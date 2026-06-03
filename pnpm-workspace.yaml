@@ -1,0 +1,9 @@
+# pnpm workspace definition.
+# NOTE: `etl/` is a Python project and is intentionally NOT a pnpm workspace member.
+packages:
+  - "apps/*"
+  - "packages/*"
+# Pre-approved native build scripts (pnpm 10+ blocks postinstall by default).
+# sharp ships a native image pipeline pulled in transitively by Next.js.
+allowBuilds:
+  sharp: true

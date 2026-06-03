@@ -1,0 +1,73 @@
+{
+  "_comment": "GOLDEN FIXTURE — recorded deterministic output of @wcdraft/core createRng. Do not hand-edit; regenerate via scripts/generate-golden.ts only when the RNG algorithm intentionally changes.",
+  "seed": "wcdraft/ws0/golden-seed-v1",
+  "count": 16,
+  "next": [
+    0.1603190815076232,
+    0.9978220397606492,
+    0.9178559286519885,
+    0.43935956340283155,
+    0.9743765273597091,
+    0.7165499087423086,
+    0.15071247168816626,
+    0.2052401527762413,
+    0.6443286936264485,
+    0.34568730695173144,
+    0.43348782462999225,
+    0.40739413327537477,
+    0.802424693480134,
+    0.6151458707172424,
+    0.6596181062050164,
+    0.6488709046971053
+  ],
+  "int": {
+    "maxExclusive": 100,
+    "values": [
+      16,
+      99,
+      91,
+      43,
+      97,
+      71,
+      15,
+      20,
+      64,
+      34,
+      43,
+      40,
+      80,
+      61,
+      65,
+      64
+    ]
+  },
+  "pick": {
+    "items": [
+      "alpha",
+      "bravo",
+      "charlie",
+      "delta",
+      "echo",
+      "foxtrot",
+      "golf"
+    ],
+    "values": [
+      "bravo",
+      "golf",
+      "golf",
+      "delta",
+      "golf",
+      "foxtrot",
+      "bravo",
+      "bravo",
+      "echo",
+      "charlie",
+      "delta",
+      "charlie",
+      "foxtrot",
+      "echo",
+      "echo",
+      "echo"
+    ]
+  }
+}

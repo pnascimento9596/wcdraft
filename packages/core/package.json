@@ -1,0 +1,26 @@
+{
+  "name": "@wcdraft/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Core primitives for wcdraft. Today: the deterministic seeded RNG (single source of randomness). Domain types are deferred to WS-0b.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:golden": "vitest run -t golden",
+    "gen:golden": "node --experimental-strip-types scripts/generate-golden.ts"
+  }
+}
