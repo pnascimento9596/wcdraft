@@ -226,7 +226,10 @@ def test_strong_nations_aggregate_higher(teams, nation_name):
     minnow_scores = [_team_score(t) for t in teams if nation_name[t["nation_id"]] in MINNOWS]
     assert len(power_scores) == len(POWERS)
     assert len(minnow_scores) == len(MINNOWS)
+    # The weakest power outranks the strongest minnow (no inversion).
     assert min(power_scores) > max(minnow_scores), (min(power_scores), max(minnow_scores))
+    # ...and the basket means are clearly separated (not a knife-edge).
+    assert sum(power_scores) / len(power_scores) - sum(minnow_scores) / len(minnow_scores) >= 4.0
 
 
 # ─── Team2026 ─────────────────────────────────────────────────────────────────
@@ -235,7 +238,9 @@ def test_strong_nations_aggregate_higher(teams, nation_name):
 def test_team2026_shape(teams, ratings):
     rating_cards = {r["card_id"] for r in ratings}
     for t in teams:
-        assert t["squad_status"] == "final"
+        # Rosters are published (2026-06-02) but the tournament has not started
+        # (opening match 2026-06-11): the contract's 'locked', not 'final'.
+        assert t["squad_status"] == "locked"
         assert t["rating_version"] == rating_2026.RATING_VERSION
         assert t["team_id"] == f"WC2026-{t['group']}{t['group_slot']}"
         assert t["squad_card_ids"] == sorted(t["squad_card_ids"])
@@ -244,7 +249,9 @@ def test_team2026_shape(teams, ratings):
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
             assert 0 <= agg[ch] <= 100
         assert 0.0 <= agg["coverage"] <= 1.0
-        assert t["sources"] and t["sources"][0]["source_type"] == "wikipedia"
+        # Cited to BOTH the squads snapshot and the draw (group_slot provenance).
+        assert {s["source_type"] for s in t["sources"]} == {"wikipedia"}
+        assert any(s["field"] == "group_slot" for s in t["sources"])
 
 
 # ─── Bracket2026 ──────────────────────────────────────────────────────────────

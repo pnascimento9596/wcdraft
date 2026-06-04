@@ -39,6 +39,18 @@ TOURNAMENT_ID = source_2026.TOURNAMENT_ID  # "WC-2026"
 HOST_NATION_IDS = ["T-12", "T-46", "T-83"]
 FORMAT_VERSION = "wc2026-48team-1.0.0"
 
+# Team2026.squad_status per the core contract semantics (tournament.ts):
+#   'locked' = official roster published but tournament has NOT started.
+#   'final'  = official roster + tournament started; no further changes.
+# The final 26-man lists were published 2026-06-02, but the opening match is
+# 2026-06-11 — so as of the pinned 2026-06-04 snapshot the contract-correct state
+# is 'locked', NOT 'final' (an injury replacement is still permitted up to 24h
+# before a team's first match). Flips to 'final' on re-pin after kickoff.
+SQUAD_STATUS = "locked"
+
+# Knockout round order, for a semantic (not lexicographic) slot sort.
+_ROUND_ORDER = {"R32": 0, "R16": 1, "QF": 2, "SF": 3, "F": 4}
+
 
 def _load(name: str, output_dir: Path = OUTPUT_DIR) -> list[dict]:
     return json.loads((output_dir / f"{name}.json").read_text(encoding="utf-8"))
@@ -189,9 +201,13 @@ def _build_teams(
                 "group_slot": slot,
                 "squad_card_ids": squad_card_ids,
                 "aggregate_rating": _team_strength(squad_ratings),
-                "squad_status": "final",
+                "squad_status": SQUAD_STATUS,
                 "rating_version": rating_2026.RATING_VERSION,
-                "sources": [source_2026.source_ref()],
+                "sources": [
+                    source_2026.source_ref("squads"),
+                    # group / group_slot are derived from the final-draw table.
+                    source_2026.source_ref("draw", field="group_slot"),
+                ],
             }
         )
     teams.sort(key=lambda t: t["team_id"])
@@ -243,7 +259,12 @@ def _build_bracket(teams: list[dict], bracket_matches: list[dict]) -> dict:
                     "source": _feeder_to_source(feeder, match_id_of),
                 }
             )
-    slots.sort(key=lambda s: s["slot_id"])
+    # Semantic order: round, then match number, then seat side (not lexicographic,
+    # which would interleave F-* before QF-*).
+    def _slot_key(s: dict) -> tuple[int, int, str]:
+        return (_ROUND_ORDER[s["round"]], int(s["match_id"].split("-M")[1]), s["slot_id"])
+
+    slots.sort(key=_slot_key)
     return {
         "format_version": FORMAT_VERSION,
         "groups": group_blocks,
