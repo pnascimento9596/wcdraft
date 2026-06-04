@@ -194,10 +194,10 @@ def build_supplement(
             if nid is None:
                 teams_unresolved.append(code)
                 # Iterate in deterministic document order (NOT a set — set order is
-                # hash-seed-dependent and would make rsssf_surname/matches_observed
-                # vary between runs, breaking the golden git-diff). matches_observed
-                # then counts lineup occurrences, and the representative spelling is
-                # the first in document order — both reproducible.
+                # hash-seed-dependent and would make rsssf_surname / lineup_occurrences
+                # vary between runs, breaking the golden git-diff). lineup_occurrences
+                # then counts lineup appearances of the unlinked token, and the
+                # representative spelling is the first in document order — both reproducible.
                 for lu in code_lineups:
                     for tok in lu.players:
                         _record_review(
