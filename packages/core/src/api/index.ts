@@ -10,3 +10,9 @@ export { computeScore, resolveTopScorer } from "./scoring.js";
 
 export type { DeriveNarrativeFactsFn } from "./narrative.js";
 export { deriveNarrativeFacts } from "./narrative.js";
+
+// WS-0c depth layer — position compatibility, Synergy, team-strength aggregation.
+export { positionCompatibility } from "./compatibility.js";
+export { computeSynergy } from "./synergy.js";
+export type { StarterContribution, AggregateUserXiStrengthFn } from "./team-strength.js";
+export { aggregateUserXiStrength } from "./team-strength.js";

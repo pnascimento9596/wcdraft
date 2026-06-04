@@ -70,3 +70,28 @@ export {
 
 export { LeaderboardSubmissionSchema } from "./leaderboard.js";
 export type { LeaderboardSubmission } from "./leaderboard.js";
+
+export {
+  // formation.ts (WS-0c depth layer)
+  SlotPositionSchema,
+  FormationChannelSchema,
+  FormationSlotSchema,
+  FormationTemplateSchema,
+} from "./formation.js";
+
+export {
+  // manager.ts (WS-0c depth layer)
+  ManagerCardIdSchema,
+  ManagerSchema,
+  ManagerTournamentSchema,
+  ManagerRatingSchema,
+  ManagerRatingComponentSchema,
+  refineManagerCardIdConsistency,
+} from "./manager.js";
+
+export {
+  // synergy.ts (WS-0c depth layer)
+  NationClusterSchema,
+  LinkedPairSchema,
+  SynergyResultSchema,
+} from "./synergy.js";
