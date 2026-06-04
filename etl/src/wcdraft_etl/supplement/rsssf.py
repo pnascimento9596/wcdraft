@@ -141,13 +141,16 @@ def parse_lineups(raw_text: str) -> list[Lineup]:
         j = i + 1
         while j < len(lines):  # gather wrapped continuation lines
             nxt = lines[j]
-            if (
-                nxt.strip() == ""
-                or nxt.lstrip().startswith("<")
-                or _GOAL_LINE_RE.match(nxt)
-                or nxt.lstrip().startswith("(")
-            ):
+            if nxt.strip() == "" or nxt.lstrip().startswith("<") or _GOAL_LINE_RE.match(nxt):
                 break
+            # Join wrapped lines with a space (the player separators "," / " - "
+            # already sit at the wrap boundary). A continuation that begins with a
+            # captain mark ("Villaplane\n(c) - ...") is kept, not dropped — that is
+            # why there is no "starts with (" break. A multi-word surname stays
+            # intact this way (e.g. "Van Heel", "del Sol") so it matches its
+            # canonical family name directly. The rare case where the wrap DROPS a
+            # comma and merges two players ("Murray\nMudie") is repaired downstream
+            # by the linker's canonical-verified de-merge, so it is never a ghost.
             buf += " " + nxt.strip()
             j += 1
         players = tuple(_split_tokens(buf))

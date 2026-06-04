@@ -13874,7 +13874,7 @@
     "tournament_id": "WC-2022"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-07282:WC-1958",
@@ -20356,7 +20356,7 @@
     "tournament_id": "WC-1954"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-10604:WC-1930",
@@ -32168,12 +32168,12 @@
     "tournament_id": "WC-1982"
   },
   {
-    "appearances": null,
-    "appearances_source": null,
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-16891:WC-1930",
     "club_at_tournament": null,
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "goals": 0,
     "nation_id": "T-06",
     "player_id": "P-16891",
@@ -36336,7 +36336,7 @@
     "tournament_id": "WC-1982"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-19215:WC-1958",
@@ -41595,7 +41595,7 @@
     "tournament_id": "WC-2022"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-22131:WC-1950",
@@ -48449,7 +48449,7 @@
     "tournament_id": "WC-2018"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-25760:WC-1930",
@@ -85287,7 +85287,7 @@
     "tournament_id": "WC-1982"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-44601:WC-1950",
@@ -86731,12 +86731,12 @@
     "tournament_id": "WC-1962"
   },
   {
-    "appearances": null,
-    "appearances_source": null,
+    "appearances": 1,
+    "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-45315:WC-1930",
     "club_at_tournament": null,
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "goals": 0,
     "nation_id": "T-06",
     "player_id": "P-45315",
@@ -88721,7 +88721,7 @@
     "tournament_id": "WC-1986"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-46390:WC-1930",
@@ -116930,7 +116930,7 @@
     "tournament_id": "WC-1994"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-60620:WC-1930",
@@ -133586,12 +133586,12 @@
     "tournament_id": "WC-2010"
   },
   {
-    "appearances": null,
-    "appearances_source": null,
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-69286:WC-1930",
     "club_at_tournament": null,
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "goals": 0,
     "nation_id": "T-06",
     "player_id": "P-69286",
@@ -142230,7 +142230,7 @@
     "tournament_id": "WC-1990"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-73743:WC-1950",
@@ -144098,7 +144098,7 @@
     "tournament_id": "WC-2019"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-74839:WC-1930",
@@ -165163,12 +165163,12 @@
     "tournament_id": "WC-2022"
   },
   {
-    "appearances": null,
-    "appearances_source": null,
+    "appearances": 1,
+    "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-85443:WC-1930",
     "club_at_tournament": null,
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "goals": 0,
     "nation_id": "T-06",
     "player_id": "P-85443",
@@ -173330,7 +173330,7 @@
     "tournament_id": "WC-1938"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-89688:WC-1930",
@@ -176279,7 +176279,7 @@
     "tournament_id": "WC-1970"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-91238:WC-1930",
@@ -179492,12 +179492,12 @@
     "tournament_id": "WC-1950"
   },
   {
-    "appearances": null,
-    "appearances_source": null,
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-92795:WC-1930",
     "club_at_tournament": null,
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "goals": 0,
     "nation_id": "T-06",
     "player_id": "P-92795",
@@ -192117,7 +192117,7 @@
     "tournament_id": "WC-2006"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-99087:WC-1930",
@@ -192918,7 +192918,7 @@
     "tournament_id": "WC-2007"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "awards": [],
     "card_id": "P-99436:WC-1950",

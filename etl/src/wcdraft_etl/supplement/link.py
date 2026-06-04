@@ -96,11 +96,38 @@ def _resolve(
     return None, "ambiguous_no_initial"
 
 
+def _demerge(
+    token: PlayerToken, fam_to_cards: dict[str, list[dict]], given_initial: dict[str, str]
+) -> list[dict] | None:
+    """Repair a wrap-merged token ("Murray Mudie" = two players whose separating
+    comma the source dropped at a line break) by splitting its raw surname.
+
+    SAFE — never a guess: a split is accepted only if BOTH halves each resolve to
+    exactly one DISTINCT canonical squad card. If either half is unknown (e.g. the
+    token is really one unlinkable name like "Arico Suárez"), no split is made and
+    the whole token is left to review. Called ONLY for blocks short of 11 players,
+    so a genuine multi-word surname in a complete XI is never split.
+    """
+    parts = token.raw.split()
+    if len(parts) < 2:
+        return None
+    for k in range(1, len(parts)):
+        left = PlayerToken(key=_norm(" ".join(parts[:k])), initial=None, raw=" ".join(parts[:k]))
+        right = PlayerToken(key=_norm(" ".join(parts[k:])), initial=None, raw=" ".join(parts[k:]))
+        lc, _ = _resolve(left, fam_to_cards, given_initial)
+        rc, _ = _resolve(right, fam_to_cards, given_initial)
+        if lc is not None and rc is not None and lc["card_id"] != rc["card_id"]:
+            return [lc, rc]
+    return None
+
+
 def _record_review(acc: dict[tuple, dict], key: tuple, base: dict) -> None:
-    """Accumulate a withheld case, counting how many matches it was observed in
-    (so the review list is one compact row per distinct unresolved name)."""
-    row = acc.setdefault(key, {**base, "matches_observed": 0})
-    row["matches_observed"] += 1
+    """Accumulate a withheld case as one compact row per distinct unresolved name,
+    counting ``lineup_occurrences`` — how many starting-XI lineups the raw token
+    appeared in. (This is an occurrence count of an UNLINKED token, deliberately
+    NOT a validated appearance total — the name was not linked to a player.)"""
+    row = acc.setdefault(key, {**base, "lineup_occurrences": 0})
+    row["lineup_occurrences"] += 1
 
 
 def build_supplement(
@@ -166,23 +193,29 @@ def build_supplement(
             nid, best_ov, second_ov = _assign_nation(team_surnames, nation_fams)
             if nid is None:
                 teams_unresolved.append(code)
-                for tok in {(t.raw, t.key, t.initial) for lu in code_lineups for t in lu.players}:
-                    _record_review(
-                        review_acc,
-                        ("nation_unresolved", code, tok[1], tok[2]),
-                        {
-                            "reason": "nation_unresolved",
-                            "tournament_id": tournament_id,
-                            "rsssf_team_code": code,
-                            "nation_id": None,
-                            "rsssf_surname": tok[0],
-                            "rsssf_initial": tok[2],
-                            "best_overlap": best_ov,
-                            "runner_up_overlap": second_ov,
-                            "candidates": [],
-                            "source_url": source_url,
-                        },
-                    )
+                # Iterate in deterministic document order (NOT a set — set order is
+                # hash-seed-dependent and would make rsssf_surname/matches_observed
+                # vary between runs, breaking the golden git-diff). matches_observed
+                # then counts lineup occurrences, and the representative spelling is
+                # the first in document order — both reproducible.
+                for lu in code_lineups:
+                    for tok in lu.players:
+                        _record_review(
+                            review_acc,
+                            ("nation_unresolved", code, tok.key, tok.initial),
+                            {
+                                "reason": "nation_unresolved",
+                                "tournament_id": tournament_id,
+                                "rsssf_team_code": code,
+                                "nation_id": None,
+                                "rsssf_surname": tok.raw,
+                                "rsssf_initial": tok.initial,
+                                "best_overlap": best_ov,
+                                "runner_up_overlap": second_ov,
+                                "candidates": [],
+                                "source_url": source_url,
+                            },
+                        )
                 continue
             teams_resolved += 1
             fam_to_cards: dict[str, list[dict]] = defaultdict(list)
@@ -195,14 +228,26 @@ def build_supplement(
 
             for lu in code_lineups:
                 seen_this_match: set[str] = set()
+                # A complete starting XI is 11 names (12 with an annotated keeper
+                # swap that dedupes to 11). A block short of 11 means the wrap
+                # dropped a comma and merged two players; only then do we attempt
+                # the canonical-verified de-merge, so genuine multi-word surnames
+                # in complete XIs are left whole.
+                short_block = len(lu.players) < 11
                 for tok in lu.players:
                     card, outcome = _resolve(tok, fam_to_cards, given_initial)
-                    if card is not None:
-                        cid = card["card_id"]
-                        if cid not in seen_this_match:  # dedupe in-match keeper swap
-                            linked_appearances[cid] += 1
-                            seen_this_match.add(cid)
-                            link_method[cid] = outcome
+                    resolved = [(card, outcome)] if card is not None else []
+                    if not resolved and short_block and " " in tok.raw:
+                        demerged = _demerge(tok, fam_to_cards, given_initial)
+                        if demerged:
+                            resolved = [(c, "demerged") for c in demerged]
+                    if resolved:
+                        for rcard, routcome in resolved:
+                            cid = rcard["card_id"]
+                            if cid not in seen_this_match:  # dedupe in-match keeper swap
+                                linked_appearances[cid] += 1
+                                seen_this_match.add(cid)
+                                link_method[cid] = routcome
                         continue
                     cand_ids = [c["card_id"] for c in fam_to_cards.get(tok.key, [])]
                     _record_review(
