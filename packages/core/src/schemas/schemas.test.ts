@@ -13,11 +13,16 @@ import { deriveSubseed } from "../rng.js";
 import {
   DraftStateSchema,
   LeaderboardSubmissionSchema,
+  MatchLineupEntrySchema,
   MatchResultSchema,
+  PlayerMatchStatsSchema,
+  PlayerRunStatsSchema,
   PlayerSchema,
   PlayerTournamentSchema,
   RatingSchema,
   RunResultSchema,
+  SpinSchema,
+  SquadSlotSchema,
   Team2026Schema,
 } from "./index.js";
 
@@ -592,5 +597,121 @@ describe("zod boundary schemas — REJECT impossible states", () => {
     const r = makeRunResult();
     const bad: RunResult = { ...r, eliminated_in_match_id: "match.fixture.7" };
     expect(RunResultSchema.safeParse(bad).success).toBe(false);
+  });
+});
+
+// ─── No-throw boundary contract ──────────────────────────────────────────────
+// safeParse MUST return {success:false} — NEVER throw — on adversarial input.
+// The card-id consistency refinements call buildCardId, which throws on an
+// empty player_id / non-positive tournament_id. Because the field-level
+// NonEmptyIdSchema only marks the result DIRTY (not aborted), the superRefine
+// still runs; an unguarded buildCardId would let that RangeError escape
+// safeParse. These five schemas are the card-id-bearing trust boundaries
+// (MatchResult.lineup, RunResult.player_stats, DraftState.spins/squad).
+
+describe("zod boundary schemas — safeParse never throws on empty player_id", () => {
+  it("MatchLineupEntrySchema rejects empty player_id without throwing", () => {
+    const bad = {
+      side: "user",
+      card_id: "x:1",
+      player_id: "",
+      tournament_id: 1,
+      slot_id: "s",
+      position: "FW",
+      started: true,
+      minutes: 90,
+    };
+    expect(() => MatchLineupEntrySchema.safeParse(bad)).not.toThrow();
+    expect(MatchLineupEntrySchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("PlayerMatchStatsSchema rejects empty player_id without throwing", () => {
+    const bad = {
+      player_id: "",
+      card_id: "x:1",
+      tournament_id: 1,
+      match_id: "m",
+      goals: 0,
+      assists: 0,
+      shots: 0,
+      shots_on_target: 0,
+      key_passes: 0,
+      fouls_committed: 0,
+      fouls_suffered: 0,
+      offsides: 0,
+      yellows: 0,
+      reds: 0,
+      saves: 0,
+      pens_won: 0,
+      pens_scored: 0,
+      pens_missed: 0,
+      minutes: 90,
+      subbed_on: false,
+      subbed_off: false,
+      injured: false,
+    };
+    expect(() => PlayerMatchStatsSchema.safeParse(bad)).not.toThrow();
+    expect(PlayerMatchStatsSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("PlayerRunStatsSchema rejects empty player_id without throwing", () => {
+    const bad = {
+      player_id: "",
+      card_id: "x:1",
+      tournament_id: 1,
+      per_match: [],
+      totals: {
+        goals: 0,
+        assists: 0,
+        shots: 0,
+        shots_on_target: 0,
+        key_passes: 0,
+        fouls_committed: 0,
+        fouls_suffered: 0,
+        offsides: 0,
+        yellows: 0,
+        reds: 0,
+        saves: 0,
+        pens_won: 0,
+        pens_scored: 0,
+        pens_missed: 0,
+        minutes: 0,
+      },
+      rating_at_draft: null,
+    };
+    expect(() => PlayerRunStatsSchema.safeParse(bad)).not.toThrow();
+    expect(PlayerRunStatsSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("SpinSchema rejects picked spin with empty picked_player_id without throwing", () => {
+    const bad = {
+      index: 0,
+      tournament_id: 1,
+      nation_id: "n",
+      rolled_card_ids: ["p:1"],
+      excluded_player_ids: [],
+      picked_card_id: "p:1",
+      picked_player_id: "",
+      assigned_slot_id: null,
+      status: "picked",
+    };
+    expect(() => SpinSchema.safeParse(bad)).not.toThrow();
+    expect(SpinSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("SquadSlotSchema rejects occupied slot with empty player_id without throwing", () => {
+    const bad = {
+      slot_id: "s",
+      is_starter: true,
+      lineup_position: "FW",
+      allowed_positions: ["FW"],
+      card_id: "p:1",
+      player_id: "",
+      tournament_id: 1,
+      slot_valid: true,
+      validation_warnings: [],
+    };
+    expect(() => SquadSlotSchema.safeParse(bad)).not.toThrow();
+    expect(SquadSlotSchema.safeParse(bad).success).toBe(false);
   });
 });
