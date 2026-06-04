@@ -57,7 +57,7 @@ absences in the source, surfaced — not data-quality defects.
 | player_tournaments | shirt | 8.6% (1,188/13,843) |
 | player_tournaments | position_listed | 0.0% (0/13,843) |
 | player_tournaments | club_at_tournament | 100.0% (13,843/13,843) |
-| player_tournaments | appearances | 18.7% (2,594/13,843) |
+| player_tournaments | appearances | 7.4% (1,021/13,843) |
 | players | full_name | 0.0% (0/10,401) |
 | players | birth_date | 0.0% (1/10,401) |
 | players | primary_position | 0.0% (0/10,401) |
@@ -75,7 +75,7 @@ uniformly deflated. The values cluster at three tiers matching the cliffs.
 
 | Era | Cards | Mean coverage | Typical |
 |---|---|---|---|
-| pre-1954 | 1,188 | 0.6667 | 0.6667 (4/6) |
-| 1954–1969 | 1,406 | 0.8333 | 0.8333 (5/6) |
+| pre-1954 | 1,188 | 0.7656 | 0.6667 (4/6) |
+| 1954–1969 | 1,406 | 0.9362 | 0.8333 (5/6) |
 | 1970+ | 11,249 | 1.0000 | 1.0000 (6/6) |
 
