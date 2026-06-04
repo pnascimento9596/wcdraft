@@ -105,6 +105,10 @@ export type {
   // narrative
   KeyMoment,
   NarrativeFacts,
+  OutcomeClass,
+  TokenName,
+  NarrativeLabels,
+  NarrativeTemplate,
   // run
   RoundResult,
   RunResult,
@@ -144,7 +148,17 @@ export {
   runTournament,
   computeScore,
   resolveTopScorer,
+  // WS-E narrative
   deriveNarrativeFacts,
+  buildNarrative,
+  selectNarrativeTemplate,
+  resolveNarrativeTokens,
+  fillTemplate,
+  headlineMoment,
+  classifyOutcome,
+  templatesForClass,
+  NARRATIVE_TEMPLATES,
+  UNAVAILABLE_TOKEN_TEXT,
   // WS-0c
   positionCompatibility,
   computeSynergy,

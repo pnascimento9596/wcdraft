@@ -9,7 +9,18 @@ export type { ComputeScoreFn, ResolveTopScorerFn } from "./scoring.js";
 export { computeScore, resolveTopScorer } from "./scoring.js";
 
 export type { DeriveNarrativeFactsFn } from "./narrative.js";
-export { deriveNarrativeFacts } from "./narrative.js";
+export {
+  deriveNarrativeFacts,
+  buildNarrative,
+  selectNarrativeTemplate,
+  resolveNarrativeTokens,
+  fillTemplate,
+  headlineMoment,
+  classifyOutcome,
+  templatesForClass,
+  NARRATIVE_TEMPLATES,
+  UNAVAILABLE_TOKEN_TEXT,
+} from "./narrative.js";
 
 // WS-0c depth layer — position compatibility, Synergy, team-strength aggregation.
 export { positionCompatibility } from "./compatibility.js";

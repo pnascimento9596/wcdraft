@@ -132,6 +132,10 @@ export type {
   // narrative.ts
   KeyMoment,
   NarrativeFacts,
+  OutcomeClass,
+  TokenName,
+  NarrativeLabels,
+  NarrativeTemplate,
 } from "./narrative.js";
 
 export type {
