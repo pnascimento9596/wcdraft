@@ -1,0 +1,15 @@
+[
+  {
+    "champion_nation_id": null,
+    "format_version": "wc2026-48team-1.0.0",
+    "host_nation_ids": [
+      "T-12",
+      "T-46",
+      "T-83"
+    ],
+    "name": "2026 FIFA Men's World Cup",
+    "tournament_id": "WC-2026",
+    "womens": false,
+    "year": 2026
+  }
+]
