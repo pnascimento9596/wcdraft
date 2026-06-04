@@ -60,16 +60,11 @@ export type ComputeScoreFn = (
  */
 export type ResolveTopScorerFn = (matches: readonly MatchResult[]) => string | null;
 
-/**
- * Runtime stub for `computeScore`. WS-B replaces this body.
- */
-export const computeScore: ComputeScoreFn = () => {
-  throw new Error("computeScore is contract-only in WS-0b; the algorithm lands in WS-B.");
-};
+// WS-B IMPLEMENTATIONS (engine bodies in `../engine/scoring.ts`).
+import { computeScore as computeScoreImpl, resolveTopScorer as resolveTopScorerImpl } from "../engine/scoring.js";
 
-/**
- * Runtime stub for `resolveTopScorer`. WS-B replaces this body.
- */
-export const resolveTopScorer: ResolveTopScorerFn = () => {
-  throw new Error("resolveTopScorer is contract-only in WS-0b; the algorithm lands in WS-B.");
-};
+/** Compute leaderboard points + transparent breakdown for a RunResult. */
+export const computeScore: ComputeScoreFn = computeScoreImpl;
+
+/** Resolve the user-side run top scorer from match events + lineups. */
+export const resolveTopScorer: ResolveTopScorerFn = resolveTopScorerImpl;
