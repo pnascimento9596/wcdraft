@@ -73,14 +73,13 @@ export type AggregateUserXiStrengthFn = (
 ) => TeamStrength;
 
 /**
- * Runtime stub for `aggregateUserXiStrength`. WS-B replaces the body once
- * the folding formula is calibrated and locked by golden test.
+ * WS-B team-strength aggregation (engine body in `../engine/team-strength.ts`).
+ * Per-channel MEAN of compatibility-weighted starter ratings × bounded Synergy
+ * multiplier × bounded manager modifier. Locked by `team-strength.golden.test.ts`.
  */
-export const aggregateUserXiStrength: AggregateUserXiStrengthFn = () => {
-  throw new Error(
-    "aggregateUserXiStrength is contract-only in WS-0c; the formula lands in WS-B.",
-  );
-};
+import { aggregateUserXiStrength as aggregateUserXiStrengthImpl } from "../engine/team-strength.js";
+
+export const aggregateUserXiStrength: AggregateUserXiStrengthFn = aggregateUserXiStrengthImpl;
 
 // Re-declare the existing `UserXiSimView` here in plain English (NOT a type
 // alias; the canonical declaration stays in `api/sim.ts`):
