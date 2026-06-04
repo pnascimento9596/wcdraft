@@ -1,0 +1,5 @@
+# Upstream source clone (Fjelstul worldcup) — fetched at a pinned commit, never committed.
+vendor/
+
+# Local virtualenv
+.venv/
