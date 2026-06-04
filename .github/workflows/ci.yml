@@ -73,3 +73,36 @@ jobs:
         # pipeline as every other check. Path-selected (src/rng.golden.test.ts)
         # with passWithNoTests:false — fails if the file is missing or drifts.
         run: pnpm exec turbo run test:golden --filter=@wcdraft/core
+
+  etl-rating:
+    name: ETL rating · lint · golden determinism
+    runs-on: ubuntu-latest
+    # Self-contained: the rating stage reads the COMMITTED canonical JSON in
+    # etl/output/, so this job needs no upstream Fjelstul CSV clone. It lints the
+    # rating code, runs the rating test suite, and proves byte-determinism by
+    # regenerating ratings.json and failing on any git diff (the moat's guard).
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ETL package
+        run: pip install -e './etl[dev]'
+
+      - name: Lint (ruff)
+        working-directory: etl
+        run: ruff check src tests
+
+      - name: Rating tests (determinism · honest-state · sanity)
+        working-directory: etl
+        run: python -m pytest tests/test_rating.py -q
+
+      - name: Golden determinism — ratings.json must be byte-stable
+        run: |
+          python -m wcdraft_etl.rating
+          git diff --exit-code -- etl/output/ratings.json \
+            || (echo "::error::etl/output/ratings.json is stale — run 'python -m wcdraft_etl.rating' and commit." && exit 1)
