@@ -9,29 +9,264 @@ import {
 
 // GOLDEN INVARIANT (WS-0c depth-layer contract):
 //   Each FormationTemplate.adjacency is materialised AT MODULE LOAD from the
-//   adjacency rule (`deriveFormationAdjacency`). The drift guard: re-deriving
-//   adjacency from the same `slots` MUST yield a deep-equal edge list. The
-//   schema enforces this for any external FormationTemplate that crosses a
-//   trust boundary; this test asserts it for the SHIPPED MVP templates so the
-//   registry is locked.
+//   adjacency rule (`deriveFormationAdjacency`). The drift guard is a
+//   HAND-WRITTEN expected edge set per MVP formation (`EXPECTED_ADJACENCY`
+//   below): the shipped adjacency MUST deep-equal it. This is a real drift
+//   lock — a change to a template's slots/channels OR to the adjacency rule
+//   that moves any edge breaks the literal comparison.
 //
-// Two halves to this scaffold:
-//   (a) ACTIVE — re-derived adjacency equals shipped adjacency for each MVP
-//       template. Edge list is well-formed (canonicalised, sorted, no
-//       duplicates / self-edges, endpoints resolve). Plus a hand-curated
-//       worked example for 4-3-3 from the task spec.
-//   (b) SKIPPED — the FULL "every MVP formation's expected edge set per the
-//       rule" worked-example table for the other five formations. Filling
-//       that table is a small but non-trivial exercise; the rule + the
-//       deep-equal re-derivation already lock the data, so the worked
-//       examples are an extra reviewability aid rather than a coverage gap.
+//   (An earlier version re-derived adjacency with `deriveFormationAdjacency`
+//   and compared it to the template's OWN derived edges — that only proved the
+//   derivation is deterministic, NOT that the materialised edges are correct.
+//   The literal fixtures replace that self-referential check.)
+//
+// HOW THE FIXTURES WERE BUILT: each edge set was enumerated by hand from the
+// rule (same-line horizontal neighbours + consecutive-line vertical neighbours
+// in the same/adjacent channel), canonicalised so `a < b`, and sorted
+// lexicographically — the same canonical form the schema's drift guard and the
+// `slots` layout produce. The structural assertions below (endpoints resolve,
+// canonicalised/sorted/de-duplicated, every edge satisfies the rule) guard the
+// shape; the literal `EXPECTED_ADJACENCY` pins the exact edges.
 
-describe("formation-adjacency — all MVP templates re-derive equal to their shipped adjacency (active)", () => {
+// Hand-written expected adjacency edge set for each of the six MVP formations.
+// Canonical form: each edge `[a, b]` has `a < b`; the array is sorted
+// lexicographically by (a, then b). This is the source-of-truth fixture the
+// shipped/derived adjacency is asserted against.
+const EXPECTED_ADJACENCY: Readonly<Record<string, ReadonlyArray<readonly [string, string]>>> = {
+  "4-3-3": [
+    ["4-3-3.CDM", "4-3-3.LB"],
+    ["4-3-3.CDM", "4-3-3.LCB"],
+    ["4-3-3.CDM", "4-3-3.LCM"],
+    ["4-3-3.CDM", "4-3-3.LW"],
+    ["4-3-3.CDM", "4-3-3.RB"],
+    ["4-3-3.CDM", "4-3-3.RCB"],
+    ["4-3-3.CDM", "4-3-3.RCM"],
+    ["4-3-3.CDM", "4-3-3.RW"],
+    ["4-3-3.CDM", "4-3-3.ST"],
+    ["4-3-3.GK", "4-3-3.LB"],
+    ["4-3-3.GK", "4-3-3.LCB"],
+    ["4-3-3.GK", "4-3-3.RB"],
+    ["4-3-3.GK", "4-3-3.RCB"],
+    ["4-3-3.LB", "4-3-3.LCB"],
+    ["4-3-3.LB", "4-3-3.LCM"],
+    ["4-3-3.LB", "4-3-3.RCM"],
+    ["4-3-3.LCB", "4-3-3.LCM"],
+    ["4-3-3.LCB", "4-3-3.RCB"],
+    ["4-3-3.LCB", "4-3-3.RCM"],
+    ["4-3-3.LCM", "4-3-3.LW"],
+    ["4-3-3.LCM", "4-3-3.RB"],
+    ["4-3-3.LCM", "4-3-3.RCB"],
+    ["4-3-3.LCM", "4-3-3.RCM"],
+    ["4-3-3.LCM", "4-3-3.RW"],
+    ["4-3-3.LCM", "4-3-3.ST"],
+    ["4-3-3.LW", "4-3-3.RCM"],
+    ["4-3-3.LW", "4-3-3.ST"],
+    ["4-3-3.RB", "4-3-3.RCB"],
+    ["4-3-3.RB", "4-3-3.RCM"],
+    ["4-3-3.RCB", "4-3-3.RCM"],
+    ["4-3-3.RCM", "4-3-3.RW"],
+    ["4-3-3.RCM", "4-3-3.ST"],
+    ["4-3-3.RW", "4-3-3.ST"],
+  ],
+  "4-4-2": [
+    ["4-4-2.GK", "4-4-2.LB"],
+    ["4-4-2.GK", "4-4-2.LCB"],
+    ["4-4-2.GK", "4-4-2.RB"],
+    ["4-4-2.GK", "4-4-2.RCB"],
+    ["4-4-2.LB", "4-4-2.LCB"],
+    ["4-4-2.LB", "4-4-2.LCM"],
+    ["4-4-2.LB", "4-4-2.LM"],
+    ["4-4-2.LB", "4-4-2.RCM"],
+    ["4-4-2.LCB", "4-4-2.LCM"],
+    ["4-4-2.LCB", "4-4-2.LM"],
+    ["4-4-2.LCB", "4-4-2.RCB"],
+    ["4-4-2.LCB", "4-4-2.RCM"],
+    ["4-4-2.LCB", "4-4-2.RM"],
+    ["4-4-2.LCM", "4-4-2.LF"],
+    ["4-4-2.LCM", "4-4-2.LM"],
+    ["4-4-2.LCM", "4-4-2.RB"],
+    ["4-4-2.LCM", "4-4-2.RCB"],
+    ["4-4-2.LCM", "4-4-2.RCM"],
+    ["4-4-2.LCM", "4-4-2.RF"],
+    ["4-4-2.LF", "4-4-2.LM"],
+    ["4-4-2.LF", "4-4-2.RCM"],
+    ["4-4-2.LF", "4-4-2.RF"],
+    ["4-4-2.LF", "4-4-2.RM"],
+    ["4-4-2.LM", "4-4-2.RCB"],
+    ["4-4-2.LM", "4-4-2.RF"],
+    ["4-4-2.RB", "4-4-2.RCB"],
+    ["4-4-2.RB", "4-4-2.RCM"],
+    ["4-4-2.RB", "4-4-2.RM"],
+    ["4-4-2.RCB", "4-4-2.RCM"],
+    ["4-4-2.RCB", "4-4-2.RM"],
+    ["4-4-2.RCM", "4-4-2.RF"],
+    ["4-4-2.RCM", "4-4-2.RM"],
+    ["4-4-2.RF", "4-4-2.RM"],
+  ],
+  "4-2-3-1": [
+    ["4-2-3-1.CAM", "4-2-3-1.LB"],
+    ["4-2-3-1.CAM", "4-2-3-1.LCB"],
+    ["4-2-3-1.CAM", "4-2-3-1.LDM"],
+    ["4-2-3-1.CAM", "4-2-3-1.RAM"],
+    ["4-2-3-1.CAM", "4-2-3-1.RB"],
+    ["4-2-3-1.CAM", "4-2-3-1.RCB"],
+    ["4-2-3-1.CAM", "4-2-3-1.RDM"],
+    ["4-2-3-1.CAM", "4-2-3-1.ST"],
+    ["4-2-3-1.GK", "4-2-3-1.LB"],
+    ["4-2-3-1.GK", "4-2-3-1.LCB"],
+    ["4-2-3-1.GK", "4-2-3-1.RB"],
+    ["4-2-3-1.GK", "4-2-3-1.RCB"],
+    ["4-2-3-1.LAM", "4-2-3-1.LB"],
+    ["4-2-3-1.LAM", "4-2-3-1.LCB"],
+    ["4-2-3-1.LAM", "4-2-3-1.LDM"],
+    ["4-2-3-1.LAM", "4-2-3-1.RCB"],
+    ["4-2-3-1.LAM", "4-2-3-1.ST"],
+    ["4-2-3-1.LB", "4-2-3-1.LCB"],
+    ["4-2-3-1.LB", "4-2-3-1.LDM"],
+    ["4-2-3-1.LB", "4-2-3-1.RDM"],
+    ["4-2-3-1.LCB", "4-2-3-1.LDM"],
+    ["4-2-3-1.LCB", "4-2-3-1.RAM"],
+    ["4-2-3-1.LCB", "4-2-3-1.RCB"],
+    ["4-2-3-1.LCB", "4-2-3-1.RDM"],
+    ["4-2-3-1.LDM", "4-2-3-1.RB"],
+    ["4-2-3-1.LDM", "4-2-3-1.RCB"],
+    ["4-2-3-1.LDM", "4-2-3-1.RDM"],
+    ["4-2-3-1.LDM", "4-2-3-1.ST"],
+    ["4-2-3-1.RAM", "4-2-3-1.RB"],
+    ["4-2-3-1.RAM", "4-2-3-1.RCB"],
+    ["4-2-3-1.RAM", "4-2-3-1.ST"],
+    ["4-2-3-1.RB", "4-2-3-1.RCB"],
+    ["4-2-3-1.RB", "4-2-3-1.RDM"],
+    ["4-2-3-1.RCB", "4-2-3-1.RDM"],
+    ["4-2-3-1.RDM", "4-2-3-1.ST"],
+  ],
+  "3-5-2": [
+    ["3-5-2.CB", "3-5-2.CM"],
+    ["3-5-2.CB", "3-5-2.GK"],
+    ["3-5-2.CB", "3-5-2.LCB"],
+    ["3-5-2.CB", "3-5-2.LCM"],
+    ["3-5-2.CB", "3-5-2.RCB"],
+    ["3-5-2.CB", "3-5-2.RCM"],
+    ["3-5-2.CM", "3-5-2.LCB"],
+    ["3-5-2.CM", "3-5-2.LCM"],
+    ["3-5-2.CM", "3-5-2.LF"],
+    ["3-5-2.CM", "3-5-2.LWB"],
+    ["3-5-2.CM", "3-5-2.RCB"],
+    ["3-5-2.CM", "3-5-2.RCM"],
+    ["3-5-2.CM", "3-5-2.RF"],
+    ["3-5-2.CM", "3-5-2.RWB"],
+    ["3-5-2.GK", "3-5-2.LCB"],
+    ["3-5-2.GK", "3-5-2.LWB"],
+    ["3-5-2.GK", "3-5-2.RCB"],
+    ["3-5-2.GK", "3-5-2.RWB"],
+    ["3-5-2.LCB", "3-5-2.LCM"],
+    ["3-5-2.LCB", "3-5-2.LWB"],
+    ["3-5-2.LCB", "3-5-2.RCB"],
+    ["3-5-2.LCB", "3-5-2.RCM"],
+    ["3-5-2.LCM", "3-5-2.LF"],
+    ["3-5-2.LCM", "3-5-2.LWB"],
+    ["3-5-2.LCM", "3-5-2.RCB"],
+    ["3-5-2.LCM", "3-5-2.RCM"],
+    ["3-5-2.LCM", "3-5-2.RF"],
+    ["3-5-2.LCM", "3-5-2.RWB"],
+    ["3-5-2.LF", "3-5-2.RCM"],
+    ["3-5-2.LF", "3-5-2.RF"],
+    ["3-5-2.LWB", "3-5-2.RCM"],
+    ["3-5-2.RCB", "3-5-2.RCM"],
+    ["3-5-2.RCB", "3-5-2.RWB"],
+    ["3-5-2.RCM", "3-5-2.RF"],
+    ["3-5-2.RCM", "3-5-2.RWB"],
+  ],
+  "3-4-3": [
+    ["3-4-3.CB", "3-4-3.GK"],
+    ["3-4-3.CB", "3-4-3.LCB"],
+    ["3-4-3.CB", "3-4-3.LCM"],
+    ["3-4-3.CB", "3-4-3.RCB"],
+    ["3-4-3.CB", "3-4-3.RCM"],
+    ["3-4-3.GK", "3-4-3.LCB"],
+    ["3-4-3.GK", "3-4-3.LWB"],
+    ["3-4-3.GK", "3-4-3.RCB"],
+    ["3-4-3.GK", "3-4-3.RWB"],
+    ["3-4-3.LCB", "3-4-3.LCM"],
+    ["3-4-3.LCB", "3-4-3.LWB"],
+    ["3-4-3.LCB", "3-4-3.RCB"],
+    ["3-4-3.LCB", "3-4-3.RCM"],
+    ["3-4-3.LCM", "3-4-3.LW"],
+    ["3-4-3.LCM", "3-4-3.LWB"],
+    ["3-4-3.LCM", "3-4-3.RCB"],
+    ["3-4-3.LCM", "3-4-3.RCM"],
+    ["3-4-3.LCM", "3-4-3.RW"],
+    ["3-4-3.LCM", "3-4-3.RWB"],
+    ["3-4-3.LCM", "3-4-3.ST"],
+    ["3-4-3.LW", "3-4-3.RCM"],
+    ["3-4-3.LW", "3-4-3.ST"],
+    ["3-4-3.LWB", "3-4-3.RCM"],
+    ["3-4-3.RCB", "3-4-3.RCM"],
+    ["3-4-3.RCB", "3-4-3.RWB"],
+    ["3-4-3.RCM", "3-4-3.RW"],
+    ["3-4-3.RCM", "3-4-3.RWB"],
+    ["3-4-3.RCM", "3-4-3.ST"],
+    ["3-4-3.RW", "3-4-3.ST"],
+  ],
+  "5-3-2": [
+    ["5-3-2.CB", "5-3-2.CM"],
+    ["5-3-2.CB", "5-3-2.GK"],
+    ["5-3-2.CB", "5-3-2.LCB"],
+    ["5-3-2.CB", "5-3-2.LCM"],
+    ["5-3-2.CB", "5-3-2.RCB"],
+    ["5-3-2.CB", "5-3-2.RCM"],
+    ["5-3-2.CM", "5-3-2.LCB"],
+    ["5-3-2.CM", "5-3-2.LCM"],
+    ["5-3-2.CM", "5-3-2.LF"],
+    ["5-3-2.CM", "5-3-2.LWB"],
+    ["5-3-2.CM", "5-3-2.RCB"],
+    ["5-3-2.CM", "5-3-2.RCM"],
+    ["5-3-2.CM", "5-3-2.RF"],
+    ["5-3-2.CM", "5-3-2.RWB"],
+    ["5-3-2.GK", "5-3-2.LCB"],
+    ["5-3-2.GK", "5-3-2.LWB"],
+    ["5-3-2.GK", "5-3-2.RCB"],
+    ["5-3-2.GK", "5-3-2.RWB"],
+    ["5-3-2.LCB", "5-3-2.LCM"],
+    ["5-3-2.LCB", "5-3-2.LWB"],
+    ["5-3-2.LCB", "5-3-2.RCB"],
+    ["5-3-2.LCB", "5-3-2.RCM"],
+    ["5-3-2.LCM", "5-3-2.LF"],
+    ["5-3-2.LCM", "5-3-2.LWB"],
+    ["5-3-2.LCM", "5-3-2.RCB"],
+    ["5-3-2.LCM", "5-3-2.RCM"],
+    ["5-3-2.LCM", "5-3-2.RF"],
+    ["5-3-2.LCM", "5-3-2.RWB"],
+    ["5-3-2.LF", "5-3-2.RCM"],
+    ["5-3-2.LF", "5-3-2.RF"],
+    ["5-3-2.LWB", "5-3-2.RCM"],
+    ["5-3-2.RCB", "5-3-2.RCM"],
+    ["5-3-2.RCB", "5-3-2.RWB"],
+    ["5-3-2.RCM", "5-3-2.RF"],
+    ["5-3-2.RCM", "5-3-2.RWB"],
+  ],
+};
+
+describe("formation-adjacency — shipped templates match hand-written expected edge sets", () => {
+  it("EXPECTED_ADJACENCY covers exactly the six MVP formation ids", () => {
+    expect(Object.keys(EXPECTED_ADJACENCY).sort()).toEqual([...FORMATION_IDS].sort());
+  });
+
   for (const fid of FORMATION_IDS) {
     const tpl = FORMATION_TEMPLATES[fid]!;
-    it(`${fid}: re-derived edge list deep-equals the shipped adjacency`, () => {
-      const reDerived = deriveFormationAdjacency(tpl.slots);
-      expect(reDerived).toEqual(tpl.adjacency);
+    const expected = EXPECTED_ADJACENCY[fid]!;
+
+    it(`${fid}: shipped adjacency deep-equals the hand-written expected edge set`, () => {
+      // Real drift lock: the materialised (rule-derived) adjacency must equal
+      // the literal fixture. Changing a template's slots/channels OR the rule
+      // such that any edge moves breaks this.
+      expect(tpl.adjacency).toEqual(expected);
+    });
+
+    it(`${fid}: re-deriving from slots also equals the expected edge set`, () => {
+      // Closes the loop rule → derive → fixture, independent of the cached
+      // `tpl.adjacency` value.
+      expect(deriveFormationAdjacency(tpl.slots)).toEqual(expected);
     });
 
     it(`${fid}: every adjacency endpoint is a real slot_id`, () => {
@@ -114,23 +349,5 @@ describe("formation-adjacency — all MVP templates re-derive equal to their shi
         expect(ruleOk).toBe(true);
       }
     }
-  });
-});
-
-describe.skip("formation-adjacency — worked-example tables for the other five MVP formations (WS-B+ reviewability aid)", () => {
-  it.skip("4-4-2 expected edge set", () => {
-    // FIXTURE TODO: enumerate the expected edges from the rule and assert.
-  });
-  it.skip("4-2-3-1 expected edge set", () => {
-    // FIXTURE TODO.
-  });
-  it.skip("3-5-2 expected edge set", () => {
-    // FIXTURE TODO.
-  });
-  it.skip("3-4-3 expected edge set", () => {
-    // FIXTURE TODO.
-  });
-  it.skip("5-3-2 expected edge set", () => {
-    // FIXTURE TODO.
   });
 });
