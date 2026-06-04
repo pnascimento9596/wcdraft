@@ -15,9 +15,8 @@ import { z } from "zod";
 import type { PlayerMatchStats, PlayerRunStats } from "../types/stats.js";
 import type { RoundResult, RunResult } from "../types/run.js";
 import type { ScoreComponent } from "../types/scoring.js";
-import { buildCardId } from "../types/identity.js";
 import { deriveSubseed } from "../rng.js";
-import { CardIdSchema } from "./identity.js";
+import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
 import {
   MatchRoundSchema,
   MinuteSchema,
@@ -77,14 +76,8 @@ export const PlayerMatchStatsSchema = z
     injured: z.boolean(),
   })
   .superRefine((s, ctx) => {
-    const expected = buildCardId(s.player_id, s.tournament_id);
-    if ((s.card_id as string) !== expected) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `PlayerMatchStats card_id must equal buildCardId(player_id, tournament_id) = "${expected}"`,
-        path: ["card_id"],
-      });
-    }
+    // try/catch-guarded card_id consistency — never throws out of safeParse.
+    refineCardIdConsistency(s, ctx);
     // shots_on_target cannot exceed shots.
     if (s.shots_on_target > s.shots) {
       ctx.addIssue({
@@ -128,14 +121,8 @@ export const PlayerRunStatsSchema = z
     rating_at_draft: z.number().nullable(),
   })
   .superRefine((s, ctx) => {
-    const expected = buildCardId(s.player_id, s.tournament_id);
-    if ((s.card_id as string) !== expected) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `PlayerRunStats card_id must equal buildCardId(player_id, tournament_id) = "${expected}"`,
-        path: ["card_id"],
-      });
-    }
+    // try/catch-guarded card_id consistency — never throws out of safeParse.
+    refineCardIdConsistency(s, ctx);
     for (let i = 0; i < s.per_match.length; i++) {
       const row = s.per_match[i]!;
       if (

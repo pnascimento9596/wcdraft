@@ -77,7 +77,19 @@ export const SpinSchema = z
           path: ["picked_card_id"],
         });
       }
-      const expected = buildCardId(spin.picked_player_id, spin.tournament_id);
+      // Guard buildCardId so a dirty (e.g. empty) picked_player_id yields a
+      // clean issue instead of an exception escaping safeParse.
+      let expected: string;
+      try {
+        expected = buildCardId(spin.picked_player_id, spin.tournament_id);
+      } catch (err) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `picked_card_id cannot be built from (picked_player_id, tournament_id): ${(err as Error).message}`,
+          path: ["picked_card_id"],
+        });
+        return;
+      }
       if (pickedStr !== expected) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -113,8 +125,19 @@ export const SquadSlotSchema = z
       return;
     }
     if (slot.card_id !== null && slot.player_id !== null && slot.tournament_id !== null) {
-      const expected = buildCardId(slot.player_id, slot.tournament_id);
-      if ((slot.card_id as string) !== expected) {
+      // Guard buildCardId so a dirty (e.g. empty) player_id yields a clean
+      // issue instead of an exception escaping safeParse.
+      let expected: string | null = null;
+      try {
+        expected = buildCardId(slot.player_id, slot.tournament_id);
+      } catch (err) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `slot card_id cannot be built from (player_id, tournament_id): ${(err as Error).message}`,
+          path: ["card_id"],
+        });
+      }
+      if (expected !== null && (slot.card_id as string) !== expected) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `slot card_id must equal buildCardId(player_id, tournament_id) = "${expected}"`,

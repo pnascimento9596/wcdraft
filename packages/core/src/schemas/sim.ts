@@ -34,8 +34,7 @@ import type {
   SubEvent,
   YellowEvent,
 } from "../types/sim.js";
-import { buildCardId } from "../types/identity.js";
-import { CardIdSchema } from "./identity.js";
+import { CardIdSchema, refineCardIdConsistency } from "./identity.js";
 import {
   IntegerRangeSchema,
   MatchPeriodSchema,
@@ -235,16 +234,10 @@ export const MatchLineupEntrySchema = z
     started: z.boolean(),
     minutes: MinuteSchema,
   })
-  .superRefine((entry, ctx) => {
-    const expected = buildCardId(entry.player_id, entry.tournament_id);
-    if ((entry.card_id as string) !== expected) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `lineup card_id must equal buildCardId(player_id, tournament_id) = "${expected}"`,
-        path: ["card_id"],
-      });
-    }
-  }) satisfies z.ZodType<MatchLineupEntry>;
+  // refineCardIdConsistency wraps buildCardId in try/catch so an empty
+  // player_id / non-positive tournament_id yields a clean issue, not an
+  // exception escaping safeParse at the trust boundary.
+  .superRefine(refineCardIdConsistency) satisfies z.ZodType<MatchLineupEntry>;
 
 const KNOCKOUT_ROUNDS = new Set(["R32", "R16", "QF", "SF", "F"] as const);
 const GROUP_ROUNDS = new Set(["G1", "G2", "G3"] as const);
