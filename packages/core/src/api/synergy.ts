@@ -8,11 +8,12 @@
 // integrations against the contract.
 
 import type { ComputeSynergyFn } from "../types/synergy.js";
+import { computeSynergy as computeSynergyImpl } from "../engine/synergy.js";
 
 /**
- * Runtime stub for `computeSynergy`. WS-B replaces the body once the Synergy
- * formula and multiplier bounds are calibrated and locked by golden test.
+ * WS-B Synergy formula (engine body in `../engine/synergy.ts`). The public
+ * binding is narrowed to the 3-arg `ComputeSynergyFn` contract; the engine
+ * function additionally accepts an optional `nationByCardId` lookup (see the
+ * engine contract-gap note) used internally by `runTournament`.
  */
-export const computeSynergy: ComputeSynergyFn = () => {
-  throw new Error("computeSynergy is contract-only in WS-0c; the formula lands in WS-B.");
-};
+export const computeSynergy: ComputeSynergyFn = computeSynergyImpl;

@@ -1,59 +1,179 @@
-import { describe, it } from "vitest";
+import { describe, it, expect } from "vitest";
 
-// GOLDEN INVARIANT (WS-0b contract, WS-B implementation):
-//   A fixed (draft, scenario, seed, all three version anchors) reproduces an
-//   IDENTICAL RunResult — INCLUDING `seed`, `round_results`,
-//   `aggregate.clean_sheets`, `narrative.narrative_seed`, `score`,
-//   `score_breakdown`, and `player_stats`.
+import goldenJson from "../test/fixtures/sim-golden.json" with { type: "json" };
+import { buildScenarioInputs, type ScenarioName } from "../test/fixtures/sim-fixtures.js";
+import { runTournamentFull } from "./engine/tournament.js";
+import { deriveSubseed } from "./rng.js";
+import { MatchResultSchema, RunResultSchema } from "./schemas/index.js";
+import type { RunResult } from "./types/run.js";
+
+// GOLDEN INVARIANT (WS-0b/WS-0c contract, WS-B implementation):
+//   A fixed (draft, scenario, seed, version anchors) reproduces a byte-identical
+//   RunResult — INCLUDING seed, round_results, aggregate.clean_sheets,
+//   narrative.narrative_seed, score, score_breakdown, and player_stats.
 //
-// DETERMINISM INVARIANTS being asserted here (declared on `DraftState` /
-// `RunScenario` / `MatchResult`):
-//   - `seed` is a STRING; PRNG is cyrb128 + sfc32; no Date / Math.random /
-//     crypto / performance / transcendentals anywhere in the sim chain (lint
-//     guard enforces in `packages/core/src` except `rng.ts`).
-//   - Sub-seeds for `match_sim` / `event_gen` / `opponent_selection` /
-//     `narrative` are derived from the run seed via `deriveSubseed` — never
-//     freshly instantiated.
-//   - Sampling pools (event taxonomies, shootout taker order, opponent
-//     selection) are CANONICALLY SORTED via `canonicalSortBy` by stable id
-//     before any draw.
-//   - The score equality `score = sum(score_breakdown[i].points)` is enforced.
-//   - `narrative.narrative_seed === deriveSubseed(seed, "narrative")`.
-//
-// IMPLEMENTATION DEFERRED: the sim + score engine lands in WS-B. Scaffold only.
+// Four characteristic scenarios are locked in `sim-golden.json` (regenerate via
+// `pnpm --filter @wcdraft/core run gen:sim-golden`): blowout, upset,
+// draw-into-pens, injury-cascade. The generator searched a seed exhibiting each
+// shape; the tests below re-run the SAME inputs + recorded seed and assert
+// determinism, schema validity, the score-sum invariant, stat-aggregation
+// coherence, and the narrative-seed lineage.
 
-describe.skip("sim+score — fixed inputs reproduce byte-identical RunResult", () => {
-  it.skip(
-    "same (draft, scenario, seed, dataset_version, rating_version, engine_version) " +
-      "yields deep-equal RunResult including score and breakdown",
-    () => {
-      // FIXTURE TODO (WS-B):
-      //   - Build a fixed DraftState + RunScenario + version anchors.
-      //   - Invoke runTournament twice with the same seed.
-      //   - Assert: the two RunResult objects are deep-equal.
-      //   - Assert: run.score === sum(run.score_breakdown.map(c => c.points)).
-      //   - Assert: per-player aggregates in player_stats match the per-match sums.
-      //   - Assert: run.narrative.narrative_seed === deriveSubseed(run.seed, "narrative").
-    },
-  );
+interface GoldenEntry {
+  name: ScenarioName;
+  seed: string;
+  run: RunResult;
+}
+const GOLDEN = (goldenJson as unknown as { scenarios: GoldenEntry[] }).scenarios;
 
-  it.skip("regulation-vs-ET-vs-shootout fields are mutually exclusive in the documented way", () => {
-    // FIXTURE TODO (WS-B):
-    //   - For a knockout match decided in regulation:
-    //       user_goals_et === null && opp_goals_et === null && shootout === null
-    //   - For a knockout match decided in ET:
-    //       user_goals_et !== null && opp_goals_et !== null && shootout === null
-    //   - For a knockout match decided on penalties:
-    //       user_goals_et !== null && opp_goals_et !== null && shootout !== null
-    //       AND `events` projection of type==='shootout_kick' === shootout.sequence
-    //   - For a group-stage draw:
-    //       outcome === 'D' && shootout === null
+function runFor(name: ScenarioName, seed: string) {
+  const inputs = buildScenarioInputs(name);
+  return runTournamentFull(inputs.draft, inputs.scenario, seed, inputs.world);
+}
+
+describe("sim+score golden — fixed inputs reproduce byte-identical RunResult", () => {
+  it("the four characteristic scenarios are all present", () => {
+    expect(GOLDEN.map((g) => g.name).sort()).toEqual(
+      ["blowout", "draw_into_pens", "injury_cascade", "upset"].sort(),
+    );
   });
 
-  it.skip("undefeated_regulation is FALSE whenever any knockout match required a shootout", () => {
-    // FIXTURE TODO (WS-B):
-    //   - Force a knockout match to go to penalties via the seed.
-    //   - Assert: even if the user wins the shootout
-    //     (counts_as_run_win === true), RunResult.undefeated_regulation is false.
+  for (const entry of GOLDEN) {
+    describe(entry.name, () => {
+      it("re-running the same (draft, scenario, seed) deep-equals the locked golden", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        expect(run).toEqual(entry.run);
+      });
+
+      it("is deterministic — two runs are deep-equal to each other", () => {
+        const a = runFor(entry.name, entry.seed);
+        const b = runFor(entry.name, entry.seed);
+        expect(a.run).toEqual(b.run);
+        expect(a.matches).toEqual(b.matches);
+      });
+
+      it("the RunResult passes the boundary schema", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        const parsed = RunResultSchema.safeParse(run);
+        if (!parsed.success) {
+          throw new Error(`RunResult schema failed: ${JSON.stringify(parsed.error.issues, null, 2)}`);
+        }
+        expect(parsed.success).toBe(true);
+      });
+
+      it("every MatchResult passes the boundary schema", () => {
+        const { matches } = runFor(entry.name, entry.seed);
+        for (const m of matches) {
+          const parsed = MatchResultSchema.safeParse(m);
+          if (!parsed.success) {
+            throw new Error(
+              `MatchResult ${m.match_id} schema failed: ${JSON.stringify(parsed.error.issues, null, 2)}`,
+            );
+          }
+        }
+      });
+
+      it("score === sum(score_breakdown.points)", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        const summed = run.score_breakdown.reduce((a, c) => a + c.points, 0);
+        expect(run.score).toBe(summed);
+        // `===` (not Object.is) — the contract's equality, which treats -0 === 0.
+        for (const c of run.score_breakdown) expect(c.points === c.raw * c.weight).toBe(true);
+      });
+
+      it("player_stats totals equal the per-match sums", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        for (const ps of run.player_stats) {
+          const fields = Object.keys(ps.totals) as Array<keyof typeof ps.totals>;
+          for (const f of fields) {
+            const sum = ps.per_match.reduce((a, pm) => a + (pm[f] as number), 0);
+            expect(ps.totals[f]).toBe(sum);
+          }
+        }
+      });
+
+      it("narrative.narrative_seed === deriveSubseed(seed, 'narrative')", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        expect(run.narrative.narrative_seed).toBe(deriveSubseed(run.seed, "narrative"));
+        expect(run.seed).toBe(entry.seed);
+      });
+
+      it("aggregate top_scorer (if any) is a user-side player with a counting goal", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        const ts = run.aggregate.top_scorer_player_id;
+        if (ts === null) return;
+        const ps = run.player_stats.find((p) => p.player_id === ts);
+        expect(ps).toBeDefined();
+        expect(ps!.totals.goals).toBeGreaterThan(0);
+      });
+    });
+  }
+});
+
+describe("sim golden — scenario shapes are what the names claim", () => {
+  it("blowout: a win by a 4+ goal margin occurred", () => {
+    const { run } = runFor("blowout", GOLDEN.find((g) => g.name === "blowout")!.seed);
+    expect(
+      run.round_results.some((r) => r.outcome === "W" && r.goals_for - r.goals_against >= 4),
+    ).toBe(true);
+  });
+
+  it("upset: the (weak) user XI won at least one knockout match", () => {
+    const { matches } = runFor("upset", GOLDEN.find((g) => g.name === "upset")!.seed);
+    expect(matches.some((m) => m.phase === "knockout" && m.outcome === "W")).toBe(true);
+  });
+
+  it("injury-cascade: ≥2 tournament-ending injuries, each persisting out of later lineups", () => {
+    const { matches } = runFor(
+      "injury_cascade",
+      GOLDEN.find((g) => g.name === "injury_cascade")!.seed,
+    );
+    const ended: Array<{ player_id: string; matchIndex: number }> = [];
+    matches.forEach((m, idx) => {
+      for (const e of m.events) {
+        if (e.type === "injury" && e.tournament_ending) {
+          ended.push({ player_id: e.player_id, matchIndex: idx });
+        }
+      }
+    });
+    expect(ended.length).toBeGreaterThanOrEqual(2);
+    for (const inj of ended) {
+      for (let later = inj.matchIndex + 1; later < matches.length; later++) {
+        const present = matches[later]!.lineup.some(
+          (l) => l.side === "user" && l.player_id === inj.player_id,
+        );
+        expect(present).toBe(false);
+      }
+    }
+  });
+});
+
+describe("sim golden — regulation/ET/shootout fields are mutually exclusive as documented", () => {
+  const pensSeed = () => GOLDEN.find((g) => g.name === "draw_into_pens")!.seed;
+
+  it("a shootout match has ET non-null, shootout non-null, and a matching kick projection", () => {
+    const { matches } = runFor("draw_into_pens", pensSeed());
+    const so = matches.find((m) => m.shootout !== null);
+    expect(so).toBeDefined();
+    expect(so!.phase).toBe("knockout");
+    expect(so!.user_goals_et).not.toBeNull();
+    expect(so!.opp_goals_et).not.toBeNull();
+    const kicks = so!.events.filter((e) => e.type === "shootout_kick");
+    expect(kicks.length).toBe(so!.shootout!.sequence.length);
+  });
+
+  it("group-stage matches never carry ET or shootout", () => {
+    const { matches } = runFor("draw_into_pens", pensSeed());
+    for (const m of matches.filter((x) => x.phase === "group")) {
+      expect(m.user_goals_et).toBeNull();
+      expect(m.opp_goals_et).toBeNull();
+      expect(m.shootout).toBeNull();
+    }
+  });
+
+  it("undefeated_regulation is FALSE when any knockout match required a shootout", () => {
+    const { run, matches } = runFor("draw_into_pens", pensSeed());
+    expect(matches.some((m) => m.shootout !== null)).toBe(true);
+    expect(run.undefeated_regulation).toBe(false);
   });
 });

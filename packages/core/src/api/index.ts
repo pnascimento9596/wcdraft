@@ -1,8 +1,8 @@
 // Barrel for the wcdraft data-contract function-signature layer.
-// Implementations land in Phase 1 workstreams (WS-B for sim/score, WS-E for
-// narrative). The runtime exports here are typed "not implemented" stubs.
+// WS-B implements sim / score (engine bodies under `../engine/*`); narrative
+// stays a typed stub until WS-E.
 
-export type { UserXiSimView, SimulateMatchFn, RunTournamentFn } from "./sim.js";
+export type { UserXiSimView, SimulateMatchFn, RunTournamentFn, SimWorld } from "./sim.js";
 export { simulateMatch, runTournament } from "./sim.js";
 
 export type { ComputeScoreFn, ResolveTopScorerFn } from "./scoring.js";
