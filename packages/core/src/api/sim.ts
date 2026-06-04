@@ -1,0 +1,74 @@
+// Function signatures for the sim engine.
+//
+// CONTRACT-ONLY: implementations land in WS-B. The runtime stubs throw.
+// The TYPE signatures here are authoritative and consumed by WS-B / WS-C / WS-D.
+
+import type { DraftState } from "../types/draft.js";
+import type { MatchResult } from "../types/sim.js";
+import type { MatchRound } from "../types/primitives.js";
+import type { Rating, TeamStrength } from "../types/rating.js";
+import type { RunResult } from "../types/run.js";
+import type { RunScenario, Team2026 } from "../types/tournament.js";
+
+/**
+ * Minimal sim-side view of the user XI — the four channels per assigned card
+ * plus the squad aggregate. Distilled from the DraftState's assigned starters
+ * + bench cards by the rating engine prior to invoking `simulateMatch`.
+ *
+ * The sim consumes ONLY this view; it must never reach back into raw cards.
+ */
+export interface UserXiSimView {
+  /** Source DraftState; carried through for replay anchors. */
+  draft_id: string;
+  /** Per-card ratings for the 11 starters + 5 bench cards. */
+  squad_ratings: Rating[];
+  /** Aggregate strength derived by the same engine that produces per-card Ratings. */
+  aggregate: TeamStrength;
+}
+
+/**
+ * Simulate one match between the user XI and a real 2026 opponent.
+ *
+ * DETERMINISM CONTRACT:
+ *  - `seed` is the STRING match-sim sub-seed (derived from the run seed +
+ *    match_index). NEVER a fresh RNG.
+ *  - Any sampling pool inside the sim (rolled events, ET probability,
+ *    shootout taker order) MUST be canonically sorted by stable id before any
+ *    draw — the invariant lives at the sampling site, but is restated here
+ *    for reviewers.
+ *  - The same (userTeam, opponent, round, seed) → byte-identical MatchResult.
+ */
+export type SimulateMatchFn = (
+  userTeam: UserXiSimView,
+  opponent: Team2026,
+  round: MatchRound,
+  seed: string,
+) => MatchResult;
+
+/**
+ * Run a full eight-match tournament path for a draft + scenario.
+ *
+ * DETERMINISM CONTRACT:
+ *  - `seed` is the STRING run seed; the implementation derives per-substream
+ *    sub-seeds (match-sim / event-gen / opponent-selection / narrative) from
+ *    it — never instantiates a fresh RNG.
+ *  - Returns a fully-derived `RunResult` including stats + score; the caller
+ *    does not need to invoke `computeScore` or the narrative reducer
+ *    separately for persistence.
+ *  - Same (draft, scenario, seed, version anchors) → byte-identical RunResult.
+ */
+export type RunTournamentFn = (draft: DraftState, scenario: RunScenario, seed: string) => RunResult;
+
+/**
+ * Runtime stub for `simulateMatch`. WS-B replaces this body.
+ */
+export const simulateMatch: SimulateMatchFn = () => {
+  throw new Error("simulateMatch is contract-only in WS-0b; the algorithm lands in WS-B.");
+};
+
+/**
+ * Runtime stub for `runTournament`. WS-B replaces this body.
+ */
+export const runTournament: RunTournamentFn = () => {
+  throw new Error("runTournament is contract-only in WS-0b; the algorithm lands in WS-B.");
+};
