@@ -103,10 +103,10 @@ AWARD_WEIGHT: dict[str, float] = {"FW": 0.20, "MF": 0.22, "DF": 0.18, "GK": 0.22
 FINISH_WEIGHT: dict[str, float] = {"FW": 0.16, "MF": 0.16, "DF": 0.24, "GK": 0.28}
 
 # Replacement-level base in [0,1] used (a) as the off-position channel floor,
-# (b) as the FLOOR of the performance base scale, and (c) as the channel base for
-# a card with no individual performance signal, so a sim-consumed channel is
-# never a degenerate 0. It is DISPLAY-independent: a no-signal card still reports
-# overall = null even though its channels are floored.
+# (b) as the FLOOR of the performance base scale, and (c) as the base for a card
+# with no individual performance signal — so such a card's overall is an honest
+# baseline+anchor ESTIMATE (flagged overall_basis="baseline_anchor_estimate"),
+# not a fabricated box score and not a withheld null.
 REPLACEMENT_BASE = 0.20
 FLOOR_CHANNEL = round(REPLACEMENT_BASE * 100)  # 20
 

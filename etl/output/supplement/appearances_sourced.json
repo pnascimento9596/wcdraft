@@ -1280,7 +1280,7 @@
     "tournament_id": "WC-1930"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-07282:WC-1958",
     "method": "surname",
@@ -1770,7 +1770,7 @@
     "tournament_id": "WC-1954"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-10604:WC-1930",
     "method": "surname",
@@ -2780,6 +2780,16 @@
     "tournament_id": "WC-1954"
   },
   {
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
+    "card_id": "P-16891:WC-1930",
+    "method": "surname",
+    "nation_id": "T-06",
+    "player_id": "P-16891",
+    "source_url": "https://www.rsssf.org/tables/30full.html",
+    "tournament_id": "WC-1930"
+  },
+  {
     "appearances": 1,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-16965:WC-1934",
@@ -3080,7 +3090,7 @@
     "tournament_id": "WC-1930"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-19215:WC-1958",
     "method": "surname",
@@ -3580,10 +3590,10 @@
     "tournament_id": "WC-1950"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-22131:WC-1950",
-    "method": "surname",
+    "method": "demerged",
     "nation_id": "T-46",
     "player_id": "P-22131",
     "source_url": "https://www.rsssf.org/tables/50full.html",
@@ -4200,7 +4210,7 @@
     "tournament_id": "WC-1962"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-25760:WC-1930",
     "method": "surname",
@@ -6970,10 +6980,10 @@
     "tournament_id": "WC-1930"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-44601:WC-1950",
-    "method": "surname",
+    "method": "demerged",
     "nation_id": "T-46",
     "player_id": "P-44601",
     "source_url": "https://www.rsssf.org/tables/50full.html",
@@ -7150,6 +7160,16 @@
     "tournament_id": "WC-1962"
   },
   {
+    "appearances": 1,
+    "appearances_source": "rsssf_starting_xi",
+    "card_id": "P-45315:WC-1930",
+    "method": "surname",
+    "nation_id": "T-06",
+    "player_id": "P-45315",
+    "source_url": "https://www.rsssf.org/tables/30full.html",
+    "tournament_id": "WC-1930"
+  },
+  {
     "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-45404:WC-1958",
@@ -7260,7 +7280,7 @@
     "tournament_id": "WC-1950"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-46390:WC-1930",
     "method": "surname",
@@ -9510,7 +9530,7 @@
     "tournament_id": "WC-1938"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-60620:WC-1930",
     "method": "surname",
@@ -10920,6 +10940,16 @@
     "tournament_id": "WC-1930"
   },
   {
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
+    "card_id": "P-69286:WC-1930",
+    "method": "surname",
+    "nation_id": "T-06",
+    "player_id": "P-69286",
+    "source_url": "https://www.rsssf.org/tables/30full.html",
+    "tournament_id": "WC-1930"
+  },
+  {
     "appearances": 1,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-69289:WC-1966",
@@ -11650,7 +11680,7 @@
     "tournament_id": "WC-1950"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-73743:WC-1950",
     "method": "surname",
@@ -11770,7 +11800,7 @@
     "tournament_id": "WC-1966"
   },
   {
-    "appearances": 1,
+    "appearances": 2,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-74839:WC-1930",
     "method": "surname",
@@ -13512,6 +13542,16 @@
   {
     "appearances": 1,
     "appearances_source": "rsssf_starting_xi",
+    "card_id": "P-85443:WC-1930",
+    "method": "surname",
+    "nation_id": "T-06",
+    "player_id": "P-85443",
+    "source_url": "https://www.rsssf.org/tables/30full.html",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "appearances": 1,
+    "appearances_source": "rsssf_starting_xi",
     "card_id": "P-85443:WC-1934",
     "method": "surname",
     "nation_id": "T-06",
@@ -14110,7 +14150,7 @@
     "tournament_id": "WC-1966"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-89688:WC-1930",
     "method": "surname",
@@ -14370,7 +14410,7 @@
     "tournament_id": "WC-1966"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-91238:WC-1930",
     "method": "surname",
@@ -14648,6 +14688,16 @@
     "player_id": "P-92780",
     "source_url": "https://www.rsssf.org/tables/50full.html",
     "tournament_id": "WC-1950"
+  },
+  {
+    "appearances": 2,
+    "appearances_source": "rsssf_starting_xi",
+    "card_id": "P-92795:WC-1930",
+    "method": "surname",
+    "nation_id": "T-06",
+    "player_id": "P-92795",
+    "source_url": "https://www.rsssf.org/tables/30full.html",
+    "tournament_id": "WC-1930"
   },
   {
     "appearances": 3,
@@ -15580,7 +15630,7 @@
     "tournament_id": "WC-1954"
   },
   {
-    "appearances": 2,
+    "appearances": 3,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-99087:WC-1930",
     "method": "surname",
@@ -15660,10 +15710,10 @@
     "tournament_id": "WC-1930"
   },
   {
-    "appearances": 3,
+    "appearances": 4,
     "appearances_source": "rsssf_starting_xi",
     "card_id": "P-99436:WC-1950",
-    "method": "surname",
+    "method": "demerged",
     "nation_id": "T-09",
     "player_id": "P-99436",
     "source_url": "https://www.rsssf.org/tables/50full.html",

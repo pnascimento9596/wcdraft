@@ -1029,7 +1029,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -1045,7 +1045,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 28,
     "goalkeeping": 20,
     "midfield": 37,
     "overall": 48,
@@ -1653,7 +1653,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -1845,7 +1845,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -1863,8 +1863,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-00369",
     "provenance": "wc_performance",
@@ -3717,7 +3717,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -3735,8 +3735,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-00708",
     "provenance": "wc_performance",
@@ -6021,7 +6021,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -11397,7 +11397,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -11415,7 +11415,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-02281",
@@ -12501,7 +12501,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -12519,8 +12519,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-02455",
     "provenance": "wc_performance",
@@ -15093,7 +15093,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -21237,7 +21237,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -23425,7 +23425,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-04538:WC-1958",
     "components": [
       {
@@ -23445,7 +23445,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -23464,7 +23464,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-04538",
     "provenance": "wc_performance",
@@ -23809,7 +23809,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-04623:WC-1930",
     "components": [
       {
@@ -23829,7 +23829,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -26757,7 +26757,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -28197,7 +28197,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -32805,7 +32805,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -33957,7 +33957,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -37893,7 +37893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -37909,10 +37909,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-07122",
     "provenance": "wc_performance",
@@ -38881,7 +38881,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 48,
+    "attack": 50,
     "card_id": "P-07282:WC-1958",
     "components": [
       {
@@ -38891,7 +38891,7 @@
       },
       {
         "signal": "appearances",
-        "value": 1,
+        "value": 2,
         "weight": 0.0
       },
       {
@@ -38901,7 +38901,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -38917,10 +38917,10 @@
     ],
     "coverage": 1.0,
     "coverage_basis": "wc_signals",
-    "defense": 28,
+    "defense": 29,
     "goalkeeping": 20,
-    "midfield": 37,
-    "overall": 48,
+    "midfield": 38,
+    "overall": 50,
     "overall_basis": "measured_performance",
     "player_id": "P-07282",
     "provenance": "wc_performance",
@@ -40053,7 +40053,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -40071,8 +40071,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-07526",
     "provenance": "wc_performance",
@@ -40773,7 +40773,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -42405,7 +42405,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -42423,8 +42423,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-07972",
     "provenance": "wc_performance",
@@ -43557,7 +43557,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -44257,7 +44257,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-08340:WC-1958",
     "components": [
       {
@@ -44277,7 +44277,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -44296,7 +44296,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-08340",
     "provenance": "wc_performance",
@@ -44661,7 +44661,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -44757,7 +44757,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -44773,7 +44773,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 33,
+    "defense": 32,
     "goalkeeping": 20,
     "midfield": 45,
     "overall": 62,
@@ -44997,7 +44997,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -45265,7 +45265,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-08566:WC-1930",
     "components": [
       {
@@ -45285,7 +45285,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -45301,10 +45301,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-08566",
     "provenance": "wc_performance",
@@ -46581,7 +46581,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -46599,8 +46599,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-08814",
     "provenance": "wc_performance",
@@ -55893,7 +55893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -55911,7 +55911,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-10526",
@@ -56401,7 +56401,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 35,
+    "attack": 40,
     "card_id": "P-10604:WC-1930",
     "components": [
       {
@@ -56411,7 +56411,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -56421,7 +56421,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -56437,10 +56437,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 34,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-10604",
     "provenance": "wc_performance",
@@ -58321,7 +58321,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-10927:WC-1930",
     "components": [
       {
@@ -58341,7 +58341,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -58357,10 +58357,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-10927",
     "provenance": "wc_performance",
@@ -58917,7 +58917,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -58933,10 +58933,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-11035",
     "provenance": "wc_performance",
@@ -59253,7 +59253,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -62037,7 +62037,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -68181,7 +68181,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -71253,7 +71253,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -71271,7 +71271,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-13299",
@@ -76533,7 +76533,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -83041,7 +83041,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 40,
+    "attack": 39,
     "card_id": "P-15806:WC-1950",
     "components": [
       {
@@ -83061,7 +83061,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -83080,7 +83080,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 32,
-    "overall": 40,
+    "overall": 39,
     "overall_basis": "measured_performance",
     "player_id": "P-15806",
     "provenance": "wc_performance",
@@ -83301,7 +83301,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -84501,7 +84501,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -85989,7 +85989,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -86737,7 +86737,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-16445:WC-1958",
     "components": [
       {
@@ -86757,7 +86757,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -86776,7 +86776,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-16445",
     "provenance": "wc_performance",
@@ -88704,8 +88704,8 @@
     "tournament_id": "WC-1982"
   },
   {
-    "appearances_source": null,
-    "attack": 37,
+    "appearances_source": "rsssf_starting_xi",
+    "attack": 38,
     "card_id": "P-16891:WC-1930",
     "components": [
       {
@@ -88715,18 +88715,18 @@
       },
       {
         "signal": "appearances",
-        "value": null,
+        "value": 2,
         "weight": 0.0
       },
       {
         "signal": "goals_percentile",
         "value": 0.34434,
-        "weight": 1.0
+        "weight": 0.75
       },
       {
         "signal": "appearances_percentile",
-        "value": null,
-        "weight": 0.0
+        "value": 0.474359,
+        "weight": 0.25
       },
       {
         "signal": "award_score",
@@ -88739,12 +88739,12 @@
         "weight": 0.16
       }
     ],
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "coverage_basis": "wc_signals",
     "defense": 25,
     "goalkeeping": 20,
-    "midfield": 30,
-    "overall": 37,
+    "midfield": 31,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-16891",
     "provenance": "wc_performance",
@@ -90501,7 +90501,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -91749,7 +91749,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -91893,7 +91893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -92805,7 +92805,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -95973,7 +95973,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -96789,7 +96789,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -96885,7 +96885,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -99429,7 +99429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -99553,7 +99553,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 50,
+    "attack": 53,
     "card_id": "P-19215:WC-1958",
     "components": [
       {
@@ -99563,7 +99563,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -99573,7 +99573,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -99589,10 +99589,10 @@
     ],
     "coverage": 1.0,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 30,
     "goalkeeping": 20,
-    "midfield": 38,
-    "overall": 50,
+    "midfield": 40,
+    "overall": 53,
     "overall_basis": "measured_performance",
     "player_id": "P-19215",
     "provenance": "wc_performance",
@@ -102501,7 +102501,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -102549,7 +102549,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -106245,7 +106245,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -106389,7 +106389,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -106407,8 +106407,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-20672",
     "provenance": "wc_performance",
@@ -107013,7 +107013,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -109509,7 +109509,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -109527,7 +109527,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-21313",
@@ -109845,7 +109845,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -111765,7 +111765,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -111783,7 +111783,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-21707",
@@ -111861,7 +111861,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -114289,7 +114289,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 52,
+    "attack": 55,
     "card_id": "P-22131:WC-1950",
     "components": [
       {
@@ -114299,7 +114299,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -114309,7 +114309,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -114327,8 +114327,8 @@
     "coverage_basis": "wc_signals",
     "defense": 30,
     "goalkeeping": 20,
-    "midfield": 39,
-    "overall": 52,
+    "midfield": 41,
+    "overall": 55,
     "overall_basis": "measured_performance",
     "player_id": "P-22131",
     "provenance": "wc_performance",
@@ -115077,7 +115077,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -115845,7 +115845,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -116469,7 +116469,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -116881,7 +116881,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-22493:WC-1930",
     "components": [
       {
@@ -116901,7 +116901,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -117573,7 +117573,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -117957,7 +117957,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -118965,7 +118965,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -118981,10 +118981,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-22907",
     "provenance": "wc_performance",
@@ -123381,7 +123381,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -125061,7 +125061,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -126741,7 +126741,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -131857,7 +131857,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 55,
+    "attack": 58,
     "card_id": "P-25760:WC-1930",
     "components": [
       {
@@ -131867,7 +131867,7 @@
       },
       {
         "signal": "appearances",
-        "value": 3,
+        "value": 4,
         "weight": 0.0
       },
       {
@@ -131877,7 +131877,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.939024,
         "weight": 0.6
       },
       {
@@ -131893,10 +131893,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 52,
+    "defense": 55,
     "goalkeeping": 20,
-    "midfield": 73,
-    "overall": 73,
+    "midfield": 78,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-25760",
     "provenance": "wc_performance",
@@ -132837,7 +132837,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -137109,7 +137109,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -138357,7 +138357,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -139125,7 +139125,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -140901,7 +140901,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -142005,7 +142005,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -142225,7 +142225,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-27752:WC-1930",
     "components": [
       {
@@ -142245,7 +142245,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -145413,7 +145413,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -145461,7 +145461,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -147573,7 +147573,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -147591,8 +147591,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-28795",
     "provenance": "wc_performance",
@@ -147717,7 +147717,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -148101,7 +148101,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -153669,7 +153669,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -153685,10 +153685,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-29865",
     "provenance": "wc_performance",
@@ -156577,7 +156577,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 52,
+    "attack": 51,
     "card_id": "P-30543:WC-1930",
     "components": [
       {
@@ -156597,7 +156597,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.95,
+        "value": 0.939024,
         "weight": 0.6
       },
       {
@@ -156615,8 +156615,8 @@
     "coverage_basis": "wc_signals",
     "defense": 49,
     "goalkeeping": 20,
-    "midfield": 69,
-    "overall": 69,
+    "midfield": 68,
+    "overall": 68,
     "overall_basis": "measured_performance",
     "player_id": "P-30543",
     "provenance": "wc_performance",
@@ -157653,7 +157653,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -157893,7 +157893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -157911,8 +157911,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-30741",
     "provenance": "wc_performance",
@@ -159429,7 +159429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -161925,7 +161925,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -161941,7 +161941,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -162117,7 +162117,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -163893,7 +163893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -166149,7 +166149,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -170209,7 +170209,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 49,
+    "attack": 48,
     "card_id": "P-33095:WC-1950",
     "components": [
       {
@@ -170229,7 +170229,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -170245,10 +170245,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 28,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-33095",
     "provenance": "wc_performance",
@@ -172677,7 +172677,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -173349,7 +173349,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -173367,7 +173367,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-33635",
@@ -173685,7 +173685,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -173733,7 +173733,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -174357,7 +174357,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -174375,8 +174375,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-33814",
     "provenance": "wc_performance",
@@ -175249,7 +175249,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-34086:WC-1958",
     "components": [
       {
@@ -175269,7 +175269,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -175288,7 +175288,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-34086",
     "provenance": "wc_performance",
@@ -183669,7 +183669,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -185157,7 +185157,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -185175,8 +185175,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-35875",
     "provenance": "wc_performance",
@@ -185329,7 +185329,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-35894:WC-1958",
     "components": [
       {
@@ -185349,7 +185349,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -185368,7 +185368,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-35894",
     "provenance": "wc_performance",
@@ -186289,7 +186289,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-36108:WC-1958",
     "components": [
       {
@@ -186309,7 +186309,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -186328,7 +186328,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-36108",
     "provenance": "wc_performance",
@@ -187413,7 +187413,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -187461,7 +187461,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -188037,7 +188037,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -188055,8 +188055,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-36379",
     "provenance": "wc_performance",
@@ -190197,7 +190197,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -190213,10 +190213,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-36835",
     "provenance": "wc_performance",
@@ -192837,7 +192837,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -192855,8 +192855,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-37309",
     "provenance": "wc_performance",
@@ -192981,7 +192981,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -193125,7 +193125,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -193893,7 +193893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -193909,7 +193909,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -198453,7 +198453,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -198471,7 +198471,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-38379",
@@ -199077,7 +199077,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -199095,8 +199095,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-38495",
     "provenance": "wc_performance",
@@ -199941,7 +199941,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -200853,7 +200853,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -206949,7 +206949,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.95,
+        "value": 0.939024,
         "weight": 0.6
       },
       {
@@ -206965,10 +206965,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 52,
+    "defense": 51,
     "goalkeeping": 20,
-    "midfield": 73,
-    "overall": 73,
+    "midfield": 72,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-39785",
     "provenance": "wc_performance",
@@ -210837,7 +210837,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -210855,8 +210855,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-40714",
     "provenance": "wc_performance",
@@ -214945,7 +214945,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-41710:WC-1930",
     "components": [
       {
@@ -214965,7 +214965,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -215637,7 +215637,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -216097,7 +216097,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-41910:WC-1930",
     "components": [
       {
@@ -216117,7 +216117,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -216165,7 +216165,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -216213,7 +216213,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -216231,8 +216231,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-41928",
     "provenance": "wc_performance",
@@ -224181,7 +224181,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -226197,7 +226197,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -226821,7 +226821,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -227349,7 +227349,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -227829,7 +227829,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -228117,7 +228117,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -228789,7 +228789,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -230709,7 +230709,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -230725,10 +230725,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-44475",
     "provenance": "wc_performance",
@@ -231025,7 +231025,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 33,
+    "attack": 37,
     "card_id": "P-44601:WC-1950",
     "components": [
       {
@@ -231035,7 +231035,7 @@
       },
       {
         "signal": "appearances",
-        "value": 1,
+        "value": 2,
         "weight": 0.0
       },
       {
@@ -231045,7 +231045,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -231061,10 +231061,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 24,
+    "defense": 25,
     "goalkeeping": 20,
-    "midfield": 28,
-    "overall": 33,
+    "midfield": 30,
+    "overall": 37,
     "overall_basis": "measured_performance",
     "player_id": "P-44601",
     "provenance": "wc_performance",
@@ -232821,7 +232821,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -232837,7 +232837,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 33,
+    "defense": 32,
     "goalkeeping": 20,
     "midfield": 45,
     "overall": 62,
@@ -234069,7 +234069,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -235248,8 +235248,8 @@
     "tournament_id": "WC-1962"
   },
   {
-    "appearances_source": null,
-    "attack": 35,
+    "appearances_source": "rsssf_starting_xi",
+    "attack": 29,
     "card_id": "P-45315:WC-1930",
     "components": [
       {
@@ -235259,18 +235259,18 @@
       },
       {
         "signal": "appearances",
-        "value": null,
+        "value": 1,
         "weight": 0.0
       },
       {
         "signal": "goals_percentile",
         "value": 0.484375,
-        "weight": 1.0
+        "weight": 0.4
       },
       {
         "signal": "appearances_percentile",
-        "value": null,
-        "weight": 0.0
+        "value": 0.182927,
+        "weight": 0.6
       },
       {
         "signal": "award_score",
@@ -235283,12 +235283,12 @@
         "weight": 0.16
       }
     ],
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 34,
+    "defense": 29,
     "goalkeeping": 20,
-    "midfield": 43,
-    "overall": 43,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-45315",
     "provenance": "wc_performance",
@@ -235557,7 +235557,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -237361,7 +237361,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-45721:WC-1958",
     "components": [
       {
@@ -237381,7 +237381,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -237400,7 +237400,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-45721",
     "provenance": "wc_performance",
@@ -240769,7 +240769,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 30,
     "card_id": "P-46390:WC-1930",
     "components": [
       {
@@ -240779,7 +240779,7 @@
       },
       {
         "signal": "appearances",
-        "value": 1,
+        "value": 2,
         "weight": 0.0
       },
       {
@@ -240789,7 +240789,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -240805,10 +240805,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 48,
     "goalkeeping": 20,
-    "midfield": 26,
-    "overall": 30,
+    "midfield": 37,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-46390",
     "provenance": "wc_performance",
@@ -244629,7 +244629,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -245973,7 +245973,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -250293,7 +250293,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -250311,7 +250311,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-48216",
@@ -251137,7 +251137,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-48345:WC-1930",
     "components": [
       {
@@ -251157,7 +251157,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -251173,10 +251173,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-48345",
     "provenance": "wc_performance",
@@ -256945,7 +256945,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-49150:WC-1930",
     "components": [
       {
@@ -256965,7 +256965,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -256981,10 +256981,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 73,
+    "defense": 72,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 73,
+    "midfield": 51,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-49150",
     "provenance": "wc_performance",
@@ -257521,7 +257521,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-49261:WC-1930",
     "components": [
       {
@@ -257541,7 +257541,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -257557,10 +257557,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-49261",
     "provenance": "wc_performance",
@@ -259029,7 +259029,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -260421,7 +260421,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -260437,7 +260437,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -265701,7 +265701,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -265749,7 +265749,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -268101,7 +268101,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -268917,7 +268917,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -269157,7 +269157,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -269541,7 +269541,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -269559,7 +269559,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-51624",
@@ -270865,7 +270865,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-51872:WC-1930",
     "components": [
       {
@@ -270885,7 +270885,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -273429,7 +273429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -273445,10 +273445,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-52323",
     "provenance": "wc_performance",
@@ -281493,7 +281493,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -282885,7 +282885,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.95,
+        "value": 0.939024,
         "weight": 0.6
       },
       {
@@ -282901,10 +282901,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 52,
+    "defense": 51,
     "goalkeeping": 20,
-    "midfield": 73,
-    "overall": 73,
+    "midfield": 72,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-53856",
     "provenance": "wc_performance",
@@ -283077,7 +283077,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -283095,8 +283095,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-53878",
     "provenance": "wc_performance",
@@ -285045,7 +285045,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -285429,7 +285429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -285445,10 +285445,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-54301",
     "provenance": "wc_performance",
@@ -287061,7 +287061,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -287079,7 +287079,7 @@
     "coverage_basis": "wc_signals",
     "defense": 36,
     "goalkeeping": 20,
-    "midfield": 53,
+    "midfield": 52,
     "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-54697",
@@ -296037,7 +296037,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -296053,7 +296053,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -296229,7 +296229,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -300933,7 +300933,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -301605,7 +301605,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -306261,7 +306261,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -306279,8 +306279,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-58196",
     "provenance": "wc_performance",
@@ -308997,7 +308997,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -309477,7 +309477,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -311713,7 +311713,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 61,
+    "attack": 60,
     "card_id": "P-59295:WC-1950",
     "components": [
       {
@@ -311733,7 +311733,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -311752,7 +311752,7 @@
     "defense": 32,
     "goalkeeping": 20,
     "midfield": 44,
-    "overall": 61,
+    "overall": 60,
     "overall_basis": "measured_performance",
     "player_id": "P-59295",
     "provenance": "wc_performance",
@@ -311781,7 +311781,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -317157,7 +317157,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -317175,7 +317175,7 @@
     "coverage_basis": "wc_signals",
     "defense": 31,
     "goalkeeping": 20,
-    "midfield": 41,
+    "midfield": 42,
     "overall": 56,
     "overall_basis": "measured_performance",
     "player_id": "P-60505",
@@ -317953,7 +317953,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 54,
+    "attack": 58,
     "card_id": "P-60620:WC-1930",
     "components": [
       {
@@ -317963,7 +317963,7 @@
       },
       {
         "signal": "appearances",
-        "value": 1,
+        "value": 2,
         "weight": 0.0
       },
       {
@@ -317973,7 +317973,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -317989,10 +317989,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 31,
     "goalkeeping": 20,
-    "midfield": 41,
-    "overall": 54,
+    "midfield": 43,
+    "overall": 58,
     "overall_basis": "measured_performance",
     "player_id": "P-60620",
     "provenance": "wc_performance",
@@ -321717,7 +321717,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -321735,8 +321735,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-61253",
     "provenance": "wc_performance",
@@ -322245,7 +322245,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -322261,7 +322261,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 33,
+    "defense": 32,
     "goalkeeping": 20,
     "midfield": 45,
     "overall": 62,
@@ -323781,7 +323781,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -326421,7 +326421,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -328053,7 +328053,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -328069,10 +328069,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-62376",
     "provenance": "wc_performance",
@@ -329301,7 +329301,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -329973,7 +329973,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -329991,8 +329991,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-62751",
     "provenance": "wc_performance",
@@ -330405,7 +330405,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -330741,7 +330741,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -334773,7 +334773,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.95,
+        "value": 0.939024,
         "weight": 0.6
       },
       {
@@ -334789,10 +334789,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 52,
+    "defense": 51,
     "goalkeeping": 20,
-    "midfield": 73,
-    "overall": 73,
+    "midfield": 72,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-63826",
     "provenance": "wc_performance",
@@ -336021,7 +336021,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -336039,8 +336039,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-64036",
     "provenance": "wc_performance",
@@ -339765,7 +339765,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -340293,7 +340293,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -340311,7 +340311,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-64697",
@@ -342837,7 +342837,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -343269,7 +343269,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -344373,7 +344373,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -344517,7 +344517,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -344535,8 +344535,8 @@
     "coverage_basis": "wc_signals",
     "defense": 29,
     "goalkeeping": 20,
-    "midfield": 34,
-    "overall": 34,
+    "midfield": 35,
+    "overall": 35,
     "overall_basis": "measured_performance",
     "player_id": "P-65504",
     "provenance": "wc_performance",
@@ -345477,7 +345477,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -350785,7 +350785,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-66691:WC-1930",
     "components": [
       {
@@ -350805,7 +350805,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -353349,7 +353349,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -354097,7 +354097,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-67332:WC-1930",
     "components": [
       {
@@ -354117,7 +354117,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -355873,7 +355873,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-67694:WC-1958",
     "components": [
       {
@@ -355893,7 +355893,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -355912,7 +355912,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-67694",
     "provenance": "wc_performance",
@@ -363456,8 +363456,8 @@
     "tournament_id": "WC-2010"
   },
   {
-    "appearances_source": null,
-    "attack": 37,
+    "appearances_source": "rsssf_starting_xi",
+    "attack": 38,
     "card_id": "P-69286:WC-1930",
     "components": [
       {
@@ -363467,18 +363467,18 @@
       },
       {
         "signal": "appearances",
-        "value": null,
+        "value": 2,
         "weight": 0.0
       },
       {
         "signal": "goals_percentile",
         "value": 0.34434,
-        "weight": 1.0
+        "weight": 0.75
       },
       {
         "signal": "appearances_percentile",
-        "value": null,
-        "weight": 0.0
+        "value": 0.474359,
+        "weight": 0.25
       },
       {
         "signal": "award_score",
@@ -363491,12 +363491,12 @@
         "weight": 0.16
       }
     ],
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "coverage_basis": "wc_signals",
     "defense": 25,
     "goalkeeping": 20,
-    "midfield": 30,
-    "overall": 37,
+    "midfield": 31,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-69286",
     "provenance": "wc_performance",
@@ -366309,7 +366309,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -367221,7 +367221,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -367237,10 +367237,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-69877",
     "provenance": "wc_performance",
@@ -367269,7 +367269,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -369093,7 +369093,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.952703,
+        "value": 0.955128,
         "weight": 0.25
       },
       {
@@ -369813,7 +369813,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -376389,7 +376389,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -376405,7 +376405,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -377589,7 +377589,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -378645,7 +378645,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -378789,7 +378789,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -379269,7 +379269,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -383041,7 +383041,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 45,
+    "attack": 44,
     "card_id": "P-72808:WC-1930",
     "components": [
       {
@@ -383061,7 +383061,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -383077,10 +383077,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 43,
+    "defense": 42,
     "goalkeeping": 20,
-    "midfield": 58,
-    "overall": 58,
+    "midfield": 57,
+    "overall": 57,
     "overall_basis": "measured_performance",
     "player_id": "P-72808",
     "provenance": "wc_performance",
@@ -383829,7 +383829,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -385989,7 +385989,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -387237,7 +387237,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -387361,7 +387361,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 72,
+    "attack": 74,
     "card_id": "P-73743:WC-1950",
     "components": [
       {
@@ -387371,7 +387371,7 @@
       },
       {
         "signal": "appearances",
-        "value": 3,
+        "value": 4,
         "weight": 0.0
       },
       {
@@ -387381,7 +387381,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -387399,8 +387399,8 @@
     "coverage_basis": "wc_signals",
     "defense": 36,
     "goalkeeping": 20,
-    "midfield": 51,
-    "overall": 72,
+    "midfield": 52,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-73743",
     "provenance": "wc_performance",
@@ -392449,7 +392449,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 34,
+    "attack": 38,
     "card_id": "P-74839:WC-1930",
     "components": [
       {
@@ -392459,7 +392459,7 @@
       },
       {
         "signal": "appearances",
-        "value": 1,
+        "value": 2,
         "weight": 0.0
       },
       {
@@ -392469,7 +392469,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -392485,10 +392485,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 24,
+    "defense": 25,
     "goalkeeping": 20,
-    "midfield": 29,
-    "overall": 34,
+    "midfield": 31,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-74839",
     "provenance": "wc_performance",
@@ -393813,7 +393813,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -394293,7 +394293,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -394965,7 +394965,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -397557,7 +397557,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -400945,7 +400945,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 43,
+    "attack": 44,
     "card_id": "P-76546:WC-1930",
     "components": [
       {
@@ -400965,7 +400965,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.175,
+        "value": 0.182927,
         "weight": 0.6
       },
       {
@@ -406033,7 +406033,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-77346:WC-1958",
     "components": [
       {
@@ -406053,7 +406053,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -406072,7 +406072,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-77346",
     "provenance": "wc_performance",
@@ -411765,7 +411765,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -415777,7 +415777,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-79204:WC-1958",
     "components": [
       {
@@ -415797,7 +415797,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -415816,7 +415816,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-79204",
     "provenance": "wc_performance",
@@ -417141,7 +417141,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -417157,10 +417157,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-79515",
     "provenance": "wc_performance",
@@ -422421,7 +422421,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -424389,7 +424389,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -424437,7 +424437,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -424453,7 +424453,7 @@
     ],
     "coverage": 1.0,
     "coverage_basis": "wc_signals",
-    "defense": 28,
+    "defense": 27,
     "goalkeeping": 20,
     "midfield": 35,
     "overall": 45,
@@ -425137,7 +425137,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-81166:WC-1930",
     "components": [
       {
@@ -425157,7 +425157,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -428017,7 +428017,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 46,
+    "attack": 45,
     "card_id": "P-81653:WC-1950",
     "components": [
       {
@@ -428037,7 +428037,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -428056,7 +428056,7 @@
     "defense": 28,
     "goalkeeping": 20,
     "midfield": 35,
-    "overall": 46,
+    "overall": 45,
     "overall_basis": "measured_performance",
     "player_id": "P-81653",
     "provenance": "wc_performance",
@@ -428229,7 +428229,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -428245,7 +428245,7 @@
     ],
     "coverage": 1.0,
     "coverage_basis": "wc_signals",
-    "defense": 28,
+    "defense": 27,
     "goalkeeping": 20,
     "midfield": 35,
     "overall": 45,
@@ -428257,7 +428257,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 40,
+    "attack": 39,
     "card_id": "P-81717:WC-1950",
     "components": [
       {
@@ -428277,7 +428277,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -428296,7 +428296,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 32,
-    "overall": 40,
+    "overall": 39,
     "overall_basis": "measured_performance",
     "player_id": "P-81717",
     "provenance": "wc_performance",
@@ -431781,7 +431781,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -431799,7 +431799,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-82422",
@@ -432357,7 +432357,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -435025,7 +435025,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-83054:WC-1930",
     "components": [
       {
@@ -435045,7 +435045,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -435061,10 +435061,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-83054",
     "provenance": "wc_performance",
@@ -435237,7 +435237,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -436321,7 +436321,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 41,
+    "attack": 40,
     "card_id": "P-83291:WC-1930",
     "components": [
       {
@@ -436341,7 +436341,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -436357,10 +436357,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 39,
+    "defense": 38,
     "goalkeeping": 20,
-    "midfield": 52,
-    "overall": 52,
+    "midfield": 51,
+    "overall": 51,
     "overall_basis": "measured_performance",
     "player_id": "P-83291",
     "provenance": "wc_performance",
@@ -437109,7 +437109,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -440373,7 +440373,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -440391,7 +440391,7 @@
     "coverage_basis": "wc_signals",
     "defense": 30,
     "goalkeeping": 20,
-    "midfield": 41,
+    "midfield": 40,
     "overall": 54,
     "overall_basis": "measured_performance",
     "player_id": "P-83987",
@@ -441765,7 +441765,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -444117,7 +444117,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.85625,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -444193,7 +444193,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-84663:WC-1958",
     "components": [
       {
@@ -444213,7 +444213,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -444232,7 +444232,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-84663",
     "provenance": "wc_performance",
@@ -444913,7 +444913,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 49,
+    "attack": 48,
     "card_id": "P-84831:WC-1950",
     "components": [
       {
@@ -444933,7 +444933,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -444949,10 +444949,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 28,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-84831",
     "provenance": "wc_performance",
@@ -444981,7 +444981,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -446449,7 +446449,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-85142:WC-1930",
     "components": [
       {
@@ -446469,7 +446469,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -448032,8 +448032,8 @@
     "tournament_id": "WC-2022"
   },
   {
-    "appearances_source": null,
-    "attack": 37,
+    "appearances_source": "rsssf_starting_xi",
+    "attack": 34,
     "card_id": "P-85443:WC-1930",
     "components": [
       {
@@ -448043,18 +448043,18 @@
       },
       {
         "signal": "appearances",
-        "value": null,
+        "value": 1,
         "weight": 0.0
       },
       {
         "signal": "goals_percentile",
         "value": 0.34434,
-        "weight": 1.0
+        "weight": 0.75
       },
       {
         "signal": "appearances_percentile",
-        "value": null,
-        "weight": 0.0
+        "value": 0.147436,
+        "weight": 0.25
       },
       {
         "signal": "award_score",
@@ -448067,12 +448067,12 @@
         "weight": 0.16
       }
     ],
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 25,
+    "defense": 24,
     "goalkeeping": 20,
-    "midfield": 30,
-    "overall": 37,
+    "midfield": 28,
+    "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-85443",
     "provenance": "wc_performance",
@@ -448629,7 +448629,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -448917,7 +448917,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -450933,7 +450933,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -451825,7 +451825,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-86082:WC-1930",
     "components": [
       {
@@ -451845,7 +451845,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -452949,7 +452949,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -455185,7 +455185,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 40,
+    "attack": 39,
     "card_id": "P-86813:WC-1950",
     "components": [
       {
@@ -455205,7 +455205,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -455224,7 +455224,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 32,
-    "overall": 40,
+    "overall": 39,
     "overall_basis": "measured_performance",
     "player_id": "P-86813",
     "provenance": "wc_performance",
@@ -455301,7 +455301,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -456069,7 +456069,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -456087,7 +456087,7 @@
     "coverage_basis": "wc_signals",
     "defense": 54,
     "goalkeeping": 20,
-    "midfield": 41,
+    "midfield": 40,
     "overall": 54,
     "overall_basis": "measured_performance",
     "player_id": "P-86932",
@@ -457077,7 +457077,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -458757,7 +458757,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -459717,7 +459717,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -459733,7 +459733,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 28,
     "goalkeeping": 20,
     "midfield": 37,
     "overall": 48,
@@ -466341,7 +466341,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -467713,7 +467713,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-89259:WC-1958",
     "components": [
       {
@@ -467733,7 +467733,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -467752,7 +467752,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-89259",
     "provenance": "wc_performance",
@@ -468981,7 +468981,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -470161,7 +470161,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 38,
+    "attack": 42,
     "card_id": "P-89688:WC-1930",
     "components": [
       {
@@ -470171,7 +470171,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -470181,7 +470181,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -470197,10 +470197,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 25,
+    "defense": 27,
     "goalkeeping": 20,
-    "midfield": 31,
-    "overall": 38,
+    "midfield": 33,
+    "overall": 42,
     "overall_basis": "measured_performance",
     "player_id": "P-89688",
     "provenance": "wc_performance",
@@ -470709,7 +470709,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -470901,7 +470901,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -474501,7 +474501,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -474961,7 +474961,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-90655:WC-1958",
     "components": [
       {
@@ -474981,7 +474981,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -475000,7 +475000,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-90655",
     "provenance": "wc_performance",
@@ -477333,7 +477333,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -477429,7 +477429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -477889,7 +477889,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 43,
+    "attack": 48,
     "card_id": "P-91238:WC-1930",
     "components": [
       {
@@ -477899,7 +477899,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -477909,7 +477909,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.743902,
         "weight": 0.6
       },
       {
@@ -477925,10 +477925,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 41,
+    "defense": 46,
     "goalkeeping": 20,
-    "midfield": 56,
-    "overall": 56,
+    "midfield": 63,
+    "overall": 63,
     "overall_basis": "measured_performance",
     "player_id": "P-91238",
     "provenance": "wc_performance",
@@ -478437,7 +478437,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -481701,7 +481701,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -483429,7 +483429,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -483445,7 +483445,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 29,
+    "defense": 28,
     "goalkeeping": 20,
     "midfield": 37,
     "overall": 48,
@@ -484629,7 +484629,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.602564,
+        "value": 0.589744,
         "weight": 1.0
       },
       {
@@ -484645,10 +484645,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 49,
+    "defense": 48,
     "goalkeeping": 20,
     "midfield": 37,
-    "overall": 49,
+    "overall": 48,
     "overall_basis": "measured_performance",
     "player_id": "P-92427",
     "provenance": "wc_performance",
@@ -485541,7 +485541,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.5,
+        "value": 0.487805,
         "weight": 0.6
       },
       {
@@ -485559,8 +485559,8 @@
     "coverage_basis": "wc_signals",
     "defense": 34,
     "goalkeeping": 20,
-    "midfield": 44,
-    "overall": 44,
+    "midfield": 43,
+    "overall": 43,
     "overall_basis": "measured_performance",
     "player_id": "P-92600",
     "provenance": "wc_performance",
@@ -486885,7 +486885,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -486912,8 +486912,8 @@
     "tournament_id": "WC-1950"
   },
   {
-    "appearances_source": null,
-    "attack": 37,
+    "appearances_source": "rsssf_starting_xi",
+    "attack": 38,
     "card_id": "P-92795:WC-1930",
     "components": [
       {
@@ -486923,18 +486923,18 @@
       },
       {
         "signal": "appearances",
-        "value": null,
+        "value": 2,
         "weight": 0.0
       },
       {
         "signal": "goals_percentile",
         "value": 0.34434,
-        "weight": 1.0
+        "weight": 0.75
       },
       {
         "signal": "appearances_percentile",
-        "value": null,
-        "weight": 0.0
+        "value": 0.474359,
+        "weight": 0.25
       },
       {
         "signal": "award_score",
@@ -486947,12 +486947,12 @@
         "weight": 0.16
       }
     ],
-    "coverage": 0.6667,
+    "coverage": 0.8333,
     "coverage_basis": "wc_signals",
     "defense": 25,
     "goalkeeping": 20,
-    "midfield": 30,
-    "overall": 37,
+    "midfield": 31,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-92795",
     "provenance": "wc_performance",
@@ -487297,7 +487297,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 39,
+    "attack": 38,
     "card_id": "P-92848:WC-1958",
     "components": [
       {
@@ -487317,7 +487317,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -487336,7 +487336,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 31,
-    "overall": 39,
+    "overall": 38,
     "overall_basis": "measured_performance",
     "player_id": "P-92848",
     "provenance": "wc_performance",
@@ -490149,7 +490149,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -491397,7 +491397,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -491445,7 +491445,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -491541,7 +491541,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -493393,7 +493393,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 40,
+    "attack": 39,
     "card_id": "P-93813:WC-1950",
     "components": [
       {
@@ -493413,7 +493413,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.675,
         "weight": 0.25
       },
       {
@@ -493432,7 +493432,7 @@
     "defense": 26,
     "goalkeeping": 20,
     "midfield": 32,
-    "overall": 40,
+    "overall": 39,
     "overall_basis": "measured_performance",
     "player_id": "P-93813",
     "provenance": "wc_performance",
@@ -496005,7 +496005,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.783784,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -498837,7 +498837,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.115789,
+        "value": 0.110526,
         "weight": 0.25
       },
       {
@@ -500209,7 +500209,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 45,
+    "attack": 44,
     "card_id": "P-94965:WC-1930",
     "components": [
       {
@@ -500229,7 +500229,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -500248,7 +500248,7 @@
     "defense": 27,
     "goalkeeping": 20,
     "midfield": 35,
-    "overall": 45,
+    "overall": 44,
     "overall_basis": "measured_performance",
     "player_id": "P-94965",
     "provenance": "wc_performance",
@@ -503109,7 +503109,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.331579,
+        "value": 0.321053,
         "weight": 0.25
       },
       {
@@ -504645,7 +504645,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.162162,
+        "value": 0.147436,
         "weight": 0.25
       },
       {
@@ -504663,7 +504663,7 @@
     "coverage_basis": "wc_signals",
     "defense": 24,
     "goalkeeping": 20,
-    "midfield": 29,
+    "midfield": 28,
     "overall": 34,
     "overall_basis": "measured_performance",
     "player_id": "P-95800",
@@ -511797,7 +511797,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.15625,
+        "value": 0.15,
         "weight": 0.25
       },
       {
@@ -515041,7 +515041,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 24,
+    "attack": 23,
     "card_id": "P-97943:WC-1930",
     "components": [
       {
@@ -515061,7 +515061,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.217949,
+        "value": 0.205128,
         "weight": 1.0
       },
       {
@@ -515781,7 +515781,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -516693,7 +516693,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.573684,
+        "value": 0.568421,
         "weight": 0.25
       },
       {
@@ -518133,7 +518133,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.44375,
+        "value": 0.43125,
         "weight": 0.25
       },
       {
@@ -518149,7 +518149,7 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 29,
     "goalkeeping": 20,
     "midfield": 39,
     "overall": 52,
@@ -520849,7 +520849,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 54,
+    "attack": 57,
     "card_id": "P-99087:WC-1930",
     "components": [
       {
@@ -520859,7 +520859,7 @@
       },
       {
         "signal": "appearances",
-        "value": 2,
+        "value": 3,
         "weight": 0.0
       },
       {
@@ -520869,7 +520869,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.782051,
         "weight": 0.25
       },
       {
@@ -520885,10 +520885,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 30,
+    "defense": 31,
     "goalkeeping": 20,
-    "midfield": 40,
-    "overall": 54,
+    "midfield": 42,
+    "overall": 57,
     "overall_basis": "measured_performance",
     "player_id": "P-99087",
     "provenance": "wc_performance",
@@ -522549,7 +522549,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.493243,
+        "value": 0.474359,
         "weight": 0.25
       },
       {
@@ -522673,7 +522673,7 @@
   },
   {
     "appearances_source": "rsssf_starting_xi",
-    "attack": 67,
+    "attack": 69,
     "card_id": "P-99436:WC-1950",
     "components": [
       {
@@ -522683,7 +522683,7 @@
       },
       {
         "signal": "appearances",
-        "value": 3,
+        "value": 4,
         "weight": 0.0
       },
       {
@@ -522693,7 +522693,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.69375,
+        "value": 0.84375,
         "weight": 0.25
       },
       {
@@ -522709,10 +522709,10 @@
     ],
     "coverage": 0.8333,
     "coverage_basis": "wc_signals",
-    "defense": 34,
+    "defense": 35,
     "goalkeeping": 20,
-    "midfield": 48,
-    "overall": 67,
+    "midfield": 49,
+    "overall": 69,
     "overall_basis": "measured_performance",
     "player_id": "P-99436",
     "provenance": "wc_performance",
@@ -523365,7 +523365,7 @@
       },
       {
         "signal": "appearances_percentile",
-        "value": 0.775,
+        "value": 0.743902,
         "weight": 0.6
       },
       {

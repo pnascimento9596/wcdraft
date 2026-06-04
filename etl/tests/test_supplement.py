@@ -110,7 +110,7 @@ def test_no_sourced_appearance_is_a_fabricated_zero(supp):
     for s in supp["sourced"]:
         assert s["appearances"] >= 1, s["card_id"]
         assert s["appearances_source"] == "rsssf_starting_xi"
-        assert s["method"] in ("surname", "surname+initial")
+        assert s["method"] in ("surname", "surname+initial", "demerged")
 
 
 def test_supplement_never_synthesises_minutes_or_assists(supp):
@@ -130,7 +130,7 @@ def test_review_rows_are_auditable(supp):
         assert r["reason"] in valid_reasons
         assert r["tournament_id"]
         assert r["rsssf_surname"]
-        assert r["matches_observed"] >= 1
+        assert r["lineup_occurrences"] >= 1
 
 
 # ─── determinism ──────────────────────────────────────────────────────────────

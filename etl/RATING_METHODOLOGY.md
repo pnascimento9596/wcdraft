@@ -22,7 +22,9 @@ match appearances, official FIFA awards, team final placement, and listed
 position. **Nothing** is ingested, mirrored, scraped, or "lightly perturbed"
 from EA Sports FC or any other proprietary rating set. A perturbed copy of a
 proprietary rating would still be a derivative; this formula is entirely
-wcdraft's own. The output is reproducible from the cited Fjelstul source alone.
+wcdraft's own. The output is reproducible from the cited public sources alone —
+the Fjelstul database plus, for pre-1970 appearances, the RSSSF match archive
+(both attributed; see README and `output/supplement/SUPPLEMENT.md`).
 
 ## Inputs (honest-state)
 
