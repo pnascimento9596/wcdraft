@@ -1,0 +1,745 @@
+{
+  "format_version": "wc2026-48team-1.0.0",
+  "groups": [
+    {
+      "group_id": "A",
+      "team_ids": [
+        "WC2026-A1",
+        "WC2026-A2",
+        "WC2026-A3",
+        "WC2026-A4"
+      ]
+    },
+    {
+      "group_id": "B",
+      "team_ids": [
+        "WC2026-B1",
+        "WC2026-B2",
+        "WC2026-B3",
+        "WC2026-B4"
+      ]
+    },
+    {
+      "group_id": "C",
+      "team_ids": [
+        "WC2026-C1",
+        "WC2026-C2",
+        "WC2026-C3",
+        "WC2026-C4"
+      ]
+    },
+    {
+      "group_id": "D",
+      "team_ids": [
+        "WC2026-D1",
+        "WC2026-D2",
+        "WC2026-D3",
+        "WC2026-D4"
+      ]
+    },
+    {
+      "group_id": "E",
+      "team_ids": [
+        "WC2026-E1",
+        "WC2026-E2",
+        "WC2026-E3",
+        "WC2026-E4"
+      ]
+    },
+    {
+      "group_id": "F",
+      "team_ids": [
+        "WC2026-F1",
+        "WC2026-F2",
+        "WC2026-F3",
+        "WC2026-F4"
+      ]
+    },
+    {
+      "group_id": "G",
+      "team_ids": [
+        "WC2026-G1",
+        "WC2026-G2",
+        "WC2026-G3",
+        "WC2026-G4"
+      ]
+    },
+    {
+      "group_id": "H",
+      "team_ids": [
+        "WC2026-H1",
+        "WC2026-H2",
+        "WC2026-H3",
+        "WC2026-H4"
+      ]
+    },
+    {
+      "group_id": "I",
+      "team_ids": [
+        "WC2026-I1",
+        "WC2026-I2",
+        "WC2026-I3",
+        "WC2026-I4"
+      ]
+    },
+    {
+      "group_id": "J",
+      "team_ids": [
+        "WC2026-J1",
+        "WC2026-J2",
+        "WC2026-J3",
+        "WC2026-J4"
+      ]
+    },
+    {
+      "group_id": "K",
+      "team_ids": [
+        "WC2026-K1",
+        "WC2026-K2",
+        "WC2026-K3",
+        "WC2026-K4"
+      ]
+    },
+    {
+      "group_id": "L",
+      "team_ids": [
+        "WC2026-L1",
+        "WC2026-L2",
+        "WC2026-L3",
+        "WC2026-L4"
+      ]
+    }
+  ],
+  "knockout_slots": [
+    {
+      "match_id": "F-M104",
+      "round": "F",
+      "slot_id": "F-M104/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "SF-M101"
+      }
+    },
+    {
+      "match_id": "F-M104",
+      "round": "F",
+      "slot_id": "F-M104/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "SF-M102"
+      }
+    },
+    {
+      "match_id": "QF-M100",
+      "round": "QF",
+      "slot_id": "QF-M100/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M95"
+      }
+    },
+    {
+      "match_id": "QF-M100",
+      "round": "QF",
+      "slot_id": "QF-M100/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M96"
+      }
+    },
+    {
+      "match_id": "QF-M97",
+      "round": "QF",
+      "slot_id": "QF-M97/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M89"
+      }
+    },
+    {
+      "match_id": "QF-M97",
+      "round": "QF",
+      "slot_id": "QF-M97/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M90"
+      }
+    },
+    {
+      "match_id": "QF-M98",
+      "round": "QF",
+      "slot_id": "QF-M98/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M93"
+      }
+    },
+    {
+      "match_id": "QF-M98",
+      "round": "QF",
+      "slot_id": "QF-M98/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M94"
+      }
+    },
+    {
+      "match_id": "QF-M99",
+      "round": "QF",
+      "slot_id": "QF-M99/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M91"
+      }
+    },
+    {
+      "match_id": "QF-M99",
+      "round": "QF",
+      "slot_id": "QF-M99/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R16-M92"
+      }
+    },
+    {
+      "match_id": "R16-M89",
+      "round": "R16",
+      "slot_id": "R16-M89/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M74"
+      }
+    },
+    {
+      "match_id": "R16-M89",
+      "round": "R16",
+      "slot_id": "R16-M89/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M77"
+      }
+    },
+    {
+      "match_id": "R16-M90",
+      "round": "R16",
+      "slot_id": "R16-M90/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M73"
+      }
+    },
+    {
+      "match_id": "R16-M90",
+      "round": "R16",
+      "slot_id": "R16-M90/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M75"
+      }
+    },
+    {
+      "match_id": "R16-M91",
+      "round": "R16",
+      "slot_id": "R16-M91/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M76"
+      }
+    },
+    {
+      "match_id": "R16-M91",
+      "round": "R16",
+      "slot_id": "R16-M91/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M78"
+      }
+    },
+    {
+      "match_id": "R16-M92",
+      "round": "R16",
+      "slot_id": "R16-M92/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M79"
+      }
+    },
+    {
+      "match_id": "R16-M92",
+      "round": "R16",
+      "slot_id": "R16-M92/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M80"
+      }
+    },
+    {
+      "match_id": "R16-M93",
+      "round": "R16",
+      "slot_id": "R16-M93/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M83"
+      }
+    },
+    {
+      "match_id": "R16-M93",
+      "round": "R16",
+      "slot_id": "R16-M93/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M84"
+      }
+    },
+    {
+      "match_id": "R16-M94",
+      "round": "R16",
+      "slot_id": "R16-M94/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M81"
+      }
+    },
+    {
+      "match_id": "R16-M94",
+      "round": "R16",
+      "slot_id": "R16-M94/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M82"
+      }
+    },
+    {
+      "match_id": "R16-M95",
+      "round": "R16",
+      "slot_id": "R16-M95/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M86"
+      }
+    },
+    {
+      "match_id": "R16-M95",
+      "round": "R16",
+      "slot_id": "R16-M95/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M88"
+      }
+    },
+    {
+      "match_id": "R16-M96",
+      "round": "R16",
+      "slot_id": "R16-M96/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M85"
+      }
+    },
+    {
+      "match_id": "R16-M96",
+      "round": "R16",
+      "slot_id": "R16-M96/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "R32-M87"
+      }
+    },
+    {
+      "match_id": "R32-M73",
+      "round": "R32",
+      "slot_id": "R32-M73/1",
+      "source": {
+        "group_id": "A",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M73",
+      "round": "R32",
+      "slot_id": "R32-M73/2",
+      "source": {
+        "group_id": "B",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M74",
+      "round": "R32",
+      "slot_id": "R32-M74/1",
+      "source": {
+        "group_id": "E",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M74",
+      "round": "R32",
+      "slot_id": "R32-M74/2",
+      "source": {
+        "candidate_groups": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "F"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M75",
+      "round": "R32",
+      "slot_id": "R32-M75/1",
+      "source": {
+        "group_id": "F",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M75",
+      "round": "R32",
+      "slot_id": "R32-M75/2",
+      "source": {
+        "group_id": "C",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M76",
+      "round": "R32",
+      "slot_id": "R32-M76/1",
+      "source": {
+        "group_id": "C",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M76",
+      "round": "R32",
+      "slot_id": "R32-M76/2",
+      "source": {
+        "group_id": "F",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M77",
+      "round": "R32",
+      "slot_id": "R32-M77/1",
+      "source": {
+        "group_id": "I",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M77",
+      "round": "R32",
+      "slot_id": "R32-M77/2",
+      "source": {
+        "candidate_groups": [
+          "C",
+          "D",
+          "F",
+          "G",
+          "H"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M78",
+      "round": "R32",
+      "slot_id": "R32-M78/1",
+      "source": {
+        "group_id": "E",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M78",
+      "round": "R32",
+      "slot_id": "R32-M78/2",
+      "source": {
+        "group_id": "I",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M79",
+      "round": "R32",
+      "slot_id": "R32-M79/1",
+      "source": {
+        "group_id": "A",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M79",
+      "round": "R32",
+      "slot_id": "R32-M79/2",
+      "source": {
+        "candidate_groups": [
+          "C",
+          "E",
+          "F",
+          "H",
+          "I"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M80",
+      "round": "R32",
+      "slot_id": "R32-M80/1",
+      "source": {
+        "group_id": "L",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M80",
+      "round": "R32",
+      "slot_id": "R32-M80/2",
+      "source": {
+        "candidate_groups": [
+          "E",
+          "H",
+          "I",
+          "J",
+          "K"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M81",
+      "round": "R32",
+      "slot_id": "R32-M81/1",
+      "source": {
+        "group_id": "D",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M81",
+      "round": "R32",
+      "slot_id": "R32-M81/2",
+      "source": {
+        "candidate_groups": [
+          "B",
+          "E",
+          "F",
+          "I",
+          "J"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M82",
+      "round": "R32",
+      "slot_id": "R32-M82/1",
+      "source": {
+        "group_id": "G",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M82",
+      "round": "R32",
+      "slot_id": "R32-M82/2",
+      "source": {
+        "candidate_groups": [
+          "A",
+          "E",
+          "H",
+          "I",
+          "J"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M83",
+      "round": "R32",
+      "slot_id": "R32-M83/1",
+      "source": {
+        "group_id": "K",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M83",
+      "round": "R32",
+      "slot_id": "R32-M83/2",
+      "source": {
+        "group_id": "L",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M84",
+      "round": "R32",
+      "slot_id": "R32-M84/1",
+      "source": {
+        "group_id": "H",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M84",
+      "round": "R32",
+      "slot_id": "R32-M84/2",
+      "source": {
+        "group_id": "J",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M85",
+      "round": "R32",
+      "slot_id": "R32-M85/1",
+      "source": {
+        "group_id": "B",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M85",
+      "round": "R32",
+      "slot_id": "R32-M85/2",
+      "source": {
+        "candidate_groups": [
+          "E",
+          "F",
+          "G",
+          "I",
+          "J"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M86",
+      "round": "R32",
+      "slot_id": "R32-M86/1",
+      "source": {
+        "group_id": "J",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M86",
+      "round": "R32",
+      "slot_id": "R32-M86/2",
+      "source": {
+        "group_id": "H",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M87",
+      "round": "R32",
+      "slot_id": "R32-M87/1",
+      "source": {
+        "group_id": "K",
+        "kind": "group_position",
+        "position": 1
+      }
+    },
+    {
+      "match_id": "R32-M87",
+      "round": "R32",
+      "slot_id": "R32-M87/2",
+      "source": {
+        "candidate_groups": [
+          "D",
+          "E",
+          "I",
+          "J",
+          "L"
+        ],
+        "kind": "best_third"
+      }
+    },
+    {
+      "match_id": "R32-M88",
+      "round": "R32",
+      "slot_id": "R32-M88/1",
+      "source": {
+        "group_id": "D",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "R32-M88",
+      "round": "R32",
+      "slot_id": "R32-M88/2",
+      "source": {
+        "group_id": "G",
+        "kind": "group_position",
+        "position": 2
+      }
+    },
+    {
+      "match_id": "SF-M101",
+      "round": "SF",
+      "slot_id": "SF-M101/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "QF-M97"
+      }
+    },
+    {
+      "match_id": "SF-M101",
+      "round": "SF",
+      "slot_id": "SF-M101/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "QF-M98"
+      }
+    },
+    {
+      "match_id": "SF-M102",
+      "round": "SF",
+      "slot_id": "SF-M102/1",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "QF-M99"
+      }
+    },
+    {
+      "match_id": "SF-M102",
+      "round": "SF",
+      "slot_id": "SF-M102/2",
+      "source": {
+        "kind": "match_winner",
+        "match_slot_id": "QF-M100"
+      }
+    }
+  ]
+}
