@@ -13,6 +13,7 @@
     "test": {
       "dependsOn": ["^build"]
     },
-    "test:golden": {}
+    "test:golden": {},
+    "test:golden:draft": {}
   }
 }
