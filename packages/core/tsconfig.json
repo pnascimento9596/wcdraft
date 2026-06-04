@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    // Allow the generate-golden script to import "../src/rng.ts" directly
+    // (it is executed by Node's --experimental-strip-types, which needs the
+    // explicit .ts specifier). Only valid under noEmit, which typecheck uses.
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts"]
+}
