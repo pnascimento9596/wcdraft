@@ -7,6 +7,7 @@ import {
 } from "./types/formation.js";
 import type { SlotPosition } from "./types/formation.js";
 import type { Position } from "./types/primitives.js";
+import { positionCompatibility } from "./engine/compatibility.js";
 
 // GOLDEN INVARIANT (WS-0c depth-layer contract; calibration WS-B):
 //   The POSITION_COMPATIBILITY_FACTORS table is the contract-time placeholder
@@ -83,39 +84,51 @@ describe("position-compatibility — factor TABLE shape (active)", () => {
   });
 });
 
-describe.skip("position-compatibility — full curve + fold (WS-B)", () => {
-  it.skip("intra-line eligibility yields 1.0 (e.g. eligible=['DF'] in a 'CB' slot)", () => {
-    // FIXTURE TODO (WS-B):
-    //   - positionCompatibility(['DF'], 'CB') === 1.0
-    //   - positionCompatibility(['DF'], 'LCB') === 1.0
-    //   - positionCompatibility(['MF'], 'CDM') === 1.0
+describe("position-compatibility — full curve + fold (WS-B calibration: MAX-of-eligibles)", () => {
+  it("intra-line eligibility yields 1.0", () => {
+    expect(positionCompatibility(["DF"], "CB")).toBe(1.0);
+    expect(positionCompatibility(["DF"], "LCB")).toBe(1.0);
+    expect(positionCompatibility(["MF"], "CDM")).toBe(1.0);
+    expect(positionCompatibility(["GK"], "GK")).toBe(1.0);
   });
 
-  it.skip("one-line-off eligibility yields the one-off factor (e.g. eligible=['MF'] in 'CB')", () => {
-    // FIXTURE TODO (WS-B):
-    //   - positionCompatibility(['MF'], 'CB') === FACTORS.MF.DF (≈ 0.75 placeholder)
-    //   - positionCompatibility(['FW'], 'CDM') === FACTORS.FW.MF (≈ 0.75 placeholder)
+  it("one-line-off eligibility yields the one-off factor", () => {
+    expect(positionCompatibility(["MF"], "CB")).toBe(POSITION_COMPATIBILITY_FACTORS.MF.DF);
+    expect(positionCompatibility(["FW"], "CDM")).toBe(POSITION_COMPATIBILITY_FACTORS.FW.MF);
   });
 
-  it.skip("two-line-off eligibility yields the two-off factor (e.g. eligible=['DF'] in 'ST')", () => {
-    // FIXTURE TODO (WS-B):
-    //   - positionCompatibility(['DF'], 'ST') === FACTORS.DF.FW (≈ 0.45 placeholder)
+  it("two-line-off eligibility yields the two-off factor", () => {
+    expect(positionCompatibility(["DF"], "ST")).toBe(POSITION_COMPATIBILITY_FACTORS.DF.FW);
   });
 
-  it.skip("GK ↔ outfield mismatches yield the severe factor (outfielder in GK, GK outfield)", () => {
-    // FIXTURE TODO (WS-B):
-    //   - positionCompatibility(['DF'], 'GK') === FACTORS.DF.GK (≈ 0.15 placeholder)
-    //   - positionCompatibility(['GK'], 'CB') === FACTORS.GK.DF (≈ 0.15 placeholder)
+  it("GK ↔ outfield mismatches yield the severe factor", () => {
+    expect(positionCompatibility(["DF"], "GK")).toBe(POSITION_COMPATIBILITY_FACTORS.DF.GK);
+    expect(positionCompatibility(["GK"], "CB")).toBe(POSITION_COMPATIBILITY_FACTORS.GK.DF);
   });
 
-  it.skip("multi-eligible cards fold via the calibrated fold (max-of-eligibles is the WS-B candidate)", () => {
-    // FIXTURE TODO (WS-B):
-    //   - positionCompatibility(['DF','MF'], 'ST') equals the calibrated fold
-    //     of [FACTORS.DF.FW, FACTORS.MF.FW]. WS-B chooses (and locks) the fold.
+  it("multi-eligible cards fold via MAX-of-eligibles", () => {
+    // ['DF','MF'] in an 'ST' (FW) slot → max(FACTORS.DF.FW, FACTORS.MF.FW).
+    const expected = Math.max(
+      POSITION_COMPATIBILITY_FACTORS.DF.FW,
+      POSITION_COMPATIBILITY_FACTORS.MF.FW,
+    );
+    expect(positionCompatibility(["DF", "MF"], "ST")).toBe(expected);
+    // A perfect-match eligible dominates the fold.
+    expect(positionCompatibility(["DF", "FW"], "ST")).toBe(1.0);
   });
 
-  it.skip("empty eligible[] throws RangeError (not a soft 0)", () => {
-    // FIXTURE TODO (WS-B):
-    //   - expect(() => positionCompatibility([], 'GK')).toThrow(RangeError)
+  it("output is always a finite number in [0, 1]", () => {
+    for (const sp of SLOT_POSITIONS) {
+      for (const e of ["GK", "DF", "MF", "FW"] as const) {
+        const v = positionCompatibility([e], sp as SlotPosition);
+        expect(Number.isFinite(v)).toBe(true);
+        expect(v).toBeGreaterThanOrEqual(0);
+        expect(v).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
+  it("empty eligible[] throws RangeError (not a soft 0)", () => {
+    expect(() => positionCompatibility([], "GK")).toThrow(RangeError);
   });
 });

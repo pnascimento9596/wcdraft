@@ -14,13 +14,11 @@
 //     there are PLACEHOLDER until WS-B calibration locks them.
 
 import type { PositionCompatibilityFn } from "../types/formation.js";
+import { positionCompatibility as positionCompatibilityImpl } from "../engine/compatibility.js";
 
 /**
- * Runtime stub for `positionCompatibility`. WS-B replaces the body once the
- * factor curve and fold are calibrated and locked by golden test.
+ * Graduated 0..1 compatibility of `eligible` positions in a fine `SlotPosition`.
+ * WS-B calibration: MAX-of-eligibles fold over `POSITION_COMPATIBILITY_FACTORS`.
+ * Locked by `position-compatibility.golden.test.ts`.
  */
-export const positionCompatibility: PositionCompatibilityFn = () => {
-  throw new Error(
-    "positionCompatibility is contract-only in WS-0c; the calibration lands in WS-B.",
-  );
-};
+export const positionCompatibility: PositionCompatibilityFn = positionCompatibilityImpl;

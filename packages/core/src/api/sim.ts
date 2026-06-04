@@ -63,16 +63,19 @@ export type SimulateMatchFn = (
  */
 export type RunTournamentFn = (draft: DraftState, scenario: RunScenario, seed: string) => RunResult;
 
-/**
- * Runtime stub for `simulateMatch`. WS-B replaces this body.
- */
-export const simulateMatch: SimulateMatchFn = () => {
-  throw new Error("simulateMatch is contract-only in WS-0b; the algorithm lands in WS-B.");
-};
+// WS-B IMPLEMENTATIONS. Engine bodies live in `../engine/*` so the api layer
+// stays a thin, contract-typed surface. `simulateMatch` is the public
+// `UserXiSimView` path (positions inferred from the distilled view).
+// `runTournament` orchestrates the full path; its engine impl takes an optional
+// resolved `SimWorld` (see the engine contract-gap note) while staying
+// assignable to the 3-arg `RunTournamentFn`. Tests that need the event-bearing
+// matches use `runTournamentFull` from the engine directly.
+import { simulateMatchFromView } from "../engine/match.js";
+import { runTournament as runTournamentImpl } from "../engine/tournament.js";
+export type { SimWorld } from "../engine/tournament.js";
 
-/**
- * Runtime stub for `runTournament`. WS-B replaces this body.
- */
-export const runTournament: RunTournamentFn = () => {
-  throw new Error("runTournament is contract-only in WS-0b; the algorithm lands in WS-B.");
-};
+/** Simulate one match from a distilled user XI view vs a real 2026 opponent. */
+export const simulateMatch: SimulateMatchFn = simulateMatchFromView;
+
+/** Run the full seeded tournament path for a draft + scenario. */
+export const runTournament: RunTournamentFn = runTournamentImpl;

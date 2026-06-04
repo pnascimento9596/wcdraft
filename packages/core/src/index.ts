@@ -137,6 +137,8 @@ export type {
   // WS-0c
   StarterContribution,
   AggregateUserXiStrengthFn,
+  // WS-B — resolved sim inputs bridge (see engine contract-gap note)
+  SimWorld,
 } from "./api/index.js";
 
 export {
@@ -150,6 +152,13 @@ export {
   computeSynergy,
   aggregateUserXiStrength,
 } from "./api/index.js";
+
+// ─── 3b. WS-B engine — usable run entry + calibration ─────────────────────────
+// `runTournament` (above) is the 3-arg contract type and THROWS until real-2026
+// ingestion threads a SimWorld. `runTournamentFull` is the usable 4-arg entry
+// (returns the RunResult AND the event-bearing matches) consumers call today.
+export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
+export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
 
 // ─── 4. Zod boundary schemas ─────────────────────────────────────────────────
 export {
