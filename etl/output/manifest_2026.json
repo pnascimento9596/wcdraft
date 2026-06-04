@@ -1,0 +1,51 @@
+{
+  "attribution": "2026 FIFA World Cup squads, draw, and knockout-bracket facts are from Wikipedia (English), used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pinned revisions: '2026 FIFA World Cup squads' (oldid 1357762108), '2026 FIFA World Cup draw' (oldid 1357747592), and '2026 FIFA World Cup knockout stage' (oldid 1357752786), retrieved 2026-06-04. Modifications by wcdraft: parsed into canonical 2026 player cards, Team2026, and Bracket2026 records; linked players/nations to the canonical 1930-2022 identity space; derived ORIGINAL projected-career player ratings from the factual career signals (international caps, international goals, age, listed position) by wcdraft's own era-fair, position-weighted formula. No proprietary (e.g. EA Sports) ratings were ingested or perturbed; absent signals are preserved as null, never fabricated. wcdraft derived 2026 data is redistributed under CC-BY-SA 4.0 (ShareAlike).",
+  "counts": {
+    "cards": 1246,
+    "cards_linked": 335,
+    "knockout_slots": 62,
+    "nations_minted": 5,
+    "players_minted": 911,
+    "ratings": 1246,
+    "teams": 48
+  },
+  "coverage_basis": "career_signals",
+  "honest_state": {
+    "never_fabricated": [
+      "club-competition minutes (not in source)",
+      "qualification goals/assists (not in source)",
+      "EA Sports / proprietary ratings (firewall — never ingested)"
+    ],
+    "overall_null_2026_cards": 0,
+    "projected_anchors_dropped": [
+      "award_score",
+      "team_finish"
+    ]
+  },
+  "license": "CC-BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "provenance": "projected_career",
+  "rating_version": "proj-career-1.0.0",
+  "retrieved_date": "2026-06-04",
+  "sources": {
+    "draw": {
+      "revid": 1357747592,
+      "timestamp": "2026-06-04T12:58:31Z",
+      "title": "2026 FIFA World Cup draw",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw"
+    },
+    "knockout": {
+      "revid": 1357752786,
+      "timestamp": "2026-06-04T13:41:45Z",
+      "title": "2026 FIFA World Cup knockout stage",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage"
+    },
+    "squads": {
+      "revid": 1357762108,
+      "timestamp": "2026-06-04T14:52:13Z",
+      "title": "2026 FIFA World Cup squads",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads"
+    }
+  },
+  "tournament_id": "WC-2026"
+}

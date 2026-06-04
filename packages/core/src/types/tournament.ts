@@ -79,16 +79,28 @@ export interface Group {
  *
  * `source` is a discriminated union of how the slot is filled:
  *  - `group_position` → top-N of a group feeds this slot.
- *  - `match_winner`   → winner of an earlier match slot feeds this slot.
+ *  - `match_winner`   → winner of an earlier match (`match_slot_id`) feeds this slot.
+ *  - `best_third`     → one of the eight "best third-placed" teams feeds this slot.
+ *    The qualifying group is one of `candidate_groups` (a fixed candidate set per
+ *    seat in the published bracket) and is resolved at runtime once the eight
+ *    qualifying thirds are known — so it cannot be a single `group_position`.
+ *    Required by the real 2026 "top 2 + 8 best thirds" Round of 32.
  */
 export type SlotSource =
   | { kind: "group_position"; group_id: GroupId; position: number }
-  | { kind: "match_winner"; match_slot_id: string };
+  | { kind: "match_winner"; match_slot_id: string }
+  | { kind: "best_third"; candidate_groups: GroupId[] };
 
 export interface Slot {
   slot_id: string;
   round: KnockoutRound;
   source: SlotSource;
+  /**
+   * The match this seat belongs to (two seats share one `match_id`). Optional:
+   * present on the ETL-emitted 2026 bracket so `match_winner` sources can point
+   * at a match rather than an individual seat.
+   */
+  match_id?: string;
 }
 
 /** The 2026 bracket: 12 groups + the knockout ladder. */

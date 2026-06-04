@@ -1,0 +1,63 @@
+[
+  {
+    "aliases": [
+      "Cabo Verde"
+    ],
+    "canonical_name": "Cape Verde",
+    "code": "CPV",
+    "confederation": "CAF",
+    "historical": false,
+    "mens_team": true,
+    "nation_id": "T-W26-1",
+    "successor": null,
+    "womens_team": false
+  },
+  {
+    "aliases": [],
+    "canonical_name": "Curaçao",
+    "code": "CUW",
+    "confederation": "CONCACAF",
+    "historical": false,
+    "mens_team": true,
+    "nation_id": "T-W26-2",
+    "successor": null,
+    "womens_team": false
+  },
+  {
+    "aliases": [
+      "Democratic Republic of the Congo",
+      "Congo DR"
+    ],
+    "canonical_name": "DR Congo",
+    "code": "COD",
+    "confederation": "CAF",
+    "historical": false,
+    "mens_team": true,
+    "nation_id": "T-W26-3",
+    "predecessor": "T-88",
+    "successor": null,
+    "womens_team": false
+  },
+  {
+    "aliases": [],
+    "canonical_name": "Jordan",
+    "code": "JOR",
+    "confederation": "AFC",
+    "historical": false,
+    "mens_team": true,
+    "nation_id": "T-W26-4",
+    "successor": null,
+    "womens_team": false
+  },
+  {
+    "aliases": [],
+    "canonical_name": "Uzbekistan",
+    "code": "UZB",
+    "confederation": "AFC",
+    "historical": false,
+    "mens_team": true,
+    "nation_id": "T-W26-5",
+    "successor": null,
+    "womens_team": false
+  }
+]
