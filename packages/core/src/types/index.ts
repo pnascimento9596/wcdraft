@@ -53,7 +53,42 @@ export type {
   SquadSlot,
   SquadValidation,
   DraftState,
+  PickedKind,
 } from "./draft.js";
+
+export type {
+  // formation.ts (WS-0c depth layer)
+  SlotPosition,
+  FormationChannel,
+  FormationSlot,
+  FormationTemplate,
+  PositionCompatibilityFn,
+} from "./formation.js";
+export {
+  SLOT_POSITIONS,
+  slotPositionLine,
+  POSITION_COMPATIBILITY_FACTORS,
+  FORMATION_TEMPLATES,
+  FORMATION_IDS,
+  deriveFormationAdjacency,
+} from "./formation.js";
+
+export type {
+  // manager.ts (WS-0c depth layer)
+  Manager,
+  ManagerTournament,
+  ManagerRating,
+  ManagerCardId,
+} from "./manager.js";
+export { buildManagerCardId, parseManagerCardId } from "./manager.js";
+
+export type {
+  // synergy.ts (WS-0c depth layer)
+  NationCluster,
+  LinkedPair,
+  SynergyResult,
+  ComputeSynergyFn,
+} from "./synergy.js";
 
 export type {
   // sim.ts

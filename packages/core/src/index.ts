@@ -57,6 +57,23 @@ export type {
   SquadSlot,
   SquadValidation,
   DraftState,
+  PickedKind,
+  // formation (WS-0c)
+  SlotPosition,
+  FormationChannel,
+  FormationSlot,
+  FormationTemplate,
+  PositionCompatibilityFn,
+  // manager (WS-0c)
+  Manager,
+  ManagerTournament,
+  ManagerRating,
+  ManagerCardId,
+  // synergy (WS-0c)
+  NationCluster,
+  LinkedPair,
+  SynergyResult,
+  ComputeSynergyFn,
   // sim
   MatchEvent,
   MatchEventType,
@@ -93,7 +110,21 @@ export type {
   RunResult,
 } from "./types/index.js";
 
-export { GROUP_IDS, PLACEHOLDER_SCORING_CONFIG, buildCardId, parseCardId } from "./types/index.js";
+export {
+  GROUP_IDS,
+  PLACEHOLDER_SCORING_CONFIG,
+  buildCardId,
+  parseCardId,
+  // WS-0c
+  SLOT_POSITIONS,
+  slotPositionLine,
+  POSITION_COMPATIBILITY_FACTORS,
+  FORMATION_TEMPLATES,
+  FORMATION_IDS,
+  deriveFormationAdjacency,
+  buildManagerCardId,
+  parseManagerCardId,
+} from "./types/index.js";
 
 // ─── 3. Function signatures (typed stubs; algorithms in Phase 1) ─────────────
 export type {
@@ -103,6 +134,9 @@ export type {
   ComputeScoreFn,
   ResolveTopScorerFn,
   DeriveNarrativeFactsFn,
+  // WS-0c
+  StarterContribution,
+  AggregateUserXiStrengthFn,
 } from "./api/index.js";
 
 export {
@@ -111,6 +145,10 @@ export {
   computeScore,
   resolveTopScorer,
   deriveNarrativeFacts,
+  // WS-0c
+  positionCompatibility,
+  computeSynergy,
+  aggregateUserXiStrength,
 } from "./api/index.js";
 
 // ─── 4. Zod boundary schemas ─────────────────────────────────────────────────
@@ -162,6 +200,19 @@ export {
   RunResultSchema,
   // leaderboard
   LeaderboardSubmissionSchema,
+  // WS-0c
+  SlotPositionSchema,
+  FormationChannelSchema,
+  FormationSlotSchema,
+  FormationTemplateSchema,
+  ManagerCardIdSchema,
+  ManagerSchema,
+  ManagerTournamentSchema,
+  ManagerRatingSchema,
+  ManagerRatingComponentSchema,
+  NationClusterSchema,
+  LinkedPairSchema,
+  SynergyResultSchema,
 } from "./schemas/index.js";
 
 export type { LeaderboardSubmission } from "./schemas/index.js";
