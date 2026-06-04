@@ -23,7 +23,9 @@ export type {
   Nation,
   Player,
   PlayerTournament,
+  CardId,
 } from "./identity.js";
+export { buildCardId, parseCardId } from "./identity.js";
 
 export type {
   // rating.ts
@@ -56,7 +58,25 @@ export type {
 export type {
   // sim.ts
   MatchEvent,
+  MatchEventType,
+  GoalEvent,
+  OwnGoalEvent,
+  PenScoredEvent,
+  PenMissedEvent,
+  PenWonEvent,
+  ShotOnEvent,
+  ShotOffEvent,
+  SaveEvent,
+  KeyPassEvent,
+  FoulEvent,
+  OffsideEvent,
+  YellowEvent,
+  RedEvent,
+  InjuryEvent,
+  SubEvent,
+  ShootoutKickEvent,
   ShootoutKick,
+  MatchLineupEntry,
   MatchResult,
 } from "./sim.js";
 
@@ -81,5 +101,6 @@ export type {
 
 export type {
   // run.ts
+  RoundResult,
   RunResult,
 } from "./run.js";

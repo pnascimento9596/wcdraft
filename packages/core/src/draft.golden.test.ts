@@ -8,10 +8,12 @@ import { describe, it } from "vitest";
 // DETERMINISM INVARIANTS being asserted here (declared on `DraftState` /
 // `Spin` types):
 //   - PRNG is the existing cyrb128 + sfc32 — no Date / Math.random / crypto /
-//     performance / transcendentals anywhere in the draft chain.
-//   - The (tournament_id, nation_id) sampling pool is CANONICALLY SORTED by
-//     (tournament_id, nation_id) BEFORE the draw.
-//   - Each rolled roster's candidate pool is CANONICALLY SORTED by card_id
+//     performance / transcendentals anywhere in the draft chain (lint guard
+//     enforces in `packages/core/src` except `rng.ts`).
+//   - The draft substream seed is `deriveSubseed(parent_seed, "draft")`.
+//   - The (tournament_id, nation_id) sampling pool is canonically sorted via
+//     `canonicalSortBy` by (tournament_id, nation_id) BEFORE the draw.
+//   - Each rolled roster's candidate pool is canonically sorted by `card_id`
 //     BEFORE the draw.
 //   - The 16 (tournament_id, nation_id) pairs are UNIQUE across spins.
 //   - Player-id dedup never yields a duplicate player_id across the 16 picks.

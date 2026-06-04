@@ -5,6 +5,7 @@
 // opponents (`group_opponent_team_ids`) and a knockout ladder selected by the
 // `KnockoutOpponentRule`.
 
+import type { CardId } from "./identity.js";
 import type { Rating, TeamStrength } from "./rating.js";
 import type { GroupId, KnockoutRound, SourceRef } from "./primitives.js";
 
@@ -45,9 +46,10 @@ export interface Team2026 {
   group_slot: number;
   /**
    * The team's 2026 cards (PlayerTournament.card_id FKs). May be projected or
-   * final depending on `squad_status`.
+   * final depending on `squad_status`. Branded `CardId[]` — every entry must
+   * be a `buildCardId(player_id, tournament_id)` for the 2026 tournament.
    */
-  squad_card_ids: string[];
+  squad_card_ids: CardId[];
   /**
    * Team-level aggregate strength, derived by the same engine that produces
    * per-card `Rating` rows. Drives the knockout opponent escalator.

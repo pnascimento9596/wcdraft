@@ -18,6 +18,8 @@
 // NO career-aggregate rating entity is defined here on purpose. Career inputs
 // live offline in ETL; the runtime contract is per-card Rating only.
 
+import type { CardId } from "./identity.js";
+
 /**
  * One factual signal that contributed to a Rating, with its applied weight.
  * The set is intentionally open (free-form `signal` string) so WS-A can publish
@@ -43,8 +45,11 @@ export interface RatingComponent {
  * of the three version anchors required for replay / leaderboard determinism.
  */
 export interface Rating {
-  /** FK -> PlayerTournament. */
-  card_id: string;
+  /**
+   * FK -> PlayerTournament. Branded `CardId` — must equal
+   * `buildCardId(player_id, tournament_id)`. Schema refinement enforces.
+   */
+  card_id: CardId;
   /** Denormalized FK -> Player. */
   player_id: string;
   /** Denormalized FK -> Tournament. */
