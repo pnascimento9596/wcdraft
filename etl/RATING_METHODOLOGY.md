@@ -81,11 +81,12 @@ base  = 0.20 + (0.68 − 0.20) · blend
 |---|---|---|
 | FW | 0.75 | 0.25 |
 | MF | 0.40 | 0.60 |
-| DF | 0.05 | 0.95 |
+| DF | 0.00 | 1.00 |
 | GK | 0.00 | 1.00 |
 
-A defender or keeper is **never rated on goals** (DF weight 0.05 is negligible;
-GK is 0). Pre-1970 (appearances `null`) the weights renormalize onto goals alone.
+A defender or keeper is **never rated on goals**. For FW/MF cards with absent
+pre-1970 appearances, the present-signal blend uses goals only; for DF/GK, goals
+remain zero-weight and are never a fallback.
 The `[0.20, 0.68]` band is intentional: raw box-score performance can only carry a
 card to "very good" — reaching the top of the scale **requires** the anchor.
 
@@ -140,13 +141,14 @@ channel = round( score·100 · spread[pos][channel] + 20 · (1 − spread[pos][c
 ### 5. `overall` and the honest null path
 
 `overall = round(score·100)` **except** when a card has **no individually
-measured performance signal** — a pre-1970 keeper (appearances `null`, and goals
-carry zero weight for keepers). Placing such a card on a 0–100 display scale
-would be fabrication, so `overall = null` (the contract's "insufficient signal"
-path). The four sim channels are still emitted (floored on the replacement base
-+ any team-finish anchor) because the sim requires them — but the display number
-is honestly withheld. In the current men's dataset this triggers for exactly the
-305 pre-1970 keepers, and **only** for them (asserted in tests).
+measured performance signal** — a pre-1970 DF/GK (appearances `null`, and goals
+carry zero weight for defenders and keepers). Placing such a card on a 0–100
+display scale would be fabrication, so `overall = null` (the contract's
+"insufficient signal" path). The four sim channels are still emitted (floored on
+the replacement base + any award/team-finish anchor) because the sim requires
+them — but the display number is honestly withheld. In the current men's dataset
+this triggers for exactly the 628 pre-1970 defenders plus 305 pre-1970 keepers
+(933 cards), and **only** for them (asserted in tests).
 
 ## Coverage & provenance
 
@@ -192,8 +194,8 @@ self-contained (read committed JSON; no upstream CSV clone needed).
 | Pelé '70 (FW, champion, **no award in source**) | 82 | Golden Ball didn't exist in 1970 — honestly carried by box score + anchor |
 | Zidane '98 (MF, champion) | 81 | undecorated champion |
 | Puskás '54 (FW, runner-up, pre-1970) | 78 | **not dwarfed** by modern average |
-| Mertesacker '14 (DF, champion, 7 apps, **0 goals**) | 88 | **not tanked** for not scoring; below Maradona (award separates them) |
+| Mertesacker '14 (DF, champion, 6 apps, **0 goals**) | 90 | rated on appearances + team finish, **not goals**; below decorated apex cards |
 | Rodrigo '18 (FW, 0 goals, 3 apps, no run) | 40 | modern journeyman baseline |
 
-Distribution over 10,973 men's cards: min 25, median 43, mean 46.5, 22 cards at
-the apex 100 (≈0.2% — all decorated peak performances), 305 with `overall: null`.
+Distribution over 10,973 men's cards: min 24, median 43, mean 46.4, 22 cards at
+the apex 100 (≈0.2% — all decorated peak performances), 933 with `overall: null`.

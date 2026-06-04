@@ -138,20 +138,41 @@ def test_non_semifinalist_team_finish_is_null(built: list[dict]):
     assert saw_null and saw_value
 
 
-def test_null_overall_only_for_presignal_keepers(built: list[dict], cards: dict[str, dict]):
+def test_null_overall_only_for_presignal_defenders_and_keepers(
+    built: list[dict], cards: dict[str, dict]
+):
     """The honest 'insufficient signal' null path may ONLY trigger where it is
-    justified: a keeper with no individually measured performance signal (goals
-    carry zero weight for GK, and appearances are null pre-1970)."""
+    justified: a DF/GK with no individually measured performance signal (goals
+    carry zero weight for DF/GK, and appearances are null pre-1970)."""
     nulls = [r for r in built if r["overall"] is None]
     assert nulls, "the null-overall honest path should be exercised by the dataset"
+    expected = [
+        r
+        for r in built
+        if cards[r["card_id"]]["position_listed"] in {"DF", "GK"}
+        and cards[r["card_id"]]["appearances"] is None
+    ]
+    assert len(nulls) == len(expected)
     for r in nulls:
         src = cards[r["card_id"]]
-        assert src["position_listed"] == "GK" and src["appearances"] is None, r["card_id"]
+        assert src["position_listed"] in {"DF", "GK"} and src["appearances"] is None, r["card_id"]
 
 
 def test_no_overall_is_a_substituted_zero(built: list[dict]):
     for r in built:
         assert r["overall"] is None or r["overall"] >= 1
+
+
+def test_defenders_and_keepers_are_never_rated_on_goals(built: list[dict], cards: dict[str, dict]):
+    checked = 0
+    for r in built:
+        src = cards[r["card_id"]]
+        if src["position_listed"] not in {"DF", "GK"}:
+            continue
+        comp = {c["signal"]: c for c in r["components"]}
+        assert comp["goals_percentile"]["weight"] == 0.0, r["card_id"]
+        checked += 1
+    assert checked > 0
 
 
 # ─── sanity: assert, don't eyeball ────────────────────────────────────────────
@@ -162,24 +183,61 @@ def test_known_greats_rate_highly(players, cards, by_id):
         return by_id[_card_id(players, cards, name, tid)]["overall"]
 
     # Decorated apex tournaments (Golden Ball / Golden Boot + deep run) -> the top.
-    assert ov("Maradona", "WC-1986") >= 95
-    assert ov("Zidane", "WC-2006") >= 95
-    assert ov("Pelé", "WC-1958") >= 90  # Best Young Player + Silver Boot, age 17
+    assert ov("Maradona", "WC-1986") == 100
+    assert ov("Zidane", "WC-2006") == 100
+    assert ov("Pelé", "WC-1958") == 100  # Best Young Player + Silver Boot, age 17
     # Champions without an award recorded that edition still rate clearly elite —
     # carried by box score + the team-finish anchor (the Golden Ball was only
     # introduced in 1982, so Pelé 1970 has no award signal to anchor on).
-    assert ov("Zidane", "WC-1998") >= 78
-    assert ov("Pelé", "WC-1970") >= 78
+    assert ov("Zidane", "WC-1998") == 81
+    assert ov("Pelé", "WC-1970") == 82
 
 
 def test_high_appearance_low_goal_defender_not_tanked(players, cards, by_id):
     """A defender who started every match must NOT be punished for not scoring."""
-    cid = _card_id(players, cards, "Mertesacker", "WC-2014")  # DF, champion, 7 apps, 0 goals
+    cid = _card_id(players, cards, "Mertesacker", "WC-2014")  # DF, champion, 6 apps, 0 goals
     r = by_id[cid]
-    assert r["overall"] >= 80
-    assert r["defense"] >= 80  # his own channel reflects the strong tournament
+    assert r["overall"] == 90
+    assert r["defense"] == 90  # his own channel reflects the strong tournament
+    comp = {c["signal"]: c for c in r["components"]}
+    assert comp["goals_percentile"]["weight"] == 0.0
+    assert comp["appearances_percentile"]["weight"] == 1.0
     src = cards[cid]
     assert src["goals"] == 0 and src["position_listed"] == "DF"  # guards the premise
+
+
+def test_pre1970_defenders_with_no_appearances_are_honest_nulls(players, cards, by_id):
+    """Pre-1970 DFs have no appearance signal and are never backfilled from goals.
+
+    Placed teams still lift sim channels through team finish; an undifferentiated
+    non-semifinalist sits on the replacement floor with no display overall.
+    """
+    placed_id = _card_id(players, cards, "Moore", "WC-1966")  # champion DF
+    placed = by_id[placed_id]
+    placed_src = cards[placed_id]
+    placed_comp = {c["signal"]: c for c in placed["components"]}
+    assert placed_src["position_listed"] == "DF" and placed_src["appearances"] is None
+    assert placed["overall"] is None
+    assert placed_comp["goals_percentile"]["weight"] == 0.0
+    assert placed_comp["appearances_percentile"]["weight"] == 0.0
+    assert placed_comp["team_finish"]["value"] == 1.0
+    assert placed["attack"] == 28
+    assert placed["midfield"] == 34
+    assert placed["defense"] == 44
+    assert placed["goalkeeping"] == rating.FLOOR_CHANNEL
+
+    floor_id = _card_id(players, cards, "Marzolini", "WC-1962")  # no semifinal finish
+    floor = by_id[floor_id]
+    floor_src = cards[floor_id]
+    floor_comp = {c["signal"]: c for c in floor["components"]}
+    assert floor_src["position_listed"] == "DF" and floor_src["appearances"] is None
+    assert floor["overall"] is None
+    assert floor_comp["goals_percentile"]["weight"] == 0.0
+    assert floor_comp["appearances_percentile"]["weight"] == 0.0
+    assert floor_comp["team_finish"]["value"] is None
+    assert {floor[ch] for ch in ("attack", "midfield", "defense", "goalkeeping")} == {
+        rating.FLOOR_CHANNEL
+    }
 
 
 def test_era_normalization_pre1990_great_not_dwarfed(players, cards, by_id):
@@ -188,7 +246,7 @@ def test_era_normalization_pre1990_great_not_dwarfed(players, cards, by_id):
     puskas = by_id[_card_id(players, cards, "Puskás", "WC-1954")]["overall"]
     fontaine = by_id[_card_id(players, cards, "Fontaine", "WC-1958")]["overall"]
     journeyman = by_id[_card_id(players, cards, "Rodrigo", "WC-2018")]["overall"]  # 0g/3app, no run
-    assert puskas >= 72
-    assert fontaine >= 88  # 13 goals + Golden Boot, normalized within 1958
+    assert puskas == 78
+    assert fontaine == 95  # 13 goals + Golden Boot, normalized within 1958
     assert puskas > journeyman + 20
     assert fontaine > journeyman + 20

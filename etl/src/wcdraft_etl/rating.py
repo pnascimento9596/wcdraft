@@ -76,7 +76,7 @@ FINISH_POINTS: dict[int, float] = {1: 1.00, 2: 0.75, 3: 0.55, 4: 0.40}
 BASE_WEIGHTS: dict[str, dict[str, float]] = {
     "FW": {"goals": 0.75, "appearances": 0.25},
     "MF": {"goals": 0.40, "appearances": 0.60},
-    "DF": {"goals": 0.05, "appearances": 0.95},
+    "DF": {"goals": 0.00, "appearances": 1.00},
     "GK": {"goals": 0.00, "appearances": 1.00},
 }
 
@@ -260,7 +260,8 @@ def build_ratings(
         # Present, positively-weighted performance signals (honest-state: drop the
         # rest). A signal counts only if its value exists AND its weight is > 0.
         present: list[tuple[str, float, float]] = []  # (name, value, raw_weight)
-        present.append(("goals", g_pct, bw["goals"]))
+        if bw["goals"] > 0.0:
+            present.append(("goals", g_pct, bw["goals"]))
         if a_pct is not None:
             present.append(("appearances", a_pct, bw["appearances"]))
         present = [(n, v, w) for (n, v, w) in present if w > 0.0]
@@ -274,10 +275,10 @@ def build_ratings(
             blend = sum(w * v for _, v, w in present) / present_w
             base = REPLACEMENT_BASE + (BASE_CEILING - REPLACEMENT_BASE) * blend
         else:
-            # Pre-1970 keeper: appearances null and goals carry zero weight, so we
-            # have no individually measured signal. Channels still need a value
-            # for the sim, so they float on the replacement base + anchor; but the
-            # DISPLAY overall is honestly null.
+            # Pre-1970 DF/GK: appearances null and goals carry zero weight, so we
+            # have no usable individual performance signal. Channels still need a
+            # value for the sim, so they float on the replacement base + anchor;
+            # but the DISPLAY overall is honestly null.
             base = REPLACEMENT_BASE
 
         eff_weight = {
