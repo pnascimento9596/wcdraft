@@ -9,6 +9,8 @@ import type { Team2026 } from "../types/tournament.js";
 import type { LeaderboardSubmission } from "./leaderboard.js";
 
 import { buildCardId } from "../types/identity.js";
+import { buildManagerCardId } from "../types/manager.js";
+import { FORMATION_TEMPLATES } from "../types/formation.js";
 import { deriveSubseed } from "../rng.js";
 import {
   DraftStateSchema,
@@ -110,45 +112,88 @@ function makeTeam2026(): Team2026 {
   };
 }
 
+// 4-4-2 starter slots (11) — taken from the locked FormationTemplate so the
+// fixture aligns with the schema's formation_id ↔ slot_id 1:1 cross-check.
+// Order matches FORMATION_TEMPLATES["4-4-2"].slots — needed so spin i (i<11)
+// assigns to the i-th starter slot.
+const FIXTURE_FORMATION_ID = "4-4-2";
+const FIXTURE_STARTER_SLOTS = FORMATION_TEMPLATES[FIXTURE_FORMATION_ID]!.slots;
+// Bench slots — engine-owned ids; positions chosen as utility roles.
+const FIXTURE_BENCH_SLOTS = [
+  { slot_id: "bench.0", slot_position: "CB" as const },
+  { slot_id: "bench.1", slot_position: "CM" as const },
+  { slot_id: "bench.2", slot_position: "ST" as const },
+  { slot_id: "bench.3", slot_position: "LCM" as const },
+  { slot_id: "bench.4", slot_position: "AM" as const },
+];
+// Manager pick lands on the LAST spin (index 16) with a distinct
+// (tournament_id, nation_id) pair so the uniqueness invariant holds.
+const FIXTURE_MGR_TOURNAMENT_ID = 1994;
+const FIXTURE_MGR_NATION_ID = "bra";
+const FIXTURE_MGR_ID = "M-311"; // Carlos Alberto Parreira — see manager-identity golden.
+
 function makeDraftState(): DraftState {
   const spins: Spin[] = [];
   const squad: SquadSlot[] = [];
+  // Spins 0..15 — player picks (11 starters + 5 bench).
   for (let i = 0; i < 16; i++) {
     const tournament_id = 1954 + i;
     const player_id = `player.fixture.${i}`;
     const card_id = buildCardId(player_id, tournament_id);
-    const slot_id = `slot.${i < 11 ? "starter" : "bench"}.${i}`;
+    const isStarter = i < 11;
+    const slotInfo = isStarter
+      ? { slot_id: FIXTURE_STARTER_SLOTS[i]!.slot_id, slot_position: FIXTURE_STARTER_SLOTS[i]!.slot_position }
+      : FIXTURE_BENCH_SLOTS[i - 11]!;
     spins.push({
       index: i,
       tournament_id,
       nation_id: `nation.${i}`,
       rolled_card_ids: [card_id],
       excluded_player_ids: Array.from({ length: i }, (_, j) => `player.fixture.${j}`),
+      rolled_manager_card_id: null,
+      picked_kind: "player",
       picked_card_id: card_id,
       picked_player_id: player_id,
-      assigned_slot_id: slot_id,
+      assigned_slot_id: slotInfo.slot_id,
+      picked_manager_card_id: null,
       status: "picked",
     });
     squad.push({
-      slot_id,
-      is_starter: i < 11,
-      lineup_position: i === 0 ? "GK" : i < 5 ? "DF" : i < 9 ? "MF" : "FW",
-      allowed_positions: i === 0 ? ["GK"] : i < 5 ? ["DF"] : i < 9 ? ["MF"] : ["FW", "MF"],
+      slot_id: slotInfo.slot_id,
+      is_starter: isStarter,
+      slot_position: slotInfo.slot_position,
       card_id,
       player_id,
       tournament_id,
-      slot_valid: true,
+      position_compatibility: 1,
       validation_warnings: [],
     });
   }
+  // Spin 16 — manager pick. Distinct (tournament_id, nation_id) for uniqueness.
+  const managerCardId = buildManagerCardId(FIXTURE_MGR_ID, FIXTURE_MGR_TOURNAMENT_ID);
+  spins.push({
+    index: 16,
+    tournament_id: FIXTURE_MGR_TOURNAMENT_ID,
+    nation_id: FIXTURE_MGR_NATION_ID,
+    rolled_card_ids: [],
+    excluded_player_ids: Array.from({ length: 16 }, (_, j) => `player.fixture.${j}`),
+    rolled_manager_card_id: managerCardId,
+    picked_kind: "manager",
+    picked_card_id: null,
+    picked_player_id: null,
+    assigned_slot_id: null,
+    picked_manager_card_id: managerCardId,
+    status: "picked",
+  });
   return {
     run_id: "run.fixture.1",
     draft_seed: "seed.draft.fixture.1",
     mode: "classic",
-    formation: "4-4-2",
+    formation_id: FIXTURE_FORMATION_ID,
     team_name: "Your XI",
     spins,
     squad,
+    manager_card_id: managerCardId,
     status: "ready",
     deduped_player_ids: Array.from({ length: 16 }, (_, i) => `player.fixture.${i}`),
     dataset_version: "dataset@0.0.0",
@@ -399,22 +444,21 @@ describe("zod boundary schemas — REJECT impossible states", () => {
     expect(LeaderboardSubmissionSchema.safeParse(bad).success).toBe(false);
   });
 
-  // Formation.
-  it("DraftState rejects formation '0-5-5' (zero part)", () => {
-    const bad = { ...makeDraftState(), formation: "0-5-5" as const };
+  // Formation FK (WS-0c).
+  it("DraftState rejects unknown formation_id", () => {
+    const bad = { ...makeDraftState(), formation_id: "9-9-9-9" };
     expect(DraftStateSchema.safeParse(bad).success).toBe(false);
   });
 
-  it("DraftState rejects formation '4-4-3' (sum != 10)", () => {
-    const bad = { ...makeDraftState(), formation: "4-4-3" as const };
+  it("DraftState rejects formation_id whose template's starter slot_ids do not match the squad", () => {
+    // 4-3-3 has a different starter slot_id set than 4-4-2 (e.g. ST / LW / RW
+    // vs LF / RF), so flipping formation_id without re-laying the squad must fail.
+    const bad = { ...makeDraftState(), formation_id: "4-3-3" };
     expect(DraftStateSchema.safeParse(bad).success).toBe(false);
   });
 
-  it("DraftState accepts formation '4-3-3' and '3-1-4-2'", () => {
-    const okA = { ...makeDraftState(), formation: "4-3-3" as const };
-    const okB = { ...makeDraftState(), formation: "3-1-4-2" as const };
-    expect(DraftStateSchema.safeParse(okA).success).toBe(true);
-    expect(DraftStateSchema.safeParse(okB).success).toBe(true);
+  it("DraftState accepts the fixture formation_id '4-4-2' (round-trip control)", () => {
+    expect(DraftStateSchema.safeParse(makeDraftState()).success).toBe(true);
   });
 
   // Card ID mismatch.
@@ -572,6 +616,62 @@ describe("zod boundary schemas — REJECT impossible states", () => {
     expect(DraftStateSchema.safeParse(bad).success).toBe(false);
   });
 
+  // Lock-on-pick: a picked PLAYER must occupy a SquadSlot (no ghost picks).
+  it("SpinSchema rejects a player pick with assigned_slot_id: null (lock-on-pick)", () => {
+    const card_id = buildCardId("player.fixture.0", 1954);
+    // Otherwise-valid player pick: card appears in rolled_card_ids and matches
+    // buildCardId(player_id, tournament_id); the ONLY defect is the null slot.
+    const bad = {
+      index: 0,
+      tournament_id: 1954,
+      nation_id: "nation.0",
+      rolled_card_ids: [card_id],
+      excluded_player_ids: [],
+      rolled_manager_card_id: null,
+      picked_kind: "player",
+      picked_card_id: card_id,
+      picked_player_id: "player.fixture.0",
+      assigned_slot_id: null,
+      picked_manager_card_id: null,
+      status: "picked",
+    };
+    expect(SpinSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("DraftState rejects a ghost picked player (picked, in deduped_player_ids, no assigned slot)", () => {
+    const d = makeDraftState();
+    // Spin 0 stays a 'picked' player — so it remains in deduped_player_ids —
+    // but drops its slot assignment, and its squad slot is vacated. The player
+    // is "drafted" yet occupies no slot: a ghost pick.
+    const ghostSlotId = d.spins[0]!.assigned_slot_id!;
+    const spinsClone = d.spins.map((s) => ({ ...s }));
+    spinsClone[0] = { ...spinsClone[0]!, assigned_slot_id: null };
+    const squadClone = d.squad.map((s) => ({ ...s }));
+    const gi = squadClone.findIndex((s) => s.slot_id === ghostSlotId);
+    squadClone[gi] = {
+      ...squadClone[gi]!,
+      card_id: null,
+      player_id: null,
+      tournament_id: null,
+      position_compatibility: 0,
+    };
+    const bad = { ...d, spins: spinsClone, squad: squadClone };
+    expect(DraftStateSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("DraftState rejects a picked-player spin whose assigned_slot_id points to a slot holding a different card", () => {
+    const d = makeDraftState();
+    // Swap the slot assignments of the first two player picks: each spin now
+    // references a slot holding the OTHER pick's card — slot/spin disagreement
+    // with no duplicate assignment and both slots still occupied.
+    const spinsClone = d.spins.map((s) => ({ ...s }));
+    const slot0 = spinsClone[0]!.assigned_slot_id;
+    spinsClone[0] = { ...spinsClone[0]!, assigned_slot_id: spinsClone[1]!.assigned_slot_id };
+    spinsClone[1] = { ...spinsClone[1]!, assigned_slot_id: slot0 };
+    const bad = { ...d, spins: spinsClone };
+    expect(DraftStateSchema.safeParse(bad).success).toBe(false);
+  });
+
   // RunResult invariant drift.
   it("RunResult rejects score != sum(score_breakdown.points)", () => {
     const bad: RunResult = { ...makeRunResult(), score: 999 };
@@ -683,16 +783,19 @@ describe("zod boundary schemas — safeParse never throws on empty player_id", (
     expect(PlayerRunStatsSchema.safeParse(bad).success).toBe(false);
   });
 
-  it("SpinSchema rejects picked spin with empty picked_player_id without throwing", () => {
+  it("SpinSchema rejects picked player-spin with empty picked_player_id without throwing", () => {
     const bad = {
       index: 0,
       tournament_id: 1,
       nation_id: "n",
       rolled_card_ids: ["p:1"],
       excluded_player_ids: [],
+      rolled_manager_card_id: null,
+      picked_kind: "player",
       picked_card_id: "p:1",
       picked_player_id: "",
       assigned_slot_id: null,
+      picked_manager_card_id: null,
       status: "picked",
     };
     expect(() => SpinSchema.safeParse(bad)).not.toThrow();
@@ -703,12 +806,11 @@ describe("zod boundary schemas — safeParse never throws on empty player_id", (
     const bad = {
       slot_id: "s",
       is_starter: true,
-      lineup_position: "FW",
-      allowed_positions: ["FW"],
+      slot_position: "ST",
       card_id: "p:1",
       player_id: "",
       tournament_id: 1,
-      slot_valid: true,
+      position_compatibility: 1,
       validation_warnings: [],
     };
     expect(() => SquadSlotSchema.safeParse(bad)).not.toThrow();
