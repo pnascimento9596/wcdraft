@@ -10,9 +10,10 @@
   ],
   "honest_state": {
     "appearances_from": 1970,
+    "appearances_pre_1970": "sourced from RSSSF starting XIs and linked to player_id where unambiguous (appearances_source='rsssf_starting_xi'); null where no lineup links (unlinkable names emitted to link_review.json)",
     "never_fabricated": [
-      "assists (no source)",
-      "minutes (no source)",
+      "assists (no source, never synthesised)",
+      "minutes (no source, never synthesised — not derived as matches*90)",
       "club_at_tournament (no source column)",
       "manager birth_date (no source column)"
     ],
@@ -28,6 +29,19 @@
     "name": "The Fjelstul World Cup Database",
     "repo": "https://www.github.com/jfjelstul/worldcup",
     "version": "1.2.0"
+  },
+  "supplement": {
+    "artifacts": [
+      "supplement/appearances_sourced.json",
+      "supplement/link_review.json",
+      "supplement/SUPPLEMENT.md"
+    ],
+    "attribution": "Pre-1970 World Cup tournament appearances sourced from the Rec.Sport.Soccer Statistics Foundation (RSSSF) match archive (https://www.rsssf.org/), used with acknowledgement. Each appearance count is the number of a team's matches whose starting XI (no substitutes existed pre-1970) lists the player, transcribed from the committed RSSSF snapshots and linked to the canonical player_id on name + nation + tournament. Unlinkable names are withheld (null) and emitted for human review; minutes and assists remain unavailable and are never synthesised.",
+    "fetch_manifest": "supplement/fetch_manifest.json",
+    "license": "Free use with acknowledgement (RSSSF terms)",
+    "license_url": "https://www.rsssf.org/",
+    "source_name": "Rec.Sport.Soccer Statistics Foundation (RSSSF)",
+    "sourced_field": "player_tournaments.appearances (pre-1970)"
   },
   "tables": {
     "appearances": 27432,

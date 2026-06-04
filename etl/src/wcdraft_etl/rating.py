@@ -13,12 +13,19 @@ team finish, position). NOTHING is ingested, mirrored, or "perturbed" from EA
 Sports FC or any proprietary rating set. The formula is entirely wcdraft's own.
 See RATING_METHODOLOGY.md for the derivation and the calibration rationale.
 
-HONEST-STATE: a signal that is absent for a card (e.g. match appearances before
-the 1970 cliff) is DROPPED from that card's weighting and surfaced as a ``null``
-component value — it is NEVER substituted with 0. A card with no individually
-measured performance signal at all (a pre-1970 goalkeeper: appearances null,
-goals carry zero weight for keepers) gets ``overall = null`` — the contract's
-honest "insufficient signal to display" path — rather than a fabricated score.
+HONEST-STATE: a signal that is absent for a card (e.g. match appearances that
+could not be sourced for the pre-1970 era) is DROPPED from that card's weighting
+and surfaced as a ``null`` component value — it is NEVER substituted with 0.
+
+NO NULL OVERALL (wc-perf-1.1.0): every card now carries a real ``overall``. Most
+pre-1970 defenders/keepers gain a measured appearances signal from the WS-A
+supplement (RSSSF starting XIs, linked to player_id); the residual cards with no
+linkable individual signal are rated from a position-appropriate replacement
+baseline plus the era-invariant team-finish / award anchor. That is an HONEST
+ESTIMATE — flagged by ``overall_basis = "baseline_anchor_estimate"`` and the
+card's (low) coverage — NOT a fabricated box score: no individual stat is ever
+invented; the absent stat stays ``null`` in components. This replaces the old
+``overall = null`` "insufficient signal" path.
 
 SCOPE: men's tournaments 1930-2022 (the contract's gameplay scope). Women's
 cards present in the canonical tables are explicitly excluded here, not silently
@@ -38,7 +45,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-1.0.0"
+RATING_VERSION = "wc-perf-1.1.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -96,10 +103,10 @@ AWARD_WEIGHT: dict[str, float] = {"FW": 0.20, "MF": 0.22, "DF": 0.18, "GK": 0.22
 FINISH_WEIGHT: dict[str, float] = {"FW": 0.16, "MF": 0.16, "DF": 0.24, "GK": 0.28}
 
 # Replacement-level base in [0,1] used (a) as the off-position channel floor,
-# (b) as the FLOOR of the performance base scale, and (c) as the channel base for
-# a card with no individual performance signal, so a sim-consumed channel is
-# never a degenerate 0. It is DISPLAY-independent: a no-signal card still reports
-# overall = null even though its channels are floored.
+# (b) as the FLOOR of the performance base scale, and (c) as the base for a card
+# with no individual performance signal — so such a card's overall is an honest
+# baseline+anchor ESTIMATE (flagged overall_basis="baseline_anchor_estimate"),
+# not a fabricated box score and not a withheld null.
 REPLACEMENT_BASE = 0.20
 FLOOR_CHANNEL = round(REPLACEMENT_BASE * 100)  # 20
 
@@ -275,10 +282,15 @@ def build_ratings(
             blend = sum(w * v for _, v, w in present) / present_w
             base = REPLACEMENT_BASE + (BASE_CEILING - REPLACEMENT_BASE) * blend
         else:
-            # Pre-1970 DF/GK: appearances null and goals carry zero weight, so we
-            # have no usable individual performance signal. Channels still need a
-            # value for the sim, so they float on the replacement base + anchor;
-            # but the DISPLAY overall is honestly null.
+            # No usable individual performance signal: a DF/GK whose pre-1970
+            # appearances could not be sourced & linked from RSSSF (goals carry zero
+            # weight for them). The WS-A supplement fills most pre-1970 DF/GK
+            # appearances, so this path now covers only the residual unlinked cards.
+            # Rather than withholding the display number (the old null path), the
+            # card is rated from the position-appropriate replacement baseline plus
+            # the era-invariant team-finish / award anchor — an HONEST ESTIMATE, not
+            # a fabricated stat, and flagged as such via overall_basis + the card's
+            # (low) coverage. No individual box-score value is invented.
             base = REPLACEMENT_BASE
 
         eff_weight = {
@@ -294,7 +306,14 @@ def build_ratings(
 
         score = _clamp01(base + anchor)
         score_0_100 = 100.0 * score
-        overall = round(score_0_100) if has_individual_signal else None
+        # overall is ALWAYS computed now (no null path): a card with measured
+        # individual performance is rated on it; a card without is rated from the
+        # replacement baseline + the era-invariant anchor (an honest estimate). The
+        # confidence is carried by coverage + overall_basis, not by withholding.
+        overall = round(score_0_100)
+        overall_basis = (
+            "measured_performance" if has_individual_signal else "baseline_anchor_estimate"
+        )
 
         channels = {ch: _channel(score_0_100, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
 
@@ -326,6 +345,7 @@ def build_ratings(
                 "player_id": c["player_id"],
                 "tournament_id": c["tournament_id"],
                 "overall": overall,
+                "overall_basis": overall_basis,
                 "attack": channels["attack"],
                 "midfield": channels["midfield"],
                 "defense": channels["defense"],
@@ -333,6 +353,7 @@ def build_ratings(
                 "components": components,
                 "coverage": c["coverage"],
                 "coverage_basis": "wc_signals",
+                "appearances_source": c.get("appearances_source"),
                 "provenance": "wc_performance",
                 "rating_version": RATING_VERSION,
             }
@@ -372,5 +393,9 @@ if __name__ == "__main__":
     rows = run()
     rated = len(rows)
     nulls = sum(1 for r in rows if r["overall"] is None)
+    estimates = sum(1 for r in rows if r["overall_basis"] == "baseline_anchor_estimate")
+    sourced = sum(1 for r in rows if r["appearances_source"] == "rsssf_starting_xi")
     print(f"wcdraft rating: wrote {rated:,} men's-card ratings -> {OUTPUT_DIR}/ratings.json")
-    print(f"  overall=null (insufficient individual signal): {nulls:,}")
+    print(f"  overall=null: {nulls:,} (target 0)")
+    print(f"  baseline_anchor_estimate (honest low-coverage estimate): {estimates:,}")
+    print(f"  appearances sourced from RSSSF (pre-1970): {sourced:,}")

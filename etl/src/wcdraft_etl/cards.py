@@ -40,13 +40,22 @@ APPEARANCES_FROM = 1970
 COVERAGE_SIGNALS = ("selection", "position_listed", "goals", "awards", "appearances", "shirt")
 
 
-def _coverage(year: int | None, shirt: int | None) -> float:
+def coverage_score(appearances_present: bool, shirt: int | None) -> float:
+    """Per-card coverage fraction over COVERAGE_SIGNALS.
+
+    appearances count as present from native Fjelstul match events (1970+) OR
+    from the WS-A supplement (pre-1970 appearances sourced & linked from RSSSF
+    starting XIs). Either way the signal is real, so it lifts coverage; a pre-1970
+    card whose appearances could not be linked stays absent here and is therefore
+    honestly flagged as lower-coverage. Re-applied by the supplement overlay after
+    appearances are filled, so coverage always reflects the final appearances.
+    """
     present = {
         "selection": True,  # the card existing means the player was selected
         "position_listed": True,  # 0 blanks upstream
         "goals": True,  # goal events cover all eras (1930+)
         "awards": True,  # award data covers all eras
-        "appearances": year is not None and year >= APPEARANCES_FROM,
+        "appearances": appearances_present,
         "shirt": shirt is not None,
     }
     return round(sum(present[s] for s in COVERAGE_SIGNALS) / len(COVERAGE_SIGNALS), 4)
@@ -104,9 +113,16 @@ def build(
                 "position_listed": s_or_none(r.position_code),
                 "club_at_tournament": None,  # not in source — never fabricated
                 "appearances": appearances_val,
+                # provenance for the appearances value: native Fjelstul match
+                # events (1970+) or null pre-1970 at base build. The WS-A
+                # supplement overlay refines this to the RSSSF tag for any
+                # pre-1970 card whose appearances it sources & links.
+                "appearances_source": (
+                    "fjelstul_match_events" if appearances_val is not None else None
+                ),
                 "goals": goal_ct.get(k, 0),
                 "awards": sorted(awards_by.get(k, [])),
-                "coverage": _coverage(year, shirt),
+                "coverage": coverage_score(appearances_val is not None, shirt),
             }
         )
     rows.sort(key=lambda x: x["card_id"])

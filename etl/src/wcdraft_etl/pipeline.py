@@ -12,6 +12,8 @@ import json
 from pathlib import Path
 
 from . import cards, coverage, facts, managers, nations, players, source, tournaments
+from . import supplement as supplement_pkg
+from .supplement import link as supplement_link
 
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # pipeline writes to the same place regardless of the caller's cwd.
@@ -33,7 +35,7 @@ def build_all() -> dict[str, list[dict]]:
     manager_appearances = source.load("manager_appearances")
     standings = source.load("tournament_standings")
 
-    return {
+    tables = {
         "nations": nations.build(teams),
         "players": players.build(players_df, squads),
         "player_tournaments": cards.build(
@@ -48,6 +50,17 @@ def build_all() -> dict[str, list[dict]]:
         "appearances": facts.build_appearances(appearances_df, tours),
         "awards": facts.build_awards(award_winners),
     }
+
+    # WS-A supplement: overlay pre-1970 tournament appearances sourced & linked
+    # from the committed RSSSF snapshots onto the cards (genuine gaps only; native
+    # Fjelstul values are never overwritten). Deterministic + offline: a pure
+    # function of the committed raw snapshots + these canonical tables. The
+    # sourced/review/report artifacts themselves are emitted by run().
+    supp = supplement_link.build_supplement(
+        tables["players"], tables["player_tournaments"], tables["tournaments"]
+    )
+    supplement_link.apply_overlay(tables["player_tournaments"], supp["sourced"])
+    return tables
 
 
 def _write_json(path: Path, obj) -> None:
@@ -72,29 +85,63 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
             "author": source.SOURCE_AUTHOR,
         },
         "attribution": source.ATTRIBUTION,
+        "supplement": {
+            "source_name": supplement_pkg.RSSSF_SOURCE_NAME,
+            "license": supplement_pkg.RSSSF_LICENSE,
+            "license_url": supplement_pkg.RSSSF_LICENSE_URL,
+            "attribution": supplement_pkg.RSSSF_ATTRIBUTION,
+            "sourced_field": "player_tournaments.appearances (pre-1970)",
+            "fetch_manifest": "supplement/fetch_manifest.json",
+            "artifacts": [
+                "supplement/appearances_sourced.json",
+                "supplement/link_review.json",
+                "supplement/SUPPLEMENT.md",
+            ],
+        },
         "coverage_signals": list(cards.COVERAGE_SIGNALS),
         "honest_state": {
             "never_fabricated": [
-                "assists (no source)",
-                "minutes (no source)",
+                "assists (no source, never synthesised)",
+                "minutes (no source, never synthesised — not derived as matches*90)",
                 "club_at_tournament (no source column)",
                 "manager birth_date (no source column)",
             ],
             "null_sentinels": ["shirt_number 0 -> null (pre-1954)"],
             "appearances_from": cards.APPEARANCES_FROM,
+            "appearances_pre_1970": (
+                "sourced from RSSSF starting XIs and linked to player_id where "
+                "unambiguous (appearances_source='rsssf_starting_xi'); null where "
+                "no lineup links (unlinkable names emitted to link_review.json)"
+            ),
         },
         "tables": {name: len(rows) for name, rows in sorted(tables.items())},
     }
 
 
 def run(output_dir: Path = OUTPUT_DIR) -> dict[str, list[dict]]:
-    """Build all tables and emit JSON artifacts + manifest + COVERAGE.md."""
+    """Build all tables and emit JSON artifacts + manifest + COVERAGE.md, plus the
+    WS-A supplement artifacts (sourced appearances, link review list, report)."""
     output_dir.mkdir(parents=True, exist_ok=True)
     tables = build_all()
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest.json", _manifest(tables))
     (output_dir / "COVERAGE.md").write_text(coverage.render(tables), encoding="utf-8")
+
+    # WS-A supplement artifacts. build_supplement is a pure function of the
+    # (already-overlaid) canonical tables + committed RSSSF snapshots; re-running
+    # it here for emission yields the identical sourced/review/report it produced
+    # for the overlay in build_all (appearances values are not read by it).
+    supp = supplement_link.build_supplement(
+        tables["players"], tables["player_tournaments"], tables["tournaments"]
+    )
+    supp_dir = output_dir / "supplement"
+    supp_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(supp_dir / "appearances_sourced.json", supp["sourced"])
+    _write_json(supp_dir / "link_review.json", supp["review"])
+    (supp_dir / "SUPPLEMENT.md").write_text(
+        supplement_link.render_report(supp), encoding="utf-8"
+    )
     return tables
 
 

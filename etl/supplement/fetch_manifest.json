@@ -1,0 +1,80 @@
+{
+  "attribution": "Pre-1970 World Cup tournament appearances sourced from the Rec.Sport.Soccer Statistics Foundation (RSSSF) match archive (https://www.rsssf.org/), used with acknowledgement. Each appearance count is the number of a team's matches whose starting XI (no substitutes existed pre-1970) lists the player, transcribed from the committed RSSSF snapshots and linked to the canonical player_id on name + nation + tournament. Unlinkable names are withheld (null) and emitted for human review; minutes and assists remain unavailable and are never synthesised.",
+  "files": [
+    {
+      "bytes": 15292,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/30full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "4e4599d9f23ca717310ab6862c7b13d09cf81ca91292d51d772f1a0b0760b332",
+      "tournament_id": "WC-1930",
+      "url": "https://www.rsssf.org/tables/30full.html"
+    },
+    {
+      "bytes": 12328,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/34full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "87b4f15e955ff650d80e2c52c0d7313a1342eb025d3a5437d5e4253097ff73ca",
+      "tournament_id": "WC-1934",
+      "url": "https://www.rsssf.org/tables/34full.html"
+    },
+    {
+      "bytes": 14661,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/38full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "4203652acc4bf84304a9a6597e9648aaaf3af1d21e3f5646d812a852553117f1",
+      "tournament_id": "WC-1938",
+      "url": "https://www.rsssf.org/tables/38full.html"
+    },
+    {
+      "bytes": 15559,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/50full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "6c0fcef44b7b01369b0391d4de9ca7ae7fbf2d7e0d1410ae90c52a3b22c8971f",
+      "tournament_id": "WC-1950",
+      "url": "https://www.rsssf.org/tables/50full.html"
+    },
+    {
+      "bytes": 19009,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/54full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "be4380edabee41bb89180e6b49fafe4abf7d7fb81841dbd472d371fb8f8b4d3d",
+      "tournament_id": "WC-1954",
+      "url": "https://www.rsssf.org/tables/54full.html"
+    },
+    {
+      "bytes": 20292,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/58full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "f89ef9ffae110c79a57083390844ba46f5193c13196c5f77fd5f5fa24dd901b8",
+      "tournament_id": "WC-1958",
+      "url": "https://www.rsssf.org/tables/58full.html"
+    },
+    {
+      "bytes": 19842,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/62full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "dcebc708609353225593e7d751c17a7251dea86ee2369a19b52665b2dca58d30",
+      "tournament_id": "WC-1962",
+      "url": "https://www.rsssf.org/tables/62full.html"
+    },
+    {
+      "bytes": 19964,
+      "charset": "iso-8859-2",
+      "file": "raw/rsssf/66full.html",
+      "retrieved": "2026-06-04",
+      "sha256": "8c2836d51aa4b7c65b1b4423fb3427b96255c6d212f89a57c0b8258179fd441b",
+      "tournament_id": "WC-1966",
+      "url": "https://www.rsssf.org/tables/66full.html"
+    }
+  ],
+  "license": "Free use with acknowledgement (RSSSF terms)",
+  "license_url": "https://www.rsssf.org/",
+  "source_name": "Rec.Sport.Soccer Statistics Foundation (RSSSF)"
+}

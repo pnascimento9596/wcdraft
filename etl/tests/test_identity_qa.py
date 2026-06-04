@@ -114,11 +114,34 @@ def test_no_fabricated_assists_or_minutes(tables):
         assert forbidden not in sample
 
 
-def test_pre_1970_appearances_are_null_not_zero(tables):
+def test_pre_1970_appearances_sourced_or_null_never_fabricated_zero(tables):
+    """Honest-state after the WS-A supplement: a pre-1970 appearance is EITHER
+    sourced & linked from RSSSF (>=1, tagged ``rsssf_starting_xi``) OR genuinely
+    unavailable (null). It is NEVER a fabricated 0 — a player found in no starting
+    XI is left null, not asserted as a (possibly-incomplete) zero."""
     years = {t["tournament_id"]: t["year"] for t in tables["tournaments"]}
+    saw_sourced = False
     for c in tables["player_tournaments"]:
         if (years.get(c["tournament_id"]) or 0) < 1970:
-            assert c["appearances"] is None, f"{c['card_id']} pre-1970 appearances must be null"
+            if c["appearances"] is None:
+                assert c["appearances_source"] is None, c["card_id"]
+            else:
+                assert c["appearances"] >= 1, f"{c['card_id']} pre-1970 apps must be >=1, not 0"
+                assert c["appearances_source"] == "rsssf_starting_xi", c["card_id"]
+                saw_sourced = True
+    assert saw_sourced  # the supplement actually populated pre-1970 appearances
+
+
+def test_appearances_source_provenance_consistent(tables):
+    """Every card's appearances_source matches its appearances value: native
+    Fjelstul match events (1970+), RSSSF starting XIs (sourced pre-1970), or null
+    when no value exists. Provenance is never ambiguous."""
+    for c in tables["player_tournaments"]:
+        src = c["appearances_source"]
+        if c["appearances"] is None:
+            assert src is None, c["card_id"]
+        else:
+            assert src in ("fjelstul_match_events", "rsssf_starting_xi"), c["card_id"]
 
 
 def test_pre_1954_shirts_are_null_not_zero(tables):
@@ -151,16 +174,22 @@ def test_own_goals_excluded_from_card_goal_tally(tables):
     assert any(g["own_goal"] for g in tables["goals"])  # sanity: own goals exist
 
 
-def test_coverage_reflects_era_cliffs(tables):
+def test_coverage_reflects_signals_present(tables):
+    """Coverage is exactly the fraction of COVERAGE_SIGNALS present. The four
+    always-on signals give a 4/6 floor; the shirt (1954+) and appearances
+    (native 1970+, or sourced pre-1970) each add 1/6. So coverage rises for a
+    pre-1970 card once its appearances are sourced — flagging real confidence."""
     years = {t["tournament_id"]: t["year"] for t in tables["tournaments"]}
     for c in tables["player_tournaments"]:
         y = years.get(c["tournament_id"]) or 0
-        if y >= 1970:
+        base = 4
+        if c["shirt"] is not None:
+            base += 1
+        if c["appearances"] is not None:
+            base += 1
+        assert c["coverage"] == round(base / 6, 4), c["card_id"]
+        if y >= 1970:  # native era: appearances + shirt always present
             assert c["coverage"] == 1.0
-        elif y >= 1954:
-            assert c["coverage"] == round(5 / 6, 4)
-        else:
-            assert c["coverage"] == round(4 / 6, 4)
 
 
 def test_all_eligible_positions_valid_and_primary_within(tables):

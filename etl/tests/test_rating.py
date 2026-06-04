@@ -88,8 +88,10 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
         # The four sim channels are ALWAYS present integers in [0, 100].
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
             assert isinstance(r[ch], int) and 0 <= r[ch] <= 100, (r["card_id"], ch, r[ch])
-        # overall is DISPLAY-only: an int in [0,100] or honest null.
-        assert r["overall"] is None or (isinstance(r["overall"], int) and 0 <= r["overall"] <= 100)
+        # overall is ALWAYS a real int in [0,100] now (no null path, wc-perf-1.1.0).
+        assert isinstance(r["overall"], int) and 0 <= r["overall"] <= 100, r["card_id"]
+        assert r["overall_basis"] in ("measured_performance", "baseline_anchor_estimate")
+        assert r["appearances_source"] in (None, "fjelstul_match_events", "rsssf_starting_xi")
         assert r["coverage"] in (0.6667, 0.8333, 1.0)
         assert r["coverage_basis"] == "wc_signals"
         assert r["provenance"] == "wc_performance"
@@ -138,29 +140,54 @@ def test_non_semifinalist_team_finish_is_null(built: list[dict]):
     assert saw_null and saw_value
 
 
-def test_null_overall_only_for_presignal_defenders_and_keepers(
+def test_no_card_has_null_overall(built: list[dict]):
+    """THE WS-A guarantee: every men's card carries a real overall in [1,100].
+    The old ``overall = null`` path is gone."""
+    nulls = [r["card_id"] for r in built if r["overall"] is None]
+    assert nulls == []
+    for r in built:
+        assert isinstance(r["overall"], int) and r["overall"] >= 1, r["card_id"]
+
+
+def test_estimate_basis_only_for_unlinked_presignal_defenders_and_keepers(
     built: list[dict], cards: dict[str, dict]
 ):
-    """The honest 'insufficient signal' null path may ONLY trigger where it is
-    justified: a DF/GK with no individually measured performance signal (goals
-    carry zero weight for DF/GK, and appearances are null pre-1970)."""
-    nulls = [r for r in built if r["overall"] is None]
-    assert nulls, "the null-overall honest path should be exercised by the dataset"
-    expected = [
-        r
-        for r in built
-        if cards[r["card_id"]]["position_listed"] in {"DF", "GK"}
-        and cards[r["card_id"]]["appearances"] is None
-    ]
-    assert len(nulls) == len(expected)
-    for r in nulls:
+    """A baseline_anchor_estimate (overall computed from the replacement baseline
+    + team-finish/award anchor, NOT measured performance) may ONLY appear where it
+    is justified: a DF/GK whose appearances could not be sourced/linked (goals
+    carry zero weight for DF/GK). It never invents a box score — the absent stat
+    stays null in components — and it is always flagged + low-coverage."""
+    estimates = [r for r in built if r["overall_basis"] == "baseline_anchor_estimate"]
+    assert estimates, "the honest-estimate path should be exercised by the residual cards"
+    for r in estimates:
         src = cards[r["card_id"]]
-        assert src["position_listed"] in {"DF", "GK"} and src["appearances"] is None, r["card_id"]
+        assert src["position_listed"] in {"DF", "GK"}, r["card_id"]
+        assert src["appearances"] is None and src["appearances_source"] is None, r["card_id"]
+        comp = {c["signal"]: c for c in r["components"]}
+        assert comp["goals_percentile"]["weight"] == 0.0
+        assert comp["appearances_percentile"]["weight"] == 0.0
+        assert comp["appearances"]["value"] is None  # never a fabricated 0
+        assert r["overall"] >= rating.FLOOR_CHANNEL  # never below the replacement floor
+        assert r["coverage"] < 1.0  # an estimate is always honestly low-coverage
 
 
-def test_no_overall_is_a_substituted_zero(built: list[dict]):
-    for r in built:
-        assert r["overall"] is None or r["overall"] >= 1
+def test_sourced_appearances_lift_formerly_null_defenders(players, cards, by_id):
+    """The headline WS-A win: a pre-1970 champion defender (Bobby Moore '66) that
+    was previously overall=null now carries a REAL, measured, coverage-1.0 rating
+    from his RSSSF-sourced appearances + champion finish."""
+    cid = _card_id(players, cards, "Moore", "WC-1966")
+    r = by_id[cid]
+    src = cards[cid]
+    assert src["position_listed"] == "DF"
+    assert src["appearances"] == 6  # all six England matches, sourced from RSSSF
+    assert src["appearances_source"] == "rsssf_starting_xi"
+    assert r["overall_basis"] == "measured_performance"
+    assert r["coverage"] == 1.0
+    assert r["overall"] >= 80  # champion DF who started every match -> elite tier
+    comp = {c["signal"]: c for c in r["components"]}
+    assert comp["goals_percentile"]["weight"] == 0.0  # still never rated on goals
+    assert comp["appearances_percentile"]["weight"] == 1.0
+    assert comp["team_finish"]["value"] == 1.0
 
 
 def test_defenders_and_keepers_are_never_rated_on_goals(built: list[dict], cards: dict[str, dict]):
@@ -182,15 +209,19 @@ def test_known_greats_rate_highly(players, cards, by_id):
     def ov(name, tid):
         return by_id[_card_id(players, cards, name, tid)]["overall"]
 
-    # Decorated apex tournaments (Golden Ball / Golden Boot + deep run) -> the top.
+    # Post-1970 apex tournaments are UNCHANGED by the supplement (pre-1970 sourcing
+    # only re-cohorts pre-1970 cards): decorated Golden-Ball winners pin at 100.
     assert ov("Maradona", "WC-1986") == 100
     assert ov("Zidane", "WC-2006") == 100
-    assert ov("Pelé", "WC-1958") == 100  # Best Young Player + Silver Boot, age 17
-    # Champions without an award recorded that edition still rate clearly elite —
-    # carried by box score + the team-finish anchor (the Golden Ball was only
-    # introduced in 1982, so Pelé 1970 has no award signal to anchor on).
-    assert ov("Zidane", "WC-1998") == 81
-    assert ov("Pelé", "WC-1970") == 82
+    assert ov("Zidane", "WC-1998") == 81  # undecorated champion
+    assert ov("Pelé", "WC-1970") == 82  # champion, no award existed in 1970
+
+    # Pelé 1958 (Best Young Player + Silver Boot, age 17) was a clamped 100 when
+    # pre-1970 cards had NO appearance signal. With his real WS-A appearances
+    # (4 of Brazil's 6 matches — he missed the first two injured) now feeding the
+    # base, he lands at the very top of the elite band rather than pinned at the
+    # ceiling. Signal-driven, documented (see RATING_METHODOLOGY.md "WS-A deltas").
+    assert ov("Pelé", "WC-1958") >= 95
 
 
 def test_high_appearance_low_goal_defender_not_tanked(players, cards, by_id):
@@ -206,47 +237,36 @@ def test_high_appearance_low_goal_defender_not_tanked(players, cards, by_id):
     assert src["goals"] == 0 and src["position_listed"] == "DF"  # guards the premise
 
 
-def test_pre1970_defenders_with_no_appearances_are_honest_nulls(players, cards, by_id):
-    """Pre-1970 DFs have no appearance signal and are never backfilled from goals.
-
-    Placed teams still lift sim channels through team finish; an undifferentiated
-    non-semifinalist sits on the replacement floor with no display overall.
-    """
-    placed_id = _card_id(players, cards, "Moore", "WC-1966")  # champion DF
-    placed = by_id[placed_id]
-    placed_src = cards[placed_id]
-    placed_comp = {c["signal"]: c for c in placed["components"]}
-    assert placed_src["position_listed"] == "DF" and placed_src["appearances"] is None
-    assert placed["overall"] is None
-    assert placed_comp["goals_percentile"]["weight"] == 0.0
-    assert placed_comp["appearances_percentile"]["weight"] == 0.0
-    assert placed_comp["team_finish"]["value"] == 1.0
-    assert placed["attack"] == 28
-    assert placed["midfield"] == 34
-    assert placed["defense"] == 44
-    assert placed["goalkeeping"] == rating.FLOOR_CHANNEL
-
-    floor_id = _card_id(players, cards, "Marzolini", "WC-1962")  # no semifinal finish
-    floor = by_id[floor_id]
-    floor_src = cards[floor_id]
-    floor_comp = {c["signal"]: c for c in floor["components"]}
-    assert floor_src["position_listed"] == "DF" and floor_src["appearances"] is None
-    assert floor["overall"] is None
-    assert floor_comp["goals_percentile"]["weight"] == 0.0
-    assert floor_comp["appearances_percentile"]["weight"] == 0.0
-    assert floor_comp["team_finish"]["value"] is None
-    assert {floor[ch] for ch in ("attack", "midfield", "defense", "goalkeeping")} == {
-        rating.FLOOR_CHANNEL
-    }
+def test_residual_unlinked_defender_is_honest_floor_estimate(players, cards, by_id):
+    """A pre-1970 DF/GK whose appearances could NOT be sourced and whose team did
+    not reach the semifinals has no individual signal and no finish anchor: it
+    sits on the replacement floor — every sim channel == FLOOR_CHANNEL and a
+    flagged baseline_anchor_estimate overall of exactly FLOOR_CHANNEL — rather
+    than the old withheld null. Found structurally so it survives re-linking."""
+    floors = [
+        r
+        for r in by_id.values()
+        if r["overall_basis"] == "baseline_anchor_estimate"
+        and next(c for c in r["components"] if c["signal"] == "team_finish")["value"] is None
+        and rating._award_score(cards[r["card_id"]]["awards"]) == 0.0
+    ]
+    assert floors, "expected residual unlinked, unplaced pre-1970 defenders/keepers"
+    for r in floors:
+        assert r["overall"] == rating.FLOOR_CHANNEL, r["card_id"]
+        assert {r[ch] for ch in ("attack", "midfield", "defense", "goalkeeping")} == {
+            rating.FLOOR_CHANNEL
+        }, r["card_id"]
 
 
 def test_era_normalization_pre1990_great_not_dwarfed(players, cards, by_id):
     """A pre-1990 great must not be dwarfed by a modern average player — proving
-    signals are normalized within-era, not on raw modern-inflated counts."""
+    signals are normalized within-era. Values shifted from wc-perf-1.0.0 because
+    pre-1970 appearances now feed the base (Puskás played only 3 of 1954's matches
+    around injury; Fontaine started all 6 of 1958) — signal-driven, documented."""
     puskas = by_id[_card_id(players, cards, "Puskás", "WC-1954")]["overall"]
     fontaine = by_id[_card_id(players, cards, "Fontaine", "WC-1958")]["overall"]
     journeyman = by_id[_card_id(players, cards, "Rodrigo", "WC-2018")]["overall"]  # 0g/3app, no run
-    assert puskas == 78
-    assert fontaine == 95  # 13 goals + Golden Boot, normalized within 1958
+    assert fontaine >= 90  # 13 goals + Golden Boot + started every match, within 1958
+    assert puskas >= 70  # runner-up, elite, still clearly above a modern journeyman
     assert puskas > journeyman + 20
     assert fontaine > journeyman + 20

@@ -38,14 +38,58 @@ reads every cell as a string with no NA coercion; each transform decides, per
 column, what missing means. Specifically:
 
 - `shirt` — `0` is the upstream "no squad number" sentinel (pre-1954) → `null`.
-- `appearances` — match-level data starts **1970**; pre-1970 → `null` (not `0`).
+- `appearances` — native Fjelstul match data starts **1970**; pre-1970 values are
+  **sourced from RSSSF starting XIs** by the WS-A supplement (see below) and
+  tagged via `appearances_source` (`fjelstul_match_events` / `rsssf_starting_xi`).
+  A pre-1970 card whose lineup name could not be unambiguously linked stays
+  `null` (never `0`) and is emitted to `output/supplement/link_review.json`.
 - `goals` — excludes own goals (credited to the scorer but not *their* goal).
-- `club_at_tournament` — **no upstream column** → always `null`, never fabricated.
+- `club_at_tournament` — **no upstream column** → always `null`, never fabricated
+  (Wikipedia club/caps/DOB enrichment is a separate, sequenced follow-on lane).
 - manager `birth_date` — **no upstream column** → always `null`.
-- **assists, minutes** — do not exist at any era → omitted entirely, never invented.
+- **assists, minutes** — do not exist at any era → omitted entirely, never
+  invented; in particular pre-1970 minutes are **not** synthesised as matches×90.
 
 See `output/COVERAGE.md` for per-era availability, the two era cliffs (1954
 shirts, 1970 match events), row counts, and null-rate per nullable column.
+
+## WS-A supplement — sourced pre-1970 appearances (RSSSF)
+
+The base ingestion is pure Fjelstul, which has no match-level appearances before
+1970 — leaving every pre-1970 card with `appearances = null` and forcing ~933
+defenders/keepers onto the rating's null path. The **WS-A supplement** closes
+that gap by **sourcing the real fact** from the RSSSF World Cup match archive and
+**linking** it to the canonical `player_id` — it never invents a value:
+
+- Pre-1970 World Cups allowed **no substitutes**, so a player's tournament
+  appearances = the number of his team's matches whose **starting XI** lists him.
+  We parse that, deterministically, from committed raw RSSSF snapshots.
+- Raw pages are pinned under `etl/supplement/raw/rsssf/` with a
+  `fetch_manifest.json` recording each URL + sha256 + retrieval date. Parsing and
+  linking are pure functions of those bytes + the canonical tables, so the
+  overlay reproduces **byte-for-byte offline** (no network on the build path).
+- Each lineup surname is linked to exactly one squad card (family name + initial
+  disambiguation). Anything not uniquely linkable — a transliteration variant, a
+  surname collision an initial can't split, a squad RSSSF romanizes beyond
+  recognition — is **withheld (`null`) and emitted to the review list**, not
+  guessed. 1,573 cards sourced; 225 review items; minutes/assists stay absent.
+
+Refresh / verify the snapshots (run-once maintenance; not needed to build):
+
+```bash
+python -m wcdraft_etl.supplement.fetch          # re-download + write fetch_manifest.json
+python -m wcdraft_etl.supplement.fetch --verify # check committed bytes vs manifest sha256
+```
+
+### Attribution — RSSSF (in addition to Fjelstul CC-BY-SA above)
+
+> Pre-1970 World Cup tournament appearances are sourced from the
+> **Rec.Sport.Soccer Statistics Foundation (RSSSF)** match archive
+> (https://www.rsssf.org/), used with acknowledgement under the RSSSF
+> free-use-with-credit terms. The full attribution string lives in
+> `wcdraft_etl.supplement.RSSSF_ATTRIBUTION`, `output/manifest.json`
+> (`supplement` block), `output/supplement/SUPPLEMENT.md`, and
+> `supplement/fetch_manifest.json`.
 
 ## Output tables (`etl/output/`)
 
@@ -60,8 +104,11 @@ shirts, 1970 match events), row counts, and null-rate per nullable column.
 | `goals.json` | event-level goals | `goal_id` |
 | `appearances.json` | event-level match appearances (1970+) | `appearance_id` |
 | `awards.json` | award winners | `award_winner_id` |
-| `manifest.json` | source pin, attribution, row counts | — |
+| `manifest.json` | source pin, attribution (Fjelstul + RSSSF), row counts | — |
 | `COVERAGE.md` | coverage / null-rate report | — |
+| `supplement/appearances_sourced.json` | one per linked pre-1970 card | `card_id` |
+| `supplement/link_review.json` | unlinkable RSSSF names (withheld, for human review) | — |
+| `supplement/SUPPLEMENT.md` | per-tournament link/coverage report | — |
 
 Nations are keyed on `team_id`, **not** `team_code` — `DEU` collides (Germany
 `T-31` vs West Germany `T-86`). Historical entities (West Germany, USSR,
