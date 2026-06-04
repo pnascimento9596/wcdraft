@@ -196,12 +196,13 @@ def link_player(
             return True
         if not (nf and nf == c["norm_family"]):
             return False
-        # Family + DOB + nation align; corroborate the given name when both sides
-        # have one (rejects twins / namesakes). If either side lacks a given name,
-        # fall back to the family+DOB+nation match.
+        # Family + DOB + nation align; require a compatible GIVEN name to confirm —
+        # this rejects same-DOB / same-surname / same-nation namesakes (e.g. the
+        # Timber twins). If a given name is unavailable on EITHER side, we CANNOT
+        # corroborate, so we do NOT link (mint instead) — conservative by design.
         if ng and c["norm_given"]:
             return ng == c["norm_given"] or ng in c["norm_given"] or c["norm_given"] in ng
-        return True
+        return False
 
     hits = [c for c in candidates if _hit(c)]
     if len(hits) == 1:

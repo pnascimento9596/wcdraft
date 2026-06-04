@@ -65,9 +65,19 @@ forward in a deep squad. On caps + goals alone, the team ordering **inverts**
 (minnows on top). The club a player holds down is the strongest **factual** quality
 proxy available before a ball is kicked, so league strength plays the role the
 **award / finish anchor** plays in `wc-perf`: an absolute, position-weighted lift
-that supplies the headroom above `BASE_CEILING`. League strength is a transparent
-tiered prior over the club's nation code (ENG/ESP 1.00 → developing leagues 0.42),
-golden-locked and tunable — wcdraft's own, not a proprietary rating.
+that supplies the headroom above `BASE_CEILING`. It is deliberately the **dominant**
+quality signal (weighted above wc-perf's award weights) precisely because, for a
+projection, club level beats longevity. League strength is a transparent tiered
+prior over the club's nation code (ENG/ESP 1.00 → developing leagues 0.42),
+golden-locked and tunable — wcdraft's own, not a proprietary rating. A player whose
+club is **unknown** drops the anchor entirely (honest-state — never a fabricated
+baseline applied to a club we don't know).
+
+This still does not make a young elite squad (Brazil, France) out-aggregate a
+veteran top-club squad (Switzerland) — caps genuinely favor the experienced side,
+and projecting otherwise would inject a prior the public signals don't support. The
+honest, asserted claim is the **robust** one: every traditional power aggregates
+higher than every debutant/minnow, with a clear basket-mean margin.
 
 ### The tournament anchors are honestly DROPPED
 
@@ -115,6 +125,15 @@ cards, `card_id = player_id:WC-2026`), `ratings_2026`, `teams_2026` (48 `Team202
 `bracket_2026` (`Bracket2026`), `tournaments_2026`, plus `manifest_2026.json`. The
 locked 1930-2022 tables are left **byte-for-byte untouched**.
 
+### `Team2026.squad_status`
+
+Emitted as **`locked`**, not `final`. The core lifecycle defines `locked` =
+"official roster published but tournament has not started" and `final` = "roster +
+tournament started". The 26-man lists were published 2026-06-02, but the opening
+match is 2026-06-11, and an injury replacement is still permitted up to 24h before a
+team's first match — so as of the pinned 2026-06-04 snapshot the contract-correct
+state is `locked`. It flips to `final` on a re-pin after kickoff.
+
 ### `Team2026.aggregate_rating`
 
 Best-available-XI semantics: the 11 cards with the highest projected `overall`,
@@ -123,17 +142,16 @@ channels. This is the **opponent** squad aggregation; the user-XI aggregator
 (core `aggregateUserXiStrength`, which folds Synergy + manager) is a separate WS-B
 concern, and the averaging choice is re-calibratable there.
 
-### `Bracket2026` — a contract note
+### `Bracket2026`
 
 `knockout_slots` faithfully encode the real R32→Final tree: the 24 group
 winner/runner-up seats use the core `group_position` source and the R16+ seats use
-`match_winner`. The **8 best-third R32 seats cannot be a single `group_position`**
-— FIFA resolves the qualifying group at runtime from a fixed candidate set — so
-they use a `best_third { candidate_groups }` source. This is an **honest extension**
-of the core `SlotSource` union (which today models only
-`group_position | match_winner`); `Bracket2026` has no zod boundary and is
-constructed in-process, so the extension is emitted faithfully and flagged here for
-a core-contract follow-up. Slots also carry a convenience `match_id`.
+`match_winner`. The **8 best-third R32 seats cannot be a single `group_position`** —
+FIFA resolves the qualifying group at runtime from a fixed candidate set — so they
+use a `best_third { candidate_groups }` source. This variant (and an optional
+`match_id` on `Slot`) were **added to the core `SlotSource` union**
+(`packages/core/src/types/tournament.ts`) as part of this workstream so the emitted
+bracket is representable by the declared `Bracket2026` type.
 
 ## Determinism & validation
 
@@ -146,10 +164,12 @@ full bracket integrity) plus the CI `git diff --exit-code` regeneration guard.
 ## Sanity results (asserted, not eyeballed)
 
 * All 48 teams present, 12 groups × 4, every squad 23-26 with ≥3 GK.
-* Projected `overall`: min 30, median 59, max 89; **zero** null overalls.
+* Projected `overall`: min 33, median 66, max 99; **zero** null overalls.
 * **Every** traditional power (Brazil, Argentina, France, Spain, Germany, England,
   Portugal, Netherlands) aggregates **higher than every** debutant/minnow
-  (Curaçao, Cape Verde, Haiti, Uzbekistan, Jordan, New Zealand, South Africa).
+  (Curaçao, Cape Verde, Haiti, Uzbekistan, Jordan, New Zealand, South Africa) —
+  power basket mean 53.2 vs minnow basket mean 46.2 (weakest power 52.0 > strongest
+  minnow 49.0).
 * 335 of 1,246 cards link to a canonical 1930-2022 player id (e.g. Messi, Ronaldo,
   Modrić — one id across 2014/18/22 + 2026); no canonical id is reused for two
   different 2026 players.

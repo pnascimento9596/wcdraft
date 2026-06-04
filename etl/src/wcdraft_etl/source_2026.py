@@ -72,9 +72,16 @@ def load_wikitext(key: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def source_ref(field: str | None = None, confidence: float | None = None) -> dict:
-    """A SourceRef-shaped citation for the pinned Wikipedia squads revision."""
-    s = snapshot_meta()["squads"]
+def source_ref(
+    key: str = "squads", field: str | None = None, confidence: float | None = None
+) -> dict:
+    """A SourceRef-shaped citation for one pinned Wikipedia revision.
+
+    ``key`` selects which snapshot ('squads' | 'draw' | 'knockout'); ``field`` names
+    the specific record field the citation supports (e.g. 'group_slot' -> the draw),
+    or None for the whole record.
+    """
+    s = snapshot_meta()[key]
     return {
         "source": f"Wikipedia: {s['title']} (oldid {s['revid']})",
         "source_type": "wikipedia",

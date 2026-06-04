@@ -14,13 +14,15 @@ KEY HONEST DIFFERENCES FROM ``wc-perf`` (all deliberate, all flagged):
     box score.
   * The two cross-era ANCHORS of ``wc-perf`` — individual tournament awards and
     team final placement — DO NOT EXIST yet (the tournament has not been played).
-    They are therefore honestly DROPPED (null, weight 0), never invented. A
-    projected rating thus lives in the performance band [REPLACEMENT_BASE,
-    BASE_CEILING] by construction: tournament distinction is UNEARNED and so
-    cannot lift a 2026 card to the legendary tail. WS-B reconciles 2026-opponent
+    They are therefore honestly DROPPED (null, weight 0), never invented. The
+    performance BASE (caps/goals percentile) stays within [REPLACEMENT_BASE,
+    BASE_CEILING]; a club-league QUALITY anchor (below) supplies the headroom above
+    it, exactly as wc-perf's award/finish anchor does. WS-B reconciles 2026-opponent
     strength with the historical pool at aggregation time.
-  * An age-curve modifier (factual, from date of birth) positions a card within
-    the band by career stage — wcdraft's own, not a proprietary rating.
+  * The quality anchor is club-league strength (the strongest factual quality proxy
+    available pre-tournament); an age-curve modifier (factual, from date of birth)
+    positions a card within the band by career stage. Both are wcdraft's own, not a
+    proprietary rating.
 
 LEGAL FIREWALL (unchanged): nothing here is ingested or perturbed from EA Sports
 FC or any proprietary rating. Every number derives only from the public career
@@ -101,12 +103,21 @@ LEAGUE_STRENGTH: dict[str, float] = {
     code: score for score, codes in _LEAGUE_TIERS.items() for code in codes
 }
 # Position weights for the league anchor (an apex top-5 club lifts every position).
-LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.22, "MF": 0.24, "DF": 0.22, "GK": 0.20}
+# Weighted as the DOMINANT quality signal — deliberately above wc-perf's award
+# weights — because for a PROJECTION the club level a player holds down is a better
+# quality proxy than caps/goals, which over-reward longevity (a minnow veteran
+# out-caps a young elite). This widens the powers-vs-minnows separation without
+# letting any single signal pin the score at 100.
+LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.28}
 
 
-def _league_score(club_nation_code: str | None) -> float:
+def _league_score(club_nation_code: str | None) -> float | None:
+    """League-strength prior for the club's nation, or None when the club is
+    UNKNOWN. A present-but-untiered league gets the legitimate baseline tier
+    (LEAGUE_DEFAULT); an ABSENT club returns None so the anchor is honestly DROPPED
+    (never a fabricated 0.42 applied to a player whose club we don't know)."""
     if not club_nation_code:
-        return LEAGUE_DEFAULT
+        return None
     return LEAGUE_STRENGTH.get(club_nation_code, LEAGUE_DEFAULT)
 
 
@@ -199,8 +210,10 @@ def build_ratings(cards: list[dict]) -> list[dict]:
         # the league-strength quality anchor — the projected analog of wc-perf's
         # award/finish anchor, supplying headroom above BASE_CEILING. The tournament
         # award/finish anchors themselves are UNEARNED pre-tournament -> dropped.
+        # An UNKNOWN club drops the anchor entirely (honest-state), never 0-substituted.
         base = REPLACEMENT_BASE + (BASE_CEILING - REPLACEMENT_BASE) * blend * af
-        anchor = LEAGUE_WEIGHT[pos] * league
+        league_weight = LEAGUE_WEIGHT[pos] if league is not None else 0.0
+        anchor = league_weight * (league or 0.0)
         score = _clamp01(base + anchor)
         score_0_100 = 100.0 * score
         overall = round(score_0_100)
@@ -216,7 +229,7 @@ def build_ratings(cards: list[dict]) -> list[dict]:
             {"signal": "caps_percentile", "value": a_pct, "weight": eff.get("appearances", 0.0)},
             {"signal": "age_factor", "value": af, "weight": 0.0},
             {"signal": "club_nation", "value": None, "weight": 0.0},  # raw code on the card
-            {"signal": "league_strength", "value": league, "weight": LEAGUE_WEIGHT[pos]},
+            {"signal": "league_strength", "value": league, "weight": league_weight},
             # The wc-perf cross-era anchors are structurally UNEARNED pre-tournament:
             # shown as null/weight 0 — honestly dropped, never substituted with 0.
             {"signal": "award_score", "value": None, "weight": 0.0},

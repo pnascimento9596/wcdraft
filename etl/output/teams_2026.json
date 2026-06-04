@@ -1,11 +1,11 @@
 [
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 60,
-      "goalkeeping": 24,
-      "midfield": 56
+      "defense": 63,
+      "goalkeeping": 20,
+      "midfield": 62
     },
     "group": "A",
     "group_slot": 1,
@@ -18,6 +18,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -49,16 +57,16 @@
       "P-W26-0416:WC-2026",
       "P-W26-0417:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-A1"
   },
   {
     "aggregate_rating": {
-      "attack": 46,
+      "attack": 47,
       "coverage": 0.7143,
-      "defense": 44,
+      "defense": 49,
       "goalkeeping": 24,
-      "midfield": 47
+      "midfield": 51
     },
     "group": "A",
     "group_slot": 2,
@@ -71,6 +79,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -102,16 +118,16 @@
       "P-W26-0648:WC-2026",
       "P-W26-0649:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-A2"
   },
   {
     "aggregate_rating": {
-      "attack": 51,
+      "attack": 55,
       "coverage": 0.7143,
-      "defense": 54,
-      "goalkeeping": 29,
-      "midfield": 61
+      "defense": 58,
+      "goalkeeping": 30,
+      "midfield": 66
     },
     "group": "A",
     "group_slot": 3,
@@ -124,6 +140,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -155,16 +179,16 @@
       "P-W26-0662:WC-2026",
       "P-W26-0663:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-A3"
   },
   {
     "aggregate_rating": {
-      "attack": 52,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 50,
-      "goalkeeping": 24,
-      "midfield": 54
+      "defense": 54,
+      "goalkeeping": 25,
+      "midfield": 59
     },
     "group": "A",
     "group_slot": 4,
@@ -177,6 +201,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -208,16 +240,16 @@
       "P-W26-0196:WC-2026",
       "P-W26-0197:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-A4"
   },
   {
     "aggregate_rating": {
-      "attack": 55,
+      "attack": 60,
       "coverage": 0.7143,
-      "defense": 55,
+      "defense": 60,
       "goalkeeping": 20,
-      "midfield": 60
+      "midfield": 65
     },
     "group": "B",
     "group_slot": 1,
@@ -230,6 +262,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -260,16 +300,16 @@
       "P-W26-0142:WC-2026",
       "P-W26-0143:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-B1"
   },
   {
     "aggregate_rating": {
-      "attack": 45,
+      "attack": 49,
       "coverage": 0.7143,
-      "defense": 51,
+      "defense": 57,
       "goalkeeping": 25,
-      "midfield": 48
+      "midfield": 53
     },
     "group": "B",
     "group_slot": 2,
@@ -282,6 +322,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -313,16 +361,16 @@
       "P-W26-0109:WC-2026",
       "P-W26-0110:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-B2"
   },
   {
     "aggregate_rating": {
-      "attack": 54,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 49,
-      "goalkeeping": 24,
-      "midfield": 52
+      "defense": 52,
+      "goalkeeping": 25,
+      "midfield": 55
     },
     "group": "B",
     "group_slot": 3,
@@ -335,6 +383,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -366,16 +422,16 @@
       "P-W26-0568:WC-2026",
       "P-W26-0569:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-B3"
   },
   {
     "aggregate_rating": {
-      "attack": 60,
+      "attack": 66,
       "coverage": 0.7143,
-      "defense": 59,
+      "defense": 65,
       "goalkeeping": 20,
-      "midfield": 63
+      "midfield": 69
     },
     "group": "B",
     "group_slot": 4,
@@ -388,6 +444,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -419,16 +483,16 @@
       "P-W26-0711:WC-2026",
       "P-W26-0712:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-B4"
   },
   {
     "aggregate_rating": {
-      "attack": 55,
+      "attack": 61,
       "coverage": 0.7143,
-      "defense": 54,
-      "goalkeeping": 25,
-      "midfield": 58
+      "defense": 58,
+      "goalkeeping": 26,
+      "midfield": 63
     },
     "group": "C",
     "group_slot": 1,
@@ -441,6 +505,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -472,16 +544,16 @@
       "P-W26-0130:WC-2026",
       "P-W26-0131:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-C1"
   },
   {
     "aggregate_rating": {
-      "attack": 53,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 55,
+      "defense": 60,
       "goalkeeping": 25,
-      "midfield": 58
+      "midfield": 64
     },
     "group": "C",
     "group_slot": 2,
@@ -494,6 +566,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -525,16 +605,16 @@
       "P-W26-0432:WC-2026",
       "P-W26-0433:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-C2"
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 48,
-      "goalkeeping": 29,
-      "midfield": 47
+      "defense": 51,
+      "goalkeeping": 30,
+      "midfield": 51
     },
     "group": "C",
     "group_slot": 3,
@@ -547,6 +627,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -578,16 +666,16 @@
       "P-W26-0325:WC-2026",
       "P-W26-0326:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-C3"
   },
   {
     "aggregate_rating": {
-      "attack": 52,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 59,
+      "defense": 65,
       "goalkeeping": 25,
-      "midfield": 62
+      "midfield": 68
     },
     "group": "C",
     "group_slot": 4,
@@ -600,6 +688,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -631,16 +727,16 @@
       "P-W26-0609:WC-2026",
       "P-W26-0610:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-C4"
   },
   {
     "aggregate_rating": {
-      "attack": 59,
+      "attack": 70,
       "coverage": 0.7143,
-      "defense": 50,
-      "goalkeeping": 25,
-      "midfield": 58
+      "defense": 53,
+      "goalkeeping": 20,
+      "midfield": 66
     },
     "group": "D",
     "group_slot": 1,
@@ -653,6 +749,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -684,16 +788,16 @@
       "P-W26-0769:WC-2026",
       "P-W26-0770:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-D1"
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 53,
-      "goalkeeping": 23,
-      "midfield": 52
+      "defense": 59,
+      "goalkeeping": 20,
+      "midfield": 62
     },
     "group": "D",
     "group_slot": 2,
@@ -706,6 +810,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -737,16 +849,16 @@
       "P-W26-0543:WC-2026",
       "P-W26-0544:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-D2"
   },
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 54,
       "coverage": 0.7143,
-      "defense": 52,
+      "defense": 56,
       "goalkeeping": 26,
-      "midfield": 51
+      "midfield": 56
     },
     "group": "D",
     "group_slot": 3,
@@ -759,6 +871,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -790,16 +910,16 @@
       "P-W26-0048:WC-2026",
       "P-W26-0049:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-D3"
   },
   {
     "aggregate_rating": {
-      "attack": 45,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 62,
-      "goalkeeping": 24,
-      "midfield": 56
+      "defense": 64,
+      "goalkeeping": 25,
+      "midfield": 61
     },
     "group": "D",
     "group_slot": 4,
@@ -812,6 +932,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -843,16 +971,16 @@
       "P-W26-0756:WC-2026",
       "P-W26-0757:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-D4"
   },
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 63,
-      "goalkeeping": 25,
-      "midfield": 61
+      "defense": 69,
+      "goalkeeping": 26,
+      "midfield": 67
     },
     "group": "E",
     "group_slot": 1,
@@ -865,6 +993,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -896,16 +1032,16 @@
       "P-W26-0282:WC-2026",
       "P-W26-0283:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-E1"
   },
   {
     "aggregate_rating": {
-      "attack": 45,
+      "attack": 49,
       "coverage": 0.7143,
-      "defense": 49,
-      "goalkeeping": 24,
-      "midfield": 53
+      "defense": 53,
+      "goalkeeping": 25,
+      "midfield": 58
     },
     "group": "E",
     "group_slot": 2,
@@ -918,6 +1054,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -949,16 +1093,16 @@
       "P-W26-0832:WC-2026",
       "P-W26-0833:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-E2"
   },
   {
     "aggregate_rating": {
-      "attack": 50,
+      "attack": 58,
       "coverage": 0.7143,
-      "defense": 54,
-      "goalkeeping": 24,
-      "midfield": 55
+      "defense": 55,
+      "goalkeeping": 25,
+      "midfield": 61
     },
     "group": "E",
     "group_slot": 3,
@@ -971,6 +1115,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1002,16 +1154,16 @@
       "P-W26-0389:WC-2026",
       "P-W26-0390:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-E3"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 57,
+      "defense": 62,
       "goalkeeping": 24,
-      "midfield": 53
+      "midfield": 58
     },
     "group": "E",
     "group_slot": 4,
@@ -1024,6 +1176,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1055,16 +1215,16 @@
       "P-W26-0210:WC-2026",
       "P-W26-0211:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-E4"
   },
   {
     "aggregate_rating": {
-      "attack": 56,
+      "attack": 62,
       "coverage": 0.7143,
-      "defense": 55,
+      "defense": 60,
       "goalkeeping": 25,
-      "midfield": 58
+      "midfield": 64
     },
     "group": "F",
     "group_slot": 1,
@@ -1077,6 +1237,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1108,16 +1276,16 @@
       "P-W26-0447:WC-2026",
       "P-W26-0448:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-F1"
   },
   {
     "aggregate_rating": {
-      "attack": 54,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 57,
+      "defense": 63,
       "goalkeeping": 20,
-      "midfield": 68
+      "midfield": 75
     },
     "group": "F",
     "group_slot": 2,
@@ -1130,6 +1298,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1161,16 +1337,16 @@
       "P-W26-0402:WC-2026",
       "P-W26-0403:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-F2"
   },
   {
     "aggregate_rating": {
-      "attack": 50,
+      "attack": 55,
       "coverage": 0.7143,
-      "defense": 52,
-      "goalkeeping": 24,
-      "midfield": 53
+      "defense": 58,
+      "goalkeeping": 25,
+      "midfield": 59
     },
     "group": "F",
     "group_slot": 3,
@@ -1183,6 +1359,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1214,16 +1398,16 @@
       "P-W26-0703:WC-2026",
       "P-W26-0704:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-F3"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 52,
+      "defense": 56,
       "goalkeeping": 24,
-      "midfield": 55
+      "midfield": 60
     },
     "group": "F",
     "group_slot": 4,
@@ -1236,6 +1420,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1267,16 +1459,16 @@
       "P-W26-0730:WC-2026",
       "P-W26-0731:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-F4"
   },
   {
     "aggregate_rating": {
-      "attack": 57,
+      "attack": 61,
       "coverage": 0.7143,
-      "defense": 56,
+      "defense": 62,
       "goalkeeping": 26,
-      "midfield": 60
+      "midfield": 68
     },
     "group": "G",
     "group_slot": 1,
@@ -1289,6 +1481,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1320,16 +1520,16 @@
       "P-W26-0085:WC-2026",
       "P-W26-0086:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-G1"
   },
   {
     "aggregate_rating": {
-      "attack": 50,
+      "attack": 54,
       "coverage": 0.7143,
-      "defense": 48,
+      "defense": 50,
       "goalkeeping": 24,
-      "midfield": 49
+      "midfield": 51
     },
     "group": "G",
     "group_slot": 2,
@@ -1342,6 +1542,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1373,16 +1581,16 @@
       "P-W26-0234:WC-2026",
       "P-W26-0235:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-G2"
   },
   {
     "aggregate_rating": {
-      "attack": 46,
+      "attack": 48,
       "coverage": 0.7143,
-      "defense": 55,
+      "defense": 58,
       "goalkeeping": 25,
-      "midfield": 57
+      "midfield": 60
     },
     "group": "G",
     "group_slot": 3,
@@ -1395,6 +1603,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1426,16 +1642,16 @@
       "P-W26-0337:WC-2026",
       "P-W26-0338:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-G3"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 53,
+      "defense": 59,
       "goalkeeping": 25,
-      "midfield": 55
+      "midfield": 60
     },
     "group": "G",
     "group_slot": 4,
@@ -1448,6 +1664,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1479,16 +1703,16 @@
       "P-W26-0471:WC-2026",
       "P-W26-0472:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-G4"
   },
   {
     "aggregate_rating": {
-      "attack": 60,
+      "attack": 66,
       "coverage": 0.7143,
-      "defense": 50,
-      "goalkeeping": 25,
-      "midfield": 62
+      "defense": 55,
+      "goalkeeping": 26,
+      "midfield": 69
     },
     "group": "H",
     "group_slot": 1,
@@ -1501,6 +1725,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1532,16 +1764,16 @@
       "P-W26-0679:WC-2026",
       "P-W26-0680:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-H1"
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 49,
+      "defense": 52,
       "goalkeeping": 25,
-      "midfield": 52
+      "midfield": 56
     },
     "group": "H",
     "group_slot": 2,
@@ -1554,6 +1786,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1585,16 +1825,16 @@
       "P-W26-0806:WC-2026",
       "P-W26-0807:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-H2"
   },
   {
     "aggregate_rating": {
-      "attack": 50,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 50,
-      "goalkeeping": 28,
-      "midfield": 50
+      "defense": 53,
+      "goalkeeping": 29,
+      "midfield": 53
     },
     "group": "H",
     "group_slot": 3,
@@ -1607,6 +1847,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1638,16 +1886,16 @@
       "P-W26-0583:WC-2026",
       "P-W26-0584:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-H3"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 59,
-      "goalkeeping": 25,
-      "midfield": 61
+      "defense": 62,
+      "goalkeeping": 30,
+      "midfield": 65
     },
     "group": "H",
     "group_slot": 4,
@@ -1660,6 +1908,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1691,16 +1947,16 @@
       "P-W26-0780:WC-2026",
       "P-W26-0781:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-H4"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 62,
-      "goalkeeping": 25,
-      "midfield": 56
+      "defense": 68,
+      "goalkeeping": 26,
+      "midfield": 61
     },
     "group": "I",
     "group_slot": 1,
@@ -1713,6 +1969,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1744,16 +2008,16 @@
       "P-W26-0265:WC-2026",
       "P-W26-0266:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-I1"
   },
   {
     "aggregate_rating": {
-      "attack": 58,
+      "attack": 64,
       "coverage": 0.7143,
-      "defense": 53,
+      "defense": 58,
       "goalkeeping": 20,
-      "midfield": 61
+      "midfield": 67
     },
     "group": "I",
     "group_slot": 2,
@@ -1766,6 +2030,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1797,16 +2069,16 @@
       "P-W26-0622:WC-2026",
       "P-W26-0623:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-I2"
   },
   {
     "aggregate_rating": {
-      "attack": 45,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 49,
-      "goalkeeping": 28,
-      "midfield": 48
+      "defense": 52,
+      "goalkeeping": 25,
+      "midfield": 54
     },
     "group": "I",
     "group_slot": 3,
@@ -1819,6 +2091,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1850,16 +2130,16 @@
       "P-W26-0363:WC-2026",
       "P-W26-0364:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-I3"
   },
   {
     "aggregate_rating": {
-      "attack": 56,
+      "attack": 62,
       "coverage": 0.7143,
-      "defense": 53,
-      "goalkeeping": 25,
-      "midfield": 57
+      "defense": 58,
+      "goalkeeping": 26,
+      "midfield": 64
     },
     "group": "I",
     "group_slot": 4,
@@ -1872,6 +2152,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1903,16 +2191,16 @@
       "P-W26-0497:WC-2026",
       "P-W26-0498:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-I4"
   },
   {
     "aggregate_rating": {
-      "attack": 53,
+      "attack": 58,
       "coverage": 0.7143,
-      "defense": 61,
-      "goalkeeping": 25,
-      "midfield": 62
+      "defense": 67,
+      "goalkeeping": 26,
+      "midfield": 69
     },
     "group": "J",
     "group_slot": 1,
@@ -1925,6 +2213,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -1956,16 +2252,16 @@
       "P-W26-0030:WC-2026",
       "P-W26-0031:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-J1"
   },
   {
     "aggregate_rating": {
-      "attack": 52,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 53,
+      "defense": 58,
       "goalkeeping": 24,
-      "midfield": 57
+      "midfield": 62
     },
     "group": "J",
     "group_slot": 2,
@@ -1978,6 +2274,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2009,16 +2313,16 @@
       "P-W26-0022:WC-2026",
       "P-W26-0023:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-J2"
   },
   {
     "aggregate_rating": {
-      "attack": 54,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 59,
+      "defense": 65,
       "goalkeeping": 20,
-      "midfield": 64
+      "midfield": 71
     },
     "group": "J",
     "group_slot": 3,
@@ -2031,6 +2335,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2061,16 +2373,16 @@
       "P-W26-0073:WC-2026",
       "P-W26-0074:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-J3"
   },
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 53,
-      "goalkeeping": 24,
-      "midfield": 53
+      "defense": 56,
+      "goalkeeping": 25,
+      "midfield": 56
     },
     "group": "J",
     "group_slot": 4,
@@ -2083,6 +2395,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2114,16 +2434,16 @@
       "P-W26-0884:WC-2026",
       "P-W26-0885:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-J4"
   },
   {
     "aggregate_rating": {
-      "attack": 55,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 57,
+      "defense": 62,
       "goalkeeping": 25,
-      "midfield": 58
+      "midfield": 63
     },
     "group": "K",
     "group_slot": 1,
@@ -2136,6 +2456,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2167,16 +2495,16 @@
       "P-W26-0554:WC-2026",
       "P-W26-0555:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-K1"
   },
   {
     "aggregate_rating": {
-      "attack": 52,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 50,
+      "defense": 57,
       "goalkeeping": 25,
-      "midfield": 57
+      "midfield": 61
     },
     "group": "K",
     "group_slot": 2,
@@ -2189,6 +2517,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2220,16 +2556,16 @@
       "P-W26-0858:WC-2026",
       "P-W26-0859:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-K2"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 50,
-      "goalkeeping": 24,
-      "midfield": 55
+      "defense": 55,
+      "goalkeeping": 20,
+      "midfield": 60
     },
     "group": "K",
     "group_slot": 3,
@@ -2242,6 +2578,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2273,16 +2617,16 @@
       "P-W26-0910:WC-2026",
       "P-W26-0911:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-K3"
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 63,
+      "defense": 69,
       "goalkeeping": 20,
-      "midfield": 61
+      "midfield": 66
     },
     "group": "K",
     "group_slot": 4,
@@ -2295,6 +2639,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2326,16 +2678,16 @@
       "P-W26-0159:WC-2026",
       "P-W26-0160:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-K4"
   },
   {
     "aggregate_rating": {
-      "attack": 57,
+      "attack": 64,
       "coverage": 0.7143,
-      "defense": 54,
+      "defense": 57,
       "goalkeeping": 26,
-      "midfield": 59
+      "midfield": 67
     },
     "group": "L",
     "group_slot": 1,
@@ -2348,6 +2700,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2379,16 +2739,16 @@
       "P-W26-0252:WC-2026",
       "P-W26-0253:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-L1"
   },
   {
     "aggregate_rating": {
-      "attack": 55,
+      "attack": 60,
       "coverage": 0.7143,
-      "defense": 56,
+      "defense": 61,
       "goalkeeping": 25,
-      "midfield": 61
+      "midfield": 67
     },
     "group": "L",
     "group_slot": 2,
@@ -2401,6 +2761,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2432,16 +2800,16 @@
       "P-W26-0170:WC-2026",
       "P-W26-0171:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-L2"
   },
   {
     "aggregate_rating": {
-      "attack": 50,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 49,
-      "goalkeeping": 24,
-      "midfield": 52
+      "defense": 53,
+      "goalkeeping": 25,
+      "midfield": 58
     },
     "group": "L",
     "group_slot": 3,
@@ -2454,6 +2822,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2485,16 +2861,16 @@
       "P-W26-0299:WC-2026",
       "P-W26-0300:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-L3"
   },
   {
     "aggregate_rating": {
-      "attack": 44,
+      "attack": 47,
       "coverage": 0.7143,
-      "defense": 61,
-      "goalkeeping": 24,
-      "midfield": 60
+      "defense": 65,
+      "goalkeeping": 25,
+      "midfield": 64
     },
     "group": "L",
     "group_slot": 4,
@@ -2507,6 +2883,14 @@
         "field": null,
         "retrieved_date": "2026-06-04",
         "source": "Wikipedia: 2026 FIFA World Cup squads (oldid 1357762108)",
+        "source_type": "wikipedia"
+      },
+      {
+        "citation": "\"2026 FIFA World Cup draw\". Wikipedia. Revision 1357747592 (2026-06-04T12:58:31Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw. Used under CC-BY-SA 4.0.",
+        "confidence": null,
+        "field": "group_slot",
+        "retrieved_date": "2026-06-04",
+        "source": "Wikipedia: 2026 FIFA World Cup draw (oldid 1357747592)",
         "source_type": "wikipedia"
       }
     ],
@@ -2538,7 +2922,7 @@
       "P-W26-0517:WC-2026",
       "P-W26-0518:WC-2026"
     ],
-    "squad_status": "final",
+    "squad_status": "locked",
     "team_id": "WC2026-L4"
   }
 ]
