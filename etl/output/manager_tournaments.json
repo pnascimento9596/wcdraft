@@ -1,0 +1,5098 @@
+[
+  {
+    "final_placement": null,
+    "manager_id": "M-001",
+    "manager_tournament_id": "M-001:WC-1998:T-13",
+    "matches": 4,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-002",
+    "manager_tournament_id": "M-002:WC-2022:T-32",
+    "matches": 3,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-003",
+    "manager_tournament_id": "M-003:WC-1982:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-004",
+    "manager_tournament_id": "M-004:WC-1994:T-48",
+    "matches": 5,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-004",
+    "manager_tournament_id": "M-004:WC-2006:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-005",
+    "manager_tournament_id": "M-005:WC-1999:T-32",
+    "matches": 3,
+    "nation_id": "T-32",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-006",
+    "manager_tournament_id": "M-006:WC-2002:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-006",
+    "manager_tournament_id": "M-006:WC-2010:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-007",
+    "manager_tournament_id": "M-007:WC-1990:T-26",
+    "matches": 3,
+    "nation_id": "T-26",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-008",
+    "manager_tournament_id": "M-008:WC-2002:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-009",
+    "manager_tournament_id": "M-009:WC-1998:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-010",
+    "manager_tournament_id": "M-010:WC-1966:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-010",
+    "manager_tournament_id": "M-010:WC-1974:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-011",
+    "manager_tournament_id": "M-011:WC-2022:T-25",
+    "matches": 3,
+    "nation_id": "T-25",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-012",
+    "manager_tournament_id": "M-012:WC-2022:T-84",
+    "matches": 3,
+    "nation_id": "T-84",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-013",
+    "manager_tournament_id": "M-013:WC-2003:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-014",
+    "manager_tournament_id": "M-014:WC-2018:T-74",
+    "matches": 5,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-015",
+    "manager_tournament_id": "M-015:WC-1950:T-75",
+    "matches": 3,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-016",
+    "manager_tournament_id": "M-016:WC-2010:T-66",
+    "matches": 3,
+    "nation_id": "T-66",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-017",
+    "manager_tournament_id": "M-017:WC-2014:T-32",
+    "matches": 3,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-018",
+    "manager_tournament_id": "M-018:WC-2006:T-73",
+    "matches": 4,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-019",
+    "manager_tournament_id": "M-019:WC-2015:T-25",
+    "matches": 3,
+    "nation_id": "T-25",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-020",
+    "manager_tournament_id": "M-020:WC-2002:T-83",
+    "matches": 5,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-020",
+    "manager_tournament_id": "M-020:WC-2006:T-83",
+    "matches": 3,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-021",
+    "manager_tournament_id": "M-021:WC-1958:T-05",
+    "matches": 3,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-022",
+    "manager_tournament_id": "M-022:WC-2022:T-04",
+    "matches": 4,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-023",
+    "manager_tournament_id": "M-023:WC-1950:T-87",
+    "matches": 3,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-024",
+    "manager_tournament_id": "M-024:WC-2003:T-32",
+    "matches": 3,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-025",
+    "manager_tournament_id": "M-025:WC-1994:T-07",
+    "matches": 3,
+    "nation_id": "T-07",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-026",
+    "manager_tournament_id": "M-026:WC-2007:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-027",
+    "manager_tournament_id": "M-027:WC-1958:T-36",
+    "matches": 4,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-027",
+    "manager_tournament_id": "M-027:WC-1962:T-36",
+    "matches": 4,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-027",
+    "manager_tournament_id": "M-027:WC-1966:T-36",
+    "matches": 4,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-027",
+    "manager_tournament_id": "M-027:WC-1978:T-36",
+    "matches": 3,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-028",
+    "manager_tournament_id": "M-028:WC-1938:T-30",
+    "matches": 2,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-029",
+    "manager_tournament_id": "M-029:WC-1994:T-03",
+    "matches": 4,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-030",
+    "manager_tournament_id": "M-030:WC-1958:T-30",
+    "matches": 6,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-031",
+    "manager_tournament_id": "M-031:WC-1978:T-41",
+    "matches": 7,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-031",
+    "manager_tournament_id": "M-031:WC-1982:T-41",
+    "matches": 7,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-031",
+    "manager_tournament_id": "M-031:WC-1986:T-41",
+    "matches": 4,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-032",
+    "manager_tournament_id": "M-032:WC-1954:T-64",
+    "matches": 2,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-033",
+    "manager_tournament_id": "M-033:WC-1986:T-86",
+    "matches": 7,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-033",
+    "manager_tournament_id": "M-033:WC-1990:T-86",
+    "matches": 7,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-034",
+    "manager_tournament_id": "M-034:WC-1990:T-48",
+    "matches": 4,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-034",
+    "manager_tournament_id": "M-034:WC-2006:T-78",
+    "matches": 3,
+    "nation_id": "T-78",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-035",
+    "manager_tournament_id": "M-035:WC-1995:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-036",
+    "manager_tournament_id": "M-036:WC-2014:T-58",
+    "matches": 3,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-036",
+    "manager_tournament_id": "M-036:WC-2022:T-71",
+    "matches": 4,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-037",
+    "manager_tournament_id": "M-037:WC-2015:T-30",
+    "matches": 5,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-038",
+    "manager_tournament_id": "M-038:WC-1970:T-74",
+    "matches": 3,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-039",
+    "manager_tournament_id": "M-039:WC-2022:T-83",
+    "matches": 4,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-040",
+    "manager_tournament_id": "M-040:WC-2007:T-53",
+    "matches": 6,
+    "nation_id": "T-53",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-041",
+    "manager_tournament_id": "M-041:WC-2019:T-41",
+    "matches": 5,
+    "nation_id": "T-41",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-042",
+    "manager_tournament_id": "M-042:WC-1982:T-72",
+    "matches": 5,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-043",
+    "manager_tournament_id": "M-043:WC-2002:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-043",
+    "manager_tournament_id": "M-043:WC-2010:T-13",
+    "matches": 4,
+    "nation_id": "T-13",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-044",
+    "manager_tournament_id": "M-044:WC-1986:T-03",
+    "matches": 7,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-044",
+    "manager_tournament_id": "M-044:WC-1990:T-03",
+    "matches": 7,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-045",
+    "manager_tournament_id": "M-045:WC-1982:T-52",
+    "matches": 5,
+    "nation_id": "T-52",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-045",
+    "manager_tournament_id": "M-045:WC-1986:T-52",
+    "matches": 3,
+    "nation_id": "T-52",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-046",
+    "manager_tournament_id": "M-046:WC-2011:T-30",
+    "matches": 6,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-047",
+    "manager_tournament_id": "M-047:WC-1991:T-31",
+    "matches": 6,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-047",
+    "manager_tournament_id": "M-047:WC-1995:T-31",
+    "matches": 6,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-048",
+    "manager_tournament_id": "M-048:WC-1998:T-18",
+    "matches": 7,
+    "nation_id": "T-18",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-049",
+    "manager_tournament_id": "M-049:WC-1994:T-47",
+    "matches": 3,
+    "nation_id": "T-47",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-050",
+    "manager_tournament_id": "M-050:WC-2006:T-81",
+    "matches": 5,
+    "nation_id": "T-81",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-051",
+    "manager_tournament_id": "M-051:WC-1991:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-052",
+    "manager_tournament_id": "M-052:WC-1998:T-10",
+    "matches": 3,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-053",
+    "manager_tournament_id": "M-053:WC-1991:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-054",
+    "manager_tournament_id": "M-054:WC-1954:T-21",
+    "matches": 2,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-055",
+    "manager_tournament_id": "M-055:WC-1986:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-056",
+    "manager_tournament_id": "M-056:WC-2003:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-056",
+    "manager_tournament_id": "M-056:WC-2007:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-056",
+    "manager_tournament_id": "M-056:WC-2019:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-057",
+    "manager_tournament_id": "M-057:WC-1970:T-10",
+    "matches": 3,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-058",
+    "manager_tournament_id": "M-058:WC-2010:T-83",
+    "matches": 4,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-059",
+    "manager_tournament_id": "M-059:WC-1998:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-060",
+    "manager_tournament_id": "M-060:WC-1999:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-061",
+    "manager_tournament_id": "M-061:WC-1930:T-56",
+    "matches": 2,
+    "nation_id": "T-56",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-062",
+    "manager_tournament_id": "M-062:WC-2006:T-20",
+    "matches": 3,
+    "nation_id": "T-20",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-063",
+    "manager_tournament_id": "M-063:WC-1950:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-064",
+    "manager_tournament_id": "M-064:WC-1958:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-065",
+    "manager_tournament_id": "M-065:WC-1974:T-24",
+    "matches": 6,
+    "nation_id": "T-24",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-066",
+    "manager_tournament_id": "M-066:WC-1938:T-06",
+    "matches": 1,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-067",
+    "manager_tournament_id": "M-067:WC-1999:T-62",
+    "matches": 4,
+    "nation_id": "T-62",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-067",
+    "manager_tournament_id": "M-067:WC-2003:T-62",
+    "matches": 4,
+    "nation_id": "T-62",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-068",
+    "manager_tournament_id": "M-068:WC-1978:T-56",
+    "matches": 6,
+    "nation_id": "T-56",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-069",
+    "manager_tournament_id": "M-069:WC-2002:T-73",
+    "matches": 5,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-070",
+    "manager_tournament_id": "M-070:WC-1974:T-03",
+    "matches": 6,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-071",
+    "manager_tournament_id": "M-071:WC-2010:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-071",
+    "manager_tournament_id": "M-071:WC-2014:T-62",
+    "matches": 3,
+    "nation_id": "T-62",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-072",
+    "manager_tournament_id": "M-072:WC-1970:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-073",
+    "manager_tournament_id": "M-073:WC-1998:T-55",
+    "matches": 4,
+    "nation_id": "T-55",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-074",
+    "manager_tournament_id": "M-074:WC-1970:T-27",
+    "matches": 3,
+    "nation_id": "T-27",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-075",
+    "manager_tournament_id": "M-075:WC-1930:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-076",
+    "manager_tournament_id": "M-076:WC-1998:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-077",
+    "manager_tournament_id": "M-077:WC-1990:T-60",
+    "matches": 5,
+    "nation_id": "T-60",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-077",
+    "manager_tournament_id": "M-077:WC-1994:T-60",
+    "matches": 4,
+    "nation_id": "T-60",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-078",
+    "manager_tournament_id": "M-078:WC-2018:T-62",
+    "matches": 5,
+    "nation_id": "T-62",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-079",
+    "manager_tournament_id": "M-079:WC-1978:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-080",
+    "manager_tournament_id": "M-080:WC-1991:T-15",
+    "matches": 4,
+    "nation_id": "T-15",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-081",
+    "manager_tournament_id": "M-081:WC-2018:T-65",
+    "matches": 3,
+    "nation_id": "T-65",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-081",
+    "manager_tournament_id": "M-081:WC-2022:T-65",
+    "matches": 4,
+    "nation_id": "T-65",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-082",
+    "manager_tournament_id": "M-082:WC-1994:T-73",
+    "matches": 5,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-082",
+    "manager_tournament_id": "M-082:WC-1998:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-083",
+    "manager_tournament_id": "M-083:WC-1995:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-084",
+    "manager_tournament_id": "M-084:WC-1962:T-84",
+    "matches": 3,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-085",
+    "manager_tournament_id": "M-085:WC-1950:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-086",
+    "manager_tournament_id": "M-086:WC-1978:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-087",
+    "manager_tournament_id": "M-087:WC-1999:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-087",
+    "manager_tournament_id": "M-087:WC-2011:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-087",
+    "manager_tournament_id": "M-087:WC-2015:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-088",
+    "manager_tournament_id": "M-088:WC-2018:T-26",
+    "matches": 3,
+    "nation_id": "T-26",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-089",
+    "manager_tournament_id": "M-089:WC-1954:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-090",
+    "manager_tournament_id": "M-090:WC-2018:T-18",
+    "matches": 7,
+    "nation_id": "T-18",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-090",
+    "manager_tournament_id": "M-090:WC-2022:T-18",
+    "matches": 7,
+    "nation_id": "T-18",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-091",
+    "manager_tournament_id": "M-091:WC-1930:T-09",
+    "matches": 2,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-092",
+    "manager_tournament_id": "M-092:WC-1982:T-35",
+    "matches": 3,
+    "nation_id": "T-35",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-093",
+    "manager_tournament_id": "M-093:WC-1986:T-39",
+    "matches": 3,
+    "nation_id": "T-39",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-094",
+    "manager_tournament_id": "M-094:WC-2010:T-73",
+    "matches": 7,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-094",
+    "manager_tournament_id": "M-094:WC-2014:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-095",
+    "manager_tournament_id": "M-095:WC-2007:T-74",
+    "matches": 3,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-095",
+    "manager_tournament_id": "M-095:WC-2011:T-74",
+    "matches": 6,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-095",
+    "manager_tournament_id": "M-095:WC-2019:T-50",
+    "matches": 4,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-096",
+    "manager_tournament_id": "M-096:WC-1982:T-86",
+    "matches": 7,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-097",
+    "manager_tournament_id": "M-097:WC-2014:T-30",
+    "matches": 5,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-097",
+    "manager_tournament_id": "M-097:WC-2018:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-097",
+    "manager_tournament_id": "M-097:WC-2022:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-098",
+    "manager_tournament_id": "M-098:WC-2019:T-30",
+    "matches": 5,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-099",
+    "manager_tournament_id": "M-099:WC-1995:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-099",
+    "manager_tournament_id": "M-099:WC-1999:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-100",
+    "manager_tournament_id": "M-100:WC-1970:T-56",
+    "matches": 4,
+    "nation_id": "T-56",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-101",
+    "manager_tournament_id": "M-101:WC-1938:T-36",
+    "matches": 4,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-102",
+    "manager_tournament_id": "M-102:WC-2019:T-11",
+    "matches": 4,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-103",
+    "manager_tournament_id": "M-103:WC-1958:T-52",
+    "matches": 5,
+    "nation_id": "T-52",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-104",
+    "manager_tournament_id": "M-104:WC-1999:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-104",
+    "manager_tournament_id": "M-104:WC-2003:T-74",
+    "matches": 6,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-104",
+    "manager_tournament_id": "M-104:WC-2007:T-14",
+    "matches": 4,
+    "nation_id": "T-14",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-105",
+    "manager_tournament_id": "M-105:WC-2006:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-105",
+    "manager_tournament_id": "M-105:WC-2010:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-106",
+    "manager_tournament_id": "M-106:WC-1991:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-107",
+    "manager_tournament_id": "M-107:WC-2006:T-32",
+    "matches": 4,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-108",
+    "manager_tournament_id": "M-108:WC-2010:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-109",
+    "manager_tournament_id": "M-109:WC-1930:T-55",
+    "matches": 2,
+    "nation_id": "T-55",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-110",
+    "manager_tournament_id": "M-110:WC-2007:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-111",
+    "manager_tournament_id": "M-111:WC-1950:T-73",
+    "matches": 6,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-112",
+    "manager_tournament_id": "M-112:WC-2019:T-70",
+    "matches": 3,
+    "nation_id": "T-70",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-113",
+    "manager_tournament_id": "M-113:WC-2015:T-83",
+    "matches": 7,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-113",
+    "manager_tournament_id": "M-113:WC-2019:T-83",
+    "matches": 7,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-114",
+    "manager_tournament_id": "M-114:WC-2002:T-57",
+    "matches": 3,
+    "nation_id": "T-57",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-115",
+    "manager_tournament_id": "M-115:WC-2015:T-11",
+    "matches": 4,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-116",
+    "manager_tournament_id": "M-116:WC-2022:T-73",
+    "matches": 4,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-117",
+    "manager_tournament_id": "M-117:WC-1974:T-74",
+    "matches": 6,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-117",
+    "manager_tournament_id": "M-117:WC-1978:T-74",
+    "matches": 3,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-118",
+    "manager_tournament_id": "M-118:WC-2002:T-28",
+    "matches": 5,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-118",
+    "manager_tournament_id": "M-118:WC-2006:T-28",
+    "matches": 5,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-118",
+    "manager_tournament_id": "M-118:WC-2010:T-42",
+    "matches": 3,
+    "nation_id": "T-42",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-119",
+    "manager_tournament_id": "M-119:WC-1966:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-120",
+    "manager_tournament_id": "M-120:WC-1999:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-121",
+    "manager_tournament_id": "M-121:WC-1986:T-47",
+    "matches": 4,
+    "nation_id": "T-47",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-122",
+    "manager_tournament_id": "M-122:WC-1958:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-122",
+    "manager_tournament_id": "M-122:WC-1966:T-09",
+    "matches": 3,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-123",
+    "manager_tournament_id": "M-123:WC-1986:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-124",
+    "manager_tournament_id": "M-124:WC-1962:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-125",
+    "manager_tournament_id": "M-125:WC-2014:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-126",
+    "manager_tournament_id": "M-126:WC-1950:T-55",
+    "matches": 2,
+    "nation_id": "T-55",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-127",
+    "manager_tournament_id": "M-127:WC-2022:T-31",
+    "matches": 3,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-128",
+    "manager_tournament_id": "M-128:WC-1966:T-75",
+    "matches": 3,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-129",
+    "manager_tournament_id": "M-129:WC-1995:T-09",
+    "matches": 3,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-130",
+    "manager_tournament_id": "M-130:WC-2011:T-29",
+    "matches": 3,
+    "nation_id": "T-29",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-131",
+    "manager_tournament_id": "M-131:WC-1990:T-83",
+    "matches": 3,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-132",
+    "manager_tournament_id": "M-132:WC-1991:T-22",
+    "matches": 4,
+    "nation_id": "T-22",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-132",
+    "manager_tournament_id": "M-132:WC-1995:T-22",
+    "matches": 4,
+    "nation_id": "T-22",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-133",
+    "manager_tournament_id": "M-133:WC-1934:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-134",
+    "manager_tournament_id": "M-134:WC-2018:T-56",
+    "matches": 3,
+    "nation_id": "T-56",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-135",
+    "manager_tournament_id": "M-135:WC-2019:T-74",
+    "matches": 7,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-136",
+    "manager_tournament_id": "M-136:WC-1934:T-48",
+    "matches": 1,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-136",
+    "manager_tournament_id": "M-136:WC-1938:T-48",
+    "matches": 1,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-137",
+    "manager_tournament_id": "M-137:WC-1966:T-58",
+    "matches": 6,
+    "nation_id": "T-58",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-138",
+    "manager_tournament_id": "M-138:WC-1978:T-57",
+    "matches": 6,
+    "nation_id": "T-57",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-139",
+    "manager_tournament_id": "M-139:WC-1970:T-06",
+    "matches": 3,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-140",
+    "manager_tournament_id": "M-140:WC-1930:T-06",
+    "matches": 2,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-140",
+    "manager_tournament_id": "M-140:WC-1934:T-06",
+    "matches": 1,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-141",
+    "manager_tournament_id": "M-141:WC-1998:T-16",
+    "matches": 3,
+    "nation_id": "T-16",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-141",
+    "manager_tournament_id": "M-141:WC-2002:T-25",
+    "matches": 3,
+    "nation_id": "T-25",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-141",
+    "manager_tournament_id": "M-141:WC-2018:T-54",
+    "matches": 3,
+    "nation_id": "T-54",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-142",
+    "manager_tournament_id": "M-142:WC-2006:T-02",
+    "matches": 3,
+    "nation_id": "T-02",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-143",
+    "manager_tournament_id": "M-143:WC-2003:T-09",
+    "matches": 4,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-144",
+    "manager_tournament_id": "M-144:WC-1958:T-55",
+    "matches": 3,
+    "nation_id": "T-55",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-145",
+    "manager_tournament_id": "M-145:WC-1974:T-57",
+    "matches": 7,
+    "nation_id": "T-57",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-146",
+    "manager_tournament_id": "M-146:WC-1934:T-83",
+    "matches": 1,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-147",
+    "manager_tournament_id": "M-147:WC-1982:T-28",
+    "matches": 5,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-148",
+    "manager_tournament_id": "M-148:WC-1991:T-41",
+    "matches": 4,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-149",
+    "manager_tournament_id": "M-149:WC-1966:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-150",
+    "manager_tournament_id": "M-150:WC-2002:T-17",
+    "matches": 3,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-150",
+    "manager_tournament_id": "M-150:WC-2006:T-17",
+    "matches": 3,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-151",
+    "manager_tournament_id": "M-151:WC-2002:T-80",
+    "matches": 7,
+    "nation_id": "T-80",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-152",
+    "manager_tournament_id": "M-152:WC-2014:T-01",
+    "matches": 4,
+    "nation_id": "T-01",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-153",
+    "manager_tournament_id": "M-153:WC-2018:T-37",
+    "matches": 3,
+    "nation_id": "T-37",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-154",
+    "manager_tournament_id": "M-154:WC-1938:T-53",
+    "matches": 1,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-155",
+    "manager_tournament_id": "M-155:WC-1995:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-156",
+    "manager_tournament_id": "M-156:WC-2015:T-14",
+    "matches": 5,
+    "nation_id": "T-14",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-157",
+    "manager_tournament_id": "M-157:WC-1978:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-158",
+    "manager_tournament_id": "M-158:WC-2018:T-22",
+    "matches": 4,
+    "nation_id": "T-22",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-159",
+    "manager_tournament_id": "M-159:WC-2007:T-22",
+    "matches": 3,
+    "nation_id": "T-22",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-159",
+    "manager_tournament_id": "M-159:WC-2019:T-12",
+    "matches": 4,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-160",
+    "manager_tournament_id": "M-160:WC-2003:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-161",
+    "manager_tournament_id": "M-161:WC-1938:T-31",
+    "matches": 2,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-161",
+    "manager_tournament_id": "M-161:WC-1954:T-86",
+    "matches": 6,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-161",
+    "manager_tournament_id": "M-161:WC-1958:T-86",
+    "matches": 6,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-161",
+    "manager_tournament_id": "M-161:WC-1962:T-86",
+    "matches": 4,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-162",
+    "manager_tournament_id": "M-162:WC-2010:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-163",
+    "manager_tournament_id": "M-163:WC-2007:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-163",
+    "manager_tournament_id": "M-163:WC-2011:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-163",
+    "manager_tournament_id": "M-163:WC-2015:T-12",
+    "matches": 5,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-163",
+    "manager_tournament_id": "M-163:WC-2022:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-164",
+    "manager_tournament_id": "M-164:WC-1962:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-165",
+    "manager_tournament_id": "M-165:WC-2014:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-166",
+    "manager_tournament_id": "M-166:WC-1990:T-05",
+    "matches": 3,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-167",
+    "manager_tournament_id": "M-167:WC-1978:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-167",
+    "manager_tournament_id": "M-167:WC-1982:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-168",
+    "manager_tournament_id": "M-168:WC-1998:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-168",
+    "manager_tournament_id": "M-168:WC-2002:T-71",
+    "matches": 7,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-168",
+    "manager_tournament_id": "M-168:WC-2006:T-04",
+    "matches": 4,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-169",
+    "manager_tournament_id": "M-169:WC-2018:T-73",
+    "matches": 4,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-170",
+    "manager_tournament_id": "M-170:WC-2010:T-75",
+    "matches": 3,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-170",
+    "manager_tournament_id": "M-170:WC-2014:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-171",
+    "manager_tournament_id": "M-171:WC-2022:T-22",
+    "matches": 3,
+    "nation_id": "T-22",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-172",
+    "manager_tournament_id": "M-172:WC-1998:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-173",
+    "manager_tournament_id": "M-173:WC-1994:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-173",
+    "manager_tournament_id": "M-173:WC-2014:T-28",
+    "matches": 3,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-174",
+    "manager_tournament_id": "M-174:WC-1999:T-53",
+    "matches": 6,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-175",
+    "manager_tournament_id": "M-175:WC-1970:T-84",
+    "matches": 6,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-176",
+    "manager_tournament_id": "M-176:WC-2014:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-177",
+    "manager_tournament_id": "M-177:WC-2010:T-71",
+    "matches": 4,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-178",
+    "manager_tournament_id": "M-178:WC-1999:T-22",
+    "matches": 3,
+    "nation_id": "T-22",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-179",
+    "manager_tournament_id": "M-179:WC-1994:T-61",
+    "matches": 5,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-179",
+    "manager_tournament_id": "M-179:WC-1998:T-61",
+    "matches": 4,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-180",
+    "manager_tournament_id": "M-180:WC-1999:T-50",
+    "matches": 4,
+    "nation_id": "T-50",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-181",
+    "manager_tournament_id": "M-181:WC-2006:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-182",
+    "manager_tournament_id": "M-182:WC-1998:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-183",
+    "manager_tournament_id": "M-183:WC-2006:T-57",
+    "matches": 3,
+    "nation_id": "T-57",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-184",
+    "manager_tournament_id": "M-184:WC-1950:T-83",
+    "matches": 3,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-185",
+    "manager_tournament_id": "M-185:WC-1990:T-61",
+    "matches": 4,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-186",
+    "manager_tournament_id": "M-186:WC-2019:T-14",
+    "matches": 4,
+    "nation_id": "T-14",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-187",
+    "manager_tournament_id": "M-187:WC-1998:T-22",
+    "matches": 5,
+    "nation_id": "T-22",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-188",
+    "manager_tournament_id": "M-188:WC-2002:T-18",
+    "matches": 3,
+    "nation_id": "T-18",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-189",
+    "manager_tournament_id": "M-189:WC-1958:T-72",
+    "matches": 5,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-189",
+    "manager_tournament_id": "M-189:WC-1962:T-72",
+    "matches": 4,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-189",
+    "manager_tournament_id": "M-189:WC-1970:T-72",
+    "matches": 4,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-190",
+    "manager_tournament_id": "M-190:WC-2022:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-191",
+    "manager_tournament_id": "M-191:WC-1938:T-57",
+    "matches": 1,
+    "nation_id": "T-57",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-192",
+    "manager_tournament_id": "M-192:WC-1998:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-193",
+    "manager_tournament_id": "M-193:WC-2002:T-69",
+    "matches": 3,
+    "nation_id": "T-69",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-194",
+    "manager_tournament_id": "M-194:WC-2010:T-69",
+    "matches": 3,
+    "nation_id": "T-69",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-195",
+    "manager_tournament_id": "M-195:WC-2019:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-196",
+    "manager_tournament_id": "M-196:WC-2014:T-50",
+    "matches": 4,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-197",
+    "manager_tournament_id": "M-197:WC-1982:T-01",
+    "matches": 3,
+    "nation_id": "T-01",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-198",
+    "manager_tournament_id": "M-198:WC-1994:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-199",
+    "manager_tournament_id": "M-199:WC-2010:T-51",
+    "matches": 3,
+    "nation_id": "T-51",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-200",
+    "manager_tournament_id": "M-200:WC-1986:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-201",
+    "manager_tournament_id": "M-201:WC-2007:T-51",
+    "matches": 4,
+    "nation_id": "T-51",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-201",
+    "manager_tournament_id": "M-201:WC-2011:T-51",
+    "matches": 3,
+    "nation_id": "T-51",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-202",
+    "manager_tournament_id": "M-202:WC-1954:T-71",
+    "matches": 2,
+    "nation_id": "T-71",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-203",
+    "manager_tournament_id": "M-203:WC-1934:T-30",
+    "matches": 1,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-204",
+    "manager_tournament_id": "M-204:WC-2006:T-31",
+    "matches": 7,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-204",
+    "manager_tournament_id": "M-204:WC-2014:T-83",
+    "matches": 4,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-205",
+    "manager_tournament_id": "M-205:WC-1958:T-21",
+    "matches": 4,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-206",
+    "manager_tournament_id": "M-206:WC-2014:T-18",
+    "matches": 3,
+    "nation_id": "T-18",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-207",
+    "manager_tournament_id": "M-207:WC-2006:T-18",
+    "matches": 3,
+    "nation_id": "T-18",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-208",
+    "manager_tournament_id": "M-208:WC-2018:T-66",
+    "matches": 3,
+    "nation_id": "T-66",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-209",
+    "manager_tournament_id": "M-209:WC-1978:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-210",
+    "manager_tournament_id": "M-210:WC-2006:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-211",
+    "manager_tournament_id": "M-211:WC-2006:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-212",
+    "manager_tournament_id": "M-212:WC-2002:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-212",
+    "manager_tournament_id": "M-212:WC-2006:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-212",
+    "manager_tournament_id": "M-212:WC-2010:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-213",
+    "manager_tournament_id": "M-213:WC-2014:T-42",
+    "matches": 3,
+    "nation_id": "T-42",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-214",
+    "manager_tournament_id": "M-214:WC-2011:T-53",
+    "matches": 3,
+    "nation_id": "T-53",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-215",
+    "manager_tournament_id": "M-215:WC-1998:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-216",
+    "manager_tournament_id": "M-216:WC-1982:T-05",
+    "matches": 5,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-217",
+    "manager_tournament_id": "M-217:WC-1990:T-09",
+    "matches": 4,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-218",
+    "manager_tournament_id": "M-218:WC-2010:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-219",
+    "manager_tournament_id": "M-219:WC-1998:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-220",
+    "manager_tournament_id": "M-220:WC-1990:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-221",
+    "manager_tournament_id": "M-221:WC-1998:T-06",
+    "matches": 3,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-222",
+    "manager_tournament_id": "M-222:WC-2002:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-222",
+    "manager_tournament_id": "M-222:WC-2006:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-223",
+    "manager_tournament_id": "M-223:WC-2019:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-224",
+    "manager_tournament_id": "M-224:WC-2011:T-09",
+    "matches": 4,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-225",
+    "manager_tournament_id": "M-225:WC-2006:T-41",
+    "matches": 7,
+    "nation_id": "T-41",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-225",
+    "manager_tournament_id": "M-225:WC-2010:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-226",
+    "manager_tournament_id": "M-226:WC-1954:T-06",
+    "matches": 2,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-227",
+    "manager_tournament_id": "M-227:WC-1986:T-72",
+    "matches": 4,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-228",
+    "manager_tournament_id": "M-228:WC-1990:T-72",
+    "matches": 3,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-229",
+    "manager_tournament_id": "M-229:WC-2003:T-30",
+    "matches": 3,
+    "nation_id": "T-30",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-230",
+    "manager_tournament_id": "M-230:WC-1950:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-230",
+    "manager_tournament_id": "M-230:WC-1954:T-84",
+    "matches": 5,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-231",
+    "manager_tournament_id": "M-231:WC-1954:T-46",
+    "matches": 2,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-231",
+    "manager_tournament_id": "M-231:WC-1958:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-232",
+    "manager_tournament_id": "M-232:WC-1962:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-232",
+    "manager_tournament_id": "M-232:WC-1966:T-03",
+    "matches": 4,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-233",
+    "manager_tournament_id": "M-233:WC-1962:T-87",
+    "matches": 6,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-234",
+    "manager_tournament_id": "M-234:WC-2010:T-31",
+    "matches": 7,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-234",
+    "manager_tournament_id": "M-234:WC-2014:T-31",
+    "matches": 7,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-234",
+    "manager_tournament_id": "M-234:WC-2018:T-31",
+    "matches": 3,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-235",
+    "manager_tournament_id": "M-235:WC-1930:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-236",
+    "manager_tournament_id": "M-236:WC-2003:T-14",
+    "matches": 4,
+    "nation_id": "T-14",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-237",
+    "manager_tournament_id": "M-237:WC-1995:T-14",
+    "matches": 6,
+    "nation_id": "T-14",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-237",
+    "manager_tournament_id": "M-237:WC-1999:T-14",
+    "matches": 6,
+    "nation_id": "T-14",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-238",
+    "manager_tournament_id": "M-238:WC-2018:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-239",
+    "manager_tournament_id": "M-239:WC-1978:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-240",
+    "manager_tournament_id": "M-240:WC-1998:T-41",
+    "matches": 5,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-240",
+    "manager_tournament_id": "M-240:WC-2002:T-55",
+    "matches": 4,
+    "nation_id": "T-55",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-241",
+    "manager_tournament_id": "M-241:WC-2010:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-242",
+    "manager_tournament_id": "M-242:WC-1970:T-21",
+    "matches": 3,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-243",
+    "manager_tournament_id": "M-243:WC-2018:T-06",
+    "matches": 7,
+    "nation_id": "T-06",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-243",
+    "manager_tournament_id": "M-243:WC-2022:T-06",
+    "matches": 3,
+    "nation_id": "T-06",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-244",
+    "manager_tournament_id": "M-244:WC-2010:T-55",
+    "matches": 5,
+    "nation_id": "T-55",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-244",
+    "manager_tournament_id": "M-244:WC-2022:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-245",
+    "manager_tournament_id": "M-245:WC-1938:T-23",
+    "matches": 1,
+    "nation_id": "T-23",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-246",
+    "manager_tournament_id": "M-246:WC-1990:T-16",
+    "matches": 4,
+    "nation_id": "T-16",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-246",
+    "manager_tournament_id": "M-246:WC-1994:T-16",
+    "matches": 3,
+    "nation_id": "T-16",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-247",
+    "manager_tournament_id": "M-247:WC-1962:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-248",
+    "manager_tournament_id": "M-248:WC-2002:T-60",
+    "matches": 4,
+    "nation_id": "T-60",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-249",
+    "manager_tournament_id": "M-249:WC-1934:T-26",
+    "matches": 1,
+    "nation_id": "T-26",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-250",
+    "manager_tournament_id": "M-250:WC-1934:T-05",
+    "matches": 4,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-251",
+    "manager_tournament_id": "M-251:WC-1938:T-21",
+    "matches": 3,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-252",
+    "manager_tournament_id": "M-252:WC-1994:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-253",
+    "manager_tournament_id": "M-253:WC-1982:T-01",
+    "matches": 3,
+    "nation_id": "T-01",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-254",
+    "manager_tournament_id": "M-254:WC-1978:T-03",
+    "matches": 7,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-254",
+    "manager_tournament_id": "M-254:WC-1982:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-255",
+    "manager_tournament_id": "M-255:WC-2019:T-43",
+    "matches": 3,
+    "nation_id": "T-43",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-256",
+    "manager_tournament_id": "M-256:WC-1982:T-36",
+    "matches": 3,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-257",
+    "manager_tournament_id": "M-257:WC-2002:T-65",
+    "matches": 5,
+    "nation_id": "T-65",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-258",
+    "manager_tournament_id": "M-258:WC-1986:T-36",
+    "matches": 3,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-259",
+    "manager_tournament_id": "M-259:WC-1986:T-30",
+    "matches": 7,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-259",
+    "manager_tournament_id": "M-259:WC-1994:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-259",
+    "manager_tournament_id": "M-259:WC-1998:T-47",
+    "matches": 3,
+    "nation_id": "T-47",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-259",
+    "manager_tournament_id": "M-259:WC-2006:T-42",
+    "matches": 3,
+    "nation_id": "T-42",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-260",
+    "manager_tournament_id": "M-260:WC-1974:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-261",
+    "manager_tournament_id": "M-261:WC-2022:T-57",
+    "matches": 4,
+    "nation_id": "T-57",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-262",
+    "manager_tournament_id": "M-262:WC-1962:T-87",
+    "matches": 6,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-263",
+    "manager_tournament_id": "M-263:WC-2019:T-04",
+    "matches": 4,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-264",
+    "manager_tournament_id": "M-264:WC-1974:T-87",
+    "matches": 6,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-264",
+    "manager_tournament_id": "M-264:WC-1982:T-87",
+    "matches": 3,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-265",
+    "manager_tournament_id": "M-265:WC-1930:T-83",
+    "matches": 3,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-266",
+    "manager_tournament_id": "M-266:WC-1986:T-46",
+    "matches": 5,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-266",
+    "manager_tournament_id": "M-266:WC-1990:T-17",
+    "matches": 4,
+    "nation_id": "T-17",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-266",
+    "manager_tournament_id": "M-266:WC-1994:T-83",
+    "matches": 4,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-266",
+    "manager_tournament_id": "M-266:WC-1998:T-50",
+    "matches": 4,
+    "nation_id": "T-50",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-266",
+    "manager_tournament_id": "M-266:WC-2002:T-14",
+    "matches": 3,
+    "nation_id": "T-14",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-267",
+    "manager_tournament_id": "M-267:WC-1999:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-268",
+    "manager_tournament_id": "M-268:WC-1974:T-10",
+    "matches": 3,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-269",
+    "manager_tournament_id": "M-269:WC-1978:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-270",
+    "manager_tournament_id": "M-270:WC-2011:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-271",
+    "manager_tournament_id": "M-271:WC-1962:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-272",
+    "manager_tournament_id": "M-272:WC-1954:T-09",
+    "matches": 3,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-273",
+    "manager_tournament_id": "M-273:WC-2022:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-274",
+    "manager_tournament_id": "M-274:WC-1966:T-72",
+    "matches": 6,
+    "nation_id": "T-72",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-275",
+    "manager_tournament_id": "M-275:WC-1934:T-75",
+    "matches": 2,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-276",
+    "manager_tournament_id": "M-276:WC-1986:T-73",
+    "matches": 5,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-277",
+    "manager_tournament_id": "M-277:WC-1958:T-85",
+    "matches": 5,
+    "nation_id": "T-85",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-278",
+    "manager_tournament_id": "M-278:WC-1999:T-51",
+    "matches": 3,
+    "nation_id": "T-51",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-279",
+    "manager_tournament_id": "M-279:WC-1966:T-51",
+    "matches": 4,
+    "nation_id": "T-51",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-280",
+    "manager_tournament_id": "M-280:WC-1934:T-36",
+    "matches": 2,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-281",
+    "manager_tournament_id": "M-281:WC-1938:T-74",
+    "matches": 3,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-282",
+    "manager_tournament_id": "M-282:WC-1954:T-05",
+    "matches": 5,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-283",
+    "manager_tournament_id": "M-283:WC-2018:T-57",
+    "matches": 3,
+    "nation_id": "T-57",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-284",
+    "manager_tournament_id": "M-284:WC-2007:T-31",
+    "matches": 6,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-284",
+    "manager_tournament_id": "M-284:WC-2011:T-31",
+    "matches": 4,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-284",
+    "manager_tournament_id": "M-284:WC-2015:T-31",
+    "matches": 7,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-285",
+    "manager_tournament_id": "M-285:WC-1990:T-11",
+    "matches": 5,
+    "nation_id": "T-11",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-286",
+    "manager_tournament_id": "M-286:WC-1934:T-31",
+    "matches": 4,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-287",
+    "manager_tournament_id": "M-287:WC-2019:T-28",
+    "matches": 7,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-288",
+    "manager_tournament_id": "M-288:WC-1970:T-61",
+    "matches": 3,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-289",
+    "manager_tournament_id": "M-289:WC-2018:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-290",
+    "manager_tournament_id": "M-290:WC-1990:T-74",
+    "matches": 3,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-291",
+    "manager_tournament_id": "M-291:WC-1950:T-41",
+    "matches": 2,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-292",
+    "manager_tournament_id": "M-292:WC-2007:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-293",
+    "manager_tournament_id": "M-293:WC-1998:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-293",
+    "manager_tournament_id": "M-293:WC-2010:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-294",
+    "manager_tournament_id": "M-294:WC-2015:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-295",
+    "manager_tournament_id": "M-295:WC-2003:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-296",
+    "manager_tournament_id": "M-296:WC-1930:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-297",
+    "manager_tournament_id": "M-297:WC-2002:T-58",
+    "matches": 3,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-298",
+    "manager_tournament_id": "M-298:WC-1994:T-53",
+    "matches": 3,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-298",
+    "manager_tournament_id": "M-298:WC-1998:T-53",
+    "matches": 4,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-299",
+    "manager_tournament_id": "M-299:WC-2002:T-22",
+    "matches": 4,
+    "nation_id": "T-22",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-299",
+    "manager_tournament_id": "M-299:WC-2010:T-22",
+    "matches": 3,
+    "nation_id": "T-22",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-300",
+    "manager_tournament_id": "M-300:WC-2002:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-301",
+    "manager_tournament_id": "M-301:WC-1974:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-302",
+    "manager_tournament_id": "M-302:WC-1930:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-303",
+    "manager_tournament_id": "M-303:WC-1990:T-87",
+    "matches": 5,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-304",
+    "manager_tournament_id": "M-304:WC-2018:T-46",
+    "matches": 4,
+    "nation_id": "T-46",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-305",
+    "manager_tournament_id": "M-305:WC-1962:T-10",
+    "matches": 3,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-306",
+    "manager_tournament_id": "M-306:WC-2022:T-85",
+    "matches": 3,
+    "nation_id": "T-85",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-307",
+    "manager_tournament_id": "M-307:WC-2007:T-32",
+    "matches": 3,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-308",
+    "manager_tournament_id": "M-308:WC-1991:T-74",
+    "matches": 6,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-309",
+    "manager_tournament_id": "M-309:WC-1994:T-33",
+    "matches": 3,
+    "nation_id": "T-33",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-310",
+    "manager_tournament_id": "M-310:WC-2006:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-1982:T-45",
+    "matches": 3,
+    "nation_id": "T-45",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-1990:T-82",
+    "matches": 3,
+    "nation_id": "T-82",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-1994:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-1998:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-2006:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-311",
+    "manager_tournament_id": "M-311:WC-2010:T-70",
+    "matches": 3,
+    "nation_id": "T-70",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-312",
+    "manager_tournament_id": "M-312:WC-1934:T-03",
+    "matches": 1,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-313",
+    "manager_tournament_id": "M-313:WC-1998:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-314",
+    "manager_tournament_id": "M-314:WC-1962:T-16",
+    "matches": 3,
+    "nation_id": "T-16",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-315",
+    "manager_tournament_id": "M-315:WC-2006:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-315",
+    "manager_tournament_id": "M-315:WC-2014:T-16",
+    "matches": 5,
+    "nation_id": "T-16",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-315",
+    "manager_tournament_id": "M-315:WC-2018:T-16",
+    "matches": 4,
+    "nation_id": "T-16",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-316",
+    "manager_tournament_id": "M-316:WC-1991:T-53",
+    "matches": 6,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-316",
+    "manager_tournament_id": "M-316:WC-1995:T-53",
+    "matches": 6,
+    "nation_id": "T-53",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-316",
+    "manager_tournament_id": "M-316:WC-2003:T-12",
+    "matches": 6,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-316",
+    "manager_tournament_id": "M-316:WC-2007:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-316",
+    "manager_tournament_id": "M-316:WC-2015:T-53",
+    "matches": 4,
+    "nation_id": "T-53",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-317",
+    "manager_tournament_id": "M-317:WC-1994:T-10",
+    "matches": 7,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-318",
+    "manager_tournament_id": "M-318:WC-2006:T-67",
+    "matches": 3,
+    "nation_id": "T-67",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-319",
+    "manager_tournament_id": "M-319:WC-2018:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-320",
+    "manager_tournament_id": "M-320:WC-1934:T-21",
+    "matches": 4,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-321",
+    "manager_tournament_id": "M-321:WC-1934:T-74",
+    "matches": 2,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-322",
+    "manager_tournament_id": "M-322:WC-2006:T-77",
+    "matches": 3,
+    "nation_id": "T-77",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-323",
+    "manager_tournament_id": "M-323:WC-1954:T-30",
+    "matches": 2,
+    "nation_id": "T-30",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-324",
+    "manager_tournament_id": "M-324:WC-1982:T-57",
+    "matches": 7,
+    "nation_id": "T-57",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-324",
+    "manager_tournament_id": "M-324:WC-1986:T-57",
+    "matches": 4,
+    "nation_id": "T-57",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-325",
+    "manager_tournament_id": "M-325:WC-1938:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-326",
+    "manager_tournament_id": "M-326:WC-2014:T-17",
+    "matches": 5,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-327",
+    "manager_tournament_id": "M-327:WC-1986:T-22",
+    "matches": 4,
+    "nation_id": "T-22",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-328",
+    "manager_tournament_id": "M-328:WC-1991:T-09",
+    "matches": 3,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-329",
+    "manager_tournament_id": "M-329:WC-2018:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-330",
+    "manager_tournament_id": "M-330:WC-1974:T-84",
+    "matches": 3,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-331",
+    "manager_tournament_id": "M-331:WC-2014:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-332",
+    "manager_tournament_id": "M-332:WC-2007:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-332",
+    "manager_tournament_id": "M-332:WC-2011:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-333",
+    "manager_tournament_id": "M-333:WC-1934:T-41",
+    "matches": 5,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-333",
+    "manager_tournament_id": "M-333:WC-1938:T-41",
+    "matches": 4,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-334",
+    "manager_tournament_id": "M-334:WC-2014:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-335",
+    "manager_tournament_id": "M-335:WC-1950:T-07",
+    "matches": 1,
+    "nation_id": "T-07",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-336",
+    "manager_tournament_id": "M-336:WC-1998:T-05",
+    "matches": 3,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-337",
+    "manager_tournament_id": "M-337:WC-2002:T-84",
+    "matches": 3,
+    "nation_id": "T-84",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-338",
+    "manager_tournament_id": "M-338:WC-1954:T-80",
+    "matches": 3,
+    "nation_id": "T-80",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-339",
+    "manager_tournament_id": "M-339:WC-2010:T-58",
+    "matches": 4,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-339",
+    "manager_tournament_id": "M-339:WC-2014:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-339",
+    "manager_tournament_id": "M-339:WC-2018:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-339",
+    "manager_tournament_id": "M-339:WC-2022:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-340",
+    "manager_tournament_id": "M-340:WC-2015:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-341",
+    "manager_tournament_id": "M-341:WC-1930:T-61",
+    "matches": 2,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-341",
+    "manager_tournament_id": "M-341:WC-1934:T-61",
+    "matches": 1,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-341",
+    "manager_tournament_id": "M-341:WC-1938:T-61",
+    "matches": 2,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-342",
+    "manager_tournament_id": "M-342:WC-2010:T-32",
+    "matches": 5,
+    "nation_id": "T-32",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-343",
+    "manager_tournament_id": "M-343:WC-2018:T-17",
+    "matches": 3,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-344",
+    "manager_tournament_id": "M-344:WC-1966:T-28",
+    "matches": 6,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-344",
+    "manager_tournament_id": "M-344:WC-1970:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-345",
+    "manager_tournament_id": "M-345:WC-1938:T-75",
+    "matches": 3,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-345",
+    "manager_tournament_id": "M-345:WC-1954:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-345",
+    "manager_tournament_id": "M-345:WC-1962:T-75",
+    "matches": 3,
+    "nation_id": "T-75",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-346",
+    "manager_tournament_id": "M-346:WC-1974:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-347",
+    "manager_tournament_id": "M-347:WC-1950:T-74",
+    "matches": 5,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-347",
+    "manager_tournament_id": "M-347:WC-1958:T-74",
+    "matches": 6,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-348",
+    "manager_tournament_id": "M-348:WC-1986:T-55",
+    "matches": 4,
+    "nation_id": "T-55",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-349",
+    "manager_tournament_id": "M-349:WC-2015:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-350",
+    "manager_tournament_id": "M-350:WC-2022:T-47",
+    "matches": 7,
+    "nation_id": "T-47",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-351",
+    "manager_tournament_id": "M-351:WC-2010:T-33",
+    "matches": 3,
+    "nation_id": "T-33",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-352",
+    "manager_tournament_id": "M-352:WC-2015:T-48",
+    "matches": 4,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-353",
+    "manager_tournament_id": "M-353:WC-2018:T-47",
+    "matches": 3,
+    "nation_id": "T-47",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-353",
+    "manager_tournament_id": "M-353:WC-2022:T-63",
+    "matches": 3,
+    "nation_id": "T-63",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-354",
+    "manager_tournament_id": "M-354:WC-2003:T-51",
+    "matches": 3,
+    "nation_id": "T-51",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-355",
+    "manager_tournament_id": "M-355:WC-1962:T-13",
+    "matches": 6,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-356",
+    "manager_tournament_id": "M-356:WC-1986:T-28",
+    "matches": 5,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-356",
+    "manager_tournament_id": "M-356:WC-1990:T-28",
+    "matches": 7,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-357",
+    "manager_tournament_id": "M-357:WC-1978:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-358",
+    "manager_tournament_id": "M-358:WC-1982:T-27",
+    "matches": 3,
+    "nation_id": "T-27",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-359",
+    "manager_tournament_id": "M-359:WC-2018:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-360",
+    "manager_tournament_id": "M-360:WC-2002:T-62",
+    "matches": 3,
+    "nation_id": "T-62",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-361",
+    "manager_tournament_id": "M-361:WC-1990:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-362",
+    "manager_tournament_id": "M-362:WC-2011:T-16",
+    "matches": 3,
+    "nation_id": "T-16",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-363",
+    "manager_tournament_id": "M-363:WC-2010:T-35",
+    "matches": 3,
+    "nation_id": "T-35",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-363",
+    "manager_tournament_id": "M-363:WC-2014:T-25",
+    "matches": 3,
+    "nation_id": "T-25",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-364",
+    "manager_tournament_id": "M-364:WC-2006:T-55",
+    "matches": 3,
+    "nation_id": "T-55",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-365",
+    "manager_tournament_id": "M-365:WC-2007:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-366",
+    "manager_tournament_id": "M-366:WC-1986:T-01",
+    "matches": 3,
+    "nation_id": "T-01",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-366",
+    "manager_tournament_id": "M-366:WC-2010:T-01",
+    "matches": 3,
+    "nation_id": "T-01",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-367",
+    "manager_tournament_id": "M-367:WC-2014:T-03",
+    "matches": 7,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-368",
+    "manager_tournament_id": "M-368:WC-1994:T-41",
+    "matches": 7,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-369",
+    "manager_tournament_id": "M-369:WC-1994:T-62",
+    "matches": 3,
+    "nation_id": "T-62",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-370",
+    "manager_tournament_id": "M-370:WC-2014:T-13",
+    "matches": 4,
+    "nation_id": "T-13",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-370",
+    "manager_tournament_id": "M-370:WC-2018:T-03",
+    "matches": 4,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-371",
+    "manager_tournament_id": "M-371:WC-2015:T-28",
+    "matches": 7,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-372",
+    "manager_tournament_id": "M-372:WC-1998:T-83",
+    "matches": 3,
+    "nation_id": "T-83",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-373",
+    "manager_tournament_id": "M-373:WC-2022:T-59",
+    "matches": 3,
+    "nation_id": "T-59",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-374",
+    "manager_tournament_id": "M-374:WC-1982:T-73",
+    "matches": 5,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-375",
+    "manager_tournament_id": "M-375:WC-1982:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-375",
+    "manager_tournament_id": "M-375:WC-1986:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-376",
+    "manager_tournament_id": "M-376:WC-1982:T-13",
+    "matches": 3,
+    "nation_id": "T-13",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-377",
+    "manager_tournament_id": "M-377:WC-2014:T-33",
+    "matches": 4,
+    "nation_id": "T-33",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-377",
+    "manager_tournament_id": "M-377:WC-2018:T-58",
+    "matches": 4,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-377",
+    "manager_tournament_id": "M-377:WC-2022:T-58",
+    "matches": 5,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-378",
+    "manager_tournament_id": "M-378:WC-2003:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-379",
+    "manager_tournament_id": "M-379:WC-1998:T-87",
+    "matches": 4,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-380",
+    "manager_tournament_id": "M-380:WC-2011:T-44",
+    "matches": 6,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-380",
+    "manager_tournament_id": "M-380:WC-2015:T-44",
+    "matches": 7,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-381",
+    "manager_tournament_id": "M-381:WC-1930:T-07",
+    "matches": 2,
+    "nation_id": "T-07",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-382",
+    "manager_tournament_id": "M-382:WC-1938:T-61",
+    "matches": 2,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-383",
+    "manager_tournament_id": "M-383:WC-2022:T-03",
+    "matches": 7,
+    "nation_id": "T-03",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-384",
+    "manager_tournament_id": "M-384:WC-2002:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-385",
+    "manager_tournament_id": "M-385:WC-1938:T-36",
+    "matches": 4,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-386",
+    "manager_tournament_id": "M-386:WC-1970:T-40",
+    "matches": 3,
+    "nation_id": "T-40",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-387",
+    "manager_tournament_id": "M-387:WC-1982:T-05",
+    "matches": 5,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-388",
+    "manager_tournament_id": "M-388:WC-1966:T-86",
+    "matches": 6,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-388",
+    "manager_tournament_id": "M-388:WC-1970:T-86",
+    "matches": 6,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-388",
+    "manager_tournament_id": "M-388:WC-1974:T-86",
+    "matches": 7,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-388",
+    "manager_tournament_id": "M-388:WC-1978:T-86",
+    "matches": 6,
+    "nation_id": "T-86",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-389",
+    "manager_tournament_id": "M-389:WC-2002:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-389",
+    "manager_tournament_id": "M-389:WC-2006:T-58",
+    "matches": 7,
+    "nation_id": "T-58",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-389",
+    "manager_tournament_id": "M-389:WC-2014:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-390",
+    "manager_tournament_id": "M-390:WC-1954:T-36",
+    "matches": 5,
+    "nation_id": "T-36",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-391",
+    "manager_tournament_id": "M-391:WC-1998:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-392",
+    "manager_tournament_id": "M-392:WC-1978:T-05",
+    "matches": 6,
+    "nation_id": "T-05",
+    "tournament_id": "WC-1978"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-393",
+    "manager_tournament_id": "M-393:WC-1995:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-393",
+    "manager_tournament_id": "M-393:WC-2007:T-04",
+    "matches": 4,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2007"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-393",
+    "manager_tournament_id": "M-393:WC-2011:T-04",
+    "matches": 4,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-393",
+    "manager_tournament_id": "M-393:WC-2019:T-49",
+    "matches": 3,
+    "nation_id": "T-49",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-394",
+    "manager_tournament_id": "M-394:WC-1991:T-14",
+    "matches": 4,
+    "nation_id": "T-14",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-395",
+    "manager_tournament_id": "M-395:WC-2018:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-396",
+    "manager_tournament_id": "M-396:WC-1998:T-43",
+    "matches": 3,
+    "nation_id": "T-43",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-397",
+    "manager_tournament_id": "M-397:WC-1930:T-87",
+    "matches": 3,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-398",
+    "manager_tournament_id": "M-398:WC-1995:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-399",
+    "manager_tournament_id": "M-399:WC-2019:T-53",
+    "matches": 5,
+    "nation_id": "T-53",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-400",
+    "manager_tournament_id": "M-400:WC-2002:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-401",
+    "manager_tournament_id": "M-401:WC-1994:T-63",
+    "matches": 4,
+    "nation_id": "T-63",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-402",
+    "manager_tournament_id": "M-402:WC-2022:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-403",
+    "manager_tournament_id": "M-403:WC-2002:T-70",
+    "matches": 3,
+    "nation_id": "T-70",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-404",
+    "manager_tournament_id": "M-404:WC-2002:T-79",
+    "matches": 3,
+    "nation_id": "T-79",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-405",
+    "manager_tournament_id": "M-405:WC-2018:T-28",
+    "matches": 7,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-405",
+    "manager_tournament_id": "M-405:WC-2022:T-28",
+    "matches": 5,
+    "nation_id": "T-28",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-406",
+    "manager_tournament_id": "M-406:WC-2015:T-76",
+    "matches": 3,
+    "nation_id": "T-76",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-406",
+    "manager_tournament_id": "M-406:WC-2019:T-76",
+    "matches": 3,
+    "nation_id": "T-76",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-407",
+    "manager_tournament_id": "M-407:WC-1958:T-03",
+    "matches": 3,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-408",
+    "manager_tournament_id": "M-408:WC-2015:T-04",
+    "matches": 5,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-409",
+    "manager_tournament_id": "M-409:WC-2003:T-53",
+    "matches": 4,
+    "nation_id": "T-53",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-410",
+    "manager_tournament_id": "M-410:WC-1982:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-411",
+    "manager_tournament_id": "M-411:WC-2022:T-66",
+    "matches": 3,
+    "nation_id": "T-66",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-412",
+    "manager_tournament_id": "M-412:WC-1990:T-73",
+    "matches": 4,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-413",
+    "manager_tournament_id": "M-413:WC-2006:T-25",
+    "matches": 4,
+    "nation_id": "T-25",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-413",
+    "manager_tournament_id": "M-413:WC-2014:T-35",
+    "matches": 3,
+    "nation_id": "T-35",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-413",
+    "manager_tournament_id": "M-413:WC-2022:T-17",
+    "matches": 3,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-414",
+    "manager_tournament_id": "M-414:WC-2011:T-83",
+    "matches": 6,
+    "nation_id": "T-83",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-414",
+    "manager_tournament_id": "M-414:WC-2015:T-74",
+    "matches": 4,
+    "nation_id": "T-74",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-415",
+    "manager_tournament_id": "M-415:WC-1930:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-416",
+    "manager_tournament_id": "M-416:WC-2014:T-08",
+    "matches": 3,
+    "nation_id": "T-08",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-417",
+    "manager_tournament_id": "M-417:WC-1991:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-1991"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-417",
+    "manager_tournament_id": "M-417:WC-1995:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-1995"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-418",
+    "manager_tournament_id": "M-418:WC-1994:T-74",
+    "matches": 7,
+    "nation_id": "T-74",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-419",
+    "manager_tournament_id": "M-419:WC-1990:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-419",
+    "manager_tournament_id": "M-419:WC-2010:T-84",
+    "matches": 7,
+    "nation_id": "T-84",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-419",
+    "manager_tournament_id": "M-419:WC-2014:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-419",
+    "manager_tournament_id": "M-419:WC-2018:T-84",
+    "matches": 5,
+    "nation_id": "T-84",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-420",
+    "manager_tournament_id": "M-420:WC-2015:T-16",
+    "matches": 4,
+    "nation_id": "T-16",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-421",
+    "manager_tournament_id": "M-421:WC-2019:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-422",
+    "manager_tournament_id": "M-422:WC-1998:T-38",
+    "matches": 3,
+    "nation_id": "T-38",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-423",
+    "manager_tournament_id": "M-423:WC-1938:T-19",
+    "matches": 3,
+    "nation_id": "T-19",
+    "tournament_id": "WC-1938"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-424",
+    "manager_tournament_id": "M-424:WC-1974:T-34",
+    "matches": 3,
+    "nation_id": "T-34",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-425",
+    "manager_tournament_id": "M-425:WC-1999:T-31",
+    "matches": 4,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-425",
+    "manager_tournament_id": "M-425:WC-2003:T-31",
+    "matches": 6,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-426",
+    "manager_tournament_id": "M-426:WC-1982:T-06",
+    "matches": 5,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-426",
+    "manager_tournament_id": "M-426:WC-1986:T-06",
+    "matches": 7,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-426",
+    "manager_tournament_id": "M-426:WC-1990:T-06",
+    "matches": 4,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-427",
+    "manager_tournament_id": "M-427:WC-1982:T-56",
+    "matches": 3,
+    "nation_id": "T-56",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-428",
+    "manager_tournament_id": "M-428:WC-1954:T-87",
+    "matches": 3,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-428",
+    "manager_tournament_id": "M-428:WC-1958:T-87",
+    "matches": 4,
+    "nation_id": "T-87",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-429",
+    "manager_tournament_id": "M-429:WC-2018:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-429",
+    "manager_tournament_id": "M-429:WC-2022:T-09",
+    "matches": 5,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-430",
+    "manager_tournament_id": "M-430:WC-1986:T-58",
+    "matches": 3,
+    "nation_id": "T-58",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-431",
+    "manager_tournament_id": "M-431:WC-2015:T-42",
+    "matches": 3,
+    "nation_id": "T-42",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-432",
+    "manager_tournament_id": "M-432:WC-1930:T-03",
+    "matches": 5,
+    "nation_id": "T-03",
+    "tournament_id": "WC-1930"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-433",
+    "manager_tournament_id": "M-433:WC-2002:T-41",
+    "matches": 4,
+    "nation_id": "T-41",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-434",
+    "manager_tournament_id": "M-434:WC-1962:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-434",
+    "manager_tournament_id": "M-434:WC-1966:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-435",
+    "manager_tournament_id": "M-435:WC-1998:T-70",
+    "matches": 3,
+    "nation_id": "T-70",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-435",
+    "manager_tournament_id": "M-435:WC-2002:T-44",
+    "matches": 4,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-436",
+    "manager_tournament_id": "M-436:WC-1999:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-437",
+    "manager_tournament_id": "M-437:WC-2011:T-50",
+    "matches": 3,
+    "nation_id": "T-50",
+    "tournament_id": "WC-2011"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-438",
+    "manager_tournament_id": "M-438:WC-2003:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2003"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-439",
+    "manager_tournament_id": "M-439:WC-1934:T-61",
+    "matches": 1,
+    "nation_id": "T-61",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-440",
+    "manager_tournament_id": "M-440:WC-2015:T-09",
+    "matches": 4,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-440",
+    "manager_tournament_id": "M-440:WC-2019:T-09",
+    "matches": 4,
+    "nation_id": "T-09",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-441",
+    "manager_tournament_id": "M-441:WC-1970:T-41",
+    "matches": 6,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-441",
+    "manager_tournament_id": "M-441:WC-1974:T-41",
+    "matches": 3,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-442",
+    "manager_tournament_id": "M-442:WC-2015:T-17",
+    "matches": 3,
+    "nation_id": "T-17",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-443",
+    "manager_tournament_id": "M-443:WC-2006:T-48",
+    "matches": 4,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2006"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-444",
+    "manager_tournament_id": "M-444:WC-2014:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-444",
+    "manager_tournament_id": "M-444:WC-2022:T-48",
+    "matches": 5,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-445",
+    "manager_tournament_id": "M-445:WC-1994:T-06",
+    "matches": 4,
+    "nation_id": "T-06",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-446",
+    "manager_tournament_id": "M-446:WC-2010:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-446",
+    "manager_tournament_id": "M-446:WC-2018:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2018"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-447",
+    "manager_tournament_id": "M-447:WC-1982:T-21",
+    "matches": 3,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-447",
+    "manager_tournament_id": "M-447:WC-1990:T-21",
+    "matches": 5,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-448",
+    "manager_tournament_id": "M-448:WC-2010:T-04",
+    "matches": 3,
+    "nation_id": "T-04",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-449",
+    "manager_tournament_id": "M-449:WC-1950:T-46",
+    "matches": 3,
+    "nation_id": "T-46",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-450",
+    "manager_tournament_id": "M-450:WC-1990:T-41",
+    "matches": 7,
+    "nation_id": "T-41",
+    "tournament_id": "WC-1990"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-451",
+    "manager_tournament_id": "M-451:WC-1970:T-47",
+    "matches": 3,
+    "nation_id": "T-47",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-451",
+    "manager_tournament_id": "M-451:WC-1974:T-88",
+    "matches": 3,
+    "nation_id": "T-88",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-452",
+    "manager_tournament_id": "M-452:WC-1966:T-84",
+    "matches": 4,
+    "nation_id": "T-84",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-453",
+    "manager_tournament_id": "M-453:WC-2019:T-73",
+    "matches": 4,
+    "nation_id": "T-73",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-454",
+    "manager_tournament_id": "M-454:WC-1966:T-73",
+    "matches": 3,
+    "nation_id": "T-73",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-455",
+    "manager_tournament_id": "M-455:WC-1982:T-11",
+    "matches": 3,
+    "nation_id": "T-11",
+    "tournament_id": "WC-1982"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-456",
+    "manager_tournament_id": "M-456:WC-1934:T-09",
+    "matches": 1,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1934"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-457",
+    "manager_tournament_id": "M-457:WC-1994:T-31",
+    "matches": 5,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-457",
+    "manager_tournament_id": "M-457:WC-1998:T-31",
+    "matches": 5,
+    "nation_id": "T-31",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-458",
+    "manager_tournament_id": "M-458:WC-2002:T-31",
+    "matches": 7,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-459",
+    "manager_tournament_id": "M-459:WC-2015:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-459",
+    "manager_tournament_id": "M-459:WC-2019:T-31",
+    "matches": 5,
+    "nation_id": "T-31",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-460",
+    "manager_tournament_id": "M-460:WC-1986:T-10",
+    "matches": 4,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-461",
+    "manager_tournament_id": "M-461:WC-1962:T-21",
+    "matches": 6,
+    "nation_id": "T-21",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-461",
+    "manager_tournament_id": "M-461:WC-1966:T-10",
+    "matches": 3,
+    "nation_id": "T-10",
+    "tournament_id": "WC-1966"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-462",
+    "manager_tournament_id": "M-462:WC-1986:T-12",
+    "matches": 3,
+    "nation_id": "T-12",
+    "tournament_id": "WC-1986"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-463",
+    "manager_tournament_id": "M-463:WC-1958:T-64",
+    "matches": 3,
+    "nation_id": "T-64",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-464",
+    "manager_tournament_id": "M-464:WC-2002:T-06",
+    "matches": 4,
+    "nation_id": "T-06",
+    "tournament_id": "WC-2002"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-465",
+    "manager_tournament_id": "M-465:WC-2010:T-68",
+    "matches": 4,
+    "nation_id": "T-68",
+    "tournament_id": "WC-2010"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-466",
+    "manager_tournament_id": "M-466:WC-1994:T-50",
+    "matches": 4,
+    "nation_id": "T-50",
+    "tournament_id": "WC-1994"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-467",
+    "manager_tournament_id": "M-467:WC-2019:T-48",
+    "matches": 7,
+    "nation_id": "T-48",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-468",
+    "manager_tournament_id": "M-468:WC-2014:T-06",
+    "matches": 5,
+    "nation_id": "T-06",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 3,
+    "manager_id": "M-469",
+    "manager_tournament_id": "M-469:WC-1999:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1999"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-470",
+    "manager_tournament_id": "M-470:WC-1950:T-28",
+    "matches": 3,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1950"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-470",
+    "manager_tournament_id": "M-470:WC-1954:T-28",
+    "matches": 3,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1954"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-470",
+    "manager_tournament_id": "M-470:WC-1958:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1958"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-470",
+    "manager_tournament_id": "M-470:WC-1962:T-28",
+    "matches": 4,
+    "nation_id": "T-28",
+    "tournament_id": "WC-1962"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-471",
+    "manager_tournament_id": "M-471:WC-2022:T-75",
+    "matches": 4,
+    "nation_id": "T-75",
+    "tournament_id": "WC-2022"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-472",
+    "manager_tournament_id": "M-472:WC-2015:T-71",
+    "matches": 4,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2015"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-472",
+    "manager_tournament_id": "M-472:WC-2019:T-71",
+    "matches": 3,
+    "nation_id": "T-71",
+    "tournament_id": "WC-2019"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-473",
+    "manager_tournament_id": "M-473:WC-2014:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2014"
+  },
+  {
+    "final_placement": 1,
+    "manager_id": "M-474",
+    "manager_tournament_id": "M-474:WC-1970:T-09",
+    "matches": 6,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1970"
+  },
+  {
+    "final_placement": 4,
+    "manager_id": "M-474",
+    "manager_tournament_id": "M-474:WC-1974:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1974"
+  },
+  {
+    "final_placement": 2,
+    "manager_id": "M-474",
+    "manager_tournament_id": "M-474:WC-1998:T-09",
+    "matches": 7,
+    "nation_id": "T-09",
+    "tournament_id": "WC-1998"
+  },
+  {
+    "final_placement": null,
+    "manager_id": "M-475",
+    "manager_tournament_id": "M-475:WC-2006:T-44",
+    "matches": 3,
+    "nation_id": "T-44",
+    "tournament_id": "WC-2006"
+  }
+]

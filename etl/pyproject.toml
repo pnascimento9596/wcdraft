@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "wcdraft-etl"
-version = "0.0.0"
-description = "ETL pipeline for wcdraft datasets. Empty skeleton in WS-0; no pipeline logic yet."
+version = "0.1.0"
+description = "ETL pipeline for wcdraft: ingest the Fjelstul World Cup Database into canonical tables."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "wcdraft" }]
-dependencies = []
+dependencies = ["pandas>=2.2"]
 
 [project.optional-dependencies]
 dev = [
@@ -31,3 +31,4 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
