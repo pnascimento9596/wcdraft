@@ -28,6 +28,24 @@ export default tseslint.config(
       },
     },
   },
+  {
+    // Plain JS tooling/scripts (e.g. icon generators) run under Node.
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
+    // Service workers run in their own global scope (self, clients, …).
+    files: ["**/public/sw.js"],
+    languageOptions: {
+      globals: {
+        ...globals.serviceworker,
+      },
+    },
+  },
   // Disable stylistic rules that conflict with Prettier (keep last).
   prettier,
 );
