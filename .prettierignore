@@ -1,0 +1,12 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+pnpm-lock.yaml
+**/next-env.d.ts
+# Machine-generated; the generator script is the source of truth.
+packages/core/test/fixtures/
+# Python
+.venv
+__pycache__

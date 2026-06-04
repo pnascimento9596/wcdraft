@@ -1,0 +1,7 @@
+{
+  "name": "@wcdraft/data",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Curated wcdraft datasets and access helpers. Empty skeleton in WS-0; data lands later. See README for the CC-BY-SA attribution obligation.",
+  "type": "module"
+}
