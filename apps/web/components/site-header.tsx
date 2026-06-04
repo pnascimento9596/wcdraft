@@ -7,6 +7,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { BallBadge, CloseIcon, MenuIcon } from "./icons";
 
 const MENU = [
+  { href: "/play", label: "Play" },
   { href: "/how-to-play", label: "How to Play" },
   { href: "/settings", label: "Settings" },
   { href: "/privacy", label: "Privacy Policy" },
