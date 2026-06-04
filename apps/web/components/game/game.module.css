@@ -1,0 +1,1548 @@
+/*
+ * wcdraft — game-screen styles (WS-D).
+ *
+ * Scoped CSS Module for the play flow (mode select, draft, review, results,
+ * share). Every colour flows from the design tokens in globals.css, so light
+ * and dark are both first-class with no per-rule overrides. Aesthetic matches
+ * the broadsheet shell: warm paper, pitch-ink, a single scarlet accent, chalk
+ * pitch lines.
+ */
+
+/* ── Shared primitives ─────────────────────────────────────────────────── */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.panelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.panelTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+.panelMeta {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.02em;
+  text-align: right;
+}
+.eyebrowAccent {
+  font-family: var(--font-text), serif;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.demoBadge {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.28rem 0.66rem;
+  white-space: nowrap;
+}
+
+/* ── Mode select ───────────────────────────────────────────────────────── */
+
+.modeGrid {
+  display: grid;
+  gap: 1.2rem;
+  margin-top: 2rem;
+}
+@media (min-width: 46rem) {
+  .modeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.modeCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.6rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    transform 0.18s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  overflow: hidden;
+}
+.modeCardLive::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--accent);
+}
+.modeCardLive:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+}
+.modeCardSoon {
+  opacity: 0.72;
+}
+.modeCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modeTag {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 0.26rem 0.66rem;
+}
+.modeTagSoon {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  color: var(--ink-faint);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.24rem 0.64rem;
+}
+.modeIndex {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.6rem;
+  color: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.modeName {
+  font-family: var(--font-display), sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.01em;
+}
+.modeDesc {
+  color: var(--ink-soft);
+  font-size: 0.97rem;
+}
+.modeFeatures {
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+}
+.modeFeatures li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.modeFeatures li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+.modeCta {
+  margin-top: auto;
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  padding-top: 0.5rem;
+}
+.modeCtaSoon {
+  margin-top: auto;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ink-faint);
+  padding-top: 0.5rem;
+}
+
+/* ── Draft layout ──────────────────────────────────────────────────────── */
+
+.draft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding-bottom: 5.5rem; /* room for the sticky lock bar */
+}
+.spinHead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.spinCounter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+.spinCounterNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.02em;
+}
+.spinCounterTotal {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.1rem;
+  color: var(--ink-faint);
+}
+.spinProgress {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-sunken);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.spinProgressFill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.draftGrid {
+  display: grid;
+  gap: 1.2rem;
+}
+@media (min-width: 60rem) {
+  .draftGrid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.draftLeft,
+.draftRight,
+.reviewSide {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-width: 0;
+}
+@media (min-width: 60rem) {
+  .draftLeft {
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+/* ── Pitch ─────────────────────────────────────────────────────────────── */
+
+.pitch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 0.6rem;
+  min-height: 24rem;
+  border-radius: 12px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--field) 92%, black 0%),
+    color-mix(in srgb, var(--field) 78%, black 8%)
+  );
+  overflow: hidden;
+}
+.pitchLines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.pitchHalfway {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.pitchCircle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7rem;
+  height: 7rem;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+}
+.pitchBoxTop,
+.pitchBoxBottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9rem;
+  height: 2.6rem;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+.pitchBoxTop {
+  top: 0;
+  border-top: none;
+}
+.pitchBoxBottom {
+  bottom: 0;
+  border-bottom: none;
+}
+.pitchRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 0.5rem;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  width: 4.7rem;
+  min-height: 3.6rem;
+  padding: 0.4rem 0.3rem;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: color-mix(in srgb, var(--bg-invert) 80%, transparent);
+  color: var(--field-ink);
+  font: inherit;
+  text-align: center;
+  transition:
+    transform 0.14s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+button.slot {
+  cursor: pointer;
+}
+button.slot:disabled {
+  cursor: default;
+}
+.slotEmpty {
+  background: color-mix(in srgb, var(--bg-invert) 38%, transparent);
+  border-style: dashed;
+  color: rgba(255, 255, 255, 0.82);
+}
+button.slotEmpty:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.75);
+}
+.slotSelected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.slotLocked {
+  opacity: 0.96;
+}
+.slotPos {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+}
+.slotName {
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.05;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  white-space: nowrap;
+}
+.slotEmptyLabel {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+}
+.slotMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.slotRating {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.8rem;
+}
+.lockGlyph {
+  font-size: 0.6rem;
+}
+.slotWarn {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #e9b949;
+  box-shadow: 0 0 0 2px var(--bg-invert);
+}
+.slot {
+  position: relative;
+}
+
+/* Compatibility tiers (committed cards) — coloured left border accent. */
+.tier_ideal {
+  border-left: 4px solid #5fbf86;
+}
+.tier_ok {
+  border-left: 4px solid rgba(255, 255, 255, 0.6);
+}
+.tier_stretch {
+  border-left: 4px solid #e9b949;
+}
+.tier_misfit {
+  border-left: 4px solid var(--accent);
+}
+/* Preview tier glow on open slots while placing. */
+.slotPreview {
+  border-style: solid;
+}
+.tierPreview_ideal {
+  border-color: #5fbf86;
+  background: color-mix(in srgb, #5fbf86 22%, var(--bg-invert));
+}
+.tierPreview_ok {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+.tierPreview_stretch {
+  border-color: #e9b949;
+  background: color-mix(in srgb, #e9b949 18%, var(--bg-invert));
+}
+.tierPreview_misfit {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg-invert));
+}
+
+/* ── Bench + manager strips ────────────────────────────────────────────── */
+
+.bench,
+.mgrSlot {
+  margin-top: 1rem;
+}
+.benchLabel {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  margin-bottom: 0.45rem;
+}
+.benchSlots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.45rem;
+}
+.benchSlot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 9px;
+  border: 1.5px dashed var(--line-strong);
+  background: var(--bg-sunken);
+  color: var(--ink-soft);
+  font: inherit;
+  text-align: center;
+  min-height: 3rem;
+}
+button.benchSlot {
+  cursor: pointer;
+}
+button.benchSlot:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+button.benchSlot:not(:disabled):hover {
+  border-color: var(--accent);
+}
+.benchFilled {
+  border-style: solid;
+  border-color: var(--line);
+  background: var(--bg-panel);
+  color: var(--ink);
+}
+.benchSlot .slotPos {
+  color: var(--ink-faint);
+}
+.benchSlot .slotName {
+  color: inherit;
+}
+.mgrFilled,
+.mgrEmpty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+.mgrFilled {
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  font-weight: 600;
+}
+.mgrEmpty {
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.mgrRating {
+  margin-left: auto;
+  font-family: var(--font-display), sans-serif;
+  color: var(--accent);
+}
+
+/* ── Spin reveal ───────────────────────────────────────────────────────── */
+
+.revealPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-invert);
+  color: var(--field-ink);
+  border-color: transparent;
+}
+:root[data-theme="dark"] .revealPanel {
+  color: var(--bg);
+}
+.revealPanel .eyebrowAccent {
+  color: var(--accent);
+}
+.revealTeam {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.revealNation {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
+  line-height: 0.95;
+}
+.revealYear {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  color: var(--accent);
+}
+.revealHint {
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────── */
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.searchInput {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  color: var(--ink);
+}
+.searchInput::placeholder {
+  color: var(--ink-faint);
+}
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.16rem;
+  background: var(--bg-sunken);
+}
+.seg,
+.segActive {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  padding: 0.36rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.segActive {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.sortLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.sortSelect {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg-panel);
+  color: var(--ink);
+}
+
+/* ── Candidate cards ───────────────────────────────────────────────────── */
+
+.candList {
+  display: grid;
+  gap: 0.7rem;
+}
+.cand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.14s ease,
+    border-color 0.18s ease;
+}
+.cand:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+}
+.candSelected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.candDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+.candDisabled:hover {
+  transform: none;
+}
+.candManager {
+  border-left: 4px solid var(--accent);
+}
+.candTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.candId {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.candShirt {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+.candNameWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.candName {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.18rem;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.candCaptain {
+  font-size: 0.6rem;
+  font-family: var(--font-text), serif;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 4px;
+  padding: 0.05rem 0.28rem;
+}
+.candSub {
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.candOverall {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+.candOverallNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.9rem;
+  color: var(--ink);
+}
+.candOverallLabel {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.candPositions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.posTag {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  color: var(--field-ink);
+  background: var(--field);
+  border-radius: 5px;
+  padding: 0.16rem 0.42rem;
+}
+.candDrafted {
+  margin-left: auto;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+.channels {
+  display: grid;
+  gap: 0.28rem;
+}
+.channel {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr 1.8rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+.channelLabel {
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.channelTrack {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+.channelFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--field), color-mix(in srgb, var(--field) 60%, var(--accent)));
+}
+.channelVal {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.78rem;
+  text-align: right;
+  color: var(--ink-soft);
+}
+.candStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
+  padding-top: 0.55rem;
+}
+.candStats b {
+  color: var(--ink);
+  font-weight: 700;
+}
+.candCoverage {
+  margin-left: auto;
+  color: var(--ink-faint);
+}
+.candManagerTag {
+  margin-left: auto;
+  color: var(--accent);
+  font-weight: 600;
+}
+.candAwards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.award {
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: #8a6d1a;
+  background: color-mix(in srgb, #e9b949 30%, var(--bg-panel));
+  border: 1px solid color-mix(in srgb, #e9b949 50%, transparent);
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+}
+:root[data-theme="dark"] .award {
+  color: #e9c97a;
+}
+.emptyList {
+  color: var(--ink-faint);
+  font-style: italic;
+  padding: 1rem 0.4rem;
+}
+
+/* ── Synergy ───────────────────────────────────────────────────────────── */
+
+.synergy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.synergyHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.synergyTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+}
+.synergyScore {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.synergyNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 2.1rem;
+  color: var(--accent);
+}
+.deltaUp {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3f9e69;
+}
+.deltaDown {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.synergyBarTrack {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+.synergyBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--field), var(--accent));
+  transition: width 0.35s ease;
+}
+.synergyMeta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+.synergyStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-sunken);
+  border-radius: 9px;
+  padding: 0.5rem 0.3rem;
+}
+.synergyStatNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.2rem;
+}
+.synergyStatLabel {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.clusters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.clustersLabel {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.clusterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.clusterTag {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--field-ink);
+  background: var(--field);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+}
+
+/* ── GK warning ────────────────────────────────────────────────────────── */
+
+.gkWarn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-left: 4px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.gkWarnGlyph {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+}
+
+/* ── Lock bar ──────────────────────────────────────────────────────────── */
+
+.lockBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem clamp(1.1rem, 5vw, 2.5rem);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-top: 1px solid var(--line-strong);
+}
+.lockInfo {
+  min-width: 0;
+  font-size: 0.92rem;
+}
+.lockInfo b {
+  font-weight: 700;
+}
+.lockHint {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.compatPill {
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+  border-left-width: 3px;
+  border-left-style: solid;
+  background: var(--bg-panel);
+}
+
+/* ── Complete panel ────────────────────────────────────────────────────── */
+
+.completePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.completeNote {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* ── Review ────────────────────────────────────────────────────────────── */
+
+.review {
+  display: flex;
+  flex-direction: column;
+}
+.teamNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.teamNameLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+.teamNameInput {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--line-strong);
+  padding: 0.1rem 0;
+  width: 100%;
+}
+.teamNameInput:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+.reviewGrid {
+  display: grid;
+  gap: 1.2rem;
+}
+@media (min-width: 60rem) {
+  .reviewGrid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.squadAvg {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+.lineRatings {
+  display: grid;
+  gap: 0.7rem;
+}
+.lineRow {
+  display: grid;
+  grid-template-columns: 6rem 1fr 2.2rem;
+  align-items: center;
+  gap: 0.7rem;
+}
+.lineName {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.lineTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+.lineFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--field), color-mix(in srgb, var(--field) 55%, var(--accent)));
+}
+.lineVal {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.1rem;
+  text-align: right;
+}
+.simPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.simNote {
+  color: var(--ink-soft);
+}
+.simPanel .btn {
+  width: 100%;
+}
+
+/* ── Results ───────────────────────────────────────────────────────────── */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--bg-invert);
+  color: var(--field-ink);
+  border-color: transparent;
+  border-top: 3px solid var(--accent);
+}
+:root[data-theme="dark"] .outcome {
+  color: var(--bg);
+}
+.outcome .eyebrowAccent {
+  color: var(--accent);
+}
+.outcomeRecord {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.outcomeBig {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(3.5rem, 14vw, 6rem);
+  line-height: 0.85;
+}
+.outcomeWL {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+.outcomeStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+}
+@media (min-width: 34rem) {
+  .outcomeStats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.oStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.oStatNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.oStatLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+.outcomeFlags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.flagGold,
+.flagGood,
+.flagMuted {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}
+.flagGold {
+  color: #1c1408;
+  background: #e9b949;
+}
+.flagGood {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+.flagMuted {
+  color: var(--field-ink);
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+:root[data-theme="dark"] .flagMuted {
+  color: var(--bg);
+}
+
+.narrative {
+  position: relative;
+  padding-left: 2.4rem;
+}
+.narrativeMark {
+  position: absolute;
+  left: 0.7rem;
+  top: 0.2rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 3rem;
+  color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.narrativeText {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.matchList {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+.matchItem {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.matchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg-panel);
+  border: none;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+}
+.matchRow:hover {
+  background: var(--bg-sunken);
+}
+.matchOutcome {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 6px;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+}
+.win {
+  background: var(--field);
+}
+.draw {
+  background: var(--ink-faint);
+}
+.loss {
+  background: var(--accent);
+}
+.matchRound {
+  flex: none;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  width: 7.5rem;
+}
+.matchOpp {
+  flex: 1;
+  font-weight: 600;
+}
+.matchScore {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.2rem;
+}
+.matchTag {
+  font-family: var(--font-text), serif;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+}
+.matchChevron {
+  flex: none;
+  color: var(--ink-faint);
+}
+.boxScore {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.85rem 0.9rem;
+  background: var(--bg-sunken);
+  border-top: 1px solid var(--line);
+}
+@media (min-width: 34rem) {
+  .boxScore {
+    grid-template-columns: 1fr 1fr;
+  }
+  .boxEvents {
+    grid-column: 1 / -1;
+  }
+}
+.boxCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.boxColHead {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.25rem;
+}
+.boxGoal {
+  font-size: 0.9rem;
+}
+.boxDetail {
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+}
+.boxNone {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.boxEvents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+}
+.boxEvent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.cardYellow,
+.cardRed {
+  width: 0.6rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  display: inline-block;
+}
+.cardYellow {
+  background: #e9b949;
+}
+.cardRed {
+  background: var(--accent);
+}
+
+.seedPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.seedRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.seedLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.seedCode {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+}
+.seedNote {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.resultsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+/* ── Share card ────────────────────────────────────────────────────────── */
+
+.share {
+  display: flex;
+  flex-direction: column;
+}
+.shareCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  aspect-ratio: 16 / 10;
+  max-width: 40rem;
+  margin-inline: auto;
+  width: 100%;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border-radius: 18px;
+  background: linear-gradient(150deg, var(--bg-invert), color-mix(in srgb, var(--field) 70%, var(--bg-invert)));
+  color: var(--field-ink);
+  border: 3px solid var(--accent);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+:root[data-theme="dark"] .shareCard {
+  color: #f2ecdc;
+}
+.shareGrain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.shareTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+.shareBrand {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.shareBrand b {
+  color: var(--accent);
+}
+.shareSeed {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+.shareBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: auto;
+}
+.shareTeam {
+  font-family: var(--font-text), serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+.shareHeadline {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.6rem, 10vw, 4.5rem);
+  line-height: 0.85;
+  color: #e9b949;
+  letter-spacing: 0.01em;
+}
+.shareRecord {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-top: 0.3rem;
+}
+.shareRecordNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+.shareRecordLabel {
+  font-size: 0.82rem;
+  opacity: 0.8;
+}
+.shareStats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 1.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 0.8rem;
+}
+.shareStat {
+  display: flex;
+  flex-direction: column;
+}
+.shareStat b {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.shareStat span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+.shareStars {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-text), serif;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+.sharePanel {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.shareCaptionLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.shareCaption {
+  font-family: var(--font-text), serif;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+.shareHint {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}

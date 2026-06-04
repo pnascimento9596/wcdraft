@@ -34,12 +34,12 @@ export default function HomePage() {
         </p>
 
         <div className="btn-row">
-          <Link href="/how-to-play" className="btn btn--primary">
+          <Link href="/play" className="btn btn--primary">
+            Play
+          </Link>
+          <Link href="/how-to-play" className="btn btn--ghost">
             How to play
           </Link>
-          <span className="btn btn--ghost btn--disabled" aria-disabled="true">
-            Play — coming soon
-          </span>
         </div>
 
         <div className="hero__meta">
@@ -62,8 +62,8 @@ export default function HomePage() {
         </div>
 
         <p className="coming-soon">
-          The game itself is in the workshop — this is the shell. Football data, draft, and scoring
-          arrive in a later milestone.
+          Play the full flow now as a preview on illustrative mock data — real football data, the
+          draft engine, and scoring wire in at a later milestone.
         </p>
       </div>
     </section>
