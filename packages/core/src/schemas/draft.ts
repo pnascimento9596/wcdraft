@@ -105,6 +105,18 @@ export const SpinSchema = z
         });
         return;
       }
+      // Lock-on-pick: a picked PLAYER must occupy a SquadSlot. Without this a
+      // "picked" player could carry assigned_slot_id: null — counted in
+      // deduped_player_ids yet leaving its slot vacant (a ghost pick). Managers
+      // never take a field/bench slot, so this requirement is player-only.
+      if (spin.assigned_slot_id === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "player-pick spin must have a non-null assigned_slot_id (lock-on-pick: a picked player occupies a SquadSlot)",
+          path: ["assigned_slot_id"],
+        });
+      }
       if (spin.picked_manager_card_id !== null) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -510,6 +522,20 @@ export const DraftStateSchema = z
     const assignedSeen = new Set<string>();
     for (let i = 0; i < draft.spins.length; i++) {
       const s = draft.spins[i]!;
+      // Lock-on-pick (DraftState-level, defensive even if SpinSchema is later
+      // refactored): a picked PLAYER spin MUST reference a SquadSlot. A picked
+      // player carrying assigned_slot_id: null is a GHOST PICK — it is counted
+      // in deduped_player_ids yet leaves its slot vacant. SpinSchema already
+      // rejects this per-spin; re-asserting it here keeps the DraftState
+      // contract self-contained (no ghost picks).
+      if (s.status === "picked" && s.picked_kind === "player" && s.assigned_slot_id === null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `picked player spin ${i} must reference a SquadSlot via assigned_slot_id (lock-on-pick: no ghost picks)`,
+          path: ["spins", i, "assigned_slot_id"],
+        });
+        continue;
+      }
       if (s.assigned_slot_id === null) continue;
       // Manager picks already required to leave assigned_slot_id null in SpinSchema;
       // any non-null here implies a player pick.

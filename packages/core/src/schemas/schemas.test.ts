@@ -616,6 +616,62 @@ describe("zod boundary schemas — REJECT impossible states", () => {
     expect(DraftStateSchema.safeParse(bad).success).toBe(false);
   });
 
+  // Lock-on-pick: a picked PLAYER must occupy a SquadSlot (no ghost picks).
+  it("SpinSchema rejects a player pick with assigned_slot_id: null (lock-on-pick)", () => {
+    const card_id = buildCardId("player.fixture.0", 1954);
+    // Otherwise-valid player pick: card appears in rolled_card_ids and matches
+    // buildCardId(player_id, tournament_id); the ONLY defect is the null slot.
+    const bad = {
+      index: 0,
+      tournament_id: 1954,
+      nation_id: "nation.0",
+      rolled_card_ids: [card_id],
+      excluded_player_ids: [],
+      rolled_manager_card_id: null,
+      picked_kind: "player",
+      picked_card_id: card_id,
+      picked_player_id: "player.fixture.0",
+      assigned_slot_id: null,
+      picked_manager_card_id: null,
+      status: "picked",
+    };
+    expect(SpinSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("DraftState rejects a ghost picked player (picked, in deduped_player_ids, no assigned slot)", () => {
+    const d = makeDraftState();
+    // Spin 0 stays a 'picked' player — so it remains in deduped_player_ids —
+    // but drops its slot assignment, and its squad slot is vacated. The player
+    // is "drafted" yet occupies no slot: a ghost pick.
+    const ghostSlotId = d.spins[0]!.assigned_slot_id!;
+    const spinsClone = d.spins.map((s) => ({ ...s }));
+    spinsClone[0] = { ...spinsClone[0]!, assigned_slot_id: null };
+    const squadClone = d.squad.map((s) => ({ ...s }));
+    const gi = squadClone.findIndex((s) => s.slot_id === ghostSlotId);
+    squadClone[gi] = {
+      ...squadClone[gi]!,
+      card_id: null,
+      player_id: null,
+      tournament_id: null,
+      position_compatibility: 0,
+    };
+    const bad = { ...d, spins: spinsClone, squad: squadClone };
+    expect(DraftStateSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("DraftState rejects a picked-player spin whose assigned_slot_id points to a slot holding a different card", () => {
+    const d = makeDraftState();
+    // Swap the slot assignments of the first two player picks: each spin now
+    // references a slot holding the OTHER pick's card — slot/spin disagreement
+    // with no duplicate assignment and both slots still occupied.
+    const spinsClone = d.spins.map((s) => ({ ...s }));
+    const slot0 = spinsClone[0]!.assigned_slot_id;
+    spinsClone[0] = { ...spinsClone[0]!, assigned_slot_id: spinsClone[1]!.assigned_slot_id };
+    spinsClone[1] = { ...spinsClone[1]!, assigned_slot_id: slot0 };
+    const bad = { ...d, spins: spinsClone };
+    expect(DraftStateSchema.safeParse(bad).success).toBe(false);
+  });
+
   // RunResult invariant drift.
   it("RunResult rejects score != sum(score_breakdown.points)", () => {
     const bad: RunResult = { ...makeRunResult(), score: 999 };
