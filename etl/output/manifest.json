@@ -1,0 +1,43 @@
+{
+  "attribution": "Contains information from The Fjelstul World Cup Database (v1.2.0) by Joshua C. Fjelstul, Ph.D., © 2023 Joshua C. Fjelstul, Ph.D., used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode). Source: https://www.github.com/jfjelstul/worldcup (pinned commit f41e9437a007498bdbf3751305818101f96cb6fb). Modifications by wcdraft: normalized into canonical nation/player/card/manager/tournament tables; derived coarse positions, per-card goal/appearance/award aggregates and a per-card coverage score; added a curated historical-entity / alias reference for nations. No upstream values were altered, imputed, or back-filled; absent signals are preserved as null. wcdraft derived data is redistributed under CC-BY-SA 4.0 (ShareAlike).",
+  "coverage_signals": [
+    "selection",
+    "position_listed",
+    "goals",
+    "awards",
+    "appearances",
+    "shirt"
+  ],
+  "honest_state": {
+    "appearances_from": 1970,
+    "never_fabricated": [
+      "assists (no source)",
+      "minutes (no source)",
+      "club_at_tournament (no source column)",
+      "manager birth_date (no source column)"
+    ],
+    "null_sentinels": [
+      "shirt_number 0 -> null (pre-1954)"
+    ]
+  },
+  "source": {
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "commit": "f41e9437a007498bdbf3751305818101f96cb6fb",
+    "license": "CC-BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+    "name": "The Fjelstul World Cup Database",
+    "repo": "https://www.github.com/jfjelstul/worldcup",
+    "version": "1.2.0"
+  },
+  "tables": {
+    "appearances": 27432,
+    "awards": 200,
+    "goals": 3637,
+    "manager_tournaments": 637,
+    "managers": 475,
+    "nations": 88,
+    "player_tournaments": 13843,
+    "players": 10401,
+    "tournaments": 30
+  }
+}

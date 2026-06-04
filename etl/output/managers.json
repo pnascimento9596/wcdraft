@@ -1,0 +1,4752 @@
+[
+  {
+    "birth_date": null,
+    "family_name": "Acosta",
+    "female": false,
+    "full_name": "Nelson Acosta",
+    "given_name": "Nelson",
+    "manager_id": "M-001",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Addo",
+    "female": false,
+    "full_name": "Otto Addo",
+    "given_name": "Otto",
+    "manager_id": "M-002",
+    "nation_id": "T-32",
+    "nationality_name": "Ghana"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Adshead",
+    "female": false,
+    "full_name": "John Adshead",
+    "given_name": "John",
+    "manager_id": "M-003",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Advocaat",
+    "female": false,
+    "full_name": "Dick Advocaat",
+    "given_name": "Dick",
+    "manager_id": "M-004",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Afranie",
+    "female": false,
+    "full_name": "Emmanual Kwasi Afranie",
+    "given_name": "Emmanual Kwasi",
+    "manager_id": "M-005",
+    "nation_id": "T-32",
+    "nationality_name": "Ghana"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Aguirre",
+    "female": false,
+    "full_name": "Javier Aguirre",
+    "given_name": "Javier",
+    "manager_id": "M-006",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Al-Gohari",
+    "female": false,
+    "full_name": "Mahmoud Al-Gohari",
+    "given_name": "Mahmoud",
+    "manager_id": "M-007",
+    "nation_id": "T-26",
+    "nationality_name": "Egypt"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Al-Johar",
+    "female": false,
+    "full_name": "Nasser Al-Johar",
+    "given_name": "Nasser",
+    "manager_id": "M-008",
+    "nation_id": "T-63",
+    "nationality_name": "Saudi Arabia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Al-Kharashy",
+    "female": false,
+    "full_name": "Mohammed Al-Kharashy",
+    "given_name": "Mohammed",
+    "manager_id": "M-009",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Álamos",
+    "female": false,
+    "full_name": "Luis Álamos",
+    "given_name": "Luis",
+    "manager_id": "M-010",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Alfaro",
+    "female": false,
+    "full_name": "Gustavo Alfaro",
+    "given_name": "Gustavo",
+    "manager_id": "M-011",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Alonso",
+    "female": false,
+    "full_name": "Diego Alonso",
+    "given_name": "Diego",
+    "manager_id": "M-012",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "An",
+    "female": false,
+    "full_name": "Jong-goan An",
+    "given_name": "Jong-goan",
+    "manager_id": "M-013",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Andersson",
+    "female": false,
+    "full_name": "Janne Andersson",
+    "given_name": "Janne",
+    "manager_id": "M-014",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Andreoli",
+    "female": false,
+    "full_name": "Franco Andreoli",
+    "given_name": "Franco",
+    "manager_id": "M-015",
+    "nation_id": "T-75",
+    "nationality_name": "Switzerland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Antić",
+    "female": false,
+    "full_name": "Radomir Antić",
+    "given_name": "Radomir",
+    "manager_id": "M-016",
+    "nation_id": "T-66",
+    "nationality_name": "Serbia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Appiah",
+    "female": false,
+    "full_name": "James Kwesi Appiah",
+    "given_name": "James Kwesi",
+    "manager_id": "M-017",
+    "nation_id": "T-32",
+    "nationality_name": "Ghana"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Aragonés",
+    "female": false,
+    "full_name": "Luis Aragonés",
+    "given_name": "Luis",
+    "manager_id": "M-018",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Arauz",
+    "female": true,
+    "full_name": "Vanessa Arauz",
+    "given_name": "Vanessa",
+    "manager_id": "M-019",
+    "nation_id": "T-25",
+    "nationality_name": "Ecuador"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Arena",
+    "female": false,
+    "full_name": "Bruce Arena",
+    "given_name": "Bruce",
+    "manager_id": "M-020",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Argauer",
+    "female": false,
+    "full_name": "Karl Argauer",
+    "given_name": "Karl",
+    "manager_id": "M-021",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Arnold",
+    "female": false,
+    "full_name": "Graham Arnold",
+    "given_name": "Graham",
+    "manager_id": "M-022",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Arsenijević",
+    "female": false,
+    "full_name": "Milorad Arsenijević",
+    "given_name": "Milorad",
+    "manager_id": "M-023",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Aryee",
+    "female": false,
+    "full_name": "Oko Aryee",
+    "given_name": "Oko",
+    "manager_id": "M-024",
+    "nation_id": "T-32",
+    "nationality_name": "Ghana"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Azkargorta",
+    "female": false,
+    "full_name": "Xabier Azkargorta",
+    "given_name": "Xabier",
+    "manager_id": "M-025",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Barcellos",
+    "female": false,
+    "full_name": "Jorge Barcellos",
+    "given_name": "Jorge",
+    "manager_id": "M-026",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Baróti",
+    "female": false,
+    "full_name": "Lajos Baróti",
+    "given_name": "Lajos",
+    "manager_id": "M-027",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Barreau",
+    "female": false,
+    "full_name": "Gaston Barreau",
+    "given_name": "Gaston",
+    "manager_id": "M-028",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Basile",
+    "female": false,
+    "full_name": "Alfio Basile",
+    "given_name": "Alfio",
+    "manager_id": "M-029",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Batteux",
+    "female": false,
+    "full_name": "Albert Batteux",
+    "given_name": "Albert",
+    "manager_id": "M-030",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bearzot",
+    "female": false,
+    "full_name": "Enzo Bearzot",
+    "given_name": "Enzo",
+    "manager_id": "M-031",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Beattie",
+    "female": false,
+    "full_name": "Andy Beattie",
+    "given_name": "Andy",
+    "manager_id": "M-032",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Beckenbauer",
+    "female": false,
+    "full_name": "Franz Beckenbauer",
+    "given_name": "Franz",
+    "manager_id": "M-033",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Beenhakker",
+    "female": false,
+    "full_name": "Leo Beenhakker",
+    "given_name": "Leo",
+    "manager_id": "M-034",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Béliveau",
+    "female": true,
+    "full_name": "Sylvie Béliveau",
+    "given_name": "Sylvie",
+    "manager_id": "M-035",
+    "nation_id": "T-12",
+    "nationality_name": "Canada"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bento",
+    "female": false,
+    "full_name": "Paulo Bento",
+    "given_name": "Paulo",
+    "manager_id": "M-036",
+    "nation_id": "T-58",
+    "nationality_name": "Portugal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bergeroo",
+    "female": false,
+    "full_name": "Philippe Bergeroo",
+    "given_name": "Philippe",
+    "manager_id": "M-037",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bergmark",
+    "female": false,
+    "full_name": "Orvar Bergmark",
+    "given_name": "Orvar",
+    "manager_id": "M-038",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Berhalter",
+    "female": false,
+    "full_name": "Gregg Berhalter",
+    "given_name": "Gregg",
+    "manager_id": "M-039",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Berntsen",
+    "female": false,
+    "full_name": "Bjarne Berntsen",
+    "given_name": "Bjarne",
+    "manager_id": "M-040",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bertolini",
+    "female": true,
+    "full_name": "Milena Bertolini",
+    "given_name": "Milena",
+    "manager_id": "M-041",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Beskov",
+    "female": false,
+    "full_name": "Konstantin Beskov",
+    "given_name": "Konstantin",
+    "manager_id": "M-042",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bielsa",
+    "female": false,
+    "full_name": "Marcelo Bielsa",
+    "given_name": "Marcelo",
+    "manager_id": "M-043",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bilardo",
+    "female": false,
+    "full_name": "Carlos Bilardo",
+    "given_name": "Carlos",
+    "manager_id": "M-044",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bingham",
+    "female": false,
+    "full_name": "Billy Bingham",
+    "given_name": "Billy",
+    "manager_id": "M-045",
+    "nation_id": "T-52",
+    "nationality_name": "Northern Ireland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bini",
+    "female": false,
+    "full_name": "Bruno Bini",
+    "given_name": "Bruno",
+    "manager_id": "M-046",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bisanz",
+    "female": false,
+    "full_name": "Gero Bisanz",
+    "given_name": "Gero",
+    "manager_id": "M-047",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Blažević",
+    "female": false,
+    "full_name": "Miroslav Blažević",
+    "given_name": "Miroslav",
+    "manager_id": "M-048",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Blinda",
+    "female": false,
+    "full_name": "Abdellah Blinda",
+    "given_name": "Abdellah",
+    "manager_id": "M-049",
+    "nation_id": "T-47",
+    "nationality_name": "Morocco"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Blokhin",
+    "female": false,
+    "full_name": "Oleg Blokhin",
+    "given_name": "Oleg",
+    "manager_id": "M-050",
+    "nation_id": "T-81",
+    "nationality_name": "Ukraine"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Boardman",
+    "female": false,
+    "full_name": "Dave Boardman",
+    "given_name": "Dave",
+    "manager_id": "M-051",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bonev",
+    "female": false,
+    "full_name": "Hristo Bonev",
+    "given_name": "Hristo",
+    "manager_id": "M-052",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bonfrère",
+    "female": false,
+    "full_name": "Jo Bonfrère",
+    "given_name": "Jo",
+    "manager_id": "M-053",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Borhy",
+    "female": false,
+    "full_name": "Karol Borhy",
+    "given_name": "Karol",
+    "manager_id": "M-054",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Borrás",
+    "female": false,
+    "full_name": "Omar Borrás",
+    "given_name": "Omar",
+    "manager_id": "M-055",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Borrello",
+    "female": false,
+    "full_name": "Carlos Borrello",
+    "given_name": "Carlos",
+    "manager_id": "M-056",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bozhkov",
+    "female": false,
+    "full_name": "Stefan Bozhkov",
+    "given_name": "Stefan",
+    "manager_id": "M-057",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bradley",
+    "female": false,
+    "full_name": "Bob Bradley",
+    "given_name": "Bob",
+    "manager_id": "M-058",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Brown",
+    "female": false,
+    "full_name": "Craig Brown",
+    "given_name": "Craig",
+    "manager_id": "M-059",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Brown",
+    "female": false,
+    "full_name": "Greg Brown",
+    "given_name": "Greg",
+    "manager_id": "M-060",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bru",
+    "female": false,
+    "full_name": "Francisco Bru",
+    "given_name": "Francisco",
+    "manager_id": "M-061",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Brückner",
+    "female": false,
+    "full_name": "Karel Brückner",
+    "given_name": "Karel",
+    "manager_id": "M-062",
+    "nation_id": "T-20",
+    "nationality_name": "Czech Republic"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Buccicardi",
+    "female": false,
+    "full_name": "Alberto Buccicardi",
+    "given_name": "Alberto",
+    "manager_id": "M-063",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Busby",
+    "female": false,
+    "full_name": "Matt Busby",
+    "given_name": "Matt",
+    "manager_id": "M-064",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Buschner",
+    "female": false,
+    "full_name": "Georg Buschner",
+    "given_name": "Georg",
+    "manager_id": "M-065",
+    "nation_id": "T-24",
+    "nationality_name": "East Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Butler",
+    "female": false,
+    "full_name": "Jack Butler",
+    "given_name": "Jack",
+    "manager_id": "M-066",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Bystritsky",
+    "female": false,
+    "full_name": "Yuri Bystritsky",
+    "given_name": "Yuri",
+    "manager_id": "M-067",
+    "nation_id": "T-62",
+    "nationality_name": "Russia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Calderón",
+    "female": false,
+    "full_name": "Marcos Calderón",
+    "given_name": "Marcos",
+    "manager_id": "M-068",
+    "nation_id": "T-56",
+    "nationality_name": "Peru"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Camacho",
+    "female": false,
+    "full_name": "José Antonio Camacho",
+    "given_name": "José Antonio",
+    "manager_id": "M-069",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cap",
+    "female": false,
+    "full_name": "Vladislao Cap",
+    "given_name": "Vladislao",
+    "manager_id": "M-070",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Capello",
+    "female": false,
+    "full_name": "Fabio Capello",
+    "given_name": "Fabio",
+    "manager_id": "M-071",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cárdenas",
+    "female": false,
+    "full_name": "Raúl Cárdenas",
+    "given_name": "Raúl",
+    "manager_id": "M-072",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Carpegiani",
+    "female": false,
+    "full_name": "Paulo César Carpegiani",
+    "given_name": "Paulo César",
+    "manager_id": "M-073",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Carrasco",
+    "female": false,
+    "full_name": "Hernán Carrasco",
+    "given_name": "Hernán",
+    "manager_id": "M-074",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Caudron",
+    "female": false,
+    "full_name": "Raoul Caudron",
+    "given_name": "Raoul",
+    "manager_id": "M-075",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cha",
+    "female": false,
+    "full_name": "Bum-kun Cha",
+    "given_name": "Bum-kun",
+    "manager_id": "M-076",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Charlton",
+    "female": false,
+    "full_name": "Jack Charlton",
+    "given_name": "Jack",
+    "manager_id": "M-077",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cherchesov",
+    "female": false,
+    "full_name": "Stanislav Cherchesov",
+    "given_name": "Stanislav",
+    "manager_id": "M-078",
+    "nation_id": "T-62",
+    "nationality_name": "Russia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Chetali",
+    "female": false,
+    "full_name": "Abdelmajid Chetali",
+    "given_name": "Abdelmajid",
+    "manager_id": "M-079",
+    "nation_id": "T-79",
+    "nationality_name": "Tunisia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Chong",
+    "female": true,
+    "full_name": "Tsu-pin Chong",
+    "given_name": "Tsu-pin",
+    "manager_id": "M-080",
+    "nation_id": "T-15",
+    "nationality_name": "Chinese Taipei"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cissé",
+    "female": false,
+    "full_name": "Aliou Cissé",
+    "given_name": "Aliou",
+    "manager_id": "M-081",
+    "nation_id": "T-65",
+    "nationality_name": "Senegal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Clemente",
+    "female": false,
+    "full_name": "Javier Clemente",
+    "given_name": "Javier",
+    "manager_id": "M-082",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Copeland",
+    "female": false,
+    "full_name": "Ted Copeland",
+    "given_name": "Ted",
+    "manager_id": "M-083",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Corazzo",
+    "female": false,
+    "full_name": "Juan Carlos Corazzo",
+    "given_name": "Juan Carlos",
+    "manager_id": "M-084",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Costa",
+    "female": false,
+    "full_name": "Flávio Costa",
+    "given_name": "Flávio",
+    "manager_id": "M-085",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Coutinho",
+    "female": false,
+    "full_name": "Cláudio Coutinho",
+    "given_name": "Cláudio",
+    "manager_id": "M-086",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cuéllar",
+    "female": false,
+    "full_name": "Leonardo Cuéllar",
+    "given_name": "Leonardo",
+    "manager_id": "M-087",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Cúper",
+    "female": false,
+    "full_name": "Héctor Cúper",
+    "given_name": "Héctor",
+    "manager_id": "M-088",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Czeizler",
+    "female": false,
+    "full_name": "Lajos Czeizler",
+    "given_name": "Lajos",
+    "manager_id": "M-089",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dalić",
+    "female": false,
+    "full_name": "Zlatko Dalić",
+    "given_name": "Zlatko",
+    "manager_id": "M-090",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "de Carvalho Rodrigues",
+    "female": false,
+    "full_name": "Píndaro de Carvalho Rodrigues",
+    "given_name": "Píndaro",
+    "manager_id": "M-091",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "de la Paz Herrera",
+    "female": false,
+    "full_name": "José de la Paz Herrera",
+    "given_name": "José",
+    "manager_id": "M-092",
+    "nation_id": "T-35",
+    "nationality_name": "Honduras"
+  },
+  {
+    "birth_date": null,
+    "family_name": "de Macedo",
+    "female": false,
+    "full_name": "Evaristo de Macedo",
+    "given_name": "Evaristo",
+    "manager_id": "M-093",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "del Bosque",
+    "female": false,
+    "full_name": "Vicente del Bosque",
+    "given_name": "Vicente",
+    "manager_id": "M-094",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dennerby",
+    "female": false,
+    "full_name": "Thomas Dennerby",
+    "given_name": "Thomas",
+    "manager_id": "M-095",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Derwall",
+    "female": false,
+    "full_name": "Jupp Derwall",
+    "given_name": "Jupp",
+    "manager_id": "M-096",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Deschamps",
+    "female": false,
+    "full_name": "Didier Deschamps",
+    "given_name": "Didier",
+    "manager_id": "M-097",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Diacre",
+    "female": true,
+    "full_name": "Corinne Diacre",
+    "given_name": "Corinne",
+    "manager_id": "M-098",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "DiCicco",
+    "female": false,
+    "full_name": "Tony DiCicco",
+    "given_name": "Tony",
+    "manager_id": "M-099",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Didi",
+    "female": false,
+    "full_name": "not applicable Didi",
+    "given_name": "not applicable",
+    "manager_id": "M-100",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dietz",
+    "female": false,
+    "full_name": "Károly Dietz",
+    "given_name": "Károly",
+    "manager_id": "M-101",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Djeumfa",
+    "female": false,
+    "full_name": "Alain Djeumfa",
+    "given_name": "Alain",
+    "manager_id": "M-102",
+    "nation_id": "T-11",
+    "nationality_name": "Cameroon"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Doherty",
+    "female": false,
+    "full_name": "Peter Doherty",
+    "given_name": "Peter",
+    "manager_id": "M-103",
+    "nation_id": "T-52",
+    "nationality_name": "Northern Ireland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Domanski-Lyfors",
+    "female": true,
+    "full_name": "Marika Domanski-Lyfors",
+    "given_name": "Marika",
+    "manager_id": "M-104",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Domenech",
+    "female": false,
+    "full_name": "Raymond Domenech",
+    "given_name": "Raymond",
+    "manager_id": "M-105",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dorrance",
+    "female": false,
+    "full_name": "Anson Dorrance",
+    "given_name": "Anson",
+    "manager_id": "M-106",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dujković",
+    "female": false,
+    "full_name": "Ratomir Dujković",
+    "given_name": "Ratomir",
+    "manager_id": "M-107",
+    "nation_id": "T-66",
+    "nationality_name": "Serbia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Dunga",
+    "female": false,
+    "full_name": "not applicable Dunga",
+    "given_name": "not applicable",
+    "manager_id": "M-108",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Durand Laguna",
+    "female": false,
+    "full_name": "José Durand Laguna",
+    "given_name": "José",
+    "manager_id": "M-109",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Effiom",
+    "female": false,
+    "full_name": "Ntiero Effiom",
+    "given_name": "Ntiero",
+    "manager_id": "M-110",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Eizaguirre",
+    "female": false,
+    "full_name": "Guillermo Eizaguirre",
+    "given_name": "Guillermo",
+    "manager_id": "M-111",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ellis",
+    "female": true,
+    "full_name": "Desiree Ellis",
+    "given_name": "Desiree",
+    "manager_id": "M-112",
+    "nation_id": "T-70",
+    "nationality_name": "South Africa"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ellis",
+    "female": true,
+    "full_name": "Jill Ellis",
+    "given_name": "Jill",
+    "manager_id": "M-113",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Engel",
+    "female": false,
+    "full_name": "Jerzy Engel",
+    "given_name": "Jerzy",
+    "manager_id": "M-114",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Enow",
+    "female": false,
+    "full_name": "Carl Enow",
+    "given_name": "Carl",
+    "manager_id": "M-115",
+    "nation_id": "T-11",
+    "nationality_name": "Cameroon"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Enrique",
+    "female": false,
+    "full_name": "Luis Enrique",
+    "given_name": "Luis",
+    "manager_id": "M-116",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ericson",
+    "female": false,
+    "full_name": "Georg Ericson",
+    "given_name": "Georg",
+    "manager_id": "M-117",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Eriksson",
+    "female": false,
+    "full_name": "Sven-Göran Eriksson",
+    "given_name": "Sven-Göran",
+    "manager_id": "M-118",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Fabbri",
+    "female": false,
+    "full_name": "Edmondo Fabbri",
+    "given_name": "Edmondo",
+    "manager_id": "M-119",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Facchin",
+    "female": false,
+    "full_name": "Carlo Facchin",
+    "given_name": "Carlo",
+    "manager_id": "M-120",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Faria",
+    "female": false,
+    "full_name": "José Faria",
+    "given_name": "José",
+    "manager_id": "M-121",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Feola",
+    "female": false,
+    "full_name": "Vicente Feola",
+    "given_name": "Vicente",
+    "manager_id": "M-122",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ferguson",
+    "female": false,
+    "full_name": "Alex Ferguson",
+    "given_name": "Alex",
+    "manager_id": "M-123",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ferrari",
+    "female": false,
+    "full_name": "Giovanni Ferrari",
+    "given_name": "Giovanni",
+    "manager_id": "M-124",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Finke",
+    "female": false,
+    "full_name": "Volker Finke",
+    "given_name": "Volker",
+    "manager_id": "M-125",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Fleitas Solich",
+    "female": false,
+    "full_name": "Manuel Fleitas Solich",
+    "given_name": "Manuel",
+    "manager_id": "M-126",
+    "nation_id": "T-55",
+    "nationality_name": "Paraguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Flick",
+    "female": false,
+    "full_name": "Hansi Flick",
+    "given_name": "Hansi",
+    "manager_id": "M-127",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Foni",
+    "female": false,
+    "full_name": "Alfredo Foni",
+    "given_name": "Alfredo",
+    "manager_id": "M-128",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Fonseca",
+    "female": false,
+    "full_name": "Ademar Fonseca",
+    "given_name": "Ademar",
+    "manager_id": "M-129",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Frigério",
+    "female": false,
+    "full_name": "Marcello Frigério",
+    "given_name": "Marcello",
+    "manager_id": "M-130",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gansler",
+    "female": false,
+    "full_name": "Bob Gansler",
+    "given_name": "Bob",
+    "manager_id": "M-131",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gantzhorn",
+    "female": false,
+    "full_name": "Keld Gantzhorn",
+    "given_name": "Keld",
+    "manager_id": "M-132",
+    "nation_id": "T-22",
+    "nationality_name": "Denmark"
+  },
+  {
+    "birth_date": null,
+    "family_name": "García",
+    "female": false,
+    "full_name": "Amadeo García",
+    "given_name": "Amadeo",
+    "manager_id": "M-133",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gareca",
+    "female": false,
+    "full_name": "Ricardo Gareca",
+    "given_name": "Ricardo",
+    "manager_id": "M-134",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gerhardsson",
+    "female": false,
+    "full_name": "Peter Gerhardsson",
+    "given_name": "Peter",
+    "manager_id": "M-135",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Glendenning",
+    "female": false,
+    "full_name": "Bob Glendenning",
+    "given_name": "Bob",
+    "manager_id": "M-136",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Glória",
+    "female": false,
+    "full_name": "Otto Glória",
+    "given_name": "Otto",
+    "manager_id": "M-137",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gmoch",
+    "female": false,
+    "full_name": "Jacek Gmoch",
+    "given_name": "Jacek",
+    "manager_id": "M-138",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Goethals",
+    "female": false,
+    "full_name": "Raymond Goethals",
+    "given_name": "Raymond",
+    "manager_id": "M-139",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Goetinck",
+    "female": false,
+    "full_name": "Hector Goetinck",
+    "given_name": "Hector",
+    "manager_id": "M-140",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gómez",
+    "female": false,
+    "full_name": "Hernán Darío Gómez",
+    "given_name": "Hernán Darío",
+    "manager_id": "M-141",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gonçalves",
+    "female": false,
+    "full_name": "Oliveira Gonçalves",
+    "given_name": "Oliveira",
+    "manager_id": "M-142",
+    "nation_id": "T-02",
+    "nationality_name": "Angola"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gonçalves",
+    "female": false,
+    "full_name": "Paulo Gonçalves",
+    "given_name": "Paulo",
+    "manager_id": "M-143",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "González",
+    "female": false,
+    "full_name": "Aurelio González",
+    "given_name": "Aurelio",
+    "manager_id": "M-144",
+    "nation_id": "T-55",
+    "nationality_name": "Paraguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Górski",
+    "female": false,
+    "full_name": "Kazimierz Górski",
+    "given_name": "Kazimierz",
+    "manager_id": "M-145",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Gould",
+    "female": false,
+    "full_name": "David Gould",
+    "given_name": "David",
+    "manager_id": "M-146",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Greenwood",
+    "female": false,
+    "full_name": "Ron Greenwood",
+    "given_name": "Ron",
+    "manager_id": "M-147",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Guenza",
+    "female": false,
+    "full_name": "Sergio Guenza",
+    "given_name": "Sergio",
+    "manager_id": "M-148",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Guérin",
+    "female": false,
+    "full_name": "Henri Guérin",
+    "given_name": "Henri",
+    "manager_id": "M-149",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Guimarães",
+    "female": false,
+    "full_name": "Alexandre Guimarães",
+    "given_name": "Alexandre",
+    "manager_id": "M-150",
+    "nation_id": "T-17",
+    "nationality_name": "Costa Rica"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Güneş",
+    "female": false,
+    "full_name": "Şenol Güneş",
+    "given_name": "Şenol",
+    "manager_id": "M-151",
+    "nation_id": "T-80",
+    "nationality_name": "Turkey"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Halilhodžić",
+    "female": false,
+    "full_name": "Vahid Halilhodžić",
+    "given_name": "Vahid",
+    "manager_id": "M-152",
+    "nation_id": "T-08",
+    "nationality_name": "Bosnia and Herzegovina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hallgrímsson",
+    "female": false,
+    "full_name": "Heimir Hallgrímsson",
+    "given_name": "Heimir",
+    "manager_id": "M-153",
+    "nation_id": "T-37",
+    "nationality_name": "Iceland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Halvorsen",
+    "female": false,
+    "full_name": "Asbjørn Halvorsen",
+    "given_name": "Asbjørn",
+    "manager_id": "M-154",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hamilton",
+    "female": false,
+    "full_name": "Paul Hamilton",
+    "given_name": "Paul",
+    "manager_id": "M-155",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hao",
+    "female": false,
+    "full_name": "Wei Hao",
+    "given_name": "Wei",
+    "manager_id": "M-156",
+    "nation_id": "T-14",
+    "nationality_name": "China"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Happel",
+    "female": false,
+    "full_name": "Ernst Happel",
+    "given_name": "Ernst",
+    "manager_id": "M-157",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hareide",
+    "female": false,
+    "full_name": "Åge Hareide",
+    "given_name": "Åge",
+    "manager_id": "M-158",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Heiner-Møller",
+    "female": false,
+    "full_name": "Kenneth Heiner-Møller",
+    "given_name": "Kenneth",
+    "manager_id": "M-159",
+    "nation_id": "T-22",
+    "nationality_name": "Denmark"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Heinrichs",
+    "female": true,
+    "full_name": "April Heinrichs",
+    "given_name": "April",
+    "manager_id": "M-160",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Herberger",
+    "female": false,
+    "full_name": "Sepp Herberger",
+    "given_name": "Sepp",
+    "manager_id": "M-161",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Herbert",
+    "female": false,
+    "full_name": "Ricki Herbert",
+    "given_name": "Ricki",
+    "manager_id": "M-162",
+    "nation_id": "T-49",
+    "nationality_name": "New Zealand"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Herdman",
+    "female": false,
+    "full_name": "John Herdman",
+    "given_name": "John",
+    "manager_id": "M-163",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Herrera",
+    "female": false,
+    "full_name": "Helenio Herrera",
+    "given_name": "Helenio",
+    "manager_id": "M-164",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Herrera",
+    "female": false,
+    "full_name": "Miguel Herrera",
+    "given_name": "Miguel",
+    "manager_id": "M-165",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hickersberger",
+    "female": false,
+    "full_name": "Josef Hickersberger",
+    "given_name": "Josef",
+    "manager_id": "M-166",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hidalgo",
+    "female": false,
+    "full_name": "Michel Hidalgo",
+    "given_name": "Michel",
+    "manager_id": "M-167",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hiddink",
+    "female": false,
+    "full_name": "Guus Hiddink",
+    "given_name": "Guus",
+    "manager_id": "M-168",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hierro",
+    "female": false,
+    "full_name": "Fernando Hierro",
+    "given_name": "Fernando",
+    "manager_id": "M-169",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hitzfeld",
+    "female": false,
+    "full_name": "Ottmar Hitzfeld",
+    "given_name": "Ottmar",
+    "manager_id": "M-170",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hjulmand",
+    "female": false,
+    "full_name": "Kasper Hjulmand",
+    "given_name": "Kasper",
+    "manager_id": "M-171",
+    "nation_id": "T-22",
+    "nationality_name": "Denmark"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hoddle",
+    "female": false,
+    "full_name": "Glenn Hoddle",
+    "given_name": "Glenn",
+    "manager_id": "M-172",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hodgson",
+    "female": false,
+    "full_name": "Roy Hodgson",
+    "given_name": "Roy",
+    "manager_id": "M-173",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Høgmo",
+    "female": false,
+    "full_name": "Per-Mathias Høgmo",
+    "given_name": "Per-Mathias",
+    "manager_id": "M-174",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hohberg",
+    "female": false,
+    "full_name": "Juan Hohberg",
+    "given_name": "Juan",
+    "manager_id": "M-175",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hong",
+    "female": false,
+    "full_name": "Myung-bo Hong",
+    "given_name": "Myung-bo",
+    "manager_id": "M-176",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Huh",
+    "female": false,
+    "full_name": "Jung-moo Huh",
+    "given_name": "Jung-moo",
+    "manager_id": "M-177",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Hvidemose",
+    "female": false,
+    "full_name": "Jørgen Hvidemose",
+    "given_name": "Jørgen",
+    "manager_id": "M-178",
+    "nation_id": "T-22",
+    "nationality_name": "Denmark"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Iordănescu",
+    "female": false,
+    "full_name": "Anghel Iordănescu",
+    "given_name": "Anghel",
+    "manager_id": "M-179",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ismaila",
+    "female": false,
+    "full_name": "Mabo Ismaila",
+    "given_name": "Mabo",
+    "manager_id": "M-180",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ivanković",
+    "female": false,
+    "full_name": "Branko Ivanković",
+    "given_name": "Branko",
+    "manager_id": "M-181",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Jacquet",
+    "female": false,
+    "full_name": "Aimé Jacquet",
+    "given_name": "Aimé",
+    "manager_id": "M-182",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Janas",
+    "female": false,
+    "full_name": "Paweł Janas",
+    "given_name": "Paweł",
+    "manager_id": "M-183",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Jeffrey",
+    "female": false,
+    "full_name": "William Jeffrey",
+    "given_name": "William",
+    "manager_id": "M-184",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Jenei",
+    "female": false,
+    "full_name": "Emerich Jenei",
+    "given_name": "Emerich",
+    "manager_id": "M-185",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Jia",
+    "female": false,
+    "full_name": "Xiuquan Jia",
+    "given_name": "Xiuquan",
+    "manager_id": "M-186",
+    "nation_id": "T-14",
+    "nationality_name": "China"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Johansson",
+    "female": false,
+    "full_name": "Bo Johansson",
+    "given_name": "Bo",
+    "manager_id": "M-187",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Jozić",
+    "female": false,
+    "full_name": "Mirko Jozić",
+    "given_name": "Mirko",
+    "manager_id": "M-188",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kachalin",
+    "female": false,
+    "full_name": "Gavriil Kachalin",
+    "given_name": "Gavriil",
+    "manager_id": "M-189",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kadri",
+    "female": false,
+    "full_name": "Jalel Kadri",
+    "given_name": "Jalel",
+    "manager_id": "M-190",
+    "nation_id": "T-79",
+    "nationality_name": "Tunisia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kałuża",
+    "female": false,
+    "full_name": "Józef Kałuża",
+    "given_name": "Józef",
+    "manager_id": "M-191",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kasperczak",
+    "female": false,
+    "full_name": "Henryk Kasperczak",
+    "given_name": "Henryk",
+    "manager_id": "M-192",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Katanec",
+    "female": false,
+    "full_name": "Srečko Katanec",
+    "given_name": "Srečko",
+    "manager_id": "M-193",
+    "nation_id": "T-69",
+    "nationality_name": "Slovenia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kek",
+    "female": false,
+    "full_name": "Matjaž Kek",
+    "given_name": "Matjaž",
+    "manager_id": "M-194",
+    "nation_id": "T-69",
+    "nationality_name": "Slovenia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kerr",
+    "female": true,
+    "full_name": "Shelley Kerr",
+    "given_name": "Shelley",
+    "manager_id": "M-195",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Keshi",
+    "female": false,
+    "full_name": "Stephen Keshi",
+    "given_name": "Stephen",
+    "manager_id": "M-196",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Khalef",
+    "female": false,
+    "full_name": "Mahieddine Khalef",
+    "given_name": "Mahieddine",
+    "manager_id": "M-197",
+    "nation_id": "T-01",
+    "nationality_name": "Algeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kim",
+    "female": false,
+    "full_name": "Ho Kim",
+    "given_name": "Ho",
+    "manager_id": "M-198",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kim",
+    "female": false,
+    "full_name": "Jong-hun Kim",
+    "given_name": "Jong-hun",
+    "manager_id": "M-199",
+    "nation_id": "T-51",
+    "nationality_name": "North Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kim",
+    "female": false,
+    "full_name": "Jung-nam Kim",
+    "given_name": "Jung-nam",
+    "manager_id": "M-200",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kim",
+    "female": false,
+    "full_name": "Kwang-min Kim",
+    "given_name": "Kwang-min",
+    "manager_id": "M-201",
+    "nation_id": "T-51",
+    "nationality_name": "North Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kim",
+    "female": false,
+    "full_name": "Yong-sik Kim",
+    "given_name": "Yong-sik",
+    "manager_id": "M-202",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kimpton",
+    "female": false,
+    "full_name": "George Kimpton",
+    "given_name": "George",
+    "manager_id": "M-203",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Klinsmann",
+    "female": false,
+    "full_name": "Jürgen Klinsmann",
+    "given_name": "Jürgen",
+    "manager_id": "M-204",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kolský",
+    "female": false,
+    "full_name": "Karel Kolský",
+    "given_name": "Karel",
+    "manager_id": "M-205",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kovač",
+    "female": false,
+    "full_name": "Niko Kovač",
+    "given_name": "Niko",
+    "manager_id": "M-206",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kranjčar",
+    "female": false,
+    "full_name": "Zlatko Kranjčar",
+    "given_name": "Zlatko",
+    "manager_id": "M-207",
+    "nation_id": "T-18",
+    "nationality_name": "Croatia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Krstajić",
+    "female": false,
+    "full_name": "Mladen Krstajić",
+    "given_name": "Mladen",
+    "manager_id": "M-208",
+    "nation_id": "T-66",
+    "nationality_name": "Serbia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kubala",
+    "female": false,
+    "full_name": "Ladislao Kubala",
+    "given_name": "Ladislao",
+    "manager_id": "M-209",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Kuhn",
+    "female": false,
+    "full_name": "Köbi Kuhn",
+    "given_name": "Köbi",
+    "manager_id": "M-210",
+    "nation_id": "T-75",
+    "nationality_name": "Switzerland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "La Volpe",
+    "female": false,
+    "full_name": "Ricardo La Volpe",
+    "given_name": "Ricardo",
+    "manager_id": "M-211",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lagerbäck",
+    "female": false,
+    "full_name": "Lars Lagerbäck",
+    "given_name": "Lars",
+    "manager_id": "M-212",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lamouchi",
+    "female": false,
+    "full_name": "Sabri Lamouchi",
+    "given_name": "Sabri",
+    "manager_id": "M-213",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Landsem",
+    "female": true,
+    "full_name": "Eli Landsem",
+    "given_name": "Eli",
+    "manager_id": "M-214",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lapuente",
+    "female": false,
+    "full_name": "Manuel Lapuente",
+    "given_name": "Manuel",
+    "manager_id": "M-215",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Latzke",
+    "female": false,
+    "full_name": "Felix Latzke",
+    "given_name": "Felix",
+    "manager_id": "M-216",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lazaroni",
+    "female": false,
+    "full_name": "Sebastião Lazaroni",
+    "given_name": "Sebastião",
+    "manager_id": "M-217",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Le Guen",
+    "female": false,
+    "full_name": "Paul Le Guen",
+    "given_name": "Paul",
+    "manager_id": "M-218",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Le Roy",
+    "female": false,
+    "full_name": "Claude Le Roy",
+    "given_name": "Claude",
+    "manager_id": "M-219",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lee",
+    "female": false,
+    "full_name": "Hoe-taik Lee",
+    "given_name": "Hoe-taik",
+    "manager_id": "M-220",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Leekens",
+    "female": false,
+    "full_name": "Georges Leekens",
+    "given_name": "Georges",
+    "manager_id": "M-221",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lemerre",
+    "female": false,
+    "full_name": "Roger Lemerre",
+    "given_name": "Roger",
+    "manager_id": "M-222",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Letelier",
+    "female": false,
+    "full_name": "José Letelier",
+    "given_name": "José",
+    "manager_id": "M-223",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "lima",
+    "female": false,
+    "full_name": "Kleiton lima",
+    "given_name": "Kleiton",
+    "manager_id": "M-224",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lippi",
+    "female": false,
+    "full_name": "Marcello Lippi",
+    "given_name": "Marcello",
+    "manager_id": "M-225",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Livingstone",
+    "female": false,
+    "full_name": "Doug Livingstone",
+    "given_name": "Doug",
+    "manager_id": "M-226",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lobanovsky",
+    "female": false,
+    "full_name": "Valeri Lobanovsky",
+    "given_name": "Valeri",
+    "manager_id": "M-227",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lobanovskyi",
+    "female": false,
+    "full_name": "Valeriy Lobanovskyi",
+    "given_name": "Valeriy",
+    "manager_id": "M-228",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Loisel",
+    "female": true,
+    "full_name": "Élisabeth Loisel",
+    "given_name": "Élisabeth",
+    "manager_id": "M-229",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "López",
+    "female": false,
+    "full_name": "Juan López",
+    "given_name": "Juan",
+    "manager_id": "M-230",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "López Herranz",
+    "female": false,
+    "full_name": "Antonio López Herranz",
+    "given_name": "Antonio",
+    "manager_id": "M-231",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lorenzo",
+    "female": false,
+    "full_name": "Juan Carlos Lorenzo",
+    "given_name": "Juan Carlos",
+    "manager_id": "M-232",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Lovrić",
+    "female": false,
+    "full_name": "Ljubomir Lovrić",
+    "given_name": "Ljubomir",
+    "manager_id": "M-233",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Löw",
+    "female": false,
+    "full_name": "Joachim Löw",
+    "given_name": "Joachim",
+    "manager_id": "M-234",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Luque de Serrallonga",
+    "female": false,
+    "full_name": "Juan Luque de Serrallonga",
+    "given_name": "Juan",
+    "manager_id": "M-235",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ma",
+    "female": false,
+    "full_name": "Liangxing Ma",
+    "given_name": "Liangxing",
+    "manager_id": "M-236",
+    "nation_id": "T-14",
+    "nationality_name": "China"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ma",
+    "female": false,
+    "full_name": "Yuanan Ma",
+    "given_name": "Yuanan",
+    "manager_id": "M-237",
+    "nation_id": "T-14",
+    "nationality_name": "China"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Maâloul",
+    "female": false,
+    "full_name": "Nabil Maâloul",
+    "given_name": "Nabil",
+    "manager_id": "M-238",
+    "nation_id": "T-79",
+    "nationality_name": "Tunisia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "MacLeod",
+    "female": false,
+    "full_name": "Ally MacLeod",
+    "given_name": "Ally",
+    "manager_id": "M-239",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Maldini",
+    "female": false,
+    "full_name": "Cesare Maldini",
+    "given_name": "Cesare",
+    "manager_id": "M-240",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Maradona",
+    "female": false,
+    "full_name": "Diego Maradona",
+    "given_name": "Diego",
+    "manager_id": "M-241",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Marko",
+    "female": false,
+    "full_name": "Jozef Marko",
+    "given_name": "Jozef",
+    "manager_id": "M-242",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Martínez",
+    "female": false,
+    "full_name": "Roberto Martínez",
+    "given_name": "Roberto",
+    "manager_id": "M-243",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Martino",
+    "female": false,
+    "full_name": "Gerardo Martino",
+    "given_name": "Gerardo",
+    "manager_id": "M-244",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mastenbroek",
+    "female": false,
+    "full_name": "Johan Mastenbroek",
+    "given_name": "Johan",
+    "manager_id": "M-245",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Maturana",
+    "female": false,
+    "full_name": "Francisco Maturana",
+    "given_name": "Francisco",
+    "manager_id": "M-246",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mazza",
+    "female": false,
+    "full_name": "Paolo Mazza",
+    "given_name": "Paolo",
+    "manager_id": "M-247",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "McCarthy",
+    "female": false,
+    "full_name": "Mick McCarthy",
+    "given_name": "Mick",
+    "manager_id": "M-248",
+    "nation_id": "T-60",
+    "nationality_name": "Republic of Ireland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "McCrae",
+    "female": false,
+    "full_name": "James McCrae",
+    "given_name": "James",
+    "manager_id": "M-249",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Meisl",
+    "female": false,
+    "full_name": "Hugo Meisl",
+    "given_name": "Hugo",
+    "manager_id": "M-250",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Meissner",
+    "female": false,
+    "full_name": "Josef Meissner",
+    "given_name": "Josef",
+    "manager_id": "M-251",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mejía Barón",
+    "female": false,
+    "full_name": "Miguel Mejía Barón",
+    "given_name": "Miguel",
+    "manager_id": "M-252",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mekhloufi",
+    "female": false,
+    "full_name": "Rachid Mekhloufi",
+    "given_name": "Rachid",
+    "manager_id": "M-253",
+    "nation_id": "T-01",
+    "nationality_name": "Algeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Menotti",
+    "female": false,
+    "full_name": "César Luis Menotti",
+    "given_name": "César Luis",
+    "manager_id": "M-254",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Menzies",
+    "female": false,
+    "full_name": "Hue Menzies",
+    "given_name": "Hue",
+    "manager_id": "M-255",
+    "nation_id": "T-43",
+    "nationality_name": "Jamaica"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mészöly",
+    "female": false,
+    "full_name": "Kálmán Mészöly",
+    "given_name": "Kálmán",
+    "manager_id": "M-256",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Metsu",
+    "female": false,
+    "full_name": "Bruno Metsu",
+    "given_name": "Bruno",
+    "manager_id": "M-257",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mezey",
+    "female": false,
+    "full_name": "György Mezey",
+    "given_name": "György",
+    "manager_id": "M-258",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Michel",
+    "female": false,
+    "full_name": "Henri Michel",
+    "given_name": "Henri",
+    "manager_id": "M-259",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Michels",
+    "female": false,
+    "full_name": "Rinus Michels",
+    "given_name": "Rinus",
+    "manager_id": "M-260",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Michniewicz",
+    "female": false,
+    "full_name": "Czesław Michniewicz",
+    "given_name": "Czesław",
+    "manager_id": "M-261",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mihajlović",
+    "female": false,
+    "full_name": "Prvoslav Mihajlović",
+    "given_name": "Prvoslav",
+    "manager_id": "M-262",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Milicic",
+    "female": false,
+    "full_name": "Ante Milicic",
+    "given_name": "Ante",
+    "manager_id": "M-263",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Miljanić",
+    "female": false,
+    "full_name": "Miljan Miljanić",
+    "given_name": "Miljan",
+    "manager_id": "M-264",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Millar",
+    "female": false,
+    "full_name": "Robert Millar",
+    "given_name": "Robert",
+    "manager_id": "M-265",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Milutinović",
+    "female": false,
+    "full_name": "Bora Milutinović",
+    "given_name": "Bora",
+    "manager_id": "M-266",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Miyauchi",
+    "female": false,
+    "full_name": "Satoshi Miyauchi",
+    "given_name": "Satoshi",
+    "manager_id": "M-267",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mladenov",
+    "female": false,
+    "full_name": "Hristo Mladenov",
+    "given_name": "Hristo",
+    "manager_id": "M-268",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Mohajerani",
+    "female": false,
+    "full_name": "Heshmat Mohajerani",
+    "given_name": "Heshmat",
+    "manager_id": "M-269",
+    "nation_id": "T-38",
+    "nationality_name": "Iran"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Morace",
+    "female": true,
+    "full_name": "Carolina Morace",
+    "given_name": "Carolina",
+    "manager_id": "M-270",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Moreira",
+    "female": false,
+    "full_name": "Aymoré Moreira",
+    "given_name": "Aymoré",
+    "manager_id": "M-271",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Moreira",
+    "female": false,
+    "full_name": "Zezé Moreira",
+    "given_name": "Zezé",
+    "manager_id": "M-272",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Moriyasu",
+    "female": false,
+    "full_name": "Hajime Moriyasu",
+    "given_name": "Hajime",
+    "manager_id": "M-273",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Morozov",
+    "female": false,
+    "full_name": "Nikolai Morozov",
+    "given_name": "Nikolai",
+    "manager_id": "M-274",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Müller",
+    "female": false,
+    "full_name": "Heinrich Müller",
+    "given_name": "Heinrich",
+    "manager_id": "M-275",
+    "nation_id": "T-75",
+    "nationality_name": "Switzerland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Muñoz",
+    "female": false,
+    "full_name": "Miguel Muñoz",
+    "given_name": "Miguel",
+    "manager_id": "M-276",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Murphy",
+    "female": false,
+    "full_name": "Jimmy Murphy",
+    "given_name": "Jimmy",
+    "manager_id": "M-277",
+    "nation_id": "T-85",
+    "nationality_name": "Wales"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Myong",
+    "female": false,
+    "full_name": "Dong-chan Myong",
+    "given_name": "Dong-chan",
+    "manager_id": "M-278",
+    "nation_id": "T-51",
+    "nationality_name": "North Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Myung",
+    "female": false,
+    "full_name": "Rye-hyun Myung",
+    "given_name": "Rye-hyun",
+    "manager_id": "M-279",
+    "nation_id": "T-51",
+    "nationality_name": "North Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nádas",
+    "female": false,
+    "full_name": "Ödön Nádas",
+    "given_name": "Ödön",
+    "manager_id": "M-280",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nagy",
+    "female": false,
+    "full_name": "József Nagy",
+    "given_name": "József",
+    "manager_id": "M-281",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nausch",
+    "female": false,
+    "full_name": "Walter Nausch",
+    "given_name": "Walter",
+    "manager_id": "M-282",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nawałka",
+    "female": false,
+    "full_name": "Adam Nawałka",
+    "given_name": "Adam",
+    "manager_id": "M-283",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Neid",
+    "female": true,
+    "full_name": "Silvia Neid",
+    "given_name": "Silvia",
+    "manager_id": "M-284",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nepomnyashchy",
+    "female": false,
+    "full_name": "Valery Nepomnyashchy",
+    "given_name": "Valery",
+    "manager_id": "M-285",
+    "nation_id": "T-72",
+    "nationality_name": "Soviet Union"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nerz",
+    "female": false,
+    "full_name": "Otto Nerz",
+    "given_name": "Otto",
+    "manager_id": "M-286",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Neville",
+    "female": false,
+    "full_name": "Phil Neville",
+    "given_name": "Phil",
+    "manager_id": "M-287",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Niculescu",
+    "female": false,
+    "full_name": "Angelo Niculescu",
+    "given_name": "Angelo",
+    "manager_id": "M-288",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nishino",
+    "female": false,
+    "full_name": "Akira Nishino",
+    "given_name": "Akira",
+    "manager_id": "M-289",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Nordin",
+    "female": false,
+    "full_name": "Olle Nordin",
+    "given_name": "Olle",
+    "manager_id": "M-290",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Novo",
+    "female": false,
+    "full_name": "Ferruccio Novo",
+    "given_name": "Ferruccio",
+    "manager_id": "M-291",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ohashi",
+    "female": false,
+    "full_name": "Hiroshi Ohashi",
+    "given_name": "Hiroshi",
+    "manager_id": "M-292",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Okada",
+    "female": false,
+    "full_name": "Takeshi Okada",
+    "given_name": "Takeshi",
+    "manager_id": "M-293",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Okon",
+    "female": false,
+    "full_name": "Edwin Okon",
+    "given_name": "Edwin",
+    "manager_id": "M-294",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Okpodu",
+    "female": false,
+    "full_name": "Samuel Okpodu",
+    "given_name": "Samuel",
+    "manager_id": "M-295",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Olazar",
+    "female": false,
+    "full_name": "Francisco Olazar",
+    "given_name": "Francisco",
+    "manager_id": "M-296",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Oliveira",
+    "female": false,
+    "full_name": "António Oliveira",
+    "given_name": "António",
+    "manager_id": "M-297",
+    "nation_id": "T-58",
+    "nationality_name": "Portugal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Olsen",
+    "female": false,
+    "full_name": "Egil Olsen",
+    "given_name": "Egil",
+    "manager_id": "M-298",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Olsen",
+    "female": false,
+    "full_name": "Morten Olsen",
+    "given_name": "Morten",
+    "manager_id": "M-299",
+    "nation_id": "T-22",
+    "nationality_name": "Denmark"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Onigbinde",
+    "female": false,
+    "full_name": "Festus Onigbinde",
+    "given_name": "Festus",
+    "manager_id": "M-300",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ormond",
+    "female": false,
+    "full_name": "Willie Ormond",
+    "given_name": "Willie",
+    "manager_id": "M-301",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Orth",
+    "female": false,
+    "full_name": "György Orth",
+    "given_name": "György",
+    "manager_id": "M-302",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Osim",
+    "female": false,
+    "full_name": "Ivica Osim",
+    "given_name": "Ivica",
+    "manager_id": "M-303",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Osorio",
+    "female": false,
+    "full_name": "Juan Carlos Osorio",
+    "given_name": "Juan Carlos",
+    "manager_id": "M-304",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pachedzhiev",
+    "female": false,
+    "full_name": "Georgi Pachedzhiev",
+    "given_name": "Georgi",
+    "manager_id": "M-305",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Page",
+    "female": false,
+    "full_name": "Rob Page",
+    "given_name": "Rob",
+    "manager_id": "M-306",
+    "nation_id": "T-85",
+    "nationality_name": "Wales"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Paha",
+    "female": false,
+    "full_name": "Isaac Paha",
+    "given_name": "Isaac",
+    "manager_id": "M-307",
+    "nation_id": "T-32",
+    "nationality_name": "Ghana"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Paijkull",
+    "female": true,
+    "full_name": "Gunilla Paijkull",
+    "given_name": "Gunilla",
+    "manager_id": "M-308",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Panagoulias",
+    "female": false,
+    "full_name": "Alketas Panagoulias",
+    "given_name": "Alketas",
+    "manager_id": "M-309",
+    "nation_id": "T-33",
+    "nationality_name": "Greece"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Paquetá",
+    "female": false,
+    "full_name": "Marcos Paquetá",
+    "given_name": "Marcos",
+    "manager_id": "M-310",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Parreira",
+    "female": false,
+    "full_name": "Carlos Alberto Parreira",
+    "given_name": "Carlos Alberto",
+    "manager_id": "M-311",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pascucci",
+    "female": false,
+    "full_name": "Felipe Pascucci",
+    "given_name": "Felipe",
+    "manager_id": "M-312",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Passarella",
+    "female": false,
+    "full_name": "Daniel Passarella",
+    "given_name": "Daniel",
+    "manager_id": "M-313",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pedernera",
+    "female": false,
+    "full_name": "Adolfo Pedernera",
+    "given_name": "Adolfo",
+    "manager_id": "M-314",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pékerman",
+    "female": false,
+    "full_name": "José Pékerman",
+    "given_name": "José",
+    "manager_id": "M-315",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pellerud",
+    "female": false,
+    "full_name": "Even Pellerud",
+    "given_name": "Even",
+    "manager_id": "M-316",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Penev",
+    "female": false,
+    "full_name": "Dimitar Penev",
+    "given_name": "Dimitar",
+    "manager_id": "M-317",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Petković",
+    "female": false,
+    "full_name": "Ilija Petković",
+    "given_name": "Ilija",
+    "manager_id": "M-318",
+    "nation_id": "T-67",
+    "nationality_name": "Serbia and Montenegro"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Petković",
+    "female": false,
+    "full_name": "Vladimir Petković",
+    "given_name": "Vladimir",
+    "manager_id": "M-319",
+    "nation_id": "T-75",
+    "nationality_name": "Switzerland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Petrů",
+    "female": false,
+    "full_name": "Karel Petrů",
+    "given_name": "Karel",
+    "manager_id": "M-320",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pettersson",
+    "female": false,
+    "full_name": "John Pettersson",
+    "given_name": "John",
+    "manager_id": "M-321",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pfister",
+    "female": false,
+    "full_name": "Otto Pfister",
+    "given_name": "Otto",
+    "manager_id": "M-322",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pibarot",
+    "female": false,
+    "full_name": "Pierre Pibarot",
+    "given_name": "Pierre",
+    "manager_id": "M-323",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Piechniczek",
+    "female": false,
+    "full_name": "Antoni Piechniczek",
+    "given_name": "Antoni",
+    "manager_id": "M-324",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pimenta",
+    "female": false,
+    "full_name": "Adhemar Pimenta",
+    "given_name": "Adhemar",
+    "manager_id": "M-325",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pinto",
+    "female": false,
+    "full_name": "Jorge Luis Pinto",
+    "given_name": "Jorge Luis",
+    "manager_id": "M-326",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Piontek",
+    "female": false,
+    "full_name": "Sepp Piontek",
+    "given_name": "Sepp",
+    "manager_id": "M-327",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pires",
+    "female": false,
+    "full_name": "Fernando Pires",
+    "given_name": "Fernando",
+    "manager_id": "M-328",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pizzi",
+    "female": false,
+    "full_name": "Juan Antonio Pizzi",
+    "given_name": "Juan Antonio",
+    "manager_id": "M-329",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Porta",
+    "female": false,
+    "full_name": "Roberto Porta",
+    "given_name": "Roberto",
+    "manager_id": "M-330",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Postecoglou",
+    "female": false,
+    "full_name": "Ange Postecoglou",
+    "given_name": "Ange",
+    "manager_id": "M-331",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Powell",
+    "female": true,
+    "full_name": "Hope Powell",
+    "given_name": "Hope",
+    "manager_id": "M-332",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pozzo",
+    "female": false,
+    "full_name": "Vittorio Pozzo",
+    "given_name": "Vittorio",
+    "manager_id": "M-333",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Prandelli",
+    "female": false,
+    "full_name": "Cesare Prandelli",
+    "given_name": "Cesare",
+    "manager_id": "M-334",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Pretto",
+    "female": false,
+    "full_name": "Mario Pretto",
+    "given_name": "Mario",
+    "manager_id": "M-335",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Prohaska",
+    "female": false,
+    "full_name": "Herbert Prohaska",
+    "given_name": "Herbert",
+    "manager_id": "M-336",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Púa",
+    "female": false,
+    "full_name": "Víctor Púa",
+    "given_name": "Víctor",
+    "manager_id": "M-337",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Puppo",
+    "female": false,
+    "full_name": "Sandro Puppo",
+    "given_name": "Sandro",
+    "manager_id": "M-338",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Queiroz",
+    "female": false,
+    "full_name": "Carlos Queiroz",
+    "given_name": "Carlos",
+    "manager_id": "M-339",
+    "nation_id": "T-58",
+    "nationality_name": "Portugal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Quereda",
+    "female": false,
+    "full_name": "Ignacio Quereda",
+    "given_name": "Ignacio",
+    "manager_id": "M-340",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rădulescu",
+    "female": false,
+    "full_name": "Costel Rădulescu",
+    "given_name": "Costel",
+    "manager_id": "M-341",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rajevac",
+    "female": false,
+    "full_name": "Milovan Rajevac",
+    "given_name": "Milovan",
+    "manager_id": "M-342",
+    "nation_id": "T-66",
+    "nationality_name": "Serbia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ramírez",
+    "female": false,
+    "full_name": "Óscar Ramírez",
+    "given_name": "Óscar",
+    "manager_id": "M-343",
+    "nation_id": "T-17",
+    "nationality_name": "Costa Rica"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ramsey",
+    "female": false,
+    "full_name": "Alf Ramsey",
+    "given_name": "Alf",
+    "manager_id": "M-344",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rappan",
+    "female": false,
+    "full_name": "Karl Rappan",
+    "given_name": "Karl",
+    "manager_id": "M-345",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rasic",
+    "female": false,
+    "full_name": "Rale Rasic",
+    "given_name": "Rale",
+    "manager_id": "M-346",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Raynor",
+    "female": false,
+    "full_name": "George Raynor",
+    "given_name": "George",
+    "manager_id": "M-347",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ré",
+    "female": false,
+    "full_name": "Cayetano Ré",
+    "given_name": "Cayetano",
+    "manager_id": "M-348",
+    "nation_id": "T-55",
+    "nationality_name": "Paraguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Readings",
+    "female": false,
+    "full_name": "Tony Readings",
+    "given_name": "Tony",
+    "manager_id": "M-349",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Regragui",
+    "female": false,
+    "full_name": "Walid Regragui",
+    "given_name": "Walid",
+    "manager_id": "M-350",
+    "nation_id": "T-47",
+    "nationality_name": "Morocco"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rehhagel",
+    "female": false,
+    "full_name": "Otto Rehhagel",
+    "given_name": "Otto",
+    "manager_id": "M-351",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Reijners",
+    "female": false,
+    "full_name": "Roger Reijners",
+    "given_name": "Roger",
+    "manager_id": "M-352",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Renard",
+    "female": false,
+    "full_name": "Hervé Renard",
+    "given_name": "Hervé",
+    "manager_id": "M-353",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ri",
+    "female": false,
+    "full_name": "Song-gun Ri",
+    "given_name": "Song-gun",
+    "manager_id": "M-354",
+    "nation_id": "T-51",
+    "nationality_name": "North Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Riera",
+    "female": false,
+    "full_name": "Fernando Riera",
+    "given_name": "Fernando",
+    "manager_id": "M-355",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Robson",
+    "female": false,
+    "full_name": "Bobby Robson",
+    "given_name": "Bobby",
+    "manager_id": "M-356",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Roca",
+    "female": false,
+    "full_name": "José Antonio Roca",
+    "given_name": "José Antonio",
+    "manager_id": "M-357",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rodríguez",
+    "female": false,
+    "full_name": "Mauricio Rodríguez",
+    "given_name": "Mauricio",
+    "manager_id": "M-358",
+    "nation_id": "T-27",
+    "nationality_name": "El Salvador"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rohr",
+    "female": false,
+    "full_name": "Gernot Rohr",
+    "given_name": "Gernot",
+    "manager_id": "M-359",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Romantsev",
+    "female": false,
+    "full_name": "Oleg Romantsev",
+    "given_name": "Oleg",
+    "manager_id": "M-360",
+    "nation_id": "T-62",
+    "nationality_name": "Russia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Roxburgh",
+    "female": false,
+    "full_name": "Andy Roxburgh",
+    "given_name": "Andy",
+    "manager_id": "M-361",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rozo",
+    "female": false,
+    "full_name": "Ricardo Rozo",
+    "given_name": "Ricardo",
+    "manager_id": "M-362",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Rueda",
+    "female": false,
+    "full_name": "Reinaldo Rueda",
+    "given_name": "Reinaldo",
+    "manager_id": "M-363",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ruiz",
+    "female": false,
+    "full_name": "Aníbal Ruiz",
+    "given_name": "Aníbal",
+    "manager_id": "M-364",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ryan",
+    "female": false,
+    "full_name": "Greg Ryan",
+    "given_name": "Greg",
+    "manager_id": "M-365",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Saâdane",
+    "female": false,
+    "full_name": "Rabah Saâdane",
+    "given_name": "Rabah",
+    "manager_id": "M-366",
+    "nation_id": "T-01",
+    "nationality_name": "Algeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sabella",
+    "female": false,
+    "full_name": "Alejandro Sabella",
+    "given_name": "Alejandro",
+    "manager_id": "M-367",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sacchi",
+    "female": false,
+    "full_name": "Arrigo Sacchi",
+    "given_name": "Arrigo",
+    "manager_id": "M-368",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sadyrin",
+    "female": false,
+    "full_name": "Pavel Sadyrin",
+    "given_name": "Pavel",
+    "manager_id": "M-369",
+    "nation_id": "T-62",
+    "nationality_name": "Russia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sampaoli",
+    "female": false,
+    "full_name": "Jorge Sampaoli",
+    "given_name": "Jorge",
+    "manager_id": "M-370",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sampson",
+    "female": false,
+    "full_name": "Mark Sampson",
+    "given_name": "Mark",
+    "manager_id": "M-371",
+    "nation_id": "T-85",
+    "nationality_name": "Wales"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sampson",
+    "female": false,
+    "full_name": "Steve Sampson",
+    "given_name": "Steve",
+    "manager_id": "M-372",
+    "nation_id": "T-83",
+    "nationality_name": "United States"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sánchez",
+    "female": false,
+    "full_name": "Félix Sánchez",
+    "given_name": "Félix",
+    "manager_id": "M-373",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santamaría",
+    "female": false,
+    "full_name": "José Santamaría",
+    "given_name": "José",
+    "manager_id": "M-374",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santana",
+    "female": false,
+    "full_name": "Telê Santana",
+    "given_name": "Telê",
+    "manager_id": "M-375",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santibáñez",
+    "female": false,
+    "full_name": "Luis Santibáñez",
+    "given_name": "Luis",
+    "manager_id": "M-376",
+    "nation_id": "T-13",
+    "nationality_name": "Chile"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santos",
+    "female": false,
+    "full_name": "Fernando Santos",
+    "given_name": "Fernando",
+    "manager_id": "M-377",
+    "nation_id": "T-58",
+    "nationality_name": "Portugal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santrac",
+    "female": false,
+    "full_name": "Adrian Santrac",
+    "given_name": "Adrian",
+    "manager_id": "M-378",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Santrač",
+    "female": false,
+    "full_name": "Slobodan Santrač",
+    "given_name": "Slobodan",
+    "manager_id": "M-379",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sasaki",
+    "female": false,
+    "full_name": "Norio Sasaki",
+    "given_name": "Norio",
+    "manager_id": "M-380",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Saucedo",
+    "female": false,
+    "full_name": "Ulises Saucedo",
+    "given_name": "Ulises",
+    "manager_id": "M-381",
+    "nation_id": "T-07",
+    "nationality_name": "Bolivia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Săvulescu",
+    "female": false,
+    "full_name": "Alexandru Săvulescu",
+    "given_name": "Alexandru",
+    "manager_id": "M-382",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Scaloni",
+    "female": false,
+    "full_name": "Lionel Scaloni",
+    "given_name": "Lionel",
+    "manager_id": "M-383",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Schäfer",
+    "female": false,
+    "full_name": "Winfried Schäfer",
+    "given_name": "Winfried",
+    "manager_id": "M-384",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Schaffer",
+    "female": false,
+    "full_name": "Alfréd Schaffer",
+    "given_name": "Alfréd",
+    "manager_id": "M-385",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Scheffer",
+    "female": false,
+    "full_name": "Emmanuel Scheffer",
+    "given_name": "Emmanuel",
+    "manager_id": "M-386",
+    "nation_id": "T-40",
+    "nationality_name": "Israel"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Schmidt",
+    "female": false,
+    "full_name": "Georg Schmidt",
+    "given_name": "Georg",
+    "manager_id": "M-387",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Schön",
+    "female": false,
+    "full_name": "Helmut Schön",
+    "given_name": "Helmut",
+    "manager_id": "M-388",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Scolari",
+    "female": false,
+    "full_name": "Luiz Felipe Scolari",
+    "given_name": "Luiz Felipe",
+    "manager_id": "M-389",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sebes",
+    "female": false,
+    "full_name": "Gusztáv Sebes",
+    "given_name": "Gusztáv",
+    "manager_id": "M-390",
+    "nation_id": "T-36",
+    "nationality_name": "Hungary"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Selmi",
+    "female": false,
+    "full_name": "Ali Selmi",
+    "given_name": "Ali",
+    "manager_id": "M-391",
+    "nation_id": "T-57",
+    "nationality_name": "Poland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Senekowitsch",
+    "female": false,
+    "full_name": "Helmut Senekowitsch",
+    "given_name": "Helmut",
+    "manager_id": "M-392",
+    "nation_id": "T-05",
+    "nationality_name": "Austria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sermanni",
+    "female": false,
+    "full_name": "Tom Sermanni",
+    "given_name": "Tom",
+    "manager_id": "M-393",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Shang",
+    "female": false,
+    "full_name": "Ruihua Shang",
+    "given_name": "Ruihua",
+    "manager_id": "M-394",
+    "nation_id": "T-14",
+    "nationality_name": "China"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Shin",
+    "female": false,
+    "full_name": "Tae-yong Shin",
+    "given_name": "Tae-yong",
+    "manager_id": "M-395",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Simões",
+    "female": false,
+    "full_name": "Renê Simões",
+    "given_name": "Renê",
+    "manager_id": "M-396",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Simonović",
+    "female": false,
+    "full_name": "Boško Simonović",
+    "given_name": "Boško",
+    "manager_id": "M-397",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Simonsson",
+    "female": false,
+    "full_name": "Bengt Simonsson",
+    "given_name": "Bengt",
+    "manager_id": "M-398",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sjögren",
+    "female": false,
+    "full_name": "Martin Sjögren",
+    "given_name": "Martin",
+    "manager_id": "M-399",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Söderberg",
+    "female": false,
+    "full_name": "Tommy Söderberg",
+    "given_name": "Tommy",
+    "manager_id": "M-400",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Solari",
+    "female": false,
+    "full_name": "Jorge Solari",
+    "given_name": "Jorge",
+    "manager_id": "M-401",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Song",
+    "female": false,
+    "full_name": "Rigobert Song",
+    "given_name": "Rigobert",
+    "manager_id": "M-402",
+    "nation_id": "T-11",
+    "nationality_name": "Cameroon"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sono",
+    "female": false,
+    "full_name": "Jomo Sono",
+    "given_name": "Jomo",
+    "manager_id": "M-403",
+    "nation_id": "T-70",
+    "nationality_name": "South Africa"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Souayah",
+    "female": false,
+    "full_name": "Ammar Souayah",
+    "given_name": "Ammar",
+    "manager_id": "M-404",
+    "nation_id": "T-79",
+    "nationality_name": "Tunisia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Southgate",
+    "female": false,
+    "full_name": "Gareth Southgate",
+    "given_name": "Gareth",
+    "manager_id": "M-405",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Srathongvian",
+    "female": true,
+    "full_name": "Nuengrutai Srathongvian",
+    "given_name": "Nuengrutai",
+    "manager_id": "M-406",
+    "nation_id": "T-76",
+    "nationality_name": "Thailand"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Stábile",
+    "female": false,
+    "full_name": "Guillermo Stábile",
+    "given_name": "Guillermo",
+    "manager_id": "M-407",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Stajcic",
+    "female": false,
+    "full_name": "Alen Stajcic",
+    "given_name": "Alen",
+    "manager_id": "M-408",
+    "nation_id": "T-04",
+    "nationality_name": "Australia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Steen",
+    "female": false,
+    "full_name": "Åge Steen",
+    "given_name": "Åge",
+    "manager_id": "M-409",
+    "nation_id": "T-53",
+    "nationality_name": "Norway"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Stein",
+    "female": false,
+    "full_name": "Jock Stein",
+    "given_name": "Jock",
+    "manager_id": "M-410",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Stojković",
+    "female": false,
+    "full_name": "Dragan Stojković",
+    "given_name": "Dragan",
+    "manager_id": "M-411",
+    "nation_id": "T-66",
+    "nationality_name": "Serbia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Suárez",
+    "female": false,
+    "full_name": "Luis Suárez",
+    "given_name": "Luis",
+    "manager_id": "M-412",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Suárez",
+    "female": false,
+    "full_name": "Luis Fernando Suárez",
+    "given_name": "Luis Fernando",
+    "manager_id": "M-413",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sundhage",
+    "female": true,
+    "full_name": "Pia Sundhage",
+    "given_name": "Pia",
+    "manager_id": "M-414",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Suppici",
+    "female": false,
+    "full_name": "Alberto Suppici",
+    "given_name": "Alberto",
+    "manager_id": "M-415",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Sušić",
+    "female": false,
+    "full_name": "Safet Sušić",
+    "given_name": "Safet",
+    "manager_id": "M-416",
+    "nation_id": "T-08",
+    "nationality_name": "Bosnia and Herzegovina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Suzuki",
+    "female": false,
+    "full_name": "Tamotsu Suzuki",
+    "given_name": "Tamotsu",
+    "manager_id": "M-417",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Svensson",
+    "female": false,
+    "full_name": "Tommy Svensson",
+    "given_name": "Tommy",
+    "manager_id": "M-418",
+    "nation_id": "T-74",
+    "nationality_name": "Sweden"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tabárez",
+    "female": false,
+    "full_name": "Óscar Tabárez",
+    "given_name": "Óscar",
+    "manager_id": "M-419",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Taborda",
+    "female": false,
+    "full_name": "Fabián Taborda",
+    "given_name": "Fabián",
+    "manager_id": "M-420",
+    "nation_id": "T-16",
+    "nationality_name": "Colombia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Takakura",
+    "female": true,
+    "full_name": "Asako Takakura",
+    "given_name": "Asako",
+    "manager_id": "M-421",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Talebi",
+    "female": false,
+    "full_name": "Jalal Talebi",
+    "given_name": "Jalal",
+    "manager_id": "M-422",
+    "nation_id": "T-38",
+    "nationality_name": "Iran"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tapia",
+    "female": false,
+    "full_name": "José Tapia",
+    "given_name": "José",
+    "manager_id": "M-423",
+    "nation_id": "T-19",
+    "nationality_name": "Cuba"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tassy",
+    "female": false,
+    "full_name": "Antoine Tassy",
+    "given_name": "Antoine",
+    "manager_id": "M-424",
+    "nation_id": "T-34",
+    "nationality_name": "Haiti"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Theune-Meyer",
+    "female": true,
+    "full_name": "Tina Theune-Meyer",
+    "given_name": "Tina",
+    "manager_id": "M-425",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Thys",
+    "female": false,
+    "full_name": "Guy Thys",
+    "given_name": "Guy",
+    "manager_id": "M-426",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tim",
+    "female": false,
+    "full_name": "not applicable Tim",
+    "given_name": "not applicable",
+    "manager_id": "M-427",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tirnanić",
+    "female": false,
+    "full_name": "Aleksandar Tirnanić",
+    "given_name": "Aleksandar",
+    "manager_id": "M-428",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tite",
+    "female": false,
+    "full_name": "not applicable Tite",
+    "given_name": "not applicable",
+    "manager_id": "M-429",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Torres",
+    "female": false,
+    "full_name": "José Torres",
+    "given_name": "José",
+    "manager_id": "M-430",
+    "nation_id": "T-58",
+    "nationality_name": "Portugal"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Touré",
+    "female": true,
+    "full_name": "Clémentine Touré",
+    "given_name": "Clémentine",
+    "manager_id": "M-431",
+    "nation_id": "T-42",
+    "nationality_name": "Ivory Coast"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tramutola",
+    "female": false,
+    "full_name": "Juan José Tramutola",
+    "given_name": "Juan José",
+    "manager_id": "M-432",
+    "nation_id": "T-03",
+    "nationality_name": "Argentina"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Trapattoni",
+    "female": false,
+    "full_name": "Giovanni Trapattoni",
+    "given_name": "Giovanni",
+    "manager_id": "M-433",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Tréllez",
+    "female": false,
+    "full_name": "Ignacio Tréllez",
+    "given_name": "Ignacio",
+    "manager_id": "M-434",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Troussier",
+    "female": false,
+    "full_name": "Philippe Troussier",
+    "given_name": "Philippe",
+    "manager_id": "M-435",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Turnbull",
+    "female": false,
+    "full_name": "Neil Turnbull",
+    "given_name": "Neil",
+    "manager_id": "M-436",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Uche",
+    "female": true,
+    "full_name": "Ngozi Eucharia Uche",
+    "given_name": "Ngozi Eucharia",
+    "manager_id": "M-437",
+    "nation_id": "T-50",
+    "nationality_name": "Nigeria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Ueda",
+    "female": false,
+    "full_name": "Eiji Ueda",
+    "given_name": "Eiji",
+    "manager_id": "M-438",
+    "nation_id": "T-44",
+    "nationality_name": "Japan"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Uridil",
+    "female": false,
+    "full_name": "Josef Uridil",
+    "given_name": "Josef",
+    "manager_id": "M-439",
+    "nation_id": "T-61",
+    "nationality_name": "Romania"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vadão",
+    "female": false,
+    "full_name": "not applicable Vadão",
+    "given_name": "not applicable",
+    "manager_id": "M-440",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Valcareggi",
+    "female": false,
+    "full_name": "Ferruccio Valcareggi",
+    "given_name": "Ferruccio",
+    "manager_id": "M-441",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Valverde",
+    "female": true,
+    "full_name": "Amelia Valverde",
+    "given_name": "Amelia",
+    "manager_id": "M-442",
+    "nation_id": "T-17",
+    "nationality_name": "Costa Rica"
+  },
+  {
+    "birth_date": null,
+    "family_name": "van Basten",
+    "female": false,
+    "full_name": "Marco van Basten",
+    "given_name": "Marco",
+    "manager_id": "M-443",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "van Gaal",
+    "female": false,
+    "full_name": "Louis van Gaal",
+    "given_name": "Louis",
+    "manager_id": "M-444",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Van Himst",
+    "female": false,
+    "full_name": "Paul Van Himst",
+    "given_name": "Paul",
+    "manager_id": "M-445",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "van Marwijk",
+    "female": false,
+    "full_name": "Bert van Marwijk",
+    "given_name": "Bert",
+    "manager_id": "M-446",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vengloš",
+    "female": false,
+    "full_name": "Jozef Vengloš",
+    "given_name": "Jozef",
+    "manager_id": "M-447",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Verbeek",
+    "female": false,
+    "full_name": "Pim Verbeek",
+    "given_name": "Pim",
+    "manager_id": "M-448",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vial",
+    "female": false,
+    "full_name": "Octavio Vial",
+    "given_name": "Octavio",
+    "manager_id": "M-449",
+    "nation_id": "T-46",
+    "nationality_name": "Mexico"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vicini",
+    "female": false,
+    "full_name": "Azeglio Vicini",
+    "given_name": "Azeglio",
+    "manager_id": "M-450",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vidinić",
+    "female": false,
+    "full_name": "Blagoje Vidinić",
+    "given_name": "Blagoje",
+    "manager_id": "M-451",
+    "nation_id": "T-87",
+    "nationality_name": "Yugoslavia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Viera",
+    "female": false,
+    "full_name": "Ondino Viera",
+    "given_name": "Ondino",
+    "manager_id": "M-452",
+    "nation_id": "T-84",
+    "nationality_name": "Uruguay"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vilda",
+    "female": false,
+    "full_name": "Jorge Vilda",
+    "given_name": "Jorge",
+    "manager_id": "M-453",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Villalonga",
+    "female": false,
+    "full_name": "José Villalonga",
+    "given_name": "José",
+    "manager_id": "M-454",
+    "nation_id": "T-73",
+    "nationality_name": "Spain"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vincent",
+    "female": false,
+    "full_name": "Jean Vincent",
+    "given_name": "Jean",
+    "manager_id": "M-455",
+    "nation_id": "T-30",
+    "nationality_name": "France"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vinhaes",
+    "female": false,
+    "full_name": "Luiz Vinhaes",
+    "given_name": "Luiz",
+    "manager_id": "M-456",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vogts",
+    "female": false,
+    "full_name": "Berti Vogts",
+    "given_name": "Berti",
+    "manager_id": "M-457",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Völler",
+    "female": false,
+    "full_name": "Rudi Völler",
+    "given_name": "Rudi",
+    "manager_id": "M-458",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Voss-Tecklenburg",
+    "female": true,
+    "full_name": "Martina Voss-Tecklenburg",
+    "given_name": "Martina",
+    "manager_id": "M-459",
+    "nation_id": "T-31",
+    "nationality_name": "Germany"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vutsov",
+    "female": false,
+    "full_name": "Ivan Vutsov",
+    "given_name": "Ivan",
+    "manager_id": "M-460",
+    "nation_id": "T-10",
+    "nationality_name": "Bulgaria"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Vytlačil",
+    "female": false,
+    "full_name": "Rudolf Vytlačil",
+    "given_name": "Rudolf",
+    "manager_id": "M-461",
+    "nation_id": "T-21",
+    "nationality_name": "Czechoslovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Waiters",
+    "female": false,
+    "full_name": "Tony Waiters",
+    "given_name": "Tony",
+    "manager_id": "M-462",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Walker",
+    "female": false,
+    "full_name": "Dawson Walker",
+    "given_name": "Dawson",
+    "manager_id": "M-463",
+    "nation_id": "T-64",
+    "nationality_name": "Scotland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Waseige",
+    "female": false,
+    "full_name": "Robert Waseige",
+    "given_name": "Robert",
+    "manager_id": "M-464",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Weiss",
+    "female": false,
+    "full_name": "Vladimír Weiss",
+    "given_name": "Vladimír",
+    "manager_id": "M-465",
+    "nation_id": "T-68",
+    "nationality_name": "Slovakia"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Westerhof",
+    "female": false,
+    "full_name": "Clemens Westerhof",
+    "given_name": "Clemens",
+    "manager_id": "M-466",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Wiegman",
+    "female": true,
+    "full_name": "Sarina Wiegman",
+    "given_name": "Sarina",
+    "manager_id": "M-467",
+    "nation_id": "T-48",
+    "nationality_name": "Netherlands"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Wilmots",
+    "female": false,
+    "full_name": "Marc Wilmots",
+    "given_name": "Marc",
+    "manager_id": "M-468",
+    "nation_id": "T-06",
+    "nationality_name": "Belgium"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Wilsinho",
+    "female": false,
+    "full_name": "not applicable Wilsinho",
+    "given_name": "not applicable",
+    "manager_id": "M-469",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Winterbottom",
+    "female": false,
+    "full_name": "Walter Winterbottom",
+    "given_name": "Walter",
+    "manager_id": "M-470",
+    "nation_id": "T-28",
+    "nationality_name": "England"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Yakin",
+    "female": false,
+    "full_name": "Murat Yakin",
+    "given_name": "Murat",
+    "manager_id": "M-471",
+    "nation_id": "T-75",
+    "nationality_name": "Switzerland"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Yoon",
+    "female": false,
+    "full_name": "Deok-yeo Yoon",
+    "given_name": "Deok-yeo",
+    "manager_id": "M-472",
+    "nation_id": "T-71",
+    "nationality_name": "South Korea"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Zaccheroni",
+    "female": false,
+    "full_name": "Alberto Zaccheroni",
+    "given_name": "Alberto",
+    "manager_id": "M-473",
+    "nation_id": "T-41",
+    "nationality_name": "Italy"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Zagallo",
+    "female": false,
+    "full_name": "Mário Zagallo",
+    "given_name": "Mário",
+    "manager_id": "M-474",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  },
+  {
+    "birth_date": null,
+    "family_name": "Zico",
+    "female": false,
+    "full_name": "not applicable Zico",
+    "given_name": "not applicable",
+    "manager_id": "M-475",
+    "nation_id": "T-09",
+    "nationality_name": "Brazil"
+  }
+]
