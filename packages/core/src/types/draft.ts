@@ -19,9 +19,11 @@
 //   - Each rolled roster MUST be canonically sorted by `card_id` before the
 //     roster sample as well.
 //   - `(tournament_id, nation_id)` pairs are UNIQUE across the 16 spins.
-//   - Distinct seeded substreams: draft / match-sim / event-gen /
-//     opponent-selection / narrative. The DraftState owns the draft substream.
+//   - Distinct seeded substreams: draft / match_sim / event_gen /
+//     opponent_selection / narrative. The DraftState owns the draft substream;
+//     the canonical sub-seed is `deriveSubseed(parent_seed, "draft")`.
 
+import type { CardId } from "./identity.js";
 import type { Formation, Position } from "./primitives.js";
 
 /**
@@ -41,12 +43,20 @@ export interface Spin {
   tournament_id: number;
   /** FK -> Nation. The (tournament_id, nation_id) pair is UNIQUE across all 16 spins. */
   nation_id: string;
-  /** Candidate cards AFTER global player_id dedup; canonically sorted by card_id. */
-  rolled_card_ids: string[];
-  /** Player ids excluded from this roll because they were picked in earlier spins. */
+  /**
+   * Candidate cards AFTER global player_id dedup; canonically sorted by
+   * `card_id` via `canonicalSortBy` BEFORE the user-facing roll. Branded
+   * `CardId[]`.
+   */
+  rolled_card_ids: CardId[];
+  /**
+   * Player ids excluded from this roll because they were picked in earlier
+   * spins. Schema-enforced: `excluded_player_ids` equals the ordered list of
+   * `picked_player_id` from spins with `index < this.index`.
+   */
   excluded_player_ids: string[];
   /** Final pick from `rolled_card_ids`; null until the user picks. */
-  picked_card_id: string | null;
+  picked_card_id: CardId | null;
   /**
    * Denormalized convenience FK -> Player. Canonical pick remains the card; this
    * field exists so dedup updates don't have to re-resolve `card_id` → `player_id`.
@@ -72,10 +82,17 @@ export interface SquadSlot {
   lineup_position: Position;
   /** Positions a card may be placed here from. Wider than `lineup_position` for utility slots. */
   allowed_positions: Position[];
-  /** Card placed here (PlayerTournament.card_id), or null if vacant. */
-  card_id: string | null;
+  /**
+   * Card placed here (PlayerTournament.card_id), or null if vacant. Branded
+   * `CardId`. When non-null, `card_id`, `player_id`, and `tournament_id` MUST
+   * be non-null together AND `card_id === buildCardId(player_id,
+   * tournament_id)` — schema refinement enforces.
+   */
+  card_id: CardId | null;
   /** Denormalized FK -> Player for fast dedup checks. */
   player_id: string | null;
+  /** Denormalized FK -> Tournament. Null iff the slot is vacant. */
+  tournament_id: number | null;
   /**
    * False if the placed card's position is outside `allowed_positions`. SOFT
    * marker — drives sim penalties, never blocks the run.
@@ -154,7 +171,10 @@ export interface DraftState {
    *   'simulated' → a RunResult has been produced for this DraftState.
    */
   status: "drafting" | "ready" | "simulated";
-  /** Running global dedup set of picked player_ids. */
+  /**
+   * Running global dedup set of picked player_ids. Schema-enforced: this
+   * MUST equal the ordered-unique list of non-null `spins[*].picked_player_id`.
+   */
   deduped_player_ids: string[];
   /** ETL dataset version anchor (one of the three replay anchors). */
   dataset_version: string;

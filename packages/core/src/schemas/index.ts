@@ -14,6 +14,13 @@ export {
   MatchPhaseSchema,
   MatchPeriodSchema,
   SourceRefSchema,
+  NonEmptyIdSchema,
+  PercentSchema,
+  RatingChannelSchema,
+  MinuteSchema,
+  NonNegativeIntegerSchema,
+  PositiveIntegerSchema,
+  IntegerRangeSchema,
 } from "./primitives.js";
 
 export {
@@ -21,6 +28,7 @@ export {
   NationSchema,
   PlayerSchema,
   PlayerTournamentSchema,
+  CardIdSchema,
 } from "./identity.js";
 
 export {
@@ -47,12 +55,14 @@ export {
   // sim.ts
   MatchEventSchema,
   ShootoutKickSchema,
+  MatchLineupEntrySchema,
   MatchResultSchema,
 } from "./sim.js";
 
 export {
   // run.ts
   ScoreComponentSchema,
+  RoundResultSchema,
   PlayerMatchStatsSchema,
   PlayerRunStatsSchema,
   RunResultSchema,

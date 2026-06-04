@@ -7,9 +7,12 @@
 //   - the eventual `RunResult.narrative` payload pointer.
 //
 // DETERMINISM CONTRACT: narrative selection threads a SUB-SEED derived from
-// the run seed — it MUST NOT instantiate a fresh RNG. The sub-seed is part of
-// the NARRATIVE substream (distinct from draft / match-sim / event-gen /
-// opponent-selection substreams).
+// the run seed via `deriveSubseed(run.seed, "narrative")` — it MUST NOT
+// instantiate a fresh RNG. The sub-seed is part of the NARRATIVE substream
+// (distinct from draft / match_sim / event_gen / opponent_selection
+// substreams). The same seed lineage is persisted on
+// `RunResult.narrative.narrative_seed` so a leaderboard re-derivation can
+// reproduce template selection byte-for-byte.
 
 import type { MatchRound } from "./primitives.js";
 
@@ -74,8 +77,9 @@ export interface NarrativeFacts {
   /** Dramatic moments in chronological order. */
   key_moments: KeyMoment[];
   /**
-   * Narrative sub-seed (DERIVED from the run seed) used by template selection.
-   * NEVER a fresh RNG — see file header.
+   * Narrative sub-seed used by template selection. MUST equal
+   * `deriveSubseed(run.seed, "narrative")` and is persisted as
+   * `RunResult.narrative.narrative_seed`. NEVER a fresh RNG — see file header.
    */
   narrative_seed: string;
 }

@@ -2,6 +2,8 @@
 //
 // Layers:
 //   1. RNG primitive — the SINGLE source of randomness for the system.
+//      Includes `deriveSubseed` for substream sub-seeds and `canonicalSortBy`
+//      for canonical sampling-pool ordering.
 //   2. Domain data-contract TYPES — the typed spine consumed by WS-A (ETL +
 //      ratings), WS-B (sim + scoring), WS-C (draft), WS-D (UI), WS-E
 //      (narrative). Field types here are AUTHORITATIVE.
@@ -14,9 +16,9 @@
 //      LeaderboardSubmission. Internal-only types deliberately do NOT carry a
 //      zod schema.
 
-// ─── 1. RNG primitive ────────────────────────────────────────────────────────
-export { createRng } from "./rng.js";
-export type { Rng } from "./rng.js";
+// ─── 1. RNG primitive + determinism helpers ──────────────────────────────────
+export { createRng, deriveSubseed, canonicalSortBy, canonicalSortStrings } from "./rng.js";
+export type { Rng, SubstreamName, CanonicalSortKey } from "./rng.js";
 
 // ─── 2. Domain types ─────────────────────────────────────────────────────────
 export type {
@@ -35,6 +37,7 @@ export type {
   Nation,
   Player,
   PlayerTournament,
+  CardId,
   // rating
   Rating,
   RatingComponent,
@@ -56,7 +59,25 @@ export type {
   DraftState,
   // sim
   MatchEvent,
+  MatchEventType,
+  GoalEvent,
+  OwnGoalEvent,
+  PenScoredEvent,
+  PenMissedEvent,
+  PenWonEvent,
+  ShotOnEvent,
+  ShotOffEvent,
+  SaveEvent,
+  KeyPassEvent,
+  FoulEvent,
+  OffsideEvent,
+  YellowEvent,
+  RedEvent,
+  InjuryEvent,
+  SubEvent,
+  ShootoutKickEvent,
   ShootoutKick,
+  MatchLineupEntry,
   MatchResult,
   // scoring
   ScoringConfig,
@@ -68,10 +89,11 @@ export type {
   KeyMoment,
   NarrativeFacts,
   // run
+  RoundResult,
   RunResult,
 } from "./types/index.js";
 
-export { GROUP_IDS, PLACEHOLDER_SCORING_CONFIG } from "./types/index.js";
+export { GROUP_IDS, PLACEHOLDER_SCORING_CONFIG, buildCardId, parseCardId } from "./types/index.js";
 
 // ─── 3. Function signatures (typed stubs; algorithms in Phase 1) ─────────────
 export type {
@@ -104,10 +126,18 @@ export {
   MatchPhaseSchema,
   MatchPeriodSchema,
   SourceRefSchema,
+  NonEmptyIdSchema,
+  PercentSchema,
+  RatingChannelSchema,
+  MinuteSchema,
+  NonNegativeIntegerSchema,
+  PositiveIntegerSchema,
+  IntegerRangeSchema,
   // identity
   NationSchema,
   PlayerSchema,
   PlayerTournamentSchema,
+  CardIdSchema,
   // rating
   RatingComponentSchema,
   TeamStrengthSchema,
@@ -122,9 +152,11 @@ export {
   // sim
   MatchEventSchema,
   ShootoutKickSchema,
+  MatchLineupEntrySchema,
   MatchResultSchema,
   // run
   ScoreComponentSchema,
+  RoundResultSchema,
   PlayerMatchStatsSchema,
   PlayerRunStatsSchema,
   RunResultSchema,
