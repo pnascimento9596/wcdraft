@@ -174,6 +174,26 @@ export {
 export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
 export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
 
+// ─── WS-C draft engine (the deterministic 17-spin DRAFT state machine) ───────
+export {
+  buildDraftCatalog,
+  createDraft,
+  activeSpin,
+  isDraftComplete,
+  pickPlayer,
+  pickManager,
+  stepDraft,
+  autoDraft,
+  validateSquad,
+} from "./draft.js";
+export type {
+  DraftPlayerCard,
+  DraftManagerCard,
+  DraftDataset,
+  DraftCatalog,
+  CreateDraftParams,
+} from "./draft.js";
+
 // ─── 4. Zod boundary schemas ─────────────────────────────────────────────────
 export {
   // primitives

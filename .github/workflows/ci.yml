@@ -74,6 +74,11 @@ jobs:
         # with passWithNoTests:false — fails if the file is missing or drifts.
         run: pnpm exec turbo run test:golden --filter=@wcdraft/core
 
+      - name: Golden DRAFT determinism (17-spin sequence · dedup · lock-on-pick · compatibility)
+        # Path-selected WS-C golden suites with passWithNoTests:false — fails if
+        # the deterministic 17-spin output drifts from the recorded snapshot.
+        run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
+
   etl-rating:
     name: ETL rating · lint · golden determinism
     runs-on: ubuntu-latest
