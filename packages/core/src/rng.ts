@@ -13,6 +13,11 @@
  *
  * These are chosen specifically for reproducibility: all arithmetic is 32-bit
  * integer math via `Math.imul` and `>>> 0`, which is identical across engines.
+ *
+ * SCOPE NOTE: this is the ONE allowed source of entropy in `packages/core`.
+ * `Math.random`, `Date.now`, `performance.now`, `crypto.getRandomValues`, and
+ * `new Date()` are FORBIDDEN everywhere else in `packages/core/src` — enforced
+ * by the ESLint determinism guard in the root flat config.
  */
 
 /** Public contract for a seeded random generator. */
@@ -119,4 +124,167 @@ export function createRng(seed: string | number): Rng {
       return arr[index]!;
     },
   };
+}
+
+// ─── SUBSTREAM SUB-SEED DERIVATION ────────────────────────────────────────────
+//
+// Every seed-consuming substream of the engine (draft / match-sim / event-gen /
+// opponent-selection / narrative) MUST derive its working seed from the master
+// run seed via `deriveSubseed`. This is the only sanctioned way to fork
+// determinism — substreams must never instantiate a fresh PRNG with raw
+// entropy. The derivation reuses the existing cyrb128 + sfc32 primitives so
+// there is exactly ONE randomness algorithm in the engine.
+//
+// Sub-seed shape: `wcdraft:<substream>:v1:<32 hex chars>`. The version tag
+// `v1` lets a future engine bump (and version anchor) deliberately rotate
+// every persisted sub-seed without re-using the old format silently.
+
+/** Sanctioned substream names. Always lowercase, underscore-separated. */
+export type SubstreamName =
+  | "draft"
+  | "match_sim"
+  | "event_gen"
+  | "opponent_selection"
+  | "narrative";
+
+const SUBSTREAM_NAMES: readonly SubstreamName[] = [
+  "draft",
+  "match_sim",
+  "event_gen",
+  "opponent_selection",
+  "narrative",
+] as const;
+
+const SUBSEED_VERSION = "v1";
+const SUBSEED_DOMAIN = "wcdraft-subseed-v1";
+
+function toHex32(word: number): string {
+  // Force unsigned interpretation, then pad to 8 hex chars.
+  return (word >>> 0).toString(16).padStart(8, "0");
+}
+
+function isSubstream(name: string): name is SubstreamName {
+  return (SUBSTREAM_NAMES as readonly string[]).includes(name);
+}
+
+/**
+ * Derive a deterministic sub-seed string for a named substream.
+ *
+ * @param runSeed   The master run seed (`RunResult.seed` / `DraftState.draft_seed`
+ *                  pre-derivation parent). Must be non-empty.
+ * @param substream One of the sanctioned `SubstreamName` values.
+ * @param scopeId   Optional scope (e.g. `"match:0"`, `"scenario:<scenario_id>"`).
+ *                  When provided, must be non-empty. Distinct scopes produce
+ *                  distinct sub-seeds within the same substream.
+ *
+ * @returns A stable, opaque string suitable for `createRng(seed)`. Same input
+ *          tuple → same output, byte-for-byte, across platforms and Node
+ *          versions.
+ *
+ * @throws RangeError on empty/whitespace `runSeed` or empty/whitespace `scopeId`.
+ *
+ * IMPLEMENTATION NOTES:
+ *  - Material is JSON-encoded as a tuple, which removes delimiter-collision
+ *    ambiguity if a seed itself contains `:` or `|`.
+ *  - The material is hashed via cyrb128 → sfc32 (same primitives as
+ *    `createRng`), so this helper does NOT introduce a second random algorithm.
+ *  - The first four uint32 outputs of sfc32 are concatenated as zero-padded
+ *    hex to produce a 128-bit seed string.
+ */
+export function deriveSubseed(
+  runSeed: string,
+  substream: SubstreamName,
+  scopeId?: string,
+): string {
+  if (typeof runSeed !== "string" || runSeed.trim().length === 0) {
+    throw new RangeError("deriveSubseed requires a non-empty runSeed");
+  }
+  if (!isSubstream(substream)) {
+    throw new RangeError(`deriveSubseed received unknown substream: ${substream}`);
+  }
+  if (scopeId !== undefined) {
+    if (typeof scopeId !== "string" || scopeId.trim().length === 0) {
+      throw new RangeError("deriveSubseed scopeId, when provided, must be non-empty");
+    }
+  }
+  const material = JSON.stringify([SUBSEED_DOMAIN, runSeed, substream, scopeId ?? null]);
+  const [a, b, c, d] = cyrb128(material);
+  const stream = sfc32(a, b, c, d);
+  // Reuse sfc32 to emit four uint32 outputs. The closure returns floats in
+  // [0,1); multiply by 2^32 and `>>> 0` to recover the underlying uint32.
+  const words: number[] = [];
+  for (let i = 0; i < 4; i++) {
+    words.push((stream() * 4294967296) >>> 0);
+  }
+  return `wcdraft:${substream}:${SUBSEED_VERSION}:${words.map(toHex32).join("")}`;
+}
+
+// ─── CANONICAL SORT HELPER ────────────────────────────────────────────────────
+//
+// Sampling pools throughout the engine (draft (tournament,nation) pairs,
+// rolled rosters, knockout opponent pools, shootout taker order, etc.) MUST
+// be canonically sorted before any draw, otherwise insertion-order drift
+// silently changes the draw without a seed change. `canonicalSortBy` is the
+// one sanctioned ordering primitive — it compares numbers numerically and
+// strings by code point (NOT locale), which is platform-stable.
+
+/** A single key part for canonical ordering. Numbers compare numerically; strings compare by code point. */
+export type CanonicalSortKey = string | number;
+
+/**
+ * Return a new array sorted lexicographically over the key parts produced by
+ * `keyParts(item)`. Stable. Never mutates `items`.
+ *
+ * Callers must supply enough key parts to make ordering canonical for their
+ * pool (e.g. `(t.tournament_id, t.nation_id)` for the draft (T,N) pool).
+ *
+ * Comparison rules:
+ *  - Same-typed parts compare directly (`<` / `>`).
+ *  - Mixed types (number vs string at the same index) order numbers BEFORE
+ *    strings; this should be avoided by design but is defined for safety.
+ */
+export function canonicalSortBy<T>(
+  items: readonly T[],
+  keyParts: (item: T) => readonly CanonicalSortKey[],
+): T[] {
+  // Materialize keys once for an O(n log n · k) total comparison cost.
+  const keyed = items.map((item, idx) => ({ item, idx, key: keyParts(item) }));
+  keyed.sort((a, b) => {
+    const ak = a.key;
+    const bk = b.key;
+    const len = Math.min(ak.length, bk.length);
+    for (let i = 0; i < len; i++) {
+      const av = ak[i]!;
+      const bv = bk[i]!;
+      const aIsNum = typeof av === "number";
+      const bIsNum = typeof bv === "number";
+      if (aIsNum && bIsNum) {
+        if (av < bv) return -1;
+        if (av > bv) return 1;
+        continue;
+      }
+      if (aIsNum !== bIsNum) {
+        // Numbers sort before strings — deterministic tiebreak for the
+        // mixed-type case, which callers should generally avoid.
+        return aIsNum ? -1 : 1;
+      }
+      // Both strings — compare by code-point order (NOT locale).
+      const as = av as string;
+      const bs = bv as string;
+      if (as < bs) return -1;
+      if (as > bs) return 1;
+    }
+    if (ak.length !== bk.length) return ak.length - bk.length;
+    // Last-resort stable tiebreak.
+    return a.idx - b.idx;
+  });
+  return keyed.map((entry) => entry.item);
+}
+
+/**
+ * Convenience: canonical-sort a flat string array by code-point order.
+ * Equivalent to `canonicalSortBy(items, (s) => [s])`.
+ */
+export function canonicalSortStrings(items: readonly string[]): string[] {
+  return canonicalSortBy(items, (s) => [s]);
 }
