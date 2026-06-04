@@ -8,5 +8,5 @@
   },
   // Build emits the public library only — tests, fixtures, and scripts excluded.
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "exclude": ["src/**/*.test.ts", "src/**/*.fixture.ts"]
 }
