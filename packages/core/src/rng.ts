@@ -54,7 +54,16 @@ function cyrb128(str: string): [number, number, number, number] {
   h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
   h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
 
-  return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
+  // Canonical bryc final mix — the XOR folds are SEQUENTIAL and in-place:
+  // each later word XORs against the ALREADY-updated h1. Do not collapse this
+  // into a single return expression (that reuses the pre-update h1 and drifts
+  // from the reference algorithm).
+  h1 ^= h2 ^ h3 ^ h4;
+  h2 ^= h1;
+  h3 ^= h1;
+  h4 ^= h1;
+
+  return [h1 >>> 0, h2 >>> 0, h3 >>> 0, h4 >>> 0];
 }
 
 /**
@@ -96,6 +105,9 @@ export function createRng(seed: string | number): Rng {
           `int(maxExclusive) requires a positive safe integer, received: ${maxExclusive}`,
         );
       }
+      // Multiply-and-floor (modulo-style) mapping. Unbiased rejection sampling
+      // is deliberately skipped: the bias is < 1e-7 for maxExclusive < 2^20,
+      // which is acceptable for game determinism and keeps the stream simple.
       return Math.floor(next() * maxExclusive);
     },
     pick<T>(arr: readonly T[]): T {

@@ -1,18 +1,21 @@
 /**
  * Regenerate the golden RNG fixture.
  *
- * Run with Node's native TS support (no build step required):
- *   node --experimental-strip-types packages/core/scripts/generate-golden.ts
+ * Run via the package script (uses tsx, no build step required):
+ *   pnpm --filter @wcdraft/core run gen:golden
  *
  * This writes test/fixtures/rng-golden.json. The committed fixture is the
- * recorded contract; the golden test (src/rng.test.ts) only READS it. Only
- * regenerate intentionally when the RNG algorithm is deliberately changed —
+ * recorded contract; the golden test (src/rng.golden.test.ts) only READS it.
+ * Only regenerate intentionally when the RNG algorithm is deliberately changed —
  * a diff here means the deterministic sequence changed.
  */
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { createRng } from "../src/rng.ts";
+// Import through the package barrel so the generator and the golden test share
+// exactly one path from seed → stream. Run via tsx (resolves the ./rng.js
+// specifier inside index.ts to the .ts source; Node --strip-types cannot).
+import { createRng } from "../src/index.ts";
 
 const SEED = "wcdraft/ws0/golden-seed-v1";
 const COUNT = 16;

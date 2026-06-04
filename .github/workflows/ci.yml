@@ -69,4 +69,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Golden RNG test (fixed seed → recorded sequence)
-        run: pnpm --filter @wcdraft/core run test:golden
+        # Routed through Turbo so the task is cache-aware and uses the same
+        # pipeline as every other check. Path-selected (src/rng.golden.test.ts)
+        # with passWithNoTests:false — fails if the file is missing or drifts.
+        run: pnpm exec turbo run test:golden --filter=@wcdraft/core

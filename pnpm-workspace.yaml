@@ -3,7 +3,11 @@
 packages:
   - "apps/*"
   - "packages/*"
-# Pre-approved native build scripts (pnpm 10+ blocks postinstall by default).
-# sharp ships a native image pipeline pulled in transitively by Next.js.
+
+# Pre-approved native build scripts (pnpm 10+ blocks postinstall by default),
+# so installs are non-interactive and deterministic in CI:
+#   sharp   — native image pipeline pulled in transitively by Next.js.
+#   esbuild — native transform engine used by tsx (golden-fixture generator).
 allowBuilds:
+  esbuild: true
   sharp: true

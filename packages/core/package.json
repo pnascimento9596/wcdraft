@@ -18,9 +18,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
-    "test:golden": "vitest run -t golden",
-    "gen:golden": "node --experimental-strip-types scripts/generate-golden.ts"
+    "test:golden": "vitest run src/rng.golden.test.ts",
+    "gen:golden": "tsx scripts/generate-golden.ts"
   }
 }

@@ -1,44 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { createRng } from "./index.js";
 
-// The committed golden fixture is the recorded determinism contract. This test
-// only READS it; regenerate intentionally via `pnpm --filter @wcdraft/core gen:golden`.
-const here = dirname(fileURLToPath(import.meta.url));
-const fixturePath = join(here, "..", "test", "fixtures", "rng-golden.json");
-
-interface GoldenFixture {
-  seed: string;
-  count: number;
-  next: number[];
-  int: { maxExclusive: number; values: number[] };
-  pick: { items: string[]; values: string[] };
-}
-
-const golden = JSON.parse(readFileSync(fixturePath, "utf8")) as GoldenFixture;
-
-// Each sequence uses a fresh generator seeded identically — matching the
-// generator script, so every sequence is independently reproducible.
-function sequence<T>(fn: (rng: ReturnType<typeof createRng>) => T): T[] {
-  const rng = createRng(golden.seed);
-  return Array.from({ length: golden.count }, () => fn(rng));
-}
-
-describe("createRng golden determinism", () => {
-  it("reproduces the recorded next() float sequence byte-for-byte", () => {
-    expect(sequence((rng) => rng.next())).toEqual(golden.next);
-  });
-
-  it("reproduces the recorded int(maxExclusive) sequence", () => {
-    expect(sequence((rng) => rng.int(golden.int.maxExclusive))).toEqual(golden.int.values);
-  });
-
-  it("reproduces the recorded pick() sequence", () => {
-    expect(sequence((rng) => rng.pick(golden.pick.items))).toEqual(golden.pick.values);
-  });
-});
+// Behavioural / property tests for the RNG. The byte-for-byte golden
+// determinism contract lives in rng.golden.test.ts (selected by path in CI).
 
 describe("createRng properties", () => {
   it("is fully deterministic: identical seeds yield identical streams", () => {

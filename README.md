@@ -55,13 +55,19 @@ rng.pick(["a", "b"]); // uniform element
 It uses a documented, platform-stable pure-JS PRNG (cyrb128 string→seed +
 sfc32 generator) and touches **no** `Date`, `Math.random`, or `crypto`. A given
 seed produces a byte-identical sequence on every platform — enforced by a
-committed golden fixture (`packages/core/test/fixtures/rng-golden.json`) and the
-golden test (`packages/core/src/rng.test.ts`).
+committed golden fixture (`packages/core/test/fixtures/rng-golden.json`) and a
+path-selected golden test (`packages/core/src/rng.golden.test.ts`) that
+re-derives the sequence at runtime and is run as a dedicated CI job.
 
 ## Getting started
 
 Prerequisites: **Node ≥ 22**, **pnpm ≥ 11** (via Corepack), and (for `etl`)
 **Python ≥ 3.11**.
+
+> **Native build scripts:** pnpm 10+ blocks dependency postinstall scripts by
+> default. We pre-approve exactly one — `sharp` (a native image pipeline pulled
+> in transitively by Next.js) — via `allowBuilds: { sharp: true }` in
+> `pnpm-workspace.yaml`, so installs are non-interactive and deterministic in CI.
 
 ```bash
 corepack enable
