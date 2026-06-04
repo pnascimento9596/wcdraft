@@ -1,15 +1,72 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Anton, Newsreader } from "next/font/google";
+import { ThemeProvider } from "../components/theme-provider";
+import { SiteHeader } from "../components/site-header";
+import { SiteFooter } from "../components/site-footer";
+import { ServiceWorkerRegister } from "../components/sw-register";
+import "./globals.css";
+
+const display = Anton({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+  display: "swap",
+});
+
+const text = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-text",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "wcdraft",
-  description: "World Cup draft simulator — foundation scaffold (WS-0).",
+  metadataBase: new URL("https://wcdraft.app"),
+  title: {
+    default: "wcdraft — draft your all-time World Cup XI",
+    template: "%s · wcdraft",
+  },
+  description:
+    "wcdraft is a football drafting game: spin a random national team and tournament year, pick one player per spin, lock a formation, and chase the perfect 8-match run.",
+  applicationName: "wcdraft",
+  appleWebApp: {
+    capable: true,
+    title: "wcdraft",
+    statusBarStyle: "default",
+  },
+  openGraph: {
+    title: "wcdraft — draft your all-time World Cup XI",
+    description: "A football drafting game. Spin, pick, build your XI, and chase the perfect run.",
+    siteName: "wcdraft",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#efe9db" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c1411" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" data-theme="light" className={`${display.variable} ${text.variable}`}>
+      <body>
+        <ThemeProvider>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
+          <div className="shell">
+            <SiteHeader />
+            <main id="main">{children}</main>
+            <SiteFooter />
+          </div>
+        </ThemeProvider>
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }
