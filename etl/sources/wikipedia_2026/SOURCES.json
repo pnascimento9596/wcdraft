@@ -1,0 +1,37 @@
+{
+  "_comment": "Pinned Wikipedia raw-wikitext snapshots for the WS-A-2026 ingest. Each snapshot is the exact revision fetched (action=query&prop=revisions, main slot content) and is committed so the 2026 ingest is self-contained and byte-deterministic without a live network fetch (mirrors the Fjelstul vendored-source strategy). License: CC-BY-SA 4.0. Re-pin = bump revid + re-run the ingest + commit.",
+  "license": "CC-BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "publisher": "Wikipedia (Wikimedia Foundation)",
+  "retrieved_date": "2026-06-04",
+  "api": "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvslots=main&rvprop=content|ids|timestamp",
+  "snapshots": {
+    "squads": {
+      "title": "2026 FIFA World Cup squads",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads",
+      "pageid": 72629354,
+      "revid": 1357762108,
+      "timestamp": "2026-06-04T14:52:13Z",
+      "file": "2026_fifa_world_cup_squads.wikitext",
+      "role": "PRIMARY — per-team squad tables: player, position, club, caps, intl goals, DOB; group membership"
+    },
+    "draw": {
+      "title": "2026 FIFA World Cup draw",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw",
+      "pageid": 79332757,
+      "revid": 1357747592,
+      "timestamp": "2026-06-04T12:58:31Z",
+      "file": "2026_fifa_world_cup_draw.wikitext",
+      "role": "Final-draw result table — drawn group_slot positions A1..L4 (FIFA codes)"
+    },
+    "knockout": {
+      "title": "2026 FIFA World Cup knockout stage",
+      "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage",
+      "pageid": 81667005,
+      "revid": 1357752786,
+      "timestamp": "2026-06-04T13:41:45Z",
+      "file": "2026_fifa_world_cup_knockout_stage.wikitext",
+      "role": "Knockout bracket — R32..Final feeder definitions (group winners/runners-up/best-thirds + match-winner tree)"
+    }
+  }
+}
