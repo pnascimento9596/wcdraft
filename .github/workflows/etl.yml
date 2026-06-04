@@ -47,6 +47,12 @@ jobs:
       - name: Lint (ruff)
         run: ruff check src tests
 
+      - name: Verify RSSSF supplement snapshots (sha256 vs fetch manifest)
+        # No network: recomputes the committed raw snapshot hashes and fails if
+        # any drift from supplement/fetch_manifest.json, proving the sourced
+        # appearances were parsed from exactly the pinned public bytes.
+        run: python -m wcdraft_etl.supplement.fetch --verify
+
       - name: Run ETL pipeline
         # Pipeline writes to etl/output relative to the repo root, so run from there.
         working-directory: ${{ github.workspace }}
