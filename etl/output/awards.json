@@ -1,0 +1,1802 @@
+[
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1978:P-35082",
+    "nation_id": "T-03",
+    "player_id": "P-35082",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1982:P-91717",
+    "nation_id": "T-41",
+    "player_id": "P-91717",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1986:P-80404",
+    "nation_id": "T-03",
+    "player_id": "P-80404",
+    "shared": false,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1990:P-76544",
+    "nation_id": "T-41",
+    "player_id": "P-76544",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1991:P-99328",
+    "nation_id": "T-83",
+    "player_id": "P-99328",
+    "shared": false,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1994:P-61251",
+    "nation_id": "T-09",
+    "player_id": "P-61251",
+    "shared": false,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1995:P-84389",
+    "nation_id": "T-53",
+    "player_id": "P-84389",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1998:P-62722",
+    "nation_id": "T-09",
+    "player_id": "P-62722",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-1999:P-14903",
+    "nation_id": "T-14",
+    "player_id": "P-14903",
+    "shared": false,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2002:P-33751",
+    "nation_id": "T-31",
+    "player_id": "P-33751",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2003:P-52478",
+    "nation_id": "T-31",
+    "player_id": "P-52478",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2006:P-56430",
+    "nation_id": "T-30",
+    "player_id": "P-56430",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2007:P-07458",
+    "nation_id": "T-09",
+    "player_id": "P-07458",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2010:P-86087",
+    "nation_id": "T-84",
+    "player_id": "P-86087",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2011:P-72113",
+    "nation_id": "T-44",
+    "player_id": "P-72113",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2014:P-14758",
+    "nation_id": "T-03",
+    "player_id": "P-14758",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2015:P-62104",
+    "nation_id": "T-83",
+    "player_id": "P-62104",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2018:P-29491",
+    "nation_id": "T-18",
+    "player_id": "P-29491",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2019:P-09273",
+    "nation_id": "T-83",
+    "player_id": "P-09273",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-1",
+    "award_name": "Golden Ball",
+    "award_winner_id": "A-1:WC-2022:P-14758",
+    "nation_id": "T-03",
+    "player_id": "P-14758",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1978:P-91717",
+    "nation_id": "T-41",
+    "player_id": "P-91717",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1982:P-35736",
+    "nation_id": "T-09",
+    "player_id": "P-35736",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1986:P-07171",
+    "nation_id": "T-86",
+    "player_id": "P-07171",
+    "shared": false,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1990:P-49502",
+    "nation_id": "T-86",
+    "player_id": "P-49502",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1991:P-54794",
+    "nation_id": "T-83",
+    "player_id": "P-54794",
+    "shared": false,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1994:P-78756",
+    "nation_id": "T-41",
+    "player_id": "P-78756",
+    "shared": false,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1995:P-67204",
+    "nation_id": "T-53",
+    "player_id": "P-67204",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1998:P-58374",
+    "nation_id": "T-18",
+    "player_id": "P-58374",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-1999:P-57452",
+    "nation_id": "T-09",
+    "player_id": "P-57452",
+    "shared": false,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2002:P-62722",
+    "nation_id": "T-09",
+    "player_id": "P-62722",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2003:P-36470",
+    "nation_id": "T-74",
+    "player_id": "P-36470",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2006:P-88863",
+    "nation_id": "T-41",
+    "player_id": "P-88863",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2007:P-52478",
+    "nation_id": "T-31",
+    "player_id": "P-52478",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2010:P-51336",
+    "nation_id": "T-48",
+    "player_id": "P-51336",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2011:P-89236",
+    "nation_id": "T-83",
+    "player_id": "P-89236",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2014:P-28154",
+    "nation_id": "T-31",
+    "player_id": "P-28154",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2015:P-64050",
+    "nation_id": "T-30",
+    "player_id": "P-64050",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2018:P-72011",
+    "nation_id": "T-06",
+    "player_id": "P-72011",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2019:P-23779",
+    "nation_id": "T-28",
+    "player_id": "P-23779",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-2",
+    "award_name": "Silver Ball",
+    "award_winner_id": "A-2:WC-2022:P-64077",
+    "nation_id": "T-30",
+    "player_id": "P-64077",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1978:P-89519",
+    "nation_id": "T-09",
+    "player_id": "P-89519",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1982:P-59574",
+    "nation_id": "T-86",
+    "player_id": "P-59574",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1986:P-36502",
+    "nation_id": "T-22",
+    "player_id": "P-36502",
+    "shared": false,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1990:P-80404",
+    "nation_id": "T-03",
+    "player_id": "P-80404",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1991:P-58688",
+    "nation_id": "T-53",
+    "player_id": "P-58688",
+    "shared": false,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1994:P-81648",
+    "nation_id": "T-10",
+    "player_id": "P-81648",
+    "shared": false,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1995:P-29915",
+    "nation_id": "T-53",
+    "player_id": "P-29915",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1998:P-56947",
+    "nation_id": "T-30",
+    "player_id": "P-56947",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-1999:P-54794",
+    "nation_id": "T-83",
+    "player_id": "P-54794",
+    "shared": false,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2002:P-55097",
+    "nation_id": "T-71",
+    "player_id": "P-55097",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2003:P-50598",
+    "nation_id": "T-31",
+    "player_id": "P-50598",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2006:P-99537",
+    "nation_id": "T-41",
+    "player_id": "P-99537",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2007:P-93057",
+    "nation_id": "T-09",
+    "player_id": "P-93057",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2010:P-49097",
+    "nation_id": "T-73",
+    "player_id": "P-49097",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2011:P-80833",
+    "nation_id": "T-83",
+    "player_id": "P-80833",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2014:P-23705",
+    "nation_id": "T-48",
+    "player_id": "P-23705",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2015:P-04310",
+    "nation_id": "T-44",
+    "player_id": "P-04310",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2018:P-90908",
+    "nation_id": "T-30",
+    "player_id": "P-90908",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2019:P-65982",
+    "nation_id": "T-83",
+    "player_id": "P-65982",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-3",
+    "award_name": "Bronze Ball",
+    "award_winner_id": "A-3:WC-2022:P-29491",
+    "nation_id": "T-18",
+    "player_id": "P-29491",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1930:P-56486",
+    "nation_id": "T-03",
+    "player_id": "P-56486",
+    "shared": false,
+    "tournament_id": "WC-1930"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1934:P-60513",
+    "nation_id": "T-21",
+    "player_id": "P-60513",
+    "shared": false,
+    "tournament_id": "WC-1934"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1938:P-09730",
+    "nation_id": "T-09",
+    "player_id": "P-09730",
+    "shared": false,
+    "tournament_id": "WC-1938"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1950:P-49381",
+    "nation_id": "T-09",
+    "player_id": "P-49381",
+    "shared": false,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1954:P-07028",
+    "nation_id": "T-36",
+    "player_id": "P-07028",
+    "shared": false,
+    "tournament_id": "WC-1954"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1958:P-77939",
+    "nation_id": "T-30",
+    "player_id": "P-77939",
+    "shared": false,
+    "tournament_id": "WC-1958"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-11702",
+    "nation_id": "T-72",
+    "player_id": "P-11702",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-21188",
+    "nation_id": "T-36",
+    "player_id": "P-21188",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-22224",
+    "nation_id": "T-13",
+    "player_id": "P-22224",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-45310",
+    "nation_id": "T-09",
+    "player_id": "P-45310",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-46080",
+    "nation_id": "T-09",
+    "player_id": "P-46080",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1962:P-55024",
+    "nation_id": "T-87",
+    "player_id": "P-55024",
+    "shared": true,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1966:P-74747",
+    "nation_id": "T-58",
+    "player_id": "P-74747",
+    "shared": false,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1970:P-72441",
+    "nation_id": "T-86",
+    "player_id": "P-72441",
+    "shared": false,
+    "tournament_id": "WC-1970"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1974:P-21597",
+    "nation_id": "T-57",
+    "player_id": "P-21597",
+    "shared": false,
+    "tournament_id": "WC-1974"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1978:P-35082",
+    "nation_id": "T-03",
+    "player_id": "P-35082",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1982:P-91717",
+    "nation_id": "T-41",
+    "player_id": "P-91717",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1986:P-36651",
+    "nation_id": "T-28",
+    "player_id": "P-36651",
+    "shared": false,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1990:P-76544",
+    "nation_id": "T-41",
+    "player_id": "P-76544",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1991:P-54794",
+    "nation_id": "T-83",
+    "player_id": "P-54794",
+    "shared": false,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1994:P-73354",
+    "nation_id": "T-62",
+    "player_id": "P-73354",
+    "shared": true,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1994:P-81648",
+    "nation_id": "T-10",
+    "player_id": "P-81648",
+    "shared": true,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1995:P-29915",
+    "nation_id": "T-53",
+    "player_id": "P-29915",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1998:P-58374",
+    "nation_id": "T-18",
+    "player_id": "P-58374",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1999:P-14903",
+    "nation_id": "T-14",
+    "player_id": "P-14903",
+    "shared": true,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-1999:P-57452",
+    "nation_id": "T-09",
+    "player_id": "P-57452",
+    "shared": true,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2002:P-62722",
+    "nation_id": "T-09",
+    "player_id": "P-62722",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2003:P-52478",
+    "nation_id": "T-31",
+    "player_id": "P-52478",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2006:P-27787",
+    "nation_id": "T-31",
+    "player_id": "P-27787",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2007:P-07458",
+    "nation_id": "T-09",
+    "player_id": "P-07458",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2010:P-28154",
+    "nation_id": "T-31",
+    "player_id": "P-28154",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2011:P-72113",
+    "nation_id": "T-44",
+    "player_id": "P-72113",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2014:P-89392",
+    "nation_id": "T-16",
+    "player_id": "P-89392",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2015:P-66612",
+    "nation_id": "T-31",
+    "player_id": "P-66612",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2018:P-58924",
+    "nation_id": "T-28",
+    "player_id": "P-58924",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2019:P-09273",
+    "nation_id": "T-83",
+    "player_id": "P-09273",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-4",
+    "award_name": "Golden Boot",
+    "award_winner_id": "A-4:WC-2022:P-64077",
+    "nation_id": "T-30",
+    "player_id": "P-64077",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1930:P-18628",
+    "nation_id": "T-84",
+    "player_id": "P-18628",
+    "shared": false,
+    "tournament_id": "WC-1930"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1934:P-56703",
+    "nation_id": "T-41",
+    "player_id": "P-56703",
+    "shared": true,
+    "tournament_id": "WC-1934"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1934:P-77348",
+    "nation_id": "T-31",
+    "player_id": "P-77348",
+    "shared": true,
+    "tournament_id": "WC-1934"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1938:P-65885",
+    "nation_id": "T-41",
+    "player_id": "P-65885",
+    "shared": true,
+    "tournament_id": "WC-1938"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1938:P-67652",
+    "nation_id": "T-36",
+    "player_id": "P-67652",
+    "shared": true,
+    "tournament_id": "WC-1938"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1938:P-89034",
+    "nation_id": "T-36",
+    "player_id": "P-89034",
+    "shared": true,
+    "tournament_id": "WC-1938"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1950:P-18523",
+    "nation_id": "T-84",
+    "player_id": "P-18523",
+    "shared": false,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1954:P-05766",
+    "nation_id": "T-86",
+    "player_id": "P-05766",
+    "shared": true,
+    "tournament_id": "WC-1954"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1954:P-14406",
+    "nation_id": "T-75",
+    "player_id": "P-14406",
+    "shared": true,
+    "tournament_id": "WC-1954"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1954:P-85257",
+    "nation_id": "T-05",
+    "player_id": "P-85257",
+    "shared": true,
+    "tournament_id": "WC-1954"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1958:P-08136",
+    "nation_id": "T-86",
+    "player_id": "P-08136",
+    "shared": true,
+    "tournament_id": "WC-1958"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1958:P-38906",
+    "nation_id": "T-09",
+    "player_id": "P-38906",
+    "shared": true,
+    "tournament_id": "WC-1958"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1966:P-12272",
+    "nation_id": "T-86",
+    "player_id": "P-12272",
+    "shared": false,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1970:P-77430",
+    "nation_id": "T-09",
+    "player_id": "P-77430",
+    "shared": false,
+    "tournament_id": "WC-1970"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1974:P-16991",
+    "nation_id": "T-48",
+    "player_id": "P-16991",
+    "shared": true,
+    "tournament_id": "WC-1974"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1974:P-92867",
+    "nation_id": "T-57",
+    "player_id": "P-92867",
+    "shared": true,
+    "tournament_id": "WC-1974"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1978:P-96979",
+    "nation_id": "T-56",
+    "player_id": "P-96979",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1982:P-59574",
+    "nation_id": "T-86",
+    "player_id": "P-59574",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1986:P-12940",
+    "nation_id": "T-73",
+    "player_id": "P-12940",
+    "shared": true,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1986:P-80404",
+    "nation_id": "T-03",
+    "player_id": "P-80404",
+    "shared": true,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1986:P-90635",
+    "nation_id": "T-09",
+    "player_id": "P-90635",
+    "shared": true,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1990:P-71260",
+    "nation_id": "T-21",
+    "player_id": "P-71260",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1991:P-30335",
+    "nation_id": "T-31",
+    "player_id": "P-30335",
+    "shared": false,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1995:P-84389",
+    "nation_id": "T-53",
+    "player_id": "P-84389",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1998:P-34670",
+    "nation_id": "T-41",
+    "player_id": "P-34670",
+    "shared": true,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-1998:P-84542",
+    "nation_id": "T-03",
+    "player_id": "P-84542",
+    "shared": true,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2002:P-27787",
+    "nation_id": "T-31",
+    "player_id": "P-27787",
+    "shared": true,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2002:P-74261",
+    "nation_id": "T-09",
+    "player_id": "P-74261",
+    "shared": true,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2003:P-50598",
+    "nation_id": "T-31",
+    "player_id": "P-50598",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2006:P-19888",
+    "nation_id": "T-03",
+    "player_id": "P-19888",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2007:P-89236",
+    "nation_id": "T-83",
+    "player_id": "P-89236",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2010:P-49097",
+    "nation_id": "T-73",
+    "player_id": "P-49097",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2011:P-07458",
+    "nation_id": "T-09",
+    "player_id": "P-07458",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2014:P-28154",
+    "nation_id": "T-31",
+    "player_id": "P-28154",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2015:P-62104",
+    "nation_id": "T-83",
+    "player_id": "P-62104",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2018:P-90908",
+    "nation_id": "T-30",
+    "player_id": "P-90908",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2019:P-37034",
+    "nation_id": "T-83",
+    "player_id": "P-37034",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-5",
+    "award_name": "Silver Boot",
+    "award_winner_id": "A-5:WC-2022:P-14758",
+    "nation_id": "T-03",
+    "player_id": "P-14758",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1930:P-71973",
+    "nation_id": "T-83",
+    "player_id": "P-71973",
+    "shared": false,
+    "tournament_id": "WC-1930"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1950:P-16302",
+    "nation_id": "T-84",
+    "player_id": "P-16302",
+    "shared": true,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1950:P-22428",
+    "nation_id": "T-09",
+    "player_id": "P-22428",
+    "shared": true,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1950:P-26928",
+    "nation_id": "T-73",
+    "player_id": "P-26928",
+    "shared": true,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1950:P-65220",
+    "nation_id": "T-73",
+    "player_id": "P-65220",
+    "shared": true,
+    "tournament_id": "WC-1950"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1966:P-34802",
+    "nation_id": "T-28",
+    "player_id": "P-34802",
+    "shared": true,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1966:P-53800",
+    "nation_id": "T-72",
+    "player_id": "P-53800",
+    "shared": true,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1966:P-72864",
+    "nation_id": "T-86",
+    "player_id": "P-72864",
+    "shared": true,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1966:P-82516",
+    "nation_id": "T-36",
+    "player_id": "P-82516",
+    "shared": true,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1970:P-96979",
+    "nation_id": "T-56",
+    "player_id": "P-96979",
+    "shared": false,
+    "tournament_id": "WC-1970"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1978:P-63266",
+    "nation_id": "T-48",
+    "player_id": "P-63266",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1982:P-37483",
+    "nation_id": "T-09",
+    "player_id": "P-37483",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1990:P-36651",
+    "nation_id": "T-28",
+    "player_id": "P-36651",
+    "shared": true,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1990:P-58080",
+    "nation_id": "T-11",
+    "player_id": "P-58080",
+    "shared": true,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1991:P-58688",
+    "nation_id": "T-53",
+    "player_id": "P-58688",
+    "shared": true,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1991:P-99328",
+    "nation_id": "T-83",
+    "player_id": "P-99328",
+    "shared": true,
+    "tournament_id": "WC-1991"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1994:P-60371",
+    "nation_id": "T-74",
+    "player_id": "P-60371",
+    "shared": true,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1994:P-61251",
+    "nation_id": "T-09",
+    "player_id": "P-61251",
+    "shared": true,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1995:P-35093",
+    "nation_id": "T-14",
+    "player_id": "P-35093",
+    "shared": false,
+    "tournament_id": "WC-1995"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-1999:P-29915",
+    "nation_id": "T-53",
+    "player_id": "P-29915",
+    "shared": false,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2003:P-90420",
+    "nation_id": "T-09",
+    "player_id": "P-90420",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2006:P-62722",
+    "nation_id": "T-09",
+    "player_id": "P-62722",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2007:P-74483",
+    "nation_id": "T-53",
+    "player_id": "P-74483",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2010:P-51336",
+    "nation_id": "T-48",
+    "player_id": "P-51336",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2011:P-89236",
+    "nation_id": "T-83",
+    "player_id": "P-89236",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2014:P-87008",
+    "nation_id": "T-09",
+    "player_id": "P-87008",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2015:P-30564",
+    "nation_id": "T-31",
+    "player_id": "P-30564",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2018:P-72637",
+    "nation_id": "T-06",
+    "player_id": "P-72637",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2019:P-84864",
+    "nation_id": "T-28",
+    "player_id": "P-84864",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-6",
+    "award_name": "Bronze Boot",
+    "award_winner_id": "A-6:WC-2022:P-89750",
+    "nation_id": "T-30",
+    "player_id": "P-89750",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-1994:P-00531",
+    "nation_id": "T-06",
+    "player_id": "P-00531",
+    "shared": false,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-1998:P-55991",
+    "nation_id": "T-30",
+    "player_id": "P-55991",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-1999:P-17759",
+    "nation_id": "T-83",
+    "player_id": "P-17759",
+    "shared": true,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-1999:P-75180",
+    "nation_id": "T-14",
+    "player_id": "P-75180",
+    "shared": true,
+    "tournament_id": "WC-1999"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2002:P-33751",
+    "nation_id": "T-31",
+    "player_id": "P-33751",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2003:P-36668",
+    "nation_id": "T-31",
+    "player_id": "P-36668",
+    "shared": false,
+    "tournament_id": "WC-2003"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2006:P-11392",
+    "nation_id": "T-41",
+    "player_id": "P-11392",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2007:P-54576",
+    "nation_id": "T-31",
+    "player_id": "P-54576",
+    "shared": false,
+    "tournament_id": "WC-2007"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2010:P-61793",
+    "nation_id": "T-73",
+    "player_id": "P-61793",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2011:P-80833",
+    "nation_id": "T-83",
+    "player_id": "P-80833",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2014:P-19408",
+    "nation_id": "T-31",
+    "player_id": "P-19408",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2015:P-80833",
+    "nation_id": "T-83",
+    "player_id": "P-80833",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2018:P-09658",
+    "nation_id": "T-06",
+    "player_id": "P-09658",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2019:P-47320",
+    "nation_id": "T-48",
+    "player_id": "P-47320",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-7",
+    "award_name": "Golden Glove",
+    "award_winner_id": "A-7:WC-2022:P-13162",
+    "nation_id": "T-03",
+    "player_id": "P-13162",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1958:P-38906",
+    "nation_id": "T-09",
+    "player_id": "P-38906",
+    "shared": false,
+    "tournament_id": "WC-1958"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1962:P-21188",
+    "nation_id": "T-36",
+    "player_id": "P-21188",
+    "shared": false,
+    "tournament_id": "WC-1962"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1966:P-72864",
+    "nation_id": "T-86",
+    "player_id": "P-72864",
+    "shared": false,
+    "tournament_id": "WC-1966"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1970:P-96979",
+    "nation_id": "T-56",
+    "player_id": "P-96979",
+    "shared": false,
+    "tournament_id": "WC-1970"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1974:P-48883",
+    "nation_id": "T-57",
+    "player_id": "P-48883",
+    "shared": false,
+    "tournament_id": "WC-1974"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1978:P-03775",
+    "nation_id": "T-41",
+    "player_id": "P-03775",
+    "shared": false,
+    "tournament_id": "WC-1978"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1982:P-69834",
+    "nation_id": "T-30",
+    "player_id": "P-69834",
+    "shared": false,
+    "tournament_id": "WC-1982"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1986:P-97414",
+    "nation_id": "T-06",
+    "player_id": "P-97414",
+    "shared": false,
+    "tournament_id": "WC-1986"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1990:P-62861",
+    "nation_id": "T-87",
+    "player_id": "P-62861",
+    "shared": false,
+    "tournament_id": "WC-1990"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1994:P-33834",
+    "nation_id": "T-48",
+    "player_id": "P-33834",
+    "shared": false,
+    "tournament_id": "WC-1994"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-1998:P-51130",
+    "nation_id": "T-28",
+    "player_id": "P-51130",
+    "shared": false,
+    "tournament_id": "WC-1998"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2002:P-05728",
+    "nation_id": "T-83",
+    "player_id": "P-05728",
+    "shared": false,
+    "tournament_id": "WC-2002"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2006:P-36287",
+    "nation_id": "T-31",
+    "player_id": "P-36287",
+    "shared": false,
+    "tournament_id": "WC-2006"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2010:P-28154",
+    "nation_id": "T-31",
+    "player_id": "P-28154",
+    "shared": false,
+    "tournament_id": "WC-2010"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2011:P-87785",
+    "nation_id": "T-04",
+    "player_id": "P-87785",
+    "shared": false,
+    "tournament_id": "WC-2011"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2014:P-17509",
+    "nation_id": "T-30",
+    "player_id": "P-17509",
+    "shared": false,
+    "tournament_id": "WC-2014"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2015:P-60142",
+    "nation_id": "T-12",
+    "player_id": "P-60142",
+    "shared": false,
+    "tournament_id": "WC-2015"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2018:P-64077",
+    "nation_id": "T-30",
+    "player_id": "P-64077",
+    "shared": false,
+    "tournament_id": "WC-2018"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2019:P-91637",
+    "nation_id": "T-31",
+    "player_id": "P-91637",
+    "shared": false,
+    "tournament_id": "WC-2019"
+  },
+  {
+    "award_id": "A-8",
+    "award_name": "Best Young Player",
+    "award_winner_id": "A-8:WC-2022:P-10739",
+    "nation_id": "T-03",
+    "player_id": "P-10739",
+    "shared": false,
+    "tournament_id": "WC-2022"
+  }
+]
