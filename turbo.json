@@ -14,6 +14,9 @@
       "dependsOn": ["^build"]
     },
     "test:golden": {},
-    "test:golden:draft": {}
+    "test:golden:draft": {},
+    "test:golden:data": {
+      "dependsOn": ["^build"]
+    }
   }
 }

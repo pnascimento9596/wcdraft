@@ -2,6 +2,39 @@
   "name": "@wcdraft/data",
   "version": "0.0.0",
   "private": true,
-  "description": "Curated wcdraft datasets and access helpers. Empty skeleton in WS-0; data lands later. See README for the CC-BY-SA attribution obligation.",
-  "type": "module"
+  "description": "Curated wcdraft runtime datasets and access helpers. Compact bundles built deterministically from the ETL output, distributed under CC-BY-SA 4.0 with full source attribution. See README for the attribution obligation.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src/generated"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:golden": "vitest run test/compact-data.golden.test.ts",
+    "test:golden:data": "vitest run test/compact-data.golden.test.ts test/compact-data.integrity.test.ts",
+    "build:compact": "node scripts/build-compact-data.mjs",
+    "copy:web-assets": "node scripts/copy-web-assets.mjs"
+  },
+  "dependencies": {
+    "@wcdraft/core": "workspace:*"
+  }
 }
