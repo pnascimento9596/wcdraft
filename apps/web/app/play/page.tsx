@@ -16,7 +16,9 @@ export default function ModeSelectPage() {
         <p className="lede">
           Seventeen spins, one all-time XI. Pick how much the draft shows you before you commit.
         </p>
-        <p className="page-head__note">Preview — screens run on illustrative mock data.</p>
+        <p className="page-head__note">
+          Draft and review run on the real 1930–2026 pool. Simulation wires in next phase.
+        </p>
       </header>
 
       <div className={s.modeGrid}>

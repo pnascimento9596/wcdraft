@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ReviewScreen } from "../../../components/game/review-screen";
 
@@ -10,7 +11,13 @@ export const metadata: Metadata = {
 export default function ReviewPage() {
   return (
     <div className="container page">
-      <ReviewScreen />
+      <Suspense fallback={<ReviewFallback />}>
+        <ReviewScreen />
+      </Suspense>
     </div>
   );
+}
+
+function ReviewFallback() {
+  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading review…</div>;
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { DraftScreen } from "../../../components/game/draft-screen";
 
@@ -10,7 +11,13 @@ export const metadata: Metadata = {
 export default function DraftPage() {
   return (
     <div className="container page">
-      <DraftScreen />
+      <Suspense fallback={<DraftFallback />}>
+        <DraftScreen />
+      </Suspense>
     </div>
   );
+}
+
+function DraftFallback() {
+  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading draft…</div>;
 }

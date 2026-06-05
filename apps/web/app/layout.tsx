@@ -5,6 +5,7 @@ import { ThemeProvider } from "../components/theme-provider";
 import { SiteHeader } from "../components/site-header";
 import { SiteFooter } from "../components/site-footer";
 import { ServiceWorkerRegister } from "../components/sw-register";
+import "./ds/tokens.css";
 import "./globals.css";
 
 const display = Anton({
