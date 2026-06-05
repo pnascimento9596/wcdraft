@@ -1,21 +1,24 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { Position } from "@wcdraft/core";
-import type { PitchSlot } from "@/lib/mock";
-import { compatTier } from "@/lib/mock";
+import {
+  compatTier,
+  formatNullableNumber,
+  positionShape,
+  type PitchSlotView,
+} from "@/lib/game/view-models";
+import {
+  getFormationVisualSlots,
+  isI2FormationId,
+  type FormationVisualSlot,
+} from "@/lib/game/formation-layout";
 import s from "./game.module.css";
 
-/** Lines top → bottom on the rendered pitch (attack at the top). */
-const LINE_ORDER: Position[] = ["FW", "MF", "DF", "GK"];
-const CHANNEL_ORDER = { L: 0, C: 1, R: 2 } as const;
-
 export interface PitchProps {
-  starters: PitchSlot[];
+  formationId: string;
+  starters: PitchSlotView[];
   /** Slot currently selected for assignment (draft screen). */
   selectedSlotId?: string | null;
-  /** Slots locked from earlier spins — cannot be reselected. */
-  lockedSlotIds?: readonly string[];
   /** When placing a card, the compatibility per OPEN slot for badge preview. */
   previewCompat?: Record<string, number> | null;
   onSlotSelect?: (slotId: string) => void;
@@ -23,59 +26,76 @@ export interface PitchProps {
   interactive?: boolean;
 }
 
+const FALLBACK_LINE: Record<string, FormationVisualSlot["visual_line"]> = {
+  GK: "gk",
+  DF: "def",
+  MF: "mid",
+  FW: "fwd",
+};
+
 export function Pitch({
+  formationId,
   starters,
   selectedSlotId = null,
-  lockedSlotIds = [],
   previewCompat = null,
   onSlotSelect,
   interactive = false,
 }: PitchProps) {
-  const byLine = LINE_ORDER.map((line) => ({
-    line,
-    slots: starters
-      .filter((sl) => sl.line === line)
-      .sort((a, b) => CHANNEL_ORDER[a.channel] - CHANNEL_ORDER[b.channel]),
-  })).filter((row) => row.slots.length > 0);
+  // Visual coords come from /brand/formations.json keyed by core slot_id.
+  // If we somehow render a non-I2 formation we fall back to a coarse grid
+  // rather than crash the page (real I2 entries always pass through).
+  const visualSlots = isI2FormationId(formationId)
+    ? getFormationVisualSlots(formationId)
+    : starters.map((sl, i) => ({
+        slot_id: sl.slot_id,
+        display_label: sl.slot_position,
+        visual_line: FALLBACK_LINE[sl.line]!,
+        x_pct: 10 + (i % 5) * 20,
+        y_pct: 10 + Math.floor(i / 5) * 20,
+      }));
+  const visualBySlot = new Map(visualSlots.map((v) => [v.slot_id, v]));
 
   return (
     <div className={s.pitch} role="group" aria-label="Formation pitch">
-      <div className={s.pitchLines} aria-hidden="true">
+      <div className={s.pitchFrame} aria-hidden="true">
         <span className={s.pitchHalfway} />
         <span className={s.pitchCircle} />
         <span className={s.pitchBoxTop} />
         <span className={s.pitchBoxBottom} />
       </div>
-      {byLine.map((row) => (
-        <div key={row.line} className={s.pitchRow}>
-          {row.slots.map((slot) => (
-            <SlotChip
-              key={slot.slot_id}
-              slot={slot}
-              selected={slot.slot_id === selectedSlotId}
-              locked={lockedSlotIds.includes(slot.slot_id)}
-              previewCompat={previewCompat?.[slot.slot_id]}
-              interactive={interactive}
-              onSelect={onSlotSelect}
-            />
-          ))}
-        </div>
-      ))}
+      {starters.map((slot) => {
+        const v = visualBySlot.get(slot.slot_id);
+        if (!v) return null;
+        return (
+          <SlotChip
+            key={slot.slot_id}
+            slot={slot}
+            x={v.x_pct}
+            y={v.y_pct}
+            selected={slot.slot_id === selectedSlotId}
+            previewCompat={previewCompat?.[slot.slot_id]}
+            interactive={interactive}
+            onSelect={onSlotSelect}
+          />
+        );
+      })}
     </div>
   );
 }
 
 function SlotChip({
   slot,
+  x,
+  y,
   selected,
-  locked,
   previewCompat,
   interactive,
   onSelect,
 }: {
-  slot: PitchSlot;
+  slot: PitchSlotView;
+  x: number;
+  y: number;
   selected: boolean;
-  locked: boolean;
   previewCompat: number | undefined;
   interactive: boolean;
   onSelect?: (slotId: string) => void;
@@ -83,17 +103,17 @@ function SlotChip({
   const filled = !!slot.card;
   const tier = filled ? compatTier(slot.position_compatibility) : null;
   const previewTier = previewCompat != null ? compatTier(previewCompat) : null;
+  const shape = positionShape(slot.line);
 
-  const classes = [s.slot];
-  if (filled) classes.push(s.slotFilled);
+  const classes = [s.slot, s[`slotShape_${shape}`]!];
+  if (filled) classes.push(s.slotFilled, s.slotLocked);
   else classes.push(s.slotEmpty);
   if (selected) classes.push(s.slotSelected);
-  if (locked) classes.push(s.slotLocked);
   if (tier) classes.push(s[`tier_${tier}`]!);
   if (previewTier) classes.push(s.slotPreview, s[`tierPreview_${previewTier}`]!);
 
   const label = filled
-    ? `${slot.slot_position} — ${slot.card!.name}${locked ? " (locked)" : ""}`
+    ? `${slot.slot_position} — ${slot.card!.name} (locked)`
     : `${slot.slot_position} — empty slot`;
 
   const content: ReactNode = filled ? (
@@ -101,14 +121,8 @@ function SlotChip({
       <span className={s.slotPos}>{slot.slot_position}</span>
       <span className={s.slotName}>{slot.card!.name}</span>
       <span className={s.slotMeta}>
-        <span className={s.slotRating}>{slot.card!.rating.overall ?? "—"}</span>
-        {locked && (
-          <span className={s.lockGlyph} aria-hidden="true">
-            🔒
-          </span>
-        )}
+        <span className={s.slotRating}>{formatNullableNumber(slot.card!.rating.overall)}</span>
       </span>
-      {slot.warnings.length > 0 && <span className={s.slotWarn} aria-hidden="true" />}
     </>
   ) : (
     <>
@@ -119,9 +133,11 @@ function SlotChip({
     </>
   );
 
-  if (!interactive) {
+  const style = { left: `${x}%`, top: `${y}%` } as const;
+
+  if (!interactive || filled) {
     return (
-      <div className={classes.join(" ")} aria-label={label}>
+      <div className={classes.join(" ")} aria-label={label} style={style}>
         {content}
       </div>
     );
@@ -133,8 +149,8 @@ function SlotChip({
       className={classes.join(" ")}
       aria-pressed={selected}
       aria-label={label}
-      disabled={locked}
       onClick={() => onSelect?.(slot.slot_id)}
+      style={style}
     >
       {content}
     </button>

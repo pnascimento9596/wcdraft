@@ -1546,3 +1546,1004 @@ button.benchSlot:not(:disabled):hover {
   color: var(--ink-faint);
   font-style: italic;
 }
+
+/* ========================================================================
+   I2 — Mobile-first portrait draft + review shell.
+   Uses DS tokens from app/ds/tokens.css; keeps legacy mock-era classes for
+   results/share until I3. New blocks are additive to avoid touching the
+   results/share styling.
+   ===================================================================== */
+
+.draftShell,
+.reviewShell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom, 0px));
+  min-height: 100dvh;
+  background: var(--bg-850);
+  color: var(--ink-100);
+  font-family: var(--f-body);
+}
+
+.draftAppBar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--bg-900) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--sh-1);
+}
+
+.appBarBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.appBarTitle {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-100);
+}
+
+.appBarMeter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.persistenceWarn {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--t-xs);
+  color: var(--warn);
+  font-family: var(--f-mono);
+}
+
+.loadingPanel {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--ink-300);
+  font-family: var(--f-mono);
+}
+
+.errorPanel {
+  padding: 24px;
+  border: 1px solid rgba(255, 77, 99, 0.35);
+  border-radius: var(--r-3);
+  background: color-mix(in srgb, var(--bg-800) 95%, rgba(255, 77, 99, 0.12));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.errorTitle {
+  margin: 0;
+  font-family: var(--f-display);
+  font-size: 22px;
+  color: var(--loss);
+}
+
+.errorMessage {
+  margin: 0;
+  color: var(--ink-200);
+}
+
+/* ── Formation select ───────────────────────────────────────────────────── */
+
+.formationSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 12px 4px 80px;
+}
+
+.formationHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.formationTitle {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 32px;
+  margin: 0;
+  color: var(--ink-100);
+}
+
+.formationSub {
+  margin: 0;
+  color: var(--ink-300);
+  font-size: var(--t-sm);
+  max-width: 32ch;
+}
+
+.formationGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 380px) {
+  .formationGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formationCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  padding: 12px;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform var(--d-fast) var(--e-snap), box-shadow var(--d-fast),
+    border-color var(--d-fast);
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+  min-height: 220px;
+}
+
+.formationCard:hover,
+.formationCard:focus-visible {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+  transform: translateY(-1px);
+}
+
+.formationCard:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.formationCardPending {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.formationCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formationCardName {
+  font-family: var(--f-display);
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: var(--ink-100);
+}
+
+.formationCardBlurb {
+  margin: 0;
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  line-height: 1.4;
+}
+
+.formationCardCta {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ember-bright);
+}
+
+.formationError {
+  margin: 0;
+  color: var(--loss);
+  font-family: var(--f-mono);
+}
+
+/* ── Mini-pitch on the formation cards ──────────────────────────────────── */
+
+.miniPitch {
+  position: relative;
+  aspect-ratio: 7 / 10;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
+    var(--bg-800);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  overflow: hidden;
+}
+
+.miniDot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: var(--ink-200);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.miniDot_gk {
+  background: var(--prov-historical);
+  border-radius: 3px;
+}
+
+.miniDot_def {
+  background: var(--teal-bright);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  border-radius: 0;
+}
+
+.miniDot_mid {
+  background: var(--ink-200);
+  transform: translate(-50%, -50%) rotate(45deg);
+  border-radius: 2px;
+}
+
+.miniDot_fwd {
+  background: var(--gold);
+  border-radius: 999px;
+}
+
+/* ── Pitch (absolute-positioned slots) ──────────────────────────────────── */
+
+.pitch {
+  position: relative;
+  aspect-ratio: 7 / 10;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
+    var(--bg-800);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  padding: 0;
+  display: block;
+}
+
+.pitchFrame {
+  position: absolute;
+  inset: 4%;
+  pointer-events: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-2);
+}
+
+.pitchFrame .pitchHalfway {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pitchFrame .pitchCircle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24%;
+  aspect-ratio: 1;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pitchFrame .pitchBoxTop,
+.pitchFrame .pitchBoxBottom {
+  position: absolute;
+  left: 20%;
+  width: 60%;
+  height: 12%;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.pitchFrame .pitchBoxTop {
+  top: 0;
+  border-top: none;
+}
+
+.pitchFrame .pitchBoxBottom {
+  bottom: 0;
+  border-bottom: none;
+}
+
+.pitch .slot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 56px;
+  max-width: 80px;
+  padding: 6px 6px;
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--ink-100);
+  font-size: var(--t-xs);
+  font-family: var(--f-mono);
+  cursor: pointer;
+  transition: transform var(--d-fast) var(--e-snap), box-shadow var(--d-fast),
+    border-color var(--d-fast);
+}
+
+.pitch button.slot:hover,
+.pitch button.slot:focus-visible {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.pitch .slotEmpty {
+  background: color-mix(in srgb, var(--bg-700) 70%, transparent);
+  border-style: dashed;
+  color: var(--ink-400);
+}
+
+.pitch .slotSelected {
+  border-color: var(--ember-bright);
+  box-shadow: var(--ring-ember);
+}
+
+.pitch .slotLocked {
+  border-color: var(--lock);
+  background: color-mix(in srgb, var(--bg-700) 95%, rgba(var(--lock-rgb), 0.08));
+  cursor: default;
+}
+
+/* Position shape encoding (square/triangle/diamond/circle) — applied as a
+   subtle outline shape on the slot's position pill in addition to the chip. */
+.slotShape_square .slotPos {
+  border-radius: 2px;
+}
+
+.slotShape_triangle .slotPos {
+  border-radius: 2px 2px 2px 8px;
+}
+
+.slotShape_diamond .slotPos {
+  border-radius: 6px;
+  transform: rotate(0deg);
+}
+
+.slotShape_circle .slotPos {
+  border-radius: 999px;
+}
+
+/* ── Bench/manager ──────────────────────────────────────────────────────── */
+
+.bench {
+  margin-top: 12px;
+}
+
+.benchSlots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.benchSlot {
+  min-height: 56px;
+}
+
+/* ── Candidate card refit (provenance hue, badges) ──────────────────────── */
+
+.cand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  text-align: left;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  color: var(--ink-100);
+  cursor: pointer;
+  transition: border-color var(--d-fast), box-shadow var(--d-fast), transform var(--d-fast);
+}
+
+.cand:hover,
+.cand:focus-visible {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.candSelected {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+}
+
+.candDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.candTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.candId {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.candNationFlag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-100);
+}
+
+.flagShape_square {
+  border-radius: 4px;
+}
+
+.flagShape_triangle {
+  border-radius: 4px 4px 4px 14px;
+}
+
+.flagShape_diamond {
+  border-radius: 8px;
+}
+
+.flagShape_circle {
+  border-radius: 999px;
+}
+
+.candNameWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.candName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candCaptain {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  font-size: 10px;
+  font-family: var(--f-mono);
+  background: var(--gold);
+  color: var(--bg-900);
+  border-radius: 999px;
+}
+
+.candSub {
+  color: var(--ink-400);
+  font-size: var(--t-xs);
+}
+
+.candOverall {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--f-mono);
+  min-width: 44px;
+}
+
+.candOverallNum {
+  font-family: var(--f-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink-100);
+}
+
+.candOverallLabel {
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  color: var(--ink-400);
+  text-transform: uppercase;
+}
+
+.candBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.candShirt {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+}
+
+.candDrafted {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--lock);
+  padding: 2px 6px;
+  border: 1px solid var(--lock-dim);
+  border-radius: var(--r-pill);
+}
+
+.candCoverage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.candCoverageTrack {
+  width: 60px;
+  height: 4px;
+  background: var(--bg-700);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.candCoverageFill {
+  display: block;
+  height: 100%;
+  background: var(--ember);
+}
+
+.candCoverageVal {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+}
+
+.candManager {
+  border-color: var(--prov-manager);
+}
+
+.candManagerTag {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--prov-manager);
+}
+
+/* Provenance hue on card border + glow. Subtle, not loud. */
+.prov_historical {
+  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line));
+}
+
+.prov_projected {
+  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line));
+}
+
+.prov_estimate {
+  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line));
+}
+
+.prov_legend {
+  border-color: color-mix(in srgb, var(--prov-legend) 60%, var(--line));
+  box-shadow: 0 0 0 1px rgba(var(--prov-legend-rgb), 0.25);
+}
+
+.prov_manager {
+  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line));
+}
+
+/* Provenance badges */
+.provBadge {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  border: 1px solid var(--line-2);
+}
+
+.provBadge_historical {
+  color: var(--prov-historical);
+  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line-2));
+}
+
+.provBadge_projected {
+  color: var(--prov-projected);
+  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line-2));
+}
+
+.provBadge_estimate {
+  color: var(--prov-estimate);
+  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line-2));
+}
+
+.provBadge_legend {
+  color: var(--bg-900);
+  background: var(--gold);
+  border-color: var(--gold-deep);
+}
+
+.provBadge_manager {
+  color: var(--prov-manager);
+  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+}
+
+/* Position shape on the eligible-position tags (mirrors slot encoding) */
+.posTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 2px 8px;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  background: var(--bg-700);
+  color: var(--ink-200);
+  border: 1px solid var(--line-2);
+}
+
+.posShape_square {
+  border-radius: 3px;
+}
+
+.posShape_triangle {
+  border-radius: 2px 2px 2px 10px;
+}
+
+.posShape_diamond {
+  border-radius: 6px;
+}
+
+.posShape_circle {
+  border-radius: 999px;
+}
+
+/* ── Sticky lock bar (thumb zone) + bottom sheet ────────────────────────── */
+
+.lockBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bg-900) 96%, transparent);
+  border-top: 1px solid var(--line-2);
+  box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.lockInfo {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lockHint {
+  color: var(--ink-400);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+}
+
+.lockError {
+  color: var(--loss);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+}
+
+.lockActions {
+  display: flex;
+  gap: 8px;
+}
+
+.compatPill {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  border: 1px solid var(--line-2);
+}
+
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 9, 12, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 8;
+  animation: fadeIn var(--d-fast) var(--e-out);
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 75vh;
+  background: var(--bg-800);
+  border-top-left-radius: var(--r-3);
+  border-top-right-radius: var(--r-3);
+  border: 1px solid var(--line-2);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideUp var(--d-med) var(--e-snap);
+}
+
+.sheetHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sheetTitle {
+  font-family: var(--f-display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.sheetClose {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-200);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-pill);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sheetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.sheetSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  padding: 12px 4px;
+  min-height: 64px;
+  background: var(--bg-750);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.sheetSlotActive {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+}
+
+.sheetSlotPos {
+  font-family: var(--f-display);
+  font-size: 16px;
+}
+
+.sheetSlotKind {
+  color: var(--ink-400);
+}
+
+.sheetSlotCompat {
+  color: var(--ember-bright);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheetBackdrop,
+  .sheet {
+    animation: none;
+  }
+}
+
+/* ── Review screen specifics ────────────────────────────────────────────── */
+
+.reviewHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.teamNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.teamNameLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink-400);
+  text-transform: uppercase;
+}
+
+.teamNameInput {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--f-display);
+  font-size: 24px;
+  background: var(--bg-800);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+}
+
+.teamNameInput:focus {
+  outline: none;
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.simPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.simNote {
+  margin: 0;
+  color: var(--ink-200);
+  font-family: var(--f-serif);
+  font-size: 16px;
+}
+
+.warningsPanel {
+  background: color-mix(in srgb, var(--bg-800) 90%, rgba(var(--glow-amber), 0.1));
+  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
+}
+
+.panelSubTitle {
+  margin: 0 0 8px;
+  font-family: var(--f-display);
+  font-size: 16px;
+  color: var(--ink-100);
+}
+
+.warnList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: var(--t-sm);
+  color: var(--ink-200);
+}
+
+.warnList li {
+  margin-bottom: 4px;
+}
+
+/* ── Channels (refit on DS tokens) ──────────────────────────────────────── */
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.channel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  color: var(--ink-300);
+}
+
+.channelLabel {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.channelTrack {
+  display: block;
+  height: 4px;
+  background: var(--bg-700);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.channelFill {
+  display: block;
+  height: 100%;
+  background: var(--ember);
+}
+
+.channelVal {
+  font-family: var(--f-mono);
+  color: var(--ink-200);
+}
+
+.candStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  align-items: center;
+}
+
+.candStats b {
+  color: var(--ink-100);
+  font-weight: 700;
+}
+
+.candAwards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.award {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  background: color-mix(in srgb, var(--gold) 18%, var(--bg-700));
+  color: var(--gold-bright);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+}
