@@ -32,9 +32,9 @@ function runFor(name: ScenarioName, seed: string) {
 }
 
 describe("sim+score golden — fixed inputs reproduce byte-identical RunResult", () => {
-  it("the four characteristic scenarios are all present", () => {
+  it("the five characteristic scenarios are all present", () => {
     expect(GOLDEN.map((g) => g.name).sort()).toEqual(
-      ["blowout", "draw_into_pens", "injury_cascade", "upset"].sort(),
+      ["blowout", "draw_into_pens", "group_elimination", "injury_cascade", "upset"].sort(),
     );
   });
 
@@ -98,6 +98,13 @@ describe("sim+score golden — fixed inputs reproduce byte-identical RunResult",
         expect(run.seed).toBe(entry.seed);
       });
 
+      it("narrative is filled (template_id !== 'pending', filled_text non-empty)", () => {
+        const { run } = runFor(entry.name, entry.seed);
+        expect(run.narrative.template_id).not.toBe("pending");
+        expect(run.narrative.template_id.length).toBeGreaterThan(0);
+        expect(run.narrative.filled_text.trim().length).toBeGreaterThan(0);
+      });
+
       it("aggregate top_scorer (if any) is a user-side player with a counting goal", () => {
         const { run } = runFor(entry.name, entry.seed);
         const ts = run.aggregate.top_scorer_player_id;
@@ -121,6 +128,19 @@ describe("sim golden — scenario shapes are what the names claim", () => {
   it("upset: the (weak) user XI won at least one knockout match", () => {
     const { matches } = runFor("upset", GOLDEN.find((g) => g.name === "upset")!.seed);
     expect(matches.some((m) => m.phase === "knockout" && m.outcome === "W")).toBe(true);
+  });
+
+  it("group_elimination: user eliminated in group, no knockouts played", () => {
+    const entry = GOLDEN.find((g) => g.name === "group_elimination")!;
+    const { run, matches, group_stage } = runFor("group_elimination", entry.seed);
+    expect(run.reached_round).toBe("G3");
+    expect(run.is_champion).toBe(false);
+    expect(matches.length).toBe(3);
+    expect(matches.every((m) => m.phase === "group")).toBe(true);
+    expect(group_stage.user_qualified).toBe(false);
+    expect(group_stage.qualification).toBe("eliminated");
+    // The last match's id must match `eliminated_in_match_id`.
+    expect(run.eliminated_in_match_id).toBe(matches[2]!.match_id);
   });
 
   it("injury-cascade: ≥2 tournament-ending injuries, each persisting out of later lineups", () => {

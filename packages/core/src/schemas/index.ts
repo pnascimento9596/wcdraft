@@ -95,3 +95,10 @@ export {
   LinkedPairSchema,
   SynergyResultSchema,
 } from "./synergy.js";
+
+export {
+  // group-stage.ts (I3.3 — additive runTournamentFull return)
+  GroupStandingSchema,
+  GroupOtherMatchSummarySchema,
+  GroupStageResultSchema,
+} from "./group-stage.js";

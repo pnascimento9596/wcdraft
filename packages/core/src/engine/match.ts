@@ -954,18 +954,26 @@ const OPP_TEMPLATE: readonly Position[] = [
   "FW",
 ];
 
-/** Build opponent SimMembers from a Team2026 squad (uniform scorer weights). */
-export function membersFromTeam2026(opponent: Team2026): SimMember[] {
+/**
+ * Build SimMembers from a Team2026 squad (uniform scorer weights).
+ *
+ * `side` defaults to `"opp"` — the existing user-vs-opponent path is
+ * byte-stable. For intra-group Team2026-vs-Team2026 simulation (I3.3), the
+ * "home" team is materialized as `side: "user"`; slot ids are side-prefixed
+ * so the two teams never collide in the lineup buffer.
+ */
+export function membersFromTeam2026(opponent: Team2026, side: "user" | "opp" = "opp"): SimMember[] {
   const sorted = canonicalSortBy(opponent.squad_card_ids, (c) => [c as string]);
   return sorted.map((card_id, i) => {
     const parsed = parseCardId(card_id);
     const started = i < 11;
+    const prefix = side === "user" ? "user" : "opp";
     return {
-      side: "opp",
+      side,
       card_id,
       player_id: parsed?.player_id ?? (card_id as string),
       tournament_id: parsed?.tournament_id ?? 1,
-      slot_id: started ? `opp.starter.${i}` : `opp.bench.${i - 11}`,
+      slot_id: started ? `${prefix}.starter.${i}` : `${prefix}.bench.${i - 11}`,
       position: started ? OPP_TEMPLATE[i]! : "MF",
       started,
       attackWeight: 1,
