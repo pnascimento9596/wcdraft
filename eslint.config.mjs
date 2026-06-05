@@ -9,6 +9,9 @@ import globals from "globals";
 const FORBIDDEN_ENTROPY_MESSAGE =
   "wcdraft determinism: forbidden entropy API in packages/core/src — the seeded RNG in rng.ts is the ONLY allowed source of randomness/time.";
 
+const FORBIDDEN_TRANSCENDENTAL_MESSAGE =
+  "wcdraft determinism: Math.exp / Math.log / Math.pow are not allowed in packages/core/src — these calls are cross-engine non-deterministic at the last bits. Use integer arithmetic, a precomputed lookup table, or a documented fast-math helper in rng.ts. See WS-B S2-2.";
+
 export default tseslint.config(
   {
     ignores: [
@@ -85,6 +88,25 @@ export default tseslint.config(
         {
           selector: "NewExpression[callee.name='Date'][arguments.length=0]",
           message: FORBIDDEN_ENTROPY_MESSAGE,
+        },
+        // ── Transcendental-math gate (WS-B S2-2) ─────────────────────────────
+        // Math.exp / Math.log / Math.pow are not bit-stable across V8 / JSC /
+        // SpiderMonkey at the last bits. They're banned in core/src so a
+        // browser refresh on a different engine cannot diverge a replay. If a
+        // calibrated path genuinely needs one, replace it with integer
+        // arithmetic or a precomputed lookup table; the only allowed escape
+        // hatch is documented fast-math helpers in rng.ts (exempted above).
+        {
+          selector: "MemberExpression[object.name='Math'][property.name='exp']",
+          message: FORBIDDEN_TRANSCENDENTAL_MESSAGE,
+        },
+        {
+          selector: "MemberExpression[object.name='Math'][property.name='log']",
+          message: FORBIDDEN_TRANSCENDENTAL_MESSAGE,
+        },
+        {
+          selector: "MemberExpression[object.name='Math'][property.name='pow']",
+          message: FORBIDDEN_TRANSCENDENTAL_MESSAGE,
         },
       ],
     },

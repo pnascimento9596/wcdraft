@@ -8,6 +8,11 @@ out/
 .turbo/
 *.tsbuildinfo
 
+# Mirrored runtime data — copied from packages/data/src/generated/ at
+# build time by `packages/data/scripts/copy-web-assets.mjs`. The source
+# of truth lives in `packages/data/src/generated/`.
+apps/web/public/data/
+
 # Test / coverage
 coverage/
 
