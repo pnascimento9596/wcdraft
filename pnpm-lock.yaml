@@ -47,6 +47,9 @@ importers:
       '@wcdraft/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@wcdraft/data':
+        specifier: workspace:*
+        version: link:../../packages/data
       next:
         specifier: ^16.2.7
         version: 16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -70,7 +73,11 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
 
-  packages/data: {}
+  packages/data:
+    dependencies:
+      '@wcdraft/core':
+        specifier: workspace:*
+        version: link:../core
 
 packages:
 
