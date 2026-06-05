@@ -113,6 +113,7 @@ export type {
   ShootoutKick,
   MatchLineupEntry,
   MatchResult,
+  SimWorld,
 } from "./sim.js";
 
 export type {

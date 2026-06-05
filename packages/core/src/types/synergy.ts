@@ -117,15 +117,23 @@ export interface SynergyResult {
  *    `linked_pairs` 1:1 by index.
  *  - `manager` — the drafted ManagerTournament, or `null` when no manager has
  *    been picked yet. When `null`, `manager_link` is `0`.
+ *  - `nationByCardId` — OPTIONAL card_id → nation_id lookup. `SquadSlot` carries
+ *    no `nation_id`, but the nation-cluster / linked-pair / manager-link
+ *    components all need a per-card nation. When omitted (or a card is missing
+ *    from the map), that card's nation is UNKNOWN → it joins no cluster and
+ *    links nothing (honest-state: an unknown nation cannot manufacture
+ *    Synergy). Real wiring of the nation map is the data/draft-engine
+ *    responsibility.
  *
  * OUTPUT: `SynergyResult` with the three components materialised and the
  * folded `overall` + bounded `multiplier`.
  *
  * The formula itself is `CALIBRATION: WS-B`. This file ships only the type +
- * function signature; the runtime stub lives in `api/synergy.ts`.
+ * function signature; the runtime binding lives in `api/synergy.ts`.
  */
 export type ComputeSynergyFn = (
   squad: readonly SquadSlot[],
   formation: FormationTemplate,
   manager: ManagerTournament | null,
+  nationByCardId?: Readonly<Record<string, string>>,
 ) => SynergyResult;
