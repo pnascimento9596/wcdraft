@@ -3,28 +3,22 @@
 //
 // DETERMINISM: per-substream sub-seeds (match_sim / event_gen /
 // opponent_selection / narrative) are derived from the run seed via
-// `deriveSubseed`; no fresh RNG. Same (draft, scenario, seed, version anchors)
-// → byte-identical RunResult.
+// `deriveSubseed`; no fresh RNG. Same (draft, scenario, seed, world, version
+// anchors) → byte-identical RunResult.
 //
-// ─── CONTRACT-GAP NOTE (for review) ──────────────────────────────────────────
-// `RunTournamentFn` is `(draft, scenario, seed)` but a `DraftState` carries no
-// per-card Ratings and a `RunScenario` carries only opponent team_id STRINGS —
-// neither the user-squad ratings, the opponent `Team2026` records, the manager
-// rating, nor the per-card nation are threaded through the WS-0c signature.
-// Until real-2026 ingestion + bracket wiring lands (a later lane), the engine
-// needs those resolved inputs. We bridge with an OPTIONAL 4th param `world: SimWorld`
-// — type-compatible with `RunTournamentFn` (an extra optional argument keeps the
-// value assignable to the 3-arg type). The 3-arg form throws an honest error;
-// callers (tests, WS-C/WS-D) pass an explicit `SimWorld`.
+// SimWorld threading: `DraftState` carries no per-card Ratings and a
+// `RunScenario` carries only opponent team_id strings. The engine consumes the
+// resolved maps via a REQUIRED `world: SimWorld` 4th argument — the public
+// `RunTournamentFn` is now 4-arg, so there is no implicit fallback to plug.
+// `SimWorld` lives in `../types/sim.ts`.
 
 import type { DraftState } from "../types/draft.js";
 import type { ManagerRating, ManagerTournament } from "../types/manager.js";
-import type { Rating, TeamStrength } from "../types/rating.js";
+import type { TeamStrength } from "../types/rating.js";
 import type { CardId } from "../types/identity.js";
 import type { MatchPhase, MatchRound, KnockoutRound } from "../types/primitives.js";
-import type { MatchLineupEntry, MatchResult } from "../types/sim.js";
+import type { MatchLineupEntry, MatchResult, SimWorld } from "../types/sim.js";
 import type { RoundResult, RunResult } from "../types/run.js";
-import type { ScoringConfig } from "../types/scoring.js";
 import type { RunScenario, Team2026 } from "../types/tournament.js";
 import type { RunTournamentFn } from "../api/sim.js";
 import type { StarterContribution } from "../api/team-strength.js";
@@ -42,25 +36,6 @@ import {
 import { deriveUserPlayerRunStats } from "./stats.js";
 import { computeScore, resolveTopScorer } from "./scoring.js";
 import { DEFAULT_SCORING_CONFIG, INJURY } from "./calibration.js";
-
-/**
- * Resolved inputs the (draft, scenario, seed) signature does not thread through.
- * See the contract-gap note above. Real wiring is the real-2026 ingestion lane.
- */
-export interface SimWorld {
-  /** card_id → Rating for every card in the user squad (all 16). */
-  ratings: Readonly<Record<string, Rating>>;
-  /** team_id → Team2026 for every opponent reachable in the scenario. */
-  opponents: Readonly<Record<string, Team2026>>;
-  /** manager_card_id → ManagerRating, when a manager was drafted. */
-  managerRatings?: Readonly<Record<string, ManagerRating>>;
-  /** manager_card_id → ManagerTournament, for the Synergy manager link. */
-  managerTournaments?: Readonly<Record<string, ManagerTournament>>;
-  /** card_id → nation_id, for Synergy nation clustering. */
-  nationByCardId?: Readonly<Record<string, string>>;
-  /** Calibrated scoring config; defaults to DEFAULT_SCORING_CONFIG. */
-  scoringConfig?: ScoringConfig;
-}
 
 const KNOCKOUT_LADDER: readonly KnockoutRound[] = ["R32", "R16", "QF", "SF", "F"];
 const GROUP_ROUNDS: readonly MatchRound[] = ["G1", "G2", "G3"];
@@ -364,23 +339,17 @@ function assembleRunResult(
 }
 
 /**
- * Public `runTournament` — see `api/sim.ts` for the contract. The 4th `world`
- * param bridges the (draft, scenario, seed) input gap (contract-gap note above);
- * it is required at runtime but optional in the type so this value stays
- * assignable to `RunTournamentFn`.
+ * Public `runTournament` — see `api/sim.ts` for the 4-arg contract. The
+ * `world: SimWorld` parameter is REQUIRED and threads the resolved sim inputs
+ * (user ratings, Team2026 opponents, optional manager/nation maps, optional
+ * scoring config, optional bracket) the (draft, scenario, seed) inputs alone
+ * cannot provide. There is no runtime fallback.
  */
 export const runTournament: RunTournamentFn = (
   draft: DraftState,
   scenario: RunScenario,
   seed: string,
-  world?: SimWorld,
+  world: SimWorld,
 ): RunResult => {
-  if (!world) {
-    throw new Error(
-      "runTournament requires a resolved SimWorld (user ratings + Team2026 opponents). " +
-        "The (draft, scenario, seed) signature does not thread these yet — real-2026 " +
-        "ingestion + bracket wiring is a later lane. Pass an explicit SimWorld 4th argument.",
-    );
-  }
   return runTournamentFull(draft, scenario, seed, world).run;
 };

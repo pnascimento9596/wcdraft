@@ -12,7 +12,11 @@
 // is replayed.
 
 import type { CardId } from "./identity.js";
+import type { ManagerRating, ManagerTournament } from "./manager.js";
 import type { MatchPeriod, MatchPhase, MatchRound, Position } from "./primitives.js";
+import type { Rating } from "./rating.js";
+import type { ScoringConfig } from "./scoring.js";
+import type { Bracket2026, Team2026 } from "./tournament.js";
 
 /**
  * Fields common to every `MatchEvent` variant. Each variant adds typed
@@ -313,4 +317,36 @@ export interface MatchResult {
 
   /** Atomic event log; source of truth for all derived summaries. */
   events: MatchEvent[];
+}
+
+// ─── SimWorld ─────────────────────────────────────────────────────────────────
+//
+// Resolved sim inputs the public `(draft, scenario, seed)` signature does NOT
+// thread on its own — `DraftState.squad` carries card_ids but no per-card
+// Rating, `RunScenario` carries only opponent team_id strings, etc. The engine
+// (and the public `RunTournamentFn`) consume these resolved maps as a REQUIRED
+// 4th argument so the type signature itself is honest about the dependency.
+// Real wiring of these maps is the data-package + web-integration lane.
+
+/** Resolved inputs the engine needs in addition to (draft, scenario, seed). */
+export interface SimWorld {
+  /** card_id → Rating for every card in the user squad (all 16). */
+  ratings: Readonly<Record<string, Rating>>;
+  /** team_id → Team2026 for every opponent reachable in the scenario. */
+  opponents: Readonly<Record<string, Team2026>>;
+  /** manager_card_id → ManagerRating, when a manager was drafted. */
+  managerRatings?: Readonly<Record<string, ManagerRating>>;
+  /** manager_card_id → ManagerTournament, for the Synergy manager link. */
+  managerTournaments?: Readonly<Record<string, ManagerTournament>>;
+  /** card_id → nation_id, for Synergy nation clustering. */
+  nationByCardId?: Readonly<Record<string, string>>;
+  /** Calibrated scoring config; defaults to DEFAULT_SCORING_CONFIG. */
+  scoringConfig?: ScoringConfig;
+  /**
+   * Real 2026 bracket metadata. Optional today; consumed by the
+   * bracket-constrained R32 opponent selection pass (later work item) — the
+   * field is reserved here so downstream items don't re-touch the SimWorld
+   * type. The current engine ignores this field.
+   */
+  bracket?: Bracket2026;
 }

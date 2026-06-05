@@ -12,8 +12,9 @@ import { computeSynergy as computeSynergyImpl } from "../engine/synergy.js";
 
 /**
  * WS-B Synergy formula (engine body in `../engine/synergy.ts`). The public
- * binding is narrowed to the 3-arg `ComputeSynergyFn` contract; the engine
- * function additionally accepts an optional `nationByCardId` lookup (see the
- * engine contract-gap note) used internally by `runTournament`.
+ * `ComputeSynergyFn` contract is 4-arg: `(squad, formation, manager,
+ * nationByCardId?)`. The optional `nationByCardId` lookup threads the per-card
+ * nation map (`SquadSlot` carries no `nation_id`); when omitted, no clusters /
+ * links can form (see `ComputeSynergyFn` for the honest-state semantics).
  */
 export const computeSynergy: ComputeSynergyFn = computeSynergyImpl;

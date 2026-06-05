@@ -96,6 +96,7 @@ export type {
   ShootoutKick,
   MatchLineupEntry,
   MatchResult,
+  SimWorld,
   // scoring
   ScoringConfig,
   ScoreComponent,
@@ -141,8 +142,6 @@ export type {
   // WS-0c
   StarterContribution,
   AggregateUserXiStrengthFn,
-  // WS-B — resolved sim inputs bridge (see engine contract-gap note)
-  SimWorld,
 } from "./api/index.js";
 
 export {
@@ -168,9 +167,10 @@ export {
 } from "./api/index.js";
 
 // ─── 3b. WS-B engine — usable run entry + calibration ─────────────────────────
-// `runTournament` (above) is the 3-arg contract type and THROWS until real-2026
-// ingestion threads a SimWorld. `runTournamentFull` is the usable 4-arg entry
-// (returns the RunResult AND the event-bearing matches) consumers call today.
+// `runTournament` (above) is the public 4-arg contract that returns only the
+// schema-clean `RunResult`. `runTournamentFull` is the event-bearing 4-arg
+// entry (returns the RunResult AND the per-match `MatchResult[]`) for
+// consumers that need the atomic event stream.
 export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
 export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
 

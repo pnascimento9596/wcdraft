@@ -91,14 +91,17 @@ scenarios — **blowout / upset / draw-into-pens / injury-cascade** — found by
 seed, version anchors)` → byte-identical `RunResult` (incl. score,
 `PlayerRunStats`, event-derived top scorer, narrative seed).
 
-## Contract-input gaps bridged (for review)
+## Public signatures — sim + Synergy
 
-Two WS-0c signatures don't thread all data the algorithm needs; both are bridged
-with a **type-compatible optional trailing param**, required at runtime, that
-fails honestly when absent (real wiring is the real-2026 ingestion lane):
+The public 4-arg `RunTournamentFn` and 4-arg `ComputeSynergyFn` thread the
+resolved inputs the (draft, scenario, seed) / (squad, formation, manager) cores
+do not carry on their own:
 
-- `runTournament(draft, scenario, seed)` → optional 4th `world: SimWorld`
-  (user ratings + `Team2026` opponents + manager rating + per-card nation +
-  scoring config). The usable entry is `runTournamentFull(...)`.
-- `computeSynergy(squad, formation, manager)` → optional 4th `nationByCardId`
-  (a `SquadSlot` carries no nation). Absent ⇒ no clusters / no links (honest).
+- `runTournament(draft, scenario, seed, world)` → REQUIRED `world: SimWorld`
+  (user ratings + `Team2026` opponents + optional manager rating / per-card
+  nation / scoring config / `Bracket2026`). `runTournamentFull(...)` is the
+  event-bearing entry returning `{ run, matches }`. `SimWorld` lives in
+  `src/types/sim.ts` and is exported from the top-level barrel.
+- `computeSynergy(squad, formation, manager, nationByCardId?)` → optional 4th
+  `nationByCardId` (a `SquadSlot` carries no nation). Absent ⇒ no clusters / no
+  links (honest-state: an unknown nation cannot manufacture Synergy).

@@ -6,17 +6,14 @@
 // multiplier BAND live in `calibration.ts` (SYNERGY). The SHAPE of the surface
 // (three components; bounded multiplier) is the WS-0c contract.
 //
-// ─── CONTRACT-GAP NOTE (for review) ──────────────────────────────────────────
-// `ComputeSynergyFn` is `(squad, formation, manager)` but a `SquadSlot` carries
-// NO `nation_id` (it carries card_id / player_id / tournament_id / slot fields
-// only). Nation clustering and the manager link both NEED a per-card nation.
-// The WS-0c signature does not thread it. We bridge with an OPTIONAL 4th param
-// `nationByCardId` (a card_id → nation_id map). It is type-compatible with
-// `ComputeSynergyFn` (an extra optional argument keeps the value assignable to
-// the 3-arg function type). When the map is absent or a card is missing from
-// it, that card's nation is UNKNOWN → it joins no cluster and links nothing
-// (honest-state: an unknown nation cannot manufacture Synergy). Real wiring of
-// the nation map is WS-C's draft-engine responsibility.
+// NATION MAP THREADING.
+// `SquadSlot` carries NO `nation_id` (only card_id / player_id /
+// tournament_id / slot fields), so nation clustering and the manager link
+// need an external per-card nation lookup. The PUBLIC `ComputeSynergyFn`
+// contract takes `nationByCardId?` as the 4th argument; this implementation
+// mirrors it. When the map is absent or a card is missing from it, that
+// card's nation is UNKNOWN → it joins no cluster and links nothing
+// (honest-state: an unknown nation cannot manufacture Synergy).
 
 import type { SquadSlot } from "../types/draft.js";
 import type { FormationTemplate } from "../types/formation.js";

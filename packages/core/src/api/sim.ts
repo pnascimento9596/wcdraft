@@ -4,7 +4,7 @@
 // The TYPE signatures here are authoritative and consumed by WS-B / WS-C / WS-D.
 
 import type { DraftState } from "../types/draft.js";
-import type { MatchResult } from "../types/sim.js";
+import type { MatchResult, SimWorld } from "../types/sim.js";
 import type { MatchRound } from "../types/primitives.js";
 import type { Rating, TeamStrength } from "../types/rating.js";
 import type { RunResult } from "../types/run.js";
@@ -59,20 +59,30 @@ export type SimulateMatchFn = (
  *    and `narrative.narrative_seed = deriveSubseed(seed, "narrative")`. The
  *    caller does not need to invoke `computeScore` or the narrative reducer
  *    separately for persistence.
- *  - Same (draft, scenario, seed, version anchors) → byte-identical RunResult.
+ *  - Same (draft, scenario, seed, world, version anchors) → byte-identical
+ *    RunResult.
+ *
+ * `world` is REQUIRED — `DraftState` carries no per-card Ratings and a
+ * `RunScenario` carries only opponent team_id strings; the engine needs the
+ * resolved `SimWorld` (ratings / opponents / optional manager + nation /
+ * scoring / bracket) explicitly. There is no implicit fallback.
  */
-export type RunTournamentFn = (draft: DraftState, scenario: RunScenario, seed: string) => RunResult;
+export type RunTournamentFn = (
+  draft: DraftState,
+  scenario: RunScenario,
+  seed: string,
+  world: SimWorld,
+) => RunResult;
 
 // WS-B IMPLEMENTATIONS. Engine bodies live in `../engine/*` so the api layer
 // stays a thin, contract-typed surface. `simulateMatch` is the public
 // `UserXiSimView` path (positions inferred from the distilled view).
-// `runTournament` orchestrates the full path; its engine impl takes an optional
-// resolved `SimWorld` (see the engine contract-gap note) while staying
-// assignable to the 3-arg `RunTournamentFn`. Tests that need the event-bearing
-// matches use `runTournamentFull` from the engine directly.
+// `runTournament` orchestrates the full path with a REQUIRED resolved
+// `SimWorld`. Tests/integrations that need the event-bearing matches use
+// `runTournamentFull` from the engine directly.
 import { simulateMatchFromView } from "../engine/match.js";
 import { runTournament as runTournamentImpl } from "../engine/tournament.js";
-export type { SimWorld } from "../engine/tournament.js";
+export type { SimWorld } from "../types/sim.js";
 
 /** Simulate one match from a distilled user XI view vs a real 2026 opponent. */
 export const simulateMatch: SimulateMatchFn = simulateMatchFromView;
