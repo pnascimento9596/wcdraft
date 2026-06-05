@@ -139,13 +139,31 @@ export function createRng(seed: string | number): Rng {
 // `v1` lets a future engine bump (and version anchor) deliberately rotate
 // every persisted sub-seed without re-using the old format silently.
 
-/** Sanctioned substream names. Always lowercase, underscore-separated. */
+/**
+ * Sanctioned substream names. Always lowercase, underscore-separated.
+ *
+ * Reserved-but-unused names: `"scenario"` (scenario builder; consumed by the
+ * RunScenario builder work item) and `"group_table"` (deterministic draw-lots
+ * tiebreak inside the group-stage qualification gate). The names are added
+ * here so the contract is stable across the integration sequence; no new
+ * entropy is introduced — only when a substream is actually `deriveSubseed`'d
+ * is its sub-seed emitted.
+ *
+ * NOTE on variadic suffixes (e.g. `group-other:N`): suffix-style scopes such
+ * as `match_sim/"match:0"` or `match_sim/"group-other:0"` ride on the existing
+ * `scopeId` parameter of `deriveSubseed`. They do NOT need to be enumerated in
+ * `SubstreamName` — `scopeId` already accepts any non-empty string. So a new
+ * scope like `group-other:N` reuses an existing substream (`match_sim` or
+ * `event_gen`) with the scope `"group-other:<N>"`.
+ */
 export type SubstreamName =
   | "draft"
   | "match_sim"
   | "event_gen"
   | "opponent_selection"
-  | "narrative";
+  | "narrative"
+  | "scenario"
+  | "group_table";
 
 const SUBSTREAM_NAMES: readonly SubstreamName[] = [
   "draft",
@@ -153,6 +171,8 @@ const SUBSTREAM_NAMES: readonly SubstreamName[] = [
   "event_gen",
   "opponent_selection",
   "narrative",
+  "scenario",
+  "group_table",
 ] as const;
 
 const SUBSEED_VERSION = "v1";
