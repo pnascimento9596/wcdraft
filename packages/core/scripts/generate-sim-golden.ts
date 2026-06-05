@@ -42,12 +42,20 @@ function exhibits(name: ScenarioName, run: RunResult, matches: MatchResult[]): b
         (r) => r.outcome === "W" && r.goals_for - r.goals_against >= 4,
       );
     case "upset":
-      // Weak user wins a knockout match it had no business winning.
+      // Weak user qualifies out of group AND wins a knockout match.
       return matches.some((m) => m.phase === "knockout" && m.outcome === "W");
     case "draw_into_pens":
       return matches.some((m) => m.shootout !== null);
     case "injury_cascade":
       return tournamentEndingInjuryCount(matches) >= 2;
+    case "group_elimination":
+      // User is eliminated in the group stage — no knockouts played.
+      return (
+        run.reached_round === "G3" &&
+        run.is_champion === false &&
+        matches.length === 3 &&
+        matches.every((m) => m.phase === "group")
+      );
     default:
       return false;
   }
