@@ -220,8 +220,14 @@ function buildInputs(name: string, params: BuildParams): ScenarioInputs {
   return { draft, scenario, world };
 }
 
-/** The four characteristic fixtures, by name. */
-export const SCENARIO_NAMES = ["blowout", "upset", "draw_into_pens", "injury_cascade"] as const;
+/** The five characteristic fixtures, by name. */
+export const SCENARIO_NAMES = [
+  "blowout",
+  "upset",
+  "draw_into_pens",
+  "injury_cascade",
+  "group_elimination",
+] as const;
 export type ScenarioName = (typeof SCENARIO_NAMES)[number];
 
 export function buildScenarioInputs(name: ScenarioName): ScenarioInputs {
@@ -234,10 +240,14 @@ export function buildScenarioInputs(name: ScenarioName): ScenarioInputs {
         withManager: true,
       });
     case "upset":
-      // Weak user vs a strong field → a variance-floor knockout upset win.
+      // Below-average user vs a strong field. After the I3.3 group gate the
+      // user must still qualify out of the group to reach knockouts, so the
+      // user channel is calibrated above the absolute bottom — they should
+      // squeeze into the round of 32 and then steal at least one knockout
+      // match on variance.
       return buildInputs("upset", {
-        userChannel: 47,
-        oppStrengths: [72, 70, 74, 80, 82, 84, 86, 88, 78, 76, 81, 83],
+        userChannel: 62,
+        oppStrengths: [60, 58, 56, 80, 82, 84, 86, 88, 78, 76, 81, 83],
         withManager: false,
       });
     case "draw_into_pens":
@@ -253,6 +263,14 @@ export function buildScenarioInputs(name: ScenarioName): ScenarioInputs {
         userChannel: 82,
         oppStrengths: [40, 44, 42, 46, 48, 50, 52, 54, 41, 43, 45, 47],
         withManager: true,
+      });
+    case "group_elimination":
+      // Weak user vs strong group opponents — user is eliminated in the
+      // group. Knockouts never play; `matches.length === 3`.
+      return buildInputs("group_elimination", {
+        userChannel: 35,
+        oppStrengths: [80, 82, 84, 60, 58, 56, 54, 52, 50, 48, 46, 44],
+        withManager: false,
       });
     default: {
       const _exhaustive: never = name;
