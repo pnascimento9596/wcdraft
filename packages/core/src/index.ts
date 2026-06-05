@@ -113,6 +113,12 @@ export type {
   // run
   RoundResult,
   RunResult,
+  // group-stage (I3.3)
+  GroupParticipantKind,
+  GroupQualification,
+  GroupStanding,
+  GroupOtherMatchSummary,
+  GroupStageResult,
 } from "./types/index.js";
 
 export {
@@ -120,6 +126,7 @@ export {
   PLACEHOLDER_SCORING_CONFIG,
   buildCardId,
   parseCardId,
+  USER_GROUP_PARTICIPANT_ID,
   // WS-0c
   SLOT_POSITIONS,
   slotPositionLine,
@@ -173,6 +180,18 @@ export {
 // consumers that need the atomic event stream.
 export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
 export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
+
+// ─── I3.2 scenario builder — RunScenario from real Team2026[] + Bracket2026 ─
+export {
+  buildRunScenario,
+  SCENARIO_KNOCKOUT_ROUNDS,
+  SCENARIO_KNOCKOUT_SEED_SUFFIX,
+} from "./scenario.js";
+export type {
+  BuildRunScenarioParams,
+  BuildRunScenarioResult,
+  RunScenarioMeta,
+} from "./scenario.js";
 
 // ─── WS-C draft engine (the deterministic 17-spin DRAFT state machine) ───────
 export {
@@ -241,6 +260,10 @@ export {
   PlayerMatchStatsSchema,
   PlayerRunStatsSchema,
   RunResultSchema,
+  // group-stage (I3.3)
+  GroupStandingSchema,
+  GroupOtherMatchSummarySchema,
+  GroupStageResultSchema,
   // leaderboard
   LeaderboardSubmissionSchema,
   // WS-0c

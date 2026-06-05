@@ -144,3 +144,13 @@ export type {
   RoundResult,
   RunResult,
 } from "./run.js";
+
+export type {
+  // group-stage.ts (I3.3 additive return from runTournamentFull)
+  GroupParticipantKind,
+  GroupQualification,
+  GroupStanding,
+  GroupOtherMatchSummary,
+  GroupStageResult,
+} from "./group-stage.js";
+export { USER_GROUP_PARTICIPANT_ID } from "./group-stage.js";
