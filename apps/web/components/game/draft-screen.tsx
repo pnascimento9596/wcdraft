@@ -1,388 +1,941 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import type { Position } from "@wcdraft/core";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
-  FIRST_QUEUE_SPIN_INDEX,
-  FORMATION,
-  LOCKED_SLOT_IDS,
-  SPIN_QUEUE,
-  TOTAL_SPINS,
+  activeSpin,
+  computeSynergy,
+  FORMATION_TEMPLATES,
+  isDraftComplete,
+  pickManager,
+  pickPlayer,
+  positionCompatibility,
+  validateSquad,
+  type CardId,
+  type DraftState,
+  type Position,
+  type SquadSlot,
+  type SynergyResult,
+} from "@wcdraft/core";
+import {
+  draftCandidateViews,
+  managerTournamentFor,
+  pitchSlotViews,
+} from "@/lib/game/adapters";
+import { loadGameData, type GameData } from "@/lib/game/data";
+import { describeGameError, DraftTransitionError } from "@/lib/game/errors";
+import {
+  getFormationVisualSlots,
+  I2_FORMATION_IDS,
+  type I2FormationId,
+} from "@/lib/game/formation-layout";
+import { draftHref, reviewHref } from "@/lib/game/navigation";
+import {
+  createNewRunRecord,
+  evictStaleRunRecords,
+  loadRunRecord,
+  saveRunRecord,
+  type RunRecordV1,
+} from "@/lib/game/run-record";
+import {
   compatLabel,
   compatTier,
-  mockPositionCompatibility,
-  mockSynergy,
-  placeCard,
-  seededSquad,
-  type ManagerCard,
-  type PlayerCard,
-} from "@/lib/mock";
+  type ManagerCardView,
+  type PlayerCardView,
+} from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { SynergyPanel } from "./synergy-panel";
 import s from "./game.module.css";
 
+const TOTAL_SPINS = 17;
 type Selection =
-  | { kind: "player"; card: PlayerCard }
-  | { kind: "manager"; card: ManagerCard }
+  | { kind: "player"; card: PlayerCardView }
+  | { kind: "manager"; card: ManagerCardView }
   | null;
-
 type PosFilter = "ALL" | Position;
 type SortKey = "ovr" | "name" | "pos";
-
 const POS_FILTERS: PosFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
 
+type Mode =
+  | { kind: "loading" }
+  | { kind: "formation_select"; gameData: GameData }
+  | {
+      kind: "ready";
+      gameData: GameData;
+      record: RunRecordV1;
+      persistenceWarning: string | null;
+    }
+  | { kind: "recovery"; gameData: GameData; reason: string; runId: string | null }
+  | { kind: "error"; title: string; message: string };
+
 export function DraftScreen() {
-  const [squad, setSquad] = useState(() => seededSquad());
-  const [manager, setManager] = useState<ManagerCard | null>(null);
-  const [spinIdx, setSpinIdx] = useState(0);
-  const [drafted, setDrafted] = useState<Set<string>>(
-    () => new Set(seededSquad().starters.flatMap((sl) => (sl.card ? [sl.card.player_id] : []))),
-  );
-  const [sel, setSel] = useState<Selection>(null);
-  const [selSlot, setSelSlot] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [posFilter, setPosFilter] = useState<PosFilter>("ALL");
-  const [sortKey, setSortKey] = useState<SortKey>("ovr");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const requestRunId = searchParams?.get("run") ?? null;
 
-  const { starters, bench } = squad;
-  const currentSquad = spinIdx < SPIN_QUEUE.length ? SPIN_QUEUE[spinIdx]! : null;
-  const complete = currentSquad === null;
-  const spinNumber = FIRST_QUEUE_SPIN_INDEX + spinIdx + 1;
+  const [mode, setMode] = useState<Mode>({ kind: "loading" });
+  const reqToken = useRef(0);
 
-  const openSlots = useMemo(
-    () => [...starters, ...bench].filter((sl) => !sl.card && !LOCKED_SLOT_IDS.includes(sl.slot_id)),
-    [starters, bench],
-  );
+  // ── Load game data + resolve run (mount + run param change) ─────────────
+  useEffect(() => {
+    const myToken = ++reqToken.current;
+    setMode({ kind: "loading" });
+    loadGameData()
+      .then((gd) => {
+        if (myToken !== reqToken.current) return;
+        evictStaleRunRecords(gd.versions);
+        if (requestRunId) {
+          const loaded = loadRunRecord(requestRunId, gd.versions);
+          if (loaded.status === "loaded" && loaded.record) {
+            setMode({
+              kind: "ready",
+              gameData: gd,
+              record: loaded.record,
+              persistenceWarning: null,
+            });
+          } else {
+            setMode({
+              kind: "recovery",
+              gameData: gd,
+              reason:
+                loaded.status === "missing"
+                  ? "We couldn't find a draft for that link."
+                  : loaded.status === "stale"
+                    ? "This draft was created on an older data bundle and has been evicted."
+                    : "This draft record is invalid and has been removed.",
+              runId: requestRunId,
+            });
+          }
+        } else {
+          setMode({ kind: "formation_select", gameData: gd });
+        }
+      })
+      .catch((err) => {
+        if (myToken !== reqToken.current) return;
+        const d = describeGameError(err);
+        setMode({ kind: "error", title: d.title, message: d.message });
+      });
+    return () => {
+      reqToken.current += 1;
+    };
+  }, [requestRunId]);
 
-  // Live candidate list for this spin.
-  const candidates = useMemo(() => {
-    if (!currentSquad) return [];
-    const q = search.trim().toLowerCase();
-    let list = currentSquad.players.filter((p) => {
-      if (q && !p.name.toLowerCase().includes(q) && !p.full_name.toLowerCase().includes(q)) {
-        return false;
-      }
-      if (posFilter !== "ALL" && !p.eligible_positions.includes(posFilter)) return false;
-      return true;
-    });
-    list = [...list].sort((a, b) => {
-      if (sortKey === "ovr") return (b.rating.overall ?? 0) - (a.rating.overall ?? 0);
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      const ord: Position[] = ["GK", "DF", "MF", "FW"];
-      return (
-        ord.indexOf(a.eligible_positions[0] ?? "MF") - ord.indexOf(b.eligible_positions[0] ?? "MF")
-      );
-    });
-    return list;
-  }, [currentSquad, search, posFilter, sortKey]);
-
-  // Preview compatibility for every open slot, given the selected player.
-  const previewCompat = useMemo(() => {
-    if (sel?.kind !== "player") return null;
-    const map: Record<string, number> = {};
-    for (const slot of openSlots) {
-      map[slot.slot_id] = mockPositionCompatibility(sel.card.eligible_positions, slot.slot_position);
-    }
-    return map;
-  }, [sel, openSlots]);
-
-  // Base + preview synergy.
-  const baseSynergy = useMemo(() => mockSynergy(starters, FORMATION, manager), [starters, manager]);
-  const previewSynergy = useMemo(() => {
-    if (sel?.kind === "manager") return mockSynergy(starters, FORMATION, sel.card);
-    if (sel?.kind === "player" && selSlot) {
-      const hypothetical = starters.map((sl) =>
-        sl.slot_id === selSlot ? placeCard(sl, sel.card) : sl,
-      );
-      return mockSynergy(hypothetical, FORMATION, manager);
-    }
-    return baseSynergy;
-  }, [sel, selSlot, starters, manager, baseSynergy]);
-  const synergyDelta = previewSynergy.overall - baseSynergy.overall;
-
-  // Soft GK state.
-  const gkSlot = starters.find((sl) => sl.line === "GK");
-  const hasKeeper =
-    !!gkSlot?.card && gkSlot.card.eligible_positions.includes("GK");
-  const placedStarters = starters.filter((sl) => sl.card).length;
-
-  function bestOpenSlotFor(card: PlayerCard): string | null {
-    const starterOpen = openSlots.filter((sl) => sl.is_starter);
-    const pool = starterOpen.length > 0 ? starterOpen : openSlots;
-    let best: { id: string; c: number } | null = null;
-    for (const slot of pool) {
-      const c = mockPositionCompatibility(card.eligible_positions, slot.slot_position);
-      if (!best || c > best.c) best = { id: slot.slot_id, c };
-    }
-    return best?.id ?? null;
+  // ── Sub-renderers per mode ───────────────────────────────────────────────
+  if (mode.kind === "loading") {
+    return (
+      <div className={s.draftShell}>
+        <DraftAppBar spinNumber={null} progressPct={0} />
+        <div className={s.loadingPanel} role="status">
+          <p>Loading the real 1930–2026 draft pool…</p>
+        </div>
+      </div>
+    );
   }
 
-  function selectPlayer(card: PlayerCard) {
-    setSel({ kind: "player", card });
-    setSelSlot(bestOpenSlotFor(card));
-  }
-  function selectManager(card: ManagerCard) {
-    setSel({ kind: "manager", card });
-    setSelSlot(null);
-  }
-  function selectSlot(slotId: string) {
-    if (sel?.kind !== "player") return;
-    if (LOCKED_SLOT_IDS.includes(slotId)) return;
-    const slot = [...starters, ...bench].find((sl) => sl.slot_id === slotId);
-    if (!slot || slot.card) return;
-    setSelSlot(slotId);
+  if (mode.kind === "error") {
+    return (
+      <div className={s.draftShell}>
+        <DraftAppBar spinNumber={null} progressPct={0} />
+        <div className={s.errorPanel} role="alert">
+          <h2 className={s.errorTitle}>{mode.title}</h2>
+          <p className={s.errorMessage}>{mode.message}</p>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => {
+              reqToken.current += 1;
+              setMode({ kind: "loading" });
+              loadGameData()
+                .then((gd) =>
+                  setMode({ kind: "formation_select", gameData: gd }),
+                )
+                .catch((err) => {
+                  const d = describeGameError(err);
+                  setMode({
+                    kind: "error",
+                    title: d.title,
+                    message: d.message,
+                  });
+                });
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  const canLock = sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
-
-  function lockPick() {
-    if (!sel) return;
-    if (sel.kind === "player" && selSlot) {
-      const card = sel.card;
-      setSquad((prev) => ({
-        starters: prev.starters.map((sl) => (sl.slot_id === selSlot ? placeCard(sl, card) : sl)),
-        bench: prev.bench.map((sl) => (sl.slot_id === selSlot ? placeCard(sl, card) : sl)),
-      }));
-      setDrafted((prev) => new Set(prev).add(card.player_id));
-    } else if (sel.kind === "manager") {
-      setManager(sel.card);
-    }
-    setSel(null);
-    setSelSlot(null);
-    setSpinIdx((i) => i + 1);
+  if (mode.kind === "recovery") {
+    return (
+      <div className={s.draftShell}>
+        <DraftAppBar spinNumber={null} progressPct={0} />
+        <div className={s.errorPanel} role="alert">
+          <h2 className={s.errorTitle}>Couldn&rsquo;t resume that draft</h2>
+          <p className={s.errorMessage}>{mode.reason}</p>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => router.replace(draftHref(null))}
+          >
+            Start a new draft
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  const selectedSlotMeta =
-    sel?.kind === "player" && selSlot
-      ? [...starters, ...bench].find((sl) => sl.slot_id === selSlot) ?? null
-      : null;
-  const selectedCompat =
-    selectedSlotMeta && sel?.kind === "player"
-      ? mockPositionCompatibility(sel.card.eligible_positions, selectedSlotMeta.slot_position)
-      : null;
+  if (mode.kind === "formation_select") {
+    return (
+      <FormationSelect
+        gameData={mode.gameData}
+        onLocked={(record, warning) => {
+          // Replace URL with new run id; keep history clean.
+          router.replace(draftHref(record.run_id));
+          setMode({
+            kind: "ready",
+            gameData: mode.gameData,
+            record,
+            persistenceWarning: warning,
+          });
+        }}
+      />
+    );
+  }
 
+  // mode.kind === "ready"
   return (
-    <div className={s.draft}>
-      {/* ── Spin reveal header ─────────────────────────────────────────── */}
-      <header className={s.spinHead}>
+    <DraftBoard
+      gameData={mode.gameData}
+      record={mode.record}
+      persistenceWarning={mode.persistenceWarning}
+      onRecordUpdate={(rec, warn) =>
+        setMode({
+          kind: "ready",
+          gameData: mode.gameData,
+          record: rec,
+          persistenceWarning: warn,
+        })
+      }
+      onReview={() => router.push(reviewHref(mode.record.run_id))}
+    />
+  );
+}
+
+// ─── Top app bar ─────────────────────────────────────────────────────────────
+
+function DraftAppBar({
+  spinNumber,
+  progressPct,
+  warning,
+}: {
+  spinNumber: number | null;
+  progressPct: number;
+  warning?: string | null;
+}) {
+  return (
+    <header className={s.draftAppBar}>
+      <div className={s.appBarBrand}>
+        <Image
+          src="/brand/wcdraft-mark.svg"
+          alt="wcdraft"
+          width={28}
+          height={31}
+          priority
+        />
+        <span className={s.appBarTitle}>Draft</span>
+      </div>
+      <div className={s.appBarMeter}>
         <div className={s.spinCounter}>
           <span className={s.spinCounterNum}>
-            Spin {Math.min(spinNumber, TOTAL_SPINS)}
+            {spinNumber !== null ? `Spin ${Math.min(spinNumber, TOTAL_SPINS)}` : "—"}
           </span>
           <span className={s.spinCounterTotal}>/ {TOTAL_SPINS}</span>
         </div>
         <div className={s.spinProgress} aria-hidden="true">
           <span
             className={s.spinProgressFill}
-            style={{ width: `${(Math.min(spinNumber - 1, TOTAL_SPINS) / TOTAL_SPINS) * 100}%` }}
+            style={{ width: `${Math.max(0, Math.min(100, progressPct))}%` }}
           />
         </div>
-        <span className={s.demoBadge}>Preview · mock data</span>
-      </header>
-
-      <div className={s.draftGrid}>
-        {/* ── LEFT: pitch + bench + synergy + lock ──────────────────────── */}
-        <section className={s.draftLeft} aria-label="Your formation">
-          <div className={s.panel}>
-            <div className={s.panelHead}>
-              <h2 className={s.panelTitle}>{FORMATION.name}</h2>
-              <span className={s.panelMeta}>
-                {placedStarters}/11 starters · {bench.filter((b) => b.card).length}/5 bench ·{" "}
-                {manager ? "1" : "0"}/1 manager
-              </span>
-            </div>
-
-            <Pitch
-              starters={starters}
-              interactive
-              selectedSlotId={selSlot}
-              lockedSlotIds={LOCKED_SLOT_IDS}
-              previewCompat={previewCompat}
-              onSlotSelect={selectSlot}
-            />
-
-            {/* Bench strip */}
-            <div className={s.bench}>
-              <span className={s.benchLabel}>Bench</span>
-              <div className={s.benchSlots}>
-                {bench.map((b) => {
-                  const isSel = b.slot_id === selSlot;
-                  const pc = previewCompat?.[b.slot_id];
-                  const cls = [s.benchSlot];
-                  if (b.card) cls.push(s.benchFilled);
-                  if (isSel) cls.push(s.slotSelected);
-                  return (
-                    <button
-                      key={b.slot_id}
-                      type="button"
-                      className={cls.join(" ")}
-                      disabled={!!b.card || sel?.kind !== "player"}
-                      onClick={() => selectSlot(b.slot_id)}
-                      aria-pressed={isSel}
-                    >
-                      <span className={s.slotPos}>{b.slot_position}</span>
-                      <span className={s.slotName}>
-                        {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Manager slot */}
-            <div className={s.mgrSlot}>
-              <span className={s.benchLabel}>Manager</span>
-              <span className={manager ? s.mgrFilled : s.mgrEmpty}>
-                {manager ? `${manager.name} · ${manager.nation_name}` : "Open — pick a coach on any spin"}
-              </span>
-            </div>
-          </div>
-
-          <div className={s.panel}>
-            <SynergyPanel result={previewSynergy} delta={sel ? synergyDelta : null} />
-            {!hasKeeper && (
-              <p className={s.gkWarn} role="status">
-                <span className={s.gkWarnGlyph} aria-hidden="true">
-                  !
-                </span>
-                {gkSlot?.card
-                  ? "An outfielder is in goal — heavy goalkeeping penalty in the sim."
-                  : "No specialist goalkeeper placed yet — your goal is exposed."}
-              </p>
-            )}
-          </div>
-        </section>
-
-        {/* ── RIGHT: spin reveal + candidates ───────────────────────────── */}
-        <section className={s.draftRight} aria-label="Candidates">
-          {complete ? (
-            <div className={`${s.panel} ${s.completePanel}`}>
-              <span className={s.eyebrowAccent}>Draft demo complete</span>
-              <h2 className={s.panelTitle}>That&rsquo;s the loop.</h2>
-              <p className={s.completeNote}>
-                In a full draft you&rsquo;d keep spinning through all {TOTAL_SPINS} picks. This
-                scaffold walks a few real spins on mock data — committed picks lock the instant you
-                confirm them, no rearranging.
-              </p>
-              <Link href="/play/review" className="btn btn--primary">
-                Review your squad →
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className={`${s.panel} ${s.revealPanel}`}>
-                <span className={s.eyebrowAccent}>This spin rolled</span>
-                <div className={s.revealTeam}>
-                  <span className={s.revealNation}>{currentSquad!.nation_name}</span>
-                  <span className={s.revealYear}>{currentSquad!.year}</span>
-                </div>
-                <p className={s.revealHint}>
-                  Pick <b>one</b> entity from this squad — a player <i>or</i> the coach. Choose a
-                  slot, watch Synergy update, then lock it in.
-                </p>
-              </div>
-
-              {/* Controls */}
-              <div className={s.controls}>
-                <input
-                  type="search"
-                  className={s.searchInput}
-                  placeholder="Search players…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  aria-label="Search players"
-                />
-                <div className={s.filterRow}>
-                  <div className={s.segmented} role="group" aria-label="Filter by position">
-                    {POS_FILTERS.map((p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        className={posFilter === p ? s.segActive : s.seg}
-                        aria-pressed={posFilter === p}
-                        onClick={() => setPosFilter(p)}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                  </div>
-                  <label className={s.sortLabel}>
-                    Sort
-                    <select
-                      className={s.sortSelect}
-                      value={sortKey}
-                      onChange={(e) => setSortKey(e.target.value as SortKey)}
-                    >
-                      <option value="ovr">Rating</option>
-                      <option value="name">Name</option>
-                      <option value="pos">Position</option>
-                    </select>
-                  </label>
-                </div>
-              </div>
-
-              {/* Coach option */}
-              {currentSquad!.coach && (
-                <ManagerCandidate
-                  coach={currentSquad!.coach}
-                  selected={sel?.kind === "manager"}
-                  disabled={manager !== null}
-                  onSelect={() => selectManager(currentSquad!.coach!)}
-                />
-              )}
-
-              {/* Player candidates */}
-              <div className={s.candList}>
-                {candidates.map((card) => (
-                  <CandidateCard
-                    key={card.card_id}
-                    card={card}
-                    selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
-                    disabled={drafted.has(card.player_id)}
-                    onSelect={() => selectPlayer(card)}
-                  />
-                ))}
-                {candidates.length === 0 && (
-                  <p className={s.emptyList}>No players match those filters.</p>
-                )}
-              </div>
-            </>
-          )}
-        </section>
       </div>
+      {warning ? (
+        <p className={s.persistenceWarn} role="status">
+          {warning}
+        </p>
+      ) : null}
+    </header>
+  );
+}
 
-      {/* ── Sticky lock bar ───────────────────────────────────────────── */}
-      {!complete && (
-        <div className={s.lockBar}>
-          <div className={s.lockInfo}>
-            {sel?.kind === "player" && selectedSlotMeta && selectedCompat != null ? (
-              <span>
-                <b>{sel.card.name}</b> → <b>{selectedSlotMeta.slot_position}</b>
-                <span className={`${s.compatPill} ${s[`tier_${compatTier(selectedCompat)}`]}`}>
-                  {compatLabel(selectedCompat)} · {Math.round(selectedCompat * 100)}%
-                </span>
-              </span>
-            ) : sel?.kind === "manager" ? (
-              <span>
-                <b>{sel.card.name}</b> → manager slot
-              </span>
-            ) : (
-              <span className={s.lockHint}>Select a player and a slot, or pick the coach.</span>
-            )}
-          </div>
-          <button
-            type="button"
-            className="btn btn--primary"
-            disabled={!canLock}
-            onClick={lockPick}
-          >
-            Lock pick 🔒
-          </button>
+// ─── Formation select (LOCK gate) ────────────────────────────────────────────
+
+const FORMATION_BLURBS: Record<I2FormationId, string> = {
+  "4-3-3": "Wide front three, single pivot. Press high, run wide.",
+  "4-2-3-1": "Double pivot under a lone striker. Stable middle, late runners.",
+  "4-4-2": "Two banks of four, strike pair. Classic, balanced, demanding.",
+  "3-5-2": "Back three, wing-backs do the running. Numbers in midfield.",
+};
+
+function FormationSelect({
+  gameData,
+  onLocked,
+}: {
+  gameData: GameData;
+  onLocked: (record: RunRecordV1, warning: string | null) => void;
+}) {
+  const [pending, setPending] = useState<I2FormationId | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const lockIn = useCallback(
+    (formation_id: I2FormationId) => {
+      setError(null);
+      setPending(formation_id);
+      try {
+        const created = createNewRunRecord(gameData, { formation_id });
+        const warning =
+          created.persistence === "volatile" || created.warnings.length > 0
+            ? created.warnings.join(" · ") ||
+              "This draft is saved in this tab only — browser storage is unavailable."
+            : null;
+        onLocked(created.record, warning);
+      } catch (err) {
+        const d = describeGameError(err);
+        setError(`${d.title}: ${d.message}`);
+        setPending(null);
+      }
+    },
+    [gameData, onLocked],
+  );
+
+  return (
+    <div className={s.draftShell}>
+      <DraftAppBar spinNumber={null} progressPct={0} />
+      <section className={s.formationSelect}>
+        <div className={s.formationHead}>
+          <Image
+            src="/brand/wcdraft-lockup.svg"
+            alt="wcdraft"
+            width={240}
+            height={60}
+            priority
+          />
+          <h1 className={s.formationTitle}>Lock a formation</h1>
+          <p className={s.formationSub}>
+            Your shape is committed the moment you lock. 17 spins, one entity per spin —
+            no rearranging afterwards.
+          </p>
         </div>
-      )}
+        <div className={s.formationGrid}>
+          {I2_FORMATION_IDS.map((fid) => (
+            <button
+              key={fid}
+              type="button"
+              className={`${s.formationCard} ${pending === fid ? s.formationCardPending : ""}`}
+              disabled={pending !== null}
+              onClick={() => lockIn(fid)}
+            >
+              <MiniPitch formation_id={fid} />
+              <div className={s.formationCardBody}>
+                <span className={s.formationCardName}>{fid}</span>
+                <p className={s.formationCardBlurb}>{FORMATION_BLURBS[fid]}</p>
+                <span className={s.formationCardCta}>
+                  {pending === fid ? "Locking…" : "Lock this shape"}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+        {error ? <p className={s.formationError}>{error}</p> : null}
+      </section>
     </div>
   );
+}
+
+function MiniPitch({ formation_id }: { formation_id: I2FormationId }) {
+  const slots = getFormationVisualSlots(formation_id);
+  return (
+    <div className={s.miniPitch} aria-hidden="true">
+      {slots.map((sl) => (
+        <span
+          key={sl.slot_id}
+          className={`${s.miniDot} ${s[`miniDot_${sl.visual_line}`]!}`}
+          style={{ left: `${sl.x_pct}%`, top: `${sl.y_pct}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Draft board (active spin → pick → lock) ─────────────────────────────────
+
+function DraftBoard({
+  gameData,
+  record,
+  persistenceWarning,
+  onRecordUpdate,
+  onReview,
+}: {
+  gameData: GameData;
+  record: RunRecordV1;
+  persistenceWarning: string | null;
+  onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
+  onReview: () => void;
+}) {
+  const draft = record.draft;
+  const formation = FORMATION_TEMPLATES[draft.formation_id]!;
+  const spin = activeSpin(draft);
+  const complete = isDraftComplete(draft);
+  const validation = useMemo(() => validateSquad(draft), [draft]);
+  const fieldable = validation.is_fieldable;
+  const spinNumber = spin !== null ? spin.index + 1 : TOTAL_SPINS;
+  const picked = draft.spins.filter((sp) => sp.status === "picked").length;
+  const progressPct = Math.round((picked / TOTAL_SPINS) * 100);
+
+  // Adapter views.
+  const { starters, bench } = useMemo(
+    () => pitchSlotViews(gameData.indexes, draft),
+    [gameData, draft],
+  );
+  const candidates = useMemo(
+    () => draftCandidateViews(gameData.indexes, draft, spin),
+    [gameData, draft, spin],
+  );
+
+  // Selection / UI state.
+  const [sel, setSel] = useState<Selection>(null);
+  const [selSlot, setSelSlot] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [posFilter, setPosFilter] = useState<PosFilter>("ALL");
+  const [sortKey, setSortKey] = useState<SortKey>("ovr");
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [committing, setCommitting] = useState(false);
+  const [transitionError, setTransitionError] = useState<string | null>(null);
+
+  // Reset selection whenever the active spin changes.
+  useEffect(() => {
+    setSel(null);
+    setSelSlot(null);
+    setSheetOpen(false);
+    setSearch("");
+    setPosFilter("ALL");
+    setTransitionError(null);
+  }, [spin?.index]);
+
+  // Filter/sort player candidates.
+  const visibleCandidates = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const list = candidates.players.filter((p) => {
+      if (q && !p.name.toLowerCase().includes(q) && !p.full_name.toLowerCase().includes(q)) {
+        return false;
+      }
+      if (posFilter !== "ALL" && !p.eligible_positions.includes(posFilter)) return false;
+      return true;
+    });
+    const ord: Record<Position, number> = { GK: 0, DF: 1, MF: 2, FW: 3 };
+    return [...list].sort((a, b) => {
+      if (sortKey === "ovr") {
+        const ao = a.rating.overall;
+        const bo = b.rating.overall;
+        if (ao === null && bo === null) return a.name.localeCompare(b.name);
+        if (ao === null) return 1;
+        if (bo === null) return -1;
+        return bo - ao;
+      }
+      if (sortKey === "name") return a.name.localeCompare(b.name);
+      return (
+        ord[a.eligible_positions[0] ?? "MF"] - ord[b.eligible_positions[0] ?? "MF"]
+      );
+    });
+  }, [candidates, search, posFilter, sortKey]);
+
+  // Open vacant slots (engine truth).
+  const openSlots = useMemo(
+    () => draft.squad.filter((sl) => sl.card_id === null),
+    [draft.squad],
+  );
+
+  function bestSlotFor(card: PlayerCardView): string | null {
+    const starterOpens = openSlots.filter((sl) => sl.is_starter);
+    const pool = starterOpens.length > 0 ? starterOpens : openSlots;
+    let best: { id: string; c: number } | null = null;
+    for (const slot of pool) {
+      const c = positionCompatibility(card.eligible_positions, slot.slot_position);
+      if (!best || c > best.c) best = { id: slot.slot_id, c };
+    }
+    return best?.id ?? null;
+  }
+
+  function selectPlayer(card: PlayerCardView) {
+    setSel({ kind: "player", card });
+    setSelSlot(bestSlotFor(card));
+    setTransitionError(null);
+  }
+  function selectManager(card: ManagerCardView) {
+    setSel({ kind: "manager", card });
+    setSelSlot(null);
+    setTransitionError(null);
+  }
+
+  // Preview compatibility per open slot, given the selected player.
+  const previewCompat = useMemo(() => {
+    if (sel?.kind !== "player") return null;
+    const map: Record<string, number> = {};
+    for (const slot of openSlots) {
+      map[slot.slot_id] = positionCompatibility(
+        sel.card.eligible_positions,
+        slot.slot_position,
+      );
+    }
+    return map;
+  }, [sel, openSlots]);
+
+  // Synergy: base + preview.
+  const currentManagerTournament = useMemo(
+    () =>
+      draft.manager_card_id
+        ? managerTournamentFor(gameData.indexes, draft.manager_card_id)
+        : null,
+    [gameData, draft.manager_card_id],
+  );
+
+  const baseSynergy: SynergyResult = useMemo(
+    () =>
+      computeSynergy(
+        draft.squad,
+        formation,
+        currentManagerTournament,
+        gameData.nationByCardId,
+      ),
+    [draft.squad, formation, currentManagerTournament, gameData.nationByCardId],
+  );
+
+  const previewSynergy: SynergyResult = useMemo(() => {
+    if (sel?.kind === "manager") {
+      const mt = managerTournamentFor(gameData.indexes, sel.card.manager_card_id);
+      return computeSynergy(draft.squad, formation, mt, gameData.nationByCardId);
+    }
+    if (sel?.kind === "player" && selSlot) {
+      const hyp = hypotheticalSquad(draft.squad, sel.card, selSlot);
+      return computeSynergy(
+        hyp,
+        formation,
+        currentManagerTournament,
+        gameData.nationByCardId,
+      );
+    }
+    return baseSynergy;
+  }, [
+    sel,
+    selSlot,
+    draft.squad,
+    formation,
+    currentManagerTournament,
+    gameData,
+    baseSynergy,
+  ]);
+
+  const synergyDelta = previewSynergy.overall - baseSynergy.overall;
+
+  // Lock pick → call core engine → save record.
+  const handleLock = useCallback(() => {
+    if (!sel || committing) return;
+    setCommitting(true);
+    setTransitionError(null);
+    try {
+      let nextDraft: DraftState;
+      if (sel.kind === "player") {
+        if (!selSlot) {
+          setCommitting(false);
+          setTransitionError("Pick a slot for this player.");
+          return;
+        }
+        nextDraft = pickPlayer(
+          gameData.catalog,
+          draft,
+          sel.card.card_id as CardId,
+          selSlot,
+        );
+      } else {
+        nextDraft = pickManager(gameData.catalog, draft);
+      }
+      const updated: RunRecordV1 = {
+        ...record,
+        updated_seq: record.updated_seq + 1,
+        draft: nextDraft,
+      };
+      const save = saveRunRecord(updated);
+      const warning =
+        save.persistence === "volatile" || save.warnings.length > 0
+          ? save.warnings.join(" · ") ||
+            "Draft is saved in this tab only — browser storage is unavailable."
+          : null;
+      onRecordUpdate(updated, warning ?? persistenceWarning);
+    } catch (err) {
+      const wrapped =
+        err instanceof DraftTransitionError
+          ? err
+          : new DraftTransitionError(
+              err instanceof Error ? err.message : String(err),
+              err,
+            );
+      setTransitionError(wrapped.message);
+    } finally {
+      setCommitting(false);
+      setSheetOpen(false);
+    }
+  }, [
+    sel,
+    selSlot,
+    committing,
+    gameData,
+    draft,
+    record,
+    onRecordUpdate,
+    persistenceWarning,
+  ]);
+
+  const selectedSlot =
+    sel?.kind === "player" && selSlot
+      ? draft.squad.find((sl) => sl.slot_id === selSlot) ?? null
+      : null;
+  const selectedCompat =
+    selectedSlot && sel?.kind === "player"
+      ? positionCompatibility(sel.card.eligible_positions, selectedSlot.slot_position)
+      : null;
+
+  const canLock =
+    sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
+
+  const showReviewCta = !sel && fieldable;
+
+  return (
+    <div className={s.draftShell}>
+      <DraftAppBar
+        spinNumber={spinNumber}
+        progressPct={progressPct}
+        warning={persistenceWarning}
+      />
+
+      {/* Spin reveal */}
+      {complete ? (
+        <section className={`${s.panel} ${s.completePanel}`}>
+          <span className={s.eyebrowAccent}>Draft complete</span>
+          <h2 className={s.panelTitle}>All 17 spins resolved.</h2>
+          <p className={s.completeNote}>
+            Lock-on-pick — nothing else can be rearranged. Step into review for line ratings,
+            Synergy, and your final XI.
+          </p>
+        </section>
+      ) : spin ? (
+        <section className={`${s.panel} ${s.revealPanel}`}>
+          <span className={s.eyebrowAccent}>This spin rolled</span>
+          <div className={s.revealTeam}>
+            <span className={s.revealNation}>
+              {gameData.indexes.nationById.get(spin.nation_id)?.canonical_name ?? spin.nation_id}
+            </span>
+            <span className={s.revealYear}>
+              {gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? spin.tournament_id}
+            </span>
+          </div>
+          <p className={s.revealHint}>
+            Pick <b>one</b> entity from this squad — a player <i>or</i> the coach. Choose a
+            slot, watch Synergy update, then lock it in.
+          </p>
+        </section>
+      ) : null}
+
+      {/* Pitch + bench + manager */}
+      <section className={s.panel} aria-label="Your formation">
+        <div className={s.panelHead}>
+          <h2 className={s.panelTitle}>{formation.name}</h2>
+          <span className={s.panelMeta}>
+            {starters.filter((sl) => sl.card).length}/11 starters ·{" "}
+            {bench.filter((sl) => sl.card).length}/5 bench ·{" "}
+            {draft.manager_card_id ? "1" : "0"}/1 manager
+          </span>
+        </div>
+
+        <Pitch
+          formationId={draft.formation_id}
+          starters={starters}
+          interactive={!complete}
+          selectedSlotId={selSlot}
+          previewCompat={previewCompat}
+          onSlotSelect={(id) => {
+            if (sel?.kind !== "player") return;
+            const slot = draft.squad.find((sl) => sl.slot_id === id);
+            if (!slot || slot.card_id !== null) return;
+            setSelSlot(id);
+          }}
+        />
+
+        <div className={s.bench}>
+          <span className={s.benchLabel}>Bench</span>
+          <div className={s.benchSlots}>
+            {bench.map((b) => {
+              const isSel = b.slot_id === selSlot;
+              const pc = previewCompat?.[b.slot_id];
+              const classes = [s.benchSlot];
+              if (b.card) classes.push(s.benchFilled, s.slotLocked);
+              if (isSel) classes.push(s.slotSelected);
+              return (
+                <button
+                  key={b.slot_id}
+                  type="button"
+                  className={classes.join(" ")}
+                  disabled={!!b.card || sel?.kind !== "player"}
+                  onClick={() => setSelSlot(b.slot_id)}
+                  aria-pressed={isSel}
+                >
+                  <span className={s.slotPos}>{b.slot_position}</span>
+                  <span className={s.slotName}>
+                    {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className={s.mgrSlot}>
+          <span className={s.benchLabel}>Manager</span>
+          <span className={draft.manager_card_id ? s.mgrFilled : s.mgrEmpty}>
+            {draft.manager_card_id
+              ? `${managerLabel(gameData, draft.manager_card_id)} · rating unavailable`
+              : "Open — pick a coach on any spin"}
+          </span>
+        </div>
+      </section>
+
+      <section className={s.panel}>
+        <SynergyPanel
+          result={previewSynergy}
+          delta={sel ? synergyDelta : null}
+        />
+        {!validation.has_goalkeeper && fieldable ? (
+          <p className={s.gkWarn} role="status">
+            <span className={s.gkWarnGlyph} aria-hidden="true">
+              !
+            </span>
+            No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal
+            penalty.
+          </p>
+        ) : null}
+      </section>
+
+      {/* Candidates */}
+      {!complete && spin ? (
+        <section className={s.panel} aria-label="Candidates">
+          <div className={s.controls}>
+            <input
+              type="search"
+              className={s.searchInput}
+              placeholder="Search players…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search players"
+            />
+            <div className={s.filterRow}>
+              <div className={s.segmented} role="group" aria-label="Filter by position">
+                {POS_FILTERS.map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    className={posFilter === p ? s.segActive : s.seg}
+                    aria-pressed={posFilter === p}
+                    onClick={() => setPosFilter(p)}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+              <label className={s.sortLabel}>
+                Sort
+                <select
+                  className={s.sortSelect}
+                  value={sortKey}
+                  onChange={(e) => setSortKey(e.target.value as SortKey)}
+                >
+                  <option value="ovr">Rating</option>
+                  <option value="name">Name</option>
+                  <option value="pos">Position</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          {candidates.manager ? (
+            <ManagerCandidate
+              coach={candidates.manager}
+              selected={sel?.kind === "manager"}
+              disabled={draft.manager_card_id !== null}
+              onSelect={() => selectManager(candidates.manager!)}
+            />
+          ) : null}
+
+          <div className={s.candList}>
+            {visibleCandidates.map((card) => (
+              <CandidateCard
+                key={card.card_id}
+                card={card}
+                selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
+                disabled={false}
+                onSelect={() => selectPlayer(card)}
+              />
+            ))}
+            {visibleCandidates.length === 0 ? (
+              <p className={s.emptyList}>No players match those filters.</p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {/* Sticky bottom CTA bar */}
+      <div className={s.lockBar} role="region" aria-label="Pick controls">
+        <div className={s.lockInfo}>
+          {transitionError ? (
+            <span className={s.lockError}>{transitionError}</span>
+          ) : sel?.kind === "player" && selectedSlot && selectedCompat != null ? (
+            <span>
+              <b>{sel.card.name}</b> → <b>{selectedSlot.slot_position}</b>
+              <span
+                className={`${s.compatPill} ${s[`tier_${compatTier(selectedCompat)}`]!}`}
+              >
+                {compatLabel(selectedCompat)} · {Math.round(selectedCompat * 100)}%
+              </span>
+            </span>
+          ) : sel?.kind === "manager" ? (
+            <span>
+              <b>{sel.card.name}</b> → manager slot
+            </span>
+          ) : showReviewCta ? (
+            <span className={s.lockHint}>
+              XI complete — review your squad and prep for the run.
+            </span>
+          ) : (
+            <span className={s.lockHint}>
+              Select a player and a slot, or pick the coach.
+            </span>
+          )}
+        </div>
+        <div className={s.lockActions}>
+          {sel?.kind === "player" && openSlots.length > 0 ? (
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => setSheetOpen(true)}
+            >
+              Choose slot
+            </button>
+          ) : null}
+          {showReviewCta ? (
+            <button type="button" className="btn btn--primary" onClick={onReview}>
+              Review XI →
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn--primary"
+              disabled={!canLock || committing}
+              onClick={handleLock}
+            >
+              {committing ? "Locking…" : "Lock pick 🔒"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom-sheet slot picker (mobile thumb zone) */}
+      {sheetOpen && sel?.kind === "player" ? (
+        <div className={s.sheetBackdrop} onClick={() => setSheetOpen(false)}>
+          <div
+            className={s.sheet}
+            role="dialog"
+            aria-label="Assign slot"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={s.sheetHead}>
+              <span className={s.sheetTitle}>Assign to slot</span>
+              <button
+                type="button"
+                className={s.sheetClose}
+                onClick={() => setSheetOpen(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <div className={s.sheetGrid}>
+              {sortSlots(openSlots).map((slot) => {
+                const c = positionCompatibility(
+                  sel.card.eligible_positions,
+                  slot.slot_position,
+                );
+                const tier = compatTier(c);
+                const isSel = selSlot === slot.slot_id;
+                return (
+                  <button
+                    key={slot.slot_id}
+                    type="button"
+                    className={`${s.sheetSlot} ${s[`tier_${tier}`]!} ${
+                      isSel ? s.sheetSlotActive : ""
+                    }`}
+                    onClick={() => {
+                      setSelSlot(slot.slot_id);
+                      setSheetOpen(false);
+                    }}
+                  >
+                    <span className={s.sheetSlotPos}>{slot.slot_position}</span>
+                    <span className={s.sheetSlotKind}>
+                      {slot.is_starter ? "Starter" : "Bench"}
+                    </span>
+                    <span className={s.sheetSlotCompat}>{Math.round(c * 100)}%</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function hypotheticalSquad(
+  squad: readonly SquadSlot[],
+  card: PlayerCardView,
+  slot_id: string,
+): SquadSlot[] {
+  return squad.map((sl) => {
+    if (sl.slot_id !== slot_id) return sl;
+    const compat = positionCompatibility(card.eligible_positions, sl.slot_position);
+    return {
+      ...sl,
+      card_id: card.card_id,
+      player_id: card.player_id,
+      tournament_id: card.tournament_id,
+      position_compatibility: compat,
+      validation_warnings: [],
+    };
+  });
+}
+
+function sortSlots(slots: readonly SquadSlot[]): SquadSlot[] {
+  return [...slots].sort((a, b) => {
+    if (a.is_starter !== b.is_starter) return a.is_starter ? -1 : 1;
+    return a.slot_id.localeCompare(b.slot_id);
+  });
+}
+
+function managerLabel(gameData: GameData, manager_card_id: string): string {
+  const m = gameData.indexes.managerByCardId.get(manager_card_id);
+  if (!m) return manager_card_id;
+  const n = gameData.indexes.nationById.get(m.nation_id);
+  const year = gameData.indexes.tournamentById.get(m.tournament_id)?.year ?? m.tournament_id;
+  return `${m.common_name || m.full_name} · ${n?.canonical_name ?? m.nation_id} · ${year}`;
 }

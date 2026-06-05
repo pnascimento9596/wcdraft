@@ -1,0 +1,173 @@
+/* ========================================================================
+   wcdraft — design tokens  (dark-first "premium arcade")
+   ===================================================================== */
+
+:root {
+  /* ---- Canvas ramp (warm-neutral, dark) ---- */
+  --bg-void:   #06090c;
+  --bg-900:    #0a0e13;
+  --bg-850:    #0d1218;   /* page canvas (cool) */
+  --bg-800:    #111720;   /* base surface */
+  --bg-750:    #161d27;   /* card surface */
+  --bg-700:    #1c2532;   /* raised */
+  --bg-650:    #243040;   /* hover / chips */
+
+  --line:        rgba(255,255,255,.07);
+  --line-2:      rgba(255,255,255,.12);
+  --line-strong: #2c3744;
+
+  /* ---- Ink (cool white) ---- */
+  --ink-100: #eef2f6;   /* hi */
+  --ink-200: #cdd3db;
+  --ink-300: #9aa3af;   /* mid */
+  --ink-400: #6b7480;   /* low */
+  --ink-500: #4d5662;   /* faint / disabled */
+
+  /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
+     moment, legend, champion, award ONLY). Cyan does the everyday work; gold is rare and earned. */
+  --cyan:        #22b8f0;
+  --cyan-bright: #6fd8ff;
+  --cyan-deep:   #1488c0;
+  --glow-cyan:   34,184,240;
+
+  --gold:        #f5b62a;
+  --gold-bright: #ffd45e;
+  --gold-deep:   #c8861a;
+  --glow-gold:   245,182,42;
+
+  --teal:        #2ecf92;
+  --teal-bright: #54e3ab;
+  --teal-deep:   #1c9e6e;
+  --glow-teal:   46,207,146;
+
+  /* legacy aliases — ember now == CYAN (the primary), so existing components adopt the new brand */
+  --ember:        #2ecf92;
+  --ember-bright: #54e3ab;
+  --ember-deep:   #1c9e6e;
+  --amber:        #f5b62a;
+  --amber-bright: #ffd45e;
+
+  --glow-ember: 46,207,146;
+  --glow-amber: 245,182,42;
+
+  /* ---- Lock / committed — its OWN treatment, off the accent palette (cool steel) ---- */
+  --lock:      #c5cbd6;
+  --lock-dim:  #8c93a1;
+  --lock-rgb:  197,203,214;
+
+  /* ---- Functional / result states ---- */
+  --win:   #f5b62a;   /* gold = the win (precious) */
+  --loss:  #ff4d63;
+  --draw:  #8b93a0;
+  --warn:  #ffce5a;
+  --info:  #22b8f0;
+
+  /* ---- Provenance (honest-state) — hue encodes how the rating was obtained.
+     Locked target mapping: historical = the verified everyday CYAN; projected = periwinkle;
+     estimate = warm orange (low-certainty warning); manager = teal; legend = the precious gold. ---- */
+  --prov-historical: #22b8f0;  /* observed   · cyan (verified, the everyday) */
+  --prov-projected:  #7b86f2;  /* modelled   · periwinkle                    */
+  --prov-estimate:   #e8843a;  /* inferred   · warm orange (low certainty)   */
+  --prov-manager:    #8b93a0;  /* staff card · neutral slate (off the emerald brand) */
+  --prov-legend:     #f5b62a;  /* elite      · gold (precious, OVR ≥ 96)     */
+  --prov-unknown:    #4d5662;  /* the "—"                                    */
+
+  /* provenance glow rgb triples (kept in sync for shadows/fills in JS + CSS) */
+  --prov-historical-rgb: 34,184,240;
+  --prov-projected-rgb:  123,134,242;
+  --prov-estimate-rgb:   232,132,58;
+  --prov-manager-rgb:    139,147,160;
+  --prov-legend-rgb:     245,182,42;
+
+  /* ---- Position — encoded by SHAPE, not hue (orthogonal to provenance).
+     Glyphs render in neutral ink; these tints are used only for tiny legend dots, never on cards. ---- */
+  --pos-gk:  #22b8f0;
+  --pos-def: #2ecf92;
+  --pos-mid: #9aa3af;
+  --pos-fwd: #f5b62a;
+
+  /* ---- Type ---- */
+  --f-display: "Saira Condensed", "Arial Narrow", sans-serif;
+  --f-body:    "Sora", system-ui, -apple-system, sans-serif;
+  --f-mono:    "JetBrains Mono", ui-monospace, monospace;
+  --f-serif:   "Newsreader", "Georgia", serif;   /* editorial / narrative direction only */
+
+  /* type scale (px) */
+  --t-hero:   clamp(56px, 9vw, 132px);
+  --t-d1:     clamp(40px, 6vw, 76px);
+  --t-d2:     38px;
+  --t-d3:     27px;
+  --t-h:      19px;
+  --t-body:   15px;
+  --t-sm:     13px;
+  --t-xs:     11px;
+  --t-micro:  10px;
+
+  /* ---- Radius (modest — arcade, never bubbly) ---- */
+  --r-1: 4px;
+  --r-2: 7px;
+  --r-3: 11px;
+  --r-pill: 999px;
+  --notch: 16px;        /* card cut-corner */
+
+  /* ---- Spacing ---- */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+  --s-9: 56px; --s-10: 80px;
+
+  /* ---- Elevation + glow ---- */
+  --sh-1: 0 1px 2px rgba(0,0,0,.4);
+  --sh-2: 0 6px 22px rgba(0,0,0,.45);
+  --sh-3: 0 18px 50px rgba(0,0,0,.55);
+  --ring-ember: 0 0 0 1px rgba(var(--glow-ember),.55), 0 0 26px -4px rgba(var(--glow-ember),.6);
+  --ring-amber: 0 0 0 1px rgba(var(--glow-amber),.5), 0 0 24px -4px rgba(var(--glow-amber),.55);
+
+  /* ---- Motion ---- */
+  --e-snap: cubic-bezier(.2,.9,.25,1.15);   /* committed lock-in */
+  --e-out:  cubic-bezier(.16,1,.3,1);
+  --e-in:   cubic-bezier(.5,0,.75,0);
+  --d-fast: .14s;
+  --d-med:  .26s;
+  --d-slow: .5s;
+}
+
+/* ---- Light theme overrides (derived second; included for completeness) ---- */
+[data-theme="light"] {
+  --bg-void:   #e9e6df;
+  --bg-900:    #efece5;
+  --bg-850:    #f4f1ea;
+  --bg-800:    #fbf9f4;
+  --bg-750:    #ffffff;
+  --bg-700:    #f3f0e8;
+  --bg-650:    #e9e5db;
+  --line:        rgba(20,18,14,.10);
+  --line-2:      rgba(20,18,14,.16);
+  --line-strong: #d2cdc0;
+  --ink-100: #14130f;
+  --ink-200: #2c2b25;
+  --ink-300: #54524a;
+  --ink-400: #7c7a70;
+  --ink-500: #a09d92;
+}
+
+* { box-sizing: border-box; }
+::selection { background: rgba(var(--glow-ember),.32); color: var(--ink-100); }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg-850);
+  color: var(--ink-100);
+  font-family: var(--f-body);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 0;
+}
+
+.mono { font-family: var(--f-mono); font-feature-settings: "tnum" 1; letter-spacing: -.01em; }
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.display { font-family: var(--f-display); font-weight: 700; line-height: .92; letter-spacing: -.01em; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
