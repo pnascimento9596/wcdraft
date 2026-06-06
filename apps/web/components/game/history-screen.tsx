@@ -1,0 +1,239 @@
+"use client";
+
+// Local history view — lists recent completed runs from `RunRecordV1`
+// localStorage via the `RunHistoryProvider` boundary. Tap a card to re-open
+// the deterministic results via the `?run=t1.…` token replay path. NEVER
+// links via a bare local `run-v1-*` id — that would violate the shared-URL
+// contract enforced by `gate-and-fallback.test.ts`.
+
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { loadGameData, type GameData } from "@/lib/game/data";
+import { describeGameError } from "@/lib/game/errors";
+import { draftHref } from "@/lib/game/navigation";
+import {
+  listCompletedRunHistory,
+  type HistoryEntry,
+} from "@/lib/game/history";
+
+import s from "./game.module.css";
+
+type Mode =
+  | { kind: "loading" }
+  | {
+      kind: "ready";
+      entries: HistoryEntry[];
+      persistence: "durable" | "volatile";
+      warnings: string[];
+    }
+  | { kind: "error"; title: string; message: string };
+
+export function HistoryScreen() {
+  const [mode, setMode] = useState<Mode>({ kind: "loading" });
+  const reqToken = useRef(0);
+
+  useEffect(() => {
+    const myToken = ++reqToken.current;
+    setMode({ kind: "loading" });
+    void (async () => {
+      try {
+        const gd: GameData = await loadGameData();
+        if (myToken !== reqToken.current) return;
+        const result = await listCompletedRunHistory(gd);
+        if (myToken !== reqToken.current) return;
+        setMode({
+          kind: "ready",
+          entries: result.entries,
+          persistence: result.persistence,
+          warnings: result.warnings,
+        });
+      } catch (err) {
+        if (myToken !== reqToken.current) return;
+        const d = describeGameError(err);
+        setMode({ kind: "error", title: d.title, message: d.message });
+      }
+    })();
+  }, []);
+
+  if (mode.kind === "loading") {
+    return (
+      <div className={s.history}>
+        <HistoryAppBar />
+        <div className={s.loadingPanel} role="status">
+          <p>Loading your run history…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode.kind === "error") {
+    return (
+      <div className={s.history}>
+        <HistoryAppBar />
+        <div className={s.errorPanel} role="alert">
+          <h2 className={s.errorTitle}>{mode.title}</h2>
+          <p className={s.errorMessage}>{mode.message}</p>
+          <Link href={draftHref(null)} className="btn btn--primary">
+            Start a new draft
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode.entries.length === 0) {
+    return (
+      <div className={s.history}>
+        <HistoryAppBar />
+        <header className="page-head">
+          <span className="eyebrow">Run history</span>
+          <h1 className="display">No completed runs yet</h1>
+          <p className="page-head__note">
+            Finish a draft and simulate the run to see it here. Up to {5} recent
+            runs are kept in this browser.
+          </p>
+        </header>
+        {mode.persistence === "volatile" ? (
+          <p className={s.historyWarn} role="status">
+            History is available in this tab only because browser storage is
+            unavailable.
+          </p>
+        ) : null}
+        <div className={s.resultsActions}>
+          <Link href={draftHref(null)} className="btn btn--primary">
+            Draft Again
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={s.history}>
+      <HistoryAppBar />
+      <header className="page-head">
+        <span className="eyebrow">Run history</span>
+        <h1 className="display">Recent runs</h1>
+        <p className="page-head__note">
+          Up to 5 most recent completed runs from this browser. Tap a run to
+          re-open the seed-locked results.
+        </p>
+      </header>
+
+      {mode.persistence === "volatile" ? (
+        <p className={s.historyWarn} role="status">
+          History is available in this tab only because browser storage is
+          unavailable.
+        </p>
+      ) : null}
+
+      <ul className={s.historyList}>
+        {mode.entries.map((entry) => (
+          <li key={entry.run_id}>
+            <HistoryCard entry={entry} />
+          </li>
+        ))}
+      </ul>
+
+      <div className={s.resultsActions}>
+        <Link href={draftHref(null)} className="btn btn--primary">
+          Draft Again
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function HistoryAppBar() {
+  return (
+    <header className={s.draftAppBar}>
+      <div className={s.appBarBrand}>
+        <Image
+          src="/brand/wcdraft-mark.svg"
+          alt="wcdraft"
+          width={28}
+          height={31}
+          priority
+        />
+        <span className={s.appBarTitle}>History</span>
+      </div>
+    </header>
+  );
+}
+
+function HistoryCard({ entry }: { entry: HistoryEntry }) {
+  const ariaLabel = `View results for ${entry.team_name}, record ${entry.display_record}`;
+  const recordClass = entry.is_champion
+    ? `${s.historyRecord} ${s.historyRecordGold}`
+    : s.historyRecord;
+
+  const meta = (
+    <>
+      <div className={s.historyMetaTop}>
+        <span className={recordClass}>{entry.display_record}</span>
+        <div className={s.historyMetaLines}>
+          <span className={s.historyTeam}>{entry.team_name}</span>
+          <span className={s.historyFormation}>
+            {entry.formation_name}
+            {entry.is_champion ? " · Champions" : ""}
+          </span>
+        </div>
+      </div>
+      {entry.key_picks.length > 0 ? (
+        <ul className={s.historyPicks}>
+          {entry.key_picks.map((p, i) => (
+            <li key={`${entry.run_id}-pick-${i}`} className={s.historyPick}>
+              <span className={s.historyPickNation}>{p.nation_code}</span>
+              <span className={s.historyPickName}>{p.name}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <div className={s.historyFootRow}>
+        <span className={s.historyRecency}>{entry.recency_label}</span>
+        <span className={s.historySequence}>{entry.sequence_label}</span>
+        <code className={s.historySeed}>seed {entry.seed}</code>
+      </div>
+    </>
+  );
+
+  if (entry.replay_href) {
+    return (
+      <Link
+        href={entry.replay_href}
+        className={`${s.panel} ${s.historyCard}`}
+        aria-label={ariaLabel}
+      >
+        {meta}
+        <div className={s.historyActions}>
+          <span className={s.historyOpenHint} aria-hidden="true">
+            Open results →
+          </span>
+          {entry.share_href ? (
+            // Secondary share affordance — visually rendered inside the link
+            // but uses pointerdown on the outer link, so the receiver should
+            // expect tapping anywhere = open results. We surface share as a
+            // text label rather than a nested link to keep the row clickable.
+            <span className={s.historyShareHint}>Token: t1.</span>
+          ) : null}
+        </div>
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className={`${s.panel} ${s.historyCard} ${s.historyCardDisabled}`}
+      role="group"
+      aria-disabled="true"
+      aria-label={`${ariaLabel} (replay unavailable)`}
+    >
+      {meta}
+      <p className={s.historyReplayError} role="alert">
+        Replay link unavailable: {entry.replay_error ?? "unknown error"}
+      </p>
+    </div>
+  );
+}

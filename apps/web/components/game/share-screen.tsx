@@ -26,7 +26,10 @@ import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { runSimulation } from "@/lib/game/simulate";
 import {
   buildShareCaption,
+  buildShareIntentText,
+  buildShareIntentUrls,
   buildShareView,
+  type ShareIntentUrls,
   type ShareView,
 } from "@/lib/game/share-adapters";
 
@@ -280,6 +283,24 @@ function ShareBody({
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
 
   const caption = useMemo(() => buildShareCaption(view, shareUrl), [view, shareUrl]);
+  const intentText = useMemo(() => buildShareIntentText(view), [view]);
+  const intentUrls = useMemo<ShareIntentUrls | null>(() => {
+    if (!shareUrl) return null;
+    return buildShareIntentUrls({ url: shareUrl, text: intentText, caption });
+  }, [shareUrl, intentText, caption]);
+
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  async function copyLink() {
+    if (!shareUrl) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setLinkCopied(true);
+      window.setTimeout(() => setLinkCopied(false), 2000);
+    } catch {
+      setLinkCopied(false);
+    }
+  }
 
   async function copyCaption() {
     try {
@@ -317,7 +338,10 @@ function ShareBody({
     try {
       await navigator.share({
         title: `${view.team_name} — ${view.headline}`,
-        text: caption,
+        // `text` excludes the URL so the platform doesn't double-render it
+        // alongside the `url:` field. The full caption (with URL) is what
+        // Copy Caption emits for clipboard paste targets.
+        text: intentText,
         url: shareUrl ?? undefined,
       });
       setShared("ok");
@@ -380,6 +404,95 @@ function ShareBody({
           >
             {shared === "unsupported" ? "Share unavailable" : "Native share"}
           </button>
+        </div>
+        {/* Social web intents (ws-results/history-share). All affordances
+            depend on the tokenized `shareUrl`; when tokenization fails we
+            render disabled spans rather than emit a non-reproducible URL. */}
+        <div className={s.shareIntentGroup}>
+          <p className={s.shareIntentLabel}>Share to</p>
+          <div className={s.shareIntentRow}>
+            {intentUrls ? (
+              <>
+                <a
+                  href={intentUrls.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  aria-label="Share on X (Twitter)"
+                >
+                  X / Twitter
+                </a>
+                <a
+                  href={intentUrls.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  aria-label="Share on WhatsApp"
+                >
+                  WhatsApp
+                </a>
+                <a
+                  href={intentUrls.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  aria-label="Share on Facebook"
+                >
+                  Facebook
+                </a>
+                <a
+                  href={intentUrls.reddit}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  aria-label="Share on Reddit"
+                >
+                  Reddit
+                </a>
+                <button
+                  type="button"
+                  className={`btn btn--ghost ${s.shareIntentButton}`}
+                  onClick={copyLink}
+                  aria-label="Copy share link"
+                >
+                  {linkCopied ? "Link copied ✓" : "Copy link"}
+                </button>
+              </>
+            ) : (
+              <>
+                <span
+                  className={`btn btn--ghost btn--disabled ${s.shareIntentButton}`}
+                  aria-disabled="true"
+                >
+                  X / Twitter
+                </span>
+                <span
+                  className={`btn btn--ghost btn--disabled ${s.shareIntentButton}`}
+                  aria-disabled="true"
+                >
+                  WhatsApp
+                </span>
+                <span
+                  className={`btn btn--ghost btn--disabled ${s.shareIntentButton}`}
+                  aria-disabled="true"
+                >
+                  Facebook
+                </span>
+                <span
+                  className={`btn btn--ghost btn--disabled ${s.shareIntentButton}`}
+                  aria-disabled="true"
+                >
+                  Reddit
+                </span>
+                <span
+                  className={`btn btn--ghost btn--disabled ${s.shareIntentButton}`}
+                  aria-disabled="true"
+                >
+                  Copy link
+                </span>
+              </>
+            )}
+          </div>
         </div>
         <div className={s.resultsActions}>
           <Link href={resultsHref(linkRunValue)} className="btn btn--ghost">

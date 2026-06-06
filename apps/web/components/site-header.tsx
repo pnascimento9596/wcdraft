@@ -9,6 +9,7 @@ import { CloseIcon, MenuIcon } from "./icons";
 
 const MENU = [
   { href: "/play", label: "Play" },
+  { href: "/play/history", label: "History" },
   { href: "/how-to-play", label: "How to Play" },
   { href: "/settings", label: "Settings" },
   { href: "/privacy", label: "Privacy Policy" },

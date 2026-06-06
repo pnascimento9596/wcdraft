@@ -80,3 +80,11 @@ export function resultsHref(run_id: string | null): string {
 export function shareHref(run_id: string | null): string {
   return runHrefFor("/play/share", run_id);
 }
+
+/**
+ * History view. No `?run=` param — listing of recent local runs.
+ * Kept here so call sites do not hardcode the route literal.
+ */
+export function historyHref(): string {
+  return "/play/history";
+}

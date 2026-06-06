@@ -542,6 +542,108 @@ export function setRunStatus(
   };
 }
 
+// ─── Listing (history surface) ───────────────────────────────────────────────
+
+export interface ListRunRecordsOptions {
+  /** Cap the number of returned records (default: `RUN_RECORD_CAP`). */
+  limit?: number;
+}
+
+export interface ListRunRecordsResult {
+  /** Records that pass version match + JSON validation, ordered newest first. */
+  records: RunRecordV1[];
+  /** Whether storage is durable (localStorage) or volatile (in-memory). */
+  persistence: "durable" | "volatile";
+  /** Non-fatal warnings (e.g. evicted bad entries). Empty for clean storage. */
+  warnings: string[];
+}
+
+/**
+ * Return the persisted `RunRecordV1`s for the current `currentVersions`,
+ * newest first. Mismatched-version or otherwise-invalid records are evicted
+ * in-place (mirrors `loadRunRecord` honest-state behavior); the index is
+ * repaired in a single pass so subsequent reads stay clean.
+ *
+ * This is the foundation under `lib/game/history.ts` — the UI never touches
+ * `RUN_RECORD_PREFIX`/`RUN_INDEX_KEY` directly.
+ */
+export function listRunRecords(
+  currentVersions: RunRecordVersions,
+  options: ListRunRecordsOptions = {},
+): ListRunRecordsResult {
+  const limit = Math.max(0, options.limit ?? RUN_RECORD_CAP);
+  const storage = getStorage();
+  const idx = loadIndex(storage);
+
+  // Newest first — `saveIndex` sorts ascending by `updated_seq`, so reverse.
+  const sorted = [...idx.entries].sort((a, b) => {
+    if (b.updated_seq !== a.updated_seq) return b.updated_seq - a.updated_seq;
+    if (b.created_seq !== a.created_seq) return b.created_seq - a.created_seq;
+    return b.run_id.localeCompare(a.run_id);
+  });
+
+  const records: RunRecordV1[] = [];
+  const warnings: string[] = [];
+  const survivingIds = new Set<string>();
+  let indexDirty = false;
+
+  for (const entry of sorted) {
+    if (records.length >= limit) {
+      survivingIds.add(entry.run_id);
+      continue;
+    }
+    const raw = storage.getItem(recordKey(entry.run_id));
+    if (!raw) {
+      indexDirty = true;
+      warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
+      continue;
+    }
+    let parsed: RunRecordV1;
+    try {
+      parsed = JSON.parse(raw) as RunRecordV1;
+    } catch {
+      storage.removeItem(recordKey(entry.run_id));
+      indexDirty = true;
+      warnings.push(`history: evicted malformed record '${entry.run_id}'`);
+      continue;
+    }
+    if (parsed.record_version !== RUN_RECORD_SCHEMA_VERSION || !parsed.draft) {
+      storage.removeItem(recordKey(entry.run_id));
+      indexDirty = true;
+      warnings.push(`history: evicted invalid record '${entry.run_id}'`);
+      continue;
+    }
+    if (!versionsMatch(parsed.versions, currentVersions)) {
+      storage.removeItem(recordKey(entry.run_id));
+      indexDirty = true;
+      continue;
+    }
+    records.push(parsed);
+    survivingIds.add(entry.run_id);
+  }
+
+  if (indexDirty) {
+    const repaired: RunRecordIndexV1 = {
+      record_version: RUN_RECORD_SCHEMA_VERSION,
+      entries: idx.entries
+        .filter((e) => survivingIds.has(e.run_id))
+        .sort((a, b) => a.updated_seq - b.updated_seq),
+    };
+    try {
+      saveIndex(storage, repaired);
+    } catch {
+      // Best-effort: a failure to write the repaired index just means the
+      // next read repeats the cleanup. Do not surface as a user-facing error.
+    }
+  }
+
+  return {
+    records,
+    persistence: storage.isVolatile ? "volatile" : "durable",
+    warnings,
+  };
+}
+
 /** Drop every record whose version anchors don't match `currentVersions`. */
 export function evictStaleRunRecords(currentVersions: RunRecordVersions): void {
   const storage = getStorage();
