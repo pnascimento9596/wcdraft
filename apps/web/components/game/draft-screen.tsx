@@ -50,11 +50,30 @@ import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
 import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { ManagerSlot } from "./manager-slot";
-import { SpinSlotMachine } from "./slot-machine";
+import { SpinStage, type SpinAnimState } from "./slot-machine";
 import { SynergyPanel } from "./synergy-panel";
 import s from "./game.module.css";
 
 const TOTAL_SPINS = 17;
+
+// Standalone-spin flow phases. Each of the 17 spins is gated: the user lands on
+// the spin stage (`spin`), clicks SPIN, watches the reveal, then crosses into
+// the lineup/pick view (`lineup`) to assign + lock. Locking advances the engine
+// to the next spin, which resets the phase back to `spin` (the re-spin swap).
+type SpinPhase = "spin" | "lineup";
+
+/** Read `prefers-reduced-motion` reactively (client-only). */
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
 type Selection =
   | { kind: "player"; card: PlayerCardView }
   | { kind: "manager"; card: ManagerCardView }
@@ -419,7 +438,14 @@ function DraftBoard({
   const [committing, setCommitting] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
 
-  // Reset selection whenever the active spin changes.
+  // Standalone-spin flow state. `phase` gates the spin stage vs the lineup
+  // view; `anim` drives the drum lifecycle on the spin stage.
+  const [phase, setPhase] = useState<SpinPhase>("spin");
+  const [anim, setAnim] = useState<SpinAnimState>("idle");
+  const reducedMotion = usePrefersReducedMotion();
+
+  // Reset selection + spin flow whenever the active spin changes (incl. the
+  // post-lock advance — this IS the re-spin swap back to the idle drum).
   useEffect(() => {
     setSel(null);
     setSelSlot(null);
@@ -427,7 +453,17 @@ function DraftBoard({
     setSearch("");
     setPosFilter("ALL");
     setTransitionError(null);
+    setPhase("spin");
+    setAnim("idle");
   }, [spin?.index]);
+
+  // SPIN clicked: reduced-motion skips the 2–3s reveal straight to settled;
+  // otherwise the drum animates and `onSettle` (animationend) flips to settled.
+  const handleSpin = useCallback(() => {
+    setAnim(reducedMotion ? "settled" : "spinning");
+  }, [reducedMotion]);
+  const handleSettle = useCallback(() => setAnim("settled"), []);
+  const handleReveal = useCallback(() => setPhase("lineup"), []);
 
   // Filter/sort player candidates.
   const visibleCandidates = useMemo(() => {
@@ -561,6 +597,19 @@ function DraftBoard({
   const revealSynergyOverall = Number.isFinite(baseSynergy.overall)
     ? baseSynergy.overall
     : null;
+  const revealSynergyMultiplier = Number.isFinite(baseSynergy.multiplier)
+    ? baseSynergy.multiplier
+    : null;
+
+  // Spun tournament year — drives the ERA / RARE tile on the spin stage. Real
+  // engine value, null only on a data-lookup miss (honest fallback).
+  const spinYear = spin
+    ? gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? null
+    : null;
+  const spinResultLabel =
+    slotReveal !== null
+      ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}`
+      : null;
 
   // Lock pick → call core engine → save record.
   const handleLock = useCallback(() => {
@@ -595,6 +644,11 @@ function DraftBoard({
           ? save.warnings.join(" · ") ||
             "Draft is saved in this tab only — browser storage is unavailable."
           : null;
+      // Re-spin swap: snap back to the idle drum for the next spin in the same
+      // commit as the record update, so the lineup for the next spin never
+      // flashes before the spin-stage reset effect runs.
+      setPhase("spin");
+      setAnim("idle");
       onRecordUpdate(updated, warning ?? persistenceWarning);
     } catch (err) {
       const wrapped =
@@ -641,6 +695,31 @@ function DraftBoard({
   // Fieldability remains a layered validity check (see no-GK warning below).
   const showReviewCta = !sel && complete;
 
+  // ── Standalone spin stage — the centerpiece, gated per spin ────────────
+  // Each of the 17 spins lands here first (idle drum, CTA "Spin"). Only after
+  // the reveal settles and the user taps "Reveal squad →" do we cross into the
+  // lineup/pick view below. This supersedes the inline reveal from PR #21.
+  if (!complete && spin && slotReveal && phase === "spin") {
+    return (
+      <div className={`${s.draftShell} ${s.spinShell}`}>
+        <SpinStage
+          model={slotReveal}
+          pickNumber={spinNumber}
+          totalPicks={TOTAL_SPINS}
+          formationId={draft.formation_id}
+          synergyOverall={revealSynergyOverall}
+          synergyMultiplier={revealSynergyMultiplier}
+          playerPoolCount={candidates.players.length}
+          year={spinYear}
+          anim={anim}
+          onSpin={handleSpin}
+          onSettle={handleSettle}
+          onReveal={handleReveal}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={s.draftShell}>
       <DraftAppBar
@@ -649,7 +728,7 @@ function DraftBoard({
         warning={persistenceWarning}
       />
 
-      {/* Spin reveal */}
+      {/* Spin reveal → now compact context (full reveal lives on the spin stage) */}
       {complete ? (
         <section className={`${s.panel} ${s.completePanel}`}>
           <span className={s.eyebrowAccent}>Draft complete</span>
@@ -659,21 +738,30 @@ function DraftBoard({
             Synergy, and your final XI.
           </p>
         </section>
-      ) : spin && slotReveal ? (
-        <SpinSlotMachine
-          model={slotReveal}
-          formationId={draft.formation_id}
-          playerPoolCount={candidates.players.length}
-          synergyOverall={revealSynergyOverall}
-          candidateHref="#draft-candidates"
-          hint="Pick one entity from this squad — a player or the coach. Choose a slot, watch Synergy update, then lock it in."
-        />
+      ) : spinResultLabel ? (
+        <section className={s.nowDrafting} aria-label="Current spin">
+          <div className={s.nowDraftingMain}>
+            <span className={s.nowDraftingPick}>
+              Pick {spinNumber} / {TOTAL_SPINS}
+            </span>
+            <span className={s.nowDraftingResult}>{spinResultLabel}</span>
+          </div>
+          <button
+            type="button"
+            className={s.nowDraftingBack}
+            onClick={() => setPhase("spin")}
+          >
+            ↺ Spin view
+          </button>
+        </section>
       ) : null}
 
       {/* Pitch + bench + manager */}
       <section className={s.panel} aria-label="Your formation">
         <div className={s.panelHead}>
-          <h2 className={s.panelTitle}>{formation.name}</h2>
+          <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>
+            {formation.name}
+          </h2>
           <span className={s.panelMeta}>
             {starters.filter((sl) => sl.card).length}/11 starters ·{" "}
             {bench.filter((sl) => sl.card).length}/5 bench ·{" "}
