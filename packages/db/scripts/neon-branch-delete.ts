@@ -4,6 +4,10 @@
 // (CI workflow's always() cleanup step sets these from the create step's
 // outputs). Refuses to delete the project's primary or default branch even
 // if asked to — belt-and-suspenders against a misconfigured workflow.
+//
+// Defensive: trim env values to neutralise any stray trailing whitespace
+// (e.g. a stored secret with a trailing newline that would otherwise make
+// the `Bearer <token>\n` header silently invalid and 401-out).
 import { request } from "node:https";
 
 const NEON_API_HOST = "console.neon.tech";
@@ -62,7 +66,7 @@ function neonRequest<T>(
 function readEnv(name: string): string {
   const v = process.env[name];
   if (!v) throw new Error(`${name} is not set`);
-  return v;
+  return v.trim();
 }
 
 function shortId(s: string, n = 10): string {
@@ -74,6 +78,12 @@ async function main(): Promise<void> {
   const projectId = readEnv("NEON_PROJECT_ID");
   const branchId = readEnv("NEON_EPHEMERAL_BRANCH_ID");
 
+  console.log(
+    `[neon-branch-delete] env diagnostic — ` +
+      `NEON_API_KEY length=${apiKey.length.toString()} ` +
+      `NEON_PROJECT_ID length=${projectId.length.toString()} ` +
+      `NEON_EPHEMERAL_BRANCH_ID length=${branchId.length.toString()}`,
+  );
   console.log(
     `[neon-branch-delete] project=${shortId(projectId)} branch=${shortId(branchId)}`,
   );

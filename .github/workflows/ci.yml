@@ -79,9 +79,38 @@ jobs:
         # the deterministic 17-spin output drifts from the recorded snapshot.
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
 
+  # ── Path-filter gate for the db job ──────────────────────────────────────
+  #
+  # The destructive ephemeral-branch rollback-check is heavy (forks + tears
+  # down a Neon branch on every run) and only meaningful when something in
+  # @wcdraft/db's surface changes. This gate emits run=true only when the PR
+  # diff (or push) touches packages/db, the workflow itself, the lockfile,
+  # or turbo.json (which carries the env: registrations the job depends on).
+  # Other PRs skip the db job entirely.
+  db-gate:
+    name: db · path filter
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.filter.outputs.db }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Detect DB-affecting changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            db:
+              - 'packages/db/**'
+              - '.github/workflows/ci.yml'
+              - 'pnpm-lock.yaml'
+              - 'turbo.json'
+
   db-rollback-check:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
     runs-on: ubuntu-latest
+    needs: db-gate
+    if: ${{ needs.db-gate.outputs.run == 'true' }}
     # SAFETY POSTURE (revised per independent review on PR #26):
     # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
     # it creates its OWN ephemeral Neon branch off the primary, runs the
@@ -89,7 +118,7 @@ jobs:
     # misconfigured secret can NEVER target production.
     #
     # Skips with a warning when NEON_API_KEY or NEON_PROJECT_ID is absent
-    # (forks PRs don't get secrets; this keeps their CI green).
+    # (fork PRs don't get secrets; this keeps their CI green).
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -116,12 +145,16 @@ jobs:
         # Emits skip=true (with a workflow warning, not a failure) when
         # either secret is missing — contributors on forks don't have them
         # and we don't want their CI to red over an integration-only job.
+        # Also prints LENGTH diagnostics so any future secret-storage drift
+        # is immediately visible in the run log (the values themselves stay
+        # masked by GitHub Actions' secret scrubber).
         run: |
           if [ -z "$NEON_API_KEY" ] || [ -z "$NEON_PROJECT_ID" ]; then
             echo "::warning::NEON_API_KEY or NEON_PROJECT_ID secret is not set — skipping ephemeral-branch rollback-check."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "[gate] NEON_API_KEY length=${#NEON_API_KEY} NEON_PROJECT_ID length=${#NEON_PROJECT_ID}"
           fi
 
       - name: Create ephemeral Neon branch

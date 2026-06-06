@@ -13,20 +13,26 @@
 //      always() cleanup step can delete the branch.
 //
 // Never echoes secret values to stdout/stderr. Only prints redacted
-// identifiers (branch id, name, endpoint prefix).
+// identifiers (branch id, name, endpoint prefix) plus a CI-visible LENGTH
+// diagnostic for NEON_API_KEY + NEON_PROJECT_ID so future drift between
+// the stored secret and the value the script sees is obvious in the run
+// log without ever revealing the value itself.
 import { writeFileSync, chmodSync, appendFileSync } from "node:fs";
 
 const NEON_API = "https://console.neon.tech/api/v2";
 
 function readEnv(name: string): string {
-  const v = process.env[name];
-  if (!v) {
+  const raw = process.env[name];
+  if (!raw) {
     throw new Error(
       `${name} is not set. CI sets this as a repo secret; locally, source ` +
         `~/.config/wcdraft/neon.env first.`,
     );
   }
-  return v;
+  // Defensive trim: a stored secret with a stray trailing newline would
+  // make the `Bearer <token>\n` header silently invalid (Neon returns 401).
+  // Trim only outer whitespace — never the middle.
+  return raw.trim();
 }
 
 async function neonRequest<T>(
@@ -91,7 +97,22 @@ async function main(): Promise<void> {
     throw new Error("usage: neon-branch-create.ts <env-file-out-path>");
   }
 
+  // DIAGNOSTIC: print only SAFE metadata. If the secret reaches the script
+  // truncated/empty/with-trailing-newline, the length and prefix below
+  // surface it BEFORE Neon's 401 hides the cause. The `napi_` prefix is
+  // documented Neon-API convention, not a sensitive value.
+  console.log(
+    `[neon-branch-create] env diagnostic — ` +
+      `NEON_API_KEY length=${apiKey.length.toString()} prefix=${apiKey.slice(0, 5)} ` +
+      `NEON_PROJECT_ID length=${projectId.length.toString()} prefix=${projectId.slice(0, 8)}`,
+  );
   console.log(`[neon-branch-create] project=${shortId(projectId)}`);
+
+  // PRE-AUTH PROBE: hit a cheap authenticated endpoint first. If this 401s,
+  // the message is unambiguous: the API key didn't authenticate. If we tried
+  // to create a branch first, the same 401 would look like a logic bug.
+  await neonRequest("GET", "/users/me/organizations", apiKey);
+  console.log(`[neon-branch-create] auth probe OK`);
 
   // 1. Find primary/default branch.
   const branches = await neonRequest<BranchListResp>(

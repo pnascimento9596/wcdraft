@@ -79,7 +79,7 @@ async function neonGet<T>(path: string, apiKey: string): Promise<T> {
 }
 
 async function guardEphemeralBranch(): Promise<void> {
-  const ephemeralId = process.env.NEON_EPHEMERAL_BRANCH_ID;
+  const ephemeralId = process.env.NEON_EPHEMERAL_BRANCH_ID?.trim();
   if (!ephemeralId) {
     throw new Error(
       "[rollback-check] REFUSING TO RUN: NEON_EPHEMERAL_BRANCH_ID is not set. " +
@@ -88,8 +88,8 @@ async function guardEphemeralBranch(): Promise<void> {
         "then source the emitted env file before invoking rollback-check.",
     );
   }
-  const apiKey = process.env.NEON_API_KEY;
-  const projectId = process.env.NEON_PROJECT_ID;
+  const apiKey = process.env.NEON_API_KEY?.trim();
+  const projectId = process.env.NEON_PROJECT_ID?.trim();
   if (!apiKey || !projectId) {
     console.log(
       "[rollback-check] guard: NEON_API_KEY/PROJECT_ID absent — relying on " +
