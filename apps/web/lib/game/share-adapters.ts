@@ -159,18 +159,68 @@ export function buildShareView(gameData: GameData, record: RunRecordV1): ShareVi
 
 // ─── Caption text ────────────────────────────────────────────────────────────
 
+/** Standard short social tagline (ws-results/history-share). */
+export const SHARE_TAGLINE = "Built my all-time XI on wcdraft" as const;
+
 /**
- * Plain-text caption to copy / native-share. The seed line lets the receiver
- * reproduce the same run via `?run=` URLs. We never emit competition marks.
+ * Plain-text caption to copy / native-share / clipboard. The URL line lets
+ * the receiver reproduce the same run via `?run=` URLs. We never emit
+ * competition marks. When `url` is null (token-encoding failed), the URL
+ * line is omitted — the share screen disables affordances around that case.
  */
 export function buildShareCaption(view: ShareView, url: string | null): string {
   const lines: string[] = [];
-  lines.push(`${view.team_name} — ${view.headline} (${view.display_record}) on wcdraft.`);
-  const topScorerStr = view.top_scorer
-    ? `top scorer ${view.top_scorer.name} (${view.top_scorer.goals})`
-    : "top scorer —";
-  lines.push(`${view.goals_for} scored, ${view.goals_against} conceded · ${topScorerStr}.`);
-  lines.push(`Seed ${view.seed} — beat it.`);
+  lines.push(`${view.team_name} went ${view.display_record} on wcdraft.`);
+  lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
   return lines.join("\n");
+}
+
+/**
+ * Short intent text — does NOT include the URL. Platforms like Twitter and
+ * Reddit pass `url=` as a separate query field, so embedding it in the text
+ * would double-render the link. Use this for text-and-url web intents and
+ * for `navigator.share({ text, url })`.
+ */
+export function buildShareIntentText(view: ShareView): string {
+  return `${view.team_name} went ${view.display_record} on wcdraft. ${SHARE_TAGLINE}`;
+}
+
+// ─── Social web intents ──────────────────────────────────────────────────────
+
+export type ShareIntentKind = "twitter" | "whatsapp" | "facebook" | "reddit";
+
+export interface ShareIntentUrls {
+  twitter: string;
+  whatsapp: string;
+  facebook: string;
+  reddit: string;
+}
+
+/**
+ * Build social web-intent URLs. The caller MUST pass a tokenized share URL
+ * (`?run=t1.…`) so the destination preserves the reproducible-replay
+ * guarantee — never a bare `run-v1-*` id.
+ */
+export function buildShareIntentUrls(args: {
+  /** Tokenized share URL: `https://wcdraft.app/play/share?run=t1.…`. */
+  url: string;
+  /** Short text without the URL — for platforms that take url= separately. */
+  text: string;
+  /** Full caption including the URL — for platforms with one combined field. */
+  caption: string;
+}): ShareIntentUrls {
+  const { url, text, caption } = args;
+
+  const twitter = new URLSearchParams({ text, url }).toString();
+  const whatsapp = new URLSearchParams({ text: caption }).toString();
+  const facebook = new URLSearchParams({ u: url }).toString();
+  const reddit = new URLSearchParams({ url, title: text }).toString();
+
+  return {
+    twitter: `https://twitter.com/intent/tweet?${twitter}`,
+    whatsapp: `https://wa.me/?${whatsapp}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?${facebook}`,
+    reddit: `https://www.reddit.com/submit?${reddit}`,
+  };
 }
