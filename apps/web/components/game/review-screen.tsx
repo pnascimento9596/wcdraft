@@ -18,12 +18,16 @@ import {
 } from "@/lib/game/adapters";
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
-import { draftHref } from "@/lib/game/navigation";
+import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
   loadRunRecord,
   saveRunRecord,
+  setRunSimulation,
+  setRunStatus,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+import { loadScenarioBundle } from "@/lib/game/scenario-data";
+import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { SynergyPanel } from "./synergy-panel";
@@ -346,25 +350,136 @@ function ReviewBoard({
         </section>
       ) : null}
 
-      <section className={`${s.panel} ${s.simPanel}`}>
-        <p className={s.simNote}>
-          {fieldable
-            ? `Your XI is fieldable. Simulation lands in the next phase.`
-            : "Your XI isn't fieldable yet — head back to the draft and finish the starters."}
-        </p>
-        <button
-          type="button"
-          className="btn btn--primary btn--disabled"
-          disabled
-          aria-disabled="true"
-          title="Simulation wires in during I3"
-        >
-          Simulate the run · next phase
-        </button>
-        <button type="button" className="btn btn--ghost" onClick={onBack}>
-          Back to draft
-        </button>
-      </section>
+      <SimulatePanel
+        gameData={gameData}
+        record={record}
+        fieldable={fieldable}
+        onBack={onBack}
+        onRecordUpdate={onRecordUpdate}
+        persistenceWarning={persistenceWarning}
+      />
     </div>
+  );
+}
+
+// ─── Simulate CTA ─────────────────────────────────────────────────────────────
+
+type SimState =
+  | { kind: "idle" }
+  | { kind: "running"; note: string }
+  | { kind: "error"; title: string; message: string };
+
+function SimulatePanel({
+  gameData,
+  record,
+  fieldable,
+  onBack,
+  onRecordUpdate,
+  persistenceWarning,
+}: {
+  gameData: GameData;
+  record: RunRecordV1;
+  fieldable: boolean;
+  onBack: () => void;
+  onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
+  persistenceWarning: string | null;
+}) {
+  const router = useRouter();
+  const [sim, setSim] = useState<SimState>({ kind: "idle" });
+
+  const startSim = useCallback(async () => {
+    if (!fieldable || sim.kind === "running") return;
+    setSim({ kind: "running", note: "Loading 2026 scenario…" });
+    // Reflect lifecycle on the persisted record so refreshes don't claim the
+    // run is "ready" mid-simulation. Best-effort — proceed on failure.
+    try {
+      const stat = setRunStatus(record.run_id, gameData.versions, "simulating");
+      if (stat.status === "updated" && stat.record) {
+        onRecordUpdate(stat.record, persistenceWarning);
+      }
+    } catch {
+      // Non-fatal: a quota error here doesn't block the actual sim.
+    }
+    try {
+      const scenarioBundle = await loadScenarioBundle();
+      setSim({ kind: "running", note: "Simulating the run…" });
+      const result = await runSimulation(gameData, scenarioBundle, record);
+      const persist = setRunSimulation(
+        record.run_id,
+        gameData.versions,
+        result.simulation,
+      );
+      if (persist.status !== "updated" || !persist.record) {
+        setSim({
+          kind: "error",
+          title: "Couldn't save the simulation",
+          message:
+            "This draft record went stale between the tap and the result. Start a new draft to try again.",
+        });
+        return;
+      }
+      const warningParts: string[] = [];
+      if (result.warning) warningParts.push(result.warning);
+      if (persist.persistence === "volatile") {
+        warningParts.push("Simulation saved to this tab only — browser storage is unavailable.");
+      }
+      warningParts.push(...persist.warnings);
+      const warn = warningParts.length > 0
+        ? warningParts.join(" · ")
+        : persistenceWarning;
+      onRecordUpdate(persist.record, warn ?? null);
+      router.push(resultsHref(persist.record.run_id));
+    } catch (err) {
+      // Reset record status so the user can retry from a clean state.
+      try {
+        const stat = setRunStatus(record.run_id, gameData.versions, "ready");
+        if (stat.status === "updated" && stat.record) {
+          onRecordUpdate(stat.record, persistenceWarning);
+        }
+      } catch {
+        // best-effort
+      }
+      const d = describeGameError(err);
+      setSim({ kind: "error", title: d.title, message: d.message });
+    }
+  }, [fieldable, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
+
+  const note = !fieldable
+    ? "Your XI isn't fieldable yet — head back to the draft and finish the starters."
+    : sim.kind === "running"
+      ? sim.note
+      : "Your XI is fieldable. Hit simulate to play the 8-match run.";
+
+  return (
+    <section className={`${s.panel} ${s.simPanel}`}>
+      {sim.kind === "error" ? (
+        <div role="alert">
+          <p className={s.simNote}>
+            <strong>{sim.title}</strong> · {sim.message}
+          </p>
+        </div>
+      ) : (
+        <p className={s.simNote} role={sim.kind === "running" ? "status" : undefined}>
+          {note}
+        </p>
+      )}
+      <button
+        type="button"
+        className={`btn btn--primary${!fieldable || sim.kind === "running" ? " btn--disabled" : ""}`}
+        onClick={startSim}
+        disabled={!fieldable || sim.kind === "running"}
+        aria-disabled={!fieldable || sim.kind === "running"}
+      >
+        {sim.kind === "running" ? "Simulating…" : "Simulate the run"}
+      </button>
+      <button
+        type="button"
+        className="btn btn--ghost"
+        onClick={onBack}
+        disabled={sim.kind === "running"}
+      >
+        Back to draft
+      </button>
+    </section>
   );
 }

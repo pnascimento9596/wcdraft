@@ -25,3 +25,11 @@ export function draftHref(run_id: string | null): string {
 export function reviewHref(run_id: string | null): string {
   return run_id ? `/play/review?${RUN_PARAM}=${encodeURIComponent(run_id)}` : "/play/review";
 }
+
+export function resultsHref(run_id: string | null): string {
+  return run_id ? `/play/results?${RUN_PARAM}=${encodeURIComponent(run_id)}` : "/play/results";
+}
+
+export function shareHref(run_id: string | null): string {
+  return run_id ? `/play/share?${RUN_PARAM}=${encodeURIComponent(run_id)}` : "/play/share";
+}
