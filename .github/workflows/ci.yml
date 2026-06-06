@@ -79,6 +79,58 @@ jobs:
         # the deterministic 17-spin output drifts from the recorded snapshot.
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
 
+  db-rollback-check:
+    name: db · apply → rollback round-trip (Neon branch)
+    runs-on: ubuntu-latest
+    # F-1 RED — runs only when the Neon DIRECT (unpooled) URL is configured as
+    # a repository secret. SKIPS for contributor PRs without the secret so
+    # forks/CI don't fail with no path forward. The secret MUST point at a
+    # Neon BRANCH (never prod) — the rollback step drops the entire schema.
+    # Always runs; if the Neon secret isn't present (e.g. fork PR), the
+    # in-job gate step short-circuits the apply/rollback round-trip with a
+    # warning so CI still passes. Secrets are NOT exposed to fork PRs by
+    # default, so this is the canonical 'secret-optional' pattern.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.5.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Guard — require Neon DIRECT URL secret
+        # Hard-fail with a clear message when the workflow runs (in-repo PR or
+        # push) but the secret is missing, instead of letting drizzle's
+        # migrator surface a cryptic ENOTFOUND.
+        env:
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+        run: |
+          if [ -z "$DATABASE_URL_UNPOOLED" ]; then
+            echo "::warning::DATABASE_URL_UNPOOLED secret is not set — skipping apply/rollback round-trip."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+        id: gate
+
+      - name: Apply → rollback round-trip
+        if: ${{ steps.gate.outputs.skip != 'true' }}
+        env:
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+        # Apply all migrations, run paired down-migrations in reverse, assert
+        # the public schema is empty afterward. Exits non-zero on any failure.
+        run: pnpm exec turbo run db:rollback-check --filter=@wcdraft/db
+
   etl-rating:
     name: ETL rating · lint · golden determinism
     runs-on: ubuntu-latest

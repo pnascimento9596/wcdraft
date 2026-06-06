@@ -20,6 +20,17 @@
     },
     "test:golden:integration": {
       "dependsOn": ["^build"]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false,
+      "env": ["DATABASE_URL_UNPOOLED"]
+    },
+    "db:rollback-check": {
+      "cache": false,
+      "env": ["DATABASE_URL_UNPOOLED"]
     }
   }
 }
