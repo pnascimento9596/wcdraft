@@ -338,7 +338,11 @@ button.slot:disabled {
   border-style: dashed;
   color: rgba(255, 255, 255, 0.82);
 }
-button.slotEmpty:hover:not(:disabled) {
+/* HOVER LIFT — only outside the pitch. Inside the pitch, the slot is
+   absolutely positioned with translate(-50%, -50%); any extra transform
+   here would override that and cause the highlighted slot to JUMP. The
+   `:not(.pitch *)` scope keeps the lift for bench-style usage of .slot. */
+button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.75);
 }
@@ -1701,13 +1705,17 @@ button.benchSlot:not(:disabled):hover {
   max-width: 32ch;
 }
 
+/* MOBILE-FIRST 6+ card grid. Cards stay tappable (min-height ~168px) but
+   scale down enough that 6 formations fit two columns at ~360px viewport,
+   and the layout flows to 3/4 columns on tablets+desktop. The previous
+   `1fr 1fr` always-two-col rule didn't compose at 10+ formations. */
 .formationGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 10px;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 320px) {
   .formationGrid {
     grid-template-columns: 1fr;
   }
@@ -1719,15 +1727,15 @@ button.benchSlot:not(:disabled):hover {
   background: var(--bg-750);
   border: 1px solid var(--line);
   border-radius: var(--r-3);
-  padding: 12px;
-  gap: 10px;
+  padding: 10px;
+  gap: 8px;
   cursor: pointer;
   transition: transform var(--d-fast) var(--e-snap), box-shadow var(--d-fast),
     border-color var(--d-fast);
   text-align: left;
   color: inherit;
   font-family: inherit;
-  min-height: 220px;
+  min-height: 168px;
 }
 
 .formationCard:hover,
@@ -1755,7 +1763,7 @@ button.benchSlot:not(:disabled):hover {
 
 .formationCardName {
   font-family: var(--f-display);
-  font-size: 22px;
+  font-size: 18px;
   letter-spacing: 0.02em;
   color: var(--ink-100);
 }
@@ -1783,9 +1791,11 @@ button.benchSlot:not(:disabled):hover {
 
 /* ── Mini-pitch on the formation cards ──────────────────────────────────── */
 
+/* Compact mini-pitch — 5/6 aspect keeps cards short enough for 6+ on mobile
+   without distorting position spacing. */
 .miniPitch {
   position: relative;
-  aspect-ratio: 7 / 10;
+  aspect-ratio: 5 / 6;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
     var(--bg-800);
@@ -1794,35 +1804,47 @@ button.benchSlot:not(:disabled):hover {
   overflow: hidden;
 }
 
+/* Base dot — COLOUR ONLY, geometry comes from the shape modifier so a
+   3-5-2 wing-back can sit in the 'mid' colour band but render as a DF
+   triangle (its true core line). */
 .miniDot {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
   border-radius: 999px;
   background: var(--ink-200);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
+/* COLOUR by JSON visual band. */
 .miniDot_gk {
   background: var(--prov-historical);
-  border-radius: 3px;
 }
-
 .miniDot_def {
   background: var(--teal-bright);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  border-radius: 0;
 }
-
 .miniDot_mid {
   background: var(--ink-200);
-  transform: translate(-50%, -50%) rotate(45deg);
-  border-radius: 2px;
 }
-
 .miniDot_fwd {
   background: var(--gold);
+}
+
+/* SHAPE by CORE position line (GK square / DF triangle / MF diamond /
+   FW circle). Position-by-shape is one of the brand invariants. */
+.miniDotShape_square {
+  border-radius: 2px;
+}
+.miniDotShape_triangle {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+.miniDotShape_diamond {
+  border-radius: 2px;
+  --mini-dot-rotate: 45deg;
+}
+.miniDotShape_circle {
   border-radius: 999px;
 }
 
@@ -1888,9 +1910,19 @@ button.benchSlot:not(:disabled):hover {
   border-bottom: none;
 }
 
+/* ── Pitch slots: stabilized placement ─────────────────────────────────────
+   The slot is absolutely positioned and CENTRED on its (x, y) percentage
+   via `transform: translate(-50%, -50%)`. Any *additional* transform on a
+   selected/hovered/preview/tier state would CLOBBER that translation and
+   make the slot JUMP or LIFT. So every state below preserves
+   `translate(-50%, -50%)` exactly, uses `box-shadow`/`outline` for
+   emphasis, and uses `box-sizing: border-box` so border-width changes
+   never resize the chip.
+   Transitions intentionally exclude `transform` for the same reason. */
 .pitch .slot {
   position: absolute;
   transform: translate(-50%, -50%);
+  box-sizing: border-box;
   min-width: 56px;
   max-width: 80px;
   padding: 6px 6px;
@@ -1905,31 +1937,76 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-xs);
   font-family: var(--f-mono);
   cursor: pointer;
-  transition: transform var(--d-fast) var(--e-snap), box-shadow var(--d-fast),
-    border-color var(--d-fast);
+  transition: box-shadow var(--d-fast), border-color var(--d-fast),
+    background-color var(--d-fast);
 }
 
 .pitch button.slot:hover,
 .pitch button.slot:focus-visible {
+  transform: translate(-50%, -50%);
   border-color: var(--ember);
   box-shadow: var(--ring-ember);
 }
 
 .pitch .slotEmpty {
+  transform: translate(-50%, -50%);
   background: color-mix(in srgb, var(--bg-700) 70%, transparent);
   border-style: dashed;
   color: var(--ink-400);
 }
 
 .pitch .slotSelected {
+  transform: translate(-50%, -50%);
   border-color: var(--ember-bright);
   box-shadow: var(--ring-ember);
 }
 
 .pitch .slotLocked {
+  transform: translate(-50%, -50%);
   border-color: var(--lock);
   background: color-mix(in srgb, var(--bg-700) 95%, rgba(var(--lock-rgb), 0.08));
   cursor: default;
+}
+
+/* Tier accents on pitch slots: the generic `.tier_*` rules set a 4px
+   left border which RESIZES the chip (via box-sizing). Inside the pitch
+   we keep the chip width stable and use an inset shadow accent instead,
+   so a fit-tier change never shifts the slot. */
+.pitch .slot.tier_ideal,
+.pitch .slot.tier_ok,
+.pitch .slot.tier_stretch,
+.pitch .slot.tier_misfit {
+  border-left-width: 1.5px;
+}
+.pitch .slot.tier_ideal {
+  box-shadow: inset 3px 0 0 0 #5fbf86;
+}
+.pitch .slot.tier_ok {
+  box-shadow: inset 3px 0 0 0 rgba(255, 255, 255, 0.45);
+}
+.pitch .slot.tier_stretch {
+  box-shadow: inset 3px 0 0 0 #e9b949;
+}
+.pitch .slot.tier_misfit {
+  box-shadow: inset 3px 0 0 0 var(--accent);
+}
+
+/* Preview tier on pitch slots: stay in place, glow via box-shadow ring. */
+.pitch .slot.slotPreview {
+  transform: translate(-50%, -50%);
+  border-left-width: 1.5px;
+}
+.pitch .slot.tierPreview_ideal {
+  box-shadow: 0 0 0 2px #5fbf86, inset 3px 0 0 0 #5fbf86;
+}
+.pitch .slot.tierPreview_ok {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55), inset 3px 0 0 0 rgba(255, 255, 255, 0.55);
+}
+.pitch .slot.tierPreview_stretch {
+  box-shadow: 0 0 0 2px #e9b949, inset 3px 0 0 0 #e9b949;
+}
+.pitch .slot.tierPreview_misfit {
+  box-shadow: 0 0 0 2px var(--accent), inset 3px 0 0 0 var(--accent);
 }
 
 /* Position shape encoding (square/triangle/diamond/circle) — applied as a
@@ -3085,4 +3162,232 @@ button.benchSlot:not(:disabled):hover {
   font-size: 0.78rem;
   margin: 0;
 
+}
+/* ── ws-squad/formations-polish: Synergy link layer + Manager slot ──────── */
+
+/* SVG layer drawn beneath the slot chips so links sit on the pitch but do
+   not block taps. Pointer events disabled because line endpoints sit at
+   slot centres and would otherwise eat clicks on the slot itself. */
+.pitchSynergyLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.synergyLineIdle {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Emerald = same-nation + same-tournament link. Locked hex `#2ecf92` per
+   the brand contract — do not swap to a token; this colour is explicit. */
+.synergyLineLive {
+  stroke: #2ecf92;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(46, 207, 146, 0.45));
+}
+
+/* Visible label naming the layer. The brand glossary says "Synergy",
+   NEVER "Chemistry". */
+.pitchSynergyLegend {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-100);
+  background: color-mix(in srgb, var(--bg-900) 65%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+}
+
+.pitchSynergyLegendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2ecf92;
+  box-shadow: 0 0 6px rgba(46, 207, 146, 0.7);
+}
+
+/* Pitch slots sit above the SVG layer so chips remain interactive. */
+.pitch .slot {
+  z-index: 2;
+}
+
+/* ── Slot shape marker (visible inside the chip) ─────────────────────────
+   Position-by-shape is one of the brand invariants: GK square,
+   DF triangle, MF diamond, FW circle. The marker is a small block placed
+   beside the slot's role pill. It must not affect chip dimensions when
+   a slot becomes selected/preview/filled — fixed size, no transform. */
+
+.slotHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.slotShapeMarker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  opacity: 0.85;
+  flex: none;
+}
+
+.slotShapeMarker_square {
+  border-radius: 1px;
+}
+
+.slotShapeMarker_triangle {
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 8px solid currentColor;
+}
+
+.slotShapeMarker_diamond {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+.slotShapeMarker_circle {
+  border-radius: 999px;
+}
+
+/* ── Squad stage: pitch + manager slot side-by-side ─────────────────────
+   Mobile-first stack; tablets+ get the manager card pinned to the right
+   of the pitch. The pitch keeps its aspect-ratio either way. */
+
+.squadStage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .squadStage {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    align-items: start;
+  }
+}
+
+/* ── Manager slot ─────────────────────────────────────────────────────── */
+
+.managerSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  color: var(--ink-100);
+}
+
+.managerSlotCommitted {
+  border-color: color-mix(in srgb, var(--prov-manager) 55%, var(--line));
+  box-shadow: 0 0 0 1px rgba(var(--prov-manager-rgb, 255, 255, 255), 0.15);
+}
+
+.managerSlotPreview {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+  border-style: dashed;
+}
+
+.managerSlotOpen {
+  border-style: dashed;
+  color: var(--ink-300);
+}
+
+.managerSlotEyebrow {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.managerSlotIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.managerSlotFlag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 6px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-100);
+}
+
+.managerSlotNameWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.managerSlotName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.managerSlotMeta {
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+}
+
+/* "Rating unavailable" — the manager rating contract is HONEST-STATE:
+   runtime data never carries one, and the UI never fabricates one. */
+.managerSlotBadge {
+  align-self: flex-start;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prov-manager);
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+}
+
+.managerSlotEmpty {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-300);
+  font-style: italic;
 }
