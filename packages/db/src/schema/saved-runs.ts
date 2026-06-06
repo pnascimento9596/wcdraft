@@ -11,6 +11,20 @@
 // anon-history reaping policy. The DB-level CHECK constraint enforces the
 // closed enum so a row written without going through the F-3 application
 // layer cannot silently land an unknown state.
+//
+// Dedupe is via a UNIQUE CONSTRAINT with NULLS NOT DISTINCT (Postgres 15+)
+// so two anonymous rows (owner_user_id IS NULL) with the same token are
+// rejected. The default Postgres NULLS-DISTINCT semantics make a plain
+// unique index toothless against the DEFAULT pre-auth case (verified by an
+// independent reviewer on Neon). Anonymous-first is the load-bearing path,
+// so the constraint is non-negotiable. NULLS NOT DISTINCT is compatible
+// with the anon→account claim flow: claiming re-keys NULL→user_id, which
+// remains unique by the new key.
+//
+// FLAG for F-3: decide whether anonymous saved_runs should be session-scoped
+// vs global-per-token. If scoped, that's an additive index change (add
+// session_id, drop the global anon dedupe). Leaderboard dedupe stays
+// global-effective regardless.
 import {
   pgTable,
   text,
@@ -18,11 +32,11 @@ import {
   uuid,
   jsonb,
   index,
-  uniqueIndex,
+  unique,
   check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { users } from "./users.js";
+import { users } from "./users.ts";
 
 export const savedRuns = pgTable(
   "saved_runs",
@@ -43,7 +57,9 @@ export const savedRuns = pgTable(
   },
   (t) => [
     index("saved_runs_owner_created_idx").on(t.ownerUserId, t.createdAt),
-    uniqueIndex("saved_runs_owner_token_uq").on(t.ownerUserId, t.token),
+    unique("saved_runs_owner_token_uq")
+      .on(t.ownerUserId, t.token)
+      .nullsNotDistinct(),
     check(
       "saved_runs_claim_state_chk",
       sql`${t.claimState} IN ('anonymous', 'claimed')`,

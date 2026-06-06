@@ -4,6 +4,12 @@
     "rootDir": "src",
     "outDir": "dist",
     "types": ["node"],
+    // TypeScript 5.7+ feature: source files import via `.ts` (so tools that
+    // resolve at the source layer — drizzle-kit, vitest, tsx — work without
+    // ceremony), and tsc rewrites those to `.js` in the emit so Node ESM
+    // can resolve the compiled output.
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "noEmit": false
   },
   "include": ["src/**/*.ts"],

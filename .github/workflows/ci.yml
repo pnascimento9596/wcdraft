@@ -80,16 +80,16 @@ jobs:
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
 
   db-rollback-check:
-    name: db · apply → rollback round-trip (Neon branch)
+    name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
     runs-on: ubuntu-latest
-    # F-1 RED — runs only when the Neon DIRECT (unpooled) URL is configured as
-    # a repository secret. SKIPS for contributor PRs without the secret so
-    # forks/CI don't fail with no path forward. The secret MUST point at a
-    # Neon BRANCH (never prod) — the rollback step drops the entire schema.
-    # Always runs; if the Neon secret isn't present (e.g. fork PR), the
-    # in-job gate step short-circuits the apply/rollback round-trip with a
-    # warning so CI still passes. Secrets are NOT exposed to fork PRs by
-    # default, so this is the canonical 'secret-optional' pattern.
+    # SAFETY POSTURE (revised per independent review on PR #26):
+    # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
+    # it creates its OWN ephemeral Neon branch off the primary, runs the
+    # round-trip against THAT, and deletes the branch in always() — so a
+    # misconfigured secret can NEVER target production.
+    #
+    # Skips with a warning when NEON_API_KEY or NEON_PROJECT_ID is absent
+    # (forks PRs don't get secrets; this keeps their CI green).
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -108,28 +108,69 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Guard — require Neon DIRECT URL secret
-        # Hard-fail with a clear message when the workflow runs (in-repo PR or
-        # push) but the secret is missing, instead of letting drizzle's
-        # migrator surface a cryptic ENOTFOUND.
-        env:
-          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
-        run: |
-          if [ -z "$DATABASE_URL_UNPOOLED" ]; then
-            echo "::warning::DATABASE_URL_UNPOOLED secret is not set — skipping apply/rollback round-trip."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "skip=false" >> "$GITHUB_OUTPUT"
+      - name: Gate — require Neon API key + project id
         id: gate
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # Emits skip=true (with a workflow warning, not a failure) when
+        # either secret is missing — contributors on forks don't have them
+        # and we don't want their CI to red over an integration-only job.
+        run: |
+          if [ -z "$NEON_API_KEY" ] || [ -z "$NEON_PROJECT_ID" ]; then
+            echo "::warning::NEON_API_KEY or NEON_PROJECT_ID secret is not set — skipping ephemeral-branch rollback-check."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Apply → rollback round-trip
+      - name: Create ephemeral Neon branch
+        id: branch_create
         if: ${{ steps.gate.outputs.skip != 'true' }}
         env:
-          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
-        # Apply all migrations, run paired down-migrations in reverse, assert
-        # the public schema is empty afterward. Exits non-zero on any failure.
-        run: pnpm exec turbo run db:rollback-check --filter=@wcdraft/db
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # The script writes the branch's pooled + unpooled URLs (and
+        # NEON_EPHEMERAL_BRANCH_ID + NEON_PROJECT_ID) to $RUNNER_TEMP/neon-ephemeral.env
+        # at mode 0600, and emits the branch_id + project_id to GITHUB_OUTPUT
+        # so the always() cleanup step can find them.
+        run: pnpm --filter @wcdraft/db db:branch:create "$RUNNER_TEMP/neon-ephemeral.env"
+
+      - name: Apply migrations against ephemeral branch
+        if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        run: |
+          set -a
+          . "$RUNNER_TEMP/neon-ephemeral.env"
+          set +a
+          pnpm --filter @wcdraft/db db:migrate
+
+      - name: Rollback-check (apply → anon-dedupe → rollback → assert empty)
+        if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # The runner's in-script guard checks NEON_EPHEMERAL_BRANCH_ID is set
+        # AND (when NEON_API_KEY is present) that the branch is NOT primary/default.
+        # A misconfigured workflow that pointed at production would be caught here.
+        run: |
+          set -a
+          . "$RUNNER_TEMP/neon-ephemeral.env"
+          set +a
+          pnpm --filter @wcdraft/db db:rollback-check
+
+      - name: Delete ephemeral Neon branch (always)
+        if: ${{ always() && steps.branch_create.outputs.branch_id != '' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ steps.branch_create.outputs.project_id }}
+          NEON_EPHEMERAL_BRANCH_ID: ${{ steps.branch_create.outputs.branch_id }}
+        # always() ensures the branch is destroyed even if migrate or
+        # rollback-check failed mid-run. The delete script ALSO refuses to
+        # delete a primary/default branch as a final safety check.
+        run: pnpm --filter @wcdraft/db db:branch:delete
 
   etl-rating:
     name: ETL rating · lint · golden determinism

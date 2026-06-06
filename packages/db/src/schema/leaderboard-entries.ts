@@ -13,6 +13,15 @@
 // allowed; ranked mode requires a bound user (F-4 application check).
 // `mode` is a DB-level CHECK enum so a write outside the F-4 application
 // layer cannot silently land an unknown mode.
+//
+// Dedupe is via a UNIQUE CONSTRAINT with NULLS NOT DISTINCT (Postgres 15+).
+// Casual leaderboard is anonymous-first by default: a plain unique index
+// on (season_key, mode, user_id, token) would let two NULL-user rows with
+// the same token both insert under Postgres' default NULLS-DISTINCT
+// semantics. NULLS NOT DISTINCT closes the spam vector while remaining
+// anon-friendly because the (season_key, mode, token) combination still
+// uniquely identifies a casual entry. Global-effective anti-spam is the
+// right F-4 surface regardless of the F-3 anon-history scoping decision.
 import {
   pgTable,
   text,
@@ -21,12 +30,12 @@ import {
   integer,
   jsonb,
   index,
-  uniqueIndex,
+  unique,
   check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { users } from "./users.js";
-import { rankedAttempts } from "./ranked-attempts.js";
+import { users } from "./users.ts";
+import { rankedAttempts } from "./ranked-attempts.ts";
 
 export const leaderboardEntries = pgTable(
   "leaderboard_entries",
@@ -51,12 +60,9 @@ export const leaderboardEntries = pgTable(
       t.mode,
       t.verifiedScore,
     ),
-    uniqueIndex("leaderboard_entries_dedupe_uq").on(
-      t.seasonKey,
-      t.mode,
-      t.userId,
-      t.token,
-    ),
+    unique("leaderboard_entries_dedupe_uq")
+      .on(t.seasonKey, t.mode, t.userId, t.token)
+      .nullsNotDistinct(),
     check(
       "leaderboard_entries_mode_chk",
       sql`${t.mode} IN ('casual', 'ranked')`,

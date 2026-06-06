@@ -9,7 +9,7 @@
 // double-submit token cookie derived from this secret and verifies it on
 // mutating handlers.
 import { pgTable, text, timestamp, uuid, index } from "drizzle-orm/pg-core";
-import { users } from "./users.js";
+import { users } from "./users.ts";
 
 export const sessions = pgTable(
   "sessions",

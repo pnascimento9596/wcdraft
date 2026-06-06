@@ -8,8 +8,8 @@
 // One of `user_id` / `session_id` MUST be set (enforced by F-4 application
 // logic; F-1 leaves both nullable so the column-only scaffold is unambiguous).
 import { pgTable, text, timestamp, uuid, index } from "drizzle-orm/pg-core";
-import { users } from "./users.js";
-import { sessions } from "./sessions.js";
+import { users } from "./users.ts";
+import { sessions } from "./sessions.ts";
 
 export const rankedAttempts = pgTable(
   "ranked_attempts",

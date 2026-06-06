@@ -9,5 +9,5 @@
 // No browser entry: this package is server-only. Importing it from a client
 // bundle will fail at runtime when `process.env` is undefined, which is the
 // desired behavior (a guard rail, not a silent fallback).
-export { getDb, openMigratorDb, type Db } from "./client.js";
-export * from "./schema/index.js";
+export { getDb, openMigratorDb, type Db } from "./client.ts";
+export * from "./schema/index.ts";

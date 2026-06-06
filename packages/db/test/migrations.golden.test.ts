@@ -1,16 +1,17 @@
-// F-1 — migration SQL golden.
+// F-1 — migration SQL golden + structural NULLS NOT DISTINCT guard.
 //
 // Reads `migrations/0000_init.sql` and asserts it contains the load-bearing
-// DDL for every required table + constraint + index. This is NOT a full
-// byte-identity check — drizzle-kit's generated SQL embeds a non-determinstic
-// timestamp in the journal, and the random tag in the SQL filename would
-// require committing the renamed file (which we do, but contents could drift
-// silently in tooling upgrades). Instead we assert SCHEMA-EQUIVALENT content:
-// every table and every constraint the Phase F plan §3 calls for.
+// DDL for every required table + constraint + index, INCLUDING the
+// UNIQUE NULLS NOT DISTINCT semantics on both anonymous-dedupe constraints
+// (the bug an independent reviewer caught by inserting duplicate NULL rows
+// on a Neon branch).
 //
-// If drizzle-kit's emit format changes, this test flags it for explicit
-// review rather than letting the migrator quietly start producing different
-// SQL.
+// This is the cheap CI-tier static guard. The RUNTIME proof — actually
+// inserting duplicates and verifying Postgres rejects them — lives in
+// `scripts/rollback-check.ts` and runs against an ephemeral Neon branch.
+//
+// If drizzle-kit's emit format changes, this file flags the drift instead
+// of letting the migrator quietly start producing different SQL.
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 
@@ -49,6 +50,38 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(initSql).toMatch(new RegExp(`CREATE TABLE IF NOT EXISTS "${table}"`));
   });
 
+  // ── FIX 1 — UNIQUE NULLS NOT DISTINCT on the two anonymous-dedupe constraints
+  //
+  // Plain UNIQUE indexes on nullable columns are TOOTHLESS against the
+  // default anonymous case (Postgres treats NULLs as distinct, so two
+  // anon rows with the same token both insert). The constraint MUST use
+  // NULLS NOT DISTINCT (Postgres 15+). These tests are the static guard;
+  // rollback-check.ts is the runtime proof.
+
+  it("emits UNIQUE NULLS NOT DISTINCT on saved_runs_owner_token_uq", () => {
+    expect(initSql).toMatch(
+      /CONSTRAINT\s+"saved_runs_owner_token_uq"\s+UNIQUE\s+NULLS\s+NOT\s+DISTINCT\("owner_user_id","token"\)/,
+    );
+  });
+
+  it("emits UNIQUE NULLS NOT DISTINCT on leaderboard_entries_dedupe_uq", () => {
+    expect(initSql).toMatch(
+      /CONSTRAINT\s+"leaderboard_entries_dedupe_uq"\s+UNIQUE\s+NULLS\s+NOT\s+DISTINCT\("season_key","mode","user_id","token"\)/,
+    );
+  });
+
+  it("does NOT regress to a plain unique index on either dedupe key", () => {
+    // Belt-and-suspenders: catch a future refactor that quietly swaps the
+    // constraint back to `uniqueIndex(...)` (which would re-introduce the
+    // anonymous-spam vector).
+    expect(initSql).not.toMatch(
+      /CREATE UNIQUE INDEX[^;]*"saved_runs_owner_token_uq"/,
+    );
+    expect(initSql).not.toMatch(
+      /CREATE UNIQUE INDEX[^;]*"leaderboard_entries_dedupe_uq"/,
+    );
+  });
+
   it("emits CHECK on saved_runs.claim_state (anonymous|claimed)", () => {
     expect(initSql).toMatch(/saved_runs_claim_state_chk/);
     expect(initSql).toMatch(/'anonymous'/);
@@ -80,11 +113,9 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     "sessions_user_id_idx",
     "sessions_expires_at_idx",
     "saved_runs_owner_created_idx",
-    "saved_runs_owner_token_uq",
     "ranked_attempts_user_issued_idx",
     "ranked_attempts_session_issued_idx",
     "leaderboard_entries_top_idx",
-    "leaderboard_entries_dedupe_uq",
   ])("creates index %s", (idx) => {
     expect(initSql).toContain(idx);
   });
@@ -96,7 +127,6 @@ describe("@wcdraft/db migrations — 0000_init", () => {
   });
 
   it("uses timestamp with time zone for all timestamp columns", () => {
-    // Spot-check the columns that must be tz-aware (session/token expiry).
     expect(initSql).toMatch(
       /"expires_at"\s+timestamp\s+with\s+time\s+zone\s+NOT\s+NULL/,
     );

@@ -20,7 +20,7 @@
 // a test or build script that never calls `getDb()` cannot dial Neon.
 import { Pool } from "@neondatabase/serverless";
 import { drizzle, type NeonDatabase } from "drizzle-orm/neon-serverless";
-import * as schema from "./schema/index.js";
+import * as schema from "./schema/index.ts";
 
 export type Db = NeonDatabase<typeof schema>;
 

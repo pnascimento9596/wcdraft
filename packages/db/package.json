@@ -27,7 +27,9 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
-    "db:rollback-check": "tsx scripts/rollback-check.ts"
+    "db:rollback-check": "tsx scripts/rollback-check.ts",
+    "db:branch:create": "tsx scripts/neon-branch-create.ts",
+    "db:branch:delete": "tsx scripts/neon-branch-delete.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.0",

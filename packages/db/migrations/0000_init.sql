@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS "saved_runs" (
 	"parent_seed" text,
 	"claim_state" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "saved_runs_owner_token_uq" UNIQUE NULLS NOT DISTINCT("owner_user_id","token"),
 	CONSTRAINT "saved_runs_claim_state_chk" CHECK ("saved_runs"."claim_state" IN ('anonymous', 'claimed'))
 );
 --> statement-breakpoint
@@ -56,6 +57,7 @@ CREATE TABLE IF NOT EXISTS "leaderboard_entries" (
 	"score_breakdown" jsonb,
 	"attempt_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "leaderboard_entries_dedupe_uq" UNIQUE NULLS NOT DISTINCT("season_key","mode","user_id","token"),
 	CONSTRAINT "leaderboard_entries_mode_chk" CHECK ("leaderboard_entries"."mode" IN ('casual', 'ranked'))
 );
 --> statement-breakpoint
@@ -106,8 +108,6 @@ CREATE INDEX IF NOT EXISTS "magic_link_tokens_expires_at_idx" ON "magic_link_tok
 CREATE INDEX IF NOT EXISTS "sessions_user_id_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "sessions_expires_at_idx" ON "sessions" USING btree ("expires_at");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "saved_runs_owner_created_idx" ON "saved_runs" USING btree ("owner_user_id","created_at");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "saved_runs_owner_token_uq" ON "saved_runs" USING btree ("owner_user_id","token");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "ranked_attempts_user_issued_idx" ON "ranked_attempts" USING btree ("user_id","issued_at");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "ranked_attempts_session_issued_idx" ON "ranked_attempts" USING btree ("session_id","issued_at");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "leaderboard_entries_top_idx" ON "leaderboard_entries" USING btree ("season_key","mode","verified_score");--> statement-breakpoint
-CREATE UNIQUE INDEX IF NOT EXISTS "leaderboard_entries_dedupe_uq" ON "leaderboard_entries" USING btree ("season_key","mode","user_id","token");
+CREATE INDEX IF NOT EXISTS "leaderboard_entries_top_idx" ON "leaderboard_entries" USING btree ("season_key","mode","verified_score");

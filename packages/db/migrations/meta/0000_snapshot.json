@@ -1,5 +1,5 @@
 {
-  "id": "50a4d934-d95a-4200-9b3e-ad4a8d6e23e2",
+  "id": "3cb4c914-e215-4d3b-82f3-d5138592bacc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -311,27 +311,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "saved_runs_owner_token_uq": {
-          "name": "saved_runs_owner_token_uq",
-          "columns": [
-            {
-              "expression": "owner_user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "token",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -350,7 +329,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "saved_runs_owner_token_uq": {
+          "name": "saved_runs_owner_token_uq",
+          "nullsNotDistinct": true,
+          "columns": [
+            "owner_user_id",
+            "token"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {
         "saved_runs_claim_state_chk": {
@@ -581,39 +569,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "leaderboard_entries_dedupe_uq": {
-          "name": "leaderboard_entries_dedupe_uq",
-          "columns": [
-            {
-              "expression": "season_key",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "mode",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "token",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {
@@ -645,7 +600,18 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "leaderboard_entries_dedupe_uq": {
+          "name": "leaderboard_entries_dedupe_uq",
+          "nullsNotDistinct": true,
+          "columns": [
+            "season_key",
+            "mode",
+            "user_id",
+            "token"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {
         "leaderboard_entries_mode_chk": {
