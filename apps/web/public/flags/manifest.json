@@ -1,0 +1,565 @@
+{
+  "source": "https://github.com/lipis/flag-icons (MIT)",
+  "license_note": "flag-icons SVGs depict national flags whose designs are public-domain. Repository code is MIT.",
+  "ratio": "4x3",
+  "mappings": [
+    {
+      "nation_id": "T-01",
+      "canonical_name": "Algeria",
+      "flag_icons_slug": "dz",
+      "note": null
+    },
+    {
+      "nation_id": "T-02",
+      "canonical_name": "Angola",
+      "flag_icons_slug": "ao",
+      "note": null
+    },
+    {
+      "nation_id": "T-03",
+      "canonical_name": "Argentina",
+      "flag_icons_slug": "ar",
+      "note": null
+    },
+    {
+      "nation_id": "T-04",
+      "canonical_name": "Australia",
+      "flag_icons_slug": "au",
+      "note": null
+    },
+    {
+      "nation_id": "T-05",
+      "canonical_name": "Austria",
+      "flag_icons_slug": "at",
+      "note": null
+    },
+    {
+      "nation_id": "T-06",
+      "canonical_name": "Belgium",
+      "flag_icons_slug": "be",
+      "note": null
+    },
+    {
+      "nation_id": "T-07",
+      "canonical_name": "Bolivia",
+      "flag_icons_slug": "bo",
+      "note": null
+    },
+    {
+      "nation_id": "T-08",
+      "canonical_name": "Bosnia and Herzegovina",
+      "flag_icons_slug": "ba",
+      "note": null
+    },
+    {
+      "nation_id": "T-09",
+      "canonical_name": "Brazil",
+      "flag_icons_slug": "br",
+      "note": null
+    },
+    {
+      "nation_id": "T-10",
+      "canonical_name": "Bulgaria",
+      "flag_icons_slug": "bg",
+      "note": null
+    },
+    {
+      "nation_id": "T-11",
+      "canonical_name": "Cameroon",
+      "flag_icons_slug": "cm",
+      "note": null
+    },
+    {
+      "nation_id": "T-12",
+      "canonical_name": "Canada",
+      "flag_icons_slug": "ca",
+      "note": null
+    },
+    {
+      "nation_id": "T-13",
+      "canonical_name": "Chile",
+      "flag_icons_slug": "cl",
+      "note": null
+    },
+    {
+      "nation_id": "T-14",
+      "canonical_name": "China",
+      "flag_icons_slug": "cn",
+      "note": null
+    },
+    {
+      "nation_id": "T-15",
+      "canonical_name": "Chinese Taipei",
+      "flag_icons_slug": "tw",
+      "note": null
+    },
+    {
+      "nation_id": "T-16",
+      "canonical_name": "Colombia",
+      "flag_icons_slug": "co",
+      "note": null
+    },
+    {
+      "nation_id": "T-17",
+      "canonical_name": "Costa Rica",
+      "flag_icons_slug": "cr",
+      "note": null
+    },
+    {
+      "nation_id": "T-18",
+      "canonical_name": "Croatia",
+      "flag_icons_slug": "hr",
+      "note": null
+    },
+    {
+      "nation_id": "T-19",
+      "canonical_name": "Cuba",
+      "flag_icons_slug": "cu",
+      "note": null
+    },
+    {
+      "nation_id": "T-20",
+      "canonical_name": "Czech Republic",
+      "flag_icons_slug": "cz",
+      "note": null
+    },
+    {
+      "nation_id": "T-21",
+      "canonical_name": "Czechoslovakia",
+      "flag_icons_slug": "cz",
+      "note": "substitute: modern Czech flag (visually identical to 1920\u20131992 Czechoslovak flag)"
+    },
+    {
+      "nation_id": "T-22",
+      "canonical_name": "Denmark",
+      "flag_icons_slug": "dk",
+      "note": null
+    },
+    {
+      "nation_id": "T-23",
+      "canonical_name": "Dutch East Indies",
+      "flag_icons_slug": "id",
+      "note": "substitute: modern Indonesian flag (visually identical to 1945 flag adopted from DEI's red-over-white)"
+    },
+    {
+      "nation_id": "T-24",
+      "canonical_name": "East Germany",
+      "flag_icons_slug": "de",
+      "note": "substitute: modern German flag (no PD GDR SVG in flag-icons set)"
+    },
+    {
+      "nation_id": "T-25",
+      "canonical_name": "Ecuador",
+      "flag_icons_slug": "ec",
+      "note": null
+    },
+    {
+      "nation_id": "T-26",
+      "canonical_name": "Egypt",
+      "flag_icons_slug": "eg",
+      "note": null
+    },
+    {
+      "nation_id": "T-27",
+      "canonical_name": "El Salvador",
+      "flag_icons_slug": "sv",
+      "note": null
+    },
+    {
+      "nation_id": "T-28",
+      "canonical_name": "England",
+      "flag_icons_slug": "gb-eng",
+      "note": null
+    },
+    {
+      "nation_id": "T-29",
+      "canonical_name": "Equatorial Guinea",
+      "flag_icons_slug": "gq",
+      "note": null
+    },
+    {
+      "nation_id": "T-30",
+      "canonical_name": "France",
+      "flag_icons_slug": "fr",
+      "note": null
+    },
+    {
+      "nation_id": "T-31",
+      "canonical_name": "Germany",
+      "flag_icons_slug": "de",
+      "note": null
+    },
+    {
+      "nation_id": "T-32",
+      "canonical_name": "Ghana",
+      "flag_icons_slug": "gh",
+      "note": null
+    },
+    {
+      "nation_id": "T-33",
+      "canonical_name": "Greece",
+      "flag_icons_slug": "gr",
+      "note": null
+    },
+    {
+      "nation_id": "T-34",
+      "canonical_name": "Haiti",
+      "flag_icons_slug": "ht",
+      "note": null
+    },
+    {
+      "nation_id": "T-35",
+      "canonical_name": "Honduras",
+      "flag_icons_slug": "hn",
+      "note": null
+    },
+    {
+      "nation_id": "T-36",
+      "canonical_name": "Hungary",
+      "flag_icons_slug": "hu",
+      "note": null
+    },
+    {
+      "nation_id": "T-37",
+      "canonical_name": "Iceland",
+      "flag_icons_slug": "is",
+      "note": null
+    },
+    {
+      "nation_id": "T-38",
+      "canonical_name": "Iran",
+      "flag_icons_slug": "ir",
+      "note": null
+    },
+    {
+      "nation_id": "T-39",
+      "canonical_name": "Iraq",
+      "flag_icons_slug": "iq",
+      "note": null
+    },
+    {
+      "nation_id": "T-40",
+      "canonical_name": "Israel",
+      "flag_icons_slug": "il",
+      "note": null
+    },
+    {
+      "nation_id": "T-41",
+      "canonical_name": "Italy",
+      "flag_icons_slug": "it",
+      "note": null
+    },
+    {
+      "nation_id": "T-42",
+      "canonical_name": "Ivory Coast",
+      "flag_icons_slug": "ci",
+      "note": null
+    },
+    {
+      "nation_id": "T-43",
+      "canonical_name": "Jamaica",
+      "flag_icons_slug": "jm",
+      "note": null
+    },
+    {
+      "nation_id": "T-44",
+      "canonical_name": "Japan",
+      "flag_icons_slug": "jp",
+      "note": null
+    },
+    {
+      "nation_id": "T-45",
+      "canonical_name": "Kuwait",
+      "flag_icons_slug": "kw",
+      "note": null
+    },
+    {
+      "nation_id": "T-46",
+      "canonical_name": "Mexico",
+      "flag_icons_slug": "mx",
+      "note": null
+    },
+    {
+      "nation_id": "T-47",
+      "canonical_name": "Morocco",
+      "flag_icons_slug": "ma",
+      "note": null
+    },
+    {
+      "nation_id": "T-48",
+      "canonical_name": "Netherlands",
+      "flag_icons_slug": "nl",
+      "note": null
+    },
+    {
+      "nation_id": "T-49",
+      "canonical_name": "New Zealand",
+      "flag_icons_slug": "nz",
+      "note": null
+    },
+    {
+      "nation_id": "T-50",
+      "canonical_name": "Nigeria",
+      "flag_icons_slug": "ng",
+      "note": null
+    },
+    {
+      "nation_id": "T-51",
+      "canonical_name": "North Korea",
+      "flag_icons_slug": "kp",
+      "note": null
+    },
+    {
+      "nation_id": "T-52",
+      "canonical_name": "Northern Ireland",
+      "flag_icons_slug": "gb-nir",
+      "note": null
+    },
+    {
+      "nation_id": "T-53",
+      "canonical_name": "Norway",
+      "flag_icons_slug": "no",
+      "note": null
+    },
+    {
+      "nation_id": "T-54",
+      "canonical_name": "Panama",
+      "flag_icons_slug": "pa",
+      "note": null
+    },
+    {
+      "nation_id": "T-55",
+      "canonical_name": "Paraguay",
+      "flag_icons_slug": "py",
+      "note": null
+    },
+    {
+      "nation_id": "T-56",
+      "canonical_name": "Peru",
+      "flag_icons_slug": "pe",
+      "note": null
+    },
+    {
+      "nation_id": "T-57",
+      "canonical_name": "Poland",
+      "flag_icons_slug": "pl",
+      "note": null
+    },
+    {
+      "nation_id": "T-58",
+      "canonical_name": "Portugal",
+      "flag_icons_slug": "pt",
+      "note": null
+    },
+    {
+      "nation_id": "T-59",
+      "canonical_name": "Qatar",
+      "flag_icons_slug": "qa",
+      "note": null
+    },
+    {
+      "nation_id": "T-60",
+      "canonical_name": "Republic of Ireland",
+      "flag_icons_slug": "ie",
+      "note": null
+    },
+    {
+      "nation_id": "T-61",
+      "canonical_name": "Romania",
+      "flag_icons_slug": "ro",
+      "note": null
+    },
+    {
+      "nation_id": "T-62",
+      "canonical_name": "Russia",
+      "flag_icons_slug": "ru",
+      "note": null
+    },
+    {
+      "nation_id": "T-63",
+      "canonical_name": "Saudi Arabia",
+      "flag_icons_slug": "sa",
+      "note": null
+    },
+    {
+      "nation_id": "T-64",
+      "canonical_name": "Scotland",
+      "flag_icons_slug": "gb-sct",
+      "note": null
+    },
+    {
+      "nation_id": "T-65",
+      "canonical_name": "Senegal",
+      "flag_icons_slug": "sn",
+      "note": null
+    },
+    {
+      "nation_id": "T-66",
+      "canonical_name": "Serbia",
+      "flag_icons_slug": "rs",
+      "note": null
+    },
+    {
+      "nation_id": "T-67",
+      "canonical_name": "Serbia and Montenegro",
+      "flag_icons_slug": "rs",
+      "note": "substitute: modern Serbian flag"
+    },
+    {
+      "nation_id": "T-68",
+      "canonical_name": "Slovakia",
+      "flag_icons_slug": "sk",
+      "note": null
+    },
+    {
+      "nation_id": "T-69",
+      "canonical_name": "Slovenia",
+      "flag_icons_slug": "si",
+      "note": null
+    },
+    {
+      "nation_id": "T-70",
+      "canonical_name": "South Africa",
+      "flag_icons_slug": "za",
+      "note": null
+    },
+    {
+      "nation_id": "T-71",
+      "canonical_name": "South Korea",
+      "flag_icons_slug": "kr",
+      "note": null
+    },
+    {
+      "nation_id": "T-72",
+      "canonical_name": "Soviet Union",
+      "flag_icons_slug": "ru",
+      "note": "substitute: modern Russian flag (no PD USSR SVG in flag-icons set)"
+    },
+    {
+      "nation_id": "T-73",
+      "canonical_name": "Spain",
+      "flag_icons_slug": "es",
+      "note": null
+    },
+    {
+      "nation_id": "T-74",
+      "canonical_name": "Sweden",
+      "flag_icons_slug": "se",
+      "note": null
+    },
+    {
+      "nation_id": "T-75",
+      "canonical_name": "Switzerland",
+      "flag_icons_slug": "ch",
+      "note": null
+    },
+    {
+      "nation_id": "T-76",
+      "canonical_name": "Thailand",
+      "flag_icons_slug": "th",
+      "note": null
+    },
+    {
+      "nation_id": "T-77",
+      "canonical_name": "Togo",
+      "flag_icons_slug": "tg",
+      "note": null
+    },
+    {
+      "nation_id": "T-78",
+      "canonical_name": "Trinidad and Tobago",
+      "flag_icons_slug": "tt",
+      "note": null
+    },
+    {
+      "nation_id": "T-79",
+      "canonical_name": "Tunisia",
+      "flag_icons_slug": "tn",
+      "note": null
+    },
+    {
+      "nation_id": "T-80",
+      "canonical_name": "Turkey",
+      "flag_icons_slug": "tr",
+      "note": null
+    },
+    {
+      "nation_id": "T-81",
+      "canonical_name": "Ukraine",
+      "flag_icons_slug": "ua",
+      "note": null
+    },
+    {
+      "nation_id": "T-82",
+      "canonical_name": "United Arab Emirates",
+      "flag_icons_slug": "ae",
+      "note": null
+    },
+    {
+      "nation_id": "T-83",
+      "canonical_name": "United States",
+      "flag_icons_slug": "us",
+      "note": null
+    },
+    {
+      "nation_id": "T-84",
+      "canonical_name": "Uruguay",
+      "flag_icons_slug": "uy",
+      "note": null
+    },
+    {
+      "nation_id": "T-85",
+      "canonical_name": "Wales",
+      "flag_icons_slug": "gb-wls",
+      "note": null
+    },
+    {
+      "nation_id": "T-86",
+      "canonical_name": "West Germany",
+      "flag_icons_slug": "de",
+      "note": "substitute: modern German flag (BRD tricolor identical 1949\u20131990)"
+    },
+    {
+      "nation_id": "T-87",
+      "canonical_name": "Yugoslavia",
+      "flag_icons_slug": "rs",
+      "note": "substitute: modern Serbian flag (no PD SFRY SVG in flag-icons set)"
+    },
+    {
+      "nation_id": "T-88",
+      "canonical_name": "Zaire",
+      "flag_icons_slug": "cd",
+      "note": "substitute: modern DR Congo flag"
+    },
+    {
+      "nation_id": "T-W26-1",
+      "canonical_name": "Cape Verde",
+      "flag_icons_slug": "cv",
+      "note": null
+    },
+    {
+      "nation_id": "T-W26-2",
+      "canonical_name": "Cura\u00e7ao",
+      "flag_icons_slug": "cw",
+      "note": null
+    },
+    {
+      "nation_id": "T-W26-3",
+      "canonical_name": "DR Congo",
+      "flag_icons_slug": "cd",
+      "note": null
+    },
+    {
+      "nation_id": "T-W26-4",
+      "canonical_name": "Jordan",
+      "flag_icons_slug": "jo",
+      "note": null
+    },
+    {
+      "nation_id": "T-W26-5",
+      "canonical_name": "Uzbekistan",
+      "flag_icons_slug": "uz",
+      "note": null
+    }
+  ]
+}
