@@ -2572,3 +2572,299 @@ button.benchSlot:not(:disabled):hover {
   padding: 2px 8px;
   border-radius: var(--r-pill);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Spin slot machine — emerald (--ember) + gold (--gold), dark-first.
+   PRESENTATION ONLY. The center reel ALWAYS lands on the deterministic
+   `activeSpin` result; flanking reels are decorative. Animation is CSS
+   transforms + opacity only. `prefers-reduced-motion` snaps to the final
+   transform with no spin.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.spinRevealPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  background: linear-gradient(180deg, var(--bg-800) 0%, var(--bg-850) 100%);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-3);
+  padding: var(--s-5);
+  position: relative;
+  overflow: hidden;
+}
+.spinRevealPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 80% at 50% 0%, rgba(var(--glow-ember), 0.10), transparent 60%),
+    radial-gradient(40% 70% at 50% 100%, rgba(var(--glow-gold), 0.08), transparent 60%);
+}
+
+.spinRevealTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  position: relative;
+}
+.pickCounterBadge {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  color: var(--ember-bright);
+  background: color-mix(in srgb, var(--ember) 16%, var(--bg-700));
+  border: 1px solid color-mix(in srgb, var(--ember) 32%, transparent);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  text-transform: uppercase;
+  font-feature-settings: "tnum" 1;
+}
+.spinRevealKicker {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+/* ── Slot machine frame ───────────────────────────────────────────────── */
+
+.slotMachine {
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  padding: var(--s-5) var(--s-3);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), var(--sh-2);
+}
+.slotGuideTop,
+.slotGuideBottom {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 18%,
+    var(--gold-bright) 50%,
+    var(--gold) 82%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(var(--glow-gold), 0.55);
+  pointer-events: none;
+  z-index: 2;
+}
+.slotGuideTop { top: calc(50% - 50px); }
+.slotGuideBottom { top: calc(50% + 50px); }
+
+.slotReels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+  align-items: stretch;
+  position: relative;
+}
+
+.slotMachine {
+  --slot-face-h: 100px;
+}
+
+.slotWindow {
+  position: relative;
+  height: var(--slot-face-h);
+  overflow: hidden;
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+}
+.slotWindowCenter {
+  border-color: color-mix(in srgb, var(--ember) 35%, transparent);
+  box-shadow: var(--ring-ember);
+  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
+}
+
+/* The track holds N faces stacked vertically; final face is the landing one.
+   We translate the track from a "scrolled" start to a "landed" end position
+   so the LAST face sits in the center window. The end offset is driven by
+   --slot-face-h so a responsive @media query just needs to bump that var. */
+.slotReelTrack {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0);
+  animation-name: slotDecelerate;
+  animation-duration: var(--reel-duration);
+  animation-delay: var(--reel-delay);
+  animation-timing-function: var(--e-out);
+  animation-fill-mode: both;
+  will-change: transform;
+}
+.slotReelTrackCenter {
+  /* Center reel gets a slightly snappier deceleration at the end. */
+  animation-timing-function: cubic-bezier(0.14, 0.85, 0.2, 1);
+}
+
+@keyframes slotDecelerate {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.65;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0);
+    opacity: 1;
+  }
+}
+
+.slotFace {
+  flex: 0 0 var(--slot-face-h);
+  height: var(--slot-face-h);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 10px;
+  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
+  border-bottom: 1px solid var(--line);
+}
+.slotFace:last-child {
+  border-bottom: none;
+}
+.slotFaceLanding {
+  background: linear-gradient(180deg, var(--bg-700) 0%, var(--bg-750) 100%);
+}
+.slotFaceFlag {
+  width: 44px;
+  height: 33px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-900);
+  flex: 0 0 auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.slotFaceFallback {
+  width: 44px;
+  height: 33px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+.slotFaceText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.slotNation {
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(14px, 3.6vw, 18px);
+  color: var(--ink-100);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slotYear {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Wider, more prominent center face on roomy viewports — driven by --slot-face-h. */
+@media (min-width: 560px) {
+  .slotMachine {
+    --slot-face-h: 120px;
+  }
+  .slotGuideTop { top: calc(50% - 60px); }
+  .slotGuideBottom { top: calc(50% + 60px); }
+  .slotFaceFlag,
+  .slotFaceFallback { width: 56px; height: 42px; }
+  .slotNation { font-size: clamp(18px, 2.6vw, 22px); }
+}
+
+/* ── Result line, stats, CTA ─────────────────────────────────────────── */
+
+.spinResultLine {
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(20px, 5vw, 28px);
+  letter-spacing: 0.04em;
+  color: var(--ink-100);
+  text-transform: uppercase;
+  margin: 0;
+}
+.spinResultLine::first-letter { color: var(--ember-bright); }
+.spinRevealHint {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-300);
+}
+
+.spinStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--s-2);
+}
+.spinStatTile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+}
+.spinStatLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinStatValue {
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(18px, 3.6vw, 22px);
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+.formationChip {
+  background: color-mix(in srgb, var(--gold) 12%, var(--bg-800));
+  border-color: color-mix(in srgb, var(--gold) 28%, var(--line));
+}
+.formationChip .spinStatValue {
+  color: var(--gold-bright);
+}
+
+.spinRevealCta {
+  align-self: flex-start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slotReelTrack {
+    animation: none !important;
+    transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0) !important;
+  }
+  .spinRevealPanel,
+  .slotMachine,
+  .slotFace,
+  .spinRevealCta {
+    transition: none !important;
+  }
+}
