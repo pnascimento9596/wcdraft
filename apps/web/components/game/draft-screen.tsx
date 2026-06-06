@@ -609,7 +609,14 @@ function DraftBoard({
   const canLock =
     sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
 
-  const showReviewCta = !sel && fieldable;
+  // I3.7 fix-pass #2 (PR #18 BLOCKER): the Review CTA gates the entrance to
+  // Simulate/Share. It MUST require the draft to be COMPLETE (all 17 spins
+  // consumed — `isDraftComplete`), NOT merely fieldable (11 starters).
+  // Fieldable is reachable at Spin 12/17 with no bench and no manager, and
+  // the share token requires the full 17 picks to encode; reviewing /
+  // simulating a `drafting`-status squad violates the share/replay contract.
+  // Fieldability remains a layered validity check (see no-GK warning below).
+  const showReviewCta = !sel && complete;
 
   return (
     <div className={s.draftShell}>
@@ -813,7 +820,7 @@ function DraftBoard({
             </span>
           ) : showReviewCta ? (
             <span className={s.lockHint}>
-              XI complete — review your squad and prep for the run.
+              Draft complete — review your squad and prep for the run.
             </span>
           ) : (
             <span className={s.lockHint}>

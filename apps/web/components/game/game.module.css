@@ -1134,6 +1134,14 @@ button.benchSlot:not(:disabled):hover {
   font-size: clamp(3.5rem, 14vw, 6rem);
   line-height: 0.85;
 }
+/* I3.8 — 8-0 perfect run rendered in precious gold. */
+.outcomeBigGold {
+  background: linear-gradient(180deg, #ffd86a 0%, #f5b62a 55%, #c8861a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 0.05em rgba(245, 182, 42, 0.18);
+}
 .outcomeWL {
   font-family: var(--font-display), sans-serif;
   font-size: 1.4rem;
@@ -1540,6 +1548,23 @@ button.benchSlot:not(:disabled):hover {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.85rem 1rem;
+}
+/* I3.9 — SVG-based deterministic share card. The card is a real <svg>
+   element rendered inline so the same node can be serialised for download
+   without a DOM-to-image dep. The frame just constrains width on mobile. */
+.shareCardFrame {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0 1.5rem;
+}
+.shareSvg {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: 22px;
+  display: block;
+  box-shadow: 0 24px 70px rgba(8, 14, 12, 0.35);
 }
 .shareHint {
   font-size: 0.82rem;

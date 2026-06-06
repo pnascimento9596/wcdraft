@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   computeSynergy,
   FORMATION_TEMPLATES,
+  isDraftComplete,
   validateSquad,
 } from "@wcdraft/core";
 import {
@@ -18,12 +19,16 @@ import {
 } from "@/lib/game/adapters";
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
-import { draftHref } from "@/lib/game/navigation";
+import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
   loadRunRecord,
   saveRunRecord,
+  setRunSimulation,
+  setRunStatus,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+import { loadScenarioBundle } from "@/lib/game/scenario-data";
+import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { SynergyPanel } from "./synergy-panel";
@@ -255,7 +260,13 @@ function ReviewBoard({
     [],
   );
 
-  const fieldable = validation.is_fieldable;
+  // I3.7 fix-pass #2 (PR #18 BLOCKER): the Simulate gate must be DRAFT
+  // COMPLETION (all 17 spins → full XI + 5 bench + 1 manager), NOT mere
+  // fieldability (11 starters). The share token requires 17 picks to encode;
+  // simulating a `drafting`-status squad ships an incomplete run and breaks
+  // the share/replay contract. (validation.is_fieldable + the no-GK soft
+  // warning remain layered checks — never the unlock condition.)
+  const complete = isDraftComplete(draft);
 
   return (
     <div className={s.reviewShell}>
@@ -346,25 +357,142 @@ function ReviewBoard({
         </section>
       ) : null}
 
-      <section className={`${s.panel} ${s.simPanel}`}>
-        <p className={s.simNote}>
-          {fieldable
-            ? `Your XI is fieldable. Simulation lands in the next phase.`
-            : "Your XI isn't fieldable yet — head back to the draft and finish the starters."}
-        </p>
-        <button
-          type="button"
-          className="btn btn--primary btn--disabled"
-          disabled
-          aria-disabled="true"
-          title="Simulation wires in during I3"
-        >
-          Simulate the run · next phase
-        </button>
-        <button type="button" className="btn btn--ghost" onClick={onBack}>
-          Back to draft
-        </button>
-      </section>
+      <SimulatePanel
+        gameData={gameData}
+        record={record}
+        complete={complete}
+        onBack={onBack}
+        onRecordUpdate={onRecordUpdate}
+        persistenceWarning={persistenceWarning}
+      />
     </div>
+  );
+}
+
+// ─── Simulate CTA ─────────────────────────────────────────────────────────────
+
+type SimState =
+  | { kind: "idle" }
+  | { kind: "running"; note: string }
+  | { kind: "error"; title: string; message: string };
+
+function SimulatePanel({
+  gameData,
+  record,
+  complete,
+  onBack,
+  onRecordUpdate,
+  persistenceWarning,
+}: {
+  gameData: GameData;
+  record: RunRecordV1;
+  /**
+   * True iff every spin has been picked (`isDraftComplete(draft)`).
+   * I3.7 fix-pass #2 (PR #18 BLOCKER): Simulate gates on draft completion —
+   * never on `is_fieldable` — because a fieldable-but-not-complete squad has
+   * <17 picks and cannot encode a `t1.` share token.
+   */
+  complete: boolean;
+  onBack: () => void;
+  onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
+  persistenceWarning: string | null;
+}) {
+  const router = useRouter();
+  const [sim, setSim] = useState<SimState>({ kind: "idle" });
+
+  const startSim = useCallback(async () => {
+    if (!complete || sim.kind === "running") return;
+    setSim({ kind: "running", note: "Loading 2026 scenario…" });
+    // Reflect lifecycle on the persisted record so refreshes don't claim the
+    // run is "ready" mid-simulation. Best-effort — proceed on failure.
+    try {
+      const stat = setRunStatus(record.run_id, gameData.versions, "simulating");
+      if (stat.status === "updated" && stat.record) {
+        onRecordUpdate(stat.record, persistenceWarning);
+      }
+    } catch {
+      // Non-fatal: a quota error here doesn't block the actual sim.
+    }
+    try {
+      const scenarioBundle = await loadScenarioBundle();
+      setSim({ kind: "running", note: "Simulating the run…" });
+      const result = await runSimulation(gameData, scenarioBundle, record);
+      const persist = setRunSimulation(
+        record.run_id,
+        gameData.versions,
+        result.simulation,
+      );
+      if (persist.status !== "updated" || !persist.record) {
+        setSim({
+          kind: "error",
+          title: "Couldn't save the simulation",
+          message:
+            "This draft record went stale between the tap and the result. Start a new draft to try again.",
+        });
+        return;
+      }
+      const warningParts: string[] = [];
+      if (result.warning) warningParts.push(result.warning);
+      if (persist.persistence === "volatile") {
+        warningParts.push("Simulation saved to this tab only — browser storage is unavailable.");
+      }
+      warningParts.push(...persist.warnings);
+      const warn = warningParts.length > 0
+        ? warningParts.join(" · ")
+        : persistenceWarning;
+      onRecordUpdate(persist.record, warn ?? null);
+      router.push(resultsHref(persist.record.run_id));
+    } catch (err) {
+      // Reset record status so the user can retry from a clean state.
+      try {
+        const stat = setRunStatus(record.run_id, gameData.versions, "ready");
+        if (stat.status === "updated" && stat.record) {
+          onRecordUpdate(stat.record, persistenceWarning);
+        }
+      } catch {
+        // best-effort
+      }
+      const d = describeGameError(err);
+      setSim({ kind: "error", title: d.title, message: d.message });
+    }
+  }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
+
+  const note = !complete
+    ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
+    : sim.kind === "running"
+      ? sim.note
+      : "Your draft is complete. Hit simulate to play the 8-match run.";
+
+  return (
+    <section className={`${s.panel} ${s.simPanel}`}>
+      {sim.kind === "error" ? (
+        <div role="alert">
+          <p className={s.simNote}>
+            <strong>{sim.title}</strong> · {sim.message}
+          </p>
+        </div>
+      ) : (
+        <p className={s.simNote} role={sim.kind === "running" ? "status" : undefined}>
+          {note}
+        </p>
+      )}
+      <button
+        type="button"
+        className={`btn btn--primary${!complete || sim.kind === "running" ? " btn--disabled" : ""}`}
+        onClick={startSim}
+        disabled={!complete || sim.kind === "running"}
+        aria-disabled={!complete || sim.kind === "running"}
+      >
+        {sim.kind === "running" ? "Simulating…" : "Simulate the run"}
+      </button>
+      <button
+        type="button"
+        className="btn btn--ghost"
+        onClick={onBack}
+        disabled={sim.kind === "running"}
+      >
+        Back to draft
+      </button>
+    </section>
   );
 }

@@ -18,7 +18,14 @@
 //     advance the counter and retry up to 20 times before surfacing a
 //     recoverable error to the UI.
 
-import { createDraft, type DraftState } from "@wcdraft/core";
+import {
+  createDraft,
+  type DraftState,
+  type MatchResult,
+  type RunResult,
+  type RunScenario,
+  type GroupStageResult,
+} from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
 import {
@@ -31,6 +38,66 @@ import {
 
 export const RUN_RECORD_SCHEMA_VERSION = 1 as const;
 
+/**
+ * Per-round opponent-selection meta that `runTournamentFull` returns alongside
+ * the run + matches. We persist it on the RunRecord verbatim for audit/replay;
+ * the engine's `KnockoutLadderMeta` type is not exported through the public
+ * barrel, so this is the JSON-shaped equivalent kept independent.
+ */
+export interface PersistedKnockoutLadderRoundMeta {
+  round: string;
+  opponent_team_id: string;
+  bracket_constrained: boolean;
+  fallback: boolean;
+  fallback_reason: string | null;
+  user_slot_id: string | null;
+  opposite_slot_id: string | null;
+  candidate_group_ids: string[];
+}
+
+export interface PersistedKnockoutLadderMeta {
+  rounds: PersistedKnockoutLadderRoundMeta[];
+}
+
+/**
+ * I3.7 — persisted simulation payload. Always written together as a single
+ * unit; missing `simulation` means the run hasn't been simulated yet (the user
+ * is still in draft/review).
+ *
+ * DETERMINISM CONTRACT — this payload IS the deterministic subset of a run:
+ * re-running `runTournamentFull(draft, scenario, parent_seed, world)` with
+ * byte-identical inputs reproduces every field here byte-for-byte. Wall-clock
+ * telemetry (e.g. `duration_ms`) lives OUTSIDE this type — see
+ * `SimulationTelemetry` — so it cannot accidentally diverge two otherwise-
+ * identical runs.
+ */
+export interface PersistedSimulation {
+  /** Resolved RunScenario from `buildRunScenario(parent_seed, ...)`. */
+  scenario: RunScenario;
+  /** Final scored run (carries seed, narrative, score_breakdown, etc). */
+  run: RunResult;
+  /** Per-match results — atomic event log per round. */
+  matches: MatchResult[];
+  /** Scoped 4-team group table + qualification verdict. */
+  group_stage: GroupStageResult;
+  /** Per-round R32 selection meta. */
+  knockout_ladder_meta: PersistedKnockoutLadderMeta;
+}
+
+/**
+ * Non-deterministic telemetry sibling to `PersistedSimulation`. Captured at
+ * the simulation site and surfaced to callers; explicitly NOT part of the
+ * persisted-payload byte-identity guarantee. Two byte-identical runs may
+ * report different `duration_ms` values.
+ */
+export interface SimulationTelemetry {
+  /** Wall-clock duration in milliseconds; null when no high-res clock is available. */
+  duration_ms: number | null;
+}
+
+/** Lifecycle status for the persisted run. */
+export type RunRecordStatus = "ready" | "simulating" | "complete" | "failed";
+
 export interface RunRecordV1 {
   record_version: typeof RUN_RECORD_SCHEMA_VERSION;
   run_id: string;
@@ -39,6 +106,10 @@ export interface RunRecordV1 {
   updated_seq: number;
   versions: RunRecordVersions;
   draft: DraftState;
+  /** Lifecycle status; older records without this field default to "ready". */
+  status?: RunRecordStatus;
+  /** Persisted simulation result; present only when status === "complete". */
+  simulation?: PersistedSimulation;
 }
 
 interface RunRecordIndexEntry {
@@ -392,6 +463,75 @@ export function updateRunRecord(
     ...loaded.record,
     updated_seq: nextSeq,
     draft: updater(loaded.record),
+  };
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+/**
+ * Attach a simulation payload to an existing record and persist. Bumps
+ * `updated_seq` + flips `status` to `complete`. Returns the new record (with
+ * persistence + warnings).
+ *
+ * If the record was evicted between the user's draft and their tap, the
+ * caller gets a `null` record back and a `missing` status code.
+ */
+export interface SetSimulationResult {
+  status: "updated" | "missing" | "stale" | "invalid";
+  record: RunRecordV1 | null;
+  persistence: "durable" | "volatile" | "none";
+  warnings: string[];
+}
+
+export function setRunSimulation(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  simulation: PersistedSimulation,
+): SetSimulationResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const status = loaded.status as "missing" | "stale" | "invalid";
+    return { status, record: null, persistence: "none", warnings: [] };
+  }
+  const storage = getStorage();
+  const nextSeq = nextCounter(storage);
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextSeq,
+    status: "complete",
+    simulation,
+  };
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
+/** Update the lifecycle status (without changing other persisted fields). */
+export function setRunStatus(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  status: RunRecordStatus,
+): SetSimulationResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const s = loaded.status as "missing" | "stale" | "invalid";
+    return { status: s, record: null, persistence: "none", warnings: [] };
+  }
+  const storage = getStorage();
+  const nextSeq = nextCounter(storage);
+  const next: RunRecordV1 = {
+    ...loaded.record,
+    updated_seq: nextSeq,
+    status,
   };
   const save = saveRunRecord(next);
   return {

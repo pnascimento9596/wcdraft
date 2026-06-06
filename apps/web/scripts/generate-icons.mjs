@@ -1,81 +1,95 @@
 /*
- * Rasterises the wcdraft app icons into apps/web/public/ using sharp (already a
- * transitive dependency of Next.js). Run from the repo root or apps/web:
+ * Rasterises the committed wcdraft brand SVGs into the PWA icon PNGs the
+ * manifest references. Idempotent — same inputs produce byte-identical PNGs,
+ * so the script is safe to run repeatedly in `predev` / `prebuild`.
  *
- *   node apps/web/scripts/generate-icons.mjs
+ * Inputs (committed SVGs — single source of truth for the brand):
+ *   - public/brand/wcdraft-icon.svg     → any-purpose square icon
+ *   - public/brand/wcdraft-maskable.svg → safe-zone maskable icon
  *
- * The mark is original — a stylised football inside a draft bracket on a
- * vintage-scarlet field — and contains no FIFA / World Cup trademark.
+ * Outputs (all under public/icons/, committed PNGs):
+ *   - icon-192.png            (192x192, purpose "any")
+ *   - icon-512.png            (512x512, purpose "any")
+ *   - apple-touch-icon.png    (180x180, Apple touch metadata)
+ *   - icon-maskable-512.png   (512x512, purpose "maskable")
+ *
+ * Also overwrites the Next.js app-router file-convention icons so the favicon
+ * and the iOS touch icon match the brand mark:
+ *   - app/icon.png       (any size — Next normalises)
+ *   - app/apple-icon.png (180x180)
+ *
+ * Run from anywhere: `node apps/web/scripts/generate-icons.mjs`
  */
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
+import { mkdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const outDir = join(here, "..", "public");
+const webRoot = join(here, "..");
+const publicDir = join(webRoot, "public");
+const iconsOutDir = join(publicDir, "icons");
+const brandDir = join(publicDir, "brand");
+const appDir = join(webRoot, "app");
+
+mkdirSync(iconsOutDir, { recursive: true });
 
 // sharp ships as a transitive dep of Next.js; pnpm does not hoist it to a
-// top-level node_modules, so resolve it explicitly from the workspace root.
+// top-level node_modules, so resolve it explicitly from the workspace root if
+// the bare import fails.
 const require = createRequire(import.meta.url);
 async function loadSharp() {
   try {
     return (await import("sharp")).default;
   } catch {
     const { globSync } = require("node:fs");
-    const root = join(here, "..", "..", "..", "node_modules", ".pnpm");
+    const root = join(webRoot, "..", "..", "node_modules", ".pnpm");
     const matches = globSync("sharp@*/node_modules/sharp/lib/index.js", { cwd: root });
-    if (!matches.length) throw new Error("sharp not found; run `pnpm install` first");
+    if (!matches.length) {
+      throw new Error(
+        "sharp not found; install dev deps (`pnpm install`) before running the icon generator.",
+      );
+    }
     return (await import(pathToFileURL(join(root, matches[0])).href)).default;
   }
 }
+
 const sharp = await loadSharp();
 
-const SCARLET = "#c2402a";
-const CREAM = "#f4eedd";
+const anySvg = readFileSync(join(brandDir, "wcdraft-icon.svg"));
+const maskableSvg = readFileSync(join(brandDir, "wcdraft-maskable.svg"));
 
-/** Build the icon SVG. `pad` is the fraction of the canvas kept as safe margin. */
-function svg({ size, pad, rounded }) {
-  const s = size;
-  const inner = s * (1 - pad * 2);
-  const cx = s / 2;
-  const cy = s / 2;
-  const r = inner / 2;
-  const radius = rounded ? s * 0.22 : 0;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">
-  <rect width="${s}" height="${s}" rx="${radius}" ry="${radius}" fill="${SCARLET}"/>
-  <g transform="translate(${cx} ${cy})" stroke="${CREAM}" fill="none" stroke-linecap="round">
-    <circle r="${r}" stroke-width="${s * 0.045}"/>
-    <path d="M0 ${-r * 0.46} L ${r * 0.44} ${-r * 0.13} L ${r * 0.27} ${r * 0.42} L ${-r * 0.27} ${r * 0.42} L ${-r * 0.44} ${-r * 0.13} Z" fill="${CREAM}" stroke="none"/>
-    <g stroke-width="${s * 0.03}">
-      <path d="M0 ${-r * 0.46} V ${-r}"/>
-      <path d="M ${r * 0.44} ${-r * 0.13} L ${r * 0.86} ${-r * 0.45}"/>
-      <path d="M ${-r * 0.44} ${-r * 0.13} L ${-r * 0.86} ${-r * 0.45}"/>
-      <path d="M ${r * 0.27} ${r * 0.42} L ${r * 0.5} ${r * 0.82}"/>
-      <path d="M ${-r * 0.27} ${r * 0.42} L ${-r * 0.5} ${r * 0.82}"/>
-      <path d="M0 ${r * 0.42} V ${r * 0.95}"/>
-    </g>
-  </g>
-</svg>`;
+async function rasterize(svg, outPath, size) {
+  // Deterministic rasterisation: square output at the requested size, opaque
+  // PNG (Apple touch icons must be opaque), default compression for stable
+  // bytes. sharp's PNG encoder is deterministic given identical input.
+  await sharp(svg, { density: 384 })
+    .resize(size, size, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toFile(outPath);
+  console.log("wrote", outPath.replace(webRoot + "/", ""));
 }
 
-async function render(name, opts) {
-  const buf = Buffer.from(svg(opts));
-  await sharp(buf).png().toFile(join(outDir, name));
-  console.log("wrote", name);
+async function rasterizeOpaque(svg, outPath, size, bg) {
+  await sharp(svg, { density: 384 })
+    .resize(size, size, { fit: "contain", background: bg })
+    .flatten({ background: bg })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toFile(outPath);
+  console.log("wrote", outPath.replace(webRoot + "/", ""));
 }
 
-await render("icon-192.png", { size: 192, pad: 0.16, rounded: true });
-await render("icon-512.png", { size: 512, pad: 0.16, rounded: true });
-await render("icon-maskable-512.png", { size: 512, pad: 0.26, rounded: false });
-await render("apple-touch-icon.png", { size: 180, pad: 0.16, rounded: true });
+// Brand background — matches the dark ink used in the maskable SVG so a flat
+// composition stays on-brand.
+const BRAND_BG = { r: 0x0a, g: 0x0e, b: 0x13, alpha: 1 };
 
-// Next.js serves the browser favicon + apple-touch icon from app/icon.png and
-// app/apple-icon.png (file conventions); copy the rendered PNGs there too.
-await sharp(Buffer.from(svg({ size: 512, pad: 0.16, rounded: true })))
-  .png()
-  .toFile(join(here, "..", "app", "icon.png"));
-await sharp(Buffer.from(svg({ size: 180, pad: 0.16, rounded: true })))
-  .png()
-  .toFile(join(here, "..", "app", "apple-icon.png"));
-console.log("wrote app/icon.png + app/apple-icon.png");
+// ── public/icons/* — referenced by app/manifest.ts ─────────────────────────
+await rasterize(anySvg, join(iconsOutDir, "icon-192.png"), 192);
+await rasterize(anySvg, join(iconsOutDir, "icon-512.png"), 512);
+// Apple touch icons should be opaque; flatten over the brand background.
+await rasterizeOpaque(anySvg, join(iconsOutDir, "apple-touch-icon.png"), 180, BRAND_BG);
+await rasterize(maskableSvg, join(iconsOutDir, "icon-maskable-512.png"), 512);
+
+// ── app/* — Next.js file-convention favicons (used by the document head) ───
+await rasterize(anySvg, join(appDir, "icon.png"), 512);
+await rasterizeOpaque(anySvg, join(appDir, "apple-icon.png"), 180, BRAND_BG);

@@ -40,7 +40,20 @@ interface ResolvedOptions {
 
 function resolveOptions(opts: LoaderOptions | undefined): ResolvedOptions {
   const basePath = (opts?.basePath ?? DEFAULT_RUNTIME_DATA_BASE_PATH).replace(/\/+$/u, "");
-  const fetchImpl = opts?.fetch ?? (typeof fetch === "function" ? fetch : undefined);
+  // IMPORTANT: when falling back to the global `fetch`, we must NOT detach it
+  // from its receiver (window / globalThis). Storing the bare `fetch`
+  // reference on a plain object and invoking it as `obj.fetchImpl(...)` calls
+  // it with `this = obj`, which Chrome rejects with
+  //   `TypeError: Failed to execute 'fetch' on 'Window': Illegal invocation`.
+  // Binding to `globalThis` makes the call site safe regardless of how the
+  // fetch impl is later stored or passed around. When the caller provides
+  // `opts.fetch` explicitly, we use it verbatim — they control its receiver.
+  const fetchImpl: typeof fetch | undefined =
+    opts?.fetch ??
+    (typeof globalThis !== "undefined" &&
+    typeof (globalThis as { fetch?: typeof fetch }).fetch === "function"
+      ? (globalThis as { fetch: typeof fetch }).fetch.bind(globalThis)
+      : undefined);
   if (typeof fetchImpl !== "function") {
     throw new Error(
       "@wcdraft/data/client: no `fetch` is available — pass `opts.fetch` explicitly.",
@@ -50,6 +63,9 @@ function resolveOptions(opts: LoaderOptions | undefined): ResolvedOptions {
 }
 
 async function fetchJson<T>(url: string, opts: ResolvedOptions): Promise<T> {
+  // `opts.fetchImpl` is either an explicitly provided fetch (caller-bound) or
+  // the global fetch bound to globalThis in `resolveOptions` — invoking it
+  // off `opts` is safe in both cases.
   const res = await opts.fetchImpl(url, { signal: opts.signal });
   if (!res.ok) {
     throw new Error(`@wcdraft/data/client: failed to load ${url} (HTTP ${res.status}).`);

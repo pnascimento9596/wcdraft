@@ -111,6 +111,27 @@ export default tseslint.config(
       ],
     },
   },
+  // ─── I3.10 — forbid the deleted mock layer from being re-imported ───────
+  // The integration pass deletes `apps/web/lib/mock`. This rule prevents
+  // anyone from re-introducing it (or `@/lib/mock` imports) from the web
+  // app source tree.
+  {
+    files: ["apps/web/**/*.{ts,tsx,mts,cts}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/mock", "@/lib/mock/*", "**/lib/mock", "**/lib/mock/*"],
+              message:
+                "apps/web/lib/mock was deleted in I3.10 — wire to @wcdraft/core + @wcdraft/data instead.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Disable stylistic rules that conflict with Prettier (keep last).
   prettier,
 );
