@@ -2,8 +2,10 @@
  * wcdraft — global stylesheet.
  *
  * Aesthetic: vintage football almanac / match-day broadsheet.
- * Warm newsprint cream + deep pitch-ink green, a single vintage-scarlet accent,
- * chalk pitch-line motifs, and a subtle paper grain. Light and dark are both
+ * Warm newsprint cream + deep pitch-ink green, a locked emerald action accent
+ * + gold for pick/win/legend moments, chalk pitch-line motifs, and a subtle
+ * paper grain. Emerald + gold come from the brand lock (Architecture v2 §11);
+ * the share card is the reference. Light and dark are both
  * first-class. All colour decisions flow from the custom properties below so the
  * theme toggle (React state, see ThemeProvider) only has to flip `data-theme`.
  *
@@ -34,9 +36,16 @@
   --line: rgba(21, 36, 29, 0.16);
   --line-strong: rgba(21, 36, 29, 0.42);
 
-  /* Brand */
-  --accent: #c2402a; /* vintage scarlet */
-  --accent-ink: #fbf6ea; /* text on accent */
+  /* Brand — LOCKED identity (Architecture v2 §11).
+     Emerald = brand / action / structure (everyday). Gold = pick / win / legend (precious).
+     Sourced from apps/web/app/ds/tokens.css; aliased here so every shell surface
+     using --accent inherits the locked palette without per-component patching. */
+  --accent: #2ecf92; /* emerald — primary action + structure */
+  --accent-strong: #1c9e6e; /* emerald deep — hover/active */
+  --accent-ink: #0a1a14; /* legible ink on emerald (both themes) */
+  --gold: #f5b62a; /* gold — pick / win / legend / perfect-run */
+  --gold-strong: #c8861a;
+  --gold-ink: #1a1206; /* legible ink on gold */
   --field: #1c4332; /* pitch green */
   --field-ink: #f2ecdc;
 
@@ -59,8 +68,12 @@
   --line: rgba(236, 228, 210, 0.16);
   --line-strong: rgba(236, 228, 210, 0.4);
 
-  --accent: #e8593b; /* brighter scarlet for dark contrast */
-  --accent-ink: #0c1411;
+  --accent: #54e3ab; /* emerald bright — dark contrast */
+  --accent-strong: #2ecf92;
+  --accent-ink: #0a1a14;
+  --gold: #f5b62a;
+  --gold-strong: #c8861a;
+  --gold-ink: #1a1206;
   --field: #1f6a47;
   --field-ink: #f2ecdc;
 
@@ -286,10 +299,11 @@ main {
 }
 
 .wordmark__badge {
-  width: 2rem;
-  height: 2rem;
+  /* Canonical mark is 120×132 — size by height, let width auto-fit
+     so the emerald pitch + gold draft arrow stay on aspect. */
+  height: 2.1rem;
+  width: auto;
   flex: none;
-  color: var(--accent);
 }
 
 .wordmark__text {
@@ -585,6 +599,11 @@ main {
 .hero h1 .accent {
   color: var(--accent);
 }
+.hero h1 .gold,
+.stat__num .gold {
+  /* Gold reserved for pick/win/legend/perfect-run moments only. */
+  color: var(--gold);
+}
 .hero__sub {
   max-width: 34rem;
 }
@@ -623,6 +642,29 @@ main {
   letter-spacing: 0.04em;
   color: var(--ink-faint);
   font-style: italic;
+}
+
+/* "Live now" status caption under the hero — honest shipped-state, not a disclaimer. */
+.hero__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-text), serif;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  max-width: 38rem;
+}
+.hero__live::before {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  transform: translateY(0.02em);
 }
 
 /* Animated entrance for hero children (respects reduced motion via reset). */

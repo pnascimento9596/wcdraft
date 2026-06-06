@@ -4,7 +4,7 @@
  * Scoped CSS Module for the play flow (mode select, draft, review, results,
  * share). Every colour flows from the design tokens in globals.css, so light
  * and dark are both first-class with no per-rule overrides. Aesthetic matches
- * the broadsheet shell: warm paper, pitch-ink, a single scarlet accent, chalk
+ * the broadsheet shell: warm paper, pitch-ink, an emerald action accent + gold for win/legend, chalk
  * pitch lines.
  */
 
