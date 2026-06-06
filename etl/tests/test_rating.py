@@ -361,7 +361,7 @@ def test_named_era_anchors_land_in_expected_bands(players, cards, by_id):
     # Fontaine '58 — 13 goals + Golden Boot + started every match.
     assert ov("Fontaine", "WC-1958") >= 90
     # Puskás '54 — runner-up, top striker of his era (one of his player_ids).
-    puskas_cid = f"P-12676:WC-1954"
+    puskas_cid = "P-12676:WC-1954"
     assert by_id[puskas_cid]["overall"] >= 80
     # Rodrigo '18 — modern journeyman, no run, 0 goals 3 apps.
     rodrigo = ov("Rodrigo", "WC-2018")
