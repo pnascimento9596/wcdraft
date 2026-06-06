@@ -44,8 +44,10 @@ import {
   type ManagerCardView,
   type PlayerCardView,
 } from "@/lib/game/view-models";
+import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
 import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
+import { SpinSlotMachine } from "./slot-machine";
 import { SynergyPanel } from "./synergy-panel";
 import s from "./game.module.css";
 
@@ -539,6 +541,24 @@ function DraftBoard({
 
   const synergyDelta = previewSynergy.overall - baseSynergy.overall;
 
+  // Slot-machine reveal model — PRESENTATION ONLY. The center reel ALWAYS
+  // lands on the engine-decided `(spin.nation_id, spin.tournament_id)`. No
+  // randomness here; the neighbor reel faces are derived from the ordered
+  // spin ring. Animation lives in CSS.
+  const slotReveal = useMemo(() => {
+    if (!spin) return null;
+    return buildSlotRevealModel({
+      activeSpin: spin,
+      allSpins: draft.spins,
+      indexes: gameData.indexes,
+      totalPicks: TOTAL_SPINS,
+    });
+  }, [spin, draft.spins, gameData.indexes]);
+
+  const revealSynergyOverall = Number.isFinite(baseSynergy.overall)
+    ? baseSynergy.overall
+    : null;
+
   // Lock pick → call core engine → save record.
   const handleLock = useCallback(() => {
     if (!sel || committing) return;
@@ -636,22 +656,15 @@ function DraftBoard({
             Synergy, and your final XI.
           </p>
         </section>
-      ) : spin ? (
-        <section className={`${s.panel} ${s.revealPanel}`}>
-          <span className={s.eyebrowAccent}>This spin rolled</span>
-          <div className={s.revealTeam}>
-            <span className={s.revealNation}>
-              {gameData.indexes.nationById.get(spin.nation_id)?.canonical_name ?? spin.nation_id}
-            </span>
-            <span className={s.revealYear}>
-              {gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? spin.tournament_id}
-            </span>
-          </div>
-          <p className={s.revealHint}>
-            Pick <b>one</b> entity from this squad — a player <i>or</i> the coach. Choose a
-            slot, watch Synergy update, then lock it in.
-          </p>
-        </section>
+      ) : spin && slotReveal ? (
+        <SpinSlotMachine
+          model={slotReveal}
+          formationId={draft.formation_id}
+          playerPoolCount={candidates.players.length}
+          synergyOverall={revealSynergyOverall}
+          candidateHref="#draft-candidates"
+          hint="Pick one entity from this squad — a player or the coach. Choose a slot, watch Synergy update, then lock it in."
+        />
       ) : null}
 
       {/* Pitch + bench + manager */}
@@ -735,7 +748,7 @@ function DraftBoard({
 
       {/* Candidates */}
       {!complete && spin ? (
-        <section className={s.panel} aria-label="Candidates">
+        <section id="draft-candidates" className={s.panel} aria-label="Candidates">
           <div className={s.controls}>
             <input
               type="search"
