@@ -1,0 +1,136 @@
+// F-1 — schema row/insert type compile assertions.
+//
+// Drizzle's `$inferSelect` / `$inferInsert` give us the row + insert types
+// for every table. This file is the "if these types ever drift from the
+// schema columns, the build fails" guard. The runtime assertions are
+// trivial; the value is the type-level coverage at `pnpm typecheck`.
+import { describe, it, expect, expectTypeOf } from "vitest";
+import {
+  users,
+  magicLinkTokens,
+  sessions,
+  savedRuns,
+  rankedAttempts,
+  leaderboardEntries,
+  type User,
+  type NewUser,
+  type MagicLinkToken,
+  type NewMagicLinkToken,
+  type Session,
+  type NewSession,
+  type SavedRun,
+  type NewSavedRun,
+  type RankedAttempt,
+  type NewRankedAttempt,
+  type LeaderboardEntry,
+  type NewLeaderboardEntry,
+} from "../src/index.ts";
+
+describe("@wcdraft/db schema — shape", () => {
+  it("exports all six tables", () => {
+    expect(users).toBeDefined();
+    expect(magicLinkTokens).toBeDefined();
+    expect(sessions).toBeDefined();
+    expect(savedRuns).toBeDefined();
+    expect(rankedAttempts).toBeDefined();
+    expect(leaderboardEntries).toBeDefined();
+  });
+
+  it("infers row and insert types for users", () => {
+    expectTypeOf<User>().toMatchTypeOf<{
+      id: string;
+      email: string | null;
+      createdAt: Date;
+    }>();
+    // email is nullable, so the insert type allows omission
+    expectTypeOf<NewUser>().toMatchTypeOf<{ email?: string | null }>();
+  });
+
+  it("infers row and insert types for magic_link_tokens", () => {
+    expectTypeOf<MagicLinkToken>().toMatchTypeOf<{
+      tokenHash: string;
+      email: string;
+      userId: string | null;
+      expiresAt: Date;
+      consumedAt: Date | null;
+      createdAt: Date;
+    }>();
+    expectTypeOf<NewMagicLinkToken>().toMatchTypeOf<{
+      tokenHash: string;
+      email: string;
+      expiresAt: Date;
+    }>();
+  });
+
+  it("infers row and insert types for sessions", () => {
+    expectTypeOf<Session>().toMatchTypeOf<{
+      id: string;
+      userId: string | null;
+      csrfSecret: string;
+      createdAt: Date;
+      expiresAt: Date;
+    }>();
+    expectTypeOf<NewSession>().toMatchTypeOf<{
+      id: string;
+      csrfSecret: string;
+      expiresAt: Date;
+    }>();
+  });
+
+  it("infers row and insert types for saved_runs", () => {
+    expectTypeOf<SavedRun>().toMatchTypeOf<{
+      id: string;
+      ownerUserId: string | null;
+      token: string;
+      // version_anchors is jsonb, unknown by default
+      versionAnchors: unknown;
+      verifiedResult: unknown;
+      runId: string | null;
+      parentSeed: string | null;
+      claimState: string;
+      createdAt: Date;
+    }>();
+    expectTypeOf<NewSavedRun>().toMatchTypeOf<{
+      token: string;
+      claimState: string;
+    }>();
+  });
+
+  it("infers row and insert types for ranked_attempts", () => {
+    expectTypeOf<RankedAttempt>().toMatchTypeOf<{
+      id: string;
+      userId: string | null;
+      sessionId: string | null;
+      issuedParentSeed: string;
+      nonce: string;
+      issuedAt: Date;
+      windowExpiresAt: Date;
+      consumedAt: Date | null;
+    }>();
+    expectTypeOf<NewRankedAttempt>().toMatchTypeOf<{
+      issuedParentSeed: string;
+      nonce: string;
+      windowExpiresAt: Date;
+    }>();
+  });
+
+  it("infers row and insert types for leaderboard_entries", () => {
+    expectTypeOf<LeaderboardEntry>().toMatchTypeOf<{
+      id: string;
+      seasonKey: string;
+      mode: string;
+      userId: string | null;
+      token: string;
+      verifiedScore: number;
+      scoreBreakdown: unknown;
+      attemptId: string | null;
+      createdAt: Date;
+    }>();
+    expectTypeOf<NewLeaderboardEntry>().toMatchTypeOf<{
+      seasonKey: string;
+      mode: string;
+      token: string;
+      verifiedScore: number;
+    }>();
+  });
+});

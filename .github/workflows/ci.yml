@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -78,6 +79,132 @@ jobs:
         # Path-selected WS-C golden suites with passWithNoTests:false — fails if
         # the deterministic 17-spin output drifts from the recorded snapshot.
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
+
+  # ── Path-filter gate for the db job ──────────────────────────────────────
+  #
+  # The destructive ephemeral-branch rollback-check is heavy (forks + tears
+  # down a Neon branch on every run) and only meaningful when something in
+  # @wcdraft/db's surface changes. This gate emits run=true only when the PR
+  # diff (or push) touches packages/db, the workflow itself, the lockfile,
+  # or turbo.json (which carries the env: registrations the job depends on).
+  # Other PRs skip the db job entirely.
+  db-gate:
+    name: db · path filter
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.filter.outputs.db }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Detect DB-affecting changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            db:
+              - 'packages/db/**'
+              - '.github/workflows/ci.yml'
+              - 'pnpm-lock.yaml'
+              - 'turbo.json'
+
+  db-rollback-check:
+    name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
+    runs-on: ubuntu-latest
+    needs: db-gate
+    if: ${{ needs.db-gate.outputs.run == 'true' }}
+    # SAFETY POSTURE (revised per independent review on PR #26):
+    # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
+    # it creates its OWN ephemeral Neon branch off the primary, runs the
+    # round-trip against THAT, and deletes the branch in always() — so a
+    # misconfigured secret can NEVER target production.
+    #
+    # Skips with a warning when NEON_API_KEY or NEON_PROJECT_ID is absent
+    # (fork PRs don't get secrets; this keeps their CI green).
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.5.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Gate — require Neon API key + project id
+        id: gate
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # Emits skip=true (with a workflow warning, not a failure) when
+        # either secret is missing — contributors on forks don't have them
+        # and we don't want their CI to red over an integration-only job.
+        # Also prints LENGTH diagnostics so any future secret-storage drift
+        # is immediately visible in the run log (the values themselves stay
+        # masked by GitHub Actions' secret scrubber).
+        run: |
+          if [ -z "$NEON_API_KEY" ] || [ -z "$NEON_PROJECT_ID" ]; then
+            echo "::warning::NEON_API_KEY or NEON_PROJECT_ID secret is not set — skipping ephemeral-branch rollback-check."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "[gate] NEON_API_KEY length=${#NEON_API_KEY} NEON_PROJECT_ID length=${#NEON_PROJECT_ID}"
+          fi
+
+      - name: Create ephemeral Neon branch
+        id: branch_create
+        if: ${{ steps.gate.outputs.skip != 'true' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # The script writes the branch's pooled + unpooled URLs (and
+        # NEON_EPHEMERAL_BRANCH_ID + NEON_PROJECT_ID) to $RUNNER_TEMP/neon-ephemeral.env
+        # at mode 0600, and emits the branch_id + project_id to GITHUB_OUTPUT
+        # so the always() cleanup step can find them.
+        run: pnpm --filter @wcdraft/db db:branch:create "$RUNNER_TEMP/neon-ephemeral.env"
+
+      - name: Apply migrations against ephemeral branch
+        if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        run: |
+          set -a
+          . "$RUNNER_TEMP/neon-ephemeral.env"
+          set +a
+          pnpm --filter @wcdraft/db db:migrate
+
+      - name: Rollback-check (apply → anon-dedupe → rollback → assert empty)
+        if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        # The runner's in-script guard checks NEON_EPHEMERAL_BRANCH_ID is set
+        # AND (when NEON_API_KEY is present) that the branch is NOT primary/default.
+        # A misconfigured workflow that pointed at production would be caught here.
+        run: |
+          set -a
+          . "$RUNNER_TEMP/neon-ephemeral.env"
+          set +a
+          pnpm --filter @wcdraft/db db:rollback-check
+
+      - name: Delete ephemeral Neon branch (always)
+        if: ${{ always() && steps.branch_create.outputs.branch_id != '' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ steps.branch_create.outputs.project_id }}
+          NEON_EPHEMERAL_BRANCH_ID: ${{ steps.branch_create.outputs.branch_id }}
+        # always() ensures the branch is destroyed even if migrate or
+        # rollback-check failed mid-run. The delete script ALSO refuses to
+        # delete a primary/default branch as a final safety check.
+        run: pnpm --filter @wcdraft/db db:branch:delete
 
   etl-rating:
     name: ETL rating · lint · golden determinism
