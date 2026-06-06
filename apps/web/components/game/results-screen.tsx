@@ -7,12 +7,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
-import { draftHref, reviewHref, shareHref } from "@/lib/game/navigation";
+import {
+  draftHref,
+  parseRunSearchParams,
+  reviewHref,
+  shareHref,
+} from "@/lib/game/navigation";
 import {
   loadRunRecord,
   type RunRecordV1,
 } from "@/lib/game/run-record";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
+import {
+  decodeRunToken,
+  RunTokenError,
+  versionsAgree,
+  virtualRecordFromToken,
+} from "@/lib/game/run-token";
+import { runSimulation } from "@/lib/game/simulate";
 import {
   buildRunSummary,
   deriveBox,
@@ -34,14 +46,22 @@ type Mode =
       gameData: GameData;
       scenario: Scenario2026Bundle;
       record: RunRecordV1;
+      /** True when this run was rehydrated from a shared `?run=<token>` URL. */
+      isReplayedFromToken: boolean;
     }
   | { kind: "missing"; reason: string; runId: string | null }
+  | { kind: "skew"; title: string; message: string }
   | { kind: "error"; title: string; message: string };
 
 export function ResultsScreen() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const runId = searchParams?.get("run") ?? null;
+  // Parsed once at component scope so both the load effect AND the render
+  // path (link-href threading) see the same discriminated value.
+  const parsed = useMemo(
+    () => parseRunSearchParams(searchParams ?? null),
+    [searchParams],
+  );
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
@@ -49,7 +69,7 @@ export function ResultsScreen() {
   useEffect(() => {
     const myToken = ++reqToken.current;
     setMode({ kind: "loading" });
-    if (!runId) {
+    if (parsed === null) {
       setMode({
         kind: "missing",
         reason: "Open a draft first — results are only available for a simulated run.",
@@ -63,31 +83,85 @@ export function ResultsScreen() {
         if (myToken !== reqToken.current) return;
         const scenario = await loadScenarioBundle();
         if (myToken !== reqToken.current) return;
-        const loaded = loadRunRecord(runId, gd.versions);
-        if (loaded.status !== "loaded" || !loaded.record) {
+
+        if (parsed.kind === "id") {
+          const loaded = loadRunRecord(parsed.run_id, gd.versions);
+          if (loaded.status !== "loaded" || !loaded.record) {
+            setMode({
+              kind: "missing",
+              reason:
+                loaded.status === "stale"
+                  ? "This run was created on an older data bundle and has been evicted."
+                  : "We couldn't find that run.",
+              runId: parsed.run_id,
+            });
+            return;
+          }
+          if (!loaded.record.simulation) {
+            // Send the user back to review where they can re-trigger the sim.
+            router.replace(reviewHref(parsed.run_id));
+            return;
+          }
           setMode({
-            kind: "missing",
-            reason:
-              loaded.status === "stale"
-                ? "This run was created on an older data bundle and has been evicted."
-                : "We couldn't find that run.",
-            runId,
+            kind: "ready",
+            gameData: gd,
+            scenario,
+            record: loaded.record,
+            isReplayedFromToken: false,
           });
           return;
         }
-        if (!loaded.record.simulation) {
-          // Send the user back to review where they can re-trigger the sim.
-          router.replace(reviewHref(runId));
+
+        // Token path — self-contained `?run=<token>` URL, possibly from a
+        // fresh browser. Decode, version-check, replay deterministically.
+        const decoded = decodeRunToken(parsed.token);
+        if (decoded === null) {
+          setMode({
+            kind: "missing",
+            reason: "The shared link is malformed or truncated — ask the sender for a fresh link.",
+            runId: null,
+          });
           return;
         }
-        setMode({ kind: "ready", gameData: gd, scenario, record: loaded.record });
+        if (!versionsAgree(decoded, gd.versions)) {
+          setMode({
+            kind: "skew",
+            title: "This shared run is from a different build",
+            message:
+              "The dataset, rating engine, or rules on this site differ from when the run was created. Replaying it here would silently produce a different outcome, so we won't. Ask the sender to refresh the link from their current results screen.",
+          });
+          return;
+        }
+        try {
+          const virtual = virtualRecordFromToken(decoded, gd);
+          const { simulation } = await runSimulation(gd, scenario, virtual);
+          if (myToken !== reqToken.current) return;
+          const recordWithSim: RunRecordV1 = { ...virtual, status: "complete", simulation };
+          setMode({
+            kind: "ready",
+            gameData: gd,
+            scenario,
+            record: recordWithSim,
+            isReplayedFromToken: true,
+          });
+        } catch (err) {
+          if (err instanceof RunTokenError) {
+            setMode({
+              kind: "missing",
+              reason: `Couldn't replay the shared run: ${err.message}`,
+              runId: null,
+            });
+            return;
+          }
+          throw err;
+        }
       } catch (err) {
         if (myToken !== reqToken.current) return;
         const d = describeGameError(err);
         setMode({ kind: "error", title: d.title, message: d.message });
       }
     })();
-  }, [runId, router]);
+  }, [parsed, router]);
 
   if (mode.kind === "loading") {
     return (
@@ -130,11 +204,33 @@ export function ResultsScreen() {
     );
   }
 
+  if (mode.kind === "skew") {
+    return (
+      <div className={s.results}>
+        <ResultsAppBar />
+        <div className={s.errorPanel} role="alert">
+          <h2 className={s.errorTitle}>{mode.title}</h2>
+          <p className={s.errorMessage}>{mode.message}</p>
+          <Link href={draftHref(null)} className="btn btn--primary">
+            Start a new draft
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // For token-replayed sessions, in-screen CTAs must carry the ORIGINAL
+  // `?run=` value (the token) so a receiver who didn't originate the run
+  // can still click through results ↔ share without losing the replay.
+  const linkRunValue =
+    parsed?.kind === "token" ? parsed.token : mode.record.run_id;
   return (
     <ResultsBody
       gameData={mode.gameData}
       scenario={mode.scenario}
       record={mode.record}
+      isReplayedFromToken={mode.isReplayedFromToken}
+      linkRunValue={linkRunValue}
     />
   );
 }
@@ -160,11 +256,17 @@ function ResultsBody({
   gameData,
   scenario,
   record,
+  isReplayedFromToken,
+  linkRunValue,
 }: {
   gameData: GameData;
   scenario: Scenario2026Bundle;
   record: RunRecordV1;
+  isReplayedFromToken: boolean;
+  /** Value to thread into in-screen `?run=` URLs — the token when replayed, the run_id otherwise. */
+  linkRunValue: string | null;
 }) {
+  void isReplayedFromToken; // present for future banner UI; not rendered yet.
   const sim = record.simulation!;
   const eliminatedInGroup =
     !sim.group_stage.user_qualified && sim.matches.length === 3;
@@ -273,7 +375,7 @@ function ResultsBody({
           <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
         </div>
         <div className={s.resultsActions}>
-          <Link href={shareHref(record.run_id)} className="btn btn--primary">
+          <Link href={shareHref(linkRunValue)} className="btn btn--primary">
             Share this run →
           </Link>
           <Link href={draftHref(null)} className="btn btn--ghost">

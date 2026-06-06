@@ -97,16 +97,22 @@ export function opponentDisplay(
 
 /**
  * Resolve a player display name from the draft pool indexes. The engine emits
- * player_id + card_id on every event; we look the card up first (gives us
- * the exact card variant the user drafted) and fall back to the player_id
- * verbatim when the card is outside the pool (opponent depth players are
- * sometimes outside the 2026 draftable pool — still honest).
+ * player_id + card_id on every event; we look the card up to get the exact
+ * card variant the user drafted. If the card is outside the 2026 draftable
+ * pool (opponent depth players sometimes are, and the engine occasionally
+ * emits events with no attributable player — e.g. own goals credited to the
+ * benefiting side without a named opponent), we render "—" — honest-state.
+ *
+ * We NEVER render a raw player_id and NEVER fabricate a name. Rendering raw
+ * ids in the UI leaks internal vocabulary and reads as gibberish to users;
+ * the dash makes it unambiguous that the scorer is unresolved.
  */
 export function resolveScorerName(
   gameData: GameData,
   player_id: string | null,
   card_id: string | null,
 ): string {
+  void player_id; // accepted for API parity; never rendered.
   if (card_id) {
     const c = gameData.indexes.playerByCardId.get(card_id);
     if (c) {
@@ -114,7 +120,6 @@ export function resolveScorerName(
       return display;
     }
   }
-  if (player_id) return player_id;
   return "—";
 }
 

@@ -64,21 +64,34 @@ export interface PersistedKnockoutLadderMeta {
  * unit; missing `simulation` means the run hasn't been simulated yet (the user
  * is still in draft/review).
  *
- * Determinism: re-running `runTournamentFull(draft, scenario, parent_seed,
- * world)` with byte-identical inputs reproduces this payload byte-for-byte.
+ * DETERMINISM CONTRACT — this payload IS the deterministic subset of a run:
+ * re-running `runTournamentFull(draft, scenario, parent_seed, world)` with
+ * byte-identical inputs reproduces every field here byte-for-byte. Wall-clock
+ * telemetry (e.g. `duration_ms`) lives OUTSIDE this type — see
+ * `SimulationTelemetry` — so it cannot accidentally diverge two otherwise-
+ * identical runs.
  */
 export interface PersistedSimulation {
   /** Resolved RunScenario from `buildRunScenario(parent_seed, ...)`. */
   scenario: RunScenario;
   /** Final scored run (carries seed, narrative, score_breakdown, etc). */
   run: RunResult;
-  /** Per-match results — atomic event log + lineup per round. */
+  /** Per-match results — atomic event log per round. */
   matches: MatchResult[];
   /** Scoped 4-team group table + qualification verdict. */
   group_stage: GroupStageResult;
   /** Per-round R32 selection meta. */
   knockout_ladder_meta: PersistedKnockoutLadderMeta;
-  /** Sub-ms simulation runtime measured at run completion (perf telemetry). */
+}
+
+/**
+ * Non-deterministic telemetry sibling to `PersistedSimulation`. Captured at
+ * the simulation site and surfaced to callers; explicitly NOT part of the
+ * persisted-payload byte-identity guarantee. Two byte-identical runs may
+ * report different `duration_ms` values.
+ */
+export interface SimulationTelemetry {
+  /** Wall-clock duration in milliseconds; null when no high-res clock is available. */
   duration_ms: number | null;
 }
 

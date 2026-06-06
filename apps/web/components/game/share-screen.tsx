@@ -7,8 +7,23 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
-import { draftHref, reviewHref, resultsHref, shareHref } from "@/lib/game/navigation";
+import {
+  draftHref,
+  parseRunSearchParams,
+  reviewHref,
+  resultsHref,
+  shareHref,
+} from "@/lib/game/navigation";
 import { loadRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
+import {
+  decodeRunToken,
+  encodeRunToken,
+  RunTokenError,
+  versionsAgree,
+  virtualRecordFromToken,
+} from "@/lib/game/run-token";
+import { loadScenarioBundle } from "@/lib/game/scenario-data";
+import { runSimulation } from "@/lib/game/simulate";
 import {
   buildShareCaption,
   buildShareView,
@@ -21,12 +36,18 @@ type Mode =
   | { kind: "loading" }
   | { kind: "ready"; gameData: GameData; record: RunRecordV1; view: ShareView }
   | { kind: "missing"; reason: string; runId: string | null }
+  | { kind: "skew"; title: string; message: string }
   | { kind: "error"; title: string; message: string };
 
 export function ShareScreen() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const runId = searchParams?.get("run") ?? null;
+  // Parsed once at component scope so both the load effect AND the render
+  // path (link-href threading) see the same discriminated value.
+  const parsed = useMemo(
+    () => parseRunSearchParams(searchParams ?? null),
+    [searchParams],
+  );
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
@@ -34,7 +55,7 @@ export function ShareScreen() {
   useEffect(() => {
     const myToken = ++reqToken.current;
     setMode({ kind: "loading" });
-    if (!runId) {
+    if (parsed === null) {
       setMode({
         kind: "missing",
         reason: "Open a draft first — a share card is only available for a simulated run.",
@@ -46,35 +67,85 @@ export function ShareScreen() {
       try {
         const gd = await loadGameData();
         if (myToken !== reqToken.current) return;
-        const loaded = loadRunRecord(runId, gd.versions);
-        if (loaded.status !== "loaded" || !loaded.record) {
+
+        let record: RunRecordV1;
+        if (parsed.kind === "id") {
+          const loaded = loadRunRecord(parsed.run_id, gd.versions);
+          if (loaded.status !== "loaded" || !loaded.record) {
+            setMode({
+              kind: "missing",
+              reason:
+                loaded.status === "stale"
+                  ? "This run was created on an older data bundle and has been evicted."
+                  : "We couldn't find that run.",
+              runId: parsed.run_id,
+            });
+            return;
+          }
+          if (!loaded.record.simulation) {
+            router.replace(reviewHref(parsed.run_id));
+            return;
+          }
+          record = loaded.record;
+        } else {
+          // Token path — self-contained `?run=<token>` URL, possibly from a
+          // fresh browser. Decode, version-check, replay deterministically.
+          const decoded = decodeRunToken(parsed.token);
+          if (decoded === null) {
+            setMode({
+              kind: "missing",
+              reason: "The shared link is malformed or truncated — ask the sender for a fresh link.",
+              runId: null,
+            });
+            return;
+          }
+          if (!versionsAgree(decoded, gd.versions)) {
+            setMode({
+              kind: "skew",
+              title: "This shared run is from a different build",
+              message:
+                "The dataset, rating engine, or rules on this site differ from when the run was created. Replaying it here would silently produce a different outcome, so we won't. Ask the sender to refresh the link from their current share screen.",
+            });
+            return;
+          }
+          try {
+            const scenario = await loadScenarioBundle();
+            if (myToken !== reqToken.current) return;
+            const virtual = virtualRecordFromToken(decoded, gd);
+            const { simulation } = await runSimulation(gd, scenario, virtual);
+            if (myToken !== reqToken.current) return;
+            record = { ...virtual, status: "complete", simulation };
+          } catch (err) {
+            if (err instanceof RunTokenError) {
+              setMode({
+                kind: "missing",
+                reason: `Couldn't replay the shared run: ${err.message}`,
+                runId: null,
+              });
+              return;
+            }
+            throw err;
+          }
+        }
+
+        const view = buildShareView(gd, record);
+        if (!view) {
+          // No simulation — token decoded but rebuilding the view failed.
           setMode({
             kind: "missing",
-            reason:
-              loaded.status === "stale"
-                ? "This run was created on an older data bundle and has been evicted."
-                : "We couldn't find that run.",
-            runId,
+            reason: "We couldn't assemble the card for this run.",
+            runId: null,
           });
           return;
         }
-        if (!loaded.record.simulation) {
-          router.replace(reviewHref(runId));
-          return;
-        }
-        const view = buildShareView(gd, loaded.record);
-        if (!view) {
-          router.replace(reviewHref(runId));
-          return;
-        }
-        setMode({ kind: "ready", gameData: gd, record: loaded.record, view });
+        setMode({ kind: "ready", gameData: gd, record, view });
       } catch (err) {
         if (myToken !== reqToken.current) return;
         const d = describeGameError(err);
         setMode({ kind: "error", title: d.title, message: d.message });
       }
     })();
-  }, [runId, router]);
+  }, [parsed, router]);
 
   if (mode.kind === "loading") {
     return (
@@ -117,7 +188,25 @@ export function ShareScreen() {
     );
   }
 
-  return <ShareBody record={mode.record} view={mode.view} />;
+  if (mode.kind === "skew") {
+    return (
+      <div className={s.share}>
+        <ShareAppBar />
+        <div className={s.errorPanel} role="alert">
+          <h2 className={s.errorTitle}>{mode.title}</h2>
+          <p className={s.errorMessage}>{mode.message}</p>
+          <Link href={draftHref(null)} className="btn btn--primary">
+            Start a new draft
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Threaded into in-screen CTAs so a token-replay session keeps the
+  // token across the share ↔ results boundary.
+  const linkRunValue = parsed?.kind === "token" ? parsed.token : mode.record.run_id;
+  return <ShareBody record={mode.record} view={mode.view} linkRunValue={linkRunValue} />;
 }
 
 function ShareAppBar() {
@@ -142,17 +231,36 @@ function ShareAppBar() {
 const CARD_WIDTH = 600;
 const CARD_HEIGHT = 800;
 
-function ShareBody({ record, view }: { record: RunRecordV1; view: ShareView }) {
+function ShareBody({
+  record,
+  view,
+  linkRunValue,
+}: {
+  record: RunRecordV1;
+  view: ShareView;
+  /** Value to thread into in-screen `?run=` URLs — the token when replayed, the run_id otherwise. */
+  linkRunValue: string | null;
+}) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState<"idle" | "ok" | "unsupported">("idle");
 
-  // Replay URL is derived deterministically from the run_id; no entropy.
+  // Replay URL: a self-contained `?run=<token>` URL so a fresh browser with
+  // no matching localStorage can reproduce the run byte-for-byte. The token
+  // carries the seed, the 17 picks, and every version anchor; honest-state
+  // fires on the receiving site if any version differs.
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return null;
     const origin = window.location.origin;
-    return `${origin}${shareHref(record.run_id)}`;
-  }, [record.run_id]);
+    try {
+      const token = encodeRunToken(record);
+      return `${origin}${shareHref(token)}`;
+    } catch {
+      // Fallback to the bare run_id only when token encoding fails on this
+      // (malformed?) record — better than no URL at all.
+      return `${origin}${shareHref(record.run_id)}`;
+    }
+  }, [record]);
 
   const caption = useMemo(() => buildShareCaption(view, shareUrl), [view, shareUrl]);
 
@@ -239,7 +347,7 @@ function ShareBody({ record, view }: { record: RunRecordV1; view: ShareView }) {
           </button>
         </div>
         <div className={s.resultsActions}>
-          <Link href={resultsHref(record.run_id)} className="btn btn--ghost">
+          <Link href={resultsHref(linkRunValue)} className="btn btn--ghost">
             Back to results
           </Link>
         </div>

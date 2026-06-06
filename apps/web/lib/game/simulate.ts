@@ -50,6 +50,7 @@ import type {
   PersistedKnockoutLadderRoundMeta,
   PersistedSimulation,
   RunRecordV1,
+  SimulationTelemetry,
 } from "./run-record";
 
 // ─── SimWorld assembly ───────────────────────────────────────────────────────
@@ -150,16 +151,29 @@ export interface SimulationOptions {
 }
 
 /**
- * Run the tournament synchronously. Returns the `PersistedSimulation` payload
- * the run-record persists. Determinism: identical (`record.parent_seed`,
- * `gameData`, `scenario`) inputs reproduce a byte-identical payload.
+ * Result of a synchronous simulation. The `simulation` field is the
+ * deterministic payload that's safe to persist + golden-compare; `telemetry`
+ * carries the wall-clock duration outside of that determinism guarantee.
+ */
+export interface SyncSimulationResult {
+  simulation: PersistedSimulation;
+  telemetry: SimulationTelemetry;
+}
+
+/**
+ * Run the tournament synchronously. Returns both:
+ *   - `simulation`: the `PersistedSimulation` payload the run-record persists,
+ *     byte-identical across runs with identical (`record.parent_seed`,
+ *     `gameData`, `scenario`) inputs;
+ *   - `telemetry`: wall-clock duration measured around the run, NOT covered
+ *     by the determinism guarantee.
  */
 export function runSimulationSync(
   gameData: GameData,
   scenario: Scenario2026Bundle,
   record: RunRecordV1,
   opts: SimulationOptions = {},
-): PersistedSimulation {
+): SyncSimulationResult {
   const { world, teams, bracket } = buildSimWorldInputs(gameData, scenario, record);
   const clock = opts.clock ?? defaultClock();
 
@@ -179,12 +193,14 @@ export function runSimulationSync(
   const duration_ms = t0 !== null && t1 !== null ? t1 - t0 : null;
 
   return {
-    scenario: runScenario,
-    run: result.run,
-    matches: result.matches,
-    group_stage: result.group_stage,
-    knockout_ladder_meta: toPersistedLadderMeta(result.knockout_ladder_meta),
-    duration_ms,
+    simulation: {
+      scenario: runScenario,
+      run: result.run,
+      matches: result.matches,
+      group_stage: result.group_stage,
+      knockout_ladder_meta: toPersistedLadderMeta(result.knockout_ladder_meta),
+    },
+    telemetry: { duration_ms },
   };
 }
 
@@ -234,7 +250,10 @@ function defaultClock(): (() => number) | null {
 export interface RunSimulationResult {
   /** "worker" when the simulation executed off the main thread. */
   via: "worker" | "main";
+  /** The deterministic payload; safe to persist via `setRunSimulation`. */
   simulation: PersistedSimulation;
+  /** Wall-clock telemetry — NOT part of the determinism guarantee. */
+  telemetry: SimulationTelemetry;
   /**
    * Non-fatal warning to surface to the user (e.g. "worker unavailable, ran
    * on main thread"). Null when nothing notable happened.
@@ -304,7 +323,12 @@ export function runSimulation(
       }
       if (data.kind === "done") {
         cleanup();
-        resolve({ via: "worker", simulation: data.simulation, warning: null });
+        resolve({
+          via: "worker",
+          simulation: data.simulation,
+          telemetry: data.telemetry,
+          warning: null,
+        });
         return;
       }
       if (data.kind === "error") {
@@ -352,8 +376,8 @@ async function runMainThread(
 ): Promise<RunSimulationResult> {
   // Yield to the event loop so the UI gets a paint before the work runs.
   await new Promise<void>((r) => setTimeout(r, 0));
-  const simulation = runSimulationSync(gameData, scenario, record);
-  return { via: "main", simulation, warning };
+  const { simulation, telemetry } = runSimulationSync(gameData, scenario, record);
+  return { via: "main", simulation, telemetry, warning };
 }
 
 // ─── Worker message protocol ─────────────────────────────────────────────────
@@ -369,7 +393,7 @@ export interface WorkerInput {
 }
 
 export type WorkerOutput =
-  | { kind: "done"; simulation: PersistedSimulation }
+  | { kind: "done"; simulation: PersistedSimulation; telemetry: SimulationTelemetry }
   | { kind: "error"; message: string; stack?: string };
 
 /**
@@ -402,6 +426,8 @@ export function handleWorkerInput(input: WorkerInput): WorkerOutput {
         matches: result.matches,
         group_stage: result.group_stage,
         knockout_ladder_meta: toPersistedLadderMeta(result.knockout_ladder_meta),
+      },
+      telemetry: {
         duration_ms: t0 !== null && t1 !== null ? t1 - t0 : null,
       },
     };
