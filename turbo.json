@@ -20,6 +20,30 @@
     },
     "test:golden:integration": {
       "dependsOn": ["^build"]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false,
+      "env": ["DATABASE_URL_UNPOOLED"]
+    },
+    "db:rollback-check": {
+      "cache": false,
+      "env": [
+        "DATABASE_URL_UNPOOLED",
+        "NEON_API_KEY",
+        "NEON_PROJECT_ID",
+        "NEON_EPHEMERAL_BRANCH_ID"
+      ]
+    },
+    "db:branch:create": {
+      "cache": false,
+      "env": ["NEON_API_KEY", "NEON_PROJECT_ID"]
+    },
+    "db:branch:delete": {
+      "cache": false,
+      "env": ["NEON_API_KEY", "NEON_PROJECT_ID", "NEON_EPHEMERAL_BRANCH_ID"]
     }
   }
 }

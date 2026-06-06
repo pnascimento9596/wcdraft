@@ -1,0 +1,41 @@
+{
+  "name": "@wcdraft/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Server-only database layer for wcdraft (Drizzle ORM over Neon Postgres). F-1 RED — greenfield schema + migrations only; no route-handler wiring (F-2/F-3/F-4) and no replacement of the legacy LeaderboardSubmissionSchema (F-4). Anonymous-first, cost-firewalled: no per-game DB access; auth/session, saved-run R/W, and leaderboard re-sim are the only consumers.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "default": "./dist/schema/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "migrations"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:rollback-check": "tsx scripts/rollback-check.ts",
+    "db:branch:create": "tsx scripts/neon-branch-create.ts",
+    "db:branch:delete": "tsx scripts/neon-branch-delete.ts"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0",
+    "drizzle-orm": "^0.36.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.28.0"
+  }
+}
