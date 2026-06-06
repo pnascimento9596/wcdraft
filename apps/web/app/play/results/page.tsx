@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ResultsScreen } from "../../../components/game/results-screen";
 
@@ -10,7 +11,13 @@ export const metadata: Metadata = {
 export default function ResultsPage() {
   return (
     <div className="container page">
-      <ResultsScreen />
+      <Suspense fallback={<ResultsFallback />}>
+        <ResultsScreen />
+      </Suspense>
     </div>
   );
+}
+
+function ResultsFallback() {
+  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading the run…</div>;
 }

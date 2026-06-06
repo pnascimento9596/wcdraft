@@ -4,14 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node ../../packages/data/scripts/copy-web-assets.mjs",
+    "predev": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs",
     "dev": "next dev",
-    "prebuild": "node ../../packages/data/scripts/copy-web-assets.mjs",
-    "build": "next build",
+    "prebuild": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "pretypecheck": "node ../../packages/data/scripts/copy-web-assets.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "generate:icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
     "@wcdraft/core": "workspace:*",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.16",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "vitest": "^4.1.8"
   }
 }
