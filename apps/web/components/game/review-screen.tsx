@@ -31,6 +31,7 @@ import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
+import { ManagerSlot } from "./manager-slot";
 import { SynergyPanel } from "./synergy-panel";
 import s from "./game.module.css";
 
@@ -295,7 +296,14 @@ function ReviewBoard({
           <h2 className={s.panelTitle}>{formation.name}</h2>
           <span className={s.panelMeta}>Locked · no rearranging</span>
         </div>
-        <Pitch formationId={draft.formation_id} starters={starters} />
+        <div className={s.squadStage}>
+          <Pitch
+            formationId={draft.formation_id}
+            starters={starters}
+            linkedPairs={synergy.linked_pairs}
+          />
+          <ManagerSlot manager={manager} />
+        </div>
 
         <div className={s.bench}>
           <span className={s.benchLabel}>Bench</span>
@@ -314,14 +322,6 @@ function ReviewBoard({
           </div>
         </div>
 
-        <div className={s.mgrSlot}>
-          <span className={s.benchLabel}>Manager</span>
-          <span className={manager ? s.mgrFilled : s.mgrEmpty}>
-            {manager
-              ? `${manager.name} · ${manager.nation_name} · ${manager.year} · rating unavailable`
-              : "No manager drafted — return to draft to keep spinning."}
-          </span>
-        </div>
       </section>
 
       <section className={s.panel}>
