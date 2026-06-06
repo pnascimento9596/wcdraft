@@ -28,28 +28,22 @@ import type { ScoringConfig } from "../types/scoring.js";
 
 // ─── λ (EXPECTED GOALS) MAP ───────────────────────────────────────────────────
 // λ_for = clamp(BASE + SPREAD * (attackFor - defenseAgainst)/100, MIN, MAX).
-// Channels are 0..100 nominally, but Phase 1 rating recalibration compresses
-// them onto the display band [66, 99]. λ is retuned to live on that
-// compressed scale — see SIM_CALIBRATION.md for the landing report. The
-// recoupled path landed: the display curve is applied to overall AND the
-// four sim channels, and λ is retuned to keep WC-like scoreline
-// distributions believable after compression. Display-only decoupling was
-// NOT used.
+// Phase 1.1 (decoupled path, plan §3.2 fallback): the rating-engine display
+// curve is applied to  ONLY; the four sim channels (attack, midfield,
+// defense, goalkeeping) stay on the pre-recal [FLOOR_CHANNEL, 100] band, so λ
+// stays calibrated to the engine's full attack-minus-defense range. These
+// constants therefore match the pre-recalibration baseline and are validated
+// against the 1998-2022 modern-era WC norms by
+//  (see that fixture for upstream source).
 export const LAMBDA = Object.freeze({
   /** Baseline goals for an evenly-matched team (attack == opp defense). */
-  BASE: 1.25,
-  /**
-   * Sensitivity to the attack-minus-defense edge. Phase 1 widens SPREAD to
-   * restore favourite/underdog separation after channels were compressed
-   * onto the display band — the raw delta (attackFor - defenseAgainst)/100
-   * is smaller than under the old [0,100] channel scale, so we lift the
-   * per-unit lambda response in proportion.
-   */
-  SPREAD: 4.0,
+  BASE: 1.3,
+  /** Sensitivity to the attack-minus-defense edge across the full 0..100 span. */
+  SPREAD: 1.7,
   /** Floor — even a hopeless attack still threatens occasionally. */
-  MIN: 0.3,
+  MIN: 0.25,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
-  MAX: 3.4,
+  MAX: 3.6,
   /** Fraction of a regulation λ that applies across a 30-minute extra time. */
   ET_FRACTION: 30 / 90,
 });

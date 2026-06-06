@@ -38,10 +38,12 @@ describe("compact-data integrity", () => {
     expect(SCENARIO_2026_BUNDLE.groups.length).toBe(12);
   });
 
-  // Phase 1 recalibration (wc-perf-2.0.0): basis logic is unchanged so the
+  // Phase 1.1 recalibration (wc-perf-2.0.0, decoupled): basis logic is unchanged so the
   // estimate count remains 388, but the count is no longer the WHOLE
-  // invariant — every estimate row must sit in [66, 73] on overall AND every
-  // channel, and the display contract applies to every runtime rating.
+  // invariant — every estimate row must sit in [66, 73] on OVERALL, and the
+  // display contract applies to every runtime rating's overall. Sim channels
+  // stay on the pre-recal [20, 100] band so λ stays calibrated; see
+  // realism-modern-norms.golden.test.ts.
   const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
   const DISPLAY_FLOOR = 66;
   const DISPLAY_MAX = 99;
@@ -58,7 +60,11 @@ describe("compact-data integrity", () => {
     expect(measured).toBe(EXPECTED_BASELINE_ANCHOR_ESTIMATE);
   });
 
-  it("every baseline_anchor_estimate row sits inside the estimate band on overall and all four channels", () => {
+  // Phase 1.1 decoupled: only OVERALL is on the display band [66, 73] for
+  // estimates. Sim channels stay on the pre-recalibration [FLOOR_CHANNEL, 100]
+  // band so the engine's λ stays calibrated to the modern-era WC norms — see
+  // realism-modern-norms.golden.test.ts.
+  it("every baseline_anchor_estimate row sits inside the overall estimate band [66, 73]", () => {
     const estimates = DRAFT_POOL_BUNDLE.ratings.filter(
       (r) => r.overall_basis === "baseline_anchor_estimate",
     );
@@ -67,12 +73,22 @@ describe("compact-data integrity", () => {
       expect(r.overall).not.toBeNull();
       expect(r.overall as number).toBeGreaterThanOrEqual(ESTIMATE_DISPLAY_MIN);
       expect(r.overall as number).toBeLessThanOrEqual(ESTIMATE_DISPLAY_MAX);
-      for (const ch of ["attack", "midfield", "defense", "goalkeeping"] as const) {
-        expect(r[ch], `${r.card_id} ${ch}`).toBeGreaterThanOrEqual(ESTIMATE_DISPLAY_MIN);
-        expect(r[ch], `${r.card_id} ${ch}`).toBeLessThanOrEqual(ESTIMATE_DISPLAY_MAX);
-      }
       expect(r.coverage).toBeLessThan(1.0);
       expect(r.provenance).toBe("wc_performance");
+    }
+  });
+
+  it("every runtime rating channel lives in the sim channel band [FLOOR_CHANNEL, 100]", () => {
+    // FLOOR_CHANNEL is 20 (REPLACEMENT_BASE * 100) — the pre-recalibration
+    // floor that the engine's λ was calibrated against. Sim channels were NOT
+    // remapped onto the display band in Phase 1.1 (decoupled path).
+    const SIM_CHANNEL_FLOOR = 20;
+    const SIM_CHANNEL_CEILING = 100;
+    for (const r of DRAFT_POOL_BUNDLE.ratings) {
+      for (const ch of ["attack", "midfield", "defense", "goalkeeping"] as const) {
+        expect(r[ch], `${r.card_id} ${ch}`).toBeGreaterThanOrEqual(SIM_CHANNEL_FLOOR);
+        expect(r[ch], `${r.card_id} ${ch}`).toBeLessThanOrEqual(SIM_CHANNEL_CEILING);
+      }
     }
   });
 
@@ -88,7 +104,7 @@ describe("compact-data integrity", () => {
   it("rating_version anchors are the Phase 1 recalibration versions", () => {
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-2.0.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.06");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.04");
   });
 
   it("every player card has a runtime CardId that parses through parseCardId", () => {

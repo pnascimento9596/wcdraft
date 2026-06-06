@@ -15,7 +15,7 @@ not a replacement.
 > shared helpers, the same target display anchors, and the same exponents).
 > The two pools therefore emit values on the **same display band `[66, 99]`**,
 > so historical and projected channels live on the same SIM scale — that is
-> what the recoupled `calibration.ts` λ retune was tuned for. No new ingestion;
+> what the decoupled path (channels untouched, λ untouched) was tuned for. No new ingestion;
 > Phase 2 will add Ballon d'Or / all-time list signals separately.
 
 This document is the companion to `etl/src/wcdraft_etl/rating_2026.py`; the

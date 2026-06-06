@@ -1,11 +1,11 @@
 [
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 66,
-      "midfield": 77
+      "defense": 63,
+      "goalkeeping": 20,
+      "midfield": 62
     },
     "group": "A",
     "group_slot": 1,
@@ -62,11 +62,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 71,
+      "attack": 47,
       "coverage": 0.7143,
-      "defense": 71,
-      "goalkeeping": 67,
-      "midfield": 71
+      "defense": 49,
+      "goalkeeping": 24,
+      "midfield": 51
     },
     "group": "A",
     "group_slot": 2,
@@ -123,11 +123,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 76,
+      "attack": 55,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 68,
-      "midfield": 79
+      "defense": 58,
+      "goalkeeping": 30,
+      "midfield": 66
     },
     "group": "A",
     "group_slot": 3,
@@ -184,11 +184,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 76
+      "defense": 54,
+      "goalkeeping": 25,
+      "midfield": 59
     },
     "group": "A",
     "group_slot": 4,
@@ -245,11 +245,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 60,
       "coverage": 0.7143,
-      "defense": 76,
-      "goalkeeping": 66,
-      "midfield": 78
+      "defense": 60,
+      "goalkeeping": 20,
+      "midfield": 65
     },
     "group": "B",
     "group_slot": 1,
@@ -305,11 +305,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 49,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 67,
-      "midfield": 73
+      "defense": 57,
+      "goalkeeping": 25,
+      "midfield": 53
     },
     "group": "B",
     "group_slot": 2,
@@ -366,11 +366,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 54,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 67,
-      "midfield": 74
+      "defense": 55,
+      "goalkeeping": 25,
+      "midfield": 55
     },
     "group": "B",
     "group_slot": 3,
@@ -427,11 +427,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 80,
+      "attack": 66,
       "coverage": 0.7143,
-      "defense": 80,
-      "goalkeeping": 66,
-      "midfield": 81
+      "defense": 65,
+      "goalkeeping": 20,
+      "midfield": 69
     },
     "group": "B",
     "group_slot": 4,
@@ -488,11 +488,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 61,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 68,
-      "midfield": 78
+      "defense": 58,
+      "goalkeeping": 26,
+      "midfield": 63
     },
     "group": "C",
     "group_slot": 1,
@@ -549,11 +549,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 76,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 67,
-      "midfield": 78
+      "defense": 60,
+      "goalkeeping": 25,
+      "midfield": 64
     },
     "group": "C",
     "group_slot": 2,
@@ -610,11 +610,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 73,
-      "goalkeeping": 68,
-      "midfield": 72
+      "defense": 51,
+      "goalkeeping": 30,
+      "midfield": 51
     },
     "group": "C",
     "group_slot": 3,
@@ -671,11 +671,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 79,
-      "goalkeeping": 67,
-      "midfield": 81
+      "defense": 65,
+      "goalkeeping": 25,
+      "midfield": 68
     },
     "group": "C",
     "group_slot": 4,
@@ -732,11 +732,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 80,
+      "attack": 70,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 66,
-      "midfield": 79
+      "defense": 53,
+      "goalkeeping": 20,
+      "midfield": 66
     },
     "group": "D",
     "group_slot": 1,
@@ -793,11 +793,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 75
+      "defense": 57,
+      "goalkeeping": 24,
+      "midfield": 57
     },
     "group": "D",
     "group_slot": 2,
@@ -854,11 +854,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 54,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 68,
-      "midfield": 74
+      "defense": 56,
+      "goalkeeping": 26,
+      "midfield": 56
     },
     "group": "D",
     "group_slot": 3,
@@ -915,11 +915,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 48,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 68,
-      "midfield": 76
+      "defense": 63,
+      "goalkeeping": 30,
+      "midfield": 57
     },
     "group": "D",
     "group_slot": 4,
@@ -976,11 +976,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 76,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 80,
-      "goalkeeping": 68,
-      "midfield": 80
+      "defense": 69,
+      "goalkeeping": 26,
+      "midfield": 67
     },
     "group": "E",
     "group_slot": 1,
@@ -1037,11 +1037,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 71,
+      "attack": 49,
       "coverage": 0.7143,
-      "defense": 73,
-      "goalkeeping": 67,
-      "midfield": 74
+      "defense": 53,
+      "goalkeeping": 25,
+      "midfield": 58
     },
     "group": "E",
     "group_slot": 2,
@@ -1098,11 +1098,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 58,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 77
+      "defense": 55,
+      "goalkeeping": 25,
+      "midfield": 61
     },
     "group": "E",
     "group_slot": 3,
@@ -1159,11 +1159,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 67,
-      "midfield": 76
+      "defense": 62,
+      "goalkeeping": 24,
+      "midfield": 58
     },
     "group": "E",
     "group_slot": 4,
@@ -1220,11 +1220,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 78,
+      "attack": 62,
       "coverage": 0.7143,
-      "defense": 78,
-      "goalkeeping": 67,
-      "midfield": 78
+      "defense": 60,
+      "goalkeeping": 25,
+      "midfield": 64
     },
     "group": "F",
     "group_slot": 1,
@@ -1281,11 +1281,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 78,
-      "goalkeeping": 66,
-      "midfield": 81
+      "defense": 63,
+      "goalkeeping": 20,
+      "midfield": 75
     },
     "group": "F",
     "group_slot": 2,
@@ -1342,11 +1342,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 55,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 75
+      "defense": 58,
+      "goalkeeping": 25,
+      "midfield": 59
     },
     "group": "F",
     "group_slot": 3,
@@ -1403,11 +1403,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 76
+      "defense": 59,
+      "goalkeeping": 24,
+      "midfield": 60
     },
     "group": "F",
     "group_slot": 4,
@@ -1464,11 +1464,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 78,
+      "attack": 61,
       "coverage": 0.7143,
-      "defense": 79,
-      "goalkeeping": 68,
-      "midfield": 81
+      "defense": 62,
+      "goalkeeping": 26,
+      "midfield": 68
     },
     "group": "G",
     "group_slot": 1,
@@ -1525,11 +1525,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 72,
-      "goalkeeping": 67,
-      "midfield": 73
+      "defense": 51,
+      "goalkeeping": 24,
+      "midfield": 52
     },
     "group": "G",
     "group_slot": 2,
@@ -1586,11 +1586,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 48,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 67,
-      "midfield": 74
+      "defense": 58,
+      "goalkeeping": 25,
+      "midfield": 60
     },
     "group": "G",
     "group_slot": 3,
@@ -1647,11 +1647,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 75
+      "defense": 59,
+      "goalkeeping": 25,
+      "midfield": 60
     },
     "group": "G",
     "group_slot": 4,
@@ -1708,11 +1708,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 79,
+      "attack": 66,
       "coverage": 0.7143,
-      "defense": 76,
-      "goalkeeping": 68,
-      "midfield": 80
+      "defense": 55,
+      "goalkeeping": 26,
+      "midfield": 69
     },
     "group": "H",
     "group_slot": 1,
@@ -1769,11 +1769,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 73,
-      "goalkeeping": 67,
-      "midfield": 73
+      "defense": 52,
+      "goalkeeping": 25,
+      "midfield": 56
     },
     "group": "H",
     "group_slot": 2,
@@ -1830,11 +1830,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 73,
-      "goalkeeping": 68,
-      "midfield": 74
+      "defense": 53,
+      "goalkeeping": 29,
+      "midfield": 53
     },
     "group": "H",
     "group_slot": 3,
@@ -1891,11 +1891,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 78,
-      "goalkeeping": 68,
-      "midfield": 79
+      "defense": 62,
+      "goalkeeping": 30,
+      "midfield": 65
     },
     "group": "H",
     "group_slot": 4,
@@ -1952,11 +1952,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 76,
+      "attack": 53,
       "coverage": 0.7143,
-      "defense": 80,
-      "goalkeeping": 67,
-      "midfield": 78
+      "defense": 68,
+      "goalkeeping": 26,
+      "midfield": 61
     },
     "group": "I",
     "group_slot": 1,
@@ -2013,11 +2013,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 78,
+      "attack": 64,
       "coverage": 0.7143,
-      "defense": 76,
-      "goalkeeping": 66,
-      "midfield": 79
+      "defense": 58,
+      "goalkeeping": 20,
+      "midfield": 67
     },
     "group": "I",
     "group_slot": 2,
@@ -2074,11 +2074,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 72,
-      "goalkeeping": 67,
-      "midfield": 73
+      "defense": 52,
+      "goalkeeping": 25,
+      "midfield": 54
     },
     "group": "I",
     "group_slot": 3,
@@ -2135,11 +2135,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 78,
+      "attack": 62,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 68,
-      "midfield": 78
+      "defense": 58,
+      "goalkeeping": 26,
+      "midfield": 64
     },
     "group": "I",
     "group_slot": 4,
@@ -2196,11 +2196,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 58,
       "coverage": 0.7143,
-      "defense": 80,
-      "goalkeeping": 68,
-      "midfield": 80
+      "defense": 67,
+      "goalkeeping": 26,
+      "midfield": 69
     },
     "group": "J",
     "group_slot": 1,
@@ -2257,11 +2257,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 76,
-      "goalkeeping": 67,
-      "midfield": 77
+      "defense": 58,
+      "goalkeeping": 24,
+      "midfield": 62
     },
     "group": "J",
     "group_slot": 2,
@@ -2318,11 +2318,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 79,
-      "goalkeeping": 66,
-      "midfield": 80
+      "defense": 65,
+      "goalkeeping": 20,
+      "midfield": 71
     },
     "group": "J",
     "group_slot": 3,
@@ -2378,11 +2378,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 67,
-      "midfield": 74
+      "defense": 56,
+      "goalkeeping": 25,
+      "midfield": 56
     },
     "group": "J",
     "group_slot": 4,
@@ -2439,11 +2439,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 78,
+      "attack": 59,
       "coverage": 0.7143,
-      "defense": 79,
-      "goalkeeping": 67,
-      "midfield": 80
+      "defense": 62,
+      "goalkeeping": 25,
+      "midfield": 63
     },
     "group": "K",
     "group_slot": 1,
@@ -2500,11 +2500,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 57,
       "coverage": 0.7143,
-      "defense": 75,
-      "goalkeeping": 67,
-      "midfield": 77
+      "defense": 55,
+      "goalkeeping": 25,
+      "midfield": 63
     },
     "group": "K",
     "group_slot": 2,
@@ -2561,11 +2561,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 72,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 73,
-      "goalkeeping": 67,
-      "midfield": 74
+      "defense": 53,
+      "goalkeeping": 24,
+      "midfield": 58
     },
     "group": "K",
     "group_slot": 3,
@@ -2622,11 +2622,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 75,
+      "attack": 52,
       "coverage": 0.7143,
-      "defense": 79,
-      "goalkeeping": 66,
-      "midfield": 78
+      "defense": 69,
+      "goalkeeping": 20,
+      "midfield": 66
     },
     "group": "K",
     "group_slot": 4,
@@ -2683,11 +2683,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 79,
+      "attack": 64,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 68,
-      "midfield": 79
+      "defense": 57,
+      "goalkeeping": 26,
+      "midfield": 67
     },
     "group": "L",
     "group_slot": 1,
@@ -2744,11 +2744,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 77,
+      "attack": 60,
       "coverage": 0.7143,
-      "defense": 78,
-      "goalkeeping": 67,
-      "midfield": 80
+      "defense": 61,
+      "goalkeeping": 25,
+      "midfield": 67
     },
     "group": "L",
     "group_slot": 2,
@@ -2805,11 +2805,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 74,
+      "attack": 56,
       "coverage": 0.7143,
-      "defense": 74,
-      "goalkeeping": 67,
-      "midfield": 75
+      "defense": 53,
+      "goalkeeping": 25,
+      "midfield": 58
     },
     "group": "L",
     "group_slot": 3,
@@ -2866,11 +2866,11 @@
   },
   {
     "aggregate_rating": {
-      "attack": 73,
+      "attack": 47,
       "coverage": 0.7143,
-      "defense": 77,
-      "goalkeeping": 67,
-      "midfield": 77
+      "defense": 65,
+      "goalkeeping": 25,
+      "midfield": 64
     },
     "group": "L",
     "group_slot": 4,

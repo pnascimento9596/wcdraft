@@ -185,9 +185,10 @@ def test_ratings_join_and_bounds(ratings, cards):
     for r in ratings:
         assert r["card_id"] in by_card
         assert r["card_id"] == f"{r['player_id']}:{r['tournament_id']}"
-        # Display band — recoupled with wc-perf-2.0.0.
+        # Phase 1.1 decoupled: sim channels on [FLOOR_CHANNEL, 100] band;
+        # only `overall` lives on the recalibrated display band [66, 99].
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
-            assert isinstance(r[ch], int) and rating.DISPLAY_FLOOR <= r[ch] <= rating.DISPLAY_MAX
+            assert isinstance(r[ch], int) and rating.FLOOR_CHANNEL <= r[ch] <= 100
         assert (
             isinstance(r["overall"], int)
             and rating.DISPLAY_FLOOR <= r["overall"] <= rating.DISPLAY_MAX
@@ -285,7 +286,8 @@ def test_team2026_shape(teams, ratings):
         assert all(cid in rating_cards for cid in t["squad_card_ids"])
         agg = t["aggregate_rating"]
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
-            assert rating.DISPLAY_FLOOR <= agg[ch] <= rating.DISPLAY_MAX
+            # Phase 1.1 decoupled: aggregates on sim band [FLOOR_CHANNEL, 100].
+            assert rating.FLOOR_CHANNEL <= agg[ch] <= 100
         assert 0.0 <= agg["coverage"] <= 1.0
         # Cited to BOTH the squads snapshot and the draw (group_slot provenance).
         assert {s["source_type"] for s in t["sources"]} == {"wikipedia"}

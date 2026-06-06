@@ -46,7 +46,7 @@ const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
 const SCHEMA_VERSION = "runtime-data-1.0.0";
-const ENGINE_VERSION = "engine-2026.06.06";
+const ENGINE_VERSION = "engine-2026.06.04";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0).
@@ -315,19 +315,14 @@ async function build() {
     };
     if (rating.overall_basis === "baseline_anchor_estimate") {
       estimateCount += 1;
-      const estimateChecks = [
-        ["overall", runtimeRating.overall],
-        ["attack", runtimeRating.attack],
-        ["midfield", runtimeRating.midfield],
-        ["defense", runtimeRating.defense],
-        ["goalkeeping", runtimeRating.goalkeeping],
-      ];
-      for (const [field, value] of estimateChecks) {
-        if (typeof value !== "number" || value < ESTIMATE_DISPLAY_MIN || value > ESTIMATE_DISPLAY_MAX) {
-          throw new Error(
-            `build-compact-data: baseline_anchor_estimate ${rating.card_id} has ${field}=${value} outside [${ESTIMATE_DISPLAY_MIN}, ${ESTIMATE_DISPLAY_MAX}].`,
-          );
-        }
+      // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
+      // stay on the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays
+      // calibrated; an unlinked card's channels naturally sit near FLOOR_CHANNEL.
+      const ov = runtimeRating.overall;
+      if (typeof ov !== "number" || ov < ESTIMATE_DISPLAY_MIN || ov > ESTIMATE_DISPLAY_MAX) {
+        throw new Error(
+          `build-compact-data: baseline_anchor_estimate ${rating.card_id} has overall=${ov} outside [${ESTIMATE_DISPLAY_MIN}, ${ESTIMATE_DISPLAY_MAX}].`,
+        );
       }
     }
     if (runtimeRating.overall === null) {

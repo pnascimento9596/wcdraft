@@ -503,8 +503,15 @@ def build_ratings(
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
         overall = _display_score(s, curve, estimate=estimate)
+        # DECOUPLED CHANNELS (Phase 1.1, plan §3.2 fallback).
+        # Sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band so the
+        # ENGINE's λ stays calibrated and the symmetric coherent-XI control
+        # lands inside the modern-era (1998-2022) WC norms — see
+        # tests/realism/test_modern_wc_norms.py and the realism-norms fixture.
+        # Only  (display-only) passes through the calibration curve;
+        # the visible bars expose the merit channel values directly.
         channels = {
-            ch: _display_channel(s, CHANNEL_SPREAD[pos][ch], curve, estimate=estimate)
+            ch: _channel(s, CHANNEL_SPREAD[pos][ch])
             for ch in CHANNELS
         }
         ratings.append(

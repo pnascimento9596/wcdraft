@@ -6,7 +6,7 @@
 > curve** maps the internal `score_0_100` onto the documented display band
 > `[66, 99]`, simultaneously reshaping `overall` AND the four sim channels.
 > `baseline_anchor_estimate` cards are additionally capped into the estimate
-> band `[66, 73]`. The recoupled path landed: the sim λ in
+> band `[66, 73]`. The **decoupled path** landed (plan §3.2 fallback): the sim λ in
 > `packages/core/src/engine/calibration.ts` was retuned so WC-like scoreline
 > distributions stay believable on the compressed channel range. The Phase 1
 > change ships only the curve + retune; new stature signals (Ballon d'Or, all-
@@ -204,7 +204,7 @@ channel. The honest-state semantics are preserved: missing components remain
 `null`, coverage stays low, the flag is kept. Estimates can never out-rate a
 measured great (asserted).
 
-### The four sim channels (recoupled)
+### The four sim channels (decoupled, Phase 1.1)
 
 The sim consumes only `attack / midfield / defense / goalkeeping` (never
 `overall`). After the curve is applied to the card, the off-position channels

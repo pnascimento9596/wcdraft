@@ -49,8 +49,8 @@ from .rating import (
     CHANNELS,
     COARSE_POSITIONS,
     REPLACEMENT_BASE,
+    _channel,
     _clamp01,
-    _display_channel,
     _display_score,
     _fit_display_curve,
     _percentile_map,
@@ -261,7 +261,9 @@ def build_ratings(cards: list[dict]) -> list[dict]:
         s = row["score_0_100"]
         overall = _display_score(s, curve)
         channels = {
-            ch: _display_channel(s, CHANNEL_SPREAD[pos][ch], curve) for ch in CHANNELS
+            # DECOUPLED CHANNELS — see rating.py for rationale. Sim channels stay on
+            # the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays calibrated.
+            ch: _channel(s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS
         }
         ratings.append(
             {
