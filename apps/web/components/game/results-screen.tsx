@@ -9,6 +9,7 @@ import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
 import {
   draftHref,
+  historyHref,
   parseRunSearchParams,
   reviewHref,
   shareHref,
@@ -374,12 +375,23 @@ function ResultsBody({
           <code className={s.seedCode}>{summary.seed}</code>
           <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
         </div>
+        {/*
+          Action hierarchy (ws-results/history-share):
+            - PRIMARY: Draft Again — the only forward action. Always starts a
+              NEW run (new seed → spins → squad). The sim is deterministic,
+              so re-simulating this squad would be a no-op; we never offer it.
+            - SECONDARY: Share — preserves token across in-app navigation.
+            - SECONDARY: View History — recent local runs (cap 5).
+        */}
         <div className={s.resultsActions}>
-          <Link href={shareHref(linkRunValue)} className="btn btn--primary">
-            Share this run →
+          <Link href={draftHref(null)} className="btn btn--primary">
+            Draft Again →
           </Link>
-          <Link href={draftHref(null)} className="btn btn--ghost">
-            New draft
+          <Link href={shareHref(linkRunValue)} className="btn btn--ghost">
+            Share
+          </Link>
+          <Link href={historyHref()} className="btn btn--ghost">
+            View History
           </Link>
         </div>
       </section>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="wcdraft — draft your all-time XI">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#141b24"/>
+      <stop offset="1" stop-color="#0a0e13"/>
+    </linearGradient>
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#54e3ab"/>
+      <stop offset="1" stop-color="#1c9e6e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#c8861a"/>
+      <stop offset="0.5" stop-color="#f5b62a"/>
+      <stop offset="1" stop-color="#ffd86a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card background + emerald top border -->
+  <rect x="0" y="0" width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="10" fill="url(#emerald)"/>
+
+  <!-- Brand mark — canonical wcdraft tactical pitch + gold draft arrow -->
+  <g transform="translate(96, 96) scale(1.6)">
+    <g fill="none" stroke="url(#emerald)" stroke-width="3" stroke-linejoin="round">
+      <rect x="14" y="8" width="92" height="116" rx="13"/>
+      <line x1="14" y1="66" x2="106" y2="66" stroke-width="2"/>
+      <rect x="42" y="8" width="36" height="15"/>
+      <rect x="52" y="8" width="16" height="6"/>
+      <rect x="42" y="109" width="36" height="15"/>
+      <rect x="52" y="118" width="16" height="6"/>
+    </g>
+    <circle cx="55" cy="52" r="28" fill="none" stroke="#2ecf92" stroke-width="1.6" stroke-dasharray="3 5" opacity=".7"/>
+    <g fill="#2ecf92">
+      <circle cx="40" cy="34" r="4.2"/>
+      <circle cx="62" cy="28" r="4.2"/>
+      <circle cx="32" cy="60" r="4.2"/>
+      <circle cx="57" cy="63" r="4.2"/>
+      <circle cx="49" cy="86" r="4.2"/>
+    </g>
+    <path d="M22 111 C 42 105, 63 92, 73 55" fill="none" stroke="url(#gold)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M81 41 L67 45 L74 58 Z" fill="url(#gold)"/>
+    <circle cx="85" cy="38" r="11" fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="85" cy="38" r="5" fill="url(#gold)"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="320" y="220" fill="#e9f9f2" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="120" font-weight="900" letter-spacing="-0.02em">
+    wc<tspan fill="url(#emerald)">draft</tspan>
+  </text>
+
+  <!-- Headline -->
+  <text x="320" y="310" fill="#9bb6ad" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="36" font-weight="600" letter-spacing="0.28em">
+    DRAFT YOUR ALL-TIME XI
+  </text>
+
+  <!-- Sub-headline -->
+  <text x="320" y="410" fill="#cfe5db" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="34" font-weight="500">
+    Spin · pick · lock the formation · chase the 8-0 run.
+  </text>
+
+  <!-- Footer line: domain + non-affiliation hint -->
+  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" letter-spacing="0.28em">
+    WCDRAFT.APP · NAMES &amp; FLAG CODES ONLY
+  </text>
+</svg>
