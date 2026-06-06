@@ -55,18 +55,18 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 22818455,
-      "bytes_brotli": 620030,
-      "bytes_gzip": 1019163,
+      "bytes": 22818413,
+      "bytes_brotli": 616284,
+      "bytes_gzip": 985689,
       "path": "draft-pool.compact.json",
-      "sha256": "6ae9c4f5956ef989b26b1a225abea1f62e013d377e9e03c707f3aa3a6d261ff0"
+      "sha256": "0ebffd30587ce889d9d9d63c91a600e3550ab9c12eb6ab5cbb9a339ce97d1772"
     },
     "scenario_2026": {
       "bytes": 109786,
-      "bytes_brotli": 4468,
-      "bytes_gzip": 7723,
+      "bytes_brotli": 4417,
+      "bytes_gzip": 7616,
       "path": "scenario-2026.compact.json",
-      "sha256": "ccad85a828dc22d0e1f348f17c4662b04f3337468f8fb321a1ee1f77da52d6e6"
+      "sha256": "6cf5c700f91517c2735dfadf22e3e8ad3f157dbc1667060806bc1bb1f07217bd"
     }
   },
   "counts": {
@@ -78,9 +78,9 @@
     "teams": 48
   },
   "dataset_version": "2026-06-04",
-  "engine_version": "engine-2026.06.04",
-  "rating_version_historical": "wc-perf-1.1.0",
-  "rating_version_projected": "proj-career-1.0.0",
+  "engine_version": "engine-2026.06.06",
+  "rating_version_historical": "wc-perf-2.0.0",
+  "rating_version_projected": "proj-career-2.0.0",
   "ruleset_version": "ruleset-2026.06.04",
   "schema_version": "runtime-data-1.0.0"
 }

@@ -22,7 +22,7 @@ import {
   SCENARIO_2026_BUNDLE,
 } from "../src/index.js";
 
-const PARENT_SEED = "wcdraft:e2e-real-run:v1:14";
+const PARENT_SEED = "wcdraft:e2e-real-run:rating-recal-v1:60";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 

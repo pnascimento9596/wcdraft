@@ -49,8 +49,10 @@ from .rating import (
     CHANNELS,
     COARSE_POSITIONS,
     REPLACEMENT_BASE,
-    _channel,
     _clamp01,
+    _display_channel,
+    _display_score,
+    _fit_display_curve,
     _percentile_map,
 )
 
@@ -59,7 +61,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Distinct version anchor — a projected rating is a different algorithm from
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this.
-RATING_VERSION = "proj-career-1.0.0"
+RATING_VERSION = "proj-career-2.0.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -186,7 +188,8 @@ def build_ratings(cards: list[dict]) -> list[dict]:
     goals_pct = {p: _percentile_map(v) for p, v in goals_cohort.items()}
     caps_pct = {p: _percentile_map(v) for p, v in caps_cohort.items()}
 
-    ratings: list[dict] = []
+    # ── PASS 1: build INTERNAL rows ────────────────────────────────────────────
+    internal_rows: list[dict] = []
     for c in cards:
         pos = c["position_listed"]
         g_pct = goals_pct[pos][c["intl_goals"]]
@@ -216,9 +219,8 @@ def build_ratings(cards: list[dict]) -> list[dict]:
         anchor = league_weight * (league or 0.0)
         score = _clamp01(base + anchor)
         score_0_100 = 100.0 * score
-        overall = round(score_0_100)
+        # Final display value computed in pass 2 via fitted display curve.
 
-        channels = {ch: _channel(score_0_100, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
         eff = {n: round(w / present_w, _PRECISION) for (n, _, w) in present}
 
         components = [
@@ -236,18 +238,43 @@ def build_ratings(cards: list[dict]) -> list[dict]:
             {"signal": "team_finish", "value": None, "weight": 0.0},
         ]
 
-        ratings.append(
+        internal_rows.append(
             {
                 "card_id": c["card_id"],
                 "player_id": c["player_id"],
                 "tournament_id": c["tournament_id"],
+                "pos": pos,
+                "score_0_100": score_0_100,
+                "components": components,
+                "coverage": c["coverage"],
+            }
+        )
+
+    # ── PASS 2: fit display curve on the projected pool, materialize Rating ────
+    # Same shared display helpers + targets as wc-perf-2.0.0. The projected RAW
+    # anchors are fitted on the projected dataset only — historical and
+    # projected raw scales have different provenance.
+    curve = _fit_display_curve([r["score_0_100"] for r in internal_rows])
+    ratings: list[dict] = []
+    for row in internal_rows:
+        pos = row["pos"]
+        s = row["score_0_100"]
+        overall = _display_score(s, curve)
+        channels = {
+            ch: _display_channel(s, CHANNEL_SPREAD[pos][ch], curve) for ch in CHANNELS
+        }
+        ratings.append(
+            {
+                "card_id": row["card_id"],
+                "player_id": row["player_id"],
+                "tournament_id": row["tournament_id"],
                 "overall": overall,
                 "attack": channels["attack"],
                 "midfield": channels["midfield"],
                 "defense": channels["defense"],
                 "goalkeeping": channels["goalkeeping"],
-                "components": components,
-                "coverage": c["coverage"],
+                "components": row["components"],
+                "coverage": row["coverage"],
                 "coverage_basis": COVERAGE_BASIS,
                 "provenance": PROVENANCE,
                 "rating_version": RATING_VERSION,

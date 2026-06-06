@@ -4,11 +4,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CALIBRATION: tune vs historical WC scoreline distributions.
 // ─────────────────────────────────────────────────────────────────────────────
-// Every value in this file is a FIRST-CUT calibration constant, chosen to be
-// plausible against World-Cup scoreline intuition (≈1.3 goals/team/match base,
-// favourites win more but never always). They are NOT fitted to a historical
-// distribution yet. Tuning λ / weights / probabilities against real WC
-// scoreline data is a FLAGGED FOLLOW-ON (its own lane), NOT this PR.
+// λ has been retuned for the Phase 1 rating recalibration (wc-perf-2.0.0 /
+// proj-career-2.0.0): the rating display curve compresses channels onto the
+// display band [66, 99], so the old [0,100] λ constants flattened
+// favourite/underdog separation. The new tuple (BASE=1.25, SPREAD=4.0,
+// MIN=0.3, MAX=3.4) keeps an evenly-matched expected total near 2.5 goals
+// while restoring favourite/underdog separation on the compressed scale.
+// All OTHER constants (chance budget, incidents, injuries, shootout band,
+// scoring, synergy, manager modifier) remain as the pre-Phase-1 first-cut
+// values and are flagged for separate tuning.
 //
 // These constants are LOCKED by golden fixtures: any change here changes a
 // golden RunResult byte and therefore REQUIRES an `engine_version` bump (the
@@ -24,16 +28,28 @@ import type { ScoringConfig } from "../types/scoring.js";
 
 // ─── λ (EXPECTED GOALS) MAP ───────────────────────────────────────────────────
 // λ_for = clamp(BASE + SPREAD * (attackFor - defenseAgainst)/100, MIN, MAX).
-// Channels are 0..100, so (attackFor - defenseAgainst) ∈ [-100, 100].
+// Channels are 0..100 nominally, but Phase 1 rating recalibration compresses
+// them onto the display band [66, 99]. λ is retuned to live on that
+// compressed scale — see SIM_CALIBRATION.md for the landing report. The
+// recoupled path landed: the display curve is applied to overall AND the
+// four sim channels, and λ is retuned to keep WC-like scoreline
+// distributions believable after compression. Display-only decoupling was
+// NOT used.
 export const LAMBDA = Object.freeze({
   /** Baseline goals for an evenly-matched team (attack == opp defense). */
-  BASE: 1.3,
-  /** Sensitivity to the attack-minus-defense edge across the full 0..100 span. */
-  SPREAD: 1.7,
+  BASE: 1.25,
+  /**
+   * Sensitivity to the attack-minus-defense edge. Phase 1 widens SPREAD to
+   * restore favourite/underdog separation after channels were compressed
+   * onto the display band — the raw delta (attackFor - defenseAgainst)/100
+   * is smaller than under the old [0,100] channel scale, so we lift the
+   * per-unit lambda response in proportion.
+   */
+  SPREAD: 4.0,
   /** Floor — even a hopeless attack still threatens occasionally. */
-  MIN: 0.25,
+  MIN: 0.3,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
-  MAX: 3.6,
+  MAX: 3.4,
   /** Fraction of a regulation λ that applies across a 30-minute extra time. */
   ET_FRACTION: 30 / 90,
 });

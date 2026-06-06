@@ -45,7 +45,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-1.1.0"
+RATING_VERSION = "wc-perf-2.0.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -134,6 +134,152 @@ CHANNELS = ("attack", "midfield", "defense", "goalkeeping")
 
 # Rounding precision for component float values, so the emitted JSON is stable.
 _PRECISION = 6
+
+# ─── DISPLAY CALIBRATION CURVE (wc-perf-2.0.0) ────────────────────────────────
+# Phase 1 rating recalibration: the internal merit model above is UNCHANGED.
+# Its output `score_0_100` is mapped through a deterministic monotonic
+# piecewise-power curve onto the display band [DISPLAY_FLOOR, DISPLAY_MAX].
+# The curve fits ONLY four global INTERNAL anchors of the emitted dataset
+# (min, p50, p95, max) onto fixed display targets (66, 73, 88, 99). It is the
+# SINGLE knob that reshapes the emitted distribution; the merit math is
+# untouched. Low-DOF (three exponents, four data anchors, no per-player
+# tuning) so it cannot fudge individuals and stays auditable.
+#
+# DESIGN INVARIANT: applied uniformly to `overall` AND the four sim channels —
+# channel spread now blends toward DISPLAY_FLOOR rather than the old raw
+# replacement floor of 20. This is the RECOUPLED path (sim λ retuned in
+# packages/core/src/engine/calibration.ts to live on the compressed display
+# scale); no display-only decoupling is used.
+#
+# ESTIMATE BAND: `baseline_anchor_estimate` cards are capped into
+# [ESTIMATE_FLOOR, ESTIMATE_CEILING] AFTER the curve. They never out-rate
+# linked greats, never fabricate a box score (the absent stat stays null in
+# components), and remain flagged via overall_basis + low coverage.
+DISPLAY_CURVE_KIND = "global_piecewise_power_v1"
+
+DISPLAY_FLOOR = 66
+DISPLAY_MEDIAN = 73
+DISPLAY_P95 = 88
+DISPLAY_MAX = 99
+
+ESTIMATE_FLOOR = 66
+ESTIMATE_CEILING = 73
+
+# Three exponents — the only free parameters of the curve. Each shapes one
+# of the three monotonic segments (floor→median, median→p95, p95→max).
+# Fixed globally; no per-player or per-era override.
+DISPLAY_LOW_EXPONENT = 0.65
+DISPLAY_MID_EXPONENT = 1.00
+DISPLAY_HIGH_EXPONENT = 1.85
+
+
+class DisplayCurve:
+    """Frozen fitted-anchor record for the display calibration curve."""
+
+    __slots__ = ("raw_floor", "raw_median", "raw_p95", "raw_max")
+
+    def __init__(
+        self, raw_floor: float, raw_median: float, raw_p95: float, raw_max: float
+    ) -> None:
+        self.raw_floor = float(raw_floor)
+        self.raw_median = float(raw_median)
+        self.raw_p95 = float(raw_p95)
+        self.raw_max = float(raw_max)
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return (
+            f"DisplayCurve(raw_floor={self.raw_floor}, raw_median={self.raw_median}, "
+            f"raw_p95={self.raw_p95}, raw_max={self.raw_max})"
+        )
+
+
+def _quantile(sorted_values: list[float], q: float) -> float:
+    n = len(sorted_values)
+    if n == 0:
+        raise ValueError("_quantile called on empty list")
+    if n == 1:
+        return float(sorted_values[0])
+    pos = (n - 1) * q
+    lo = int(pos)
+    hi = min(lo + 1, n - 1)
+    frac = pos - lo
+    return float(sorted_values[lo]) * (1.0 - frac) + float(sorted_values[hi]) * frac
+
+
+def _fit_display_curve(scores: list[float]) -> DisplayCurve:
+    """Fit four-anchor display curve on emitted internal scores."""
+    if not scores:
+        raise ValueError("_fit_display_curve called on empty score list")
+    sv = sorted(float(s) for s in scores)
+    for s in sv:
+        if s != s or s in (float("inf"), float("-inf")):
+            raise ValueError(f"non-finite internal score: {s}")
+    curve = DisplayCurve(
+        raw_floor=sv[0],
+        raw_median=_quantile(sv, 0.50),
+        raw_p95=_quantile(sv, 0.95),
+        raw_max=sv[-1],
+    )
+    if not (curve.raw_floor < curve.raw_median < curve.raw_p95 < curve.raw_max):
+        raise ValueError(
+            "degenerate display curve anchors "
+            f"(floor={curve.raw_floor}, median={curve.raw_median}, "
+            f"p95={curve.raw_p95}, max={curve.raw_max}); refusing to emit."
+        )
+    return curve
+
+
+def _display_value(
+    score_0_100: float, curve: DisplayCurve, *, estimate: bool = False
+) -> float:
+    x = score_0_100
+    if x <= curve.raw_floor:
+        y = float(DISPLAY_FLOOR)
+    elif x >= curve.raw_max:
+        y = float(DISPLAY_MAX)
+    elif x <= curve.raw_median:
+        span_raw = curve.raw_median - curve.raw_floor
+        t = (x - curve.raw_floor) / span_raw if span_raw > 0.0 else 0.0
+        y = DISPLAY_FLOOR + (DISPLAY_MEDIAN - DISPLAY_FLOOR) * (t ** DISPLAY_LOW_EXPONENT)
+    elif x <= curve.raw_p95:
+        span_raw = curve.raw_p95 - curve.raw_median
+        t = (x - curve.raw_median) / span_raw if span_raw > 0.0 else 0.0
+        y = DISPLAY_MEDIAN + (DISPLAY_P95 - DISPLAY_MEDIAN) * (t ** DISPLAY_MID_EXPONENT)
+    else:
+        span_raw = curve.raw_max - curve.raw_p95
+        t = (x - curve.raw_p95) / span_raw if span_raw > 0.0 else 0.0
+        y = DISPLAY_P95 + (DISPLAY_MAX - DISPLAY_P95) * (t ** DISPLAY_HIGH_EXPONENT)
+    if y < DISPLAY_FLOOR:
+        y = float(DISPLAY_FLOOR)
+    elif y > DISPLAY_MAX:
+        y = float(DISPLAY_MAX)
+    if estimate:
+        if y < ESTIMATE_FLOOR:
+            y = float(ESTIMATE_FLOOR)
+        elif y > ESTIMATE_CEILING:
+            y = float(ESTIMATE_CEILING)
+    return y
+
+
+def _display_score(
+    score_0_100: float, curve: DisplayCurve, *, estimate: bool = False
+) -> int:
+    return int(round(_display_value(score_0_100, curve, estimate=estimate)))
+
+
+def _display_channel(
+    score_0_100: float, spread: float, curve: DisplayCurve, *, estimate: bool = False
+) -> int:
+    display = _display_value(score_0_100, curve, estimate=estimate)
+    val = display * spread + DISPLAY_FLOOR * (1.0 - spread)
+    if estimate:
+        if val < ESTIMATE_FLOOR:
+            val = float(ESTIMATE_FLOOR)
+        elif val > ESTIMATE_CEILING:
+            val = float(ESTIMATE_CEILING)
+    return max(DISPLAY_FLOOR, min(DISPLAY_MAX, round(val)))
+
+
 
 
 # ─── INPUT LOADING ────────────────────────────────────────────────────────────
@@ -255,7 +401,10 @@ def build_ratings(
     goals_pct = {k: _percentile_map(v) for k, v in goals_cohort.items()}
     apps_pct = {k: _percentile_map(v) for k, v in apps_cohort.items()}
 
-    ratings: list[dict] = []
+    # ── PASS 1: build per-card INTERNAL rows ──────────────────────────────────
+    # Refactor (wc-perf-2.0.0): the final overall/channels are computed in
+    # pass 2 from `score_0_100` via the calibrated display curve.
+    internal_rows: list[dict] = []
     for c in mens_cards:
         pos = _coarse_pos(c, position_of_player)
         ckey = (c["tournament_id"], pos)
@@ -306,16 +455,9 @@ def build_ratings(
 
         score = _clamp01(base + anchor)
         score_0_100 = 100.0 * score
-        # overall is ALWAYS computed now (no null path): a card with measured
-        # individual performance is rated on it; a card without is rated from the
-        # replacement baseline + the era-invariant anchor (an honest estimate). The
-        # confidence is carried by coverage + overall_basis, not by withholding.
-        overall = round(score_0_100)
         overall_basis = (
             "measured_performance" if has_individual_signal else "baseline_anchor_estimate"
         )
-
-        channels = {ch: _channel(score_0_100, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
 
         components = [
             # Raw box-score values for transparency (weight 0 — informational).
@@ -339,21 +481,47 @@ def build_ratings(
             {"signal": "team_finish", "value": finish_pts, "weight": FINISH_WEIGHT[pos]},
         ]
 
-        ratings.append(
+        internal_rows.append(
             {
                 "card_id": c["card_id"],
                 "player_id": c["player_id"],
                 "tournament_id": c["tournament_id"],
-                "overall": overall,
+                "pos": pos,
+                "score_0_100": score_0_100,
                 "overall_basis": overall_basis,
+                "components": components,
+                "coverage": c["coverage"],
+                "appearances_source": c.get("appearances_source"),
+            }
+        )
+
+    # ── PASS 2: fit display curve and materialize Rating rows ─────────────────
+    curve = _fit_display_curve([r["score_0_100"] for r in internal_rows])
+    ratings: list[dict] = []
+    for row in internal_rows:
+        pos = row["pos"]
+        s = row["score_0_100"]
+        estimate = row["overall_basis"] == "baseline_anchor_estimate"
+        overall = _display_score(s, curve, estimate=estimate)
+        channels = {
+            ch: _display_channel(s, CHANNEL_SPREAD[pos][ch], curve, estimate=estimate)
+            for ch in CHANNELS
+        }
+        ratings.append(
+            {
+                "card_id": row["card_id"],
+                "player_id": row["player_id"],
+                "tournament_id": row["tournament_id"],
+                "overall": overall,
+                "overall_basis": row["overall_basis"],
                 "attack": channels["attack"],
                 "midfield": channels["midfield"],
                 "defense": channels["defense"],
                 "goalkeeping": channels["goalkeeping"],
-                "components": components,
-                "coverage": c["coverage"],
+                "components": row["components"],
+                "coverage": row["coverage"],
                 "coverage_basis": "wc_signals",
-                "appearances_source": c.get("appearances_source"),
+                "appearances_source": row["appearances_source"],
                 "provenance": "wc_performance",
                 "rating_version": RATING_VERSION,
             }
