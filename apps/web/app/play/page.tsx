@@ -17,7 +17,8 @@ export default function ModeSelectPage() {
           Seventeen spins, one all-time XI. Pick how much the draft shows you before you commit.
         </p>
         <p className="page-head__note">
-          Draft and review run on the real 1930–2026 pool. Simulation wires in next phase.
+          Live on the real 1930–2026 pool. Draft, eight-match simulation and scoring all run in
+          your browser.
         </p>
       </header>
 

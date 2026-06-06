@@ -55,15 +55,15 @@ export default function HomePage() {
           </div>
           <div className="stat">
             <span className="stat__num">
-              8<span className="accent">–</span>0
+              8<span className="gold">–</span>0
             </span>
             <span className="stat__label">a perfect run</span>
           </div>
         </div>
 
-        <p className="coming-soon">
-          Play the full flow now as a preview on illustrative mock data — real football data, the
-          draft engine, and scoring wire in at a later milestone.
+        <p className="hero__live">
+          Live now on real football data from 1930–2022 plus 2026. The deterministic draft
+          engine, the match simulator, and real scoring all run in your browser.
         </p>
       </div>
     </section>

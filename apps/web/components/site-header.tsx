@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
-import { BallBadge, CloseIcon, MenuIcon } from "./icons";
+import { CloseIcon, MenuIcon } from "./icons";
 
 const MENU = [
   { href: "/play", label: "Play" },
@@ -25,8 +26,18 @@ export function SiteHeader() {
   return (
     <header className="masthead">
       <div className="container masthead__inner">
+        {/* Canonical wcdraft mark — emerald tactical-pitch + gold draft-arrow.
+            Source: apps/web/public/brand/wcdraft-mark.svg (the same artwork the
+            PWA icon set in PR #17 was generated from). Never redraw inline. */}
         <Link href="/" className="wordmark" aria-label="wcdraft — home">
-          <BallBadge className="wordmark__badge" />
+          <Image
+            src="/brand/wcdraft-mark.svg"
+            alt=""
+            width={32}
+            height={35}
+            priority
+            className="wordmark__badge"
+          />
           <span className="wordmark__text">
             wc<b>draft</b>
           </span>
