@@ -249,18 +249,35 @@ function ShareBody({
   // no matching localStorage can reproduce the run byte-for-byte. The token
   // carries the seed, the 17 picks, and every version anchor; honest-state
   // fires on the receiving site if any version differs.
-  const shareUrl = useMemo(() => {
-    if (typeof window === "undefined") return null;
+  //
+  // I3.7 fix-pass #2 (PR #18 BLOCKER): NO silent bare-id fallback. A
+  // `ready`/`simulated` run MUST always tokenize; if `encodeRunToken` ever
+  // fails (e.g. the record is malformed or has <17 picks somehow), we emit
+  // NO share URL and surface an honest disabled/error state instead of a
+  // non-reproducible `run-v1-*` link.
+  const shareLink = useMemo<
+    | { kind: "ready"; url: string }
+    | { kind: "ssr" }
+    | { kind: "error"; message: string }
+  >(() => {
+    if (typeof window === "undefined") return { kind: "ssr" };
     const origin = window.location.origin;
     try {
       const token = encodeRunToken(record);
-      return `${origin}${shareHref(token)}`;
-    } catch {
-      // Fallback to the bare run_id only when token encoding fails on this
-      // (malformed?) record — better than no URL at all.
-      return `${origin}${shareHref(record.run_id)}`;
+      return { kind: "ready", url: `${origin}${shareHref(token)}` };
+    } catch (err) {
+      return {
+        kind: "error",
+        message:
+          err instanceof RunTokenError
+            ? `Couldn't build a reproducible share link: ${err.message}`
+            : "Couldn't build a reproducible share link for this run.",
+      };
     }
   }, [record]);
+
+  const shareUrl = shareLink.kind === "ready" ? shareLink.url : null;
+  const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
 
   const caption = useMemo(() => buildShareCaption(view, shareUrl), [view, shareUrl]);
 
@@ -333,16 +350,34 @@ function ShareBody({
 
       {/* ── Caption + actions ─────────────────────────────────────────── */}
       <div className={`${s.panel} ${s.sharePanel}`}>
+        {shareLinkError ? (
+          <p className={s.shareHint} role="alert">
+            <strong>Share link unavailable.</strong> {shareLinkError} The card and caption
+            still render, but we will not emit a non-reproducible URL.
+          </p>
+        ) : null}
         <p className={s.shareCaptionLabel}>Caption</p>
         <pre className={s.shareCaption}>{caption}</pre>
         <div className={s.resultsActions}>
-          <button type="button" className="btn btn--primary" onClick={copyCaption}>
+          <button
+            type="button"
+            className={`btn btn--primary${shareLinkError ? " btn--disabled" : ""}`}
+            onClick={copyCaption}
+            disabled={!!shareLinkError}
+            aria-disabled={!!shareLinkError}
+          >
             {copied ? "Copied ✓" : "Copy caption"}
           </button>
           <button type="button" className="btn btn--ghost" onClick={downloadSvg}>
             Download card
           </button>
-          <button type="button" className="btn btn--ghost" onClick={shareNative}>
+          <button
+            type="button"
+            className={`btn btn--ghost${shareLinkError ? " btn--disabled" : ""}`}
+            onClick={shareNative}
+            disabled={!!shareLinkError}
+            aria-disabled={!!shareLinkError}
+          >
             {shared === "unsupported" ? "Share unavailable" : "Native share"}
           </button>
         </div>

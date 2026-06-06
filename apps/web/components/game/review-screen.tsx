@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   computeSynergy,
   FORMATION_TEMPLATES,
+  isDraftComplete,
   validateSquad,
 } from "@wcdraft/core";
 import {
@@ -259,7 +260,13 @@ function ReviewBoard({
     [],
   );
 
-  const fieldable = validation.is_fieldable;
+  // I3.7 fix-pass #2 (PR #18 BLOCKER): the Simulate gate must be DRAFT
+  // COMPLETION (all 17 spins → full XI + 5 bench + 1 manager), NOT mere
+  // fieldability (11 starters). The share token requires 17 picks to encode;
+  // simulating a `drafting`-status squad ships an incomplete run and breaks
+  // the share/replay contract. (validation.is_fieldable + the no-GK soft
+  // warning remain layered checks — never the unlock condition.)
+  const complete = isDraftComplete(draft);
 
   return (
     <div className={s.reviewShell}>
@@ -353,7 +360,7 @@ function ReviewBoard({
       <SimulatePanel
         gameData={gameData}
         record={record}
-        fieldable={fieldable}
+        complete={complete}
         onBack={onBack}
         onRecordUpdate={onRecordUpdate}
         persistenceWarning={persistenceWarning}
@@ -372,14 +379,20 @@ type SimState =
 function SimulatePanel({
   gameData,
   record,
-  fieldable,
+  complete,
   onBack,
   onRecordUpdate,
   persistenceWarning,
 }: {
   gameData: GameData;
   record: RunRecordV1;
-  fieldable: boolean;
+  /**
+   * True iff every spin has been picked (`isDraftComplete(draft)`).
+   * I3.7 fix-pass #2 (PR #18 BLOCKER): Simulate gates on draft completion —
+   * never on `is_fieldable` — because a fieldable-but-not-complete squad has
+   * <17 picks and cannot encode a `t1.` share token.
+   */
+  complete: boolean;
   onBack: () => void;
   onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
   persistenceWarning: string | null;
@@ -388,7 +401,7 @@ function SimulatePanel({
   const [sim, setSim] = useState<SimState>({ kind: "idle" });
 
   const startSim = useCallback(async () => {
-    if (!fieldable || sim.kind === "running") return;
+    if (!complete || sim.kind === "running") return;
     setSim({ kind: "running", note: "Loading 2026 scenario…" });
     // Reflect lifecycle on the persisted record so refreshes don't claim the
     // run is "ready" mid-simulation. Best-effort — proceed on failure.
@@ -442,13 +455,13 @@ function SimulatePanel({
       const d = describeGameError(err);
       setSim({ kind: "error", title: d.title, message: d.message });
     }
-  }, [fieldable, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
+  }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
 
-  const note = !fieldable
-    ? "Your XI isn't fieldable yet — head back to the draft and finish the starters."
+  const note = !complete
+    ? "Your draft isn't finished — head back and consume all 17 spins before simulating."
     : sim.kind === "running"
       ? sim.note
-      : "Your XI is fieldable. Hit simulate to play the 8-match run.";
+      : "Your draft is complete. Hit simulate to play the 8-match run.";
 
   return (
     <section className={`${s.panel} ${s.simPanel}`}>
@@ -465,10 +478,10 @@ function SimulatePanel({
       )}
       <button
         type="button"
-        className={`btn btn--primary${!fieldable || sim.kind === "running" ? " btn--disabled" : ""}`}
+        className={`btn btn--primary${!complete || sim.kind === "running" ? " btn--disabled" : ""}`}
         onClick={startSim}
-        disabled={!fieldable || sim.kind === "running"}
-        aria-disabled={!fieldable || sim.kind === "running"}
+        disabled={!complete || sim.kind === "running"}
+        aria-disabled={!complete || sim.kind === "running"}
       >
         {sim.kind === "running" ? "Simulating…" : "Simulate the run"}
       </button>
