@@ -2652,184 +2652,199 @@ button.benchSlot:not(:disabled):hover {
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Spin slot machine — emerald (--ember) + gold (--gold), dark-first.
-   PRESENTATION ONLY. The center reel ALWAYS lands on the deterministic
-   `activeSpin` result; flanking reels are decorative. Animation is CSS
-   transforms + opacity only. `prefers-reduced-motion` snaps to the final
-   transform with no spin.
+   SPIN REVEAL — standalone stage (the centerpiece). Emerald = var(--ember),
+   gold = var(--gold); brand hexes are never re-hardcoded here. The 2–3s drum
+   spin is PRESENTATION ONLY over the deterministic engine result, and
+   prefers-reduced-motion snaps straight to the settled face.
    ───────────────────────────────────────────────────────────────────────── */
 
-.spinRevealPanel {
+.spinShell {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+.spinStage {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  background: linear-gradient(180deg, var(--bg-800) 0%, var(--bg-850) 100%);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-3);
-  padding: var(--s-5);
-  position: relative;
-  overflow: hidden;
-}
-.spinRevealPanel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(60% 80% at 50% 0%, rgba(var(--glow-ember), 0.10), transparent 60%),
-    radial-gradient(40% 70% at 50% 100%, rgba(var(--glow-gold), 0.08), transparent 60%);
+  padding: var(--s-2) 0 0;
 }
 
-.spinRevealTop {
-  display: flex;
+/* ── Status bar ─────────────────────────────────────────────────────────── */
+.spinStatusBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-  position: relative;
+  gap: var(--s-2);
 }
-.pickCounterBadge {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.12em;
-  color: var(--ember-bright);
-  background: color-mix(in srgb, var(--ember) 16%, var(--bg-700));
-  border: 1px solid color-mix(in srgb, var(--ember) 32%, transparent);
-  padding: 4px 10px;
+.spinPickBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
   border-radius: var(--r-pill);
-  text-transform: uppercase;
-  font-feature-settings: "tnum" 1;
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--ember) 24%, var(--bg-750)), var(--bg-800));
+  border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--line-2));
+  box-shadow: var(--ring-ember);
+  line-height: 1;
 }
-.spinRevealKicker {
+.spinPickKicker {
   font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.18em;
+  font-size: 8px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
-
-/* ── Slot machine frame ───────────────────────────────────────────────── */
-
-.slotMachine {
-  position: relative;
-  background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-2);
-  padding: var(--s-5) var(--s-3);
-  overflow: hidden;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), var(--sh-2);
+.spinPickNum {
+  font-family: var(--f-display), sans-serif;
+  font-size: 22px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
 }
-.slotGuideTop,
-.slotGuideBottom {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--gold) 18%,
-    var(--gold-bright) 50%,
-    var(--gold) 82%,
-    transparent 100%
-  );
-  box-shadow: 0 0 12px rgba(var(--glow-gold), 0.55);
-  pointer-events: none;
-  z-index: 2;
+.spinPickOf {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-400);
 }
-.slotGuideTop { top: calc(50% - 50px); }
-.slotGuideBottom { top: calc(50% + 50px); }
-
-.slotReels {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--s-2);
-  align-items: stretch;
-  position: relative;
+.spinStatusTitle {
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-300);
 }
-
-.slotMachine {
-  --slot-face-h: 100px;
-}
-
-.slotWindow {
-  position: relative;
-  height: var(--slot-face-h);
-  overflow: hidden;
-  background: var(--bg-800);
-  border: 1px solid var(--line);
-  border-radius: var(--r-2);
-}
-.slotWindowCenter {
-  border-color: color-mix(in srgb, var(--ember) 35%, transparent);
-  box-shadow: var(--ring-ember);
-  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
-}
-
-/* The track holds N faces stacked vertically; final face is the landing one.
-   We translate the track from a "scrolled" start to a "landed" end position
-   so the LAST face sits in the center window. The end offset is driven by
-   --slot-face-h so a responsive @media query just needs to bump that var. */
-.slotReelTrack {
-  position: absolute;
-  inset: 0;
+.spinStatusMeta {
   display: flex;
   flex-direction: column;
-  transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0);
-  animation-name: slotDecelerate;
-  animation-duration: var(--reel-duration);
-  animation-delay: var(--reel-delay);
-  animation-timing-function: var(--e-out);
-  animation-fill-mode: both;
+  gap: 4px;
+}
+.spinStatusChip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 8px;
+  border-radius: var(--r-1);
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+  min-width: 104px;
+}
+.spinStatusChipLabel {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinStatusChipValue {
+  font-family: var(--f-display), sans-serif;
+  font-size: 14px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── Drum ───────────────────────────────────────────────────────────────── */
+.spinDrumLabel {
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinDrum {
+  position: relative;
+  padding: var(--s-3);
+  border-radius: var(--r-3);
+  background:
+    radial-gradient(72% 90% at 50% 50%, color-mix(in srgb, var(--ember) 9%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
+  border: 1px solid var(--line-2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), var(--sh-2);
+  overflow: hidden;
+}
+.spinReels {
+  display: grid;
+  grid-template-columns: 0.8fr 1.3fr 0.8fr;
+  gap: var(--s-2);
+  align-items: center;
+}
+.spinReelWindow {
+  position: relative;
+  height: var(--reel-h);
+  overflow: hidden;
+  border-radius: var(--r-2);
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+}
+.spinReelWindowSide {
+  opacity: 0.4;
+  filter: saturate(0.7);
+  transform: scale(0.93);
+}
+.spinReelWindowCenter {
+  border: 1.5px solid color-mix(in srgb, var(--gold) 62%, transparent);
+  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
+  box-shadow: var(--ring-amber), inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
+  z-index: 2;
+}
+.spinReelTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
   will-change: transform;
 }
-.slotReelTrackCenter {
-  /* Center reel gets a slightly snappier deceleration at the end. */
-  animation-timing-function: cubic-bezier(0.14, 0.85, 0.2, 1);
+.spinReelTrackSpinning {
+  animation-name: spinDrum;
+  animation-duration: var(--spin-dur);
+  animation-delay: var(--spin-delay);
+  animation-timing-function: cubic-bezier(0.16, 0.74, 0.12, 1);
+  animation-fill-mode: both;
 }
-
-@keyframes slotDecelerate {
-  0% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.65;
-  }
-  60% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0);
-    opacity: 1;
-  }
+@keyframes spinDrum {
+  0%   { transform: translateY(var(--spin-from)); filter: blur(2px); }
+  12%  { filter: blur(2px); }
+  82%  { filter: blur(0); }
+  100% { transform: translateY(var(--spin-to)); filter: blur(0); }
 }
-
-.slotFace {
-  flex: 0 0 var(--slot-face-h);
-  height: var(--slot-face-h);
+.spinFace {
+  height: var(--face-h);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--s-2);
-  padding: 0 10px;
-  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
-  border-bottom: 1px solid var(--line);
+  justify-content: center;
+  gap: 4px;
+  padding: 0 6px;
+  text-align: center;
 }
-.slotFace:last-child {
-  border-bottom: none;
+.spinFaceSettled {
+  animation: spinFacePop var(--d-med) var(--e-snap) both;
 }
-.slotFaceLanding {
-  background: linear-gradient(180deg, var(--bg-700) 0%, var(--bg-750) 100%);
+@keyframes spinFacePop {
+  0%   { transform: scale(0.86); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
-.slotFaceFlag {
-  width: 44px;
-  height: 33px;
+.spinFaceFlag {
+  width: 52px;
+  height: 36px;
   object-fit: cover;
   border-radius: 3px;
   border: 1px solid var(--line-2);
   background: var(--bg-900);
-  flex: 0 0 auto;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
-.slotFaceFallback {
-  width: 44px;
-  height: 33px;
+.spinFaceFlagFallback {
+  width: 52px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2839,111 +2854,168 @@ button.benchSlot:not(:disabled):hover {
   background: var(--bg-700);
   border: 1px solid var(--line-2);
   border-radius: 3px;
-  flex: 0 0 auto;
 }
-.slotFaceText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-.slotNation {
+.spinFaceNation {
   font-family: var(--f-display), sans-serif;
-  font-size: clamp(14px, 3.6vw, 18px);
+  font-size: clamp(13px, 3.6vw, 17px);
   color: var(--ink-100);
   line-height: 1;
-  letter-spacing: 0.01em;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.slotYear {
+.spinFaceYear {
   font-family: var(--f-mono);
   font-size: var(--t-xs);
   color: var(--gold-bright);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   font-feature-settings: "tnum" 1;
 }
-
-/* Wider, more prominent center face on roomy viewports — driven by --slot-face-h. */
-@media (min-width: 560px) {
-  .slotMachine {
-    --slot-face-h: 120px;
-  }
-  .slotGuideTop { top: calc(50% - 60px); }
-  .slotGuideBottom { top: calc(50% + 60px); }
-  .slotFaceFlag,
-  .slotFaceFallback { width: 56px; height: 42px; }
-  .slotNation { font-size: clamp(18px, 2.6vw, 22px); }
-}
-
-/* ── Result line, stats, CTA ─────────────────────────────────────────── */
-
-.spinResultLine {
+.spinFaceIdle .spinFaceGlyph {
   font-family: var(--f-display), sans-serif;
-  font-size: clamp(20px, 5vw, 28px);
-  letter-spacing: 0.04em;
-  color: var(--ink-100);
-  text-transform: uppercase;
-  margin: 0;
+  font-size: 28px;
+  color: var(--ink-500);
 }
-.spinResultLine::first-letter { color: var(--ember-bright); }
-.spinRevealHint {
+.spinFaceIdle .spinFaceNation {
+  color: var(--ink-400);
+}
+.spinChevronTop,
+.spinChevronBottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  z-index: 4;
+  filter: drop-shadow(0 0 5px rgba(var(--glow-gold), 0.7));
+}
+.spinChevronTop {
+  top: 7px;
+  border-top: 11px solid var(--gold);
+}
+.spinChevronBottom {
+  bottom: 7px;
+  border-bottom: 11px solid var(--gold);
+}
+.spinShadeTop,
+.spinShadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px;
+  pointer-events: none;
+  z-index: 3;
+}
+.spinShadeTop {
+  top: 0;
+  background: linear-gradient(180deg, var(--bg-900) 0%, transparent 100%);
+}
+.spinShadeBottom {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--bg-900) 0%, transparent 100%);
+}
+.spinPayline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Result block ───────────────────────────────────────────────────────── */
+.spinResultBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.spinResultEyebrow {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinResultName {
+  margin: 0;
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(28px, 8vw, 40px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.spinResultNation {
+  color: var(--ember);
+}
+.spinResultYear {
+  color: var(--ink-200);
+  font-feature-settings: "tnum" 1;
+}
+.spinResultPending {
+  color: var(--ink-500);
+}
+.spinResultTag {
   margin: 0;
   font-size: var(--t-sm);
   color: var(--ink-300);
+  max-width: 34ch;
 }
 
-.spinStats {
+/* ── Stat tiles ─────────────────────────────────────────────────────────── */
+.spinTiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--s-2);
 }
-.spinStatTile {
+.spinTile {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 12px;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 6px;
   background: var(--bg-800);
   border: 1px solid var(--line);
   border-radius: var(--r-2);
 }
-.spinStatLabel {
+.spinTileLabel {
   font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
-.spinStatValue {
+.spinTileValue {
   font-family: var(--f-display), sans-serif;
-  font-size: clamp(18px, 3.6vw, 22px);
+  font-size: 18px;
   color: var(--ink-100);
   font-feature-settings: "tnum" 1;
 }
-.formationChip {
-  background: color-mix(in srgb, var(--gold) 12%, var(--bg-800));
-  border-color: color-mix(in srgb, var(--gold) 28%, var(--line));
+.spinTileRare {
+  background: color-mix(in srgb, var(--gold) 14%, var(--bg-800));
+  border-color: color-mix(in srgb, var(--gold) 46%, var(--line));
+  box-shadow: 0 0 18px -6px rgba(var(--glow-gold), 0.5);
 }
-.formationChip .spinStatValue {
+.spinTileRare .spinTileLabel {
+  color: var(--gold-bright);
+}
+.spinTileRare .spinTileValue {
   color: var(--gold-bright);
 }
 
-.spinRevealCta {
-  align-self: flex-start;
+/* ── CTA ────────────────────────────────────────────────────────────────── */
+.spinCta {
+  width: 100%;
+  margin-top: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slotReelTrack {
+  .spinReelTrackSpinning {
     animation: none !important;
-    transform: translate3d(0, calc(-100% + var(--slot-face-h)), 0) !important;
   }
-  .spinRevealPanel,
-  .slotMachine,
-  .slotFace,
-  .spinRevealCta {
-    transition: none !important;
+  .spinFaceSettled {
+    animation: none !important;
   }
 }
 
@@ -3390,4 +3462,295 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-sm);
   color: var(--ink-300);
   font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Compact candidate rows (video-game lineup density). One scannable line by
+   default; tapping selects AND expands the full detail in-place. Honest-state
+   throughout: unknown OVR shows "—", coverage/channels are real, provenance is
+   the left hue stripe + dot. Manager shows "Rating unavailable" (never a
+   fabricated number).
+   ───────────────────────────────────────────────────────────────────────── */
+.candRow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+  cursor: pointer;
+  transition: border-color var(--d-fast), box-shadow var(--d-fast),
+    background-color var(--d-fast);
+}
+.candRow:hover,
+.candRow:focus-visible {
+  border-color: var(--ember);
+}
+.candRowSelected {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+  background: var(--bg-700);
+}
+.candRowDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.candRow.prov_historical { border-left-color: var(--prov-historical); }
+.candRow.prov_projected { border-left-color: var(--prov-projected); }
+.candRow.prov_estimate { border-left-color: var(--prov-estimate); }
+.candRow.prov_legend { border-left-color: var(--prov-legend); }
+.candRow.prov_manager { border-left-color: var(--prov-manager); }
+.candRowSelected {
+  border-left-color: var(--gold);
+}
+
+.candRowLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  min-height: 46px;
+}
+.candRowFlag {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 24px;
+  padding: 0 5px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.04em;
+  color: var(--ink-200);
+}
+.candRowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.candRowName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.candRowSub {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.candRowProv {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--prov-unknown);
+}
+.provDot_historical { background: var(--prov-historical); }
+.provDot_projected { background: var(--prov-projected); }
+.provDot_estimate { background: var(--prov-estimate); }
+.provDot_legend {
+  background: var(--prov-legend);
+  box-shadow: 0 0 6px rgba(var(--prov-legend-rgb), 0.7);
+}
+.candRowShape {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-300);
+}
+.shapeDot_square { border-radius: 1px; }
+.shapeDot_triangle {
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 9px solid var(--ink-300);
+}
+.shapeDot_diamond {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+.shapeDot_circle { border-radius: 999px; }
+.candRowBars {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+  width: 22px;
+}
+.candRowBars i {
+  display: block;
+  width: 3px;
+  min-height: 1px;
+  background: var(--ink-400);
+  border-radius: 1px;
+}
+.candRowOvr {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  min-width: 28px;
+}
+.candRowOvr b {
+  font-family: var(--f-display);
+  font-size: 20px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+.candRowOvr i {
+  font-family: var(--f-mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: var(--ink-400);
+  font-style: normal;
+  text-transform: uppercase;
+}
+.candRowCov {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-300);
+  min-width: 30px;
+  text-align: right;
+}
+.candRowChevron {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--ink-400);
+}
+.candRowMgrBadge {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--prov-manager);
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+  border-radius: var(--r-pill);
+}
+.candDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 10px 0;
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--line);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Now-drafting context header (lineup view). The full reveal lives on the
+   standalone spin stage; this is the compact carry-over so the lineup keeps
+   its nation/year context.
+   ───────────────────────────────────────────────────────────────────────── */
+.nowDrafting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, var(--bg-800), var(--bg-850));
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-3);
+}
+.nowDraftingMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.nowDraftingPick {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember-bright);
+}
+.nowDraftingResult {
+  font-family: var(--f-display), sans-serif;
+  font-size: 20px;
+  color: var(--ink-100);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nowDraftingBack {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+}
+.nowDraftingBack:hover {
+  border-color: var(--ember);
+  color: var(--ember-bright);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Formation grid de-bulk (mobile). Shrink the draft-board pitch, slim the
+   nodes, and move the Synergy-links legend out of the crowded forward line to
+   the clear bottom-left corner so it never overlaps the ST node. Nodes sit
+   above the link layer; the pitch clips its own overflow, so nothing spills.
+   ───────────────────────────────────────────────────────────────────────── */
+.squadStage .pitch {
+  aspect-ratio: 1 / 1.12;
+  max-width: 340px;
+  margin-inline: auto;
+}
+.squadStage .pitch .slot {
+  min-width: 42px;
+  max-width: 62px;
+  padding: 4px;
+  gap: 1px;
+}
+.squadStage .pitch .slotName {
+  font-size: 9px;
+}
+.squadStage .pitch .slotPos {
+  font-size: 9px;
+}
+.squadStage .pitch .slotEmptyLabel {
+  font-size: 9px;
+}
+.pitchSynergyLegend {
+  top: auto;
+  bottom: 6px;
+  left: 6px;
+  padding: 2px 7px;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+/* Formation shape id ("4-3-3") must never break at its hyphens. Scoped so the
+   shared `.panelTitle` (which wraps elsewhere, e.g. "All 17 spins resolved.")
+   is untouched. */
+.formationTitleInline {
+  white-space: nowrap;
+  flex: 0 0 auto;
 }

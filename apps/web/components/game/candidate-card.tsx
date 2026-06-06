@@ -22,7 +22,13 @@ const AWARD_LABEL: Record<string, string> = {
   fair_play: "Fair Play",
 };
 
-/** Compact channel bar. Honest: 0 means a measured zero, not "unknown". */
+/** Mini channel-bar height as a % of the fixed bar track. Honest: a measured
+ *  zero renders as an empty bar, never a fabricated stub. */
+function barHeight(value: number): string {
+  return `${Math.max(0, Math.min(100, value))}%`;
+}
+
+/** Compact channel bar (expanded detail). Honest: 0 means a measured zero. */
 function Channel({ label, value }: { label: string; value: number }) {
   const clamped = Math.max(0, Math.min(100, value));
   return (
@@ -49,6 +55,14 @@ function PositionGlyph({ position }: { position: PlayerCardView["eligible_positi
   );
 }
 
+/**
+ * Compact, scannable player row (video-game lineup density). One horizontal
+ * line by default; tapping selects AND expands the full detail in-place. Only
+ * the selected card is expanded, so the pool stays dense and fast to scan.
+ *
+ * Honest-state: unknown OVR shows "—" (never 0); coverage and channels are the
+ * real runtime values; provenance is encoded by the left hue stripe + dot.
+ */
 export function CandidateCard({
   card,
   selected,
@@ -60,13 +74,12 @@ export function CandidateCard({
   disabled?: boolean;
   onSelect: () => void;
 }) {
-  const classes = [s.cand];
+  const classes = [s.candRow];
   classes.push(s[`prov_${card.rating.badge_kind}`]!);
-  if (selected) classes.push(s.candSelected);
-  if (disabled) classes.push(s.candDisabled);
+  if (selected) classes.push(s.candRowSelected);
+  if (disabled) classes.push(s.candRowDisabled);
 
   const coveragePct = Math.round(card.rating.coverage * 100);
-  // Coarse `Position` already, no need for slot-position resolution.
   const primaryLine = card.position_listed ?? card.eligible_positions[0] ?? "MF";
   const headShape = positionShape(primaryLine);
 
@@ -77,86 +90,116 @@ export function CandidateCard({
       onClick={onSelect}
       disabled={disabled}
       aria-pressed={selected}
+      aria-expanded={selected}
     >
-      <div className={s.candTop}>
-        <div className={s.candId}>
-          <span
-            className={`${s.candNationFlag} ${s[`flagShape_${headShape}`]!}`}
-            aria-label={card.nation_name}
-            title={card.nation_name}
-          >
-            {card.nation_code}
+      <span className={s.candRowLine}>
+        <span
+          className={`${s.candRowFlag} ${s[`flagShape_${headShape}`]!}`}
+          aria-label={card.nation_name}
+          title={card.nation_name}
+        >
+          {card.nation_code}
+        </span>
+
+        <span className={s.candRowMain}>
+          <span className={s.candRowName}>
+            {card.name}
+            {card.captain ? (
+              <span className={s.candCaptain} title="Captain">
+                C
+              </span>
+            ) : null}
           </span>
-          <div className={s.candNameWrap}>
-            <span className={s.candName}>
-              {card.name}
-              {card.captain ? (
-                <span className={s.candCaptain} title="Captain">
-                  C
+          <span className={s.candRowSub}>
+            {card.year} ·{" "}
+            {card.position_listed ?? card.eligible_positions[0] ?? "—"}
+            {card.club_label ? ` · ${card.club_label}` : ""}
+          </span>
+        </span>
+
+        <span
+          className={`${s.candRowProv} ${s[`provDot_${card.rating.badge_kind}`]!}`}
+          title={card.rating.badge_label}
+          aria-hidden="true"
+        />
+        <span
+          className={`${s.candRowShape} ${s[`shapeDot_${headShape}`]!}`}
+          aria-hidden="true"
+        />
+
+        <span className={s.candRowBars} aria-hidden="true">
+          <i style={{ height: barHeight(card.rating.attack) }} />
+          <i style={{ height: barHeight(card.rating.midfield) }} />
+          <i style={{ height: barHeight(card.rating.defense) }} />
+          <i style={{ height: barHeight(card.rating.goalkeeping) }} />
+        </span>
+
+        <span className={s.candRowOvr}>
+          <b>{formatNullableNumber(card.rating.overall)}</b>
+          <i>OVR</i>
+        </span>
+
+        <span className={s.candRowCov} title="Honest-state data coverage">
+          {coveragePct}%
+        </span>
+
+        <span className={s.candRowChevron} aria-hidden="true">
+          {selected ? "▴" : "▾"}
+        </span>
+      </span>
+
+      {selected ? (
+        <span className={s.candDetail}>
+          <span className={s.candBadgeRow}>
+            <span className={`${s.provBadge} ${s[`provBadge_${card.rating.badge_kind}`]!}`}>
+              {card.rating.badge_label}
+            </span>
+            {card.shirt_number !== null ? (
+              <span className={s.candShirt}>#{card.shirt_number}</span>
+            ) : null}
+            {disabled ? <span className={s.candDrafted}>Drafted</span> : null}
+          </span>
+
+          <span className={s.candPositions}>
+            {card.eligible_positions.map((p) => (
+              <PositionGlyph key={p} position={p} />
+            ))}
+          </span>
+
+          <span className={s.channels}>
+            <Channel label="ATT" value={card.rating.attack} />
+            <Channel label="MID" value={card.rating.midfield} />
+            <Channel label="DEF" value={card.rating.defense} />
+            <Channel label="GK" value={card.rating.goalkeeping} />
+          </span>
+
+          <span className={s.candStats}>
+            {card.stats.map((stat) => (
+              <span key={stat.label} title={stat.title}>
+                <b>{formatStatValue(stat.value)}</b> {stat.label}
+              </span>
+            ))}
+            <span className={s.candCoverage} title="Honest-state data coverage">
+              <span className={s.candCoverageTrack}>
+                <span
+                  className={s.candCoverageFill}
+                  style={{ width: `${coveragePct}%` }}
+                />
+              </span>
+              <span className={s.candCoverageVal}>{coveragePct}%</span>
+            </span>
+          </span>
+
+          {card.awards && card.awards.length > 0 ? (
+            <span className={s.candAwards}>
+              {card.awards.map((a, i) => (
+                <span key={i} className={s.award}>
+                  {AWARD_LABEL[a.award_type] ?? a.award_type}
                 </span>
-              ) : null}
+              ))}
             </span>
-            <span className={s.candSub}>
-              {card.year} ·{" "}
-              {card.position_listed ?? card.eligible_positions[0] ?? "—"} ·{" "}
-              {card.club_label ?? "—"}
-            </span>
-          </div>
-        </div>
-        <div className={s.candOverall}>
-          <span className={s.candOverallNum}>{formatNullableNumber(card.rating.overall)}</span>
-          <span className={s.candOverallLabel}>OVR</span>
-        </div>
-      </div>
-
-      <div className={s.candBadgeRow}>
-        <span className={`${s.provBadge} ${s[`provBadge_${card.rating.badge_kind}`]!}`}>
-          {card.rating.badge_label}
+          ) : null}
         </span>
-        {card.shirt_number !== null ? (
-          <span className={s.candShirt}>#{card.shirt_number}</span>
-        ) : null}
-        {disabled ? <span className={s.candDrafted}>Drafted</span> : null}
-      </div>
-
-      <div className={s.candPositions}>
-        {card.eligible_positions.map((p) => (
-          <PositionGlyph key={p} position={p} />
-        ))}
-      </div>
-
-      <div className={s.channels}>
-        <Channel label="ATT" value={card.rating.attack} />
-        <Channel label="MID" value={card.rating.midfield} />
-        <Channel label="DEF" value={card.rating.defense} />
-        <Channel label="GK" value={card.rating.goalkeeping} />
-      </div>
-
-      <div className={s.candStats}>
-        {card.stats.map((stat) => (
-          <span key={stat.label} title={stat.title}>
-            <b>{formatStatValue(stat.value)}</b> {stat.label}
-          </span>
-        ))}
-        <span className={s.candCoverage} title="Honest-state data coverage">
-          <span className={s.candCoverageTrack}>
-            <span
-              className={s.candCoverageFill}
-              style={{ width: `${coveragePct}%` }}
-            />
-          </span>
-          <span className={s.candCoverageVal}>{coveragePct}%</span>
-        </span>
-      </div>
-
-      {card.awards && card.awards.length > 0 ? (
-        <div className={s.candAwards}>
-          {card.awards.map((a, i) => (
-            <span key={i} className={s.award}>
-              {AWARD_LABEL[a.award_type] ?? a.award_type}
-            </span>
-          ))}
-        </div>
       ) : null}
     </button>
   );
@@ -173,9 +216,9 @@ export function ManagerCandidate({
   disabled?: boolean;
   onSelect: () => void;
 }) {
-  const classes = [s.cand, s.candManager, s.prov_manager];
-  if (selected) classes.push(s.candSelected);
-  if (disabled) classes.push(s.candDisabled);
+  const classes = [s.candRow, s.candRowManager, s.prov_manager];
+  if (selected) classes.push(s.candRowSelected);
+  if (disabled) classes.push(s.candRowDisabled);
 
   return (
     <button
@@ -184,47 +227,47 @@ export function ManagerCandidate({
       onClick={onSelect}
       disabled={disabled}
       aria-pressed={selected}
+      aria-expanded={selected}
     >
-      <div className={s.candTop}>
-        <div className={s.candId}>
-          <span
-            className={`${s.candNationFlag} ${s.flagShape_diamond}`}
-            aria-label={coach.nation_name}
-            title={coach.nation_name}
-          >
-            {coach.nation_code}
+      <span className={s.candRowLine}>
+        <span
+          className={`${s.candRowFlag} ${s.flagShape_diamond}`}
+          aria-label={coach.nation_name}
+          title={coach.nation_name}
+        >
+          {coach.nation_code}
+        </span>
+
+        <span className={s.candRowMain}>
+          <span className={s.candRowName}>{coach.name}</span>
+          <span className={s.candRowSub}>
+            Manager · {coach.nation_name} · {coach.year}
           </span>
-          <div className={s.candNameWrap}>
-            <span className={s.candName}>{coach.name}</span>
-            <span className={s.candSub}>
-              Manager · {coach.nation_name} · {coach.year}
+        </span>
+
+        <span className={s.candRowMgrBadge}>Rating unavailable</span>
+
+        <span className={s.candRowChevron} aria-hidden="true">
+          {selected ? "▴" : "▾"}
+        </span>
+      </span>
+
+      {selected ? (
+        <span className={s.candDetail}>
+          <span className={s.candStats}>
+            <span>
+              <b>{formatNullableNumber(coach.matches)}</b> matches
             </span>
-          </div>
-        </div>
-        <div className={s.candOverall}>
-          <span className={s.candOverallLabel}>Manager slot</span>
-        </div>
-      </div>
-
-      <div className={s.candBadgeRow}>
-        <span className={`${s.provBadge} ${s.provBadge_manager}`}>
-          Rating unavailable
+            <span>
+              finish{" "}
+              <b>
+                {coach.final_placement !== null ? `#${coach.final_placement}` : "—"}
+              </b>
+            </span>
+            <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
+          </span>
         </span>
-        {disabled ? <span className={s.candDrafted}>Drafted</span> : null}
-      </div>
-
-      <div className={s.candStats}>
-        <span>
-          <b>{formatNullableNumber(coach.matches)}</b> matches
-        </span>
-        <span>
-          finish{" "}
-          <b>
-            {coach.final_placement !== null ? `#${coach.final_placement}` : "—"}
-          </b>
-        </span>
-        <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
-      </div>
+      ) : null}
     </button>
   );
 }
