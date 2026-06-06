@@ -1,25 +1,11 @@
 import type { SVGProps } from "react";
 
 /**
- * Original line-art icons. The "badge" is wcdraft's own mark — a stylised
- * football inside a draft bracket — deliberately NOT any FIFA / World Cup
- * trademark or trophy silhouette.
+ * Small UI icons (theme toggle + menu chrome). The wcdraft mark itself is
+ * NEVER drawn inline — it lives in /public/brand/ (wcdraft-mark.svg /
+ * wcdraft-lockup.svg) and is referenced via <Image>. Inline mark redraws
+ * have caused brand drift in the past; keep them out of this file.
  */
-
-export function BallBadge(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" {...props}>
-      <circle cx="16" cy="16" r="13" stroke="currentColor" strokeWidth="2" />
-      <path d="M16 8.5l4.2 3-1.6 5h-5.2l-1.6-5L16 8.5z" fill="currentColor" fillOpacity="0.9" />
-      <path
-        d="M16 3v5.5M9.8 11.5 5 9.4m22 0-4.8 2.1M11 21.5 7.5 25.5m13-4-3.5 4M16 21v6"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 export function SunIcon(props: SVGProps<SVGSVGElement>) {
   return (
