@@ -20,6 +20,7 @@ import {
 } from "@wcdraft/core";
 import {
   draftCandidateViews,
+  managerCardView,
   managerTournamentFor,
   pitchSlotViews,
 } from "@/lib/game/adapters";
@@ -27,8 +28,8 @@ import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError, DraftTransitionError } from "@/lib/game/errors";
 import {
   getFormationVisualSlots,
-  I2_FORMATION_IDS,
-  type I2FormationId,
+  SUPPORTED_FORMATION_OPTIONS,
+  type SupportedFormationId,
 } from "@/lib/game/formation-layout";
 import { draftHref, reviewHref } from "@/lib/game/navigation";
 import {
@@ -41,12 +42,14 @@ import {
 import {
   compatLabel,
   compatTier,
+  positionShape,
   type ManagerCardView,
   type PlayerCardView,
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
 import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
+import { ManagerSlot } from "./manager-slot";
 import { SpinSlotMachine } from "./slot-machine";
 import { SynergyPanel } from "./synergy-panel";
 import s from "./game.module.css";
@@ -274,13 +277,6 @@ function DraftAppBar({
 
 // ─── Formation select (LOCK gate) ────────────────────────────────────────────
 
-const FORMATION_BLURBS: Record<I2FormationId, string> = {
-  "4-3-3": "Wide front three, single pivot. Press high, run wide.",
-  "4-2-3-1": "Double pivot under a lone striker. Stable middle, late runners.",
-  "4-4-2": "Two banks of four, strike pair. Classic, balanced, demanding.",
-  "3-5-2": "Back three, wing-backs do the running. Numbers in midfield.",
-};
-
 function FormationSelect({
   gameData,
   onLocked,
@@ -288,11 +284,11 @@ function FormationSelect({
   gameData: GameData;
   onLocked: (record: RunRecordV1, warning: string | null) => void;
 }) {
-  const [pending, setPending] = useState<I2FormationId | null>(null);
+  const [pending, setPending] = useState<SupportedFormationId | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const lockIn = useCallback(
-    (formation_id: I2FormationId) => {
+    (formation_id: SupportedFormationId) => {
       setError(null);
       setPending(formation_id);
       try {
@@ -331,7 +327,7 @@ function FormationSelect({
           </p>
         </div>
         <div className={s.formationGrid}>
-          {I2_FORMATION_IDS.map((fid) => (
+          {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid, blurb }) => (
             <button
               key={fid}
               type="button"
@@ -342,7 +338,7 @@ function FormationSelect({
               <MiniPitch formation_id={fid} />
               <div className={s.formationCardBody}>
                 <span className={s.formationCardName}>{fid}</span>
-                <p className={s.formationCardBlurb}>{FORMATION_BLURBS[fid]}</p>
+                <p className={s.formationCardBlurb}>{blurb}</p>
                 <span className={s.formationCardCta}>
                   {pending === fid ? "Locking…" : "Lock this shape"}
                 </span>
@@ -356,17 +352,24 @@ function FormationSelect({
   );
 }
 
-function MiniPitch({ formation_id }: { formation_id: I2FormationId }) {
+function MiniPitch({ formation_id }: { formation_id: SupportedFormationId }) {
   const slots = getFormationVisualSlots(formation_id);
   return (
     <div className={s.miniPitch} aria-hidden="true">
-      {slots.map((sl) => (
-        <span
-          key={sl.slot_id}
-          className={`${s.miniDot} ${s[`miniDot_${sl.visual_line}`]!}`}
-          style={{ left: `${sl.x_pct}%`, top: `${sl.y_pct}%` }}
-        />
-      ))}
+      {slots.map((sl) => {
+        // Shape comes from the CORE position line (GK square / DF triangle
+        // / MF diamond / FW circle). Colour family uses the JSON visual
+        // band so a 3-5-2 wing-back stays in the midfield COLOUR but draws
+        // as a DF triangle — see formation-layout.ts.
+        const shape = positionShape(sl.position_line);
+        return (
+          <span
+            key={sl.slot_id}
+            className={`${s.miniDot} ${s[`miniDot_${sl.visual_line}`]!} ${s[`miniDotShape_${shape}`]!}`}
+            style={{ left: `${sl.x_pct}%`, top: `${sl.y_pct}%` }}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -678,19 +681,30 @@ function DraftBoard({
           </span>
         </div>
 
-        <Pitch
-          formationId={draft.formation_id}
-          starters={starters}
-          interactive={!complete}
-          selectedSlotId={selSlot}
-          previewCompat={previewCompat}
-          onSlotSelect={(id) => {
-            if (sel?.kind !== "player") return;
-            const slot = draft.squad.find((sl) => sl.slot_id === id);
-            if (!slot || slot.card_id !== null) return;
-            setSelSlot(id);
-          }}
-        />
+        <div className={s.squadStage}>
+          <Pitch
+            formationId={draft.formation_id}
+            starters={starters}
+            interactive={!complete}
+            selectedSlotId={selSlot}
+            previewCompat={previewCompat}
+            linkedPairs={previewSynergy.linked_pairs}
+            onSlotSelect={(id) => {
+              if (sel?.kind !== "player") return;
+              const slot = draft.squad.find((sl) => sl.slot_id === id);
+              if (!slot || slot.card_id !== null) return;
+              setSelSlot(id);
+            }}
+          />
+          <ManagerSlot
+            manager={
+              draft.manager_card_id
+                ? managerCardView(gameData.indexes, draft.manager_card_id)
+                : null
+            }
+            previewManager={sel?.kind === "manager" ? sel.card : null}
+          />
+        </div>
 
         <div className={s.bench}>
           <span className={s.benchLabel}>Bench</span>
@@ -720,14 +734,6 @@ function DraftBoard({
           </div>
         </div>
 
-        <div className={s.mgrSlot}>
-          <span className={s.benchLabel}>Manager</span>
-          <span className={draft.manager_card_id ? s.mgrFilled : s.mgrEmpty}>
-            {draft.manager_card_id
-              ? `${managerLabel(gameData, draft.manager_card_id)} · rating unavailable`
-              : "Open — pick a coach on any spin"}
-          </span>
-        </div>
       </section>
 
       <section className={s.panel}>
@@ -952,10 +958,3 @@ function sortSlots(slots: readonly SquadSlot[]): SquadSlot[] {
   });
 }
 
-function managerLabel(gameData: GameData, manager_card_id: string): string {
-  const m = gameData.indexes.managerByCardId.get(manager_card_id);
-  if (!m) return manager_card_id;
-  const n = gameData.indexes.nationById.get(m.nation_id);
-  const year = gameData.indexes.tournamentById.get(m.tournament_id)?.year ?? m.tournament_id;
-  return `${m.common_name || m.full_name} · ${n?.canonical_name ?? m.nation_id} · ${year}`;
-}
