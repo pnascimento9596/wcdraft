@@ -67,7 +67,7 @@ describe("createServerRunHistoryProvider", () => {
     expect(result.warnings[0]).toMatch(/malformed/);
   });
 
-  it("skips rows whose token does not decode + surfaces a per-row warning", async () => {
+  it("skips rows with NEITHER a decodable token NOR a summary (honest-state)", async () => {
     const provider = createServerRunHistoryProvider({
       fetcher: async () =>
         new Response(
@@ -79,6 +79,7 @@ describe("createServerRunHistoryProvider", () => {
                 run_id: null,
                 parent_seed: null,
                 version_anchors: null,
+                summary: null,
                 claim_state: "claimed",
                 created_at: new Date().toISOString(),
               },
@@ -90,7 +91,46 @@ describe("createServerRunHistoryProvider", () => {
     });
     const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
     expect(result.entries).toEqual([]);
-    expect(result.warnings[0]).toMatch(/did not decode/);
+    expect(result.warnings[0]).toMatch(/neither a decodable token nor a summary/);
+  });
+
+  it("SURFACES a row with NO decode but a valid summary (replay link degrades, entry stays)", async () => {
+    const provider = createServerRunHistoryProvider({
+      fetcher: async () =>
+        new Response(
+          JSON.stringify({
+            runs: [
+              {
+                id: "row-1",
+                token: "not-a-real-token",
+                run_id: "run-v1-z9",
+                parent_seed: "wcdraft:run:v1:run-v1-z9:f4-3-3",
+                version_anchors: null,
+                summary: {
+                  team_name: "Titans",
+                  display_record: "5-3",
+                  formation_name: "4-3-3",
+                  key_picks: [{ name: "Pele", nation_code: "BRA" }],
+                  is_champion: false,
+                  seed: "wcdraft:demo:seed",
+                },
+                claim_state: "claimed",
+                created_at: new Date().toISOString(),
+              },
+            ],
+            cap: 5,
+          }),
+          { status: 200 },
+        ),
+    });
+    const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
+    expect(result.entries).toHaveLength(1);
+    const entry = result.entries[0]!;
+    expect(entry.team_name).toBe("Titans");
+    expect(entry.display_record).toBe("5-3");
+    expect(entry.replay_href).toBeNull();
+    expect(entry.share_href).toBeNull();
+    expect(entry.replay_error).toMatch(/didn't decode/);
   });
 
   it("maps valid tokens to well-formed entries (placeholder display fields documented)", async () => {
@@ -161,3 +201,114 @@ describe("createServerRunHistoryProvider", () => {
     expect(result.persistence).toBe("durable");
   });
 });
+
+// ── F-3.5 summary-driven honest-state display ─────────────────────────
+describe("F-3.5 summary honest-state", () => {
+  it("uses summary fields when present (REAL records, not placeholders)", async () => {
+    const summary = {
+      team_name: "TitanXI",
+      display_record: "8-0",
+      formation_name: "4-3-3",
+      key_picks: [
+        { name: "Pele", nation_code: "BRA" },
+        { name: "Beckenbauer", nation_code: "GER" },
+        { name: "Maradona", nation_code: "ARG" },
+      ],
+      is_champion: true,
+      seed: "wcdraft:test:perfect",
+    };
+    const provider = createServerRunHistoryProvider({
+      fetcher: async () =>
+        new Response(
+          JSON.stringify({
+            runs: [
+              {
+                id: "row-1",
+                token: "t1.fake-summary-row",
+                run_id: VALID_BODY.rid,
+                parent_seed: VALID_BODY.ps,
+                version_anchors: null,
+                summary,
+                claim_state: "claimed",
+                created_at: new Date().toISOString(),
+              },
+            ],
+            cap: 5,
+          }),
+          { status: 200 },
+        ),
+    });
+    const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
+    expect(result.entries).toHaveLength(1);
+    const entry = result.entries[0]!;
+    // REAL values, not "—".
+    expect(entry.team_name).toBe(summary.team_name);
+    expect(entry.display_record).toBe(summary.display_record);
+    expect(entry.formation_name).toBe(summary.formation_name);
+    expect(entry.is_champion).toBe(true);
+    expect(entry.key_picks).toEqual(summary.key_picks);
+    expect(entry.seed).toBe(summary.seed);
+  });
+
+  it("FALLS BACK to honest \"—\" when summary is null (pre-F-3.5 row)", async () => {
+    const provider = createServerRunHistoryProvider({
+      fetcher: async () =>
+        new Response(
+          JSON.stringify({
+            runs: [
+              {
+                id: "row-1",
+                token: "t1.no-summary",
+                run_id: VALID_BODY.rid,
+                parent_seed: VALID_BODY.ps,
+                version_anchors: null,
+                summary: null,
+                claim_state: "claimed",
+                created_at: new Date().toISOString(),
+              },
+            ],
+            cap: 5,
+          }),
+          { status: 200 },
+        ),
+    });
+    const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
+    const entry = result.entries[0]!;
+    // Honest-state: never fabricated.
+    expect(entry.display_record).toBe("—");
+    expect(entry.key_picks).toEqual([]);
+    expect(entry.is_champion).toBe(false);
+    // Token-decoded fields are still populated where possible.
+    expect(entry.team_name).toBe(VALID_BODY.tn);
+    expect(entry.formation_name).toBe(VALID_BODY.fid);
+  });
+
+  it("FALLS BACK when summary is structurally invalid (defence in depth)", async () => {
+    const provider = createServerRunHistoryProvider({
+      fetcher: async () =>
+        new Response(
+          JSON.stringify({
+            runs: [
+              {
+                id: "row-1",
+                token: "t1.bad-summary",
+                run_id: VALID_BODY.rid,
+                parent_seed: VALID_BODY.ps,
+                version_anchors: null,
+                summary: { team_name: 42, display_record: null }, // wrong types
+                claim_state: "claimed",
+                created_at: new Date().toISOString(),
+              },
+            ],
+            cap: 5,
+          }),
+          { status: 200 },
+        ),
+    });
+    const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
+    const entry = result.entries[0]!;
+    expect(entry.display_record).toBe("—");
+    expect(entry.is_champion).toBe(false);
+  });
+});
+

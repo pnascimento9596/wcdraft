@@ -39,6 +39,35 @@ export interface AuthContext {
   readonly sessionId: string;
 }
 
+/**
+ * F-3.5 — display-ready summary persisted at save time. The shape is the
+ * client's responsibility (the server treats it as opaque jsonb); the
+ * server-history-provider reads it back to render real records.
+ *
+ * Honest-state: when this is `null` (pre-F-3.5 row, or a save mirror that
+ * raced ahead of the simulation), the UI renders "—" — never fabricated.
+ */
+export interface SavedRunSummary {
+  /** Team name the user picked at draft time. */
+  readonly team_name: string;
+  /** "W-L" pure record (matches the on-screen scoreboard). */
+  readonly display_record: string;
+  /** Formation pretty name e.g. "4-3-3". */
+  readonly formation_name: string;
+  /** Up to three: names + nation flag codes only. NEVER kit/crest marks. */
+  readonly key_picks: ReadonlyArray<{
+    readonly name: string;
+    readonly nation_code: string;
+  }>;
+  /** True only when the run finished as champions. */
+  readonly is_champion: boolean;
+  /** The deterministic seed string (cosmetic). */
+  readonly seed: string;
+  /** Local sequence numbers for stable ordering on the client. */
+  readonly created_seq?: number;
+  readonly updated_seq?: number;
+}
+
 export interface SaveRunArgs {
   /** `t1.*` reconstruction token (opaque to the server). */
   readonly token: string;
@@ -46,6 +75,8 @@ export interface SaveRunArgs {
   readonly versionAnchors: Record<string, unknown> | null;
   readonly runId: string | null;
   readonly parentSeed: string | null;
+  /** F-3.5 display-ready summary. Null until the client has it. */
+  readonly summary: SavedRunSummary | null;
 }
 
 export interface SaveRunResult {
@@ -113,6 +144,7 @@ export async function saveRun(
       sessionId: ctx.userId !== null ? null : ctx.sessionId,
       token: args.token,
       versionAnchors: args.versionAnchors ?? null,
+      summary: args.summary as unknown,
       runId: args.runId,
       parentSeed: args.parentSeed,
       claimState: ctx.userId !== null ? "claimed" : "anonymous",

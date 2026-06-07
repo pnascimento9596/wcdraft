@@ -24,6 +24,7 @@ interface SaveBody {
   versionAnchors?: unknown;
   runId?: unknown;
   parentSeed?: unknown;
+  summary?: unknown;
 }
 
 function isStringOrNull(x: unknown): x is string | null {
@@ -77,6 +78,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         versionAnchors: jsonObjOrNull(body.versionAnchors),
         runId: isStringOrNull(body.runId) ? body.runId : null,
         parentSeed: isStringOrNull(body.parentSeed) ? body.parentSeed : null,
+        summary: coerceSummary(body.summary),
       },
       auth.ctx,
       auth.deps,
@@ -100,6 +102,8 @@ interface ApiRunShape {
   run_id: string | null;
   parent_seed: string | null;
   version_anchors: unknown;
+  /** F-3.5 display summary. Null on pre-F-3.5 rows; client renders "—". */
+  summary: unknown;
   claim_state: string;
   created_at: string;
 }
@@ -110,6 +114,7 @@ function toApiShape(row: {
   runId: string | null;
   parentSeed: string | null;
   versionAnchors: unknown;
+  summary: unknown;
   claimState: string;
   createdAt: Date;
 }): ApiRunShape {
@@ -119,8 +124,44 @@ function toApiShape(row: {
     run_id: row.runId,
     parent_seed: row.parentSeed,
     version_anchors: row.versionAnchors,
+    summary: row.summary ?? null,
     claim_state: row.claimState,
     created_at: row.createdAt.toISOString(),
+  };
+}
+
+/**
+ * Tolerant coercion: the server treats summary as opaque jsonb but we still
+ * gate at the API layer so a malformed body can't poison the column with
+ * non-objects. Strict structural validation lives client-side; here we only
+ * reject "this isn't a plain object" cases.
+ */
+function coerceSummary(x: unknown): import("@/lib/game/saved-runs-store").SavedRunSummary | null {
+  if (x === null || x === undefined) return null;
+  if (typeof x !== "object" || Array.isArray(x)) return null;
+  const o = x as Record<string, unknown>;
+  if (typeof o.team_name !== "string") return null;
+  if (typeof o.display_record !== "string") return null;
+  if (typeof o.formation_name !== "string") return null;
+  if (typeof o.is_champion !== "boolean") return null;
+  if (typeof o.seed !== "string") return null;
+  if (!Array.isArray(o.key_picks)) return null;
+  const key_picks = o.key_picks.filter(
+    (p): p is { name: string; nation_code: string } =>
+      !!p &&
+      typeof p === "object" &&
+      typeof (p as Record<string, unknown>).name === "string" &&
+      typeof (p as Record<string, unknown>).nation_code === "string",
+  );
+  return {
+    team_name: o.team_name,
+    display_record: o.display_record,
+    formation_name: o.formation_name,
+    key_picks,
+    is_champion: o.is_champion,
+    seed: o.seed,
+    created_seq: typeof o.created_seq === "number" ? o.created_seq : undefined,
+    updated_seq: typeof o.updated_seq === "number" ? o.updated_seq : undefined,
   };
 }
 
