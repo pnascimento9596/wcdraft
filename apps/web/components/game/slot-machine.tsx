@@ -81,9 +81,6 @@ export interface SpinStageProps {
   readonly synergyMultiplier: number | null;
   /** REAL candidate count for this spin. */
   readonly playerPoolCount: number;
-  /** Spun tournament year — drives the ERA / RARE tile. Null only on a
-   *  data-lookup miss (honest fallback). */
-  readonly year: number | null;
   readonly anim: SpinAnimState;
   readonly onSpin: () => void;
   readonly onSettle: () => void;
@@ -98,7 +95,6 @@ export function SpinStage({
   synergyOverall,
   synergyMultiplier,
   playerPoolCount,
-  year,
   anim,
   onSpin,
   onSettle,
@@ -109,7 +105,11 @@ export function SpinStage({
   const spinning = anim === "spinning";
 
   const result = model.result;
-  const isRare = year !== null && year < 1998;
+  // ENGINE-V2 E-2: rare flag comes from the engine spin via the slot-reveal
+  // model — NOT recomputed from `year`. The `year` prop still drives the era
+  // label below, but rarity is authoritative engine truth.
+  const isRare = model.rare;
+  const drawProbabilityLabel = model.drawProbabilityLabel;
   const pickNum = String(pickNumber).padStart(2, "0");
 
   const tagline = settled
@@ -127,7 +127,7 @@ export function SpinStage({
   };
 
   return (
-    <section className={s.spinStage} aria-labelledby="spin-stage-title">
+    <section className={`${s.spinStage} ${settled && isRare ? s.spinRare : ""}`} aria-labelledby="spin-stage-title">
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={s.spinStatusBar}>
         <div
@@ -190,6 +190,21 @@ export function SpinStage({
         </h2>
         <p className={s.spinResultTag}>{tagline}</p>
       </div>
+
+      {/* ── ENGINE-V2 E-2 — Rare-pick moment (additive) ──────────────── */}
+      {settled && isRare ? (
+        <div
+          className={s.rareMoment}
+          role="status"
+          aria-live="polite"
+          aria-label={`Rare pick — draw probability ${drawProbabilityLabel}`}
+        >
+          <span className={s.rareMomentTitle}>RARE PICK!</span>
+          <span className={s.rareMomentProbability}>
+            Draw probability: {drawProbabilityLabel}
+          </span>
+        </div>
+      ) : null}
 
       {/* ── Stat tiles ───────────────────────────────────────────────── */}
       <div className={s.spinTiles} role="group" aria-label="Spin details">

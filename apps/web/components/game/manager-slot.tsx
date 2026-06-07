@@ -67,6 +67,22 @@ export function ManagerSlot({
           <span className={s.managerSlotBadge}>
             {isPreview ? "Preview · rating unavailable" : "Rating unavailable"}
           </span>
+          {display.traits.length > 0 ? (
+            <span
+              className={s.managerTraits}
+              aria-label="Manager style traits — flavor only"
+            >
+              {display.traits.map((t) => (
+                <span
+                  key={t.id}
+                  className={s.managerTraitChip}
+                  title="Flavor trait only — no gameplay effect."
+                >
+                  {t.label}
+                </span>
+              ))}
+            </span>
+          ) : null}
         </>
       ) : (
         <p className={s.managerSlotEmpty}>
