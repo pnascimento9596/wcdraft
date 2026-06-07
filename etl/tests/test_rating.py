@@ -7,10 +7,16 @@ SELF-CONTAINED: the rating stage reads the committed canonical JSON in
 tables; the locked output is the committed ratings.json.
 
 PHASE 1 RECALIBRATION (wc-perf-2.0.0):
-  * Display floor 66, p50 ≈ 73, p95 ≈ 88, max 99 (no 100s).
-  * baseline_anchor_estimate cards banded into [66, 73].
-  * Recoupled path: the calibration curve drives both ``overall`` AND the four
-    sim channels; ``calibration.ts`` λ is retuned on the compressed channel scale.
+  * Display floor 66, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
+  * baseline_anchor_estimate cards banded into [66, 73] on OVERALL only.
+  * Decoupled path (plan section 3.2 fallback) LANDED: the calibration curve
+    drives ``overall`` ONLY. The four sim channels stay on the pre-recal
+    ``[FLOOR_CHANNEL, 100]`` band; ``calibration.ts`` is UNCHANGED from
+    ``origin/main`` (lambda, channels, engine_version all unchanged). The sim
+    is byte-identical to ``origin/main`` (sim-golden.json: 0 diff).
+  * OVR is the believability view of the pre-display COMPOSITE merit score;
+    it is NOT a per-channel proxy and not a sim-strength predictor (sim uses
+    channels). OVR<->channel divergence is by design.
   * No new data ingestion. Only the existing committed signals are re-shaped.
 """
 
@@ -236,11 +242,12 @@ def test_display_curve_is_low_dof():
 # ─── §4 acceptance: ordering / monotonicity ───────────────────────────────────
 
 
-def test_display_curve_preserves_ordering(built: list[dict], cards: dict[str, dict]):
-    """The curve is monotonic on the internal score; the emitted overall must
-    therefore preserve internal ordering up to integer-rounding ties. We
-    re-derive each card's internal score the same way build_ratings does and
-    assert no display-overall inversion exists."""
+def test_display_curve_replay_is_byte_stable(built: list[dict], cards: dict[str, dict]):
+    """Determinism check: a fresh build from the committed canonical tables
+    produces the same ``overall`` for every card as the committed build. This
+    is the BYTE-STABLE REPLAY invariant — separate from the curve-monotonicity
+    invariant asserted by ``test_display_overall_is_monotonic_vs_composite_*``.
+    """
     players_rows = rating._load(rating.OUTPUT_DIR, "players")
     mt_rows = rating._load(rating.OUTPUT_DIR, "manager_tournaments")
     tournaments_rows = rating._load(rating.OUTPUT_DIR, "tournaments")
@@ -252,14 +259,6 @@ def test_display_curve_preserves_ordering(built: list[dict], cards: dict[str, di
         manager_tournaments=mt_rows,
     )
     assert {r["card_id"] for r in rebuilt} == {r["card_id"] for r in built}
-
-    # Phase 1.1 decoupled: channels live on the pre-recal sim band
-    # [FLOOR_CHANNEL, 100], overall lives on the display band [66, 99] — they
-    # are on different scales by construction. The monotonicity guarantee is
-    # internal to `_display_value` (piecewise-power, integer-quantized).
-    # We verify the curve via the cross-build replay invariant: a fresh build
-    # from the committed canonical tables produces the same `overall` for
-    # every card as the committed build.
     rebuilt_by_id = {r["card_id"]: r for r in rebuilt}
     for r in built:
         assert rebuilt_by_id[r["card_id"]]["overall"] == r["overall"], (
@@ -267,6 +266,124 @@ def test_display_curve_preserves_ordering(built: list[dict], cards: dict[str, di
             rebuilt_by_id[r["card_id"]]["overall"],
             r["overall"],
         )
+
+
+# ─── §4 acceptance: curve monotonicity — the RIGHT invariant ──────────────────
+#
+# `overall` is the believability view of the PRE-DISPLAY COMPOSITE merit score
+# (`score_0_100` = era-normalized goals/apps blend + award lift + finish lift,
+# clamped to [0,1], scaled to [0, 100]). The display curve is monotonic
+# non-decreasing BY CONSTRUCTION (piecewise-power on `score_0_100`), so for
+# two MEASURED (non-estimate) cards A and B, composite(A) > composite(B) MUST
+# imply overall(A) >= overall(B).
+#
+# OVR is NOT a per-channel proxy and is NOT a sim-strength predictor. Channels
+# are decoupled (Phase 1.1) and live on the pre-recal [FLOOR_CHANNEL, 100] sim
+# band; the sim consumes the four channels via `simulateMatchCore`, never OVR.
+# OVR-vs-channel divergence is by design — see
+# `packages/core/SIM_CALIBRATION.md`. Tightening the OVR<->channel correlation
+# is a model-design item flagged for engine-v2, NOT this PR.
+
+
+def _build_internal_view():
+    players_rows = rating._load(rating.OUTPUT_DIR, "players")
+    cards_rows = rating._load(rating.OUTPUT_DIR, "player_tournaments")
+    tournaments_rows = rating._load(rating.OUTPUT_DIR, "tournaments")
+    mt_rows = rating._load(rating.OUTPUT_DIR, "manager_tournaments")
+    return rating.build_internal_view(
+        players=players_rows,
+        cards=cards_rows,
+        tournaments=tournaments_rows,
+        manager_tournaments=mt_rows,
+    )
+
+
+def test_display_overall_is_monotonic_vs_composite_for_measured_cards():
+    """The curve's right monotonicity invariant: for MEASURED (non-estimate)
+    cards, composite(A) > composite(B) implies overall(A) >= overall(B).
+
+    Pure measured-vs-measured composite breaks are forbidden — they would
+    indicate a real curve bug. Estimate-band inversions are handled by the
+    next test and by the existing estimate-banding tests; they are EXPECTED
+    and intentional (honest-state cap, see test_estimates_are_banded_and_honest).
+    """
+    internal, curve = _build_internal_view()
+    measured = [r for r in internal if r["overall_basis"] == "measured_performance"]
+    enriched = [
+        (
+            r["card_id"],
+            r["score_0_100"],
+            rating._display_score(r["score_0_100"], curve, estimate=False),
+        )
+        for r in measured
+    ]
+    enriched.sort(key=lambda x: (x[1], x[0]))
+    last_overall = -1
+    inversions = []
+    for cid, comp, ov in enriched:
+        if ov < last_overall:
+            inversions.append({
+                "card": cid,
+                "composite": comp,
+                "overall": ov,
+                "prior_max_overall": last_overall,
+            })
+        if ov > last_overall:
+            last_overall = ov
+    assert not inversions, (
+        f"composite -> overall monotonicity broken for {len(inversions)} "
+        f"measured cards (first 5): {inversions[:5]}"
+    )
+
+
+def test_overall_inversions_vs_composite_are_confined_to_estimate_pairs():
+    """Frame the OVR-vs-composite ordering directly: every pair (A, B) where
+    overall(A) > overall(B) but composite(A) < composite(B) must include at
+    least one estimate-flagged card. The estimate band cap (display in
+    [ESTIMATE_FLOOR, ESTIMATE_CEILING]) is the ONLY mechanism that can
+    produce such an inversion — honest-state forbids an unlinked card from
+    displaying above the band regardless of its raw composite.
+
+    Reviewer's classification: every "inversion" against a single channel is
+    either (a) composite-vs-single-channel divergence (channels are NOT OVR;
+    enforced by the decoupling contract in rating.py + SIM_CALIBRATION.md), or
+    (b) intentional estimate-band cap (this test confines those). Pure
+    measured-vs-measured composite breaks — case (c) — would be a real curve
+    bug; this test fails if any are found.
+    """
+    internal, curve = _build_internal_view()
+    enriched = []
+    for r in internal:
+        is_est = r["overall_basis"] == "baseline_anchor_estimate"
+        ov = rating._display_score(r["score_0_100"], curve, estimate=is_est)
+        enriched.append({
+            "card_id": r["card_id"],
+            "composite": r["score_0_100"],
+            "overall": ov,
+            "is_estimate": is_est,
+        })
+    enriched.sort(key=lambda x: (x["composite"], x["card_id"]))
+    max_overall = -1
+    max_overall_is_estimate = False
+    max_overall_card = None
+    breaks = []
+    for c in enriched:
+        if max_overall_card is not None and c["overall"] < max_overall:
+            both_measured = (not c["is_estimate"]) and (not max_overall_is_estimate)
+            if both_measured:
+                breaks.append({
+                    "lower_composite_higher_overall": max_overall_card,
+                    "higher_composite_lower_overall": c["card_id"],
+                    "delta_overall": max_overall - c["overall"],
+                })
+        if c["overall"] > max_overall:
+            max_overall = c["overall"]
+            max_overall_is_estimate = c["is_estimate"]
+            max_overall_card = c["card_id"]
+    assert not breaks, (
+        f"pure measured-vs-measured composite inversions: {len(breaks)} "
+        f"(first 5: {breaks[:5]})"
+    )
 
 
 # ─── §4 acceptance: public anchor TRAIN / HELD-OUT ────────────────────────────

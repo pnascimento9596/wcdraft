@@ -4,11 +4,13 @@
 > UNCHANGED — same era-normalized percentiles, same independent award/finish
 > anchors, same honest-state semantics. A single new **display calibration
 > curve** maps the internal `score_0_100` onto the documented display band
-> `[66, 99]`, simultaneously reshaping `overall` AND the four sim channels.
-> `baseline_anchor_estimate` cards are additionally capped into the estimate
-> band `[66, 73]`. The **decoupled path** landed (plan §3.2 fallback): the sim λ in
-> `packages/core/src/engine/calibration.ts` was retuned so WC-like scoreline
-> distributions stay believable on the compressed channel range. The Phase 1
+> `[66, 99]`, reshaping `overall` ONLY. `baseline_anchor_estimate` cards are
+> additionally capped into the estimate band `[66, 73]` on overall. The
+> **decoupled path** landed (plan §3.2 fallback): the four sim channels stay
+> on the pre-recal `[FLOOR_CHANNEL, 100]` band, and
+> `packages/core/src/engine/calibration.ts` (λ, channel scale, engine_version)
+> is **UNCHANGED** from `origin/main` — the sim is byte-identical to main
+> (verified by sim-golden.json: 0 diff). The Phase 1
 > change ships only the curve + retune; new stature signals (Ballon d'Or, all-
 > time list ranks) are a deliberate Phase 2 follow-on.
 >
@@ -66,7 +68,10 @@ exclusion is surfaced, not silent.
 2. **Pass 2 — display curve.** Fit one global low-DOF monotonic curve on the
    four internal quantiles of the emitted dataset (min, p50, p95, max) and
    map them onto the fixed display targets (66, 73, 88, 99). Apply the curve
-   to BOTH `overall` AND the four sim channels.
+   to `overall` ONLY (decoupled — see §3.2 fallback). The four sim channels
+   are derived directly from `score_0_100` via `_channel(score_0_100, spread)`
+   and stay on the pre-recal `[FLOOR_CHANNEL, 100]` band; they are NOT
+   passed through the display curve.
 
 This is deterministic: same canonical input → same internal scores → same
 fitted curve anchors → byte-identical `ratings.json`.
@@ -207,13 +212,20 @@ measured great (asserted).
 ### The four sim channels (decoupled, Phase 1.1)
 
 The sim consumes only `attack / midfield / defense / goalkeeping` (never
-`overall`). After the curve is applied to the card, the off-position channels
-are a convex blend toward `DISPLAY_FLOOR = 66` (not the old raw floor 20):
+`overall`). The display curve is NOT routed through the channels — they
+stay on the pre-recal sim band `[FLOOR_CHANNEL=20, 100]` so the engine's λ
+stays calibrated to the engine's full attack-minus-defense range. The
+off-position channels are a convex blend toward `FLOOR_CHANNEL = 20`:
 
 ```
-display = _display_value(score_0_100, curve, estimate)
-channel = round( display · spread[pos][channel] + 66 · (1 − spread[pos][channel]) )
+channel = round( score_0_100 · spread[pos][channel] + 20 · (1 − spread[pos][channel]) )
 ```
+
+`score_0_100` is the COMPOSITE merit value (the curve's INPUT). Channels
+operate on the composite, not the curve's display output — that is exactly
+the decoupling. The dominant-position channel (`spread == 1.00`) reflects
+the raw composite without any display reshape; an off-position channel is
+suppressed toward the merit floor.
 
 | spread → | attack | midfield | defense | goalkeeping |
 |---|---|---|---|---|
@@ -222,11 +234,13 @@ channel = round( display · spread[pos][channel] + 66 · (1 − spread[pos][chan
 | DF | 0.35 | 0.60 | 1.00 | 0.00 |
 | GK | 0.05 | 0.20 | 0.55 | 1.00 |
 
-This is the RECOUPLED path: the rating display curve drives both display AND
-sim. The sim λ in `packages/core/src/engine/calibration.ts` was retuned in the
-same atomic landing to keep WC-like scoreline distributions believable on the
-compressed channel range — display-only decoupling was not used. See
-`packages/core/SIM_CALIBRATION.md` for the λ retune landing report.
+This is the **DECOUPLED path** (plan §3.2 fallback): the rating display
+curve drives ``overall`` ONLY. The four sim channels stay on the
+pre-recalibration ``[FLOOR_CHANNEL, 100]`` band so the engine's λ
+stays calibrated to the engine's full attack-minus-defense range. The
+sim is **byte-identical** to ``origin/main`` (verified by
+``packages/core/test/fixtures/sim-golden.json`` diffing 0 lines), so the
+engine_version anchor stays unchanged.
 
 ## `overall_basis` semantics (unchanged)
 
@@ -310,7 +324,10 @@ the display floor and never above the estimate ceiling.
 - The runtime data schema is **unchanged**; the combined-`rv` token skew
   machinery in `apps/web/lib/game/` invalidates stale persisted runs
   automatically via the existing "different build" notice.
-- The sim engine version bumped `engine-2026.06.04` → `engine-2026.06.06`
+- The sim engine_version anchor is UNCHANGED (`engine-2026.06.04`): the
+  decoupled path means the engine math, λ constants, and channel scale all
+  match `origin/main` byte-for-byte. Only the rating-version anchors bump
+  (`wc-perf-2.0.0`, `proj-career-2.0.0`).
   because λ retuning moves deterministic `RunResult` bytes.
 
 ## Known seam — `tournament_id` shape

@@ -145,11 +145,14 @@ _PRECISION = 6
 # untouched. Low-DOF (three exponents, four data anchors, no per-player
 # tuning) so it cannot fudge individuals and stays auditable.
 #
-# DESIGN INVARIANT: applied uniformly to `overall` AND the four sim channels —
-# channel spread now blends toward DISPLAY_FLOOR rather than the old raw
-# replacement floor of 20. This is the RECOUPLED path (sim λ retuned in
-# packages/core/src/engine/calibration.ts to live on the compressed display
-# scale); no display-only decoupling is used.
+# DESIGN INVARIANT: applied to `overall` ONLY. The four sim channels stay
+# on the pre-recalibration `[FLOOR_CHANNEL, 100]` band — they are NOT routed
+# through the display curve. This is the DECOUPLED path (plan §3.2 fallback);
+# `packages/core/src/engine/calibration.ts` (λ, channel scale, engine_version)
+# is UNCHANGED from `origin/main`, and the sim is byte-identical to main
+# (sim-golden.json: 0 diff). OVR is the believability view of the pre-display
+# COMPOSITE merit score; channels are the sim-strength inputs. They DIVERGE
+# by design — see `packages/core/SIM_CALIBRATION.md`.
 #
 # ESTIMATE BAND: `baseline_anchor_estimate` cards are capped into
 # [ESTIMATE_FLOOR, ESTIMATE_CEILING] AFTER the curve. They never out-rate
@@ -358,18 +361,23 @@ def _coarse_pos(card: dict, position_of_player: dict[str, str | None]) -> str:
     return pos
 
 
-def build_ratings(
+def _build_internal_rows(
     players: list[dict],
     cards: list[dict],
     tournaments: list[dict],
     manager_tournaments: list[dict],
 ) -> list[dict]:
-    """Return Rating-shaped records for every men's card, sorted by card_id.
+    """Pass 1 of the rating build — return one INTERNAL row per men's card,
+    carrying the pre-display COMPOSITE merit score ``score_0_100``, the
+    coarse position ``pos``, the basis flag, and the components array.
 
-    Records carry the canonical (string) ``tournament_id`` / ``card_id`` so they
-    JOIN 1:1 with player_tournaments.json. Mapping the string tournament id to
-    the numeric id the runtime ``Rating`` zod schema wants is the later
-    packages/data emit-lock step and deliberately out of scope here.
+    The composite is the curve's input: pass 2 (``build_ratings``) maps
+    ``score_0_100`` through the fitted display curve to produce the final
+    ``overall``, and through ``_channel`` to produce the four sim channels.
+    Exposed via ``build_internal_view`` for the §4 acceptance suite —
+    the curve's monotonicity invariant is asserted on this composite, NOT
+    on per-channel values (channels are decoupled; OVR is the composite's
+    believability view, not a single-channel proxy).
     """
     mens = {t["tournament_id"] for t in tournaments if "Men's" in t["name"]}
     position_of_player = {p["player_id"]: p.get("primary_position") for p in players}
@@ -495,8 +503,43 @@ def build_ratings(
             }
         )
 
+    return internal_rows
+
+
+def build_internal_view(
+    players: list[dict],
+    cards: list[dict],
+    tournaments: list[dict],
+    manager_tournaments: list[dict],
+) -> tuple[list[dict], DisplayCurve]:
+    """Pass 1 + curve fit, exposed for the §4 acceptance suite.
+
+    Returns the internal rows (each carrying ``score_0_100``, ``overall_basis``,
+    ``pos``, ``components``) AND the fitted ``DisplayCurve``. The acceptance
+    tests use this to assert that ``overall`` is monotonic vs the pre-display
+    composite for measured cards — the right curve invariant — without
+    surrogate channel-vs-overall checks.
+    """
+    internal = _build_internal_rows(players, cards, tournaments, manager_tournaments)
+    curve = _fit_display_curve([r["score_0_100"] for r in internal])
+    return internal, curve
+
+
+def build_ratings(
+    players: list[dict],
+    cards: list[dict],
+    tournaments: list[dict],
+    manager_tournaments: list[dict],
+) -> list[dict]:
+    """Return Rating-shaped records for every men's card, sorted by card_id.
+
+    Records carry the canonical (string) ``tournament_id`` / ``card_id`` so they
+    JOIN 1:1 with player_tournaments.json. Mapping the string tournament id to
+    the numeric id the runtime ``Rating`` zod schema wants is the later
+    packages/data emit-lock step and deliberately out of scope here.
+    """
     # ── PASS 2: fit display curve and materialize Rating rows ─────────────────
-    curve = _fit_display_curve([r["score_0_100"] for r in internal_rows])
+    internal_rows, curve = build_internal_view(players, cards, tournaments, manager_tournaments)
     ratings: list[dict] = []
     for row in internal_rows:
         pos = row["pos"]

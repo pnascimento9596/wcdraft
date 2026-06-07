@@ -10,13 +10,16 @@ not a replacement.
 > **proj-career-2.0.0 (Phase 1 rating recalibration):** the internal merit
 > formula is UNCHANGED from `proj-career-1.0.0`. The projected pool now shares
 > the **same display calibration curve** as the historical pool — fitted on
-> projected raw quantiles (the projected raw scale has different provenance
-> from the historical raw scale, so curves are fit per-pool but use the same
-> shared helpers, the same target display anchors, and the same exponents).
-> The two pools therefore emit values on the **same display band `[66, 99]`**,
-> so historical and projected channels live on the same SIM scale — that is
-> what the decoupled path (channels untouched, λ untouched) was tuned for. No new ingestion;
-> Phase 2 will add Ballon d'Or / all-time list signals separately.
+> projected raw quantiles (per-pool fit, shared helpers, same target display
+> anchors, same exponents). The curve drives **`overall` ONLY** under the
+> decoupled path (plan §3.2 fallback): the four sim channels stay on the
+> pre-recal `[FLOOR_CHANNEL, 100]` band, identical to `proj-career-1.0.0`.
+> Historical and projected pools emit `overall` on the same display band
+> `[66, 99]` and channels on the same pre-recal sim band, so the engine's λ
+> stays calibrated to the engine's full attack-minus-defense range and
+> `packages/core/src/engine/calibration.ts` is UNCHANGED from `origin/main`.
+> No new ingestion; Phase 2 will add Ballon d'Or / all-time list signals
+> separately.
 
 This document is the companion to `etl/src/wcdraft_etl/rating_2026.py`; the
 code is the source of truth and every constant is `CALIBRATION`-flagged there.
@@ -72,9 +75,11 @@ league_anchor         = LEAGUE_WEIGHT[pos] · league_strength
 score_0_100           = 100 · internal_score    (input to the SHARED display curve)
 ```
 
-The **display curve** then maps `score_0_100` onto the band `[66, 99]` using
-the same `DisplayCurve` / `_display_score` / `_display_channel` helpers as
-`wc-perf-2.0.0`. The projected pool fits the curve on **its own** four
+The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
+the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
+helpers as `wc-perf-2.0.0`. Channels are derived from `score_0_100` via
+`_channel(score_0_100, spread)` (unchanged pre-recal formula) — they do NOT
+pass through the display curve. The projected pool fits the curve on **its own** four
 quantiles (the projected raw scale is bounded above more tightly than the
 historical raw scale, because there is no decorated apex tail). The TARGET
 anchors are identical to historical (66, 73, 88, 99) so historical and
@@ -130,19 +135,20 @@ is computed as of the opening match (2026-06-11).
 ## Emitted artifacts (`etl/output/*_2026.json`)
 
 `nations_2026`, `players_2026` (minted only), `player_tournaments_2026`
-(1,246 cards, `card_id = player_id:WC-2026`), `ratings_2026` (now on the
-recalibrated display band), `teams_2026` (48 `Team2026`, aggregate now
-re-derived on the recalibrated channels), `bracket_2026`,
+(1,246 cards, `card_id = player_id:WC-2026`), `ratings_2026` (now with `overall` on the
+recalibrated display band; channels unchanged), `teams_2026` (48 `Team2026`, aggregate now
+re-derived on the projected channels (unchanged from `proj-career-1.0.0`)), `bracket_2026`,
 `tournaments_2026`, plus `manifest_2026.json`. The locked 1930-2022 tables
 are left byte-for-byte untouched.
 
 ### `Team2026.aggregate_rating`
 
 Best-available-XI semantics: the 11 cards with the highest projected
-`overall`, averaged per sim channel + coverage. After Phase 1 the channels
-live in `[66, 99]`, so aggregate channel values land in a narrower band
-than `proj-career-1.0.0` — this is by design (compressed sim scale,
-λ retuned to keep favourite/underdog separation visible).
+`overall`, averaged per sim channel + coverage. Under the decoupled path,
+channels remain on the pre-recal `[FLOOR_CHANNEL, 100]` sim band — aggregate
+channel values are byte-identical to what `proj-career-1.0.0` would emit on
+the same input pool, since the channel formula is unchanged. λ in
+`calibration.ts` is UNCHANGED; sim is byte-identical to `origin/main`.
 
 ## Determinism & validation
 
