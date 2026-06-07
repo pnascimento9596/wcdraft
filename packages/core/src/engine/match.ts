@@ -30,13 +30,14 @@ import type { UserXiSimView } from "../api/sim.js";
 import { parseCardId } from "../types/identity.js";
 import {
   CHANCE_OUTCOME,
-  CHANCES,
   INCIDENT,
   INJURY,
-  LAMBDA,
   MINUTES,
   SHOOTOUT,
+  activeChances,
+  activeLambda,
   clamp,
+  lambdaForFour,
 } from "./calibration.js";
 
 // ─── INTERNAL MEMBER MODEL ────────────────────────────────────────────────────
@@ -63,14 +64,6 @@ const PERIOD_ORDER: Readonly<Record<MatchPeriod, number>> = {
   ET2: 3,
   shootout: 4,
 };
-
-function lambdaFor(attackFor: number, defenseAgainst: number): number {
-  return clamp(
-    LAMBDA.BASE + (LAMBDA.SPREAD * (attackFor - defenseAgainst)) / 100,
-    LAMBDA.MIN,
-    LAMBDA.MAX,
-  );
-}
 
 function periodForMinute(minute: number): MatchPeriod {
   if (minute <= 45) return "1H";
@@ -142,7 +135,7 @@ interface ChancePhaseParams {
 function generateChances(p: ChancePhaseParams): ChanceResult[] {
   const out: ChanceResult[] = [];
   const span = p.minuteHi - p.minuteLo + 1;
-  const pGoal = clamp(p.lambda / p.chanceCount, 0, CHANCES.MAX_GOAL_PROB);
+  const pGoal = clamp(p.lambda / p.chanceCount, 0, activeChances().MAX_GOAL_PROB);
   for (let j = 0; j < p.chanceCount; j++) {
     const jitter = p.eventRng.next();
     let minute = p.minuteLo + Math.floor(((j + jitter) * span) / p.chanceCount);
@@ -393,14 +386,18 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
   const userKeeper = keeperOf(userStarted);
   const oppKeeper = keeperOf(oppStarted);
 
-  const lambdaUser = lambdaFor(userStrength.attack, oppStrength.defense);
-  const lambdaOpp = lambdaFor(oppStrength.attack, userStrength.defense);
+  // E-3a four-channel λ map — see calibration.ts:lambdaForFour. Opponent's
+  // DEFENSE + GOALKEEPING fold into a single defResist; MIDFIELD modulates as
+  // a bounded multiplier. This is the SQUAD's four channels + Synergy (already
+  // folded into TeamStrength upstream) driving λ legibly.
+  const lambdaUser = lambdaForFour(userStrength, oppStrength);
+  const lambdaOpp = lambdaForFour(oppStrength, userStrength);
 
   // ── Regulation chances ──
   const userReg = generateChances({
     side: "user",
     lambda: lambdaUser,
-    chanceCount: CHANCES.REGULATION,
+    chanceCount: activeChances().REGULATION,
     minuteLo: 1,
     minuteHi: 90,
     attackers: userOutfield.length ? userOutfield : userStarted,
@@ -413,7 +410,7 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
   const oppReg = generateChances({
     side: "opp",
     lambda: lambdaOpp,
-    chanceCount: CHANCES.REGULATION,
+    chanceCount: activeChances().REGULATION,
     minuteLo: 1,
     minuteHi: 90,
     attackers: oppOutfield.length ? oppOutfield : oppStarted,
@@ -440,8 +437,8 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
   if (phase === "knockout" && regTied) {
     etUser = generateChances({
       side: "user",
-      lambda: lambdaUser * LAMBDA.ET_FRACTION,
-      chanceCount: CHANCES.EXTRA_TIME,
+      lambda: lambdaUser * activeLambda().ET_FRACTION,
+      chanceCount: activeChances().EXTRA_TIME,
       minuteLo: 91,
       minuteHi: 120,
       attackers: userOutfield.length ? userOutfield : userStarted,
@@ -453,8 +450,8 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
     });
     etOpp = generateChances({
       side: "opp",
-      lambda: lambdaOpp * LAMBDA.ET_FRACTION,
-      chanceCount: CHANCES.EXTRA_TIME,
+      lambda: lambdaOpp * activeLambda().ET_FRACTION,
+      chanceCount: activeChances().EXTRA_TIME,
       minuteLo: 91,
       minuteHi: 120,
       attackers: oppOutfield.length ? oppOutfield : oppStarted,

@@ -4,19 +4,31 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CALIBRATION: tune vs historical WC scoreline distributions.
 // ─────────────────────────────────────────────────────────────────────────────
-// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0) landed
-// the DECOUPLED path: the rating display curve drives `overall` ONLY; the
-// four sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band and λ
-// is BYTE-IDENTICAL to origin/main (no engine tuning). All constants in this file
-// match origin/main; the sim is byte-identical to main and engine_version
-// stays at `engine-2026.06.04` (verified by sim-golden.json: 0 diff). All
-// constants below (chance budget, incidents, injuries, shootout band,
-// scoring, synergy, manager modifier) remain pre-Phase-1 first-cut values
-// and are flagged for separate tuning.
+// E-3a (engine-v2) — FAITHFULNESS + REALISM landing:
+//   The λ map is now a four-channel form driven by the user XI's ATTACK,
+//   GOALKEEPING + DEFENSE (opponent side, weighted into a single defensive
+//   resistance), and MIDFIELD (a bounded control modulator) plus the
+//   bounded Synergy multiplier that already lives upstream on
+//   `TeamStrength`. The chance budget is raised so Binomial(n, λ/n) is
+//   genuinely Poisson-like at WC scale and the per-chance MAX_GOAL_PROB
+//   cap stops binding for realistic λ. The fitted tuple
+//     {SPREAD, w_def, w_gk, γ_mid, BASE, MIN, MAX, n}
+//   was found by a deterministic seeded coordinate search (D6) over the
+//   era-weighted draft-reachable squad population, subject to the D4
+//   faithfulness assertions passing. See SIM_CALIBRATION.md for the landing
+//   report (norms hit, search seed, candidate scores).
 //
-// These constants are LOCKED by golden fixtures: any change here changes a
-// golden RunResult byte and therefore REQUIRES an `engine_version` bump (the
-// same discipline the RNG sequence and the rating algorithm already follow).
+// ENGINE_VERSION POLICY (E-3a):
+//   Historically a change to any constant in this file moves a golden
+//   `RunResult` byte and therefore REQUIRES an `engine_version` bump
+//   (matching the discipline the RNG sequence and rating algorithm
+//   already follow). E-3a INTENTIONALLY DEFERS that bump to the season
+//   merge — the constants change AND the impacted goldens (sim /
+//   simulate-match / e2e / group-stage / top-scorer) are re-locked on the
+//   `engine-v2-e3a-lambda-calibration` branch, but `engine_version`
+//   remains `engine-2026.06.04` (pinned by
+//   `packages/data/test/compact-data.integrity.test.ts`). This is the
+//   ONLY sanctioned exception; it is locked to the engine-v2 chain.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
@@ -25,58 +37,120 @@
 // — never a Knuth-Poisson sampler (which needs exp(-λ)).
 
 import type { ScoringConfig } from "../types/scoring.js";
+import type { TeamStrength } from "../types/rating.js";
 
-// ─── λ (EXPECTED GOALS) MAP ───────────────────────────────────────────────────
-// λ_for = clamp(BASE + SPREAD * (attackFor - defenseAgainst)/100, MIN, MAX).
-// Phase 1 (decoupled path, plan §3.2 fallback): the rating-engine display
-// curve is applied to `overall` ONLY; the four sim channels (attack,
-// midfield, defense, goalkeeping) stay on the pre-recal [FLOOR_CHANNEL, 100]
-// band, so λ stays calibrated to the engine's full attack-minus-defense
-// range. These constants match origin/main byte-for-byte and are validated
-// against the 1998-2022 modern-era WC norms (computed from pinned upstream
-// f41e9437) by `packages/data/test/realism-modern-norms.golden.test.ts`,
-// which pins the symmetric coherent-XI sweep + per-metric Δ bands.
+// ─── λ (EXPECTED GOALS) MAP — E-3a four-channel form ──────────────────────────
+//
+// Conceptual form (defResist + control_for + λ_for is implemented in
+// `lambdaForFour` below):
+//
+//   defResist_against = clamp_int( w_def·defenseAgainst + w_gk·goalkeepingAgainst )
+//                                  // single 0..100 defensive-resistance number
+//                                  // — opponent's GK channel suppresses your λ
+//                                  // through the same surface as the defense
+//                                  // channel. No opaque "no GK" penalty: a
+//                                  // weak GK channel ALREADY concedes more
+//                                  // through this map (D3: GK stays emergent).
+//
+//   control_for       = clamp( 1 + γ_mid·(midfieldFor − midfieldAgainst)/100,
+//                              CONTROL_BAND_LO, CONTROL_BAND_HI )
+//                                  // bounded multiplicative modulator (±15%):
+//                                  // midfield amplifies attack, never replaces.
+//
+//   λ_for = clamp( BASE + SPREAD·(attackFor − defResist_against)/100, MIN, MAX )
+//             · control_for
+//
+// w_def + w_gk MUST sum to 1.0 — this keeps `defResist` on the same 0..100
+// scale as the old single-channel `defense` term so BASE / SPREAD / MIN / MAX
+// remain interpretable on the compressed display band [66, 99].
+//
+// SYNERGY does NOT enter the λ map directly — it is already folded into the
+// four channels via `aggregateUserXiStrength(starters, synergy, manager)`
+// (bounded multiplier, see SYNERGY.MULTIPLIER_BAND). Synergy thus AMPLIFIES
+// each of the four legible drivers; it does not bypass them.
 export const LAMBDA = Object.freeze({
-  /** Baseline goals for an evenly-matched team (attack == opp defense). */
-  BASE: 1.3,
-  /** Sensitivity to the attack-minus-defense edge across the full 0..100 span. */
-  SPREAD: 1.7,
-  /** Floor — even a hopeless attack still threatens occasionally. */
-  MIN: 0.25,
+  /**
+   * Baseline goals for an evenly-matched team (attack == opp defResist).
+   * E-3a D6 fit landed BASE=0.85: under the new n=50 Poisson-like budget
+   * the per-team scoreline is much less noisy than under n=14, so a lower
+   * BASE keeps mean goals/match near the 2.54 modern-WC norm.
+   */
+  BASE: 0.85,
+  /** Sensitivity to the (attack − defResist) edge, per 100 channel points. */
+  SPREAD: 4.0,
+  /**
+   * Floor — even a hopeless attack still threatens occasionally. Raised to
+   * 0.75 by the D6 fit so weak underdogs still produce credible goals/game
+   * and KO-stage ET/SO rates land near the modern-WC norms.
+   */
+  MIN: 0.75,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
-  MAX: 3.6,
+  MAX: 3.4,
+  /** Weight on opponent DEFENSE channel inside `defResist` (D6 fit: 0.65). */
+  W_DEF: 0.65,
+  /** Weight on opponent GOALKEEPING channel inside `defResist`. Must satisfy W_DEF + W_GK === 1. */
+  W_GK: 0.35,
+  /**
+   * Sensitivity of `control_for` to the midfield delta (per 100 channel
+   * points). D6 fit landed γ_mid=0.45 — the legibility-via-midfield
+   * channel is now near the upper end of its bounded band.
+   */
+  GAMMA_MID: 0.45,
+  /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
+  CONTROL_BAND_LO: 0.85,
+  /** Upper bound of the midfield `control_for` multiplier. */
+  CONTROL_BAND_HI: 1.15,
   /** Fraction of a regulation λ that applies across a 30-minute extra time. */
   ET_FRACTION: 30 / 90,
 });
 
 // ─── CHANCE BUDGET (binomial goal model) ──────────────────────────────────────
+//
 // Each team gets a fixed budget of "chances" per phase. Each chance is one
 // seeded Bernoulli trial: with probability p_goal = λ / chances it is a goal.
-// Goals ~ Binomial(chances, λ/chances) → mean = λ, transcendental-free.
+// Goals ~ Binomial(chances, λ/chances) → mean = λ. As `chances` grows the
+// binomial converges to Poisson (with the same mean), restoring genuinely
+// Poisson-like scoreline dispersion at WC scale — without ever evaluating
+// `exp(-λ)` (which would break cross-platform determinism).
+//
+// E-3a: the chance budget was raised from 14 (E-2 era) to a value chosen so
+// p_goal = λ / chances stays comfortably below MAX_GOAL_PROB across the full
+// fitted λ range [MIN, MAX]. The cap is now an effectively-unreachable
+// guard rather than a binding ceiling — see SIM_CALIBRATION.md.
 export const CHANCES = Object.freeze({
-  /** Chances per team across 90' regulation. */
-  REGULATION: 14,
-  /** Chances per team across 30' extra time. */
-  EXTRA_TIME: 5,
-  /** Hard cap on per-chance goal probability (keeps any single chance < a coin-flip). */
+  /** Chances per team across 90' regulation (raised in E-3a from 14). */
+  REGULATION: 50,
+  /** Chances per team across 30' extra time. Scales with REGULATION * ET_FRACTION (rounded). */
+  EXTRA_TIME: 17,
+  /** Hard cap on per-chance goal probability — at REGULATION=50 and MAX=3.4, λ/n=0.068 ≪ 0.6, so the cap is a guard only. */
   MAX_GOAL_PROB: 0.6,
 });
 
 // ─── PER-CHANCE OUTCOME SPLIT (conditioned on a chance occurring, non-goal) ────
+//
 // After the goal test fails, the remaining probability mass splits into a
-// saved shot (on target), an off-target shot, or open play (no shot — which may
-// surface a foul / offside / key pass). Values are the conditional shares of
-// the NON-goal mass.
+// saved shot (on target), an off-target shot, a foul, an offside, or open
+// play (no shot — which logs a key pass for box-score colour). Values are
+// the conditional shares of the NON-goal mass.
+//
+// E-3a re-normalization: shares were rescaled so per-team-per-match EVENT
+// counts remain realistic now that the chance budget is ~3.6× larger.
+// Targets (per side, regulation, evenly-matched, n=50, E[goals]≈1.25):
+//   shots on target  ≈ 4.9   (SAVED  · 48.75)
+//   shots off target ≈ 6.8   (OFF    · 48.75)
+//   fouls            ≈ 10.7  (FOUL   · 48.75)
+//   offsides         ≈ 1.95  (OFFSIDE· 48.75)
+//   remainder ~50% is open-play key-pass colour (box-score honest, not noise).
 export const CHANCE_OUTCOME = Object.freeze({
   /** Share of non-goal chances that are shots on target (→ save event). */
-  SAVED_SHARE: 0.26,
+  SAVED_SHARE: 0.10,
   /** Share of non-goal chances that are off-target shots. */
-  OFF_TARGET_SHARE: 0.22,
+  OFF_TARGET_SHARE: 0.14,
   /** Share of non-goal chances that surface a foul. */
-  FOUL_SHARE: 0.16,
+  FOUL_SHARE: 0.22,
   /** Share of non-goal chances that surface an offside. */
-  OFFSIDE_SHARE: 0.08,
-  /** Remaining mass is uneventful open play (a key pass is logged for colour). */
+  OFFSIDE_SHARE: 0.04,
+  /** Remaining mass (~0.50) is uneventful open play (a key pass is logged for colour). */
 });
 
 // ─── PENALTIES, ASSISTS, CARDS ────────────────────────────────────────────────
@@ -213,4 +287,109 @@ export function clamp(value: number, min: number, max: number): number {
 /** Clamp then round to an integer in [0, 100] — the rating-channel domain. */
 export function toChannelInt(value: number): number {
   return Math.round(clamp(value, 0, 100));
+}
+
+// ─── λ FOUR-CHANNEL HELPERS (E-3a) ────────────────────────────────────────────
+//
+// Kept in calibration.ts (alongside the constants they consume) so any future
+// re-tune touches a single file. `match.ts` calls `lambdaForFour(forCh, againstCh)`
+// to obtain the expected-goals rate for a side.
+
+/**
+ * Single-number defensive resistance for the SIDE BEING ATTACKED. Folds the
+ * opponent's DEFENSE and GOALKEEPING channels with `LAMBDA.W_DEF` /
+ * `LAMBDA.W_GK` (W_DEF + W_GK === 1 by contract). Clamped + rounded to the
+ * 0..100 channel domain so callers can read it as a sibling of the four raw
+ * channels without surprise.
+ *
+ * Honest-state (D3): the GK channel is folded HERE — a weak GK channel
+ * lowers `defResist` and naturally raises the attacker's λ. There is no
+ * separate "missing GK" penalty inside the engine.
+ */
+export function defensiveResistance(against: TeamStrength): number {
+  const L = activeLambda();
+  const raw = L.W_DEF * against.defense + L.W_GK * against.goalkeeping;
+  return toChannelInt(raw);
+}
+
+/**
+ * Midfield `control_for` modulator. ∈ [CONTROL_BAND_LO, CONTROL_BAND_HI]. A
+ * midfield-dominant side gets a small λ uplift; a midfield-shaded side a
+ * small λ cut. Bounded so midfield AMPLIFIES, never replaces, the
+ * attack/defense edge.
+ */
+export function midfieldControl(forSide: TeamStrength, against: TeamStrength): number {
+  const L = activeLambda();
+  const raw = 1 + (L.GAMMA_MID * (forSide.midfield - against.midfield)) / 100;
+  return clamp(raw, L.CONTROL_BAND_LO, L.CONTROL_BAND_HI);
+}
+
+/**
+ * E-3a λ map. Replaces the legacy `λ = clamp(BASE + SPREAD·(att - def)/100, MIN, MAX)`
+ * with a four-channel form: opponent DEFENSE + GOALKEEPING fold into
+ * `defResist`, MIDFIELD modulates as a bounded multiplier, ATTACK drives the
+ * primary edge. The bounded multipliers + the inner clamp keep each channel
+ * AMPLIFYING — never replacing — talent.
+ */
+export function lambdaForFour(forSide: TeamStrength, against: TeamStrength): number {
+  const L = activeLambda();
+  const defResist = defensiveResistance(against);
+  const base = clamp(
+    L.BASE + (L.SPREAD * (forSide.attack - defResist)) / 100,
+    L.MIN,
+    L.MAX,
+  );
+  return base * midfieldControl(forSide, against);
+}
+
+
+// ─── D6 CALIBRATION FIT OVERRIDE — OFFLINE TOOL ONLY ──────────────────────────
+//
+// The two getters below return the ACTIVE λ + chance constants. Production
+// engine code calls these (not the raw `LAMBDA`/`CHANCES` exports) so the D6
+// fit script (`scripts/fit-calibration.ts`) can swap a candidate tuple in for
+// the duration of a realism ensemble.
+//
+// SAFETY:
+//   - Default state (no override): `activeLambda() === LAMBDA` and
+//     `activeChances() === CHANCES` — byte-identical to the frozen exports,
+//     so production runs and goldens never see overridden values.
+//   - `__UNSAFE_setCalibrationOverride` is the only mutator. Its name makes
+//     it grep-visible and an ESLint guard could be added to forbid it
+//     outside `scripts/fit-calibration.ts` (deferred).
+//   - The fit script ALWAYS pairs a `setOverride` with a `clearOverride`
+//     so a single Node process never leaks an overridden state across
+//     evaluations.
+
+export interface CalibrationOverride {
+  LAMBDA?: Partial<typeof LAMBDA>;
+  CHANCES?: Partial<typeof CHANCES>;
+}
+
+let __activeLambda: typeof LAMBDA = LAMBDA;
+let __activeChances: typeof CHANCES = CHANCES;
+
+/** Return the currently-active λ constants. Equals `LAMBDA` unless the D6 fit has set an override. */
+export function activeLambda(): typeof LAMBDA {
+  return __activeLambda;
+}
+
+/** Return the currently-active chance budget. Equals `CHANCES` unless the D6 fit has set an override. */
+export function activeChances(): typeof CHANCES {
+  return __activeChances;
+}
+
+/**
+ * D6 FIT ONLY. Swap λ + CHANCES constants for the next ensemble. Production
+ * code MUST NOT call this. Always paired with `__UNSAFE_clearCalibrationOverride`.
+ */
+export function __UNSAFE_setCalibrationOverride(o: CalibrationOverride): void {
+  __activeLambda = Object.freeze({ ...LAMBDA, ...(o.LAMBDA ?? {}) }) as typeof LAMBDA;
+  __activeChances = Object.freeze({ ...CHANCES, ...(o.CHANCES ?? {}) }) as typeof CHANCES;
+}
+
+/** D6 FIT ONLY. Restore production-default constants. */
+export function __UNSAFE_clearCalibrationOverride(): void {
+  __activeLambda = LAMBDA;
+  __activeChances = CHANCES;
 }

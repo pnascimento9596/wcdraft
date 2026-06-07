@@ -170,7 +170,7 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
   // Δ values reflect the engine output on the 2026 pool (sim is
   // byte-identical to origin/main; residual drift from norm is pre-existing
   // engine behavior carried forward).
-  it(`mean goals/match: 2.44 (Δ −0.10 vs norm 2.54) — band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
+  it(`mean goals/match: 2.40 (Δ −0.13 vs norm 2.54, post-E3a four-channel λ) — band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
     const delta = m.mean_goals - NORMS.mean_goals_per_match_regulation;
     expect(m.mean_goals).toBeGreaterThanOrEqual(BANDS.mean_goals.lo);
     expect(m.mean_goals).toBeLessThanOrEqual(BANDS.mean_goals.hi);
@@ -179,28 +179,28 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
     expect(Math.abs(delta)).toBeLessThan(0.25);
   });
 
-  it(`group draw rate: 28.7% (Δ +4.0pp vs norm 24.7%) — band [${100 * BANDS.group_draw.lo}%, ${100 * BANDS.group_draw.hi}%]`, () => {
+  it(`group draw rate: 26.4% (Δ +1.7pp vs norm 24.7%, post-E3a) — band [${100 * BANDS.group_draw.lo}%, ${100 * BANDS.group_draw.hi}%]`, () => {
     const delta = m.group_draw - NORMS.group_stage_draw_rate;
     expect(m.group_draw).toBeGreaterThanOrEqual(BANDS.group_draw.lo);
     expect(m.group_draw).toBeLessThanOrEqual(BANDS.group_draw.hi);
     expect(Math.abs(delta)).toBeLessThan(0.06);
   });
 
-  it(`margin ≥ 4: 2.30% (Δ −2.6pp vs norm 4.9%, structural — binomial × pool compression) — band [${100 * BANDS.margin_ge_4.lo}%, ${100 * BANDS.margin_ge_4.hi}%]`, () => {
+  it(`margin ≥ 4: 2.93% (Δ −2.0pp vs norm 4.9%, structural — Poisson-like dispersion at n=50 + bounded MAX λ) — band [${100 * BANDS.margin_ge_4.lo}%, ${100 * BANDS.margin_ge_4.hi}%]`, () => {
     const delta = m.margin_ge_4 - NORMS.regulation_margin_ge_4;
     expect(m.margin_ge_4).toBeGreaterThanOrEqual(BANDS.margin_ge_4.lo);
     expect(m.margin_ge_4).toBeLessThanOrEqual(BANDS.margin_ge_4.hi);
     expect(Math.abs(delta)).toBeLessThan(0.04);
   });
 
-  it(`KO → ET: 28.5% (Δ −4.5pp vs norm 33.0%) — band [${100 * BANDS.ko_et.lo}%, ${100 * BANDS.ko_et.hi}%]`, () => {
+  it(`KO → ET: 29.6% (Δ −3.4pp vs norm 33.0%, post-E3a) — band [${100 * BANDS.ko_et.lo}%, ${100 * BANDS.ko_et.hi}%]`, () => {
     const delta = m.ko_et - NORMS.knockout_extra_time_rate;
     expect(m.ko_et).toBeGreaterThanOrEqual(BANDS.ko_et.lo);
     expect(m.ko_et).toBeLessThanOrEqual(BANDS.ko_et.hi);
     expect(Math.abs(delta)).toBeLessThan(0.08);
   });
 
-  it(`KO → shootout: 14.3% (Δ −7.1pp vs norm 21.4%) — band [${100 * BANDS.ko_shootout.lo}%, ${100 * BANDS.ko_shootout.hi}%]`, () => {
+  it(`KO → shootout: 15.7% (Δ −5.7pp vs norm 21.4%, post-E3a) — band [${100 * BANDS.ko_shootout.lo}%, ${100 * BANDS.ko_shootout.hi}%]`, () => {
     const delta = m.ko_shootout - NORMS.knockout_shootout_rate;
     expect(m.ko_shootout).toBeGreaterThanOrEqual(BANDS.ko_shootout.lo);
     expect(m.ko_shootout).toBeLessThanOrEqual(BANDS.ko_shootout.hi);

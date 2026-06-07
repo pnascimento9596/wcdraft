@@ -33,8 +33,8 @@ import {
   SCENARIO_2026_BUNDLE,
 } from "../src/index.js";
 
-const SEED_PREFIX = "wcdraft:e2e-real-run:rating-recal-v2";
-const SEED_LIMIT = 200;
+const SEED_PREFIX = "wcdraft:e2e-real-run:engine-v2-e3a";
+const SEED_LIMIT = 2000;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
 const dataset = {
