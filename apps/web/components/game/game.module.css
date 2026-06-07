@@ -3256,14 +3256,16 @@ button.benchSlot:not(:disabled):hover {
   vector-effect: non-scaling-stroke;
 }
 
-/* Emerald = same-nation + same-tournament link. Locked hex `#2ecf92` per
-   the brand contract — do not swap to a token; this colour is explicit. */
+/* Emerald link = same-nation, both slots filled. Token `--ember` carries
+   the locked emerald (#2ecf92 in light, #54e3ab in dark — the brand
+   lock keeps both within the same emerald family). The glow uses the
+   --glow-ember RGB triplet so the halo follows the theme too. */
 .synergyLineLive {
-  stroke: #2ecf92;
-  stroke-width: 0.9;
+  stroke: var(--ember);
+  stroke-width: 1.1;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 4px rgba(46, 207, 146, 0.45));
+  filter: drop-shadow(0 0 4px rgba(var(--glow-ember), 0.5));
 }
 
 /* Visible label naming the layer. The brand glossary says "Synergy",
@@ -3718,33 +3720,70 @@ button.benchSlot:not(:disabled):hover {
    the clear bottom-left corner so it never overlaps the ST node. Nodes sit
    above the link layer; the pitch clips its own overflow, so nothing spills.
    ───────────────────────────────────────────────────────────────────────── */
+/* UX-COMPACT — mobile pitch zoom-out.
+   Compact-by-default everywhere `.pitch` is rendered inside `.squadStage`
+   (draft + squad-review share this stage). Shorter aspect, smaller chips,
+   tighter inner padding. Coordinates still come from formations.json
+   (responsive percentage layout), so node spacing scales with the pitch
+   width; min-width clamps prevent overlap at 360–430px viewports. */
 .squadStage .pitch {
-  aspect-ratio: 1 / 1.12;
-  max-width: 340px;
+  aspect-ratio: 1 / 1.02;
+  max-width: 312px;
   margin-inline: auto;
 }
+.squadStage .pitch .pitchFrame {
+  inset: 3%;
+}
 .squadStage .pitch .slot {
-  min-width: 42px;
-  max-width: 62px;
-  padding: 4px;
+  min-width: 38px;
+  max-width: 56px;
+  padding: 3px;
   gap: 1px;
+  border-radius: var(--r-2);
 }
 .squadStage .pitch .slotName {
   font-size: 9px;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .squadStage .pitch .slotPos {
-  font-size: 9px;
+  font-size: 8px;
+  letter-spacing: 0.04em;
 }
 .squadStage .pitch .slotEmptyLabel {
-  font-size: 9px;
-}
-.pitchSynergyLegend {
-  top: auto;
-  bottom: 6px;
-  left: 6px;
-  padding: 2px 7px;
   font-size: 8px;
-  letter-spacing: 0.1em;
+}
+.squadStage .pitch .slotMeta {
+  font-size: 8px;
+}
+.squadStage .pitch .slotShapeMarker {
+  width: 6px;
+  height: 6px;
+}
+.squadStage .pitch .slotShapeMarker_triangle {
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 6px solid currentColor;
+}
+/* Legend removed in UX-COMPACT — the SynergyBar at the top of the
+   section is now the single source of synergy nomenclature. The class
+   is kept for back-compat; render path no longer emits it. */
+.pitchSynergyLegend {
+  display: none;
+}
+@media (max-width: 380px) {
+  .squadStage .pitch {
+    max-width: 288px;
+  }
+  .squadStage .pitch .slot {
+    min-width: 34px;
+    max-width: 50px;
+  }
+  .squadStage .pitch .slotName {
+    max-width: 44px;
+  }
 }
 
 /* Formation shape id ("4-3-3") must never break at its hyphens. Scoped so the
@@ -3753,4 +3792,179 @@ button.benchSlot:not(:disabled):hover {
 .formationTitleInline {
   white-space: nowrap;
   flex: 0 0 auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — Synergy bar (pinned to top of formation section)
+   The bar replaces the old SynergyPanel card. Headline score + a thin
+   strength track + three inline figures (strength mult / links live /
+   manager link) — every metric the card surfaced, in a single horizontal
+   composition. Honest-state: "—" when the squad is empty AND no manager.
+   ───────────────────────────────────────────────────────────────────────── */
+.synergyBar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 12px 10px;
+  margin-bottom: 12px;
+  background: color-mix(in srgb, var(--bg-800) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  /* Subtle emerald-tinted edge to keep the score readable. */
+  box-shadow: inset 0 1px 0 0 rgba(var(--glow-ember), 0.06);
+}
+
+.synergyBarHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.synergyBarLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.synergyBarScore {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.synergyBarNum {
+  font-family: var(--f-display), sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ember);
+  font-feature-settings: "tnum" 1;
+}
+
+/* Thin strength track. Single emerald fill — no gradient mid-tone, the
+   token does the work. Width animates only when motion is allowed. */
+.synergyBarTrack {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  overflow: hidden;
+}
+
+.synergyBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--ember) 65%, transparent),
+    var(--ember)
+  );
+  transition: width var(--d-base) ease;
+}
+
+.synergyBarFigures {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.synergyBarFigure {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.synergyBarFigure dt {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin: 0;
+}
+
+.synergyBarFigure dd {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink-100);
+  margin: 0;
+  font-feature-settings: "tnum" 1;
+}
+
+.synergyBarFigureSub {
+  color: var(--ink-400);
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — squad counter chip ("11/11 XI · 5/5 Bench · 1/1 Mgr").
+   Single line at 360–430px. Monospace + tabular numerals so the digits
+   don't reflow as the counts tick.
+   ───────────────────────────────────────────────────────────────────────── */
+.squadCounter {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 6px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-300);
+  font-feature-settings: "tnum" 1;
+}
+
+.squadCounterCell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.squadCounterCell b {
+  color: var(--ink-100);
+  font-weight: 600;
+}
+
+.squadCounterSep {
+  color: var(--ink-400);
+}
+
+@media (max-width: 380px) {
+  .squadCounter {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* GK warning panel slimmed now that synergy moved up. */
+.gkWarnPanel {
+  margin-top: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — reduced-motion guard. Lock-in / select / preview already
+   avoid layout shift (every state preserves the centring translate);
+   here we belt-and-brace by disabling state transitions when the user
+   asks for less motion. The squad-stage feels instant rather than eased.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pitch .slot,
+  .pitch button.slot,
+  .synergyBarFill,
+  .managerSlot,
+  .benchSlot,
+  .candRow {
+    transition: none !important;
+  }
+  .synergyLineLive {
+    filter: none;
+  }
 }

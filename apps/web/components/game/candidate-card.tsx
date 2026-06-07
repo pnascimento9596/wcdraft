@@ -206,12 +206,12 @@ export function CandidateCard({
 }
 
 export function ManagerCandidate({
-  coach,
+  manager,
   selected,
   disabled,
   onSelect,
 }: {
-  coach: ManagerCardView;
+  manager: ManagerCardView;
   selected: boolean;
   disabled?: boolean;
   onSelect: () => void;
@@ -232,16 +232,16 @@ export function ManagerCandidate({
       <span className={s.candRowLine}>
         <span
           className={`${s.candRowFlag} ${s.flagShape_diamond}`}
-          aria-label={coach.nation_name}
-          title={coach.nation_name}
+          aria-label={manager.nation_name}
+          title={manager.nation_name}
         >
-          {coach.nation_code}
+          {manager.nation_code}
         </span>
 
         <span className={s.candRowMain}>
-          <span className={s.candRowName}>{coach.name}</span>
+          <span className={s.candRowName}>{manager.name}</span>
           <span className={s.candRowSub}>
-            Manager · {coach.nation_name} · {coach.year}
+            Manager · {manager.nation_name} · {manager.year}
           </span>
         </span>
 
@@ -256,12 +256,12 @@ export function ManagerCandidate({
         <span className={s.candDetail}>
           <span className={s.candStats}>
             <span>
-              <b>{formatNullableNumber(coach.matches)}</b> matches
+              <b>{formatNullableNumber(manager.matches)}</b> matches
             </span>
             <span>
               finish{" "}
               <b>
-                {coach.final_placement !== null ? `#${coach.final_placement}` : "—"}
+                {manager.final_placement !== null ? `#${manager.final_placement}` : "—"}
               </b>
             </span>
             <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
