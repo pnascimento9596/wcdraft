@@ -48,9 +48,11 @@ CC-BY-SA 4.0.
 `rating_2026.py` **imports** the `wc-perf` machinery rather than
 re-implementing it, so "same family" is literal: position `BASE_WEIGHTS`, the
 `[REPLACEMENT_BASE, BASE_CEILING]` internal band, the within-cohort mid-rank
-percentile (`_percentile_map`), the four-channel `CHANNEL_SPREAD`, and the
-**new display curve helpers** (`_fit_display_curve`, `_display_score`,
-`_display_channel`) are all shared code. The era-fairness principle is
+percentile (`_percentile_map`), the four-channel `CHANNEL_SPREAD`, the
+pre-recal `_channel(score_0_100, spread)` channel materializer, and the
+**new display curve helpers** (`_fit_display_curve`, `_display_score`) are
+all shared code. Decoupling means `_display_score` drives `overall` only;
+channels are computed by `_channel` and stay on the pre-recal sim band. The era-fairness principle is
 preserved: a signal is normalized within its `(tournament, position)` cohort
 — for 2026 that is **(position) across all 48 squads**, so a striker is
 ranked against every other 2026 striker. A defender / keeper is **NEVER**

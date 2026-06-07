@@ -11,7 +11,8 @@
 > `packages/core/src/engine/calibration.ts` (λ, channel scale, engine_version)
 > is **UNCHANGED** from `origin/main` — the sim is byte-identical to main
 > (verified by sim-golden.json: 0 diff). The Phase 1
-> change ships only the curve + retune; new stature signals (Ballon d'Or, all-
+> change ships only the OVERALL display curve (engine unchanged); new
+> stature signals (Ballon d'Or, all-
 > time list ranks) are a deliberate Phase 2 follow-on.
 >
 > **Prior versions** — `wc-perf-1.1.0` introduced RSSSF-sourced pre-1970
@@ -54,7 +55,7 @@ byte-deterministic. Signals respect the era cliffs documented in
 pinned public-source snapshots): all-time / decade list rank, Ballon d'Or /
 The Best points, captaincy (not present in the ingested
 `player_tournaments`), club honours, peak transfer context. Phase 1 ships only
-the curve + retune — no new ingestion.
+the display curve on OVR — no new ingestion; the sim engine is unchanged.
 
 **Scope:** men's tournaments 1930–2022 (the contract's gameplay scope). The
 canonical tables also contain 8 women's editions (2,870 cards); those are
@@ -203,11 +204,17 @@ only reshape the global distribution.
 
 ### Estimate band
 
-`baseline_anchor_estimate` cards apply the curve and are then **clamped into
-`[ESTIMATE_FLOOR, ESTIMATE_CEILING] = [66, 73]`** on both `overall` AND every
-channel. The honest-state semantics are preserved: missing components remain
-`null`, coverage stays low, the flag is kept. Estimates can never out-rate a
-measured great (asserted).
+`baseline_anchor_estimate` cards have `overall` passed through the display
+curve and then **clamped into `[ESTIMATE_FLOOR, ESTIMATE_CEILING] = [66, 73]`
+on `overall` ONLY**. The four sim channels stay on the pre-recal sim band
+`[FLOOR_CHANNEL, 100]` (materialized via `_channel(score_0_100, spread)`) —
+the estimate cap is a display-overall promise, NOT a channel clamp. An
+unlinked card's channels naturally sit near `FLOOR_CHANNEL` because the
+underlying merit signal is at the replacement baseline; we never lift the
+sim channels into the estimate band. The honest-state semantics are
+preserved: missing components remain `null`, coverage stays low, the flag is
+kept. Estimates can never out-rate a measured great on display OVR
+(asserted).
 
 ### The four sim channels (decoupled, Phase 1.1)
 
@@ -325,10 +332,10 @@ the display floor and never above the estimate ceiling.
   machinery in `apps/web/lib/game/` invalidates stale persisted runs
   automatically via the existing "different build" notice.
 - The sim engine_version anchor is UNCHANGED (`engine-2026.06.04`): the
-  decoupled path means the engine math, λ constants, and channel scale all
-  match `origin/main` byte-for-byte. Only the rating-version anchors bump
-  (`wc-perf-2.0.0`, `proj-career-2.0.0`).
-  because λ retuning moves deterministic `RunResult` bytes.
+  decoupled path means the engine math, λ constants, channel scale, and
+  `RunResult` bytes all match `origin/main` byte-for-byte (verified by
+  `sim-golden.json: 0 diff` against `origin/main`). Only the rating-version
+  anchors bump (`wc-perf-2.0.0`, `proj-career-2.0.0`).
 
 ## Known seam — `tournament_id` shape
 

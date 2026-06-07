@@ -4,15 +4,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CALIBRATION: tune vs historical WC scoreline distributions.
 // ─────────────────────────────────────────────────────────────────────────────
-// λ has been retuned for the Phase 1 rating recalibration (wc-perf-2.0.0 /
-// proj-career-2.0.0): the rating display curve compresses channels onto the
-// display band [66, 99], so the old [0,100] λ constants flattened
-// favourite/underdog separation. The new tuple (BASE=1.25, SPREAD=4.0,
-// MIN=0.3, MAX=3.4) keeps an evenly-matched expected total near 2.5 goals
-// while restoring favourite/underdog separation on the compressed scale.
-// All OTHER constants (chance budget, incidents, injuries, shootout band,
-// scoring, synergy, manager modifier) remain as the pre-Phase-1 first-cut
-// values and are flagged for separate tuning.
+// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0) landed
+// the DECOUPLED path: the rating display curve drives `overall` ONLY; the
+// four sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band and λ
+// is BYTE-IDENTICAL to origin/main (no engine tuning). All constants in this file
+// match origin/main; the sim is byte-identical to main and engine_version
+// stays at `engine-2026.06.04` (verified by sim-golden.json: 0 diff). All
+// constants below (chance budget, incidents, injuries, shootout band,
+// scoring, synergy, manager modifier) remain pre-Phase-1 first-cut values
+// and are flagged for separate tuning.
 //
 // These constants are LOCKED by golden fixtures: any change here changes a
 // golden RunResult byte and therefore REQUIRES an `engine_version` bump (the
@@ -28,13 +28,14 @@ import type { ScoringConfig } from "../types/scoring.js";
 
 // ─── λ (EXPECTED GOALS) MAP ───────────────────────────────────────────────────
 // λ_for = clamp(BASE + SPREAD * (attackFor - defenseAgainst)/100, MIN, MAX).
-// Phase 1.1 (decoupled path, plan §3.2 fallback): the rating-engine display
-// curve is applied to  ONLY; the four sim channels (attack, midfield,
-// defense, goalkeeping) stay on the pre-recal [FLOOR_CHANNEL, 100] band, so λ
-// stays calibrated to the engine's full attack-minus-defense range. These
-// constants therefore match the pre-recalibration baseline and are validated
-// against the 1998-2022 modern-era WC norms by
-//  (see that fixture for upstream source).
+// Phase 1 (decoupled path, plan §3.2 fallback): the rating-engine display
+// curve is applied to `overall` ONLY; the four sim channels (attack,
+// midfield, defense, goalkeeping) stay on the pre-recal [FLOOR_CHANNEL, 100]
+// band, so λ stays calibrated to the engine's full attack-minus-defense
+// range. These constants match origin/main byte-for-byte and are validated
+// against the 1998-2022 modern-era WC norms (computed from pinned upstream
+// f41e9437) by `packages/data/test/realism-modern-norms.golden.test.ts`,
+// which pins the symmetric coherent-XI sweep + per-metric Δ bands.
 export const LAMBDA = Object.freeze({
   /** Baseline goals for an evenly-matched team (attack == opp defense). */
   BASE: 1.3,

@@ -270,21 +270,6 @@ def _display_score(
     return int(round(_display_value(score_0_100, curve, estimate=estimate)))
 
 
-def _display_channel(
-    score_0_100: float, spread: float, curve: DisplayCurve, *, estimate: bool = False
-) -> int:
-    display = _display_value(score_0_100, curve, estimate=estimate)
-    val = display * spread + DISPLAY_FLOOR * (1.0 - spread)
-    if estimate:
-        if val < ESTIMATE_FLOOR:
-            val = float(ESTIMATE_FLOOR)
-        elif val > ESTIMATE_CEILING:
-            val = float(ESTIMATE_CEILING)
-    return max(DISPLAY_FLOOR, min(DISPLAY_MAX, round(val)))
-
-
-
-
 # ─── INPUT LOADING ────────────────────────────────────────────────────────────
 
 
