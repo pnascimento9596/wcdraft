@@ -17,6 +17,7 @@ import {
   consumeAndIssueSession,
   safeNextPath,
 } from "@/lib/auth/verify-flow";
+import { claimAnonRuns } from "@/lib/game/saved-runs-store";
 import {
   buildRuntimeDeps,
   jsonError,
@@ -85,6 +86,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         origin: req.headers.get("origin"),
         referer: req.headers.get("referer"),
         host: req.headers.get("host"),
+        // F-3 hook — claim this session's anon saved_runs to the new
+        // user. Errors here are caught + logged inside verify-flow; the
+        // sign-in never blocks on the claim. POST /api/runs/claim is the
+        // retry surface.
+        onAuthenticatedSessionReady: async ({ sessionId, userId }) => {
+          await claimAnonRuns({ sessionId, userId }, { db: deps.db });
+        },
       },
       deps,
     );

@@ -157,28 +157,59 @@ async function main(): Promise<void> {
   const migrationsFolder = new URL("../migrations", import.meta.url).pathname;
   try {
     // STEP 1 — APPLY
-    console.log("[rollback-check] step 1/5 — applying all up-migrations");
+    console.log("[rollback-check] step 1/6 — applying all up-migrations");
     await migrate(db, { migrationsFolder });
 
-    // STEP 2 — assert anonymous saved_runs dedupe
-    console.log("[rollback-check] step 2/5 — saved_runs anonymous dedupe");
+    // STEP 2 — assert anonymous saved_runs dedupe is now SESSION-SCOPED
+    //
+    // F-3 split the F-1 global `UNIQUE NULLS NOT DISTINCT (owner_user_id, token)`
+    // into two PARTIAL unique indexes so anon rows dedupe per-session, not
+    // globally. The F-1 anti-spam invariant remains true at the session
+    // level — the test now exercises that more specific shape PLUS the
+    // negative case: anon rows with the SAME token across DIFFERENT
+    // sessions are allowed.
+    console.log(
+      "[rollback-check] step 2/6 — saved_runs anonymous dedupe (session-scoped)",
+    );
     const dupToken = `rollback-check-token-${Math.floor(performance.now()).toString()}`;
+    const sessionA = `rollback-check-session-a-${Math.floor(performance.now()).toString()}`;
+    const sessionB = `rollback-check-session-b-${Math.floor(performance.now()).toString()}`;
+    const sessionCsrf = "csrf-secret-for-rollback-check";
+    // Seed the sessions we'll bind anon rows to.
     await db.execute(sql`
-      INSERT INTO saved_runs (owner_user_id, token, claim_state)
-      VALUES (NULL, ${dupToken}, 'anonymous')
+      INSERT INTO sessions (id, user_id, csrf_secret, expires_at)
+      VALUES (${sessionA}, NULL, ${sessionCsrf}, NOW() + INTERVAL '1 hour')
     `);
+    await db.execute(sql`
+      INSERT INTO sessions (id, user_id, csrf_secret, expires_at)
+      VALUES (${sessionB}, NULL, ${sessionCsrf}, NOW() + INTERVAL '1 hour')
+    `);
+    // Row 1: anon, session A, token T → succeed.
+    await db.execute(sql`
+      INSERT INTO saved_runs (owner_user_id, session_id, token, claim_state)
+      VALUES (NULL, ${sessionA}, ${dupToken}, 'anonymous')
+    `);
+    // Row 2: anon, SAME session, SAME token → MUST be rejected (session-scoped dedupe).
     await assertDuplicateRejected(
       db,
-      "saved_runs: two NULL-owner rows with the same token must be rejected",
+      "saved_runs: two NULL-owner rows in the SAME session with the same token must be rejected",
       () =>
         db.execute(sql`
-          INSERT INTO saved_runs (owner_user_id, token, claim_state)
-          VALUES (NULL, ${dupToken}, 'anonymous')
+          INSERT INTO saved_runs (owner_user_id, session_id, token, claim_state)
+          VALUES (NULL, ${sessionA}, ${dupToken}, 'anonymous')
         `),
+    );
+    // Row 3: anon, DIFFERENT session, SAME token → MUST succeed (no cross-session collision).
+    await db.execute(sql`
+      INSERT INTO saved_runs (owner_user_id, session_id, token, claim_state)
+      VALUES (NULL, ${sessionB}, ${dupToken}, 'anonymous')
+    `);
+    console.log(
+      "  ✓ saved_runs: NULL-owner rows in DIFFERENT sessions with the same token are allowed",
     );
 
     // STEP 3 — assert anonymous leaderboard_entries dedupe
-    console.log("[rollback-check] step 3/5 — leaderboard_entries anonymous dedupe");
+    console.log("[rollback-check] step 3/6 — leaderboard_entries anonymous dedupe");
     const lbToken = `rollback-check-lb-token-${Math.floor(performance.now()).toString()}`;
     const lbSeason = "rollback-check-season-001";
     await db.execute(sql`
@@ -197,11 +228,27 @@ async function main(): Promise<void> {
         `),
     );
 
-    // STEP 4 — ROLLBACK in reverse journal order
+    // CLEANUP — drop the runtime-test rows BEFORE attempting to roll back.
+    // The session-scoped positive case in step 2 seeds two NULL-owner rows
+    // with the same token across two different sessions. That is LEGAL
+    // under F-3 (session-scoped dedupe) but ILLEGAL under F-1's restored
+    // global `UNIQUE NULLS NOT DISTINCT (owner_user_id, token)`. If we
+    // tried to ALTER TABLE … ADD CONSTRAINT … on a populated table, the
+    // index build would fail with 23505. A real-world rollback would need
+    // the same purge (or a per-row dedupe), so this is also a documentary
+    // signal: F-3 → F-1 rollback on a populated DB requires data cleanup.
+    console.log(
+      "[rollback-check] step 4/6 — purging runtime-test rows pre-rollback",
+    );
+    await db.execute(sql`DELETE FROM saved_runs`);
+    await db.execute(sql`DELETE FROM leaderboard_entries`);
+    await db.execute(sql`DELETE FROM sessions`);
+
+    // STEP 5 — ROLLBACK in reverse journal order
     const journal = readJournal();
     const ordered = [...journal.entries].sort((a, b) => b.idx - a.idx);
     console.log(
-      `[rollback-check] step 4/5 — running ${ordered.length.toString()} down-migration(s) in reverse`,
+      `[rollback-check] step 5/6 — running ${ordered.length.toString()} down-migration(s) in reverse`,
     );
     for (const entry of ordered) {
       const downSql = readDown(entry.tag);
@@ -210,7 +257,7 @@ async function main(): Promise<void> {
     }
 
     // STEP 5 — assert clean state
-    console.log("[rollback-check] step 5/5 — asserting public schema is empty");
+    console.log("[rollback-check] step 6/6 — asserting public schema is empty");
     const tables = await db.execute<{ table_name: string }>(sql`
       SELECT table_name
       FROM information_schema.tables
