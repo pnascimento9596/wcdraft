@@ -24,6 +24,9 @@ import {
   type NewRankedAttempt,
   type LeaderboardEntry,
   type NewLeaderboardEntry,
+  authRateLimits,
+  type AuthRateLimit,
+  type NewAuthRateLimit,
 } from "../src/index.ts";
 
 describe("@wcdraft/db schema — shape", () => {
@@ -34,6 +37,20 @@ describe("@wcdraft/db schema — shape", () => {
     expect(savedRuns).toBeDefined();
     expect(rankedAttempts).toBeDefined();
     expect(leaderboardEntries).toBeDefined();
+    expect(authRateLimits).toBeDefined();
+  });
+
+  it("infers row and insert types for auth_rate_limits", () => {
+    expectTypeOf<AuthRateLimit>().toMatchTypeOf<{
+      bucketKey: string;
+      windowStart: Date;
+      count: number;
+      updatedAt: Date;
+    }>();
+    expectTypeOf<NewAuthRateLimit>().toMatchTypeOf<{
+      bucketKey: string;
+      windowStart: Date;
+    }>();
   });
 
   it("infers row and insert types for users", () => {

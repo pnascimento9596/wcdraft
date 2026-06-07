@@ -25,6 +25,16 @@ const downSql = readFileSync(
   "utf8",
 );
 
+const authSql = readFileSync(
+  new URL("../migrations/0001_auth_rate_limits.sql", import.meta.url),
+  "utf8",
+);
+
+const authDownSql = readFileSync(
+  new URL("../migrations/0001_auth_rate_limits.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(
     new URL("../migrations/meta/_journal.json", import.meta.url),
@@ -33,10 +43,12 @@ const journal = JSON.parse(
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
-  it("journal references the renamed 0000_init tag", () => {
-    expect(journal.entries).toHaveLength(1);
+  it("journal references the renamed 0000_init + 0001_auth_rate_limits tags", () => {
+    expect(journal.entries).toHaveLength(2);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
+    expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
+    expect(journal.entries[1]?.idx).toBe(1);
   });
 
   it.each([
@@ -163,3 +175,28 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(downSql).toMatch(/DROP SCHEMA IF EXISTS "drizzle" CASCADE/);
   });
 });
+
+describe("@wcdraft/db migrations — 0001_auth_rate_limits", () => {
+  it("creates auth_rate_limits table", () => {
+    expect(authSql).toMatch(/CREATE TABLE IF NOT EXISTS "auth_rate_limits"/);
+  });
+
+  it("uses composite primary key (bucket_key, window_start)", () => {
+    expect(authSql).toMatch(
+      /CONSTRAINT\s+"auth_rate_limits_pk"\s+PRIMARY KEY\("bucket_key","window_start"\)/,
+    );
+  });
+
+  it("creates the window_start sweep index", () => {
+    expect(authSql).toContain("auth_rate_limits_window_idx");
+  });
+
+  it("uses jsonb-incompatible plain integer for count column", () => {
+    expect(authSql).toMatch(/"count"\s+integer/);
+  });
+
+  it("down-migration drops auth_rate_limits", () => {
+    expect(authDownSql).toMatch(/DROP TABLE IF EXISTS "auth_rate_limits"/);
+  });
+});
+
