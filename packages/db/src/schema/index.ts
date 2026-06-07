@@ -9,3 +9,4 @@ export * from "./sessions.ts";
 export * from "./saved-runs.ts";
 export * from "./ranked-attempts.ts";
 export * from "./leaderboard-entries.ts";
+export * from "./auth-rate-limits.ts";

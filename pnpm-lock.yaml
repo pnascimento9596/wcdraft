@@ -50,6 +50,9 @@ importers:
       '@wcdraft/data':
         specifier: workspace:*
         version: link:../../packages/data
+      '@wcdraft/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       next:
         specifier: ^16.2.7
         version: 16.2.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -60,12 +63,18 @@ importers:
         specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
     devDependencies:
+      '@electric-sql/pglite':
+        specifier: ^0.3.10
+        version: 0.3.16
       '@types/react':
         specifier: ^19.2.16
         version: 19.2.16
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.16)
+      drizzle-orm:
+        specifier: ^0.36.0
+        version: 0.36.4(@electric-sql/pglite@0.3.16)(@neondatabase/serverless@1.1.0)(@types/react@19.2.16)(react@19.2.7)
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@types/node@25.9.1)(vite@8.0.16(@types/node@25.9.1)(esbuild@0.28.0)(tsx@4.22.4))
@@ -89,7 +98,7 @@ importers:
         version: 1.1.0
       drizzle-orm:
         specifier: ^0.36.0
-        version: 0.36.4(@neondatabase/serverless@1.1.0)(@types/react@19.2.16)(react@19.2.7)
+        version: 0.36.4(@electric-sql/pglite@0.3.16)(@neondatabase/serverless@1.1.0)(@types/react@19.2.16)(react@19.2.7)
     devDependencies:
       drizzle-kit:
         specifier: ^0.28.0
@@ -99,6 +108,9 @@ packages:
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
+
+  '@electric-sql/pglite@0.3.16':
+    resolution: {integrity: sha512-mZkZfOd9OqTMHsK+1cje8OSzfAQcpD7JmILXTl5ahdempjUDdmg4euf1biDex5/LfQIDJ3gvCu6qDgdnDxfJmA==}
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -1817,6 +1829,8 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
+  '@electric-sql/pglite@0.3.16': {}
+
   '@emnapi/core@1.10.0':
     dependencies:
       '@emnapi/wasi-threads': 1.2.1
@@ -2537,8 +2551,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.36.4(@neondatabase/serverless@1.1.0)(@types/react@19.2.16)(react@19.2.7):
+  drizzle-orm@0.36.4(@electric-sql/pglite@0.3.16)(@neondatabase/serverless@1.1.0)(@types/react@19.2.16)(react@19.2.7):
     optionalDependencies:
+      '@electric-sql/pglite': 0.3.16
       '@neondatabase/serverless': 1.1.0
       '@types/react': 19.2.16
       react: 19.2.7
