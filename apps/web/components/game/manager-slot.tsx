@@ -16,7 +16,7 @@ import s from "./game.module.css";
  *
  * NOMENCLATURE: this is the MANAGER slot. Synergy (not "chemistry") draws
  * a small link from the slot's nation_id to the XI via `computeSynergy`'s
- * `manager_link` term — surfaced numerically in the SynergyPanel, not here.
+ * `manager_link` term — surfaced numerically in the SynergyBar, not here.
  */
 export function ManagerSlot({
   manager,
@@ -70,7 +70,7 @@ export function ManagerSlot({
         </>
       ) : (
         <p className={s.managerSlotEmpty}>
-          Open — pick a coach on any spin to fill this slot.
+          Open — pick a manager on any spin to fill this slot.
         </p>
       )}
     </aside>

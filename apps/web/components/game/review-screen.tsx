@@ -32,7 +32,7 @@ import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
-import { SynergyPanel } from "./synergy-panel";
+import { SynergyBar } from "./synergy-bar";
 import s from "./game.module.css";
 
 type Mode =
@@ -292,6 +292,7 @@ function ReviewBoard({
       </header>
 
       <section className={s.panel} aria-label="Final XI">
+        <SynergyBar result={synergy} active={true} />
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>{formation.name}</h2>
           <span className={s.panelMeta}>Locked · no rearranging</span>
@@ -342,11 +343,7 @@ function ReviewBoard({
         </div>
       </section>
 
-      <section className={s.panel}>
-        <SynergyPanel result={synergy} />
-      </section>
-
-      {validation.warnings.length > 0 ? (
+{validation.warnings.length > 0 ? (
         <section className={`${s.panel} ${s.warningsPanel}`}>
           <h3 className={s.panelSubTitle}>Squad warnings</h3>
           <ul className={s.warnList}>

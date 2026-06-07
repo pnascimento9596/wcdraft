@@ -51,7 +51,7 @@ import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { ManagerSlot } from "./manager-slot";
 import { SpinStage, type SpinAnimState } from "./slot-machine";
-import { SynergyPanel } from "./synergy-panel";
+import { SynergyBar } from "./synergy-bar";
 import s from "./game.module.css";
 
 const TOTAL_SPINS = 17;
@@ -758,14 +758,29 @@ function DraftBoard({
 
       {/* Pitch + bench + manager */}
       <section className={s.panel} aria-label="Your formation">
+        <SynergyBar
+          result={previewSynergy}
+          delta={sel ? synergyDelta : null}
+          active={
+            starters.some((sl) => sl.card) || draft.manager_card_id !== null
+          }
+        />
         <div className={s.panelHead}>
           <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>
             {formation.name}
           </h2>
-          <span className={s.panelMeta}>
-            {starters.filter((sl) => sl.card).length}/11 starters ·{" "}
-            {bench.filter((sl) => sl.card).length}/5 bench ·{" "}
-            {draft.manager_card_id ? "1" : "0"}/1 manager
+          <span className={`${s.panelMeta} ${s.squadCounter}`}>
+            <span className={s.squadCounterCell}>
+              <b>{starters.filter((sl) => sl.card).length}/11</b> XI
+            </span>
+            <span className={s.squadCounterSep} aria-hidden="true">·</span>
+            <span className={s.squadCounterCell}>
+              <b>{bench.filter((sl) => sl.card).length}/5</b> Bench
+            </span>
+            <span className={s.squadCounterSep} aria-hidden="true">·</span>
+            <span className={s.squadCounterCell}>
+              <b>{draft.manager_card_id ? "1" : "0"}/1</b> Mgr
+            </span>
           </span>
         </div>
 
@@ -824,12 +839,8 @@ function DraftBoard({
 
       </section>
 
-      <section className={s.panel}>
-        <SynergyPanel
-          result={previewSynergy}
-          delta={sel ? synergyDelta : null}
-        />
-        {!validation.has_goalkeeper && fieldable ? (
+      {!validation.has_goalkeeper && fieldable ? (
+        <section className={`${s.panel} ${s.gkWarnPanel}`}>
           <p className={s.gkWarn} role="status">
             <span className={s.gkWarnGlyph} aria-hidden="true">
               !
@@ -837,8 +848,8 @@ function DraftBoard({
             No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal
             penalty.
           </p>
-        ) : null}
-      </section>
+        </section>
+      ) : null}
 
       {/* Candidates */}
       {!complete && spin ? (
@@ -883,7 +894,7 @@ function DraftBoard({
 
           {candidates.manager ? (
             <ManagerCandidate
-              coach={candidates.manager}
+              manager={candidates.manager}
               selected={sel?.kind === "manager"}
               disabled={draft.manager_card_id !== null}
               onSelect={() => selectManager(candidates.manager!)}
@@ -931,7 +942,7 @@ function DraftBoard({
             </span>
           ) : (
             <span className={s.lockHint}>
-              Select a player and a slot, or pick the coach.
+              Select a player and a slot, or pick the manager.
             </span>
           )}
         </div>
