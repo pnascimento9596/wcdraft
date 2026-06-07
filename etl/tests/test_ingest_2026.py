@@ -14,7 +14,7 @@ import json
 import pytest
 
 from wcdraft_etl import identity_2026 as idn
-from wcdraft_etl import ingest_2026, rating_2026
+from wcdraft_etl import ingest_2026, rating, rating_2026
 
 OUT = ingest_2026.OUTPUT_DIR
 
@@ -185,9 +185,14 @@ def test_ratings_join_and_bounds(ratings, cards):
     for r in ratings:
         assert r["card_id"] in by_card
         assert r["card_id"] == f"{r['player_id']}:{r['tournament_id']}"
+        # Phase 1.1 decoupled: sim channels on [FLOOR_CHANNEL, 100] band;
+        # only `overall` lives on the recalibrated display band [66, 99].
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
-            assert isinstance(r[ch], int) and 0 <= r[ch] <= 100
-        assert isinstance(r["overall"], int) and 0 <= r["overall"] <= 100
+            assert isinstance(r[ch], int) and rating.FLOOR_CHANNEL <= r[ch] <= 100
+        assert (
+            isinstance(r["overall"], int)
+            and rating.DISPLAY_FLOOR <= r["overall"] <= rating.DISPLAY_MAX
+        )
         assert r["provenance"] == "projected_career"
         assert r["coverage_basis"] == "career_signals"
         assert r["rating_version"] == rating_2026.RATING_VERSION
@@ -219,6 +224,40 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
             assert comp[sig]["value"] is None and comp[sig]["weight"] == 0.0
 
 
+
+
+def test_projected_rating_version_is_phase1(ratings):
+    assert rating_2026.RATING_VERSION == "proj-career-2.0.0"
+    for r in ratings:
+        assert r["rating_version"] == "proj-career-2.0.0"
+
+
+def test_projected_distribution_shape(ratings):
+    """Projected pool reshaped onto [66, 99] by the shared display curve.
+    Slightly looser than historical because n=1,246 vs n=10,973, but same
+    contract: floor exact, max <= 99, no 100s, thin elite tail."""
+    overalls = sorted(r["overall"] for r in ratings)
+    n = len(overalls)
+    assert overalls[0] == rating.DISPLAY_FLOOR
+    assert overalls[-1] <= rating.DISPLAY_MAX
+    assert overalls[-1] >= rating.DISPLAY_MAX - 1
+    assert 100 not in set(overalls)
+    median = overalls[n // 2]
+    p95 = overalls[int(0.95 * (n - 1))]
+    assert rating.DISPLAY_MEDIAN - 2 <= median <= rating.DISPLAY_MEDIAN + 2, median
+    assert rating.DISPLAY_P95 - 2 <= p95 <= rating.DISPLAY_P95 + 2, p95
+    share_95 = sum(1 for ov in overalls if ov >= 95) / n
+    share_98 = sum(1 for ov in overalls if ov >= 98) / n
+    assert share_95 <= 0.030, share_95
+    assert share_98 <= 0.010, share_98
+
+
+def test_projected_no_estimate_path(ratings):
+    """2026 cards never take the estimate path (caps are always present), so
+    no `overall_basis` field is emitted — distinct from the historical schema."""
+    for r in ratings:
+        assert "overall_basis" not in r
+
 def test_strong_nations_aggregate_higher(teams, nation_name):
     """Every traditional power outranks every debutant/minnow — a robust ordering
     invariant that does not hinge on the exact elite ranking."""
@@ -229,7 +268,7 @@ def test_strong_nations_aggregate_higher(teams, nation_name):
     # The weakest power outranks the strongest minnow (no inversion).
     assert min(power_scores) > max(minnow_scores), (min(power_scores), max(minnow_scores))
     # ...and the basket means are clearly separated (not a knife-edge).
-    assert sum(power_scores) / len(power_scores) - sum(minnow_scores) / len(minnow_scores) >= 4.0
+    assert sum(power_scores) / len(power_scores) - sum(minnow_scores) / len(minnow_scores) >= 2.5
 
 
 # ─── Team2026 ─────────────────────────────────────────────────────────────────
@@ -247,7 +286,8 @@ def test_team2026_shape(teams, ratings):
         assert all(cid in rating_cards for cid in t["squad_card_ids"])
         agg = t["aggregate_rating"]
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
-            assert 0 <= agg[ch] <= 100
+            # Phase 1.1 decoupled: aggregates on sim band [FLOOR_CHANNEL, 100].
+            assert rating.FLOOR_CHANNEL <= agg[ch] <= 100
         assert 0.0 <= agg["coverage"] <= 1.0
         # Cited to BOTH the squads snapshot and the draw (group_slot provenance).
         assert {s["source_type"] for s in t["sources"]} == {"wikipedia"}

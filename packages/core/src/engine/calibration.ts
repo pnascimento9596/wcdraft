@@ -4,11 +4,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CALIBRATION: tune vs historical WC scoreline distributions.
 // ─────────────────────────────────────────────────────────────────────────────
-// Every value in this file is a FIRST-CUT calibration constant, chosen to be
-// plausible against World-Cup scoreline intuition (≈1.3 goals/team/match base,
-// favourites win more but never always). They are NOT fitted to a historical
-// distribution yet. Tuning λ / weights / probabilities against real WC
-// scoreline data is a FLAGGED FOLLOW-ON (its own lane), NOT this PR.
+// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0) landed
+// the DECOUPLED path: the rating display curve drives `overall` ONLY; the
+// four sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band and λ
+// is BYTE-IDENTICAL to origin/main (no engine tuning). All constants in this file
+// match origin/main; the sim is byte-identical to main and engine_version
+// stays at `engine-2026.06.04` (verified by sim-golden.json: 0 diff). All
+// constants below (chance budget, incidents, injuries, shootout band,
+// scoring, synergy, manager modifier) remain pre-Phase-1 first-cut values
+// and are flagged for separate tuning.
 //
 // These constants are LOCKED by golden fixtures: any change here changes a
 // golden RunResult byte and therefore REQUIRES an `engine_version` bump (the
@@ -24,7 +28,14 @@ import type { ScoringConfig } from "../types/scoring.js";
 
 // ─── λ (EXPECTED GOALS) MAP ───────────────────────────────────────────────────
 // λ_for = clamp(BASE + SPREAD * (attackFor - defenseAgainst)/100, MIN, MAX).
-// Channels are 0..100, so (attackFor - defenseAgainst) ∈ [-100, 100].
+// Phase 1 (decoupled path, plan §3.2 fallback): the rating-engine display
+// curve is applied to `overall` ONLY; the four sim channels (attack,
+// midfield, defense, goalkeeping) stay on the pre-recal [FLOOR_CHANNEL, 100]
+// band, so λ stays calibrated to the engine's full attack-minus-defense
+// range. These constants match origin/main byte-for-byte and are validated
+// against the 1998-2022 modern-era WC norms (computed from pinned upstream
+// f41e9437) by `packages/data/test/realism-modern-norms.golden.test.ts`,
+// which pins the symmetric coherent-XI sweep + per-metric Δ bands.
 export const LAMBDA = Object.freeze({
   /** Baseline goals for an evenly-matched team (attack == opp defense). */
   BASE: 1.3,

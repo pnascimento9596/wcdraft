@@ -55,18 +55,18 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 22818455,
-      "bytes_brotli": 620030,
-      "bytes_gzip": 1019163,
+      "bytes": 22818434,
+      "bytes_brotli": 619790,
+      "bytes_gzip": 1010145,
       "path": "draft-pool.compact.json",
-      "sha256": "6ae9c4f5956ef989b26b1a225abea1f62e013d377e9e03c707f3aa3a6d261ff0"
+      "sha256": "8f437b9212ac8ca2467cc7405c38c235bb86f7c32d2f92641abef0e64f77af54"
     },
     "scenario_2026": {
       "bytes": 109786,
-      "bytes_brotli": 4468,
-      "bytes_gzip": 7723,
+      "bytes_brotli": 4450,
+      "bytes_gzip": 7718,
       "path": "scenario-2026.compact.json",
-      "sha256": "ccad85a828dc22d0e1f348f17c4662b04f3337468f8fb321a1ee1f77da52d6e6"
+      "sha256": "674fe1a28976ef5a248efc3738e1a8c2e6fcfae3b26ce8fc7e49b7bcc4acfadd"
     }
   },
   "counts": {
@@ -79,8 +79,8 @@
   },
   "dataset_version": "2026-06-04",
   "engine_version": "engine-2026.06.04",
-  "rating_version_historical": "wc-perf-1.1.0",
-  "rating_version_projected": "proj-career-1.0.0",
+  "rating_version_historical": "wc-perf-2.0.0",
+  "rating_version_projected": "proj-career-2.0.0",
   "ruleset_version": "ruleset-2026.06.04",
   "schema_version": "runtime-data-1.0.0"
 }

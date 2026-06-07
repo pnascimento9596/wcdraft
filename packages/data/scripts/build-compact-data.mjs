@@ -49,6 +49,15 @@ const SCHEMA_VERSION = "runtime-data-1.0.0";
 const ENGINE_VERSION = "engine-2026.06.04";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
+// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0).
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-2.0.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-2.0.0";
+const DISPLAY_FLOOR = 66;
+const DISPLAY_MAX = 99;
+const ESTIMATE_DISPLAY_MIN = 66;
+const ESTIMATE_DISPLAY_MAX = 73;
+const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
+
 const TOURNAMENT_ID_RE = /^WC-(\d{4})$/u;
 const KNOCKOUT_ROUNDS = ["R32", "R16", "QF", "SF", "F"];
 
@@ -304,7 +313,32 @@ async function build() {
       ...(rating.overall_basis ? { overall_basis: rating.overall_basis } : {}),
       ...(rating.appearances_source ? { appearances_source: rating.appearances_source } : {}),
     };
-    if (rating.overall_basis === "baseline_anchor_estimate") estimateCount += 1;
+    if (rating.overall_basis === "baseline_anchor_estimate") {
+      estimateCount += 1;
+      // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
+      // stay on the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays
+      // calibrated; an unlinked card's channels naturally sit near FLOOR_CHANNEL.
+      const ov = runtimeRating.overall;
+      if (typeof ov !== "number" || ov < ESTIMATE_DISPLAY_MIN || ov > ESTIMATE_DISPLAY_MAX) {
+        throw new Error(
+          `build-compact-data: baseline_anchor_estimate ${rating.card_id} has overall=${ov} outside [${ESTIMATE_DISPLAY_MIN}, ${ESTIMATE_DISPLAY_MAX}].`,
+        );
+      }
+    }
+    if (runtimeRating.overall === null) {
+      throw new Error(
+        `build-compact-data: rating ${rating.card_id} emitted null overall; wc-perf-2.0.0 contract forbids null overalls.`,
+      );
+    }
+    if (
+      typeof runtimeRating.overall !== "number"
+      || runtimeRating.overall < DISPLAY_FLOOR
+      || runtimeRating.overall > DISPLAY_MAX
+    ) {
+      throw new Error(
+        `build-compact-data: rating ${rating.card_id} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
+      );
+    }
     playerCardRatings.push(runtimeRating);
   }
 
@@ -373,6 +407,20 @@ async function build() {
       provenance: rating.provenance,
       rating_version: rating.rating_version,
     };
+    if (runtimeRating.overall === null) {
+      throw new Error(
+        `build-compact-data: 2026 rating ${rating.card_id} emitted null overall; proj-career-2.0.0 contract forbids null overalls.`,
+      );
+    }
+    if (
+      typeof runtimeRating.overall !== "number"
+      || runtimeRating.overall < DISPLAY_FLOOR
+      || runtimeRating.overall > DISPLAY_MAX
+    ) {
+      throw new Error(
+        `build-compact-data: 2026 rating ${rating.card_id} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
+      );
+    }
     playerCardRatings.push(runtimeRating);
   }
 
@@ -533,8 +581,8 @@ async function build() {
 
   // ── Attribution ──────────────────────────────────────────────────────────
   const datasetVersion = cliDatasetVersion ?? deriveDatasetVersion(manifest2026);
-  const ratingVersionHistorical = inferRatingVersion(mensRatings, "wc-perf-1.1.0");
-  const ratingVersionProjected = inferRatingVersion(ratings2026, "proj-career-1.0.0");
+  const ratingVersionHistorical = inferRatingVersion(mensRatings, RATING_VERSION_HISTORICAL_FALLBACK);
+  const ratingVersionProjected = inferRatingVersion(ratings2026, RATING_VERSION_PROJECTED_FALLBACK);
 
   const attribution = buildAttribution(historicalManifest, manifest2026);
 
@@ -611,7 +659,7 @@ async function build() {
       `  ratings            = ${playerCardRatings.length}`,
       `  teams              = ${teams.length}`,
       `  knockout_slots     = ${knockoutSlotsSorted.length}`,
-      `  baseline_anchor_estimate = ${estimateCount} (expected 388)`,
+      `  baseline_anchor_estimate = ${estimateCount} (expected ${EXPECTED_BASELINE_ANCHOR_ESTIMATE})`,
       `  draft_pool.compact = ${humanBytes(draftPoolBytes.length)} raw / ${humanBytes(draftPoolFingerprint.bytes_gzip)} gzip / ${humanBytes(draftPoolFingerprint.bytes_brotli)} brotli`,
       `  scenario-2026      = ${humanBytes(scenario2026Bytes.length)} raw / ${humanBytes(scenario2026Fingerprint.bytes_gzip)} gzip / ${humanBytes(scenario2026Fingerprint.bytes_brotli)} brotli`,
       `  manifest           = ${humanBytes(manifestBytes.length)} raw`,
@@ -619,9 +667,9 @@ async function build() {
     ].join("\n"),
   );
 
-  if (estimateCount !== 388) {
+  if (estimateCount !== EXPECTED_BASELINE_ANCHOR_ESTIMATE) {
     throw new Error(
-      `build-compact-data: expected 388 baseline_anchor_estimate ratings, got ${estimateCount}. Refusing to emit.`,
+      `build-compact-data: expected ${EXPECTED_BASELINE_ANCHOR_ESTIMATE} baseline_anchor_estimate ratings, got ${estimateCount}. Refusing to emit.`,
     );
   }
 }
