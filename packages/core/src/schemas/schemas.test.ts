@@ -126,8 +126,9 @@ const FIXTURE_BENCH_SLOTS = [
   { slot_id: "bench.3", slot_position: "LCM" as const },
   { slot_id: "bench.4", slot_position: "AM" as const },
 ];
-// Manager pick lands on the LAST spin (index 16) with a distinct
-// (tournament_id, nation_id) pair so the uniqueness invariant holds.
+// Manager pick lands on the LAST spin (index 16). Under ENGINE-V2 E-1
+// with-replacement sampling the schema no longer enforces (T, N) uniqueness,
+// but this fixture still uses a distinct manager pair for clarity.
 const FIXTURE_MGR_TOURNAMENT_ID = 1994;
 const FIXTURE_MGR_NATION_ID = "bra";
 const FIXTURE_MGR_ID = "M-311"; // Carlos Alberto Parreira — see manager-identity golden.
@@ -148,6 +149,8 @@ function makeDraftState(): DraftState {
       index: i,
       tournament_id,
       nation_id: `nation.${i}`,
+      rare: false,
+      draw_probability: 0.05,
       rolled_card_ids: [card_id],
       excluded_player_ids: Array.from({ length: i }, (_, j) => `player.fixture.${j}`),
       rolled_manager_card_id: null,
@@ -175,6 +178,8 @@ function makeDraftState(): DraftState {
     index: 16,
     tournament_id: FIXTURE_MGR_TOURNAMENT_ID,
     nation_id: FIXTURE_MGR_NATION_ID,
+    rare: false,
+    draw_probability: 0.05,
     rolled_card_ids: [],
     excluded_player_ids: Array.from({ length: 16 }, (_, j) => `player.fixture.${j}`),
     rolled_manager_card_id: managerCardId,
@@ -625,6 +630,8 @@ describe("zod boundary schemas — REJECT impossible states", () => {
       index: 0,
       tournament_id: 1954,
       nation_id: "nation.0",
+      rare: false,
+      draw_probability: 0.05,
       rolled_card_ids: [card_id],
       excluded_player_ids: [],
       rolled_manager_card_id: null,
@@ -788,6 +795,8 @@ describe("zod boundary schemas — safeParse never throws on empty player_id", (
       index: 0,
       tournament_id: 1,
       nation_id: "n",
+      rare: false,
+      draw_probability: 0.05,
       rolled_card_ids: ["p:1"],
       excluded_player_ids: [],
       rolled_manager_card_id: null,

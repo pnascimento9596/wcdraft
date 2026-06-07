@@ -213,5 +213,12 @@ function buildDraftDataset(bundle: DraftPoolBundle): DraftDataset {
       tournament_id: m.tournament_id,
       nation_id: m.nation_id,
     })),
+    // ENGINE-V2 E-1: era-weighted sampling needs tournament years. The
+    // DraftPoolBundle already carries `{ year, name }` per tournament; map
+    // it onto the engine's narrow DraftTournament view.
+    tournaments: Object.entries(bundle.tournaments).map(([tid, t]) => ({
+      tournament_id: Number(tid),
+      year: t.year,
+    })),
   };
 }

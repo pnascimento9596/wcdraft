@@ -29,6 +29,10 @@ export const SpinSchema = z
     index: IntegerRangeSchema(0, 16),
     tournament_id: PositiveIntegerSchema,
     nation_id: NonEmptyIdSchema,
+    // ENGINE-V2 E-1 rare exposure: pre-1998 flag + per-spin emitted probability
+    // in [0, 1] (audit/display only — never re-fed into sampling). See Spin doc.
+    rare: z.boolean(),
+    draw_probability: PercentSchema,
     // rolled_card_ids MAY be empty on a manager-only spin (no remaining
     // players for this (tournament, nation)) — see the Spin comment.
     rolled_card_ids: z.array(CardIdSchema),
@@ -376,20 +380,11 @@ export const DraftStateSchema = z
       }
     }
 
-    // (tournament_id, nation_id) uniqueness across spins.
-    const pairSeen = new Set<string>();
-    for (let i = 0; i < draft.spins.length; i++) {
-      const s = draft.spins[i]!;
-      const k = `${s.tournament_id}:${s.nation_id}`;
-      if (pairSeen.has(k)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `(tournament_id, nation_id) pair ${k} repeated across spins`,
-          path: ["spins", i],
-        });
-      }
-      pairSeen.add(k);
-    }
+    // ENGINE-V2 E-1: (tournament_id, nation_id) MAY repeat across spins under
+    // with-replacement weighted sampling. The WS-0c uniqueness refinement is
+    // intentionally GONE — global player_id dedup is what stops the same human
+    // being drafted twice (enforced below via the deduped_player_ids / per-spin
+    // excluded_player_ids invariants).
 
     // ─── PLAYER-pick / MANAGER-pick accounting ─────────────────────────────
     //
