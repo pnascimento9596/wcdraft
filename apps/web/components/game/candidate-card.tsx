@@ -67,17 +67,21 @@ export function CandidateCard({
   card,
   selected,
   disabled,
+  rarePick = false,
   onSelect,
 }: {
   card: PlayerCardView;
   selected: boolean;
   disabled?: boolean;
+  /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
+  rarePick?: boolean;
   onSelect: () => void;
 }) {
   const classes = [s.candRow];
   classes.push(s[`prov_${card.rating.badge_kind}`]!);
   if (selected) classes.push(s.candRowSelected);
   if (disabled) classes.push(s.candRowDisabled);
+  if (rarePick) classes.push(s.candRare);
 
   const coveragePct = Math.round(card.rating.coverage * 100);
   const primaryLine = card.position_listed ?? card.eligible_positions[0] ?? "MF";
@@ -209,16 +213,20 @@ export function ManagerCandidate({
   coach,
   selected,
   disabled,
+  rarePick = false,
   onSelect,
 }: {
   coach: ManagerCardView;
   selected: boolean;
   disabled?: boolean;
+  /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
+  rarePick?: boolean;
   onSelect: () => void;
 }) {
   const classes = [s.candRow, s.candRowManager, s.prov_manager];
   if (selected) classes.push(s.candRowSelected);
   if (disabled) classes.push(s.candRowDisabled);
+  if (rarePick) classes.push(s.candRare);
 
   return (
     <button
@@ -266,6 +274,22 @@ export function ManagerCandidate({
             </span>
             <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
           </span>
+          {coach.traits.length > 0 ? (
+            <span
+              className={s.managerTraits}
+              aria-label="Manager style traits — flavor only"
+            >
+              {coach.traits.map((t) => (
+                <span
+                  key={t.id}
+                  className={s.managerTraitChip}
+                  title="Flavor trait only — no gameplay effect."
+                >
+                  {t.label}
+                </span>
+              ))}
+            </span>
+          ) : null}
         </span>
       ) : null}
     </button>

@@ -10,6 +10,12 @@
 //   (3) manager_link    — did the manager (if any) share nation_id with
 //                          enough of the XI?
 //
+// ENGINE-V2 E-2 NATION-ONLY: tournament year is irrelevant for Synergy. A
+// Brazil-1970 + Brazil-2002 starter pair forms a same-nation link identically
+// to two same-year starters. The manager link is purely a count-based
+// function of same-nation starter share — the manager's own tournament year
+// is never read.
+//
 // The component WEIGHTS that fold into `overall` and `multiplier` are
 // CALIBRATION: WS-B (the same as the position-compatibility curve). The
 // SHAPE of the surface (these three components, their identities, the fact
@@ -70,9 +76,11 @@ export interface LinkedPair {
  * Aggregate result of running the Synergy formula on a squad + formation +
  * (optional) manager.
  *
- * DETERMINISM INVARIANT: identical `(squad, formation, manager)` → identical
- * `SynergyResult`. The Synergy formula is PURE — no RNG, no I/O, no globals.
- * The `synergy-determinism` golden test locks this once.
+ * DETERMINISM INVARIANT: identical `(squad, formation, manager, nationByCardId)`
+ * → identical `SynergyResult`. The Synergy formula is PURE — no RNG, no I/O,
+ * no globals. The `synergy-determinism` golden test locks this once. The
+ * fourth input (`nationByCardId`) is part of the deterministic input tuple
+ * because per-card nation lookups drive every Synergy component.
  */
 export interface SynergyResult {
   /**

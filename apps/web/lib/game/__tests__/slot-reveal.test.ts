@@ -13,7 +13,12 @@ import type { Spin } from "@wcdraft/core";
 import type { GameDataIndexes } from "../data";
 import { buildSlotRevealModel } from "../slot-reveal";
 
-function makeSpin(index: number, nationId: string, tournamentId: number): Spin {
+function makeSpin(
+  index: number,
+  nationId: string,
+  tournamentId: number,
+  opts: { rare?: boolean; draw_probability?: number } = {},
+): Spin {
   return {
     index,
     tournament_id: tournamentId,
@@ -21,6 +26,8 @@ function makeSpin(index: number, nationId: string, tournamentId: number): Spin {
     rolled_card_ids: [],
     excluded_player_ids: [],
     rolled_manager_card_id: null,
+    rare: opts.rare ?? false,
+    draw_probability: opts.draw_probability ?? 0.062,
     status: "pending",
     picked_kind: null,
     picked_player_id: null,
@@ -169,5 +176,77 @@ describe("buildSlotRevealModel", () => {
       totalPicks: 17,
     });
     expect(a).toEqual(b);
+  });
+});
+
+
+describe("buildSlotRevealModel — ENGINE-V2 E-2 rare + draw probability", () => {
+  it("passes through Spin.rare unchanged", () => {
+    const indexes = makeIndexes();
+    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.124 });
+    const ring = [SPINS[0]!, SPINS[1]!, rareSpin, SPINS[3]!, SPINS[4]!];
+    const model = buildSlotRevealModel({
+      activeSpin: rareSpin,
+      allSpins: ring,
+      indexes,
+      totalPicks: 17,
+    });
+    expect(model.rare).toBe(true);
+    expect(model.drawProbability).toBe(0.124);
+  });
+
+  it("formats draw_probability honestly — 0.124 → 12.4%", () => {
+    const indexes = makeIndexes();
+    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.124 });
+    const ring = [SPINS[0]!, SPINS[1]!, rareSpin, SPINS[3]!, SPINS[4]!];
+    const model = buildSlotRevealModel({
+      activeSpin: rareSpin,
+      allSpins: ring,
+      indexes,
+      totalPicks: 17,
+    });
+    expect(model.drawProbabilityLabel).toBe("12.4%");
+  });
+
+  it("formats sub-1% probabilities with 2 decimals (honest, never hidden)", () => {
+    const indexes = makeIndexes();
+    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.0042 });
+    const ring = [SPINS[0]!, SPINS[1]!, rareSpin, SPINS[3]!, SPINS[4]!];
+    const model = buildSlotRevealModel({
+      activeSpin: rareSpin,
+      allSpins: ring,
+      indexes,
+      totalPicks: 17,
+    });
+    expect(model.drawProbabilityLabel).toBe("0.42%");
+  });
+
+  it("non-rare spins still carry their draw_probability honestly", () => {
+    const indexes = makeIndexes();
+    const modernSpin = makeSpin(2, "T-30", 5, { rare: false, draw_probability: 0.083 });
+    const ring = [SPINS[0]!, SPINS[1]!, modernSpin, SPINS[3]!, SPINS[4]!];
+    const model = buildSlotRevealModel({
+      activeSpin: modernSpin,
+      allSpins: ring,
+      indexes,
+      totalPicks: 17,
+    });
+    expect(model.rare).toBe(false);
+    expect(model.drawProbability).toBe(0.083);
+    expect(model.drawProbabilityLabel).toBe("8.3%");
+  });
+
+  it("rare spins in practice read at <= 15% (E-1 contract sanity)", () => {
+    const indexes = makeIndexes();
+    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.149 });
+    const ring = [SPINS[0]!, SPINS[1]!, rareSpin, SPINS[3]!, SPINS[4]!];
+    const model = buildSlotRevealModel({
+      activeSpin: rareSpin,
+      allSpins: ring,
+      indexes,
+      totalPicks: 17,
+    });
+    expect(model.rare).toBe(true);
+    expect(model.drawProbability).toBeLessThanOrEqual(0.15);
   });
 });
