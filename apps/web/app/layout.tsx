@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Anton, Newsreader } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
+import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
+import { isAuthEnabled } from "../lib/auth/auth-enabled";
 import { SiteFooter } from "../components/site-footer";
 import { ServiceWorkerRegister } from "../components/sw-register";
 import "./ds/tokens.css";
@@ -61,18 +63,24 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  // Ship-dark gate — computed server-side so the client never has to
+  // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY +
+  // AUTH_EMAIL_FROM in the Vercel env flips this true.
+  const authEnabled = isAuthEnabled();
   return (
     <html lang="en" data-theme="light" className={`${display.variable} ${text.variable}`}>
       <body>
         <ThemeProvider>
-          <a className="skip-link" href="#main">
-            Skip to content
-          </a>
-          <div className="shell">
-            <SiteHeader />
-            <main id="main">{children}</main>
-            <SiteFooter />
-          </div>
+          <AuthProvider authEnabled={authEnabled}>
+            <a className="skip-link" href="#main">
+              Skip to content
+            </a>
+            <div className="shell">
+              <SiteHeader />
+              <main id="main">{children}</main>
+              <SiteFooter />
+            </div>
+          </AuthProvider>
         </ThemeProvider>
         <ServiceWorkerRegister />
       </body>

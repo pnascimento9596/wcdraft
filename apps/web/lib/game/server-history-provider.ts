@@ -35,14 +35,40 @@ import { decodeRunToken, RunTokenError } from "./run-token";
 import { resultsHref, shareHref } from "./navigation";
 import { RUN_RECORD_CAP } from "./run-record";
 
+interface ApiRunSummary {
+  team_name: string;
+  display_record: string;
+  formation_name: string;
+  key_picks: ReadonlyArray<{ name: string; nation_code: string }>;
+  is_champion: boolean;
+  seed: string;
+  created_seq?: number;
+  updated_seq?: number;
+}
+
 interface ApiRun {
   id: string;
   token: string;
   run_id: string | null;
   parent_seed: string | null;
   version_anchors: unknown;
+  /** F-3.5 — display-ready summary; null on pre-F-3.5 rows. */
+  summary: ApiRunSummary | null;
   claim_state: string;
   created_at: string;
+}
+
+function isApiRunSummary(x: unknown): x is ApiRunSummary {
+  if (!x || typeof x !== "object" || Array.isArray(x)) return false;
+  const o = x as Record<string, unknown>;
+  return (
+    typeof o.team_name === "string" &&
+    typeof o.display_record === "string" &&
+    typeof o.formation_name === "string" &&
+    typeof o.is_champion === "boolean" &&
+    typeof o.seed === "string" &&
+    Array.isArray(o.key_picks)
+  );
 }
 
 interface ListResponse {
@@ -108,9 +134,16 @@ export function createServerRunHistoryProvider(
       for (let i = 0; i < body.runs.length; i += 1) {
         const apiRow = body.runs[i]!;
         const decoded = decodeRunToken(apiRow.token);
-        if (!decoded) {
+        const summary = isApiRunSummary(apiRow.summary) ? apiRow.summary : null;
+        // F-3.5 — surface the entry as long as we have EITHER a decoded
+        // token OR a valid summary. Token decode failure on a row with a
+        // good summary is non-fatal (the user still sees the run; only
+        // the replay/share links degrade). Dropping a row that had real
+        // saved data would be a worse honest-state violation than
+        // showing it with degraded affordances.
+        if (!decoded && !summary) {
           warnings.push(
-            `server-history: row ${apiRow.id} token did not decode (skipped)`,
+            `server-history: row ${apiRow.id} has neither a decodable token nor a summary (skipped)`,
           );
           continue;
         }
@@ -128,12 +161,19 @@ export function createServerRunHistoryProvider(
 }
 
 /**
- * Build a `HistoryEntry` from a fresh API row + decoded token body. The
- * display fields populated here are the ones the token alone carries:
- * `team_name`, `formation_name` (from formation_id), `seed`, replay /
- * share URLs. Fields that require the simulation payload
- * (`display_record`, `is_champion`, `key_picks`) get tier-1 placeholders
- * so the entry is still well-formed; the Yellow follow swaps these in.
+ * Build a `HistoryEntry` from an API row + decoded token body.
+ *
+ * F-3.5 contract — honest-state display:
+ *   - When `apiRow.summary` is present and well-formed, use it for the
+ *     display-rich fields (`display_record`, `key_picks`, `is_champion`,
+ *     `formation_name`, etc.). These are the REAL records, not
+ *     placeholders.
+ *   - When `summary` is null (pre-F-3.5 row, or a save mirror that raced
+ *     ahead of the simulation, or a client that omitted it), the display
+ *     fields fall back to honest sentinels: `display_record = "—"`,
+ *     `key_picks = []`, `is_champion = false`. The token-decoded data
+ *     (`team_name`, `seed`, `formation_id`) still populates what it can.
+ *     Never fabricated.
  */
 function buildHistoryEntryFromApiRow(
   _gameData: GameData,
@@ -142,37 +182,50 @@ function buildHistoryEntryFromApiRow(
     fid: string;
     ps: string;
     tn: string;
-  },
+  } | null,
   apiRow: ApiRun,
   index: number,
 ): HistoryEntry {
   let replay_href: string | null = null;
   let share_href: string | null = null;
   let replay_error: string | null = null;
-  try {
-    replay_href = resultsHref(apiRow.token);
-    share_href = shareHref(apiRow.token);
-  } catch (err) {
-    replay_error =
-      err instanceof RunTokenError
-        ? err.message
-        : "Couldn't build a reproducible replay link for this run.";
+  // Only attempt replay/share links if we actually have a decoded token.
+  // A row that survived only on its summary has no usable share link.
+  if (decoded) {
+    try {
+      replay_href = resultsHref(apiRow.token);
+      share_href = shareHref(apiRow.token);
+    } catch (err) {
+      replay_error =
+        err instanceof RunTokenError
+          ? err.message
+          : "Couldn't build a reproducible replay link for this run.";
+    }
+  } else {
+    replay_error = "This run's token didn't decode; replay isn't available.";
   }
+  const summary = isApiRunSummary(apiRow.summary) ? apiRow.summary : null;
   return {
-    run_id: apiRow.run_id ?? decoded.rid,
-    team_name: decoded.tn,
-    display_record: "—",
-    formation_name: decoded.fid,
-    key_picks: [],
+    run_id: apiRow.run_id ?? decoded?.rid ?? apiRow.id,
+    team_name: summary?.team_name ?? decoded?.tn ?? "—",
+    // Honest-state — "—" sentinel when summary is missing.
+    display_record: summary?.display_record ?? "—",
+    formation_name: summary?.formation_name ?? decoded?.fid ?? "—",
+    key_picks: summary
+      ? summary.key_picks.map((s) => ({
+          name: s.name,
+          nation_code: s.nation_code,
+        }))
+      : [],
     recency_label: buildRecencyLabel(index),
-    sequence_label: apiRow.run_id ?? decoded.rid,
-    seed: apiRow.parent_seed ?? decoded.ps,
-    is_champion: false,
+    sequence_label: apiRow.run_id ?? decoded?.rid ?? apiRow.id,
+    seed: summary?.seed ?? apiRow.parent_seed ?? decoded?.ps ?? "—",
+    is_champion: summary?.is_champion ?? false,
     replay_href,
     share_href,
     replay_error,
-    created_seq: 0,
-    updated_seq: 0,
+    created_seq: summary?.created_seq ?? 0,
+    updated_seq: summary?.updated_seq ?? 0,
   };
 }
 

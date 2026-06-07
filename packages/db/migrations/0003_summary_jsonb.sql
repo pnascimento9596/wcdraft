@@ -1,0 +1,1 @@
+ALTER TABLE "saved_runs" ADD COLUMN "summary" jsonb;

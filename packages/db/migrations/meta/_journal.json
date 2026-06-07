@@ -22,6 +22,13 @@
       "when": 1780799178028,
       "tag": "0002_history_session_scope",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1780807899850,
+      "tag": "0003_summary_jsonb",
+      "breakpoints": true
     }
   ]
 }

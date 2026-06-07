@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { CloseIcon, MenuIcon } from "./icons";
+import { AccountMenu } from "./account-menu";
 
 const MENU = [
   { href: "/play", label: "Play" },
@@ -54,16 +55,9 @@ export function SiteHeader() {
 
         <ThemeToggle />
 
-        {/* Visual-only sign-in slot — no auth wired up yet. */}
-        <button
-          type="button"
-          className="signin-stub"
-          aria-disabled="true"
-          title="Sign-in coming soon"
-        >
-          <span className="signin-stub__dot" aria-hidden="true" />
-          Sign in
-        </button>
+        {/* F-3.5 — live account menu. Ship-dark gate hides this when
+            RESEND_API_KEY / AUTH_EMAIL_FROM are not configured. */}
+        <AccountMenu />
 
         <button
           type="button"
@@ -89,7 +83,7 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <div className="mobile-menu__signin">Sign-in coming soon</div>
+          <div className="mobile-menu__signin"><AccountMenu /></div>
         </div>
       </nav>
     </header>

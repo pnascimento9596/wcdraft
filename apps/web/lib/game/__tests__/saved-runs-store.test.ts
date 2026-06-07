@@ -45,6 +45,7 @@ const baseArgs = {
   versionAnchors: { dataset_version: "v1" },
   runId: "run-v1-abc",
   parentSeed: "wcdraft:run:v1:run-v1-abc:f4-3-3",
+  summary: null,
 };
 
 const deps = () => ({ db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, 0) });
@@ -471,3 +472,79 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
     expect(owned).toHaveLength(4);
   });
 });
+
+// ── F-3.5 summary persistence ──────────────────────────────────────────
+describe("F-3.5 summary persistence", () => {
+  const summary = {
+    team_name: "Test XI",
+    display_record: "4-1",
+    formation_name: "4-3-3",
+    key_picks: [
+      { name: "Pele", nation_code: "BRA" },
+      { name: "Maradona", nation_code: "ARG" },
+      { name: "Zidane", nation_code: "FRA" },
+    ],
+    is_champion: false,
+    seed: "wcdraft:test:seed",
+    created_seq: 17,
+    updated_seq: 22,
+  } as const;
+
+  it("persists the summary on save and surfaces it on list", async () => {
+    const uid = await makeUser("sum@example.com");
+    await makeSession({ id: "ses-sum", userId: uid });
+    await saveRun(
+      { ...baseArgs, token: "t1.sum", summary },
+      { userId: uid, sessionId: "ses-sum" },
+      deps(),
+    );
+    const list = await listRuns({ userId: uid, sessionId: "ses-sum" }, deps());
+    expect(list).toHaveLength(1);
+    expect(list[0]?.summary).toEqual(summary);
+  });
+
+  it("anon row also gets summary; survives the claim re-key to the user", async () => {
+    const uid = await makeUser("anon2acc@example.com");
+    await makeSession({ id: "ses-anon-sum" });
+    await makeSession({ id: "ses-user-sum", userId: uid });
+    await saveRun(
+      { ...baseArgs, token: "t1.anon-sum", summary },
+      { userId: null, sessionId: "ses-anon-sum" },
+      deps(),
+    );
+    await claimAnonRuns({ sessionId: "ses-anon-sum", userId: uid }, deps());
+    const list = await listRuns({ userId: uid, sessionId: "ses-user-sum" }, deps());
+    expect(list).toHaveLength(1);
+    expect(list[0]?.summary).toEqual(summary);
+    expect(list[0]?.ownerUserId).toBe(uid);
+    expect(list[0]?.claimState).toBe("claimed");
+  });
+
+  it("save without summary leaves the column NULL (honest-state)", async () => {
+    const uid = await makeUser("nosum@example.com");
+    await makeSession({ id: "ses-nosum", userId: uid });
+    await saveRun(
+      { ...baseArgs, token: "t1.nosum", summary: null },
+      { userId: uid, sessionId: "ses-nosum" },
+      deps(),
+    );
+    const list = await listRuns({ userId: uid, sessionId: "ses-nosum" }, deps());
+    expect(list).toHaveLength(1);
+    expect(list[0]?.summary).toBeNull();
+  });
+
+  it("cross-user isolation extends to summary — user B never sees A's summary", async () => {
+    const a = await makeUser("a-sum@example.com");
+    const b = await makeUser("b-sum@example.com");
+    await makeSession({ id: "ses-a-sum", userId: a });
+    await makeSession({ id: "ses-b-sum", userId: b });
+    await saveRun(
+      { ...baseArgs, token: "t1.a-summed", summary },
+      { userId: a, sessionId: "ses-a-sum" },
+      deps(),
+    );
+    const listB = await listRuns({ userId: b, sessionId: "ses-b-sum" }, deps());
+    expect(listB).toEqual([]);
+  });
+});
+
