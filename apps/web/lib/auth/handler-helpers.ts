@@ -38,15 +38,51 @@ function db(): Db {
   return cachedDb;
 }
 
-function readSecret(name: string): string {
-  const v = process.env[name]?.trim();
-  if (!v || v.length < 16) {
+/**
+ * Validate a base64url-encoded secret has at least the required number of
+ * decoded bytes. The previous `length >= 16` check let weak secrets like
+ * a single 16-char ASCII string sneak past the gate even though the
+ * generator emits 32 random bytes (43-char base64url). The new check
+ * decodes and asserts on the BYTE length, matching the contract the
+ * error message advertises.
+ *
+ * Exported so the unit tests in __tests__/cookie-secret.test.ts can
+ * exercise it directly with no env coupling.
+ */
+export function validateCookieSecret(
+  raw: string | undefined,
+  varName = "AUTH_COOKIE_SECRET",
+  minBytes = 32,
+): string {
+  const v = raw?.trim() ?? "";
+  if (!v) {
     throw new Error(
-      `${name} must be set to a 32+ byte base64url string (got length=${(v ?? "").length.toString()}). ` +
-        "Generate with `node -e \"console.log(require('crypto').randomBytes(32).toString('base64url'))\"`",
+      `${varName} is not set. Generate with ` +
+        "`node -e \"console.log(require('crypto').randomBytes(32).toString('base64url'))\"`.",
+    );
+  }
+  // Defensive — Buffer.from(<bad>, 'base64url') silently returns 0-byte
+  // output on garbage input. We catch both "decodes to too few bytes" and
+  // "isn't base64url at all" with the same byte-length check.
+  let decoded: Buffer;
+  try {
+    decoded = Buffer.from(v, "base64url");
+  } catch {
+    decoded = Buffer.alloc(0);
+  }
+  if (decoded.length < minBytes) {
+    throw new Error(
+      `${varName} must be a base64url string of at least ${minBytes.toString()} ` +
+        `decoded bytes (got ${decoded.length.toString()} bytes from a ` +
+        `${v.length.toString()}-char string). Generate with ` +
+        "`node -e \"console.log(require('crypto').randomBytes(32).toString('base64url'))\"`.",
     );
   }
   return v;
+}
+
+function readCookieSecret(): string {
+  return validateCookieSecret(process.env.AUTH_COOKIE_SECRET);
 }
 
 export function buildRuntimeDeps(): RuntimeDeps {
@@ -57,7 +93,7 @@ export function buildRuntimeDeps(): RuntimeDeps {
   return {
     db: db(),
     now: () => Date.now(),
-    cookieSecret: readSecret("AUTH_COOKIE_SECRET"),
+    cookieSecret: readCookieSecret(),
     sender: getEmailSender(process.env),
     verifyBaseUrl,
     fromAddress,
