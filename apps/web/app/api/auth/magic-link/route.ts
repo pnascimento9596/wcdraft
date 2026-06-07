@@ -22,6 +22,8 @@ import {
   setSessionCookie,
 } from "@/lib/auth/handler-helpers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
+import { AuthError } from "@/lib/auth/errors";
+import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
 interface RequestBody {
   email?: unknown;
@@ -29,6 +31,13 @@ interface RequestBody {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    // F-3.6 ship-dark gate — refuse before building secret-dependent deps.
+    // The sign-in UI is hidden in this mode, but a directly-POSTed payload
+    // would otherwise crash with INTERNAL_ERROR on missing AUTH_COOKIE_SECRET
+    // or send a real email via a misconfigured sender.
+    if (!isAuthEnabled()) {
+      throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
+    }
     const deps = buildRuntimeDeps();
 
     // 1) Origin/Host first — cheap, catches drive-by mutations.

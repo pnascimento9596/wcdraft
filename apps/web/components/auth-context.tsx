@@ -8,6 +8,7 @@
 // `refresh()` so post-sign-in/post-sign-out flows can re-read.
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { fetchSession, type SessionInfoResponse } from "@/lib/auth/client";
+import { shouldFetchSessionOnMount } from "@/lib/auth/auth-client-policy";
 
 export interface AuthState {
   /** Ship-dark gate — surface sign-in UI only when true. */
@@ -47,8 +48,17 @@ export function AuthProvider({
   }, []);
 
   useEffect(() => {
+    // F-3.6 ship-dark hardening — do NOT call /api/auth/session when auth
+    // is disabled. The flag comes from /api/auth/config (root layout prop),
+    // so we already know the answer client-side and a zero-call ship-dark
+    // is the honest surface. Mark ready so consumers don't hang on the
+    // first paint.
+    if (!shouldFetchSessionOnMount(authEnabled)) {
+      setReady(true);
+      return;
+    }
     void refresh();
-  }, [refresh]);
+  }, [authEnabled, refresh]);
 
   const value = useMemo<AuthState>(
     () => ({

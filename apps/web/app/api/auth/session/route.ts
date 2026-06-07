@@ -5,6 +5,22 @@
 //
 // GET intentionally does NOT mint an anon session — call /api/auth/csrf for
 // that. This endpoint reads-or-zero.
+//
+// F-3.6 (ship-dark hardening) — the anonymous path MUST NOT 500.
+//
+// In ship-dark prod (auth feature gated off, AUTH_COOKIE_SECRET not yet set
+// because go-live hasn't happened) the previous code eagerly called
+// buildRuntimeDeps() before the no-cookie check; readCookieSecret() threw,
+// jsonError swallowed the non-AuthError, and every page load saw a 500.
+//
+// New order for GET:
+//   1. If `isAuthEnabled()` is false  → 200 {session:null}, no deps built.
+//   2. Else if no SESSION cookie       → 200 {session:null}, no deps built.
+//   3. Else                            → build deps, validate, return.
+//
+// DELETE (sign-out): when auth is disabled, return 503 AUTH_DISABLED before
+// touching any secret-dependent dep. There is no in-flight session to clear
+// when the sign-in UI is dark.
 import { NextResponse, type NextRequest } from "next/server";
 import { validateSessionCookie, deleteSession } from "@/lib/auth/sessions";
 import { verifyCsrfDoubleSubmit, verifyOriginHost, CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
@@ -16,14 +32,25 @@ import {
   readRequestCookie,
 } from "@/lib/auth/handler-helpers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
+import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const deps = buildRuntimeDeps();
-    const cookie = readRequestCookie(req, SESSION_COOKIE_NAME);
-    if (!cookie) {
+    // Ship-dark fast path — the feature is gated off, so there is no
+    // session story to tell. Return the same shape the client expects for
+    // an anonymous caller and DO NOT touch buildRuntimeDeps (which reads
+    // AUTH_COOKIE_SECRET and would throw before go-live).
+    if (!isAuthEnabled()) {
       return NextResponse.json({ session: null });
     }
+    const cookie = readRequestCookie(req, SESSION_COOKIE_NAME);
+    if (!cookie) {
+      // No cookie → nothing to validate. Skip dep build entirely so a
+      // missing AUTH_COOKIE_SECRET cannot cause a 500 for an anonymous
+      // caller even with the feature flag flipped on mid-rollout.
+      return NextResponse.json({ session: null });
+    }
+    const deps = buildRuntimeDeps();
     try {
       const session = await validateSessionCookie(cookie, deps);
       return NextResponse.json({
@@ -46,6 +73,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
+    // Ship-dark — refuse the mutation honestly before building deps.
+    if (!isAuthEnabled()) {
+      throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
+    }
     const deps = buildRuntimeDeps();
     verifyOriginHost({
       origin: req.headers.get("origin"),

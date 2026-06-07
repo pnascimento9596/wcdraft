@@ -27,9 +27,18 @@ import {
 } from "@/lib/auth/handler-helpers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { CSRF_COOKIE_NAME } from "@/lib/auth/csrf";
+import { AuthError } from "@/lib/auth/errors";
+import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
+    // F-3.6 ship-dark gate — a token-bearing GET in this mode can only have
+    // been crafted manually (no UI surfaces magic-link requests). Refuse
+    // honestly before building deps so the missing AUTH_COOKIE_SECRET path
+    // cannot 500.
+    if (!isAuthEnabled()) {
+      throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
+    }
     const deps = buildRuntimeDeps();
     const token = req.nextUrl.searchParams.get("token") ?? "";
     // `next` is forwarded into the form unchanged; the POST handler
@@ -68,6 +77,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    // F-3.6 ship-dark gate — mirror the GET path. Without this a directly
+    // posted form would build deps and crash on a missing secret.
+    if (!isAuthEnabled()) {
+      throw new AuthError("AUTH_DISABLED", "Auth feature is not enabled.");
+    }
     const deps = buildRuntimeDeps();
     // Forms POST as application/x-www-form-urlencoded by default. NextRequest's
     // .formData() handles both that and multipart/form-data uniformly.

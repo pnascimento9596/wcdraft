@@ -16,7 +16,12 @@ export type AuthErrorCode =
   | "ORIGIN_MISMATCH"
   | "ANON_FORBIDDEN"
   | "RATE_LIMITED"
-  | "EMAIL_INVALID";
+  | "EMAIL_INVALID"
+  // F-3.6 (ship-dark hardening) — issued by mutating auth routes when
+  // `isAuthEnabled()` is false. Honest gated response, no secret-dependent
+  // dependencies built, never a 500. GET /api/auth/session does NOT throw
+  // this — it returns 200 {session:null} so the AuthProvider stays quiet.
+  | "AUTH_DISABLED";
 
 export class AuthError extends Error {
   readonly code: AuthErrorCode;
@@ -48,5 +53,7 @@ function statusFor(code: AuthErrorCode): number {
       return 429;
     case "EMAIL_INVALID":
       return 400;
+    case "AUTH_DISABLED":
+      return 503;
   }
 }
