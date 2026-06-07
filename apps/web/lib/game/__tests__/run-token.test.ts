@@ -56,6 +56,11 @@ function buildDataset(): DraftDataset {
       tournament_id: m.tournament_id,
       nation_id: m.nation_id,
     })),
+    // ENGINE-V2 E-1: era-weighted sampling needs tournament years.
+    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
+      tournament_id: Number(tid),
+      year: t.year,
+    })),
   };
 }
 
