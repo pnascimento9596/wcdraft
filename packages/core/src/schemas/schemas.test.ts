@@ -127,8 +127,8 @@ const FIXTURE_BENCH_SLOTS = [
   { slot_id: "bench.4", slot_position: "AM" as const },
 ];
 // Manager pick lands on the LAST spin (index 16). Under ENGINE-V2 E-1
-// with-replacement sampling the schema no longer enforces (T, N) uniqueness,
-// but this fixture still uses a distinct manager pair for clarity.
+// with-replacement sampling the schema allows repeated (T, N) pairs, but this
+// fixture still uses a distinct manager pair for clarity.
 const FIXTURE_MGR_TOURNAMENT_ID = 1994;
 const FIXTURE_MGR_NATION_ID = "bra";
 const FIXTURE_MGR_ID = "M-311"; // Carlos Alberto Parreira — see manager-identity golden.
@@ -172,7 +172,7 @@ function makeDraftState(): DraftState {
       validation_warnings: [],
     });
   }
-  // Spin 16 — manager pick. Distinct (tournament_id, nation_id) for uniqueness.
+  // Spin 16 — manager pick. Distinct (tournament_id, nation_id) for readability.
   const managerCardId = buildManagerCardId(FIXTURE_MGR_ID, FIXTURE_MGR_TOURNAMENT_ID);
   spins.push({
     index: 16,

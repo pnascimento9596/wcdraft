@@ -79,13 +79,13 @@ function tournamentsFor(ids: readonly number[]): DraftTournament[] {
 }
 
 /**
- * The primary fixture: a LARGE pool (6 tournaments × 10 nations = 60 unique
- * (tournament, nation) pairs, well over the 17 spins) so the era-weighted
+ * The primary fixture: a LARGE pool (6 tournaments × 10 nations = 60 distinct
+ * (tournament, nation) catalog pairs, well over the 17 spins) so the era-weighted
  * with-replacement draw genuinely samples and may repeat. Coaches sit on
  * ~half the pairs (those where `tournament + nationIndex` is even), so the
  * run has both coach-bearing and coach-less spins and the at-most-one-manager
- * + later-coach-suppression invariants are exercised. Players are unique per
- * bucket.
+ * + later-coach-suppression invariants are exercised. Player ids are
+ * non-overlapping per bucket.
  */
 export function buildDraftFixture(): DraftFixture {
   const players: DraftPlayerCard[] = [];

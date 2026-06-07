@@ -7,8 +7,8 @@
 //     weighted draw over ALL (tournament_id, nation_id) pairs in the catalog
 //     (the same (T, N) MAY repeat across spins; pre-1998 tournaments aggregate
 //     ≈15% of per-spin probability, modern 1998..2026 ≈85% with gentle recency
-//     scaling). The WS-0c (T, N)-UNIQUENESS invariant is GONE — global
-//     `player_id` dedup is what stops the same human being drafted twice.
+//     scaling). The old WS-0c pair-once rule is gone; global `player_id` dedup
+//     is what stops the same human being drafted twice.
 //     Whichever (T, N) is selected, the spin offers BOTH that squad's
 //     un-picked player cards AND that team-year's coach as candidates. The
 //     user picks exactly ONE entity per spin — a player OR the coach.
@@ -38,13 +38,15 @@
 //   - `draft_seed` is a STRING; PRNG is the existing cyrb128+sfc32. No
 //     `Date`/`Math.random`/`crypto`/`performance` anywhere in the
 //     seed → draft → sim → score → narrative chain.
-//   - The 17 (tournament_id, nation_id) pairs sample from a pool that MUST
-//     be CANONICALLY SORTED by (tournament_id, nation_id) BEFORE the draw —
-//     the sort is the responsibility of the sampling code, but the invariant
-//     is declared here so reviewers can spot drift.
+//   - The pool MUST be CANONICALLY SORTED by (tournament_id, nation_id) BEFORE
+//     the draw; the sort is the responsibility of the sampling code, but the
+//     invariant is declared here so reviewers can spot drift.
+//   - Each spin independently samples WITH REPLACEMENT from that sorted pool.
+//     `(tournament_id, nation_id)` MAY repeat across the 17 spins.
+//   - Global `player_id` dedup is the hard uniqueness guarantee: one human can
+//     be picked at most once even when a team-year pair repeats.
 //   - Each rolled roster MUST be canonically sorted by `card_id` before the
 //     roster sample as well.
-//   - `(tournament_id, nation_id)` pairs are UNIQUE across the 17 spins.
 //   - Distinct seeded substreams: draft / match_sim / event_gen /
 //     opponent_selection / narrative. The DraftState owns the draft substream;
 //     the canonical sub-seed is `deriveSubseed(parent_seed, "draft")`.

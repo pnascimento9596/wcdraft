@@ -10,7 +10,8 @@
 // ─── THE 17 SPINS (ENGINE-V2 E-1) ────────────────────────────────────────────
 //   - Each spin is an INDEPENDENT, ERA-WEIGHTED, WITH-REPLACEMENT weighted
 //     draw over ALL (tournament_id, nation_id) pairs in the catalog. The same
-//     (T, N) MAY be drawn on more than one spin (WS-0c uniqueness is GONE).
+//     (T, N) MAY be drawn on more than one spin; the old WS-0c pair-once rule
+//     is gone.
 //   - ERA WEIGHTING is a YEAR-level allocation, then UNIFORM-within-year over
 //     the pairs of that year:
 //       - rare years (year < `RARE_YEAR_CUTOFF` = 1998) receive a flat

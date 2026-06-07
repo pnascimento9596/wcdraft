@@ -33,7 +33,7 @@ import {
 // GOLDEN INVARIANT (ENGINE-V2 E-1):
 //   A fixed `draft_seed` reproduces an IDENTICAL 17-spin sequence —
 //   - same (tournament_id, nation_id) pairs in the same order (with-replacement
-//     means (T, N) MAY repeat across spins; uniqueness from WS-0c is gone);
+//     means (T, N) MAY repeat across spins; the old WS-0c pair-once rule is gone);
 //   - same rolled card sets, post-dedup pools, per-spin `rolled_manager_card_id`;
 //   - same per-spin `rare` flag and `draw_probability`.
 //
@@ -122,7 +122,7 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
   it("(tournament_id, nation_id) MAY repeat across spins (with-replacement)", () => {
     // Concrete contract change vs WS-0c: the golden draft over the fixture
     // MUST be capable of producing a repeated (T, N). The deterministic
-    // fixture has 60 unique pairs over 17 spins, so a repeat is not
+    // fixture has 60 distinct catalog pairs over 17 spins, so a repeat is not
     // guaranteed every run — but the SCHEMA must accept it. Assert at minimum
     // that the schema does not throw on a deliberately-repeated synthetic
     // run (golden coverage of repeats themselves is via the depleted-advance
@@ -383,7 +383,7 @@ describe("draft — at most ONE manager; manager never in a SquadSlot", () => {
 describe("draft — nation-switcher fixture sanity (ENGINE-V2 E-1)", () => {
   it("the switcher fixture builds and autoDraft completes deterministically", () => {
     // The WS-0c test "switcher picked once across two buckets" relied on
-    // without-replacement guaranteeing both buckets were drawn. Under
+    // the previous draw rule guaranteeing both buckets were drawn. Under
     // with-replacement that's no longer guaranteed, but the schema-level
     // GLOBAL player_id dedup invariant still holds: if `aaa-switcher` is
     // ever picked, it can be picked only once. Verify the autoDraft path
