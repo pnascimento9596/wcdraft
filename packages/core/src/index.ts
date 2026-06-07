@@ -180,6 +180,13 @@ export {
 // consumers that need the atomic event stream.
 export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
 export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
+// PUBLIC SIM PRIMITIVES — surfaced for the realism golden test
+// (`@wcdraft/data` test/realism-modern-norms.golden.test.ts) which runs a
+// 3,006-match symmetric coherent-XI sweep through the engine and validates
+// against modern-era WC norms. `simulateMatch` (UserXiSimView path) is the
+// drafted-user surface; these are the Team2026-vs-Team2026 primitives.
+export { simulateMatchCore, membersFromTeam2026 } from "./engine/match.js";
+export type { CoreMatchInput, SimMember } from "./engine/match.js";
 
 // ─── I3.2 scenario builder — RunScenario from real Team2026[] + Bracket2026 ─
 export {

@@ -1,0 +1,16 @@
+{
+  "era": "1998-2022 Men's WC",
+  "upstream_source": "github.com/jfjelstul/worldcup",
+  "upstream_commit": "f41e9437a007498bdbf3751305818101f96cb6fb",
+  "tournaments_included": [1998, 2002, 2006, 2010, 2014, 2018, 2022],
+  "matches_total": 448,
+  "matches_group_stage": 336,
+  "matches_knockout_stage": 112,
+  "mean_goals_per_match_regulation": 2.5357,
+  "group_stage_draw_rate": 0.247,
+  "regulation_margin_ge_4": 0.0491,
+  "regulation_margin_ge_5": 0.0246,
+  "knockout_extra_time_rate": 0.3304,
+  "knockout_shootout_rate": 0.2143,
+  "regulation_margin_distribution": {"0":107,"1":189,"2":87,"3":43,"4":11,"5":6,"6":2,"7":2,"8":1}
+}
