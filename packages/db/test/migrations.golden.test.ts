@@ -45,6 +45,16 @@ const histDownSql = readFileSync(
   "utf8",
 );
 
+const summarySql = readFileSync(
+  new URL("../migrations/0003_summary_jsonb.sql", import.meta.url),
+  "utf8",
+);
+
+const summaryDownSql = readFileSync(
+  new URL("../migrations/0003_summary_jsonb.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(
     new URL("../migrations/meta/_journal.json", import.meta.url),
@@ -53,14 +63,16 @@ const journal = JSON.parse(
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
-  it("journal references the renamed 0000/0001/0002 tags", () => {
-    expect(journal.entries).toHaveLength(3);
+  it("journal references the renamed 0000/0001/0002/0003 tags", () => {
+    expect(journal.entries).toHaveLength(4);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
     expect(journal.entries[1]?.idx).toBe(1);
     expect(journal.entries[2]?.tag).toBe("0002_history_session_scope");
     expect(journal.entries[2]?.idx).toBe(2);
+    expect(journal.entries[3]?.tag).toBe("0003_summary_jsonb");
+    expect(journal.entries[3]?.idx).toBe(3);
   });
 
   it.each([
@@ -266,6 +278,31 @@ describe("@wcdraft/db migrations — 0002_history_session_scope", () => {
     expect(histDownSql).toMatch(/DROP INDEX IF EXISTS "saved_runs_owner_token_uq"/);
     expect(histDownSql).toMatch(/DROP INDEX IF EXISTS "saved_runs_session_idx"/);
     expect(histDownSql).toMatch(/DROP COLUMN IF EXISTS "session_id"/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0003_summary_jsonb", () => {
+  it("adds saved_runs.summary as a nullable jsonb column", () => {
+    expect(summarySql).toMatch(
+      /ALTER TABLE "saved_runs" ADD COLUMN "summary" jsonb/,
+    );
+    // Single-statement additive migration — no schema reshape.
+    expect(summarySql).not.toMatch(/CREATE TABLE/);
+    expect(summarySql).not.toMatch(/DROP/);
+  });
+
+  it("down-migration drops the summary column (idempotent IF EXISTS)", () => {
+    expect(summaryDownSql).toMatch(
+      /ALTER TABLE "saved_runs" DROP COLUMN IF EXISTS "summary"/,
+    );
+  });
+
+  it("does NOT touch any other table (additive on saved_runs only)", () => {
+    expect(summarySql).not.toMatch(/ALTER TABLE "users"/);
+    expect(summarySql).not.toMatch(/ALTER TABLE "sessions"/);
+    expect(summarySql).not.toMatch(/ALTER TABLE "magic_link_tokens"/);
+    expect(summarySql).not.toMatch(/ALTER TABLE "leaderboard_entries"/);
+    expect(summarySql).not.toMatch(/ALTER TABLE "ranked_attempts"/);
   });
 });
 

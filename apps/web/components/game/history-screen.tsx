@@ -15,8 +15,12 @@ import { describeGameError } from "@/lib/game/errors";
 import { draftHref } from "@/lib/game/navigation";
 import {
   listCompletedRunHistory,
+  localRunHistoryProvider,
   type HistoryEntry,
+  type RunHistoryProvider,
 } from "@/lib/game/history";
+import { createServerRunHistoryProvider } from "@/lib/game/server-history-provider";
+import { useAuth } from "@/components/auth-context";
 
 import s from "./game.module.css";
 
@@ -33,15 +37,26 @@ type Mode =
 export function HistoryScreen() {
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
+  // F-3.5 — provider swap. Signed-in users read the server-backed history
+  // (saved_runs + the F-3 anon→account claim means runs saved BEFORE
+  // sign-in show up after sign-in too). Anon / not-yet-ready callers stay
+  // on the local provider so the experience is identical to pre-F-3.5.
+  const { isSignedIn, ready: authReady } = useAuth();
 
   useEffect(() => {
     const myToken = ++reqToken.current;
     setMode({ kind: "loading" });
+    // Wait until the auth state has resolved at least once so we don't
+    // flicker the local list and then replace it.
+    if (!authReady) return;
     void (async () => {
       try {
         const gd: GameData = await loadGameData();
         if (myToken !== reqToken.current) return;
-        const result = await listCompletedRunHistory(gd);
+        const provider: RunHistoryProvider = isSignedIn
+          ? createServerRunHistoryProvider()
+          : localRunHistoryProvider;
+        const result = await listCompletedRunHistory(gd, provider);
         if (myToken !== reqToken.current) return;
         setMode({
           kind: "ready",
@@ -55,7 +70,7 @@ export function HistoryScreen() {
         setMode({ kind: "error", title: d.title, message: d.message });
       }
     })();
-  }, []);
+  }, [authReady, isSignedIn]);
 
   if (mode.kind === "loading") {
     return (

@@ -28,6 +28,7 @@ import {
   type RunRecordV1,
 } from "@/lib/game/run-record";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
+import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
@@ -438,6 +439,11 @@ function SimulatePanel({
         ? warningParts.join(" · ")
         : persistenceWarning;
       onRecordUpdate(persist.record, warn ?? null);
+      // F-3.5 — fire-and-forget server mirror. The local save is the
+      // source of truth; this just lands the row in saved_runs so signed-
+      // in users get cross-device history and the F-3 claim has something
+      // to transfer at sign-in.
+      void mirrorRunToServer(gameData, persist.record);
       router.push(resultsHref(persist.record.run_id));
     } catch (err) {
       // Reset record status so the user can retry from a clean state.
