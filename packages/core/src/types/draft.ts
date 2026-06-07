@@ -1,13 +1,17 @@
 // Draft state layer of the wcdraft data contract.
 //
-// THE 17-SPIN DRAFT (WS-0c depth layer revision; superseded the WS-0b 16-spin
-// shape).
+// THE 17-SPIN DRAFT (WS-0c depth layer revision; ENGINE-V2 E-1 sampling).
 //
 //   - Spins length is exactly 17.
-//   - Each spin rolls a unique (tournament_id, nation_id) pair AND offers BOTH
-//     that squad's player cards AND that team's coach for that year as
-//     candidates. The user picks exactly ONE entity per spin — a player OR
-//     the coach.
+//   - ENGINE-V2 E-1: Each spin is an INDEPENDENT, ERA-WEIGHTED, WITH-REPLACEMENT
+//     weighted draw over ALL (tournament_id, nation_id) pairs in the catalog
+//     (the same (T, N) MAY repeat across spins; pre-1998 tournaments aggregate
+//     ≈15% of per-spin probability, modern 1998..2026 ≈85% with gentle recency
+//     scaling). The old WS-0c pair-once rule is gone; global `player_id` dedup
+//     is what stops the same human being drafted twice.
+//     Whichever (T, N) is selected, the spin offers BOTH that squad's
+//     un-picked player cards AND that team-year's coach as candidates. The
+//     user picks exactly ONE entity per spin — a player OR the coach.
 //   - ONE manager only: the coach may be taken on ANY single spin, but once
 //     `manager_card_id` is set the coach is NO LONGER a selectable candidate
 //     on later spins. A draft contains EXACTLY ONE manager pick across the 17
@@ -34,13 +38,15 @@
 //   - `draft_seed` is a STRING; PRNG is the existing cyrb128+sfc32. No
 //     `Date`/`Math.random`/`crypto`/`performance` anywhere in the
 //     seed → draft → sim → score → narrative chain.
-//   - The 17 (tournament_id, nation_id) pairs sample from a pool that MUST
-//     be CANONICALLY SORTED by (tournament_id, nation_id) BEFORE the draw —
-//     the sort is the responsibility of the sampling code, but the invariant
-//     is declared here so reviewers can spot drift.
+//   - The pool MUST be CANONICALLY SORTED by (tournament_id, nation_id) BEFORE
+//     the draw; the sort is the responsibility of the sampling code, but the
+//     invariant is declared here so reviewers can spot drift.
+//   - Each spin independently samples WITH REPLACEMENT from that sorted pool.
+//     `(tournament_id, nation_id)` MAY repeat across the 17 spins.
+//   - Global `player_id` dedup is the hard uniqueness guarantee: one human can
+//     be picked at most once even when a team-year pair repeats.
 //   - Each rolled roster MUST be canonically sorted by `card_id` before the
 //     roster sample as well.
-//   - `(tournament_id, nation_id)` pairs are UNIQUE across the 17 spins.
 //   - Distinct seeded substreams: draft / match_sim / event_gen /
 //     opponent_selection / narrative. The DraftState owns the draft substream;
 //     the canonical sub-seed is `deriveSubseed(parent_seed, "draft")`.
@@ -66,7 +72,10 @@ export type PickedKind = "player" | "manager";
  * One of the 17 wheel spins in a draft.
  *
  * INVARIANTS:
- *  - `(tournament_id, nation_id)` is UNIQUE across the 17 spins in a DraftState.
+ *  - `(tournament_id, nation_id)` MAY repeat across spins (ENGINE-V2 E-1
+ *    with-replacement weighted sampling — the WS-0c uniqueness invariant is
+ *    GONE; global `player_id` dedup is what prevents drafting the same human
+ *    twice).
  *  - `rolled_card_ids` is the post-dedup player candidate set surfaced to the
  *    user; it must be canonically sorted by card_id BEFORE the user-facing roll.
  *  - `rolled_manager_card_id` is THAT team-year's coach card if present in
@@ -84,8 +93,27 @@ export interface Spin {
   index: number;
   /** FK -> Tournament. */
   tournament_id: number;
-  /** FK -> Nation. The (tournament_id, nation_id) pair is UNIQUE across all 17 spins. */
+  /**
+   * FK -> Nation. (tournament_id, nation_id) MAY repeat across spins under
+   * ENGINE-V2 E-1 with-replacement sampling.
+   */
   nation_id: string;
+  /**
+   * ENGINE-V2 E-1 RARE EXPOSURE: `true` iff this spin's tournament year is
+   * pre-1998. UI rendering (badges, copy) lands in E-2; E-1 only exposes the
+   * field on the persisted Spin.
+   */
+  rare: boolean;
+  /**
+   * ENGINE-V2 E-1 RARE EXPOSURE: the EFFECTIVE probability this spin emits
+   * the chosen (tournament_id, nation_id), in `[0, 1]`. Equals the base
+   * weight of the selected (T, N) plus the weights of all contiguous DEPLETED
+   * pairs the deterministic advance scanned past to reach it (so it is
+   * `≥ base_weight`). Audit/display metadata only — NEVER fed back into
+   * sampling. Stored as a JS number rounded to 12 fractional digits via
+   * `Number(p.toFixed(12))` so JSON-stringify produces a stable byte sequence.
+   */
+  draw_probability: number;
   /**
    * Candidate PLAYER cards AFTER global player_id dedup; canonically sorted
    * by `card_id` via `canonicalSortBy` BEFORE the user-facing roll. Branded

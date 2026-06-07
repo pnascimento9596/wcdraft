@@ -215,6 +215,7 @@ export {
 export type {
   DraftPlayerCard,
   DraftManagerCard,
+  DraftTournament,
   DraftDataset,
   DraftCatalog,
   CreateDraftParams,
