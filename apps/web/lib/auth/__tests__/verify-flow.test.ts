@@ -10,7 +10,7 @@
 //
 // All flows run against pglite (real Postgres 16 semantics) so the atomic
 // token consume + session rotation are exercised end-to-end.
-import { describe, it, expect, beforeAll, afterEach } from "vitest";
+import { describe, it, expect, beforeAll, afterEach, vi } from "vitest";
 import { setupTestDb, testCookieSecret } from "./_test-db";
 import {
   prepareVerifyInterstitial,
@@ -90,6 +90,28 @@ describe("safeNextPath", () => {
   });
   it("REJECTS scheme-relative tricks (`/\\foo`)", () => {
     expect(safeNextPath("/\\evil")).toBe("/play");
+  });
+  it("REJECTS percent-encoded CRLF (CRLF / response-splitting)", () => {
+    expect(safeNextPath("/play%0d%0aSet-Cookie:%20x=y")).toBe("/play");
+    expect(safeNextPath("/play%0D%0ASet-Cookie:%20x=y")).toBe("/play");
+    expect(safeNextPath("/play%0a")).toBe("/play");
+  });
+  it("REJECTS percent-encoded tab and other C0 control bytes", () => {
+    expect(safeNextPath("/play%09evil")).toBe("/play");
+    expect(safeNextPath("/play%00")).toBe("/play");
+    expect(safeNextPath("/play%1f")).toBe("/play");
+  });
+  it("REJECTS percent-encoded DEL (0x7f)", () => {
+    expect(safeNextPath("/play%7f")).toBe("/play");
+  });
+  it("REJECTS malformed percent-encoding (invalid escape)", () => {
+    expect(safeNextPath("/play%zz")).toBe("/play");
+    expect(safeNextPath("/play%g")).toBe("/play");
+  });
+  it("ALLOWS benign percent-encoding (visible characters)", () => {
+    expect(safeNextPath("/play?q=hello%20world")).toBe(
+      "/play?q=hello%20world",
+    );
   });
 });
 
@@ -513,3 +535,86 @@ describe("session rotation on consume", () => {
     expect(after[0]?.userId).not.toBeNull();
   });
 });
+
+// ── F-3 onAuthenticatedSessionReady hook ─────────────────────────────────
+describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
+  it("fires after rotation with the preserved sessionId and the new userId", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const created = await createSession({ userId: null }, deps(now));
+    const sender = new LogEmailSender(() => undefined);
+    await requestMagicLink(
+      { email: "hook@example.com", ipAddress: "1.1.1.1" },
+      { ...deps(now), sender },
+    );
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
+      "token",
+    )!;
+    const calls: Array<{ sessionId: string; userId: string }> = [];
+    await consumeAndIssueSession(
+      {
+        token: rawToken,
+        next: "/play",
+        csrfFromForm: created.session.csrfSecret,
+        csrfFromCookie: created.session.csrfSecret,
+        sessionCookieValue: created.cookieValue,
+        origin: "https://wcdraft.com",
+        referer: null,
+        host: "wcdraft.com",
+        onAuthenticatedSessionReady: async (args) => {
+          calls.push(args);
+        },
+      },
+      deps(now + 1),
+    );
+    expect(calls).toHaveLength(1);
+    // sessionId is the SAME session row (rotation preserves id) — F-4
+    // ranked binding survives sign-in.
+    expect(calls[0]?.sessionId).toBe(created.session.id);
+    expect(calls[0]?.userId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    );
+  });
+
+  it("hook FAILURE does NOT block sign-in (logged, swallowed)", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const created = await createSession({ userId: null }, deps(now));
+    const sender = new LogEmailSender(() => undefined);
+    await requestMagicLink(
+      { email: "swallow@example.com", ipAddress: "1.1.1.1" },
+      { ...deps(now), sender },
+    );
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
+      "token",
+    )!;
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const result = await consumeAndIssueSession(
+        {
+          token: rawToken,
+          next: "/play",
+          csrfFromForm: created.session.csrfSecret,
+          csrfFromCookie: created.session.csrfSecret,
+          sessionCookieValue: created.cookieValue,
+          origin: "https://wcdraft.com",
+          referer: null,
+          host: "wcdraft.com",
+          onAuthenticatedSessionReady: () => {
+            throw new Error("simulated claim failure");
+          },
+        },
+        deps(now + 1),
+      );
+      expect(result.redirectTo).toBe("/play");
+      expect(errSpy).toHaveBeenCalled();
+    } finally {
+      errSpy.mockRestore();
+    }
+    // Session is still rotated even though the hook threw.
+    const validated = await validateSessionCookie(
+      created.cookieValue,
+      deps(now + 2),
+    );
+    void validated;
+  });
+});
+

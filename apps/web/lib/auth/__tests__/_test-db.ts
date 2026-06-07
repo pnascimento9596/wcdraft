@@ -39,7 +39,11 @@ export async function setupTestDb(): Promise<{
   // markers between statements — drizzle's migrator splits on those.
   // pglite's `.exec()` accepts a multi-statement script, so we strip the
   // marker comments and let pg parse the whole script.
-  for (const file of ["0000_init.sql", "0001_auth_rate_limits.sql"]) {
+  for (const file of [
+    "0000_init.sql",
+    "0001_auth_rate_limits.sql",
+    "0002_history_session_scope.sql",
+  ]) {
     const sql = loadMigration(file).replace(/-->\s*statement-breakpoint/g, "");
     await pg.exec(sql);
   }

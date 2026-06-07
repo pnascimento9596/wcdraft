@@ -173,6 +173,20 @@ export interface ConsumeAndIssueSessionArgs {
   readonly origin: string | null | undefined;
   readonly referer: string | null | undefined;
   readonly host: string | null | undefined;
+  /**
+   * F-3 hook: invoked after a successful session rotation, BEFORE the
+   * caller redirects. Receives the (now stable) session id and the
+   * newly-authenticated user id. Use case: claim this session's anon
+   * `saved_runs` rows to the user (re-key owner_user_id, drop conflicts).
+   *
+   * Errors thrown by the hook are caught + logged; they do NOT fail the
+   * sign-in. Claim is best-effort and idempotent; the user can retry via
+   * `POST /api/runs/claim`. This contract keeps auth focused on auth.
+   */
+  readonly onAuthenticatedSessionReady?: (args: {
+    readonly sessionId: string;
+    readonly userId: string;
+  }) => Promise<void>;
 }
 
 export interface ConsumeAndIssueSessionResult {
@@ -188,16 +202,32 @@ export interface ConsumeAndIssueSessionResult {
  * Whitelist `?next=` (or the form's `next` field) to same-origin pathnames
  * so a malicious link can't redirect through us cross-origin.
  *
- *   "/play"        ✓
- *   "/play?x=1"    ✓
- *   "//evil/"      ✗ — protocol-relative
- *   "https://…"    ✗ — absolute
- *   "" or null     ✗ — default to "/play"
+ *   "/play"            ✓
+ *   "/play?x=1"        ✓
+ *   "//evil/"          ✗ — protocol-relative
+ *   "https://…"        ✗ — absolute
+ *   "/play%0d%0aSet…"  ✗ — percent-encoded CRLF (F-2 reviewer note)
+ *   "/play%09…"        ✗ — percent-encoded tab
+ *   "" or null         ✗ — default to "/play"
+ *
+ * Hardening (F-3, per F-2 reviewer): after the basic regex, percent-decode
+ * the candidate path and reject any C0 control byte (0x00–0x1f) or
+ * DEL (0x7f). A bare CR/LF in `raw` was already caught by the character
+ * class; the new check covers the `%0d` / `%0a` / `%09` percent-encoded
+ * variants that would otherwise sneak into a Location: header.
  */
 export function safeNextPath(raw: string | null | undefined): string {
   if (!raw) return "/play";
   if (!/^\/[A-Za-z0-9_\-./?&=%]*$/.test(raw)) return "/play";
   if (raw.startsWith("//")) return "/play";
+  try {
+    const decoded = decodeURIComponent(raw);
+    // eslint-disable-next-line no-control-regex -- explicit C0 + DEL guard
+    if (/[\x00-\x1f\x7f]/.test(decoded)) return "/play";
+  } catch {
+    // Malformed percent-encoding → reject.
+    return "/play";
+  }
   return raw;
 }
 
@@ -290,6 +320,21 @@ export async function consumeAndIssueSession(
     const fresh = await createSession({ userId: user.id }, deps);
     sessionCookieValue = fresh.cookieValue;
     csrfSecret = fresh.session.csrfSecret;
+  }
+
+  if (args.onAuthenticatedSessionReady) {
+    try {
+      await args.onAuthenticatedSessionReady({
+        sessionId: anonSession.id,
+        userId: user.id,
+      });
+    } catch (e) {
+      // Claim (or any other future post-rotation work) is best-effort.
+      // The user is already signed in; a hook failure must not surface as
+      // a sign-in failure. The claim is also idempotent — the route
+      // handler offers POST /api/runs/claim as a retry surface.
+      console.error("[verify-flow] onAuthenticatedSessionReady hook failed", e);
+    }
   }
 
   return {

@@ -35,6 +35,16 @@ const authDownSql = readFileSync(
   "utf8",
 );
 
+const histSql = readFileSync(
+  new URL("../migrations/0002_history_session_scope.sql", import.meta.url),
+  "utf8",
+);
+
+const histDownSql = readFileSync(
+  new URL("../migrations/0002_history_session_scope.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(
     new URL("../migrations/meta/_journal.json", import.meta.url),
@@ -43,12 +53,14 @@ const journal = JSON.parse(
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
-  it("journal references the renamed 0000_init + 0001_auth_rate_limits tags", () => {
-    expect(journal.entries).toHaveLength(2);
+  it("journal references the renamed 0000/0001/0002 tags", () => {
+    expect(journal.entries).toHaveLength(3);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
     expect(journal.entries[1]?.idx).toBe(1);
+    expect(journal.entries[2]?.tag).toBe("0002_history_session_scope");
+    expect(journal.entries[2]?.idx).toBe(2);
   });
 
   it.each([
@@ -197,6 +209,63 @@ describe("@wcdraft/db migrations — 0001_auth_rate_limits", () => {
 
   it("down-migration drops auth_rate_limits", () => {
     expect(authDownSql).toMatch(/DROP TABLE IF EXISTS "auth_rate_limits"/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0002_history_session_scope", () => {
+  it("DROPS the F-1 global UNIQUE NULLS NOT DISTINCT constraint", () => {
+    expect(histSql).toMatch(
+      /ALTER TABLE "saved_runs" DROP CONSTRAINT "saved_runs_owner_token_uq"/,
+    );
+  });
+
+  it("adds saved_runs.session_id column (nullable text)", () => {
+    expect(histSql).toMatch(
+      /ALTER TABLE "saved_runs" ADD COLUMN "session_id" text/,
+    );
+  });
+
+  it("adds FK saved_runs.session_id → sessions.id ON DELETE set null", () => {
+    expect(histSql).toMatch(
+      /ADD CONSTRAINT "saved_runs_session_id_sessions_id_fk"\s+FOREIGN KEY \("session_id"\) REFERENCES "public"\."sessions"\("id"\) ON DELETE set null/,
+    );
+  });
+
+  it("creates account-scoped partial UNIQUE on (owner_user_id, token) WHERE owner IS NOT NULL", () => {
+    expect(histSql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "saved_runs_owner_token_uq" ON "saved_runs" USING btree \("owner_user_id","token"\) WHERE "saved_runs"\."owner_user_id" IS NOT NULL/,
+    );
+  });
+
+  it("creates session-scoped partial UNIQUE on (session_id, token) WHERE anon AND session IS NOT NULL", () => {
+    expect(histSql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "saved_runs_session_token_uq" ON "saved_runs" USING btree \("session_id","token"\) WHERE "saved_runs"\."owner_user_id" IS NULL AND "saved_runs"\."session_id" IS NOT NULL/,
+    );
+  });
+
+  it("creates a session_id lookup index", () => {
+    expect(histSql).toMatch(
+      /CREATE INDEX IF NOT EXISTS "saved_runs_session_idx" ON "saved_runs" USING btree \("session_id"\)/,
+    );
+  });
+
+  it("does NOT touch users / magic_link_tokens / sessions tables (additive on saved_runs only)", () => {
+    expect(histSql).not.toMatch(/CREATE TABLE/);
+    expect(histSql).not.toMatch(/ALTER TABLE "users"/);
+    expect(histSql).not.toMatch(/ALTER TABLE "sessions"/);
+  });
+
+  it("down-migration restores F-1's global UNIQUE NULLS NOT DISTINCT constraint", () => {
+    expect(histDownSql).toMatch(
+      /ADD CONSTRAINT "saved_runs_owner_token_uq"\s+UNIQUE NULLS NOT DISTINCT \("owner_user_id", "token"\)/,
+    );
+  });
+
+  it("down-migration drops F-3 partial uniques + session_id column", () => {
+    expect(histDownSql).toMatch(/DROP INDEX IF EXISTS "saved_runs_session_token_uq"/);
+    expect(histDownSql).toMatch(/DROP INDEX IF EXISTS "saved_runs_owner_token_uq"/);
+    expect(histDownSql).toMatch(/DROP INDEX IF EXISTS "saved_runs_session_idx"/);
+    expect(histDownSql).toMatch(/DROP COLUMN IF EXISTS "session_id"/);
   });
 });
 
