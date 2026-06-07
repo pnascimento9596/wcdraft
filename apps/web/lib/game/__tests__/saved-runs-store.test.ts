@@ -1,0 +1,473 @@
+// F-3 — saved-runs-store: isolation, claim integrity, cap, idempotence.
+//
+// Tests run against pglite (real PostgreSQL 16 semantics) so the partial
+// unique indexes, FK cascades, and DELETE..USING claim ordering all behave
+// the way they will in production. Isolation invariants here are the RED
+// gate: a regression in scope filtering = a data-leak landed.
+import { describe, it, expect, beforeAll, afterEach } from "vitest";
+import { setupTestDb } from "@/lib/auth/__tests__/_test-db";
+import { sessions, users, savedRuns } from "@wcdraft/db";
+import { eq } from "drizzle-orm";
+import {
+  saveRun,
+  listRuns,
+  getRun,
+  deleteRun,
+  claimAnonRuns,
+  SAVED_RUNS_CAP,
+} from "@/lib/game/saved-runs-store";
+
+let env: Awaited<ReturnType<typeof setupTestDb>>;
+beforeAll(async () => {
+  env = await setupTestDb();
+});
+afterEach(async () => {
+  await env.reset();
+});
+
+async function makeUser(email: string): Promise<string> {
+  const [u] = await env.db.insert(users).values({ email }).returning();
+  return u!.id;
+}
+async function makeSession(args: {
+  id: string;
+  userId?: string | null;
+}): Promise<void> {
+  await env.db.insert(sessions).values({
+    id: args.id,
+    userId: args.userId ?? null,
+    csrfSecret: "csrf-secret-for-test-only",
+    expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+  });
+}
+
+const baseArgs = {
+  versionAnchors: { dataset_version: "v1" },
+  runId: "run-v1-abc",
+  parentSeed: "wcdraft:run:v1:run-v1-abc:f4-3-3",
+};
+
+const deps = () => ({ db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, 0) });
+
+// ── Save: per-scope semantics ──────────────────────────────────────────
+describe("saveRun", () => {
+  it("anon scope: inserts a row keyed by session_id + token", async () => {
+    await makeSession({ id: "ses-1" });
+    const r = await saveRun(
+      { ...baseArgs, token: "t1.aaa" },
+      { userId: null, sessionId: "ses-1" },
+      deps(),
+    );
+    expect(r.idempotent).toBe(false);
+    expect(r.row.ownerUserId).toBeNull();
+    expect(r.row.sessionId).toBe("ses-1");
+    expect(r.row.claimState).toBe("anonymous");
+  });
+
+  it("account scope: inserts with owner_user_id and clears session_id", async () => {
+    const uid = await makeUser("a@example.com");
+    await makeSession({ id: "ses-1", userId: uid });
+    const r = await saveRun(
+      { ...baseArgs, token: "t1.bbb" },
+      { userId: uid, sessionId: "ses-1" },
+      deps(),
+    );
+    expect(r.row.ownerUserId).toBe(uid);
+    expect(r.row.sessionId).toBeNull();
+    expect(r.row.claimState).toBe("claimed");
+  });
+
+  it("anon: idempotent re-save with the same token returns the existing row", async () => {
+    await makeSession({ id: "ses-1" });
+    const a = await saveRun(
+      { ...baseArgs, token: "t1.ccc" },
+      { userId: null, sessionId: "ses-1" },
+      deps(),
+    );
+    const b = await saveRun(
+      { ...baseArgs, token: "t1.ccc" },
+      { userId: null, sessionId: "ses-1" },
+      deps(),
+    );
+    expect(b.idempotent).toBe(true);
+    expect(b.row.id).toBe(a.row.id);
+  });
+
+  it("anon: two DIFFERENT sessions can save the SAME token (no cross-session collision)", async () => {
+    await makeSession({ id: "ses-x" });
+    await makeSession({ id: "ses-y" });
+    await saveRun(
+      { ...baseArgs, token: "t1.shared" },
+      { userId: null, sessionId: "ses-x" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.shared" },
+      { userId: null, sessionId: "ses-y" },
+      deps(),
+    );
+    const rows = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.token, "t1.shared"));
+    expect(rows).toHaveLength(2);
+  });
+
+  it("account: idempotent re-save returns the existing row", async () => {
+    const uid = await makeUser("idem@example.com");
+    await makeSession({ id: "ses-1", userId: uid });
+    const a = await saveRun(
+      { ...baseArgs, token: "t1.dup" },
+      { userId: uid, sessionId: "ses-1" },
+      deps(),
+    );
+    const b = await saveRun(
+      { ...baseArgs, token: "t1.dup" },
+      { userId: uid, sessionId: "ses-1" },
+      deps(),
+    );
+    expect(b.idempotent).toBe(true);
+    expect(b.row.id).toBe(a.row.id);
+  });
+});
+
+// ── List / Get / Delete: scope isolation (the RED gate) ────────────────
+describe("listRuns / getRun / deleteRun — scope isolation", () => {
+  it("anon callers only see their OWN session's anon rows (and never another anon's)", async () => {
+    await makeSession({ id: "ses-mine" });
+    await makeSession({ id: "ses-other" });
+    await saveRun(
+      { ...baseArgs, token: "t1.mine" },
+      { userId: null, sessionId: "ses-mine" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.others" },
+      { userId: null, sessionId: "ses-other" },
+      deps(),
+    );
+    const list = await listRuns({ userId: null, sessionId: "ses-mine" }, deps());
+    expect(list.map((r) => r.token)).toEqual(["t1.mine"]);
+  });
+
+  it("authed callers only see their OWN account rows (never another user's)", async () => {
+    const a = await makeUser("a@example.com");
+    const b = await makeUser("b@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-b", userId: b });
+    await saveRun(
+      { ...baseArgs, token: "t1.a" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.b" },
+      { userId: b, sessionId: "ses-b" },
+      deps(),
+    );
+    const list = await listRuns({ userId: a, sessionId: "ses-a" }, deps());
+    expect(list.map((r) => r.token)).toEqual(["t1.a"]);
+  });
+
+  it("authed caller CANNOT see anon rows (different scope kind)", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-anon" });
+    await makeSession({ id: "ses-a", userId: a });
+    await saveRun(
+      { ...baseArgs, token: "t1.anon" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    const list = await listRuns({ userId: a, sessionId: "ses-a" }, deps());
+    expect(list).toEqual([]);
+  });
+
+  it("anon caller CANNOT see another user's account rows", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-anon" });
+    await saveRun(
+      { ...baseArgs, token: "t1.a" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    const list = await listRuns(
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    expect(list).toEqual([]);
+  });
+
+  it("getRun: user B cannot fetch user A's row by id (returns null)", async () => {
+    const a = await makeUser("a@example.com");
+    const b = await makeUser("b@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-b", userId: b });
+    const saved = await saveRun(
+      { ...baseArgs, token: "t1.a" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    const found = await getRun(
+      saved.row.id,
+      { userId: b, sessionId: "ses-b" },
+      deps(),
+    );
+    expect(found).toBeNull();
+  });
+
+  it("deleteRun: user B cannot delete user A's row (returns false, row stays)", async () => {
+    const a = await makeUser("a@example.com");
+    const b = await makeUser("b@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-b", userId: b });
+    const saved = await saveRun(
+      { ...baseArgs, token: "t1.a" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    const deleted = await deleteRun(
+      saved.row.id,
+      { userId: b, sessionId: "ses-b" },
+      deps(),
+    );
+    expect(deleted).toBe(false);
+    const stillThere = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.id, saved.row.id));
+    expect(stillThere).toHaveLength(1);
+  });
+
+  it("deleteRun: owner can delete their own row (returns true)", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    const saved = await saveRun(
+      { ...baseArgs, token: "t1.a" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    const deleted = await deleteRun(
+      saved.row.id,
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    expect(deleted).toBe(true);
+    const rows = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.id, saved.row.id));
+    expect(rows).toEqual([]);
+  });
+});
+
+// ── Cap / eviction ─────────────────────────────────────────────────────
+describe("cap + eviction", () => {
+  it("oldest rows beyond SAVED_RUNS_CAP are evicted on save", async () => {
+    const a = await makeUser("cap@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    for (let i = 0; i < SAVED_RUNS_CAP + 2; i += 1) {
+      await saveRun(
+        { ...baseArgs, token: `t1.c${i.toString()}` },
+        { userId: a, sessionId: "ses-a" },
+        { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, i) },
+      );
+    }
+    const list = await listRuns(
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+      { limit: SAVED_RUNS_CAP + 5 },
+    );
+    expect(list).toHaveLength(SAVED_RUNS_CAP);
+    expect(list.map((r) => r.token)).not.toContain("t1.c0");
+    expect(list.map((r) => r.token)).not.toContain("t1.c1");
+  });
+
+  it("eviction NEVER reaches across scopes", async () => {
+    const a = await makeUser("a@example.com");
+    const b = await makeUser("b@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-b", userId: b });
+    // Fill user B to cap.
+    for (let i = 0; i < SAVED_RUNS_CAP; i += 1) {
+      await saveRun(
+        { ...baseArgs, token: `t1.bb${i.toString()}` },
+        { userId: b, sessionId: "ses-b" },
+        { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, i) },
+      );
+    }
+    // User A goes over cap.
+    for (let i = 0; i < SAVED_RUNS_CAP + 2; i += 1) {
+      await saveRun(
+        { ...baseArgs, token: `t1.aa${i.toString()}` },
+        { userId: a, sessionId: "ses-a" },
+        { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 10, i) },
+      );
+    }
+    const listA = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), { limit: 99 });
+    const listB = await listRuns({ userId: b, sessionId: "ses-b" }, deps(), { limit: 99 });
+    expect(listA).toHaveLength(SAVED_RUNS_CAP);
+    expect(listB).toHaveLength(SAVED_RUNS_CAP);
+  });
+});
+
+// ── Claim (anon → account) ────────────────────────────────────────────
+describe("claimAnonRuns — idempotence, conflict, no theft", () => {
+  it("transfers this session's anon rows to the new user_id (sets claim_state = 'claimed')", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-anon" });
+    await saveRun(
+      { ...baseArgs, token: "t1.1" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.2" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    const result = await claimAnonRuns(
+      { sessionId: "ses-anon", userId: a },
+      deps(),
+    );
+    expect(result).toEqual({ transferred: 2, dropped: 0 });
+    const owned = await listRuns({ userId: a, sessionId: "ses-anon" }, deps());
+    expect(owned).toHaveLength(2);
+    expect(owned.every((r) => r.claimState === "claimed")).toBe(true);
+    expect(owned.every((r) => r.sessionId === null)).toBe(true);
+  });
+
+  it("IS IDEMPOTENT: re-running yields zero transfers and zero drops", async () => {
+    const a = await makeUser("idem@example.com");
+    await makeSession({ id: "ses-anon" });
+    await saveRun(
+      { ...baseArgs, token: "t1.x" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    const r1 = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
+    const r2 = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
+    expect(r1).toEqual({ transferred: 1, dropped: 0 });
+    expect(r2).toEqual({ transferred: 0, dropped: 0 });
+  });
+
+  it("conflict policy: existing ACCOUNT row wins, anon duplicate is DROPPED", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-anon" });
+    // Account row exists for token T.
+    await saveRun(
+      { ...baseArgs, token: "t1.T" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    // Anon session also has token T.
+    await saveRun(
+      { ...baseArgs, token: "t1.T" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    const result = await claimAnonRuns(
+      { sessionId: "ses-anon", userId: a },
+      deps(),
+    );
+    expect(result).toEqual({ transferred: 0, dropped: 1 });
+    const owned = await listRuns({ userId: a, sessionId: "ses-a" }, deps());
+    expect(owned).toHaveLength(1);
+    // Anon row for that session is gone (dropped, NOT transferred).
+    const anonRows = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.sessionId, "ses-anon"));
+    expect(anonRows).toEqual([]);
+  });
+
+  it("mixed: some transfer, some drop (per-token conflict resolution)", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-a", userId: a });
+    await makeSession({ id: "ses-anon" });
+    // Account: t1.alpha
+    await saveRun(
+      { ...baseArgs, token: "t1.alpha" },
+      { userId: a, sessionId: "ses-a" },
+      deps(),
+    );
+    // Anon: t1.alpha (conflict) + t1.beta (transferable) + t1.gamma (transferable)
+    await saveRun(
+      { ...baseArgs, token: "t1.alpha" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.beta" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.gamma" },
+      { userId: null, sessionId: "ses-anon" },
+      deps(),
+    );
+    const result = await claimAnonRuns(
+      { sessionId: "ses-anon", userId: a },
+      deps(),
+    );
+    expect(result).toEqual({ transferred: 2, dropped: 1 });
+    const owned = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), { limit: 99 });
+    expect(owned.map((r) => r.token).sort()).toEqual([
+      "t1.alpha",
+      "t1.beta",
+      "t1.gamma",
+    ]);
+  });
+
+  it("NO CROSS-SESSION THEFT: claiming session X does not touch session Y", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-mine" });
+    await makeSession({ id: "ses-strangers" });
+    await saveRun(
+      { ...baseArgs, token: "t1.mine" },
+      { userId: null, sessionId: "ses-mine" },
+      deps(),
+    );
+    await saveRun(
+      { ...baseArgs, token: "t1.strangers" },
+      { userId: null, sessionId: "ses-strangers" },
+      deps(),
+    );
+    const result = await claimAnonRuns(
+      { sessionId: "ses-mine", userId: a },
+      deps(),
+    );
+    expect(result.transferred).toBe(1);
+    // Stranger's anon row is untouched.
+    const strangersStill = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.sessionId, "ses-strangers"));
+    expect(strangersStill).toHaveLength(1);
+    expect(strangersStill[0]?.ownerUserId).toBeNull();
+  });
+
+  it("CONCURRENT claim safety: two simultaneous claims race-without-error", async () => {
+    const a = await makeUser("a@example.com");
+    await makeSession({ id: "ses-anon" });
+    for (let i = 0; i < 4; i += 1) {
+      await saveRun(
+        { ...baseArgs, token: `t1.c${i.toString()}` },
+        { userId: null, sessionId: "ses-anon" },
+        deps(),
+      );
+    }
+    const [r1, r2] = await Promise.all([
+      claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps()),
+      claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps()),
+    ]);
+    // One wins all 4, the other sees 0. (Or any partition that sums to 4.)
+    expect(r1.transferred + r2.transferred).toBe(4);
+    expect(r1.dropped + r2.dropped).toBe(0);
+    // No duplicate account rows (unique partial index enforces this).
+    const owned = await listRuns({ userId: a, sessionId: "ses-anon" }, deps(), { limit: 99 });
+    expect(owned).toHaveLength(4);
+  });
+});
