@@ -1114,3 +1114,112 @@ main {
   left: auto;
   min-width: 100%;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ws-ux/mobile-compact-v3 — global shell compaction (landing + static).
+   ─────────────────────────────────────────────────────────────────────────
+   Companion to the game.module.css block of the same name. The two together
+   form the cure for two distinct UX failures:
+
+     1. "I deployed compaction and it's not visible" - solved structurally
+        by the SW cache-bust (see apps/web/public/sw.js + sw-version.js).
+     2. "The pages still feel bulky on mobile" - solved layout-wise below by
+        cutting global header/page/hero/heading padding, and by reducing
+        .page padding for game routes (which already pad their own shells).
+
+   Token-only rule: every value below references either an existing
+   --token, a tap-target-driven min, or a justified physical px constant.
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  /* Per-block mobile tunables - other selectors below read these so a
+     follow-up tweak only touches one rule. */
+  :root {
+    --m-container-x: 0.6rem;
+    --m-page-y: 0.85rem;
+    --m-page-y-game: 0.5rem;
+    --m-hero-y: 1.5rem;
+    --m-head-gap: 0.55rem;
+    --m-head-margin: 1.05rem;
+    --m-head-pad: 0.55rem;
+  }
+
+  /* Container + page padding - cuts ~50% off the vertical bulk. */
+  .container {
+    padding-inline: var(--m-container-x);
+  }
+  .page {
+    padding-block: var(--m-page-y);
+  }
+  /* Game routes already pad their own shells (draftShell/reviewShell carry
+     a 76px lock-bar reservation); avoid double-padding by tightening .page
+     for those routes only. */
+  .game-page.page {
+    padding-block: var(--m-page-y-game);
+  }
+
+  /* Sticky masthead - 4rem header eats 16% of a 390x844 viewport. */
+  .masthead__inner {
+    height: 3.35rem;
+    gap: 0.75rem;
+  }
+  .wordmark {
+    gap: 0.45rem;
+  }
+  /* Mobile menu links land tighter without breaking tap target (still
+     >= 32px row height once line-height padding is added). */
+  .mobile-menu__link {
+    padding-block: 0.55rem;
+  }
+
+  /* Landing hero - keeps all stats + live caption + CTA visible, just
+     less air above/below. */
+  .hero {
+    padding-block: var(--m-hero-y);
+  }
+  .hero__inner {
+    gap: 1.1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 12vw, 4.4rem);
+    margin-block: 0.15rem 0.1rem;
+  }
+  .hero__meta {
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.25rem;
+    padding-top: 0.85rem;
+  }
+  .stat__num {
+    font-size: clamp(1.6rem, 8vw, 2.4rem);
+  }
+
+  /* Page headings - on every static and mode-select route. */
+  .page-head {
+    gap: var(--m-head-gap);
+    margin-bottom: var(--m-head-margin);
+    padding-bottom: var(--m-head-pad);
+  }
+  .page-head h1 {
+    font-size: clamp(1.85rem, 7.5vw, 2.7rem);
+  }
+  .page-head .lede {
+    font-size: 0.95rem;
+  }
+
+  /* Default button compaction - lock bars and game-specific buttons keep
+     their own (denser) sizing via the game.module.css overrides. */
+  .btn {
+    padding-block: 0.55rem;
+  }
+}
+
+/* Galaxy Fold / 360px-wide window - layer-tighter overrides only where
+   430px is still too generous. Variables already plumbed above. */
+@media (max-width: 380px) {
+  :root {
+    --m-container-x: 0.5rem;
+    --m-page-y: 0.7rem;
+    --m-page-y-game: 0.4rem;
+    --m-hero-y: 1.25rem;
+    --m-head-margin: 0.85rem;
+  }
+}

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ModeSelectPage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--mode">
       <header className="page-head">
         <span className="eyebrow">New draft</span>
         <h1 className="display">Choose your mode</h1>

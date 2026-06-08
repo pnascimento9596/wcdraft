@@ -8,7 +8,7 @@ fetched from the upstream `main` branch on 2026-06-06.
 
 - Repository license: **MIT** (code/scripts in flag-icons).
 - Asset content: depicts each country's **national flag**, the visual design of
-  which is in the public domain. No crests, kits, federation marks, FIFA marks,
+  which is in the public domain. No crests, kits, federation marks, official competition marks,
   competition marks, or maker logos are included.
 - Ratio: 4×3.
 

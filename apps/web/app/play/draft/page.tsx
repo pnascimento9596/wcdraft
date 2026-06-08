@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DraftPage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--draft">
       <Suspense fallback={<DraftFallback />}>
         <DraftScreen />
       </Suspense>

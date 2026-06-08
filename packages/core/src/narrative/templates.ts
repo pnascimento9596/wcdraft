@@ -8,7 +8,7 @@
 //
 // HOUSE STYLE:
 //   - "football", never "soccer".
-//   - No FIFA marks, no real competition names, no trademarked phrases.
+//   - No official competition marks, no real competition names, no trademarked phrases.
 //   - Original copy; evocative but token-safe (a missing token renders as the
 //     honest-state sentinel without breaking the sentence's grammar).
 //

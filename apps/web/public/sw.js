@@ -1,37 +1,57 @@
 /*
- * wcdraft service worker — versioned compact-data cache.
+ * wcdraft service worker - per-deploy cache versioning via /sw-version.js.
  *
- * Responsibilities:
- *   1. Pre-cache the three compact-data artifacts under `/data/wcdraft/*`
- *      on install so the draft route works offline after first online
- *      install (the dataset is large enough that the network-first path
- *      would re-pay the download every navigation).
- *   2. Serve `/data/wcdraft/*` cache-first — the bundles are
- *      hash-pinned by the manifest; if a new manifest ships, it lands in
- *      a new cache name (see below) and the old cache is evicted.
- *   3. Network-first for navigations + everything else, with a tolerant
- *      cache fallback so a flaky network does not break a partially
- *      cached run.
- *   4. On activation, evict EVERY cache whose name does not match the
- *      currently bundled CACHE_NAMES values — so a redeploy that bumps
- *      schema or dataset version atomically drops the old runtime data.
+ * The cache-name anchors live in the build-generated `/sw-version.js`,
+ * imported below. The committed source here is intentionally version-free
+ * so this file does NOT need to be edited on every deploy.
  *
- * The two `CACHE_NAME_*` strings below are the cache-key version anchors;
- * bumping them is the kill-switch for invalidating runtime data + app
- * shell separately. The dataset cache key encodes BOTH the schema version
- * and the dataset version so the cache changes shape whenever either
- * anchor moves.
+ * v3 change (root-cause cure for "I deploy and don't see it"):
+ *   - Both the data cache and the navigation/shell cache include a
+ *     per-deploy revision. UI-only deploys (mobile CSS, copy edits)
+ *     rotate the shell cache; data deploys ALSO rotate the data cache
+ *     via its bundle-sha component. Either change triggers a SW update
+ *     because /sw-version.js bytes differ.
+ *   - sw-register.tsx registers with `updateViaCache: "none"` so the
+ *     imported version script bypasses HTTP cache on every update check.
  *
- * INTENTIONAL LIMITS: this worker does NOT cache the full `/_next/static`
- * tree (a separate I2/I3 concern); navigations stay network-first. The
- * scope here is the runtime data plus a network-first navigation fallback
- * that prevents a total offline blank.
+ * Behaviour preserved from v1/v2:
+ *   - Pre-cache the compact bundles on install so the draft works offline.
+ *   - Serve `/data/wcdraft/*` cache-first (hash-pinned by the manifest).
+ *   - Network-first for navigations with shell-cache fallback.
+ *   - On activate, evict every `wcdraft-*` cache outside KNOWN_CACHE_NAMES
+ *     so old (pre-rotation) caches are dropped atomically.
+ *
+ * Intentional limit: this worker does NOT cache the full `/_next/static`
+ * tree. Those assets are content-hashed and cached by browser HTTP cache
+ * via Next's default headers.
  */
 
-const SCHEMA_VERSION = "runtime-data-1.0.0";
-const DATASET_VERSION = "2026-06-04";
-const CACHE_NAME_DATA = `wcdraft-data-${SCHEMA_VERSION}-${DATASET_VERSION}`;
-const CACHE_NAME_SHELL = `wcdraft-shell-v1`;
+importScripts("/sw-version.js");
+
+// Hard contract with apps/web/scripts/generate-sw-version.mjs. If
+// `/sw-version.js` is missing or malformed, throw during worker
+// evaluation so the new worker fails installation and the previously
+// active worker stays in control (vs. installing one with `undefined`
+// cache names).
+const SW_CONFIG = self.__WCDRAFT_SW_CONFIG__;
+if (!SW_CONFIG || typeof SW_CONFIG !== "object") {
+  throw new Error("wcdraft sw: /sw-version.js did not set self.__WCDRAFT_SW_CONFIG__");
+}
+if (!SW_CONFIG.cache_names || typeof SW_CONFIG.cache_names !== "object") {
+  throw new Error("wcdraft sw: __WCDRAFT_SW_CONFIG__.cache_names missing");
+}
+const CACHE_NAME_DATA = SW_CONFIG.cache_names.data;
+const CACHE_NAME_SHELL = SW_CONFIG.cache_names.shell;
+if (
+  typeof CACHE_NAME_DATA !== "string" ||
+  !CACHE_NAME_DATA.startsWith("wcdraft-data-") ||
+  typeof CACHE_NAME_SHELL !== "string" ||
+  !CACHE_NAME_SHELL.startsWith("wcdraft-shell-")
+) {
+  throw new Error(
+    "wcdraft sw: cache_names must include wcdraft-data-* and wcdraft-shell-* values",
+  );
+}
 
 const DATA_PREFIX = "/data/wcdraft/";
 const PRECACHE_DATA_URLS = [
@@ -41,24 +61,24 @@ const PRECACHE_DATA_URLS = [
 ];
 
 // The full set of cache names this build expects to own. The activation
-// handler evicts anything outside this set.
+// handler evicts anything outside this set whose name starts with
+// `wcdraft-` (so we never stomp other origins' caches).
 const KNOWN_CACHE_NAMES = new Set([CACHE_NAME_DATA, CACHE_NAME_SHELL]);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME_DATA);
-      // Pre-cache the compact bundles. We tolerate individual failures —
-      // a missing file should not block install (the page still works
-      // online); cache-first serving will fall through to network for
-      // any URL not in the cache.
+      // Pre-cache the compact bundles. We tolerate individual failures
+      // so a single missing file doesn't block install (the page still
+      // works online; cache-first will fall through to network).
       await Promise.all(
         PRECACHE_DATA_URLS.map(async (url) => {
           try {
             const res = await fetch(url, { cache: "no-cache" });
             if (res.ok) await cache.put(url, res.clone());
           } catch {
-            /* swallow — handler will fall back to network on demand */
+            /* swallow - fetch handler falls back to network on demand */
           }
         }),
       );
@@ -74,8 +94,8 @@ self.addEventListener("activate", (event) => {
       await Promise.all(
         names.map((name) => {
           if (KNOWN_CACHE_NAMES.has(name)) return undefined;
-          // Match the wcdraft prefix to avoid stomping other origins' caches
-          // when scoped same-origin (defensive — a stray cache is rare).
+          // Limit eviction to our prefix so we never stomp other origins'
+          // caches when scoped same-origin.
           if (!name.startsWith("wcdraft-")) return undefined;
           return caches.delete(name);
         }),
@@ -95,9 +115,10 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  // Cache-first for the compact data — hash-pinned by the manifest and
-  // version-keyed by the cache name. If a new dataset ships, the cache
-  // name changes and the activation handler evicts the old one.
+  // Cache-first for the compact data - hash-pinned by the manifest and
+  // version-keyed by CACHE_NAME_DATA (which embeds both the deploy
+  // revision and the bundle sha). If either moves, the cache name
+  // changes and activation evicts the old cache.
   if (isCompactDataRequest(url)) {
     event.respondWith(
       (async () => {
@@ -109,7 +130,7 @@ self.addEventListener("fetch", (event) => {
           if (res.ok) cache.put(request, res.clone()).catch(() => undefined);
           return res;
         } catch (err) {
-          // No cache hit AND network failed — surface a clean 504 so the
+          // No cache hit AND network failed - surface a clean 504 so the
           // client can show a recovery panel instead of crashing.
           return new Response(
             JSON.stringify({
@@ -128,8 +149,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network-first for HTML navigations with a tolerant cache fallback —
-  // keeps the app shell installable while not stomping freshness.
+  // Network-first for HTML navigations with a tolerant cache fallback.
+  // Keeps the app shell installable while always serving fresh HTML
+  // when the network is reachable (the OLD worker's shell cache is
+  // dropped by the new worker's activate handler).
   if (request.mode === "navigate") {
     event.respondWith(
       (async () => {
@@ -153,5 +176,6 @@ self.addEventListener("fetch", (event) => {
 
   // Everything else: pass through. The default browser fetch path is
   // sufficient for `/_next/static/*` (already aggressively cached by
-  // Cache-Control headers) and other same-origin assets.
+  // Cache-Control headers + content-hashed filenames) and other same-
+  // origin assets.
 });

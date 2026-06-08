@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ReviewPage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--review">
       <Suspense fallback={<ReviewFallback />}>
         <ReviewScreen />
       </Suspense>

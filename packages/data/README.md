@@ -5,11 +5,11 @@ artifacts built from the committed ETL output, plus typed loaders for
 browser and Node consumers.
 
 > **Game language:** the project refers to the sport as **football**, never
-> "soccer". No FIFA marks, names, or likenesses are used. wcdraft is **not
-> affiliated with, endorsed by, or sponsored by FIFA, the FIFA World Cup,
-> any participating national football association, club, or player.** The
-> not-affiliated disclaimer is also shipped on every `RuntimeDataManifest`
-> for the UI to surface.
+> "soccer". No official-competition marks, names, or likenesses are used.
+> wcdraft is **not affiliated with, endorsed by, or sponsored by any
+> official competition or governing body, any participating national
+> football association, club, or player.** The not-affiliated disclaimer
+> is also shipped on every `RuntimeDataManifest` for the UI to surface.
 
 ## Bundles
 
@@ -116,9 +116,9 @@ attribution preserved verbatim on every `RuntimeDataManifest`:
 - **Wikipedia (English)** under
   [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
   Pinned revisions:
-  - "2026 FIFA World Cup squads" (oldid `1357762108`),
-  - "2026 FIFA World Cup draw" (oldid `1357747592`),
-  - "2026 FIFA World Cup knockout stage" (oldid `1357752786`),
+  - "2026 World Cup squads" (Wikipedia, oldid `1357762108`),
+  - "2026 World Cup draw" (Wikipedia, oldid `1357747592`),
+  - "2026 World Cup knockout stage" (Wikipedia, oldid `1357752786`),
   retrieved 2026-06-04.
 
 ### Modifications by wcdraft

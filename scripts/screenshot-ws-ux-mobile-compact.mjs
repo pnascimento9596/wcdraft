@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Capture before/after screenshots for ws-ux/mobile-compact-v2 at both mobile
+// Capture before/after screenshots for ws-ux/mobile-compact-v3 at both mobile
 // viewports (390x844 iPhone-class, 360x800 small Android-class).
 //
 // Surfaces visited in order on EACH viewport, against BEFORE (port 3001) and
@@ -112,6 +112,25 @@ async function captureForVariantViewport(variant, viewport, outRoot) {
     await candidatesSection.scrollIntoViewIfNeeded();
     await page.waitForTimeout(300);
     await shotFullPage(page, dir, "04-player-list");
+
+    // ws-ux/mobile-compact-v3: count collapsed candidate rows whose
+    // bounding box intersects the viewport. Logged (not asserted) so
+    // the harness keeps capturing even if the target slips - the
+    // density target is 8-9 rows at 390x844, >= 7 at 360x800.
+    const visibleRows = await page.evaluate(({ vw, vh }) => {
+      const rows = Array.from(
+        document.querySelectorAll(
+          '[aria-label="Candidates"] button[aria-pressed]',
+        ),
+      );
+      return rows.filter((row) => {
+        const r = row.getBoundingClientRect();
+        return r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
+      }).length;
+    }, { vw: viewport.width, vh: viewport.height });
+    console.log(
+      `  · ${variant.label}/${viewport.name} candidate rows visible: ${visibleRows}`,
+    );
   }
 
   // 5) Assign-flow: click the first candidate row → should auto-scroll up
@@ -176,7 +195,7 @@ async function captureForVariantViewport(variant, viewport, outRoot) {
 
 async function main() {
   const outRoot =
-    process.argv[2] ?? join(process.cwd(), "docs/screenshots/ws-ux+mobile-compact-v2");
+    process.argv[2] ?? join(process.cwd(), "docs/screenshots/ws-ux+mobile-compact-v3");
   await mkdir(outRoot, { recursive: true });
 
   for (const variant of VARIANTS) {
