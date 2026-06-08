@@ -608,11 +608,6 @@ function DraftBoard({
     ? baseSynergy.multiplier
     : null;
 
-  // Spun tournament year — drives the ERA / RARE tile on the spin stage. Real
-  // engine value, null only on a data-lookup miss (honest fallback).
-  const spinYear = spin
-    ? (gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? null)
-    : null;
   const spinResultLabel =
     slotReveal !== null ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}` : null;
 
@@ -700,7 +695,6 @@ function DraftBoard({
           synergyOverall={revealSynergyOverall}
           synergyMultiplier={revealSynergyMultiplier}
           playerPoolCount={candidates.players.length}
-          year={spinYear}
           anim={anim}
           onSpin={handleSpin}
           onSettle={handleSettle}
@@ -881,6 +875,7 @@ function DraftBoard({
               manager={candidates.manager}
               selected={sel?.kind === "manager"}
               disabled={draft.manager_card_id !== null}
+              rarePick={spin?.rare === true}
               onSelect={() => selectManager(candidates.manager!)}
             />
           ) : null}
@@ -892,6 +887,7 @@ function DraftBoard({
                 card={card}
                 selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
                 disabled={false}
+                rarePick={spin?.rare === true}
                 onSelect={() => selectPlayer(card)}
               />
             ))}

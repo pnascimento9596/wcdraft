@@ -34,8 +34,11 @@ export interface CardRatingView {
   coverage: number;
   /** Source of the rating signal. */
   provenance: "wc_performance" | "projected_career";
-  /** Historical-only honest-state flag (388 cards). */
-  overall_basis?: "measured_performance" | "baseline_anchor_estimate";
+  /** Historical-only honest-state flag. */
+  overall_basis?:
+    | "measured_performance"
+    | "baseline_anchor_estimate"
+    | "career_stature_estimate";
   /** Folded display kind for the provenance/estimate/legend badge. */
   badge_kind: RatingBadgeKind;
   /** Human label for the provenance/estimate/legend badge. */
@@ -108,6 +111,69 @@ export interface ManagerCardView {
    * "rating unavailable" — never invent pedigree/experience numbers.
    */
   rating_available: false;
+  /**
+   * Flavor-only manager traits derived at web runtime (ENGINE-V2 E-2).
+   * Always exactly two entries. Display-only — NO mechanical effect on
+   * Synergy, team strength, scoring, or any other simulation surface.
+   * Curated for well-known managers; deterministically seeded from
+   * `manager_id` for the rest.
+   */
+  traits: readonly ManagerTraitView[];
+}
+
+// ─── Manager flavor traits (ENGINE-V2 E-2 — display only) ────────────────────
+
+/**
+ * Closed taxonomy of original, generic-football-descriptive manager trait
+ * identifiers. The set is intentionally NOT modelled on EA / FIFA / Football
+ * Manager attribute schemas. Labels are display-only flavor; they MUST NOT
+ * be referenced anywhere in the simulation engine, scoring, or persisted
+ * draft state.
+ */
+export type ManagerTraitId =
+  | "adaptive_plan"
+  | "attacking_license"
+  | "belief_builder"
+  | "compact_shape"
+  | "continuity_builder"
+  | "counter_tempo"
+  | "defensive_platform"
+  | "detail_planner"
+  | "dressing_room_calm"
+  | "emotional_spark"
+  | "finals_calm"
+  | "fluid_front_line"
+  | "global_organiser"
+  | "identity_builder"
+  | "knockout_calm"
+  | "positional_rotation"
+  | "possession_patience"
+  | "pressing_tone"
+  | "quick_assimilation"
+  | "quiet_authority"
+  | "rotation_trust"
+  | "set_piece_voice"
+  | "shape_innovator"
+  | "squad_balance"
+  | "squad_evolution"
+  | "steady_builder"
+  | "structure_first"
+  | "sweeper_view"
+  | "systems_teacher"
+  | "transition_patterns"
+  | "underdog_order"
+  | "wide_patterns"
+  | "youth_trust";
+
+/** Whether a trait was sourced from the curated map or the seeded fallback. */
+export type ManagerTraitSource = "curated" | "derived";
+
+/** Materialised manager trait for UI rendering. */
+export interface ManagerTraitView {
+  readonly id: ManagerTraitId;
+  /** Human label shown in the UI (Title Case). */
+  readonly label: string;
+  readonly source: ManagerTraitSource;
 }
 
 // ─── Pitch slot view ─────────────────────────────────────────────────────────
@@ -194,7 +260,10 @@ export function formatStatValue(value: number | string | null | undefined): stri
 interface BadgeInputs {
   overall: number | null;
   provenance: "wc_performance" | "projected_career";
-  overall_basis?: "measured_performance" | "baseline_anchor_estimate";
+  overall_basis?:
+    | "measured_performance"
+    | "baseline_anchor_estimate"
+    | "career_stature_estimate";
 }
 
 /**

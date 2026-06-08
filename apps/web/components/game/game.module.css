@@ -3316,10 +3316,11 @@ button.benchSlot:not(:disabled):hover {
   vector-effect: non-scaling-stroke;
 }
 
-/* Emerald link = same-nation, both slots filled. Token `--ember` carries
-   the locked emerald (#2ecf92 in light, #54e3ab in dark — the brand
-   lock keeps both within the same emerald family). The glow uses the
-   --glow-ember RGB triplet so the halo follows the theme too. */
+/* Emerald link = same-nation, both slots filled (year-agnostic; ENGINE-V2 E-2
+   made synergy nation-only). Token `--ember` carries the locked emerald
+   (#2ecf92 in light, #54e3ab in dark — the brand lock keeps both within the
+   same emerald family). The glow uses the --glow-ember RGB triplet so the halo
+   follows the theme too. */
 .synergyLineLive {
   stroke: var(--ember);
   stroke-width: 1.1;
@@ -4569,5 +4570,91 @@ button.benchSlot:not(:disabled):hover {
   }
   .candRowSub {
     font-size: 9px;
+  }
+}
+
+/* ─── ENGINE-V2 E-2 — Manager flavor traits (display-only chips) ─────────── */
+
+.managerTraits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.managerTraitChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  /* These chips are FLAVOR only — never style them with gold (reserved for
+     rare) or with the OVR/rating palette. Neutral slate by design. */
+}
+
+/* ─── ENGINE-V2 E-2 — Rare-pick gold accent (additive, reduced-motion safe) ─ */
+
+.spinRevealPanelRare,
+.spinStage.spinRare {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent),
+              0 0 28px -8px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+
+.rareMoment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 8px auto 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 10%, var(--bg-800));
+  color: var(--ink-1);
+  animation: rarePulse 1800ms ease-in-out infinite alternate;
+}
+
+.rareMomentTitle {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.rareMomentProbability {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+
+.candRare {
+  position: relative;
+}
+.candRare::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-strong), var(--gold), var(--gold-strong));
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  pointer-events: none;
+}
+
+@keyframes rarePulse {
+  from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 25%, transparent); }
+  to   { box-shadow: 0 0 18px 2px color-mix(in srgb, var(--gold) 35%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rareMoment {
+    animation: none;
   }
 }

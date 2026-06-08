@@ -248,3 +248,193 @@ describe("team-strength — bounded multiplier (Synergy amplifies, never replace
     expect(withNull).toEqual(withNeutral);
   });
 });
+
+// ─── ENGINE-V2 E-2 NATION-ONLY (cross-year) ──────────────────────────────────
+
+interface MixedSquadOpts {
+  starterNations: string[]; // length 11
+  starterTournamentIds: number[]; // length 11
+  benchNations?: string[];
+  benchTournamentIds?: number[];
+}
+
+function buildMixedSquad(opts: MixedSquadOpts): {
+  squad: SquadSlot[];
+  nationByCardId: Record<string, string>;
+} {
+  const squad: SquadSlot[] = [];
+  const nationByCardId: Record<string, string> = {};
+  TEMPLATE.slots.forEach((slot, i) => {
+    const nation = opts.starterNations[i] ?? "";
+    const yearTid = opts.starterTournamentIds[i] ?? TID;
+    if (nation === "") {
+      squad.push({
+        slot_id: slot.slot_id,
+        is_starter: true,
+        slot_position: slot.slot_position,
+        card_id: null,
+        player_id: null,
+        tournament_id: null,
+        position_compatibility: 0,
+        validation_warnings: [],
+      });
+      return;
+    }
+    const player_id = `s${i}-${yearTid}`;
+    const card_id = buildCardId(player_id, yearTid);
+    nationByCardId[card_id as string] = nation;
+    squad.push({
+      slot_id: slot.slot_id,
+      is_starter: true,
+      slot_position: slot.slot_position,
+      card_id,
+      player_id,
+      tournament_id: yearTid,
+      position_compatibility: 1,
+      validation_warnings: [],
+    });
+  });
+  const bench = opts.benchNations ?? [];
+  const benchTids = opts.benchTournamentIds ?? [];
+  bench.forEach((nation, i) => {
+    const yearTid = benchTids[i] ?? TID;
+    const player_id = `b${i}-${yearTid}`;
+    const card_id = buildCardId(player_id, yearTid);
+    nationByCardId[card_id as string] = nation;
+    squad.push({
+      slot_id: `bench.${i}`,
+      is_starter: false,
+      slot_position: "CM",
+      card_id,
+      player_id,
+      tournament_id: yearTid,
+      position_compatibility: 1,
+      validation_warnings: [],
+    });
+  });
+  return { squad, nationByCardId };
+}
+
+function managerTournamentAt(nation: string, yearTid: number): ManagerTournament {
+  const manager_card_id = buildManagerCardId("mgr1", yearTid);
+  return {
+    manager_card_id,
+    manager_id: "mgr1",
+    tournament_id: yearTid,
+    nation_id: nation,
+    matches: 7,
+    final_placement: 1,
+    sources: [],
+  };
+}
+
+describe("synergy — ENGINE-V2 E-2 NATION-ONLY (year-agnostic)", () => {
+  it("same-nation starters link across different tournament years", () => {
+    // 11 Brazilian starters spanning historical years 1958–2026.
+    const years = [1958, 1962, 1970, 1982, 1994, 2002, 2006, 2010, 2014, 2018, 2026];
+    const { squad, nationByCardId } = buildMixedSquad({
+      starterNations: ALL("BRA"),
+      starterTournamentIds: years,
+    });
+    const r = computeSynergy(squad, TEMPLATE, null, nationByCardId);
+    // Every adjacency edge between occupied starters must link as same-nation.
+    for (const p of r.linked_pairs) {
+      expect(p.linked).toBe(true);
+      expect(p.nation_id).toBe("BRA");
+    }
+    // And the cluster is a single BRA cluster of size 11.
+    expect(r.nation_clusters.length).toBe(1);
+    expect(r.nation_clusters[0]!.nation_id).toBe("BRA");
+    expect(r.nation_clusters[0]!.size).toBe(11);
+  });
+
+  it("different nations do NOT link even when tournament year matches", () => {
+    // All starters at 2002, but split BRA / GER 5/6.
+    const nations = ["BRA","BRA","BRA","BRA","BRA","GER","GER","GER","GER","GER","GER"];
+    const years = Array.from({ length: 11 }, () => 2002);
+    const { squad, nationByCardId } = buildMixedSquad({
+      starterNations: nations,
+      starterTournamentIds: years,
+    });
+    const r = computeSynergy(squad, TEMPLATE, null, nationByCardId);
+    // Any edge whose endpoints span different nations must NOT link.
+    for (const p of r.linked_pairs) {
+      const slotsById = new Map(squad.filter((s) => s.is_starter).map((s) => [s.slot_id, s]));
+      const cidA = slotsById.get(p.slot_id_a)!.card_id!;
+      const cidB = slotsById.get(p.slot_id_b)!.card_id!;
+      const na = nationByCardId[cidA as string];
+      const nb = nationByCardId[cidB as string];
+      if (na !== nb) {
+        expect(p.linked).toBe(false);
+        expect(p.nation_id).toBeNull();
+      } else {
+        expect(p.linked).toBe(true);
+        expect(p.nation_id).toBe(na);
+      }
+    }
+  });
+
+  it("manager_link is count-based and year-agnostic", () => {
+    // Scenario A: 5 BRA starters mixed across years; 6 non-BRA starters.
+    // 5/11 ≈ 0.4545, divided by MANAGER_LINK_FULL_AT (0.6) → ≈ 0.757 ∈ (0, 1).
+    const yearsA = [1958, 1962, 1970, 1982, 1994, 2002, 2002, 2002, 2002, 2002, 2002];
+    const nationsA = ["BRA","BRA","BRA","BRA","BRA","GER","ITA","ARG","FRA","ENG","ESP"];
+    const a = buildMixedSquad({
+      starterNations: nationsA,
+      starterTournamentIds: yearsA,
+    });
+    const mgrA = managerTournamentAt("BRA", 2026); // mgr year ≠ any starter year for most.
+
+    // Scenario B: same 7 BRA / 4 non-BRA but all on a SINGLE year (2002).
+    const nationsB = nationsA.slice();
+    const yearsB = Array.from({ length: 11 }, () => 2002);
+    const b = buildMixedSquad({
+      starterNations: nationsB,
+      starterTournamentIds: yearsB,
+    });
+    const mgrB = managerTournamentAt("BRA", 2002);
+
+    const ra = computeSynergy(a.squad, TEMPLATE, mgrA, a.nationByCardId);
+    const rb = computeSynergy(b.squad, TEMPLATE, mgrB, b.nationByCardId);
+
+    // Same-nation starter count drives manager_link; both scenarios share count.
+    expect(ra.manager_link).toBe(rb.manager_link);
+    // And both are strictly between 0 and 1 (partial share).
+    expect(ra.manager_link).toBeGreaterThan(0);
+    expect(ra.manager_link).toBeLessThan(1);
+  });
+
+  it("manager tournament year is irrelevant — all-BRA XI yields manager_link === 1", () => {
+    const years = [1958, 1970, 1982, 1994, 2002, 2006, 2010, 2014, 2018, 2022, 2026];
+    const { squad, nationByCardId } = buildMixedSquad({
+      starterNations: ALL("BRA"),
+      starterTournamentIds: years,
+    });
+    // Manager card from 2026 still links fully against pre-1998 BRA starters.
+    const mgr = managerTournamentAt("BRA", 2026);
+    const r = computeSynergy(squad, TEMPLATE, mgr, nationByCardId);
+    expect(r.manager_link).toBe(1);
+  });
+
+  it("bench composition (incl. bench years) does not affect manager_link", () => {
+    const starterYears = [1970, 1970, 1970, 1970, 1970, 1970, 1970, 1970, 1970, 1970, 1970];
+    const a = buildMixedSquad({
+      starterNations: ALL("BRA"),
+      starterTournamentIds: starterYears,
+      benchNations: ["ARG","ARG","ARG","ARG","ARG"],
+      benchTournamentIds: [1970, 1970, 1970, 1970, 1970],
+    });
+    const b = buildMixedSquad({
+      starterNations: ALL("BRA"),
+      starterTournamentIds: starterYears,
+      benchNations: ["ARG","ARG","ARG","ARG","ARG"],
+      benchTournamentIds: [2026, 2026, 2026, 2026, 2026],
+    });
+    const mgr = managerTournamentAt("BRA", 2002);
+    const ra = computeSynergy(a.squad, TEMPLATE, mgr, a.nationByCardId);
+    const rb = computeSynergy(b.squad, TEMPLATE, mgr, b.nationByCardId);
+    expect(ra.manager_link).toBe(rb.manager_link);
+    expect(ra.nation_clusters).toEqual(rb.nation_clusters);
+    expect(ra.linked_pairs).toEqual(rb.linked_pairs);
+  });
+});

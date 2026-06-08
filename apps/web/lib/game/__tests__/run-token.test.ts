@@ -56,6 +56,11 @@ function buildDataset(): DraftDataset {
       tournament_id: m.tournament_id,
       nation_id: m.nation_id,
     })),
+    // ENGINE-V2 E-1: era-weighted sampling needs tournament years.
+    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
+      tournament_id: Number(tid),
+      year: t.year,
+    })),
   };
 }
 
@@ -229,6 +234,73 @@ describe("run-token — honest-state on version skew", () => {
         `expected skew on ${Object.keys(patch).join(",")} to trip versionsAgree`,
       ).toBe(false);
     }
+  });
+});
+
+describe("run-token — season-merge bump: pre-bump token surfaces skew, current replays byte-identical", () => {
+  // The real-world regression this guards: a `?run=` link minted by the
+  // PREVIOUS shipped build (engine-2026.06.04 + wc-perf-2.0.0) is opened
+  // against THIS build (engine-2026.06.08 + the E-4 wc-perf-3.0.0 ratings).
+  // The screens (results-screen / share-screen) gate replay on
+  // `versionsAgree` and MUST show the "different build" notice instead of
+  // silently re-simulating the old picks against the new ratings.
+  const gameData = buildGameDataFromBundles();
+  const origin = buildOriginRecord(gameData);
+
+  // Previous shipped build's anchors (pre season-merge).
+  const PREV_ENGINE_VERSION = "engine-2026.06.04";
+  const PREV_RATING_VERSION = "wc-perf-2.0.0";
+
+  /** A genuine `t1.` token as the previous build would have minted it. */
+  function mintPreBumpToken(): string {
+    const preBumpVersions: RunRecordVersions = {
+      ...gameData.versions,
+      engine_version: PREV_ENGINE_VERSION,
+      rating_version: PREV_RATING_VERSION,
+    };
+    const preBumpRecord: RunRecordV1 = { ...origin, versions: preBumpVersions };
+    return encodeRunToken(preBumpRecord);
+  }
+
+  it("the current build is the bumped season-merge build", () => {
+    // Pins the bump so a future stamp change is a conscious re-lock.
+    expect(gameData.versions.engine_version).toBe("engine-2026.06.08");
+    expect(gameData.versions.engine_version).toBe(RUNTIME_DATA_MANIFEST.engine_version);
+    // The current rating anchor is the E-4 career-lift version, NOT the old one.
+    expect(gameData.versions.rating_version).toContain("wc-perf-3.0.0");
+    expect(gameData.versions.rating_version).not.toContain(PREV_RATING_VERSION);
+  });
+
+  it("a pre-bump token (engine-2026.06.04 + wc-perf-2.0.0) trips skew — NOT a silent re-sim", () => {
+    const decoded = decodeRunToken(mintPreBumpToken());
+    expect(decoded).not.toBeNull();
+    // The token carries the OLD anchors verbatim …
+    expect(decoded!.ev).toBe(PREV_ENGINE_VERSION);
+    expect(decoded!.rv).toBe(PREV_RATING_VERSION);
+    // … so against the current bundle the version gate is FALSE. This is the
+    // boolean results-screen.tsx / share-screen.tsx branch on to render the
+    // honest "This shared run is from a different build" notice; they never
+    // call reconstructDraftFromToken when this is false.
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
+    // Specifically the engine AND rating anchors diverge (not just one).
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+    expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
+  });
+
+  it("a current-build token agrees and replays byte-identical (no skew)", () => {
+    const decoded = decodeRunToken(encodeRunToken(origin))!;
+    expect(decoded.ev).toBe("engine-2026.06.08");
+    expect(versionsAgree(decoded, gameData.versions)).toBe(true);
+
+    // Same-build replay is byte-identical end-to-end — the deterministic
+    // subset of the persisted simulation reproduces exactly.
+    const originSim = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, origin).simulation;
+    const replaySim = runSimulationSync(
+      gameData,
+      SCENARIO_2026_BUNDLE,
+      virtualRecordFromToken(decoded, gameData),
+    ).simulation;
+    expect(JSON.stringify(replaySim)).toBe(JSON.stringify(originSim));
   });
 });
 

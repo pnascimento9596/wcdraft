@@ -33,6 +33,7 @@ import type {
   PlayerCardView,
 } from "./view-models";
 import { provenanceBadgeKind, provenanceBadgeLabel } from "./view-models";
+import { managerTraitsFor } from "./manager-traits";
 
 // ─── Tournament / nation lookups ─────────────────────────────────────────────
 
@@ -192,6 +193,11 @@ export function managerCardView(
     matches: m.matches,
     final_placement: m.final_placement,
     rating_available: false,
+    traits: managerTraitsFor({
+      manager_id: m.manager_id,
+      full_name: m.full_name,
+      common_name: m.common_name,
+    }),
   };
 }
 

@@ -119,11 +119,13 @@ export interface RuntimeBundleFingerprint {
  * historical honest-state fields that 1930–2022 cards carry but 2026 cards
  * do not:
  *
- *  - `overall_basis` — `"measured_performance"` (default) vs.
+ *  - `overall_basis` — `"measured_performance"` (default),
  *    `"baseline_anchor_estimate"` (388 historical cards where the score is
  *    estimated from an era anchor because tournament-card signals were too
- *    thin to compute directly). The UI surfaces the estimate as a coverage
- *    badge — never silently rendered as a measured number.
+ *    thin to compute directly), or `"career_stature_estimate"` (E-4: a
+ *    no-tournament-signal card carried by a well-covered elite career record;
+ *    0 cards currently, but a live basis). The UI surfaces an estimate as a
+ *    coverage badge — never silently rendered as a measured number.
  *  - `appearances_source` — RSSSF supplement vs. Fjelstul match events; UI
  *    can disambiguate pre-1970 supplemented appearances vs. native counts.
  *
@@ -131,8 +133,11 @@ export interface RuntimeBundleFingerprint {
  * are emitted as `undefined` so the JSON omits them.
  */
 export interface RuntimeRating extends Rating {
-  /** Historical only. UI badge for the 388 estimate-anchored ratings. */
-  overall_basis?: "measured_performance" | "baseline_anchor_estimate";
+  /** Historical only. UI badge for estimate-anchored ratings. */
+  overall_basis?:
+    | "measured_performance"
+    | "baseline_anchor_estimate"
+    | "career_stature_estimate";
   /** Historical only. Provenance of the `appearances` count. */
   appearances_source?: string;
 }
@@ -392,6 +397,8 @@ export interface RuntimeDataManifest {
     knockout_slots: number;
     /** Historical cards flagged `overall_basis === "baseline_anchor_estimate"` — 388 expected. */
     baseline_anchor_estimate: number;
+    /** E-4: cards flagged `overall_basis === "career_stature_estimate"` — 0 currently. */
+    career_stature_estimate: number;
   };
   /** Full attribution block (UI surface). */
   attribution: RuntimeAttribution;
