@@ -11,7 +11,12 @@
     },
     "lint": {},
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["WCDRAFT_REALISM_HEAVY"]
+    },
+    "test:realism:heavy": {
+      "dependsOn": ["^build"],
+      "env": ["WCDRAFT_REALISM_HEAVY", "WCDRAFT_REALISM_N", "WCDRAFT_REALISM_SEED_PREFIX", "WCDRAFT_REALISM_GATE"]
     },
     "test:golden": {},
     "test:golden:draft": {},

@@ -1,4 +1,5 @@
-// WS-C — the deterministic 17-spin DRAFT state machine.
+// ENGINE-V2 E-1 — the deterministic 17-spin DRAFT state machine, era-weighted
+// + with-replacement + rare exposure.
 //
 // This is the runtime that fills the WS-0c draft contract declared in
 // `types/draft.ts` + `schemas/draft.ts`. It is PURE and DETERMINISTIC: the only
@@ -6,11 +7,29 @@
 // from `deriveSubseed`). No Date / Math.random / crypto anywhere — the
 // determinism lint guard enforces this across `packages/core/src`.
 //
-// ─── THE 17 SPINS ────────────────────────────────────────────────────────────
-//   - Each spin samples a UNIQUE (tournament_id, nation_id) pair WITHOUT
-//     replacement from the valid pool. The pool is CANONICALLY SORTED by
-//     (tournament_id, nation_id) BEFORE the draw (`canonicalSortBy`), so pool
-//     insertion-order drift can never silently change a draw.
+// ─── THE 17 SPINS (ENGINE-V2 E-1) ────────────────────────────────────────────
+//   - Each spin is an INDEPENDENT, ERA-WEIGHTED, WITH-REPLACEMENT weighted
+//     draw over ALL (tournament_id, nation_id) pairs in the catalog. The same
+//     (T, N) MAY be drawn on more than one spin; the old WS-0c pair-once rule
+//     is gone.
+//   - ERA WEIGHTING is a YEAR-level allocation, then UNIFORM-within-year over
+//     the pairs of that year:
+//       - rare years (year < `RARE_YEAR_CUTOFF` = 1998) receive a flat
+//         `RARE_ERA_MASS` (10%) of total per-spin probability;
+//       - modern years (year >= 1998) receive `MODERN_ERA_MASS` (90%), with
+//         a per-year recency factor scaling from 1.0 at 1998 to 1.5 at 2026
+//         (clamped outside that range);
+//       - within an era, year mass is split proportionally to the year factor;
+//       - within a year, pair mass is split uniformly across the year's pairs.
+//     The weights are an engine constant (function of year), NOT a data input.
+//   - DEPLETED-SQUAD ADVANCE: if the weighted starting pair has no un-picked
+//     player left AND no selectable coach (manager already drafted, or no
+//     coach on that pair), the engine deterministically advances through the
+//     canonical (T, N) pool order until a selectable pair is reached. The
+//     emitted Spin.draw_probability accounts for the swept-past weight.
+//   - GLOBAL player_id dedup remains the hard guarantee: a player picked on
+//     one spin is filtered out of every later spin's roster (even if the
+//     same (T, N) repeats).
 //   - The spin presents that squad's player cards (canonically sorted by
 //     `card_id`, with every already-picked player_id filtered out GLOBALLY) AND
 //     that team-year's coach as candidates. The user takes exactly ONE entity.
@@ -29,8 +48,18 @@
 //   pending spin). A resolved spin object and its occupied SquadSlot are
 //   deep-FROZEN and carried by reference into every later state — so they
 //   physically cannot change. Transitions are append-only and never mutate a
-//   resolved spin; only later PENDING spins are re-rolled (their global dedup /
-//   coach-availability changes as picks accumulate).
+//   resolved spin; only later PENDING spins are regenerated (their global
+//   dedup / coach-availability changes as picks accumulate, and their drawn
+//   (T, N) may advance to a non-depleted pair).
+//
+// ─── DETERMINISM (ENGINE-V2 E-1) ─────────────────────────────────────────────
+//   `rebuildSpins(catalog, draft_seed, spins)` replays exactly ONE
+//   `rng.next()` per spin index in order; picked spins consume the draw to
+//   preserve RNG alignment but pass through unchanged by reference, while
+//   pending spins regenerate their entry/candidates from the replayed `u`
+//   value, the current global picked-player set, and the manager-drafted
+//   flag. Same `(catalog, draft_seed, resolved-pick-sequence)` → byte-identical
+//   17-spin sequence on every platform.
 //
 // ─── SOFT RULES ──────────────────────────────────────────────────────────────
 //   no-GK and out-of-position are SOFT (low `position_compatibility` + a
@@ -39,9 +68,10 @@
 //
 // SCOPE: the draft engine consumes a narrow candidate view of the ingested
 // `PlayerTournament` / `ManagerTournament` cards (`DraftPlayerCard` /
-// `DraftManagerCard`). Real wiring maps those canonical records 1:1 onto these
-// views; golden development runs against a synthetic fixture squad set so this
-// lane does not block on data wiring (see `draft.fixture.ts`).
+// `DraftManagerCard`) PLUS a `DraftTournament` view ({tournament_id, year})
+// for era weighting. Real wiring maps those canonical records 1:1 onto these
+// views; golden development runs against a synthetic fixture squad set so
+// this lane does not block on data wiring (see `draft.fixture.ts`).
 
 import { canonicalSortBy, createRng, deriveSubseed } from "./rng.js";
 import { positionCompatibility } from "./api/compatibility.js";
@@ -81,10 +111,23 @@ export interface DraftManagerCard {
   nation_id: string;
 }
 
-/** The candidate source for a draft: player cards + coach cards. */
+/**
+ * The narrow per-tournament view the draft engine needs for ENGINE-V2 E-1 era
+ * weighting. The engine MUST NOT infer year from `tournament_id`; real
+ * tournament_ids happen to be FIFA's catalog ids, not years.
+ */
+export interface DraftTournament {
+  tournament_id: number;
+  /** Calendar year the tournament was played. Positive integer. */
+  year: number;
+}
+
+/** The candidate source for a draft: player cards + coach cards + tournaments. */
 export interface DraftDataset {
   players: readonly DraftPlayerCard[];
   managers: readonly DraftManagerCard[];
+  /** Required ENGINE-V2 E-1: must cover every tournament_id referenced by `players`. */
+  tournaments: readonly DraftTournament[];
 }
 
 /**
@@ -103,14 +146,69 @@ export interface CreateDraftParams {
   engine_version: string;
 }
 
+// ─── ERA WEIGHTING CONSTANTS (ENGINE-V2 E-1) ─────────────────────────────────
+//
+// These are engine constants (not data) — golden-tested via the draft fixture
+// + the dedicated era-weighting tests in draft.golden.test.ts. Bumping any of
+// these is an intentional engine change that re-locks the draft golden.
+
+/** Tournaments STRICTLY before this year are `rare` (pre-1998 era). */
+export const RARE_YEAR_CUTOFF = 1998;
+/**
+ * Aggregate per-spin probability allocated to rare (pre-1998) years.
+ *
+ * ENGINE-V2 E-1b (Paulo's product call): lowered from 0.15 to 0.10 so the
+ * reachable squad pool tilts more modern (>= 90% from 1998..2026). The
+ * recency factor, year-level mass split, and uniform-within-year structure
+ * are unchanged.
+ */
+export const RARE_ERA_MASS = 0.1;
+/** Aggregate per-spin probability allocated to modern (>= 1998) years. */
+export const MODERN_ERA_MASS = 0.9;
+/** Modern recency factor lower anchor — 1998 receives factor 1.0. */
+const MODERN_RECENCY_START_YEAR = 1998;
+/** Modern recency factor upper anchor — 2026 receives factor `1 + MODERN_RECENCY_BONUS`. */
+const MODERN_RECENCY_END_YEAR = 2026;
+/** Modern recency factor span; 2026 receives `1 + 0.5 = 1.5` × the 1998 weight. */
+const MODERN_RECENCY_BONUS = 0.5;
+
+/**
+ * Round a probability to 12 fractional digits via `Number(p.toFixed(12))` so
+ * `JSON.stringify` produces a stable byte sequence across platforms (golden
+ * stability) without losing meaningful precision.
+ */
+function roundProbability(p: number): number {
+  return Number(p.toFixed(12));
+}
+
+/**
+ * The recency factor for a modern year. 1.0 at `MODERN_RECENCY_START_YEAR`,
+ * linearly scaling to `1 + MODERN_RECENCY_BONUS` at `MODERN_RECENCY_END_YEAR`,
+ * clamped outside the range. Pure function of `year`.
+ */
+function modernYearFactor(year: number): number {
+  const span = MODERN_RECENCY_END_YEAR - MODERN_RECENCY_START_YEAR;
+  const t = Math.max(0, Math.min(1, (year - MODERN_RECENCY_START_YEAR) / span));
+  return 1 + MODERN_RECENCY_BONUS * t;
+}
+
 // ─── CATALOG (indexed, canonically ordered candidate source) ─────────────────
 
 /** One (tournament, nation) squad bucket — roster canonically sorted by card_id. */
 interface TnEntry {
   tournament_id: number;
   nation_id: string;
+  /** Tournament year — drives era weighting + `Spin.rare`. */
+  year: number;
+  /** True iff `year < RARE_YEAR_CUTOFF`. Cached on the entry for sampling speed. */
+  rare: boolean;
   roster: readonly DraftPlayerCard[];
   coach: DraftManagerCard | null;
+  /**
+   * Per-pair base draw weight from the ENGINE-V2 E-1 era-weighting formula.
+   * Sums to ≈ 1.0 across the catalog's `pairs` (modulo float rounding).
+   */
+  base_draw_weight: number;
 }
 
 /**
@@ -122,6 +220,14 @@ export interface DraftCatalog {
   /** Canonically sorted by (tournament_id, nation_id) — the draw pool. */
   readonly pairs: readonly TnEntry[];
   readonly byPair: ReadonlyMap<string, TnEntry>;
+  /**
+   * Cached cumulative `base_draw_weight` over `pairs` for O(log n) weighted
+   * start selection. `cumulativeWeights[i]` is the running sum INCLUDING
+   * `pairs[i].base_draw_weight`. The last element equals the total weight.
+   */
+  readonly cumulativeWeights: readonly number[];
+  /** True iff at least one entry has a non-null `coach`. */
+  readonly hasAnyCoach: boolean;
 }
 
 const SPIN_COUNT = 17;
@@ -135,11 +241,12 @@ const BENCH_COUNT = 5;
 const BENCH_LAYOUT: readonly SlotPosition[] = ["GK", "CB", "CM", "CM", "ST"];
 
 function pairKey(tournament_id: number, nation_id: string): string {
-  // Separator is U+0000, emitted in the return below via the 6-char escape
-  // backslash-u-0000 (NEVER a literal NUL byte, which would make this source
-  // file binary to git/diff tooling). A nation_id carries no control chars, so
-  // a numeric tournament_id + U+0000 + nation_id cannot collide across pairs.
-  return `${tournament_id}\u0000${nation_id}`;
+  // Separator is "|" — nation_id is an alphanumeric short code (never
+  // contains "|"), so a numeric tournament_id + "|" + nation_id cannot
+  // collide across pairs. (Earlier revisions used a U+0000 escape; that
+  // attracted bugs whenever a tool stripped the source-level escape and
+  // left a literal NUL byte in this file.)
+  return `${tournament_id}|${nation_id}`;
 }
 
 /**
@@ -147,8 +254,30 @@ function pairKey(tournament_id: number, nation_id: string): string {
  * (tournament, nation) and each roster is canonically sorted by `card_id`
  * BEFORE any draw. Coaches attach to their matching (tournament, nation) bucket;
  * a coach with no player squad in the dataset is ignored (no squad to spin on).
+ *
+ * ENGINE-V2 E-1: tournament metadata is REQUIRED for every tournament_id that
+ * appears in `players` — used to attach the `year`/`rare` flag to each entry
+ * and to compute the era-weighted `base_draw_weight`. Missing or conflicting
+ * tournament metadata is a hard failure here (not a silent zero/default).
  */
 export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
+  // Tournament-year index — honest mismatch instead of silent defaults.
+  const yearByTournament = new Map<number, number>();
+  for (const t of dataset.tournaments) {
+    const prior = yearByTournament.get(t.tournament_id);
+    if (prior !== undefined && prior !== t.year) {
+      throw new RangeError(
+        `buildDraftCatalog: conflicting year metadata for tournament_id ${t.tournament_id} (${prior} vs ${t.year})`,
+      );
+    }
+    if (!Number.isSafeInteger(t.year) || t.year <= 0) {
+      throw new RangeError(
+        `buildDraftCatalog: tournament_id ${t.tournament_id} has invalid year ${t.year}`,
+      );
+    }
+    yearByTournament.set(t.tournament_id, t.year);
+  }
+
   // Group players by (tournament, nation).
   const rosterGroups = new Map<string, DraftPlayerCard[]>();
   for (const card of dataset.players) {
@@ -175,25 +304,138 @@ export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
     group.push(coach);
   }
 
-  const byPair = new Map<string, TnEntry>();
+  // Build entries (year-less + weight-less first; we attach weights in a
+  // second pass once we know the year groups).
+  interface PartialEntry {
+    tournament_id: number;
+    nation_id: string;
+    year: number;
+    rare: boolean;
+    roster: readonly DraftPlayerCard[];
+    coach: DraftManagerCard | null;
+  }
+  const partials = new Map<string, PartialEntry>();
   for (const [key, group] of rosterGroups) {
     const first = group[0]!;
+    const year = yearByTournament.get(first.tournament_id);
+    if (year === undefined) {
+      throw new RangeError(
+        `buildDraftCatalog: missing tournament metadata for tournament_id ${first.tournament_id} (referenced by ${group.length} player card(s) in nation ${first.nation_id})`,
+      );
+    }
     const roster = canonicalSortBy(group, (c) => [buildCardId(c.player_id, c.tournament_id)]);
     const coaches = coachGroups.get(key);
     let coach: DraftManagerCard | null = null;
     if (coaches && coaches.length > 0) {
       coach = canonicalSortBy(coaches, (c) => [c.manager_id])[0]!;
     }
-    byPair.set(key, {
+    partials.set(key, {
       tournament_id: first.tournament_id,
       nation_id: first.nation_id,
+      year,
+      rare: year < RARE_YEAR_CUTOFF,
       roster,
       coach,
     });
   }
 
+  // ENGINE-V2 E-1 ERA WEIGHTING — year-level mass split, then uniform within
+  // a year. Pair count per year does NOT inflate the year's exposure (the
+  // 2026 48-team expansion would otherwise swamp the recency curve).
+
+  const pairsByYear = new Map<number, PartialEntry[]>();
+  for (const p of partials.values()) {
+    let group = pairsByYear.get(p.year);
+    if (!group) {
+      group = [];
+      pairsByYear.set(p.year, group);
+    }
+    group.push(p);
+  }
+
+  const rareYears: number[] = [];
+  const modernYears: number[] = [];
+  for (const y of pairsByYear.keys()) {
+    if (y < RARE_YEAR_CUTOFF) rareYears.push(y);
+    else modernYears.push(y);
+  }
+
+  // Era masses — collapse to the single-era case so a fixture/catalog with
+  // only one era still sums to 1.0 (the absent era contributes nothing).
+  const hasRare = rareYears.length > 0;
+  const hasModern = modernYears.length > 0;
+  let rareEraMass: number;
+  let modernEraMass: number;
+  if (hasRare && hasModern) {
+    rareEraMass = RARE_ERA_MASS;
+    modernEraMass = MODERN_ERA_MASS;
+  } else if (hasRare) {
+    rareEraMass = 1;
+    modernEraMass = 0;
+  } else if (hasModern) {
+    rareEraMass = 0;
+    modernEraMass = 1;
+  } else {
+    rareEraMass = 0;
+    modernEraMass = 0;
+  }
+
+  // Compute year-factor sums per era for normalization.
+  const rareFactorSum = rareYears.length; // flat — rare era is uniform across rare years.
+  let modernFactorSum = 0;
+  for (const y of modernYears) {
+    modernFactorSum += modernYearFactor(y);
+  }
+
+  // Allocate year mass, then split uniformly within a year.
+  const yearMass = new Map<number, number>();
+  for (const y of rareYears) {
+    const yMass = rareFactorSum > 0 ? rareEraMass * (1 / rareFactorSum) : 0;
+    yearMass.set(y, yMass);
+  }
+  for (const y of modernYears) {
+    const factor = modernYearFactor(y);
+    const yMass = modernFactorSum > 0 ? modernEraMass * (factor / modernFactorSum) : 0;
+    yearMass.set(y, yMass);
+  }
+
+  const byPair = new Map<string, TnEntry>();
+  for (const [key, p] of partials) {
+    const yPairs = pairsByYear.get(p.year)!;
+    const massForYear = yearMass.get(p.year) ?? 0;
+    const perPair = yPairs.length > 0 ? massForYear / yPairs.length : 0;
+    byPair.set(key, {
+      tournament_id: p.tournament_id,
+      nation_id: p.nation_id,
+      year: p.year,
+      rare: p.rare,
+      roster: p.roster,
+      coach: p.coach,
+      base_draw_weight: perPair,
+    });
+  }
+
   const pairs = canonicalSortBy([...byPair.values()], (e) => [e.tournament_id, e.nation_id]);
-  return { pairs, byPair };
+  if (pairs.length === 0) {
+    throw new RangeError("buildDraftCatalog: dataset has no (tournament, nation) player buckets");
+  }
+  const cumulativeWeights: number[] = [];
+  let running = 0;
+  let hasAnyCoach = false;
+  for (const e of pairs) {
+    running += e.base_draw_weight;
+    cumulativeWeights.push(running);
+    if (e.coach !== null) hasAnyCoach = true;
+  }
+  // Defensive: if every year had zero mass (no years registered for any pair),
+  // sampling would divide by zero. This should be impossible given the
+  // missing-metadata throw above, but bail honestly if it ever happens.
+  if (running <= 0) {
+    throw new RangeError(
+      "buildDraftCatalog: total base_draw_weight is zero — every pair's tournament year resolved to zero mass",
+    );
+  }
+  return { pairs, byPair, cumulativeWeights, hasAnyCoach };
 }
 
 // ─── IMMUTABILITY HELPERS (lock-on-pick) ─────────────────────────────────────
@@ -209,27 +451,126 @@ function freezeSlot(slot: SquadSlot): SquadSlot {
   return Object.freeze(slot);
 }
 
+// ─── WEIGHTED DRAW + DEPLETION ADVANCE (ENGINE-V2 E-1) ───────────────────────
+
+/**
+ * True if `entry` can still source AT LEAST ONE pickable thing on a spin
+ * with the given prior-pick context: an un-picked player OR a coach (only
+ * when no manager has been drafted yet).
+ */
+function isEntrySelectable(
+  entry: TnEntry,
+  excluded: ReadonlySet<string>,
+  managerPicked: boolean,
+): boolean {
+  if (!managerPicked && entry.coach !== null) return true;
+  for (const card of entry.roster) {
+    if (!excluded.has(card.player_id)) return true;
+  }
+  return false;
+}
+
+/**
+ * Find the canonical-order index of the weighted start pair for a `u ∈ [0, 1)`
+ * draw. Uses binary search over `cumulativeWeights` so a fixture with hundreds
+ * of pairs costs O(log n) per spin.
+ */
+function weightedStartIndex(catalog: DraftCatalog, u: number): number {
+  const total = catalog.cumulativeWeights[catalog.cumulativeWeights.length - 1]!;
+  // Map `u` into the cumulative-weight space; clamp the inclusive-upper edge
+  // (`u === 1` is unreachable from `rng.next()` but defended for safety).
+  const target = Math.min(u * total, total * (1 - 1e-15));
+  let lo = 0;
+  let hi = catalog.cumulativeWeights.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (catalog.cumulativeWeights[mid]! <= target) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
+
+/**
+ * Result of a single weighted-draw + deterministic-advance step for one spin.
+ * The `draw_probability` is the SUM of `base_draw_weight` from the emitted
+ * entry plus every contiguous depleted entry the advance scanned past to
+ * reach it (the engine deterministically advances in canonical order, so the
+ * scan-back walk computes the exact emission probability under the given
+ * pick context).
+ */
+interface WeightedDrawResult {
+  entry: TnEntry;
+  draw_probability: number;
+}
+
+/**
+ * Draw the (T, N) entry for a single spin from one `rng.next()` worth of
+ * entropy. The starting index is the weighted-start under the catalog's
+ * static weights; if that entry is depleted under the current pick context,
+ * the engine deterministically advances `(idx + 1) % pairs.length` until a
+ * selectable entry is reached. Emission probability is summed back over the
+ * contiguous depleted run that led to the emitted index.
+ *
+ * @throws RangeError if NO entry in the whole catalog is selectable under
+ *   the given pick context (a fully depleted draft pool — the schema /
+ *   surrounding state should prevent this from being reachable in normal
+ *   play; surfacing honestly is preferable to looping forever).
+ */
+function drawSpinEntry(
+  catalog: DraftCatalog,
+  u: number,
+  excluded: ReadonlySet<string>,
+  managerPicked: boolean,
+): WeightedDrawResult {
+  const startIdx = weightedStartIndex(catalog, u);
+  const n = catalog.pairs.length;
+
+  // Scan forward (canonical order, wrap) for the first selectable entry.
+  let idx = startIdx;
+  let scanned = 0;
+  while (!isEntrySelectable(catalog.pairs[idx]!, excluded, managerPicked)) {
+    idx = (idx + 1) % n;
+    scanned++;
+    if (scanned >= n) {
+      throw new RangeError(
+        "draft pool is fully depleted: no (tournament, nation) pair offers a selectable player or coach under the current pick context",
+      );
+    }
+  }
+  const emitted = catalog.pairs[idx]!;
+
+  // Compute draw_probability by walking BACK from the emitted index across the
+  // contiguous depleted entries the advance would have scanned past. Includes
+  // the emitted entry's own weight. Stop the walk when we hit a selectable
+  // entry or wrap fully back to `idx`.
+  let probability = emitted.base_draw_weight;
+  let walk = (idx - 1 + n) % n;
+  let safetySteps = 0;
+  while (walk !== idx && safetySteps < n) {
+    const w = catalog.pairs[walk]!;
+    if (isEntrySelectable(w, excluded, managerPicked)) break;
+    probability += w.base_draw_weight;
+    walk = (walk - 1 + n) % n;
+    safetySteps++;
+  }
+
+  return { entry: emitted, draw_probability: roundProbability(probability) };
+}
+
 // ─── SPIN ROLLING ────────────────────────────────────────────────────────────
 
 /**
- * (Re)roll a PENDING spin's candidate fields from the current running state:
- * global player dedup (`priorPlayerPicks`, in pick order) and whether a manager
- * has already been taken (`managerPicked`). Resolved spins are never re-rolled.
+ * Build a fresh PENDING spin object from a drawn `TnEntry` and the current
+ * pick context. The roster is filtered by the GLOBAL picked-player set; the
+ * coach is exposed iff no manager has been drafted yet.
  */
-function rollPendingSpin(
-  catalog: DraftCatalog,
+function rollPendingSpinFromEntry(
+  entry: TnEntry,
   index: number,
-  tournament_id: number,
-  nation_id: string,
   priorPlayerPicks: readonly string[],
   managerPicked: boolean,
+  draw_probability: number,
 ): Spin {
-  const entry = catalog.byPair.get(pairKey(tournament_id, nation_id));
-  if (!entry) {
-    throw new RangeError(
-      `draft engine: no catalog entry for (tournament ${tournament_id}, nation ${nation_id})`,
-    );
-  }
   const excluded = new Set(priorPlayerPicks);
   const rolled_card_ids: CardId[] = [];
   for (const card of entry.roster) {
@@ -242,8 +583,10 @@ function rollPendingSpin(
       : null;
   return {
     index,
-    tournament_id,
-    nation_id,
+    tournament_id: entry.tournament_id,
+    nation_id: entry.nation_id,
+    rare: entry.rare,
+    draw_probability,
     rolled_card_ids,
     excluded_player_ids: [...priorPlayerPicks],
     rolled_manager_card_id,
@@ -259,18 +602,38 @@ function rollPendingSpin(
 }
 
 /**
- * Refresh every PENDING spin from the resolved spins ahead of it. Resolved
- * spins (already frozen) pass through UNCHANGED by reference — lock-on-pick.
- * `priorPlayerPicks` accumulates in spin order (so each spin's
- * `excluded_player_ids` equals exactly the players picked before it) and the
- * `managerPicked` flag flips after the manager spin (so every later spin's
- * `rolled_manager_card_id` becomes null).
+ * Refresh every PENDING spin by replaying the seeded `"draft"` RNG stream and
+ * the running pick context. Resolved spins (already frozen) pass through
+ * UNCHANGED by reference — lock-on-pick — but the RNG is advanced one step
+ * per index so the i-th `rng.next()` value always lines up with spin `i`.
+ *
+ * Algorithm (ENGINE-V2 E-1):
+ *   for i in 0..16:
+ *     u = rng.next()
+ *     if spins[i].status === 'picked':
+ *       carry it forward; update `priorPlayerPicks` / `managerPicked`.
+ *     else:
+ *       draw a fresh entry from `(u, excluded, managerPicked)` with
+ *       deterministic depletion advance; build a new pending Spin.
+ *
+ * `priorPlayerPicks` accumulates in spin order (so each pending spin's
+ * `excluded_player_ids` equals exactly the players picked before it) and
+ * `managerPicked` flips after a manager pick (so every later pending spin's
+ * `rolled_manager_card_id` becomes null even if the drawn (T, N) carries a
+ * coach in the catalog).
  */
-function rebuildSpins(catalog: DraftCatalog, spins: readonly Spin[]): Spin[] {
+function rebuildSpins(
+  catalog: DraftCatalog,
+  draft_seed: string,
+  spins: readonly Spin[],
+): Spin[] {
+  const rng = createRng(draft_seed);
   const priorPlayerPicks: string[] = [];
   let managerPicked = false;
   const out: Spin[] = [];
-  for (const spin of spins) {
+  for (let i = 0; i < spins.length; i++) {
+    const u = rng.next();
+    const spin = spins[i]!;
     if (spin.status === "picked") {
       out.push(spin);
       if (spin.picked_kind === "player" && spin.picked_player_id !== null) {
@@ -280,18 +643,30 @@ function rebuildSpins(catalog: DraftCatalog, spins: readonly Spin[]): Spin[] {
       }
       continue;
     }
+    const excluded = new Set(priorPlayerPicks);
+    const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, managerPicked);
     out.push(
-      rollPendingSpin(
-        catalog,
-        spin.index,
-        spin.tournament_id,
-        spin.nation_id,
-        priorPlayerPicks,
-        managerPicked,
-      ),
+      rollPendingSpinFromEntry(entry, i, priorPlayerPicks, managerPicked, draw_probability),
     );
   }
   return out;
+}
+
+/**
+ * Run the initial 17 weighted draws (no prior picks, no manager yet) to
+ * produce the freshly-created draft's pending spin list. Each draw consumes
+ * exactly one `rng.next()` from the seeded `"draft"` substream.
+ */
+function buildInitialSpins(catalog: DraftCatalog, draft_seed: string): Spin[] {
+  const rng = createRng(draft_seed);
+  const excluded = new Set<string>();
+  const spins: Spin[] = [];
+  for (let i = 0; i < SPIN_COUNT; i++) {
+    const u = rng.next();
+    const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, /*managerPicked*/ false);
+    spins.push(rollPendingSpinFromEntry(entry, i, [], false, draw_probability));
+  }
+  return spins;
 }
 
 // ─── SQUAD CONSTRUCTION ──────────────────────────────────────────────────────
@@ -326,30 +701,6 @@ function buildSquad(formation_id: string): SquadSlot[] {
     });
   }
   return slots;
-}
-
-// ─── DRAW (without replacement, canonical pool) ──────────────────────────────
-
-function drawPairs(
-  rng: ReturnType<typeof createRng>,
-  pairs: readonly TnEntry[],
-  n: number,
-): TnEntry[] {
-  if (pairs.length < n) {
-    throw new RangeError(
-      `draft pool has only ${pairs.length} (tournament, nation) pairs; need ${n} unique spins`,
-    );
-  }
-  // Draw WITHOUT replacement from the canonically-sorted pool. `splice` keeps
-  // the surviving pool in canonical order between draws, so the procedure is
-  // fully determined by the seed.
-  const remaining = [...pairs];
-  const drawn: TnEntry[] = [];
-  for (let i = 0; i < n; i++) {
-    const idx = rng.int(remaining.length);
-    drawn.push(remaining.splice(idx, 1)[0]!);
-  }
-  return drawn;
 }
 
 // ─── STATUS + WARNINGS ───────────────────────────────────────────────────────
@@ -431,24 +782,30 @@ function finalize(
 
 /**
  * Create a fresh draft. The formation is LOCKED here and immutable for the
- * lifetime of the draft. The 17 (tournament, nation) pairs are drawn WITHOUT
- * replacement from the canonical pool using the `"draft"` substream sub-seed.
+ * lifetime of the draft. The 17 (tournament, nation) pairs are drawn via
+ * ENGINE-V2 E-1 era-weighted, with-replacement sampling over the canonical
+ * pool using the `"draft"` substream sub-seed (one `rng.next()` per spin).
  * All spins start PENDING; spin candidates reflect zero prior picks.
  */
 export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): DraftState {
+  // Honest fail-fast: a complete draft needs exactly one manager. If the
+  // catalog has NO coach-bearing pair, the draft can never be completed —
+  // surface it now rather than strand the user mid-draft.
+  if (!catalog.hasAnyCoach) {
+    throw new RangeError(
+      "createDraft: catalog has no coach-bearing (tournament, nation) pair; a complete draft requires exactly one manager",
+    );
+  }
+
   const draft_seed = deriveSubseed(params.parent_seed, "draft");
-  const rng = createRng(draft_seed);
-  const drawn = drawPairs(rng, catalog.pairs, SPIN_COUNT);
+  const spins = buildInitialSpins(catalog, draft_seed);
   const squad = buildSquad(params.formation_id);
 
-  const spins: Spin[] = drawn.map((entry, index) =>
-    rollPendingSpin(catalog, index, entry.tournament_id, entry.nation_id, [], false),
-  );
-
-  // A complete draft requires exactly one manager. If NONE of the 17 drawn
-  // (tournament, nation) pairs carries a coach, the draft can never be
-  // completed — fail honestly at creation rather than strand the user at spin
-  // 17. (Coaches sit on a subset of pairs, so the draw could miss them all.)
+  // ENGINE-V2 E-1: with-replacement sampling can produce 17 draws where NO
+  // pair offers a coach (e.g. era weights happen to land on coach-less pairs).
+  // Without bumping engine_version or adding a coach-forcing pass, surface
+  // this as an honest creation failure (rare with a real-data catalog where
+  // most pairs carry a coach; easy to hit in degenerate fixtures).
   if (!spins.some((s) => s.rolled_manager_card_id !== null)) {
     throw new RangeError(
       "createDraft: none of the 17 drawn (tournament, nation) pairs offers a coach; a complete draft requires exactly one manager",
@@ -505,8 +862,9 @@ function firstVacantSlotId(state: DraftState): string | null {
  * SquadSlot. `position_compatibility` is computed via `positionCompatibility`
  * and stored; out-of-position / outfielder-in-goal placements add a soft
  * warning but never block. The resolved spin + occupied slot are frozen
- * (lock-on-pick); later pending spins are re-rolled to drop the picked player
- * from their candidate pools.
+ * (lock-on-pick); later pending spins are regenerated to drop the picked
+ * player from their candidate pools (and potentially advance to a different
+ * (T, N) if their drawn pair becomes depleted by this pick).
  *
  * @throws RangeError if the draft is complete, the card is not a candidate on
  *   the active spin, the player is already drafted, the slot is unknown, or the
@@ -554,8 +912,8 @@ export function pickPlayer(
   // chance to take one — committing a player here would leave the draft
   // unrecoverable (a 17th player with no slot, no coach to draft). Reject the
   // player pick and force the manager now. (Pending spins after the active one
-  // carry a non-null rolled_manager_card_id iff their (T,N) has a coach, since
-  // no manager is drafted yet.)
+  // carry a non-null rolled_manager_card_id iff their drawn (T,N) has a coach,
+  // since no manager is drafted yet.)
   if (state.manager_card_id === null) {
     const laterCoachOffered = state.spins.some(
       (s) => s.index > active.index && s.rolled_manager_card_id !== null,
@@ -616,7 +974,7 @@ export function pickPlayer(
     status: "picked",
   });
   const withPick = state.spins.map((s) => (s.index === active.index ? pickedSpin : s));
-  const spins = rebuildSpins(catalog, withPick);
+  const spins = rebuildSpins(catalog, state.draft_seed, withPick);
 
   return finalize(state, spins, squad, state.manager_card_id);
 }
@@ -653,7 +1011,7 @@ export function pickManager(catalog: DraftCatalog, state: DraftState): DraftStat
     status: "picked",
   });
   const withPick = state.spins.map((s) => (s.index === active.index ? pickedSpin : s));
-  const spins = rebuildSpins(catalog, withPick);
+  const spins = rebuildSpins(catalog, state.draft_seed, withPick);
   // Squad untouched: the manager never occupies a SquadSlot.
   return finalize(state, spins, state.squad, mgr);
 }
@@ -741,4 +1099,41 @@ export function validateSquad(state: DraftState): SquadValidation {
     warnings.push("no manager drafted");
   }
   return { is_fieldable, has_goalkeeper, warnings };
+}
+
+// ─── TEST-ONLY INTROSPECTION (ENGINE-V2 E-1) ─────────────────────────────────
+//
+// Internal-only helpers exposed for the era-weighting + distribution-probe
+// tests. NOT re-exported from `packages/core/src/index.ts` — consumers MUST
+// not depend on these; they may evolve as the engine evolves.
+
+/** Test-only: return a frozen view of a catalog entry's era-weighting fields. */
+export function _testGetEntryWeight(
+  catalog: DraftCatalog,
+  tournament_id: number,
+  nation_id: string,
+): { year: number; rare: boolean; base_draw_weight: number } | null {
+  const e = catalog.byPair.get(pairKey(tournament_id, nation_id));
+  if (!e) return null;
+  return Object.freeze({
+    year: e.year,
+    rare: e.rare,
+    base_draw_weight: e.base_draw_weight,
+  });
+}
+
+/** Test-only: total of all `base_draw_weight` over the catalog (≈ 1.0). */
+export function _testTotalCatalogWeight(catalog: DraftCatalog): number {
+  return catalog.cumulativeWeights[catalog.cumulativeWeights.length - 1] ?? 0;
+}
+
+/** Test-only: aggregate rare/modern mass over the catalog (for the era probe). */
+export function _testEraMassSplit(catalog: DraftCatalog): { rare: number; modern: number } {
+  let rare = 0;
+  let modern = 0;
+  for (const e of catalog.pairs) {
+    if (e.rare) rare += e.base_draw_weight;
+    else modern += e.base_draw_weight;
+  }
+  return { rare, modern };
 }

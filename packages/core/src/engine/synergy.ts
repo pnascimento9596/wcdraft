@@ -6,6 +6,16 @@
 // multiplier BAND live in `calibration.ts` (SYNERGY). The SHAPE of the surface
 // (three components; bounded multiplier) is the WS-0c contract.
 //
+// ENGINE-V2 E-2 NATION-ONLY CONTRACT.
+// All three Synergy components — clusters, linked pairs, manager link — are
+// keyed on `nation_id` alone. Two starters from the same nation but different
+// tournament years (e.g. Brazil 1970 + Brazil 2002) cluster and link
+// identically to two starters from the same year. The manager link is a
+// deterministic count-based function of same-nation starters in the XI,
+// regardless of the manager's own tournament year. There is NO
+// tournament-year gate anywhere in this file: `SquadSlot.tournament_id` and
+// `ManagerTournament.tournament_id` are intentionally NOT read here.
+//
 // NATION MAP THREADING.
 // `SquadSlot` carries NO `nation_id` (only card_id / player_id /
 // tournament_id / slot fields), so nation clustering and the manager link

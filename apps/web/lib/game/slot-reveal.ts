@@ -47,6 +47,20 @@ export interface SlotRevealModel {
   /** Authoritative result face — equal to `reels[1].landingFace`. */
   readonly result: SlotRevealFace;
   readonly reels: readonly [SlotRevealReel, SlotRevealReel, SlotRevealReel];
+  /**
+   * ENGINE-V2 E-2 — pass-through of the engine's rare flag for the active
+   * spin. The UI surfaces this with a gold "RARE PICK!" accent; this layer
+   * does NOT recompute rarity.
+   */
+  readonly rare: boolean;
+  /**
+   * ENGINE-V2 E-2 — the honest engine-computed draw probability for the
+   * active spin (in [0, 1]). Displayed as a percentage; rare spins read at
+   * `<= 10%` in practice but the UI shows whatever the engine emitted.
+   */
+  readonly drawProbability: number;
+  /** Pre-formatted percent label, e.g. `12.4%` / `0.42%` / `0.0%`. */
+  readonly drawProbabilityLabel: string;
 }
 
 export interface BuildSlotRevealModelParams {
@@ -121,7 +135,28 @@ export function buildSlotRevealModel(
       { key: "center", landingFace: resultFace, trackFaces: centerTrack },
       { key: "right", landingFace: rightLanding, trackFaces: rightTrack },
     ],
+    rare: activeSpin.rare,
+    drawProbability: activeSpin.draw_probability,
+    drawProbabilityLabel: formatDrawProbability(activeSpin.draw_probability),
   };
+}
+
+/**
+ * Format an engine-emitted draw probability (in [0, 1]) as a deterministic,
+ * locale-stable percent string suitable for snapshots and golden tests.
+ *
+ * Rules:
+ *   * Below 1% → 2 decimals (e.g. `0.42%`).
+ *   * 1% and above → 1 decimal (e.g. `12.4%`).
+ *   * Hard zero → `0.00%` (honest, not hidden).
+ *   * Anything outside [0, 1] is displayed honestly (the engine controls the
+ *     value; UI never silently clamps it).
+ */
+export function formatDrawProbability(p: number): string {
+  if (!Number.isFinite(p)) return "—";
+  const pct = p * 100;
+  if (pct < 1) return `${pct.toFixed(2)}%`;
+  return `${pct.toFixed(1)}%`;
 }
 
 function buildTrack(

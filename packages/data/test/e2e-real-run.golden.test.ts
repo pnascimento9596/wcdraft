@@ -48,7 +48,7 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-const PARENT_SEED = "wcdraft:e2e-real-run:rating-recal-v2:9";
+const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:801";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
@@ -67,6 +67,11 @@ function buildDataset(): DraftDataset {
       manager_id: m.manager_id,
       tournament_id: m.tournament_id,
       nation_id: m.nation_id,
+    })),
+    // ENGINE-V2 E-1: era-weighted sampling needs tournament years.
+    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
+      tournament_id: Number(tid),
+      year: t.year,
     })),
   };
 }

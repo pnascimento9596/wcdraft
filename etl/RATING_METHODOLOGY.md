@@ -1,5 +1,21 @@
-# wcdraft Player Rating — Methodology (`wc-perf-2.0.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-3.0.0`)
 
+> **wc-perf-3.0.0 (ENGINE-V2 E-4 — career-stature lift):** the per-tournament
+> merit model below is UNCHANGED. A new **career-stature lift** is added to the
+> internal `score_0_100` **before** it is materialized, so a historical legend's
+> off-tournament card and its four sim channels rise **coherently** off the raw
+> floor (the channel-decoupling fix: Pelé-1966 attack no longer sits at the raw
+> 54 channel). The lift is a capped **floor/lift, not an override** — a card is
+> raised only toward a capped career target and only to the extent its raw
+> tournament score fell short; a great tournament already above the target keeps
+> its higher measured score, and a mid-tier / weakly-sourced player gets little or
+> none. Career signals come EXCLUSIVELY from the public E-4.1 merit archives
+> (`etl/output/merit/source_facts.json` → `etl/output/career_stature.json`); no
+> proprietary rating IP is ever consumed. Because channels move, this version
+> ships a sim re-lock (compact data + goldens); the engine math/λ are unchanged
+> unless a realism re-fit is separately required. See **Career-stature lift**
+> below and `docs/plans/merit-rating-model-2026-06-07.md`.
+>
 > **wc-perf-2.0.0 (Phase 1 rating recalibration):** the internal merit model is
 > UNCHANGED — same era-normalized percentiles, same independent award/finish
 > anchors, same honest-state semantics. A single new **display calibration
@@ -249,18 +265,64 @@ sim is **byte-identical** to ``origin/main`` (verified by
 ``packages/core/test/fixtures/sim-golden.json`` diffing 0 lines), so the
 engine_version anchor stays unchanged.
 
-## `overall_basis` semantics (unchanged)
+## Career-stature lift (`wc-perf-3.0.0`)
+
+The lift is added to the SAME internal composite that feeds both display `overall`
+and the four sim channels, at the single insertion point in `_build_internal_rows`:
+
+```text
+raw_tournament_score = clamp01(base + anchor)          # the wc-perf-2.0.0 score
+career_elite  = career_stature_score ** CAREER_ELITE_EXPONENT
+career_target = REPLACEMENT_BASE + CAREER_TARGET_SPAN[pos] * career_elite
+career_lift   = min(CAREER_MAX_LIFT[pos],
+                    CAREER_BLEND_HISTORICAL * max(0, career_target - raw_tournament_score))
+score         = clamp01(raw_tournament_score + career_lift)   # feeds OVR AND channels
+```
+
+`career_stature_score` and `coverage` come from `etl/output/career_stature.json`
+(constant across all of a player's cards); only the per-card `career_lift` varies,
+because it depends on how far THIS card's raw score fell short of the target.
+
+| Constant | Value | Role |
+|---|---|---|
+| `CAREER_ELITE_EXPONENT` | `0.85` | concave sharpening of the stature score |
+| `CAREER_TARGET_SPAN` | FW 0.80 · MF 0.80 · DF 0.74 · GK 0.72 | headroom above `REPLACEMENT_BASE` |
+| `CAREER_BLEND_HISTORICAL` | `0.70` | fraction of the gap a card closes |
+| `CAREER_MAX_LIFT` | FW 0.26 · MF 0.24 · DF 0.22 · GK 0.20 | hard per-card lift cap |
+| `MIN_CAREER_COVERAGE_FOR_LIFT` | `0.25` | below this the public record is too thin → no lift |
+
+**Why the exponent is concave (< 1).** The merit composite in
+`merit/stature.py` is an era-weighted **saturating product** of family scores,
+whose structural maximum is ≈0.70; the elite tail compresses into ~[0.50, 0.66].
+A convex exponent (the plan's indicative 1.35) would under-lift the
+strong-but-not-maximal legends (Pelé/Zidane/Platini at ~0.55–0.59) relative to the
+maximal ones, so the fitted exponent is concave. Constants are fitted against the
+E-4 named-anchor set and golden-locked like the λ / display knobs.
+
+**Honest-state.** Missing career coverage is coverage, never a zero against the
+player: a card with no career row, or coverage below the gate, keeps its raw
+tournament score (lift 0) and records `null` career score/coverage/target in
+`components[]`. Managers remain rating-unavailable. There is **no per-player
+override table** — every lift is the same formula over the same public facts.
+
+## `overall_basis` semantics (`wc-perf-3.0.0` split)
 
 - **`measured_performance`** — the card had at least one positively-weighted
   individual signal (goals for FW/MF, appearances for any position). The vast
   majority of cards, including ~1,573 pre-1970 cards whose appearances came
-  from the RSSSF supplement.
-- **`baseline_anchor_estimate`** — residual cards with no linkable individual
-  signal: a pre-1970 DF/GK whose appearances could not be sourced. Computed
-  from the replacement baseline + anchor, capped into `[66, 73]` after the
+  from the RSSSF supplement. A career lift may apply on top.
+- **`career_stature_estimate`** — the card lacks any individual tournament signal
+  **but** the player has a well-covered, clearly-elite career record
+  (`coverage ≥ 0.50` AND `career_stature_score ≥ 0.55`). Exits via the **uncapped**
+  display curve (not the old estimate clamp), because the public career record
+  supports an above-band rating. *(0 cards in the current dataset — none of the
+  no-signal pre-1970 cards belong to a well-covered elite player — but the path is
+  live and tested.)*
+- **`baseline_anchor_estimate`** — residual cards with no individual signal **and**
+  no usable career record: a pre-1970 DF/GK whose appearances could not be sourced.
+  Computed from the replacement baseline + anchor, capped into `[66, 73]` after the
   curve, **no individual box score invented**, low coverage flagged. Exactly
-  388 cards in the current dataset (unchanged from `wc-perf-1.1.0` — Phase 1
-  did not change the basis logic).
+  388 cards in the current dataset.
 
 ## Coverage & provenance
 
@@ -269,8 +331,8 @@ A `baseline_anchor_estimate` is always `< 1.0`. Low-coverage ratings are
 **flagged, not faked**. `coverage_basis = "wc_signals"`,
 `provenance = "wc_performance"`, `appearances_source` records the appearance
 origin (`fjelstul_match_events` / `rsssf_starting_xi` / `null`), and
-`rating_version = "wc-perf-2.0.0"` (a replay anchor — bump on any change to
-weights, normalization, or the display curve).
+`rating_version = "wc-perf-3.0.0"` (a replay anchor — bump on any change to
+weights, normalization, the display curve, or the career lift).
 
 ## `components[]` transparency
 
@@ -278,7 +340,10 @@ Every rating carries its inputs: raw `goals`/`appearances` (weight 0,
 informational), the era-normalized `goals_percentile` / `appearances_percentile`
 with their **effective** base weights, and `award_score` / `team_finish` with
 their anchor weights. A dropped signal shows `value: null, weight: 0.0` —
-visibly **not** 0-substituted.
+visibly **not** 0-substituted. `wc-perf-3.0.0` adds four career-stature entries:
+`career_stature_score`, `career_stature_coverage`, `career_stature_target`
+(weight 0, informational; `null` when no usable career row) and
+`career_stature_lift` (the additive lift actually applied to this card).
 
 ## Determinism & validation
 
@@ -325,17 +390,18 @@ the display floor and never above the estimate ceiling.
 
 ## Migration & versioning
 
-- `rating_version` changes `wc-perf-1.1.0` → `wc-perf-2.0.0`.
-- Projected 2026 ratings change `proj-career-1.0.0` → `proj-career-2.0.0`
-  (same display curve and shared helpers; see `RATING_METHODOLOGY_2026.md`).
+- `rating_version` changes `wc-perf-2.0.0` → `wc-perf-3.0.0` (the career lift).
+- Projected 2026 ratings stay `proj-career-2.0.0`: `rating_2026.py` does **not**
+  consume `career_stature.json` in E-4 (deferred), so Team2026 aggregates and the
+  E-3a symmetric realism gate stay byte-identical. See `RATING_METHODOLOGY_2026.md`.
 - The runtime data schema is **unchanged**; the combined-`rv` token skew
   machinery in `apps/web/lib/game/` invalidates stale persisted runs
   automatically via the existing "different build" notice.
-- The sim engine_version anchor is UNCHANGED (`engine-2026.06.04`): the
-  decoupled path means the engine math, λ constants, channel scale, and
-  `RunResult` bytes all match `origin/main` byte-for-byte (verified by
-  `sim-golden.json: 0 diff` against `origin/main`). Only the rating-version
-  anchors bump (`wc-perf-2.0.0`, `proj-career-2.0.0`).
+- The sim **engine_version** anchor stays `engine-2026.06.04` (bumped only at the
+  season merge). E-4 is a rating/data-model change: because the four channels move,
+  it ships a compact-data + golden re-lock, but the engine math/λ constants in
+  `packages/core/src/engine/calibration.ts` are unchanged unless a realism re-fit
+  is separately required (see the E-4.7 hand-off rule in the plan).
 
 ## Known seam — `tournament_id` shape
 
