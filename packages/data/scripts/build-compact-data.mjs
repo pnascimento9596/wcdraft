@@ -49,12 +49,18 @@ const SCHEMA_VERSION = "runtime-data-1.0.0";
 const ENGINE_VERSION = "engine-2026.06.04";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0).
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-2.0.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-2.0.0";
-const DISPLAY_FLOOR = 66;
+// Rating recalibration: WS-RATING/FLOOR-60 lowered the player-card display
+// OVERALL floor from 66 -> 60 (wc-perf-2.1.0 / proj-career-2.1.0). The four sim
+// channels (attack/midfield/defense/goalkeeping) stay on the pre-recal sim band
+// (FLOOR_CHANNEL=20..100) — they are NOT routed through the display curve, so
+// the engine's lambda calibration is unchanged and `ENGINE_VERSION` does not
+// bump. The compact builder only validates the OVERALL display band here;
+// sim-channel bands are checked by the runtime types / integrity suite.
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-2.1.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-2.1.0";
+const DISPLAY_FLOOR = 60;
 const DISPLAY_MAX = 99;
-const ESTIMATE_DISPLAY_MIN = 66;
+const ESTIMATE_DISPLAY_MIN = 60;
 const ESTIMATE_DISPLAY_MAX = 73;
 const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
 

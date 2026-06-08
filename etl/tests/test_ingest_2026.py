@@ -186,7 +186,7 @@ def test_ratings_join_and_bounds(ratings, cards):
         assert r["card_id"] in by_card
         assert r["card_id"] == f"{r['player_id']}:{r['tournament_id']}"
         # Phase 1.1 decoupled: sim channels on [FLOOR_CHANNEL, 100] band;
-        # only `overall` lives on the recalibrated display band [66, 99].
+        # only `overall` lives on the recalibrated display band [60, 99].
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
             assert isinstance(r[ch], int) and rating.FLOOR_CHANNEL <= r[ch] <= 100
         assert (
@@ -227,13 +227,13 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_phase1(ratings):
-    assert rating_2026.RATING_VERSION == "proj-career-2.0.0"
+    assert rating_2026.RATING_VERSION == "proj-career-2.1.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-2.0.0"
+        assert r["rating_version"] == "proj-career-2.1.0"
 
 
 def test_projected_distribution_shape(ratings):
-    """Projected pool reshaped onto [66, 99] by the shared display curve.
+    """Projected pool reshaped onto [60, 99] by the shared display curve.
     Slightly looser than historical because n=1,246 vs n=10,973, but same
     contract: floor exact, max <= 99, no 100s, thin elite tail."""
     overalls = sorted(r["overall"] for r in ratings)
@@ -272,6 +272,49 @@ def test_strong_nations_aggregate_higher(teams, nation_name):
 
 
 # ─── Team2026 ─────────────────────────────────────────────────────────────────
+
+
+OWN_CHANNEL_BY_POSITION = {
+    "FW": "attack",
+    "MF": "midfield",
+    "DF": "defense",
+    "GK": "goalkeeping",
+}
+
+
+def test_team_aggregate_uses_own_position_channel_sort(teams, ratings, cards):
+    """``aggregate_rating`` MUST be computed by ranking the squad on the
+    own-position SIM channel (tiebreak card_id) and averaging the four sim
+    channels + coverage over the top 11.
+
+    Routing best-XI selection through the sim channels (NOT through display
+    ``overall``) keeps ``aggregate_rating`` INVARIANT to display-curve
+    recalibrations like WS-RATING/FLOOR-60. A regression that re-keys the sort
+    on ``r["overall"]`` would re-shuffle low-tier ties whenever
+    ``DISPLAY_FLOOR`` moves, drifting opponent sim strengths without an
+    engine-version bump.
+    """
+    rating_by_card = {r["card_id"]: r for r in ratings}
+    cards_by_nation: dict[str, list[dict]] = {}
+    for c in cards:
+        cards_by_nation.setdefault(c["nation_id"], []).append(c)
+    for t in teams:
+        squad = cards_by_nation[t["nation_id"]]
+
+        def _rank_key(card: dict) -> tuple[int, str]:
+            cid = card["card_id"]
+            rr = rating_by_card[cid]
+            return (-rr[OWN_CHANNEL_BY_POSITION[card["position_listed"]]], cid)
+
+        best = sorted(squad, key=_rank_key)[:11]
+        best_ratings = [rating_by_card[c["card_id"]] for c in best]
+        n = len(best_ratings)
+        expected = {
+            ch: round(sum(r[ch] for r in best_ratings) / n)
+            for ch in ("attack", "midfield", "defense", "goalkeeping")
+        }
+        expected["coverage"] = round(sum(r["coverage"] for r in best_ratings) / n, 4)
+        assert t["aggregate_rating"] == expected, t["team_id"]
 
 
 def test_team2026_shape(teams, ratings):

@@ -993,7 +993,7 @@
       "P-19947"
     ],
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-2.0.0+proj-career-2.0.0",
+    "rating_version": "wc-perf-2.1.0+proj-career-2.1.0",
     "engine_version": "engine-2026.06.04"
   },
   "scenario": {
@@ -1038,7 +1038,7 @@
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:c1892735a4a6aeea97721aa078868e63",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-2.0.0+proj-career-2.0.0",
+    "rating_version": "wc-perf-2.1.0+proj-career-2.1.0",
     "engine_version": "engine-2026.06.04",
     "seed": "wcdraft:e2e-real-run:rating-recal-v2:9",
     "reached_round": "R32",
@@ -1276,7 +1276,7 @@
           "pens_missed": 0,
           "minutes": 390
         },
-        "rating_at_draft": 71
+        "rating_at_draft": 69
       },
       {
         "player_id": "P-00875",
@@ -1397,7 +1397,7 @@
           "pens_missed": 0,
           "minutes": 360
         },
-        "rating_at_draft": 71
+        "rating_at_draft": 69
       },
       {
         "player_id": "P-00746",
@@ -1760,7 +1760,7 @@
           "pens_missed": 0,
           "minutes": 390
         },
-        "rating_at_draft": 72
+        "rating_at_draft": 70
       },
       {
         "player_id": "P-00649",
@@ -2244,7 +2244,7 @@
           "pens_missed": 0,
           "minutes": 390
         },
-        "rating_at_draft": 73
+        "rating_at_draft": 72
       },
       {
         "player_id": "P-01895",
@@ -2365,7 +2365,7 @@
           "pens_missed": 0,
           "minutes": 360
         },
-        "rating_at_draft": 66
+        "rating_at_draft": 60
       },
       {
         "player_id": "P-02853",
@@ -2486,7 +2486,7 @@
           "pens_missed": 0,
           "minutes": 360
         },
-        "rating_at_draft": 72
+        "rating_at_draft": 70
       },
       {
         "player_id": "P-02430",
@@ -2849,7 +2849,7 @@
           "pens_missed": 0,
           "minutes": 60
         },
-        "rating_at_draft": 70
+        "rating_at_draft": 68
       },
       {
         "player_id": "P-00506",

@@ -154,23 +154,52 @@ def _build_cards(rows: list[dict]) -> list[dict]:
 # ─── Team2026 + aggregate TeamStrength ──────────────────────────────────────────
 
 
-def _team_strength(squad_ratings: list[dict]) -> dict:
+OWN_CHANNEL_BY_POSITION = {
+    "FW": "attack",
+    "MF": "midfield",
+    "DF": "defense",
+    "GK": "goalkeeping",
+}
+
+
+def _team_strength(
+    squad_cards: list[dict], rating_by_card: dict[str, dict]
+) -> dict:
     """Aggregate a squad's per-card ratings into a TeamStrength.
 
-    Best-available-XI semantics: take the 11 cards with the highest projected
-    overall (tiebreak card_id) and average each sim channel + coverage over them.
-    A stronger squad's best XI carries higher channels, so strong nations aggregate
-    higher. NOTE: this is the OPPONENT squad aggregation; the user-XI aggregator
+    Best-available-XI semantics: take the 11 cards with the highest OWN-POSITION
+    sim CHANNEL (tiebreak card_id) and average each sim channel + coverage over
+    them. A stronger squad's best XI carries higher channels, so strong nations
+    aggregate higher.
+
+    SORT KEY = own-position channel (NOT display ``overall``): the four sim
+    channels live on the decoupled [FLOOR_CHANNEL, 100] band and are byte-
+    identical across display-curve recalibrations (e.g. WS-RATING/FLOOR-60). The
+    display ``overall`` clips low-band scores to ``DISPLAY_FLOOR``, so an
+    overall-keyed sort produces card_id-tie-broken top-11 picks that re-shuffle
+    whenever ``DISPLAY_FLOOR`` moves. Sorting on the own-position channel
+    routes the aggregation through pure sim data and makes ``aggregate_rating``
+    INVARIANT to display-only knob changes.
+
+    NOTE: this is the OPPONENT squad aggregation; the user-XI aggregator
     (core ``aggregateUserXiStrength``, which folds synergy + manager) is a separate
     WS-B concern. The averaging choice is locked here and re-calibratable in WS-B.
     """
-    best = sorted(squad_ratings, key=lambda r: (-r["overall"], r["card_id"]))[:11]
-    n = len(best)
+    def _rank_key(card: dict) -> tuple[int, str]:
+        cid = card["card_id"]
+        rating = rating_by_card[cid]
+        pos = card["position_listed"]
+        own = rating[OWN_CHANNEL_BY_POSITION[pos]]
+        return (-own, cid)
+
+    best_cards = sorted(squad_cards, key=_rank_key)[:11]
+    best_ratings = [rating_by_card[c["card_id"]] for c in best_cards]
+    n = len(best_ratings)
     agg: dict[str, float] = {
-        ch: round(sum(r[ch] for r in best) / n)
+        ch: round(sum(r[ch] for r in best_ratings) / n)
         for ch in ("attack", "midfield", "defense", "goalkeeping")
     }
-    agg["coverage"] = round(sum(r["coverage"] for r in best) / n, 4)
+    agg["coverage"] = round(sum(r["coverage"] for r in best_ratings) / n, 4)
     return agg
 
 
@@ -192,7 +221,6 @@ def _build_teams(
     for nation_id, squad in cards_by_nation.items():
         group, slot = slot_of_nation[nation_id]
         squad_card_ids = sorted(c["card_id"] for c in squad)
-        squad_ratings = [rating_by_card[cid] for cid in squad_card_ids]
         teams.append(
             {
                 "team_id": f"WC2026-{group}{slot}",
@@ -200,7 +228,7 @@ def _build_teams(
                 "group": group,
                 "group_slot": slot,
                 "squad_card_ids": squad_card_ids,
-                "aggregate_rating": _team_strength(squad_ratings),
+                "aggregate_rating": _team_strength(squad, rating_by_card),
                 "squad_status": SQUAD_STATUS,
                 "rating_version": rating_2026.RATING_VERSION,
                 "sources": [

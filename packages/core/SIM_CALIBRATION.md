@@ -1,6 +1,6 @@
 # WS-B Sim + Scoring — Calibration
 
-> **Phase 1 rating recalibration landed (wc-perf-2.0.0 / proj-career-2.0.0)
+> **Display recalibration landed (wc-perf-2.1.0 / proj-career-2.1.0 — WS-RATING/FLOOR-60)
 > via the DECOUPLED path (plan §3.2 fallback):** the rating display curve is
 > applied to `overall` ONLY; the four sim channels (`attack`, `midfield`,
 > `defense`, `goalkeeping`) stay on the pre-recalibration `[FLOOR_CHANNEL, 100]`

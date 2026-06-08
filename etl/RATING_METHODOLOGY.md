@@ -1,11 +1,13 @@
-# wcdraft Player Rating — Methodology (`wc-perf-2.0.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-2.1.0`)
 
-> **wc-perf-2.0.0 (Phase 1 rating recalibration):** the internal merit model is
+> **wc-perf-2.1.0 (WS-RATING/FLOOR-60 — hard 60 OVR display floor):** the
+> internal merit model is
 > UNCHANGED — same era-normalized percentiles, same independent award/finish
 > anchors, same honest-state semantics. A single new **display calibration
 > curve** maps the internal `score_0_100` onto the documented display band
-> `[66, 99]`, reshaping `overall` ONLY. `baseline_anchor_estimate` cards are
-> additionally capped into the estimate band `[66, 73]` on overall. The
+> `[60, 99]`, reshaping `overall` ONLY. The display floor is **hard 60** —
+> no draftable card's OVR can sit below 60. `baseline_anchor_estimate` cards
+> are additionally capped into the estimate band `[60, 73]` on overall. The
 > **decoupled path** landed (plan §3.2 fallback): the four sim channels stay
 > on the pre-recal `[FLOOR_CHANNEL, 100]` band, and
 > `packages/core/src/engine/calibration.ts` (λ, channel scale, engine_version)
@@ -62,13 +64,13 @@ canonical tables also contain 8 women's editions (2,870 cards); those are
 **explicitly excluded** here — `run()` reports the rated count (10,973) so the
 exclusion is surfaced, not silent.
 
-## Two-pass build (wc-perf-2.0.0)
+## Two-pass build (wc-perf-2.1.0)
 
 1. **Pass 1 — internal merit.** For each card, compute an internal
    `score_0_100` exactly as in `wc-perf-1.1.0` (the same formula below).
 2. **Pass 2 — display curve.** Fit one global low-DOF monotonic curve on the
    four internal quantiles of the emitted dataset (min, p50, p95, max) and
-   map them onto the fixed display targets (66, 73, 88, 99). Apply the curve
+   map them onto the fixed display targets (60, 73, 88, 99). Apply the curve
    to `overall` ONLY (decoupled — see §3.2 fallback). The four sim channels
    are derived directly from `score_0_100` via `_channel(score_0_100, spread)`
    and stay on the pre-recal `[FLOOR_CHANNEL, 100]` band; they are NOT
@@ -122,7 +124,7 @@ base  = 0.20 + (0.68 − 0.20) · blend
 A defender or keeper is **never rated on goals**.
 
 `REPLACEMENT_BASE = 0.20` is the INTERNAL replacement baseline, **not** the
-emitted display floor. Phase 1 maps it via the curve onto the display floor 66.
+emitted display floor. WS-RATING/FLOOR-60 maps it via the curve onto the display floor 60 (was 66 under wc-perf-2.0.0).
 The `[0.20, 0.68]` internal band is intentional: raw box-score performance can
 only carry a card to "very good" internally — reaching the top of the emitted
 display range still **requires** the anchor.
@@ -158,12 +160,12 @@ The curve takes the internal `score_0_100` and maps it onto the display band:
 
 ```
 DISPLAY_CURVE_KIND  = "global_piecewise_power_v1"
-DISPLAY_FLOOR       = 66
+DISPLAY_FLOOR       = 60
 DISPLAY_MEDIAN      = 73
 DISPLAY_P95         = 88
 DISPLAY_MAX         = 99
 
-ESTIMATE_FLOOR      = 66
+ESTIMATE_FLOOR      = 60
 ESTIMATE_CEILING    = 73
 ```
 
@@ -205,7 +207,7 @@ only reshape the global distribution.
 ### Estimate band
 
 `baseline_anchor_estimate` cards have `overall` passed through the display
-curve and then **clamped into `[ESTIMATE_FLOOR, ESTIMATE_CEILING] = [66, 73]`
+curve and then **clamped into `[ESTIMATE_FLOOR, ESTIMATE_CEILING] = [60, 73]`
 on `overall` ONLY**. The four sim channels stay on the pre-recal sim band
 `[FLOOR_CHANNEL, 100]` (materialized via `_channel(score_0_100, spread)`) —
 the estimate cap is a display-overall promise, NOT a channel clamp. An
@@ -257,7 +259,7 @@ engine_version anchor stays unchanged.
   from the RSSSF supplement.
 - **`baseline_anchor_estimate`** — residual cards with no linkable individual
   signal: a pre-1970 DF/GK whose appearances could not be sourced. Computed
-  from the replacement baseline + anchor, capped into `[66, 73]` after the
+  from the replacement baseline + anchor, capped into `[60, 73]` after the
   curve, **no individual box score invented**, low coverage flagged. Exactly
   388 cards in the current dataset (unchanged from `wc-perf-1.1.0` — Phase 1
   did not change the basis logic).
@@ -269,7 +271,7 @@ A `baseline_anchor_estimate` is always `< 1.0`. Low-coverage ratings are
 **flagged, not faked**. `coverage_basis = "wc_signals"`,
 `provenance = "wc_performance"`, `appearances_source` records the appearance
 origin (`fjelstul_match_events` / `rsssf_starting_xi` / `null`), and
-`rating_version = "wc-perf-2.0.0"` (a replay anchor — bump on any change to
+`rating_version = "wc-perf-2.1.0"` (a replay anchor — bump on any change to
 weights, normalization, or the display curve).
 
 ## `components[]` transparency
@@ -286,7 +288,7 @@ Fixed canonical input → byte-identical `etl/output/ratings.json`. Guarded by
 `etl/tests/test_rating.py` — the Phase 1 acceptance suite:
 
 - determinism + committed-golden equality + sorted rows + schema bounds
-- **distribution shape** (floor 66, median ~73, p95 ~88, max 99, no 100s,
+- **distribution shape** (floor 60, median ~73, p95 ~88, max 99, no 100s,
   thin elite tail)
 - **low-DOF curve guard** (3 exponents, 4 measured anchors, no per-player map)
 - **display-curve ordering preservation** (monotonic by construction)
@@ -319,14 +321,14 @@ clean rebuild.
 | Mertesacker '14 (DF, champion, 6 apps, 0 goals) | ≥88 | DF not rated on goals |
 | Rodrigo '18 (FW, 0 goals, 3 apps, no run) | ≤80 | modern journeyman |
 
-Estimate-tier cards (`baseline_anchor_estimate`) land in `[66, 73]` on overall
+Estimate-tier cards (`baseline_anchor_estimate`) land in `[60, 73]` on overall
 AND every channel — the honest "no individual signal" reading, never below
 the display floor and never above the estimate ceiling.
 
 ## Migration & versioning
 
-- `rating_version` changes `wc-perf-1.1.0` → `wc-perf-2.0.0`.
-- Projected 2026 ratings change `proj-career-1.0.0` → `proj-career-2.0.0`
+- `rating_version` changes `wc-perf-2.0.0` → `wc-perf-2.1.0`.
+- Projected 2026 ratings change `proj-career-2.0.0` → `proj-career-2.1.0`
   (same display curve and shared helpers; see `RATING_METHODOLOGY_2026.md`).
 - The runtime data schema is **unchanged**; the combined-`rv` token skew
   machinery in `apps/web/lib/game/` invalidates stale persisted runs
@@ -335,7 +337,7 @@ the display floor and never above the estimate ceiling.
   decoupled path means the engine math, λ constants, channel scale, and
   `RunResult` bytes all match `origin/main` byte-for-byte (verified by
   `sim-golden.json: 0 diff` against `origin/main`). Only the rating-version
-  anchors bump (`wc-perf-2.0.0`, `proj-career-2.0.0`).
+  anchors bump (`wc-perf-2.1.0`, `proj-career-2.1.0`).
 
 ## Known seam — `tournament_id` shape
 

@@ -38,16 +38,16 @@ describe("compact-data integrity", () => {
     expect(SCENARIO_2026_BUNDLE.groups.length).toBe(12);
   });
 
-  // Phase 1.1 recalibration (wc-perf-2.0.0, decoupled): basis logic is unchanged so the
-  // estimate count remains 388, but the count is no longer the WHOLE
-  // invariant — every estimate row must sit in [66, 73] on OVERALL, and the
-  // display contract applies to every runtime rating's overall. Sim channels
-  // stay on the pre-recal [20, 100] band so λ stays calibrated; see
+  // WS-RATING/FLOOR-60 recalibration (wc-perf-2.1.0, decoupled): basis logic
+  // is unchanged so the estimate count remains 388, but every estimate row must
+  // sit in [60, 73] on OVERALL, and the display contract applies to every
+  // runtime rating's overall. Sim channels stay on the pre-recal [20, 100]
+  // band so λ stays calibrated (engine_version unchanged); see
   // realism-modern-norms.golden.test.ts.
   const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
-  const DISPLAY_FLOOR = 66;
+  const DISPLAY_FLOOR = 60;
   const DISPLAY_MAX = 99;
-  const ESTIMATE_DISPLAY_MIN = 66;
+  const ESTIMATE_DISPLAY_MIN = 60;
   const ESTIMATE_DISPLAY_MAX = 73;
 
   it("baseline_anchor_estimate count is the expected count and matches the manifest", () => {
@@ -64,7 +64,7 @@ describe("compact-data integrity", () => {
   // estimates. Sim channels stay on the pre-recalibration [FLOOR_CHANNEL, 100]
   // band so the engine's λ stays calibrated to the modern-era WC norms — see
   // realism-modern-norms.golden.test.ts.
-  it("every baseline_anchor_estimate row sits inside the overall estimate band [66, 73]", () => {
+  it("every baseline_anchor_estimate row sits inside the overall estimate band [60, 73]", () => {
     const estimates = DRAFT_POOL_BUNDLE.ratings.filter(
       (r) => r.overall_basis === "baseline_anchor_estimate",
     );
@@ -92,7 +92,7 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("every runtime rating overall lives in the recalibrated display band [66, 99]", () => {
+  it("every runtime rating overall lives in the recalibrated display band [60, 99]", () => {
     for (const r of DRAFT_POOL_BUNDLE.ratings) {
       expect(r.overall, `${r.card_id} overall`).not.toBeNull();
       expect(r.overall as number, `${r.card_id} overall`).toBeGreaterThanOrEqual(DISPLAY_FLOOR);
@@ -101,9 +101,11 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the Phase 1 recalibration versions", () => {
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-2.0.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.0.0");
+  it("rating_version anchors are the WS-RATING/FLOOR-60 recalibration versions", () => {
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-2.1.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.1.0");
+    // engine_version MUST NOT change — sim channels are decoupled from the
+    // display curve, so the FLOOR-60 drop does not require a λ retune.
     expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.04");
   });
 

@@ -61,7 +61,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Distinct version anchor — a projected rating is a different algorithm from
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this.
-RATING_VERSION = "proj-career-2.0.0"
+RATING_VERSION = "proj-career-2.1.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"

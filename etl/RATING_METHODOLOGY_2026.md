@@ -1,13 +1,13 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-2.0.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-2.1.0`)
 
 The 2026 World Cup opponents are **real** (the 48 final squads, group draw, and
 knockout bracket were published 2026-06-02). But the 2026 players have **no
 World Cup performance yet**, so their ratings are **projected from factual
 career signals** — `provenance = 'projected_career'`, a sibling of the
-1930-2022 `wc-perf-2.0.0` rating ([RATING_METHODOLOGY.md](RATING_METHODOLOGY.md)),
+1930-2022 `wc-perf-2.1.0` rating ([RATING_METHODOLOGY.md](RATING_METHODOLOGY.md)),
 not a replacement.
 
-> **proj-career-2.0.0 (Phase 1 rating recalibration):** the internal merit
+> **proj-career-2.1.0 (WS-RATING/FLOOR-60 — hard 60 OVR display floor):** the internal merit
 > formula is UNCHANGED from `proj-career-1.0.0`. The projected pool now shares
 > the **same display calibration curve** as the historical pool — fitted on
 > projected raw quantiles (per-pool fit, shared helpers, same target display
@@ -15,7 +15,7 @@ not a replacement.
 > decoupled path (plan §3.2 fallback): the four sim channels stay on the
 > pre-recal `[FLOOR_CHANNEL, 100]` band, identical to `proj-career-1.0.0`.
 > Historical and projected pools emit `overall` on the same display band
-> `[66, 99]` and channels on the same pre-recal sim band, so the engine's λ
+> `[60, 99]` and channels on the same pre-recal sim band, so the engine's λ
 > stays calibrated to the engine's full attack-minus-defense range and
 > `packages/core/src/engine/calibration.ts` is UNCHANGED from `origin/main`.
 > No new ingestion; Phase 2 will add Ballon d'Or / all-time list signals
@@ -43,7 +43,7 @@ snapshots makes the ingest self-contained and byte-deterministic with no live
 fetch. ShareAlike propagates: derived 2026 data is redistributed under
 CC-BY-SA 4.0.
 
-## Same methodology family as `wc-perf-2.0.0`
+## Same methodology family as `wc-perf-2.1.0`
 
 `rating_2026.py` **imports** the `wc-perf` machinery rather than
 re-implementing it, so "same family" is literal: position `BASE_WEIGHTS`, the
@@ -77,14 +77,14 @@ league_anchor         = LEAGUE_WEIGHT[pos] · league_strength
 score_0_100           = 100 · internal_score    (input to the SHARED display curve)
 ```
 
-The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
+The **display curve** then maps `score_0_100` onto the band `[60, 99]` for
 the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
-helpers as `wc-perf-2.0.0`. Channels are derived from `score_0_100` via
+helpers as `wc-perf-2.1.0`. Channels are derived from `score_0_100` via
 `_channel(score_0_100, spread)` (unchanged pre-recal formula) — they do NOT
 pass through the display curve. The projected pool fits the curve on **its own** four
 quantiles (the projected raw scale is bounded above more tightly than the
 historical raw scale, because there is no decorated apex tail). The TARGET
-anchors are identical to historical (66, 73, 88, 99) so historical and
+anchors are identical to historical (60, 73, 88, 99) so historical and
 projected display values are directly comparable.
 
 ### Why a league anchor (the projection-sanity fix, unchanged from 1.0.0)
@@ -159,8 +159,8 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-2.0.0`)
-* **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
+* **projected rating version** check (`proj-career-2.1.0`)
+* **projected distribution shape** (floor 60, median ~73, p95 ~88, max 99,
   no 100s)
 * **projected has no `overall_basis` field** (no estimate path)
 * projected rating bounds on the new band + honest-state nulls
@@ -172,7 +172,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 ## Sanity results (Phase 1, asserted)
 
 * All 48 teams present, 12 groups × 4, every squad 23-26 with ≥3 GK.
-* Projected `overall` on the recalibrated band `[66, 99]`; **zero** null
+* Projected `overall` on the recalibrated band `[60, 99]`; **zero** null
   overalls; **zero** at the 100 ceiling.
 * Every traditional power (Brazil, Argentina, France, Spain, Germany,
   England, Portugal, Netherlands) aggregates higher than every
@@ -185,7 +185,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 ## Migration & versioning
 
-- `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0`.
+- `rating_version` changes `proj-career-2.0.0` → `proj-career-2.1.0`.
 - The runtime data schema is unchanged.
 - See `RATING_METHODOLOGY.md` for the historical-pool curve details and the
   shared display-curve helpers.

@@ -1,14 +1,14 @@
 """WS-A Rating: golden determinism, schema bounds, honest-state, and the
-``wc-perf-2.0.0`` recalibration acceptance suite.
+``wc-perf-2.1.0`` recalibration acceptance suite.
 
 SELF-CONTAINED: the rating stage reads the committed canonical JSON in
 ``etl/output/``, so the suite runs without the upstream Fjelstul CSV clone
 (unlike the ingestion tests). The fixed input dataset is the committed canonical
 tables; the locked output is the committed ratings.json.
 
-PHASE 1 RECALIBRATION (wc-perf-2.0.0):
-  * Display floor 66, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
-  * baseline_anchor_estimate cards banded into [66, 73] on OVERALL only.
+PHASE 1.2 RECALIBRATION (wc-perf-2.1.0):
+  * Display floor 60, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
+  * baseline_anchor_estimate cards banded into [60, 73] on OVERALL only.
   * Decoupled path (plan section 3.2 fallback) LANDED: the calibration curve
     drives ``overall`` ONLY. The four sim channels stay on the pre-recal
     ``[FLOOR_CHANNEL, 100]`` band; ``calibration.ts`` is UNCHANGED from
@@ -152,9 +152,40 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
 
 
 def test_rating_version_is_phase1(built: list[dict]):
-    assert rating.RATING_VERSION == "wc-perf-2.0.0"
+    assert rating.RATING_VERSION == "wc-perf-2.1.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-2.0.0"
+        assert r["rating_version"] == "wc-perf-2.1.0"
+
+
+def test_display_floor_is_sixty_and_channels_stay_decoupled(built: list[dict]):
+    """WS-RATING/FLOOR-60 contract:
+      * ``DISPLAY_FLOOR`` is the HARD 60 floor on the player-card ``overall``.
+      * Sim channels stay on the pre-recal ``[FLOOR_CHANNEL, 100]`` band and
+        are NOT routed through the display curve — proves the decoupled scheme
+        survived the floor change.
+      * Every emitted ``overall`` is >= 60 and the dataset reaches the floor
+        (the estimate band sits there) so the floor is a real, exercised value
+        and not a vacuous bound.
+    """
+    assert rating.DISPLAY_FLOOR == 60
+    assert rating.ESTIMATE_FLOOR == 60
+    assert rating.FLOOR_CHANNEL == 20  # the SIM band floor — untouched.
+    overalls = [r["overall"] for r in built]
+    assert min(overalls) == 60
+    # Channels live on the SIM band, not the display band — they may legally
+    # sit below DISPLAY_FLOOR; the decoupling assertion is purely structural.
+    channels_seen = set()
+    for r in built:
+        for ch in ("attack", "midfield", "defense", "goalkeeping"):
+            channels_seen.add(r[ch])
+    assert min(channels_seen) >= rating.FLOOR_CHANNEL
+    # Existence proof of decoupling: at least one card has a channel STRICTLY
+    # below DISPLAY_FLOOR (which would be impossible if channels routed through
+    # the display curve).
+    assert any(c < rating.DISPLAY_FLOOR for c in channels_seen), (
+        "channels should reach below DISPLAY_FLOOR=60 (decoupled SIM band"
+        " [20, 100]); if every channel is >=60 the decoupling has regressed."
+    )
 
 
 def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
@@ -166,7 +197,7 @@ def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
 
 
 def test_overall_distribution_shape(built: list[dict]):
-    """Reshaped onto [66, 99] with the documented anchors. The exact target
+    """Reshaped onto [60, 99] with the documented anchors. The exact target
     quantiles are slightly elastic (±1) because the curve is fit on measured
     internal anchors, but the floor and max are HARD."""
     overalls = [r["overall"] for r in built]
@@ -203,7 +234,7 @@ def test_floor_is_not_a_clump(built: list[dict]):
     n = len(overalls)
     share_at_floor = sum(1 for ov in overalls if ov == rating.DISPLAY_FLOOR) / n
     # 388/10973 ≈ 0.035; allow a wide window so it’s tolerant to small
-    # data refreshes but still flags a regression that pins everything to 66.
+    # data refreshes but still flags a regression that pins everything to the floor.
     assert share_at_floor < 0.15, f"too many overalls clumped at floor: {share_at_floor:.4f}"
 
 
@@ -541,7 +572,7 @@ def test_strong_defender_not_punished_for_zero_goals(players, cards, by_id):
     assert r["overall"] >= 88
     # Sim channels are on the merit scale [FLOOR_CHANNEL, 100] (Phase 1.1
     # decoupled) — they cannot be compared to `overall` (display band
-    # [66, 99]). Defender invariant: defense is the dominant channel by a
+    # [60, 99]). Defender invariant: defense is the dominant channel by a
     # real margin AND lands above the elite-defender floor on the merit scale.
     assert r["defense"] >= 80
     assert r["defense"] > r["attack"]

@@ -45,7 +45,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-2.0.0"
+RATING_VERSION = "wc-perf-2.1.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -135,12 +135,12 @@ CHANNELS = ("attack", "midfield", "defense", "goalkeeping")
 # Rounding precision for component float values, so the emitted JSON is stable.
 _PRECISION = 6
 
-# ─── DISPLAY CALIBRATION CURVE (wc-perf-2.0.0) ────────────────────────────────
+# ─── DISPLAY CALIBRATION CURVE (wc-perf-2.1.0) ────────────────────────────────
 # Phase 1 rating recalibration: the internal merit model above is UNCHANGED.
 # Its output `score_0_100` is mapped through a deterministic monotonic
 # piecewise-power curve onto the display band [DISPLAY_FLOOR, DISPLAY_MAX].
 # The curve fits ONLY four global INTERNAL anchors of the emitted dataset
-# (min, p50, p95, max) onto fixed display targets (66, 73, 88, 99). It is the
+# (min, p50, p95, max) onto fixed display targets (60, 73, 88, 99). It is the
 # SINGLE knob that reshapes the emitted distribution; the merit math is
 # untouched. Low-DOF (three exponents, four data anchors, no per-player
 # tuning) so it cannot fudge individuals and stays auditable.
@@ -160,12 +160,12 @@ _PRECISION = 6
 # components), and remain flagged via overall_basis + low coverage.
 DISPLAY_CURVE_KIND = "global_piecewise_power_v1"
 
-DISPLAY_FLOOR = 66
+DISPLAY_FLOOR = 60
 DISPLAY_MEDIAN = 73
 DISPLAY_P95 = 88
 DISPLAY_MAX = 99
 
-ESTIMATE_FLOOR = 66
+ESTIMATE_FLOOR = 60
 ESTIMATE_CEILING = 73
 
 # Three exponents — the only free parameters of the curve. Each shapes one
