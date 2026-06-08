@@ -101,10 +101,20 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the Phase 1 recalibration versions", () => {
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-2.0.0");
+  it("rating_version anchors are the E-4 career-lift versions", () => {
+    // wc-perf-3.0.0 = the E-4 career-stature lift. Projected stays
+    // proj-career-2.0.0 (2026 does not consume career stature in E-4), and the
+    // engine_version is unchanged (channels moved, but engine math/λ did not).
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-3.0.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.0.0");
     expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.04");
+  });
+
+  it("career_stature_estimate count matches the manifest (E-4)", () => {
+    const measured = DRAFT_POOL_BUNDLE.ratings.filter(
+      (r) => r.overall_basis === "career_stature_estimate",
+    ).length;
+    expect(RUNTIME_DATA_MANIFEST.counts.career_stature_estimate).toBe(measured);
   });
 
   it("every player card has a runtime CardId that parses through parseCardId", () => {

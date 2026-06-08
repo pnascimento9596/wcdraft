@@ -19,6 +19,7 @@ import pytest
 
 from wcdraft_etl.merit import (
     VERSION,
+    MeritRecord,
     parse_century_caps,
     parse_century_election,
     parse_poy,
@@ -26,6 +27,7 @@ from wcdraft_etl.merit import (
 )
 from wcdraft_etl.merit import fetch as merit_fetch
 from wcdraft_etl.merit.build import build
+from wcdraft_etl.merit.link import build_canon, link_records
 from wcdraft_etl.merit.nation import NationResolver
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -214,6 +216,80 @@ def test_no_fact_is_a_fabricated_zero(built):
         assert f["player_id"].startswith("P-")
         assert f["family"]
         assert f["method"]
+
+
+def test_distinct_null_year_facts_survive_dedup_exact_duplicates_collapse():
+    """Regression for the de-dupe key: a null-year ranked-list row carries a
+    metric/election discriminator, so genuinely distinct facts that share a null
+    year survive — a century-caps player keeps BOTH caps and goals, and a player
+    elected in several distinct century polls keeps EACH election — while an exact
+    repeat of the same row still collapses to a single fact."""
+    players = [
+        {
+            "player_id": "P-TEST",
+            "given_name": "Distinctive",
+            "family_name": "Testplayer",
+            "full_name": "Distinctive Testplayer",
+            "common_name": None,
+        }
+    ]
+    cards = [{"player_id": "P-TEST", "nation_id": "N-1", "tournament_id": "WC-1970"}]
+    tournaments = [{"tournament_id": "WC-1970", "womens": False}]
+    nations = [{"nation_id": "N-1", "canonical_name": "Testland"}]
+    canon = build_canon(players, cards, tournaments, nations)
+
+    name = "Distinctive Testplayer"  # distinctive full name -> links on its own
+    records = [
+        # century-caps page emits BOTH metrics for one player, year=None.
+        MeritRecord(
+            "international_century_caps", "international_record", name,
+            year=None, detail="caps=150 (1968-1975)",
+            extra={"list": "caps", "value": 150},
+        ),
+        MeritRecord(
+            "international_century_caps", "international_record", name,
+            year=None, detail="goals=40", extra={"list": "goals", "value": 40},
+        ),
+        # an EXACT repeat of the caps row must collapse, not duplicate.
+        MeritRecord(
+            "international_century_caps", "international_record", name,
+            year=None, detail="caps=150 (1968-1975)",
+            extra={"list": "caps", "value": 150},
+        ),
+        # two DISTINCT century elections for the same player, year=None.
+        MeritRecord(
+            "iffhs_century", "retrospective_selection", name, year=None,
+            detail="century election: World - Player of the Century",
+            extra={"election": "World - Player of the Century"},
+        ),
+        MeritRecord(
+            "iffhs_century", "retrospective_selection", name, year=None,
+            detail="century election: Europe - Player of the Century",
+            extra={"election": "Europe - Player of the Century"},
+        ),
+        # an EXACT repeat of the World election must collapse.
+        MeritRecord(
+            "iffhs_century", "retrospective_selection", name, year=None,
+            detail="century election: World - Player of the Century",
+            extra={"election": "World - Player of the Century"},
+        ),
+    ]
+    facts, _review = link_records(records, canon)
+    mine = [f for f in facts if f["player_id"] == "P-TEST"]
+
+    caps_goals = sorted(
+        f["detail"] for f in mine if f["source_id"] == "international_century_caps"
+    )
+    assert caps_goals == ["caps=150 (1968-1975)", "goals=40"]  # both kept; dup gone
+
+    elections = sorted(f["detail"] for f in mine if f["source_id"] == "iffhs_century")
+    assert elections == [
+        "century election: Europe - Player of the Century",
+        "century election: World - Player of the Century",
+    ]  # both distinct elections kept; dup gone
+
+    # 2 international-record + 2 retrospective facts; the two exact repeats collapsed.
+    assert len(mine) == 4
 
 
 # ─── honest-state boundary: NO rating output is touched ───────────────────────

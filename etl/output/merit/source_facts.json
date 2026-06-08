@@ -1,5 +1,5 @@
 {
-  "fact_count": 944,
+  "fact_count": 1095,
   "facts": [
     {
       "detail": "iffhs_worlds_best winner 2020",
@@ -1418,6 +1418,18 @@
       "year": null
     },
     {
+      "detail": "goals=88 (2008-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Poland",
+      "player_id": "P-00549",
+      "player_name": "Robert Lewandowski",
+      "raw_name": "Robert Lewandowski",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=39",
       "era": "pre_1956",
       "family": "international_record",
@@ -1502,7 +1514,31 @@
       "year": null
     },
     {
+      "detail": "goals=72 (1978-1994)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-03048",
+      "player_name": "Majed Abdullah",
+      "raw_name": "Majed Abdullah",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=108 (2001-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Panama",
+      "player_id": "P-03144",
+      "player_name": "Luis Tejada",
+      "raw_name": "Luis Tejada",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=43 (2001-2018)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -1527,6 +1563,18 @@
     },
     {
       "detail": "caps=113 (1992-2011)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Costa Rica",
+      "player_id": "P-03776",
+      "player_name": "Rolando Fonseca",
+      "raw_name": "Rolando Fonseca",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=47 (1992-2011)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -1610,6 +1658,18 @@
       "year": null
     },
     {
+      "detail": "goals=57 (2000-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "USA",
+      "player_id": "P-05728",
+      "player_name": "Landon Donovan",
+      "raw_name": "Landon Donovan",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=33",
       "era": "pre_1956",
       "family": "international_record",
@@ -1670,6 +1730,18 @@
       "year": null
     },
     {
+      "detail": "goals=42 (2007-2019)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "USA",
+      "player_id": "P-07475",
+      "player_name": "Jozy Altidore",
+      "raw_name": "Jozy Altidore",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=102 (1990-2007)",
       "era": "1956_1990",
       "family": "international_record",
@@ -1695,6 +1767,18 @@
     },
     {
       "detail": "caps=106 (1958-1970)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-08601",
+      "player_name": "Bobby Charlton",
+      "raw_name": "Bobby Charlton",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=49 (1958-1970)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -1755,6 +1839,18 @@
     },
     {
       "detail": "caps=100 (1985-2000)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "(East) Germany",
+      "player_id": "P-09705",
+      "player_name": "Ulf Kirsten",
+      "raw_name": "Ulf Kirsten",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=34 (1985-2000)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -1982,6 +2078,18 @@
       "year": null
     },
     {
+      "detail": "goals=115 (2005-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-14758",
+      "player_name": "Lionel Messi",
+      "raw_name": "Lionel Messi",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=41",
       "era": "1991_plus",
       "family": "international_record",
@@ -2079,6 +2187,18 @@
     },
     {
       "detail": "caps=141 (2004-2017)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "USA",
+      "player_id": "P-18672",
+      "player_name": "Clint Dempsey",
+      "raw_name": "Clint Dempsey",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=57 (2004-2017)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -2294,6 +2414,18 @@
       "year": null
     },
     {
+      "detail": "goals=45 (1971-1984)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Poland",
+      "player_id": "P-21597",
+      "player_name": "Grzegorz Lato",
+      "raw_name": "Grzegorz Lato",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=121 (1991-2000)",
       "era": "1991_plus",
       "family": "international_record",
@@ -2438,6 +2570,18 @@
       "year": null
     },
     {
+      "detail": "goals=44 (1996-2006)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "surname+nation",
+      "nation_token": "Spain",
+      "player_id": "P-24556",
+      "player_name": "Raúl",
+      "raw_name": "Raúl",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=156 (2010-2025)",
       "era": "1991_plus",
       "family": "international_record",
@@ -2534,7 +2678,31 @@
       "year": null
     },
     {
+      "detail": "goals=55 (2013-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-27540",
+      "player_name": "Memphis Depay",
+      "raw_name": "Memphis Depay",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=137 (2001-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-27787",
+      "player_name": "Miroslav Klose",
+      "raw_name": "Miroslav Klose",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=71 (2001-2014)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -2571,6 +2739,18 @@
     },
     {
       "detail": "caps=131 (2010-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-28154",
+      "player_name": "Thomas Müller",
+      "raw_name": "Thomas Müller",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=45 (2010-2024)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -2619,6 +2799,18 @@
     },
     {
       "detail": "caps=128 (2004-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Peru",
+      "player_id": "P-29117",
+      "player_name": "Paolo Guerrero",
+      "raw_name": "Paolo Guerrero",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=41 (2004-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -2726,6 +2918,18 @@
       "year": null
     },
     {
+      "detail": "goals=52 (2006-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Chile",
+      "player_id": "P-30014",
+      "player_name": "Alexis Sánchez",
+      "raw_name": "Alexis Sánchez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=106 (2016-2025)",
       "era": "1991_plus",
       "family": "international_record",
@@ -2750,6 +2954,18 @@
       "year": null
     },
     {
+      "detail": "goals=69 (2007-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-30486",
+      "player_name": "Luis Suárez",
+      "raw_name": "Luis Suárez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=145 (2008-2022)",
       "era": "1991_plus",
       "family": "international_record",
@@ -2763,6 +2979,18 @@
     },
     {
       "detail": "caps=124 (1983-2000)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Romania",
+      "player_id": "P-30739",
+      "player_name": "Gheorghe Hagi",
+      "raw_name": "Gheorghe Hagi",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=35 (1983-2000)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -2803,6 +3031,18 @@
       "family": "international_record",
       "method": "full_name",
       "nation_token": "Bosnia-Herzegov.",
+      "player_id": "P-31839",
+      "player_name": "Edin Džeko",
+      "raw_name": "Edin Dzeko",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=72 (2007-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name",
+      "nation_token": "Bosnia-Herzegovina",
       "player_id": "P-31839",
       "player_name": "Edin Džeko",
       "raw_name": "Edin Dzeko",
@@ -2978,6 +3218,18 @@
       "year": null
     },
     {
+      "detail": "goals=32 (1999-2016)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Paraguay",
+      "player_id": "P-34530",
+      "player_name": "Roque Santa Cruz",
+      "raw_name": "Roque Santa Cruz",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=33",
       "era": "pre_1956",
       "family": "international_record",
@@ -3038,7 +3290,31 @@
       "year": null
     },
     {
+      "detail": "goals=49 (2004-2017)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-36287",
+      "player_name": "Lukas Podolski",
+      "raw_name": "Lukas Podolski",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=109 (2009-2019)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+year",
+      "nation_token": "Mexico",
+      "player_id": "P-36515",
+      "player_name": "Javier Hernández",
+      "raw_name": "Javier Hernández",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=52 (2009-2019)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+year",
@@ -3074,7 +3350,31 @@
       "year": null
     },
     {
+      "detail": "goals=45 (2009-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Chile",
+      "player_id": "P-36808",
+      "player_name": "Eduardo Vargas",
+      "raw_name": "Eduardo Vargas",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=101 (2006-2021)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-36870",
+      "player_name": "Sergio Agüero",
+      "raw_name": "Sergio Agüero",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=42 (2006-2021)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3134,6 +3434,18 @@
       "year": null
     },
     {
+      "detail": "goals=62 (1982-1997)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Iraq",
+      "player_id": "P-37600",
+      "player_name": "Ahmed Radhi",
+      "raw_name": "Ahmed Radhi",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=30",
       "era": "1991_plus",
       "family": "international_record",
@@ -3158,7 +3470,31 @@
       "year": null
     },
     {
+      "detail": "goals=108 (1993-2006)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Iran",
+      "player_id": "P-38371",
+      "player_name": "Ali Daei",
+      "raw_name": "Ali Daei",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=109 (2003-2019)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Ghana",
+      "player_id": "P-38556",
+      "player_name": "Asamoah Gyan",
+      "raw_name": "Asamoah Gyan",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=51 (2003-2019)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3183,6 +3519,18 @@
     },
     {
       "detail": "caps=184 (2008-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Qatar",
+      "player_id": "P-38732",
+      "player_name": "Hassan Al-Haydos",
+      "raw_name": "Hassan Al-Haydos",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=41 (2008-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3267,6 +3615,18 @@
     },
     {
       "detail": "caps=125 (2010-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Switzerland",
+      "player_id": "P-39460",
+      "player_name": "Xherdan Shaqiri",
+      "raw_name": "Xherdan Shaqiri",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=32 (2010-2024)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3374,6 +3734,18 @@
       "year": null
     },
     {
+      "detail": "goals=34 (2007-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Chile",
+      "player_id": "P-41001",
+      "player_name": "Arturo Vidal",
+      "raw_name": "Arturo Vidal",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=131 (1988-2002)",
       "era": "1956_1990",
       "family": "international_record",
@@ -3411,6 +3783,18 @@
     },
     {
       "detail": "caps=145 (2008-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-42113",
+      "player_name": "Ángel Di María",
+      "raw_name": "Ángel Di María",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=31 (2008-2024)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3471,6 +3855,18 @@
     },
     {
       "detail": "caps=106 (1993-2009)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-42895",
+      "player_name": "Henrik Larsson",
+      "raw_name": "Henrik Larsson",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=37 (1993-2009)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3614,6 +4010,18 @@
       "year": null
     },
     {
+      "detail": "goals=50 (2004-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Australia",
+      "player_id": "P-44926",
+      "player_name": "Tim Cahill",
+      "raw_name": "Tim Cahill",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=101 (2004-2015)",
       "era": "1991_plus",
       "family": "international_record",
@@ -3710,6 +4118,18 @@
       "year": null
     },
     {
+      "detail": "goals=40 (2015-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Qatar",
+      "player_id": "P-47319",
+      "player_name": "Akram Afif",
+      "raw_name": "Akram Afif",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=103 (2015-2026)",
       "era": "1991_plus",
       "family": "international_record",
@@ -3758,6 +4178,18 @@
       "year": null
     },
     {
+      "detail": "goals=37 (1994-2008)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name",
+      "nation_token": "Yugoslavia/S.-M.",
+      "player_id": "P-48250",
+      "player_name": "Savo Milošević",
+      "raw_name": "Savo Milosevic",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "goals=37",
       "era": "1991_plus",
       "family": "international_record",
@@ -3795,6 +4227,18 @@
     },
     {
       "detail": "caps=115 (2010-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-48955",
+      "player_name": "Kevin De Bruyne",
+      "raw_name": "Kevin De Bruyne",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=36 (2010-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -3902,6 +4346,18 @@
       "year": null
     },
     {
+      "detail": "goals=46 (2010-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-50104",
+      "player_name": "Christian Eriksen",
+      "raw_name": "Christian Eriksen",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=121 (2002-2017)",
       "era": "1991_plus",
       "family": "international_record",
@@ -3915,6 +4371,18 @@
     },
     {
       "detail": "caps=112 (1997-2010)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-50534",
+      "player_name": "Jon Dahl Tomasson",
+      "raw_name": "Jon Dahl Tomasson",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=52 (1997-2010)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4010,7 +4478,31 @@
       "year": null
     },
     {
+      "detail": "goals=31 (2003-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-51336",
+      "player_name": "Wesley Sneijder",
+      "raw_name": "Wesley Sneijder",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=123 (1997-2010)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-51395",
+      "player_name": "Thierry Henry",
+      "raw_name": "Thierry Henry",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=51 (1997-2010)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4142,6 +4634,18 @@
       "year": null
     },
     {
+      "detail": "goals=45 (2010-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Cameroon",
+      "player_id": "P-53452",
+      "player_name": "Vincent Aboubakar",
+      "raw_name": "Vincent Aboubakar",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=145 (1994-2011)",
       "era": "1991_plus",
       "family": "international_record",
@@ -4155,6 +4659,18 @@
     },
     {
       "detail": "caps=104 (2009-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Iran",
+      "player_id": "P-53957",
+      "player_name": "Karim Ansarifard",
+      "raw_name": "Karim Ansarifard",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=30 (2009-2024)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4226,6 +4742,18 @@
       "year": null
     },
     {
+      "detail": "goals=36 (2002-2021)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Costa Rica",
+      "player_id": "P-55781",
+      "player_name": "Álvaro Saborío",
+      "raw_name": "Álvaro Saborío",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=119 (1964-1986)",
       "era": "1956_1990",
       "family": "international_record",
@@ -4274,7 +4802,31 @@
       "year": null
     },
     {
+      "detail": "goals=31 (1994-2006)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-56430",
+      "player_name": "Zinedine Zidane",
+      "raw_name": "Zinedine Zidane",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=104 (1982-1998)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-56788",
+      "player_name": "Michael Laudrup",
+      "raw_name": "Michael Laudrup",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=37 (1982-1998)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4346,6 +4898,18 @@
       "year": null
     },
     {
+      "detail": "goals=32 (1991-2006)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-57496",
+      "player_name": "Luís Figo",
+      "raw_name": "Luis Figo",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=104 (2004-2019)",
       "era": "1991_plus",
       "family": "international_record",
@@ -4359,6 +4923,18 @@
     },
     {
       "detail": "caps=123 (2013-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-57865",
+      "player_name": "Raúl Jiménez",
+      "raw_name": "Raúl Jiménez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=44 (2013-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4395,6 +4971,18 @@
     },
     {
       "detail": "caps=112 (1992-2007)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Turkey",
+      "player_id": "P-58212",
+      "player_name": "Hakan Şükür",
+      "raw_name": "Hakan Sükür",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=51 (1992-2007)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4466,7 +5054,31 @@
       "year": null
     },
     {
+      "detail": "goals=78 (2015-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-58924",
+      "player_name": "Harry Kane",
+      "raw_name": "Harry Kane",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=136 (2008-2022)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-59138",
+      "player_name": "Edinson Cavani",
+      "raw_name": "Edinson Cavani",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=58 (2008-2022)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4491,6 +5103,18 @@
     },
     {
       "detail": "caps=105 (2012-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Algeria",
+      "player_id": "P-59199",
+      "player_name": "Islam Slimani",
+      "raw_name": "Islam Slimani",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=46 (2012-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4551,6 +5175,18 @@
     },
     {
       "detail": "caps=149 (2000-2015)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Iran",
+      "player_id": "P-59901",
+      "player_name": "Javad Nekounam",
+      "raw_name": "Javad Nekounam",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=38 (2000-2015)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4742,6 +5378,18 @@
       "year": null
     },
     {
+      "detail": "goals=41 (2006-2022)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Wales",
+      "player_id": "P-63927",
+      "player_name": "Gareth Bale",
+      "raw_name": "Gareth Bale",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=157 (2007-2024)",
       "era": "1991_plus",
       "family": "international_record",
@@ -4767,6 +5415,18 @@
     },
     {
       "detail": "caps=125 (2006-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-64102",
+      "player_name": "David Silva",
+      "raw_name": "David Silva",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=35 (2006-2018)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4851,6 +5511,18 @@
     },
     {
       "detail": "caps=112 (2014-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Croatia",
+      "player_id": "P-65182",
+      "player_name": "Andrej Kramarić",
+      "raw_name": "Andrej Kramaric",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=35 (2014-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -4970,6 +5642,18 @@
       "year": null
     },
     {
+      "detail": "goals=34 (1990-2000)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "USA",
+      "player_id": "P-67232",
+      "player_name": "Eric Wynalda",
+      "raw_name": "Eric Wynalda",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=100 (2003-2018)",
       "era": "1991_plus",
       "family": "international_record",
@@ -5019,6 +5703,18 @@
     },
     {
       "detail": "caps=102 (1971-1986)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Scotland",
+      "player_id": "P-68584",
+      "player_name": "Kenny Dalglish",
+      "raw_name": "Kenny Dalglish",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=30 (1972-1987)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5114,6 +5810,18 @@
       "year": null
     },
     {
+      "detail": "goals=143 (2003-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-70442",
+      "player_name": "Cristiano Ronaldo",
+      "raw_name": "Cristiano Ronaldo",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=127 (2009-2022)",
       "era": "1991_plus",
       "family": "international_record",
@@ -5174,7 +5882,31 @@
       "year": null
     },
     {
+      "detail": "goals=38 (2003-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-71661",
+      "player_name": "Fernando Torres",
+      "raw_name": "Fernando Torres",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=126 (2008-2022)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-72011",
+      "player_name": "Eden Hazard",
+      "raw_name": "Eden Hazard",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=33 (2008-2022)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5235,6 +5967,18 @@
     },
     {
       "detail": "caps=124 (2010-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-72637",
+      "player_name": "Romelu Lukaku",
+      "raw_name": "Romelu Lukaku",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=89 (2010-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5390,7 +6134,31 @@
       "year": null
     },
     {
+      "detail": "goals=67 (2011-2026)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Egypt",
+      "player_id": "P-75890",
+      "player_name": "Mohamed Salah",
+      "raw_name": "Mohamed Salah",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=103 (2012-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Ecuador",
+      "player_id": "P-75912",
+      "player_name": "Enner Valencia",
+      "raw_name": "Enner Valencia",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=48 (2012-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5463,6 +6231,18 @@
     },
     {
       "detail": "caps=123 (2001-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Panama",
+      "player_id": "P-76850",
+      "player_name": "Blas Pérez",
+      "raw_name": "Blas Pérez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=43 (2001-2018)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5666,6 +6446,18 @@
       "year": null
     },
     {
+      "detail": "goals=53 (2012-2026)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Senegal",
+      "player_id": "P-79299",
+      "player_name": "Sadio Mané",
+      "raw_name": "Sadio Mané",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=116 (1993-2004)",
       "era": "1991_plus",
       "family": "international_record",
@@ -5703,6 +6495,18 @@
     },
     {
       "detail": "caps=122 (2001-2023)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=62 (2001-2022)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -5978,6 +6782,18 @@
       "year": null
     },
     {
+      "detail": "goals=50 (2008-2019)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Japan",
+      "player_id": "P-84807",
+      "player_name": "Shinji Okazaki",
+      "raw_name": "Shinji Okazaki",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=109 (2011-2022)",
       "era": "1991_plus",
       "family": "international_record",
@@ -5991,6 +6807,18 @@
     },
     {
       "detail": "caps=146 (1998-2016)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Ireland",
+      "player_id": "P-84878",
+      "player_name": "Robbie Keane",
+      "raw_name": "Robbie Keane",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=68 (1998-2016)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6050,6 +6878,18 @@
       "year": null
     },
     {
+      "detail": "goals=63 (2013-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Serbia",
+      "player_id": "P-85696",
+      "player_name": "Aleksandar Mitrović",
+      "raw_name": "Aleksandar Mitrovic",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=114 (1999-2014)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6063,6 +6903,18 @@
     },
     {
       "detail": "caps=102 (2015-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Iran",
+      "player_id": "P-85860",
+      "player_name": "Mehdi Taremi",
+      "raw_name": "Mehdi Taremi",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=56 (2015-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6098,6 +6950,18 @@
       "year": null
     },
     {
+      "detail": "goals=36 (2002-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-86087",
+      "player_name": "Diego Forlán",
+      "raw_name": "Diego Forlán",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=100 (1992-2002)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6111,6 +6975,18 @@
     },
     {
       "detail": "caps=111 (1995-2012)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Ukraine",
+      "player_id": "P-86650",
+      "player_name": "Andriy Shevchenko",
+      "raw_name": "Andriy Shevchenko",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=48 (1995-2012)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6146,7 +7022,31 @@
       "year": null
     },
     {
+      "detail": "goals=79 (2010-2023)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-87008",
+      "player_name": "Neymar",
+      "raw_name": "\"Neymar\"",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=112 (2002-2013)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-87114",
+      "player_name": "Yasser Al-Qahtani",
+      "raw_name": "Yasser Al-Qahtani",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=42 (2002-2013)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6170,6 +7070,18 @@
       "year": null
     },
     {
+      "detail": "goals=46 (1992-2006)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-88041",
+      "player_name": "Sami Al-Jaber",
+      "raw_name": "Sami Al-Jaber",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=120 (1995-2014)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6182,7 +7094,31 @@
       "year": null
     },
     {
+      "detail": "goals=39 (1995-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-88428",
+      "player_name": "Cuauhtémoc Blanco",
+      "raw_name": "Cuauhtémoc Blanco",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=115 (1995-2011)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name",
+      "nation_token": "Trinidad/Tobago",
+      "player_id": "P-88830",
+      "player_name": "Stern John",
+      "raw_name": "Stern John",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=70 (1995-2011)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name",
@@ -6254,6 +7190,18 @@
       "year": null
     },
     {
+      "detail": "goals=31 (2011-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Colombia",
+      "player_id": "P-89392",
+      "player_name": "James Rodríguez",
+      "raw_name": "James Rodríguez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=150 (2004-2024)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6290,7 +7238,31 @@
       "year": null
     },
     {
+      "detail": "goals=57 (2011-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-89750",
+      "player_name": "Olivier Giroud",
+      "raw_name": "Olivier Giroud",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=177 (1985-2006)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Egypt",
+      "player_id": "P-89810",
+      "player_name": "Hossam Hassan",
+      "raw_name": "Hossam Hassan",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=69 (1985-2006)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6374,6 +7346,18 @@
       "year": null
     },
     {
+      "detail": "goals=44 (2014-2024)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-90908",
+      "player_name": "Antoine Griezmann",
+      "raw_name": "Antoine Griezmann",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=105 (2010-2024)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6398,7 +7382,31 @@
       "year": null
     },
     {
+      "detail": "goals=47 (1987-1998)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "(West) Germany",
+      "player_id": "P-91373",
+      "player_name": "Jürgen Klinsmann",
+      "raw_name": "Jürgen Klinsmann",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=112 (2014-2026)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Algeria",
+      "player_id": "P-91590",
+      "player_name": "Riyad Mahrez",
+      "raw_name": "Riyad Mahrez",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=37 (2014-2026)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6435,6 +7443,18 @@
     },
     {
       "detail": "caps=102 (1969-1984)",
+      "era": "1956_1990",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "East Germany",
+      "player_id": "P-91963",
+      "player_name": "Joachim Streich",
+      "raw_name": "Joachim Streich",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=55 (1969-1984)",
       "era": "1956_1990",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6555,6 +7575,18 @@
     },
     {
       "detail": "caps=150 (2011-2025)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Croatia",
+      "player_id": "P-93884",
+      "player_name": "Ivan Perišić",
+      "raw_name": "Ivan Perisic",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=38 (2011-2025)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6794,6 +7826,18 @@
       "year": null
     },
     {
+      "detail": "goals=65 (2002-2014)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Ivory Coast",
+      "player_id": "P-99466",
+      "player_name": "Didier Drogba",
+      "raw_name": "Didier Drogba",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=116 (2002-2015)",
       "era": "1991_plus",
       "family": "international_record",
@@ -6830,7 +7874,31 @@
       "year": null
     },
     {
+      "detail": "goals=50 (2005-2017)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-99934",
+      "player_name": "Robin van Persie",
+      "raw_name": "Robin van Persie",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
       "detail": "caps=120 (2003-2018)",
+      "era": "1991_plus",
+      "family": "international_record",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-99967",
+      "player_name": "Wayne Rooney",
+      "raw_name": "Wayne Rooney",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "detail": "goals=53 (2003-2018)",
       "era": "1991_plus",
       "family": "international_record",
       "method": "full_name+nation",
@@ -6938,6 +8006,30 @@
       "year": null
     },
     {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-07028",
+      "player_name": "Sándor Kocsis",
+      "raw_name": "Sándor Kocsis",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Hungary - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-07028",
+      "player_name": "Sándor Kocsis",
+      "raw_name": "Sándor Kocsis",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -6986,6 +8078,30 @@
       "year": 2004
     },
     {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-08939",
+      "player_name": "Michel Platini",
+      "raw_name": "Michel Platini",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: France - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-08939",
+      "player_name": "Michel Platini",
+      "raw_name": "Michel Platini",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7022,6 +8138,18 @@
       "year": null
     },
     {
+      "detail": "century election: Spain - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-09022",
+      "player_name": "Francisco Gento",
+      "raw_name": "Francisco Gento",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -7035,6 +8163,18 @@
     },
     {
       "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-09973",
+      "player_name": "Fritz Walter",
+      "raw_name": "Fritz Walter",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
       "method": "full_name+nation",
@@ -7070,6 +8210,30 @@
       "year": 2004
     },
     {
+      "detail": "century election: Austria - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-11865",
+      "player_name": "Matthias Sindelar",
+      "raw_name": "Matthias Sindelar",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-11865",
+      "player_name": "Matthias Sindelar",
+      "raw_name": "Matthias Sindelar",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -7102,6 +8266,42 @@
       "player_id": "P-12470",
       "player_name": "Marcelo Balboa",
       "raw_name": "Marcelo Balboa",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-12676",
+      "player_name": "Ferenc Puskás",
+      "raw_name": "Ferenc Puskás",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Hungary - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-12676",
+      "player_name": "Ferenc Puskás",
+      "raw_name": "Ferenc Puskás",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Spain - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-12676",
+      "player_name": "Ferenc Puskás",
+      "raw_name": "Ferenc Puskás",
       "source_id": "iffhs_century",
       "year": null
     },
@@ -7238,6 +8438,18 @@
       "year": null
     },
     {
+      "detail": "century election: Hungary - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-21188",
+      "player_name": "Flórián Albert",
+      "raw_name": "Flórián Albert",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: Europe - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7274,6 +8486,18 @@
       "year": null
     },
     {
+      "detail": "century election: Netherlands - Player of the Century",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-22409",
+      "player_name": "Dennis Bergkamp",
+      "raw_name": "Dennis Bergkamp",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -7284,6 +8508,18 @@
       "raw_name": "Dennis Bergkamp",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Scotland",
+      "player_id": "P-22762",
+      "player_name": "Denis Law",
+      "raw_name": "Denis Law",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -7430,6 +8666,18 @@
       "year": 2004
     },
     {
+      "detail": "century election: Central and North America - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-26316",
+      "player_name": "Hugo Sánchez",
+      "raw_name": "Hugo Sánchez",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7538,6 +8786,18 @@
       "year": null
     },
     {
+      "detail": "century election: Netherlands - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-31830",
+      "player_name": "Ruud Krol",
+      "raw_name": "Ruud Krol",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7548,6 +8808,30 @@
       "raw_name": "Rinat Dasayev",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-32830",
+      "player_name": "Ruud Gullit",
+      "raw_name": "Ruud Gullit",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Netherlands - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-32830",
+      "player_name": "Ruud Gullit",
+      "raw_name": "Ruud Gullit",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -7618,6 +8902,42 @@
       "player_id": "P-34403",
       "player_name": "Alfredo Di Stéfano",
       "raw_name": "Alfredo di Stéfano",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Spain - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-34403",
+      "player_name": "Alfredo Di Stéfano",
+      "raw_name": "Alfredo di Stéfano",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-34536",
+      "player_name": "Giuseppe Meazza",
+      "raw_name": "Giuseppe Meazza",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Italy - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-34536",
+      "player_name": "Giuseppe Meazza",
+      "raw_name": "Giuseppe Meazza",
       "source_id": "iffhs_century",
       "year": null
     },
@@ -7694,6 +9014,18 @@
       "year": null
     },
     {
+      "detail": "century election: Uruguay - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-36582",
+      "player_name": "Enzo Francescoli",
+      "raw_name": "Enzo Francescoli",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7718,6 +9050,18 @@
       "year": 2004
     },
     {
+      "detail": "century election: South America - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-37483",
+      "player_name": "Zico",
+      "raw_name": "Zico",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7740,6 +9084,18 @@
       "raw_name": "Zico",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Czechoslovakia",
+      "player_id": "P-37610",
+      "player_name": "Josef Masopust",
+      "raw_name": "Josef Masopust",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -7814,6 +9170,30 @@
       "year": null
     },
     {
+      "detail": "century election: South America - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-38873",
+      "player_name": "Juan Alberto Schiaffino",
+      "raw_name": "Juan Alberto Schiaffino",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Uruguay - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-38873",
+      "player_name": "Juan Alberto Schiaffino",
+      "raw_name": "Juan Alberto Schiaffino",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -7848,6 +9228,18 @@
       "raw_name": "Javier Saviola",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: South America - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-38906",
+      "player_name": "Pelé",
+      "raw_name": "Pelé",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -7886,6 +9278,18 @@
       "year": null
     },
     {
+      "detail": "century election: Brazil - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-41064",
+      "player_name": "Ademir da Guia",
+      "raw_name": "Ademir da Guía",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: South America - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -7908,6 +9312,30 @@
       "raw_name": "Francesco Totti",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42920",
+      "player_name": "Franco Baresi",
+      "raw_name": "Franco Baresi",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Italy - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42920",
+      "player_name": "Franco Baresi",
+      "raw_name": "Franco Baresi",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -8006,6 +9434,18 @@
       "year": 2004
     },
     {
+      "detail": "century election: South America - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-46080",
+      "player_name": "Garrincha",
+      "raw_name": "Garrincha",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8078,6 +9518,30 @@
       "year": 2004
     },
     {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-49502",
+      "player_name": "Lothar Matthäus",
+      "raw_name": "Lothar Matthäus",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-49502",
+      "player_name": "Lothar Matthäus",
+      "raw_name": "Lothar Matthäus",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8112,6 +9576,30 @@
       "raw_name": "Carlos Valderrama",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: England - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-50128",
+      "player_name": "Kevin Keegan",
+      "raw_name": "Kevin Keegan",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-50128",
+      "player_name": "Kevin Keegan",
+      "raw_name": "Kevin Keegan",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -8174,6 +9662,30 @@
       "year": null
     },
     {
+      "detail": "century election: England - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-51382",
+      "player_name": "Stanley Matthews",
+      "raw_name": "Stanley Matthews",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-51382",
+      "player_name": "Stanley Matthews",
+      "raw_name": "Stanley Matthews",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -8222,6 +9734,18 @@
       "year": null
     },
     {
+      "detail": "century election: England - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-52816",
+      "player_name": "Bobby Moore",
+      "raw_name": "Bobby Moore",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: Europe - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8256,6 +9780,18 @@
       "raw_name": "Javier Zanetti",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Austria - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-53882",
+      "player_name": "Ernst Ocwirk",
+      "raw_name": "Ernst Ocwirk",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: Europe - Player of the Century",
@@ -8378,6 +9914,30 @@
       "year": null
     },
     {
+      "detail": "century election: Italy - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-57787",
+      "player_name": "Roberto Bettega",
+      "raw_name": "Roberto Bettega",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Africa - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Cameroon",
+      "player_id": "P-58080",
+      "player_name": "Roger Milla",
+      "raw_name": "Roger Milla",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8424,6 +9984,18 @@
       "raw_name": "Patrick Kluivert",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-59574",
+      "player_name": "Karl-Heinz Rummenigge",
+      "raw_name": "Karl-Heinz Rummenigge",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -8534,6 +10106,18 @@
       "year": null
     },
     {
+      "detail": "century election: Italy - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-62214",
+      "player_name": "Gianni Rivera",
+      "raw_name": "Gianni Rivera",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8602,6 +10186,30 @@
       "player_id": "P-63826",
       "player_name": "José Leandro Andrade",
       "raw_name": "José Leandro Andrade",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Uruguay - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-63826",
+      "player_name": "José Leandro Andrade",
+      "raw_name": "José Leandro Andrade",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-64138",
+      "player_name": "Uwe Seeler",
+      "raw_name": "Uwe Seeler",
       "source_id": "iffhs_century",
       "year": null
     },
@@ -8678,6 +10286,18 @@
       "year": null
     },
     {
+      "detail": "century election: Italy - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-65885",
+      "player_name": "Silvio Piola",
+      "raw_name": "Silvio Piola",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: Germany - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8703,6 +10323,18 @@
     },
     {
       "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-68170",
+      "player_name": "Giacinto Facchetti",
+      "raw_name": "Giacinto Facchetti",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Italy - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
       "method": "full_name+nation",
@@ -8762,6 +10394,30 @@
       "year": null
     },
     {
+      "detail": "century election: Hungary - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-70989",
+      "player_name": "József Bozsik",
+      "raw_name": "József Bozsik",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-72441",
+      "player_name": "Gerd Müller",
+      "raw_name": "Gerd Müller",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -8794,6 +10450,30 @@
       "player_id": "P-72482",
       "player_name": "Karim Bagheri",
       "raw_name": "Karim Bagheri",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-72864",
+      "player_name": "Franz Beckenbauer",
+      "raw_name": "Franz Beckenbauer",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Germany - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-72864",
+      "player_name": "Franz Beckenbauer",
+      "raw_name": "Franz Beckenbauer",
       "source_id": "iffhs_century",
       "year": null
     },
@@ -8880,6 +10560,18 @@
       "raw_name": "Gordon Banks",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-74747",
+      "player_name": "Eusébio",
+      "raw_name": "Eusébio",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -9002,6 +10694,30 @@
       "year": null
     },
     {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-76874",
+      "player_name": "Marco van Basten",
+      "raw_name": "Marco van Basten",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Netherlands - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-76874",
+      "player_name": "Marco van Basten",
+      "raw_name": "Marco van Basten",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -9024,6 +10740,30 @@
       "raw_name": "Marco van Basten",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-77939",
+      "player_name": "Just Fontaine",
+      "raw_name": "Just Fontaine",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: France - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-77939",
+      "player_name": "Just Fontaine",
+      "raw_name": "Just Fontaine",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: World - Player of the Century",
@@ -9075,6 +10815,18 @@
     },
     {
       "detail": "century election: Europe - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-78756",
+      "player_name": "Roberto Baggio",
+      "raw_name": "Roberto Baggio",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: Italy - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
       "method": "full_name+nation",
@@ -9494,6 +11246,30 @@
       "year": null
     },
     {
+      "detail": "century election: Europe - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-94605",
+      "player_name": "Raymond Kopa",
+      "raw_name": "Raymond Kopa",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "detail": "century election: France - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-94605",
+      "player_name": "Raymond Kopa",
+      "raw_name": "Raymond Kopa",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -9516,6 +11292,18 @@
       "raw_name": "Raymond Kopa",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Belgium - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-94646",
+      "player_name": "Paul Van Himst",
+      "raw_name": "Paul Van Himst",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: Europe - Player of the Century",
@@ -9578,6 +11366,18 @@
       "year": 2004
     },
     {
+      "detail": "century election: South America - Player of the Century",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Peru",
+      "player_id": "P-96979",
+      "player_name": "Teófilo Cubillas",
+      "raw_name": "Teófilo Cubillas",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "detail": "century election: World - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -9600,6 +11400,18 @@
       "raw_name": "Teófilo Cubillas",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "century election: Austria - Player of the Century",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-98569",
+      "player_name": "Gerhard Hanappi",
+      "raw_name": "Gerhard Hanappi",
+      "source_id": "iffhs_century",
+      "year": null
     },
     {
       "detail": "century election: Europe - Player of the Century",

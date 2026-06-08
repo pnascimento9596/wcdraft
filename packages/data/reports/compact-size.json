@@ -1,18 +1,18 @@
 {
   "bundles": {
     "draft_pool": {
-      "bytes": 22818434,
-      "bytes_brotli": 619790,
-      "bytes_gzip": 1010145,
+      "bytes": 27740104,
+      "bytes_brotli": 643010,
+      "bytes_gzip": 1084541,
       "path": "draft-pool.compact.json",
-      "sha256": "8f437b9212ac8ca2467cc7405c38c235bb86f7c32d2f92641abef0e64f77af54"
+      "sha256": "405bd9b97c39fc3578c1c4632f7a65747cc50dd83502262ac36f189a87d7d08c"
     },
     "manifest": {
-      "bytes": 6047,
-      "bytes_brotli": 1726,
-      "bytes_gzip": 2101,
+      "bytes": 6081,
+      "bytes_brotli": 1748,
+      "bytes_gzip": 2115,
       "path": "manifest.json",
-      "sha256": "eb16aaf0d198c6ba50fd2fedde02299c877d64421c6dadfd13fe2b58d8d5879f"
+      "sha256": "330fb769327c0fded62a01ef2c5cbcb826dde393c4c4ce573a13d9c5890618c7"
     },
     "scenario_2026": {
       "bytes": 109786,
@@ -24,7 +24,7 @@
   },
   "dataset_version": "2026-06-04",
   "schema_version": "runtime-data-1.0.0",
-  "total_brotli_bytes": 625966,
-  "total_gzip_bytes": 1019964,
-  "total_raw_bytes": 22934267
+  "total_brotli_bytes": 649208,
+  "total_gzip_bytes": 1094374,
+  "total_raw_bytes": 27855971
 }

@@ -55,11 +55,11 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 22818434,
-      "bytes_brotli": 619790,
-      "bytes_gzip": 1010145,
+      "bytes": 27740104,
+      "bytes_brotli": 643010,
+      "bytes_gzip": 1084541,
       "path": "draft-pool.compact.json",
-      "sha256": "8f437b9212ac8ca2467cc7405c38c235bb86f7c32d2f92641abef0e64f77af54"
+      "sha256": "405bd9b97c39fc3578c1c4632f7a65747cc50dd83502262ac36f189a87d7d08c"
     },
     "scenario_2026": {
       "bytes": 109786,
@@ -71,6 +71,7 @@
   },
   "counts": {
     "baseline_anchor_estimate": 388,
+    "career_stature_estimate": 0,
     "knockout_slots": 62,
     "manager_cards": 501,
     "player_cards": 12219,
@@ -79,7 +80,7 @@
   },
   "dataset_version": "2026-06-04",
   "engine_version": "engine-2026.06.04",
-  "rating_version_historical": "wc-perf-2.0.0",
+  "rating_version_historical": "wc-perf-3.0.0",
   "rating_version_projected": "proj-career-2.0.0",
   "ruleset_version": "ruleset-2026.06.04",
   "schema_version": "runtime-data-1.0.0"

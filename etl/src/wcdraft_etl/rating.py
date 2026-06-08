@@ -45,7 +45,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-2.0.0"
+RATING_VERSION = "wc-perf-3.0.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -101,6 +101,44 @@ BASE_WEIGHTS: dict[str, dict[str, float]] = {
 # DOWN for FW (whose own box score already carries them through the base).
 AWARD_WEIGHT: dict[str, float] = {"FW": 0.20, "MF": 0.22, "DF": 0.18, "GK": 0.22}
 FINISH_WEIGHT: dict[str, float] = {"FW": 0.16, "MF": 0.16, "DF": 0.24, "GK": 0.28}
+
+# ─── CAREER-STATURE LIFT (wc-perf-3.0.0, plan E-4.3) ──────────────────────────
+# A career-stature merit BASE (built offline in merit/stature.py, keyed by
+# player_id) is added to the SAME internal composite that feeds both display OVR
+# and the four sim channels, BEFORE score_0_100 is materialized — so a legend's
+# off-tournament card and its channels rise coherently (the channel-decoupling
+# fix: Pelé-1966 attack no longer sits at the raw 54 floor). This is a FLOOR/LIFT,
+# not an override: a card is lifted toward a capped career target only to the
+# extent its raw tournament score falls short of that target. A great tournament
+# already above the target keeps its (higher) measured score; a mid-tier or
+# weakly-sourced player gets little or none. There is NO per-player override table.
+#
+#   career_elite  = career_stature_score ** CAREER_ELITE_EXPONENT
+#   career_target = REPLACEMENT_BASE + CAREER_TARGET_SPAN[pos] * career_elite
+#   career_lift   = min(CAREER_MAX_LIFT[pos],
+#                       CAREER_BLEND_HISTORICAL * max(0, career_target - raw))
+#   score         = clamp01(raw + career_lift)
+#
+# CALIBRATION NOTE: the era-weighted saturating composite in merit/stature.py
+# compresses the elite tail into ~[0.50, 0.66] (its structural max is ≈0.70), so
+# the elite EXPONENT is CONCAVE (< 1) — a convex exponent would under-lift the
+# strong-but-not-maximal legends (Pelé/Zidane/Platini at ~0.55–0.59) relative to
+# the maximal ones. Constants are fitted against the E-4 named-anchor set
+# (RATING_METHODOLOGY.md §"Career-stature lift"); they are calibration, not
+# algorithm, and golden-locked like the λ / display knobs.
+CAREER_ELITE_EXPONENT = 0.85
+CAREER_TARGET_SPAN: dict[str, float] = {"FW": 0.80, "MF": 0.80, "DF": 0.74, "GK": 0.72}
+CAREER_BLEND_HISTORICAL = 0.70
+CAREER_MAX_LIFT: dict[str, float] = {"FW": 0.26, "MF": 0.24, "DF": 0.22, "GK": 0.20}
+# Below this career coverage the public record is too thin to support a lift; the
+# card keeps its raw tournament score (honest thin coverage, not a zero).
+MIN_CAREER_COVERAGE_FOR_LIFT = 0.25
+# A card with no individual tournament signal is a "career_stature_estimate" (vs
+# the existing capped "baseline_anchor_estimate") only when its career record is
+# both well-covered AND clearly elite — otherwise the existing [66, 73] estimate
+# clamp still applies.
+CAREER_ESTIMATE_MIN_COVERAGE = 0.50
+CAREER_ESTIMATE_MIN_SCORE = 0.55
 
 # Replacement-level base in [0,1] used (a) as the off-position channel floor,
 # (b) as the FLOOR of the performance base scale, and (c) as the base for a card
@@ -277,6 +315,26 @@ def _load(output_dir: Path, name: str) -> list[dict]:
     return json.loads((output_dir / f"{name}.json").read_text(encoding="utf-8"))
 
 
+def _load_career_stature(output_dir: Path) -> dict[str, dict]:
+    """player_id -> career-stature row from the offline merit composite.
+
+    Missing file is tolerated (returns {}): the rating stage then degrades to the
+    pre-career behavior with every lift = 0, so rating.py never hard-depends on the
+    merit artifact existing. A present file must carry unique player_id keys.
+    """
+    path = output_dir / "career_stature.json"
+    if not path.exists():
+        return {}
+    table = json.loads(path.read_text(encoding="utf-8"))
+    by_player: dict[str, dict] = {}
+    for row in table["career_stature"]:
+        pid = row["player_id"]
+        if pid in by_player:
+            raise ValueError(f"duplicate career_stature row for {pid}")
+        by_player[pid] = row
+    return by_player
+
+
 # ─── ERA NORMALIZATION ────────────────────────────────────────────────────────
 
 
@@ -329,6 +387,34 @@ def _clamp01(x: float) -> float:
     return 0.0 if x < 0.0 else 1.0 if x > 1.0 else x
 
 
+def _career_lift(
+    raw_tournament_score: float, pos: str, cs: dict | None
+) -> tuple[float, float | None, float | None, float | None]:
+    """Career-stature floor/lift for one card (plan E-4.3 formula).
+
+    Returns ``(lift, career_score, coverage, target)`` where ``lift`` is the
+    additive term in [0, CAREER_MAX_LIFT[pos]] applied to the internal composite,
+    and the trailing values are the transparency numbers recorded in components[].
+    With no usable career row (missing, or coverage below the gate) the lift is 0
+    and target is None — the card keeps its raw tournament score (honest thin
+    coverage, never a zero against the player).
+    """
+    if cs is None:
+        return 0.0, None, None, None
+    career_score = cs["career_stature_score"]
+    coverage = cs["coverage"]
+    if coverage < MIN_CAREER_COVERAGE_FOR_LIFT:
+        # Real score recorded for transparency, but no lift: too thin to support it.
+        return 0.0, career_score, coverage, None
+    elite = career_score ** CAREER_ELITE_EXPONENT
+    target = round(REPLACEMENT_BASE + CAREER_TARGET_SPAN[pos] * elite, _PRECISION)
+    lift = min(
+        CAREER_MAX_LIFT[pos],
+        CAREER_BLEND_HISTORICAL * max(0.0, target - raw_tournament_score),
+    )
+    return round(lift, _PRECISION), career_score, coverage, target
+
+
 def _channel(score_0_100: float, spread: float) -> int:
     """Convex blend between the card score (spread=1) and the replacement floor
     (spread=0), rounded to an integer in [0,100]."""
@@ -351,6 +437,7 @@ def _build_internal_rows(
     cards: list[dict],
     tournaments: list[dict],
     manager_tournaments: list[dict],
+    career_stature_by_player: dict[str, dict] | None = None,
 ) -> list[dict]:
     """Pass 1 of the rating build — return one INTERNAL row per men's card,
     carrying the pre-display COMPOSITE merit score ``score_0_100``, the
@@ -366,6 +453,7 @@ def _build_internal_rows(
     """
     mens = {t["tournament_id"] for t in tournaments if "Men's" in t["name"]}
     position_of_player = {p["player_id"]: p.get("primary_position") for p in players}
+    career_stature_by_player = career_stature_by_player or {}
 
     # Team final placement keyed by (nation_id, tournament_id). Semifinalists only;
     # everything else is genuinely absent (-> None -> dropped, never 0).
@@ -446,11 +534,40 @@ def _build_internal_rows(
         # Two independent additive cross-era lifts (see AWARD_WEIGHT / FINISH_WEIGHT).
         anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (finish_pts or 0.0)
 
-        score = _clamp01(base + anchor)
+        # Raw tournament composite (pre-career). This is the score the wc-perf-2.0.0
+        # model emitted; the career lift is added on top of it below.
+        raw_tournament_score = _clamp01(base + anchor)
+
+        # Career-stature floor/lift: lifts BOTH overall and the four channels
+        # coherently because it is added to the single composite that feeds both.
+        cs = career_stature_by_player.get(c["player_id"])
+        (
+            career_lift,
+            career_score_val,
+            career_coverage,
+            career_target,
+        ) = _career_lift(raw_tournament_score, pos, cs)
+
+        score = _clamp01(raw_tournament_score + career_lift)
         score_0_100 = 100.0 * score
-        overall_basis = (
-            "measured_performance" if has_individual_signal else "baseline_anchor_estimate"
-        )
+
+        # overall_basis split (plan §"overall_basis semantics"):
+        #   measured_performance     — a positively-weighted tournament signal exists
+        #   career_stature_estimate  — no tournament signal, but a well-covered, elite
+        #                              career record (exits via the uncapped curve)
+        #   baseline_anchor_estimate — no tournament signal AND no usable career
+        #                              record (keeps the existing [66, 73] cap)
+        if has_individual_signal:
+            overall_basis = "measured_performance"
+        elif (
+            career_coverage is not None
+            and career_coverage >= CAREER_ESTIMATE_MIN_COVERAGE
+            and career_score_val is not None
+            and career_score_val >= CAREER_ESTIMATE_MIN_SCORE
+        ):
+            overall_basis = "career_stature_estimate"
+        else:
+            overall_basis = "baseline_anchor_estimate"
 
         components = [
             # Raw box-score values for transparency (weight 0 — informational).
@@ -472,6 +589,31 @@ def _build_internal_rows(
             # team_finish (non-semifinalist) is shown as null, never 0-substituted.
             {"signal": "award_score", "value": award_score, "weight": AWARD_WEIGHT[pos]},
             {"signal": "team_finish", "value": finish_pts, "weight": FINISH_WEIGHT[pos]},
+            # Career-stature transparency (wc-perf-3.0.0). Constant across all of a
+            # player's cards (score/coverage/target); only the per-card lift varies,
+            # since lift depends on how far THIS card's raw score fell short. A
+            # player with no usable career row shows null score/coverage/target and
+            # a 0 lift — visibly not 0-substituted against the player.
+            {
+                "signal": "career_stature_score",
+                "value": career_score_val,
+                "weight": 0.0,
+            },
+            {
+                "signal": "career_stature_coverage",
+                "value": career_coverage,
+                "weight": 0.0,
+            },
+            {
+                "signal": "career_stature_target",
+                "value": career_target,
+                "weight": 0.0,
+            },
+            {
+                "signal": "career_stature_lift",
+                "value": round(career_lift, _PRECISION),
+                "weight": 1.0,
+            },
         ]
 
         internal_rows.append(
@@ -481,6 +623,7 @@ def _build_internal_rows(
                 "tournament_id": c["tournament_id"],
                 "pos": pos,
                 "score_0_100": score_0_100,
+                "raw_tournament_score_0_100": round(100.0 * raw_tournament_score, _PRECISION),
                 "overall_basis": overall_basis,
                 "components": components,
                 "coverage": c["coverage"],
@@ -496,6 +639,7 @@ def build_internal_view(
     cards: list[dict],
     tournaments: list[dict],
     manager_tournaments: list[dict],
+    career_stature_by_player: dict[str, dict] | None = None,
 ) -> tuple[list[dict], DisplayCurve]:
     """Pass 1 + curve fit, exposed for the §4 acceptance suite.
 
@@ -505,7 +649,9 @@ def build_internal_view(
     composite for measured cards — the right curve invariant — without
     surrogate channel-vs-overall checks.
     """
-    internal = _build_internal_rows(players, cards, tournaments, manager_tournaments)
+    internal = _build_internal_rows(
+        players, cards, tournaments, manager_tournaments, career_stature_by_player
+    )
     curve = _fit_display_curve([r["score_0_100"] for r in internal])
     return internal, curve
 
@@ -515,6 +661,7 @@ def build_ratings(
     cards: list[dict],
     tournaments: list[dict],
     manager_tournaments: list[dict],
+    career_stature_by_player: dict[str, dict] | None = None,
 ) -> list[dict]:
     """Return Rating-shaped records for every men's card, sorted by card_id.
 
@@ -524,7 +671,9 @@ def build_ratings(
     packages/data emit-lock step and deliberately out of scope here.
     """
     # ── PASS 2: fit display curve and materialize Rating rows ─────────────────
-    internal_rows, curve = build_internal_view(players, cards, tournaments, manager_tournaments)
+    internal_rows, curve = build_internal_view(
+        players, cards, tournaments, manager_tournaments, career_stature_by_player
+    )
     ratings: list[dict] = []
     for row in internal_rows:
         pos = row["pos"]
@@ -573,6 +722,7 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
         cards=_load(output_dir, "player_tournaments"),
         tournaments=_load(output_dir, "tournaments"),
         manager_tournaments=_load(output_dir, "manager_tournaments"),
+        career_stature_by_player=_load_career_stature(output_dir),
     )
 
 

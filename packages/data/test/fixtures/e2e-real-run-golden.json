@@ -1047,7 +1047,7 @@
       "P-03706"
     ],
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-2.0.0+proj-career-2.0.0",
+    "rating_version": "wc-perf-3.0.0+proj-career-2.0.0",
     "engine_version": "engine-2026.06.04"
   },
   "scenario": {
@@ -1092,7 +1092,7 @@
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:06c7af0efa0d42887f6a918fae7dee58",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-2.0.0+proj-career-2.0.0",
+    "rating_version": "wc-perf-3.0.0+proj-career-2.0.0",
     "engine_version": "engine-2026.06.04",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:801",
     "reached_round": "R32",
@@ -1935,7 +1935,7 @@
           "pens_missed": 0,
           "minutes": 330
         },
-        "rating_at_draft": 74
+        "rating_at_draft": 73
       },
       {
         "player_id": "P-01933",
@@ -2419,7 +2419,7 @@
           "pens_missed": 0,
           "minutes": 330
         },
-        "rating_at_draft": 73
+        "rating_at_draft": 72
       },
       {
         "player_id": "P-01895",

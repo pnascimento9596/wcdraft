@@ -139,7 +139,11 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             isinstance(r["overall"], int)
             and rating.DISPLAY_FLOOR <= r["overall"] <= rating.DISPLAY_MAX
         ), r["card_id"]
-        assert r["overall_basis"] in ("measured_performance", "baseline_anchor_estimate")
+        assert r["overall_basis"] in (
+            "measured_performance",
+            "career_stature_estimate",
+            "baseline_anchor_estimate",
+        )
         assert r["appearances_source"] in (None, "fjelstul_match_events", "rsssf_starting_xi")
         assert r["coverage"] in (0.6667, 0.8333, 1.0)
         assert r["coverage_basis"] == "wc_signals"
@@ -151,10 +155,11 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_phase1(built: list[dict]):
-    assert rating.RATING_VERSION == "wc-perf-2.0.0"
+def test_rating_version_is_career_lift(built: list[dict]):
+    # wc-perf-3.0.0 = the E-4 career-stature lift integration (engine-v2).
+    assert rating.RATING_VERSION == "wc-perf-3.0.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-2.0.0"
+        assert r["rating_version"] == "wc-perf-3.0.0"
 
 
 def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
@@ -257,6 +262,7 @@ def test_display_curve_replay_is_byte_stable(built: list[dict], cards: dict[str,
         cards=pt_rows,
         tournaments=tournaments_rows,
         manager_tournaments=mt_rows,
+        career_stature_by_player=rating._load_career_stature(rating.OUTPUT_DIR),
     )
     assert {r["card_id"] for r in rebuilt} == {r["card_id"] for r in built}
     rebuilt_by_id = {r["card_id"]: r for r in rebuilt}
@@ -295,6 +301,7 @@ def _build_internal_view():
         cards=cards_rows,
         tournaments=tournaments_rows,
         manager_tournaments=mt_rows,
+        career_stature_by_player=rating._load_career_stature(rating.OUTPUT_DIR),
     )
 
 
@@ -639,6 +646,130 @@ def test_defenders_and_keepers_are_never_rated_on_goals(built: list[dict], cards
         assert comp["goals_percentile"]["weight"] == 0.0, r["card_id"]
         checked += 1
     assert checked > 0
+
+
+# ─── E-4 acceptance: career-stature lift (wc-perf-3.0.0) ──────────────────────
+
+
+def _career_comp(rating_row: dict, signal: str):
+    return next(
+        c["value"] for c in rating_row["components"] if c["signal"] == signal
+    )
+
+
+def test_career_lift_fixes_legend_off_tournament_channel(players, cards, by_id):
+    """The headline E-4 fix: a legend's off-tournament card and its primary sim
+    channel rise OFF the raw floor, while the legend's apex cards do not balloon."""
+    def card(name, tid):
+        return by_id[_card_id(players, cards, name, tid)]
+
+    # Pelé '66 — the canonical failure. The attack channel was the raw 54 floor;
+    # the lift must move it materially up (and never down). OVR rises in step.
+    pele66 = card("Pelé", "WC-1966")
+    assert pele66["attack"] >= 64, pele66["attack"]
+    assert _career_comp(pele66, "career_stature_lift") > 0
+    # Apex cards stay put — lift is a FLOOR, not an override (raw already above target).
+    assert card("Pelé", "WC-1958")["attack"] >= 95
+    assert _career_comp(card("Pelé", "WC-1958"), "career_stature_lift") == 0
+    assert card("Maradona", "WC-1986")["midfield"] == 100
+    assert _career_comp(card("Maradona", "WC-1986"), "career_stature_lift") == 0
+    # Other multi-WC legends' weak cards rise too.
+    assert card("Messi", "WC-2010")["attack"] >= 58
+    assert card("Maradona", "WC-1994")["midfield"] >= 60
+    assert card("Ronaldo", "WC-1994")["attack"] >= 60
+
+
+def test_career_stature_score_is_constant_across_a_players_cards(players, by_id):
+    """A player's career_stature_score/coverage is a CAREER aggregate — identical
+    on every one of their cards; only the per-card lift varies."""
+    pele_ids = {p["player_id"] for p in players if p["common_name"] == "Pelé"}
+    pele_cards = [r for r in by_id.values() if r["player_id"] in pele_ids]
+    assert len(pele_cards) >= 3
+    scores = {_career_comp(r, "career_stature_score") for r in pele_cards}
+    covs = {_career_comp(r, "career_stature_coverage") for r in pele_cards}
+    assert len(scores) == 1 and None not in scores, scores
+    assert len(covs) == 1 and None not in covs, covs
+    # The per-card lift is NOT constant (it depends on each card's raw shortfall).
+    lifts = {_career_comp(r, "career_stature_lift") for r in pele_cards}
+    assert len(lifts) > 1, lifts
+
+
+def test_thin_coverage_greats_get_no_lift(players, by_id):
+    """Honest-state: a great with sparse public facts (below the coverage gate)
+    keeps their raw tournament score — missing coverage is coverage, not a lift."""
+    # Cruyff (1 retrospective fact, coverage 0.15) and Baresi (coverage 0.15).
+    for name in ("Cruyff", "Baresi"):
+        pids = {p["player_id"] for p in players if p["common_name"] == name}
+        rows = [r for r in by_id.values() if r["player_id"] in pids]
+        assert rows, name
+        for r in rows:
+            assert _career_comp(r, "career_stature_lift") == 0, (name, r["card_id"])
+            # target is withheld (null) below the gate; score is still recorded.
+            assert _career_comp(r, "career_stature_target") is None
+
+
+def test_no_card_overall_reaches_100_after_lift(built: list[dict]):
+    """The lift must not push any card to the old pinned-at-ceiling failure."""
+    assert 100 not in {r["overall"] for r in built}
+    assert max(r["overall"] for r in built) == rating.DISPLAY_MAX
+
+
+def test_career_stature_estimate_gating_is_live_and_uncapped():
+    """The career_stature_estimate path (no tournament signal + well-covered elite
+    career) exits via the UNCAPPED curve. No real card currently hits it, so this
+    drives a crafted no-signal card for an elite-career player through build_ratings
+    and asserts the basis + that it clears the old [66, 73] estimate ceiling."""
+    players = [{"player_id": "P-TEST", "common_name": "Test", "primary_position": "DF"}]
+    tournaments = [{"tournament_id": "WC-1962", "name": "1962 FIFA Men's World Cup"}]
+    # DF card, appearances null (no individual signal) -> would be baseline estimate.
+    # A Golden Ball anchor lifts its raw composite above the padding cohort so the
+    # uncapped curve maps it ABOVE the old [66, 73] estimate ceiling (the whole
+    # point of the career_stature_estimate exit).
+    cards = [
+        {
+            "card_id": "P-TEST:WC-1962",
+            "player_id": "P-TEST",
+            "tournament_id": "WC-1962",
+            "nation_id": "N-TEST",
+            "position_listed": "DF",
+            "goals": 0,
+            "appearances": None,
+            "appearances_source": None,
+            "awards": ["Golden Ball"],
+            "coverage": 0.3333,
+        }
+    ]
+    # Elite, well-covered career row -> routes to career_stature_estimate.
+    career = {
+        "P-TEST": {
+            "player_id": "P-TEST",
+            "career_stature_score": 0.65,
+            "coverage": 1.0,
+        }
+    }
+    # A non-degenerate curve needs a spread of internal scores; pad with measured
+    # cards whose composites sit BELOW the anchored test card so it lands at the top
+    # of the distribution (where the uncapped vs capped distinction is visible).
+    for i, g in enumerate((0, 1, 2, 3)):
+        players.append({"player_id": f"P-P{i}", "common_name": f"P{i}", "primary_position": "FW"})
+        cards.append(
+            {
+                "card_id": f"P-P{i}:WC-1962",
+                "player_id": f"P-P{i}",
+                "tournament_id": "WC-1962",
+                "nation_id": "N-TEST",
+                "position_listed": "FW",
+                "goals": g,
+                "appearances": 2,
+                "appearances_source": "fjelstul_match_events",
+                "awards": None,
+                "coverage": 1.0,
+            }
+        )
+    out = rating.build_ratings(players, cards, tournaments, [], career)
+    test_row = next(r for r in out if r["card_id"] == "P-TEST:WC-1962")
+    assert test_row["overall_basis"] == "career_stature_estimate"
+    assert test_row["overall"] > rating.ESTIMATE_CEILING  # uncapped, not [66,73]
 
 
 # ─── §4 acceptance: provenance / legal grep ───────────────────────────────────
