@@ -1728,6 +1728,13 @@ button.benchSlot:not(:disabled):hover {
 }
 
 @media (max-width: 320px) {
+  /* ws-ux/mobile-compact-v3: collapse formation grid only at
+     true micro-screens (<=320px). Above that the 2-col layout
+     remains, even at 360px. */
+  .formationGrid {
+    grid-template-columns: 1fr;
+  }
+
   .formationGrid {
     grid-template-columns: 1fr;
   }
@@ -4045,15 +4052,25 @@ button.benchSlot:not(:disabled):hover {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   ws-ux/mobile-compact-v2 — global mobile compaction pass.
+   ws-ux/mobile-compact-v3 — global mobile compaction pass.
 
-   Cuts excessive vertical scroll on the four key surfaces (spin-reveal,
-   draft/synergy, formation-lock, player-list) and slims the sticky
-   lock-pick CTA at narrow viewports. Compact via spacing / typography /
-   padding only — NO content removed, NO new color literals, all values
-   sourced from `app/ds/tokens.css` via `var(...)`. Outer breakpoints:
-   430px (every modern phone in portrait) and 380px (Galaxy Fold / very
-   narrow). Both are scoped so tablet+desktop are untouched.
+   v3 sharpens the v2 cut and closes one critical gap: the candidate-row
+   collapsed height. v2 reduced surrounding chrome but left .candRowLine
+   at the base 46px min-height, so only ~6 collapsed rows fit a 390x844
+   viewport even after the chrome cut. v3 overrides .candRowLine to
+   38px @ 430px and 36px @ 380px so 8-9 rows sit in view. v3 also keeps
+   the formation grid 2-column down to 360px (v2 collapsed it at 380
+   which added scroll), and tightens the draft shell / app bar / sub-
+   panel paddings further.
+
+   Cuts excessive vertical scroll on the key surfaces (spin-reveal,
+   draft/synergy, formation-lock, player-list, squad review, results /
+   share / history) and slims the sticky lock-pick CTA at narrow
+   viewports. Compact via spacing / typography / padding only — NO
+   content removed, NO new color literals, all values sourced from
+   `app/ds/tokens.css` via `var(...)`. Outer breakpoints: 430px (every
+   modern phone in portrait) and 380px (Galaxy Fold / very narrow).
+   Both are scoped so tablet+desktop are untouched.
 
    Pitch chip overlap (5-3-2 GK/CB, dense midfield diamonds) is also
    addressed at the RENDER layer by `lib/game/pitch-layout.ts`; this
@@ -4064,20 +4081,20 @@ button.benchSlot:not(:disabled):hover {
   /* ── Outer shell + app bar ─────────────────────────────────────── */
   .draftShell,
   .reviewShell {
-    gap: 10px;
-    padding: 10px 10px calc(76px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+    padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
   }
   .draftAppBar {
-    padding: 6px 10px;
-    gap: 8px;
+    padding: 5px 8px;
+    gap: 6px;
     border-radius: var(--r-2);
   }
   .appBarBrand img {
-    width: 22px;
-    height: 25px;
+    width: 20px;
+    height: 23px;
   }
   .appBarTitle {
-    font-size: 15px;
+    font-size: 14px;
     letter-spacing: 0.03em;
   }
   .appBarMeter {
@@ -4367,30 +4384,40 @@ button.benchSlot:not(:disabled):hover {
     padding: 3px 6px;
     font-size: 11px;
   }
+  /* ws-ux/mobile-compact-v3: candidate-row density target.
+     Override .candRowLine min-height (base 46px) so ~8-9 collapsed
+     rows fit a 390x844 viewport once the spin stage + filters + lock
+     bar are subtracted. .candRowFlag is also cut back from the v2
+     value (30px tall) which was working against compaction. */
   .candList {
-    gap: 4px;
+    gap: 3px;
   }
   .candRow {
-    padding: 6px 8px;
-    gap: 6px;
+    padding: 4px 6px;
+    gap: 4px;
     border-radius: var(--r-2);
   }
   .candRowLine {
     gap: 6px;
+    min-height: 38px;
+    padding: 3px 6px;
   }
   .candRowFlag {
-    min-width: 30px;
-    height: 30px;
-    font-size: 10px;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 4px;
+    font-size: 9px;
   }
   .candRowName {
-    font-size: 13px;
+    font-size: 12.5px;
+    line-height: 1.2;
   }
   .candRowSub {
-    font-size: 10px;
+    font-size: 9.5px;
+    line-height: 1.2;
   }
   .candRowOvr b {
-    font-size: 18px;
+    font-size: 16px;
   }
   .candRowOvr i {
     font-size: 8px;
@@ -4478,17 +4505,32 @@ button.benchSlot:not(:disabled):hover {
 }
 
 @media (max-width: 380px) {
-  /* Extra-tight overrides for very narrow phones (e.g. Galaxy Fold). */
+  /* ws-ux/mobile-compact-v3: extra-tight overrides for very narrow
+     phones (Galaxy Fold / 360px windows). Keep the formation grid
+     2-column down to 360 - the 1-col fallback increased scrolling and
+     undid the v2 compaction. .formationGrid only collapses below 320px
+     (the actual unusable width). */
   .draftShell,
   .reviewShell {
-    padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
-    gap: 8px;
+    padding: 6px 6px calc(68px + env(safe-area-inset-bottom, 0px));
+    gap: 6px;
   }
-  .formationGrid {
-    grid-template-columns: 1fr;
+  .candRowLine {
+    min-height: 36px;
+    padding: 2px 5px;
+  }
+  .candRowFlag {
+    min-width: 24px;
+    height: 20px;
+  }
+  .candRowName {
+    font-size: 12px;
+  }
+  .candRowSub {
+    font-size: 9px;
   }
   .squadStage .pitch {
-    max-width: 280px;
+    max-width: 260px;
   }
   .squadStage .pitch .slot {
     min-width: 34px;

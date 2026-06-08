@@ -41,3 +41,9 @@ venv/
 .ruff_cache/
 .mypy_cache/
 *.egg-info/
+
+# Build-generated service-worker version anchor. Written by
+# `apps/web/scripts/generate-sw-version.mjs` from the copied data
+# manifest + a per-deploy revision. Source of truth is the generator;
+# checking this in would defeat the per-deploy cache-bust contract.
+apps/web/public/sw-version.js

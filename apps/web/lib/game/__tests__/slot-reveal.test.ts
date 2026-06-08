@@ -38,11 +38,11 @@ function makeIndexes(): GameDataIndexes {
     ["T-41", { canonical_name: "Italy", code: "ITA" }],
   ]);
   const tournamentById = new Map<number, { year: number; name: string }>([
-    [1, { year: 1986, name: "1986 FIFA World Cup" }],
-    [2, { year: 1994, name: "1994 FIFA World Cup" }],
-    [3, { year: 1998, name: "1998 FIFA World Cup" }],
-    [4, { year: 2002, name: "2002 FIFA World Cup" }],
-    [5, { year: 2014, name: "2014 FIFA World Cup" }],
+    [1, { year: 1986, name: "1986 World Cup" }],
+    [2, { year: 1994, name: "1994 World Cup" }],
+    [3, { year: 1998, name: "1998 World Cup" }],
+    [4, { year: 2002, name: "2002 World Cup" }],
+    [5, { year: 2014, name: "2014 World Cup" }],
   ]);
   return {
     playerByCardId: new Map(),

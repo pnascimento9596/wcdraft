@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ResultsPage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--results">
       <Suspense fallback={<ResultsFallback />}>
         <ResultsScreen />
       </Suspense>

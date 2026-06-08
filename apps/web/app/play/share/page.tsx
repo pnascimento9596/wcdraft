@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function SharePage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--share">
       <Suspense fallback={<ShareFallback />}>
         <ShareScreen />
       </Suspense>

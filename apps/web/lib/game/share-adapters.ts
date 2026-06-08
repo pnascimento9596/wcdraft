@@ -2,9 +2,10 @@
 // content the share card + caption need.
 //
 // LICENSING — names + national flag codes only. No faces / kits / crests /
-// maker logos / governing-body marks. This module never emits competition
-// names; we say "football" never "soccer"; we never use the word "World"
-// followed by "Cup". The shell footer carries the standalone disclaimer per
+// maker logos / governing-body marks. Nominative "World Cup" is allowed
+// where accurate; we say "football" never "soccer"; no official
+// competition marks or governing-body names appear in share copy or
+// card output. The shell footer carries the standalone disclaimer per
 // Surface Inventory v2 — share copy stays mark-free.
 
 import {

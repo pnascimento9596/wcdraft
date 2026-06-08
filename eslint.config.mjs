@@ -21,6 +21,7 @@ export default tseslint.config(
       "**/.turbo/**",
       "**/coverage/**",
       "**/next-env.d.ts",
+      "apps/web/public/sw-version.js",
     ],
   },
   js.configs.recommended,
