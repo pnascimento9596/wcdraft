@@ -34,8 +34,11 @@ export interface CardRatingView {
   coverage: number;
   /** Source of the rating signal. */
   provenance: "wc_performance" | "projected_career";
-  /** Historical-only honest-state flag (388 cards). */
-  overall_basis?: "measured_performance" | "baseline_anchor_estimate";
+  /** Historical-only honest-state flag. */
+  overall_basis?:
+    | "measured_performance"
+    | "baseline_anchor_estimate"
+    | "career_stature_estimate";
   /** Folded display kind for the provenance/estimate/legend badge. */
   badge_kind: RatingBadgeKind;
   /** Human label for the provenance/estimate/legend badge. */
@@ -257,7 +260,10 @@ export function formatStatValue(value: number | string | null | undefined): stri
 interface BadgeInputs {
   overall: number | null;
   provenance: "wc_performance" | "projected_career";
-  overall_basis?: "measured_performance" | "baseline_anchor_estimate";
+  overall_basis?:
+    | "measured_performance"
+    | "baseline_anchor_estimate"
+    | "career_stature_estimate";
 }
 
 /**

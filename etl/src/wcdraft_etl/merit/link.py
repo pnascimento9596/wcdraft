@@ -139,6 +139,26 @@ def _nation_ids(rec: MeritRecord, canon: _Canon) -> frozenset[str]:
     return canon.resolver.resolve(rec.nation_token)
 
 
+def _fact_discriminator(rec: MeritRecord) -> str:
+    """The sub-identity that distinguishes genuinely-different facts which share the
+    same ``(player_id, source_id, year)``.
+
+    For the year-less ranked lists this is the *metric* the row records — the
+    century-caps page emits BOTH a ``caps=…`` and a ``goals=…`` row per player
+    (year ``None``), and the IFFHS page elects one player in several distinct
+    century polls. Without a discriminator those distinct facts collapse to one,
+    understating ``international_record`` / ``retrospective_selection`` for the most
+    decorated players. The single-fact-per-year award sources carry no discriminator
+    (``""``) — their year already makes the key unique. An EXACT repeat of the same
+    row keeps the same discriminator and still collapses to a single fact."""
+    extra = rec.extra or {}
+    if "list" in extra:  # century-caps page: caps vs goals
+        return f"list={extra['list']}"
+    if "election" in extra:  # IFFHS century: one election vs another
+        return f"election={extra['election']}"
+    return ""
+
+
 def _link_one(rec: MeritRecord, canon: _Canon) -> tuple[str | None, str, list[str]]:
     """Resolve one record. Returns (player_id, method, candidate_ids).
     player_id is None when withheld; ``method`` then carries the review reason."""
@@ -188,15 +208,17 @@ def link_records(
     records: list[MeritRecord], canon: _Canon
 ) -> tuple[list[dict], list[dict]]:
     """Link every record. Returns (facts, review). Facts are de-duplicated to one
-    per (player_id, source_id, year); review rows aggregate per distinct
-    (source_id, reason, raw name, nation)."""
+    per (player_id, source_id, year, fact-discriminator) — the discriminator (caps
+    vs goals, a specific election) keeps genuinely distinct facts that share a
+    null year from collapsing, while an exact repeat of the same row still folds to
+    one. Review rows aggregate per distinct (source_id, reason, raw name, nation)."""
     facts_by_key: dict[tuple, dict] = {}
     review_acc: dict[tuple, dict] = {}
 
     for rec in records:
         pid, method, cands = _link_one(rec, canon)
         if pid is not None:
-            key = (pid, rec.source_id, rec.year)
+            key = (pid, rec.source_id, rec.year, _fact_discriminator(rec))
             if key in facts_by_key:
                 continue  # keep first (parse order is most-significant-first)
             facts_by_key[key] = {

@@ -4,7 +4,7 @@
 
 - **Intake version:** `career-stature-1.0.0`
 - **Scope:** coverage proof only — **no rating output, engine, or compact data is changed by this build.**
-- **Linked facts:** 944 across 644 distinct players (men's World Cup pool).
+- **Linked facts:** 1,095 across 644 distinct players (men's World Cup pool).
 - **Withheld to review (never assigned):** 612 distinct ambiguities.
 
 
@@ -23,9 +23,9 @@
 | Source | Family | Linked facts |
 |---|---|---|
 | European Player of the Year (Ballon d'Or) — annual winners | annual_recognition | 56 |
-| IFFHS Century elections — world/continental player-of-the-century polls | retrospective_selection | 119 |
+| IFFHS Century elections — world/continental player-of-the-century polls | retrospective_selection | 181 |
 | IFFHS World's Best Player — annual winners | annual_recognition | 8 |
-| Players with 100+ international caps / 30+ international goals | international_record | 454 |
+| Players with 100+ international caps / 30+ international goals | international_record | 543 |
 | 2004 living-legends list — 125 greatest living players selection | retrospective_selection | 114 |
 | South American Player of the Year — annual winners | annual_recognition | 52 |
 | wc_individual_awards_native | wc_legacy | 141 |

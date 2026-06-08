@@ -49,8 +49,10 @@ const SCHEMA_VERSION = "runtime-data-1.0.0";
 const ENGINE_VERSION = "engine-2026.06.04";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// Phase 1 rating recalibration (wc-perf-2.0.0 / proj-career-2.0.0).
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-2.0.0";
+// E-4 career-stature lift (wc-perf-3.0.0 historical); projected stays
+// proj-career-2.0.0 (2026 does not consume career stature in E-4). Fallbacks only
+// apply if a ratings file omits rating_version; the real value is read per-row.
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-3.0.0";
 const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-2.0.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
@@ -240,6 +242,11 @@ async function build() {
   const playerCards = [];
   const playerCardRatings = [];
   let estimateCount = 0;
+  // wc-perf-3.0.0 (E-4): cards with no tournament signal but a well-covered elite
+  // career record exit via the uncapped curve. Counted for the manifest; currently
+  // 0 (no no-signal card belongs to a well-covered elite player) but tracked so a
+  // future shift is visible in the manifest rather than silent.
+  let careerStatureEstimateCount = 0;
 
   // Historical 1930..2022
   for (const pt of mensPlayerTournaments) {
@@ -325,9 +332,12 @@ async function build() {
         );
       }
     }
+    if (rating.overall_basis === "career_stature_estimate") {
+      careerStatureEstimateCount += 1;
+    }
     if (runtimeRating.overall === null) {
       throw new Error(
-        `build-compact-data: rating ${rating.card_id} emitted null overall; wc-perf-2.0.0 contract forbids null overalls.`,
+        `build-compact-data: rating ${rating.card_id} emitted null overall; the rating contract forbids null overalls.`,
       );
     }
     if (
@@ -611,6 +621,7 @@ async function build() {
       teams: teams.length,
       knockout_slots: knockoutSlotsSorted.length,
       baseline_anchor_estimate: estimateCount,
+      career_stature_estimate: careerStatureEstimateCount,
     },
     attribution,
   };
