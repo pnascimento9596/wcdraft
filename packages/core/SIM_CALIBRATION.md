@@ -168,34 +168,72 @@ Two harnesses, complementary:
    that catch any engine regression. Updated `it()` titles for E-3a
    landings; all 5 norms pass.
 
-2. **Asymmetric (new, REPORT-ONLY)** —
-   `packages/data/test/realism/realism.gate.test.ts`. N=200 auto-drafted
-   user XIs (via `autoDraft` over the era-weighted draft-reachable
-   `DRAFT_POOL_BUNDLE`, which folds in the E-1 era weighting +
-   with-replacement + rare exposure sampling) vs the real projected-2026
-   `Team2026[]` opponents. Logs `[REALISM] obs / tgt / band` lines, never
-   fails by default. Hard-pass with `WCDRAFT_REALISM_GATE=pass`.
-
-   Latest landing (N=200, fitted tuple):
+2. **Asymmetric (E-3b — PASS GATE on a COMPETENT user population)** —
+   `packages/data/test/realism/realism.gate.test.ts`. N=2000 drafted user
+   XIs vs the projected-2026 `Team2026[]` opponents, MEASURED OVER the
+   `strategicAutoDraft` slot-fit best-available policy in
+   `packages/data/test/realism/draft-policies.ts` (test-only — the
+   production `autoDraft` is UNCHANGED). Landings are locked in
+   `packages/data/test/realism/asym-realism-golden.json`.
 
    ```
-   [REALISM] N_runs=200 qualifying=11/200 matches=613 groups=600 KO=13
-   [REALISM] ✗ goals/game     obs=3.075 tgt=2.540
-   [REALISM] ✗ draw% (group)  obs=14.83% tgt=24.70%
-   [REALISM] ✗ margin≥4%      obs=16.64% tgt=4.90%
-   [REALISM] ✗ KO→ET%         obs=0.00% tgt=33.00%
-   [REALISM] ✓ shootout%      obs=0.00% tgt=21.40%
+   [REALISM] ── policy=strategicAutoDraft       qualifying=393/2000 matches=6561 groups=6000 KO=561
+   [REALISM]    ✓ goals/game     obs=   2.476  (lower floor 2.40)
+   [REALISM]    ✓ draw% (group)  obs=  22.48%  band 22.48% ± 1.50%
+   [REALISM]    ✓ margin≥4%      obs=   9.05%  band  9.05% ± 1.50%
+   [REALISM]    ✓ KO→ET%         obs=  30.66%  band 30.66% ± 5.00%
+   [REALISM]    ✓ shootout%      obs=  19.96%  band 19.96% ± 4.00%
    ```
 
-   The structural gap (only 11/200 auto-drafts qualify, blowouts at
-   17%) reflects an HONEST property of the auto-drafted population:
-   era-weighted random draws are systematically weaker than the
-   projected-elite 2026 opponents. Calibration cannot close this gap
-   without distorting the symmetric (true-WC-norms) gate. The harness
-   exists as TELEMETRY for player-experience tuning (e.g. the upstream
-   draft helper, manager modifier, Synergy bonus), not as a tournament
-   realism check. Flip to PASS gate only after the draft / Synergy /
-   manager amplification work explicitly targets this distribution.
+   **Gate mechanism (durable infrastructure).**
+   - **Population.** `strategicAutoDraft` — for each spin, scan
+     `rolled_card_ids` and pick max of
+     `positionCompatibility(eligible, slot_position) × rating[channel_for_slot]`
+     (tiebreak: `overall` DESC, `card_id` ASC). Manager-first / first-vacant
+     slot order is unchanged from canonical `autoDraft`. This is the
+     realistic proxy for a COMPETENT human draft; canonical `autoDraft`
+     stays a determinism fixture, NOT a user-behavior proxy.
+   - **Shape bands (TIGHT).** The 4 shape norms (draw% / margin≥4% / KO→ET%
+     / shootout%) are gated as Wilson-style half-widths AROUND the
+     strategic landings. Half-widths include a variance floor (≥ 1.5pp for
+     match-denominator metrics; ≥ 4–5pp for KO-only metrics) so the gate
+     isn't brittle to engine output noise but red-flags any meaningful
+     drift.
+   - **One-sided lower floor on goals/game.** Total goal volume
+     legitimately tracks the underdog gap (strategic XI is ~10–13 channel
+     points below the 2026 coherent-elite opponent mean) and there is no
+     real-world ceiling, so the gate only enforces a LOWER floor (2.40)
+     and lets goals/game drift up without false alarms.
+   - **`greedyOverallAutoDraft` CI guard.** A position-blind max-overall
+     drafter is the NEGATIVE CONTROL: the gate ASSERTS it lands OUTSIDE
+     every shape band, so nobody can "fix" realism by maxing OVR. Competent
+     must mean slot-fit-aware.
+   - **Telemetry.** The harness logs per-policy XI channel means + Synergy
+     multiplier + manager modifier for every run — so a future regression's
+     direction (population gap moved? Synergy folded differently?) is
+     visible in the CI log without re-running the measurement.
+   - **N sizing.** N=2000 targets a 95% Wilson half-width ≤ ~4pp on the
+     KO-derived metrics (KO→ET, shootout); observed half-widths land at
+     3.89pp / 3.38pp. Overriding `WCDRAFT_REALISM_N` below the locked
+     value will widen the KO bands above the gate tolerance and (correctly)
+     red the gate — the small-N problem surfaces instead of silently
+     widening tolerance.
+
+   **E-3b investigation provenance.** The pre-E-3b landing (11/200
+   qualifying, 16.64% margin≥4, 0% KO→ET) was a harness population
+   artifact — canonical `autoDraft` is canonical-first, so the population
+   was coherent-elite vs random-history. `docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md`
+   quantifies the artifact end-to-end (Angle 1 strategic vs canonical;
+   Angle 2 rating distribution parity; Angle 3 SPREAD amplification).
+
+   **E-4 re-lock policy.** When E-4 (rating-stature) lands, λ and the
+   strategic landings shift. Re-run the measurement at the same
+   `(N, seed_prefix, formation_id)`, copy the new landings + Wilson
+   half-widths into `asym-realism-golden.json`, and commit the band update
+   ATOMICALLY with the engine-output change. The gate MECHANISM
+   (strategicAutoDraft + raised N + greedyOverall guard + shape bands +
+   lower-floor goals + per-policy telemetry) is the DURABLE infrastructure
+   E-4's realism re-fit measures against; only the NUMBERS move.
 
 ## Knockout tie resolution (unchanged)
 
@@ -288,6 +326,7 @@ test suite remains byte-deterministic at every commit in the series.
 | **E-2 — nation-only synergy + rare UI** (squashed `74bb90c`) | Synergy moved from manager-driven to nation-only; rare-spin UI surfaced | synergy + draft (selectively) | not bumped |
 | **E-3a — λ calibration** (queued on `engine-v2-e3a-lambda-calibration`) | `LAMBDA.{BASE,SPREAD,MIN,MAX}` shifted toward realism-control bands | sim + e2e | not bumped |
 | **E-1b — pre-1998 era mass 15% → 10%** (this PR #37) | `RARE_ERA_MASS 0.15 → 0.10`, modern (T,N) per-pair probs × 1.0588 | draft + e2e | not bumped |
+| **E-3b — asymmetric realism gate (test-harness only)** | NONE (no engine bytes change — `sim-golden.json` byte-identical, `engine_version` unchanged) | asym-realism golden landings + shape bands (new fixture) | not bumped |
 
 Codex review of PR #37 correctly reproduced the cross-engine-state replay
 failure (`pickPlayer: card P-04469:2010 is not a candidate on spin 2` when an
