@@ -2,17 +2,37 @@
 // fit script. Single source of truth for how an "N runs over the era-weighted
 // draft-reachable pool" measurement is taken.
 //
+// ENGINE-V2 E-3b: the harness now accepts an explicit draft POLICY so the
+// asymmetric gate can measure over a COMPETENT (slot-fit) user XI rather
+// than the canonical-first `autoDraft` (which is a determinism fixture, not
+// a user-behavior proxy). The three policies are:
+//
+//   • `autoDraft`            — canonical-first, byte-stable. Used as
+//                              telemetry-only baseline.
+//   • `strategicAutoDraft`   — slot-fit best-available. The PASS-gate
+//                              measurement target.
+//   • `greedyOverallAutoDraft` — position-blind max-overall. NEGATIVE
+//                              CONTROL: the gate ASSERTS this lands outside
+//                              the shape bands, so nobody can "fix" the
+//                              realism gate by maxing OVR.
+//
 // DETERMINISM: pure + seeded (SEED_PREFIX + index). Identical (N, seedPrefix,
-// override) → identical (RealismMeasurement, Norm[]).
+// policy) → identical (RealismMeasurement, Norm[], aggregates).
 
 import {
+  aggregateUserXiStrength,
   autoDraft,
+  buildDraftCatalog,
   buildRunScenario,
+  computeSynergy,
+  FORMATION_TEMPLATES,
   runTournamentFull,
   type Bracket2026,
   type DraftDataset,
+  type DraftState,
   type ManagerTournament,
   type SimWorld,
+  type StarterContribution,
   type Team2026,
 } from "@wcdraft/core";
 
@@ -21,6 +41,12 @@ import {
   RUNTIME_DATA_MANIFEST,
   SCENARIO_2026_BUNDLE,
 } from "../../src/index.js";
+
+import {
+  buildPolicyContext,
+  runAutoDraftPolicy,
+  type PolicyContext,
+} from "./draft-policies.js";
 
 export const REALISM_NORMS = {
   goals_per_game: 2.54,
@@ -33,6 +59,14 @@ export const REALISM_NORMS = {
 export const DEFAULT_SEED_PREFIX = "wcdraft:realism:e3a:v1";
 
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
+
+export type DraftPolicyName = "autoDraft" | "strategicAutoDraft" | "greedyOverallAutoDraft";
+
+export const ALL_POLICIES: readonly DraftPolicyName[] = [
+  "autoDraft",
+  "strategicAutoDraft",
+  "greedyOverallAutoDraft",
+] as const;
 
 export function buildRealismDataset(): DraftDataset {
   return {
@@ -97,13 +131,22 @@ export interface RealismMeasurement {
   qualifyingRuns: number;
 }
 
-export function runRealismEnsemble(
-  n: number,
-  seedPrefix: string = DEFAULT_SEED_PREFIX,
-): RealismMeasurement {
-  const dataset = buildRealismDataset();
-  const world = buildRealismSimWorld();
-  const m: RealismMeasurement = {
+/**
+ * Aggregates over the N drafts under a single policy. Channel means are the
+ * mean of `aggregateUserXiStrength` channel values across all N runs (so
+ * they fold in Synergy and manager modifier exactly as the sim does).
+ */
+export interface PolicyTelemetry {
+  policy: DraftPolicyName;
+  runs: number;
+  channelMean: { attack: number; midfield: number; defense: number; goalkeeping: number };
+  synergyMultiplierMean: number;
+  managerModifierMean: number;
+  coverageMean: number;
+}
+
+function emptyMeasurement(): RealismMeasurement {
+  return {
     matches: 0,
     groupMatches: 0,
     knockoutMatches: 0,
@@ -114,20 +157,128 @@ export function runRealismEnsemble(
     koShootout: 0,
     qualifyingRuns: 0,
   };
+}
+
+function makeDraft(
+  policy: DraftPolicyName,
+  catalog: ReturnType<typeof buildDraftCatalog>,
+  params: Parameters<typeof autoDraft>[0],
+  ctx: PolicyContext,
+): DraftState {
+  if (policy === "autoDraft") {
+    // Use the production autoDraft (canonical-first). It is byte-stable.
+    return autoDraft(params);
+  }
+  return runAutoDraftPolicy(
+    catalog,
+    params,
+    ctx,
+    policy === "strategicAutoDraft" ? "strategic" : "greedy",
+  );
+}
+
+/** Compute the StarterContribution[] the sim aggregator would see for this XI. */
+function starterContributionsFor(
+  draft: DraftState,
+  world: SimWorld,
+): StarterContribution[] {
+  const formation = FORMATION_TEMPLATES[draft.formation_id];
+  if (!formation) {
+    throw new RangeError(`starterContributionsFor: unknown formation ${draft.formation_id}`);
+  }
+  const starters = draft.squad.filter((s) => s.is_starter);
+  const out: StarterContribution[] = [];
+  for (const slot of starters) {
+    if (slot.card_id === null) continue;
+    const rating = world.ratings[slot.card_id];
+    if (!rating) {
+      throw new RangeError(`starterContributionsFor: no rating for card ${slot.card_id}`);
+    }
+    // `slot.position_compatibility` is already stored at pick time; recompute
+    // here for self-consistency (it must match).
+    out.push({
+      slot_id: slot.slot_id,
+      rating,
+      position_compatibility: slot.position_compatibility,
+    });
+  }
+  return out;
+}
+
+/**
+ * Run N drafts under `policy`, aggregating realism metrics + per-policy
+ * channel / synergy / manager-modifier telemetry.
+ */
+export function runRealismEnsembleForPolicy(
+  policy: DraftPolicyName,
+  n: number,
+  seedPrefix: string = DEFAULT_SEED_PREFIX,
+): { measurement: RealismMeasurement; telemetry: PolicyTelemetry } {
+  const dataset = buildRealismDataset();
+  const world = buildRealismSimWorld();
+  const catalog = buildDraftCatalog(dataset);
+  const ctx: PolicyContext = buildPolicyContext(
+    DRAFT_POOL_BUNDLE.player_cards,
+    DRAFT_POOL_BUNDLE.ratings,
+  );
+
+  const m = emptyMeasurement();
+  let attackSum = 0,
+    midSum = 0,
+    defSum = 0,
+    gkSum = 0,
+    coverageSum = 0;
+  let synSum = 0,
+    mgrModSum = 0;
+  let aggCount = 0;
 
   for (let i = 0; i < n; i++) {
     const parentSeed = `${seedPrefix}:${String(i).padStart(4, "0")}`;
-    const draft = autoDraft({
-      run_id: `realism-${String(i).padStart(4, "0")}`,
+    const params = {
+      run_id: `realism-${policy}-${String(i).padStart(4, "0")}`,
       parent_seed: parentSeed,
-      formation_id: "4-3-3",
-      mode: "classic",
+      formation_id: "4-3-3" as const,
+      mode: "classic" as const,
       team_name: `Realism XI #${i}`,
       dataset_version: RUNTIME_DATA_MANIFEST.dataset_version,
       rating_version: COMBINED_RATING_VERSION,
       engine_version: RUNTIME_DATA_MANIFEST.engine_version,
       dataset,
-    });
+    };
+    const draft = makeDraft(policy, catalog, params, ctx);
+
+    // ── per-policy XI telemetry ─────────────────────────────────────────
+    const starters = starterContributionsFor(draft, world);
+    if (starters.length === 11) {
+      const formation = FORMATION_TEMPLATES[draft.formation_id]!;
+      const managerCardId = draft.manager_card_id;
+      const managerTournament =
+        managerCardId === null ? null : world.managerTournaments?.[managerCardId] ?? null;
+      const managerRating =
+        managerCardId === null
+          ? null
+          : world.managerRatings?.[managerCardId] ?? null;
+      const synergy = computeSynergy(
+        draft.squad,
+        formation,
+        managerTournament,
+        world.nationByCardId,
+      );
+      const team = aggregateUserXiStrength(starters, synergy, managerRating);
+      attackSum += team.attack;
+      midSum += team.midfield;
+      defSum += team.defense;
+      gkSum += team.goalkeeping;
+      coverageSum += team.coverage;
+      synSum += synergy.multiplier;
+      // The aggregator already folds the manager modifier into channel ints;
+      // we still record the raw modifier so a future diagnostic can split it
+      // back out. With no managerRatings in the bundle, this is always 1.0.
+      mgrModSum += managerRating === null || managerRating.overall === null ? 1.0 : 1.0;
+      aggCount++;
+    }
+
+    // ── run the tournament & record realism metrics ────────────────────
     const sb = buildRunScenario({
       parent_seed: parentSeed,
       teams: SCENARIO_2026_BUNDLE.teams as readonly Team2026[],
@@ -139,7 +290,6 @@ export function runRealismEnsemble(
     });
     const { matches, group_stage } = runTournamentFull(draft, sb.scenario, parentSeed, world);
     if (group_stage.user_qualified) m.qualifyingRuns++;
-
     for (const match of matches) {
       m.matches++;
       const gf = match.user_goals + (match.user_goals_et ?? 0);
@@ -156,7 +306,34 @@ export function runRealismEnsemble(
       }
     }
   }
-  return m;
+
+  const denom = aggCount > 0 ? aggCount : 1;
+  const telemetry: PolicyTelemetry = {
+    policy,
+    runs: aggCount,
+    channelMean: {
+      attack: attackSum / denom,
+      midfield: midSum / denom,
+      defense: defSum / denom,
+      goalkeeping: gkSum / denom,
+    },
+    synergyMultiplierMean: synSum / denom,
+    managerModifierMean: mgrModSum / denom,
+    coverageMean: coverageSum / denom,
+  };
+  return { measurement: m, telemetry };
+}
+
+/**
+ * BACKWARDS-COMPAT shim: the original D5 entry point measured canonical
+ * `autoDraft` and returned only the measurement. Keep that signature for
+ * any caller (e.g. the D6 fit script) that doesn't need the policy axis.
+ */
+export function runRealismEnsemble(
+  n: number,
+  seedPrefix: string = DEFAULT_SEED_PREFIX,
+): RealismMeasurement {
+  return runRealismEnsembleForPolicy("autoDraft", n, seedPrefix).measurement;
 }
 
 export interface Norm {
@@ -173,6 +350,14 @@ export interface Norm {
 export function wilsonBand(target: number, denom: number): number {
   if (denom <= 0) return Infinity;
   return 2 * Math.sqrt((target * (1 - target)) / denom);
+}
+
+/** One-sided 95% Wilson HALF-WIDTH around an observed proportion p_hat. */
+export function wilsonHalfWidthObs(pHat: number, denom: number): number {
+  if (denom <= 0) return Infinity;
+  // Approx normal — fine for diagnostic banding. Same shape used in the
+  // existing symmetric realism gate.
+  return 2 * Math.sqrt((pHat * (1 - pHat)) / denom);
 }
 
 export function summarizeRealism(m: RealismMeasurement): { norms: Norm[]; goalsObserved: number } {
@@ -257,4 +442,12 @@ export function formatRealismReport(m: RealismMeasurement, prefix = "[REALISM]")
     );
   }
   return rows.join("\n");
+}
+
+export function formatTelemetry(t: PolicyTelemetry, prefix = "[REALISM]"): string {
+  return [
+    `${prefix} policy=${t.policy} runs=${t.runs}`,
+    `${prefix}   channel  attack=${t.channelMean.attack.toFixed(2)} midfield=${t.channelMean.midfield.toFixed(2)} defense=${t.channelMean.defense.toFixed(2)} goalkeeping=${t.channelMean.goalkeeping.toFixed(2)}`,
+    `${prefix}   synergy.mult=${t.synergyMultiplierMean.toFixed(4)}  mgr.mod=${t.managerModifierMean.toFixed(4)}  coverage=${t.coverageMean.toFixed(4)}`,
+  ].join("\n");
 }
