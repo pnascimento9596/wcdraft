@@ -1,0 +1,83 @@
+{
+  "files": [
+    {
+      "bytes": 192821,
+      "charset": "iso-8859-1",
+      "family": "international_record",
+      "file": "rsssf/century.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "04bdeadf6ad3287a4cd8fd89515a0575afce2414b25161b974187cf2ea1a7a62",
+      "source_id": "international_century_caps",
+      "url": "https://www.rsssf.org/miscellaneous/century.html"
+    },
+    {
+      "bytes": 61757,
+      "charset": "iso-8859-1",
+      "family": "annual_recognition",
+      "file": "rsssf/europa-poy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "768facf762739de46a6adad785de265916422838bae85c66667b353b9ecb64a0",
+      "source_id": "european_poy",
+      "url": "https://www.rsssf.org/miscellaneous/europa-poy.html"
+    },
+    {
+      "bytes": 41692,
+      "charset": "iso-8859-1",
+      "family": "retrospective_selection",
+      "file": "rsssf/iffhs-century.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "a787c9d8af6b2466a63e23c907e28d622b807925b3bb9617d65a8612d327e336",
+      "source_id": "iffhs_century",
+      "url": "https://www.rsssf.org/miscellaneous/iffhs-century.html"
+    },
+    {
+      "bytes": 13047,
+      "charset": "iso-8859-1",
+      "family": "annual_recognition",
+      "file": "rsssf/sam-poy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "cf5e71a6d4d9897f95f51e9ae69dcd2781dacea5b75f846cb2fd6fe23de63bed",
+      "source_id": "south_american_poy",
+      "url": "https://www.rsssf.org/miscellaneous/sam-poy.html"
+    },
+    {
+      "bytes": 582178,
+      "charset": "utf-8",
+      "family": "annual_recognition",
+      "file": "wiki/iffhs-worlds-best.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "86b8f411fb906fb7eef1dc51f666d22ddcc1c5f6fa8915e9a36b553f42e8f30c",
+      "source_id": "iffhs_worlds_best",
+      "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Player"
+    },
+    {
+      "bytes": 338047,
+      "charset": "utf-8",
+      "family": "retrospective_selection",
+      "file": "wiki/living-legends-2004.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "93a9e413bfbdb562193809a84f9c0fe5f493edb51186343797e12590142fffcd",
+      "source_id": "living_legends_2004",
+      "url": "https://en.wikipedia.org/wiki/FIFA_100"
+    },
+    {
+      "bytes": 1759702,
+      "charset": "utf-8",
+      "family": "wc_legacy",
+      "file": "wiki/wc-awards.html",
+      "retrieved": "2026-06-08",
+      "role": "crosscheck",
+      "sha256": "e9da801200afbe5d375c0660fbb1bd6790ba5eeef26431533f1b8350039007bc",
+      "source_id": "wc_awards_crosscheck",
+      "url": "https://en.wikipedia.org/wiki/FIFA_World_Cup_awards"
+    }
+  ],
+  "note": "SHA-pinned public snapshots; fetch is OFF the deterministic build path.",
+  "version": "career-stature-1.0.0"
+}

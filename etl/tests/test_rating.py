@@ -657,12 +657,14 @@ _PROPRIETARY_PATTERN = re.compile(
 
 
 def test_etl_source_pins_have_no_proprietary_rating_references():
-    """ETL source pins + supplement raw inputs must NOT mention any proprietary
-    rating source. The recalibration is clean-room: every signal comes from
-    public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia 2026)."""
+    """ETL source pins + supplement & merit raw inputs must NOT mention any
+    proprietary rating source. The recalibration is clean-room: every signal comes
+    from public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia 2026 +
+    the E-4.1 career-stature archives)."""
     scan_dirs = [
         REPO_ROOT / "etl" / "sources",
         REPO_ROOT / "etl" / "supplement" / "raw",
+        REPO_ROOT / "etl" / "merit" / "raw",  # E-4.1 merit-source raw snapshots
     ]
     hits: list[str] = []
     for d in scan_dirs:

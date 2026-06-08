@@ -1,0 +1,6272 @@
+{
+  "review": [
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Nil",
+      "occurrences": 1,
+      "raw_name": "George BEST",
+      "reason": "no_candidate",
+      "source_id": "european_poy",
+      "year": 1968
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Bul",
+      "occurrences": 1,
+      "raw_name": "Hristo STOITCHKOV",
+      "reason": "no_candidate",
+      "source_id": "european_poy",
+      "year": 1994
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Net",
+      "occurrences": 3,
+      "raw_name": "Johan CRUIJFF",
+      "reason": "no_candidate",
+      "source_id": "european_poy",
+      "year": 1971
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-30252",
+          "player_name": "Timothy Weah"
+        }
+      ],
+      "family": "annual_recognition",
+      "nation_token": "Lib",
+      "occurrences": 1,
+      "raw_name": "George WEAH",
+      "reason": "weak_unverified",
+      "source_id": "european_poy",
+      "year": 1995
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-34403",
+          "player_name": "Alfredo Di Stéfano"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 3,
+      "raw_name": "Alfredo di Stéfano",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-51668",
+          "player_name": "Josef Bican"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Czechoslovakia",
+      "occurrences": 2,
+      "raw_name": "Josef Bican",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-12682",
+          "player_name": "Omar Sívori"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Omar Sivori",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-03638",
+          "player_name": "Raimundo Orsi"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Raimundo Orsi",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-23304",
+          "player_name": "Youssouf Fofana"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Youssouf Fofana",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Morocco",
+      "occurrences": 1,
+      "raw_name": "Abdel Aziz Bouderbala",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Abdullah Majed",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Ademir Marquez de Menezes",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Adolf Armah",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 2,
+      "raw_name": "Adolfo Pedernera",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Ahmad Fandhi",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Ahmed Rahdi",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Alan Davidson",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "Alcides Edgardo Ghiggia",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Ali Abugreisma",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Spain",
+      "occurrences": 1,
+      "raw_name": "Amancio Amaro",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 2,
+      "raw_name": "Angel Amadeo Labruna",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Arsenio Erico",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Arsenio Pastor Erico",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Arthur Friedenreich",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Israel",
+      "occurrences": 1,
+      "raw_name": "Avi Cohen",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Carlos Alberto Torres",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Colombia",
+      "occurrences": 1,
+      "raw_name": "Carlos Alberto Valderrama",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Guinea",
+      "occurrences": 1,
+      "raw_name": "Cheik Mohamed Keita",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Craig Peter Johnston",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 3,
+      "raw_name": "Diego Armando Maradona",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Domingos Antônio da Guía",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Eddie Krncevic",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 2,
+      "raw_name": "Enrique Omar Sivori",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "France",
+      "occurrences": 2,
+      "raw_name": "Eric Cantona",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Congo-Kinshasa",
+      "occurrences": 1,
+      "raw_name": "Etefe Kakoto",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Faas Wilkes",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Faisal Ali Ak-Dakhil",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Frank Farina",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "N. Ireland",
+      "occurrences": 2,
+      "raw_name": "George Best",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Liberia",
+      "occurrences": 2,
+      "raw_name": "George Weah",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Bulgaria",
+      "occurrences": 1,
+      "raw_name": "Georgi Asparukhov",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Germany",
+      "occurrences": 1,
+      "raw_name": "Gerhard Müller",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Italy",
+      "occurrences": 1,
+      "raw_name": "Giacchinto Facchetti",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Sweden",
+      "occurrences": 2,
+      "raw_name": "Gunnar Nordahl",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Györgi Orth",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Györgi Sárosi",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Hussain Saeed",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Imre Schlosser",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ireland",
+      "occurrences": 1,
+      "raw_name": "Jackey Carey",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 2,
+      "raw_name": "James Greaves",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Chad",
+      "occurrences": 1,
+      "raw_name": "Japhet N'Doram",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Netherlands",
+      "occurrences": 3,
+      "raw_name": "Johan Cruijff",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "John Kosmina",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "El Salvador",
+      "occurrences": 1,
+      "raw_name": "Jorge Alberto González",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Guatemala",
+      "occurrences": 1,
+      "raw_name": "Jorge Roldán",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "José Leonardo Andrade",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 3,
+      "raw_name": "José Manuel Moreno",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "El Salvador",
+      "occurrences": 1,
+      "raw_name": "José Mauricio Cienfuegos",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Joseph Marsto",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Panama",
+      "occurrences": 1,
+      "raw_name": "Julio César Dely Valdéz",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Kalusha Bwalya",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Karim Abdul Razak",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Japan",
+      "occurrences": 1,
+      "raw_name": "Kazuyoshi Miura",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "New Zealand",
+      "occurrences": 1,
+      "raw_name": "Kenneth Armstrong",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Japan",
+      "occurrences": 1,
+      "raw_name": "Kunishige Kamamoto",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Morocco",
+      "occurrences": 1,
+      "raw_name": "Labri Ben Barek",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Spain",
+      "occurrences": 3,
+      "raw_name": "Ladislao Kubala",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Laurent Pokou",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Leônidas da Silva",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ireland",
+      "occurrences": 1,
+      "raw_name": "Liam Brady",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Italy",
+      "occurrences": 1,
+      "raw_name": "Luigi Riva",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Uruguay",
+      "occurrences": 2,
+      "raw_name": "Luis Alberto Cubilla",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Luís Edmundo Pereira",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Mexico",
+      "occurrences": 1,
+      "raw_name": "Luis Funete",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 2,
+      "raw_name": "Mario Alberto Kempes",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Cuba",
+      "occurrences": 1,
+      "raw_name": "Mario López",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Spain",
+      "occurrences": 1,
+      "raw_name": "Miguel González \"Michel\"",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Mokhtar Dahari",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Nílton dos Santos",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "Obdulio Jacinto Varela",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Soviet Union",
+      "occurrences": 1,
+      "raw_name": "Oleg Blokhin",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Oscar Alfredo Ruggeri",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "India",
+      "occurrences": 1,
+      "raw_name": "Pardip Kumar Banderjee",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Tahiti",
+      "occurrences": 1,
+      "raw_name": "Pascal Vahirua",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Paul Okon",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Paulo Roberto Falcão",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Paul Wade",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "Pedro Virgilio Rocha",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Guinea",
+      "occurrences": 1,
+      "raw_name": "Petit Sorry",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Piyapong Pue-Oun",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Nigeria",
+      "occurrences": 1,
+      "raw_name": "Rachidi Yekini",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "El Salvador",
+      "occurrences": 1,
+      "raw_name": "Raúl Ignacio Díaz Arce",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Reginald Date",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Germany",
+      "occurrences": 1,
+      "raw_name": "Richard Hofmann",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 2,
+      "raw_name": "Robert Charlton",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 1,
+      "raw_name": "Robert Moore",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Romário de Souza Faria",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Said Al-Owairan",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 2,
+      "raw_name": "Stephen Bloomer",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Tahar Abou-Zeid",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 2,
+      "raw_name": "Thomas Finney",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 2,
+      "raw_name": "Thomas Lawton",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Thomas Soãres \"Zizinho\"",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 2,
+      "raw_name": "Valdir Pereira Didi",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 1,
+      "raw_name": "Vivian John Woodward",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "USA",
+      "occurrences": 1,
+      "raw_name": "Walter Alfred Bahr",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "England",
+      "occurrences": 1,
+      "raw_name": "William \"Dixie\" Dean",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "USA",
+      "occurrences": 1,
+      "raw_name": "William Gonsalves",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Soviet Union",
+      "occurrences": 1,
+      "raw_name": "Wsjevolod Bobrov",
+      "reason": "no_candidate",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Norway",
+      "occurrences": 1,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "iffhs_worlds_best",
+      "year": 2023
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Northern Ireland",
+      "occurrences": 1,
+      "raw_name": "Aaron Hughes",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Abdallah Deeb",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Algeria",
+      "occurrences": 1,
+      "raw_name": "Abdelhafid Tasfaout",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Abdelkarim Fadlalla",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Abdel Zaher El-Saqua",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Abdoulaye Traoré",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 2,
+      "raw_name": "Abdul Aziz Al-Muqbali",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaya/Malaysia",
+      "occurrences": 1,
+      "raw_name": "Abdul Ghani Minhat",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 2,
+      "raw_name": "Abdul Kadir",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Abdulla Al-Marzooqi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Abdullah Zubromawi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Abdul Rahem Jumaa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Abdul Salam Jumaa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Abdul Shukor Salleh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Abdulwahab Al-Safi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Abe Lenstra",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Adel Khamis Al-Noubi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Ademir Marques",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Adnan Dirjal",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 2,
+      "raw_name": "Adnan Kh. Al-Talyani",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Romania",
+      "occurrences": 1,
+      "raw_name": "Adrian Mutu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 2,
+      "raw_name": "Ah. Khalil Al-Junaibi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Ahmed Abdul El-Kass",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Ahmed Al-Dosari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Ahmed Al-Mahaijri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Ahmed Al-Mukhaini",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Ahmed Fathi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 2,
+      "raw_name": "Ahmed Hassan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Ahmed Ibrahim Khalaf",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Aide Iskandar",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Alaa Al-Azzawi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Panama",
+      "occurrences": 1,
+      "raw_name": "Alberto Quintero",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Austria",
+      "occurrences": 1,
+      "raw_name": "Aleksandar Dragovic",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Aleksandr Dmitrijev",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Aleksandr Geynrikh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Belarus",
+      "occurrences": 1,
+      "raw_name": "Alexandr Kulchiy",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Moldova",
+      "occurrences": 1,
+      "raw_name": "Alexandru Epureanu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 2,
+      "raw_name": "Alex Chola",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Ali Abdullah Al-Habsi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Ali Adnan Kadhim",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Ali Al-Busaidi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Yemen",
+      "occurrences": 1,
+      "raw_name": "Ali Al-Nono",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Maldives",
+      "occurrences": 1,
+      "raw_name": "Ali Ashfaq",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Ali Hussein Rehema",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Ali Jaafar Madan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 2,
+      "raw_name": "Ali Mabkhout",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iran",
+      "occurrences": 2,
+      "raw_name": "Ali Mohammed Karimi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 2,
+      "raw_name": "Almoez Ali Abdulla",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 2,
+      "raw_name": "Amad Ali S. Al-Hosni",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Amer Deeb",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Amer Shafi Sabbah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Amr Zaki",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Anas Bani Yaseen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ukraine",
+      "occurrences": 1,
+      "raw_name": "Anatoliy Tymoschuk",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Austria",
+      "occurrences": 1,
+      "raw_name": "Andreas Herzog",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "Andrei Agius",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Andrejs Rubins",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 2,
+      "raw_name": "Andres Oper",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Andris Vanins",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ukraine",
+      "occurrences": 2,
+      "raw_name": "Andriy Yarmolenko",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Greece",
+      "occurrences": 1,
+      "raw_name": "Angelos Basinas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Trinidad/Tobago",
+      "occurrences": 2,
+      "raw_name": "Angus Eve",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Anzur Ismailov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Turkey",
+      "occurrences": 1,
+      "raw_name": "Arda Turan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 1,
+      "raw_name": "Ari Hjelm",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Arumugam Rengasamy",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Ayman Hussein",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "A.Zafuan Abdul Radzak",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 2,
+      "raw_name": "Bader Ahmed Al-Mutawa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Algeria",
+      "occurrences": 1,
+      "raw_name": "Baghdad Bounedjah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Baha'a Abd. Suleiman",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Baihakki Khaizan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Balazs Dzsudzsak",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 1,
+      "raw_name": "Bambang Pamungkas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 2,
+      "raw_name": "Bashar Abdullah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Bashar Bani Yaseen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Bilal Mohammed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iceland",
+      "occurrences": 1,
+      "raw_name": "Birkir Saevarsson",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bulgaria",
+      "occurrences": 1,
+      "raw_name": "Borislav Mikhailov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Serbia",
+      "occurrences": 1,
+      "raw_name": "Brunislav Ivanovic",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Gabon",
+      "occurrences": 1,
+      "raw_name": "Bruno Ecuélé Manga",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Turkey",
+      "occurrences": 1,
+      "raw_name": "Burak Yilmaz",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Honduras",
+      "occurrences": 2,
+      "raw_name": "Carlos Alberto Pavón",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guatemala",
+      "occurrences": 2,
+      "raw_name": "Carlos Humberto Ruiz",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "Carmel Busuttil",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 2,
+      "raw_name": "Cha Bum-Kun",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Congo-Kinshasa",
+      "occurrences": 1,
+      "raw_name": "Chancel Mbemba",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Chandran Mutveeran",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hongkong",
+      "occurrences": 1,
+      "raw_name": "Chan Siu-ki",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Burkina Faso",
+      "occurrences": 1,
+      "raw_name": "Charles Kaboré",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 2,
+      "raw_name": "Choi Soon-Ho",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Cho Young-Jeung",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Christopher Katongo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Solomon Islands",
+      "occurrences": 1,
+      "raw_name": "Commins Menapi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Daniel Alves",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Daniel Bennett",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Luxembourg",
+      "occurrences": 1,
+      "raw_name": "Daniel da Mota",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Croatia",
+      "occurrences": 1,
+      "raw_name": "Dario Srna",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "El Salvador",
+      "occurrences": 1,
+      "raw_name": "Darwin Ceren",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Datsakorn Thonglao",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Austria",
+      "occurrences": 1,
+      "raw_name": "David Alaba",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "David Carabott",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "David Chabala",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Northern Ireland",
+      "occurrences": 1,
+      "raw_name": "David Healy",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Denis Ramón Caniza",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kenya",
+      "occurrences": 1,
+      "raw_name": "Dennis Oliech",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guinea",
+      "occurrences": 1,
+      "raw_name": "Diallo Ibrahim Kandia",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Gabon",
+      "occurrences": 1,
+      "raw_name": "Didier Ovono",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Diego Pablo Simeone",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bulgaria",
+      "occurrences": 1,
+      "raw_name": "Dimitar Berbatov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Dirk Kuijt",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Dmitri Kruglov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaya",
+      "occurrences": 1,
+      "raw_name": "Dollah Salleh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Haiti",
+      "occurrences": 1,
+      "raw_name": "Duckens Nazon",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Dusit Chalermsan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Edward Acquah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iran",
+      "occurrences": 1,
+      "raw_name": "Ehsan Hajsafy",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "\"El-Dhizui\"",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Eldor Shomurodov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kenya",
+      "occurrences": 1,
+      "raw_name": "Elijah Lidonde",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Elijah Tana",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Emad Mohammed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Enar Jääger",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Israel",
+      "occurrences": 1,
+      "raw_name": "Eran Zahavi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Panama",
+      "occurrences": 1,
+      "raw_name": "Eric Davis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Norway",
+      "occurrences": 1,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Poland",
+      "occurrences": 1,
+      "raw_name": "Ernest Pol",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Poland/Germany",
+      "occurrences": 1,
+      "raw_name": "Ernest Wilimowski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Faas Wilkes",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Angola",
+      "occurrences": 1,
+      "raw_name": "Fabrice Maieco 'Akwá'",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Fahad Al-Ansari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Fahad Al-Hajeri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Fahad Awadh Shaheen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Faisel Al-Dekheel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Falah Hassan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 2,
+      "raw_name": "Fandi Ahmad",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Fan Zhiyi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Faouzi Mubarak Aaish",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 2,
+      "raw_name": "Fawzi Bashir",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Felix Nyirongo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Lithuania",
+      "occurrences": 1,
+      "raw_name": "Fiodor Cernych",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Firas Al-Khatib",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Angola",
+      "occurrences": 1,
+      "raw_name": "Flávio Amado",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mexico",
+      "occurrences": 1,
+      "raw_name": "Francisco Ochoa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mexico",
+      "occurrences": 1,
+      "raw_name": "Francisco Rodríguez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Franck Kessié",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Gabon",
+      "occurrences": 1,
+      "raw_name": "François Amégasse",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Haiti",
+      "occurrences": 1,
+      "raw_name": "Frantzdy Pierrot",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Liechtenstein",
+      "occurrences": 1,
+      "raw_name": "Franz Burgmeier",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Gabor Kiraly",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Gao Lin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cameroon",
+      "occurrences": 1,
+      "raw_name": "Geremi Fotso Njitap",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ethiopia",
+      "occurrences": 1,
+      "raw_name": "Getaneh Kebede",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "Gilbert Agius",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Gilbert Chirwa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Greece",
+      "occurrences": 1,
+      "raw_name": "Giorgios Karagounis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Macedonia",
+      "occurrences": 1,
+      "raw_name": "Goce Sedloski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 2,
+      "raw_name": "Godfrey Chitalu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uganda",
+      "occurrences": 1,
+      "raw_name": "Godfrey Walusimbi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Chile",
+      "occurrences": 1,
+      "raw_name": "Gonzala Jara",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Macedonia",
+      "occurrences": 2,
+      "raw_name": "Goran Pandev",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guatemala",
+      "occurrences": 1,
+      "raw_name": "Guillermo Ramirez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Gunnar Nordahl",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Georgia",
+      "occurrences": 1,
+      "raw_name": "Guram Kashia",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guatemala",
+      "occurrences": 1,
+      "raw_name": "Gustavo Cabrera",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Györgi Sárosi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Sudan",
+      "occurrences": 1,
+      "raw_name": "Haitham Mustafa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Turkey",
+      "occurrences": 1,
+      "raw_name": "Hakan Calhanoglu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 2,
+      "raw_name": "Hamza Al-Daradreh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 2,
+      "raw_name": "Hani Al-Dhabit",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "East Germany",
+      "occurrences": 1,
+      "raw_name": "Hans-Jürgen Dörner",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 2,
+      "raw_name": "Hao Haidong",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Harib Al-Saadi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Hariss Harun",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Harry Waya",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Rwanda",
+      "occurrences": 1,
+      "raw_name": "Haruna Niyonzima",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Hasan A.-F. Mahmoud",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Hassan Al-Ghilani",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Hassan Bin Abd. Sunny",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Hassan El-Shazly",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Hassan Farhan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Lebanon",
+      "occurrences": 1,
+      "raw_name": "Hassan Maatouk",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Hatem Abdullah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Hatem Moh. Yusuf Aqel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Hawar Mulla Mohammed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Switzerland",
+      "occurrences": 1,
+      "raw_name": "Heinz Hermann",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Armenia",
+      "occurrences": 1,
+      "raw_name": "Henrik Mkhitaryan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Henry Anier",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Hong Myung-Bo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Hosni Abd. Rabbou",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 2,
+      "raw_name": "Husain Ali Ahmed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Husain Ali B. Mohamed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Hussein O.A. Sulimani",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 2,
+      "raw_name": "Hussein Saeed Mohammed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 2,
+      "raw_name": "Hwang Seon-Hong",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Ibrahim Majid",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Ignatiy Nesterov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Igors N. Stepanovs",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Andorra",
+      "occurrences": 1,
+      "raw_name": "Ildefons Lima",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Imants Bleidelis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Maldives",
+      "occurrences": 1,
+      "raw_name": "Imran Mohamed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hungary",
+      "occurrences": 1,
+      "raw_name": "Imre Schlosser",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 2,
+      "raw_name": "Indra Sahdan bin Daud",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Indrek Zelinski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Isa Abu Bakar",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 2,
+      "raw_name": "Ismael Matar",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Ismail Al-Ajmi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Ismail Al-Hammadi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 2,
+      "raw_name": "Ismail H. Abdullatif",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Tunisia",
+      "occurrences": 1,
+      "raw_name": "Issam Jemaa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 1,
+      "raw_name": "Iswadi Idris",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Georgia",
+      "occurrences": 1,
+      "raw_name": "Jaba Kankava",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Jack Chamangwana",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Poland",
+      "occurrences": 1,
+      "raw_name": "Jakub Blaszczykowski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Jalal Hachim",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Jamal Abdulrahman Mubarak",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ireland",
+      "occurrences": 1,
+      "raw_name": "James McClean",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Jarah Al-Ataiqi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 2,
+      "raw_name": "Jari Litmanen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Jassem Al-Houwaidi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jamaica",
+      "occurrences": 1,
+      "raw_name": "Jermaine Taylor",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mexico",
+      "occurrences": 1,
+      "raw_name": "Jesús Daniel Gallardo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "Joe Brincat",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Joel Lindpere",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Trinidad/Tobago",
+      "occurrences": 1,
+      "raw_name": "Joevin Jones",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Johan Cruijff",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iceland",
+      "occurrences": 1,
+      "raw_name": "Jóhann B. Gudmundsson",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Austria",
+      "occurrences": 1,
+      "raw_name": "Johann Krankl",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Norway",
+      "occurrences": 1,
+      "raw_name": "John Arne Riise",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ireland",
+      "occurrences": 1,
+      "raw_name": "John O'Shea",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 1,
+      "raw_name": "Jonatan Johansson",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Jonathan Billie",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "North Korea",
+      "occurrences": 1,
+      "raw_name": "Jong Il-Gwan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Northern Ireland",
+      "occurrences": 1,
+      "raw_name": "Jonny Evans",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ghana",
+      "occurrences": 2,
+      "raw_name": "Jordan Pierre Ayew",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Peru",
+      "occurrences": 1,
+      "raw_name": "Jorge Soto",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Venezuela",
+      "occurrences": 1,
+      "raw_name": "José Manuel Rey",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "José Martín Cáceres",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Joseph Kamwendo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Joseph Musonda",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Croatia",
+      "occurrences": 1,
+      "raw_name": "Josep Simunic",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Venezuela",
+      "occurrences": 2,
+      "raw_name": "José Salomon Rondón",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Nicaragua",
+      "occurrences": 1,
+      "raw_name": "Josué Quijano",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Venezuela",
+      "occurrences": 1,
+      "raw_name": "Juan Arango Saez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Nicaragua",
+      "occurrences": 1,
+      "raw_name": "Juan Barrera",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guatemala",
+      "occurrences": 1,
+      "raw_name": "Juan Carlos Plata",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Juris Laizans",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "J. Yacoub Al-Besara",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 1,
+      "raw_name": "Kainun Waskito",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Kalusha Bwalya",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Karol Mets",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Japan",
+      "occurrences": 1,
+      "raw_name": "Kazuyoshi Miura",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Kennedy Mweene",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Martinique",
+      "occurrences": 1,
+      "raw_name": "Kevin Parsemain",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Khaled Al-Muwallid",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Khamis Al-Dossari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Khater Subait Al-Junaibi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 2,
+      "raw_name": "Kiatisuk Senamuang",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Kim Ho-Kon",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Kim Jae-Han",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Kim Tae-Yeong",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Kim Young-Gwon",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 2,
+      "raw_name": "Kinna Phiri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Nepal",
+      "occurrences": 1,
+      "raw_name": "Kiran Chemjong",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Ki Sung-Yueng",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Komail Hasan Alaswad",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Greece",
+      "occurrences": 1,
+      "raw_name": "Konstantinos Katsouranis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Konstantin Vassiljev",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Kristen Viikmäe",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Switzerland",
+      "occurrences": 1,
+      "raw_name": "Kubilay Türkyilmaz",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Japan",
+      "occurrences": 1,
+      "raw_name": "Kunishige Kamamoto",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 1,
+      "raw_name": "Kurniawan Dwi Julianto",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Kwasi Owusu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Romania",
+      "occurrences": 1,
+      "raw_name": "Ladislau Bölöni",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Luxembourg",
+      "occurrences": 1,
+      "raw_name": "Laurent Jans",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Lawrence Waya",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Vietnam",
+      "occurrences": 1,
+      "raw_name": "Lê Công Vinh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 2,
+      "raw_name": "Lee Dong-Gook",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Lee Jae-sun",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Lee Woon-Jae",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Lee Young-Pyo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Colombia",
+      "occurrences": 1,
+      "raw_name": "Leonel de Jesús Alvarez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cuba",
+      "occurrences": 1,
+      "raw_name": "Lester Moré",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Georgia",
+      "occurrences": 1,
+      "raw_name": "Levan Kobiashvili",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Li Weifeng",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Italy",
+      "occurrences": 1,
+      "raw_name": "Luigi Riva",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mexico",
+      "occurrences": 1,
+      "raw_name": "Luis Alves \"Zague\"",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Costa Rica",
+      "occurrences": 1,
+      "raw_name": "Luis Antonio Marin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ecuador",
+      "occurrences": 1,
+      "raw_name": "Luis Enrique Capurro",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 1,
+      "raw_name": "Lukas Hradecky",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jamaica",
+      "occurrences": 1,
+      "raw_name": "Luton Shelton",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Mahboub Mubarak",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Mahdi Karim Ajeel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Maher Al-Sayed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Mahmoud Al-Mawas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Mahmoud Yaseen Soufi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Maksim Shatskikh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Mansour Meftah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mozambique",
+      "occurrences": 1,
+      "raw_name": "Manuel José Bucuane",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bolivia",
+      "occurrences": 2,
+      "raw_name": "Marcelo Martins Moreno",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Andorra",
+      "occurrences": 1,
+      "raw_name": "Marcio Vieira",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Andorra",
+      "occurrences": 1,
+      "raw_name": "Marc Pujol",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Andorra",
+      "occurrences": 1,
+      "raw_name": "Marc Vales",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Liechtenstein",
+      "occurrences": 1,
+      "raw_name": "Mario Frick",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Luxembourg",
+      "occurrences": 1,
+      "raw_name": "Mario Mutsch",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Maris Verpakovskis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Austria",
+      "occurrences": 2,
+      "raw_name": "Marko Arnautovic",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Marko Kristal",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Martin Reim",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Liechtenstein",
+      "occurrences": 1,
+      "raw_name": "Martin Stocklasa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Mart Poom",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Trinidad/Tobago",
+      "occurrences": 1,
+      "raw_name": "Marvin Phillip",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "San Marino",
+      "occurrences": 1,
+      "raw_name": "Matteo Vitaioli",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Costa Rica",
+      "occurrences": 1,
+      "raw_name": "Mauricio Solis Mora",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Switzerland",
+      "occurrences": 1,
+      "raw_name": "Max Abegglen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Max-Alain Gradel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "Maximiliano Pereira",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Mesaed Nada Al-Enezi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 2,
+      "raw_name": "Michael Mifsud",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kenya",
+      "occurrences": 1,
+      "raw_name": "Michael Olunga",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cyprus",
+      "occurrences": 1,
+      "raw_name": "Michalis Konstandinou",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Poland",
+      "occurrences": 1,
+      "raw_name": "Michal Zewlawkow",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Mihails Zemlinskis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Honduras",
+      "occurrences": 1,
+      "raw_name": "Milton Núñez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Mirdzhalal Kasymov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Slovakia",
+      "occurrences": 1,
+      "raw_name": "Miroslav Karhan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Mohamed Abdeljawad",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 2,
+      "raw_name": "Mohamed Aboutraika",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar/UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Mohamed Al-Enazi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Mohamed Al-Hayam",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Mohamed El-Nenni",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Lebanon",
+      "occurrences": 1,
+      "raw_name": "Mohamed Haidar",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Mohamed Husain",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Mohamed Omar",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Mohamed Salmeen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Libya",
+      "occurrences": 1,
+      "raw_name": "Mohammed Ali Al-Biski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Mohammed Al-Musalami",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Mohammed Al-Noobi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 2,
+      "raw_name": "Mohd Khairul Amri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Mohd Nazri Bin Nasir",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Mohd Noh Alam Shah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 2,
+      "raw_name": "Moh. Mokhtar Dahari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Mohsen Mosabeh Faraj",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Burkina Faso",
+      "occurrences": 1,
+      "raw_name": "Moumouni Dagano",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Tanzania",
+      "occurrences": 1,
+      "raw_name": "Mrisho Ngasa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 2,
+      "raw_name": "Mubarak Mustafa Fazli",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Muhammad Baharuddin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Myanmar",
+      "occurrences": 1,
+      "raw_name": "Myo Hlaing Win",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Nader El-Sayed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Nashat Akram",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "England",
+      "occurrences": 1,
+      "raw_name": "Nathaniel Lofthouse",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Nawaf Al-Khaldi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uruguay",
+      "occurrences": 1,
+      "raw_name": "Néstor Muslera",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Nohair Al-Shammari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Nour Sabri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Tanzania",
+      "occurrences": 1,
+      "raw_name": "Nyoni Erasto",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Obeid Al-Dossary",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Odai Yusuf Al-Saifi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cuba",
+      "occurrences": 1,
+      "raw_name": "Odelin Molina",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Odil Ahmedov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Soviet Union",
+      "occurrences": 2,
+      "raw_name": "Oleg Blokhin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Denmark",
+      "occurrences": 1,
+      "raw_name": "Ole Madsen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "(West) Germany",
+      "occurrences": 1,
+      "raw_name": "Olivier Bierhoff",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Omar Khrbin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Honduras",
+      "occurrences": 1,
+      "raw_name": "Óscar Boniek García",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Andorra",
+      "occurrences": 1,
+      "raw_name": "Oscar Sonejee",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Park Ji-Sung",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Park Lee-Chun",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Park Sung-Hwa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Guinea",
+      "occurrences": 1,
+      "raw_name": "Pascal Feindouno",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Denmark",
+      "occurrences": 1,
+      "raw_name": "Pauli Jørgensen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Paulo César da Silva",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Costa Rica",
+      "occurrences": 1,
+      "raw_name": "Paulo César Wanchope",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Pedro Miguel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mozambique",
+      "occurrences": 1,
+      "raw_name": "Pelembe \"Dominguês\"",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Antigua/Barbuda",
+      "occurrences": 1,
+      "raw_name": "Peter Byers",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Liechtenstein",
+      "occurrences": 1,
+      "raw_name": "Peter Jehle",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Peter Mponda",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zimbabwe",
+      "occurrences": 1,
+      "raw_name": "Peter Ndlovu",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Philippines",
+      "occurrences": 2,
+      "raw_name": "Phil Younghusband",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Gabon",
+      "occurrences": 1,
+      "raw_name": "Pierre-E. Aubameyang",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 2,
+      "raw_name": "Piyapong Pue-on",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Denmark",
+      "occurrences": 1,
+      "raw_name": "Poul \"Tist\" Nielsen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Denmark",
+      "occurrences": 1,
+      "raw_name": "Preben Elkjær-Larsen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Jordan",
+      "occurrences": 1,
+      "raw_name": "Qasem Al-Sheikh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Rabei Yassin",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Colombia",
+      "occurrences": 2,
+      "raw_name": "Radamel Falcao García",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Ragnar Klavan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Rainford Kalaba",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Raio Piiroja",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Rajaa Rafe",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Azerbaijan",
+      "occurrences": 1,
+      "raw_name": "Rashad Sadygov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Rashed Al-Dosari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "El Salvador",
+      "occurrences": 1,
+      "raw_name": "Raúl Díaz Arce",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Romania",
+      "occurrences": 1,
+      "raw_name": "Razvan Rat",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Switzerland",
+      "occurrences": 1,
+      "raw_name": "Richardo Rodríguez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Grenada",
+      "occurrences": 1,
+      "raw_name": "Ricky Charles",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "North Korea",
+      "occurrences": 1,
+      "raw_name": "Ri Myong-Guk",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Robert Acuña",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Roberto Fabián Ayala",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Peru",
+      "occurrences": 1,
+      "raw_name": "Roberto Palacios",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malta",
+      "occurrences": 1,
+      "raw_name": "Roderick Briffa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cameroon",
+      "occurrences": 1,
+      "raw_name": "Roger Miller \"Milla\"",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Nepal",
+      "occurrences": 1,
+      "raw_name": "Rohit Chand",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bolivia",
+      "occurrences": 1,
+      "raw_name": "Ronald Raldes",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Fiji",
+      "occurrences": 1,
+      "raw_name": "Roy Krishna",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iceland",
+      "occurrences": 1,
+      "raw_name": "Rúnar Kristinsson",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Ruud van Nistelrooij",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Oman",
+      "occurrences": 1,
+      "raw_name": "Saad Al-Mukhaini",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Salem Al-Dosari",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Salman Isa",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 1,
+      "raw_name": "Sami Hyypiä",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cameroon",
+      "occurrences": 2,
+      "raw_name": "Samuel Eto'o Fils",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Santokh Singh",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Sarayuth Chaikamdee",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Armenia",
+      "occurrences": 1,
+      "raw_name": "Sarkis Hovsepyan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Lithuania",
+      "occurrences": 1,
+      "raw_name": "Saulius Mikoliunas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Sayed Dhiya Saeed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Sayed Mahmood Jalal",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Sayed Mohamed Adnan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Sayed Mohammed Jaffer",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 2,
+      "raw_name": "Sebastián Soria",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Estonia",
+      "occurrences": 1,
+      "raw_name": "Sergei Zenjov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Server Djeparov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Mali",
+      "occurrences": 1,
+      "raw_name": "Seydou Keïta",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Shaharuddin Abdullah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Shahril Ishak",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saint Vincent/Gr.",
+      "occurrences": 1,
+      "raw_name": "Shandel Samuel",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Singapore",
+      "occurrences": 1,
+      "raw_name": "Shunmugham Subramani",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Denmark",
+      "occurrences": 1,
+      "raw_name": "Simon Kjaer",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Tanzania",
+      "occurrences": 1,
+      "raw_name": "Simon Msuva",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Indonesia",
+      "occurrences": 1,
+      "raw_name": "Soetjipto Soentoro",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 1,
+      "raw_name": "Soh Chin Ann",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 2,
+      "raw_name": "Son Heung-Min",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Switzerland",
+      "occurrences": 1,
+      "raw_name": "Stefan Lichtsteiner",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Montenegro",
+      "occurrences": 1,
+      "raw_name": "Stevan Jovetic",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Northern Ireland",
+      "occurrences": 1,
+      "raw_name": "Steven Davis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bulgaria",
+      "occurrences": 1,
+      "raw_name": "Stilian Petrov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "India",
+      "occurrences": 2,
+      "raw_name": "Sunil Chhetri",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Sven Rydell",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Eetonia",
+      "occurrences": 1,
+      "raw_name": "Taijo Teniste",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Taiseer Al-Jassam",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Talal Al-Meshal",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Bahrain",
+      "occurrences": 1,
+      "raw_name": "Talal Yousef Mohammed",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Tarek Salman Soliman",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Tahiti",
+      "occurrences": 1,
+      "raw_name": "Teaonui Tehau",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Finland",
+      "occurrences": 2,
+      "raw_name": "Teemu Pukki",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 2,
+      "raw_name": "Teerasil Dangda",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Theerathon Bunmathan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Greece",
+      "occurrences": 1,
+      "raw_name": "Theodoros Zagorakis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Norway",
+      "occurrences": 1,
+      "raw_name": "Thorbjørn Svenssen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Uzbekistan",
+      "occurrences": 1,
+      "raw_name": "Timur Kapadze",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Venezuela",
+      "occurrences": 1,
+      "raw_name": "Tomás Rincón",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Thailand",
+      "occurrences": 1,
+      "raw_name": "Totchtawan Sripan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Russia",
+      "occurrences": 1,
+      "raw_name": "Vasiliy Berezutskiy",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Greece",
+      "occurrences": 1,
+      "raw_name": "Vassilis Torosidis",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kosovo",
+      "occurrences": 1,
+      "raw_name": "Vedad Muriqi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Nigeria",
+      "occurrences": 1,
+      "raw_name": "Victor Osimhen",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Latvia",
+      "occurrences": 1,
+      "raw_name": "Vitalijs Astafjevs",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "England/England Am",
+      "occurrences": 1,
+      "raw_name": "-.Vivian John Woodward",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Wael Goma'a",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Wael Sul. Al-Habashi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 1,
+      "raw_name": "Waleed Ali H. Jumah",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Walid Abbas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Wesan Rizik Abdulmajid",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kenya",
+      "occurrences": 1,
+      "raw_name": "William Ouma",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Honduras",
+      "occurrences": 1,
+      "raw_name": "Wilmer Velásquez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Poland",
+      "occurrences": 1,
+      "raw_name": "Wlodzimierz Lubanski",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 2,
+      "raw_name": "Wu Lei",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Hongkong",
+      "occurrences": 1,
+      "raw_name": "Yapp Hung-fai",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cuba",
+      "occurrences": 1,
+      "raw_name": "Yenier Márquez",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Cyprus",
+      "occurrences": 1,
+      "raw_name": "Yiannakis Okkas",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Yoo Sang-Chul",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Israel",
+      "occurrences": 1,
+      "raw_name": "Yossi Benayoun",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malawi",
+      "occurrences": 1,
+      "raw_name": "Young Chimodzi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Iraq",
+      "occurrences": 2,
+      "raw_name": "Younis Mahmoud",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Kuwait",
+      "occurrences": 2,
+      "raw_name": "Yousef Al-Sulaiman",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Russia",
+      "occurrences": 1,
+      "raw_name": "Yury Zhirkov",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "Malaysia",
+      "occurrences": 2,
+      "raw_name": "Zainal Abidin Hassan",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Zhang Linpeng",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Zheng Zhi",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Zhu Bo",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "international_record",
+      "nation_token": "UA Emirates",
+      "occurrences": 1,
+      "raw_name": "Zuhair Bakhit Bilal",
+      "reason": "no_candidate",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-00480",
+          "player_name": "Seung-hwi Im"
+        }
+      ],
+      "family": "international_record",
+      "nation_token": "India",
+      "occurrences": 1,
+      "raw_name": "I.M. Vijayan",
+      "reason": "weak_unverified",
+      "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-29601",
+          "player_name": "Júnior"
+        },
+        {
+          "player_id": "P-66308",
+          "player_name": "Roque Júnior"
+        },
+        {
+          "player_id": "P-83096",
+          "player_name": "Júnior"
+        },
+        {
+          "player_id": "P-92812",
+          "player_name": "Vinícius Júnior"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "Júnior",
+      "reason": "multi_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-34403",
+          "player_name": "Alfredo Di Stéfano"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Alfredo Di Stéfano",
+      "reason": "nation_divergent",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-12682",
+          "player_name": "Omar Sívori"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Omar Sívori",
+      "reason": "nation_divergent",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Abedi Pele",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "France",
+      "occurrences": 1,
+      "raw_name": "Eric Cantona",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Northern Ireland",
+      "occurrences": 1,
+      "raw_name": "George Best",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Liberia",
+      "occurrences": 1,
+      "raw_name": "George Weah",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Hong Myung-bo",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Mia Hamm",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Michelle Akers",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Paraguay",
+      "occurrences": 1,
+      "raw_name": "Romerito",
+      "reason": "no_candidate",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-01068",
+          "player_name": "Jackson Martínez"
+        },
+        {
+          "player_id": "P-05369",
+          "player_name": "Mario Martínez"
+        },
+        {
+          "player_id": "P-05758",
+          "player_name": "Javi Martínez"
+        },
+        {
+          "player_id": "P-07090",
+          "player_name": "Saturnino Martínez"
+        },
+        {
+          "player_id": "P-12327",
+          "player_name": "William Martínez"
+        },
+        {
+          "player_id": "P-13162",
+          "player_name": "Emiliano Martínez"
+        },
+        {
+          "player_id": "P-23070",
+          "player_name": "Lisandro Martínez"
+        },
+        {
+          "player_id": "P-31812",
+          "player_name": "Fidel Martínez"
+        },
+        {
+          "player_id": "P-32696",
+          "player_name": "Gilberto Martínez"
+        },
+        {
+          "player_id": "P-39281",
+          "player_name": "Carlos Martínez"
+        },
+        {
+          "player_id": "P-49544",
+          "player_name": "Juan Ramón Martínez"
+        },
+        {
+          "player_id": "P-64464",
+          "player_name": "Jesús Martínez"
+        },
+        {
+          "player_id": "P-81505",
+          "player_name": "Lautaro Martínez"
+        },
+        {
+          "player_id": "P-86511",
+          "player_name": "Rony Martínez"
+        },
+        {
+          "player_id": "P-88160",
+          "player_name": "Walter Martínez"
+        },
+        {
+          "player_id": "P-93628",
+          "player_name": "Eulogio Martínez"
+        },
+        {
+          "player_id": "P-97602",
+          "player_name": "Sergio Martínez"
+        }
+      ],
+      "family": "annual_recognition",
+      "nation_token": "Arg",
+      "occurrences": 1,
+      "raw_name": "Gonzalo MARTÍNEZ",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy",
+      "year": 2018
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-30381",
+          "player_name": "Óscar Cardozo"
+        },
+        {
+          "player_id": "P-98051",
+          "player_name": "José Cardozo"
+        }
+      ],
+      "family": "annual_recognition",
+      "nation_token": "Par",
+      "occurrences": 1,
+      "raw_name": "José Saturnino CARDOZO",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy",
+      "year": 2002
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-38692",
+          "player_name": "Rubén Cano"
+        }
+      ],
+      "family": "annual_recognition",
+      "nation_token": "Arg",
+      "occurrences": 1,
+      "raw_name": "Germán CANO",
+      "reason": "nation_mismatch",
+      "source_id": "south_american_poy",
+      "year": 2023
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Arg",
+      "occurrences": 1,
+      "raw_name": "Andrés D'ALESSANDRO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy",
+      "year": 2010
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Bra",
+      "occurrences": 1,
+      "raw_name": "GABRIEL BARBOSA Almeida",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Bra",
+      "occurrences": 1,
+      "raw_name": "LUAN Guilherme de Jesus Vieira",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy",
+      "year": 2017
+    },
+    {
+      "candidates": [],
+      "family": "annual_recognition",
+      "nation_token": "Bra",
+      "occurrences": 1,
+      "raw_name": "LUIZ HENRIQUE André Rosa da Silva",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy",
+      "year": 2024
+    }
+  ],
+  "review_count": 612,
+  "version": "career-stature-1.0.0",
+  "withheld_occurrences": 705
+}
