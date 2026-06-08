@@ -1,0 +1,100 @@
+{
+  "$schema_doc": "ENGINE-V2 E-3b asymmetric realism gate — locked landings + tight shape bands. Re-locks atomically when E-4 (rating-stature) ships new λ/realism; the gate MECHANISM (strategicAutoDraft + raised N + greedyOverall guard) is the durable infrastructure E-4's realism re-fit measures against.",
+  "engine_anchor": "engine-v2 @ b39305a (E-3a λ-calibration)",
+  "engine_version": "engine-2026.06.04",
+  "ensemble": {
+    "seed_prefix": "wcdraft:realism:e3a:v1",
+    "N_runs": 2000,
+    "formation_id": "4-3-3"
+  },
+  "policies": {
+    "strategicAutoDraft": {
+      "_doc": "PASS-gate measurement target. Slot-fit best-available: for each spin, scan rolled_card_ids and pick max(positionCompatibility(eligible, slot_position) * rating[channel_for_slot]); tiebreak by overall DESC then card_id ASC. Manager-first flow + first-vacant slot order unchanged from canonical autoDraft.",
+      "qualifying": 393,
+      "matches": 6561,
+      "groupMatches": 6000,
+      "knockoutMatches": 561,
+      "goalsTotal": 16245,
+      "draws": 1349,
+      "margin4plus": 594,
+      "koEt": 172,
+      "koShootout": 112,
+      "observed": {
+        "goals_per_game": 2.47599451303155,
+        "draw_pct": 0.22483333333333333,
+        "margin4plus_pct": 0.09053497942386832,
+        "ko_et_pct": 0.3065953654188948,
+        "shootout_pct": 0.19964349376114082
+      },
+      "wilson_half_widths_around_observed": {
+        "goals_per_game": 0.03885257574073709,
+        "draw_pct": 0.010779094134961914,
+        "margin4plus_pct": 0.0070851031996180735,
+        "ko_et_pct": 0.03893361481253849,
+        "shootout_pct": 0.033753427940787166
+      },
+      "telemetry": {
+        "channelMean": { "attack": 45.1835, "midfield": 48.936, "defense": 48.5065, "goalkeeping": 24.3775 },
+        "synergyMultiplierMean": 1.010280999999991,
+        "managerModifierMean": 1.0,
+        "coverageMean": 0.9523985500000016
+      }
+    },
+    "autoDraft": {
+      "_doc": "Canonical first-card autoDraft — TELEMETRY ONLY. Production engine fixture (byte-stable for goldens); a measurement artifact when used as the realism population (see docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md).",
+      "qualifying": 19,
+      "matches": 6020,
+      "groupMatches": 6000,
+      "knockoutMatches": 20,
+      "observed": {
+        "goals_per_game": 3.70265780730897,
+        "draw_pct": 0.0765,
+        "margin4plus_pct": 0.3759136212624585,
+        "ko_et_pct": 0.1,
+        "shootout_pct": 0.05
+      },
+      "telemetry": {
+        "channelMean": { "attack": 23.603, "midfield": 25.949, "defense": 24.999, "goalkeeping": 14.1865 },
+        "synergyMultiplierMean": 1.010280999999991,
+        "managerModifierMean": 1.0,
+        "coverageMean": 0.9501791727272756
+      }
+    },
+    "greedyOverallAutoDraft": {
+      "_doc": "Position-blind max-overall NEGATIVE CONTROL. The gate ASSERTS this policy lands OUTSIDE every shape band, so nobody can 'fix' realism by maxing OVR — competent must mean slot-fit-aware, not max-overall.",
+      "qualifying": 17,
+      "matches": 6019,
+      "groupMatches": 6000,
+      "knockoutMatches": 19,
+      "observed": {
+        "goals_per_game": 3.7341751121448747,
+        "draw_pct": 0.07616666666666666,
+        "margin4plus_pct": 0.38046187074264826,
+        "ko_et_pct": 0.05263157894736842,
+        "shootout_pct": 0.05263157894736842
+      },
+      "telemetry": {
+        "channelMean": { "attack": 27.8645, "midfield": 27.613, "defense": 23.9785, "goalkeeping": 13.875 },
+        "synergyMultiplierMean": 1.010280999999991,
+        "managerModifierMean": 1.0,
+        "coverageMean": 0.9524743954545476
+      }
+    }
+  },
+  "shape_bands": {
+    "_doc": "Tight Wilson bands around the strategicAutoDraft landings. Half-width = max(WilsonHalfWidthAroundObs at this N, variance_floor). The four shape norms are tracked together (each ±halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap — total goal volume legitimately tracks the underdog gap).",
+    "draw_pct":        { "center_policy": "strategicAutoDraft", "half_width": 0.0150 },
+    "margin4plus_pct": { "center_policy": "strategicAutoDraft", "half_width": 0.0150 },
+    "ko_et_pct":       { "center_policy": "strategicAutoDraft", "half_width": 0.0500 },
+    "shootout_pct":    { "center_policy": "strategicAutoDraft", "half_width": 0.0400 }
+  },
+  "goals_per_game_lower_floor": {
+    "_doc": "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2× Wilson half-width = honest-residual cushion below norm 2.54.",
+    "lower_bound": 2.40
+  },
+  "wilson_target_for_ko_metrics": {
+    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO→ET, shootout) is the chosen-N tooth criterion. With N=2000 strategicAutoDraft produces ~561 KO matches → ko_et half-width ≈ 3.89pp, shootout half-width ≈ 3.38pp — both ≤ ~4pp.",
+    "target_half_width_pp": 4.0,
+    "observed_half_width_pp": { "ko_et_pct": 3.89, "shootout_pct": 3.38 }
+  }
+}
