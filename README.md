@@ -10,8 +10,8 @@ A deterministic World Cup draft simulator — pick squads, simulate tournaments,
 
 ## Disclaimer
 
-**Not affiliated with, endorsed by, or associated with FIFA**, or any football
-federation, governing body, or official competition. "World Cup" is used
+**Not affiliated with, endorsed by, or associated with any official competition or
+governing body**, including any football federation. "World Cup" is used
 descriptively. All trademarks belong to their respective owners.
 
 ## Monorepo map

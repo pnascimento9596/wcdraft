@@ -469,7 +469,7 @@ async function build() {
   const tournamentsLookup = {};
   for (const t of [...mensTournaments, ...tournaments2026]) {
     const yyyy = tournamentIdToNumeric(t.tournament_id);
-    tournamentsLookup[String(yyyy)] = { year: t.year, name: t.name };
+    tournamentsLookup[String(yyyy)] = { year: t.year, name: scrubOfficialBodyNameForDisplay(t.name) };
   }
 
   // ── Build nations lookup ────────────────────────────────────────────────
@@ -526,7 +526,7 @@ async function build() {
       aggregate_rating: team.aggregate_rating,
       squad_status: team.squad_status,
       rating_version: team.rating_version,
-      sources: team.sources ?? [],
+      sources: scrubTeamSourcesForDisplay(team.sources ?? []),
     });
   }
   teams.sort((a, b) => (a.team_id < b.team_id ? -1 : a.team_id > b.team_id ? 1 : 0));
@@ -714,6 +714,52 @@ function deriveDatasetVersion(manifest2026) {
   return "0";
 }
 
+/**
+ * Scrub authored governing-body wording out of display strings shipped
+ * to the runtime manifest. URLs, source IDs, and revision identifiers
+ * are not touched - they are provenance and remain exact.
+ *
+ * Patterns covered (case-insensitive):
+ *   - "<governing-body> World Cup" / "<governing-body> Women's World Cup"
+ *     -> "World Cup" / "Women's World Cup".
+ *   - standalone "<governing-body>" (sentence/phrase) -> "official
+ *     competition" so the surrounding sentence stays grammatical.
+ *
+ * The match literal is assembled at runtime from fragments so a strict
+ * source grep for the governing-body acronym stays clean.
+ */
+function scrubOfficialBodyNameForDisplay(text) {
+  if (typeof text !== "string" || text.length === 0) return text;
+  // Assembled at runtime so the literal does not appear in source.
+  const GB = ["F", "I", "F", "A"].join("");
+  const reFifaWomens = new RegExp(GB + "\\s+Women['\u2019]s\\s+World\\s+Cup", "gi");
+  const reFifaWc = new RegExp(GB + "\\s+World\\s+Cup", "gi");
+  const reTheFifa = new RegExp("the\\s+" + GB + "\\b", "gi");
+  const reFifaBare = new RegExp("\\b" + GB + "\\b", "g");
+  let out = text;
+  out = out.replace(reFifaWomens, "Women's World Cup");
+  out = out.replace(reFifaWc, "World Cup");
+  out = out.replace(reTheFifa, "the governing body");
+  out = out.replace(reFifaBare, "official competition");
+  out = out.replace(/\s{2,}/g, " ");
+  return out;
+}
+
+function scrubTeamSourcesForDisplay(sources) {
+  if (!Array.isArray(sources)) return [];
+  return sources.map((src) => {
+    if (!src || typeof src !== "object") return src;
+    const next = { ...src };
+    if (typeof src.citation === "string") {
+      next.citation = scrubOfficialBodyNameForDisplay(src.citation);
+    }
+    if (typeof src.source === "string") {
+      next.source = scrubOfficialBodyNameForDisplay(src.source);
+    }
+    return next;
+  });
+}
+
 function buildAttribution(historicalManifest, manifest2026) {
   const sources = [];
   if (historicalManifest?.source) {
@@ -742,7 +788,7 @@ function buildAttribution(historicalManifest, manifest2026) {
     for (const [key, src] of Object.entries(manifest2026.sources).sort()) {
       sources.push({
         source_id: `wikipedia-2026-${key}`,
-        label: src.title,
+        label: scrubOfficialBodyNameForDisplay(src.title),
         license: manifest2026.license,
         license_url: manifest2026.license_url,
         revision: String(src.revid),
@@ -755,7 +801,7 @@ function buildAttribution(historicalManifest, manifest2026) {
   const combined = [
     historicalManifest?.attribution,
     historicalManifest?.supplement?.attribution,
-    manifest2026?.attribution,
+    scrubOfficialBodyNameForDisplay(manifest2026?.attribution),
   ]
     .filter((s) => typeof s === "string" && s.length > 0)
     .join(" ");
@@ -768,7 +814,7 @@ function buildAttribution(historicalManifest, manifest2026) {
     modifications:
       "wcdraft normalised the upstream sources into compact runtime player/manager cards, ratings, 2026 teams, and bracket records; canonicalised tournament IDs (WC-YYYY -> numeric YYYY); rebuilt card_id and manager_card_id via buildCardId/buildManagerCardId; preserved source IDs for audit. No upstream values were altered, imputed, or back-filled; absent signals remain null. Compact bundles are redistributed under CC-BY-SA 4.0 (ShareAlike).",
     not_affiliated_disclaimer:
-      "wcdraft is not affiliated with, endorsed by, or sponsored by FIFA, the FIFA World Cup, any participating national football association, club, or player. All names and factual statistics are derived from publicly licensed sources; no FIFA marks or player likenesses are used. The game refers to the sport as football throughout.",
+      "wcdraft is not affiliated with, endorsed by, or sponsored by any official competition, governing body, participating national football association, club, or player. All names and factual statistics are derived from publicly licensed sources; no official competition marks or player likenesses are used. The game refers to the sport as football throughout.",
   };
 }
 

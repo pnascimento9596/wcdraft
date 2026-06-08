@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function HistoryPage() {
   return (
-    <div className="container page">
+    <div className="container page game-page game-page--history">
       <Suspense fallback={<HistoryFallback />}>
         <HistoryScreen />
       </Suspense>

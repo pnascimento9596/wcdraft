@@ -50,7 +50,7 @@ export function SiteFooter() {
           </p>
           <p>
             wcdraft is an independent project and is not affiliated with, endorsed by, or associated
-            with FIFA or any official competition.
+            with any official competition or governing body.
           </p>
         </div>
       </div>
