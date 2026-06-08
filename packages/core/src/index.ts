@@ -179,7 +179,15 @@ export {
 // entry (returns the RunResult AND the per-match `MatchResult[]`) for
 // consumers that need the atomic event stream.
 export { runTournamentFull, isBelowFieldableFloor } from "./engine/tournament.js";
-export { DEFAULT_SCORING_CONFIG } from "./engine/calibration.js";
+export {
+  DEFAULT_SCORING_CONFIG,
+  // D6 fit override mechanism — OFFLINE TOOL ONLY. Production code MUST
+  // NOT call these; the symbol names are `__UNSAFE_*` so the call sites
+  // are grep-visible. See calibration.ts for the safety contract.
+  __UNSAFE_setCalibrationOverride,
+  __UNSAFE_clearCalibrationOverride,
+  type CalibrationOverride,
+} from "./engine/calibration.js";
 // PUBLIC SIM PRIMITIVES — surfaced for the realism golden test
 // (`@wcdraft/data` test/realism-modern-norms.golden.test.ts) which runs a
 // 3,006-match symmetric coherent-XI sweep through the engine and validates

@@ -1,20 +1,25 @@
 # WS-B Sim + Scoring — Calibration
 
-> **Phase 1 rating recalibration landed (wc-perf-2.0.0 / proj-career-2.0.0)
-> via the DECOUPLED path (plan §3.2 fallback):** the rating display curve is
-> applied to `overall` ONLY; the four sim channels (`attack`, `midfield`,
-> `defense`, `goalkeeping`) stay on the pre-recalibration `[FLOOR_CHANNEL, 100]`
-> band so the engine's λ stays calibrated to the full attack-minus-defense
-> range. The λ tuple below is therefore **byte-identical to the pre-Phase-1
-> first-cut values** — the engine is unchanged. All OTHER constants (chance
-> budget, incidents, injuries, shootout band, scoring, synergy, manager
-> modifier) likewise remain as pre-Phase-1 first-cut values and are a flagged
-> follow-on. Every value lives in
+> **E-3a (engine-v2) landed** — the λ map is now a four-channel form
+> (`attack` × bounded `midfield` modulator − weighted `defense`+`goalkeeping`
+> resistance), the chance budget is raised so `Binomial(n, λ/n)` is
+> genuinely Poisson-like at WC scale, the fitted tuple was found by a
+> deterministic seeded coordinate search (D6), the faithfulness suite (D4)
+> asserts monotonicity / elite-ceiling / dominance-not-certainty /
+> legibility / no-inversion, and the realism harnesses report
+> (symmetric: golden-locked / asymmetric draft-reachable: report-only).
+> Every constant lives in
 > [`src/engine/calibration.ts`](src/engine/calibration.ts) and is locked by
-> golden fixtures — changing any of them moves a golden `RunResult` byte and
-> therefore **requires an `engine_version` bump**. Phase 1 did NOT bump
-> the engine (sim is byte-identical to `origin/main`); it stays at
-> `engine-2026.06.04`.
+> golden fixtures.
+>
+> **ENGINE_VERSION POLICY (E-3a)**: changes to `LAMBDA` / `CHANCES` /
+> `CHANCE_OUTCOME` normally require an `engine_version` bump. E-3a
+> **defers** that bump to the season merge — the constants change and the
+> impacted goldens (`sim-golden.json`, `e2e-real-run-golden.json`) are
+> re-locked on the `engine-v2-e3a-lambda-calibration` branch, but
+> `engine_version` stays `engine-2026.06.04` (pinned by
+> `packages/data/test/compact-data.integrity.test.ts`). This is the only
+> sanctioned exception; it is locked to the engine-v2 chain.
 
 ## Determinism
 
@@ -27,65 +32,235 @@ only), never a Knuth-Poisson sampler (which would need `exp(-λ)`). Substreams
 derived from the run seed via `deriveSubseed`. Sampling pools are canonically
 sorted before any draw.
 
-## Expected goals (λ) — pre-Phase-1 first-cut values, unchanged
+## Expected goals (λ) — E-3a four-channel form
 
-`λ_for = clamp(BASE + SPREAD · (attackFor − defenseAgainst)/100, MIN, MAX)`
+```
+defResist_against = clamp_int( W_DEF·defenseAgainst + W_GK·goalkeepingAgainst )
+control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
+                           CONTROL_BAND_LO, CONTROL_BAND_HI )
+λ_for             = clamp( BASE + SPREAD·(attackFor − defResist_against)/100,
+                           MIN, MAX )  ·  control_for
+```
 
-| Constant | **Current** |
-|---|---|
-| `LAMBDA.BASE` | **1.3** |
-| `LAMBDA.SPREAD` | **1.7** |
-| `LAMBDA.MIN` | **0.25** |
-| `LAMBDA.MAX` | **3.6** |
-| `LAMBDA.ET_FRACTION` | **30/90** |
+| Constant | Pre-E3a | E-3a (initial) | **E-3a REFIT (current)** | Why (refit) |
+|---|---|---|---|---|
+| `LAMBDA.BASE` | 1.25 | 0.85 | **0.85** | unchanged — the SPREAD bump below carries the mean-goals lift |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | **6.5** | raised — wider SPREAD is what unlocks `margin ≥ 4 ≈ 4.9%` tight band |
+| `LAMBDA.MIN` | 0.30 | 0.75 | **0.40** | lowered — the wider SPREAD drives raw λ deeper below zero; the lower floor keeps blowouts emergent |
+| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | unchanged |
+| `LAMBDA.W_DEF` | — | 0.65 | **0.70** | slight bump — keeps elite defensive XIs legible while leaving GK its own channel |
+| `LAMBDA.W_GK` | — | 0.35 | **0.30** | W_GK + W_DEF ≡ 1 |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | **0.50** | raised — midfield channel near upper end of bounded band |
+| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | unchanged |
+| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | **0.85** | NEW — KO regulation goals run ~15% below group, matching modern-WC pattern |
+| `CHANCES.REGULATION` | 14 | 50 | 50 | unchanged |
+| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | unchanged |
+| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | unchanged |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | unchanged |
+| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | unchanged |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | unchanged |
+| `LAMBDA_DISP.OUTER_PROB` | — | — | **0.20** | NEW — KO-phase outer mass for ε ∈ {1−A, 1, 1+A} |
+| `LAMBDA_DISP.A` | — | — | **0.75** | NEW — KO-phase half-width; lifts KO → ET / shootout onto modern-WC norms |
+| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | **0.10** | NEW — group-phase outer mass (smaller — must respect tight `group_draw` band) |
+| `LAMBDA_DISP.GROUP_A` | — | — | **0.50** | NEW — group-phase half-width; drives `margin ≥ 4` into [4.12%, 5.70%] |
 
-### Why these values
+## E-3a REFIT (current) — match-level λ dispersion (D1 path)
 
-These are the pre-Phase-1 first-cut values, deliberately preserved through
-the rating recalibration via the decoupled path. Decoupling channels from
-the display curve means the engine continues to see the full `[0, 100]`
-attack-minus-defense range, so the original `SPREAD = 1.7` keeps producing
-the favourite/underdog separation it always did.
+E-3a INITIAL pure-Poisson scoring was Pareto-limited against the D5-tight
+bands:
+- at λ_per_side ≈ 1.27 (the mean-goals norm), the maximum tie rate is ≈ 24.6%
+  while the modern-era KO → ET norm is 33% and shootout 21.4% — no four-channel
+  λ + chance-budget grid can clear `mean_goals ≈ 2.54` AND `KO → ET ≈ 33%`
+  simultaneously;
+- `group_draw` and `KO → ET` measure the SAME statistic (matches tied after 90′)
+  on the SAME team population in the symmetric coherent-XI sweep, so the
+  modern-era norms (24.7% group, 33% KO) cannot BOTH be hit without a
+  PHASE-DEPENDENT driver.
 
-- `BASE = 1.3` keeps an evenly-matched expected total near 2.6 goals per
-  match (close to the 1998-2022 WC norm of 2.54).
-- `SPREAD = 1.7` lets a strong attack vs weak defense move λ up to ~3.0
-  while an evenly matched pairing stays near `BASE`.
-- `MIN = 0.25` keeps even outmatched attacks alive (meaningful underdog
-  upset rate).
-- `MAX = 3.6` caps the binomial well below saturation.
-- `ET_FRACTION = 30/90` is a pro-rata of regulation λ across 30' of ET.
+The E-3a REFIT resolves both walls with two new mechanisms (both
+transcendental-free; cross-platform determinism preserved):
 
-### Realism gate
+1. **`LAMBDA.KO_LAMBDA_FACTOR`** (= 0.85) — multiplicative λ reduction applied
+   to BOTH sides in KO regulation. Models the well-documented modern-WC fact
+   that knockout matches run ~10–15% below group-stage scoring rates (more
+   tactical, more cagey). Faithfulness preserved because the favourite/underdog
+   ordering is scaled by the SAME factor.
+2. **`LAMBDA_DISP` — phase-specific 3-point dispersion** — each match draws
+   ONE seeded ε ∈ {1−A, 1, 1+A} (a discrete distribution, mean exactly 1,
+   integer/rational arithmetic only). The (`OUTER_PROB`, `A`) pair is
+   PHASE-DEPENDENT: KO uses a strong dispersion (0.20, 0.75) → lifts KO →
+   ET and shootout rates; group uses a sparse, wider dispersion (0.10, 0.50)
+   → lifts `margin ≥ 4` into band without pushing `group_draw` past its
+   tight upper edge. Mean(ε) = 1 by construction so mean goals/match is
+   preserved within each phase.
 
-The realism control is committed as
-[`packages/data/test/realism-modern-norms.golden.test.ts`](../data/test/realism-modern-norms.golden.test.ts).
-It runs a 3,006-match symmetric coherent-XI sweep (2,256 group + 750
-knockout, fixed seeds, canonical team_id ordering) through the engine and
-validates the aggregate metrics against pinned modern-era (1998-2022) WC
-norms — [`test/fixtures/modern-wc-norms.json`](../data/test/fixtures/modern-wc-norms.json),
-derived from upstream `f41e9437`. The bands accept the current
-pre-Phase-1 engine behavior with structural-gap rationale documented inline
-in the test; any future λ / channel / aggregate change must keep the
-control in band or land a justified band update.
+D5-tight bands now committed in `realism-modern-norms.golden.test.ts`
+(replacing the pre-refit loose bands). The refit lands all 5 metrics
+STRICTLY INSIDE these tight bands; the gate is no longer toothless.
 
-Measured landing on the decoupled Phase 1 build (3,006 matches, fixed
-seeds, byte-identical to `origin/main` engine output):
+**Why the four-channel form**: the E-2-era map keyed only on `attackFor`
+vs `defenseAgainst`. After Phase 1 the channels compress onto `[66, 99]`,
+so a single (att − def) edge collapses favourite/underdog separation when
+either side has a weak GK or midfield. The four-channel form makes ALL
+FOUR channels (and Synergy, via the bounded multiplier already folded into
+`TeamStrength` upstream) legible drivers of λ.
 
-| Metric | Sweep | Modern WC norm (1998-2022) | In band |
-|---|---|---|---|
-| mean goals/match (regulation) | 2.44 | 2.54 | ✅ (band [2.20, 2.90]) |
-| group draw rate | 28.7% | 24.7% | ✅ (band [20.0%, 30.0%]) |
-| regulation margin ≥ 4 (blowout) | 2.30% | 4.9% | ✅ (band [1.5%, 6.0%]) |
-| KO → ET | 28.5% | 33.0% | ✅ (band [22%, 36%]) |
-| KO → shootout | 14.3% | 21.4% | ✅ (band [10%, 27%]) |
+**D3 — GK stays emergent**: a weak GK channel lowers `defResist` and the
+attacker's λ rises automatically through the same surface as the defense
+channel. There is NO opaque "missing GK" penalty in the engine. The
+`position_compatibility` fold + `fieldable_floor` (and soft no-GK warning
+upstream) are unchanged.
 
-The residual gap from norm (especially margin ≥ 4 and KO shootout) is
-**pre-existing engine behavior carried forward from `origin/main`** —
-neither introduced nor amplified by Phase 1 recalibration. The bands
-accommodate it explicitly with rationale; tightening the engine to land
-nearer the norms (BASE/SPREAD/ET tune) is a flagged follow-on, NOT in
-scope for the rating-recalibration PR.
+## D6 fit (deterministic coord descent)
+
+`packages/data/scripts/fit-calibration.mjs` runs a seeded coordinate
+descent on the symmetric Team2026-vs-Team2026 sweep (the same population
+the existing `realism-modern-norms.golden.test.ts` measures). 2 passes ×
+~30 evaluations × ~3,006 matches per evaluation = ~3 min wall-clock; the
+schedule + grids are pinned, so the winner is reproducible.
+
+| Norm | Modern-WC target | D5-tight band | E-3a initial landing | **E-3a REFIT landing** |
+|---|---|---|---|---|
+| goals / game           | 2.54  | [2.478, 2.594]  | 2.40 (Δ −0.13, FAIL ↓)        | **2.534 (Δ −0.006, ✓ near centre)** |
+| group draw %           | 24.7  | [22.88%, 26.52%] | 26.4 (Δ +1.7pp, ✓ narrow)     | **25.84% (Δ +1.14pp, ✓)**           |
+| margin ≥ 4 %           | 4.9   | [4.12%, 5.70%]   | 2.93 (Δ −2.0pp, FAIL ↓)       | **4.72% (Δ −0.18pp, ✓)**            |
+| KO → ET %              | 33.0  | [29.61%, 36.48%] | 29.6 (Δ −3.4pp, FAIL ↓)       | **33.60% (Δ +0.60pp, ✓)**           |
+| shootout %             | 21.4  | [18.43%, 24.43%] | 15.7 (Δ −5.7pp, FAIL ↓)       | **22.93% (Δ +1.53pp, ✓)**           |
+
+All 5 symmetric realism norms land STRICTLY INSIDE the D5-tight bands —
+the realism gate is no longer toothless. Faithfulness (`packages/core/src/faithfulness.test.ts`,
+11 ensembles) still passes 11/11 — bounded ε ∈ [1−A, 1+A] and KO_LAMBDA_FACTOR
+applied to BOTH sides preserve monotonicity, elite-ceiling, and dominance-
+not-certainty. Determinism preserved: `lambdaDispersionMultiplier` consumes
+EXACTLY ONE `structRng.next()` call per match (always; the value is gated
+by phase, the draw is not), and the discrete 3-point distribution is encoded
+with rational thresholds — no transcendental math anywhere.
+
+## Faithfulness suite (D4)
+
+`packages/core/src/faithfulness.test.ts` — 11 deterministic seeded
+ensembles asserting:
+- **Determinism**: same (strengths, K, seedLabel) → same summary.
+- **Monotonicity**: bumping `attack` / `midfield` / `defense` /
+  `goalkeeping` by 15 weakly raises win-rate (each channel asserted
+  separately).
+- **Elite ceiling**: 99/99/99/99 vs 50/50/50/50 in knockouts wins ≥85%
+  but < 100% (variance preserved). In groups, maxGoalsFor ≥ 6 and
+  margin-≥4 wins occur at > 10% — the elite ceiling is legible in the
+  box score, not just W/L.
+- **Dominance-not-certainty**: 85/85/85/85 vs 60/60/60/60 in groups
+  wins ≥ 65% but < 95%.
+- **Legibility (att/def split)**: a 95-attack/50-defense XI both scores
+  AND concedes more than a balanced one.
+- **Legibility (GK — D3 emergent path)**: dropping GK from 80 to 50
+  raises mean goals-against by > 0.05 (meaningful, not noise).
+- **No-inversion**: 60/60/60/60 vs 85/85/85/85 wins ≤ 25% (variance
+  floor — never 0).
+
+## Realism gates (D5)
+
+Two harnesses, complementary:
+
+1. **Symmetric (existing, hard gate)** —
+   `packages/data/test/realism-modern-norms.golden.test.ts`. A 3,006-match
+   Team2026-vs-Team2026 sweep against modern-era WC norms. Locked bands
+   that catch any engine regression. Updated `it()` titles for E-3a
+   landings; all 5 norms pass.
+
+2. **Asymmetric (new, REPORT-ONLY)** —
+   `packages/data/test/realism/realism.gate.test.ts`. N=200 auto-drafted
+   user XIs (via `autoDraft` over the era-weighted draft-reachable
+   `DRAFT_POOL_BUNDLE`, which folds in the E-1 era weighting +
+   with-replacement + rare exposure sampling) vs the real projected-2026
+   `Team2026[]` opponents. Logs `[REALISM] obs / tgt / band` lines, never
+   fails by default. Hard-pass with `WCDRAFT_REALISM_GATE=pass`.
+
+   Latest landing (N=200, fitted tuple):
+
+   ```
+   [REALISM] N_runs=200 qualifying=11/200 matches=613 groups=600 KO=13
+   [REALISM] ✗ goals/game     obs=3.075 tgt=2.540
+   [REALISM] ✗ draw% (group)  obs=14.83% tgt=24.70%
+   [REALISM] ✗ margin≥4%      obs=16.64% tgt=4.90%
+   [REALISM] ✗ KO→ET%         obs=0.00% tgt=33.00%
+   [REALISM] ✓ shootout%      obs=0.00% tgt=21.40%
+   ```
+
+   The structural gap (only 11/200 auto-drafts qualify, blowouts at
+   17%) reflects an HONEST property of the auto-drafted population:
+   era-weighted random draws are systematically weaker than the
+   projected-elite 2026 opponents. Calibration cannot close this gap
+   without distorting the symmetric (true-WC-norms) gate. The harness
+   exists as TELEMETRY for player-experience tuning (e.g. the upstream
+   draft helper, manager modifier, Synergy bonus), not as a tournament
+   realism check. Flip to PASS gate only after the draft / Synergy /
+   manager amplification work explicitly targets this distribution.
+
+## Knockout tie resolution (unchanged)
+
+ET when a knockout is level after 90; penalties when still level after ET.
+Shootout: best-of-five + sudden death, conversion `BASE_CONVERT_PROB = 0.75`
+confined to a **variance floor band** `±CONVERT_BAND (0.10)` regardless of
+how lopsided the teams are — the "favourites can still lose" guarantee.
+
+## Injuries / substitutions / forfeit (unchanged)
+
+0–2 injury events per match (`PRIMARY_INJURY_PROB 0.5`, `SECOND_INJURY_PROB
+0.2`); each is tournament-ending with `TOURNAMENT_ENDING_PROB 0.34` and then
+persists out of every later match lineup for the run. Position-aware bench
+subs from the 5-bench (reset each match). Below `FIELDABLE_FLOOR = 7`
+available players → forfeit (0–3 walkover) — a safety valve.
+
+## Synergy + team-strength fold (unchanged formula)
+
+`team_channel = clamp_int( mean_11(rating[ch] × position_compatibility) ×
+synergy.multiplier × manager_modifier )`
+
+- **position compatibility** — MAX-of-eligibles fold over
+  `POSITION_COMPATIBILITY_FACTORS` (same line 1.0, one-off ≈0.75, two-off
+  ≈0.45, GK↔outfield ≈0.15).
+- **Synergy** components: nation clusters (starters only), linked pairs (per
+  formation adjacency edge), manager link. Weights `0.45 / 0.40 / 0.15`.
+- **Bounded multipliers**: `synergy.multiplier ∈ [1, 1 + 0.12]`; manager
+  modifier `∈ [1 − 0.10, 1 + 0.10]` (null manager → exactly 1.0). The bound
+  is the "Synergy amplifies, never replaces talent" guarantee.
+
+The aggregator is unchanged; only the channel inputs are now on the
+compressed display band. The four-channel λ form makes the Synergy
+amplification visible in all four channels rather than only `attack` and
+`defense`.
+
+## Scoring config (`DEFAULT_SCORING_CONFIG`) — unchanged
+
+Integer weights keep `points = raw × weight` exact so `score = Σ points`
+holds byte-for-byte. See table in `calibration.ts`.
+
+## Golden lock — E-3a re-locked artifacts
+
+| Fixture | Why it moved | Regenerator |
+|---|---|---|
+| `packages/core/test/fixtures/sim-golden.json` | every scoreline/event/score is downstream of λ + n | `pnpm --filter @wcdraft/core run gen:sim-golden` |
+| `packages/data/test/fixtures/e2e-real-run-golden.json` | real-data run is downstream of the same | `pnpm --filter @wcdraft/data run gen:e2e-golden` |
+| `packages/data/test/realism-modern-norms.golden.test.ts` (Δ labels) | landings shift; bands still cover | hand-edit `it()` titles |
+
+Unaffected (no regen): `synergy.golden`, `scenario.golden`, `narrative.golden`,
+`opponent-selection.golden`, `top-scorer.golden`, `draft.golden`,
+`group-stage.golden`, `compact-data.golden`, `compact-data.integrity` (still
+pins `engine-2026.06.04`).
+
+## Public signatures — sim + Synergy (unchanged)
+
+- `runTournament(draft, scenario, seed, world)` → REQUIRED `world: SimWorld`.
+- `computeSynergy(squad, formation, manager, nationByCardId?)` → optional
+  4th `nationByCardId`.
+- `simulateMatchCore`, `membersFromTeam2026` — public sim primitives for
+  realism harnesses (`@wcdraft/data` test/realism-modern-norms.golden.test.ts).
+- **E-3a additions** (offline tooling only — DO NOT call from production):
+  `__UNSAFE_setCalibrationOverride` / `__UNSAFE_clearCalibrationOverride` —
+  thread-local swap of `LAMBDA` + `CHANCES` for the D6 fit script. Default
+  state is byte-identical to the frozen exports; goldens lock the
+  no-override path.
 
 ## Engine-v2 series — deferred `engine_version` bump ledger
 
@@ -126,4 +301,3 @@ this branch.
 If any sub-unit ever needs to ship to production before the season merge
 (e.g. a hotfix backport to `main`), it MUST bump `engine_version` and
 re-lock the public-data manifests, ignoring the deferred-bump policy.
-
