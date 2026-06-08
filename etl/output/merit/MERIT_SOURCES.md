@@ -4,8 +4,8 @@
 
 - **Intake version:** `career-stature-1.0.0`
 - **Scope:** coverage proof only — **no rating output, engine, or compact data is changed by this build.**
-- **Linked facts:** 950 across 646 distinct players (men's World Cup pool).
-- **Withheld to review (never assigned):** 605 distinct ambiguities.
+- **Linked facts:** 944 across 644 distinct players (men's World Cup pool).
+- **Withheld to review (never assigned):** 612 distinct ambiguities.
 
 
 ## Linked players by signal family × player era
@@ -15,7 +15,7 @@
 | wc_legacy | 21 | 47 | 41 | 109 |
 | annual_recognition | 2 | 42 | 36 | 80 |
 | international_record | 21 | 75 | 358 | 454 |
-| retrospective_selection | 31 | 107 | 63 | 201 |
+| retrospective_selection | 29 | 106 | 62 | 197 |
 | club_honors | — | — | — | _deferred (E-4b), weight 0.0_ |
 
 ## Linked facts per source
@@ -23,10 +23,10 @@
 | Source | Family | Linked facts |
 |---|---|---|
 | European Player of the Year (Ballon d'Or) — annual winners | annual_recognition | 56 |
-| IFFHS Century elections — world/continental player-of-the-century polls | retrospective_selection | 123 |
+| IFFHS Century elections — world/continental player-of-the-century polls | retrospective_selection | 119 |
 | IFFHS World's Best Player — annual winners | annual_recognition | 8 |
 | Players with 100+ international caps / 30+ international goals | international_record | 454 |
-| 2004 living-legends list — 125 greatest living players selection | retrospective_selection | 116 |
+| 2004 living-legends list — 125 greatest living players selection | retrospective_selection | 114 |
 | South American Player of the Year — annual winners | annual_recognition | 52 |
 | wc_individual_awards_native | wc_legacy | 141 |
 
@@ -41,6 +41,7 @@
 | Reason | Distinct names |
 |---|---|
 | multi_candidate | 3 |
+| nation_divergent | 7 |
 | nation_mismatch | 1 |
 | no_candidate | 599 |
 | weak_unverified | 2 |

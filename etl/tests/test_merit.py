@@ -113,6 +113,13 @@ def test_nation_resolver_handles_codes_names_and_successors():
     # A successor-spanning code resolves to a SET that includes both states.
     ger = r.resolve("Ger")
     assert len(ger) >= 2  # Germany + West Germany (+ East Germany)
+    # Full-name tokens are successor-lineage expanded: "Germany" corroborates a
+    # West-Germany card, "Russia" corroborates a Soviet-Union card.
+    nid = {n["canonical_name"]: n["nation_id"] for n in nations}
+    assert nid["West Germany"] in r.resolve("Germany")
+    assert nid["Soviet Union"] in r.resolve("Russia")
+    # ...but unrelated nations are never merged.
+    assert nid["Spain"] not in r.resolve("Argentina")
     # An unmapped token is honestly empty (nation simply unavailable).
     assert r.resolve("ZZZ") == frozenset()
     assert r.resolve(None) == frozenset()
@@ -166,12 +173,39 @@ def test_weah_is_not_mislinked_to_his_son(built):
 
 
 def test_review_rows_are_auditable_and_never_assigned(built):
-    valid = {"no_candidate", "multi_candidate", "nation_mismatch", "weak_unverified"}
+    valid = {
+        "no_candidate",
+        "multi_candidate",
+        "nation_mismatch",
+        "nation_divergent",
+        "weak_unverified",
+    }
     for r in built["review"]:
         assert r["reason"] in valid, r["reason"]
         assert r["raw_name"]
         assert r["occurrences"] >= 1
         assert isinstance(r["candidates"], list)
+
+
+def test_namesake_from_another_country_is_withheld_not_mislinked(built):
+    """A full-name match whose source nation contradicts the only canonical card
+    (no successor-lineage overlap, no career-year corroboration) is WITHHELD, not
+    assigned — it is likely a coincidental namesake. The IFFHS Century lists the
+    Ivorian 'Youssouf Fofana'; the only such card in the men's pool is the modern
+    French player (P-23304, World Cup 2022), so the record must NOT link to him."""
+    assert not any(f["player_id"] == "P-23304" for f in built["facts"])
+    withheld = [
+        r
+        for r in built["review"]
+        if r["reason"] == "nation_divergent" and "fofana" in r["raw_name"].lower()
+    ]
+    assert withheld, "the Ivorian Fofana record must be withheld for review"
+
+
+def test_no_fact_is_assigned_against_a_contradicting_nation(built):
+    """No assigned fact may carry a 'divergent' method — nation contradictions are
+    withheld, never silently assigned with a flag."""
+    assert not [f for f in built["facts"] if "divergent" in f["method"]]
 
 
 def test_no_fact_is_a_fabricated_zero(built):

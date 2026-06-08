@@ -152,14 +152,23 @@ def _link_one(rec: MeritRecord, canon: _Canon) -> tuple[str | None, str, list[st
         pid = cands[0]
         nation_ok = bool(nat) and bool(canon.nations.get(pid, frozenset()) & nat)
         nation_contradicts = bool(nat) and not nation_ok
+        year_ok = _year_agrees(pid, rec, canon)
         if tier == "full_name":
-            # Distinctive full name — accept; note if nation contradicts as method.
-            method = "full_name" + ("" if not nation_contradicts else "_nation_divergent")
-            return pid, method, cands
+            # A distinctive full name links on its own ONLY while nothing contradicts
+            # it. A resolved nation that does not overlap the card (after successor-
+            # lineage expansion) is a contradiction — it may be a coincidental
+            # namesake from another country (e.g. a modern player sharing a name with
+            # a non-World-Cup great), so the link is WITHHELD unless career year
+            # independently corroborates it. Nation simply being unknown never blocks.
+            if not nation_contradicts:
+                return pid, "full_name" + ("+nation" if nation_ok else ""), cands
+            if year_ok:
+                return pid, "full_name+year", cands
+            return None, "nation_divergent", cands
         # Weaker tier (surname / key name): require positive corroboration.
         if nation_ok:
             return pid, f"{tier}+nation", cands
-        if not nat and _year_agrees(pid, rec, canon):
+        if not nat and year_ok:
             return pid, f"{tier}+year", cands
         reason = "nation_mismatch" if nation_contradicts else "weak_unverified"
         return None, reason, cands

@@ -46,6 +46,81 @@
       "year": 1995
     },
     {
+      "candidates": [
+        {
+          "player_id": "P-34403",
+          "player_name": "Alfredo Di Stéfano"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 3,
+      "raw_name": "Alfredo di Stéfano",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-51668",
+          "player_name": "Josef Bican"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Czechoslovakia",
+      "occurrences": 2,
+      "raw_name": "Josef Bican",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-12682",
+          "player_name": "Omar Sívori"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Omar Sivori",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-03638",
+          "player_name": "Raimundo Orsi"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Raimundo Orsi",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-23304",
+          "player_name": "Youssouf Fofana"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Ivory Coast",
+      "occurrences": 1,
+      "raw_name": "Youssouf Fofana",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_century",
+      "year": null
+    },
+    {
       "candidates": [],
       "family": "retrospective_selection",
       "nation_token": "Morocco",
@@ -5928,6 +6003,36 @@
       "year": 2004
     },
     {
+      "candidates": [
+        {
+          "player_id": "P-34403",
+          "player_name": "Alfredo Di Stéfano"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Alfredo Di Stéfano",
+      "reason": "nation_divergent",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-12682",
+          "player_name": "Omar Sívori"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Omar Sívori",
+      "reason": "nation_divergent",
+      "source_id": "living_legends_2004",
+      "year": 2004
+    },
+    {
       "candidates": [],
       "family": "retrospective_selection",
       "nation_token": "Ghana",
@@ -6161,7 +6266,7 @@
       "year": 2024
     }
   ],
-  "review_count": 605,
+  "review_count": 612,
   "version": "career-stature-1.0.0",
-  "withheld_occurrences": 695
+  "withheld_occurrences": 705
 }

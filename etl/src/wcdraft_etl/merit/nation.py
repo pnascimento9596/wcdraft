@@ -84,12 +84,27 @@ class NationResolver:
             if nid is not None:
                 self._by_name.setdefault(key, nid)
 
+        # Successor closure: a nation and the football-successor states it lists in
+        # its ``successor`` field (by T-id) form one equivalence group, so a token
+        # naming the predecessor corroborates a card on a successor and vice-versa
+        # (e.g. "Germany" <-> West/East Germany, "Russia" <-> Soviet Union). This is
+        # a SAME-LINEAGE relaxation; it does NOT merge unrelated nations.
+        self._succ: dict[str, frozenset[str]] = _successor_groups(nations)
+
     def _ids_for_names(self, names: tuple[str, ...]) -> frozenset[str]:
         ids = {self._by_name[norm(nm)] for nm in names if norm(nm) in self._by_name}
-        return frozenset(ids)
+        return self._expand(ids)
+
+    def _expand(self, ids: set[str] | frozenset[str]) -> frozenset[str]:
+        """Grow an id set to include each id's successor-lineage group."""
+        out: set[str] = set()
+        for nid in ids:
+            out |= self._succ.get(nid, {nid})
+        return frozenset(out)
 
     def resolve(self, token: str | None) -> frozenset[str]:
-        """Acceptable nation_ids for a raw token, or empty set if unmapped."""
+        """Acceptable nation_ids for a raw token (successor-lineage expanded), or
+        the empty set if the token is unmapped."""
         if not token:
             return frozenset()
         key = norm(token)
@@ -97,8 +112,40 @@ class NationResolver:
             return frozenset()
         # Full-name / alias match first (covers wiki + century/election lists).
         if key in self._by_name:
-            return frozenset({self._by_name[key]})
+            return self._expand({self._by_name[key]})
         # RSSSF 3-letter code legend (the two POY winner lists).
         if key in _RSSSF_CODE_LEGEND:
             return self._ids_for_names(_RSSSF_CODE_LEGEND[key])
         return frozenset()
+
+
+def _successor_groups(nations: list[dict]) -> dict[str, frozenset[str]]:
+    """Union-find over nation_ids: a nation is unioned with every T-id referenced in
+    its ``successor`` field. Returns id -> the full lineage group it belongs to."""
+    import re
+
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[max(ra, rb)] = min(ra, rb)
+
+    ids = {n["nation_id"] for n in nations}
+    for n in nations:
+        nid = n["nation_id"]
+        find(nid)
+        for ref in re.findall(r"T-\d+", str(n.get("successor") or "")):
+            if ref in ids:
+                union(nid, ref)
+    groups: dict[str, set[str]] = {}
+    for nid in ids:
+        groups.setdefault(find(nid), set()).add(nid)
+    return {nid: frozenset(groups[find(nid)]) for nid in ids}
