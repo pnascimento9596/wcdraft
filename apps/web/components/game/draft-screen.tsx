@@ -172,9 +172,7 @@ export function DraftScreen() {
               reqToken.current += 1;
               setMode({ kind: "loading" });
               loadGameData()
-                .then((gd) =>
-                  setMode({ kind: "formation_select", gameData: gd }),
-                )
+                .then((gd) => setMode({ kind: "formation_select", gameData: gd }))
                 .catch((err) => {
                   const d = describeGameError(err);
                   setMode({
@@ -262,13 +260,7 @@ function DraftAppBar({
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image
-          src="/brand/wcdraft-mark.svg"
-          alt="wcdraft"
-          width={28}
-          height={31}
-          priority
-        />
+        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Draft</span>
       </div>
       <div className={s.appBarMeter}>
@@ -332,17 +324,11 @@ function FormationSelect({
       <DraftAppBar spinNumber={null} progressPct={0} />
       <section className={s.formationSelect}>
         <div className={s.formationHead}>
-          <Image
-            src="/brand/wcdraft-lockup.svg"
-            alt="wcdraft"
-            width={240}
-            height={60}
-            priority
-          />
+          <Image src="/brand/wcdraft-lockup.svg" alt="wcdraft" width={240} height={60} priority />
           <h1 className={s.formationTitle}>Lock a formation</h1>
           <p className={s.formationSub}>
-            Your shape is committed the moment you lock. 17 spins, one entity per spin —
-            no rearranging afterwards.
+            Your shape is committed the moment you lock. 17 spins, one entity per spin — no
+            rearranging afterwards.
           </p>
         </div>
         <div className={s.formationGrid}>
@@ -444,6 +430,20 @@ function DraftBoard({
   const [anim, setAnim] = useState<SpinAnimState>("idle");
   const reducedMotion = usePrefersReducedMotion();
 
+  // Refs used to drive deterministic scroll alignment on two key
+  // transitions:
+  //  - assign-flow: picking a candidate scrolls the formation panel into
+  //    view so the slot picker is on screen (no manual scroll up).
+  //  - post-lock: locking advances the engine + flips phase to "spin", so
+  //    we scroll the window to the spin-stage origin to put the flags
+  //    card at the top of the viewport (no mid-page landing).
+  const formationPanelRef = useRef<HTMLElement | null>(null);
+  const lastSelectedPlayerRef = useRef<string | null>(null);
+  // Set by handleLock to signal the post-lock spin-stage scroll on next
+  // render. Tracked in a ref (not state) so it doesn't cause an extra
+  // render before the layout effect fires.
+  const justLockedRef = useRef(false);
+
   // Reset selection + spin flow whenever the active spin changes (incl. the
   // post-lock advance — this IS the re-spin swap back to the idle drum).
   useEffect(() => {
@@ -455,7 +455,45 @@ function DraftBoard({
     setTransitionError(null);
     setPhase("spin");
     setAnim("idle");
+    lastSelectedPlayerRef.current = null;
   }, [spin?.index]);
+
+  // Post-lock scroll alignment. handleLock sets `justLockedRef` AND
+  // `phase = "spin"` together; the spin-stage early-return swaps the
+  // whole DraftBoard tree on next render. We then scroll the window
+  // back to the origin so the spin-stage flags / drum land at the top
+  // of the viewport instead of wherever the user clicked the lockBar.
+  useEffect(() => {
+    if (!justLockedRef.current) return;
+    if (phase !== "spin") return;
+    justLockedRef.current = false;
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+  }, [phase, spin?.index, reducedMotion]);
+
+  // Assign-flow scroll. Selecting a player NAME from the candidate list
+  // should put the formation/slot picker on screen so the user assigns
+  // the slot without manual scroll-up. Triggered on a player selection
+  // ID change (manager selection has no slot to assign, so it does not
+  // scroll). Skipped when the formation panel is already in view.
+  useEffect(() => {
+    const id = sel?.kind === "player" ? sel.card.card_id : null;
+    if (!id) {
+      lastSelectedPlayerRef.current = null;
+      return;
+    }
+    if (id === lastSelectedPlayerRef.current) return;
+    lastSelectedPlayerRef.current = id;
+    const el = formationPanelRef.current;
+    if (!el || typeof window === "undefined") return;
+    const rect = el.getBoundingClientRect();
+    // Already at or above the viewport top (with a small slack) → no scroll.
+    if (rect.top >= 0 && rect.top <= 80) return;
+    el.scrollIntoView({
+      block: "start",
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [sel, reducedMotion]);
 
   // SPIN clicked: reduced-motion skips the 2–3s reveal straight to settled;
   // otherwise the drum animates and `onSettle` (animationend) flips to settled.
@@ -486,17 +524,12 @@ function DraftBoard({
         return bo - ao;
       }
       if (sortKey === "name") return a.name.localeCompare(b.name);
-      return (
-        ord[a.eligible_positions[0] ?? "MF"] - ord[b.eligible_positions[0] ?? "MF"]
-      );
+      return ord[a.eligible_positions[0] ?? "MF"] - ord[b.eligible_positions[0] ?? "MF"];
     });
   }, [candidates, search, posFilter, sortKey]);
 
   // Open vacant slots (engine truth).
-  const openSlots = useMemo(
-    () => draft.squad.filter((sl) => sl.card_id === null),
-    [draft.squad],
-  );
+  const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
 
   function bestSlotFor(card: PlayerCardView): string | null {
     const starterOpens = openSlots.filter((sl) => sl.is_starter);
@@ -525,10 +558,7 @@ function DraftBoard({
     if (sel?.kind !== "player") return null;
     const map: Record<string, number> = {};
     for (const slot of openSlots) {
-      map[slot.slot_id] = positionCompatibility(
-        sel.card.eligible_positions,
-        slot.slot_position,
-      );
+      map[slot.slot_id] = positionCompatibility(sel.card.eligible_positions, slot.slot_position);
     }
     return map;
   }, [sel, openSlots]);
@@ -536,20 +566,12 @@ function DraftBoard({
   // Synergy: base + preview.
   const currentManagerTournament = useMemo(
     () =>
-      draft.manager_card_id
-        ? managerTournamentFor(gameData.indexes, draft.manager_card_id)
-        : null,
+      draft.manager_card_id ? managerTournamentFor(gameData.indexes, draft.manager_card_id) : null,
     [gameData, draft.manager_card_id],
   );
 
   const baseSynergy: SynergyResult = useMemo(
-    () =>
-      computeSynergy(
-        draft.squad,
-        formation,
-        currentManagerTournament,
-        gameData.nationByCardId,
-      ),
+    () => computeSynergy(draft.squad, formation, currentManagerTournament, gameData.nationByCardId),
     [draft.squad, formation, currentManagerTournament, gameData.nationByCardId],
   );
 
@@ -560,23 +582,10 @@ function DraftBoard({
     }
     if (sel?.kind === "player" && selSlot) {
       const hyp = hypotheticalSquad(draft.squad, sel.card, selSlot);
-      return computeSynergy(
-        hyp,
-        formation,
-        currentManagerTournament,
-        gameData.nationByCardId,
-      );
+      return computeSynergy(hyp, formation, currentManagerTournament, gameData.nationByCardId);
     }
     return baseSynergy;
-  }, [
-    sel,
-    selSlot,
-    draft.squad,
-    formation,
-    currentManagerTournament,
-    gameData,
-    baseSynergy,
-  ]);
+  }, [sel, selSlot, draft.squad, formation, currentManagerTournament, gameData, baseSynergy]);
 
   const synergyDelta = previewSynergy.overall - baseSynergy.overall;
 
@@ -594,9 +603,7 @@ function DraftBoard({
     });
   }, [spin, draft.spins, gameData.indexes]);
 
-  const revealSynergyOverall = Number.isFinite(baseSynergy.overall)
-    ? baseSynergy.overall
-    : null;
+  const revealSynergyOverall = Number.isFinite(baseSynergy.overall) ? baseSynergy.overall : null;
   const revealSynergyMultiplier = Number.isFinite(baseSynergy.multiplier)
     ? baseSynergy.multiplier
     : null;
@@ -604,12 +611,10 @@ function DraftBoard({
   // Spun tournament year — drives the ERA / RARE tile on the spin stage. Real
   // engine value, null only on a data-lookup miss (honest fallback).
   const spinYear = spin
-    ? gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? null
+    ? (gameData.indexes.tournamentById.get(spin.tournament_id)?.year ?? null)
     : null;
   const spinResultLabel =
-    slotReveal !== null
-      ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}`
-      : null;
+    slotReveal !== null ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}` : null;
 
   // Lock pick → call core engine → save record.
   const handleLock = useCallback(() => {
@@ -624,12 +629,7 @@ function DraftBoard({
           setTransitionError("Pick a slot for this player.");
           return;
         }
-        nextDraft = pickPlayer(
-          gameData.catalog,
-          draft,
-          sel.card.card_id as CardId,
-          selSlot,
-        );
+        nextDraft = pickPlayer(gameData.catalog, draft, sel.card.card_id as CardId, selSlot);
       } else {
         nextDraft = pickManager(gameData.catalog, draft);
       }
@@ -646,7 +646,10 @@ function DraftBoard({
           : null;
       // Re-spin swap: snap back to the idle drum for the next spin in the same
       // commit as the record update, so the lineup for the next spin never
-      // flashes before the spin-stage reset effect runs.
+      // flashes before the spin-stage reset effect runs. Flag the post-lock
+      // scroll so the `phase === "spin"` re-render lands the flags/drum at
+      // the top of the viewport (handled in the scroll effect above).
+      justLockedRef.current = true;
       setPhase("spin");
       setAnim("idle");
       onRecordUpdate(updated, warning ?? persistenceWarning);
@@ -654,37 +657,24 @@ function DraftBoard({
       const wrapped =
         err instanceof DraftTransitionError
           ? err
-          : new DraftTransitionError(
-              err instanceof Error ? err.message : String(err),
-              err,
-            );
+          : new DraftTransitionError(err instanceof Error ? err.message : String(err), err);
       setTransitionError(wrapped.message);
     } finally {
       setCommitting(false);
       setSheetOpen(false);
     }
-  }, [
-    sel,
-    selSlot,
-    committing,
-    gameData,
-    draft,
-    record,
-    onRecordUpdate,
-    persistenceWarning,
-  ]);
+  }, [sel, selSlot, committing, gameData, draft, record, onRecordUpdate, persistenceWarning]);
 
   const selectedSlot =
     sel?.kind === "player" && selSlot
-      ? draft.squad.find((sl) => sl.slot_id === selSlot) ?? null
+      ? (draft.squad.find((sl) => sl.slot_id === selSlot) ?? null)
       : null;
   const selectedCompat =
     selectedSlot && sel?.kind === "player"
       ? positionCompatibility(sel.card.eligible_positions, selectedSlot.slot_position)
       : null;
 
-  const canLock =
-    sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
+  const canLock = sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Review CTA gates the entrance to
   // Simulate/Share. It MUST require the draft to be COMPLETE (all 17 spins
@@ -722,11 +712,7 @@ function DraftBoard({
 
   return (
     <div className={s.draftShell}>
-      <DraftAppBar
-        spinNumber={spinNumber}
-        progressPct={progressPct}
-        warning={persistenceWarning}
-      />
+      <DraftAppBar spinNumber={spinNumber} progressPct={progressPct} warning={persistenceWarning} />
 
       {/* Spin reveal → now compact context (full reveal lives on the spin stage) */}
       {complete ? (
@@ -746,38 +732,38 @@ function DraftBoard({
             </span>
             <span className={s.nowDraftingResult}>{spinResultLabel}</span>
           </div>
-          <button
-            type="button"
-            className={s.nowDraftingBack}
-            onClick={() => setPhase("spin")}
-          >
+          <button type="button" className={s.nowDraftingBack} onClick={() => setPhase("spin")}>
             ↺ Spin view
           </button>
         </section>
       ) : null}
 
       {/* Pitch + bench + manager */}
-      <section className={s.panel} aria-label="Your formation">
+      <section
+        ref={formationPanelRef}
+        className={`${s.panel} ${s.formationPanel}`}
+        aria-label="Your formation"
+      >
         <SynergyBar
           result={previewSynergy}
           delta={sel ? synergyDelta : null}
-          active={
-            starters.some((sl) => sl.card) || draft.manager_card_id !== null
-          }
+          active={starters.some((sl) => sl.card) || draft.manager_card_id !== null}
         />
         <div className={s.panelHead}>
-          <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>
-            {formation.name}
-          </h2>
+          <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
           <span className={`${s.panelMeta} ${s.squadCounter}`}>
             <span className={s.squadCounterCell}>
               <b>{starters.filter((sl) => sl.card).length}/11</b> XI
             </span>
-            <span className={s.squadCounterSep} aria-hidden="true">·</span>
+            <span className={s.squadCounterSep} aria-hidden="true">
+              ·
+            </span>
             <span className={s.squadCounterCell}>
               <b>{bench.filter((sl) => sl.card).length}/5</b> Bench
             </span>
-            <span className={s.squadCounterSep} aria-hidden="true">·</span>
+            <span className={s.squadCounterSep} aria-hidden="true">
+              ·
+            </span>
             <span className={s.squadCounterCell}>
               <b>{draft.manager_card_id ? "1" : "0"}/1</b> Mgr
             </span>
@@ -836,7 +822,6 @@ function DraftBoard({
             })}
           </div>
         </div>
-
       </section>
 
       {!validation.has_goalkeeper && fieldable ? (
@@ -845,8 +830,7 @@ function DraftBoard({
             <span className={s.gkWarnGlyph} aria-hidden="true">
               !
             </span>
-            No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal
-            penalty.
+            No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal penalty.
           </p>
         </section>
       ) : null}
@@ -926,9 +910,7 @@ function DraftBoard({
           ) : sel?.kind === "player" && selectedSlot && selectedCompat != null ? (
             <span>
               <b>{sel.card.name}</b> → <b>{selectedSlot.slot_position}</b>
-              <span
-                className={`${s.compatPill} ${s[`tier_${compatTier(selectedCompat)}`]!}`}
-              >
+              <span className={`${s.compatPill} ${s[`tier_${compatTier(selectedCompat)}`]!}`}>
                 {compatLabel(selectedCompat)} · {Math.round(selectedCompat * 100)}%
               </span>
             </span>
@@ -941,18 +923,12 @@ function DraftBoard({
               Draft complete — review your squad and prep for the run.
             </span>
           ) : (
-            <span className={s.lockHint}>
-              Select a player and a slot, or pick the manager.
-            </span>
+            <span className={s.lockHint}>Select a player and a slot, or pick the manager.</span>
           )}
         </div>
         <div className={s.lockActions}>
           {sel?.kind === "player" && openSlots.length > 0 ? (
-            <button
-              type="button"
-              className="btn btn--ghost"
-              onClick={() => setSheetOpen(true)}
-            >
+            <button type="button" className="btn btn--ghost" onClick={() => setSheetOpen(true)}>
               Choose slot
             </button>
           ) : null}
@@ -995,10 +971,7 @@ function DraftBoard({
             </div>
             <div className={s.sheetGrid}>
               {sortSlots(openSlots).map((slot) => {
-                const c = positionCompatibility(
-                  sel.card.eligible_positions,
-                  slot.slot_position,
-                );
+                const c = positionCompatibility(sel.card.eligible_positions, slot.slot_position);
                 const tier = compatTier(c);
                 const isSel = selSlot === slot.slot_id;
                 return (
@@ -1014,9 +987,7 @@ function DraftBoard({
                     }}
                   >
                     <span className={s.sheetSlotPos}>{slot.slot_position}</span>
-                    <span className={s.sheetSlotKind}>
-                      {slot.is_starter ? "Starter" : "Bench"}
-                    </span>
+                    <span className={s.sheetSlotKind}>{slot.is_starter ? "Starter" : "Bench"}</span>
                     <span className={s.sheetSlotCompat}>{Math.round(c * 100)}%</span>
                   </button>
                 );
@@ -1056,4 +1027,3 @@ function sortSlots(slots: readonly SquadSlot[]): SquadSlot[] {
     return a.slot_id.localeCompare(b.slot_id);
   });
 }
-

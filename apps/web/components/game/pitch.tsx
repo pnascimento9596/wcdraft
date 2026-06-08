@@ -13,6 +13,7 @@ import {
   isSupportedFormationId,
   type FormationVisualSlot,
 } from "@/lib/game/formation-layout";
+import { adjustPitchLayoutForRender } from "@/lib/game/pitch-layout";
 import { buildSynergySegments } from "@/lib/game/synergy-overlay";
 import s from "./game.module.css";
 
@@ -51,7 +52,7 @@ export function Pitch({
   onSlotSelect,
   interactive = false,
 }: PitchProps) {
-  const visualSlots: FormationVisualSlot[] = isSupportedFormationId(formationId)
+  const canonicalSlots: FormationVisualSlot[] = isSupportedFormationId(formationId)
     ? getFormationVisualSlots(formationId)
     : starters.map((sl, i) => ({
         slot_id: sl.slot_id,
@@ -61,10 +62,15 @@ export function Pitch({
         x_pct: 10 + (i % 5) * 20,
         y_pct: 10 + Math.floor(i / 5) * 20,
       }));
+  // Render-layer anti-overlap. Canonical `formations.json` is the layout
+  // truth, but at narrow mobile widths chip AABBs collide in dense
+  // central stacks (5-3-2 GK/CB, diamond mid). The helper returns a
+  // copy with x/y nudged just enough to break overlaps; the JSON is
+  // never mutated. Chips AND synergy link endpoints must read from the
+  // same adjusted map or the lines miss the chips.
+  const visualSlots = adjustPitchLayoutForRender(canonicalSlots);
   const visualBySlot = new Map(visualSlots.map((v) => [v.slot_id, v]));
-  const filledSlotIds = new Set(
-    starters.filter((sl) => !!sl.card).map((sl) => sl.slot_id),
-  );
+  const filledSlotIds = new Set(starters.filter((sl) => !!sl.card).map((sl) => sl.slot_id));
 
   // Honest-state: a same-nation link is only ever drawn between TWO
   // filled slots. Empty slots → no segments. The headline Synergy bar
@@ -154,10 +160,7 @@ function SlotChip({
     : `${slot.slot_position} — empty slot`;
 
   const shapeMarker = (
-    <span
-      className={`${s.slotShapeMarker} ${s[`slotShapeMarker_${shape}`]!}`}
-      aria-hidden="true"
-    />
+    <span className={`${s.slotShapeMarker} ${s[`slotShapeMarker_${shape}`]!}`} aria-hidden="true" />
   );
 
   const content: ReactNode = filled ? (
