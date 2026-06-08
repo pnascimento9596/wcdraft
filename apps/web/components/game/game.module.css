@@ -779,7 +779,11 @@ button.benchSlot:not(:disabled):hover {
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--field), color-mix(in srgb, var(--field) 60%, var(--accent)));
+  background: linear-gradient(
+    to right,
+    var(--field),
+    color-mix(in srgb, var(--field) 60%, var(--accent))
+  );
 }
 .channelVal {
   font-family: var(--font-display), sans-serif;
@@ -1086,7 +1090,11 @@ button.benchSlot:not(:disabled):hover {
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(to right, var(--field), color-mix(in srgb, var(--field) 55%, var(--accent)));
+  background: linear-gradient(
+    to right,
+    var(--field),
+    color-mix(in srgb, var(--field) 55%, var(--accent))
+  );
 }
 .lineVal {
   font-family: var(--font-display), sans-serif;
@@ -1428,7 +1436,11 @@ button.benchSlot:not(:disabled):hover {
   width: 100%;
   padding: clamp(1.2rem, 4vw, 2rem);
   border-radius: 18px;
-  background: linear-gradient(150deg, var(--bg-invert), color-mix(in srgb, var(--field) 70%, var(--bg-invert)));
+  background: linear-gradient(
+    150deg,
+    var(--bg-invert),
+    color-mix(in srgb, var(--field) 70%, var(--bg-invert))
+  );
   color: var(--field-ink);
   border: 3px solid var(--accent);
   overflow: hidden;
@@ -1730,7 +1742,9 @@ button.benchSlot:not(:disabled):hover {
   padding: 10px;
   gap: 8px;
   cursor: pointer;
-  transition: transform var(--d-fast) var(--e-snap), box-shadow var(--d-fast),
+  transition:
+    transform var(--d-fast) var(--e-snap),
+    box-shadow var(--d-fast),
     border-color var(--d-fast);
   text-align: left;
   color: inherit;
@@ -1937,7 +1951,9 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-xs);
   font-family: var(--f-mono);
   cursor: pointer;
-  transition: box-shadow var(--d-fast), border-color var(--d-fast),
+  transition:
+    box-shadow var(--d-fast),
+    border-color var(--d-fast),
     background-color var(--d-fast);
 }
 
@@ -1997,16 +2013,24 @@ button.benchSlot:not(:disabled):hover {
   border-left-width: 1.5px;
 }
 .pitch .slot.tierPreview_ideal {
-  box-shadow: 0 0 0 2px #5fbf86, inset 3px 0 0 0 #5fbf86;
+  box-shadow:
+    0 0 0 2px #5fbf86,
+    inset 3px 0 0 0 #5fbf86;
 }
 .pitch .slot.tierPreview_ok {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55), inset 3px 0 0 0 rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.55),
+    inset 3px 0 0 0 rgba(255, 255, 255, 0.55);
 }
 .pitch .slot.tierPreview_stretch {
-  box-shadow: 0 0 0 2px #e9b949, inset 3px 0 0 0 #e9b949;
+  box-shadow:
+    0 0 0 2px #e9b949,
+    inset 3px 0 0 0 #e9b949;
 }
 .pitch .slot.tierPreview_misfit {
-  box-shadow: 0 0 0 2px var(--accent), inset 3px 0 0 0 var(--accent);
+  box-shadow:
+    0 0 0 2px var(--accent),
+    inset 3px 0 0 0 var(--accent);
 }
 
 /* Position shape encoding (square/triangle/diamond/circle) — applied as a
@@ -2058,7 +2082,10 @@ button.benchSlot:not(:disabled):hover {
   border-radius: var(--r-3);
   color: var(--ink-100);
   cursor: pointer;
-  transition: border-color var(--d-fast), box-shadow var(--d-fast), transform var(--d-fast);
+  transition:
+    border-color var(--d-fast),
+    box-shadow var(--d-fast),
+    transform var(--d-fast);
 }
 
 .cand:hover,
@@ -2650,7 +2677,6 @@ button.benchSlot:not(:disabled):hover {
   border-radius: var(--r-pill);
 }
 
-
 /* ─────────────────────────────────────────────────────────────────────────
    SPIN REVEAL — standalone stage (the centerpiece). Emerald = var(--ember),
    gold = var(--gold); brand hexes are never re-hardcoded here. The 2–3s drum
@@ -2686,7 +2712,11 @@ button.benchSlot:not(:disabled):hover {
   width: 56px;
   height: 56px;
   border-radius: var(--r-pill);
-  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--ember) 24%, var(--bg-750)), var(--bg-800));
+  background: radial-gradient(
+    circle at 50% 35%,
+    color-mix(in srgb, var(--ember) 24%, var(--bg-750)),
+    var(--bg-800)
+  );
   border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--line-2));
   box-shadow: var(--ring-ember);
   line-height: 1;
@@ -2763,10 +2793,16 @@ button.benchSlot:not(:disabled):hover {
   padding: var(--s-3);
   border-radius: var(--r-3);
   background:
-    radial-gradient(72% 90% at 50% 50%, color-mix(in srgb, var(--ember) 9%, transparent), transparent 70%),
+    radial-gradient(
+      72% 90% at 50% 50%,
+      color-mix(in srgb, var(--ember) 9%, transparent),
+      transparent 70%
+    ),
     linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
   border: 1px solid var(--line-2);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), var(--sh-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    var(--sh-2);
   overflow: hidden;
 }
 .spinReels {
@@ -2791,7 +2827,9 @@ button.benchSlot:not(:disabled):hover {
 .spinReelWindowCenter {
   border: 1.5px solid color-mix(in srgb, var(--gold) 62%, transparent);
   background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
-  box-shadow: var(--ring-amber), inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
+  box-shadow:
+    var(--ring-amber),
+    inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
   z-index: 2;
 }
 .spinReelTrack {
@@ -2811,10 +2849,20 @@ button.benchSlot:not(:disabled):hover {
   animation-fill-mode: both;
 }
 @keyframes spinDrum {
-  0%   { transform: translateY(var(--spin-from)); filter: blur(2px); }
-  12%  { filter: blur(2px); }
-  82%  { filter: blur(0); }
-  100% { transform: translateY(var(--spin-to)); filter: blur(0); }
+  0% {
+    transform: translateY(var(--spin-from));
+    filter: blur(2px);
+  }
+  12% {
+    filter: blur(2px);
+  }
+  82% {
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(var(--spin-to));
+    filter: blur(0);
+  }
 }
 .spinFace {
   height: var(--face-h);
@@ -2830,8 +2878,14 @@ button.benchSlot:not(:disabled):hover {
   animation: spinFacePop var(--d-med) var(--e-snap) both;
 }
 @keyframes spinFacePop {
-  0%   { transform: scale(0.86); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.86);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 .spinFaceFlag {
   width: 52px;
@@ -3233,7 +3287,6 @@ button.benchSlot:not(:disabled):hover {
   color: var(--accent);
   font-size: 0.78rem;
   margin: 0;
-
 }
 /* ── ws-squad/formations-polish: Synergy link layer + Manager slot ──────── */
 
@@ -3485,7 +3538,9 @@ button.benchSlot:not(:disabled):hover {
   border-radius: var(--r-2);
   color: var(--ink-100);
   cursor: pointer;
-  transition: border-color var(--d-fast), box-shadow var(--d-fast),
+  transition:
+    border-color var(--d-fast),
+    box-shadow var(--d-fast),
     background-color var(--d-fast);
 }
 .candRow:hover,
@@ -3501,11 +3556,21 @@ button.benchSlot:not(:disabled):hover {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.candRow.prov_historical { border-left-color: var(--prov-historical); }
-.candRow.prov_projected { border-left-color: var(--prov-projected); }
-.candRow.prov_estimate { border-left-color: var(--prov-estimate); }
-.candRow.prov_legend { border-left-color: var(--prov-legend); }
-.candRow.prov_manager { border-left-color: var(--prov-manager); }
+.candRow.prov_historical {
+  border-left-color: var(--prov-historical);
+}
+.candRow.prov_projected {
+  border-left-color: var(--prov-projected);
+}
+.candRow.prov_estimate {
+  border-left-color: var(--prov-estimate);
+}
+.candRow.prov_legend {
+  border-left-color: var(--prov-legend);
+}
+.candRow.prov_manager {
+  border-left-color: var(--prov-manager);
+}
 .candRowSelected {
   border-left-color: var(--gold);
 }
@@ -3564,9 +3629,15 @@ button.benchSlot:not(:disabled):hover {
   border-radius: 999px;
   background: var(--prov-unknown);
 }
-.provDot_historical { background: var(--prov-historical); }
-.provDot_projected { background: var(--prov-projected); }
-.provDot_estimate { background: var(--prov-estimate); }
+.provDot_historical {
+  background: var(--prov-historical);
+}
+.provDot_projected {
+  background: var(--prov-projected);
+}
+.provDot_estimate {
+  background: var(--prov-estimate);
+}
 .provDot_legend {
   background: var(--prov-legend);
   box-shadow: 0 0 6px rgba(var(--prov-legend-rgb), 0.7);
@@ -3577,7 +3648,9 @@ button.benchSlot:not(:disabled):hover {
   height: 9px;
   background: var(--ink-300);
 }
-.shapeDot_square { border-radius: 1px; }
+.shapeDot_square {
+  border-radius: 1px;
+}
 .shapeDot_triangle {
   background: transparent;
   width: 0;
@@ -3590,7 +3663,9 @@ button.benchSlot:not(:disabled):hover {
   border-radius: 1px;
   transform: rotate(45deg);
 }
-.shapeDot_circle { border-radius: 999px; }
+.shapeDot_circle {
+  border-radius: 999px;
+}
 .candRowBars {
   flex: 0 0 auto;
   display: flex;
@@ -3966,5 +4041,491 @@ button.benchSlot:not(:disabled):hover {
   }
   .synergyLineLive {
     filter: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ws-ux/mobile-compact-v2 — global mobile compaction pass.
+
+   Cuts excessive vertical scroll on the four key surfaces (spin-reveal,
+   draft/synergy, formation-lock, player-list) and slims the sticky
+   lock-pick CTA at narrow viewports. Compact via spacing / typography /
+   padding only — NO content removed, NO new color literals, all values
+   sourced from `app/ds/tokens.css` via `var(...)`. Outer breakpoints:
+   430px (every modern phone in portrait) and 380px (Galaxy Fold / very
+   narrow). Both are scoped so tablet+desktop are untouched.
+
+   Pitch chip overlap (5-3-2 GK/CB, dense midfield diamonds) is also
+   addressed at the RENDER layer by `lib/game/pitch-layout.ts`; this
+   block contributes only chip-size tightening, never a coordinate
+   change, so the canonical `formations.json` stays the source of truth.
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  /* ── Outer shell + app bar ─────────────────────────────────────── */
+  .draftShell,
+  .reviewShell {
+    gap: 10px;
+    padding: 10px 10px calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+  .draftAppBar {
+    padding: 6px 10px;
+    gap: 8px;
+    border-radius: var(--r-2);
+  }
+  .appBarBrand img {
+    width: 22px;
+    height: 25px;
+  }
+  .appBarTitle {
+    font-size: 15px;
+    letter-spacing: 0.03em;
+  }
+  .appBarMeter {
+    min-width: 108px;
+    gap: 2px;
+  }
+  .spinCounterNum {
+    font-size: 13px;
+  }
+  .spinCounterTotal {
+    font-size: 11px;
+  }
+  .spinProgress {
+    height: 4px;
+  }
+
+  /* ── Cards (panels) ────────────────────────────────────────────── */
+  .panel {
+    padding: 10px;
+    border-radius: var(--r-2);
+  }
+  .panelHead {
+    margin-bottom: 6px;
+    gap: 8px;
+  }
+  .panelTitle {
+    font-size: 15px;
+  }
+  .panelMeta {
+    font-size: var(--t-xs);
+  }
+
+  /* ── Compact spin-context strip in lineup view ─────────────────── */
+  .nowDrafting {
+    padding: 8px 10px;
+    border-radius: var(--r-2);
+  }
+  .nowDraftingPick {
+    font-size: 10px;
+  }
+  .nowDraftingResult {
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+  .nowDraftingBack {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+
+  /* ── SpinStage (full-screen spin reveal) ───────────────────────── */
+  .spinShell {
+    gap: 10px;
+    padding: 10px 10px calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  .spinStage {
+    gap: var(--s-3);
+    padding: 0;
+  }
+  .spinStatusBar {
+    gap: 8px;
+  }
+  .spinPickBadge {
+    width: 48px;
+    height: 48px;
+  }
+  .spinPickNum {
+    font-size: 18px;
+  }
+  .spinPickKicker,
+  .spinPickOf {
+    font-size: 7px;
+  }
+  .spinStatusTitle {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+  .spinStatusChip {
+    min-width: 88px;
+    padding: 2px 6px;
+  }
+  .spinStatusChipLabel {
+    font-size: 7px;
+  }
+  .spinStatusChipValue {
+    font-size: 12px;
+  }
+  .spinDrumLabel {
+    font-size: var(--t-micro);
+    letter-spacing: 0.18em;
+  }
+  .spinDrum {
+    padding: var(--s-2);
+    border-radius: var(--r-2);
+  }
+  .spinResultName {
+    font-size: clamp(22px, 6.6vw, 30px);
+  }
+  .spinResultTag {
+    font-size: var(--t-xs);
+    max-width: 30ch;
+  }
+  .spinTile {
+    padding: 6px 4px;
+    gap: 2px;
+  }
+  .spinTileLabel {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+  .spinTileValue {
+    font-size: 15px;
+  }
+  .spinCta {
+    margin-top: var(--s-2);
+  }
+
+  /* ── Formation lock gate ──────────────────────────────────────── */
+  .formationSelect {
+    gap: 14px;
+    padding: 6px 2px 28px;
+  }
+  .formationHead {
+    gap: 6px;
+  }
+  .formationHead img {
+    width: 168px;
+    height: auto;
+  }
+  .formationTitle {
+    font-size: 22px;
+  }
+  .formationSub {
+    font-size: var(--t-xs);
+    max-width: 30ch;
+  }
+  .formationGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .formationCard {
+    padding: 8px;
+    gap: 6px;
+    min-height: 0;
+    border-radius: var(--r-2);
+  }
+  .formationCardBody {
+    gap: 2px;
+  }
+  .formationCardName {
+    font-size: 15px;
+  }
+  .formationCardBlurb {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .formationCardCta {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+  /* Smaller mini-pitch keeps the lock cards short enough that all six
+     formations sit in a single mobile viewport with minimal scroll. */
+  .miniPitch {
+    aspect-ratio: 5 / 5;
+  }
+  .miniDot {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* ── Formation/Synergy section (lineup view) ─────────────────── */
+  .formationPanel {
+    padding: 8px 10px 10px;
+    /* Anchor for the assign-flow scrollIntoView({block:'start'}) so the
+       slot picker lands cleanly below the sticky DraftAppBar instead of
+       half-occluded under it. */
+    scroll-margin-top: 64px;
+  }
+  .synergyBar {
+    padding: 6px 10px 8px;
+    margin-bottom: 8px;
+    gap: 4px;
+  }
+  .synergyBarNum {
+    font-size: 18px;
+  }
+  .synergyBarFigures {
+    gap: 10px;
+  }
+  .squadStage {
+    gap: 8px;
+  }
+  /* Slightly tighter pitch frame at very narrow widths — pairs with the
+     render-layer anti-overlap from `pitch-layout.ts`. */
+  .squadStage .pitch {
+    max-width: 296px;
+  }
+  .squadStage .pitch .slot {
+    min-width: 36px;
+    max-width: 52px;
+    padding: 2px 3px;
+    border-width: 1px;
+    line-height: 1.05;
+  }
+  .squadStage .pitch .slotName {
+    font-size: 9px;
+    max-width: 46px;
+  }
+  .squadStage .pitch .slotPos {
+    font-size: 8px;
+  }
+  .squadStage .pitch .slotEmptyLabel,
+  .squadStage .pitch .slotMeta {
+    font-size: 8px;
+  }
+  .bench {
+    margin-top: 8px;
+  }
+  .benchLabel {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .benchSlots {
+    gap: 4px;
+  }
+  .benchSlot {
+    min-height: 46px;
+    padding: 4px 2px;
+    border-radius: var(--r-2);
+  }
+  .benchSlot .slotPos {
+    font-size: 9px;
+  }
+  .benchSlot .slotName {
+    font-size: 9px;
+  }
+  .managerSlot {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+  .managerSlotName {
+    font-size: 14px;
+  }
+  .managerSlotMeta,
+  .managerSlotBadge {
+    font-size: var(--t-xs);
+  }
+  .managerSlotFlag {
+    min-width: 30px;
+    height: 30px;
+  }
+
+  /* ── GK warning slim variant ──────────────────────────────────── */
+  .gkWarnPanel {
+    padding: 8px 10px;
+  }
+  .gkWarn {
+    font-size: var(--t-xs);
+    gap: 6px;
+  }
+
+  /* ── Player candidate list ────────────────────────────────────── */
+  .controls {
+    gap: 6px;
+  }
+  .searchInput {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: var(--r-2);
+  }
+  .filterRow {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .segmented {
+    gap: 2px;
+  }
+  .seg,
+  .segActive {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .sortLabel {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .sortSelect {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  .candList {
+    gap: 4px;
+  }
+  .candRow {
+    padding: 6px 8px;
+    gap: 6px;
+    border-radius: var(--r-2);
+  }
+  .candRowLine {
+    gap: 6px;
+  }
+  .candRowFlag {
+    min-width: 30px;
+    height: 30px;
+    font-size: 10px;
+  }
+  .candRowName {
+    font-size: 13px;
+  }
+  .candRowSub {
+    font-size: 10px;
+  }
+  .candRowOvr b {
+    font-size: 18px;
+  }
+  .candRowOvr i {
+    font-size: 8px;
+  }
+  .candRowBars {
+    gap: 2px;
+  }
+  .candRowBars i {
+    width: 3px;
+  }
+  .candRowCov {
+    font-size: 10px;
+  }
+  .candRowChevron {
+    font-size: 11px;
+  }
+  /* Expanded detail panel stays useful but loses its bulk. */
+  .candDetail {
+    gap: 6px;
+    padding-top: 6px;
+  }
+  .candBadgeRow {
+    gap: 4px;
+  }
+  .channels {
+    gap: 4px;
+  }
+  .candStats {
+    gap: 6px;
+    font-size: var(--t-xs);
+  }
+  .candAwards {
+    gap: 4px;
+  }
+
+  /* ── Sticky lock-pick CTA ─────────────────────────────────────── */
+  .lockBar {
+    gap: 8px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  .lockInfo {
+    font-size: 12px;
+  }
+  .lockHint {
+    font-size: 10px;
+  }
+  .lockError {
+    font-size: 10px;
+  }
+  /* Compact buttons in the lock bar so a long player name + Choose-slot +
+     Lock-pick all fit on one line without overflowing at 390px. */
+  .lockBar .btn,
+  .lockBar :global(.btn) {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .lockActions {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .compatPill {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 6px;
+  }
+
+  /* ── Bottom-sheet slot picker ─────────────────────────────────── */
+  .sheet {
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+  }
+  .sheetTitle {
+    font-size: 15px;
+  }
+  .sheetGrid {
+    gap: 6px;
+  }
+  .sheetSlot {
+    padding: 8px 4px;
+    min-height: 54px;
+  }
+  .sheetSlotPos {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Extra-tight overrides for very narrow phones (e.g. Galaxy Fold). */
+  .draftShell,
+  .reviewShell {
+    padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+  }
+  .formationGrid {
+    grid-template-columns: 1fr;
+  }
+  .squadStage .pitch {
+    max-width: 280px;
+  }
+  .squadStage .pitch .slot {
+    min-width: 34px;
+    max-width: 48px;
+    padding: 2px;
+  }
+  .squadStage .pitch .slotName {
+    font-size: 8px;
+    max-width: 42px;
+  }
+  .squadStage .pitch .slotPos,
+  .squadStage .pitch .slotEmptyLabel,
+  .squadStage .pitch .slotMeta {
+    font-size: 8px;
+  }
+  .spinResultName {
+    font-size: clamp(20px, 6vw, 26px);
+  }
+  .spinPickBadge {
+    width: 44px;
+    height: 44px;
+  }
+  .spinPickNum {
+    font-size: 16px;
+  }
+  .spinTileValue {
+    font-size: 14px;
+  }
+  .lockBar .btn,
+  .lockBar :global(.btn) {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+  .candRowName {
+    font-size: 12px;
+  }
+  .candRowSub {
+    font-size: 9px;
   }
 }
