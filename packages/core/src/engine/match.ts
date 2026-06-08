@@ -37,6 +37,7 @@ import {
   activeChances,
   activeLambda,
   clamp,
+  lambdaDispersionMultiplier,
   lambdaForFour,
 } from "./calibration.js";
 
@@ -390,8 +391,31 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
   // DEFENSE + GOALKEEPING fold into a single defResist; MIDFIELD modulates as
   // a bounded multiplier. This is the SQUAD's four channels + Synergy (already
   // folded into TeamStrength upstream) driving λ legibly.
-  const lambdaUser = lambdaForFour(userStrength, oppStrength);
-  const lambdaOpp = lambdaForFour(oppStrength, userStrength);
+  //
+  // Phase-dependent λ factor (E-3a refit, D1 path): knockout regulation
+  // applies `LAMBDA.KO_LAMBDA_FACTOR` ≤ 1 to BOTH sides' λ. This models the
+  // documented modern-WC phenomenon that KO regulation is cagier than the
+  // group phase — without a phase split, the symmetric sweep cannot land
+  // both `group_draw ≈ 24.7%` AND `KO → ET ≈ 33%` (they measure the same
+  // statistic on the same teams). The favourite/underdog ordering survives
+  // intact because both sides are scaled by the same factor (legibility
+  // preserved; D4 monotonicity / elite-ceiling tests still pass).
+  const phaseLambdaFactor = phase === "knockout" ? activeLambda().KO_LAMBDA_FACTOR : 1;
+  const lambdaUserRaw = lambdaForFour(userStrength, oppStrength) * phaseLambdaFactor;
+  const lambdaOppRaw = lambdaForFour(oppStrength, userStrength) * phaseLambdaFactor;
+
+  // E-3a refit (D1) — phase-specific match-level λ dispersion. The helper
+  // `lambdaDispersionMultiplier` consumes EXACTLY ONE seeded `structRng.next()`
+  // and picks (OUTER_PROB, A) by phase:
+  //   - knockout: strong dispersion (lifts KO → ET + shootout to the modern-WC norm)
+  //   - group:    mild dispersion (lifts margin ≥ 4 into band without inflating group_draw)
+  // The single rng draw means the rng sequence is invariant to the phase /
+  // config; only the λ multiplier downstream differs. ε ∈ [1−A, 1+A], mean 1
+  // exactly → goals/match mean preserved. Both sides scaled together →
+  // favourite/underdog ordering preserved (faithfulness intact).
+  const lambdaEpsilon = lambdaDispersionMultiplier(structRng, phase === "knockout" ? "knockout" : "group");
+  const lambdaUser = lambdaUserRaw * lambdaEpsilon;
+  const lambdaOpp = lambdaOppRaw * lambdaEpsilon;
 
   // ── Regulation chances ──
   const userReg = generateChances({

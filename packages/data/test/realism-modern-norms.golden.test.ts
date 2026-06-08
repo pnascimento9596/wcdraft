@@ -47,15 +47,31 @@ const NORMS = JSON.parse(
 const GROUP_MATCHES = 2256;
 const KO_MATCHES = 750;
 
-// Documented one-sided / two-sided tolerances per metric. The structural gap
-// (binomial × 2026 pool strength compression) is captured in `tolerance_low`
-// or `tolerance_high` per metric; symmetric across signs would be misleading.
+// D5-TIGHT BANDS — committed in the E-3a refit. Each band is the modern-era
+// WC norm ± 2·sqrt(p(1-p)/N) (binomial sample-noise std-err × 2) at the
+// sample sizes USED IN THIS HARNESS (group N=2256, KO N=750, total N=3006
+// for `mean_goals` and `margin ≥ 4`). The previous loose bands were a
+// structural placeholder; the refit (BASE/SPREAD/W_DEF/γ_mid + KO_LAMBDA_FACTOR
+// + per-phase λ dispersion in `calibration.ts`) lands all 5 metrics
+// STRICTLY INSIDE these tight bands, so any future engine drift that moves
+// a metric outside ANY tight band fails CI — the realism gate is no longer
+// toothless.
+//
+// HOW THE PHASE SPLIT MAKES BOTH `group_draw` (24.7%) AND `KO → ET` (33%)
+// ACHIEVABLE on the SAME team pool: the modern-era norms encode that real
+// WC group matches and KO matches come from DIFFERENT populations (group
+// includes weak vs strong; KO is between qualifying teams) — the engine
+// mirrors that two-population reality via (a) `LAMBDA.KO_LAMBDA_FACTOR`
+// (KO regulation goals run lower than group) and (b) phase-specific
+// dispersion in `LAMBDA_DISP` (KO uses larger A; group uses smaller A only
+// to lift `margin ≥ 4` into band). See `calibration.ts:LAMBDA_DISP` for
+// the full contract and SIM_CALIBRATION.md for the landing report.
 const BANDS = {
-  mean_goals: { lo: 2.20, hi: 2.90 },         // norm 2.54 ± ~14%
-  group_draw: { lo: 0.20, hi: 0.30 },         // norm 0.247 ± ~3pp
-  margin_ge_4: { lo: 0.015, hi: 0.060 },      // norm 0.049, lo accepts structural gap from binomial × pool compression
-  ko_et: { lo: 0.22, hi: 0.36 },              // norm 0.330 ± ~6pp
-  ko_shootout: { lo: 0.10, hi: 0.27 },        // norm 0.214 ± ~7pp (high sampling variance, n=750)
+  mean_goals:  { lo: 2.478,  hi: 2.594  }, // norm 2.54   ± ~0.058 (N=3006)
+  group_draw:  { lo: 0.2288, hi: 0.2652 }, // norm 0.247  ± 0.0182 (N=2256)
+  margin_ge_4: { lo: 0.0412, hi: 0.0570 }, // norm 0.049  ± 0.0079 (N=3006)
+  ko_et:       { lo: 0.2961, hi: 0.3648 }, // norm 0.330  ± 0.0343 (N=750)
+  ko_shootout: { lo: 0.1843, hi: 0.2443 }, // norm 0.214  ± 0.0299 (N=750)
 } as const;
 
 const teams = [...SCENARIO_2026_BUNDLE.teams].sort((a, b) =>
@@ -170,40 +186,41 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
   // Δ values reflect the engine output on the 2026 pool (sim is
   // byte-identical to origin/main; residual drift from norm is pre-existing
   // engine behavior carried forward).
-  it(`mean goals/match: 2.40 (Δ −0.13 vs norm 2.54, post-E3a four-channel λ) — band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
+  it(`mean goals/match: 2.534 (Δ −0.006 vs norm 2.54, E-3a refit) — tight band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
     const delta = m.mean_goals - NORMS.mean_goals_per_match_regulation;
     expect(m.mean_goals).toBeGreaterThanOrEqual(BANDS.mean_goals.lo);
     expect(m.mean_goals).toBeLessThanOrEqual(BANDS.mean_goals.hi);
     // Sanity-cap the drift from the documented landing — anyone moving the
-    // engine that pushes this by > 0.2 must update the committed Δ landing.
-    expect(Math.abs(delta)).toBeLessThan(0.25);
+    // engine that pushes this by > 0.10 (≈ 2× the tight half-width) must
+    // explicitly update both the committed Δ landing and the bands.
+    expect(Math.abs(delta)).toBeLessThan(0.10);
   });
 
-  it(`group draw rate: 26.4% (Δ +1.7pp vs norm 24.7%, post-E3a) — band [${100 * BANDS.group_draw.lo}%, ${100 * BANDS.group_draw.hi}%]`, () => {
+  it(`group draw rate: 25.84% (Δ +1.14pp vs norm 24.7%, E-3a refit) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {
     const delta = m.group_draw - NORMS.group_stage_draw_rate;
     expect(m.group_draw).toBeGreaterThanOrEqual(BANDS.group_draw.lo);
     expect(m.group_draw).toBeLessThanOrEqual(BANDS.group_draw.hi);
-    expect(Math.abs(delta)).toBeLessThan(0.06);
+    expect(Math.abs(delta)).toBeLessThan(0.025);
   });
 
-  it(`margin ≥ 4: 2.93% (Δ −2.0pp vs norm 4.9%, structural — Poisson-like dispersion at n=50 + bounded MAX λ) — band [${100 * BANDS.margin_ge_4.lo}%, ${100 * BANDS.margin_ge_4.hi}%]`, () => {
+  it(`margin ≥ 4: 4.72% (Δ −0.18pp vs norm 4.9%, E-3a refit — phase-split DISP) — tight band [${(100 * BANDS.margin_ge_4.lo).toFixed(2)}%, ${(100 * BANDS.margin_ge_4.hi).toFixed(2)}%]`, () => {
     const delta = m.margin_ge_4 - NORMS.regulation_margin_ge_4;
     expect(m.margin_ge_4).toBeGreaterThanOrEqual(BANDS.margin_ge_4.lo);
     expect(m.margin_ge_4).toBeLessThanOrEqual(BANDS.margin_ge_4.hi);
-    expect(Math.abs(delta)).toBeLessThan(0.04);
+    expect(Math.abs(delta)).toBeLessThan(0.015);
   });
 
-  it(`KO → ET: 29.6% (Δ −3.4pp vs norm 33.0%, post-E3a) — band [${100 * BANDS.ko_et.lo}%, ${100 * BANDS.ko_et.hi}%]`, () => {
+  it(`KO → ET: 33.60% (Δ +0.60pp vs norm 33.0%, E-3a refit) — tight band [${(100 * BANDS.ko_et.lo).toFixed(2)}%, ${(100 * BANDS.ko_et.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_et - NORMS.knockout_extra_time_rate;
     expect(m.ko_et).toBeGreaterThanOrEqual(BANDS.ko_et.lo);
     expect(m.ko_et).toBeLessThanOrEqual(BANDS.ko_et.hi);
-    expect(Math.abs(delta)).toBeLessThan(0.08);
+    expect(Math.abs(delta)).toBeLessThan(0.05);
   });
 
-  it(`KO → shootout: 15.7% (Δ −5.7pp vs norm 21.4%, post-E3a) — band [${100 * BANDS.ko_shootout.lo}%, ${100 * BANDS.ko_shootout.hi}%]`, () => {
+  it(`KO → shootout: 22.93% (Δ +1.53pp vs norm 21.4%, E-3a refit) — tight band [${(100 * BANDS.ko_shootout.lo).toFixed(2)}%, ${(100 * BANDS.ko_shootout.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_shootout - NORMS.knockout_shootout_rate;
     expect(m.ko_shootout).toBeGreaterThanOrEqual(BANDS.ko_shootout.lo);
     expect(m.ko_shootout).toBeLessThanOrEqual(BANDS.ko_shootout.hi);
-    expect(Math.abs(delta)).toBeLessThan(0.10);
+    expect(Math.abs(delta)).toBeLessThan(0.05);
   });
 });

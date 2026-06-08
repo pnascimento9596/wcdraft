@@ -42,23 +42,62 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | **E-3a (current)** | Why |
-|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | **0.85** | n=50 → much less per-match noise → lower BASE keeps mean goals/match near 2.54 |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | unchanged |
-| `LAMBDA.MIN` | 0.30 | **0.75** | raised — keeps underdogs credible after BASE drop |
-| `LAMBDA.MAX` | 3.40 | 3.40 | unchanged |
-| `LAMBDA.W_DEF` | — | **0.65** | new — DEFENSE share of `defResist` |
-| `LAMBDA.W_GK` | — | **0.35** | new — GOALKEEPING share of `defResist` (W_DEF + W_GK ≡ 1) |
-| `LAMBDA.GAMMA_MID` | — | **0.45** | new — midfield `control_for` sensitivity |
-| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | bounded multiplier — midfield amplifies, never replaces |
-| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | unchanged |
-| `CHANCES.REGULATION` | 14 | **50** | raised so Binomial→Poisson; MAX_GOAL_PROB cap stops binding |
-| `CHANCES.EXTRA_TIME` | 5 | **17** | scaled by ET_FRACTION |
-| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | **0.10** | re-normalized for n=50 |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | **0.14** | re-normalized for n=50 |
-| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | **0.22** | re-normalized for n=50 |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | **0.04** | re-normalized for n=50 |
+| Constant | Pre-E3a | E-3a (initial) | **E-3a REFIT (current)** | Why (refit) |
+|---|---|---|---|---|
+| `LAMBDA.BASE` | 1.25 | 0.85 | **0.85** | unchanged — the SPREAD bump below carries the mean-goals lift |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | **6.5** | raised — wider SPREAD is what unlocks `margin ≥ 4 ≈ 4.9%` tight band |
+| `LAMBDA.MIN` | 0.30 | 0.75 | **0.40** | lowered — the wider SPREAD drives raw λ deeper below zero; the lower floor keeps blowouts emergent |
+| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | unchanged |
+| `LAMBDA.W_DEF` | — | 0.65 | **0.70** | slight bump — keeps elite defensive XIs legible while leaving GK its own channel |
+| `LAMBDA.W_GK` | — | 0.35 | **0.30** | W_GK + W_DEF ≡ 1 |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | **0.50** | raised — midfield channel near upper end of bounded band |
+| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | unchanged |
+| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | **0.85** | NEW — KO regulation goals run ~15% below group, matching modern-WC pattern |
+| `CHANCES.REGULATION` | 14 | 50 | 50 | unchanged |
+| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | unchanged |
+| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | unchanged |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | unchanged |
+| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | unchanged |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | unchanged |
+| `LAMBDA_DISP.OUTER_PROB` | — | — | **0.20** | NEW — KO-phase outer mass for ε ∈ {1−A, 1, 1+A} |
+| `LAMBDA_DISP.A` | — | — | **0.75** | NEW — KO-phase half-width; lifts KO → ET / shootout onto modern-WC norms |
+| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | **0.10** | NEW — group-phase outer mass (smaller — must respect tight `group_draw` band) |
+| `LAMBDA_DISP.GROUP_A` | — | — | **0.50** | NEW — group-phase half-width; drives `margin ≥ 4` into [4.12%, 5.70%] |
+
+## E-3a REFIT (current) — match-level λ dispersion (D1 path)
+
+E-3a INITIAL pure-Poisson scoring was Pareto-limited against the D5-tight
+bands:
+- at λ_per_side ≈ 1.27 (the mean-goals norm), the maximum tie rate is ≈ 24.6%
+  while the modern-era KO → ET norm is 33% and shootout 21.4% — no four-channel
+  λ + chance-budget grid can clear `mean_goals ≈ 2.54` AND `KO → ET ≈ 33%`
+  simultaneously;
+- `group_draw` and `KO → ET` measure the SAME statistic (matches tied after 90′)
+  on the SAME team population in the symmetric coherent-XI sweep, so the
+  modern-era norms (24.7% group, 33% KO) cannot BOTH be hit without a
+  PHASE-DEPENDENT driver.
+
+The E-3a REFIT resolves both walls with two new mechanisms (both
+transcendental-free; cross-platform determinism preserved):
+
+1. **`LAMBDA.KO_LAMBDA_FACTOR`** (= 0.85) — multiplicative λ reduction applied
+   to BOTH sides in KO regulation. Models the well-documented modern-WC fact
+   that knockout matches run ~10–15% below group-stage scoring rates (more
+   tactical, more cagey). Faithfulness preserved because the favourite/underdog
+   ordering is scaled by the SAME factor.
+2. **`LAMBDA_DISP` — phase-specific 3-point dispersion** — each match draws
+   ONE seeded ε ∈ {1−A, 1, 1+A} (a discrete distribution, mean exactly 1,
+   integer/rational arithmetic only). The (`OUTER_PROB`, `A`) pair is
+   PHASE-DEPENDENT: KO uses a strong dispersion (0.20, 0.75) → lifts KO →
+   ET and shootout rates; group uses a sparse, wider dispersion (0.10, 0.50)
+   → lifts `margin ≥ 4` into band without pushing `group_draw` past its
+   tight upper edge. Mean(ε) = 1 by construction so mean goals/match is
+   preserved within each phase.
+
+D5-tight bands now committed in `realism-modern-norms.golden.test.ts`
+(replacing the pre-refit loose bands). The refit lands all 5 metrics
+STRICTLY INSIDE these tight bands; the gate is no longer toothless.
 
 **Why the four-channel form**: the E-2-era map keyed only on `attackFor`
 vs `defenseAgainst`. After Phase 1 the channels compress onto `[66, 99]`,
@@ -81,19 +120,22 @@ the existing `realism-modern-norms.golden.test.ts` measures). 2 passes ×
 ~30 evaluations × ~3,006 matches per evaluation = ~3 min wall-clock; the
 schedule + grids are pinned, so the winner is reproducible.
 
-| Norm | Target | Pre-fit (E-3a seed) | **Fit landing** | Pre-E2 baseline (origin/engine-v2) |
+| Norm | Modern-WC target | D5-tight band | E-3a initial landing | **E-3a REFIT landing** |
 |---|---|---|---|---|
-| goals / game | 2.54 | 3.05 | **2.40** (Δ −0.13) | 2.44 (Δ −0.10) |
-| group draw % | 24.7 | 24.40 | **26.4** (Δ +1.7pp) | 28.7 (Δ +4.0pp) |
-| margin ≥ 4 % | 4.9 | 5.66 | **2.93** (Δ −2.0pp) | 2.30 (Δ −2.6pp) |
-| KO → ET % | 33 | 11.04 | **29.6** (Δ −3.4pp) | 28.5 (Δ −4.5pp) |
-| shootout % | 21.4 | 11.03 | **15.7** (Δ −5.7pp) | 14.3 (Δ −7.1pp) |
+| goals / game           | 2.54  | [2.478, 2.594]  | 2.40 (Δ −0.13, FAIL ↓)        | **2.534 (Δ −0.006, ✓ near centre)** |
+| group draw %           | 24.7  | [22.88%, 26.52%] | 26.4 (Δ +1.7pp, ✓ narrow)     | **25.84% (Δ +1.14pp, ✓)**           |
+| margin ≥ 4 %           | 4.9   | [4.12%, 5.70%]   | 2.93 (Δ −2.0pp, FAIL ↓)       | **4.72% (Δ −0.18pp, ✓)**            |
+| KO → ET %              | 33.0  | [29.61%, 36.48%] | 29.6 (Δ −3.4pp, FAIL ↓)       | **33.60% (Δ +0.60pp, ✓)**           |
+| shootout %             | 21.4  | [18.43%, 24.43%] | 15.7 (Δ −5.7pp, FAIL ↓)       | **22.93% (Δ +1.53pp, ✓)**           |
 
-Every fitted norm lands STRICTLY INSIDE the existing bands committed to
-`realism-modern-norms.golden.test.ts` AND inside each test's `|delta|<X`
-sanity cap. So the symmetric realism gate continues to pass with the new
-constants — only the per-test `it()` titles were updated to reflect the
-new Δ landings.
+All 5 symmetric realism norms land STRICTLY INSIDE the D5-tight bands —
+the realism gate is no longer toothless. Faithfulness (`packages/core/src/faithfulness.test.ts`,
+11 ensembles) still passes 11/11 — bounded ε ∈ [1−A, 1+A] and KO_LAMBDA_FACTOR
+applied to BOTH sides preserve monotonicity, elite-ceiling, and dominance-
+not-certainty. Determinism preserved: `lambdaDispersionMultiplier` consumes
+EXACTLY ONE `structRng.next()` call per match (always; the value is gated
+by phase, the draw is not), and the discrete 3-point distribution is encoded
+with rational thresholds — no transcendental math anywhere.
 
 ## Faithfulness suite (D4)
 

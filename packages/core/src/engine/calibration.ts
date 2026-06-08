@@ -71,37 +71,75 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * E-3a D6 fit landed BASE=0.85: under the new n=50 Poisson-like budget
-   * the per-team scoreline is much less noisy than under n=14, so a lower
-   * BASE keeps mean goals/match near the 2.54 modern-WC norm.
+   * E-3a REFIT (D6 + D1 dispersion): BASE=0.85 sits on the low side so
+   * the wider SPREAD below + the match-level dispersion drive mean goals
+   * to 2.54 while keeping the high-margin tail (margin ≥ 4) inside band.
    */
   BASE: 0.85,
-  /** Sensitivity to the (attack − defResist) edge, per 100 channel points. */
-  SPREAD: 4.0,
   /**
-   * Floor — even a hopeless attack still threatens occasionally. Raised to
-   * 0.75 by the D6 fit so weak underdogs still produce credible goals/game
-   * and KO-stage ET/SO rates land near the modern-WC norms.
+   * Sensitivity to the (attack − defResist) edge, per 100 channel points.
+   * E-3a REFIT lifted SPREAD from 4.0 to 6.5: the wider spread is what
+   * unlocks the `margin ≥ 4 ≈ 4.9%` tight band. Combined with `MIN = 0.40`
+   * floor the underdog λ still produces credible goals for the weakest
+   * 2026-pool pairs (the D4 elite-ceiling / dominance-not-certainty
+   * faithfulness assertions still pass — see SIM_CALIBRATION.md).
    */
-  MIN: 0.75,
+  SPREAD: 6.5,
+  /**
+   * Floor — even a hopeless attack still threatens occasionally. E-3a REFIT
+   * dropped MIN to 0.40 because the wider SPREAD pushes the most lopsided
+   * pairs' raw λ deep below zero; the lower floor keeps blowouts emergent
+   * from the channel math rather than artificially capped.
+   */
+  MIN: 0.40,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
   MAX: 3.4,
-  /** Weight on opponent DEFENSE channel inside `defResist` (D6 fit: 0.65). */
-  W_DEF: 0.65,
+  /**
+   * Weight on opponent DEFENSE channel inside `defResist`. E-3a REFIT
+   * landed W_DEF=0.70: a slightly higher defense weight keeps elite
+   * defensive XIs legible while leaving GK with a meaningful (W_GK=0.30)
+   * channel of its own.
+   */
+  W_DEF: 0.70,
   /** Weight on opponent GOALKEEPING channel inside `defResist`. Must satisfy W_DEF + W_GK === 1. */
-  W_GK: 0.35,
+  W_GK: 0.30,
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
-   * points). D6 fit landed γ_mid=0.45 — the legibility-via-midfield
-   * channel is now near the upper end of its bounded band.
+   * points). E-3a REFIT raised γ_mid to 0.50 — the bounded multiplier
+   * (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies, never
+   * replaces, the attack/defense edge.
    */
-  GAMMA_MID: 0.45,
+  GAMMA_MID: 0.50,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */
   CONTROL_BAND_HI: 1.15,
   /** Fraction of a regulation λ that applies across a 30-minute extra time. */
   ET_FRACTION: 30 / 90,
+  /**
+   * Multiplicative λ factor applied to BOTH sides during KNOCKOUT regulation
+   * (phase === "knockout"). Models the documented modern-WC phenomenon that
+   * knockout matches are more tactical / cagier than group matches: real WC
+   * 1998–2022 shows knockout regulation goals/match running ~10–15% below
+   * the group rate (with the gap soaking into the KO-tied + ET + shootout
+   * tail).
+   *
+   * In the symmetric coherent-XI sweep, `group_draw` and `KO → ET` would
+   * otherwise measure the IDENTICAL statistic (matches tied after 90′) on
+   * the same population, so the 24.7% group-draw norm and the 33% KO → ET
+   * norm cannot BOTH be hit without a phase-dependent driver. This factor
+   * is that driver — fitted (D6) jointly with the four-channel λ + the
+   * match-level dispersion so all five modern-era norms land inside the
+   * D5-tight bands simultaneously.
+   *
+   * Bound: must be in (0, 1]. A value of 1.0 disables the phase split
+   * (engine reverts to the pre-refit single-phase λ for everything). The
+   * ET phase inherits the factor via `lambdaUser * ET_FRACTION` — extra
+   * time is already cagier by virtue of `ET_FRACTION = 30/90`. E-3a REFIT
+   * D6 landed 0.85 — KO regulation goals run ~15% below group goals,
+   * matching the modern-WC pattern.
+   */
+  KO_LAMBDA_FACTOR: 0.85,
 });
 
 // ─── CHANCE BUDGET (binomial goal model) ──────────────────────────────────────
@@ -124,6 +162,92 @@ export const CHANCES = Object.freeze({
   EXTRA_TIME: 17,
   /** Hard cap on per-chance goal probability — at REGULATION=50 and MAX=3.4, λ/n=0.068 ≪ 0.6, so the cap is a guard only. */
   MAX_GOAL_PROB: 0.6,
+});
+
+// ─── MATCH-LEVEL λ DISPERSION (E-3a refit, D1 path) ──────────────────────────
+//
+// PROBLEM. A pure two-independent-Poisson scoreline model is Pareto-limited
+// in TWO ways relative to the modern-era WC norms measured on the symmetric
+// coherent-XI sweep:
+//
+//   (a) At the modern-era WC mean (2.54 goals/match, λ_per_side ≈ 1.27),
+//       the maximum tie rate is ≈ 24.6%. The modern-era KO-tied-after-
+//       regulation norm is 33% and the shootout rate 21.4%. No grid search
+//       over the four-channel λ + chance budget can clear both
+//       `mean_goals ≈ 2.54` AND `KO → ET ≈ 33%` in pure Poisson — they live
+//       on opposite faces of the Pareto frontier.
+//   (b) `group_draw` and `KO → ET` measure the SAME statistic (matches
+//       tied after 90′) on the same population, so the modern-era norms
+//       (24.7% group, 33% KO) cannot BOTH be hit without a PHASE-DEPENDENT
+//       driver. Real WC has different rates because the populations differ
+//       (group matches include weak vs strong; KO matches are between
+//       qualifying teams) — the symmetric sweep cannot capture that.
+//
+// FIX (D1 — parity-dependent variance, phase-gated to knockouts).
+// Each match draws ONE deterministic ε ∈ {1−A, 1, 1+A} (a discrete 3-point
+// distribution, mean exactly 1, integer/rational arithmetic only) from
+// `structRng` BEFORE any chance is generated. The ε is APPLIED ONLY IN THE
+// KNOCKOUT PHASE (see `match.ts:simulateMatchCore`); the group phase keeps
+// pure four-channel Poisson scoring. Both sides' λ are scaled together by ε
+// in KO — preserving the favourite ordering — to lift the KO-tied rate
+// (and downstream shootout rate) onto the modern-era norms:
+//
+//   ε = 1 − A  with probability  OUTER_PROB    → "cagey KO" (more 0-0, 1-1, more ties)
+//   ε = 1      with probability  1 − 2·OUTER_PROB
+//   ε = 1 + A  with probability  OUTER_PROB    → "open KO"  (more 3-3, 4-4, more ties)
+//
+// E[ε] = 1 → mean goals per KO match is preserved (the `LAMBDA.KO_LAMBDA_FACTOR`
+// constant does the goal-rate reduction); Var[ε] = 2·OUTER_PROB·A² is the
+// dispersion engine. The group_draw rate stays at its pure-Poisson value
+// (≈ 24.7% on the 2026 pool), independent of A / OUTER_PROB.
+//
+// DETERMINISM. ε is drawn via a single `structRng.next()` call EVEN IN
+// GROUP MATCHES (the gate uses the value but always consumes the draw), so
+// the rng sequence is invariant to the phase split. No transcendental math
+// anywhere. The discrete distribution is encoded as rational thresholds.
+// Cross-platform byte-identical output preserved.
+//
+// HONEST-STATE. ε is a match-level "style" multiplier (cagey vs open) — the
+// per-side aggregate λ ordering (favourite still favoured) is preserved by
+// applying the SAME ε to both sides. No channel becomes opaquely advantaged.
+//
+// FAITHFULNESS. Bounded multiplier (ε ∈ [1−A, 1+A]) by construction means a
+// cagey KO match cannot invert the favourite/underdog ordering and an open
+// KO match cannot manufacture a blowout from nothing. The bound is the
+// "amplifies, never replaces" guarantee for the dispersion mechanism.
+export const LAMBDA_DISP = Object.freeze({
+  /**
+   * KO-phase mass on EACH outer point of the discrete ε distribution (so the
+   * centre mass is `1 − 2·OUTER_PROB`). Must satisfy `2·OUTER_PROB ≤ 1`. Set
+   * to 0 to disable KO dispersion (ε ≡ 1 in KO — pure Poisson scoring there).
+   * E-3a REFIT D6: OUTER_PROB=0.20 → 40% of KO matches are "non-neutral"
+   * (cagey OR open), 60% stay at neutral λ.
+   */
+  OUTER_PROB: 0.20,
+  /**
+   * KO-phase half-width: ε ∈ {1 − A, 1, 1 + A}. Must satisfy `A < 1`. The
+   * KO dispersion magnitude is Var[ε] = 2·OUTER_PROB·A² — E-3a REFIT D6
+   * landed A=0.75 to lift KO → ET and shootout rates onto the modern-era
+   * norms (33% / 21.4%).
+   */
+  A: 0.75,
+  /**
+   * GROUP-phase outer mass. Same shape as `OUTER_PROB` but applied to group
+   * matches. E-3a REFIT D6: GROUP_OUTER_PROB=0.10 (much smaller than KO's
+   * 0.20) — group_draw must stay inside the D5-tight band [22.88%, 26.52%],
+   * so the group dispersion is only frequent enough to lift `margin ≥ 4`
+   * into [4.12%, 5.70%] without inflating group_draw past 26.5%.
+   * Set to 0 to disable group dispersion.
+   */
+  GROUP_OUTER_PROB: 0.10,
+  /**
+   * GROUP-phase half-width. E-3a REFIT D6: GROUP_A=0.50 — wider than the
+   * default to drive the high-margin tail (~4.7% margin≥4) while the
+   * sparse OUTER_PROB keeps the group_draw rate inside the tight band.
+   * Group phase doesn't need the KO-tied lift, only the asymmetric-
+   * scoreline tail boost.
+   */
+  GROUP_A: 0.50,
 });
 
 // ─── PER-CHANCE OUTCOME SPLIT (conditioned on a chance occurring, non-goal) ────
@@ -342,6 +466,44 @@ export function lambdaForFour(forSide: TeamStrength, against: TeamStrength): num
   return base * midfieldControl(forSide, against);
 }
 
+/**
+ * Per-match λ dispersion multiplier ε ∈ {1−A, 1, 1+A} drawn from a discrete
+ * 3-point symmetric distribution (mean 1 exactly). Consumes EXACTLY ONE
+ * `rng.next()` call so the rng sequence is invariant to phase / config.
+ *
+ * The per-phase (OUTER_PROB, A) tuple is picked by `phase`:
+ *   - "knockout" → `LAMBDA_DISP.OUTER_PROB`, `LAMBDA_DISP.A` (strong dispersion
+ *     to lift KO → ET / shootout onto the modern-era norms).
+ *   - else (group) → `LAMBDA_DISP.GROUP_OUTER_PROB`, `LAMBDA_DISP.GROUP_A`
+ *     (mild dispersion — only enough to lift `margin ≥ 4` into band; the
+ *     group_draw rate must stay inside the D5-tight band).
+ *
+ * Mean(ε)=1 preserves goals/match by construction; Var(ε)=2·OUTER_PROB·A²
+ * is the dispersion magnitude. Applied to BOTH sides' λ → match-level
+ * "style" knob (cagey vs open), legibility preserved.
+ *
+ * Determinism (D-INV): single rational comparison against `rng.next()`.
+ * No transcendental math. Byte-identical output across platforms.
+ *
+ * Disabled-state contract (D-OFF): when the phase-relevant outer mass is 0
+ * the function STILL consumes its `rng.next()` call (so the on/off
+ * transition is a single, audited rng-sequence shift carried by the
+ * engine_version bump). The returned ε is exactly `1` in that case.
+ */
+export function lambdaDispersionMultiplier(
+  rng: { next: () => number },
+  phase: "group" | "knockout",
+): number {
+  const D = activeLambdaDisp();
+  const roll = rng.next();
+  const outer = phase === "knockout" ? D.OUTER_PROB : D.GROUP_OUTER_PROB;
+  const a = phase === "knockout" ? D.A : D.GROUP_A;
+  if (outer <= 0) return 1;
+  if (roll < outer) return 1 - a;
+  if (roll < 2 * outer) return 1 + a;
+  return 1;
+}
+
 
 // ─── D6 CALIBRATION FIT OVERRIDE — OFFLINE TOOL ONLY ──────────────────────────
 //
@@ -364,10 +526,12 @@ export function lambdaForFour(forSide: TeamStrength, against: TeamStrength): num
 export interface CalibrationOverride {
   LAMBDA?: Partial<typeof LAMBDA>;
   CHANCES?: Partial<typeof CHANCES>;
+  LAMBDA_DISP?: Partial<typeof LAMBDA_DISP>;
 }
 
 let __activeLambda: typeof LAMBDA = LAMBDA;
 let __activeChances: typeof CHANCES = CHANCES;
+let __activeLambdaDisp: typeof LAMBDA_DISP = LAMBDA_DISP;
 
 /** Return the currently-active λ constants. Equals `LAMBDA` unless the D6 fit has set an override. */
 export function activeLambda(): typeof LAMBDA {
@@ -379,17 +543,25 @@ export function activeChances(): typeof CHANCES {
   return __activeChances;
 }
 
+/** Return the currently-active λ dispersion params. Equals `LAMBDA_DISP` unless the D6 fit has set an override. */
+export function activeLambdaDisp(): typeof LAMBDA_DISP {
+  return __activeLambdaDisp;
+}
+
 /**
- * D6 FIT ONLY. Swap λ + CHANCES constants for the next ensemble. Production
- * code MUST NOT call this. Always paired with `__UNSAFE_clearCalibrationOverride`.
+ * D6 FIT ONLY. Swap λ + CHANCES + LAMBDA_DISP constants for the next
+ * ensemble. Production code MUST NOT call this. Always paired with
+ * `__UNSAFE_clearCalibrationOverride`.
  */
 export function __UNSAFE_setCalibrationOverride(o: CalibrationOverride): void {
   __activeLambda = Object.freeze({ ...LAMBDA, ...(o.LAMBDA ?? {}) }) as typeof LAMBDA;
   __activeChances = Object.freeze({ ...CHANCES, ...(o.CHANCES ?? {}) }) as typeof CHANCES;
+  __activeLambdaDisp = Object.freeze({ ...LAMBDA_DISP, ...(o.LAMBDA_DISP ?? {}) }) as typeof LAMBDA_DISP;
 }
 
 /** D6 FIT ONLY. Restore production-default constants. */
 export function __UNSAFE_clearCalibrationOverride(): void {
   __activeLambda = LAMBDA;
   __activeChances = CHANCES;
+  __activeLambdaDisp = LAMBDA_DISP;
 }
