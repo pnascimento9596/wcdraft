@@ -56,7 +56,7 @@ export interface SlotRevealModel {
   /**
    * ENGINE-V2 E-2 — the honest engine-computed draw probability for the
    * active spin (in [0, 1]). Displayed as a percentage; rare spins read at
-   * `<= 15%` in practice but the UI shows whatever the engine emitted.
+   * `<= 10%` in practice but the UI shows whatever the engine emitted.
    */
   readonly drawProbability: number;
   /** Pre-formatted percent label, e.g. `12.4%` / `0.42%` / `0.0%`. */
