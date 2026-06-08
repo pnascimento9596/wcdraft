@@ -6,7 +6,7 @@
 //   - ENGINE-V2 E-1: Each spin is an INDEPENDENT, ERA-WEIGHTED, WITH-REPLACEMENT
 //     weighted draw over ALL (tournament_id, nation_id) pairs in the catalog
 //     (the same (T, N) MAY repeat across spins; pre-1998 tournaments aggregate
-//     ≈15% of per-spin probability, modern 1998..2026 ≈85% with gentle recency
+//     ≈10% of per-spin probability, modern 1998..2026 ≈90% with gentle recency
 //     scaling). The old WS-0c pair-once rule is gone; global `player_id` dedup
 //     is what stops the same human being drafted twice.
 //     Whichever (T, N) is selected, the spin offers BOTH that squad's

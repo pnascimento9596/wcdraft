@@ -236,9 +236,9 @@ describe("buildSlotRevealModel — ENGINE-V2 E-2 rare + draw probability", () =>
     expect(model.drawProbabilityLabel).toBe("8.3%");
   });
 
-  it("rare spins in practice read at <= 15% (E-1 contract sanity)", () => {
+  it("rare spins in practice read at <= 10% (E-1b contract sanity)", () => {
     const indexes = makeIndexes();
-    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.149 });
+    const rareSpin = makeSpin(2, "T-09", 1, { rare: true, draw_probability: 0.099 });
     const ring = [SPINS[0]!, SPINS[1]!, rareSpin, SPINS[3]!, SPINS[4]!];
     const model = buildSlotRevealModel({
       activeSpin: rareSpin,
@@ -247,6 +247,6 @@ describe("buildSlotRevealModel — ENGINE-V2 E-2 rare + draw probability", () =>
       totalPicks: 17,
     });
     expect(model.rare).toBe(true);
-    expect(model.drawProbability).toBeLessThanOrEqual(0.15);
+    expect(model.drawProbability).toBeLessThanOrEqual(0.1);
   });
 });

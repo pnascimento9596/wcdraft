@@ -166,7 +166,7 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
   it("every spin's `rare` matches its tournament year (year < 1998)", () => {
     // Per-spin correctness: `rare` MUST equal `year < 1998` for whichever
     // (T, N) the engine emitted. Aggregate era share is verified by the
-    // distribution probe below — for a single seeded run with 15% rare
+    // distribution probe below — for a single seeded run with 10% rare
     // mass and 17 spins, ~2.5 rare are expected, but a specific seed can
     // produce zero rare without violating the contract.
     const draft = runFixtureDraft();
@@ -210,9 +210,12 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
       }
     }
     const share = rareCount / total;
-    // ±3pp tolerance band centred on RARE_ERA_MASS=0.15.
-    expect(share).toBeGreaterThan(0.12);
-    expect(share).toBeLessThan(0.18);
+    // ±3pp tolerance band centred on RARE_ERA_MASS=0.10. Pre-1998 share
+    // MUST land at or below 13% (and not collapse to <7%) over the 3,400-
+    // sample window, proving the engine constant lowered the era share
+    // toward Paulo's ≤10% product target.
+    expect(share).toBeGreaterThan(0.07);
+    expect(share).toBeLessThan(0.13);
   });
 
   it("depletion advance: no pending spin sits on a fully depleted (T, N) without a coach", () => {

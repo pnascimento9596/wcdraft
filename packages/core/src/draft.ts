@@ -15,8 +15,8 @@
 //   - ERA WEIGHTING is a YEAR-level allocation, then UNIFORM-within-year over
 //     the pairs of that year:
 //       - rare years (year < `RARE_YEAR_CUTOFF` = 1998) receive a flat
-//         `RARE_ERA_MASS` (15%) of total per-spin probability;
-//       - modern years (year >= 1998) receive `MODERN_ERA_MASS` (85%), with
+//         `RARE_ERA_MASS` (10%) of total per-spin probability;
+//       - modern years (year >= 1998) receive `MODERN_ERA_MASS` (90%), with
 //         a per-year recency factor scaling from 1.0 at 1998 to 1.5 at 2026
 //         (clamped outside that range);
 //       - within an era, year mass is split proportionally to the year factor;
@@ -154,10 +154,17 @@ export interface CreateDraftParams {
 
 /** Tournaments STRICTLY before this year are `rare` (pre-1998 era). */
 export const RARE_YEAR_CUTOFF = 1998;
-/** Aggregate per-spin probability allocated to rare (pre-1998) years. */
-export const RARE_ERA_MASS = 0.15;
+/**
+ * Aggregate per-spin probability allocated to rare (pre-1998) years.
+ *
+ * ENGINE-V2 E-1b (Paulo's product call): lowered from 0.15 to 0.10 so the
+ * reachable squad pool tilts more modern (>= 90% from 1998..2026). The
+ * recency factor, year-level mass split, and uniform-within-year structure
+ * are unchanged.
+ */
+export const RARE_ERA_MASS = 0.1;
 /** Aggregate per-spin probability allocated to modern (>= 1998) years. */
-export const MODERN_ERA_MASS = 0.85;
+export const MODERN_ERA_MASS = 0.9;
 /** Modern recency factor lower anchor — 1998 receives factor 1.0. */
 const MODERN_RECENCY_START_YEAR = 1998;
 /** Modern recency factor upper anchor — 2026 receives factor `1 + MODERN_RECENCY_BONUS`. */
