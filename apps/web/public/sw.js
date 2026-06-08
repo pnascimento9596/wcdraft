@@ -14,13 +14,16 @@
  *      cached run.
  *   4. On activation, evict EVERY cache whose name does not match the
  *      currently bundled CACHE_NAMES values — so a redeploy that bumps
- *      schema or dataset version atomically drops the old runtime data.
+ *      schema, dataset, or bundle revision atomically drops the old
+ *      runtime data.
  *
  * The two `CACHE_NAME_*` strings below are the cache-key version anchors;
  * bumping them is the kill-switch for invalidating runtime data + app
- * shell separately. The dataset cache key encodes BOTH the schema version
- * and the dataset version so the cache changes shape whenever either
- * anchor moves.
+ * shell separately. The dataset cache key encodes the schema version,
+ * the dataset version, AND a per-bundle revision (BUNDLE_REVISION) that
+ * mirrors the current draft-pool sha256 prefix — so the cache name
+ * changes shape whenever any of those anchors moves, including a
+ * rating-only recal against the same source revisions.
  *
  * INTENTIONAL LIMITS: this worker does NOT cache the full `/_next/static`
  * tree (a separate I2/I3 concern); navigations stay network-first. The
@@ -30,7 +33,25 @@
 
 const SCHEMA_VERSION = "runtime-data-1.0.0";
 const DATASET_VERSION = "2026-06-04";
-const CACHE_NAME_DATA = `wcdraft-data-${SCHEMA_VERSION}-${DATASET_VERSION}`;
+// First 8 hex chars of packages/data/src/generated/manifest.json
+// .bundles.draft_pool.sha256 — included in CACHE_NAME_DATA so any
+// regenerated compact bundle rotates the cache key, even when
+// schema_version and dataset_version stay pinned (e.g. a rating recal
+// against the same source revisions).
+//
+// This anchor closed a real cache-poisoning incident: commit 5048e34
+// shipped the wc-perf-2.0.0 / proj-career-2.0.0 recal with a hard
+// DISPLAY_FLOOR of 66, but the SW cache name did not move — every
+// already-installed PWA kept serving the pre-floor bundle (OVRs as
+// low as 20) until its data cache was manually cleared.
+//
+// Bump rule: whenever packages/data/src/generated/manifest.json
+// .bundles.draft_pool.sha256 changes, update BUNDLE_REVISION to its
+// new first 8 hex chars. The invariant is locked by
+// apps/web/lib/game/__tests__/sw-cache-version.test.ts; it WILL fail
+// CI if the SW value drifts from the shipped manifest.
+const BUNDLE_REVISION = "8f437b92";
+const CACHE_NAME_DATA = `wcdraft-data-${SCHEMA_VERSION}-${DATASET_VERSION}-${BUNDLE_REVISION}`;
 const CACHE_NAME_SHELL = `wcdraft-shell-v1`;
 
 const DATA_PREFIX = "/data/wcdraft/";
