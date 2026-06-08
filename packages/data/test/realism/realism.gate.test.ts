@@ -116,6 +116,18 @@ const N_RUNS = Number(process.env.WCDRAFT_REALISM_N ?? GOLDEN.ensemble.N_runs);
 const SEED_PREFIX = process.env.WCDRAFT_REALISM_SEED_PREFIX ?? DEFAULT_SEED_PREFIX;
 const GATE_MODE = process.env.WCDRAFT_REALISM_GATE === "report" ? "report" : "pass";
 
+// HEAVY-CI SPLIT
+//   This gate runs the N=2000 × 3-policy ensemble (~1 min wall on a warm
+//   runner). It is intentionally OFF the default `test` / `turbo run test`
+//   job so the fast feedback loop stays fast, and runs ONLY when
+//   `WCDRAFT_REALISM_HEAVY=1` — set by the dedicated `realism · asymmetric
+//   gate` CI job and by the `pnpm --filter @wcdraft/data test:realism:heavy`
+//   script. It is NOT dropped: the heavy job still gates every PR. The fast
+//   SYMMETRIC coherent-XI sweep (`realism-modern-norms.golden.test.ts`)
+//   remains on the default job, so default CI still exercises realism shape.
+const HEAVY_ENABLED = process.env.WCDRAFT_REALISM_HEAVY === "1";
+const gate = HEAVY_ENABLED ? describe : describe.skip;
+
 interface PolicyResult {
   measurement: RealismMeasurement;
   telemetry: PolicyTelemetry;
@@ -186,7 +198,7 @@ function inShapeBand(key: ShapeKey, observed: number): boolean {
   return Math.abs(observed - center) <= half;
 }
 
-describe(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RUNS}`, () => {
+gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RUNS}`, () => {
   const results = new Map<DraftPolicyName, PolicyResult>();
 
   beforeAll(() => {

@@ -32,6 +32,7 @@
     "test:golden": "vitest run test/compact-data.golden.test.ts",
     "test:golden:data": "vitest run test/compact-data.golden.test.ts test/compact-data.integrity.test.ts",
     "test:golden:integration": "vitest run test/e2e-real-run.golden.test.ts",
+    "test:realism:heavy": "WCDRAFT_REALISM_HEAVY=1 vitest run test/realism/realism.gate.test.ts",
     "build:compact": "node scripts/build-compact-data.mjs",
     "copy:web-assets": "node scripts/copy-web-assets.mjs",
     "gen:e2e-golden": "tsx scripts/generate-e2e-golden.mjs"

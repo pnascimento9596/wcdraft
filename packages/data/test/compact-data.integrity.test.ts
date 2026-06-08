@@ -101,13 +101,16 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the E-4 career-lift versions", () => {
+  it("rating_version anchors are the E-4 career-lift versions; engine_version is the season-merge bump", () => {
     // wc-perf-3.0.0 = the E-4 career-stature lift. Projected stays
-    // proj-career-2.0.0 (2026 does not consume career stature in E-4), and the
-    // engine_version is unchanged (channels moved, but engine math/λ did not).
+    // proj-career-2.0.0 (2026 does not consume career stature in E-4). The
+    // SEASON MERGE bumps engine_version once (engine-2026.06.04 →
+    // engine-2026.06.08), resolving the deferred-bump ledger
+    // (E-2 / E-1b / E-3a / E-3b / E-4). The bump is a STAMP change only —
+    // sim logic is byte-identical, so this pins the stamp, not new sim values.
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-3.0.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.04");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.08");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {

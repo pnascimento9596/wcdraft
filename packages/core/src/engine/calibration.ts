@@ -18,17 +18,21 @@
 //   faithfulness assertions passing. See SIM_CALIBRATION.md for the landing
 //   report (norms hit, search seed, candidate scores).
 //
-// ENGINE_VERSION POLICY (E-3a):
+// ENGINE_VERSION POLICY (E-3a → resolved at the season merge):
 //   Historically a change to any constant in this file moves a golden
 //   `RunResult` byte and therefore REQUIRES an `engine_version` bump
 //   (matching the discipline the RNG sequence and rating algorithm
-//   already follow). E-3a INTENTIONALLY DEFERS that bump to the season
-//   merge — the constants change AND the impacted goldens (sim /
-//   simulate-match / e2e / group-stage / top-scorer) are re-locked on the
-//   `engine-v2-e3a-lambda-calibration` branch, but `engine_version`
-//   remains `engine-2026.06.04` (pinned by
-//   `packages/data/test/compact-data.integrity.test.ts`). This is the
-//   ONLY sanctioned exception; it is locked to the engine-v2 chain.
+//   already follow). E-3a INTENTIONALLY DEFERRED that bump to the season
+//   merge — the constants changed AND the impacted sim goldens (sim /
+//   simulate-match / e2e / group-stage / top-scorer) were re-locked on the
+//   engine-v2 chain, while `engine_version` stayed `engine-2026.06.04`.
+//   The SEASON MERGE now resolves that deferred-bump ledger
+//   (E-2 / E-1b / E-3a / E-3b / E-4) into ONE atomic stamp bump to
+//   `engine-2026.06.08` (pinned by
+//   `packages/data/test/compact-data.integrity.test.ts`). The bump is a
+//   STAMP change only — sim logic is byte-identical, so the pure-sim
+//   goldens (sim / rng / draft) do NOT move; only stamp-carrying payloads
+//   (e2e-real-run, run-record, compact manifest, asym-realism) re-lock.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical

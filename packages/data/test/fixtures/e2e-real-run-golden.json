@@ -1048,7 +1048,7 @@
     ],
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-3.0.0+proj-career-2.0.0",
-    "engine_version": "engine-2026.06.04"
+    "engine_version": "engine-2026.06.08"
   },
   "scenario": {
     "scenario_id": "scenario:wcdraft:scenario:v1:06c7af0efa0d42887f6a918fae7dee58",
@@ -1093,7 +1093,7 @@
     "scenario_id": "scenario:wcdraft:scenario:v1:06c7af0efa0d42887f6a918fae7dee58",
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-3.0.0+proj-career-2.0.0",
-    "engine_version": "engine-2026.06.04",
+    "engine_version": "engine-2026.06.08",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:801",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",

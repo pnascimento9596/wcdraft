@@ -46,7 +46,7 @@ const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
 const SCHEMA_VERSION = "runtime-data-1.0.0";
-const ENGINE_VERSION = "engine-2026.06.04";
+const ENGINE_VERSION = "engine-2026.06.08";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // E-4 career-stature lift (wc-perf-3.0.0 historical); projected stays

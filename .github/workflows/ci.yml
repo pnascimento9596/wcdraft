@@ -80,6 +80,39 @@ jobs:
         # the deterministic 17-spin output drifts from the recorded snapshot.
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
 
+  realism:
+    name: realism · asymmetric gate (N=2000 × 3 policies)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.5.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Asymmetric realism gate (heavy — split OFF the default test job)
+        # The N=2000 × 3-policy ensemble (~1 min) is deliberately OFF the
+        # `verify` job's `pnpm run test` to keep fast feedback fast. It is NOT
+        # dropped — it gates every PR here. The fast SYMMETRIC coherent-XI
+        # sweep (realism-modern-norms.golden.test.ts) stays on the default
+        # job. WCDRAFT_REALISM_HEAVY=1 flips realism.gate.test.ts from
+        # describe.skip to live; the Turbo task declares the var in its env so
+        # this run never shares a cache entry with the default test job.
+        env:
+          WCDRAFT_REALISM_HEAVY: "1"
+        run: pnpm exec turbo run test:realism:heavy --filter=@wcdraft/data
+
   # ── Path-filter gate for the db job ──────────────────────────────────────
   #
   # The destructive ephemeral-branch rollback-check is heavy (forks + tears
