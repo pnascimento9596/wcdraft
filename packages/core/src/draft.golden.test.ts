@@ -210,12 +210,17 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
       }
     }
     const share = rareCount / total;
-    // ±3pp tolerance band centred on RARE_ERA_MASS=0.10. Pre-1998 share
-    // MUST land at or below 13% (and not collapse to <7%) over the 3,400-
-    // sample window, proving the engine constant lowered the era share
-    // toward Paulo's ≤10% product target.
-    expect(share).toBeGreaterThan(0.07);
-    expect(share).toBeLessThan(0.13);
+    // ENGINE-V2 E-1b — distribution probe band tightened to ±3σ around
+    // RARE_ERA_MASS=0.10. For p=0.10, n=3400, σ = √(p·(1−p)/n) ≈ 0.00514,
+    // so ±3σ ≈ ±0.0154 ⇒ band [0.085, 0.115]. This is the EMPIRICAL
+    // smoke test; the exact-mass guard is the analytic
+    // `expect(rare).toBeCloseTo(RARE_ERA_MASS, 9)` assertion above, which
+    // proves the catalog allocation is exactly 0.10. The tightened band
+    // catches a real engine drift to e.g. p=0.12 (which would clear the
+    // old 0.07–0.13 window) while staying ~3σ wide so the test does not
+    // flake on the deterministic 3,400-sample window.
+    expect(share).toBeGreaterThan(0.085);
+    expect(share).toBeLessThan(0.115);
   });
 
   it("depletion advance: no pending spin sits on a fully depleted (T, N) without a coach", () => {

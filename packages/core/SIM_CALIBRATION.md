@@ -87,3 +87,43 @@ accommodate it explicitly with rationale; tightening the engine to land
 nearer the norms (BASE/SPREAD/ET tune) is a flagged follow-on, NOT in
 scope for the rating-recalibration PR.
 
+## Engine-v2 series — deferred `engine_version` bump ledger
+
+The `engine-v2` integration branch follows a **deferred-bump policy**: sub-unit
+PRs change deterministic engine output (draft, synergy, sim, calibration)
+without bumping `engine_version`. The single bump + cumulative golden re-lock
++ client/DB version-skew handling happen **atomically at the
+`engine-v2` → `main` season merge**, not per sub-unit. This matches the
+pre-existing policy already in force above for the Phase 1 decoupled rating
+recalibration (which also stayed at `engine-2026.06.04`).
+
+Why it's safe in dev: `engine-v2` does not deploy. No live client carries any
+intermediate anchor between the current `main` and the eventual
+`engine-v2` → `main` merge, so the `versionsAgree` / `purgeStale` /
+leaderboard-season gates have nothing to enforce *within* the series. At the
+season-merge moment the bump invalidates every outstanding `main`-anchored
+token / RunRecord / leaderboard season in one stroke.
+
+Within-branch fixture consistency is preserved: every sub-unit re-locks its
+own draft / sim / e2e goldens against the branch state of the moment, so the
+test suite remains byte-deterministic at every commit in the series.
+
+| Sub-unit | Engine output change | Goldens re-locked here | `engine_version` |
+|---|---|---|---|
+| **E-2 — nation-only synergy + rare UI** (squashed `74bb90c`) | Synergy moved from manager-driven to nation-only; rare-spin UI surfaced | synergy + draft (selectively) | not bumped |
+| **E-3a — λ calibration** (queued on `engine-v2-e3a-lambda-calibration`) | `LAMBDA.{BASE,SPREAD,MIN,MAX}` shifted toward realism-control bands | sim + e2e | not bumped |
+| **E-1b — pre-1998 era mass 15% → 10%** (this PR #37) | `RARE_ERA_MASS 0.15 → 0.10`, modern (T,N) per-pair probs × 1.0588 | draft + e2e | not bumped |
+
+Codex review of PR #37 correctly reproduced the cross-engine-state replay
+failure (`pickPlayer: card P-04469:2010 is not a candidate on spin 2` when an
+old `:23`-anchored pick log is replayed under the new engine constants) and
+flagged the missing bump as a structural blocker. That blocker is real **in
+absolute terms** and is the exact failure mode the season-merge bump is
+designed to invalidate atomically. It is **unreachable in production** during
+the engine-v2 dev phase because no `engine-v2`-anchored token exists outside
+this branch.
+
+If any sub-unit ever needs to ship to production before the season merge
+(e.g. a hotfix backport to `main`), it MUST bump `engine_version` and
+re-lock the public-data manifests, ignoring the deferred-bump policy.
+
