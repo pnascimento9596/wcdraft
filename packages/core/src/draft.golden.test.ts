@@ -166,7 +166,7 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
   it("every spin's `rare` matches its tournament year (year < 1998)", () => {
     // Per-spin correctness: `rare` MUST equal `year < 1998` for whichever
     // (T, N) the engine emitted. Aggregate era share is verified by the
-    // distribution probe below — for a single seeded run with 15% rare
+    // distribution probe below — for a single seeded run with 10% rare
     // mass and 17 spins, ~2.5 rare are expected, but a specific seed can
     // produce zero rare without violating the contract.
     const draft = runFixtureDraft();
@@ -210,9 +210,17 @@ describe("draft — ENGINE-V2 E-1 with-replacement sampling", () => {
       }
     }
     const share = rareCount / total;
-    // ±3pp tolerance band centred on RARE_ERA_MASS=0.15.
-    expect(share).toBeGreaterThan(0.12);
-    expect(share).toBeLessThan(0.18);
+    // ENGINE-V2 E-1b — distribution probe band tightened to ±3σ around
+    // RARE_ERA_MASS=0.10. For p=0.10, n=3400, σ = √(p·(1−p)/n) ≈ 0.00514,
+    // so ±3σ ≈ ±0.0154 ⇒ band [0.085, 0.115]. This is the EMPIRICAL
+    // smoke test; the exact-mass guard is the analytic
+    // `expect(rare).toBeCloseTo(RARE_ERA_MASS, 9)` assertion above, which
+    // proves the catalog allocation is exactly 0.10. The tightened band
+    // catches a real engine drift to e.g. p=0.12 (which would clear the
+    // old 0.07–0.13 window) while staying ~3σ wide so the test does not
+    // flake on the deterministic 3,400-sample window.
+    expect(share).toBeGreaterThan(0.085);
+    expect(share).toBeLessThan(0.115);
   });
 
   it("depletion advance: no pending spin sits on a fully depleted (T, N) without a coach", () => {
