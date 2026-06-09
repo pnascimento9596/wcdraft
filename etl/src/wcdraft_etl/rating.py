@@ -45,7 +45,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-4.0.0"
+RATING_VERSION = "wc-perf-4.1.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring

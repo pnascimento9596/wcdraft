@@ -71,7 +71,16 @@ from dataclasses import dataclass, field
 # ZERO change to the historical/projected rating outputs or compact bundles (the
 # career-stature table the rating stage reads is untouched) until MV2-4.
 SOURCE_SET_VERSION = "merit-source-set-2.0.0"
-VERSION = "career-stature-2.0.0"
+# career-stature-2.1.0 (MV2-3.5): the table re-scores the SAME model over a
+# broadened fact set — two new citation-backed research-backstop sources
+# (research_wc_all_star → wc_legacy, research_gk_award → position_balanced_selection)
+# close the consensus-great defender/keeper recognition deficit the MV2-9 recon read
+# surfaced. The index transform, saturating combine, era weights, tier quantiles and
+# legend routes are byte-identical to 2.0.0; only the fact INPUTS (and two reused
+# per-source strength anchors) changed. SOURCE_SET_VERSION stays at 2.0.0 because the
+# additions are research-backstop notes (their own pinned manifest), not new fetched
+# web sources — the same split MV2-2 used when it added the captaincy/global notes.
+VERSION = "career-stature-2.1.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
@@ -469,6 +478,28 @@ _RESEARCH_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "Global annual recognition recovered under canonical names (research backstop)",
+    ),
+    # MV2-3.5 — defender / goalkeeper recognition gap-fill (position-appropriate).
+    # Both are citation-backed, SHA-pinned committed notes (same discipline as the
+    # MV2-2 research sources); they route through the EXISTING wc_legacy and
+    # position_balanced_selection scorers and add NO new model parameter.
+    Source(
+        "research_wc_all_star",
+        "wc_legacy",
+        "research/wc-all-star.json",
+        "(research backstop — per-row citations in merit/raw/research/manifest.json)",
+        "utf-8",
+        "fact",
+        "World Cup All-Star Team / Team-of-the-Tournament selections (research backstop)",
+    ),
+    Source(
+        "research_gk_award",
+        "position_balanced_selection",
+        "research/gk-awards.json",
+        "(research backstop — per-row citations in merit/raw/research/manifest.json)",
+        "utf-8",
+        "fact",
+        "World's Best Goalkeeper annual award wins (research backstop)",
     ),
 )
 RESEARCH_SOURCES: tuple[Source, ...] = _RESEARCH_SOURCES

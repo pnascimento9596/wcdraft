@@ -385,7 +385,7 @@ def test_source_set_and_stature_table_versions_are_independent():
     MV2-3 now bumps the career-stature TABLE to v2 to consume that breadth. They are
     distinct strings (different schemas, different change cadences)."""
     assert SOURCE_SET_VERSION == "merit-source-set-2.0.0"
-    assert VERSION == "career-stature-2.0.0"
+    assert VERSION == "career-stature-2.1.0"
     assert SOURCE_SET_VERSION != VERSION
 
 
@@ -513,7 +513,7 @@ def test_v2_stature_table_scores_the_full_source_set():
     table = json.loads(
         (REPO_ROOT / "etl" / "output" / "career_stature.json").read_text("utf-8")
     )
-    assert table["version"] == "career-stature-2.0.0"
+    assert table["version"] == "career-stature-2.1.0"
     # The v2-only families carry positive scores on real rows — they are scored, not
     # staged-and-ignored as they were under the v1 table.
     for fam in (

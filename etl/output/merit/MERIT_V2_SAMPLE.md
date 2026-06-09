@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-4.0.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-4.1.0)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -31,25 +31,25 @@ First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = st
 
 | Player | Card | Pos | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| Schmeichel | `WC-1998` | GK | 0.574527 | 1.00 | 0.649 | 0.690534 | +0.060 | 0.751 | 23 | 31 | 50 | 75 | ✓ |
 | Schillaci | `WC-1990` | FW | 0.572 | 1.00 | 0.965 | 0.714667 | +0.080 | 0.795 | 79 | 56 | 38 | 20 | — |
 | Tigana | `WC-1986` | MF | 0.56966 | 1.00 | 0.740 | 0.713107 | +0.080 | 0.793 | 59 | 79 | 56 | 20 | — |
 | Ibrahimović | `WC-2006` | FW | 0.56041 | 1.00 | 0.388 | 0.70694 | +0.000 | 0.707 | 71 | 50 | 35 | 20 | ✓ |
 | Thuram | `WC-1998` | DF | 0.559838 | 1.00 | 0.987 | 0.701231 | +0.070 | 0.771 | 40 | 54 | 77 | 20 | ✓ |
-| Moore | `WC-1966` | DF | 0.557594 | 1.00 | 0.897 | 0.69981 | +0.070 | 0.770 | 40 | 54 | 77 | 20 | ✓ |
 | Ballack | `WC-2002` | MF | 0.552878 | 1.00 | 0.785 | 0.701919 | +0.080 | 0.782 | 58 | 78 | 55 | 20 | ✓ |
 | Courtois | `WC-2014` | GK | 0.5522 | 1.00 | 0.650 | 0.676393 | +0.060 | 0.736 | 23 | 31 | 50 | 74 | — |
 | De Bruyne | `WC-2018` | MF | 0.550566 | 1.00 | 0.743 | 0.700377 | +0.080 | 0.780 | 58 | 78 | 55 | 20 | ✓ |
 | Kane | `WC-2018` | FW | 0.550288 | 1.00 | 0.916 | 0.700192 | +0.080 | 0.780 | 78 | 55 | 37 | 20 | — |
 | Nesta | `WC-2006` | DF | 0.542419 | 1.00 | 0.758 | 0.690199 | +0.070 | 0.760 | 40 | 54 | 76 | 20 | ✓ |
 | Navas | `WC-2014` | GK | 0.539951 | 1.00 | 0.650 | 0.668636 | +0.060 | 0.729 | 23 | 31 | 49 | 73 | — |
-| Santos | `WC-1962` | DF | 0.5375 | 1.00 | 0.883 | 0.687083 | +0.070 | 0.757 | 39 | 53 | 76 | 20 | — |
+| Seedorf | `WC-1998` | MF | 0.537434 | 1.00 | 0.573 | 0.691623 | +0.054 | 0.745 | 55 | 75 | 53 | 20 | ✓ |
 
 ## Position-channel anchors (DF / GK / MF — channel-shape check)
 
 | Player | Card | Pos | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
 | Maldini | `WC-1990` | DF | 0.750389 | 1.00 | 0.800 | 0.821913 | +0.070 | 0.892 | 44 | 62 | 89 | 20 | ✓ |
-| Baresi | `WC-1990` | DF | 0.5225 | 1.00 | 0.800 | 0.677583 | +0.070 | 0.748 | 39 | 53 | 75 | 20 | ✓ |
+| Baresi | `WC-1990` | DF | 0.631647 | 1.00 | 0.800 | 0.74671 | +0.070 | 0.817 | 42 | 57 | 82 | 20 | ✓ |
 | Beckenbauer | `WC-1966` | MF | 0.888616 | 1.00 | 0.948 | 0.925744 | +0.080 | 1.000 | 72 | 100 | 68 | 20 | ✓ |
 | Cafu | `WC-1994` | DF | 0.65594 | 1.00 | 0.716 | 0.762095 | +0.070 | 0.832 | 42 | 58 | 83 | 20 | ✓ |
 | Yashin | `WC-1958` | GK | 0.737587 | 1.00 | 0.628 | 0.793805 | +0.060 | 0.854 | 23 | 33 | 56 | 85 | ✓ |

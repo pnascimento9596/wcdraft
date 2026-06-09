@@ -1,0 +1,43 @@
+{
+  "source_id": "research_gk_award",
+  "family": "position_balanced_selection",
+  "note": "MV2-3.5 deterministic factual research backstop. World's-Best-Goalkeeper annual award wins (IFFHS World's Best Goalkeeper) — a GK-specific, position-aware best-of-year recognition that the forward-heavy player-of-the-year ballots never reach, and the natural goalkeeper analogue of the existing position-balanced selections (UEFA Best Goalkeeper, FIFPro, ESM). Scope is a BOUNDED gap-fill for the consensus-great keepers the MV2-9 recon-divergence read flagged as under-credited by OUR model (etl/output/merit/RECON_DIVERGENCE.md). ONLY outright annual WINS are sourced — a runner-up / 3rd place is NOT a win and is deliberately excluded (e.g. a keeper who only placed is left where he is, never fabricated up). Each row is a citation-backed public fact: the keeper's canonical display name, nation, award year, position GK, a human detail, and a fetchable citation URL plus the specific claim. It routes through the EXISTING position_balanced_selection scorer at the same single-best-at-a-position strength as the UEFA positional award; that family is era-gated to the post-1990 annual-award era exactly as the other annual position-balanced selections, so it credits only keepers whose award fell in their playing era. NO rating numbers, rankings, OVR/channel/boost/override, NO recon values — only the award record. The conservative linker treats these rows identically to parser rows; an uncited row fails the build.",
+  "rows": [
+    {
+      "scope": "recon_undercredit",
+      "name": "Peter Schmeichel",
+      "nation_token": "Denmark",
+      "year": 1992,
+      "position": "GK",
+      "detail": "world_best_gk 1992",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper",
+        "claim": "Peter Schmeichel was named the IFFHS World's Best Goalkeeper for 1992."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Peter Schmeichel",
+      "nation_token": "Denmark",
+      "year": 1993,
+      "position": "GK",
+      "detail": "world_best_gk 1993",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper",
+        "claim": "Peter Schmeichel was named the IFFHS World's Best Goalkeeper for 1993."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Fabien Barthez",
+      "nation_token": "France",
+      "year": 2000,
+      "position": "GK",
+      "detail": "world_best_gk 2000",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper",
+        "claim": "Fabien Barthez was named the IFFHS World's Best Goalkeeper for 2000."
+      }
+    }
+  ]
+}

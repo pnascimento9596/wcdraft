@@ -157,9 +157,9 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
 
 def test_rating_version_is_stature_dominant(built: list[dict]):
     # wc-perf-4.0.0 = the merit-v2 stature-dominant rebase (MV2-4).
-    assert rating.RATING_VERSION == "wc-perf-4.0.0"
+    assert rating.RATING_VERSION == "wc-perf-4.1.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-4.0.0"
+        assert r["rating_version"] == "wc-perf-4.1.0"
 
 
 def test_every_row_carries_a_boolean_legend(built: list[dict]):

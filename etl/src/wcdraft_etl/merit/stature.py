@@ -151,6 +151,14 @@ _WC_AWARD_STRENGTH: dict[str, float] = {
     "Bronze Boot": 0.45,
     "Golden Glove": 0.85,
     "Best Young Player": 0.55,
+    # MV2-3.5 — a World Cup All-Star Team / Team-of-the-Tournament selection (the
+    # research_wc_all_star gap-fill) is a contemporaneous, position-aware best-XI
+    # honour. It is a NEW recognised award KIND, not a new tuning constant: its
+    # strength REUSES the existing Bronze-Boot anchor (0.45) — a best-XI-of-tournament
+    # selection (11 slots) is a bronze-tier individual honour, below Best Young Player
+    # (0.55, one slot) and at/below the Bronze Ball (0.50, the third-best player).
+    # Repeated selections saturate through the unchanged per-family product.
+    "WC All-Star Team": 0.45,
 }
 
 # Global annual player-of-the-year recognition, by source. Ballon d'Or (and its
@@ -186,6 +194,13 @@ _POSITION_BALANCED_STRENGTH: dict[str, float] = {
     "fifpro_world11": 0.50,
     "uefa_team_of_the_year": 0.45,
     "esm_team_of_the_season": 0.40,
+    # MV2-3.5 — World's-Best-Goalkeeper annual award (the research_gk_award gap-fill):
+    # the GK-specific analogue of the single-best-at-a-position UEFA award. NEW
+    # recognised source, NOT a new tuning constant: its strength REUSES the existing
+    # uefa_club_positional anchor (0.62, the single best at a position that year). It
+    # is era-gated to the post-1990 annual-award era like every other annual
+    # position-balanced selection (ERA_FAMILY_WEIGHTS unchanged).
+    "research_gk_award": 0.62,
 }
 
 # Retrospective / all-time selections. A World Player-of-the-Century election is the
