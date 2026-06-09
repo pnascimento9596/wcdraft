@@ -66,7 +66,6 @@ from .rating import (
     _channel,
     _clamp01,
     _display_score,
-    _fit_display_curve,
     _load_career_stature,
     _percentile_map,
     _quantile,
@@ -596,6 +595,7 @@ def build_ratings(
     career_stature_by_player: dict[str, dict] | None = None,
     historical_raw_only_internal: list[float] | None = None,
     output_dir: Path = OUTPUT_DIR,
+    curve=None,
 ) -> list[dict]:
     """Return projected Rating-shaped records for every 2026 card, sorted by card_id.
 
@@ -604,20 +604,30 @@ def build_ratings(
 
     ``historical_raw_only_internal`` (the quantile-map target) defaults to the
     committed ``ratings.json`` raw-only distribution under ``output_dir``.
+
+    ``curve`` is the MV2-6 UNIFIED display curve (fit on the pooled historical +
+    2026 internal distribution by ``display_curve.fit_unified_curve``). Passing
+    ``None`` self-fits it so a bare call still emits the final unified display.
+    The 2026 ``rating_version`` stays ``proj-career-3.0.0``: the INTERNAL projected
+    algorithm is unchanged — only the display ``overall`` moved from the MV2-5
+    provisional 2026-only curve onto the shared wc-perf-4.2.0 unified curve.
     """
+    from . import display_curve  # lazy: avoid an import cycle
+
     if historical_raw_only_internal is None:
         historical_raw_only_internal = _historical_raw_only_internal(output_dir)
     internal_rows = _build_internal_rows(
         cards, career_stature_by_player, historical_raw_only_internal
     )
 
-    # ── PASS 2: fit display curve on the projected pool, materialize Rating ────
-    # PROVISIONAL display (MV2-5). The unified historical+projected display curve is
-    # MV2-6; until then `overall` is fit on the projected pool only and is NOT the
-    # final display — the INTERNAL score_0_100 (now on the stature scale) is the
-    # assertable quantity. baseline_anchor_estimate never occurs for 2026, so the
-    # estimate cap is structurally inert here.
-    curve = _fit_display_curve([r["score_0_100"] for r in internal_rows])
+    # ── PASS 2: materialize Rating rows on the UNIFIED display curve (MV2-6) ───
+    # The display `overall` is now mapped by the ONE pooled curve shared with the
+    # historical wc-perf-4.2.0 cards (no longer the MV2-5 provisional 2026-only
+    # fit). The INTERNAL score_0_100 (on the stature scale) is unchanged, so the
+    # four sim channels stay byte-identical. baseline_anchor_estimate never occurs
+    # for 2026, so the estimate cap is structurally inert here.
+    if curve is None:
+        curve = display_curve.fit_unified_curve(output_dir)
     ratings: list[dict] = []
     for row in internal_rows:
         pos = row["pos"]
@@ -817,7 +827,12 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
 
     historical = rating.render_merit_v2_sample(output_dir)
     section_2026 = render_merit_v2_sample_2026(internal_rows, cards, name_of)
-    md = historical + section_2026
+    # MV2-6: append the unified DISPLAY-band section (final `overall`, both eras on
+    # the one pooled curve + the anti-inflation band distribution — Paulo's gate).
+    from . import display_curve
+
+    section_display = display_curve.render_unified_display_sample(output_dir)
+    md = historical + section_2026 + section_display
     out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")

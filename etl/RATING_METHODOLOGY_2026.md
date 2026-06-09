@@ -1,5 +1,15 @@
 # wcdraft 2026 Projected Rating — Methodology (`proj-career-3.0.0`)
 
+> **MV2-6 (unified display curve):** the 2026 `rating_version` stays
+> `proj-career-3.0.0` — the projected INTERNAL algorithm is unchanged. What changed
+> is the **display** `overall`: it is no longer fit on the 2026 pool alone but is
+> now mapped by the ONE shared monotonic curve fit over the **pooled** historical +
+> 2026 internal distribution (`display_curve.fit_unified_curve`, carried by the
+> `wc-perf-4.2.0` historical anchor). MV2-5's quantile mapping made the two internal
+> scales cross-era fair, so the same curve maps both eras honestly. The four sim
+> channels are byte-identical (the curve touches `overall` only); the four
+> previously-spurious OVR-99 projected MF cards now display in the mid-80s.
+
 The 2026 World Cup opponents are **real** (the 48 final squads, group draw, and
 knockout bracket were published 2026-06-02). But the 2026 players have **no
 World Cup performance yet**, so their ratings are **projected from factual
@@ -39,9 +49,10 @@ not a replacement.
 > comparable historical reserve cross-era. Rows now
 > carry `overall_basis` (`career_stature_estimate` | `measured_performance`, never
 > `baseline_anchor_estimate`) and a first-class `legend` boolean joined from the
-> linked player's career row. The materialized `overall` here is **provisional** —
-> the unified historical+projected display curve is MV2-6; MV2-5 asserts the
-> INTERNAL (pre-display) score behavior. `calibration.ts` is still UNCHANGED.
+> linked player's career row. The materialized `overall` is now the **final**
+> unified display (MV2-6 landed the shared historical+projected pooled curve); the
+> INTERNAL (pre-display) score behavior MV2-5 asserts is unchanged.
+> `calibration.ts` is still UNCHANGED.
 >
 > **Cross-era density note (the MV2-5 raw-only divergence):** the projected raw
 > composite runs HOT relative to the historical tournament box score (2026
@@ -137,11 +148,12 @@ The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
 the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
 helpers as `wc-perf-2.0.0`. Channels are derived from `score_0_100` via
 `_channel(score_0_100, spread)` (unchanged pre-recal formula) — they do NOT
-pass through the display curve. The projected pool fits the curve on **its own** four
-quantiles (the projected raw scale is bounded above more tightly than the
-historical raw scale, because there is no decorated apex tail). The TARGET
-anchors are identical to historical (66, 73, 88, 99) so historical and
-projected display values are directly comparable.
+pass through the display curve. Under **MV2-6** the projected pool no longer fits
+its own curve: the display `overall` is mapped by the ONE curve fit over the
+**pooled** historical + 2026 internal scores (`display_curve.fit_unified_curve`),
+identical for both eras. The TARGET anchors remain 66/73/88/99 and, because MV2-5
+made the internal scales cross-era fair, historical and projected display values
+sit on the same honest scale with no per-era table.
 
 ### Why a league anchor (the projection-sanity fix, unchanged from 1.0.0)
 

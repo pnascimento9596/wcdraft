@@ -1,5 +1,21 @@
-# wcdraft Player Rating — Methodology (`wc-perf-3.0.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-4.2.0`)
 
+> **wc-perf-4.2.0 (MV2-6 — unified display curve):** the internal merit model and
+> the four sim channels are UNCHANGED (channels byte-identical; the engine/λ and
+> the committed compact are untouched). The single change is the **display curve**:
+> instead of the historical pool and the 2026 projected pool each fitting their own
+> per-pool curve, ONE monotonic low-DOF curve is now fit over the **pooled**
+> historical + 2026 internal distribution (`display_curve.fit_unified_curve`) and
+> applied identically to BOTH eras. MV2-5 made the two internal scales cross-era
+> fair (the 2026 non-material cards are quantile-mapped onto the historical raw-only
+> distribution), so one pooled curve is the honest mapping — no per-era table, no
+> per-player pin. The curve form (`global` piecewise-power, three fixed exponents,
+> four data anchors → 66/73/88/99) is unchanged; only the data the anchors are fit
+> on changed (the pool). This is a display-`overall`-only bump: historical `overall`
+> moves ≤1 for 25/10 973 cards, the 2026 display moves onto the shared curve, and
+> every sim channel stays byte-identical. The same curve also maps the
+> `proj-career-3.0.0` 2026 cards (whose internal-algorithm anchor is unchanged).
+>
 > **wc-perf-3.0.0 (ENGINE-V2 E-4 — career-stature lift):** the per-tournament
 > merit model below is UNCHANGED. A new **career-stature lift** is added to the
 > internal `score_0_100` **before** it is materialized, so a historical legend's
@@ -168,12 +184,12 @@ finish_lift = FINISH_WEIGHT[pos] · finish_points
 | DF | 0.18 | 0.24 |
 | GK | 0.22 | 0.28 |
 
-## The display calibration curve (the Phase 1 reshape)
+## The display calibration curve (Phase 1 reshape; unified pool in MV2-6)
 
 The curve takes the internal `score_0_100` and maps it onto the display band:
 
 ```
-DISPLAY_CURVE_KIND  = "global_piecewise_power_v1"
+DISPLAY_CURVE_KIND  = "unified_pooled_piecewise_power_v1"
 DISPLAY_FLOOR       = 66
 DISPLAY_MEDIAN      = 73
 DISPLAY_P95         = 88
@@ -185,8 +201,9 @@ ESTIMATE_CEILING    = 73
 
 ### Algorithm
 
-The curve is fit on four global INTERNAL quantiles of the EMITTED dataset
-(historical men's cards or projected 2026 cards, fitted separately):
+The curve is fit on four global INTERNAL quantiles of the **pooled** dataset
+(historical men's cards **and** projected 2026 cards together — MV2-6 unification;
+before MV2-6 each pool fitted its own curve):
 
 ```
 raw_floor   = min(score_0_100)

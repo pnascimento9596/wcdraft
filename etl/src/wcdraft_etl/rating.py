@@ -45,7 +45,13 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-RATING_VERSION = "wc-perf-4.1.0"
+# wc-perf-4.2.0 (MV2-6): the display `overall` is now reshaped by the UNIFIED
+# pooled display curve (`display_curve.fit_unified_curve`) — ONE monotonic curve
+# fit over the combined historical + 2026 internal distribution and applied
+# identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
+# display-`overall`-only bump (the same shared curve also maps 2026 — see
+# rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
+RATING_VERSION = "wc-perf-4.2.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -220,7 +226,7 @@ CHANNELS = ("attack", "midfield", "defense", "goalkeeping")
 # Rounding precision for component float values, so the emitted JSON is stable.
 _PRECISION = 6
 
-# ─── DISPLAY CALIBRATION CURVE (wc-perf-2.0.0) ────────────────────────────────
+# ─── DISPLAY CALIBRATION CURVE (wc-perf-2.0.0; unified pool MV2-6) ─────────────
 # Phase 1 rating recalibration: the internal merit model above is UNCHANGED.
 # Its output `score_0_100` is mapped through a deterministic monotonic
 # piecewise-power curve onto the display band [DISPLAY_FLOOR, DISPLAY_MAX].
@@ -229,6 +235,14 @@ _PRECISION = 6
 # SINGLE knob that reshapes the emitted distribution; the merit math is
 # untouched. Low-DOF (three exponents, four data anchors, no per-player
 # tuning) so it cannot fudge individuals and stays auditable.
+#
+# MV2-6 UNIFICATION: the four anchors are now fit on the POOLED historical + 2026
+# internal distribution (see `display_curve.fit_unified_curve`) and the SAME curve
+# maps BOTH eras — one honest cross-era mapping, no per-era table. The curve FORM
+# (`_fit_display_curve` / `_display_value`) is identical; only the data the anchors
+# are fit on changed. `build_ratings` takes the unified curve via `curve=`; passing
+# `None` self-fits the unified pooled curve so a bare `build_ratings` call still
+# emits the unified display.
 #
 # DESIGN INVARIANT: applied to `overall` ONLY. The four sim channels stay
 # on the pre-recalibration `[FLOOR_CHANNEL, 100]` band — they are NOT routed
@@ -243,7 +257,7 @@ _PRECISION = 6
 # [ESTIMATE_FLOOR, ESTIMATE_CEILING] AFTER the curve. They never out-rate
 # linked greats, never fabricate a box score (the absent stat stays null in
 # components), and remain flagged via overall_basis + low coverage.
-DISPLAY_CURVE_KIND = "global_piecewise_power_v1"
+DISPLAY_CURVE_KIND = "unified_pooled_piecewise_power_v1"
 
 DISPLAY_FLOOR = 66
 DISPLAY_MEDIAN = 73
@@ -832,6 +846,7 @@ def build_ratings(
     tournaments: list[dict],
     manager_tournaments: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    curve: DisplayCurve | None = None,
 ) -> list[dict]:
     """Return Rating-shaped records for every men's card, sorted by card_id.
 
@@ -839,11 +854,22 @@ def build_ratings(
     JOIN 1:1 with player_tournaments.json. Mapping the string tournament id to
     the numeric id the runtime ``Rating`` zod schema wants is the later
     packages/data emit-lock step and deliberately out of scope here.
+
+    ``curve`` is the MV2-6 UNIFIED display curve (fit on the pooled historical +
+    2026 internal distribution). Passing ``None`` self-fits it via
+    ``display_curve.fit_unified_curve`` so a bare call still emits the unified
+    display; the orchestrator passes the curve once to avoid the redundant fit.
+    The curve reshapes ``overall`` ONLY — channels are materialized independently
+    from ``score_0_100`` and stay byte-identical regardless of the curve.
     """
-    # ── PASS 2: fit display curve and materialize Rating rows ─────────────────
-    internal_rows, curve = build_internal_view(
+    from . import display_curve  # lazy: avoid an import cycle
+
+    # ── PASS 2: materialize Rating rows on the UNIFIED display curve ───────────
+    internal_rows, _self_curve = build_internal_view(
         players, cards, tournaments, manager_tournaments, career_stature_by_player
     )
+    if curve is None:
+        curve = display_curve.fit_unified_curve()
     ratings: list[dict] = []
     for row in internal_rows:
         pos = row["pos"]
@@ -890,13 +916,17 @@ def build_ratings(
 
 
 def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
-    """Load the committed canonical tables and build every men's-card rating."""
+    """Load the committed canonical tables and build every men's-card rating on
+    the MV2-6 unified pooled display curve (fit once here, passed down)."""
+    from . import display_curve  # lazy: avoid an import cycle
+
     return build_ratings(
         players=_load(output_dir, "players"),
         cards=_load(output_dir, "player_tournaments"),
         tournaments=_load(output_dir, "tournaments"),
         manager_tournaments=_load(output_dir, "manager_tournaments"),
         career_stature_by_player=_load_career_stature(output_dir),
+        curve=display_curve.fit_unified_curve(output_dir),
     )
 
 
