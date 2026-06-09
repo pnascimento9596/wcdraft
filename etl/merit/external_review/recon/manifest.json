@@ -1,0 +1,47 @@
+{
+  "kind": "external_review_reference",
+  "status": "REVIEW_ONLY",
+  "purpose": "Independent, separately-produced career-strength ratings trail, staged ONLY as a cross-check / scale-calibration reference. NEVER a rating source, never per-card-copied, never blended into our ratings.",
+  "produced_by": "wcdraft-recon (separate local project at /Users/paulo/Projects/wcdraft-recon) — Player Career-Strength Rating Model v1.1 (Phase 3C).",
+  "retrieved": "2026-06-08",
+  "ingested_for": [
+    "MV2-8 scale-calibration anchor (later)",
+    "MV2-9 divergence cross-check (later)"
+  ],
+  "files": [
+    {
+      "file": "player_career_strength_ratings_v1_1.csv",
+      "role": "crosscheck_reference",
+      "bytes": 1778921,
+      "sha256": "e90696bd02b9276d38aa6947ed4e70ad8199cc693227341ea675aaeb1f0f380c",
+      "rows": 8482,
+      "columns": 28,
+      "encoding": "utf-8",
+      "variant": "full",
+      "note": "The full/richest recon output: carries provenance columns (rating_basis, source_count, sources_json, override_type, notes, birth_date, era_bucket) needed for divergence auditing. Chosen over the 19-column app_clean ingestion variant, which TRIMS exactly those provenance columns and is intended for per-card ingestion — not what a cross-check needs."
+    }
+  ],
+  "external_provenance_trail": {
+    "note": "Authoritative provenance/IP evidence lives OUTSIDE this repo (it cites proprietary product names as EXCLUSIONS, which must not enter the firewalled tree). Cited here by absolute path for auditability; not copied in.",
+    "base_dir": "/Users/paulo/Projects/wcdraft-recon",
+    "documents": [
+      "outputs/player_career_strength_model_report_v1_1.md",
+      "outputs/player_career_strength_model_report.md",
+      "outputs/player_career_strength_source_registry.csv",
+      "outputs/player_career_strength_manual_review_v1_1.csv",
+      "outputs/worldcup_game_rating_model_report.md",
+      "outputs/final_audit/"
+    ]
+  },
+  "source_basis": {
+    "structure_and_merit": "Fjelstul World Cup Database (CC-BY-SA 4.0, Joshua C. Fjelstul, Ph.D.) — players, squads, goals, matches, team_appearances. The secondary world_cup_merit_score field is a deterministic function of this DB only (the recon 'worldcup_game' model = the World Cup DRAFT-GAME merit model, NOT a video-game rating).",
+    "anchors_and_overrides": "Curated public-knowledge career-strength claims for ~3.2% of players, each citing award/honors/editorial sources (Ballon d'Or, South American / IFFHS player-of-the-year, FIFA governing-body awards, IFFHS/RSSSF century lists, FIFA 100 living-legends, Wikipedia, public consensus).",
+    "fallback": "Remaining ~96.8% use deterministic position/tier templates + small era/merit adjustments (conservative defaults, confidence=low)."
+  },
+  "ip_determination": {
+    "verdict": "ADMISSIBLE",
+    "basis": "Award / fact / editorial sourced. No proprietary game-rating IP is fetched, parsed, or referenced in the data trail.",
+    "proprietary_game_rating_dbs": "EXCLUDED and documented as not-used in the recon source registry. The committed reference CSV is token-clean against the canonical block list (PROPRIETARY_SOURCE_TOKENS in etl/src/wcdraft_etl/merit/__init__.py / _PROPRIETARY_PATTERN in etl/tests/test_rating.py): 0 hits across all 8482 rows.",
+    "fifa_note": "The token 'FIFA' appears only as the GOVERNING BODY's honors/awards (FIFA World Cup awards, The Best, FIFA 100) — an admissible recognition source — never as the video-game rating product, which the canonical block list catches and which returns 0 hits."
+  }
+}

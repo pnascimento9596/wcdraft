@@ -803,6 +803,10 @@ def test_etl_source_pins_have_no_proprietary_rating_references():
         REPO_ROOT / "etl" / "sources",
         REPO_ROOT / "etl" / "supplement" / "raw",
         REPO_ROOT / "etl" / "merit" / "raw",  # merit-source raw snapshots (recursive)
+        # MV2 recon cross-check reference (REVIEW-ONLY; never a rating source).
+        # Reference data + provenance only — it must carry zero proprietary
+        # rating tokens, same as every other source tree.
+        REPO_ROOT / "etl" / "merit" / "external_review" / "recon",
     ]
     hits: list[str] = []
     for d in scan_dirs:
