@@ -31,24 +31,44 @@ not a replacement.
 > at 79 on the old raw formula and now reads on the stature scale; the 2026 legend
 > count is no longer 0. Minted / unlinked / ambiguous / linked-but-below-material
 > players **never** consult career stature and stay on the honest projected raw
-> path, with the projected raw composite mapped onto the shared raw-only internal
-> band `[REPLACEMENT_BASE, RAW_ONLY_GLOBAL_CEILING]` so a strong-caps-plus-top-
-> league role player **cannot** occupy the recognized-greats / legend band on the
-> projection alone (the fix for the spurious OVR-99 projected MF cards). Rows now
+> path, with the projected raw composite **quantile-mapped onto the historical
+> raw-only internal distribution** (read read-only from the committed `ratings.json`)
+> so a strong-caps-plus-top-league role player **cannot** occupy the recognized-
+> greats / legend band on the projection alone (the fix for the spurious OVR-99
+> projected MF cards) **and** a 2026 reserve lands at the same internal score as a
+> comparable historical reserve cross-era. Rows now
 > carry `overall_basis` (`career_stature_estimate` | `measured_performance`, never
 > `baseline_anchor_estimate`) and a first-class `legend` boolean joined from the
 > linked player's career row. The materialized `overall` here is **provisional** —
 > the unified historical+projected display curve is MV2-6; MV2-5 asserts the
 > INTERNAL (pre-display) score behavior. `calibration.ts` is still UNCHANGED.
 >
-> **Scale note (reviewer flag):** the projected raw composite sits on a higher
-> numeric scale than the historical tournament box score (2026 projected-raw
-> median ≈0.66 vs ≈0.43 historically; ≈58% of 2026 cards exceed the 0.62 ceiling
-> vs ≈12% historically). The historical hard clip `min(raw, ceiling)` would clamp
-> the majority of 2026 cards to an identical point — degenerating the display fit
-> and erasing the minnow-vs-power ordering. So 2026 maps the projected raw onto the
-> shared raw-only band rank-preserving instead of hard-clipping: same OUTCOME
-> (non-material confined below the greats band), scale-correct mechanism.
+> **Cross-era density note (the MV2-5 raw-only divergence):** the projected raw
+> composite runs HOT relative to the historical tournament box score (2026
+> projected-raw median ≈0.66 vs ≈0.43 historically; ≈58% of 2026 cards exceed the
+> 0.62 ceiling vs ≈12% historically). Two mechanisms are therefore wrong: the
+> historical hard clip `min(raw, ceiling)` flattens the majority of 2026 cards to an
+> identical point; and an **affine rescale onto `[REPLACEMENT_BASE, ceiling]`**
+> matches only the BOUNDS — it leaves the 2026 floor lifted (≈0.34 vs the historical
+> 0.20) and the whole non-material distribution sitting systematically above
+> comparable historical journeymen, which MV2-6's single monotonic display curve
+> (fit over the pooled internal scores) **cannot** pull back down. So MV2-5 uses
+> **empirical quantile mapping** (density neutralization): a non-material card's
+> percentile within the 2026 pure-raw-only (`weight == 0`) projected-raw cohort is
+> read off the historical raw-only internal scores at the SAME percentile. The 2026
+> non-material internal **distribution then matches the historical raw-only
+> quantiles** (per-quantile cross-era gap ≈0, not merely the bounds), so a 2026
+> reserve at percentile *p* lands at the same internal score as a historical raw-only
+> card at *p* (e.g. a 2026 bench defender aligns with a Mangala-2014-class reserve,
+> not above it). Monotonic in projected raw ⇒ within-2026 rank preserved. The
+> per-cohort raw-only ceiling (the global elite cap, ≈0.62) still bounds the result
+> below the recognized-greats band — confirmed full-scan. NB: the continuity-ramp
+> blend means a strong *linked-below-material* card can brush an anomalously-low
+> marginal-material card at the `weight≈0.5` boundary; this is the cliff-free ramp
+> working and is a property shared with — and far milder than — the historical engine
+> (where non-material reaches 64.8 vs a 44.8 marginal-material floor). The cap that
+> matters — pure raw-only / minted / unlinked cards never reaching the band — holds
+> at the 0.62 ceiling.
 
 This document is the companion to `etl/src/wcdraft_etl/rating_2026.py`; the
 code is the source of truth and every constant is `CALIBRATION`-flagged there.
@@ -103,8 +123,15 @@ internal_score (0..1) = clamp01( base + league_anchor )
 base                  = REPLACEMENT_BASE + (BASE_CEILING − REPLACEMENT_BASE) · perf_blend · age_factor
 perf_blend            = Σ wᵢ·pctᵢ / Σ wᵢ      over present signals (caps, intl goals), position-weighted
 league_anchor         = LEAGUE_WEIGHT[pos] · league_strength
-score_0_100           = 100 · internal_score    (input to the SHARED display curve)
+projected_raw         = internal_score         (the projected CONTEXT signal, not the final)
 ```
+
+Under MV2-5 `projected_raw` is no longer the final score: it is the context signal
+into the stature reconciliation. For **linked + material** cards the final is the
+stature blend (`stature_target + bounded projected modulation`); for **non-material**
+cards the final is `projected_raw` **quantile-mapped onto the historical raw-only
+internal distribution** (see the summary's cross-era density note). `score_0_100 =
+100 · final` is the input to the SHARED display curve.
 
 The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
 the emitted `overall` only, via the same `DisplayCurve` / `_display_score`

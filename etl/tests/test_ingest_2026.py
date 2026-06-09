@@ -382,6 +382,24 @@ def _comp(row: dict, signal: str):
     return next(c["value"] for c in row["components"] if c["signal"] == signal)
 
 
+@pytest.fixture(scope="session")
+def historical_raw_only_sorted() -> list[float]:
+    """Sorted historical PURE raw-only (stature_model_weight==0) INTERNAL scores in
+    [0,1], read read-only from committed ratings.json — the quantile-map target and
+    the population MV2-6's single monotonic curve pools."""
+    return rating_2026._historical_raw_only_internal(OUT)
+
+
+@pytest.fixture(scope="session")
+def projected_raw_only_sorted(internal_2026) -> list[float]:
+    """Sorted 2026 PURE raw-only (weight==0) INTERNAL scores in [0,1]."""
+    return sorted(
+        r["score_0_100"] / 100.0
+        for r in internal_2026.values()
+        if _comp(r, "stature_model_weight") == 0.0
+    )
+
+
 def test_new_stature_components_emitted(ratings):
     """Every 2026 row carries the MV2-5 stature-reconciliation components (numeric;
     RatingComponentSchema stays numeric-only)."""
@@ -469,6 +487,56 @@ def test_spurious_high_raw_cards_capped_below_material(internal_2026):
         assert row["legend"] is False, pid
         # raw-only ceiling band, never the stature/legend band.
         assert row["score_0_100"] / 100.0 <= rating.RAW_ONLY_GLOBAL_CEILING + 1e-9, pid
+
+
+def test_nonmaterial_quantiles_match_historical_raw_only(
+    historical_raw_only_sorted, projected_raw_only_sorted
+):
+    """MV2-5 cross-era DENSITY neutralization (the headline fix). The 2026 pure
+    raw-only (weight==0) INTERNAL distribution is empirically quantile-mapped onto the
+    historical raw-only internal distribution, so a 2026 reserve at percentile p lands
+    at the SAME internal score as a historical raw-only card at p — the population
+    MV2-6's single monotonic curve pools. The replaced affine map matched only the
+    bounds and left the 2026 floor ~0.14 and the median ~0.055 above historical (a
+    2026 journeyman systematically out-rating a comparable historical one, which a
+    monotonic curve cannot undo). Quantile mapping closes the whole distribution: the
+    per-quantile cross-era gap must be ~0, not merely the bounds."""
+    assert historical_raw_only_sorted and projected_raw_only_sorted
+    for q in (0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99):
+        h = rating._quantile(historical_raw_only_sorted, q)
+        n = rating._quantile(projected_raw_only_sorted, q)
+        assert abs(h - n) <= 0.01, (q, h, n)
+    # Floors coincide exactly — the affine map's lifted 2026 floor is the regression
+    # this guards: a 2026 reserve can sink to the historical replacement floor.
+    assert min(projected_raw_only_sorted) <= min(historical_raw_only_sorted) + 1e-9
+
+
+def test_2026_reserve_df_not_above_comparable_historical_reserve(
+    internal_2026, historical_raw_only_sorted
+):
+    """Cross-era FLOOR parity, the concrete Mangala-2014 case from the review block:
+    a 2026 pure-raw-only reserve defender must NOT out-internal a comparable modern
+    historical reserve defender. Mangala (Man City, WC-2014) is a raw-only DF at
+    internal ≈0.239; under the replaced affine map a 2026 bench DF floored ~0.10
+    above him for no merit reason. The spurious-cap test guards the upper bound; this
+    guards the FLOOR."""
+    # Mangala-2014 internal, reconstructed from committed ratings.json (stable anchor).
+    rj = {r["card_id"]: r for r in json.loads((OUT / "ratings.json").read_text())}
+    mangala = rj["P-08834:WC-2014"]
+    assert _comp(mangala, "stature_model_weight") == 0.0
+    mangala_internal = min(
+        _comp(mangala, "raw_tournament_score"), rating.RAW_ONLY_GLOBAL_CEILING
+    )
+    df_raw_only = sorted(
+        r["score_0_100"] / 100.0
+        for r in internal_2026.values()
+        if r["pos"] == "DF" and _comp(r, "stature_model_weight") == 0.0
+    )
+    # 2026 reserve defenders reach AT/BELOW the Mangala-class internal — they are no
+    # longer floored above comparable historical reserves.
+    assert min(df_raw_only) <= mangala_internal + 1e-9, (min(df_raw_only), mangala_internal)
+    # And the 2026 DF raw-only floor is the historical replacement floor, not lifted.
+    assert min(df_raw_only) <= rating._quantile(historical_raw_only_sorted, 0.10) + 1e-9
 
 
 def test_top_internal_scores_are_material_not_raw_artifacts(internal_2026):

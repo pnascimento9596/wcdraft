@@ -35,6 +35,7 @@ integers, possibly 0), so the appearance-role signal (caps) is ALWAYS present �
 
 from __future__ import annotations
 
+import bisect
 import json
 from pathlib import Path
 
@@ -44,6 +45,10 @@ from pathlib import Path
 # imports the stature-dominant composite pieces (stature target, continuity ramp,
 # tier caps, raw-only ceiling) so 2026 linked players sit on the SAME stature scale
 # as the historical wc-perf-4.x cards — one scale across both, not a parallel model.
+# Non-material 2026 cards are placed on the historical raw-only scale by EMPIRICAL
+# QUANTILE MAPPING (not an affine rescale) — see _raw_only_quantile_map — so the
+# 2026 non-material internal-score DISTRIBUTION matches the historical raw-only
+# quantiles cross-era, the population MV2-6's single monotonic curve pools.
 from . import rating
 from .rating import (
     _PRECISION,
@@ -142,7 +147,7 @@ LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.2
 #   linked + material:  projected_final = stature_target(pos, index)
 #                          + clamp(PROJECTED_MOD_GAIN[pos]·(projected_raw − ref),
 #                                  −DOWN_CAP[pos][tier], +UP_CAP[pos])
-#   non-material:        projected_final = min(projected_raw, raw_only_ceiling)
+#   non-material:        projected_final = quantile_map(projected_raw)  (see below)
 #   (linked-material gets weight 1; the continuity ramp interpolates the boundary.)
 #
 # Aging legends take DOWNWARD projected modulation but never a full collapse below
@@ -151,32 +156,80 @@ LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.2
 PROJECTED_MOD_GAIN: dict[str, float] = {"FW": 0.40, "MF": 0.40, "DF": 0.35, "GK": 0.30}
 
 
-def _raw_only_path(projected_raw: float, raw_only_ceiling: float) -> float:
-    """Express a non-material 2026 card's projected raw composite on the SHARED
-    raw-only internal band ``[REPLACEMENT_BASE, raw_only_ceiling]``, preserving rank.
+def _historical_raw_only_internal(output_dir: Path) -> list[float]:
+    """Sorted internal scores (in [0,1]) of the HISTORICAL PURE raw-only cards
+    (``stature_model_weight == 0``), read READ-ONLY from the committed
+    ``ratings.json`` — the exact population MV2-6's single monotonic curve pools.
 
-    SCALE NOTE (the 2026-specific adaptation of the historical raw-only ceiling):
-    the projected raw composite (caps/goals percentile band + a strong club-league
-    quality anchor) sits on a higher numeric scale than the historical tournament box
-    score — the 2026 projected-raw median is ≈0.66 vs ≈0.43 historically, and ≈58% of
-    2026 cards exceed RAW_ONLY_GLOBAL_CEILING (0.62) vs ≈12% historically. The
-    historical mechanism (``min(raw, ceiling)``) trims only the top decile there; on
-    the 2026 scale it would clamp the majority to an identical point — degenerating
-    the display-curve fit AND erasing the minnow-vs-power ordering the projection
-    exists to express. So instead of a hard clip we map the projected raw onto the
-    SAME band the historical raw-only cards already occupy (their box score floors at
-    REPLACEMENT_BASE and is clipped at the ceiling, i.e. ``[REPLACEMENT_BASE,
-    ceiling]``), monotonically and rank-preserving. Outcome is identical in spirit:
-    a non-material 2026 card is confined strictly below the recognized-greats /
-    legend band (it cannot reach the high-90s on the projection alone), while
-    keeping full within-band spread for the unified curve (MV2-6) to read.
-
-    When there is no material stature anywhere (ceiling >= 1.0 — e.g. the career
-    table is absent) there is no band to protect and the raw passes through.
+    ``ratings.json`` materializes the display ``overall`` and the components, not the
+    pre-display internal ``score_0_100``; for a pure raw-only card the internal score
+    is ``min(raw_tournament_score, RAW_ONLY_GLOBAL_CEILING)`` — the raw composite
+    (carried verbatim in the ``raw_tournament_score`` component) under the same global
+    elite ceiling the historical engine applies. The per-(tournament, pos) ceiling
+    tightening never binds BELOW the global ceiling across the committed population
+    (the material-stature finals that could tighten it sit well above 0.62), so this
+    reconstruction reproduces the committed internal raw-only distribution to within
+    the stored 6-dp rounding. Empty (``ratings.json`` absent) ⇒ no band to match and
+    the quantile map degrades to a rank-preserving pass-through.
     """
-    if raw_only_ceiling >= 1.0:
+    path = output_dir / "ratings.json"
+    if not path.exists():
+        return []
+    target: list[float] = []
+    for r in json.loads(path.read_text(encoding="utf-8")):
+        comps = {c["signal"]: c["value"] for c in r["components"]}
+        if comps.get("stature_model_weight") == 0.0:
+            target.append(min(comps["raw_tournament_score"], RAW_ONLY_GLOBAL_CEILING))
+    return sorted(target)
+
+
+def _empirical_percentile(sorted_vals: list[float], x: float) -> float:
+    """Mid-rank percentile of ``x`` within ``sorted_vals`` in [0,1]: ``(#strictly-less
+    + 0.5·#equal) / N`` — the float analog of ``rating._percentile_map``. Tie-stable,
+    deterministic, monotonic non-decreasing in ``x`` (equal values share a percentile);
+    empty reference ⇒ 0.5 (neutral)."""
+    n = len(sorted_vals)
+    if n == 0:
+        return 0.5
+    lo = bisect.bisect_left(sorted_vals, x)
+    hi = bisect.bisect_right(sorted_vals, x)
+    return (lo + 0.5 * (hi - lo)) / n
+
+
+def _raw_only_quantile_map(
+    projected_raw: float,
+    raw_only_cohort_sorted: list[float],
+    historical_raw_only_internal: list[float],
+) -> float:
+    """Place a non-material 2026 card's projected raw composite onto the HISTORICAL
+    raw-only internal scale by EMPIRICAL QUANTILE MAPPING (density neutralization, not
+    bound-matching).
+
+    The projected raw composite (caps/goals percentile band + a strong club-league
+    quality anchor) runs HOT relative to the historical tournament box score — its
+    median is ≈0.66 vs ≈0.43 historically. An affine rescale onto
+    ``[REPLACEMENT_BASE, ceiling]`` matched only the BOUNDS: it left the 2026 floor
+    lifted (≈0.34 vs the historical 0.20) and the whole non-material distribution
+    sitting systematically above comparable historical journeymen, which a single
+    monotonic display curve (MV2-6) cannot pull back down. Instead we histogram-match:
+    take the card's percentile ``p`` within the 2026 pure-raw-only (``weight == 0``)
+    projected-raw cohort, then read the historical raw-only internal score at the SAME
+    percentile ``p``. The 2026 non-material internal-score distribution then MATCHES
+    the historical raw-only quantiles — a 2026 reserve at percentile ``p`` lands at the
+    same internal score as a historical raw-only card at percentile ``p`` (e.g. a 2026
+    bench defender aligns with a Mangala-2014-class historical reserve, not above it).
+
+    Monotonic in ``projected_raw`` (mid-rank percentile ∘ linear-interp quantile), so
+    within-2026 rank is preserved. Used as the raw COMPONENT everywhere: pure raw-only
+    (``weight == 0``) cards AND the raw term of the continuity-ramp blend for
+    linked-but-below-material (``0 < weight < 0.5``) cards — the percentile is always
+    taken against the ``weight == 0`` cohort. With no historical band to match
+    (``ratings.json`` absent) the projected raw passes through rank-preserved.
+    """
+    if not historical_raw_only_internal:
         return projected_raw
-    return REPLACEMENT_BASE + (raw_only_ceiling - REPLACEMENT_BASE) * projected_raw
+    p = _empirical_percentile(raw_only_cohort_sorted, projected_raw)
+    return _quantile(historical_raw_only_internal, p)
 
 
 def _projected_modulation(
@@ -290,6 +343,7 @@ def _projected_raw_score(c: dict, g_pct: float, a_pct: float) -> tuple[float, di
 def _build_internal_rows(
     cards: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    historical_raw_only_internal: list[float] | None = None,
 ) -> list[dict]:
     """Pass 1 of the projected build — one INTERNAL row per 2026 card carrying the
     pre-display ``score_0_100`` (now on the stature scale for linked-material cards),
@@ -305,6 +359,7 @@ def _build_internal_rows(
     never carrying a factual ``legend``.
     """
     career_stature_by_player = career_stature_by_player or {}
+    historical_raw_only_internal = historical_raw_only_internal or []
 
     # Within-(tournament, position) cohorts — for 2026 there is one tournament, so
     # the cohort is effectively (position) across all 48 squads: a striker is
@@ -390,12 +445,21 @@ def _build_internal_rows(
         if weight >= STATURE_DOMINANT_WEIGHT:
             material_finals_by_pos.setdefault(pos, []).append(stature_path)
 
-    # ── PASS 1d: raw-only ceiling, final blend, basis, legend, components ───────
-    # The SAME global raw-only elite ceiling as the historical raw-only cards: a
-    # non-material 2026 player's raw path is capped below the lowest factual-legend
-    # band so a strong projected box score (high caps + top league) can NEVER occupy
-    # the high-90s/legend band on the projection alone. This is the fix for the
-    # spurious OVR-99 projected MF cards.
+    # ── PASS 1d: raw-only quantile map + per-cohort ceiling, blend, basis, legend ─
+    # Non-material 2026 cards are histogram-matched onto the HISTORICAL raw-only
+    # internal distribution (the population MV2-6 pools): the card's percentile within
+    # the 2026 pure-raw-only (weight == 0) projected-raw cohort is read off the
+    # historical raw-only internal scores at the SAME percentile. This NEUTRALIZES the
+    # hot 2026 scale cross-era (a 2026 reserve aligns with a comparable historical
+    # reserve, not above it), unlike the affine rescale it replaces, which only matched
+    # the bounds and left the 2026 floor/median lifted. The per-cohort raw-only ceiling
+    # (min of the global elite ceiling and the cohort's material-stature median) is
+    # still applied as the absolute cap that keeps every non-material card strictly
+    # below the recognized-greats / legend band — the fix for the spurious OVR-99
+    # projected MF cards. The quantile-map target already tops out at the historical
+    # raw-only ceiling (≈0.62), so this clamp only binds in the rare cohort whose
+    # material median dips below it.
+    raw_only_cohort_sorted = sorted(s["projected_raw"] for s in staged if s["weight"] == 0.0)
     has_any_material = any(s["weight"] >= STATURE_DOMINANT_WEIGHT for s in staged)
     internal_rows: list[dict] = []
     for s in staged:
@@ -409,7 +473,10 @@ def _build_internal_rows(
         raw_only_ceiling = RAW_ONLY_GLOBAL_CEILING if has_any_material else 1.0
         if cohort_material:
             raw_only_ceiling = min(raw_only_ceiling, _quantile(sorted(cohort_material), 0.5))
-        raw_path = _raw_only_path(raw, raw_only_ceiling)
+        raw_path = min(
+            _raw_only_quantile_map(raw, raw_only_cohort_sorted, historical_raw_only_internal),
+            raw_only_ceiling,
+        )
 
         # Continuous blend: weight 0 ⇒ projected-raw-only, weight 1 ⇒ stature-dominant.
         final = _clamp01(weight * s["stature_path"] + (1.0 - weight) * raw_path)
@@ -507,24 +574,42 @@ def _build_internal_rows(
 def build_internal_view(
     cards: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    historical_raw_only_internal: list[float] | None = None,
+    output_dir: Path = OUTPUT_DIR,
 ) -> list[dict]:
     """Pass 1, exposed for the acceptance suite — internal rows carrying the
     pre-display stature-scale ``score_0_100``, ``overall_basis``, ``legend``, and
     ``components``. Display (``overall``) is provisional until MV2-6, so MV2-5 tests
-    assert on these INTERNAL rows, not the materialized display band."""
-    return _build_internal_rows(cards, career_stature_by_player)
+    assert on these INTERNAL rows, not the materialized display band.
+
+    ``historical_raw_only_internal`` (the quantile-map target) defaults to the
+    committed ``ratings.json`` raw-only distribution under ``output_dir``."""
+    if historical_raw_only_internal is None:
+        historical_raw_only_internal = _historical_raw_only_internal(output_dir)
+    return _build_internal_rows(
+        cards, career_stature_by_player, historical_raw_only_internal
+    )
 
 
 def build_ratings(
     cards: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    historical_raw_only_internal: list[float] | None = None,
+    output_dir: Path = OUTPUT_DIR,
 ) -> list[dict]:
     """Return projected Rating-shaped records for every 2026 card, sorted by card_id.
 
     Records carry the canonical string ``tournament_id`` ("WC-2026") / ``card_id``
     so they JOIN 1:1 with player_tournaments_2026.json (same seam as wc-perf).
+
+    ``historical_raw_only_internal`` (the quantile-map target) defaults to the
+    committed ``ratings.json`` raw-only distribution under ``output_dir``.
     """
-    internal_rows = _build_internal_rows(cards, career_stature_by_player)
+    if historical_raw_only_internal is None:
+        historical_raw_only_internal = _historical_raw_only_internal(output_dir)
+    internal_rows = _build_internal_rows(
+        cards, career_stature_by_player, historical_raw_only_internal
+    )
 
     # ── PASS 2: fit display curve on the projected pool, materialize Rating ────
     # PROVISIONAL display (MV2-5). The unified historical+projected display curve is
@@ -576,7 +661,10 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
     # file → {} (every card stays on the projected raw path), so the stage never hard-
     # depends on the merit artifact existing (mirrors rating._load_career_stature).
     career = _load_career_stature(output_dir)
-    return build_ratings(cards, career)
+    # Historical raw-only internal distribution (the quantile-map target), read
+    # READ-ONLY from the committed ratings.json. Missing → [] (raw passes through).
+    historical_raw_only = _historical_raw_only_internal(output_dir)
+    return build_ratings(cards, career, historical_raw_only, output_dir)
 
 
 # ─── MV2-5 accuracy-eyeball SAMPLE (2026 INTERNAL-score shape) ────────────────
@@ -718,7 +806,8 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     the committed bytes regardless of which stage ran last."""
     cards = json.loads((output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8"))
     career = _load_career_stature(output_dir)
-    internal_rows = _build_internal_rows(cards, career)
+    historical_raw_only = _historical_raw_only_internal(output_dir)
+    internal_rows = _build_internal_rows(cards, career, historical_raw_only)
 
     players_canon = json.loads((output_dir / "players.json").read_text(encoding="utf-8"))
     players_minted = json.loads((output_dir / "players_2026.json").read_text(encoding="utf-8"))

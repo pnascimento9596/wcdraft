@@ -298,8 +298,11 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> dict:
     # MV2-5: linked-material 2026 players reconcile onto the career-stature scale.
     # career_stature.json is consumed READ-ONLY (missing → {} → every card on the
     # projected raw path); rating_2026 only consults it for link_status=="linked".
+    # Non-material cards are quantile-mapped onto the committed historical raw-only
+    # internal distribution (ratings.json, READ-ONLY) for cross-era density parity.
     career = rating_2026._load_career_stature(output_dir)
-    ratings = rating_2026.build_ratings(cards, career)
+    historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
+    ratings = rating_2026.build_ratings(cards, career, historical_raw_only, output_dir)
     teams = _build_teams(cards, ratings, draw)
     bracket = _build_bracket(teams, bracket_matches)
 

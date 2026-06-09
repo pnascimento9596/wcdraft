@@ -104,7 +104,7 @@ MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale 
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
 | Messi | `P-14758` | FW | linked·material | 0.938413 | 1.00 | 0.762 | 0.958942 | +0.042 | 1.000 | 100 | 68 | 44 | 20 | ✓ |
 | Mbappé | `P-64077` | FW | linked·material | 0.85777 | 1.00 | 0.971 | 0.90518 | +0.080 | 0.985 | 99 | 67 | 44 | 20 | ✓ |
-| Júnior | `P-92812` | FW | linked·below | 0.2 | 0.00 | 0.848 | — | +0.000 | 0.556 | 56 | 41 | 31 | 20 | — |
+| Júnior | `P-92812` | FW | linked·below | 0.2 | 0.00 | 0.848 | — | +0.000 | 0.605 | 61 | 44 | 32 | 20 | — |
 | Bellingham | `P-15674` | MF | linked·material | 0.4625 | 1.00 | 0.869 | 0.641667 | +0.074 | 0.716 | 54 | 72 | 51 | 20 | — |
 | Modrić | `P-29491` | MF | linked·material | 0.897806 | 1.00 | 0.888 | 0.931871 | +0.080 | 1.000 | 72 | 100 | 68 | 20 | ✓ |
 
@@ -112,21 +112,21 @@ MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale 
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Soucek | `P-W26-0177` | MF | minted | — | 0.00 | 0.987 | — | +0.000 | 0.615 | 47 | 61 | 45 | 20 | — |
+| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Soucek | `P-W26-0177` | MF | minted | — | 0.00 | 0.987 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
 
 ## Raw-only controls (non-material — top of the raw band + journeyman floor)
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.615 | 47 | 62 | 45 | 20 | — |
-| Soucek | `P-W26-0177` | MF | minted | — | 0.00 | 0.987 | — | +0.000 | 0.615 | 47 | 61 | 45 | 20 | — |
-| Mcginn | `P-W26-0589` | MF | minted | — | 0.00 | 0.985 | — | +0.000 | 0.614 | 47 | 61 | 45 | 20 | — |
-| Soliman | `P-W26-0212` | GK | minted | — | 0.00 | 0.330 | — | +0.000 | 0.338 | 21 | 23 | 28 | 34 | — |
+| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Soucek | `P-W26-0177` | MF | minted | — | 0.00 | 0.987 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Mcginn | `P-W26-0589` | MF | minted | — | 0.00 | 0.985 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Beach | `P-W26-0043` | GK | minted | — | 0.00 | 0.366 | — | +0.000 | 0.200 | 20 | 20 | 20 | 20 | — |
 
 _A non-material 2026 card's projected raw path is capped at the global raw-only ceiling (0.62), strictly below the marginal-material stature floor, so it cannot occupy the high-90s/legend band on the projection alone — the fix for the spurious OVR-99 projected MF cards. A linked aging legend takes bounded DOWNWARD projected modulation (tightest at the gold tier) but never collapses below recognized stature._
 
