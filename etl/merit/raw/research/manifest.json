@@ -55,7 +55,7 @@
       "source_id": "research_global_annual"
     },
     {
-      "bytes": 8357,
+      "bytes": 8242,
       "cited_urls": [
         "https://en.wikipedia.org/wiki/Bobby_Moore",
         "https://en.wikipedia.org/wiki/Carles_Puyol",
@@ -68,14 +68,13 @@
         "https://en.wikipedia.org/wiki/Gianluca_Zambrotta",
         "https://en.wikipedia.org/wiki/Gordon_Banks",
         "https://en.wikipedia.org/wiki/N%C3%ADlton_Santos",
-        "https://en.wikipedia.org/wiki/Rapha%C3%ABl_Varane",
         "https://en.wikipedia.org/wiki/Roberto_Carlos",
         "https://en.wikipedia.org/wiki/Sepp_Maier"
       ],
       "family": "wc_legacy",
       "file": "research/wc-all-star.json",
-      "row_count": 17,
-      "sha256": "b9733800c62c6d1a371fb1bce8b973c9d85bac473016c7987480ffc9b1af0e1e",
+      "row_count": 16,
+      "sha256": "a3bea5924f6edeb783b5b0bfe3ef23a52c5f3c56e4ba301aa6144943a44dcaed",
       "source_id": "research_wc_all_star"
     }
   ],

@@ -4,8 +4,8 @@
 
 - **Source-set version:** `merit-source-set-2.0.0`
 - **Scope:** coverage only — **no rating output, engine, or compact data is changed by this build.** The v2 source families are staged in `source_facts.json` for the career-stature-2.0.0 table (MV2-3).
-- **Linked facts:** 2,189 across 791 distinct players (men's World Cup pool) — **2,003 parser-derived** + **141 native** World Cup awards + **45 research-backstop** (citation-backed, MV2-2).
-- **First-class position facts:** 450 (GK/DF/MF/FW) from the position-balanced + all-time + research sources.
+- **Linked facts:** 2,188 across 791 distinct players (men's World Cup pool) — **2,003 parser-derived** + **141 native** World Cup awards + **44 research-backstop** (citation-backed, MV2-2).
+- **First-class position facts:** 449 (GK/DF/MF/FW) from the position-balanced + all-time + research sources.
 - **Withheld to review (never assigned):** 751 distinct ambiguities.
 
 
@@ -13,7 +13,7 @@
 
 | Signal family | pre-1956 | 1956–1990 | 1991+ | Total |
 |---|---|---|---|---|
-| WC legacy | 23 | 54 | 45 | 122 |
+| WC legacy | 23 | 54 | 44 | 121 |
 | Global annual | 2 | 48 | 34 | 84 |
 | Regional annual | 0 | 39 | 81 | 120 |
 | Position XI | 0 | 8 | 196 | 204 |
@@ -43,7 +43,7 @@
 | National-team captaincy records (research backstop, citation-backed) | captaincy | research | 22 |
 | World's Best Goalkeeper annual award wins (research backstop) | position_balanced_selection | research | 3 |
 | Global annual recognition recovered under canonical names (research backstop) | global_annual_recognition | research | 3 |
-| World Cup All-Star Team / Team-of-the-Tournament selections (research backstop) | wc_legacy | research | 17 |
+| World Cup All-Star Team / Team-of-the-Tournament selections (research backstop) | wc_legacy | research | 16 |
 | South American Player of the Year (Rey de América) — annual winners | regional_annual_recognition | parser | 52 |
 | South American Player of the Year — annual top-3 placements (2nd/3rd) | regional_annual_recognition | parser | 57 |
 | UEFA Club positional awards — Best Goalkeeper/Defender/Midfielder/Forward | position_balanced_selection | parser | 70 |
@@ -54,14 +54,14 @@
 
 ## Research backstop (MV2-2) — citation-backed gap closure
 
-The deterministic research backstop adds **45 citation-backed** facts that parser-only public lists miss: each row carries a fetchable public citation URL and the specific claim it supports (an uncited row fails the build), and is linked by the SAME conservative linker as parser rows. It activates the `captaincy` family (no SHA-pinnable web source) and recovers global recognition the parser list holds under a non-canonical spelling.
+The deterministic research backstop adds **44 citation-backed** facts that parser-only public lists miss: each row carries a fetchable public citation URL and the specific claim it supports (an uncited row fails the build), and is linked by the SAME conservative linker as parser rows. It activates the `captaincy` family (no SHA-pinnable web source) and recovers global recognition the parser list holds under a non-canonical spelling.
 
 | Family | Research facts | Distinct players |
 |---|---:|---:|
 | Captaincy | 22 | 22 |
 | Global annual | 3 | 1 |
 | Position XI | 3 | 2 |
-| WC legacy | 17 | 14 |
+| WC legacy | 16 | 13 |
 
 ### Known v1 gaps — explicitly evaluated
 
@@ -76,7 +76,7 @@ The deterministic research backstop adds **45 citation-backed** facts that parse
 | Giacinto Facchetti (DF) | 2 | WC legacy, Retrospective, Captaincy |
 | Daniel Passarella (DF) | 1 | Retrospective, Captaincy |
 
-_33 distinct players carry a research-backstop fact. Yashin's national-team captaincy was evaluated and WITHHELD — the cited source states he rarely captained his side — so no captaincy row was authored for him (anti-fabrication: a claim a citation does not support is never committed)._
+_32 distinct players carry a research-backstop fact. Yashin's national-team captaincy was evaluated and WITHHELD — the cited source states he rarely captained his side — so no captaincy row was authored for him (anti-fabrication: a claim a citation does not support is never committed)._
 
 
 ## World Cup Golden Ball cross-check (native data is canonical)

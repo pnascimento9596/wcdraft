@@ -2090,8 +2090,8 @@
     },
     {
       "card_id": "P-42326:WC-2018",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.172406,
+      "career_coverage": 0.25,
+      "career_stature_score": 0.1125,
       "delta_overall": -5,
       "delta_primary_channel": -30,
       "overall_after": 88,
@@ -4918,8 +4918,8 @@
     },
     {
       "card_id": "P-42326:WC-2022",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.172406,
+      "career_coverage": 0.25,
+      "career_stature_score": 0.1125,
       "delta_overall": -2,
       "delta_primary_channel": -22,
       "overall_after": 88,

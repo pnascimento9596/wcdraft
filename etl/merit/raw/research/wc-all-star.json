@@ -1,7 +1,7 @@
 {
   "source_id": "research_wc_all_star",
   "family": "wc_legacy",
-  "note": "MV2-3.5 deterministic factual research backstop. World Cup All-Star Team / Team-of-the-Tournament selections — a contemporaneous, position-aware tournament best-XI recognition that credits exactly the elite defenders and goalkeepers the recognition-weighted source set structurally under-credits (they win far fewer individual player-of-the-year awards than forwards). Scope is a BOUNDED gap-fill, not an exhaustive parse of every All-Star Team: it covers only the consensus-great defenders/keepers the MV2-9 recon-divergence read identified as under-credited by OUR model (etl/output/merit/RECON_DIVERGENCE.md). Each row is a citation-backed public fact transcribed from the named player's own public encyclopedia page — the player's display name as the canonical card carries it, their nation, the World Cup year of the selection, the source-stated position (DF/GK), a human detail, and a fetchable citation URL plus the specific claim it supports. The official Technical Study Group All-Star Team award ran 1994-2006; earlier (1930-1990) and later (2010+ 'Dream Team') editions are the widely-recorded tournament best-XI selections as documented on the cited pages — all carry the SAME modest bronze-tier strength in the EXISTING wc_legacy scorer (a best-XI-of-tournament selection, never an MVP). Only full-XI selections are sourced: 'Reserve', 'Fantasy Team' and 'Fans' All-Star Team' designations are deliberately excluded. NO rating numbers, rankings, OVR/channel/boost/override, NO recon values — only the selection record. The conservative linker treats these rows identically to parser rows (unique high-confidence link only; ambiguous withheld to review); an uncited row fails the build.",
+  "note": "MV2-3.5 deterministic factual research backstop. World Cup All-Star Team / Team-of-the-Tournament selections — a contemporaneous, position-aware tournament best-XI recognition that credits exactly the elite defenders and goalkeepers the recognition-weighted source set structurally under-credits (they win far fewer individual player-of-the-year awards than forwards). Scope is a BOUNDED gap-fill, not an exhaustive parse of every All-Star Team: it covers only the consensus-great defenders/keepers the MV2-9 recon-divergence read identified as under-credited by OUR model (etl/output/merit/RECON_DIVERGENCE.md). Each row is a citation-backed public fact transcribed from the named player's own public encyclopedia page — the player's display name as the canonical card carries it, their nation, the World Cup year of the selection, the source-stated position (DF/GK), a human detail, and a fetchable citation URL plus the specific claim it supports. An official, technically-selected World Cup All-Star Team ran through the 2010 edition (the Technical Study Group All-Star Team, formalised 1994-2010); earlier (1930-1990) editions are the widely-recorded tournament best-XI selections as documented on the cited pages. All carry the SAME modest bronze-tier strength in the EXISTING wc_legacy scorer (a best-XI-of-tournament selection, never an MVP). Scope is strictly the official/technical through-2010 selection: the post-2010 World Cup 'Dream Team' editions (2014, 2018, 2022) are PUBLIC/FAN VOTES, not technical Team-of-the-Tournament selections, and are deliberately excluded — as are 'Reserve', 'Fantasy Team' and 'Fans' All-Star Team' designations. Only full-XI, technically-selected entries are sourced. NO rating numbers, rankings, OVR/channel/boost/override, NO recon values — only the selection record. The conservative linker treats these rows identically to parser rows (unique high-confidence link only; ambiguous withheld to review); an uncited row fails the build.",
   "rows": [
     {
       "scope": "recon_undercredit",
@@ -193,18 +193,6 @@
       "citation": {
         "url": "https://en.wikipedia.org/wiki/Carles_Puyol",
         "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2010 World Cup."
-      }
-    },
-    {
-      "scope": "recon_undercredit",
-      "name": "Raphaël Varane",
-      "nation_token": "France",
-      "year": 2018,
-      "position": "DF",
-      "detail": "WC All-Star Team WC-2018",
-      "citation": {
-        "url": "https://en.wikipedia.org/wiki/Rapha%C3%ABl_Varane",
-        "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2018 World Cup."
       }
     }
   ]

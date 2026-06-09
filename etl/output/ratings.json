@@ -406242,32 +406242,32 @@
       },
       {
         "signal": "tournament_modulation",
-        "value": 0.050118,
+        "value": 0.0,
         "weight": 0.0
       },
       {
         "signal": "career_stature_score",
-        "value": 0.172406,
+        "value": 0.1125,
         "weight": 0.0
       },
       {
         "signal": "career_stature_index",
-        "value": 0.344812,
+        "value": 0.225,
         "weight": 0.0
       },
       {
         "signal": "career_stature_coverage",
-        "value": 0.4,
+        "value": 0.25,
         "weight": 0.0
       },
       {
         "signal": "stature_target_score",
-        "value": 0.6,
+        "value": null,
         "weight": 0.0
       },
       {
         "signal": "stature_model_weight",
-        "value": 0.0401,
+        "value": 0.0,
         "weight": 1.0
       }
     ],
@@ -406331,32 +406331,32 @@
       },
       {
         "signal": "tournament_modulation",
-        "value": 0.07,
+        "value": 0.0,
         "weight": 0.0
       },
       {
         "signal": "career_stature_score",
-        "value": 0.172406,
+        "value": 0.1125,
         "weight": 0.0
       },
       {
         "signal": "career_stature_index",
-        "value": 0.344812,
+        "value": 0.225,
         "weight": 0.0
       },
       {
         "signal": "career_stature_coverage",
-        "value": 0.4,
+        "value": 0.25,
         "weight": 0.0
       },
       {
         "signal": "stature_target_score",
-        "value": 0.6,
+        "value": null,
         "weight": 0.0
       },
       {
         "signal": "stature_model_weight",
-        "value": 0.0401,
+        "value": 0.0,
         "weight": 1.0
       }
     ],
@@ -406420,32 +406420,32 @@
       },
       {
         "signal": "tournament_modulation",
-        "value": 0.07,
+        "value": 0.0,
         "weight": 0.0
       },
       {
         "signal": "career_stature_score",
-        "value": 0.172406,
+        "value": 0.1125,
         "weight": 0.0
       },
       {
         "signal": "career_stature_index",
-        "value": 0.344812,
+        "value": 0.225,
         "weight": 0.0
       },
       {
         "signal": "career_stature_coverage",
-        "value": 0.4,
+        "value": 0.25,
         "weight": 0.0
       },
       {
         "signal": "stature_target_score",
-        "value": 0.6,
+        "value": null,
         "weight": 0.0
       },
       {
         "signal": "stature_model_weight",
-        "value": 0.0401,
+        "value": 0.0,
         "weight": 1.0
       }
     ],

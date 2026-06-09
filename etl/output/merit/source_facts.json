@@ -1,5 +1,5 @@
 {
-  "fact_count": 2189,
+  "fact_count": 2188,
   "facts": [
     {
       "citation": {
@@ -27294,23 +27294,6 @@
       "raw_name": "Gianluca Zambrotta",
       "source_id": "research_wc_all_star",
       "year": 2006
-    },
-    {
-      "citation": {
-        "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2018 World Cup.",
-        "url": "https://en.wikipedia.org/wiki/Rapha%C3%ABl_Varane"
-      },
-      "detail": "WC All-Star Team WC-2018",
-      "era": "1991_plus",
-      "family": "wc_legacy",
-      "method": "full_name+nation",
-      "nation_token": "France",
-      "player_id": "P-42326",
-      "player_name": "Raphaël Varane",
-      "position": "DF",
-      "raw_name": "Raphaël Varane",
-      "source_id": "research_wc_all_star",
-      "year": 2018
     },
     {
       "citation": {

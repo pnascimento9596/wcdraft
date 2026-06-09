@@ -19,7 +19,7 @@ Our model only emits a stature row for players carrying merit facts, so the 7691
 
 ## Overall agreement
 
-- **Spearman ρ (full matched cohort, n=791)**: **0.3926**
+- **Spearman ρ (full matched cohort, n=791)**: **0.392**
 - **Spearman ρ (material cohort only, n=207)**: **0.3324**
 - **Top-20 overlap**: 10/20 (50.0%)
 - **Top-50 overlap**: 23/50 (46.0%)
@@ -111,7 +111,7 @@ Players recon backed with a **curated career-strength anchor** (award/honors/edi
 | Jairzinho | Brazil | FW | 87 | manual_legend_anchor | 0.31 |
 | Hugo Lloris | France | GK | 86 | manual_legend_anchor | 0.07 |
 | Franco Armani | Argentina | GK | 86 | career_strength_override | 0.05 |
-| Raphaël Varane | France | DF | 86 | manual_legend_anchor | 0.34 |
+| Raphaël Varane | France | DF | 86 | manual_legend_anchor | 0.23 |
 | Javier Zanetti | Argentina | DF | 86 | manual_legend_anchor | 0.17 |
 | Michael Laudrup | Denmark | MF | 86 | manual_legend_anchor | 0.35 |
 | Sócrates | Brazil | MF | 86 | manual_legend_anchor | 0.40 |
@@ -123,7 +123,7 @@ Players recon backed with a **curated career-strength anchor** (award/honors/edi
 
 ## Plain-language read
 
-**Headline — moderate agreement, concentrated disagreement.** Two independently-built, differently-sourced career-strength models agree *moderately*: Spearman ρ=0.3926 across all 791 matched players and ρ=0.3324 within the material cohort we differentiate, with 10/20 and 23/50 of the top names shared. About half the elite overlaps — real corroboration that both float a similar set of greats to the top, but well short of a lockstep ranking. The material ρ sitting at or below the full ρ tells us the disagreement lives *inside* the cohort we differentiate, not just in the tied tail — so it is worth dissecting, which the next points do. The disagreement is not uniform; it sorts cleanly by era and by position.
+**Headline — moderate agreement, concentrated disagreement.** Two independently-built, differently-sourced career-strength models agree *moderately*: Spearman ρ=0.392 across all 791 matched players and ρ=0.3324 within the material cohort we differentiate, with 10/20 and 23/50 of the top names shared. About half the elite overlaps — real corroboration that both float a similar set of greats to the top, but well short of a lockstep ranking. The material ρ sitting at or below the full ρ tells us the disagreement lives *inside* the cohort we differentiate, not just in the tied tail — so it is worth dissecting, which the next points do. The disagreement is not uniform; it sorts cleanly by era and by position.
 
 **'We rank higher' = recon under-rating history (methodology, not our gap).** The we-higher table is 16/20 forwards, and 17/20 of them are floored by recon near its **1st percentile** (recon strength ≈ 52) — pre-modern recognition-greats like Zizinho, Sindelar, Matthews, Scarone and Gento. recon's composite leans on a World-Cup-match merit score plus curated anchors, and where it never anchored a pre-1970 great it drops to a low template; our recognition archives (POY placements, all-time selections) correctly elevate them. So this whole direction is mostly recon under-crediting history, **not** us over-crediting it — it corroborates our historic coverage. The one guardrail: where a single thin fact drives a high index, confirm the fact is real (it is sourced, by construction) and not over-weighted.
 

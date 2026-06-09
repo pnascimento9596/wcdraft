@@ -10881,11 +10881,11 @@
     },
     {
       "career_peak_year": 2018,
-      "career_stature_index": 0.344812,
-      "career_stature_score": 0.172406,
-      "coverage": 0.4,
+      "career_stature_index": 0.225,
+      "career_stature_score": 0.1125,
+      "coverage": 0.25,
       "era_bucket": "1991_plus",
-      "fact_count": 2,
+      "fact_count": 1,
       "family_scores": {
         "captaincy": null,
         "club_honors": null,
@@ -10894,7 +10894,7 @@
         "position_balanced_selection": 0.45,
         "regional_annual_recognition": null,
         "retrospective_selection": null,
-        "wc_legacy": 0.45
+        "wc_legacy": null
       },
       "family_weights": {
         "captaincy": 0.05,
@@ -10908,13 +10908,13 @@
       },
       "legend": false,
       "legend_reason_codes": [],
-      "modal_position": "DF",
+      "modal_position": null,
       "player_id": "P-42326",
       "review_flags": [
-        "below_material_index_gate"
+        "below_material_index_gate",
+        "single_family_only"
       ],
       "source_refs": [
-        "research_wc_all_star:WC All-Star Team WC-2018",
         "uefa_team_of_the_year:uefa_team_of_the_year 2018"
       ],
       "source_set_version": "merit-source-set-2.0.0",
