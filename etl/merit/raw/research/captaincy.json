@@ -1,0 +1,271 @@
+{
+  "source_id": "research_captaincy",
+  "family": "captaincy",
+  "note": "MV2-2 deterministic factual research backstop. National-team captaincy records — a parser-valid fact family that the v1/MV2-1 source set leaves empty (its only named source, eu-football.info, serves JS-gated empty bodies to non-browser clients and is not SHA-pinnable). Every row is a citation-backed public fact: the player's display name as the canonical card carries it, their nation, the relevant year (captaincy-defining tournament, or null for a standing current captaincy), a source-stated position, and a fetchable public citation URL plus the specific claim it supports. NO rating numbers, rankings, OVR/channel/boost/override — only the captaincy record. Each citation was fetched and confirmed to support its claim before commit. The conservative linker treats these rows identically to parser rows (unique high-confidence link only; ambiguous withheld to review); an uncited row fails the build.",
+  "rows": [
+    {
+      "scope": "historical_gap",
+      "name": "Carlos Alberto",
+      "nation_token": "Brazil",
+      "year": 1970,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 1970 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres",
+        "claim": "He captained the Brazil national team to victory in the 1970 World Cup."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Daniel Passarella",
+      "nation_token": "Argentina",
+      "year": 1978,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 1978 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Daniel_Passarella",
+        "claim": "He captained Argentina during the 1978 World Cup and was the first Argentine to hold the World Cup."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Giacinto Facchetti",
+      "nation_token": "Italy",
+      "year": 1968,
+      "position": "DF",
+      "detail": "national-team captain — record 11-year Italy captaincy; lifted the 1968 European Championship",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Giacinto_Facchetti",
+        "claim": "He was captain of the Italy national side for a record 11 years and led Italy to its first European Championship in 1968."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Cafu",
+      "nation_token": "Brazil",
+      "year": 2002,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 2002 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Cafu",
+        "claim": "As Brazil's captain he raised the World Cup trophy after the 2002 final."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Dino Zoff",
+      "nation_token": "Italy",
+      "year": 1982,
+      "position": "GK",
+      "detail": "national-team captain — lifted the 1982 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Dino_Zoff",
+        "claim": "He lifted the World Cup as captain of Italy in the 1982 tournament at the age of 40."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Bobby Moore",
+      "nation_token": "England",
+      "year": 1966,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 1966 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Bobby_Moore",
+        "claim": "He was the captain of the England national team that won the 1966 World Cup."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Fabio Cannavaro",
+      "nation_token": "Italy",
+      "year": 2006,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 2006 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Fabio_Cannavaro",
+        "claim": "He captained Italy throughout their successful 2006 World Cup campaign."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Iker Casillas",
+      "nation_token": "Spain",
+      "year": 2010,
+      "position": "GK",
+      "detail": "national-team captain — lifted the 2010 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Iker_Casillas",
+        "claim": "On 11 July 2010 Casillas captained Spain to their first World Cup title."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Philipp Lahm",
+      "nation_token": "Germany",
+      "year": 2014,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 2014 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Philipp_Lahm",
+        "claim": "On 13 July 2014 Lahm led Germany to a World Cup victory as captain."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Didier Deschamps",
+      "nation_token": "France",
+      "year": 1998,
+      "position": "MF",
+      "detail": "national-team captain — lifted the 1998 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Didier_Deschamps",
+        "claim": "In 1998 Deschamps captained France as they won the 1998 World Cup on home soil."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Franz Beckenbauer",
+      "nation_token": "West Germany",
+      "year": 1974,
+      "position": "DF",
+      "detail": "national-team captain — lifted the 1974 World Cup (first to lift the new trophy)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Franz_Beckenbauer",
+        "claim": "Beckenbauer led West Germany to victory at the 1974 World Cup and was the first captain to lift the new trophy."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Diego Maradona",
+      "nation_token": "Argentina",
+      "year": 1986,
+      "position": "MF",
+      "detail": "national-team captain — lifted the 1986 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Diego_Maradona",
+        "claim": "Maradona captained the Argentine national team to victory in the 1986 World Cup, lifting the trophy as captain."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Lothar Matthäus",
+      "nation_token": "Germany",
+      "year": 1990,
+      "position": "MF",
+      "detail": "national-team captain — lifted the 1990 World Cup",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Lothar_Matth%C3%A4us",
+        "claim": "He captained West Germany to victory in the 1990 World Cup, hoisting the trophy as team captain."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Franco Baresi",
+      "nation_token": "Italy",
+      "year": 1994,
+      "position": "DF",
+      "detail": "national-team captain — named Italy captain for the 1994 World Cup; AC Milan captain for 15 seasons",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Franco_Baresi",
+        "claim": "He was named Italy's captain for the 1994 World Cup and captained AC Milan for 15 seasons."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Luka Modrić",
+      "nation_token": "Croatia",
+      "year": null,
+      "position": "MF",
+      "detail": "national-team captain — captains Croatia (most-capped Croatia player)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Luka_Modri%C4%87",
+        "claim": "He captains the Croatia national team and is the country's most-capped player."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Harry Kane",
+      "nation_token": "England",
+      "year": null,
+      "position": "FW",
+      "detail": "national-team captain — captains England (all-time top scorer)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Harry_Kane",
+        "claim": "He captains the England national team and is England's all-time top goalscorer."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Mohamed Salah",
+      "nation_token": "Egypt",
+      "year": null,
+      "position": "FW",
+      "detail": "national-team captain — captains Egypt",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Mohamed_Salah",
+        "claim": "He captains the Egypt national team."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Granit Xhaka",
+      "nation_token": "Switzerland",
+      "year": null,
+      "position": "MF",
+      "detail": "national-team captain — captains Switzerland (record appearance holder)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Granit_Xhaka",
+        "claim": "He captains the Switzerland national team and is the nation's record appearance holder."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Wataru Endo",
+      "nation_token": "Japan",
+      "year": null,
+      "position": "MF",
+      "detail": "national-team captain — named Japan captain in June 2023",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Wataru_Endo",
+        "claim": "He captains the Japan national team, having been named captain in June 2023."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Christian Pulisic",
+      "nation_token": "United States",
+      "year": null,
+      "position": "FW",
+      "detail": "national-team captain — has captained the United States",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Christian_Pulisic",
+        "claim": "Pulisic captained the United States national team, including the 2021 Nations League final victory."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Edin Džeko",
+      "nation_token": "Bosnia and Herzegovina",
+      "year": null,
+      "position": "FW",
+      "detail": "national-team captain — captains Bosnia and Herzegovina (all-time top scorer, most-capped)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Edin_D%C5%BEeko",
+        "claim": "He captains the Bosnia and Herzegovina national team and is its all-time top scorer and most-capped player."
+      }
+    },
+    {
+      "scope": "top2026",
+      "name": "Mathew Ryan",
+      "nation_token": "Australia",
+      "year": null,
+      "position": "GK",
+      "detail": "national-team captain — captains Australia",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Mathew_Ryan",
+        "claim": "He captains the Australia national team."
+      }
+    }
+  ]
+}

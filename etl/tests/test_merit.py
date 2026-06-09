@@ -531,3 +531,154 @@ def test_v1_stature_table_is_byte_identical_after_v2_expansion():
         REPO_ROOT / "etl" / "output" / "career_stature.json"
     ).read_text(encoding="utf-8")
     assert rebuilt == committed
+
+
+# ─── MV2-2: deterministic factual research backstop ───────────────────────────
+
+
+@pytest.fixture(scope="session")
+def research_facts(built) -> list[dict]:
+    from wcdraft_etl.merit import RESEARCH_SOURCE_IDS
+
+    return [f for f in built["facts"] if f["source_id"] in RESEARCH_SOURCE_IDS]
+
+
+def test_research_rows_are_all_cited_and_linked_like_parser_rows(research_facts):
+    """Every research-backstop fact links to a real player_id and carries a public
+    citation (url + claim). The linker emitted them via the SAME path as parser
+    rows — they are not a privileged side-channel."""
+    assert len(research_facts) >= 20
+    for f in research_facts:
+        assert f["player_id"].startswith("P-")
+        cite = f.get("citation")
+        assert isinstance(cite, dict), f
+        assert cite["url"].lower().startswith("http"), f
+        assert cite["claim"].strip(), f
+        # research rows never invent a rating number / ranking field
+        assert "overall" not in f and "rating" not in f
+
+
+def test_research_uncited_row_fails_the_build(monkeypatch):
+    """An uncited / malformed research row raises ResearchError — uncited fails the
+    build, it is never silently accepted."""
+    from wcdraft_etl.merit import parse_research
+
+    monkeypatch.setattr(
+        parse_research, "_load_note", lambda s: {
+            "source_id": s.source_id,
+            "family": s.family,
+            "rows": [{"name": "Someone", "nation_token": "Brazil", "year": 1970}],
+        }
+    )
+    with pytest.raises(parse_research.ResearchError):
+        parse_research.collect()
+
+
+def test_research_ambiguous_row_is_withheld_to_review_not_assigned(built):
+    """A research record with an ambiguous identity is routed to link_review by the
+    SAME conservative linker as parser rows — never force-assigned. Feeding a bare
+    surname with no corroborating nation through link_records yields a review row,
+    not a fact (research rows have no privileged link path)."""
+    from wcdraft_etl.merit import MeritRecord
+    from wcdraft_etl.merit.link import build_canon, link_records
+
+    canon = build_canon(
+        json.loads((REPO_ROOT / "etl" / "output" / "players.json").read_text()),
+        json.loads((REPO_ROOT / "etl" / "output" / "player_tournaments.json").read_text()),
+        json.loads((REPO_ROOT / "etl" / "output" / "tournaments.json").read_text()),
+        json.loads((REPO_ROOT / "etl" / "output" / "nations.json").read_text()),
+    )
+    ambiguous = MeritRecord(
+        source_id="research_captaincy",
+        family="captaincy",
+        name="Silva",  # a surname shared by many; no nation to disambiguate
+        nation_token=None,
+        year=None,
+        extra={"citation": {"url": "https://example.org/x", "claim": "c"}},
+    )
+    facts, review = link_records([ambiguous], canon)
+    assert facts == []
+    assert review and review[0]["source_id"] == "research_captaincy"
+
+
+def test_research_manifest_pins_bytes_so_editing_a_citation_is_detected(tmp_path, monkeypatch):
+    """Editing any citation changes the note bytes and therefore the pinned sha256:
+    verify() must catch the drift. Proven by mutating a committed note in place and
+    re-running verify against the unchanged manifest (restored in a finally block)."""
+    from wcdraft_etl.merit import RESEARCH_SOURCES, parse_research
+
+    # clean state first
+    assert parse_research.verify() == 0
+
+    src = RESEARCH_SOURCES[0]
+    real = MERIT_RAW / src.raw_file
+    doc = json.loads(real.read_text(encoding="utf-8"))
+    doc["rows"][0]["citation"]["url"] = "https://en.wikipedia.org/wiki/Tampered"
+    backup = real.read_text(encoding="utf-8")
+    try:
+        real.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        assert parse_research.verify() == 1  # sha drift detected
+    finally:
+        real.write_text(backup, encoding="utf-8")
+    assert parse_research.verify() == 0  # restored
+
+
+def test_research_facts_do_not_leak_into_the_v1_stature_table(research_facts):
+    """The scope guard holds for research too: research source_ids are not in the v1
+    source-family map, so stature._v1_facts drops them all — career_stature.json (and
+    every rating) is byte-identical to the pre-research base."""
+    from wcdraft_etl.merit import stature
+
+    research_sources = {f["source_id"] for f in research_facts}
+    assert research_sources  # there ARE research facts
+    assert research_sources.isdisjoint(set(stature._V1_SOURCE_FAMILY))
+    v1 = stature._v1_facts(research_facts)
+    assert v1 == []  # not one research row survives into the v1 table
+
+
+def test_research_activates_captaincy_and_closes_named_v1_gaps(research_facts, built):
+    """The reserved `captaincy` family is now sourced, and the named v1 gaps pick up
+    a research fact: Cruyff (global recognition recovered under his canonical name),
+    Cafu / Carlos Alberto / Facchetti / Passarella / Baresi (DF captaincy)."""
+    from wcdraft_etl.merit import ACTIVE_SOURCE_FAMILIES
+
+    assert "captaincy" in ACTIVE_SOURCE_FAMILIES
+    fam_by_pid = {}
+    for f in built["facts"]:
+        fam_by_pid.setdefault(f["player_id"], set()).add(f["family"])
+
+    # Cruyff: global recognition now linked (was withheld under "Cruijff").
+    assert "global_annual_recognition" in fam_by_pid.get("P-50564", set())
+    # Defender / GK captaincy closures (player_id, expected family).
+    for pid in ("P-91718", "P-25829", "P-68170", "P-80376", "P-42920"):
+        assert "captaincy" in fam_by_pid.get(pid, set()), pid
+    # Position is carried on the research captaincy facts (the DF/GK repair).
+    cafu_caps = [f for f in research_facts if f["player_id"] == "P-91718"]
+    assert any(f["position"] == "DF" for f in cafu_caps)
+
+
+def test_research_manifest_covers_every_research_source(research_facts):
+    """The research manifest lists exactly the registered research sources, stamped
+    with the source-set version, and verify() is clean."""
+    from wcdraft_etl.merit import RESEARCH_SOURCES, parse_research
+    from wcdraft_etl.merit.paths import RESEARCH_MANIFEST_PATH
+
+    manifest = json.loads(RESEARCH_MANIFEST_PATH.read_text(encoding="utf-8"))
+    files = {f["file"] for f in manifest["files"]}
+    assert files == {s.raw_file for s in RESEARCH_SOURCES}
+    assert manifest["version"] == SOURCE_SET_VERSION
+    assert parse_research.verify() == 0
+
+
+def test_research_sources_are_excluded_from_the_fetch_manifest():
+    """Research notes are NOT fetched web snapshots: they must not appear in
+    fetch_manifest.json (which pins only downloaded pages) — they own a separate
+    manifest. This keeps `fetch --verify`'s fetched-source set unchanged."""
+    from wcdraft_etl.merit import RESEARCH_SOURCE_IDS, SOURCES
+
+    fetch_manifest = json.loads(
+        (REPO_ROOT / "etl" / "merit" / "fetch_manifest.json").read_text()
+    )
+    fetch_sources = {f["source_id"] for f in fetch_manifest["files"]}
+    assert fetch_sources.isdisjoint(RESEARCH_SOURCE_IDS)
+    assert RESEARCH_SOURCE_IDS.isdisjoint({s.source_id for s in SOURCES})

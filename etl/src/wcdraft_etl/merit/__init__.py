@@ -111,10 +111,13 @@ class SignalFamily:
 
 # v2 position-balanced taxonomy. ``weight`` is intentionally NOT set for the active
 # families: MV2-1 proves coverage and assigns no rating weight (MV2-3 owns weights).
-# Two families are reserved (no live source yet): ``captaincy`` (the only named
-# captaincy source — eu-football.info — serves JS-gated empty bodies to non-browser
-# clients and is not cleanly SHA-pinnable as static public bytes, so it is deferred,
-# documented, not fabricated) and ``club_honors`` (deferred to a later approval).
+# One family is reserved (no live source yet): ``club_honors`` (deferred to a later
+# approval). ``captaincy`` was reserved in MV2-1 (its only named web source,
+# eu-football.info, serves JS-gated empty bodies to non-browser clients and is not
+# cleanly SHA-pinnable); MV2-2 ACTIVATES it via the deterministic research backstop
+# — citation-backed captaincy records authored from fetched-and-verified public
+# sources (see RESEARCH_SOURCES), staged in source_facts.json for MV2-3, still
+# weight-less here.
 #
 # ``annual_recognition`` is a LEGACY family key: no v2 source maps to it. It is
 # retained ONLY because the v1 career-stature-1.0.0 table (stature.py) still groups
@@ -171,9 +174,10 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
     SignalFamily(
         "captaincy",
         "National-team captaincy record",
-        None,  # reserved: named source (eu-football.info) is JS-gated, deferred
-        "RESERVED: the named captaincy source serves no static bytes to non-browser "
-        "clients; deferred (not fabricated) until a SHA-pinnable source is sourced.",
+        None,  # active via the MV2-2 research backstop; MV2-3 decides any weight
+        "National-team captaincy records, sourced via the MV2-2 deterministic "
+        "research backstop (citation-backed, fetched-and-verified public sources) "
+        "since the only named web source is not SHA-pinnable.",
     ),
     SignalFamily(
         "annual_recognition",
@@ -193,6 +197,8 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
 FAMILY_KEYS: tuple[str, ...] = tuple(f.key for f in SIGNAL_FAMILIES)
 
 # Families a v2 SOURCE may legitimately carry (excludes the legacy/reserved keys).
+# ``captaincy`` joins in MV2-2: the research backstop gives it a live, citation-backed
+# source, so it is no longer reserved.
 ACTIVE_SOURCE_FAMILIES: frozenset[str] = frozenset(
     {
         "wc_legacy",
@@ -201,6 +207,7 @@ ACTIVE_SOURCE_FAMILIES: frozenset[str] = frozenset(
         "position_balanced_selection",
         "international_record",
         "retrospective_selection",
+        "captaincy",
     }
 )
 
@@ -437,11 +444,43 @@ _V2_SOURCES: tuple[Source, ...] = (
 
 SOURCES: tuple[Source, ...] = _V1_SOURCES + _V2_SOURCES
 
+# ── research backstop sources (MV2-2) — DELIBERATELY SEPARATE from SOURCES ──
+# These are NOT fetched web snapshots: each is a committed, citation-backed research
+# note authored from fetched-and-verified public sources, pinned in its OWN manifest
+# (merit/raw/research/manifest.json), not fetch_manifest.json. They are kept out of
+# ``SOURCES`` so the fetch path (fetch_manifest, ``fetch --verify``) is untouched;
+# they are added to SOURCE_BY_ID only so the report can label them. ``url`` is a
+# marker, never fetched — the real provenance is the per-row ``citation.url``.
+_RESEARCH_SOURCES: tuple[Source, ...] = (
+    Source(
+        "research_captaincy",
+        "captaincy",
+        "research/captaincy.json",
+        "(research backstop — per-row citations in merit/raw/research/manifest.json)",
+        "utf-8",
+        "fact",
+        "National-team captaincy records (research backstop, citation-backed)",
+    ),
+    Source(
+        "research_global_annual",
+        "global_annual_recognition",
+        "research/global-annual.json",
+        "(research backstop — per-row citations in merit/raw/research/manifest.json)",
+        "utf-8",
+        "fact",
+        "Global annual recognition recovered under canonical names (research backstop)",
+    ),
+)
+RESEARCH_SOURCES: tuple[Source, ...] = _RESEARCH_SOURCES
+RESEARCH_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _RESEARCH_SOURCES)
+
 # Source id used for the native, pre-linked World Cup individual awards drawn from
 # the canonical Fjelstul awards table (etl/output/awards.json). It is NOT fetched.
 NATIVE_WC_AWARDS_SOURCE = "wc_individual_awards_native"
 
-SOURCE_BY_ID: dict[str, Source] = {s.source_id: s for s in SOURCES}
+# SOURCE_BY_ID spans fetched + research sources (for report labels); FACT_SOURCES and
+# the fetch manifest see ONLY the fetched ``SOURCES`` (research has its own manifest).
+SOURCE_BY_ID: dict[str, Source] = {s.source_id: s for s in (SOURCES + _RESEARCH_SOURCES)}
 FACT_SOURCES: tuple[Source, ...] = tuple(s for s in SOURCES if s.role == "fact")
 
 ATTRIBUTION = (

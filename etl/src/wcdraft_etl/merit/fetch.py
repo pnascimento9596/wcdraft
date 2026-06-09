@@ -101,7 +101,9 @@ def write_manifest(manifest: dict) -> None:
 
 
 def verify() -> int:
-    """Recompute sha256 of committed snapshots against the manifest. 0 if clean."""
+    """Recompute sha256 of every committed snapshot against the manifest — both the
+    fetched web snapshots AND the research-backstop notes (MV2-2, own manifest). 0 if
+    clean. A changed citation (changed research bytes) trips its sha here too."""
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     bad = 0
     for f in manifest["files"]:
@@ -110,7 +112,9 @@ def verify() -> int:
             print(f"DRIFT {f['file']}: manifest={f['sha256'][:16]} actual={actual[:16]}")
             bad += 1
     print("merit fetch manifest verify:", "OK" if not bad else f"{bad} drifted")
-    return 1 if bad else 0
+    from . import parse_research
+
+    return (1 if bad else 0) or parse_research.verify()
 
 
 if __name__ == "__main__":
