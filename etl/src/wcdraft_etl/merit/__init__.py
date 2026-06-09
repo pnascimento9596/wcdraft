@@ -71,7 +71,7 @@ from dataclasses import dataclass, field
 # ZERO change to the historical/projected rating outputs or compact bundles (the
 # career-stature table the rating stage reads is untouched) until MV2-4.
 SOURCE_SET_VERSION = "merit-source-set-2.0.0"
-VERSION = "career-stature-1.0.0"
+VERSION = "career-stature-2.0.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
