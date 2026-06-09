@@ -140,6 +140,14 @@ MATERIAL_STATURE_MIN_COVERAGE = 0.25
 MATERIAL_STATURE_MIN_INDEX = 0.40
 STATURE_RAMP_HALF_WIDTH = 0.06
 
+# The continuity-blend weight at/above which the stature path DOMINATES the final
+# (final = weight·stature_path + (1−weight)·raw_path, so weight ≥ 0.5 ⇒ stature is
+# the larger half). This single line marks a card as "clearly material": it (a)
+# admits a card into the cohort's elite internal band, (b) decides whether the
+# global raw-only ceiling applies, and (c) selects the career_stature_estimate
+# basis label — all three are the same "stature dominates" notion.
+STATURE_DOMINANT_WEIGHT = 0.5
+
 # stature_target(pos, index): material index in [MIN_INDEX, 1.0] maps onto
 # [FLOOR, FLOOR+SPAN]. FLOOR is the internal score of a marginal-material card; an
 # index near 1.0 (the all-time peak) maps near the internal ceiling (→ display
@@ -640,9 +648,10 @@ def _build_internal_rows(
         s["target"] = target
         s["modulation"] = modulation
         s["stature_path"] = stature_path
-        # A clearly-material card (weight ≥ 0.5) defines the cohort's elite internal
-        # band, which bounds the raw-only ceiling for non-material cards beside it.
-        if weight >= 0.5:
+        # A clearly-material card (weight ≥ STATURE_DOMINANT_WEIGHT) defines the
+        # cohort's elite internal band, which bounds the raw-only ceiling for
+        # non-material cards beside it.
+        if weight >= STATURE_DOMINANT_WEIGHT:
             material_finals_by_cohort.setdefault((c["tournament_id"], pos), []).append(
                 stature_path
             )
@@ -652,7 +661,7 @@ def _build_internal_rows(
     # band; when no material stature exists at all (e.g. the career table is absent,
     # as in the divergence baseline), there is no band to protect and the global
     # ceiling is not applied (it would otherwise flatten the whole distribution).
-    has_any_material = any(s["weight"] >= 0.5 for s in staged)
+    has_any_material = any(s["weight"] >= STATURE_DOMINANT_WEIGHT for s in staged)
     internal_rows: list[dict] = []
     for s in staged:
         c = s["card"]
@@ -682,17 +691,30 @@ def _build_internal_rows(
             and cs["career_stature_index"] >= CAREER_ESTIMATE_MIN_INDEX
         )
 
-        # overall_basis split:
-        #   measured_performance     — a positively-weighted tournament signal exists
-        #   career_stature_estimate  — no tournament signal, but a material+elite
-        #                              career record (exits the [66,73] cap)
-        #   baseline_anchor_estimate — no tournament signal AND no material elite
-        if s["has_individual_signal"]:
-            overall_basis = "measured_performance"
-        elif is_material_elite:
+        # overall_basis split (stature-dominant model, wc-perf-4.x). The label reports
+        # what actually DROVE the final score, not merely whether a tournament box
+        # score exists. Under the continuity blend a material card's final is
+        # weight·stature_path + (1−weight)·raw_path, so once the stature path
+        # dominates (weight ≥ STATURE_DOMINANT_WEIGHT) the score is career-stature
+        # driven even when the card also carries a tournament signal — keying the
+        # label on has_individual_signal mislabelled ~all material greats as
+        # "measured_performance".
+        #   baseline_anchor_estimate — no tournament signal AND no material-elite
+        #                              career: the display-capped [66,73] honest
+        #                              estimate. Predicate UNCHANGED from before, so
+        #                              every estimate-capped overall stays byte-
+        #                              identical (this is the ONLY basis that feeds a
+        #                              numeric — the estimate=True display cap).
+        #   career_stature_estimate  — the stature path dominates the merit blend:
+        #                              the final is primarily career stature, not
+        #                              measured tournament performance.
+        #   measured_performance     — the raw tournament path drives the final.
+        if not s["has_individual_signal"] and not is_material_elite:
+            overall_basis = "baseline_anchor_estimate"
+        elif weight >= STATURE_DOMINANT_WEIGHT:
             overall_basis = "career_stature_estimate"
         else:
-            overall_basis = "baseline_anchor_estimate"
+            overall_basis = "measured_performance"
 
         components = [
             {"signal": "goals", "value": c["goals"], "weight": 0.0},
