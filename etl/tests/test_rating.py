@@ -534,14 +534,20 @@ def test_named_era_anchors_land_in_expected_bands(players, cards, by_id):
 
 def test_great_pre1970_defender_lands_in_elite_band(players, cards, by_id):
     """Bobby Moore '66 — England champion captain DF with all-6 RSSSF
-    appearances supplemented — must land near the top of the DF band."""
+    appearances supplemented — must land near the top of the DF band.
+
+    His elite band is career-stature driven (stature path dominates the blend at
+    weight ≥ STATURE_DOMINANT_WEIGHT), so the honest basis is
+    ``career_stature_estimate`` — NOT ``measured_performance``: a thin '66 box
+    score alone could never carry a DF to 92. The overall is byte-identical to the
+    pre-fix value; only the (formerly mislabelled) basis moved."""
     cid = _card_id(players, cards, "Moore", "WC-1966")
     r = by_id[cid]
     src = cards[cid]
     assert src["position_listed"] == "DF"
     assert src["appearances"] == 6
     assert src["appearances_source"] == "rsssf_starting_xi"
-    assert r["overall_basis"] == "measured_performance"
+    assert r["overall_basis"] == "career_stature_estimate"
     assert r["coverage"] == 1.0
     assert r["overall"] >= 88
 
