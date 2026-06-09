@@ -156,6 +156,13 @@ def _fact_discriminator(rec: MeritRecord) -> str:
         return f"list={extra['list']}"
     if "election" in extra:  # IFFHS century: one election vs another
         return f"election={extra['election']}"
+    if "selection" in extra:  # position-balanced / all-time: distinct XI selections
+        # A player can sit in several distinct year-less all-time XIs (e.g. the
+        # Ballon d'Or Dream Team AND an IFFHS continental dream team) — each is a
+        # genuinely distinct selection, so keep them apart. An exact repeat of the
+        # same selection still collapses (same discriminator). Linking is untouched;
+        # this only governs de-duplication of already-linked facts.
+        return f"selection={extra['selection']}"
     return ""
 
 
@@ -227,6 +234,7 @@ def link_records(
                 "source_id": rec.source_id,
                 "family": rec.family,
                 "year": rec.year,
+                "position": rec.position,
                 "era": era_bucket(canon.wc_years[pid][0]),
                 "method": method,
                 "raw_name": rec.name,
@@ -259,6 +267,7 @@ def link_records(
             f["source_id"],
             f["year"] if f["year"] is not None else -1,
             f["detail"],
+            f["position"] or "",
         ),
     )
     review = sorted(
@@ -284,6 +293,7 @@ def native_wc_legacy_facts(awards: list[dict], canon: _Canon) -> list[dict]:
             "source_id": NATIVE_WC_AWARDS_SOURCE,
             "family": "wc_legacy",
             "year": year,
+            "position": None,
             "era": era_bucket(canon.wc_years[pid][0]),
             "method": "native_canonical",
             "raw_name": a["award_name"],
@@ -292,7 +302,12 @@ def native_wc_legacy_facts(awards: list[dict], canon: _Canon) -> list[dict]:
         }
     return sorted(
         facts.values(),
-        key=lambda f: (f["player_id"], f["year"] if f["year"] is not None else -1, f["detail"]),
+        key=lambda f: (
+            f["player_id"],
+            f["year"] if f["year"] is not None else -1,
+            f["detail"],
+            f["position"] or "",
+        ),
     )
 
 

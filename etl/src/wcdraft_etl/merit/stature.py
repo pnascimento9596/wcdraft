@@ -42,7 +42,7 @@ import json
 import re
 from pathlib import Path
 
-from . import ERA_BUCKETS, FAMILY_KEYS, VERSION
+from . import ERA_BUCKETS, NATIVE_WC_AWARDS_SOURCE, VERSION
 from .paths import OUTPUT_DIR
 
 # career_stature.json lives next to the canonical tables (the rating stage reads it
@@ -52,6 +52,44 @@ CAREER_STATURE_PATH = _CANON_DIR / "career_stature.json"
 
 # Float rounding so emitted JSON is byte-stable (matches rating._PRECISION).
 _PRECISION = 6
+
+# ─── v1 source-set view (career-stature-1.0.0) ────────────────────────────────
+# MV2-1 broadened source_facts.json with the v2 source set + v2 family taxonomy,
+# but the v1 career-stature table (and therefore every rating output) is held
+# BYTE-IDENTICAL until MV2-3. This view is the mechanism: stature scores ONLY the
+# v1 source set, and reads each v1 source under its v1 family name (the registry
+# relabelled some v1 sources — e.g. european_poy — onto the v2 global_/regional_
+# taxonomy). Every v2-only source (the new regional/position-balanced/all-time
+# lists) is STAGED in source_facts.json and ignored here. MV2-3 replaces this with
+# career-stature-2.0.0 consuming the full v2 set + the v2 families.
+_V1_FAMILY_KEYS: tuple[str, ...] = (
+    "wc_legacy",
+    "annual_recognition",
+    "international_record",
+    "retrospective_selection",
+    "club_honors",
+)
+_V1_SOURCE_FAMILY: dict[str, str] = {
+    NATIVE_WC_AWARDS_SOURCE: "wc_legacy",
+    "european_poy": "annual_recognition",
+    "south_american_poy": "annual_recognition",
+    "iffhs_worlds_best": "annual_recognition",
+    "international_century_caps": "international_record",
+    "iffhs_century": "retrospective_selection",
+    "living_legends_2004": "retrospective_selection",
+}
+
+
+def _v1_facts(facts: list[dict]) -> list[dict]:
+    """Keep only v1-source facts, each relabelled to its v1 family — so neither the
+    v2 registry relabel nor the v2 source-set expansion moves this v1 table."""
+    out: list[dict] = []
+    for f in facts:
+        fam = _V1_SOURCE_FAMILY.get(f["source_id"])
+        if fam is None:
+            continue  # v2-only source: staged for MV2-3, not scored by the v1 table
+        out.append({**f, "family": fam})
+    return out
 
 # ─── era-bucketed family weights ──────────────────────────────────────────────
 # The load-bearing composite shape (plan §"Career composite"). A family weight of
@@ -217,7 +255,7 @@ def _career_peak_year(years: list[int]) -> int | None:
 
 def build_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> list[dict]:
     """Build the sorted per-player career-stature rows (pure)."""
-    facts = source_facts["facts"]
+    facts = _v1_facts(source_facts["facts"])
     by_player: dict[str, list[dict]] = {}
     for f in facts:
         by_player.setdefault(f["player_id"], []).append(f)
@@ -241,7 +279,7 @@ def build_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> list[dic
             family_facts.setdefault(f["family"], []).append(f)
         family_scores: dict[str, float] = {}
         for fam, ff in family_facts.items():
-            if fam not in FAMILY_KEYS:
+            if fam not in _V1_FAMILY_KEYS:
                 raise ValueError(f"player {pid} fact in unknown family {fam!r}")
             family_scores[fam] = round(
                 _saturate([_fact_strength(f) for f in ff]), _PRECISION
@@ -249,7 +287,7 @@ def build_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> list[dic
 
         # Era-weighted saturating combine across families. Only era-available
         # families (weight > 0) participate; club_honors (weight 0) is excluded.
-        active = [fam for fam in FAMILY_KEYS if weights.get(fam, 0.0) > 0.0]
+        active = [fam for fam in _V1_FAMILY_KEYS if weights.get(fam, 0.0) > 0.0]
         acc = 1.0
         for fam in active:
             fs = family_scores.get(fam, 0.0)
@@ -282,9 +320,9 @@ def build_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> list[dic
                 "era_bucket": era,
                 "career_peak_year": peak_year,
                 "family_scores": {
-                    fam: family_scores.get(fam, None) for fam in FAMILY_KEYS
+                    fam: family_scores.get(fam, None) for fam in _V1_FAMILY_KEYS
                 },
-                "family_weights": {fam: weights.get(fam, 0.0) for fam in FAMILY_KEYS},
+                "family_weights": {fam: weights.get(fam, 0.0) for fam in _V1_FAMILY_KEYS},
                 "fact_count": len(pfacts),
                 "review_flags": _review_flags(coverage, family_scores),
                 "source_refs": source_refs,
@@ -412,7 +450,7 @@ def _render_report(rows: list[dict]) -> str:
             L.append(f"| {name} | — | — | — | (no linked facts) |")
             continue
         fams = ", ".join(
-            f for f in FAMILY_KEYS if r["family_scores"].get(f) not in (None, 0.0)
+            f for f in _V1_FAMILY_KEYS if r["family_scores"].get(f) not in (None, 0.0)
         )
         L.append(
             f"| {name} | `{r['era_bucket']}` | {r['career_stature_score']:.3f} "

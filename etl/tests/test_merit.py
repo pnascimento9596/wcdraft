@@ -18,12 +18,18 @@ from pathlib import Path
 import pytest
 
 from wcdraft_etl.merit import (
+    POSITIONS,
+    SOURCE_SET_VERSION,
     VERSION,
     MeritRecord,
     parse_century_caps,
     parse_century_election,
+    parse_iffhs_dreamteams,
     parse_poy,
+    parse_rsssf_awards,
     parse_wiki,
+    parse_wiki_awards,
+    parse_wiki_xi,
 )
 from wcdraft_etl.merit import fetch as merit_fetch
 from wcdraft_etl.merit.build import build
@@ -152,10 +158,11 @@ def test_canonical_greats_pick_up_stature(built):
     }
     for pid, name in greats.items():
         assert by_player.get(pid), f"{name} ({pid}) picked up no stature fact"
-    # Pelé spans all four active families.
+    # Pelé spans the v2 families available to him: World Cup legacy, regional annual
+    # (South American Player of the Year), international record, and retrospective.
     assert by_player["P-38906"] >= {
         "wc_legacy",
-        "annual_recognition",
+        "regional_annual_recognition",
         "international_record",
         "retrospective_selection",
     }
@@ -350,7 +357,7 @@ def test_manifest_covers_every_source():
     from wcdraft_etl.merit import SOURCES
 
     assert files == {s.raw_file for s in SOURCES}
-    assert manifest["version"] == VERSION
+    assert manifest["version"] == SOURCE_SET_VERSION
 
 
 def test_build_is_deterministic():
@@ -367,4 +374,160 @@ def test_committed_outputs_are_in_sync_with_a_fresh_build(built):
     the artifacts were regenerated, not hand-edited."""
     committed = json.loads((MERIT_OUT / "source_facts.json").read_text())
     assert committed["facts"] == built["source_facts"]["facts"]
-    assert committed["version"] == VERSION
+    assert committed["version"] == SOURCE_SET_VERSION
+
+
+# ─── MV2-1: v2 source-set expansion (parsers, positions, coverage) ────────────
+
+
+def test_source_set_and_stature_table_versions_are_independent():
+    """MV2-1 bumps the SOURCE-SET version but leaves the career-stature TABLE version
+    on v1 — the two axes move independently so the source breadth lands without
+    touching the v1 table (and therefore ratings)."""
+    assert SOURCE_SET_VERSION == "merit-source-set-2.0.0"
+    assert VERSION == "career-stature-1.0.0"
+    assert SOURCE_SET_VERSION != VERSION
+
+
+def test_manifest_dedups_a_shared_snapshot():
+    """A snapshot backing more than one logical source (the SAM page backs both the
+    winners and the placements parser) is pinned ONCE — one manifest entry per file,
+    yet the SOURCES set still references it."""
+    manifest = json.loads((REPO_ROOT / "etl" / "merit" / "fetch_manifest.json").read_text())
+    files = [f["file"] for f in manifest["files"]]
+    assert len(files) == len(set(files)), "duplicate file entry in fetch manifest"
+    from wcdraft_etl.merit import SOURCE_BY_ID
+
+    assert SOURCE_BY_ID["south_american_poy"].raw_file == "rsssf/sam-poy.html"
+    assert SOURCE_BY_ID["south_american_poy_placements"].raw_file == "rsssf/sam-poy.html"
+
+
+def test_v2_sources_each_contribute_linked_facts(built):
+    """Every v2 fact source links at least one real record — proof the new parsers
+    are wired and resolve, not dead code."""
+    by_source = {f["source_id"] for f in built["facts"]}
+    for sid in (
+        "african_poy",
+        "asian_poy",
+        "concacaf_poy",
+        "south_american_poy_placements",
+        "uefa_mens_poy",
+        "world_soccer_poy",
+        "onze_awards",
+        "uefa_club_positional",
+        "uefa_team_of_the_year",
+        "fifpro_world11",
+        "esm_team_of_the_season",
+        "ballondor_dream_team",
+        "iffhs_dream_teams",
+    ):
+        assert sid in by_source, f"v2 source {sid} contributed no linked fact"
+
+
+def test_position_balanced_sources_emit_first_class_positions(built):
+    """The whole point of MV2-1: position-aware sources emit first-class GK/DF/MF/FW
+    facts. Every position is in the closed set, and all four appear — the striker
+    bias is broken."""
+    positions = {f["position"] for f in built["facts"] if f["position"] is not None}
+    assert positions == set(POSITIONS), positions
+    # The UEFA positional awards directly source goalkeepers AND defenders.
+    pos_by_source = {}
+    for f in built["facts"]:
+        if f["position"]:
+            pos_by_source.setdefault(f["source_id"], set()).add(f["position"])
+    assert {"GK", "DF"} <= pos_by_source["uefa_club_positional"]
+    assert "GK" in pos_by_source["esm_team_of_the_season"]
+
+
+def test_defender_and_keeper_greats_now_carry_facts(built):
+    """The v2 repair target: the defender/goalkeeper legends the striker-biased v1
+    ballots missed now carry facts, and (mononym ambiguity aside) a position."""
+    by_player: dict[str, list[dict]] = {}
+    for f in built["facts"]:
+        by_player.setdefault(f["player_id"], []).append(f)
+    checklist = {
+        "P-42920": "Baresi",
+        "P-43222": "Maldini",
+        "P-09317": "Yashin",
+        "P-11392": "Buffon",
+        "P-91718": "Cafu",
+        "P-72864": "Beckenbauer",
+    }
+    for pid, name in checklist.items():
+        assert by_player.get(pid), f"{name} ({pid}) carries no v2 stature fact"
+    # All but the mononym 'Cafu' (withheld on the all-time-XI row, no nation/year)
+    # carry a first-class position from a positional / formation source.
+    for pid in ("P-42920", "P-43222", "P-09317", "P-11392", "P-72864"):
+        assert any(f["position"] for f in by_player[pid]), pid
+
+
+def test_v2_parser_anchor_facts_are_correct():
+    """Spot-check documented anchor facts so a parser regression is loud (assert,
+    don't eyeball). Pure over the committed snapshots."""
+    onze = parse_rsssf_awards.parse_onze_awards()
+    assert any(
+        r.year == 1986 and r.extra["selection"] == "onze_dor" and "MARADONA" in r.name.upper()
+        for r in onze
+    )
+    wsoc = parse_rsssf_awards.parse_world_soccer_poy()
+    assert any(r.year == 1986 and "MARADONA" in r.name.upper() for r in wsoc)
+    asian = parse_rsssf_awards.parse_asian_poy()
+    assert any(r.year == 2020 and "SON" in r.name.upper() for r in asian)
+    # CONCACAF male Player of the Year 2014 winner is the keeper Keylor Navas.
+    concacaf = parse_wiki_awards.parse_concacaf_poy()
+    assert any(r.year == 2014 and "NAVAS" in r.name.upper() for r in concacaf)
+    # Ballon d'Or First Team: Yashin is the GK, Maldini a defender (position joined
+    # from the per-position nomination sections via the article slug).
+    bd = parse_wiki_xi.parse_ballondor_dream_team()
+    first = {r.name: r.position for r in bd if r.extra["selection"] == "ballondor_first_team"}
+    assert first.get("Lev Yashin") == "GK"
+    assert first.get("Paolo Maldini") == "DF"
+    # ESM reads position from the formation column: Buffon is the keeper.
+    esm = parse_wiki_xi.parse_esm_team_of_the_season()
+    assert any(r.name == "Gianluigi Buffon" and r.position == "GK" for r in esm)
+    # IFFHS All-Time World XI: the goalkeeper (Yashin) is listed first.
+    iffhs = parse_iffhs_dreamteams.parse()
+    assert any("YASHIN" in r.name.upper() and r.position == "GK" for r in iffhs)
+
+
+def test_v2_review_reasons_are_the_same_conservative_set(built):
+    """The linker is UNCHANGED: the broadened source set produces only the existing
+    conservative withholding reasons — no new silent-assignment path."""
+    valid = {
+        "no_candidate",
+        "multi_candidate",
+        "nation_mismatch",
+        "nation_divergent",
+        "weak_unverified",
+    }
+    assert {r["reason"] for r in built["review"]} <= valid
+
+
+def test_v2_facts_do_not_leak_into_the_v1_stature_table():
+    """The scope guard, at the merit layer: the v1 career-stature table consumes
+    ONLY the v1 source set. Every v2-only source is filtered out, so the grown
+    source_facts.json leaves career_stature.json (and every rating) byte-identical."""
+    from wcdraft_etl.merit import stature
+
+    committed = json.loads((MERIT_OUT / "source_facts.json").read_text())
+    v1 = stature._v1_facts(committed["facts"])
+    v1_sources = {f["source_id"] for f in v1}
+    assert "uefa_club_positional" not in v1_sources
+    assert "ballondor_dream_team" not in v1_sources
+    assert "african_poy" not in v1_sources
+    assert v1_sources <= set(stature._V1_SOURCE_FAMILY)
+    # And the relabelled v1 facts only carry v1 family names.
+    assert {f["family"] for f in v1} <= set(stature._V1_FAMILY_KEYS)
+
+
+def test_v1_stature_table_is_byte_identical_after_v2_expansion():
+    """A fresh v1 stature build over the GROWN source_facts.json reproduces the
+    committed career_stature.json byte-for-byte — ratings cannot have moved."""
+    from wcdraft_etl.merit import stature
+
+    out = stature.build(write=False)
+    rebuilt = json.dumps(out["table"], ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    committed = (
+        REPO_ROOT / "etl" / "output" / "career_stature.json"
+    ).read_text(encoding="utf-8")
+    assert rebuilt == committed
