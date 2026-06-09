@@ -1,12 +1,20 @@
-"""ENGINE-V2 E-4.1 — deterministic merit / career-stature source intake.
+"""Deterministic merit / career-stature source intake (merit-source-set-2.0.0).
 
-This package SOURCES public, factually-grounded recognition records for players
-(annual player-of-the-year awards, century international-cap/goal records,
-retrospective century elections, and a living-legends list) and LINKS each record
-to a canonical ``player_id``. It is the *coverage proof* for a later career-lift
-integration (E-4b): it changes **no rating output, no engine, no compact data**.
-Its only products are a linked-fact file, a withheld-ambiguity review queue, and a
-coverage report (``MERIT_SOURCES.md``).
+This package SOURCES public, factually-grounded recognition records for players —
+global & regional player-of-the-year ballots, position-balanced selections (UEFA
+positional awards / Team of the Year, FIFPro World 11, ESM Team of the Season),
+all-time dream teams (the Ballon d'Or Dream Team, IFFHS), century international-cap/
+goal records, retrospective century elections, and a living-legends list — and LINKS
+each record to a canonical ``player_id``. It is the *coverage proof* for the
+stature-dominant rating rebase: it changes **no rating output, no engine, no compact
+data** (the v2 source families are staged in ``source_facts.json`` for the
+career-stature-2.0.0 table in MV2-3). Its only products are a linked-fact file, a
+withheld-ambiguity review queue, and a coverage report (``MERIT_SOURCES.md``).
+
+MV2-1 (this unit) broadened the v1 source set with position-balanced and regional
+sources to repair the striker / Ballon-d'Or bias — defenders and goalkeepers
+(Baresi, Maldini, Yashin, Buffon, Cafu, Beckenbauer) now carry facts, and the
+position-aware sources emit first-class GK/DF/MF/FW positions.
 
 The integrity line mirrors the RSSSF appearance supplement exactly
 (``wcdraft_etl.supplement``):
@@ -43,9 +51,33 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-# Intake schema version. Bumping it signals a change to the source set, the parse,
-# or the link contract — NOT a rating change (this package emits no rating).
+# ─── version axes (TWO independent versions) ──────────────────────────────────
+# The merit package carries TWO version axes that move independently:
+#
+#   SOURCE_SET_VERSION  the source REGISTRY + parse + link contract (this file,
+#                       fetch.py, build.py). Bumping it signals a change to which
+#                       public lists are sourced / how they are parsed & linked.
+#                       It versions source_facts.json + link_review.json + the
+#                       fetch manifest. It is NOT a rating change.
+#
+#   VERSION             the downstream career-stature TABLE schema produced by
+#                       stature.py (career_stature.json). It stays on v1 here:
+#                       MV2-1 grows the SOURCE set but the v1 stature table (and
+#                       therefore every rating output) is held byte-identical — the
+#                       v2 source families are STAGED in source_facts.json for
+#                       MV2-3's career-stature-2.0.0 to consume, not the v1 table.
+#
+# Keeping them separate is the whole point of MV2-1: broaden factual coverage with
+# ZERO change to the historical/projected rating outputs or compact bundles (the
+# career-stature table the rating stage reads is untouched) until MV2-4.
+SOURCE_SET_VERSION = "merit-source-set-2.0.0"
 VERSION = "career-stature-1.0.0"
+
+# Closed set of player positions a fact may carry. Position-balanced sources
+# (positional awards, formation XIs, all-time dream teams) emit a first-class
+# position so MV2-3 can score defenders / goalkeepers / midfielders, not just the
+# striker-biased annual winners. ``None`` = the source does not state a position.
+POSITIONS: tuple[str, ...] = ("GK", "DF", "MF", "FW")
 
 # ─── era buckets ──────────────────────────────────────────────────────────────
 # A linked fact's era is the era of the *player* (their earliest World Cup
@@ -77,6 +109,18 @@ class SignalFamily:
     note: str
 
 
+# v2 position-balanced taxonomy. ``weight`` is intentionally NOT set for the active
+# families: MV2-1 proves coverage and assigns no rating weight (MV2-3 owns weights).
+# Two families are reserved (no live source yet): ``captaincy`` (the only named
+# captaincy source — eu-football.info — serves JS-gated empty bodies to non-browser
+# clients and is not cleanly SHA-pinnable as static public bytes, so it is deferred,
+# documented, not fabricated) and ``club_honors`` (deferred to a later approval).
+#
+# ``annual_recognition`` is a LEGACY family key: no v2 source maps to it. It is
+# retained ONLY because the v1 career-stature-1.0.0 table (stature.py) still groups
+# the v1 annual sources under it internally; keeping it in the registry lets that v1
+# table rebuild byte-identical. MV2-3 splits the v1 annual sources into the
+# global_/regional_ families when it rebuilds the table as career-stature-2.0.0.
 SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
     SignalFamily(
         "wc_legacy",
@@ -87,11 +131,28 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
         "World Cup awards list.",
     ),
     SignalFamily(
-        "annual_recognition",
-        "Annual player-of-the-year recognition",
+        "global_annual_recognition",
+        "Global annual player-of-the-year recognition",
         None,
-        "Ballon d'Or, South American Player of the Year, and IFFHS World's Best "
-        "Player — annual peer/journalist elections.",
+        "World-scope annual peer/journalist elections: Ballon d'Or, IFFHS World's "
+        "Best, UEFA Men's Player of the Year, World Soccer Player of the Year, and "
+        "the Onze d'Or/d'Argent/de Bronze.",
+    ),
+    SignalFamily(
+        "regional_annual_recognition",
+        "Regional annual player-of-the-year recognition",
+        None,
+        "Continental annual elections: South American (Rey de América) winners & "
+        "placements, African, Asian, and CONCACAF Player-of-the-Year — recognition "
+        "for non-European greats invisible to the global ballots.",
+    ),
+    SignalFamily(
+        "position_balanced_selection",
+        "Position-balanced selection (positional awards / formation XIs)",
+        None,
+        "Position-aware best-of selections: UEFA Club positional awards (GK/DF/MF/"
+        "FW), UEFA Team of the Year, FIFPro World 11, ESM Team of the Season. Each "
+        "fact carries a first-class position — the defender / goalkeeper repair.",
     ),
     SignalFamily(
         "international_record",
@@ -101,19 +162,47 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
     ),
     SignalFamily(
         "retrospective_selection",
-        "Retrospective century selection",
+        "Retrospective / all-time selection",
         None,
-        "IFFHS Century player elections and the 2004 living-legends list.",
+        "All-era selections: IFFHS Century player elections, the 2004 living-legends "
+        "list, IFFHS All-Time World / continental / national dream teams, and the "
+        "Ballon d'Or Dream Team — the position-aware all-time route.",
+    ),
+    SignalFamily(
+        "captaincy",
+        "National-team captaincy record",
+        None,  # reserved: named source (eu-football.info) is JS-gated, deferred
+        "RESERVED: the named captaincy source serves no static bytes to non-browser "
+        "clients; deferred (not fabricated) until a SHA-pinnable source is sourced.",
+    ),
+    SignalFamily(
+        "annual_recognition",
+        "Annual recognition (legacy v1-table family)",
+        None,  # LEGACY: no v2 source maps here; retained for the v1 table rebuild
+        "LEGACY v1 career-stature-1.0.0 family. No v2 source maps to it; MV2-3 "
+        "splits it into global_/regional_annual_recognition.",
     ),
     SignalFamily(
         "club_honors",
         "Club honours",
-        0.0,  # deferred to E-4b; present for schema stability, no source yet
-        "DEFERRED (E-4b): no source fetched, weight 0.0, zero facts in this build.",
+        0.0,  # deferred; present for schema stability, no source yet
+        "DEFERRED: no source fetched, weight 0.0, zero facts in this build.",
     ),
 )
 
 FAMILY_KEYS: tuple[str, ...] = tuple(f.key for f in SIGNAL_FAMILIES)
+
+# Families a v2 SOURCE may legitimately carry (excludes the legacy/reserved keys).
+ACTIVE_SOURCE_FAMILIES: frozenset[str] = frozenset(
+    {
+        "wc_legacy",
+        "global_annual_recognition",
+        "regional_annual_recognition",
+        "position_balanced_selection",
+        "international_record",
+        "retrospective_selection",
+    }
+)
 
 
 # ─── proprietary-IP wall ──────────────────────────────────────────────────────
@@ -147,10 +236,14 @@ class Source:
     label: str  # human label for the report (brand-neutral)
 
 
-SOURCES: tuple[Source, ...] = (
+# ── v1 sources (carried over) — families relabelled onto the v2 taxonomy ──
+# Bytes & links are UNCHANGED; only the registry ``family`` label moves onto the v2
+# taxonomy. The v1 stature table re-derives its own internal v1 family from the
+# source_id (stature._V1_SOURCE_FAMILY), so this relabel does NOT move the v1 table.
+_V1_SOURCES: tuple[Source, ...] = (
     Source(
         "european_poy",
-        "annual_recognition",
+        "global_annual_recognition",
         "rsssf/europa-poy.html",
         "https://www.rsssf.org/miscellaneous/europa-poy.html",
         "iso-8859-1",
@@ -159,16 +252,16 @@ SOURCES: tuple[Source, ...] = (
     ),
     Source(
         "south_american_poy",
-        "annual_recognition",
+        "regional_annual_recognition",
         "rsssf/sam-poy.html",
         "https://www.rsssf.org/miscellaneous/sam-poy.html",
         "iso-8859-1",
         "fact",
-        "South American Player of the Year — annual winners",
+        "South American Player of the Year (Rey de América) — annual winners",
     ),
     Source(
         "iffhs_worlds_best",
-        "annual_recognition",
+        "global_annual_recognition",
         "wiki/iffhs-worlds-best.html",
         "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Player",
         "utf-8",
@@ -213,6 +306,137 @@ SOURCES: tuple[Source, ...] = (
     ),
 )
 
+# ── v2 source-set expansion (MV2-1) — Tier-A breadth ──
+# Regional player-of-the-year ballots (non-European greats), global recognition
+# (UEFA / World Soccer / Onze), and position-balanced selections + all-time dream
+# teams (the defender / goalkeeper repair). Every source is a public, attributable
+# recognition list — no proprietary game-rating IP (see PROPRIETARY_SOURCE_TOKENS).
+_V2_SOURCES: tuple[Source, ...] = (
+    # — regional annual recognition —
+    Source(
+        "south_american_poy_placements",
+        "regional_annual_recognition",
+        "rsssf/sam-poy.html",  # reuses the committed v1 snapshot (placements region)
+        "https://www.rsssf.org/miscellaneous/sam-poy.html",
+        "iso-8859-1",
+        "fact",
+        "South American Player of the Year — annual top-3 placements (2nd/3rd)",
+    ),
+    Source(
+        "african_poy",
+        "regional_annual_recognition",
+        "rsssf/afr-poy.html",
+        "https://www.rsssf.org/miscellaneous/afr-poy.html",
+        "iso-8859-1",
+        "fact",
+        "African Player of the Year — annual winners",
+    ),
+    Source(
+        "asian_poy",
+        "regional_annual_recognition",
+        "rsssf/as-poy.html",
+        "https://www.rsssf.org/miscellaneous/as-poy.html",
+        "iso-8859-1",
+        "fact",
+        "Asian Player of the Year — annual winners",
+    ),
+    Source(
+        "concacaf_poy",
+        "regional_annual_recognition",
+        "wiki/concacaf-awards.html",
+        "https://en.wikipedia.org/wiki/CONCACAF_Awards",
+        "utf-8",
+        "fact",
+        "CONCACAF Player of the Year — annual winners",
+    ),
+    # — global annual recognition —
+    Source(
+        "uefa_mens_poy",
+        "global_annual_recognition",
+        "wiki/uefa-mens-poy.html",
+        "https://en.wikipedia.org/wiki/UEFA_Men%27s_Player_of_the_Year_Award",
+        "utf-8",
+        "fact",
+        "UEFA Men's Player of the Year — annual top-three",
+    ),
+    Source(
+        "world_soccer_poy",
+        "global_annual_recognition",
+        "rsssf/wsoc-awards.html",
+        "https://www.rsssf.org/miscellaneous/wsoc-awards.html",
+        "iso-8859-1",
+        "fact",
+        "World Soccer Player of the Year — annual winners",
+    ),
+    Source(
+        "onze_awards",
+        "global_annual_recognition",
+        "rsssf/onze-awards.html",
+        "https://www.rsssf.org/miscellaneous/onze-awards.html",
+        "iso-8859-1",
+        "fact",
+        "Onze d'Or / d'Argent / de Bronze — annual top-three",
+    ),
+    # — position-balanced selections (the defender / goalkeeper repair) —
+    Source(
+        "uefa_club_positional",
+        "position_balanced_selection",
+        "wiki/uefa-club-awards.html",
+        "https://en.wikipedia.org/wiki/UEFA_Club_Football_Awards",
+        "utf-8",
+        "fact",
+        "UEFA Club positional awards — Best Goalkeeper/Defender/Midfielder/Forward",
+    ),
+    Source(
+        "uefa_team_of_the_year",
+        "position_balanced_selection",
+        "wiki/uefa-toty.html",
+        "https://en.wikipedia.org/wiki/UEFA_Team_of_the_Year",
+        "utf-8",
+        "fact",
+        "UEFA Team of the Year — annual position-normalised XI",
+    ),
+    Source(
+        "fifpro_world11",
+        "position_balanced_selection",
+        "wiki/fifpro-world11.html",
+        "https://en.wikipedia.org/wiki/FIFPRO_World_11",
+        "utf-8",
+        "fact",
+        "FIFPro World 11 — annual player-voted position XI",
+    ),
+    Source(
+        "esm_team_of_the_season",
+        "position_balanced_selection",
+        "wiki/esm-tots.html",
+        "https://en.wikipedia.org/wiki/ESM_Team_of_the_Season",
+        "utf-8",
+        "fact",
+        "ESM Team of the Season — annual position XI",
+    ),
+    # — retrospective / all-time selections (position-aware) —
+    Source(
+        "ballondor_dream_team",
+        "retrospective_selection",
+        "wiki/ballondor-dreamteam.html",
+        "https://en.wikipedia.org/wiki/Ballon_d%27Or_Dream_Team",
+        "utf-8",
+        "fact",
+        "Ballon d'Or Dream Team (2020) — all-time 1st/2nd/3rd position XIs",
+    ),
+    Source(
+        "iffhs_dream_teams",
+        "retrospective_selection",
+        "iffhs/iffhs-dreamteams.html",
+        "https://www.iffhs.com/posts/1110",
+        "utf-8",
+        "fact",
+        "IFFHS All-Time World / continental / national dream teams",
+    ),
+)
+
+SOURCES: tuple[Source, ...] = _V1_SOURCES + _V2_SOURCES
+
 # Source id used for the native, pre-linked World Cup individual awards drawn from
 # the canonical Fjelstul awards table (etl/output/awards.json). It is NOT fetched.
 NATIVE_WC_AWARDS_SOURCE = "wc_individual_awards_native"
@@ -222,11 +446,12 @@ FACT_SOURCES: tuple[Source, ...] = tuple(s for s in SOURCES if s.role == "fact")
 
 ATTRIBUTION = (
     "Career-stature records sourced from public archives — the Rec.Sport.Soccer "
-    "Statistics Foundation (RSSSF, https://www.rsssf.org/) and Wikipedia "
-    "(https://en.wikipedia.org/, CC BY-SA) — used with acknowledgement. Each "
-    "record is transcribed from a SHA-pinned snapshot and linked to a canonical "
-    "player_id only when the match is unique and high-confidence; ambiguous names "
-    "are withheld for human review and never assigned."
+    "Statistics Foundation (RSSSF, https://www.rsssf.org/), Wikipedia "
+    "(https://en.wikipedia.org/, CC BY-SA), and the IFFHS (https://www.iffhs.com/) "
+    "— used with acknowledgement. Each record is transcribed from a SHA-pinned "
+    "snapshot and linked to a canonical player_id only when the match is unique and "
+    "high-confidence; ambiguous names are withheld for human review and never "
+    "assigned."
 )
 
 
@@ -235,8 +460,9 @@ class MeritRecord:
     """One parsed source row, before linking. A pure transcription of the snapshot:
     the player's name as written, the nation token as written, the relevant year
     (award year, election year, or None), an optional career-year span (caps
-    lists), and a free-text ``detail`` for the review/report. ``name`` is the raw
-    display string; normalization for matching happens in ``link``."""
+    lists), an optional ``position`` (GK/DF/MF/FW) for position-balanced sources,
+    and a free-text ``detail`` for the review/report. ``name`` is the raw display
+    string; normalization for matching happens in ``link``."""
 
     source_id: str
     family: str
@@ -245,5 +471,6 @@ class MeritRecord:
     year: int | None = None
     career_start: int | None = None
     career_end: int | None = None
+    position: str | None = None  # one of POSITIONS, or None when not stated
     detail: str = ""
     extra: dict = field(default_factory=dict)

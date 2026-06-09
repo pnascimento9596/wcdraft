@@ -790,12 +790,19 @@ _PROPRIETARY_PATTERN = re.compile(
 def test_etl_source_pins_have_no_proprietary_rating_references():
     """ETL source pins + supplement & merit raw inputs must NOT mention any
     proprietary rating source. The recalibration is clean-room: every signal comes
-    from public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia 2026 +
-    the E-4.1 career-stature archives)."""
+    from public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia + the
+    IFFHS + the merit-source-set-2.0.0 recognition archives).
+
+    The merit raw tree is scanned RECURSIVELY, so the v2 source-set subtrees
+    (``rsssf/``, ``wiki/``, ``iffhs/``) are covered automatically. Public football
+    facts — award names, all-time / dream teams, tournament names, FIFA tri-codes,
+    and ``FIFA 100`` as a public factual source — are NOT proprietary rating IP and
+    do not match the pattern; only the Sofifa / Futbin / EA Sports FC / PES /
+    eFootball / Konami product family does."""
     scan_dirs = [
         REPO_ROOT / "etl" / "sources",
         REPO_ROOT / "etl" / "supplement" / "raw",
-        REPO_ROOT / "etl" / "merit" / "raw",  # E-4.1 merit-source raw snapshots
+        REPO_ROOT / "etl" / "merit" / "raw",  # merit-source raw snapshots (recursive)
     ]
     hits: list[str] = []
     for d in scan_dirs:
@@ -811,3 +818,21 @@ def test_etl_source_pins_have_no_proprietary_rating_references():
             for m in _PROPRIETARY_PATTERN.finditer(text):
                 hits.append(f"{path.relative_to(REPO_ROOT)}: {m.group(0)!r}")
     assert hits == [], "proprietary rating references in ETL source pins:\n" + "\n".join(hits)
+
+
+def test_merit_parser_and_linker_code_has_no_proprietary_rating_references():
+    """The merit parser / linker / registry CODE must not reference a proprietary
+    rating source either. Every module is scanned EXCEPT ``__init__.py``, which is
+    the documented home of the ``PROPRIETARY_SOURCE_TOKENS`` block list (those tokens
+    are forbidden STRINGS, never sources) — that file's brand-neutrality is enforced
+    separately by ``test_merit.test_outputs_and_code_carry_no_governing_body_brand``.
+    """
+    merit_src = REPO_ROOT / "etl" / "src" / "wcdraft_etl" / "merit"
+    hits: list[str] = []
+    for path in sorted(merit_src.glob("*.py")):
+        if path.name == "__init__.py":
+            continue  # block-list / proprietary-wall declaration home
+        text = path.read_text(encoding="utf-8")
+        for m in _PROPRIETARY_PATTERN.finditer(text):
+            hits.append(f"{path.relative_to(REPO_ROOT)}: {m.group(0)!r}")
+    assert hits == [], "proprietary rating references in merit code:\n" + "\n".join(hits)

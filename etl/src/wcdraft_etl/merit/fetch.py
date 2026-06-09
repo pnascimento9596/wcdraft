@@ -22,7 +22,7 @@ import json
 import sys
 import urllib.request
 
-from . import SOURCES, VERSION
+from . import SOURCE_SET_VERSION, SOURCES
 from .paths import MANIFEST_PATH, RAW_DIR
 
 _USER_AGENT = "wcdraft-etl/1.0 (research; contact via repo)"
@@ -32,6 +32,20 @@ _RETRIEVED = "2026-06-08"
 
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def _unique_sources() -> list:
+    """One source per unique raw_file (first registration wins), in a stable order.
+    A snapshot can back more than one logical source (e.g. the SAM page backs both
+    the winners and the placements parser); it is pinned ONCE."""
+    seen: set[str] = set()
+    out = []
+    for s in SOURCES:
+        if s.raw_file in seen:
+            continue
+        seen.add(s.raw_file)
+        out.append(s)
+    return out
 
 
 def _entry(source, data: bytes, retrieved: str) -> dict:
@@ -50,16 +64,16 @@ def _entry(source, data: bytes, retrieved: str) -> dict:
 
 def _manifest(files: list[dict]) -> dict:
     return {
-        "version": VERSION,
+        "version": SOURCE_SET_VERSION,
         "note": "SHA-pinned public snapshots; fetch is OFF the deterministic build path.",
         "files": sorted(files, key=lambda f: f["file"]),
     }
 
 
 def fetch_all(retrieved: str = _RETRIEVED) -> dict:
-    """Download every pinned source into RAW_DIR and return the manifest dict."""
+    """Download every pinned snapshot into RAW_DIR and return the manifest dict."""
     files: list[dict] = []
-    for source in SOURCES:
+    for source in _unique_sources():
         out = RAW_DIR / source.raw_file
         out.parent.mkdir(parents=True, exist_ok=True)
         req = urllib.request.Request(source.url, headers={"User-Agent": _USER_AGENT})
@@ -72,7 +86,10 @@ def fetch_all(retrieved: str = _RETRIEVED) -> dict:
 
 def manifest_from_committed(retrieved: str = _RETRIEVED) -> dict:
     """Build the manifest from the bytes ALREADY committed under RAW_DIR (no net)."""
-    files = [_entry(s, (RAW_DIR / s.raw_file).read_bytes(), retrieved) for s in SOURCES]
+    files = [
+        _entry(s, (RAW_DIR / s.raw_file).read_bytes(), retrieved)
+        for s in _unique_sources()
+    ]
     return _manifest(files)
 
 
@@ -101,7 +118,8 @@ if __name__ == "__main__":
         raise SystemExit(verify())
     if "--pin" in sys.argv:
         write_manifest(manifest_from_committed())
-        print(f"pinned {len(SOURCES)} committed snapshots -> {MANIFEST_PATH}")
+        print(f"pinned {len(_unique_sources())} committed snapshots -> {MANIFEST_PATH}")
     else:
         write_manifest(fetch_all())
-        print(f"fetched {len(SOURCES)} sources -> {RAW_DIR}\nmanifest -> {MANIFEST_PATH}")
+        print(f"fetched {len(_unique_sources())} snapshots -> {RAW_DIR}")
+        print(f"manifest -> {MANIFEST_PATH}")

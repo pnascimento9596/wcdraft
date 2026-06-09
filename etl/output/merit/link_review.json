@@ -2,7 +2,821 @@
   "review": [
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Abdul RAZAK",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1978
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Ghana",
+      "occurrences": 6,
+      "raw_name": "Abedi AYEW PELÉ",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1991
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Nigeria",
+      "occurrences": 1,
+      "raw_name": "Ademola LOOKMAN",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Guinea",
+      "occurrences": 1,
+      "raw_name": "Chérif SOULEYMANE",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1972
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Mali",
+      "occurrences": 1,
+      "raw_name": "Frederic KANOUTÉ",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 2007
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Ibrahim SUNDAY",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1971
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Cameroon",
+      "occurrences": 1,
+      "raw_name": "Jean MANGA-ONGUENE",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1980
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Zambia",
+      "occurrences": 1,
+      "raw_name": "Kalusha BWALYA",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1988
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Mahmmoud AL-KHATIB",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1983
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Congo",
+      "occurrences": 1,
+      "raw_name": "Paul MOUKILA",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1974
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Borussia Dortmund (Ger)",
+      "occurrences": 1,
+      "raw_name": "Pierre-Emerick AUBAMEYANG Gabon",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 2015
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Zaire",
+      "occurrences": 1,
+      "raw_name": "Tshimimu BWANGA",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 1973
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Nigeria",
+      "occurrences": 1,
+      "raw_name": "Victor OSIMHEN",
+      "reason": "no_candidate",
+      "source_id": "african_poy",
+      "year": 2023
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-30252",
+          "player_name": "Timothy Weah"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": "Liberia",
+      "occurrences": 4,
+      "raw_name": "George WEAH",
+      "reason": "weak_unverified",
+      "source_id": "african_poy",
+      "year": 1989
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-98071",
+          "player_name": "Abdul Kader Keïta"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": "Mali",
+      "occurrences": 1,
+      "raw_name": "Salif KEITA",
+      "reason": "weak_unverified",
+      "source_id": "african_poy",
+      "year": 1970
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-20549",
+          "player_name": "Maad Ibrahim"
+        },
+        {
+          "player_id": "P-44834",
+          "player_name": "Ahmed Halim Ibrahim"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Khalfan IBRAHIM",
+      "reason": "multi_candidate",
+      "source_id": "asian_poy",
+      "year": 2006
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-02525",
+          "player_name": "Yong-jun Kim"
+        },
+        {
+          "player_id": "P-02609",
+          "player_name": "Min-woo Kim"
+        },
+        {
+          "player_id": "P-02853",
+          "player_name": "Do-hoon Kim"
+        },
+        {
+          "player_id": "P-07259",
+          "player_name": "Young-gwon Kim"
+        },
+        {
+          "player_id": "P-08049",
+          "player_name": "Kum-il Kim"
+        },
+        {
+          "player_id": "P-08539",
+          "player_name": "Young-kwang Kim"
+        },
+        {
+          "player_id": "P-15736",
+          "player_name": "Shin-wook Kim"
+        },
+        {
+          "player_id": "P-15820",
+          "player_name": "Ji-sung Kim"
+        },
+        {
+          "player_id": "P-16139",
+          "player_name": "Bo-kyung Kim"
+        },
+        {
+          "player_id": "P-19142",
+          "player_name": "Chang-soo Kim"
+        },
+        {
+          "player_id": "P-19309",
+          "player_name": "Jong-boo Kim"
+        },
+        {
+          "player_id": "P-29757",
+          "player_name": "Jin-hyeon Kim"
+        },
+        {
+          "player_id": "P-30708",
+          "player_name": "Jae-sung Kim"
+        },
+        {
+          "player_id": "P-40283",
+          "player_name": "Seung-Il Kim"
+        },
+        {
+          "player_id": "P-42392",
+          "player_name": "Myong-gil Kim"
+        },
+        {
+          "player_id": "P-42523",
+          "player_name": "Seung-gyu Kim"
+        },
+        {
+          "player_id": "P-47942",
+          "player_name": "Jung-woo Kim"
+        },
+        {
+          "player_id": "P-49251",
+          "player_name": "Kyong-il Kim"
+        },
+        {
+          "player_id": "P-50318",
+          "player_name": "Yong-dae Kim"
+        },
+        {
+          "player_id": "P-51785",
+          "player_name": "Nam-il Kim"
+        },
+        {
+          "player_id": "P-52780",
+          "player_name": "Bong-hwan Kim"
+        },
+        {
+          "player_id": "P-53258",
+          "player_name": "Pan-keun Kim"
+        },
+        {
+          "player_id": "P-53955",
+          "player_name": "Yong-se Kim"
+        },
+        {
+          "player_id": "P-54653",
+          "player_name": "Do-keun Kim"
+        },
+        {
+          "player_id": "P-56299",
+          "player_name": "Sang-sik Kim"
+        },
+        {
+          "player_id": "P-61550",
+          "player_name": "Dong-jin Kim"
+        },
+        {
+          "player_id": "P-65040",
+          "player_name": "Do-heon Kim"
+        },
+        {
+          "player_id": "P-70602",
+          "player_name": "Pyung-seok Kim"
+        },
+        {
+          "player_id": "P-76780",
+          "player_name": "Jin-kyu Kim"
+        },
+        {
+          "player_id": "P-80634",
+          "player_name": "Myong-won Kim"
+        },
+        {
+          "player_id": "P-84722",
+          "player_name": "Byung-ji Kim"
+        },
+        {
+          "player_id": "P-88081",
+          "player_name": "Yung-kil Kim"
+        },
+        {
+          "player_id": "P-94594",
+          "player_name": "Young-chul Kim"
+        },
+        {
+          "player_id": "P-95438",
+          "player_name": "Poong-joo Kim"
+        },
+        {
+          "player_id": "P-95664",
+          "player_name": "Joo-sung Kim"
+        },
+        {
+          "player_id": "P-96267",
+          "player_name": "Tae-young Kim"
+        },
+        {
+          "player_id": "P-96457",
+          "player_name": "Hyung-il Kim"
+        },
+        {
+          "player_id": "P-99042",
+          "player_name": "Sam-soo Kim"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": "South Korea",
+      "occurrences": 3,
+      "raw_name": "KIM Joo-Sung",
+      "reason": "multi_candidate",
+      "source_id": "asian_poy",
+      "year": 1989
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Japan",
+      "occurrences": 1,
+      "raw_name": "Kazuyoshi MIURA",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 1993
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Lee KEUN-HO",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2012
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Saudi Arabia",
+      "occurrences": 1,
+      "raw_name": "Nasser AL-SHAMRANI",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2014
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Syria",
+      "occurrences": 1,
+      "raw_name": "Omar KHARBIN",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2017
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Australia",
+      "occurrences": 1,
+      "raw_name": "Saa OGNENOVSKI",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2010
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "Uzbekistan",
+      "occurrences": 2,
+      "raw_name": "Server DJEPAROV",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2008
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Zheng ZHI",
+      "reason": "no_candidate",
+      "source_id": "asian_poy",
+      "year": 2013
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-62722",
+          "player_name": "Ronaldo"
+        },
+        {
+          "player_id": "P-70442",
+          "player_name": "Cristiano Ronaldo"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Ronaldo",
+      "reason": "multi_candidate",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Carlos Alberto Torres",
+      "reason": "no_candidate",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "George Best",
+      "reason": "no_candidate",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-91718",
+          "player_name": "Cafu"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Cafu",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-76740",
+          "player_name": "Didi"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Didi",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-46080",
+          "player_name": "Garrincha"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Garrincha",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-38906",
+          "player_name": "Pelé"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Pelé",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-57361",
+          "player_name": "Ronaldinho"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Ronaldinho",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-29415",
+          "player_name": "Xavi"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Xavi",
+      "reason": "weak_unverified",
+      "source_id": "ballondor_dream_team",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Adalberto Carrasquilla",
+      "reason": "no_candidate",
+      "source_id": "concacaf_poy",
+      "year": 2023
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-47246",
+          "player_name": "Simone Pepe"
+        },
+        {
+          "player_id": "P-54379",
+          "player_name": "Pepe"
+        },
+        {
+          "player_id": "P-81972",
+          "player_name": "Pepe"
+        }
+      ],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Pepe",
+      "reason": "multi_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2013
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Álex Grimaldo",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2023
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Andy Robertson",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Cole Palmer",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "David Alaba",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2013
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Eric Cantona",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 1995
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Florian Wirtz",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2023
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Frédéric Kanouté",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2006
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "George Weah",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 1995
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Gianluigi Donnarumma",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Giovanni Di Lorenzo",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2022
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Jan Oblak",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2020
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Jari Litmanen",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 1994
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 3,
+      "raw_name": "Jocelyn Angloma",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 1996
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Lamine Yamal",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Ludovic Giuly",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2003
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Martin Ødegaard",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2022
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Mehmet Scholl",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 1995
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Nuri Şahin",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2010
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Roy Makaay",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Sami Hyypiä",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2000
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Scott McTominay",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Thiago Alcântara",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2016
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Victor Osimhen",
+      "reason": "no_candidate",
+      "source_id": "esm_team_of_the_season",
+      "year": 2022
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
       "nation_token": "Nil",
       "occurrences": 1,
       "raw_name": "George BEST",
@@ -12,7 +826,7 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "global_annual_recognition",
       "nation_token": "Bul",
       "occurrences": 1,
       "raw_name": "Hristo STOITCHKOV",
@@ -22,7 +836,7 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "global_annual_recognition",
       "nation_token": "Net",
       "occurrences": 3,
       "raw_name": "Johan CRUIJFF",
@@ -37,13 +851,23 @@
           "player_name": "Timothy Weah"
         }
       ],
-      "family": "annual_recognition",
+      "family": "global_annual_recognition",
       "nation_token": "Lib",
       "occurrences": 1,
       "raw_name": "George WEAH",
       "reason": "weak_unverified",
       "source_id": "european_poy",
       "year": 1995
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 4,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "fifpro_world11",
+      "year": 2021
     },
     {
       "candidates": [
@@ -1122,7 +1946,27 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "retrospective_selection",
+      "nation_token": "Brazil",
+      "occurrences": 1,
+      "raw_name": "CARLOS ALBERTO Torres",
+      "reason": "no_candidate",
+      "source_id": "iffhs_dream_teams",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Netherlands",
+      "occurrences": 1,
+      "raw_name": "Johan CRUIJFF",
+      "reason": "no_candidate",
+      "source_id": "iffhs_dream_teams",
+      "year": null
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
       "nation_token": "Norway",
       "occurrences": 1,
       "raw_name": "Erling Haaland",
@@ -6115,6 +6959,160 @@
     {
       "candidates": [
         {
+          "player_id": "P-52474",
+          "player_name": "Dino Baggio"
+        },
+        {
+          "player_id": "P-78756",
+          "player_name": "Roberto Baggio"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 3,
+      "raw_name": "BAGGIO Roberto",
+      "reason": "multi_candidate",
+      "source_id": "onze_awards",
+      "year": 1993
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-40400",
+          "player_name": "Emmanuel Petit"
+        },
+        {
+          "player_id": "P-54760",
+          "player_name": "Jean Petit"
+        },
+        {
+          "player_id": "P-69703",
+          "player_name": "Jean Petit"
+        },
+        {
+          "player_id": "P-92307",
+          "player_name": "Petit"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "PETIT Emmanuel",
+      "reason": "multi_candidate",
+      "source_id": "onze_awards",
+      "year": 1998
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-62722",
+          "player_name": "Ronaldo"
+        },
+        {
+          "player_id": "P-70442",
+          "player_name": "Cristiano Ronaldo"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 5,
+      "raw_name": "RONALDO Cristiano",
+      "reason": "multi_candidate",
+      "source_id": "onze_awards",
+      "year": 2007
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-62722",
+          "player_name": "Ronaldo"
+        },
+        {
+          "player_id": "P-70442",
+          "player_name": "Cristiano Ronaldo"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "RONALDO Nazario de Lima",
+      "reason": "multi_candidate",
+      "source_id": "onze_awards",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "CANTONA Eric",
+      "reason": "no_candidate",
+      "source_id": "onze_awards",
+      "year": 1996
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "LACAZETTE Alexandre",
+      "reason": "no_candidate",
+      "source_id": "onze_awards",
+      "year": 2014
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "STOITCHKOV Hristo",
+      "reason": "no_candidate",
+      "source_id": "onze_awards",
+      "year": 1992
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "YAMAL Lamine",
+      "reason": "no_candidate",
+      "source_id": "onze_awards",
+      "year": 2024
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-62134",
+          "player_name": "Gustavo de Simone"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "SIMONE Marco",
+      "reason": "weak_unverified",
+      "source_id": "onze_awards",
+      "year": 1997
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-30252",
+          "player_name": "Timothy Weah"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "WEAH George",
+      "reason": "weak_unverified",
+      "source_id": "onze_awards",
+      "year": 1995
+    },
+    {
+      "candidates": [
+        {
           "player_id": "P-01068",
           "player_name": "Jackson Martínez"
         },
@@ -6183,7 +7181,7 @@
           "player_name": "Sergio Martínez"
         }
       ],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Arg",
       "occurrences": 1,
       "raw_name": "Gonzalo MARTÍNEZ",
@@ -6202,7 +7200,7 @@
           "player_name": "José Cardozo"
         }
       ],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Par",
       "occurrences": 1,
       "raw_name": "José Saturnino CARDOZO",
@@ -6217,7 +7215,7 @@
           "player_name": "Rubén Cano"
         }
       ],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Arg",
       "occurrences": 1,
       "raw_name": "Germán CANO",
@@ -6227,7 +7225,7 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Arg",
       "occurrences": 1,
       "raw_name": "Andrés D'ALESSANDRO",
@@ -6237,7 +7235,7 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Bra",
       "occurrences": 1,
       "raw_name": "GABRIEL BARBOSA Almeida",
@@ -6247,7 +7245,7 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Bra",
       "occurrences": 1,
       "raw_name": "LUAN Guilherme de Jesus Vieira",
@@ -6257,16 +7255,1014 @@
     },
     {
       "candidates": [],
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "nation_token": "Bra",
       "occurrences": 1,
       "raw_name": "LUIZ HENRIQUE André Rosa da Silva",
       "reason": "no_candidate",
       "source_id": "south_american_poy",
       "year": 2024
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-65320",
+          "player_name": "Jhonny Acosta"
+        },
+        {
+          "player_id": "P-86410",
+          "player_name": "Kellyn Acosta"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Alberto ACOSTA",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1992
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-13847",
+          "player_name": "Carlos Sánchez"
+        },
+        {
+          "player_id": "P-66228",
+          "player_name": "Carlos Sánchez"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Carlos SANCHEZ",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2014
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-03126",
+          "player_name": "Miguel Ángel Gamboa"
+        },
+        {
+          "player_id": "P-26483",
+          "player_name": "Cristian Gamboa"
+        },
+        {
+          "player_id": "P-73967",
+          "player_name": "Delio Gamboa"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Fernando GAMBOA",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1992
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-10231",
+          "player_name": "Papu Gómez"
+        },
+        {
+          "player_id": "P-14496",
+          "player_name": "Gildardo Gómez"
+        },
+        {
+          "player_id": "P-16382",
+          "player_name": "Róger Gómez"
+        },
+        {
+          "player_id": "P-19953",
+          "player_name": "José Gómez"
+        },
+        {
+          "player_id": "P-21324",
+          "player_name": "Jaime Gómez"
+        },
+        {
+          "player_id": "P-28455",
+          "player_name": "Luis Gómez"
+        },
+        {
+          "player_id": "P-31825",
+          "player_name": "Gabriel Gómez"
+        },
+        {
+          "player_id": "P-32575",
+          "player_name": "Gabriel Gómez"
+        },
+        {
+          "player_id": "P-46352",
+          "player_name": "Carlos Gómez"
+        },
+        {
+          "player_id": "P-48216",
+          "player_name": "Gumercindo Gómez"
+        },
+        {
+          "player_id": "P-53378",
+          "player_name": "Derlis Gómez"
+        },
+        {
+          "player_id": "P-55170",
+          "player_name": "Rónald Gómez"
+        },
+        {
+          "player_id": "P-70671",
+          "player_name": "Maxi Gómez"
+        },
+        {
+          "player_id": "P-72039",
+          "player_name": "Herculez Gomez"
+        },
+        {
+          "player_id": "P-74225",
+          "player_name": "Gregorio Gómez"
+        },
+        {
+          "player_id": "P-78594",
+          "player_name": "Mario Gómez"
+        },
+        {
+          "player_id": "P-84531",
+          "player_name": "Juan Gómez"
+        },
+        {
+          "player_id": "P-95376",
+          "player_name": "Alberto Gómez"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Gustavo GÓMEZ",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2020
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-34543",
+          "player_name": "Romario Ibarra"
+        },
+        {
+          "player_id": "P-47469",
+          "player_name": "Oswaldo Ibarra"
+        },
+        {
+          "player_id": "P-73520",
+          "player_name": "Renato Ibarra"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Hugo IBARRA",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2007
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-00643",
+          "player_name": "Luis Fernández"
+        },
+        {
+          "player_id": "P-10061",
+          "player_name": "Gualberto Fernández"
+        },
+        {
+          "player_id": "P-10739",
+          "player_name": "Enzo Fernández"
+        },
+        {
+          "player_id": "P-20506",
+          "player_name": "José Fernández"
+        },
+        {
+          "player_id": "P-29672",
+          "player_name": "Augusto Fernández"
+        },
+        {
+          "player_id": "P-45649",
+          "player_name": "Arturo Fernández"
+        },
+        {
+          "player_id": "P-47269",
+          "player_name": "Roberto Fernández"
+        },
+        {
+          "player_id": "P-53503",
+          "player_name": "Félix Fernández"
+        },
+        {
+          "player_id": "P-53856",
+          "player_name": "Lorenzo Fernández"
+        },
+        {
+          "player_id": "P-61667",
+          "player_name": "René Fernández"
+        },
+        {
+          "player_id": "P-72244",
+          "player_name": "Federico Fernández"
+        },
+        {
+          "player_id": "P-77302",
+          "player_name": "Tomás Fernández"
+        },
+        {
+          "player_id": "P-85729",
+          "player_name": "Gustavo Fernández"
+        },
+        {
+          "player_id": "P-85736",
+          "player_name": "Ángel Fernández"
+        },
+        {
+          "player_id": "P-88751",
+          "player_name": "Sebastián Fernández"
+        },
+        {
+          "player_id": "P-96009",
+          "player_name": "Matías Fernández"
+        },
+        {
+          "player_id": "P-99965",
+          "player_name": "Álvaro Fernández"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Ignacio FERNÁNDEZ",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2020
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-30381",
+          "player_name": "Óscar Cardozo"
+        },
+        {
+          "player_id": "P-98051",
+          "player_name": "José Cardozo"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "José Saturnino CARDOZO",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2003
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-01116",
+          "player_name": "Alberto González"
+        },
+        {
+          "player_id": "P-04458",
+          "player_name": "Rafael González"
+        },
+        {
+          "player_id": "P-04808",
+          "player_name": "Giancarlo González"
+        },
+        {
+          "player_id": "P-11130",
+          "player_name": "Kily González"
+        },
+        {
+          "player_id": "P-11306",
+          "player_name": "Jorge González"
+        },
+        {
+          "player_id": "P-12856",
+          "player_name": "Leonardo González"
+        },
+        {
+          "player_id": "P-13602",
+          "player_name": "José Luis González"
+        },
+        {
+          "player_id": "P-17625",
+          "player_name": "Alberto González"
+        },
+        {
+          "player_id": "P-20244",
+          "player_name": "Omar Gonzalez"
+        },
+        {
+          "player_id": "P-21702",
+          "player_name": "Álvaro González"
+        },
+        {
+          "player_id": "P-32102",
+          "player_name": "Mario González"
+        },
+        {
+          "player_id": "P-32760",
+          "player_name": "Pedro González"
+        },
+        {
+          "player_id": "P-35574",
+          "player_name": "Mark González"
+        },
+        {
+          "player_id": "P-37056",
+          "player_name": "Héctor González"
+        },
+        {
+          "player_id": "P-38889",
+          "player_name": "Javier González"
+        },
+        {
+          "player_id": "P-46031",
+          "player_name": "Ignacio González"
+        },
+        {
+          "player_id": "P-48161",
+          "player_name": "Lucho González"
+        },
+        {
+          "player_id": "P-51887",
+          "player_name": "José González"
+        },
+        {
+          "player_id": "P-54509",
+          "player_name": "Matías González"
+        },
+        {
+          "player_id": "P-61383",
+          "player_name": "Armando González"
+        },
+        {
+          "player_id": "P-64697",
+          "player_name": "Aurelio González"
+        },
+        {
+          "player_id": "P-72837",
+          "player_name": "Edgardo González"
+        },
+        {
+          "player_id": "P-75261",
+          "player_name": "Jaime González"
+        },
+        {
+          "player_id": "P-85328",
+          "player_name": "Juan Carlos González"
+        },
+        {
+          "player_id": "P-92902",
+          "player_name": "Rubén González"
+        },
+        {
+          "player_id": "P-95498",
+          "player_name": "Carlos González"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Luis GONZÁLEZ",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2004
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-26834",
+          "player_name": "Francisco Javier Toledo"
+        },
+        {
+          "player_id": "P-42228",
+          "player_name": "Delio Toledo"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Patricio TOLEDO",
+      "reason": "multi_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1991
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "ARTHUR Melo",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2017
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "BRUNO HENRIQUE Pinto",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Claudio MOREL RODRÍGUEZ",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2007
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "DIEGO Ribas da Cunha",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2003
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "É. MÉNDEZ",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2009
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "GABRIEL BARBOSA Almeida",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "GEOVANI Silva",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1988
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Giorgian D. DE ARRASCAETA",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2022
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "H. SUAZO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2009
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Jefferson SAVARINO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2024
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Leandro DESÁBATO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2009
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Leonardo PISCULICHI",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2014
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "LUCAS Rodrigues Moura da Silva",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2012
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Nolberto SOLANO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1997
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Obdulio TRASANTE",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1987
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Paulo Henrique GANSO",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2011
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Sergio GOYCOECHEA",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 1992
+    },
+    {
+      "candidates": [],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Sergio ORTEMAN",
+      "reason": "no_candidate",
+      "source_id": "south_american_poy_placements",
+      "year": 2002
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-69661",
+          "player_name": "Juan Guerra"
+        }
+      ],
+      "family": "regional_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Alejandro GUERRA",
+      "reason": "weak_unverified",
+      "source_id": "south_american_poy_placements",
+      "year": 2016
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Alisson Becker",
+      "reason": "no_candidate",
+      "source_id": "uefa_club_positional",
+      "year": 2018
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "uefa_club_positional",
+      "year": 2020
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Erling Haaland",
+      "reason": "no_candidate",
+      "source_id": "uefa_mens_poy",
+      "year": 2022
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-26340",
+          "player_name": "Jorginho"
+        }
+      ],
+      "family": "global_annual_recognition",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Jorginho",
+      "reason": "weak_unverified",
+      "source_id": "uefa_mens_poy",
+      "year": 2020
+    },
+    {
+      "candidates": [
+        {
+          "player_id": "P-62722",
+          "player_name": "Ronaldo"
+        },
+        {
+          "player_id": "P-70442",
+          "player_name": "Cristiano Ronaldo"
+        }
+      ],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Ronaldo",
+      "reason": "multi_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 10,
+      "raw_name": "A.C. Milan",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "AFC Ajax",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Alisson Becker",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Andy Robertson",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2019
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 7,
+      "raw_name": "Arsenal F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Atlético Madrid",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2014
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Bayer 04 Leverkusen",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Blackburn Rovers F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Borussia Dortmund",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2013
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 8,
+      "raw_name": "Chelsea F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2004
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Cosmin Contra",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Cristian Chivu",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 3,
+      "raw_name": "David Alaba",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2013
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Deportivo Alavés",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 18,
+      "raw_name": "FC Barcelona",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 12,
+      "raw_name": "FC Bayern Munich",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "FC Porto",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2003
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Fenerbahçe S.K.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 4,
+      "raw_name": "Inter Milan",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 12,
+      "raw_name": "Juventus FC",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 9,
+      "raw_name": "Liverpool F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Maicon Sisenando",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2010
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 3,
+      "raw_name": "Manchester City F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2017
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 7,
+      "raw_name": "Manchester United F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Olympique Lyonnais",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2007
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 6,
+      "raw_name": "Paris Saint-Germain F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2012
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 17,
+      "raw_name": "Real Madrid CF",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Sami Hyypiä",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Sevilla FC",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2007
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "S.S. Lazio",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 1,
+      "raw_name": "Thiago Alcântara",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2020
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Tottenham Hotspur F.C.",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2011
+    },
+    {
+      "candidates": [],
+      "family": "position_balanced_selection",
+      "nation_token": null,
+      "occurrences": 2,
+      "raw_name": "Valencia CF",
+      "reason": "no_candidate",
+      "source_id": "uefa_team_of_the_year",
+      "year": 2001
+    },
+    {
+      "candidates": [],
+      "family": "global_annual_recognition",
+      "nation_token": "Norway",
+      "occurrences": 1,
+      "raw_name": "Erling HAALAND",
+      "reason": "no_candidate",
+      "source_id": "world_soccer_poy",
+      "year": 2023
     }
   ],
-  "review_count": 612,
-  "version": "career-stature-1.0.0",
-  "withheld_occurrences": 705
+  "review_count": 751,
+  "version": "merit-source-set-2.0.0",
+  "withheld_occurrences": 980
 }
