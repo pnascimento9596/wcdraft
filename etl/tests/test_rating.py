@@ -155,11 +155,12 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_stature_dominant(built: list[dict]):
-    # wc-perf-4.0.0 = the merit-v2 stature-dominant rebase (MV2-4).
-    assert rating.RATING_VERSION == "wc-perf-4.1.0"
+def test_rating_version_is_unified_display(built: list[dict]):
+    # wc-perf-4.2.0 = the MV2-6 unified pooled display curve (display `overall`-only
+    # bump off the MV2-4/4.1 stature-dominant internal model).
+    assert rating.RATING_VERSION == "wc-perf-4.2.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-4.1.0"
+        assert r["rating_version"] == "wc-perf-4.2.0"
 
 
 def test_every_row_carries_a_boolean_legend(built: list[dict]):
@@ -229,7 +230,7 @@ def test_display_curve_is_low_dof():
     """The recalibration is a global low-DOF curve, not a per-player override
     table. The contract: one shared curve kind name + three global exponents +
     four data anchors fit on the emitted dataset. No additional knobs."""
-    assert rating.DISPLAY_CURVE_KIND == "global_piecewise_power_v1"
+    assert rating.DISPLAY_CURVE_KIND == "unified_pooled_piecewise_power_v1"
     free_exponents = {
         "low": rating.DISPLAY_LOW_EXPONENT,
         "mid": rating.DISPLAY_MID_EXPONENT,

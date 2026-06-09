@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-4.1.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-4.2.0)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -129,4 +129,70 @@ MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale 
 | Beach | `P-W26-0043` | GK | minted | — | 0.00 | 0.366 | — | +0.000 | 0.200 | 20 | 20 | 20 | 20 | — |
 
 _A non-material 2026 card's projected raw path is capped at the global raw-only ceiling (0.62), strictly below the marginal-material stature floor, so it cannot occupy the high-90s/legend band on the projection alone — the fix for the spurious OVR-99 projected MF cards. A linked aging legend takes bounded DOWNWARD projected modulation (tightest at the gold tier) but never collapses below recognized stature._
+
+
+---
+
+# Unified display-curve sample (wc-perf-4.2.0 curve; maps proj-career-3.0.0 too)
+
+MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v1`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→66, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 1.85). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
+
+**Pooled curve anchors (internal 0–100):** floor `20.000` · median `43.255` · p95 `62.000` · max `100.000`.
+
+## Band distribution (anti-inflation guard)
+
+| Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Historical | 10973 | 73 | 5685 (51.8%) | 2692 (24.5%) | 2332 (21.3%) | 264 (2.4%) | 2596 (23.7%) | 321 (2.9%) |
+| 2026 | 1246 | 73 | 666 (53.5%) | 316 (25.4%) | 256 (20.5%) | 8 (0.6%) | 264 (21.2%) | 10 (0.8%) |
+| Pooled | 12219 | 73 | 6351 (52.0%) | 3008 (24.6%) | 2588 (21.2%) | 272 (2.2%) | 2860 (23.4%) | 331 (2.7%) |
+
+_The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
+
+
+## Historical anchors (unified curve)
+
+| Player | Card | Basis | Lgd | Display OVR |
+|---|---|---|---|---:|
+| Messi 2010 | `P-14758:WC-2010` | career_stature_estimate | ✓ | **98** |
+| Messi 2022 | `P-14758:WC-2022` | career_stature_estimate | ✓ | **99** |
+| Pelé 1958 | `P-38906:WC-1958` | career_stature_estimate | ✓ | **97** |
+| Pelé 1966 | `P-38906:WC-1966` | career_stature_estimate | ✓ | **95** |
+| Pelé 1970 | `P-38906:WC-1970` | career_stature_estimate | ✓ | **97** |
+| Maradona 1986 | `P-80404:WC-1986` | career_stature_estimate | ✓ | **99** |
+| Cruyff 1974 | `P-50564:WC-1974` | career_stature_estimate | ✓ | **95** |
+| Beckenbauer 1974 | `P-72864:WC-1974` | career_stature_estimate | ✓ | **98** |
+| Maldini 1990 | `P-43222:WC-1990` | career_stature_estimate | ✓ | **94** |
+| Baresi 1990 | `P-42920:WC-1990` | career_stature_estimate | ✓ | **91** |
+| Yashin 1958 | `P-09317:WC-1958` | career_stature_estimate | ✓ | **92** |
+
+## 2026 anchors (SAME unified curve)
+
+| Player | Card | Basis | Lgd | Display OVR |
+|---|---|---|---|---:|
+| Messi 2026 | `P-14758:WC-2026` | career_stature_estimate | ✓ | **99** |
+| Mbappé 2026 | `P-64077:WC-2026` | career_stature_estimate | ✓ | **98** |
+| Vinícius 2026 | `P-92812:WC-2026` | measured_performance | — | **87** |
+| Bellingham 2026 | `P-15674:WC-2026` | career_stature_estimate | — | **89** |
+| Modrić 2026 | `P-29491:WC-2026` | career_stature_estimate | ✓ | **99** |
+
+## Previously-spurious OVR-99 2026 cards (now mid-80s, not 99)
+
+| Player | Card | Basis | Lgd | Display OVR |
+|---|---|---|---|---:|
+| Silva | `P-34205:WC-2026` | measured_performance | — | **88** |
+| Fernandes | `P-39584:WC-2026` | measured_performance | — | **88** |
+| Hwang | `P-58692:WC-2026` | measured_performance | — | **88** |
+| Soucek | `P-W26-0177:WC-2026` | measured_performance | — | **88** |
+
+## Mid-band starter + journeyman floor controls (both eras)
+
+| Control | Player | Card | Basis | Display OVR |
+|---|---|---|---|---:|
+| Historical starter | Ortega | `P-00065:WC-1994` | measured_performance | **73** |
+| Historical floor | Park | `P-00390:WC-1954` | baseline_anchor_estimate | **66** |
+| 2026 starter | Vargas | `P-27327:WC-2026` | measured_performance | **73** |
+| 2026 floor | Beach | `P-W26-0043:WC-2026` | measured_performance | **66** |
+
+_One curve, both eras, ordering preserved: recognized greats land in-band by their internal score (never hard-pinned), the broad middle holds at the median, and the four spurious projected cards collapse from a raw-only 99 to the mid-80s. No card displays 100._
 
