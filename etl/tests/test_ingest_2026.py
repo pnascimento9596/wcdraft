@@ -301,6 +301,43 @@ def test_team2026_shape(teams, ratings):
         assert any(s["field"] == "group_slot" for s in t["sources"])
 
 
+def test_best_xi_selected_on_internal_score(teams, cards, ratings):
+    """MV2-10 decoupling: best-XI keys on the curve-invariant INTERNAL score.
+
+    Two invariants:
+    1. Every team's aggregate equals the top-11-by-(internal score, card_id)
+       average — the selection never reads the display ``overall``.
+    2. The internal selection differs from a display-keyed selection ONLY within
+       display-overall ties (the display curve is a monotone map of the internal
+       score, so any swap must exchange equal-display cards — a strict display
+       reordering would mean the curve leaked back into the sim aggregate).
+    """
+    career = rating_2026._load_career_stature(OUT)
+    hist = rating_2026._historical_raw_only_internal(OUT)
+    internal = {
+        r["card_id"]: r["score_0_100"]
+        for r in rating_2026.build_internal_view(cards, career, hist, OUT)
+    }
+    rating_by_card = {r["card_id"]: r for r in ratings}
+    for t in teams:
+        squad = [rating_by_card[cid] for cid in t["squad_card_ids"]]
+        by_internal = sorted(squad, key=lambda r: (-internal[r["card_id"]], r["card_id"]))[:11]
+        n = len(by_internal)
+        expected: dict[str, float] = {
+            ch: round(sum(r[ch] for r in by_internal) / n)
+            for ch in ("attack", "midfield", "defense", "goalkeeping")
+        }
+        expected["coverage"] = round(sum(r["coverage"] for r in by_internal) / n, 4)
+        assert t["aggregate_rating"] == expected, t["team_id"]
+
+        by_display = sorted(squad, key=lambda r: (-r["overall"], r["card_id"]))[:11]
+        dropped = {r["card_id"] for r in by_display} - {r["card_id"] for r in by_internal}
+        added = {r["card_id"] for r in by_internal} - {r["card_id"] for r in by_display}
+        assert {rating_by_card[c]["overall"] for c in dropped} == {
+            rating_by_card[c]["overall"] for c in added
+        }, (t["team_id"], dropped, added)
+
+
 # ─── Bracket2026 ──────────────────────────────────────────────────────────────
 
 

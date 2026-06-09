@@ -596,6 +596,7 @@ def build_ratings(
     historical_raw_only_internal: list[float] | None = None,
     output_dir: Path = OUTPUT_DIR,
     curve=None,
+    internal_rows: list[dict] | None = None,
 ) -> list[dict]:
     """Return projected Rating-shaped records for every 2026 card, sorted by card_id.
 
@@ -611,14 +612,20 @@ def build_ratings(
     The 2026 ``rating_version`` stays ``proj-career-3.0.0``: the INTERNAL projected
     algorithm is unchanged — only the display ``overall`` moved from the MV2-5
     provisional 2026-only curve onto the shared wc-perf-4.2.0 unified curve.
+
+    ``internal_rows`` accepts the precomputed pass-1 rows (``build_internal_view``
+    output for the SAME cards/career/distribution args) so a caller that also
+    needs the internal ``score_0_100`` (MV2-10: best-XI selection) computes pass 1
+    exactly once. ``None`` self-computes — identical rows either way.
     """
     from . import display_curve  # lazy: avoid an import cycle
 
     if historical_raw_only_internal is None:
         historical_raw_only_internal = _historical_raw_only_internal(output_dir)
-    internal_rows = _build_internal_rows(
-        cards, career_stature_by_player, historical_raw_only_internal
-    )
+    if internal_rows is None:
+        internal_rows = _build_internal_rows(
+            cards, career_stature_by_player, historical_raw_only_internal
+        )
 
     # ── PASS 2: materialize Rating rows on the UNIFIED display curve (MV2-6) ───
     # The display `overall` is now mapped by the ONE pooled curve shared with the

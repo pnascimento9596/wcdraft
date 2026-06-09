@@ -40,10 +40,10 @@ export interface CardRatingView {
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
   /**
-   * Source-derived legend flag (MV2-7), carried through verbatim so the future
-   * memory mode can read it directly. `badge_kind` already folds it into the
-   * gold legend styling; this is the raw signal. `undefined` until the compact
-   * regenerates with legend data (MV2-10).
+   * Source-derived legend flag (MV2-7 seam, MV2-10 data), carried through
+   * verbatim so the future memory mode can read it directly. `badge_kind`
+   * already folds it into the gold legend styling; this is the raw signal.
+   * Populated on every card as of the runtime-data-1.1.0 compact.
    */
   legend?: boolean;
   /** Folded display kind for the provenance/estimate/legend badge. */
@@ -272,10 +272,12 @@ interface BadgeInputs {
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
   /**
-   * Source-derived legend flag (MV2-7). When defined it is authoritative — an
-   * explicit `false` SUPPRESSES legend even for OVR≥96. Absent → fall back to
-   * the OVR≥96 heuristic below. The compact carries no legend yet, so today
-   * every card takes the fallback path (pure no-op vs. the old heuristic).
+   * Source-derived legend flag (MV2-7 seam, MV2-10 data). When defined it is
+   * authoritative — an explicit `false` SUPPRESSES legend even for OVR≥96.
+   * Absent → fall back to the OVR≥96 heuristic below. As of the
+   * runtime-data-1.1.0 compact every rating carries the flag, so the fallback
+   * only guards pre-1.1.0 data shapes (and keeps BadgeInputs permissive for
+   * callers that fold non-rating inputs).
    */
   legend?: boolean;
 }
