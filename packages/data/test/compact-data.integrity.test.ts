@@ -39,13 +39,15 @@ describe("compact-data integrity", () => {
     expect(SCENARIO_2026_BUNDLE.groups.length).toBe(12);
   });
 
-  // Phase 1.1 recalibration (wc-perf-2.0.0, decoupled): basis logic is unchanged so the
-  // estimate count remains 388, but the count is no longer the WHOLE
-  // invariant — every estimate row must sit in [66, 73] on OVERALL, and the
-  // display contract applies to every runtime rating's overall. Sim channels
-  // stay on the pre-recal [20, 100] band so λ stays calibrated; see
-  // realism-modern-norms.golden.test.ts.
-  const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
+  // 387 as of MV2-10: the MV2-3/4 stature-dominant core moved one card off the
+  // baseline-anchor path onto the career-stature path, and this regen brings the
+  // compact in sync with the ETL (clearing the known 387≠388 drift). The count
+  // is not the WHOLE invariant — every estimate row must sit in [66, 73] on
+  // OVERALL, and the display contract applies to every runtime rating's
+  // overall. Sim channels stay on the pre-recal [20, 100] band; the λ refit to
+  // the new MV2 channel distribution is MV2-11b (the realism goldens are
+  // expected-red on this regen until that refit re-locks them).
+  const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 387;
   const DISPLAY_FLOOR = 66;
   const DISPLAY_MAX = 99;
   const ESTIMATE_DISPLAY_MIN = 66;
@@ -102,15 +104,14 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the E-4 career-lift versions; engine_version is the season-merge bump", () => {
-    // wc-perf-3.0.0 = the E-4 career-stature lift. Projected stays
-    // proj-career-2.0.0 (2026 does not consume career stature in E-4). The
-    // SEASON MERGE bumps engine_version once (engine-2026.06.04 →
-    // engine-2026.06.08), resolving the deferred-bump ledger
-    // (E-2 / E-1b / E-3a / E-3b / E-4). The bump is a STAMP change only —
-    // sim logic is byte-identical, so this pins the stamp, not new sim values.
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-3.0.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-2.0.0");
+  it("rating_version anchors are the MV2 merit versions; engine_version is unchanged until MV2-11b", () => {
+    // wc-perf-4.2.0 = the MV2 stature-dominant historical model on the unified
+    // display curve (MV2-3/4 + MV2-6); proj-career-3.0.0 = the 2026 stature
+    // reconciliation (MV2-5). engine_version stays at the season-merge stamp —
+    // MV2-10 regenerates DATA only; the λ refit that re-tunes the engine to the
+    // new channel distribution (and bumps engine_version) is MV2-11b.
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-3.0.0");
     expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.08");
   });
 
@@ -220,34 +221,49 @@ describe("compact-data integrity", () => {
     }
   });
 
-  // ── MV2-7 — optional source-derived `legend` field ─────────────────────────
+  // ── MV2-10 — required source-derived `legend` field ─────────────────────────
   //
-  // MV2-7 adds `legend?: boolean` to the RuntimeRating contract but does NOT
-  // wire the compact passthrough (the ETL already emits `legend`, so wiring it
-  // here would diverge the committed legend-less bundles from a rebuild and
-  // break the byte-identical golden gate). The DATA + REQUIRED-field bump land
-  // with the compact regen in MV2-10. These two assertions lock the interim
-  // state: the committed compact is legend-less, and the optional field is a
-  // valid, additive extension that the current bundle still satisfies.
-  describe("MV2-7 optional legend field", () => {
-    it("the committed compact is legend-less (field absent until the MV2-10 regen)", () => {
-      const withLegend = DRAFT_POOL_BUNDLE.ratings.filter(
-        (r) => r.legend !== undefined,
-      );
-      expect(
-        withLegend.length,
-        "no committed rating should carry `legend` yet — the compact passthrough lands in MV2-10",
-      ).toBe(0);
+  // runtime-data-1.1.0: the compact passthrough is wired and `legend` is
+  // REQUIRED on every rating row (historical + 2026). The flag is the ETL
+  // source-derived boolean — never re-derived from `overall` — and the count is
+  // locked on the manifest for the honest-state census.
+  describe("MV2-10 required legend field", () => {
+    const EXPECTED_LEGEND_TOTAL = 302;
+    const EXPECTED_LEGEND_HISTORICAL = 292;
+    const EXPECTED_LEGEND_2026 = 10;
+
+    it("every rating carries a boolean legend flag (required as of runtime-data-1.1.0)", () => {
+      for (const r of DRAFT_POOL_BUNDLE.ratings) {
+        expect(typeof r.legend, `${r.card_id} legend`).toBe("boolean");
+      }
     });
 
-    it("every committed rating already satisfies the updated (legend-optional) contract", () => {
-      // The field is OPTIONAL: an existing legend-less rating is a valid
-      // RuntimeRating as-is, and a legend-augmented rating is equally valid —
-      // proving the additive field does not invalidate the current bundle.
-      const sample = DRAFT_POOL_BUNDLE.ratings[0]!;
-      const legendless: RuntimeRating = sample; // compiles ⇒ optional, absent ok
-      expect(legendless.legend).toBeUndefined();
+    it("legend count matches the manifest census: 302 = 292 historical + 10 2026", () => {
+      const legends = DRAFT_POOL_BUNDLE.ratings.filter((r) => r.legend);
+      expect(RUNTIME_DATA_MANIFEST.counts.legend).toBe(EXPECTED_LEGEND_TOTAL);
+      expect(legends.length).toBe(EXPECTED_LEGEND_TOTAL);
+      const historical = legends.filter((r) => r.tournament_id !== 2026);
+      const projected = legends.filter((r) => r.tournament_id === 2026);
+      expect(historical.length).toBe(EXPECTED_LEGEND_HISTORICAL);
+      expect(projected.length).toBe(EXPECTED_LEGEND_2026);
+    });
 
+    it("legend is source-derived, not an OVR threshold re-derivation", () => {
+      // The flag must not collapse into the old OVR≥96 display heuristic: the
+      // source-joined census includes sub-96 legends AND high-OVR non-legends.
+      // (If `legend` were re-derived from overall, both sets would be empty.)
+      const sub96Legends = DRAFT_POOL_BUNDLE.ratings.filter(
+        (r) => r.legend && r.overall !== null && r.overall < 96,
+      );
+      const high96NonLegends = DRAFT_POOL_BUNDLE.ratings.filter(
+        (r) => !r.legend && r.overall !== null && r.overall >= 96,
+      );
+      expect(sub96Legends.length).toBeGreaterThan(0);
+      expect(high96NonLegends.length).toBeGreaterThan(0);
+    });
+
+    it("an explicit legend boolean satisfies the required-field contract", () => {
+      const sample = DRAFT_POOL_BUNDLE.ratings[0]!;
       const augmented: RuntimeRating = { ...sample, legend: true };
       expect(augmented.legend).toBe(true);
       const suppressed: RuntimeRating = { ...sample, legend: false };

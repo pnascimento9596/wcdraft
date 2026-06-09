@@ -45,20 +45,26 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
-const SCHEMA_VERSION = "runtime-data-1.0.0";
+// runtime-data-1.1.0 (MV2-10): `legend` is now a REQUIRED RuntimeRating field —
+// the passthrough below flows the ETL-joined flag into every compact rating.
+const SCHEMA_VERSION = "runtime-data-1.1.0";
 const ENGINE_VERSION = "engine-2026.06.08";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// E-4 career-stature lift (wc-perf-3.0.0 historical); projected stays
-// proj-career-2.0.0 (2026 does not consume career stature in E-4). Fallbacks only
-// apply if a ratings file omits rating_version; the real value is read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-3.0.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-2.0.0";
+// MV2 stature-dominant model (wc-perf-4.2.0 historical, unified display curve);
+// projected proj-career-3.0.0 (2026 linked-material on the stature scale, MV2-5).
+// Fallbacks only apply if a ratings file omits rating_version; the real value is
+// read per-row.
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-4.2.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-3.0.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
 const ESTIMATE_DISPLAY_MAX = 73;
-const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 388;
+// 387 as of MV2-10: the MV2-3/4 stature-dominant core moved one card off the
+// baseline-anchor path onto the career-stature path (the pre-MV2-10 compact was
+// locked at the stale 388 — the known ETL↔compact drift this regen clears).
+const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 387;
 
 const TOURNAMENT_ID_RE = /^WC-(\d{4})$/u;
 const KNOCKOUT_ROUNDS = ["R32", "R16", "QF", "SF", "F"];
@@ -319,14 +325,11 @@ async function build() {
       rating_version: rating.rating_version,
       ...(rating.overall_basis ? { overall_basis: rating.overall_basis } : {}),
       ...(rating.appearances_source ? { appearances_source: rating.appearances_source } : {}),
-      // MV2-7 NOTE: the compact `legend` passthrough is intentionally NOT wired
-      // here. The ETL `ratings.json` ALREADY emits `legend` on every row, so a
-      // passthrough would immediately flow it into the compact and diverge from
-      // the committed legend-less bundles — breaking the byte-identical golden
-      // gate. The passthrough + REQUIRED-field bump land together with the
-      // compact regen in MV2-10, which owns that diff. Until then the runtime
-      // `RuntimeRating.legend` field stays optional+absent and the UI falls back
-      // to the OVR≥96 heuristic (see apps/web/lib/game/view-models.ts).
+      // MV2-10: source-derived legend flag, REQUIRED as of runtime-data-1.1.0.
+      // Passed through verbatim from the ETL row (never re-derived from overall);
+      // requireLegend throws on a missing/non-boolean value instead of silently
+      // defaulting — an ETL row without the flag is a contract violation.
+      legend: requireLegend(rating),
     };
     if (rating.overall_basis === "baseline_anchor_estimate") {
       estimateCount += 1;
@@ -424,10 +427,13 @@ async function build() {
       coverage_basis: rating.coverage_basis,
       provenance: rating.provenance,
       rating_version: rating.rating_version,
+      // MV2-10: legend passthrough (REQUIRED, runtime-data-1.1.0) — same
+      // honest-failure rule as the historical loop.
+      legend: requireLegend(rating),
     };
     if (runtimeRating.overall === null) {
       throw new Error(
-        `build-compact-data: 2026 rating ${rating.card_id} emitted null overall; proj-career-2.0.0 contract forbids null overalls.`,
+        `build-compact-data: 2026 rating ${rating.card_id} emitted null overall; the projected rating contract forbids null overalls.`,
       );
     }
     if (
@@ -604,6 +610,10 @@ async function build() {
 
   const attribution = buildAttribution(historicalManifest, manifest2026);
 
+  // MV2-10: legend census published on the manifest for fast sanity-checks
+  // (the integrity test locks it against the bundle).
+  const legendCount = playerCardRatings.filter((r) => r.legend).length;
+
   // ── Serialise bundles and stamp manifest fingerprints ────────────────────
   const draftPoolBytes = Buffer.from(stableStringify(draftPoolBundle), "utf8");
   const scenario2026Bytes = Buffer.from(stableStringify(scenario2026Bundle), "utf8");
@@ -630,6 +640,7 @@ async function build() {
       knockout_slots: knockoutSlotsSorted.length,
       baseline_anchor_estimate: estimateCount,
       career_stature_estimate: careerStatureEstimateCount,
+      legend: legendCount,
     },
     attribution,
   };
@@ -679,6 +690,7 @@ async function build() {
       `  teams              = ${teams.length}`,
       `  knockout_slots     = ${knockoutSlotsSorted.length}`,
       `  baseline_anchor_estimate = ${estimateCount} (expected ${EXPECTED_BASELINE_ANCHOR_ESTIMATE})`,
+      `  legend             = ${legendCount}`,
       `  draft_pool.compact = ${humanBytes(draftPoolBytes.length)} raw / ${humanBytes(draftPoolFingerprint.bytes_gzip)} gzip / ${humanBytes(draftPoolFingerprint.bytes_brotli)} brotli`,
       `  scenario-2026      = ${humanBytes(scenario2026Bytes.length)} raw / ${humanBytes(scenario2026Fingerprint.bytes_gzip)} gzip / ${humanBytes(scenario2026Fingerprint.bytes_brotli)} brotli`,
       `  manifest           = ${humanBytes(manifestBytes.length)} raw`,
@@ -712,6 +724,18 @@ function humanBytes(n) {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(2)} KiB`;
   return `${(n / (1024 * 1024)).toFixed(2)} MiB`;
+}
+
+function requireLegend(rating) {
+  // MV2-10 (runtime-data-1.1.0): `legend` is REQUIRED on every compact rating.
+  // The ETL emits the source-derived boolean on every row (historical + 2026);
+  // anything else is a contract violation surfaced loudly, never defaulted.
+  if (typeof rating.legend !== "boolean") {
+    throw new Error(
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-1.1.0 requires a boolean on every row. Refusing to emit.`,
+    );
+  }
+  return rating.legend;
 }
 
 function inferRatingVersion(rows, fallback) {

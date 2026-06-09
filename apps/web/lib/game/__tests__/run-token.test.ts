@@ -264,10 +264,13 @@ describe("run-token — season-merge bump: pre-bump token surfaces skew, current
 
   it("the current build is the bumped season-merge build", () => {
     // Pins the bump so a future stamp change is a conscious re-lock.
+    // MV2-10 re-lock: the compact regen carries the MV2 stature-dominant
+    // anchors (wc-perf-4.2.0 + proj-career-3.0.0); engine_version is unchanged
+    // until the MV2-11b λ refit.
     expect(gameData.versions.engine_version).toBe("engine-2026.06.08");
     expect(gameData.versions.engine_version).toBe(RUNTIME_DATA_MANIFEST.engine_version);
-    // The current rating anchor is the E-4 career-lift version, NOT the old one.
-    expect(gameData.versions.rating_version).toContain("wc-perf-3.0.0");
+    expect(gameData.versions.rating_version).toContain("wc-perf-4.2.0");
+    expect(gameData.versions.rating_version).toContain("proj-career-3.0.0");
     expect(gameData.versions.rating_version).not.toContain(PREV_RATING_VERSION);
   });
 

@@ -48,7 +48,11 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:801";
+// :198 as of MV2-10 (compact regen onto wc-perf-4.2.0 + proj-career-3.0.0): the
+// deterministic first-satisfying-seed search re-ran against the new pool and
+// now lands on :198 (was :801 on the wc-perf-3.0.0 pool). Same search criteria,
+// same prefix — see scripts/generate-e2e-golden.mjs.
+const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:198";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
