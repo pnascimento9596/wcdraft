@@ -25,6 +25,7 @@ from . import (
     parse_century_election,
     parse_iffhs_dreamteams,
     parse_poy,
+    parse_research,
     parse_rsssf_awards,
     parse_wiki,
     parse_wiki_awards,
@@ -75,6 +76,9 @@ def collect_records() -> list:
     #   retrospective / all-time selections (position-aware)
     records += parse_wiki_xi.parse_ballondor_dream_team()
     records += parse_iffhs_dreamteams.parse()
+    # MV2-2 deterministic factual research backstop (citation-backed; uncited fails
+    # the build). Linked identically to parser rows downstream.
+    records += parse_research.collect()
     return records
 
 

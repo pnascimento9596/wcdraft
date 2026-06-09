@@ -228,7 +228,7 @@ def link_records(
             key = (pid, rec.source_id, rec.year, _fact_discriminator(rec))
             if key in facts_by_key:
                 continue  # keep first (parse order is most-significant-first)
-            facts_by_key[key] = {
+            fact = {
                 "player_id": pid,
                 "player_name": canon.display.get(pid, pid),
                 "source_id": rec.source_id,
@@ -241,6 +241,14 @@ def link_records(
                 "nation_token": rec.nation_token,
                 "detail": rec.detail,
             }
+            # Research-backstop rows carry a public citation (url + claim); parser
+            # rows do not (their provenance is the SHA-pinned snapshot + manifest).
+            # The citation rides onto the emitted fact so source_facts.json is
+            # self-auditing for every research-derived row.
+            citation = (rec.extra or {}).get("citation")
+            if citation:
+                fact["citation"] = citation
+            facts_by_key[key] = fact
         else:
             rkey = (rec.source_id, method, norm(rec.name), rec.nation_token or "")
             row = review_acc.get(rkey)

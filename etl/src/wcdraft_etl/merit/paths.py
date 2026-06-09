@@ -16,6 +16,13 @@ RAW_DIR = _ETL_ROOT / "merit" / "raw"
 MANIFEST_PATH = _ETL_ROOT / "merit" / "fetch_manifest.json"
 OUTPUT_DIR = _ETL_ROOT / "output" / "merit"
 
+# Deterministic factual research backstop (MV2-2): committed citation-backed notes
+# live under ``merit/raw/research/`` with their OWN pinned manifest, separate from
+# the fetched web snapshots in ``fetch_manifest.json`` (research notes are authored
+# from fetched-and-verified public citations, not downloaded as a single page).
+RESEARCH_DIR = RAW_DIR / "research"
+RESEARCH_MANIFEST_PATH = RESEARCH_DIR / "manifest.json"
+
 
 def read_raw(raw_file: str, charset: str) -> str:
     """Read a committed snapshot as text in its declared charset."""

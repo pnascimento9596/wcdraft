@@ -17,13 +17,14 @@ from . import (
     ACTIVE_SOURCE_FAMILIES,
     ATTRIBUTION,
     ERA_BUCKETS,
+    RESEARCH_SOURCE_IDS,
     SIGNAL_FAMILIES,
     SOURCE_SET_VERSION,
 )
 from .link import source_label
 
 # Active families in report column order (legacy/reserved keys are shown as notes,
-# not counted columns).
+# not counted columns). ``captaincy`` joins in MV2-2 (research-backstop sourced).
 _ACTIVE_FAMILIES = (
     "wc_legacy",
     "global_annual_recognition",
@@ -31,6 +32,7 @@ _ACTIVE_FAMILIES = (
     "position_balanced_selection",
     "international_record",
     "retrospective_selection",
+    "captaincy",
 )
 _FAMILY_SHORT = {
     "wc_legacy": "WC legacy",
@@ -39,6 +41,7 @@ _FAMILY_SHORT = {
     "position_balanced_selection": "Position XI",
     "international_record": "Int'l record",
     "retrospective_selection": "Retrospective",
+    "captaincy": "Captaincy",
 }
 
 _ERA_LABEL = {"pre_1956": "pre-1956", "1956_1990": "1956–1990", "1991_plus": "1991+"}
@@ -117,8 +120,9 @@ def render_report(facts: list[dict], review: list[dict], crosscheck: dict, canon
     fam_players = _families_by_player(facts)
     pos_players = _positions_by_player(facts)
     linked_players = len(fam_players)
-    parser_facts = sum(1 for f in facts if f["source_id"] != _NATIVE_SOURCE)
-    native_facts = len(facts) - parser_facts
+    native_facts = sum(1 for f in facts if f["source_id"] == _NATIVE_SOURCE)
+    research_facts = sum(1 for f in facts if f["source_id"] in RESEARCH_SOURCE_IDS)
+    parser_facts = len(facts) - native_facts - research_facts
     position_facts = sum(1 for f in facts if f.get("position"))
 
     L: list[str] = []
@@ -131,9 +135,10 @@ def render_report(facts: list[dict], review: list[dict], crosscheck: dict, canon
         f"`source_facts.json` for the career-stature-2.0.0 table (MV2-3).\n"
         f"- **Linked facts:** {len(facts):,} across {linked_players:,} distinct "
         f"players (men's World Cup pool) — **{parser_facts:,} parser-derived** + "
-        f"**{native_facts:,} native** World Cup awards.\n"
+        f"**{native_facts:,} native** World Cup awards + **{research_facts:,} "
+        f"research-backstop** (citation-backed, MV2-2).\n"
         f"- **First-class position facts:** {position_facts:,} (GK/DF/MF/FW) from "
-        f"the position-balanced + all-time sources.\n"
+        f"the position-balanced + all-time + research sources.\n"
         f"- **Withheld to review (never assigned):** {len(review):,} distinct "
         f"ambiguities.\n"
     )
@@ -160,10 +165,65 @@ def render_report(facts: list[dict], review: list[dict], crosscheck: dict, canon
     # ─── per-source linked-fact counts (parser vs native split) ───
     L.append("\n## Linked facts per source\n")
     by_source = Counter(f["source_id"] for f in facts)
-    L.append("| Source | Family | Linked facts |\n|---|---|---|")
+    L.append("| Source | Family | Origin | Linked facts |\n|---|---|---|---|")
     for sid in sorted(by_source):
         fam = next((f["family"] for f in facts if f["source_id"] == sid), "")
-        L.append(f"| {source_label(sid)} | {fam} | {by_source[sid]:,} |")
+        if sid == _NATIVE_SOURCE:
+            origin = "native"
+        elif sid in RESEARCH_SOURCE_IDS:
+            origin = "research"
+        else:
+            origin = "parser"
+        L.append(f"| {source_label(sid)} | {fam} | {origin} | {by_source[sid]:,} |")
+
+    # ─── research backstop (MV2-2): citation-backed gap closure ───
+    research = [f for f in facts if f["source_id"] in RESEARCH_SOURCE_IDS]
+    L.append("\n## Research backstop (MV2-2) — citation-backed gap closure\n")
+    L.append(
+        f"The deterministic research backstop adds **{len(research):,} "
+        f"citation-backed** facts that parser-only public lists miss: each row "
+        f"carries a fetchable public citation URL and the specific claim it supports "
+        f"(an uncited row fails the build), and is linked by the SAME conservative "
+        f"linker as parser rows. It activates the `captaincy` family (no SHA-pinnable "
+        f"web source) and recovers global recognition the parser list holds under a "
+        f"non-canonical spelling.\n"
+    )
+    by_research = Counter(f["family"] for f in research)
+    L.append("| Family | Research facts | Distinct players |")
+    L.append("|---|---:|---:|")
+    for fam in sorted(by_research):
+        ids = {f["player_id"] for f in research if f["family"] == fam}
+        L.append(f"| {_FAMILY_SHORT.get(fam, fam)} | {by_research[fam]} | {len(ids)} |")
+
+    # Known v1 coverage gaps, explicitly evaluated. ``research`` = a research-backstop
+    # fact now links for the player; ``parser`` = already covered by a parser source;
+    # ``none`` = still no linked fact (honest under-coverage, never a fabricated zero).
+    _V1_GAPS: tuple[tuple[str, str], ...] = (
+        ("Johan Cruyff", "P-50564"),
+        ("Franco Baresi (DF)", "P-42920"),
+        ("Paolo Maldini (DF)", "P-43222"),
+        ("Lev Yashin (GK)", "P-09317"),
+        ("Cafu (DF)", "P-91718"),
+        ("Carlos Alberto (DF)", "P-25829"),
+        ("Giacinto Facchetti (DF)", "P-68170"),
+        ("Daniel Passarella (DF)", "P-80376"),
+    )
+    research_pids = {f["player_id"] for f in research}
+    L.append("\n### Known v1 gaps — explicitly evaluated\n")
+    L.append("| Player | Research facts | Families now linked |")
+    L.append("|---|---:|---|")
+    for name, pid in _V1_GAPS:
+        rn = sum(1 for f in research if f["player_id"] == pid)
+        fams = fam_players.get(pid, set())
+        fam_list = ", ".join(_FAMILY_SHORT.get(f, f) for f in _ACTIVE_FAMILIES if f in fams)
+        L.append(f"| {name} | {rn} | {fam_list or '—'} |")
+    L.append(
+        f"\n_{len(research_pids)} distinct players carry a research-backstop fact. "
+        "Yashin's national-team captaincy was evaluated and WITHHELD — the cited "
+        "source states he rarely captained his side — so no captaincy row was "
+        "authored for him (anti-fabrication: a claim a citation does not support is "
+        "never committed)._\n"
+    )
 
     # ─── Golden Ball cross-check ───
     cc = crosscheck

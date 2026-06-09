@@ -1,6 +1,380 @@
 {
-  "fact_count": 2144,
+  "fact_count": 2169,
   "facts": [
+    {
+      "citation": {
+        "claim": "He captains the Australia national team.",
+        "url": "https://en.wikipedia.org/wiki/Mathew_Ryan"
+      },
+      "detail": "national-team captain — captains Australia",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Australia",
+      "player_id": "P-10244",
+      "player_name": "Mathew Ryan",
+      "position": "GK",
+      "raw_name": "Mathew Ryan",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "Pulisic captained the United States national team, including the 2021 Nations League final victory.",
+        "url": "https://en.wikipedia.org/wiki/Christian_Pulisic"
+      },
+      "detail": "national-team captain — has captained the United States",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "United States",
+      "player_id": "P-11737",
+      "player_name": "Christian Pulisic",
+      "position": "FW",
+      "raw_name": "Christian Pulisic",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "On 13 July 2014 Lahm led Germany to a World Cup victory as captain.",
+        "url": "https://en.wikipedia.org/wiki/Philipp_Lahm"
+      },
+      "detail": "national-team captain — lifted the 2014 World Cup",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-18599",
+      "player_name": "Philipp Lahm",
+      "position": "DF",
+      "raw_name": "Philipp Lahm",
+      "source_id": "research_captaincy",
+      "year": 2014
+    },
+    {
+      "citation": {
+        "claim": "He captained the Brazil national team to victory in the 1970 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres"
+      },
+      "detail": "national-team captain — lifted the 1970 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-25829",
+      "player_name": "Carlos Alberto",
+      "position": "DF",
+      "raw_name": "Carlos Alberto",
+      "source_id": "research_captaincy",
+      "year": 1970
+    },
+    {
+      "citation": {
+        "claim": "He captains the Croatia national team and is the country's most-capped player.",
+        "url": "https://en.wikipedia.org/wiki/Luka_Modri%C4%87"
+      },
+      "detail": "national-team captain — captains Croatia (most-capped Croatia player)",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Croatia",
+      "player_id": "P-29491",
+      "player_name": "Luka Modrić",
+      "position": "MF",
+      "raw_name": "Luka Modrić",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "He captains the Bosnia and Herzegovina national team and is its all-time top scorer and most-capped player.",
+        "url": "https://en.wikipedia.org/wiki/Edin_D%C5%BEeko"
+      },
+      "detail": "national-team captain — captains Bosnia and Herzegovina (all-time top scorer, most-capped)",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Bosnia and Herzegovina",
+      "player_id": "P-31839",
+      "player_name": "Edin Džeko",
+      "position": "FW",
+      "raw_name": "Edin Džeko",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "He was named Italy's captain for the 1994 World Cup and captained AC Milan for 15 seasons.",
+        "url": "https://en.wikipedia.org/wiki/Franco_Baresi"
+      },
+      "detail": "national-team captain — named Italy captain for the 1994 World Cup; AC Milan captain for 15 seasons",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42920",
+      "player_name": "Franco Baresi",
+      "position": "DF",
+      "raw_name": "Franco Baresi",
+      "source_id": "research_captaincy",
+      "year": 1994
+    },
+    {
+      "citation": {
+        "claim": "He lifted the World Cup as captain of Italy in the 1982 tournament at the age of 40.",
+        "url": "https://en.wikipedia.org/wiki/Dino_Zoff"
+      },
+      "detail": "national-team captain — lifted the 1982 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-48831",
+      "player_name": "Dino Zoff",
+      "position": "GK",
+      "raw_name": "Dino Zoff",
+      "source_id": "research_captaincy",
+      "year": 1982
+    },
+    {
+      "citation": {
+        "claim": "He captained West Germany to victory in the 1990 World Cup, hoisting the trophy as team captain.",
+        "url": "https://en.wikipedia.org/wiki/Lothar_Matth%C3%A4us"
+      },
+      "detail": "national-team captain — lifted the 1990 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-49502",
+      "player_name": "Lothar Matthäus",
+      "position": "MF",
+      "raw_name": "Lothar Matthäus",
+      "source_id": "research_captaincy",
+      "year": 1990
+    },
+    {
+      "citation": {
+        "claim": "He was the captain of the England national team that won the 1966 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Bobby_Moore"
+      },
+      "detail": "national-team captain — lifted the 1966 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-52816",
+      "player_name": "Bobby Moore",
+      "position": "DF",
+      "raw_name": "Bobby Moore",
+      "source_id": "research_captaincy",
+      "year": 1966
+    },
+    {
+      "citation": {
+        "claim": "He captains the Japan national team, having been named captain in June 2023.",
+        "url": "https://en.wikipedia.org/wiki/Wataru_Endo"
+      },
+      "detail": "national-team captain — named Japan captain in June 2023",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Japan",
+      "player_id": "P-53282",
+      "player_name": "Wataru Endo",
+      "position": "MF",
+      "raw_name": "Wataru Endo",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "He captains the England national team and is England's all-time top goalscorer.",
+        "url": "https://en.wikipedia.org/wiki/Harry_Kane"
+      },
+      "detail": "national-team captain — captains England (all-time top scorer)",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-58924",
+      "player_name": "Harry Kane",
+      "position": "FW",
+      "raw_name": "Harry Kane",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "On 11 July 2010 Casillas captained Spain to their first World Cup title.",
+        "url": "https://en.wikipedia.org/wiki/Iker_Casillas"
+      },
+      "detail": "national-team captain — lifted the 2010 World Cup",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-61793",
+      "player_name": "Iker Casillas",
+      "position": "GK",
+      "raw_name": "Iker Casillas",
+      "source_id": "research_captaincy",
+      "year": 2010
+    },
+    {
+      "citation": {
+        "claim": "In 1998 Deschamps captained France as they won the 1998 World Cup on home soil.",
+        "url": "https://en.wikipedia.org/wiki/Didier_Deschamps"
+      },
+      "detail": "national-team captain — lifted the 1998 World Cup",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-61954",
+      "player_name": "Didier Deschamps",
+      "position": "MF",
+      "raw_name": "Didier Deschamps",
+      "source_id": "research_captaincy",
+      "year": 1998
+    },
+    {
+      "citation": {
+        "claim": "He was captain of the Italy national side for a record 11 years and led Italy to its first European Championship in 1968.",
+        "url": "https://en.wikipedia.org/wiki/Giacinto_Facchetti"
+      },
+      "detail": "national-team captain — record 11-year Italy captaincy; lifted the 1968 European Championship",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-68170",
+      "player_name": "Giacinto Facchetti",
+      "position": "DF",
+      "raw_name": "Giacinto Facchetti",
+      "source_id": "research_captaincy",
+      "year": 1968
+    },
+    {
+      "citation": {
+        "claim": "Beckenbauer led West Germany to victory at the 1974 World Cup and was the first captain to lift the new trophy.",
+        "url": "https://en.wikipedia.org/wiki/Franz_Beckenbauer"
+      },
+      "detail": "national-team captain — lifted the 1974 World Cup (first to lift the new trophy)",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "West Germany",
+      "player_id": "P-72864",
+      "player_name": "Franz Beckenbauer",
+      "position": "DF",
+      "raw_name": "Franz Beckenbauer",
+      "source_id": "research_captaincy",
+      "year": 1974
+    },
+    {
+      "citation": {
+        "claim": "He captains the Egypt national team.",
+        "url": "https://en.wikipedia.org/wiki/Mohamed_Salah"
+      },
+      "detail": "national-team captain — captains Egypt",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Egypt",
+      "player_id": "P-75890",
+      "player_name": "Mohamed Salah",
+      "position": "FW",
+      "raw_name": "Mohamed Salah",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "He captains the Switzerland national team and is the nation's record appearance holder.",
+        "url": "https://en.wikipedia.org/wiki/Granit_Xhaka"
+      },
+      "detail": "national-team captain — captains Switzerland (record appearance holder)",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Switzerland",
+      "player_id": "P-77224",
+      "player_name": "Granit Xhaka",
+      "position": "MF",
+      "raw_name": "Granit Xhaka",
+      "source_id": "research_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "He captained Argentina during the 1978 World Cup and was the first Argentine to hold the World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Daniel_Passarella"
+      },
+      "detail": "national-team captain — lifted the 1978 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-80376",
+      "player_name": "Daniel Passarella",
+      "position": "DF",
+      "raw_name": "Daniel Passarella",
+      "source_id": "research_captaincy",
+      "year": 1978
+    },
+    {
+      "citation": {
+        "claim": "Maradona captained the Argentine national team to victory in the 1986 World Cup, lifting the trophy as captain.",
+        "url": "https://en.wikipedia.org/wiki/Diego_Maradona"
+      },
+      "detail": "national-team captain — lifted the 1986 World Cup",
+      "era": "1956_1990",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-80404",
+      "player_name": "Diego Maradona",
+      "position": "MF",
+      "raw_name": "Diego Maradona",
+      "source_id": "research_captaincy",
+      "year": 1986
+    },
+    {
+      "citation": {
+        "claim": "He captained Italy throughout their successful 2006 World Cup campaign.",
+        "url": "https://en.wikipedia.org/wiki/Fabio_Cannavaro"
+      },
+      "detail": "national-team captain — lifted the 2006 World Cup",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-88863",
+      "player_name": "Fabio Cannavaro",
+      "position": "DF",
+      "raw_name": "Fabio Cannavaro",
+      "source_id": "research_captaincy",
+      "year": 2006
+    },
+    {
+      "citation": {
+        "claim": "As Brazil's captain he raised the World Cup trophy after the 2002 final.",
+        "url": "https://en.wikipedia.org/wiki/Cafu"
+      },
+      "detail": "national-team captain — lifted the 2002 World Cup",
+      "era": "1991_plus",
+      "family": "captaincy",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-91718",
+      "player_name": "Cafu",
+      "position": "DF",
+      "raw_name": "Cafu",
+      "source_id": "research_captaincy",
+      "year": 2002
+    },
     {
       "detail": "iffhs_worlds_best winner 2020",
       "era": "1991_plus",
@@ -1183,6 +1557,57 @@
       "raw_name": "BOKSIC Alen",
       "source_id": "onze_awards",
       "year": 1993
+    },
+    {
+      "citation": {
+        "claim": "Johan Cruyff won the Ballon d'Or in 1971.",
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or"
+      },
+      "detail": "European Player of the Year (Ballon d'Or) — 1971 winner",
+      "era": "1956_1990",
+      "family": "global_annual_recognition",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-50564",
+      "player_name": "Johan Cruyff",
+      "position": "FW",
+      "raw_name": "Johan Cruyff",
+      "source_id": "research_global_annual",
+      "year": 1971
+    },
+    {
+      "citation": {
+        "claim": "Johan Cruyff won the Ballon d'Or in 1973.",
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or"
+      },
+      "detail": "European Player of the Year (Ballon d'Or) — 1973 winner",
+      "era": "1956_1990",
+      "family": "global_annual_recognition",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-50564",
+      "player_name": "Johan Cruyff",
+      "position": "FW",
+      "raw_name": "Johan Cruyff",
+      "source_id": "research_global_annual",
+      "year": 1973
+    },
+    {
+      "citation": {
+        "claim": "Johan Cruyff won the Ballon d'Or in 1974.",
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or"
+      },
+      "detail": "European Player of the Year (Ballon d'Or) — 1974 winner",
+      "era": "1956_1990",
+      "family": "global_annual_recognition",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-50564",
+      "player_name": "Johan Cruyff",
+      "position": "FW",
+      "raw_name": "Johan Cruyff",
+      "source_id": "research_global_annual",
+      "year": 1974
     },
     {
       "detail": "european_poy winner 2001",
@@ -27874,6 +28299,6 @@
       "year": 2006
     }
   ],
-  "linked_player_count": 790,
+  "linked_player_count": 791,
   "version": "merit-source-set-2.0.0"
 }

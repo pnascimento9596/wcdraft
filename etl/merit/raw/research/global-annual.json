@@ -1,0 +1,43 @@
+{
+  "source_id": "research_global_annual",
+  "family": "global_annual_recognition",
+  "note": "MV2-2 deterministic factual research backstop. Global annual player-of-the-year wins that the parser source set holds but cannot link, because the source list renders the player's name in a spelling the canonical card does not carry (the European Player of the Year / Ballon d'Or snapshot lists 'Johan CRUIJFF', withheld to link_review.json as no_candidate against the canonical 'Johan Cruyff'). Each row re-asserts the SAME public fact under the canonical display name so the conservative linker resolves it, with a fetchable public citation URL and the specific claim it supports. NO rating numbers or rankings — only the award-win record. Each citation was fetched and confirmed before commit.",
+  "rows": [
+    {
+      "scope": "historical_gap",
+      "name": "Johan Cruyff",
+      "nation_token": "Netherlands",
+      "year": 1971,
+      "position": "FW",
+      "detail": "European Player of the Year (Ballon d'Or) — 1971 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or",
+        "claim": "Johan Cruyff won the Ballon d'Or in 1971."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Johan Cruyff",
+      "nation_token": "Netherlands",
+      "year": 1973,
+      "position": "FW",
+      "detail": "European Player of the Year (Ballon d'Or) — 1973 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or",
+        "claim": "Johan Cruyff won the Ballon d'Or in 1973."
+      }
+    },
+    {
+      "scope": "historical_gap",
+      "name": "Johan Cruyff",
+      "nation_token": "Netherlands",
+      "year": 1974,
+      "position": "FW",
+      "detail": "European Player of the Year (Ballon d'Or) — 1974 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or",
+        "claim": "Johan Cruyff won the Ballon d'Or in 1974."
+      }
+    }
+  ]
+}
