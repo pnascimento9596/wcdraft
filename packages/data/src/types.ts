@@ -140,6 +140,17 @@ export interface RuntimeRating extends Rating {
     | "career_stature_estimate";
   /** Historical only. Provenance of the `appearances` count. */
   appearances_source?: string;
+  /**
+   * Source-derived "legend" flag (MV2-7). Display/honest-state only — NEVER a
+   * sim input, never crosses the `Rating` sim boundary. When present it is the
+   * source of truth for the gold legend badge; when ABSENT the UI falls back to
+   * the historical OVR≥96 heuristic (see `provenanceBadgeKind`). Optional so the
+   * current legend-less compact still validates unchanged. The compact
+   * passthrough + the legend DATA are intentionally deferred to MV2-10's regen
+   * (the ETL already emits `legend`, so wiring it now would break the
+   * byte-identical golden gate — see the NOTE in build-compact-data.mjs).
+   */
+  legend?: boolean;
 }
 
 // ─── Player card ─────────────────────────────────────────────────────────────

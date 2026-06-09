@@ -62,6 +62,7 @@ function ratingView(r: RuntimeRating): CardRatingView {
     overall: r.overall,
     provenance: r.provenance,
     overall_basis: r.overall_basis,
+    legend: r.legend,
   });
   return {
     overall: r.overall,
@@ -72,6 +73,7 @@ function ratingView(r: RuntimeRating): CardRatingView {
     coverage: r.coverage,
     provenance: r.provenance,
     overall_basis: r.overall_basis,
+    legend: r.legend,
     badge_kind,
     badge_label: provenanceBadgeLabel(badge_kind),
   };
