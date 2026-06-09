@@ -295,7 +295,14 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> dict:
         _load("nations", output_dir),
     )
     cards = _build_cards(rows)
-    ratings = rating_2026.build_ratings(cards)
+    # MV2-5: linked-material 2026 players reconcile onto the career-stature scale.
+    # career_stature.json is consumed READ-ONLY (missing → {} → every card on the
+    # projected raw path); rating_2026 only consults it for link_status=="linked".
+    # Non-material cards are quantile-mapped onto the committed historical raw-only
+    # internal distribution (ratings.json, READ-ONLY) for cross-era density parity.
+    career = rating_2026._load_career_stature(output_dir)
+    historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
+    ratings = rating_2026.build_ratings(cards, career, historical_raw_only, output_dir)
     teams = _build_teams(cards, ratings, draw)
     bracket = _build_bracket(teams, bracket_matches)
 
@@ -369,6 +376,10 @@ def run(output_dir: Path = OUTPUT_DIR) -> dict:
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest_2026.json", _manifest(tables))
+    # MV2-5 accuracy-eyeball sample: rewrite MERIT_V2_SAMPLE.md as the historical
+    # MV2-4 section + the 2026 reconciliation section. Runs LAST (after the 2026
+    # tables are on disk) and regenerates the whole file deterministically.
+    rating_2026.write_merit_v2_sample(output_dir)
     return tables
 
 

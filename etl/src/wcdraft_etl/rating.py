@@ -1029,7 +1029,13 @@ def _render_merit_v2_sample(
     return "\n".join(L) + "\n"
 
 
-def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+def render_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+    """Render the historical INTERNAL-score shape sample as markdown (no write).
+
+    Exposed (non-behavioral) so the 2026 stage (MV2-5) can prepend this exact
+    historical section before appending its own 2026 reconciliation section into
+    the SAME ``MERIT_V2_SAMPLE.md`` — see ``rating_2026.write_merit_v2_sample``.
+    """
     players = _load(output_dir, "players")
     cards = _load(output_dir, "player_tournaments")
     tournaments = _load(output_dir, "tournaments")
@@ -1039,9 +1045,13 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
         players, cards, tournaments, manager_tournaments, career
     )
     ratings = build_ratings(players, cards, tournaments, manager_tournaments, career)
-    md = _render_merit_v2_sample(
+    return _render_merit_v2_sample(
         internal, {r["card_id"]: r for r in ratings}, players, career
     )
+
+
+def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+    md = render_merit_v2_sample(output_dir)
     out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")
