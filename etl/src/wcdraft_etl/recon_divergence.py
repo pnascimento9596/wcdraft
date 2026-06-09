@@ -419,6 +419,14 @@ def _read(doc: dict) -> str:
     lo_defgk = sum(1 for r in doc["we_lower"] if r["position"] in ("DF", "GK"))
     gap_defgk = sum(1 for r in doc["anchor_gap"] if r["position"] in ("DF", "GK"))
     n_hi, n_lo, n_gap = len(doc["we_higher"]), len(doc["we_lower"]), len(doc["anchor_gap"])
+    # Illustrative names are DERIVED from the live tables (not hard-coded) so the
+    # regenerated read stays consistent as the defender/keeper cohort moves.
+    lo_defgk_names = ", ".join(
+        r["name"] for r in doc["we_lower"] if r["position"] in ("DF", "GK")
+    )
+    gap_defgk_names = ", ".join(
+        r["name"] for r in doc["anchor_gap"] if r["position"] in ("DF", "GK")
+    )
 
     lines = []
     lines.append(
@@ -456,8 +464,7 @@ def _read(doc: dict) -> str:
         f"Position-stratified agreement is uneven: best is {best['position']} "
         f"(ρ={best['spearman']}, n={best['n']}), worst is **{worst['position']}** "
         f"(ρ={worst['spearman']}, n={worst['n']}). And the we-lower table is "
-        f"{lo_defgk}/{n_lo} **defenders and goalkeepers** — Baresi, Djalma & Nílton "
-        f"Santos, Bobby Moore, Roberto Carlos, Cafu, Puyol, Schmeichel, Barthez. This "
+        f"{lo_defgk}/{n_lo} **defenders and goalkeepers** — {lo_defgk_names}. This "
         f"is the report's strongest model-gap signal: our recognition-weighted "
         f"families structurally under-credit elite defenders and keepers, who win far "
         f"fewer individual awards (Ballon d'Or, player-of-the-year) than forwards, so "
@@ -470,7 +477,7 @@ def _read(doc: dict) -> str:
     lines.append(
         f"**Sub-material anchors sharpen the same lead — and the hard guardrail.** "
         f"The recon-anchored-but-sub-material list is {gap_defgk}/{n_gap} keepers and "
-        f"defenders (Zoff, Banks, Maier, Carlos Alberto, the Santoses, Zanetti…): "
+        f"defenders ({gap_defgk_names}): "
         f"players recon curated from real awards/honors but for whom our merit set "
         f"holds no fact strong enough to clear the gate. Each is a lead to **source a "
         f"real, citable fact** into our MODEL — never to copy recon's number, blend it, "

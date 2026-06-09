@@ -339,6 +339,20 @@
       "primary_channel_before": 39
     },
     {
+      "card_id": "P-52002:WC-1966",
+      "career_coverage": 0.8,
+      "career_stature_score": 0.456313,
+      "delta_overall": 21,
+      "delta_primary_channel": 47,
+      "overall_after": 93,
+      "overall_before": 72,
+      "player_id": "P-52002",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 86,
+      "primary_channel_before": 39
+    },
+    {
       "card_id": "P-98569:WC-1958",
       "career_coverage": 0.5,
       "career_stature_score": 0.4608,
@@ -577,6 +591,20 @@
       "primary_channel_before": 31
     },
     {
+      "card_id": "P-52002:WC-1954",
+      "career_coverage": 0.8,
+      "career_stature_score": 0.456313,
+      "delta_overall": 19,
+      "delta_primary_channel": 43,
+      "overall_after": 94,
+      "overall_before": 75,
+      "player_id": "P-52002",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 91,
+      "primary_channel_before": 48
+    },
+    {
       "card_id": "P-53255:WC-1958",
       "career_coverage": 0.5,
       "career_stature_score": 0.36,
@@ -717,6 +745,20 @@
       "primary_channel_before": 32
     },
     {
+      "card_id": "P-52002:WC-1958",
+      "career_coverage": 0.8,
+      "career_stature_score": 0.456313,
+      "delta_overall": 19,
+      "delta_primary_channel": 41,
+      "overall_after": 94,
+      "overall_before": 75,
+      "player_id": "P-52002",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 89,
+      "primary_channel_before": 48
+    },
+    {
       "card_id": "P-57361:WC-2006",
       "career_coverage": 0.8,
       "career_stature_score": 0.530883,
@@ -855,6 +897,20 @@
       "primary_channel": "attack",
       "primary_channel_after": 74,
       "primary_channel_before": 34
+    },
+    {
+      "card_id": "P-75955:WC-1950",
+      "career_coverage": 0.8,
+      "career_stature_score": 0.372875,
+      "delta_overall": 18,
+      "delta_primary_channel": 40,
+      "overall_after": 90,
+      "overall_before": 72,
+      "player_id": "P-75955",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 78,
+      "primary_channel_before": 38
     },
     {
       "card_id": "P-86518:WC-1938",
@@ -1291,6 +1347,20 @@
       "primary_channel_before": 48
     },
     {
+      "card_id": "P-75955:WC-1954",
+      "career_coverage": 0.8,
+      "career_stature_score": 0.372875,
+      "delta_overall": 17,
+      "delta_primary_channel": 35,
+      "overall_after": 92,
+      "overall_before": 75,
+      "player_id": "P-75955",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 83,
+      "primary_channel_before": 48
+    },
+    {
       "card_id": "P-08601:WC-1970",
       "career_coverage": 0.610526,
       "career_stature_score": 0.415102,
@@ -1417,20 +1487,6 @@
       "primary_channel_before": 56
     },
     {
-      "card_id": "P-55991:WC-1998",
-      "career_coverage": 0.42,
-      "career_stature_score": 0.22173,
-      "delta_overall": -11,
-      "delta_primary_channel": -34,
-      "overall_after": 88,
-      "overall_before": 99,
-      "player_id": "P-55991",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 66,
-      "primary_channel_before": 100
-    },
-    {
       "card_id": "P-12940:WC-1990",
       "career_coverage": 0.494737,
       "career_stature_score": 0.321658,
@@ -1551,20 +1607,6 @@
       "overall_after": 88,
       "overall_before": 95,
       "player_id": "P-31850",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 95
-    },
-    {
-      "card_id": "P-48831:WC-1982",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.184625,
-      "delta_overall": -7,
-      "delta_primary_channel": -33,
-      "overall_after": 88,
-      "overall_before": 95,
-      "player_id": "P-48831",
       "position": "GK",
       "primary_channel": "goalkeeping",
       "primary_channel_after": 62,
@@ -1711,20 +1753,6 @@
       "primary_channel_before": 94
     },
     {
-      "card_id": "P-14080:WC-1974",
-      "career_coverage": 0.263158,
-      "career_stature_score": 0.1375,
-      "delta_overall": -7,
-      "delta_primary_channel": -32,
-      "overall_after": 88,
-      "overall_before": 95,
-      "player_id": "P-14080",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 94
-    },
-    {
       "card_id": "P-25276:WC-1978",
       "career_coverage": null,
       "career_stature_score": null,
@@ -1823,20 +1851,6 @@
       "primary_channel_before": 94
     },
     {
-      "card_id": "P-74455:WC-1966",
-      "career_coverage": 0.263158,
-      "career_stature_score": 0.1375,
-      "delta_overall": -6,
-      "delta_primary_channel": -32,
-      "overall_after": 88,
-      "overall_before": 94,
-      "player_id": "P-74455",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 94
-    },
-    {
       "card_id": "P-30486:WC-2022",
       "career_coverage": 0.43,
       "career_stature_score": 0.274839,
@@ -1847,20 +1861,6 @@
       "player_id": "P-30486",
       "position": "FW",
       "primary_channel": "attack",
-      "primary_channel_after": 69,
-      "primary_channel_before": 38
-    },
-    {
-      "card_id": "P-75955:WC-1950",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": 16,
-      "delta_primary_channel": 31,
-      "overall_after": 88,
-      "overall_before": 72,
-      "player_id": "P-75955",
-      "position": "DF",
-      "primary_channel": "defense",
       "primary_channel_after": 69,
       "primary_channel_before": 38
     },
@@ -2005,20 +2005,6 @@
       "primary_channel_before": 34
     },
     {
-      "card_id": "P-52002:WC-1966",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": 16,
-      "delta_primary_channel": 30,
-      "overall_after": 88,
-      "overall_before": 72,
-      "player_id": "P-52002",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 69,
-      "primary_channel_before": 39
-    },
-    {
       "card_id": "P-62157:WC-2014",
       "career_coverage": 0.6,
       "career_stature_score": 0.345617,
@@ -2104,8 +2090,8 @@
     },
     {
       "card_id": "P-42326:WC-2018",
-      "career_coverage": 0.25,
-      "career_stature_score": 0.1125,
+      "career_coverage": 0.4,
+      "career_stature_score": 0.172406,
       "delta_overall": -5,
       "delta_primary_channel": -30,
       "overall_after": 88,
@@ -2185,6 +2171,34 @@
       "primary_channel": "defense",
       "primary_channel_after": 62,
       "primary_channel_before": 33
+    },
+    {
+      "card_id": "P-52816:WC-1962",
+      "career_coverage": 0.631579,
+      "career_stature_score": 0.358845,
+      "delta_overall": 14,
+      "delta_primary_channel": 29,
+      "overall_after": 92,
+      "overall_before": 78,
+      "player_id": "P-52816",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 83,
+      "primary_channel_before": 54
+    },
+    {
+      "card_id": "P-68170:WC-1966",
+      "career_coverage": 0.547368,
+      "career_stature_score": 0.336814,
+      "delta_overall": 14,
+      "delta_primary_channel": 29,
+      "overall_after": 90,
+      "overall_before": 76,
+      "player_id": "P-68170",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 78,
+      "primary_channel_before": 49
     },
     {
       "card_id": "P-72864:WC-1970",
@@ -2495,6 +2509,20 @@
       "primary_channel_before": 55
     },
     {
+      "card_id": "P-68170:WC-1974",
+      "career_coverage": 0.547368,
+      "career_stature_score": 0.336814,
+      "delta_overall": 14,
+      "delta_primary_channel": 28,
+      "overall_after": 89,
+      "overall_before": 75,
+      "player_id": "P-68170",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 75,
+      "primary_channel_before": 47
+    },
+    {
       "card_id": "P-95834:WC-1966",
       "career_coverage": 0.368421,
       "career_stature_score": 0.322975,
@@ -2577,6 +2605,34 @@
       "primary_channel": "defense",
       "primary_channel_after": 92,
       "primary_channel_before": 64
+    },
+    {
+      "card_id": "P-14080:WC-1974",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": -7,
+      "delta_primary_channel": -28,
+      "overall_after": 88,
+      "overall_before": 95,
+      "player_id": "P-14080",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 66,
+      "primary_channel_before": 94
+    },
+    {
+      "card_id": "P-74455:WC-1966",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": -6,
+      "delta_primary_channel": -28,
+      "overall_after": 88,
+      "overall_before": 94,
+      "player_id": "P-74455",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 66,
+      "primary_channel_before": 94
     },
     {
       "card_id": "P-03775:WC-1982",
@@ -2719,20 +2775,6 @@
       "primary_channel_before": 90
     },
     {
-      "card_id": "P-25829:WC-1970",
-      "career_coverage": 0.315789,
-      "career_stature_score": 0.163375,
-      "delta_overall": -4,
-      "delta_primary_channel": -28,
-      "overall_after": 88,
-      "overall_before": 92,
-      "player_id": "P-25829",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 62,
-      "primary_channel_before": 90
-    },
-    {
       "card_id": "P-35173:WC-2022",
       "career_coverage": null,
       "career_stature_score": null,
@@ -2748,8 +2790,8 @@
     },
     {
       "card_id": "P-42227:WC-2006",
-      "career_coverage": 0.25,
-      "career_stature_score": 0.1125,
+      "career_coverage": 0.4,
+      "career_stature_score": 0.172406,
       "delta_overall": -4,
       "delta_primary_channel": -28,
       "overall_after": 88,
@@ -2999,6 +3041,20 @@
       "primary_channel_before": 58
     },
     {
+      "card_id": "P-85176:WC-2006",
+      "career_coverage": 0.58,
+      "career_stature_score": 0.412111,
+      "delta_overall": 12,
+      "delta_primary_channel": 27,
+      "overall_after": 93,
+      "overall_before": 81,
+      "player_id": "P-85176",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 88,
+      "primary_channel_before": 61
+    },
+    {
       "card_id": "P-94135:WC-1930",
       "career_coverage": 0.5,
       "career_stature_score": 0.36,
@@ -3139,34 +3195,6 @@
       "primary_channel_before": 49
     },
     {
-      "card_id": "P-52002:WC-1954",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": 14,
-      "delta_primary_channel": 26,
-      "overall_after": 89,
-      "overall_before": 75,
-      "player_id": "P-52002",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 74,
-      "primary_channel_before": 48
-    },
-    {
-      "card_id": "P-75955:WC-1954",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": 14,
-      "delta_primary_channel": 26,
-      "overall_after": 89,
-      "overall_before": 75,
-      "player_id": "P-75955",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 74,
-      "primary_channel_before": 48
-    },
-    {
       "card_id": "P-95834:WC-1974",
       "career_coverage": 0.368421,
       "career_stature_score": 0.322975,
@@ -3179,6 +3207,20 @@
       "primary_channel": "defense",
       "primary_channel_after": 73,
       "primary_channel_before": 47
+    },
+    {
+      "card_id": "P-42920:WC-1982",
+      "career_coverage": 0.547368,
+      "career_stature_score": 0.337765,
+      "delta_overall": 13,
+      "delta_primary_channel": 26,
+      "overall_after": 89,
+      "overall_before": 76,
+      "player_id": "P-42920",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 75,
+      "primary_channel_before": 49
     },
     {
       "card_id": "P-61703:WC-2002",
@@ -3951,20 +3993,6 @@
       "primary_channel_before": 42
     },
     {
-      "card_id": "P-52002:WC-1958",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": 14,
-      "delta_primary_channel": 24,
-      "overall_after": 89,
-      "overall_before": 75,
-      "player_id": "P-52002",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 72,
-      "primary_channel_before": 48
-    },
-    {
       "card_id": "P-89392:WC-2018",
       "career_coverage": 0.48,
       "career_stature_score": 0.266063,
@@ -3991,6 +4019,20 @@
       "primary_channel": "midfield",
       "primary_channel_after": 58,
       "primary_channel_before": 34
+    },
+    {
+      "card_id": "P-51089:WC-2006",
+      "career_coverage": 0.48,
+      "career_stature_score": 0.316252,
+      "delta_overall": 13,
+      "delta_primary_channel": 24,
+      "overall_after": 90,
+      "overall_before": 77,
+      "player_id": "P-51089",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 76,
+      "primary_channel_before": 52
     },
     {
       "card_id": "P-89177:WC-2014",
@@ -4287,6 +4329,20 @@
       "primary_channel_before": 77
     },
     {
+      "card_id": "P-55991:WC-2002",
+      "career_coverage": 0.67,
+      "career_stature_score": 0.349993,
+      "delta_overall": 11,
+      "delta_primary_channel": 23,
+      "overall_after": 91,
+      "overall_before": 80,
+      "player_id": "P-55991",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 80,
+      "primary_channel_before": 57
+    },
+    {
       "card_id": "P-43222:WC-1998",
       "career_coverage": 0.610526,
       "career_stature_score": 0.416926,
@@ -4341,6 +4397,20 @@
       "primary_channel": "attack",
       "primary_channel_after": 77,
       "primary_channel_before": 100
+    },
+    {
+      "card_id": "P-48831:WC-1982",
+      "career_coverage": 0.631579,
+      "career_stature_score": 0.265347,
+      "delta_overall": -6,
+      "delta_primary_channel": -23,
+      "overall_after": 89,
+      "overall_before": 95,
+      "player_id": "P-48831",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 72,
+      "primary_channel_before": 95
     },
     {
       "card_id": "P-03775:WC-1978",
@@ -4665,34 +4735,6 @@
       "primary_channel_before": 47
     },
     {
-      "card_id": "P-68170:WC-1966",
-      "career_coverage": 0.315789,
-      "career_stature_score": 0.263945,
-      "delta_overall": 13,
-      "delta_primary_channel": 22,
-      "overall_after": 89,
-      "overall_before": 76,
-      "player_id": "P-68170",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 71,
-      "primary_channel_before": 49
-    },
-    {
-      "card_id": "P-52816:WC-1962",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.288396,
-      "delta_overall": 12,
-      "delta_primary_channel": 22,
-      "overall_after": 90,
-      "overall_before": 78,
-      "player_id": "P-52816",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 76,
-      "primary_channel_before": 54
-    },
-    {
       "card_id": "P-09730:WC-1934",
       "career_coverage": 0.3,
       "career_stature_score": 0.27,
@@ -4791,20 +4833,6 @@
       "primary_channel_before": 91
     },
     {
-      "card_id": "P-55991:WC-2006",
-      "career_coverage": 0.42,
-      "career_stature_score": 0.22173,
-      "delta_overall": -3,
-      "delta_primary_channel": -22,
-      "overall_after": 88,
-      "overall_before": 91,
-      "player_id": "P-55991",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 66,
-      "primary_channel_before": 88
-    },
-    {
       "card_id": "P-04469:WC-2006",
       "career_coverage": 0.25,
       "career_stature_score": 0.1125,
@@ -4890,8 +4918,8 @@
     },
     {
       "card_id": "P-42326:WC-2022",
-      "career_coverage": 0.25,
-      "career_stature_score": 0.1125,
+      "career_coverage": 0.4,
+      "career_stature_score": 0.172406,
       "delta_overall": -2,
       "delta_primary_channel": -22,
       "overall_after": 88,
@@ -5197,20 +5225,6 @@
       "primary_channel_before": 44
     },
     {
-      "card_id": "P-68170:WC-1974",
-      "career_coverage": 0.315789,
-      "career_stature_score": 0.263945,
-      "delta_overall": 13,
-      "delta_primary_channel": 21,
-      "overall_after": 88,
-      "overall_before": 75,
-      "player_id": "P-68170",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 68,
-      "primary_channel_before": 47
-    },
-    {
       "card_id": "P-80404:WC-1990",
       "career_coverage": 1.0,
       "career_stature_score": 0.625262,
@@ -5505,6 +5519,20 @@
       "primary_channel_before": 83
     },
     {
+      "card_id": "P-14080:WC-1966",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": 0,
+      "delta_primary_channel": 21,
+      "overall_after": 73,
+      "overall_before": 73,
+      "player_id": "P-14080",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 62,
+      "primary_channel_before": 41
+    },
+    {
       "card_id": "P-56947:WC-2002",
       "career_coverage": 0.58,
       "career_stature_score": 0.289892,
@@ -5561,18 +5589,18 @@
       "primary_channel_before": 59
     },
     {
-      "card_id": "P-85176:WC-2006",
-      "career_coverage": 0.43,
-      "career_stature_score": 0.343416,
+      "card_id": "P-52816:WC-1970",
+      "career_coverage": 0.631579,
+      "career_stature_score": 0.358845,
       "delta_overall": 10,
       "delta_primary_channel": 20,
       "overall_after": 91,
       "overall_before": 81,
-      "player_id": "P-85176",
+      "player_id": "P-52816",
       "position": "DF",
       "primary_channel": "defense",
-      "primary_channel_after": 81,
-      "primary_channel_before": 61
+      "primary_channel_after": 80,
+      "primary_channel_before": 60
     },
     {
       "card_id": "P-05318:WC-2022",
@@ -5615,6 +5643,20 @@
       "primary_channel": "midfield",
       "primary_channel_after": 95,
       "primary_channel_before": 75
+    },
+    {
+      "card_id": "P-55991:WC-1998",
+      "career_coverage": 0.67,
+      "career_stature_score": 0.349993,
+      "delta_overall": -8,
+      "delta_primary_channel": -20,
+      "overall_after": 91,
+      "overall_before": 99,
+      "player_id": "P-55991",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 80,
+      "primary_channel_before": 100
     },
     {
       "card_id": "P-56486:WC-1930",
@@ -6161,34 +6203,6 @@
       "primary_channel": "midfield",
       "primary_channel_after": 72,
       "primary_channel_before": 53
-    },
-    {
-      "card_id": "P-42920:WC-1982",
-      "career_coverage": 0.315789,
-      "career_stature_score": 0.265,
-      "delta_overall": 12,
-      "delta_primary_channel": 19,
-      "overall_after": 88,
-      "overall_before": 76,
-      "player_id": "P-42920",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 68,
-      "primary_channel_before": 49
-    },
-    {
-      "card_id": "P-51089:WC-2006",
-      "career_coverage": 0.33,
-      "career_stature_score": 0.266758,
-      "delta_overall": 12,
-      "delta_primary_channel": 19,
-      "overall_after": 89,
-      "overall_before": 77,
-      "player_id": "P-51089",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 71,
-      "primary_channel_before": 52
     },
     {
       "card_id": "P-55511:WC-2002",
@@ -7003,20 +7017,6 @@
       "primary_channel_before": 80
     },
     {
-      "card_id": "P-14080:WC-1970",
-      "career_coverage": 0.263158,
-      "career_stature_score": 0.1375,
-      "delta_overall": -1,
-      "delta_primary_channel": -18,
-      "overall_after": 88,
-      "overall_before": 89,
-      "player_id": "P-14080",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 80
-    },
-    {
       "card_id": "P-14923:WC-1970",
       "career_coverage": null,
       "career_stature_score": null,
@@ -7619,6 +7619,20 @@
       "primary_channel_before": 96
     },
     {
+      "card_id": "P-25829:WC-1970",
+      "career_coverage": 0.547368,
+      "career_stature_score": 0.246201,
+      "delta_overall": -3,
+      "delta_primary_channel": -17,
+      "overall_after": 89,
+      "overall_before": 92,
+      "player_id": "P-25829",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 73,
+      "primary_channel_before": 90
+    },
+    {
       "card_id": "P-08136:WC-1954",
       "career_coverage": 0.3,
       "career_stature_score": 0.18,
@@ -8053,6 +8067,20 @@
       "primary_channel_before": 83
     },
     {
+      "card_id": "P-51089:WC-2002",
+      "career_coverage": 0.48,
+      "career_stature_score": 0.316252,
+      "delta_overall": 9,
+      "delta_primary_channel": 16,
+      "overall_after": 90,
+      "overall_before": 81,
+      "player_id": "P-51089",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 76,
+      "primary_channel_before": 60
+    },
+    {
       "card_id": "P-34670:WC-2002",
       "career_coverage": 0.5,
       "career_stature_score": 0.3086,
@@ -8135,20 +8163,6 @@
       "primary_channel": "midfield",
       "primary_channel_after": 90,
       "primary_channel_before": 74
-    },
-    {
-      "card_id": "P-51089:WC-2010",
-      "career_coverage": 0.33,
-      "career_stature_score": 0.266758,
-      "delta_overall": -4,
-      "delta_primary_channel": -16,
-      "overall_after": 89,
-      "overall_before": 93,
-      "player_id": "P-51089",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 75,
-      "primary_channel_before": 91
     },
     {
       "card_id": "P-64348:WC-2010",
@@ -8341,20 +8355,6 @@
       "overall_after": 88,
       "overall_before": 88,
       "player_id": "P-45712",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 78
-    },
-    {
-      "card_id": "P-48831:WC-1978",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.184625,
-      "delta_overall": 0,
-      "delta_primary_channel": -16,
-      "overall_after": 88,
-      "overall_before": 88,
-      "player_id": "P-48831",
       "position": "GK",
       "primary_channel": "goalkeeping",
       "primary_channel_after": 62,
@@ -8849,6 +8849,20 @@
       "primary_channel": "attack",
       "primary_channel_after": 86,
       "primary_channel_before": 71
+    },
+    {
+      "card_id": "P-42920:WC-1994",
+      "career_coverage": 0.547368,
+      "career_stature_score": 0.337765,
+      "delta_overall": 7,
+      "delta_primary_channel": 15,
+      "overall_after": 91,
+      "overall_before": 84,
+      "player_id": "P-42920",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 81,
+      "primary_channel_before": 66
     },
     {
       "card_id": "P-90908:WC-2018",
@@ -9579,6 +9593,20 @@
       "primary_channel_before": 92
     },
     {
+      "card_id": "P-14080:WC-1970",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": -1,
+      "delta_primary_channel": -14,
+      "overall_after": 88,
+      "overall_before": 89,
+      "player_id": "P-14080",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 66,
+      "primary_channel_before": 80
+    },
+    {
       "card_id": "P-69834:WC-1982",
       "career_coverage": 0.494737,
       "career_stature_score": 0.2089,
@@ -10069,6 +10097,20 @@
       "primary_channel_before": 76
     },
     {
+      "card_id": "P-48831:WC-1970",
+      "career_coverage": 0.631579,
+      "career_stature_score": 0.265347,
+      "delta_overall": 10,
+      "delta_primary_channel": 13,
+      "overall_after": 88,
+      "overall_before": 78,
+      "player_id": "P-48831",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 67,
+      "primary_channel_before": 54
+    },
+    {
       "card_id": "P-16938:WC-1990",
       "career_coverage": 0.347368,
       "career_stature_score": 0.207333,
@@ -10109,20 +10151,6 @@
       "primary_channel": "midfield",
       "primary_channel_after": 74,
       "primary_channel_before": 61
-    },
-    {
-      "card_id": "P-52816:WC-1970",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.288396,
-      "delta_overall": 8,
-      "delta_primary_channel": 13,
-      "overall_after": 89,
-      "overall_before": 81,
-      "player_id": "P-52816",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 73,
-      "primary_channel_before": 60
     },
     {
       "card_id": "P-01173:WC-1954",
@@ -10179,20 +10207,6 @@
       "primary_channel": "defense",
       "primary_channel_after": 45,
       "primary_channel_before": 32
-    },
-    {
-      "card_id": "P-52816:WC-1966",
-      "career_coverage": 0.4,
-      "career_stature_score": 0.288396,
-      "delta_overall": -2,
-      "delta_primary_channel": -13,
-      "overall_after": 90,
-      "overall_before": 92,
-      "player_id": "P-52816",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 77,
-      "primary_channel_before": 90
     },
     {
       "card_id": "P-31830:WC-1978",
@@ -10951,20 +10965,6 @@
       "primary_channel_before": 74
     },
     {
-      "card_id": "P-52002:WC-1962",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": -1,
-      "delta_primary_channel": -12,
-      "overall_after": 90,
-      "overall_before": 91,
-      "player_id": "P-52002",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 76,
-      "primary_channel_before": 88
-    },
-    {
       "card_id": "P-52190:WC-1950",
       "career_coverage": null,
       "career_stature_score": null,
@@ -11019,34 +11019,6 @@
       "primary_channel": "defense",
       "primary_channel_after": 62,
       "primary_channel_before": 74
-    },
-    {
-      "card_id": "P-75955:WC-1958",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": -1,
-      "delta_primary_channel": -12,
-      "overall_after": 90,
-      "overall_before": 91,
-      "player_id": "P-75955",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 76,
-      "primary_channel_before": 88
-    },
-    {
-      "card_id": "P-75955:WC-1962",
-      "career_coverage": 0.5,
-      "career_stature_score": 0.275,
-      "delta_overall": -1,
-      "delta_primary_channel": -12,
-      "overall_after": 90,
-      "overall_before": 91,
-      "player_id": "P-75955",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 76,
-      "primary_channel_before": 88
     },
     {
       "card_id": "P-87073:WC-1950",
@@ -11595,6 +11567,20 @@
       "primary_channel_before": 56
     },
     {
+      "card_id": "P-48831:WC-1974",
+      "career_coverage": 0.631579,
+      "career_stature_score": 0.265347,
+      "delta_overall": 9,
+      "delta_primary_channel": 11,
+      "overall_after": 88,
+      "overall_before": 79,
+      "player_id": "P-48831",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 68,
+      "primary_channel_before": 57
+    },
+    {
       "card_id": "P-32798:WC-2022",
       "career_coverage": 0.33,
       "career_stature_score": 0.264172,
@@ -11603,20 +11589,6 @@
       "overall_after": 89,
       "overall_before": 81,
       "player_id": "P-32798",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 71,
-      "primary_channel_before": 60
-    },
-    {
-      "card_id": "P-51089:WC-2002",
-      "career_coverage": 0.33,
-      "career_stature_score": 0.266758,
-      "delta_overall": 8,
-      "delta_primary_channel": 11,
-      "overall_after": 89,
-      "overall_before": 81,
-      "player_id": "P-51089",
       "position": "DF",
       "primary_channel": "defense",
       "primary_channel_after": 71,
@@ -11705,6 +11677,20 @@
       "primary_channel": "midfield",
       "primary_channel_after": 81,
       "primary_channel_before": 92
+    },
+    {
+      "card_id": "P-51089:WC-2010",
+      "career_coverage": 0.48,
+      "career_stature_score": 0.316252,
+      "delta_overall": -2,
+      "delta_primary_channel": -11,
+      "overall_after": 91,
+      "overall_before": 93,
+      "player_id": "P-51089",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 80,
+      "primary_channel_before": 91
     },
     {
       "card_id": "P-00643:WC-1986",
@@ -12447,6 +12433,20 @@
       "primary_channel": "defense",
       "primary_channel_after": 70,
       "primary_channel_before": 60
+    },
+    {
+      "card_id": "P-35183:WC-1998",
+      "career_coverage": 0.43,
+      "career_stature_score": 0.299685,
+      "delta_overall": 7,
+      "delta_primary_channel": 10,
+      "overall_after": 90,
+      "overall_before": 83,
+      "player_id": "P-35183",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 75,
+      "primary_channel_before": 65
     },
     {
       "card_id": "P-49097:WC-2006",
@@ -13219,20 +13219,6 @@
       "primary_channel_before": 46
     },
     {
-      "card_id": "P-55991:WC-2002",
-      "career_coverage": 0.42,
-      "career_stature_score": 0.22173,
-      "delta_overall": 8,
-      "delta_primary_channel": 8,
-      "overall_after": 88,
-      "overall_before": 80,
-      "player_id": "P-55991",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 65,
-      "primary_channel_before": 57
-    },
-    {
       "card_id": "P-71661:WC-2014",
       "career_coverage": 0.33,
       "career_stature_score": 0.205049,
@@ -13275,6 +13261,20 @@
       "primary_channel_before": 55
     },
     {
+      "card_id": "P-74455:WC-1970",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": 8,
+      "delta_primary_channel": 5,
+      "overall_after": 88,
+      "overall_before": 80,
+      "player_id": "P-74455",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 63,
+      "primary_channel_before": 58
+    },
+    {
       "card_id": "P-12470:WC-1994",
       "career_coverage": 0.347368,
       "career_stature_score": 0.203903,
@@ -13293,5 +13293,5 @@
     "abs_delta_overall_min": 8,
     "abs_delta_primary_channel_min": 10
   },
-  "version": "career-stature-2.0.0"
+  "version": "career-stature-2.1.0"
 }

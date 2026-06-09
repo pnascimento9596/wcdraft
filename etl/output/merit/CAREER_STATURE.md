@@ -1,17 +1,17 @@
-# Career-stature composite (career-stature-2.0.0)
+# Career-stature composite (career-stature-2.1.0)
 
 Per-player career-stature BASE consumed by the stature-dominant rating stage (MV2-4). NOT a rating. Built deterministically from the committed `merit/source_facts.json` (merit-source-set-2.0.0) + canonical men's World Cup years.
 
 - Players scored: **791**
-- Material-stature (coverage ≥ 0.25 AND index ≥ 0.4): **203** (the cohort the rating stage ramps onto the stature-dominant path; the rest stay raw-tournament)
-- Factual legends: **111**
-- Tier cuts (index quantiles of the material cohort): gold ≥ `0.812635`, silver ≥ `0.617725`, bronze = qualifying remainder
+- Material-stature (coverage ≥ 0.25 AND index ≥ 0.4): **207** (the cohort the rating stage ramps onto the stature-dominant path; the rest stay raw-tournament)
+- Factual legends: **112**
+- Tier cuts (index quantiles of the material cohort): gold ≥ `0.809391`, silver ≥ `0.631647`, bronze = qualifying remainder
 
 ## Score / index distribution by era bucket
 
 | Era | players | score min/med/max | index min/med/max |
 |---|---:|---|---|
-| `pre_1956` | 58 | 0.044 / 0.275 / 0.671 | 0.089 / 0.537 / 0.992 |
+| `pre_1956` | 58 | 0.044 / 0.360 / 0.671 | 0.089 / 0.665 / 0.992 |
 | `1956_1990` | 200 | 0.000 / 0.180 / 0.625 | 0.000 / 0.360 / 0.952 |
 | `1991_plus` | 533 | 0.020 / 0.060 / 0.609 | 0.040 / 0.121 / 0.938 |
 
@@ -19,8 +19,8 @@ Per-player career-stature BASE consumed by the stature-dominant rating stage (MV
 
 | Position | material players | index min/med/max |
 |---|---:|---|
-| GK | 11 | 0.450 / 0.552 / 0.777 |
-| DF | 28 | 0.430 / 0.529 / 0.889 |
+| GK | 15 | 0.446 / 0.552 / 0.777 |
+| DF | 31 | 0.430 / 0.598 / 0.889 |
 | MF | 36 | 0.413 / 0.643 / 0.952 |
 | FW | 27 | 0.410 / 0.682 / 0.938 |
 
@@ -31,8 +31,8 @@ Per-player career-stature BASE consumed by the stature-dominant rating stage (MV
 | `global_annual_multi_winner` | 31 |
 | `global_annual_winner_with_corroboration` | 21 |
 | `approved_all_time_selection` | 54 |
-| `position_balanced_world_xi_3plus` | 49 |
-| `retrospective_plus_major_fact` | 59 |
+| `position_balanced_world_xi_3plus` | 50 |
+| `retrospective_plus_major_fact` | 60 |
 
 ## Canonical-greats checklist (de-risk signal)
 
@@ -52,7 +52,7 @@ Per-player career-stature BASE consumed by the stature-dominant rating stage (MV
 | Michel Platini | `1956_1990` | 0.455 | 0.804 | 0.61 | silver | ✓ |
 | Zico | `1956_1990` | 0.518 | 0.859 | 0.95 | gold | ✓ |
 | Karl-Heinz Rummenigge | `1956_1990` | 0.552 | 0.889 | 0.84 | gold | ✓ |
-| Franco Baresi (DF) | `1956_1990` | 0.265 | 0.522 | 0.32 | bronze | ✓ |
+| Franco Baresi (DF) | `1956_1990` | 0.338 | 0.632 | 0.55 | silver | ✓ |
 | Lothar Matthäus | `1956_1990` | 0.554 | 0.891 | 0.89 | gold | ✓ |
 | Marco van Basten | `1956_1990` | 0.438 | 0.781 | 0.53 | silver | ✓ |
 | Roberto Baggio | `1956_1990` | 0.512 | 0.854 | 0.76 | gold | ✓ |
@@ -70,7 +70,7 @@ Per-player career-stature BASE consumed by the stature-dominant rating stage (MV
 | Player | Era | Index | Cov | Tier | Legend | Reason codes |
 |---|---|---:|---:|---|---|---|
 | Paolo Maldini (DF) | `1956_1990` | 0.750 | 0.61 | silver | ✓ | global_annual_winner_with_corroboration, approved_all_time_selection, position_balanced_world_xi_3plus, retrospective_plus_major_fact |
-| Franco Baresi (DF) | `1956_1990` | 0.522 | 0.32 | bronze | ✓ | approved_all_time_selection, retrospective_plus_major_fact |
+| Franco Baresi (DF) | `1956_1990` | 0.632 | 0.55 | silver | ✓ | approved_all_time_selection, retrospective_plus_major_fact |
 | Franz Beckenbauer (DF) | `1956_1990` | 0.889 | 0.89 | gold | ✓ | global_annual_multi_winner, approved_all_time_selection, retrospective_plus_major_fact |
 | Cafu (DF) | `1991_plus` | 0.656 | 0.58 | silver | ✓ | approved_all_time_selection, retrospective_plus_major_fact |
 | Lev Yashin (GK) | `1956_1990` | 0.738 | 0.53 | silver | ✓ | global_annual_winner_with_corroboration, approved_all_time_selection |

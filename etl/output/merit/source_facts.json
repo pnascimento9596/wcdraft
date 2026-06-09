@@ -1,5 +1,5 @@
 {
-  "fact_count": 2169,
+  "fact_count": 2189,
   "facts": [
     {
       "citation": {
@@ -13401,6 +13401,40 @@
       "year": 2002
     },
     {
+      "citation": {
+        "claim": "Peter Schmeichel was named the IFFHS World's Best Goalkeeper for 1992.",
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper"
+      },
+      "detail": "world_best_gk 1992",
+      "era": "1991_plus",
+      "family": "position_balanced_selection",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-35183",
+      "player_name": "Peter Schmeichel",
+      "position": "GK",
+      "raw_name": "Peter Schmeichel",
+      "source_id": "research_gk_award",
+      "year": 1992
+    },
+    {
+      "citation": {
+        "claim": "Peter Schmeichel was named the IFFHS World's Best Goalkeeper for 1993.",
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper"
+      },
+      "detail": "world_best_gk 1993",
+      "era": "1991_plus",
+      "family": "position_balanced_selection",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-35183",
+      "player_name": "Peter Schmeichel",
+      "position": "GK",
+      "raw_name": "Peter Schmeichel",
+      "source_id": "research_gk_award",
+      "year": 1993
+    },
+    {
       "detail": "uefa_best_gk 1997",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14907,6 +14941,23 @@
       "raw_name": "Franck Ribéry",
       "source_id": "uefa_team_of_the_year",
       "year": 2013
+    },
+    {
+      "citation": {
+        "claim": "Fabien Barthez was named the IFFHS World's Best Goalkeeper for 2000.",
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper"
+      },
+      "detail": "world_best_gk 2000",
+      "era": "1991_plus",
+      "family": "position_balanced_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-55991",
+      "player_name": "Fabien Barthez",
+      "position": "GK",
+      "raw_name": "Fabien Barthez",
+      "source_id": "research_gk_award",
+      "year": 2000
     },
     {
       "detail": "esm_tots DF 2018",
@@ -26661,6 +26712,23 @@
       "year": 2022
     },
     {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1974 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Sepp_Maier"
+      },
+      "detail": "WC All-Star Team WC-1974",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "West Germany",
+      "player_id": "P-14080",
+      "player_name": "Sepp Maier",
+      "position": "GK",
+      "raw_name": "Sepp Maier",
+      "source_id": "research_wc_all_star",
+      "year": 1974
+    },
+    {
       "detail": "Silver Boot WC-1954",
       "era": "pre_1956",
       "family": "wc_legacy",
@@ -26880,6 +26948,23 @@
       "raw_name": "Bronze Ball",
       "source_id": "wc_individual_awards_native",
       "year": 2014
+    },
+    {
+      "citation": {
+        "claim": "He was named to the 1970 World Cup All-Star Team.",
+        "url": "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres"
+      },
+      "detail": "WC All-Star Team WC-1970",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-25829",
+      "player_name": "Carlos Alberto",
+      "position": "DF",
+      "raw_name": "Carlos Alberto",
+      "source_id": "research_wc_all_star",
+      "year": 1970
     },
     {
       "detail": "Bronze Boot WC-1950",
@@ -27194,6 +27279,57 @@
       "year": 1958
     },
     {
+      "citation": {
+        "claim": "He was selected in the Team of the Tournament (World Cup All-Star Team) for the 2006 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Gianluca_Zambrotta"
+      },
+      "detail": "WC All-Star Team WC-2006",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42227",
+      "player_name": "Gianluca Zambrotta",
+      "position": "DF",
+      "raw_name": "Gianluca Zambrotta",
+      "source_id": "research_wc_all_star",
+      "year": 2006
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2018 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Rapha%C3%ABl_Varane"
+      },
+      "detail": "WC All-Star Team WC-2018",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-42326",
+      "player_name": "Raphaël Varane",
+      "position": "DF",
+      "raw_name": "Raphaël Varane",
+      "source_id": "research_wc_all_star",
+      "year": 2018
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team (Team of the tournament) for the 1990 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Franco_Baresi"
+      },
+      "detail": "WC All-Star Team WC-1990",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42920",
+      "player_name": "Franco Baresi",
+      "position": "DF",
+      "raw_name": "Franco Baresi",
+      "source_id": "research_wc_all_star",
+      "year": 1990
+    },
+    {
       "detail": "Golden Boot WC-1962",
       "era": "1956_1990",
       "family": "wc_legacy",
@@ -27218,6 +27354,23 @@
       "raw_name": "Golden Boot",
       "source_id": "wc_individual_awards_native",
       "year": 1962
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1982 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Dino_Zoff"
+      },
+      "detail": "WC All-Star Team WC-1982",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-48831",
+      "player_name": "Dino Zoff",
+      "position": "GK",
+      "raw_name": "Dino Zoff",
+      "source_id": "research_wc_all_star",
+      "year": 1982
     },
     {
       "detail": "Best Young Player WC-1974",
@@ -27285,6 +27438,23 @@
       "year": 1990
     },
     {
+      "citation": {
+        "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2010 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Carles_Puyol"
+      },
+      "detail": "WC All-Star Team WC-2010",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-51089",
+      "player_name": "Carles Puyol",
+      "position": "DF",
+      "raw_name": "Carles Puyol",
+      "source_id": "research_wc_all_star",
+      "year": 2010
+    },
+    {
       "detail": "Best Young Player WC-1998",
       "era": "1991_plus",
       "family": "wc_legacy",
@@ -27324,6 +27494,74 @@
       "year": 2010
     },
     {
+      "citation": {
+        "claim": "He was included in the World Cup All-Star Team for the 1954 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos"
+      },
+      "detail": "WC All-Star Team WC-1954",
+      "era": "pre_1956",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-52002",
+      "player_name": "Djalma Santos",
+      "position": "DF",
+      "raw_name": "Djalma Santos",
+      "source_id": "research_wc_all_star",
+      "year": 1954
+    },
+    {
+      "citation": {
+        "claim": "He was included in the World Cup All-Star Team for the 1958 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos"
+      },
+      "detail": "WC All-Star Team WC-1958",
+      "era": "pre_1956",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-52002",
+      "player_name": "Djalma Santos",
+      "position": "DF",
+      "raw_name": "Djalma Santos",
+      "source_id": "research_wc_all_star",
+      "year": 1958
+    },
+    {
+      "citation": {
+        "claim": "He was selected as a defender in the 1962 World Cup Team of the Tournament (All-Star Team).",
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos"
+      },
+      "detail": "WC All-Star Team WC-1962",
+      "era": "pre_1956",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-52002",
+      "player_name": "Djalma Santos",
+      "position": "DF",
+      "raw_name": "Djalma Santos",
+      "source_id": "research_wc_all_star",
+      "year": 1962
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1966 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Bobby_Moore"
+      },
+      "detail": "WC All-Star Team WC-1966",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-52816",
+      "player_name": "Bobby Moore",
+      "position": "DF",
+      "raw_name": "Bobby Moore",
+      "source_id": "research_wc_all_star",
+      "year": 1966
+    },
+    {
       "detail": "Bronze Boot WC-1966",
       "era": "1956_1990",
       "family": "wc_legacy",
@@ -27361,6 +27599,23 @@
       "raw_name": "Bronze Ball",
       "source_id": "wc_individual_awards_native",
       "year": 2002
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1998 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Fabien_Barthez"
+      },
+      "detail": "WC All-Star Team WC-1998",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-55991",
+      "player_name": "Fabien Barthez",
+      "position": "GK",
+      "raw_name": "Fabien Barthez",
+      "source_id": "research_wc_all_star",
+      "year": 1998
     },
     {
       "detail": "Golden Glove WC-1998",
@@ -27727,6 +27982,23 @@
       "year": 1938
     },
     {
+      "citation": {
+        "claim": "He was named to the Team of the Tournament (World Cup All-Star Team) at the 1970 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Giacinto_Facchetti"
+      },
+      "detail": "WC All-Star Team WC-1970",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-68170",
+      "player_name": "Giacinto Facchetti",
+      "position": "DF",
+      "raw_name": "Giacinto Facchetti",
+      "source_id": "research_wc_all_star",
+      "year": 1970
+    },
+    {
       "detail": "Best Young Player WC-1982",
       "era": "1956_1990",
       "family": "wc_legacy",
@@ -27857,6 +28129,23 @@
       "year": 2002
     },
     {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1966 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Gordon_Banks"
+      },
+      "detail": "WC All-Star Team WC-1966",
+      "era": "1956_1990",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-74455",
+      "player_name": "Gordon Banks",
+      "position": "GK",
+      "raw_name": "Gordon Banks",
+      "source_id": "research_wc_all_star",
+      "year": 1966
+    },
+    {
       "detail": "Golden Boot WC-1966",
       "era": "1956_1990",
       "family": "wc_legacy",
@@ -27868,6 +28157,23 @@
       "raw_name": "Golden Boot",
       "source_id": "wc_individual_awards_native",
       "year": 1966
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1958 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/N%C3%ADlton_Santos"
+      },
+      "detail": "WC All-Star Team WC-1958",
+      "era": "pre_1956",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-75955",
+      "player_name": "Nílton Santos",
+      "position": "DF",
+      "raw_name": "Nílton Santos",
+      "source_id": "research_wc_all_star",
+      "year": 1958
     },
     {
       "detail": "Golden Ball WC-1990",
@@ -28037,6 +28343,40 @@
       "raw_name": "Silver Boot",
       "source_id": "wc_individual_awards_native",
       "year": 1998
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 1998 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Roberto_Carlos"
+      },
+      "detail": "WC All-Star Team WC-1998",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-85176",
+      "player_name": "Roberto Carlos",
+      "position": "DF",
+      "raw_name": "Roberto Carlos",
+      "source_id": "research_wc_all_star",
+      "year": 1998
+    },
+    {
+      "citation": {
+        "claim": "He was named to the World Cup All-Star Team for the 2002 World Cup.",
+        "url": "https://en.wikipedia.org/wiki/Roberto_Carlos"
+      },
+      "detail": "WC All-Star Team WC-2002",
+      "era": "1991_plus",
+      "family": "wc_legacy",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-85176",
+      "player_name": "Roberto Carlos",
+      "position": "DF",
+      "raw_name": "Roberto Carlos",
+      "source_id": "research_wc_all_star",
+      "year": 2002
     },
     {
       "detail": "Silver Boot WC-1954",
