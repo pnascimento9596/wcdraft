@@ -125,8 +125,8 @@ export interface ManagerCardView {
 
 /**
  * Closed taxonomy of original, generic-football-descriptive manager trait
- * identifiers. The set is intentionally NOT modelled on EA / FIFA / Football
- * Manager attribute schemas. Labels are display-only flavor; they MUST NOT
+ * identifiers. The set is intentionally NOT modelled on any commercial
+ * football-game attribute schema. Labels are display-only flavor; they MUST NOT
  * be referenced anywhere in the simulation engine, scoring, or persisted
  * draft state.
  */
