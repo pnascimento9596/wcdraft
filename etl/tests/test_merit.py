@@ -381,11 +381,11 @@ def test_committed_outputs_are_in_sync_with_a_fresh_build(built):
 
 
 def test_source_set_and_stature_table_versions_are_independent():
-    """MV2-1 bumps the SOURCE-SET version but leaves the career-stature TABLE version
-    on v1 — the two axes move independently so the source breadth lands without
-    touching the v1 table (and therefore ratings)."""
+    """The two version axes move independently: MV2-1/2 bumped the SOURCE-SET to v2;
+    MV2-3 now bumps the career-stature TABLE to v2 to consume that breadth. They are
+    distinct strings (different schemas, different change cadences)."""
     assert SOURCE_SET_VERSION == "merit-source-set-2.0.0"
-    assert VERSION == "career-stature-1.0.0"
+    assert VERSION == "career-stature-2.0.0"
     assert SOURCE_SET_VERSION != VERSION
 
 
@@ -503,34 +503,29 @@ def test_v2_review_reasons_are_the_same_conservative_set(built):
     assert {r["reason"] for r in built["review"]} <= valid
 
 
-def test_v2_facts_do_not_leak_into_the_v1_stature_table():
-    """The scope guard, at the merit layer: the v1 career-stature table consumes
-    ONLY the v1 source set. Every v2-only source is filtered out, so the grown
-    source_facts.json leaves career_stature.json (and every rating) byte-identical."""
+def test_v2_stature_table_scores_the_full_source_set():
+    """MV2-3 removed the v1 isolation: the career-stature-2.0.0 table consumes the
+    FULL source_facts.json over the v2 position-balanced family taxonomy. The v2-only
+    families (regional / position-balanced / captaincy) now drive real family scores —
+    the inverse of the MV2-1 scope guard, which held the v1 table byte-identical."""
     from wcdraft_etl.merit import stature
 
-    committed = json.loads((MERIT_OUT / "source_facts.json").read_text())
-    v1 = stature._v1_facts(committed["facts"])
-    v1_sources = {f["source_id"] for f in v1}
-    assert "uefa_club_positional" not in v1_sources
-    assert "ballondor_dream_team" not in v1_sources
-    assert "african_poy" not in v1_sources
-    assert v1_sources <= set(stature._V1_SOURCE_FAMILY)
-    # And the relabelled v1 facts only carry v1 family names.
-    assert {f["family"] for f in v1} <= set(stature._V1_FAMILY_KEYS)
-
-
-def test_v1_stature_table_is_byte_identical_after_v2_expansion():
-    """A fresh v1 stature build over the GROWN source_facts.json reproduces the
-    committed career_stature.json byte-for-byte — ratings cannot have moved."""
-    from wcdraft_etl.merit import stature
-
-    out = stature.build(write=False)
-    rebuilt = json.dumps(out["table"], ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    committed = (
-        REPO_ROOT / "etl" / "output" / "career_stature.json"
-    ).read_text(encoding="utf-8")
-    assert rebuilt == committed
+    table = json.loads(
+        (REPO_ROOT / "etl" / "output" / "career_stature.json").read_text("utf-8")
+    )
+    assert table["version"] == "career-stature-2.0.0"
+    # The v2-only families carry positive scores on real rows — they are scored, not
+    # staged-and-ignored as they were under the v1 table.
+    for fam in (
+        "regional_annual_recognition",
+        "position_balanced_selection",
+        "captaincy",
+    ):
+        assert any(
+            (r["family_scores"].get(fam) or 0.0) > 0.0 for r in table["career_stature"]
+        ), f"v2 family {fam} contributes no family score — full set not consumed"
+    # The v1 isolation machinery is gone (no _v1_facts / _V1_* symbols remain).
+    assert not hasattr(stature, "_v1_facts")
 
 
 # ─── MV2-2: deterministic factual research backstop ───────────────────────────
@@ -623,17 +618,24 @@ def test_research_manifest_pins_bytes_so_editing_a_citation_is_detected(tmp_path
     assert parse_research.verify() == 0  # restored
 
 
-def test_research_facts_do_not_leak_into_the_v1_stature_table(research_facts):
-    """The scope guard holds for research too: research source_ids are not in the v1
-    source-family map, so stature._v1_facts drops them all — career_stature.json (and
-    every rating) is byte-identical to the pre-research base."""
-    from wcdraft_etl.merit import stature
-
-    research_sources = {f["source_id"] for f in research_facts}
-    assert research_sources  # there ARE research facts
-    assert research_sources.isdisjoint(set(stature._V1_SOURCE_FAMILY))
-    v1 = stature._v1_facts(research_facts)
-    assert v1 == []  # not one research row survives into the v1 table
+def test_research_facts_are_scored_by_the_v2_stature_table(research_facts):
+    """MV2-3 consumes the research backstop: every linked research fact reaches the
+    v2 career-stature table for its player (it is no longer filtered out as it was by
+    the v1 isolation), via the research family (captaincy / global_annual)."""
+    research_pids = {f["player_id"] for f in research_facts}
+    assert research_pids
+    table = json.loads(
+        (REPO_ROOT / "etl" / "output" / "career_stature.json").read_text("utf-8")
+    )
+    scored_pids = {r["player_id"] for r in table["career_stature"]}
+    # Every player carrying a research fact is scored by the v2 table.
+    assert research_pids <= scored_pids
+    # The research-fed families carry positive scores somewhere in the table.
+    research_families = {f["family"] for f in research_facts}
+    for fam in research_families:
+        assert any(
+            (r["family_scores"].get(fam) or 0.0) > 0.0 for r in table["career_stature"]
+        ), fam
 
 
 def test_research_activates_captaincy_and_closes_named_v1_gaps(research_facts, built):

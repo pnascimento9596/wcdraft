@@ -105,10 +105,10 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
     doc = {
         "version": VERSION,
         "note": (
-            "REVIEW ONLY — internal pre-lift (wc-perf-2.0.0 behavior) vs post-lift "
-            "(wc-perf-3.0.0) divergence. Never a source, never an override. An "
-            "external independent merit assembly may be diffed against this by a "
-            "reviewer but is not read by the build."
+            "REVIEW ONLY — raw-only baseline (career table disabled) vs the "
+            "stature-dominant wc-perf-4.0.0 output (career table enabled) divergence. "
+            "Never a source, never an override. An external independent merit assembly "
+            "may be diffed against this by a reviewer but is not read by the build."
         ),
         "thresholds": {
             "abs_delta_overall_min": DELTA_OVERALL_THRESHOLD,
