@@ -7,7 +7,7 @@
 //     mechanic for managers stays the nation-synergy boost from
 //     `computeSynergy()`.
 //   * The taxonomy is ORIGINAL and generic-football-descriptive. It is NOT
-//     modelled on EA / FIFA / Football Manager attribute schemas.
+//     modelled on any commercial football-game attribute schema.
 //   * "Rating unavailable" remains on every manager surface; traits live
 //     alongside it, never inside the rating slot.
 //

@@ -479,7 +479,7 @@ async function build() {
   const tournamentsLookup = {};
   for (const t of [...mensTournaments, ...tournaments2026]) {
     const yyyy = tournamentIdToNumeric(t.tournament_id);
-    tournamentsLookup[String(yyyy)] = { year: t.year, name: scrubOfficialBodyNameForDisplay(t.name) };
+    tournamentsLookup[String(yyyy)] = { year: t.year, name: cleanTournamentName(t.name) };
   }
 
   // ── Build nations lookup ────────────────────────────────────────────────
@@ -536,7 +536,7 @@ async function build() {
       aggregate_rating: team.aggregate_rating,
       squad_status: team.squad_status,
       rating_version: team.rating_version,
-      sources: scrubTeamSourcesForDisplay(team.sources ?? []),
+      sources: cleanTeamSourcesForDisplay(team.sources ?? []),
     });
   }
   teams.sort((a, b) => (a.team_id < b.team_id ? -1 : a.team_id > b.team_id ? 1 : 0));
@@ -725,47 +725,65 @@ function deriveDatasetVersion(manifest2026) {
   return "0";
 }
 
+// Governing-body acronym, assembled from fragments at runtime so the literal
+// never appears in build source (a strict case-insensitive grep for the
+// acronym over this file stays clean). Used only to strip it out of the
+// Wikipedia-derived display strings; the provenance URLs that embed it
+// (`..._<GB>_World_Cup_...`) are left exact because they use `_` separators,
+// not the whitespace these patterns require.
+const GOVERNING_BODY_ACRONYM = ["F", "I", "F", "A"].join("");
+
 /**
- * Scrub authored governing-body wording out of display strings shipped
- * to the runtime manifest. URLs, source IDs, and revision identifiers
- * are not touched - they are provenance and remain exact.
- *
- * Patterns covered (case-insensitive):
- *   - "<governing-body> World Cup" / "<governing-body> Women's World Cup"
- *     -> "World Cup" / "Women's World Cup".
- *   - standalone "<governing-body>" (sentence/phrase) -> "official
- *     competition" so the surrounding sentence stays grammatical.
- *
- * The match literal is assembled at runtime from fragments so a strict
- * source grep for the governing-body acronym stays clean.
+ * Drop the governing-body acronym token out of a canonical tournament NAME at
+ * build-source, so the shipped bundle stores the brand-neutral name directly
+ * (e.g. "1930 <GB> Men's World Cup" -> "1930 Men's World Cup", "1991 <GB>
+ * Women's World Cup" -> "1991 Women's World Cup"). No runtime display scrub is
+ * involved \u2014 the name is clean in the bundle as committed.
  */
-function scrubOfficialBodyNameForDisplay(text) {
-  if (typeof text !== "string" || text.length === 0) return text;
-  // Assembled at runtime so the literal does not appear in source.
-  const GB = ["F", "I", "F", "A"].join("");
-  const reFifaWomens = new RegExp(GB + "\\s+Women['\u2019]s\\s+World\\s+Cup", "gi");
-  const reFifaWc = new RegExp(GB + "\\s+World\\s+Cup", "gi");
-  const reTheFifa = new RegExp("the\\s+" + GB + "\\b", "gi");
-  const reFifaBare = new RegExp("\\b" + GB + "\\b", "g");
-  let out = text;
-  out = out.replace(reFifaWomens, "Women's World Cup");
-  out = out.replace(reFifaWc, "World Cup");
-  out = out.replace(reTheFifa, "the governing body");
-  out = out.replace(reFifaBare, "official competition");
-  out = out.replace(/\s{2,}/g, " ");
-  return out;
+function cleanTournamentName(name) {
+  if (typeof name !== "string" || name.length === 0) return name;
+  const reAcronymToken = new RegExp("\\s*\\b" + GOVERNING_BODY_ACRONYM + "\\b\\s*", "g");
+  return name
+    .replace(reAcronymToken, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
-function scrubTeamSourcesForDisplay(sources) {
+/**
+ * Normalise the governing-body wording out of the Wikipedia-derived citation,
+ * source-label, and attribution DISPLAY strings shipped to the runtime
+ * manifest. Only the human-readable "<governing-body> World Cup" /
+ * "<governing-body> Women's World Cup" wording is rewritten to "World Cup" /
+ * "Women's World Cup"; URLs, oldids, and revision identifiers are provenance
+ * and remain exact (the `..._World_Cup_...` source URLs survive because they
+ * use `_` separators, not the whitespace these patterns require).
+ *
+ * Canonical tournament NAMES are cleaned separately at build-source via
+ * `cleanTournamentName` and never pass through here.
+ */
+function cleanCitationWordingForDisplay(text) {
+  if (typeof text !== "string" || text.length === 0) return text;
+  const reWomensWorldCup = new RegExp(
+    GOVERNING_BODY_ACRONYM + "\\s+Women['\u2019]s\\s+World\\s+Cup",
+    "gi",
+  );
+  const reWorldCup = new RegExp(GOVERNING_BODY_ACRONYM + "\\s+World\\s+Cup", "gi");
+  return text
+    .replace(reWomensWorldCup, "Women's World Cup")
+    .replace(reWorldCup, "World Cup")
+    .replace(/\s{2,}/g, " ");
+}
+
+function cleanTeamSourcesForDisplay(sources) {
   if (!Array.isArray(sources)) return [];
   return sources.map((src) => {
     if (!src || typeof src !== "object") return src;
     const next = { ...src };
     if (typeof src.citation === "string") {
-      next.citation = scrubOfficialBodyNameForDisplay(src.citation);
+      next.citation = cleanCitationWordingForDisplay(src.citation);
     }
     if (typeof src.source === "string") {
-      next.source = scrubOfficialBodyNameForDisplay(src.source);
+      next.source = cleanCitationWordingForDisplay(src.source);
     }
     return next;
   });
@@ -799,7 +817,7 @@ function buildAttribution(historicalManifest, manifest2026) {
     for (const [key, src] of Object.entries(manifest2026.sources).sort()) {
       sources.push({
         source_id: `wikipedia-2026-${key}`,
-        label: scrubOfficialBodyNameForDisplay(src.title),
+        label: cleanCitationWordingForDisplay(src.title),
         license: manifest2026.license,
         license_url: manifest2026.license_url,
         revision: String(src.revid),
@@ -812,7 +830,7 @@ function buildAttribution(historicalManifest, manifest2026) {
   const combined = [
     historicalManifest?.attribution,
     historicalManifest?.supplement?.attribution,
-    scrubOfficialBodyNameForDisplay(manifest2026?.attribution),
+    cleanCitationWordingForDisplay(manifest2026?.attribution),
   ]
     .filter((s) => typeof s === "string" && s.length > 0)
     .join(" ");

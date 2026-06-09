@@ -55,11 +55,11 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 27740472,
-      "bytes_brotli": 643010,
-      "bytes_gzip": 1084551,
+      "bytes": 27739989,
+      "bytes_brotli": 642982,
+      "bytes_gzip": 1084532,
       "path": "draft-pool.compact.json",
-      "sha256": "d70c7ac33e7470d6d1f3caf03d09424bcbeb91bb7f8394d0f810178fc4f5a841"
+      "sha256": "7a737ac33fc33eb33e115ee5071f330d30ad65642fcf9d8e4bc77a8b8a1dba94"
     },
     "scenario_2026": {
       "bytes": 108826,

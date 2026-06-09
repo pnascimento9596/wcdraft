@@ -114,7 +114,7 @@ export interface DraftManagerCard {
 /**
  * The narrow per-tournament view the draft engine needs for ENGINE-V2 E-1 era
  * weighting. The engine MUST NOT infer year from `tournament_id`; real
- * tournament_ids happen to be FIFA's catalog ids, not years.
+ * tournament_ids happen to be the source catalog's ids, not years.
  */
 export interface DraftTournament {
   tournament_id: number;
