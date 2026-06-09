@@ -1,4 +1,4 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-2.0.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-3.0.0`)
 
 The 2026 World Cup opponents are **real** (the 48 final squads, group draw, and
 knockout bracket were published 2026-06-02). But the 2026 players have **no
@@ -20,6 +20,35 @@ not a replacement.
 > `packages/core/src/engine/calibration.ts` is UNCHANGED from `origin/main`.
 > No new ingestion; Phase 2 will add Ballon d'Or / all-time list signals
 > separately.
+
+> **proj-career-3.0.0 (merit-v2 MV2-5 — 2026 stature reconciliation):** linked
+> players (`link_status == "linked"`) whose canonical `career_stature.json` row
+> clears the material gate are reconciled onto the **same stature scale** as the
+> historical `wc-perf-4.x` cards: `projected_final = stature_target(pos, index) +
+> bounded projected-context modulation`, using the identical stature target,
+> continuity ramp, and tier-tightened caps as the historical model (imported, not
+> re-implemented). This fixes the headline gap — linked Messi-2026 was age-pinned
+> at 79 on the old raw formula and now reads on the stature scale; the 2026 legend
+> count is no longer 0. Minted / unlinked / ambiguous / linked-but-below-material
+> players **never** consult career stature and stay on the honest projected raw
+> path, with the projected raw composite mapped onto the shared raw-only internal
+> band `[REPLACEMENT_BASE, RAW_ONLY_GLOBAL_CEILING]` so a strong-caps-plus-top-
+> league role player **cannot** occupy the recognized-greats / legend band on the
+> projection alone (the fix for the spurious OVR-99 projected MF cards). Rows now
+> carry `overall_basis` (`career_stature_estimate` | `measured_performance`, never
+> `baseline_anchor_estimate`) and a first-class `legend` boolean joined from the
+> linked player's career row. The materialized `overall` here is **provisional** —
+> the unified historical+projected display curve is MV2-6; MV2-5 asserts the
+> INTERNAL (pre-display) score behavior. `calibration.ts` is still UNCHANGED.
+>
+> **Scale note (reviewer flag):** the projected raw composite sits on a higher
+> numeric scale than the historical tournament box score (2026 projected-raw
+> median ≈0.66 vs ≈0.43 historically; ≈58% of 2026 cards exceed the 0.62 ceiling
+> vs ≈12% historically). The historical hard clip `min(raw, ceiling)` would clamp
+> the majority of 2026 cards to an identical point — degenerating the display fit
+> and erasing the minnow-vs-power ordering. So 2026 maps the projected raw onto the
+> shared raw-only band rank-preserving instead of hard-clipping: same OUTCOME
+> (non-material confined below the greats band), scale-correct mechanism.
 
 This document is the companion to `etl/src/wcdraft_etl/rating_2026.py`; the
 code is the source of truth and every constant is `CALIBRATION`-flagged there.
@@ -159,10 +188,17 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-2.0.0`)
+* **projected rating version** check (`proj-career-3.0.0`)
 * **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
   no 100s)
-* **projected has no `overall_basis` field** (no estimate path)
+* **projected basis** is `career_stature_estimate` | `measured_performance`,
+  never `baseline_anchor_estimate`; both paths exercised by the real squads
+* **MV2-5 stature reconciliation (INTERNAL-score assertions):** minted/non-linked
+  never consume career stature; linked-material rides the stature scale (Messi no
+  longer age-dominated); the 4 previously-spurious OVR-99 cards are capped on the
+  raw-only band below the greats; the top of the internal distribution is material,
+  not raw artifacts; legend joins linked-material only; DF/GK legends are position-
+  channel-shaped; `link_status` missing fails loudly
 * projected rating bounds on the new band + honest-state nulls
 * **strong-nations-aggregate-higher invariant** holds on the compressed
   channel scale: every traditional power outranks every debutant/minnow
@@ -185,7 +221,10 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 ## Migration & versioning
 
-- `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0`.
-- The runtime data schema is unchanged.
+- `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0` →
+  `proj-career-3.0.0` (MV2-5 stature reconciliation).
+- Rows gain `overall_basis` and a first-class `legend` boolean (joined from
+  `career_stature.json` for linked players). `ratings_2026.json` and
+  `teams_2026.json` regenerate; the unified display curve is MV2-6.
 - See `RATING_METHODOLOGY.md` for the historical-pool curve details and the
   shared display-curve helpers.
