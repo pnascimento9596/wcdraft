@@ -15,6 +15,7 @@ import {
   RUNTIME_DATA_SCHEMA_VERSION,
   SCENARIO_2026_BUNDLE,
 } from "../src/index.js";
+import type { RuntimeRating } from "../src/types.js";
 
 describe("compact-data integrity", () => {
   it("manifest schema_version matches the runtime contract anchor", () => {
@@ -217,5 +218,40 @@ describe("compact-data integrity", () => {
         expect(r.overall_basis ?? r.provenance).toBeDefined();
       }
     }
+  });
+
+  // ── MV2-7 — optional source-derived `legend` field ─────────────────────────
+  //
+  // MV2-7 adds `legend?: boolean` to the RuntimeRating contract but does NOT
+  // wire the compact passthrough (the ETL already emits `legend`, so wiring it
+  // here would diverge the committed legend-less bundles from a rebuild and
+  // break the byte-identical golden gate). The DATA + REQUIRED-field bump land
+  // with the compact regen in MV2-10. These two assertions lock the interim
+  // state: the committed compact is legend-less, and the optional field is a
+  // valid, additive extension that the current bundle still satisfies.
+  describe("MV2-7 optional legend field", () => {
+    it("the committed compact is legend-less (field absent until the MV2-10 regen)", () => {
+      const withLegend = DRAFT_POOL_BUNDLE.ratings.filter(
+        (r) => r.legend !== undefined,
+      );
+      expect(
+        withLegend.length,
+        "no committed rating should carry `legend` yet — the compact passthrough lands in MV2-10",
+      ).toBe(0);
+    });
+
+    it("every committed rating already satisfies the updated (legend-optional) contract", () => {
+      // The field is OPTIONAL: an existing legend-less rating is a valid
+      // RuntimeRating as-is, and a legend-augmented rating is equally valid —
+      // proving the additive field does not invalidate the current bundle.
+      const sample = DRAFT_POOL_BUNDLE.ratings[0]!;
+      const legendless: RuntimeRating = sample; // compiles ⇒ optional, absent ok
+      expect(legendless.legend).toBeUndefined();
+
+      const augmented: RuntimeRating = { ...sample, legend: true };
+      expect(augmented.legend).toBe(true);
+      const suppressed: RuntimeRating = { ...sample, legend: false };
+      expect(suppressed.legend).toBe(false);
+    });
   });
 });

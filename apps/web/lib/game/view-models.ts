@@ -39,6 +39,13 @@ export interface CardRatingView {
     | "measured_performance"
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
+  /**
+   * Source-derived legend flag (MV2-7), carried through verbatim so the future
+   * memory mode can read it directly. `badge_kind` already folds it into the
+   * gold legend styling; this is the raw signal. `undefined` until the compact
+   * regenerates with legend data (MV2-10).
+   */
+  legend?: boolean;
   /** Folded display kind for the provenance/estimate/legend badge. */
   badge_kind: RatingBadgeKind;
   /** Human label for the provenance/estimate/legend badge. */
@@ -264,18 +271,26 @@ interface BadgeInputs {
     | "measured_performance"
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
+  /**
+   * Source-derived legend flag (MV2-7). When defined it is authoritative — an
+   * explicit `false` SUPPRESSES legend even for OVR≥96. Absent → fall back to
+   * the OVR≥96 heuristic below. The compact carries no legend yet, so today
+   * every card takes the fallback path (pure no-op vs. the old heuristic).
+   */
+  legend?: boolean;
 }
 
 /**
  * Order matters: legend > estimate > projected > historical.
- *   - LEGEND  : non-null OVR >= 96 (precious gold; rare and earned)
+ *   - LEGEND  : source-derived `legend` flag when present, else the historical
+ *               OVR≥96 heuristic (precious gold; rare and earned)
  *   - ESTIMATE: historical card flagged baseline_anchor_estimate (orange,
  *               low-certainty warning hue)
  *   - PROJECTED: 2026 projected-career provenance (periwinkle)
  *   - HISTORICAL: verified WC-performance signal (cyan, the everyday)
  */
 export function provenanceBadgeKind(r: BadgeInputs): RatingBadgeKind {
-  if (r.overall !== null && r.overall >= 96) return "legend";
+  if (r.legend ?? (r.overall !== null && r.overall >= 96)) return "legend";
   if (r.overall_basis === "baseline_anchor_estimate") return "estimate";
   if (r.provenance === "projected_career") return "projected";
   return "historical";

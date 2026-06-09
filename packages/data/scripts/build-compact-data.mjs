@@ -319,6 +319,14 @@ async function build() {
       rating_version: rating.rating_version,
       ...(rating.overall_basis ? { overall_basis: rating.overall_basis } : {}),
       ...(rating.appearances_source ? { appearances_source: rating.appearances_source } : {}),
+      // MV2-7 NOTE: the compact `legend` passthrough is intentionally NOT wired
+      // here. The ETL `ratings.json` ALREADY emits `legend` on every row, so a
+      // passthrough would immediately flow it into the compact and diverge from
+      // the committed legend-less bundles — breaking the byte-identical golden
+      // gate. The passthrough + REQUIRED-field bump land together with the
+      // compact regen in MV2-10, which owns that diff. Until then the runtime
+      // `RuntimeRating.legend` field stays optional+absent and the UI falls back
+      // to the OVR≥96 heuristic (see apps/web/lib/game/view-models.ts).
     };
     if (rating.overall_basis === "baseline_anchor_estimate") {
       estimateCount += 1;
