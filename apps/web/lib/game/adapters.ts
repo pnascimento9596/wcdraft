@@ -32,7 +32,11 @@ import type {
   PitchSlotView,
   PlayerCardView,
 } from "./view-models";
-import { provenanceBadgeKind, provenanceBadgeLabel } from "./view-models";
+import {
+  blindCardRatingView,
+  provenanceBadgeKind,
+  provenanceBadgeLabel,
+} from "./view-models";
 import { managerTraitsFor } from "./manager-traits";
 
 // ─── Tournament / nation lookups ─────────────────────────────────────────────
@@ -57,14 +61,25 @@ export function ratingFor(idx: GameDataIndexes, card_id: CardId | string): Runti
   return r;
 }
 
-function ratingView(r: RuntimeRating): CardRatingView {
+/**
+ * Memory (hidden) mode display options, threaded through the adapter joins.
+ * `blindRatings: true` strips rating signals from the returned VIEWS via
+ * `blindCardRatingView` — strictly display-layer; the engine-facing state
+ * (squad, ratings consumed by the sim) is never touched. Omitted/false is
+ * the classic path, byte-identical to before this option existed.
+ */
+export interface AdapterDisplayOptions {
+  blindRatings?: boolean;
+}
+
+function ratingView(r: RuntimeRating, opts?: AdapterDisplayOptions): CardRatingView {
   const badge_kind = provenanceBadgeKind({
     overall: r.overall,
     provenance: r.provenance,
     overall_basis: r.overall_basis,
     legend: r.legend,
   });
-  return {
+  const view: CardRatingView = {
     overall: r.overall,
     attack: r.attack,
     midfield: r.midfield,
@@ -77,6 +92,7 @@ function ratingView(r: RuntimeRating): CardRatingView {
     badge_kind,
     badge_label: provenanceBadgeLabel(badge_kind),
   };
+  return opts?.blindRatings ? blindCardRatingView(view) : view;
 }
 
 // ─── Player card lookup + view ───────────────────────────────────────────────
@@ -131,6 +147,7 @@ function nationCode(
 export function playerCardView(
   idx: GameDataIndexes,
   card_id: CardId | string,
+  opts?: AdapterDisplayOptions,
 ): PlayerCardView {
   const c = playerOrThrow(idx, card_id);
   const nation = nationOrThrow(idx, c.nation_id);
@@ -158,7 +175,7 @@ export function playerCardView(
     intl_goals: c.intl_goals,
     awards: c.awards,
     captain: c.captain,
-    rating: ratingView(r),
+    rating: ratingView(r, opts),
     stats: buildStats(c),
   };
 }
@@ -241,8 +258,9 @@ export function pitchSlotView(
   idx: GameDataIndexes,
   formation: FormationTemplate,
   slot: SquadSlot,
+  opts?: AdapterDisplayOptions,
 ): PitchSlotView {
-  const card = slot.card_id ? playerCardView(idx, slot.card_id) : null;
+  const card = slot.card_id ? playerCardView(idx, slot.card_id, opts) : null;
   return {
     slot_id: slot.slot_id,
     is_starter: slot.is_starter,
@@ -260,7 +278,11 @@ export interface PitchSlotViews {
   bench: PitchSlotView[];
 }
 
-export function pitchSlotViews(idx: GameDataIndexes, draft: DraftState): PitchSlotViews {
+export function pitchSlotViews(
+  idx: GameDataIndexes,
+  draft: DraftState,
+  opts?: AdapterDisplayOptions,
+): PitchSlotViews {
   const formation = FORMATION_TEMPLATES[draft.formation_id];
   if (!formation) {
     throw new MissingRecordError("formation", draft.formation_id);
@@ -268,7 +290,7 @@ export function pitchSlotViews(idx: GameDataIndexes, draft: DraftState): PitchSl
   const starters: PitchSlotView[] = [];
   const bench: PitchSlotView[] = [];
   for (const slot of draft.squad) {
-    const view = pitchSlotView(idx, formation, slot);
+    const view = pitchSlotView(idx, formation, slot, opts);
     if (slot.is_starter) starters.push(view);
     else bench.push(view);
   }
@@ -287,11 +309,12 @@ export function draftCandidateViews(
   idx: GameDataIndexes,
   draft: DraftState,
   spin: Spin | null,
+  opts?: AdapterDisplayOptions,
 ): DraftCandidateViews {
   if (!spin) return { spin: null, players: [], manager: null };
   const drafted = new Set(draft.deduped_player_ids);
   const players = spin.rolled_card_ids
-    .map((id) => playerCardView(idx, id))
+    .map((id) => playerCardView(idx, id, opts))
     .filter((v) => !drafted.has(v.player_id));
   const manager = spin.rolled_manager_card_id
     ? managerCardView(idx, spin.rolled_manager_card_id)

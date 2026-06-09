@@ -23,13 +23,25 @@ const AWARD_LABEL: Record<string, string> = {
 };
 
 /** Mini channel-bar height as a % of the fixed bar track. Honest: a measured
- *  zero renders as an empty bar, never a fabricated stub. */
-function barHeight(value: number): string {
+ *  zero renders as an empty bar, never a fabricated stub. `null` is the
+ *  Memory-mode blind — also an empty bar (hidden, not zero). */
+function barHeight(value: number | null): string {
+  if (value === null) return "0%";
   return `${Math.max(0, Math.min(100, value))}%`;
 }
 
-/** Compact channel bar (expanded detail). Honest: 0 means a measured zero. */
-function Channel({ label, value }: { label: string; value: number }) {
+/** Compact channel bar (expanded detail). Honest: 0 means a measured zero;
+ *  `null` is the Memory-mode blind and renders `—` with an empty track. */
+function Channel({ label, value }: { label: string; value: number | null }) {
+  if (value === null) {
+    return (
+      <div className={s.channel} title={`${label} hidden`}>
+        <span className={s.channelLabel}>{label}</span>
+        <span className={s.channelTrack} />
+        <span className={s.channelVal}>—</span>
+      </div>
+    );
+  }
   const clamped = Math.max(0, Math.min(100, value));
   return (
     <div className={s.channel} title={`${label} ${value}`}>

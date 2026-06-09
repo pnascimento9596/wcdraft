@@ -25,6 +25,7 @@ export function SynergyBar({
   result,
   delta = null,
   active = true,
+  blind = false,
 }: {
   result: SynergyResult;
   delta?: number | null;
@@ -35,10 +36,19 @@ export function SynergyBar({
    * raw score from `computeSynergy`.
    */
   active?: boolean;
+  /**
+   * Memory (hidden) mode — blind every Synergy NUMERIC (score, fill,
+   * delta, strength multiplier, links-live count, manager link) until the
+   * post-Simulate reveal. DISPLAY-ONLY: `result` is still the real
+   * `computeSynergy` output (the sim consumes it untouched); the link
+   * LINES on the pitch stay visible — they're structural, derivable from
+   * the visible flags. Default `false`: classic render path, untouched.
+   */
+  blind?: boolean;
 }) {
   const linked = result.linked_pairs.filter((p) => p.linked).length;
   const totalEdges = result.linked_pairs.length;
-  const showDash = !active || (linked === 0 && result.manager_link === 0);
+  const showDash = blind || !active || (linked === 0 && result.manager_link === 0);
   const overallText = showDash ? "—" : String(result.overall);
   const fillPct = showDash ? 0 : result.overall;
 
@@ -46,13 +56,13 @@ export function SynergyBar({
     <div
       className={s.synergyBar}
       role="group"
-      aria-label="Squad synergy summary"
+      aria-label={blind ? "Squad synergy summary — hidden until you simulate" : "Squad synergy summary"}
     >
       <div className={s.synergyBarHead}>
         <span className={s.synergyBarLabel}>Synergy</span>
         <span className={s.synergyBarScore} aria-live="polite">
           <span className={s.synergyBarNum}>{overallText}</span>
-          {delta != null && delta !== 0 ? (
+          {!blind && delta != null && delta !== 0 ? (
             <span className={delta > 0 ? s.deltaUp : s.deltaDown}>
               {delta > 0 ? "▲" : "▼"} {Math.abs(delta)}
             </span>
@@ -70,18 +80,24 @@ export function SynergyBar({
       <dl className={s.synergyBarFigures} aria-label="Synergy components">
         <div className={s.synergyBarFigure}>
           <dt>strength mult.</dt>
-          <dd>{result.multiplier.toFixed(2)}×</dd>
+          <dd>{blind ? "—" : `${result.multiplier.toFixed(2)}×`}</dd>
         </div>
         <div className={s.synergyBarFigure}>
           <dt>links live</dt>
           <dd>
-            {linked}
-            <span className={s.synergyBarFigureSub}>/{totalEdges}</span>
+            {blind ? (
+              "—"
+            ) : (
+              <>
+                {linked}
+                <span className={s.synergyBarFigureSub}>/{totalEdges}</span>
+              </>
+            )}
           </dd>
         </div>
         <div className={s.synergyBarFigure}>
           <dt>manager link</dt>
-          <dd>{Math.round(result.manager_link * 100)}%</dd>
+          <dd>{blind ? "—" : `${Math.round(result.manager_link * 100)}%`}</dd>
         </div>
       </dl>
     </div>
