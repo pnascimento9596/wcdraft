@@ -26,6 +26,10 @@ import {
   type SubmitRouteDeps,
 } from "../submit-route";
 import { allowAllSubmitRateLimiter } from "../submit-rate-limit";
+import {
+  createDbSubmitRateLimiter,
+  STORE_ERROR_RETRY_AFTER_SECONDS,
+} from "../submit-rate-limiter-db";
 import type { ValidationData } from "../validate";
 import { encodeBody } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
@@ -517,5 +521,65 @@ describe("rate-limit seam (step 5: after identity, before the pipeline)", () => 
     );
     expect(res.status).toBe(403);
     expect(limiterCalls).toBe(0);
+  });
+});
+
+// ─── U5: the REAL limiter through the route (deps-builder swap) ─────────────
+//
+// Same deps shape the production route builds — only `now`/`random` pinned.
+// Proves the swap needs zero route-logic changes and the 429 carries the
+// limiter's honest window remainder.
+
+describe("U5 — auth_rate_limits-backed limiter end-to-end", () => {
+  // UTC midnight → hourly window starts exactly here; Retry-After is exact.
+  const NOW = Date.UTC(2026, 5, 3);
+
+  async function pinnedSessionOpts(): Promise<ReqOpts> {
+    const { session, cookieValue } = await createSession(
+      { userId: null },
+      { db, now: () => NOW, cookieSecret: SECRET },
+    );
+    return {
+      sessionCookie: cookieValue,
+      csrfCookie: session.csrfSecret,
+      csrfHeader: session.csrfSecret,
+      origin: "http://localhost",
+      host: "localhost",
+    };
+  }
+
+  it("7th attempt in the hour → 429 RATE_LIMITED with honest Retry-After", async () => {
+    const opts = await pinnedSessionOpts();
+    const deps = makeDeps({
+      now: () => NOW,
+      rateLimiter: createDbSubmitRateLimiter({ db, now: () => NOW, random: () => 1 }),
+    });
+    const statuses: number[] = [];
+    let last: Response | null = null;
+    for (let i = 0; i < 7; i++) {
+      last = await handleLeaderboardSubmit(makeReq(opts), deps);
+      statuses.push(last.status);
+    }
+    // 1 insert + 5 honest duplicates (attempts still burn quota) + 1 deny.
+    expect(statuses).toEqual([201, 200, 200, 200, 200, 200, 429]);
+    expect((await errorOf(last!)).error).toBe("RATE_LIMITED");
+    expect(last!.headers.get("Retry-After")).toBe("3600");
+    expect(await allRows()).toHaveLength(1);
+  });
+
+  it("limiter-store failure → fail-closed 429 through the route, no row", async () => {
+    const opts = await pinnedSessionOpts();
+    const broken = {
+      execute: () => Promise.reject(new Error("neon down")),
+    } as unknown as typeof db;
+    const deps = makeDeps({
+      now: () => NOW,
+      rateLimiter: createDbSubmitRateLimiter({ db: broken, now: () => NOW, random: () => 1 }),
+    });
+    const res = await handleLeaderboardSubmit(makeReq(opts), deps);
+    expect(res.status).toBe(429);
+    expect((await errorOf(res)).error).toBe("RATE_LIMITED");
+    expect(res.headers.get("Retry-After")).toBe(String(STORE_ERROR_RETRY_AFTER_SECONDS));
+    expect(await allRows()).toHaveLength(0);
   });
 });

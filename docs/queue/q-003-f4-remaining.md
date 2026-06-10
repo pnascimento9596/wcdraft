@@ -2,13 +2,9 @@
 
 - **Tier:** Red (leaderboard/auth/schema surface) · **Mode:** DISPATCH-ONLY.
 - **Status:** OPEN — tracks the remainder of `docs/plans/f4-leaderboard-2026-06-10.md` §9.
-- Shipped: U1 (#67) · U2 (#69) · U3 (#70) · U6 claim bridge (#71, `b34a700`) — all on
-  main, routes dark behind `LEADERBOARD_ENABLED`.
-
-## In flight — REFERENCE ONLY, do not duplicate
-
-- **U5** abuse hardening — PR #72 open.
-- **U4** leaderboard UI — PR #74 open.
+- Shipped: U1 (#67) · U2 (#69) · U3 (#70) · U6 claim bridge (#71, `b34a700`) ·
+  U4 UI (#74, `6f76c10`) · U5 abuse hardening (#72) — all on main, routes dark
+  behind `LEADERBOARD_ENABLED`.
 
 ## Not started
 
