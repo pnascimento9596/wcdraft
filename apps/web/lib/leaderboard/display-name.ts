@@ -11,31 +11,13 @@
 // The rejected value is NEVER echoed back in `reason` strings — callers log
 // the category only (plan: no echo of the bad value beyond a hash).
 
+import { DISPLAY_NAME_BLOCKLIST } from "./display-name-blocklist";
+
+export { DISPLAY_NAME_BLOCKLIST };
+
 /** Inclusive code-point length bounds — match the DB CHECK (char_length). */
 export const DISPLAY_NAME_MIN = 3;
 export const DISPLAY_NAME_MAX = 24;
-
-/**
- * Curated blocklist: impersonation terms + severe profanity. Matched as a
- * substring of the case-folded, separator-stripped name (defeats `a.d.m.i.n`
- * spacing tricks at the cost of rare false positives — accepted v1 posture;
- * U5 owns curation/tuning, retroactive sweeps are a manual script per §5.5).
- */
-export const DISPLAY_NAME_BLOCKLIST: readonly string[] = [
-  // impersonation
-  "admin",
-  "moderator",
-  "wcdraft",
-  "official",
-  "sysop",
-  // severe profanity / slurs (starter set — U5 curates)
-  "fuck",
-  "shit",
-  "cunt",
-  "nigger",
-  "nigga",
-  "faggot",
-];
 
 /** Why a display name was rejected — category only, safe to log and return. */
 export type DisplayNameRejection =
@@ -56,6 +38,17 @@ const ENDS_ALNUM = /[\p{L}\p{N}]$/u;
 const SEPARATORS = /[ _.-]/gu;
 
 /**
+ * The fold the blocklist is matched against: case-folded, separators
+ * stripped (defeats `a.d.m.i.n` spacing tricks at the cost of rare false
+ * positives — accepted v1 posture, see display-name-blocklist.ts). Exported
+ * so the blocklist hygiene test can assert every term is already in this
+ * form — a term that isn't can never match.
+ */
+export function foldForBlocklist(value: string): string {
+  return value.toLowerCase().replace(SEPARATORS, "");
+}
+
+/**
  * Validate a raw (untrusted) display name. Returns the normalized name on
  * success — callers MUST persist `result.name`, not the raw input.
  */
@@ -70,7 +63,7 @@ export function validateDisplayName(raw: unknown): DisplayNameResult {
   if (!STARTS_ALNUM.test(name) || !ENDS_ALNUM.test(name)) {
     return { ok: false, reason: "edge_separator" };
   }
-  const folded = name.toLowerCase().replace(SEPARATORS, "");
+  const folded = foldForBlocklist(name);
   for (const term of DISPLAY_NAME_BLOCKLIST) {
     if (folded.includes(term)) return { ok: false, reason: "blocked_term" };
   }

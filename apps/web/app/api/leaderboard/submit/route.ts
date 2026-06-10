@@ -16,7 +16,7 @@ import {
 } from "@/lib/leaderboard/enabled";
 import { getValidationData } from "@/lib/leaderboard/server-data";
 import { handleLeaderboardSubmit } from "@/lib/leaderboard/submit-route";
-import { allowAllSubmitRateLimiter } from "@/lib/leaderboard/submit-rate-limit";
+import { createDbSubmitRateLimiter } from "@/lib/leaderboard/submit-rate-limiter-db";
 
 // Plan §6 — replay + re-sim is ~17 ms p95, but allow for serverless cold
 // start (bundle parse + catalog build) on the same invocation.
@@ -24,14 +24,16 @@ export const maxDuration = 10;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!isLeaderboardEnabled()) return leaderboardDarkResponse();
+  const db = getDb();
+  const now = (): number => Date.now();
   return handleLeaderboardSubmit(req, {
-    db: getDb(),
-    now: () => Date.now(),
+    db,
+    now,
     getCookieSecret: () => validateCookieSecret(process.env.AUTH_COOKIE_SECRET),
     getValidation: getValidationData,
-    // U5 swaps in the auth_rate_limits-backed limiter here (plan §5.2);
-    // the handler logic does not change.
-    rateLimiter: allowAllSubmitRateLimiter,
+    // U5: the real auth_rate_limits-backed limiter (plan §5.2) — swapped in
+    // here at the deps builder; the handler logic did not change.
+    rateLimiter: createDbSubmitRateLimiter({ db, now, random: Math.random }),
     requireAccount: isLeaderboardAccountRequired,
   });
 }

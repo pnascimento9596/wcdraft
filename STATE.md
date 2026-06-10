@@ -4,14 +4,14 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · counts run at main `06cca91` (F-4 U3, #70); branch
-rebased onto `b34a700` (F-4 U6, #71) before merge — docs-only diff, counts unaffected.
+Last measured: 2026-06-10 · counts run at `9c71219` (= U5 rebased onto main
+`63a403d`, #73) in a fresh clone; merged with a docs-only delta — counts unaffected.
 
 ## Lanes in flight at last measurement
 
-- PR #72 `ws-f4/u5-abuse` — F-4 U5 SubmitRateLimiter + blocklist (open).
-- PR #74 `ws-f4/u4-ui` — F-4 U4 leaderboard UI (open).
-- U6 claim bridge MERGED on main as `b34a700` (#71) 2026-06-10.
+- F-4 U1–U6 all MERGED on main (U5 = PR #72, this change). Remaining F-4: U7 ranked
+  lane (dark, blocked on plan §10 Q2) + the HUMAN-gated light-up checklist
+  (`docs/queue/q-003-f4-remaining.md`).
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -24,7 +24,7 @@ rebased onto `b34a700` (F-4 U6, #71) before merge — docs-only diff, counts una
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
-## Test counts (run 2026-06-10 at `06cca91`)
+## Test counts (run 2026-06-10 at `9c71219`)
 
 | Suite                                   | Result                      |
 | --------------------------------------- | --------------------------- |
@@ -35,7 +35,7 @@ rebased onto `b34a700` (F-4 U6, #71) before merge — docs-only diff, counts una
 | @wcdraft/data `test:golden:data`        | 28 passed                   |
 | @wcdraft/data `test:golden:integration` | 10 passed                   |
 | @wcdraft/db `test`                      | 74 passed                   |
-| @wcdraft/web `test`                     | 422 passed, 1 skipped (423) |
+| @wcdraft/web `test`                     | 526 passed, 1 skipped (527) |
 | @wcdraft/web `test:golden:leaderboard`  | 5 passed                    |
 | etl `pytest -q`                         | 159 passed                  |
 | `pnpm build`                            | 4/4 tasks green             |
