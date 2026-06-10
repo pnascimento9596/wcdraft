@@ -4,14 +4,14 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · main @ `06cca91` (F-4 U3, #70) — branch point of
-`ws-meta/train-protocol`.
+Last measured: 2026-06-10 · counts run at main `06cca91` (F-4 U3, #70); branch
+rebased onto `b34a700` (F-4 U6, #71) before merge — docs-only diff, counts unaffected.
 
-## Lanes in flight at branch point
+## Lanes in flight at last measurement
 
-- PR #71 `ws-f4/u6-claim` — F-4 U6 anon→account claim bridge (open, in review).
 - PR #72 `ws-f4/u5-abuse` — F-4 U5 SubmitRateLimiter + blocklist (open).
-- F-4 U4 (leaderboard UI) — lane in progress, no PR yet.
+- PR #74 `ws-f4/u4-ui` — F-4 U4 leaderboard UI (open).
+- U6 claim bridge MERGED on main as `b34a700` (#71) 2026-06-10.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
