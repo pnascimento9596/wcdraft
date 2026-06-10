@@ -1,6 +1,21 @@
 # WS-B Sim + Scoring — Calibration
 
-> **E-3a (engine-v2) landed** — the λ map is now a four-channel form
+> **MV2-11b (engine-2026.06.09) — λ refit against merit-v2 stature-dominant
+> channels.** The merit-v2 rating model (`wc-perf-4.2.0` / `proj-career-3.0.0`)
+> moved every channel, so the E-3a REFIT λ tuple no longer landed inside the
+> D5-tight bands. The deterministic coordinate descent (`fit-calibration.mjs`)
+> was re-run against the new channel distribution and produced the current
+> shipped tuple: **`LAMBDA.BASE = 1.0`, `LAMBDA.SPREAD = 7.0`,
+> `LAMBDA.GAMMA_MID = 0.60`, `LAMBDA.KO_LAMBDA_FACTOR = 0.82`** (the rest of
+> `LAMBDA` / `CHANCES` / `CHANCE_OUTCOME` / `LAMBDA_DISP` unchanged from
+> E-3a REFIT). All 5 symmetric realism norms land mid-band; the faithfulness
+> suite remains 11/11; the heavy asymmetric realism gate remains 7/7 (with
+> shape bands re-derived to the 1.5pp floor). At the same time the season
+> merge landed the deferred `engine_version` bump → `engine-2026.06.09`.
+> `sim-golden.json`, `e2e-real-run-golden.json`, the symmetric realism
+> golden, and the asymmetric realism golden were re-locked atomically.
+>
+> **E-3a (engine-v2) landed** — the λ map is a four-channel form
 > (`attack` × bounded `midfield` modulator − weighted `defense`+`goalkeeping`
 > resistance), the chance budget is raised so `Binomial(n, λ/n)` is
 > genuinely Poisson-like at WC scale, the fitted tuple was found by a
@@ -12,14 +27,14 @@
 > [`src/engine/calibration.ts`](src/engine/calibration.ts) and is locked by
 > golden fixtures.
 >
-> **ENGINE_VERSION POLICY (E-3a)**: changes to `LAMBDA` / `CHANCES` /
-> `CHANCE_OUTCOME` normally require an `engine_version` bump. E-3a
-> **defers** that bump to the season merge — the constants change and the
-> impacted goldens (`sim-golden.json`, `e2e-real-run-golden.json`) are
-> re-locked on the `engine-v2-e3a-lambda-calibration` branch, but
-> `engine_version` stays `engine-2026.06.04` (pinned by
-> `packages/data/test/compact-data.integrity.test.ts`). This is the only
-> sanctioned exception; it is locked to the engine-v2 chain.
+> **ENGINE_VERSION POLICY (E-3a → resolved at season merge)**: changes to
+> `LAMBDA` / `CHANCES` / `CHANCE_OUTCOME` normally require an
+> `engine_version` bump. E-3a + E-4 + MV2-11b each moved the constants and
+> re-locked the impacted goldens within their integration branches while
+> `engine_version` deferred (E-3a / E-4 stayed `engine-2026.06.04`). The
+> season merge landed the cumulative bump in one atomic step:
+> `engine-2026.06.04 → engine-2026.06.09` (pinned by
+> `packages/data/test/compact-data.integrity.test.ts`).
 
 ## Determinism
 
@@ -42,28 +57,28 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | **E-3a REFIT (current)** | Why (refit) |
-|---|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | 0.85 | **0.85** | unchanged — the SPREAD bump below carries the mean-goals lift |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | **6.5** | raised — wider SPREAD is what unlocks `margin ≥ 4 ≈ 4.9%` tight band |
-| `LAMBDA.MIN` | 0.30 | 0.75 | **0.40** | lowered — the wider SPREAD drives raw λ deeper below zero; the lower floor keeps blowouts emergent |
-| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | unchanged |
-| `LAMBDA.W_DEF` | — | 0.65 | **0.70** | slight bump — keeps elite defensive XIs legible while leaving GK its own channel |
-| `LAMBDA.W_GK` | — | 0.35 | **0.30** | W_GK + W_DEF ≡ 1 |
-| `LAMBDA.GAMMA_MID` | — | 0.45 | **0.50** | raised — midfield channel near upper end of bounded band |
-| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
-| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | unchanged |
-| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | **0.85** | NEW — KO regulation goals run ~15% below group, matching modern-WC pattern |
-| `CHANCES.REGULATION` | 14 | 50 | 50 | unchanged |
-| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | unchanged |
-| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | unchanged |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | unchanged |
-| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | unchanged |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | unchanged |
-| `LAMBDA_DISP.OUTER_PROB` | — | — | **0.20** | NEW — KO-phase outer mass for ε ∈ {1−A, 1, 1+A} |
-| `LAMBDA_DISP.A` | — | — | **0.75** | NEW — KO-phase half-width; lifts KO → ET / shootout onto modern-WC norms |
-| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | **0.10** | NEW — group-phase outer mass (smaller — must respect tight `group_draw` band) |
-| `LAMBDA_DISP.GROUP_A` | — | — | **0.50** | NEW — group-phase half-width; drives `margin ≥ 4` into [4.12%, 5.70%] |
+| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | **MV2-11b (shipped)** | Why (MV2-11b) |
+|---|---|---|---|---|---|
+| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | **1.0** | raised — the merit-v2 DF/GK stature lift compresses the defResist range; BASE moves up so mean goals/match lands at norm |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | **7.0** | nudged — wider SPREAD restores the `margin ≥ 4` band against the compressed channel spread |
+| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | unchanged |
+| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
+| `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | unchanged |
+| `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | **0.60** | raised — midfield channel needs more pull after the stature lift flattens its spread |
+| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
+| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | **0.82** | tightened — after the BASE/SPREAD lift, KO regulation needed a slightly larger drop to keep KO → ET in band |
+| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | unchanged |
+| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | unchanged |
+| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | unchanged |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | unchanged |
+| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | unchanged |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | unchanged |
+| `LAMBDA_DISP.OUTER_PROB` | — | — | 0.20 | 0.20 | unchanged |
+| `LAMBDA_DISP.A` | — | — | 0.75 | 0.75 | unchanged |
+| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | 0.10 | 0.10 | unchanged |
+| `LAMBDA_DISP.GROUP_A` | — | — | 0.50 | 0.50 | unchanged |
 
 ## E-3a REFIT (current) — match-level λ dispersion (D1 path)
 
