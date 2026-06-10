@@ -173,6 +173,54 @@
   padding-top: 0.5rem;
 }
 
+/* Mode select — single-screen contract at 390x844: BOTH cards (Classic +
+   Memory) fully visible with zero scroll. Compaction only: tighter display
+   type, one-line bullets, inline CTA. No copy removed. */
+@media (max-width: 430px) {
+  .modeGrid {
+    gap: 8px;
+    margin-top: 0.8rem;
+  }
+  .modeCard {
+    padding: 0.85rem 0.95rem;
+    gap: 0.4rem;
+    border-radius: 12px;
+  }
+  .modeCardLive:hover {
+    transform: none;
+  }
+  .modeTag {
+    font-size: 0.58rem;
+    padding: 0.18rem 0.5rem;
+  }
+  .modeIndex {
+    font-size: 1.1rem;
+  }
+  .modeName {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .modeDesc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .modeFeatures {
+    gap: 0.15rem;
+    margin-top: 0;
+  }
+  .modeFeatures li {
+    font-size: 0.78rem;
+    padding-left: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .modeCta {
+    font-size: 0.95rem;
+    padding-top: 0.25rem;
+  }
+}
+
 /* ── Draft layout ──────────────────────────────────────────────────────── */
 
 .draft {
@@ -593,6 +641,7 @@ button.benchSlot:not(:disabled):hover {
   letter-spacing: 0.04em;
   font-size: 0.78rem;
   padding: 0.36rem 0.7rem;
+  min-height: 44px; /* thumb-sized position filter (tap-target audit) */
   border-radius: 999px;
   cursor: pointer;
 }
@@ -613,6 +662,7 @@ button.benchSlot:not(:disabled):hover {
   font: inherit;
   font-size: 0.85rem;
   padding: 0.4rem 0.5rem;
+  min-height: 44px; /* tap-target audit */
   border-radius: 8px;
   border: 1px solid var(--line-strong);
   background: var(--bg-panel);
@@ -866,12 +916,12 @@ button.benchSlot:not(:disabled):hover {
 .deltaUp {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #3f9e69;
+  color: var(--teal-deep);
 }
 .deltaDown {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--loss);
 }
 .synergyBarTrack {
   height: 8px;
@@ -1888,7 +1938,7 @@ button.benchSlot:not(:disabled):hover {
   position: absolute;
   inset: 4%;
   pointer-events: none;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid var(--pitch-line);
   border-radius: var(--r-2);
 }
 
@@ -1898,7 +1948,7 @@ button.benchSlot:not(:disabled):hover {
   right: 0;
   top: 50%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--pitch-line);
 }
 
 .pitchFrame .pitchCircle {
@@ -1907,7 +1957,7 @@ button.benchSlot:not(:disabled):hover {
   top: 50%;
   width: 24%;
   aspect-ratio: 1;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid var(--pitch-line);
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
@@ -1918,7 +1968,7 @@ button.benchSlot:not(:disabled):hover {
   left: 20%;
   width: 60%;
   height: 12%;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid var(--pitch-line);
 }
 
 .pitchFrame .pitchBoxTop {
@@ -1975,7 +2025,24 @@ button.benchSlot:not(:disabled):hover {
   transform: translate(-50%, -50%);
   background: color-mix(in srgb, var(--bg-700) 70%, transparent);
   border-style: dashed;
-  color: var(--ink-400);
+  /* Dashed outline must read on the pale light-mode pitch too — themed
+     token, never the white literal the legacy rules used. */
+  border-color: var(--pitch-slot-line);
+  color: var(--ink-300);
+}
+
+/* Slot label ink — the legacy `.slotPos` / `.slotEmptyLabel` rules carry
+   white literals (the old pitch was always dark green). On the DS pitch
+   the chip surface follows the theme, so the label ink must too:
+   white-on-pale was unreadable in light mode. */
+.pitch .slot .slotPos {
+  color: var(--ink-200);
+}
+.pitch .slotEmpty .slotPos {
+  color: var(--ink-300);
+}
+.pitch .slotEmptyLabel {
+  color: var(--ink-300);
 }
 
 .pitch .slotSelected {
@@ -2005,7 +2072,7 @@ button.benchSlot:not(:disabled):hover {
   box-shadow: inset 3px 0 0 0 #5fbf86;
 }
 .pitch .slot.tier_ok {
-  box-shadow: inset 3px 0 0 0 rgba(255, 255, 255, 0.45);
+  box-shadow: inset 3px 0 0 0 var(--pitch-accent-mute);
 }
 .pitch .slot.tier_stretch {
   box-shadow: inset 3px 0 0 0 #e9b949;
@@ -2026,8 +2093,8 @@ button.benchSlot:not(:disabled):hover {
 }
 .pitch .slot.tierPreview_ok {
   box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.55),
-    inset 3px 0 0 0 rgba(255, 255, 255, 0.55);
+    0 0 0 2px var(--pitch-accent-mute),
+    inset 3px 0 0 0 var(--pitch-accent-mute);
 }
 .pitch .slot.tierPreview_stretch {
   box-shadow:
@@ -2219,11 +2286,13 @@ button.benchSlot:not(:disabled):hover {
   align-items: center;
 }
 
+/* Pill/badge rhythm: 2px 8px + r-pill + t-xs mono everywhere a pill
+   appears (provBadge, shirt, drafted, compatPill, manager badge). */
 .candShirt {
   font-family: var(--f-mono);
   font-size: var(--t-xs);
   color: var(--ink-300);
-  padding: 2px 6px;
+  padding: 2px 8px;
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
 }
@@ -2232,7 +2301,7 @@ button.benchSlot:not(:disabled):hover {
   font-family: var(--f-mono);
   font-size: var(--t-xs);
   color: var(--lock);
-  padding: 2px 6px;
+  padding: 2px 8px;
   border: 1px solid var(--lock-dim);
   border-radius: var(--r-pill);
 }
@@ -2375,7 +2444,11 @@ button.benchSlot:not(:disabled):hover {
   border-radius: 999px;
 }
 
-/* ── Sticky lock bar (thumb zone) + bottom sheet ────────────────────────── */
+/* ── Sticky lock bar (thumb zone) + bottom sheet ──────────────────────────
+   LOCK PICK is the most-pressed control in the game. Mobile-first layout:
+   one compact context line on top, then a full-width action row where the
+   primary owns the thumb zone (min 52px tall, right side / full width).
+   ≥640px relaxes back to a single side-by-side row. */
 
 .lockBar {
   position: fixed;
@@ -2384,10 +2457,10 @@ button.benchSlot:not(:disabled):hover {
   bottom: 0;
   z-index: 6;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px 16px calc(10px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in srgb, var(--bg-900) 96%, transparent);
   border-top: 1px solid var(--line-2);
   box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
@@ -2395,12 +2468,13 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .lockInfo {
-  flex: 1;
   min-width: 0;
   font-size: var(--t-sm);
   color: var(--ink-200);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
 }
 
 .lockHint {
@@ -2418,6 +2492,39 @@ button.benchSlot:not(:disabled):hover {
 .lockActions {
   display: flex;
   gap: 8px;
+}
+
+/* Primary (Lock pick / Review XI) — full prominence, thumb-zone right. */
+.lockActions .lockPrimary {
+  flex: 1 1 auto;
+  min-height: 52px;
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+/* Secondary (Choose slot) — demoted but still a ≥44px target. */
+.lockActions .lockSecondary {
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+@media (min-width: 640px) {
+  .lockBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  .lockInfo {
+    flex: 1;
+  }
+  .lockActions .lockPrimary {
+    flex: 0 0 auto;
+    min-width: 220px;
+  }
 }
 
 .compatPill {
@@ -2473,8 +2580,8 @@ button.benchSlot:not(:disabled):hover {
   background: transparent;
   border: 1px solid var(--line);
   color: var(--ink-200);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--r-pill);
   font-size: 18px;
   cursor: pointer;
@@ -3088,6 +3195,7 @@ button.benchSlot:not(:disabled):hover {
 .spinCta {
   width: 100%;
   margin-top: auto;
+  min-height: 52px; /* primary CTA — thumb-sized at every breakpoint */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3329,7 +3437,7 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .synergyLineIdle {
-  stroke: rgba(255, 255, 255, 0.22);
+  stroke: var(--pitch-line);
   stroke-width: 0.55;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
@@ -3749,17 +3857,6 @@ button.benchSlot:not(:disabled):hover {
   font-size: 10px;
   color: var(--ink-400);
 }
-.candRowMgrBadge {
-  flex: 0 0 auto;
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--prov-manager);
-  padding: 2px 7px;
-  border: 1px solid color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
-  border-radius: var(--r-pill);
-}
 .candDetail {
   display: flex;
   flex-direction: column;
@@ -3815,7 +3912,8 @@ button.benchSlot:not(:disabled):hover {
   background: var(--bg-700);
   border: 1px solid var(--line-2);
   border-radius: var(--r-pill);
-  padding: 6px 12px;
+  padding: 6px 14px;
+  min-height: 44px; /* tap-target audit */
 }
 .nowDraftingBack:hover {
   border-color: var(--ember);
@@ -3828,14 +3926,28 @@ button.benchSlot:not(:disabled):hover {
    the clear bottom-left corner so it never overlaps the ST node. Nodes sit
    above the link layer; the pitch clips its own overflow, so nothing spills.
    ───────────────────────────────────────────────────────────────────────── */
-/* UX-COMPACT — mobile pitch zoom-out.
+/* UX-COMPACT — container-derived pitch chips (ws-ux/mobile-polish-1).
    Compact-by-default everywhere `.pitch` is rendered inside `.squadStage`
-   (draft + squad-review share this stage). Shorter aspect, smaller chips,
-   tighter inner padding. Coordinates still come from formations.json
-   (responsive percentage layout), so node spacing scales with the pitch
-   width; min-width clamps prevent overlap at 360–430px viewports. */
+   (draft + squad-review share this stage).
+
+   GEOMETRY CONTRACT (coupled to lib/game/pitch-layout.ts):
+   The pitch is an inline-size container; chips are sized in cqw so their
+   footprint is a FIXED fraction of the pitch at every viewport width:
+     - chip width  = 19cqw  → half-width  =  9.5% of pitch width
+     - chip height = 14cqw  → at aspect 100/94, 14/0.94 = 14.9% of pitch
+                              height → half-height ≈ 7.45%
+   `CHIP_HALF_W_PCT` / `CHIP_HALF_H_PCT` in pitch-layout.ts mirror these
+   numbers; the anti-overlap resolver is only correct while they match.
+   Inner content scales with the chip (cqw with px clamps) so compaction
+   never clips. Fixed height + hidden overflow keep the AABB exact. */
 .squadStage .pitch {
-  aspect-ratio: 1 / 1.02;
+  container-type: inline-size;
+  aspect-ratio: 100 / 94;
+  /* The legacy `.pitch` rule pins min-height to 24rem (384px) — that's
+     ~90px of dead vertical on mobile and it breaks the aspect-ratio the
+     chip-geometry contract is computed from. */
+  min-height: 0;
+  width: 100%;
   max-width: 312px;
   margin-inline: auto;
 }
@@ -3843,28 +3955,39 @@ button.benchSlot:not(:disabled):hover {
   inset: 3%;
 }
 .squadStage .pitch .slot {
-  min-width: 38px;
-  max-width: 56px;
-  padding: 3px;
+  width: 19cqw;
+  min-width: 0;
+  max-width: none;
+  height: 14cqw;
+  min-height: 0;
+  justify-content: center;
+  overflow: hidden;
+  padding: 2px 3px;
   gap: 1px;
   border-radius: var(--r-2);
 }
+.squadStage .pitch .slotHead {
+  gap: 3px;
+}
 .squadStage .pitch .slotName {
-  font-size: 9px;
-  max-width: 50px;
+  font-size: clamp(8px, 3cqw, 10px);
+  max-width: 17.5cqw;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .squadStage .pitch .slotPos {
-  font-size: 8px;
+  font-size: clamp(7px, 2.7cqw, 9px);
   letter-spacing: 0.04em;
 }
 .squadStage .pitch .slotEmptyLabel {
-  font-size: 8px;
+  font-size: clamp(7px, 2.8cqw, 9px);
 }
 .squadStage .pitch .slotMeta {
-  font-size: 8px;
+  font-size: clamp(7px, 2.8cqw, 9px);
+}
+.squadStage .pitch .slotRating {
+  font-size: clamp(8px, 3.2cqw, 11px);
 }
 .squadStage .pitch .slotShapeMarker {
   width: 6px;
@@ -3880,18 +4003,6 @@ button.benchSlot:not(:disabled):hover {
    is kept for back-compat; render path no longer emits it. */
 .pitchSynergyLegend {
   display: none;
-}
-@media (max-width: 380px) {
-  .squadStage .pitch {
-    max-width: 288px;
-  }
-  .squadStage .pitch .slot {
-    min-width: 34px;
-    max-width: 50px;
-  }
-  .squadStage .pitch .slotName {
-    max-width: 44px;
-  }
 }
 
 /* Formation shape id ("4-3-3") must never break at its hyphens. Scoped so the
@@ -3913,7 +4024,7 @@ button.benchSlot:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 8px 12px 10px;
+  padding: 2px 12px 8px;
   margin-bottom: 12px;
   background: color-mix(in srgb, var(--bg-800) 92%, transparent);
   border: 1px solid var(--line);
@@ -3922,11 +4033,29 @@ button.benchSlot:not(:disabled):hover {
   box-shadow: inset 0 1px 0 0 rgba(var(--glow-ember), 0.06);
 }
 
-.synergyBarHead {
+/* Head row doubles as the collapse toggle — full-width, 44px target.
+   Collapsed, the bar is exactly this row (label + score + chevron). */
+.synergyBarToggle {
+  appearance: none;
+  background: transparent;
+  border: none;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.synergyBarChevron {
+  font-size: 10px;
+  color: var(--ink-400);
+  align-self: center;
 }
 
 .synergyBarLabel {
@@ -4207,9 +4336,10 @@ button.benchSlot:not(:disabled):hover {
   .spinStatusChipValue {
     font-size: 12px;
   }
+  /* The drum label duplicates the "Spin reveal" status-bar title — on a
+     390x844 viewport that's a dead line between header and drum. */
   .spinDrumLabel {
-    font-size: var(--t-micro);
-    letter-spacing: 0.18em;
+    display: none;
   }
   .spinDrum {
     padding: var(--s-2);
@@ -4237,24 +4367,28 @@ button.benchSlot:not(:disabled):hover {
     margin-top: var(--s-2);
   }
 
-  /* ── Formation lock gate ──────────────────────────────────────── */
+  /* ── Formation lock gate ──────────────────────────────────────────
+     Comparability goal: all six shapes in a tight 2-col grid with
+     minimal scroll at 390x844. The mini-pitch is the bulk — squash it
+     to 4/3 (dots keep relative spacing); blurbs go one-line. */
   .formationSelect {
-    gap: 14px;
-    padding: 6px 2px 28px;
+    gap: 10px;
+    padding: 4px 2px 20px;
   }
   .formationHead {
-    gap: 6px;
+    gap: 5px;
   }
+  /* The masthead + draft app bar already brand this screen twice — the
+     in-panel lockup is the single biggest dead block above the grid. */
   .formationHead img {
-    width: 168px;
-    height: auto;
+    display: none;
   }
   .formationTitle {
-    font-size: 22px;
+    font-size: 20px;
   }
   .formationSub {
     font-size: var(--t-xs);
-    max-width: 30ch;
+    max-width: 44ch;
   }
   .formationGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4275,15 +4409,19 @@ button.benchSlot:not(:disabled):hover {
   .formationCardBlurb {
     font-size: 10px;
     line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .formationCardCta {
     font-size: 9px;
     letter-spacing: 0.06em;
   }
-  /* Smaller mini-pitch keeps the lock cards short enough that all six
-     formations sit in a single mobile viewport with minimal scroll. */
+  /* Flat mini-pitch: the previews are the bulk of the picker. 16/10 keeps
+     the six shapes comparable (relative spacing intact) while letting all
+     six cards reach a single 390x844 viewport with minimal scroll. */
   .miniPitch {
-    aspect-ratio: 5 / 5;
+    aspect-ratio: 16 / 10;
   }
   .miniDot {
     width: 8px;
@@ -4299,7 +4437,7 @@ button.benchSlot:not(:disabled):hover {
     scroll-margin-top: 64px;
   }
   .synergyBar {
-    padding: 6px 10px 8px;
+    padding: 0 10px 6px;
     margin-bottom: 8px;
     gap: 4px;
   }
@@ -4312,28 +4450,12 @@ button.benchSlot:not(:disabled):hover {
   .squadStage {
     gap: 8px;
   }
-  /* Slightly tighter pitch frame at very narrow widths — pairs with the
-     render-layer anti-overlap from `pitch-layout.ts`. */
-  .squadStage .pitch {
-    max-width: 296px;
-  }
+  /* Chip geometry is container-derived (cqw) — see the squadStage block
+     above. Only non-geometric tweaks belong here so the pitch-layout.ts
+     AABB contract holds at every width. */
   .squadStage .pitch .slot {
-    min-width: 36px;
-    max-width: 52px;
-    padding: 2px 3px;
     border-width: 1px;
     line-height: 1.05;
-  }
-  .squadStage .pitch .slotName {
-    font-size: 9px;
-    max-width: 46px;
-  }
-  .squadStage .pitch .slotPos {
-    font-size: 8px;
-  }
-  .squadStage .pitch .slotEmptyLabel,
-  .squadStage .pitch .slotMeta {
-    font-size: 8px;
   }
   .bench {
     margin-top: 8px;
@@ -4410,11 +4532,11 @@ button.benchSlot:not(:disabled):hover {
     padding: 3px 6px;
     font-size: 11px;
   }
-  /* ws-ux/mobile-compact-v3: candidate-row density target.
-     Override .candRowLine min-height (base 46px) so ~8-9 collapsed
-     rows fit a 390x844 viewport once the spin stage + filters + lock
-     bar are subtracted. .candRowFlag is also cut back from the v2
-     value (30px tall) which was working against compaction. */
+  /* ws-ux/mobile-polish-1: candidate-row density vs tap-target.
+     The v3 pass cut .candRowLine to 38px for density; that is below the
+     44px minimum tap height, and these rows are the most-tapped list in
+     the game. 44px is the floor — density comes from the trimmed chrome
+     around the list instead. */
   .candList {
     gap: 3px;
   }
@@ -4425,7 +4547,7 @@ button.benchSlot:not(:disabled):hover {
   }
   .candRowLine {
     gap: 6px;
-    min-height: 38px;
+    min-height: 44px;
     padding: 3px 6px;
   }
   .candRowFlag {
@@ -4479,10 +4601,13 @@ button.benchSlot:not(:disabled):hover {
     gap: 4px;
   }
 
-  /* ── Sticky lock-pick CTA ─────────────────────────────────────── */
+  /* ── Sticky lock-pick CTA ─────────────────────────────────────────
+     Layout is column (helper line above, actions below) from the base
+     rules; here we only trim chrome. The primary stays ≥52px tall —
+     never compact the most-pressed button in the game. */
   .lockBar {
-    gap: 8px;
-    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    gap: 5px;
+    padding: 7px 12px calc(8px + env(safe-area-inset-bottom, 0px));
   }
   .lockInfo {
     font-size: 12px;
@@ -4493,16 +4618,8 @@ button.benchSlot:not(:disabled):hover {
   .lockError {
     font-size: 10px;
   }
-  /* Compact buttons in the lock bar so a long player name + Choose-slot +
-     Lock-pick all fit on one line without overflowing at 390px. */
-  .lockBar .btn,
-  .lockBar :global(.btn) {
-    padding: 8px 12px;
-    font-size: 13px;
-  }
   .lockActions {
     gap: 6px;
-    flex-shrink: 0;
   }
   .compatPill {
     font-size: 10px;
@@ -4542,7 +4659,7 @@ button.benchSlot:not(:disabled):hover {
     gap: 6px;
   }
   .candRowLine {
-    min-height: 36px;
+    min-height: 44px; /* tap-target floor, even on Fold-width screens */
     padding: 2px 5px;
   }
   .candRowFlag {
@@ -4554,23 +4671,6 @@ button.benchSlot:not(:disabled):hover {
   }
   .candRowSub {
     font-size: 9px;
-  }
-  .squadStage .pitch {
-    max-width: 260px;
-  }
-  .squadStage .pitch .slot {
-    min-width: 34px;
-    max-width: 48px;
-    padding: 2px;
-  }
-  .squadStage .pitch .slotName {
-    font-size: 8px;
-    max-width: 42px;
-  }
-  .squadStage .pitch .slotPos,
-  .squadStage .pitch .slotEmptyLabel,
-  .squadStage .pitch .slotMeta {
-    font-size: 8px;
   }
   .spinResultName {
     font-size: clamp(20px, 6vw, 26px);
@@ -4584,11 +4684,6 @@ button.benchSlot:not(:disabled):hover {
   }
   .spinTileValue {
     font-size: 14px;
-  }
-  .lockBar .btn,
-  .lockBar :global(.btn) {
-    padding: 7px 10px;
-    font-size: 12px;
   }
   .candRowName {
     font-size: 12px;

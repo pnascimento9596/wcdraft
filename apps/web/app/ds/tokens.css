@@ -20,7 +20,7 @@
   --ink-100: #eef2f6;   /* hi */
   --ink-200: #cdd3db;
   --ink-300: #9aa3af;   /* mid */
-  --ink-400: #6b7480;   /* low */
+  --ink-400: #7d8794;   /* low — lifted from #6b7480 so t-xs labels on bg-750 clear 4.5:1 */
   --ink-500: #4d5662;   /* faint / disabled */
 
   /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
@@ -86,6 +86,14 @@
   --pos-mid: #9aa3af;
   --pos-fwd: #f5b62a;
 
+  /* ---- Pitch surface (theme-aware chalk + chip lines) ----
+     The pitch backdrop is bg-800 + a teal wash in BOTH themes, so chalk
+     lines / dashed empty-slot borders can't be white literals — they must
+     darken when the pitch goes pale in light mode. */
+  --pitch-line:        rgba(255,255,255,.1);   /* frame, halfway, circle, boxes */
+  --pitch-slot-line:   rgba(255,255,255,.32);  /* dashed empty-slot borders     */
+  --pitch-accent-mute: rgba(255,255,255,.45);  /* neutral "ok" fit-tier accent  */
+
   /* ---- Type ---- */
   --f-display: "Saira Condensed", "Arial Narrow", sans-serif;
   --f-body:    "Sora", system-ui, -apple-system, sans-serif;
@@ -131,7 +139,12 @@
   --d-slow: .5s;
 }
 
-/* ---- Light theme overrides (derived second; included for completeness) ---- */
+/* ---- Light theme overrides ----
+   First-class, not an afterthought: every hue that renders as TEXT or as a
+   load-bearing line on the pale canvas is deepened to clear WCAG AA
+   (≥4.5:1 body / ≥3:1 large+UI) against bg-750/bg-800. Fills (rings, glows,
+   chevrons, track fills) follow the same deepened ramps so the palette
+   stays coherent. */
 [data-theme="light"] {
   --bg-void:   #e9e6df;
   --bg-900:    #efece5;
@@ -141,13 +154,80 @@
   --bg-700:    #f3f0e8;
   --bg-650:    #e9e5db;
   --line:        rgba(20,18,14,.10);
-  --line-2:      rgba(20,18,14,.16);
-  --line-strong: #d2cdc0;
+  --line-2:      rgba(20,18,14,.2);
+  --line-strong: #b9b3a4;
   --ink-100: #14130f;
   --ink-200: #2c2b25;
   --ink-300: #54524a;
-  --ink-400: #7c7a70;
+  --ink-400: #6c6a60;   /* lifted-dark: 5.5:1 on white panels at t-xs sizes */
   --ink-500: #a09d92;
+
+  /* Accent ramps — deepened so accent-as-text reads on paper. "bright"
+     means "emphasis text", not "lighter", in this theme. */
+  --cyan:        #0a6d96;
+  --cyan-bright: #095e82;
+  --cyan-deep:   #084f6e;
+  --glow-cyan:   10,109,150;
+
+  --gold:        #8a6200;
+  --gold-bright: #7a5600;
+  --gold-deep:   #6e4e00;
+  --glow-gold:   138,98,0;
+
+  --teal:        #177a55;
+  --teal-bright: #116647;
+  --teal-deep:   #0e5238;
+  --glow-teal:   23,122,85;
+
+  --ember:        #177a55;
+  --ember-bright: #116647;
+  --ember-deep:   #0e5238;
+  --amber:        #8a6200;
+  --amber-bright: #7a5600;
+  --glow-ember: 23,122,85;
+  --glow-amber: 138,98,0;
+
+  /* Lock / committed — steel flips dark for text + borders on paper. */
+  --lock:      #5a6372;
+  --lock-dim:  #767f8d;
+  --lock-rgb:  90,99,114;
+
+  /* Functional states as text on pale surfaces. */
+  --win:   #8a6200;
+  --loss:  #c2273c;
+  --draw:  #5d6570;
+  --warn:  #8a5d0b;
+  --info:  #0a6d96;
+
+  /* Provenance hues — same identities, print-grade depth. */
+  --prov-historical: #0a6d96;
+  --prov-projected:  #4a55c4;
+  --prov-estimate:   #9c4f0f;
+  --prov-manager:    #5d6570;
+  --prov-legend:     #8a6200;
+  --prov-unknown:    #8d8a80;
+
+  --prov-historical-rgb: 10,109,150;
+  --prov-projected-rgb:  74,85,196;
+  --prov-estimate-rgb:   156,79,15;
+  --prov-manager-rgb:    93,101,112;
+  --prov-legend-rgb:     138,98,0;
+
+  /* Position legend tints (decorative dots only). */
+  --pos-gk:  #0a6d96;
+  --pos-def: #177a55;
+  --pos-mid: #54524a;
+  --pos-fwd: #8a6200;
+
+  /* Pitch chalk + chip lines flip to dark ink on the pale pitch. */
+  --pitch-line:        rgba(21,36,29,.3);
+  --pitch-slot-line:   rgba(21,36,29,.5);
+  --pitch-accent-mute: rgba(21,36,29,.5);
+
+  /* Paper-weight elevation (heavy black halos look dirty on cream). */
+  --sh-1: 0 1px 2px rgba(20,18,14,.12);
+  --sh-2: 0 6px 22px rgba(20,18,14,.14);
+  --sh-3: 0 18px 50px rgba(20,18,14,.18);
 }
 
 * { box-sizing: border-box; }

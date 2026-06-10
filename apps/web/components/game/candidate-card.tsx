@@ -266,12 +266,14 @@ export function ManagerCandidate({
 
         <span className={s.candRowMain}>
           <span className={s.candRowName}>{manager.name}</span>
+          {/* Honest-state: managers carry NO rating, and the row renders no
+              number — the "Manager · …" subtitle marks the card kind. The
+              old "Rating unavailable" pill restated this and is gone; the
+              dedicated ManagerSlot card still carries the explicit badge. */}
           <span className={s.candRowSub}>
             Manager · {manager.nation_name} · {manager.year}
           </span>
         </span>
-
-        <span className={s.candRowMgrBadge}>Rating unavailable</span>
 
         <span className={s.candRowChevron} aria-hidden="true">
           {selected ? "▴" : "▾"}
