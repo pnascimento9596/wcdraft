@@ -36,6 +36,41 @@
 > `engine-2026.06.04 → engine-2026.06.09` (pinned by
 > `packages/data/test/compact-data.integrity.test.ts`).
 
+## Decoupling guards (ws-core/decoupling-guards)
+
+Two display-channel ↔ sim coupling risks were surfaced by the season-merge
+gate-2 adversarial review and disarmed on the `ws-core/decoupling-guards`
+branch. Both are tripwires — they preserve current behaviour but make a
+future regression turn red loudly.
+
+1. **Manager modifier no longer reads `ManagerRating.overall`.** The
+   `managerModifier()` fold in `engine/team-strength.ts` is now EXPLICITLY
+   identity (returns 1.0 for every input). `ManagerRating.overall` is
+   display-only — the type contract says "the sim MUST NOT read this
+   field." When a sim-legal manager field is defined, wire that field
+   here; do NOT re-introduce the display-overall read. Locked by
+   `src/manager-modifier-decoupling.guard.test.ts` (static scan + functional
+   identity assertion).
+
+2. **Strategic-draft tie ordering invalidates the realism lock.** The
+   `pickBest` helper in `packages/data/test/realism/draft-policies.ts`
+   breaks `strategicAutoDraft` ties by `overall` DESC then `card_id` ASC.
+   `overall` is the display-only Rating composite (`core/src/types/rating.ts`:
+   "the sim engine MUST NOT read this field"). The harness sits UNDER the
+   λ-calibration chain — any future change to the display `overall` curve
+   (rescaling, post-fit normalisation, stature-driven pooled curve, etc.)
+   can flip a tie ordering, re-order the strategic pick sequence, shift the
+   realism landings, and silently invalidate the λ fit basis (the
+   `realism.gate.test.ts` Wilson bands re-base WITH the landings on re-lock,
+   so they do not catch the flip). The tiebreak is INTENTIONALLY left
+   unchanged: any pick-flip drifts the locked realism landings and
+   invalidates the λ basis. Instead,
+   `packages/data/test/realism/strategic-pick-canary.golden.test.ts` locks
+   the exact strategic-draft pick sequence for the first 5 seeds of the
+   realism harness. **A display-curve change that flips even one tie
+   ordering trips this canary and REQUIRES atomic re-lock against a fresh
+   realism re-fit.**
+
 ## Determinism
 
 The engine is pure + seeded (cyrb128 + sfc32 via `createRng` / `deriveSubseed`).
