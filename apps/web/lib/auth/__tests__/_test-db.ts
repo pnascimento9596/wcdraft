@@ -44,6 +44,7 @@ export async function setupTestDb(): Promise<{
     "0001_auth_rate_limits.sql",
     "0002_history_session_scope.sql",
     "0003_summary_jsonb.sql",
+    "0004_f4_leaderboard.sql",
   ]) {
     const sql = loadMigration(file).replace(/-->\s*statement-breakpoint/g, "");
     await pg.exec(sql);

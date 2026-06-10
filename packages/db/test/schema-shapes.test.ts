@@ -116,7 +116,8 @@ describe("@wcdraft/db schema — shape", () => {
   it("infers row and insert types for ranked_attempts", () => {
     expectTypeOf<RankedAttempt>().toMatchTypeOf<{
       id: string;
-      userId: string | null;
+      // F-4 U1: RANKED IS ACCOUNT-REQUIRED — user_id is structurally NOT NULL.
+      userId: string;
       sessionId: string | null;
       issuedParentSeed: string;
       nonce: string;
@@ -125,10 +126,14 @@ describe("@wcdraft/db schema — shape", () => {
       consumedAt: Date | null;
     }>();
     expectTypeOf<NewRankedAttempt>().toMatchTypeOf<{
+      userId: string;
       issuedParentSeed: string;
       nonce: string;
       windowExpiresAt: Date;
     }>();
+    // The insert type must REQUIRE userId (a userId-less insert no longer
+    // compiles — the structural account requirement at the type level).
+    expectTypeOf<NewRankedAttempt["userId"]>().toEqualTypeOf<string>();
   });
 
   it("infers row and insert types for leaderboard_entries", () => {
@@ -136,16 +141,22 @@ describe("@wcdraft/db schema — shape", () => {
       id: string;
       seasonKey: string;
       mode: string;
+      draftMode: string;
       userId: string | null;
+      sessionId: string | null;
+      displayName: string;
       token: string;
       verifiedScore: number;
       scoreBreakdown: unknown;
       attemptId: string | null;
+      hiddenAt: Date | null;
       createdAt: Date;
     }>();
     expectTypeOf<NewLeaderboardEntry>().toMatchTypeOf<{
       seasonKey: string;
       mode: string;
+      draftMode: string;
+      displayName: string;
       token: string;
       verifiedScore: number;
     }>();
