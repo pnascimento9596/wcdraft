@@ -8,8 +8,10 @@ import s from "./game.module.css";
  *
  * HONEST-STATE INVARIANTS:
  * - Manager has `rating_available: false` in runtime data; we OMIT any
- *   numeric rating. We never render a fabricated number. A "Rating
- *   unavailable" tag stands in for the OVR badge.
+ *   numeric rating. We never render a fabricated number. Managers
+ *   structurally carry no rating, so absence is NOT information — no
+ *   "Rating unavailable" pill is rendered anywhere (ws-ux/mobile-polish-2);
+ *   the card simply has no OVR surface.
  * - Three states: committed, preview (draft-time, before lock), open.
  * - Open / preview states are read-only at this site; selection happens in
  *   the candidate list, the manager slot only mirrors it.
@@ -64,9 +66,7 @@ export function ManagerSlot({
               </span>
             </div>
           </div>
-          <span className={s.managerSlotBadge}>
-            {isPreview ? "Preview · rating unavailable" : "Rating unavailable"}
-          </span>
+          {isPreview ? <span className={s.managerSlotBadge}>Preview</span> : null}
           {display.traits.length > 0 ? (
             <span
               className={s.managerTraits}

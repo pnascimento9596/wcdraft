@@ -94,7 +94,10 @@ export function CandidateCard({
   classes.push(s[`prov_${card.rating.badge_kind}`]!);
   if (selected) classes.push(s.candRowSelected);
   if (disabled) classes.push(s.candRowDisabled);
-  if (rarePick) classes.push(s.candRare);
+  // ws-ux/mobile-polish-2: rare is marked by the inline gold "Rare" chip
+  // (see candRareTag below), not a full-width gold top band — one accent
+  // axis per edge: provenance owns the left stripe, gold marks pick/win
+  // moments at the moment site (chip, selected ring), never a second bar.
 
   const coveragePct =
     card.rating.coverage === null ? null : Math.round(card.rating.coverage * 100);
@@ -125,6 +128,11 @@ export function CandidateCard({
             {card.captain ? (
               <span className={s.candCaptain} title="Captain">
                 C
+              </span>
+            ) : null}
+            {rarePick ? (
+              <span className={s.candRareTag} title="Rare pick — low roll probability">
+                Rare
               </span>
             ) : null}
           </span>
@@ -244,7 +252,6 @@ export function ManagerCandidate({
   const classes = [s.candRow, s.candRowManager, s.prov_manager];
   if (selected) classes.push(s.candRowSelected);
   if (disabled) classes.push(s.candRowDisabled);
-  if (rarePick) classes.push(s.candRare);
 
   return (
     <button
@@ -265,7 +272,14 @@ export function ManagerCandidate({
         </span>
 
         <span className={s.candRowMain}>
-          <span className={s.candRowName}>{manager.name}</span>
+          <span className={s.candRowName}>
+            {manager.name}
+            {rarePick ? (
+              <span className={s.candRareTag} title="Rare pick — low roll probability">
+                Rare
+              </span>
+            ) : null}
+          </span>
           {/* Honest-state: managers carry NO rating, and the row renders no
               number — the "Manager · …" subtitle marks the card kind. The
               old "Rating unavailable" pill restated this and is gone; the

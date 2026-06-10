@@ -60,22 +60,28 @@
 .modeGrid {
   display: grid;
   gap: 1.2rem;
-  margin-top: 2rem;
+  /* Uniform card height between the two modes — the shorter card stretches
+     to match instead of leaving a ragged edge. */
+  grid-auto-rows: 1fr;
+  margin-top: 1.4rem;
 }
 @media (min-width: 46rem) {
   .modeGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* Pre-draft card system — mode select + formation picker share this design
+   language: 14px radius, 1px chalk border, left accent bar, mono uppercase
+   CTA (see .formationCard). Change one, change both. */
 .modeCard {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   background: var(--bg-panel);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 1.6rem 1.5rem;
+  border-radius: 14px;
+  padding: 1.25rem 1.3rem;
   box-shadow: var(--shadow-card);
   text-decoration: none;
   color: var(--ink);
@@ -131,37 +137,38 @@
 }
 .modeName {
   font-family: var(--font-display), sans-serif;
-  font-size: 2.4rem;
+  font-size: 2.1rem;
   letter-spacing: 0.01em;
 }
 .modeDesc {
   color: var(--ink-soft);
-  font-size: 0.97rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
+/* Feature bullets as single-line inline chips — one row of quiet tags
+   instead of a three-line list (screen-compaction contract). */
 .modeFeatures {
   list-style: none;
-  display: grid;
-  gap: 0.35rem;
-  margin-top: 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
 }
 .modeFeatures li {
-  position: relative;
-  padding-left: 1.1rem;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
   color: var(--ink-soft);
-}
-.modeFeatures li::before {
-  content: "›";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-weight: 700;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+  white-space: nowrap;
 }
 .modeCta {
   margin-top: auto;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--f-mono);
+  font-size: 0.82rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   color: var(--accent);
   padding-top: 0.5rem;
 }
@@ -173,17 +180,18 @@
   padding-top: 0.5rem;
 }
 
-/* Mode select — single-screen contract at 390x844: BOTH cards (Classic +
-   Memory) fully visible with zero scroll. Compaction only: tighter display
-   type, one-line bullets, inline CTA. No copy removed. */
+/* Mode select — single-screen contract at ~390x664 VISIBLE viewport (Safari
+   chrome accounted for): page head + BOTH cards (Classic + Memory) fully
+   visible with zero scroll. Compaction only: merged header line, chip
+   bullets, tighter type/padding. */
 @media (max-width: 430px) {
   .modeGrid {
     gap: 8px;
-    margin-top: 0.8rem;
+    margin-top: 0.7rem;
   }
   .modeCard {
-    padding: 0.85rem 0.95rem;
-    gap: 0.4rem;
+    padding: 0.7rem 0.8rem;
+    gap: 0.3rem;
     border-radius: 12px;
   }
   .modeCardLive:hover {
@@ -197,27 +205,24 @@
     font-size: 1.1rem;
   }
   .modeName {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1;
   }
   .modeDesc {
-    font-size: 0.82rem;
-    line-height: 1.45;
+    font-size: 0.8rem;
+    line-height: 1.42;
   }
   .modeFeatures {
-    gap: 0.15rem;
+    gap: 0.25rem;
     margin-top: 0;
   }
   .modeFeatures li {
-    font-size: 0.78rem;
-    padding-left: 0.85rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.64rem;
+    padding: 0.12rem 0.45rem;
   }
   .modeCta {
-    font-size: 0.95rem;
-    padding-top: 0.25rem;
+    font-size: 0.78rem;
+    padding-top: 0.2rem;
   }
 }
 
@@ -1170,6 +1175,10 @@ button.benchSlot:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  /* The reveal/results column is a terminal scroll surface on iOS — keep its
+     last element (bench / leaderboard / replay row) clear of Safari's bottom
+     chrome + the home indicator. */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 }
 .outcome {
   display: flex;
@@ -1177,8 +1186,15 @@ button.benchSlot:not(:disabled):hover {
   gap: 1rem;
   background: var(--bg-invert);
   color: var(--field-ink);
-  border-color: transparent;
+  /* Deliberate seam (ws-ux/mobile-polish-2): the inverted editorial plate is
+     intentional brand contrast, but flush cream-on-dark read as a rendering
+     glitch. A hairline in the plate's own ink + a 1px outer ring against the
+     page tone frame it as a designed insert in both themes. */
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
   border-top: 3px solid var(--accent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent),
+    var(--shadow-card);
 }
 :root[data-theme="dark"] .outcome {
   color: var(--bg);
@@ -1651,7 +1667,12 @@ button.benchSlot:not(:disabled):hover {
   flex-direction: column;
   gap: 16px;
   padding: 16px 16px calc(96px + env(safe-area-inset-bottom, 0px));
-  min-height: 100dvh;
+  /* svh, NOT dvh/vh: iOS Safari grows the dynamic viewport when its toolbar
+     collapses on first interaction; a dvh min-height reflows the whole page
+     mid-tap and the fixed lock bar shifts under the user's finger (the
+     "first tap near LOCK PICK does nothing" bug). The small-viewport box is
+     stable across toolbar states. */
+  min-height: 100svh;
   background: var(--bg-850);
   color: var(--ink-100);
   font-family: var(--f-body);
@@ -1740,22 +1761,22 @@ button.benchSlot:not(:disabled):hover {
 .formationSelect {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 12px 4px 80px;
+  gap: 16px;
+  padding: 12px 4px 16px;
 }
 
 .formationHead {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
 }
 
 .formationTitle {
   font-family: var(--f-display);
   font-weight: 700;
-  font-size: 32px;
+  font-size: 28px;
   margin: 0;
   color: var(--ink-100);
 }
@@ -1767,10 +1788,10 @@ button.benchSlot:not(:disabled):hover {
   max-width: 32ch;
 }
 
-/* MOBILE-FIRST 6+ card grid. Cards stay tappable (min-height ~168px) but
-   scale down enough that 6 formations fit two columns at ~360px viewport,
-   and the layout flows to 3/4 columns on tablets+desktop. The previous
-   `1fr 1fr` always-two-col rule didn't compose at 10+ formations. */
+/* MOBILE-FIRST 6+ tile grid (ws-ux/mobile-polish-2 compaction): horizontal
+   tiles — small pitch preview left, name + lock CTA right — so all six
+   shapes land within one phone screen (2-col × 3 rows ≈ 260px) instead of
+   ~2 tiles per screen. Flows to 3/4 columns on tablets+desktop. */
 .formationGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
@@ -1784,20 +1805,21 @@ button.benchSlot:not(:disabled):hover {
   .formationGrid {
     grid-template-columns: 1fr;
   }
-
-  .formationGrid {
-    grid-template-columns: 1fr;
-  }
 }
 
+/* Pre-draft card system — shares the mode-select design language: 14px
+   radius (12px compact), 1px chalk border, left accent bar, mono uppercase
+   CTA (see .modeCard). Change one, change both. */
 .formationCard {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   background: var(--bg-750);
   border: 1px solid var(--line);
-  border-radius: var(--r-3);
-  padding: 10px;
-  gap: 8px;
+  border-left: 3px solid var(--accent);
+  border-radius: 14px;
+  padding: 8px 10px;
+  gap: 10px;
   cursor: pointer;
   transition:
     transform var(--d-fast) var(--e-snap),
@@ -1806,7 +1828,7 @@ button.benchSlot:not(:disabled):hover {
   text-align: left;
   color: inherit;
   font-family: inherit;
-  min-height: 168px;
+  min-height: 76px;
 }
 
 .formationCard:hover,
@@ -1830,6 +1852,7 @@ button.benchSlot:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .formationCardName {
@@ -1837,13 +1860,6 @@ button.benchSlot:not(:disabled):hover {
   font-size: 18px;
   letter-spacing: 0.02em;
   color: var(--ink-100);
-}
-
-.formationCardBlurb {
-  margin: 0;
-  font-size: var(--t-xs);
-  color: var(--ink-300);
-  line-height: 1.4;
 }
 
 .formationCardCta {
@@ -1862,10 +1878,12 @@ button.benchSlot:not(:disabled):hover {
 
 /* ── Mini-pitch on the formation cards ──────────────────────────────────── */
 
-/* Compact mini-pitch — 5/6 aspect keeps cards short enough for 6+ on mobile
-   without distorting position spacing. */
+/* Compact mini-pitch — fixed 56px-wide thumbnail (5/6 aspect, no position
+   distortion) sitting on the tile's left so six tiles fit one phone screen. */
 .miniPitch {
   position: relative;
+  flex: 0 0 56px;
+  width: 56px;
   aspect-ratio: 5 / 6;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
@@ -1880,8 +1898,8 @@ button.benchSlot:not(:disabled):hover {
    triangle (its true core line). */
 .miniDot {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 7px;
+  height: 7px;
   transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
   border-radius: 999px;
   background: var(--ink-200);
@@ -2465,6 +2483,13 @@ button.benchSlot:not(:disabled):hover {
   border-top: 1px solid var(--line-2);
   box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
+  /* Kill the 350ms double-tap-zoom heuristic on the most-pressed surface in
+     the game — first tap must commit immediately (iOS Safari). */
+  touch-action: manipulation;
+}
+
+.lockBar button {
+  touch-action: manipulation;
 }
 
 .lockInfo {
@@ -2551,7 +2576,9 @@ button.benchSlot:not(:disabled):hover {
 .sheet {
   width: 100%;
   max-width: 480px;
-  max-height: 75vh;
+  /* dvh, not vh: classic-vh ignores the iOS toolbar state and lets the
+     sheet's bottom land under Safari's collapsed chrome. */
+  max-height: 75dvh;
   background: var(--bg-800);
   border-top-left-radius: var(--r-3);
   border-top-right-radius: var(--r-3);
@@ -3436,9 +3463,14 @@ button.benchSlot:not(:disabled):hover {
   z-index: 1;
 }
 
+/* Inactive adjacency edge (reveal/review surfaces) — the structural "could
+   link" graph. Deliberately quiet: ~20% neutral ink, 1px, no glow, so the
+   pitch never reads as a wire mesh and live emerald edges stay dominant.
+   `--ink-300` flips with the theme, keeping the line visible (but quiet) on
+   the light pitch too. */
 .synergyLineIdle {
-  stroke: var(--pitch-line);
-  stroke-width: 0.55;
+  stroke: color-mix(in srgb, var(--ink-300) 22%, transparent);
+  stroke-width: 1;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
@@ -3632,8 +3664,11 @@ button.benchSlot:not(:disabled):hover {
   color: var(--ink-300);
 }
 
-/* "Rating unavailable" — the manager rating contract is HONEST-STATE:
-   runtime data never carries one, and the UI never fabricates one. */
+/* Manager slot status chip — now only the draft-time "Preview" state.
+   The manager rating contract stays HONEST-STATE: runtime data never
+   carries a rating and the UI never fabricates one; since absence is
+   structural (every manager), the old "Rating unavailable" pill restated
+   nothing and was removed on every surface (ws-ux/mobile-polish-2). */
 .managerSlotBadge {
   align-self: flex-start;
   font-family: var(--f-mono);
@@ -3658,8 +3693,8 @@ button.benchSlot:not(:disabled):hover {
    Compact candidate rows (video-game lineup density). One scannable line by
    default; tapping selects AND expands the full detail in-place. Honest-state
    throughout: unknown OVR shows "—", coverage/channels are real, provenance is
-   the left hue stripe + dot. Manager shows "Rating unavailable" (never a
-   fabricated number).
+   the left hue stripe + dot. Manager rows render NO rating surface at all
+   (managers structurally carry none — never a fabricated number).
    ───────────────────────────────────────────────────────────────────────── */
 .candRow {
   position: relative;
@@ -4394,11 +4429,14 @@ button.benchSlot:not(:disabled):hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
+  /* Horizontal tile (preview left, name + CTA right) — keeps every shape
+     comparable at 5/6 aspect while all six tiles fit one visible screen.
+     12px radius matches .modeCard at this width (shared card system). */
   .formationCard {
-    padding: 8px;
-    gap: 6px;
-    min-height: 0;
-    border-radius: var(--r-2);
+    padding: 6px 8px;
+    gap: 8px;
+    min-height: 60px;
+    border-radius: 12px;
   }
   .formationCardBody {
     gap: 2px;
@@ -4406,26 +4444,17 @@ button.benchSlot:not(:disabled):hover {
   .formationCardName {
     font-size: 15px;
   }
-  .formationCardBlurb {
-    font-size: 10px;
-    line-height: 1.35;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .formationCardCta {
     font-size: 9px;
     letter-spacing: 0.06em;
   }
-  /* Flat mini-pitch: the previews are the bulk of the picker. 16/10 keeps
-     the six shapes comparable (relative spacing intact) while letting all
-     six cards reach a single 390x844 viewport with minimal scroll. */
   .miniPitch {
-    aspect-ratio: 16 / 10;
+    flex-basis: 48px;
+    width: 48px;
   }
   .miniDot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   /* ── Formation/Synergy section (lineup view) ─────────────────── */
@@ -4754,18 +4783,25 @@ button.benchSlot:not(:disabled):hover {
   letter-spacing: 0.04em;
 }
 
-.candRare {
-  position: relative;
-}
-.candRare::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold-strong), var(--gold), var(--gold-strong));
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  pointer-events: none;
+/* Rare candidate marker (ws-ux/mobile-polish-2): an inline gold chip beside
+   the name, replacing the old full-width gold top band. One accent axis per
+   edge — the left stripe stays provenance-only, gold marks the pick/win
+   moment at the moment site (chip here, ring on the selected card, glow on
+   the spin stage). */
+.candRareTag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  vertical-align: 1px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
 }
 
 @keyframes rarePulse {

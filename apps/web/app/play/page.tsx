@@ -13,12 +13,11 @@ export default function ModeSelectPage() {
       <header className="page-head">
         <span className="eyebrow">New draft</span>
         <h1 className="display">Choose your mode</h1>
+        {/* ws-ux/mobile-polish-2: subtitle + pool note merged into one line —
+            the header must leave both mode cards visible in a ~390×664
+            viewport with zero scroll. */}
         <p className="lede">
-          Seventeen spins, one all-time XI. Pick how much the draft shows you before you commit.
-        </p>
-        <p className="page-head__note">
-          Live on the real 1930–2026 pool. Draft, eight-match simulation and scoring all run in
-          your browser.
+          Seventeen spins, one all-time XI — live on the real 1930–2026 pool, all in your browser.
         </p>
       </header>
 
@@ -31,8 +30,8 @@ export default function ModeSelectPage() {
           </div>
           <h2 className={s.modeName}>Classic</h2>
           <p className={s.modeDesc}>
-            Ratings, positions and stats are all on the table. Every rolled squad shows you exactly
-            what you&rsquo;re choosing between — pure drafting skill.
+            Ratings, positions and stats all on the table — pure drafting skill on every rolled
+            squad.
           </p>
           <ul className={s.modeFeatures}>
             <li>Ratings visible</li>
@@ -50,8 +49,8 @@ export default function ModeSelectPage() {
           </div>
           <h2 className={s.modeName}>Memory</h2>
           <p className={s.modeDesc}>
-            Names, flags and years stay on the table — ratings don&rsquo;t. You draft on what you
-            remember of the player, not a visible OVR. Everything reveals after you simulate.
+            Names, flags and years stay — ratings don&rsquo;t. Draft on what you remember;
+            everything reveals after you simulate.
           </p>
           <ul className={s.modeFeatures}>
             <li>Ratings &amp; Synergy numbers hidden</li>
