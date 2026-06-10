@@ -25,7 +25,7 @@ the `9c71219` run (fresh clone) — untouched by that presentation-only change.
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
-## Test counts (run 2026-06-10 at `9c71219`)
+## Test counts (run 2026-06-10 on q-001 micro-Yellow bundle off `b5829f9`; web +2 synergy display-rounding tests)
 
 | Suite                                   | Result                      |
 | --------------------------------------- | --------------------------- |

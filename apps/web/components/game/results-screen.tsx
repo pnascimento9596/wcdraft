@@ -27,6 +27,7 @@ import {
 } from "@/lib/game/run-token";
 import { runSimulation } from "@/lib/game/simulate";
 import {
+  buildNarrativeLabels,
   buildRunSummary,
   deriveBox,
   matchCardViews,
@@ -282,9 +283,22 @@ function ResultsBody({
   const eliminatedInGroup =
     !sim.group_stage.user_qualified && sim.matches.length === 3;
 
+  const narrativeLabels = useMemo(
+    () => buildNarrativeLabels(gameData, scenario, record.draft),
+    [gameData, scenario, record.draft],
+  );
+
   const summary: RunSummaryView = useMemo(
-    () => buildRunSummary(gameData, record.draft.team_name, sim.run, sim.matches, eliminatedInGroup),
-    [gameData, record.draft.team_name, sim.run, sim.matches, eliminatedInGroup],
+    () =>
+      buildRunSummary(
+        gameData,
+        record.draft.team_name,
+        sim.run,
+        sim.matches,
+        eliminatedInGroup,
+        narrativeLabels,
+      ),
+    [gameData, record.draft, sim.run, sim.matches, eliminatedInGroup, narrativeLabels],
   );
 
   const matchCards: MatchCardView[] = useMemo(

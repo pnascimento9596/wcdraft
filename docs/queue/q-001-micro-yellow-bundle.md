@@ -1,7 +1,7 @@
 # q-001 — micro-Yellow polish bundle
 
 - **Tier:** Yellow · **Mode:** `SELF-SERVE:YELLOW`
-- **Status:** OPEN
+- **Status:** DONE (ws-ux/micro-yellow-1)
 - **Origin:** verified non-blocking findings from the season-merge live verification,
   PR #62 review, and the F-4 U3 independent review.
 

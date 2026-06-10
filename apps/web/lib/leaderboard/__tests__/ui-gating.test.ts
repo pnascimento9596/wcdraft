@@ -35,11 +35,7 @@ import { submitStatusCopy } from "../submit-copy";
 import type { SubmitPhase } from "../submit-state";
 import { runSimulationSync } from "../../game/simulate";
 import type { RunRecordV1 } from "../../game/run-record";
-import {
-  buildOriginRecord,
-  buildServerGameData,
-  serverScenarioBundle,
-} from "./_harness";
+import { buildOriginRecord, buildServerGameData, serverScenarioBundle } from "./_harness";
 
 const FLAG = "LEADERBOARD_ENABLED";
 let savedFlag: string | undefined;
@@ -169,9 +165,7 @@ describe("LeaderboardSubmitPanel (container)", () => {
 
   it("shows the run's engine score (the value being claimed)", () => {
     const record = simulatedRecord("classic");
-    const html = renderToStaticMarkup(
-      createElement(LeaderboardSubmitPanel, { gameData, record }),
-    );
+    const html = renderToStaticMarkup(createElement(LeaderboardSubmitPanel, { gameData, record }));
     expect(html).toContain(`${record.simulation!.run.score}`);
   });
 
@@ -189,9 +183,7 @@ describe("LeaderboardSubmitPanel (container)", () => {
 
   it("is absent for an unsimulated record", () => {
     const record = buildOriginRecord(gameData, "wcdraft:f4-u4-ui:nosim:1");
-    const html = renderToStaticMarkup(
-      createElement(LeaderboardSubmitPanel, { gameData, record }),
-    );
+    const html = renderToStaticMarkup(createElement(LeaderboardSubmitPanel, { gameData, record }));
     expect(html).toBe("");
   });
 });

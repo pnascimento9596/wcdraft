@@ -61,11 +61,7 @@ export type SubmitRejectionCode =
   | "SCORE_MISMATCH";
 
 /** Codes owned by the route layer (U3/U5) — steps 4 and 6 of the pipeline. */
-export type SubmitGateCode =
-  | "AUTH_REQUIRED"
-  | "CSRF_FAILED"
-  | "RATE_LIMITED"
-  | "BAD_ATTEMPT";
+export type SubmitGateCode = "AUTH_REQUIRED" | "CSRF_FAILED" | "RATE_LIMITED" | "BAD_ATTEMPT";
 
 export type SubmitErrorCode = SubmitRejectionCode | SubmitGateCode;
 
@@ -154,10 +150,7 @@ function rejected(code: SubmitRejectionCode, reason: string): RejectedSubmission
   return { status: "rejected", code, reason };
 }
 
-function mismatchedAnchors(
-  token: RunTokenV1Body,
-  versions: RunRecordVersions,
-): VersionAnchor[] {
+function mismatchedAnchors(token: RunTokenV1Body, versions: RunRecordVersions): VersionAnchor[] {
   return VERSION_ANCHORS.filter(([t, v]) => token[t] !== versions[v]).map(([, v]) => v);
 }
 
@@ -165,10 +158,7 @@ function mismatchedAnchors(
  * Validate one leaderboard submission. Pure and deterministic over
  * (`body`, `data`); strictly cheapest-rejection-first.
  */
-export function validateSubmission(
-  body: SubmissionBody,
-  data: ValidationData,
-): SubmitVerdict {
+export function validateSubmission(body: SubmissionBody, data: ValidationData): SubmitVerdict {
   // 1 — shape + size. Size BEFORE decode so an oversize token never reaches
   // base64/JSON work (decodeRunToken would null it, but with the wrong code).
   if (typeof body.token !== "string") {

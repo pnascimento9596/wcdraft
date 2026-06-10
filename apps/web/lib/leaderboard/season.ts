@@ -33,7 +33,10 @@ export const SEASON_KEY_HASH_LEN = 8;
  */
 export function deriveSeasonKey(versions: RunRecordVersions): string {
   const joined = SEASON_HASH_ANCHOR_ORDER.map((k) => versions[k]).join("\n");
-  const suffix = createHash("sha256").update(joined, "utf8").digest("hex").slice(0, SEASON_KEY_HASH_LEN);
+  const suffix = createHash("sha256")
+    .update(joined, "utf8")
+    .digest("hex")
+    .slice(0, SEASON_KEY_HASH_LEN);
   return [
     versions.engine_version,
     versions.rating_version,

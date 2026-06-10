@@ -151,7 +151,8 @@ export function SpinStage({
           <span className={s.spinStatusChip}>
             <span className={s.spinStatusChipLabel}>Synergy</span>
             <span className={s.spinStatusChipValue}>
-              {synergyOverall ?? "—"}
+              {/* Display rounding only — the engine value stays fractional. */}
+              {synergyOverall !== null ? Math.round(synergyOverall) : "—"}
             </span>
           </span>
         </div>

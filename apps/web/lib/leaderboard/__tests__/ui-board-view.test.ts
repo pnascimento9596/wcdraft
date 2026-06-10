@@ -29,10 +29,7 @@ function entry(over: Partial<BoardEntryWire> & { id: string; rank: number }): Bo
   };
 }
 
-function page(
-  entries: BoardEntryWire[],
-  nextCursor: string | null,
-): BoardPageWire {
+function page(entries: BoardEntryWire[], nextCursor: string | null): BoardPageWire {
   return {
     season_key: "s",
     current_season_key: "s",

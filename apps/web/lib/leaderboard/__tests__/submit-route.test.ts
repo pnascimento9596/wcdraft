@@ -142,10 +142,7 @@ async function sessionReqOpts(userId: string | null = null): Promise<{
 
 describe("transport gates (before any pipeline work)", () => {
   it("non-JSON content-type → 415, no row", async () => {
-    const res = await handleLeaderboardSubmit(
-      makeReq({ contentType: "text/plain" }),
-      makeDeps(),
-    );
+    const res = await handleLeaderboardSubmit(makeReq({ contentType: "text/plain" }), makeDeps());
     expect(res.status).toBe(415);
     expect((await errorOf(res)).error).toBe("UNSUPPORTED_MEDIA_TYPE");
     expect(await allRows()).toHaveLength(0);
@@ -264,10 +261,7 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
       const [first, , , second] = picks;
       (b.pl[second!.i] as { c: string }).c = first!.p.c;
     });
-    const res = await handleLeaderboardSubmit(
-      makeReq({ body: validBody({ token }) }),
-      makeDeps(),
-    );
+    const res = await handleLeaderboardSubmit(makeReq({ body: validBody({ token }) }), makeDeps());
     expect(res.status).toBe(422);
     expect((await errorOf(res)).error).toBe("ILLEGAL_PICK");
     expect(await allRows()).toHaveLength(0);
@@ -290,10 +284,7 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
       gameData: data.gameData,
       scenario: { ...data.scenario, teams: [] } as ValidationData["scenario"],
     };
-    const res = await handleLeaderboardSubmit(
-      makeReq(),
-      makeDeps({ getValidation: () => broken }),
-    );
+    const res = await handleLeaderboardSubmit(makeReq(), makeDeps({ getValidation: () => broken }));
     expect(res.status).toBe(500);
     expect((await errorOf(res)).error).toBe("SIM_FAILURE");
     expect(await allRows()).toHaveLength(0);
@@ -384,10 +375,7 @@ describe("session identity + CSRF (plan §5.3 — like POST /api/runs)", () => {
   });
 
   it("account-bound session → user_id persisted", async () => {
-    const inserted = await db
-      .insert(users)
-      .values({ email: "f4-u3@example.com" })
-      .returning();
+    const inserted = await db.insert(users).values({ email: "f4-u3@example.com" }).returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
     const res = await handleLeaderboardSubmit(makeReq(opts), makeDeps());
     expect(res.status).toBe(201);
