@@ -4,9 +4,10 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · web count re-measured at ws-ux/mobile-polish-2 (#78,
-off main `b5829f9`): 528 passed (+2 synergy-overlay tests). All other counts from
-the `9c71219` run (fresh clone) — untouched by that presentation-only change.
+Last measured: 2026-06-10 · web count re-measured on ws-ux/micro-yellow-1 (q-001)
+rebased onto main `b4f8651` (#78): 530 passed (+2 synergy display-rounding tests on
+top of #78's 528). All other counts from the `9c71219` run (fresh clone) —
+untouched by these display/docs-only changes.
 
 ## Lanes in flight at last measurement
 
@@ -25,7 +26,7 @@ the `9c71219` run (fresh clone) — untouched by that presentation-only change.
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
-## Test counts (run 2026-06-10 on q-001 micro-Yellow bundle off `b5829f9`; web +2 synergy display-rounding tests)
+## Test counts (run 2026-06-10; web re-run on q-001 at main `b4f8651`, rest at `9c71219`)
 
 | Suite                                   | Result                      |
 | --------------------------------------- | --------------------------- |
@@ -36,7 +37,7 @@ the `9c71219` run (fresh clone) — untouched by that presentation-only change.
 | @wcdraft/data `test:golden:data`        | 28 passed                   |
 | @wcdraft/data `test:golden:integration` | 10 passed                   |
 | @wcdraft/db `test`                      | 74 passed                   |
-| @wcdraft/web `test`                     | 528 passed, 1 skipped (529) |
+| @wcdraft/web `test`                     | 530 passed, 1 skipped (531) |
 | @wcdraft/web `test:golden:leaderboard`  | 5 passed                    |
 | etl `pytest -q`                         | 159 passed                  |
 | `pnpm build`                            | 4/4 tasks green             |
