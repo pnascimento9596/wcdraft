@@ -8,15 +8,33 @@ import { ThemeToggle } from "./theme-toggle";
 import { CloseIcon, MenuIcon } from "./icons";
 import { AccountMenu } from "./account-menu";
 
-const MENU = [
-  { href: "/play", label: "Play" },
-  { href: "/play/history", label: "History" },
-  { href: "/how-to-play", label: "How to Play" },
-  { href: "/settings", label: "Settings" },
-  { href: "/privacy", label: "Privacy Policy" },
-] as const;
+export interface MenuItem {
+  readonly href: string;
+  readonly label: string;
+}
 
-export function SiteHeader() {
+/**
+ * F-4 U4 — menu derivation. The Leaderboard entry exists only when the
+ * server says the feature is live (layout reads LEADERBOARD_ENABLED; no
+ * NEXT_PUBLIC_ mirror) — when dark there is no dead link anywhere.
+ */
+export function buildMenu(opts: { leaderboardEnabled: boolean }): MenuItem[] {
+  return [
+    { href: "/play", label: "Play" },
+    { href: "/play/history", label: "History" },
+    ...(opts.leaderboardEnabled ? [{ href: "/leaderboard", label: "Leaderboard" }] : []),
+    { href: "/how-to-play", label: "How to Play" },
+    { href: "/settings", label: "Settings" },
+    { href: "/privacy", label: "Privacy Policy" },
+  ];
+}
+
+export function SiteHeader({
+  leaderboardEnabled = false,
+}: {
+  leaderboardEnabled?: boolean;
+}) {
+  const menu = buildMenu({ leaderboardEnabled });
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -46,7 +64,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="nav-desktop" aria-label="Primary">
-          {MENU.map((item) => (
+          {menu.map((item) => (
             <Link key={item.href} href={item.href} className="nav-link">
               {item.label}
             </Link>
@@ -74,7 +92,7 @@ export function SiteHeader() {
       <nav id="mobile-menu" className="mobile-menu" aria-label="Menu" hidden={!open}>
         <div className="container">
           <ul className="mobile-menu__list">
-            {MENU.map((item, i) => (
+            {menu.map((item, i) => (
               <li key={item.href}>
                 <Link href={item.href} className="mobile-menu__link">
                   <span className="mobile-menu__num">{String(i + 1).padStart(2, "0")}</span>
