@@ -38,6 +38,7 @@ import {
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
 
+import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
 import { MemoryReveal } from "./memory-reveal";
 import s from "./game.module.css";
 
@@ -55,7 +56,12 @@ type Mode =
   | { kind: "skew"; title: string; message: string }
   | { kind: "error"; title: string; message: string };
 
-export function ResultsScreen() {
+export function ResultsScreen({
+  leaderboardEnabled = false,
+}: {
+  /** F-4 U4 — server-gated ship-dark flag (results page reads the env). */
+  leaderboardEnabled?: boolean;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   // Parsed once at component scope so both the load effect AND the render
@@ -233,6 +239,7 @@ export function ResultsScreen() {
       record={mode.record}
       isReplayedFromToken={mode.isReplayedFromToken}
       linkRunValue={linkRunValue}
+      leaderboardEnabled={leaderboardEnabled}
     />
   );
 }
@@ -260,6 +267,7 @@ function ResultsBody({
   record,
   isReplayedFromToken,
   linkRunValue,
+  leaderboardEnabled,
 }: {
   gameData: GameData;
   scenario: Scenario2026Bundle;
@@ -267,6 +275,7 @@ function ResultsBody({
   isReplayedFromToken: boolean;
   /** Value to thread into in-screen `?run=` URLs — the token when replayed, the run_id otherwise. */
   linkRunValue: string | null;
+  leaderboardEnabled: boolean;
 }) {
   void isReplayedFromToken; // present for future banner UI; not rendered yet.
   const sim = record.simulation!;
@@ -378,6 +387,15 @@ function ResultsBody({
           })}
         </ul>
       </section>
+
+      {/* ── Leaderboard submit (F-4 U4) ───────────────────────────────────
+          Post-sim only (this body only mounts with a simulation), classic
+          AND hidden. Server-gated: when the leaderboard is dark the prop is
+          false and nothing renders. The panel itself also stays absent when
+          the run's version anchors don't match the loaded bundle. */}
+      {leaderboardEnabled ? (
+        <LeaderboardSubmitPanel gameData={gameData} record={record} />
+      ) : null}
 
       {/* ── Seed + actions ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.seedPanel}`}>
