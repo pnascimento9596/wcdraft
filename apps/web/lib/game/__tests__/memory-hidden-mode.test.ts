@@ -1,0 +1,369 @@
+// Memory (hidden) mode — blind seam + determinism contract tests.
+//
+// REQUIRED OUTCOMES (memory-hidden-mode build plan):
+//   - DETERMINISM: a hidden run and a classic run from the SAME seed produce
+//     BYTE-IDENTICAL sim results. Mode is display-only — it never reaches the
+//     engine/sim. Asserted on the full `PersistedSimulation` payload.
+//   - BLIND SET (display): `blindCardRatingView` hides OVR, the four
+//     channels, coverage (rating-confidence metadata — % and bars), the
+//     legend gold (via the #56 `badge_kind` seam — never a re-derived
+//     OVR≥96 check), the provenance hue/label, and `overall_basis`.
+//   - KEEP SET (display): identity (name, nation, year), position shape
+//     inputs, position-fit/compatibility numerics, stats and interactivity
+//     inputs stay untouched.
+//   - TOKEN: `md: "hidden"` rides the `t1.` token and reconstructs a
+//     hidden-mode draft, so a shared hidden run replays (and reveals) on web.
+
+import { describe, expect, it } from "vitest";
+
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+
+import {
+  activeSpin,
+  autoDraft,
+  buildDraftCatalog,
+  createDraft,
+  stepDraft,
+  type DraftDataset,
+  type DraftState,
+} from "@wcdraft/core";
+import {
+  DRAFT_POOL_BUNDLE,
+  RUNTIME_DATA_MANIFEST,
+  SCENARIO_2026_BUNDLE,
+  type RuntimeDataManifest,
+} from "@wcdraft/data";
+
+import type { GameData, RunRecordVersions } from "../data";
+import { buildGameDataIndexes, composeVersions } from "../data";
+import type { RunRecordV1 } from "../run-record";
+import { runSimulationSync } from "../simulate";
+import {
+  draftCandidateViews,
+  pitchSlotViews,
+  playerCardView,
+} from "../adapters";
+import {
+  buildRunTokenBody,
+  decodeRunToken,
+  encodeRunToken,
+  reconstructDraftFromToken,
+} from "../run-token";
+import { blindCardRatingView, type CardRatingView } from "../view-models";
+import type { PlayerCardView } from "../view-models";
+import { CandidateCard } from "@/components/game/candidate-card";
+
+// ─── Harness (mirrors run-token.test.ts) ─────────────────────────────────────
+
+const PARENT_SEED = "wcdraft:memory-mode:v1:7";
+
+function buildDataset(): DraftDataset {
+  return {
+    players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
+      player_id: c.player_id,
+      tournament_id: c.tournament_id,
+      nation_id: c.nation_id,
+      eligible_positions: c.eligible_positions,
+    })),
+    managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
+      manager_id: m.manager_id,
+      tournament_id: m.tournament_id,
+      nation_id: m.nation_id,
+    })),
+    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
+      tournament_id: Number(tid),
+      year: t.year,
+    })),
+  };
+}
+
+function buildGameDataFromBundles(): GameData {
+  const manifest = RUNTIME_DATA_MANIFEST as RuntimeDataManifest;
+  const versions: RunRecordVersions = composeVersions(manifest);
+  const indexes = buildGameDataIndexes(DRAFT_POOL_BUNDLE);
+  const draftDataset = buildDataset();
+  const catalog = buildDraftCatalog(draftDataset);
+  return {
+    manifest,
+    draftPool: DRAFT_POOL_BUNDLE,
+    versions,
+    indexes,
+    draftDataset,
+    catalog,
+    nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+  };
+}
+
+function buildRecord(
+  gameData: GameData,
+  mode: "classic" | "hidden",
+  seed = PARENT_SEED,
+): RunRecordV1 {
+  const draft = autoDraft({
+    run_id: "memory-mode-origin",
+    parent_seed: seed,
+    formation_id: "4-3-3",
+    mode,
+    team_name: "Memory XI",
+    dataset_version: gameData.versions.dataset_version,
+    rating_version: gameData.versions.rating_version,
+    engine_version: gameData.versions.engine_version,
+    dataset: gameData.draftDataset,
+  });
+  return {
+    record_version: 1,
+    run_id: "memory-mode-origin",
+    parent_seed: seed,
+    created_seq: 1,
+    updated_seq: 1,
+    versions: gameData.versions,
+    draft,
+  };
+}
+
+/** DraftState with the `mode` field dropped — for everything-else equality. */
+function draftSansMode(draft: DraftState): Omit<DraftState, "mode"> {
+  const { mode, ...rest } = draft;
+  void mode;
+  return rest;
+}
+
+// ─── Determinism: mode never reaches the engine/sim ──────────────────────────
+
+describe("memory mode — classic vs hidden determinism", () => {
+  const gameData = buildGameDataFromBundles();
+  const classic = buildRecord(gameData, "classic");
+  const hidden = buildRecord(gameData, "hidden");
+
+  it("same seed → byte-identical DraftState apart from the mode tag", () => {
+    expect(classic.draft.mode).toBe("classic");
+    expect(hidden.draft.mode).toBe("hidden");
+    // Spins, picks, squad, dedup state — everything but `mode` is identical.
+    expect(JSON.stringify(draftSansMode(hidden.draft))).toBe(
+      JSON.stringify(draftSansMode(classic.draft)),
+    );
+  });
+
+  it("same seed → BYTE-IDENTICAL PersistedSimulation payloads", () => {
+    const classicSim = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, classic).simulation;
+    const hiddenSim = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, hidden).simulation;
+    // The whole deterministic payload — scenario, run (score breakdown,
+    // narrative, seed), per-match event logs, group stage, ladder meta.
+    expect(JSON.stringify(hiddenSim)).toBe(JSON.stringify(classicSim));
+  });
+});
+
+// ─── Blind seam: blindCardRatingView ─────────────────────────────────────────
+
+describe("memory mode — blindCardRatingView blind/keep sets", () => {
+  const legendInput: CardRatingView = {
+    overall: 97,
+    attack: 95,
+    midfield: 88,
+    defense: 41,
+    goalkeeping: 12,
+    coverage: 0.92,
+    provenance: "wc_performance",
+    overall_basis: "measured_performance",
+    legend: true,
+    badge_kind: "legend",
+    badge_label: "Legend",
+  };
+
+  it("hides the full blind set — OVR, channels, legend gold, provenance hue", () => {
+    const blinded = blindCardRatingView(legendInput);
+    expect(blinded.overall).toBeNull();
+    expect(blinded.attack).toBeNull();
+    expect(blinded.midfield).toBeNull();
+    expect(blinded.defense).toBeNull();
+    expect(blinded.goalkeeping).toBeNull();
+    // Legend gold is blinded via the badge seam, not a re-derived check.
+    expect(blinded.badge_kind).toBe("masked");
+    expect(blinded.badge_label).toBe("Hidden");
+    expect(blinded.legend).toBeUndefined();
+    expect(blinded.overall_basis).toBeUndefined();
+  });
+
+  it("blinds coverage (rating-confidence metadata) and does not mutate its input", () => {
+    const before = JSON.stringify(legendInput);
+    const blinded = blindCardRatingView(legendInput);
+    expect(blinded.coverage).toBeNull();
+    expect(JSON.stringify(legendInput)).toBe(before);
+  });
+
+  it("masks every badge kind uniformly — estimate/projected don't leak either", () => {
+    for (const badge_kind of ["historical", "projected", "estimate", "legend"] as const) {
+      const blinded = blindCardRatingView({ ...legendInput, badge_kind });
+      expect(blinded.badge_kind).toBe("masked");
+    }
+  });
+});
+
+// ─── Blind seam: adapter threading ───────────────────────────────────────────
+
+describe("memory mode — adapters blind ratings but keep identity", () => {
+  const gameData = buildGameDataFromBundles();
+  const record = buildRecord(gameData, "hidden");
+  const firstCardId = record.draft.squad.find((sl) => sl.card_id !== null)!.card_id!;
+
+  it("playerCardView({blindRatings:true}) blinds rating, keeps the keep set", () => {
+    const open = playerCardView(gameData.indexes, firstCardId);
+    const blinded = playerCardView(gameData.indexes, firstCardId, { blindRatings: true });
+
+    // Blind set.
+    expect(blinded.rating.overall).toBeNull();
+    expect(blinded.rating.attack).toBeNull();
+    expect(blinded.rating.badge_kind).toBe("masked");
+
+    // Keep set — identity, shape inputs, stats are untouched.
+    expect(blinded.name).toBe(open.name);
+    expect(blinded.nation_code).toBe(open.nation_code);
+    expect(blinded.nation_name).toBe(open.nation_name);
+    expect(blinded.year).toBe(open.year);
+    expect(blinded.primary_position).toBe(open.primary_position);
+    expect(blinded.eligible_positions).toEqual(open.eligible_positions);
+    expect(blinded.stats).toEqual(open.stats);
+    // Coverage is rating-confidence metadata — it rides the BLIND set.
+    expect(blinded.rating.coverage).toBeNull();
+  });
+
+  it("legend cards never leak gold through the blind", () => {
+    // Find a card whose OPEN badge is legend (source flag or OVR≥96).
+    let legendCardId: string | null = null;
+    for (const [cardId, r] of gameData.indexes.ratingByCardId) {
+      if (r.legend === true || (r.overall !== null && r.overall >= 96)) {
+        legendCardId = cardId;
+        break;
+      }
+    }
+    expect(legendCardId).not.toBeNull();
+    const open = playerCardView(gameData.indexes, legendCardId!);
+    expect(open.rating.badge_kind).toBe("legend");
+    const blinded = playerCardView(gameData.indexes, legendCardId!, { blindRatings: true });
+    expect(blinded.rating.badge_kind).toBe("masked");
+    expect(blinded.rating.overall).toBeNull();
+  });
+
+  it("pitchSlotViews + draftCandidateViews thread the blind to every card", () => {
+    const { starters, bench } = pitchSlotViews(gameData.indexes, record.draft, {
+      blindRatings: true,
+    });
+    for (const slot of [...starters, ...bench]) {
+      if (!slot.card) continue;
+      expect(slot.card.rating.overall).toBeNull();
+      expect(slot.card.rating.badge_kind).toBe("masked");
+      expect(slot.card.name.length).toBeGreaterThan(0);
+    }
+
+    // Candidates on a LIVE (in-progress) draft — the spin pool the user
+    // actually scans. Advance a fresh hidden draft a few picks in, then
+    // assert every rolled candidate is blinded but identity-complete.
+    let inProgress = createDraft(gameData.catalog, {
+      run_id: "memory-mode-live",
+      parent_seed: `${PARENT_SEED}:candidates`,
+      formation_id: "4-3-3",
+      mode: "hidden",
+      team_name: "Memory XI",
+      dataset_version: gameData.versions.dataset_version,
+      rating_version: gameData.versions.rating_version,
+      engine_version: gameData.versions.engine_version,
+    });
+    for (let i = 0; i < 3; i += 1) {
+      inProgress = stepDraft(gameData.catalog, inProgress);
+    }
+    const spin = activeSpin(inProgress);
+    expect(spin).not.toBeNull();
+    const views = draftCandidateViews(gameData.indexes, inProgress, spin, {
+      blindRatings: true,
+    });
+    expect(views.players.length).toBeGreaterThan(0);
+    for (const cand of views.players) {
+      expect(cand.rating.overall).toBeNull();
+      expect(cand.rating.attack).toBeNull();
+      expect(cand.rating.badge_kind).toBe("masked");
+      expect(cand.name.length).toBeGreaterThan(0);
+      expect(cand.nation_code.length).toBeGreaterThan(0);
+      expect(cand.year).toBeGreaterThan(1900);
+    }
+  });
+
+  it("classic path (no opts) is unchanged — ratings fully visible", () => {
+    const open = playerCardView(gameData.indexes, firstCardId);
+    expect(typeof open.rating.attack).toBe("number");
+    expect(open.rating.badge_kind).not.toBe("masked");
+  });
+});
+
+// ─── Markup digit probe: a hidden candidate leaks no coverage digits ─────────
+
+describe("memory mode — hidden candidate markup contains no coverage digits", () => {
+  const gameData = buildGameDataFromBundles();
+  const record = buildRecord(gameData, "hidden");
+  const firstCardId = record.draft.squad.find((sl) => sl.card_id !== null)!.card_id!;
+
+  /** Static-markup render (no DOM needed) of the EXPANDED candidate row. */
+  function renderCard(card: PlayerCardView): string {
+    return renderToStaticMarkup(
+      createElement(CandidateCard, {
+        card,
+        selected: true,
+        onSelect: () => {},
+      }),
+    );
+  }
+
+  /** Visible text only — strips tags (and with them style/title attributes). */
+  function textContent(html: string): string {
+    return html.replace(/<[^>]+>/g, " ");
+  }
+
+  it("hidden candidate: zero coverage digits — every digit run is keep-set", () => {
+    const blinded = playerCardView(gameData.indexes, firstCardId, { blindRatings: true });
+    const text = textContent(renderCard(blinded));
+
+    // Coverage is the only %-rendered value on the candidate card; the blind
+    // must leave no percentage anywhere (collapsed cov cell, expanded bar val).
+    expect(text).not.toMatch(/\d\s*%/);
+
+    // Stronger: every digit run on a hidden candidate comes from the KEEP set
+    // (year, shirt number, era stats, club label) — never a rating signal.
+    const allowed = new Set<string>([String(blinded.year)]);
+    if (blinded.shirt_number !== null) allowed.add(String(blinded.shirt_number));
+    for (const st of blinded.stats) {
+      if (typeof st.value === "number") allowed.add(String(st.value));
+    }
+    for (const run of blinded.club_label?.match(/\d+/g) ?? []) allowed.add(run);
+    for (const run of text.match(/\d+/g) ?? []) {
+      expect(allowed.has(run), `unexpected digit run "${run}" on a hidden candidate`).toBe(true);
+    }
+  });
+
+  it("classic control: the coverage % still renders", () => {
+    const open = playerCardView(gameData.indexes, firstCardId);
+    const text = textContent(renderCard(open));
+    expect(text).toMatch(/\d+%/);
+  });
+});
+
+// ─── Token: `md` rides the t1. token (share/replay → reveal path) ────────────
+
+describe("memory mode — t1. token carries and reconstructs hidden mode", () => {
+  const gameData = buildGameDataFromBundles();
+  const hidden = buildRecord(gameData, "hidden");
+
+  it("encodes md='hidden' and round-trips through decode", () => {
+    const body = buildRunTokenBody(hidden);
+    expect(body.md).toBe("hidden");
+    const decoded = decodeRunToken(encodeRunToken(hidden));
+    expect(decoded).not.toBeNull();
+    expect(decoded!.md).toBe("hidden");
+  });
+
+  it("reconstructs a hidden-mode draft byte-identical to the origin", () => {
+    const decoded = decodeRunToken(encodeRunToken(hidden))!;
+    const replayed = reconstructDraftFromToken(decoded, gameData);
+    expect(replayed.mode).toBe("hidden");
+    expect(JSON.stringify(replayed)).toBe(JSON.stringify(hidden.draft));
+  });
+});

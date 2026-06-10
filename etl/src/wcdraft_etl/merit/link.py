@@ -156,6 +156,13 @@ def _fact_discriminator(rec: MeritRecord) -> str:
         return f"list={extra['list']}"
     if "election" in extra:  # IFFHS century: one election vs another
         return f"election={extra['election']}"
+    if "selection" in extra:  # position-balanced / all-time: distinct XI selections
+        # A player can sit in several distinct year-less all-time XIs (e.g. the
+        # Ballon d'Or Dream Team AND an IFFHS continental dream team) — each is a
+        # genuinely distinct selection, so keep them apart. An exact repeat of the
+        # same selection still collapses (same discriminator). Linking is untouched;
+        # this only governs de-duplication of already-linked facts.
+        return f"selection={extra['selection']}"
     return ""
 
 
@@ -221,18 +228,27 @@ def link_records(
             key = (pid, rec.source_id, rec.year, _fact_discriminator(rec))
             if key in facts_by_key:
                 continue  # keep first (parse order is most-significant-first)
-            facts_by_key[key] = {
+            fact = {
                 "player_id": pid,
                 "player_name": canon.display.get(pid, pid),
                 "source_id": rec.source_id,
                 "family": rec.family,
                 "year": rec.year,
+                "position": rec.position,
                 "era": era_bucket(canon.wc_years[pid][0]),
                 "method": method,
                 "raw_name": rec.name,
                 "nation_token": rec.nation_token,
                 "detail": rec.detail,
             }
+            # Research-backstop rows carry a public citation (url + claim); parser
+            # rows do not (their provenance is the SHA-pinned snapshot + manifest).
+            # The citation rides onto the emitted fact so source_facts.json is
+            # self-auditing for every research-derived row.
+            citation = (rec.extra or {}).get("citation")
+            if citation:
+                fact["citation"] = citation
+            facts_by_key[key] = fact
         else:
             rkey = (rec.source_id, method, norm(rec.name), rec.nation_token or "")
             row = review_acc.get(rkey)
@@ -259,6 +275,7 @@ def link_records(
             f["source_id"],
             f["year"] if f["year"] is not None else -1,
             f["detail"],
+            f["position"] or "",
         ),
     )
     review = sorted(
@@ -284,6 +301,7 @@ def native_wc_legacy_facts(awards: list[dict], canon: _Canon) -> list[dict]:
             "source_id": NATIVE_WC_AWARDS_SOURCE,
             "family": "wc_legacy",
             "year": year,
+            "position": None,
             "era": era_bucket(canon.wc_years[pid][0]),
             "method": "native_canonical",
             "raw_name": a["award_name"],
@@ -292,7 +310,12 @@ def native_wc_legacy_facts(awards: list[dict], canon: _Canon) -> list[dict]:
         }
     return sorted(
         facts.values(),
-        key=lambda f: (f["player_id"], f["year"] if f["year"] is not None else -1, f["detail"]),
+        key=lambda f: (
+            f["player_id"],
+            f["year"] if f["year"] is not None else -1,
+            f["detail"],
+            f["position"] or "",
+        ),
     )
 
 

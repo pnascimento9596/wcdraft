@@ -42,24 +42,24 @@ export default function ModeSelectPage() {
           <span className={s.modeCta}>Start drafting →</span>
         </Link>
 
-        {/* Memory — designed-in, disabled */}
-        <div className={`${s.modeCard} ${s.modeCardSoon}`} aria-disabled="true">
+        {/* Memory — live. Ratings blind until the post-Simulate reveal. */}
+        <Link href="/play/draft?mode=hidden" className={`${s.modeCard} ${s.modeCardLive}`}>
           <div className={s.modeCardTop}>
-            <span className={s.modeTagSoon}>Locked</span>
+            <span className={s.modeTag}>Live</span>
             <span className={s.modeIndex}>02</span>
           </div>
           <h2 className={s.modeName}>Memory</h2>
           <p className={s.modeDesc}>
-            Identities are masked until you commit. No ratings, no names at roll time — you draft on
-            instinct and what you remember of the tournament. A harder, purer test.
+            Names, flags and years stay on the table — ratings don&rsquo;t. You draft on what you
+            remember of the player, not a visible OVR. Everything reveals after you simulate.
           </p>
           <ul className={s.modeFeatures}>
-            <li>Cards hidden until picked</li>
-            <li>No ratings at roll time</li>
+            <li>Ratings &amp; Synergy numbers hidden</li>
+            <li>Names, flags &amp; years visible</li>
             <li>Same seeds, same outcomes</li>
           </ul>
-          <span className={s.modeCtaSoon}>Coming in a later update</span>
-        </div>
+          <span className={s.modeCta}>Draft from memory →</span>
+        </Link>
       </div>
     </div>
   );

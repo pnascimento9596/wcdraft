@@ -1,0 +1,83 @@
+{
+  "files": [
+    {
+      "bytes": 10396,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/Bobby_Moore",
+        "https://en.wikipedia.org/wiki/Cafu",
+        "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres",
+        "https://en.wikipedia.org/wiki/Christian_Pulisic",
+        "https://en.wikipedia.org/wiki/Daniel_Passarella",
+        "https://en.wikipedia.org/wiki/Didier_Deschamps",
+        "https://en.wikipedia.org/wiki/Diego_Maradona",
+        "https://en.wikipedia.org/wiki/Dino_Zoff",
+        "https://en.wikipedia.org/wiki/Edin_D%C5%BEeko",
+        "https://en.wikipedia.org/wiki/Fabio_Cannavaro",
+        "https://en.wikipedia.org/wiki/Franco_Baresi",
+        "https://en.wikipedia.org/wiki/Franz_Beckenbauer",
+        "https://en.wikipedia.org/wiki/Giacinto_Facchetti",
+        "https://en.wikipedia.org/wiki/Granit_Xhaka",
+        "https://en.wikipedia.org/wiki/Harry_Kane",
+        "https://en.wikipedia.org/wiki/Iker_Casillas",
+        "https://en.wikipedia.org/wiki/Lothar_Matth%C3%A4us",
+        "https://en.wikipedia.org/wiki/Luka_Modri%C4%87",
+        "https://en.wikipedia.org/wiki/Mathew_Ryan",
+        "https://en.wikipedia.org/wiki/Mohamed_Salah",
+        "https://en.wikipedia.org/wiki/Philipp_Lahm",
+        "https://en.wikipedia.org/wiki/Wataru_Endo"
+      ],
+      "family": "captaincy",
+      "file": "research/captaincy.json",
+      "row_count": 22,
+      "sha256": "baeae94df314d0a990d39954b5e183ea947d30d2ced2bf675f4ed4a2566db699",
+      "source_id": "research_captaincy"
+    },
+    {
+      "bytes": 2721,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper"
+      ],
+      "family": "position_balanced_selection",
+      "file": "research/gk-awards.json",
+      "row_count": 3,
+      "sha256": "08ffb792f1b443797d111005bffa04fef1fbc3ccf48ea98794a701da080ebc38",
+      "source_id": "research_gk_award"
+    },
+    {
+      "bytes": 1968,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/Ballon_d%27Or"
+      ],
+      "family": "global_annual_recognition",
+      "file": "research/global-annual.json",
+      "row_count": 3,
+      "sha256": "bfb7868fe3216d0481991e03bbe4d961798f7e10332020519f2c8a7c1fab5842",
+      "source_id": "research_global_annual"
+    },
+    {
+      "bytes": 8242,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/Bobby_Moore",
+        "https://en.wikipedia.org/wiki/Carles_Puyol",
+        "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres",
+        "https://en.wikipedia.org/wiki/Dino_Zoff",
+        "https://en.wikipedia.org/wiki/Djalma_Santos",
+        "https://en.wikipedia.org/wiki/Fabien_Barthez",
+        "https://en.wikipedia.org/wiki/Franco_Baresi",
+        "https://en.wikipedia.org/wiki/Giacinto_Facchetti",
+        "https://en.wikipedia.org/wiki/Gianluca_Zambrotta",
+        "https://en.wikipedia.org/wiki/Gordon_Banks",
+        "https://en.wikipedia.org/wiki/N%C3%ADlton_Santos",
+        "https://en.wikipedia.org/wiki/Roberto_Carlos",
+        "https://en.wikipedia.org/wiki/Sepp_Maier"
+      ],
+      "family": "wc_legacy",
+      "file": "research/wc-all-star.json",
+      "row_count": 16,
+      "sha256": "a3bea5924f6edeb783b5b0bfe3ef23a52c5f3c56e4ba301aa6144943a44dcaed",
+      "source_id": "research_wc_all_star"
+    }
+  ],
+  "note": "MV2-2 deterministic factual research backstop. Citation-backed public facts for coverage gaps the parser-only lists miss (curated historical defender/GK/non-European greats + the bounded top-5-per-2026-linked-team slice). Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. The linker treats research rows identically to parser rows; an uncited row fails the build.",
+  "version": "merit-source-set-2.0.0"
+}

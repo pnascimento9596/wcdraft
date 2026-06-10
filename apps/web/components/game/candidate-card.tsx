@@ -23,13 +23,25 @@ const AWARD_LABEL: Record<string, string> = {
 };
 
 /** Mini channel-bar height as a % of the fixed bar track. Honest: a measured
- *  zero renders as an empty bar, never a fabricated stub. */
-function barHeight(value: number): string {
+ *  zero renders as an empty bar, never a fabricated stub. `null` is the
+ *  Memory-mode blind — also an empty bar (hidden, not zero). */
+function barHeight(value: number | null): string {
+  if (value === null) return "0%";
   return `${Math.max(0, Math.min(100, value))}%`;
 }
 
-/** Compact channel bar (expanded detail). Honest: 0 means a measured zero. */
-function Channel({ label, value }: { label: string; value: number }) {
+/** Compact channel bar (expanded detail). Honest: 0 means a measured zero;
+ *  `null` is the Memory-mode blind and renders `—` with an empty track. */
+function Channel({ label, value }: { label: string; value: number | null }) {
+  if (value === null) {
+    return (
+      <div className={s.channel} title={`${label} hidden`}>
+        <span className={s.channelLabel}>{label}</span>
+        <span className={s.channelTrack} />
+        <span className={s.channelVal}>—</span>
+      </div>
+    );
+  }
   const clamped = Math.max(0, Math.min(100, value));
   return (
     <div className={s.channel} title={`${label} ${value}`}>
@@ -61,7 +73,8 @@ function PositionGlyph({ position }: { position: PlayerCardView["eligible_positi
  * the selected card is expanded, so the pool stays dense and fast to scan.
  *
  * Honest-state: unknown OVR shows "—" (never 0); coverage and channels are the
- * real runtime values; provenance is encoded by the left hue stripe + dot.
+ * real runtime values (`null` is the Memory-mode blind — "—" with an empty
+ * bar); provenance is encoded by the left hue stripe + dot.
  */
 export function CandidateCard({
   card,
@@ -83,7 +96,8 @@ export function CandidateCard({
   if (disabled) classes.push(s.candRowDisabled);
   if (rarePick) classes.push(s.candRare);
 
-  const coveragePct = Math.round(card.rating.coverage * 100);
+  const coveragePct =
+    card.rating.coverage === null ? null : Math.round(card.rating.coverage * 100);
   const primaryLine = card.position_listed ?? card.eligible_positions[0] ?? "MF";
   const headShape = positionShape(primaryLine);
 
@@ -144,7 +158,7 @@ export function CandidateCard({
         </span>
 
         <span className={s.candRowCov} title="Honest-state data coverage">
-          {coveragePct}%
+          {coveragePct === null ? "—" : `${coveragePct}%`}
         </span>
 
         <span className={s.candRowChevron} aria-hidden="true">
@@ -185,12 +199,16 @@ export function CandidateCard({
             ))}
             <span className={s.candCoverage} title="Honest-state data coverage">
               <span className={s.candCoverageTrack}>
-                <span
-                  className={s.candCoverageFill}
-                  style={{ width: `${coveragePct}%` }}
-                />
+                {coveragePct === null ? null : (
+                  <span
+                    className={s.candCoverageFill}
+                    style={{ width: `${coveragePct}%` }}
+                  />
+                )}
               </span>
-              <span className={s.candCoverageVal}>{coveragePct}%</span>
+              <span className={s.candCoverageVal}>
+                {coveragePct === null ? "—" : `${coveragePct}%`}
+              </span>
             </span>
           </span>
 

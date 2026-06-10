@@ -191,9 +191,15 @@ function ReviewBoard({
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
   const validation = useMemo(() => validateSquad(draft), [draft]);
 
+  // Memory (hidden) mode — blind every rating SIGNAL (OVRs, channels, legend
+  // gold, provenance hue, Synergy numerics, line strengths) until the
+  // post-Simulate reveal. DISPLAY-ONLY: the engine still consumes the real
+  // channels; identities, shapes, flags and synergy LINK LINES stay visible.
+  const blind = draft.mode === "hidden";
+
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft),
-    [gameData, draft],
+    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind }),
+    [gameData, draft, blind],
   );
 
   const manager = draft.manager_card_id
@@ -218,10 +224,12 @@ function ReviewBoard({
     () => lineStrengthViews(gameData.indexes, draft),
     [gameData, draft],
   );
-  const squadAvg = useMemo(() => squadAverageOverall(gameData.indexes, draft), [
-    gameData,
-    draft,
-  ]);
+  // Blinding rides the adapter opts (same as pitchSlotViews) so the masked
+  // null comes out of the blindCardRatingView seam, not a screen branch.
+  const squadAvg = useMemo(
+    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind }),
+    [gameData, draft, blind],
+  );
 
   // Team name with debounced persistence.
   const [teamName, setTeamName] = useState(draft.team_name);
@@ -293,7 +301,12 @@ function ReviewBoard({
       </header>
 
       <section className={s.panel} aria-label="Final XI">
-        <SynergyBar result={synergy} active={true} />
+        <SynergyBar result={synergy} active={true} blind={blind} />
+        {blind ? (
+          <p className={s.memoryModeNote} role="note">
+            Memory mode — ratings &amp; Synergy numbers reveal after you simulate.
+          </p>
+        ) : null}
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>{formation.name}</h2>
           <span className={s.panelMeta}>Locked · no rearranging</span>
@@ -331,17 +344,23 @@ function ReviewBoard({
           <h2 className={s.panelTitle}>Rating by line</h2>
           <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
         </div>
-        <div className={s.lineRatings}>
-          {lineRatings.map((l) => (
-            <div key={l.line} className={s.lineRow}>
-              <span className={s.lineName}>{l.label}</span>
-              <span className={s.lineTrack}>
-                <span className={s.lineFill} style={{ width: `${l.value}%` }} />
-              </span>
-              <span className={s.lineVal}>{l.value}</span>
-            </div>
-          ))}
-        </div>
+        {blind ? (
+          <p className={s.memoryModeNote} role="note">
+            Hidden until you simulate — line strengths are part of the Memory-mode blind.
+          </p>
+        ) : (
+          <div className={s.lineRatings}>
+            {lineRatings.map((l) => (
+              <div key={l.line} className={s.lineRow}>
+                <span className={s.lineName}>{l.label}</span>
+                <span className={s.lineTrack}>
+                  <span className={s.lineFill} style={{ width: `${l.value}%` }} />
+                </span>
+                <span className={s.lineVal}>{l.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
 {validation.warnings.length > 0 ? (
