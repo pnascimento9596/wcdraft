@@ -2705,6 +2705,15 @@ button.benchSlot:not(:disabled):hover {
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
+/* Standalone-spin surface has no DraftAppBar, so the persistence warning
+   would never reach the user mid-spin. Render it inline above the stage:
+   one line, centered, no layout regression on the compact density bar. */
+.spinPersistenceWarn {
+  padding: 0 var(--s-3);
+  text-align: center;
+  flex-basis: auto;
+}
+
 .spinStage {
   flex: 1 1 auto;
   min-height: 0;
