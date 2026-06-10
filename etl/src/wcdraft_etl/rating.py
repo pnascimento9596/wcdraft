@@ -45,13 +45,23 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-4.2.1 (basis-gate stature alignment): the `overall_basis` classifier
+# was keyed on a stricter `is_material_elite` predicate (career_stature_index
+# ≥ 0.50) than the v4 ramp's dominance threshold (index ≥ MATERIAL_STATURE_MIN_INDEX
+# = 0.40, where stature_model_weight ≥ STATURE_DOMINANT_WEIGHT = 0.5). A no-signal
+# card with index in [0.40, 0.50) had stature dominate its score yet was mislabeled
+# `baseline_anchor_estimate` and display-capped into [66,73]. The classifier is
+# reordered to make the dominance check primary; the dead `CAREER_ESTIMATE_MIN_INDEX`
+# constant is removed. Channels/internal merit math UNCHANGED; one card's display
+# `overall` moves (Sepp Maier P-14080:WC-1966, 73 → 88) and the basis counts shift
+# baseline 387→386 / career_stature 485→486.
 # wc-perf-4.2.0 (MV2-6): the display `overall` is now reshaped by the UNIFIED
 # pooled display curve (`display_curve.fit_unified_curve`) — ONE monotonic curve
 # fit over the combined historical + 2026 internal distribution and applied
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-4.2.0"
+RATING_VERSION = "wc-perf-4.2.1"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -187,11 +197,6 @@ COHORT_MIN_N = 8
 # honest raw score up to the ceiling). Sits below the marginal-material STATURE
 # floor (0.58–0.60) so raw-only cards stay below the recognized-greats band.
 RAW_ONLY_GLOBAL_CEILING = 0.62
-
-# A no-tournament-signal card is a "career_stature_estimate" (exits the [66,73]
-# estimate cap via the normal curve) only when its career record is material AND
-# clearly elite; otherwise it stays a capped "baseline_anchor_estimate".
-CAREER_ESTIMATE_MIN_INDEX = 0.50
 
 # Replacement-level base in [0,1] used (a) as the off-position channel floor,
 # (b) as the FLOOR of the performance base scale, and (c) as the base for a card
@@ -699,34 +704,40 @@ def _build_internal_rows(
         career_score_val = cs["career_stature_score"] if cs else None
         career_index_val = cs["career_stature_index"] if cs else None
         career_coverage = cs["coverage"] if cs else None
-        is_material_elite = (
-            cs is not None
-            and cs["coverage"] >= MATERIAL_STATURE_MIN_COVERAGE
-            and cs["career_stature_index"] >= CAREER_ESTIMATE_MIN_INDEX
-        )
 
         # overall_basis split (stature-dominant model, wc-perf-4.x). The label reports
         # what actually DROVE the final score, not merely whether a tournament box
-        # score exists. Under the continuity blend a material card's final is
-        # weight·stature_path + (1−weight)·raw_path, so once the stature path
-        # dominates (weight ≥ STATURE_DOMINANT_WEIGHT) the score is career-stature
-        # driven even when the card also carries a tournament signal — keying the
-        # label on has_individual_signal mislabelled ~all material greats as
-        # "measured_performance".
-        #   baseline_anchor_estimate — no tournament signal AND no material-elite
-        #                              career: the display-capped [66,73] honest
-        #                              estimate. Predicate UNCHANGED from before, so
-        #                              every estimate-capped overall stays byte-
-        #                              identical (this is the ONLY basis that feeds a
-        #                              numeric — the estimate=True display cap).
-        #   career_stature_estimate  — the stature path dominates the merit blend:
-        #                              the final is primarily career stature, not
-        #                              measured tournament performance.
-        #   measured_performance     — the raw tournament path drives the final.
-        if not s["has_individual_signal"] and not is_material_elite:
-            overall_basis = "baseline_anchor_estimate"
-        elif weight >= STATURE_DOMINANT_WEIGHT:
+        # score exists. Under the continuity blend
+        #     final = weight·stature_path + (1−weight)·raw_path
+        # the stature path drives the score iff weight ≥ STATURE_DOMINANT_WEIGHT.
+        # That is the SAME ramp threshold the rest of the model uses to admit a card
+        # into the elite stature band and to apply the raw-only ceiling — keying the
+        # basis label on it is the one principled choice.
+        #
+        # The previous gate used a stricter `is_material_elite` predicate (career
+        # index ≥ 0.50) that was strictly TIGHTER than the v4 ramp's dominance
+        # threshold (index ≥ MATERIAL_STATURE_MIN_INDEX = 0.40, since weight = 1.0
+        # at index ≥ MIN + HALF_WIDTH = 0.46). A no-signal card with index in
+        # [0.40, 0.50) had stature dominate its score but was mislabeled
+        # baseline_anchor_estimate and display-capped into [66,73] — see
+        # Sepp Maier P-14080:WC-1966 (index 0.446, weight 0.881, score_0_100 62.2,
+        # displayed 73 vs measured-channel peers 1970/74/78 at 88).
+        #
+        #   baseline_anchor_estimate — no measured tournament signal AND stature
+        #                              does NOT dominate (weight < threshold): the
+        #                              display-capped [66,73] honest estimate.
+        #   career_stature_estimate  — the stature path dominates the merit blend
+        #                              (weight ≥ STATURE_DOMINANT_WEIGHT): the
+        #                              final is primarily career stature, not
+        #                              measured tournament performance. This is
+        #                              the path that escapes the estimate cap and
+        #                              reads the unified display curve directly.
+        #   measured_performance     — a measured tournament signal exists and the
+        #                              raw tournament path drives the final.
+        if weight >= STATURE_DOMINANT_WEIGHT:
             overall_basis = "career_stature_estimate"
+        elif not s["has_individual_signal"]:
+            overall_basis = "baseline_anchor_estimate"
         else:
             overall_basis = "measured_performance"
 

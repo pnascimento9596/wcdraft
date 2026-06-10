@@ -156,11 +156,12 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
 
 
 def test_rating_version_is_unified_display(built: list[dict]):
-    # wc-perf-4.2.0 = the MV2-6 unified pooled display curve (display `overall`-only
-    # bump off the MV2-4/4.1 stature-dominant internal model).
-    assert rating.RATING_VERSION == "wc-perf-4.2.0"
+    # wc-perf-4.2.1 = basis-gate stature alignment (no-signal cards with stature
+    # dominance now correctly label career_stature_estimate and escape the [66,73]
+    # estimate cap). Patch off wc-perf-4.2.0 (MV2-6 unified pooled display curve).
+    assert rating.RATING_VERSION == "wc-perf-4.2.1"
     for r in built:
-        assert r["rating_version"] == "wc-perf-4.2.0"
+        assert r["rating_version"] == "wc-perf-4.2.1"
 
 
 def test_every_row_carries_a_boolean_legend(built: list[dict]):
@@ -585,9 +586,11 @@ def test_estimates_are_banded_and_honest(built: list[dict], cards: dict[str, dic
     for DF/GK)."""
     estimates = [r for r in built if r["overall_basis"] == "baseline_anchor_estimate"]
     assert estimates, "the honest-estimate path should be exercised by the residual cards"
-    # 387 under wc-perf-4.0.0: one former baseline card now has material+elite career
-    # stature and correctly routes to the (now live) career_stature_estimate basis.
-    assert len(estimates) == 387
+    # 386 under wc-perf-4.2.1: the basis-gate stature alignment re-labels Maier
+    # P-14080:WC-1966 (career_stature_index 0.446, stature_model_weight 0.881 —
+    # stature dominates) from baseline_anchor_estimate → career_stature_estimate,
+    # one card off the previous wc-perf-4.x count of 387.
+    assert len(estimates) == 386
     for r in estimates:
         assert rating.ESTIMATE_FLOOR <= r["overall"] <= rating.ESTIMATE_CEILING, r["card_id"]
         for ch in ("attack", "midfield", "defense", "goalkeeping"):

@@ -5183,6 +5183,20 @@
       "primary_channel_before": 84
     },
     {
+      "card_id": "P-14080:WC-1966",
+      "career_coverage": 0.494737,
+      "career_stature_score": 0.222887,
+      "delta_overall": 15,
+      "delta_primary_channel": 21,
+      "overall_after": 88,
+      "overall_before": 73,
+      "player_id": "P-14080",
+      "position": "GK",
+      "primary_channel": "goalkeeping",
+      "primary_channel_after": 62,
+      "primary_channel_before": 41
+    },
+    {
       "card_id": "P-41064:WC-1974",
       "career_coverage": 0.263158,
       "career_stature_score": 0.2304,
@@ -5517,20 +5531,6 @@
       "primary_channel": "goalkeeping",
       "primary_channel_after": 62,
       "primary_channel_before": 83
-    },
-    {
-      "card_id": "P-14080:WC-1966",
-      "career_coverage": 0.494737,
-      "career_stature_score": 0.222887,
-      "delta_overall": 0,
-      "delta_primary_channel": 21,
-      "overall_after": 73,
-      "overall_before": 73,
-      "player_id": "P-14080",
-      "position": "GK",
-      "primary_channel": "goalkeeping",
-      "primary_channel_after": 62,
-      "primary_channel_before": 41
     },
     {
       "card_id": "P-56947:WC-2002",

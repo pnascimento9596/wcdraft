@@ -1047,7 +1047,7 @@
       "P-02273"
     ],
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-4.2.0+proj-career-3.0.0",
+    "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
     "engine_version": "engine-2026.06.09"
   },
   "scenario": {
@@ -1092,7 +1092,7 @@
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-4.2.0+proj-career-3.0.0",
+    "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
     "engine_version": "engine-2026.06.09",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:29",
     "reached_round": "R32",

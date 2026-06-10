@@ -1,5 +1,28 @@
-# wcdraft Player Rating — Methodology (`wc-perf-4.2.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-4.2.1`)
 
+> **wc-perf-4.2.1 (basis-gate stature alignment):** the internal merit model, the
+> four sim channels, the display curve, and the engine are UNCHANGED. The single
+> change is the `overall_basis` classifier. Under wc-perf-4.2.0 the classifier
+> keyed `is_material_elite` on `career_stature_index ≥ 0.50` — a strictly
+> TIGHTER predicate than the v4 ramp's dominance threshold
+> (`stature_model_weight ≥ STATURE_DOMINANT_WEIGHT = 0.5`, which the ramp
+> reaches at `career_stature_index ≥ MATERIAL_STATURE_MIN_INDEX = 0.40`). A
+> no-individual-signal card with index in `[0.40, 0.50)` had stature drive its
+> internal score yet was mislabeled `baseline_anchor_estimate` and display-capped
+> into `[66, 73]`. The classifier is reordered to make the dominance check
+> primary — `if weight ≥ STATURE_DOMINANT_WEIGHT → career_stature_estimate;
+> elif not has_individual_signal → baseline_anchor_estimate; else
+> measured_performance` — and the now-dead `CAREER_ESTIMATE_MIN_INDEX` constant
+> is removed. **Population delta:** exactly one card moves
+> (Sepp Maier P-14080:WC-1966, GK, `career_stature_index=0.446`,
+> `stature_model_weight=0.881`, `score_0_100=62.19`), with `overall`
+> 73 → 88 and basis `baseline_anchor_estimate` → `career_stature_estimate` —
+> aligning him with his measured-channel peer cards 1970/74/78 which already
+> display 88. Basis counts: `baseline_anchor_estimate` 387 → 386,
+> `career_stature_estimate` 485 → 486. Every other rating row (10 972 of
+> 10 973) is byte-identical to wc-perf-4.2.0 in `overall`, all four channels,
+> components, and coverage — only `rating_version` is uniformly bumped.
+>
 > **wc-perf-4.2.0 (MV2-6 — unified display curve):** the internal merit model and
 > the four sim channels are UNCHANGED (channels byte-identical; the engine/λ and
 > the committed compact are untouched). The single change is the **display curve**:
@@ -332,7 +355,6 @@ an up-cap.
 | `TOURNAMENT_DOWN_CAP` | per-tier {gold/silver/bronze} = {0.05–0.06, 0.08–0.09, 0.11–0.12} | tier-tightened downward cap |
 | `COHORT_MIN_N` | `8` | (tournament, pos) cohort size needed before using its median |
 | `RAW_ONLY_GLOBAL_CEILING` | `0.62` | internal-score ceiling on `raw_path` for non-material cards |
-| `CAREER_ESTIMATE_MIN_INDEX` | `0.50` | index threshold to tag a no-signal card `career_stature_estimate` |
 
 **MV2-3.5 — defender honors (`career-stature-2.1.0`).** Two SHA-pinned
 research notes (WC All-Star → `wc_legacy`, World's-Best-GK →
@@ -363,25 +385,28 @@ across the fix; only the label moves.
   positively-weighted individual signal (goals for FW/MF, appearances for
   any position). The vast majority of cards, including the pre-1970 cards
   whose appearances came from the RSSSF supplement.
-- **`career_stature_estimate`** (485 cards) — the card lacks any individual
+- **`career_stature_estimate`** (486 cards) — the card lacks any individual
   tournament signal **but** the player's career row is clearly material
   (`stature_weight ≥ STATURE_DOMINANT_WEIGHT`). Exits via the unified
   display curve at its full internal score — the elite tier supports an
   above-band rating without an individual box score being invented.
-- **`baseline_anchor_estimate`** (387 cards) — residual cards with no
+- **`baseline_anchor_estimate`** (386 cards) — residual cards with no
   individual signal **and** no material career record: a pre-1970 DF/GK
   whose appearances could not be sourced. Computed from the replacement
   baseline + anchor, capped into `[66, 73]` after the curve, **no
   individual box score invented**, low coverage flagged. (Pre-MV2-10 this
   was 388 — the MV2-3/4 stature-dominant core moved one card off the
-  capped tier; the compact integrity test locks this at 387.)
+  capped tier, and the wc-perf-4.2.1 basis-gate alignment moved
+  Maier-1966 off it; the compact integrity test locks this at 386.)
 
-> A known sub-defect — a small number of `career_stature_estimate` cards
-> still display the `baseline_anchor_estimate` basis on the result-screen
-> tooltip (the "Maier-class basis-gate" the season gate review #2 flagged).
-> The ratings are correct; only the surfaced badge string lags the blend
-> decision. The fix is scoped to a separate PR — values are not pre-stated
-> here.
+> The "Maier-class basis-gate" sub-defect the season gate review #2 flagged
+> (the classifier keyed on the legacy `CAREER_ESTIMATE_MIN_INDEX = 0.50`
+> instead of the ramp's dominance threshold, so a no-signal card with
+> `index ∈ [0.40, 0.50)` kept the stale baseline label and the `[66, 73]`
+> cap) is FIXED in `wc-perf-4.2.1` — see the top-of-file changelog. The
+> label now tracks the blend decision exactly:
+> `stature_model_weight ≥ STATURE_DOMINANT_WEIGHT ⇔ career_stature_estimate`
+> for no-signal cards.
 
 ## 2026 reconcile (`proj-career-3.0.0`, MV2-5)
 
@@ -438,7 +463,7 @@ A `baseline_anchor_estimate` is always `< 1.0`. Low-coverage ratings are
 **flagged, not faked**. `coverage_basis = "wc_signals"`,
 `provenance = "wc_performance"`, `appearances_source` records the appearance
 origin (`fjelstul_match_events` / `rsssf_starting_xi` / `null`), and
-`rating_version = "wc-perf-4.2.0"` (a replay anchor — bump on any change to
+`rating_version = "wc-perf-4.2.1"` (a replay anchor — bump on any change to
 weights, normalization, the display curve, the stature-dominant blend, or
 the source set).
 

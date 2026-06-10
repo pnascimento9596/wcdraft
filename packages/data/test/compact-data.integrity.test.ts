@@ -39,15 +39,17 @@ describe("compact-data integrity", () => {
     expect(SCENARIO_2026_BUNDLE.groups.length).toBe(12);
   });
 
-  // 387 as of MV2-10: the MV2-3/4 stature-dominant core moved one card off the
-  // baseline-anchor path onto the career-stature path, and this regen brings the
-  // compact in sync with the ETL (clearing the known 387≠388 drift). The count
+  // 386 as of wc-perf-4.2.1: the basis-gate stature alignment re-labels Sepp
+  // Maier P-14080:WC-1966 (career_stature_index 0.446, stature_model_weight
+  // 0.881 — stature dominates) from baseline_anchor_estimate →
+  // career_stature_estimate, one card off the MV2-10 count of 387. The count
   // is not the WHOLE invariant — every estimate row must sit in [66, 73] on
   // OVERALL, and the display contract applies to every runtime rating's
-  // overall. Sim channels stay on the pre-recal [20, 100] band; the λ refit to
-  // the new MV2 channel distribution is MV2-11b (the realism goldens are
-  // expected-red on this regen until that refit re-locks them).
-  const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 387;
+  // overall. Sim channels stay on the pre-recal [20, 100] band — channels are
+  // BYTE-IDENTICAL across this fix (basis re-label only flips the [66,73]
+  // estimate cap on display `overall`; the channel materializer never reads
+  // `overall_basis`).
+  const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 386;
   const DISPLAY_FLOOR = 66;
   const DISPLAY_MAX = 99;
   const ESTIMATE_DISPLAY_MIN = 66;
@@ -104,13 +106,13 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the MV2 merit versions; engine_version is unchanged until MV2-11b", () => {
-    // wc-perf-4.2.0 = the MV2 stature-dominant historical model on the unified
-    // display curve (MV2-3/4 + MV2-6); proj-career-3.0.0 = the 2026 stature
-    // reconciliation (MV2-5). engine_version stays at the season-merge stamp —
-    // MV2-10 regenerates DATA only; the λ refit that re-tunes the engine to the
-    // new channel distribution (and bumps engine_version) is MV2-11b.
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.0");
+  it("rating_version anchors are the MV2 merit versions; engine_version is unchanged across this fix", () => {
+    // wc-perf-4.2.1 = wc-perf-4.2.0 + the basis-gate stature alignment (a
+    // label-only fix that re-routes Maier-1966 off the [66,73] estimate cap).
+    // proj-career-3.0.0 = the 2026 stature reconciliation (MV2-5). engine_version
+    // stays at the merit-v2 season-merge stamp — this fix moves no sim bytes
+    // (channels are byte-identical; only one display `overall` shifts).
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.1");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-3.0.0");
     expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.09");
   });

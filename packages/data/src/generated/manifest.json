@@ -55,11 +55,11 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 34193323,
-      "bytes_brotli": 672695,
-      "bytes_gzip": 1267188,
+      "bytes": 34193322,
+      "bytes_brotli": 672564,
+      "bytes_gzip": 1267551,
       "path": "draft-pool.compact.json",
-      "sha256": "1502ce5575ab51df56ea8135b0312d64d34d5ae34199383fd393d052c86934d5"
+      "sha256": "58120edad54af5f7f137024675fe7d6faf8f08c5fa7ebafb69677468f44da45b"
     },
     "scenario_2026": {
       "bytes": 108826,
@@ -70,8 +70,8 @@
     }
   },
   "counts": {
-    "baseline_anchor_estimate": 387,
-    "career_stature_estimate": 485,
+    "baseline_anchor_estimate": 386,
+    "career_stature_estimate": 486,
     "knockout_slots": 62,
     "legend": 302,
     "manager_cards": 501,
@@ -81,7 +81,7 @@
   },
   "dataset_version": "2026-06-04",
   "engine_version": "engine-2026.06.09",
-  "rating_version_historical": "wc-perf-4.2.0",
+  "rating_version_historical": "wc-perf-4.2.1",
   "rating_version_projected": "proj-career-3.0.0",
   "ruleset_version": "ruleset-2026.06.04",
   "schema_version": "runtime-data-1.1.0"

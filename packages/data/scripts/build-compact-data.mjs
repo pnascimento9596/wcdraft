@@ -54,20 +54,21 @@ const SCHEMA_VERSION = "runtime-data-1.1.0";
 const ENGINE_VERSION = "engine-2026.06.09";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// MV2 stature-dominant model (wc-perf-4.2.0 historical, unified display curve);
+// MV2 stature-dominant model (wc-perf-4.2.1 historical, unified display curve);
 // projected proj-career-3.0.0 (2026 linked-material on the stature scale, MV2-5).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-4.2.0";
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-4.2.1";
 const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-3.0.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
 const ESTIMATE_DISPLAY_MAX = 73;
-// 387 as of MV2-10: the MV2-3/4 stature-dominant core moved one card off the
-// baseline-anchor path onto the career-stature path (the pre-MV2-10 compact was
-// locked at the stale 388 — the known ETL↔compact drift this regen clears).
-const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 387;
+// 386 as of wc-perf-4.2.1: the basis-gate stature alignment re-labels Sepp Maier
+// P-14080:WC-1966 (career_stature_index 0.446, stature_model_weight 0.881 — stature
+// dominates) from baseline_anchor_estimate → career_stature_estimate, one card off
+// the MV2-10 count of 387.
+const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 386;
 
 const TOURNAMENT_ID_RE = /^WC-(\d{4})$/u;
 const KNOCKOUT_ROUNDS = ["R32", "R16", "QF", "SF", "F"];
