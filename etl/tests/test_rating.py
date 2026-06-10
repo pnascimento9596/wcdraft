@@ -155,11 +155,22 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_career_lift(built: list[dict]):
-    # wc-perf-3.0.0 = the E-4 career-stature lift integration (engine-v2).
-    assert rating.RATING_VERSION == "wc-perf-3.0.0"
+def test_rating_version_is_unified_display(built: list[dict]):
+    # wc-perf-4.2.0 = the MV2-6 unified pooled display curve (display `overall`-only
+    # bump off the MV2-4/4.1 stature-dominant internal model).
+    assert rating.RATING_VERSION == "wc-perf-4.2.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-3.0.0"
+        assert r["rating_version"] == "wc-perf-4.2.0"
+
+
+def test_every_row_carries_a_boolean_legend(built: list[dict]):
+    """Each rating row joins career_stature.json.legend (missing row → False). This
+    is the rating-layer join MV2-7's compact builder reads; it never re-derives the
+    badge from overall."""
+    for r in built:
+        assert isinstance(r["legend"], bool), r["card_id"]
+    assert any(r["legend"] for r in built)  # legends exist
+    assert any(not r["legend"] for r in built)  # most cards are not legends
 
 
 def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
@@ -219,7 +230,7 @@ def test_display_curve_is_low_dof():
     """The recalibration is a global low-DOF curve, not a per-player override
     table. The contract: one shared curve kind name + three global exponents +
     four data anchors fit on the emitted dataset. No additional knobs."""
-    assert rating.DISPLAY_CURVE_KIND == "global_piecewise_power_v1"
+    assert rating.DISPLAY_CURVE_KIND == "unified_pooled_piecewise_power_v1"
     free_exponents = {
         "low": rating.DISPLAY_LOW_EXPONENT,
         "mid": rating.DISPLAY_MID_EXPONENT,
@@ -524,36 +535,40 @@ def test_named_era_anchors_land_in_expected_bands(players, cards, by_id):
 
 def test_great_pre1970_defender_lands_in_elite_band(players, cards, by_id):
     """Bobby Moore '66 — England champion captain DF with all-6 RSSSF
-    appearances supplemented — must land near the top of the DF band."""
+    appearances supplemented — must land near the top of the DF band.
+
+    His elite band is career-stature driven (stature path dominates the blend at
+    weight ≥ STATURE_DOMINANT_WEIGHT), so the honest basis is
+    ``career_stature_estimate`` — NOT ``measured_performance``: a thin '66 box
+    score alone could never carry a DF to 92. The overall is byte-identical to the
+    pre-fix value; only the (formerly mislabelled) basis moved."""
     cid = _card_id(players, cards, "Moore", "WC-1966")
     r = by_id[cid]
     src = cards[cid]
     assert src["position_listed"] == "DF"
     assert src["appearances"] == 6
     assert src["appearances_source"] == "rsssf_starting_xi"
-    assert r["overall_basis"] == "measured_performance"
+    assert r["overall_basis"] == "career_stature_estimate"
     assert r["coverage"] == 1.0
     assert r["overall"] >= 88
 
 
 def test_strong_defender_not_punished_for_zero_goals(players, cards, by_id):
-    """Mertesacker '14 — champion DF, 6 apps 0 goals — lands in the elite
-    overall band, never penalized for not scoring. Defense is his dominant
-    sim channel — strictly above attack/midfield/goalkeeping under the
-    CHANNEL_SPREAD weights, and elite on the merit scale."""
+    """Mertesacker '14 — champion DF, 6 apps 0 goals — is never penalized for not
+    scoring (goals carry zero weight), and DEFENSE is his strictly dominant sim
+    channel. Under wc-perf-4.0.0 a solid-but-not-legendary champion DF lands
+    mid-band (he is NOT an all-time-legend stature card), so the absolute elite
+    magnitude is intentionally lower than the old capped-lift model; the final
+    elite-defender display band is MV2-8's named-anchor surface."""
     cid = _card_id(players, cards, "Mertesacker", "WC-2014")
     r = by_id[cid]
     src = cards[cid]
     assert src["goals"] == 0 and src["position_listed"] == "DF"
-    assert r["overall"] >= 88
-    # Sim channels are on the merit scale [FLOOR_CHANNEL, 100] (Phase 1.1
-    # decoupled) — they cannot be compared to `overall` (display band
-    # [66, 99]). Defender invariant: defense is the dominant channel by a
-    # real margin AND lands above the elite-defender floor on the merit scale.
-    assert r["defense"] >= 80
+    # Defender invariant: defense is the dominant channel by a real margin.
     assert r["defense"] > r["attack"]
     assert r["defense"] > r["midfield"]
     assert r["defense"] > r["goalkeeping"]
+    assert r["defense"] >= rating.FLOOR_CHANNEL + 30  # well clear of the floor
     comp = {c["signal"]: c for c in r["components"]}
     assert comp["goals_percentile"]["weight"] == 0.0
     assert comp["appearances_percentile"]["weight"] == 1.0
@@ -570,7 +585,9 @@ def test_estimates_are_banded_and_honest(built: list[dict], cards: dict[str, dic
     for DF/GK)."""
     estimates = [r for r in built if r["overall_basis"] == "baseline_anchor_estimate"]
     assert estimates, "the honest-estimate path should be exercised by the residual cards"
-    assert len(estimates) == 388  # pinned: basis logic unchanged in Phase 1
+    # 387 under wc-perf-4.0.0: one former baseline card now has material+elite career
+    # stature and correctly routes to the (now live) career_stature_estimate basis.
+    assert len(estimates) == 387
     for r in estimates:
         assert rating.ESTIMATE_FLOOR <= r["overall"] <= rating.ESTIMATE_CEILING, r["card_id"]
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
@@ -648,128 +665,182 @@ def test_defenders_and_keepers_are_never_rated_on_goals(built: list[dict], cards
     assert checked > 0
 
 
-# ─── E-4 acceptance: career-stature lift (wc-perf-3.0.0) ──────────────────────
+# ─── MV2-4 acceptance: stature-dominant INTERNAL-score invariants ─────────────
+#
+# These assert INTERNAL-score / channel behavior, NOT final display. The unified
+# display curve (MV2-6) and the final display-band named anchors (MV2-8) land later;
+# `overall` here is provisional (the existing curve refit to the new distribution).
 
 
 def _career_comp(rating_row: dict, signal: str):
-    return next(
-        c["value"] for c in rating_row["components"] if c["signal"] == signal
-    )
+    return next(c["value"] for c in rating_row["components"] if c["signal"] == signal)
 
 
-def test_career_lift_fixes_legend_off_tournament_channel(players, cards, by_id):
-    """The headline E-4 fix: a legend's off-tournament card and its primary sim
-    channel rise OFF the raw floor, while the legend's apex cards do not balloon."""
+def _internal_by_card():
+    internal, _ = _build_internal_view()
+    return {r["card_id"]: r for r in internal}
+
+
+def _final(internal_row: dict) -> float:
+    return internal_row["score_0_100"] / 100.0
+
+
+def test_legend_weak_tournament_stays_elite_and_apex_can_exceed_target(players, cards):
+    """A recognized great's WEAK World Cup still reads elite (bounded down-mod off a
+    high stature target), while an APEX tournament can EXCEED the stature target via
+    positive modulation. Pelé-1966 / Messi-2010 (stature path) rise far above the v3
+    underweighted raw floor; Pelé-1958 / Maradona-1986 exceed their career target."""
+    internal = _internal_by_card()
+
+    def card(name, tid):
+        return internal[_card_id(players, cards, name, tid)]
+
+    pele66 = card("Pelé", "WC-1966")
+    # Stature-path card: full stature weight, final far above the raw floor.
+    assert _career_comp(pele66, "stature_model_weight") == 1.0
+    assert _final(pele66) >= 0.80, _final(pele66)
+    # Modulation is bounded (a weak tournament cannot collapse a legend).
+    assert _career_comp(pele66, "tournament_modulation") >= -0.12
+
+    messi10 = card("Messi", "WC-2010")
+    assert _career_comp(messi10, "stature_model_weight") == 1.0
+    assert _final(messi10) >= 0.85, _final(messi10)
+
+    # Apex cards EXCEED the career target via positive modulation.
+    for name, tid in (("Pelé", "WC-1958"), ("Maradona", "WC-1986")):
+        r = card(name, tid)
+        target = _career_comp(r, "stature_target_score")
+        assert _final(r) > target, (name, _final(r), target)
+
+
+def test_career_aggregates_constant_per_player_modulation_varies(players, by_id):
+    internal = _internal_by_card()
+    pele_ids = {p["player_id"] for p in players if p["common_name"] == "Pelé"}
+    pele_cards = [r for r in internal.values() if r["player_id"] in pele_ids]
+    assert len(pele_cards) >= 3
+    # career_stature_score / index / coverage are CAREER aggregates — identical.
+    for sig in ("career_stature_score", "career_stature_index", "career_stature_coverage"):
+        vals = {_career_comp(r, sig) for r in pele_cards}
+        assert len(vals) == 1 and None not in vals, (sig, vals)
+    # The per-card tournament modulation is NOT constant (depends on each card's raw).
+    mods = {_career_comp(r, "tournament_modulation") for r in pele_cards}
+    assert len(mods) > 1, mods
+
+
+def test_formerly_zeroed_defender_gk_legends_are_now_material():
+    """The v2 repair: Cruyff / Baresi / Maldini / Yashin were zeroed (no lift) under
+    the v1 thin-coverage gate. Under stature-dominant they are material-stature
+    cards (full stature weight) and read elite — no longer the raw floor. Keyed by
+    canonical player_id (NOT common_name — 'Baresi' is also Franco's brother
+    Giuseppe P-55733, who is correctly NOT a material-stature legend)."""
+    internal = _internal_by_card()
+    # Franco Baresi, Paolo Maldini, Lev Yashin, Johan Cruyff.
+    for name, pid in (("Cruyff", "P-50564"), ("Baresi", "P-42920"),
+                      ("Maldini", "P-43222"), ("Yashin", "P-09317")):
+        rows = [r for r in internal.values() if r["player_id"] == pid]
+        assert rows, name
+        for r in rows:
+            assert _career_comp(r, "stature_model_weight") == 1.0, (name, r["card_id"])
+            assert _final(r) >= 0.66, (name, r["card_id"], _final(r))
+
+
+def test_channel_shape_non_attacker_legends_are_position_dominant(players, cards, by_id):
+    """A DF/GK/MF legend reads elite on its POSITION channel, NOT uniformly elite
+    (the inverse of 'not suppressed'): Maldini DEF ≫ ATT; Yashin GK ≫ outfield; a
+    defender/keeper legend must NOT become a top-tier attacker."""
     def card(name, tid):
         return by_id[_card_id(players, cards, name, tid)]
 
-    # Pelé '66 — the canonical failure. The attack channel was the raw 54 floor;
-    # the lift must move it materially up (and never down). OVR rises in step.
-    pele66 = card("Pelé", "WC-1966")
-    assert pele66["attack"] >= 64, pele66["attack"]
-    assert _career_comp(pele66, "career_stature_lift") > 0
-    # Apex cards stay put — lift is a FLOOR, not an override (raw already above target).
-    assert card("Pelé", "WC-1958")["attack"] >= 95
-    assert _career_comp(card("Pelé", "WC-1958"), "career_stature_lift") == 0
-    assert card("Maradona", "WC-1986")["midfield"] == 100
-    assert _career_comp(card("Maradona", "WC-1986"), "career_stature_lift") == 0
-    # Other multi-WC legends' weak cards rise too.
-    assert card("Messi", "WC-2010")["attack"] >= 58
-    assert card("Maradona", "WC-1994")["midfield"] >= 60
-    assert card("Ronaldo", "WC-1994")["attack"] >= 60
+    maldini = card("Maldini", "WC-2002")
+    assert maldini["defense"] >= 80
+    assert maldini["defense"] > maldini["attack"] + 20
+    assert maldini["attack"] <= 60  # not a top-tier attacker
+
+    yashin = card("Yashin", "WC-1966")
+    assert yashin["goalkeeping"] >= 80
+    assert yashin["goalkeeping"] > yashin["attack"]
+    assert yashin["goalkeeping"] > yashin["midfield"]
+    assert yashin["goalkeeping"] > yashin["defense"]
+    assert yashin["attack"] <= 50  # a keeper is not an outfield threat
 
 
-def test_career_stature_score_is_constant_across_a_players_cards(players, by_id):
-    """A player's career_stature_score/coverage is a CAREER aggregate — identical
-    on every one of their cards; only the per-card lift varies."""
-    pele_ids = {p["player_id"] for p in players if p["common_name"] == "Pelé"}
-    pele_cards = [r for r in by_id.values() if r["player_id"] in pele_ids]
-    assert len(pele_cards) >= 3
-    scores = {_career_comp(r, "career_stature_score") for r in pele_cards}
-    covs = {_career_comp(r, "career_stature_coverage") for r in pele_cards}
-    assert len(scores) == 1 and None not in scores, scores
-    assert len(covs) == 1 and None not in covs, covs
-    # The per-card lift is NOT constant (it depends on each card's raw shortfall).
-    lifts = {_career_comp(r, "career_stature_lift") for r in pele_cards}
-    assert len(lifts) > 1, lifts
+def test_raw_only_journeyman_is_not_in_the_high_stature_or_legend_band(players, cards, by_id):
+    """A raw-only control (no material stature) stays primarily tournament-derived,
+    bounded below the high-stature band, and is never a factual legend."""
+    internal = _internal_by_card()
+
+    def both(name, tid):
+        cid = _card_id(players, cards, name, tid)
+        return internal[cid], by_id[cid]
+
+    ir, rr = both("Rodrigo", "WC-2018")
+    assert _career_comp(ir, "stature_model_weight") == 0.0  # raw-only
+    assert _final(ir) <= rating.RAW_ONLY_GLOBAL_CEILING + 1e-6
+    assert rr["legend"] is False
 
 
-def test_thin_coverage_greats_get_no_lift(players, by_id):
-    """Honest-state: a great with sparse public facts (below the coverage gate)
-    keeps their raw tournament score — missing coverage is coverage, not a lift."""
-    # Cruyff (1 retrospective fact, coverage 0.15) and Baresi (coverage 0.15).
-    for name in ("Cruyff", "Baresi"):
-        pids = {p["player_id"] for p in players if p["common_name"] == name}
-        rows = [r for r in by_id.values() if r["player_id"] in pids]
-        assert rows, name
-        for r in rows:
-            assert _career_comp(r, "career_stature_lift") == 0, (name, r["card_id"])
-            # target is withheld (null) below the gate; score is still recorded.
-            assert _career_comp(r, "career_stature_target") is None
+def test_mid_band_control_lands_below_the_greats(players, cards, by_id):
+    """Anti-inflation directional check (internal-score level): a solid international
+    with modest recognition does not land in the recognized-greats internal band."""
+    internal = _internal_by_card()
+    # Rodrigo (modern journeyman) and any non-material card sit well below the greats.
+    greats_floor = min(
+        internal[_card_id(players, cards, n, t)]["score_0_100"]
+        for n, t in (("Pelé", "WC-1966"), ("Messi", "WC-2010"), ("Maldini", "WC-2002"))
+    )
+    mid = internal[_card_id(players, cards, "Rodrigo", "WC-2018")]["score_0_100"]
+    assert mid + 20 < greats_floor, (mid, greats_floor)
 
 
-def test_no_card_overall_reaches_100_after_lift(built: list[dict]):
-    """The lift must not push any card to the old pinned-at-ceiling failure."""
+def test_continuity_no_cliff_across_the_material_threshold():
+    """The stature_model_weight ramp is continuous: two crafted cards whose career
+    index straddles MATERIAL_STATURE_MIN_INDEX by ε differ by < N internal points
+    (no cliff). Asserts MV2-4's continuity-ramp, not a hard gate."""
+    eps = 0.01
+    lo_idx = rating.MATERIAL_STATURE_MIN_INDEX - eps
+    hi_idx = rating.MATERIAL_STATURE_MIN_INDEX + eps
+    tournaments = [{"tournament_id": "WC-1998", "name": "1998 Men's World Cup"}]
+
+    def fw_card(pid, goals):
+        return {
+            "card_id": f"{pid}:WC-1998", "player_id": pid, "tournament_id": "WC-1998",
+            "nation_id": "N-T", "position_listed": "FW", "goals": goals, "appearances": 5,
+            "appearances_source": "fjelstul_match_events", "awards": None, "coverage": 1.0,
+        }
+
+    # Two near-identical FW cards with the SAME raw tournament profile; only the
+    # career index differs by 2ε across the threshold.
+    players = [
+        {"player_id": "P-LO", "common_name": "LO", "primary_position": "FW"},
+        {"player_id": "P-HI", "common_name": "HI", "primary_position": "FW"},
+    ]
+    cards = [fw_card("P-LO", 3), fw_card("P-HI", 3)]
+    # Pad the cohort so the curve is non-degenerate.
+    for i, g in enumerate((0, 1, 2, 4, 6)):
+        players.append({"player_id": f"P-Q{i}", "common_name": f"Q{i}", "primary_position": "FW"})
+        cards.append(fw_card(f"P-Q{i}", g))
+
+    def career_row(pid, idx):
+        return {
+            "player_id": pid, "career_stature_score": 0.30, "career_stature_index": idx,
+            "coverage": 1.0, "stature_tier": "bronze", "legend": False,
+        }
+
+    career = {"P-LO": career_row("P-LO", lo_idx), "P-HI": career_row("P-HI", hi_idx)}
+    internal = {
+        r["card_id"]: r
+        for r in rating._build_internal_rows(players, cards, tournaments, [], career)
+    }
+    lo = internal["P-LO:WC-1998"]["score_0_100"]
+    hi = internal["P-HI:WC-1998"]["score_0_100"]
+    # Weights straddle 0.5 ± a small ramp step; internal scores stay within a few pts.
+    assert abs(hi - lo) < 6.0, (lo, hi)
+
+
+def test_no_card_overall_reaches_100(built: list[dict]):
+    """No card pins at the display ceiling (provisional curve still caps at 99)."""
     assert 100 not in {r["overall"] for r in built}
     assert max(r["overall"] for r in built) == rating.DISPLAY_MAX
-
-
-def test_career_stature_estimate_gating_is_live_and_uncapped():
-    """The career_stature_estimate path (no tournament signal + well-covered elite
-    career) exits via the UNCAPPED curve. No real card currently hits it, so this
-    drives a crafted no-signal card for an elite-career player through build_ratings
-    and asserts the basis + that it clears the old [66, 73] estimate ceiling."""
-    players = [{"player_id": "P-TEST", "common_name": "Test", "primary_position": "DF"}]
-    tournaments = [{"tournament_id": "WC-1962", "name": "1962 FIFA Men's World Cup"}]
-    # DF card, appearances null (no individual signal) -> would be baseline estimate.
-    # A Golden Ball anchor lifts its raw composite above the padding cohort so the
-    # uncapped curve maps it ABOVE the old [66, 73] estimate ceiling (the whole
-    # point of the career_stature_estimate exit).
-    cards = [
-        {
-            "card_id": "P-TEST:WC-1962",
-            "player_id": "P-TEST",
-            "tournament_id": "WC-1962",
-            "nation_id": "N-TEST",
-            "position_listed": "DF",
-            "goals": 0,
-            "appearances": None,
-            "appearances_source": None,
-            "awards": ["Golden Ball"],
-            "coverage": 0.3333,
-        }
-    ]
-    # Elite, well-covered career row -> routes to career_stature_estimate.
-    career = {
-        "P-TEST": {
-            "player_id": "P-TEST",
-            "career_stature_score": 0.65,
-            "coverage": 1.0,
-        }
-    }
-    # A non-degenerate curve needs a spread of internal scores; pad with measured
-    # cards whose composites sit BELOW the anchored test card so it lands at the top
-    # of the distribution (where the uncapped vs capped distinction is visible).
-    for i, g in enumerate((0, 1, 2, 3)):
-        players.append({"player_id": f"P-P{i}", "common_name": f"P{i}", "primary_position": "FW"})
-        cards.append(
-            {
-                "card_id": f"P-P{i}:WC-1962",
-                "player_id": f"P-P{i}",
-                "tournament_id": "WC-1962",
-                "nation_id": "N-TEST",
-                "position_listed": "FW",
-                "goals": g,
-                "appearances": 2,
-                "appearances_source": "fjelstul_match_events",
-                "awards": None,
-                "coverage": 1.0,
-            }
-        )
-    out = rating.build_ratings(players, cards, tournaments, [], career)
-    test_row = next(r for r in out if r["card_id"] == "P-TEST:WC-1962")
-    assert test_row["overall_basis"] == "career_stature_estimate"
-    assert test_row["overall"] > rating.ESTIMATE_CEILING  # uncapped, not [66,73]
 
 
 # ─── §4 acceptance: provenance / legal grep ───────────────────────────────────
@@ -790,12 +861,23 @@ _PROPRIETARY_PATTERN = re.compile(
 def test_etl_source_pins_have_no_proprietary_rating_references():
     """ETL source pins + supplement & merit raw inputs must NOT mention any
     proprietary rating source. The recalibration is clean-room: every signal comes
-    from public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia 2026 +
-    the E-4.1 career-stature archives)."""
+    from public, factually-grounded sources (Fjelstul + RSSSF + Wikipedia + the
+    IFFHS + the merit-source-set-2.0.0 recognition archives).
+
+    The merit raw tree is scanned RECURSIVELY, so the v2 source-set subtrees
+    (``rsssf/``, ``wiki/``, ``iffhs/``) are covered automatically. Public football
+    facts — award names, all-time / dream teams, tournament names, FIFA tri-codes,
+    and ``FIFA 100`` as a public factual source — are NOT proprietary rating IP and
+    do not match the pattern; only the Sofifa / Futbin / EA Sports FC / PES /
+    eFootball / Konami product family does."""
     scan_dirs = [
         REPO_ROOT / "etl" / "sources",
         REPO_ROOT / "etl" / "supplement" / "raw",
-        REPO_ROOT / "etl" / "merit" / "raw",  # E-4.1 merit-source raw snapshots
+        REPO_ROOT / "etl" / "merit" / "raw",  # merit-source raw snapshots (recursive)
+        # MV2 recon cross-check reference (REVIEW-ONLY; never a rating source).
+        # Reference data + provenance only — it must carry zero proprietary
+        # rating tokens, same as every other source tree.
+        REPO_ROOT / "etl" / "merit" / "external_review" / "recon",
     ]
     hits: list[str] = []
     for d in scan_dirs:
@@ -811,3 +893,21 @@ def test_etl_source_pins_have_no_proprietary_rating_references():
             for m in _PROPRIETARY_PATTERN.finditer(text):
                 hits.append(f"{path.relative_to(REPO_ROOT)}: {m.group(0)!r}")
     assert hits == [], "proprietary rating references in ETL source pins:\n" + "\n".join(hits)
+
+
+def test_merit_parser_and_linker_code_has_no_proprietary_rating_references():
+    """The merit parser / linker / registry CODE must not reference a proprietary
+    rating source either. Every module is scanned EXCEPT ``__init__.py``, which is
+    the documented home of the ``PROPRIETARY_SOURCE_TOKENS`` block list (those tokens
+    are forbidden STRINGS, never sources) — that file's brand-neutrality is enforced
+    separately by ``test_merit.test_outputs_and_code_carry_no_governing_body_brand``.
+    """
+    merit_src = REPO_ROOT / "etl" / "src" / "wcdraft_etl" / "merit"
+    hits: list[str] = []
+    for path in sorted(merit_src.glob("*.py")):
+        if path.name == "__init__.py":
+            continue  # block-list / proprietary-wall declaration home
+        text = path.read_text(encoding="utf-8")
+        for m in _PROPRIETARY_PATTERN.finditer(text):
+            hits.append(f"{path.relative_to(REPO_ROOT)}: {m.group(0)!r}")
+    assert hits == [], "proprietary rating references in merit code:\n" + "\n".join(hits)

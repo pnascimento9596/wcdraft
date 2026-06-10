@@ -19,19 +19,34 @@ import type { Award, CardId, ManagerCardId, Position, SlotPosition } from "@wcdr
 
 // ─── Rating view ─────────────────────────────────────────────────────────────
 
-/** Provenance tag — drives the hue + label badge on every player card. */
-export type RatingBadgeKind = "historical" | "projected" | "estimate" | "legend";
+/**
+ * Provenance tag — drives the hue + label badge on every player card.
+ * `masked` is the Memory-mode blind: a display-only state produced ONLY by
+ * `blindCardRatingView` (never by `provenanceBadgeKind`). It carries a
+ * neutral hue so neither the legend gold nor the provenance tier leaks.
+ */
+export type RatingBadgeKind = "historical" | "projected" | "estimate" | "legend" | "masked";
 
 /** Fold of `RuntimeRating` honest-state fields into UI-ready form. */
 export interface CardRatingView {
   /** Display composite (0..100); null when coverage is insufficient. */
   overall: number | null;
-  attack: number;
-  midfield: number;
-  defense: number;
-  goalkeeping: number;
-  /** Honest-state coverage fraction in [0,1]. */
-  coverage: number;
+  /**
+   * Channels are always numeric in runtime data; `null` here means the value
+   * is BLINDED for display (Memory mode, via `blindCardRatingView`) — render
+   * `—`, never `0`. Classic mode never produces null channels.
+   */
+  attack: number | null;
+  midfield: number | null;
+  defense: number | null;
+  goalkeeping: number | null;
+  /**
+   * Honest-state coverage fraction in [0,1]. `null` means the value is
+   * BLINDED for display (Memory mode, via `blindCardRatingView`) — coverage
+   * is rating-confidence metadata, so it rides the blind set; render `—`
+   * with an empty bar, never `0`. Classic mode never produces null coverage.
+   */
+  coverage: number | null;
   /** Source of the rating signal. */
   provenance: "wc_performance" | "projected_career";
   /** Historical-only honest-state flag. */
@@ -39,6 +54,13 @@ export interface CardRatingView {
     | "measured_performance"
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
+  /**
+   * Source-derived legend flag (MV2-7 seam, MV2-10 data), carried through
+   * verbatim so the future memory mode can read it directly. `badge_kind`
+   * already folds it into the gold legend styling; this is the raw signal.
+   * Populated on every card as of the runtime-data-1.1.0 compact.
+   */
+  legend?: boolean;
   /** Folded display kind for the provenance/estimate/legend badge. */
   badge_kind: RatingBadgeKind;
   /** Human label for the provenance/estimate/legend badge. */
@@ -264,18 +286,28 @@ interface BadgeInputs {
     | "measured_performance"
     | "baseline_anchor_estimate"
     | "career_stature_estimate";
+  /**
+   * Source-derived legend flag (MV2-7 seam, MV2-10 data). When defined it is
+   * authoritative — an explicit `false` SUPPRESSES legend even for OVR≥96.
+   * Absent → fall back to the OVR≥96 heuristic below. As of the
+   * runtime-data-1.1.0 compact every rating carries the flag, so the fallback
+   * only guards pre-1.1.0 data shapes (and keeps BadgeInputs permissive for
+   * callers that fold non-rating inputs).
+   */
+  legend?: boolean;
 }
 
 /**
  * Order matters: legend > estimate > projected > historical.
- *   - LEGEND  : non-null OVR >= 96 (precious gold; rare and earned)
+ *   - LEGEND  : source-derived `legend` flag when present, else the historical
+ *               OVR≥96 heuristic (precious gold; rare and earned)
  *   - ESTIMATE: historical card flagged baseline_anchor_estimate (orange,
  *               low-certainty warning hue)
  *   - PROJECTED: 2026 projected-career provenance (periwinkle)
  *   - HISTORICAL: verified WC-performance signal (cyan, the everyday)
  */
 export function provenanceBadgeKind(r: BadgeInputs): RatingBadgeKind {
-  if (r.overall !== null && r.overall >= 96) return "legend";
+  if (r.legend ?? (r.overall !== null && r.overall >= 96)) return "legend";
   if (r.overall_basis === "baseline_anchor_estimate") return "estimate";
   if (r.provenance === "projected_career") return "projected";
   return "historical";
@@ -286,8 +318,40 @@ const BADGE_LABELS: Record<RatingBadgeKind, string> = {
   projected: "Projected",
   estimate: "Estimate",
   legend: "Legend",
+  masked: "Hidden",
 };
 
 export function provenanceBadgeLabel(kind: RatingBadgeKind): string {
   return BADGE_LABELS[kind];
+}
+
+// ─── Memory-mode blind (display-only) ────────────────────────────────────────
+
+/**
+ * THE single blind seam for Memory (hidden) mode. Strips every rating SIGNAL
+ * from an already-built `CardRatingView` while leaving identity intact:
+ *
+ *   BLINDED: overall, the four channels, coverage (rating-confidence
+ *   metadata — the % and its bars), the legend gold (via `badge_kind`, the
+ *   #56 seam — never a re-derived OVR≥96 check), the provenance hue/label
+ *   (it leaks rating tier), and `overall_basis`.
+ *
+ * Display-only by construction: this runs strictly on the view-model AFTER
+ * the engine-facing data is resolved, so the sim always consumes the real
+ * channels. Classic mode never calls this — its render path is untouched.
+ */
+export function blindCardRatingView(r: CardRatingView): CardRatingView {
+  return {
+    ...r,
+    overall: null,
+    attack: null,
+    midfield: null,
+    defense: null,
+    goalkeeping: null,
+    coverage: null,
+    overall_basis: undefined,
+    legend: undefined,
+    badge_kind: "masked",
+    badge_label: BADGE_LABELS.masked,
+  };
 }

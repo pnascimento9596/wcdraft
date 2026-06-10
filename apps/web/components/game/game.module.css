@@ -2296,6 +2296,11 @@ button.benchSlot:not(:disabled):hover {
   border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line));
 }
 
+/* Memory-mode blind — neutral, leaks no provenance tier or legend gold. */
+.prov_masked {
+  border-color: var(--line);
+}
+
 /* Provenance badges */
 .provBadge {
   font-family: var(--f-mono);
@@ -2332,6 +2337,11 @@ button.benchSlot:not(:disabled):hover {
 .provBadge_manager {
   color: var(--prov-manager);
   border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+}
+
+.provBadge_masked {
+  color: var(--ink-400);
+  border-color: var(--line-2);
 }
 
 /* Position shape on the eligible-position tags (mirrors slot encoding) */
@@ -3579,6 +3589,9 @@ button.benchSlot:not(:disabled):hover {
 .candRow.prov_manager {
   border-left-color: var(--prov-manager);
 }
+.candRow.prov_masked {
+  border-left-color: var(--line-2);
+}
 .candRowSelected {
   border-left-color: var(--gold);
 }
@@ -3649,6 +3662,9 @@ button.benchSlot:not(:disabled):hover {
 .provDot_legend {
   background: var(--prov-legend);
   box-shadow: 0 0 6px rgba(var(--prov-legend-rgb), 0.7);
+}
+.provDot_masked {
+  background: var(--prov-unknown);
 }
 .candRowShape {
   flex: 0 0 auto;
@@ -4655,6 +4671,46 @@ button.benchSlot:not(:disabled):hover {
 
 @media (prefers-reduced-motion: reduce) {
   .rareMoment {
+    animation: none;
+  }
+}
+
+/* ── Memory (hidden) mode ───────────────────────────────────────────────── */
+
+/* Inline note shown on the draft + review screens while the blind is on. */
+.memoryModeNote {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  color: var(--ink-400);
+}
+
+/* Post-Simulate reveal wrapper — auto-expands around the existing squad
+   surfaces (SynergyBar / Pitch / bench / manager). The animation is pure
+   presentation; `.memoryRevealInstant` (prefers-reduced-motion) renders the
+   final state with no animation at all. */
+.memoryReveal {
+  animation: memoryRevealIn 480ms ease-out both;
+}
+
+.memoryRevealInstant {
+  animation: none;
+}
+
+@keyframes memoryRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memoryReveal {
     animation: none;
   }
 }

@@ -45,7 +45,9 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-1.0.0" as const;
+// runtime-data-1.1.0 (MV2-10): `RuntimeRating.legend` became REQUIRED — every
+// compact rating now carries the source-derived legend flag (historical + 2026).
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-1.1.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
@@ -120,17 +122,18 @@ export interface RuntimeBundleFingerprint {
  * do not:
  *
  *  - `overall_basis` — `"measured_performance"` (default),
- *    `"baseline_anchor_estimate"` (388 historical cards where the score is
+ *    `"baseline_anchor_estimate"` (387 historical cards where the score is
  *    estimated from an era anchor because tournament-card signals were too
- *    thin to compute directly), or `"career_stature_estimate"` (E-4: a
- *    no-tournament-signal card carried by a well-covered elite career record;
- *    0 cards currently, but a live basis). The UI surfaces an estimate as a
- *    coverage badge — never silently rendered as a measured number.
+ *    thin to compute directly), or `"career_stature_estimate"` (a card whose
+ *    score is carried by the dominant career-stature path — MV2-4.1 basis
+ *    tag). The UI surfaces an estimate as a coverage badge — never silently
+ *    rendered as a measured number.
  *  - `appearances_source` — RSSSF supplement vs. Fjelstul match events; UI
  *    can disambiguate pre-1970 supplemented appearances vs. native counts.
  *
  * 2026 ratings (`provenance: "projected_career"`) carry neither field; both
- * are emitted as `undefined` so the JSON omits them.
+ * are emitted as `undefined` so the JSON omits them. `legend` (below) is
+ * carried by BOTH eras and is required as of runtime-data-1.1.0.
  */
 export interface RuntimeRating extends Rating {
   /** Historical only. UI badge for estimate-anchored ratings. */
@@ -140,6 +143,17 @@ export interface RuntimeRating extends Rating {
     | "career_stature_estimate";
   /** Historical only. Provenance of the `appearances` count. */
   appearances_source?: string;
+  /**
+   * Source-derived "legend" flag (MV2-7 contract, MV2-10 data). Display/
+   * honest-state only — NEVER a sim input, never crosses the `Rating` sim
+   * boundary. REQUIRED as of runtime-data-1.1.0: the compact passthrough is
+   * wired and every rating row (historical + 2026) carries the ETL-joined
+   * flag, so it is the source of truth for the gold legend badge. An explicit
+   * `false` SUPPRESSES legend styling even for an OVR≥96 card (the UI's
+   * `legend ?? OVR≥96` fallback in `provenanceBadgeKind` now only guards
+   * pre-1.1.0 data shapes).
+   */
+  legend: boolean;
 }
 
 // ─── Player card ─────────────────────────────────────────────────────────────
@@ -395,10 +409,12 @@ export interface RuntimeDataManifest {
     ratings: number;
     teams: number;
     knockout_slots: number;
-    /** Historical cards flagged `overall_basis === "baseline_anchor_estimate"` — 388 expected. */
+    /** Historical cards flagged `overall_basis === "baseline_anchor_estimate"` — 387 expected. */
     baseline_anchor_estimate: number;
-    /** E-4: cards flagged `overall_basis === "career_stature_estimate"` — 0 currently. */
+    /** Cards flagged `overall_basis === "career_stature_estimate"` (MV2-4.1 basis tag). */
     career_stature_estimate: number;
+    /** Ratings carrying `legend: true` (MV2-10 passthrough) — 302 expected (292 historical + 10 2026). */
+    legend: number;
   };
   /** Full attribution block (UI surface). */
   attribution: RuntimeAttribution;

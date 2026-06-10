@@ -1,6 +1,39 @@
 {
   "files": [
     {
+      "bytes": 559462,
+      "charset": "utf-8",
+      "family": "retrospective_selection",
+      "file": "iffhs/iffhs-dreamteams.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "fe499eb64b205cacf7d178f98c0d5f790d04e643a374347fb21f64a80c314a17",
+      "source_id": "iffhs_dream_teams",
+      "url": "https://www.iffhs.com/posts/1110"
+    },
+    {
+      "bytes": 9045,
+      "charset": "iso-8859-1",
+      "family": "regional_annual_recognition",
+      "file": "rsssf/afr-poy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "3e3ab1edd7c4d0c8c9a63dbe9c0eab6f6eb9e39dcc963cee778f8964cff525db",
+      "source_id": "african_poy",
+      "url": "https://www.rsssf.org/miscellaneous/afr-poy.html"
+    },
+    {
+      "bytes": 11717,
+      "charset": "iso-8859-1",
+      "family": "regional_annual_recognition",
+      "file": "rsssf/as-poy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "59b6ed8d1daf9c4a78ba8fc15114e79f531e1d54e5d7cb1382f9f2dc8a0e6ac9",
+      "source_id": "asian_poy",
+      "url": "https://www.rsssf.org/miscellaneous/as-poy.html"
+    },
+    {
       "bytes": 192821,
       "charset": "iso-8859-1",
       "family": "international_record",
@@ -14,7 +47,7 @@
     {
       "bytes": 61757,
       "charset": "iso-8859-1",
-      "family": "annual_recognition",
+      "family": "global_annual_recognition",
       "file": "rsssf/europa-poy.html",
       "retrieved": "2026-06-08",
       "role": "fact",
@@ -34,9 +67,20 @@
       "url": "https://www.rsssf.org/miscellaneous/iffhs-century.html"
     },
     {
+      "bytes": 20121,
+      "charset": "iso-8859-1",
+      "family": "global_annual_recognition",
+      "file": "rsssf/onze-awards.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "e3cc1091ba29649494d621b8725e8d7ddb91c9bb124b94511fd2b740b30bdb80",
+      "source_id": "onze_awards",
+      "url": "https://www.rsssf.org/miscellaneous/onze-awards.html"
+    },
+    {
       "bytes": 13047,
       "charset": "iso-8859-1",
-      "family": "annual_recognition",
+      "family": "regional_annual_recognition",
       "file": "rsssf/sam-poy.html",
       "retrieved": "2026-06-08",
       "role": "fact",
@@ -45,9 +89,64 @@
       "url": "https://www.rsssf.org/miscellaneous/sam-poy.html"
     },
     {
+      "bytes": 10768,
+      "charset": "iso-8859-1",
+      "family": "global_annual_recognition",
+      "file": "rsssf/wsoc-awards.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "e66e7f227322bd00a46cd1feed284fc16bec53d2d04697ec00bc55b431d63ecc",
+      "source_id": "world_soccer_poy",
+      "url": "https://www.rsssf.org/miscellaneous/wsoc-awards.html"
+    },
+    {
+      "bytes": 310569,
+      "charset": "utf-8",
+      "family": "retrospective_selection",
+      "file": "wiki/ballondor-dreamteam.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "05d4f3e2e9dc2812d02459f72b6ca3c5ded4bf5346cb06960e2e28212a9cec13",
+      "source_id": "ballondor_dream_team",
+      "url": "https://en.wikipedia.org/wiki/Ballon_d%27Or_Dream_Team"
+    },
+    {
+      "bytes": 306580,
+      "charset": "utf-8",
+      "family": "regional_annual_recognition",
+      "file": "wiki/concacaf-awards.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "adb5fed410bc4861734c54cd53333dd564d554744ce6c001d23a15df4286e756",
+      "source_id": "concacaf_poy",
+      "url": "https://en.wikipedia.org/wiki/CONCACAF_Awards"
+    },
+    {
+      "bytes": 339528,
+      "charset": "utf-8",
+      "family": "position_balanced_selection",
+      "file": "wiki/esm-tots.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "185fc036316736f5669ba8f36a56a2f247a6c419270db40b175d4000461c0c37",
+      "source_id": "esm_team_of_the_season",
+      "url": "https://en.wikipedia.org/wiki/ESM_Team_of_the_Season"
+    },
+    {
+      "bytes": 530361,
+      "charset": "utf-8",
+      "family": "position_balanced_selection",
+      "file": "wiki/fifpro-world11.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "6ccf9fee8ac91d6cb092456d2b8220afd5e8fae5462e9dfdd14224c670dbc94d",
+      "source_id": "fifpro_world11",
+      "url": "https://en.wikipedia.org/wiki/FIFPRO_World_11"
+    },
+    {
       "bytes": 582178,
       "charset": "utf-8",
-      "family": "annual_recognition",
+      "family": "global_annual_recognition",
       "file": "wiki/iffhs-worlds-best.html",
       "retrieved": "2026-06-08",
       "role": "fact",
@@ -67,6 +166,39 @@
       "url": "https://en.wikipedia.org/wiki/FIFA_100"
     },
     {
+      "bytes": 444503,
+      "charset": "utf-8",
+      "family": "position_balanced_selection",
+      "file": "wiki/uefa-club-awards.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "dee718a21c0c115dd322bf3182b720112566cb4e14cde8bc24eaca044a885dd8",
+      "source_id": "uefa_club_positional",
+      "url": "https://en.wikipedia.org/wiki/UEFA_Club_Football_Awards"
+    },
+    {
+      "bytes": 366408,
+      "charset": "utf-8",
+      "family": "global_annual_recognition",
+      "file": "wiki/uefa-mens-poy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "c87277708608c909738fbcd973fc631a08b8265e28ebe5b3da4970334e94f1f8",
+      "source_id": "uefa_mens_poy",
+      "url": "https://en.wikipedia.org/wiki/UEFA_Men%27s_Player_of_the_Year_Award"
+    },
+    {
+      "bytes": 505135,
+      "charset": "utf-8",
+      "family": "position_balanced_selection",
+      "file": "wiki/uefa-toty.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "875ed9cbe68d98c8a6b49118b1d61123b57b1d07803ea0a82614357e970f5fe9",
+      "source_id": "uefa_team_of_the_year",
+      "url": "https://en.wikipedia.org/wiki/UEFA_Team_of_the_Year"
+    },
+    {
       "bytes": 1759702,
       "charset": "utf-8",
       "family": "wc_legacy",
@@ -79,5 +211,5 @@
     }
   ],
   "note": "SHA-pinned public snapshots; fetch is OFF the deterministic build path.",
-  "version": "career-stature-1.0.0"
+  "version": "merit-source-set-2.0.0"
 }

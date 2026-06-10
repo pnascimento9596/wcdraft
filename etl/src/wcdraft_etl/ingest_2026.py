@@ -154,17 +154,24 @@ def _build_cards(rows: list[dict]) -> list[dict]:
 # ─── Team2026 + aggregate TeamStrength ──────────────────────────────────────────
 
 
-def _team_strength(squad_ratings: list[dict]) -> dict:
+def _team_strength(squad_ratings: list[dict], internal_score_by_card: dict[str, float]) -> dict:
     """Aggregate a squad's per-card ratings into a TeamStrength.
 
-    Best-available-XI semantics: take the 11 cards with the highest projected
-    overall (tiebreak card_id) and average each sim channel + coverage over them.
-    A stronger squad's best XI carries higher channels, so strong nations aggregate
-    higher. NOTE: this is the OPPONENT squad aggregation; the user-XI aggregator
-    (core ``aggregateUserXiStrength``, which folds synergy + manager) is a separate
+    Best-available-XI semantics: take the 11 cards with the highest INTERNAL
+    ``score_0_100`` (tiebreak card_id) and average each sim channel + coverage
+    over them. The internal score is curve-invariant: display ``overall`` is a
+    monotone map of it (MV2-6), so selecting on the internal float preserves the
+    display ordering MINUS the integer-rounding ties display introduces — the
+    MV2-10 decoupling fix that removes the display→sim leak (a display-curve
+    re-fit can no longer flip which XI a team aggregates over). A stronger
+    squad's best XI carries higher channels, so strong nations aggregate higher.
+    NOTE: this is the OPPONENT squad aggregation; the user-XI aggregator (core
+    ``aggregateUserXiStrength``, which folds synergy + manager) is a separate
     WS-B concern. The averaging choice is locked here and re-calibratable in WS-B.
     """
-    best = sorted(squad_ratings, key=lambda r: (-r["overall"], r["card_id"]))[:11]
+    best = sorted(
+        squad_ratings, key=lambda r: (-internal_score_by_card[r["card_id"]], r["card_id"])
+    )[:11]
     n = len(best)
     agg: dict[str, float] = {
         ch: round(sum(r[ch] for r in best) / n)
@@ -175,7 +182,10 @@ def _team_strength(squad_ratings: list[dict]) -> dict:
 
 
 def _build_teams(
-    cards: list[dict], ratings: list[dict], draw: dict[str, dict[int, str]]
+    cards: list[dict],
+    ratings: list[dict],
+    draw: dict[str, dict[int, str]],
+    internal_score_by_card: dict[str, float],
 ) -> list[dict]:
     rating_by_card = {r["card_id"]: r for r in ratings}
     # nation_id -> drawn slot, via the draw's FIFA code map.
@@ -200,7 +210,7 @@ def _build_teams(
                 "group": group,
                 "group_slot": slot,
                 "squad_card_ids": squad_card_ids,
-                "aggregate_rating": _team_strength(squad_ratings),
+                "aggregate_rating": _team_strength(squad_ratings, internal_score_by_card),
                 "squad_status": SQUAD_STATUS,
                 "rating_version": rating_2026.RATING_VERSION,
                 "sources": [
@@ -295,8 +305,21 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> dict:
         _load("nations", output_dir),
     )
     cards = _build_cards(rows)
-    ratings = rating_2026.build_ratings(cards)
-    teams = _build_teams(cards, ratings, draw)
+    # MV2-5: linked-material 2026 players reconcile onto the career-stature scale.
+    # career_stature.json is consumed READ-ONLY (missing → {} → every card on the
+    # projected raw path); rating_2026 only consults it for link_status=="linked".
+    # Non-material cards are quantile-mapped onto the committed historical raw-only
+    # internal distribution (ratings.json, READ-ONLY) for cross-era density parity.
+    career = rating_2026._load_career_stature(output_dir)
+    historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
+    # Pass 1 computed ONCE: the same internal rows materialize the Rating rows AND
+    # carry the curve-invariant score_0_100 the best-XI selection keys on (MV2-10).
+    internal_rows = rating_2026.build_internal_view(cards, career, historical_raw_only, output_dir)
+    ratings = rating_2026.build_ratings(
+        cards, career, historical_raw_only, output_dir, internal_rows=internal_rows
+    )
+    internal_score_by_card = {r["card_id"]: r["score_0_100"] for r in internal_rows}
+    teams = _build_teams(cards, ratings, draw, internal_score_by_card)
     bracket = _build_bracket(teams, bracket_matches)
 
     tournament = {
@@ -369,6 +392,10 @@ def run(output_dir: Path = OUTPUT_DIR) -> dict:
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest_2026.json", _manifest(tables))
+    # MV2-5 accuracy-eyeball sample: rewrite MERIT_V2_SAMPLE.md as the historical
+    # MV2-4 section + the 2026 reconciliation section. Runs LAST (after the 2026
+    # tables are on disk) and regenerates the whole file deterministically.
+    rating_2026.write_merit_v2_sample(output_dir)
     return tables
 
 

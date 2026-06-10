@@ -1,4 +1,14 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-2.0.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-3.0.0`)
+
+> **MV2-6 (unified display curve):** the 2026 `rating_version` stays
+> `proj-career-3.0.0` — the projected INTERNAL algorithm is unchanged. What changed
+> is the **display** `overall`: it is no longer fit on the 2026 pool alone but is
+> now mapped by the ONE shared monotonic curve fit over the **pooled** historical +
+> 2026 internal distribution (`display_curve.fit_unified_curve`, carried by the
+> `wc-perf-4.2.0` historical anchor). MV2-5's quantile mapping made the two internal
+> scales cross-era fair, so the same curve maps both eras honestly. The four sim
+> channels are byte-identical (the curve touches `overall` only); the four
+> previously-spurious OVR-99 projected MF cards now display in the mid-80s.
 
 The 2026 World Cup opponents are **real** (the 48 final squads, group draw, and
 knockout bracket were published 2026-06-02). But the 2026 players have **no
@@ -20,6 +30,56 @@ not a replacement.
 > `packages/core/src/engine/calibration.ts` is UNCHANGED from `origin/main`.
 > No new ingestion; Phase 2 will add Ballon d'Or / all-time list signals
 > separately.
+
+> **proj-career-3.0.0 (merit-v2 MV2-5 — 2026 stature reconciliation):** linked
+> players (`link_status == "linked"`) whose canonical `career_stature.json` row
+> clears the material gate are reconciled onto the **same stature scale** as the
+> historical `wc-perf-4.x` cards: `projected_final = stature_target(pos, index) +
+> bounded projected-context modulation`, using the identical stature target,
+> continuity ramp, and tier-tightened caps as the historical model (imported, not
+> re-implemented). This fixes the headline gap — linked Messi-2026 was age-pinned
+> at 79 on the old raw formula and now reads on the stature scale; the 2026 legend
+> count is no longer 0. Minted / unlinked / ambiguous / linked-but-below-material
+> players **never** consult career stature and stay on the honest projected raw
+> path, with the projected raw composite **quantile-mapped onto the historical
+> raw-only internal distribution** (read read-only from the committed `ratings.json`)
+> so a strong-caps-plus-top-league role player **cannot** occupy the recognized-
+> greats / legend band on the projection alone (the fix for the spurious OVR-99
+> projected MF cards) **and** a 2026 reserve lands at the same internal score as a
+> comparable historical reserve cross-era. Rows now
+> carry `overall_basis` (`career_stature_estimate` | `measured_performance`, never
+> `baseline_anchor_estimate`) and a first-class `legend` boolean joined from the
+> linked player's career row. The materialized `overall` is now the **final**
+> unified display (MV2-6 landed the shared historical+projected pooled curve); the
+> INTERNAL (pre-display) score behavior MV2-5 asserts is unchanged.
+> `calibration.ts` is still UNCHANGED.
+>
+> **Cross-era density note (the MV2-5 raw-only divergence):** the projected raw
+> composite runs HOT relative to the historical tournament box score (2026
+> projected-raw median ≈0.66 vs ≈0.43 historically; ≈58% of 2026 cards exceed the
+> 0.62 ceiling vs ≈12% historically). Two mechanisms are therefore wrong: the
+> historical hard clip `min(raw, ceiling)` flattens the majority of 2026 cards to an
+> identical point; and an **affine rescale onto `[REPLACEMENT_BASE, ceiling]`**
+> matches only the BOUNDS — it leaves the 2026 floor lifted (≈0.34 vs the historical
+> 0.20) and the whole non-material distribution sitting systematically above
+> comparable historical journeymen, which MV2-6's single monotonic display curve
+> (fit over the pooled internal scores) **cannot** pull back down. So MV2-5 uses
+> **empirical quantile mapping** (density neutralization): a non-material card's
+> percentile within the 2026 pure-raw-only (`weight == 0`) projected-raw cohort is
+> read off the historical raw-only internal scores at the SAME percentile. The 2026
+> non-material internal **distribution then matches the historical raw-only
+> quantiles** (per-quantile cross-era gap ≈0, not merely the bounds), so a 2026
+> reserve at percentile *p* lands at the same internal score as a historical raw-only
+> card at *p* (e.g. a 2026 bench defender aligns with a Mangala-2014-class reserve,
+> not above it). Monotonic in projected raw ⇒ within-2026 rank preserved. The
+> per-cohort raw-only ceiling (the global elite cap, ≈0.62) still bounds the result
+> below the recognized-greats band — confirmed full-scan. NB: the continuity-ramp
+> blend means a strong *linked-below-material* card can brush an anomalously-low
+> marginal-material card at the `weight≈0.5` boundary; this is the cliff-free ramp
+> working and is a property shared with — and far milder than — the historical engine
+> (where non-material reaches 64.8 vs a 44.8 marginal-material floor). The cap that
+> matters — pure raw-only / minted / unlinked cards never reaching the band — holds
+> at the 0.62 ceiling.
 
 This document is the companion to `etl/src/wcdraft_etl/rating_2026.py`; the
 code is the source of truth and every constant is `CALIBRATION`-flagged there.
@@ -74,18 +134,26 @@ internal_score (0..1) = clamp01( base + league_anchor )
 base                  = REPLACEMENT_BASE + (BASE_CEILING − REPLACEMENT_BASE) · perf_blend · age_factor
 perf_blend            = Σ wᵢ·pctᵢ / Σ wᵢ      over present signals (caps, intl goals), position-weighted
 league_anchor         = LEAGUE_WEIGHT[pos] · league_strength
-score_0_100           = 100 · internal_score    (input to the SHARED display curve)
+projected_raw         = internal_score         (the projected CONTEXT signal, not the final)
 ```
+
+Under MV2-5 `projected_raw` is no longer the final score: it is the context signal
+into the stature reconciliation. For **linked + material** cards the final is the
+stature blend (`stature_target + bounded projected modulation`); for **non-material**
+cards the final is `projected_raw` **quantile-mapped onto the historical raw-only
+internal distribution** (see the summary's cross-era density note). `score_0_100 =
+100 · final` is the input to the SHARED display curve.
 
 The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
 the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
 helpers as `wc-perf-2.0.0`. Channels are derived from `score_0_100` via
 `_channel(score_0_100, spread)` (unchanged pre-recal formula) — they do NOT
-pass through the display curve. The projected pool fits the curve on **its own** four
-quantiles (the projected raw scale is bounded above more tightly than the
-historical raw scale, because there is no decorated apex tail). The TARGET
-anchors are identical to historical (66, 73, 88, 99) so historical and
-projected display values are directly comparable.
+pass through the display curve. Under **MV2-6** the projected pool no longer fits
+its own curve: the display `overall` is mapped by the ONE curve fit over the
+**pooled** historical + 2026 internal scores (`display_curve.fit_unified_curve`),
+identical for both eras. The TARGET anchors remain 66/73/88/99 and, because MV2-5
+made the internal scales cross-era fair, historical and projected display values
+sit on the same honest scale with no per-era table.
 
 ### Why a league anchor (the projection-sanity fix, unchanged from 1.0.0)
 
@@ -159,10 +227,17 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-2.0.0`)
+* **projected rating version** check (`proj-career-3.0.0`)
 * **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
   no 100s)
-* **projected has no `overall_basis` field** (no estimate path)
+* **projected basis** is `career_stature_estimate` | `measured_performance`,
+  never `baseline_anchor_estimate`; both paths exercised by the real squads
+* **MV2-5 stature reconciliation (INTERNAL-score assertions):** minted/non-linked
+  never consume career stature; linked-material rides the stature scale (Messi no
+  longer age-dominated); the 4 previously-spurious OVR-99 cards are capped on the
+  raw-only band below the greats; the top of the internal distribution is material,
+  not raw artifacts; legend joins linked-material only; DF/GK legends are position-
+  channel-shaped; `link_status` missing fails loudly
 * projected rating bounds on the new band + honest-state nulls
 * **strong-nations-aggregate-higher invariant** holds on the compressed
   channel scale: every traditional power outranks every debutant/minnow
@@ -185,7 +260,10 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 ## Migration & versioning
 
-- `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0`.
-- The runtime data schema is unchanged.
+- `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0` →
+  `proj-career-3.0.0` (MV2-5 stature reconciliation).
+- Rows gain `overall_basis` and a first-class `legend` boolean (joined from
+  `career_stature.json` for linked players). `ratings_2026.json` and
+  `teams_2026.json` regenerate; the unified display curve is MV2-6.
 - See `RATING_METHODOLOGY.md` for the historical-pool curve details and the
   shared display-curve helpers.

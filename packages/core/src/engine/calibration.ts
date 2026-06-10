@@ -34,6 +34,14 @@
 //   goldens (sim / rng / draft) do NOT move; only stamp-carrying payloads
 //   (e2e-real-run, run-record, compact manifest, asym-realism) re-lock.
 //
+//   MV2-11b (engine-2026.06.09): λ refit against the merit-v2
+//   stature-dominant channels — BASE/SPREAD/GAMMA_MID/KO_LAMBDA_FACTOR
+//   moved, sim behavior CHANGED, so this bump pairs with the behavior
+//   change in the same commit: both realism goldens (symmetric +
+//   asymmetric) and the sim/e2e goldens re-lock atomically, and t1.
+//   tokens minted by older engines hit the version-skew "different
+//   build" path instead of silently diverging.
+//
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
 // output on every platform/engine. λ is a clamped LINEAR map and goal counts
@@ -75,20 +83,23 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * E-3a REFIT (D6 + D1 dispersion): BASE=0.85 sits on the low side so
-   * the wider SPREAD below + the match-level dispersion drive mean goals
-   * to 2.54 while keeping the high-margin tail (margin ≥ 4) inside band.
+   * MV2-11b REFIT: BASE=1.0 (was 0.85). The merit-v2 DF/GK stature lift
+   * compressed the mean (attack − defResist) edge, collapsing λ and goal
+   * volume (goals/game 2.218 — see
+   * docs/investigations/mv2-11a-sim-measurement-2026-06-09.md); BASE is
+   * the goal-volume lever that restores the 2.54 norm.
    */
-  BASE: 0.85,
+  BASE: 1.0,
   /**
    * Sensitivity to the (attack − defResist) edge, per 100 channel points.
-   * E-3a REFIT lifted SPREAD from 4.0 to 6.5: the wider spread is what
-   * unlocks the `margin ≥ 4 ≈ 4.9%` tight band. Combined with `MIN = 0.40`
-   * floor the underdog λ still produces credible goals for the weakest
-   * 2026-pool pairs (the D4 elite-ceiling / dominance-not-certainty
-   * faithfulness assertions still pass — see SIM_CALIBRATION.md).
+   * E-3a lifted SPREAD 4.0 → 6.5 to unlock the `margin ≥ 4 ≈ 4.9%` tight
+   * band; MV2-11b lifted it to 7.0 because the stature-dominant channels
+   * compressed inter-team spread (margin≥4 fell to 3.63%). Combined with
+   * the `MIN = 0.40` floor the underdog λ still produces credible goals
+   * for the weakest 2026-pool pairs (the D4 elite-ceiling /
+   * dominance-not-certainty faithfulness assertions still pass).
    */
-  SPREAD: 6.5,
+  SPREAD: 7.0,
   /**
    * Floor — even a hopeless attack still threatens occasionally. E-3a REFIT
    * dropped MIN to 0.40 because the wider SPREAD pushes the most lopsided
@@ -109,11 +120,12 @@ export const LAMBDA = Object.freeze({
   W_GK: 0.30,
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
-   * points). E-3a REFIT raised γ_mid to 0.50 — the bounded multiplier
-   * (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies, never
-   * replaces, the attack/defense edge.
+   * points). E-3a raised γ_mid to 0.50; MV2-11b raised it to 0.60 to
+   * recover edge expression under the compressed merit-v2 channel spread.
+   * The bounded multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield
+   * STILL amplifies, never replaces, the attack/defense edge.
    */
-  GAMMA_MID: 0.50,
+  GAMMA_MID: 0.60,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */
@@ -140,10 +152,12 @@ export const LAMBDA = Object.freeze({
    * (engine reverts to the pre-refit single-phase λ for everything). The
    * ET phase inherits the factor via `lambdaUser * ET_FRACTION` — extra
    * time is already cagier by virtue of `ET_FRACTION = 30/90`. E-3a REFIT
-   * D6 landed 0.85 — KO regulation goals run ~15% below group goals,
-   * matching the modern-WC pattern.
+   * D6 landed 0.85; MV2-11b landed 0.82 — after the BASE/SPREAD lift this
+   * re-centers mean goals (2.544 vs 2.564) and the shootout rate inside
+   * their bands, with KO regulation running ~18% below group goals (still
+   * inside the documented modern-WC 10–20% gap).
    */
-  KO_LAMBDA_FACTOR: 0.85,
+  KO_LAMBDA_FACTOR: 0.82,
 });
 
 // ─── CHANCE BUDGET (binomial goal model) ──────────────────────────────────────

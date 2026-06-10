@@ -226,10 +226,11 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 
-def test_projected_rating_version_is_phase1(ratings):
-    assert rating_2026.RATING_VERSION == "proj-career-2.0.0"
+def test_projected_rating_version_is_stature_reconciled(ratings):
+    # proj-career-3.0.0 = the merit-v2 MV2-5 stature reconciliation of 2026.
+    assert rating_2026.RATING_VERSION == "proj-career-3.0.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-2.0.0"
+        assert r["rating_version"] == "proj-career-3.0.0"
 
 
 def test_projected_distribution_shape(ratings):
@@ -252,11 +253,17 @@ def test_projected_distribution_shape(ratings):
     assert share_98 <= 0.010, share_98
 
 
-def test_projected_no_estimate_path(ratings):
-    """2026 cards never take the estimate path (caps are always present), so
-    no `overall_basis` field is emitted — distinct from the historical schema."""
+def test_projected_basis_is_stature_or_measured_never_baseline(ratings):
+    """MV2-5: 2026 rows now carry overall_basis (the shared RatingSchema vocabulary)
+    so MV2-7's compact builder reads one join. Caps are always present, so a 2026
+    card NEVER takes the baseline_anchor_estimate path: it is either stature-driven
+    (linked-material) or projected-raw-driven (measured_performance)."""
+    seen = set()
     for r in ratings:
-        assert "overall_basis" not in r
+        assert r["overall_basis"] in ("career_stature_estimate", "measured_performance")
+        seen.add(r["overall_basis"])
+    # Both paths are exercised by the real 2026 squads.
+    assert seen == {"career_stature_estimate", "measured_performance"}
 
 def test_strong_nations_aggregate_higher(teams, nation_name):
     """Every traditional power outranks every debutant/minnow — a robust ordering
@@ -292,6 +299,43 @@ def test_team2026_shape(teams, ratings):
         # Cited to BOTH the squads snapshot and the draw (group_slot provenance).
         assert {s["source_type"] for s in t["sources"]} == {"wikipedia"}
         assert any(s["field"] == "group_slot" for s in t["sources"])
+
+
+def test_best_xi_selected_on_internal_score(teams, cards, ratings):
+    """MV2-10 decoupling: best-XI keys on the curve-invariant INTERNAL score.
+
+    Two invariants:
+    1. Every team's aggregate equals the top-11-by-(internal score, card_id)
+       average — the selection never reads the display ``overall``.
+    2. The internal selection differs from a display-keyed selection ONLY within
+       display-overall ties (the display curve is a monotone map of the internal
+       score, so any swap must exchange equal-display cards — a strict display
+       reordering would mean the curve leaked back into the sim aggregate).
+    """
+    career = rating_2026._load_career_stature(OUT)
+    hist = rating_2026._historical_raw_only_internal(OUT)
+    internal = {
+        r["card_id"]: r["score_0_100"]
+        for r in rating_2026.build_internal_view(cards, career, hist, OUT)
+    }
+    rating_by_card = {r["card_id"]: r for r in ratings}
+    for t in teams:
+        squad = [rating_by_card[cid] for cid in t["squad_card_ids"]]
+        by_internal = sorted(squad, key=lambda r: (-internal[r["card_id"]], r["card_id"]))[:11]
+        n = len(by_internal)
+        expected: dict[str, float] = {
+            ch: round(sum(r[ch] for r in by_internal) / n)
+            for ch in ("attack", "midfield", "defense", "goalkeeping")
+        }
+        expected["coverage"] = round(sum(r["coverage"] for r in by_internal) / n, 4)
+        assert t["aggregate_rating"] == expected, t["team_id"]
+
+        by_display = sorted(squad, key=lambda r: (-r["overall"], r["card_id"]))[:11]
+        dropped = {r["card_id"] for r in by_display} - {r["card_id"] for r in by_internal}
+        added = {r["card_id"] for r in by_internal} - {r["card_id"] for r in by_display}
+        assert {rating_by_card[c]["overall"] for c in dropped} == {
+            rating_by_card[c]["overall"] for c in added
+        }, (t["team_id"], dropped, added)
 
 
 # ─── Bracket2026 ──────────────────────────────────────────────────────────────
@@ -342,3 +386,274 @@ def test_manifest_and_attribution(built):
     assert "Wikipedia" in manifest["attribution"]
     assert manifest["counts"]["cards"] == len(built["player_tournaments_2026"])
     assert manifest["honest_state"]["overall_null_2026_cards"] == 0
+
+
+# ─── MV2-5: 2026 linked-player stature reconciliation ─────────────────────────
+# These assert INTERNAL-score behavior (the assertable MV2-5 quantity). The display
+# `overall` is provisional until the unified curve (MV2-6), so display-band anchors
+# (Messi >= 91 OVR, etc.) are NOT asserted here.
+
+# Canonical player_ids surfaced explicitly for the eyeball anchors (mirrors the
+# historical named-anchor test). Messi/Modrić = gold legends; the four *_SPURIOUS
+# were OVR-99 projected MF cards on the old proj-career-2.0.0 raw formula.
+_MESSI = "P-14758"
+_VINICIUS = "P-92812"  # linked but BELOW material (low career index)
+_SPURIOUS_99 = ("P-34205", "P-39584", "P-58692", "P-W26-0177")
+_DF_LEGEND = "P-56029"  # van Dijk
+_GK_LEGEND = "P-19408"  # Neuer
+
+
+@pytest.fixture(scope="session")
+def career_2026() -> dict[str, dict]:
+    return rating._load_career_stature(OUT)
+
+
+@pytest.fixture(scope="session")
+def internal_2026(cards, career_2026) -> dict[str, dict]:
+    """player_id -> INTERNAL projected row (pre-display, on the stature scale)."""
+    rows = rating_2026.build_internal_view(cards, career_2026)
+    return {r["player_id"]: r for r in rows}
+
+
+def _comp(row: dict, signal: str):
+    return next(c["value"] for c in row["components"] if c["signal"] == signal)
+
+
+@pytest.fixture(scope="session")
+def historical_raw_only_sorted() -> list[float]:
+    """Sorted historical PURE raw-only (stature_model_weight==0) INTERNAL scores in
+    [0,1], read read-only from committed ratings.json — the quantile-map target and
+    the population MV2-6's single monotonic curve pools."""
+    return rating_2026._historical_raw_only_internal(OUT)
+
+
+@pytest.fixture(scope="session")
+def projected_raw_only_sorted(internal_2026) -> list[float]:
+    """Sorted 2026 PURE raw-only (weight==0) INTERNAL scores in [0,1]."""
+    return sorted(
+        r["score_0_100"] / 100.0
+        for r in internal_2026.values()
+        if _comp(r, "stature_model_weight") == 0.0
+    )
+
+
+def test_new_stature_components_emitted(ratings):
+    """Every 2026 row carries the MV2-5 stature-reconciliation components (numeric;
+    RatingComponentSchema stays numeric-only)."""
+    required = {
+        "projected_raw_score",
+        "projected_reference_score",
+        "projected_modulation",
+        "career_stature_score",
+        "career_stature_index",
+        "career_stature_coverage",
+        "stature_target_score",
+        "stature_model_weight",
+    }
+    for r in ratings:
+        signals = {c["signal"] for c in r["components"]}
+        assert required <= signals, r["card_id"]
+        for c in r["components"]:
+            assert c["value"] is None or isinstance(c["value"], (int, float))
+
+
+def test_minted_never_consume_career_stature(internal_2026, cards):
+    """Minted / unlinked / ambiguous (any status != 'linked') never query career
+    stature: career_* components are null, the stature weight is 0, and they can
+    never carry a factual legend. The score is purely the projected raw path."""
+    link_of = {c["player_id"]: c["link_status"] for c in cards}
+    checked = 0
+    for pid, row in internal_2026.items():
+        if link_of[pid] == "linked":
+            continue
+        assert _comp(row, "career_stature_score") is None, pid
+        assert _comp(row, "career_stature_index") is None, pid
+        assert _comp(row, "stature_target_score") is None, pid
+        assert _comp(row, "stature_model_weight") == 0.0, pid
+        assert row["legend"] is False, pid
+        assert row["overall_basis"] == "measured_performance", pid
+        checked += 1
+    assert checked > 0
+
+
+def test_linked_material_reconciled_onto_stature_scale(internal_2026, cards):
+    """Linked players whose career row clears the material gate ride the stature
+    path: a populated career index, stature-dominant weight, the career_stature
+    basis, and an internal score driven by the stature target (well above the
+    raw-only band)."""
+    link_of = {c["player_id"]: c["link_status"] for c in cards}
+    material = [
+        row
+        for pid, row in internal_2026.items()
+        if link_of[pid] == "linked"
+        and _comp(row, "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT
+    ]
+    assert len(material) >= 10  # the recognized 2026 greats
+    for row in material:
+        assert _comp(row, "career_stature_index") is not None, row["player_id"]
+        assert _comp(row, "stature_target_score") is not None, row["player_id"]
+        assert row["overall_basis"] == "career_stature_estimate", row["player_id"]
+        # Stature-path internal score clears the marginal-material floor — it is NOT
+        # confined to the raw-only band that caps non-material cards.
+        assert row["score_0_100"] / 100.0 > rating.RAW_ONLY_GLOBAL_CEILING, row["player_id"]
+
+
+def test_messi_no_longer_age_dominated(internal_2026):
+    """The headline gap: linked Messi-2026 was age-suppressed on the old projected
+    formula (raw-only). He now reads on the stature scale — stature-dominant weight,
+    a near-peak target, the career_stature basis, and a factual legend."""
+    row = internal_2026[_MESSI]
+    assert _comp(row, "stature_model_weight") == 1.0
+    assert row["overall_basis"] == "career_stature_estimate"
+    assert row["legend"] is True
+    # His internal final is the stature target (+ bounded modulation), an order above
+    # the raw-only band — not the age-tempered projected raw he was pinned to before.
+    assert row["score_0_100"] / 100.0 >= 0.95
+    assert _comp(row, "stature_target_score") >= 0.90
+
+
+def test_spurious_high_raw_cards_capped_below_material(internal_2026):
+    """The four previously-OVR-99 projected MF cards (strong caps + top league, no
+    material career stature) are now confined to the raw-only band: stature weight 0,
+    measured_performance basis, no legend, internal score at/below the raw-only
+    ceiling — strictly below the recognized-greats band. The Souček-class fix."""
+    for pid in _SPURIOUS_99:
+        row = internal_2026[pid]
+        assert _comp(row, "stature_model_weight") == 0.0, pid
+        assert row["overall_basis"] == "measured_performance", pid
+        assert row["legend"] is False, pid
+        # raw-only ceiling band, never the stature/legend band.
+        assert row["score_0_100"] / 100.0 <= rating.RAW_ONLY_GLOBAL_CEILING + 1e-9, pid
+
+
+def test_nonmaterial_quantiles_match_historical_raw_only(
+    historical_raw_only_sorted, projected_raw_only_sorted
+):
+    """MV2-5 cross-era DENSITY neutralization (the headline fix). The 2026 pure
+    raw-only (weight==0) INTERNAL distribution is empirically quantile-mapped onto the
+    historical raw-only internal distribution, so a 2026 reserve at percentile p lands
+    at the SAME internal score as a historical raw-only card at p — the population
+    MV2-6's single monotonic curve pools. The replaced affine map matched only the
+    bounds and left the 2026 floor ~0.14 and the median ~0.055 above historical (a
+    2026 journeyman systematically out-rating a comparable historical one, which a
+    monotonic curve cannot undo). Quantile mapping closes the whole distribution: the
+    per-quantile cross-era gap must be ~0, not merely the bounds."""
+    assert historical_raw_only_sorted and projected_raw_only_sorted
+    for q in (0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99):
+        h = rating._quantile(historical_raw_only_sorted, q)
+        n = rating._quantile(projected_raw_only_sorted, q)
+        assert abs(h - n) <= 0.01, (q, h, n)
+    # Floors coincide exactly — the affine map's lifted 2026 floor is the regression
+    # this guards: a 2026 reserve can sink to the historical replacement floor.
+    assert min(projected_raw_only_sorted) <= min(historical_raw_only_sorted) + 1e-9
+
+
+def test_2026_reserve_df_not_above_comparable_historical_reserve(
+    internal_2026, historical_raw_only_sorted
+):
+    """Cross-era FLOOR parity, the concrete Mangala-2014 case from the review block:
+    a 2026 pure-raw-only reserve defender must NOT out-internal a comparable modern
+    historical reserve defender. Mangala (Man City, WC-2014) is a raw-only DF at
+    internal ≈0.239; under the replaced affine map a 2026 bench DF floored ~0.10
+    above him for no merit reason. The spurious-cap test guards the upper bound; this
+    guards the FLOOR."""
+    # Mangala-2014 internal, reconstructed from committed ratings.json (stable anchor).
+    rj = {r["card_id"]: r for r in json.loads((OUT / "ratings.json").read_text())}
+    mangala = rj["P-08834:WC-2014"]
+    assert _comp(mangala, "stature_model_weight") == 0.0
+    mangala_internal = min(
+        _comp(mangala, "raw_tournament_score"), rating.RAW_ONLY_GLOBAL_CEILING
+    )
+    df_raw_only = sorted(
+        r["score_0_100"] / 100.0
+        for r in internal_2026.values()
+        if r["pos"] == "DF" and _comp(r, "stature_model_weight") == 0.0
+    )
+    # 2026 reserve defenders reach AT/BELOW the Mangala-class internal — they are no
+    # longer floored above comparable historical reserves.
+    assert min(df_raw_only) <= mangala_internal + 1e-9, (min(df_raw_only), mangala_internal)
+    # And the 2026 DF raw-only floor is the historical replacement floor, not lifted.
+    assert min(df_raw_only) <= rating._quantile(historical_raw_only_sorted, 0.10) + 1e-9
+
+
+def test_top_internal_scores_are_material_not_raw_artifacts(internal_2026):
+    """The top of the 2026 INTERNAL distribution is dominated by linked global-
+    stature players, not by projected-raw artifacts (the old failure: minnow/role-
+    player MF cards pinning the top on caps+league alone)."""
+    top = sorted(internal_2026.values(), key=lambda r: -r["score_0_100"])[:15]
+    for row in top:
+        assert _comp(row, "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT, (
+            row["player_id"],
+            row["score_0_100"],
+        )
+
+
+def test_linked_below_material_stays_on_raw_path(internal_2026):
+    """A LINKED player whose career index is below the material gate (e.g. a young
+    star without an accumulated honours record) stays on the honest projected raw
+    path — no stature target, no legend — exactly like a minted card."""
+    row = internal_2026[_VINICIUS]
+    assert _comp(row, "stature_model_weight") == 0.0
+    assert _comp(row, "stature_target_score") is None
+    assert row["overall_basis"] == "measured_performance"
+    assert row["legend"] is False
+
+
+def test_legend_join_is_linked_material_only(internal_2026, cards, career_2026):
+    """legend is the factual career flag joined for linked players (missing row →
+    False); minted cards never carry it. Every 2026 legend is a linked, material,
+    legend-flagged career row."""
+    link_of = {c["player_id"]: c["link_status"] for c in cards}
+    legends = [pid for pid, row in internal_2026.items() if row["legend"]]
+    assert len(legends) > 0
+    for pid in legends:
+        assert link_of[pid] == "linked", pid
+        assert career_2026[pid]["legend"] is True, pid
+        assert _comp(internal_2026[pid], "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT
+
+
+def test_defender_keeper_legends_are_position_shaped(internal_2026):
+    """A 2026 DF/GK legend reads elite on its position channel, not uniformly elite
+    across all four (the channel-shape invariant carries over from wc-perf-4.x): a
+    centre-back must not become a top-tier attacker, a keeper must not be elite
+    outfield."""
+    df = internal_2026[_DF_LEGEND]
+    df_ch = {
+        ch: rating._channel(df["score_0_100"], rating.CHANNEL_SPREAD[df["pos"]][ch])
+        for ch in rating.CHANNELS
+    }
+    assert df_ch["defense"] > df_ch["attack"]
+    assert df_ch["defense"] > df_ch["goalkeeping"]
+
+    gk = internal_2026[_GK_LEGEND]
+    gk_ch = {
+        ch: rating._channel(gk["score_0_100"], rating.CHANNEL_SPREAD[gk["pos"]][ch])
+        for ch in rating.CHANNELS
+    }
+    assert gk_ch["goalkeeping"] > gk_ch["attack"]
+    assert gk_ch["goalkeeping"] > gk_ch["defense"]
+
+
+def test_missing_link_status_fails_loudly():
+    """link_status is never defaulted: a 2026 card without it is a contract break."""
+    bad = {
+        "card_id": "P-00000:WC-2026",
+        "player_id": "P-00000",
+        "tournament_id": "WC-2026",
+        "position_listed": "FW",
+        "caps": 10,
+        "intl_goals": 3,
+        "birth_date": "1998-01-01",
+        "club_nation_code": "ENG",
+        "coverage": 0.7143,
+        # link_status deliberately omitted
+    }
+    with pytest.raises(ValueError, match="link_status"):
+        rating_2026.build_ratings([bad], {})
+
+
+def test_two_builds_are_byte_identical():
+    """Determinism: no per-player override, no nondeterministic ordering."""
+    a = rating_2026.build_all()
+    b = rating_2026.build_all()
+    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)

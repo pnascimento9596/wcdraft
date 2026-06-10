@@ -58,9 +58,18 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
     manager_tournaments = rating._load(output_dir, "manager_tournaments")
     career = rating._load_career_stature(output_dir)
 
-    before = rating.build_ratings(players, cards, tournaments, manager_tournaments, {})
+    # MV2-6: hold the display curve FIXED (the shared unified pooled curve) across
+    # both builds so Δoverall isolates the career-lift's effect on the INTERNAL
+    # score as seen through the production curve — not a by-product of each build
+    # refitting a different per-pool curve. Channel deltas are curve-independent.
+    from . import display_curve
+
+    curve = display_curve.fit_unified_curve(output_dir)
+    before = rating.build_ratings(
+        players, cards, tournaments, manager_tournaments, {}, curve=curve
+    )
     after = rating.build_ratings(
-        players, cards, tournaments, manager_tournaments, career
+        players, cards, tournaments, manager_tournaments, career, curve=curve
     )
     before_by = {r["card_id"]: r for r in before}
     players_by_id = {p["player_id"]: p for p in players}
@@ -105,10 +114,12 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
     doc = {
         "version": VERSION,
         "note": (
-            "REVIEW ONLY — internal pre-lift (wc-perf-2.0.0 behavior) vs post-lift "
-            "(wc-perf-3.0.0) divergence. Never a source, never an override. An "
-            "external independent merit assembly may be diffed against this by a "
-            "reviewer but is not read by the build."
+            "REVIEW ONLY — raw-only baseline (career table disabled) vs the "
+            "stature-dominant output (career table enabled) divergence, both mapped "
+            "through the shared MV2-6 unified display curve so Δoverall isolates the "
+            "career lift. Never a source, never an override. An external independent "
+            "merit assembly may be diffed against this by a reviewer but is not read "
+            "by the build."
         ),
         "thresholds": {
             "abs_delta_overall_min": DELTA_OVERALL_THRESHOLD,
