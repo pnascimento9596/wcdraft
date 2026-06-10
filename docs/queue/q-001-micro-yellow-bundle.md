@@ -29,7 +29,7 @@ one PR; each fix is independent — drop any that turns out to be load-bearing a
    say rank is a second statement (honest CURRENT rank); (b) `MAX_SUBMIT_BODY_BYTES`
    compares `raw.length` chars, not bytes — compare byte length; (c) live+cookie+missing
    `AUTH_COOKIE_SECRET` throws a plain `Error` (500) — make it a typed AuthError with the
-   same status; (d) covered by item 4; (e) light→dark flag flip can serve a stale board
+   same status; (d) prettier drift — covered by the lib/leaderboard sweep above; (e) light→dark flag flip can serve a stale board
    for ≤30s+SWR120 — add cache-control note or shorten s-maxage on the board route
    (document the choice; dark 404 is never cached, so security posture is unchanged).
 

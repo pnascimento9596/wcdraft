@@ -21,6 +21,11 @@ Human steps:
 
 A real account can sign in on www.wcdraft.com; STATE.md env table updated (names only).
 
+## Evidence required
+
+Live sanity transcript of the magic-link round-trip (request → two-step verify → session
+established → claim flow), plus the updated STATE.md env table in the same change.
+
 ## Why HUMAN-ONLY
 
 Credential issuance and domain verification are owner-identity actions; the standing

@@ -64,8 +64,8 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
 - UNSET (dark by design): `LEADERBOARD_ENABLED`, `LEADERBOARD_REQUIRE_ACCOUNT`,
   `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `AUTH_BASE_URL` — leaderboard routes 404,
   accounts email path dark (Resend activation is HUMAN-ONLY).
-- Neon prod DB: migrations 0000–0004 applied (provisioned + verified 2026-06-10,
-  see memory/prod-provisioning lane).
+- Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
+  re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
 
 ## Branch / merge convention (from git history)
 
