@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-4.2.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-4.2.1)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -133,7 +133,7 @@ _A non-material 2026 card's projected raw path is capped at the global raw-only 
 
 ---
 
-# Unified display-curve sample (wc-perf-4.2.0 curve; maps proj-career-3.0.0 too)
+# Unified display-curve sample (wc-perf-4.2.1 curve; maps proj-career-3.0.0 too)
 
 MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v1`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→66, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 1.85). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
@@ -143,9 +143,9 @@ MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_po
 
 | Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Historical | 10973 | 73 | 5685 (51.8%) | 2692 (24.5%) | 2332 (21.3%) | 264 (2.4%) | 2596 (23.7%) | 321 (2.9%) |
+| Historical | 10973 | 73 | 5684 (51.8%) | 2692 (24.5%) | 2333 (21.3%) | 264 (2.4%) | 2597 (23.7%) | 321 (2.9%) |
 | 2026 | 1246 | 73 | 666 (53.5%) | 316 (25.4%) | 256 (20.5%) | 8 (0.6%) | 264 (21.2%) | 10 (0.8%) |
-| Pooled | 12219 | 73 | 6351 (52.0%) | 3008 (24.6%) | 2588 (21.2%) | 272 (2.2%) | 2860 (23.4%) | 331 (2.7%) |
+| Pooled | 12219 | 73 | 6350 (52.0%) | 3008 (24.6%) | 2589 (21.2%) | 272 (2.2%) | 2861 (23.4%) | 331 (2.7%) |
 
 _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
 

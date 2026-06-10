@@ -240,7 +240,7 @@ describe("run-token — honest-state on version skew", () => {
 describe("run-token — season-merge bump: pre-bump token surfaces skew, current replays byte-identical", () => {
   // The real-world regression this guards: a `?run=` link minted by the
   // PREVIOUS shipped build (engine-2026.06.04 + wc-perf-2.0.0) is opened
-  // against THIS build (engine-2026.06.09 + the merit-v2 wc-perf-4.2.0
+  // against THIS build (engine-2026.06.09 + the merit-v2 wc-perf-4.2.1
   // historical + proj-career-3.0.0 2026 ratings).
   // The screens (results-screen / share-screen) gate replay on
   // `versionsAgree` and MUST show the "different build" notice instead of
@@ -270,7 +270,7 @@ describe("run-token — season-merge bump: pre-bump token surfaces skew, current
     // pre-bump tokens must trip the version-skew path, never silently re-sim.
     expect(gameData.versions.engine_version).toBe("engine-2026.06.09");
     expect(gameData.versions.engine_version).toBe(RUNTIME_DATA_MANIFEST.engine_version);
-    expect(gameData.versions.rating_version).toContain("wc-perf-4.2.0");
+    expect(gameData.versions.rating_version).toContain("wc-perf-4.2.1");
     expect(gameData.versions.rating_version).toContain("proj-career-3.0.0");
     expect(gameData.versions.rating_version).not.toContain(PREV_RATING_VERSION);
   });
@@ -313,7 +313,7 @@ describe("run-token — season-merge bump: immediate-prior prod token (engine-20
   // landed, the immediate-prior prod shipped engine-2026.06.08 +
   // wc-perf-3.0.0 historical + proj-career-2.0.0 projected on
   // runtime-data-1.0.0. A `?run=` link minted by THAT build against the
-  // CURRENT merit-v2 bundle (engine-2026.06.09 + wc-perf-4.2.0 +
+  // CURRENT merit-v2 bundle (engine-2026.06.09 + wc-perf-4.2.1 +
   // proj-career-3.0.0 + runtime-data-1.1.0) must trip the version gate on
   // EVERY anchor that moved, not just engine_version.
   const gameData = buildGameDataFromBundles();
@@ -338,7 +338,7 @@ describe("run-token — season-merge bump: immediate-prior prod token (engine-20
     expect(gameData.versions.engine_version).toBe("engine-2026.06.09");
     expect(gameData.versions.engine_version).not.toBe(PREV_ENGINE_VERSION);
     expect(gameData.versions.rating_version).toBe(
-      "wc-perf-4.2.0+proj-career-3.0.0",
+      "wc-perf-4.2.1+proj-career-3.0.0",
     );
     expect(gameData.versions.rating_version).not.toBe(PREV_RATING_VERSION);
     expect(gameData.versions.schema_version).toBe("runtime-data-1.1.0");
@@ -358,6 +358,31 @@ describe("run-token — season-merge bump: immediate-prior prod token (engine-20
     expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
     expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
     expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
+  });
+
+  it("a season-era prod token (wc-perf-4.2.0 — rating-anchor-ONLY skew) trips the notice", () => {
+    // The wc-perf-4.2.1 basis-gate fix bumps ONLY the historical rating
+    // anchor: engine, schema, dataset, ruleset, and the 2026 projected
+    // anchor are all unchanged. A `?run=` link minted by the season-merge
+    // prod (wc-perf-4.2.0) therefore diverges on rv ALONE — the narrowest
+    // possible skew — and must still surface the honest "different build"
+    // notice rather than silently replaying against shifted ratings
+    // (Maier-1966 displays 73 on that build, 88 on this one).
+    const seasonEraVersions: RunRecordVersions = {
+      ...gameData.versions,
+      rating_version: "wc-perf-4.2.0+proj-career-3.0.0",
+    };
+    const seasonEraRecord: RunRecordV1 = { ...origin, versions: seasonEraVersions };
+    const decoded = decodeRunToken(encodeRunToken(seasonEraRecord));
+    expect(decoded).not.toBeNull();
+    // Every other anchor matches the current bundle…
+    expect(decoded!.ev).toBe(gameData.versions.engine_version);
+    expect(decoded!.sv).toBe(gameData.versions.schema_version);
+    expect(decoded!.dv).toBe(gameData.versions.dataset_version);
+    // …so the rating anchor alone must gate the replay.
+    expect(decoded!.rv).toBe("wc-perf-4.2.0+proj-career-3.0.0");
+    expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
   });
 });
 

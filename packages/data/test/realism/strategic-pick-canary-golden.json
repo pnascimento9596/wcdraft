@@ -4,7 +4,7 @@
   "seed_prefix": "wcdraft:realism:e3a:v1",
   "formation_id": "4-3-3",
   "n_seeds": 5,
-  "rating_version": "wc-perf-4.2.0+proj-career-3.0.0",
+  "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
   "engine_version": "engine-2026.06.09",
   "dataset_version": "2026-06-04",
   "records": [
