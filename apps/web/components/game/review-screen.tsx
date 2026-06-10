@@ -224,10 +224,12 @@ function ReviewBoard({
     () => lineStrengthViews(gameData.indexes, draft),
     [gameData, draft],
   );
-  const squadAvg = useMemo(() => squadAverageOverall(gameData.indexes, draft), [
-    gameData,
-    draft,
-  ]);
+  // Blinding rides the adapter opts (same as pitchSlotViews) so the masked
+  // null comes out of the blindCardRatingView seam, not a screen branch.
+  const squadAvg = useMemo(
+    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind }),
+    [gameData, draft, blind],
+  );
 
   // Team name with debounced persistence.
   const [teamName, setTeamName] = useState(draft.team_name);
@@ -340,7 +342,7 @@ function ReviewBoard({
       <section className={s.panel}>
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>Rating by line</h2>
-          <span className={s.squadAvg}>{blind ? "—" : formatNullableNumber(squadAvg)} OVR</span>
+          <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
         </div>
         {blind ? (
           <p className={s.memoryModeNote} role="note">

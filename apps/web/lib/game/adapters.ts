@@ -366,18 +366,24 @@ export function lineStrengthViews(
   });
 }
 
-/** Average of non-null `overall` across filled STARTERS; null if none known. */
+/**
+ * Average of non-null `overall` across filled STARTERS; null if none known.
+ * Aggregates over the per-card VIEW fold (`ratingView`), so `blindRatings`
+ * blinds every term via `blindCardRatingView` and the average is honestly
+ * null — the masking decision never lives in a screen.
+ */
 export function squadAverageOverall(
   idx: GameDataIndexes,
   draft: DraftState,
+  opts?: AdapterDisplayOptions,
 ): number | null {
   let sum = 0;
   let count = 0;
   for (const slot of draft.squad) {
     if (!slot.is_starter || !slot.card_id) continue;
-    const r = ratingFor(idx, slot.card_id);
-    if (r.overall === null) continue;
-    sum += r.overall;
+    const view = ratingView(ratingFor(idx, slot.card_id), opts);
+    if (view.overall === null) continue;
+    sum += view.overall;
     count += 1;
   }
   if (count === 0) return null;

@@ -40,8 +40,13 @@ export interface CardRatingView {
   midfield: number | null;
   defense: number | null;
   goalkeeping: number | null;
-  /** Honest-state coverage fraction in [0,1]. */
-  coverage: number;
+  /**
+   * Honest-state coverage fraction in [0,1]. `null` means the value is
+   * BLINDED for display (Memory mode, via `blindCardRatingView`) — coverage
+   * is rating-confidence metadata, so it rides the blind set; render `—`
+   * with an empty bar, never `0`. Classic mode never produces null coverage.
+   */
+  coverage: number | null;
   /** Source of the rating signal. */
   provenance: "wc_performance" | "projected_career";
   /** Historical-only honest-state flag. */
@@ -326,8 +331,9 @@ export function provenanceBadgeLabel(kind: RatingBadgeKind): string {
  * THE single blind seam for Memory (hidden) mode. Strips every rating SIGNAL
  * from an already-built `CardRatingView` while leaving identity intact:
  *
- *   BLINDED: overall, the four channels, the legend gold (via `badge_kind`,
- *   the #56 seam — never a re-derived OVR≥96 check), the provenance hue/label
+ *   BLINDED: overall, the four channels, coverage (rating-confidence
+ *   metadata — the % and its bars), the legend gold (via `badge_kind`, the
+ *   #56 seam — never a re-derived OVR≥96 check), the provenance hue/label
  *   (it leaks rating tier), and `overall_basis`.
  *
  * Display-only by construction: this runs strictly on the view-model AFTER
@@ -342,6 +348,7 @@ export function blindCardRatingView(r: CardRatingView): CardRatingView {
     midfield: null,
     defense: null,
     goalkeeping: null,
+    coverage: null,
     overall_basis: undefined,
     legend: undefined,
     badge_kind: "masked",

@@ -240,7 +240,8 @@ describe("run-token — honest-state on version skew", () => {
 describe("run-token — season-merge bump: pre-bump token surfaces skew, current replays byte-identical", () => {
   // The real-world regression this guards: a `?run=` link minted by the
   // PREVIOUS shipped build (engine-2026.06.04 + wc-perf-2.0.0) is opened
-  // against THIS build (engine-2026.06.09 + the merit-v2 wc-perf-4.2.0 ratings).
+  // against THIS build (engine-2026.06.09 + the merit-v2 wc-perf-4.2.0
+  // historical + proj-career-3.0.0 2026 ratings).
   // The screens (results-screen / share-screen) gate replay on
   // `versionsAgree` and MUST show the "different build" notice instead of
   // silently re-simulating the old picks against the new ratings.

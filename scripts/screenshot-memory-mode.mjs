@@ -52,6 +52,48 @@ async function shot(page, dir, name, fullPage = true) {
   await page.screenshot({ path: join(dir, `${name}.png`), fullPage });
 }
 
+// ── Hidden-surface digit probe ──────────────────────────────────────────────
+// Every rating cell (OVR, channel values, coverage % — collapsed row AND
+// expanded detail, synergy numerics, squad-avg, line strengths) must contain
+// ZERO digits on a hidden surface, and every provenance dot/badge must carry
+// the `masked` kind (legend gold + provenance tier fold into it). CSS-module
+// class names keep the local name (`game_candRowCov__hash`), so substring
+// selectors are stable.
+const RATING_CELL_SELECTORS = [
+  '[class*="candRowOvr"]',
+  '[class*="channelVal"]',
+  '[class*="candRowCov"]',
+  '[class*="candCoverageVal"]',
+  '[class*="synergyBarNum"]',
+  '[class*="synergyBarFigure"] dd',
+  '[class*="squadAvg"]',
+  '[class*="lineVal"]',
+];
+
+async function probeHiddenSurface(page, surface) {
+  const offenders = await page.evaluate((selectors) => {
+    const bad = [];
+    for (const sel of selectors) {
+      for (const el of document.querySelectorAll(sel)) {
+        const text = (el.textContent ?? "").trim();
+        if (/\d/.test(text)) bad.push(`${sel} → "${text}"`);
+      }
+    }
+    for (const el of document.querySelectorAll(
+      '[class*="provDot_"], [class*="provBadge_"], [class*="prov_"]',
+    )) {
+      if (/prov(?:Dot|Badge)?_(historical|projected|estimate|legend)/.test(el.className)) {
+        bad.push(`unmasked provenance class → "${el.className}"`);
+      }
+    }
+    return bad;
+  }, RATING_CELL_SELECTORS);
+  if (offenders.length > 0) {
+    throw new Error(`digit probe FAILED on ${surface}:\n  ${offenders.join("\n  ")}`);
+  }
+  console.log(`  ✓ digit probe clean: ${surface}`);
+}
+
 /** Lock 4-3-3 on the formation gate, then spin → reveal into the lineup. */
 async function lockAndFirstReveal(page) {
   const lock433 = page.locator("button", { hasText: /^4-3-3/ }).first();
@@ -151,16 +193,24 @@ async function captureViewport(viewport, outRoot) {
   await shot(page, dir, "10-hidden-spin-stage");
   await spinAndReveal(page);
   await shot(page, dir, "11-hidden-lineup");
+  await probeHiddenSurface(page, "hidden lineup");
   const hiddenCands = page.locator('[aria-label="Candidates"]').first();
   await hiddenCands.scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   await shot(page, dir, "12-hidden-candidates");
+  await probeHiddenSurface(page, "hidden candidates (collapsed)");
+  // Expand the first player row — the expanded detail renders the channel
+  // values and the coverage bar/value cells; they must be masked too.
+  await hiddenCands.locator("button", { hasText: /OVR/ }).first().click();
+  await page.waitForTimeout(300);
+  await probeHiddenSurface(page, "hidden candidate (expanded detail)");
 
   // ── Hidden — complete the draft → blinded review ────────────────────────
   await completeDraft(page);
   await page.getByRole("button", { name: /review xi/i }).first().click();
   await waitForReady(page);
   await shot(page, dir, "13-hidden-review");
+  await probeHiddenSurface(page, "hidden review");
 
   // ── Hidden — Simulate → results with the MemoryReveal ───────────────────
   await page.getByRole("button", { name: /simulate the run/i }).first().click();

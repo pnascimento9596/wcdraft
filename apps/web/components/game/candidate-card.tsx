@@ -73,7 +73,8 @@ function PositionGlyph({ position }: { position: PlayerCardView["eligible_positi
  * the selected card is expanded, so the pool stays dense and fast to scan.
  *
  * Honest-state: unknown OVR shows "—" (never 0); coverage and channels are the
- * real runtime values; provenance is encoded by the left hue stripe + dot.
+ * real runtime values (`null` is the Memory-mode blind — "—" with an empty
+ * bar); provenance is encoded by the left hue stripe + dot.
  */
 export function CandidateCard({
   card,
@@ -95,7 +96,8 @@ export function CandidateCard({
   if (disabled) classes.push(s.candRowDisabled);
   if (rarePick) classes.push(s.candRare);
 
-  const coveragePct = Math.round(card.rating.coverage * 100);
+  const coveragePct =
+    card.rating.coverage === null ? null : Math.round(card.rating.coverage * 100);
   const primaryLine = card.position_listed ?? card.eligible_positions[0] ?? "MF";
   const headShape = positionShape(primaryLine);
 
@@ -156,7 +158,7 @@ export function CandidateCard({
         </span>
 
         <span className={s.candRowCov} title="Honest-state data coverage">
-          {coveragePct}%
+          {coveragePct === null ? "—" : `${coveragePct}%`}
         </span>
 
         <span className={s.candRowChevron} aria-hidden="true">
@@ -197,12 +199,16 @@ export function CandidateCard({
             ))}
             <span className={s.candCoverage} title="Honest-state data coverage">
               <span className={s.candCoverageTrack}>
-                <span
-                  className={s.candCoverageFill}
-                  style={{ width: `${coveragePct}%` }}
-                />
+                {coveragePct === null ? null : (
+                  <span
+                    className={s.candCoverageFill}
+                    style={{ width: `${coveragePct}%` }}
+                  />
+                )}
               </span>
-              <span className={s.candCoverageVal}>{coveragePct}%</span>
+              <span className={s.candCoverageVal}>
+                {coveragePct === null ? "—" : `${coveragePct}%`}
+              </span>
             </span>
           </span>
 

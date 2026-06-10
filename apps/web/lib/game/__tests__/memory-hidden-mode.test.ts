@@ -5,15 +5,19 @@
 //     BYTE-IDENTICAL sim results. Mode is display-only — it never reaches the
 //     engine/sim. Asserted on the full `PersistedSimulation` payload.
 //   - BLIND SET (display): `blindCardRatingView` hides OVR, the four
-//     channels, the legend gold (via the #56 `badge_kind` seam — never a
-//     re-derived OVR≥96 check), the provenance hue/label, and
-//     `overall_basis`.
+//     channels, coverage (rating-confidence metadata — % and bars), the
+//     legend gold (via the #56 `badge_kind` seam — never a re-derived
+//     OVR≥96 check), the provenance hue/label, and `overall_basis`.
 //   - KEEP SET (display): identity (name, nation, year), position shape
-//     inputs, stats, coverage and interactivity inputs stay untouched.
+//     inputs, position-fit/compatibility numerics, stats and interactivity
+//     inputs stay untouched.
 //   - TOKEN: `md: "hidden"` rides the `t1.` token and reconstructs a
 //     hidden-mode draft, so a shared hidden run replays (and reveals) on web.
 
 import { describe, expect, it } from "vitest";
+
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   activeSpin,
@@ -47,6 +51,8 @@ import {
   reconstructDraftFromToken,
 } from "../run-token";
 import { blindCardRatingView, type CardRatingView } from "../view-models";
+import type { PlayerCardView } from "../view-models";
+import { CandidateCard } from "@/components/game/candidate-card";
 
 // ─── Harness (mirrors run-token.test.ts) ─────────────────────────────────────
 
@@ -179,10 +185,10 @@ describe("memory mode — blindCardRatingView blind/keep sets", () => {
     expect(blinded.overall_basis).toBeUndefined();
   });
 
-  it("keeps coverage (honest-state) intact and does not mutate its input", () => {
+  it("blinds coverage (rating-confidence metadata) and does not mutate its input", () => {
     const before = JSON.stringify(legendInput);
     const blinded = blindCardRatingView(legendInput);
-    expect(blinded.coverage).toBe(0.92);
+    expect(blinded.coverage).toBeNull();
     expect(JSON.stringify(legendInput)).toBe(before);
   });
 
@@ -218,7 +224,8 @@ describe("memory mode — adapters blind ratings but keep identity", () => {
     expect(blinded.primary_position).toBe(open.primary_position);
     expect(blinded.eligible_positions).toEqual(open.eligible_positions);
     expect(blinded.stats).toEqual(open.stats);
-    expect(blinded.rating.coverage).toBe(open.rating.coverage);
+    // Coverage is rating-confidence metadata — it rides the BLIND set.
+    expect(blinded.rating.coverage).toBeNull();
   });
 
   it("legend cards never leak gold through the blind", () => {
@@ -285,6 +292,57 @@ describe("memory mode — adapters blind ratings but keep identity", () => {
     const open = playerCardView(gameData.indexes, firstCardId);
     expect(typeof open.rating.attack).toBe("number");
     expect(open.rating.badge_kind).not.toBe("masked");
+  });
+});
+
+// ─── Markup digit probe: a hidden candidate leaks no coverage digits ─────────
+
+describe("memory mode — hidden candidate markup contains no coverage digits", () => {
+  const gameData = buildGameDataFromBundles();
+  const record = buildRecord(gameData, "hidden");
+  const firstCardId = record.draft.squad.find((sl) => sl.card_id !== null)!.card_id!;
+
+  /** Static-markup render (no DOM needed) of the EXPANDED candidate row. */
+  function renderCard(card: PlayerCardView): string {
+    return renderToStaticMarkup(
+      createElement(CandidateCard, {
+        card,
+        selected: true,
+        onSelect: () => {},
+      }),
+    );
+  }
+
+  /** Visible text only — strips tags (and with them style/title attributes). */
+  function textContent(html: string): string {
+    return html.replace(/<[^>]+>/g, " ");
+  }
+
+  it("hidden candidate: zero coverage digits — every digit run is keep-set", () => {
+    const blinded = playerCardView(gameData.indexes, firstCardId, { blindRatings: true });
+    const text = textContent(renderCard(blinded));
+
+    // Coverage is the only %-rendered value on the candidate card; the blind
+    // must leave no percentage anywhere (collapsed cov cell, expanded bar val).
+    expect(text).not.toMatch(/\d\s*%/);
+
+    // Stronger: every digit run on a hidden candidate comes from the KEEP set
+    // (year, shirt number, era stats, club label) — never a rating signal.
+    const allowed = new Set<string>([String(blinded.year)]);
+    if (blinded.shirt_number !== null) allowed.add(String(blinded.shirt_number));
+    for (const st of blinded.stats) {
+      if (typeof st.value === "number") allowed.add(String(st.value));
+    }
+    for (const run of blinded.club_label?.match(/\d+/g) ?? []) allowed.add(run);
+    for (const run of text.match(/\d+/g) ?? []) {
+      expect(allowed.has(run), `unexpected digit run "${run}" on a hidden candidate`).toBe(true);
+    }
+  });
+
+  it("classic control: the coverage % still renders", () => {
+    const open = playerCardView(gameData.indexes, firstCardId);
+    const text = textContent(renderCard(open));
+    expect(text).toMatch(/\d+%/);
   });
 });
 

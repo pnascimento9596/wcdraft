@@ -12,6 +12,8 @@ builds on merit-v2.
 
 ## Blind set (hidden during draft + review, hidden mode ONLY)
 - OVR, channels (ATT/MID/DEF/GK)
+- Coverage (numeric %, bars, expanded detail) — coverage is rating-confidence metadata, so it rides the blind
+  set (Lead-Architect amendment, 2026-06-09)
 - The legend gold treatment — blind it via the #56 badge seam (badge_kind), NOT a re-derived OVR≥96 check
 - Provenance HUE (it leaks rating tier)
 - Synergy NUMERIC (score, strength-mult, links-live count)
@@ -19,10 +21,26 @@ builds on merit-v2.
 ## Keep set (ALWAYS shown — these are how knowledge applies, not ratings)
 - Player name, nation flag, World Cup year
 - Position SHAPE (GK square / DF triangle / MF diamond / FW circle) — identity, not a rating
+- Position-fit / compatibility numerics (slot fit %, assignment-sheet %, validation-warning compatibility
+  values) — VERIFIED: `positionCompatibility` (packages/core/src/engine/compatibility.ts) is a pure
+  MAX-of-eligibles table lookup over (player eligible positions × slot line); NO rating/channel/quality input
+  feeds it, so it is derivable from the visible position shape (Lead-Architect amendment, 2026-06-09)
+- Settled spin-stage player-pool count — structural depth info, no rating signal (Lead-Architect amendment,
+  2026-06-09)
 - The spin (country, year) + the RARE moment
 - Synergy LINKS (lines between filled same-nation slots) — structural, derivable from visible flags; only the
   numeric hides
 - Formation pitch, slot assignment, squad counter, honest "—" states
+
+## Architecture rule (replaces "no mode conditionals in components")
+- Rating-masking logic exists ONLY in `blindCardRatingView` (apps/web/lib/game/view-models.ts).
+- Screen-level `draft.mode === 'hidden'` branches are permitted SOLELY for plumbing: threading
+  `{ blindRatings }` through adapter calls, sort default/options, and MemoryReveal mounting (incl. the
+  Memory-mode note copy). Never for rating derivation, masking, or badge logic.
+- Leaf presentational components stay mode-free — they render honest-null props ("—" / empty bar) and never
+  read `draft.mode`.
+- Aggregates (e.g. squad-average OVR) blind by aggregating over `blindCardRatingView`-folded views via the
+  adapter `{ blindRatings }` opts — the masked null comes out of the seam, not a screen ternary.
 
 ## Reveal (post-Simulate)
 - Reveal the full blind set via a thin MemoryReveal wrapper around the existing surfaces (do NOT overload
