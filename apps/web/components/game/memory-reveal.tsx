@@ -97,6 +97,7 @@ export function MemoryReveal({
           formationId={draft.formation_id}
           starters={starters}
           linkedPairs={synergy.linked_pairs}
+          showInactiveEdges
         />
         <ManagerSlot manager={manager} />
       </div>

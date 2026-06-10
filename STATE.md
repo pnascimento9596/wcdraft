@@ -4,8 +4,9 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · counts run at `9c71219` (= U5 rebased onto main
-`63a403d`, #73) in a fresh clone; merged with a docs-only delta — counts unaffected.
+Last measured: 2026-06-10 · web count re-measured at ws-ux/mobile-polish-2 (#78,
+off main `b5829f9`): 528 passed (+2 synergy-overlay tests). All other counts from
+the `9c71219` run (fresh clone) — untouched by that presentation-only change.
 
 ## Lanes in flight at last measurement
 
@@ -35,7 +36,7 @@ Last measured: 2026-06-10 · counts run at `9c71219` (= U5 rebased onto main
 | @wcdraft/data `test:golden:data`        | 28 passed                   |
 | @wcdraft/data `test:golden:integration` | 10 passed                   |
 | @wcdraft/db `test`                      | 74 passed                   |
-| @wcdraft/web `test`                     | 526 passed, 1 skipped (527) |
+| @wcdraft/web `test`                     | 528 passed, 1 skipped (529) |
 | @wcdraft/web `test:golden:leaderboard`  | 5 passed                    |
 | etl `pytest -q`                         | 159 passed                  |
 | `pnpm build`                            | 4/4 tasks green             |

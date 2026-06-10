@@ -22,11 +22,17 @@ export interface PitchProps {
   starters: PitchSlotView[];
   /**
    * Synergy adjacency edges from `computeSynergy(...).linked_pairs`. The
-   * UI layer renders ONLY edges with `linked === true` (both endpoints
-   * occupied + sharing nation). Empty slots produce ZERO links — there
-   * is no idle full-mesh layer. See `lib/game/synergy-overlay.ts`.
+   * UI layer renders coloured edges ONLY where `linked === true` (both
+   * endpoints occupied + sharing nation). Empty slots produce ZERO live
+   * links. See `lib/game/synergy-overlay.ts`.
    */
   linkedPairs?: readonly LinkedPair[] | null;
+  /**
+   * Also draw the INACTIVE adjacency graph as quiet grey lines (reveal /
+   * review surfaces). Structural formation info only — never a synergy
+   * claim, so it stays visually subordinate to the live edges.
+   */
+  showInactiveEdges?: boolean;
   /** Slot currently selected for assignment (draft screen). */
   selectedSlotId?: string | null;
   /** When placing a card, the compatibility per OPEN slot for badge preview. */
@@ -47,6 +53,7 @@ export function Pitch({
   formationId,
   starters,
   linkedPairs = null,
+  showInactiveEdges = false,
   selectedSlotId = null,
   previewCompat = null,
   onSlotSelect,
@@ -72,11 +79,19 @@ export function Pitch({
   const visualBySlot = new Map(visualSlots.map((v) => [v.slot_id, v]));
   const filledSlotIds = new Set(starters.filter((sl) => !!sl.card).map((sl) => sl.slot_id));
 
-  // Honest-state: a same-nation link is only ever drawn between TWO
-  // filled slots. Empty slots → no segments. The headline Synergy bar
-  // is the single home for the overall score; the pitch overlay shows
-  // the live edges only.
-  const segments = buildSynergySegments(linkedPairs, visualBySlot, filledSlotIds);
+  // Honest-state: a same-nation LIVE link is only ever drawn between TWO
+  // filled slots. Empty slots → no live segments. The headline Synergy bar
+  // is the single home for the overall score. Reveal/review surfaces
+  // additionally render the inactive adjacency graph (quiet grey) so a
+  // pair with no synergy still reads as "checked, none" instead of
+  // rendering nothing.
+  // Idle lines paint first so live edges always sit on top of the mesh.
+  const segments = buildSynergySegments(
+    linkedPairs,
+    visualBySlot,
+    filledSlotIds,
+    showInactiveEdges,
+  ).sort((a, b) => Number(a.linked) - Number(b.linked));
 
   return (
     <div className={s.pitch} role="group" aria-label="Formation pitch">
@@ -101,7 +116,7 @@ export function Pitch({
               y1={seg.y1}
               x2={seg.x2}
               y2={seg.y2}
-              className={s.synergyLineLive}
+              className={seg.linked ? s.synergyLineLive : s.synergyLineIdle}
             />
           ))}
         </svg>

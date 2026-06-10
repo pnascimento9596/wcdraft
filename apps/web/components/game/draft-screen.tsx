@@ -365,7 +365,12 @@ function FormationSelect({
           ) : null}
         </div>
         <div className={s.formationGrid}>
-          {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid, blurb }) => (
+          {/* ws-ux/mobile-polish-2: blurb prose dropped from the tile — at
+              tile width it truncated mid-sentence ("…"), which added noise
+              without information. The tile is shape-first: mini pitch +
+              name + lock CTA. `FormationOption.blurb` stays in the data
+              layer for surfaces with room for prose. */}
+          {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid }) => (
             <button
               key={fid}
               type="button"
@@ -376,7 +381,6 @@ function FormationSelect({
               <MiniPitch formation_id={fid} />
               <div className={s.formationCardBody}>
                 <span className={s.formationCardName}>{fid}</span>
-                <p className={s.formationCardBlurb}>{blurb}</p>
                 <span className={s.formationCardCta}>
                   {pending === fid ? "Locking…" : "Lock this shape"}
                 </span>
