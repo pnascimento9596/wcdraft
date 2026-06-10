@@ -6,12 +6,7 @@
 // fixture-generator imports keep working. Underscore-prefixed so the vitest
 // `*.test.ts` glob skips it.
 
-import {
-  autoDraft,
-  buildRunScenario,
-  runTournamentFull,
-  type ScoreComponent,
-} from "@wcdraft/core";
+import { autoDraft, buildRunScenario, runTournamentFull, type ScoreComponent } from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "../../game/data";

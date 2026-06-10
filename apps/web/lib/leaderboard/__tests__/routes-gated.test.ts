@@ -14,10 +14,7 @@ import { NextRequest } from "next/server";
 import * as boardRoute from "@/app/api/leaderboard/route";
 import * as meRoute from "@/app/api/leaderboard/me/route";
 import * as submitRoute from "@/app/api/leaderboard/submit/route";
-import {
-  isLeaderboardAccountRequired,
-  isLeaderboardEnabled,
-} from "../enabled";
+import { isLeaderboardAccountRequired, isLeaderboardEnabled } from "../enabled";
 
 const ENV_KEYS = [
   "LEADERBOARD_ENABLED",

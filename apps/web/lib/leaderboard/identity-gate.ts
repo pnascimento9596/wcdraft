@@ -34,11 +34,7 @@ import {
 } from "../auth/csrf";
 import { AuthError } from "../auth/errors";
 import { readRequestCookie } from "../auth/handler-helpers";
-import {
-  SESSION_COOKIE_NAME,
-  validateSessionCookie,
-  type SessionDeps,
-} from "../auth/sessions";
+import { SESSION_COOKIE_NAME, validateSessionCookie, type SessionDeps } from "../auth/sessions";
 import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
 
 /** Resolved submitting identity. Both null = anonymous casual submission. */

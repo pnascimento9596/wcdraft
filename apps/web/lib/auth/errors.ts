@@ -21,7 +21,11 @@ export type AuthErrorCode =
   // `isAuthEnabled()` is false. Honest gated response, no secret-dependent
   // dependencies built, never a 500. GET /api/auth/session does NOT throw
   // this — it returns 200 {session:null} so the AuthProvider stays quiet.
-  | "AUTH_DISABLED";
+  | "AUTH_DISABLED"
+  // q-001 (U3 carryover c) — server misconfiguration: a live route saw a
+  // session cookie but AUTH_COOKIE_SECRET is unset/weak. Typed instead of a
+  // plain `Error` so handlers translate it uniformly; status stays 500.
+  | "SECRET_MISCONFIGURED";
 
 export class AuthError extends Error {
   readonly code: AuthErrorCode;
@@ -55,5 +59,7 @@ function statusFor(code: AuthErrorCode): number {
       return 400;
     case "AUTH_DISABLED":
       return 503;
+    case "SECRET_MISCONFIGURED":
+      return 500;
   }
 }

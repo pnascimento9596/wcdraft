@@ -48,8 +48,18 @@ export function relativeTimeLabel(nowMs: number, iso: string): string {
 }
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ] as const;
 
 // ─── Score breakdown (evidence popover) ──────────────────────────────────────
@@ -116,10 +126,7 @@ export const EMPTY_BOARD: BoardAccumulator = { entries: [], nextCursor: null };
  * ids already present are dropped defensively (a CDN-cached page replayed
  * after a refresh must not duplicate rows).
  */
-export function appendBoardPage(
-  acc: BoardAccumulator,
-  page: BoardPageWire,
-): BoardAccumulator {
+export function appendBoardPage(acc: BoardAccumulator, page: BoardPageWire): BoardAccumulator {
   const seen = new Set(acc.entries.map((e) => e.id));
   const fresh = page.entries.filter((e) => !seen.has(e.id));
   return {

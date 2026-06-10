@@ -228,10 +228,7 @@ describe("GET /api/leaderboard — board page", () => {
 
 // ─── /me ────────────────────────────────────────────────────────────────────
 
-function meReq(
-  params: Record<string, string> = {},
-  cookie?: string,
-): NextRequest {
+function meReq(params: Record<string, string> = {}, cookie?: string): NextRequest {
   const url = new URL("http://localhost/api/leaderboard/me");
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   const headers: Record<string, string> = {};

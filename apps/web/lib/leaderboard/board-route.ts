@@ -19,10 +19,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { leaderboardEntries, type Db } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
-import {
-  LeaderboardGateError,
-  requireReadIdentity,
-} from "./identity-gate";
+import { LeaderboardGateError, requireReadIdentity } from "./identity-gate";
 import {
   boardPage,
   identityBoardRank,
@@ -169,7 +166,12 @@ export async function handleLeaderboardBoardGet(
       next_cursor: page.hasMore && lastRow ? encodeBoardCursor(lastRow) : null,
     };
     const res = NextResponse.json(body);
-    // Plan §5.2 — Vercel CDN absorbs board reads.
+    // Plan §5.2 — Vercel CDN absorbs board reads. DOCUMENTED TRADE-OFF
+    // (q-001 carryover e): after a light→dark LEADERBOARD_ENABLED flip the
+    // CDN can keep serving this 200 for ≤30s (+SWR 120s revalidation
+    // window). Accepted: only already-public board rows are exposed; the
+    // dark-mode 404 is never cached, so dark→light flips are instant and
+    // the security posture is unchanged.
     res.headers.set("Cache-Control", "public, s-maxage=30, stale-while-revalidate=120");
     return res;
   } catch (err) {
@@ -216,7 +218,7 @@ export async function handleLeaderboardMeGet(
       mode: base.mode,
       identityKey: identity.userId ?? sessionId,
     });
-    const bestRow = best ? recent.find((r) => r.id === best.entryId) ?? null : null;
+    const bestRow = best ? (recent.find((r) => r.id === best.entryId) ?? null) : null;
     // The best entry may be older than the recent window — fetch it directly
     // if so (still the same identity scope, so no leak surface).
     const bestApi =
@@ -238,10 +240,7 @@ export async function handleLeaderboardMeGet(
     return res;
   } catch (err) {
     if (err instanceof LeaderboardGateError) {
-      return NextResponse.json(
-        { error: err.code, message: err.message },
-        { status: err.status },
-      );
+      return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
     }
     console.error("[leaderboard] unexpected me error", err);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });

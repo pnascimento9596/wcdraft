@@ -56,7 +56,10 @@ export function validateCookieSecret(
 ): string {
   const v = raw?.trim() ?? "";
   if (!v) {
-    throw new Error(
+    // Typed (q-001 carryover c) — same 500 status, but a clean typed JSON
+    // body via jsonError instead of the generic INTERNAL_ERROR path.
+    throw new AuthError(
+      "SECRET_MISCONFIGURED",
       `${varName} is not set. Generate with ` +
         "`node -e \"console.log(require('crypto').randomBytes(32).toString('base64url'))\"`.",
     );
@@ -71,7 +74,8 @@ export function validateCookieSecret(
     decoded = Buffer.alloc(0);
   }
   if (decoded.length < minBytes) {
-    throw new Error(
+    throw new AuthError(
+      "SECRET_MISCONFIGURED",
       `${varName} must be a base64url string of at least ${minBytes.toString()} ` +
         `decoded bytes (got ${decoded.length.toString()} bytes from a ` +
         `${v.length.toString()}-char string). Generate with ` +

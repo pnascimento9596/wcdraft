@@ -14,11 +14,14 @@
 // covers them; otherwise the player_id is shown verbatim (still honest —
 // no fabricated name).
 
-import type {
-  MatchEvent,
-  MatchResult,
-  MatchRound,
-  RunResult,
+import {
+  buildNarrative,
+  type DraftState,
+  type MatchEvent,
+  type MatchResult,
+  type MatchRound,
+  type NarrativeLabels,
+  type RunResult,
 } from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
@@ -333,12 +336,46 @@ export interface RunSummaryView {
   matches_played: number;
 }
 
+/**
+ * Display labels for the narrative tokens — DISPLAY-ONLY. The engine's
+ * narrative selection/seed is untouched; labels only swap how an already
+ * selected entity id renders. Honest-state: ids the pool/scenario cannot
+ * name keep the core fallback (raw id), never a fabricated name.
+ */
+export function buildNarrativeLabels(
+  gameData: GameData,
+  scenario: Scenario2026Bundle,
+  draft: DraftState,
+): NarrativeLabels {
+  const player_names: Record<string, string> = {};
+  for (const c of gameData.indexes.playerByCardId.values()) {
+    const display =
+      c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name;
+    if (display) player_names[c.player_id] = display;
+  }
+  const team_names: Record<string, string> = {};
+  for (const t of scenario.teams) {
+    const name = scenario.team_display_names[t.team_id];
+    if (name) team_names[t.team_id] = name;
+  }
+  const managerCard = draft.manager_card_id
+    ? gameData.indexes.managerByCardId.get(draft.manager_card_id)
+    : null;
+  const manager_name = managerCard
+    ? managerCard.common_name && managerCard.common_name.trim().length > 0
+      ? managerCard.common_name
+      : managerCard.full_name
+    : null;
+  return { team_name: draft.team_name, manager_name, player_names, team_names };
+}
+
 export function buildRunSummary(
   gameData: GameData,
   team_name: string,
   run: RunResult,
   matches: readonly MatchResult[],
   eliminatedInGroup: boolean,
+  labels?: NarrativeLabels,
 ): RunSummaryView {
   const display_record = `${run.wins}-${run.losses}`;
   const is_perfect_eight_zero =
@@ -358,7 +395,12 @@ export function buildRunSummary(
     goals_against: run.aggregate.goals_against,
     top_scorer: topScorerView(gameData, run, matches),
     seed: run.seed,
-    narrative: run.narrative.filled_text,
+    // Display-only label pass: re-fill the SAME template/seed (selection is
+    // deterministic from the run) with display names so the prose never
+    // shows raw card ids or "Unavailable" for entities the pool can name.
+    narrative: labels
+      ? buildNarrative(run, [...matches], labels).filled_text
+      : run.narrative.filled_text,
     eliminated_in_group: eliminatedInGroup,
     matches_played: matches.length,
   };
