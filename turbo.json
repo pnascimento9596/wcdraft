@@ -12,7 +12,7 @@
     "lint": {},
     "test": {
       "dependsOn": ["^build"],
-      "env": ["WCDRAFT_REALISM_HEAVY"]
+      "env": ["WCDRAFT_REALISM_HEAVY", "WCDRAFT_LEADERBOARD_BENCH"]
     },
     "test:realism:heavy": {
       "dependsOn": ["^build"],
@@ -24,6 +24,9 @@
       "dependsOn": ["^build"]
     },
     "test:golden:integration": {
+      "dependsOn": ["^build"]
+    },
+    "test:golden:leaderboard": {
       "dependsOn": ["^build"]
     },
     "db:generate": {
