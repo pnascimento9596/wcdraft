@@ -337,32 +337,50 @@ const LINES_ORDER: Position[] = ["GK", "DF", "MF", "FW"];
  * Use the line-specific rating CHANNEL (gk/def/mid/att) for line strength,
  * not the (often null) `overall`. This gives a stable numeric even when
  * some cards have honest-null OVR.
+ *
+ * Aggregates over the per-card VIEW fold (`ratingView`), mirroring
+ * `squadAverageOverall`, so `blindRatings` blinds every channel via
+ * `blindCardRatingView` and the per-line average is honestly null — the
+ * masking decision never lives in a screen. `count` is the filled-starter
+ * count (not the rated-channel count), so the row labels render in blind
+ * with a null value coming out of the seam.
  */
 export function lineStrengthViews(
   idx: GameDataIndexes,
   draft: DraftState,
+  opts?: AdapterDisplayOptions,
 ): LineStrengthView[] {
   const formation = FORMATION_TEMPLATES[draft.formation_id];
   if (!formation) throw new MissingRecordError("formation", draft.formation_id);
-  const buckets: Record<Position, number[]> = { GK: [], DF: [], MF: [], FW: [] };
+  const channels: Record<Position, Array<number | null>> = {
+    GK: [],
+    DF: [],
+    MF: [],
+    FW: [],
+  };
+  const counts: Record<Position, number> = { GK: 0, DF: 0, MF: 0, FW: 0 };
   for (const slot of draft.squad) {
     if (!slot.is_starter || !slot.card_id) continue;
-    const r = ratingFor(idx, slot.card_id);
+    const view = ratingView(ratingFor(idx, slot.card_id), opts);
     const line = slotPositionLine(slot.slot_position);
+    counts[line] += 1;
     const channel =
       line === "GK"
-        ? r.goalkeeping
+        ? view.goalkeeping
         : line === "DF"
-          ? r.defense
+          ? view.defense
           : line === "MF"
-            ? r.midfield
-            : r.attack;
-    buckets[line].push(channel);
+            ? view.midfield
+            : view.attack;
+    channels[line].push(channel);
   }
-  return LINES_ORDER.filter((line) => buckets[line].length > 0).map((line) => {
-    const xs = buckets[line];
-    const value = Math.round(xs.reduce((a, b) => a + b, 0) / xs.length);
-    return { line, label: LINE_LABELS[line], count: xs.length, value };
+  return LINES_ORDER.filter((line) => counts[line] > 0).map((line) => {
+    const xs = channels[line].filter((c): c is number => c !== null);
+    const value =
+      xs.length > 0
+        ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length)
+        : null;
+    return { line, label: LINE_LABELS[line], count: counts[line], value };
   });
 }
 

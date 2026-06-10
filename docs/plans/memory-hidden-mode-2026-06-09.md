@@ -39,8 +39,19 @@ builds on merit-v2.
   Memory-mode note copy). Never for rating derivation, masking, or badge logic.
 - Leaf presentational components stay mode-free — they render honest-null props ("—" / empty bar) and never
   read `draft.mode`.
-- Aggregates (e.g. squad-average OVR) blind by aggregating over `blindCardRatingView`-folded views via the
-  adapter `{ blindRatings }` opts — the masked null comes out of the seam, not a screen ternary.
+- Aggregates (e.g. squad-average OVR, per-line strengths) blind by aggregating over `blindCardRatingView`-folded
+  views via the adapter `{ blindRatings }` opts — the masked null comes out of the seam, not a screen ternary.
+
+## Compliance notes — post-merge fix-pass (ws-ux/seam-and-quota)
+- `lineStrengthViews(idx, draft, opts?)` now mirrors `squadAverageOverall`: every channel folds through
+  `ratingView(...)` (the single `blindCardRatingView` seam). Under blind, per-line `value` is honestly null and
+  the screen renders the row list unconditionally — no real channel averages are computed or held in React
+  state pre-reveal. `count` (filled-starter count) stays visible so labels render in both modes.
+- The review-screen "Rating by line" panel is no longer guarded by a `blind ? null : <list>` ternary. The
+  Memory-mode note still renders above the list under blind for honest copy.
+- Persistence-warning surfacing: the standalone spin stage has no DraftAppBar, so the volatile-storage
+  warning ("Draft is saved in this tab only") now renders inline above `<SpinStage>` whenever
+  `persistenceWarning` is truthy. One line, centered, no layout regression on the compact density bar.
 
 ## Reveal (post-Simulate)
 - Reveal the full blind set via a thin MemoryReveal wrapper around the existing surfaces (do NOT overload

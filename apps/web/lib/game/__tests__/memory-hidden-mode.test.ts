@@ -41,8 +41,10 @@ import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
 import {
   draftCandidateViews,
+  lineStrengthViews,
   pitchSlotViews,
   playerCardView,
+  squadAverageOverall,
 } from "../adapters";
 import {
   buildRunTokenBody,
@@ -292,6 +294,64 @@ describe("memory mode — adapters blind ratings but keep identity", () => {
     const open = playerCardView(gameData.indexes, firstCardId);
     expect(typeof open.rating.attack).toBe("number");
     expect(open.rating.badge_kind).not.toBe("masked");
+  });
+});
+
+// ─── Aggregate seams: squad-average + per-line strength under blind ──────────
+
+describe("memory mode — aggregate seams blind through the adapter", () => {
+  const gameData = buildGameDataFromBundles();
+  const hidden = buildRecord(gameData, "hidden");
+  const classic = buildRecord(gameData, "classic");
+
+  it("classic path: per-line strength returns numeric values", () => {
+    const lines = lineStrengthViews(gameData.indexes, classic.draft);
+    expect(lines.length).toBeGreaterThan(0);
+    for (const ln of lines) {
+      expect(typeof ln.value).toBe("number");
+      expect(ln.count).toBeGreaterThan(0);
+    }
+  });
+
+  it("blindRatings:true: every per-line `value` is null (no real channel averaged)", () => {
+    const lines = lineStrengthViews(gameData.indexes, hidden.draft, {
+      blindRatings: true,
+    });
+    expect(lines.length).toBeGreaterThan(0);
+    for (const ln of lines) {
+      expect(ln.value).toBeNull();
+      // `count` is the filled-starter count — stays visible so labels render.
+      expect(ln.count).toBeGreaterThan(0);
+    }
+  });
+
+  it("seam leak guard: no numeric `value` field escapes the blind output", () => {
+    const blindJson = JSON.stringify(
+      lineStrengthViews(gameData.indexes, hidden.draft, { blindRatings: true }),
+    );
+    // If anyone reintroduces a screen-level mask (computing real channels and
+    // ternary-hiding them at the screen), this assertion fires — the seam is
+    // the single source of truth.
+    expect(blindJson).not.toMatch(/"value"\s*:\s*\d/);
+  });
+
+  it("blind classic-mode draft (opts={blindRatings:false}) still returns numbers", () => {
+    const lines = lineStrengthViews(gameData.indexes, classic.draft, {
+      blindRatings: false,
+    });
+    expect(lines.length).toBeGreaterThan(0);
+    for (const ln of lines) {
+      expect(typeof ln.value).toBe("number");
+    }
+  });
+
+  it("squadAverageOverall (aggregate seam, sanity): blind ⇒ null", () => {
+    expect(
+      squadAverageOverall(gameData.indexes, hidden.draft, { blindRatings: true }),
+    ).toBeNull();
+    expect(
+      typeof squadAverageOverall(gameData.indexes, classic.draft),
+    ).toBe("number");
   });
 });
 

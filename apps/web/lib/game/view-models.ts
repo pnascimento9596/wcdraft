@@ -223,8 +223,13 @@ export interface LineStrengthView {
   label: string;
   /** Number of filled starter slots in this line. */
   count: number;
-  /** Average of the line-specific rating channel (0..100); 0 when empty. */
-  value: number;
+  /**
+   * Average of the line-specific rating CHANNEL (0..100). `null` when every
+   * channel in the bucket folds through the blind seam to null (Memory mode)
+   * or when no rated channel is available — the honest-null comes out of the
+   * adapter, never a screen-level mask.
+   */
+  value: number | null;
 }
 
 // ─── UI helpers ──────────────────────────────────────────────────────────────

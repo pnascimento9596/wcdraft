@@ -185,6 +185,17 @@ export function _resetVolatileStorageForTests(): void {
   volatileMode = false;
 }
 
+/**
+ * True iff the run-record store is running against the in-memory fallback
+ * (tab-only persistence). Probes the backing store with the same guard used
+ * by `getStorage`. Read this on a resume path so the volatile-storage warning
+ * survives URL changes (e.g. the formation-lock `router.replace` that would
+ * otherwise wipe a per-call warning before the spin stage renders).
+ */
+export function isStorageVolatile(): boolean {
+  return getStorage().isVolatile;
+}
+
 // ─── Counter / id / seed ─────────────────────────────────────────────────────
 
 function nextCounter(storage: StorageBackend): number {
