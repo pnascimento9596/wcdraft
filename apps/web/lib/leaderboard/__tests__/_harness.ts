@@ -1,77 +1,26 @@
 // F-4 U2 — shared test/dev harness for the validation core.
 //
-// Builds the SAME server-shaped inputs the submit route (U3) will construct
-// once per process: `GameData` from the committed static bundles (mirrors
-// `run-token.test.ts` / `e2e-real-run.golden.test.ts`) plus the scenario
-// bundle. Underscore-prefixed so the vitest `*.test.ts` glob skips it; the
-// golden-fixture generator script imports it too.
+// The server-shaped inputs (`GameData` + scenario bundle) are single-sourced
+// from `lib/leaderboard/server-data.ts` since U3 — the SAME construction the
+// submit route uses in production, re-exported here so existing U2 test and
+// fixture-generator imports keep working. Underscore-prefixed so the vitest
+// `*.test.ts` glob skips it.
 
 import {
   autoDraft,
-  buildDraftCatalog,
   buildRunScenario,
   runTournamentFull,
-  type DraftDataset,
   type ScoreComponent,
 } from "@wcdraft/core";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-  type RuntimeDataManifest,
-  type Scenario2026Bundle,
-} from "@wcdraft/data";
+import type { Scenario2026Bundle } from "@wcdraft/data";
 
-import {
-  buildGameDataIndexes,
-  composeVersions,
-  type GameData,
-  type RunRecordVersions,
-} from "../../game/data";
+import type { GameData } from "../../game/data";
 import type { RunRecordV1 } from "../../game/run-record";
 import { buildSimWorldInputs } from "../../game/simulate";
+import { buildServerGameData, serverScenarioBundle } from "../server-data";
 
-/** Build the `DraftDataset` consumed by `autoDraft` / `buildDraftCatalog`. */
-function buildDataset(): DraftDataset {
-  return {
-    players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
-      player_id: c.player_id,
-      tournament_id: c.tournament_id,
-      nation_id: c.nation_id,
-      eligible_positions: c.eligible_positions,
-    })),
-    managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
-      manager_id: m.manager_id,
-      tournament_id: m.tournament_id,
-      nation_id: m.nation_id,
-    })),
-    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
-      tournament_id: Number(tid),
-      year: t.year,
-    })),
-  };
-}
-
-/** Server-shaped `GameData` over the committed compact bundles. */
-export function buildServerGameData(): GameData {
-  const manifest = RUNTIME_DATA_MANIFEST as RuntimeDataManifest;
-  const versions: RunRecordVersions = composeVersions(manifest);
-  const draftDataset = buildDataset();
-  return {
-    manifest,
-    draftPool: DRAFT_POOL_BUNDLE,
-    versions,
-    indexes: buildGameDataIndexes(DRAFT_POOL_BUNDLE),
-    draftDataset,
-    catalog: buildDraftCatalog(draftDataset),
-    nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
-  };
-}
-
-/** The committed 2026 scenario bundle (teams + bracket). */
-export function serverScenarioBundle(): Scenario2026Bundle {
-  return SCENARIO_2026_BUNDLE as Scenario2026Bundle;
-}
+export { buildServerGameData, serverScenarioBundle };
+export type { Scenario2026Bundle };
 
 /** Deterministic origin run: autoDraft over the real catalog at `seed`. */
 export function buildOriginRecord(
