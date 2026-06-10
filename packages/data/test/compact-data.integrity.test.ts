@@ -112,7 +112,7 @@ describe("compact-data integrity", () => {
     // new channel distribution (and bumps engine_version) is MV2-11b.
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-3.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.08");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.09");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {

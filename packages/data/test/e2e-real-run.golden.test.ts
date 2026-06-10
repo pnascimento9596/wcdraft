@@ -48,11 +48,12 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-// :198 as of MV2-10 (compact regen onto wc-perf-4.2.0 + proj-career-3.0.0): the
-// deterministic first-satisfying-seed search re-ran against the new pool and
-// now lands on :198 (was :801 on the wc-perf-3.0.0 pool). Same search criteria,
-// same prefix — see scripts/generate-e2e-golden.mjs.
-const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:198";
+// :29 as of MV2-11b (λ refit vs the merit-v2 stature-dominant channels): the
+// deterministic first-satisfying-seed search re-ran under the refit engine
+// (engine-2026.06.09) and now lands on :29 (was :198 on the MV2-10 compact
+// under the pre-refit λ, :801 before that). Same search criteria, same
+// prefix — see scripts/generate-e2e-golden.mjs.
+const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:29";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
