@@ -8,8 +8,10 @@
 //     `computeSynergy()`.
 //   * The taxonomy is ORIGINAL and generic-football-descriptive. It is NOT
 //     modelled on any commercial football-game attribute schema.
-//   * "Rating unavailable" remains on every manager surface; traits live
-//     alongside it, never inside the rating slot.
+//   * Managers structurally carry no rating and the UI renders NO rating
+//     surface for them (no number, no "Rating unavailable" pill — absence
+//     is not information; see ws-ux/mobile-polish-2). Traits never occupy
+//     a rating slot.
 //
 // DETERMINISM.
 //   * Curated map first (by `manager_id`, then by normalized name).

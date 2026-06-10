@@ -1,9 +1,11 @@
 // Locks the UX-COMPACT synergy-overlay contract:
-//   - empty squad (no filled slots) → ZERO segments
-//   - filled but no shared nation → ZERO segments
+//   - empty squad (no filled slots) → ZERO active segments
+//   - filled but no shared nation → ZERO active segments
 //   - only `linked: true` pairs whose BOTH endpoints are in the filled
-//     set become segments
+//     set become ACTIVE segments
 //   - segments carry the visual coords from the formation layout
+//   - `includeInactive` additionally emits the quiet adjacency graph
+//     (linked: false, nation_id: null) — never as an active edge
 
 import { describe, expect, it } from "vitest";
 
@@ -62,7 +64,33 @@ describe("buildSynergySegments", () => {
     ];
     const segs = buildSynergySegments(pairs, visualBySlot, new Set(["a", "b"]));
     expect(segs).toEqual([
-      { key: "a|b", x1: 10, y1: 10, x2: 90, y2: 10, nation_id: "BRA" },
+      { key: "a|b", x1: 10, y1: 10, x2: 90, y2: 10, nation_id: "BRA", linked: true },
+    ]);
+  });
+
+  it("emits the full adjacency as inactive segments when includeInactive is set", () => {
+    const pairs: LinkedPair[] = [
+      { slot_id_a: "a", slot_id_b: "b", linked: true, nation_id: "BRA" },
+      { slot_id_a: "a", slot_id_b: "c", linked: false, nation_id: null },
+      { slot_id_a: "b", slot_id_b: "c", linked: false, nation_id: null },
+    ];
+    const segs = buildSynergySegments(pairs, visualBySlot, new Set(["a", "b", "c"]), true);
+    expect(segs.map((s) => [s.key, s.linked, s.nation_id])).toEqual([
+      ["a|b", true, "BRA"],
+      ["a|c", false, null],
+      ["b|c", false, null],
+    ]);
+  });
+
+  it("demotes a defensively-dropped active edge to inactive when includeInactive is set", () => {
+    // linked:true but endpoint not filled — must NEVER render as active,
+    // but the adjacency itself is still structural and may render quiet.
+    const pairs: LinkedPair[] = [
+      { slot_id_a: "a", slot_id_b: "c", linked: true, nation_id: "BRA" },
+    ];
+    const segs = buildSynergySegments(pairs, visualBySlot, new Set(["a"]), true);
+    expect(segs).toEqual([
+      { key: "a|c", x1: 10, y1: 10, x2: 50, y2: 90, nation_id: null, linked: false },
     ]);
   });
 
