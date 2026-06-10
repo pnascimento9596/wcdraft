@@ -9,9 +9,11 @@ Last measured: 2026-06-10 · counts run at `9c71219` (= U5 rebased onto main
 
 ## Lanes in flight at last measurement
 
-- F-4 U1–U6 all MERGED on main (U5 = PR #72, this change). Remaining F-4: U7 ranked
-  lane (dark, blocked on plan §10 Q2) + the HUMAN-gated light-up checklist
-  (`docs/queue/q-003-f4-remaining.md`).
+- F-4 U1–U6 all MERGED on main (U5 = PR #72). LIGHT-UP EXECUTED 2026-06-10Z (dispatched):
+  casual leaderboard LIVE on www.wcdraft.com behind `LEADERBOARD_ENABLED=1` + turbo build-env
+  fix #75 (`48d87c0`); live verification 10/10 PASS
+  (`docs/reports/f4-lightup-verification-2026-06-10.md`). Remaining F-4: U7 ranked lane
+  (dark, blocked on plan §10 Q2).
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -61,9 +63,14 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
 
 - SET: `DATABASE_URL`, `AUTH_COOKIE_SECRET` (do NOT rotate) — verified via
   `vercel env ls production` 2026-06-10.
-- UNSET (dark by design): `LEADERBOARD_ENABLED`, `LEADERBOARD_REQUIRE_ACCOUNT`,
-  `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `AUTH_BASE_URL` — leaderboard routes 404,
-  accounts email path dark (Resend activation is HUMAN-ONLY).
+- SET: `LEADERBOARD_ENABLED=1` (casual leaderboard LIVE 2026-06-10Z, light-up report
+  `docs/reports/f4-lightup-verification-2026-06-10.md`). Stored as a PLAIN (non-sensitive)
+  var ON PURPOSE: the flag must be visible at build time (static layout nav gating +
+  prerenders) and sensitive vars are runtime-only. It must also stay declared in root
+  `turbo.json` `build.env` (PR #75) or Vercel's strict turbo env strips it from the build.
+- UNSET (dark by design): `LEADERBOARD_REQUIRE_ACCOUNT` (anonymous-first casual posture),
+  `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `AUTH_BASE_URL` — ranked lane dark (U7 unbuilt,
+  submit `mode:"ranked"` → 403), accounts email path dark (Resend activation is HUMAN-ONLY).
 - Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
   re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
 
