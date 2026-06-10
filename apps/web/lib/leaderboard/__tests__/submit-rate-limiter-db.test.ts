@@ -101,9 +101,7 @@ describe("identity keying", () => {
   it("userId dominates: same account over rotating sessions shares one bucket", async () => {
     const limiter = limiterAt(() => BASE);
     for (let i = 0; i < 6; i++) {
-      const r = await limiter.checkSubmit(
-        ctx({ userId: "user-1", sessionId: `rotated-${i}` }),
-      );
+      const r = await limiter.checkSubmit(ctx({ userId: "user-1", sessionId: `rotated-${i}` }));
       expect(r.allowed).toBe(true);
     }
     const denied = await limiter.checkSubmit(ctx({ userId: "user-1", sessionId: "rotated-7" }));
@@ -157,7 +155,10 @@ describe("lazy sweep", () => {
     // Seed an old row (beyond retention) and a recent one.
     const old = limiterAt(() => BASE - SWEEP_RETENTION_MS - HOUR);
     await old.checkSubmit(ctx({ sessionId: "ancient" }));
-    const sweeping = limiterAt(() => BASE, () => SWEEP_PROBABILITY / 2);
+    const sweeping = limiterAt(
+      () => BASE,
+      () => SWEEP_PROBABILITY / 2,
+    );
     const r = await sweeping.checkSubmit(ctx());
     expect(r.allowed).toBe(true);
     const rows = await db.select().from(authRateLimits);
@@ -169,7 +170,10 @@ describe("lazy sweep", () => {
   it("does not fire at/above the threshold", async () => {
     const old = limiterAt(() => BASE - SWEEP_RETENTION_MS - HOUR);
     await old.checkSubmit(ctx({ sessionId: "ancient" }));
-    const limiter = limiterAt(() => BASE, () => SWEEP_PROBABILITY);
+    const limiter = limiterAt(
+      () => BASE,
+      () => SWEEP_PROBABILITY,
+    );
     await limiter.checkSubmit(ctx());
     const rows = await db.select().from(authRateLimits);
     expect(rows.length).toBe(2 * SUBMIT_CAPS.length); // ancient rows retained

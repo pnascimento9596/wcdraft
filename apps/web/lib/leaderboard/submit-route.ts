@@ -11,9 +11,10 @@
 //   7. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
 //
 // Honest-state: the persisted score is the SERVER's re-sim, the returned
-// rank is computed by the DB in the same snapshot as the insert (null when
-// the identity has no visible entry), nulls stay null, and every error is a
-// typed code — never prose-only.
+// rank is the identity's CURRENT board rank read by a SECOND statement after
+// the insert — not the insert's snapshot, so a concurrent insert can move it
+// (null when the identity has no visible entry), nulls stay null, and every
+// error is a typed code — never prose-only.
 
 import { NextResponse, type NextRequest } from "next/server";
 import type { Db } from "@wcdraft/db";
@@ -31,11 +32,7 @@ import {
   type ApiLeaderboardEntry,
 } from "./store";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
-import {
-  SUBMIT_ERROR_HTTP_STATUS,
-  validateSubmission,
-  type ValidationData,
-} from "./validate";
+import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
 
 /** Generous bound over the worst legitimate body: token ≤ 8192 chars + name
  *  + integer score + JSON envelope. Checked on declared AND actual size. */
@@ -68,8 +65,9 @@ function transportError(code: TransportErrorCode, message: string): NextResponse
 export interface SubmitResponseBody {
   readonly entry: ApiLeaderboardEntry;
   readonly duplicate: boolean;
-  /** Identity's CURRENT board rank (season+mode view), same DB snapshot as
-   *  the insert. Null only if the identity has no visible entry. */
+  /** Identity's CURRENT board rank (season+mode view), read by a second
+   *  statement after the insert — a concurrent insert can move it between
+   *  the two. Null only if the identity has no visible entry. */
   readonly rank: number | null;
 }
 
@@ -88,7 +86,9 @@ export async function handleLeaderboardSubmit(
       return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
     }
     const raw = await req.text();
-    if (raw.length > MAX_SUBMIT_BODY_BYTES) {
+    // Byte length, not char count — multi-byte chars made `raw.length`
+    // under-count the actual wire size.
+    if (new TextEncoder().encode(raw).length > MAX_SUBMIT_BODY_BYTES) {
       return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
     }
 
@@ -162,7 +162,8 @@ export async function handleLeaderboardSubmit(
       );
     }
 
-    // 7 — persist + honest dedupe; rank from the same snapshot.
+    // 7 — persist + honest dedupe; rank is a SECOND read after the insert
+    // (current rank, not the insert's snapshot).
     const result = await insertAcceptedEntry(
       deps.db,
       {
@@ -182,8 +183,7 @@ export async function handleLeaderboardSubmit(
     const best = await identityBoardRank(deps.db, {
       seasonKey: verdict.season_key,
       mode: "casual",
-      identityKey:
-        result.row.userId ?? result.row.sessionId ?? result.row.id,
+      identityKey: result.row.userId ?? result.row.sessionId ?? result.row.id,
     });
     const responseBody: SubmitResponseBody = {
       entry: toApiEntry(result.row),
@@ -195,10 +195,7 @@ export async function handleLeaderboardSubmit(
     });
   } catch (err) {
     if (err instanceof LeaderboardGateError) {
-      return NextResponse.json(
-        { error: err.code, message: err.message },
-        { status: err.status },
-      );
+      return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
     }
     console.error("[leaderboard] unexpected submit error", err);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });

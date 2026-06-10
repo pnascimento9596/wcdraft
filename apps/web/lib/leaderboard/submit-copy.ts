@@ -9,10 +9,7 @@ import type { SubmitErrorCode } from "./validate";
 import type { DisplayNameRejection } from "./display-name";
 
 /** Transport-layer codes owned by the route file (not the pipeline). */
-export type SubmitTransportCode =
-  | "UNSUPPORTED_MEDIA_TYPE"
-  | "BODY_TOO_LARGE"
-  | "INTERNAL_ERROR";
+export type SubmitTransportCode = "UNSUPPORTED_MEDIA_TYPE" | "BODY_TOO_LARGE" | "INTERNAL_ERROR";
 
 export type SubmitWireCode = SubmitErrorCode | SubmitTransportCode;
 

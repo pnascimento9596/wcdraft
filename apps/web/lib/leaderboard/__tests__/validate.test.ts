@@ -16,11 +16,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  buildRunTokenBody,
-  decodeRunToken,
-  type RunTokenV1Body,
-} from "../../game/run-token";
+import { buildRunTokenBody, decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
 import { DISPLAY_NAME_MAX, validateDisplayName } from "../display-name";
 import { deriveSeasonKey } from "../season";
 import {
@@ -107,9 +103,7 @@ describe("step 1 — shape + size guard", () => {
 
 describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
   it("rejects a truncated token", () => {
-    expect(rejectionCode(submit({ token: originToken.slice(0, 40) }))).toBe(
-      "MALFORMED_TOKEN",
-    );
+    expect(rejectionCode(submit({ token: originToken.slice(0, 40) }))).toBe("MALFORMED_TOKEN");
   });
 
   it("rejects an empty payload", () => {
@@ -285,11 +279,7 @@ function legendOutsideSpin(
     if (picked.has(c.player_id)) continue;
     const overall = data.gameData.indexes.ratingByCardId.get(c.card_id)?.overall;
     if (overall === null || overall === undefined) continue;
-    if (
-      !best ||
-      overall > best.overall ||
-      (overall === best.overall && c.card_id < best.card_id)
-    ) {
+    if (!best || overall > best.overall || (overall === best.overall && c.card_id < best.card_id)) {
       best = { card_id: c.card_id, overall };
     }
   }
