@@ -94,6 +94,59 @@ async function probeHiddenSurface(page, surface) {
   console.log(`  ✓ digit probe clean: ${surface}`);
 }
 
+// ── Post-reveal POSITIVE probe ──────────────────────────────────────────────
+// Mirror of probeHiddenSurface for the MemoryReveal section on results: the
+// reveal must REINTRODUCE digits (squad-avg OVR + per-line ratings) AND the
+// neutral `masked` provenance class must be gone (real historical/projected/
+// estimate/legend tiers shown). Closes the screenshot-only gap the gate
+// review #2 flagged — the reveal screenshot proves pixels, this proves bytes.
+async function probeRevealedSurface(page, surface) {
+  const probe = await page.evaluate(() => {
+    const root = document.querySelector('[class*="memoryReveal"]');
+    if (!root) return { ok: false, reason: "memoryReveal section not in DOM" };
+
+    const cellsWithDigits = (sel) => {
+      const cells = Array.from(root.querySelectorAll(sel));
+      return cells.filter((el) => /\d/.test((el.textContent ?? "").trim())).length;
+    };
+    const squadAvgDigits = cellsWithDigits('[class*="squadAvg"]');
+    const lineValDigits = cellsWithDigits('[class*="lineVal"]');
+
+    const lingeringMasks = Array.from(
+      root.querySelectorAll(
+        '[class*="provDot_masked"], [class*="provBadge_masked"], [class*="prov_masked"]',
+      ),
+    ).map((el) => el.className);
+
+    return { ok: true, squadAvgDigits, lineValDigits, lingeringMasks };
+  });
+
+  if (!probe.ok) {
+    throw new Error(`reveal probe FAILED on ${surface}: ${probe.reason}`);
+  }
+  if (probe.squadAvgDigits === 0) {
+    throw new Error(
+      `reveal probe FAILED on ${surface}: squad-avg OVR has no digits (still masked?)`,
+    );
+  }
+  if (probe.lineValDigits === 0) {
+    throw new Error(
+      `reveal probe FAILED on ${surface}: per-line ratings have no digits (still masked?)`,
+    );
+  }
+  if (probe.lingeringMasks.length > 0) {
+    throw new Error(
+      `reveal probe FAILED on ${surface}: ${probe.lingeringMasks.length} `
+        + `lingering masked provenance class(es) inside MemoryReveal:\n  `
+        + probe.lingeringMasks.join("\n  "),
+    );
+  }
+  console.log(
+    `  ✓ reveal probe clean: ${surface} `
+      + `(squad-avg=${probe.squadAvgDigits}, line-vals=${probe.lineValDigits})`,
+  );
+}
+
 /** Lock 4-3-3 on the formation gate, then spin → reveal into the lineup. */
 async function lockAndFirstReveal(page) {
   const lock433 = page.locator("button", { hasText: /^4-3-3/ }).first();
@@ -217,6 +270,7 @@ async function captureViewport(viewport, outRoot) {
   await page.waitForURL(/\/play\/results/, { timeout: 120_000 });
   await waitForReady(page);
   await shot(page, dir, "14-hidden-results-reveal");
+  await probeRevealedSurface(page, "hidden results (post-reveal)");
 
   await browser.close();
   return dir;

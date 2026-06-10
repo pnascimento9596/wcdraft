@@ -82,10 +82,23 @@ byte-identical files. The golden test enforces this.
 `club_at_tournament` — every nullable upstream field stays `null` when the
 source did not record it. **NEVER coerced to `0`.**
 
-`RuntimeRating.overall_basis === "baseline_anchor_estimate"` flags the 388
+`RuntimeRating.overall_basis === "baseline_anchor_estimate"` flags the 387
 historical cards whose `overall` came from an era-anchor estimate instead
-of measured tournament performance. UI surfaces this as a coverage badge —
-the number is never rendered as a measured value.
+of measured tournament performance. `overall_basis === "career_stature_estimate"`
+flags the 485 historical cards (MV2-4.1) where the player has a clearly
+material career stature but no individual tournament signal on this card.
+UI surfaces both as coverage badges — the number is never rendered as a
+measured value.
+
+> **2026 ETL↔compact divergence (deliberate, documented here):** the
+> per-card `overall_basis` field is emitted by the ETL on `ratings_2026.json`
+> but is **NOT** carried through to `RuntimeRating` on 2026 cards in the
+> compact bundles. The field is shipped **historical-only**: the 2026
+> rating model (`proj-career-3.0.0`) draws every card on the
+> linked-stature / quantile-mapped raw path with no honest-state estimate
+> tier, so the runtime contract intentionally omits it. The integrity
+> tests assert the historical count is exact (387) and do not assert the
+> field on 2026 rows. Documenting current design — not changing it.
 
 ## ⚠️ Attribution obligation (CC-BY-SA 4.0)
 

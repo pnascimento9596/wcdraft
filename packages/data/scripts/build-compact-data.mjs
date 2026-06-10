@@ -251,10 +251,11 @@ async function build() {
   const playerCards = [];
   const playerCardRatings = [];
   let estimateCount = 0;
-  // wc-perf-3.0.0 (E-4): cards with no tournament signal but a well-covered elite
-  // career record exit via the uncapped curve. Counted for the manifest; currently
-  // 0 (no no-signal card belongs to a well-covered elite player) but tracked so a
-  // future shift is visible in the manifest rather than silent.
+  // wc-perf-4.2.0 (MV2-4.1 basis tag fix): cards with no individual tournament
+  // signal but a clearly-material career stature exit via the unified display
+  // curve and are tagged `career_stature_estimate` in `overall_basis`. Counted
+  // for the manifest (485 as of merit-v2 95718a5; the manifest lock lives in
+  // RUNTIME_DATA_MANIFEST/tests, this comment is just the human-readable note).
   let careerStatureEstimateCount = 0;
 
   // Historical 1930..2022

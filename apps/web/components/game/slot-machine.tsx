@@ -113,7 +113,7 @@ export function SpinStage({
   const pickNum = String(pickNumber).padStart(2, "0");
 
   const tagline = settled
-    ? `${result.nationName}’s ${result.yearLabel} squad is on the board — draft one player or the coach.`
+    ? `${result.nationName}’s ${result.yearLabel} squad is on the board — draft one player or the manager.`
     : spinning
       ? "Rolling the drum…"
       : "Press spin to lock in a nation and World Cup year.";
