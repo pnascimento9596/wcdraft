@@ -2,8 +2,16 @@
 
 - **Tier:** Red (rating model) · **Mode:** DISPATCH-ONLY — Lead Architect authors the
   prompt; never self-served.
-- **Status:** CANDIDATE — no authored spec exists; this file only mirrors the verified
-  deferred threads that would feed it.
+- **Status:** AUDITED — diagnostic pre-work executed 2026-06-10; see
+  [`docs/reports/mv212-ratings-audit-2026-06-10.md`](../reports/mv212-ratings-audit-2026-06-10.md).
+  **GO recommended** (option D2 + D1: active-career recognition intake with a
+  career-stage-normalized index, plus age-conditioned projected cohorts). Confirmed
+  mechanisms: the career-stature archive has zero in-progress careers (primary) and an
+  age/all-age-percentile double penalty (secondary); the raw-path ceiling (internal
+  0.62 → display 88) makes everything above 88 stature-only in BOTH eras.
+  "Maldini 71" ruled Cesare-1962 (surname display-ambiguity UX follow-up, not a rating
+  defect). No authored spec yet — implementation remains DISPATCH-ONLY pending a
+  Lead-Architect-authored plan.
 
 ## Verified deferred threads (sources: merit-v2 plan + lane memories)
 
