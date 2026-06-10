@@ -35,10 +35,19 @@ import { draftHref, reviewHref } from "@/lib/game/navigation";
 import {
   createNewRunRecord,
   evictStaleRunRecords,
+  isStorageVolatile,
   loadRunRecord,
   saveRunRecord,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+
+/**
+ * Honest fallback copy when the run-record store is running on the in-memory
+ * fallback. Kept in sync with the FormationSelect / handleLock messages so a
+ * resume after `router.replace` doesn't lose the warning the user already saw.
+ */
+const VOLATILE_STORAGE_WARNING =
+  "Draft is saved in this tab only — browser storage is unavailable.";
 import {
   compatLabel,
   compatTier,
@@ -122,7 +131,11 @@ export function DraftScreen() {
               kind: "ready",
               gameData: gd,
               record: loaded.record,
-              persistenceWarning: null,
+              // Re-derive the volatile-storage warning on the resume path so
+              // it survives the formation-lock `router.replace` (and a real
+              // refresh) — otherwise the spin stage flashes blank between the
+              // initial save and the next durable-failing pick.
+              persistenceWarning: isStorageVolatile() ? VOLATILE_STORAGE_WARNING : null,
             });
           } else {
             setMode({
@@ -712,6 +725,14 @@ function DraftBoard({
   if (!complete && spin && slotReveal && phase === "spin") {
     return (
       <div className={`${s.draftShell} ${s.spinShell}`}>
+        {persistenceWarning ? (
+          <p
+            className={`${s.persistenceWarn} ${s.spinPersistenceWarn}`}
+            role="status"
+          >
+            {persistenceWarning}
+          </p>
+        ) : null}
         <SpinStage
           model={slotReveal}
           pickNumber={spinNumber}

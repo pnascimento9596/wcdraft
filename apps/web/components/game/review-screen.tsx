@@ -220,12 +220,14 @@ function ReviewBoard({
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
   );
 
+  // Blinding rides the adapter opts (same as pitchSlotViews / squadAverageOverall)
+  // so the masked nulls come out of the `blindCardRatingView` seam, never a screen
+  // branch. Under blind, per-line `value` is null but `count` still reports the
+  // filled-starter count so the row labels can render unconditionally.
   const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft),
-    [gameData, draft],
+    () => lineStrengthViews(gameData.indexes, draft, { blindRatings: blind }),
+    [gameData, draft, blind],
   );
-  // Blinding rides the adapter opts (same as pitchSlotViews) so the masked
-  // null comes out of the blindCardRatingView seam, not a screen branch.
   const squadAvg = useMemo(
     () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind }),
     [gameData, draft, blind],
@@ -348,19 +350,21 @@ function ReviewBoard({
           <p className={s.memoryModeNote} role="note">
             Hidden until you simulate — line strengths are part of the Memory-mode blind.
           </p>
-        ) : (
-          <div className={s.lineRatings}>
-            {lineRatings.map((l) => (
-              <div key={l.line} className={s.lineRow}>
-                <span className={s.lineName}>{l.label}</span>
-                <span className={s.lineTrack}>
-                  <span className={s.lineFill} style={{ width: `${l.value}%` }} />
-                </span>
-                <span className={s.lineVal}>{l.value}</span>
-              </div>
-            ))}
-          </div>
-        )}
+        ) : null}
+        <div className={s.lineRatings}>
+          {lineRatings.map((l) => (
+            <div key={l.line} className={s.lineRow}>
+              <span className={s.lineName}>{l.label}</span>
+              <span className={s.lineTrack}>
+                <span
+                  className={s.lineFill}
+                  style={{ width: `${l.value ?? 0}%` }}
+                />
+              </span>
+              <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
 {validation.warnings.length > 0 ? (

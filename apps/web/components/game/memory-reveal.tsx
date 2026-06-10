@@ -127,9 +127,12 @@ export function MemoryReveal({
           <div key={l.line} className={s.lineRow}>
             <span className={s.lineName}>{l.label}</span>
             <span className={s.lineTrack}>
-              <span className={s.lineFill} style={{ width: `${l.value}%` }} />
+              <span
+                className={s.lineFill}
+                style={{ width: `${l.value ?? 0}%` }}
+              />
             </span>
-            <span className={s.lineVal}>{l.value}</span>
+            <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
           </div>
         ))}
       </div>

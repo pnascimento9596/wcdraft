@@ -1,0 +1,31 @@
+{
+  "viewport": "390x844",
+  "hits": [
+    [
+      {
+        "line": "GK",
+        "label": "Goalkeeper",
+        "count": 1,
+        "value": null
+      },
+      {
+        "line": "DF",
+        "label": "Defence",
+        "count": 4,
+        "value": null
+      },
+      {
+        "line": "MF",
+        "label": "Midfield",
+        "count": 3,
+        "value": null
+      },
+      {
+        "line": "FW",
+        "label": "Attack",
+        "count": 3,
+        "value": null
+      }
+    ]
+  ]
+}
