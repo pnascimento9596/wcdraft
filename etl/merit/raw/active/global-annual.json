@@ -1,0 +1,50 @@
+{
+  "source_id": "active_global_annual",
+  "family": "global_annual_recognition",
+  "cutoff_date": "2026-06-01",
+  "note": "MV2-12a active-career intake. Global annual recognition earned by players whose careers are IN PROGRESS (the career-stature archive's peak-year ceiling is 2022; these players are structurally absent from it). Every row is a citation-backed public fact established on or before the cutoff date: the player's display name as the canonical card carries it, their nation, the award year, a source-stated position, the specific distinction, and a fetchable public citation URL plus the claim it supports. NO rating numbers, rankings, OVR/channel/boost/override — only the recognition record. Each citation was fetched and confirmed to support its claim before commit. These rows are staged in the INERT active channel (source_facts_active.json); they never enter source_facts.json or career_stature.json until MV2-12b activates the channel.",
+  "curation_notes": [
+    "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance."
+  ],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "Lamine Yamal",
+      "nation_token": "Spain",
+      "year": 2024,
+      "position": "FW",
+      "kind": "kopa_trophy",
+      "detail": "Kopa Trophy (best under-21 player) — 2024 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Kopa_Trophy",
+        "claim": "Lamine Yamal (Spain, Barcelona) won the 2024 Kopa Trophy."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Lamine Yamal",
+      "nation_token": "Spain",
+      "year": 2025,
+      "position": "FW",
+      "kind": "kopa_trophy",
+      "detail": "Kopa Trophy (best under-21 player) — 2025 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Kopa_Trophy",
+        "claim": "Lamine Yamal won the 2025 Kopa Trophy, becoming the first player to win the award twice."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Lamine Yamal",
+      "nation_token": "Spain",
+      "year": 2025,
+      "position": "FW",
+      "kind": "ballon_dor_podium",
+      "detail": "Ballon d'Or — 2025 runner-up",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/2025_Ballon_d%27Or",
+        "claim": "Lamine Yamal finished second in the 2025 Ballon d'Or ranking with 1,059 points, behind Ousmane Dembélé."
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "source_id": "active_international_record",
+  "family": "international_record",
+  "cutoff_date": "2026-06-01",
+  "note": "MV2-12a active-career intake. International longevity records for in-progress careers that the pinned century-caps snapshot holds but cannot link because the source renders the player's name in a spelling the canonical card does not carry — the same canonical-name recovery the MV2-2 research backstop used for Cruyff. Each row re-asserts the SAME public fact under the canonical display name with a fetchable public citation. Staged in the inert active channel.",
+  "curation_notes": [
+    "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision."
+  ],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "Guillermo Ochoa",
+      "nation_token": "Mexico",
+      "year": null,
+      "position": "GK",
+      "kind": "caps",
+      "detail": "caps=152 (2005-2026)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Guillermo_Ochoa",
+        "claim": "Francisco Guillermo Ochoa Magaña has 152 caps for Mexico (2005–present), Mexico's most-capped goalkeeper and third most-capped player; the pinned century-caps snapshot lists him as 'Francisco Ochoa', which the canonical card cannot match."
+      }
+    }
+  ]
+}

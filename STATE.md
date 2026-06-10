@@ -37,6 +37,9 @@ remains staged for MV2-12b
   medallion/banner intake, generated OG/social PNGs, site-wide static metadata
   wiring, a pick-screen attribution line, and the organic X plan + q-007 queue
   item. In-app SVG mark and PWA icon family remain locked/unchanged.
+- MV2-12a active-career intake (`ws-etl/mv212a-active-career-intake`, RED, IN REVIEW):
+  facts-only inert channel, 47 facts / 23 players; rating outputs + compact bundles
+  byte-identical (see `docs/queue/q-002-mv2-12-candidate.md`). 12b stays DISPATCH-ONLY.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -62,7 +65,7 @@ remains staged for MV2-12b
 | @wcdraft/db `test`                                      | 74 passed                   |
 | @wcdraft/web `test`                                     | 548 passed, 1 skipped (549) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
-| etl `pytest -q`                                         | 159 passed                  |
+| etl `pytest -q`                                         | 181 passed (+22 active-intake tests, ws-etl/mv212a) |
 | `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached |
 
 ## CI (`.github/workflows/`)

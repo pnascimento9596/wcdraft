@@ -9,9 +9,9 @@
   mechanisms: the career-stature archive has zero in-progress careers (primary) and an
   age/all-age-percentile double penalty (secondary); the raw-path ceiling (internal
   0.62 → display 88) makes everything above 88 stature-only in BOTH eras.
-  "Maldini 71" ruled Cesare-1962 (surname display-ambiguity UX follow-up, not a rating
-  defect). No authored spec yet — implementation remains DISPATCH-ONLY pending a
-  Lead-Architect-authored plan.
+  "Maldini 71" ruled Cesare-1962 (surname display-ambiguity UX follow-up — now filed as
+  [`q-005`](q-005-surname-disambiguation.md)). The audit's severable **12a intake unit is
+  built and IN REVIEW** (below); **12b remains DISPATCH-ONLY**.
 - **Audit-2 (face-validity sweep) executed 2026-06-10; see
   [`docs/reports/mv212-face-validity-2026-06-10.md`](../reports/mv212-face-validity-2026-06-10.md).**
   Adds: (1) **P0 NEW DEFECT — 17 identity-seam link misses among minted 2026 cards**
@@ -23,6 +23,31 @@
   (3) consolidated candidate-misratings table (21 classes) + a named 12b
   acceptance-probe set incl. Valverde-2022 counterfactual (injected index 0.42 → 84,
   matching the owner's instinct — D2 fixes him organically).
+
+## MV2-12a — active-career stature intake (FACTS-ONLY) — IN REVIEW
+
+- Branch `ws-etl/mv212a-active-career-intake`: extends the merit intake to in-progress
+  careers via a structurally INERT active channel — 47 facts / 23 players
+  (`active-career-source-set-1.0.0`, cutoff 2026-06-01): 36 parser-recovered facts
+  (withheld pinned-snapshot records re-linked against the minted 2026 identity space)
+  + 11 citation-backed active-note facts (own SHA-pinned manifest under
+  `etl/merit/raw/active/`). Staged in `etl/output/merit/source_facts_active.json` +
+  `career_stature_active_staging.json` (NO score/index — entries are facts + identity
+  only). Consumed archive, both rating outputs and compact bundles proven
+  byte-identical. 4 identity-bridge review entries (minted 2026 duplicates of
+  fact-carrying historical ids: Neymar, Alisson, Marquinhos, Rodri) staged for 12b.
+- Anti-fab drops recorded in the notes: Valverde Uruguay-captaincy REFUTED (Giménez is
+  the citable 2026 captain); Hajsafi century-caps absent from the pinned snapshot.
+
+## MV2-12b — rating integration (DISPATCH-ONLY, not started)
+
+Activates the channel per the audit's D2+D1: player-identity stature seam (not
+historical-card link), career-stage-normalized index for in-progress careers,
+age-conditioned cohorts in the projected raw path. Carries the FULL Red chain:
+rating-version bumps, canary regen + pick-equality, compact regen, λ re-fit BEFORE
+any realism re-lock, fresh-session RED review, human approval, `--match-head-commit`.
+The 12a inertness tests (`test_scoring_code_never_references_the_active_artifacts`,
+the double-credit build guard) are the explicit flip points 12b must change.
 
 ## Verified deferred threads (sources: merit-v2 plan + lane memories)
 

@@ -1,0 +1,57 @@
+{
+  "cutoff_date": "2026-06-01",
+  "files": [
+    {
+      "bytes": 3280,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/Andy_Robertson",
+        "https://en.wikipedia.org/wiki/David_Alaba",
+        "https://en.wikipedia.org/wiki/Gustavo_G%C3%B3mez",
+        "https://en.wikipedia.org/wiki/Hakan_%C3%87alhano%C4%9Flu",
+        "https://en.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez"
+      ],
+      "family": "captaincy",
+      "file": "active/captaincy.json",
+      "row_count": 5,
+      "sha256": "dda808588c0a89728ce7a38162c7b589059d4e55560d4f763e84952d3f41e65f",
+      "source_id": "active_captaincy"
+    },
+    {
+      "bytes": 1484,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper",
+        "https://en.wikipedia.org/wiki/Yashin_Trophy"
+      ],
+      "family": "position_balanced_selection",
+      "file": "active/gk-awards.json",
+      "row_count": 2,
+      "sha256": "02c8f8a5b00aeead6f58428eb1b378a74f4a8b4e06ac0f7c4904a063102cbcf5",
+      "source_id": "active_gk_award"
+    },
+    {
+      "bytes": 2602,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/2025_Ballon_d%27Or",
+        "https://en.wikipedia.org/wiki/Kopa_Trophy"
+      ],
+      "family": "global_annual_recognition",
+      "file": "active/global-annual.json",
+      "row_count": 3,
+      "sha256": "057176fc9dcddaaf39e52d95965c2e0f9138273b2bd39e4383db88d867f08c18",
+      "source_id": "active_global_annual"
+    },
+    {
+      "bytes": 1576,
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
+      ],
+      "family": "international_record",
+      "file": "active/international-record.json",
+      "row_count": 1,
+      "sha256": "2fc858eb8f4a40ee5032cf11598df3c58adeb7be162c93f6bc0fc1987aa58acf",
+      "source_id": "active_international_record"
+    }
+  ],
+  "note": "MV2-12a active-career intake notes. Citation-backed public facts for in-progress careers, staged in the inert active channel. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
+  "version": "active-career-source-set-1.0.0"
+}

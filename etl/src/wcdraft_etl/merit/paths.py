@@ -23,6 +23,13 @@ OUTPUT_DIR = _ETL_ROOT / "output" / "merit"
 RESEARCH_DIR = RAW_DIR / "research"
 RESEARCH_MANIFEST_PATH = RESEARCH_DIR / "manifest.json"
 
+# Active-career intake (MV2-12a): committed citation-backed notes for IN-PROGRESS
+# careers live under ``merit/raw/active/`` with their OWN pinned manifest. The
+# active channel is deliberately separate from both the fetched snapshots and the
+# research backstop so the consumed archive (career_stature.json) stays untouched.
+ACTIVE_DIR = RAW_DIR / "active"
+ACTIVE_MANIFEST_PATH = ACTIVE_DIR / "manifest.json"
+
 
 def read_raw(raw_file: str, charset: str) -> str:
     """Read a committed snapshot as text in its declared charset."""
