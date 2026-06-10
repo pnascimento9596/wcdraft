@@ -1,0 +1,370 @@
+/*
+ * wcdraft — leaderboard surfaces (F-4 U4).
+ *
+ * Scoped CSS Module for the board page + the results-screen submit
+ * affordance. Every colour flows from the design tokens in globals.css /
+ * ds/tokens.css, so light and dark are both first-class. Mobile-first per
+ * ws-ux/mobile-polish-1: interactive rows and buttons hold ≥44px targets.
+ */
+
+/* ── Shared panel (matches game.module.css .panel geometry) ─────────────── */
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Board page ─────────────────────────────────────────────────────────── */
+
+.boardShell {
+  display: grid;
+  gap: 1rem;
+}
+
+.seasonKey {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  word-break: break-all;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.modeTabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.modeTab {
+  font-family: var(--font-text), serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  border-bottom: 2px solid var(--accent);
+  padding: 0.45rem 0.15rem;
+}
+
+.modeTabDark {
+  font-family: var(--font-text), serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+  border-bottom: 2px solid transparent;
+  padding: 0.45rem 0.15rem;
+}
+
+.modeTabSoon {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  margin-left: 0.35rem;
+}
+
+/* "Your best" chip — rendered only when /me resolves (honest absence). */
+.meChip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.meChipRank {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+/* ── Rows ───────────────────────────────────────────────────────────────── */
+
+.rowList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.rowItem {
+  border-top: 1px solid var(--line);
+}
+.rowItem:first-child {
+  border-top: none;
+}
+
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 52px; /* tap-target audit: full-row disclosure button */
+  padding: 0.5rem 0.25rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.rowMine {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  border-radius: 8px;
+}
+
+.rowRank {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  text-align: right;
+  padding-right: 0.2rem;
+}
+.rowRankTop {
+  color: var(--gold);
+}
+
+.rowMain {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.rowName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+.badge {
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.08rem 0.45rem;
+  color: var(--ink-soft);
+}
+
+.badgeHidden {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+}
+
+.badgeYou {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.rowScore {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.25rem;
+  text-align: right;
+}
+.rowScoreUnit {
+  display: block;
+  font-family: var(--font-text), serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Evidence (score breakdown) disclosure */
+.breakdown {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.25rem 0.25rem 0.85rem 3rem;
+}
+.breakdownLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.breakdownPts {
+  font-family: var(--f-mono), monospace;
+}
+.breakdownNone {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  padding: 0 0.25rem 0.85rem 3rem;
+}
+
+/* ── States ─────────────────────────────────────────────────────────────── */
+
+.stateBox {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+  padding: 1.5rem 0.5rem;
+  color: var(--ink-soft);
+}
+.stateTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.loadMore {
+  margin-top: 0.75rem;
+  width: 100%;
+  min-height: 48px; /* tap-target audit */
+}
+
+.boardFoot {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+/* ── Submit affordance (results screen) ─────────────────────────────────── */
+
+.submitPanel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.submitHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.submitTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+}
+
+.submitScore {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.submitScoreNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin-right: 0.25rem;
+}
+
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.nameField {
+  flex: 1 1 12rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.nameInput {
+  width: 100%;
+  min-height: 48px; /* tap-target audit */
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--bg-sunken);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+}
+.nameInput:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.nameHint {
+  font-size: 0.74rem;
+  color: var(--loss);
+}
+
+.submitBtn {
+  min-height: 48px; /* tap-target audit */
+  align-self: start;
+}
+
+/* Outcome states — every string maps 1:1 to a server response. */
+.outcome {
+  display: grid;
+  gap: 0.35rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.75rem;
+}
+.outcomeTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.1rem;
+}
+.outcomeTitleGood {
+  color: var(--accent);
+}
+.outcomeTitleGold {
+  color: var(--gold);
+}
+.outcomeTitleBad {
+  color: var(--loss);
+}
+.outcomeMsg {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.outcomeRank {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.6rem;
+}
+
+.submitFine {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 26rem) {
+  .row {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+  }
+  .breakdown,
+  .breakdownNone {
+    padding-left: 2.5rem;
+  }
+}
