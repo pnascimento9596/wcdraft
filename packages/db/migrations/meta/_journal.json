@@ -29,6 +29,13 @@
       "when": 1780807899850,
       "tag": "0003_summary_jsonb",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781091099182,
+      "tag": "0004_f4_leaderboard",
+      "breakpoints": true
     }
   ]
 }
