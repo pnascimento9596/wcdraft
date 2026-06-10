@@ -122,7 +122,7 @@ export interface RuntimeBundleFingerprint {
  * do not:
  *
  *  - `overall_basis` — `"measured_performance"` (default),
- *    `"baseline_anchor_estimate"` (387 historical cards where the score is
+ *    `"baseline_anchor_estimate"` (386 historical cards where the score is
  *    estimated from an era anchor because tournament-card signals were too
  *    thin to compute directly), or `"career_stature_estimate"` (a card whose
  *    score is carried by the dominant career-stature path — MV2-4.1 basis
@@ -409,7 +409,7 @@ export interface RuntimeDataManifest {
     ratings: number;
     teams: number;
     knockout_slots: number;
-    /** Historical cards flagged `overall_basis === "baseline_anchor_estimate"` — 387 expected. */
+    /** Historical cards flagged `overall_basis === "baseline_anchor_estimate"` — 386 expected. */
     baseline_anchor_estimate: number;
     /** Cards flagged `overall_basis === "career_stature_estimate"` (MV2-4.1 basis tag). */
     career_stature_estimate: number;
