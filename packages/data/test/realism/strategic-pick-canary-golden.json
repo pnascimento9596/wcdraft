@@ -1,0 +1,642 @@
+{
+  "$schema_doc": "DECOUPLING GUARD #2 — strategic-pick canary. Locks the exact strategicAutoDraft pick sequence for the first N_SEEDS seeds of the realism harness. Trips when a display-curve change (e.g. a stature-driven `overall` rescale) flips a `pickBest` tie ordering and silently invalidates the λ-calibration basis (the realism gate's Wilson bands shift with the landings on re-lock, so they do NOT catch the flip). Re-lock atomically with any intentional realism re-fit.",
+  "policy": "strategicAutoDraft",
+  "seed_prefix": "wcdraft:realism:e3a:v1",
+  "formation_id": "4-3-3",
+  "n_seeds": 5,
+  "rating_version": "wc-perf-4.2.0+proj-career-3.0.0",
+  "engine_version": "engine-2026.06.09",
+  "dataset_version": "2026-06-04",
+  "records": [
+    {
+      "seed_index": 0,
+      "parent_seed": "wcdraft:realism:e3a:v1:0000",
+      "manager_card_id": "M-377:2018",
+      "picks": [
+        {
+          "spin": 0,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0115:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "spin": 1,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "picked_manager_card_id": "M-377:2018",
+          "assigned_slot_id": null
+        },
+        {
+          "spin": 2,
+          "picked_kind": "player",
+          "picked_card_id": "P-15860:1958",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "spin": 3,
+          "picked_kind": "player",
+          "picked_card_id": "P-47321:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "spin": 4,
+          "picked_kind": "player",
+          "picked_card_id": "P-55518:1998",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "spin": 5,
+          "picked_kind": "player",
+          "picked_card_id": "P-16663:1938",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "spin": 6,
+          "picked_kind": "player",
+          "picked_card_id": "P-68952:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "spin": 7,
+          "picked_kind": "player",
+          "picked_card_id": "P-34822:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "spin": 8,
+          "picked_kind": "player",
+          "picked_card_id": "P-99537:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "spin": 9,
+          "picked_kind": "player",
+          "picked_card_id": "P-61272:1970",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "spin": 10,
+          "picked_kind": "player",
+          "picked_card_id": "P-88899:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "spin": 11,
+          "picked_kind": "player",
+          "picked_card_id": "P-71308:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "spin": 12,
+          "picked_kind": "player",
+          "picked_card_id": "P-55991:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "spin": 13,
+          "picked_kind": "player",
+          "picked_card_id": "P-55097:1998",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "spin": 14,
+          "picked_kind": "player",
+          "picked_card_id": "P-35818:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "spin": 15,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0351:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "spin": 16,
+          "picked_kind": "player",
+          "picked_card_id": "P-14758:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "seed_index": 1,
+      "parent_seed": "wcdraft:realism:e3a:v1:0001",
+      "manager_card_id": "M-170:2014",
+      "picks": [
+        {
+          "spin": 0,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "picked_manager_card_id": "M-170:2014",
+          "assigned_slot_id": null
+        },
+        {
+          "spin": 1,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0473:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "spin": 2,
+          "picked_kind": "player",
+          "picked_card_id": "P-27079:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "spin": 3,
+          "picked_kind": "player",
+          "picked_card_id": "P-56029:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "spin": 4,
+          "picked_kind": "player",
+          "picked_card_id": "P-09704:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "spin": 5,
+          "picked_kind": "player",
+          "picked_card_id": "P-66908:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "spin": 6,
+          "picked_kind": "player",
+          "picked_card_id": "P-57361:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "spin": 7,
+          "picked_kind": "player",
+          "picked_card_id": "P-58907:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "spin": 8,
+          "picked_kind": "player",
+          "picked_card_id": "P-75890:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "spin": 9,
+          "picked_kind": "player",
+          "picked_card_id": "P-35837:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "spin": 10,
+          "picked_kind": "player",
+          "picked_card_id": "P-42223:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "spin": 11,
+          "picked_kind": "player",
+          "picked_card_id": "P-30014:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "spin": 12,
+          "picked_kind": "player",
+          "picked_card_id": "P-24251:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "spin": 13,
+          "picked_kind": "player",
+          "picked_card_id": "P-06256:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "spin": 14,
+          "picked_kind": "player",
+          "picked_card_id": "P-19478:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "spin": 15,
+          "picked_kind": "player",
+          "picked_card_id": "P-29415:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "spin": 16,
+          "picked_kind": "player",
+          "picked_card_id": "P-63927:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "seed_index": 2,
+      "parent_seed": "wcdraft:realism:e3a:v1:0002",
+      "manager_card_id": "M-363:2014",
+      "picks": [
+        {
+          "spin": 0,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "picked_manager_card_id": "M-363:2014",
+          "assigned_slot_id": null
+        },
+        {
+          "spin": 1,
+          "picked_kind": "player",
+          "picked_card_id": "P-11275:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "spin": 2,
+          "picked_kind": "player",
+          "picked_card_id": "P-51118:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "spin": 3,
+          "picked_kind": "player",
+          "picked_card_id": "P-00957:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "spin": 4,
+          "picked_kind": "player",
+          "picked_card_id": "P-27808:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "spin": 5,
+          "picked_kind": "player",
+          "picked_card_id": "P-08916:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "spin": 6,
+          "picked_kind": "player",
+          "picked_card_id": "P-79299:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "spin": 7,
+          "picked_kind": "player",
+          "picked_card_id": "P-05918:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "spin": 8,
+          "picked_kind": "player",
+          "picked_card_id": "P-01164:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "spin": 9,
+          "picked_kind": "player",
+          "picked_card_id": "P-72637:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "spin": 10,
+          "picked_kind": "player",
+          "picked_card_id": "P-60597:1998",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "spin": 11,
+          "picked_kind": "player",
+          "picked_card_id": "P-58080:1994",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "spin": 12,
+          "picked_kind": "player",
+          "picked_card_id": "P-12372:1978",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "spin": 13,
+          "picked_kind": "player",
+          "picked_card_id": "P-37930:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "spin": 14,
+          "picked_kind": "player",
+          "picked_card_id": "P-29491:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "spin": 15,
+          "picked_kind": "player",
+          "picked_card_id": "P-22242:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "spin": 16,
+          "picked_kind": "player",
+          "picked_card_id": "P-10713:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "seed_index": 3,
+      "parent_seed": "wcdraft:realism:e3a:v1:0003",
+      "manager_card_id": "M-158:2018",
+      "picks": [
+        {
+          "spin": 0,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "picked_manager_card_id": "M-158:2018",
+          "assigned_slot_id": null
+        },
+        {
+          "spin": 1,
+          "picked_kind": "player",
+          "picked_card_id": "P-25428:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "spin": 2,
+          "picked_kind": "player",
+          "picked_card_id": "P-12625:1998",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "spin": 3,
+          "picked_kind": "player",
+          "picked_card_id": "P-07520:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "spin": 4,
+          "picked_kind": "player",
+          "picked_card_id": "P-42326:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "spin": 5,
+          "picked_kind": "player",
+          "picked_card_id": "P-22192:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "spin": 6,
+          "picked_kind": "player",
+          "picked_card_id": "P-31160:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "spin": 7,
+          "picked_kind": "player",
+          "picked_card_id": "P-23821:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "spin": 8,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0854:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "spin": 9,
+          "picked_kind": "player",
+          "picked_card_id": "P-30486:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "spin": 10,
+          "picked_kind": "player",
+          "picked_card_id": "P-31765:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "spin": 11,
+          "picked_kind": "player",
+          "picked_card_id": "P-27540:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "spin": 12,
+          "picked_kind": "player",
+          "picked_card_id": "P-50688:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "spin": 13,
+          "picked_kind": "player",
+          "picked_card_id": "P-77238:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "spin": 14,
+          "picked_kind": "player",
+          "picked_card_id": "P-30651:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "spin": 15,
+          "picked_kind": "player",
+          "picked_card_id": "P-37610:1958",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "spin": 16,
+          "picked_kind": "player",
+          "picked_card_id": "P-31839:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "seed_index": 4,
+      "parent_seed": "wcdraft:realism:e3a:v1:0004",
+      "manager_card_id": "M-448:2010",
+      "picks": [
+        {
+          "spin": 0,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "picked_manager_card_id": "M-448:2010",
+          "assigned_slot_id": null
+        },
+        {
+          "spin": 1,
+          "picked_kind": "player",
+          "picked_card_id": "P-85818:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "spin": 2,
+          "picked_kind": "player",
+          "picked_card_id": "P-88863:2006",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "spin": 3,
+          "picked_kind": "player",
+          "picked_card_id": "P-25070:1978",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "spin": 4,
+          "picked_kind": "player",
+          "picked_card_id": "P-10172:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "spin": 5,
+          "picked_kind": "player",
+          "picked_card_id": "P-51089:2002",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "spin": 6,
+          "picked_kind": "player",
+          "picked_card_id": "P-48955:2018",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "spin": 7,
+          "picked_kind": "player",
+          "picked_card_id": "P-96340:2026",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "spin": 8,
+          "picked_kind": "player",
+          "picked_card_id": "P-15674:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "spin": 9,
+          "picked_kind": "player",
+          "picked_card_id": "P-29440:1986",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "spin": 10,
+          "picked_kind": "player",
+          "picked_card_id": "P-46913:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "spin": 11,
+          "picked_kind": "player",
+          "picked_card_id": "P-84807:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "spin": 12,
+          "picked_kind": "player",
+          "picked_card_id": "P-46325:2014",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "spin": 13,
+          "picked_kind": "player",
+          "picked_card_id": "P-09614:2022",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "spin": 14,
+          "picked_kind": "player",
+          "picked_card_id": "P-82311:1950",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "spin": 15,
+          "picked_kind": "player",
+          "picked_card_id": "P-28154:2010",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "spin": 16,
+          "picked_kind": "player",
+          "picked_card_id": "P-47496:1966",
+          "picked_manager_card_id": null,
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    }
+  ]
+}

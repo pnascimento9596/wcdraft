@@ -1,5 +1,23 @@
 // E-3a D6 — DETERMINISTIC SEEDED COORDINATE-DESCENT FIT.
 //
+// ⚠️ DECOUPLING NOTE (ws-core/decoupling-guards):
+//   The asymmetric realism harness measures strategicAutoDraft picks, and
+//   `pickBest` in `packages/data/test/realism/draft-policies.ts` breaks
+//   ties by display `overall` DESC. DISPLAY-CURVE CHANGES (rescaling,
+//   post-fit normalisation, stature-driven pooled curve, etc.) CAN FLIP A
+//   TIE ORDERING, which re-orders the strategic pick sequence, which
+//   shifts the realism landings, which silently invalidates THIS LAMBDA
+//   FIT'S BASIS. The Wilson bands in `realism.gate.test.ts` re-base WITH
+//   the landings on re-lock and DO NOT catch the flip.
+//
+//   The tripwire is `packages/data/test/realism/strategic-pick-canary.golden.test.ts`
+//   — it locks the first 5 strategicAutoDraft pick sequences. If you are
+//   here because that canary turned red, A RE-FIT IS REQUIRED before the
+//   realism-gate golden may be re-locked: re-run this script, copy the
+//   new tuple into `calibration.ts`, regenerate sim-golden + e2e +
+//   asym-realism atomically with the canary re-lock.
+//   See SIM_CALIBRATION.md › "Decoupling guards".
+//
 // Tunes the λ tuple {SPREAD, w_def, w_gk, γ_mid, BASE, MIN, MAX, n}
 // to minimize weighted distance to the five WC realism norms over a
 // SYMMETRIC coherent-XI sweep (Team2026 vs Team2026, ~3,000 matches per

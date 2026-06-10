@@ -137,7 +137,30 @@ interface Scored {
   overall: number;
 }
 
-/** Tiebreak by overall DESC, then card_id ASC — deterministic. */
+/**
+ * Tiebreak by overall DESC, then card_id ASC — deterministic.
+ *
+ * ⚠️ DECOUPLING NOTE (ws-core/decoupling-guards):
+ *   This reads display `overall` to break ties. `overall` is the DISPLAY-only
+ *   Rating composite (`packages/core/src/types/rating.ts`: "the sim engine
+ *   MUST NOT read this field"). This is HARNESS code, not the sim, so the
+ *   contract is not literally violated — but the harness sits UNDER the
+ *   λ-calibration chain (see `packages/data/scripts/fit-calibration.mjs`).
+ *   A future change to the display `overall` curve (rescaling, post-fit
+ *   normalisation, stature-driven pooled curve, etc.) can FLIP a tie
+ *   ordering here, re-order the strategic pick sequence, shift the realism
+ *   landings, and silently invalidate the λ fit basis. The realism gate's
+ *   Wilson bands re-base WITH the landings on re-lock, so they do NOT
+ *   catch the flip.
+ *
+ *   DO NOT change this tiebreak — any pick-flip drifts the locked realism
+ *   landings. The tripwire instead is
+ *   `strategic-pick-canary.golden.test.ts`: it locks the first 5
+ *   strategicAutoDraft pick sequences and turns red the moment a display-
+ *   curve change flips any tie. If the canary trips, a λ re-fit is
+ *   REQUIRED before the realism golden may be re-locked. See
+ *   SIM_CALIBRATION.md › "Decoupling guards".
+ */
 function pickBest(candidates: readonly Scored[]): Scored {
   let best = candidates[0]!;
   for (let i = 1; i < candidates.length; i++) {
