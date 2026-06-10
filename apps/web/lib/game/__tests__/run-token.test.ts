@@ -308,6 +308,59 @@ describe("run-token — season-merge bump: pre-bump token surfaces skew, current
   });
 });
 
+describe("run-token — season-merge bump: immediate-prior prod token (engine-2026.06.08 + wc-perf-3.0.0 + proj-career-2.0.0 + runtime-data-1.0.0) surfaces skew", () => {
+  // The other realistic pre-bump anchor. Until the merit-v2 season merge
+  // landed, the immediate-prior prod shipped engine-2026.06.08 +
+  // wc-perf-3.0.0 historical + proj-career-2.0.0 projected on
+  // runtime-data-1.0.0. A `?run=` link minted by THAT build against the
+  // CURRENT merit-v2 bundle (engine-2026.06.09 + wc-perf-4.2.0 +
+  // proj-career-3.0.0 + runtime-data-1.1.0) must trip the version gate on
+  // EVERY anchor that moved, not just engine_version.
+  const gameData = buildGameDataFromBundles();
+  const origin = buildOriginRecord(gameData);
+
+  const PREV_ENGINE_VERSION = "engine-2026.06.08";
+  const PREV_RATING_VERSION = "wc-perf-3.0.0+proj-career-2.0.0";
+  const PREV_SCHEMA_VERSION = "runtime-data-1.0.0";
+
+  function mintPreBumpToken(): string {
+    const preBumpVersions: RunRecordVersions = {
+      ...gameData.versions,
+      schema_version: PREV_SCHEMA_VERSION,
+      engine_version: PREV_ENGINE_VERSION,
+      rating_version: PREV_RATING_VERSION,
+    };
+    const preBumpRecord: RunRecordV1 = { ...origin, versions: preBumpVersions };
+    return encodeRunToken(preBumpRecord);
+  }
+
+  it("the current build moved past every immediate-prior prod anchor", () => {
+    expect(gameData.versions.engine_version).toBe("engine-2026.06.09");
+    expect(gameData.versions.engine_version).not.toBe(PREV_ENGINE_VERSION);
+    expect(gameData.versions.rating_version).toBe(
+      "wc-perf-4.2.0+proj-career-3.0.0",
+    );
+    expect(gameData.versions.rating_version).not.toBe(PREV_RATING_VERSION);
+    expect(gameData.versions.schema_version).toBe("runtime-data-1.1.0");
+    expect(gameData.versions.schema_version).not.toBe(PREV_SCHEMA_VERSION);
+  });
+
+  it("an immediate-prior prod token trips skew — NOT a silent re-sim", () => {
+    const decoded = decodeRunToken(mintPreBumpToken());
+    expect(decoded).not.toBeNull();
+    expect(decoded!.ev).toBe(PREV_ENGINE_VERSION);
+    expect(decoded!.rv).toBe(PREV_RATING_VERSION);
+    expect(decoded!.sv).toBe(PREV_SCHEMA_VERSION);
+    // The combined-anchor gate is FALSE — results-screen / share-screen render
+    // the "different build" notice instead of reconstructing the draft.
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
+    // Specifically, engine + combined rating + schema all diverge.
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+    expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
+    expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
+  });
+});
+
 describe("run-token — malformed input safety", () => {
   it("returns null for an empty string", () => {
     expect(decodeRunToken("")).toBeNull();
