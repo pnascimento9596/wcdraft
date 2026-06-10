@@ -240,7 +240,7 @@ describe("run-token — honest-state on version skew", () => {
 describe("run-token — season-merge bump: pre-bump token surfaces skew, current replays byte-identical", () => {
   // The real-world regression this guards: a `?run=` link minted by the
   // PREVIOUS shipped build (engine-2026.06.04 + wc-perf-2.0.0) is opened
-  // against THIS build (engine-2026.06.08 + the E-4 wc-perf-3.0.0 ratings).
+  // against THIS build (engine-2026.06.09 + the merit-v2 wc-perf-4.2.0 ratings).
   // The screens (results-screen / share-screen) gate replay on
   // `versionsAgree` and MUST show the "different build" notice instead of
   // silently re-simulating the old picks against the new ratings.
@@ -264,10 +264,10 @@ describe("run-token — season-merge bump: pre-bump token surfaces skew, current
 
   it("the current build is the bumped season-merge build", () => {
     // Pins the bump so a future stamp change is a conscious re-lock.
-    // MV2-10 re-lock: the compact regen carries the MV2 stature-dominant
-    // anchors (wc-perf-4.2.0 + proj-career-3.0.0); engine_version is unchanged
-    // until the MV2-11b λ refit.
-    expect(gameData.versions.engine_version).toBe("engine-2026.06.08");
+    // MV2-11b re-lock: the λ refit against the stature-dominant channels is a
+    // sim-behavior change, so engine_version bumps to engine-2026.06.09 —
+    // pre-bump tokens must trip the version-skew path, never silently re-sim.
+    expect(gameData.versions.engine_version).toBe("engine-2026.06.09");
     expect(gameData.versions.engine_version).toBe(RUNTIME_DATA_MANIFEST.engine_version);
     expect(gameData.versions.rating_version).toContain("wc-perf-4.2.0");
     expect(gameData.versions.rating_version).toContain("proj-career-3.0.0");
@@ -292,7 +292,7 @@ describe("run-token — season-merge bump: pre-bump token surfaces skew, current
 
   it("a current-build token agrees and replays byte-identical (no skew)", () => {
     const decoded = decodeRunToken(encodeRunToken(origin))!;
-    expect(decoded.ev).toBe("engine-2026.06.08");
+    expect(decoded.ev).toBe("engine-2026.06.09");
     expect(versionsAgree(decoded, gameData.versions)).toBe(true);
 
     // Same-build replay is byte-identical end-to-end — the deterministic

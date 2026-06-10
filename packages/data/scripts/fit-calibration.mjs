@@ -52,42 +52,45 @@ const TEAMS = [...SCENARIO_2026_BUNDLE.teams].sort((a, b) =>
 // Coordinate-descent schedule. Each entry: which constant, which grid of
 // candidate values to try while all others are held at the current best.
 //
-// E-3a REFIT (post-D5 tight-band escalation):
-//   - SPREAD: was edge-bound at 4.0 → grid now spreads finer BELOW 4.0
-//     (3.0..4.25) so the optimum is identifiable rather than a boundary.
-//   - MAX: was unidentified (flat across 2.40..3.40 because the clamp
-//     never bound at the previous landing) → grid now reaches DOWN to
-//     2.20 so the ceiling can bind on the most lopsided pairs.
-//   - BASE + MIN + GAMMA_MID: finer / extended grids so goals/match
-//     and margin≥4 can lift toward 2.54 / 4.9% without sacrificing the
-//     symmetric KO-tie boost from λ-DISPERSION below.
-//   - LAMBDA_DISP.OUTER_PROB / A: NEW — the D1 parity-dependent
-//     overdispersion knob. ε ∈ {1−A, 1, 1+A}, mass {p, 1−2p, p}, mean=1
-//     exactly. Required because two-independent-Poisson at the modern-WC
-//     mean (λ_side≈1.27) caps the symmetric tie rate at ≈24.6%, well
-//     short of the 33% KO→ET / 21.4% shootout norms — no pure-Poisson
-//     grid can clear both `mean_goals ≈ 2.54` AND `KO → ET ≈ 33%`.
+// (E-3a grid rationale — SPREAD identifiability, MAX bind, the D1
+// LAMBDA_DISP overdispersion knob and why pure Poisson cannot clear both
+// mean_goals 2.54 and KO→ET 33% — lives in calibration.ts:LAMBDA_DISP and
+// SIM_CALIBRATION.md.)
+//
+// MV2-11b REFIT (merit-v2 stature-dominant channels): the DF/GK stature
+// lift compressed (attack - defResist) and collapsed goal volume (see
+// docs/investigations/mv2-11a-sim-measurement-2026-06-09.md). Grids are
+// re-centered on the COMMITTED E-3a tuple so the descent starts from the
+// shipped engine and climbs back onto the norms under the new channel
+// distribution. BASE extends UP (primary goal-volume lever now that the
+// mean channel edge shrank); SPREAD explores around 6.5 (margin>=4
+// collapsed to 3.63% — watch the D4 elite-ceiling / dominance bands, a
+// hard constraint checked at the winner); GROUP_OUTER_PROB / GROUP_A
+// join the schedule (hand-tuned in E-3a, now load-bearing for the
+// margin>=4 vs group_draw trade and fit jointly).
 const CONSTANT_GRIDS = [
-  { name: "BASE",             bucket: "LAMBDA",      values: [0.95, 1.00, 1.05, 1.10, 1.15, 1.20] },
-  { name: "SPREAD",           bucket: "LAMBDA",      values: [3.75, 4.00, 4.25, 4.50] },
-  { name: "MIN",              bucket: "LAMBDA",      values: [0.55, 0.65, 0.75, 0.85] },
-  { name: "MAX",              bucket: "LAMBDA",      values: [2.80, 3.10, 3.40] },
+  { name: "BASE",             bucket: "LAMBDA",      values: [0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20] },
+  { name: "SPREAD",           bucket: "LAMBDA",      values: [5.50, 6.00, 6.50, 7.00, 7.50, 8.00] },
+  { name: "MIN",              bucket: "LAMBDA",      values: [0.30, 0.40, 0.50, 0.60] },
+  { name: "MAX",              bucket: "LAMBDA",      values: [3.10, 3.40, 3.70] },
   { name: "W_DEF",            bucket: "LAMBDA",      values: [0.60, 0.65, 0.70, 0.75] },
-  { name: "GAMMA_MID",        bucket: "LAMBDA",      values: [0.30, 0.40, 0.50] },
-  { name: "KO_LAMBDA_FACTOR", bucket: "LAMBDA",      values: [0.78, 0.82, 0.85, 0.88, 0.90] },
-  { name: "OUTER_PROB",       bucket: "LAMBDA_DISP", values: [0.16, 0.18, 0.20, 0.22, 0.24] },
-  { name: "A",                bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.55, 0.60, 0.65] },
+  { name: "GAMMA_MID",        bucket: "LAMBDA",      values: [0.40, 0.50, 0.60] },
+  { name: "KO_LAMBDA_FACTOR", bucket: "LAMBDA",      values: [0.78, 0.82, 0.85, 0.88, 0.92] },
+  { name: "OUTER_PROB",       bucket: "LAMBDA_DISP", values: [0.12, 0.16, 0.20, 0.24] },
+  { name: "A",                bucket: "LAMBDA_DISP", values: [0.55, 0.65, 0.75, 0.85] },
+  { name: "GROUP_OUTER_PROB", bucket: "LAMBDA_DISP", values: [0.06, 0.10, 0.14, 0.18] },
+  { name: "GROUP_A",          bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.60, 0.70] },
 ];
 
-// Seed tuple — start at the previously-landed E-3a tuple PLUS a moderate
-// LAMBDA_DISP (mid-grid for both knobs) so the coordinate descent can move
-// off either edge under the new tight-band gradient.
+// Seed tuple — MV2-11b: seed at the COMMITTED E-3a tuple (calibration.ts as shipped) so
+// the seed evaluation reproduces the observed merit-v2 RED landing exactly
+// and every descent step is an audited move away from the shipped engine.
 const SEED_TUPLE = {
   LAMBDA: {
-    SPREAD: 4.00,
-    BASE: 1.05,
-    MIN: 0.65,
-    MAX: 3.10,
+    SPREAD: 6.50,
+    BASE: 0.85,
+    MIN: 0.40,
+    MAX: 3.40,
     W_DEF: 0.70,
     W_GK: 0.30,
     GAMMA_MID: 0.50,
@@ -99,7 +102,9 @@ const SEED_TUPLE = {
   },
   LAMBDA_DISP: {
     OUTER_PROB: 0.20,
-    A: 0.55,
+    A: 0.75,
+    GROUP_OUTER_PROB: 0.10,
+    GROUP_A: 0.50,
   },
 };
 
@@ -116,7 +121,7 @@ const NORM_SCALES = {
 // `realism-modern-norms.golden.test.ts` enforces them.
 const TIGHT_BANDS = {
   goals:   { lo: 2.478,  hi: 2.594  },
-  draw:    { lo: 0.20,   hi: 0.30   }, // looser — only one that survived raw
+  draw:    { lo: 0.2288, hi: 0.2652 }, // MV2-11b: tightened to the COMMITTED golden band so the fit cannot land outside the gate
   margin4: { lo: 0.0412, hi: 0.0570 },
   ko_et:   { lo: 0.2961, hi: 0.3648 },
   ko_so:   { lo: 0.1843, hi: 0.2443 },
