@@ -282,20 +282,25 @@ function DraftAppBar({
         <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Draft</span>
       </div>
-      <div className={s.appBarMeter}>
-        <div className={s.spinCounter}>
-          <span className={s.spinCounterNum}>
-            {spinNumber !== null ? `Spin ${Math.min(spinNumber, TOTAL_SPINS)}` : "—"}
-          </span>
-          <span className={s.spinCounterTotal}>/ {TOTAL_SPINS}</span>
+      {/* No counter until a draft actually exists (formation select /
+          loading / error pass spinNumber=null) — a dash-counter on a
+          screen with no draft reads as broken state. */}
+      {spinNumber !== null ? (
+        <div className={s.appBarMeter}>
+          <div className={s.spinCounter}>
+            <span className={s.spinCounterNum}>
+              Spin {Math.min(spinNumber, TOTAL_SPINS)}
+            </span>
+            <span className={s.spinCounterTotal}>/ {TOTAL_SPINS}</span>
+          </div>
+          <div className={s.spinProgress} aria-hidden="true">
+            <span
+              className={s.spinProgressFill}
+              style={{ width: `${Math.max(0, Math.min(100, progressPct))}%` }}
+            />
+          </div>
         </div>
-        <div className={s.spinProgress} aria-hidden="true">
-          <span
-            className={s.spinProgressFill}
-            style={{ width: `${Math.max(0, Math.min(100, progressPct))}%` }}
-          />
-        </div>
-      </div>
+      ) : null}
       {warning ? (
         <p className={s.persistenceWarn} role="status">
           {warning}
@@ -977,18 +982,26 @@ function DraftBoard({
         </div>
         <div className={s.lockActions}>
           {sel?.kind === "player" && openSlots.length > 0 ? (
-            <button type="button" className="btn btn--ghost" onClick={() => setSheetOpen(true)}>
+            <button
+              type="button"
+              className={`btn btn--ghost ${s.lockSecondary}`}
+              onClick={() => setSheetOpen(true)}
+            >
               Choose slot
             </button>
           ) : null}
           {showReviewCta ? (
-            <button type="button" className="btn btn--primary" onClick={onReview}>
+            <button
+              type="button"
+              className={`btn btn--primary ${s.lockPrimary}`}
+              onClick={onReview}
+            >
               Review XI →
             </button>
           ) : (
             <button
               type="button"
-              className="btn btn--primary"
+              className={`btn btn--primary ${s.lockPrimary}`}
               disabled={!canLock || committing}
               onClick={handleLock}
             >

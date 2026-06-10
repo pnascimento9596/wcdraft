@@ -39,19 +39,21 @@
 import type { FormationVisualSlot } from "./formation-layout";
 
 /**
- * Chip half-width in pitch-percent units. Tuned conservatively for the
- * mobile chip max-width set in `game.module.css` (.squadStage .pitch
- * .slot is max-width ~50px on a ~288-312px pitch, which is ~16-17% wide
- * → half-width ~8-9%). A small buffer (~0.5%) makes sure chip borders /
- * rings never kiss.
+ * Chip half-width in pitch-percent units. EXACT under the container-query
+ * sizing in `game.module.css`: `.squadStage .pitch .slot` is `width: 19cqw`
+ * (19% of the pitch's inline size) → half-width 9.5%. No px clamps remain,
+ * so this holds at every viewport width.
  */
 const CHIP_HALF_W_PCT = 9.5;
 /**
- * Chip half-height in pitch-percent units. Mobile chip is ~32-38px tall
- * on a ~294-318px pitch → ~5.5-6%. Plus padding for ring/border focus
- * states.
+ * Chip half-height in pitch-percent units. EXACT under the container-query
+ * sizing: chip `height: 14cqw` on a pitch with `aspect-ratio: 100 / 94`
+ * → 14 / 0.94 = 14.89% of pitch height → half-height 7.45%. Rounded up a
+ * touch for border/ring breathing room. The old 6.0 UNDERESTIMATED the
+ * rendered chip (content-sized, ~15-16% tall), which is exactly why GK/CB
+ * and ST/CAM stacks still collided at 360-430px.
  */
-const CHIP_HALF_H_PCT = 6.0;
+const CHIP_HALF_H_PCT = 7.5;
 /** Visual breathing room between adjacent chip edges. */
 const CHIP_GAP_PCT = 0.4;
 /**
@@ -62,8 +64,14 @@ const CHIP_GAP_PCT = 0.4;
  * the resolver moved would snap back into overlap on the next render.
  */
 const PITCH_EDGE_INSET_PCT = 0;
-/** Iteration cap; converges in ≤3 passes for all six supported formations. */
-const MAX_PASSES = 6;
+/**
+ * Iteration cap. The averaged-delta scheme separates a residual overlap
+ * geometrically (≈half per pass) when a middle chip is pinned by symmetric
+ * neighbours, so a generous cap is needed to drive dense 3-stacks (5-3-2 /
+ * 3-5-2 midfield diamonds at the taller half-height) below the collision
+ * threshold. Still deterministic and trivially cheap (≤11 chips).
+ */
+const MAX_PASSES = 24;
 
 interface Delta {
   dx: number;
@@ -83,6 +91,15 @@ export function adjustPitchLayoutForRender(
   const halfW = CHIP_HALF_W_PCT;
   const halfH = CHIP_HALF_H_PCT;
   const gap = CHIP_GAP_PCT;
+
+  // Clamp bounds — generous on purpose (PITCH_EDGE_INSET_PCT = 0): chips
+  // may overflow the `.pitchFrame` inset by their half-extents, and the
+  // bound must never be tighter than a canonical position or the clamp
+  // re-creates the overlap the resolver just fixed.
+  const minX = PITCH_EDGE_INSET_PCT + halfW;
+  const maxX = 100 - PITCH_EDGE_INSET_PCT - halfW;
+  const minY = PITCH_EDGE_INSET_PCT + halfH;
+  const maxY = 100 - PITCH_EDGE_INSET_PCT - halfH;
 
   for (let pass = 0; pass < MAX_PASSES; pass++) {
     const deltas: Delta[] = out.map(() => ({ dx: 0, dy: 0, count: 0 }));
@@ -128,24 +145,23 @@ export function adjustPitchLayoutForRender(
     // two neighbours and ends up moving by 0 — the two outer chips
     // absorb the total separation. Mirror pairs (e.g. LCM/RCM at the
     // same y) stay mirrored.
+    //
+    // Clamp INSIDE the pass (not just once at the end): a chip pinned to
+    // the pitch edge (canonical GK at y=91 sits ~1.5% from the bottom
+    // bound) loses its share of the separation to the clamp, and the
+    // NEXT pass must see the clamped position so the remaining overlap
+    // is pushed onto the unpinned neighbour. With an end-only clamp the
+    // GK/CB stack converged to a still-colliding pair.
     for (let i = 0; i < out.length; i++) {
       const d = deltas[i]!;
       if (d.count > 0) {
-        out[i]!.x_pct += d.dx / d.count;
-        out[i]!.y_pct += d.dy / d.count;
+        out[i]!.x_pct = clamp(out[i]!.x_pct + d.dx / d.count, minX, maxX);
+        out[i]!.y_pct = clamp(out[i]!.y_pct + d.dy / d.count, minY, maxY);
       }
     }
   }
 
-  // Clamp to the pitch box. Bounds are intentionally generous (chips
-  // may overflow the `.pitchFrame` inset by half-extents) so canonical
-  // positions like GK at y=91 are NEVER reduced — that would undo the
-  // resolver's separation work and re-create the very overlap we just
-  // fixed.
-  const minX = PITCH_EDGE_INSET_PCT + halfW;
-  const maxX = 100 - PITCH_EDGE_INSET_PCT - halfW;
-  const minY = PITCH_EDGE_INSET_PCT + halfH;
-  const maxY = 100 - PITCH_EDGE_INSET_PCT - halfH;
+  // Final safety clamp (no-op when the per-pass clamp already ran).
   for (const sl of out) {
     sl.x_pct = clamp(sl.x_pct, minX, maxX);
     sl.y_pct = clamp(sl.y_pct, minY, maxY);

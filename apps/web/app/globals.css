@@ -1204,6 +1204,24 @@ main {
   .page-head .lede {
     font-size: 0.95rem;
   }
+  /* Mode select must land BOTH mode cards inside one 390x844 (and
+     360x800) viewport — shave the head so the cards own the screen. */
+  .game-page--mode .page-head {
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.35rem;
+  }
+  .game-page--mode .page-head h1 {
+    font-size: clamp(1.6rem, 6.5vw, 2.2rem);
+  }
+  .game-page--mode .page-head .lede {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+  .game-page--mode .page-head__note {
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
 
   /* Default button compaction - lock bars and game-specific buttons keep
      their own (denser) sizing via the game.module.css overrides. */
