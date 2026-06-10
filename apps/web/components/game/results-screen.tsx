@@ -38,6 +38,7 @@ import {
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
 
+import { MemoryReveal } from "./memory-reveal";
 import s from "./game.module.css";
 
 type Mode =
@@ -332,6 +333,16 @@ function ResultsBody({
           )}
         </div>
       </header>
+
+      {/* ── Memory-mode reveal ────────────────────────────────────────────
+          Hidden-mode runs blind every rating signal through draft + review;
+          the sim has now run, so the full blind set reveals here. This also
+          covers SHARED hidden runs — a `?run=<t1.…>` replay reconstructs the
+          draft (mode rides the token's `md`) and reveals the same way.
+          Classic runs render nothing extra. */}
+      {record.draft.mode === "hidden" ? (
+        <MemoryReveal gameData={gameData} record={record} />
+      ) : null}
 
       {/* ── Narrative ─────────────────────────────────────────────────── */}
       {summary.narrative ? (

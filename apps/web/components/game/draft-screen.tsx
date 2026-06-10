@@ -98,6 +98,11 @@ export function DraftScreen() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
+  // Mode-select threads `?mode=hidden` for a Memory draft; anything else is
+  // classic. Only consulted when CREATING a run — resumed runs carry their
+  // mode on the persisted DraftState.
+  const requestedMode: "classic" | "hidden" =
+    searchParams?.get("mode") === "hidden" ? "hidden" : "classic";
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
@@ -213,6 +218,7 @@ export function DraftScreen() {
     return (
       <FormationSelect
         gameData={mode.gameData}
+        draftMode={requestedMode}
         onLocked={(record, warning) => {
           // Replace URL with new run id; keep history clean.
           router.replace(draftHref(record.run_id));
@@ -290,9 +296,12 @@ function DraftAppBar({
 
 function FormationSelect({
   gameData,
+  draftMode,
   onLocked,
 }: {
   gameData: GameData;
+  /** Run mode for the record being created — `hidden` is Memory mode. */
+  draftMode: "classic" | "hidden";
   onLocked: (record: RunRecordV1, warning: string | null) => void;
 }) {
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
@@ -303,7 +312,7 @@ function FormationSelect({
       setError(null);
       setPending(formation_id);
       try {
-        const created = createNewRunRecord(gameData, { formation_id });
+        const created = createNewRunRecord(gameData, { formation_id, mode: draftMode });
         const warning =
           created.persistence === "volatile" || created.warnings.length > 0
             ? created.warnings.join(" · ") ||
@@ -316,7 +325,7 @@ function FormationSelect({
         setPending(null);
       }
     },
-    [gameData, onLocked],
+    [gameData, draftMode, onLocked],
   );
 
   return (
@@ -330,6 +339,12 @@ function FormationSelect({
             Your shape is committed the moment you lock. 17 spins, one entity per spin — no
             rearranging afterwards.
           </p>
+          {draftMode === "hidden" ? (
+            <p className={s.memoryModeNote} role="note">
+              Memory mode — names, flags and years stay visible; ratings &amp; Synergy numbers
+              hide until you simulate.
+            </p>
+          ) : null}
         </div>
         <div className={s.formationGrid}>
           {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid, blurb }) => (
@@ -404,14 +419,20 @@ function DraftBoard({
   const picked = draft.spins.filter((sp) => sp.status === "picked").length;
   const progressPct = Math.round((picked / TOTAL_SPINS) * 100);
 
+  // Memory (hidden) mode — blind every rating SIGNAL (OVRs, channels, legend
+  // gold, provenance hue, Synergy numerics) on the draft surface. DISPLAY-
+  // ONLY: the engine state, pick/lock flow, and the sim inputs are the real
+  // values; identities, shapes, flags, the spin and synergy LINK LINES stay.
+  const blind = draft.mode === "hidden";
+
   // Adapter views.
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft),
-    [gameData, draft],
+    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind }),
+    [gameData, draft, blind],
   );
   const candidates = useMemo(
-    () => draftCandidateViews(gameData.indexes, draft, spin),
-    [gameData, draft, spin],
+    () => draftCandidateViews(gameData.indexes, draft, spin, { blindRatings: blind }),
+    [gameData, draft, spin, blind],
   );
 
   // Selection / UI state.
@@ -419,7 +440,9 @@ function DraftBoard({
   const [selSlot, setSelSlot] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState<PosFilter>("ALL");
-  const [sortKey, setSortKey] = useState<SortKey>("ovr");
+  // Hidden mode: OVR is blinded, so a rating sort would leak tier order —
+  // default to name and drop the option (see the sort <select> below).
+  const [sortKey, setSortKey] = useState<SortKey>(blind ? "name" : "ovr");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [committing, setCommitting] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
@@ -603,10 +626,12 @@ function DraftBoard({
     });
   }, [spin, draft.spins, gameData.indexes]);
 
-  const revealSynergyOverall = Number.isFinite(baseSynergy.overall) ? baseSynergy.overall : null;
-  const revealSynergyMultiplier = Number.isFinite(baseSynergy.multiplier)
-    ? baseSynergy.multiplier
-    : null;
+  // Hidden mode blinds the spin-stage Synergy numerics too — the props are
+  // already nullable, and null renders the honest "—".
+  const revealSynergyOverall =
+    !blind && Number.isFinite(baseSynergy.overall) ? baseSynergy.overall : null;
+  const revealSynergyMultiplier =
+    !blind && Number.isFinite(baseSynergy.multiplier) ? baseSynergy.multiplier : null;
 
   const spinResultLabel =
     slotReveal !== null ? `${slotReveal.result.nationName} ${slotReveal.result.yearLabel}` : null;
@@ -740,9 +765,15 @@ function DraftBoard({
       >
         <SynergyBar
           result={previewSynergy}
-          delta={sel ? synergyDelta : null}
+          delta={sel && !blind ? synergyDelta : null}
           active={starters.some((sl) => sl.card) || draft.manager_card_id !== null}
+          blind={blind}
         />
+        {blind ? (
+          <p className={s.memoryModeNote} role="note">
+            Memory mode — ratings &amp; Synergy numbers reveal after you simulate.
+          </p>
+        ) : null}
         <div className={s.panelHead}>
           <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
           <span className={`${s.panelMeta} ${s.squadCounter}`}>
@@ -862,7 +893,8 @@ function DraftBoard({
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as SortKey)}
                 >
-                  <option value="ovr">Rating</option>
+                  {/* Hidden mode: rating sort would leak the blinded OVR order. */}
+                  {!blind ? <option value="ovr">Rating</option> : null}
                   <option value="name">Name</option>
                   <option value="pos">Position</option>
                 </select>

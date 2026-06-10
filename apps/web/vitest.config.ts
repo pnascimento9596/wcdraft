@@ -2,8 +2,11 @@ import { defineConfig } from "vitest/config";
 import { fileURLToPath } from "node:url";
 
 // Vitest config for the web layer. Tests target pure adapter modules under
-// `lib/game/__tests__` and `lib/auth/__tests__` — no React rendering, no
-// DOM. We keep the next-aware path aliases working so test imports mirror
+// `lib/game/__tests__` and `lib/auth/__tests__` — no DOM environment.
+// React components are exercised only via `renderToStaticMarkup` string
+// renders (the Memory-mode digit probe). That needs JSX transformed:
+// Next's tsconfig sets `jsx: "preserve"`, so esbuild must override it here.
+// We keep the next-aware path aliases working so test imports mirror
 // what the source files use.
 
 export default defineConfig({
@@ -11,6 +14,9 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./", import.meta.url)),
     },
+  },
+  oxc: {
+    jsx: { runtime: "automatic" },
   },
   test: {
     include: [
