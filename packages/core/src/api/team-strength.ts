@@ -17,10 +17,13 @@
 //  - The multiplier is BOUNDED (see SynergyResult.multiplier comment) — the
 //    aggregator MUST NOT let a high-Synergy weak XI out-aggregate a
 //    low-Synergy superstar XI. The bound is calibrated + locked in WS-B.
-//  - Manager modifier is `null` for runs where no manager has been drafted
-//    yet (or where coverage on `ManagerRating` is insufficient). In that
-//    case the aggregator MUST fall back to a 1.0 multiplier — no implicit
-//    "0" coercion.
+//  - Manager modifier is EXPLICITLY IDENTITY (1.0) for every input —
+//    `null` manager, `null` `ManagerRating.overall`, AND any non-null
+//    rating. `ManagerRating.overall` is display-only (see
+//    `types/manager.ts`); the sim MUST NOT read it. A future sim-legal
+//    manager rating field will replace the identity fold without
+//    re-introducing the display-overall read. Locked by
+//    `manager-modifier-decoupling.guard.test.ts`.
 //
 // SCOPE: signature + per-starter view type only. The folding formula
 // (channel-by-channel weighted mean? max-of-eligibles? something else?) is
@@ -58,8 +61,10 @@ export interface StarterContribution {
  *  - `synergy`   — output of `computeSynergy` for the same XI / formation /
  *    manager triple.
  *  - `manager`   — the drafted manager's `ManagerRating`, or `null` when no
- *    manager has been drafted yet (or `ManagerRating.overall` is null).
- *    `null` MUST be folded as a 1.0 modifier — no implicit zero.
+ *    manager has been drafted yet. CURRENTLY UNUSED: the manager modifier
+ *    is identity (1.0) for every input until a sim-legal manager field is
+ *    defined (see header). The parameter is retained for forward-compat;
+ *    do NOT read `manager.overall` here.
  *
  * OUTPUT: `TeamStrength` — the same shape the sim already consumes.
  *
