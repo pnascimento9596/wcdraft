@@ -150,6 +150,37 @@ async function assertDuplicateRejected(
   void db;
 }
 
+// F-4 U1 — generic rejection probe for CHECK / NOT NULL violations (the
+// leaderboard column-shape guards). Same posture as assertDuplicateRejected:
+// the insert MUST fail, and it must fail for the expected reason.
+async function assertInsertRejected(
+  description: string,
+  insert: () => Promise<unknown>,
+  expectedReason: RegExp,
+): Promise<void> {
+  let actualError: unknown = null;
+  try {
+    await insert();
+  } catch (e) {
+    actualError = e;
+  }
+  if (actualError === null) {
+    throw new Error(
+      `[rollback-check] FATAL: ${description} — INSERT SHOULD have been ` +
+        "rejected but succeeded. A 0004 column constraint is missing or " +
+        "its name drifted from the schema.",
+    );
+  }
+  const msg = String(actualError);
+  if (!expectedReason.test(msg)) {
+    throw new Error(
+      `[rollback-check] FATAL: ${description} — rejection did not match ` +
+        `${expectedReason.toString()}. Error: ${msg.slice(0, 300)}`,
+    );
+  }
+  console.log(`  ✓ ${description}`);
+}
+
 async function main(): Promise<void> {
   await guardEphemeralBranch();
 
@@ -208,14 +239,17 @@ async function main(): Promise<void> {
       "  ✓ saved_runs: NULL-owner rows in DIFFERENT sessions with the same token are allowed",
     );
 
-    // STEP 3 — assert anonymous leaderboard_entries dedupe
-    console.log("[rollback-check] step 3/6 — leaderboard_entries anonymous dedupe");
+    // STEP 3 — assert anonymous leaderboard_entries dedupe + F-4 U1
+    // column-shape probes (0004_f4_leaderboard).
+    console.log(
+      "[rollback-check] step 3/6 — leaderboard_entries anonymous dedupe + 0004 column shape",
+    );
     const lbToken = `rollback-check-lb-token-${Math.floor(performance.now()).toString()}`;
     const lbSeason = "rollback-check-season-001";
     await db.execute(sql`
       INSERT INTO leaderboard_entries
-        (season_key, mode, user_id, token, verified_score)
-      VALUES (${lbSeason}, 'casual', NULL, ${lbToken}, 0)
+        (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback-check', ${lbToken}, 0)
     `);
     await assertDuplicateRejected(
       db,
@@ -223,9 +257,92 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, user_id, token, verified_score)
-          VALUES (${lbSeason}, 'casual', NULL, ${lbToken}, 0)
+            (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback-check', ${lbToken}, 0)
         `),
+    );
+    // NULLS-NOT-DISTINCT × new-column interaction: the dedupe key is still
+    // (season_key, mode, user_id, token) ONLY — a different session_id,
+    // display_name, or draft_mode must NOT open a second row for the same
+    // anon token. (draft_mode is deliberately NOT a dedupe dimension: the
+    // token IS the run, `md` is inside it.)
+    await assertDuplicateRejected(
+      db,
+      "leaderboard_entries: differing session_id/display_name/draft_mode must NOT bypass the anon dedupe",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'hidden', NULL, ${sessionB}, 'other-name', ${lbToken}, 0)
+        `),
+    );
+    // 0004 CHECK probes — every constraint must hold at the DB layer.
+    await assertInsertRejected(
+      "leaderboard_entries: display_name shorter than 3 chars must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', NULL, 'ab', ${`${lbToken}-shortname`}, 0)
+        `),
+      /leaderboard_entries_display_name_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: draft_mode outside (classic|hidden) must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'speedrun', NULL, 'rollback-check', ${`${lbToken}-badmode`}, 0)
+        `),
+      /leaderboard_entries_draft_mode_chk|check constraint/i,
+    );
+    // RANKED IS ACCOUNT-REQUIRED (Lead-Architect ruling) — structural at
+    // BOTH tables: a ranked entry with NULL user and a ranked attempt
+    // without a user must be impossible regardless of application bugs.
+    await assertInsertRejected(
+      "leaderboard_entries: ranked row with NULL user_id must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
+          VALUES (${lbSeason}, 'ranked', 'classic', NULL, 'rollback-check', ${`${lbToken}-ranked`}, 0)
+        `),
+      /leaderboard_entries_ranked_user_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "ranked_attempts: NULL user_id must be rejected (NOT NULL)",
+      () =>
+        db.execute(sql`
+          INSERT INTO ranked_attempts
+            (user_id, session_id, issued_parent_seed, nonce, window_expires_at)
+          VALUES (NULL, ${sessionA}, 'rollback-check-seed', 'rollback-check-nonce', NOW() + INTERVAL '10 minutes')
+        `),
+      /not-null constraint|null value/i,
+    );
+    // ON DELETE SET NULL semantics: board entries are public artifacts that
+    // must SURVIVE session expiry/sweep (unlike cascading operational rows).
+    // sessionB owns no leaderboard rows yet — bind one, delete the session,
+    // assert the row remains with session_id NULL.
+    const setNullToken = `${lbToken}-setnull`;
+    await db.execute(sql`
+      INSERT INTO leaderboard_entries
+        (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionB}, 'rollback-check', ${setNullToken}, 0)
+    `);
+    await db.execute(sql`DELETE FROM sessions WHERE id = ${sessionB}`);
+    const survivors = await db.execute<{ session_id: string | null }>(sql`
+      SELECT session_id FROM leaderboard_entries WHERE token = ${setNullToken}
+    `);
+    if (survivors.rows.length !== 1 || survivors.rows[0]?.session_id !== null) {
+      throw new Error(
+        "[rollback-check] FATAL: leaderboard entry did not survive session " +
+          "deletion with session_id NULL — the FK must be ON DELETE SET NULL " +
+          `(rows=${survivors.rows.length.toString()}, session_id=${String(survivors.rows[0]?.session_id)})`,
+      );
+    }
+    console.log(
+      "  ✓ leaderboard_entries: row survives session deletion with session_id SET NULL",
     );
 
     // CLEANUP — drop the runtime-test rows BEFORE attempting to roll back.

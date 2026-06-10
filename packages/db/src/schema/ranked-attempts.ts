@@ -5,8 +5,13 @@
 // nonce, server secret), stores it with a short window, and rejects any
 // ranked submission whose token's parent_seed does not match.
 //
-// One of `user_id` / `session_id` MUST be set (enforced by F-4 application
-// logic; F-1 leaves both nullable so the column-only scaffold is unambiguous).
+// RANKED IS ACCOUNT-REQUIRED (Lead-Architect ruling, F-4 U1 / migration
+// 0004): server-issued single-use seeds tie to a USER, so `user_id` is
+// NOT NULL — the requirement is structural, not an application check. The
+// F-1 "one of user_id / session_id" convention is superseded. `session_id`
+// stays nullable as an optional record of the issuing session; its
+// ON DELETE CASCADE is acceptable because attempts are short-lived
+// operational rows (window_expires_at), unlike public board entries.
 import { pgTable, text, timestamp, uuid, index } from "drizzle-orm/pg-core";
 import { users } from "./users.ts";
 import { sessions } from "./sessions.ts";
@@ -15,7 +20,9 @@ export const rankedAttempts = pgTable(
   "ranked_attempts",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     sessionId: text("session_id").references(() => sessions.id, {
       onDelete: "cascade",
     }),

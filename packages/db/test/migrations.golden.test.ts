@@ -55,6 +55,16 @@ const summaryDownSql = readFileSync(
   "utf8",
 );
 
+const f4Sql = readFileSync(
+  new URL("../migrations/0004_f4_leaderboard.sql", import.meta.url),
+  "utf8",
+);
+
+const f4DownSql = readFileSync(
+  new URL("../migrations/0004_f4_leaderboard.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(
     new URL("../migrations/meta/_journal.json", import.meta.url),
@@ -63,8 +73,8 @@ const journal = JSON.parse(
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
-  it("journal references the renamed 0000/0001/0002/0003 tags", () => {
-    expect(journal.entries).toHaveLength(4);
+  it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
+    expect(journal.entries).toHaveLength(5);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -73,6 +83,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[2]?.idx).toBe(2);
     expect(journal.entries[3]?.tag).toBe("0003_summary_jsonb");
     expect(journal.entries[3]?.idx).toBe(3);
+    expect(journal.entries[4]?.tag).toBe("0004_f4_leaderboard");
+    expect(journal.entries[4]?.idx).toBe(4);
   });
 
   it.each([
@@ -303,6 +315,134 @@ describe("@wcdraft/db migrations — 0003_summary_jsonb", () => {
     expect(summarySql).not.toMatch(/ALTER TABLE "magic_link_tokens"/);
     expect(summarySql).not.toMatch(/ALTER TABLE "leaderboard_entries"/);
     expect(summarySql).not.toMatch(/ALTER TABLE "ranked_attempts"/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
+  // ── F-4 plan §7 columns ────────────────────────────────────────────────
+  it("adds leaderboard_entries.display_name as NOT NULL text", () => {
+    expect(f4Sql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "display_name" text NOT NULL/,
+    );
+  });
+
+  it("enforces display_name length 3–24 at the DB", () => {
+    expect(f4Sql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_display_name_chk" CHECK \(char_length\("leaderboard_entries"\."display_name"\) BETWEEN 3 AND 24\)/,
+    );
+  });
+
+  it("adds leaderboard_entries.session_id with ON DELETE SET NULL (NOT cascade — board entries survive session sweep)", () => {
+    expect(f4Sql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "session_id" text/,
+    );
+    expect(f4Sql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_session_id_sessions_id_fk" FOREIGN KEY \("session_id"\) REFERENCES "public"\."sessions"\("id"\) ON DELETE set null/,
+    );
+    expect(f4Sql).not.toMatch(
+      /"leaderboard_entries_session_id_sessions_id_fk"[^;]*ON DELETE cascade/,
+    );
+  });
+
+  it("adds leaderboard_entries.draft_mode (classic|hidden) as NOT NULL with CHECK", () => {
+    expect(f4Sql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "draft_mode" text NOT NULL/,
+    );
+    expect(f4Sql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_draft_mode_chk" CHECK \("leaderboard_entries"\."draft_mode" IN \('classic', 'hidden'\)\)/,
+    );
+  });
+
+  it("adds nullable leaderboard_entries.hidden_at (timestamptz) for reversible moderation", () => {
+    expect(f4Sql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "hidden_at" timestamp with time zone/,
+    );
+    expect(f4Sql).not.toMatch(/"hidden_at" timestamp with time zone NOT NULL/);
+  });
+
+  // ── F-4 plan §7 index changes ──────────────────────────────────────────
+  it("replaces the top index with the exact board sort + keyset triple, partial on hidden_at IS NULL", () => {
+    expect(f4Sql).toMatch(/DROP INDEX IF EXISTS "leaderboard_entries_top_idx"/);
+    expect(f4Sql).toMatch(
+      /CREATE INDEX IF NOT EXISTS "leaderboard_entries_top_idx" ON "leaderboard_entries" USING btree \("season_key","mode","verified_score" DESC NULLS LAST,"created_at","id"\) WHERE "leaderboard_entries"\."hidden_at" IS NULL/,
+    );
+  });
+
+  it("adds the partial session_id index for claim UPDATE + my-entry lookup", () => {
+    expect(f4Sql).toMatch(
+      /CREATE INDEX IF NOT EXISTS "leaderboard_entries_session_idx" ON "leaderboard_entries" USING btree \("session_id"\) WHERE "leaderboard_entries"\."session_id" IS NOT NULL/,
+    );
+  });
+
+  // ── Lead-Architect ruling: RANKED IS ACCOUNT-REQUIRED (structural) ─────
+  it("makes ranked_attempts.user_id NOT NULL (server-issued seeds tie to a user)", () => {
+    expect(f4Sql).toMatch(
+      /ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" SET NOT NULL/,
+    );
+  });
+
+  it("forbids ranked leaderboard rows with a NULL user at the DB", () => {
+    expect(f4Sql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_user_chk" CHECK \("leaderboard_entries"\."mode" <> 'ranked' OR "leaderboard_entries"\."user_id" IS NOT NULL\)/,
+    );
+  });
+
+  // ── Invariants that must NOT move ──────────────────────────────────────
+  it("does NOT touch the dedupe constraint (NULLS NOT DISTINCT global dedupe stays; session_id deliberately excluded)", () => {
+    expect(f4Sql).not.toMatch(/leaderboard_entries_dedupe_uq/);
+  });
+
+  it("derive-only seasons: no seasons table, no new tables at all", () => {
+    // (season_key on leaderboard_entries is the derive-only carrier and is
+    // expected in the index DDL; what must NOT exist is a seasons relation.)
+    expect(f4Sql).not.toMatch(/CREATE TABLE/);
+    expect(f4Sql).not.toMatch(/"seasons"/);
+  });
+
+  it("does NOT touch users / sessions / saved_runs / magic_link_tokens / auth_rate_limits", () => {
+    expect(f4Sql).not.toMatch(/ALTER TABLE "users"/);
+    expect(f4Sql).not.toMatch(/ALTER TABLE "sessions"/);
+    expect(f4Sql).not.toMatch(/ALTER TABLE "saved_runs"/);
+    expect(f4Sql).not.toMatch(/ALTER TABLE "magic_link_tokens"/);
+    expect(f4Sql).not.toMatch(/ALTER TABLE "auth_rate_limits"/);
+  });
+
+  // ── Hand-paired down-migration restores the 0003 snapshot shape ────────
+  it("down-migration drops both new indexes before the columns", () => {
+    expect(f4DownSql).toMatch(
+      /DROP INDEX IF EXISTS "leaderboard_entries_session_idx"/,
+    );
+    expect(f4DownSql).toMatch(
+      /DROP INDEX IF EXISTS "leaderboard_entries_top_idx"/,
+    );
+  });
+
+  it("down-migration drops the three CHECKs + FK + four columns", () => {
+    for (const constraint of [
+      "leaderboard_entries_ranked_user_chk",
+      "leaderboard_entries_display_name_chk",
+      "leaderboard_entries_draft_mode_chk",
+      "leaderboard_entries_session_id_sessions_id_fk",
+    ]) {
+      expect(f4DownSql).toContain(`DROP CONSTRAINT IF EXISTS "${constraint}"`);
+    }
+    for (const column of [
+      "hidden_at",
+      "display_name",
+      "session_id",
+      "draft_mode",
+    ]) {
+      expect(f4DownSql).toContain(`DROP COLUMN IF EXISTS "${column}"`);
+    }
+  });
+
+  it("down-migration restores the F-1 top index and nullable ranked_attempts.user_id", () => {
+    expect(f4DownSql).toMatch(
+      /CREATE INDEX IF NOT EXISTS "leaderboard_entries_top_idx"\s+ON "leaderboard_entries" USING btree \("season_key","mode","verified_score"\)/,
+    );
+    expect(f4DownSql).toMatch(
+      /ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" DROP NOT NULL/,
+    );
   });
 });
 
