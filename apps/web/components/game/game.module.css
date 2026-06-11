@@ -312,55 +312,6 @@
   );
   overflow: hidden;
 }
-.pitchLines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.5;
-}
-.pitchHalfway {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.55);
-}
-.pitchCircle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 7rem;
-  height: 7rem;
-  transform: translate(-50%, -50%);
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  border-radius: 50%;
-}
-.pitchBoxTop,
-.pitchBoxBottom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 9rem;
-  height: 2.6rem;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-}
-.pitchBoxTop {
-  top: 0;
-  border-top: none;
-}
-.pitchBoxBottom {
-  bottom: 0;
-  border-bottom: none;
-}
-.pitchRow {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-evenly;
-  gap: 0.5rem;
-}
-
 .slot {
   display: flex;
   flex-direction: column;
@@ -1886,8 +1837,16 @@ button.benchSlot:not(:disabled):hover {
   width: 56px;
   aspect-ratio: 5 / 6;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
-    var(--bg-800);
+    radial-gradient(
+      ellipse at 50% 8%,
+      color-mix(in srgb, var(--teal-deep) 22%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
+      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
+    );
   border: 1px solid var(--line);
   border-radius: var(--r-2);
   overflow: hidden;
@@ -1898,12 +1857,13 @@ button.benchSlot:not(:disabled):hover {
    triangle (its true core line). */
 .miniDot {
   position: absolute;
+  z-index: 1;
   width: 7px;
   height: 7px;
   transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
   border-radius: 999px;
   background: var(--ink-200);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--sh-1);
 }
 
 /* COLOUR by JSON visual band. */
@@ -1943,8 +1903,16 @@ button.benchSlot:not(:disabled):hover {
   position: relative;
   aspect-ratio: 7 / 10;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--teal-deep) 18%, transparent), transparent),
-    var(--bg-800);
+    radial-gradient(
+      ellipse at 50% 8%,
+      color-mix(in srgb, var(--teal-deep) 22%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
+      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
+    );
   border: 1px solid var(--line-2);
   border-radius: var(--r-3);
   overflow: hidden;
@@ -1952,51 +1920,46 @@ button.benchSlot:not(:disabled):hover {
   display: block;
 }
 
-.pitchFrame {
+.pitchMarkings {
   position: absolute;
-  inset: 4%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  border: 1.5px solid var(--pitch-line);
-  border-radius: var(--r-2);
+  z-index: 0;
 }
 
-.pitchFrame .pitchHalfway {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  background: var(--pitch-line);
+.pitchMarkingLine {
+  fill: none;
+  stroke: var(--pitch-line);
+  stroke-width: 1.15;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
-.pitchFrame .pitchCircle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 24%;
-  aspect-ratio: 1;
-  border: 1.5px solid var(--pitch-line);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
+.pitchMarkingTouchline {
+  stroke-width: 1.25;
 }
 
-.pitchFrame .pitchBoxTop,
-.pitchFrame .pitchBoxBottom {
-  position: absolute;
-  left: 20%;
-  width: 60%;
-  height: 12%;
-  border: 1.5px solid var(--pitch-line);
+.pitchMarkingSpot {
+  fill: var(--pitch-line);
 }
 
-.pitchFrame .pitchBoxTop {
-  top: 0;
-  border-top: none;
+.pitchMarkingsFull {
+  opacity: 0.9;
 }
 
-.pitchFrame .pitchBoxBottom {
-  bottom: 0;
-  border-bottom: none;
+.pitchMarkingsMini {
+  opacity: 0.34;
+}
+
+.pitchMarkingsMini .pitchMarkingLine {
+  stroke-width: 0.9;
+}
+
+.pitchMarkingsMini .pitchMarkingDetail {
+  display: none;
 }
 
 /* ── Pitch slots: stabilized placement ─────────────────────────────────────
@@ -2087,13 +2050,13 @@ button.benchSlot:not(:disabled):hover {
   border-left-width: 1.5px;
 }
 .pitch .slot.tier_ideal {
-  box-shadow: inset 3px 0 0 0 #5fbf86;
+  box-shadow: inset 3px 0 0 0 var(--pos-def);
 }
 .pitch .slot.tier_ok {
   box-shadow: inset 3px 0 0 0 var(--pitch-accent-mute);
 }
 .pitch .slot.tier_stretch {
-  box-shadow: inset 3px 0 0 0 #e9b949;
+  box-shadow: inset 3px 0 0 0 var(--gold);
 }
 .pitch .slot.tier_misfit {
   box-shadow: inset 3px 0 0 0 var(--accent);
@@ -2106,8 +2069,8 @@ button.benchSlot:not(:disabled):hover {
 }
 .pitch .slot.tierPreview_ideal {
   box-shadow:
-    0 0 0 2px #5fbf86,
-    inset 3px 0 0 0 #5fbf86;
+    0 0 0 2px var(--pos-def),
+    inset 3px 0 0 0 var(--pos-def);
 }
 .pitch .slot.tierPreview_ok {
   box-shadow:
@@ -2116,8 +2079,8 @@ button.benchSlot:not(:disabled):hover {
 }
 .pitch .slot.tierPreview_stretch {
   box-shadow:
-    0 0 0 2px #e9b949,
-    inset 3px 0 0 0 #e9b949;
+    0 0 0 2px var(--gold),
+    inset 3px 0 0 0 var(--gold);
 }
 .pitch .slot.tierPreview_misfit {
   box-shadow:
@@ -3469,20 +3432,18 @@ button.benchSlot:not(:disabled):hover {
    `--ink-300` flips with the theme, keeping the line visible (but quiet) on
    the light pitch too. */
 .synergyLineIdle {
-  stroke: color-mix(in srgb, var(--ink-300) 22%, transparent);
-  stroke-width: 1;
+  stroke: color-mix(in srgb, var(--ink-200) 30%, transparent);
+  stroke-width: 1.05;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
 /* Emerald link = same-nation, both slots filled (year-agnostic; ENGINE-V2 E-2
-   made synergy nation-only). Token `--ember` carries the locked emerald
-   (#2ecf92 in light, #54e3ab in dark — the brand lock keeps both within the
-   same emerald family). The glow uses the --glow-ember RGB triplet so the halo
-   follows the theme too. */
+   made synergy nation-only). Token `--ember` carries the locked emerald brand
+   hue, and --glow-ember keeps the halo theme-aware. */
 .synergyLineLive {
   stroke: var(--ember);
-  stroke-width: 1.1;
+  stroke-width: 1.25;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 4px rgba(var(--glow-ember), 0.5));
@@ -3514,8 +3475,8 @@ button.benchSlot:not(:disabled):hover {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: #2ecf92;
-  box-shadow: 0 0 6px rgba(46, 207, 146, 0.7);
+  background: var(--ember);
+  box-shadow: 0 0 6px rgba(var(--glow-ember), 0.7);
 }
 
 /* Pitch slots sit above the SVG layer so chips remain interactive. */
@@ -4012,9 +3973,6 @@ button.benchSlot:not(:disabled):hover {
   width: 100%;
   max-width: 312px;
   margin-inline: auto;
-}
-.squadStage .pitch .pitchFrame {
-  inset: 3%;
 }
 .squadStage .pitch .slot {
   width: 19cqw;
@@ -4777,8 +4735,9 @@ button.benchSlot:not(:disabled):hover {
 
 .spinRevealPanelRare,
 .spinStage.spinRare {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent),
-              0 0 28px -8px color-mix(in srgb, var(--gold) 50%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent),
+    0 0 28px -8px color-mix(in srgb, var(--gold) 50%, transparent);
 }
 
 .rareMoment {
@@ -4832,8 +4791,12 @@ button.benchSlot:not(:disabled):hover {
 }
 
 @keyframes rarePulse {
-  from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 25%, transparent); }
-  to   { box-shadow: 0 0 18px 2px color-mix(in srgb, var(--gold) 35%, transparent); }
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 25%, transparent);
+  }
+  to {
+    box-shadow: 0 0 18px 2px color-mix(in srgb, var(--gold) 35%, transparent);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
