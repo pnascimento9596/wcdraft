@@ -83,6 +83,34 @@ describe("createNewRunRecord + token round-trip under a non-default era (DC-2)",
   });
 });
 
+describe("pick-path catalog coherence (DC-2 regression guard)", () => {
+  it("a modern-era draft picked against the UNFILTERED catalog diverges or throws — the UI must use getCatalogForEra", () => {
+    const created = createNewRunRecord(gameData, {
+      formation_id: "4-3-3",
+      mode: "classic",
+      era_preset: "modern",
+    });
+    const right = getCatalogForEra(gameData, "modern");
+    const wrong = gameData.catalog;
+    const draft = created.record.draft;
+    const spin = draft.spins[0]!;
+    const card = spin.rolled_card_ids[0]!;
+    const viaRight = stepDraft(right, draft);
+    // The unfiltered catalog rebuilds pending spins from the FULL pool — the
+    // result must not silently equal the bounded rebuild (or it throws on a
+    // missing pair). Either way: never byte-equal.
+    let divergedOrThrew = false;
+    try {
+      const viaWrong = stepDraft(wrong, draft);
+      divergedOrThrew = JSON.stringify(viaWrong) !== JSON.stringify(viaRight);
+    } catch {
+      divergedOrThrew = true;
+    }
+    expect(divergedOrThrew).toBe(true);
+    void card;
+  });
+});
+
 describe("spin-reveal era label (DC-2 honest copy)", () => {
   const created = createNewRunRecord(gameData, {
     formation_id: "4-3-3",

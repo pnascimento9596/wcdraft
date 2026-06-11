@@ -27,7 +27,7 @@ import {
   managerTournamentFor,
   pitchSlotViews,
 } from "@/lib/game/adapters";
-import { loadGameData, type GameData } from "@/lib/game/data";
+import { getCatalogForEra, loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError, DraftTransitionError } from "@/lib/game/errors";
 import {
   getFormationVisualSlots,
@@ -764,15 +764,18 @@ function DraftBoard({
     setTransitionError(null);
     try {
       let nextDraft: DraftState;
+      // DC-2: picks must run against the SAME era-bounded catalog the draft
+      // was created from — pending-spin rebuilds redraw from this pool.
+      const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
       if (sel.kind === "player") {
         if (!selSlot) {
           setCommitting(false);
           setTransitionError("Pick a slot for this player.");
           return;
         }
-        nextDraft = pickPlayer(gameData.catalog, draft, sel.card.card_id as CardId, selSlot);
+        nextDraft = pickPlayer(catalog, draft, sel.card.card_id as CardId, selSlot);
       } else {
-        nextDraft = pickManager(gameData.catalog, draft);
+        nextDraft = pickManager(catalog, draft);
       }
       const updated: RunRecordV1 = {
         ...record,
