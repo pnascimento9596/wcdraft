@@ -31,8 +31,12 @@ export function buildMenu(opts: { leaderboardEnabled: boolean }): MenuItem[] {
 
 export function SiteHeader({
   leaderboardEnabled = false,
+  buildStamp = "dev",
 }: {
   leaderboardEnabled?: boolean;
+  /** Build identifier (short SHA · date, or "dev") — computed server-side in
+      the root layout from VERCEL_GIT_COMMIT_SHA; see lib/build-stamp.ts. */
+  buildStamp?: string;
 }) {
   const menu = buildMenu({ leaderboardEnabled });
   const [open, setOpen] = useState(false);
@@ -101,7 +105,12 @@ export function SiteHeader({
               </li>
             ))}
           </ul>
-          <div className="mobile-menu__signin"><AccountMenu /></div>
+          <div className="mobile-menu__signin">
+            <AccountMenu />
+          </div>
+          {/* Build stamp — lets a real device be checked against the deploy
+              it should be serving (the SW is cache-first). */}
+          <p className="mobile-menu__footer">build {buildStamp}</p>
         </div>
       </nav>
     </header>

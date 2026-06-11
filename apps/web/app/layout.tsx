@@ -6,6 +6,7 @@ import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
 import { isAuthEnabled } from "../lib/auth/auth-enabled";
 import { isLeaderboardEnabled } from "../lib/leaderboard/enabled";
+import { getBuildStamp } from "../lib/build-stamp";
 import { SiteFooter } from "../components/site-footer";
 import { ServiceWorkerRegister } from "../components/sw-register";
 import "./ds/tokens.css";
@@ -80,7 +81,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               Skip to content
             </a>
             <div className="shell">
-              <SiteHeader leaderboardEnabled={leaderboardEnabled} />
+              <SiteHeader leaderboardEnabled={leaderboardEnabled} buildStamp={getBuildStamp()} />
               <main id="main">{children}</main>
               <SiteFooter />
             </div>

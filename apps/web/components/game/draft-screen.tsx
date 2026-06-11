@@ -757,212 +757,220 @@ function DraftBoard({
   }
 
   return (
-    <div className={s.draftShell}>
+    /* ws-ux/tap-stability-2: the main draft layout is an ANCHORED shell — the
+       document never scrolls (scrolling lives in .draftScroll), so iOS Safari's
+       toolbar never collapses mid-session and the lock bar — a normal-flow
+       bottom row of this 100svh shell, not a viewport-fixed element — cannot
+       move under the user's finger. */
+    <div className={`${s.draftShell} ${s.draftShellAnchored}`} data-draft-anchored>
       <DraftAppBar spinNumber={spinNumber} progressPct={progressPct} warning={persistenceWarning} />
 
-      {/* Spin reveal → now compact context (full reveal lives on the spin stage) */}
-      {complete ? (
-        <section className={`${s.panel} ${s.completePanel}`}>
-          <span className={s.eyebrowAccent}>Draft complete</span>
-          <h2 className={s.panelTitle}>All 17 spins resolved.</h2>
-          <p className={s.completeNote}>
-            Lock-on-pick — nothing else can be rearranged. Step into review for line ratings,
-            Synergy, and your final XI.
-          </p>
-        </section>
-      ) : spinResultLabel && slotReveal ? (
-        <section className={s.nowDrafting} aria-label="Current spin">
-          <SquadHeaderFlag
-            flagSrc={slotReveal.result.flagSrc}
-            nationCode={slotReveal.result.nationCode}
-            nationName={slotReveal.result.nationName}
-          />
-          <div className={s.nowDraftingMain}>
-            <span className={s.nowDraftingPick}>
-              Pick {spinNumber} / {TOTAL_SPINS}
-            </span>
-            <span className={s.nowDraftingResult}>{spinResultLabel}</span>
-          </div>
-          <button type="button" className={s.nowDraftingBack} onClick={() => setPhase("spin")}>
-            ↺ Spin view
-          </button>
-        </section>
-      ) : null}
-
-      {/* Pitch + bench + manager */}
-      <section
-        ref={formationPanelRef}
-        className={`${s.panel} ${s.formationPanel}`}
-        aria-label="Your formation"
-      >
-        <SynergyBar
-          result={previewSynergy}
-          delta={sel && !blind ? synergyDelta : null}
-          active={starters.some((sl) => sl.card) || draft.manager_card_id !== null}
-          blind={blind}
-        />
-        {blind ? (
-          <p className={s.memoryModeNote} role="note">
-            Memory mode — ratings &amp; Synergy numbers reveal after you simulate.
-          </p>
-        ) : null}
-        <div className={s.panelHead}>
-          <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
-          <span className={`${s.panelMeta} ${s.squadCounter}`}>
-            <span className={s.squadCounterCell}>
-              <b>{starters.filter((sl) => sl.card).length}/11</b> XI
-            </span>
-            <span className={s.squadCounterSep} aria-hidden="true">
-              ·
-            </span>
-            <span className={s.squadCounterCell}>
-              <b>{bench.filter((sl) => sl.card).length}/5</b> Bench
-            </span>
-            <span className={s.squadCounterSep} aria-hidden="true">
-              ·
-            </span>
-            <span className={s.squadCounterCell}>
-              <b>{draft.manager_card_id ? "1" : "0"}/1</b> Mgr
-            </span>
-          </span>
-        </div>
-
-        <div className={s.squadStage}>
-          <Pitch
-            formationId={draft.formation_id}
-            starters={starters}
-            interactive={!complete}
-            selectedSlotId={selSlot}
-            previewCompat={previewCompat}
-            linkedPairs={previewSynergy.linked_pairs}
-            onSlotSelect={(id) => {
-              if (sel?.kind !== "player") return;
-              const slot = draft.squad.find((sl) => sl.slot_id === id);
-              if (!slot || slot.card_id !== null) return;
-              setSelSlot(id);
-            }}
-          />
-          <ManagerSlot
-            manager={
-              draft.manager_card_id
-                ? managerCardView(gameData.indexes, draft.manager_card_id)
-                : null
-            }
-            previewManager={sel?.kind === "manager" ? sel.card : null}
-          />
-        </div>
-
-        <div className={s.bench}>
-          <span className={s.benchLabel}>Bench</span>
-          <div className={s.benchSlots}>
-            {bench.map((b) => {
-              const isSel = b.slot_id === selSlot;
-              const pc = previewCompat?.[b.slot_id];
-              const classes = [s.benchSlot];
-              if (b.card) classes.push(s.benchFilled, s.slotLocked);
-              if (isSel) classes.push(s.slotSelected);
-              return (
-                <button
-                  key={b.slot_id}
-                  type="button"
-                  className={classes.join(" ")}
-                  disabled={!!b.card || sel?.kind !== "player"}
-                  onClick={() => setSelSlot(b.slot_id)}
-                  aria-pressed={isSel}
-                >
-                  <span className={s.slotPos}>{b.slot_position}</span>
-                  <span className={s.slotName}>
-                    {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {!validation.has_goalkeeper && fieldable ? (
-        <section className={`${s.panel} ${s.gkWarnPanel}`}>
-          <p className={s.gkWarn} role="status">
-            <span className={s.gkWarnGlyph} aria-hidden="true">
-              !
-            </span>
-            No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal penalty.
-          </p>
-        </section>
-      ) : null}
-
-      {/* Candidates */}
-      {!complete && spin ? (
-        <section id="draft-candidates" className={s.panel} aria-label="Candidates">
-          <div className={s.controls}>
-            <input
-              type="search"
-              className={s.searchInput}
-              placeholder="Search players…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search players"
+      <div className={s.draftScroll}>
+        {/* Spin reveal → now compact context (full reveal lives on the spin stage) */}
+        {complete ? (
+          <section className={`${s.panel} ${s.completePanel}`}>
+            <span className={s.eyebrowAccent}>Draft complete</span>
+            <h2 className={s.panelTitle}>All 17 spins resolved.</h2>
+            <p className={s.completeNote}>
+              Lock-on-pick — nothing else can be rearranged. Step into review for line ratings,
+              Synergy, and your final XI.
+            </p>
+          </section>
+        ) : spinResultLabel && slotReveal ? (
+          <section className={s.nowDrafting} aria-label="Current spin">
+            <SquadHeaderFlag
+              flagSrc={slotReveal.result.flagSrc}
+              nationCode={slotReveal.result.nationCode}
+              nationName={slotReveal.result.nationName}
             />
-            <div className={s.filterRow}>
-              <div className={s.segmented} role="group" aria-label="Filter by position">
-                {POS_FILTERS.map((p) => (
+            <div className={s.nowDraftingMain}>
+              <span className={s.nowDraftingPick}>
+                Pick {spinNumber} / {TOTAL_SPINS}
+              </span>
+              <span className={s.nowDraftingResult}>{spinResultLabel}</span>
+            </div>
+            <button type="button" className={s.nowDraftingBack} onClick={() => setPhase("spin")}>
+              ↺ Spin view
+            </button>
+          </section>
+        ) : null}
+
+        {/* Pitch + bench + manager */}
+        <section
+          ref={formationPanelRef}
+          className={`${s.panel} ${s.formationPanel}`}
+          aria-label="Your formation"
+        >
+          <SynergyBar
+            result={previewSynergy}
+            delta={sel && !blind ? synergyDelta : null}
+            active={starters.some((sl) => sl.card) || draft.manager_card_id !== null}
+            blind={blind}
+          />
+          {blind ? (
+            <p className={s.memoryModeNote} role="note">
+              Memory mode — ratings &amp; Synergy numbers reveal after you simulate.
+            </p>
+          ) : null}
+          <div className={s.panelHead}>
+            <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
+            <span className={`${s.panelMeta} ${s.squadCounter}`}>
+              <span className={s.squadCounterCell}>
+                <b>{starters.filter((sl) => sl.card).length}/11</b> XI
+              </span>
+              <span className={s.squadCounterSep} aria-hidden="true">
+                ·
+              </span>
+              <span className={s.squadCounterCell}>
+                <b>{bench.filter((sl) => sl.card).length}/5</b> Bench
+              </span>
+              <span className={s.squadCounterSep} aria-hidden="true">
+                ·
+              </span>
+              <span className={s.squadCounterCell}>
+                <b>{draft.manager_card_id ? "1" : "0"}/1</b> Mgr
+              </span>
+            </span>
+          </div>
+
+          <div className={s.squadStage}>
+            <Pitch
+              formationId={draft.formation_id}
+              starters={starters}
+              interactive={!complete}
+              selectedSlotId={selSlot}
+              previewCompat={previewCompat}
+              linkedPairs={previewSynergy.linked_pairs}
+              onSlotSelect={(id) => {
+                if (sel?.kind !== "player") return;
+                const slot = draft.squad.find((sl) => sl.slot_id === id);
+                if (!slot || slot.card_id !== null) return;
+                setSelSlot(id);
+              }}
+            />
+            <ManagerSlot
+              manager={
+                draft.manager_card_id
+                  ? managerCardView(gameData.indexes, draft.manager_card_id)
+                  : null
+              }
+              previewManager={sel?.kind === "manager" ? sel.card : null}
+            />
+          </div>
+
+          <div className={s.bench}>
+            <span className={s.benchLabel}>Bench</span>
+            <div className={s.benchSlots}>
+              {bench.map((b) => {
+                const isSel = b.slot_id === selSlot;
+                const pc = previewCompat?.[b.slot_id];
+                const classes = [s.benchSlot];
+                if (b.card) classes.push(s.benchFilled, s.slotLocked);
+                if (isSel) classes.push(s.slotSelected);
+                return (
                   <button
-                    key={p}
+                    key={b.slot_id}
                     type="button"
-                    className={posFilter === p ? s.segActive : s.seg}
-                    aria-pressed={posFilter === p}
-                    onClick={() => setPosFilter(p)}
+                    className={classes.join(" ")}
+                    disabled={!!b.card || sel?.kind !== "player"}
+                    onClick={() => setSelSlot(b.slot_id)}
+                    aria-pressed={isSel}
                   >
-                    {p}
+                    <span className={s.slotPos}>{b.slot_position}</span>
+                    <span className={s.slotName}>
+                      {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
+                    </span>
                   </button>
-                ))}
-              </div>
-              <label className={s.sortLabel}>
-                Sort
-                <select
-                  className={s.sortSelect}
-                  value={sortKey}
-                  onChange={(e) => setSortKey(e.target.value as SortKey)}
-                >
-                  {/* Hidden mode: rating sort would leak the blinded OVR order. */}
-                  {!blind ? <option value="ovr">Rating</option> : null}
-                  <option value="name">Name</option>
-                  <option value="pos">Position</option>
-                </select>
-              </label>
+                );
+              })}
             </div>
           </div>
-
-          {candidates.manager ? (
-            <ManagerCandidate
-              manager={candidates.manager}
-              selected={sel?.kind === "manager"}
-              disabled={draft.manager_card_id !== null}
-              rarePick={spin?.rare === true}
-              onSelect={() => selectManager(candidates.manager!)}
-            />
-          ) : null}
-
-          <div className={s.candList}>
-            {visibleCandidates.map((card) => (
-              <CandidateCard
-                key={card.card_id}
-                card={card}
-                selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
-                disabled={false}
-                rarePick={spin?.rare === true}
-                onSelect={() => selectPlayer(card)}
-              />
-            ))}
-            {visibleCandidates.length === 0 ? (
-              <p className={s.emptyList}>No players match those filters.</p>
-            ) : null}
-          </div>
         </section>
-      ) : null}
 
-      {/* Sticky bottom CTA bar */}
+        {!validation.has_goalkeeper && fieldable ? (
+          <section className={`${s.panel} ${s.gkWarnPanel}`}>
+            <p className={s.gkWarn} role="status">
+              <span className={s.gkWarnGlyph} aria-hidden="true">
+                !
+              </span>
+              No specialist goalkeeper placed yet — the sim will apply an outfielder-in-goal
+              penalty.
+            </p>
+          </section>
+        ) : null}
+
+        {/* Candidates */}
+        {!complete && spin ? (
+          <section id="draft-candidates" className={s.panel} aria-label="Candidates">
+            <div className={s.controls}>
+              <input
+                type="search"
+                className={s.searchInput}
+                placeholder="Search players…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search players"
+              />
+              <div className={s.filterRow}>
+                <div className={s.segmented} role="group" aria-label="Filter by position">
+                  {POS_FILTERS.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className={posFilter === p ? s.segActive : s.seg}
+                      aria-pressed={posFilter === p}
+                      onClick={() => setPosFilter(p)}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                <label className={s.sortLabel}>
+                  Sort
+                  <select
+                    className={s.sortSelect}
+                    value={sortKey}
+                    onChange={(e) => setSortKey(e.target.value as SortKey)}
+                  >
+                    {/* Hidden mode: rating sort would leak the blinded OVR order. */}
+                    {!blind ? <option value="ovr">Rating</option> : null}
+                    <option value="name">Name</option>
+                    <option value="pos">Position</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            {candidates.manager ? (
+              <ManagerCandidate
+                manager={candidates.manager}
+                selected={sel?.kind === "manager"}
+                disabled={draft.manager_card_id !== null}
+                rarePick={spin?.rare === true}
+                onSelect={() => selectManager(candidates.manager!)}
+              />
+            ) : null}
+
+            <div className={s.candList}>
+              {visibleCandidates.map((card) => (
+                <CandidateCard
+                  key={card.card_id}
+                  card={card}
+                  selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
+                  disabled={false}
+                  rarePick={spin?.rare === true}
+                  onSelect={() => selectPlayer(card)}
+                />
+              ))}
+              {visibleCandidates.length === 0 ? (
+                <p className={s.emptyList}>No players match those filters.</p>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+      </div>
+
+      {/* In-shell bottom CTA bar (normal flow — see .lockBar) */}
       <div className={s.lockBar} role="region" aria-label="Pick controls">
         <div className={s.lockInfo}>
           {transitionError ? (

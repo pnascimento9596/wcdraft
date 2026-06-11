@@ -229,6 +229,38 @@ p a:hover {
   min-height: 100dvh;
 }
 
+/* ws-ux/tap-stability-2 — when the anchored draft layout is on screen (the
+   lineup/pick view, the only screen with a bottom action bar), the page
+   column is pinned to exactly 100svh and the document never scrolls:
+   scrolling happens inside the draft shell. iOS Safari's toolbar only
+   collapses on document scroll, so the in-flow lock bar cannot move under a
+   tap. The footer is hidden on this one screen — a fixed-height column would
+   otherwise squeeze the game area by the footer's height; the CC-BY-SA
+   attribution remains on every other route. */
+body:has([data-draft-anchored]) .shell {
+  height: 100svh;
+  min-height: 0;
+}
+body:has([data-draft-anchored]) main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+body:has([data-draft-anchored]) .game-page--draft {
+  /* the .container/.page wrapper between main and the shell must pass the
+     flex height constraint through, and its editorial block padding is
+     dead space in a fixed-height game column */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-block: 0;
+}
+body:has([data-draft-anchored]) .site-footer {
+  display: none;
+}
+
 .container {
   width: 100%;
   max-width: 64rem;
@@ -427,6 +459,14 @@ main {
   font-size: 0.85rem;
   color: var(--accent);
   letter-spacing: 0.05em;
+}
+.mobile-menu__footer {
+  margin: 0.6rem 0.2rem 0.2rem;
+  text-align: center;
+  font-family: var(--f-mono, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
 }
 .mobile-menu__signin {
   margin: 0.85rem 0.2rem 0.4rem;
@@ -981,7 +1021,10 @@ main {
   border-color: rgba(46, 207, 146, 0.45);
   color: var(--ink);
   text-decoration: none;
-  transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+  transition:
+    background 0.14s ease,
+    border-color 0.14s ease,
+    transform 0.14s ease;
 }
 .signin-stub--live:hover {
   background: rgba(46, 207, 146, 0.12);
@@ -1009,7 +1052,7 @@ main {
   padding: 0.5rem 0.95rem;
   border: 1px solid var(--accent);
   border-radius: 999px;
-  background: rgba(46, 207, 146, 0.10);
+  background: rgba(46, 207, 146, 0.1);
   color: var(--ink);
   cursor: pointer;
 }
@@ -1032,8 +1075,12 @@ main {
   animation: account-chip-shimmer 1.4s linear infinite;
 }
 @keyframes account-chip-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Popover */
