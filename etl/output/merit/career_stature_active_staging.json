@@ -12,7 +12,7 @@
         "position_balanced_selection"
       ],
       "identity_space": "historical",
-      "in_2026_squad": false,
+      "in_2026_squad": true,
       "player_id": "P-21531",
       "player_name": "Alisson",
       "positions": [
@@ -62,7 +62,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0050",
+      "player_id": "P-W26-0049",
       "player_name": "Marko Arnautović",
       "positions": [],
       "source_refs": [
@@ -79,7 +79,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0051",
+      "player_id": "P-W26-0050",
       "player_name": "David Alaba",
       "positions": [
         "DF"
@@ -100,7 +100,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0126",
+      "player_id": "P-W26-0115",
       "player_name": "Luiz Henrique",
       "positions": [],
       "source_refs": [
@@ -114,7 +114,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0280",
+      "player_id": "P-W26-0267",
       "player_name": "Florian Wirtz",
       "positions": [
         "MF"
@@ -130,7 +130,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0304",
+      "player_id": "P-W26-0291",
       "player_name": "Duckens Nazon",
       "positions": [],
       "source_refs": [
@@ -144,7 +144,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0305",
+      "player_id": "P-W26-0292",
       "player_name": "Frantzdy Pierrot",
       "positions": [],
       "source_refs": [
@@ -158,7 +158,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0369",
+      "player_id": "P-W26-0356",
       "player_name": "Franck Kessié",
       "positions": [],
       "source_refs": [
@@ -172,7 +172,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0483",
+      "player_id": "P-W26-0470",
       "player_name": "Martin Ødegaard",
       "positions": [
         "MF"
@@ -190,7 +190,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0490",
+      "player_id": "P-W26-0477",
       "player_name": "Erling Haaland",
       "positions": [
         "FW"
@@ -216,7 +216,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0499",
+      "player_id": "P-W26-0486",
       "player_name": "Alberto Quintero",
       "positions": [],
       "source_refs": [
@@ -230,7 +230,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0513",
+      "player_id": "P-W26-0500",
       "player_name": "Adalberto Carrasquilla",
       "positions": [],
       "source_refs": [
@@ -244,7 +244,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0525",
+      "player_id": "P-W26-0512",
       "player_name": "Gustavo Gómez",
       "positions": [
         "DF"
@@ -260,7 +260,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0557",
+      "player_id": "P-W26-0543",
       "player_name": "Pedro Miguel",
       "positions": [],
       "source_refs": [
@@ -275,7 +275,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0588",
+      "player_id": "P-W26-0574",
       "player_name": "Andy Robertson",
       "positions": [
         "DF"
@@ -293,7 +293,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0601",
+      "player_id": "P-W26-0587",
       "player_name": "Scott McTominay",
       "positions": [
         "MF"
@@ -309,7 +309,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0665",
+      "player_id": "P-W26-0651",
       "player_name": "Álex Grimaldo",
       "positions": [
         "DF"
@@ -326,7 +326,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0680",
+      "player_id": "P-W26-0663",
       "player_name": "Lamine Yamal",
       "positions": [
         "FW",
@@ -348,7 +348,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0733",
+      "player_id": "P-W26-0716",
       "player_name": "Hakan Çalhanoğlu",
       "positions": [
         "MF"
@@ -365,7 +365,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0839",
+      "player_id": "P-W26-0822",
       "player_name": "Chancel Mbemba",
       "positions": [],
       "source_refs": [
@@ -379,7 +379,7 @@
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
-      "player_id": "P-W26-0893",
+      "player_id": "P-W26-0876",
       "player_name": "Eldor Shomurodov",
       "positions": [],
       "source_refs": [
@@ -388,44 +388,7 @@
     }
   ],
   "entry_count": 23,
-  "identity_bridge_review": [
-    {
-      "historical_has_active_facts": false,
-      "historical_has_archive_row": true,
-      "historical_name": "Neymar",
-      "historical_player_id": "P-87008",
-      "method": "surname+nation+birth_date",
-      "minted_name": "Neymar",
-      "minted_player_id": "P-W26-0113"
-    },
-    {
-      "historical_has_active_facts": true,
-      "historical_has_archive_row": false,
-      "historical_name": "Alisson",
-      "historical_player_id": "P-21531",
-      "method": "surname+nation+birth_date",
-      "minted_name": "Alisson",
-      "minted_player_id": "P-W26-0115"
-    },
-    {
-      "historical_has_active_facts": false,
-      "historical_has_archive_row": true,
-      "historical_name": "Marquinhos",
-      "historical_player_id": "P-76060",
-      "method": "surname+nation+birth_date",
-      "minted_name": "Marquinhos",
-      "minted_player_id": "P-W26-0119"
-    },
-    {
-      "historical_has_active_facts": false,
-      "historical_has_archive_row": true,
-      "historical_name": "Rodri",
-      "historical_player_id": "P-62341",
-      "method": "surname+nation+birth_date",
-      "minted_name": "Rodri",
-      "minted_player_id": "P-W26-0668"
-    }
-  ],
+  "identity_bridge_review": [],
   "inert": true,
   "note": "Active-career staging entries (MV2-12a). Facts + identity only: no career_stature_score, index, tier or legend is computed — the completed-career composite is the wrong model for an in-progress career. Nothing in the rating stage reads this file; MV2-12b activates the channel explicitly (career-stage-normalized index, full Red chain).",
   "version": "active-career-source-set-1.0.0"

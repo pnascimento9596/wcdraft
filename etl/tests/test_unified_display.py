@@ -189,7 +189,7 @@ def test_spurious_99_cards_display_mid_80s(proj):
     material career stature) now display in the mid-80s on the raw-only path — a
     clear notch below the recognized-greats band, never 99."""
     by = {r["player_id"]: r for r in proj}
-    for pid in ("P-34205", "P-39584", "P-58692", "P-W26-0177"):
+    for pid in ("P-34205", "P-39584", "P-58692", "P-W26-0166"):  # 0177->0166: merit-v3 U0 renumber
         ov = by[pid]["overall"]
         assert 84 <= ov <= 90, (pid, ov)
         assert by[pid]["legend"] is False, pid
