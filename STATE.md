@@ -11,7 +11,10 @@ tasks, typecheck 7/7, lint 4/4, test 7/7). Web count is now 594 passed, 1
 skipped after integrating current `main` plus the versioned run-token
 navigation regression. Compact
 rebuild, token skew, leaderboard canonical-config, era honesty, and golden
-diff gates were re-executed in the fresh season-merge review. Club-at-tournament
+diff gates were re-executed in the fresh season-merge review. merit-v3 U0 also
+measured ETL ruff clean, ETL pytest 199 passed (+17 identity-link tests), 2026
+ingest run-twice byte-identical, and linker-conservatism byte-stability for
+`source_facts.json`/`link_review.json`/`career_stature.json`. Club-at-tournament
 backfill remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
@@ -68,6 +71,15 @@ backfill remains staged for MV2-12b
   the same single skew event. Version matrix: wc-perf-5.0.0 / proj-career-4.0.0 /
   career-stature-3.0.0 / runtime-data-2.0.0 / engine bump. Units U0 (in flight) +
   V1–V8, all DISPATCH-ONLY; acceptance probes pre-registered in plan §7.
+- merit-v3 U0 identity-link fix (this change, RED, on `merit-v3` only): the 17
+  Audit-2 §H.3 seam misses now LINK (2026 linked census 335→352, minted 911→894,
+  minted ids renumbered); 4 staged 12a bridges promoted into the real linker path
+  (`identity_2026.IDENTITY_BRIDGES`, mechanism-agreement-guarded); Neymar-2026
+  88→93 + legend, Rodri-2026 88→90 + legend (both inside plan §7 probe bands);
+  80 further cards +1 single-channel (weight==0 quantile-pool shift, zero
+  negative). `*_2026.json` + merit active staging re-locked ON BRANCH; NO version
+  bumps / compact regen / canary / λ (V6–V8 own those). 5 near-miss identity
+  candidates surfaced for human verification (PR table) — withheld, not linked.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -93,7 +105,7 @@ backfill remains staged for MV2-12b
 | @wcdraft/db `test`                                      | 74 passed                   |
 | @wcdraft/web `test`                                     | 594 passed, 1 skipped (595) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
-| etl `pytest -q`                                         | 182 passed (previous ws-etl/mv212a measurement; draft-config diff does not touch `etl/`) |
+| etl `pytest -q`                                         | 199 passed (+17 identity-link tests, merit-v3 U0) |
 | `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
 
 ## CI (`.github/workflows/`)

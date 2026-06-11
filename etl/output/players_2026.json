@@ -442,19 +442,6 @@
     "primary_position": "DF"
   },
   {
-    "birth_date": "1998-06-07",
-    "common_name": "Devlin",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": "Devlin",
-    "female": false,
-    "full_name": "Cammy Devlin",
-    "given_name": "Cammy",
-    "player_id": "P-W26-0035",
-    "primary_position": "MF"
-  },
-  {
     "birth_date": "1998-07-04",
     "common_name": "Oneill",
     "eligible_positions": [
@@ -464,7 +451,7 @@
     "female": false,
     "full_name": "Aiden O'Neill",
     "given_name": "Aiden",
-    "player_id": "P-W26-0036",
+    "player_id": "P-W26-0035",
     "primary_position": "MF"
   },
   {
@@ -477,7 +464,7 @@
     "female": false,
     "full_name": "Connor Metcalfe",
     "given_name": "Connor",
-    "player_id": "P-W26-0037",
+    "player_id": "P-W26-0036",
     "primary_position": "MF"
   },
   {
@@ -490,7 +477,7 @@
     "female": false,
     "full_name": "Tete Yengi",
     "given_name": "Tete",
-    "player_id": "P-W26-0038",
+    "player_id": "P-W26-0037",
     "primary_position": "FW"
   },
   {
@@ -503,7 +490,7 @@
     "female": false,
     "full_name": "Nishan Velupillay",
     "given_name": "Nishan",
-    "player_id": "P-W26-0039",
+    "player_id": "P-W26-0038",
     "primary_position": "FW"
   },
   {
@@ -516,7 +503,7 @@
     "female": false,
     "full_name": "Kai Trewin",
     "given_name": "Kai",
-    "player_id": "P-W26-0040",
+    "player_id": "P-W26-0039",
     "primary_position": "DF"
   },
   {
@@ -529,7 +516,7 @@
     "female": false,
     "full_name": "Jacob Italiano",
     "given_name": "Jacob",
-    "player_id": "P-W26-0041",
+    "player_id": "P-W26-0040",
     "primary_position": "DF"
   },
   {
@@ -542,7 +529,7 @@
     "female": false,
     "full_name": "Jordan Bos",
     "given_name": "Jordan",
-    "player_id": "P-W26-0042",
+    "player_id": "P-W26-0041",
     "primary_position": "DF"
   },
   {
@@ -555,7 +542,7 @@
     "female": false,
     "full_name": "Patrick Beach",
     "given_name": "Patrick",
-    "player_id": "P-W26-0043",
+    "player_id": "P-W26-0042",
     "primary_position": "GK"
   },
   {
@@ -568,7 +555,7 @@
     "female": false,
     "full_name": "Alessandro Circati",
     "given_name": "Alessandro",
-    "player_id": "P-W26-0044",
+    "player_id": "P-W26-0043",
     "primary_position": "DF"
   },
   {
@@ -581,7 +568,7 @@
     "female": false,
     "full_name": "Cristian Volpato",
     "given_name": "Cristian",
-    "player_id": "P-W26-0045",
+    "player_id": "P-W26-0044",
     "primary_position": "FW"
   },
   {
@@ -594,7 +581,7 @@
     "female": false,
     "full_name": "Mohamed Touré",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0046",
+    "player_id": "P-W26-0045",
     "primary_position": "FW"
   },
   {
@@ -607,7 +594,7 @@
     "female": false,
     "full_name": "Paul Okon-Engstler",
     "given_name": "Paul",
-    "player_id": "P-W26-0047",
+    "player_id": "P-W26-0046",
     "primary_position": "MF"
   },
   {
@@ -620,7 +607,7 @@
     "female": false,
     "full_name": "Nestory Irankunda",
     "given_name": "Nestory",
-    "player_id": "P-W26-0048",
+    "player_id": "P-W26-0047",
     "primary_position": "FW"
   },
   {
@@ -633,7 +620,7 @@
     "female": false,
     "full_name": "Lucas Herrington",
     "given_name": "Lucas",
-    "player_id": "P-W26-0049",
+    "player_id": "P-W26-0048",
     "primary_position": "DF"
   },
   {
@@ -646,7 +633,7 @@
     "female": false,
     "full_name": "Marko Arnautović",
     "given_name": "Marko",
-    "player_id": "P-W26-0050",
+    "player_id": "P-W26-0049",
     "primary_position": "FW"
   },
   {
@@ -659,7 +646,7 @@
     "female": false,
     "full_name": "David Alaba",
     "given_name": "David",
-    "player_id": "P-W26-0051",
+    "player_id": "P-W26-0050",
     "primary_position": "DF"
   },
   {
@@ -672,7 +659,7 @@
     "female": false,
     "full_name": "Phillipp Mwene",
     "given_name": "Phillipp",
-    "player_id": "P-W26-0052",
+    "player_id": "P-W26-0051",
     "primary_position": "DF"
   },
   {
@@ -685,7 +672,7 @@
     "female": false,
     "full_name": "Alessandro Schöpf",
     "given_name": "Alessandro",
-    "player_id": "P-W26-0053",
+    "player_id": "P-W26-0052",
     "primary_position": "MF"
   },
   {
@@ -698,7 +685,7 @@
     "female": false,
     "full_name": "Marcel Sabitzer",
     "given_name": "Marcel",
-    "player_id": "P-W26-0054",
+    "player_id": "P-W26-0053",
     "primary_position": "MF"
   },
   {
@@ -711,7 +698,7 @@
     "female": false,
     "full_name": "Michael Gregoritsch",
     "given_name": "Michael",
-    "player_id": "P-W26-0055",
+    "player_id": "P-W26-0054",
     "primary_position": "FW"
   },
   {
@@ -724,7 +711,7 @@
     "female": false,
     "full_name": "Florian Grillitsch",
     "given_name": "Florian",
-    "player_id": "P-W26-0056",
+    "player_id": "P-W26-0055",
     "primary_position": "MF"
   },
   {
@@ -737,7 +724,7 @@
     "female": false,
     "full_name": "Alexander Schlager",
     "given_name": "Alexander",
-    "player_id": "P-W26-0057",
+    "player_id": "P-W26-0056",
     "primary_position": "GK"
   },
   {
@@ -750,7 +737,7 @@
     "female": false,
     "full_name": "Philipp Lienhart",
     "given_name": "Philipp",
-    "player_id": "P-W26-0058",
+    "player_id": "P-W26-0057",
     "primary_position": "DF"
   },
   {
@@ -763,7 +750,7 @@
     "female": false,
     "full_name": "Patrick Pentz",
     "given_name": "Patrick",
-    "player_id": "P-W26-0059",
+    "player_id": "P-W26-0058",
     "primary_position": "GK"
   },
   {
@@ -776,7 +763,7 @@
     "female": false,
     "full_name": "Stefan Posch",
     "given_name": "Stefan",
-    "player_id": "P-W26-0060",
+    "player_id": "P-W26-0059",
     "primary_position": "DF"
   },
   {
@@ -789,7 +776,7 @@
     "female": false,
     "full_name": "Konrad Laimer",
     "given_name": "Konrad",
-    "player_id": "P-W26-0061",
+    "player_id": "P-W26-0060",
     "primary_position": "MF"
   },
   {
@@ -802,7 +789,7 @@
     "female": false,
     "full_name": "Saša Kalajdžić",
     "given_name": "Sasa",
-    "player_id": "P-W26-0062",
+    "player_id": "P-W26-0061",
     "primary_position": "FW"
   },
   {
@@ -815,7 +802,7 @@
     "female": false,
     "full_name": "Xaver Schlager",
     "given_name": "Xaver",
-    "player_id": "P-W26-0063",
+    "player_id": "P-W26-0062",
     "primary_position": "MF"
   },
   {
@@ -828,7 +815,7 @@
     "female": false,
     "full_name": "Marco Friedl",
     "given_name": "Marco",
-    "player_id": "P-W26-0064",
+    "player_id": "P-W26-0063",
     "primary_position": "DF"
   },
   {
@@ -841,7 +828,7 @@
     "female": false,
     "full_name": "Kevin Danso",
     "given_name": "Kevin",
-    "player_id": "P-W26-0065",
+    "player_id": "P-W26-0064",
     "primary_position": "DF"
   },
   {
@@ -854,7 +841,7 @@
     "female": false,
     "full_name": "Michael Svoboda",
     "given_name": "Michael",
-    "player_id": "P-W26-0066",
+    "player_id": "P-W26-0065",
     "primary_position": "DF"
   },
   {
@@ -867,7 +854,7 @@
     "female": false,
     "full_name": "Romano Schmid",
     "given_name": "Romano",
-    "player_id": "P-W26-0067",
+    "player_id": "P-W26-0066",
     "primary_position": "MF"
   },
   {
@@ -880,7 +867,7 @@
     "female": false,
     "full_name": "David Affengruber",
     "given_name": "David",
-    "player_id": "P-W26-0068",
+    "player_id": "P-W26-0067",
     "primary_position": "DF"
   },
   {
@@ -893,7 +880,7 @@
     "female": false,
     "full_name": "Florian Wiegele",
     "given_name": "Florian",
-    "player_id": "P-W26-0069",
+    "player_id": "P-W26-0068",
     "primary_position": "GK"
   },
   {
@@ -906,7 +893,7 @@
     "female": false,
     "full_name": "Nicolas Seiwald",
     "given_name": "Nicolas",
-    "player_id": "P-W26-0070",
+    "player_id": "P-W26-0069",
     "primary_position": "MF"
   },
   {
@@ -919,7 +906,7 @@
     "female": false,
     "full_name": "Alexander Prass",
     "given_name": "Alexander",
-    "player_id": "P-W26-0071",
+    "player_id": "P-W26-0070",
     "primary_position": "MF"
   },
   {
@@ -932,7 +919,7 @@
     "female": false,
     "full_name": "Patrick Wimmer",
     "given_name": "Patrick",
-    "player_id": "P-W26-0072",
+    "player_id": "P-W26-0071",
     "primary_position": "FW"
   },
   {
@@ -945,7 +932,7 @@
     "female": false,
     "full_name": "Carney Chukwuemeka",
     "given_name": "Carney",
-    "player_id": "P-W26-0073",
+    "player_id": "P-W26-0072",
     "primary_position": "MF"
   },
   {
@@ -958,7 +945,7 @@
     "female": false,
     "full_name": "Paul Wanner",
     "given_name": "Paul",
-    "player_id": "P-W26-0074",
+    "player_id": "P-W26-0073",
     "primary_position": "MF"
   },
   {
@@ -971,7 +958,7 @@
     "female": false,
     "full_name": "Brandon Mechele",
     "given_name": "Brandon",
-    "player_id": "P-W26-0075",
+    "player_id": "P-W26-0074",
     "primary_position": "DF"
   },
   {
@@ -984,7 +971,7 @@
     "female": false,
     "full_name": "Dodi Lukébakio",
     "given_name": "Dodi",
-    "player_id": "P-W26-0076",
+    "player_id": "P-W26-0075",
     "primary_position": "FW"
   },
   {
@@ -997,7 +984,7 @@
     "female": false,
     "full_name": "Alexis Saelemaekers",
     "given_name": "Alexis",
-    "player_id": "P-W26-0077",
+    "player_id": "P-W26-0076",
     "primary_position": "MF"
   },
   {
@@ -1010,7 +997,7 @@
     "female": false,
     "full_name": "Maxim De Cuyper",
     "given_name": "Maxim",
-    "player_id": "P-W26-0078",
+    "player_id": "P-W26-0077",
     "primary_position": "DF"
   },
   {
@@ -1023,7 +1010,7 @@
     "female": false,
     "full_name": "Nicolas Raskin",
     "given_name": "Nicolas",
-    "player_id": "P-W26-0079",
+    "player_id": "P-W26-0078",
     "primary_position": "MF"
   },
   {
@@ -1036,7 +1023,7 @@
     "female": false,
     "full_name": "Koni De Winter",
     "given_name": "Koni",
-    "player_id": "P-W26-0080",
+    "player_id": "P-W26-0079",
     "primary_position": "DF"
   },
   {
@@ -1049,7 +1036,7 @@
     "female": false,
     "full_name": "Senne Lammens",
     "given_name": "Senne",
-    "player_id": "P-W26-0081",
+    "player_id": "P-W26-0080",
     "primary_position": "GK"
   },
   {
@@ -1062,7 +1049,7 @@
     "female": false,
     "full_name": "Nathan Ngoy",
     "given_name": "Nathan",
-    "player_id": "P-W26-0082",
+    "player_id": "P-W26-0081",
     "primary_position": "DF"
   },
   {
@@ -1075,7 +1062,7 @@
     "female": false,
     "full_name": "Diego Moreira",
     "given_name": "Diego",
-    "player_id": "P-W26-0083",
+    "player_id": "P-W26-0082",
     "primary_position": "MF"
   },
   {
@@ -1088,7 +1075,7 @@
     "female": false,
     "full_name": "Matias Fernandez-Pardo",
     "given_name": "Matias",
-    "player_id": "P-W26-0084",
+    "player_id": "P-W26-0083",
     "primary_position": "FW"
   },
   {
@@ -1101,7 +1088,7 @@
     "female": false,
     "full_name": "Joaquin Seys",
     "given_name": "Joaquin",
-    "player_id": "P-W26-0085",
+    "player_id": "P-W26-0084",
     "primary_position": "DF"
   },
   {
@@ -1114,7 +1101,7 @@
     "female": false,
     "full_name": "Mike Penders",
     "given_name": "Mike",
-    "player_id": "P-W26-0086",
+    "player_id": "P-W26-0085",
     "primary_position": "GK"
   },
   {
@@ -1127,7 +1114,7 @@
     "female": false,
     "full_name": "Haris Tabaković",
     "given_name": "Haris",
-    "player_id": "P-W26-0087",
+    "player_id": "P-W26-0086",
     "primary_position": "FW"
   },
   {
@@ -1140,7 +1127,7 @@
     "female": false,
     "full_name": "Nikola Vasilj",
     "given_name": "Nikola",
-    "player_id": "P-W26-0088",
+    "player_id": "P-W26-0087",
     "primary_position": "GK"
   },
   {
@@ -1153,7 +1140,7 @@
     "female": false,
     "full_name": "Ivan Šunjić",
     "given_name": "Ivan",
-    "player_id": "P-W26-0089",
+    "player_id": "P-W26-0088",
     "primary_position": "MF"
   },
   {
@@ -1166,7 +1153,7 @@
     "female": false,
     "full_name": "Nikola Katić",
     "given_name": "Nikola",
-    "player_id": "P-W26-0090",
+    "player_id": "P-W26-0089",
     "primary_position": "DF"
   },
   {
@@ -1179,7 +1166,7 @@
     "female": false,
     "full_name": "Amir Hadžiahmetović",
     "given_name": "Amir",
-    "player_id": "P-W26-0091",
+    "player_id": "P-W26-0090",
     "primary_position": "MF"
   },
   {
@@ -1192,7 +1179,7 @@
     "female": false,
     "full_name": "Stjepan Radeljić",
     "given_name": "Stjepan",
-    "player_id": "P-W26-0092",
+    "player_id": "P-W26-0091",
     "primary_position": "DF"
   },
   {
@@ -1205,7 +1192,7 @@
     "female": false,
     "full_name": "Ermedin Demirović",
     "given_name": "Ermedin",
-    "player_id": "P-W26-0093",
+    "player_id": "P-W26-0092",
     "primary_position": "FW"
   },
   {
@@ -1218,7 +1205,7 @@
     "female": false,
     "full_name": "Nihad Mujakić",
     "given_name": "Nihad",
-    "player_id": "P-W26-0094",
+    "player_id": "P-W26-0093",
     "primary_position": "DF"
   },
   {
@@ -1231,7 +1218,7 @@
     "female": false,
     "full_name": "Dženis Burnić",
     "given_name": "Dzenis",
-    "player_id": "P-W26-0095",
+    "player_id": "P-W26-0094",
     "primary_position": "MF"
   },
   {
@@ -1244,7 +1231,7 @@
     "female": false,
     "full_name": "Dennis Hadžikadunić",
     "given_name": "Dennis",
-    "player_id": "P-W26-0096",
+    "player_id": "P-W26-0095",
     "primary_position": "DF"
   },
   {
@@ -1257,7 +1244,7 @@
     "female": false,
     "full_name": "Martin Zlomislić",
     "given_name": "Martin",
-    "player_id": "P-W26-0097",
+    "player_id": "P-W26-0096",
     "primary_position": "GK"
   },
   {
@@ -1270,7 +1257,7 @@
     "female": false,
     "full_name": "Jovo Lukić",
     "given_name": "Jovo",
-    "player_id": "P-W26-0098",
+    "player_id": "P-W26-0097",
     "primary_position": "FW"
   },
   {
@@ -1283,7 +1270,7 @@
     "female": false,
     "full_name": "Amar Memić",
     "given_name": "Amar",
-    "player_id": "P-W26-0099",
+    "player_id": "P-W26-0098",
     "primary_position": "MF"
   },
   {
@@ -1296,7 +1283,7 @@
     "female": false,
     "full_name": "Armin Gigović",
     "given_name": "Armin",
-    "player_id": "P-W26-0100",
+    "player_id": "P-W26-0099",
     "primary_position": "MF"
   },
   {
@@ -1309,7 +1296,7 @@
     "female": false,
     "full_name": "Ivan Bašić",
     "given_name": "Ivan",
-    "player_id": "P-W26-0101",
+    "player_id": "P-W26-0100",
     "primary_position": "MF"
   },
   {
@@ -1322,7 +1309,7 @@
     "female": false,
     "full_name": "Amar Dedić",
     "given_name": "Amar",
-    "player_id": "P-W26-0102",
+    "player_id": "P-W26-0101",
     "primary_position": "DF"
   },
   {
@@ -1335,7 +1322,7 @@
     "female": false,
     "full_name": "Tarik Muharemović",
     "given_name": "Tarik",
-    "player_id": "P-W26-0103",
+    "player_id": "P-W26-0102",
     "primary_position": "DF"
   },
   {
@@ -1348,7 +1335,7 @@
     "female": false,
     "full_name": "Benjamin Tahirović",
     "given_name": "Benjamin",
-    "player_id": "P-W26-0104",
+    "player_id": "P-W26-0103",
     "primary_position": "MF"
   },
   {
@@ -1361,7 +1348,7 @@
     "female": false,
     "full_name": "Samed Baždar",
     "given_name": "Samed",
-    "player_id": "P-W26-0105",
+    "player_id": "P-W26-0104",
     "primary_position": "FW"
   },
   {
@@ -1374,7 +1361,7 @@
     "female": false,
     "full_name": "Esmir Bajraktarević",
     "given_name": "Esmir",
-    "player_id": "P-W26-0106",
+    "player_id": "P-W26-0105",
     "primary_position": "FW"
   },
   {
@@ -1387,7 +1374,7 @@
     "female": false,
     "full_name": "Ermin Mahmić",
     "given_name": "Ermin",
-    "player_id": "P-W26-0107",
+    "player_id": "P-W26-0106",
     "primary_position": "MF"
   },
   {
@@ -1400,7 +1387,7 @@
     "female": false,
     "full_name": "Nidal Čelik",
     "given_name": "Nidal",
-    "player_id": "P-W26-0108",
+    "player_id": "P-W26-0107",
     "primary_position": "DF"
   },
   {
@@ -1413,7 +1400,7 @@
     "female": false,
     "full_name": "Kerim Alajbegović",
     "given_name": "Kerim",
-    "player_id": "P-W26-0109",
+    "player_id": "P-W26-0108",
     "primary_position": "FW"
   },
   {
@@ -1426,99 +1413,8 @@
     "female": false,
     "full_name": "Mladen Jurkas",
     "given_name": "Mladen",
-    "player_id": "P-W26-0110",
+    "player_id": "P-W26-0109",
     "primary_position": "GK"
-  },
-  {
-    "birth_date": "1987-12-13",
-    "common_name": "Weverton",
-    "eligible_positions": [
-      "GK"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Weverton",
-    "given_name": null,
-    "player_id": "P-W26-0111",
-    "primary_position": "GK"
-  },
-  {
-    "birth_date": "1991-07-15",
-    "common_name": "Danilo Luiz",
-    "eligible_positions": [
-      "DF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Danilo Luiz",
-    "given_name": null,
-    "player_id": "P-W26-0112",
-    "primary_position": "DF"
-  },
-  {
-    "birth_date": "1992-02-05",
-    "common_name": "Neymar",
-    "eligible_positions": [
-      "FW"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Neymar",
-    "given_name": null,
-    "player_id": "P-W26-0113",
-    "primary_position": "FW"
-  },
-  {
-    "birth_date": "1992-02-23",
-    "common_name": "Casemiro",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Casemiro",
-    "given_name": null,
-    "player_id": "P-W26-0114",
-    "primary_position": "MF"
-  },
-  {
-    "birth_date": "1992-10-02",
-    "common_name": "Alisson",
-    "eligible_positions": [
-      "GK"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Alisson",
-    "given_name": null,
-    "player_id": "P-W26-0115",
-    "primary_position": "GK"
-  },
-  {
-    "birth_date": "1993-08-17",
-    "common_name": "Ederson",
-    "eligible_positions": [
-      "GK"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Ederson",
-    "given_name": null,
-    "player_id": "P-W26-0116",
-    "primary_position": "GK"
-  },
-  {
-    "birth_date": "1993-10-23",
-    "common_name": "Fabinho",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Fabinho",
-    "given_name": null,
-    "player_id": "P-W26-0117",
-    "primary_position": "MF"
   },
   {
     "birth_date": "1994-03-22",
@@ -1530,20 +1426,7 @@
     "female": false,
     "full_name": "Douglas Santos",
     "given_name": "Douglas",
-    "player_id": "P-W26-0118",
-    "primary_position": "DF"
-  },
-  {
-    "birth_date": "1994-05-14",
-    "common_name": "Marquinhos",
-    "eligible_positions": [
-      "DF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Marquinhos",
-    "given_name": null,
-    "player_id": "P-W26-0119",
+    "player_id": "P-W26-0110",
     "primary_position": "DF"
   },
   {
@@ -1556,33 +1439,7 @@
     "female": false,
     "full_name": "Léo Pereira",
     "given_name": "Leo",
-    "player_id": "P-W26-0120",
-    "primary_position": "DF"
-  },
-  {
-    "birth_date": "1996-12-14",
-    "common_name": "Raphinha",
-    "eligible_positions": [
-      "FW"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Raphinha",
-    "given_name": null,
-    "player_id": "P-W26-0121",
-    "primary_position": "FW"
-  },
-  {
-    "birth_date": "1997-03-18",
-    "common_name": "Bremer",
-    "eligible_positions": [
-      "DF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Bremer",
-    "given_name": null,
-    "player_id": "P-W26-0122",
+    "player_id": "P-W26-0111",
     "primary_position": "DF"
   },
   {
@@ -1595,7 +1452,7 @@
     "female": false,
     "full_name": "Gabriel Magalhães",
     "given_name": "Gabriel",
-    "player_id": "P-W26-0123",
+    "player_id": "P-W26-0112",
     "primary_position": "DF"
   },
   {
@@ -1608,7 +1465,7 @@
     "female": false,
     "full_name": "Roger Ibañez",
     "given_name": "Roger",
-    "player_id": "P-W26-0124",
+    "player_id": "P-W26-0113",
     "primary_position": "DF"
   },
   {
@@ -1621,7 +1478,7 @@
     "female": false,
     "full_name": "Matheus Cunha",
     "given_name": "Matheus",
-    "player_id": "P-W26-0125",
+    "player_id": "P-W26-0114",
     "primary_position": "FW"
   },
   {
@@ -1634,7 +1491,7 @@
     "female": false,
     "full_name": "Luiz Henrique",
     "given_name": null,
-    "player_id": "P-W26-0126",
+    "player_id": "P-W26-0115",
     "primary_position": "FW"
   },
   {
@@ -1647,7 +1504,7 @@
     "female": false,
     "full_name": "Danilo Santos",
     "given_name": "Danilo",
-    "player_id": "P-W26-0127",
+    "player_id": "P-W26-0116",
     "primary_position": "MF"
   },
   {
@@ -1660,7 +1517,7 @@
     "female": false,
     "full_name": "Igor Thiago",
     "given_name": null,
-    "player_id": "P-W26-0128",
+    "player_id": "P-W26-0117",
     "primary_position": "FW"
   },
   {
@@ -1673,7 +1530,7 @@
     "female": false,
     "full_name": "Wesley",
     "given_name": null,
-    "player_id": "P-W26-0129",
+    "player_id": "P-W26-0118",
     "primary_position": "DF"
   },
   {
@@ -1686,7 +1543,7 @@
     "female": false,
     "full_name": "Endrick",
     "given_name": null,
-    "player_id": "P-W26-0130",
+    "player_id": "P-W26-0119",
     "primary_position": "FW"
   },
   {
@@ -1699,7 +1556,7 @@
     "female": false,
     "full_name": "Rayan",
     "given_name": null,
-    "player_id": "P-W26-0131",
+    "player_id": "P-W26-0120",
     "primary_position": "FW"
   },
   {
@@ -1712,7 +1569,7 @@
     "female": false,
     "full_name": "Maxime Crépeau",
     "given_name": "Maxime",
-    "player_id": "P-W26-0132",
+    "player_id": "P-W26-0121",
     "primary_position": "GK"
   },
   {
@@ -1725,7 +1582,7 @@
     "female": false,
     "full_name": "Alfie Jones",
     "given_name": "Alfie",
-    "player_id": "P-W26-0133",
+    "player_id": "P-W26-0122",
     "primary_position": "DF"
   },
   {
@@ -1738,7 +1595,7 @@
     "female": false,
     "full_name": "Mathieu Choinière",
     "given_name": "Mathieu",
-    "player_id": "P-W26-0134",
+    "player_id": "P-W26-0123",
     "primary_position": "MF"
   },
   {
@@ -1751,7 +1608,7 @@
     "female": false,
     "full_name": "Jacob Shaffelburg",
     "given_name": "Jacob",
-    "player_id": "P-W26-0135",
+    "player_id": "P-W26-0124",
     "primary_position": "MF"
   },
   {
@@ -1764,7 +1621,7 @@
     "female": false,
     "full_name": "Moïse Bombito",
     "given_name": "Moise",
-    "player_id": "P-W26-0136",
+    "player_id": "P-W26-0125",
     "primary_position": "DF"
   },
   {
@@ -1777,7 +1634,7 @@
     "female": false,
     "full_name": "Tani Oluwaseyi",
     "given_name": "Tani",
-    "player_id": "P-W26-0137",
+    "player_id": "P-W26-0126",
     "primary_position": "FW"
   },
   {
@@ -1790,7 +1647,7 @@
     "female": false,
     "full_name": "Ali Ahmed",
     "given_name": "Ali",
-    "player_id": "P-W26-0138",
+    "player_id": "P-W26-0127",
     "primary_position": "FW"
   },
   {
@@ -1803,7 +1660,7 @@
     "female": false,
     "full_name": "Promise David",
     "given_name": "Promise",
-    "player_id": "P-W26-0139",
+    "player_id": "P-W26-0128",
     "primary_position": "FW"
   },
   {
@@ -1816,7 +1673,7 @@
     "female": false,
     "full_name": "Niko Sigur",
     "given_name": "Niko",
-    "player_id": "P-W26-0140",
+    "player_id": "P-W26-0129",
     "primary_position": "DF"
   },
   {
@@ -1829,7 +1686,7 @@
     "female": false,
     "full_name": "Owen Goodman",
     "given_name": "Owen",
-    "player_id": "P-W26-0141",
+    "player_id": "P-W26-0130",
     "primary_position": "GK"
   },
   {
@@ -1842,7 +1699,7 @@
     "female": false,
     "full_name": "Nathan Saliba",
     "given_name": "Nathan",
-    "player_id": "P-W26-0142",
+    "player_id": "P-W26-0131",
     "primary_position": "MF"
   },
   {
@@ -1855,7 +1712,7 @@
     "female": false,
     "full_name": "Luc de Fougerolles",
     "given_name": "Luc de",
-    "player_id": "P-W26-0143",
+    "player_id": "P-W26-0132",
     "primary_position": "DF"
   },
   {
@@ -1868,7 +1725,7 @@
     "female": false,
     "full_name": "Jhon Córdoba",
     "given_name": "Jhon",
-    "player_id": "P-W26-0144",
+    "player_id": "P-W26-0133",
     "primary_position": "FW"
   },
   {
@@ -1881,7 +1738,7 @@
     "female": false,
     "full_name": "Deiver Machado",
     "given_name": "Deiver",
-    "player_id": "P-W26-0145",
+    "player_id": "P-W26-0134",
     "primary_position": "DF"
   },
   {
@@ -1894,7 +1751,7 @@
     "female": false,
     "full_name": "Álvaro Montero",
     "given_name": "Alvaro",
-    "player_id": "P-W26-0146",
+    "player_id": "P-W26-0135",
     "primary_position": "GK"
   },
   {
@@ -1907,7 +1764,7 @@
     "female": false,
     "full_name": "Daniel Muñoz",
     "given_name": "Daniel",
-    "player_id": "P-W26-0147",
+    "player_id": "P-W26-0136",
     "primary_position": "DF"
   },
   {
@@ -1920,7 +1777,7 @@
     "female": false,
     "full_name": "Luis Díaz",
     "given_name": "Luis",
-    "player_id": "P-W26-0148",
+    "player_id": "P-W26-0137",
     "primary_position": "FW"
   },
   {
@@ -1933,7 +1790,7 @@
     "female": false,
     "full_name": "Jhon Arias",
     "given_name": "Jhon",
-    "player_id": "P-W26-0149",
+    "player_id": "P-W26-0138",
     "primary_position": "MF"
   },
   {
@@ -1946,7 +1803,7 @@
     "female": false,
     "full_name": "Luis Suárez",
     "given_name": "Luis",
-    "player_id": "P-W26-0150",
+    "player_id": "P-W26-0139",
     "primary_position": "FW"
   },
   {
@@ -1959,7 +1816,7 @@
     "female": false,
     "full_name": "Willer Ditta",
     "given_name": "Willer",
-    "player_id": "P-W26-0151",
+    "player_id": "P-W26-0140",
     "primary_position": "DF"
   },
   {
@@ -1972,7 +1829,7 @@
     "female": false,
     "full_name": "Jorge Carrascal",
     "given_name": "Jorge",
-    "player_id": "P-W26-0152",
+    "player_id": "P-W26-0141",
     "primary_position": "MF"
   },
   {
@@ -1985,7 +1842,7 @@
     "female": false,
     "full_name": "Jhon Lucumí",
     "given_name": "Jhon",
-    "player_id": "P-W26-0153",
+    "player_id": "P-W26-0142",
     "primary_position": "DF"
   },
   {
@@ -1998,7 +1855,7 @@
     "female": false,
     "full_name": "Juan Portilla",
     "given_name": "Juan",
-    "player_id": "P-W26-0154",
+    "player_id": "P-W26-0143",
     "primary_position": "MF"
   },
   {
@@ -2011,7 +1868,7 @@
     "female": false,
     "full_name": "Cucho Hernández",
     "given_name": "Cucho",
-    "player_id": "P-W26-0155",
+    "player_id": "P-W26-0144",
     "primary_position": "FW"
   },
   {
@@ -2024,7 +1881,7 @@
     "female": false,
     "full_name": "Jaminton Campaz",
     "given_name": "Jaminton",
-    "player_id": "P-W26-0156",
+    "player_id": "P-W26-0145",
     "primary_position": "FW"
   },
   {
@@ -2037,7 +1894,7 @@
     "female": false,
     "full_name": "Richard Ríos",
     "given_name": "Richard",
-    "player_id": "P-W26-0157",
+    "player_id": "P-W26-0146",
     "primary_position": "MF"
   },
   {
@@ -2050,7 +1907,7 @@
     "female": false,
     "full_name": "Kevin Castaño",
     "given_name": "Kevin",
-    "player_id": "P-W26-0158",
+    "player_id": "P-W26-0147",
     "primary_position": "MF"
   },
   {
@@ -2063,7 +1920,7 @@
     "female": false,
     "full_name": "Andrés Gómez",
     "given_name": "Andres",
-    "player_id": "P-W26-0159",
+    "player_id": "P-W26-0148",
     "primary_position": "FW"
   },
   {
@@ -2076,7 +1933,7 @@
     "female": false,
     "full_name": "Gustavo Puerta",
     "given_name": "Gustavo",
-    "player_id": "P-W26-0160",
+    "player_id": "P-W26-0149",
     "primary_position": "DF"
   },
   {
@@ -2089,7 +1946,7 @@
     "female": false,
     "full_name": "Marin Pongračić",
     "given_name": "Marin",
-    "player_id": "P-W26-0161",
+    "player_id": "P-W26-0150",
     "primary_position": "DF"
   },
   {
@@ -2102,7 +1959,7 @@
     "female": false,
     "full_name": "Petar Musa",
     "given_name": "Petar",
-    "player_id": "P-W26-0162",
+    "player_id": "P-W26-0151",
     "primary_position": "FW"
   },
   {
@@ -2115,7 +1972,7 @@
     "female": false,
     "full_name": "Nikola Moro",
     "given_name": "Nikola",
-    "player_id": "P-W26-0163",
+    "player_id": "P-W26-0152",
     "primary_position": "MF"
   },
   {
@@ -2128,7 +1985,7 @@
     "female": false,
     "full_name": "Dominik Kotarski",
     "given_name": "Dominik",
-    "player_id": "P-W26-0164",
+    "player_id": "P-W26-0153",
     "primary_position": "GK"
   },
   {
@@ -2141,7 +1998,7 @@
     "female": false,
     "full_name": "Ivor Pandur",
     "given_name": "Ivor",
-    "player_id": "P-W26-0165",
+    "player_id": "P-W26-0154",
     "primary_position": "GK"
   },
   {
@@ -2154,7 +2011,7 @@
     "female": false,
     "full_name": "Marco Pašalić",
     "given_name": "Marco",
-    "player_id": "P-W26-0166",
+    "player_id": "P-W26-0155",
     "primary_position": "FW"
   },
   {
@@ -2167,7 +2024,7 @@
     "female": false,
     "full_name": "Toni Fruk",
     "given_name": "Toni",
-    "player_id": "P-W26-0167",
+    "player_id": "P-W26-0156",
     "primary_position": "MF"
   },
   {
@@ -2180,7 +2037,7 @@
     "female": false,
     "full_name": "Martin Baturina",
     "given_name": "Martin",
-    "player_id": "P-W26-0168",
+    "player_id": "P-W26-0157",
     "primary_position": "MF"
   },
   {
@@ -2193,7 +2050,7 @@
     "female": false,
     "full_name": "Igor Matanović",
     "given_name": "Igor",
-    "player_id": "P-W26-0169",
+    "player_id": "P-W26-0158",
     "primary_position": "FW"
   },
   {
@@ -2206,7 +2063,7 @@
     "female": false,
     "full_name": "Petar Sučić",
     "given_name": "Petar",
-    "player_id": "P-W26-0170",
+    "player_id": "P-W26-0159",
     "primary_position": "MF"
   },
   {
@@ -2219,7 +2076,7 @@
     "female": false,
     "full_name": "Luka Vušković",
     "given_name": "Luka",
-    "player_id": "P-W26-0171",
+    "player_id": "P-W26-0160",
     "primary_position": "DF"
   },
   {
@@ -2232,7 +2089,7 @@
     "female": false,
     "full_name": "Vladimír Darida",
     "given_name": "Vladimir",
-    "player_id": "P-W26-0172",
+    "player_id": "P-W26-0161",
     "primary_position": "MF"
   },
   {
@@ -2245,7 +2102,7 @@
     "female": false,
     "full_name": "Jaroslav Zelený",
     "given_name": "Jaroslav",
-    "player_id": "P-W26-0173",
+    "player_id": "P-W26-0162",
     "primary_position": "DF"
   },
   {
@@ -2258,7 +2115,7 @@
     "female": false,
     "full_name": "Vladimír Coufal",
     "given_name": "Vladimir",
-    "player_id": "P-W26-0174",
+    "player_id": "P-W26-0163",
     "primary_position": "DF"
   },
   {
@@ -2271,7 +2128,7 @@
     "female": false,
     "full_name": "Tomáš Holeš",
     "given_name": "Tomas",
-    "player_id": "P-W26-0175",
+    "player_id": "P-W26-0164",
     "primary_position": "DF"
   },
   {
@@ -2284,7 +2141,7 @@
     "female": false,
     "full_name": "Tomáš Chorý",
     "given_name": "Tomas",
-    "player_id": "P-W26-0176",
+    "player_id": "P-W26-0165",
     "primary_position": "FW"
   },
   {
@@ -2297,7 +2154,7 @@
     "female": false,
     "full_name": "Tomáš Souček",
     "given_name": "Tomas",
-    "player_id": "P-W26-0177",
+    "player_id": "P-W26-0166",
     "primary_position": "MF"
   },
   {
@@ -2310,7 +2167,7 @@
     "female": false,
     "full_name": "Patrik Schick",
     "given_name": "Patrik",
-    "player_id": "P-W26-0178",
+    "player_id": "P-W26-0167",
     "primary_position": "FW"
   },
   {
@@ -2323,7 +2180,7 @@
     "female": false,
     "full_name": "Jindřich Staněk",
     "given_name": "Jindrich",
-    "player_id": "P-W26-0179",
+    "player_id": "P-W26-0168",
     "primary_position": "GK"
   },
   {
@@ -2336,7 +2193,7 @@
     "female": false,
     "full_name": "Lukáš Provod",
     "given_name": "Lukas",
-    "player_id": "P-W26-0180",
+    "player_id": "P-W26-0169",
     "primary_position": "MF"
   },
   {
@@ -2349,7 +2206,7 @@
     "female": false,
     "full_name": "Jan Kuchta",
     "given_name": "Jan",
-    "player_id": "P-W26-0181",
+    "player_id": "P-W26-0170",
     "primary_position": "FW"
   },
   {
@@ -2362,7 +2219,7 @@
     "female": false,
     "full_name": "David Douděra",
     "given_name": "David",
-    "player_id": "P-W26-0182",
+    "player_id": "P-W26-0171",
     "primary_position": "DF"
   },
   {
@@ -2375,7 +2232,7 @@
     "female": false,
     "full_name": "Ladislav Krejčí",
     "given_name": "Ladislav",
-    "player_id": "P-W26-0183",
+    "player_id": "P-W26-0172",
     "primary_position": "DF"
   },
   {
@@ -2388,7 +2245,7 @@
     "female": false,
     "full_name": "Mojmír Chytil",
     "given_name": "Mojmir",
-    "player_id": "P-W26-0184",
+    "player_id": "P-W26-0173",
     "primary_position": "FW"
   },
   {
@@ -2401,7 +2258,7 @@
     "female": false,
     "full_name": "Michal Sadílek",
     "given_name": "Michal",
-    "player_id": "P-W26-0185",
+    "player_id": "P-W26-0174",
     "primary_position": "MF"
   },
   {
@@ -2414,7 +2271,7 @@
     "female": false,
     "full_name": "Robin Hranáč",
     "given_name": "Robin",
-    "player_id": "P-W26-0186",
+    "player_id": "P-W26-0175",
     "primary_position": "DF"
   },
   {
@@ -2427,7 +2284,7 @@
     "female": false,
     "full_name": "Matěj Kovář",
     "given_name": "Matej",
-    "player_id": "P-W26-0187",
+    "player_id": "P-W26-0176",
     "primary_position": "GK"
   },
   {
@@ -2440,7 +2297,7 @@
     "female": false,
     "full_name": "David Jurásek",
     "given_name": "David",
-    "player_id": "P-W26-0188",
+    "player_id": "P-W26-0177",
     "primary_position": "DF"
   },
   {
@@ -2453,7 +2310,7 @@
     "female": false,
     "full_name": "David Zima",
     "given_name": "David",
-    "player_id": "P-W26-0189",
+    "player_id": "P-W26-0178",
     "primary_position": "DF"
   },
   {
@@ -2466,7 +2323,7 @@
     "female": false,
     "full_name": "Pavel Šulc",
     "given_name": "Pavel",
-    "player_id": "P-W26-0190",
+    "player_id": "P-W26-0179",
     "primary_position": "FW"
   },
   {
@@ -2479,7 +2336,7 @@
     "female": false,
     "full_name": "Lukáš Červ",
     "given_name": "Lukas",
-    "player_id": "P-W26-0191",
+    "player_id": "P-W26-0180",
     "primary_position": "MF"
   },
   {
@@ -2492,7 +2349,7 @@
     "female": false,
     "full_name": "Lukáš Horníček",
     "given_name": "Lukas",
-    "player_id": "P-W26-0192",
+    "player_id": "P-W26-0181",
     "primary_position": "GK"
   },
   {
@@ -2505,7 +2362,7 @@
     "female": false,
     "full_name": "Adam Hložek",
     "given_name": "Adam",
-    "player_id": "P-W26-0193",
+    "player_id": "P-W26-0182",
     "primary_position": "FW"
   },
   {
@@ -2518,7 +2375,7 @@
     "female": false,
     "full_name": "Štěpán Chaloupek",
     "given_name": "Stepan",
-    "player_id": "P-W26-0194",
+    "player_id": "P-W26-0183",
     "primary_position": "DF"
   },
   {
@@ -2531,7 +2388,7 @@
     "female": false,
     "full_name": "Denis Višinský",
     "given_name": "Denis",
-    "player_id": "P-W26-0195",
+    "player_id": "P-W26-0184",
     "primary_position": "FW"
   },
   {
@@ -2544,7 +2401,7 @@
     "female": false,
     "full_name": "Alexandr Sojka",
     "given_name": "Alexandr",
-    "player_id": "P-W26-0196",
+    "player_id": "P-W26-0185",
     "primary_position": "MF"
   },
   {
@@ -2557,7 +2414,7 @@
     "female": false,
     "full_name": "Hugo Sochůrek",
     "given_name": "Hugo",
-    "player_id": "P-W26-0197",
+    "player_id": "P-W26-0186",
     "primary_position": "MF"
   },
   {
@@ -2570,7 +2427,7 @@
     "female": false,
     "full_name": "Gonzalo Valle",
     "given_name": "Gonzalo",
-    "player_id": "P-W26-0198",
+    "player_id": "P-W26-0187",
     "primary_position": "GK"
   },
   {
@@ -2583,7 +2440,7 @@
     "female": false,
     "full_name": "Jordy Caicedo",
     "given_name": "Jordy",
-    "player_id": "P-W26-0199",
+    "player_id": "P-W26-0188",
     "primary_position": "FW"
   },
   {
@@ -2596,7 +2453,7 @@
     "female": false,
     "full_name": "Jordy Alcívar",
     "given_name": "Jordy",
-    "player_id": "P-W26-0200",
+    "player_id": "P-W26-0189",
     "primary_position": "MF"
   },
   {
@@ -2609,21 +2466,8 @@
     "female": false,
     "full_name": "John Yeboah",
     "given_name": "John",
-    "player_id": "P-W26-0201",
+    "player_id": "P-W26-0190",
     "primary_position": "FW"
-  },
-  {
-    "birth_date": "2001-10-16",
-    "common_name": "Pacho",
-    "eligible_positions": [
-      "DF"
-    ],
-    "family_name": "Pacho",
-    "female": false,
-    "full_name": "Willian Pacho",
-    "given_name": "Willian",
-    "player_id": "P-W26-0202",
-    "primary_position": "DF"
   },
   {
     "birth_date": "2002-03-09",
@@ -2635,7 +2479,7 @@
     "female": false,
     "full_name": "Pedro Vite",
     "given_name": "Pedro",
-    "player_id": "P-W26-0203",
+    "player_id": "P-W26-0191",
     "primary_position": "MF"
   },
   {
@@ -2648,7 +2492,7 @@
     "female": false,
     "full_name": "Alan Minda",
     "given_name": "Alan",
-    "player_id": "P-W26-0204",
+    "player_id": "P-W26-0192",
     "primary_position": "MF"
   },
   {
@@ -2661,7 +2505,7 @@
     "female": false,
     "full_name": "Nilson Angulo",
     "given_name": "Nilson",
-    "player_id": "P-W26-0205",
+    "player_id": "P-W26-0193",
     "primary_position": "FW"
   },
   {
@@ -2674,7 +2518,7 @@
     "female": false,
     "full_name": "Anthony Valencia",
     "given_name": "Anthony",
-    "player_id": "P-W26-0206",
+    "player_id": "P-W26-0194",
     "primary_position": "MF"
   },
   {
@@ -2687,7 +2531,7 @@
     "female": false,
     "full_name": "Denil Castillo",
     "given_name": "Denil",
-    "player_id": "P-W26-0207",
+    "player_id": "P-W26-0195",
     "primary_position": "MF"
   },
   {
@@ -2700,7 +2544,7 @@
     "female": false,
     "full_name": "Joel Ordóñez",
     "given_name": "Joel",
-    "player_id": "P-W26-0208",
+    "player_id": "P-W26-0196",
     "primary_position": "DF"
   },
   {
@@ -2713,7 +2557,7 @@
     "female": false,
     "full_name": "Yaimar Medina",
     "given_name": "Yaimar",
-    "player_id": "P-W26-0209",
+    "player_id": "P-W26-0197",
     "primary_position": "DF"
   },
   {
@@ -2726,7 +2570,7 @@
     "female": false,
     "full_name": "Jeremy Arévalo",
     "given_name": "Jeremy",
-    "player_id": "P-W26-0210",
+    "player_id": "P-W26-0198",
     "primary_position": "FW"
   },
   {
@@ -2739,7 +2583,7 @@
     "female": false,
     "full_name": "Kendry Páez",
     "given_name": "Kendry",
-    "player_id": "P-W26-0211",
+    "player_id": "P-W26-0199",
     "primary_position": "MF"
   },
   {
@@ -2752,7 +2596,7 @@
     "female": false,
     "full_name": "El Mahdy Soliman",
     "given_name": "El Mahdy",
-    "player_id": "P-W26-0212",
+    "player_id": "P-W26-0200",
     "primary_position": "GK"
   },
   {
@@ -2765,7 +2609,7 @@
     "female": false,
     "full_name": "Yasser Ibrahim",
     "given_name": "Yasser",
-    "player_id": "P-W26-0213",
+    "player_id": "P-W26-0201",
     "primary_position": "DF"
   },
   {
@@ -2778,7 +2622,7 @@
     "female": false,
     "full_name": "Ramy Rabia",
     "given_name": "Ramy",
-    "player_id": "P-W26-0214",
+    "player_id": "P-W26-0202",
     "primary_position": "DF"
   },
   {
@@ -2791,21 +2635,8 @@
     "female": false,
     "full_name": "Hamdy Fathy",
     "given_name": "Hamdy",
-    "player_id": "P-W26-0215",
+    "player_id": "P-W26-0203",
     "primary_position": "MF"
-  },
-  {
-    "birth_date": "1994-10-01",
-    "common_name": "Trézéguet",
-    "eligible_positions": [
-      "FW"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Trézéguet",
-    "given_name": null,
-    "player_id": "P-W26-0216",
-    "primary_position": "FW"
   },
   {
     "birth_date": "1996-01-10",
@@ -2817,7 +2648,7 @@
     "female": false,
     "full_name": "Zizo",
     "given_name": null,
-    "player_id": "P-W26-0217",
+    "player_id": "P-W26-0204",
     "primary_position": "FW"
   },
   {
@@ -2830,7 +2661,7 @@
     "female": false,
     "full_name": "Mohamed Hany",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0218",
+    "player_id": "P-W26-0205",
     "primary_position": "DF"
   },
   {
@@ -2843,7 +2674,7 @@
     "female": false,
     "full_name": "Karim Hafez",
     "given_name": "Karim",
-    "player_id": "P-W26-0219",
+    "player_id": "P-W26-0206",
     "primary_position": "DF"
   },
   {
@@ -2856,7 +2687,7 @@
     "female": false,
     "full_name": "Nabil Emad",
     "given_name": "Nabil",
-    "player_id": "P-W26-0220",
+    "player_id": "P-W26-0207",
     "primary_position": "MF"
   },
   {
@@ -2869,7 +2700,7 @@
     "female": false,
     "full_name": "Mohanad Lasheen",
     "given_name": "Mohanad",
-    "player_id": "P-W26-0221",
+    "player_id": "P-W26-0208",
     "primary_position": "MF"
   },
   {
@@ -2882,7 +2713,7 @@
     "female": false,
     "full_name": "Mostafa Ziko",
     "given_name": "Mostafa",
-    "player_id": "P-W26-0222",
+    "player_id": "P-W26-0209",
     "primary_position": "MF"
   },
   {
@@ -2895,7 +2726,7 @@
     "female": false,
     "full_name": "Emam Ashour",
     "given_name": "Emam",
-    "player_id": "P-W26-0223",
+    "player_id": "P-W26-0210",
     "primary_position": "MF"
   },
   {
@@ -2908,7 +2739,7 @@
     "female": false,
     "full_name": "Ahmed Fatouh",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0224",
+    "player_id": "P-W26-0211",
     "primary_position": "DF"
   },
   {
@@ -2921,7 +2752,7 @@
     "female": false,
     "full_name": "Marwan Attia",
     "given_name": "Marwan",
-    "player_id": "P-W26-0225",
+    "player_id": "P-W26-0212",
     "primary_position": "MF"
   },
   {
@@ -2934,7 +2765,7 @@
     "female": false,
     "full_name": "Mohamed Alaa",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0226",
+    "player_id": "P-W26-0213",
     "primary_position": "GK"
   },
   {
@@ -2947,7 +2778,7 @@
     "female": false,
     "full_name": "Mohamed Abdelmonem",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0227",
+    "player_id": "P-W26-0214",
     "primary_position": "DF"
   },
   {
@@ -2960,7 +2791,7 @@
     "female": false,
     "full_name": "Omar Marmoush",
     "given_name": "Omar",
-    "player_id": "P-W26-0228",
+    "player_id": "P-W26-0215",
     "primary_position": "FW"
   },
   {
@@ -2973,7 +2804,7 @@
     "female": false,
     "full_name": "Mostafa Shobeir",
     "given_name": "Mostafa",
-    "player_id": "P-W26-0229",
+    "player_id": "P-W26-0216",
     "primary_position": "GK"
   },
   {
@@ -2986,7 +2817,7 @@
     "female": false,
     "full_name": "Ibrahim Adel",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0230",
+    "player_id": "P-W26-0217",
     "primary_position": "FW"
   },
   {
@@ -2999,7 +2830,7 @@
     "female": false,
     "full_name": "Hossam Abdelmaguid",
     "given_name": "Hossam",
-    "player_id": "P-W26-0231",
+    "player_id": "P-W26-0218",
     "primary_position": "DF"
   },
   {
@@ -3012,7 +2843,7 @@
     "female": false,
     "full_name": "Mahmoud Saber",
     "given_name": "Mahmoud",
-    "player_id": "P-W26-0232",
+    "player_id": "P-W26-0219",
     "primary_position": "MF"
   },
   {
@@ -3025,7 +2856,7 @@
     "female": false,
     "full_name": "Tarek Alaa",
     "given_name": "Tarek",
-    "player_id": "P-W26-0233",
+    "player_id": "P-W26-0220",
     "primary_position": "DF"
   },
   {
@@ -3038,7 +2869,7 @@
     "female": false,
     "full_name": "Haissem Hassan",
     "given_name": "Haissem",
-    "player_id": "P-W26-0234",
+    "player_id": "P-W26-0221",
     "primary_position": "FW"
   },
   {
@@ -3051,7 +2882,7 @@
     "female": false,
     "full_name": "Hamza Abdelkarim",
     "given_name": "Hamza",
-    "player_id": "P-W26-0235",
+    "player_id": "P-W26-0222",
     "primary_position": "FW"
   },
   {
@@ -3064,7 +2895,7 @@
     "female": false,
     "full_name": "Dan Burn",
     "given_name": "Dan",
-    "player_id": "P-W26-0236",
+    "player_id": "P-W26-0223",
     "primary_position": "DF"
   },
   {
@@ -3077,7 +2908,7 @@
     "female": false,
     "full_name": "Ollie Watkins",
     "given_name": "Ollie",
-    "player_id": "P-W26-0237",
+    "player_id": "P-W26-0224",
     "primary_position": "FW"
   },
   {
@@ -3090,7 +2921,7 @@
     "female": false,
     "full_name": "Ivan Toney",
     "given_name": "Ivan",
-    "player_id": "P-W26-0238",
+    "player_id": "P-W26-0225",
     "primary_position": "FW"
   },
   {
@@ -3103,7 +2934,7 @@
     "female": false,
     "full_name": "Dean Henderson",
     "given_name": "Dean",
-    "player_id": "P-W26-0239",
+    "player_id": "P-W26-0226",
     "primary_position": "GK"
   },
   {
@@ -3116,7 +2947,7 @@
     "female": false,
     "full_name": "Ezri Konsa",
     "given_name": "Ezri",
-    "player_id": "P-W26-0240",
+    "player_id": "P-W26-0227",
     "primary_position": "DF"
   },
   {
@@ -3129,7 +2960,7 @@
     "female": false,
     "full_name": "Eberechi Eze",
     "given_name": "Eberechi",
-    "player_id": "P-W26-0241",
+    "player_id": "P-W26-0228",
     "primary_position": "MF"
   },
   {
@@ -3142,7 +2973,7 @@
     "female": false,
     "full_name": "Reece James",
     "given_name": "Reece",
-    "player_id": "P-W26-0242",
+    "player_id": "P-W26-0229",
     "primary_position": "DF"
   },
   {
@@ -3155,7 +2986,7 @@
     "female": false,
     "full_name": "Marc Guéhi",
     "given_name": "Marc",
-    "player_id": "P-W26-0243",
+    "player_id": "P-W26-0230",
     "primary_position": "DF"
   },
   {
@@ -3168,7 +2999,7 @@
     "female": false,
     "full_name": "Djed Spence",
     "given_name": "Djed",
-    "player_id": "P-W26-0244",
+    "player_id": "P-W26-0231",
     "primary_position": "DF"
   },
   {
@@ -3181,7 +3012,7 @@
     "female": false,
     "full_name": "Anthony Gordon",
     "given_name": "Anthony",
-    "player_id": "P-W26-0245",
+    "player_id": "P-W26-0232",
     "primary_position": "FW"
   },
   {
@@ -3194,7 +3025,7 @@
     "female": false,
     "full_name": "Noni Madueke",
     "given_name": "Noni",
-    "player_id": "P-W26-0246",
+    "player_id": "P-W26-0233",
     "primary_position": "FW"
   },
   {
@@ -3207,7 +3038,7 @@
     "female": false,
     "full_name": "Morgan Rogers",
     "given_name": "Morgan",
-    "player_id": "P-W26-0247",
+    "player_id": "P-W26-0234",
     "primary_position": "MF"
   },
   {
@@ -3220,7 +3051,7 @@
     "female": false,
     "full_name": "James Trafford",
     "given_name": "James",
-    "player_id": "P-W26-0248",
+    "player_id": "P-W26-0235",
     "primary_position": "GK"
   },
   {
@@ -3233,7 +3064,7 @@
     "female": false,
     "full_name": "Elliot Anderson",
     "given_name": "Elliot",
-    "player_id": "P-W26-0249",
+    "player_id": "P-W26-0236",
     "primary_position": "MF"
   },
   {
@@ -3246,7 +3077,7 @@
     "female": false,
     "full_name": "Tino Livramento",
     "given_name": "Tino",
-    "player_id": "P-W26-0250",
+    "player_id": "P-W26-0237",
     "primary_position": "DF"
   },
   {
@@ -3259,7 +3090,7 @@
     "female": false,
     "full_name": "Jarell Quansah",
     "given_name": "Jarell",
-    "player_id": "P-W26-0251",
+    "player_id": "P-W26-0238",
     "primary_position": "DF"
   },
   {
@@ -3272,7 +3103,7 @@
     "female": false,
     "full_name": "Nico O'Reilly",
     "given_name": "Nico",
-    "player_id": "P-W26-0252",
+    "player_id": "P-W26-0239",
     "primary_position": "DF"
   },
   {
@@ -3285,7 +3116,7 @@
     "female": false,
     "full_name": "Kobbie Mainoo",
     "given_name": "Kobbie",
-    "player_id": "P-W26-0253",
+    "player_id": "P-W26-0240",
     "primary_position": "MF"
   },
   {
@@ -3298,7 +3129,7 @@
     "female": false,
     "full_name": "Brice Samba",
     "given_name": "Brice",
-    "player_id": "P-W26-0254",
+    "player_id": "P-W26-0241",
     "primary_position": "GK"
   },
   {
@@ -3311,7 +3142,7 @@
     "female": false,
     "full_name": "Mike Maignan",
     "given_name": "Mike",
-    "player_id": "P-W26-0255",
+    "player_id": "P-W26-0242",
     "primary_position": "GK"
   },
   {
@@ -3324,7 +3155,7 @@
     "female": false,
     "full_name": "Jean-Philippe Mateta",
     "given_name": "Jean-Philippe",
-    "player_id": "P-W26-0256",
+    "player_id": "P-W26-0243",
     "primary_position": "FW"
   },
   {
@@ -3337,7 +3168,7 @@
     "female": false,
     "full_name": "Maxence Lacroix",
     "given_name": "Maxence",
-    "player_id": "P-W26-0257",
+    "player_id": "P-W26-0244",
     "primary_position": "DF"
   },
   {
@@ -3350,7 +3181,7 @@
     "female": false,
     "full_name": "Manu Koné",
     "given_name": "Manu",
-    "player_id": "P-W26-0258",
+    "player_id": "P-W26-0245",
     "primary_position": "MF"
   },
   {
@@ -3363,7 +3194,7 @@
     "female": false,
     "full_name": "Michael Olise",
     "given_name": "Michael",
-    "player_id": "P-W26-0259",
+    "player_id": "P-W26-0246",
     "primary_position": "FW"
   },
   {
@@ -3376,7 +3207,7 @@
     "female": false,
     "full_name": "Maghnes Akliouche",
     "given_name": "Maghnes",
-    "player_id": "P-W26-0260",
+    "player_id": "P-W26-0247",
     "primary_position": "MF"
   },
   {
@@ -3389,7 +3220,7 @@
     "female": false,
     "full_name": "Bradley Barcola",
     "given_name": "Bradley",
-    "player_id": "P-W26-0261",
+    "player_id": "P-W26-0248",
     "primary_position": "FW"
   },
   {
@@ -3402,7 +3233,7 @@
     "female": false,
     "full_name": "Malo Gusto",
     "given_name": "Malo",
-    "player_id": "P-W26-0262",
+    "player_id": "P-W26-0249",
     "primary_position": "DF"
   },
   {
@@ -3415,7 +3246,7 @@
     "female": false,
     "full_name": "Rayan Cherki",
     "given_name": "Rayan",
-    "player_id": "P-W26-0263",
+    "player_id": "P-W26-0250",
     "primary_position": "MF"
   },
   {
@@ -3428,7 +3259,7 @@
     "female": false,
     "full_name": "Robin Risser",
     "given_name": "Robin",
-    "player_id": "P-W26-0264",
+    "player_id": "P-W26-0251",
     "primary_position": "GK"
   },
   {
@@ -3441,7 +3272,7 @@
     "female": false,
     "full_name": "Désiré Doué",
     "given_name": "Desire",
-    "player_id": "P-W26-0265",
+    "player_id": "P-W26-0252",
     "primary_position": "FW"
   },
   {
@@ -3454,7 +3285,7 @@
     "female": false,
     "full_name": "Warren Zaïre-Emery",
     "given_name": "Warren",
-    "player_id": "P-W26-0266",
+    "player_id": "P-W26-0253",
     "primary_position": "MF"
   },
   {
@@ -3467,7 +3298,7 @@
     "female": false,
     "full_name": "Oliver Baumann",
     "given_name": "Oliver",
-    "player_id": "P-W26-0267",
+    "player_id": "P-W26-0254",
     "primary_position": "GK"
   },
   {
@@ -3480,7 +3311,7 @@
     "female": false,
     "full_name": "Pascal Groß",
     "given_name": "Pascal",
-    "player_id": "P-W26-0268",
+    "player_id": "P-W26-0255",
     "primary_position": "MF"
   },
   {
@@ -3493,7 +3324,7 @@
     "female": false,
     "full_name": "Jonathan Tah",
     "given_name": "Jonathan",
-    "player_id": "P-W26-0269",
+    "player_id": "P-W26-0256",
     "primary_position": "DF"
   },
   {
@@ -3506,7 +3337,7 @@
     "female": false,
     "full_name": "Deniz Undav",
     "given_name": "Deniz",
-    "player_id": "P-W26-0270",
+    "player_id": "P-W26-0257",
     "primary_position": "FW"
   },
   {
@@ -3519,7 +3350,7 @@
     "female": false,
     "full_name": "Waldemar Anton",
     "given_name": "Waldemar",
-    "player_id": "P-W26-0271",
+    "player_id": "P-W26-0258",
     "primary_position": "DF"
   },
   {
@@ -3532,7 +3363,7 @@
     "female": false,
     "full_name": "Alexander Nübel",
     "given_name": "Alexander",
-    "player_id": "P-W26-0272",
+    "player_id": "P-W26-0259",
     "primary_position": "GK"
   },
   {
@@ -3545,7 +3376,7 @@
     "female": false,
     "full_name": "Nadiem Amiri",
     "given_name": "Nadiem",
-    "player_id": "P-W26-0273",
+    "player_id": "P-W26-0260",
     "primary_position": "MF"
   },
   {
@@ -3558,7 +3389,7 @@
     "female": false,
     "full_name": "Felix Nmecha",
     "given_name": "Felix",
-    "player_id": "P-W26-0274",
+    "player_id": "P-W26-0261",
     "primary_position": "MF"
   },
   {
@@ -3571,7 +3402,7 @@
     "female": false,
     "full_name": "Jamie Leweling",
     "given_name": "Jamie",
-    "player_id": "P-W26-0275",
+    "player_id": "P-W26-0262",
     "primary_position": "MF"
   },
   {
@@ -3584,7 +3415,7 @@
     "female": false,
     "full_name": "Angelo Stiller",
     "given_name": "Angelo",
-    "player_id": "P-W26-0276",
+    "player_id": "P-W26-0263",
     "primary_position": "MF"
   },
   {
@@ -3597,7 +3428,7 @@
     "female": false,
     "full_name": "Malick Thiaw",
     "given_name": "Malick",
-    "player_id": "P-W26-0277",
+    "player_id": "P-W26-0264",
     "primary_position": "DF"
   },
   {
@@ -3610,7 +3441,7 @@
     "female": false,
     "full_name": "Nick Woltemade",
     "given_name": "Nick",
-    "player_id": "P-W26-0278",
+    "player_id": "P-W26-0265",
     "primary_position": "FW"
   },
   {
@@ -3623,7 +3454,7 @@
     "female": false,
     "full_name": "Maximilian Beier",
     "given_name": "Maximilian",
-    "player_id": "P-W26-0279",
+    "player_id": "P-W26-0266",
     "primary_position": "FW"
   },
   {
@@ -3636,7 +3467,7 @@
     "female": false,
     "full_name": "Florian Wirtz",
     "given_name": "Florian",
-    "player_id": "P-W26-0280",
+    "player_id": "P-W26-0267",
     "primary_position": "MF"
   },
   {
@@ -3649,7 +3480,7 @@
     "female": false,
     "full_name": "Nathaniel Brown",
     "given_name": "Nathaniel",
-    "player_id": "P-W26-0281",
+    "player_id": "P-W26-0268",
     "primary_position": "DF"
   },
   {
@@ -3662,7 +3493,7 @@
     "female": false,
     "full_name": "Aleksandar Pavlović",
     "given_name": "Aleksandar",
-    "player_id": "P-W26-0282",
+    "player_id": "P-W26-0269",
     "primary_position": "MF"
   },
   {
@@ -3675,7 +3506,7 @@
     "female": false,
     "full_name": "Lennart Karl",
     "given_name": "Lennart",
-    "player_id": "P-W26-0283",
+    "player_id": "P-W26-0270",
     "primary_position": "MF"
   },
   {
@@ -3688,7 +3519,7 @@
     "female": false,
     "full_name": "Benjamin Asare",
     "given_name": "Benjamin",
-    "player_id": "P-W26-0284",
+    "player_id": "P-W26-0271",
     "primary_position": "GK"
   },
   {
@@ -3701,7 +3532,7 @@
     "female": false,
     "full_name": "Abdul Rahman Baba",
     "given_name": "Abdul Rahman",
-    "player_id": "P-W26-0285",
+    "player_id": "P-W26-0272",
     "primary_position": "DF"
   },
   {
@@ -3714,7 +3545,7 @@
     "female": false,
     "full_name": "Derrick Luckassen",
     "given_name": "Derrick",
-    "player_id": "P-W26-0286",
+    "player_id": "P-W26-0273",
     "primary_position": "DF"
   },
   {
@@ -3727,7 +3558,7 @@
     "female": false,
     "full_name": "Abdul Mumin",
     "given_name": "Abdul",
-    "player_id": "P-W26-0287",
+    "player_id": "P-W26-0274",
     "primary_position": "DF"
   },
   {
@@ -3740,7 +3571,7 @@
     "female": false,
     "full_name": "Kwasi Sibo",
     "given_name": "Kwasi",
-    "player_id": "P-W26-0288",
+    "player_id": "P-W26-0275",
     "primary_position": "MF"
   },
   {
@@ -3753,7 +3584,7 @@
     "female": false,
     "full_name": "Jerome Opoku",
     "given_name": "Jerome",
-    "player_id": "P-W26-0289",
+    "player_id": "P-W26-0276",
     "primary_position": "DF"
   },
   {
@@ -3766,7 +3597,7 @@
     "female": false,
     "full_name": "Brandon Thomas-Asante",
     "given_name": "Brandon",
-    "player_id": "P-W26-0290",
+    "player_id": "P-W26-0277",
     "primary_position": "FW"
   },
   {
@@ -3779,7 +3610,7 @@
     "female": false,
     "full_name": "Joseph Anang",
     "given_name": "Joseph",
-    "player_id": "P-W26-0291",
+    "player_id": "P-W26-0278",
     "primary_position": "GK"
   },
   {
@@ -3792,7 +3623,7 @@
     "female": false,
     "full_name": "Augustine Boakye",
     "given_name": "Augustine",
-    "player_id": "P-W26-0292",
+    "player_id": "P-W26-0279",
     "primary_position": "MF"
   },
   {
@@ -3805,7 +3636,7 @@
     "female": false,
     "full_name": "Marvin Senaya",
     "given_name": "Marvin",
-    "player_id": "P-W26-0293",
+    "player_id": "P-W26-0280",
     "primary_position": "DF"
   },
   {
@@ -3818,7 +3649,7 @@
     "female": false,
     "full_name": "Prince Kwabena Adu",
     "given_name": "Prince Kwabena",
-    "player_id": "P-W26-0294",
+    "player_id": "P-W26-0281",
     "primary_position": "FW"
   },
   {
@@ -3831,7 +3662,7 @@
     "female": false,
     "full_name": "Ernest Nuamah",
     "given_name": "Ernest",
-    "player_id": "P-W26-0295",
+    "player_id": "P-W26-0282",
     "primary_position": "FW"
   },
   {
@@ -3844,7 +3675,7 @@
     "female": false,
     "full_name": "Jonas Adjetey",
     "given_name": "Jonas",
-    "player_id": "P-W26-0296",
+    "player_id": "P-W26-0283",
     "primary_position": "DF"
   },
   {
@@ -3857,7 +3688,7 @@
     "female": false,
     "full_name": "Abdul Fatawu",
     "given_name": "Abdul",
-    "player_id": "P-W26-0297",
+    "player_id": "P-W26-0284",
     "primary_position": "FW"
   },
   {
@@ -3870,7 +3701,7 @@
     "female": false,
     "full_name": "Kojo Peprah Oppong",
     "given_name": "Kojo",
-    "player_id": "P-W26-0298",
+    "player_id": "P-W26-0285",
     "primary_position": "DF"
   },
   {
@@ -3883,7 +3714,7 @@
     "female": false,
     "full_name": "Christopher Bonsu Baah",
     "given_name": "Christopher",
-    "player_id": "P-W26-0299",
+    "player_id": "P-W26-0286",
     "primary_position": "FW"
   },
   {
@@ -3896,7 +3727,7 @@
     "female": false,
     "full_name": "Caleb Yirenkyi",
     "given_name": "Caleb",
-    "player_id": "P-W26-0300",
+    "player_id": "P-W26-0287",
     "primary_position": "MF"
   },
   {
@@ -3909,7 +3740,7 @@
     "female": false,
     "full_name": "Johny Placide",
     "given_name": "Johny",
-    "player_id": "P-W26-0301",
+    "player_id": "P-W26-0288",
     "primary_position": "GK"
   },
   {
@@ -3922,7 +3753,7 @@
     "female": false,
     "full_name": "Ricardo Adé",
     "given_name": "Ricardo",
-    "player_id": "P-W26-0302",
+    "player_id": "P-W26-0289",
     "primary_position": "DF"
   },
   {
@@ -3935,7 +3766,7 @@
     "female": false,
     "full_name": "Duke Lacroix",
     "given_name": "Duke",
-    "player_id": "P-W26-0303",
+    "player_id": "P-W26-0290",
     "primary_position": "DF"
   },
   {
@@ -3948,7 +3779,7 @@
     "female": false,
     "full_name": "Duckens Nazon",
     "given_name": "Duckens",
-    "player_id": "P-W26-0304",
+    "player_id": "P-W26-0291",
     "primary_position": "FW"
   },
   {
@@ -3961,7 +3792,7 @@
     "female": false,
     "full_name": "Frantzdy Pierrot",
     "given_name": "Frantzdy",
-    "player_id": "P-W26-0305",
+    "player_id": "P-W26-0292",
     "primary_position": "FW"
   },
   {
@@ -3974,7 +3805,7 @@
     "female": false,
     "full_name": "Carlens Arcus",
     "given_name": "Carlens",
-    "player_id": "P-W26-0306",
+    "player_id": "P-W26-0293",
     "primary_position": "DF"
   },
   {
@@ -3987,7 +3818,7 @@
     "female": false,
     "full_name": "Derrick Etienne Jr.",
     "given_name": "Derrick Jr",
-    "player_id": "P-W26-0307",
+    "player_id": "P-W26-0294",
     "primary_position": "FW"
   },
   {
@@ -4000,7 +3831,7 @@
     "female": false,
     "full_name": "Jean-Kévin Duverne",
     "given_name": "Jean-Kevin",
-    "player_id": "P-W26-0308",
+    "player_id": "P-W26-0295",
     "primary_position": "DF"
   },
   {
@@ -4013,7 +3844,7 @@
     "female": false,
     "full_name": "Leverton Pierre",
     "given_name": "Leverton",
-    "player_id": "P-W26-0309",
+    "player_id": "P-W26-0296",
     "primary_position": "MF"
   },
   {
@@ -4026,7 +3857,7 @@
     "female": false,
     "full_name": "Jean-Ricner Bellegarde",
     "given_name": "Jean-Ricner",
-    "player_id": "P-W26-0310",
+    "player_id": "P-W26-0297",
     "primary_position": "MF"
   },
   {
@@ -4039,7 +3870,7 @@
     "female": false,
     "full_name": "Yassin Fortuné",
     "given_name": "Yassin",
-    "player_id": "P-W26-0311",
+    "player_id": "P-W26-0298",
     "primary_position": "FW"
   },
   {
@@ -4052,7 +3883,7 @@
     "female": false,
     "full_name": "Hannes Delcroix",
     "given_name": "Hannes",
-    "player_id": "P-W26-0312",
+    "player_id": "P-W26-0299",
     "primary_position": "DF"
   },
   {
@@ -4065,7 +3896,7 @@
     "female": false,
     "full_name": "Martin Expérience",
     "given_name": "Martin",
-    "player_id": "P-W26-0313",
+    "player_id": "P-W26-0300",
     "primary_position": "DF"
   },
   {
@@ -4078,7 +3909,7 @@
     "female": false,
     "full_name": "Josué Duverger",
     "given_name": "Josue",
-    "player_id": "P-W26-0314",
+    "player_id": "P-W26-0301",
     "primary_position": "GK"
   },
   {
@@ -4091,7 +3922,7 @@
     "female": false,
     "full_name": "Danley Jean Jacques",
     "given_name": "Danley",
-    "player_id": "P-W26-0315",
+    "player_id": "P-W26-0302",
     "primary_position": "MF"
   },
   {
@@ -4104,7 +3935,7 @@
     "female": false,
     "full_name": "Dominique Simon",
     "given_name": "Dominique",
-    "player_id": "P-W26-0316",
+    "player_id": "P-W26-0303",
     "primary_position": "MF"
   },
   {
@@ -4117,7 +3948,7 @@
     "female": false,
     "full_name": "Wilson Isidor",
     "given_name": "Wilson",
-    "player_id": "P-W26-0317",
+    "player_id": "P-W26-0304",
     "primary_position": "FW"
   },
   {
@@ -4130,7 +3961,7 @@
     "female": false,
     "full_name": "Lenny Joseph",
     "given_name": "Lenny",
-    "player_id": "P-W26-0318",
+    "player_id": "P-W26-0305",
     "primary_position": "FW"
   },
   {
@@ -4143,7 +3974,7 @@
     "female": false,
     "full_name": "Louicius Deedson",
     "given_name": "Louicius",
-    "player_id": "P-W26-0319",
+    "player_id": "P-W26-0306",
     "primary_position": "FW"
   },
   {
@@ -4156,7 +3987,7 @@
     "female": false,
     "full_name": "Alexandre Pierre",
     "given_name": "Alexandre",
-    "player_id": "P-W26-0320",
+    "player_id": "P-W26-0307",
     "primary_position": "GK"
   },
   {
@@ -4169,7 +4000,7 @@
     "female": false,
     "full_name": "Ruben Providence",
     "given_name": "Ruben",
-    "player_id": "P-W26-0321",
+    "player_id": "P-W26-0308",
     "primary_position": "FW"
   },
   {
@@ -4182,7 +4013,7 @@
     "female": false,
     "full_name": "Wilguens Paugain",
     "given_name": "Wilguens",
-    "player_id": "P-W26-0322",
+    "player_id": "P-W26-0309",
     "primary_position": "DF"
   },
   {
@@ -4195,7 +4026,7 @@
     "female": false,
     "full_name": "Josué Casimir",
     "given_name": "Josue",
-    "player_id": "P-W26-0323",
+    "player_id": "P-W26-0310",
     "primary_position": "FW"
   },
   {
@@ -4208,7 +4039,7 @@
     "female": false,
     "full_name": "Carl Sainté",
     "given_name": "Carl",
-    "player_id": "P-W26-0324",
+    "player_id": "P-W26-0311",
     "primary_position": "MF"
   },
   {
@@ -4221,7 +4052,7 @@
     "female": false,
     "full_name": "Woodensky Pierre",
     "given_name": "Woodensky",
-    "player_id": "P-W26-0325",
+    "player_id": "P-W26-0312",
     "primary_position": "MF"
   },
   {
@@ -4234,7 +4065,7 @@
     "female": false,
     "full_name": "Keeto Thermoncy",
     "given_name": "Keeto",
-    "player_id": "P-W26-0326",
+    "player_id": "P-W26-0313",
     "primary_position": "DF"
   },
   {
@@ -4247,7 +4078,7 @@
     "female": false,
     "full_name": "Shahriyar Moghanlou",
     "given_name": "Shahriyar",
-    "player_id": "P-W26-0327",
+    "player_id": "P-W26-0314",
     "primary_position": "FW"
   },
   {
@@ -4260,7 +4091,7 @@
     "female": false,
     "full_name": "Ali Alipour",
     "given_name": "Ali",
-    "player_id": "P-W26-0328",
+    "player_id": "P-W26-0315",
     "primary_position": "FW"
   },
   {
@@ -4273,7 +4104,7 @@
     "female": false,
     "full_name": "Ali Nemati",
     "given_name": "Ali",
-    "player_id": "P-W26-0329",
+    "player_id": "P-W26-0316",
     "primary_position": "DF"
   },
   {
@@ -4286,7 +4117,7 @@
     "female": false,
     "full_name": "Dennis Eckert",
     "given_name": "Dennis",
-    "player_id": "P-W26-0330",
+    "player_id": "P-W26-0317",
     "primary_position": "FW"
   },
   {
@@ -4299,7 +4130,7 @@
     "female": false,
     "full_name": "Mehdi Ghayedi",
     "given_name": "Mehdi",
-    "player_id": "P-W26-0331",
+    "player_id": "P-W26-0318",
     "primary_position": "FW"
   },
   {
@@ -4312,7 +4143,7 @@
     "female": false,
     "full_name": "Mohammad Mohebi",
     "given_name": "Mohammad",
-    "player_id": "P-W26-0332",
+    "player_id": "P-W26-0319",
     "primary_position": "MF"
   },
   {
@@ -4325,7 +4156,7 @@
     "female": false,
     "full_name": "Saleh Hardani",
     "given_name": "Saleh",
-    "player_id": "P-W26-0333",
+    "player_id": "P-W26-0320",
     "primary_position": "DF"
   },
   {
@@ -4338,7 +4169,7 @@
     "female": false,
     "full_name": "Amirhossein Hosseinzadeh",
     "given_name": "Amirhossein",
-    "player_id": "P-W26-0334",
+    "player_id": "P-W26-0321",
     "primary_position": "FW"
   },
   {
@@ -4351,7 +4182,7 @@
     "female": false,
     "full_name": "Mohammad Ghorbani",
     "given_name": "Mohammad",
-    "player_id": "P-W26-0335",
+    "player_id": "P-W26-0322",
     "primary_position": "MF"
   },
   {
@@ -4364,7 +4195,7 @@
     "female": false,
     "full_name": "Aria Yousefi",
     "given_name": "Aria",
-    "player_id": "P-W26-0336",
+    "player_id": "P-W26-0323",
     "primary_position": "DF"
   },
   {
@@ -4377,7 +4208,7 @@
     "female": false,
     "full_name": "Danial Eiri",
     "given_name": "Danial",
-    "player_id": "P-W26-0337",
+    "player_id": "P-W26-0324",
     "primary_position": "DF"
   },
   {
@@ -4390,7 +4221,7 @@
     "female": false,
     "full_name": "Amirmohammad Razzaghinia",
     "given_name": "Amirmohammad",
-    "player_id": "P-W26-0338",
+    "player_id": "P-W26-0325",
     "primary_position": "MF"
   },
   {
@@ -4403,7 +4234,7 @@
     "female": false,
     "full_name": "Jalal Hassan",
     "given_name": "Jalal",
-    "player_id": "P-W26-0339",
+    "player_id": "P-W26-0326",
     "primary_position": "GK"
   },
   {
@@ -4416,7 +4247,7 @@
     "female": false,
     "full_name": "Rebin Sulaka",
     "given_name": "Rebin",
-    "player_id": "P-W26-0340",
+    "player_id": "P-W26-0327",
     "primary_position": "DF"
   },
   {
@@ -4429,7 +4260,7 @@
     "female": false,
     "full_name": "Frans Putros",
     "given_name": "Frans",
-    "player_id": "P-W26-0341",
+    "player_id": "P-W26-0328",
     "primary_position": "DF"
   },
   {
@@ -4442,7 +4273,7 @@
     "female": false,
     "full_name": "Fahad Talib",
     "given_name": "Fahad",
-    "player_id": "P-W26-0342",
+    "player_id": "P-W26-0329",
     "primary_position": "GK"
   },
   {
@@ -4455,7 +4286,7 @@
     "female": false,
     "full_name": "Ahmed Yahya",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0343",
+    "player_id": "P-W26-0330",
     "primary_position": "DF"
   },
   {
@@ -4468,7 +4299,7 @@
     "female": false,
     "full_name": "Ali Yousif",
     "given_name": "Ali",
-    "player_id": "P-W26-0344",
+    "player_id": "P-W26-0331",
     "primary_position": "FW"
   },
   {
@@ -4481,7 +4312,7 @@
     "female": false,
     "full_name": "Aymen Hussein",
     "given_name": "Aymen",
-    "player_id": "P-W26-0345",
+    "player_id": "P-W26-0332",
     "primary_position": "FW"
   },
   {
@@ -4494,7 +4325,7 @@
     "female": false,
     "full_name": "Ahmed Basil",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0346",
+    "player_id": "P-W26-0333",
     "primary_position": "GK"
   },
   {
@@ -4507,7 +4338,7 @@
     "female": false,
     "full_name": "Manaf Younis",
     "given_name": "Manaf",
-    "player_id": "P-W26-0347",
+    "player_id": "P-W26-0334",
     "primary_position": "DF"
   },
   {
@@ -4520,7 +4351,7 @@
     "female": false,
     "full_name": "Amir Al-Ammari",
     "given_name": "Amir",
-    "player_id": "P-W26-0348",
+    "player_id": "P-W26-0335",
     "primary_position": "MF"
   },
   {
@@ -4533,7 +4364,7 @@
     "female": false,
     "full_name": "Akam Hashim",
     "given_name": "Akam",
-    "player_id": "P-W26-0349",
+    "player_id": "P-W26-0336",
     "primary_position": "DF"
   },
   {
@@ -4546,7 +4377,7 @@
     "female": false,
     "full_name": "Merchas Doski",
     "given_name": "Merchas",
-    "player_id": "P-W26-0350",
+    "player_id": "P-W26-0337",
     "primary_position": "DF"
   },
   {
@@ -4559,7 +4390,7 @@
     "female": false,
     "full_name": "Ibrahim Bayesh",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0351",
+    "player_id": "P-W26-0338",
     "primary_position": "MF"
   },
   {
@@ -4572,7 +4403,7 @@
     "female": false,
     "full_name": "Mohanad Ali",
     "given_name": "Mohanad",
-    "player_id": "P-W26-0352",
+    "player_id": "P-W26-0339",
     "primary_position": "FW"
   },
   {
@@ -4585,7 +4416,7 @@
     "female": false,
     "full_name": "Kevin Yakob",
     "given_name": "Kevin",
-    "player_id": "P-W26-0353",
+    "player_id": "P-W26-0340",
     "primary_position": "MF"
   },
   {
@@ -4598,7 +4429,7 @@
     "female": false,
     "full_name": "Zaid Tahseen",
     "given_name": "Zaid",
-    "player_id": "P-W26-0354",
+    "player_id": "P-W26-0341",
     "primary_position": "DF"
   },
   {
@@ -4611,7 +4442,7 @@
     "female": false,
     "full_name": "Mustafa Saadoon",
     "given_name": "Mustafa",
-    "player_id": "P-W26-0355",
+    "player_id": "P-W26-0342",
     "primary_position": "DF"
   },
   {
@@ -4624,7 +4455,7 @@
     "female": false,
     "full_name": "Zaid Ismail",
     "given_name": "Zaid",
-    "player_id": "P-W26-0356",
+    "player_id": "P-W26-0343",
     "primary_position": "MF"
   },
   {
@@ -4637,7 +4468,7 @@
     "female": false,
     "full_name": "Ali Al-Hamadi",
     "given_name": "Ali",
-    "player_id": "P-W26-0357",
+    "player_id": "P-W26-0344",
     "primary_position": "FW"
   },
   {
@@ -4650,7 +4481,7 @@
     "female": false,
     "full_name": "Hussein Ali",
     "given_name": "Hussein",
-    "player_id": "P-W26-0358",
+    "player_id": "P-W26-0345",
     "primary_position": "DF"
   },
   {
@@ -4663,7 +4494,7 @@
     "female": false,
     "full_name": "Aimar Sher",
     "given_name": "Aimar",
-    "player_id": "P-W26-0359",
+    "player_id": "P-W26-0346",
     "primary_position": "MF"
   },
   {
@@ -4676,7 +4507,7 @@
     "female": false,
     "full_name": "Zidane Iqbal",
     "given_name": "Zidane",
-    "player_id": "P-W26-0360",
+    "player_id": "P-W26-0347",
     "primary_position": "MF"
   },
   {
@@ -4689,7 +4520,7 @@
     "female": false,
     "full_name": "Ahmed Qasem",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0361",
+    "player_id": "P-W26-0348",
     "primary_position": "FW"
   },
   {
@@ -4702,7 +4533,7 @@
     "female": false,
     "full_name": "Youssef Amyn",
     "given_name": "Youssef",
-    "player_id": "P-W26-0362",
+    "player_id": "P-W26-0349",
     "primary_position": "MF"
   },
   {
@@ -4715,7 +4546,7 @@
     "female": false,
     "full_name": "Ali Jasim",
     "given_name": "Ali",
-    "player_id": "P-W26-0363",
+    "player_id": "P-W26-0350",
     "primary_position": "FW"
   },
   {
@@ -4728,7 +4559,7 @@
     "female": false,
     "full_name": "Marko Farji",
     "given_name": "Marko",
-    "player_id": "P-W26-0364",
+    "player_id": "P-W26-0351",
     "primary_position": "FW"
   },
   {
@@ -4741,7 +4572,7 @@
     "female": false,
     "full_name": "Jean Michaël Seri",
     "given_name": "Jean Michael",
-    "player_id": "P-W26-0365",
+    "player_id": "P-W26-0352",
     "primary_position": "MF"
   },
   {
@@ -4754,7 +4585,7 @@
     "female": false,
     "full_name": "Seko Fofana",
     "given_name": "Seko",
-    "player_id": "P-W26-0366",
+    "player_id": "P-W26-0353",
     "primary_position": "MF"
   },
   {
@@ -4767,7 +4598,7 @@
     "female": false,
     "full_name": "Nicolas Pépé",
     "given_name": "Nicolas",
-    "player_id": "P-W26-0367",
+    "player_id": "P-W26-0354",
     "primary_position": "FW"
   },
   {
@@ -4780,7 +4611,7 @@
     "female": false,
     "full_name": "Ghislain Konan",
     "given_name": "Ghislain",
-    "player_id": "P-W26-0368",
+    "player_id": "P-W26-0355",
     "primary_position": "DF"
   },
   {
@@ -4793,7 +4624,7 @@
     "female": false,
     "full_name": "Franck Kessié",
     "given_name": "Franck",
-    "player_id": "P-W26-0369",
+    "player_id": "P-W26-0356",
     "primary_position": "MF"
   },
   {
@@ -4806,7 +4637,7 @@
     "female": false,
     "full_name": "Christopher Opéri",
     "given_name": "Christopher",
-    "player_id": "P-W26-0370",
+    "player_id": "P-W26-0357",
     "primary_position": "DF"
   },
   {
@@ -4819,7 +4650,7 @@
     "female": false,
     "full_name": "Emmanuel Agbadou",
     "given_name": "Emmanuel",
-    "player_id": "P-W26-0371",
+    "player_id": "P-W26-0358",
     "primary_position": "DF"
   },
   {
@@ -4832,7 +4663,7 @@
     "female": false,
     "full_name": "Ibrahim Sangaré",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0372",
+    "player_id": "P-W26-0359",
     "primary_position": "MF"
   },
   {
@@ -4845,7 +4676,7 @@
     "female": false,
     "full_name": "Alban Lafont",
     "given_name": "Alban",
-    "player_id": "P-W26-0373",
+    "player_id": "P-W26-0360",
     "primary_position": "GK"
   },
   {
@@ -4858,7 +4689,7 @@
     "female": false,
     "full_name": "Evan Ndicka",
     "given_name": "Evan",
-    "player_id": "P-W26-0374",
+    "player_id": "P-W26-0361",
     "primary_position": "DF"
   },
   {
@@ -4871,7 +4702,7 @@
     "female": false,
     "full_name": "Yahia Fofana",
     "given_name": "Yahia",
-    "player_id": "P-W26-0375",
+    "player_id": "P-W26-0362",
     "primary_position": "GK"
   },
   {
@@ -4884,7 +4715,7 @@
     "female": false,
     "full_name": "Wilfried Singo",
     "given_name": "Wilfried",
-    "player_id": "P-W26-0376",
+    "player_id": "P-W26-0363",
     "primary_position": "DF"
   },
   {
@@ -4897,7 +4728,7 @@
     "female": false,
     "full_name": "Odilon Kossounou",
     "given_name": "Odilon",
-    "player_id": "P-W26-0377",
+    "player_id": "P-W26-0364",
     "primary_position": "DF"
   },
   {
@@ -4910,7 +4741,7 @@
     "female": false,
     "full_name": "Parfait Guiagon",
     "given_name": "Parfait",
-    "player_id": "P-W26-0378",
+    "player_id": "P-W26-0365",
     "primary_position": "MF"
   },
   {
@@ -4923,7 +4754,7 @@
     "female": false,
     "full_name": "Evann Guessand",
     "given_name": "Evann",
-    "player_id": "P-W26-0379",
+    "player_id": "P-W26-0366",
     "primary_position": "FW"
   },
   {
@@ -4936,7 +4767,7 @@
     "female": false,
     "full_name": "Simon Adingra",
     "given_name": "Simon",
-    "player_id": "P-W26-0380",
+    "player_id": "P-W26-0367",
     "primary_position": "FW"
   },
   {
@@ -4949,7 +4780,7 @@
     "female": false,
     "full_name": "Mohamed Koné",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0381",
+    "player_id": "P-W26-0368",
     "primary_position": "GK"
   },
   {
@@ -4962,7 +4793,7 @@
     "female": false,
     "full_name": "Amad Diallo",
     "given_name": "Amad",
-    "player_id": "P-W26-0382",
+    "player_id": "P-W26-0369",
     "primary_position": "FW"
   },
   {
@@ -4975,7 +4806,7 @@
     "female": false,
     "full_name": "Guéla Doué",
     "given_name": "Guela",
-    "player_id": "P-W26-0383",
+    "player_id": "P-W26-0370",
     "primary_position": "DF"
   },
   {
@@ -4988,7 +4819,7 @@
     "female": false,
     "full_name": "Elye Wahi",
     "given_name": "Elye",
-    "player_id": "P-W26-0384",
+    "player_id": "P-W26-0371",
     "primary_position": "FW"
   },
   {
@@ -5001,7 +4832,7 @@
     "female": false,
     "full_name": "Ange-Yoan Bonny",
     "given_name": "Ange-Yoan",
-    "player_id": "P-W26-0385",
+    "player_id": "P-W26-0372",
     "primary_position": "FW"
   },
   {
@@ -5014,7 +4845,7 @@
     "female": false,
     "full_name": "Ousmane Diomande",
     "given_name": "Ousmane",
-    "player_id": "P-W26-0386",
+    "player_id": "P-W26-0373",
     "primary_position": "DF"
   },
   {
@@ -5027,7 +4858,7 @@
     "female": false,
     "full_name": "Oumar Diakité",
     "given_name": "Oumar",
-    "player_id": "P-W26-0387",
+    "player_id": "P-W26-0374",
     "primary_position": "FW"
   },
   {
@@ -5040,7 +4871,7 @@
     "female": false,
     "full_name": "Bazoumana Touré",
     "given_name": "Bazoumana",
-    "player_id": "P-W26-0388",
+    "player_id": "P-W26-0375",
     "primary_position": "FW"
   },
   {
@@ -5053,7 +4884,7 @@
     "female": false,
     "full_name": "Christ Inao Oulaï",
     "given_name": "Christ",
-    "player_id": "P-W26-0389",
+    "player_id": "P-W26-0376",
     "primary_position": "MF"
   },
   {
@@ -5066,7 +4897,7 @@
     "female": false,
     "full_name": "Yan Diomande",
     "given_name": "Yan",
-    "player_id": "P-W26-0390",
+    "player_id": "P-W26-0377",
     "primary_position": "FW"
   },
   {
@@ -5079,7 +4910,7 @@
     "female": false,
     "full_name": "Tsuyoshi Watanabe",
     "given_name": "Tsuyoshi",
-    "player_id": "P-W26-0391",
+    "player_id": "P-W26-0378",
     "primary_position": "DF"
   },
   {
@@ -5092,7 +4923,7 @@
     "female": false,
     "full_name": "Kōki Ogawa",
     "given_name": "Koki",
-    "player_id": "P-W26-0392",
+    "player_id": "P-W26-0379",
     "primary_position": "FW"
   },
   {
@@ -5105,7 +4936,7 @@
     "female": false,
     "full_name": "Tomoki Hayakawa",
     "given_name": "Tomoki",
-    "player_id": "P-W26-0393",
+    "player_id": "P-W26-0380",
     "primary_position": "GK"
   },
   {
@@ -5118,7 +4949,7 @@
     "female": false,
     "full_name": "Keisuke Ōsako",
     "given_name": "Keisuke",
-    "player_id": "P-W26-0394",
+    "player_id": "P-W26-0381",
     "primary_position": "GK"
   },
   {
@@ -5131,7 +4962,7 @@
     "female": false,
     "full_name": "Ayumu Seko",
     "given_name": "Ayumu",
-    "player_id": "P-W26-0395",
+    "player_id": "P-W26-0382",
     "primary_position": "DF"
   },
   {
@@ -5144,7 +4975,7 @@
     "female": false,
     "full_name": "Yukinari Sugawara",
     "given_name": "Yukinari",
-    "player_id": "P-W26-0396",
+    "player_id": "P-W26-0383",
     "primary_position": "DF"
   },
   {
@@ -5157,7 +4988,7 @@
     "female": false,
     "full_name": "Keito Nakamura",
     "given_name": "Keito",
-    "player_id": "P-W26-0397",
+    "player_id": "P-W26-0384",
     "primary_position": "MF"
   },
   {
@@ -5170,7 +5001,7 @@
     "female": false,
     "full_name": "Kaishū Sano",
     "given_name": "Kaishu",
-    "player_id": "P-W26-0398",
+    "player_id": "P-W26-0385",
     "primary_position": "MF"
   },
   {
@@ -5183,7 +5014,7 @@
     "female": false,
     "full_name": "Yuito Suzuki",
     "given_name": "Yuito",
-    "player_id": "P-W26-0399",
+    "player_id": "P-W26-0386",
     "primary_position": "MF"
   },
   {
@@ -5196,7 +5027,7 @@
     "female": false,
     "full_name": "Zion Suzuki",
     "given_name": "Zion",
-    "player_id": "P-W26-0400",
+    "player_id": "P-W26-0387",
     "primary_position": "GK"
   },
   {
@@ -5209,7 +5040,7 @@
     "female": false,
     "full_name": "Junnosuke Suzuki",
     "given_name": "Junnosuke",
-    "player_id": "P-W26-0401",
+    "player_id": "P-W26-0388",
     "primary_position": "DF"
   },
   {
@@ -5222,7 +5053,7 @@
     "female": false,
     "full_name": "Kento Shiogai",
     "given_name": "Kento",
-    "player_id": "P-W26-0402",
+    "player_id": "P-W26-0389",
     "primary_position": "FW"
   },
   {
@@ -5235,7 +5066,7 @@
     "female": false,
     "full_name": "Keisuke Gotō",
     "given_name": "Keisuke",
-    "player_id": "P-W26-0403",
+    "player_id": "P-W26-0390",
     "primary_position": "FW"
   },
   {
@@ -5248,7 +5079,7 @@
     "female": false,
     "full_name": "Guillermo Martínez",
     "given_name": "Guillermo",
-    "player_id": "P-W26-0404",
+    "player_id": "P-W26-0391",
     "primary_position": "FW"
   },
   {
@@ -5261,7 +5092,7 @@
     "female": false,
     "full_name": "Carlos Acevedo",
     "given_name": "Carlos",
-    "player_id": "P-W26-0405",
+    "player_id": "P-W26-0392",
     "primary_position": "GK"
   },
   {
@@ -5274,7 +5105,7 @@
     "female": false,
     "full_name": "Julián Quiñones",
     "given_name": "Julian",
-    "player_id": "P-W26-0406",
+    "player_id": "P-W26-0393",
     "primary_position": "FW"
   },
   {
@@ -5287,7 +5118,7 @@
     "female": false,
     "full_name": "Álvaro Fidalgo",
     "given_name": "Alvaro",
-    "player_id": "P-W26-0407",
+    "player_id": "P-W26-0394",
     "primary_position": "MF"
   },
   {
@@ -5300,7 +5131,7 @@
     "female": false,
     "full_name": "Raúl Rangel",
     "given_name": "Raul",
-    "player_id": "P-W26-0408",
+    "player_id": "P-W26-0395",
     "primary_position": "GK"
   },
   {
@@ -5313,7 +5144,7 @@
     "female": false,
     "full_name": "Érik Lira",
     "given_name": "Erik",
-    "player_id": "P-W26-0409",
+    "player_id": "P-W26-0396",
     "primary_position": "MF"
   },
   {
@@ -5326,7 +5157,7 @@
     "female": false,
     "full_name": "Israel Reyes",
     "given_name": "Israel",
-    "player_id": "P-W26-0410",
+    "player_id": "P-W26-0397",
     "primary_position": "DF"
   },
   {
@@ -5339,7 +5170,7 @@
     "female": false,
     "full_name": "César Huerta",
     "given_name": "Cesar",
-    "player_id": "P-W26-0411",
+    "player_id": "P-W26-0398",
     "primary_position": "FW"
   },
   {
@@ -5352,7 +5183,7 @@
     "female": false,
     "full_name": "Santiago Giménez",
     "given_name": "Santiago",
-    "player_id": "P-W26-0412",
+    "player_id": "P-W26-0399",
     "primary_position": "FW"
   },
   {
@@ -5365,7 +5196,7 @@
     "female": false,
     "full_name": "Armando González",
     "given_name": "Armando",
-    "player_id": "P-W26-0413",
+    "player_id": "P-W26-0400",
     "primary_position": "FW"
   },
   {
@@ -5378,7 +5209,7 @@
     "female": false,
     "full_name": "Brian Gutiérrez",
     "given_name": "Brian",
-    "player_id": "P-W26-0414",
+    "player_id": "P-W26-0401",
     "primary_position": "MF"
   },
   {
@@ -5391,7 +5222,7 @@
     "female": false,
     "full_name": "Mateo Chávez",
     "given_name": "Mateo",
-    "player_id": "P-W26-0415",
+    "player_id": "P-W26-0402",
     "primary_position": "DF"
   },
   {
@@ -5404,7 +5235,7 @@
     "female": false,
     "full_name": "Obed Vargas",
     "given_name": "Obed",
-    "player_id": "P-W26-0416",
+    "player_id": "P-W26-0403",
     "primary_position": "MF"
   },
   {
@@ -5417,7 +5248,7 @@
     "female": false,
     "full_name": "Gilberto Mora",
     "given_name": "Gilberto",
-    "player_id": "P-W26-0417",
+    "player_id": "P-W26-0404",
     "primary_position": "MF"
   },
   {
@@ -5430,7 +5261,7 @@
     "female": false,
     "full_name": "Soufiane Rahimi",
     "given_name": "Soufiane",
-    "player_id": "P-W26-0418",
+    "player_id": "P-W26-0405",
     "primary_position": "FW"
   },
   {
@@ -5443,7 +5274,7 @@
     "female": false,
     "full_name": "Issa Diop",
     "given_name": "Issa",
-    "player_id": "P-W26-0419",
+    "player_id": "P-W26-0406",
     "primary_position": "DF"
   },
   {
@@ -5456,7 +5287,7 @@
     "female": false,
     "full_name": "Youssef Belammari",
     "given_name": "Youssef",
-    "player_id": "P-W26-0420",
+    "player_id": "P-W26-0407",
     "primary_position": "DF"
   },
   {
@@ -5469,7 +5300,7 @@
     "female": false,
     "full_name": "Brahim Díaz",
     "given_name": "Brahim",
-    "player_id": "P-W26-0421",
+    "player_id": "P-W26-0408",
     "primary_position": "FW"
   },
   {
@@ -5482,7 +5313,7 @@
     "female": false,
     "full_name": "Ismael Saibari",
     "given_name": "Ismael",
-    "player_id": "P-W26-0422",
+    "player_id": "P-W26-0409",
     "primary_position": "MF"
   },
   {
@@ -5495,7 +5326,7 @@
     "female": false,
     "full_name": "Neil El Aynaoui",
     "given_name": "Neil",
-    "player_id": "P-W26-0423",
+    "player_id": "P-W26-0410",
     "primary_position": "MF"
   },
   {
@@ -5508,7 +5339,7 @@
     "female": false,
     "full_name": "Zakaria El Ouahdi",
     "given_name": "Zakaria",
-    "player_id": "P-W26-0424",
+    "player_id": "P-W26-0411",
     "primary_position": "DF"
   },
   {
@@ -5521,7 +5352,7 @@
     "female": false,
     "full_name": "Anass Salah-Eddine",
     "given_name": "Anass",
-    "player_id": "P-W26-0425",
+    "player_id": "P-W26-0412",
     "primary_position": "DF"
   },
   {
@@ -5534,7 +5365,7 @@
     "female": false,
     "full_name": "Redouane Halhal",
     "given_name": "Redouane",
-    "player_id": "P-W26-0426",
+    "player_id": "P-W26-0413",
     "primary_position": "DF"
   },
   {
@@ -5547,7 +5378,7 @@
     "female": false,
     "full_name": "Chadi Riad",
     "given_name": "Chadi",
-    "player_id": "P-W26-0427",
+    "player_id": "P-W26-0414",
     "primary_position": "DF"
   },
   {
@@ -5560,7 +5391,7 @@
     "female": false,
     "full_name": "Bilal El Khannouss",
     "given_name": "Bilal",
-    "player_id": "P-W26-0428",
+    "player_id": "P-W26-0415",
     "primary_position": "MF"
   },
   {
@@ -5573,7 +5404,7 @@
     "female": false,
     "full_name": "Ayoube Amaimouni",
     "given_name": "Ayoube",
-    "player_id": "P-W26-0429",
+    "player_id": "P-W26-0416",
     "primary_position": "FW"
   },
   {
@@ -5586,7 +5417,7 @@
     "female": false,
     "full_name": "Chemsdine Talbi",
     "given_name": "Chemsdine",
-    "player_id": "P-W26-0430",
+    "player_id": "P-W26-0417",
     "primary_position": "MF"
   },
   {
@@ -5599,7 +5430,7 @@
     "female": false,
     "full_name": "Samir El Mourabet",
     "given_name": "Samir",
-    "player_id": "P-W26-0431",
+    "player_id": "P-W26-0418",
     "primary_position": "MF"
   },
   {
@@ -5612,7 +5443,7 @@
     "female": false,
     "full_name": "Gessime Yassine",
     "given_name": "Gessime",
-    "player_id": "P-W26-0432",
+    "player_id": "P-W26-0419",
     "primary_position": "MF"
   },
   {
@@ -5625,7 +5456,7 @@
     "female": false,
     "full_name": "Ayyoub Bouaddi",
     "given_name": "Ayyoub",
-    "player_id": "P-W26-0433",
+    "player_id": "P-W26-0420",
     "primary_position": "MF"
   },
   {
@@ -5638,7 +5469,7 @@
     "female": false,
     "full_name": "Mark Flekken",
     "given_name": "Mark",
-    "player_id": "P-W26-0434",
+    "player_id": "P-W26-0421",
     "primary_position": "GK"
   },
   {
@@ -5651,7 +5482,7 @@
     "female": false,
     "full_name": "Guus Til",
     "given_name": "Guus",
-    "player_id": "P-W26-0435",
+    "player_id": "P-W26-0422",
     "primary_position": "MF"
   },
   {
@@ -5664,7 +5495,7 @@
     "female": false,
     "full_name": "Tijjani Reijnders",
     "given_name": "Tijjani",
-    "player_id": "P-W26-0436",
+    "player_id": "P-W26-0423",
     "primary_position": "MF"
   },
   {
@@ -5677,7 +5508,7 @@
     "female": false,
     "full_name": "Donyell Malen",
     "given_name": "Donyell",
-    "player_id": "P-W26-0437",
+    "player_id": "P-W26-0424",
     "primary_position": "FW"
   },
   {
@@ -5690,7 +5521,7 @@
     "female": false,
     "full_name": "Justin Kluivert",
     "given_name": "Justin",
-    "player_id": "P-W26-0438",
+    "player_id": "P-W26-0425",
     "primary_position": "MF"
   },
   {
@@ -5703,7 +5534,7 @@
     "female": false,
     "full_name": "Mats Wieffer",
     "given_name": "Mats",
-    "player_id": "P-W26-0439",
+    "player_id": "P-W26-0426",
     "primary_position": "DF"
   },
   {
@@ -5716,7 +5547,7 @@
     "female": false,
     "full_name": "Jan Paul van Hecke",
     "given_name": "Jan Paul van",
-    "player_id": "P-W26-0440",
+    "player_id": "P-W26-0427",
     "primary_position": "DF"
   },
   {
@@ -5729,7 +5560,7 @@
     "female": false,
     "full_name": "Micky van de Ven",
     "given_name": "Micky van de",
-    "player_id": "P-W26-0441",
+    "player_id": "P-W26-0428",
     "primary_position": "DF"
   },
   {
@@ -5742,7 +5573,7 @@
     "female": false,
     "full_name": "Quinten Timber",
     "given_name": "Quinten",
-    "player_id": "P-W26-0442",
+    "player_id": "P-W26-0429",
     "primary_position": "MF"
   },
   {
@@ -5755,7 +5586,7 @@
     "female": false,
     "full_name": "Crysencio Summerville",
     "given_name": "Crysencio",
-    "player_id": "P-W26-0443",
+    "player_id": "P-W26-0430",
     "primary_position": "FW"
   },
   {
@@ -5768,7 +5599,7 @@
     "female": false,
     "full_name": "Brian Brobbey",
     "given_name": "Brian",
-    "player_id": "P-W26-0444",
+    "player_id": "P-W26-0431",
     "primary_position": "FW"
   },
   {
@@ -5781,7 +5612,7 @@
     "female": false,
     "full_name": "Ryan Gravenberch",
     "given_name": "Ryan",
-    "player_id": "P-W26-0445",
+    "player_id": "P-W26-0432",
     "primary_position": "MF"
   },
   {
@@ -5794,7 +5625,7 @@
     "female": false,
     "full_name": "Bart Verbruggen",
     "given_name": "Bart",
-    "player_id": "P-W26-0446",
+    "player_id": "P-W26-0433",
     "primary_position": "GK"
   },
   {
@@ -5807,7 +5638,7 @@
     "female": false,
     "full_name": "Robin Roefs",
     "given_name": "Robin",
-    "player_id": "P-W26-0447",
+    "player_id": "P-W26-0434",
     "primary_position": "GK"
   },
   {
@@ -5820,7 +5651,7 @@
     "female": false,
     "full_name": "Jorrel Hato",
     "given_name": "Jorrel",
-    "player_id": "P-W26-0448",
+    "player_id": "P-W26-0435",
     "primary_position": "DF"
   },
   {
@@ -5833,7 +5664,7 @@
     "female": false,
     "full_name": "Michael Boxall",
     "given_name": "Michael",
-    "player_id": "P-W26-0449",
+    "player_id": "P-W26-0436",
     "primary_position": "DF"
   },
   {
@@ -5846,7 +5677,7 @@
     "female": false,
     "full_name": "Kosta Barbarouses",
     "given_name": "Kosta",
-    "player_id": "P-W26-0450",
+    "player_id": "P-W26-0437",
     "primary_position": "FW"
   },
   {
@@ -5859,7 +5690,7 @@
     "female": false,
     "full_name": "Max Crocombe",
     "given_name": "Max",
-    "player_id": "P-W26-0451",
+    "player_id": "P-W26-0438",
     "primary_position": "GK"
   },
   {
@@ -5872,7 +5703,7 @@
     "female": false,
     "full_name": "Tim Payne",
     "given_name": "Tim",
-    "player_id": "P-W26-0452",
+    "player_id": "P-W26-0439",
     "primary_position": "DF"
   },
   {
@@ -5885,7 +5716,7 @@
     "female": false,
     "full_name": "Francis de Vries",
     "given_name": "Francis",
-    "player_id": "P-W26-0453",
+    "player_id": "P-W26-0440",
     "primary_position": "DF"
   },
   {
@@ -5898,7 +5729,7 @@
     "female": false,
     "full_name": "Ryan Thomas",
     "given_name": "Ryan",
-    "player_id": "P-W26-0454",
+    "player_id": "P-W26-0441",
     "primary_position": "MF"
   },
   {
@@ -5911,7 +5742,7 @@
     "female": false,
     "full_name": "Alex Rufer",
     "given_name": "Alex",
-    "player_id": "P-W26-0455",
+    "player_id": "P-W26-0442",
     "primary_position": "MF"
   },
   {
@@ -5924,7 +5755,7 @@
     "female": false,
     "full_name": "Michael Woud",
     "given_name": "Michael",
-    "player_id": "P-W26-0456",
+    "player_id": "P-W26-0443",
     "primary_position": "GK"
   },
   {
@@ -5937,7 +5768,7 @@
     "female": false,
     "full_name": "Sarpreet Singh",
     "given_name": "Sarpreet",
-    "player_id": "P-W26-0457",
+    "player_id": "P-W26-0444",
     "primary_position": "MF"
   },
   {
@@ -5950,7 +5781,7 @@
     "female": false,
     "full_name": "Nando Pijnaker",
     "given_name": "Nando",
-    "player_id": "P-W26-0458",
+    "player_id": "P-W26-0445",
     "primary_position": "DF"
   },
   {
@@ -5963,7 +5794,7 @@
     "female": false,
     "full_name": "Joe Bell",
     "given_name": "Joe",
-    "player_id": "P-W26-0459",
+    "player_id": "P-W26-0446",
     "primary_position": "MF"
   },
   {
@@ -5976,7 +5807,7 @@
     "female": false,
     "full_name": "Callum McCowatt",
     "given_name": "Callum",
-    "player_id": "P-W26-0460",
+    "player_id": "P-W26-0447",
     "primary_position": "MF"
   },
   {
@@ -5989,7 +5820,7 @@
     "female": false,
     "full_name": "Callan Elliot",
     "given_name": "Callan",
-    "player_id": "P-W26-0461",
+    "player_id": "P-W26-0448",
     "primary_position": "DF"
   },
   {
@@ -6002,7 +5833,7 @@
     "female": false,
     "full_name": "Elijah Just",
     "given_name": "Elijah",
-    "player_id": "P-W26-0462",
+    "player_id": "P-W26-0449",
     "primary_position": "MF"
   },
   {
@@ -6015,7 +5846,7 @@
     "female": false,
     "full_name": "Liberato Cacace",
     "given_name": "Liberato",
-    "player_id": "P-W26-0463",
+    "player_id": "P-W26-0450",
     "primary_position": "DF"
   },
   {
@@ -6028,7 +5859,7 @@
     "female": false,
     "full_name": "Ben Waine",
     "given_name": "Ben",
-    "player_id": "P-W26-0464",
+    "player_id": "P-W26-0451",
     "primary_position": "FW"
   },
   {
@@ -6041,7 +5872,7 @@
     "female": false,
     "full_name": "Marko Stamenić",
     "given_name": "Marko",
-    "player_id": "P-W26-0465",
+    "player_id": "P-W26-0452",
     "primary_position": "MF"
   },
   {
@@ -6054,7 +5885,7 @@
     "female": false,
     "full_name": "Matthew Garbett",
     "given_name": "Matthew",
-    "player_id": "P-W26-0466",
+    "player_id": "P-W26-0453",
     "primary_position": "MF"
   },
   {
@@ -6067,7 +5898,7 @@
     "female": false,
     "full_name": "Alex Paulsen",
     "given_name": "Alex",
-    "player_id": "P-W26-0467",
+    "player_id": "P-W26-0454",
     "primary_position": "GK"
   },
   {
@@ -6080,7 +5911,7 @@
     "female": false,
     "full_name": "Lachlan Bayliss",
     "given_name": "Lachlan",
-    "player_id": "P-W26-0468",
+    "player_id": "P-W26-0455",
     "primary_position": "MF"
   },
   {
@@ -6093,7 +5924,7 @@
     "female": false,
     "full_name": "Ben Old",
     "given_name": "Ben",
-    "player_id": "P-W26-0469",
+    "player_id": "P-W26-0456",
     "primary_position": "MF"
   },
   {
@@ -6106,7 +5937,7 @@
     "female": false,
     "full_name": "Jesse Randall",
     "given_name": "Jesse",
-    "player_id": "P-W26-0470",
+    "player_id": "P-W26-0457",
     "primary_position": "FW"
   },
   {
@@ -6119,7 +5950,7 @@
     "female": false,
     "full_name": "Finn Surman",
     "given_name": "Finn",
-    "player_id": "P-W26-0471",
+    "player_id": "P-W26-0458",
     "primary_position": "DF"
   },
   {
@@ -6132,7 +5963,7 @@
     "female": false,
     "full_name": "Tyler Bindon",
     "given_name": "Tyler",
-    "player_id": "P-W26-0472",
+    "player_id": "P-W26-0459",
     "primary_position": "DF"
   },
   {
@@ -6145,7 +5976,7 @@
     "female": false,
     "full_name": "Ørjan Nyland",
     "given_name": "Orjan",
-    "player_id": "P-W26-0473",
+    "player_id": "P-W26-0460",
     "primary_position": "GK"
   },
   {
@@ -6158,7 +5989,7 @@
     "female": false,
     "full_name": "Alexander Sørloth",
     "given_name": "Alexander",
-    "player_id": "P-W26-0474",
+    "player_id": "P-W26-0461",
     "primary_position": "FW"
   },
   {
@@ -6171,7 +6002,7 @@
     "female": false,
     "full_name": "Fredrik Aursnes",
     "given_name": "Fredrik",
-    "player_id": "P-W26-0475",
+    "player_id": "P-W26-0462",
     "primary_position": "MF"
   },
   {
@@ -6184,7 +6015,7 @@
     "female": false,
     "full_name": "Morten Thorsby",
     "given_name": "Morten",
-    "player_id": "P-W26-0476",
+    "player_id": "P-W26-0463",
     "primary_position": "MF"
   },
   {
@@ -6197,7 +6028,7 @@
     "female": false,
     "full_name": "Egil Selvik",
     "given_name": "Egil",
-    "player_id": "P-W26-0477",
+    "player_id": "P-W26-0464",
     "primary_position": "GK"
   },
   {
@@ -6210,7 +6041,7 @@
     "female": false,
     "full_name": "Julian Ryerson",
     "given_name": "Julian",
-    "player_id": "P-W26-0478",
+    "player_id": "P-W26-0465",
     "primary_position": "FW"
   },
   {
@@ -6223,7 +6054,7 @@
     "female": false,
     "full_name": "Patrick Berg",
     "given_name": "Patrick",
-    "player_id": "P-W26-0479",
+    "player_id": "P-W26-0466",
     "primary_position": "MF"
   },
   {
@@ -6236,7 +6067,7 @@
     "female": false,
     "full_name": "Sander Berge",
     "given_name": "Sander",
-    "player_id": "P-W26-0480",
+    "player_id": "P-W26-0467",
     "primary_position": "MF"
   },
   {
@@ -6249,7 +6080,7 @@
     "female": false,
     "full_name": "Kristoffer Ajer",
     "given_name": "Kristoffer",
-    "player_id": "P-W26-0481",
+    "player_id": "P-W26-0468",
     "primary_position": "DF"
   },
   {
@@ -6262,7 +6093,7 @@
     "female": false,
     "full_name": "Fredrik André Bjørkan",
     "given_name": "Fredrik Andre",
-    "player_id": "P-W26-0482",
+    "player_id": "P-W26-0469",
     "primary_position": "DF"
   },
   {
@@ -6275,7 +6106,7 @@
     "female": false,
     "full_name": "Martin Ødegaard",
     "given_name": "Martin",
-    "player_id": "P-W26-0483",
+    "player_id": "P-W26-0470",
     "primary_position": "MF"
   },
   {
@@ -6288,7 +6119,7 @@
     "female": false,
     "full_name": "Torbjørn Heggem",
     "given_name": "Torbjorn",
-    "player_id": "P-W26-0484",
+    "player_id": "P-W26-0471",
     "primary_position": "DF"
   },
   {
@@ -6301,7 +6132,7 @@
     "female": false,
     "full_name": "Kristian Thorstvedt",
     "given_name": "Kristian",
-    "player_id": "P-W26-0485",
+    "player_id": "P-W26-0472",
     "primary_position": "MF"
   },
   {
@@ -6314,7 +6145,7 @@
     "female": false,
     "full_name": "Jens Petter Hauge",
     "given_name": "Jens Petter",
-    "player_id": "P-W26-0486",
+    "player_id": "P-W26-0473",
     "primary_position": "MF"
   },
   {
@@ -6327,7 +6158,7 @@
     "female": false,
     "full_name": "Leo Østigård",
     "given_name": "Leo",
-    "player_id": "P-W26-0487",
+    "player_id": "P-W26-0474",
     "primary_position": "DF"
   },
   {
@@ -6340,7 +6171,7 @@
     "female": false,
     "full_name": "Jørgen Strand Larsen",
     "given_name": "Jorgen",
-    "player_id": "P-W26-0488",
+    "player_id": "P-W26-0475",
     "primary_position": "FW"
   },
   {
@@ -6353,7 +6184,7 @@
     "female": false,
     "full_name": "Marcus Holmgren Pedersen",
     "given_name": "Marcus Holmgren",
-    "player_id": "P-W26-0489",
+    "player_id": "P-W26-0476",
     "primary_position": "DF"
   },
   {
@@ -6366,7 +6197,7 @@
     "female": false,
     "full_name": "Erling Haaland",
     "given_name": "Erling",
-    "player_id": "P-W26-0490",
+    "player_id": "P-W26-0477",
     "primary_position": "FW"
   },
   {
@@ -6379,7 +6210,7 @@
     "female": false,
     "full_name": "Sondre Langås",
     "given_name": "Sondre",
-    "player_id": "P-W26-0491",
+    "player_id": "P-W26-0478",
     "primary_position": "DF"
   },
   {
@@ -6392,7 +6223,7 @@
     "female": false,
     "full_name": "David Møller Wolfe",
     "given_name": "David",
-    "player_id": "P-W26-0492",
+    "player_id": "P-W26-0479",
     "primary_position": "DF"
   },
   {
@@ -6405,7 +6236,7 @@
     "female": false,
     "full_name": "Thelo Aasgaard",
     "given_name": "Thelo",
-    "player_id": "P-W26-0493",
+    "player_id": "P-W26-0480",
     "primary_position": "MF"
   },
   {
@@ -6418,7 +6249,7 @@
     "female": false,
     "full_name": "Sander Tangvik",
     "given_name": "Sander",
-    "player_id": "P-W26-0494",
+    "player_id": "P-W26-0481",
     "primary_position": "GK"
   },
   {
@@ -6431,7 +6262,7 @@
     "female": false,
     "full_name": "Henrik Falchener",
     "given_name": "Henrik",
-    "player_id": "P-W26-0495",
+    "player_id": "P-W26-0482",
     "primary_position": "DF"
   },
   {
@@ -6444,7 +6275,7 @@
     "female": false,
     "full_name": "Oscar Bobb",
     "given_name": "Oscar",
-    "player_id": "P-W26-0496",
+    "player_id": "P-W26-0483",
     "primary_position": "MF"
   },
   {
@@ -6457,7 +6288,7 @@
     "female": false,
     "full_name": "Andreas Schjelderup",
     "given_name": "Andreas",
-    "player_id": "P-W26-0497",
+    "player_id": "P-W26-0484",
     "primary_position": "MF"
   },
   {
@@ -6470,7 +6301,7 @@
     "female": false,
     "full_name": "Antonio Nusa",
     "given_name": "Antonio",
-    "player_id": "P-W26-0498",
+    "player_id": "P-W26-0485",
     "primary_position": "FW"
   },
   {
@@ -6483,7 +6314,7 @@
     "female": false,
     "full_name": "Alberto Quintero",
     "given_name": "Alberto",
-    "player_id": "P-W26-0499",
+    "player_id": "P-W26-0486",
     "primary_position": "MF"
   },
   {
@@ -6496,7 +6327,7 @@
     "female": false,
     "full_name": "Luis Mejía",
     "given_name": "Luis",
-    "player_id": "P-W26-0500",
+    "player_id": "P-W26-0487",
     "primary_position": "GK"
   },
   {
@@ -6509,7 +6340,7 @@
     "female": false,
     "full_name": "Cecilio Waterman",
     "given_name": "Cecilio",
-    "player_id": "P-W26-0501",
+    "player_id": "P-W26-0488",
     "primary_position": "FW"
   },
   {
@@ -6522,7 +6353,7 @@
     "female": false,
     "full_name": "Roderick Miller",
     "given_name": "Roderick",
-    "player_id": "P-W26-0502",
+    "player_id": "P-W26-0489",
     "primary_position": "DF"
   },
   {
@@ -6535,7 +6366,7 @@
     "female": false,
     "full_name": "José Fajardo",
     "given_name": "Jose",
-    "player_id": "P-W26-0503",
+    "player_id": "P-W26-0490",
     "primary_position": "FW"
   },
   {
@@ -6548,7 +6379,7 @@
     "female": false,
     "full_name": "Yoel Bárcenas",
     "given_name": "Yoel",
-    "player_id": "P-W26-0504",
+    "player_id": "P-W26-0491",
     "primary_position": "MF"
   },
   {
@@ -6561,7 +6392,7 @@
     "female": false,
     "full_name": "César Samudio",
     "given_name": "Cesar",
-    "player_id": "P-W26-0505",
+    "player_id": "P-W26-0492",
     "primary_position": "GK"
   },
   {
@@ -6574,7 +6405,7 @@
     "female": false,
     "full_name": "Orlando Mosquera",
     "given_name": "Orlando",
-    "player_id": "P-W26-0506",
+    "player_id": "P-W26-0493",
     "primary_position": "GK"
   },
   {
@@ -6587,7 +6418,7 @@
     "female": false,
     "full_name": "César Yanis",
     "given_name": "Cesar",
-    "player_id": "P-W26-0507",
+    "player_id": "P-W26-0494",
     "primary_position": "MF"
   },
   {
@@ -6600,7 +6431,7 @@
     "female": false,
     "full_name": "Jiovany Ramos",
     "given_name": "Jiovany",
-    "player_id": "P-W26-0508",
+    "player_id": "P-W26-0495",
     "primary_position": "DF"
   },
   {
@@ -6613,7 +6444,7 @@
     "female": false,
     "full_name": "Cristian Martínez",
     "given_name": "Cristian",
-    "player_id": "P-W26-0509",
+    "player_id": "P-W26-0496",
     "primary_position": "MF"
   },
   {
@@ -6626,7 +6457,7 @@
     "female": false,
     "full_name": "César Blackman",
     "given_name": "Cesar",
-    "player_id": "P-W26-0510",
+    "player_id": "P-W26-0497",
     "primary_position": "DF"
   },
   {
@@ -6639,7 +6470,7 @@
     "female": false,
     "full_name": "Jorge Gutiérrez",
     "given_name": "Jorge",
-    "player_id": "P-W26-0511",
+    "player_id": "P-W26-0498",
     "primary_position": "DF"
   },
   {
@@ -6652,7 +6483,7 @@
     "female": false,
     "full_name": "Andrés Andrade",
     "given_name": "Andres",
-    "player_id": "P-W26-0512",
+    "player_id": "P-W26-0499",
     "primary_position": "DF"
   },
   {
@@ -6665,7 +6496,7 @@
     "female": false,
     "full_name": "Adalberto Carrasquilla",
     "given_name": "Adalberto",
-    "player_id": "P-W26-0513",
+    "player_id": "P-W26-0500",
     "primary_position": "MF"
   },
   {
@@ -6678,7 +6509,7 @@
     "female": false,
     "full_name": "Tomás Rodríguez",
     "given_name": "Tomas",
-    "player_id": "P-W26-0514",
+    "player_id": "P-W26-0501",
     "primary_position": "FW"
   },
   {
@@ -6691,7 +6522,7 @@
     "female": false,
     "full_name": "Carlos Harvey",
     "given_name": "Carlos",
-    "player_id": "P-W26-0515",
+    "player_id": "P-W26-0502",
     "primary_position": "DF"
   },
   {
@@ -6704,7 +6535,7 @@
     "female": false,
     "full_name": "José Córdoba",
     "given_name": "Jose",
-    "player_id": "P-W26-0516",
+    "player_id": "P-W26-0503",
     "primary_position": "DF"
   },
   {
@@ -6717,7 +6548,7 @@
     "female": false,
     "full_name": "Azarias Londoño",
     "given_name": "Azarias",
-    "player_id": "P-W26-0517",
+    "player_id": "P-W26-0504",
     "primary_position": "FW"
   },
   {
@@ -6730,7 +6561,7 @@
     "female": false,
     "full_name": "Edgardo Fariña",
     "given_name": "Edgardo",
-    "player_id": "P-W26-0518",
+    "player_id": "P-W26-0505",
     "primary_position": "DF"
   },
   {
@@ -6743,7 +6574,7 @@
     "female": false,
     "full_name": "Gatito Fernández",
     "given_name": "Gatito",
-    "player_id": "P-W26-0519",
+    "player_id": "P-W26-0506",
     "primary_position": "GK"
   },
   {
@@ -6756,7 +6587,7 @@
     "female": false,
     "full_name": "Gabriel Ávalos",
     "given_name": "Gabriel",
-    "player_id": "P-W26-0520",
+    "player_id": "P-W26-0507",
     "primary_position": "FW"
   },
   {
@@ -6769,7 +6600,7 @@
     "female": false,
     "full_name": "Gustavo Velázquez",
     "given_name": "Gustavo",
-    "player_id": "P-W26-0521",
+    "player_id": "P-W26-0508",
     "primary_position": "DF"
   },
   {
@@ -6782,7 +6613,7 @@
     "female": false,
     "full_name": "Fabián Balbuena",
     "given_name": "Fabian",
-    "player_id": "P-W26-0522",
+    "player_id": "P-W26-0509",
     "primary_position": "DF"
   },
   {
@@ -6795,7 +6626,7 @@
     "female": false,
     "full_name": "Júnior Alonso",
     "given_name": "Junior",
-    "player_id": "P-W26-0523",
+    "player_id": "P-W26-0510",
     "primary_position": "DF"
   },
   {
@@ -6808,7 +6639,7 @@
     "female": false,
     "full_name": "Gastón Olveira",
     "given_name": "Gaston",
-    "player_id": "P-W26-0524",
+    "player_id": "P-W26-0511",
     "primary_position": "GK"
   },
   {
@@ -6821,7 +6652,7 @@
     "female": false,
     "full_name": "Gustavo Gómez",
     "given_name": "Gustavo",
-    "player_id": "P-W26-0525",
+    "player_id": "P-W26-0512",
     "primary_position": "DF"
   },
   {
@@ -6834,7 +6665,7 @@
     "female": false,
     "full_name": "Miguel Almirón",
     "given_name": "Miguel",
-    "player_id": "P-W26-0526",
+    "player_id": "P-W26-0513",
     "primary_position": "MF"
   },
   {
@@ -6847,7 +6678,7 @@
     "female": false,
     "full_name": "Kaku",
     "given_name": null,
-    "player_id": "P-W26-0527",
+    "player_id": "P-W26-0514",
     "primary_position": "FW"
   },
   {
@@ -6860,7 +6691,7 @@
     "female": false,
     "full_name": "Álex Arce",
     "given_name": "Alex",
-    "player_id": "P-W26-0528",
+    "player_id": "P-W26-0515",
     "primary_position": "FW"
   },
   {
@@ -6873,7 +6704,7 @@
     "female": false,
     "full_name": "Antonio Sanabria",
     "given_name": "Antonio",
-    "player_id": "P-W26-0529",
+    "player_id": "P-W26-0516",
     "primary_position": "FW"
   },
   {
@@ -6886,7 +6717,7 @@
     "female": false,
     "full_name": "Andrés Cubas",
     "given_name": "Andres",
-    "player_id": "P-W26-0530",
+    "player_id": "P-W26-0517",
     "primary_position": "MF"
   },
   {
@@ -6899,7 +6730,7 @@
     "female": false,
     "full_name": "José Canale",
     "given_name": "Jose",
-    "player_id": "P-W26-0531",
+    "player_id": "P-W26-0518",
     "primary_position": "DF"
   },
   {
@@ -6912,7 +6743,7 @@
     "female": false,
     "full_name": "Omar Alderete",
     "given_name": "Omar",
-    "player_id": "P-W26-0532",
+    "player_id": "P-W26-0519",
     "primary_position": "DF"
   },
   {
@@ -6925,7 +6756,7 @@
     "female": false,
     "full_name": "Isidro Pitta",
     "given_name": "Isidro",
-    "player_id": "P-W26-0533",
+    "player_id": "P-W26-0520",
     "primary_position": "FW"
   },
   {
@@ -6938,7 +6769,7 @@
     "female": false,
     "full_name": "Ramón Sosa",
     "given_name": "Ramon",
-    "player_id": "P-W26-0534",
+    "player_id": "P-W26-0521",
     "primary_position": "MF"
   },
   {
@@ -6951,7 +6782,7 @@
     "female": false,
     "full_name": "Juan José Cáceres",
     "given_name": "Juan Jose",
-    "player_id": "P-W26-0535",
+    "player_id": "P-W26-0522",
     "primary_position": "DF"
   },
   {
@@ -6964,7 +6795,7 @@
     "female": false,
     "full_name": "Orlando Gill",
     "given_name": "Orlando",
-    "player_id": "P-W26-0536",
+    "player_id": "P-W26-0523",
     "primary_position": "GK"
   },
   {
@@ -6977,7 +6808,7 @@
     "female": false,
     "full_name": "Braian Ojeda",
     "given_name": "Braian",
-    "player_id": "P-W26-0537",
+    "player_id": "P-W26-0524",
     "primary_position": "MF"
   },
   {
@@ -6990,7 +6821,7 @@
     "female": false,
     "full_name": "Maurício",
     "given_name": null,
-    "player_id": "P-W26-0538",
+    "player_id": "P-W26-0525",
     "primary_position": "MF"
   },
   {
@@ -7003,7 +6834,7 @@
     "female": false,
     "full_name": "Damián Bobadilla",
     "given_name": "Damian",
-    "player_id": "P-W26-0539",
+    "player_id": "P-W26-0526",
     "primary_position": "MF"
   },
   {
@@ -7016,7 +6847,7 @@
     "female": false,
     "full_name": "Gustavo Caballero",
     "given_name": "Gustavo",
-    "player_id": "P-W26-0540",
+    "player_id": "P-W26-0527",
     "primary_position": "MF"
   },
   {
@@ -7029,7 +6860,7 @@
     "female": false,
     "full_name": "Matías Galarza",
     "given_name": "Matias",
-    "player_id": "P-W26-0541",
+    "player_id": "P-W26-0528",
     "primary_position": "MF"
   },
   {
@@ -7042,7 +6873,7 @@
     "female": false,
     "full_name": "Diego Gómez",
     "given_name": "Diego",
-    "player_id": "P-W26-0542",
+    "player_id": "P-W26-0529",
     "primary_position": "MF"
   },
   {
@@ -7055,7 +6886,7 @@
     "female": false,
     "full_name": "Julio Enciso",
     "given_name": "Julio",
-    "player_id": "P-W26-0543",
+    "player_id": "P-W26-0530",
     "primary_position": "FW"
   },
   {
@@ -7068,7 +6899,7 @@
     "female": false,
     "full_name": "Alexandro Maidana",
     "given_name": "Alexandro",
-    "player_id": "P-W26-0544",
+    "player_id": "P-W26-0531",
     "primary_position": "DF"
   },
   {
@@ -7081,7 +6912,7 @@
     "female": false,
     "full_name": "Nélson Semedo",
     "given_name": "Nelson",
-    "player_id": "P-W26-0545",
+    "player_id": "P-W26-0532",
     "primary_position": "DF"
   },
   {
@@ -7094,7 +6925,7 @@
     "female": false,
     "full_name": "Rui Silva",
     "given_name": "Rui",
-    "player_id": "P-W26-0546",
+    "player_id": "P-W26-0533",
     "primary_position": "GK"
   },
   {
@@ -7107,21 +6938,8 @@
     "female": false,
     "full_name": "Francisco Trincão",
     "given_name": "Francisco",
-    "player_id": "P-W26-0547",
+    "player_id": "P-W26-0534",
     "primary_position": "FW"
-  },
-  {
-    "birth_date": "2000-02-13",
-    "common_name": "Vitinha",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Vitinha",
-    "given_name": null,
-    "player_id": "P-W26-0548",
-    "primary_position": "MF"
   },
   {
     "birth_date": "2000-03-09",
@@ -7133,7 +6951,7 @@
     "female": false,
     "full_name": "Pedro Neto",
     "given_name": "Pedro",
-    "player_id": "P-W26-0549",
+    "player_id": "P-W26-0535",
     "primary_position": "FW"
   },
   {
@@ -7146,7 +6964,7 @@
     "female": false,
     "full_name": "Samú Costa",
     "given_name": "Samu",
-    "player_id": "P-W26-0550",
+    "player_id": "P-W26-0536",
     "primary_position": "DF"
   },
   {
@@ -7159,7 +6977,7 @@
     "female": false,
     "full_name": "Gonçalo Inácio",
     "given_name": "Goncalo",
-    "player_id": "P-W26-0551",
+    "player_id": "P-W26-0537",
     "primary_position": "DF"
   },
   {
@@ -7172,7 +6990,7 @@
     "female": false,
     "full_name": "Tomás Araújo",
     "given_name": "Tomas",
-    "player_id": "P-W26-0552",
+    "player_id": "P-W26-0538",
     "primary_position": "DF"
   },
   {
@@ -7185,7 +7003,7 @@
     "female": false,
     "full_name": "Francisco Conceição",
     "given_name": "Francisco",
-    "player_id": "P-W26-0553",
+    "player_id": "P-W26-0539",
     "primary_position": "FW"
   },
   {
@@ -7198,7 +7016,7 @@
     "female": false,
     "full_name": "Renato Veiga",
     "given_name": "Renato",
-    "player_id": "P-W26-0554",
+    "player_id": "P-W26-0540",
     "primary_position": "DF"
   },
   {
@@ -7211,7 +7029,7 @@
     "female": false,
     "full_name": "João Neves",
     "given_name": "Joao",
-    "player_id": "P-W26-0555",
+    "player_id": "P-W26-0541",
     "primary_position": "MF"
   },
   {
@@ -7224,7 +7042,7 @@
     "female": false,
     "full_name": "Lucas Mendes",
     "given_name": "Lucas",
-    "player_id": "P-W26-0556",
+    "player_id": "P-W26-0542",
     "primary_position": "DF"
   },
   {
@@ -7237,7 +7055,7 @@
     "female": false,
     "full_name": "Pedro Miguel",
     "given_name": null,
-    "player_id": "P-W26-0557",
+    "player_id": "P-W26-0543",
     "primary_position": "DF"
   },
   {
@@ -7250,7 +7068,7 @@
     "female": false,
     "full_name": "Ahmed Fathy",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0558",
+    "player_id": "P-W26-0544",
     "primary_position": "MF"
   },
   {
@@ -7263,7 +7081,7 @@
     "female": false,
     "full_name": "Edmilson Junior",
     "given_name": null,
-    "player_id": "P-W26-0559",
+    "player_id": "P-W26-0545",
     "primary_position": "FW"
   },
   {
@@ -7276,7 +7094,7 @@
     "female": false,
     "full_name": "Sultan Al-Brake",
     "given_name": "Sultan",
-    "player_id": "P-W26-0560",
+    "player_id": "P-W26-0546",
     "primary_position": "DF"
   },
   {
@@ -7289,7 +7107,7 @@
     "female": false,
     "full_name": "Issa Laye",
     "given_name": "Issa",
-    "player_id": "P-W26-0561",
+    "player_id": "P-W26-0547",
     "primary_position": "DF"
   },
   {
@@ -7302,7 +7120,7 @@
     "female": false,
     "full_name": "Salah Zakaria",
     "given_name": "Salah",
-    "player_id": "P-W26-0562",
+    "player_id": "P-W26-0548",
     "primary_position": "GK"
   },
   {
@@ -7315,7 +7133,7 @@
     "female": false,
     "full_name": "Yusuf Abdurisag",
     "given_name": "Yusuf",
-    "player_id": "P-W26-0563",
+    "player_id": "P-W26-0549",
     "primary_position": "FW"
   },
   {
@@ -7328,7 +7146,7 @@
     "female": false,
     "full_name": "Mahmud Abunada",
     "given_name": "Mahmud",
-    "player_id": "P-W26-0564",
+    "player_id": "P-W26-0550",
     "primary_position": "GK"
   },
   {
@@ -7341,7 +7159,7 @@
     "female": false,
     "full_name": "Ahmed Al-Ganehi",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0565",
+    "player_id": "P-W26-0551",
     "primary_position": "MF"
   },
   {
@@ -7354,7 +7172,7 @@
     "female": false,
     "full_name": "Mohamed Manai",
     "given_name": "Mohamed",
-    "player_id": "P-W26-0566",
+    "player_id": "P-W26-0552",
     "primary_position": "FW"
   },
   {
@@ -7367,7 +7185,7 @@
     "female": false,
     "full_name": "Al-Hashmi Al-Hussain",
     "given_name": "Al-Hashmi",
-    "player_id": "P-W26-0567",
+    "player_id": "P-W26-0553",
     "primary_position": "DF"
   },
   {
@@ -7380,7 +7198,7 @@
     "female": false,
     "full_name": "Ayoub Al-Oui",
     "given_name": "Ayoub",
-    "player_id": "P-W26-0568",
+    "player_id": "P-W26-0554",
     "primary_position": "DF"
   },
   {
@@ -7393,7 +7211,7 @@
     "female": false,
     "full_name": "Tahsin Jamshid",
     "given_name": "Tahsin",
-    "player_id": "P-W26-0569",
+    "player_id": "P-W26-0555",
     "primary_position": "FW"
   },
   {
@@ -7406,7 +7224,7 @@
     "female": false,
     "full_name": "Ahmed Al-Kassar",
     "given_name": "Ahmed",
-    "player_id": "P-W26-0570",
+    "player_id": "P-W26-0556",
     "primary_position": "GK"
   },
   {
@@ -7419,7 +7237,7 @@
     "female": false,
     "full_name": "Hassan Kadesh",
     "given_name": "Hassan",
-    "player_id": "P-W26-0571",
+    "player_id": "P-W26-0557",
     "primary_position": "DF"
   },
   {
@@ -7432,7 +7250,7 @@
     "female": false,
     "full_name": "Sultan Mandash",
     "given_name": "Sultan",
-    "player_id": "P-W26-0572",
+    "player_id": "P-W26-0558",
     "primary_position": "FW"
   },
   {
@@ -7445,7 +7263,7 @@
     "female": false,
     "full_name": "Alaa Al-Hejji",
     "given_name": "Alaa",
-    "player_id": "P-W26-0573",
+    "player_id": "P-W26-0559",
     "primary_position": "MF"
   },
   {
@@ -7458,7 +7276,7 @@
     "female": false,
     "full_name": "Ali Lajami",
     "given_name": "Ali",
-    "player_id": "P-W26-0574",
+    "player_id": "P-W26-0560",
     "primary_position": "DF"
   },
   {
@@ -7471,7 +7289,7 @@
     "female": false,
     "full_name": "Abdullah Al-Hamdan",
     "given_name": "Abdullah",
-    "player_id": "P-W26-0575",
+    "player_id": "P-W26-0561",
     "primary_position": "FW"
   },
   {
@@ -7484,7 +7302,7 @@
     "female": false,
     "full_name": "Nawaf Boushal",
     "given_name": "Nawaf",
-    "player_id": "P-W26-0576",
+    "player_id": "P-W26-0562",
     "primary_position": "DF"
   },
   {
@@ -7497,7 +7315,7 @@
     "female": false,
     "full_name": "Ali Majrashi",
     "given_name": "Ali",
-    "player_id": "P-W26-0577",
+    "player_id": "P-W26-0563",
     "primary_position": "DF"
   },
   {
@@ -7510,7 +7328,7 @@
     "female": false,
     "full_name": "Moteb Al-Harbi",
     "given_name": "Moteb",
-    "player_id": "P-W26-0578",
+    "player_id": "P-W26-0564",
     "primary_position": "DF"
   },
   {
@@ -7523,7 +7341,7 @@
     "female": false,
     "full_name": "Khalid Al-Ghannam",
     "given_name": "Khalid",
-    "player_id": "P-W26-0579",
+    "player_id": "P-W26-0565",
     "primary_position": "FW"
   },
   {
@@ -7536,7 +7354,7 @@
     "female": false,
     "full_name": "Ayman Yahya",
     "given_name": "Ayman",
-    "player_id": "P-W26-0580",
+    "player_id": "P-W26-0566",
     "primary_position": "FW"
   },
   {
@@ -7549,7 +7367,7 @@
     "female": false,
     "full_name": "Jehad Thakri",
     "given_name": "Jehad",
-    "player_id": "P-W26-0581",
+    "player_id": "P-W26-0567",
     "primary_position": "DF"
   },
   {
@@ -7562,7 +7380,7 @@
     "female": false,
     "full_name": "Ziyad Al-Johani",
     "given_name": "Ziyad",
-    "player_id": "P-W26-0582",
+    "player_id": "P-W26-0568",
     "primary_position": "MF"
   },
   {
@@ -7575,7 +7393,7 @@
     "female": false,
     "full_name": "Mohammed Abu Al-Shamat",
     "given_name": "Mohammed",
-    "player_id": "P-W26-0583",
+    "player_id": "P-W26-0569",
     "primary_position": "DF"
   },
   {
@@ -7588,7 +7406,7 @@
     "female": false,
     "full_name": "Musab Al-Juwayr",
     "given_name": "Musab",
-    "player_id": "P-W26-0584",
+    "player_id": "P-W26-0570",
     "primary_position": "MF"
   },
   {
@@ -7601,7 +7419,7 @@
     "female": false,
     "full_name": "Craig Gordon",
     "given_name": "Craig",
-    "player_id": "P-W26-0585",
+    "player_id": "P-W26-0571",
     "primary_position": "GK"
   },
   {
@@ -7614,7 +7432,7 @@
     "female": false,
     "full_name": "Grant Hanley",
     "given_name": "Grant",
-    "player_id": "P-W26-0586",
+    "player_id": "P-W26-0572",
     "primary_position": "DF"
   },
   {
@@ -7627,7 +7445,7 @@
     "female": false,
     "full_name": "Kenny McLean",
     "given_name": "Kenny",
-    "player_id": "P-W26-0587",
+    "player_id": "P-W26-0573",
     "primary_position": "MF"
   },
   {
@@ -7640,7 +7458,7 @@
     "female": false,
     "full_name": "Andy Robertson",
     "given_name": "Andy",
-    "player_id": "P-W26-0588",
+    "player_id": "P-W26-0574",
     "primary_position": "DF"
   },
   {
@@ -7653,7 +7471,7 @@
     "female": false,
     "full_name": "John McGinn",
     "given_name": "John",
-    "player_id": "P-W26-0589",
+    "player_id": "P-W26-0575",
     "primary_position": "MF"
   },
   {
@@ -7666,7 +7484,7 @@
     "female": false,
     "full_name": "Ryan Christie",
     "given_name": "Ryan",
-    "player_id": "P-W26-0590",
+    "player_id": "P-W26-0576",
     "primary_position": "MF"
   },
   {
@@ -7679,7 +7497,7 @@
     "female": false,
     "full_name": "Jack Hendry",
     "given_name": "Jack",
-    "player_id": "P-W26-0591",
+    "player_id": "P-W26-0577",
     "primary_position": "DF"
   },
   {
@@ -7692,7 +7510,7 @@
     "female": false,
     "full_name": "Lawrence Shankland",
     "given_name": "Lawrence",
-    "player_id": "P-W26-0592",
+    "player_id": "P-W26-0578",
     "primary_position": "FW"
   },
   {
@@ -7705,7 +7523,7 @@
     "female": false,
     "full_name": "Lyndon Dykes",
     "given_name": "Lyndon",
-    "player_id": "P-W26-0593",
+    "player_id": "P-W26-0579",
     "primary_position": "FW"
   },
   {
@@ -7718,7 +7536,7 @@
     "female": false,
     "full_name": "Dominic Hyam",
     "given_name": "Dominic",
-    "player_id": "P-W26-0594",
+    "player_id": "P-W26-0580",
     "primary_position": "DF"
   },
   {
@@ -7731,7 +7549,7 @@
     "female": false,
     "full_name": "Angus Gunn",
     "given_name": "Angus",
-    "player_id": "P-W26-0595",
+    "player_id": "P-W26-0581",
     "primary_position": "GK"
   },
   {
@@ -7744,7 +7562,7 @@
     "female": false,
     "full_name": "Liam Kelly",
     "given_name": "Liam",
-    "player_id": "P-W26-0596",
+    "player_id": "P-W26-0582",
     "primary_position": "GK"
   },
   {
@@ -7757,7 +7575,7 @@
     "female": false,
     "full_name": "Ross Stewart",
     "given_name": "Ross",
-    "player_id": "P-W26-0597",
+    "player_id": "P-W26-0583",
     "primary_position": "FW"
   },
   {
@@ -7770,7 +7588,7 @@
     "female": false,
     "full_name": "Ché Adams",
     "given_name": "Che",
-    "player_id": "P-W26-0598",
+    "player_id": "P-W26-0584",
     "primary_position": "FW"
   },
   {
@@ -7783,7 +7601,7 @@
     "female": false,
     "full_name": "John Souttar",
     "given_name": "John",
-    "player_id": "P-W26-0599",
+    "player_id": "P-W26-0585",
     "primary_position": "DF"
   },
   {
@@ -7796,7 +7614,7 @@
     "female": false,
     "full_name": "Scott McKenna",
     "given_name": "Scott",
-    "player_id": "P-W26-0600",
+    "player_id": "P-W26-0586",
     "primary_position": "DF"
   },
   {
@@ -7809,7 +7627,7 @@
     "female": false,
     "full_name": "Scott McTominay",
     "given_name": "Scott",
-    "player_id": "P-W26-0601",
+    "player_id": "P-W26-0587",
     "primary_position": "MF"
   },
   {
@@ -7822,7 +7640,7 @@
     "female": false,
     "full_name": "Kieran Tierney",
     "given_name": "Kieran",
-    "player_id": "P-W26-0602",
+    "player_id": "P-W26-0588",
     "primary_position": "DF"
   },
   {
@@ -7835,7 +7653,7 @@
     "female": false,
     "full_name": "Anthony Ralston",
     "given_name": "Anthony",
-    "player_id": "P-W26-0603",
+    "player_id": "P-W26-0589",
     "primary_position": "DF"
   },
   {
@@ -7848,7 +7666,7 @@
     "female": false,
     "full_name": "George Hirst",
     "given_name": "George",
-    "player_id": "P-W26-0604",
+    "player_id": "P-W26-0590",
     "primary_position": "FW"
   },
   {
@@ -7861,7 +7679,7 @@
     "female": false,
     "full_name": "Lewis Ferguson",
     "given_name": "Lewis",
-    "player_id": "P-W26-0605",
+    "player_id": "P-W26-0591",
     "primary_position": "MF"
   },
   {
@@ -7874,7 +7692,7 @@
     "female": false,
     "full_name": "Nathan Patterson",
     "given_name": "Nathan",
-    "player_id": "P-W26-0606",
+    "player_id": "P-W26-0592",
     "primary_position": "DF"
   },
   {
@@ -7887,7 +7705,7 @@
     "female": false,
     "full_name": "Aaron Hickey",
     "given_name": "Aaron",
-    "player_id": "P-W26-0607",
+    "player_id": "P-W26-0593",
     "primary_position": "DF"
   },
   {
@@ -7900,7 +7718,7 @@
     "female": false,
     "full_name": "Ben Gannon-Doak",
     "given_name": "Ben",
-    "player_id": "P-W26-0608",
+    "player_id": "P-W26-0594",
     "primary_position": "FW"
   },
   {
@@ -7913,7 +7731,7 @@
     "female": false,
     "full_name": "Findlay Curtis",
     "given_name": "Findlay",
-    "player_id": "P-W26-0609",
+    "player_id": "P-W26-0595",
     "primary_position": "FW"
   },
   {
@@ -7926,7 +7744,7 @@
     "female": false,
     "full_name": "Tyler Fletcher",
     "given_name": "Tyler",
-    "player_id": "P-W26-0610",
+    "player_id": "P-W26-0596",
     "primary_position": "MF"
   },
   {
@@ -7939,7 +7757,7 @@
     "female": false,
     "full_name": "Abdoulaye Seck",
     "given_name": "Abdoulaye",
-    "player_id": "P-W26-0611",
+    "player_id": "P-W26-0597",
     "primary_position": "DF"
   },
   {
@@ -7952,7 +7770,7 @@
     "female": false,
     "full_name": "Mory Diaw",
     "given_name": "Mory",
-    "player_id": "P-W26-0612",
+    "player_id": "P-W26-0598",
     "primary_position": "GK"
   },
   {
@@ -7965,7 +7783,7 @@
     "female": false,
     "full_name": "Cherif Ndiaye",
     "given_name": "Cherif",
-    "player_id": "P-W26-0613",
+    "player_id": "P-W26-0599",
     "primary_position": "FW"
   },
   {
@@ -7978,7 +7796,7 @@
     "female": false,
     "full_name": "Moussa Niakhaté",
     "given_name": "Moussa",
-    "player_id": "P-W26-0614",
+    "player_id": "P-W26-0600",
     "primary_position": "DF"
   },
   {
@@ -7991,7 +7809,7 @@
     "female": false,
     "full_name": "Yehvann Diouf",
     "given_name": "Yehvann",
-    "player_id": "P-W26-0615",
+    "player_id": "P-W26-0601",
     "primary_position": "GK"
   },
   {
@@ -8004,7 +7822,7 @@
     "female": false,
     "full_name": "Lamine Camara",
     "given_name": "Lamine",
-    "player_id": "P-W26-0616",
+    "player_id": "P-W26-0602",
     "primary_position": "MF"
   },
   {
@@ -8017,7 +7835,7 @@
     "female": false,
     "full_name": "Habib Diarra",
     "given_name": "Habib",
-    "player_id": "P-W26-0617",
+    "player_id": "P-W26-0603",
     "primary_position": "MF"
   },
   {
@@ -8030,7 +7848,7 @@
     "female": false,
     "full_name": "Antoine Mendy",
     "given_name": "Antoine",
-    "player_id": "P-W26-0618",
+    "player_id": "P-W26-0604",
     "primary_position": "DF"
   },
   {
@@ -8043,7 +7861,7 @@
     "female": false,
     "full_name": "El Hadji Malick Diouf",
     "given_name": "El Hadji Malick",
-    "player_id": "P-W26-0619",
+    "player_id": "P-W26-0605",
     "primary_position": "DF"
   },
   {
@@ -8056,7 +7874,7 @@
     "female": false,
     "full_name": "Mamadou Sarr",
     "given_name": "Mamadou",
-    "player_id": "P-W26-0620",
+    "player_id": "P-W26-0606",
     "primary_position": "DF"
   },
   {
@@ -8069,7 +7887,7 @@
     "female": false,
     "full_name": "Assane Diao",
     "given_name": "Assane",
-    "player_id": "P-W26-0621",
+    "player_id": "P-W26-0607",
     "primary_position": "FW"
   },
   {
@@ -8082,7 +7900,7 @@
     "female": false,
     "full_name": "Bara Sapoko Ndiaye",
     "given_name": "Bara",
-    "player_id": "P-W26-0622",
+    "player_id": "P-W26-0608",
     "primary_position": "MF"
   },
   {
@@ -8095,7 +7913,7 @@
     "female": false,
     "full_name": "Ibrahim Mbaye",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0623",
+    "player_id": "P-W26-0609",
     "primary_position": "FW"
   },
   {
@@ -8108,7 +7926,7 @@
     "female": false,
     "full_name": "Themba Zwane",
     "given_name": "Themba",
-    "player_id": "P-W26-0624",
+    "player_id": "P-W26-0610",
     "primary_position": "MF"
   },
   {
@@ -8121,7 +7939,7 @@
     "female": false,
     "full_name": "Ronwen Williams",
     "given_name": "Ronwen",
-    "player_id": "P-W26-0625",
+    "player_id": "P-W26-0611",
     "primary_position": "GK"
   },
   {
@@ -8134,7 +7952,7 @@
     "female": false,
     "full_name": "Ricardo Goss",
     "given_name": "Ricardo",
-    "player_id": "P-W26-0626",
+    "player_id": "P-W26-0612",
     "primary_position": "GK"
   },
   {
@@ -8147,7 +7965,7 @@
     "female": false,
     "full_name": "Khuliso Mudau",
     "given_name": "Khuliso",
-    "player_id": "P-W26-0627",
+    "player_id": "P-W26-0613",
     "primary_position": "DF"
   },
   {
@@ -8160,7 +7978,7 @@
     "female": false,
     "full_name": "Aubrey Modiba",
     "given_name": "Aubrey",
-    "player_id": "P-W26-0628",
+    "player_id": "P-W26-0614",
     "primary_position": "DF"
   },
   {
@@ -8173,7 +7991,7 @@
     "female": false,
     "full_name": "Nkosinathi Sibisi",
     "given_name": "Nkosinathi",
-    "player_id": "P-W26-0629",
+    "player_id": "P-W26-0615",
     "primary_position": "DF"
   },
   {
@@ -8186,7 +8004,7 @@
     "female": false,
     "full_name": "Iqraam Rayners",
     "given_name": "Iqraam",
-    "player_id": "P-W26-0630",
+    "player_id": "P-W26-0616",
     "primary_position": "FW"
   },
   {
@@ -8199,7 +8017,7 @@
     "female": false,
     "full_name": "Sipho Chaine",
     "given_name": "Sipho",
-    "player_id": "P-W26-0631",
+    "player_id": "P-W26-0617",
     "primary_position": "GK"
   },
   {
@@ -8212,7 +8030,7 @@
     "female": false,
     "full_name": "Teboho Mokoena",
     "given_name": "Teboho",
-    "player_id": "P-W26-0632",
+    "player_id": "P-W26-0618",
     "primary_position": "MF"
   },
   {
@@ -8225,7 +8043,7 @@
     "female": false,
     "full_name": "Thabang Matuludi",
     "given_name": "Thabang",
-    "player_id": "P-W26-0633",
+    "player_id": "P-W26-0619",
     "primary_position": "DF"
   },
   {
@@ -8238,7 +8056,7 @@
     "female": false,
     "full_name": "Sphephelo Sithole",
     "given_name": "Sphephelo",
-    "player_id": "P-W26-0634",
+    "player_id": "P-W26-0620",
     "primary_position": "MF"
   },
   {
@@ -8251,7 +8069,7 @@
     "female": false,
     "full_name": "Thalente Mbatha",
     "given_name": "Thalente",
-    "player_id": "P-W26-0635",
+    "player_id": "P-W26-0621",
     "primary_position": "MF"
   },
   {
@@ -8264,7 +8082,7 @@
     "female": false,
     "full_name": "Evidence Makgopa",
     "given_name": "Evidence",
-    "player_id": "P-W26-0636",
+    "player_id": "P-W26-0622",
     "primary_position": "FW"
   },
   {
@@ -8277,7 +8095,7 @@
     "female": false,
     "full_name": "Lyle Foster",
     "given_name": "Lyle",
-    "player_id": "P-W26-0637",
+    "player_id": "P-W26-0623",
     "primary_position": "FW"
   },
   {
@@ -8290,7 +8108,7 @@
     "female": false,
     "full_name": "Tshepang Moremi",
     "given_name": "Tshepang",
-    "player_id": "P-W26-0638",
+    "player_id": "P-W26-0624",
     "primary_position": "FW"
   },
   {
@@ -8303,7 +8121,7 @@
     "female": false,
     "full_name": "Bradley Cross",
     "given_name": "Bradley",
-    "player_id": "P-W26-0639",
+    "player_id": "P-W26-0625",
     "primary_position": "DF"
   },
   {
@@ -8316,7 +8134,7 @@
     "female": false,
     "full_name": "Jayden Adams",
     "given_name": "Jayden",
-    "player_id": "P-W26-0640",
+    "player_id": "P-W26-0626",
     "primary_position": "MF"
   },
   {
@@ -8329,7 +8147,7 @@
     "female": false,
     "full_name": "Oswin Appollis",
     "given_name": "Oswin",
-    "player_id": "P-W26-0641",
+    "player_id": "P-W26-0627",
     "primary_position": "FW"
   },
   {
@@ -8342,7 +8160,7 @@
     "female": false,
     "full_name": "Kamogelo Sebelebele",
     "given_name": "Kamogelo",
-    "player_id": "P-W26-0642",
+    "player_id": "P-W26-0628",
     "primary_position": "FW"
   },
   {
@@ -8355,7 +8173,7 @@
     "female": false,
     "full_name": "Thapelo Maseko",
     "given_name": "Thapelo",
-    "player_id": "P-W26-0643",
+    "player_id": "P-W26-0629",
     "primary_position": "FW"
   },
   {
@@ -8368,7 +8186,7 @@
     "female": false,
     "full_name": "Khulumani Ndamane",
     "given_name": "Khulumani",
-    "player_id": "P-W26-0644",
+    "player_id": "P-W26-0630",
     "primary_position": "DF"
   },
   {
@@ -8381,7 +8199,7 @@
     "female": false,
     "full_name": "Ime Okon",
     "given_name": "Ime",
-    "player_id": "P-W26-0645",
+    "player_id": "P-W26-0631",
     "primary_position": "DF"
   },
   {
@@ -8394,7 +8212,7 @@
     "female": false,
     "full_name": "Samukele Kabini",
     "given_name": "Samukele",
-    "player_id": "P-W26-0646",
+    "player_id": "P-W26-0632",
     "primary_position": "DF"
   },
   {
@@ -8407,7 +8225,7 @@
     "female": false,
     "full_name": "Olwethu Makhanya",
     "given_name": "Olwethu",
-    "player_id": "P-W26-0647",
+    "player_id": "P-W26-0633",
     "primary_position": "DF"
   },
   {
@@ -8420,7 +8238,7 @@
     "female": false,
     "full_name": "Relebohile Mofokeng",
     "given_name": "Relebohile",
-    "player_id": "P-W26-0648",
+    "player_id": "P-W26-0634",
     "primary_position": "FW"
   },
   {
@@ -8433,7 +8251,7 @@
     "female": false,
     "full_name": "Mbekezeli Mbokazi",
     "given_name": "Mbekezeli",
-    "player_id": "P-W26-0649",
+    "player_id": "P-W26-0635",
     "primary_position": "DF"
   },
   {
@@ -8446,7 +8264,7 @@
     "female": false,
     "full_name": "Park Jin-seob",
     "given_name": "Jin-seob",
-    "player_id": "P-W26-0650",
+    "player_id": "P-W26-0636",
     "primary_position": "DF"
   },
   {
@@ -8459,7 +8277,7 @@
     "female": false,
     "full_name": "Kim Jin-gyu",
     "given_name": "Jin-gyu",
-    "player_id": "P-W26-0651",
+    "player_id": "P-W26-0637",
     "primary_position": "MF"
   },
   {
@@ -8472,7 +8290,7 @@
     "female": false,
     "full_name": "Lee Dong-gyeong",
     "given_name": "Dong-gyeong",
-    "player_id": "P-W26-0652",
+    "player_id": "P-W26-0638",
     "primary_position": "MF"
   },
   {
@@ -8485,7 +8303,7 @@
     "female": false,
     "full_name": "Seol Young-woo",
     "given_name": "Young-woo",
-    "player_id": "P-W26-0653",
+    "player_id": "P-W26-0639",
     "primary_position": "DF"
   },
   {
@@ -8498,7 +8316,7 @@
     "female": false,
     "full_name": "Lee Gi-hyuk",
     "given_name": "Gi-hyuk",
-    "player_id": "P-W26-0654",
+    "player_id": "P-W26-0640",
     "primary_position": "MF"
   },
   {
@@ -8511,7 +8329,7 @@
     "female": false,
     "full_name": "Kim Tae-hyeon",
     "given_name": "Tae-hyeon",
-    "player_id": "P-W26-0655",
+    "player_id": "P-W26-0641",
     "primary_position": "DF"
   },
   {
@@ -8524,7 +8342,7 @@
     "female": false,
     "full_name": "Oh Hyeon-gyu",
     "given_name": "Hyeon-gyu",
-    "player_id": "P-W26-0656",
+    "player_id": "P-W26-0642",
     "primary_position": "FW"
   },
   {
@@ -8537,7 +8355,7 @@
     "female": false,
     "full_name": "Cho Wi-je",
     "given_name": "Wi-je",
-    "player_id": "P-W26-0657",
+    "player_id": "P-W26-0643",
     "primary_position": "DF"
   },
   {
@@ -8550,7 +8368,7 @@
     "female": false,
     "full_name": "Eom Ji-sung",
     "given_name": "Ji-sung",
-    "player_id": "P-W26-0658",
+    "player_id": "P-W26-0644",
     "primary_position": "MF"
   },
   {
@@ -8563,7 +8381,7 @@
     "female": false,
     "full_name": "Yang Hyun-jun",
     "given_name": "Hyun-jun",
-    "player_id": "P-W26-0659",
+    "player_id": "P-W26-0645",
     "primary_position": "MF"
   },
   {
@@ -8576,7 +8394,7 @@
     "female": false,
     "full_name": "Lee Han-beom",
     "given_name": "Han-beom",
-    "player_id": "P-W26-0660",
+    "player_id": "P-W26-0646",
     "primary_position": "DF"
   },
   {
@@ -8589,7 +8407,7 @@
     "female": false,
     "full_name": "Lee Tae-seok",
     "given_name": "Tae-seok",
-    "player_id": "P-W26-0661",
+    "player_id": "P-W26-0647",
     "primary_position": "DF"
   },
   {
@@ -8602,7 +8420,7 @@
     "female": false,
     "full_name": "Jens Castrop",
     "given_name": "Jens",
-    "player_id": "P-W26-0662",
+    "player_id": "P-W26-0648",
     "primary_position": "DF"
   },
   {
@@ -8615,7 +8433,7 @@
     "female": false,
     "full_name": "Bae Jun-ho",
     "given_name": "Jun-ho",
-    "player_id": "P-W26-0663",
+    "player_id": "P-W26-0649",
     "primary_position": "MF"
   },
   {
@@ -8628,7 +8446,7 @@
     "female": false,
     "full_name": "Borja Iglesias",
     "given_name": "Borja",
-    "player_id": "P-W26-0664",
+    "player_id": "P-W26-0650",
     "primary_position": "FW"
   },
   {
@@ -8641,7 +8459,7 @@
     "female": false,
     "full_name": "Álex Grimaldo",
     "given_name": "Alex",
-    "player_id": "P-W26-0665",
+    "player_id": "P-W26-0651",
     "primary_position": "DF"
   },
   {
@@ -8654,7 +8472,7 @@
     "female": false,
     "full_name": "Fabián Ruiz",
     "given_name": "Fabian",
-    "player_id": "P-W26-0666",
+    "player_id": "P-W26-0652",
     "primary_position": "MF"
   },
   {
@@ -8667,20 +8485,7 @@
     "female": false,
     "full_name": "Mikel Merino",
     "given_name": "Mikel",
-    "player_id": "P-W26-0667",
-    "primary_position": "MF"
-  },
-  {
-    "birth_date": "1996-06-22",
-    "common_name": "Rodri",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Rodri",
-    "given_name": null,
-    "player_id": "P-W26-0668",
+    "player_id": "P-W26-0653",
     "primary_position": "MF"
   },
   {
@@ -8693,7 +8498,7 @@
     "female": false,
     "full_name": "Mikel Oyarzabal",
     "given_name": "Mikel",
-    "player_id": "P-W26-0669",
+    "player_id": "P-W26-0654",
     "primary_position": "FW"
   },
   {
@@ -8706,7 +8511,7 @@
     "female": false,
     "full_name": "Marc Cucurella",
     "given_name": "Marc",
-    "player_id": "P-W26-0670",
+    "player_id": "P-W26-0655",
     "primary_position": "DF"
   },
   {
@@ -8719,7 +8524,7 @@
     "female": false,
     "full_name": "Martín Zubimendi",
     "given_name": "Martin",
-    "player_id": "P-W26-0671",
+    "player_id": "P-W26-0656",
     "primary_position": "MF"
   },
   {
@@ -8732,7 +8537,7 @@
     "female": false,
     "full_name": "Pedro Porro",
     "given_name": "Pedro",
-    "player_id": "P-W26-0672",
+    "player_id": "P-W26-0657",
     "primary_position": "DF"
   },
   {
@@ -8745,7 +8550,7 @@
     "female": false,
     "full_name": "Joan Garcia",
     "given_name": "Joan",
-    "player_id": "P-W26-0673",
+    "player_id": "P-W26-0658",
     "primary_position": "GK"
   },
   {
@@ -8758,20 +8563,7 @@
     "female": false,
     "full_name": "Álex Baena",
     "given_name": "Alex",
-    "player_id": "P-W26-0674",
-    "primary_position": "MF"
-  },
-  {
-    "birth_date": "2002-11-25",
-    "common_name": "Pedri",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Pedri",
-    "given_name": null,
-    "player_id": "P-W26-0675",
+    "player_id": "P-W26-0659",
     "primary_position": "MF"
   },
   {
@@ -8784,7 +8576,7 @@
     "female": false,
     "full_name": "Marc Pubill",
     "given_name": "Marc",
-    "player_id": "P-W26-0676",
+    "player_id": "P-W26-0660",
     "primary_position": "DF"
   },
   {
@@ -8797,21 +8589,8 @@
     "female": false,
     "full_name": "Víctor Muñoz",
     "given_name": "Victor",
-    "player_id": "P-W26-0677",
+    "player_id": "P-W26-0661",
     "primary_position": "FW"
-  },
-  {
-    "birth_date": "2004-08-05",
-    "common_name": "Gavi",
-    "eligible_positions": [
-      "MF"
-    ],
-    "family_name": null,
-    "female": false,
-    "full_name": "Gavi",
-    "given_name": null,
-    "player_id": "P-W26-0678",
-    "primary_position": "MF"
   },
   {
     "birth_date": "2007-01-22",
@@ -8823,7 +8602,7 @@
     "female": false,
     "full_name": "Pau Cubarsí",
     "given_name": "Pau",
-    "player_id": "P-W26-0679",
+    "player_id": "P-W26-0662",
     "primary_position": "DF"
   },
   {
@@ -8836,7 +8615,7 @@
     "female": false,
     "full_name": "Lamine Yamal",
     "given_name": "Lamine",
-    "player_id": "P-W26-0680",
+    "player_id": "P-W26-0663",
     "primary_position": "FW"
   },
   {
@@ -8849,7 +8628,7 @@
     "female": false,
     "full_name": "Ken Sema",
     "given_name": "Ken",
-    "player_id": "P-W26-0681",
+    "player_id": "P-W26-0664",
     "primary_position": "MF"
   },
   {
@@ -8862,7 +8641,7 @@
     "female": false,
     "full_name": "Carl Starfelt",
     "given_name": "Carl",
-    "player_id": "P-W26-0682",
+    "player_id": "P-W26-0665",
     "primary_position": "DF"
   },
   {
@@ -8875,7 +8654,7 @@
     "female": false,
     "full_name": "Jesper Karlström",
     "given_name": "Jesper",
-    "player_id": "P-W26-0683",
+    "player_id": "P-W26-0666",
     "primary_position": "MF"
   },
   {
@@ -8888,7 +8667,7 @@
     "female": false,
     "full_name": "Eric Smith",
     "given_name": "Eric",
-    "player_id": "P-W26-0684",
+    "player_id": "P-W26-0667",
     "primary_position": "DF"
   },
   {
@@ -8901,7 +8680,7 @@
     "female": false,
     "full_name": "Gustaf Nilsson",
     "given_name": "Gustaf",
-    "player_id": "P-W26-0685",
+    "player_id": "P-W26-0668",
     "primary_position": "FW"
   },
   {
@@ -8914,7 +8693,7 @@
     "female": false,
     "full_name": "Herman Johansson",
     "given_name": "Herman",
-    "player_id": "P-W26-0686",
+    "player_id": "P-W26-0669",
     "primary_position": "DF"
   },
   {
@@ -8927,7 +8706,7 @@
     "female": false,
     "full_name": "Viktor Gyökeres",
     "given_name": "Viktor",
-    "player_id": "P-W26-0687",
+    "player_id": "P-W26-0670",
     "primary_position": "FW"
   },
   {
@@ -8940,7 +8719,7 @@
     "female": false,
     "full_name": "Taha Ali",
     "given_name": "Taha",
-    "player_id": "P-W26-0688",
+    "player_id": "P-W26-0671",
     "primary_position": "FW"
   },
   {
@@ -8953,7 +8732,7 @@
     "female": false,
     "full_name": "Jacob Widell Zetterström",
     "given_name": "Jacob",
-    "player_id": "P-W26-0689",
+    "player_id": "P-W26-0672",
     "primary_position": "GK"
   },
   {
@@ -8966,7 +8745,7 @@
     "female": false,
     "full_name": "Alexander Bernhardsson",
     "given_name": "Alexander",
-    "player_id": "P-W26-0690",
+    "player_id": "P-W26-0673",
     "primary_position": "DF"
   },
   {
@@ -8979,7 +8758,7 @@
     "female": false,
     "full_name": "Viktor Johansson",
     "given_name": "Viktor",
-    "player_id": "P-W26-0691",
+    "player_id": "P-W26-0674",
     "primary_position": "GK"
   },
   {
@@ -8992,7 +8771,7 @@
     "female": false,
     "full_name": "Hjalmar Ekdal",
     "given_name": "Hjalmar",
-    "player_id": "P-W26-0692",
+    "player_id": "P-W26-0675",
     "primary_position": "DF"
   },
   {
@@ -9005,7 +8784,7 @@
     "female": false,
     "full_name": "Mattias Svanberg",
     "given_name": "Mattias",
-    "player_id": "P-W26-0693",
+    "player_id": "P-W26-0676",
     "primary_position": "MF"
   },
   {
@@ -9018,7 +8797,7 @@
     "female": false,
     "full_name": "Isak Hien",
     "given_name": "Isak",
-    "player_id": "P-W26-0694",
+    "player_id": "P-W26-0677",
     "primary_position": "DF"
   },
   {
@@ -9031,7 +8810,7 @@
     "female": false,
     "full_name": "Gabriel Gudmundsson",
     "given_name": "Gabriel",
-    "player_id": "P-W26-0695",
+    "player_id": "P-W26-0678",
     "primary_position": "DF"
   },
   {
@@ -9044,7 +8823,7 @@
     "female": false,
     "full_name": "Alexander Isak",
     "given_name": "Alexander",
-    "player_id": "P-W26-0696",
+    "player_id": "P-W26-0679",
     "primary_position": "FW"
   },
   {
@@ -9057,7 +8836,7 @@
     "female": false,
     "full_name": "Gustaf Lagerbielke",
     "given_name": "Gustaf",
-    "player_id": "P-W26-0697",
+    "player_id": "P-W26-0680",
     "primary_position": "DF"
   },
   {
@@ -9070,7 +8849,7 @@
     "female": false,
     "full_name": "Benjamin Nygren",
     "given_name": "Benjamin",
-    "player_id": "P-W26-0698",
+    "player_id": "P-W26-0681",
     "primary_position": "MF"
   },
   {
@@ -9083,7 +8862,7 @@
     "female": false,
     "full_name": "Daniel Svensson",
     "given_name": "Daniel",
-    "player_id": "P-W26-0699",
+    "player_id": "P-W26-0682",
     "primary_position": "DF"
   },
   {
@@ -9096,7 +8875,7 @@
     "female": false,
     "full_name": "Anthony Elanga",
     "given_name": "Anthony",
-    "player_id": "P-W26-0700",
+    "player_id": "P-W26-0683",
     "primary_position": "FW"
   },
   {
@@ -9109,7 +8888,7 @@
     "female": false,
     "full_name": "Elliot Stroud",
     "given_name": "Elliot",
-    "player_id": "P-W26-0701",
+    "player_id": "P-W26-0684",
     "primary_position": "DF"
   },
   {
@@ -9122,7 +8901,7 @@
     "female": false,
     "full_name": "Besfort Zeneli",
     "given_name": "Besfort",
-    "player_id": "P-W26-0702",
+    "player_id": "P-W26-0685",
     "primary_position": "MF"
   },
   {
@@ -9135,7 +8914,7 @@
     "female": false,
     "full_name": "Yasin Ayari",
     "given_name": "Yasin",
-    "player_id": "P-W26-0703",
+    "player_id": "P-W26-0686",
     "primary_position": "MF"
   },
   {
@@ -9148,7 +8927,7 @@
     "female": false,
     "full_name": "Lucas Bergvall",
     "given_name": "Lucas",
-    "player_id": "P-W26-0704",
+    "player_id": "P-W26-0687",
     "primary_position": "MF"
   },
   {
@@ -9161,7 +8940,7 @@
     "female": false,
     "full_name": "Cedric Itten",
     "given_name": "Cedric",
-    "player_id": "P-W26-0705",
+    "player_id": "P-W26-0688",
     "primary_position": "FW"
   },
   {
@@ -9174,7 +8953,7 @@
     "female": false,
     "full_name": "Miro Muheim",
     "given_name": "Miro",
-    "player_id": "P-W26-0706",
+    "player_id": "P-W26-0689",
     "primary_position": "DF"
   },
   {
@@ -9187,7 +8966,7 @@
     "female": false,
     "full_name": "Dan Ndoye",
     "given_name": "Dan",
-    "player_id": "P-W26-0707",
+    "player_id": "P-W26-0690",
     "primary_position": "FW"
   },
   {
@@ -9200,7 +8979,7 @@
     "female": false,
     "full_name": "Zeki Amdouni",
     "given_name": "Zeki",
-    "player_id": "P-W26-0708",
+    "player_id": "P-W26-0691",
     "primary_position": "FW"
   },
   {
@@ -9213,7 +8992,7 @@
     "female": false,
     "full_name": "Marvin Keller",
     "given_name": "Marvin",
-    "player_id": "P-W26-0709",
+    "player_id": "P-W26-0692",
     "primary_position": "GK"
   },
   {
@@ -9226,7 +9005,7 @@
     "female": false,
     "full_name": "Luca Jaquez",
     "given_name": "Luca",
-    "player_id": "P-W26-0710",
+    "player_id": "P-W26-0693",
     "primary_position": "DF"
   },
   {
@@ -9239,7 +9018,7 @@
     "female": false,
     "full_name": "Aurèle Amenda",
     "given_name": "Aurele",
-    "player_id": "P-W26-0711",
+    "player_id": "P-W26-0694",
     "primary_position": "DF"
   },
   {
@@ -9252,7 +9031,7 @@
     "female": false,
     "full_name": "Johan Manzambi",
     "given_name": "Johan",
-    "player_id": "P-W26-0712",
+    "player_id": "P-W26-0695",
     "primary_position": "MF"
   },
   {
@@ -9265,7 +9044,7 @@
     "female": false,
     "full_name": "Rani Khedira",
     "given_name": "Rani",
-    "player_id": "P-W26-0713",
+    "player_id": "P-W26-0696",
     "primary_position": "MF"
   },
   {
@@ -9278,7 +9057,7 @@
     "female": false,
     "full_name": "Mortadha Ben Ouanes",
     "given_name": "Mortadha",
-    "player_id": "P-W26-0714",
+    "player_id": "P-W26-0697",
     "primary_position": "DF"
   },
   {
@@ -9291,7 +9070,7 @@
     "female": false,
     "full_name": "Mohamed Amine Ben Hamida",
     "given_name": "Mohamed Amine",
-    "player_id": "P-W26-0715",
+    "player_id": "P-W26-0698",
     "primary_position": "DF"
   },
   {
@@ -9304,7 +9083,7 @@
     "female": false,
     "full_name": "Firas Chaouat",
     "given_name": "Firas",
-    "player_id": "P-W26-0716",
+    "player_id": "P-W26-0699",
     "primary_position": "FW"
   },
   {
@@ -9317,7 +9096,7 @@
     "female": false,
     "full_name": "Sabri Ben Hessen",
     "given_name": "Sabri",
-    "player_id": "P-W26-0717",
+    "player_id": "P-W26-0700",
     "primary_position": "GK"
   },
   {
@@ -9330,7 +9109,7 @@
     "female": false,
     "full_name": "Hazem Mastouri",
     "given_name": "Hazem",
-    "player_id": "P-W26-0718",
+    "player_id": "P-W26-0701",
     "primary_position": "FW"
   },
   {
@@ -9343,7 +9122,7 @@
     "female": false,
     "full_name": "Elias Achouri",
     "given_name": "Elias",
-    "player_id": "P-W26-0719",
+    "player_id": "P-W26-0702",
     "primary_position": "FW"
   },
   {
@@ -9356,7 +9135,7 @@
     "female": false,
     "full_name": "Yan Valery",
     "given_name": "Yan",
-    "player_id": "P-W26-0720",
+    "player_id": "P-W26-0703",
     "primary_position": "DF"
   },
   {
@@ -9369,7 +9148,7 @@
     "female": false,
     "full_name": "Elias Saad",
     "given_name": "Elias",
-    "player_id": "P-W26-0721",
+    "player_id": "P-W26-0704",
     "primary_position": "FW"
   },
   {
@@ -9382,7 +9161,7 @@
     "female": false,
     "full_name": "Hadj Mahmoud",
     "given_name": "Hadj",
-    "player_id": "P-W26-0722",
+    "player_id": "P-W26-0705",
     "primary_position": "MF"
   },
   {
@@ -9395,7 +9174,7 @@
     "female": false,
     "full_name": "Mouhib Chamakh",
     "given_name": "Mouhib",
-    "player_id": "P-W26-0723",
+    "player_id": "P-W26-0706",
     "primary_position": "GK"
   },
   {
@@ -9408,7 +9187,7 @@
     "female": false,
     "full_name": "Omar Rekik",
     "given_name": "Omar",
-    "player_id": "P-W26-0724",
+    "player_id": "P-W26-0707",
     "primary_position": "DF"
   },
   {
@@ -9421,7 +9200,7 @@
     "female": false,
     "full_name": "Sebastian Tounekti",
     "given_name": "Sebastian",
-    "player_id": "P-W26-0725",
+    "player_id": "P-W26-0708",
     "primary_position": "MF"
   },
   {
@@ -9434,7 +9213,7 @@
     "female": false,
     "full_name": "Ismaël Gharbi",
     "given_name": "Ismael",
-    "player_id": "P-W26-0726",
+    "player_id": "P-W26-0709",
     "primary_position": "MF"
   },
   {
@@ -9447,7 +9226,7 @@
     "female": false,
     "full_name": "Raed Chikhaoui",
     "given_name": "Raed",
-    "player_id": "P-W26-0727",
+    "player_id": "P-W26-0710",
     "primary_position": "DF"
   },
   {
@@ -9460,7 +9239,7 @@
     "female": false,
     "full_name": "Adem Arous",
     "given_name": "Adem",
-    "player_id": "P-W26-0728",
+    "player_id": "P-W26-0711",
     "primary_position": "DF"
   },
   {
@@ -9473,7 +9252,7 @@
     "female": false,
     "full_name": "Moutaz Neffati",
     "given_name": "Moutaz",
-    "player_id": "P-W26-0729",
+    "player_id": "P-W26-0712",
     "primary_position": "DF"
   },
   {
@@ -9486,7 +9265,7 @@
     "female": false,
     "full_name": "Khalil Ayari",
     "given_name": "Khalil",
-    "player_id": "P-W26-0730",
+    "player_id": "P-W26-0713",
     "primary_position": "MF"
   },
   {
@@ -9499,7 +9278,7 @@
     "female": false,
     "full_name": "Rayan Elloumi",
     "given_name": "Rayan",
-    "player_id": "P-W26-0731",
+    "player_id": "P-W26-0714",
     "primary_position": "FW"
   },
   {
@@ -9512,7 +9291,7 @@
     "female": false,
     "full_name": "Mert Günok",
     "given_name": "Mert",
-    "player_id": "P-W26-0732",
+    "player_id": "P-W26-0715",
     "primary_position": "GK"
   },
   {
@@ -9525,7 +9304,7 @@
     "female": false,
     "full_name": "Hakan Çalhanoğlu",
     "given_name": "Hakan",
-    "player_id": "P-W26-0733",
+    "player_id": "P-W26-0716",
     "primary_position": "MF"
   },
   {
@@ -9538,7 +9317,7 @@
     "female": false,
     "full_name": "Samet Akaydin",
     "given_name": "Samet",
-    "player_id": "P-W26-0734",
+    "player_id": "P-W26-0717",
     "primary_position": "DF"
   },
   {
@@ -9551,7 +9330,7 @@
     "female": false,
     "full_name": "Abdülkerim Bardakcı",
     "given_name": "Abdulkerim",
-    "player_id": "P-W26-0735",
+    "player_id": "P-W26-0718",
     "primary_position": "DF"
   },
   {
@@ -9564,7 +9343,7 @@
     "female": false,
     "full_name": "Kaan Ayhan",
     "given_name": "Kaan",
-    "player_id": "P-W26-0736",
+    "player_id": "P-W26-0719",
     "primary_position": "MF"
   },
   {
@@ -9577,7 +9356,7 @@
     "female": false,
     "full_name": "İrfan Can Kahveci",
     "given_name": "Irfan Can",
-    "player_id": "P-W26-0737",
+    "player_id": "P-W26-0720",
     "primary_position": "FW"
   },
   {
@@ -9590,7 +9369,7 @@
     "female": false,
     "full_name": "Uğurcan Çakır",
     "given_name": "Ugurcan",
-    "player_id": "P-W26-0738",
+    "player_id": "P-W26-0721",
     "primary_position": "GK"
   },
   {
@@ -9603,7 +9382,7 @@
     "female": false,
     "full_name": "Çağlar Söyüncü",
     "given_name": "Caglar",
-    "player_id": "P-W26-0739",
+    "player_id": "P-W26-0722",
     "primary_position": "DF"
   },
   {
@@ -9616,7 +9395,7 @@
     "female": false,
     "full_name": "Zeki Çelik",
     "given_name": "Zeki",
-    "player_id": "P-W26-0740",
+    "player_id": "P-W26-0723",
     "primary_position": "DF"
   },
   {
@@ -9629,7 +9408,7 @@
     "female": false,
     "full_name": "Salih Özcan",
     "given_name": "Salih",
-    "player_id": "P-W26-0741",
+    "player_id": "P-W26-0724",
     "primary_position": "MF"
   },
   {
@@ -9642,7 +9421,7 @@
     "female": false,
     "full_name": "Merih Demiral",
     "given_name": "Merih",
-    "player_id": "P-W26-0742",
+    "player_id": "P-W26-0725",
     "primary_position": "DF"
   },
   {
@@ -9655,7 +9434,7 @@
     "female": false,
     "full_name": "Altay Bayındır",
     "given_name": "Altay",
-    "player_id": "P-W26-0743",
+    "player_id": "P-W26-0726",
     "primary_position": "GK"
   },
   {
@@ -9668,7 +9447,7 @@
     "female": false,
     "full_name": "Kerem Aktürkoğlu",
     "given_name": "Kerem",
-    "player_id": "P-W26-0744",
+    "player_id": "P-W26-0727",
     "primary_position": "FW"
   },
   {
@@ -9681,7 +9460,7 @@
     "female": false,
     "full_name": "İsmail Yüksek",
     "given_name": "Ismail",
-    "player_id": "P-W26-0745",
+    "player_id": "P-W26-0728",
     "primary_position": "MF"
   },
   {
@@ -9694,7 +9473,7 @@
     "female": false,
     "full_name": "Mert Müldür",
     "given_name": "Mert",
-    "player_id": "P-W26-0746",
+    "player_id": "P-W26-0729",
     "primary_position": "DF"
   },
   {
@@ -9707,7 +9486,7 @@
     "female": false,
     "full_name": "Ferdi Kadıoğlu",
     "given_name": "Ferdi",
-    "player_id": "P-W26-0747",
+    "player_id": "P-W26-0730",
     "primary_position": "DF"
   },
   {
@@ -9720,7 +9499,7 @@
     "female": false,
     "full_name": "Ozan Kabak",
     "given_name": "Ozan",
-    "player_id": "P-W26-0748",
+    "player_id": "P-W26-0731",
     "primary_position": "DF"
   },
   {
@@ -9733,7 +9512,7 @@
     "female": false,
     "full_name": "Barış Alper Yılmaz",
     "given_name": "Baris Alper",
-    "player_id": "P-W26-0749",
+    "player_id": "P-W26-0732",
     "primary_position": "FW"
   },
   {
@@ -9746,7 +9525,7 @@
     "female": false,
     "full_name": "Eren Elmalı",
     "given_name": "Eren",
-    "player_id": "P-W26-0750",
+    "player_id": "P-W26-0733",
     "primary_position": "DF"
   },
   {
@@ -9759,7 +9538,7 @@
     "female": false,
     "full_name": "Yunus Akgün",
     "given_name": "Yunus",
-    "player_id": "P-W26-0751",
+    "player_id": "P-W26-0734",
     "primary_position": "FW"
   },
   {
@@ -9772,7 +9551,7 @@
     "female": false,
     "full_name": "Oğuz Aydın",
     "given_name": "Oguz",
-    "player_id": "P-W26-0752",
+    "player_id": "P-W26-0735",
     "primary_position": "FW"
   },
   {
@@ -9785,7 +9564,7 @@
     "female": false,
     "full_name": "Orkun Kökçü",
     "given_name": "Orkun",
-    "player_id": "P-W26-0753",
+    "player_id": "P-W26-0736",
     "primary_position": "MF"
   },
   {
@@ -9798,7 +9577,7 @@
     "female": false,
     "full_name": "Deniz Gül",
     "given_name": "Deniz",
-    "player_id": "P-W26-0754",
+    "player_id": "P-W26-0737",
     "primary_position": "FW"
   },
   {
@@ -9811,7 +9590,7 @@
     "female": false,
     "full_name": "Arda Güler",
     "given_name": "Arda",
-    "player_id": "P-W26-0755",
+    "player_id": "P-W26-0738",
     "primary_position": "FW"
   },
   {
@@ -9824,7 +9603,7 @@
     "female": false,
     "full_name": "Kenan Yıldız",
     "given_name": "Kenan",
-    "player_id": "P-W26-0756",
+    "player_id": "P-W26-0739",
     "primary_position": "FW"
   },
   {
@@ -9837,7 +9616,7 @@
     "female": false,
     "full_name": "Can Uzun",
     "given_name": "Can",
-    "player_id": "P-W26-0757",
+    "player_id": "P-W26-0740",
     "primary_position": "FW"
   },
   {
@@ -9850,7 +9629,7 @@
     "female": false,
     "full_name": "Miles Robinson",
     "given_name": "Miles",
-    "player_id": "P-W26-0758",
+    "player_id": "P-W26-0741",
     "primary_position": "DF"
   },
   {
@@ -9863,7 +9642,7 @@
     "female": false,
     "full_name": "Alejandro Zendejas",
     "given_name": "Alejandro",
-    "player_id": "P-W26-0759",
+    "player_id": "P-W26-0742",
     "primary_position": "FW"
   },
   {
@@ -9876,7 +9655,7 @@
     "female": false,
     "full_name": "Auston Trusty",
     "given_name": "Auston",
-    "player_id": "P-W26-0760",
+    "player_id": "P-W26-0743",
     "primary_position": "DF"
   },
   {
@@ -9889,7 +9668,7 @@
     "female": false,
     "full_name": "Matt Freese",
     "given_name": "Matt",
-    "player_id": "P-W26-0761",
+    "player_id": "P-W26-0744",
     "primary_position": "GK"
   },
   {
@@ -9902,7 +9681,7 @@
     "female": false,
     "full_name": "Mark McKenzie",
     "given_name": "Mark",
-    "player_id": "P-W26-0762",
+    "player_id": "P-W26-0745",
     "primary_position": "DF"
   },
   {
@@ -9915,7 +9694,7 @@
     "female": false,
     "full_name": "Chris Richards",
     "given_name": "Chris",
-    "player_id": "P-W26-0763",
+    "player_id": "P-W26-0746",
     "primary_position": "DF"
   },
   {
@@ -9928,7 +9707,7 @@
     "female": false,
     "full_name": "Maximilian Arfsten",
     "given_name": "Maximilian",
-    "player_id": "P-W26-0764",
+    "player_id": "P-W26-0747",
     "primary_position": "DF"
   },
   {
@@ -9941,7 +9720,7 @@
     "female": false,
     "full_name": "Sebastian Berhalter",
     "given_name": "Sebastian",
-    "player_id": "P-W26-0765",
+    "player_id": "P-W26-0748",
     "primary_position": "MF"
   },
   {
@@ -9954,7 +9733,7 @@
     "female": false,
     "full_name": "Folarin Balogun",
     "given_name": "Folarin",
-    "player_id": "P-W26-0766",
+    "player_id": "P-W26-0749",
     "primary_position": "FW"
   },
   {
@@ -9967,7 +9746,7 @@
     "female": false,
     "full_name": "Malik Tillman",
     "given_name": "Malik",
-    "player_id": "P-W26-0767",
+    "player_id": "P-W26-0750",
     "primary_position": "MF"
   },
   {
@@ -9980,7 +9759,7 @@
     "female": false,
     "full_name": "Ricardo Pepi",
     "given_name": "Ricardo",
-    "player_id": "P-W26-0768",
+    "player_id": "P-W26-0751",
     "primary_position": "FW"
   },
   {
@@ -9993,7 +9772,7 @@
     "female": false,
     "full_name": "Chris Brady",
     "given_name": "Chris",
-    "player_id": "P-W26-0769",
+    "player_id": "P-W26-0752",
     "primary_position": "GK"
   },
   {
@@ -10006,7 +9785,7 @@
     "female": false,
     "full_name": "Alex Freeman",
     "given_name": "Alex",
-    "player_id": "P-W26-0770",
+    "player_id": "P-W26-0753",
     "primary_position": "DF"
   },
   {
@@ -10019,7 +9798,7 @@
     "female": false,
     "full_name": "Rodrigo Aguirre",
     "given_name": "Rodrigo",
-    "player_id": "P-W26-0771",
+    "player_id": "P-W26-0754",
     "primary_position": "FW"
   },
   {
@@ -10032,7 +9811,7 @@
     "female": false,
     "full_name": "Santiago Mele",
     "given_name": "Santiago",
-    "player_id": "P-W26-0772",
+    "player_id": "P-W26-0755",
     "primary_position": "GK"
   },
   {
@@ -10045,7 +9824,7 @@
     "female": false,
     "full_name": "Federico Viñas",
     "given_name": "Federico",
-    "player_id": "P-W26-0773",
+    "player_id": "P-W26-0756",
     "primary_position": "FW"
   },
   {
@@ -10058,7 +9837,7 @@
     "female": false,
     "full_name": "Joaquín Piquerez",
     "given_name": "Joaquin",
-    "player_id": "P-W26-0774",
+    "player_id": "P-W26-0757",
     "primary_position": "MF"
   },
   {
@@ -10071,7 +9850,7 @@
     "female": false,
     "full_name": "Santiago Bueno",
     "given_name": "Santiago",
-    "player_id": "P-W26-0775",
+    "player_id": "P-W26-0758",
     "primary_position": "DF"
   },
   {
@@ -10084,7 +9863,7 @@
     "female": false,
     "full_name": "Rodrigo Zalazar",
     "given_name": "Rodrigo",
-    "player_id": "P-W26-0776",
+    "player_id": "P-W26-0759",
     "primary_position": "MF"
   },
   {
@@ -10097,7 +9876,7 @@
     "female": false,
     "full_name": "Emiliano Martínez",
     "given_name": "Emiliano",
-    "player_id": "P-W26-0777",
+    "player_id": "P-W26-0760",
     "primary_position": "MF"
   },
   {
@@ -10110,7 +9889,7 @@
     "female": false,
     "full_name": "Sebastián Cáceres",
     "given_name": "Sebastian",
-    "player_id": "P-W26-0778",
+    "player_id": "P-W26-0761",
     "primary_position": "DF"
   },
   {
@@ -10123,7 +9902,7 @@
     "female": false,
     "full_name": "Maximiliano Araújo",
     "given_name": "Maximiliano",
-    "player_id": "P-W26-0779",
+    "player_id": "P-W26-0762",
     "primary_position": "MF"
   },
   {
@@ -10136,7 +9915,7 @@
     "female": false,
     "full_name": "Juan Manuel Sanabria",
     "given_name": "Juan Manuel",
-    "player_id": "P-W26-0780",
+    "player_id": "P-W26-0763",
     "primary_position": "MF"
   },
   {
@@ -10149,7 +9928,7 @@
     "female": false,
     "full_name": "Brian Rodríguez",
     "given_name": "Brian",
-    "player_id": "P-W26-0781",
+    "player_id": "P-W26-0764",
     "primary_position": "FW"
   },
   {
@@ -10162,7 +9941,7 @@
     "female": false,
     "full_name": "Vozinha",
     "given_name": null,
-    "player_id": "P-W26-0782",
+    "player_id": "P-W26-0765",
     "primary_position": "GK"
   },
   {
@@ -10175,7 +9954,7 @@
     "female": false,
     "full_name": "Stopira",
     "given_name": null,
-    "player_id": "P-W26-0783",
+    "player_id": "P-W26-0766",
     "primary_position": "DF"
   },
   {
@@ -10188,7 +9967,7 @@
     "female": false,
     "full_name": "Ryan Mendes",
     "given_name": "Ryan",
-    "player_id": "P-W26-0784",
+    "player_id": "P-W26-0767",
     "primary_position": "FW"
   },
   {
@@ -10201,7 +9980,7 @@
     "female": false,
     "full_name": "Garry Rodrigues",
     "given_name": "Garry",
-    "player_id": "P-W26-0785",
+    "player_id": "P-W26-0768",
     "primary_position": "MF"
   },
   {
@@ -10214,7 +9993,7 @@
     "female": false,
     "full_name": "Nuno da Costa",
     "given_name": "Nuno",
-    "player_id": "P-W26-0786",
+    "player_id": "P-W26-0769",
     "primary_position": "MF"
   },
   {
@@ -10227,7 +10006,7 @@
     "female": false,
     "full_name": "Roberto Lopes",
     "given_name": "Roberto",
-    "player_id": "P-W26-0787",
+    "player_id": "P-W26-0770",
     "primary_position": "DF"
   },
   {
@@ -10240,7 +10019,7 @@
     "female": false,
     "full_name": "Jamiro Monteiro",
     "given_name": "Jamiro",
-    "player_id": "P-W26-0788",
+    "player_id": "P-W26-0771",
     "primary_position": "MF"
   },
   {
@@ -10253,7 +10032,7 @@
     "female": false,
     "full_name": "Willy Semedo",
     "given_name": "Willy",
-    "player_id": "P-W26-0789",
+    "player_id": "P-W26-0772",
     "primary_position": "MF"
   },
   {
@@ -10266,7 +10045,7 @@
     "female": false,
     "full_name": "Steven Moreira",
     "given_name": "Steven",
-    "player_id": "P-W26-0790",
+    "player_id": "P-W26-0773",
     "primary_position": "DF"
   },
   {
@@ -10279,7 +10058,7 @@
     "female": false,
     "full_name": "Diney",
     "given_name": null,
-    "player_id": "P-W26-0791",
+    "player_id": "P-W26-0774",
     "primary_position": "DF"
   },
   {
@@ -10292,7 +10071,7 @@
     "female": false,
     "full_name": "Yannick Semedo",
     "given_name": "Yannick",
-    "player_id": "P-W26-0792",
+    "player_id": "P-W26-0775",
     "primary_position": "MF"
   },
   {
@@ -10305,7 +10084,7 @@
     "female": false,
     "full_name": "Kevin Pina",
     "given_name": "Kevin",
-    "player_id": "P-W26-0793",
+    "player_id": "P-W26-0776",
     "primary_position": "MF"
   },
   {
@@ -10318,7 +10097,7 @@
     "female": false,
     "full_name": "Márcio Rosa",
     "given_name": "Marcio",
-    "player_id": "P-W26-0794",
+    "player_id": "P-W26-0777",
     "primary_position": "GK"
   },
   {
@@ -10331,7 +10110,7 @@
     "female": false,
     "full_name": "Laros Duarte",
     "given_name": "Laros",
-    "player_id": "P-W26-0795",
+    "player_id": "P-W26-0778",
     "primary_position": "MF"
   },
   {
@@ -10344,7 +10123,7 @@
     "female": false,
     "full_name": "João Paulo",
     "given_name": null,
-    "player_id": "P-W26-0796",
+    "player_id": "P-W26-0779",
     "primary_position": "MF"
   },
   {
@@ -10357,7 +10136,7 @@
     "female": false,
     "full_name": "Jovane Cabral",
     "given_name": "Jovane",
-    "player_id": "P-W26-0797",
+    "player_id": "P-W26-0780",
     "primary_position": "MF"
   },
   {
@@ -10370,7 +10149,7 @@
     "female": false,
     "full_name": "Deroy Duarte",
     "given_name": "Deroy",
-    "player_id": "P-W26-0798",
+    "player_id": "P-W26-0781",
     "primary_position": "MF"
   },
   {
@@ -10383,7 +10162,7 @@
     "female": false,
     "full_name": "Kelvin Pires",
     "given_name": "Kelvin",
-    "player_id": "P-W26-0799",
+    "player_id": "P-W26-0782",
     "primary_position": "DF"
   },
   {
@@ -10396,7 +10175,7 @@
     "female": false,
     "full_name": "CJ dos Santos",
     "given_name": "Cj",
-    "player_id": "P-W26-0800",
+    "player_id": "P-W26-0783",
     "primary_position": "GK"
   },
   {
@@ -10409,7 +10188,7 @@
     "female": false,
     "full_name": "Logan Costa",
     "given_name": "Logan",
-    "player_id": "P-W26-0801",
+    "player_id": "P-W26-0784",
     "primary_position": "DF"
   },
   {
@@ -10422,7 +10201,7 @@
     "female": false,
     "full_name": "Dailon Livramento",
     "given_name": "Dailon",
-    "player_id": "P-W26-0802",
+    "player_id": "P-W26-0785",
     "primary_position": "FW"
   },
   {
@@ -10435,7 +10214,7 @@
     "female": false,
     "full_name": "Telmo Arcanjo",
     "given_name": "Telmo",
-    "player_id": "P-W26-0803",
+    "player_id": "P-W26-0786",
     "primary_position": "MF"
   },
   {
@@ -10448,7 +10227,7 @@
     "female": false,
     "full_name": "Gilson Benchimol",
     "given_name": "Gilson",
-    "player_id": "P-W26-0804",
+    "player_id": "P-W26-0787",
     "primary_position": "FW"
   },
   {
@@ -10461,7 +10240,7 @@
     "female": false,
     "full_name": "Hélio Varela",
     "given_name": "Helio",
-    "player_id": "P-W26-0805",
+    "player_id": "P-W26-0788",
     "primary_position": "MF"
   },
   {
@@ -10474,7 +10253,7 @@
     "female": false,
     "full_name": "Sidny Lopes Cabral",
     "given_name": "Sidny",
-    "player_id": "P-W26-0806",
+    "player_id": "P-W26-0789",
     "primary_position": "DF"
   },
   {
@@ -10487,7 +10266,7 @@
     "female": false,
     "full_name": "Wagner Pina",
     "given_name": "Wagner",
-    "player_id": "P-W26-0807",
+    "player_id": "P-W26-0790",
     "primary_position": "DF"
   },
   {
@@ -10500,7 +10279,7 @@
     "female": false,
     "full_name": "Eloy Room",
     "given_name": "Eloy",
-    "player_id": "P-W26-0808",
+    "player_id": "P-W26-0791",
     "primary_position": "GK"
   },
   {
@@ -10513,7 +10292,7 @@
     "female": false,
     "full_name": "Leandro Bacuna",
     "given_name": "Leandro",
-    "player_id": "P-W26-0809",
+    "player_id": "P-W26-0792",
     "primary_position": "MF"
   },
   {
@@ -10526,7 +10305,7 @@
     "female": false,
     "full_name": "Brandley Kuwas",
     "given_name": "Brandley",
-    "player_id": "P-W26-0810",
+    "player_id": "P-W26-0793",
     "primary_position": "FW"
   },
   {
@@ -10539,7 +10318,7 @@
     "female": false,
     "full_name": "Jürgen Locadia",
     "given_name": "Jurgen",
-    "player_id": "P-W26-0811",
+    "player_id": "P-W26-0794",
     "primary_position": "FW"
   },
   {
@@ -10552,7 +10331,7 @@
     "female": false,
     "full_name": "Juriën Gaari",
     "given_name": "Jurien",
-    "player_id": "P-W26-0812",
+    "player_id": "P-W26-0795",
     "primary_position": "DF"
   },
   {
@@ -10565,7 +10344,7 @@
     "female": false,
     "full_name": "Joshua Brenet",
     "given_name": "Joshua",
-    "player_id": "P-W26-0813",
+    "player_id": "P-W26-0796",
     "primary_position": "DF"
   },
   {
@@ -10578,7 +10357,7 @@
     "female": false,
     "full_name": "Kenji Gorré",
     "given_name": "Kenji",
-    "player_id": "P-W26-0814",
+    "player_id": "P-W26-0797",
     "primary_position": "FW"
   },
   {
@@ -10591,7 +10370,7 @@
     "female": false,
     "full_name": "Gervane Kastaneer",
     "given_name": "Gervane",
-    "player_id": "P-W26-0815",
+    "player_id": "P-W26-0798",
     "primary_position": "FW"
   },
   {
@@ -10604,7 +10383,7 @@
     "female": false,
     "full_name": "Riechedly Bazoer",
     "given_name": "Riechedly",
-    "player_id": "P-W26-0816",
+    "player_id": "P-W26-0799",
     "primary_position": "DF"
   },
   {
@@ -10617,7 +10396,7 @@
     "female": false,
     "full_name": "Juninho Bacuna",
     "given_name": "Juninho",
-    "player_id": "P-W26-0817",
+    "player_id": "P-W26-0800",
     "primary_position": "MF"
   },
   {
@@ -10630,7 +10409,7 @@
     "female": false,
     "full_name": "Roshon van Eijma",
     "given_name": "Roshon van",
-    "player_id": "P-W26-0818",
+    "player_id": "P-W26-0801",
     "primary_position": "DF"
   },
   {
@@ -10643,7 +10422,7 @@
     "female": false,
     "full_name": "Sherel Floranus",
     "given_name": "Sherel",
-    "player_id": "P-W26-0819",
+    "player_id": "P-W26-0802",
     "primary_position": "DF"
   },
   {
@@ -10656,7 +10435,7 @@
     "female": false,
     "full_name": "Armando Obispo",
     "given_name": "Armando",
-    "player_id": "P-W26-0820",
+    "player_id": "P-W26-0803",
     "primary_position": "DF"
   },
   {
@@ -10669,7 +10448,7 @@
     "female": false,
     "full_name": "Trevor Doornbusch",
     "given_name": "Trevor",
-    "player_id": "P-W26-0821",
+    "player_id": "P-W26-0804",
     "primary_position": "GK"
   },
   {
@@ -10682,7 +10461,7 @@
     "female": false,
     "full_name": "Godfried Roemeratoe",
     "given_name": "Godfried",
-    "player_id": "P-W26-0822",
+    "player_id": "P-W26-0805",
     "primary_position": "MF"
   },
   {
@@ -10695,7 +10474,7 @@
     "female": false,
     "full_name": "Kevin Felida",
     "given_name": "Kevin",
-    "player_id": "P-W26-0823",
+    "player_id": "P-W26-0806",
     "primary_position": "MF"
   },
   {
@@ -10708,7 +10487,7 @@
     "female": false,
     "full_name": "Tahith Chong",
     "given_name": "Tahith",
-    "player_id": "P-W26-0824",
+    "player_id": "P-W26-0807",
     "primary_position": "MF"
   },
   {
@@ -10721,7 +10500,7 @@
     "female": false,
     "full_name": "Jearl Margaritha",
     "given_name": "Jearl",
-    "player_id": "P-W26-0825",
+    "player_id": "P-W26-0808",
     "primary_position": "FW"
   },
   {
@@ -10734,7 +10513,7 @@
     "female": false,
     "full_name": "Shurandy Sambo",
     "given_name": "Shurandy",
-    "player_id": "P-W26-0826",
+    "player_id": "P-W26-0809",
     "primary_position": "DF"
   },
   {
@@ -10747,7 +10526,7 @@
     "female": false,
     "full_name": "Jeremy Antonisse",
     "given_name": "Jeremy",
-    "player_id": "P-W26-0827",
+    "player_id": "P-W26-0810",
     "primary_position": "FW"
   },
   {
@@ -10760,7 +10539,7 @@
     "female": false,
     "full_name": "Tyrick Bodak",
     "given_name": "Tyrick",
-    "player_id": "P-W26-0828",
+    "player_id": "P-W26-0811",
     "primary_position": "GK"
   },
   {
@@ -10773,7 +10552,7 @@
     "female": false,
     "full_name": "Sontje Hansen",
     "given_name": "Sontje",
-    "player_id": "P-W26-0829",
+    "player_id": "P-W26-0812",
     "primary_position": "FW"
   },
   {
@@ -10786,7 +10565,7 @@
     "female": false,
     "full_name": "Tyrese Noslin",
     "given_name": "Tyrese",
-    "player_id": "P-W26-0830",
+    "player_id": "P-W26-0813",
     "primary_position": "FW"
   },
   {
@@ -10799,7 +10578,7 @@
     "female": false,
     "full_name": "Deveron Fonville",
     "given_name": "Deveron",
-    "player_id": "P-W26-0831",
+    "player_id": "P-W26-0814",
     "primary_position": "DF"
   },
   {
@@ -10812,7 +10591,7 @@
     "female": false,
     "full_name": "Ar'jany Martha",
     "given_name": "Arjany",
-    "player_id": "P-W26-0832",
+    "player_id": "P-W26-0815",
     "primary_position": "MF"
   },
   {
@@ -10825,7 +10604,7 @@
     "female": false,
     "full_name": "Livano Comenencia",
     "given_name": "Livano",
-    "player_id": "P-W26-0833",
+    "player_id": "P-W26-0816",
     "primary_position": "MF"
   },
   {
@@ -10838,7 +10617,7 @@
     "female": false,
     "full_name": "Cédric Bakambu",
     "given_name": "Cedric",
-    "player_id": "P-W26-0834",
+    "player_id": "P-W26-0817",
     "primary_position": "FW"
   },
   {
@@ -10851,7 +10630,7 @@
     "female": false,
     "full_name": "Gaël Kakuta",
     "given_name": "Gael",
-    "player_id": "P-W26-0835",
+    "player_id": "P-W26-0818",
     "primary_position": "FW"
   },
   {
@@ -10864,7 +10643,7 @@
     "female": false,
     "full_name": "Arthur Masuaku",
     "given_name": "Arthur",
-    "player_id": "P-W26-0836",
+    "player_id": "P-W26-0819",
     "primary_position": "DF"
   },
   {
@@ -10877,7 +10656,7 @@
     "female": false,
     "full_name": "Fiston Mayele",
     "given_name": "Fiston",
-    "player_id": "P-W26-0837",
+    "player_id": "P-W26-0820",
     "primary_position": "FW"
   },
   {
@@ -10890,7 +10669,7 @@
     "female": false,
     "full_name": "Lionel Mpasi",
     "given_name": "Lionel",
-    "player_id": "P-W26-0838",
+    "player_id": "P-W26-0821",
     "primary_position": "GK"
   },
   {
@@ -10903,7 +10682,7 @@
     "female": false,
     "full_name": "Chancel Mbemba",
     "given_name": "Chancel",
-    "player_id": "P-W26-0839",
+    "player_id": "P-W26-0822",
     "primary_position": "DF"
   },
   {
@@ -10916,7 +10695,7 @@
     "female": false,
     "full_name": "Joris Kayembe",
     "given_name": "Joris",
-    "player_id": "P-W26-0840",
+    "player_id": "P-W26-0823",
     "primary_position": "DF"
   },
   {
@@ -10929,7 +10708,7 @@
     "female": false,
     "full_name": "Aaron Tshibola",
     "given_name": "Aaron",
-    "player_id": "P-W26-0841",
+    "player_id": "P-W26-0824",
     "primary_position": "MF"
   },
   {
@@ -10942,7 +10721,7 @@
     "female": false,
     "full_name": "Théo Bongonda",
     "given_name": "Theo",
-    "player_id": "P-W26-0842",
+    "player_id": "P-W26-0825",
     "primary_position": "MF"
   },
   {
@@ -10955,7 +10734,7 @@
     "female": false,
     "full_name": "Dylan Batubinsika",
     "given_name": "Dylan",
-    "player_id": "P-W26-0843",
+    "player_id": "P-W26-0826",
     "primary_position": "DF"
   },
   {
@@ -10968,7 +10747,7 @@
     "female": false,
     "full_name": "Samuel Moutoussamy",
     "given_name": "Samuel",
-    "player_id": "P-W26-0844",
+    "player_id": "P-W26-0827",
     "primary_position": "MF"
   },
   {
@@ -10981,7 +10760,7 @@
     "female": false,
     "full_name": "Simon Banza",
     "given_name": "Simon",
-    "player_id": "P-W26-0845",
+    "player_id": "P-W26-0828",
     "primary_position": "FW"
   },
   {
@@ -10994,7 +10773,7 @@
     "female": false,
     "full_name": "Yoane Wissa",
     "given_name": "Yoane",
-    "player_id": "P-W26-0846",
+    "player_id": "P-W26-0829",
     "primary_position": "FW"
   },
   {
@@ -11007,7 +10786,7 @@
     "female": false,
     "full_name": "Charles Pickel",
     "given_name": "Charles",
-    "player_id": "P-W26-0847",
+    "player_id": "P-W26-0830",
     "primary_position": "MF"
   },
   {
@@ -11020,7 +10799,7 @@
     "female": false,
     "full_name": "Meschak Elia",
     "given_name": "Meschak",
-    "player_id": "P-W26-0848",
+    "player_id": "P-W26-0831",
     "primary_position": "FW"
   },
   {
@@ -11033,7 +10812,7 @@
     "female": false,
     "full_name": "Gédéon Kalulu",
     "given_name": "Gedeon",
-    "player_id": "P-W26-0849",
+    "player_id": "P-W26-0832",
     "primary_position": "DF"
   },
   {
@@ -11046,7 +10825,7 @@
     "female": false,
     "full_name": "Axel Tuanzebe",
     "given_name": "Axel",
-    "player_id": "P-W26-0850",
+    "player_id": "P-W26-0833",
     "primary_position": "DF"
   },
   {
@@ -11059,7 +10838,7 @@
     "female": false,
     "full_name": "Aaron Wan-Bissaka",
     "given_name": "Aaron",
-    "player_id": "P-W26-0851",
+    "player_id": "P-W26-0834",
     "primary_position": "DF"
   },
   {
@@ -11072,7 +10851,7 @@
     "female": false,
     "full_name": "Brian Cipenga",
     "given_name": "Brian",
-    "player_id": "P-W26-0852",
+    "player_id": "P-W26-0835",
     "primary_position": "FW"
   },
   {
@@ -11085,7 +10864,7 @@
     "female": false,
     "full_name": "Steve Kapuadi",
     "given_name": "Steve",
-    "player_id": "P-W26-0853",
+    "player_id": "P-W26-0836",
     "primary_position": "DF"
   },
   {
@@ -11098,7 +10877,7 @@
     "female": false,
     "full_name": "Edo Kayembe",
     "given_name": "Edo",
-    "player_id": "P-W26-0854",
+    "player_id": "P-W26-0837",
     "primary_position": "MF"
   },
   {
@@ -11111,7 +10890,7 @@
     "female": false,
     "full_name": "Timothy Fayulu",
     "given_name": "Timothy",
-    "player_id": "P-W26-0855",
+    "player_id": "P-W26-0838",
     "primary_position": "GK"
   },
   {
@@ -11124,7 +10903,7 @@
     "female": false,
     "full_name": "Nathanaël Mbuku",
     "given_name": "Nathanael",
-    "player_id": "P-W26-0856",
+    "player_id": "P-W26-0839",
     "primary_position": "MF"
   },
   {
@@ -11137,7 +10916,7 @@
     "female": false,
     "full_name": "Ngal'ayel Mukau",
     "given_name": "Ngalayel",
-    "player_id": "P-W26-0857",
+    "player_id": "P-W26-0840",
     "primary_position": "MF"
   },
   {
@@ -11150,7 +10929,7 @@
     "female": false,
     "full_name": "Noah Sadiki",
     "given_name": "Noah",
-    "player_id": "P-W26-0858",
+    "player_id": "P-W26-0841",
     "primary_position": "MF"
   },
   {
@@ -11163,7 +10942,7 @@
     "female": false,
     "full_name": "Matthieu Epolo",
     "given_name": "Matthieu",
-    "player_id": "P-W26-0859",
+    "player_id": "P-W26-0842",
     "primary_position": "GK"
   },
   {
@@ -11176,7 +10955,7 @@
     "female": false,
     "full_name": "Salim Obaid",
     "given_name": "Salim",
-    "player_id": "P-W26-0860",
+    "player_id": "P-W26-0843",
     "primary_position": "DF"
   },
   {
@@ -11189,7 +10968,7 @@
     "female": false,
     "full_name": "Mohammad Al-Dawoud",
     "given_name": "Mohammad",
-    "player_id": "P-W26-0861",
+    "player_id": "P-W26-0844",
     "primary_position": "MF"
   },
   {
@@ -11202,7 +10981,7 @@
     "female": false,
     "full_name": "Yazeed Abulaila",
     "given_name": "Yazeed",
-    "player_id": "P-W26-0862",
+    "player_id": "P-W26-0845",
     "primary_position": "GK"
   },
   {
@@ -11215,7 +10994,7 @@
     "female": false,
     "full_name": "Nour Bani Attiah",
     "given_name": "Nour",
-    "player_id": "P-W26-0863",
+    "player_id": "P-W26-0846",
     "primary_position": "GK"
   },
   {
@@ -11228,7 +11007,7 @@
     "female": false,
     "full_name": "Rajaei Ayed",
     "given_name": "Rajaei",
-    "player_id": "P-W26-0864",
+    "player_id": "P-W26-0847",
     "primary_position": "MF"
   },
   {
@@ -11241,7 +11020,7 @@
     "female": false,
     "full_name": "Mahmoud Al-Mardi",
     "given_name": "Mahmoud",
-    "player_id": "P-W26-0865",
+    "player_id": "P-W26-0848",
     "primary_position": "FW"
   },
   {
@@ -11254,7 +11033,7 @@
     "female": false,
     "full_name": "Ihsan Haddad",
     "given_name": "Ihsan",
-    "player_id": "P-W26-0866",
+    "player_id": "P-W26-0849",
     "primary_position": "DF"
   },
   {
@@ -11267,7 +11046,7 @@
     "female": false,
     "full_name": "Abdallah Nasib",
     "given_name": "Abdallah",
-    "player_id": "P-W26-0867",
+    "player_id": "P-W26-0850",
     "primary_position": "DF"
   },
   {
@@ -11280,7 +11059,7 @@
     "female": false,
     "full_name": "Mohammad Abu Hashish",
     "given_name": "Mohammad",
-    "player_id": "P-W26-0868",
+    "player_id": "P-W26-0851",
     "primary_position": "DF"
   },
   {
@@ -11293,7 +11072,7 @@
     "female": false,
     "full_name": "Yazan Al-Arab",
     "given_name": "Yazan",
-    "player_id": "P-W26-0869",
+    "player_id": "P-W26-0852",
     "primary_position": "DF"
   },
   {
@@ -11306,7 +11085,7 @@
     "female": false,
     "full_name": "Saed Al-Rosan",
     "given_name": "Saed",
-    "player_id": "P-W26-0870",
+    "player_id": "P-W26-0853",
     "primary_position": "DF"
   },
   {
@@ -11319,7 +11098,7 @@
     "female": false,
     "full_name": "Noor Al-Rawabdeh",
     "given_name": "Noor",
-    "player_id": "P-W26-0871",
+    "player_id": "P-W26-0854",
     "primary_position": "MF"
   },
   {
@@ -11332,7 +11111,7 @@
     "female": false,
     "full_name": "Musa Al-Taamari",
     "given_name": "Musa",
-    "player_id": "P-W26-0872",
+    "player_id": "P-W26-0855",
     "primary_position": "FW"
   },
   {
@@ -11345,7 +11124,7 @@
     "female": false,
     "full_name": "Anas Badawi",
     "given_name": "Anas",
-    "player_id": "P-W26-0873",
+    "player_id": "P-W26-0856",
     "primary_position": "DF"
   },
   {
@@ -11358,7 +11137,7 @@
     "female": false,
     "full_name": "Mohammad Abu Zrayq",
     "given_name": "Mohammad",
-    "player_id": "P-W26-0874",
+    "player_id": "P-W26-0857",
     "primary_position": "FW"
   },
   {
@@ -11371,7 +11150,7 @@
     "female": false,
     "full_name": "Nizar Al-Rashdan",
     "given_name": "Nizar",
-    "player_id": "P-W26-0875",
+    "player_id": "P-W26-0858",
     "primary_position": "MF"
   },
   {
@@ -11384,7 +11163,7 @@
     "female": false,
     "full_name": "Abdallah Al-Fakhouri",
     "given_name": "Abdallah",
-    "player_id": "P-W26-0876",
+    "player_id": "P-W26-0859",
     "primary_position": "GK"
   },
   {
@@ -11397,7 +11176,7 @@
     "female": false,
     "full_name": "Ali Olwan",
     "given_name": "Ali",
-    "player_id": "P-W26-0877",
+    "player_id": "P-W26-0860",
     "primary_position": "FW"
   },
   {
@@ -11410,7 +11189,7 @@
     "female": false,
     "full_name": "Ibrahim Sadeh",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0878",
+    "player_id": "P-W26-0861",
     "primary_position": "MF"
   },
   {
@@ -11423,7 +11202,7 @@
     "female": false,
     "full_name": "Husam Abu Dahab",
     "given_name": "Husam",
-    "player_id": "P-W26-0879",
+    "player_id": "P-W26-0862",
     "primary_position": "DF"
   },
   {
@@ -11436,7 +11215,7 @@
     "female": false,
     "full_name": "Mo Abualnadi",
     "given_name": "Mo",
-    "player_id": "P-W26-0880",
+    "player_id": "P-W26-0863",
     "primary_position": "DF"
   },
   {
@@ -11449,7 +11228,7 @@
     "female": false,
     "full_name": "Amer Jamous",
     "given_name": "Amer",
-    "player_id": "P-W26-0881",
+    "player_id": "P-W26-0864",
     "primary_position": "MF"
   },
   {
@@ -11462,7 +11241,7 @@
     "female": false,
     "full_name": "Mohannad Abu Taha",
     "given_name": "Mohannad",
-    "player_id": "P-W26-0882",
+    "player_id": "P-W26-0865",
     "primary_position": "MF"
   },
   {
@@ -11475,7 +11254,7 @@
     "female": false,
     "full_name": "Ali Azaizeh",
     "given_name": "Ali",
-    "player_id": "P-W26-0883",
+    "player_id": "P-W26-0866",
     "primary_position": "FW"
   },
   {
@@ -11488,7 +11267,7 @@
     "female": false,
     "full_name": "Odeh Al-Fakhouri",
     "given_name": "Odeh",
-    "player_id": "P-W26-0884",
+    "player_id": "P-W26-0867",
     "primary_position": "FW"
   },
   {
@@ -11501,7 +11280,7 @@
     "female": false,
     "full_name": "Ibrahim Sabra",
     "given_name": "Ibrahim",
-    "player_id": "P-W26-0885",
+    "player_id": "P-W26-0868",
     "primary_position": "FW"
   },
   {
@@ -11514,7 +11293,7 @@
     "female": false,
     "full_name": "Utkir Yusupov",
     "given_name": "Utkir",
-    "player_id": "P-W26-0886",
+    "player_id": "P-W26-0869",
     "primary_position": "GK"
   },
   {
@@ -11527,7 +11306,7 @@
     "female": false,
     "full_name": "Farrukh Sayfiev",
     "given_name": "Farrukh",
-    "player_id": "P-W26-0887",
+    "player_id": "P-W26-0870",
     "primary_position": "DF"
   },
   {
@@ -11540,7 +11319,7 @@
     "female": false,
     "full_name": "Umar Eshmurodov",
     "given_name": "Umar",
-    "player_id": "P-W26-0888",
+    "player_id": "P-W26-0871",
     "primary_position": "DF"
   },
   {
@@ -11553,7 +11332,7 @@
     "female": false,
     "full_name": "Igor Sergeev",
     "given_name": "Igor",
-    "player_id": "P-W26-0889",
+    "player_id": "P-W26-0872",
     "primary_position": "FW"
   },
   {
@@ -11566,7 +11345,7 @@
     "female": false,
     "full_name": "Jaloliddin Masharipov",
     "given_name": "Jaloliddin",
-    "player_id": "P-W26-0890",
+    "player_id": "P-W26-0873",
     "primary_position": "MF"
   },
   {
@@ -11579,7 +11358,7 @@
     "female": false,
     "full_name": "Jamshid Iskanderov",
     "given_name": "Jamshid",
-    "player_id": "P-W26-0891",
+    "player_id": "P-W26-0874",
     "primary_position": "MF"
   },
   {
@@ -11592,7 +11371,7 @@
     "female": false,
     "full_name": "Botirali Ergashev",
     "given_name": "Botirali",
-    "player_id": "P-W26-0892",
+    "player_id": "P-W26-0875",
     "primary_position": "GK"
   },
   {
@@ -11605,7 +11384,7 @@
     "female": false,
     "full_name": "Eldor Shomurodov",
     "given_name": "Eldor",
-    "player_id": "P-W26-0893",
+    "player_id": "P-W26-0876",
     "primary_position": "FW"
   },
   {
@@ -11618,7 +11397,7 @@
     "female": false,
     "full_name": "Odiljon Hamrobekov",
     "given_name": "Odiljon",
-    "player_id": "P-W26-0894",
+    "player_id": "P-W26-0877",
     "primary_position": "MF"
   },
   {
@@ -11631,7 +11410,7 @@
     "female": false,
     "full_name": "Otabek Shukurov",
     "given_name": "Otabek",
-    "player_id": "P-W26-0895",
+    "player_id": "P-W26-0878",
     "primary_position": "MF"
   },
   {
@@ -11644,7 +11423,7 @@
     "female": false,
     "full_name": "Rustam Ashurmatov",
     "given_name": "Rustam",
-    "player_id": "P-W26-0896",
+    "player_id": "P-W26-0879",
     "primary_position": "DF"
   },
   {
@@ -11657,7 +11436,7 @@
     "female": false,
     "full_name": "Dostonbek Khamdamov",
     "given_name": "Dostonbek",
-    "player_id": "P-W26-0897",
+    "player_id": "P-W26-0880",
     "primary_position": "MF"
   },
   {
@@ -11670,7 +11449,7 @@
     "female": false,
     "full_name": "Khojiakbar Alijonov",
     "given_name": "Khojiakbar",
-    "player_id": "P-W26-0898",
+    "player_id": "P-W26-0881",
     "primary_position": "DF"
   },
   {
@@ -11683,7 +11462,7 @@
     "female": false,
     "full_name": "Abdulla Abdullaev",
     "given_name": "Abdulla",
-    "player_id": "P-W26-0899",
+    "player_id": "P-W26-0882",
     "primary_position": "DF"
   },
   {
@@ -11696,7 +11475,7 @@
     "female": false,
     "full_name": "Azizbek Amonov",
     "given_name": "Azizbek",
-    "player_id": "P-W26-0900",
+    "player_id": "P-W26-0883",
     "primary_position": "FW"
   },
   {
@@ -11709,7 +11488,7 @@
     "female": false,
     "full_name": "Azizjon Ganiev",
     "given_name": "Azizjon",
-    "player_id": "P-W26-0901",
+    "player_id": "P-W26-0884",
     "primary_position": "MF"
   },
   {
@@ -11722,7 +11501,7 @@
     "female": false,
     "full_name": "Sherzod Nasrullaev",
     "given_name": "Sherzod",
-    "player_id": "P-W26-0902",
+    "player_id": "P-W26-0885",
     "primary_position": "DF"
   },
   {
@@ -11735,7 +11514,7 @@
     "female": false,
     "full_name": "Akmal Mozgovoy",
     "given_name": "Akmal",
-    "player_id": "P-W26-0903",
+    "player_id": "P-W26-0886",
     "primary_position": "MF"
   },
   {
@@ -11748,7 +11527,7 @@
     "female": false,
     "full_name": "Avazbek Ulmasaliev",
     "given_name": "Avazbek",
-    "player_id": "P-W26-0904",
+    "player_id": "P-W26-0887",
     "primary_position": "DF"
   },
   {
@@ -11761,7 +11540,7 @@
     "female": false,
     "full_name": "Oston Urunov",
     "given_name": "Oston",
-    "player_id": "P-W26-0905",
+    "player_id": "P-W26-0888",
     "primary_position": "MF"
   },
   {
@@ -11774,7 +11553,7 @@
     "female": false,
     "full_name": "Abduvohid Nematov",
     "given_name": "Abduvohid",
-    "player_id": "P-W26-0906",
+    "player_id": "P-W26-0889",
     "primary_position": "GK"
   },
   {
@@ -11787,7 +11566,7 @@
     "female": false,
     "full_name": "Sherzod Esanov",
     "given_name": "Sherzod",
-    "player_id": "P-W26-0907",
+    "player_id": "P-W26-0890",
     "primary_position": "MF"
   },
   {
@@ -11800,7 +11579,7 @@
     "female": false,
     "full_name": "Abbosbek Fayzullaev",
     "given_name": "Abbosbek",
-    "player_id": "P-W26-0908",
+    "player_id": "P-W26-0891",
     "primary_position": "MF"
   },
   {
@@ -11813,7 +11592,7 @@
     "female": false,
     "full_name": "Jakhongir Urozov",
     "given_name": "Jakhongir",
-    "player_id": "P-W26-0909",
+    "player_id": "P-W26-0892",
     "primary_position": "DF"
   },
   {
@@ -11826,7 +11605,7 @@
     "female": false,
     "full_name": "Abdukodir Khusanov",
     "given_name": "Abdukodir",
-    "player_id": "P-W26-0910",
+    "player_id": "P-W26-0893",
     "primary_position": "DF"
   },
   {
@@ -11839,7 +11618,7 @@
     "female": false,
     "full_name": "Bekhruz Karimov",
     "given_name": "Bekhruz",
-    "player_id": "P-W26-0911",
+    "player_id": "P-W26-0894",
     "primary_position": "DF"
   }
 ]
