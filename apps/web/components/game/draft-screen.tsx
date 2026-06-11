@@ -58,6 +58,7 @@ import {
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
 import { Pitch } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
+import { SquadHeaderFlag } from "./squad-header-flag";
 import { ManagerSlot } from "./manager-slot";
 import { SpinStage, type SpinAnimState } from "./slot-machine";
 import { SynergyBar } from "./synergy-bar";
@@ -773,8 +774,13 @@ function DraftBoard({
             Synergy, and your final XI.
           </p>
         </section>
-      ) : spinResultLabel ? (
+      ) : spinResultLabel && slotReveal ? (
         <section className={s.nowDrafting} aria-label="Current spin">
+          <SquadHeaderFlag
+            flagSrc={slotReveal.result.flagSrc}
+            nationCode={slotReveal.result.nationCode}
+            nationName={slotReveal.result.nationName}
+          />
           <div className={s.nowDraftingMain}>
             <span className={s.nowDraftingPick}>
               Pick {spinNumber} / {TOTAL_SPINS}

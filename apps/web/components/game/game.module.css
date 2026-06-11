@@ -3921,6 +3921,33 @@ button.benchSlot:not(:disabled):hover {
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  flex: 1; /* flag sits left as a header identity element; main fills the middle */
+}
+/* Squad-header flag (ws-ux/club-coverage) — same asset family as the spin
+   reel, sized to the existing two-line header so it adds NO vertical height. */
+.squadHeaderFlag {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-900);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.squadHeaderFlagFallback {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
 }
 .nowDraftingPick {
   font-family: var(--f-mono);
