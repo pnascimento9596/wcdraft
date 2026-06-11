@@ -1,11 +1,30 @@
 {
+  "activated_by": "career-stature-3.0.0",
   "curation_notes": [
     "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance.",
-    "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no fact in this pass (missing facts stay missing).",
-    "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision."
+    "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no captaincy fact in this pass (missing captaincy stays missing).",
+    "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision.",
+    "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
   ],
   "cutoff_date": "2026-06-01",
   "entries": [
+    {
+      "fact_count": 2,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-05174",
+      "player_name": "Federico Valverde",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/played the 2024 final"
+      ]
+    },
     {
       "fact_count": 2,
       "families": [
@@ -21,6 +40,22 @@
       "source_refs": [
         "active_gk_award:World's Best Goalkeeper annual award — 2019 winner",
         "active_gk_award:Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-62341",
+      "player_name": "Rodri",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/scored in the 2023 final"
       ]
     },
     {
@@ -53,6 +88,23 @@
       ],
       "source_refs": [
         "active_international_record:caps=152 (2005-2026)"
+      ]
+    },
+    {
+      "fact_count": 2,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-92812",
+      "player_name": "Vinícius Júnior",
+      "positions": [
+        "FW"
+      ],
+      "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/scored in the 2022 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/scored in the 2024 final"
       ]
     },
     {
@@ -182,8 +234,9 @@
       ]
     },
     {
-      "fact_count": 11,
+      "fact_count": 12,
       "families": [
+        "club_season_honors",
         "global_annual_recognition",
         "international_record",
         "position_balanced_selection"
@@ -196,6 +249,7 @@
         "FW"
       ],
       "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/played the 2023 final",
         "esm_team_of_the_season:esm_tots FW 2019",
         "esm_team_of_the_season:esm_tots FW 2022",
         "fifpro_world11:fifpro_world11 2021",
@@ -387,9 +441,8 @@
       ]
     }
   ],
-  "entry_count": 23,
+  "entry_count": 26,
   "identity_bridge_review": [],
-  "inert": true,
-  "note": "Active-career staging entries (MV2-12a). Facts + identity only: no career_stature_score, index, tier or legend is computed — the completed-career composite is the wrong model for an in-progress career. Nothing in the rating stage reads this file; MV2-12b activates the channel explicitly (career-stage-normalized index, full Red chain).",
-  "version": "active-career-source-set-1.0.0"
+  "note": "Active-career staging entries. Facts + identity only: no career_stature_score, index, tier or legend is computed here. career-stature-3.0.0 consumes source_facts_active.json plus this staging artifact and applies the person-level, career-stage-normalized merge.",
+  "version": "active-career-source-set-2.0.0"
 }

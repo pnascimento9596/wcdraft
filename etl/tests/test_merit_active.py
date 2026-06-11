@@ -1,8 +1,7 @@
-"""MV2-12a active-career intake: citation discipline, conservative dual-space
-linking, determinism, the SHA-pin, and — the load-bearing assertions — the
-INERTNESS contract: the active channel must be structurally incapable of moving
-``source_facts.json``, ``career_stature.json`` or any rating output until
-MV2-12b activates it explicitly.
+"""MV2-12a / merit-v3 V1 active-career intake: citation discipline,
+conservative dual-space linking, determinism, the SHA-pin, and the explicit
+activation seam: active.py still emits facts + identity only, while
+career-stature-3.0.0 consumes those facts through stature.py.
 
 Self-contained: reads the committed canonical JSON in ``etl/output/`` plus the
 committed snapshots/notes under ``etl/merit/raw/``.
@@ -79,7 +78,7 @@ def test_build_is_deterministic(abuilt):
     assert again["review_doc"] == abuilt["review_doc"]
 
 
-# ─── INERTNESS: the consumed pipeline cannot see the active channel ───────────
+# ─── ACTIVATION: stature consumes active facts; rating still does not ─────────
 
 
 def test_no_active_source_id_reaches_the_consumed_fact_file():
@@ -91,26 +90,39 @@ def test_no_active_source_id_reaches_the_consumed_fact_file():
     assert not {s.source_id for s in SOURCES} & ACTIVE_SOURCE_IDS
 
 
-def test_no_active_player_breaches_the_consumed_archive(abuilt):
-    """Build-enforced double-credit guard, re-asserted here: no staged identity
-    has a row in the consumed career-stature archive."""
-    archive = json.loads((ETL_OUT / "career_stature.json").read_text(encoding="utf-8"))
-    archived = {r["player_id"] for r in archive["career_stature"]}
+def test_archived_active_targets_are_staged_for_stature_merge(abuilt):
+    """V1 activation flip: archived targets are allowed in the active channel.
+    The no-double-credit invariant now belongs to stature.py's person-level
+    merge, so this test asserts the intended archived-target staging surface."""
+    archive = json.loads((MERIT_OUT / "source_facts.json").read_text(encoding="utf-8"))
+    archived = {f["player_id"] for f in archive["facts"]}
     staged = {e["player_id"] for e in abuilt["entries"]}
-    assert not staged & archived
+    assert {"P-62341", "P-92812"} <= staged & archived
+    entries = {e["player_id"]: e for e in abuilt["entries"]}
+    assert entries["P-62341"]["families"] == ["club_season_honors"]
+    assert entries["P-92812"]["families"] == ["club_season_honors"]
 
 
 def test_scoring_code_never_references_the_active_artifacts():
-    """The explicit-flip guard: no consumed-pipeline module may name an active
-    artifact or import the active module. MV2-12b must change this test when it
-    activates the channel — that is the point."""
+    """V1 activation flip: stature.py must name and consume the active artifacts,
+    while rating/compact/ingest modules still do not import the active channel.
+    This replaces the old inertness assertion with the post-activation boundary."""
+    stature_text = (ETL_SRC / "merit" / "stature.py").read_text(encoding="utf-8")
+    for token in (
+        "source_facts_active.json",
+        "career_stature_active_staging.json",
+        "ACTIVE_SOURCE_SET_VERSION",
+    ):
+        assert token in stature_text, f"stature.py does not consume {token!r}"
+    for token in ("merit.active", "import active", "from . import active"):
+        assert token not in stature_text, f"stature.py imports active module: {token!r}"
+
     consumed_modules = [
         ETL_SRC / "rating.py",
         ETL_SRC / "rating_2026.py",
         ETL_SRC / "display_curve.py",
         ETL_SRC / "pipeline.py",
         ETL_SRC / "ingest_2026.py",
-        ETL_SRC / "merit" / "stature.py",
         ETL_SRC / "merit" / "build.py",
         ETL_SRC / "merit" / "link.py",
     ]
@@ -136,9 +148,9 @@ def test_active_module_never_imports_or_writes_rating_artifacts():
 
 
 def test_staged_entries_carry_no_score_index_tier_or_legend(abuilt):
-    """No re-scoring in 12a: a staged entry is facts + identity ONLY. The
-    completed-career composite keys must be structurally absent so 12b's
-    activation is an explicit, reviewable flip."""
+    """Even after V1 activation, active.py stays facts + identity ONLY. The
+    completed-career composite keys remain structurally absent because stature.py
+    owns scoring, stage normalization, tiers and legend flags."""
     forbidden = {
         "career_stature_score",
         "career_stature_index",
@@ -149,7 +161,7 @@ def test_staged_entries_carry_no_score_index_tier_or_legend(abuilt):
         "family_scores",
         "family_weights",
     }
-    assert abuilt["staging_doc"]["inert"] is True
+    assert abuilt["staging_doc"]["activated_by"] == "career-stature-3.0.0"
     for e in abuilt["entries"]:
         assert not forbidden & set(e), e["player_id"]
 
@@ -213,10 +225,10 @@ def test_note_cutoff_date_must_match_the_registry(monkeypatch):
         active._load_note(src)
 
 
-def test_double_credit_guard_fails_the_build_on_an_archived_target(monkeypatch):
-    """Curation drift onto an identity the consumed archive already scores must
-    fail loud. Proven by injecting a note row for a player with an archive row
-    (Heung-min Son) and asserting ActiveIntakeError."""
+def test_double_credit_guard_is_now_a_stature_merge_invariant(monkeypatch):
+    """V1 activation flip: an archived active target no longer fails active.build.
+    The post-flip no-double-credit guard is the stature merge invariant tested in
+    test_career_stature.py; this pin proves active.py no longer owns that gate."""
     real_collect = active.collect_notes
 
     def with_archived_target():
@@ -237,8 +249,14 @@ def test_double_credit_guard_fails_the_build_on_an_archived_target(monkeypatch):
         return records, notes
 
     monkeypatch.setattr(active, "collect_notes", with_archived_target)
-    with pytest.raises(active.ActiveIntakeError, match="double-credit"):
-        active.build(write=False)
+    out = active.build(write=False)
+    injected = [
+        f
+        for f in out["facts"]
+        if f["source_id"] == "active_captaincy" and f["raw_name"] == "Heung-min Son"
+    ]
+    assert injected
+    assert any(e["player_id"] == injected[0]["player_id"] for e in out["entries"])
 
 
 # ─── conservative linking in the minted 2026 space ────────────────────────────
@@ -307,8 +325,12 @@ def test_named_anchor_links(abuilt):
     # Giménez — the Uruguay captaincy lands on the canonical card name.
     gimenez = by_pid["P-65659"]
     assert gimenez[0]["family"] == "captaincy"
-    # Valverde — REFUTED captaincy stays out (anti-fabrication pin).
-    assert "P-05174" not in by_pid
+    # Valverde — REFUTED captaincy stays out, while the separate club-season
+    # honors facts are allowed in under their own sourced family.
+    valverde = by_pid["P-05174"]
+    assert {f["source_id"] for f in valverde} == {"active_club_season_honors"}
+    assert {f["family"] for f in valverde} == {"club_season_honors"}
+    assert len(valverde) == 2
     valverde_drop = [n for n in abuilt["staging_doc"]["curation_notes"] if "Valverde" in n]
     assert valverde_drop, "the Valverde drop must stay documented"
 

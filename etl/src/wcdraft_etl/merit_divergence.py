@@ -27,7 +27,6 @@ import json
 from pathlib import Path
 
 from . import rating
-from .merit import VERSION
 
 # Primary sim channel per coarse position — the channel the player's stature most
 # directly drives (and the one the plan's Δ threshold watches).
@@ -112,7 +111,7 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
         )
     )
     doc = {
-        "version": VERSION,
+        "version": rating._career_stature_rating_version(output_dir),
         "note": (
             "REVIEW ONLY — raw-only baseline (career table disabled) vs the "
             "stature-dominant output (career table enabled) divergence, both mapped "
@@ -139,6 +138,6 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
 
 if __name__ == "__main__":
     out = build(write=True)
-    print(f"career-lift divergence review {VERSION}")
+    print(f"career-lift divergence review {out['version']}")
     print(f"  flagged: {out['flagged_count']} cards (Δovr≥8 or Δchannel≥10)")
     print(f"  -> {OUTPUT_PATH}")

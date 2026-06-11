@@ -2,7 +2,7 @@
   "cutoff_date": "2026-06-01",
   "files": [
     {
-      "bytes": 3280,
+      "bytes": 3303,
       "cited_urls": [
         "https://en.wikipedia.org/wiki/Andy_Robertson",
         "https://en.wikipedia.org/wiki/David_Alaba",
@@ -13,8 +13,22 @@
       "family": "captaincy",
       "file": "active/captaincy.json",
       "row_count": 5,
-      "sha256": "dda808588c0a89728ce7a38162c7b589059d4e55560d4f763e84952d3f41e65f",
+      "sha256": "508f2d1b8c640f2cac81be0b1a9b670c869cb671bfe175ebd6ebc01326dd7469",
       "source_id": "active_captaincy"
+    },
+    {
+      "bytes": 4544,
+      "cited_urls": [
+        "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
+        "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
+        "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/",
+        "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/"
+      ],
+      "family": "club_season_honors",
+      "file": "active/club-season-honors.json",
+      "row_count": 6,
+      "sha256": "591aaa4ee80fc66b6ec8362d3cee200fdeb862cc6539aab928e54af71fb68850",
+      "source_id": "active_club_season_honors"
     },
     {
       "bytes": 1484,
@@ -52,6 +66,6 @@
       "source_id": "active_international_record"
     }
   ],
-  "note": "MV2-12a active-career intake notes. Citation-backed public facts for in-progress careers, staged in the inert active channel. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
-  "version": "active-career-source-set-1.0.0"
+  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-3.0.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
+  "version": "active-career-source-set-2.0.0"
 }

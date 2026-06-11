@@ -1,0 +1,89 @@
+{
+  "source_id": "active_club_season_honors",
+  "family": "club_season_honors",
+  "cutoff_date": "2026-06-01",
+  "note": "merit-v3 V1 active-career curation. Top-tier continental club titles with documented final participation only; titles are credited as factual honors, never as subjective player-importance rankings. Every row is citation-backed and staged for career-stature-3.0.0.",
+  "curation_notes": [
+    "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
+  ],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "Federico Valverde",
+      "nation_token": "Uruguay",
+      "year": 2022,
+      "position": "MF",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
+        "claim": "UEFA's 2022 Champions League final match record shows Real Madrid beat Liverpool 1-0; Federico Valverde played in the final and was substituted off in the 86th minute."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Vinícius Júnior",
+      "nation_token": "Brazil",
+      "year": 2022,
+      "position": "FW",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/scored in the 2022 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
+        "claim": "UEFA's 2022 Champions League final match record shows Real Madrid beat Liverpool 1-0 and records Vinícius Júnior as the 59th-minute scorer."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Rodri",
+      "nation_token": "Spain",
+      "year": 2023,
+      "position": "MF",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/scored in the 2023 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
+        "claim": "UEFA's 2023 Champions League final match record shows Manchester City beat Inter 1-0, with Rodri scoring the winning goal."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Erling Haaland",
+      "nation_token": "Norway",
+      "year": 2023,
+      "position": "FW",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/played the 2023 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/",
+        "claim": "UEFA's 2023 Champions League final line-ups list Erling Haaland in Manchester City's final XI against Inter."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Federico Valverde",
+      "nation_token": "Uruguay",
+      "year": 2024,
+      "position": "MF",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/played the 2024 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
+        "claim": "UEFA's 2024 Champions League final report lists Federico Valverde in Real Madrid's line-up and reports Real Madrid's 2-0 win."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Vinícius Júnior",
+      "nation_token": "Brazil",
+      "year": 2024,
+      "position": "FW",
+      "kind": "ucl_title_final_participant",
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/scored in the 2024 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
+        "claim": "UEFA's 2024 Champions League final report lists Vinícius Júnior in Real Madrid's line-up and records his 83rd-minute goal in the 2-0 win."
+      }
+    }
+  ]
+}
