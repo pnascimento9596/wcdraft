@@ -825,12 +825,11 @@ def render_merit_v2_sample_2026(
     return "\n".join(L) + "\n"
 
 
-def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
-    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md as the historical MV2-4 section
-    (rendered fresh from rating.py) FOLLOWED BY the 2026 MV2-5 reconciliation section.
-    Deterministic and order-independent: the whole file is regenerated from the
-    committed canonical + career-stature + 2026 tables, so a clean rebuild reproduces
-    the committed bytes regardless of which stage ran last."""
+def render_merit_v2_sample_full(output_dir: Path = OUTPUT_DIR) -> str:
+    """Render the full 3-section MERIT_V2_SAMPLE.md (no write): historical MV2-4
+    section (rendered fresh from rating.py) + 2026 MV2-5 reconciliation section +
+    MV2-6 unified-display section. Deterministic: regenerated entirely from the
+    committed canonical + career-stature + 2026 tables."""
     cards = json.loads((output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8"))
     career = _load_career_stature(output_dir)
     historical_raw_only = _historical_raw_only_internal(output_dir)
@@ -849,7 +848,15 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     from . import display_curve
 
     section_display = display_curve.render_unified_display_sample(output_dir)
-    md = historical + section_2026 + section_display
+    return historical + section_2026 + section_display
+
+
+def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md — the SOLE owner of that file
+    (invoked from ``ingest_2026.run``; ``rating.run`` deliberately does not write
+    it). Runs LAST in the ingest lane and regenerates the whole 3-section file, so
+    a clean rebuild reproduces the committed bytes regardless of stage order."""
+    md = render_merit_v2_sample_full(output_dir)
     out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")

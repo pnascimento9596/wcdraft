@@ -86,6 +86,28 @@ def test_matches_committed_golden(built):
         assert committed == fresh, f"etl/output/{name}.json is stale — re-run the 2026 ingest."
 
 
+def test_merit_v2_sample_single_owner_and_byte_stable():
+    """MERIT_V2_SAMPLE.md has exactly ONE writer: rating_2026.write_merit_v2_sample
+    (invoked last from ingest_2026.run). rating.run() must not write it — the old
+    dual-writer left the committed file as whichever stage ran last (historical-only
+    when rating ran last, truncating the 2026 + unified-display sections). Pins both
+    halves: the rating module exposes no writer, and the canonical 3-section render
+    is run-twice deterministic AND reproduces the committed bytes (so a clean
+    full-pipeline rebuild leaves the file byte-stable)."""
+    assert not hasattr(rating, "write_merit_v2_sample"), (
+        "rating.py must not write MERIT_V2_SAMPLE.md — sole owner is "
+        "rating_2026.write_merit_v2_sample (dual-writer trap)"
+    )
+    committed = (OUT / "merit" / "MERIT_V2_SAMPLE.md").read_text(encoding="utf-8")
+    first = rating_2026.render_merit_v2_sample_full()
+    second = rating_2026.render_merit_v2_sample_full()
+    assert first == second, "MERIT_V2_SAMPLE render differs between runs"
+    assert first == committed, (
+        "etl/output/merit/MERIT_V2_SAMPLE.md is stale — re-run "
+        "'python -m wcdraft_etl.ingest_2026' and commit."
+    )
+
+
 # ─── structure: 48 teams, groups, squad sizes ─────────────────────────────────
 
 

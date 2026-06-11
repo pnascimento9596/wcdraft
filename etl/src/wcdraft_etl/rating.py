@@ -1278,10 +1278,11 @@ def _render_merit_v2_sample(
 def render_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     """Render the historical INTERNAL-score shape sample as markdown (no write).
 
-    Exposed (non-behavioral) so the 2026 stage (MV2-5) can prepend this exact
-    historical section before appending its own 2026 reconciliation section into
-    the SAME ``MERIT_V2_SAMPLE.md`` — see ``rating_2026.write_merit_v2_sample``.
-    """
+    ``MERIT_V2_SAMPLE.md`` has a SINGLE owner: ``rating_2026.write_merit_v2_sample``
+    (invoked from ``ingest_2026.run``), which prepends this exact historical section
+    before its 2026 reconciliation + unified-display sections. This module only
+    renders — it must never write the file, or whichever stage ran last would
+    decide its committed contents (the dual-writer trap)."""
     players = _load(output_dir, "players")
     cards = _load(output_dir, "player_tournaments")
     tournaments = _load(output_dir, "tournaments")
@@ -1296,20 +1297,14 @@ def render_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     )
 
 
-def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
-    md = render_merit_v2_sample(output_dir)
-    out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(md, encoding="utf-8")
-    return md
-
-
 def run(output_dir: Path = OUTPUT_DIR) -> list[dict]:
-    """Build ratings from the committed canonical tables and emit ratings.json + the
-    MV2-4 accuracy-eyeball INTERNAL-score sample."""
+    """Build ratings from the committed canonical tables and emit ratings.json.
+
+    Deliberately does NOT write MERIT_V2_SAMPLE.md — the canonical 3-section
+    sample is owned solely by ``rating_2026.write_merit_v2_sample`` (via
+    ``ingest_2026.run``); see ``render_merit_v2_sample``."""
     ratings = build_all(output_dir)
     _write_json(output_dir / "ratings.json", ratings)
-    write_merit_v2_sample(output_dir)
     return ratings
 
 
