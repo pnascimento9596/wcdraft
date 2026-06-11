@@ -14,6 +14,11 @@ untouched by these display/docs-only changes.
 - F-4 U1–U6 all MERGED on main (U5 = PR #72, this change). Remaining F-4: U7 ranked
   lane (dark, blocked on plan §10 Q2) + the HUMAN-gated light-up checklist
   (`docs/queue/q-003-f4-remaining.md`).
+- MV2-12 audits: Audit-1 (`docs/reports/mv212-ratings-audit-2026-06-10.md`) +
+  Audit-2 face-validity sweep (`docs/reports/mv212-face-validity-2026-06-10.md`,
+  this change — report-only, zero runtime change; reproduction re-proven
+  12,219/12,219 at `b4f8651`). Audit-2 surfaces a P0 data defect: 17 minted-2026
+  identity link misses (Neymar/Rodri live distortion) — fix unit pending dispatch.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
