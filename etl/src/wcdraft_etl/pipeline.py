@@ -11,7 +11,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from . import cards, coverage, facts, managers, nations, players, source, tournaments
+from . import (
+    cards,
+    coverage,
+    facts,
+    historical_clubs,
+    managers,
+    nations,
+    players,
+    source,
+    tournaments,
+)
 from . import supplement as supplement_pkg
 from .supplement import link as supplement_link
 
@@ -35,11 +45,13 @@ def build_all() -> dict[str, list[dict]]:
     manager_appearances = source.load("manager_appearances")
     standings = source.load("tournament_standings")
 
+    club_backfill = historical_clubs.build_club_lookup(squads, players_df, teams)
+
     tables = {
         "nations": nations.build(teams),
         "players": players.build(players_df, squads),
         "player_tournaments": cards.build(
-            squads, tours, goals_df, appearances_df, award_winners
+            squads, tours, goals_df, appearances_df, award_winners, club_backfill.clubs
         ),
         "managers": managers.build_managers(managers_df, teams),
         "manager_tournaments": managers.build_manager_tournaments(
@@ -72,6 +84,9 @@ def _write_json(path: Path, obj) -> None:
 
 
 def _manifest(tables: dict[str, list[dict]]) -> dict:
+    club_rows = historical_clubs.coverage_by_tournament(tables["player_tournaments"])
+    club_populated = sum(r["club_populated"] for r in club_rows)
+    club_null = sum(r["club_null"] for r in club_rows)
     # No timestamp — keeping the manifest deterministic. Provenance is the pinned
     # source commit; row counts let consumers sanity-check what they loaded.
     return {
@@ -98,12 +113,25 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
                 "supplement/SUPPLEMENT.md",
             ],
         },
+        "historical_club_backfill": {
+            "source_name": historical_clubs.SOURCE_NAME,
+            "license": historical_clubs.SOURCE_LICENSE,
+            "license_url": historical_clubs.SOURCE_LICENSE_URL,
+            "attribution": historical_clubs.ATTRIBUTION,
+            "sourced_field": "player_tournaments.club_at_tournament (men's 1930-2022)",
+            "fetch_manifest": "sources/wikipedia_historical_squads/fetch_manifest.json",
+            "cards_populated": club_populated,
+            "honest_null_cards": club_null,
+        },
         "coverage_signals": list(cards.COVERAGE_SIGNALS),
         "honest_state": {
             "never_fabricated": [
                 "assists (no source, never synthesised)",
                 "minutes (no source, never synthesised — not derived as matches*90)",
-                "club_at_tournament (no source column)",
+                (
+                    "club_at_tournament stays null where pinned squad pages lack a club "
+                    "row/value or no unambiguous canonical join exists"
+                ),
                 "manager birth_date (no source column)",
             ],
             "null_sentinels": ["shirt_number 0 -> null (pre-1954)"],

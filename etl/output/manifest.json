@@ -8,13 +8,23 @@
     "appearances",
     "shirt"
   ],
+  "historical_club_backfill": {
+    "attribution": "Historical club-at-tournament names for men's World Cup player cards are factual text parsed from English Wikipedia squad-page revisions, used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). One revision is pinned per tournament in etl/sources/wikipedia_historical_squads/fetch_manifest.json; raw wikitext is committed under etl/sources/wikipedia_<year>/. Modifications by wcdraft: parsed only factual club names, joined them to canonical player-tournament cards by deterministic entity-resolution keys, and preserved null where the source or join is absent/ambiguous. No crests, badges, kits, or proprietary ratings are ingested.",
+    "cards_populated": 10957,
+    "fetch_manifest": "sources/wikipedia_historical_squads/fetch_manifest.json",
+    "honest_null_cards": 16,
+    "license": "CC-BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_name": "Wikipedia historical FIFA World Cup squads",
+    "sourced_field": "player_tournaments.club_at_tournament (men's 1930-2022)"
+  },
   "honest_state": {
     "appearances_from": 1970,
     "appearances_pre_1970": "sourced from RSSSF starting XIs and linked to player_id where unambiguous (appearances_source='rsssf_starting_xi'); null where no lineup links (unlinkable names emitted to link_review.json)",
     "never_fabricated": [
       "assists (no source, never synthesised)",
       "minutes (no source, never synthesised — not derived as matches*90)",
-      "club_at_tournament (no source column)",
+      "club_at_tournament stays null where pinned squad pages lack a club row/value or no unambiguous canonical join exists",
       "manager birth_date (no source column)"
     ],
     "null_sentinels": [

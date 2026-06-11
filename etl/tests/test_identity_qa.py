@@ -153,8 +153,19 @@ def test_pre_1954_shirts_are_null_not_zero(tables):
             assert c["shirt"] is None, f"{c['card_id']} pre-1954 shirt must be null"
 
 
-def test_club_and_manager_birthdate_never_fabricated(tables):
-    assert all(c["club_at_tournament"] is None for c in tables["player_tournaments"])
+def test_historical_clubs_are_source_bounded_not_fabricated(tables):
+    from wcdraft_etl.historical_clubs import CLUB_ALIAS_BRIDGES, HISTORICAL_YEARS
+
+    historical_tids = {f"WC-{year}" for year in HISTORICAL_YEARS}
+    historical_cards = [
+        c for c in tables["player_tournaments"] if c["tournament_id"] in historical_tids
+    ]
+    populated = [c for c in historical_cards if c["club_at_tournament"] is not None]
+    assert len(populated) == 10_957
+    assert len(historical_cards) - len(populated) == 16
+    by_key = {(c["player_id"], c["tournament_id"], c["nation_id"]): c for c in historical_cards}
+    for card_key, bridge in CLUB_ALIAS_BRIDGES.items():
+        assert by_key[card_key]["club_at_tournament"] == bridge.expected_club
     assert all(m["birth_date"] is None for m in tables["managers"])
 
 
