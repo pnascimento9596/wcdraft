@@ -31,6 +31,7 @@ function makeStub(
     ratingByCardId: new Map(),
     nationById: new Map(),
     tournamentById: new Map(),
+    displayNameByCardId: new Map(),
   } as unknown as GameDataIndexes;
   return { indexes } as unknown as GameData;
 }

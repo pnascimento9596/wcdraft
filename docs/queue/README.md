@@ -22,3 +22,4 @@ Rules (binding, from `CLAUDE.md`):
 | [q-003-f4-remaining](q-003-f4-remaining.md)               | Red · DISPATCH-ONLY             | F-4 leaderboard remainder: U4/U5/U6 lanes in flight (reference only), U7 ranked lane dark, light-up checklist             |
 | [q-004-accounts-activation](q-004-accounts-activation.md) | HUMAN-ONLY                      | Resend API key + sender domain verify — Paulo only, never agent-served                                                    |
 | [q-006-draft-config](q-006-draft-config.md)               | Red · DISPATCH-ONLY             | Draft config wave: Position First, era presets, Career/Current basis, leaderboard policy                                  |
+| [q-008-micro-yellow-2](q-008-micro-yellow-2.md)           | Yellow · SELF-SERVE:YELLOW · DONE | Micro-bundle 2: OG mark gold re-ink, CI push+PR dedupe, auth error-body scrub (q-003 item), surname disambiguation (q-005) |

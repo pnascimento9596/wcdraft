@@ -65,14 +65,15 @@ remains staged for MV2-12b
 | @wcdraft/data `test:golden:data`                        | 28 passed                   |
 | @wcdraft/data `test:golden:integration`                 | 10 passed                   |
 | @wcdraft/db `test`                                      | 74 passed                   |
-| @wcdraft/web `test`                                     | 548 passed, 1 skipped (549) |
+| @wcdraft/web `test`                                     | 556 passed, 1 skipped (557) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
 | etl `pytest -q`                                         | 182 passed (+23 active-intake tests, ws-etl/mv212a) |
 | `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached |
 
 ## CI (`.github/workflows/`)
 
-- `ci.yml` jobs: **verify** (typecheck·lint·test·build) · **golden** (RNG + draft) ·
+- `ci.yml` jobs: **dedupe** (skips push-event runs when the pushed branch has an open
+  PR — the pull_request run still gates; q-008) · **verify** (typecheck·lint·test·build) · **golden** (RNG + draft) ·
   **realism** (heavy asymmetric gate, N=2000 × 3 policies) · **db-gate → db-rollback-check**
   (path-filtered to `packages/db/**`+workflow+lockfile+turbo.json; ephemeral Neon branch,
   never prod) · **etl-rating** (ruff · rating tests · ratings.json byte-determinism).
