@@ -99,7 +99,7 @@ describe("pick-path catalog coherence (DC-2 regression guard)", () => {
     // The unfiltered catalog rebuilds pending spins from the FULL pool — the
     // result must not silently equal the bounded rebuild (or it throws on a
     // missing pair). Either way: never byte-equal.
-    let divergedOrThrew = false;
+    let divergedOrThrew: boolean;
     try {
       const viaWrong = stepDraft(wrong, draft);
       divergedOrThrew = JSON.stringify(viaWrong) !== JSON.stringify(viaRight);
