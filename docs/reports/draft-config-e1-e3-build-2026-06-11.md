@@ -1,4 +1,4 @@
-# Draft-config season — E1+E2+E3 chained build report (2026-06-11)
+# Draft-config season — E1+E2+E3 + prep chained build report (2026-06-11)
 
 **Spec of record:** `docs/plans/draft-config-2026-06-10.md`.
 **Integration branch:** `engine-draft-config` off `origin/main` `b41b8e0`.
@@ -10,18 +10,44 @@ approval).
 
 ## Outcome
 
-All three units SHIPPED to the integration branch:
+All three build units SHIPPED to the integration branch; the prep unit is the
+final on-branch re-lock before the later owner-approved season merge:
 
 | Unit | PR | Squash SHA on `engine-draft-config` |
 | ---- | -- | ----------------------------------- |
 | E1 / DC-1 — `t2.` token & config schema | #94 | `8be0627` |
 | E2 / DC-2 — era-preset bounded sampling | #95 | `7d5803b` |
 | E3 / DC-3 — position-first state machine | #96 | (head `088629a` + docs commit; merged on green CI) |
+| Prep — anchor bump + skew/re-lock/docs | #98 | PR head; squash SHA assigned after gated merge |
 
 Owner ratifications honored: ranked = canonical config only; era presets only
 (no slider); naming Career/Current; integration branch `engine-draft-config`.
 The rating-basis VALUE stays excluded (gated on merit-v3/MV2-12b) — its token
 field ships now, locked to default, so no second token evolution is needed.
+
+## Prep delta (final on-branch unit)
+
+- Anchors bumped exactly once for the season: `schema_version` is
+  `runtime-data-1.2.0`; `engine_version` is `engine-2026.06.11`. Dataset,
+  ruleset, and rating anchors remain `2026-06-04`, `ruleset-2026.06.04`, and
+  `wc-perf-4.2.1+proj-career-3.0.0`.
+- Compact artifacts were rebuilt from the same ETL inputs. The only compact
+  payload body change is `schema_version` in `draft-pool.compact.json` and
+  `scenario-2026.compact.json`; manifest/report hash changes follow from those
+  stamped strings plus the `engine_version` manifest field.
+- Skew fixtures now include `current_prod_t1`, stamped from the shipped
+  `origin/main` manifest commit `2310ce29ba5dba8294f6529cd38e4db97669acc1`
+  (`runtime-data-1.1.0` / `engine-2026.06.09`). The pre-existing `prev_*`
+  fixtures remain dead-anchor skew cases, and the future `t3.` path still
+  surfaces UI newer-version copy while the API returns `MALFORMED_TOKEN`.
+- Golden re-locks: era golden header only, leaderboard tokens/season key,
+  token skew fixture, compact size report, e2e seed `:29` engine-anchor strings
+  only, and strategic-pick canary header only. No realism measurement payload,
+  sim math, rating, synergy, or ETL source changed.
+- Terminal position-first coachless dead-end copy now states the revealed squad
+  is coachless and the final manager target is unrecoverable; earlier
+  non-terminal manager-target dead ends keep the recoverable "pick a different
+  target" copy.
 
 ## Per-unit summary
 
@@ -104,13 +130,13 @@ field ships now, locked to default, so no second token evolution is needed.
 | Golden | Status |
 | ------ | ------ |
 | `packages/core/test/fixtures/draft-golden.json` | regenerated twice: E1 diff = +3 config fields; E3 diff = +17 `target_slot_id: null` lines. Zero spin/pick changes. |
-| `packages/data/test/fixtures/e2e-real-run-golden.json` (seed `:29`) | regenerated twice, fields-only diffs identical in kind; sim output byte-identical. |
+| `packages/data/test/fixtures/e2e-real-run-golden.json` (seed `:29`) | prep touched only the two `engine_version` anchor strings; seed and run bytes unchanged. |
 | `packages/data/test/fixtures/era-presets-golden.json` | NEW (E2): one deterministic draft per preset from one seed; ZERO diff under E3 (picks unchanged). Runs under `test:golden:integration` (already-registered turbo task — no new task needed). |
 | Era census lock | NEW (E2): per-preset pool depth matches the plan's measured table EXACTLY (12219/501/537 · 5757/193/240 · 3549/96/144 · 2813/64/112 + coarse coverage) + `2026-only` zero-manager invalidity lock. |
-| `run-token-skew.json` | NEW (E1): 4 committed PREV-skew fixtures (prev t1 / prev t2 default / prev t2 non-default / tampered current t2). |
-| `leaderboard-validate-golden.json` | UNTOUCHED and green — committed t1 tokens still accept (t1-compat + no-anchor-change proof). |
+| `run-token-skew.json` | prep: 5 committed skew fixtures (real current-prod t1 from shipped manifest + prev t1 / prev t2 default / prev t2 non-default / tampered current t2). |
+| `leaderboard-validate-golden.json` | prep: re-locked to `t2.` tokens and season key `engine-2026.06.11_…_f166edc0`; score breakdowns unchanged. |
 | RNG / sim / lock-on-pick / position-compat goldens | untouched, green. |
-| Strategic-pick canary + realism gates | untouched; heavy realism (N=2000 × 3 policies) green in CI on every unit PR. |
+| Strategic-pick canary + realism gates | canary header anchor re-locked only; pick records and asymmetric realism fixture untouched. |
 
 ## Canonical-config invariance probe
 
@@ -171,10 +197,11 @@ Live-walked on the dev build (`next dev --webpack`).
    its own lane. This build preserves the shipped `md` behavior and gates
    only the NEW axes — flagged for the DC-8 (HUMAN) leaderboard-policy
    decision.
-3. **Anchor bump deferred:** engine/schema versions unchanged on the branch
-   (byte-identical default behavior); the season merge (DC-9) owns the bump +
-   canary/leaderboard-golden regen per the documented re-lock procedure.
-   Until then, pre-season local records replay fine BY DESIGN.
+3. **Anchors now bumped on the integration branch:** `runtime-data-1.2.0` +
+   `engine-2026.06.11` intentionally force pre-season/current-prod tokens and
+   local records to the honest different-build path. The later main merge is
+   still production-deploying and requires a separate cumulative fresh review +
+   owner SHA-pinned approval.
 4. **Share/replay config badges** (plan §G, non-default `t2` links rendering
    a config badge on results/share) are DC-4 scope — not in E1–E3; the
    recipient currently sees default-styled results for a non-default run
@@ -186,20 +213,33 @@ Live-walked on the dev build (`next dev --webpack`).
 
 ## Consolidated reviewer — re-execution scope
 
-Cumulative diff: `git diff b41b8e0..engine-draft-config` (units #94/#95/#96).
+Cumulative diff: `git diff b41b8e0..engine-draft-config` (units #94/#95/#96 + prep).
 Re-execute, fresh session:
 
 1. `pnpm install && pnpm build`, then root `pnpm typecheck && pnpm lint &&
    pnpm test` (expect core 331 / data 62 / web 586).
 2. All five golden tasks (counts above) + `WCDRAFT_REALISM_HEAVY=1` data
    heavy gate.
-3. Verify BOTH golden regens are fields-only:
+3. Verify prep re-locks are fields/anchor-only:
    `git diff b41b8e0..HEAD -- packages/core/test/fixtures/draft-golden.json
-   packages/data/test/fixtures/e2e-real-run-golden.json` — every hunk is
-   `draft_flow`/`rating_basis`/`era_preset`/`target_slot_id` only.
-4. Adversarial probes: token tamper (ef bounds, ts coherence, anchor flips),
+   packages/data/test/fixtures/e2e-real-run-golden.json
+   packages/data/test/fixtures/era-presets-golden.json
+   apps/web/lib/leaderboard/__tests__/fixtures/leaderboard-validate-golden.json
+   apps/web/lib/game/__tests__/fixtures/run-token-skew.json` — every hunk is
+   config fields, target metadata, anchor strings, token prefixes, season keys,
+   or manifest-derived hashes; no pick/sim/rating outcome movement.
+4. Rebuild compact data twice into clean temp dirs and compare hashes to the
+   committed artifacts; expected body changes vs pre-prep are schema anchor
+   strings only in the bundle payloads plus manifest/report fingerprints.
+5. Adversarial probes: token tamper (ef bounds, ts coherence, anchor flips),
    board non-canonical rejections, hidden-mode leak probes on the target
    stage + rolled candidates, era census re-derivation from the bundle,
    cross-flow (T,N) equality, dead-end non-consumption (state unchanged).
-5. UI: replay the screenshot walk (`next dev --webpack`), confirm default
+6. Skew matrix: real current-prod `t1` (`engine-2026.06.09`) → different-build
+   notice; prev `t1` / prev `t2` default / prev `t2` non-default → different-build
+   notice; tampered current `t2` → decode null; future `t3.` → UI newer-version
+   notice and API `MALFORMED_TOKEN`.
+7. UI: replay the screenshot walk (`next dev --webpack`), confirm default
    path unchanged (no disclosure interaction → today's flow exactly).
+8. CI: require green checks on the exact prep PR head before squash-merging
+   into `engine-draft-config` with `--match-head-commit`.

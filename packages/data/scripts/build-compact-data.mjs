@@ -45,13 +45,14 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
-// runtime-data-1.1.0 (MV2-10): `legend` is now a REQUIRED RuntimeRating field —
-// the passthrough below flows the ETL-joined flag into every compact rating.
-const SCHEMA_VERSION = "runtime-data-1.1.0";
-// engine-2026.06.09 (MV2-11b): lambda refit vs the merit-v2 stature-dominant
-// channels (calibration.ts BASE/SPREAD/GAMMA_MID/KO_LAMBDA_FACTOR) - sim
-// behavior changed, so old-engine t1. tokens must hit the version-skew path.
-const ENGINE_VERSION = "engine-2026.06.09";
+// runtime-data-1.2.0 (draft-config season): runtime replay now includes the
+// config axes carried by `t2.` tokens plus era-filtered and position-first
+// draft semantics. Old t1/t2 links must hit version-skew, never silent replay.
+const SCHEMA_VERSION = "runtime-data-1.2.0";
+// engine-2026.06.11 (draft-config season): the draft engine semantics now
+// include config axes and position-first target commitment. There is no sim
+// math change in this prep unit; this anchor invalidates old replay tokens.
+const ENGINE_VERSION = "engine-2026.06.11";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // MV2 stature-dominant model (wc-perf-4.2.1 historical, unified display curve);

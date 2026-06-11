@@ -1,6 +1,6 @@
 // DC-1 — committed PREV-skew token fixtures (plan §A fixture list).
 //
-// Produces `lib/game/__tests__/fixtures/run-token-skew.json` with four cases:
+// Produces `lib/game/__tests__/fixtures/run-token-skew.json` with five cases:
 //
 //   prev_t1             — a valid `t1.` token as the previous shipped build
 //                         (engine-2026.06.08 era anchors) would have minted it.
@@ -8,6 +8,8 @@
 //                         previous-build anchors.
 //   prev_t2_nondefault  — a valid `t2.` NON-default token (position_first +
 //                         modern, ts on every pick) with previous-build anchors.
+//   current_prod_t1     — a valid `t1.` token stamped with anchors read from a
+//                         real shipped manifest commit (engine-2026.06.09 era).
 //   tampered_current_t2 — a CURRENT-anchor `t2.` token whose era bounds were
 //                         tampered AFTER encode (must fail decode; this
 //                         assertion is anchor-stable across future bumps).
@@ -21,6 +23,7 @@
 // The generator self-checks every fixture against the decoder before writing.
 
 import { writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
@@ -51,13 +54,49 @@ const PREV = {
   hv: "prev-bundle-hash-fixture",
 };
 
+// Shipped production manifest used for the live-today t1 skew case. The
+// explicit commit keeps fixture regeneration stable even after origin/main
+// moves; this is a real git artifact, not invented anchors.
+const CURRENT_PROD_MANIFEST_COMMIT = "2310ce29ba5dba8294f6529cd38e4db97669acc1";
+
 function b64url(s: string): string {
   return Buffer.from(s, "utf8").toString("base64url");
+}
+
+type ShippedManifest = {
+  schema_version: string;
+  dataset_version: string;
+  rating_version_historical: string;
+  rating_version_projected: string;
+  engine_version: string;
+  ruleset_version: string;
+  bundles: { draft_pool: { sha256: string }; scenario_2026: { sha256: string } };
+};
+
+function shippedManifestAt(commit: string): ShippedManifest {
+  const raw = execFileSync(
+    "git",
+    ["show", `${commit}:packages/data/src/generated/manifest.json`],
+    { encoding: "utf8" },
+  );
+  return JSON.parse(raw) as ShippedManifest;
+}
+
+function manifestAnchors(manifest: ShippedManifest) {
+  return {
+    sv: manifest.schema_version,
+    dv: manifest.dataset_version,
+    rv: `${manifest.rating_version_historical}+${manifest.rating_version_projected}`,
+    ev: manifest.engine_version,
+    uv: manifest.ruleset_version,
+    hv: `${manifest.bundles.draft_pool.sha256}+${manifest.bundles.scenario_2026.sha256}`,
+  };
 }
 
 const gameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData, "wcdraft:token-skew-fixture:v1:3");
 const currentBody: RunTokenV2Body = buildRunTokenBody(origin);
+const currentProdAnchors = manifestAnchors(shippedManifestAt(CURRENT_PROD_MANIFEST_COMMIT));
 
 // 1 — prev-build t1.
 const prevT1: RunTokenV1Body = {
@@ -71,6 +110,13 @@ const prevT1: RunTokenV1Body = {
     p.k === "m" ? { k: "m" as const } : { k: "p" as const, c: p.c, s: p.s },
   ),
   ...PREV,
+};
+
+// 1b — current production t1. Current prod still emitted t1 tokens, so this
+// fixture strips t2-only config fields and stamps the real shipped anchors.
+const currentProdT1: RunTokenV1Body = {
+  ...prevT1,
+  ...currentProdAnchors,
 };
 
 // 2 — prev-build t2 default config.
@@ -93,16 +139,21 @@ tampered.ef = { id: "all_time", min: 1900, max: 2026 };
 
 const fixtures = {
   _comment:
-    "DC-1 PREV-skew token fixtures (plan §A). prev_* cases pin dead anchors (permanent skew); tampered_current_t2 must fail decode regardless of anchors. Regen: pnpm --filter @wcdraft/web gen:token-skew",
+    "Draft-config skew token fixtures. prev_* cases pin dead anchors; current_prod_t1 derives anchors from a shipped git manifest; tampered_current_t2 must fail decode regardless of anchors. Regen: pnpm --filter @wcdraft/web gen:token-skew",
   prev_anchors: PREV,
+  current_prod_source: {
+    manifest_commit: CURRENT_PROD_MANIFEST_COMMIT,
+    anchors: currentProdAnchors,
+  },
   prev_t1: { token: "t1." + b64url(JSON.stringify(prevT1)) },
+  current_prod_t1: { token: "t1." + b64url(JSON.stringify(currentProdT1)) },
   prev_t2_default: { token: "t2." + b64url(JSON.stringify(prevT2Default)) },
   prev_t2_nondefault: { token: "t2." + b64url(JSON.stringify(prevT2NonDefault)) },
   tampered_current_t2: { token: "t2." + b64url(JSON.stringify(tampered)) },
 };
 
 // ── Self-checks — refuse to write fixtures the decoder disagrees with ───────
-for (const key of ["prev_t1", "prev_t2_default", "prev_t2_nondefault"] as const) {
+for (const key of ["prev_t1", "current_prod_t1", "prev_t2_default", "prev_t2_nondefault"] as const) {
   const decoded = decodeRunToken(fixtures[key].token);
   if (decoded === null) throw new Error(`self-check failed: ${key} must decode`);
 }
