@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   activeSpin,
@@ -968,6 +969,10 @@ function DraftBoard({
             </div>
           </section>
         ) : null}
+
+        <p className={s.draftAttribution}>
+          <Link href="/attribution">Data: Fjelstul (CC-BY-SA 4.0) · Wikipedia (CC-BY-SA)</Link>
+        </p>
       </div>
 
       {/* In-shell bottom CTA bar (normal flow — see .lockBar) */}

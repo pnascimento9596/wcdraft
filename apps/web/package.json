@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs && node scripts/generate-sw-version.mjs",
+    "predev": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs && node scripts/generate-marketing-assets.mjs && node scripts/generate-sw-version.mjs",
     "dev": "next dev",
-    "prebuild": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs && node scripts/generate-sw-version.mjs",
+    "prebuild": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-icons.mjs && node scripts/generate-marketing-assets.mjs && node scripts/generate-sw-version.mjs",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
@@ -17,6 +17,7 @@
     "test:golden:leaderboard": "vitest run lib/leaderboard/__tests__/validate.golden.test.ts",
     "gen:leaderboard-golden": "tsx scripts/generate-leaderboard-golden.mts",
     "generate:icons": "node scripts/generate-icons.mjs",
+    "generate:marketing-assets": "node scripts/generate-marketing-assets.mjs",
     "generate:sw-version": "node scripts/generate-sw-version.mjs"
   },
   "dependencies": {
