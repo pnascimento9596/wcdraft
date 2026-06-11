@@ -14,6 +14,7 @@ emitted tables, so it cannot drift from what was shipped.
 | Goals, squad selection, awards, standings, managers | **1930** | — (full history) |
 | Match appearances / lineups, bookings, substitutions | **1970** | `null` (no match-level data) |
 | Shirt numbers | **1954** | `null` (no squad numbers assigned) |
+| Club at tournament | **pinned Wikipedia squad pages (men's 1930–2022)** | `null` where the pinned source lacks a club row/value or no unambiguous join exists |
 | **Assists, minutes played** | **never** | permanently absent — omitted, not fabricated |
 
 
@@ -38,7 +39,8 @@ back to **1930**.
 ## Null-rate per nullable column
 
 Only honest-state nullable columns are listed. `club_at_tournament` is
-**100% null by design** (no club column exists upstream); managers'
+populated only where the pinned Wikipedia squad source carries a factual
+club name and the row joins unambiguously to a canonical card; managers'
 `birth_date` is **100% null** (no birth_date column upstream); and
 `final_placement` is null except for semifinalists, because the upstream
 `tournament_standings` ranks only positions 1–4 per tournament. These are
@@ -56,7 +58,7 @@ absences in the source, surfaced — not data-quality defects.
 | nations | successor | 90.9% (80/88) |
 | player_tournaments | shirt | 8.6% (1,188/13,843) |
 | player_tournaments | position_listed | 0.0% (0/13,843) |
-| player_tournaments | club_at_tournament | 100.0% (13,843/13,843) |
+| player_tournaments | club_at_tournament | 20.9% (2,891/13,843) |
 | player_tournaments | appearances | 7.3% (1,016/13,843) |
 | players | full_name | 0.0% (0/10,401) |
 | players | birth_date | 0.0% (1/10,401) |
@@ -70,8 +72,9 @@ absences in the source, surfaced — not data-quality defects.
 ## Card coverage by era
 
 `coverage` = fraction of the per-card signal universe {selection, position_listed, goals, awards, appearances, shirt} present
-for that card. Signals absent for every card at every era (club, assists, minutes) are excluded from the universe so coverage is not
-uniformly deflated. The values cluster at three tiers matching the cliffs.
+for that card. Signals outside the rating-input universe (club, assists, minutes) are excluded: club is optional display metadata,
+while assists/minutes are absent. The values cluster at
+three tiers matching the cliffs.
 
 | Era | Cards | Mean coverage | Typical |
 |---|---|---|---|
