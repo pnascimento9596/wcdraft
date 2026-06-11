@@ -66,12 +66,12 @@ from .rating import (
     _channel,
     _clamp01,
     _display_score,
-    _load_career_stature,
     _percentile_map,
     _quantile,
     _stature_model_weight,
     _stature_target,
 )
+from .rating import _load_career_stature as _load_historical_career_stature
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 
@@ -131,6 +131,15 @@ LEAGUE_STRENGTH: dict[str, float] = {
 LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.28}
 
 
+def _load_career_stature(output_dir: Path) -> dict[str, dict]:
+    """Projected cards keep the V1 rating-compat stature view until V3.
+
+    merit-v3 V2 flips historical consumers only; projected 2026 ratings and
+    `ratings_2026.json` are owned by V3 and must remain byte-stable here.
+    """
+    return _load_historical_career_stature(output_dir, use_rating_compat=True)
+
+
 # ─── STATURE RECONCILIATION (proj-career-3.0.0, merit-v2 MV2-5) ───────────────
 # Linked + material-stature 2026 players are evaluated through the SAME stature
 # scale as the historical wc-perf-4.x cards (plan §"2026 reconciliation"): the
@@ -157,28 +166,29 @@ PROJECTED_MOD_GAIN: dict[str, float] = {"FW": 0.40, "MF": 0.40, "DF": 0.35, "GK"
 
 def _historical_raw_only_internal(output_dir: Path) -> list[float]:
     """Sorted internal scores (in [0,1]) of the HISTORICAL PURE raw-only cards
-    (``stature_model_weight == 0``), read READ-ONLY from the committed
-    ``ratings.json`` — the exact population MV2-6's single monotonic curve pools.
+    (``stature_model_weight == 0``) under the projected-rating compatibility view.
 
-    ``ratings.json`` materializes the display ``overall`` and the components, not the
-    pre-display internal ``score_0_100``; for a pure raw-only card the internal score
-    is ``min(raw_tournament_score, RAW_ONLY_GLOBAL_CEILING)`` — the raw composite
-    (carried verbatim in the ``raw_tournament_score`` component) under the same global
-    elite ceiling the historical engine applies. The per-(tournament, pos) ceiling
-    tightening never binds BELOW the global ceiling across the committed population
-    (the material-stature finals that could tighten it sit well above 0.62), so this
-    reconstruction reproduces the committed internal raw-only distribution to within
-    the stored 6-dp rounding. Empty (``ratings.json`` absent) ⇒ no band to match and
-    the quantile map degrades to a rank-preserving pass-through.
+    merit-v3 V2 changes historical rating consumption and participation mechanics,
+    but V3 owns projected re-locking. To keep ``ratings_2026.json`` byte-stable, the
+    projected quantile map reconstructs the pre-V2 target from canonical historical
+    tables plus ``career_stature.rating_compat`` and the legacy raw component. V3 can
+    remove this compatibility path when it intentionally re-derives the 2026 map.
     """
-    path = output_dir / "ratings.json"
-    if not path.exists():
-        return []
     target: list[float] = []
-    for r in json.loads(path.read_text(encoding="utf-8")):
+    internal, _curve = rating.build_internal_view(
+        players=rating._load(output_dir, "players"),
+        cards=rating._load(output_dir, "player_tournaments"),
+        tournaments=rating._load(output_dir, "tournaments"),
+        manager_tournaments=rating._load(output_dir, "manager_tournaments"),
+        career_stature_by_player=rating._load_career_stature(
+            output_dir, use_rating_compat=True
+        ),
+    )
+    for r in internal:
         comps = {c["signal"]: c["value"] for c in r["components"]}
         if comps.get("stature_model_weight") == 0.0:
-            target.append(min(comps["raw_tournament_score"], RAW_ONLY_GLOBAL_CEILING))
+            raw = comps["legacy_raw_tournament_score"]
+            target.append(min(raw, RAW_ONLY_GLOBAL_CEILING))
     return sorted(target)
 
 
@@ -815,12 +825,11 @@ def render_merit_v2_sample_2026(
     return "\n".join(L) + "\n"
 
 
-def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
-    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md as the historical MV2-4 section
-    (rendered fresh from rating.py) FOLLOWED BY the 2026 MV2-5 reconciliation section.
-    Deterministic and order-independent: the whole file is regenerated from the
-    committed canonical + career-stature + 2026 tables, so a clean rebuild reproduces
-    the committed bytes regardless of which stage ran last."""
+def render_merit_v2_sample_full(output_dir: Path = OUTPUT_DIR) -> str:
+    """Render the full 3-section MERIT_V2_SAMPLE.md (no write): historical MV2-4
+    section (rendered fresh from rating.py) + 2026 MV2-5 reconciliation section +
+    MV2-6 unified-display section. Deterministic: regenerated entirely from the
+    committed canonical + career-stature + 2026 tables."""
     cards = json.loads((output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8"))
     career = _load_career_stature(output_dir)
     historical_raw_only = _historical_raw_only_internal(output_dir)
@@ -839,7 +848,15 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     from . import display_curve
 
     section_display = display_curve.render_unified_display_sample(output_dir)
-    md = historical + section_2026 + section_display
+    return historical + section_2026 + section_display
+
+
+def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md — the SOLE owner of that file
+    (invoked from ``ingest_2026.run``; ``rating.run`` deliberately does not write
+    it). Runs LAST in the ingest lane and regenerates the whole 3-section file, so
+    a clean rebuild reproduces the committed bytes regardless of stage order."""
+    md = render_merit_v2_sample_full(output_dir)
     out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")

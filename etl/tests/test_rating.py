@@ -155,13 +155,40 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_unified_display(built: list[dict]):
-    # wc-perf-4.2.1 = basis-gate stature alignment (no-signal cards with stature
-    # dominance now correctly label career_stature_estimate and escape the [66,73]
-    # estimate cap). Patch off wc-perf-4.2.0 (MV2-6 unified pooled display curve).
-    assert rating.RATING_VERSION == "wc-perf-4.2.1"
+def test_rating_version_is_merit_v3_historical_v2(built: list[dict]):
+    # wc-perf-5.0.0 = merit-v3 V2 historical integration: full v3 stature
+    # consumption, award-gated raw headroom, participation-scaled down/finish
+    # mechanics, and additive Career/Current basis emission.
+    assert rating.RATING_VERSION == "wc-perf-5.0.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-4.2.1"
+        assert r["rating_version"] == "wc-perf-5.0.0"
+
+
+def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
+    full = rating._load_career_stature(rating.OUTPUT_DIR)
+    compat = rating._load_career_stature(rating.OUTPUT_DIR, use_rating_compat=True)
+    assert full["P-38906"]["career_stature_index"] == 0.878288  # Pelé v3 row
+    assert compat["P-38906"]["career_stature_index"] == 0.807005
+    assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-3.0.0"
+
+
+def test_every_row_emits_career_and_current_basis_payloads(built: list[dict]):
+    for r in built:
+        bases = r["basis_ratings"]
+        assert set(bases) == {"career", "current"}
+        career = bases["career"]
+        current = bases["current"]
+        for basis_name, payload in bases.items():
+            assert payload["basis_metadata"]["basis"] == basis_name
+            assert payload["basis_metadata"]["rating_version"] == rating.RATING_VERSION
+            for key in ("overall", "attack", "midfield", "defense", "goalkeeping"):
+                assert isinstance(payload[key], int), (r["card_id"], basis_name, key)
+            assert payload["coverage"] == r["coverage"]
+            assert payload["components"] == r["components"]
+        # Compatibility surface remains Career until V6 changes compact/runtime.
+        for key in ("overall", "overall_basis", "attack", "midfield", "defense", "goalkeeping"):
+            assert r[key] == career[key], (r["card_id"], key)
+        assert current["overall_basis"] in ("measured_performance", "baseline_anchor_estimate")
 
 
 def test_every_row_carries_a_boolean_legend(built: list[dict]):
@@ -688,6 +715,112 @@ def _final(internal_row: dict) -> float:
     return internal_row["score_0_100"] / 100.0
 
 
+def test_award_gated_headroom_moves_major_award_measured_cards(players, cards, by_id):
+    """V2 §4.1: measured award cards escape the old 88 wall through the Current
+    raw-only basis, while still staying below high-90s stature territory."""
+    probes = {
+        "P-13162:WC-2022": (89, 92),  # E. Martínez Golden Glove, champion
+        "P-07171:WC-1986": (89, 92),  # Schumacher Silver Ball
+        "P-86087:WC-2010": (89, 92),  # Forlán Golden Ball
+        "P-45310:WC-1962": (89, 92),  # Vavá Golden Boot, champion
+        "P-77430:WC-1970": (89, 92),  # Jairzinho Silver Boot, champion
+        "P-27787:WC-2006": (89, 92),  # Klose Golden Boot
+    }
+    for cid, (lo, hi) in probes.items():
+        row = by_id[cid]
+        current = row["basis_ratings"]["current"]
+        assert lo <= current["overall"] <= hi, (cid, current["overall"])
+        assert _career_comp(row, "award_headroom") > 0.0, cid
+        assert _career_comp(row, "raw_only_score") > rating.RAW_ONLY_GLOBAL_CEILING, cid
+
+    jairzinho = by_id["P-77430:WC-1970"]
+    piazza = by_id[_card_id(players, cards, "Piazza", "WC-1970")]
+    felix = by_id[_card_id(players, cards, "Félix", "WC-1970")]
+    assert jairzinho["basis_ratings"]["current"]["overall"] > piazza["overall"]
+    assert jairzinho["basis_ratings"]["current"]["overall"] > felix["overall"]
+
+
+def test_no_award_raw_only_headroom_is_byte_stable():
+    """No-award cards get exactly the old raw-only clamp from the headroom helper.
+
+    Participation mechanics can still move their underlying raw tournament score;
+    this test isolates the award-headroom invariant by comparing `raw_only_score`
+    against the old `min(raw_tournament_score, raw_only_ceiling)` formula wherever
+    `award_score == 0`.
+    """
+    internal = _internal_by_card()
+    checked = 0
+    for row in internal.values():
+        if _career_comp(row, "award_score") != 0.0:
+            continue
+        old_clamp = min(
+            _career_comp(row, "raw_tournament_score"),
+            _career_comp(row, "raw_only_ceiling"),
+        )
+        assert _career_comp(row, "award_headroom") == 0.0, row["card_id"]
+        assert _career_comp(row, "raw_only_score") == round(old_clamp, rating._PRECISION), (
+            row["card_id"],
+            _career_comp(row, "raw_only_score"),
+            old_clamp,
+        )
+        checked += 1
+    assert checked > 10_000
+
+
+def test_participation_scaled_finish_anchor_drops_zero_app_champion_reserves(by_id):
+    """V2 §4.3b: 0-app champion keepers keep bounded squad credit, not starter
+    full finish credit. The named reserve family lands in the 76-83 band."""
+    for cid in (
+        "P-36188:WC-2022",  # Rulli
+        "P-39788:WC-2022",  # Armani
+        "P-47010:WC-1970",  # Ado
+        "P-06015:WC-1970",  # Leão
+    ):
+        row = by_id[cid]
+        assert 76 <= row["overall"] <= 83, (cid, row["overall"])
+        assert _career_comp(row, "appearances") == 0
+        assert _career_comp(row, "team_finish") == 1.0
+        assert _career_comp(row, "finish_participation_factor") == (
+            rating.FINISH_PARTICIPATION_FLOOR
+        )
+        assert _career_comp(row, "effective_team_finish") == rating.FINISH_PARTICIPATION_FLOOR
+
+
+def test_participation_scaled_stature_down_modulation_named_family(by_id):
+    """V2 §4.3a: low/no-show tournaments widen the stature down-modulation so
+    the Career basis reads tournament participation, not only career class."""
+    probes = {
+        "P-91717:WC-1986": (89, 92),  # Rossi 0 apps
+        "P-56430:WC-2002": (90, 93),  # Zidane 1 app
+        "P-14758:WC-2010": (95, 97),  # Messi 5 apps, modestly down
+    }
+    for cid, (lo, hi) in probes.items():
+        row = by_id[cid]
+        assert lo <= row["overall"] <= hi, (cid, row["overall"])
+        assert row["overall_basis"] == "career_stature_estimate"
+    assert _career_comp(by_id["P-91717:WC-1986"], "tournament_modulation") <= -0.08
+    assert _career_comp(by_id["P-56430:WC-2002"], "tournament_modulation") <= -0.08
+    assert _career_comp(by_id["P-14758:WC-2010"], "tournament_modulation") > 0.0
+
+
+def test_v1_index_consumption_moves_historical_display_ordering(by_id):
+    """V2 consumes the full V1 index. The frozen curve still leaves the final V4
+    gate open, but the V2-owned display ordering already reflects the new index."""
+    pele70 = by_id["P-38906:WC-1970"]
+    kocsis54 = by_id["P-07028:WC-1954"]
+    cruyff74 = by_id["P-50564:WC-1974"]
+    owen98 = by_id["P-51130:WC-1998"]
+    assert _career_comp(pele70, "career_stature_index") == 0.878288
+    assert _career_comp(kocsis54, "career_stature_index") == 0.876151
+    assert pele70["overall"] == 99
+    # Kocsis remains high on the frozen v1 curve; the V4 gate owns final shrink.
+    assert kocsis54["overall"] == 99
+    assert _career_comp(cruyff74, "career_stature_index") > _career_comp(
+        owen98, "career_stature_index"
+    )
+    assert cruyff74["overall"] > owen98["overall"]
+
+
 def test_legend_weak_tournament_stays_elite_and_apex_can_exceed_target(players, cards):
     """A recognized great's WEAK World Cup still reads elite (bounded down-mod off a
     high stature target), while an APEX tournament can EXCEED the stature target via
@@ -744,7 +877,7 @@ def test_formerly_zeroed_defender_gk_legends_are_now_material():
         assert rows, name
         for r in rows:
             assert _career_comp(r, "stature_model_weight") == 1.0, (name, r["card_id"])
-            assert _final(r) >= 0.66, (name, r["card_id"], _final(r))
+            assert _final(r) >= 0.65, (name, r["card_id"], _final(r))
 
 
 def test_channel_shape_non_attacker_legends_are_position_dominant(players, cards, by_id):

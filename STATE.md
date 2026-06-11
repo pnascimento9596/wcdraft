@@ -23,6 +23,11 @@ compact generated artifacts unchanged. Active-career source set stays
 2030150 and all 14 cited final pages were re-verified. Club-at-tournament
 backfill remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
+merit-v3 V2 measured ETL ruff clean, focused V2/curve/projected suite 91
+passed, full ETL pytest 241 passed, three mutation proofs failed when
+deliberately broken, historical artifact generation was two-run byte-identical,
+and 2026 outputs plus `career_stature.json` plus compact/runtime artifacts
+remained unchanged.
 
 ## Lanes in flight at last measurement
 
@@ -94,6 +99,15 @@ backfill remains staged for MV2-12b
   the player. Active/archive access now fails unresolved identity bridges before
   stature merge, with mutation proof in the test suite; V1 report, delta CSV, and
   STATE updated. No compact goldens or rating consumer artifacts changed.
+- merit-v3 V2 historical re-score (this change, RED, in review): historical
+  rating now consumes the full `career-stature-3.0.0` table, applies award-gated
+  raw headroom, participation-scaled finish/down-cap mechanics, and emits
+  additive Career/Current basis payloads while keeping the top-level surface
+  Career-compatible. `ratings.json`, `MERIT_V2_SAMPLE.md`, and the review-only
+  merit divergence artifact are re-locked; `ratings_2026.json`,
+  `career_stature.json`, compact/runtime goldens, canary, and lambda/realism
+  goldens remain untouched. V4 owns curve refit and final probe gate; V6/V7 own
+  compact/canary/lambda.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -125,6 +139,12 @@ backfill remains staged for MV2-12b
 | merit-v3 V1 club-season citation verifier               | 14/14 rows verified         |
 | merit-v3 V1 active/stature generation                   | two-run byte-identical hash match |
 | merit-v3 V1 conservatism                                | ratings + compact generated artifacts unchanged |
+| etl V2 `ruff check src tests`                           | clean                       |
+| etl V2 focused rating/display/projected suite            | 91 passed                   |
+| etl V2 `pytest -q`                                      | 241 passed                  |
+| merit-v3 V2 mutation proofs                             | 3/3 guards failed when deliberately broken |
+| merit-v3 V2 historical artifact generation              | two-run byte-identical hash match |
+| merit-v3 V2 conservatism                                | 2026 outputs + career_stature + compact unchanged |
 | `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
 
 ## CI (`.github/workflows/`)
