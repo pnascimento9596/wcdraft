@@ -505,6 +505,63 @@ _RESEARCH_SOURCES: tuple[Source, ...] = (
 RESEARCH_SOURCES: tuple[Source, ...] = _RESEARCH_SOURCES
 RESEARCH_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _RESEARCH_SOURCES)
 
+# ── active-career intake sources (MV2-12a) — DELIBERATELY SEPARATE channel ──
+# Citation-backed notes for IN-PROGRESS careers (players whose careers continue
+# past the archive's 2022 peak-year ceiling, incl. 2026 squad members). They are
+# kept out of ``SOURCES`` AND out of the research backstop: their facts are staged
+# in ``output/merit/source_facts_active.json`` and NEVER flow into
+# ``source_facts.json`` / ``career_stature.json`` — the consumed archive is held
+# byte-identical until MV2-12b activates the channel explicitly (full Red chain).
+# Same discipline as the research backstop otherwise: every row carries a
+# fetchable public citation (url + claim) verified before commit; an uncited row
+# fails the build; the notes are SHA-pinned in their own manifest
+# (merit/raw/active/manifest.json).
+ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-1.0.0"
+# Curation cutoff: a note in this set may only assert facts established on or
+# before this date (the 2026 squad-pin season boundary). Re-curation of active
+# careers is expected each dataset revision — active records drift by nature.
+ACTIVE_CUTOFF_DATE = "2026-06-01"
+_ACTIVE_SOURCES: tuple[Source, ...] = (
+    Source(
+        "active_global_annual",
+        "global_annual_recognition",
+        "active/global-annual.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "Global annual recognition for in-progress careers (citation-backed)",
+    ),
+    Source(
+        "active_gk_award",
+        "position_balanced_selection",
+        "active/gk-awards.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "Best-goalkeeper annual award wins for in-progress careers (citation-backed)",
+    ),
+    Source(
+        "active_captaincy",
+        "captaincy",
+        "active/captaincy.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "National-team captaincy records for in-progress careers (citation-backed)",
+    ),
+    Source(
+        "active_international_record",
+        "international_record",
+        "active/international-record.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "International longevity records for in-progress careers (citation-backed)",
+    ),
+)
+ACTIVE_SOURCES: tuple[Source, ...] = _ACTIVE_SOURCES
+ACTIVE_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _ACTIVE_SOURCES)
+
 # Source id used for the native, pre-linked World Cup individual awards drawn from
 # the canonical Fjelstul awards table (etl/output/awards.json). It is NOT fetched.
 NATIVE_WC_AWARDS_SOURCE = "wc_individual_awards_native"

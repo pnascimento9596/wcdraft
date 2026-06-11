@@ -1,0 +1,71 @@
+{
+  "source_id": "active_captaincy",
+  "family": "captaincy",
+  "cutoff_date": "2026-06-01",
+  "note": "MV2-12a active-career intake. Standing national-team captaincy records for players whose careers are in progress, following the MV2-2 captaincy-note pattern (year null = standing current captaincy). Every row is a citation-backed public fact fetched and confirmed before commit; staged in the inert active channel.",
+  "curation_notes": [
+    "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no fact in this pass (missing facts stay missing)."
+  ],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "David Alaba",
+      "nation_token": "Austria",
+      "year": null,
+      "position": "DF",
+      "detail": "national-team captain — captains Austria (first captained the side in 2017)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/David_Alaba",
+        "claim": "He captains the Austria national team, having first captained Austria on 24 March 2017."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Andy Robertson",
+      "nation_token": "Scotland",
+      "year": null,
+      "position": "DF",
+      "detail": "national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Andy_Robertson",
+        "claim": "He was appointed Scotland captain on 3 September 2018 and holds the record for most games as Scotland captain."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Hakan Çalhanoğlu",
+      "nation_token": "Turkey",
+      "year": null,
+      "position": "MF",
+      "detail": "national-team captain — captains Turkey (named captain in March 2022)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Hakan_%C3%87alhano%C4%9Flu",
+        "claim": "He plays for and captains the Turkey national team, becoming his nation's captain in March 2022."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Gustavo Gómez",
+      "nation_token": "Paraguay",
+      "year": null,
+      "position": "DF",
+      "detail": "national-team captain — captains Paraguay",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Gustavo_G%C3%B3mez",
+        "claim": "He plays as a centre-back for and captains both Palmeiras and the Paraguay national team."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "José Giménez",
+      "nation_token": "Uruguay",
+      "year": null,
+      "position": "DF",
+      "detail": "national-team captain — captains Uruguay; listed as captain of Uruguay's 2026 World Cup squad",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez",
+        "claim": "José María Giménez (the canonical card carries 'José Giménez') captains the Uruguay national team and is listed with the captain designation in Uruguay's 2026 World Cup squad."
+      }
+    }
+  ]
+}
