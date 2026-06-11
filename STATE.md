@@ -20,6 +20,11 @@ changes. Club-at-tournament backfill staged for MV2-12b
   this change — report-only, zero runtime change; reproduction re-proven
   12,219/12,219 at `b4f8651`). Audit-2 surfaces a P0 data defect: 17 minted-2026
   identity link misses (Neymar/Rodri live distortion) — fix unit pending dispatch.
+- Draft config deep plan (`docs/plans/draft-config-2026-06-10.md`) + queue mirror
+  (`docs/queue/q-006-draft-config.md`) staged on `ws-plan/draft-config` off
+  `dbc1f0a` — docs-only, zero runtime change. Plan default: `t2` token schema,
+  v1 era presets only, `Current` rating basis gated on MV2-12b, and a future
+  `engine-draft-config` integration branch for implementation.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
