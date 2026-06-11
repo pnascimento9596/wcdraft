@@ -1,0 +1,35 @@
+{
+  "source_id": "active_gk_award",
+  "family": "position_balanced_selection",
+  "cutoff_date": "2026-06-01",
+  "note": "MV2-12a active-career intake. Best-goalkeeper annual award wins for players whose careers are in progress — the GK arm of the position-balance discipline (the parser recovery yields no GK facts because the annual-XI snapshots carry none for the active gap cohort). Same contract as every active note: citation-backed public facts only, fetched and confirmed before commit; staged in the inert active channel.",
+  "curation_notes": [],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "Alisson",
+      "nation_token": "Brazil",
+      "year": 2019,
+      "position": "GK",
+      "kind": "yashin_trophy",
+      "detail": "Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Yashin_Trophy",
+        "claim": "Alisson (Brazil, Liverpool) won the inaugural Yashin Trophy in 2019 with 795 points."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Alisson",
+      "nation_token": "Brazil",
+      "year": 2019,
+      "position": "GK",
+      "kind": "worlds_best_gk",
+      "detail": "World's Best Goalkeeper annual award — 2019 winner",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Goalkeeper",
+        "claim": "Alisson (Brazil, Liverpool) was named the IFFHS World's Best Goalkeeper for 2019."
+      }
+    }
+  ]
+}

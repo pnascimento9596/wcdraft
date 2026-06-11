@@ -1,0 +1,432 @@
+{
+  "curation_notes": [
+    "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance.",
+    "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no fact in this pass (missing facts stay missing).",
+    "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision."
+  ],
+  "cutoff_date": "2026-06-01",
+  "entries": [
+    {
+      "fact_count": 2,
+      "families": [
+        "position_balanced_selection"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": false,
+      "player_id": "P-21531",
+      "player_name": "Alisson",
+      "positions": [
+        "GK"
+      ],
+      "source_refs": [
+        "active_gk_award:World's Best Goalkeeper annual award — 2019 winner",
+        "active_gk_award:Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "captaincy"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-65659",
+      "player_name": "José Giménez",
+      "positions": [
+        "DF"
+      ],
+      "source_refs": [
+        "active_captaincy:national-team captain — captains Uruguay; listed as captain of Uruguay's 2026 World Cup squad"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-80826",
+      "player_name": "Guillermo Ochoa",
+      "positions": [
+        "GK"
+      ],
+      "source_refs": [
+        "active_international_record:caps=152 (2005-2026)"
+      ]
+    },
+    {
+      "fact_count": 2,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0050",
+      "player_name": "Marko Arnautović",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:caps=130 (2008-2025)",
+        "international_century_caps:goals=47 (2008-2025)"
+      ]
+    },
+    {
+      "fact_count": 6,
+      "families": [
+        "captaincy",
+        "international_record",
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0051",
+      "player_name": "David Alaba",
+      "positions": [
+        "DF"
+      ],
+      "source_refs": [
+        "active_captaincy:national-team captain — captains Austria (first captained the side in 2017)",
+        "esm_team_of_the_season:esm_tots DF 2013",
+        "international_century_caps:caps=111 (2009-2025)",
+        "uefa_team_of_the_year:uefa_team_of_the_year 2013",
+        "uefa_team_of_the_year:uefa_team_of_the_year 2014",
+        "uefa_team_of_the_year:uefa_team_of_the_year 2015"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "regional_annual_recognition"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0126",
+      "player_name": "Luiz Henrique",
+      "positions": [],
+      "source_refs": [
+        "south_american_poy:south_american_poy winner 2024"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0280",
+      "player_name": "Florian Wirtz",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "esm_team_of_the_season:esm_tots MF 2023"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0304",
+      "player_name": "Duckens Nazon",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:goals=44"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0305",
+      "player_name": "Frantzdy Pierrot",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:goals=33"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0369",
+      "player_name": "Franck Kessié",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:caps=100 (2014-2026)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0483",
+      "player_name": "Martin Ødegaard",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "esm_team_of_the_season:esm_tots MF 2022"
+      ]
+    },
+    {
+      "fact_count": 11,
+      "families": [
+        "global_annual_recognition",
+        "international_record",
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0490",
+      "player_name": "Erling Haaland",
+      "positions": [
+        "FW"
+      ],
+      "source_refs": [
+        "esm_team_of_the_season:esm_tots FW 2019",
+        "esm_team_of_the_season:esm_tots FW 2022",
+        "fifpro_world11:fifpro_world11 2021",
+        "fifpro_world11:fifpro_world11 2022",
+        "fifpro_world11:fifpro_world11 2023",
+        "fifpro_world11:fifpro_world11 2024",
+        "iffhs_worlds_best:iffhs_worlds_best winner 2023",
+        "international_century_caps:goals=55",
+        "uefa_club_positional:uefa_best_fw 2020",
+        "uefa_mens_poy:uefa_mens_poy winner 2022",
+        "world_soccer_poy:world_soccer_poy winner 2023"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0499",
+      "player_name": "Alberto Quintero",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:caps=140 (2007-2025)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "regional_annual_recognition"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0513",
+      "player_name": "Adalberto Carrasquilla",
+      "positions": [],
+      "source_refs": [
+        "concacaf_poy:concacaf_poy winner 2023"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "captaincy"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0525",
+      "player_name": "Gustavo Gómez",
+      "positions": [
+        "DF"
+      ],
+      "source_refs": [
+        "active_captaincy:national-team captain — captains Paraguay"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0557",
+      "player_name": "Pedro Miguel",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:caps=108 (2016-2025)"
+      ]
+    },
+    {
+      "fact_count": 3,
+      "families": [
+        "captaincy",
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0588",
+      "player_name": "Andy Robertson",
+      "positions": [
+        "DF"
+      ],
+      "source_refs": [
+        "active_captaincy:national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
+        "esm_team_of_the_season:esm_tots DF 2019",
+        "uefa_team_of_the_year:uefa_team_of_the_year 2019"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0601",
+      "player_name": "Scott McTominay",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "esm_team_of_the_season:esm_tots MF 2024"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0665",
+      "player_name": "Álex Grimaldo",
+      "positions": [
+        "DF"
+      ],
+      "source_refs": [
+        "esm_team_of_the_season:esm_tots DF 2023"
+      ]
+    },
+    {
+      "fact_count": 5,
+      "families": [
+        "global_annual_recognition",
+        "position_balanced_selection"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0680",
+      "player_name": "Lamine Yamal",
+      "positions": [
+        "FW",
+        "MF"
+      ],
+      "source_refs": [
+        "active_global_annual:Ballon d'Or — 2025 runner-up",
+        "active_global_annual:Kopa Trophy (best under-21 player) — 2024 winner",
+        "active_global_annual:Kopa Trophy (best under-21 player) — 2025 winner",
+        "esm_team_of_the_season:esm_tots MF 2024",
+        "onze_awards:onze_dor 2024"
+      ]
+    },
+    {
+      "fact_count": 2,
+      "families": [
+        "captaincy",
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0733",
+      "player_name": "Hakan Çalhanoğlu",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "active_captaincy:national-team captain — captains Turkey (named captain in March 2022)",
+        "international_century_caps:caps=102 (2013-2025)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0839",
+      "player_name": "Chancel Mbemba",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:caps=106 (2012-2026)"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "international_record"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0893",
+      "player_name": "Eldor Shomurodov",
+      "positions": [],
+      "source_refs": [
+        "international_century_caps:goals=43"
+      ]
+    }
+  ],
+  "entry_count": 23,
+  "identity_bridge_review": [
+    {
+      "historical_has_active_facts": false,
+      "historical_has_archive_row": true,
+      "historical_name": "Neymar",
+      "historical_player_id": "P-87008",
+      "method": "surname+nation+birth_date",
+      "minted_name": "Neymar",
+      "minted_player_id": "P-W26-0113"
+    },
+    {
+      "historical_has_active_facts": true,
+      "historical_has_archive_row": false,
+      "historical_name": "Alisson",
+      "historical_player_id": "P-21531",
+      "method": "surname+nation+birth_date",
+      "minted_name": "Alisson",
+      "minted_player_id": "P-W26-0115"
+    },
+    {
+      "historical_has_active_facts": false,
+      "historical_has_archive_row": true,
+      "historical_name": "Marquinhos",
+      "historical_player_id": "P-76060",
+      "method": "surname+nation+birth_date",
+      "minted_name": "Marquinhos",
+      "minted_player_id": "P-W26-0119"
+    },
+    {
+      "historical_has_active_facts": false,
+      "historical_has_archive_row": true,
+      "historical_name": "Rodri",
+      "historical_player_id": "P-62341",
+      "method": "surname+nation+birth_date",
+      "minted_name": "Rodri",
+      "minted_player_id": "P-W26-0668"
+    }
+  ],
+  "inert": true,
+  "note": "Active-career staging entries (MV2-12a). Facts + identity only: no career_stature_score, index, tier or legend is computed — the completed-career composite is the wrong model for an in-progress career. Nothing in the rating stage reads this file; MV2-12b activates the channel explicitly (career-stage-normalized index, full Red chain).",
+  "version": "active-career-source-set-1.0.0"
+}
