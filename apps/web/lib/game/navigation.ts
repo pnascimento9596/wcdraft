@@ -2,7 +2,7 @@
 // in one place. Always preserves `?run=<value>` across navigations.
 //
 // The `?run=` param carries EITHER a local-only run_id (a `run-v1-*` string
-// produced by `run-record.ts`) OR a self-contained `t1.<base64url>` token
+// produced by `run-record.ts`) OR a self-contained `tN.<base64url>` token
 // produced by `run-token.ts`. The token form is what shared / replay URLs
 // emit so a fresh browser (no matching localStorage) can still rebuild the
 // run. `parseRunSearchParams` returns the discriminated kind so call sites
@@ -14,9 +14,12 @@ const RUN_PARAM = "run";
 // upper length cap stays narrow (64) so a token can never be mistaken for one.
 const RUN_ID_RX = /^[A-Za-z0-9_-]{1,64}$/;
 
-// Token format. The `.` distinguishes tokens from run-ids (run-ids never
-// contain a dot). Keep this prefix in sync with `run-token.ts`.
-const RUN_TOKEN_PREFIX = "t1.";
+// Token route format. The `.` distinguishes tokens from run-ids (run-ids never
+// contain a dot). Keep this intentionally version-tolerant: current encoders
+// emit `t2.`, legacy shares use `t1.`, and future `t3.` tokens must reach the
+// decoder so the UI can show the newer-version notice instead of a generic
+// missing-run state.
+const RUN_TOKEN_ROUTE_RX = /^t\d{1,4}\./;
 // Generous upper bound on a single URL value (token + the small overhead of
 // `?run=` is well under common 8KB URL limits).
 const RUN_PARAM_MAX_LEN = 8192;
@@ -47,10 +50,11 @@ export function parseRunSearchParams(
   const trimmed = raw.trim();
   if (!trimmed) return null;
   if (trimmed.length > RUN_PARAM_MAX_LEN) return null;
-  if (trimmed.startsWith(RUN_TOKEN_PREFIX)) {
+  const tokenPrefix = RUN_TOKEN_ROUTE_RX.exec(trimmed)?.[0] ?? null;
+  if (tokenPrefix) {
     // Token — payload validation happens in `decodeRunToken`. Here we just
-    // confirm the prefix + non-empty body.
-    if (trimmed.length <= RUN_TOKEN_PREFIX.length) return null;
+    // confirm the token-looking prefix + non-empty body.
+    if (trimmed.length <= tokenPrefix.length) return null;
     return { kind: "token", token: trimmed };
   }
   if (!RUN_ID_RX.test(trimmed)) return null;
@@ -59,7 +63,7 @@ export function parseRunSearchParams(
 
 /**
  * Build a `?run=<value>` URL. Accepts EITHER a run-id (in-app navigation) or
- * a `t1.` token (shared / replay URLs).
+ * a run token (shared / replay URLs).
  */
 function runHrefFor(base: string, value: string | null): string {
   return value ? `${base}?${RUN_PARAM}=${encodeURIComponent(value)}` : base;

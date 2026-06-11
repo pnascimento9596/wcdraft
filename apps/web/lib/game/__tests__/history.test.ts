@@ -4,7 +4,7 @@
 //   - The provider lists ONLY records with `simulation` attached. Older
 //     records that lack the `status` field still surface as long as they
 //     hold a complete simulation payload.
-//   - Replay/share hrefs MUST be tokenized (`?run=t1.…`). If tokenization
+//   - Replay/share hrefs MUST be tokenized. If tokenization
 //     fails the entry surfaces `replay_href: null` + a `replay_error`; we
 //     NEVER emit a bare `run-v1-*` id as a fallback.
 //   - Listing is capped by `RUN_RECORD_CAP` (currently 5).
@@ -46,8 +46,8 @@ function makeEntry(over: Partial<HistoryEntry> = {}): HistoryEntry {
     sequence_label: "Run #1",
     seed: "wcdraft:run:v1:run-v1-1:4-3-3",
     is_champion: false,
-    replay_href: "/play/results?run=t1.fakeBody",
-    share_href: "/play/share?run=t1.fakeBody",
+    replay_href: "/play/results?run=t2.fakeBody",
+    share_href: "/play/share?run=t2.fakeBody",
     replay_error: null,
     created_seq: 1,
     updated_seq: 1,
@@ -93,17 +93,17 @@ describe("listCompletedRunHistory — provider boundary", () => {
 });
 
 describe("HistoryEntry shape — replay link contract", () => {
-  it("emits a tokenized replay_href (`?run=t1.`)", () => {
+  it("emits a tokenized replay_href", () => {
     const entry = makeEntry();
     expect(entry.replay_href).not.toBeNull();
-    expect(entry.replay_href).toMatch(/\?run=t1\./);
+    expect(entry.replay_href).toMatch(/\?run=t\d+\./);
     expect(entry.replay_href).not.toMatch(/run-v1-/);
   });
 
   it("emits a tokenized share_href when token encoding succeeded", () => {
     const entry = makeEntry();
     expect(entry.share_href).not.toBeNull();
-    expect(entry.share_href).toMatch(/\?run=t1\./);
+    expect(entry.share_href).toMatch(/\?run=t\d+\./);
   });
 
   it("when tokenization fails, replay_href + share_href are NULL — never a bare run-v1-* id", () => {

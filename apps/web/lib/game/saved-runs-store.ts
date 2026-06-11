@@ -5,7 +5,7 @@
 // real isolation + claim integrity tests in
 // `lib/game/__tests__/saved-runs-store.test.ts` exercise THIS file
 // directly against pglite. No server-side game simulation lives here —
-// the `t1.*` token is stored opaquely; the client decodes for display.
+// the replay token is stored opaquely; the client decodes for display.
 //
 // Authorisation model
 // -------------------
@@ -69,7 +69,7 @@ export interface SavedRunSummary {
 }
 
 export interface SaveRunArgs {
-  /** `t1.*` reconstruction token (opaque to the server). */
+  /** Reconstruction token (opaque to the server). */
   readonly token: string;
   /** F-1 column-stub jsonb (the seasonal version anchors). */
   readonly versionAnchors: Record<string, unknown> | null;
@@ -116,7 +116,7 @@ function scopeWhere(ctx: AuthContext) {
 // ── Save ────────────────────────────────────────────────────────────────
 
 /**
- * Save a `t1.*` token under the caller's scope. Idempotent: if the same
+ * Save a replay token under the caller's scope. Idempotent: if the same
  * scope already has this token, the existing row is returned (no insert).
  *
  * Cap policy: after a successful insert, the oldest rows beyond

@@ -200,11 +200,11 @@ export interface ShareIntentUrls {
 
 /**
  * Build social web-intent URLs. The caller MUST pass a tokenized share URL
- * (`?run=t1.…`) so the destination preserves the reproducible-replay
+ * token so the destination preserves the reproducible-replay
  * guarantee — never a bare `run-v1-*` id.
  */
 export function buildShareIntentUrls(args: {
-  /** Tokenized share URL: `https://wcdraft.app/play/share?run=t1.…`. */
+  /** Tokenized share URL. */
   url: string;
   /** Short text without the URL — for platforms that take url= separately. */
   text: string;

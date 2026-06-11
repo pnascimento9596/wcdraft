@@ -6,9 +6,9 @@
 // future `serverRunHistoryProvider` can satisfy the same interface by
 // mapping server rows to `HistoryEntry`s without touching the UI.
 //
-// Replay/share links MUST be tokenized (`t1.<base64url>`); we never emit a
-// bare local `run-v1-*` id from history. This matches the gate-and-fallback
-// invariant the share screen already enforces.
+// Replay/share links MUST be tokenized; we never emit a bare local `run-v1-*`
+// id from history. This matches the gate-and-fallback invariant the share
+// screen already enforces.
 
 import type { GameData } from "./data";
 import { listRunRecords, RUN_RECORD_CAP, type RunRecordV1 } from "./run-record";
@@ -41,9 +41,9 @@ export interface HistoryEntry {
   seed: string;
   /** True when the run finished a tournament (champions). */
   is_champion: boolean;
-  /** `?run=t1.…` replay URL, or `null` when tokenization fails. */
+  /** Tokenized replay URL, or `null` when tokenization fails. */
   replay_href: string | null;
-  /** `?run=t1.…` share URL, or `null` when tokenization fails. */
+  /** Tokenized share URL, or `null` when tokenization fails. */
   share_href: string | null;
   /** Honest-state error when tokenization fails. */
   replay_error: string | null;

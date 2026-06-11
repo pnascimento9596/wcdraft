@@ -1,7 +1,7 @@
 // Tests for the social web-intent helpers added in ws-results/history-share.
 //
 // The honest-state contract: `buildShareIntentUrls` MUST consume only the
-// tokenized share URL (`?run=t1.…`). The share screen never calls into
+// tokenized share URL. The share screen never calls into
 // these helpers with a bare `run-v1-*` id; the screen disables affordances
 // when tokenization fails so this module never sees a non-reproducible URL.
 //
@@ -44,7 +44,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
 }
 
 const TOKEN_URL =
-  "https://wcdraft.app/play/share?run=t1.eyJ2IjoxLCJ0Ijoid2NkcmFmdCJ9";
+  "https://wcdraft.app/play/share?run=t2.eyJ2IjoyLCJ0Ijoid2NkcmFmdCJ9";
 
 describe("buildShareCaption", () => {
   it("includes the team record + the standard wcdraft tagline", () => {
@@ -120,7 +120,7 @@ describe("buildShareIntentUrls", () => {
     // in the helper layer too.
     for (const intent of Object.values(urls)) {
       expect(intent).not.toMatch(/run-v1-/);
-      expect(intent).toContain("t1.");
+      expect(decodeURIComponent(intent)).toMatch(/\?run=t\d+\./);
     }
   });
 });
