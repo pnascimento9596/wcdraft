@@ -34,6 +34,12 @@
   --gold-bright: #ffd45e;
   --gold-deep:   #c8861a;
   --glow-gold:   245,182,42;
+  --brand-gold-start: #c8861a;
+  --brand-gold-mid:   #f5b62a;
+  --brand-gold-end:   #ffd86a;
+  --brand-mark-gold-start: var(--brand-gold-start);
+  --brand-mark-gold-mid:   var(--brand-gold-mid);
+  --brand-mark-gold-end:   var(--brand-gold-end);
 
   --teal:        #2ecf92;
   --teal-bright: #54e3ab;
@@ -173,6 +179,9 @@
   --gold-bright: #7a5600;
   --gold-deep:   #6e4e00;
   --glow-gold:   138,98,0;
+  --brand-mark-gold-start: #6e4e00;
+  --brand-mark-gold-mid:   #8a6200;
+  --brand-mark-gold-end:   #a66f00;
 
   --teal:        #177a55;
   --teal-bright: #116647;
