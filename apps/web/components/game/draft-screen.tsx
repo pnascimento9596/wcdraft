@@ -18,6 +18,8 @@ import {
   type Position,
   type SquadSlot,
   type SynergyResult,
+  ERA_PRESET_IDS,
+  type EraPresetId,
 } from "@wcdraft/core";
 import {
   draftCandidateViews,
@@ -25,7 +27,7 @@ import {
   managerTournamentFor,
   pitchSlotViews,
 } from "@/lib/game/adapters";
-import { loadGameData, type GameData } from "@/lib/game/data";
+import { getCatalogForEra, loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError, DraftTransitionError } from "@/lib/game/errors";
 import {
   getFormationVisualSlots,
@@ -310,6 +312,91 @@ function DraftAppBar({
   );
 }
 
+// ─── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
+
+const ERA_PRESET_LABELS: Record<EraPresetId, string> = {
+  all_time: "All-time",
+  post_2000: "Post-2000",
+  post_2010: "Post-2010",
+  modern: "Modern",
+};
+
+function DraftSetupDisclosure({
+  eraPreset,
+  onEraPreset,
+  disabled,
+}: {
+  eraPreset: EraPresetId;
+  onEraPreset: (p: EraPresetId) => void;
+  disabled: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  // Summary mirrors the three config axes; flow/basis are fixed in this
+  // build (Position First lands with DC-3, Current with the basis season).
+  const summary = `Squad First · Career · ${ERA_PRESET_LABELS[eraPreset]}`;
+  return (
+    <div>
+      <button
+        type="button"
+        className={s.setupRow}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className={s.setupRowLabel}>Draft setup</span>
+        <span className={s.setupRowValue}>{summary}</span>
+        <span className={s.setupRowChevron} aria-hidden="true">
+          {open ? "▴" : "▾"}
+        </span>
+      </button>
+      {open ? (
+        <div className={s.setupPanel}>
+          <div className={s.setupAxis}>
+            <span className={s.setupAxisLabel}>Era</span>
+            <div className={s.setupSeg} role="group" aria-label="Era preset">
+              {ERA_PRESET_IDS.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`${s.setupSegBtn} ${eraPreset === id ? s.setupSegBtnActive : ""}`}
+                  aria-pressed={eraPreset === id}
+                  disabled={disabled}
+                  onClick={() => onEraPreset(id)}
+                >
+                  {ERA_PRESET_LABELS[id]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className={s.setupAxis}>
+            <span className={s.setupAxisLabel}>Draft mode</span>
+            <div className={s.setupSeg} role="group" aria-label="Draft mode">
+              <button type="button" className={`${s.setupSegBtn} ${s.setupSegBtnActive}`} aria-pressed>
+                Squad First
+              </button>
+              <button type="button" className={s.setupSegBtn} disabled>
+                Position First
+              </button>
+            </div>
+            <p className={s.setupAxisNote}>Position First is coming in a later update.</p>
+          </div>
+          <div className={s.setupAxis}>
+            <span className={s.setupAxisLabel}>Rating basis</span>
+            <div className={s.setupSeg} role="group" aria-label="Rating basis">
+              <button type="button" className={`${s.setupSegBtn} ${s.setupSegBtnActive}`} aria-pressed>
+                Career
+              </button>
+              <button type="button" className={s.setupSegBtn} disabled>
+                Current
+              </button>
+            </div>
+            <p className={s.setupAxisNote}>Current arrives after the rating rebuild.</p>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 // ─── Formation select (LOCK gate) ────────────────────────────────────────────
 
 function FormationSelect({
@@ -324,13 +411,18 @@ function FormationSelect({
 }) {
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
 
   const lockIn = useCallback(
     (formation_id: SupportedFormationId) => {
       setError(null);
       setPending(formation_id);
       try {
-        const created = createNewRunRecord(gameData, { formation_id, mode: draftMode });
+        const created = createNewRunRecord(gameData, {
+          formation_id,
+          mode: draftMode,
+          era_preset: eraPreset,
+        });
         const warning =
           created.persistence === "volatile" || created.warnings.length > 0
             ? created.warnings.join(" · ") ||
@@ -343,7 +435,7 @@ function FormationSelect({
         setPending(null);
       }
     },
-    [gameData, draftMode, onLocked],
+    [gameData, draftMode, eraPreset, onLocked],
   );
 
   return (
@@ -364,6 +456,11 @@ function FormationSelect({
             </p>
           ) : null}
         </div>
+        <DraftSetupDisclosure
+          eraPreset={eraPreset}
+          onEraPreset={setEraPreset}
+          disabled={pending !== null}
+        />
         <div className={s.formationGrid}>
           {/* ws-ux/mobile-polish-2: blurb prose dropped from the tile — at
               tile width it truncated mid-sentence ("…"), which added noise
@@ -646,8 +743,9 @@ function DraftBoard({
       allSpins: draft.spins,
       indexes: gameData.indexes,
       totalPicks: TOTAL_SPINS,
+      eraPreset: draft.era_preset,
     });
-  }, [spin, draft.spins, gameData.indexes]);
+  }, [spin, draft.spins, draft.era_preset, gameData.indexes]);
 
   // Hidden mode blinds the spin-stage Synergy numerics too — the props are
   // already nullable, and null renders the honest "—".
@@ -666,15 +764,18 @@ function DraftBoard({
     setTransitionError(null);
     try {
       let nextDraft: DraftState;
+      // DC-2: picks must run against the SAME era-bounded catalog the draft
+      // was created from — pending-spin rebuilds redraw from this pool.
+      const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
       if (sel.kind === "player") {
         if (!selSlot) {
           setCommitting(false);
           setTransitionError("Pick a slot for this player.");
           return;
         }
-        nextDraft = pickPlayer(gameData.catalog, draft, sel.card.card_id as CardId, selSlot);
+        nextDraft = pickPlayer(catalog, draft, sel.card.card_id as CardId, selSlot);
       } else {
-        nextDraft = pickManager(gameData.catalog, draft);
+        nextDraft = pickManager(catalog, draft);
       }
       const updated: RunRecordV1 = {
         ...record,

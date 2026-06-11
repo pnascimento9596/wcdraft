@@ -88,8 +88,9 @@ import {
   DEFAULT_DRAFT_FLOW,
   DEFAULT_ERA_PRESET,
   DEFAULT_RATING_BASIS,
+  ERA_PRESETS,
 } from "./types/draft-config.js";
-import type { DraftFlow, EraPresetId, RatingBasis } from "./types/draft-config.js";
+import type { DraftFlow, EraPreset, EraPresetId, RatingBasis } from "./types/draft-config.js";
 
 // ─── CANDIDATE INPUT VIEWS ───────────────────────────────────────────────────
 
@@ -245,6 +246,18 @@ export interface DraftCatalog {
   readonly cumulativeWeights: readonly number[];
   /** True iff at least one entry has a non-null `coach`. */
   readonly hasAnyCoach: boolean;
+  /**
+   * DC-2 — the era preset this catalog was built under. `createDraft`
+   * cross-checks `params.era_preset` against this stamp so a draft can never
+   * record a preset its catalog did not enforce.
+   */
+  readonly era: EraPreset;
+  /**
+   * DC-2 — true iff the configured pool carries non-zero rare (pre-1998)
+   * mass. Drives honest era copy in the UI: an all-modern preset has no
+   * "rare 10%" class and must not pretend otherwise.
+   */
+  readonly hasRareEra: boolean;
 }
 
 const SPIN_COUNT = 17;
@@ -267,6 +280,37 @@ function pairKey(tournament_id: number, nation_id: string): string {
 }
 
 /**
+ * DC-2 — restrict a dataset to the tournaments inside an era preset's year
+ * bounds (inclusive). Pure and deterministic: players, managers, and
+ * tournament metadata outside the window are dropped together; everything
+ * inside passes through BY REFERENCE in original order (so an `all_time`
+ * filter over real data is an identity in content terms).
+ *
+ * Year resolution uses the dataset's own tournament metadata; a player or
+ * manager card referencing a tournament with NO metadata is a hard failure
+ * downstream in `buildDraftCatalog` (unchanged honest-mismatch behavior) —
+ * this function drops nothing it cannot date, it keeps the card and lets the
+ * catalog builder surface the metadata gap loudly.
+ */
+export function filterDraftDataset(dataset: DraftDataset, era_preset: EraPresetId): DraftDataset {
+  const preset = ERA_PRESETS[era_preset];
+  const inBounds = new Set<number>();
+  const tournaments = dataset.tournaments.filter((t) => {
+    const keep = t.year >= preset.min_year && t.year <= preset.max_year;
+    if (keep) inBounds.add(t.tournament_id);
+    return keep;
+  });
+  const known = new Set(dataset.tournaments.map((t) => t.tournament_id));
+  const players = dataset.players.filter(
+    (c) => inBounds.has(c.tournament_id) || !known.has(c.tournament_id),
+  );
+  const managers = dataset.managers.filter(
+    (m) => inBounds.has(m.tournament_id) || !known.has(m.tournament_id),
+  );
+  return { players, managers, tournaments };
+}
+
+/**
  * Index a dataset into the canonical draw catalog. Players are grouped by
  * (tournament, nation) and each roster is canonically sorted by `card_id`
  * BEFORE any draw. Coaches attach to their matching (tournament, nation) bucket;
@@ -276,8 +320,20 @@ function pairKey(tournament_id: number, nation_id: string): string {
  * appears in `players` — used to attach the `year`/`rare` flag to each entry
  * and to compute the era-weighted `base_draw_weight`. Missing or conflicting
  * tournament metadata is a hard failure here (not a silent zero/default).
+ *
+ * DC-2: an optional era preset bounds the pool. The dataset is filtered to
+ * the preset's year window FIRST, then era weights are recomputed inside the
+ * filtered catalog by the unchanged ENGINE-V2 E-1 algorithm — a window with
+ * no rare years collapses to 100% modern mass (and vice versa) via the
+ * existing single-era branch, so an all-modern preset has NO phantom rare
+ * class. The default (`all_time`) spans every shipped year, making the
+ * filter an identity and the catalog byte-equal to the unfiltered build.
  */
-export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
+export function buildDraftCatalog(
+  dataset: DraftDataset,
+  era_preset: EraPresetId = DEFAULT_ERA_PRESET,
+): DraftCatalog {
+  dataset = filterDraftDataset(dataset, era_preset);
   // Tournament-year index — honest mismatch instead of silent defaults.
   const yearByTournament = new Map<number, number>();
   for (const t of dataset.tournaments) {
@@ -434,7 +490,9 @@ export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
 
   const pairs = canonicalSortBy([...byPair.values()], (e) => [e.tournament_id, e.nation_id]);
   if (pairs.length === 0) {
-    throw new RangeError("buildDraftCatalog: dataset has no (tournament, nation) player buckets");
+    throw new RangeError(
+      `buildDraftCatalog: dataset has no (tournament, nation) player buckets inside era preset "${era_preset}"`,
+    );
   }
   const cumulativeWeights: number[] = [];
   let running = 0;
@@ -452,7 +510,14 @@ export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
       "buildDraftCatalog: total base_draw_weight is zero — every pair's tournament year resolved to zero mass",
     );
   }
-  return { pairs, byPair, cumulativeWeights, hasAnyCoach };
+  return {
+    pairs,
+    byPair,
+    cumulativeWeights,
+    hasAnyCoach,
+    era: ERA_PRESETS[era_preset],
+    hasRareEra: hasRare,
+  };
 }
 
 // ─── IMMUTABILITY HELPERS (lock-on-pick) ─────────────────────────────────────
@@ -824,10 +889,11 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
       `createDraft: rating_basis "${rating_basis}" is not available in this build (gated on MV2-12b)`,
     );
   }
-  if (era_preset !== "all_time") {
-    // Replaced by DC-2 era-filtered catalogs.
+  if (era_preset !== catalog.era.id) {
+    // DC-2 coherence: a draft must never record a preset its catalog did not
+    // enforce — the caller builds the catalog with the same preset it passes.
     throw new RangeError(
-      `createDraft: era_preset "${era_preset}" is not implemented in this build (DC-2)`,
+      `createDraft: era_preset "${era_preset}" does not match the catalog's era stamp "${catalog.era.id}"`,
     );
   }
 
@@ -1109,7 +1175,7 @@ export function stepDraft(catalog: DraftCatalog, state: DraftState): DraftState 
  */
 export function autoDraft(input: CreateDraftParams & { dataset: DraftDataset }): DraftState {
   const { dataset, ...params } = input;
-  const catalog = buildDraftCatalog(dataset);
+  const catalog = buildDraftCatalog(dataset, params.era_preset);
   let state = createDraft(catalog, params);
   while (!isDraftComplete(state)) {
     state = stepDraft(catalog, state);

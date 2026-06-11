@@ -57,6 +57,7 @@ import {
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
+import { getCatalogForEra } from "./data";
 import type { RunRecordV1 } from "./run-record";
 
 // ─── Token format ────────────────────────────────────────────────────────────
@@ -439,17 +440,15 @@ export function reconstructDraftFromToken(
       `token rating_basis "${config.rating_basis}" is not available in this build (gated on MV2-12b)`,
     );
   }
-  if (config.era_preset !== "all_time") {
-    throw new RunTokenError(
-      `token era_preset "${config.era_preset}" is not implemented in this build (DC-2)`,
-    );
-  }
   if (config.draft_flow !== "squad_first") {
     throw new RunTokenError(
       `token draft_flow "${config.draft_flow}" is not implemented in this build (DC-3)`,
     );
   }
-  let state = createDraft(gameData.catalog, {
+  // DC-2: replay against the SAME era-bounded catalog the run was drafted
+  // from (default all_time IS gameData.catalog by object identity).
+  const catalog = getCatalogForEra(gameData, config.era_preset);
+  let state = createDraft(catalog, {
     run_id: token.rid,
     parent_seed: token.ps,
     formation_id: token.fid,
@@ -466,13 +465,13 @@ export function reconstructDraftFromToken(
     const pick = token.pl[i]!;
     try {
       if (pick.k === "m") {
-        state = pickManager(gameData.catalog, state);
+        state = pickManager(catalog, state);
       } else {
         // `pick.c` is a CardId by construction (token round-trips a real
         // DraftState.spins[i].picked_card_id, which is branded CardId). The
         // brand is structural and not preserved through JSON, so re-stamp it
         // here at the trust boundary.
-        state = pickPlayer(gameData.catalog, state, pick.c as CardId, pick.s);
+        state = pickPlayer(catalog, state, pick.c as CardId, pick.s);
       }
     } catch (err) {
       throw new RunTokenError(
