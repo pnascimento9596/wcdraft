@@ -271,7 +271,7 @@ def test_minted_multi_candidate_ambiguity_is_withheld_not_assigned(minted_canon)
     pid, method, cands = active._link_minted(rec, minted_canon, frozenset())
     assert pid is None
     assert method == "multi_candidate"
-    assert cands == ["P-W26-0514", "P-W26-0781"]
+    assert cands == ["P-W26-0501", "P-W26-0764"]  # renumbered by merit-v3 U0 link fix
 
 
 def test_minted_single_candidate_weak_key_is_withheld(minted_canon):
@@ -279,7 +279,7 @@ def test_minted_single_candidate_weak_key_is_withheld(minted_canon):
     pid, method, cands = active._link_minted(rec, minted_canon, frozenset())
     assert pid is None
     assert method == "weak_unverified"
-    assert cands == ["P-W26-0546"]
+    assert cands == ["P-W26-0533"]  # renumbered by merit-v3 U0 link fix
 
 
 def test_named_anchor_links(abuilt):
@@ -289,7 +289,7 @@ def test_named_anchor_links(abuilt):
         by_pid.setdefault(f["player_id"], []).append(f)
     # Yamal — minted 2026 identity; Kopa + Ballon d'Or podium note facts AND
     # snapshot-recovered selections.
-    yamal = by_pid["P-W26-0680"]
+    yamal = by_pid["P-W26-0663"]  # renumbered by merit-v3 U0 link fix
     details = {f["detail"] for f in yamal}
     assert any("Kopa Trophy" in d and "2024" in d for d in details)
     assert any("Kopa Trophy" in d and "2025" in d for d in details)
@@ -313,22 +313,26 @@ def test_named_anchor_links(abuilt):
     assert valverde_drop, "the Valverde drop must stay documented"
 
 
-def test_identity_bridges_are_review_only_and_birth_corroborated(abuilt):
-    """The minted-duplicate identities the audit's cohort scan surfaced are
-    detected, birth-date-corroborated, and never asserted as facts."""
-    bridges = {b["minted_player_id"]: b for b in abuilt["bridges"]}
-    expected = {
-        "P-W26-0113": "P-87008",  # Neymar
-        "P-W26-0115": "P-21531",  # Alisson
-        "P-W26-0119": "P-76060",  # Marquinhos
-        "P-W26-0668": "P-62341",  # Rodri
-    }
-    for mpid, hpid in expected.items():
-        assert bridges[mpid]["historical_player_id"] == hpid
-        assert "+birth_date" in bridges[mpid]["method"]
-    # Review-only: no staged fact targets the minted side of a bridge.
-    staged = {f["player_id"] for f in abuilt["facts"]}
-    assert not staged & set(expected)
+def test_identity_bridge_review_empty_after_promotion(abuilt):
+    """merit-v3 U0 promoted the four 12a bridge pairs (Neymar, Alisson,
+    Marquinhos, Rodri) from review-only staging into the REAL linker path
+    (``identity_2026.IDENTITY_BRIDGES``): those players now link to their
+    canonical historical ids at ingest, so no minted 2026 identity shadows a
+    fact-carrying historical identity any more — the review queue is empty."""
+    assert abuilt["bridges"] == []
+    # The promoted identities are real links in the committed 2026 cards…
+    cards = json.loads(
+        (REPO_ROOT / "etl" / "output" / "player_tournaments_2026.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_pid = {c["player_id"]: c for c in cards}
+    for hpid in ("P-87008", "P-21531", "P-76060", "P-62341"):
+        assert by_pid[hpid]["link_status"] == "linked"
+    # …and Alisson's staged active facts ride the canonical id, now correctly
+    # flagged as in the 2026 squad (the seam used to split this identity).
+    alisson = [e for e in abuilt["entries"] if e["player_id"] == "P-21531"]
+    assert alisson and alisson[0]["in_2026_squad"] is True
 
 
 # ─── position balance + cohort shape ──────────────────────────────────────────

@@ -5,7 +5,7 @@ MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year ceiling 202
 - Linked active facts: **47**
 - Players staged: **23**
 - Withheld (review): **0**
-- Identity-bridge review entries: **4**
+- Identity-bridge review entries: **0**
 
 ## Facts by family
 
@@ -31,38 +31,33 @@ MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year ceiling 202
 
 | Player | Identity | 2026 squad | Facts | Families |
 |---|---|---|---:|---|
-| Alisson (`P-21531`) | historical | — | 2 | position_balanced_selection |
+| Alisson (`P-21531`) | historical | ✓ | 2 | position_balanced_selection |
 | José Giménez (`P-65659`) | historical | ✓ | 1 | captaincy |
 | Guillermo Ochoa (`P-80826`) | historical | ✓ | 1 | international_record |
-| Marko Arnautović (`P-W26-0050`) | minted_2026 | ✓ | 2 | international_record |
-| David Alaba (`P-W26-0051`) | minted_2026 | ✓ | 6 | captaincy, international_record, position_balanced_selection |
-| Luiz Henrique (`P-W26-0126`) | minted_2026 | ✓ | 1 | regional_annual_recognition |
-| Florian Wirtz (`P-W26-0280`) | minted_2026 | ✓ | 1 | position_balanced_selection |
-| Duckens Nazon (`P-W26-0304`) | minted_2026 | ✓ | 1 | international_record |
-| Frantzdy Pierrot (`P-W26-0305`) | minted_2026 | ✓ | 1 | international_record |
-| Franck Kessié (`P-W26-0369`) | minted_2026 | ✓ | 1 | international_record |
-| Martin Ødegaard (`P-W26-0483`) | minted_2026 | ✓ | 1 | position_balanced_selection |
-| Erling Haaland (`P-W26-0490`) | minted_2026 | ✓ | 11 | global_annual_recognition, international_record, position_balanced_selection |
-| Alberto Quintero (`P-W26-0499`) | minted_2026 | ✓ | 1 | international_record |
-| Adalberto Carrasquilla (`P-W26-0513`) | minted_2026 | ✓ | 1 | regional_annual_recognition |
-| Gustavo Gómez (`P-W26-0525`) | minted_2026 | ✓ | 1 | captaincy |
-| Pedro Miguel (`P-W26-0557`) | minted_2026 | ✓ | 1 | international_record |
-| Andy Robertson (`P-W26-0588`) | minted_2026 | ✓ | 3 | captaincy, position_balanced_selection |
-| Scott McTominay (`P-W26-0601`) | minted_2026 | ✓ | 1 | position_balanced_selection |
-| Álex Grimaldo (`P-W26-0665`) | minted_2026 | ✓ | 1 | position_balanced_selection |
-| Lamine Yamal (`P-W26-0680`) | minted_2026 | ✓ | 5 | global_annual_recognition, position_balanced_selection |
-| Hakan Çalhanoğlu (`P-W26-0733`) | minted_2026 | ✓ | 2 | captaincy, international_record |
-| Chancel Mbemba (`P-W26-0839`) | minted_2026 | ✓ | 1 | international_record |
-| Eldor Shomurodov (`P-W26-0893`) | minted_2026 | ✓ | 1 | international_record |
+| Marko Arnautović (`P-W26-0049`) | minted_2026 | ✓ | 2 | international_record |
+| David Alaba (`P-W26-0050`) | minted_2026 | ✓ | 6 | captaincy, international_record, position_balanced_selection |
+| Luiz Henrique (`P-W26-0115`) | minted_2026 | ✓ | 1 | regional_annual_recognition |
+| Florian Wirtz (`P-W26-0267`) | minted_2026 | ✓ | 1 | position_balanced_selection |
+| Duckens Nazon (`P-W26-0291`) | minted_2026 | ✓ | 1 | international_record |
+| Frantzdy Pierrot (`P-W26-0292`) | minted_2026 | ✓ | 1 | international_record |
+| Franck Kessié (`P-W26-0356`) | minted_2026 | ✓ | 1 | international_record |
+| Martin Ødegaard (`P-W26-0470`) | minted_2026 | ✓ | 1 | position_balanced_selection |
+| Erling Haaland (`P-W26-0477`) | minted_2026 | ✓ | 11 | global_annual_recognition, international_record, position_balanced_selection |
+| Alberto Quintero (`P-W26-0486`) | minted_2026 | ✓ | 1 | international_record |
+| Adalberto Carrasquilla (`P-W26-0500`) | minted_2026 | ✓ | 1 | regional_annual_recognition |
+| Gustavo Gómez (`P-W26-0512`) | minted_2026 | ✓ | 1 | captaincy |
+| Pedro Miguel (`P-W26-0543`) | minted_2026 | ✓ | 1 | international_record |
+| Andy Robertson (`P-W26-0574`) | minted_2026 | ✓ | 3 | captaincy, position_balanced_selection |
+| Scott McTominay (`P-W26-0587`) | minted_2026 | ✓ | 1 | position_balanced_selection |
+| Álex Grimaldo (`P-W26-0651`) | minted_2026 | ✓ | 1 | position_balanced_selection |
+| Lamine Yamal (`P-W26-0663`) | minted_2026 | ✓ | 5 | global_annual_recognition, position_balanced_selection |
+| Hakan Çalhanoğlu (`P-W26-0716`) | minted_2026 | ✓ | 2 | captaincy, international_record |
+| Chancel Mbemba (`P-W26-0822`) | minted_2026 | ✓ | 1 | international_record |
+| Eldor Shomurodov (`P-W26-0876`) | minted_2026 | ✓ | 1 | international_record |
 
 ## Identity-bridge review (review-only; MV2-12b seam)
 
-| Minted 2026 id | Historical id | Archive row | Method |
-|---|---|---|---|
-| Neymar (`P-W26-0113`) | Neymar (`P-87008`) | ✓ | surname+nation+birth_date |
-| Alisson (`P-W26-0115`) | Alisson (`P-21531`) | — | surname+nation+birth_date |
-| Marquinhos (`P-W26-0119`) | Marquinhos (`P-76060`) | ✓ | surname+nation+birth_date |
-| Rodri (`P-W26-0668`) | Rodri (`P-62341`) | ✓ | surname+nation+birth_date |
+(none detected)
 
 ## Curation notes (attempted-but-dropped, documented gaps)
 
