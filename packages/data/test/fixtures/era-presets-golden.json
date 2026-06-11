@@ -1,0 +1,649 @@
+{
+  "_comment": "DC-2 era-preset golden — one deterministic autoDraft per preset from one seed. Regen: pnpm --filter @wcdraft/data gen:era-golden",
+  "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
+  "engine_version": "engine-2026.06.09",
+  "dataset_version": "2026-06-04",
+  "parent_seed": "wcdraft:era-presets-golden:v1:1",
+  "records": [
+    {
+      "era_preset": "all_time",
+      "parent_seed": "wcdraft:era-presets-golden:v1:1",
+      "manager_card_id": "M-306:2022",
+      "spins": [
+        {
+          "index": 0,
+          "tournament_id": 2022,
+          "nation_id": "T-85",
+          "rare": false,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "assigned_slot_id": null
+        },
+        {
+          "index": 1,
+          "tournament_id": 2014,
+          "nation_id": "T-75",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00875:2014",
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "index": 2,
+          "tournament_id": 2026,
+          "nation_id": "T-34",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0301:2026",
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "index": 3,
+          "tournament_id": 2006,
+          "nation_id": "T-30",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00916:2006",
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "index": 4,
+          "tournament_id": 2002,
+          "nation_id": "T-25",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-03128:2002",
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "index": 5,
+          "tournament_id": 2018,
+          "nation_id": "T-06",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-06338:2018",
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "index": 6,
+          "tournament_id": 2022,
+          "nation_id": "T-17",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01994:2022",
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "index": 7,
+          "tournament_id": 2026,
+          "nation_id": "T-26",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-75890:2026",
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "index": 8,
+          "tournament_id": 2018,
+          "nation_id": "T-62",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-05922:2018",
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "index": 9,
+          "tournament_id": 2002,
+          "nation_id": "T-25",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-06468:2002",
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "index": 10,
+          "tournament_id": 2006,
+          "nation_id": "T-63",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00585:2006",
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "index": 11,
+          "tournament_id": 2026,
+          "nation_id": "T-09",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-05164:2026",
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "index": 12,
+          "tournament_id": 1950,
+          "nation_id": "T-46",
+          "rare": true,
+          "picked_kind": "player",
+          "picked_card_id": "P-01521:1950",
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "index": 13,
+          "tournament_id": 2014,
+          "nation_id": "T-50",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01164:2014",
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "index": 14,
+          "tournament_id": 2018,
+          "nation_id": "T-17",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00781:2018",
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "index": 15,
+          "tournament_id": 2014,
+          "nation_id": "T-84",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-10014:2014",
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "index": 16,
+          "tournament_id": 2014,
+          "nation_id": "T-46",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01835:2014",
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "era_preset": "post_2000",
+      "parent_seed": "wcdraft:era-presets-golden:v1:1",
+      "manager_card_id": "M-359:2018",
+      "spins": [
+        {
+          "index": 0,
+          "tournament_id": 2026,
+          "nation_id": "T-16",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01505:2026",
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "index": 1,
+          "tournament_id": 2018,
+          "nation_id": "T-50",
+          "rare": false,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "assigned_slot_id": null
+        },
+        {
+          "index": 2,
+          "tournament_id": 2026,
+          "nation_id": "T-47",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-09614:2026",
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "index": 3,
+          "tournament_id": 2010,
+          "nation_id": "T-46",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01835:2010",
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "index": 4,
+          "tournament_id": 2006,
+          "nation_id": "T-73",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-13964:2006",
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "index": 5,
+          "tournament_id": 2018,
+          "nation_id": "T-58",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00521:2018",
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "index": 6,
+          "tournament_id": 2022,
+          "nation_id": "T-47",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00597:2022",
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "index": 7,
+          "tournament_id": 2026,
+          "nation_id": "T-39",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0339:2026",
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "index": 8,
+          "tournament_id": 2022,
+          "nation_id": "T-12",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00809:2022",
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "index": 9,
+          "tournament_id": 2006,
+          "nation_id": "T-73",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-15314:2006",
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "index": 10,
+          "tournament_id": 2010,
+          "nation_id": "T-70",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-06967:2010",
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "index": 11,
+          "tournament_id": 2026,
+          "nation_id": "T-30",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-03945:2026",
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "index": 12,
+          "tournament_id": 2002,
+          "nation_id": "T-18",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-10638:2002",
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "index": 13,
+          "tournament_id": 2018,
+          "nation_id": "T-38",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00111:2018",
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "index": 14,
+          "tournament_id": 2018,
+          "nation_id": "T-63",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-04434:2018",
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "index": 15,
+          "tournament_id": 2018,
+          "nation_id": "T-54",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-02886:2018",
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "index": 16,
+          "tournament_id": 2018,
+          "nation_id": "T-31",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-03367:2018",
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "era_preset": "post_2010",
+      "parent_seed": "wcdraft:era-presets-golden:v1:1",
+      "manager_card_id": "M-244:2022",
+      "spins": [
+        {
+          "index": 0,
+          "tournament_id": 2026,
+          "nation_id": "T-47",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-09614:2026",
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "index": 1,
+          "tournament_id": 2022,
+          "nation_id": "T-46",
+          "rare": false,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "assigned_slot_id": null
+        },
+        {
+          "index": 2,
+          "tournament_id": 2026,
+          "nation_id": "T-64",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0585:2026",
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "index": 3,
+          "tournament_id": 2018,
+          "nation_id": "T-31",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-03367:2018",
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "index": 4,
+          "tournament_id": 2014,
+          "nation_id": "T-75",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00875:2014",
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "index": 5,
+          "tournament_id": 2022,
+          "nation_id": "T-48",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-10326:2022",
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "index": 6,
+          "tournament_id": 2026,
+          "nation_id": "T-08",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-31839:2026",
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "index": 7,
+          "tournament_id": 2026,
+          "nation_id": "T-59",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01930:2026",
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "index": 8,
+          "tournament_id": 2022,
+          "nation_id": "T-79",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-09569:2022",
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "index": 9,
+          "tournament_id": 2014,
+          "nation_id": "T-75",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-07180:2014",
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "index": 10,
+          "tournament_id": 2018,
+          "nation_id": "T-47",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-15199:2018",
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "index": 11,
+          "tournament_id": 2026,
+          "nation_id": "T-54",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-09945:2026",
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "index": 12,
+          "tournament_id": 2014,
+          "nation_id": "T-06",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-03735:2014",
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "index": 13,
+          "tournament_id": 2022,
+          "nation_id": "T-38",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-04541:2022",
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "index": 14,
+          "tournament_id": 2022,
+          "nation_id": "T-58",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-05289:2022",
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "index": 15,
+          "tournament_id": 2022,
+          "nation_id": "T-47",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00597:2022",
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "index": 16,
+          "tournament_id": 2022,
+          "nation_id": "T-32",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01945:2022",
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    },
+    {
+      "era_preset": "modern",
+      "parent_seed": "wcdraft:era-presets-golden:v1:1",
+      "manager_card_id": "M-471:2022",
+      "spins": [
+        {
+          "index": 0,
+          "tournament_id": 2026,
+          "nation_id": "T-55",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0519:2026",
+          "assigned_slot_id": "4-3-3.GK"
+        },
+        {
+          "index": 1,
+          "tournament_id": 2022,
+          "nation_id": "T-75",
+          "rare": false,
+          "picked_kind": "manager",
+          "picked_card_id": null,
+          "assigned_slot_id": null
+        },
+        {
+          "index": 2,
+          "tournament_id": 2026,
+          "nation_id": "T-73",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-31301:2026",
+          "assigned_slot_id": "4-3-3.LB"
+        },
+        {
+          "index": 3,
+          "tournament_id": 2022,
+          "nation_id": "T-03",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00652:2022",
+          "assigned_slot_id": "4-3-3.LCB"
+        },
+        {
+          "index": 4,
+          "tournament_id": 2018,
+          "nation_id": "T-58",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00521:2018",
+          "assigned_slot_id": "4-3-3.RCB"
+        },
+        {
+          "index": 5,
+          "tournament_id": 2022,
+          "nation_id": "T-83",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01792:2022",
+          "assigned_slot_id": "4-3-3.RB"
+        },
+        {
+          "index": 6,
+          "tournament_id": 2026,
+          "nation_id": "T-31",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-19408:2026",
+          "assigned_slot_id": "4-3-3.CDM"
+        },
+        {
+          "index": 7,
+          "tournament_id": 2026,
+          "nation_id": "T-70",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0624:2026",
+          "assigned_slot_id": "4-3-3.LCM"
+        },
+        {
+          "index": 8,
+          "tournament_id": 2026,
+          "nation_id": "T-09",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-05164:2026",
+          "assigned_slot_id": "4-3-3.RCM"
+        },
+        {
+          "index": 9,
+          "tournament_id": 2018,
+          "nation_id": "T-58",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-10712:2018",
+          "assigned_slot_id": "4-3-3.LW"
+        },
+        {
+          "index": 10,
+          "tournament_id": 2022,
+          "nation_id": "T-09",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-02305:2022",
+          "assigned_slot_id": "4-3-3.ST"
+        },
+        {
+          "index": 11,
+          "tournament_id": 2026,
+          "nation_id": "T-64",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-W26-0585:2026",
+          "assigned_slot_id": "4-3-3.RW"
+        },
+        {
+          "index": 12,
+          "tournament_id": 2018,
+          "nation_id": "T-06",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-06338:2018",
+          "assigned_slot_id": "bench.0"
+        },
+        {
+          "index": 13,
+          "tournament_id": 2022,
+          "nation_id": "T-73",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-01416:2022",
+          "assigned_slot_id": "bench.1"
+        },
+        {
+          "index": 14,
+          "tournament_id": 2022,
+          "nation_id": "T-84",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-00232:2022",
+          "assigned_slot_id": "bench.2"
+        },
+        {
+          "index": 15,
+          "tournament_id": 2022,
+          "nation_id": "T-79",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-09569:2022",
+          "assigned_slot_id": "bench.3"
+        },
+        {
+          "index": 16,
+          "tournament_id": 2022,
+          "nation_id": "T-71",
+          "rare": false,
+          "picked_kind": "player",
+          "picked_card_id": "P-04157:2022",
+          "assigned_slot_id": "bench.4"
+        }
+      ]
+    }
+  ]
+}

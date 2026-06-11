@@ -13,7 +13,7 @@
 // The component layer (`slot-machine.tsx`) consumes this model and animates
 // the reels visually. It must not alter draft state.
 
-import type { Spin } from "@wcdraft/core";
+import type { EraPresetId, Spin } from "@wcdraft/core";
 
 import type { GameDataIndexes } from "./data";
 import { flagSrcForNationId } from "./flags";
@@ -61,6 +61,13 @@ export interface SlotRevealModel {
   readonly drawProbability: number;
   /** Pre-formatted percent label, e.g. `12.4%` / `0.42%` / `0.0%`. */
   readonly drawProbabilityLabel: string;
+  /**
+   * DC-2 — display label for a NON-default era preset bounding this run's
+   * pool (e.g. `Modern (2018–2026)`), or `null` under the default all-time
+   * pool (today's rendering, unchanged). Sampling metadata only — allowed in
+   * Memory mode's keep set.
+   */
+  readonly eraPresetLabel: string | null;
 }
 
 export interface BuildSlotRevealModelParams {
@@ -68,7 +75,15 @@ export interface BuildSlotRevealModelParams {
   readonly allSpins: readonly Spin[];
   readonly indexes: GameDataIndexes;
   readonly totalPicks: number;
+  /** DC-2 — the run's era preset (default `all_time`). */
+  readonly eraPreset?: EraPresetId;
 }
+
+const ERA_REVEAL_LABELS: Record<Exclude<EraPresetId, "all_time">, string> = {
+  post_2000: "Post-2000 (2002–2026)",
+  post_2010: "Post-2010 (2014–2026)",
+  modern: "Modern (2018–2026)",
+};
 
 const TRACK_LEN = 7;
 
@@ -76,7 +91,7 @@ const TRACK_LEN = 7;
 export function buildSlotRevealModel(
   params: BuildSlotRevealModelParams,
 ): SlotRevealModel {
-  const { activeSpin, allSpins, indexes, totalPicks } = params;
+  const { activeSpin, allSpins, indexes, totalPicks, eraPreset } = params;
 
   const resultFace = faceFromSpin(activeSpin, indexes, "C");
   const pickLabel = `PICK ${String(activeSpin.index + 1).padStart(2, "0")} OF ${totalPicks}`;
@@ -138,6 +153,8 @@ export function buildSlotRevealModel(
     rare: activeSpin.rare,
     drawProbability: activeSpin.draw_probability,
     drawProbabilityLabel: formatDrawProbability(activeSpin.draw_probability),
+    eraPresetLabel:
+      eraPreset && eraPreset !== "all_time" ? ERA_REVEAL_LABELS[eraPreset] : null,
   };
 }
 

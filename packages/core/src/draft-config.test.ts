@@ -18,7 +18,14 @@ import {
   isEraPresetId,
   isRatingBasis,
 } from "./types/draft-config.js";
-import { buildDraftCatalog, createDraft } from "./draft.js";
+import {
+  _testEraMassSplit,
+  _testTotalCatalogWeight,
+  autoDraft,
+  buildDraftCatalog,
+  createDraft,
+  filterDraftDataset,
+} from "./draft.js";
 import { buildDraftFixture } from "./draft.fixture.js";
 
 const FIXTURE = buildDraftFixture();
@@ -95,5 +102,95 @@ describe("createDraft DC-1 config recording + honesty gates", () => {
     expect(() => createDraft(catalog, { ...PARAMS, rating_basis: "current" })).toThrow(
       /rating_basis "current" is not available/,
     );
+  });
+
+  it("refuses an era_preset that does not match the catalog's era stamp (DC-2 coherence)", () => {
+    expect(() => createDraft(catalog, { ...PARAMS, era_preset: "modern" })).toThrow(
+      /does not match the catalog's era stamp/,
+    );
+  });
+});
+
+// ─── DC-2 — era-filtered catalogs (plan §B sampling rule) ────────────────────
+
+describe("filterDraftDataset (DC-2)", () => {
+  // Fixture years: 1934, 1962, 1990 (rare) / 2002, 2014, 2026 (modern) —
+  // tournament_ids 1..6 (see draft.fixture.ts TOURNAMENT_META).
+  const ds = FIXTURE.dataset;
+
+  it("all_time passes every tournament through (identity in content terms)", () => {
+    const filtered = filterDraftDataset(ds, "all_time");
+    expect(filtered.players.length).toBe(ds.players.length);
+    expect(filtered.managers.length).toBe(ds.managers.length);
+    expect(filtered.tournaments.length).toBe(ds.tournaments.length);
+  });
+
+  it("modern (2018–2026) keeps only the 2026 fixture tournament", () => {
+    const filtered = filterDraftDataset(ds, "modern");
+    const years = new Set(filtered.tournaments.map((t) => t.year));
+    expect([...years]).toEqual([2026]);
+    expect(filtered.players.every((c) => c.tournament_id === 6)).toBe(true);
+    expect(filtered.managers.every((m) => m.tournament_id === 6)).toBe(true);
+    expect(filtered.players.length).toBeGreaterThan(0);
+  });
+
+  it("post_2000 (2002–2026) drops every rare-year tournament", () => {
+    const filtered = filterDraftDataset(ds, "post_2000");
+    expect(filtered.tournaments.map((t) => t.year).sort()).toEqual([2002, 2014, 2026]);
+  });
+});
+
+describe("buildDraftCatalog era stamping + mass recomputation (DC-2)", () => {
+  const ds = FIXTURE.dataset;
+
+  it("default build is stamped all_time and content-identical to an explicit all_time build", () => {
+    const implicit = buildDraftCatalog(ds);
+    const explicit = buildDraftCatalog(ds, "all_time");
+    expect(implicit.era).toEqual({ id: "all_time", min_year: 1930, max_year: 2026 });
+    expect(implicit.hasRareEra).toBe(true);
+    // Deep content equality (Map serializes empty — compare pairs + weights).
+    expect(JSON.stringify(explicit.pairs)).toBe(JSON.stringify(implicit.pairs));
+    expect(explicit.cumulativeWeights).toEqual(implicit.cumulativeWeights);
+  });
+
+  it("all_time keeps the 0.10 / 0.90 era mass split", () => {
+    const catalog = buildDraftCatalog(ds, "all_time");
+    const { rare, modern } = _testEraMassSplit(catalog);
+    expect(rare).toBeCloseTo(0.1, 10);
+    expect(modern).toBeCloseTo(0.9, 10);
+  });
+
+  it("an all-modern preset collapses to 0 / 1 era mass — no phantom rare class", () => {
+    for (const preset of ["post_2000", "post_2010", "modern"] as const) {
+      const catalog = buildDraftCatalog(ds, preset);
+      expect(catalog.era.id).toBe(preset);
+      expect(catalog.hasRareEra).toBe(false);
+      const { rare, modern } = _testEraMassSplit(catalog);
+      expect(rare).toBe(0);
+      expect(modern).toBeCloseTo(1, 10);
+      expect(catalog.pairs.every((p) => !p.rare)).toBe(true);
+    }
+  });
+
+  it("total catalog weight stays ≈1.0 inside every preset", () => {
+    for (const preset of ["all_time", "post_2000", "post_2010", "modern"] as const) {
+      expect(_testTotalCatalogWeight(buildDraftCatalog(ds, preset))).toBeCloseTo(1, 10);
+    }
+  });
+
+  it("createDraft accepts a matching preset/catalog pair and records the preset", () => {
+    const catalog = buildDraftCatalog(ds, "modern");
+    const draft = createDraft(catalog, { ...PARAMS, era_preset: "modern" });
+    expect(draft.era_preset).toBe("modern");
+    // Every drawn spin must come from the bounded pool.
+    expect(draft.spins.every((s) => s.tournament_id === 6 && !s.rare)).toBe(true);
+  });
+
+  it("era-bounded autoDraft completes deterministically (run-twice identity)", () => {
+    const a = autoDraft({ ...PARAMS, era_preset: "modern", dataset: ds });
+    const b = autoDraft({ ...PARAMS, era_preset: "modern", dataset: ds });
+    expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+    expect(a.era_preset).toBe("modern");
+    expect(a.status).toBe("ready");
   });
 });

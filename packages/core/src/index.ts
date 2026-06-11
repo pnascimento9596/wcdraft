@@ -211,6 +211,7 @@ export type {
 // ─── WS-C draft engine (the deterministic 17-spin DRAFT state machine) ───────
 export {
   buildDraftCatalog,
+  filterDraftDataset,
   createDraft,
   activeSpin,
   isDraftComplete,

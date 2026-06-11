@@ -18,6 +18,7 @@ import {
   buildDraftCatalog,
   type DraftCatalog,
   type DraftDataset,
+  type EraPresetId,
 } from "@wcdraft/core";
 import { loadDataManifest, loadDraftPoolBundle } from "@wcdraft/data/client";
 import type {
@@ -116,6 +117,31 @@ function buildGameData(
     catalog,
     nationByCardId: draftPool.nation_by_card_id,
   };
+}
+
+// ─── DC-2 — era-filtered catalogs ────────────────────────────────────────────
+
+/**
+ * Per-GameData cache of era-filtered catalogs. The default (`all_time`)
+ * preset returns `gameData.catalog` BY OBJECT IDENTITY — the default path is
+ * provably the same catalog the rest of the app already uses, not a rebuilt
+ * twin. Non-default catalogs build lazily once per (GameData, preset).
+ */
+const eraCatalogCache = new WeakMap<GameData, Map<EraPresetId, DraftCatalog>>();
+
+export function getCatalogForEra(gameData: GameData, era_preset: EraPresetId): DraftCatalog {
+  if (era_preset === "all_time") return gameData.catalog;
+  let cache = eraCatalogCache.get(gameData);
+  if (!cache) {
+    cache = new Map();
+    eraCatalogCache.set(gameData, cache);
+  }
+  let catalog = cache.get(era_preset);
+  if (!catalog) {
+    catalog = buildDraftCatalog(gameData.draftDataset, era_preset);
+    cache.set(era_preset, catalog);
+  }
+  return catalog;
 }
 
 /** Compose the eviction-key version bundle from the manifest. */
