@@ -42,6 +42,16 @@ remains staged for MV2-12b
 - MV2-12a active-career intake (`ws-etl/mv212a-active-career-intake`, RED, IN REVIEW):
   facts-only inert channel, 47 facts / 23 players; rating outputs + compact bundles
   byte-identical (see `docs/queue/q-002-mv2-12-candidate.md`). 12b stays DISPATCH-ONLY.
+- merit-v3 SEASON DESIGN landed (this change, docs-only):
+  `docs/plans/merit-v3-design-2026-06-11.md` on integration branch `merit-v3` —
+  D2 activation (person-identity stature seam, stage-normalized active index,
+  inertness-guard flips), D1 age-conditioned projected scoring (age_factor retired),
+  index-bias mitigation (eligibility re-norm + sparse-fact saturation; archive
+  re-research ledgered), award-gated raw-ceiling headroom + curve re-fit, dual-basis
+  Career/Current internals materialized for `engine-draft-config`, club backfill in
+  the same single skew event. Version matrix: wc-perf-5.0.0 / proj-career-4.0.0 /
+  career-stature-3.0.0 / runtime-data-2.0.0 / engine bump. Units U0 (in flight) +
+  V1–V8, all DISPATCH-ONLY; acceptance probes pre-registered in plan §7.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -56,19 +66,19 @@ remains staged for MV2-12b
 
 ## Test counts (run 2026-06-11; forced Turbo gate on `ws-etl/mv212a-active-career-intake`)
 
-| Suite                                                   | Result                      |
-| ------------------------------------------------------- | --------------------------- |
-| @wcdraft/core `test`                                    | 302 passed, 3 skipped (305) |
-| @wcdraft/core `test:golden` (RNG)                       | 3 passed                    |
-| @wcdraft/core `test:golden:draft`                       | 37 passed                   |
-| @wcdraft/data `test`                                    | 50 passed, 7 skipped (57)   |
-| @wcdraft/data `test:golden:data`                        | 28 passed                   |
-| @wcdraft/data `test:golden:integration`                 | 10 passed                   |
-| @wcdraft/db `test`                                      | 74 passed                   |
-| @wcdraft/web `test`                                     | 548 passed, 1 skipped (549) |
-| @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
+| Suite                                                   | Result                                              |
+| ------------------------------------------------------- | --------------------------------------------------- |
+| @wcdraft/core `test`                                    | 302 passed, 3 skipped (305)                         |
+| @wcdraft/core `test:golden` (RNG)                       | 3 passed                                            |
+| @wcdraft/core `test:golden:draft`                       | 37 passed                                           |
+| @wcdraft/data `test`                                    | 50 passed, 7 skipped (57)                           |
+| @wcdraft/data `test:golden:data`                        | 28 passed                                           |
+| @wcdraft/data `test:golden:integration`                 | 10 passed                                           |
+| @wcdraft/db `test`                                      | 74 passed                                           |
+| @wcdraft/web `test`                                     | 548 passed, 1 skipped (549)                         |
+| @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                            |
 | etl `pytest -q`                                         | 182 passed (+23 active-intake tests, ws-etl/mv212a) |
-| `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached |
+| `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached                         |
 
 ## CI (`.github/workflows/`)
 

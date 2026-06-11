@@ -2,6 +2,17 @@
 
 - **Tier:** Red (rating model) · **Mode:** DISPATCH-ONLY — Lead Architect authors the
   prompt; never self-served.
+- **Status update 2026-06-11 — DESIGNED.** The Lead-Architect season design landed:
+  [`docs/plans/merit-v3-design-2026-06-11.md`](../plans/merit-v3-design-2026-06-11.md)
+  (integration branch `merit-v3`). It supersedes the "MV2-12b" label: the rating
+  integration is decomposed into season units U0 (identity links, in flight) +
+  V1–V8 (stature core → historical/projected integration → curve re-fit + pre-registered
+  probe gate → club backfill → compact regen → λ re-fit → season merge), with the
+  version matrix (wc-perf-5.0.0 / proj-career-4.0.0 / career-stature-3.0.0 /
+  runtime-data-2.0.0 / engine bump), the §H.2-derived acceptance-probe set
+  pre-registered, and the one-skew-event rule. Per this item's done-when, q-002 is
+  replaced by the plan's units; all remain DISPATCH-ONLY. The sections below stay as
+  the audit-trail record.
 - **Status:** AUDITED — diagnostic pre-work executed 2026-06-10; see
   [`docs/reports/mv212-ratings-audit-2026-06-10.md`](../reports/mv212-ratings-audit-2026-06-10.md).
   **GO recommended** (option D2 + D1: active-career recognition intake with a
@@ -30,7 +41,7 @@
   careers via a structurally INERT active channel — 47 facts / 23 players
   (`active-career-source-set-1.0.0`, cutoff 2026-06-01): 36 parser-recovered facts
   (withheld pinned-snapshot records re-linked against the minted 2026 identity space)
-  + 11 citation-backed active-note facts (own SHA-pinned manifest under
+  plus 11 citation-backed active-note facts (own SHA-pinned manifest under
   `etl/merit/raw/active/`). Staged in `etl/output/merit/source_facts_active.json` +
   `career_stature_active_staging.json` (NO score/index — entries are facts + identity
   only). Consumed archive, both rating outputs and compact bundles proven
