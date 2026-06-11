@@ -22,7 +22,7 @@ Field-scoped output proof against `origin/merit-v3`:
 |---|---:|
 | Card IDs unchanged | 13,843 |
 | Non-club field diffs in `player_tournaments.json` | 0 |
-| `club_at_tournament: null -> value` | 10,952 |
+| `club_at_tournament: null -> value` | 10,957 |
 | Other `club_at_tournament` changes | 0 |
 | Rating/stature/identity output diff | 0 tracked files changed |
 
@@ -64,9 +64,9 @@ Before V5, every historical men's card was `null` for `club_at_tournament`.
 
 | Tournament | Before | After | Honest nulls |
 |---|---:|---:|---:|
-| WC-1930 | 0/245 (0.00%) | 238/245 (97.14%) | 7 |
+| WC-1930 | 0/245 (0.00%) | 241/245 (98.37%) | 4 |
 | WC-1934 | 0/342 (0.00%) | 338/342 (98.83%) | 4 |
-| WC-1938 | 0/320 (0.00%) | 317/320 (99.06%) | 3 |
+| WC-1938 | 0/320 (0.00%) | 318/320 (99.38%) | 2 |
 | WC-1950 | 0/281 (0.00%) | 276/281 (98.22%) | 5 |
 | WC-1954 | 0/350 (0.00%) | 350/350 (100.00%) | 0 |
 | WC-1958 | 0/352 (0.00%) | 352/352 (100.00%) | 0 |
@@ -79,7 +79,7 @@ Before V5, every historical men's card was `null` for `club_at_tournament`.
 | WC-1986 | 0/528 (0.00%) | 528/528 (100.00%) | 0 |
 | WC-1990 | 0/528 (0.00%) | 528/528 (100.00%) | 0 |
 | WC-1994 | 0/528 (0.00%) | 528/528 (100.00%) | 0 |
-| WC-1998 | 0/705 (0.00%) | 704/705 (99.86%) | 1 |
+| WC-1998 | 0/705 (0.00%) | 705/705 (100.00%) | 0 |
 | WC-2002 | 0/736 (0.00%) | 736/736 (100.00%) | 0 |
 | WC-2006 | 0/736 (0.00%) | 736/736 (100.00%) | 0 |
 | WC-2010 | 0/736 (0.00%) | 735/736 (99.86%) | 1 |
@@ -87,28 +87,48 @@ Before V5, every historical men's card was `null` for `club_at_tournament`.
 | WC-2018 | 0/736 (0.00%) | 736/736 (100.00%) | 0 |
 | WC-2022 | 0/831 (0.00%) | 831/831 (100.00%) | 0 |
 
-Total: **10,952/10,973 = 99.81% populated**, with 21 honest nulls.
+Total: **10,957/10,973 = 99.85% populated**, with 16 honest nulls.
 
-## Honest-Null Census
+## Tail Re-Audit Census
 
-These rows stay null because the pinned source set lacks a trustworthy row/value or the
-source roster disagrees with the canonical Fjelstul card. No adjacent-year or alternate
-source inference was used.
+All 21 rows from the previous tail were re-audited against the pinned source rows with
+alias awareness. The build still uses only committed wikitext and the explicit
+`CLUB_ALIAS_BRIDGES` table; live redirect checks were review-time corroboration, not a
+runtime resolution mechanism.
+
+| Bucket | Count | Meaning |
+|---|---:|---|
+| `bridged` | 5 | A reviewer-verified alias maps one canonical card to one pinned source row. |
+| `unresolved_alias` | 0 | No remaining club-bearing source row had enough alias evidence to stay visibly unresolved. |
+| `source_lacks_club` | 16 | No trustworthy club-bearing pinned source row exists for the canonical card; fuzzy same-squad neighbors without name/DOB corroboration remain null. |
+
+### Bridged
+
+| Tournament | Nation | Card player | player_id | Pinned source row | Club | Corroboration |
+|---|---|---|---|---|---|---|
+| WC-1930 | Mexico | Alfredo Viejo Sánchez | `P-83291` | Alfredo Sánchez | Club América | Review verified redirect-equivalence; same Mexico 1930 squad context. Pinned DOB differs, so this is explicit bridge-only evidence. |
+| WC-1930 | Peru | Luis Souza Ferreira | `P-44010` | Luis de Souza | Universitario de Deportes | Review verified redirect-equivalence; same Peru 1930 squad context. Pinned DOB differs, so this is explicit bridge-only evidence. |
+| WC-1930 | Romania | Miklós Kovács | `P-70294` | Nicolae Kovács | Banatul Timișoara | Review verified redirect-equivalence; same Romania 1930 squad context with the six-day DOB discrepancy recorded. |
+| WC-1938 | Dutch East Indies | Frans Hu Kon | `P-56198` | Frans G. Hukom | Sparta Bandung | Review verified redirect-equivalence; same Dutch East Indies 1938 squad context. Canonical DOB is absent. |
+| WC-1998 | Saudi Arabia | Ibrahim Al-Shahrani | `P-92151` | Ibrahim Suwayed | Al-Ahli | Review verified redirect-equivalence; same Saudi Arabia 1998 squad, matching DOB, and matching shirt number 7. |
+
+### Unresolved Alias
+
+None. Same-shirt or fuzzy-name neighbors that contradicted the canonical name/DOB were
+classified as roster/source disagreement rather than as unresolved alias matches.
+
+### Source Lacks Club
 
 | Tournament | Nation | Player | player_id |
 |---|---|---|---|
 | WC-1930 | Brazil | not applicable Benvenuto | `P-11648` |
 | WC-1930 | Brazil | not applicable Doca | `P-58460` |
-| WC-1930 | Mexico | Alfredo Viejo Sánchez | `P-83291` |
 | WC-1930 | Peru | Jorge Góngora | `P-29687` |
 | WC-1930 | Peru | Juan Alfonso Valle | `P-41536` |
-| WC-1930 | Peru | Luis Souza Ferreira | `P-44010` |
-| WC-1930 | Romania | Miklós Kovács | `P-70294` |
 | WC-1934 | Brazil | not applicable Almeida | `P-63886` |
 | WC-1934 | Sweden | Carl Johnsson | `P-01918` |
 | WC-1934 | Sweden | Erik Granath | `P-92190` |
 | WC-1934 | Switzerland | Max Weiler | `P-44740` |
-| WC-1938 | Dutch East Indies | Frans Hu Kon | `P-56198` |
 | WC-1938 | Dutch East Indies | not applicable Dorst | `P-16278` |
 | WC-1938 | Dutch East Indies | not applicable Teilherber | `P-92120` |
 | WC-1950 | Bolivia | Eulogio Sandoval | `P-54466` |
@@ -116,7 +136,6 @@ source inference was used.
 | WC-1950 | Sweden | Kjell Rosén | `P-79649` |
 | WC-1950 | Switzerland | Felice Soldini | `P-71162` |
 | WC-1950 | United States | Frank Moniz | `P-53883` |
-| WC-1998 | Saudi Arabia | Ibrahim Al-Shahrani | `P-92151` |
 | WC-2010 | North Korea | Il-gwan Jong | `P-79551` |
 
 ## Spot-Check Sample
@@ -163,17 +182,18 @@ Commands run locally:
 
 | Gate | Result |
 |---|---|
-| `PYTHONPATH=src python -m wcdraft_etl.historical_clubs --verify` | OK |
-| `/opt/homebrew/bin/ruff check src tests` | passed |
-| `python -m pytest -q` | 225 passed |
-| Run `PYTHONPATH=src python -m wcdraft_etl` twice and compare touched-output SHA256s | OK |
-| Field-scoped diff against `origin/merit-v3:etl/output/player_tournaments.json` | only 10,952 `club_at_tournament` null-to-value changes |
+| `uv run --project etl python -m wcdraft_etl.historical_clubs --verify` | OK |
+| `uv run --project etl ruff check etl/src etl/tests` | passed |
+| `uv run --project etl pytest -q etl/tests` | 228 passed |
+| Run `uv run --project etl python -m wcdraft_etl` twice and compare `etl/output` SHA256 manifests | OK |
+| Field-scoped diff against `origin/merit-v3:etl/output/player_tournaments.json` | only 10,957 `club_at_tournament` null-to-value changes |
+| Field-scoped delta against `90c796b` | exactly 5 `club_at_tournament` null-to-value changes; zero non-club diffs |
 | `git diff --quiet` for ratings/stature/identity outputs | exit 0 |
 
 Deterministic touched-output hashes after the run-twice proof:
 
 | File | sha256 |
 |---|---|
-| `etl/output/player_tournaments.json` | `5e5a3229eb615400e3be1c651f8f98b242c77f8df73a4d9319704c90fd37d9e9` |
-| `etl/output/manifest.json` | `8125b6b5a5e86a21f27bf535cade5a0a0cf21401c72fef2421b6c07dc06a3520` |
-| `etl/output/COVERAGE.md` | `881dddf3211ee68ac6ce71f98a69346f456d15a0eff50f4babc8ea097b2e8d6b` |
+| `etl/output/player_tournaments.json` | `be93b57ef9b4945081daab3e39c409d4d0d16efe50c0ef5c7429077e5b8930fc` |
+| `etl/output/manifest.json` | `bd51f92a8e291129ea110e78061e2e34e9f994e02dea68e4dbbbfac5561530a3` |
+| `etl/output/COVERAGE.md` | `09dc44c5a65dbb79887f2683ecb41b236cfba82a1e2ee9b0569d90f267f3699c` |

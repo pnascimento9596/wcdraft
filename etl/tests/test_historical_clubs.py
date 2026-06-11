@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from wcdraft_etl import historical_clubs
+from wcdraft_etl import historical_clubs, source
 
 
 def test_parse_nat_fs_and_national_squad_templates():
@@ -114,6 +115,106 @@ def test_club_join_prefers_wikipedia_title_and_preserves_null(monkeypatch):
     assert result.clubs == {("P-pele", "WC-1970"): "Santos"}
     assert result.methods == {"wiki_title": 1}
     assert any(r["reason"] == "player_unresolved" for r in result.review)
+
+
+def test_club_alias_bridges_populate_reviewer_verified_tail_rows():
+    result = historical_clubs.build_club_lookup(
+        source.load("squads"),
+        source.load("players"),
+        source.load("teams"),
+    )
+
+    assert result.methods["club_alias_bridge"] == 5
+    assert {
+        key: result.clubs[key]
+        for key in [
+            ("P-83291", "WC-1930"),
+            ("P-44010", "WC-1930"),
+            ("P-70294", "WC-1930"),
+            ("P-56198", "WC-1938"),
+            ("P-92151", "WC-1998"),
+        ]
+    } == {
+        ("P-83291", "WC-1930"): "Club América",
+        ("P-44010", "WC-1930"): "Universitario de Deportes",
+        ("P-70294", "WC-1930"): "Banatul Timișoara",
+        ("P-56198", "WC-1938"): "Sparta Bandung",
+        ("P-92151", "WC-1998"): "Al-Ahli",
+    }
+
+
+def test_club_alias_bridge_raises_if_mechanism_resolves_differently(monkeypatch):
+    monkeypatch.setattr(
+        historical_clubs,
+        "_iter_pinned_rows",
+        lambda: [
+            historical_clubs.ParsedClubRow(
+                tournament_id="WC-1930",
+                year=1930,
+                team_name="Mexico",
+                player_name="Alfredo Sánchez",
+                player_title="Alfredo Sánchez (footballer, born 1904)",
+                birth_date=None,
+                shirt=None,
+                position="FW",
+                club="Club América",
+                club_title=None,
+                source_revid=1353483110,
+            )
+        ],
+    )
+    squads = pd.DataFrame(
+        [
+            {
+                "player_id": "P-83291",
+                "tournament_id": "WC-1930",
+                "team_id": "T-46",
+                "given_name": "Alfredo",
+                "family_name": "Viejo Sánchez",
+                "shirt_number": "0",
+            },
+            {
+                "player_id": "P-other",
+                "tournament_id": "WC-1930",
+                "team_id": "T-46",
+                "given_name": "Alfredo",
+                "family_name": "Sánchez",
+                "shirt_number": "0",
+            },
+        ]
+    )
+    players = pd.DataFrame(
+        [
+            {
+                "player_id": "P-83291",
+                "given_name": "Alfredo",
+                "family_name": "Viejo Sánchez",
+                "birth_date": "1908-05-24",
+                "player_wikipedia_link": "https://en.wikipedia.org/wiki/Alfredo_Viejo_S%C3%A1nchez",
+            },
+            {
+                "player_id": "P-other",
+                "given_name": "Alfredo",
+                "family_name": "Sánchez",
+                "birth_date": "1904-05-28",
+                "player_wikipedia_link": "https://en.wikipedia.org/wiki/Alfredo_S%C3%A1nchez_(footballer,_born_1904)",
+            },
+        ]
+    )
+    teams = pd.DataFrame([{"team_id": "T-46", "team_name": "Mexico"}])
+
+    with pytest.raises(ValueError, match="disagrees with resolver mechanism"):
+        historical_clubs.build_club_lookup(squads, players, teams)
+
+
+def test_tail_null_classification_census_is_pinned():
+    census = Counter(historical_clubs.TAIL_NULL_CLASSIFICATIONS.values())
+
+    assert sum(census.values()) == 21
+    assert census == {
+        "bridged": 5,
+        "source_lacks_club": 16,
+    }
 
 
 def test_lower_confidence_conflict_cannot_override_exact_title(monkeypatch):

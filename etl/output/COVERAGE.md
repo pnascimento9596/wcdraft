@@ -58,7 +58,7 @@ absences in the source, surfaced — not data-quality defects.
 | nations | successor | 90.9% (80/88) |
 | player_tournaments | shirt | 8.6% (1,188/13,843) |
 | player_tournaments | position_listed | 0.0% (0/13,843) |
-| player_tournaments | club_at_tournament | 20.9% (2,891/13,843) |
+| player_tournaments | club_at_tournament | 20.8% (2,886/13,843) |
 | player_tournaments | appearances | 7.3% (1,016/13,843) |
 | players | full_name | 0.0% (0/10,401) |
 | players | birth_date | 0.0% (1/10,401) |

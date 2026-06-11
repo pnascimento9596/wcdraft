@@ -87,7 +87,13 @@ _TEAM_ALIASES = {
     (1998, "fr yugoslavia"): "yugoslavia",
     (2002, "china pr"): "china",
 }
-_RESOLUTION_RANK = {"wiki_title": 0, "name": 1, "birth_date": 2, "shirt": 3}
+_RESOLUTION_RANK = {
+    "club_alias_bridge": 0,
+    "wiki_title": 1,
+    "name": 2,
+    "birth_date": 3,
+    "shirt": 4,
+}
 
 
 @dataclass(frozen=True)
@@ -106,10 +112,129 @@ class ParsedClubRow:
 
 
 @dataclass(frozen=True)
+class ClubAliasBridge:
+    source_player_name: str
+    source_player_title: str
+    source_revid: int
+    expected_club: str
+    corroboration_note: str
+
+
+@dataclass(frozen=True)
 class ClubBackfillResult:
     clubs: dict[tuple[str, str], str]
     methods: dict[str, int]
     review: list[dict]
+
+
+# Pinned alias bridges for card rows whose canonical Fjelstul identity is represented
+# under a different player-title row in the committed Wikipedia squad table. Runtime
+# resolution remains deterministic: this table points from the canonical card natural
+# key (player_id, tournament_id, team_id) to the pinned source row. The live redirect
+# checks named below were review-time corroboration only; the build never performs
+# live redirect resolution.
+CLUB_ALIAS_BRIDGES: dict[tuple[str, str, str], ClubAliasBridge] = {
+    (
+        "P-83291",
+        "WC-1930",
+        "T-46",
+    ): ClubAliasBridge(
+        source_player_name="Alfredo Sánchez",
+        source_player_title="Alfredo Sánchez (footballer, born 1904)",
+        source_revid=1353483110,
+        expected_club="Club América",
+        corroboration_note=(
+            "Review verified Alfredo Viejo Sánchez redirects to the pinned Alfredo "
+            "Sánchez row; same Mexico 1930 squad context. Pinned source DOB differs, "
+            "so this remains an explicit bridge, not generalized DOB resolution."
+        ),
+    ),
+    (
+        "P-44010",
+        "WC-1930",
+        "T-56",
+    ): ClubAliasBridge(
+        source_player_name="Luis de Souza",
+        source_player_title="Luis de Souza",
+        source_revid=1353483110,
+        expected_club="Universitario de Deportes",
+        corroboration_note=(
+            "Review verified Luis Souza Ferreira redirects to the pinned Luis de Souza "
+            "row; same Peru 1930 squad context. Pinned source DOB differs, so this is "
+            "kept as a documented alias bridge."
+        ),
+    ),
+    (
+        "P-70294",
+        "WC-1930",
+        "T-61",
+    ): ClubAliasBridge(
+        source_player_name="Nicolae Kovács",
+        source_player_title="Nicolae Kovács",
+        source_revid=1353483110,
+        expected_club="Banatul Timișoara",
+        corroboration_note=(
+            "Review verified Miklós Kovács redirects to the pinned Nicolae Kovács "
+            "row; same Romania 1930 squad context with a six-day DOB discrepancy "
+            "recorded in the pinned/canonical sources."
+        ),
+    ),
+    (
+        "P-56198",
+        "WC-1938",
+        "T-23",
+    ): ClubAliasBridge(
+        source_player_name="Frans G. Hukom",
+        source_player_title="Frans G. Hukom",
+        source_revid=1353856728,
+        expected_club="Sparta Bandung",
+        corroboration_note=(
+            "Review verified Frans Hu Kon redirects to the pinned Frans G. Hukom row; "
+            "same Dutch East Indies 1938 squad context. Canonical DOB is absent, so "
+            "the bridge documents the title-equivalence evidence."
+        ),
+    ),
+    (
+        "P-92151",
+        "WC-1998",
+        "T-63",
+    ): ClubAliasBridge(
+        source_player_name="Ibrahim Suwayed",
+        source_player_title="Ibrahim Suwayed",
+        source_revid=1358659668,
+        expected_club="Al-Ahli",
+        corroboration_note=(
+            "Review verified Ibrahim Al-Shahrani redirects to the pinned Ibrahim "
+            "Suwayed row; same Saudi Arabia 1998 squad, matching DOB, and matching "
+            "shirt number 7."
+        ),
+    ),
+}
+
+
+TAIL_NULL_CLASSIFICATIONS: dict[tuple[str, str], str] = {
+    ("P-83291", "WC-1930"): "bridged",
+    ("P-44010", "WC-1930"): "bridged",
+    ("P-70294", "WC-1930"): "bridged",
+    ("P-56198", "WC-1938"): "bridged",
+    ("P-92151", "WC-1998"): "bridged",
+    ("P-11648", "WC-1930"): "source_lacks_club",
+    ("P-58460", "WC-1930"): "source_lacks_club",
+    ("P-29687", "WC-1930"): "source_lacks_club",
+    ("P-41536", "WC-1930"): "source_lacks_club",
+    ("P-63886", "WC-1934"): "source_lacks_club",
+    ("P-01918", "WC-1934"): "source_lacks_club",
+    ("P-92190", "WC-1934"): "source_lacks_club",
+    ("P-44740", "WC-1934"): "source_lacks_club",
+    ("P-16278", "WC-1938"): "source_lacks_club",
+    ("P-92120", "WC-1938"): "source_lacks_club",
+    ("P-54466", "WC-1950"): "source_lacks_club",
+    ("P-46561", "WC-1950"): "source_lacks_club",
+    ("P-79649", "WC-1950"): "source_lacks_club",
+    ("P-71162", "WC-1950"): "source_lacks_club",
+    ("P-53883", "WC-1950"): "source_lacks_club",
+    ("P-79551", "WC-2010"): "source_lacks_club",
+}
 
 
 def _sha256(data: bytes) -> str:
@@ -137,6 +262,40 @@ def _title_from_url(url: str | None) -> str | None:
     if not url or "/wiki/" not in url:
         return None
     return _normalize_title(url.rsplit("/wiki/", 1)[1])
+
+
+def _bridge_source_key(
+    tournament_id: str,
+    team_id: str,
+    source_player_name: str,
+    source_player_title: str | None,
+    source_revid: int,
+) -> tuple[str, str, str, str | None, int]:
+    return (
+        tournament_id,
+        team_id,
+        _normalize_key(source_player_name),
+        _normalize_title(source_player_title),
+        source_revid,
+    )
+
+
+def _club_alias_bridges_by_source() -> dict[
+    tuple[str, str, str, str | None, int], tuple[str, ClubAliasBridge]
+]:
+    by_source: dict[tuple[str, str, str, str | None, int], tuple[str, ClubAliasBridge]] = {}
+    for (player_id, tournament_id, team_id), bridge in CLUB_ALIAS_BRIDGES.items():
+        source_key = _bridge_source_key(
+            tournament_id,
+            team_id,
+            bridge.source_player_name,
+            bridge.source_player_title,
+            bridge.source_revid,
+        )
+        if source_key in by_source:
+            raise ValueError(f"duplicate club alias bridge source key: {source_key}")
+        by_source[source_key] = (player_id, bridge)
+    return by_source
 
 
 def _split_top_level(body: str, sep: str = "|") -> list[str]:
@@ -468,6 +627,7 @@ def build_club_lookup(
 ) -> ClubBackfillResult:
     """Return club names keyed by ``(player_id, tournament_id)`` plus review stats."""
     parsed_rows = _iter_pinned_rows()
+    bridge_by_source = _club_alias_bridges_by_source()
 
     team_id_by_name = {
         _normalize_key(t.team_name): t.team_id for t in teams.itertuples(index=False)
@@ -537,7 +697,7 @@ def build_club_lookup(
                 }
             )
             continue
-        player_id, method = _resolve_player(
+        mechanism_player_id, mechanism_method = _resolve_player(
             row,
             team_id,
             player_title_to_id,
@@ -547,6 +707,35 @@ def build_club_lookup(
             by_shirt,
             family_tokens_by_player,
         )
+
+        bridge_entry = bridge_by_source.get(
+            _bridge_source_key(
+                row.tournament_id,
+                team_id,
+                row.player_name,
+                row.player_title,
+                row.source_revid,
+            )
+        )
+        if bridge_entry is not None:
+            bridged_player_id, bridge = bridge_entry
+            card_key = (bridged_player_id, row.tournament_id, team_id)
+            if card_key not in squad_keys:
+                raise ValueError(f"club alias bridge target is not a squad card: {card_key}")
+            if row.club != bridge.expected_club:
+                raise ValueError(
+                    f"club alias bridge {card_key} expected club {bridge.expected_club!r} "
+                    f"but pinned source row has {row.club!r}"
+                )
+            if mechanism_player_id is not None and mechanism_player_id != bridged_player_id:
+                raise ValueError(
+                    f"club alias bridge {card_key} -> {bridged_player_id} disagrees with "
+                    f"resolver mechanism result {mechanism_player_id!r}"
+                )
+            player_id, method = bridged_player_id, "club_alias_bridge"
+        else:
+            player_id, method = mechanism_player_id, mechanism_method
+
         if player_id is None or method is None:
             review.append(
                 {
