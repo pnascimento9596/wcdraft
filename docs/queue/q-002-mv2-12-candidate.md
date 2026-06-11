@@ -12,6 +12,17 @@
   "Maldini 71" ruled Cesare-1962 (surname display-ambiguity UX follow-up, not a rating
   defect). No authored spec yet — implementation remains DISPATCH-ONLY pending a
   Lead-Architect-authored plan.
+- **Audit-2 (face-validity sweep) executed 2026-06-10; see
+  [`docs/reports/mv212-face-validity-2026-06-10.md`](../reports/mv212-face-validity-2026-06-10.md).**
+  Adds: (1) **P0 NEW DEFECT — 17 identity-seam link misses among minted 2026 cards**
+  (Neymar 88 vs hist 93+legend, Rodri 88; mononym/nickname name-forms + 474
+  `given_name="not applicable"` historical rows) → recommend a small Red link-seam
+  fix unit BEFORE/alongside 12b; (2) **NEW 12b design input — the career-stature
+  index is era/eligibility biased within the archive** (Pelé 0.807 rank-45 silver vs
+  Kocsis 0.992 #1; pre-1995 Ballon d'Or eligibility + sparse-fact inflation);
+  (3) consolidated candidate-misratings table (21 classes) + a named 12b
+  acceptance-probe set incl. Valverde-2022 counterfactual (injected index 0.42 → 84,
+  matching the owner's instinct — D2 fixes him organically).
 
 ## Verified deferred threads (sources: merit-v2 plan + lane memories)
 
