@@ -17,17 +17,84 @@
       "source_id": "active_captaincy"
     },
     {
-      "bytes": 4544,
+      "bytes": 22072,
+      "census": {
+        "exclusion_count": 2,
+        "finals_registry_count": 9,
+        "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+        "rule_id": "top_tier_continental_club_title_final_participation_v1",
+        "scope_count": 26,
+        "scope_player_ids": [
+          "P-05174",
+          "P-21531",
+          "P-62341",
+          "P-65659",
+          "P-80826",
+          "P-92812",
+          "P-W26-0049",
+          "P-W26-0050",
+          "P-W26-0115",
+          "P-W26-0267",
+          "P-W26-0291",
+          "P-W26-0292",
+          "P-W26-0356",
+          "P-W26-0470",
+          "P-W26-0477",
+          "P-W26-0486",
+          "P-W26-0500",
+          "P-W26-0512",
+          "P-W26-0543",
+          "P-W26-0574",
+          "P-W26-0587",
+          "P-W26-0651",
+          "P-W26-0663",
+          "P-W26-0716",
+          "P-W26-0822",
+          "P-W26-0876"
+        ],
+        "top_tier_competitions": [
+          {
+            "competition": "AFC Champions League / AFC Champions League Elite",
+            "confederation": "AFC"
+          },
+          {
+            "competition": "CAF Champions League",
+            "confederation": "CAF"
+          },
+          {
+            "competition": "CONCACAF Champions Cup / CONCACAF Champions League",
+            "confederation": "CONCACAF"
+          },
+          {
+            "competition": "Copa Libertadores",
+            "confederation": "CONMEBOL"
+          },
+          {
+            "competition": "OFC Champions League",
+            "confederation": "OFC"
+          },
+          {
+            "competition": "UEFA Champions League / European Cup",
+            "confederation": "UEFA"
+          }
+        ]
+      },
       "cited_urls": [
-        "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
+        "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final",
+        "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final",
+        "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
+        "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/",
+        "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "https://www.uefa.com/uefachampionsleague/match/2029490--paris-vs-bayern-munchen/lineups/",
+        "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
         "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
         "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/",
         "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/"
       ],
       "family": "club_season_honors",
       "file": "active/club-season-honors.json",
-      "row_count": 6,
-      "sha256": "591aaa4ee80fc66b6ec8362d3cee200fdeb862cc6539aab928e54af71fb68850",
+      "row_count": 14,
+      "sha256": "f8efe34346e276523ef9677875d525063e1a5c40f28b9607081ac217e0cf9562",
       "source_id": "active_club_season_honors"
     },
     {

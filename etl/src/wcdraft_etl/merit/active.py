@@ -696,17 +696,26 @@ def manifest_from_committed() -> dict:
         data = _read_bytes(source.raw_file)
         doc = json.loads(data)
         cited = sorted({r["citation"]["url"] for r in doc["rows"]})
-        files.append(
-            {
-                "file": source.raw_file,
-                "source_id": source.source_id,
-                "family": source.family,
-                "bytes": len(data),
-                "sha256": _sha256(data),
-                "row_count": len(doc["rows"]),
-                "cited_urls": cited,
+        entry = {
+            "file": source.raw_file,
+            "source_id": source.source_id,
+            "family": source.family,
+            "bytes": len(data),
+            "sha256": _sha256(data),
+            "row_count": len(doc["rows"]),
+            "cited_urls": cited,
+        }
+        if census := doc.get("census"):
+            entry["census"] = {
+                "rule_id": census["rule_id"],
+                "rule": census["rule"],
+                "scope_count": len(census["scope"]),
+                "scope_player_ids": sorted(s["player_id"] for s in census["scope"]),
+                "top_tier_competitions": census["top_tier_competitions"],
+                "finals_registry_count": len(census["finals_registry"]),
+                "exclusion_count": len(census.get("exclusions", [])),
             }
-        )
+        files.append(entry)
     return {
         "version": ACTIVE_SOURCE_SET_VERSION,
         "cutoff_date": ACTIVE_CUTOFF_DATE,

@@ -99,6 +99,11 @@ def test_archived_active_targets_are_staged_for_stature_merge(abuilt):
     staged = {e["player_id"] for e in abuilt["entries"]}
     assert {"P-62341", "P-92812"} <= staged & archived
     entries = {e["player_id"]: e for e in abuilt["entries"]}
+    assert entries["P-21531"]["identity_space"] == "historical"
+    assert entries["P-21531"]["families"] == [
+        "club_season_honors",
+        "position_balanced_selection",
+    ]
     assert entries["P-62341"]["families"] == ["club_season_honors"]
     assert entries["P-92812"]["families"] == ["club_season_honors"]
 
@@ -189,6 +194,63 @@ def test_every_active_fact_is_linked_and_note_facts_are_cited(abuilt):
             assert f["source_id"] in parser_ids, f
 
 
+def test_club_season_honors_census_matches_scope_and_registry(abuilt):
+    """The V1 club-season honors source is a real census, not a probe-adjacent
+    sample: rows must equal scope × pinned finals registry under the written
+    top-tier continental-title/final-participation rule."""
+    note = json.loads(
+        (MERIT_RAW / "active" / "club-season-honors.json").read_text(encoding="utf-8")
+    )
+    census = note["census"]
+    assert "top-tier continental club titles" in census["rule"]
+    assert "documented final participation" in census["rule"]
+    assert "MV2-12a active 23 plus the V1 additions" in census["rule"]
+
+    scope_ids = {p["player_id"] for p in census["scope"]}
+    assert len(scope_ids) == 26
+    assert scope_ids == {e["player_id"] for e in abuilt["entries"]}
+    assert {
+        p["player_id"]
+        for p in census["scope"]
+        if p["scope_reason"] == "v1_club_season_honors_addition"
+    } == {"P-05174", "P-62341", "P-92812"}
+    assert {c["confederation"] for c in census["top_tier_competitions"]} == {
+        "AFC",
+        "CAF",
+        "CONCACAF",
+        "CONMEBOL",
+        "OFC",
+        "UEFA",
+    }
+
+    expected = set()
+    for final in census["finals_registry"]:
+        assert final["citation_url"].startswith("http")
+        for player in final["qualifying_scope_players"]:
+            assert player["player_id"] in scope_ids
+            expected.add((player["player_id"], final["year"], final["competition"]))
+    actual = {(r["player_id"], r["year"], r["competition"]) for r in note["rows"]}
+    assert actual == expected
+    assert expected >= {
+        ("P-W26-0050", 2013, "UEFA Champions League"),
+        ("P-W26-0050", 2020, "UEFA Champions League"),
+        ("P-W26-0050", 2022, "UEFA Champions League"),
+        ("P-21531", 2019, "UEFA Champions League"),
+        ("P-W26-0574", 2019, "UEFA Champions League"),
+        ("P-W26-0512", 2020, "Copa Libertadores"),
+        ("P-W26-0512", 2021, "Copa Libertadores"),
+        ("P-W26-0115", 2024, "Copa Libertadores"),
+    }
+    assert len(note["rows"]) == 14
+    assert {r["player_id"] for r in note["rows"]} <= scope_ids
+    assert {r["player_id"] for r in note["rows"] if r["name"] == "Luiz Henrique"} == {
+        "P-W26-0115"
+    }
+    exclusions = {e["player_id"]: e["reason"] for e in census["exclusions"]}
+    assert "final participation" in exclusions["P-W26-0049"]
+    assert "losing-final" in exclusions["P-W26-0716"]
+
+
 def test_uncited_or_off_scope_note_row_fails_the_build(monkeypatch):
     base = {
         "source_id": ACTIVE_SOURCES[0].source_id,
@@ -227,8 +289,10 @@ def test_note_cutoff_date_must_match_the_registry(monkeypatch):
 
 def test_double_credit_guard_is_now_a_stature_merge_invariant(monkeypatch):
     """V1 activation flip: an archived active target no longer fails active.build.
-    The post-flip no-double-credit guard is the stature merge invariant tested in
-    test_career_stature.py; this pin proves active.py no longer owns that gate."""
+    Design consequence: post-activation, active facts may legitimately reach an
+    archived identity through the person resolver. The post-flip no-double-credit
+    guard is the stature merge invariant tested in test_career_stature.py; this
+    pin proves active.py no longer owns that gate."""
     real_collect = active.collect_notes
 
     def with_archived_target():
@@ -314,11 +378,14 @@ def test_named_anchor_links(abuilt):
     assert any("Ballon d'Or — 2025 runner-up" in d for d in details)
     assert any(f["source_id"] == "esm_team_of_the_season" for f in yamal)
     # Alisson — facts key to his HISTORICAL identity (P-21531), not the minted
-    # duplicate; both GK awards present.
+    # duplicate; both GK awards and the 2019 UCL final-title fact are present.
     alisson = by_pid["P-21531"]
     assert all(f["identity_space"] == "historical" for f in alisson)
-    assert {f["source_id"] for f in alisson} == {"active_gk_award"}
-    assert len(alisson) == 2
+    assert {f["source_id"] for f in alisson} == {
+        "active_club_season_honors",
+        "active_gk_award",
+    }
+    assert len(alisson) == 3
     # Ochoa — canonical-name recovery of the withheld century-caps record.
     ochoa = by_pid["P-80826"]
     assert ochoa[0]["detail"].startswith("caps=152")
@@ -331,6 +398,18 @@ def test_named_anchor_links(abuilt):
     assert {f["source_id"] for f in valverde} == {"active_club_season_honors"}
     assert {f["family"] for f in valverde} == {"club_season_honors"}
     assert len(valverde) == 2
+    # Reviewer-named omissions are now census facts or explicitly in scope.
+    alaba = by_pid["P-W26-0050"]
+    assert sum(f["source_id"] == "active_club_season_honors" for f in alaba) == 3
+    robertson = by_pid["P-W26-0574"]
+    assert any(f["source_id"] == "active_club_season_honors" for f in robertson)
+    gomez = by_pid["P-W26-0512"]
+    assert sum(f["source_id"] == "active_club_season_honors" for f in gomez) == 2
+    luiz = by_pid["P-W26-0115"]
+    assert any(
+        f["source_id"] == "active_club_season_honors" and f["year"] == 2024
+        for f in luiz
+    )
     valverde_drop = [n for n in abuilt["staging_doc"]["curation_notes"] if "Valverde" in n]
     assert valverde_drop, "the Valverde drop must stay documented"
 

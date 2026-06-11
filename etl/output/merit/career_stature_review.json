@@ -8562,67 +8562,6 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 2,
-      "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {
-        "position_balanced_selection": 1.0
-      },
-      "career_peak_year": 2022,
-      "career_stature_index": 0.308016,
-      "career_stature_index_raw": 0.308016,
-      "career_stature_score": 0.154008,
-      "coverage": 0.18,
-      "era_bucket": "1991_plus",
-      "fact_count": 2,
-      "family_scores": {
-        "captaincy": null,
-        "club_honors": null,
-        "club_season_honors": null,
-        "global_annual_recognition": null,
-        "international_record": null,
-        "position_balanced_selection": 0.8556,
-        "regional_annual_recognition": null,
-        "retrospective_selection": null,
-        "wc_legacy": null
-      },
-      "family_weight_adjustments": [],
-      "family_weights": {
-        "captaincy": 0.03,
-        "club_honors": 0.0,
-        "club_season_honors": 0.2,
-        "global_annual_recognition": 0.2,
-        "international_record": 0.09,
-        "position_balanced_selection": 0.18,
-        "regional_annual_recognition": 0.07,
-        "retrospective_selection": 0.06,
-        "wc_legacy": 0.17
-      },
-      "index_adjustments": [],
-      "legend": false,
-      "legend_reason_codes": [],
-      "modal_position": "GK",
-      "person_id": "P-21531",
-      "person_resolution_methods": [
-        "u0_link"
-      ],
-      "player_id": "P-21531",
-      "resolved_player_ids": [
-        "P-21531"
-      ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
-      ],
-      "source_refs": [
-        "active_gk_award:World's Best Goalkeeper annual award — 2019 winner",
-        "active_gk_award:Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)"
-      ],
-      "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
-      "stature_version": "career-stature-3.0.0"
-    },
-    {
       "active_fact_count": 0,
       "active_source_set_version": null,
       "active_stage_factors": {},
@@ -43340,129 +43279,6 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 6,
-      "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {
-        "position_balanced_selection": 1.0
-      },
-      "career_peak_year": 2026,
-      "career_stature_index": 0.391024,
-      "career_stature_index_raw": 0.391024,
-      "career_stature_score": 0.195512,
-      "coverage": 0.3,
-      "era_bucket": "1991_plus",
-      "fact_count": 6,
-      "family_scores": {
-        "captaincy": 0.4,
-        "club_honors": null,
-        "club_season_honors": null,
-        "global_annual_recognition": null,
-        "international_record": 0.314375,
-        "position_balanced_selection": 0.900175,
-        "regional_annual_recognition": null,
-        "retrospective_selection": null,
-        "wc_legacy": null
-      },
-      "family_weight_adjustments": [],
-      "family_weights": {
-        "captaincy": 0.03,
-        "club_honors": 0.0,
-        "club_season_honors": 0.2,
-        "global_annual_recognition": 0.2,
-        "international_record": 0.09,
-        "position_balanced_selection": 0.18,
-        "regional_annual_recognition": 0.07,
-        "retrospective_selection": 0.06,
-        "wc_legacy": 0.17
-      },
-      "index_adjustments": [],
-      "legend": false,
-      "legend_reason_codes": [],
-      "modal_position": "DF",
-      "person_id": "P-W26-0050",
-      "person_resolution_methods": [
-        "minted"
-      ],
-      "player_id": "P-W26-0050",
-      "resolved_player_ids": [
-        "P-W26-0050"
-      ],
-      "review_flags": [
-        "below_material_index_gate"
-      ],
-      "source_refs": [
-        "active_captaincy:national-team captain — captains Austria (first captained the side in 2017)",
-        "esm_team_of_the_season:esm_tots DF 2013",
-        "international_century_caps:caps=111 (2009-2025)",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2013",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2014",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2015"
-      ],
-      "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
-      "stature_version": "career-stature-3.0.0"
-    },
-    {
-      "active_fact_count": 1,
-      "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {
-        "regional_annual_recognition": 0.4375
-      },
-      "career_peak_year": 2026,
-      "career_stature_index": 0.14,
-      "career_stature_index_raw": 0.14,
-      "career_stature_score": 0.07,
-      "coverage": 0.16,
-      "era_bucket": "1991_plus",
-      "fact_count": 1,
-      "family_scores": {
-        "captaincy": null,
-        "club_honors": null,
-        "club_season_honors": null,
-        "global_annual_recognition": null,
-        "international_record": null,
-        "position_balanced_selection": null,
-        "regional_annual_recognition": 1.0,
-        "retrospective_selection": null,
-        "wc_legacy": null
-      },
-      "family_weight_adjustments": [],
-      "family_weights": {
-        "captaincy": 0.03,
-        "club_honors": 0.0,
-        "club_season_honors": 0.2,
-        "global_annual_recognition": 0.2,
-        "international_record": 0.09,
-        "position_balanced_selection": 0.18,
-        "regional_annual_recognition": 0.07,
-        "retrospective_selection": 0.06,
-        "wc_legacy": 0.17
-      },
-      "index_adjustments": [],
-      "legend": false,
-      "legend_reason_codes": [],
-      "modal_position": null,
-      "person_id": "P-W26-0115",
-      "person_resolution_methods": [
-        "minted"
-      ],
-      "player_id": "P-W26-0115",
-      "resolved_player_ids": [
-        "P-W26-0115"
-      ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
-      ],
-      "source_refs": [
-        "south_american_poy:south_american_poy winner 2024"
-      ],
-      "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
-      "stature_version": "career-stature-3.0.0"
-    },
-    {
       "active_fact_count": 1,
       "active_source_set_version": "active-career-source-set-2.0.0",
       "active_stage_factors": {
@@ -43873,20 +43689,22 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 1,
+      "active_fact_count": 3,
       "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {},
+      "active_stage_factors": {
+        "club_season_honors": 0.9375
+      },
       "career_peak_year": 2026,
-      "career_stature_index": 0.024,
-      "career_stature_index_raw": 0.024,
-      "career_stature_score": 0.012,
-      "coverage": 0.03,
+      "career_stature_index": 0.3781,
+      "career_stature_index_raw": 0.3781,
+      "career_stature_score": 0.18905,
+      "coverage": 0.245333,
       "era_bucket": "1991_plus",
-      "fact_count": 1,
+      "fact_count": 3,
       "family_scores": {
         "captaincy": 0.4,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 0.896,
         "global_annual_recognition": null,
         "international_record": null,
         "position_balanced_selection": null,
@@ -43920,11 +43738,12 @@
       ],
       "review_flags": [
         "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
+        "below_material_index_gate"
       ],
       "source_refs": [
-        "active_captaincy:national-team captain — captains Paraguay"
+        "active_captaincy:national-team captain — captains Paraguay",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2020 winner; started/played the final against Santos",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2021 winner; started/played the final against Flamengo"
       ],
       "source_set_version": "merit-source-set-2.0.0",
       "stature_tier": null,
@@ -43983,67 +43802,6 @@
       ],
       "source_refs": [
         "international_century_caps:caps=108 (2016-2025)"
-      ],
-      "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
-      "stature_version": "career-stature-3.0.0"
-    },
-    {
-      "active_fact_count": 3,
-      "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {
-        "position_balanced_selection": 0.875
-      },
-      "career_peak_year": 2026,
-      "career_stature_index": 0.29635,
-      "career_stature_index_raw": 0.29635,
-      "career_stature_score": 0.148175,
-      "coverage": 0.24,
-      "era_bucket": "1991_plus",
-      "fact_count": 3,
-      "family_scores": {
-        "captaincy": 0.4,
-        "club_honors": null,
-        "club_season_honors": null,
-        "global_annual_recognition": null,
-        "international_record": null,
-        "position_balanced_selection": 0.765714,
-        "regional_annual_recognition": null,
-        "retrospective_selection": null,
-        "wc_legacy": null
-      },
-      "family_weight_adjustments": [],
-      "family_weights": {
-        "captaincy": 0.03,
-        "club_honors": 0.0,
-        "club_season_honors": 0.2,
-        "global_annual_recognition": 0.2,
-        "international_record": 0.09,
-        "position_balanced_selection": 0.18,
-        "regional_annual_recognition": 0.07,
-        "retrospective_selection": 0.06,
-        "wc_legacy": 0.17
-      },
-      "index_adjustments": [],
-      "legend": false,
-      "legend_reason_codes": [],
-      "modal_position": "DF",
-      "person_id": "P-W26-0574",
-      "person_resolution_methods": [
-        "minted"
-      ],
-      "player_id": "P-W26-0574",
-      "resolved_player_ids": [
-        "P-W26-0574"
-      ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate"
-      ],
-      "source_refs": [
-        "active_captaincy:national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
-        "esm_team_of_the_season:esm_tots DF 2019",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2019"
       ],
       "source_set_version": "merit-source-set-2.0.0",
       "stature_tier": null,
@@ -44344,6 +44102,6 @@
       "stature_version": "career-stature-3.0.0"
     }
   ],
-  "review_count": 661,
+  "review_count": 657,
   "version": "career-stature-3.0.0"
 }

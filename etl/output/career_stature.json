@@ -1,6 +1,6 @@
 {
   "active_channel": {
-    "active_fact_count": 53,
+    "active_fact_count": 61,
     "active_person_count": 26,
     "active_person_ids": [
       "P-05174",
@@ -10439,22 +10439,23 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 2,
+      "active_fact_count": 3,
       "active_source_set_version": "active-career-source-set-2.0.0",
       "active_stage_factors": {
+        "club_season_honors": 1.0,
         "position_balanced_selection": 1.0
       },
       "career_peak_year": 2022,
-      "career_stature_index": 0.308016,
-      "career_stature_index_raw": 0.308016,
-      "career_stature_score": 0.154008,
-      "coverage": 0.18,
+      "career_stature_index": 0.50829,
+      "career_stature_index_raw": 0.50829,
+      "career_stature_score": 0.255527,
+      "coverage": 0.38,
       "era_bucket": "1991_plus",
-      "fact_count": 2,
+      "fact_count": 3,
       "family_scores": {
         "captaincy": null,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 0.6,
         "global_annual_recognition": null,
         "international_record": null,
         "position_balanced_selection": 0.8556,
@@ -10486,17 +10487,14 @@
       "resolved_player_ids": [
         "P-21531"
       ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
-      ],
+      "review_flags": [],
       "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
         "active_gk_award:World's Best Goalkeeper annual award — 2019 winner",
         "active_gk_award:Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
+      "stature_tier": "bronze",
       "stature_version": "career-stature-3.0.0"
     },
     {
@@ -22104,7 +22102,7 @@
         "research_wc_all_star:WC All-Star Team WC-1990"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": "bronze",
+      "stature_tier": "silver",
       "stature_version": "career-stature-3.0.0"
     },
     {
@@ -27210,7 +27208,7 @@
         "research_wc_all_star:WC All-Star Team WC-1962"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": "silver",
+      "stature_tier": "gold",
       "stature_version": "career-stature-3.0.0"
     },
     {
@@ -54642,22 +54640,23 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 6,
+      "active_fact_count": 9,
       "active_source_set_version": "active-career-source-set-2.0.0",
       "active_stage_factors": {
+        "club_season_honors": 1.0,
         "position_balanced_selection": 1.0
       },
       "career_peak_year": 2026,
-      "career_stature_index": 0.391024,
-      "career_stature_index_raw": 0.391024,
-      "career_stature_score": 0.195512,
-      "coverage": 0.3,
+      "career_stature_index": 0.644168,
+      "career_stature_index_raw": 0.644168,
+      "career_stature_score": 0.346112,
+      "coverage": 0.5,
       "era_bucket": "1991_plus",
-      "fact_count": 6,
+      "fact_count": 9,
       "family_scores": {
         "captaincy": 0.4,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 0.936,
         "global_annual_recognition": null,
         "international_record": 0.314375,
         "position_balanced_selection": 0.900175,
@@ -54678,8 +54677,10 @@
         "wc_legacy": 0.17
       },
       "index_adjustments": [],
-      "legend": false,
-      "legend_reason_codes": [],
+      "legend": true,
+      "legend_reason_codes": [
+        "position_balanced_world_xi_3plus"
+      ],
       "modal_position": "DF",
       "person_id": "P-W26-0050",
       "person_resolution_methods": [
@@ -54689,11 +54690,12 @@
       "resolved_player_ids": [
         "P-W26-0050"
       ],
-      "review_flags": [
-        "below_material_index_gate"
-      ],
+      "review_flags": [],
       "source_refs": [
         "active_captaincy:national-team captain — captains Austria (first captained the side in 2017)",
+        "active_club_season_honors:UEFA Champions League title with final participation — Bayern Munich 2012-13 winner; started/played the 2013 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
         "esm_team_of_the_season:esm_tots DF 2013",
         "international_century_caps:caps=111 (2009-2025)",
         "uefa_team_of_the_year:uefa_team_of_the_year 2013",
@@ -54701,26 +54703,27 @@
         "uefa_team_of_the_year:uefa_team_of_the_year 2015"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
+      "stature_tier": "silver",
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 1,
+      "active_fact_count": 2,
       "active_source_set_version": "active-career-source-set-2.0.0",
       "active_stage_factors": {
+        "club_season_honors": 0.4375,
         "regional_annual_recognition": 0.4375
       },
       "career_peak_year": 2026,
-      "career_stature_index": 0.14,
-      "career_stature_index_raw": 0.14,
-      "career_stature_score": 0.07,
-      "coverage": 0.16,
+      "career_stature_index": 0.509,
+      "career_stature_index_raw": 0.509,
+      "career_stature_score": 0.256,
+      "coverage": 0.617143,
       "era_bucket": "1991_plus",
-      "fact_count": 1,
+      "fact_count": 2,
       "family_scores": {
         "captaincy": null,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 1.0,
         "global_annual_recognition": null,
         "international_record": null,
         "position_balanced_selection": null,
@@ -54743,7 +54746,7 @@
       "index_adjustments": [],
       "legend": false,
       "legend_reason_codes": [],
-      "modal_position": null,
+      "modal_position": "FW",
       "person_id": "P-W26-0115",
       "person_resolution_methods": [
         "minted"
@@ -54752,16 +54755,13 @@
       "resolved_player_ids": [
         "P-W26-0115"
       ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
-      ],
+      "review_flags": [],
       "source_refs": [
+        "active_club_season_honors:Copa Libertadores title with final participation — Botafogo 2024 winner; scored in the final against Atlético Mineiro",
         "south_american_poy:south_american_poy winner 2024"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
+      "stature_tier": "bronze",
       "stature_version": "career-stature-3.0.0"
     },
     {
@@ -55247,20 +55247,22 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 1,
+      "active_fact_count": 3,
       "active_source_set_version": "active-career-source-set-2.0.0",
-      "active_stage_factors": {},
+      "active_stage_factors": {
+        "club_season_honors": 0.9375
+      },
       "career_peak_year": 2026,
-      "career_stature_index": 0.024,
-      "career_stature_index_raw": 0.024,
-      "career_stature_score": 0.012,
-      "coverage": 0.03,
+      "career_stature_index": 0.3781,
+      "career_stature_index_raw": 0.3781,
+      "career_stature_score": 0.18905,
+      "coverage": 0.245333,
       "era_bucket": "1991_plus",
-      "fact_count": 1,
+      "fact_count": 3,
       "family_scores": {
         "captaincy": 0.4,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 0.896,
         "global_annual_recognition": null,
         "international_record": null,
         "position_balanced_selection": null,
@@ -55294,11 +55296,12 @@
       ],
       "review_flags": [
         "below_material_coverage_gate",
-        "below_material_index_gate",
-        "single_family_only"
+        "below_material_index_gate"
       ],
       "source_refs": [
-        "active_captaincy:national-team captain — captains Paraguay"
+        "active_captaincy:national-team captain — captains Paraguay",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2020 winner; started/played the final against Santos",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2021 winner; started/played the final against Flamengo"
       ],
       "source_set_version": "merit-source-set-2.0.0",
       "stature_tier": null,
@@ -55363,22 +55366,23 @@
       "stature_version": "career-stature-3.0.0"
     },
     {
-      "active_fact_count": 3,
+      "active_fact_count": 4,
       "active_source_set_version": "active-career-source-set-2.0.0",
       "active_stage_factors": {
+        "club_season_honors": 0.875,
         "position_balanced_selection": 0.875
       },
       "career_peak_year": 2026,
-      "career_stature_index": 0.29635,
-      "career_stature_index_raw": 0.29635,
-      "career_stature_score": 0.148175,
-      "coverage": 0.24,
+      "career_stature_index": 0.522494,
+      "career_stature_index_raw": 0.522494,
+      "career_stature_score": 0.264996,
+      "coverage": 0.468571,
       "era_bucket": "1991_plus",
-      "fact_count": 3,
+      "fact_count": 4,
       "family_scores": {
         "captaincy": 0.4,
         "club_honors": null,
-        "club_season_honors": null,
+        "club_season_honors": 0.685714,
         "global_annual_recognition": null,
         "international_record": null,
         "position_balanced_selection": 0.765714,
@@ -55410,17 +55414,15 @@
       "resolved_player_ids": [
         "P-W26-0574"
       ],
-      "review_flags": [
-        "below_material_coverage_gate",
-        "below_material_index_gate"
-      ],
+      "review_flags": [],
       "source_refs": [
         "active_captaincy:national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
+        "active_club_season_honors:UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
         "esm_team_of_the_season:esm_tots DF 2019",
         "uefa_team_of_the_year:uefa_team_of_the_year 2019"
       ],
       "source_set_version": "merit-source-set-2.0.0",
-      "stature_tier": null,
+      "stature_tier": "bronze",
       "stature_version": "career-stature-3.0.0"
     },
     {
@@ -55788,8 +55790,8 @@
     "sparse_fact_count_threshold": 6,
     "sparse_family_count_threshold": 4
   },
-  "legend_count": 100,
-  "material_count": 193,
+  "legend_count": 101,
+  "material_count": 197,
   "material_gate": {
     "min_coverage": 0.25,
     "min_index": 0.4
@@ -55807,8 +55809,8 @@
   },
   "source_set_version": "merit-source-set-2.0.0",
   "tier_thresholds": {
-    "gold_min_index": 0.777583,
-    "silver_min_index": 0.623335
+    "gold_min_index": 0.772877,
+    "silver_min_index": 0.61763
   },
   "version": "career-stature-3.0.0"
 }

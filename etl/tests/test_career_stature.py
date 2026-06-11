@@ -11,6 +11,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from wcdraft_etl.merit import (
     ACTIVE_SOURCE_SET_VERSION,
     FAMILY_KEYS,
@@ -70,9 +72,17 @@ def test_club_honors_legacy_zero_and_club_season_honors_active():
             club_rows.append(r)
             assert r["family_weights"]["club_season_honors"] > 0.0
             assert r["active_source_set_version"] == ACTIVE_SOURCE_SET_VERSION
-    assert {"P-05174", "P-62341", "P-92812", "P-W26-0477"} <= {
-        r["player_id"] for r in club_rows
-    }
+    assert {
+        "P-05174",
+        "P-21531",
+        "P-62341",
+        "P-92812",
+        "P-W26-0050",
+        "P-W26-0115",
+        "P-W26-0477",
+        "P-W26-0512",
+        "P-W26-0574",
+    } <= {r["player_id"] for r in club_rows}
 
 
 def test_family_weights_are_era_based_with_documented_eligibility_adjustments():
@@ -297,6 +307,83 @@ def test_person_identity_resolver_and_merge_prevent_double_credit():
     assert row["active_fact_count"] == 1
     assert row["resolved_player_ids"] == ["P-62341", "P-W26-RODRI"]
     assert "identity_bridge" in row["person_resolution_methods"]
+
+
+def test_unresolved_active_identity_bridge_fails_stature_merge():
+    """Mutation proof for the post-activation guard: if an active fact reaches a
+    historical/archive identity without an identity merge, the staging artifact
+    still carries ``identity_bridge_review`` and stature refuses to score it."""
+    resolver = stature._PersonIdentityResolver(
+        players=[{"player_id": "P-62341", "birth_date": "1996-06-22"}],
+        players_2026=[
+            {
+                "player_id": "P-W26-RODRI",
+                "birth_date": "1996-06-22",
+                "full_name": "Unmerged Rodri Alias",
+                "common_name": "Rodri Alias",
+                "family_name": "Alias",
+            }
+        ],
+        cards_2026=[
+            {
+                "card_id": "P-W26-RODRI:WC-2026",
+                "player_id": "P-W26-RODRI",
+                "link_status": "minted",
+                "nation_id": "T-73",
+                "birth_date": "1996-06-22",
+            }
+        ],
+    )
+    assert resolver.resolve("P-W26-RODRI") == "P-W26-RODRI"
+
+    ctx = stature._ScoringContext(
+        resolver=resolver,
+        birth_year={"P-62341": 1996, "P-W26-RODRI": 1996},
+        confederations={"P-62341": {"UEFA"}, "P-W26-RODRI": {"UEFA"}},
+    )
+    source_facts = {
+        "version": SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-62341",
+                "source_id": "european_poy",
+                "family": "global_annual_recognition",
+                "year": 2024,
+                "position": "MF",
+                "detail": "european_poy winner 2024",
+                "era": "1991_plus",
+            }
+        ],
+    }
+    active_facts = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-W26-RODRI",
+                "source_id": "active_club_season_honors",
+                "family": "club_season_honors",
+                "year": 2024,
+                "position": "MF",
+                "detail": "UEFA Champions League title with final participation",
+            }
+        ],
+    }
+    active_staging = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "entries": [{"player_id": "P-W26-RODRI"}],
+        "identity_bridge_review": [
+            {
+                "minted_player_id": "P-W26-RODRI",
+                "historical_player_id": "P-62341",
+                "historical_has_archive_row": True,
+                "method": "manual-mutation",
+            }
+        ],
+    }
+    with pytest.raises(ValueError, match="unresolved identity bridges"):
+        stature._merge_active_channel(
+            source_facts, active_facts, active_staging, {"P-62341": [2022]}, ctx
+        )
 
 
 def test_index_bias_control_probe_census():

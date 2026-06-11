@@ -4,6 +4,8 @@
     "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance.",
     "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no captaincy fact in this pass (missing captaincy stays missing).",
     "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision.",
+    "Census rule: top-tier continental club titles, Champions League and Libertadores class across all confederations with a top-tier equivalent, with documented final participation, applied to the MV2-12a active 23 plus V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+    "Luiz Henrique is in active scope as P-W26-0115 and his 2024 Copa Libertadores final goal/title fact is included.",
     "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
   ],
   "cutoff_date": "2026-06-01",
@@ -26,8 +28,9 @@
       ]
     },
     {
-      "fact_count": 2,
+      "fact_count": 3,
       "families": [
+        "club_season_honors",
         "position_balanced_selection"
       ],
       "identity_space": "historical",
@@ -38,6 +41,7 @@
         "GK"
       ],
       "source_refs": [
+        "active_club_season_honors:UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
         "active_gk_award:World's Best Goalkeeper annual award — 2019 winner",
         "active_gk_award:Yashin Trophy (best goalkeeper) — 2019 winner (inaugural)"
       ]
@@ -123,9 +127,10 @@
       ]
     },
     {
-      "fact_count": 6,
+      "fact_count": 9,
       "families": [
         "captaincy",
+        "club_season_honors",
         "international_record",
         "position_balanced_selection"
       ],
@@ -138,6 +143,9 @@
       ],
       "source_refs": [
         "active_captaincy:national-team captain — captains Austria (first captained the side in 2017)",
+        "active_club_season_honors:UEFA Champions League title with final participation — Bayern Munich 2012-13 winner; started/played the 2013 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
+        "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
         "esm_team_of_the_season:esm_tots DF 2013",
         "international_century_caps:caps=111 (2009-2025)",
         "uefa_team_of_the_year:uefa_team_of_the_year 2013",
@@ -146,16 +154,20 @@
       ]
     },
     {
-      "fact_count": 1,
+      "fact_count": 2,
       "families": [
+        "club_season_honors",
         "regional_annual_recognition"
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
       "player_id": "P-W26-0115",
       "player_name": "Luiz Henrique",
-      "positions": [],
+      "positions": [
+        "FW"
+      ],
       "source_refs": [
+        "active_club_season_honors:Copa Libertadores title with final participation — Botafogo 2024 winner; scored in the final against Atlético Mineiro",
         "south_american_poy:south_american_poy winner 2024"
       ]
     },
@@ -292,9 +304,10 @@
       ]
     },
     {
-      "fact_count": 1,
+      "fact_count": 3,
       "families": [
-        "captaincy"
+        "captaincy",
+        "club_season_honors"
       ],
       "identity_space": "minted_2026",
       "in_2026_squad": true,
@@ -304,7 +317,9 @@
         "DF"
       ],
       "source_refs": [
-        "active_captaincy:national-team captain — captains Paraguay"
+        "active_captaincy:national-team captain — captains Paraguay",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2020 winner; started/played the final against Santos",
+        "active_club_season_honors:Copa Libertadores title with final participation — Palmeiras 2021 winner; started/played the final against Flamengo"
       ]
     },
     {
@@ -322,9 +337,10 @@
       ]
     },
     {
-      "fact_count": 3,
+      "fact_count": 4,
       "families": [
         "captaincy",
+        "club_season_honors",
         "position_balanced_selection"
       ],
       "identity_space": "minted_2026",
@@ -336,6 +352,7 @@
       ],
       "source_refs": [
         "active_captaincy:national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
+        "active_club_season_honors:UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
         "esm_team_of_the_season:esm_tots DF 2019",
         "uefa_team_of_the_year:uefa_team_of_the_year 2019"
       ]

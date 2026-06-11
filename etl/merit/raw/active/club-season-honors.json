@@ -3,43 +3,499 @@
   "family": "club_season_honors",
   "cutoff_date": "2026-06-01",
   "note": "merit-v3 V1 active-career curation. Top-tier continental club titles with documented final participation only; titles are credited as factual honors, never as subjective player-importance rankings. Every row is citation-backed and staged for career-stature-3.0.0.",
+  "census": {
+    "rule_id": "top_tier_continental_club_title_final_participation_v1",
+    "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+    "scope_basis": "All players staged by the active-career source set after V1: the MV2-12a active 23 plus V1 club-season-honors additions.",
+    "top_tier_competitions": [
+      {
+        "confederation": "AFC",
+        "competition": "AFC Champions League / AFC Champions League Elite"
+      },
+      {
+        "confederation": "CAF",
+        "competition": "CAF Champions League"
+      },
+      {
+        "confederation": "CONCACAF",
+        "competition": "CONCACAF Champions Cup / CONCACAF Champions League"
+      },
+      {
+        "confederation": "CONMEBOL",
+        "competition": "Copa Libertadores"
+      },
+      {
+        "confederation": "OFC",
+        "competition": "OFC Champions League"
+      },
+      {
+        "confederation": "UEFA",
+        "competition": "UEFA Champions League / European Cup"
+      }
+    ],
+    "scope": [
+      {
+        "player_id": "P-05174",
+        "name": "Federico Valverde",
+        "scope_reason": "v1_club_season_honors_addition"
+      },
+      {
+        "player_id": "P-21531",
+        "name": "Alisson",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-62341",
+        "name": "Rodri",
+        "scope_reason": "v1_club_season_honors_addition"
+      },
+      {
+        "player_id": "P-65659",
+        "name": "José Giménez",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-80826",
+        "name": "Guillermo Ochoa",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-92812",
+        "name": "Vinícius Júnior",
+        "scope_reason": "v1_club_season_honors_addition"
+      },
+      {
+        "player_id": "P-W26-0049",
+        "name": "Marko Arnautović",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0050",
+        "name": "David Alaba",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0115",
+        "name": "Luiz Henrique",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0267",
+        "name": "Florian Wirtz",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0291",
+        "name": "Duckens Nazon",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0292",
+        "name": "Frantzdy Pierrot",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0356",
+        "name": "Franck Kessié",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0470",
+        "name": "Martin Ødegaard",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0477",
+        "name": "Erling Haaland",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0486",
+        "name": "Alberto Quintero",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0500",
+        "name": "Adalberto Carrasquilla",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0512",
+        "name": "Gustavo Gómez",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0543",
+        "name": "Pedro Miguel",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0574",
+        "name": "Andy Robertson",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0587",
+        "name": "Scott McTominay",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0651",
+        "name": "Álex Grimaldo",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0663",
+        "name": "Lamine Yamal",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0716",
+        "name": "Hakan Çalhanoğlu",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0822",
+        "name": "Chancel Mbemba",
+        "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-W26-0876",
+        "name": "Eldor Shomurodov",
+        "scope_reason": "mv2_12a_active_scope"
+      }
+    ],
+    "finals_registry": [
+      {
+        "registry_key": "uefa_champions_league_2013_bayern",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2013,
+        "champion": "Bayern Munich",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-W26-0050",
+            "name": "David Alaba"
+          }
+        ]
+      },
+      {
+        "registry_key": "uefa_champions_league_2019_liverpool",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2019,
+        "champion": "Liverpool",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-21531",
+            "name": "Alisson"
+          },
+          {
+            "player_id": "P-W26-0574",
+            "name": "Andy Robertson"
+          }
+        ]
+      },
+      {
+        "registry_key": "uefa_champions_league_2020_bayern",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2020,
+        "champion": "Bayern Munich",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2029490--paris-vs-bayern-munchen/lineups/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-W26-0050",
+            "name": "David Alaba"
+          }
+        ]
+      },
+      {
+        "registry_key": "copa_libertadores_2020_palmeiras",
+        "competition": "Copa Libertadores",
+        "confederation": "CONMEBOL",
+        "year": 2020,
+        "champion": "Palmeiras",
+        "citation_url": "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-W26-0512",
+            "name": "Gustavo Gómez"
+          }
+        ]
+      },
+      {
+        "registry_key": "copa_libertadores_2021_palmeiras",
+        "competition": "Copa Libertadores",
+        "confederation": "CONMEBOL",
+        "year": 2021,
+        "champion": "Palmeiras",
+        "citation_url": "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-W26-0512",
+            "name": "Gustavo Gómez"
+          }
+        ]
+      },
+      {
+        "registry_key": "uefa_champions_league_2022_real_madrid",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2022,
+        "champion": "Real Madrid",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-05174",
+            "name": "Federico Valverde"
+          },
+          {
+            "player_id": "P-92812",
+            "name": "Vinícius Júnior"
+          },
+          {
+            "player_id": "P-W26-0050",
+            "name": "David Alaba"
+          }
+        ]
+      },
+      {
+        "registry_key": "uefa_champions_league_2023_manchester_city",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2023,
+        "champion": "Manchester City",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-62341",
+            "name": "Rodri"
+          },
+          {
+            "player_id": "P-W26-0477",
+            "name": "Erling Haaland"
+          }
+        ]
+      },
+      {
+        "registry_key": "uefa_champions_league_2024_real_madrid",
+        "competition": "UEFA Champions League",
+        "confederation": "UEFA",
+        "year": 2024,
+        "champion": "Real Madrid",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-05174",
+            "name": "Federico Valverde"
+          },
+          {
+            "player_id": "P-92812",
+            "name": "Vinícius Júnior"
+          }
+        ]
+      },
+      {
+        "registry_key": "copa_libertadores_2024_botafogo",
+        "competition": "Copa Libertadores",
+        "confederation": "CONMEBOL",
+        "year": 2024,
+        "champion": "Botafogo",
+        "citation_url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-W26-0115",
+            "name": "Luiz Henrique"
+          }
+        ]
+      }
+    ],
+    "exclusions": [
+      {
+        "player_id": "P-W26-0049",
+        "name": "Marko Arnautović",
+        "reason": "Inter won the 2010 UEFA Champions League, but the census rule requires documented final participation; Arnautović did not participate in the final."
+      },
+      {
+        "player_id": "P-W26-0716",
+        "name": "Hakan Çalhanoğlu",
+        "reason": "Inter reached the 2023 UEFA Champions League final, but Manchester City won the top-tier title; losing-final participation is out of rule."
+      }
+    ]
+  },
   "curation_notes": [
+    "Census rule: top-tier continental club titles, Champions League and Libertadores class across all confederations with a top-tier equivalent, with documented final participation, applied to the MV2-12a active 23 plus V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+    "Luiz Henrique is in active scope as P-W26-0115 and his 2024 Copa Libertadores final goal/title fact is included.",
     "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
   ],
   "rows": [
     {
       "scope": "active_career",
+      "player_id": "P-W26-0050",
+      "name": "David Alaba",
+      "nation_token": "Austria",
+      "year": 2013,
+      "position": "DF",
+      "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Bayern Munich",
+      "detail": "UEFA Champions League title with final participation — Bayern Munich 2012-13 winner; started/played the 2013 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/",
+        "claim": "UEFA's 2013 Champions League final line-ups identify Bayern Munich as the 2-1 winner against Borussia Dortmund and list David Alaba in Bayern's final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-21531",
+      "name": "Alisson",
+      "nation_token": "Brazil",
+      "year": 2019,
+      "position": "GK",
+      "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Liverpool",
+      "detail": "UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "claim": "UEFA's 2019 Champions League final line-ups identify Liverpool as the 2-0 winner against Tottenham and list Alisson in Liverpool's final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-W26-0574",
+      "name": "Andy Robertson",
+      "nation_token": "Scotland",
+      "year": 2019,
+      "position": "DF",
+      "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Liverpool",
+      "detail": "UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "claim": "UEFA's 2019 Champions League final line-ups identify Liverpool as the 2-0 winner against Tottenham and list Andy Robertson in Liverpool's final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-W26-0050",
+      "name": "David Alaba",
+      "nation_token": "Austria",
+      "year": 2020,
+      "position": "DF",
+      "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Bayern Munich",
+      "detail": "UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2029490--paris-vs-bayern-munchen/lineups/",
+        "claim": "UEFA's 2020 Champions League final line-ups identify Bayern Munich as the 1-0 winner against Paris Saint-Germain and list David Alaba in Bayern's final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-W26-0512",
+      "name": "Gustavo Gómez",
+      "nation_token": "Paraguay",
+      "year": 2020,
+      "position": "DF",
+      "kind": "libertadores_title_final_participant",
+      "competition": "Copa Libertadores",
+      "confederation": "CONMEBOL",
+      "club": "Palmeiras",
+      "detail": "Copa Libertadores title with final participation — Palmeiras 2020 winner; started/played the final against Santos",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final",
+        "claim": "The 2020 Copa Libertadores final details record Palmeiras' 1-0 title win against Santos and list Gustavo Gómez in Palmeiras' final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-W26-0512",
+      "name": "Gustavo Gómez",
+      "nation_token": "Paraguay",
+      "year": 2021,
+      "position": "DF",
+      "kind": "libertadores_title_final_participant",
+      "competition": "Copa Libertadores",
+      "confederation": "CONMEBOL",
+      "club": "Palmeiras",
+      "detail": "Copa Libertadores title with final participation — Palmeiras 2021 winner; started/played the final against Flamengo",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final",
+        "claim": "The 2021 Copa Libertadores final details record Palmeiras' 2-1 title win against Flamengo and list Gustavo Gómez as Palmeiras' captain in the final XI."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-05174",
       "name": "Federico Valverde",
       "nation_token": "Uruguay",
       "year": 2022,
       "position": "MF",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Real Madrid",
       "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
       "citation": {
-        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
-        "claim": "UEFA's 2022 Champions League final match record shows Real Madrid beat Liverpool 1-0; Federico Valverde played in the final and was substituted off in the 86th minute."
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "claim": "UEFA's 2022 Champions League final line-ups list Federico Valverde in Real Madrid's final XI; UEFA's match record shows Real Madrid beat Liverpool 1-0."
       }
     },
     {
       "scope": "active_career",
+      "player_id": "P-92812",
       "name": "Vinícius Júnior",
       "nation_token": "Brazil",
       "year": 2022,
       "position": "FW",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Real Madrid",
       "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/scored in the 2022 final",
       "citation": {
-        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/",
-        "claim": "UEFA's 2022 Champions League final match record shows Real Madrid beat Liverpool 1-0 and records Vinícius Júnior as the 59th-minute scorer."
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "claim": "UEFA's 2022 Champions League final line-ups list Vinícius Júnior in Real Madrid's final XI; UEFA's match record credits him with the goal in Real Madrid's 1-0 win."
       }
     },
     {
       "scope": "active_career",
+      "player_id": "P-W26-0050",
+      "name": "David Alaba",
+      "nation_token": "Austria",
+      "year": 2022,
+      "position": "DF",
+      "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Real Madrid",
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
+      "citation": {
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "claim": "UEFA's 2022 Champions League final line-ups list David Alaba in Real Madrid's final XI; UEFA's match record shows Real Madrid beat Liverpool 1-0."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-62341",
       "name": "Rodri",
       "nation_token": "Spain",
       "year": 2023,
       "position": "MF",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Manchester City",
       "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/scored in the 2023 final",
       "citation": {
         "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
@@ -48,11 +504,15 @@
     },
     {
       "scope": "active_career",
+      "player_id": "P-W26-0477",
       "name": "Erling Haaland",
       "nation_token": "Norway",
       "year": 2023,
       "position": "FW",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Manchester City",
       "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/played the 2023 final",
       "citation": {
         "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/",
@@ -61,11 +521,15 @@
     },
     {
       "scope": "active_career",
+      "player_id": "P-05174",
       "name": "Federico Valverde",
       "nation_token": "Uruguay",
       "year": 2024,
       "position": "MF",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Real Madrid",
       "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/played the 2024 final",
       "citation": {
         "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
@@ -74,15 +538,36 @@
     },
     {
       "scope": "active_career",
+      "player_id": "P-92812",
       "name": "Vinícius Júnior",
       "nation_token": "Brazil",
       "year": 2024,
       "position": "FW",
       "kind": "ucl_title_final_participant",
+      "competition": "UEFA Champions League",
+      "confederation": "UEFA",
+      "club": "Real Madrid",
       "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/scored in the 2024 final",
       "citation": {
         "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
         "claim": "UEFA's 2024 Champions League final report lists Vinícius Júnior in Real Madrid's line-up and records his 83rd-minute goal in the 2-0 win."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-W26-0115",
+      "name": "Luiz Henrique",
+      "nation_token": "Brazil",
+      "year": 2024,
+      "position": "FW",
+      "kind": "libertadores_title_final_participant",
+      "competition": "Copa Libertadores",
+      "confederation": "CONMEBOL",
+      "club": "Botafogo",
+      "detail": "Copa Libertadores title with final participation — Botafogo 2024 winner; scored in the final against Atlético Mineiro",
+      "citation": {
+        "url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
+        "claim": "ESPN's 2024 Copa Libertadores final match record shows Botafogo beat Atlético Mineiro 3-1 and credits Luiz Henrique with Botafogo's 35th-minute goal."
       }
     }
   ]

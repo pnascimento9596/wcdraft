@@ -866,6 +866,16 @@ def _merge_active_channel(
             f"active staging version {active_staging.get('version')!r} != "
             f"{ACTIVE_SOURCE_SET_VERSION!r}"
         )
+    unresolved_bridges = active_staging.get("identity_bridge_review") or []
+    if unresolved_bridges:
+        preview = ", ".join(
+            f"{b.get('minted_player_id')}->{b.get('historical_player_id')}"
+            for b in unresolved_bridges[:5]
+        )
+        raise ValueError(
+            "active staging has unresolved identity bridges; promote/merge before "
+            f"career-stature scoring: {preview}"
+        )
     active_pids = {f["player_id"] for f in active_facts["facts"]}
     staged_pids = {e["player_id"] for e in active_staging["entries"]}
     if active_pids != staged_pids:
