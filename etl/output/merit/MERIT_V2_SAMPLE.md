@@ -73,7 +73,7 @@ _SHAPE check only. A recognized great's weak tournament should still read elite 
 
 ---
 
-# 2026 reconciliation INTERNAL-score sample (proj-career-3.0.0)
+# 2026 reconciliation INTERNAL-score sample (proj-career-4.0.0)
 
 MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale as the historical wc-perf-4.x cards, and caps non-material 2026 cards below the recognized-greats band on the projected raw path. Columns mirror the historical sample: **Status** (linked·material / linked·below / minted), career **Index**, stature model **Wt**, **Raw** projected score, stature **Target**, projected **Mod**ulation, blended **Final** (internal, NOT display — display is provisional until MV2-6), the four sim channels, and the factual **L**e**g**en**d** flag.
 
@@ -81,61 +81,65 @@ MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale 
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Messi | `P-14758` | FW | linked·material | 0.938413 | 1.00 | 0.762 | 0.958942 | +0.042 | 1.000 | 100 | 68 | 44 | 20 | ✓ |
-| Modrić | `P-29491` | MF | linked·material | 0.897806 | 1.00 | 0.888 | 0.931871 | +0.080 | 1.000 | 72 | 100 | 68 | 20 | ✓ |
-| Ronaldo | `P-70442` | FW | linked·material | 0.87844 | 1.00 | 0.763 | 0.91896 | +0.042 | 0.961 | 96 | 66 | 43 | 20 | ✓ |
-| Mbappé | `P-64077` | FW | linked·material | 0.85777 | 1.00 | 0.971 | 0.90518 | +0.080 | 0.985 | 99 | 67 | 44 | 20 | ✓ |
-| Salah | `P-75890` | FW | linked·material | 0.80008 | 1.00 | 0.942 | 0.86672 | +0.080 | 0.947 | 95 | 65 | 42 | 20 | ✓ |
-| Mané | `P-79299` | FW | linked·material | 0.748945 | 1.00 | 0.796 | 0.83263 | +0.055 | 0.888 | 89 | 61 | 41 | 20 | ✓ |
-| van Dijk | `P-56029` | DF | linked·material | 0.73688 | 1.00 | 0.920 | 0.813357 | +0.070 | 0.883 | 44 | 61 | 88 | 20 | ✓ |
-| Neuer | `P-19408` | GK | linked·material | 0.733164 | 1.00 | 0.827 | 0.791004 | +0.060 | 0.851 | 23 | 33 | 56 | 85 | ✓ |
-| Neymar | `P-87008` | FW | linked·material | 0.681783 | 1.00 | 0.855 | 0.787855 | +0.079 | 0.867 | 87 | 60 | 40 | 20 | ✓ |
-| Courtois | `P-09658` | GK | linked·material | 0.5522 | 1.00 | 0.899 | 0.676393 | +0.060 | 0.736 | 23 | 31 | 50 | 74 | — |
-| De Bruyne | `P-48955` | MF | linked·material | 0.550566 | 1.00 | 0.932 | 0.700377 | +0.080 | 0.780 | 58 | 78 | 55 | 20 | ✓ |
-| Kane | `P-58924` | FW | linked·material | 0.550288 | 1.00 | 0.924 | 0.700192 | +0.080 | 0.780 | 78 | 55 | 37 | 20 | — |
-| Rodri | `P-62341` | MF | linked·material | 0.526598 | 1.00 | 0.901 | 0.684399 | +0.080 | 0.764 | 57 | 76 | 54 | 20 | ✓ |
-| Rodríguez | `P-89392` | MF | linked·material | 0.524095 | 1.00 | 0.824 | 0.68273 | +0.056 | 0.739 | 55 | 74 | 52 | 20 | — |
-| Dembélé | `P-97778` | FW | linked·material | 0.50732 | 1.00 | 0.809 | 0.671547 | +0.061 | 0.732 | 73 | 52 | 36 | 20 | ✓ |
-| Kimmich | `P-30316` | DF | linked·material | 0.474648 | 1.00 | 0.938 | 0.647277 | +0.070 | 0.717 | 38 | 51 | 72 | 20 | — |
-| Bellingham | `P-15674` | MF | linked·material | 0.4625 | 1.00 | 0.869 | 0.641667 | +0.074 | 0.716 | 54 | 72 | 51 | 20 | — |
-| Kanté | `P-98287` | MF | linked·material | 0.46238 | 1.00 | 0.694 | 0.641587 | +0.004 | 0.646 | 49 | 65 | 47 | 20 | — |
+| Messi | `P-14758` | FW | linked·material | 0.866823 | 1.00 | 0.836 | 0.911215 | +0.067 | 0.978 | 98 | 67 | 43 | 20 | ✓ |
+| Haaland | `P-W26-0477` | FW | minted | 0.842791 | 1.00 | 0.966 | 0.895194 | +0.080 | 0.975 | 98 | 67 | 43 | 20 | ✓ |
+| Modrić | `P-29491` | MF | linked·material | 0.832588 | 1.00 | 0.960 | 0.888392 | +0.080 | 0.968 | 70 | 97 | 66 | 20 | ✓ |
+| Mbappé | `P-64077` | FW | linked·material | 0.800552 | 1.00 | 0.983 | 0.867035 | +0.080 | 0.947 | 95 | 65 | 42 | 20 | ✓ |
+| Ronaldo | `P-70442` | FW | linked·material | 0.769903 | 1.00 | 0.843 | 0.846602 | +0.070 | 0.916 | 92 | 63 | 41 | 20 | ✓ |
+| Salah | `P-75890` | FW | linked·material | 0.664103 | 1.00 | 0.961 | 0.776069 | +0.080 | 0.856 | 86 | 59 | 40 | 20 | ✓ |
+| Neuer | `P-19408` | GK | linked·material | 0.645981 | 1.00 | 0.856 | 0.735788 | +0.060 | 0.796 | 23 | 32 | 53 | 80 | ✓ |
+| Alaba | `P-W26-0050` | DF | minted | 0.644168 | 1.00 | 0.973 | 0.75464 | +0.070 | 0.825 | 42 | 57 | 82 | 20 | ✓ |
+| Yamal | `P-W26-0663` | FW | minted | 0.641 | 1.00 | 0.929 | 0.760667 | +0.080 | 0.841 | 84 | 58 | 39 | 20 | ✓ |
+| Mané | `P-79299` | FW | linked·material | 0.623335 | 1.00 | 0.813 | 0.74889 | +0.058 | 0.807 | 81 | 56 | 38 | 20 | ✓ |
+| Rodri | `P-62341` | MF | linked·material | 0.614884 | 1.00 | 0.881 | 0.743256 | +0.078 | 0.821 | 60 | 82 | 57 | 20 | ✓ |
+| Neymar | `P-87008` | FW | linked·material | 0.600323 | 1.00 | 0.891 | 0.733549 | +0.080 | 0.814 | 81 | 57 | 38 | 20 | ✓ |
+| van Dijk | `P-56029` | DF | linked·material | 0.586845 | 1.00 | 0.931 | 0.718335 | +0.070 | 0.788 | 41 | 55 | 79 | 20 | ✓ |
+| Kane | `P-58924` | FW | linked·material | 0.539919 | 1.00 | 0.938 | 0.693279 | +0.080 | 0.773 | 77 | 54 | 37 | 20 | — |
+| Robertson | `P-W26-0574` | DF | minted | 0.522494 | 1.00 | 0.953 | 0.67758 | +0.070 | 0.748 | 39 | 53 | 75 | 20 | — |
+| Courtois | `P-09658` | GK | linked·material | 0.520428 | 1.00 | 0.943 | 0.656271 | +0.060 | 0.716 | 23 | 30 | 48 | 72 | — |
+| Rodríguez | `P-89392` | MF | linked·material | 0.515159 | 1.00 | 0.859 | 0.676773 | +0.069 | 0.746 | 55 | 75 | 53 | 20 | — |
+| Júnior | `P-92812` | FW | linked·material | 0.5114 | 1.00 | 0.888 | 0.674267 | +0.080 | 0.754 | 75 | 53 | 37 | 20 | — |
+| Luiz Henrique | `P-W26-0115` | FW | minted | 0.509 | 1.00 | 0.544 | 0.672667 | -0.050 | 0.623 | 62 | 45 | 33 | 20 | — |
+| Alisson | `P-21531` | GK | linked·material | 0.50829 | 1.00 | 0.900 | 0.648584 | +0.060 | 0.709 | 23 | 30 | 48 | 71 | — |
+| De Bruyne | `P-48955` | MF | linked·material | 0.442968 | 0.86 | 0.968 | 0.628645 | +0.080 | 0.696 | 52 | 70 | 50 | 20 | — |
+| Valverde | `P-05174` | MF | linked·material | 0.4 | 0.50 | 0.973 | 0.6 | +0.080 | 0.650 | 49 | 65 | 47 | 20 | — |
 
 ## Named eyeball anchors
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Messi | `P-14758` | FW | linked·material | 0.938413 | 1.00 | 0.762 | 0.958942 | +0.042 | 1.000 | 100 | 68 | 44 | 20 | ✓ |
-| Mbappé | `P-64077` | FW | linked·material | 0.85777 | 1.00 | 0.971 | 0.90518 | +0.080 | 0.985 | 99 | 67 | 44 | 20 | ✓ |
-| Júnior | `P-92812` | FW | linked·below | 0.2 | 0.00 | 0.848 | — | +0.000 | 0.607 | 61 | 44 | 32 | 20 | — |
-| Bellingham | `P-15674` | MF | linked·material | 0.4625 | 1.00 | 0.869 | 0.641667 | +0.074 | 0.716 | 54 | 72 | 51 | 20 | — |
-| Modrić | `P-29491` | MF | linked·material | 0.897806 | 1.00 | 0.888 | 0.931871 | +0.080 | 1.000 | 72 | 100 | 68 | 20 | ✓ |
+| Messi | `P-14758` | FW | linked·material | 0.866823 | 1.00 | 0.836 | 0.911215 | +0.067 | 0.978 | 98 | 67 | 43 | 20 | ✓ |
+| Mbappé | `P-64077` | FW | linked·material | 0.800552 | 1.00 | 0.983 | 0.867035 | +0.080 | 0.947 | 95 | 65 | 42 | 20 | ✓ |
+| Júnior | `P-92812` | FW | linked·material | 0.5114 | 1.00 | 0.888 | 0.674267 | +0.080 | 0.754 | 75 | 53 | 37 | 20 | — |
+| Bellingham | `P-15674` | MF | linked·below | 0.333 | 0.00 | 0.972 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Modrić | `P-29491` | MF | linked·material | 0.832588 | 1.00 | 0.960 | 0.888392 | +0.080 | 0.968 | 70 | 97 | 66 | 20 | ✓ |
 
 ## Previously-spurious OVR-99 projected cards (now raw-only capped)
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Jurasek | `P-W26-0177` | DF | minted | — | 0.00 | 0.566 | — | +0.000 | 0.353 | 25 | 29 | 35 | 20 | — |
+| Silva | `P-34205` | MF | linked·below | 0.194426 | 0.00 | 0.990 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Fernandes | `P-39584` | MF | linked·below | 0.144 | 0.00 | 0.991 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.980 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Jurasek | `P-W26-0177` | DF | minted | — | 0.00 | 0.596 | — | +0.000 | 0.366 | 26 | 30 | 37 | 20 | — |
 
 ## Raw-only controls (non-material — top of the raw band + journeyman floor)
 
 | Player | Player ID | Pos | Status | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Fernandes | `P-39584` | MF | linked·below | 0.2 | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Hwang | `P-58692` | MF | linked·below | — | 0.00 | 0.989 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Silva | `P-34205` | MF | linked·below | 0.24347 | 0.00 | 0.988 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Soucek | `P-W26-0166` | MF | minted | — | 0.00 | 0.987 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Mcginn | `P-W26-0575` | MF | minted | — | 0.00 | 0.985 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
-| Beach | `P-W26-0042` | GK | minted | — | 0.00 | 0.366 | — | +0.000 | 0.200 | 20 | 20 | 20 | 20 | — |
+| Xhaka | `P-77224` | MF | linked·below | 0.097692 | 0.00 | 1.000 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Fernandes | `P-39584` | MF | linked·below | 0.144 | 0.00 | 0.991 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Silva | `P-34205` | MF | linked·below | 0.194426 | 0.00 | 0.990 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Soucek | `P-W26-0166` | MF | minted | — | 0.00 | 0.988 | — | +0.000 | 0.620 | 47 | 62 | 45 | 20 | — |
+| Rodríguez | `P-43367` | DF | linked·below | — | 0.00 | 0.985 | — | +0.000 | 0.620 | 35 | 45 | 62 | 20 | — |
+| Benbot | `P-W26-0001` | GK | minted | — | 0.00 | 0.351 | — | +0.000 | 0.200 | 20 | 20 | 20 | 20 | — |
 
 _A non-material 2026 card's projected raw path is capped at the global raw-only ceiling (0.62), strictly below the marginal-material stature floor, so it cannot occupy the high-90s/legend band on the projection alone — the fix for the spurious OVR-99 projected MF cards. A linked aging legend takes bounded DOWNWARD projected modulation (tightest at the gold tier) but never collapses below recognized stature._
 
 
 ---
 
-# Unified display-curve sample (wc-perf-5.0.0 curve; maps proj-career-3.0.0 too)
+# Unified display-curve sample (wc-perf-5.0.0 curve; maps proj-career-4.0.0 too)
 
 MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v1`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→66, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 1.85). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
@@ -146,8 +150,8 @@ MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_po
 | Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | Historical | 10973 | 73 | 5904 (53.8%) | 2580 (23.5%) | 2290 (20.9%) | 199 (1.8%) | 2489 (22.7%) | 267 (2.4%) |
-| 2026 | 1246 | 73 | 665 (53.4%) | 316 (25.4%) | 256 (20.5%) | 9 (0.7%) | 265 (21.3%) | 12 (1.0%) |
-| Pooled | 12219 | 73 | 6569 (53.8%) | 2896 (23.7%) | 2546 (20.8%) | 208 (1.7%) | 2754 (22.5%) | 279 (2.3%) |
+| 2026 | 1246 | 73 | 687 (55.1%) | 301 (24.2%) | 246 (19.7%) | 12 (1.0%) | 258 (20.7%) | 15 (1.2%) |
+| Pooled | 12219 | 73 | 6591 (53.9%) | 2881 (23.6%) | 2536 (20.8%) | 211 (1.7%) | 2747 (22.5%) | 282 (2.3%) |
 
 _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
 
@@ -172,11 +176,11 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 
 | Player | Card | Basis | Lgd | Display OVR |
 |---|---|---|---|---:|
-| Messi 2026 | `P-14758:WC-2026` | career_stature_estimate | ✓ | **99** |
-| Mbappé 2026 | `P-64077:WC-2026` | career_stature_estimate | ✓ | **98** |
-| Vinícius 2026 | `P-92812:WC-2026` | measured_performance | — | **87** |
-| Bellingham 2026 | `P-15674:WC-2026` | career_stature_estimate | — | **89** |
-| Modrić 2026 | `P-29491:WC-2026` | career_stature_estimate | ✓ | **99** |
+| Messi 2026 | `P-14758:WC-2026` | career_stature_estimate | ✓ | **98** |
+| Mbappé 2026 | `P-64077:WC-2026` | career_stature_estimate | ✓ | **96** |
+| Vinícius 2026 | `P-92812:WC-2026` | career_stature_estimate | — | **90** |
+| Bellingham 2026 | `P-15674:WC-2026` | measured_performance | — | **88** |
+| Modrić 2026 | `P-29491:WC-2026` | career_stature_estimate | ✓ | **97** |
 
 ## Previously-spurious OVR-99 2026 cards (now mid-80s, not 99)
 
@@ -185,7 +189,7 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 | Silva | `P-34205:WC-2026` | measured_performance | — | **88** |
 | Fernandes | `P-39584:WC-2026` | measured_performance | — | **88** |
 | Hwang | `P-58692:WC-2026` | measured_performance | — | **88** |
-| Jurasek | `P-W26-0177:WC-2026` | measured_performance | — | **71** |
+| Jurasek | `P-W26-0177:WC-2026` | measured_performance | — | **72** |
 
 ## Mid-band starter + journeyman floor controls (both eras)
 
@@ -193,8 +197,8 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 |---|---|---|---|---:|
 | Historical starter | Ortega | `P-00065:WC-1994` | measured_performance | **73** |
 | Historical floor | Park | `P-00390:WC-1954` | baseline_anchor_estimate | **66** |
-| 2026 starter | Vargas | `P-27327:WC-2026` | measured_performance | **73** |
-| 2026 floor | Beach | `P-W26-0042:WC-2026` | measured_performance | **66** |
+| 2026 starter | Mvogo | `P-01729:WC-2026` | measured_performance | **73** |
+| 2026 floor | Benbot | `P-W26-0001:WC-2026` | measured_performance | **66** |
 
 _One curve, both eras, ordering preserved: recognized greats land in-band by their internal score (never hard-pinned), the broad middle holds at the median, and the four spurious projected cards collapse from a raw-only 99 to the mid-80s. No card displays 100._
 
