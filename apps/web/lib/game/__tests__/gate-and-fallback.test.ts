@@ -58,7 +58,7 @@ import {
   decodeRunToken,
   encodeRunToken,
   reconstructDraftFromToken,
-  RUN_TOKEN_PREFIX,
+  RUN_TOKEN_V2_PREFIX,
   RunTokenError,
 } from "../run-token";
 
@@ -203,12 +203,12 @@ describe("share-token invariant — encoding a <17-pick draft throws; a complete
     expect(() => encodeRunToken(record)).toThrow(RunTokenError);
   });
 
-  it("encodeRunToken yields `t1.<base64url>` for a complete 17-spin draft", () => {
+  it("encodeRunToken yields `t2.<base64url>` for a complete 17-spin draft", () => {
     const complete = buildCompleteDraft(gameData);
     const record = recordFor(gameData, complete);
     const token = encodeRunToken(record);
-    expect(token.startsWith(RUN_TOKEN_PREFIX)).toBe(true);
-    const body = token.slice(RUN_TOKEN_PREFIX.length);
+    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
+    const body = token.slice(RUN_TOKEN_V2_PREFIX.length);
     expect(body).toMatch(/^[A-Za-z0-9_-]+$/u);
   });
 });
@@ -242,7 +242,7 @@ describe("share-screen — silent bare-id fallback is removed", () => {
 
 // ─── 4. END-TO-END: a complete run shares a `t1.` token that replays ──────
 
-describe("regression — complete 17-spin run shares a `t1.` token that replays byte-identically", () => {
+describe("regression — complete 17-spin run shares a run token that replays byte-identically", () => {
   const gameData = buildGameDataFromBundles();
 
   it("token decodes + reconstructs to a byte-identical DraftState in a fresh context", () => {
@@ -250,7 +250,7 @@ describe("regression — complete 17-spin run shares a `t1.` token that replays 
     const record = recordFor(gameData, complete);
     const token = encodeRunToken(record);
 
-    expect(token.startsWith(RUN_TOKEN_PREFIX)).toBe(true);
+    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
 
     const decoded = decodeRunToken(token);
     expect(decoded).not.toBeNull();

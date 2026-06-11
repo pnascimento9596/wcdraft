@@ -67,7 +67,11 @@ export function expectedRunFor(
   return { score: result.run.score, score_breakdown: result.run.score_breakdown };
 }
 
-/** Re-encode a (possibly tampered) token body — trust-boundary test helper. */
+/** Re-encode a (possibly tampered) token body — trust-boundary test helper.
+ *  Picks the wire prefix from the body's `v` so tampering at the JSON layer
+ *  round-trips through the same decoder the attacker would hit. */
 export function encodeBody(body: unknown): string {
-  return "t1." + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
+  const v = (body as { v?: unknown } | null)?.v;
+  const prefix = v === 1 ? "t1." : "t2.";
+  return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }

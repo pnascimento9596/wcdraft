@@ -193,6 +193,9 @@ function buildInputs(name: string, params: BuildParams): ScenarioInputs {
     status: "ready",
     deduped_player_ids: squad.filter((s) => s.player_id).map((s) => s.player_id as string),
     ...VERSIONS,
+    draft_flow: "squad_first",
+    rating_basis: "career",
+    era_preset: "all_time",
   };
 
   const scenario: RunScenario = {

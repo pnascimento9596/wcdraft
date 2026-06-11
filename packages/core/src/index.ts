@@ -229,6 +229,27 @@ export type {
   CreateDraftParams,
 } from "./draft.js";
 
+// ─── DC-1 draft configuration axes (draft-config season) ─────────────────────
+export {
+  ERA_PRESETS,
+  ERA_PRESET_IDS,
+  DEFAULT_DRAFT_FLOW,
+  DEFAULT_RATING_BASIS,
+  DEFAULT_ERA_PRESET,
+  DEFAULT_DRAFT_CONFIG,
+  isDraftFlow,
+  isRatingBasis,
+  isEraPresetId,
+  isCanonicalDraftConfig,
+} from "./types/draft-config.js";
+export type {
+  DraftFlow,
+  RatingBasis,
+  EraPresetId,
+  EraPreset,
+  DraftConfig,
+} from "./types/draft-config.js";
+
 // ─── 4. Zod boundary schemas ─────────────────────────────────────────────────
 export {
   // primitives

@@ -54,6 +54,7 @@
 import type { CardId } from "./identity.js";
 import type { ManagerCardId } from "./manager.js";
 import type { SlotPosition } from "./formation.js";
+import type { DraftFlow, EraPresetId, RatingBasis } from "./draft-config.js";
 
 /**
  * The two kinds of entity a user may take on a single spin. Discriminator for
@@ -348,4 +349,23 @@ export interface DraftState {
    * RunResult.
    */
   engine_version: string;
+  /**
+   * DC-1 config axes (plan §A/§G) — stored EXPLICITLY on the persisted draft
+   * so token encode / replay never infer config from URL state. Defaults
+   * (`squad_first` / `career` / `all_time`) are byte-for-byte today's shipped
+   * behavior. LOCKED at draft creation, immutable thereafter.
+   */
+  draft_flow: DraftFlow;
+  /**
+   * Rating basis the run's ratings/sim channels are drawn from. `career` is
+   * the only constructible value until the MV2-12b basis season; the field
+   * exists now so the token schema never needs a second evolution.
+   */
+  rating_basis: RatingBasis;
+  /**
+   * Era preset bounding the spin pool's tournament years. The catalog the
+   * draft samples from MUST be the matching era-filtered catalog
+   * (`createDraft` cross-checks against the catalog's era stamp).
+   */
+  era_preset: EraPresetId;
 }
