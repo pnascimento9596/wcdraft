@@ -4,11 +4,14 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-11 · web count re-measured on ws-ux/tap-stability-2
-rebased onto main `a640fb7` (pitch-realism): 548 passed (+8 tap-stability/
-build-stamp tests on top of pitch-realism's 540). Other counts from the
-2026-06-11 forced full gate on ws-ux/pitch-realism (16/16 tasks green).
-Club-at-tournament backfill remains staged for MV2-12b
+Last measured: 2026-06-11 · forced full gate on `ws-brand/gold-mark`
+rebased onto main `ca01432`: 16/16 tasks green, 0 cached. Web count remains
+548 passed (+8 tap-stability/build-stamp tests on top of pitch-realism's 540).
+Final post-rebase full-gate runtime: 2m10.386s.
+Brand gold-mark validation artifacts are under
+`docs/validation/ws-brand-gold-mark/`, with the report at
+`docs/reports/ws-brand-gold-mark-2026-06-11.md`. Club-at-tournament backfill
+remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
 ## Lanes in flight at last measurement
@@ -41,7 +44,7 @@ Club-at-tournament backfill remains staged for MV2-12b
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
-## Test counts (run 2026-06-11; forced Turbo gate on `ws-ux/pitch-realism`)
+## Test counts (run 2026-06-11; forced Turbo gate on `ws-brand/gold-mark`)
 
 | Suite                                                   | Result                      |
 | ------------------------------------------------------- | --------------------------- |

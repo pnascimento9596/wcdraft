@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 132" width="120" height="132" role="img" aria-label="wcdraft">
   <defs>
     <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#c8861a"/><stop offset=".5" stop-color="#f5b62a"/><stop offset="1" stop-color="#ffd86a"/>
+      <stop offset="0" stop-color="#6e4e00"/><stop offset=".55" stop-color="#8a6200"/><stop offset="1" stop-color="#a66f00"/>
     </linearGradient>
   </defs>
   <g fill="none" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round">

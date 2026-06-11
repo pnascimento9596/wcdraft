@@ -46,6 +46,7 @@
   --gold: #f5b62a; /* gold — pick / win / legend / perfect-run */
   --gold-strong: #c8861a;
   --gold-ink: #1a1206; /* legible ink on gold */
+  --brand-wordmark-accent: var(--accent);
   --field: #1c4332; /* pitch green */
   --field-ink: #f2ecdc;
 
@@ -74,6 +75,7 @@
   --gold: #f5b62a;
   --gold-strong: #c8861a;
   --gold-ink: #1a1206;
+  --brand-wordmark-accent: var(--accent);
   --field: #1f6a47;
   --field-ink: #f2ecdc;
 
@@ -332,7 +334,7 @@ main {
 
 .wordmark__badge {
   /* Canonical mark is 120×132 — size by height, let width auto-fit
-     so the emerald pitch + gold draft arrow stay on aspect. */
+     so the gold tactical pitch + draft arrow stay on aspect. */
   height: 2.1rem;
   width: auto;
   flex: none;
@@ -346,7 +348,7 @@ main {
   line-height: 1;
 }
 .wordmark__text b {
-  color: var(--accent);
+  color: var(--brand-wordmark-accent);
   font-weight: inherit;
 }
 
