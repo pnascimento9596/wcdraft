@@ -56,6 +56,7 @@ function makeIndexes(): GameDataIndexes {
     managerByCardId: new Map(),
     ratingByCardId: new Map(),
     nationById,
+    displayNameByCardId: new Map(),
     tournamentById,
   };
 }

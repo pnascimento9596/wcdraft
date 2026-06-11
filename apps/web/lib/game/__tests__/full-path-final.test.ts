@@ -81,6 +81,7 @@ function makeGameDataStub(): GameData {
     ratingByCardId: new Map(),
     nationById,
     tournamentById: new Map(),
+    displayNameByCardId: new Map(),
   } as unknown as GameDataIndexes;
   return { indexes } as unknown as GameData;
 }
