@@ -249,10 +249,11 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-3.0.0 = the merit-v2 MV2-5 stature reconciliation of 2026.
-    assert rating_2026.RATING_VERSION == "proj-career-3.0.0"
+    # proj-career-4.0.0 = merit-v3 V3: D1 age conditioning (age_factor retired),
+    # person-identity stature seam, re-derived cross-era quantile map, dual-basis.
+    assert rating_2026.RATING_VERSION == "proj-career-4.0.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-3.0.0"
+        assert r["rating_version"] == "proj-career-4.0.0"
 
 
 def test_projected_distribution_shape(ratings):
@@ -419,7 +420,7 @@ def test_manifest_and_attribution(built):
 # historical named-anchor test). Messi/Modrić = gold legends; the four *_SPURIOUS
 # were OVR-99 projected MF cards on the old proj-career-2.0.0 raw formula.
 _MESSI = "P-14758"
-_VINICIUS = "P-92812"  # linked but BELOW material (low career index)
+_UPAMECANO = "P-03945"  # linked with a career row BELOW the material ramp (idx ~0.14)
 _SPURIOUS_99 = ("P-34205", "P-39584", "P-58692", "P-W26-0177")
 _DF_LEGEND = "P-56029"  # van Dijk
 _GK_LEGEND = "P-19408"  # Neuer
@@ -427,8 +428,8 @@ _GK_LEGEND = "P-19408"  # Neuer
 
 @pytest.fixture(scope="session")
 def career_2026() -> dict[str, dict]:
-    # V2 flips historical consumers only; projected 2026 remains on the
-    # compatibility view until V3 owns the `ratings_2026.json` re-lock.
+    # merit-v3 V3: the projected stage consumes the FULL career-stature-3.0.0
+    # person-identity rows (the V1 rating-compat pin is retired).
     return rating_2026._load_career_stature(OUT)
 
 
@@ -481,14 +482,15 @@ def test_new_stature_components_emitted(ratings):
             assert c["value"] is None or isinstance(c["value"], (int, float))
 
 
-def test_minted_never_consume_career_stature(internal_2026, cards):
-    """Minted / unlinked / ambiguous (any status != 'linked') never query career
-    stature: career_* components are null, the stature weight is 0, and they can
-    never carry a factual legend. The score is purely the projected raw path."""
-    link_of = {c["player_id"]: c["link_status"] for c in cards}
+def test_no_career_row_never_consumes_career_stature(internal_2026, cards, career_2026):
+    """merit-v3 V3 person-identity seam: a card whose person has NO career-stature
+    row (linked or minted alike) never consumes stature — career_* components are
+    null, the stature weight is 0, no factual legend, purely the projected raw
+    path. No facts → no row → no lift (the Perlaza/Ayari anti-overcorrection
+    invariant, design §1.2)."""
     checked = 0
     for pid, row in internal_2026.items():
-        if link_of[pid] == "linked":
+        if pid in career_2026:
             continue
         assert _comp(row, "career_stature_score") is None, pid
         assert _comp(row, "career_stature_index") is None, pid
@@ -497,7 +499,32 @@ def test_minted_never_consume_career_stature(internal_2026, cards):
         assert row["legend"] is False, pid
         assert row["overall_basis"] == "measured_performance", pid
         checked += 1
-    assert checked > 0
+    assert checked > 800  # the bulk of the minted pool has no facts → no row
+
+
+def test_minted_person_rows_are_consulted(internal_2026, cards, career_2026):
+    """merit-v3 V3 (design §1.1): the structural bar on minted cards is REMOVED.
+    A minted card whose minted player_id carries a V1 person-identity stature row
+    consults it exactly like a linked card: career_* populated, and a material
+    row rides the stature path (career_stature_estimate + target applied)."""
+    link_of = {c["player_id"]: c["link_status"] for c in cards}
+    consulted = [
+        pid
+        for pid, row in internal_2026.items()
+        if link_of[pid] == "minted" and _comp(row, "career_stature_index") is not None
+    ]
+    assert len(consulted) > 0
+    material = 0
+    for pid in consulted:
+        row = internal_2026[pid]
+        assert _comp(row, "career_stature_index") == career_2026[pid][
+            "career_stature_index"
+        ], pid
+        if _comp(row, "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT:
+            material += 1
+            assert row["overall_basis"] == "career_stature_estimate", pid
+            assert _comp(row, "stature_target_score") is not None, pid
+    assert material > 0  # e.g. Haaland / Yamal / Alaba ride the stature path
 
 
 def test_linked_material_reconciled_onto_stature_scale(internal_2026, cards):
@@ -613,27 +640,40 @@ def test_top_internal_scores_are_material_not_raw_artifacts(internal_2026):
 
 
 def test_linked_below_material_stays_on_raw_path(internal_2026):
-    """A LINKED player whose career index is below the material gate (e.g. a young
-    star without an accumulated honours record) stays on the honest projected raw
-    path — no stature target, no legend — exactly like a minted card."""
-    row = internal_2026[_VINICIUS]
-    assert _comp(row, "stature_model_weight") == 0.0
+    """A LINKED player whose career row sits below the material ramp (index under
+    the gate, weight 0) stays on the honest projected raw path — no stature
+    target applied, no legend — exactly like a no-row card. Upamecano (linked,
+    index ≈0.14, below the 0.34 ramp start) is the exemplar; Vinícius graduated
+    to material under the V1 re-curated index (the §7 probe), so he no longer
+    serves as the below-material case."""
+    row = internal_2026[_UPAMECANO]
+    assert _comp(row, "career_stature_index") is not None  # row exists…
+    assert _comp(row, "stature_model_weight") == 0.0  # …but below the ramp
     assert _comp(row, "stature_target_score") is None
     assert row["overall_basis"] == "measured_performance"
     assert row["legend"] is False
 
 
-def test_legend_join_is_linked_material_only(internal_2026, cards, career_2026):
-    """legend is the factual career flag joined for linked players (missing row →
-    False); minted cards never carry it. Every 2026 legend is a linked, material,
-    legend-flagged career row."""
-    link_of = {c["player_id"]: c["link_status"] for c in cards}
+def test_legend_join_is_material_person_row_only(internal_2026, cards, career_2026):
+    """legend is the factual career flag joined from the person's career-stature
+    row (missing row → False). merit-v3 V3: minted persons with V1 resolver rows
+    may carry it too (Haaland/Yamal/Alaba class) — but EVERY 2026 legend must
+    join a legend-flagged, material career row; a card without a row can never
+    carry the badge."""
     legends = [pid for pid, row in internal_2026.items() if row["legend"]]
     assert len(legends) > 0
+    non_material = []
     for pid in legends:
-        assert link_of[pid] == "linked", pid
+        assert pid in career_2026, pid  # no row → no badge, structurally
         assert career_2026[pid]["legend"] is True, pid
-        assert _comp(internal_2026[pid], "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT
+        if _comp(internal_2026[pid], "stature_model_weight") < rating.STATURE_DOMINANT_WEIGHT:
+            non_material.append(pid)
+    # The badge is the FACTUAL career flag (same join as the historical stage):
+    # a legend-flagged row below the material gate keeps the badge but stays on
+    # the raw path. Under career-stature-3.0.0 exactly one such case exists —
+    # Dembélé (global_annual_multi_winner, coverage 0.20 < the 0.25 material
+    # gate). Pinned so any growth of this set is a loud signal, not a drift.
+    assert non_material == ["P-97778"], non_material
 
 
 def test_defender_keeper_legends_are_position_shaped(internal_2026):

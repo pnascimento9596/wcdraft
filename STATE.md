@@ -28,6 +28,12 @@ passed, full ETL pytest 241 passed, three mutation proofs failed when
 deliberately broken, historical artifact generation was two-run byte-identical,
 and 2026 outputs plus `career_stature.json` plus compact/runtime artifacts
 remained unchanged.
+merit-v3 V3/V4 measured ETL ruff clean, full ETL pytest 288 passed, V3
+`proj-career-4.0.0` projected re-score with dual-basis emission, V4 display
+curve re-lock with both-basis channels byte-identical, committed §7 gate tests,
+run-twice determinism across both stage orders, and strict boundary proof that
+`career_stature.json`, canonical tables, compact/runtime goldens, canary, and
+lambda/realism stayed untouched.
 
 ## Lanes in flight at last measurement
 
@@ -99,7 +105,15 @@ remained unchanged.
   the player. Active/archive access now fails unresolved identity bridges before
   stature merge, with mutation proof in the test suite; V1 report, delta CSV, and
   STATE updated. No compact goldens or rating consumer artifacts changed.
-- merit-v3 V2 historical re-score (this change, RED, in review): historical
+- merit-v3 V3+V4 chained (this change, RED, in review): V3 projected re-score
+  (proj-career-4.0.0) + V4 curve re-fit (`…_v2`) with the §7 probe gate
+  committed as tests (`etl/tests/test_merit_v3_gate.py`) — scoreboard in
+  `docs/reports/merit-v3-v4-curve-gate.md`, per-card deltas in
+  `docs/reports/merit-v3-v3-projected-rescore-delta.csv` (1,246 rows) and
+  `…-v4-curve-refit-delta.csv` (12,219 rows). V6 owns compact regen + canary;
+  V7 owns λ.
+- merit-v3 V2 historical re-score (MERGED into merit-v3 as `bc4f671`, PR #92,
+  after fix-forward 5053751 single-owner MERIT_V2_SAMPLE.md writer): historical
   rating now consumes the full `career-stature-3.0.0` table, applies award-gated
   raw headroom, participation-scaled finish/down-cap mechanics, and emits
   additive Career/Current basis payloads while keeping the top-level surface
@@ -145,6 +159,12 @@ remained unchanged.
 | merit-v3 V2 mutation proofs                             | 3/3 guards failed when deliberately broken |
 | merit-v3 V2 historical artifact generation              | two-run byte-identical hash match |
 | merit-v3 V2 conservatism                                | 2026 outputs + career_stature + compact unchanged |
+| etl V3/V4 `ruff check src tests`                        | clean                       |
+| etl V3/V4 `pytest -q`                                   | 288 passed                  |
+| merit-v3 V3/V4 §7 movers/controls                       | 14 in-band, 6 pinned-miss elements; controls 7/7 evaluable pass |
+| merit-v3 V3/V4 distribution/coherence probes             | median and 90+ pass; pile-up, inversion, and 9 pre-1967 violations pinned for V8 waiver |
+| merit-v3 V3/V4 determinism                              | both stage orders run-twice byte-identical |
+| merit-v3 V3/V4 boundary                                 | career_stature, canonical tables, compact, canary, lambda/realism untouched |
 | `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
 
 ## CI (`.github/workflows/`)

@@ -258,7 +258,7 @@ def test_display_curve_is_low_dof():
     """The recalibration is a global low-DOF curve, not a per-player override
     table. The contract: one shared curve kind name + three global exponents +
     four data anchors fit on the emitted dataset. No additional knobs."""
-    assert rating.DISPLAY_CURVE_KIND == "unified_pooled_piecewise_power_v1"
+    assert rating.DISPLAY_CURVE_KIND == "unified_pooled_piecewise_power_v2"
     free_exponents = {
         "low": rating.DISPLAY_LOW_EXPONENT,
         "mid": rating.DISPLAY_MID_EXPONENT,
