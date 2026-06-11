@@ -138,9 +138,9 @@ describe("seasonLabel", () => {
   it("leads with dataset · engine from the derived key", () => {
     expect(
       seasonLabel(
-        "engine-2026.06.09_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_ac3ca8c8",
+        "engine-2026.06.11_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_f166edc0",
       ),
-    ).toBe("2026-06-04 · engine-2026.06.09");
+    ).toBe("2026-06-04 · engine-2026.06.11");
   });
   it("falls back to the raw key when the shape is unexpected", () => {
     expect(seasonLabel("weird")).toBe("weird");

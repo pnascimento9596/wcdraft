@@ -251,6 +251,23 @@ describe("encode — pre-DC-1 RunRecord (no config fields) normalizes to default
 // ─── 7. committed PREV skew fixtures (plan §A fixture list) ──────────────────
 
 describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
+  it("current-prod t1 token: anchors derive from the shipped manifest and now trip skew", () => {
+    const decoded = decodeRunToken(skewFixtures.current_prod_t1.token);
+    expect(decoded).not.toBeNull();
+    expect(decoded!.v).toBe(1);
+    expect(decoded!.sv).toBe(skewFixtures.current_prod_source.anchors.sv);
+    expect(decoded!.ev).toBe(skewFixtures.current_prod_source.anchors.ev);
+    expect(decoded!.rv).toBe(skewFixtures.current_prod_source.anchors.rv);
+    expect(tokenDraftConfig(decoded!)).toMatchObject({
+      draft_flow: "squad_first",
+      rating_basis: "career",
+      era_preset: "all_time",
+    });
+    expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
+    expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
+  });
+
   it("prev-build t1 token: decodes, default config, trips skew", () => {
     const decoded = decodeRunToken(skewFixtures.prev_t1.token);
     expect(decoded).not.toBeNull();
@@ -269,6 +286,17 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
       rating_basis: "career",
       era_preset: "all_time",
     });
+  });
+
+  it("prev t1 and prev t2-default are equivalent defaults, but both remain version-skew", () => {
+    const t1 = decodeRunToken(skewFixtures.prev_t1.token);
+    const t2 = decodeRunToken(skewFixtures.prev_t2_default.token);
+    expect(t1).not.toBeNull();
+    expect(t2).not.toBeNull();
+    expect(tokenDraftConfig(t1!)).toEqual(tokenDraftConfig(t2!));
+    expect(JSON.stringify(t1!.pl)).toBe(JSON.stringify(t2!.pl));
+    expect(versionsAgree(t1!, gameData.versions)).toBe(false);
+    expect(versionsAgree(t2!, gameData.versions)).toBe(false);
   });
 
   it("prev-build t2 NON-default-config token: decodes with its config, trips skew", () => {

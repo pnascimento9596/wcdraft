@@ -932,8 +932,9 @@ function DraftBoard({
             </p>
             {targetDeadEnd ? (
               <p className={s.formationError} role="alert">
-                No candidate for that target in this configured pool — the spin was not used. Pick
-                a different target.
+                {managerForced
+                  ? "The revealed squad is coachless, and this final manager target is unrecoverable. Start a new draft."
+                  : "No candidate for that target in this configured pool — the spin was not used. Pick a different target."}
               </p>
             ) : null}
             {transitionError ? (

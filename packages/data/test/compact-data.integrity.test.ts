@@ -106,15 +106,15 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the MV2 merit versions; engine_version is unchanged across this fix", () => {
+  it("rating_version anchors are the MV2 merit versions; engine_version is the draft-config season stamp", () => {
     // wc-perf-4.2.1 = wc-perf-4.2.0 + the basis-gate stature alignment (a
     // label-only fix that re-routes Maier-1966 off the [66,73] estimate cap).
-    // proj-career-3.0.0 = the 2026 stature reconciliation (MV2-5). engine_version
-    // stays at the merit-v2 season-merge stamp — this fix moves no sim bytes
-    // (channels are byte-identical; only one display `overall` shifts).
+    // proj-career-3.0.0 = the 2026 stature reconciliation (MV2-5). The
+    // draft-config season bumps engine_version for replay semantics; this
+    // prep unit does not move sim/rating bytes.
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.1");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-3.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.09");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.11");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {

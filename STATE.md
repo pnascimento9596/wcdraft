@@ -32,18 +32,19 @@ remains staged for MV2-12b
   `dbc1f0a` — docs-only, zero runtime change. Plan default: `t2` token schema,
   v1 era presets only, `Current` rating basis gated on MV2-12b, and a future
   `engine-draft-config` integration branch for implementation.
-- Draft-config season E1+E2+E3 BUILT on the `engine-draft-config` integration
+- Draft-config season E1+E2+E3 + prep BUILT on the `engine-draft-config` integration
   branch (NOT main): DC-1 `t2.` config token + explicit DraftState config axes
   (#94), DC-2 era-preset bounded sampling (#95), DC-3 position-first state
-  machine (#96). Measured on the branch: core 331 · data 62 · web 586 ·
-  golden core 3 + draft 37 + data 28 + integration 22 (10 e2e + 12 era) +
-  leaderboard 5. Default config is byte-identical to today (goldens
-  regenerated with fields-only diffs; era golden zero-diff under DC-3).
-  Engine/schema anchor bump DEFERRED to the season merge per the season
-  pattern. `Current` basis stays gated on MV2-12b; the board rejects every
-  non-canonical config (`NON_CANONICAL_CONFIG`). Consolidated fresh-session
-  review of the cumulative branch diff pending; season merge to main is Red
-  (review + owner approval). Screenshots:
+  machine (#96), then prep bumped anchors to `runtime-data-1.2.0` /
+  `engine-2026.06.11`, re-locked compact/era/token/leaderboard/e2e header
+  goldens, added the shipped-manifest `current_prod_t1` skew fixture, and
+  fixed the terminal position-first coachless dead-end copy. Measured on the
+  prep branch before PR review: compact rebuild deterministic; era/token/
+  leaderboard generators rerun; e2e seed `:29` unchanged except anchor strings;
+  no sim/rating/math paths changed. `Current` basis stays gated on MV2-12b;
+  the board rejects every non-canonical config (`NON_CANONICAL_CONFIG`).
+  Consolidated fresh-session review of the cumulative branch diff pending;
+  season merge to main is Red (review + owner approval). Screenshots:
   `docs/validation/draft-config-2026-06-11/`; build report:
   `docs/reports/draft-config-e1-e3-build-2026-06-11.md`.
 - UX: `ws-ux/pitch-realism` is Yellow/display-only (realistic pitch markings +
@@ -61,10 +62,10 @@ remains staged for MV2-12b
 
 | Field                       | Value              |
 | --------------------------- | ------------------ |
-| schema_version              | runtime-data-1.1.0 |
+| schema_version              | runtime-data-1.2.0 |
 | dataset_version             | 2026-06-04         |
 | ruleset_version             | ruleset-2026.06.04 |
-| engine_version              | engine-2026.06.09  |
+| engine_version              | engine-2026.06.11  |
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
