@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { CloseIcon, MenuIcon } from "./icons";
 import { AccountMenu } from "./account-menu";
+import { useTheme } from "./theme-provider";
 
 export interface MenuItem {
   readonly href: string;
@@ -41,6 +42,9 @@ export function SiteHeader({
   const menu = buildMenu({ leaderboardEnabled });
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const markSrc =
+    theme === "light" ? "/brand/wcdraft-mark-light.svg" : "/brand/wcdraft-mark.svg";
 
   // Close the mobile menu on route change.
   useEffect(() => {
@@ -50,12 +54,13 @@ export function SiteHeader({
   return (
     <header className="masthead">
       <div className="container masthead__inner">
-        {/* Canonical wcdraft mark — emerald tactical-pitch + gold draft-arrow.
-            Source: apps/web/public/brand/wcdraft-mark.svg (the same artwork the
-            PWA icon set in PR #17 was generated from). Never redraw inline. */}
+        {/* Canonical wcdraft mark — gold tactical pitch + draft arrow.
+            Source: apps/web/public/brand/wcdraft-mark*.svg. The light variant
+            is the same geometry with deeper gold-family stops for the pale
+            masthead. Never redraw inline. */}
         <Link href="/" className="wordmark" aria-label="wcdraft — home">
           <Image
-            src="/brand/wcdraft-mark.svg"
+            src={markSrc}
             alt=""
             width={32}
             height={35}

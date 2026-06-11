@@ -1,0 +1,12 @@
+{
+  "lightInfo": {
+    "theme": "light",
+    "src": "/brand/wcdraft-mark-light.svg",
+    "currentSrc": "http://localhost:3002/brand/wcdraft-mark-light.svg"
+  },
+  "darkInfo": {
+    "theme": "dark",
+    "src": "/brand/wcdraft-mark.svg",
+    "currentSrc": "http://localhost:3002/brand/wcdraft-mark.svg"
+  }
+}
