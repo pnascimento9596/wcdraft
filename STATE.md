@@ -4,23 +4,34 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-11 · `merit-v3-v2-historical-rescore` off `merit-v3`
-base `a42260b`: ETL ruff clean; focused V2/curve/projected suite 91 passed;
-full ETL pytest 241 passed. Historical `ratings.json` is re-locked to
-`wc-perf-5.0.0`; `MERIT_V2_SAMPLE.md` and review-only
-`merit_divergence_review.json` are re-locked because they are asserted against
-the active historical rating loader. The full per-card delta CSV has 10,973
-historical rows; no-award headroom proof checked 10,853 rows, including 1,180
-above the raw-only ceiling, with 0 mismatches against the old
-`min(raw_tournament_score, raw_only_ceiling)` formula. Mutation proofs failed
-as intended for zeroed award headroom, full-finish 0-app reserves, and projected
-ratings using the full V3 stature view. Rebuilt twice, byte-identical hashes:
-`ratings.json` `14b9dbccfb6e1880d1e9cddfd4e95c33f7a9fd1faf39a8e84f10130bc3529494`,
-`MERIT_V2_SAMPLE.md` `1232e3bf6898b2d35409ca1f418f761e9fd756edbfee6a826a0c7cfab835b952`,
-`merit_divergence_review.json` `2e5a9316c6491ab3ec149b56460bc441f7652b77be0e6d343e7651954804ffda`.
-Strict boundary checks: `ratings_2026.json`, `players_2026.json`,
-`teams_2026.json`, `career_stature.json`, compact/runtime goldens, canary, and
-lambda/realism goldens are unchanged; V6/V7 own those. Previous V1 measurement:
+Last measured: 2026-06-11 · `merit-v3-v3v4-projected-and-curve` off `merit-v3`
+base `bc4f671` (post-#92): ETL ruff clean; full ETL pytest **288 passed**
+(+32 over the V2 head: 12 D1/dual-basis property tests, 19 committed §7 gate
+tests, semantic rewrites). V3 re-locked `ratings_2026.json` (proj-career-4.0.0:
+D1 age-conditional quantile surfaces with age_factor RETIRED, person-identity
+stature seam incl. minted rows, cross-era quantile map re-derived against live
+wc-perf-5.0.0 raw-only internals, dual-basis emission), `teams_2026.json`,
+`manifest_2026.json` stamp. V4 re-locked the display curve
+(`unified_pooled_piecewise_power_v2`, frozen anchors == live union-pool refit,
+proven by test) → `ratings.json` display-only re-lock (channels byte-identical
+across BOTH bases, 0 diffs; every moved card exactly +1), `MERIT_V2_SAMPLE.md`,
+`merit_divergence_review.json`. §7 gate executed and committed as tests:
+movers 14 IN-BAND / 6 with MISSED elements (Yamal 92 vs 85–91; Haaland 98 vs
+89–93; Valverde-26 88 vs 89–91; Neymar-26 91 vs 92–94 — the declared
+watch-item; Lukaku/B. Fernandes conditional-facts misses; Kocsis card 99 vs
+94–97; Cruyff-74 card 94 vs 96–98), controls 7/7 evaluable PASS (Perlaza absent
+from the pinned pool), distribution median 73 ✓ / 90+ 2.31% ✓ / pile-up ≤4%
+MISSED structurally (88-wall 11.3% point-mass at internal 62.0; 71/72 pigeonhole
+vs the median gate) / inversion 0.588% vs ≤0.5% MISSED marginally (award-headroom
+asymmetry) / coherence census MISSED with exactly 9 pinned pre-1967 violations.
+All misses encoded as `*_MISSED_*` pins in `etl/tests/test_merit_v3_gate.py` —
+ledgered for the owner at V8. AGE_QUANTILE_BANDWIDTH=8.0 fit in-unit against the
+pre-registered flattening lock (minted age signature +4.16 → +0.09; h=4
+rejected as inversion −2.31). Channel-decoupling mutation proof re-run (guard
+bites). Run-twice determinism proven across both stage orders. Strict boundary:
+`career_stature.json` + canonical tables byte-identical; compact/runtime
+goldens, canary, λ/realism untouched (V6/V7 own those; compact family stays
+declared-red mid-season). Previous V1 measurement:
 `merit-v3-v1-stature-core` rebased on `7dd9509` with fix-forward from
 `cfd6822` had ETL ruff clean, focused merit suite 42 passed, full ETL pytest
 233 passed, active/stature generation run twice byte-identical, and rating plus
@@ -85,7 +96,15 @@ remains staged for MV2-12b (`docs/reports/club-backfill-manifest-2026-06-10.md`)
   the player. Active/archive access now fails unresolved identity bridges before
   stature merge, with mutation proof in the test suite; V1 report, delta CSV, and
   STATE updated. No compact goldens or rating consumer artifacts changed.
-- merit-v3 V2 historical re-score (this change, RED, in review): historical
+- merit-v3 V3+V4 chained (this change, RED, in review): V3 projected re-score
+  (proj-career-4.0.0) + V4 curve re-fit (`…_v2`) with the §7 probe gate
+  committed as tests (`etl/tests/test_merit_v3_gate.py`) — scoreboard in
+  `docs/reports/merit-v3-v4-curve-gate.md`, per-card deltas in
+  `docs/reports/merit-v3-v3-projected-rescore-delta.csv` (1,246 rows) and
+  `…-v4-curve-refit-delta.csv` (12,219 rows). V6 owns compact regen + canary;
+  V7 owns λ.
+- merit-v3 V2 historical re-score (MERGED into merit-v3 as `bc4f671`, PR #92,
+  after fix-forward 5053751 single-owner MERIT_V2_SAMPLE.md writer): historical
   rating now consumes the full `career-stature-3.0.0` table, applies award-gated
   raw headroom, participation-scaled finish/down-cap mechanics, and emits
   additive Career/Current basis payloads while keeping the top-level surface

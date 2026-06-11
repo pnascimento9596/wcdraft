@@ -1,16 +1,16 @@
 [
   {
     "aggregate_rating": {
-      "attack": 41,
+      "attack": 36,
       "coverage": 0.7143,
-      "defense": 46,
-      "goalkeeping": 20,
-      "midfield": 45
+      "defense": 47,
+      "goalkeeping": 25,
+      "midfield": 41
     },
     "group": "A",
     "group_slot": 1,
     "nation_id": "T-46",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -62,7 +62,7 @@
   },
   {
     "aggregate_rating": {
-      "attack": 34,
+      "attack": 33,
       "coverage": 0.7143,
       "defense": 34,
       "goalkeeping": 22,
@@ -71,7 +71,7 @@
     "group": "A",
     "group_slot": 2,
     "nation_id": "T-70",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -123,16 +123,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 41,
+      "attack": 42,
       "coverage": 0.7143,
-      "defense": 41,
-      "goalkeeping": 25,
+      "defense": 42,
+      "goalkeeping": 23,
       "midfield": 48
     },
     "group": "A",
     "group_slot": 3,
     "nation_id": "T-71",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -186,14 +186,14 @@
     "aggregate_rating": {
       "attack": 40,
       "coverage": 0.7143,
-      "defense": 39,
-      "goalkeeping": 22,
-      "midfield": 42
+      "defense": 38,
+      "goalkeeping": 23,
+      "midfield": 41
     },
     "group": "A",
     "group_slot": 4,
     "nation_id": "T-20",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -245,16 +245,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 44,
+      "attack": 43,
       "coverage": 0.7143,
-      "defense": 44,
+      "defense": 43,
       "goalkeeping": 20,
-      "midfield": 47
+      "midfield": 46
     },
     "group": "B",
     "group_slot": 1,
     "nation_id": "T-12",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -305,7 +305,7 @@
   },
   {
     "aggregate_rating": {
-      "attack": 36,
+      "attack": 35,
       "coverage": 0.7143,
       "defense": 40,
       "goalkeeping": 23,
@@ -314,7 +314,7 @@
     "group": "B",
     "group_slot": 2,
     "nation_id": "T-08",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -366,16 +366,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 40,
+      "attack": 38,
       "coverage": 0.7143,
-      "defense": 38,
-      "goalkeeping": 22,
+      "defense": 39,
+      "goalkeeping": 23,
       "midfield": 39
     },
     "group": "B",
     "group_slot": 3,
     "nation_id": "T-59",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -429,14 +429,14 @@
     "aggregate_rating": {
       "attack": 48,
       "coverage": 0.7143,
-      "defense": 47,
+      "defense": 46,
       "goalkeeping": 20,
       "midfield": 49
     },
     "group": "B",
     "group_slot": 4,
     "nation_id": "T-75",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -488,16 +488,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 51,
       "coverage": 0.7143,
-      "defense": 44,
-      "goalkeeping": 24,
+      "defense": 42,
+      "goalkeeping": 25,
       "midfield": 48
     },
     "group": "C",
     "group_slot": 1,
     "nation_id": "T-09",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -549,16 +549,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 42,
+      "attack": 43,
       "coverage": 0.7143,
       "defense": 44,
       "goalkeeping": 23,
-      "midfield": 46
+      "midfield": 47
     },
     "group": "C",
     "group_slot": 2,
     "nation_id": "T-47",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -612,14 +612,14 @@
     "aggregate_rating": {
       "attack": 36,
       "coverage": 0.7143,
-      "defense": 37,
-      "goalkeeping": 26,
-      "midfield": 37
+      "defense": 36,
+      "goalkeeping": 29,
+      "midfield": 35
     },
     "group": "C",
     "group_slot": 3,
     "nation_id": "T-34",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -671,16 +671,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 42,
+      "attack": 40,
       "coverage": 0.7143,
-      "defense": 46,
+      "defense": 47,
       "goalkeeping": 23,
-      "midfield": 48
+      "midfield": 46
     },
     "group": "C",
     "group_slot": 4,
     "nation_id": "T-64",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -734,14 +734,14 @@
     "aggregate_rating": {
       "attack": 51,
       "coverage": 0.7143,
-      "defense": 40,
+      "defense": 42,
       "goalkeeping": 20,
-      "midfield": 48
+      "midfield": 50
     },
     "group": "D",
     "group_slot": 1,
     "nation_id": "T-83",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -795,14 +795,14 @@
     "aggregate_rating": {
       "attack": 38,
       "coverage": 0.7143,
-      "defense": 43,
+      "defense": 41,
       "goalkeeping": 20,
-      "midfield": 44
+      "midfield": 43
     },
     "group": "D",
     "group_slot": 2,
     "nation_id": "T-55",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -854,16 +854,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 39,
+      "attack": 38,
       "coverage": 0.7143,
-      "defense": 40,
+      "defense": 42,
       "goalkeeping": 24,
-      "midfield": 40
+      "midfield": 41
     },
     "group": "D",
     "group_slot": 3,
     "nation_id": "T-04",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -915,16 +915,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 39,
+      "attack": 40,
       "coverage": 0.7143,
-      "defense": 47,
-      "goalkeeping": 20,
-      "midfield": 45
+      "defense": 45,
+      "goalkeeping": 23,
+      "midfield": 43
     },
     "group": "D",
     "group_slot": 4,
     "nation_id": "T-80",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -978,14 +978,14 @@
     "aggregate_rating": {
       "attack": 40,
       "coverage": 0.7143,
-      "defense": 52,
-      "goalkeeping": 26,
-      "midfield": 49
+      "defense": 50,
+      "goalkeeping": 25,
+      "midfield": 48
     },
     "group": "E",
     "group_slot": 1,
     "nation_id": "T-31",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1037,16 +1037,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 35,
+      "attack": 31,
       "coverage": 0.7143,
       "defense": 38,
-      "goalkeeping": 23,
-      "midfield": 41
+      "goalkeeping": 26,
+      "midfield": 38
     },
     "group": "E",
     "group_slot": 2,
     "nation_id": "T-W26-2",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1098,16 +1098,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 42,
+      "attack": 44,
       "coverage": 0.7143,
-      "defense": 41,
+      "defense": 40,
       "goalkeeping": 23,
-      "midfield": 44
+      "midfield": 43
     },
     "group": "E",
     "group_slot": 3,
     "nation_id": "T-42",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1161,14 +1161,14 @@
     "aggregate_rating": {
       "attack": 40,
       "coverage": 0.7143,
-      "defense": 45,
+      "defense": 47,
       "goalkeeping": 20,
-      "midfield": 44
+      "midfield": 46
     },
     "group": "E",
     "group_slot": 4,
     "nation_id": "T-25",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1220,16 +1220,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 44,
       "coverage": 0.7143,
-      "defense": 46,
-      "goalkeeping": 23,
-      "midfield": 48
+      "defense": 48,
+      "goalkeeping": 24,
+      "midfield": 47
     },
     "group": "F",
     "group_slot": 1,
     "nation_id": "T-48",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1281,16 +1281,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 43,
+      "attack": 42,
       "coverage": 0.7143,
       "defense": 45,
-      "goalkeeping": 20,
-      "midfield": 53
+      "goalkeeping": 24,
+      "midfield": 52
     },
     "group": "F",
     "group_slot": 2,
     "nation_id": "T-44",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1342,16 +1342,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 40,
+      "attack": 41,
       "coverage": 0.7143,
       "defense": 42,
       "goalkeeping": 23,
-      "midfield": 41
+      "midfield": 43
     },
     "group": "F",
     "group_slot": 3,
     "nation_id": "T-74",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1403,16 +1403,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 38,
+      "attack": 37,
       "coverage": 0.7143,
-      "defense": 41,
+      "defense": 42,
       "goalkeeping": 22,
-      "midfield": 43
+      "midfield": 44
     },
     "group": "F",
     "group_slot": 4,
     "nation_id": "T-79",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1464,16 +1464,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 46,
+      "attack": 45,
       "coverage": 0.7143,
       "defense": 46,
       "goalkeeping": 25,
-      "midfield": 50
+      "midfield": 49
     },
     "group": "G",
     "group_slot": 1,
     "nation_id": "T-06",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1525,16 +1525,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 42,
+      "attack": 38,
       "coverage": 0.7143,
-      "defense": 37,
-      "goalkeeping": 22,
-      "midfield": 38
+      "defense": 36,
+      "goalkeeping": 24,
+      "midfield": 36
     },
     "group": "G",
     "group_slot": 2,
     "nation_id": "T-26",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1586,16 +1586,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 36,
+      "attack": 35,
       "coverage": 0.7143,
-      "defense": 41,
+      "defense": 39,
       "goalkeeping": 23,
-      "midfield": 42
+      "midfield": 40
     },
     "group": "G",
     "group_slot": 3,
     "nation_id": "T-38",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1647,16 +1647,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 39,
+      "attack": 40,
       "coverage": 0.7143,
-      "defense": 42,
+      "defense": 41,
       "goalkeeping": 23,
-      "midfield": 43
+      "midfield": 44
     },
     "group": "G",
     "group_slot": 4,
     "nation_id": "T-49",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1708,16 +1708,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 53,
       "coverage": 0.7143,
       "defense": 42,
       "goalkeeping": 24,
-      "midfield": 51
+      "midfield": 52
     },
     "group": "H",
     "group_slot": 1,
     "nation_id": "T-73",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1769,16 +1769,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 36,
+      "attack": 35,
       "coverage": 0.7143,
-      "defense": 38,
+      "defense": 35,
       "goalkeeping": 23,
-      "midfield": 40
+      "midfield": 37
     },
     "group": "H",
     "group_slot": 2,
     "nation_id": "T-W26-1",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1830,7 +1830,7 @@
   },
   {
     "aggregate_rating": {
-      "attack": 39,
+      "attack": 38,
       "coverage": 0.7143,
       "defense": 39,
       "goalkeeping": 25,
@@ -1839,7 +1839,7 @@
     "group": "H",
     "group_slot": 3,
     "nation_id": "T-63",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1894,13 +1894,13 @@
       "attack": 38,
       "coverage": 0.7143,
       "defense": 45,
-      "goalkeeping": 26,
+      "goalkeeping": 23,
       "midfield": 46
     },
     "group": "H",
     "group_slot": 4,
     "nation_id": "T-84",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -1952,16 +1952,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 46,
+      "attack": 42,
       "coverage": 0.7143,
-      "defense": 51,
-      "goalkeeping": 23,
-      "midfield": 50
+      "defense": 49,
+      "goalkeeping": 24,
+      "midfield": 46
     },
     "group": "I",
     "group_slot": 1,
     "nation_id": "T-30",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2013,16 +2013,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 49,
       "coverage": 0.7143,
-      "defense": 45,
+      "defense": 46,
       "goalkeeping": 20,
-      "midfield": 52
+      "midfield": 53
     },
     "group": "I",
     "group_slot": 2,
     "nation_id": "T-65",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2074,16 +2074,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 36,
+      "attack": 38,
       "coverage": 0.7143,
-      "defense": 36,
+      "defense": 35,
       "goalkeeping": 23,
-      "midfield": 38
+      "midfield": 39
     },
     "group": "I",
     "group_slot": 3,
     "nation_id": "T-39",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2135,16 +2135,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 45,
+      "attack": 48,
       "coverage": 0.7143,
-      "defense": 43,
+      "defense": 46,
       "goalkeeping": 24,
-      "midfield": 46
+      "midfield": 50
     },
     "group": "I",
     "group_slot": 4,
     "nation_id": "T-53",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2196,16 +2196,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 49,
+      "attack": 50,
       "coverage": 0.7143,
-      "defense": 47,
-      "goalkeeping": 24,
-      "midfield": 52
+      "defense": 49,
+      "goalkeeping": 20,
+      "midfield": 53
     },
     "group": "J",
     "group_slot": 1,
     "nation_id": "T-03",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2259,14 +2259,14 @@
     "aggregate_rating": {
       "attack": 42,
       "coverage": 0.7143,
-      "defense": 42,
+      "defense": 43,
       "goalkeeping": 22,
-      "midfield": 45
+      "midfield": 46
     },
     "group": "J",
     "group_slot": 2,
     "nation_id": "T-01",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2320,14 +2320,14 @@
     "aggregate_rating": {
       "attack": 43,
       "coverage": 0.7143,
-      "defense": 47,
+      "defense": 48,
       "goalkeeping": 20,
-      "midfield": 50
+      "midfield": 51
     },
     "group": "J",
     "group_slot": 3,
     "nation_id": "T-05",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2378,16 +2378,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 37,
+      "attack": 35,
       "coverage": 0.7143,
-      "defense": 40,
-      "goalkeeping": 23,
-      "midfield": 40
+      "defense": 39,
+      "goalkeeping": 24,
+      "midfield": 38
     },
     "group": "J",
     "group_slot": 4,
     "nation_id": "T-W26-4",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2439,16 +2439,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 47,
+      "attack": 46,
       "coverage": 0.7143,
-      "defense": 46,
-      "goalkeeping": 23,
-      "midfield": 47
+      "defense": 47,
+      "goalkeeping": 24,
+      "midfield": 49
     },
     "group": "K",
     "group_slot": 1,
     "nation_id": "T-58",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2500,16 +2500,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 42,
+      "attack": 40,
       "coverage": 0.7143,
-      "defense": 41,
+      "defense": 39,
       "goalkeeping": 23,
-      "midfield": 44
+      "midfield": 43
     },
     "group": "K",
     "group_slot": 2,
     "nation_id": "T-W26-3",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2561,7 +2561,7 @@
   },
   {
     "aggregate_rating": {
-      "attack": 38,
+      "attack": 37,
       "coverage": 0.7143,
       "defense": 39,
       "goalkeeping": 20,
@@ -2570,7 +2570,7 @@
     "group": "K",
     "group_slot": 3,
     "nation_id": "T-W26-5",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2622,16 +2622,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 41,
+      "attack": 38,
       "coverage": 0.7143,
-      "defense": 51,
-      "goalkeeping": 20,
-      "midfield": 49
+      "defense": 49,
+      "goalkeeping": 23,
+      "midfield": 45
     },
     "group": "K",
     "group_slot": 4,
     "nation_id": "T-16",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2683,16 +2683,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 48,
+      "attack": 45,
       "coverage": 0.7143,
-      "defense": 43,
+      "defense": 44,
       "goalkeeping": 24,
-      "midfield": 50
+      "midfield": 48
     },
     "group": "L",
     "group_slot": 1,
     "nation_id": "T-28",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2744,7 +2744,7 @@
   },
   {
     "aggregate_rating": {
-      "attack": 46,
+      "attack": 44,
       "coverage": 0.7143,
       "defense": 47,
       "goalkeeping": 23,
@@ -2753,7 +2753,7 @@
     "group": "L",
     "group_slot": 2,
     "nation_id": "T-18",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2807,14 +2807,14 @@
     "aggregate_rating": {
       "attack": 40,
       "coverage": 0.7143,
-      "defense": 39,
-      "goalkeeping": 22,
-      "midfield": 42
+      "defense": 40,
+      "goalkeeping": 23,
+      "midfield": 41
     },
     "group": "L",
     "group_slot": 3,
     "nation_id": "T-32",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
@@ -2866,16 +2866,16 @@
   },
   {
     "aggregate_rating": {
-      "attack": 36,
+      "attack": 35,
       "coverage": 0.7143,
-      "defense": 47,
+      "defense": 46,
       "goalkeeping": 23,
-      "midfield": 46
+      "midfield": 45
     },
     "group": "L",
     "group_slot": 4,
     "nation_id": "T-54",
-    "rating_version": "proj-career-3.0.0",
+    "rating_version": "proj-career-4.0.0",
     "sources": [
       {
         "citation": "\"2026 FIFA World Cup squads\". Wikipedia. Revision 1357762108 (2026-06-04T14:52:13Z). https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads. Used under CC-BY-SA 4.0.",
