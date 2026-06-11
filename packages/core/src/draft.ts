@@ -84,6 +84,12 @@ import type { ManagerCardId } from "./types/manager.js";
 import type { SlotPosition } from "./types/formation.js";
 import type { Position } from "./types/primitives.js";
 import type { DraftState, Spin, SquadSlot, SquadValidation } from "./types/draft.js";
+import {
+  DEFAULT_DRAFT_FLOW,
+  DEFAULT_ERA_PRESET,
+  DEFAULT_RATING_BASIS,
+} from "./types/draft-config.js";
+import type { DraftFlow, EraPresetId, RatingBasis } from "./types/draft-config.js";
 
 // ─── CANDIDATE INPUT VIEWS ───────────────────────────────────────────────────
 
@@ -144,6 +150,17 @@ export interface CreateDraftParams {
   dataset_version: string;
   rating_version: string;
   engine_version: string;
+  /**
+   * DC-1 config axes. Omitted fields default to today's shipped behavior
+   * (`squad_first` / `career` / `all_time`). Non-default values are gated on
+   * their implementation units: `position_first` (DC-3), era-filtered
+   * catalogs (DC-2), `current` basis (MV2-12b season) — `createDraft` throws
+   * honestly on a value whose semantics this build does not implement, it
+   * never records config it did not enforce.
+   */
+  draft_flow?: DraftFlow;
+  rating_basis?: RatingBasis;
+  era_preset?: EraPresetId;
 }
 
 // ─── ERA WEIGHTING CONSTANTS (ENGINE-V2 E-1) ─────────────────────────────────
@@ -765,6 +782,9 @@ function finalize(
     dataset_version: prev.dataset_version,
     rating_version: prev.rating_version,
     engine_version: prev.engine_version,
+    draft_flow: prev.draft_flow,
+    rating_basis: prev.rating_basis,
+    era_preset: prev.era_preset,
   };
   const parsed = DraftStateSchema.safeParse(next);
   if (!parsed.success) {
@@ -788,6 +808,29 @@ function finalize(
  * All spins start PENDING; spin candidates reflect zero prior picks.
  */
 export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): DraftState {
+  // ── DC-1 config gates — never record config this build does not enforce ──
+  const draft_flow = params.draft_flow ?? DEFAULT_DRAFT_FLOW;
+  const rating_basis = params.rating_basis ?? DEFAULT_RATING_BASIS;
+  const era_preset = params.era_preset ?? DEFAULT_ERA_PRESET;
+  if (draft_flow !== "squad_first") {
+    // Replaced by the DC-3 position-first state machine.
+    throw new RangeError(
+      `createDraft: draft_flow "${draft_flow}" is not implemented in this build (DC-3)`,
+    );
+  }
+  if (rating_basis !== "career") {
+    // Gated on the MV2-12b dual-basis season — no fake fallback to career.
+    throw new RangeError(
+      `createDraft: rating_basis "${rating_basis}" is not available in this build (gated on MV2-12b)`,
+    );
+  }
+  if (era_preset !== "all_time") {
+    // Replaced by DC-2 era-filtered catalogs.
+    throw new RangeError(
+      `createDraft: era_preset "${era_preset}" is not implemented in this build (DC-2)`,
+    );
+  }
+
   // Honest fail-fast: a complete draft needs exactly one manager. If the
   // catalog has NO coach-bearing pair, the draft can never be completed —
   // surface it now rather than strand the user mid-draft.
@@ -826,6 +869,9 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
     dataset_version: params.dataset_version,
     rating_version: params.rating_version,
     engine_version: params.engine_version,
+    draft_flow,
+    rating_basis,
+    era_preset,
   };
   const parsed = DraftStateSchema.safeParse(draft);
   if (!parsed.success) {

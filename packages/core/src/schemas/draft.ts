@@ -303,6 +303,13 @@ export const DraftStateSchema = z
     dataset_version: NonEmptyIdSchema,
     rating_version: NonEmptyIdSchema,
     engine_version: NonEmptyIdSchema,
+    // DC-1 config axes — stored explicitly (plan §A/§G). `rating_basis`
+    // admits both enum values so the persisted contract never needs a second
+    // evolution for the MV2-12b basis season; runtime construction of
+    // `current` is refused in `createDraft` until that season lands.
+    draft_flow: z.enum(["squad_first", "position_first"]),
+    rating_basis: z.enum(["career", "current"]),
+    era_preset: z.enum(["all_time", "post_2000", "post_2010", "modern"]),
   })
   .superRefine((draft, ctx) => {
     // formation_id MUST resolve to a known FormationTemplate.

@@ -36,12 +36,15 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData, RunRecordVersions } from "../game/data";
 import type { RunRecordV1 } from "../game/run-record";
+import { isCanonicalDraftConfig } from "@wcdraft/core";
+
 import {
   decodeRunToken,
   RUN_TOKEN_MAX_LEN,
+  tokenDraftConfig,
   versionsAgree,
   reconstructDraftFromToken,
-  type RunTokenV1Body,
+  type RunTokenBody,
 } from "../game/run-token";
 import { buildSimWorldInputs } from "../game/simulate";
 import { validateDisplayName, type DisplayNameRejection } from "./display-name";
@@ -55,6 +58,7 @@ export type SubmitRejectionCode =
   | "TOKEN_TOO_LARGE"
   | "MALFORMED_TOKEN"
   | "WRONG_SEASON"
+  | "NON_CANONICAL_CONFIG"
   | "INVALID_NAME"
   | "ILLEGAL_PICK"
   | "SIM_FAILURE"
@@ -76,6 +80,7 @@ export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>>
   TOKEN_TOO_LARGE: 400,
   MALFORMED_TOKEN: 400,
   WRONG_SEASON: 409,
+  NON_CANONICAL_CONFIG: 422,
   AUTH_REQUIRED: 401,
   CSRF_FAILED: 403,
   INVALID_NAME: 422,
@@ -96,7 +101,10 @@ export const VERSION_ANCHORS = [
   ["ev", "engine_version"],
   ["uv", "ruleset_version"],
   ["hv", "data_bundle_hash"],
-] as const satisfies readonly (readonly [keyof RunTokenV1Body, keyof RunRecordVersions])[];
+] as const satisfies readonly (readonly [
+  keyof RunTokenBody & ("sv" | "dv" | "rv" | "ev" | "uv" | "hv"),
+  keyof RunRecordVersions,
+])[];
 
 export type VersionAnchor = (typeof VERSION_ANCHORS)[number][1];
 
@@ -113,7 +121,7 @@ export interface AcceptedSubmission {
   /** Normalized (trimmed + NFC) name — persist THIS, not the raw input. */
   display_name: string;
   /** Decoded token body (rid / ps available to the route for logging). */
-  token_body: RunTokenV1Body;
+  token_body: RunTokenBody;
 }
 
 export interface RejectedSubmission {
@@ -150,7 +158,7 @@ function rejected(code: SubmitRejectionCode, reason: string): RejectedSubmission
   return { status: "rejected", code, reason };
 }
 
-function mismatchedAnchors(token: RunTokenV1Body, versions: RunRecordVersions): VersionAnchor[] {
+function mismatchedAnchors(token: RunTokenBody, versions: RunRecordVersions): VersionAnchor[] {
   return VERSION_ANCHORS.filter(([t, v]) => token[t] !== versions[v]).map(([, v]) => v);
 }
 
@@ -185,6 +193,19 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
       reason: "token version anchors do not match the current season tuple",
       mismatched_anchors: mismatchedAnchors(token, data.gameData.versions),
     };
+  }
+
+  // 3b — DC-1 canonical-config gate (owner-ratified): board submissions must
+  // carry the canonical config axes (squad_first / career / all_time). `t1.`
+  // tokens are canonical by compatibility. The pre-existing Classic / Memory
+  // visibility lanes (`md`) are a separate board dimension and stay accepted.
+  // O(1) — runs before name/replay work.
+  const config = tokenDraftConfig(token);
+  if (!isCanonicalDraftConfig(config)) {
+    return rejected(
+      "NON_CANONICAL_CONFIG",
+      `board submissions require the canonical config (squad_first/career/all_time); token carries ${config.draft_flow}/${config.rating_basis}/${config.era_preset}`,
+    );
   }
 
   // 5 — display name (4 and 6 are route seams; both are O(1) DB/header work

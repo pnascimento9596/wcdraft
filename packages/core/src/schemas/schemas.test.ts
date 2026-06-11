@@ -204,6 +204,9 @@ function makeDraftState(): DraftState {
     dataset_version: "dataset@0.0.0",
     rating_version: "rating@0.0.0",
     engine_version: "engine@0.0.0",
+    draft_flow: "squad_first",
+    rating_basis: "career",
+    era_preset: "all_time",
   };
 }
 

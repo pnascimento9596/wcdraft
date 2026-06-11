@@ -1048,7 +1048,10 @@
     ],
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
-    "engine_version": "engine-2026.06.09"
+    "engine_version": "engine-2026.06.09",
+    "draft_flow": "squad_first",
+    "rating_basis": "career",
+    "era_preset": "all_time"
   },
   "scenario": {
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",

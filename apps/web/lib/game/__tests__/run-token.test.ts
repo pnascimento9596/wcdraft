@@ -13,96 +13,24 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  autoDraft,
-  buildDraftCatalog,
-  type DraftDataset,
-} from "@wcdraft/core";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-  type RuntimeDataManifest,
-} from "@wcdraft/data";
+import { RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
-import type { GameData, RunRecordVersions } from "../data";
-import { buildGameDataIndexes, composeVersions } from "../data";
+import type { RunRecordVersions } from "../data";
 import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
+import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 import {
   buildRunTokenBody,
   decodeRunToken,
   encodeRunToken,
   reconstructDraftFromToken,
-  RUN_TOKEN_PREFIX,
+  RUN_TOKEN_V2_PREFIX,
   versionsAgree,
   virtualRecordFromToken,
 } from "../run-token";
 
 // ─── Harness ─────────────────────────────────────────────────────────────────
-
-const PARENT_SEED = "wcdraft:e2e-real-run:v1:14";
-
-function buildDataset(): DraftDataset {
-  return {
-    players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
-      player_id: c.player_id,
-      tournament_id: c.tournament_id,
-      nation_id: c.nation_id,
-      eligible_positions: c.eligible_positions,
-    })),
-    managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
-      manager_id: m.manager_id,
-      tournament_id: m.tournament_id,
-      nation_id: m.nation_id,
-    })),
-    // ENGINE-V2 E-1: era-weighted sampling needs tournament years.
-    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
-      tournament_id: Number(tid),
-      year: t.year,
-    })),
-  };
-}
-
-function buildGameDataFromBundles(): GameData {
-  const manifest = RUNTIME_DATA_MANIFEST as RuntimeDataManifest;
-  const versions: RunRecordVersions = composeVersions(manifest);
-  const indexes = buildGameDataIndexes(DRAFT_POOL_BUNDLE);
-  const draftDataset = buildDataset();
-  const catalog = buildDraftCatalog(draftDataset);
-  return {
-    manifest,
-    draftPool: DRAFT_POOL_BUNDLE,
-    versions,
-    indexes,
-    draftDataset,
-    catalog,
-    nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
-  };
-}
-
-function buildOriginRecord(gameData: GameData, seed = PARENT_SEED): RunRecordV1 {
-  const draft = autoDraft({
-    run_id: "token-origin",
-    parent_seed: seed,
-    formation_id: "4-3-3",
-    mode: "classic",
-    team_name: "Origin XI",
-    dataset_version: gameData.versions.dataset_version,
-    rating_version: gameData.versions.rating_version,
-    engine_version: gameData.versions.engine_version,
-    dataset: gameData.draftDataset,
-  });
-  return {
-    record_version: 1,
-    run_id: "token-origin",
-    parent_seed: seed,
-    created_seq: 1,
-    updated_seq: 1,
-    versions: gameData.versions,
-    draft,
-  };
-}
+// (shared builders live in run-token.test-harness.ts)
 
 function asPlain<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
@@ -114,11 +42,11 @@ describe("run-token — encode / decode round-trip", () => {
   const gameData = buildGameDataFromBundles();
   const origin = buildOriginRecord(gameData);
 
-  it("encodes to a `t1.<base64url>` string", () => {
+  it("encodes to a `t2.<base64url>` string", () => {
     const token = encodeRunToken(origin);
-    expect(token.startsWith(RUN_TOKEN_PREFIX)).toBe(true);
+    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
     // Body is base64url: only A-Za-z0-9_- after the prefix.
-    const body = token.slice(RUN_TOKEN_PREFIX.length);
+    const body = token.slice(RUN_TOKEN_V2_PREFIX.length);
     expect(body).toMatch(/^[A-Za-z0-9_-]+$/u);
   });
 

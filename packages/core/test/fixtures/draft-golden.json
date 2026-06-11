@@ -844,6 +844,9 @@
     ],
     "dataset_version": "fixture-dataset-v1",
     "rating_version": "fixture-rating-v1",
-    "engine_version": "wcdraft-core@ws-c-fixture"
+    "engine_version": "wcdraft-core@ws-c-fixture",
+    "draft_flow": "squad_first",
+    "rating_basis": "career",
+    "era_preset": "all_time"
   }
 }
