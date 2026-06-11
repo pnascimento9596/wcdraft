@@ -56,7 +56,7 @@ import {
   type PlayerCardView,
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
-import { Pitch } from "./pitch";
+import { Pitch, PitchMarkings } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { SquadHeaderFlag } from "./squad-header-flag";
 import { ManagerSlot } from "./manager-slot";
@@ -289,9 +289,7 @@ function DraftAppBar({
       {spinNumber !== null ? (
         <div className={s.appBarMeter}>
           <div className={s.spinCounter}>
-            <span className={s.spinCounterNum}>
-              Spin {Math.min(spinNumber, TOTAL_SPINS)}
-            </span>
+            <span className={s.spinCounterNum}>Spin {Math.min(spinNumber, TOTAL_SPINS)}</span>
             <span className={s.spinCounterTotal}>/ {TOTAL_SPINS}</span>
           </div>
           <div className={s.spinProgress} aria-hidden="true">
@@ -360,8 +358,8 @@ function FormationSelect({
           </p>
           {draftMode === "hidden" ? (
             <p className={s.memoryModeNote} role="note">
-              Memory mode — names, flags and years stay visible; ratings &amp; Synergy numbers
-              hide until you simulate.
+              Memory mode — names, flags and years stay visible; ratings &amp; Synergy numbers hide
+              until you simulate.
             </p>
           ) : null}
         </div>
@@ -399,6 +397,7 @@ function MiniPitch({ formation_id }: { formation_id: SupportedFormationId }) {
   const slots = getFormationVisualSlots(formation_id);
   return (
     <div className={s.miniPitch} aria-hidden="true">
+      <PitchMarkings variant="mini" />
       {slots.map((sl) => {
         // Shape comes from the CORE position line (GK square / DF triangle
         // / MF diamond / FW circle). Colour family uses the JSON visual
@@ -736,10 +735,7 @@ function DraftBoard({
     return (
       <div className={`${s.draftShell} ${s.spinShell}`}>
         {persistenceWarning ? (
-          <p
-            className={`${s.persistenceWarn} ${s.spinPersistenceWarn}`}
-            role="status"
-          >
+          <p className={`${s.persistenceWarn} ${s.spinPersistenceWarn}`} role="status">
             {persistenceWarning}
           </p>
         ) : null}

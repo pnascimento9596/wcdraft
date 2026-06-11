@@ -92,10 +92,10 @@ export function adjustPitchLayoutForRender(
   const halfH = CHIP_HALF_H_PCT;
   const gap = CHIP_GAP_PCT;
 
-  // Clamp bounds — generous on purpose (PITCH_EDGE_INSET_PCT = 0): chips
-  // may overflow the `.pitchFrame` inset by their half-extents, and the
-  // bound must never be tighter than a canonical position or the clamp
-  // re-creates the overlap the resolver just fixed.
+  // Clamp bounds -- generous on purpose (PITCH_EDGE_INSET_PCT = 0): chips
+  // may overlap the visual touchline by their half-extents, and the bound
+  // must never be tighter than a canonical position or the clamp re-creates
+  // the overlap the resolver just fixed.
   const minX = PITCH_EDGE_INSET_PCT + halfW;
   const maxX = 100 - PITCH_EDGE_INSET_PCT - halfW;
   const minY = PITCH_EDGE_INSET_PCT + halfH;

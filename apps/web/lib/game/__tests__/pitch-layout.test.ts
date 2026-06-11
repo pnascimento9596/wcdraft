@@ -76,8 +76,8 @@ describe("adjustPitchLayoutForRender", () => {
     for (const fid of SUPPORTED_FORMATION_IDS) {
       const adjusted = adjustPitchLayoutForRender(getFormationVisualSlots(fid));
       for (const sl of adjusted) {
-        // Chips must sit inside the inset frame (.pitchFrame inset:4%)
-        // with at least their half-extents of breathing room.
+        // Chips must stay inside the normalized pitch coordinate space
+        // that the marking and synergy SVG layers also use.
         expect(sl.x_pct).toBeGreaterThanOrEqual(4);
         expect(sl.x_pct).toBeLessThanOrEqual(96);
         expect(sl.y_pct).toBeGreaterThanOrEqual(4);
