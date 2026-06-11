@@ -58,6 +58,16 @@ backfill remains staged for MV2-12b
 - MV2-12a active-career intake (`ws-etl/mv212a-active-career-intake`, RED, IN REVIEW):
   facts-only inert channel, 47 facts / 23 players; rating outputs + compact bundles
   byte-identical (see `docs/queue/q-002-mv2-12-candidate.md`). 12b stays DISPATCH-ONLY.
+- merit-v3 SEASON DESIGN landed (this change, docs-only):
+  `docs/plans/merit-v3-design-2026-06-11.md` on integration branch `merit-v3` —
+  D2 activation (person-identity stature seam, stage-normalized active index,
+  inertness-guard flips), D1 age-conditioned projected scoring (age_factor retired),
+  index-bias mitigation (eligibility re-norm + sparse-fact saturation; archive
+  re-research ledgered), award-gated raw-ceiling headroom + curve re-fit, dual-basis
+  Career/Current internals materialized for `engine-draft-config`, club backfill in
+  the same single skew event. Version matrix: wc-perf-5.0.0 / proj-career-4.0.0 /
+  career-stature-3.0.0 / runtime-data-2.0.0 / engine bump. Units U0 (in flight) +
+  V1–V8, all DISPATCH-ONLY; acceptance probes pre-registered in plan §7.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
