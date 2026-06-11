@@ -204,7 +204,7 @@
         "confederation": "UEFA",
         "year": 2020,
         "champion": "Bayern Munich",
-        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2029490--paris-vs-bayern-munchen/lineups/",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2030150--paris-vs-bayern-munchen/lineups/",
         "qualifying_scope_players": [
           {
             "player_id": "P-W26-0050",
@@ -331,6 +331,96 @@
     "Luiz Henrique is in active scope as P-W26-0115 and his 2024 Copa Libertadores final goal/title fact is included.",
     "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
   ],
+  "verification_notes": {
+    "verified_on": "2026-06-11",
+    "method": "Direct citation re-check. UEFA match-page rows were checked against the rendered page context plus match.uefa.com/v5/matches/<match_id>/lineups; UEFA report, Wikipedia, and ESPN rows were checked against the fetched page HTML. Each row below confirms that the pinned citation names the player in that final.",
+    "rows": [
+      {
+        "row_key": "P-W26-0050:2013:UEFA Champions League",
+        "name": "David Alaba",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/",
+        "result": "OK: UEFA match 2009612 is the 2012/13 final line-ups page and its lineups data names David Alaba for Bayern München."
+      },
+      {
+        "row_key": "P-21531:2019:UEFA Champions League",
+        "name": "Alisson",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "result": "OK: UEFA match 2025486 is the 2018/19 final line-ups page and its lineups data names Alisson for Liverpool."
+      },
+      {
+        "row_key": "P-W26-0574:2019:UEFA Champions League",
+        "name": "Andy Robertson",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/",
+        "result": "OK: UEFA match 2025486 is the 2018/19 final line-ups page and its lineups data names Andy Robertson for Liverpool."
+      },
+      {
+        "row_key": "P-W26-0050:2020:UEFA Champions League",
+        "name": "David Alaba",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2030150--paris-vs-bayern-munchen/lineups/",
+        "result": "OK: UEFA match 2030150 is the 2019/20 final line-ups page and its lineups data names David Alaba for Bayern München."
+      },
+      {
+        "row_key": "P-W26-0512:2020:Copa Libertadores",
+        "name": "Gustavo Gómez",
+        "citation_url": "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final",
+        "result": "OK: the 2020 Copa Libertadores final page names Gustavo Gómez in Palmeiras' final details."
+      },
+      {
+        "row_key": "P-W26-0512:2021:Copa Libertadores",
+        "name": "Gustavo Gómez",
+        "citation_url": "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final",
+        "result": "OK: the 2021 Copa Libertadores final page names Gustavo Gómez in Palmeiras' final details."
+      },
+      {
+        "row_key": "P-05174:2022:UEFA Champions League",
+        "name": "Federico Valverde",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "result": "OK: UEFA match 2034586 is the 2021/22 final line-ups page and its lineups data names Federico Valverde for Real Madrid."
+      },
+      {
+        "row_key": "P-92812:2022:UEFA Champions League",
+        "name": "Vinícius Júnior",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "result": "OK: UEFA match 2034586 is the 2021/22 final line-ups page and its lineups data names Vinícius Júnior for Real Madrid."
+      },
+      {
+        "row_key": "P-W26-0050:2022:UEFA Champions League",
+        "name": "David Alaba",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/",
+        "result": "OK: UEFA match 2034586 is the 2021/22 final line-ups page and its lineups data names David Alaba for Real Madrid."
+      },
+      {
+        "row_key": "P-62341:2023:UEFA Champions League",
+        "name": "Rodri",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/",
+        "result": "OK: UEFA match 2037765 is the 2022/23 final match page and its match/lineups data names Rodri for Manchester City."
+      },
+      {
+        "row_key": "P-W26-0477:2023:UEFA Champions League",
+        "name": "Erling Haaland",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/",
+        "result": "OK: UEFA match 2037765 is the 2022/23 final line-ups page and its lineups data names Erling Haaland for Manchester City."
+      },
+      {
+        "row_key": "P-05174:2024:UEFA Champions League",
+        "name": "Federico Valverde",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
+        "result": "OK: UEFA's 2023/24 final report page names Federico Valverde in Real Madrid's line-up."
+      },
+      {
+        "row_key": "P-92812:2024:UEFA Champions League",
+        "name": "Vinícius Júnior",
+        "citation_url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/",
+        "result": "OK: UEFA's 2023/24 final report page names Vinícius Júnior in Real Madrid's line-up and scoring summary."
+      },
+      {
+        "row_key": "P-W26-0115:2024:Copa Libertadores",
+        "name": "Luiz Henrique",
+        "citation_url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
+        "result": "OK: ESPN's 2024 Copa Libertadores final match page names Luiz Henrique for Botafogo and credits his 35th-minute goal."
+      }
+    ]
+  },
   "rows": [
     {
       "scope": "active_career",
@@ -396,7 +486,7 @@
       "club": "Bayern Munich",
       "detail": "UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
       "citation": {
-        "url": "https://www.uefa.com/uefachampionsleague/match/2029490--paris-vs-bayern-munchen/lineups/",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2030150--paris-vs-bayern-munchen/lineups/",
         "claim": "UEFA's 2020 Champions League final line-ups identify Bayern Munich as the 1-0 winner against Paris Saint-Germain and list David Alaba in Bayern's final XI."
       }
     },

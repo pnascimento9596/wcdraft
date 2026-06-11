@@ -231,6 +231,27 @@ def test_club_season_honors_census_matches_scope_and_registry(abuilt):
             expected.add((player["player_id"], final["year"], final["competition"]))
     actual = {(r["player_id"], r["year"], r["competition"]) for r in note["rows"]}
     assert actual == expected
+    verification = note["verification_notes"]
+    assert verification["verified_on"] == "2026-06-11"
+    verified = {r["row_key"]: r for r in verification["rows"]}
+    row_keys = {f"{r['player_id']}:{r['year']}:{r['competition']}" for r in note["rows"]}
+    assert set(verified) == row_keys
+    assert len(verified) == len(note["rows"]) == 14
+    alaba_2020 = next(
+        r
+        for r in note["rows"]
+        if r["player_id"] == "P-W26-0050" and r["year"] == 2020
+    )
+    assert "match/2030150--paris-vs-bayern-munchen/lineups/" in alaba_2020[
+        "citation"
+    ]["url"]
+    assert "2030150" in verified["P-W26-0050:2020:UEFA Champions League"][
+        "citation_url"
+    ]
+    all_urls = [r["citation"]["url"] for r in note["rows"]] + [
+        f["citation_url"] for f in census["finals_registry"]
+    ]
+    assert all("2029490" not in url for url in all_urls)
     assert expected >= {
         ("P-W26-0050", 2013, "UEFA Champions League"),
         ("P-W26-0050", 2020, "UEFA Champions League"),

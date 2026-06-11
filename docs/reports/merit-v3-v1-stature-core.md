@@ -2,6 +2,7 @@
 
 - Branch: `merit-v3-v1-stature-core`
 - Fix-forward base: `cfd6822`
+- Rebased onto merit-v3: `7dd9509`
 - Spec of record: `docs/plans/merit-v3-design-2026-06-11.md` sections 1, 3, 7
 - Full stature delta table: `docs/reports/merit-v3-v1-stature-delta.csv`
 
@@ -27,11 +28,13 @@ declared mid-season skew and was not touched.
 | Legend rows | 100 | 101 | David Alaba reaches factual legend route |
 | Rating outputs / compact data | unchanged | unchanged | compatibility lock preserved |
 
-Delta CSV reconciliation against `cfd6822`: 815 rows, 5 positive index deltas, 0
-negative index deltas, 810 unchanged. The changed rows are Alisson
-`0.308016 -> 0.508290`, David Alaba `0.391024 -> 0.644168`, Luiz Henrique
-`0.140000 -> 0.509000`, Gustavo Gomez `0.024000 -> 0.378100`, and Andy Robertson
-`0.296350 -> 0.522494`.
+Delta CSV reconciliation against `cfd6822`: 815 byte-level rows, 5 index movers,
+2 tier-label-only changes, and 808 fully unchanged rows. The index movers are
+Alisson `0.308016 -> 0.508290`, David Alaba `0.391024 -> 0.644168`, Luiz
+Henrique `0.140000 -> 0.509000`, Gustavo Gomez `0.024000 -> 0.378100`, and Andy
+Robertson `0.296350 -> 0.522494`. The tier-label-only changes are Franco Baresi
+`bronze -> silver` and Djalma Santos `silver -> gold`; both keep
+`rating_compat_locked_2.1.0`.
 
 ## Honors Census
 
@@ -154,9 +157,10 @@ Executed:
 
 - `cd etl && uv run --extra dev ruff check src tests` - pass.
 - `cd etl && uv run --extra dev pytest -q tests/test_merit_active.py tests/test_career_stature.py` - 42 passed.
-- `cd etl && uv run --extra dev pytest -q` - 204 passed.
+- `cd etl && uv run --extra dev pytest -q` - 233 passed.
+- Club-season citation verifier: 14/14 rows checked against the pinned citation URLs; Alaba 2020 is re-pinned to UEFA match `2030150`.
 - Run-twice determinism: `active`, `active --pin`, and `stature` were run twice; SHA-256 hashes matched for the active manifest, active facts, active staging, `ACTIVE_CAREERS.md`, `career_stature.json`, `career_stature_review.json`, and `CAREER_STATURE.md`.
-- Conservatism boundary: `ratings.json`, `ratings_2026.json`, `packages/data/src/generated`, and `apps/web/public/data` have no diff.
+- Conservatism boundary vs `origin/merit-v3`: `ratings.json`, `ratings_2026.json`, `packages/data/src/generated`, and `apps/web/public/data` have no diff.
 
 Not executed by design: compact regeneration, compact goldens, canary regeneration,
 rating version bumps, and lambda refit. V6/V7 own those units.
