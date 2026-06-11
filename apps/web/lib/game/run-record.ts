@@ -25,6 +25,7 @@ import {
   type RunResult,
   type RunScenario,
   type GroupStageResult,
+  type DraftFlow,
   type EraPresetId,
 } from "@wcdraft/core";
 
@@ -284,6 +285,8 @@ export interface CreateRunRecordParams {
    * created against the matching era-filtered catalog via `getCatalogForEra`.
    */
   era_preset?: EraPresetId;
+  /** DC-3 draft flow (default `squad_first` = today's flow). */
+  draft_flow?: DraftFlow;
 }
 
 export interface CreateRunRecordResult {
@@ -331,6 +334,7 @@ export function createNewRunRecord(
         rating_version: gameData.versions.rating_version,
         engine_version: gameData.versions.engine_version,
         era_preset,
+        draft_flow: params.draft_flow ?? "squad_first",
       });
       const record: RunRecordV1 = {
         record_version: RUN_RECORD_SCHEMA_VERSION,
