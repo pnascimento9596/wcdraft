@@ -47,6 +47,15 @@ def abuilt() -> dict:
     return active.build(write=False)
 
 
+@pytest.fixture(scope="session")
+def minted_canon():
+    players_2026 = json.loads((ETL_OUT / "players_2026.json").read_text(encoding="utf-8"))
+    cards_2026 = json.loads(
+        (ETL_OUT / "player_tournaments_2026.json").read_text(encoding="utf-8")
+    )
+    return active.build_minted_canon(players_2026, cards_2026)
+
+
 # ─── determinism: committed artifacts == a fresh build ────────────────────────
 
 
@@ -255,18 +264,22 @@ def test_parser_recovery_only_takes_records_with_no_historical_candidate(abuilt)
         assert cands == [] and tier == "no_candidate", f
 
 
-def test_minted_ambiguity_is_withheld_not_assigned():
+def test_minted_multi_candidate_ambiguity_is_withheld_not_assigned(minted_canon):
     """A bare ambiguous surname with no corroboration must not link in the
     minted space."""
-    players_2026 = json.loads((ETL_OUT / "players_2026.json").read_text(encoding="utf-8"))
-    cards_2026 = json.loads(
-        (ETL_OUT / "player_tournaments_2026.json").read_text(encoding="utf-8")
-    )
-    mc = active.build_minted_canon(players_2026, cards_2026)
-    rec = MeritRecord(source_id="active_captaincy", family="captaincy", name="Silva")
-    pid, method, _cands = active._link_minted(rec, mc, frozenset())
+    rec = MeritRecord(source_id="active_captaincy", family="captaincy", name="Rodriguez")
+    pid, method, cands = active._link_minted(rec, minted_canon, frozenset())
     assert pid is None
-    assert method in ("multi_candidate", "weak_unverified", "no_candidate")
+    assert method == "multi_candidate"
+    assert cands == ["P-W26-0514", "P-W26-0781"]
+
+
+def test_minted_single_candidate_weak_key_is_withheld(minted_canon):
+    rec = MeritRecord(source_id="active_captaincy", family="captaincy", name="Silva")
+    pid, method, cands = active._link_minted(rec, minted_canon, frozenset())
+    assert pid is None
+    assert method == "weak_unverified"
+    assert cands == ["P-W26-0546"]
 
 
 def test_named_anchor_links(abuilt):
