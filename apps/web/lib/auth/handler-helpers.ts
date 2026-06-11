@@ -210,6 +210,17 @@ export function clearSessionCookie(response: NextResponse): void {
 
 export function jsonError(err: unknown): NextResponse {
   if (err instanceof AuthError) {
+    // q-003 — server-misconfiguration detail (env-var names, secret-generation
+    // commands) must never reach the client. Log the full message server-side
+    // and return a generic body; every other code's message is its code-level
+    // copy and stays as-is.
+    if (err.code === "SECRET_MISCONFIGURED") {
+      console.error("[auth] secret misconfigured:", err.message);
+      return NextResponse.json(
+        { error: err.code, message: "Server configuration error." },
+        { status: err.status },
+      );
+    }
     return NextResponse.json(
       { error: err.code, message: err.message },
       { status: err.status },
