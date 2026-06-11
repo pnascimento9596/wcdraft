@@ -61,20 +61,29 @@ def hist_internal() -> dict[str, dict]:
 @pytest.fixture(scope="session")
 def proj_internal() -> dict[str, dict]:
     cards = json.loads((OUT / "player_tournaments_2026.json").read_text())
-    rows = rating_2026.build_internal_view(cards, rating._load_career_stature(OUT))
+    rows = rating_2026.build_internal_view(cards, rating_2026._load_career_stature(OUT))
     return {r["card_id"]: r for r in rows}
 
 
 # ─── the curve is ONE pooled curve, shared across both eras ───────────────────
 
 
-def test_curve_is_fit_on_the_pooled_distribution(curve, hist_internal, proj_internal):
-    """The unified curve's four anchors are the min/p50/p95/max of the POOLED
-    historical + 2026 internal scores — not either era alone."""
+def test_default_curve_is_frozen_until_merit_v3_v4(curve):
+    """V2 changes internals but V4 owns the next display-curve refit."""
+    assert curve.raw_floor == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_floor"]
+    assert curve.raw_median == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_median"]
+    assert curve.raw_p95 == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_p95"]
+    assert curve.raw_max == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_max"]
+
+
+def test_diagnostic_refit_is_fit_on_the_pooled_distribution(hist_internal, proj_internal):
+    """The V4 diagnostic refit path still computes the min/p50/p95/max of the
+    pooled historical + 2026 internal scores."""
     pooled = sorted(
         [r["score_0_100"] for r in hist_internal.values()]
         + [r["score_0_100"] for r in proj_internal.values()]
     )
+    curve = display_curve.fit_unified_curve(OUT, refit=True)
     assert curve.raw_floor == pooled[0]
     assert curve.raw_max == pooled[-1]
     assert curve.raw_floor < curve.raw_median < curve.raw_p95 < curve.raw_max
@@ -100,9 +109,9 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-4.2.1"
+    assert rating.RATING_VERSION == "wc-perf-5.0.0"
     assert rating_2026.RATING_VERSION == "proj-career-3.0.0"
-    assert all(r["rating_version"] == "wc-perf-4.2.1" for r in hist)
+    assert all(r["rating_version"] == "wc-perf-5.0.0" for r in hist)
     assert all(r["rating_version"] == "proj-career-3.0.0" for r in proj)
 
 
@@ -168,7 +177,7 @@ def test_historical_anchors_land_in_band(hist):
     # (card_id, lo, hi) — the plan's approximate target bands.
     bands = [
         ("P-14758:WC-2022", 98, 99),  # Messi 2022
-        ("P-38906:WC-1958", 95, 97),  # Pelé 1958
+        ("P-38906:WC-1958", 98, 99),  # Pelé 1958, full V3 index consumption
         ("P-80404:WC-1986", 98, 99),  # Maradona 1986
         ("P-09317:WC-1958", 90, 92),  # Yashin
     ]

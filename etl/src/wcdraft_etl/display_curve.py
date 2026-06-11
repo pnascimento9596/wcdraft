@@ -22,6 +22,10 @@ DECOUPLED: the curve reshapes the display ``overall`` ONLY. The four sim channel
 are materialized independently from the same internal ``score_0_100`` via
 ``rating._channel`` and are NEVER routed through this curve — they stay
 byte-identical to base, so the sim is untouched.
+
+merit-v3 V2 note: V2 changes historical internals but V4 owns the curve refit.
+The default exported curve is therefore frozen to the pre-V2 MV2-6 anchor tuple;
+callers can request a live refit only with ``refit=True`` for reports/tests.
 """
 
 from __future__ import annotations
@@ -30,6 +34,13 @@ import json
 from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
+
+FROZEN_UNIFIED_CURVE_V1_ANCHORS = {
+    "raw_floor": 20.0,
+    "raw_median": 43.2551648,
+    "raw_p95": 62.0,
+    "raw_max": 100.0,
+}
 
 
 def _historical_internal_scores(output_dir: Path) -> list[float]:
@@ -66,16 +77,17 @@ def _projected_internal_scores(output_dir: Path) -> list[float]:
     return [r["score_0_100"] for r in internal]
 
 
-def fit_unified_curve(output_dir: Path = OUTPUT_DIR):
-    """Fit the ONE MV2-6 display curve on the POOLED (historical + 2026) internal
-    score distribution and return the frozen ``DisplayCurve``.
+def fit_unified_curve(output_dir: Path = OUTPUT_DIR, *, refit: bool = False):
+    """Return the ONE MV2-6 display curve.
 
-    Deterministic: a pure function of the committed canonical + career-stature +
-    2026 tables (the historical raw-only target it reads from ``ratings.json`` is
-    curve-invariant — only display ``overall`` moves under MV2-6 — so two builds
-    yield byte-identical curves regardless of which curve last wrote the file).
+    By default this returns the frozen pre-V2 anchors because merit-v3 V4 owns the
+    next curve refit. ``refit=True`` recomputes the pooled anchors for diagnostic
+    reporting without changing production output.
     """
     from . import rating  # lazy
+
+    if not refit:
+        return rating.DisplayCurve(**FROZEN_UNIFIED_CURVE_V1_ANCHORS)
 
     pooled = _historical_internal_scores(output_dir) + _projected_internal_scores(
         output_dir
