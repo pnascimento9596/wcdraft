@@ -5,7 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": ["LEADERBOARD_ENABLED", "LEADERBOARD_REQUIRE_ACCOUNT"]
+      "env": ["LEADERBOARD_ENABLED", "LEADERBOARD_REQUIRE_ACCOUNT", "VERCEL_GIT_COMMIT_SHA"]
     },
     "typecheck": {
       "dependsOn": ["^build"]
@@ -17,7 +17,12 @@
     },
     "test:realism:heavy": {
       "dependsOn": ["^build"],
-      "env": ["WCDRAFT_REALISM_HEAVY", "WCDRAFT_REALISM_N", "WCDRAFT_REALISM_SEED_PREFIX", "WCDRAFT_REALISM_GATE"]
+      "env": [
+        "WCDRAFT_REALISM_HEAVY",
+        "WCDRAFT_REALISM_N",
+        "WCDRAFT_REALISM_SEED_PREFIX",
+        "WCDRAFT_REALISM_GATE"
+      ]
     },
     "test:golden": {},
     "test:golden:draft": {},

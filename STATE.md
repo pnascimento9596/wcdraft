@@ -4,10 +4,10 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-11 · forced full gate on ws-ux/pitch-realism off
-origin/main `d3353fd`: `pnpm exec turbo run typecheck lint test build --force`
-reported 16/16 tasks green, 0 cached, in 1m48.661s. Web count is now
-540 passed / 1 skipped (+3 pitch-marking render/coordinate tests).
+Last measured: 2026-06-11 · web count re-measured on ws-ux/tap-stability-2
+rebased onto main `a640fb7` (pitch-realism): 548 passed (+8 tap-stability/
+build-stamp tests on top of pitch-realism's 540). Other counts from the
+2026-06-11 forced full gate on ws-ux/pitch-realism (16/16 tasks green).
 Club-at-tournament backfill remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
@@ -52,7 +52,7 @@ Club-at-tournament backfill remains staged for MV2-12b
 | @wcdraft/data `test:golden:data`                        | 28 passed                   |
 | @wcdraft/data `test:golden:integration`                 | 10 passed                   |
 | @wcdraft/db `test`                                      | 74 passed                   |
-| @wcdraft/web `test`                                     | 540 passed, 1 skipped (541) |
+| @wcdraft/web `test`                                     | 548 passed, 1 skipped (549) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
 | etl `pytest -q`                                         | 159 passed                  |
 | `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached |

@@ -1629,6 +1629,49 @@ button.benchSlot:not(:disabled):hover {
   font-family: var(--f-body);
 }
 
+/* ws-ux/tap-stability-2 — ANCHORED variant for the main draft layout (the
+   only screen with a bottom action bar). The page column is pinned to 100svh
+   (companion body:has([data-draft-anchored]) rules in globals.css) and the
+   DOCUMENT never scrolls: scrolling lives in .draftScroll. Two effects:
+   (1) iOS Safari's toolbar only collapses on document scroll, so it stays
+   put for the whole draft session; (2) even if the user arrives with the
+   toolbar already collapsed, the svh page bottom = the toolbar-expanded
+   line, so the in-flow lock bar sits safely above Safari's bottom-edge
+   gesture zone. Compound selector beats the later media-query padding
+   overrides on .draftShell. */
+.draftShell.draftShellAnchored {
+  flex: 1 1 auto; /* fill what the masthead leaves of the 100svh column */
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+}
+.draftShellAnchored .draftAppBar {
+  position: static; /* always visible as a shell row — sticky is moot here */
+  margin: 12px 16px 0;
+}
+.draftScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* no scroll chaining to the document */
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 16px 24px;
+}
+@media (max-width: 430px) {
+  .draftShellAnchored .draftAppBar {
+    margin: 8px 8px 0;
+  }
+  .draftScroll {
+    gap: 8px;
+    padding: 8px 8px 16px;
+  }
+}
+
 .draftAppBar {
   position: sticky;
   top: 0;
@@ -2425,23 +2468,40 @@ button.benchSlot:not(:disabled):hover {
   border-radius: 999px;
 }
 
-/* ── Sticky lock bar (thumb zone) + bottom sheet ──────────────────────────
+/* ── In-shell lock bar (thumb zone) + bottom sheet ────────────────────────
    LOCK PICK is the most-pressed control in the game. Mobile-first layout:
-   one compact context line on top, then a full-width action row where the
-   primary owns the thumb zone (min 52px tall, right side / full width).
-   ≥640px relaxes back to a single side-by-side row. */
+   full-width action row on top, compact context line below it (the context
+   line doubles as live clearance above Safari's bottom-edge tap-to-expand
+   gesture zone, so the primary's hit area never lands in it).
+   ≥640px relaxes back to a single side-by-side row.
+
+   ws-ux/tap-stability-2: the bar is NOT viewport-fixed. iOS Safari anchors
+   `position: fixed; bottom: 0` to the visual viewport, so the bar physically
+   moves during the toolbar collapse/expand animation — the "first tap jumps,
+   second tap works" defect that survived the #78 svh fix. Instead the bar is
+   a normal-flow bottom row of the anchored 100svh draft shell (see
+   .draftShellAnchored): the shell bottom corresponds to the toolbar-expanded
+   position and is invariant under toolbar state transitions. The legacy
+   .lockBar block earlier in this file is fully shadowed by this one (same
+   specificity, later wins) and intentionally left untouched. */
 
 .lockBar {
-  position: fixed;
-  left: 0;
-  right: 0;
+  /* sticky, NOT fixed: in the anchored shell the document never scrolls, so
+     this settles as a plain in-flow row; if a browser without :has() support
+     degrades to a body-scrolling layout, sticky still keeps the bar visible
+     without the iOS visual-viewport anchoring a fixed bar suffers. */
+  position: sticky;
+  inset: auto; /* neutralise the legacy block's stale left/right offsets */
   bottom: 0;
+  flex: 0 0 auto;
   z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 6px;
-  padding: 8px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  /* ≥12px under the safe-area inset keeps the action row clear of Safari's
+     bottom-edge gesture zone even when the toolbar is minimized. */
+  padding: 8px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in srgb, var(--bg-900) 96%, transparent);
   border-top: 1px solid var(--line-2);
   box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
@@ -2463,6 +2523,10 @@ button.benchSlot:not(:disabled):hover {
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.3;
+  /* Context line BELOW the actions in the mobile column layout: it lives in
+     the bottom clearance band, lifting the LOCK PICK hit area ≥16px above
+     the shell bottom edge (Safari gesture-zone margin) without dead space. */
+  order: 2;
 }
 
 .lockHint {
@@ -2504,10 +2568,11 @@ button.benchSlot:not(:disabled):hover {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   }
   .lockInfo {
     flex: 1;
+    order: 0; /* row layout: context line back on the left */
   }
   .lockActions .lockPrimary {
     flex: 0 0 auto;
@@ -4621,7 +4686,8 @@ button.benchSlot:not(:disabled):hover {
      never compact the most-pressed button in the game. */
   .lockBar {
     gap: 5px;
-    padding: 7px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    /* Keep the ≥12px gesture-zone clearance even in the compact tier. */
+    padding: 7px 12px calc(12px + env(safe-area-inset-bottom, 0px));
   }
   .lockInfo {
     font-size: 12px;
