@@ -33,6 +33,13 @@
   defender/keeper under-credit is narrowed, not closed.
 - MV2-9 divergence-review queue mechanism exists; top-end great-vs-great inversions are
   routed there by design (not test-pinned) and remain unreviewed inventory.
+- **Club-at-tournament backfill (12b compact-regen train inherits this):** historical
+  club is source-absent for all 10,973 pre-2026 cards (Fjelstul has no club column; ETL
+  honest-nulls at `cards.py:114`). Spec staged in
+  [`docs/reports/club-backfill-manifest-2026-06-10.md`](../reports/club-backfill-manifest-2026-06-10.md):
+  pin per-tournament Wikipedia squads revisions (1930–2022, same mechanism as
+  `source_2026.py`), parse club, join in ETL, regen compact. UI render path + census-lock
+  test already shipped on `ws-ux/club-coverage`; the census test MUST flip with the regen.
 
 ## Done-when (for the CANDIDATE itself)
 
