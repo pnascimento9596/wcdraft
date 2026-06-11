@@ -4,10 +4,11 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · web count re-measured on ws-ux/club-coverage rebased onto
-main `3c52a34` (#80): 537 passed (+7 club-display/flag tests on top of q-001's 530). All
-other counts from the `9c71219` run (fresh clone) — untouched by these display/docs-only
-changes. Club-at-tournament backfill staged for MV2-12b
+Last measured: 2026-06-11 · forced full gate on ws-ux/pitch-realism off
+origin/main `d3353fd`: `pnpm exec turbo run typecheck lint test build --force`
+reported 16/16 tasks green, 0 cached, in 1m48.661s. Web count is now
+540 passed / 1 skipped (+3 pitch-marking render/coordinate tests).
+Club-at-tournament backfill remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
 ## Lanes in flight at last measurement
@@ -25,6 +26,9 @@ changes. Club-at-tournament backfill staged for MV2-12b
   `dbc1f0a` — docs-only, zero runtime change. Plan default: `t2` token schema,
   v1 era presets only, `Current` rating basis gated on MV2-12b, and a future
   `engine-draft-config` integration branch for implementation.
+- UX: `ws-ux/pitch-realism` is Yellow/display-only (realistic pitch markings +
+  low-ink formation mini-pitches), with before/after 390×844 screenshots under
+  `docs/validation/ws-ux-pitch-realism/`.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -37,21 +41,21 @@ changes. Club-at-tournament backfill staged for MV2-12b
 | rating_version (historical) | wc-perf-4.2.1      |
 | rating_version (projected)  | proj-career-3.0.0  |
 
-## Test counts (run 2026-06-10; web re-run on q-001 at main `b4f8651`, rest at `9c71219`)
+## Test counts (run 2026-06-11; forced Turbo gate on `ws-ux/pitch-realism`)
 
-| Suite                                   | Result                      |
-| --------------------------------------- | --------------------------- |
-| @wcdraft/core `test`                    | 302 passed, 3 skipped (305) |
-| @wcdraft/core `test:golden` (RNG)       | 3 passed                    |
-| @wcdraft/core `test:golden:draft`       | 37 passed                   |
-| @wcdraft/data `test`                    | 50 passed, 7 skipped (57)   |
-| @wcdraft/data `test:golden:data`        | 28 passed                   |
-| @wcdraft/data `test:golden:integration` | 10 passed                   |
-| @wcdraft/db `test`                      | 74 passed                   |
-| @wcdraft/web `test`                     | 537 passed, 1 skipped (538) |
-| @wcdraft/web `test:golden:leaderboard`  | 5 passed                    |
-| etl `pytest -q`                         | 159 passed                  |
-| `pnpm build`                            | 4/4 tasks green             |
+| Suite                                                   | Result                      |
+| ------------------------------------------------------- | --------------------------- |
+| @wcdraft/core `test`                                    | 302 passed, 3 skipped (305) |
+| @wcdraft/core `test:golden` (RNG)                       | 3 passed                    |
+| @wcdraft/core `test:golden:draft`                       | 37 passed                   |
+| @wcdraft/data `test`                                    | 50 passed, 7 skipped (57)   |
+| @wcdraft/data `test:golden:data`                        | 28 passed                   |
+| @wcdraft/data `test:golden:integration`                 | 10 passed                   |
+| @wcdraft/db `test`                                      | 74 passed                   |
+| @wcdraft/web `test`                                     | 540 passed, 1 skipped (541) |
+| @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
+| etl `pytest -q`                                         | 159 passed                  |
+| `pnpm exec turbo run typecheck lint test build --force` | 16/16 tasks green, 0 cached |
 
 ## CI (`.github/workflows/`)
 

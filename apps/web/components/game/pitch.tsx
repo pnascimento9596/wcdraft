@@ -49,6 +49,142 @@ const FALLBACK_LINE: Record<string, FormationVisualSlot["visual_line"]> = {
   FW: "fwd",
 };
 
+type PitchMarkingsVariant = "full" | "mini";
+
+const FIELD_X = 4;
+const FIELD_Y = 4;
+const FIELD_W = 92;
+const FIELD_H = 92;
+const FIELD_CX = 50;
+const FIELD_CY = 50;
+const PENALTY_AREA_X = 22.7;
+const PENALTY_AREA_W = 54.6;
+const PENALTY_AREA_H = 14.5;
+const SIX_YARD_X = 37.6;
+const SIX_YARD_W = 24.8;
+const SIX_YARD_H = 4.8;
+const PENALTY_SPOT_TOP_Y = 13.6;
+const PENALTY_SPOT_BOTTOM_Y = 86.4;
+const CENTER_RX = 12.4;
+const CENTER_RY = 8;
+const PENALTY_ARC_START_X = 40.1;
+const PENALTY_ARC_END_X = 59.9;
+const PENALTY_ARC_TOP_Y = FIELD_Y + PENALTY_AREA_H;
+const PENALTY_ARC_BOTTOM_Y = FIELD_Y + FIELD_H - PENALTY_AREA_H;
+const CORNER_R = 2.5;
+
+export function PitchMarkings({ variant = "full" }: { variant?: PitchMarkingsVariant }) {
+  return (
+    <svg
+      className={`${s.pitchMarkings} ${
+        variant === "mini" ? s.pitchMarkingsMini : s.pitchMarkingsFull
+      }`}
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+      data-pitch-markings={variant}
+    >
+      <rect
+        x={FIELD_X}
+        y={FIELD_Y}
+        width={FIELD_W}
+        height={FIELD_H}
+        className={`${s.pitchMarkingLine} ${s.pitchMarkingTouchline}`}
+        data-mark="touchline"
+      />
+      <line
+        x1={FIELD_X}
+        y1={FIELD_CY}
+        x2={FIELD_X + FIELD_W}
+        y2={FIELD_CY}
+        className={s.pitchMarkingLine}
+        data-mark="halfway"
+      />
+      <ellipse
+        cx={FIELD_CX}
+        cy={FIELD_CY}
+        rx={CENTER_RX}
+        ry={CENTER_RY}
+        className={s.pitchMarkingLine}
+        data-mark="center-circle"
+      />
+      <circle
+        cx={FIELD_CX}
+        cy={FIELD_CY}
+        r="0.75"
+        className={`${s.pitchMarkingSpot} ${s.pitchMarkingDetail}`}
+        data-mark="center-spot"
+      />
+
+      <g data-mark="penalty-area">
+        <rect
+          x={PENALTY_AREA_X}
+          y={FIELD_Y}
+          width={PENALTY_AREA_W}
+          height={PENALTY_AREA_H}
+          className={s.pitchMarkingLine}
+        />
+        <rect
+          x={PENALTY_AREA_X}
+          y={FIELD_Y + FIELD_H - PENALTY_AREA_H}
+          width={PENALTY_AREA_W}
+          height={PENALTY_AREA_H}
+          className={s.pitchMarkingLine}
+        />
+      </g>
+      <g data-mark="six-yard-box">
+        <rect
+          x={SIX_YARD_X}
+          y={FIELD_Y}
+          width={SIX_YARD_W}
+          height={SIX_YARD_H}
+          className={s.pitchMarkingLine}
+        />
+        <rect
+          x={SIX_YARD_X}
+          y={FIELD_Y + FIELD_H - SIX_YARD_H}
+          width={SIX_YARD_W}
+          height={SIX_YARD_H}
+          className={s.pitchMarkingLine}
+        />
+      </g>
+      <g className={s.pitchMarkingDetail} data-mark="penalty-spots">
+        <circle cx={FIELD_CX} cy={PENALTY_SPOT_TOP_Y} r="0.68" className={s.pitchMarkingSpot} />
+        <circle cx={FIELD_CX} cy={PENALTY_SPOT_BOTTOM_Y} r="0.68" className={s.pitchMarkingSpot} />
+      </g>
+      <g className={s.pitchMarkingDetail} data-mark="penalty-arcs">
+        <path
+          d={`M ${PENALTY_ARC_START_X} ${PENALTY_ARC_TOP_Y} A ${CENTER_RX} ${CENTER_RY} 0 0 0 ${PENALTY_ARC_END_X} ${PENALTY_ARC_TOP_Y}`}
+          className={s.pitchMarkingLine}
+        />
+        <path
+          d={`M ${PENALTY_ARC_START_X} ${PENALTY_ARC_BOTTOM_Y} A ${CENTER_RX} ${CENTER_RY} 0 0 1 ${PENALTY_ARC_END_X} ${PENALTY_ARC_BOTTOM_Y}`}
+          className={s.pitchMarkingLine}
+        />
+      </g>
+      <g className={s.pitchMarkingDetail} data-mark="corner-arcs">
+        <path
+          d={`M ${FIELD_X} ${FIELD_Y + CORNER_R} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + CORNER_R} ${FIELD_Y}`}
+          className={s.pitchMarkingLine}
+        />
+        <path
+          d={`M ${FIELD_X + FIELD_W - CORNER_R} ${FIELD_Y} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + FIELD_W} ${FIELD_Y + CORNER_R}`}
+          className={s.pitchMarkingLine}
+        />
+        <path
+          d={`M ${FIELD_X + FIELD_W} ${FIELD_Y + FIELD_H - CORNER_R} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + FIELD_W - CORNER_R} ${FIELD_Y + FIELD_H}`}
+          className={s.pitchMarkingLine}
+        />
+        <path
+          d={`M ${FIELD_X + CORNER_R} ${FIELD_Y + FIELD_H} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X} ${FIELD_Y + FIELD_H - CORNER_R}`}
+          className={s.pitchMarkingLine}
+        />
+      </g>
+    </svg>
+  );
+}
+
 export function Pitch({
   formationId,
   starters,
@@ -95,12 +231,7 @@ export function Pitch({
 
   return (
     <div className={s.pitch} role="group" aria-label="Formation pitch">
-      <div className={s.pitchFrame} aria-hidden="true">
-        <span className={s.pitchHalfway} />
-        <span className={s.pitchCircle} />
-        <span className={s.pitchBoxTop} />
-        <span className={s.pitchBoxBottom} />
-      </div>
+      <PitchMarkings />
       {segments.length > 0 ? (
         <svg
           className={s.pitchSynergyLayer}
@@ -108,6 +239,7 @@ export function Pitch({
           preserveAspectRatio="none"
           aria-hidden="true"
           focusable="false"
+          data-pitch-synergy="true"
         >
           {segments.map((seg) => (
             <line
