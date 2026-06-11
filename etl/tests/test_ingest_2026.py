@@ -405,7 +405,9 @@ _GK_LEGEND = "P-19408"  # Neuer
 
 @pytest.fixture(scope="session")
 def career_2026() -> dict[str, dict]:
-    return rating._load_career_stature(OUT)
+    # V2 flips historical consumers only; projected 2026 remains on the
+    # compatibility view until V3 owns the `ratings_2026.json` re-lock.
+    return rating_2026._load_career_stature(OUT)
 
 
 @pytest.fixture(scope="session")

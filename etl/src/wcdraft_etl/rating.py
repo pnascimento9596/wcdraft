@@ -45,23 +45,19 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-# wc-perf-4.2.1 (basis-gate stature alignment): the `overall_basis` classifier
-# was keyed on a stricter `is_material_elite` predicate (career_stature_index
-# ≥ 0.50) than the v4 ramp's dominance threshold (index ≥ MATERIAL_STATURE_MIN_INDEX
-# = 0.40, where stature_model_weight ≥ STATURE_DOMINANT_WEIGHT = 0.5). A no-signal
-# card with index in [0.40, 0.50) had stature dominate its score yet was mislabeled
-# `baseline_anchor_estimate` and display-capped into [66,73]. The classifier is
-# reordered to make the dominance check primary; the dead `CAREER_ESTIMATE_MIN_INDEX`
-# constant is removed. Channels/internal merit math UNCHANGED; one card's display
-# `overall` moves (Sepp Maier P-14080:WC-1966, 73 → 88) and the basis counts shift
-# baseline 387→386 / career_stature 485→486.
+# wc-perf-5.0.0 (merit-v3 V2): historical ratings now consume the full
+# career-stature-3.0.0 table, replace the raw-only hard clamp with award-gated
+# soft headroom, scale weak-tournament stature modulation and team-finish credit
+# by participation evidence, and emit additive Career/Current basis material for
+# the future runtime-data-2.0.0 unit. The top-level row remains the Career
+# compatibility surface until compact/runtime consumers are changed in V6.
 # wc-perf-4.2.0 (MV2-6): the display `overall` is now reshaped by the UNIFIED
 # pooled display curve (`display_curve.fit_unified_curve`) — ONE monotonic curve
 # fit over the combined historical + 2026 internal distribution and applied
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-4.2.1"
+RATING_VERSION = "wc-perf-5.0.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -197,6 +193,35 @@ COHORT_MIN_N = 8
 # honest raw score up to the ceiling). Sits below the marginal-material STATURE
 # floor (0.58–0.60) so raw-only cards stay below the recognized-greats band.
 RAW_ONLY_GLOBAL_CEILING = 0.62
+
+# merit-v3 V2 §4.1: raw-only tournament performances may escape the old 0.62
+# ceiling only when the card has public major-individual-award evidence. No award
+# means gate 0 and byte-identical raw-only score versus the old clamp.
+RAW_AWARD_GATE_START = 0.30
+RAW_AWARD_GATE_FULL = AWARD_POINTS["Golden Ball"]
+RAW_AWARD_HEADROOM = 0.18
+
+# merit-v3 V2 §4.3a: weak-tournament stature modulation should read participation
+# evidence. Unknown historical participation is neutral; sourced low/no-show
+# participation both widens the allowed down-cap and adds a bounded negative
+# context term before the cap is applied.
+PARTICIPATION_CONTEXT_PENALTY: dict[str, float] = {
+    "FW": 0.15,
+    "MF": 0.15,
+    "DF": 0.13,
+    "GK": 0.12,
+}
+TOURNAMENT_LOW_PARTICIPATION_DOWN_CAP_EXTRA: dict[str, dict[str, float]] = {
+    "FW": {"gold": 0.09, "silver": 0.08, "bronze": 0.07},
+    "MF": {"gold": 0.09, "silver": 0.08, "bronze": 0.07},
+    "DF": {"gold": 0.08, "silver": 0.07, "bronze": 0.06},
+    "GK": {"gold": 0.08, "silver": 0.07, "bronze": 0.06},
+}
+
+# merit-v3 V2 §4.3b: 0-app champion reserves retain bounded squad credit instead
+# of full starter-level team-finish credit. Sourced unknown appearances remain
+# neutral rather than guessed low.
+FINISH_PARTICIPATION_FLOOR = 0.55
 
 # Replacement-level base in [0,1] used (a) as the off-position channel floor,
 # (b) as the FLOOR of the performance base scale, and (c) as the base for a card
@@ -381,15 +406,17 @@ def _load(output_dir: Path, name: str) -> list[dict]:
     return json.loads((output_dir / f"{name}.json").read_text(encoding="utf-8"))
 
 
-def _load_career_stature(output_dir: Path) -> dict[str, dict]:
+def _load_career_stature(
+    output_dir: Path, *, use_rating_compat: bool = False
+) -> dict[str, dict]:
     """player_id -> career-stature row from the offline merit composite.
 
     Missing file is tolerated (returns {}): the rating stage then degrades to the
     pre-career behavior with every lift = 0, so rating.py never hard-depends on the
     merit artifact existing. A present file must carry unique player_id keys.
-    merit-v3 V1 may expose a newer stature table while rating is intentionally
-    locked to a row-level compatibility view until the V2 rating unit flips the
-    consumer.
+    merit-v3 V2 flips historical rating consumption to the full v3 rows. The
+    2026 projected path remains explicitly pinned to the V1 compatibility view
+    until its V3 unit owns projected re-locking.
     """
     path = output_dir / "career_stature.json"
     if not path.exists():
@@ -401,7 +428,7 @@ def _load_career_stature(output_dir: Path) -> dict[str, dict]:
         pid = row["player_id"]
         if pid in by_player:
             raise ValueError(f"duplicate career_stature row for {pid}")
-        if compat_field:
+        if use_rating_compat and compat_field:
             compat = row.get(compat_field)
             if compat is None:
                 continue
@@ -418,8 +445,7 @@ def _career_stature_rating_version(output_dir: Path) -> str | None:
     if not path.exists():
         return None
     table = json.loads(path.read_text(encoding="utf-8"))
-    compat = table.get("rating_consumption") or {}
-    return compat.get("version") or table.get("version")
+    return table.get("version")
 
 
 # ─── ERA NORMALIZATION ────────────────────────────────────────────────────────
@@ -503,14 +529,67 @@ def _stature_target(pos: str, index: float) -> float:
     return _clamp01(STATURE_TARGET_FLOOR[pos] + STATURE_TARGET_SPAN[pos] * norm)
 
 
+def _participation_factor(appearances: int | None, appearances_percentile: float | None) -> float:
+    """Participation factor in [FINISH_PARTICIPATION_FLOOR, 1] for sourced apps.
+
+    Missing appearances are genuinely unknown for older cards, so they are neutral
+    rather than treated as zero participation.
+    """
+    if appearances is None or appearances_percentile is None:
+        return 1.0
+    if appearances <= 0:
+        return FINISH_PARTICIPATION_FLOOR
+    return max(FINISH_PARTICIPATION_FLOOR, min(1.0, appearances_percentile))
+
+
+def _stature_participation_context(
+    appearances: int | None, appearances_percentile: float | None
+) -> float:
+    """Participation context for stature down-modulation.
+
+    Unknown appearances are neutral. For sourced apps, use the app percentile but
+    make 0-app cards a true no-show signal instead of the mid-rank 0-app percentile.
+    """
+    if appearances is None or appearances_percentile is None:
+        return 1.0
+    if appearances <= 0:
+        return 0.0
+    return max(0.0, min(1.0, appearances_percentile))
+
+
+def _award_gate(award_anchor: float) -> float:
+    return _ramp01(award_anchor, RAW_AWARD_GATE_START, RAW_AWARD_GATE_FULL)
+
+
+def _raw_only_score(
+    raw_tournament_score: float, raw_only_ceiling: float, award_anchor: float
+) -> float:
+    capped = min(raw_tournament_score, raw_only_ceiling)
+    headroom = _award_gate(award_anchor) * min(
+        max(raw_tournament_score - raw_only_ceiling, 0.0),
+        RAW_AWARD_HEADROOM,
+    )
+    return _clamp01(capped + headroom)
+
+
 def _tournament_modulation(
-    raw_tournament_score: float, tournament_ref: float, pos: str, tier: str | None
+    raw_tournament_score: float,
+    tournament_ref: float,
+    pos: str,
+    tier: str | None,
+    participation_context: float = 1.0,
 ) -> float:
     """Signed, bounded tournament context around the stature target. Positive when
     the card's raw tournament score beats its (tournament_id, pos) cohort median,
     negative when it lags — capped tighter downward at higher stature tiers."""
+    participation_gap = 1.0 - _clamp01(participation_context)
     raw_delta = raw_tournament_score - tournament_ref
-    down_cap = TOURNAMENT_DOWN_CAP[pos][tier or "bronze"]
+    if raw_delta < 0.0 or participation_gap > 0.0:
+        raw_delta -= PARTICIPATION_CONTEXT_PENALTY[pos] * participation_gap
+    down_cap = TOURNAMENT_DOWN_CAP[pos][tier or "bronze"] + (
+        TOURNAMENT_LOW_PARTICIPATION_DOWN_CAP_EXTRA[pos][tier or "bronze"]
+        * participation_gap
+    )
     up_cap = TOURNAMENT_UP_CAP[pos]
     return max(-down_cap, min(up_cap, TOURNAMENT_MOD_GAIN[pos] * raw_delta))
 
@@ -623,8 +702,21 @@ def _build_internal_rows(
         award_score = _award_score(c["awards"]) if c["awards"] is not None else 0.0
         finish = finish_of.get((c["nation_id"], c["tournament_id"]))
         finish_pts = FINISH_POINTS[finish] if finish is not None else None
-        anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (finish_pts or 0.0)
+        finish_participation = _participation_factor(c["appearances"], a_pct)
+        stature_participation = _stature_participation_context(c["appearances"], a_pct)
+        effective_finish_pts = (
+            round(finish_pts * finish_participation, _PRECISION)
+            if finish_pts is not None
+            else None
+        )
+        legacy_anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (
+            finish_pts or 0.0
+        )
+        anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (
+            effective_finish_pts or 0.0
+        )
 
+        legacy_raw_tournament_score = _clamp01(base + legacy_anchor)
         raw_tournament_score = _clamp01(base + anchor)
         raw_by_cohort.setdefault(ckey, []).append(raw_tournament_score)
         raw_by_pos.setdefault(pos, []).append(raw_tournament_score)
@@ -638,7 +730,11 @@ def _build_internal_rows(
                 "eff_weight": eff_weight,
                 "award_score": award_score,
                 "finish_pts": finish_pts,
+                "effective_finish_pts": effective_finish_pts,
+                "finish_participation": finish_participation,
+                "stature_participation": stature_participation,
                 "has_individual_signal": has_individual_signal,
+                "legacy_raw_tournament_score": legacy_raw_tournament_score,
                 "raw_tournament_score": raw_tournament_score,
             }
         )
@@ -675,7 +771,11 @@ def _build_internal_rows(
             tier = cs.get("stature_tier")
             target = _stature_target(pos, index)
             modulation = _tournament_modulation(
-                s["raw_tournament_score"], ref, pos, tier
+                s["raw_tournament_score"],
+                ref,
+                pos,
+                tier,
+                s["stature_participation"],
             )
             stature_path = _clamp01(target + modulation)
         else:
@@ -716,7 +816,8 @@ def _build_internal_rows(
             raw_only_ceiling = min(
                 raw_only_ceiling, _quantile(sorted(cohort_material), 0.5)
             )
-        raw_path = min(raw, raw_only_ceiling)
+        raw_path = _raw_only_score(raw, raw_only_ceiling, s["award_score"])
+        award_headroom = raw_path - min(raw, raw_only_ceiling)
 
         # The continuous blend: weight 0 ⇒ raw-only, weight 1 ⇒ stature-dominant.
         final = _clamp01(weight * s["stature_path"] + (1.0 - weight) * raw_path)
@@ -777,6 +878,16 @@ def _build_internal_rows(
             },
             {"signal": "award_score", "value": s["award_score"], "weight": AWARD_WEIGHT[pos]},
             {"signal": "team_finish", "value": s["finish_pts"], "weight": FINISH_WEIGHT[pos]},
+            {
+                "signal": "finish_participation_factor",
+                "value": round(s["finish_participation"], _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "effective_team_finish",
+                "value": s["effective_finish_pts"],
+                "weight": FINISH_WEIGHT[pos],
+            },
             # Stature-dominant transparency (wc-perf-4.0.0). career_* are CAREER
             # aggregates (constant across a player's cards); raw_tournament_score and
             # tournament_modulation vary per card. A player with no career row shows
@@ -788,6 +899,26 @@ def _build_internal_rows(
                 "weight": 0.0,
             },
             {
+                "signal": "legacy_raw_tournament_score",
+                "value": round(s["legacy_raw_tournament_score"], _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "raw_only_ceiling",
+                "value": round(raw_only_ceiling, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "award_headroom",
+                "value": round(award_headroom, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "raw_only_score",
+                "value": round(raw_path, _PRECISION),
+                "weight": 0.0,
+            },
+            {
                 "signal": "tournament_reference_score",
                 "value": round(s["ref"], _PRECISION),
                 "weight": 0.0,
@@ -795,6 +926,11 @@ def _build_internal_rows(
             {
                 "signal": "tournament_modulation",
                 "value": round(s["modulation"], _PRECISION) if weight > 0.0 else 0.0,
+                "weight": 0.0,
+            },
+            {
+                "signal": "stature_participation_context",
+                "value": round(s["stature_participation"], _PRECISION),
                 "weight": 0.0,
             },
             {
@@ -838,8 +974,15 @@ def _build_internal_rows(
                 "tournament_id": c["tournament_id"],
                 "pos": pos,
                 "score_0_100": score_0_100,
+                "current_score_0_100": 100.0 * raw_path,
                 "raw_tournament_score_0_100": round(100.0 * raw, _PRECISION),
+                "raw_only_score_0_100": round(100.0 * raw_path, _PRECISION),
                 "overall_basis": overall_basis,
+                "current_basis": (
+                    "baseline_anchor_estimate"
+                    if not s["has_individual_signal"]
+                    else "measured_performance"
+                ),
                 "legend": bool(cs["legend"]) if cs else False,
                 "components": components,
                 "coverage": c["coverage"],
@@ -908,6 +1051,9 @@ def build_ratings(
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
         overall = _display_score(s, curve, estimate=estimate)
+        current_s = row["current_score_0_100"]
+        current_estimate = row["current_basis"] == "baseline_anchor_estimate"
+        current_overall = _display_score(current_s, curve, estimate=current_estimate)
         # DECOUPLED CHANNELS (Phase 1.1, plan §3.2 fallback).
         # Sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band so the
         # ENGINE's λ stays calibrated and the symmetric coherent-XI control
@@ -918,6 +1064,40 @@ def build_ratings(
         channels = {
             ch: _channel(s, CHANNEL_SPREAD[pos][ch])
             for ch in CHANNELS
+        }
+        current_channels = {
+            ch: _channel(current_s, CHANNEL_SPREAD[pos][ch])
+            for ch in CHANNELS
+        }
+        career_basis = {
+            "overall": overall,
+            "overall_basis": row["overall_basis"],
+            "attack": channels["attack"],
+            "midfield": channels["midfield"],
+            "defense": channels["defense"],
+            "goalkeeping": channels["goalkeeping"],
+            "coverage": row["coverage"],
+            "components": row["components"],
+            "basis_metadata": {
+                "basis": "career",
+                "score_0_100": round(s, _PRECISION),
+                "rating_version": RATING_VERSION,
+            },
+        }
+        current_basis = {
+            "overall": current_overall,
+            "overall_basis": row["current_basis"],
+            "attack": current_channels["attack"],
+            "midfield": current_channels["midfield"],
+            "defense": current_channels["defense"],
+            "goalkeeping": current_channels["goalkeeping"],
+            "coverage": row["coverage"],
+            "components": row["components"],
+            "basis_metadata": {
+                "basis": "current",
+                "score_0_100": round(current_s, _PRECISION),
+                "rating_version": RATING_VERSION,
+            },
         }
         ratings.append(
             {
@@ -934,6 +1114,10 @@ def build_ratings(
                 "midfield": channels["midfield"],
                 "defense": channels["defense"],
                 "goalkeeping": channels["goalkeeping"],
+                "basis_ratings": {
+                    "career": career_basis,
+                    "current": current_basis,
+                },
                 "components": row["components"],
                 "coverage": row["coverage"],
                 "coverage_basis": "wc_signals",
