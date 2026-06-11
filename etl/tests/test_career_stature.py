@@ -11,7 +11,15 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from wcdraft_etl.merit import FAMILY_KEYS, VERSION, stature
+import pytest
+
+from wcdraft_etl.merit import (
+    ACTIVE_SOURCE_SET_VERSION,
+    FAMILY_KEYS,
+    SOURCE_SET_VERSION,
+    VERSION,
+    stature,
+)
 
 _OUTPUT = Path(__file__).resolve().parents[1] / "output"
 
@@ -52,20 +60,61 @@ def test_scores_and_coverage_are_finite_in_unit_interval():
             assert fs is None or (0.0 <= fs <= 1.0)
 
 
-def test_club_honors_is_deferred_weight_zero_everywhere():
-    """Tier-2 club honours are deferred (E-4b): null family score, weight 0,
-    in every row — never a fact, never a weight."""
+def test_club_honors_legacy_zero_and_club_season_honors_active():
+    """V1 adds the narrow club_season_honors family. The legacy club_honors key
+    remains the explicit zero-weight placeholder, while cited active title/final
+    participation facts score only through the new family."""
+    club_rows = []
     for r in _committed()["career_stature"]:
         assert r["family_scores"]["club_honors"] is None
         assert r["family_weights"]["club_honors"] == 0.0
+        if r["family_scores"]["club_season_honors"]:
+            club_rows.append(r)
+            assert r["family_weights"]["club_season_honors"] > 0.0
+            assert r["active_source_set_version"] == ACTIVE_SOURCE_SET_VERSION
+    assert {
+        "P-05174",
+        "P-21531",
+        "P-62341",
+        "P-92812",
+        "P-W26-0050",
+        "P-W26-0115",
+        "P-W26-0477",
+        "P-W26-0512",
+        "P-W26-0574",
+    } <= {r["player_id"] for r in club_rows}
 
 
-def test_era_weights_match_the_locked_table():
-    """Each row's family weights are exactly the era-bucket weights — there is no
-    per-player weighting, only per-era."""
+def test_family_weights_are_era_based_with_documented_eligibility_adjustments():
+    """Weights start from the era table, drop structurally unavailable families,
+    then apply only closed-set eligibility adjustments. This is not per-player
+    tuning: the only V1 adjustment is pre-1995 Ballon d'Or ineligibility."""
     for r in _committed()["career_stature"]:
-        expected = stature.ERA_FAMILY_WEIGHTS[r["era_bucket"]]
-        assert r["family_weights"] == expected, r["player_id"]
+        base = stature.ERA_FAMILY_WEIGHTS[r["era_bucket"]]
+        weights = r["family_weights"]
+        assert set(weights) == set(stature._V2_FAMILY_KEYS), r["player_id"]
+        assert weights["club_honors"] == 0.0
+        for fam, base_weight in base.items():
+            if base_weight == 0.0:
+                assert weights[fam] == 0.0, (r["player_id"], fam)
+        assert round(sum(weights.values()), stature._PRECISION) == 1.0, r["player_id"]
+        adjustments = r["family_weight_adjustments"]
+        assert set(adjustments) <= {
+            "global_annual_recognition:pre_1995_ballondor_ineligible"
+        }
+        if not adjustments:
+            total = sum(w for w in base.values() if w > 0.0)
+            expected = {
+                fam: round((base.get(fam, 0.0) / total) if base.get(fam, 0.0) > 0.0 else 0.0,
+                           stature._PRECISION)
+                for fam in stature._V2_FAMILY_KEYS
+            }
+            assert weights == expected, r["player_id"]
+
+    pele = {r["player_id"]: r for r in _committed()["career_stature"]}["P-38906"]
+    assert pele["family_weight_adjustments"] == [
+        "global_annual_recognition:pre_1995_ballondor_ineligible"
+    ]
 
 
 def test_every_family_score_is_backed_by_a_source_ref():
@@ -98,22 +147,26 @@ def test_material_gate_split_is_consistent():
 
 
 def test_index_is_finite_monotonic_respread_in_unit_interval():
-    """career_stature_index is a finite [0,1] value, monotonic non-decreasing in the
-    score (the global re-spread), and never below the raw score's own compression —
-    the recognized-greats cohort lands near the top of [0,1]."""
+    """career_stature_index_raw is the finite monotonic global re-spread. The
+    emitted index may be lower only through the documented V1 bias controls."""
     rows = sorted(
         _committed()["career_stature"], key=lambda r: r["career_stature_score"]
     )
-    last = -1.0
+    last_raw = -1.0
     for r in rows:
+        raw = r["career_stature_index_raw"]
         idx = r["career_stature_index"]
+        assert isinstance(raw, (int, float)) and 0.0 <= raw <= 1.0 and raw == raw, r
         assert isinstance(idx, (int, float)) and 0.0 <= idx <= 1.0 and idx == idx, r
-        assert idx >= last - 1e-9, ("index not monotonic vs score", r["player_id"])
-        last = idx
+        assert raw >= last_raw - 1e-9, ("raw index not monotonic vs score", r["player_id"])
+        assert idx <= raw + 1e-9, ("bias control inflated index", r["player_id"])
+        if not r["index_adjustments"]:
+            assert idx == raw, r["player_id"]
+        last_raw = raw
     # The transform is a pure function of the score (no per-player parameter): equal
-    # scores must yield equal indices.
+    # scores must yield equal raw indices.
     for r in _committed()["career_stature"]:
-        assert r["career_stature_index"] == round(
+        assert r["career_stature_index_raw"] == round(
             stature._index_of(r["career_stature_score"]), stature._PRECISION
         ), r["player_id"]
 
@@ -141,9 +194,10 @@ def test_legend_is_source_derived_with_closed_reason_codes():
     """legend is a boolean backed by ≥1 closed-set reason code; the reason codes are
     a pure function of the player's SOURCE facts + index (never a rating)."""
     facts_by_player: dict[str, list[dict]] = {}
-    sf = json.loads((_OUTPUT / "merit" / "source_facts.json").read_text("utf-8"))
-    for f in sf["facts"]:
-        facts_by_player.setdefault(f["player_id"], []).append(f)
+    for name in ("source_facts.json", "source_facts_active.json"):
+        sf = json.loads((_OUTPUT / "merit" / name).read_text("utf-8"))
+        for f in sf["facts"]:
+            facts_by_player.setdefault(f["player_id"], []).append(f)
     for r in _committed()["career_stature"]:
         codes = r["legend_reason_codes"]
         assert all(c in stature._LEGEND_REASON_CODES for c in codes), r["player_id"]
@@ -153,6 +207,201 @@ def test_legend_is_source_derived_with_closed_reason_codes():
             facts_by_player[r["player_id"]], r["career_stature_index"]
         )
         assert rederived == codes, r["player_id"]
+
+
+def test_active_stage_normalization_and_honest_absence():
+    """Active dated facts are accrual-to-date normalized and capped. Players with
+    no sourced fact still have no row; no synthetic zero or placeholder lift is
+    emitted."""
+    by = {r["player_id"]: r for r in _committed()["career_stature"]}
+
+    valverde = by["P-05174"]
+    assert valverde["active_fact_count"] == 2
+    assert valverde["family_scores"]["club_season_honors"] == 1.0
+    assert valverde["active_stage_factors"]["club_season_honors"] == 0.625
+    assert 0.40 <= valverde["career_stature_index"] <= 0.46
+    assert valverde["coverage"] == 0.32
+
+    yamal = by["P-W26-0663"]
+    assert yamal["active_stage_factors"]["global_annual_recognition"] == 0.35
+    assert yamal["career_stature_index"] >= 0.50
+
+    # Named no-fact candidates remain honestly absent from the stature table.
+    assert "P-36290" not in by  # José Luis Perlaza
+    assert "P-40581" not in by  # Anis Ayari
+    assert "P-W26-0686" not in by  # Yasin Ayari
+
+
+def test_person_identity_resolver_and_merge_prevent_double_credit():
+    """Post-activation double credit is impossible at the stature merge: a
+    historical fact plus an active fact on a bridged 2026 alias produce one
+    person row, not two player rows."""
+    resolver = stature._PersonIdentityResolver(
+        players=[{"player_id": "P-62341", "birth_date": "1996-06-22"}],
+        players_2026=[
+            {
+                "player_id": "P-W26-RODRI",
+                "birth_date": "1996-06-22",
+                "full_name": "Rodri",
+                "common_name": "Rodri",
+                "family_name": "Rodri",
+            }
+        ],
+        cards_2026=[
+            {
+                "card_id": "P-W26-RODRI:WC-2026",
+                "player_id": "P-W26-RODRI",
+                "link_status": "minted",
+                "nation_id": "T-73",
+                "birth_date": "1996-06-22",
+            }
+        ],
+    )
+    assert resolver.resolve("P-W26-RODRI") == "P-62341"
+
+    ctx = stature._ScoringContext(
+        resolver=resolver,
+        birth_year={"P-62341": 1996},
+        confederations={"P-62341": {"UEFA"}},
+    )
+    source_facts = {
+        "version": SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-62341",
+                "source_id": "european_poy",
+                "family": "global_annual_recognition",
+                "year": 2024,
+                "position": "MF",
+                "detail": "european_poy winner 2024",
+                "era": "1991_plus",
+            }
+        ],
+    }
+    active_facts = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-W26-RODRI",
+                "source_id": "active_club_season_honors",
+                "family": "club_season_honors",
+                "year": 2024,
+                "position": "MF",
+                "detail": "UEFA Champions League title with final participation",
+            }
+        ],
+    }
+    active_staging = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "entries": [{"player_id": "P-W26-RODRI"}],
+    }
+    merged, meta = stature._merge_active_channel(
+        source_facts, active_facts, active_staging, {"P-62341": [2022]}, ctx
+    )
+    assert meta["resolved_aliases"] == {"P-62341": ["P-62341", "P-W26-RODRI"]}
+    rows, _ = stature.build_rows(merged, {"P-62341": [2022]}, ctx)
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["player_id"] == "P-62341"
+    assert row["fact_count"] == 2
+    assert row["active_fact_count"] == 1
+    assert row["resolved_player_ids"] == ["P-62341", "P-W26-RODRI"]
+    assert "identity_bridge" in row["person_resolution_methods"]
+
+
+def test_unresolved_active_identity_bridge_fails_stature_merge():
+    """Mutation proof for the post-activation guard: if an active fact reaches a
+    historical/archive identity without an identity merge, the staging artifact
+    still carries ``identity_bridge_review`` and stature refuses to score it."""
+    resolver = stature._PersonIdentityResolver(
+        players=[{"player_id": "P-62341", "birth_date": "1996-06-22"}],
+        players_2026=[
+            {
+                "player_id": "P-W26-RODRI",
+                "birth_date": "1996-06-22",
+                "full_name": "Unmerged Rodri Alias",
+                "common_name": "Rodri Alias",
+                "family_name": "Alias",
+            }
+        ],
+        cards_2026=[
+            {
+                "card_id": "P-W26-RODRI:WC-2026",
+                "player_id": "P-W26-RODRI",
+                "link_status": "minted",
+                "nation_id": "T-73",
+                "birth_date": "1996-06-22",
+            }
+        ],
+    )
+    assert resolver.resolve("P-W26-RODRI") == "P-W26-RODRI"
+
+    ctx = stature._ScoringContext(
+        resolver=resolver,
+        birth_year={"P-62341": 1996, "P-W26-RODRI": 1996},
+        confederations={"P-62341": {"UEFA"}, "P-W26-RODRI": {"UEFA"}},
+    )
+    source_facts = {
+        "version": SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-62341",
+                "source_id": "european_poy",
+                "family": "global_annual_recognition",
+                "year": 2024,
+                "position": "MF",
+                "detail": "european_poy winner 2024",
+                "era": "1991_plus",
+            }
+        ],
+    }
+    active_facts = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "facts": [
+            {
+                "player_id": "P-W26-RODRI",
+                "source_id": "active_club_season_honors",
+                "family": "club_season_honors",
+                "year": 2024,
+                "position": "MF",
+                "detail": "UEFA Champions League title with final participation",
+            }
+        ],
+    }
+    active_staging = {
+        "version": ACTIVE_SOURCE_SET_VERSION,
+        "entries": [{"player_id": "P-W26-RODRI"}],
+        "identity_bridge_review": [
+            {
+                "minted_player_id": "P-W26-RODRI",
+                "historical_player_id": "P-62341",
+                "historical_has_archive_row": True,
+                "method": "manual-mutation",
+            }
+        ],
+    }
+    with pytest.raises(ValueError, match="unresolved identity bridges"):
+        stature._merge_active_channel(
+            source_facts, active_facts, active_staging, {"P-62341": [2022]}, ctx
+        )
+
+
+def test_index_bias_control_probe_census():
+    """V1-owned probe census: eligibility-aware re-normalization raises
+    pre-1995 non-UEFA profiles, sparse-control prevents tiny profiles from
+    occupying the extreme band, and known ordering probes stay coherent."""
+    by = {r["player_id"]: r for r in _committed()["career_stature"]}
+    pele = by["P-38906"]
+    kocsis = by["P-07028"]
+    cruyff = by["P-50564"]
+    owen = by["P-51130"]
+    klose = by["P-27787"]
+
+    assert pele["career_stature_index"] > kocsis["career_stature_index"]
+    assert "sparse_fact_count_shrinkage" in kocsis["index_adjustments"]
+    assert kocsis["career_stature_index"] <= 0.90
+    assert cruyff["career_stature_index"] > owen["career_stature_index"]
+    assert klose["career_stature_index"] >= 0.40
 
 
 def test_canonical_greats_and_defender_gk_legends_are_flagged():

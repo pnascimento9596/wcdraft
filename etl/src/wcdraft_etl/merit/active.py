@@ -1,10 +1,10 @@
-"""MV2-12a — active-career stature intake (FACTS ONLY, structurally inert).
+"""Active-career stature intake (FACTS ONLY, activated by merit-v3 V1 stature).
 
-The career-stature archive covers COMPLETED careers: 791 players, peak-year
-ceiling 2022, zero entries ≥ 2023 (the MV2-12 audit's confirmed C1 mechanism).
-Players whose careers are still running — including every 2026 squad member —
-are structurally barred from it. This module extends the merit intake to
-in-progress careers WITHOUT touching anything the rating stage consumes:
+The rating-compatible career-stature view still covers the completed-career
+archive: 791 players, peak-year ceiling 2022, zero entries ≥ 2023 (the MV2-12
+audit's confirmed C1 mechanism). merit-v3 V1 extends the stature table itself
+to in-progress careers, but this module remains facts + identity only and never
+writes rating outputs:
 
     etl/output/merit/source_facts_active.json           linked active facts
     etl/output/merit/link_review_active.json            withheld ambiguities
@@ -30,19 +30,16 @@ Two fact channels feed it:
      (post-snapshot award wins, standing captaincies, canonical-name recovery
      of withheld longevity rows). An uncited row FAILS the build.
 
-INERTNESS CONTRACT (the load-bearing MV2-12a line):
+ACTIVATION CONTRACT (the load-bearing merit-v3 V1 line):
 
-  * Nothing here writes to — or is read by — ``source_facts.json``,
-    ``career_stature.json``, ``rating.py``, ``rating_2026.py`` or any compact
-    bundle. The consumed archive stays byte-identical; activation of this
-    channel is MV2-12b's explicit, reviewable flip (full Red chain).
-  * NO score, index, tier or legend is computed for staged entries: the
-    completed-career composite is the wrong model for an in-progress career
-    (career-stage normalization is MV2-12b design work). Staging carries facts
-    and identity only.
-  * A staged fact may not target a player who already has an archive row —
-    intake covers the structural gap, never double-credits an identity. The
-    build FAILS if curation drifts onto an archived player.
+  * This module still writes only active facts, active review, and active
+    staging. ``stature.py`` is the only scoring consumer and owns the
+    career-stage-normalized merge into ``career_stature.json``.
+  * Staging entries remain facts + identity only. Score, index, tier and legend
+    stay out of this module so there is one scoring implementation.
+  * A staged fact may target an identity that already has an archive row; the
+    person-level merge in ``stature.py`` must emit one row for the person and
+    fails the build if resolution would create duplicate person rows.
   * Honest-state: a player with no citable post-archive record gets no entry;
     refuted or unverifiable curation attempts are dropped and documented in the
     note files' ``curation_notes``.
@@ -50,8 +47,8 @@ INERTNESS CONTRACT (the load-bearing MV2-12a line):
 IDENTITY: facts are keyed to a single explicit identity — a canonical
 historical ``player_id`` (active player with a men's WC card) or a minted 2026
 ``player_id`` (``P-W26-…``). Minted players whose name + birth date shadow a
-fact-carrying historical identity are surfaced in ``identity_bridge_review``
-(review-only; the bridge seam itself is MV2-12b scope).
+fact-carrying historical identity are surfaced in ``identity_bridge_review``;
+the scorer consumes the real 2026 links first and identity bridges second.
 
 Pure + offline: a re-run over the committed snapshots, notes and canonical
 tables reproduces byte-identical outputs. No network, clock, randomness or LLM.
@@ -452,17 +449,10 @@ def build(write: bool = True) -> dict:
 
     facts = _sort_facts(list(facts_by_key.values()))
 
-    # INERTNESS GUARD — staged facts may not target an identity the consumed
-    # archive already scores; intake covers the structural gap, never
-    # double-credits. Curation drift onto an archived player fails the build.
-    archive = json.loads((_CANON_DIR / "career_stature.json").read_text(encoding="utf-8"))
-    archived_pids = {r["player_id"] for r in archive["career_stature"]}
-    collisions = sorted({f["player_id"] for f in facts} & archived_pids)
-    if collisions:
-        raise ActiveIntakeError(
-            "active intake targets archived identities (double-credit): "
-            + ", ".join(collisions)
-        )
+    # Activation seam: archived targets are allowed here. stature.py resolves
+    # person identities and enforces one merged career-stature row per person.
+    archive_facts = json.loads((OUTPUT_DIR / "source_facts.json").read_text(encoding="utf-8"))
+    archived_pids = {f["player_id"] for f in archive_facts["facts"]}
 
     review = sorted(
         review_acc.values(),
@@ -470,8 +460,8 @@ def build(write: bool = True) -> dict:
     )
 
     # Staging entries: identity + facts only. NO score / index / tier / legend —
-    # scoring an in-progress career needs the career-stage-normalized model that
-    # MV2-12b owns; their absence here is the explicit-flip seam.
+    # scoring an in-progress career belongs to stature.py's career-stage-
+    # normalized model; their absence here is the explicit activation seam.
     by_pid: dict[str, list[dict]] = defaultdict(list)
     for f in facts:
         by_pid[f["player_id"]].append(f)
@@ -510,14 +500,13 @@ def build(write: bool = True) -> dict:
     staging_doc = {
         "version": ACTIVE_SOURCE_SET_VERSION,
         "cutoff_date": ACTIVE_CUTOFF_DATE,
-        "inert": True,
+        "activated_by": "career-stature-3.0.0",
         "note": (
-            "Active-career staging entries (MV2-12a). Facts + identity only: no "
-            "career_stature_score, index, tier or legend is computed — the "
-            "completed-career composite is the wrong model for an in-progress "
-            "career. Nothing in the rating stage reads this file; MV2-12b "
-            "activates the channel explicitly (career-stage-normalized index, "
-            "full Red chain)."
+            "Active-career staging entries. Facts + identity only: no "
+            "career_stature_score, index, tier or legend is computed here. "
+            "career-stature-3.0.0 consumes source_facts_active.json plus this "
+            "staging artifact and applies the person-level, career-stage-"
+            "normalized merge."
         ),
         "entry_count": len(entries),
         "entries": entries,
@@ -545,7 +534,7 @@ def build(write: bool = True) -> dict:
     }
 
 
-# ─── identity-bridge review (review-only; the seam itself is MV2-12b) ─────────
+# ─── identity-bridge review (review-only; consumed by the stature resolver) ───
 
 
 def _identity_bridge_review(
@@ -620,10 +609,9 @@ def _render_report(facts, entries, review, bridges, curation_notes) -> str:
     L.append(f"# Active-career intake ({ACTIVE_SOURCE_SET_VERSION})\n")
     L.append(
         "MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year "
-        f"ceiling 2022). Curation cutoff **{ACTIVE_CUTOFF_DATE}**. STRUCTURALLY "
-        "INERT: no rating-stage module reads these artifacts; no score/index is "
-        "computed. Activation is MV2-12b (career-stage-normalized index, full "
-        "Red chain).\n"
+        f"ceiling 2022). Curation cutoff **{ACTIVE_CUTOFF_DATE}**. Activated by "
+        "career-stature-3.0.0: stature.py consumes these artifacts, while this "
+        "module still emits facts + identity only and no rating output.\n"
     )
     L.append(f"- Linked active facts: **{len(facts)}**")
     L.append(f"- Players staged: **{len(entries)}**")
@@ -659,7 +647,7 @@ def _render_report(facts, entries, review, bridges, curation_notes) -> str:
             f"| {', '.join(e['families'])} |"
         )
 
-    L.append("\n## Identity-bridge review (review-only; MV2-12b seam)\n")
+    L.append("\n## Identity-bridge review (review-only; stature resolver input)\n")
     if bridges:
         L.append("| Minted 2026 id | Historical id | Archive row | Method |")
         L.append("|---|---|---|---|")
@@ -682,8 +670,8 @@ def _render_report(facts, entries, review, bridges, curation_notes) -> str:
         "\n_Conservative linking throughout: a parser record is recovered against "
         "the minted 2026 identity space ONLY when the historical canon offers no "
         "candidate; note rows link historical-first; every ambiguity is withheld, "
-        "never assigned. A staged fact may not target an identity the consumed "
-        "archive already scores (build-enforced)._\n"
+        "never assigned. Archived-target staged facts are merged by stature.py's "
+        "person resolver, which enforces one row per person._\n"
     )
     return "\n".join(L) + "\n"
 
@@ -708,23 +696,32 @@ def manifest_from_committed() -> dict:
         data = _read_bytes(source.raw_file)
         doc = json.loads(data)
         cited = sorted({r["citation"]["url"] for r in doc["rows"]})
-        files.append(
-            {
-                "file": source.raw_file,
-                "source_id": source.source_id,
-                "family": source.family,
-                "bytes": len(data),
-                "sha256": _sha256(data),
-                "row_count": len(doc["rows"]),
-                "cited_urls": cited,
+        entry = {
+            "file": source.raw_file,
+            "source_id": source.source_id,
+            "family": source.family,
+            "bytes": len(data),
+            "sha256": _sha256(data),
+            "row_count": len(doc["rows"]),
+            "cited_urls": cited,
+        }
+        if census := doc.get("census"):
+            entry["census"] = {
+                "rule_id": census["rule_id"],
+                "rule": census["rule"],
+                "scope_count": len(census["scope"]),
+                "scope_player_ids": sorted(s["player_id"] for s in census["scope"]),
+                "top_tier_competitions": census["top_tier_competitions"],
+                "finals_registry_count": len(census["finals_registry"]),
+                "exclusion_count": len(census.get("exclusions", [])),
             }
-        )
+        files.append(entry)
     return {
         "version": ACTIVE_SOURCE_SET_VERSION,
         "cutoff_date": ACTIVE_CUTOFF_DATE,
         "note": (
-            "MV2-12a active-career intake notes. Citation-backed public facts for "
-            "in-progress careers, staged in the inert active channel. Each note is "
+            "Active-career intake notes. Citation-backed public facts for "
+            "in-progress careers, staged for career-stature-3.0.0. Each note is "
             "SHA-pinned and every row carries a fetchable public citation URL plus "
             "the specific claim it supports; editing a citation changes the bytes "
             "and therefore the pinned sha256. An uncited row fails the build."
