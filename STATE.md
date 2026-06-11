@@ -14,7 +14,13 @@ rebuild, token skew, leaderboard canonical-config, era honesty, and golden
 diff gates were re-executed in the fresh season-merge review. merit-v3 U0 also
 measured ETL ruff clean, ETL pytest 199 passed (+17 identity-link tests), 2026
 ingest run-twice byte-identical, and linker-conservatism byte-stability for
-`source_facts.json`/`link_review.json`/`career_stature.json`. Club-at-tournament
+`source_facts.json`/`link_review.json`/`career_stature.json`. merit-v3 V1
+measured ETL ruff clean, focused merit suite 42 passed, full ETL pytest 233
+passed, active/stature generation run twice byte-identical, and ratings plus
+compact generated artifacts unchanged. Active-career source set stays
+`active-career-source-set-2.0.0`; club-season honors is census-locked at 14 rows
+/ 9 finals over the 26-player active scope; Alaba 2020 is pinned to UEFA match
+2030150 and all 14 cited final pages were re-verified. Club-at-tournament
 backfill remains staged for MV2-12b
 (`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
@@ -80,6 +86,14 @@ backfill remains staged for MV2-12b
   negative). `*_2026.json` + merit active staging re-locked ON BRANCH; NO version
   bumps / compact regen / canary / λ (V6–V8 own those). 5 near-miss identity
   candidates surfaced for human verification (PR table) — withheld, not linked.
+- merit-v3 V1 stature core fix-forward (this change, PR #91): top-tier
+  continental club honors intake is now an explicit scope x finals-registry
+  census (14 rows over 26 active-scope players), with completeness tested from
+  manifest metadata; Alaba 2020 is re-pinned from UEFA match 2029490 to 2030150,
+  and the active-note verification ledger confirms all 14 cited final pages name
+  the player. Active/archive access now fails unresolved identity bridges before
+  stature merge, with mutation proof in the test suite; V1 report, delta CSV, and
+  STATE updated. No compact goldens or rating consumer artifacts changed.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -105,7 +119,12 @@ backfill remains staged for MV2-12b
 | @wcdraft/db `test`                                      | 74 passed                   |
 | @wcdraft/web `test`                                     | 594 passed, 1 skipped (595) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
-| etl `pytest -q`                                         | 199 passed (+17 identity-link tests, merit-v3 U0) |
+| etl V1 `ruff check src tests`                           | clean                       |
+| etl V1 focused merit suite                              | 42 passed                   |
+| etl V1 `pytest -q`                                      | 233 passed                  |
+| merit-v3 V1 club-season citation verifier               | 14/14 rows verified         |
+| merit-v3 V1 active/stature generation                   | two-run byte-identical hash match |
+| merit-v3 V1 conservatism                                | ratings + compact generated artifacts unchanged |
 | `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
 
 ## CI (`.github/workflows/`)

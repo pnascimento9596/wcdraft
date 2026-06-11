@@ -6,10 +6,11 @@ positional awards / Team of the Year, FIFPro World 11, ESM Team of the Season),
 all-time dream teams (the Ballon d'Or Dream Team, IFFHS), century international-cap/
 goal records, retrospective century elections, and a living-legends list — and LINKS
 each record to a canonical ``player_id``. It is the *coverage proof* for the
-stature-dominant rating rebase: it changes **no rating output, no engine, no compact
-data** (the v2 source families are staged in ``source_facts.json`` for the
-career-stature-2.0.0 table in MV2-3). Its only products are a linked-fact file, a
-withheld-ambiguity review queue, and a coverage report (``MERIT_SOURCES.md``).
+stature-dominant rating rebase: the base source set feeds ``career_stature.json``,
+while rating output remains locked to the row-level compatibility view until the
+rating unit deliberately flips the consumer. Its products are linked fact files,
+withheld-ambiguity review queues, and coverage reports (``MERIT_SOURCES.md`` /
+``ACTIVE_CAREERS.md``).
 
 MV2-1 (this unit) broadened the v1 source set with position-balanced and regional
 sources to repair the striker / Ballon-d'Or bias — defenders and goalkeepers
@@ -61,26 +62,20 @@ from dataclasses import dataclass, field
 #                       fetch manifest. It is NOT a rating change.
 #
 #   VERSION             the downstream career-stature TABLE schema produced by
-#                       stature.py (career_stature.json). It stays on v1 here:
-#                       MV2-1 grows the SOURCE set but the v1 stature table (and
-#                       therefore every rating output) is held byte-identical — the
-#                       v2 source families are STAGED in source_facts.json for
-#                       MV2-3's career-stature-2.0.0 to consume, not the v1 table.
+#                       stature.py (career_stature.json). merit-v3 V1 moves this
+#                       to 3.0.0 for active facts, person resolution and index
+#                       controls, while rating.py keeps consuming the table's
+#                       row-level rating_compat view until the V2 rating unit.
 #
-# Keeping them separate is the whole point of MV2-1: broaden factual coverage with
-# ZERO change to the historical/projected rating outputs or compact bundles (the
-# career-stature table the rating stage reads is untouched) until MV2-4.
+# Keeping these axes separate is what lets the factual table move without
+# accidentally changing historical/projected rating outputs or compact bundles.
 SOURCE_SET_VERSION = "merit-source-set-2.0.0"
-# career-stature-2.1.0 (MV2-3.5): the table re-scores the SAME model over a
-# broadened fact set — two new citation-backed research-backstop sources
-# (research_wc_all_star → wc_legacy, research_gk_award → position_balanced_selection)
-# close the consensus-great defender/keeper recognition deficit the MV2-9 recon read
-# surfaced. The index transform, saturating combine, era weights, tier quantiles and
-# legend routes are byte-identical to 2.0.0; only the fact INPUTS (and two reused
-# per-source strength anchors) changed. SOURCE_SET_VERSION stays at 2.0.0 because the
-# additions are research-backstop notes (their own pinned manifest), not new fetched
-# web sources — the same split MV2-2 used when it added the captaincy/global notes.
-VERSION = "career-stature-2.1.0"
+# career-stature-3.0.0 (merit-v3 V1): the table activates the active-career
+# channel through stature.py, adds eligibility-aware family re-normalization,
+# sparse-profile controls, person-identity resolution, and the
+# club_season_honors family. The base merit source set remains 2.0.0; the active
+# source set has its own version below.
+VERSION = "career-stature-3.0.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
@@ -201,6 +196,13 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
         0.0,  # deferred; present for schema stability, no source yet
         "DEFERRED: no source fetched, weight 0.0, zero facts in this build.",
     ),
+    SignalFamily(
+        "club_season_honors",
+        "Club season honours",
+        None,
+        "Top-tier continental club titles with documented final participation. "
+        "Activated in merit-v3 V1 through citation-backed active notes.",
+    ),
 )
 
 FAMILY_KEYS: tuple[str, ...] = tuple(f.key for f in SIGNAL_FAMILIES)
@@ -217,6 +219,7 @@ ACTIVE_SOURCE_FAMILIES: frozenset[str] = frozenset(
         "international_record",
         "retrospective_selection",
         "captaincy",
+        "club_season_honors",
     }
 )
 
@@ -505,18 +508,16 @@ _RESEARCH_SOURCES: tuple[Source, ...] = (
 RESEARCH_SOURCES: tuple[Source, ...] = _RESEARCH_SOURCES
 RESEARCH_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _RESEARCH_SOURCES)
 
-# ── active-career intake sources (MV2-12a) — DELIBERATELY SEPARATE channel ──
+# ── active-career intake sources (MV2-12a → merit-v3 V1 activated channel) ──
 # Citation-backed notes for IN-PROGRESS careers (players whose careers continue
 # past the archive's 2022 peak-year ceiling, incl. 2026 squad members). They are
-# kept out of ``SOURCES`` AND out of the research backstop: their facts are staged
-# in ``output/merit/source_facts_active.json`` and NEVER flow into
-# ``source_facts.json`` / ``career_stature.json`` — the consumed archive is held
-# byte-identical until MV2-12b activates the channel explicitly (full Red chain).
-# Same discipline as the research backstop otherwise: every row carries a
-# fetchable public citation (url + claim) verified before commit; an uncited row
-# fails the build; the notes are SHA-pinned in their own manifest
-# (merit/raw/active/manifest.json).
-ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-1.0.0"
+# kept out of ``SOURCES`` AND out of the research backstop: their facts are
+# staged in ``output/merit/source_facts_active.json`` and are consumed only by
+# stature.py's person-level active merge. Same discipline as the research
+# backstop otherwise: every row carries a fetchable public citation (url +
+# claim) verified before commit; an uncited row fails the build; the notes are
+# SHA-pinned in their own manifest (merit/raw/active/manifest.json).
+ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-2.0.0"
 # Curation cutoff: a note in this set may only assert facts established on or
 # before this date (the 2026 squad-pin season boundary). Re-curation of active
 # careers is expected each dataset revision — active records drift by nature.
@@ -557,6 +558,15 @@ _ACTIVE_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "International longevity records for in-progress careers (citation-backed)",
+    ),
+    Source(
+        "active_club_season_honors",
+        "club_season_honors",
+        "active/club-season-honors.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "Top-tier continental club titles with documented final participation",
     ),
 )
 ACTIVE_SOURCES: tuple[Source, ...] = _ACTIVE_SOURCES

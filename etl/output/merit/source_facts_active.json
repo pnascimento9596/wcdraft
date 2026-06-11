@@ -1,7 +1,58 @@
 {
   "cutoff_date": "2026-06-01",
-  "fact_count": 47,
+  "fact_count": 61,
   "facts": [
+    {
+      "citation": {
+        "claim": "UEFA's 2022 Champions League final line-ups list Federico Valverde in Real Madrid's final XI; UEFA's match record shows Real Madrid beat Liverpool 1-0.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-05174",
+      "player_name": "Federico Valverde",
+      "position": "MF",
+      "raw_name": "Federico Valverde",
+      "source_id": "active_club_season_honors",
+      "year": 2022
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2024 Champions League final report lists Federico Valverde in Real Madrid's line-up and reports Real Madrid's 2-0 win.",
+        "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/"
+      },
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/played the 2024 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-05174",
+      "player_name": "Federico Valverde",
+      "position": "MF",
+      "raw_name": "Federico Valverde",
+      "source_id": "active_club_season_honors",
+      "year": 2024
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2019 Champions League final line-ups identify Liverpool as the 2-0 winner against Tottenham and list Alisson in Liverpool's final XI.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-21531",
+      "player_name": "Alisson",
+      "position": "GK",
+      "raw_name": "Alisson",
+      "source_id": "active_club_season_honors",
+      "year": 2019
+    },
     {
       "citation": {
         "claim": "Alisson (Brazil, Liverpool) was named the IFFHS World's Best Goalkeeper for 2019.",
@@ -38,6 +89,23 @@
     },
     {
       "citation": {
+        "claim": "UEFA's 2023 Champions League final match record shows Manchester City beat Inter 1-0, with Rodri scoring the winning goal.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/"
+      },
+      "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/scored in the 2023 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "surname+year",
+      "nation_token": "Spain",
+      "player_id": "P-62341",
+      "player_name": "Rodri",
+      "position": "MF",
+      "raw_name": "Rodri",
+      "source_id": "active_club_season_honors",
+      "year": 2023
+    },
+    {
+      "citation": {
         "claim": "José María Giménez (the canonical card carries 'José Giménez') captains the Uruguay national team and is listed with the captain designation in Uruguay's 2026 World Cup squad.",
         "url": "https://en.wikipedia.org/wiki/Jos%C3%A9_Mar%C3%ADa_Gim%C3%A9nez"
       },
@@ -69,6 +137,40 @@
       "raw_name": "Guillermo Ochoa",
       "source_id": "active_international_record",
       "year": null
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2022 Champions League final line-ups list Vinícius Júnior in Real Madrid's final XI; UEFA's match record credits him with the goal in Real Madrid's 1-0 win.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/scored in the 2022 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-92812",
+      "player_name": "Vinícius Júnior",
+      "position": "FW",
+      "raw_name": "Vinícius Júnior",
+      "source_id": "active_club_season_honors",
+      "year": 2022
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2024 Champions League final report lists Vinícius Júnior in Real Madrid's line-up and records his 83rd-minute goal in the 2-0 win.",
+        "url": "https://www.uefa.com/uefachampionsleague/news/028e-1b07e18d875a-ba78e4b9d9fc-1000--real-madrid-win-champions-league-carvajal-and-vinicius-jun/"
+      },
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2023-24 winner; started/scored in the 2024 final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-92812",
+      "player_name": "Vinícius Júnior",
+      "position": "FW",
+      "raw_name": "Vinícius Júnior",
+      "source_id": "active_club_season_honors",
+      "year": 2024
     },
     {
       "detail": "caps=130 (2008-2025)",
@@ -112,6 +214,57 @@
       "raw_name": "David Alaba",
       "source_id": "active_captaincy",
       "year": null
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2013 Champions League final line-ups identify Bayern Munich as the 2-1 winner against Borussia Dortmund and list David Alaba in Bayern's final XI.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Bayern Munich 2012-13 winner; started/played the 2013 final",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-W26-0050",
+      "player_name": "David Alaba",
+      "position": "DF",
+      "raw_name": "David Alaba",
+      "source_id": "active_club_season_honors",
+      "year": 2013
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2020 Champions League final line-ups identify Bayern Munich as the 1-0 winner against Paris Saint-Germain and list David Alaba in Bayern's final XI.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2030150--paris-vs-bayern-munchen/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-W26-0050",
+      "player_name": "David Alaba",
+      "position": "DF",
+      "raw_name": "David Alaba",
+      "source_id": "active_club_season_honors",
+      "year": 2020
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2022 Champions League final line-ups list David Alaba in Real Madrid's final XI; UEFA's match record shows Real Madrid beat Liverpool 1-0.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2034586--liverpool-vs-real-madrid/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Austria",
+      "player_id": "P-W26-0050",
+      "player_name": "David Alaba",
+      "position": "DF",
+      "raw_name": "David Alaba",
+      "source_id": "active_club_season_honors",
+      "year": 2022
     },
     {
       "detail": "esm_tots DF 2013",
@@ -177,6 +330,23 @@
       "raw_name": "David Alaba",
       "source_id": "uefa_team_of_the_year",
       "year": 2015
+    },
+    {
+      "citation": {
+        "claim": "ESPN's 2024 Copa Libertadores final match record shows Botafogo beat Atlético Mineiro 3-1 and credits Luiz Henrique with Botafogo's 35th-minute goal.",
+        "url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg"
+      },
+      "detail": "Copa Libertadores title with final participation — Botafogo 2024 winner; scored in the final against Atlético Mineiro",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-W26-0115",
+      "player_name": "Luiz Henrique",
+      "position": "FW",
+      "raw_name": "Luiz Henrique",
+      "source_id": "active_club_season_honors",
+      "year": 2024
     },
     {
       "detail": "south_american_poy winner 2024",
@@ -255,6 +425,23 @@
       "raw_name": "Martin Ødegaard",
       "source_id": "esm_team_of_the_season",
       "year": 2022
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2023 Champions League final line-ups list Erling Haaland in Manchester City's final XI against Inter.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Manchester City 2022-23 winner; started/played the 2023 final",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Norway",
+      "player_id": "P-W26-0477",
+      "player_name": "Erling Haaland",
+      "position": "FW",
+      "raw_name": "Erling Haaland",
+      "source_id": "active_club_season_honors",
+      "year": 2023
     },
     {
       "detail": "esm_tots FW 2019",
@@ -443,6 +630,40 @@
       "year": null
     },
     {
+      "citation": {
+        "claim": "The 2020 Copa Libertadores final details record Palmeiras' 1-0 title win against Santos and list Gustavo Gómez in Palmeiras' final XI.",
+        "url": "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final"
+      },
+      "detail": "Copa Libertadores title with final participation — Palmeiras 2020 winner; started/played the final against Santos",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Paraguay",
+      "player_id": "P-W26-0512",
+      "player_name": "Gustavo Gómez",
+      "position": "DF",
+      "raw_name": "Gustavo Gómez",
+      "source_id": "active_club_season_honors",
+      "year": 2020
+    },
+    {
+      "citation": {
+        "claim": "The 2021 Copa Libertadores final details record Palmeiras' 2-1 title win against Flamengo and list Gustavo Gómez as Palmeiras' captain in the final XI.",
+        "url": "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final"
+      },
+      "detail": "Copa Libertadores title with final participation — Palmeiras 2021 winner; started/played the final against Flamengo",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Paraguay",
+      "player_id": "P-W26-0512",
+      "player_name": "Gustavo Gómez",
+      "position": "DF",
+      "raw_name": "Gustavo Gómez",
+      "source_id": "active_club_season_honors",
+      "year": 2021
+    },
+    {
       "detail": "caps=108 (2016-2025)",
       "family": "international_record",
       "identity_space": "minted_2026",
@@ -471,6 +692,23 @@
       "raw_name": "Andy Robertson",
       "source_id": "active_captaincy",
       "year": null
+    },
+    {
+      "citation": {
+        "claim": "UEFA's 2019 Champions League final line-ups identify Liverpool as the 2-0 winner against Tottenham and list Andy Robertson in Liverpool's final XI.",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/lineups/"
+      },
+      "detail": "UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Scotland",
+      "player_id": "P-W26-0574",
+      "player_name": "Andy Robertson",
+      "position": "DF",
+      "raw_name": "Andy Robertson",
+      "source_id": "active_club_season_honors",
+      "year": 2019
     },
     {
       "detail": "esm_tots DF 2019",
@@ -658,6 +896,6 @@
       "year": null
     }
   ],
-  "linked_player_count": 23,
-  "version": "active-career-source-set-1.0.0"
+  "linked_player_count": 26,
+  "version": "active-career-source-set-2.0.0"
 }

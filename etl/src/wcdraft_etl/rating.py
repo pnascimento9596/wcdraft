@@ -387,18 +387,39 @@ def _load_career_stature(output_dir: Path) -> dict[str, dict]:
     Missing file is tolerated (returns {}): the rating stage then degrades to the
     pre-career behavior with every lift = 0, so rating.py never hard-depends on the
     merit artifact existing. A present file must carry unique player_id keys.
+    merit-v3 V1 may expose a newer stature table while rating is intentionally
+    locked to a row-level compatibility view until the V2 rating unit flips the
+    consumer.
     """
     path = output_dir / "career_stature.json"
     if not path.exists():
         return {}
     table = json.loads(path.read_text(encoding="utf-8"))
+    compat_field = (table.get("rating_consumption") or {}).get("field")
     by_player: dict[str, dict] = {}
     for row in table["career_stature"]:
         pid = row["player_id"]
         if pid in by_player:
             raise ValueError(f"duplicate career_stature row for {pid}")
-        by_player[pid] = row
+        if compat_field:
+            compat = row.get(compat_field)
+            if compat is None:
+                continue
+            effective = dict(compat)
+            effective["player_id"] = pid
+            by_player[pid] = effective
+        else:
+            by_player[pid] = row
     return by_player
+
+
+def _career_stature_rating_version(output_dir: Path) -> str | None:
+    path = output_dir / "career_stature.json"
+    if not path.exists():
+        return None
+    table = json.loads(path.read_text(encoding="utf-8"))
+    compat = table.get("rating_consumption") or {}
+    return compat.get("version") or table.get("version")
 
 
 # ─── ERA NORMALIZATION ────────────────────────────────────────────────────────
