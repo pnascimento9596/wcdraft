@@ -141,17 +141,17 @@ _A non-material 2026 card's projected raw path is capped at the global raw-only 
 
 # Unified display-curve sample (wc-perf-5.0.0 curve; maps proj-career-4.0.0 too)
 
-MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v1`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→66, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 1.85). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
+MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v2`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→66, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 1.85). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
-**Pooled curve anchors (internal 0–100):** floor `20.000` · median `43.255` · p95 `62.000` · max `100.000`.
+**Pooled curve anchors (internal 0–100):** floor `20.000` · median `42.326` · p95 `62.000` · max `100.000`.
 
 ## Band distribution (anti-inflation guard)
 
 | Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Historical | 10973 | 73 | 5904 (53.8%) | 2580 (23.5%) | 2290 (20.9%) | 199 (1.8%) | 2489 (22.7%) | 267 (2.4%) |
-| 2026 | 1246 | 73 | 687 (55.1%) | 301 (24.2%) | 246 (19.7%) | 12 (1.0%) | 258 (20.7%) | 15 (1.2%) |
-| Pooled | 12219 | 73 | 6591 (53.9%) | 2881 (23.6%) | 2536 (20.8%) | 211 (1.7%) | 2747 (22.5%) | 282 (2.3%) |
+| Historical | 10973 | 73 | 5579 (50.8%) | 2872 (26.2%) | 2323 (21.2%) | 199 (1.8%) | 2522 (23.0%) | 267 (2.4%) |
+| 2026 | 1246 | 73 | 648 (52.0%) | 336 (27.0%) | 250 (20.1%) | 12 (1.0%) | 262 (21.0%) | 15 (1.2%) |
+| Pooled | 12219 | 73 | 6227 (51.0%) | 3208 (26.3%) | 2573 (21.1%) | 211 (1.7%) | 2784 (22.8%) | 282 (2.3%) |
 
 _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
 
@@ -195,9 +195,9 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 
 | Control | Player | Card | Basis | Display OVR |
 |---|---|---|---|---:|
-| Historical starter | Ortega | `P-00065:WC-1994` | measured_performance | **73** |
+| Historical starter | Frei | `P-00244:WC-2022` | measured_performance | **73** |
 | Historical floor | Park | `P-00390:WC-1954` | baseline_anchor_estimate | **66** |
-| 2026 starter | Mvogo | `P-01729:WC-2026` | measured_performance | **73** |
+| 2026 starter | Jo | `P-04157:WC-2026` | measured_performance | **73** |
 | 2026 floor | Benbot | `P-W26-0001:WC-2026` | measured_performance | **66** |
 
 _One curve, both eras, ordering preserved: recognized greats land in-band by their internal score (never hard-pinned), the broad middle holds at the median, and the four spurious projected cards collapse from a raw-only 99 to the mid-80s. No card displays 100._

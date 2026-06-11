@@ -287,7 +287,10 @@ _PRECISION = 6
 # [ESTIMATE_FLOOR, ESTIMATE_CEILING] AFTER the curve. They never out-rate
 # linked greats, never fabricate a box score (the absent stat stays null in
 # components), and remain flagged via overall_basis + low coverage.
-DISPLAY_CURVE_KIND = "unified_pooled_piecewise_power_v1"
+# merit-v3 V4: re-fit on the UNION of both bases' (career + current) internal
+# pools across both eras (design §4.4 + §5) — the v2 kind. The curve form and
+# the three exponents are unchanged; only the anchor data moved.
+DISPLAY_CURVE_KIND = "unified_pooled_piecewise_power_v2"
 
 DISPLAY_FLOOR = 66
 DISPLAY_MEDIAN = 73

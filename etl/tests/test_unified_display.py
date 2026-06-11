@@ -68,21 +68,33 @@ def proj_internal() -> dict[str, dict]:
 # ─── the curve is ONE pooled curve, shared across both eras ───────────────────
 
 
-def test_default_curve_is_frozen_until_merit_v3_v4(curve):
-    """V2 changes internals but V4 owns the next display-curve refit."""
-    assert curve.raw_floor == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_floor"]
-    assert curve.raw_median == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_median"]
-    assert curve.raw_p95 == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_p95"]
-    assert curve.raw_max == display_curve.FROZEN_UNIFIED_CURVE_V1_ANCHORS["raw_max"]
+def test_default_curve_is_frozen_v2_and_freeze_tracks_live_refit(curve):
+    """V4: the default curve is the FROZEN v2 anchor tuple, and the freeze must
+    equal a live union-pool refit — a stale freeze after any internal change is a
+    loud red, not a silent drift."""
+    assert curve.raw_floor == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_floor"]
+    assert curve.raw_median == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_median"]
+    assert curve.raw_p95 == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_p95"]
+    assert curve.raw_max == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_max"]
+    live = display_curve.fit_unified_curve(OUT, refit=True)
+    assert (live.raw_floor, live.raw_median, live.raw_p95, live.raw_max) == (
+        curve.raw_floor,
+        curve.raw_median,
+        curve.raw_p95,
+        curve.raw_max,
+    )
 
 
-def test_diagnostic_refit_is_fit_on_the_pooled_distribution(hist_internal, proj_internal):
-    """The V4 diagnostic refit path still computes the min/p50/p95/max of the
-    pooled historical + 2026 internal scores."""
+def test_refit_is_fit_on_the_union_pool(hist_internal, proj_internal):
+    """V4 (design §5): the refit population is the UNION of both bases'
+    (career + current) internal scores across both eras."""
     pooled = sorted(
         [r["score_0_100"] for r in hist_internal.values()]
+        + [r["current_score_0_100"] for r in hist_internal.values()]
         + [r["score_0_100"] for r in proj_internal.values()]
+        + [r["current_score_0_100"] for r in proj_internal.values()]
     )
+    assert len(pooled) == 2 * (len(hist_internal) + len(proj_internal))
     curve = display_curve.fit_unified_curve(OUT, refit=True)
     assert curve.raw_floor == pooled[0]
     assert curve.raw_max == pooled[-1]

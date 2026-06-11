@@ -100,7 +100,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -201,7 +201,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -299,7 +299,7 @@
     "goalkeeping": 46,
     "legend": false,
     "midfield": 25,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-00232",
     "provenance": "projected_career",
@@ -1021,7 +1021,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -1122,7 +1122,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -1220,7 +1220,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-01505",
     "provenance": "projected_career",
@@ -1328,7 +1328,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -1429,7 +1429,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -1527,7 +1527,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-01729",
     "provenance": "projected_career",
@@ -3784,7 +3784,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -3885,7 +3885,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -3983,7 +3983,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-04541",
     "provenance": "projected_career",
@@ -6854,7 +6854,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 58,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -6955,7 +6955,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 58,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -7053,7 +7053,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 58,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-08169",
     "provenance": "projected_career",
@@ -9003,7 +9003,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 53,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -9104,7 +9104,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 53,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -9202,7 +9202,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 53,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-09945",
     "provenance": "projected_career",
@@ -11152,7 +11152,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -11253,7 +11253,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -11351,7 +11351,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-11878",
     "provenance": "projected_career",
@@ -11459,7 +11459,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -11560,7 +11560,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -11658,7 +11658,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-11879",
     "provenance": "projected_career",
@@ -11766,7 +11766,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -11867,7 +11867,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -11965,7 +11965,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-12335",
     "provenance": "projected_career",
@@ -12073,7 +12073,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -12174,7 +12174,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -12272,7 +12272,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-12635",
     "provenance": "projected_career",
@@ -12380,7 +12380,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -12481,7 +12481,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -12579,7 +12579,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-12810",
     "provenance": "projected_career",
@@ -12687,7 +12687,7 @@
         "defense": 42,
         "goalkeeping": 60,
         "midfield": 28,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -12788,7 +12788,7 @@
         "defense": 42,
         "goalkeeping": 60,
         "midfield": 28,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       }
     },
@@ -12886,7 +12886,7 @@
     "goalkeeping": 60,
     "legend": false,
     "midfield": 28,
-    "overall": 86,
+    "overall": 87,
     "overall_basis": "measured_performance",
     "player_id": "P-13162",
     "provenance": "projected_career",
@@ -14836,7 +14836,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -14937,7 +14937,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -15035,7 +15035,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-14499",
     "provenance": "projected_career",
@@ -15450,7 +15450,7 @@
         "defense": 29,
         "goalkeeping": 36,
         "midfield": 23,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -15551,7 +15551,7 @@
         "defense": 29,
         "goalkeeping": 36,
         "midfield": 23,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -15649,7 +15649,7 @@
     "goalkeeping": 36,
     "legend": false,
     "midfield": 23,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-15566",
     "provenance": "projected_career",
@@ -20362,7 +20362,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -20463,7 +20463,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -20561,7 +20561,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-20804",
     "provenance": "projected_career",
@@ -20669,7 +20669,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -20770,7 +20770,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -20868,7 +20868,7 @@
     "goalkeeping": 50,
     "legend": false,
     "midfield": 26,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-20998",
     "provenance": "projected_career",
@@ -21897,7 +21897,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -21998,7 +21998,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -22096,7 +22096,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 54,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-21652",
     "provenance": "projected_career",
@@ -22204,7 +22204,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -22305,7 +22305,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -22403,7 +22403,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-22110",
     "provenance": "projected_career",
@@ -23125,7 +23125,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -23226,7 +23226,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -23324,7 +23324,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-22983",
     "provenance": "projected_career",
@@ -24660,7 +24660,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -24761,7 +24761,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -24859,7 +24859,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-24760",
     "provenance": "projected_career",
@@ -25274,7 +25274,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -25375,7 +25375,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -25473,7 +25473,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-25593",
     "provenance": "projected_career",
@@ -25888,7 +25888,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -25989,7 +25989,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -26087,7 +26087,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-26367",
     "provenance": "projected_career",
@@ -26195,7 +26195,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -26296,7 +26296,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -26394,7 +26394,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-26412",
     "provenance": "projected_career",
@@ -27116,7 +27116,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -27217,7 +27217,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -27315,7 +27315,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-27349",
     "provenance": "projected_career",
@@ -27730,7 +27730,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 49,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -27831,7 +27831,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 49,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -27929,7 +27929,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 49,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-27541",
     "provenance": "projected_career",
@@ -28344,7 +28344,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -28445,7 +28445,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -28543,7 +28543,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-28364",
     "provenance": "projected_career",
@@ -29265,7 +29265,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -29366,7 +29366,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -29464,7 +29464,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-28794",
     "provenance": "projected_career",
@@ -29572,7 +29572,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -29673,7 +29673,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -29771,7 +29771,7 @@
     "goalkeeping": 50,
     "legend": false,
     "midfield": 26,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-28811",
     "provenance": "projected_career",
@@ -33256,7 +33256,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -33357,7 +33357,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -33455,7 +33455,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-32222",
     "provenance": "projected_career",
@@ -33870,7 +33870,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -33971,7 +33971,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -34069,7 +34069,7 @@
     "goalkeeping": 46,
     "legend": false,
     "midfield": 25,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-32803",
     "provenance": "projected_career",
@@ -34177,7 +34177,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -34278,7 +34278,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -34376,7 +34376,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-33325",
     "provenance": "projected_career",
@@ -34484,7 +34484,7 @@
         "defense": 35,
         "goalkeeping": 47,
         "midfield": 25,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -34585,7 +34585,7 @@
         "defense": 35,
         "goalkeeping": 47,
         "midfield": 25,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -34683,7 +34683,7 @@
     "goalkeeping": 47,
     "legend": false,
     "midfield": 25,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-33433",
     "provenance": "projected_career",
@@ -35098,7 +35098,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -35199,7 +35199,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -35297,7 +35297,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-33958",
     "provenance": "projected_career",
@@ -36633,7 +36633,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -36734,7 +36734,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -36832,7 +36832,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-35225",
     "provenance": "projected_career",
@@ -37554,7 +37554,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -37655,7 +37655,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -37753,7 +37753,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-35837",
     "provenance": "projected_career",
@@ -38782,7 +38782,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -38883,7 +38883,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -38981,7 +38981,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-37308",
     "provenance": "projected_career",
@@ -39089,7 +39089,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -39190,7 +39190,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -39288,7 +39288,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-37314",
     "provenance": "projected_career",
@@ -39396,7 +39396,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -39497,7 +39497,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -39595,7 +39595,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-37420",
     "provenance": "projected_career",
@@ -40317,7 +40317,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -40418,7 +40418,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -40516,7 +40516,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-38732",
     "provenance": "projected_career",
@@ -41238,7 +41238,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 57,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -41339,7 +41339,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 57,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -41437,7 +41437,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 57,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-39464",
     "provenance": "projected_career",
@@ -42773,7 +42773,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -42874,7 +42874,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -42972,7 +42972,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-40147",
     "provenance": "projected_career",
@@ -44308,7 +44308,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -44409,7 +44409,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -44507,7 +44507,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-41902",
     "provenance": "projected_career",
@@ -45229,7 +45229,7 @@
         "defense": 57,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -45330,7 +45330,7 @@
         "defense": 57,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -45428,7 +45428,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 42,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-43196",
     "provenance": "projected_career",
@@ -45843,7 +45843,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -45944,7 +45944,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -46042,7 +46042,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-44505",
     "provenance": "projected_career",
@@ -46764,7 +46764,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -46865,7 +46865,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -46963,7 +46963,7 @@
     "goalkeeping": 45,
     "legend": false,
     "midfield": 25,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-45399",
     "provenance": "projected_career",
@@ -47378,7 +47378,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -47479,7 +47479,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -47577,7 +47577,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-46107",
     "provenance": "projected_career",
@@ -47992,7 +47992,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -48093,7 +48093,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -48191,7 +48191,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-46898",
     "provenance": "projected_career",
@@ -48913,7 +48913,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -49014,7 +49014,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -49112,7 +49112,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-47319",
     "provenance": "projected_career",
@@ -51062,7 +51062,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -51163,7 +51163,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -51261,7 +51261,7 @@
     "goalkeeping": 50,
     "legend": false,
     "midfield": 26,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-48903",
     "provenance": "projected_career",
@@ -52904,7 +52904,7 @@
         "defense": 38,
         "goalkeeping": 54,
         "midfield": 27,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -53005,7 +53005,7 @@
         "defense": 38,
         "goalkeeping": 54,
         "midfield": 27,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -53103,7 +53103,7 @@
     "goalkeeping": 54,
     "legend": false,
     "midfield": 27,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-50688",
     "provenance": "projected_career",
@@ -53211,7 +53211,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -53312,7 +53312,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -53410,7 +53410,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-51118",
     "provenance": "projected_career",
@@ -55360,7 +55360,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -55461,7 +55461,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -55559,7 +55559,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-54506",
     "provenance": "projected_career",
@@ -57509,7 +57509,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -57610,7 +57610,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -57708,7 +57708,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-56659",
     "provenance": "projected_career",
@@ -58123,7 +58123,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -58224,7 +58224,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -58322,7 +58322,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-56868",
     "provenance": "projected_career",
@@ -58430,7 +58430,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -58531,7 +58531,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -58629,7 +58629,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-57100",
     "provenance": "projected_career",
@@ -59658,7 +59658,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -59759,7 +59759,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -59857,7 +59857,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-57759",
     "provenance": "projected_career",
@@ -63956,7 +63956,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -64057,7 +64057,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -64155,7 +64155,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-61810",
     "provenance": "projected_career",
@@ -64877,7 +64877,7 @@
         "defense": 59,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -64978,7 +64978,7 @@
         "defense": 59,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       }
     },
@@ -65076,7 +65076,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 85,
+    "overall": 86,
     "overall_basis": "measured_performance",
     "player_id": "P-62543",
     "provenance": "projected_career",
@@ -66412,7 +66412,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -66513,7 +66513,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -66611,7 +66611,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-64182",
     "provenance": "projected_career",
@@ -67333,7 +67333,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -67434,7 +67434,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -67532,7 +67532,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-64924",
     "provenance": "projected_career",
@@ -67947,7 +67947,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -68048,7 +68048,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -68146,7 +68146,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-65199",
     "provenance": "projected_career",
@@ -69175,7 +69175,7 @@
         "defense": 60,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -69276,7 +69276,7 @@
         "defense": 60,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       }
     },
@@ -69374,7 +69374,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 86,
+    "overall": 87,
     "overall_basis": "measured_performance",
     "player_id": "P-67129",
     "provenance": "projected_career",
@@ -69789,7 +69789,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -69890,7 +69890,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -69988,7 +69988,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-67668",
     "provenance": "projected_career",
@@ -71017,7 +71017,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -71118,7 +71118,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -71216,7 +71216,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-68429",
     "provenance": "projected_career",
@@ -72245,7 +72245,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -72346,7 +72346,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -72444,7 +72444,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-70483",
     "provenance": "projected_career",
@@ -72552,7 +72552,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -72653,7 +72653,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -72751,7 +72751,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-70583",
     "provenance": "projected_career",
@@ -76543,7 +76543,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -76644,7 +76644,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -76742,7 +76742,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-74098",
     "provenance": "projected_career",
@@ -77157,7 +77157,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -77258,7 +77258,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -77356,7 +77356,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-74612",
     "provenance": "projected_career",
@@ -77771,7 +77771,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -77872,7 +77872,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -77970,7 +77970,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-75785",
     "provenance": "projected_career",
@@ -80841,7 +80841,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -80942,7 +80942,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -81040,7 +81040,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-77382",
     "provenance": "projected_career",
@@ -84832,7 +84832,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -84933,7 +84933,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -85031,7 +85031,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-82223",
     "provenance": "projected_career",
@@ -86367,7 +86367,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 59,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -86468,7 +86468,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 59,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       }
     },
@@ -86566,7 +86566,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 59,
-    "overall": 85,
+    "overall": 86,
     "overall_basis": "measured_performance",
     "player_id": "P-83560",
     "provenance": "projected_career",
@@ -86674,7 +86674,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -86775,7 +86775,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -86873,7 +86873,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-84424",
     "provenance": "projected_career",
@@ -88209,7 +88209,7 @@
         "defense": 35,
         "goalkeeping": 48,
         "midfield": 26,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -88310,7 +88310,7 @@
         "defense": 35,
         "goalkeeping": 48,
         "midfield": 26,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -88408,7 +88408,7 @@
     "goalkeeping": 48,
     "legend": false,
     "midfield": 26,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-85438",
     "provenance": "projected_career",
@@ -88516,7 +88516,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -88617,7 +88617,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -88715,7 +88715,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-85577",
     "provenance": "projected_career",
@@ -90665,7 +90665,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -90766,7 +90766,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -90864,7 +90864,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-86871",
     "provenance": "projected_career",
@@ -90972,7 +90972,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -91073,7 +91073,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -91171,7 +91171,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-86878",
     "provenance": "projected_career",
@@ -91586,7 +91586,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -91687,7 +91687,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -91785,7 +91785,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-86920",
     "provenance": "projected_career",
@@ -92814,7 +92814,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -92915,7 +92915,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -93013,7 +93013,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-87169",
     "provenance": "projected_career",
@@ -94349,7 +94349,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -94450,7 +94450,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -94548,7 +94548,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-88928",
     "provenance": "projected_career",
@@ -94963,7 +94963,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -95064,7 +95064,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -95162,7 +95162,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-89248",
     "provenance": "projected_career",
@@ -95270,7 +95270,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -95371,7 +95371,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -95469,7 +95469,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-89266",
     "provenance": "projected_career",
@@ -96191,7 +96191,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -96292,7 +96292,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -96390,7 +96390,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-89845",
     "provenance": "projected_career",
@@ -96498,7 +96498,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -96599,7 +96599,7 @@
         "defense": 53,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -96697,7 +96697,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-89869",
     "provenance": "projected_career",
@@ -97726,7 +97726,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -97827,7 +97827,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -97925,7 +97925,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-91350",
     "provenance": "projected_career",
@@ -98033,7 +98033,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -98134,7 +98134,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -98232,7 +98232,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-91431",
     "provenance": "projected_career",
@@ -99568,7 +99568,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -99669,7 +99669,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -99767,7 +99767,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-93173",
     "provenance": "projected_career",
@@ -99875,7 +99875,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -99976,7 +99976,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -100074,7 +100074,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-93884",
     "provenance": "projected_career",
@@ -101410,7 +101410,7 @@
         "defense": 37,
         "goalkeeping": 51,
         "midfield": 26,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -101511,7 +101511,7 @@
         "defense": 37,
         "goalkeeping": 51,
         "midfield": 26,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -101609,7 +101609,7 @@
     "goalkeeping": 51,
     "legend": false,
     "midfield": 26,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-94838",
     "provenance": "projected_career",
@@ -101717,7 +101717,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -101818,7 +101818,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -101916,7 +101916,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-95036",
     "provenance": "projected_career",
@@ -103252,7 +103252,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -103353,7 +103353,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -103451,7 +103451,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-95754",
     "provenance": "projected_career",
@@ -105708,7 +105708,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -105809,7 +105809,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -105907,7 +105907,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 48,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-97800",
     "provenance": "projected_career",
@@ -107243,7 +107243,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -107344,7 +107344,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -107442,7 +107442,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-99025",
     "provenance": "projected_career",
@@ -107857,7 +107857,7 @@
         "defense": 39,
         "goalkeeping": 54,
         "midfield": 27,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -107958,7 +107958,7 @@
         "defense": 39,
         "goalkeeping": 54,
         "midfield": 27,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -108056,7 +108056,7 @@
     "goalkeeping": 54,
     "legend": false,
     "midfield": 27,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-99988",
     "provenance": "projected_career",
@@ -108778,7 +108778,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -108879,7 +108879,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -108977,7 +108977,7 @@
     "goalkeeping": 45,
     "legend": false,
     "midfield": 25,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0003",
     "provenance": "projected_career",
@@ -109085,7 +109085,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -109186,7 +109186,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -109284,7 +109284,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0004",
     "provenance": "projected_career",
@@ -109392,7 +109392,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -109493,7 +109493,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -109591,7 +109591,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0005",
     "provenance": "projected_career",
@@ -110620,7 +110620,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -110721,7 +110721,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -110819,7 +110819,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0009",
     "provenance": "projected_career",
@@ -110927,7 +110927,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -111028,7 +111028,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -111126,7 +111126,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0010",
     "provenance": "projected_career",
@@ -113383,7 +113383,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -113484,7 +113484,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -113582,7 +113582,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 30,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0018",
     "provenance": "projected_career",
@@ -116760,7 +116760,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -116861,7 +116861,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -116959,7 +116959,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0029",
     "provenance": "projected_career",
@@ -118909,7 +118909,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -119010,7 +119010,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -119108,7 +119108,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0036",
     "provenance": "projected_career",
@@ -120444,7 +120444,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -120545,7 +120545,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -120643,7 +120643,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0041",
     "provenance": "projected_career",
@@ -121058,7 +121058,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -121159,7 +121159,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -121257,7 +121257,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0043",
     "provenance": "projected_career",
@@ -121672,7 +121672,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -121773,7 +121773,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -121871,7 +121871,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0045",
     "provenance": "projected_career",
@@ -123514,7 +123514,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -123615,7 +123615,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -123713,7 +123713,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0051",
     "provenance": "projected_career",
@@ -124742,7 +124742,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -124843,7 +124843,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -124941,7 +124941,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0055",
     "provenance": "projected_career",
@@ -125049,7 +125049,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -125150,7 +125150,7 @@
         "defense": 34,
         "goalkeeping": 46,
         "midfield": 25,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -125248,7 +125248,7 @@
     "goalkeeping": 46,
     "legend": false,
     "midfield": 25,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0056",
     "provenance": "projected_career",
@@ -125356,7 +125356,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -125457,7 +125457,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -125555,7 +125555,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0057",
     "provenance": "projected_career",
@@ -125663,7 +125663,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -125764,7 +125764,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -125862,7 +125862,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0058",
     "provenance": "projected_career",
@@ -126584,7 +126584,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -126685,7 +126685,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -126783,7 +126783,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 30,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0061",
     "provenance": "projected_career",
@@ -128119,7 +128119,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 55,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -128220,7 +128220,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 55,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -128318,7 +128318,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 55,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0066",
     "provenance": "projected_career",
@@ -129040,7 +129040,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -129141,7 +129141,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       }
     },
@@ -129239,7 +129239,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 56,
-    "overall": 83,
+    "overall": 84,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0069",
     "provenance": "projected_career",
@@ -131496,7 +131496,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -131597,7 +131597,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -131695,7 +131695,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0077",
     "provenance": "projected_career",
@@ -132110,7 +132110,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -132211,7 +132211,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -132309,7 +132309,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0079",
     "provenance": "projected_career",
@@ -135487,7 +135487,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -135588,7 +135588,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -135686,7 +135686,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0090",
     "provenance": "projected_career",
@@ -136101,7 +136101,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -136202,7 +136202,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -136300,7 +136300,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0092",
     "provenance": "projected_career",
@@ -138864,7 +138864,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -138965,7 +138965,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -139063,7 +139063,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0101",
     "provenance": "projected_career",
@@ -139478,7 +139478,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -139579,7 +139579,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -139677,7 +139677,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0103",
     "provenance": "projected_career",
@@ -142241,7 +142241,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -142342,7 +142342,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -142440,7 +142440,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0112",
     "provenance": "projected_career",
@@ -143469,7 +143469,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -143570,7 +143570,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -143668,7 +143668,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0116",
     "provenance": "projected_career",
@@ -144083,7 +144083,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -144184,7 +144184,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -144282,7 +144282,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0118",
     "provenance": "projected_career",
@@ -145004,7 +145004,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -145105,7 +145105,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -145203,7 +145203,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0121",
     "provenance": "projected_career",
@@ -145925,7 +145925,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -146026,7 +146026,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -146124,7 +146124,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0124",
     "provenance": "projected_career",
@@ -146232,7 +146232,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -146333,7 +146333,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -146431,7 +146431,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0125",
     "provenance": "projected_career",
@@ -146539,7 +146539,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -146640,7 +146640,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -146738,7 +146738,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0126",
     "provenance": "projected_career",
@@ -147153,7 +147153,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -147254,7 +147254,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -147352,7 +147352,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0128",
     "provenance": "projected_career",
@@ -152372,7 +152372,7 @@
         "defense": 23,
         "goalkeeping": 20,
         "midfield": 27,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -152473,7 +152473,7 @@
         "defense": 23,
         "goalkeeping": 20,
         "midfield": 27,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       }
     },
@@ -152571,7 +152571,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 27,
-    "overall": 70,
+    "overall": 71,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0145",
     "provenance": "projected_career",
@@ -152679,7 +152679,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -152780,7 +152780,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -152878,7 +152878,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0146",
     "provenance": "projected_career",
@@ -156056,7 +156056,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -156157,7 +156157,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -156255,7 +156255,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0157",
     "provenance": "projected_career",
@@ -156670,7 +156670,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -156771,7 +156771,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -156869,7 +156869,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0159",
     "provenance": "projected_career",
@@ -157284,7 +157284,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -157385,7 +157385,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -157483,7 +157483,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0161",
     "provenance": "projected_career",
@@ -157898,7 +157898,7 @@
         "defense": 57,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -157999,7 +157999,7 @@
         "defense": 57,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -158097,7 +158097,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 42,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0163",
     "provenance": "projected_career",
@@ -158512,7 +158512,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -158613,7 +158613,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -158711,7 +158711,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 30,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0165",
     "provenance": "projected_career",
@@ -160661,7 +160661,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -160762,7 +160762,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -160860,7 +160860,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0172",
     "provenance": "projected_career",
@@ -160968,7 +160968,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -161069,7 +161069,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -161167,7 +161167,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0173",
     "provenance": "projected_career",
@@ -161582,7 +161582,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -161683,7 +161683,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -161781,7 +161781,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0175",
     "provenance": "projected_career",
@@ -166187,7 +166187,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -166288,7 +166288,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -166386,7 +166386,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0190",
     "provenance": "projected_career",
@@ -166801,7 +166801,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -166902,7 +166902,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -167000,7 +167000,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0192",
     "provenance": "projected_career",
@@ -168029,7 +168029,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -168130,7 +168130,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -168228,7 +168228,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0196",
     "provenance": "projected_career",
@@ -168950,7 +168950,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -169051,7 +169051,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -169149,7 +169149,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0199",
     "provenance": "projected_career",
@@ -170485,7 +170485,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -170586,7 +170586,7 @@
         "defense": 25,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -170684,7 +170684,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0204",
     "provenance": "projected_career",
@@ -176625,7 +176625,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -176726,7 +176726,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -176824,7 +176824,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0224",
     "provenance": "projected_career",
@@ -179081,7 +179081,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -179182,7 +179182,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -179280,7 +179280,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0232",
     "provenance": "projected_career",
@@ -179695,7 +179695,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -179796,7 +179796,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -179894,7 +179894,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0234",
     "provenance": "projected_career",
@@ -182151,7 +182151,7 @@
         "defense": 41,
         "goalkeeping": 59,
         "midfield": 28,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -182252,7 +182252,7 @@
         "defense": 41,
         "goalkeeping": 59,
         "midfield": 28,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       }
     },
@@ -182350,7 +182350,7 @@
     "goalkeeping": 59,
     "legend": false,
     "midfield": 28,
-    "overall": 85,
+    "overall": 86,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0242",
     "provenance": "projected_career",
@@ -183379,7 +183379,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -183480,7 +183480,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -183578,7 +183578,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0246",
     "provenance": "projected_career",
@@ -184300,7 +184300,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -184401,7 +184401,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -184499,7 +184499,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0249",
     "provenance": "projected_career",
@@ -185221,7 +185221,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -185322,7 +185322,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -185420,7 +185420,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0252",
     "provenance": "projected_career",
@@ -185528,7 +185528,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -185629,7 +185629,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -185727,7 +185727,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0253",
     "provenance": "projected_career",
@@ -186449,7 +186449,7 @@
         "defense": 56,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -186550,7 +186550,7 @@
         "defense": 56,
         "goalkeeping": 20,
         "midfield": 42,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       }
     },
@@ -186648,7 +186648,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 42,
-    "overall": 83,
+    "overall": 84,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0256",
     "provenance": "projected_career",
@@ -186756,7 +186756,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -186857,7 +186857,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -186955,7 +186955,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0257",
     "provenance": "projected_career",
@@ -188598,7 +188598,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -188699,7 +188699,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -188797,7 +188797,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0263",
     "provenance": "projected_career",
@@ -189212,7 +189212,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -189313,7 +189313,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -189411,7 +189411,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0265",
     "provenance": "projected_career",
@@ -190440,7 +190440,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -190541,7 +190541,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -190639,7 +190639,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0269",
     "provenance": "projected_career",
@@ -191361,7 +191361,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -191462,7 +191462,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -191560,7 +191560,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0272",
     "provenance": "projected_career",
@@ -194431,7 +194431,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -194532,7 +194532,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -194630,7 +194630,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0282",
     "provenance": "projected_career",
@@ -194738,7 +194738,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -194839,7 +194839,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -194937,7 +194937,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0283",
     "provenance": "projected_career",
@@ -195045,7 +195045,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -195146,7 +195146,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -195244,7 +195244,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0284",
     "provenance": "projected_career",
@@ -196273,7 +196273,7 @@
         "defense": 39,
         "goalkeeping": 55,
         "midfield": 27,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -196374,7 +196374,7 @@
         "defense": 39,
         "goalkeeping": 55,
         "midfield": 27,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -196472,7 +196472,7 @@
     "goalkeeping": 55,
     "legend": false,
     "midfield": 27,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0288",
     "provenance": "projected_career",
@@ -197501,7 +197501,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -197602,7 +197602,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -197700,7 +197700,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0292",
     "provenance": "projected_career",
@@ -199957,7 +199957,7 @@
         "defense": 45,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -200058,7 +200058,7 @@
         "defense": 45,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -200156,7 +200156,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0300",
     "provenance": "projected_career",
@@ -200264,7 +200264,7 @@
         "defense": 33,
         "goalkeeping": 44,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -200365,7 +200365,7 @@
         "defense": 33,
         "goalkeeping": 44,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -200463,7 +200463,7 @@
     "goalkeeping": 44,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0301",
     "provenance": "projected_career",
@@ -200571,7 +200571,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -200672,7 +200672,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -200770,7 +200770,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0302",
     "provenance": "projected_career",
@@ -202413,7 +202413,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -202514,7 +202514,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -202612,7 +202612,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0308",
     "provenance": "projected_career",
@@ -205790,7 +205790,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -205891,7 +205891,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -205989,7 +205989,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0319",
     "provenance": "projected_career",
@@ -206711,7 +206711,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -206812,7 +206812,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       }
     },
@@ -206910,7 +206910,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 70,
+    "overall": 71,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0322",
     "provenance": "projected_career",
@@ -207939,7 +207939,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -208040,7 +208040,7 @@
         "defense": 36,
         "goalkeeping": 50,
         "midfield": 26,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -208138,7 +208138,7 @@
     "goalkeeping": 50,
     "legend": false,
     "midfield": 26,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0326",
     "provenance": "projected_career",
@@ -209781,7 +209781,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -209882,7 +209882,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -209980,7 +209980,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0332",
     "provenance": "projected_career",
@@ -210702,7 +210702,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -210803,7 +210803,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -210901,7 +210901,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0335",
     "provenance": "projected_career",
@@ -211930,7 +211930,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -212031,7 +212031,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -212129,7 +212129,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0339",
     "provenance": "projected_career",
@@ -213772,7 +213772,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -213873,7 +213873,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -213971,7 +213971,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0345",
     "provenance": "projected_career",
@@ -214079,7 +214079,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -214180,7 +214180,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       }
     },
@@ -214278,7 +214278,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 70,
+    "overall": 71,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0346",
     "provenance": "projected_career",
@@ -214386,7 +214386,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -214487,7 +214487,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -214585,7 +214585,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 48,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0347",
     "provenance": "projected_career",
@@ -215000,7 +215000,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -215101,7 +215101,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -215199,7 +215199,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0349",
     "provenance": "projected_career",
@@ -216228,7 +216228,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -216329,7 +216329,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -216427,7 +216427,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0353",
     "provenance": "projected_career",
@@ -218684,7 +218684,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -218785,7 +218785,7 @@
         "defense": 52,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -218883,7 +218883,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0361",
     "provenance": "projected_career",
@@ -218991,7 +218991,7 @@
         "defense": 39,
         "goalkeeping": 55,
         "midfield": 27,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -219092,7 +219092,7 @@
         "defense": 39,
         "goalkeeping": 55,
         "midfield": 27,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -219190,7 +219190,7 @@
     "goalkeeping": 55,
     "legend": false,
     "midfield": 27,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0362",
     "provenance": "projected_career",
@@ -219605,7 +219605,7 @@
         "defense": 60,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -219706,7 +219706,7 @@
         "defense": 60,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 86,
+        "overall": 87,
         "overall_basis": "measured_performance"
       }
     },
@@ -219804,7 +219804,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 86,
+    "overall": 87,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0364",
     "provenance": "projected_career",
@@ -220219,7 +220219,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -220320,7 +220320,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -220418,7 +220418,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0366",
     "provenance": "projected_career",
@@ -222368,7 +222368,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -222469,7 +222469,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -222567,7 +222567,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0373",
     "provenance": "projected_career",
@@ -222675,7 +222675,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -222776,7 +222776,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -222874,7 +222874,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0374",
     "provenance": "projected_career",
@@ -224210,7 +224210,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -224311,7 +224311,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -224409,7 +224409,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0379",
     "provenance": "projected_career",
@@ -225131,7 +225131,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -225232,7 +225232,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -225330,7 +225330,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0382",
     "provenance": "projected_career",
@@ -225745,7 +225745,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 57,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -225846,7 +225846,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 57,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -225944,7 +225944,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 57,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0384",
     "provenance": "projected_career",
@@ -226359,7 +226359,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -226460,7 +226460,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -226558,7 +226558,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0386",
     "provenance": "projected_career",
@@ -229736,7 +229736,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -229837,7 +229837,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -229935,7 +229935,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0397",
     "provenance": "projected_career",
@@ -230964,7 +230964,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -231065,7 +231065,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -231163,7 +231163,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0401",
     "provenance": "projected_career",
@@ -232192,7 +232192,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -232293,7 +232293,7 @@
         "defense": 26,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -232391,7 +232391,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0405",
     "provenance": "projected_career",
@@ -233727,7 +233727,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -233828,7 +233828,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -233926,7 +233926,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0410",
     "provenance": "projected_career",
@@ -234341,7 +234341,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -234442,7 +234442,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 30,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -234540,7 +234540,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 30,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0412",
     "provenance": "projected_career",
@@ -236183,7 +236183,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -236284,7 +236284,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -236382,7 +236382,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0418",
     "provenance": "projected_career",
@@ -237104,7 +237104,7 @@
         "defense": 31,
         "goalkeeping": 40,
         "midfield": 24,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -237205,7 +237205,7 @@
         "defense": 31,
         "goalkeeping": 40,
         "midfield": 24,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -237303,7 +237303,7 @@
     "goalkeeping": 40,
     "legend": false,
     "midfield": 24,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0421",
     "provenance": "projected_career",
@@ -238639,7 +238639,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -238740,7 +238740,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -238838,7 +238838,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0426",
     "provenance": "projected_career",
@@ -241402,7 +241402,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -241503,7 +241503,7 @@
         "defense": 48,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -241601,7 +241601,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0435",
     "provenance": "projected_career",
@@ -242630,7 +242630,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -242731,7 +242731,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -242829,7 +242829,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0439",
     "provenance": "projected_career",
@@ -244472,7 +244472,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -244573,7 +244573,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -244671,7 +244671,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0445",
     "provenance": "projected_career",
@@ -245086,7 +245086,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -245187,7 +245187,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -245285,7 +245285,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0447",
     "provenance": "projected_career",
@@ -246007,7 +246007,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -246108,7 +246108,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -246206,7 +246206,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0450",
     "provenance": "projected_career",
@@ -246621,7 +246621,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -246722,7 +246722,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -246820,7 +246820,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0452",
     "provenance": "projected_career",
@@ -249691,7 +249691,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -249792,7 +249792,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -249890,7 +249890,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0462",
     "provenance": "projected_career",
@@ -250305,7 +250305,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -250406,7 +250406,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -250504,7 +250504,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0464",
     "provenance": "projected_career",
@@ -253682,7 +253682,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -253783,7 +253783,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -253881,7 +253881,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0475",
     "provenance": "projected_career",
@@ -256138,7 +256138,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -256239,7 +256239,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       }
     },
@@ -256337,7 +256337,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 56,
-    "overall": 83,
+    "overall": 84,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0483",
     "provenance": "projected_career",
@@ -257059,7 +257059,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -257160,7 +257160,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -257258,7 +257258,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0486",
     "provenance": "projected_career",
@@ -258594,7 +258594,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -258695,7 +258695,7 @@
         "defense": 42,
         "goalkeeping": 20,
         "midfield": 56,
-        "overall": 83,
+        "overall": 84,
         "overall_basis": "measured_performance"
       }
     },
@@ -258793,7 +258793,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 56,
-    "overall": 83,
+    "overall": 84,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0491",
     "provenance": "projected_career",
@@ -263199,7 +263199,7 @@
         "defense": 26,
         "goalkeeping": 31,
         "midfield": 22,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -263300,7 +263300,7 @@
         "defense": 26,
         "goalkeeping": 31,
         "midfield": 22,
-        "overall": 70,
+        "overall": 71,
         "overall_basis": "measured_performance"
       }
     },
@@ -263398,7 +263398,7 @@
     "goalkeeping": 31,
     "legend": false,
     "midfield": 22,
-    "overall": 70,
+    "overall": 71,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0506",
     "provenance": "projected_career",
@@ -264120,7 +264120,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -264221,7 +264221,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -264319,7 +264319,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0509",
     "provenance": "projected_career",
@@ -265348,7 +265348,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -265449,7 +265449,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -265547,7 +265547,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0513",
     "provenance": "projected_career",
@@ -266269,7 +266269,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -266370,7 +266370,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -266468,7 +266468,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0516",
     "provenance": "projected_career",
@@ -267190,7 +267190,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -267291,7 +267291,7 @@
         "defense": 55,
         "goalkeeping": 20,
         "midfield": 41,
-        "overall": 82,
+        "overall": 83,
         "overall_basis": "measured_performance"
       }
     },
@@ -267389,7 +267389,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 41,
-    "overall": 82,
+    "overall": 83,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0519",
     "provenance": "projected_career",
@@ -271181,7 +271181,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -271282,7 +271282,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -271380,7 +271380,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0532",
     "provenance": "projected_career",
@@ -272102,7 +272102,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -272203,7 +272203,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -272301,7 +272301,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0535",
     "provenance": "projected_career",
@@ -273330,7 +273330,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -273431,7 +273431,7 @@
         "defense": 28,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -273529,7 +273529,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0539",
     "provenance": "projected_career",
@@ -273637,7 +273637,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -273738,7 +273738,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -273836,7 +273836,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0540",
     "provenance": "projected_career",
@@ -273944,7 +273944,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 59,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -274045,7 +274045,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 59,
-        "overall": 85,
+        "overall": 86,
         "overall_basis": "measured_performance"
       }
     },
@@ -274143,7 +274143,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 59,
-    "overall": 85,
+    "overall": 86,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0541",
     "provenance": "projected_career",
@@ -274558,7 +274558,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -274659,7 +274659,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -274757,7 +274757,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0543",
     "provenance": "projected_career",
@@ -280391,7 +280391,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -280492,7 +280492,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -280590,7 +280590,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0562",
     "provenance": "projected_career",
@@ -283461,7 +283461,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -283562,7 +283562,7 @@
         "defense": 49,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -283660,7 +283660,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0572",
     "provenance": "projected_career",
@@ -284996,7 +284996,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -285097,7 +285097,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -285195,7 +285195,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0577",
     "provenance": "projected_career",
@@ -287759,7 +287759,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -287860,7 +287860,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -287958,7 +287958,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0586",
     "provenance": "projected_career",
@@ -288373,7 +288373,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -288474,7 +288474,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -288572,7 +288572,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0588",
     "provenance": "projected_career",
@@ -288680,7 +288680,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -288781,7 +288781,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -288879,7 +288879,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0589",
     "provenance": "projected_career",
@@ -289294,7 +289294,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -289395,7 +289395,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -289493,7 +289493,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0591",
     "provenance": "projected_career",
@@ -290215,7 +290215,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -290316,7 +290316,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -290414,7 +290414,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0594",
     "provenance": "projected_career",
@@ -292057,7 +292057,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -292158,7 +292158,7 @@
         "defense": 47,
         "goalkeeping": 20,
         "midfield": 36,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -292256,7 +292256,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 36,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0600",
     "provenance": "projected_career",
@@ -293899,7 +293899,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -294000,7 +294000,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -294098,7 +294098,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0606",
     "provenance": "projected_career",
@@ -294820,7 +294820,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -294921,7 +294921,7 @@
         "defense": 30,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -295019,7 +295019,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0609",
     "provenance": "projected_career",
@@ -295434,7 +295434,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -295535,7 +295535,7 @@
         "defense": 33,
         "goalkeeping": 43,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -295633,7 +295633,7 @@
     "goalkeeping": 43,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0611",
     "provenance": "projected_career",
@@ -297583,7 +297583,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -297684,7 +297684,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 45,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -297782,7 +297782,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 45,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0618",
     "provenance": "projected_career",
@@ -298197,7 +298197,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -298298,7 +298298,7 @@
         "defense": 32,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -298396,7 +298396,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0620",
     "provenance": "projected_career",
@@ -300346,7 +300346,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -300447,7 +300447,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -300545,7 +300545,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0627",
     "provenance": "projected_career",
@@ -301574,7 +301574,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -301675,7 +301675,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -301773,7 +301773,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0631",
     "provenance": "projected_career",
@@ -304030,7 +304030,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -304131,7 +304131,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -304229,7 +304229,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0639",
     "provenance": "projected_career",
@@ -304951,7 +304951,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -305052,7 +305052,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -305150,7 +305150,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0642",
     "provenance": "projected_career",
@@ -306793,7 +306793,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -306894,7 +306894,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -306992,7 +306992,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0648",
     "provenance": "projected_career",
@@ -307100,7 +307100,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -307201,7 +307201,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -307299,7 +307299,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0649",
     "provenance": "projected_career",
@@ -308021,7 +308021,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -308122,7 +308122,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -308220,7 +308220,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 54,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0652",
     "provenance": "projected_career",
@@ -308942,7 +308942,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -309043,7 +309043,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -309141,7 +309141,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0655",
     "provenance": "projected_career",
@@ -309249,7 +309249,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -309350,7 +309350,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -309448,7 +309448,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0656",
     "provenance": "projected_career",
@@ -309556,7 +309556,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -309657,7 +309657,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -309755,7 +309755,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0657",
     "provenance": "projected_career",
@@ -310170,7 +310170,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -310271,7 +310271,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -310369,7 +310369,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0659",
     "provenance": "projected_career",
@@ -315082,7 +315082,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -315183,7 +315183,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -315281,7 +315281,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0675",
     "provenance": "projected_career",
@@ -315389,7 +315389,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -315490,7 +315490,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 54,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -315588,7 +315588,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 54,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0676",
     "provenance": "projected_career",
@@ -316003,7 +316003,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -316104,7 +316104,7 @@
         "defense": 50,
         "goalkeeping": 20,
         "midfield": 38,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -316202,7 +316202,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 38,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0678",
     "provenance": "projected_career",
@@ -318766,7 +318766,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -318867,7 +318867,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -318965,7 +318965,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0687",
     "provenance": "projected_career",
@@ -323985,7 +323985,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -324086,7 +324086,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -324184,7 +324184,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0704",
     "provenance": "projected_career",
@@ -327362,7 +327362,7 @@
         "defense": 29,
         "goalkeeping": 36,
         "midfield": 23,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -327463,7 +327463,7 @@
         "defense": 29,
         "goalkeeping": 36,
         "midfield": 23,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -327561,7 +327561,7 @@
     "goalkeeping": 36,
     "legend": false,
     "midfield": 23,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0715",
     "provenance": "projected_career",
@@ -328283,7 +328283,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -328384,7 +328384,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 29,
-        "overall": 71,
+        "overall": 72,
         "overall_basis": "measured_performance"
       }
     },
@@ -328482,7 +328482,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 29,
-    "overall": 71,
+    "overall": 72,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0718",
     "provenance": "projected_career",
@@ -329511,7 +329511,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -329612,7 +329612,7 @@
         "defense": 51,
         "goalkeeping": 20,
         "midfield": 39,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -329710,7 +329710,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 39,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0722",
     "provenance": "projected_career",
@@ -330125,7 +330125,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -330226,7 +330226,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -330324,7 +330324,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0724",
     "provenance": "projected_career",
@@ -332274,7 +332274,7 @@
         "defense": 54,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -332375,7 +332375,7 @@
         "defense": 54,
         "goalkeeping": 20,
         "midfield": 40,
-        "overall": 81,
+        "overall": 82,
         "overall_basis": "measured_performance"
       }
     },
@@ -332473,7 +332473,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 40,
-    "overall": 81,
+    "overall": 82,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0731",
     "provenance": "projected_career",
@@ -332888,7 +332888,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -332989,7 +332989,7 @@
         "defense": 41,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -333087,7 +333087,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0733",
     "provenance": "projected_career",
@@ -333809,7 +333809,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 52,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -333910,7 +333910,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 52,
-        "overall": 80,
+        "overall": 81,
         "overall_basis": "measured_performance"
       }
     },
@@ -334008,7 +334008,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 52,
-    "overall": 80,
+    "overall": 81,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0736",
     "provenance": "projected_career",
@@ -335344,7 +335344,7 @@
         "defense": 45,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -335445,7 +335445,7 @@
         "defense": 45,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -335543,7 +335543,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0741",
     "provenance": "projected_career",
@@ -336265,7 +336265,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -336366,7 +336366,7 @@
         "defense": 34,
         "goalkeeping": 45,
         "midfield": 25,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -336464,7 +336464,7 @@
     "goalkeeping": 45,
     "legend": false,
     "midfield": 25,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0744",
     "provenance": "projected_career",
@@ -341484,7 +341484,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -341585,7 +341585,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -341683,7 +341683,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0761",
     "provenance": "projected_career",
@@ -341791,7 +341791,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -341892,7 +341892,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -341990,7 +341990,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0762",
     "provenance": "projected_career",
@@ -343019,7 +343019,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -343120,7 +343120,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -343218,7 +343218,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0766",
     "provenance": "projected_career",
@@ -348852,7 +348852,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -348953,7 +348953,7 @@
         "defense": 29,
         "goalkeeping": 20,
         "midfield": 37,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -349051,7 +349051,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 37,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0785",
     "provenance": "projected_career",
@@ -349466,7 +349466,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -349567,7 +349567,7 @@
         "defense": 27,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -349665,7 +349665,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0787",
     "provenance": "projected_career",
@@ -350694,7 +350694,7 @@
         "defense": 33,
         "goalkeeping": 44,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -350795,7 +350795,7 @@
         "defense": 33,
         "goalkeeping": 44,
         "midfield": 25,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -350893,7 +350893,7 @@
     "goalkeeping": 44,
     "legend": false,
     "midfield": 25,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0791",
     "provenance": "projected_career",
@@ -351001,7 +351001,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -351102,7 +351102,7 @@
         "defense": 38,
         "goalkeeping": 20,
         "midfield": 50,
-        "overall": 78,
+        "overall": 79,
         "overall_basis": "measured_performance"
       }
     },
@@ -351200,7 +351200,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 50,
-    "overall": 78,
+    "overall": 79,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0792",
     "provenance": "projected_career",
@@ -353457,7 +353457,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 58,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -353558,7 +353558,7 @@
         "defense": 43,
         "goalkeeping": 20,
         "midfield": 58,
-        "overall": 84,
+        "overall": 85,
         "overall_basis": "measured_performance"
       }
     },
@@ -353656,7 +353656,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 58,
-    "overall": 84,
+    "overall": 85,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0800",
     "provenance": "projected_career",
@@ -353764,7 +353764,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -353865,7 +353865,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -353963,7 +353963,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0801",
     "provenance": "projected_career",
@@ -354071,7 +354071,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -354172,7 +354172,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -354270,7 +354270,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0802",
     "provenance": "projected_career",
@@ -355606,7 +355606,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -355707,7 +355707,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -355805,7 +355805,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0807",
     "provenance": "projected_career",
@@ -361132,7 +361132,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -361233,7 +361233,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 43,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -361331,7 +361331,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 43,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0825",
     "provenance": "projected_career",
@@ -363588,7 +363588,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -363689,7 +363689,7 @@
         "defense": 40,
         "goalkeeping": 20,
         "midfield": 32,
-        "overall": 72,
+        "overall": 73,
         "overall_basis": "measured_performance"
       }
     },
@@ -363787,7 +363787,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 32,
-    "overall": 72,
+    "overall": 73,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0833",
     "provenance": "projected_career",
@@ -366044,7 +366044,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -366145,7 +366145,7 @@
         "defense": 37,
         "goalkeeping": 20,
         "midfield": 48,
-        "overall": 77,
+        "overall": 78,
         "overall_basis": "measured_performance"
       }
     },
@@ -366243,7 +366243,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 48,
-    "overall": 77,
+    "overall": 78,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0841",
     "provenance": "projected_career",
@@ -367272,7 +367272,7 @@
         "defense": 35,
         "goalkeeping": 47,
         "midfield": 25,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -367373,7 +367373,7 @@
         "defense": 35,
         "goalkeeping": 47,
         "midfield": 25,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -367471,7 +367471,7 @@
     "goalkeeping": 47,
     "legend": false,
     "midfield": 25,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0845",
     "provenance": "projected_career",
@@ -368807,7 +368807,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -368908,7 +368908,7 @@
         "defense": 46,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -369006,7 +369006,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0850",
     "provenance": "projected_career",
@@ -369114,7 +369114,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -369215,7 +369215,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 34,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -369313,7 +369313,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 34,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0851",
     "provenance": "projected_career",
@@ -370035,7 +370035,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -370136,7 +370136,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -370234,7 +370234,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0854",
     "provenance": "projected_career",
@@ -371263,7 +371263,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -371364,7 +371364,7 @@
         "defense": 34,
         "goalkeeping": 20,
         "midfield": 44,
-        "overall": 73,
+        "overall": 74,
         "overall_basis": "measured_performance"
       }
     },
@@ -371462,7 +371462,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 44,
-    "overall": 73,
+    "overall": 74,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0858",
     "provenance": "projected_career",
@@ -372184,7 +372184,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -372285,7 +372285,7 @@
         "defense": 35,
         "goalkeeping": 20,
         "midfield": 46,
-        "overall": 75,
+        "overall": 76,
         "overall_basis": "measured_performance"
       }
     },
@@ -372383,7 +372383,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 46,
-    "overall": 75,
+    "overall": 76,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0861",
     "provenance": "projected_career",
@@ -375868,7 +375868,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -375969,7 +375969,7 @@
         "defense": 36,
         "goalkeeping": 20,
         "midfield": 47,
-        "overall": 76,
+        "overall": 77,
         "overall_basis": "measured_performance"
       }
     },
@@ -376067,7 +376067,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 47,
-    "overall": 76,
+    "overall": 77,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0873",
     "provenance": "projected_career",
@@ -377403,7 +377403,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -377504,7 +377504,7 @@
         "defense": 39,
         "goalkeeping": 20,
         "midfield": 51,
-        "overall": 79,
+        "overall": 80,
         "overall_basis": "measured_performance"
       }
     },
@@ -377602,7 +377602,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 51,
-    "overall": 79,
+    "overall": 80,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0878",
     "provenance": "projected_career",
@@ -377710,7 +377710,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       },
       "current": {
@@ -377811,7 +377811,7 @@
         "defense": 44,
         "goalkeeping": 20,
         "midfield": 35,
-        "overall": 74,
+        "overall": 75,
         "overall_basis": "measured_performance"
       }
     },
@@ -377909,7 +377909,7 @@
     "goalkeeping": 20,
     "legend": false,
     "midfield": 35,
-    "overall": 74,
+    "overall": 75,
     "overall_basis": "measured_performance",
     "player_id": "P-W26-0879",
     "provenance": "projected_career",

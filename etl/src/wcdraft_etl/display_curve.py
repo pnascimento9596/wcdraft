@@ -23,9 +23,13 @@ are materialized independently from the same internal ``score_0_100`` via
 ``rating._channel`` and are NEVER routed through this curve — they stay
 byte-identical to base, so the sim is untouched.
 
-merit-v3 V2 note: V2 changes historical internals but V4 owns the curve refit.
-The default exported curve is therefore frozen to the pre-V2 MV2-6 anchor tuple;
-callers can request a live refit only with ``refit=True`` for reports/tests.
+merit-v3 V4 (design §4.4 + §5): the curve is re-fit — kind
+``unified_pooled_piecewise_power_v2`` — over the UNION of both bases' internal
+pools across both eras (historical career + historical current + 2026 career +
+2026 current; n = 24,438). One shared curve maps every basis of every era, so
+the same internal score renders identically across bases (draft-config §D).
+The fitted anchors are FROZEN below for byte-determinism; the lock test asserts
+the frozen tuple equals a live refit, so the freeze cannot go silently stale.
 """
 
 from __future__ import annotations
@@ -35,20 +39,24 @@ from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 
-FROZEN_UNIFIED_CURVE_V1_ANCHORS = {
+# Fit at V4 lock time on the union pool (see fit_unified_curve(refit=True));
+# test_unified_display pins frozen == live-refit. NOTE (recorded for the gate
+# report): the union p95 anchor still lands exactly ON the internal-62.0 clamp
+# pile — 1,150 historical no-award cards sit at exactly 62.0, byte-stable under
+# V2's own §4.1 no-award invariant, so no monotone curve can spread them.
+FROZEN_UNIFIED_CURVE_V2_ANCHORS = {
     "raw_floor": 20.0,
-    "raw_median": 43.2551648,
+    "raw_median": 42.325568000000004,
     "raw_p95": 62.0,
     "raw_max": 100.0,
 }
 
 
-def _historical_internal_scores(output_dir: Path) -> list[float]:
-    """Pre-display composite ``score_0_100`` of every historical men's card,
-    rebuilt deterministically from the committed canonical tables. Pure function of
-    the committed inputs — independent of the display curve, so pooling it is safe
-    against the bootstrap (the historical internal score never depends on which
-    curve last wrote ``ratings.json``)."""
+def _historical_internal_rows(output_dir: Path) -> list[dict]:
+    """Internal rows of every historical men's card, rebuilt deterministically
+    from the committed canonical tables. Pure function of the committed inputs —
+    independent of the display curve, so pooling is safe against the bootstrap
+    (the internal scores never depend on which curve last wrote ratings.json)."""
     from . import rating  # lazy: avoid an import cycle (rating imports this module)
 
     internal, _self_curve = rating.build_internal_view(
@@ -58,14 +66,13 @@ def _historical_internal_scores(output_dir: Path) -> list[float]:
         manager_tournaments=rating._load(output_dir, "manager_tournaments"),
         career_stature_by_player=rating._load_career_stature(output_dir),
     )
-    return [r["score_0_100"] for r in internal]
+    return internal
 
 
-def _projected_internal_scores(output_dir: Path) -> list[float]:
-    """Pre-display composite ``score_0_100`` of every 2026 card, rebuilt with the
-    EXACT production projected path (the same ``_historical_raw_only_internal``
-    quantile-map target the committed ``ratings_2026.json`` was built from), so the
-    pooled scores equal the production internal scores card-for-card."""
+def _projected_internal_rows(output_dir: Path) -> list[dict]:
+    """Internal rows of every 2026 card, rebuilt with the EXACT production
+    projected path (the same ``_historical_raw_only_internal`` quantile-map
+    target the committed ``ratings_2026.json`` was built from)."""
     from . import rating_2026  # lazy: avoid an import cycle
 
     cards = json.loads(
@@ -73,26 +80,28 @@ def _projected_internal_scores(output_dir: Path) -> list[float]:
     )
     career = rating_2026._load_career_stature(output_dir)
     historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
-    internal = rating_2026._build_internal_rows(cards, career, historical_raw_only)
-    return [r["score_0_100"] for r in internal]
+    return rating_2026._build_internal_rows(cards, career, historical_raw_only)
+
+
+def _union_pool(output_dir: Path) -> list[float]:
+    """The v2 fit population: career + current internal scores, both eras."""
+    rows = _historical_internal_rows(output_dir) + _projected_internal_rows(output_dir)
+    return [r["score_0_100"] for r in rows] + [r["current_score_0_100"] for r in rows]
 
 
 def fit_unified_curve(output_dir: Path = OUTPUT_DIR, *, refit: bool = False):
-    """Return the ONE MV2-6 display curve.
+    """Return the ONE unified display curve (v2 kind).
 
-    By default this returns the frozen pre-V2 anchors because merit-v3 V4 owns the
-    next curve refit. ``refit=True`` recomputes the pooled anchors for diagnostic
-    reporting without changing production output.
+    By default this returns the FROZEN v2 anchors (byte-determinism for the
+    committed artifacts). ``refit=True`` recomputes the union-pool anchors live;
+    the lock test asserts frozen == live so the freeze tracks the internals.
     """
     from . import rating  # lazy
 
     if not refit:
-        return rating.DisplayCurve(**FROZEN_UNIFIED_CURVE_V1_ANCHORS)
+        return rating.DisplayCurve(**FROZEN_UNIFIED_CURVE_V2_ANCHORS)
 
-    pooled = _historical_internal_scores(output_dir) + _projected_internal_scores(
-        output_dir
-    )
-    return rating._fit_display_curve(pooled)
+    return rating._fit_display_curve(_union_pool(output_dir))
 
 
 # ─── MV2-6 accuracy-eyeball SAMPLE (unified DISPLAY band) ─────────────────────
