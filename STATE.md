@@ -4,10 +4,11 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-10 · web count re-measured on ws-ux/micro-yellow-1 (q-001)
-rebased onto main `b4f8651` (#78): 530 passed (+2 synergy display-rounding tests on
-top of #78's 528). All other counts from the `9c71219` run (fresh clone) —
-untouched by these display/docs-only changes.
+Last measured: 2026-06-10 · web count re-measured on ws-ux/club-coverage rebased onto
+main `3c52a34` (#80): 537 passed (+7 club-display/flag tests on top of q-001's 530). All
+other counts from the `9c71219` run (fresh clone) — untouched by these display/docs-only
+changes. Club-at-tournament backfill staged for MV2-12b
+(`docs/reports/club-backfill-manifest-2026-06-10.md`).
 
 ## Lanes in flight at last measurement
 
@@ -42,7 +43,7 @@ untouched by these display/docs-only changes.
 | @wcdraft/data `test:golden:data`        | 28 passed                   |
 | @wcdraft/data `test:golden:integration` | 10 passed                   |
 | @wcdraft/db `test`                      | 74 passed                   |
-| @wcdraft/web `test`                     | 530 passed, 1 skipped (531) |
+| @wcdraft/web `test`                     | 537 passed, 1 skipped (538) |
 | @wcdraft/web `test:golden:leaderboard`  | 5 passed                    |
 | etl `pytest -q`                         | 159 passed                  |
 | `pnpm build`                            | 4/4 tasks green             |

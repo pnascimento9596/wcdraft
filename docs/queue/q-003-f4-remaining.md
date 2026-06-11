@@ -11,6 +11,10 @@
 - **U7 ranked lane** (attempt issuance/consume + dark UI tab) — dark by design; blocked on
   plan §10 product decision Q2 (ranked = account-required posture). `LEADERBOARD_REQUIRE_ACCOUNT`
   gate already exists in identity-gate.
+- Scrub env-var names and secret-generation hints from auth-route JSON error bodies
+  (AuthError SECRET_MISCONFIGURED currently surfaces the var name via jsonError). Generic
+  client body; detail to server logs only. One-liner, fold into the next F-4/auth lane.
+  (Ledgered from PR #79 carryover via ws-ux/club-coverage — docs-only append.)
 
 ## Light-up checklist (go-live, after U4+U5 land — HUMAN decision to flip)
 
