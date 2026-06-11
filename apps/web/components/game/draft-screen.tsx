@@ -19,6 +19,9 @@ import {
   type SquadSlot,
   type SynergyResult,
   ERA_PRESET_IDS,
+  selectDraftTarget,
+  DraftTargetDeadEndError,
+  type DraftFlow,
   type EraPresetId,
 } from "@wcdraft/core";
 import {
@@ -321,19 +324,28 @@ const ERA_PRESET_LABELS: Record<EraPresetId, string> = {
   modern: "Modern",
 };
 
+const DRAFT_FLOW_LABELS: Record<DraftFlow, string> = {
+  squad_first: "Squad First",
+  position_first: "Position First",
+};
+
 function DraftSetupDisclosure({
   eraPreset,
   onEraPreset,
+  draftFlow,
+  onDraftFlow,
   disabled,
 }: {
   eraPreset: EraPresetId;
   onEraPreset: (p: EraPresetId) => void;
+  draftFlow: DraftFlow;
+  onDraftFlow: (f: DraftFlow) => void;
   disabled: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  // Summary mirrors the three config axes; flow/basis are fixed in this
-  // build (Position First lands with DC-3, Current with the basis season).
-  const summary = `Squad First · Career · ${ERA_PRESET_LABELS[eraPreset]}`;
+  // Summary mirrors the three config axes; basis is fixed in this build
+  // (Current lands with the MV2-12b basis season).
+  const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · Career · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
     <div>
       <button
@@ -370,14 +382,22 @@ function DraftSetupDisclosure({
           <div className={s.setupAxis}>
             <span className={s.setupAxisLabel}>Draft mode</span>
             <div className={s.setupSeg} role="group" aria-label="Draft mode">
-              <button type="button" className={`${s.setupSegBtn} ${s.setupSegBtnActive}`} aria-pressed>
-                Squad First
-              </button>
-              <button type="button" className={s.setupSegBtn} disabled>
-                Position First
-              </button>
+              {(["squad_first", "position_first"] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={`${s.setupSegBtn} ${draftFlow === f ? s.setupSegBtnActive : ""}`}
+                  aria-pressed={draftFlow === f}
+                  disabled={disabled}
+                  onClick={() => onDraftFlow(f)}
+                >
+                  {DRAFT_FLOW_LABELS[f]}
+                </button>
+              ))}
             </div>
-            <p className={s.setupAxisNote}>Position First is coming in a later update.</p>
+            <p className={s.setupAxisNote}>
+              Position First: choose the slot to fill, then spin for the squad.
+            </p>
           </div>
           <div className={s.setupAxis}>
             <span className={s.setupAxisLabel}>Rating basis</span>
@@ -412,6 +432,7 @@ function FormationSelect({
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
+  const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
 
   const lockIn = useCallback(
     (formation_id: SupportedFormationId) => {
@@ -422,6 +443,7 @@ function FormationSelect({
           formation_id,
           mode: draftMode,
           era_preset: eraPreset,
+          draft_flow: draftFlow,
         });
         const warning =
           created.persistence === "volatile" || created.warnings.length > 0
@@ -435,7 +457,7 @@ function FormationSelect({
         setPending(null);
       }
     },
-    [gameData, draftMode, eraPreset, onLocked],
+    [gameData, draftMode, eraPreset, draftFlow, onLocked],
   );
 
   return (
@@ -459,6 +481,8 @@ function FormationSelect({
         <DraftSetupDisclosure
           eraPreset={eraPreset}
           onEraPreset={setEraPreset}
+          draftFlow={draftFlow}
+          onDraftFlow={setDraftFlow}
           disabled={pending !== null}
         />
         <div className={s.formationGrid}>
@@ -544,6 +568,14 @@ function DraftBoard({
   // ONLY: the engine state, pick/lock flow, and the sim inputs are the real
   // values; identities, shapes, flags, the spin and synergy LINK LINES stay.
   const blind = draft.mode === "hidden";
+
+  // DC-3 position-first derivations. `awaitingTarget` gates the target-select
+  // stage (the spin's draw is NOT materialized yet); `lockedTarget` pins the
+  // assignment once the squad rolled (the lock action fills only the target).
+  const positionFirst = draft.draft_flow === "position_first";
+  const awaitingTarget = positionFirst && spin?.status === "awaiting_slot";
+  const lockedTarget =
+    positionFirst && spin?.status === "pending" ? spin.target_slot_id : null;
 
   // Adapter views.
   const { starters, bench } = useMemo(
@@ -646,6 +678,46 @@ function DraftBoard({
   const handleSettle = useCallback(() => setAnim("settled"), []);
   const handleReveal = useCallback(() => setPhase("lineup"), []);
 
+  // DC-3 — commit a position-first target, roll the squad, persist. A
+  // DraftTargetDeadEndError leaves the spin UNCONSUMED: we surface the
+  // blocking honest notice and the user picks a different target.
+  const [targetDeadEnd, setTargetDeadEnd] = useState<string | null>(null);
+  const handleSelectTarget = useCallback(
+    (target: string) => {
+      if (committing) return;
+      setCommitting(true);
+      setTargetDeadEnd(null);
+      setTransitionError(null);
+      try {
+        const catalog = getCatalogForEra(gameData, draft.era_preset ?? "all_time");
+        const nextDraft = selectDraftTarget(catalog, draft, target);
+        const updated: RunRecordV1 = {
+          ...record,
+          updated_seq: record.updated_seq + 1,
+          draft: nextDraft,
+        };
+        const save = saveRunRecord(updated);
+        const warning =
+          save.persistence === "volatile" || save.warnings.length > 0
+            ? save.warnings.join(" · ") ||
+              "Draft is saved in this tab only — browser storage is unavailable."
+            : null;
+        setPhase("spin");
+        setAnim("idle");
+        onRecordUpdate(updated, warning ?? persistenceWarning);
+      } catch (err) {
+        if (err instanceof DraftTargetDeadEndError) {
+          setTargetDeadEnd(err.message);
+        } else {
+          setTransitionError(err instanceof Error ? err.message : String(err));
+        }
+      } finally {
+        setCommitting(false);
+      }
+    },
+    [committing, gameData, draft, record, onRecordUpdate, persistenceWarning],
+  );
+
   // Filter/sort player candidates.
   const visibleCandidates = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -687,7 +759,9 @@ function DraftBoard({
 
   function selectPlayer(card: PlayerCardView) {
     setSel({ kind: "player", card });
-    setSelSlot(bestSlotFor(card));
+    // Position-first: the slot was committed before the reveal — the pick
+    // can only fill the locked target.
+    setSelSlot(lockedTarget ?? bestSlotFor(card));
     setTransitionError(null);
   }
   function selectManager(card: ManagerCardView) {
@@ -737,7 +811,8 @@ function DraftBoard({
   // randomness here; the neighbor reel faces are derived from the ordered
   // spin ring. Animation lives in CSS.
   const slotReveal = useMemo(() => {
-    if (!spin) return null;
+    // awaiting_slot placeholders carry no draw — nothing to reveal yet.
+    if (!spin || spin.status === "awaiting_slot") return null;
     return buildSlotRevealModel({
       activeSpin: spin,
       allSpins: draft.spins,
@@ -828,6 +903,108 @@ function DraftBoard({
   // simulating a `drafting`-status squad violates the share/replay contract.
   // Fieldability remains a layered validity check (see no-GK warning below).
   const showReviewCta = !sel && complete;
+
+  // ── DC-3 — position-first target stage (before any squad is rolled) ─────
+  if (!complete && spin && awaitingTarget) {
+    const vacantStarters = draft.squad.filter((sl) => sl.is_starter && sl.card_id === null);
+    const vacantBench = draft.squad.filter((sl) => !sl.is_starter && sl.card_id === null);
+    const managerOpen = draft.manager_card_id === null;
+    const unresolvedAfter = draft.spins.filter(
+      (sp) => sp.status !== "picked" && sp.index > spin.index,
+    ).length;
+    const managerForced = managerOpen && unresolvedAfter === 0;
+    return (
+      <div className={`${s.draftShell} ${s.draftShellAnchored}`} data-draft-anchored>
+        <DraftAppBar
+          spinNumber={spinNumber}
+          progressPct={progressPct}
+          warning={persistenceWarning}
+        />
+        <div className={s.draftScroll}>
+          <section className={s.panel} aria-label="Choose your target">
+            <span className={s.eyebrowAccent}>
+              Pick {spinNumber} / {TOTAL_SPINS}
+            </span>
+            <h2 className={s.panelTitle}>Choose the slot to fill</h2>
+            <p className={s.completeNote}>
+              Position First — commit a target before the squad is revealed. The spin fills only
+              this target; the choice is locked once the squad rolls.
+            </p>
+            {targetDeadEnd ? (
+              <p className={s.formationError} role="alert">
+                No candidate for that target in this configured pool — the spin was not used. Pick
+                a different target.
+              </p>
+            ) : null}
+            {transitionError ? (
+              <p className={s.formationError} role="alert">
+                {transitionError}
+              </p>
+            ) : null}
+            {managerForced ? (
+              <p className={s.memoryModeNote} role="note">
+                Final spin with no manager drafted — the manager is the only legal target.
+              </p>
+            ) : null}
+            {managerOpen ? (
+              <div className={s.targetGroup}>
+                <h3 className={s.targetGroupTitle}>Staff</h3>
+                <div className={s.targetGrid}>
+                  <button
+                    type="button"
+                    className={s.targetChip}
+                    disabled={committing}
+                    onClick={() => handleSelectTarget("manager")}
+                  >
+                    <span className={s.targetChipPos}>MGR</span>
+                    <span className={s.targetChipId}>Manager</span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {!managerForced && vacantStarters.length > 0 ? (
+              <div className={s.targetGroup}>
+                <h3 className={s.targetGroupTitle}>Starting XI</h3>
+                <div className={s.targetGrid}>
+                  {vacantStarters.map((sl) => (
+                    <button
+                      key={sl.slot_id}
+                      type="button"
+                      className={s.targetChip}
+                      disabled={committing}
+                      onClick={() => handleSelectTarget(sl.slot_id)}
+                    >
+                      <span className={s.targetChipPos}>{sl.slot_position}</span>
+                      <span className={s.targetChipId}>{sl.slot_id}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {!managerForced && vacantBench.length > 0 ? (
+              <div className={s.targetGroup}>
+                <h3 className={s.targetGroupTitle}>Bench</h3>
+                <div className={s.targetGrid}>
+                  {vacantBench.map((sl) => (
+                    <button
+                      key={sl.slot_id}
+                      type="button"
+                      className={s.targetChip}
+                      disabled={committing}
+                      onClick={() => handleSelectTarget(sl.slot_id)}
+                    >
+                      <span className={s.targetChipPos}>{sl.slot_position}</span>
+                      <span className={s.targetChipId}>{sl.slot_id}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </section>
+        </div>
+      </div>
+    );
+  }
 
   // ── Standalone spin stage — the centerpiece, gated per spin ────────────
   // Each of the 17 spins lands here first (idle drum, CTA "Spin"). Only after
@@ -1101,7 +1278,7 @@ function DraftBoard({
           )}
         </div>
         <div className={s.lockActions}>
-          {sel?.kind === "player" && openSlots.length > 0 ? (
+          {sel?.kind === "player" && openSlots.length > 0 && !lockedTarget ? (
             <button
               type="button"
               className={`btn btn--ghost ${s.lockSecondary}`}

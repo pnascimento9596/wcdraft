@@ -34,6 +34,7 @@
         "picked_player_id": "p-4-ger-00",
         "assigned_slot_id": "4-3-3.GK",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -65,6 +66,7 @@
         "picked_player_id": "p-5-ita-00",
         "assigned_slot_id": "4-3-3.LB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -97,6 +99,7 @@
         "picked_player_id": "p-5-arg-00",
         "assigned_slot_id": "4-3-3.LCB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -130,6 +133,7 @@
         "picked_player_id": "p-4-uru-00",
         "assigned_slot_id": "4-3-3.RCB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -164,6 +168,7 @@
         "picked_player_id": "p-5-por-00",
         "assigned_slot_id": "4-3-3.RB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -199,6 +204,7 @@
         "picked_player_id": "p-6-uru-00",
         "assigned_slot_id": "4-3-3.CDM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -235,6 +241,7 @@
         "picked_player_id": null,
         "assigned_slot_id": null,
         "picked_manager_card_id": "m-5-bra:5",
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -271,6 +278,7 @@
         "picked_player_id": "p-5-ned-00",
         "assigned_slot_id": "4-3-3.LCM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -308,6 +316,7 @@
         "picked_player_id": "p-4-fra-00",
         "assigned_slot_id": "4-3-3.RCM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -346,6 +355,7 @@
         "picked_player_id": "p-6-ita-00",
         "assigned_slot_id": "4-3-3.LW",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -384,6 +394,7 @@
         "picked_player_id": "p-4-uru-01",
         "assigned_slot_id": "4-3-3.ST",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -424,6 +435,7 @@
         "picked_player_id": "p-6-eng-00",
         "assigned_slot_id": "4-3-3.RW",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -465,6 +477,7 @@
         "picked_player_id": "p-6-arg-00",
         "assigned_slot_id": "bench.0",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -505,6 +518,7 @@
         "picked_player_id": "p-4-uru-02",
         "assigned_slot_id": "bench.1",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -548,6 +562,7 @@
         "picked_player_id": "p-6-ned-00",
         "assigned_slot_id": "bench.2",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -591,6 +606,7 @@
         "picked_player_id": "p-6-arg-01",
         "assigned_slot_id": "bench.3",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -635,6 +651,7 @@
         "picked_player_id": "p-6-eng-01",
         "assigned_slot_id": "bench.4",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       }
     ],

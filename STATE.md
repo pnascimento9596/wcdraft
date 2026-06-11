@@ -32,6 +32,20 @@ remains staged for MV2-12b
   `dbc1f0a` — docs-only, zero runtime change. Plan default: `t2` token schema,
   v1 era presets only, `Current` rating basis gated on MV2-12b, and a future
   `engine-draft-config` integration branch for implementation.
+- Draft-config season E1+E2+E3 BUILT on the `engine-draft-config` integration
+  branch (NOT main): DC-1 `t2.` config token + explicit DraftState config axes
+  (#94), DC-2 era-preset bounded sampling (#95), DC-3 position-first state
+  machine (#96). Measured on the branch: core 331 · data 62 · web 586 ·
+  golden core 3 + draft 37 + data 28 + integration 22 (10 e2e + 12 era) +
+  leaderboard 5. Default config is byte-identical to today (goldens
+  regenerated with fields-only diffs; era golden zero-diff under DC-3).
+  Engine/schema anchor bump DEFERRED to the season merge per the season
+  pattern. `Current` basis stays gated on MV2-12b; the board rejects every
+  non-canonical config (`NON_CANONICAL_CONFIG`). Consolidated fresh-session
+  review of the cumulative branch diff pending; season merge to main is Red
+  (review + owner approval). Screenshots:
+  `docs/validation/draft-config-2026-06-11/`; build report:
+  `docs/reports/draft-config-e1-e3-build-2026-06-11.md`.
 - UX: `ws-ux/pitch-realism` is Yellow/display-only (realistic pitch markings +
   low-ink formation mini-pitches), with before/after 390×844 screenshots under
   `docs/validation/ws-ux-pitch-realism/`.

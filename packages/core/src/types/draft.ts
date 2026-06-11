@@ -173,10 +173,30 @@ export interface Spin {
    */
   picked_manager_card_id: ManagerCardId | null;
   /**
-   * Lifecycle: 'pending' (not yet picked) → 'picked' (confirmed, IMMUTABLE).
-   * There is no 'unpicked' transition — append-only.
+   * DC-3 position-first — the target the user COMMITTED before this spin's
+   * squad reveal: a SquadSlot.slot_id, the literal `"manager"`, or `null`.
+   *
+   *   - squad_first: ALWAYS null (the slot is chosen after the reveal and
+   *     recorded in `assigned_slot_id` only — byte-compatible with pre-DC-3
+   *     drafts modulo the field itself).
+   *   - position_first: null only while `status === 'awaiting_slot'`; set
+   *     and IMMUTABLE from the moment `selectDraftTarget` rolls the squad.
+   *     A picked player spin's `assigned_slot_id` MUST equal it; a picked
+   *     manager spin's target MUST be `"manager"`.
    */
-  status: "pending" | "picked";
+  target_slot_id: string | null;
+  /**
+   * Lifecycle:
+   *   squad_first:    'pending' → 'picked' (unchanged, append-only).
+   *   position_first: 'awaiting_slot' → 'pending' → 'picked' (DC-3).
+   *
+   * 'awaiting_slot' is a PLACEHOLDER: the spin's (T, N) draw has NOT been
+   * materialized (the commitment boundary is real — persisted state carries
+   * no squad data the user hasn't earned by committing a target). Sentinel
+   * shape: tournament_id 0, nation_id "", rare false, draw_probability 0,
+   * empty candidate/exclusion lists, all pick fields null. Schema enforces.
+   */
+  status: "awaiting_slot" | "pending" | "picked";
 }
 
 /**

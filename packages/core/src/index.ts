@@ -217,6 +217,8 @@ export {
   isDraftComplete,
   pickPlayer,
   pickManager,
+  selectDraftTarget,
+  DraftTargetDeadEndError,
   stepDraft,
   autoDraft,
   validateSquad,

@@ -42,6 +42,7 @@
 import {
   createDraft,
   ERA_PRESETS,
+  selectDraftTarget,
   isDraftComplete,
   isDraftFlow,
   isEraPresetId,
@@ -440,14 +441,10 @@ export function reconstructDraftFromToken(
       `token rating_basis "${config.rating_basis}" is not available in this build (gated on MV2-12b)`,
     );
   }
-  if (config.draft_flow !== "squad_first") {
-    throw new RunTokenError(
-      `token draft_flow "${config.draft_flow}" is not implemented in this build (DC-3)`,
-    );
-  }
   // DC-2: replay against the SAME era-bounded catalog the run was drafted
   // from (default all_time IS gameData.catalog by object identity).
   const catalog = getCatalogForEra(gameData, config.era_preset);
+  const positionFirst = config.draft_flow === "position_first";
   let state = createDraft(catalog, {
     run_id: token.rid,
     parent_seed: token.ps,
@@ -464,6 +461,18 @@ export function reconstructDraftFromToken(
   for (let i = 0; i < token.pl.length; i += 1) {
     const pick = token.pl[i]!;
     try {
+      // DC-3 position-first: replay the COMMITTED target before each pick —
+      // the same selectDraftTarget transition the live UI walks. Decode
+      // guarantees `ts` is present and coherent on every position-first
+      // entry; the engine then enforces target/assignment equality, so a
+      // token whose `ts` and final slot diverge fails replay loudly.
+      if (positionFirst) {
+        const ts = (pick as { ts?: string }).ts;
+        if (ts === undefined) {
+          throw new RunTokenError(`spin ${i}: position_first pick is missing its target`);
+        }
+        state = selectDraftTarget(catalog, state, ts);
+      }
       if (pick.k === "m") {
         state = pickManager(catalog, state);
       } else {

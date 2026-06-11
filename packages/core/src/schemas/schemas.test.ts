@@ -159,6 +159,7 @@ function makeDraftState(): DraftState {
       picked_player_id: player_id,
       assigned_slot_id: slotInfo.slot_id,
       picked_manager_card_id: null,
+      target_slot_id: null,
       status: "picked",
     });
     squad.push({
@@ -188,6 +189,7 @@ function makeDraftState(): DraftState {
     picked_player_id: null,
     assigned_slot_id: null,
     picked_manager_card_id: managerCardId,
+    target_slot_id: null,
     status: "picked",
   });
   return {
