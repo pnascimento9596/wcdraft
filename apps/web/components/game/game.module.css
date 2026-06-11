@@ -1662,6 +1662,24 @@ button.benchSlot:not(:disabled):hover {
   gap: 16px;
   padding: 12px 16px 24px;
 }
+.draftAttribution {
+  margin: -2px 0 0;
+  color: var(--ink-400);
+  font-family: var(--f-body);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+  white-space: nowrap;
+}
+.draftAttribution a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+.draftAttribution a:hover {
+  color: var(--ink-300);
+  text-decoration: underline;
+}
 @media (max-width: 430px) {
   .draftShellAnchored .draftAppBar {
     margin: 8px 8px 0;
@@ -1669,6 +1687,9 @@ button.benchSlot:not(:disabled):hover {
   .draftScroll {
     gap: 8px;
     padding: 8px 8px 16px;
+  }
+  .draftAttribution {
+    font-size: 10px;
   }
 }
 

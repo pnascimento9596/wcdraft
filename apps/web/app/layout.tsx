@@ -7,6 +7,14 @@ import { SiteHeader } from "../components/site-header";
 import { isAuthEnabled } from "../lib/auth/auth-enabled";
 import { isLeaderboardEnabled } from "../lib/leaderboard/enabled";
 import { getBuildStamp } from "../lib/build-stamp";
+import {
+  metadataBaseUrl,
+  OG_DEFAULT_IMAGE,
+  OG_DEFAULT_IMAGE_ALT,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+} from "../lib/site-metadata";
 import { SiteFooter } from "../components/site-footer";
 import { ServiceWorkerRegister } from "../components/sw-register";
 import "./ds/tokens.css";
@@ -28,24 +36,42 @@ const text = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://wcdraft.app"),
+  metadataBase: metadataBaseUrl(),
   title: {
-    default: "wcdraft — draft your all-time World Cup XI",
+    default: SITE_TITLE,
     template: "%s · wcdraft",
   },
-  description:
-    "wcdraft is a football drafting game: spin a random national team and tournament year, pick one player per spin, lock a formation, and chase the perfect 8-match run.",
-  applicationName: "wcdraft",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   appleWebApp: {
     capable: true,
-    title: "wcdraft",
+    title: SITE_NAME,
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "wcdraft — draft your all-time World Cup XI",
-    description: "A football drafting game. Spin, pick, build your XI, and chase the perfect run.",
-    siteName: "wcdraft",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
     type: "website",
+    images: [
+      {
+        url: OG_DEFAULT_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: OG_DEFAULT_IMAGE_ALT,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: OG_DEFAULT_IMAGE,
+        alt: OG_DEFAULT_IMAGE_ALT,
+      },
+    ],
   },
   icons: {
     icon: [
