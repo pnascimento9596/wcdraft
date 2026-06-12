@@ -11,7 +11,7 @@
 //   - verify against an UNKNOWN token → TOKEN_UNKNOWN
 //   - verify against a malformed token → TOKEN_MALFORMED
 //   - user is upserted by email (no duplicate users on second sign-in)
-import { describe, it, expect, beforeAll, afterEach } from "vitest";
+import { describe, it, expect, beforeAll, afterEach, vi } from "vitest";
 import { setupTestDb } from "./_test-db";
 import {
   requestMagicLink,
@@ -21,7 +21,7 @@ import {
 } from "@/lib/auth/magic-link";
 import { LogEmailSender } from "@/lib/auth/email";
 import { sha256Hex } from "@/lib/auth/tokens";
-import { magicLinkTokens } from "@wcdraft/db";
+import { authRateLimits, magicLinkTokens } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
@@ -63,6 +63,33 @@ describe("requestMagicLink", () => {
       /^https:\/\/wcdraft\.com\/api\/auth\/verify\?token=[A-Za-z0-9_-]{43}$/,
     );
   });
+
+  it.each([
+    ["missing base URL", ""],
+    ["http localhost", "http://localhost:3000"],
+    ["https localhost", "https://localhost"],
+    ["http public host", "http://www.wcdraft.com"],
+  ])(
+    "refuses to persist or send an unsafe production verify URL (%s)",
+    async (_label, verifyBaseUrl) => {
+      const now = Date.UTC(2026, 5, 1);
+      const sender = new LogEmailSender(() => undefined);
+      vi.stubEnv("NODE_ENV", "production");
+      try {
+        await expect(
+          requestMagicLink(
+            { email: "user@example.com", ipAddress: "1.2.3.4" },
+            { ...makeDeps({ now, sender }), verifyBaseUrl },
+          ),
+        ).rejects.toMatchObject({ code: "SECRET_MISCONFIGURED" });
+      } finally {
+        vi.unstubAllEnvs();
+      }
+      expect(sender.lastSent).toBeNull();
+      expect(await env.db.select().from(magicLinkTokens)).toHaveLength(0);
+      expect(await env.db.select().from(authRateLimits)).toHaveLength(0);
+    },
+  );
 
   it("stores ONLY the sha-256 hash; raw token is never persisted", async () => {
     const now = Date.UTC(2026, 5, 1);

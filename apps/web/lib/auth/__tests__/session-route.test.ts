@@ -1,7 +1,7 @@
 // F-3.6 — /api/auth/session ship-dark hardening
 //
-// The bug we are fixing: in production with auth disabled (RESEND_API_KEY +
-// AUTH_EMAIL_FROM unset) and AUTH_COOKIE_SECRET also unset, the previous
+// The bug we are fixing: in production with auth disabled (RESEND_API_KEY,
+// AUTH_EMAIL_FROM, and/or AUTH_BASE_URL unset) and AUTH_COOKIE_SECRET also unset, the previous
 // GET handler called `buildRuntimeDeps()` before checking for the cookie,
 // `readCookieSecret()` threw, and every page load saw an INTERNAL_ERROR 500.
 //
@@ -20,6 +20,7 @@ import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 const ENV_KEYS = [
   "RESEND_API_KEY",
   "AUTH_EMAIL_FROM",
+  "AUTH_BASE_URL",
   "AUTH_COOKIE_SECRET",
 ] as const;
 
@@ -29,6 +30,7 @@ function snap(): Snapshot {
   return {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     AUTH_EMAIL_FROM: process.env.AUTH_EMAIL_FROM,
+    AUTH_BASE_URL: process.env.AUTH_BASE_URL,
     AUTH_COOKIE_SECRET: process.env.AUTH_COOKIE_SECRET,
   };
 }
@@ -81,6 +83,7 @@ describe("GET /api/auth/session — ship-dark", () => {
     // deploy (flag flipped, secret not yet rotated) cannot 500 anon callers.
     process.env.RESEND_API_KEY = "re_demo";
     process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@resend.dev>";
+    process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
     // AUTH_COOKIE_SECRET still unset on purpose.
     const res = await GET(makeReq());
     expect(res.status).toBe(200);
