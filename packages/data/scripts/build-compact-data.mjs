@@ -45,22 +45,21 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
-// runtime-data-1.2.0 (draft-config season): runtime replay now includes the
-// config axes carried by `t2.` tokens plus era-filtered and position-first
-// draft semantics. Old t1/t2 links must hit version-skew, never silent replay.
-const SCHEMA_VERSION = "runtime-data-1.2.0";
-// engine-2026.06.11 (draft-config season): the draft engine semantics now
-// include config axes and position-first target commitment. There is no sim
-// math change in this prep unit; this anchor invalidates old replay tokens.
+// runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
+// while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
+// The legacy `ratings` array remains the Career alias for shipped consumers.
+const SCHEMA_VERSION = "runtime-data-2.0.0";
+// Draft-config has already shipped engine-2026.06.11 on main. merit-v3 V8 owns
+// the next season engine bump after the V7 lambda refit.
 const ENGINE_VERSION = "engine-2026.06.11";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// MV2 stature-dominant model (wc-perf-4.2.1 historical, unified display curve);
-// projected proj-career-3.0.0 (2026 linked-material on the stature scale, MV2-5).
+// merit-v3 model (wc-perf-5.0.0 historical, unified display curve v2);
+// projected proj-career-4.0.0 (2026 linked-material on the stature scale).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-4.2.1";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-3.0.0";
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-5.0.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-4.0.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
@@ -252,6 +251,7 @@ async function build() {
   // ── Build player cards ───────────────────────────────────────────────────
   const playerCards = [];
   const playerCardRatings = [];
+  const playerCardRatingsByBasis = { career: [], current: [] };
   let estimateCount = 0;
   // wc-perf-4.2.0 (MV2-4.1 basis tag fix): cards with no individual tournament
   // signal but a clearly-material career stature exit via the unified display
@@ -315,28 +315,10 @@ async function build() {
         `build-compact-data: rating ${rating.card_id} tournament ${ratingYyyy} mismatched player_tournament ${yyyy}.`,
       );
     }
-    const runtimeRating = {
-      card_id: cardId,
-      player_id: rating.player_id,
-      tournament_id: yyyy,
-      overall: rating.overall ?? null,
-      attack: rating.attack,
-      midfield: rating.midfield,
-      defense: rating.defense,
-      goalkeeping: rating.goalkeeping,
-      components: rating.components,
-      coverage: rating.coverage,
-      coverage_basis: rating.coverage_basis,
-      provenance: rating.provenance,
-      rating_version: rating.rating_version,
-      ...(rating.overall_basis ? { overall_basis: rating.overall_basis } : {}),
-      ...(rating.appearances_source ? { appearances_source: rating.appearances_source } : {}),
-      // MV2-10: source-derived legend flag, REQUIRED as of runtime-data-1.1.0.
-      // Passed through verbatim from the ETL row (never re-derived from overall);
-      // requireLegend throws on a missing/non-boolean value instead of silently
-      // defaulting — an ETL row without the flag is a contract violation.
-      legend: requireLegend(rating),
-    };
+    const basisRatings = materializeBasisRatings(rating, cardId, yyyy, {
+      appearancesSource: rating.appearances_source,
+    });
+    const runtimeRating = withCurrentBasis(basisRatings);
     if (rating.overall_basis === "baseline_anchor_estimate") {
       estimateCount += 1;
       // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
@@ -349,7 +331,7 @@ async function build() {
         );
       }
     }
-    if (rating.overall_basis === "career_stature_estimate") {
+    if (runtimeRating.overall_basis === "career_stature_estimate") {
       careerStatureEstimateCount += 1;
     }
     if (runtimeRating.overall === null) {
@@ -367,6 +349,8 @@ async function build() {
       );
     }
     playerCardRatings.push(runtimeRating);
+    playerCardRatingsByBasis.career.push(runtimeRating);
+    playerCardRatingsByBasis.current.push(basisRatings.current);
   }
 
   // 2026 cards
@@ -419,24 +403,8 @@ async function build() {
     };
     playerCards.push(card);
 
-    const runtimeRating = {
-      card_id: cardId,
-      player_id: rating.player_id,
-      tournament_id: yyyy,
-      overall: rating.overall ?? null,
-      attack: rating.attack,
-      midfield: rating.midfield,
-      defense: rating.defense,
-      goalkeeping: rating.goalkeeping,
-      components: rating.components,
-      coverage: rating.coverage,
-      coverage_basis: rating.coverage_basis,
-      provenance: rating.provenance,
-      rating_version: rating.rating_version,
-      // MV2-10: legend passthrough (REQUIRED, runtime-data-1.1.0) — same
-      // honest-failure rule as the historical loop.
-      legend: requireLegend(rating),
-    };
+    const basisRatings = materializeBasisRatings(rating, cardId, yyyy);
+    const runtimeRating = withCurrentBasis(basisRatings);
     if (runtimeRating.overall === null) {
       throw new Error(
         `build-compact-data: 2026 rating ${rating.card_id} emitted null overall; the projected rating contract forbids null overalls.`,
@@ -451,12 +419,22 @@ async function build() {
         `build-compact-data: 2026 rating ${rating.card_id} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
       );
     }
+    if (runtimeRating.overall_basis === "career_stature_estimate") {
+      careerStatureEstimateCount += 1;
+    }
     playerCardRatings.push(runtimeRating);
+    playerCardRatingsByBasis.career.push(runtimeRating);
+    playerCardRatingsByBasis.current.push(basisRatings.current);
   }
 
   // Canonical sort by card_id (string lex). The compact JSON is deterministic.
   playerCards.sort((a, b) => (a.card_id < b.card_id ? -1 : a.card_id > b.card_id ? 1 : 0));
   playerCardRatings.sort((a, b) => (a.card_id < b.card_id ? -1 : a.card_id > b.card_id ? 1 : 0));
+  for (const basis of ["career", "current"]) {
+    playerCardRatingsByBasis[basis].sort((a, b) =>
+      a.card_id < b.card_id ? -1 : a.card_id > b.card_id ? 1 : 0,
+    );
+  }
 
   // ── Build manager cards ──────────────────────────────────────────────────
   const managerCards = [];
@@ -619,6 +597,23 @@ async function build() {
   // MV2-10: legend census published on the manifest for fast sanity-checks
   // (the integrity test locks it against the bundle).
   const legendCount = playerCardRatings.filter((r) => r.legend).length;
+  const basisCounts = Object.fromEntries(
+    ["career", "current"].map((basis) => {
+      const rows = playerCardRatingsByBasis[basis];
+      return [
+        basis,
+        {
+          ratings: rows.length,
+          baseline_anchor_estimate: rows.filter(
+            (r) => r.overall_basis === "baseline_anchor_estimate",
+          ).length,
+          career_stature_estimate: rows.filter(
+            (r) => r.overall_basis === "career_stature_estimate",
+          ).length,
+        },
+      ];
+    }),
+  );
 
   // ── Serialise bundles and stamp manifest fingerprints ────────────────────
   const draftPoolBytes = Buffer.from(stableStringify(draftPoolBundle), "utf8");
@@ -647,6 +642,7 @@ async function build() {
       baseline_anchor_estimate: estimateCount,
       career_stature_estimate: careerStatureEstimateCount,
       legend: legendCount,
+      rating_basis: basisCounts,
     },
     attribution,
   };
@@ -696,6 +692,8 @@ async function build() {
       `  teams              = ${teams.length}`,
       `  knockout_slots     = ${knockoutSlotsSorted.length}`,
       `  baseline_anchor_estimate = ${estimateCount} (expected ${EXPECTED_BASELINE_ANCHOR_ESTIMATE})`,
+      `  basis.current.baseline_anchor_estimate = ${basisCounts.current.baseline_anchor_estimate}`,
+      `  basis.current.career_stature_estimate = ${basisCounts.current.career_stature_estimate}`,
       `  legend             = ${legendCount}`,
       `  draft_pool.compact = ${humanBytes(draftPoolBytes.length)} raw / ${humanBytes(draftPoolFingerprint.bytes_gzip)} gzip / ${humanBytes(draftPoolFingerprint.bytes_brotli)} brotli`,
       `  scenario-2026      = ${humanBytes(scenario2026Bytes.length)} raw / ${humanBytes(scenario2026Fingerprint.bytes_gzip)} gzip / ${humanBytes(scenario2026Fingerprint.bytes_brotli)} brotli`,
@@ -707,6 +705,87 @@ async function build() {
   if (estimateCount !== EXPECTED_BASELINE_ANCHOR_ESTIMATE) {
     throw new Error(
       `build-compact-data: expected ${EXPECTED_BASELINE_ANCHOR_ESTIMATE} baseline_anchor_estimate ratings, got ${estimateCount}. Refusing to emit.`,
+    );
+  }
+}
+
+function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
+  const basisRatings = rating.basis_ratings;
+  if (!basisRatings || typeof basisRatings !== "object") {
+    throw new Error(
+      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.0.0 requires career + current.`,
+    );
+  }
+  return {
+    career: materializeBasisRating(rating, basisRatings.career, "career", runtimeCardId, yyyy, opts),
+    current: materializeBasisRating(rating, basisRatings.current, "current", runtimeCardId, yyyy, opts),
+  };
+}
+
+function withCurrentBasis(basisRatings) {
+  return {
+    ...basisRatings.career,
+    basis_ratings: {
+      current: basisRatings.current,
+    },
+  };
+}
+
+function materializeBasisRating(parentRating, basisRating, expectedBasis, runtimeCardId, yyyy, opts = {}) {
+  if (!basisRating || typeof basisRating !== "object") {
+    throw new Error(
+      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.0.0 requires both bases.`,
+    );
+  }
+  const basisMetadata = basisRating.basis_metadata;
+  if (!basisMetadata || basisMetadata.basis !== expectedBasis) {
+    throw new Error(
+      `build-compact-data: rating ${parentRating.card_id} basis ${expectedBasis} has invalid basis_metadata=${JSON.stringify(basisMetadata)}.`,
+    );
+  }
+  const out = {
+    card_id: runtimeCardId,
+    player_id: parentRating.player_id,
+    tournament_id: yyyy,
+    overall: basisRating.overall ?? null,
+    attack: basisRating.attack,
+    midfield: basisRating.midfield,
+    defense: basisRating.defense,
+    goalkeeping: basisRating.goalkeeping,
+    components: basisRating.components,
+    coverage: basisRating.coverage ?? parentRating.coverage,
+    coverage_basis: basisRating.coverage_basis ?? parentRating.coverage_basis,
+    provenance: basisRating.provenance ?? parentRating.provenance,
+    rating_version: basisRating.rating_version ?? basisMetadata.rating_version ?? parentRating.rating_version,
+    ...(basisRating.overall_basis ? { overall_basis: basisRating.overall_basis } : {}),
+    ...(opts.appearancesSource ? { appearances_source: opts.appearancesSource } : {}),
+    legend: requireLegend(parentRating),
+    basis_metadata: basisMetadata,
+  };
+  validateRuntimeRating(out, parentRating.card_id, expectedBasis);
+  return out;
+}
+
+function validateRuntimeRating(runtimeRating, sourceCardId, basis) {
+  for (const ch of ["attack", "midfield", "defense", "goalkeeping"]) {
+    if (typeof runtimeRating[ch] !== "number") {
+      throw new Error(
+        `build-compact-data: ${sourceCardId} basis ${basis} missing numeric ${ch}.`,
+      );
+    }
+  }
+  if (runtimeRating.overall === null) {
+    throw new Error(
+      `build-compact-data: rating ${sourceCardId} basis ${basis} emitted null overall; the rating contract forbids null overalls.`,
+    );
+  }
+  if (
+    typeof runtimeRating.overall !== "number"
+    || runtimeRating.overall < DISPLAY_FLOOR
+    || runtimeRating.overall > DISPLAY_MAX
+  ) {
+    throw new Error(
+      `build-compact-data: rating ${sourceCardId} basis ${basis} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
     );
   }
 }
@@ -733,12 +812,12 @@ function humanBytes(n) {
 }
 
 function requireLegend(rating) {
-  // MV2-10 (runtime-data-1.1.0): `legend` is REQUIRED on every compact rating.
+  // runtime-data-2.0.0: `legend` is REQUIRED on every compact rating.
   // The ETL emits the source-derived boolean on every row (historical + 2026);
   // anything else is a contract violation surfaced loudly, never defaulted.
   if (typeof rating.legend !== "boolean") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-1.1.0 requires a boolean on every row. Refusing to emit.`,
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.0.0 requires a boolean on every row. Refusing to emit.`,
     );
   }
   return rating.legend;
