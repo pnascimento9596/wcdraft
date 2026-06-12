@@ -183,11 +183,11 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
 
   // Each it() title shows VALUE, Δ from norm, and the test band — so a reader
   // can read the drift without expanding the test report. The committed
-  // Δ values reflect the MV2-11b λ refit landing on the merit-v2
-  // (stature-dominant) 2026 pool — see
-  // docs/investigations/mv2-11a-sim-measurement-2026-06-09.md for the
-  // pre-refit RED landing this re-lock resolves.
-  it(`mean goals/match: 2.544 (Δ +0.008 vs norm 2.54, MV2-11b refit) — tight band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
+  // Δ values reflect the merit-v3 V7 λ refit landing on the post-V6
+  // Career-channel 2026 pool. The engine_version stamp is intentionally
+  // deferred to V8's single skew event; these titles record the pending-V8
+  // landing that the gate enforces.
+  it(`mean goals/match: 2.534 (Δ −0.001 vs norm 2.54, merit-v3 V7 pending V8 stamp) — tight band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
     const delta = m.mean_goals - NORMS.mean_goals_per_match_regulation;
     expect(m.mean_goals).toBeGreaterThanOrEqual(BANDS.mean_goals.lo);
     expect(m.mean_goals).toBeLessThanOrEqual(BANDS.mean_goals.hi);
@@ -197,28 +197,28 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
     expect(Math.abs(delta)).toBeLessThan(0.10);
   });
 
-  it(`group draw rate: 24.69% (Δ −0.01pp vs norm 24.7%, MV2-11b refit) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {
+  it(`group draw rate: 25.18% (Δ +0.48pp vs norm 24.7%, merit-v3 V7 pending V8 stamp) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {
     const delta = m.group_draw - NORMS.group_stage_draw_rate;
     expect(m.group_draw).toBeGreaterThanOrEqual(BANDS.group_draw.lo);
     expect(m.group_draw).toBeLessThanOrEqual(BANDS.group_draw.hi);
     expect(Math.abs(delta)).toBeLessThan(0.025);
   });
 
-  it(`margin ≥ 4: 4.62% (Δ −0.29pp vs norm 4.9%, MV2-11b refit — phase-split DISP) — tight band [${(100 * BANDS.margin_ge_4.lo).toFixed(2)}%, ${(100 * BANDS.margin_ge_4.hi).toFixed(2)}%]`, () => {
+  it(`margin ≥ 4: 4.96% (Δ +0.05pp vs norm 4.9%, merit-v3 V7 pending V8 stamp — phase-split DISP) — tight band [${(100 * BANDS.margin_ge_4.lo).toFixed(2)}%, ${(100 * BANDS.margin_ge_4.hi).toFixed(2)}%]`, () => {
     const delta = m.margin_ge_4 - NORMS.regulation_margin_ge_4;
     expect(m.margin_ge_4).toBeGreaterThanOrEqual(BANDS.margin_ge_4.lo);
     expect(m.margin_ge_4).toBeLessThanOrEqual(BANDS.margin_ge_4.hi);
     expect(Math.abs(delta)).toBeLessThan(0.015);
   });
 
-  it(`KO → ET: 33.87% (Δ +0.83pp vs norm 33.0%, MV2-11b refit) — tight band [${(100 * BANDS.ko_et.lo).toFixed(2)}%, ${(100 * BANDS.ko_et.hi).toFixed(2)}%]`, () => {
+  it(`KO → ET: 33.47% (Δ +0.43pp vs norm 33.0%, merit-v3 V7 pending V8 stamp) — tight band [${(100 * BANDS.ko_et.lo).toFixed(2)}%, ${(100 * BANDS.ko_et.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_et - NORMS.knockout_extra_time_rate;
     expect(m.ko_et).toBeGreaterThanOrEqual(BANDS.ko_et.lo);
     expect(m.ko_et).toBeLessThanOrEqual(BANDS.ko_et.hi);
     expect(Math.abs(delta)).toBeLessThan(0.05);
   });
 
-  it(`KO → shootout: 21.87% (Δ +0.44pp vs norm 21.4%, MV2-11b refit) — tight band [${(100 * BANDS.ko_shootout.lo).toFixed(2)}%, ${(100 * BANDS.ko_shootout.hi).toFixed(2)}%]`, () => {
+  it(`KO → shootout: 21.33% (Δ −0.10pp vs norm 21.4%, merit-v3 V7 pending V8 stamp) — tight band [${(100 * BANDS.ko_shootout.lo).toFixed(2)}%, ${(100 * BANDS.ko_shootout.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_shootout - NORMS.knockout_shootout_rate;
     expect(m.ko_shootout).toBeGreaterThanOrEqual(BANDS.ko_shootout.lo);
     expect(m.ko_shootout).toBeLessThanOrEqual(BANDS.ko_shootout.hi);
