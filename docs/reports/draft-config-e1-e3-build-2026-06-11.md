@@ -13,12 +13,12 @@ approval).
 All three build units SHIPPED to the integration branch; the prep unit is the
 final on-branch re-lock before the later owner-approved season merge:
 
-| Unit | PR | Squash SHA on `engine-draft-config` |
-| ---- | -- | ----------------------------------- |
-| E1 / DC-1 — `t2.` token & config schema | #94 | `8be0627` |
-| E2 / DC-2 — era-preset bounded sampling | #95 | `7d5803b` |
+| Unit                                     | PR  | Squash SHA on `engine-draft-config`                |
+| ---------------------------------------- | --- | -------------------------------------------------- |
+| E1 / DC-1 — `t2.` token & config schema  | #94 | `8be0627`                                          |
+| E2 / DC-2 — era-preset bounded sampling  | #95 | `7d5803b`                                          |
 | E3 / DC-3 — position-first state machine | #96 | (head `088629a` + docs commit; merged on green CI) |
-| Prep — anchor bump + skew/re-lock/docs | #98 | PR head; squash SHA assigned after gated merge |
+| Prep — anchor bump + skew/re-lock/docs   | #98 | PR head; squash SHA assigned after gated merge     |
 
 Owner ratifications honored: ranked = canonical config only; era presets only
 (no slider); naming Career/Current; integration branch `engine-draft-config`.
@@ -54,7 +54,7 @@ field ships now, locked to default, so no second token evolution is needed.
 ### E1 / DC-1 — token & config schema (plan §A)
 
 - `t2.<base64url>` body: `{v:2, rid, fid, ps, tn, md, df, rb, ef:{id,min,max},
-  pl, sv..hv}`. `ef` carries RESOLVED bounds; decode rejects bounds that
+pl, sv..hv}`. `ef` carries RESOLVED bounds; decode rejects bounds that
   disagree with the build's `ERA_PRESETS` table (a relabel/tamper cannot
   reinterpret old tokens). Per-pick `ts` target field: required + coherent
   under `position_first` (`ts === s` / `"manager"`), optional-but-coherent
@@ -127,16 +127,16 @@ field ships now, locked to default, so no second token evolution is needed.
 
 ## Golden census
 
-| Golden | Status |
-| ------ | ------ |
-| `packages/core/test/fixtures/draft-golden.json` | regenerated twice: E1 diff = +3 config fields; E3 diff = +17 `target_slot_id: null` lines. Zero spin/pick changes. |
-| `packages/data/test/fixtures/e2e-real-run-golden.json` (seed `:29`) | prep touched only the two `engine_version` anchor strings; seed and run bytes unchanged. |
-| `packages/data/test/fixtures/era-presets-golden.json` | NEW (E2): one deterministic draft per preset from one seed; ZERO diff under E3 (picks unchanged). Runs under `test:golden:integration` (already-registered turbo task — no new task needed). |
-| Era census lock | NEW (E2): per-preset pool depth matches the plan's measured table EXACTLY (12219/501/537 · 5757/193/240 · 3549/96/144 · 2813/64/112 + coarse coverage) + `2026-only` zero-manager invalidity lock. |
-| `run-token-skew.json` | prep: 5 committed skew fixtures (real current-prod t1 from shipped manifest + prev t1 / prev t2 default / prev t2 non-default / tampered current t2). |
-| `leaderboard-validate-golden.json` | prep: re-locked to `t2.` tokens and season key `engine-2026.06.11_…_f166edc0`; score breakdowns unchanged. |
-| RNG / sim / lock-on-pick / position-compat goldens | untouched, green. |
-| Strategic-pick canary + realism gates | canary header anchor re-locked only; pick records and asymmetric realism fixture untouched. |
+| Golden                                                              | Status                                                                                                                                                                                             |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/core/test/fixtures/draft-golden.json`                     | regenerated twice: E1 diff = +3 config fields; E3 diff = +17 `target_slot_id: null` lines. Zero spin/pick changes.                                                                                 |
+| `packages/data/test/fixtures/e2e-real-run-golden.json` (seed `:29`) | prep touched only the two `engine_version` anchor strings; seed and run bytes unchanged.                                                                                                           |
+| `packages/data/test/fixtures/era-presets-golden.json`               | NEW (E2): one deterministic draft per preset from one seed; ZERO diff under E3 (picks unchanged). Runs under `test:golden:integration` (already-registered turbo task — no new task needed).       |
+| Era census lock                                                     | NEW (E2): per-preset pool depth matches the plan's measured table EXACTLY (12219/501/537 · 5757/193/240 · 3549/96/144 · 2813/64/112 + coarse coverage) + `2026-only` zero-manager invalidity lock. |
+| `run-token-skew.json`                                               | prep: 5 committed skew fixtures (real current-prod t1 from shipped manifest + prev t1 / prev t2 default / prev t2 non-default / tampered current t2).                                              |
+| `leaderboard-validate-golden.json`                                  | prep: re-locked to `t2.` tokens and season key `engine-2026.06.11_…_f166edc0`; score breakdowns unchanged.                                                                                         |
+| RNG / sim / lock-on-pick / position-compat goldens                  | untouched, green.                                                                                                                                                                                  |
+| Strategic-pick canary + realism gates                               | canary header anchor re-locked only; pick records and asymmetric realism fixture untouched.                                                                                                        |
 
 ## Canonical-config invariance probe
 
@@ -180,7 +180,7 @@ Live-walked on the dev build (`next dev --webpack`).
   lock handler called `pickPlayer`/`pickManager` with the unfiltered
   `gameData.catalog`; under a non-default preset, pending-spin rebuilds would
   have redrawn from the FULL pool. Fixed to route through `getCatalogForEra`
-  + divergence regression test (`era-config.test.ts`).
+  - divergence regression test (`era-config.test.ts`).
 
 ## Risks & carryovers (honest)
 
@@ -198,8 +198,8 @@ Live-walked on the dev build (`next dev --webpack`).
    only the NEW axes — flagged for the DC-8 (HUMAN) leaderboard-policy
    decision.
 3. **Anchors now bumped on the integration branch:** `runtime-data-1.2.0` +
-   `engine-2026.06.11` intentionally force pre-season/current-prod tokens and
-   local records to the honest different-build path. The later main merge is
+   `engine-2026.06.11` intentionally force pre-season/then-production tokens
+   and local records to the honest different-build path. The later main merge is
    still production-deploying and requires a separate cumulative fresh review +
    owner SHA-pinned approval.
 4. **Share/replay config badges** (plan §G, non-default `t2` links rendering
@@ -211,21 +211,37 @@ Live-walked on the dev build (`next dev --webpack`).
 6. **API future-token code:** `t3.` submissions return `MALFORMED_TOKEN`
    (not a dedicated code). UI surfaces the honest newer-version notice.
 
+### Addendum — 2026-06-12 post-season wrap
+
+Post-#105 reality supersedes this report's "current" anchor wording: the
+draft-config season's `runtime-data-1.2.0` / `engine-2026.06.11` pair is now a
+historical PREV-skew fixture after merit-v3 V8 shipped `runtime-data-2.0.0` /
+`engine-2026.06.12` via #104, followed by the #105 leaderboard runtime-data
+hotfix (`origin/main` `a0d0828612f6103ea37e310aa76389e4ead28a3e`).
+
+The DC-4 carryovers called out above remain accurate history for the E1-E3
+season boundary, but `ws-wrap/post-season` addresses the two presentation
+carryovers in Yellow scope: non-default config badges on results/share and
+target-aware position-first lock-bar copy. The same wrap wave also records the
+live-verification finding that `/sw.js` and `/sw-version.js` served correctly
+but no service worker registered on a clean production page; the diagnosed cause
+was client registration timing, not a deliberate removal.
+
 ## Consolidated reviewer — re-execution scope
 
 Cumulative diff: `git diff b41b8e0..engine-draft-config` (units #94/#95/#96 + prep).
 Re-execute, fresh session:
 
 1. `pnpm install && pnpm build`, then root `pnpm typecheck && pnpm lint &&
-   pnpm test` (expect core 331 / data 62 / web 586).
+pnpm test` (expect core 331 / data 62 / web 586).
 2. All five golden tasks (counts above) + `WCDRAFT_REALISM_HEAVY=1` data
    heavy gate.
 3. Verify prep re-locks are fields/anchor-only:
    `git diff b41b8e0..HEAD -- packages/core/test/fixtures/draft-golden.json
-   packages/data/test/fixtures/e2e-real-run-golden.json
-   packages/data/test/fixtures/era-presets-golden.json
-   apps/web/lib/leaderboard/__tests__/fixtures/leaderboard-validate-golden.json
-   apps/web/lib/game/__tests__/fixtures/run-token-skew.json` — every hunk is
+packages/data/test/fixtures/e2e-real-run-golden.json
+packages/data/test/fixtures/era-presets-golden.json
+apps/web/lib/leaderboard/__tests__/fixtures/leaderboard-validate-golden.json
+apps/web/lib/game/__tests__/fixtures/run-token-skew.json` — every hunk is
    config fields, target metadata, anchor strings, token prefixes, season keys,
    or manifest-derived hashes; no pick/sim/rating outcome movement.
 4. Rebuild compact data twice into clean temp dirs and compare hashes to the

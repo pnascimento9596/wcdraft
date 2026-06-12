@@ -8,6 +8,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
 import {
+  configBadgesFromRecordToken,
+  configBadgesFromReplayToken,
+  type ConfigBadge,
+} from "@/lib/game/config-badges";
+import {
   draftHref,
   parseRunSearchParams,
   reviewHref,
@@ -48,10 +53,7 @@ export function ShareScreen() {
   const router = useRouter();
   // Parsed once at component scope so both the load effect AND the render
   // path (link-href threading) see the same discriminated value.
-  const parsed = useMemo(
-    () => parseRunSearchParams(searchParams ?? null),
-    [searchParams],
-  );
+  const parsed = useMemo(() => parseRunSearchParams(searchParams ?? null), [searchParams]);
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
@@ -219,13 +221,7 @@ function ShareAppBar() {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image
-          src="/brand/wcdraft-mark.svg"
-          alt="wcdraft"
-          width={28}
-          height={31}
-          priority
-        />
+        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Share</span>
       </div>
     </header>
@@ -262,9 +258,7 @@ function ShareBody({
   // NO share URL and surface an honest disabled/error state instead of a
   // non-reproducible `run-v1-*` link.
   const shareLink = useMemo<
-    | { kind: "ready"; url: string }
-    | { kind: "ssr" }
-    | { kind: "error"; message: string }
+    { kind: "ready"; url: string } | { kind: "ssr" } | { kind: "error"; message: string }
   >(() => {
     if (typeof window === "undefined") return { kind: "ssr" };
     const origin = window.location.origin;
@@ -284,6 +278,11 @@ function ShareBody({
 
   const shareUrl = shareLink.kind === "ready" ? shareLink.url : null;
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
+  const configBadges: ConfigBadge[] = useMemo(() => {
+    const replayBadges =
+      typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
+    return replayBadges.length > 0 ? replayBadges : configBadgesFromRecordToken(record);
+  }, [linkRunValue, record]);
 
   const caption = useMemo(() => buildShareCaption(view, shareUrl), [view, shareUrl]);
   const intentText = useMemo(() => buildShareIntentText(view), [view]);
@@ -319,10 +318,9 @@ function ShareBody({
     const node = svgRef.current;
     if (!node) return;
     const xml = new XMLSerializer().serializeToString(node);
-    const blob = new Blob(
-      [`<?xml version="1.0" encoding="UTF-8"?>\n` + xml],
-      { type: "image/svg+xml" },
-    );
+    const blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n` + xml], {
+      type: "image/svg+xml",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -360,27 +358,24 @@ function ShareBody({
       <header className="page-head">
         <span className="eyebrow">Share your run</span>
         <h1 className="display">The card</h1>
+        {configBadges.length > 0 ? <ConfigBadgeRow badges={configBadges} /> : null}
         <p className="page-head__note">
-          Branded, deterministic, seed-locked. Names and national flag codes only — no
-          competition marks.
+          Branded, deterministic, seed-locked. Names and national flag codes only — no competition
+          marks.
         </p>
       </header>
 
       {/* ── The SVG card (rendered + serialisable for export) ──────────── */}
       <div className={s.shareCardFrame}>
-        <ShareCardSvg
-          svgRef={svgRef}
-          view={view}
-          shareUrl={shareUrl}
-        />
+        <ShareCardSvg svgRef={svgRef} view={view} shareUrl={shareUrl} />
       </div>
 
       {/* ── Caption + actions ─────────────────────────────────────────── */}
       <div className={`${s.panel} ${s.sharePanel}`}>
         {shareLinkError ? (
           <p className={s.shareHint} role="alert">
-            <strong>Share link unavailable.</strong> {shareLinkError} The card and caption
-            still render, but we will not emit a non-reproducible URL.
+            <strong>Share link unavailable.</strong> {shareLinkError} The card and caption still
+            render, but we will not emit a non-reproducible URL.
           </p>
         ) : null}
         <p className={s.shareCaptionLabel}>Caption</p>
@@ -503,10 +498,22 @@ function ShareBody({
           </Link>
         </div>
         <p className={s.shareHint}>
-          The replay URL above reproduces this run byte-for-byte from its seed. Nothing
-          here uses any official competition name, emblem, or trophy.
+          The replay URL above reproduces this run byte-for-byte from its seed. Nothing here uses
+          any official competition name, emblem, or trophy.
         </p>
       </div>
+    </div>
+  );
+}
+
+function ConfigBadgeRow({ badges }: { badges: readonly ConfigBadge[] }) {
+  return (
+    <div className={s.configBadgeRow} aria-label="Run configuration">
+      {badges.map((badge) => (
+        <span key={badge.axis} className={`${s.configBadge} ${s[`configBadge_${badge.axis}`]!}`}>
+          {badge.label}
+        </span>
+      ))}
     </div>
   );
 }
@@ -572,7 +579,9 @@ function ShareCardSvg({
           letterSpacing="0.04em"
         >
           wc
-          <tspan fontWeight="900" fill="url(#wcEmerald)">draft</tspan>
+          <tspan fontWeight="900" fill="url(#wcEmerald)">
+            draft
+          </tspan>
         </text>
         <text
           x={CARD_WIDTH - 96}

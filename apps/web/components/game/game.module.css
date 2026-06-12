@@ -1153,6 +1153,34 @@ button.benchSlot:not(:disabled):hover {
 .outcome .eyebrowAccent {
   color: var(--accent);
 }
+.configBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+.configBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.45rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  line-height: 1;
+  color: currentColor;
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+.configBadge_era_preset {
+  border-style: solid;
+}
+.configBadge_draft_flow {
+  border-style: dashed;
+}
+.configBadge_rating_basis {
+  border-style: double;
+}
 .outcomeRecord {
   display: flex;
   align-items: baseline;
@@ -2686,9 +2714,9 @@ button.benchSlot:not(:disabled):hover {
   min-width: 0;
   font-size: var(--t-sm);
   color: var(--ink-200);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
   line-height: 1.3;
   /* Context line BELOW the actions in the mobile column layout: it lives in
      the bottom clearance band, lifting the LOCK PICK hit area ≥16px above

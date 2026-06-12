@@ -8,16 +8,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { loadGameData, type GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
 import {
+  configBadgesFromRecordToken,
+  configBadgesFromReplayToken,
+  type ConfigBadge,
+} from "@/lib/game/config-badges";
+import {
   draftHref,
   historyHref,
   parseRunSearchParams,
   reviewHref,
   shareHref,
 } from "@/lib/game/navigation";
-import {
-  loadRunRecord,
-  type RunRecordV1,
-} from "@/lib/game/run-record";
+import { loadRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import {
   decodeRunToken,
@@ -68,10 +70,7 @@ export function ResultsScreen({
   const router = useRouter();
   // Parsed once at component scope so both the load effect AND the render
   // path (link-href threading) see the same discriminated value.
-  const parsed = useMemo(
-    () => parseRunSearchParams(searchParams ?? null),
-    [searchParams],
-  );
+  const parsed = useMemo(() => parseRunSearchParams(searchParams ?? null), [searchParams]);
 
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
@@ -234,8 +233,7 @@ export function ResultsScreen({
   // For token-replayed sessions, in-screen CTAs must carry the ORIGINAL
   // `?run=` value (the token) so a receiver who didn't originate the run
   // can still click through results ↔ share without losing the replay.
-  const linkRunValue =
-    parsed?.kind === "token" ? parsed.token : mode.record.run_id;
+  const linkRunValue = parsed?.kind === "token" ? parsed.token : mode.record.run_id;
   return (
     <ResultsBody
       gameData={mode.gameData}
@@ -252,13 +250,7 @@ function ResultsAppBar() {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image
-          src="/brand/wcdraft-mark.svg"
-          alt="wcdraft"
-          width={28}
-          height={31}
-          priority
-        />
+        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Results</span>
       </div>
     </header>
@@ -283,8 +275,7 @@ function ResultsBody({
 }) {
   void isReplayedFromToken; // present for future banner UI; not rendered yet.
   const sim = record.simulation!;
-  const eliminatedInGroup =
-    !sim.group_stage.user_qualified && sim.matches.length === 3;
+  const eliminatedInGroup = !sim.group_stage.user_qualified && sim.matches.length === 3;
 
   const narrativeLabels = useMemo(
     () => buildNarrativeLabels(gameData, scenario, record.draft),
@@ -322,6 +313,11 @@ function ResultsBody({
   const recordClass = summary.is_perfect_eight_zero
     ? `${s.outcomeBig} ${s.outcomeBigGold}`
     : s.outcomeBig;
+  const configBadges: ConfigBadge[] = useMemo(() => {
+    const replayBadges =
+      typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
+    return replayBadges.length > 0 ? replayBadges : configBadgesFromRecordToken(record);
+  }, [linkRunValue, record]);
 
   return (
     <div className={s.results}>
@@ -330,6 +326,7 @@ function ResultsBody({
       {/* ── Outcome header ────────────────────────────────────────────── */}
       <header className={`${s.panel} ${s.outcome}`}>
         <span className={s.eyebrowAccent}>{eyebrow}</span>
+        {configBadges.length > 0 ? <ConfigBadgeRow badges={configBadges} /> : null}
         <div className={s.outcomeRecord}>
           <span className={recordClass}>{summary.display_record}</span>
           <span className={s.outcomeWL}>W–L</span>
@@ -347,9 +344,7 @@ function ResultsBody({
           {summary.is_champion && <span className={s.flagGold}>Tournament won</span>}
           {!summary.eliminated_in_group && (
             <span className={summary.undefeated_regulation ? s.flagGood : s.flagMuted}>
-              {summary.undefeated_regulation
-                ? "Undefeated in regulation"
-                : "Decided by a shootout"}
+              {summary.undefeated_regulation ? "Undefeated in regulation" : "Decided by a shootout"}
             </span>
           )}
           {summary.eliminated_in_group && (
@@ -366,14 +361,14 @@ function ResultsBody({
           covers SHARED hidden runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
           Classic runs render nothing extra. */}
-      {record.draft.mode === "hidden" ? (
-        <MemoryReveal gameData={gameData} record={record} />
-      ) : null}
+      {record.draft.mode === "hidden" ? <MemoryReveal gameData={gameData} record={record} /> : null}
 
       {/* ── Narrative ─────────────────────────────────────────────────── */}
       {summary.narrative ? (
         <section className={`${s.panel} ${s.narrative}`}>
-          <span className={s.narrativeMark} aria-hidden="true">&ldquo;</span>
+          <span className={s.narrativeMark} aria-hidden="true">
+            &ldquo;
+          </span>
           <p className={s.narrativeText}>{summary.narrative}</p>
         </section>
       ) : null}
@@ -410,9 +405,7 @@ function ResultsBody({
           AND hidden. Server-gated: when the leaderboard is dark the prop is
           false and nothing renders. The panel itself also stays absent when
           the run's version anchors don't match the loaded bundle. */}
-      {leaderboardEnabled ? (
-        <LeaderboardSubmitPanel gameData={gameData} record={record} />
-      ) : null}
+      {leaderboardEnabled ? <LeaderboardSubmitPanel gameData={gameData} record={record} /> : null}
 
       {/* ── Seed + actions ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.seedPanel}`}>
@@ -445,6 +438,18 @@ function ResultsBody({
   );
 }
 
+function ConfigBadgeRow({ badges }: { badges: readonly ConfigBadge[] }) {
+  return (
+    <div className={s.configBadgeRow} aria-label="Run configuration">
+      {badges.map((badge) => (
+        <span key={badge.axis} className={`${s.configBadge} ${s[`configBadge_${badge.axis}`]!}`}>
+          {badge.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function OutcomeStat({ num, label }: { num: number | string; label: string }) {
   return (
     <div className={s.oStat}>
@@ -468,20 +473,14 @@ function MatchListItem({
   onToggle: () => void;
 }) {
   const box: DerivedBox = useMemo(() => deriveBox(gameData, match), [gameData, match]);
-  const outcomeClass =
-    view.outcome === "W" ? s.win : view.outcome === "L" ? s.loss : s.draw;
+  const outcomeClass = view.outcome === "W" ? s.win : view.outcome === "L" ? s.loss : s.draw;
   const opponentLabel =
     view.opponent.nation_code !== null
       ? `${view.opponent.nation_code} ${view.opponent.name}`
       : view.opponent.name;
   return (
     <li className={s.matchItem}>
-      <button
-        type="button"
-        className={s.matchRow}
-        aria-expanded={isOpen}
-        onClick={onToggle}
-      >
+      <button type="button" className={s.matchRow} aria-expanded={isOpen} onClick={onToggle}>
         <span className={`${s.matchOutcome} ${outcomeClass}`}>{view.outcome}</span>
         <span className={s.matchRound}>{view.round_label}</span>
         <span className={s.matchOpp}>vs {opponentLabel}</span>
@@ -521,7 +520,10 @@ function MatchListItem({
             <div className={s.boxEvents}>
               {box.cards.map((c, i) => (
                 <span key={`c${i}`} className={s.boxEvent}>
-                  <span className={c.card === "red" ? s.cardRed : s.cardYellow} aria-hidden="true" />
+                  <span
+                    className={c.card === "red" ? s.cardRed : s.cardYellow}
+                    aria-hidden="true"
+                  />
                   {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
                 </span>
               ))}

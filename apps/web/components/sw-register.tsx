@@ -2,6 +2,22 @@
 
 import { useEffect } from "react";
 
+export type ServiceWorkerRegistrationPlan = "disabled" | "register-now" | "register-on-load";
+
+export function serviceWorkerRegistrationPlan({
+  nodeEnv,
+  hasServiceWorker,
+  documentReadyState,
+}: {
+  nodeEnv: string | undefined;
+  hasServiceWorker: boolean;
+  documentReadyState: Document["readyState"];
+}): ServiceWorkerRegistrationPlan {
+  if (nodeEnv !== "production") return "disabled";
+  if (!hasServiceWorker) return "disabled";
+  return documentReadyState === "loading" ? "register-on-load" : "register-now";
+}
+
 /**
  * Registers the wcdraft service worker in production builds.
  *
@@ -20,16 +36,23 @@ import { useEffect } from "react";
  */
 export function ServiceWorkerRegister() {
   useEffect(() => {
-    if (process.env.NODE_ENV !== "production") return;
-    if (!("serviceWorker" in navigator)) return;
+    const plan = serviceWorkerRegistrationPlan({
+      nodeEnv: process.env.NODE_ENV,
+      hasServiceWorker: "serviceWorker" in navigator,
+      documentReadyState: document.readyState,
+    });
+    if (plan === "disabled") return;
 
     const register = () => {
-      navigator.serviceWorker
-        .register("/sw.js", { updateViaCache: "none" })
-        .catch(() => {
-          /* installability is best-effort; ignore registration failures */
-        });
+      navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => {
+        /* installability is best-effort; ignore registration failures */
+      });
     };
+
+    if (plan === "register-now") {
+      register();
+      return;
+    }
 
     window.addEventListener("load", register);
     return () => window.removeEventListener("load", register);
