@@ -5,22 +5,21 @@
 // `GameData` over the committed static bundles for the submit pipeline, plus
 // the light current-season key for the read routes.
 //
-// This module imports the top-level `@wcdraft/data` static-JSON exports —
-// SERVER ONLY, never reachable from a client bundle (the client loads
-// bundles via `@wcdraft/data/client` fetch — see lib/game/data.ts header).
-// Import cost (bundle JSON parse) is paid once per serverless process;
-// the heavier catalog/index build is lazy and memoized behind
-// `getValidationData()` so read routes that only need the season key never
-// pay it.
+// This module reads the committed web runtime assets from
+// `public/data/wcdraft/` — SERVER ONLY, never reachable from a client bundle
+// (the client loads the same files via `@wcdraft/data/client` fetch — see
+// lib/game/data.ts header). Do not import the top-level `@wcdraft/data`
+// bundle exports here: Vercel's function tracer can omit package-side
+// generated JSON files, while the web public assets are the deployed source of
+// truth for the app.
+// Import cost (bundle JSON parse) is paid once per serverless process; the
+// heavier catalog/index build is lazy and memoized behind `getValidationData()`
+// so read routes that only need the season key never pay it.
 
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-  type RuntimeDataManifest,
-  type Scenario2026Bundle,
-} from "@wcdraft/data";
+import type { DraftPoolBundle, RuntimeDataManifest, Scenario2026Bundle } from "@wcdraft/data";
 
 import {
   buildGameDataIndexes,
@@ -32,24 +31,59 @@ import { deriveSeasonKey } from "./season";
 import type { ValidationData } from "./validate";
 
 /** Build the `DraftDataset` consumed by `createDraft`/`buildDraftCatalog`. */
-function buildDataset(): DraftDataset {
+function buildDataset(draftPool: DraftPoolBundle): DraftDataset {
   return {
-    players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
+    players: draftPool.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
     })),
-    managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
+    managers: draftPool.manager_cards.map((m) => ({
       manager_id: m.manager_id,
       tournament_id: m.tournament_id,
       nation_id: m.nation_id,
     })),
-    tournaments: Object.entries(DRAFT_POOL_BUNDLE.tournaments).map(([tid, t]) => ({
+    tournaments: Object.entries(draftPool.tournaments).map(([tid, t]) => ({
       tournament_id: Number(tid),
       year: t.year,
     })),
   };
+}
+
+const RUNTIME_DATA_DIR_CANDIDATES = [
+  join(process.cwd(), "public", "data", "wcdraft"),
+  join(process.cwd(), "apps", "web", "public", "data", "wcdraft"),
+] as const;
+
+function runtimeDataDir(): string {
+  for (const dir of RUNTIME_DATA_DIR_CANDIDATES) {
+    if (existsSync(join(dir, "manifest.json"))) return dir;
+  }
+  throw new Error(
+    `leaderboard server data: public runtime data manifest not found in ${RUNTIME_DATA_DIR_CANDIDATES.join(
+      " or ",
+    )}`,
+  );
+}
+
+function readRuntimeJson<T>(fileName: string): T {
+  const filePath = join(runtimeDataDir(), fileName);
+  return JSON.parse(readFileSync(filePath, "utf8")) as T;
+}
+
+let cachedManifest: RuntimeDataManifest | null = null;
+let cachedDraftPool: DraftPoolBundle | null = null;
+let cachedScenario2026: Scenario2026Bundle | null = null;
+
+function serverManifest(): RuntimeDataManifest {
+  cachedManifest ??= readRuntimeJson<RuntimeDataManifest>("manifest.json");
+  return cachedManifest;
+}
+
+function serverDraftPool(): DraftPoolBundle {
+  cachedDraftPool ??= readRuntimeJson<DraftPoolBundle>("draft-pool.compact.json");
+  return cachedDraftPool;
 }
 
 /**
@@ -59,23 +93,25 @@ function buildDataset(): DraftDataset {
  * memoized `getValidationData()`.
  */
 export function buildServerGameData(): GameData {
-  const manifest = RUNTIME_DATA_MANIFEST as RuntimeDataManifest;
+  const manifest = serverManifest();
+  const draftPool = serverDraftPool();
   const versions: RunRecordVersions = composeVersions(manifest);
-  const draftDataset = buildDataset();
+  const draftDataset = buildDataset(draftPool);
   return {
     manifest,
-    draftPool: DRAFT_POOL_BUNDLE,
+    draftPool,
     versions,
-    indexes: buildGameDataIndexes(DRAFT_POOL_BUNDLE),
+    indexes: buildGameDataIndexes(draftPool),
     draftDataset,
     catalog: buildDraftCatalog(draftDataset),
-    nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+    nationByCardId: draftPool.nation_by_card_id,
   };
 }
 
 /** The committed 2026 scenario bundle (teams + bracket). */
 export function serverScenarioBundle(): Scenario2026Bundle {
-  return SCENARIO_2026_BUNDLE as Scenario2026Bundle;
+  cachedScenario2026 ??= readRuntimeJson<Scenario2026Bundle>("scenario-2026.compact.json");
+  return cachedScenario2026;
 }
 
 let cachedValidationData: ValidationData | null = null;
@@ -100,7 +136,7 @@ let cachedSeasonKey: string | null = null;
  */
 export function currentSeasonKey(): string {
   cachedSeasonKey ??= deriveSeasonKey(
-    composeVersions(RUNTIME_DATA_MANIFEST as RuntimeDataManifest),
+    composeVersions(serverManifest()),
   );
   return cachedSeasonKey;
 }
