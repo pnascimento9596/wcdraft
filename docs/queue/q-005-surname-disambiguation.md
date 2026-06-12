@@ -2,7 +2,8 @@
 
 - **Tier:** Yellow (display-only UX; no schema/rating/sim semantics) · **Mode:**
   `SELF-SERVE:YELLOW`.
-- **Status:** OPEN — filed from the MV2-12 ratings audit §E
+- **Status:** DONE — shipped via q-008 micro-Yellow bundle 2 (`q-008-micro-yellow-2.md`);
+  filed from the MV2-12 ratings audit §E
   (`docs/reports/mv212-ratings-audit-2026-06-10.md`).
 
 ## Problem (verified in the audit)

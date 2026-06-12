@@ -159,7 +159,11 @@ export function playerCardView(
     player_id: c.player_id,
     tournament_id: c.tournament_id,
     year,
-    name: c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name,
+    // q-005 — colliding short names (e.g. Cesare vs Paolo "Maldini") carry a
+    // pre-computed disambiguated override; everyone else keeps the short form.
+    name:
+      idx.displayNameByCardId.get(c.card_id) ??
+      (c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name),
     full_name: c.full_name,
     nation_id: c.nation_id,
     nation_name: nation.canonical_name,

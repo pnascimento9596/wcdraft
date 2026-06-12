@@ -19,9 +19,10 @@
   <rect x="0" y="0" width="1200" height="630" fill="url(#bg)"/>
   <rect x="0" y="0" width="1200" height="10" fill="url(#emerald)"/>
 
-  <!-- Brand mark — canonical wcdraft tactical pitch + gold draft arrow -->
+  <!-- Brand mark — canonical all-gold wcdraft tactical pitch + draft arrow
+       (geometry + ink mirror public/brand/wcdraft-mark.svg) -->
   <g transform="translate(96, 96) scale(1.6)">
-    <g fill="none" stroke="url(#emerald)" stroke-width="3" stroke-linejoin="round">
+    <g fill="none" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round">
       <rect x="14" y="8" width="92" height="116" rx="13"/>
       <line x1="14" y1="66" x2="106" y2="66" stroke-width="2"/>
       <rect x="42" y="8" width="36" height="15"/>
@@ -29,8 +30,8 @@
       <rect x="42" y="109" width="36" height="15"/>
       <rect x="52" y="118" width="16" height="6"/>
     </g>
-    <circle cx="55" cy="52" r="28" fill="none" stroke="#2ecf92" stroke-width="1.6" stroke-dasharray="3 5" opacity=".7"/>
-    <g fill="#2ecf92">
+    <circle cx="55" cy="52" r="28" fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-dasharray="3 5" opacity=".7"/>
+    <g fill="url(#gold)">
       <circle cx="40" cy="34" r="4.2"/>
       <circle cx="62" cy="28" r="4.2"/>
       <circle cx="32" cy="60" r="4.2"/>

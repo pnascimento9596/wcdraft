@@ -4,8 +4,9 @@
 // documented contract — and the generator — produce a 32-byte base64url
 // secret (43 chars). The reviewer flagged the gap; these tests pin the
 // new contract.
-import { describe, it, expect } from "vitest";
-import { validateCookieSecret } from "@/lib/auth/handler-helpers";
+import { describe, it, expect, vi } from "vitest";
+import { jsonError, validateCookieSecret } from "@/lib/auth/handler-helpers";
+import { AuthError } from "@/lib/auth/errors";
 
 const VALID_32B = Buffer.alloc(32, 0x41).toString("base64url"); // 43 chars
 const VALID_64B = Buffer.alloc(64, 0x41).toString("base64url"); // 86 chars
@@ -62,5 +63,44 @@ describe("validateCookieSecret", () => {
   it("byte-length floor is configurable", () => {
     // A 16-byte secret passes when the caller declares 16 is enough.
     expect(validateCookieSecret(ONLY_16_BYTES, "X", 16)).toBe(ONLY_16_BYTES);
+  });
+});
+
+// q-008 — the var name / generation hint stays SERVER-SIDE: jsonError scrubs
+// SECRET_MISCONFIGURED detail into a generic client body (full message goes
+// to console.error). Other codes keep their code-level copy untouched.
+describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
+  it("returns a generic body with no env-var names or generation hints", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const err = (() => {
+        try {
+          validateCookieSecret(undefined);
+          throw new Error("unreachable");
+        } catch (e) {
+          return e;
+        }
+      })();
+      const res = jsonError(err);
+      expect(res.status).toBe(500);
+      const body = (await res.json()) as { error: string; message: string };
+      expect(body.error).toBe("SECRET_MISCONFIGURED");
+      expect(body.message).toBe("Server configuration error.");
+      expect(JSON.stringify(body)).not.toMatch(/AUTH_COOKIE_SECRET|randomBytes|base64url/);
+      // Detail is preserved server-side.
+      expect(spy).toHaveBeenCalledWith(
+        "[auth] secret misconfigured:",
+        expect.stringContaining("AUTH_COOKIE_SECRET"),
+      );
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("other AuthError codes keep their message in the body", async () => {
+    const res = jsonError(new AuthError("RATE_LIMITED", "Too many requests"));
+    const body = (await res.json()) as { error: string; message: string };
+    expect(res.status).toBe(429);
+    expect(body.message).toBe("Too many requests");
   });
 });
