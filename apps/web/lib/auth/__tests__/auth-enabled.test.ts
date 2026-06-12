@@ -1,18 +1,19 @@
 // F-3.5 — ship-dark gate.
 //
 // The gate is the contract that decides whether the sign-in UI surfaces
-// in production. It MUST be false unless BOTH env vars are present and
-// non-blank. Whitespace counts as blank — defence against a half-
+// in production. It MUST be false unless all three env vars are present
+// and non-blank. Whitespace counts as blank — defence against a half-
 // configured env where someone pasted a trailing space.
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { isAuthEnabled, getAuthConfig } from "@/lib/auth/auth-enabled";
 
-const KEYS = ["RESEND_API_KEY", "AUTH_EMAIL_FROM"] as const;
+const KEYS = ["RESEND_API_KEY", "AUTH_EMAIL_FROM", "AUTH_BASE_URL"] as const;
 
 function snapshot(): Record<(typeof KEYS)[number], string | undefined> {
   return {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     AUTH_EMAIL_FROM: process.env.AUTH_EMAIL_FROM,
+    AUTH_BASE_URL: process.env.AUTH_BASE_URL,
   };
 }
 
@@ -33,39 +34,55 @@ afterEach(() => {
 });
 
 describe("isAuthEnabled", () => {
-  it("FALSE when both env vars are missing", () => {
-    expect(isAuthEnabled()).toBe(false);
-    expect(getAuthConfig()).toEqual({ authEnabled: false });
-  });
+  it.each([
+    [false, false, false, false],
+    [true, false, false, false],
+    [false, true, false, false],
+    [false, false, true, false],
+    [true, true, false, false],
+    [true, false, true, false],
+    [false, true, true, false],
+    [true, true, true, true],
+  ])(
+    "truth table: RESEND_API_KEY=%s AUTH_EMAIL_FROM=%s AUTH_BASE_URL=%s -> %s",
+    (hasApiKey, hasFromAddress, hasBaseUrl, expected) => {
+      if (hasApiKey) process.env.RESEND_API_KEY = "re_real_value";
+      if (hasFromAddress) {
+        process.env.AUTH_EMAIL_FROM = "wcdraft <noreply@wcdraft.com>";
+      }
+      if (hasBaseUrl) process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
 
-  it("FALSE with only RESEND_API_KEY", () => {
-    process.env.RESEND_API_KEY = "re_demo";
-    expect(isAuthEnabled()).toBe(false);
-  });
+      expect(isAuthEnabled()).toBe(expected);
+      expect(getAuthConfig()).toEqual({ authEnabled: expected });
+    },
+  );
 
-  it("FALSE with only AUTH_EMAIL_FROM", () => {
-    process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@resend.dev>";
-    expect(isAuthEnabled()).toBe(false);
-  });
-
-  it("FALSE when either value is blank (just whitespace)", () => {
+  it("FALSE when any value is blank (just whitespace)", () => {
     process.env.RESEND_API_KEY = "re_demo";
     process.env.AUTH_EMAIL_FROM = "   ";
+    process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
     expect(isAuthEnabled()).toBe(false);
     process.env.RESEND_API_KEY = "   ";
     process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@resend.dev>";
+    process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
+    expect(isAuthEnabled()).toBe(false);
+    process.env.RESEND_API_KEY = "re_demo";
+    process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@resend.dev>";
+    process.env.AUTH_BASE_URL = "   ";
     expect(isAuthEnabled()).toBe(false);
   });
 
-  it("FALSE when either value is empty string", () => {
+  it("FALSE when any value is empty string", () => {
     process.env.RESEND_API_KEY = "";
     process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@resend.dev>";
+    process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
     expect(isAuthEnabled()).toBe(false);
   });
 
-  it("TRUE only when BOTH values are present and non-blank", () => {
+  it("TRUE only when all three production auth env values are present and non-blank", () => {
     process.env.RESEND_API_KEY = "re_real_value";
     process.env.AUTH_EMAIL_FROM = "wcdraft <noreply@wcdraft.com>";
+    process.env.AUTH_BASE_URL = "https://www.wcdraft.com";
     expect(isAuthEnabled()).toBe(true);
     expect(getAuthConfig()).toEqual({ authEnabled: true });
   });
@@ -73,6 +90,7 @@ describe("isAuthEnabled", () => {
   it("trims whitespace before evaluating", () => {
     process.env.RESEND_API_KEY = "  re_padded_value  ";
     process.env.AUTH_EMAIL_FROM = "  wcdraft <noreply@wcdraft.com>  ";
+    process.env.AUTH_BASE_URL = "  https://www.wcdraft.com  ";
     expect(isAuthEnabled()).toBe(true);
   });
 });

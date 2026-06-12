@@ -92,8 +92,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   // Ship-dark gate — computed server-side so the client never has to
-  // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY +
-  // AUTH_EMAIL_FROM in the Vercel env flips this true.
+  // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY,
+  // AUTH_EMAIL_FROM, and AUTH_BASE_URL in the Vercel env flips this true.
   const authEnabled = isAuthEnabled();
   // F-4 U4 — same ship-dark pattern for the leaderboard nav entry: the env
   // is read server-side here; when dark the entry simply doesn't exist.

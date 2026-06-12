@@ -14,6 +14,7 @@ import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/rout
 const ENV_KEYS = [
   "RESEND_API_KEY",
   "AUTH_EMAIL_FROM",
+  "AUTH_BASE_URL",
   "AUTH_COOKIE_SECRET",
 ] as const;
 
@@ -23,6 +24,7 @@ function snap(): Snapshot {
   return {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     AUTH_EMAIL_FROM: process.env.AUTH_EMAIL_FROM,
+    AUTH_BASE_URL: process.env.AUTH_BASE_URL,
     AUTH_COOKIE_SECRET: process.env.AUTH_COOKIE_SECRET,
   };
 }
@@ -70,6 +72,18 @@ function postForm(url: string, fields: Record<string, string>): NextRequest {
 
 describe("/api/auth/magic-link — ship-dark", () => {
   it("returns 503 AUTH_DISABLED before building deps when auth is disabled", async () => {
+    const req = postJson("http://localhost/api/auth/magic-link", {
+      email: "user@example.com",
+    });
+    const res = await magicLinkPost(req);
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as { error?: string };
+    expect(body.error).toBe("AUTH_DISABLED");
+  });
+
+  it("stays dark when sender env is set but AUTH_BASE_URL is missing", async () => {
+    process.env.RESEND_API_KEY = "re_demo";
+    process.env.AUTH_EMAIL_FROM = "wcdraft <noreply@wcdraft.com>";
     const req = postJson("http://localhost/api/auth/magic-link", {
       email: "user@example.com",
     });

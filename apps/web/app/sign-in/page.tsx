@@ -70,8 +70,8 @@ function DisabledNotice(): React.ReactElement {
       <span className="signin-screen__disabled-tag">soon</span>
       <p>
         Sign&#8209;in goes live once <code>RESEND_API_KEY</code> +{" "}
-        <code>AUTH_EMAIL_FROM</code> are configured in the deployment. Your
-        anonymous runs keep saving locally in the meantime.
+        <code>AUTH_EMAIL_FROM</code> + <code>AUTH_BASE_URL</code> are configured
+        in the deployment. Your anonymous runs keep saving locally in the meantime.
       </p>
     </div>
   );

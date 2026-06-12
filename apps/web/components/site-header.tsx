@@ -82,8 +82,8 @@ export function SiteHeader({
 
         <ThemeToggle />
 
-        {/* F-3.5 — live account menu. Ship-dark gate hides this when
-            RESEND_API_KEY / AUTH_EMAIL_FROM are not configured. */}
+        {/* F-3.5 — live account menu. Ship-dark gate hides this when the
+            email sender or public auth base URL is not configured. */}
         <AccountMenu />
 
         <button

@@ -22,8 +22,14 @@ import { requestMagicLink } from "@/lib/auth/magic-link";
 import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, validateSessionCookie } from "@/lib/auth/sessions";
 import { sha256Hex } from "@/lib/auth/tokens";
-import { magicLinkTokens, sessions } from "@wcdraft/db";
+import {
+  leaderboardEntries,
+  magicLinkTokens,
+  savedRuns,
+  sessions,
+} from "@wcdraft/db";
 import { eq } from "drizzle-orm";
+import { claimAnonArtifacts } from "@/lib/leaderboard/claim";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
 const COOKIE_SECRET = testCookieSecret("verify-flow");
@@ -616,5 +622,93 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
     );
     void validated;
   });
-});
 
+  it("drives the verify hook to claim anon saved runs and leaderboard entries", async () => {
+    const now = Date.UTC(2026, 5, 1);
+    const created = await createSession({ userId: null }, deps(now));
+    await env.db.insert(savedRuns).values({
+      sessionId: created.session.id,
+      ownerUserId: null,
+      token: "t1.verify-claimed-run",
+      versionAnchors: { dataset_version: "v1" },
+      runId: "run-verify-claim",
+      parentSeed: "seed-verify-claim",
+      claimState: "anonymous",
+    });
+    await env.db.insert(leaderboardEntries).values({
+      seasonKey: "season-verify-claim",
+      mode: "casual",
+      draftMode: "classic",
+      userId: null,
+      sessionId: created.session.id,
+      displayName: "Anon Verify",
+      token: "t1.verify-claimed-board",
+      verifiedScore: 777,
+    });
+
+    const sender = new LogEmailSender(() => undefined);
+    await requestMagicLink(
+      { email: "claim-via-verify@example.com", ipAddress: "1.1.1.1" },
+      { ...deps(now), sender },
+    );
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
+      "token",
+    )!;
+
+    const result = await consumeAndIssueSession(
+      {
+        token: rawToken,
+        next: "/history",
+        csrfFromForm: created.session.csrfSecret,
+        csrfFromCookie: created.session.csrfSecret,
+        sessionCookieValue: created.cookieValue,
+        origin: "https://wcdraft.com",
+        referer: null,
+        host: "wcdraft.com",
+        onAuthenticatedSessionReady: async (args) => {
+          await claimAnonArtifacts(args, { db: env.db });
+        },
+      },
+      deps(now + 1),
+    );
+
+    expect(result.redirectTo).toBe("/history");
+    const authedSession = await validateSessionCookie(
+      result.sessionCookieValue,
+      deps(now + 2),
+    );
+    expect(authedSession.id).toBe(created.session.id);
+    expect(authedSession.userId).not.toBeNull();
+    const userId = authedSession.userId!;
+
+    const claimedRuns = await env.db
+      .select()
+      .from(savedRuns)
+      .where(eq(savedRuns.ownerUserId, userId));
+    expect(claimedRuns).toHaveLength(1);
+    expect(claimedRuns[0]!.token).toBe("t1.verify-claimed-run");
+    expect(claimedRuns[0]!.sessionId).toBeNull();
+    expect(claimedRuns[0]!.claimState).toBe("claimed");
+
+    const claimedEntries = await env.db
+      .select()
+      .from(leaderboardEntries)
+      .where(eq(leaderboardEntries.userId, userId));
+    expect(claimedEntries).toHaveLength(1);
+    expect(claimedEntries[0]!.token).toBe("t1.verify-claimed-board");
+    expect(claimedEntries[0]!.sessionId).toBeNull();
+
+    expect(
+      await env.db
+        .select()
+        .from(savedRuns)
+        .where(eq(savedRuns.sessionId, created.session.id)),
+    ).toHaveLength(0);
+    expect(
+      await env.db
+        .select()
+        .from(leaderboardEntries)
+        .where(eq(leaderboardEntries.sessionId, created.session.id)),
+    ).toHaveLength(0);
+  });
+});
