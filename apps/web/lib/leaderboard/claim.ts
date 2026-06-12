@@ -52,8 +52,27 @@ import { leaderboardEntries } from "@wcdraft/db";
 import type { Db } from "@wcdraft/db";
 import { claimAnonRuns, type ClaimResult } from "@/lib/game/saved-runs-store";
 
+/**
+ * The exact transactional surface the claim path touches: the raw USING-DELETE
+ * (`execute`) and the survivor transfer (`update → set → where → returning`).
+ * Both a full `Db` connection and a Drizzle transaction handle satisfy this
+ * structurally, so the claim runs unchanged under either — no cast at the tx
+ * seam. Members are pinned to `Db`'s own method types so the interface cannot
+ * silently drift from the driver.
+ */
+export interface ClaimTx {
+  readonly execute: Db["execute"];
+  readonly update: Db["update"];
+}
+
+/** Dependencies for a single-table claim — satisfied by `Db` or a tx handle. */
 export interface ClaimDeps {
-  readonly db: Db;
+  readonly db: ClaimTx;
+}
+
+/** Dependencies for the combined claim moment — needs to open a transaction. */
+export interface ClaimRunnerDeps {
+  readonly db: Pick<Db, "transaction">;
 }
 
 export interface ClaimArgs {
@@ -112,14 +131,14 @@ export async function claimLeaderboardEntries(
  */
 export async function claimAnonArtifacts(
   args: ClaimArgs,
-  deps: ClaimDeps,
+  deps: ClaimRunnerDeps,
 ): Promise<ClaimArtifactsResult> {
   return deps.db.transaction(async (tx) => {
-    // The drizzle transaction handle exposes the same query surface as Db;
-    // the cast mirrors the test-harness precedent (_test-db.ts).
-    const txDb = tx as unknown as Db;
-    const runs = await claimAnonRuns(args, { db: txDb });
-    const leaderboard = await claimLeaderboardEntries(args, { db: txDb });
+    // The drizzle transaction handle structurally satisfies both the saved-runs
+    // `StoreDeps.db` surface and `ClaimTx`, so the SAME `tx` drives both
+    // transfers under one transaction — no cast at the seam.
+    const runs = await claimAnonRuns(args, { db: tx });
+    const leaderboard = await claimLeaderboardEntries(args, { db: tx });
     return { runs, leaderboard };
   });
 }
