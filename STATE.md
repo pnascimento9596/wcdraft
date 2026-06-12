@@ -33,8 +33,11 @@ than hidden regressions.
   runtime-data loading from public assets without changing engine/data contracts.
 - Draft-config's shipped `runtime-data-1.2.0` / `engine-2026.06.11` anchors are now
   committed PREV-skew artifacts after merit-v3, not current production anchors.
-- F-4 U1–U6 are live; remaining account/email light-up is still gated on owner-held
-  Resend/auth secrets. Ranked leaderboard remains human-gated.
+- F-4 U1–U6 are live; accounts/email light-up is **LIVE** as of 2026-06-12
+  (Resend domain `wcdraft.com` verified, `RESEND_API_KEY` + `AUTH_EMAIL_FROM` +
+  `AUTH_BASE_URL` set in Vercel Production, magic-link verify proven end-to-end
+  with a real owner sign-in). Ranked leaderboard remains human-gated
+  (`LEADERBOARD_REQUIRE_ACCOUNT` still UNSET — casual board only).
 - `ws-wrap/post-season` is the current Yellow post-season wrap wave: service-worker
   registration timing, results/share config badges, position-first lock-bar copy, and
   doc-truth reconciliation. It must not touch schema/contracts/sim/rating/synergy/
@@ -120,11 +123,13 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
 
 ## Prod env (names only — never record values here)
 
-- SET: `DATABASE_URL`, `AUTH_COOKIE_SECRET` (do NOT rotate) — verified via
-  `vercel env ls production` 2026-06-10.
-- UNSET (dark by design): `LEADERBOARD_ENABLED`, `LEADERBOARD_REQUIRE_ACCOUNT`,
-  `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `AUTH_BASE_URL` — leaderboard routes 404,
-  accounts email path dark (Resend activation is HUMAN-ONLY).
+- SET: `DATABASE_URL`, `AUTH_COOKIE_SECRET` (do NOT rotate), `LEADERBOARD_ENABLED`,
+  `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, `AUTH_BASE_URL` — verified via
+  `vercel env ls production` 2026-06-12. All three auth env names are also
+  declared in `turbo.json`'s `tasks.build.env` so the SSG'd root layout
+  prerenders `authEnabled:true` (see PR #108).
+- UNSET (dark by design): `LEADERBOARD_REQUIRE_ACCOUNT` — keeps the ranked
+  leaderboard gated until ranked tiers ship.
 - Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
   re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
 
