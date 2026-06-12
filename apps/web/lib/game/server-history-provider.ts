@@ -7,7 +7,7 @@
 // Cost firewall preserved
 // -----------------------
 // The server never re-simulates. The token-decode → `buildShareView`
-// pipeline runs entirely on the client. When the t1.* token alone
+// pipeline runs entirely on the client. When the replay token alone
 // decodes cleanly AND a local-storage cache hit lands the `simulation`
 // payload, the rich display fields (`display_record`, `formation_name`,
 // `key_picks`, …) match what `localRunHistoryProvider` would render for

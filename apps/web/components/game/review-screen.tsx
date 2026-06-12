@@ -412,7 +412,7 @@ function SimulatePanel({
    * True iff every spin has been picked (`isDraftComplete(draft)`).
    * I3.7 fix-pass #2 (PR #18 BLOCKER): Simulate gates on draft completion —
    * never on `is_fieldable` — because a fieldable-but-not-complete squad has
-   * <17 picks and cannot encode a `t1.` share token.
+   * <17 picks and cannot encode a replay token.
    */
   complete: boolean;
   onBack: () => void;

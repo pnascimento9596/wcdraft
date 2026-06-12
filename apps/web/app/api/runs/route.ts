@@ -2,7 +2,7 @@
 //
 // GET  — newest-first list of the caller's saved_runs, account-scoped if
 //        signed in, session-scoped if anon. Read-only, no CSRF gate.
-// POST — save a `t1.*` token + metadata to the caller's scope. Mutating →
+// POST — save a replay token + metadata to the caller's scope. Mutating →
 //        Origin/Host + CSRF double-submit required.
 import { NextResponse, type NextRequest } from "next/server";
 import { resolveAuth } from "@/lib/game/__server-auth-context";

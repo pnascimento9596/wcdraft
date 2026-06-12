@@ -363,7 +363,7 @@ function ResultsBody({
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Hidden-mode runs blind every rating signal through draft + review;
           the sim has now run, so the full blind set reveals here. This also
-          covers SHARED hidden runs — a `?run=<t1.…>` replay reconstructs the
+          covers SHARED hidden runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
           Classic runs render nothing extra. */}
       {record.draft.mode === "hidden" ? (

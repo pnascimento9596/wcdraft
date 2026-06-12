@@ -19,11 +19,11 @@
 //      `isDraftComplete`. The unlock condition the UI uses is the same
 //      `isDraftComplete` the token requires.
 //   2. INVARIANT — encoding a `<17-pick` draft throws `RunTokenError`; a
-//      complete draft yields a `t1.<base64url>` token.
+//      complete draft yields a replay token.
 //   3. REGRESSION — the production share-screen source contains NO
 //      `shareHref(record.run_id)` (the removed bare-id fallback) and emits
 //      `null` for the share URL on token-encoding failure.
-//   4. END-TO-END — a complete 17-spin draft produces a `t1.` token that
+//   4. END-TO-END — a complete 17-spin draft produces a replay token that
 //      decodes + replays to a byte-identical DraftState in a fresh context.
 
 import { readFileSync } from "node:fs";
@@ -234,13 +234,13 @@ describe("share-screen — silent bare-id fallback is removed", () => {
   });
 
   it("share-screen.tsx still calls encodeRunToken to build the URL", () => {
-    // The fix preserves the t1.<base64url> happy path — only the silent
+    // The fix preserves the token replay happy path — only the silent
     // fallback was removed.
     expect(src).toMatch(/encodeRunToken\(\s*record\s*\)/);
   });
 });
 
-// ─── 4. END-TO-END: a complete run shares a `t1.` token that replays ──────
+// ─── 4. END-TO-END: a complete run shares a replay token that replays ──────
 
 describe("regression — complete 17-spin run shares a run token that replays byte-identically", () => {
   const gameData = buildGameDataFromBundles();
