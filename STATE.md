@@ -7,8 +7,9 @@
 Last measured: 2026-06-11 · draft-config cumulative merge review on
 `engine-draft-config` at `f0a9f5c` plus the fix-forward token-route patch:
 `pnpm build && pnpm typecheck && pnpm lint && pnpm test` green (build 4/4
-tasks, typecheck 7/7, lint 4/4, test 7/7). Web count is now 586 passed, 1
-skipped after adding the versioned run-token navigation regression. Compact
+tasks, typecheck 7/7, lint 4/4, test 7/7). Web count is now 594 passed, 1
+skipped after integrating current `main` plus the versioned run-token
+navigation regression. Compact
 rebuild, token skew, leaderboard canonical-config, era honesty, and golden
 diff gates were re-executed in the fresh season-merge review. Club-at-tournament
 backfill remains staged for MV2-12b
@@ -80,14 +81,15 @@ backfill remains staged for MV2-12b
 | @wcdraft/data `test:golden:data`                        | 28 passed                   |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                   |
 | @wcdraft/db `test`                                      | 74 passed                   |
-| @wcdraft/web `test`                                     | 586 passed, 1 skipped (587) |
+| @wcdraft/web `test`                                     | 594 passed, 1 skipped (595) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
 | etl `pytest -q`                                         | 182 passed (previous ws-etl/mv212a measurement; draft-config diff does not touch `etl/`) |
 | `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
 
 ## CI (`.github/workflows/`)
 
-- `ci.yml` jobs: **verify** (typecheck·lint·test·build) · **golden** (RNG + draft) ·
+- `ci.yml` jobs: **dedupe** (skips push-event runs when the pushed branch has an open
+  PR — the pull_request run still gates; q-008) · **verify** (typecheck·lint·test·build) · **golden** (RNG + draft) ·
   **realism** (heavy asymmetric gate, N=2000 × 3 policies) · **db-gate → db-rollback-check**
   (path-filtered to `packages/db/**`+workflow+lockfile+turbo.json; ephemeral Neon branch,
   never prod) · **etl-rating** (ruff · rating tests · ratings.json byte-determinism).

@@ -50,6 +50,16 @@ export interface GameDataIndexes {
   ratingByCardId: ReadonlyMap<string, RuntimeRating>;
   nationById: ReadonlyMap<string, { canonical_name: string; code: string | null }>;
   tournamentById: ReadonlyMap<number, { year: number; name: string }>;
+  /**
+   * q-005 — surname-collision disambiguation. Card → display name, present
+   * ONLY for cards whose short name (`common_name`, falling back to
+   * `full_name`) is shared by more than one distinct `player_id` in the pool
+   * (e.g. Cesare vs Paolo "Maldini"). The override is the given-name-initial
+   * form ("C. Maldini") when the short name is the final token of the full
+   * name, otherwise the full name; if initial forms still collide across
+   * different players, both fall back to the full name. Display-only.
+   */
+  displayNameByCardId: ReadonlyMap<string, string>;
 }
 
 /** The full bundle of loaded data, indexes, and engine-ready inputs. */
@@ -181,7 +191,72 @@ export function buildGameDataIndexes(bundle: DraftPoolBundle): GameDataIndexes {
     if (entry) tournamentById.set(tid, entry);
   }
 
-  return { playerByCardId, managerByCardId, ratingByCardId, nationById, tournamentById };
+  const displayNameByCardId = buildDisplayNameOverrides(bundle.player_cards);
+
+  return {
+    playerByCardId,
+    managerByCardId,
+    ratingByCardId,
+    nationById,
+    tournamentById,
+    displayNameByCardId,
+  };
+}
+
+/** Short display name before disambiguation — mirrors the adapter fallback. */
+function baseDisplayName(c: RuntimePlayerCard): string {
+  const cn = c.common_name.trim();
+  return cn.length > 0 ? cn : c.full_name;
+}
+
+/**
+ * Given-name-initial form ("C. Maldini") when the short name is the final
+ * token of a multi-token full name; null when that shape doesn't hold
+ * (mononyms, nicknames unrelated to the surname).
+ */
+function initialForm(c: RuntimePlayerCard, base: string): string | null {
+  const tokens = c.full_name.trim().split(/\s+/);
+  if (tokens.length < 2) return null;
+  if (tokens[tokens.length - 1]!.toLowerCase() !== base.toLowerCase()) return null;
+  return `${tokens[0]!.charAt(0).toUpperCase()}. ${base}`;
+}
+
+/** See `GameDataIndexes.displayNameByCardId`. */
+export function buildDisplayNameOverrides(
+  cards: readonly RuntimePlayerCard[],
+): ReadonlyMap<string, string> {
+  // Group player_ids by short display name (case-insensitive).
+  const playersByName = new Map<string, Set<string>>();
+  for (const c of cards) {
+    const key = baseDisplayName(c).toLowerCase();
+    const set = playersByName.get(key) ?? new Set<string>();
+    set.add(c.player_id);
+    playersByName.set(key, set);
+  }
+
+  const overrides = new Map<string, string>();
+  for (const [key, playerIds] of playersByName) {
+    if (playerIds.size < 2) continue;
+    const colliding = cards.filter((c) => baseDisplayName(c).toLowerCase() === key);
+    // First pass: candidate per card (initial form, else full name).
+    const candidateByCard = new Map<string, string>();
+    const playersByCandidate = new Map<string, Set<string>>();
+    for (const c of colliding) {
+      const cand = initialForm(c, baseDisplayName(c)) ?? c.full_name;
+      candidateByCard.set(c.card_id, cand);
+      const set = playersByCandidate.get(cand.toLowerCase()) ?? new Set<string>();
+      set.add(c.player_id);
+      playersByCandidate.set(cand.toLowerCase(), set);
+    }
+    // Second pass: if a candidate is still shared by >1 player, fall back to
+    // the full name (year on the card disambiguates any remaining tie).
+    for (const c of colliding) {
+      const cand = candidateByCard.get(c.card_id)!;
+      const stillShared = playersByCandidate.get(cand.toLowerCase())!.size > 1;
+      overrides.set(c.card_id, stillShared ? c.full_name : cand);
+    }
+  }
+  return overrides;
 }
 
 /**
