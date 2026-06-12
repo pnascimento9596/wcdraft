@@ -17,6 +17,7 @@ import { GET as configGet } from "@/app/api/auth/config/route";
 const ENV_KEYS = [
   "RESEND_API_KEY",
   "AUTH_EMAIL_FROM",
+  "AUTH_BASE_URL",
   "AUTH_COOKIE_SECRET",
   "DATABASE_URL",
 ] as const;

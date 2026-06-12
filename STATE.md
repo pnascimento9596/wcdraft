@@ -39,6 +39,11 @@ than hidden regressions.
   `AUTH_BASE_URL` set in Vercel Production, magic-link verify proven end-to-end
   with a real owner sign-in). Ranked leaderboard remains human-gated
   (`LEADERBOARD_REQUIRE_ACCOUNT` still UNSET — casual board only).
+- Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
+  now participates in the ship-dark auth gate, and production magic-link
+  verify URLs must be https and non-localhost before any token is persisted or
+  email is sent. With all three production auth env names set, prod remains
+  light-up equivalent; missing any one stays honestly dark.
 - `ws-wrap/post-season` is the current Yellow post-season wrap wave: service-worker
   registration timing, results/share config badges, position-first lock-bar copy, and
   doc-truth reconciliation. It must not touch schema/contracts/sim/rating/synergy/

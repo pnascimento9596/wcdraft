@@ -101,8 +101,7 @@ export function buildRuntimeDeps(): RuntimeDeps {
       "DATABASE_URL is not set. The session substrate is unavailable.",
     );
   }
-  const verifyBaseUrl =
-    process.env.AUTH_BASE_URL?.trim() ?? "http://localhost:3000";
+  const verifyBaseUrl = process.env.AUTH_BASE_URL?.trim() ?? "";
   const fromAddress =
     process.env.AUTH_EMAIL_FROM?.trim() ?? "wcdraft <onboarding@resend.dev>";
   return {

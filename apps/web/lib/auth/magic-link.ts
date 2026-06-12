@@ -49,6 +49,40 @@ export interface RequestMagicLinkArgs {
   readonly ipAddress: string;
 }
 
+export function buildMagicLinkVerifyUrl(args: {
+  readonly token: string;
+  readonly verifyBaseUrl: string;
+  readonly nodeEnv?: string;
+}): string {
+  let verifyUrl: URL;
+  try {
+    verifyUrl = new URL("/api/auth/verify", args.verifyBaseUrl);
+  } catch {
+    throw new AuthError(
+      "SECRET_MISCONFIGURED",
+      "AUTH_BASE_URL is not a valid absolute URL.",
+    );
+  }
+  verifyUrl.searchParams.set("token", args.token);
+
+  if ((args.nodeEnv ?? process.env.NODE_ENV) === "production") {
+    const hostname = verifyUrl.hostname.toLowerCase();
+    const isLocalHost =
+      hostname === "localhost" ||
+      hostname === "::1" ||
+      hostname === "0.0.0.0" ||
+      hostname.startsWith("127.");
+    if (verifyUrl.protocol !== "https:" || isLocalHost) {
+      throw new AuthError(
+        "SECRET_MISCONFIGURED",
+        "AUTH_BASE_URL must produce an https non-localhost verify URL in production.",
+      );
+    }
+  }
+
+  return verifyUrl.toString();
+}
+
 /** Issue a magic link. Always resolves to "sent" externally; throws only on rate-limit / invalid email. */
 export async function requestMagicLink(
   args: RequestMagicLinkArgs,
@@ -58,6 +92,12 @@ export async function requestMagicLink(
   if (!EMAIL_RE.test(email)) {
     throw new AuthError("EMAIL_INVALID");
   }
+
+  const { token, tokenHash } = generateToken();
+  const magicLinkUrl = buildMagicLinkVerifyUrl({
+    token,
+    verifyBaseUrl: deps.verifyBaseUrl,
+  });
 
   const emailRate = await consumeRateLimit(
     {
@@ -82,7 +122,6 @@ export async function requestMagicLink(
     throw new AuthError("RATE_LIMITED", "too many requests from this address");
   }
 
-  const { token, tokenHash } = generateToken();
   const expiresAt = new Date(deps.now() + MAGIC_LINK_TTL_MS);
 
   await deps.db.insert(magicLinkTokens).values({
@@ -91,11 +130,9 @@ export async function requestMagicLink(
     expiresAt,
   });
 
-  const verifyUrl = new URL("/api/auth/verify", deps.verifyBaseUrl);
-  verifyUrl.searchParams.set("token", token);
   await deps.sender.sendMagicLink({
     toEmail: email,
-    magicLinkUrl: verifyUrl.toString(),
+    magicLinkUrl,
     fromAddress: deps.fromAddress,
   });
 
