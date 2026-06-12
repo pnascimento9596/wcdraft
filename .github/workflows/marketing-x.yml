@@ -1,0 +1,117 @@
+# q-007 — organic X (Twitter) marketing automation for @WCDraft.
+#
+# Phase A (posting) runs on several jittered slots/day. Phase B/C (engagement)
+# runs less often and self-gates OFF on the Free API tier. EVERYTHING is
+# dry-run unless the repo variable MARKETING_LIVE == 'true'. The global kill
+# switch is the repo variable MARKETING_PAUSED == 'true' (halts both jobs at
+# the `if:` level AND inside the CLI — defense in depth).
+#
+# IDEMPOTENCY: live posts append to the COMMITTED ledger
+# (marketing/x/ledger/posts.ledger.jsonl). The post job commits the new line
+# back to main with [skip ci] so the next run sees it and never double-posts.
+# Trade-off: a ledger-only commit triggers a (cached, identical) Vercel
+# redeploy. To suppress that, add an Ignored-Build-Step on the Vercel project
+# for paths under marketing/** — an owner action, noted in the q-007 report.
+
+name: marketing-x
+
+on:
+  schedule:
+    # Six scattered, non-:00 UTC slots so posts don't land robotically and
+    # spread across time zones. A random pre-post sleep adds finer jitter.
+    - cron: "17 13 * * *" # ~09:17 ET morning slot
+    - cron: "43 15 * * *"
+    - cron: "11 18 * * *"
+    - cron: "39 20 * * *"
+    - cron: "23 22 * * *"
+    - cron: "51 0 * * *" # late EU / Asia
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Publish live (otherwise dry-run)"
+        type: boolean
+        default: false
+      daily_cap:
+        description: "Override per-day cap (clamped to code default 6)"
+        type: string
+        default: ""
+
+concurrency:
+  group: marketing-x
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    # Kill switch: skip entirely when paused.
+    if: ${{ vars.MARKETING_PAUSED != 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      X_API_KEY: ${{ secrets.X_API_KEY }}
+      X_API_SECRET: ${{ secrets.X_API_SECRET }}
+      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+      X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+      X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+      MARKETING_PAUSED: ${{ vars.MARKETING_PAUSED }}
+      MARKETING_LIVE: ${{ inputs.live && 'true' || vars.MARKETING_LIVE }}
+      MARKETING_DAILY_CAP: ${{ inputs.daily_cap != '' && inputs.daily_cap || vars.MARKETING_DAILY_CAP }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need the latest ledger; a token that can push the [skip ci] commit.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build engine deps (core + data)
+        run: pnpm exec turbo run build --filter=@wcdraft/core --filter=@wcdraft/data
+      - name: Jitter (avoid landing on the exact cron minute)
+        run: sleep $(( RANDOM % 480 ))
+      - name: Run one poster slot
+        run: pnpm --filter @wcdraft/marketing-x run compose
+      - name: Commit ledger (live posts only)
+        if: ${{ env.MARKETING_LIVE == 'true' }}
+        run: |
+          if ! git diff --quiet -- marketing/x/ledger/posts.ledger.jsonl; then
+            git config user.name "wcdraft-marketing-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add marketing/x/ledger/posts.ledger.jsonl
+            git commit -m "chore(marketing): record live X post [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
+
+  engage:
+    # Phase B/C. Self-gates OFF on the Free tier (prints an honest line, exits).
+    if: ${{ vars.MARKETING_PAUSED != 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      X_API_KEY: ${{ secrets.X_API_KEY }}
+      X_API_SECRET: ${{ secrets.X_API_SECRET }}
+      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+      X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+      X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+      MARKETING_PAUSED: ${{ vars.MARKETING_PAUSED }}
+      MARKETING_LIVE: ${{ vars.MARKETING_LIVE }}
+    # Twice a day is plenty for inbound replies + discovery.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build engine deps (core + data)
+        run: pnpm exec turbo run build --filter=@wcdraft/core --filter=@wcdraft/data
+      - name: Run engagement (gated on Basic tier)
+        run: pnpm --filter @wcdraft/marketing-x run engage
