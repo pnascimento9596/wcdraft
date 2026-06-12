@@ -10,7 +10,6 @@ import { getDb } from "@wcdraft/db";
 
 import { validateCookieSecret } from "@/lib/auth/handler-helpers";
 import {
-  isLeaderboardAccountRequired,
   isLeaderboardEnabled,
   leaderboardDarkResponse,
 } from "@/lib/leaderboard/enabled";
@@ -34,6 +33,5 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // U5: the real auth_rate_limits-backed limiter (plan §5.2) — swapped in
     // here at the deps builder; the handler logic did not change.
     rateLimiter: createDbSubmitRateLimiter({ db, now, random: Math.random }),
-    requireAccount: isLeaderboardAccountRequired,
   });
 }

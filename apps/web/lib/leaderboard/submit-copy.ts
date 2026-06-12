@@ -61,7 +61,7 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   },
   AUTH_REQUIRED: {
     title: "Account required",
-    message: "The board currently requires a signed-in account to post runs.",
+    message: "Sign in to post ranked runs — casual runs stay shareable",
   },
   CSRF_FAILED: {
     title: "Session check failed",

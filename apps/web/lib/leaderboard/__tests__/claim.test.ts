@@ -1,6 +1,6 @@
 // F-4 U6 — claim bridge: leaderboard_entries anon→account transfer.
 //
-// Runs against pglite at the full 0004 shape (real PostgreSQL 16 semantics:
+// Runs against pglite at the full migration shape (real PostgreSQL 16 semantics:
 // UNIQUE NULLS NOT DISTINCT, CHECK constraints, FK SET NULL) so the
 // drop-then-transfer ordering and the constraint interplay behave exactly
 // as they will on Neon. RED-adjacent: a regression here either leaks rows
@@ -114,6 +114,7 @@ describe("claimLeaderboardEntries — happy transfer", () => {
     expect(row.id).toBe(before.id);
     expect(row.sessionId).toBeNull();
     // The submit-time identity survives the claim verbatim.
+    expect(row.mode).toBe("casual");
     expect(row.displayAlias).toBe("night_fox");
     expect(row.token).toBe("t1.aaa");
     expect(row.verifiedScore).toBe(123);

@@ -287,6 +287,30 @@
   margin-right: 0.25rem;
 }
 
+.submitModeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.submitModeNote {
+  flex: 1 1 13rem;
+  min-width: 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.submitModeNote a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.submitModeNote a:hover {
+  text-decoration: underline;
+}
+
 .nameRow {
   display: flex;
   flex-wrap: wrap;

@@ -12,18 +12,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useAuth } from "@/components/auth-context";
+import { putJson } from "@/lib/auth/client";
 import type { GameData } from "@/lib/game/data";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { buildRunTokenBody, encodeRunToken, versionsAgree } from "@/lib/game/run-token";
-import { validateDisplayName } from "@/lib/leaderboard/display-name";
+import { validateDisplayName, type DisplayNameRejection } from "@/lib/leaderboard/display-name";
 import { submitRun } from "@/lib/leaderboard/client";
-import { NAME_HINT } from "@/lib/leaderboard/submit-copy";
+import { NAME_HINT, submitStatusCopy } from "@/lib/leaderboard/submit-copy";
 import {
   IDLE,
   loadLastDisplayName,
   rememberTokenSubmitted,
   saveLastDisplayName,
   wasTokenSubmitted,
+  type SubmitBoardMode,
   type SubmitPhase,
 } from "@/lib/leaderboard/submit-state";
 
@@ -45,16 +48,24 @@ export function LeaderboardSubmitPanel({
   }, [record, gameData.versions, sim]);
 
   const [phase, setPhase] = useState<SubmitPhase>(IDLE);
+  const [submitMode, setSubmitMode] = useState<SubmitBoardMode>("casual");
   const [name, setName] = useState("");
   const [touched, setTouched] = useState(false);
   const [retryRemaining, setRetryRemaining] = useState<number | null>(null);
+  const { ready: authReady, isSignedIn, session, refresh } = useAuth();
+  const publicUsername = isSignedIn ? (session?.username ?? null) : null;
 
   // Local memory — read in an effect so SSR/hydration stay byte-stable.
   useEffect(() => {
     if (token === null) return;
     setName((n) => (n.length > 0 ? n : loadLastDisplayName()));
-    if (wasTokenSubmitted(token)) setPhase({ kind: "submitted-earlier" });
   }, [token]);
+
+  useEffect(() => {
+    if (token === null) return;
+    setPhase(wasTokenSubmitted(token, submitMode) ? { kind: "submitted-earlier" } : IDLE);
+    setRetryRemaining(null);
+  }, [token, submitMode]);
 
   // RATE_LIMITED: respect Retry-After with a live countdown; the submit
   // button stays disabled until it elapses.
@@ -77,24 +88,31 @@ export function LeaderboardSubmitPanel({
   if (sim === null || token === null) return null;
   const score = sim.run.score;
 
-  const nameCheck = validateDisplayName(name);
-  const nameHint = touched && !nameCheck.ok ? NAME_HINT[nameCheck.reason] : null;
+  const preparedName = preparePublicName({ mode: submitMode, raw: name, publicUsername });
+  const nameHint = touched && !preparedName.ok ? NAME_HINT[preparedName.reason] : null;
 
   const onSubmit = () => {
     if (phase.kind === "submitting") return;
-    if (!nameCheck.ok) {
+    if (submitMode === "ranked" && (!authReady || !isSignedIn)) {
+      setPhase(rankedAuthRequiredPhase());
+      return;
+    }
+    if (!preparedName.ok) {
       setTouched(true);
       return;
     }
     setPhase({ kind: "submitting" });
-    void submitRun({
+    void submitAfterProfile({
       token,
-      claimedScore: score,
-      displayName: nameCheck.name,
+      score,
+      mode: submitMode,
+      displayName: preparedName.value,
+      needsUsername: submitMode === "ranked" && isSignedIn && publicUsername === null,
+      refresh,
     }).then((outcome) => {
       if (outcome.kind === "accepted" || outcome.kind === "duplicate") {
-        rememberTokenSubmitted(token);
-        saveLastDisplayName(nameCheck.name);
+        rememberTokenSubmitted(token, submitMode);
+        if (preparedName.value !== null) saveLastDisplayName(preparedName.value);
       }
       setPhase(outcome);
     });
@@ -104,10 +122,18 @@ export function LeaderboardSubmitPanel({
     <SubmitPanelView
       score={score}
       draftMode={record.draft.mode}
+      submitMode={submitMode}
+      authReady={authReady}
+      isSignedIn={isSignedIn}
+      publicUsername={publicUsername}
       name={name}
       nameHint={nameHint}
       phase={phase}
       retryRemaining={retryRemaining}
+      onModeChange={(mode) => {
+        setTouched(false);
+        setSubmitMode(mode);
+      }}
       onNameChange={(v) => {
         setTouched(true);
         setName(v);
@@ -115,4 +141,91 @@ export function LeaderboardSubmitPanel({
       onSubmit={onSubmit}
     />
   );
+}
+
+type PreparedPublicName =
+  | { readonly ok: true; readonly value: string | null }
+  | { readonly ok: false; readonly reason: DisplayNameRejection };
+
+function preparePublicName({
+  mode,
+  raw,
+  publicUsername,
+}: {
+  mode: SubmitBoardMode;
+  raw: string;
+  publicUsername: string | null;
+}): PreparedPublicName {
+  if (mode === "ranked" && publicUsername !== null && raw.trim() === "") {
+    return { ok: true, value: null };
+  }
+  const checked = validateDisplayName(raw);
+  if (!checked.ok) return { ok: false, reason: checked.reason };
+  return { ok: true, value: checked.name };
+}
+
+function rankedAuthRequiredPhase(): SubmitPhase {
+  return {
+    kind: "rejected",
+    code: "AUTH_REQUIRED",
+    copy: submitStatusCopy("AUTH_REQUIRED"),
+    nameHint: null,
+    retryAfterSeconds: null,
+  };
+}
+
+type ProfileUpdateBody = {
+  readonly profile?: { readonly username?: unknown };
+  readonly error?: unknown;
+  readonly username_reason?: unknown;
+};
+
+async function submitAfterProfile({
+  token,
+  score,
+  mode,
+  displayName,
+  needsUsername,
+  refresh,
+}: {
+  token: string;
+  score: number;
+  mode: SubmitBoardMode;
+  displayName: string | null;
+  needsUsername: boolean;
+  refresh: () => Promise<void>;
+}): Promise<SubmitPhase> {
+  let aliasForEntry = displayName;
+  if (needsUsername) {
+    if (displayName === null) return rankedAuthRequiredPhase();
+    const profile = await putJson<ProfileUpdateBody>("/api/profile", { username: displayName });
+    if (!profile.ok) {
+      if (profile.status === 401) return rankedAuthRequiredPhase();
+      const reason =
+        typeof profile.data?.username_reason === "string"
+          ? (NAME_HINT[profile.data.username_reason as DisplayNameRejection] ?? null)
+          : profile.status === 409
+            ? "That username is already taken."
+            : null;
+      if (reason !== null) {
+        return {
+          kind: "rejected",
+          code: "INVALID_NAME",
+          copy: submitStatusCopy("INVALID_NAME"),
+          nameHint: reason,
+          retryAfterSeconds: null,
+        };
+      }
+      return { kind: "unreachable" };
+    }
+    aliasForEntry = null;
+    await refresh();
+  }
+
+  return submitRun({
+    token,
+    claimedScore: score,
+    mode,
+    displayName: aliasForEntry,
+  });
 }

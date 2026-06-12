@@ -9,7 +9,7 @@
 
 import Link from "next/link";
 
-import type { SubmitPhase } from "@/lib/leaderboard/submit-state";
+import type { SubmitBoardMode, SubmitPhase } from "@/lib/leaderboard/submit-state";
 
 import s from "./leaderboard.module.css";
 
@@ -17,12 +17,17 @@ export interface SubmitPanelViewProps {
   /** Engine score of the local run (the value being claimed). */
   score: number;
   draftMode: "classic" | "hidden";
+  submitMode: SubmitBoardMode;
+  authReady: boolean;
+  isSignedIn: boolean;
+  publicUsername: string | null;
   name: string;
   /** Live U2-mirror hint; null when the name is fine or untouched. */
   nameHint: string | null;
   phase: SubmitPhase;
   /** RATE_LIMITED countdown (seconds left); null otherwise. */
   retryRemaining: number | null;
+  onModeChange: (mode: SubmitBoardMode) => void;
   onNameChange: (value: string) => void;
   onSubmit: () => void;
 }
@@ -39,6 +44,19 @@ function formVisible(phase: SubmitPhase): boolean {
 
 export function SubmitPanelView(props: SubmitPanelViewProps) {
   const { phase } = props;
+  const rankedSelected = props.submitMode === "ranked";
+  const rankedAuthBlocked = rankedSelected && (!props.authReady || !props.isSignedIn);
+  const needsUsername = rankedSelected && props.isSignedIn && props.publicUsername === null;
+  const aliasOptional = rankedSelected && props.isSignedIn && props.publicUsername !== null;
+  const inputId = needsUsername ? "lb-username" : "lb-display-name";
+  const inputLabel = needsUsername ? "Username" : "Display alias";
+  const inputPlaceholder = needsUsername
+    ? "Username (3-20 chars: a-z, 0-9, _)"
+    : aliasOptional
+      ? "Optional alias (3-20 chars)"
+      : "Alias (3-20 chars: a-z, 0-9, _)";
+  const submitDisabled =
+    phase.kind === "submitting" || props.retryRemaining !== null || rankedAuthBlocked;
   return (
     <section className={s.submitPanel} aria-label="Post to the leaderboard">
       <div className={s.submitHead}>
@@ -51,22 +69,49 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
         </span>
       </div>
 
+      <div className={s.submitModeRow}>
+        <div className="segmented" role="group" aria-label="Leaderboard lane">
+          <button
+            type="button"
+            aria-pressed={props.submitMode === "casual"}
+            disabled={phase.kind === "submitting"}
+            onClick={() => props.onModeChange("casual")}
+          >
+            Casual
+          </button>
+          <button
+            type="button"
+            aria-pressed={props.submitMode === "ranked"}
+            disabled={phase.kind === "submitting"}
+            onClick={() => props.onModeChange("ranked")}
+          >
+            Ranked
+          </button>
+        </div>
+        <SubmitModeNote
+          mode={props.submitMode}
+          authReady={props.authReady}
+          isSignedIn={props.isSignedIn}
+          publicUsername={props.publicUsername}
+        />
+      </div>
+
       {formVisible(phase) && (
         <>
           <div className={s.nameRow}>
             <div className={s.nameField}>
-              <label className="visually-hidden" htmlFor="lb-display-name">
-                Display name
+              <label className="visually-hidden" htmlFor={inputId}>
+                {inputLabel}
               </label>
               <input
-                id="lb-display-name"
+                id={inputId}
                 className={s.nameInput}
                 value={props.name}
                 maxLength={48}
-                placeholder="Alias (3-20 chars: a-z, 0-9, _)"
+                placeholder={inputPlaceholder}
                 autoComplete="nickname"
                 onChange={(e) => props.onNameChange(e.target.value)}
-                disabled={phase.kind === "submitting"}
+                disabled={phase.kind === "submitting" || rankedAuthBlocked}
               />
               {props.nameHint !== null && (
                 <span className={s.nameHint} role="status">
@@ -78,9 +123,13 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
               type="button"
               className={`btn btn--primary ${s.submitBtn}`}
               onClick={props.onSubmit}
-              disabled={phase.kind === "submitting" || props.retryRemaining !== null}
+              disabled={submitDisabled}
             >
-              {phase.kind === "submitting" ? "Submitting…" : "Post to leaderboard"}
+              {phase.kind === "submitting"
+                ? "Submitting…"
+                : rankedSelected
+                  ? "Post ranked run"
+                  : "Post casual run"}
             </button>
           </div>
           <p className={s.submitFine}>
@@ -92,6 +141,42 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
       <SubmitOutcome phase={phase} retryRemaining={props.retryRemaining} />
     </section>
   );
+}
+
+function SubmitModeNote({
+  mode,
+  authReady,
+  isSignedIn,
+  publicUsername,
+}: {
+  mode: SubmitBoardMode;
+  authReady: boolean;
+  isSignedIn: boolean;
+  publicUsername: string | null;
+}) {
+  if (mode === "casual") {
+    return <p className={s.submitModeNote}>Casual runs stay shareable.</p>;
+  }
+  if (!authReady) {
+    return <p className={s.submitModeNote}>Checking account…</p>;
+  }
+  if (!isSignedIn) {
+    return (
+      <p className={s.submitModeNote}>
+        Sign in to post ranked runs — casual runs stay shareable.{" "}
+        <Link href="/sign-in">Sign in</Link>
+      </p>
+    );
+  }
+  if (publicUsername !== null) {
+    return (
+      <p className={s.submitModeNote}>
+        Posting as <span className="mono">{publicUsername}</span>. Optional alias applies to this
+        run only.
+      </p>
+    );
+  }
+  return <p className={s.submitModeNote}>Choose a username for ranked.</p>;
 }
 
 function SubmitOutcome({

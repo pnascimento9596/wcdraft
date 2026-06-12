@@ -10,7 +10,7 @@
 import { ensureCsrfToken } from "../auth/client";
 import type { BoardDraftModeFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
-import { outcomeFromResponse, type SubmitPhase } from "./submit-state";
+import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./submit-state";
 
 // ─── Board page ──────────────────────────────────────────────────────────────
 
@@ -80,7 +80,8 @@ export async function fetchMyPresence(): Promise<MyBoardPresence | null> {
 export async function submitRun(input: {
   token: string;
   claimedScore: number;
-  displayName: string;
+  mode: SubmitBoardMode;
+  displayName: string | null;
 }): Promise<SubmitPhase> {
   let r: Response;
   try {
@@ -97,7 +98,7 @@ export async function submitRun(input: {
         token: input.token,
         claimed_score: input.claimedScore,
         display_alias: input.displayName,
-        mode: "casual",
+        mode: input.mode,
       }),
     });
   } catch {

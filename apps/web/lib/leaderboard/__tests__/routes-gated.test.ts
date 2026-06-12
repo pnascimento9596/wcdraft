@@ -77,12 +77,12 @@ describe("ship-dark — flag absent → 404 on every route, no deps touched", ()
     }
   });
 
-  it("LEADERBOARD_REQUIRE_ACCOUNT defaults off and only '1' flips it", () => {
-    expect(isLeaderboardAccountRequired()).toBe(false);
-    process.env.LEADERBOARD_REQUIRE_ACCOUNT = "true";
-    expect(isLeaderboardAccountRequired()).toBe(false);
-    process.env.LEADERBOARD_REQUIRE_ACCOUNT = "1";
-    expect(isLeaderboardAccountRequired()).toBe(true);
+  it("LEADERBOARD_REQUIRE_ACCOUNT has no OFF state for ranked submissions", () => {
+    for (const v of [undefined, "", "0", "false", "true", "1"]) {
+      if (v === undefined) delete process.env.LEADERBOARD_REQUIRE_ACCOUNT;
+      else process.env.LEADERBOARD_REQUIRE_ACCOUNT = v;
+      expect(isLeaderboardAccountRequired()).toBe(true);
+    }
   });
 });
 

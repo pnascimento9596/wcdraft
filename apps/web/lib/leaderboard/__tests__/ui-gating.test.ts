@@ -158,7 +158,7 @@ describe("LeaderboardSubmitPanel (container)", () => {
       const html = renderToStaticMarkup(
         createElement(LeaderboardSubmitPanel, { gameData, record: simulatedRecord(mode) }),
       );
-      expect(html).toContain("Post to leaderboard");
+      expect(html).toContain("Post casual run");
       expect(html).toContain(mode === "hidden" ? "Memory" : "Classic");
     }
   });
@@ -196,10 +196,15 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       createElement(SubmitPanelView, {
         score: 41,
         draftMode: "classic",
+        submitMode: "casual",
+        authReady: true,
+        isSignedIn: false,
+        publicUsername: null,
         name: "golden_xi",
         nameHint: null,
         phase,
         retryRemaining,
+        onModeChange: () => undefined,
         onNameChange: () => undefined,
         onSubmit: () => undefined,
       }),
@@ -209,7 +214,8 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
   it("idle: form with name input + submit", () => {
     const html = render({ kind: "idle" });
     expect(html).toContain("lb-display-name");
-    expect(html).toContain("Post to leaderboard");
+    expect(html).toContain("Post casual run");
+    expect(html).toContain("Ranked");
     expect(html).toContain("41");
   });
 
@@ -280,6 +286,78 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       retryAfterSeconds: null,
     });
     expect(html).toContain('href="/sign-in"');
+  });
+
+  it("ranked signed-out: rule copy appears before submit and button is disabled", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: false,
+        publicUsername: null,
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Sign in to post ranked runs — casual runs stay shareable");
+    expect(html).toContain('href="/sign-in"');
+    expect(html).toContain("Post ranked run");
+    expect(html).toContain("disabled");
+  });
+
+  it("ranked signed-in without username: collects a username before posting", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: null,
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Choose a username for ranked.");
+    expect(html).toContain("lb-username");
+    expect(html).toContain("Username (3-20 chars: a-z, 0-9, _)");
+    expect(html).not.toContain("disabled");
+  });
+
+  it("ranked signed-in with username: alias is optional per entry", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: "public_user",
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Posting as");
+    expect(html).toContain("public_user");
+    expect(html).toContain("Optional alias (3-20 chars)");
+    expect(html).toContain("Post ranked run");
   });
 
   it("INVALID_NAME: server verdict + mirrored hint", () => {

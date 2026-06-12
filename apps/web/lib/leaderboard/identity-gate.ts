@@ -13,10 +13,10 @@
 //                                downgraded to anonymous: the player would
 //                                believe the entry is attached to their
 //                                session/claimable when it is not)
-//   - requireAccount() flipped → additionally reject userId === null
+//   - requireAccount() true    → additionally reject userId === null
 //
-// Flipping LEADERBOARD_REQUIRE_ACCOUNT changes no schema, no pipeline step,
-// no response contract — only this gate's verdict.
+// L2: requireAccount() is selected by the submit route per requested board
+// mode. Ranked always requires an account; casual stays anonymous-capable.
 //
 // Failures throw `LeaderboardGateError` carrying the U2-declared gate codes
 // (`SubmitGateCode`) and the single-sourced SUBMIT_ERROR_HTTP_STATUS status,
@@ -36,6 +36,9 @@ import { AuthError } from "../auth/errors";
 import { readRequestCookie } from "../auth/handler-helpers";
 import { SESSION_COOKIE_NAME, validateSessionCookie, type SessionDeps } from "../auth/sessions";
 import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
+
+export const RANKED_AUTH_REQUIRED_MESSAGE =
+  "Sign in to post ranked runs — casual runs stay shareable";
 
 /** Resolved submitting identity. Both null = anonymous casual submission. */
 export interface SubmitIdentity {
@@ -61,7 +64,7 @@ export interface IdentityGateDeps {
   /** Lazy — only read when a session cookie is actually present, so a dark
    *  or half-configured deploy can never 500 the anonymous path (F-3.6). */
   readonly getCookieSecret: () => string;
-  /** Plan §5.3 posture flag (LEADERBOARD_REQUIRE_ACCOUNT). */
+  /** Caller-selected account gate. Ranked submit passes true; casual false. */
   readonly requireAccount: () => boolean;
 }
 
@@ -80,7 +83,7 @@ export async function requireSubmitIdentity(
   const cookie = readRequestCookie(req, SESSION_COOKIE_NAME);
   if (!cookie) {
     if (deps.requireAccount()) {
-      throw new LeaderboardGateError("AUTH_REQUIRED", "an account is required to submit");
+      throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
     }
     return { sessionId: null, userId: null };
   }
@@ -114,7 +117,7 @@ export async function requireSubmitIdentity(
   }
 
   if (deps.requireAccount() && session.userId === null) {
-    throw new LeaderboardGateError("AUTH_REQUIRED", "an account is required to submit");
+    throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
   }
   return { sessionId: session.id, userId: session.userId };
 }

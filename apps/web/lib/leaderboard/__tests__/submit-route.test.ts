@@ -3,12 +3,12 @@
 //
 // Coverage per the Red gate:
 //   - transport gates: content-type, declared/actual size, malformed JSON
-//   - ranked lane dark (BAD_ATTEMPT), unknown mode rejected
+//   - ranked lane requires signed-in account; anonymous casual stays open
 //   - verdict → SUBMIT_ERROR_HTTP_STATUS mapping for every SubmitRejectionCode
 //   - anonymous casual accepted (lead-architect ruling), honest rank
 //   - dedupe conflict path (NULLS NOT DISTINCT, all three anon shapes)
 //   - session identity + CSRF negatives (double-submit + origin)
-//   - LEADERBOARD_REQUIRE_ACCOUNT posture flip (config-only, same route)
+//   - ranked account gate negatives (no cookie, anonymous, forged, expired)
 //   - rate-limit seam: 429 + Retry-After, runs AFTER identity and BEFORE
 //     the CPU-bound pipeline (throwing getValidation proves ordering)
 
@@ -20,6 +20,7 @@ import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
 import { decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
 import { getValidationData } from "../server-data";
+import { RANKED_AUTH_REQUIRED_MESSAGE } from "../identity-gate";
 import {
   handleLeaderboardSubmit,
   MAX_SUBMIT_BODY_BYTES,
@@ -56,7 +57,6 @@ function makeDeps(overrides: Partial<SubmitRouteDeps> = {}): SubmitRouteDeps {
     getCookieSecret: () => SECRET,
     getValidation: () => data,
     rateLimiter: allowAllSubmitRateLimiter,
-    requireAccount: () => false,
     ...overrides,
   };
 }
@@ -118,13 +118,16 @@ async function errorOf(res: Response): Promise<{ error?: string } & Record<strin
 }
 
 /** Anon session + matching CSRF material, ready to spread into ReqOpts. */
-async function sessionReqOpts(userId: string | null = null): Promise<{
+async function sessionReqOpts(
+  userId: string | null = null,
+  opts: { now?: number; ttlMs?: number } = {},
+): Promise<{
   sessionId: string;
   opts: Pick<ReqOpts, "sessionCookie" | "csrfCookie" | "csrfHeader" | "origin" | "host">;
 }> {
   const { session, cookieValue } = await createSession(
-    { userId },
-    { db, now: () => Date.now(), cookieSecret: SECRET },
+    { userId, ttlMs: opts.ttlMs },
+    { db, now: () => opts.now ?? Date.now(), cookieSecret: SECRET },
   );
   return {
     sessionId: session.id,
@@ -179,13 +182,20 @@ describe("transport gates (before any pipeline work)", () => {
     expect(res.status).toBe(400);
   });
 
-  it("mode:'ranked' → 403 BAD_ATTEMPT (dark lane), no row", async () => {
+  it("mode:'ranked' with no account → 401 AUTH_REQUIRED before validation, no row", async () => {
     const res = await handleLeaderboardSubmit(
       makeReq({ body: validBody({ mode: "ranked" }) }),
-      makeDeps(),
+      makeDeps({
+        getValidation: () => {
+          throw new Error("validation must not run before ranked auth");
+        },
+      }),
     );
-    expect(res.status).toBe(403);
-    expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
+    expect(res.status).toBe(401);
+    expect(await errorOf(res)).toMatchObject({
+      error: "AUTH_REQUIRED",
+      message: RANKED_AUTH_REQUIRED_MESSAGE,
+    });
     expect(await allRows()).toHaveLength(0);
   });
 
@@ -195,6 +205,7 @@ describe("transport gates (before any pipeline work)", () => {
       makeDeps(),
     );
     expect(res.status).toBe(400);
+    expect((await errorOf(res)).message).toBe("mode must be 'casual' or 'ranked'");
   });
 });
 
@@ -465,31 +476,108 @@ describe("session identity + CSRF (plan §5.3 — like POST /api/runs)", () => {
   });
 });
 
-// ─── Posture flip (LEADERBOARD_REQUIRE_ACCOUNT) ─────────────────────────────
+// ─── Ranked requires account ────────────────────────────────────────────────
 
-describe("requireAccount posture flip is config-only (plan §5.3)", () => {
-  const strictDeps = () => makeDeps({ requireAccount: () => true });
+describe("ranked account gate", () => {
+  it("anonymous casual remains accepted", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ mode: "casual" }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.mode).toBe("casual");
+    expect(rows[0]!.userId).toBeNull();
+  });
 
-  it("no cookie → 401 AUTH_REQUIRED", async () => {
-    const res = await handleLeaderboardSubmit(makeReq(), strictDeps());
+  it("anonymous session ranked → 401 AUTH_REQUIRED, no row", async () => {
+    const { opts } = await sessionReqOpts();
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: validBody({ mode: "ranked" }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(401);
+    expect(await errorOf(res)).toMatchObject({
+      error: "AUTH_REQUIRED",
+      message: RANKED_AUTH_REQUIRED_MESSAGE,
+    });
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("forged ranked session → 401 AUTH_REQUIRED, never downgrades to anonymous", async () => {
+    const { opts } = await sessionReqOpts();
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        sessionCookie: opts.sessionCookie!.slice(0, -2) + "xx",
+        body: validBody({ mode: "ranked" }),
+      }),
+      makeDeps(),
+    );
     expect(res.status).toBe(401);
     expect((await errorOf(res)).error).toBe("AUTH_REQUIRED");
+    expect(await allRows()).toHaveLength(0);
   });
 
-  it("anonymous session (valid CSRF) → 401 AUTH_REQUIRED", async () => {
-    const { opts } = await sessionReqOpts();
-    const res = await handleLeaderboardSubmit(makeReq(opts), strictDeps());
-    expect(res.status).toBe(401);
-  });
-
-  it("account-bound session → 201 (same request shape, only the flag moved)", async () => {
+  it("expired ranked session → 401 AUTH_REQUIRED, no row", async () => {
+    const now = Date.UTC(2026, 5, 1);
     const inserted = await db
       .insert(users)
-      .values({ email: "f4-u3-strict@example.com" })
+      .values({ email: "expired-ranked@example.com", username: "expired_ranked" })
+      .returning();
+    const { opts } = await sessionReqOpts(inserted[0]!.id, { now, ttlMs: 1 });
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: validBody({ mode: "ranked" }) }),
+      makeDeps({ now: () => now + 2 }),
+    );
+    expect(res.status).toBe(401);
+    expect((await errorOf(res)).error).toBe("AUTH_REQUIRED");
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("account-bound ranked with username fallback → 201 ranked row, no email", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "ranked-user@example.com", username: "ranked_user" })
       .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
-    const res = await handleLeaderboardSubmit(makeReq(opts), strictDeps());
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body: validBody({ mode: "ranked", display_alias: undefined, display_name: undefined }),
+      }),
+      makeDeps(),
+    );
     expect(res.status).toBe(201);
+    const body = (await res.json()) as {
+      rank: number | null;
+      entry: Record<string, unknown>;
+    };
+    expect(body.rank).toBe(1);
+    expect(body.entry.mode).toBe("ranked");
+    expect(body.entry.display_name).toBe("ranked_user");
+    expect(JSON.stringify(body)).not.toContain("ranked-user@example.com");
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.mode).toBe("ranked");
+    expect(rows[0]!.userId).toBe(inserted[0]!.id);
+  });
+
+  it("account-bound ranked alias overrides username per entry", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "alias-ranked@example.com", username: "real_user" })
+      .returning();
+    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: validBody({ mode: "ranked", display_alias: "alias_user" }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { entry: Record<string, unknown> };
+    expect(body.entry.display_name).toBe("alias_user");
+    expect(JSON.stringify(body)).not.toContain("alias-ranked@example.com");
   });
 });
 
