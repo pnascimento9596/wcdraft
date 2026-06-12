@@ -1,9 +1,25 @@
 # @wcdraft/marketing-x — organic X automation (q-007)
 
-Deterministic, dry-run-first content engine + poster for the **@WCDraft** account.
-Organic only (paid is blocked on trademark counsel — a HUMAN gate). Channel-agnostic
-by design: the composer + `features.json` are not X-specific, so Instagram/TikTok port
-lanes can reuse them.
+Deterministic content engine for the **@WCDraft** account. Organic only; channel-agnostic
+by design (the composer + `features.json` aren't X-specific, so Instagram/TikTok port lanes
+can reuse them).
+
+## Operating model: ZERO-API content packs
+
+@WCDraft has **no X API credits** (posting and search both return 402 `CreditsDepleted`)
+and the owner will not buy them, so **there is no automated posting**. Instead this package
+generates ready-to-paste content the owner schedules by hand via X's native composer:
+
+- **`pnpm gen:pack`** → `packs/pack-YYYY-WW.md` — a week of ~40 posts (feature pitches,
+  daily seeded challenges, dataset factoids, result spotlights), grouped by day, char-counted.
+- **`pnpm gen:banks`** → `reply-bank.md` + `quote-bank.md` — pre-written replies (by
+  scenario) and quote-post templates + `x.com/search?q=…` discovery links.
+- **`ROUTINE.md`** — the owner's weekly 15-min + daily 2-min flow (no API step).
+- `marketing-x.yml` regenerates the pack + banks every Monday and commits them to main.
+
+The live API poster (`run-poster`/`run-engagement`) + X client below stay **built, tested,
+and DORMANT** behind `MARKETING_PAUSED=true`; they activate only if API credits are ever
+loaded. **Browser-automation posting is forbidden** (X ToS / account-ban risk).
 
 ## What it does
 

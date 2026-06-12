@@ -3,7 +3,7 @@
   "manifest_version": "1.0.0",
   "updated": "2026-06-12",
   "site_url": "https://www.wcdraft.com",
-  "note": "TRUTH SOURCE for every published marketing claim (q-007). The composer reads feature truth from here: a template may only reference a feature whose `status` is `live`. Each `live` feature was verified against origin/main at 6aeb78d and is reachable on the production site. FUTURE LANES MUST UPDATE THIS FILE when a feature ships, changes, or is removed — a stale claim here becomes a false post. The fresh-context review gate cross-checks every `live` entry against www.wcdraft.com; a claim prod does not support is a merge blocker. Licensing: nominative 'World Cup' only, no FIFA marks, 'football' never 'soccer', 'manager' never 'coach', 'Synergy' never 'Chemistry'.",
+  "note": "TRUTH SOURCE for every published marketing claim (q-007). The composer reads feature truth from here: a template may only reference a feature whose `status` is `live`. Each `live` feature was verified against origin/main (incl. #118 — Current rating basis enabled end-to-end) and is reachable on the production site. FUTURE LANES MUST UPDATE THIS FILE when a feature ships, changes, or is removed — a stale claim here becomes a false post. The fresh-context review gate cross-checks every `live` entry against www.wcdraft.com; a claim prod does not support is a merge blocker. Licensing: nominative 'World Cup' only, no FIFA marks, 'football' never 'soccer', 'manager' never 'coach', 'Synergy' never 'Chemistry'.",
   "features": [
     {
       "id": "free_browser",
@@ -150,12 +150,16 @@
     },
     {
       "id": "rating_basis_choice",
-      "status": "planned",
-      "headline": "Rating basis — Career (Current coming)",
-      "claim": "Ratings are career-basis today; a Current basis arrives after the rating rebuild.",
-      "hooks": [],
-      "verify": "On /play/draft 'Draft setup' → Rating basis: Career is active, Current is DISABLED ('Current arrives after the rating rebuild'). DO NOT pitch a basis CHOICE until Current is enabled in prod.",
-      "source": "apps/web/components/game/draft-screen.tsx (Rating basis segment: Current button disabled)"
+      "status": "live",
+      "headline": "Rating basis — Career or Current",
+      "claim": "Choose your rating basis: Career rates each player on their whole-career peak, Current rates them at that tournament's strength. Your call at setup.",
+      "hooks": [
+        "Career peak or current form — you pick the rating basis.",
+        "Rate players on their whole career, or just that tournament.",
+        "Two ways to value a player: Career or Current."
+      ],
+      "verify": "On /play/draft 'Draft setup' → Rating basis: Career AND Current are both selectable (enabled end-to-end by #118; the sim resolves basis_ratings.current for a Current run). NOTE: Current runs are casual-only (non-canonical on the ranked board) — never imply a Current run can rank.",
+      "source": "apps/web/components/game/draft-screen.tsx (Rating basis segment, SETUP_RATING_BASES) + #118 Current-basis enablement"
     }
   ]
 }
