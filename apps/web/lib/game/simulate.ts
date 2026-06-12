@@ -82,19 +82,25 @@ export function buildSimWorldInputs(
   // Ratings for every card in the user squad (starter + bench). The engine
   // throws if a starter is missing a rating; bench cards may have ratings or
   // not, but we collect every available one for completeness.
+  //
+  // SELECTED BASIS: the engine consumes the channels for the run's recorded
+  // `rating_basis`. `career` feeds the top-level RuntimeRating row (the Career
+  // compatibility alias) UNCHANGED — byte-identical to before this seam
+  // existed. `current` feeds `basis_ratings.current` (a Rating in its own
+  // right), so a Current run actually simulates on the at-tournament strength,
+  // not the career numbers the player saw masked behind a chip. Opponents are
+  // the fixed 2026 field and are not re-rated by basis. This is NOT display-
+  // only: the basis decision changes the sim inputs.
+  const useCurrent = draft.rating_basis === "current";
   const ratings: Record<string, Rating> = {};
   for (const slot of draft.squad) {
     if (slot.card_id === null) continue;
     const cardId = slot.card_id as string;
     const r = gameData.indexes.ratingByCardId.get(cardId);
     if (!r) {
-      throw new MissingRecordError(
-        "rating",
-        cardId,
-        `for drafted squad slot ${slot.slot_id}`,
-      );
+      throw new MissingRecordError("rating", cardId, `for drafted squad slot ${slot.slot_id}`);
     }
-    ratings[cardId] = r;
+    ratings[cardId] = useCurrent ? r.basis_ratings.current : r;
   }
 
   // Opponents = every Team2026 in the scenario bundle (sim only walks the
@@ -275,11 +281,12 @@ export function runSimulation(
 ): Promise<RunSimulationResult> {
   return new Promise<RunSimulationResult>((resolve, reject) => {
     // Decide if we can use a worker. SSR / Node test envs have no Worker.
-    const canUseWorker =
-      typeof window !== "undefined" && typeof Worker !== "undefined";
+    const canUseWorker = typeof window !== "undefined" && typeof Worker !== "undefined";
     if (!canUseWorker) {
-      runMainThread(gameData, scenario, record, "worker unavailable in this environment")
-        .then(resolve, reject);
+      runMainThread(gameData, scenario, record, "worker unavailable in this environment").then(
+        resolve,
+        reject,
+      );
       return;
     }
 
@@ -294,8 +301,7 @@ export function runSimulation(
         scenario,
         record,
         `simulation worker failed to spawn (${err instanceof Error ? err.message : String(err)}); ran on main thread`,
-      )
-        .then(resolve, reject);
+      ).then(resolve, reject);
       return;
     }
 
@@ -348,8 +354,7 @@ export function runSimulation(
         scenario,
         record,
         `simulation worker failed (${ev.message || "unknown error"}); ran on main thread`,
-      )
-        .then(resolve, reject);
+      ).then(resolve, reject);
     };
 
     worker.addEventListener("message", onMessage);

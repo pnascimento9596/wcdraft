@@ -171,6 +171,7 @@ describe("memory mode — blindCardRatingView blind/keep sets", () => {
     legend: true,
     badge_kind: "legend",
     badge_label: "Legend",
+    basis: "career",
   };
 
   it("hides the full blind set — OVR, channels, legend gold, provenance hue", () => {
@@ -185,6 +186,10 @@ describe("memory mode — blindCardRatingView blind/keep sets", () => {
     expect(blinded.badge_label).toBe("Hidden");
     expect(blinded.legend).toBeUndefined();
     expect(blinded.overall_basis).toBeUndefined();
+    // `basis` is CONFIG, not a rating signal — it survives blinding so the
+    // CURRENT chip can still render while every numeric stays masked.
+    expect(blinded.basis).toBe("career");
+    expect(blindCardRatingView({ ...legendInput, basis: "current" }).basis).toBe("current");
   });
 
   it("blinds coverage (rating-confidence metadata) and does not mutate its input", () => {
@@ -346,12 +351,8 @@ describe("memory mode — aggregate seams blind through the adapter", () => {
   });
 
   it("squadAverageOverall (aggregate seam, sanity): blind ⇒ null", () => {
-    expect(
-      squadAverageOverall(gameData.indexes, hidden.draft, { blindRatings: true }),
-    ).toBeNull();
-    expect(
-      typeof squadAverageOverall(gameData.indexes, classic.draft),
-    ).toBe("number");
+    expect(squadAverageOverall(gameData.indexes, hidden.draft, { blindRatings: true })).toBeNull();
+    expect(typeof squadAverageOverall(gameData.indexes, classic.draft)).toBe("number");
   });
 });
 

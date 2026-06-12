@@ -1,11 +1,9 @@
 // DC-1 — draft configuration axes: preset table sanity, canonical-config
-// predicate, and the createDraft honesty gates (config this build does not
-// implement is REFUSED, never recorded-but-ignored).
-//
-// NOTE: the two "not implemented" gates below are intentionally temporary —
-// DC-2 replaces the era gate with a catalog era-stamp cross-check and DC-3
-// implements position_first. Those units update these tests in the same
-// change that lands the behavior.
+// predicate, and createDraft config recording. All three axes are now
+// implemented (squad_first/position_first, career/current, era presets), so the
+// only remaining createDraft gate is the DC-2 era-stamp coherence check (the
+// recorded preset must match the catalog it was built from). The former
+// "current basis not implemented" gate is gone — both bases are live.
 
 import { describe, expect, it } from "vitest";
 
@@ -67,9 +65,9 @@ describe("config type guards", () => {
 describe("isCanonicalDraftConfig", () => {
   it("is true only for squad_first + career + all_time", () => {
     expect(isCanonicalDraftConfig(DEFAULT_DRAFT_CONFIG)).toBe(true);
-    expect(
-      isCanonicalDraftConfig({ ...DEFAULT_DRAFT_CONFIG, draft_flow: "position_first" }),
-    ).toBe(false);
+    expect(isCanonicalDraftConfig({ ...DEFAULT_DRAFT_CONFIG, draft_flow: "position_first" })).toBe(
+      false,
+    );
     expect(isCanonicalDraftConfig({ ...DEFAULT_DRAFT_CONFIG, rating_basis: "current" })).toBe(
       false,
     );
@@ -98,10 +96,14 @@ describe("createDraft DC-1 config recording + honesty gates", () => {
     expect(JSON.stringify(explicit)).toBe(JSON.stringify(implicit));
   });
 
-  it("refuses rating_basis 'current' (gated on MV2-12b; no fake fallback)", () => {
-    expect(() => createDraft(catalog, { ...PARAMS, rating_basis: "current" })).toThrow(
-      /rating_basis "current" is not available/,
-    );
+  it("records rating_basis 'current' (selected-basis lane — both bases live)", () => {
+    const draft = createDraft(catalog, { ...PARAMS, rating_basis: "current" });
+    expect(draft.rating_basis).toBe("current");
+    // Spins/draws are basis-independent (the basis only re-rates the squad
+    // downstream), so a current-basis draft has the same spin structure as the
+    // default — the byte-equal proof would differ only in the recorded basis.
+    const career = createDraft(catalog, { ...PARAMS, rating_basis: "career" });
+    expect({ ...draft, rating_basis: "career" }).toEqual(career);
   });
 
   it("refuses an era_preset that does not match the catalog's era stamp (DC-2 coherence)", () => {

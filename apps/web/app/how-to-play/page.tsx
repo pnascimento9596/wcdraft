@@ -87,8 +87,9 @@ export default function HowToPlayPage() {
           spin pool to a span of tournaments — all-time, or the more recent windows.{" "}
           <strong>Draft order</strong> is either Squad First (spin a squad, then choose who fills
           which slot) or Position First (choose the slot to fill, then spin for it).{" "}
-          <strong>Rating basis</strong> is Career — each card rated on the strength of the
-          player&rsquo;s whole career.
+          <strong>Rating basis</strong> is Career (each card on its whole-career peak) or Current
+          (the player at that tournament&rsquo;s strength, estimated where a career is still in
+          progress); a Current run is marked with a chip and counts as casual.
         </p>
 
         <h2>Ranked &amp; casual</h2>

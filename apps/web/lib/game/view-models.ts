@@ -15,7 +15,14 @@
 //     circle). Provenance is encoded by HUE (cyan / periwinkle / orange /
 //     gold / slate). The two are orthogonal — see I2 brief.
 
-import type { Award, CardId, ManagerCardId, Position, SlotPosition } from "@wcdraft/core";
+import type {
+  Award,
+  CardId,
+  ManagerCardId,
+  Position,
+  RatingBasis,
+  SlotPosition,
+} from "@wcdraft/core";
 
 // ─── Rating view ─────────────────────────────────────────────────────────────
 
@@ -50,10 +57,7 @@ export interface CardRatingView {
   /** Source of the rating signal. */
   provenance: "wc_performance" | "projected_career";
   /** Historical-only honest-state flag. */
-  overall_basis?:
-    | "measured_performance"
-    | "baseline_anchor_estimate"
-    | "career_stature_estimate";
+  overall_basis?: "measured_performance" | "baseline_anchor_estimate" | "career_stature_estimate";
   /**
    * Source-derived legend flag (MV2-7 seam, MV2-10 data), carried through
    * verbatim so the future memory mode can read it directly. `badge_kind`
@@ -65,6 +69,13 @@ export interface CardRatingView {
   badge_kind: RatingBadgeKind;
   /** Human label for the provenance/estimate/legend badge. */
   badge_label: string;
+  /**
+   * Rating basis this view was resolved from — CONFIG, not a rating signal, so
+   * it survives `blindCardRatingView` (a Memory-mode Current run shows the
+   * CURRENT chip while every numeric stays masked). `"career"` is the default
+   * and renders chip-free.
+   */
+  basis: RatingBasis;
 }
 
 // ─── Player candidate view ───────────────────────────────────────────────────
@@ -287,10 +298,7 @@ export function formatStatValue(value: number | string | null | undefined): stri
 interface BadgeInputs {
   overall: number | null;
   provenance: "wc_performance" | "projected_career";
-  overall_basis?:
-    | "measured_performance"
-    | "baseline_anchor_estimate"
-    | "career_stature_estimate";
+  overall_basis?: "measured_performance" | "baseline_anchor_estimate" | "career_stature_estimate";
   /**
    * Source-derived legend flag (MV2-7 seam, MV2-10 data). When defined it is
    * authoritative — an explicit `false` SUPPRESSES legend even for OVR≥96.
