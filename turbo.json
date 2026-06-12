@@ -5,7 +5,14 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": ["LEADERBOARD_ENABLED", "LEADERBOARD_REQUIRE_ACCOUNT", "VERCEL_GIT_COMMIT_SHA"]
+      "env": [
+        "LEADERBOARD_ENABLED",
+        "LEADERBOARD_REQUIRE_ACCOUNT",
+        "VERCEL_GIT_COMMIT_SHA",
+        "RESEND_API_KEY",
+        "AUTH_EMAIL_FROM",
+        "AUTH_BASE_URL"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"]
