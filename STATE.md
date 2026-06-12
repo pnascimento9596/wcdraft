@@ -130,9 +130,13 @@ than hidden regressions.
   cron slots/day + `engage` job (Phase B/C). Both gate on `vars.MARKETING_PAUSED != 'true'`
   (kill switch). Dry-run unless `vars.MARKETING_LIVE == 'true'` (or dispatch `live=true`).
   Secrets `X_API_KEY/X_API_SECRET/X_ACCESS_TOKEN/X_ACCESS_SECRET/X_BEARER_TOKEN` set as repo
-  Actions secrets 2026-06-12. @WCDraft is **Free API tier** (search → 402) so Phase B/C
-  ship gated OFF; Phase A posting works. Live posts commit `marketing/x/ledger/posts.ledger.jsonl`
-  back to main with `[skip ci]`.
+  Actions secrets 2026-06-12. OAuth verified live (auth OK as @WCDraft). BLOCKED 2026-06-12:
+  the account has **no X API credits** — both search AND `POST /2/tweets` return 402
+  (`CreditsDepleted`), so NO live posting is possible yet (Phase A included). Lane held with
+  `MARKETING_PAUSED=true`; the dry-run pipeline is fully functional. To go live the OWNER must
+  add X API credits / a paid plan, then unset `MARKETING_PAUSED` and set `MARKETING_LIVE=true`
+  (start at `MARKETING_DAILY_CAP=3` for the supervised first day). Live posts commit
+  `marketing/x/ledger/posts.ledger.jsonl` back to main with `[skip ci]`.
 - Triggers (both): PR + push on `main`, `engine-*`, `merit-*`, `season-*`.
 - Branch protection requires PR CI; repo auto-merge DISABLED (checks ~7 min; realism ~4 min).
 
