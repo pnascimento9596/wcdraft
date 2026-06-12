@@ -99,7 +99,7 @@ than hidden regressions.
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
 | @wcdraft/web `test`                                     | 634 passed, 1 skipped (635) (ui/ux-basis-wave: +rating-basis seam/divergence/determinism tests)       |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
-| @wcdraft/marketing-x `test`                             | 65 passed (7 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement, weekly-pack + reply/quote banks) |
+| @wcdraft/marketing-x `test`                             | 64 passed (7 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement, weekly-pack + reply/quote banks) |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |
 | etl V1 focused merit suite                              | 42 passed                                                                                             |
 | etl V1 `pytest -q`                                      | 233 passed                                                                                            |
