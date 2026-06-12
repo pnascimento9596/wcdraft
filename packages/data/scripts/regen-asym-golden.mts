@@ -1,15 +1,14 @@
-// E-4.7 — refresh the EMPIRICAL measurement block of the asymmetric realism gate
-// golden after a rating-channel change, WITHOUT touching the locked gate bands.
+// V7 — refresh the asymmetric realism gate golden after a rating-channel + λ
+// refit.
 //
 // What this updates: per-policy run counts + raw event totals + observed rates +
-// per-observed Wilson half-widths + telemetry (the count-lock and documentation
-// the gate measures against).
+// per-observed Wilson half-widths + telemetry, then re-centers the shape bands
+// around the strategicAutoDraft landing using the pre-existing recipe:
+// max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor).
 //
-// What this DELIBERATELY preserves byte-for-byte: `shape_bands`,
-// `goals_per_game_lower_floor`, `wilson_target_for_ko_metrics`, `ensemble`,
-// `engine_version`, `engine_anchor`, `$schema_doc`, and each policy's `_doc`.
-// The realism BANDS that E-3b locked are NOT re-centered on the new data — they
-// stay put, and the new data is re-verified to still fall inside them by the gate.
+// What this DELIBERATELY preserves byte-for-byte: `ensemble`, `engine_version`,
+// and each policy's `_doc`. V7 keeps the runtime manifest's old engine_version
+// until V8, so the header records that the new tuple is pending the V8 stamp.
 //
 //   pnpm --filter @wcdraft/data exec tsx scripts/regen-asym-golden.mts
 
@@ -29,6 +28,8 @@ const GOLDEN_PATH = join(HERE, "..", "test", "realism", "asym-realism-golden.jso
 const golden = JSON.parse(readFileSync(GOLDEN_PATH, "utf-8"));
 const N: number = golden.ensemble.N_runs;
 const seedPrefix: string = golden.ensemble.seed_prefix;
+const SHAPE_KEYS = ["draw_pct", "margin4plus_pct", "ko_et_pct", "shootout_pct"] as const;
+const SHAPE_FLOOR = 0.015;
 
 function observedOf(m: RealismMeasurement) {
   return {
@@ -82,5 +83,30 @@ for (const policy of ALL_POLICIES) {
   );
 }
 
+const strategic = golden.policies.strategicAutoDraft;
+golden.$schema_doc =
+  "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.09 until V8's single season stamp; the tuple is pending that V8 anchor.";
+golden.engine_anchor =
+  "merit-v3 V7 lambda refit on post-V6 Career channels; runtime engine_version stamp deferred to V8";
+golden.shape_bands._doc =
+  "V7 RE-LOCK: shape bands are centered on strategicAutoDraft after the post-V6 Career-channel lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
+for (const key of SHAPE_KEYS) {
+  golden.shape_bands[key] = {
+    center_policy: "strategicAutoDraft",
+    half_width: Math.max(strategic.wilson_half_widths_around_observed[key], SHAPE_FLOOR),
+  };
+}
+golden.goals_per_game_lower_floor._doc =
+  "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2x Wilson half-width, rounded down to keep honest residual cushion.";
+golden.goals_per_game_lower_floor.lower_bound = Math.floor(
+  (strategic.observed.goals_per_game - 2 * strategic.wilson_half_widths_around_observed.goals_per_game) * 100,
+) / 100;
+golden.wilson_target_for_ko_metrics._doc =
+  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. V7 records the strategicAutoDraft observed half-widths under the post-V6 Career-channel lambda refit.";
+golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
+  ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
+  shootout_pct: Number((100 * strategic.wilson_half_widths_around_observed.shootout_pct).toFixed(2)),
+};
+
 writeFileSync(GOLDEN_PATH, JSON.stringify(golden, null, 2) + "\n", "utf-8");
-console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands + gate params untouched)`);
+console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands re-derived, engine_version preserved for V8)`);

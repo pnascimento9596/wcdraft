@@ -75,28 +75,22 @@ const TEAMS = [...SCENARIO_2026_BUNDLE.teams].sort((a, b) =>
 // mean_goals 2.54 and KO→ET 33% — lives in calibration.ts:LAMBDA_DISP and
 // SIM_CALIBRATION.md.)
 //
-// MV2-11b REFIT (merit-v2 stature-dominant channels): the DF/GK stature
-// lift compressed (attack - defResist) and collapsed goal volume (see
-// docs/investigations/mv2-11a-sim-measurement-2026-06-09.md). Grids are
-// re-centered on the COMMITTED E-3a tuple so the descent starts from the
-// shipped engine and climbs back onto the norms under the new channel
-// distribution. BASE extends UP (primary goal-volume lever now that the
-// mean channel edge shrank); SPREAD explores around 6.5 (margin>=4
-// collapsed to 3.63% — watch the D4 elite-ceiling / dominance bands, a
-// hard constraint checked at the winner); GROUP_OUTER_PROB / GROUP_A
-// join the schedule (hand-tuned in E-3a, now load-bearing for the
-// margin>=4 vs group_draw trade and fit jointly).
+// merit-v3 V7 REFIT (post-V6 Career channels): the display/channel
+// distribution moved again, and the seed tuple no longer lands inside the
+// symmetric realism bands. Start from the committed pre-V7 tuple, then
+// extend grids whenever a fitted parameter touches an edge. GAMMA_MID is
+// deliberately extended upward first because 0.60 was the prior edge.
 const CONSTANT_GRIDS = [
   { name: "BASE",             bucket: "LAMBDA",      values: [0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20] },
   { name: "SPREAD",           bucket: "LAMBDA",      values: [5.50, 6.00, 6.50, 7.00, 7.50, 8.00] },
-  { name: "MIN",              bucket: "LAMBDA",      values: [0.30, 0.40, 0.50, 0.60] },
+  { name: "MIN",              bucket: "LAMBDA",      values: [0.30, 0.40, 0.50, 0.60, 0.70, 0.80] },
   { name: "MAX",              bucket: "LAMBDA",      values: [3.10, 3.40, 3.70] },
   { name: "W_DEF",            bucket: "LAMBDA",      values: [0.60, 0.65, 0.70, 0.75] },
-  { name: "GAMMA_MID",        bucket: "LAMBDA",      values: [0.40, 0.50, 0.60] },
+  { name: "GAMMA_MID",        bucket: "LAMBDA",      values: [0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00] },
   { name: "KO_LAMBDA_FACTOR", bucket: "LAMBDA",      values: [0.78, 0.82, 0.85, 0.88, 0.92] },
   { name: "OUTER_PROB",       bucket: "LAMBDA_DISP", values: [0.12, 0.16, 0.20, 0.24] },
   { name: "A",                bucket: "LAMBDA_DISP", values: [0.55, 0.65, 0.75, 0.85] },
-  { name: "GROUP_OUTER_PROB", bucket: "LAMBDA_DISP", values: [0.06, 0.10, 0.14, 0.18] },
+  { name: "GROUP_OUTER_PROB", bucket: "LAMBDA_DISP", values: [0.00, 0.02, 0.04, 0.06, 0.10, 0.14, 0.18] },
   { name: "GROUP_A",          bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.60, 0.70] },
 ];
 
@@ -275,7 +269,7 @@ function scoreTuple(tuple) {
 
 function describeTuple(t) {
   const L = t.LAMBDA, C = t.CHANCES, D = t.LAMBDA_DISP;
-  return `SPREAD=${L.SPREAD} BASE=${L.BASE} MIN=${L.MIN} MAX=${L.MAX} W_DEF=${L.W_DEF}/W_GK=${(1 - L.W_DEF).toFixed(2)} γ_mid=${L.GAMMA_MID} ko_f=${L.KO_LAMBDA_FACTOR} n=${C.REGULATION} DISP(p=${D.OUTER_PROB},A=${D.A})`;
+  return `SPREAD=${L.SPREAD} BASE=${L.BASE} MIN=${L.MIN} MAX=${L.MAX} W_DEF=${L.W_DEF}/W_GK=${(1 - L.W_DEF).toFixed(2)} γ_mid=${L.GAMMA_MID} ko_f=${L.KO_LAMBDA_FACTOR} n=${C.REGULATION} DISP(p=${D.OUTER_PROB},A=${D.A},group_p=${D.GROUP_OUTER_PROB},group_A=${D.GROUP_A})`;
 }
 
 function clone(t) { return { LAMBDA: { ...t.LAMBDA }, CHANCES: { ...t.CHANCES }, LAMBDA_DISP: { ...t.LAMBDA_DISP } }; }
@@ -338,3 +332,5 @@ console.log(`[FIT WINNER]   CHANCES.REGULATION= ${best.CHANCES.REGULATION}`);
 console.log(`[FIT WINNER]   CHANCES.EXTRA_TIME= ${Math.max(1, Math.round((best.CHANCES.REGULATION * 30) / 90))}`);
 console.log(`[FIT WINNER]   LAMBDA_DISP.OUTER_PROB= ${best.LAMBDA_DISP.OUTER_PROB}`);
 console.log(`[FIT WINNER]   LAMBDA_DISP.A         = ${best.LAMBDA_DISP.A}`);
+console.log(`[FIT WINNER]   LAMBDA_DISP.GROUP_OUTER_PROB= ${best.LAMBDA_DISP.GROUP_OUTER_PROB}`);
+console.log(`[FIT WINNER]   LAMBDA_DISP.GROUP_A         = ${best.LAMBDA_DISP.GROUP_A}`);
