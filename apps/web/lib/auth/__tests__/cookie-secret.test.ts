@@ -82,7 +82,9 @@ describe("jsonError — SECRET_MISCONFIGURED body scrub (q-008)", () => {
         }
       })();
       const res = jsonError(err);
-      expect(res.status).toBe(500);
+      // accounts-activation — misconfigured env is an honest 503 (substrate
+      // unavailable), never a 500.
+      expect(res.status).toBe(503);
       const body = (await res.json()) as { error: string; message: string };
       expect(body.error).toBe("SECRET_MISCONFIGURED");
       expect(body.message).toBe("Server configuration error.");
