@@ -22,9 +22,11 @@ export type AuthErrorCode =
   // dependencies built, never a 500. GET /api/auth/session does NOT throw
   // this — it returns 200 {session:null} so the AuthProvider stays quiet.
   | "AUTH_DISABLED"
-  // q-001 (U3 carryover c) — server misconfiguration: a live route saw a
-  // session cookie but AUTH_COOKIE_SECRET is unset/weak. Typed instead of a
-  // plain `Error` so handlers translate it uniformly; status stays 500.
+  // q-001 (U3 carryover c) — server misconfiguration: a route needs server
+  // env (AUTH_COOKIE_SECRET, DATABASE_URL) that is unset/weak. Typed instead
+  // of a plain `Error` so handlers translate it uniformly. Status is 503 —
+  // the session substrate is honestly UNAVAILABLE in this deploy, not
+  // crashing: never a 500 while env is simply absent (ship-dark posture).
   | "SECRET_MISCONFIGURED";
 
 export class AuthError extends Error {
@@ -58,8 +60,7 @@ function statusFor(code: AuthErrorCode): number {
     case "EMAIL_INVALID":
       return 400;
     case "AUTH_DISABLED":
-      return 503;
     case "SECRET_MISCONFIGURED":
-      return 500;
+      return 503;
   }
 }
