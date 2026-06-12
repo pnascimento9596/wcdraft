@@ -13,8 +13,9 @@
 > `margin>=4=3.49%`, `KO->ET=38.27%`, `SO=24.40%`; winner landing
 > `goals=2.534`, `draw=25.18%`, `margin>=4=4.96%`, `KO->ET=33.47%`,
 > `SO=21.33%`. Faithfulness remains 11/11; heavy asymmetric realism remains
-> 7/7 after re-locking Wilson/floor shape bands. Runtime `engine_version`
-> intentionally remains `engine-2026.06.09` until V8's single season stamp.
+> 7/7 after re-locking Wilson/floor shape bands. After the draft-config rebase,
+> runtime `engine_version` intentionally remains `engine-2026.06.11` until
+> V8's single season stamp.
 > Evidence: `docs/reports/merit-v3-v7-lambda-refit.md`.
 
 > **MV2-11b (engine-2026.06.09) — λ refit against merit-v2 stature-dominant

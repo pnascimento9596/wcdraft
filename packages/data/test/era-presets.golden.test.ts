@@ -74,25 +74,25 @@ const EXPECTED_CENSUS: Record<EraPresetId, PresetCensus> = {
     players: 12219,
     managers: 501,
     pairs: 537,
-    coarse: { GK: 1547, DF: 3875, MF: 3994, FW: 3317 },
+    coarse: { GK: 1547, DF: 3875, MF: 3995, FW: 3316 },
   },
   post_2000: {
     players: 5757,
     managers: 193,
     pairs: 240,
-    coarse: { GK: 724, DF: 1933, MF: 1979, FW: 1323 },
+    coarse: { GK: 724, DF: 1933, MF: 1980, FW: 1322 },
   },
   post_2010: {
     players: 3549,
     managers: 96,
     pairs: 144,
-    coarse: { GK: 436, DF: 1189, MF: 1204, FW: 835 },
+    coarse: { GK: 436, DF: 1189, MF: 1205, FW: 834 },
   },
   modern: {
     players: 2813,
     managers: 64,
     pairs: 112,
-    coarse: { GK: 340, DF: 945, MF: 928, FW: 680 },
+    coarse: { GK: 340, DF: 945, MF: 929, FW: 679 },
   },
 };
 

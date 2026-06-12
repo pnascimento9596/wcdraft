@@ -85,7 +85,7 @@ for (const policy of ALL_POLICIES) {
 
 const strategic = golden.policies.strategicAutoDraft;
 golden.$schema_doc =
-  "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.09 until V8's single season stamp; the tuple is pending that V8 anchor.";
+  "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.11 after the draft-config rebase until V8's single season stamp; the tuple is pending that V8 anchor.";
 golden.engine_anchor =
   "merit-v3 V7 lambda refit on post-V6 Career channels; runtime engine_version stamp deferred to V8";
 golden.shape_bands._doc =

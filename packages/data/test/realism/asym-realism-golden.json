@@ -1,7 +1,7 @@
 {
-  "$schema_doc": "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.09 until V8's single season stamp; the tuple is pending that V8 anchor.",
+  "$schema_doc": "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.11 after the draft-config rebase until V8's single season stamp; the tuple is pending that V8 anchor.",
   "engine_anchor": "merit-v3 V7 lambda refit on post-V6 Career channels; runtime engine_version stamp deferred to V8",
-  "engine_version": "engine-2026.06.09",
+  "engine_version": "engine-2026.06.11",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
     "N_runs": 2000,

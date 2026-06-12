@@ -9,7 +9,7 @@ Unit: V6 compact regen (`runtime-data-2.0.0`)
 Two temp builds were byte-identical before committing artifacts:
 
 - `draft-pool.compact.json`: `93a05d9ecb56f26b8aa186355abf7bf32180f8eb6392a4f4a231e02f60da1821`
-- `manifest.json`: `ef582bb594c70b1df8d5dd19e205856f1fa6f27fe6df1b9163c32de954e71d58`
+- `manifest.json`: `aed8c02e902ccaa701e75ebf783cf3af8bb83e7559d34a0ec6f65e06816b32fd`
 - `scenario-2026.compact.json`: `238e56a88f0ac2c9052baaa638164ffc733bf29e26f793d37f437e138c320098`
 
 Runtime anchors:
@@ -17,7 +17,7 @@ Runtime anchors:
 - `schema_version`: `runtime-data-2.0.0`
 - `rating_version_historical`: `wc-perf-5.0.0`
 - `rating_version_projected`: `proj-career-4.0.0`
-- `engine_version`: `engine-2026.06.09` (unchanged; V8 owns the engine stamp)
+- `engine_version`: `engine-2026.06.11` (draft-config stamp after rebase; V8 owns the next engine stamp)
 
 Manifest counts:
 

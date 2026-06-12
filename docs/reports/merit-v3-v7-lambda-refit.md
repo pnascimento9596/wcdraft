@@ -2,7 +2,7 @@
 
 Date: 2026-06-12  
 Branch: `merit-v3-v7-lambda` off post-V6 `merit-v3` (`b416199`)  
-Scope: lambda constants, fitter grid/logging, realism/sim goldens, SIM calibration docs. The public `engine_version` stamp remains `engine-2026.06.09`; V8 owns the single season stamp.
+Scope: lambda constants, fitter grid/logging, realism/sim goldens, SIM calibration docs. After the draft-config rebase, the public `engine_version` stamp remains `engine-2026.06.11`; V8 owns the next single season stamp.
 
 ## Fitter
 
@@ -89,9 +89,10 @@ injury_cascade: score=138 champion=true
 group_elimination: score=-9 champion=false
 ```
 
-The leaderboard validation golden also moved by one deterministic event under the
-new tuple: hidden fixture `Offsides.raw` `3 -> 2`; season key and verified score
-remain unchanged (`engine-2026.06.09_..._69eb7e4a`, hidden score `-25`).
+After the draft-config rebase, the leaderboard validation golden keeps the V6
+verified scores and carries the reconciled pre-V8 season key:
+`engine-2026.06.11_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_c35292b1`;
+hidden score remains `-25`.
 Regenerated with:
 
 ```sh
@@ -163,4 +164,4 @@ Computed from `packages/data/src/generated/draft-pool.compact.json`, `n=12,219` 
 
 ## Anchor Policy
 
-V7 intentionally does not bump `engine_version`. The committed asymmetric golden header says the runtime manifest remains `engine-2026.06.09` until V8, and the new tuple is pending the V8 season stamp. Runtime manifest, leaderboard season key, run-token skew fixtures, and public version anchors are V8 work.
+V7 intentionally does not bump `engine_version`. After rebasing on the draft-config season merge, the committed asymmetric golden header says the runtime manifest remains `engine-2026.06.11` until V8, and the new tuple is pending the V8 season stamp. Runtime manifest, leaderboard season key, run-token skew fixtures, and public version anchors are V8 work.

@@ -1,6 +1,6 @@
 {
   "_comment": "DC-2 era-preset golden — one deterministic autoDraft per preset from one seed. Regen: pnpm --filter @wcdraft/data gen:era-golden",
-  "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
+  "rating_version": "wc-perf-5.0.0+proj-career-4.0.0",
   "engine_version": "engine-2026.06.11",
   "dataset_version": "2026-06-04",
   "parent_seed": "wcdraft:era-presets-golden:v1:1",
@@ -34,7 +34,7 @@
           "nation_id": "T-34",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0301:2026",
+          "picked_card_id": "P-W26-0288:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -115,7 +115,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-05164:2026",
+          "picked_card_id": "P-02305:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
@@ -239,7 +239,7 @@
           "nation_id": "T-39",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0339:2026",
+          "picked_card_id": "P-W26-0326:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -354,7 +354,7 @@
           "nation_id": "T-64",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0585:2026",
+          "picked_card_id": "P-W26-0571:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -496,7 +496,7 @@
           "nation_id": "T-55",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0519:2026",
+          "picked_card_id": "P-W26-0506:2026",
           "assigned_slot_id": "4-3-3.GK"
         },
         {
@@ -514,7 +514,7 @@
           "nation_id": "T-73",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-31301:2026",
+          "picked_card_id": "P-24897:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -559,7 +559,7 @@
           "nation_id": "T-70",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0624:2026",
+          "picked_card_id": "P-W26-0610:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -568,7 +568,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-05164:2026",
+          "picked_card_id": "P-02305:2026",
           "assigned_slot_id": "4-3-3.RCM"
         },
         {
@@ -586,7 +586,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-02305:2022",
+          "picked_card_id": "P-05164:2022",
           "assigned_slot_id": "4-3-3.ST"
         },
         {
@@ -595,7 +595,7 @@
           "nation_id": "T-64",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0585:2026",
+          "picked_card_id": "P-W26-0571:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
