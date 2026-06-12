@@ -50,6 +50,13 @@ than hidden regressions.
   draft-sampling/entitlements; any such need is dropped and ledgered.
 - Post-season backlog still includes the full archive re-research wave for unsung-role
   and pre-1967 legend-coherence gaps; this was deliberately ledgered out of merit-v3.
+- `ws-ux/mobile-content` (Yellow) shipped the draft-screen mobile horizontal-overflow
+  fix (`.candList` collapsible grid track — see
+  `docs/investigations/draft-mobile-overflow-2026-06-12.md`) and the as-shipped
+  how-to-play rewrite (scaffold removed). Display/content only; goldens untouched.
+  The Current-basis enablement (sim wiring, in-draft visibility, disclosure
+  default-open, basis copy + the MV2-12b/selected-basis stale-language sweep) is the
+  paired RED lane `ui/ux-basis-wave`, held for fresh-session review + pinned approval.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -79,7 +86,7 @@ than hidden regressions.
 | @wcdraft/data `test:golden:data`                        | 31 passed                                                                                             |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                                                                                             |
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
-| @wcdraft/web `test`                                     | 603 passed, 1 skipped (604)                                                                           |
+| @wcdraft/web `test`                                     | 625 passed, 1 skipped (626) (ws-ux/mobile-content: +3 draft-overflow contract tests)                  |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |
 | etl V1 focused merit suite                              | 42 passed                                                                                             |
