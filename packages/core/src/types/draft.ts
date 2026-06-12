@@ -54,6 +54,7 @@
 import type { CardId } from "./identity.js";
 import type { ManagerCardId } from "./manager.js";
 import type { SlotPosition } from "./formation.js";
+import type { DraftFlow, EraPresetId, RatingBasis } from "./draft-config.js";
 
 /**
  * The two kinds of entity a user may take on a single spin. Discriminator for
@@ -172,10 +173,30 @@ export interface Spin {
    */
   picked_manager_card_id: ManagerCardId | null;
   /**
-   * Lifecycle: 'pending' (not yet picked) → 'picked' (confirmed, IMMUTABLE).
-   * There is no 'unpicked' transition — append-only.
+   * DC-3 position-first — the target the user COMMITTED before this spin's
+   * squad reveal: a SquadSlot.slot_id, the literal `"manager"`, or `null`.
+   *
+   *   - squad_first: ALWAYS null (the slot is chosen after the reveal and
+   *     recorded in `assigned_slot_id` only — byte-compatible with pre-DC-3
+   *     drafts modulo the field itself).
+   *   - position_first: null only while `status === 'awaiting_slot'`; set
+   *     and IMMUTABLE from the moment `selectDraftTarget` rolls the squad.
+   *     A picked player spin's `assigned_slot_id` MUST equal it; a picked
+   *     manager spin's target MUST be `"manager"`.
    */
-  status: "pending" | "picked";
+  target_slot_id: string | null;
+  /**
+   * Lifecycle:
+   *   squad_first:    'pending' → 'picked' (unchanged, append-only).
+   *   position_first: 'awaiting_slot' → 'pending' → 'picked' (DC-3).
+   *
+   * 'awaiting_slot' is a PLACEHOLDER: the spin's (T, N) draw has NOT been
+   * materialized (the commitment boundary is real — persisted state carries
+   * no squad data the user hasn't earned by committing a target). Sentinel
+   * shape: tournament_id 0, nation_id "", rare false, draw_probability 0,
+   * empty candidate/exclusion lists, all pick fields null. Schema enforces.
+   */
+  status: "awaiting_slot" | "pending" | "picked";
 }
 
 /**
@@ -348,4 +369,23 @@ export interface DraftState {
    * RunResult.
    */
   engine_version: string;
+  /**
+   * DC-1 config axes (plan §A/§G) — stored EXPLICITLY on the persisted draft
+   * so token encode / replay never infer config from URL state. Defaults
+   * (`squad_first` / `career` / `all_time`) are byte-for-byte today's shipped
+   * behavior. LOCKED at draft creation, immutable thereafter.
+   */
+  draft_flow: DraftFlow;
+  /**
+   * Rating basis the run's ratings/sim channels are drawn from. `career` is
+   * the only constructible value until the MV2-12b basis season; the field
+   * exists now so the token schema never needs a second evolution.
+   */
+  rating_basis: RatingBasis;
+  /**
+   * Era preset bounding the spin pool's tournament years. The catalog the
+   * draft samples from MUST be the matching era-filtered catalog
+   * (`createDraft` cross-checks against the catalog's era stamp).
+   */
+  era_preset: EraPresetId;
 }

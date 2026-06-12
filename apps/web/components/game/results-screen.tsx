@@ -21,6 +21,7 @@ import {
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import {
   decodeRunToken,
+  isNewerRunTokenVersion,
   RunTokenError,
   versionsAgree,
   virtualRecordFromToken,
@@ -127,7 +128,9 @@ export function ResultsScreen({
         if (decoded === null) {
           setMode({
             kind: "missing",
-            reason: "The shared link is malformed or truncated — ask the sender for a fresh link.",
+            reason: isNewerRunTokenVersion(parsed.token)
+              ? "This link was made on a newer version of the game than this page is running. Reload the page; if that doesn't help, the new version hasn't reached you yet."
+              : "The shared link is malformed or truncated — ask the sender for a fresh link.",
             runId: null,
           });
           return;
@@ -360,7 +363,7 @@ function ResultsBody({
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Hidden-mode runs blind every rating signal through draft + review;
           the sim has now run, so the full blind set reveals here. This also
-          covers SHARED hidden runs — a `?run=<t1.…>` replay reconstructs the
+          covers SHARED hidden runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
           Classic runs render nothing extra. */}
       {record.draft.mode === "hidden" ? (

@@ -84,6 +84,13 @@ import type { ManagerCardId } from "./types/manager.js";
 import type { SlotPosition } from "./types/formation.js";
 import type { Position } from "./types/primitives.js";
 import type { DraftState, Spin, SquadSlot, SquadValidation } from "./types/draft.js";
+import {
+  DEFAULT_DRAFT_FLOW,
+  DEFAULT_ERA_PRESET,
+  DEFAULT_RATING_BASIS,
+  ERA_PRESETS,
+} from "./types/draft-config.js";
+import type { DraftFlow, EraPreset, EraPresetId, RatingBasis } from "./types/draft-config.js";
 
 // ─── CANDIDATE INPUT VIEWS ───────────────────────────────────────────────────
 
@@ -144,6 +151,17 @@ export interface CreateDraftParams {
   dataset_version: string;
   rating_version: string;
   engine_version: string;
+  /**
+   * DC-1 config axes. Omitted fields default to today's shipped behavior
+   * (`squad_first` / `career` / `all_time`). Non-default values are gated on
+   * their implementation units: `position_first` (DC-3), era-filtered
+   * catalogs (DC-2), `current` basis (MV2-12b season) — `createDraft` throws
+   * honestly on a value whose semantics this build does not implement, it
+   * never records config it did not enforce.
+   */
+  draft_flow?: DraftFlow;
+  rating_basis?: RatingBasis;
+  era_preset?: EraPresetId;
 }
 
 // ─── ERA WEIGHTING CONSTANTS (ENGINE-V2 E-1) ─────────────────────────────────
@@ -228,6 +246,18 @@ export interface DraftCatalog {
   readonly cumulativeWeights: readonly number[];
   /** True iff at least one entry has a non-null `coach`. */
   readonly hasAnyCoach: boolean;
+  /**
+   * DC-2 — the era preset this catalog was built under. `createDraft`
+   * cross-checks `params.era_preset` against this stamp so a draft can never
+   * record a preset its catalog did not enforce.
+   */
+  readonly era: EraPreset;
+  /**
+   * DC-2 — true iff the configured pool carries non-zero rare (pre-1998)
+   * mass. Drives honest era copy in the UI: an all-modern preset has no
+   * "rare 10%" class and must not pretend otherwise.
+   */
+  readonly hasRareEra: boolean;
 }
 
 const SPIN_COUNT = 17;
@@ -250,6 +280,37 @@ function pairKey(tournament_id: number, nation_id: string): string {
 }
 
 /**
+ * DC-2 — restrict a dataset to the tournaments inside an era preset's year
+ * bounds (inclusive). Pure and deterministic: players, managers, and
+ * tournament metadata outside the window are dropped together; everything
+ * inside passes through BY REFERENCE in original order (so an `all_time`
+ * filter over real data is an identity in content terms).
+ *
+ * Year resolution uses the dataset's own tournament metadata; a player or
+ * manager card referencing a tournament with NO metadata is a hard failure
+ * downstream in `buildDraftCatalog` (unchanged honest-mismatch behavior) —
+ * this function drops nothing it cannot date, it keeps the card and lets the
+ * catalog builder surface the metadata gap loudly.
+ */
+export function filterDraftDataset(dataset: DraftDataset, era_preset: EraPresetId): DraftDataset {
+  const preset = ERA_PRESETS[era_preset];
+  const inBounds = new Set<number>();
+  const tournaments = dataset.tournaments.filter((t) => {
+    const keep = t.year >= preset.min_year && t.year <= preset.max_year;
+    if (keep) inBounds.add(t.tournament_id);
+    return keep;
+  });
+  const known = new Set(dataset.tournaments.map((t) => t.tournament_id));
+  const players = dataset.players.filter(
+    (c) => inBounds.has(c.tournament_id) || !known.has(c.tournament_id),
+  );
+  const managers = dataset.managers.filter(
+    (m) => inBounds.has(m.tournament_id) || !known.has(m.tournament_id),
+  );
+  return { players, managers, tournaments };
+}
+
+/**
  * Index a dataset into the canonical draw catalog. Players are grouped by
  * (tournament, nation) and each roster is canonically sorted by `card_id`
  * BEFORE any draw. Coaches attach to their matching (tournament, nation) bucket;
@@ -259,8 +320,20 @@ function pairKey(tournament_id: number, nation_id: string): string {
  * appears in `players` — used to attach the `year`/`rare` flag to each entry
  * and to compute the era-weighted `base_draw_weight`. Missing or conflicting
  * tournament metadata is a hard failure here (not a silent zero/default).
+ *
+ * DC-2: an optional era preset bounds the pool. The dataset is filtered to
+ * the preset's year window FIRST, then era weights are recomputed inside the
+ * filtered catalog by the unchanged ENGINE-V2 E-1 algorithm — a window with
+ * no rare years collapses to 100% modern mass (and vice versa) via the
+ * existing single-era branch, so an all-modern preset has NO phantom rare
+ * class. The default (`all_time`) spans every shipped year, making the
+ * filter an identity and the catalog byte-equal to the unfiltered build.
  */
-export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
+export function buildDraftCatalog(
+  dataset: DraftDataset,
+  era_preset: EraPresetId = DEFAULT_ERA_PRESET,
+): DraftCatalog {
+  dataset = filterDraftDataset(dataset, era_preset);
   // Tournament-year index — honest mismatch instead of silent defaults.
   const yearByTournament = new Map<number, number>();
   for (const t of dataset.tournaments) {
@@ -417,7 +490,9 @@ export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
 
   const pairs = canonicalSortBy([...byPair.values()], (e) => [e.tournament_id, e.nation_id]);
   if (pairs.length === 0) {
-    throw new RangeError("buildDraftCatalog: dataset has no (tournament, nation) player buckets");
+    throw new RangeError(
+      `buildDraftCatalog: dataset has no (tournament, nation) player buckets inside era preset "${era_preset}"`,
+    );
   }
   const cumulativeWeights: number[] = [];
   let running = 0;
@@ -435,7 +510,14 @@ export function buildDraftCatalog(dataset: DraftDataset): DraftCatalog {
       "buildDraftCatalog: total base_draw_weight is zero — every pair's tournament year resolved to zero mass",
     );
   }
-  return { pairs, byPair, cumulativeWeights, hasAnyCoach };
+  return {
+    pairs,
+    byPair,
+    cumulativeWeights,
+    hasAnyCoach,
+    era: ERA_PRESETS[era_preset],
+    hasRareEra: hasRare,
+  };
 }
 
 // ─── IMMUTABILITY HELPERS (lock-on-pick) ─────────────────────────────────────
@@ -570,15 +652,26 @@ function rollPendingSpinFromEntry(
   priorPlayerPicks: readonly string[],
   managerPicked: boolean,
   draw_probability: number,
+  /**
+   * DC-3 — the committed position-first target, or null under squad_first.
+   * Exposure follows the target: a `"manager"` target offers ONLY the coach;
+   * a slot target offers ONLY players (the sampling itself is target-blind —
+   * same (T, N) draw either way; presentation/assignment differ).
+   */
+  target_slot_id: string | null = null,
 ): Spin {
   const excluded = new Set(priorPlayerPicks);
   const rolled_card_ids: CardId[] = [];
-  for (const card of entry.roster) {
-    if (excluded.has(card.player_id)) continue;
-    rolled_card_ids.push(buildCardId(card.player_id, card.tournament_id));
+  if (target_slot_id !== "manager") {
+    for (const card of entry.roster) {
+      if (excluded.has(card.player_id)) continue;
+      rolled_card_ids.push(buildCardId(card.player_id, card.tournament_id));
+    }
   }
+  const offerCoach =
+    target_slot_id === null ? !managerPicked : target_slot_id === "manager";
   const rolled_manager_card_id: ManagerCardId | null =
-    !managerPicked && entry.coach
+    offerCoach && entry.coach
       ? buildManagerCardId(entry.coach.manager_id, entry.coach.tournament_id)
       : null;
   return {
@@ -597,8 +690,43 @@ function rollPendingSpinFromEntry(
     picked_player_id: null,
     assigned_slot_id: null,
     picked_manager_card_id: null,
+    target_slot_id,
     status: "pending",
   };
+}
+
+/** DC-3 — unmaterialized position-first placeholder (no draw happened). */
+function buildAwaitingSpin(index: number): Spin {
+  return {
+    index,
+    tournament_id: 0,
+    nation_id: "",
+    rare: false,
+    draw_probability: 0,
+    rolled_card_ids: [],
+    excluded_player_ids: [],
+    rolled_manager_card_id: null,
+    picked_kind: "player",
+    picked_card_id: null,
+    picked_player_id: null,
+    assigned_slot_id: null,
+    picked_manager_card_id: null,
+    target_slot_id: null,
+    status: "awaiting_slot",
+  };
+}
+
+/**
+ * DC-3 — the i-th spin's RNG draw value. Position-first materializes draws
+ * lazily, but the value for index `i` is IDENTICAL to what squad_first would
+ * consume at that index (one `rng.next()` per index from the `"draft"`
+ * substream) — same seed, same per-index entropy under either flow.
+ */
+function drawValueForIndex(draft_seed: string, index: number): number {
+  const rng = createRng(draft_seed);
+  let u = 0;
+  for (let i = 0; i <= index; i++) u = rng.next();
+  return u;
 }
 
 /**
@@ -765,6 +893,9 @@ function finalize(
     dataset_version: prev.dataset_version,
     rating_version: prev.rating_version,
     engine_version: prev.engine_version,
+    draft_flow: prev.draft_flow,
+    rating_basis: prev.rating_basis,
+    era_preset: prev.era_preset,
   };
   const parsed = DraftStateSchema.safeParse(next);
   if (!parsed.success) {
@@ -788,6 +919,24 @@ function finalize(
  * All spins start PENDING; spin candidates reflect zero prior picks.
  */
 export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): DraftState {
+  // ── DC-1 config gates — never record config this build does not enforce ──
+  const draft_flow = params.draft_flow ?? DEFAULT_DRAFT_FLOW;
+  const rating_basis = params.rating_basis ?? DEFAULT_RATING_BASIS;
+  const era_preset = params.era_preset ?? DEFAULT_ERA_PRESET;
+  if (rating_basis !== "career") {
+    // Gated on the MV2-12b dual-basis season — no fake fallback to career.
+    throw new RangeError(
+      `createDraft: rating_basis "${rating_basis}" is not available in this build (gated on MV2-12b)`,
+    );
+  }
+  if (era_preset !== catalog.era.id) {
+    // DC-2 coherence: a draft must never record a preset its catalog did not
+    // enforce — the caller builds the catalog with the same preset it passes.
+    throw new RangeError(
+      `createDraft: era_preset "${era_preset}" does not match the catalog's era stamp "${catalog.era.id}"`,
+    );
+  }
+
   // Honest fail-fast: a complete draft needs exactly one manager. If the
   // catalog has NO coach-bearing pair, the draft can never be completed —
   // surface it now rather than strand the user mid-draft.
@@ -798,15 +947,22 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
   }
 
   const draft_seed = deriveSubseed(params.parent_seed, "draft");
-  const spins = buildInitialSpins(catalog, draft_seed);
+  // DC-3: position_first materializes NOTHING at creation — all 17 spins are
+  // placeholders until a target is committed (the commitment boundary is in
+  // the persisted state, not just the UI). squad_first is unchanged.
+  const spins =
+    draft_flow === "position_first"
+      ? Array.from({ length: SPIN_COUNT }, (_, i) => buildAwaitingSpin(i))
+      : buildInitialSpins(catalog, draft_seed);
   const squad = buildSquad(params.formation_id);
 
-  // ENGINE-V2 E-1: with-replacement sampling can produce 17 draws where NO
-  // pair offers a coach (e.g. era weights happen to land on coach-less pairs).
-  // Without bumping engine_version or adding a coach-forcing pass, surface
-  // this as an honest creation failure (rare with a real-data catalog where
-  // most pairs carry a coach; easy to hit in degenerate fixtures).
-  if (!spins.some((s) => s.rolled_manager_card_id !== null)) {
+  // ENGINE-V2 E-1 (squad_first only — position_first has no draws yet):
+  // with-replacement sampling can produce 17 draws where NO pair offers a
+  // coach (e.g. era weights happen to land on coach-less pairs). Without
+  // bumping engine_version or adding a coach-forcing pass, surface this as
+  // an honest creation failure (rare with a real-data catalog where most
+  // pairs carry a coach; easy to hit in degenerate fixtures).
+  if (draft_flow === "squad_first" && !spins.some((s) => s.rolled_manager_card_id !== null)) {
     throw new RangeError(
       "createDraft: none of the 17 drawn (tournament, nation) pairs offers a coach; a complete draft requires exactly one manager",
     );
@@ -826,6 +982,9 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
     dataset_version: params.dataset_version,
     rating_version: params.rating_version,
     engine_version: params.engine_version,
+    draft_flow,
+    rating_basis,
+    era_preset,
   };
   const parsed = DraftStateSchema.safeParse(draft);
   if (!parsed.success) {
@@ -838,9 +997,14 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
 
 // ─── PUBLIC: STATE QUERIES ───────────────────────────────────────────────────
 
-/** The active spin = the lowest-index spin still `pending`, or null if complete. */
+/**
+ * The active spin = the lowest-index spin not yet `picked`, or null if
+ * complete. Under squad_first this is always a `pending` spin (unchanged);
+ * under position_first it is `awaiting_slot` (target not committed yet) or
+ * `pending` (squad rolled, pick outstanding).
+ */
 export function activeSpin(state: DraftState): Spin | null {
-  return state.spins.find((s) => s.status === "pending") ?? null;
+  return state.spins.find((s) => s.status !== "picked") ?? null;
 }
 
 /** True once every spin is resolved (all 17 picked). */
@@ -853,6 +1017,124 @@ function firstVacantSlotId(state: DraftState): string | null {
   // first vacant slot fills starters before bench — the hard 'ready' gate
   // (11 starters) is satisfied as early as possible.
   return state.squad.find((s) => s.card_id === null)?.slot_id ?? null;
+}
+
+// ─── PUBLIC: DC-3 POSITION-FIRST TARGET SELECTION ────────────────────────────
+
+/**
+ * DC-3 — thrown by `selectDraftTarget` when the committed target yields no
+ * candidate in the drawn squad. The spin is NOT consumed (state unchanged,
+ * no hidden seed advance); the UI shows a blocking honest state and returns
+ * the user to target selection.
+ */
+export class DraftTargetDeadEndError extends RangeError {
+  constructor(message: string) {
+    super(message);
+    this.name = "DraftTargetDeadEndError";
+  }
+}
+
+/**
+ * DC-3 — commit a position-first TARGET for the active spin, then consume
+ * the spin's normal RNG draw and roll the squad.
+ *
+ *   - Valid only on a `position_first` draft whose active spin is still
+ *     `awaiting_slot` (the target is immutable once the squad rolls).
+ *   - `target` is a vacant SquadSlot.slot_id, or `"manager"` while no
+ *     manager has been drafted.
+ *   - The draw is the SAME era-weighted (T, N) draw squad_first would make
+ *     at this index (the target never changes sampling); only candidate
+ *     EXPOSURE follows the target — a slot target offers that squad's
+ *     players, the manager target offers only that squad's coach.
+ *   - STRAND GUARD: when no manager is drafted and this is the LAST
+ *     unresolved spin, only the `"manager"` target is selectable.
+ *   - DEAD END: if the drawn squad has no candidate for the target (no
+ *     coach on a manager target; every player already picked on a slot
+ *     target), throws `DraftTargetDeadEndError` WITHOUT consuming the spin.
+ */
+export function selectDraftTarget(
+  catalog: DraftCatalog,
+  state: DraftState,
+  target: string,
+): DraftState {
+  if (state.draft_flow !== "position_first") {
+    throw new RangeError("selectDraftTarget: draft is not position_first");
+  }
+  if (state.era_preset !== catalog.era.id) {
+    throw new RangeError(
+      `selectDraftTarget: catalog era stamp "${catalog.era.id}" does not match the draft's era_preset "${state.era_preset}"`,
+    );
+  }
+  const active = activeSpin(state);
+  if (!active) {
+    throw new RangeError("selectDraftTarget: the draft has no unresolved spin");
+  }
+  if (active.status !== "awaiting_slot") {
+    throw new RangeError(
+      `selectDraftTarget: spin ${active.index} already has a committed target (${active.target_slot_id}) — targets are immutable once the squad rolls`,
+    );
+  }
+
+  const unresolvedAfter = state.spins.filter(
+    (s) => s.status !== "picked" && s.index > active.index,
+  ).length;
+
+  if (target === "manager") {
+    if (state.manager_card_id !== null) {
+      throw new RangeError(
+        "selectDraftTarget: a manager has already been drafted (≤1 manager across the 17 spins)",
+      );
+    }
+  } else {
+    const slot = state.squad.find((s) => s.slot_id === target);
+    if (!slot) {
+      throw new RangeError(`selectDraftTarget: unknown slot_id ${target}`);
+    }
+    if (slot.card_id !== null) {
+      throw new RangeError(
+        `selectDraftTarget: slot ${target} is already occupied (lock-on-pick: an assigned slot is immutable)`,
+      );
+    }
+    if (state.manager_card_id === null && unresolvedAfter === 0) {
+      throw new RangeError(
+        "selectDraftTarget: this is the final spin and no manager has been drafted — the manager target is the only legal choice",
+      );
+    }
+  }
+
+  // The draw: identical per-index entropy to squad_first, current context.
+  const u = drawValueForIndex(state.draft_seed, active.index);
+  const priorPlayerPicks = dedupedFromSpins(state.spins);
+  const excluded = new Set(priorPlayerPicks);
+  const managerPicked = state.manager_card_id !== null;
+  const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, managerPicked);
+
+  // Honest dead-end checks BEFORE committing anything.
+  if (target === "manager") {
+    if (entry.coach === null) {
+      throw new DraftTargetDeadEndError(
+        `selectDraftTarget: the drawn squad (tournament ${entry.tournament_id}, nation ${entry.nation_id}) has no coach — no candidate for the manager target in this configured pool; the spin was not consumed`,
+      );
+    }
+  } else {
+    const anyPlayerLeft = entry.roster.some((c) => !excluded.has(c.player_id));
+    if (!anyPlayerLeft) {
+      throw new DraftTargetDeadEndError(
+        `selectDraftTarget: every player in the drawn squad (tournament ${entry.tournament_id}, nation ${entry.nation_id}) is already drafted — no candidate for slot ${target}; the spin was not consumed`,
+      );
+    }
+  }
+
+  const rolled = rollPendingSpinFromEntry(
+    entry,
+    active.index,
+    priorPlayerPicks,
+    managerPicked,
+    draw_probability,
+    target,
+  );
+  const spins = state.spins.map((s) => (s.index === active.index ? rolled : s));
+  return finalize(state, spins, [...state.squad], state.manager_card_id);
 }
 
 // ─── PUBLIC: PICK TRANSITIONS (lock-on-pick) ─────────────────────────────────
@@ -887,6 +1169,25 @@ export function pickPlayer(
   if (!active) {
     throw new RangeError("pickPlayer: the draft has no pending spin (all 17 are resolved)");
   }
+  if (active.status === "awaiting_slot") {
+    throw new RangeError(
+      `pickPlayer: spin ${active.index} has no committed target yet — call selectDraftTarget first (position_first)`,
+    );
+  }
+  const positionFirst = state.draft_flow === "position_first";
+  if (positionFirst) {
+    if (active.target_slot_id === "manager") {
+      throw new RangeError(
+        `pickPlayer: spin ${active.index} is committed to the manager target — only pickManager is legal`,
+      );
+    }
+    if (slot_id !== undefined && slot_id !== active.target_slot_id) {
+      throw new RangeError(
+        `pickPlayer: slot ${slot_id} does not match the committed target ${active.target_slot_id} (position_first fills only its target)`,
+      );
+    }
+    slot_id = active.target_slot_id ?? undefined;
+  }
   if (!active.rolled_card_ids.includes(card_id)) {
     throw new RangeError(
       `pickPlayer: card ${card_id} is not a candidate on spin ${active.index}`,
@@ -907,21 +1208,35 @@ export function pickPlayer(
     throw new RangeError(`pickPlayer: player ${parsed.player_id} is already drafted (global dedup)`);
   }
 
-  // STRAND GUARD: a complete draft needs exactly one manager. If none has been
-  // drafted yet and NO later spin offers a coach, the active spin is the last
-  // chance to take one — committing a player here would leave the draft
-  // unrecoverable (a 17th player with no slot, no coach to draft). Reject the
-  // player pick and force the manager now. (Pending spins after the active one
-  // carry a non-null rolled_manager_card_id iff their drawn (T,N) has a coach,
-  // since no manager is drafted yet.)
+  // STRAND GUARD: a complete draft needs exactly one manager.
+  //   squad_first — if none is drafted yet and NO later spin offers a coach,
+  //   the active spin is the last chance to take one (later pending spins
+  //   carry a non-null rolled_manager_card_id iff their drawn (T,N) has a
+  //   coach, since no manager is drafted yet).
+  //   position_first — later spins are unmaterialized placeholders, so this
+  //   inductive read is impossible; the equivalent forcing lives in
+  //   `selectDraftTarget` (final unresolved spin + no manager → manager
+  //   target only). Defensively reject a player pick that would leave zero
+  //   unresolved spins with no manager drafted.
   if (state.manager_card_id === null) {
-    const laterCoachOffered = state.spins.some(
-      (s) => s.index > active.index && s.rolled_manager_card_id !== null,
-    );
-    if (!laterCoachOffered) {
-      throw new RangeError(
-        `pickPlayer: no manager is drafted and no later spin offers a coach — the manager must be drafted on spin ${active.index} now; a player pick here would strand the draft`,
+    if (positionFirst) {
+      const unresolvedAfter = state.spins.filter(
+        (s) => s.status !== "picked" && s.index > active.index,
+      ).length;
+      if (unresolvedAfter === 0) {
+        throw new RangeError(
+          `pickPlayer: spin ${active.index} is the last unresolved spin and no manager is drafted — a player pick here would strand the draft (selectDraftTarget should have forced the manager target)`,
+        );
+      }
+    } else {
+      const laterCoachOffered = state.spins.some(
+        (s) => s.index > active.index && s.rolled_manager_card_id !== null,
       );
+      if (!laterCoachOffered) {
+        throw new RangeError(
+          `pickPlayer: no manager is drafted and no later spin offers a coach — the manager must be drafted on spin ${active.index} now; a player pick here would strand the draft`,
+        );
+      }
     }
   }
 
@@ -974,7 +1289,10 @@ export function pickPlayer(
     status: "picked",
   });
   const withPick = state.spins.map((s) => (s.index === active.index ? pickedSpin : s));
-  const spins = rebuildSpins(catalog, state.draft_seed, withPick);
+  // squad_first regenerates later PENDING spins (dedup / coach availability /
+  // depletion advance). position_first has nothing to regenerate — later
+  // spins are unmaterialized placeholders until their targets are committed.
+  const spins = positionFirst ? withPick : rebuildSpins(catalog, state.draft_seed, withPick);
 
   return finalize(state, spins, squad, state.manager_card_id);
 }
@@ -991,6 +1309,17 @@ export function pickManager(catalog: DraftCatalog, state: DraftState): DraftStat
   const active = activeSpin(state);
   if (!active) {
     throw new RangeError("pickManager: the draft has no pending spin (all 17 are resolved)");
+  }
+  if (active.status === "awaiting_slot") {
+    throw new RangeError(
+      `pickManager: spin ${active.index} has no committed target yet — call selectDraftTarget first (position_first)`,
+    );
+  }
+  const positionFirst = state.draft_flow === "position_first";
+  if (positionFirst && active.target_slot_id !== "manager") {
+    throw new RangeError(
+      `pickManager: spin ${active.index} is committed to slot ${active.target_slot_id} — only a player pick into that slot is legal`,
+    );
   }
   if (state.manager_card_id !== null) {
     throw new RangeError(
@@ -1011,7 +1340,7 @@ export function pickManager(catalog: DraftCatalog, state: DraftState): DraftStat
     status: "picked",
   });
   const withPick = state.spins.map((s) => (s.index === active.index ? pickedSpin : s));
-  const spins = rebuildSpins(catalog, state.draft_seed, withPick);
+  const spins = positionFirst ? withPick : rebuildSpins(catalog, state.draft_seed, withPick);
   // Squad untouched: the manager never occupies a SquadSlot.
   return finalize(state, spins, state.squad, mgr);
 }
@@ -1033,6 +1362,12 @@ export function pickManager(catalog: DraftCatalog, state: DraftState): DraftStat
  *   or no coach is ever offered (a 17th player has nowhere to go).
  */
 export function stepDraft(catalog: DraftCatalog, state: DraftState): DraftState {
+  if (state.draft_flow !== "squad_first") {
+    // The default policy is squad-first-shaped (pick first, slot second).
+    // Position-first walks are driven explicitly (selectDraftTarget → pick);
+    // tests/harnesses own their own target policies.
+    throw new RangeError("stepDraft: only squad_first drafts use the default autopilot policy");
+  }
   const active = activeSpin(state);
   if (!active) {
     throw new RangeError("stepDraft: the draft is already complete");
@@ -1063,7 +1398,7 @@ export function stepDraft(catalog: DraftCatalog, state: DraftState): DraftState 
  */
 export function autoDraft(input: CreateDraftParams & { dataset: DraftDataset }): DraftState {
   const { dataset, ...params } = input;
-  const catalog = buildDraftCatalog(dataset);
+  const catalog = buildDraftCatalog(dataset, params.era_preset);
   let state = createDraft(catalog, params);
   while (!isDraftComplete(state)) {
     state = stepDraft(catalog, state);

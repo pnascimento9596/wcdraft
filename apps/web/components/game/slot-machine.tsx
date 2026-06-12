@@ -212,7 +212,9 @@ export function SpinStage({
         <div className={`${s.spinTile} ${settled && isRare ? s.spinTileRare : ""}`}>
           <span className={s.spinTileLabel}>{settled && isRare ? "Rare" : "Era"}</span>
           <span className={s.spinTileValue}>
-            {settled ? (isRare ? "Pre-1998" : "Modern") : "—"}
+            {settled
+              ? (model.eraPresetLabel ?? (isRare ? "Pre-1998" : "Modern"))
+              : "—"}
           </span>
         </div>
         <div className={s.spinTile}>

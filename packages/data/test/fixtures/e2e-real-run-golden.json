@@ -56,6 +56,7 @@
         "picked_player_id": null,
         "assigned_slot_id": null,
         "picked_manager_card_id": "M-343:2018",
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -99,6 +100,7 @@
         "picked_player_id": "P-05559",
         "assigned_slot_id": "4-3-3.GK",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -141,6 +143,7 @@
         "picked_player_id": "P-03735",
         "assigned_slot_id": "4-3-3.LB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -187,6 +190,7 @@
         "picked_player_id": "P-09292",
         "assigned_slot_id": "4-3-3.LCB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -230,6 +234,7 @@
         "picked_player_id": "P-03775",
         "assigned_slot_id": "4-3-3.RCB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -275,6 +280,7 @@
         "picked_player_id": "P-05783",
         "assigned_slot_id": "4-3-3.RB",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -321,6 +327,7 @@
         "picked_player_id": "P-00447",
         "assigned_slot_id": "4-3-3.CDM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -367,6 +374,7 @@
         "picked_player_id": "P-07639",
         "assigned_slot_id": "4-3-3.LCM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -415,6 +423,7 @@
         "picked_player_id": "P-02465",
         "assigned_slot_id": "4-3-3.RCM",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -464,6 +473,7 @@
         "picked_player_id": "P-04785",
         "assigned_slot_id": "4-3-3.LW",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -517,6 +527,7 @@
         "picked_player_id": "P-00549",
         "assigned_slot_id": "4-3-3.ST",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -567,6 +578,7 @@
         "picked_player_id": "P-02853",
         "assigned_slot_id": "4-3-3.RW",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -621,6 +633,7 @@
         "picked_player_id": "P-33958",
         "assigned_slot_id": "bench.0",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -677,6 +690,7 @@
         "picked_player_id": "P-W26-0172",
         "assigned_slot_id": "bench.1",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -730,6 +744,7 @@
         "picked_player_id": "P-06148",
         "assigned_slot_id": "bench.2",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -785,6 +800,7 @@
         "picked_player_id": "P-03401",
         "assigned_slot_id": "bench.3",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       },
       {
@@ -841,6 +857,7 @@
         "picked_player_id": "P-02273",
         "assigned_slot_id": "bench.4",
         "picked_manager_card_id": null,
+        "target_slot_id": null,
         "status": "picked"
       }
     ],
@@ -1048,7 +1065,10 @@
     ],
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
-    "engine_version": "engine-2026.06.09"
+    "engine_version": "engine-2026.06.11",
+    "draft_flow": "squad_first",
+    "rating_basis": "career",
+    "era_preset": "all_time"
   },
   "scenario": {
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
@@ -1093,7 +1113,7 @@
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-4.2.1+proj-career-3.0.0",
-    "engine_version": "engine-2026.06.09",
+    "engine_version": "engine-2026.06.11",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:29",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",

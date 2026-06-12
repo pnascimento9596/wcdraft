@@ -1891,6 +1891,152 @@ button.benchSlot:not(:disabled):hover {
   font-family: var(--f-mono);
 }
 
+/* ── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
+   Collapsed one-line summary row by default so the formation screen keeps
+   its one-viewport compaction (#78); tapping discloses segmented controls. */
+
+.setupRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--bg-panel);
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.setupRowLabel {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.setupRowValue {
+  color: var(--ink-100);
+}
+
+.setupRowChevron {
+  color: var(--ink-400);
+}
+
+.setupPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--bg-panel);
+}
+
+.setupAxis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.setupAxisLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.setupSeg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.setupSegBtn {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.setupSegBtnActive {
+  border-color: var(--ember-bright);
+  color: var(--ember-bright);
+}
+
+.setupSegBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* DC-3 — position-first target-select stage */
+.targetGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.targetGroupTitle {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.targetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.4rem;
+}
+
+.targetChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--bg-panel);
+  cursor: pointer;
+}
+
+.targetChip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.targetChipPos {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--ember-bright);
+}
+
+.targetChipId {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-400);
+}
+
+.setupAxisNote {
+  margin: 0;
+  font-size: var(--t-xs);
+  color: var(--ink-400);
+}
+
 /* ── Mini-pitch on the formation cards ──────────────────────────────────── */
 
 /* Compact mini-pitch — fixed 56px-wide thumbnail (5/6 aspect, no position

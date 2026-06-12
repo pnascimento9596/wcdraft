@@ -45,9 +45,10 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
-// runtime-data-1.1.0 (MV2-10): `RuntimeRating.legend` became REQUIRED — every
-// compact rating now carries the source-derived legend flag (historical + 2026).
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-1.1.0" as const;
+// runtime-data-1.2.0 (draft-config season): runtime replay now includes the
+// config axes carried by `t2.` tokens plus era-filtered and position-first
+// draft semantics.
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-1.2.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
