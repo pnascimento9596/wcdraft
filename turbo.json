@@ -8,7 +8,14 @@
       "env": [
         "LEADERBOARD_ENABLED",
         "LEADERBOARD_REQUIRE_ACCOUNT",
+        "DATABASE_URL",
+        "AUTH_COOKIE_SECRET",
         "VERCEL_GIT_COMMIT_SHA",
+        "VERCEL_URL",
+        "VERCEL_DEPLOYMENT_ID",
+        "WCDRAFT_DEPLOY_REVISION",
+        "WCDRAFT_SITE_URL",
+        "NEXT_PUBLIC_SITE_URL",
         "RESEND_API_KEY",
         "AUTH_EMAIL_FROM",
         "AUTH_BASE_URL"
@@ -20,7 +27,27 @@
     "lint": {},
     "test": {
       "dependsOn": ["^build"],
-      "env": ["WCDRAFT_REALISM_HEAVY", "WCDRAFT_LEADERBOARD_BENCH"]
+      "env": [
+        "WCDRAFT_REALISM_HEAVY",
+        "WCDRAFT_REALISM_N",
+        "WCDRAFT_REALISM_SEED_PREFIX",
+        "WCDRAFT_REALISM_GATE",
+        "WCDRAFT_CANARY_REGEN",
+        "WCDRAFT_LEADERBOARD_BENCH",
+        "LEADERBOARD_ENABLED",
+        "LEADERBOARD_REQUIRE_ACCOUNT",
+        "AUTH_COOKIE_SECRET",
+        "DATABASE_URL",
+        "RESEND_API_KEY",
+        "AUTH_EMAIL_FROM",
+        "AUTH_BASE_URL",
+        "VERCEL_GIT_COMMIT_SHA",
+        "VERCEL_URL",
+        "VERCEL_DEPLOYMENT_ID",
+        "WCDRAFT_DEPLOY_REVISION",
+        "WCDRAFT_SITE_URL",
+        "NEXT_PUBLIC_SITE_URL"
+      ]
     },
     "test:realism:heavy": {
       "dependsOn": ["^build"],
@@ -43,7 +70,8 @@
       "dependsOn": ["^build"]
     },
     "db:generate": {
-      "cache": false
+      "cache": false,
+      "env": ["DATABASE_URL_UNPOOLED", "DATABASE_URL"]
     },
     "db:migrate": {
       "cache": false,
@@ -60,7 +88,7 @@
     },
     "db:branch:create": {
       "cache": false,
-      "env": ["NEON_API_KEY", "NEON_PROJECT_ID"]
+      "env": ["NEON_API_KEY", "NEON_PROJECT_ID", "GITHUB_RUN_ID", "GITHUB_OUTPUT"]
     },
     "db:branch:delete": {
       "cache": false,

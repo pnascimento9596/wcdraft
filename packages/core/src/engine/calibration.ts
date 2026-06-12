@@ -26,18 +26,15 @@
 //   merge — the constants changed AND the impacted sim goldens (sim /
 //   simulate-match / e2e / group-stage / top-scorer) were re-locked on the
 //   engine-v2 chain, while `engine_version` stayed `engine-2026.06.04`.
-//   The SEASON MERGE now resolves that deferred-bump ledger
-//   (E-2 / E-1b / E-3a / E-3b / E-4) into ONE atomic stamp bump to
-//   `engine-2026.06.08` (pinned by
-//   `packages/data/test/compact-data.integrity.test.ts`). The bump is a
-//   STAMP change only — sim logic is byte-identical, so the pure-sim
-//   goldens (sim / rng / draft) do NOT move; only stamp-carrying payloads
-//   (e2e-real-run, run-record, compact manifest, asym-realism) re-lock.
+//   The engine-v2 season merge resolved that deferred-bump ledger
+//   (E-2 / E-1b / E-3a / E-3b / E-4) into one atomic stamp bump. That bump
+//   was a STAMP change only — sim logic was byte-identical, so the pure-sim
+//   goldens (sim / rng / draft) did NOT move; only stamp-carrying payloads
+//   (e2e-real-run, run-record, compact manifest, asym-realism) re-locked.
 //
-//   merit-v3 V7: λ refit against the post-V6 Career channels —
-//   BASE/SPREAD/MIN/GAMMA_MID moved, sim behavior CHANGED, and the realism
-//   goldens re-lock here. The season's single public engine_version stamp
-//   is intentionally deferred to V8 so the full anchor skew lands once.
+//   merit-v3 V7/V8: λ refit against the post-V6 Career channels moved
+//   BASE/SPREAD/MIN/GAMMA_MID, sim behavior CHANGED, and the realism goldens
+//   re-locked. V8 stamped the shipped season as `engine-2026.06.12`.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical

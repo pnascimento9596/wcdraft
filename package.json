@@ -2,7 +2,7 @@
   "name": "wcdraft",
   "version": "0.0.0",
   "private": true,
-  "description": "World Cup draft simulator monorepo (foundation scaffold).",
+  "description": "World Cup draft simulator monorepo.",
   "packageManager": "pnpm@11.5.1",
   "engines": {
     "node": ">=22",

@@ -2,7 +2,10 @@
 
 **Date:** 2026-06-10
 **Branch:** `ws-plan/draft-config` off `origin/main` at `dbc1f0a`
-**Status:** design only. No implementation, no schema changes, no runtime changes in this PR.
+**Status:** historical design. DC-1 token/config schema, DC-2 era presets,
+DC-3 Position First, and DC-4 setup/badge/copy polish have shipped. The plan
+remains the audit trail for the still-Red selected-basis and leaderboard-policy
+work.
 
 This plan adds pre-draft configuration on top of the existing Classic / Memory
 mode select:
@@ -299,7 +302,13 @@ Memory-mode blind set against new UI:
 
 ## D. Rating Basis x MV2-12
 
-**Decision: the `rating_basis` axis is sequenced after MV2-12b lands.**
+**2026-06-12 update:** merit-v3 has now shipped the dual-basis runtime data
+(`basis_ratings.current`) under `runtime-data-2.0.0`. The original decision
+below still applies to product exposure: `rating_basis: "current"` must remain
+disabled until selected-basis sim inputs, canaries/goldens, and leaderboard
+policy are dispatched and reviewed as Red work. No fake fallback to Career.
+
+**Original decision: the `rating_basis` axis is sequenced after MV2-12b lands.**
 
 This is load-bearing. MV2-12 audits found that the current career-stature path
 and the at-tournament / active-career paths are not cleanly separable enough
@@ -313,7 +322,8 @@ to expose as a product toggle:
 Therefore:
 
 - `Career` / `Current` copy and token schema can be designed now.
-- Runtime exposure of `rb: "current"` is gated on MV2-12b outputs.
+- Runtime exposure of `rb: "current"` is gated on the selected-basis sim and
+  leaderboard-policy work, even though merit-v3 now emits Current rows.
 - No implementation unit may fake Current by reusing today's `overall_basis`
   or by suppressing career badges only.
 
@@ -525,8 +535,9 @@ Pre-draft UX:
   - Draft mode: Squad First / Position First;
   - Rating basis: Career / Current;
   - Era: All-time / Post-2000 / Post-2010 / Modern.
-- Until MV2-12b, `Current` remains disabled with honest copy: "Coming after
-  rating rebuild", not a fake fallback.
+- Until the selected-basis Red lane lands, `Current` remains disabled with
+  honest copy. The data rows exist; the sim/leaderboard product contract does
+  not yet.
 - No free range slider in v1. The measured `2026-only` invalid case proves
   arbitrary ranges need dynamic manager and coverage validation before they can
   be safely offered.
@@ -556,18 +567,18 @@ All items below are **DISPATCH-ONLY**. Red units require fresh-session
 independent review and human approval per `CLAUDE.md`; the docs-only planning
 PR remains Green.
 
-| Unit                       | Tier                | Status                            | Scope                                                                                  | Depends on          |
-| -------------------------- | ------------------- | --------------------------------- | -------------------------------------------------------------------------------------- | ------------------- |
-| DC-0 plan + queue          | Green docs          | Unblocked now                     | This plan, `q-006`, `STATE.md` note                                                    | none                |
-| DC-1 token schema          | Red                 | Unblocked now, integration branch | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures                        | DC-0                |
-| DC-2 era presets           | Red                 | Unblocked now, integration branch | filtered catalog input, preset constants, pool-depth census, era goldens               | DC-1 preferred      |
-| DC-3 position-first core   | Red                 | Unblocked now, integration branch | target-selection state, token `ts` replay, transition goldens                          | DC-1                |
-| DC-4 config UX dark        | Yellow/Red boundary | After DC-1..3                     | formation-screen setup disclosure, share badges, Memory leak tests, `Current` disabled | DC-1..3             |
-| DC-5 MV2-12 link seam      | Red                 | Gated on MV2-12 dispatch          | fix 2026 identity-link misses called out by Audit-2                                    | q-002 dispatch      |
-| DC-6 MV2-12b dual basis    | Red                 | Gated on DC-5/12b                 | dual ratings, shared display curve, compact/runtime shape                              | DC-5                |
-| DC-7 rating-basis sim gate | Red                 | Gated on DC-6                     | selected-basis channels, shared lambda validation, canaries/goldens                    | DC-6                |
-| DC-8 leaderboard policy    | Red                 | Gated on HUMAN                    | ranked/casual config policy, DB/API/board changes                                      | Paulo decision F    |
-| DC-9 season merge          | Red                 | Final integration                 | anchor bump, golden re-lock, full CI, independent Red review, human approval           | DC-1..8 as selected |
+| Unit                       | Tier                | Status                        | Scope                                                                                  | Depends on          |
+| -------------------------- | ------------------- | ----------------------------- | -------------------------------------------------------------------------------------- | ------------------- |
+| DC-0 plan + queue          | Green docs          | Unblocked now                 | This plan, `q-006`, `STATE.md` note                                                    | none                |
+| DC-1 token schema          | Red                 | SHIPPED                       | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures                        | DC-0                |
+| DC-2 era presets           | Red                 | SHIPPED                       | filtered catalog input, preset constants, pool-depth census, era goldens               | DC-1 preferred      |
+| DC-3 position-first core   | Red                 | SHIPPED                       | target-selection state, token `ts` replay, transition goldens                          | DC-1                |
+| DC-4 config UX dark        | Yellow/Red boundary | SHIPPED for setup/badges/copy | formation-screen setup disclosure, share badges, Memory leak tests, `Current` disabled | DC-1..3             |
+| DC-5 MV2-12 link seam      | Red                 | SUPERSEDED by merit-v3 U0     | fix 2026 identity-link misses called out by Audit-2                                    | q-002 dispatch      |
+| DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                              | DC-5                |
+| DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens                    | DC-6                |
+| DC-8 leaderboard policy    | Red                 | Gated on HUMAN                | ranked/casual config policy, DB/API/board changes                                      | Paulo decision F    |
+| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, human approval           | DC-1..8 as selected |
 
 Integration-branch decision:
 

@@ -121,7 +121,6 @@ export type {
   ScoringConfig,
   ScoreComponent,
 } from "./scoring.js";
-export { PLACEHOLDER_SCORING_CONFIG } from "./scoring.js";
 
 export type {
   // stats.ts

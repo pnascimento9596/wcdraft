@@ -123,7 +123,6 @@ export type {
 
 export {
   GROUP_IDS,
-  PLACEHOLDER_SCORING_CONFIG,
   buildCardId,
   parseCardId,
   USER_GROUP_PARTICIPANT_ID,

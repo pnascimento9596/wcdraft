@@ -396,7 +396,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #e9b949;
+  background: var(--gold);
   box-shadow: 0 0 0 2px var(--bg-invert);
 }
 .slot {
@@ -405,13 +405,13 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
 
 /* Compatibility tiers (committed cards) — coloured left border accent. */
 .tier_ideal {
-  border-left: 4px solid #5fbf86;
+  border-left: 4px solid var(--accent);
 }
 .tier_ok {
   border-left: 4px solid rgba(255, 255, 255, 0.6);
 }
 .tier_stretch {
-  border-left: 4px solid #e9b949;
+  border-left: 4px solid var(--gold);
 }
 .tier_misfit {
   border-left: 4px solid var(--accent);
@@ -421,15 +421,15 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   border-style: solid;
 }
 .tierPreview_ideal {
-  border-color: #5fbf86;
-  background: color-mix(in srgb, #5fbf86 22%, var(--bg-invert));
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg-invert));
 }
 .tierPreview_ok {
   border-color: rgba(255, 255, 255, 0.8);
 }
 .tierPreview_stretch {
-  border-color: #e9b949;
-  background: color-mix(in srgb, #e9b949 18%, var(--bg-invert));
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 18%, var(--bg-invert));
 }
 .tierPreview_misfit {
   border-color: var(--accent);
@@ -827,14 +827,14 @@ button.benchSlot:not(:disabled):hover {
 .award {
   font-size: 0.66rem;
   letter-spacing: 0.04em;
-  color: #8a6d1a;
-  background: color-mix(in srgb, #e9b949 30%, var(--bg-panel));
-  border: 1px solid color-mix(in srgb, #e9b949 50%, transparent);
+  color: var(--gold-ink);
+  background: color-mix(in srgb, var(--gold) 30%, var(--bg-panel));
+  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
   border-radius: 999px;
   padding: 0.16rem 0.55rem;
 }
 :root[data-theme="dark"] .award {
-  color: #e9c97a;
+  color: var(--gold);
 }
 .emptyList {
   color: var(--ink-faint);
@@ -1193,7 +1193,12 @@ button.benchSlot:not(:disabled):hover {
 }
 /* I3.8 — 8-0 perfect run rendered in precious gold. */
 .outcomeBigGold {
-  background: linear-gradient(180deg, #ffd86a 0%, #f5b62a 55%, #c8861a 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
+    var(--gold) 55%,
+    var(--gold-strong) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1246,8 +1251,8 @@ button.benchSlot:not(:disabled):hover {
   padding: 0.3rem 0.7rem;
 }
 .flagGold {
-  color: #1c1408;
-  background: #e9b949;
+  color: var(--gold-ink);
+  background: var(--gold);
 }
 .flagGood {
   color: var(--accent-ink);
@@ -1422,7 +1427,7 @@ button.benchSlot:not(:disabled):hover {
   display: inline-block;
 }
 .cardYellow {
-  background: #e9b949;
+  background: var(--gold);
 }
 .cardRed {
   background: var(--accent);
@@ -1492,7 +1497,7 @@ button.benchSlot:not(:disabled):hover {
   box-shadow: var(--shadow-card);
 }
 :root[data-theme="dark"] .shareCard {
-  color: #f2ecdc;
+  color: var(--field-ink);
 }
 .shareGrain {
   position: absolute;
@@ -1540,7 +1545,7 @@ button.benchSlot:not(:disabled):hover {
   font-family: var(--font-display), sans-serif;
   font-size: clamp(2.6rem, 10vw, 4.5rem);
   line-height: 0.85;
-  color: #e9b949;
+  color: var(--gold);
   letter-spacing: 0.01em;
 }
 .shareRecord {
@@ -3527,7 +3532,12 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .historyRecordGold {
-  background: linear-gradient(180deg, #ffd86a 0%, #f5b62a 55%, #c8861a 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
+    var(--gold) 55%,
+    var(--gold-strong) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

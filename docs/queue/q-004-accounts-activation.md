@@ -1,14 +1,21 @@
 # q-004 — accounts activation (email sign-in)
 
 - **Tier:** Red surface, but **Mode: HUMAN-ONLY** — agents must not perform any step.
-- **Status:** OPEN — blocked on human-held credentials.
+- **Status:** DONE — completed in production 2026-06-12 via #108/#109.
+
+> **SUPERSEDED 2026-06-12:** This checklist is retained as the activation audit
+> trail. Accounts/email sign-in is live on `www.wcdraft.com`: Resend domain
+> `wcdraft.com` is verified, `RESEND_API_KEY` / `AUTH_EMAIL_FROM` /
+> `AUTH_BASE_URL` are set in Vercel Production, and `STATE.md` records the
+> live magic-link verification. Ranked leaderboard remains gated separately by
+> `LEADERBOARD_REQUIRE_ACCOUNT`.
 
 ## Spec (for Paulo, not for agents)
 
-Accounts (magic-link email auth) are shipped dark: code paths live since F-3.x, prod has
-`AUTH_COOKIE_SECRET` + `DATABASE_URL` set, but the email path is dark because
-`RESEND_API_KEY`, `AUTH_EMAIL_FROM`, and `AUTH_BASE_URL` are unset in Vercel prod
-(verified 2026-06-10).
+Accounts (magic-link email auth) were shipped dark before #108/#109: code paths
+were live since F-3.x, prod had `AUTH_COOKIE_SECRET` + `DATABASE_URL` set, but
+the email path was dark until `RESEND_API_KEY`, `AUTH_EMAIL_FROM`, and
+`AUTH_BASE_URL` were added in Vercel prod.
 
 Human steps:
 
