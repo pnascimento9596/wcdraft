@@ -1,0 +1,11 @@
+{
+  "id": "memory-mode",
+  "family": "literal",
+  "status": "queued",
+  "scheduled_at": null,
+  "params": {
+    "text": "Two ways to play wcdraft: Classic with every rating visible, or Memory — ratings hidden until you simulate, and the reveal becomes the story. Free, in your browser. https://www.wcdraft.com/play",
+    "deep_link": "https://www.wcdraft.com/play",
+    "referenced_feature_ids": ["two_modes", "free_browser"]
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "./features.schema.json",
+  "manifest_version": "1.0.0",
+  "updated": "2026-06-12",
+  "site_url": "https://www.wcdraft.com",
+  "note": "TRUTH SOURCE for every published marketing claim (q-007). The composer reads feature truth from here: a template may only reference a feature whose `status` is `live`. Each `live` feature was verified against origin/main at 6aeb78d and is reachable on the production site. FUTURE LANES MUST UPDATE THIS FILE when a feature ships, changes, or is removed — a stale claim here becomes a false post. The fresh-context review gate cross-checks every `live` entry against www.wcdraft.com; a claim prod does not support is a merge blocker. Licensing: nominative 'World Cup' only, no FIFA marks, 'football' never 'soccer', 'manager' never 'coach', 'Synergy' never 'Chemistry'.",
+  "features": [
+    {
+      "id": "free_browser",
+      "status": "live",
+      "headline": "Free, in your browser, no download",
+      "claim": "wcdraft is free and runs entirely in your browser — no app, no download, no account needed to play.",
+      "hooks": [
+        "Free, in your browser. No download.",
+        "No app store, no install — just open it and draft.",
+        "Free to play, nothing to download."
+      ],
+      "verify": "Load https://www.wcdraft.com and /play in a fresh browser: the game runs client-side with no paywall and no required sign-in.",
+      "source": "apps/web/app/play/page.tsx; client-side draft + sim (no server gate)"
+    },
+    {
+      "id": "calibrated_sim",
+      "status": "live",
+      "headline": "Realistic, calibrated match simulation of the real 2026 bracket",
+      "claim": "Your XI plays the real 2026 World Cup bracket — 8 matches through the knockouts — in a calibrated match simulation. A perfect run is 8-0.",
+      "hooks": [
+        "Run the real 2026 bracket — 8 matches, a perfect run is 8-0.",
+        "Calibrated match sim, not coin-flips — 8 matches to a perfect 8-0.",
+        "Eight matches through the real bracket. Can your XI go 8-0?"
+      ],
+      "verify": "Complete a draft and Simulate: the run plays a group stage + 5 knockout rounds (8 matches); the share/results screen shows the W-L record and flags a perfect 8-0.",
+      "source": "packages/core/src/engine/tournament.ts (runTournamentFull); ShareView.is_perfect_eight_zero"
+    },
+    {
+      "id": "seventeen_spins",
+      "status": "live",
+      "headline": "17 spins, one pick each — 16 players + a manager",
+      "claim": "Seventeen spins, one pick on each: sixteen players for your XI and bench, plus one manager.",
+      "hooks": [
+        "17 spins, one pick each — 16 players and a manager.",
+        "Seventeen spins. One pick each. Build the whole XI.",
+        "16 players + a manager, one spin at a time."
+      ],
+      "verify": "A full draft is exactly 17 spins; the spin log includes a manager pick.",
+      "source": "packages/core/src/draft.ts (17-spin draft, manager spin)"
+    },
+    {
+      "id": "manager_pick",
+      "status": "live",
+      "headline": "Managers are a pick",
+      "claim": "The manager is one of your spins — a real pick that shapes the squad, not a footnote.",
+      "hooks": [
+        "Managers are a pick here — one of your 17 spins.",
+        "You draft a manager too. Most games don't let you.",
+        "One of your spins is the manager. It matters."
+      ],
+      "verify": "During a draft one spin is a manager spin (pickManager); the manager appears on the results/share screen.",
+      "source": "packages/core/src/draft.ts (pickManager); apps/web/components/game/manager-slot.tsx"
+    },
+    {
+      "id": "era_presets",
+      "status": "live",
+      "headline": "Era presets — draft across 90+ years of squads",
+      "claim": "Choose your era: All-time, Post-2000, Post-2010, or Modern — drafting across more than ninety years of World Cup squads (1930–2026).",
+      "hooks": [
+        "Four era presets: All-time, Post-2000, Post-2010, Modern.",
+        "Draft across 1930–2026, or narrow to one era.",
+        "All-time or Modern — you choose the era you draft from."
+      ],
+      "verify": "On /play/draft open 'Draft setup' → Era: four selectable presets (All-time, Post-2000, Post-2010, Modern).",
+      "source": "apps/web/components/game/draft-screen.tsx ERA_PRESET_LABELS + DraftSetupDisclosure; @wcdraft/core ERA_PRESETS"
+    },
+    {
+      "id": "two_modes",
+      "status": "live",
+      "headline": "Two modes — Classic and Memory",
+      "claim": "Play Classic with every rating visible, or Memory mode where ratings stay hidden until you simulate and the reveal becomes the story.",
+      "hooks": [
+        "Classic, or Memory — ratings hidden until the reveal.",
+        "Two modes: ratings on the table, or draft from memory.",
+        "Memory mode hides the numbers until you simulate."
+      ],
+      "verify": "/play offers Classic and Memory cards; Memory mode masks ratings in-draft and reveals them after Simulate.",
+      "source": "apps/web/app/play/page.tsx; apps/web/components/game/memory-reveal.tsx"
+    },
+    {
+      "id": "draft_flow",
+      "status": "live",
+      "headline": "Draft order choice — Squad First or Position First",
+      "claim": "Pick your draft order: Squad First, or Position First — commit a slot to fill before the squad is even revealed.",
+      "hooks": [
+        "Squad First or Position First — your call.",
+        "Position First: lock the slot, then spin for who fills it.",
+        "Two ways to draft: by squad, or by position."
+      ],
+      "verify": "On /play/draft open 'Draft setup' → Draft mode: Squad First / Position First are both selectable.",
+      "source": "apps/web/components/game/draft-screen.tsx DRAFT_FLOW_LABELS + DraftSetupDisclosure"
+    },
+    {
+      "id": "nation_synergy",
+      "status": "live",
+      "headline": "Nation synergy",
+      "claim": "Players from the same nation build Synergy — a live preview shows your XI's connections as you draft.",
+      "hooks": [
+        "Same-nation picks build Synergy — watch it live as you draft.",
+        "Nation Synergy rewards a connected XI.",
+        "Synergy ticks up when your nations line up."
+      ],
+      "verify": "Classic mode shows a live Synergy preview that responds to same-nation picks.",
+      "source": "apps/web/components/game/synergy-bar.tsx; packages/core/src/synergy.ts"
+    },
+    {
+      "id": "position_filters_search",
+      "status": "live",
+      "headline": "Position filters + in-draft search",
+      "claim": "Filter the rolled squad by position and search players by name, right inside the draft.",
+      "hooks": [
+        "Filter by position and search by name — in the draft.",
+        "Position filters + search to find your pick fast.",
+        "Search the rolled squad by name, filter by position."
+      ],
+      "verify": "In-draft: a 'Search players…' input and a position filter (ALL / GK / DF / MF / FW) both work.",
+      "source": "apps/web/components/game/draft-screen.tsx (search state, PosFilter)"
+    },
+    {
+      "id": "leaderboard",
+      "status": "live",
+      "headline": "Season-keyed ranked leaderboard",
+      "claim": "Post your run to a season-keyed ranked leaderboard and see where your XI lands.",
+      "hooks": [
+        "There's a season-keyed leaderboard — post your run.",
+        "Ranked board, keyed to the season. Climb it.",
+        "Submit your run to the leaderboard and rank up."
+      ],
+      "verify": "The leaderboard board page is reachable and accepts a submitted run (LEADERBOARD_ENABLED live in prod).",
+      "source": "apps/web/components/leaderboard/board-views.tsx; apps/web/lib/leaderboard/*"
+    },
+    {
+      "id": "shareable_replays",
+      "status": "live",
+      "headline": "Shareable, replayable run links",
+      "claim": "Every run gets a shareable link that replays the exact same draft and result in any browser — same seed, same outcome.",
+      "hooks": [
+        "Every run has a shareable, replayable link.",
+        "Share your run — the link replays it exactly, any browser.",
+        "Same seed, same outcome: your run link is fully reproducible."
+      ],
+      "verify": "A completed run yields a https://www.wcdraft.com/play/share?run=t2.<token> URL that reproduces the run in a fresh browser.",
+      "source": "apps/web/lib/game/run-token.ts; apps/web/app/play/share/page.tsx"
+    },
+    {
+      "id": "rating_basis_choice",
+      "status": "planned",
+      "headline": "Rating basis — Career (Current coming)",
+      "claim": "Ratings are career-basis today; a Current basis arrives after the rating rebuild.",
+      "hooks": [],
+      "verify": "On /play/draft 'Draft setup' → Rating basis: Career is active, Current is DISABLED ('Current arrives after the rating rebuild'). DO NOT pitch a basis CHOICE until Current is enabled in prod.",
+      "source": "apps/web/components/game/draft-screen.tsx (Rating basis segment: Current button disabled)"
+    }
+  ]
+}

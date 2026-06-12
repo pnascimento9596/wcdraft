@@ -3,6 +3,9 @@
 packages:
   - "apps/*"
   - "packages/*"
+  # `marketing/x` — q-007 organic X poster. Self-contained workspace package
+  # that reuses @wcdraft/core + @wcdraft/data; does NOT touch the web app.
+  - "marketing/*"
 
 # Pre-approved native build scripts (pnpm 10+ blocks postinstall by default),
 # so installs are non-interactive and deterministic in CI:

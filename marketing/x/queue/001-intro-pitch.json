@@ -1,0 +1,11 @@
+{
+  "id": "intro-pitch",
+  "family": "literal",
+  "status": "queued",
+  "scheduled_at": null,
+  "params": {
+    "text": "wcdraft is a fan-made football draft game. Spin 17 World Cup squads, pick one player per spin, build an all-time XI, and run the full 2026 bracket — free, in your browser. https://www.wcdraft.com/play",
+    "deep_link": "https://www.wcdraft.com/play",
+    "referenced_feature_ids": ["seventeen_spins", "calibrated_sim", "free_browser"]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@wcdraft/marketing-x",
+  "version": "0.0.0",
+  "private": true,
+  "description": "q-007 — organic X (Twitter) marketing automation for @WCDraft. Deterministic, seeded content composer + dry-run-first poster. Channel-agnostic by design (IG/TikTok port lanes later). Reuses @wcdraft/core + @wcdraft/data; the web app is untouched.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "compose": "tsx src/cli/run-poster.ts",
+    "engage": "tsx src/cli/run-engagement.ts",
+    "probe-tier": "tsx src/cli/probe-tier.ts",
+    "gen:fixture": "tsx src/cli/gen-fixture.ts"
+  },
+  "dependencies": {
+    "@wcdraft/core": "workspace:*",
+    "@wcdraft/data": "workspace:*"
+  }
+}
