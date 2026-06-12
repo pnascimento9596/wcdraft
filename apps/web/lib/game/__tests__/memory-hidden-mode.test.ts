@@ -406,9 +406,9 @@ describe("memory mode — hidden candidate markup contains no coverage digits", 
   });
 });
 
-// ─── Token: `md` rides the t1. token (share/replay → reveal path) ────────────
+// ─── Token: `md` rides the replay token (share/replay → reveal path) ─────────
 
-describe("memory mode — t1. token carries and reconstructs hidden mode", () => {
+describe("memory mode — replay token carries and reconstructs hidden mode", () => {
   const gameData = buildGameDataFromBundles();
   const hidden = buildRecord(gameData, "hidden");
 

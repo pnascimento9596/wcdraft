@@ -27,8 +27,11 @@ import {
 export const SpinSchema = z
   .object({
     index: IntegerRangeSchema(0, 16),
-    tournament_id: PositiveIntegerSchema,
-    nation_id: NonEmptyIdSchema,
+    // DC-3: tournament_id 0 / nation_id "" are the awaiting_slot placeholder
+    // sentinels (no draw materialized yet); superRefine requires the real
+    // positive-id / non-empty shape on every NON-awaiting spin.
+    tournament_id: z.number().int().nonnegative(),
+    nation_id: z.string(),
     // ENGINE-V2 E-1 rare exposure: pre-1998 flag + per-spin emitted probability
     // in [0, 1] (audit/display only — never re-fed into sampling). See Spin doc.
     rare: z.boolean(),
@@ -43,9 +46,52 @@ export const SpinSchema = z
     picked_player_id: NonEmptyIdSchema.nullable(),
     assigned_slot_id: NonEmptyIdSchema.nullable(),
     picked_manager_card_id: ManagerCardIdSchema.nullable(),
-    status: z.enum(["pending", "picked"]),
+    // DC-3 position-first target commitment (see types/draft.ts).
+    target_slot_id: NonEmptyIdSchema.nullable(),
+    status: z.enum(["awaiting_slot", "pending", "picked"]),
   })
   .superRefine((spin, ctx) => {
+    // DC-3 — awaiting_slot placeholder coherence: NOTHING is materialized.
+    if (spin.status === "awaiting_slot") {
+      const placeholderOk =
+        spin.tournament_id === 0 &&
+        spin.nation_id === "" &&
+        spin.rare === false &&
+        spin.draw_probability === 0 &&
+        spin.rolled_card_ids.length === 0 &&
+        spin.excluded_player_ids.length === 0 &&
+        spin.rolled_manager_card_id === null &&
+        spin.picked_card_id === null &&
+        spin.picked_player_id === null &&
+        spin.assigned_slot_id === null &&
+        spin.picked_manager_card_id === null &&
+        spin.target_slot_id === null;
+      if (!placeholderOk) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "awaiting_slot spin must be an empty placeholder (no draw, no candidates, no target, no picks)",
+          path: ["status"],
+        });
+      }
+      return;
+    }
+    // Every NON-awaiting spin carries a real materialized draw.
+    if (spin.tournament_id <= 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "materialized spin must have a positive tournament_id",
+        path: ["tournament_id"],
+      });
+    }
+    if (spin.nation_id.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "materialized spin must have a non-empty nation_id",
+        path: ["nation_id"],
+      });
+    }
+
     // rolled_card_ids uniqueness + every rolled card's tournament_id matches.
     const rolledSeen = new Set<string>();
     for (let i = 0; i < spin.rolled_card_ids.length; i++) {
@@ -303,6 +349,13 @@ export const DraftStateSchema = z
     dataset_version: NonEmptyIdSchema,
     rating_version: NonEmptyIdSchema,
     engine_version: NonEmptyIdSchema,
+    // DC-1 config axes — stored explicitly (plan §A/§G). `rating_basis`
+    // admits both enum values so the persisted contract never needs a second
+    // evolution for the MV2-12b basis season; runtime construction of
+    // `current` is refused in `createDraft` until that season lands.
+    draft_flow: z.enum(["squad_first", "position_first"]),
+    rating_basis: z.enum(["career", "current"]),
+    era_preset: z.enum(["all_time", "post_2000", "post_2010", "modern"]),
   })
   .superRefine((draft, ctx) => {
     // formation_id MUST resolve to a known FormationTemplate.
@@ -482,11 +535,14 @@ export const DraftStateSchema = z
       }
     }
 
-    // For each spin: excluded_player_ids === ordered list of PRIOR PLAYER picks.
-    // Manager picks do NOT contribute to the dedup set.
+    // For each MATERIALIZED spin: excluded_player_ids === ordered list of
+    // PRIOR PLAYER picks. Manager picks do NOT contribute to the dedup set.
+    // DC-3: awaiting_slot placeholders exclude nothing (no draw happened) —
+    // their per-spin coherence is enforced in SpinSchema.
     const priorPlayerPicks: string[] = [];
     for (let i = 0; i < draft.spins.length; i++) {
       const s = draft.spins[i]!;
+      if (s.status === "awaiting_slot") continue;
       if (s.excluded_player_ids.length !== priorPlayerPicks.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -595,5 +651,101 @@ export const DraftStateSchema = z
         message: `status 'simulated' requires a drafted manager (DraftState.manager_card_id must be non-null)`,
         path: ["manager_card_id"],
       });
+    }
+
+    // ─── DC-3 — draft-flow coherence ────────────────────────────────────────
+    if (draft.draft_flow === "squad_first") {
+      // Squad-first never uses the position-first lifecycle or targets.
+      for (let i = 0; i < draft.spins.length; i++) {
+        const s = draft.spins[i]!;
+        if (s.status === "awaiting_slot") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `squad_first draft must not contain awaiting_slot spins (spins[${i}])`,
+            path: ["spins", i, "status"],
+          });
+        }
+        if (s.target_slot_id !== null) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `squad_first spins carry no target_slot_id (spins[${i}])`,
+            path: ["spins", i, "target_slot_id"],
+          });
+        }
+      }
+    } else {
+      // position_first: every materialized spin carries its committed target;
+      // at most ONE pending spin exists and it is the LOWEST unresolved index
+      // (later unresolved spins stay unmaterialized placeholders).
+      let pendingCount = 0;
+      let firstUnresolved: number | null = null;
+      for (let i = 0; i < draft.spins.length; i++) {
+        const s = draft.spins[i]!;
+        if (firstUnresolved === null && s.status !== "picked") firstUnresolved = i;
+        if (s.status === "pending") {
+          pendingCount += 1;
+          if (firstUnresolved !== i) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `position_first pending spin must be the lowest unresolved index (spins[${i}] vs first unresolved ${firstUnresolved})`,
+              path: ["spins", i, "status"],
+            });
+          }
+        }
+        if (s.status === "picked" || s.status === "pending") {
+          if (s.target_slot_id === null) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `position_first materialized spin must carry its committed target_slot_id (spins[${i}])`,
+              path: ["spins", i, "target_slot_id"],
+            });
+            continue;
+          }
+          if (s.status === "picked" && s.picked_kind === "player") {
+            if (s.assigned_slot_id !== s.target_slot_id) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `position_first player pick must fill its committed target (spins[${i}]: target ${s.target_slot_id}, assigned ${s.assigned_slot_id})`,
+                path: ["spins", i, "assigned_slot_id"],
+              });
+            }
+          }
+          if (s.status === "picked" && s.picked_kind === "manager") {
+            if (s.target_slot_id !== "manager") {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `position_first manager pick must target "manager" (spins[${i}])`,
+                path: ["spins", i, "target_slot_id"],
+              });
+            }
+          }
+          if (s.status === "pending") {
+            // Candidate exposure matches the committed target: a manager
+            // target offers ONLY the coach; a slot target offers ONLY players.
+            if (s.target_slot_id === "manager") {
+              if (s.rolled_card_ids.length !== 0 || s.rolled_manager_card_id === null) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: `position_first manager-target spin exposes only the coach (spins[${i}])`,
+                  path: ["spins", i, "rolled_manager_card_id"],
+                });
+              }
+            } else if (s.rolled_manager_card_id !== null) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `position_first slot-target spin must not expose a coach (spins[${i}])`,
+                path: ["spins", i, "rolled_manager_card_id"],
+              });
+            }
+          }
+        }
+      }
+      if (pendingCount > 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `position_first draft can have at most ONE pending spin; found ${pendingCount}`,
+          path: ["spins"],
+        });
+      }
     }
   }) satisfies z.ZodType<DraftState>;

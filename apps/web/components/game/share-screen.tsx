@@ -17,6 +17,7 @@ import {
 import { loadRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
   decodeRunToken,
+  isNewerRunTokenVersion,
   encodeRunToken,
   RunTokenError,
   versionsAgree,
@@ -97,7 +98,9 @@ export function ShareScreen() {
           if (decoded === null) {
             setMode({
               kind: "missing",
-              reason: "The shared link is malformed or truncated — ask the sender for a fresh link.",
+              reason: isNewerRunTokenVersion(parsed.token)
+                ? "This link was made on a newer version of the game than this page is running. Reload the page; if that doesn't help, the new version hasn't reached you yet."
+                : "The shared link is malformed or truncated — ask the sender for a fresh link.",
               runId: null,
             });
             return;

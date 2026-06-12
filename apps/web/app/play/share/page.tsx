@@ -11,7 +11,7 @@ import {
 
 // ws-results/history-share — link-unfurl metadata.
 //
-// Per-run dynamic OG (rendering the card from the `?run=t1.…` token via
+// Per-run dynamic OG (rendering the card from the `?run=` token via
 // `@vercel/og` / Next's `opengraph-image` convention) is a deliberate
 // FOLLOW-ON. The repo currently has no rasterizer or `@vercel/og` dep, and
 // the share route's primary data lives client-side; standing up server-side

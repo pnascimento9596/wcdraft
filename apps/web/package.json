@@ -18,7 +18,8 @@
     "gen:leaderboard-golden": "tsx scripts/generate-leaderboard-golden.mts",
     "generate:icons": "node scripts/generate-icons.mjs",
     "generate:marketing-assets": "node scripts/generate-marketing-assets.mjs",
-    "generate:sw-version": "node scripts/generate-sw-version.mjs"
+    "generate:sw-version": "node scripts/generate-sw-version.mjs",
+    "gen:token-skew": "tsx scripts/generate-token-skew-fixtures.mts"
   },
   "dependencies": {
     "@wcdraft/core": "workspace:*",

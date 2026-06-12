@@ -2,7 +2,7 @@
 
 // Local history view — lists recent completed runs from `RunRecordV1`
 // localStorage via the `RunHistoryProvider` boundary. Tap a card to re-open
-// the deterministic results via the `?run=t1.…` token replay path. NEVER
+// the deterministic results via the token replay path. NEVER
 // links via a bare local `run-v1-*` id — that would violate the shared-URL
 // contract enforced by `gate-and-fallback.test.ts`.
 
@@ -231,7 +231,7 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
             // but uses pointerdown on the outer link, so the receiver should
             // expect tapping anywhere = open results. We surface share as a
             // text label rather than a nested link to keep the row clickable.
-            <span className={s.historyShareHint}>Token: t1.</span>
+            <span className={s.historyShareHint}>Replay token</span>
           ) : null}
         </div>
       </Link>

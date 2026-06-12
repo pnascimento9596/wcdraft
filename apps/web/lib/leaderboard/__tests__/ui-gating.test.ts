@@ -383,10 +383,10 @@ describe("board views", () => {
     const html = renderToStaticMarkup(
       createElement(BoardHead, {
         currentSeasonKey:
-          "engine-2026.06.09_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_ac3ca8c8",
+          "engine-2026.06.11_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_f166edc0",
       }),
     );
-    expect(html).toContain("Season 2026-06-04 · engine-2026.06.09");
-    expect(html).toContain("ac3ca8c8");
+    expect(html).toContain("Season 2026-06-04 · engine-2026.06.11");
+    expect(html).toContain("f166edc0");
   });
 });

@@ -121,10 +121,17 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
     expect(rejectionCode(submit({ token: t16 }))).toBe("MALFORMED_TOKEN");
   });
 
-  it("rejects an unknown token version (v:2)", () => {
+  it("rejects an unknown token version (v:3)", () => {
     const t = tampered((b) => {
-      (b as { v: number }).v = 2;
+      (b as { v: number }).v = 3;
     });
+    expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
+  });
+
+  it("rejects a future `t3.` wire prefix", () => {
+    // The UI may show a nicer "newer version" notice, but the API contract is
+    // simple: undecodable means MALFORMED_TOKEN.
+    const t = "t3." + Buffer.from(JSON.stringify({ v: 3 }), "utf8").toString("base64url");
     expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
   });
 
@@ -171,6 +178,63 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
 });
 
 // ─── Step 5 — display names (T5) ─────────────────────────────────────────────
+
+describe("step 3b — NON_CANONICAL_CONFIG (DC-1, owner-ratified canonical-only board)", () => {
+  // Board submissions must carry the canonical config axes (squad_first /
+  // career / all_time). Every non-canonical axis value is rejected with the
+  // dedicated code — these tokens DECODE fine (they are well-formed t2), so
+  // MALFORMED_TOKEN would be the wrong verdict.
+  type V2 = RunTokenV1Body & {
+    df: string;
+    rb: string;
+    ef: { id: string; min: number; max: number };
+    pl: Array<{ k: string; c?: string; s?: string; ts?: string }>;
+  };
+
+  it("rejects rating_basis 'current'", () => {
+    const t = tampered((b) => {
+      (b as unknown as V2).rb = "current";
+    });
+    expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
+  });
+
+  it("rejects every non-default era preset", () => {
+    const presets = [
+      { id: "post_2000", min: 2002, max: 2026 },
+      { id: "post_2010", min: 2014, max: 2026 },
+      { id: "modern", min: 2018, max: 2026 },
+    ];
+    for (const ef of presets) {
+      const t = tampered((b) => {
+        (b as unknown as V2).ef = ef;
+      });
+      expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
+    }
+  });
+
+  it("rejects draft_flow 'position_first' (with a coherent ts log)", () => {
+    const t = tampered((b) => {
+      const v2 = b as unknown as V2;
+      v2.df = "position_first";
+      for (const p of v2.pl) {
+        if (p.k === "m") p.ts = "manager";
+        else p.ts = p.s;
+      }
+    });
+    expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
+  });
+
+  it("config gate runs BEFORE the name gate (cheapest-rejection order)", () => {
+    const t = tampered((b) => {
+      (b as unknown as V2).rb = "current";
+    });
+    // Invalid name + non-canonical config → config code wins (it is checked
+    // first; the name is never inspected for a run that cannot rank).
+    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe(
+      "NON_CANONICAL_CONFIG",
+    );
+  });
+});
 
 describe("step 5 — display-name rules (plan §5.1)", () => {
   it("rejects through the pipeline with INVALID_NAME + category, raw value not echoed", () => {
@@ -411,6 +475,7 @@ describe("U3 seam — SUBMIT_ERROR_HTTP_STATUS", () => {
       TOKEN_TOO_LARGE: 400,
       MALFORMED_TOKEN: 400,
       WRONG_SEASON: 409,
+      NON_CANONICAL_CONFIG: 422,
       AUTH_REQUIRED: 401,
       CSRF_FAILED: 403,
       INVALID_NAME: 422,

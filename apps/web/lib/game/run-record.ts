@@ -25,9 +25,12 @@ import {
   type RunResult,
   type RunScenario,
   type GroupStageResult,
+  type DraftFlow,
+  type EraPresetId,
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
+import { getCatalogForEra } from "./data";
 import {
   RunRecordError,
   StorageQuotaError,
@@ -277,6 +280,13 @@ export interface CreateRunRecordParams {
   formation_id: string;
   mode?: "classic" | "hidden";
   team_name?: string;
+  /**
+   * DC-2 era preset (default `all_time` = today's pool). The draft is
+   * created against the matching era-filtered catalog via `getCatalogForEra`.
+   */
+  era_preset?: EraPresetId;
+  /** DC-3 draft flow (default `squad_first` = today's flow). */
+  draft_flow?: DraftFlow;
 }
 
 export interface CreateRunRecordResult {
@@ -313,7 +323,8 @@ export function createNewRunRecord(
     const run_id = buildRunId(seq);
     const parent_seed = buildParentSeed(run_id, params.formation_id);
     try {
-      const draft = createDraft(gameData.catalog, {
+      const era_preset = params.era_preset ?? "all_time";
+      const draft = createDraft(getCatalogForEra(gameData, era_preset), {
         run_id,
         parent_seed,
         formation_id: params.formation_id,
@@ -322,6 +333,8 @@ export function createNewRunRecord(
         dataset_version: gameData.versions.dataset_version,
         rating_version: gameData.versions.rating_version,
         engine_version: gameData.versions.engine_version,
+        era_preset,
+        draft_flow: params.draft_flow ?? "squad_first",
       });
       const record: RunRecordV1 = {
         record_version: RUN_RECORD_SCHEMA_VERSION,
