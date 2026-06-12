@@ -90,6 +90,17 @@ function readCookieSecret(): string {
 }
 
 export function buildRuntimeDeps(): RuntimeDeps {
+  // Honest-degrade guard — without a DB the session substrate cannot work
+  // at all. getDb() would throw a plain Error (→ INTERNAL_ERROR 500); the
+  // typed code keeps the response a clean, scrubbed 503 instead. Checked
+  // before the cookie secret so a fully-unset deploy degrades the same way
+  // as a partially-unset one.
+  if (!process.env.DATABASE_URL?.trim()) {
+    throw new AuthError(
+      "SECRET_MISCONFIGURED",
+      "DATABASE_URL is not set. The session substrate is unavailable.",
+    );
+  }
   const verifyBaseUrl =
     process.env.AUTH_BASE_URL?.trim() ?? "http://localhost:3000";
   const fromAddress =
