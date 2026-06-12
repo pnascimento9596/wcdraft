@@ -361,11 +361,32 @@ export interface CoreMatchInput {
 }
 
 /**
+ * The engine-internal result. It is exactly the public `MatchResult` PLUS the
+ * tournament-ending injury stash the run loop needs to carry forward between
+ * matches. That stash is NOT part of the public schema and must never reach a
+ * serialized result; it rides on this internal type and is drained at the
+ * public boundary by `stripInternal`. `MatchResult` itself declares no such
+ * field, so the only way to read the stash is through this internal type via
+ * `tournamentEndingInjuries` — never through a public result.
+ */
+export interface InternalMatchResult extends MatchResult {
+  /**
+   * Engine-only: `player_id`s whose injury ends their tournament this match.
+   * Drained by `stripInternal` before the result crosses the public boundary.
+   */
+  readonly __injuredTournamentEnding: readonly string[];
+}
+
+/**
  * Simulate one full match. The user lineup may be smaller than 11 if the run
  * has accumulated tournament-ending injuries; the caller enforces the
  * fieldable floor / forfeit before calling here.
+ *
+ * Returns an `InternalMatchResult` — the caller drains the injury stash via
+ * `tournamentEndingInjuries` and then strips it with `stripInternal` before the
+ * result is exposed as a public `MatchResult`.
  */
-export function simulateMatchCore(input: CoreMatchInput): MatchResult {
+export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   const {
     matchId,
     matchIndex,
@@ -594,7 +615,7 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
     shootout,
   );
 
-  return {
+  const result: InternalMatchResult = {
     match_id: matchId,
     match_index: matchIndex,
     round,
@@ -610,22 +631,28 @@ export function simulateMatchCore(input: CoreMatchInput): MatchResult {
     advanced,
     lineup,
     events: ctx.events,
-    // Expose persistent injuries via a non-schema side channel for the caller.
-    ...({ __injuredTournamentEnding: injuredTournamentEnding } as object),
-  } as MatchResult;
+    // Engine-internal stash: persistent injuries handed to the run loop, then
+    // drained at the public boundary by `stripInternal`. Declared last so the
+    // public key order (match_id…events) is identical after the strip.
+    __injuredTournamentEnding: injuredTournamentEnding,
+  };
+  return result;
 }
 
-/** Extract the tournament-ending injuries stashed on a core MatchResult. */
-export function tournamentEndingInjuries(m: MatchResult): string[] {
-  const stash = (m as unknown as { __injuredTournamentEnding?: string[] }).__injuredTournamentEnding;
-  return stash ?? [];
+/** Extract the tournament-ending injuries stashed on a core result. */
+export function tournamentEndingInjuries(m: InternalMatchResult): readonly string[] {
+  return m.__injuredTournamentEnding;
 }
 
-/** Strip the internal stash so the returned MatchResult is schema-clean. */
-export function stripInternal(m: MatchResult): MatchResult {
-  const copy = { ...(m as object) } as Record<string, unknown>;
-  delete copy.__injuredTournamentEnding;
-  return copy as unknown as MatchResult;
+/**
+ * Narrow an internal result to the public `MatchResult` boundary: drop the
+ * engine-internal injury stash so no hidden key is ever serialized. The
+ * surviving keys are exactly the public schema, in the same order.
+ */
+export function stripInternal(m: InternalMatchResult): MatchResult {
+  const { __injuredTournamentEnding, ...pub } = m;
+  void __injuredTournamentEnding;
+  return pub;
 }
 
 function resolveOutcome(
