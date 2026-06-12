@@ -11,7 +11,9 @@
     "compose": "tsx src/cli/run-poster.ts",
     "engage": "tsx src/cli/run-engagement.ts",
     "probe-tier": "tsx src/cli/probe-tier.ts",
-    "gen:fixture": "tsx src/cli/gen-fixture.ts"
+    "gen:fixture": "tsx src/cli/gen-fixture.ts",
+    "gen:pack": "tsx src/cli/gen-pack.ts",
+    "gen:banks": "tsx src/cli/gen-banks.ts"
   },
   "dependencies": {
     "@wcdraft/core": "workspace:*",

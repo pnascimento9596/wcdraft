@@ -44,12 +44,11 @@ describe("feature-truth gate", () => {
   it("throws for an unknown feature id", () => {
     expect(() => assertFeatureTruth(["telepathy"], "test")).toThrow(/unknown feature/);
   });
-  it("throws for a planned (not-yet-live) feature id", () => {
-    // rating_basis_choice is planned (Current basis is disabled in prod).
-    expect(() => assertFeatureTruth(["rating_basis_choice"], "test")).toThrow(/not live/);
-  });
-  it("manifest marks rating_basis_choice as planned, not live", () => {
-    expect(isLiveFeature("rating_basis_choice")).toBe(false);
+  it("now marks rating_basis_choice LIVE (Current basis enabled end-to-end by #118)", () => {
+    // #118 made the Career/Current basis choice selectable in prod, so the
+    // composer may now pitch it. (It was `planned` while Current was disabled.)
+    expect(isLiveFeature("rating_basis_choice")).toBe(true);
+    expect(() => assertFeatureTruth(["rating_basis_choice"], "test")).not.toThrow();
   });
 });
 

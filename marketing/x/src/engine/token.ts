@@ -223,7 +223,11 @@ export function versionsAgree(token: RunTokenBody, current: RunRecordVersions): 
 export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGameData): DraftState {
   const config = tokenDraftConfig(token);
   if (config.rating_basis !== "career") {
-    throw new Error(`token rating_basis "${config.rating_basis}" not replayable in this build`);
+    // The app supports a Current basis (#118), but this marketing composer
+    // simulates on Career ratings only, so a Current-basis token is honest-
+    // skipped from result-spotlights (run-from-token returns replay_failed)
+    // rather than rendered against the wrong ratings. Never a fabricated stat.
+    throw new Error(`token rating_basis "${config.rating_basis}" is not simulated by the marketing composer (Career only)`);
   }
   const catalog = getCatalogForEra(gd, config.era_preset);
   const positionFirst = config.draft_flow === "position_first";

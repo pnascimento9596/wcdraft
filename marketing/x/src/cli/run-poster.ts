@@ -1,8 +1,15 @@
 // CLI: run one Phase A poster slot.
 //
+// DORMANT (2026-06-12): @WCDraft has no X API credits, so live posting is not
+// possible (POST /2/tweets → 402 CreditsDepleted). This CLI is kept built +
+// tested but is NOT scheduled by any workflow and is gated behind
+// MARKETING_PAUSED=true. It activates only if API credits are ever loaded (set
+// MARKETING_PAUSED=false + MARKETING_LIVE=true). The live operating model is the
+// content-pack pipeline (gen:pack / gen:banks) — see marketing/x/ROUTINE.md.
+// Browser-automation posting is forbidden (X ToS / ban risk).
+//
 // Dry-run by default (writes an artifact). Live posting requires
-// MARKETING_LIVE=true AND credentials in the environment. Phase A (posting)
-// works on the Free API tier, so no tier gate here. The global kill switch
+// MARKETING_LIVE=true AND credentials in the environment. The global kill switch
 // (MARKETING_PAUSED=true) halts everything.
 
 import { isLive, isPaused } from "../config.ts";
