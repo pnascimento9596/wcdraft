@@ -73,9 +73,7 @@ export const RUN_TOKEN_V2_PREFIX = "t2." as const;
 export const RUN_TOKEN_MAX_LEN = 8192 as const;
 
 /** Pick log entry. Manager picks have no card_id/slot_id; the manager goes to `DraftState.manager_card_id`. */
-export type RunTokenPick =
-  | { k: "m" }
-  | { k: "p"; c: string; s: string };
+export type RunTokenPick = { k: "m" } | { k: "p"; c: string; s: string };
 
 /** Versioned reconstruction payload carried by the token. */
 export interface RunTokenV1Body {
@@ -208,7 +206,12 @@ function base64UrlDecode(input: string): string {
  */
 export function tokenDraftConfig(token: RunTokenBody): DraftConfig & { md: "classic" | "hidden" } {
   if (token.v === 1) {
-    return { md: token.md, draft_flow: "squad_first", rating_basis: "career", era_preset: "all_time" };
+    return {
+      md: token.md,
+      draft_flow: "squad_first",
+      rating_basis: "career",
+      era_preset: "all_time",
+    };
   }
   return { md: token.md, draft_flow: token.df, rating_basis: token.rb, era_preset: token.ef.id };
 }
@@ -428,19 +431,12 @@ export function versionsAgree(token: RunTokenBody, current: RunRecordVersions): 
  * catalog is the receiving site's, so the spin pool the picks reference is
  * only meaningful when versions agree.
  */
-export function reconstructDraftFromToken(
-  token: RunTokenBody,
-  gameData: GameData,
-): DraftState {
+export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
   const config = tokenDraftConfig(token);
-  // HONEST GATES — config this build cannot replay is refused loudly, never
-  // silently substituted (no fake fallback from `current` to `career`, no
-  // unfiltered catalog standing in for an era preset).
-  if (config.rating_basis !== "career") {
-    throw new RunTokenError(
-      `token rating_basis "${config.rating_basis}" is not available in this build (gated on MV2-12b)`,
-    );
-  }
+  // Both rating bases now replay (runtime-data-2.0.0 dual basis). The basis is
+  // carried on the reconstructed DraftState and resolved when the sim world /
+  // display views are built (no fake fallback between bases). The era-preset
+  // gate below still refuses an unfiltered catalog standing in for a preset.
   // DC-2: replay against the SAME era-bounded catalog the run was drafted
   // from (default all_time IS gameData.catalog by object identity).
   const catalog = getCatalogForEra(gameData, config.era_preset);
@@ -502,10 +498,7 @@ export function reconstructDraftFromToken(
  * (token-loaded runs are ephemeral session state — the user receiving the
  * URL is a viewer, not the originator).
  */
-export function virtualRecordFromToken(
-  token: RunTokenBody,
-  gameData: GameData,
-): RunRecordV1 {
+export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
   const draft = reconstructDraftFromToken(token, gameData);
   return {
     record_version: 1,

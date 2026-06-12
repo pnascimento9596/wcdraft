@@ -8,12 +8,12 @@
 //                      choose slot) or Position First (choose target slot →
 //                      spin squad → fill that slot). State-machine semantics
 //                      land in DC-3.
-//   - `rating_basis` — Career (career-best / full-career stature — today's
-//                      shipped ratings) or Current (at-that-World-Cup-year
-//                      strength). The TOKEN field ships now so no second token
-//                      evolution is ever needed, but the `current` VALUE is
-//                      gated on MV2-12b: decode accepts both, encode emits
-//                      `career` only, and replay refuses `current` honestly.
+//   - `rating_basis` — Career (career-best / full-career stature — the default
+//                      ratings) or Current (at-that-World-Cup-year strength).
+//                      Both VALUES are live: the squad is re-rated from
+//                      `basis_ratings.current` for a `current` run, in both the
+//                      display adapter and the sim world build. The single
+//                      token field carries either basis (no second evolution).
 //   - `era_preset`   — preset year window over the spin pool. v1 is presets
 //                      only (no free range slider); `2026-only` is explicitly
 //                      invalid (zero manager cards — cannot complete a draft).
@@ -26,10 +26,10 @@
 export type DraftFlow = "squad_first" | "position_first";
 
 /**
- * Rating basis axis. Default `career`. `current` is schema-valid (token
- * decode accepts it — single token evolution) but NOT materialized until the
- * MV2-12b basis season: encode never emits it and replay refuses it honestly.
- * Owner naming is pinned: never call `current` "Prime".
+ * Rating basis axis. Default `career`. Both values are live and materialized
+ * (runtime-data-2.0.0 dual basis): `current` re-rates the squad from
+ * `basis_ratings.current` for display and sim. Owner naming is pinned: never
+ * call `current` "Prime".
  */
 export type RatingBasis = "career" | "current";
 

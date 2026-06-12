@@ -4,12 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  computeSynergy,
-  FORMATION_TEMPLATES,
-  isDraftComplete,
-  validateSquad,
-} from "@wcdraft/core";
+import { computeSynergy, FORMATION_TEMPLATES, isDraftComplete, validateSquad } from "@wcdraft/core";
 import {
   lineStrengthViews,
   managerCardView,
@@ -156,13 +151,7 @@ function ReviewAppBar({ warning }: { warning?: string | null } = {}) {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image
-          src="/brand/wcdraft-mark.svg"
-          alt="wcdraft"
-          width={28}
-          height={31}
-          priority
-        />
+        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Review</span>
       </div>
       {warning ? (
@@ -196,10 +185,13 @@ function ReviewBoard({
   // post-Simulate reveal. DISPLAY-ONLY: the engine still consumes the real
   // channels; identities, shapes, flags and synergy LINK LINES stay visible.
   const blind = draft.mode === "hidden";
+  // Rating basis the squad was drafted on — every card/aggregate view resolves
+  // from it (Current reads basis_ratings.current); the CURRENT chip rides it.
+  const basis = draft.rating_basis;
 
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind }),
-    [gameData, draft, blind],
+    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
 
   const manager = draft.manager_card_id
@@ -210,13 +202,7 @@ function ReviewBoard({
     : null;
 
   const synergy = useMemo(
-    () =>
-      computeSynergy(
-        draft.squad,
-        formation,
-        managerTournament,
-        gameData.nationByCardId,
-      ),
+    () => computeSynergy(draft.squad, formation, managerTournament, gameData.nationByCardId),
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
   );
 
@@ -225,12 +211,12 @@ function ReviewBoard({
   // branch. Under blind, per-line `value` is null but `count` still reports the
   // filled-starter count so the row labels can render unconditionally.
   const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft, { blindRatings: blind }),
-    [gameData, draft, blind],
+    () => lineStrengthViews(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
   const squadAvg = useMemo(
-    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind }),
-    [gameData, draft, blind],
+    () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
 
   // Team name with debounced persistence.
@@ -311,6 +297,14 @@ function ReviewBoard({
         ) : null}
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>{formation.name}</h2>
+          {basis === "current" ? (
+            <span
+              className={s.basisChip}
+              title="This run rates every card on its at-tournament (Current) strength."
+            >
+              Current
+            </span>
+          ) : null}
           <span className={s.panelMeta}>Locked · no rearranging</span>
         </div>
         <div className={s.squadStage}>
@@ -339,7 +333,6 @@ function ReviewBoard({
             ))}
           </div>
         </div>
-
       </section>
 
       <section className={s.panel}>
@@ -357,10 +350,7 @@ function ReviewBoard({
             <div key={l.line} className={s.lineRow}>
               <span className={s.lineName}>{l.label}</span>
               <span className={s.lineTrack}>
-                <span
-                  className={s.lineFill}
-                  style={{ width: `${l.value ?? 0}%` }}
-                />
+                <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
               </span>
               <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
             </div>
@@ -368,7 +358,7 @@ function ReviewBoard({
         </div>
       </section>
 
-{validation.warnings.length > 0 ? (
+      {validation.warnings.length > 0 ? (
         <section className={`${s.panel} ${s.warningsPanel}`}>
           <h3 className={s.panelSubTitle}>Squad warnings</h3>
           <ul className={s.warnList}>
@@ -439,11 +429,7 @@ function SimulatePanel({
       const scenarioBundle = await loadScenarioBundle();
       setSim({ kind: "running", note: "Simulating the run…" });
       const result = await runSimulation(gameData, scenarioBundle, record);
-      const persist = setRunSimulation(
-        record.run_id,
-        gameData.versions,
-        result.simulation,
-      );
+      const persist = setRunSimulation(record.run_id, gameData.versions, result.simulation);
       if (persist.status !== "updated" || !persist.record) {
         setSim({
           kind: "error",
@@ -459,9 +445,7 @@ function SimulatePanel({
         warningParts.push("Simulation saved to this tab only — browser storage is unavailable.");
       }
       warningParts.push(...persist.warnings);
-      const warn = warningParts.length > 0
-        ? warningParts.join(" · ")
-        : persistenceWarning;
+      const warn = warningParts.length > 0 ? warningParts.join(" · ") : persistenceWarning;
       onRecordUpdate(persist.record, warn ?? null);
       // F-3.5 — fire-and-forget server mirror. The local save is the
       // source of truth; this just lands the row in saved_runs so signed-

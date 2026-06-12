@@ -23,6 +23,7 @@ import {
   DraftTargetDeadEndError,
   type DraftFlow,
   type EraPresetId,
+  type RatingBasis,
 } from "@wcdraft/core";
 import {
   draftCandidateViews,
@@ -330,23 +331,40 @@ const DRAFT_FLOW_LABELS: Record<DraftFlow, string> = {
   position_first: "Position First",
 };
 
+const RATING_BASIS_LABELS: Record<RatingBasis, string> = {
+  career: "Career",
+  current: "Current",
+};
+
+/**
+ * The rating bases the setup control offers, in display order. EXPORTED as the
+ * control-of-record so a test can pin it against the bases actually present in
+ * the served runtime bundle — the UI can never silently lag (or lead) the data.
+ */
+export const SETUP_RATING_BASES = ["career", "current"] as const satisfies readonly RatingBasis[];
+
 function DraftSetupDisclosure({
   eraPreset,
   onEraPreset,
   draftFlow,
   onDraftFlow,
+  ratingBasis,
+  onRatingBasis,
   disabled,
 }: {
   eraPreset: EraPresetId;
   onEraPreset: (p: EraPresetId) => void;
   draftFlow: DraftFlow;
   onDraftFlow: (f: DraftFlow) => void;
+  ratingBasis: RatingBasis;
+  onRatingBasis: (b: RatingBasis) => void;
   disabled: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  // Summary mirrors the three config axes; basis is fixed in this build
-  // (Current lands with the MV2-12b basis season).
-  const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · Career · ${ERA_PRESET_LABELS[eraPreset]}`;
+  // Default-OPEN on first arrival (owner decision): collapsed axes are easy to
+  // miss. Still collapsible; the summary line stays either way.
+  const [open, setOpen] = useState(true);
+  // Summary mirrors all three config axes.
+  const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
     <div>
       <button
@@ -403,18 +421,23 @@ function DraftSetupDisclosure({
           <div className={s.setupAxis}>
             <span className={s.setupAxisLabel}>Rating basis</span>
             <div className={s.setupSeg} role="group" aria-label="Rating basis">
-              <button
-                type="button"
-                className={`${s.setupSegBtn} ${s.setupSegBtnActive}`}
-                aria-pressed
-              >
-                Career
-              </button>
-              <button type="button" className={s.setupSegBtn} disabled>
-                Current
-              </button>
+              {SETUP_RATING_BASES.map((b) => (
+                <button
+                  key={b}
+                  type="button"
+                  className={`${s.setupSegBtn} ${ratingBasis === b ? s.setupSegBtnActive : ""}`}
+                  aria-pressed={ratingBasis === b}
+                  disabled={disabled}
+                  onClick={() => onRatingBasis(b)}
+                >
+                  {RATING_BASIS_LABELS[b]}
+                </button>
+              ))}
             </div>
-            <p className={s.setupAxisNote}>Current arrives after the rating rebuild.</p>
+            <p className={s.setupAxisNote}>
+              Career: each card on its whole-career peak. Current: the player at that
+              tournament&rsquo;s strength, estimated where a career is still in progress.
+            </p>
           </div>
         </div>
       ) : null}
@@ -438,6 +461,7 @@ function FormationSelect({
   const [error, setError] = useState<string | null>(null);
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
   const [draftFlow, setDraftFlow] = useState<DraftFlow>("squad_first");
+  const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
 
   const lockIn = useCallback(
     (formation_id: SupportedFormationId) => {
@@ -449,6 +473,7 @@ function FormationSelect({
           mode: draftMode,
           era_preset: eraPreset,
           draft_flow: draftFlow,
+          rating_basis: ratingBasis,
         });
         const warning =
           created.persistence === "volatile" || created.warnings.length > 0
@@ -462,7 +487,7 @@ function FormationSelect({
         setPending(null);
       }
     },
-    [gameData, draftMode, eraPreset, draftFlow, onLocked],
+    [gameData, draftMode, eraPreset, draftFlow, ratingBasis, onLocked],
   );
 
   return (
@@ -488,6 +513,8 @@ function FormationSelect({
           onEraPreset={setEraPreset}
           draftFlow={draftFlow}
           onDraftFlow={setDraftFlow}
+          ratingBasis={ratingBasis}
+          onRatingBasis={setRatingBasis}
           disabled={pending !== null}
         />
         <div className={s.formationGrid}>
@@ -573,6 +600,10 @@ function DraftBoard({
   // ONLY: the engine state, pick/lock flow, and the sim inputs are the real
   // values; identities, shapes, flags, the spin and synergy LINK LINES stay.
   const blind = draft.mode === "hidden";
+  // Rating-basis seam: every card view + the sim resolve from this basis. The
+  // CURRENT chip rides `draft.rating_basis` (config, not a rating), so it shows
+  // even under Memory mode while the numerics stay masked.
+  const basis = draft.rating_basis;
 
   // DC-3 position-first derivations. `awaitingTarget` gates the target-select
   // stage (the spin's draw is NOT materialized yet); `lockedTarget` pins the
@@ -584,12 +615,12 @@ function DraftBoard({
 
   // Adapter views.
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind }),
-    [gameData, draft, blind],
+    () => pitchSlotViews(gameData.indexes, draft, { blindRatings: blind, basis }),
+    [gameData, draft, blind, basis],
   );
   const candidates = useMemo(
-    () => draftCandidateViews(gameData.indexes, draft, spin, { blindRatings: blind }),
-    [gameData, draft, spin, blind],
+    () => draftCandidateViews(gameData.indexes, draft, spin, { blindRatings: blind, basis }),
+    [gameData, draft, spin, blind, basis],
   );
 
   // Selection / UI state.
@@ -1099,6 +1130,14 @@ function DraftBoard({
           ) : null}
           <div className={s.panelHead}>
             <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
+            {basis === "current" ? (
+              <span
+                className={s.basisChip}
+                title="This run rates every card on its at-tournament (Current) strength."
+              >
+                Current
+              </span>
+            ) : null}
             <span className={`${s.panelMeta} ${s.squadCounter}`}>
               <span className={s.squadCounterCell}>
                 <b>{starters.filter((sl) => sl.card).length}/11</b> XI

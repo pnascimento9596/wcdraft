@@ -42,21 +42,18 @@ function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
-export function MemoryReveal({
-  gameData,
-  record,
-}: {
-  gameData: GameData;
-  record: RunRecordV1;
-}) {
+export function MemoryReveal({ gameData, record }: { gameData: GameData; record: RunRecordV1 }) {
   const reducedMotion = usePrefersReducedMotion();
   const draft = record.draft;
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
 
-  // Full (unblinded) views — the same adapters the classic surfaces use.
+  // Full (unblinded) views — the same adapters the classic surfaces use. The
+  // reveal must show the basis the run was drafted on, so a Current run reveals
+  // the Current numbers (not the Career alias).
+  const basis = draft.rating_basis;
   const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft),
-    [gameData, draft],
+    () => pitchSlotViews(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
   const manager = draft.manager_card_id
     ? managerCardView(gameData.indexes, draft.manager_card_id)
@@ -65,17 +62,16 @@ export function MemoryReveal({
     ? managerTournamentFor(gameData.indexes, draft.manager_card_id)
     : null;
   const synergy = useMemo(
-    () =>
-      computeSynergy(draft.squad, formation, managerTournament, gameData.nationByCardId),
+    () => computeSynergy(draft.squad, formation, managerTournament, gameData.nationByCardId),
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
   );
   const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft),
-    [gameData, draft],
+    () => lineStrengthViews(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
   const squadAvg = useMemo(
-    () => squadAverageOverall(gameData.indexes, draft),
-    [gameData, draft],
+    () => squadAverageOverall(gameData.indexes, draft, { basis }),
+    [gameData, draft, basis],
   );
 
   return (
@@ -85,9 +81,7 @@ export function MemoryReveal({
     >
       <div className={s.panelHead}>
         <h2 className={s.panelTitle}>The reveal</h2>
-        <span className={s.panelMeta}>
-          Memory mode — ratings &amp; Synergy, now on the table
-        </span>
+        <span className={s.panelMeta}>Memory mode — ratings &amp; Synergy, now on the table</span>
       </div>
 
       <SynergyBar result={synergy} active={true} />
@@ -128,10 +122,7 @@ export function MemoryReveal({
           <div key={l.line} className={s.lineRow}>
             <span className={s.lineName}>{l.label}</span>
             <span className={s.lineTrack}>
-              <span
-                className={s.lineFill}
-                style={{ width: `${l.value ?? 0}%` }}
-              />
+              <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
             </span>
             <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
           </div>

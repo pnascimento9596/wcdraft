@@ -99,8 +99,7 @@ export function CandidateCard({
   // axis per edge: provenance owns the left stripe, gold marks pick/win
   // moments at the moment site (chip, selected ring), never a second bar.
 
-  const coveragePct =
-    card.rating.coverage === null ? null : Math.round(card.rating.coverage * 100);
+  const coveragePct = card.rating.coverage === null ? null : Math.round(card.rating.coverage * 100);
   const primaryLine = card.position_listed ?? card.eligible_positions[0] ?? "MF";
   const headShape = positionShape(primaryLine);
 
@@ -137,8 +136,7 @@ export function CandidateCard({
             ) : null}
           </span>
           <span className={s.candRowSub}>
-            {card.year} ·{" "}
-            {card.position_listed ?? card.eligible_positions[0] ?? "—"}
+            {card.year} · {card.position_listed ?? card.eligible_positions[0] ?? "—"}
             {card.club_label ? ` · ${card.club_label}` : ""}
           </span>
         </span>
@@ -148,10 +146,7 @@ export function CandidateCard({
           title={card.rating.badge_label}
           aria-hidden="true"
         />
-        <span
-          className={`${s.candRowShape} ${s[`shapeDot_${headShape}`]!}`}
-          aria-hidden="true"
-        />
+        <span className={`${s.candRowShape} ${s[`shapeDot_${headShape}`]!}`} aria-hidden="true" />
 
         <span className={s.candRowBars} aria-hidden="true">
           <i style={{ height: barHeight(card.rating.attack) }} />
@@ -180,6 +175,14 @@ export function CandidateCard({
             <span className={`${s.provBadge} ${s[`provBadge_${card.rating.badge_kind}`]!}`}>
               {card.rating.badge_label}
             </span>
+            {card.rating.basis === "current" ? (
+              <span
+                className={s.basisChip}
+                title="Rated on at-tournament (Current) strength, not career peak."
+              >
+                Current
+              </span>
+            ) : null}
             {card.shirt_number !== null ? (
               <span className={s.candShirt}>#{card.shirt_number}</span>
             ) : null}
@@ -208,10 +211,7 @@ export function CandidateCard({
             <span className={s.candCoverage} title="Honest-state data coverage">
               <span className={s.candCoverageTrack}>
                 {coveragePct === null ? null : (
-                  <span
-                    className={s.candCoverageFill}
-                    style={{ width: `${coveragePct}%` }}
-                  />
+                  <span className={s.candCoverageFill} style={{ width: `${coveragePct}%` }} />
                 )}
               </span>
               <span className={s.candCoverageVal}>
@@ -301,18 +301,12 @@ export function ManagerCandidate({
               <b>{formatNullableNumber(manager.matches)}</b> matches
             </span>
             <span>
-              finish{" "}
-              <b>
-                {manager.final_placement !== null ? `#${manager.final_placement}` : "—"}
-              </b>
+              finish <b>{manager.final_placement !== null ? `#${manager.final_placement}` : "—"}</b>
             </span>
             <span className={s.candManagerTag}>Goes to the dedicated manager slot</span>
           </span>
           {manager.traits.length > 0 ? (
-            <span
-              className={s.managerTraits}
-              aria-label="Manager style traits — flavor only"
-            >
+            <span className={s.managerTraits} aria-label="Manager style traits — flavor only">
               {manager.traits.map((t) => (
                 <span
                   key={t.id}

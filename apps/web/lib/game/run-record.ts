@@ -27,15 +27,12 @@ import {
   type GroupStageResult,
   type DraftFlow,
   type EraPresetId,
+  type RatingBasis,
 } from "@wcdraft/core";
 
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
-import {
-  RunRecordError,
-  StorageQuotaError,
-  StorageUnavailableError,
-} from "./errors";
+import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
 
@@ -287,6 +284,11 @@ export interface CreateRunRecordParams {
   era_preset?: EraPresetId;
   /** DC-3 draft flow (default `squad_first` = today's flow). */
   draft_flow?: DraftFlow;
+  /**
+   * Rating basis (default `career`). `current` re-rates the squad from
+   * `basis_ratings.current` for both display and sim (selected-basis lane).
+   */
+  rating_basis?: RatingBasis;
 }
 
 export interface CreateRunRecordResult {
@@ -335,6 +337,7 @@ export function createNewRunRecord(
         engine_version: gameData.versions.engine_version,
         era_preset,
         draft_flow: params.draft_flow ?? "squad_first",
+        rating_basis: params.rating_basis ?? "career",
       });
       const record: RunRecordV1 = {
         record_version: RUN_RECORD_SCHEMA_VERSION,
@@ -352,10 +355,7 @@ export function createNewRunRecord(
       lastErr = err;
       // Retry on the specific "no coach in 17 spins" failure; surface anything
       // else immediately.
-      if (
-        err instanceof RangeError &&
-        /none of the 17 drawn/i.test(err.message)
-      ) {
+      if (err instanceof RangeError && /none of the 17 drawn/i.test(err.message)) {
         continue;
       }
       throw err;
