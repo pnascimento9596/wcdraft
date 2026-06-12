@@ -15,7 +15,9 @@ import type {
   SquadSlot,
 } from "@wcdraft/core";
 import { FORMATION_TEMPLATES, slotPositionLine } from "@wcdraft/core";
+import type { RatingBasis } from "@wcdraft/core";
 import type {
+  RuntimeBasisRating,
   RuntimeManagerCard,
   RuntimePlayerCard,
   RuntimeRating,
@@ -32,11 +34,7 @@ import type {
   PitchSlotView,
   PlayerCardView,
 } from "./view-models";
-import {
-  blindCardRatingView,
-  provenanceBadgeKind,
-  provenanceBadgeLabel,
-} from "./view-models";
+import { blindCardRatingView, provenanceBadgeKind, provenanceBadgeLabel } from "./view-models";
 import { managerTraitsFor } from "./manager-traits";
 
 // ─── Tournament / nation lookups ─────────────────────────────────────────────
@@ -62,45 +60,59 @@ export function ratingFor(idx: GameDataIndexes, card_id: CardId | string): Runti
 }
 
 /**
- * Memory (hidden) mode display options, threaded through the adapter joins.
+ * Memory (hidden) mode + rating-basis display options, threaded through the
+ * adapter joins.
+ *
  * `blindRatings: true` strips rating signals from the returned VIEWS via
  * `blindCardRatingView` — strictly display-layer; the engine-facing state
- * (squad, ratings consumed by the sim) is never touched. Omitted/false is
- * the classic path, byte-identical to before this option existed.
+ * (squad, ratings consumed by the sim) is never touched. Omitted/false is the
+ * classic path.
+ *
+ * `basis: "current"` reads the card's `basis_ratings.current` view (channels,
+ * coverage, provenance/`overall_basis` and `legend` are ALL per-basis — an
+ * estimate on Current must surface as an estimate, never as measured). Omitted
+ * or `"career"` reads the Career compatibility alias UNCHANGED, byte-identical
+ * to before this option existed. Blinding runs AFTER basis selection, so a
+ * Memory-mode Current run masks every Current value identically (the basis is
+ * a config choice, not a leak).
  */
 export interface AdapterDisplayOptions {
   blindRatings?: boolean;
+  basis?: RatingBasis;
+}
+
+function basisRating(r: RuntimeRating, basis?: RatingBasis): RuntimeBasisRating {
+  return basis === "current" ? r.basis_ratings.current : r;
 }
 
 function ratingView(r: RuntimeRating, opts?: AdapterDisplayOptions): CardRatingView {
+  const rr = basisRating(r, opts?.basis);
   const badge_kind = provenanceBadgeKind({
-    overall: r.overall,
-    provenance: r.provenance,
-    overall_basis: r.overall_basis,
-    legend: r.legend,
+    overall: rr.overall,
+    provenance: rr.provenance,
+    overall_basis: rr.overall_basis,
+    legend: rr.legend,
   });
   const view: CardRatingView = {
-    overall: r.overall,
-    attack: r.attack,
-    midfield: r.midfield,
-    defense: r.defense,
-    goalkeeping: r.goalkeeping,
-    coverage: r.coverage,
-    provenance: r.provenance,
-    overall_basis: r.overall_basis,
-    legend: r.legend,
+    overall: rr.overall,
+    attack: rr.attack,
+    midfield: rr.midfield,
+    defense: rr.defense,
+    goalkeeping: rr.goalkeeping,
+    coverage: rr.coverage,
+    provenance: rr.provenance,
+    overall_basis: rr.overall_basis,
+    legend: rr.legend,
     badge_kind,
     badge_label: provenanceBadgeLabel(badge_kind),
+    basis: opts?.basis ?? "career",
   };
   return opts?.blindRatings ? blindCardRatingView(view) : view;
 }
 
 // ─── Player card lookup + view ───────────────────────────────────────────────
 
-function playerOrThrow(
-  idx: GameDataIndexes,
-  card_id: CardId | string,
-): RuntimePlayerCard {
+function playerOrThrow(idx: GameDataIndexes, card_id: CardId | string): RuntimePlayerCard {
   const c = idx.playerByCardId.get(card_id);
   if (!c) throw new MissingRecordError("player_card", String(card_id));
   return c;
@@ -137,10 +149,7 @@ function buildStats(c: RuntimePlayerCard): CandidateStatView[] {
   return out;
 }
 
-function nationCode(
-  nation_id: string,
-  nation: { code: string | null },
-): string {
+function nationCode(nation_id: string, nation: { code: string | null }): string {
   return nation.code ?? nation_id.toUpperCase();
 }
 
@@ -243,17 +252,10 @@ export function managerTournamentFor(
 
 // ─── Pitch slot view ─────────────────────────────────────────────────────────
 
-function slotChannelForStarter(
-  formation: FormationTemplate,
-  slot_id: string,
-): FormationChannel {
+function slotChannelForStarter(formation: FormationTemplate, slot_id: string): FormationChannel {
   const fs = formation.slots.find((s) => s.slot_id === slot_id);
   if (!fs) {
-    throw new MissingRecordError(
-      "slot",
-      slot_id,
-      `not in formation "${formation.formation_id}"`,
-    );
+    throw new MissingRecordError("slot", slot_id, `not in formation "${formation.formation_id}"`);
   }
   return fs.channel;
 }
@@ -380,10 +382,7 @@ export function lineStrengthViews(
   }
   return LINES_ORDER.filter((line) => counts[line] > 0).map((line) => {
     const xs = channels[line].filter((c): c is number => c !== null);
-    const value =
-      xs.length > 0
-        ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length)
-        : null;
+    const value = xs.length > 0 ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null;
     return { line, label: LINE_LABELS[line], count: counts[line], value };
   });
 }

@@ -19,8 +19,11 @@ merit-v3 as-built facts: U0 linked the 17 Audit-2 2026 identity misses; V1 emitt
 as `unified_pooled_piecewise_power_v2`; V5 backfilled historical club-at-tournament
 coverage; V6 emitted `runtime-data-2.0.0` dual-basis compact data and locked the
 source-derived legend census at 270; V7 refit lambda and realism bands; V8 owns the
-single public engine stamp and season merge docs. Current shipped basis remains
-Career; Current is materialized in `basis_ratings.current` for draft-config use.
+single public engine stamp and season merge docs. The default basis is Career;
+the Current basis (materialized in `basis_ratings.current`) is now SELECTABLE at
+setup and rides the existing t2 token — a Current run re-rates the user squad
+from `basis_ratings.current` for both display and sim, and is non-canonical
+(casual-only, honest `NON_CANONICAL_CONFIG` 422 on the ranked board).
 
 Merit-v3 shipped with its §7 waiver ledger preserved, not erased: Yamal, Haaland,
 Valverde-2026, Neymar-2026, Lukaku, B. Fernandes, Kocsis card, Cruyff-1974 card,
@@ -57,6 +60,14 @@ than hidden regressions.
   The Current-basis enablement (sim wiring, in-draft visibility, disclosure
   default-open, basis copy + the MV2-12b/selected-basis stale-language sweep) is the
   paired RED lane `ui/ux-basis-wave`, held for fresh-session review + pinned approval.
+- `ui/ux-basis-wave` (RED) ENABLES the Current rating basis end-to-end: setup
+  control selectable + disclosure default-open + factual basis copy; the display
+  adapter and `buildSimWorldInputs` both resolve `basis_ratings.current` for a
+  Current run (the sim genuinely consumes the Current channels — not display-
+  only); a CURRENT chip on the squad/card surfaces (config, survives Memory
+  blinding); leaderboard still refuses Current as `NON_CANONICAL_CONFIG`. The
+  Career path is byte-identical (goldens untouched, no regen; heavy realism 7/7).
+  Stale MV2-12b/selected-basis gate language swept from code comments + setup.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -79,14 +90,14 @@ than hidden regressions.
 
 | Suite                                                   | Result                                                                                                |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| @wcdraft/core `test`                                    | 331 passed, 3 skipped (334)                                                                           |
+| @wcdraft/core `test`                                    | 338 passed (ui/ux-basis-wave: current-basis recorded, no longer refused)                              |
 | @wcdraft/core `test:golden` (RNG)                       | 3 passed                                                                                              |
 | @wcdraft/core `test:golden:draft`                       | 40 passed (entity-resolution and manager-identity goldens now wired)                                  |
 | @wcdraft/data `test`                                    | 65 passed, 7 skipped (72)                                                                             |
 | @wcdraft/data `test:golden:data`                        | 31 passed                                                                                             |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                                                                                             |
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
-| @wcdraft/web `test`                                     | 625 passed, 1 skipped (626) (ws-ux/mobile-content: +3 draft-overflow contract tests)                  |
+| @wcdraft/web `test`                                     | 634 passed, 1 skipped (635) (ui/ux-basis-wave: +rating-basis seam/divergence/determinism tests)       |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
 | @wcdraft/marketing-x `test`                             | 54 passed (6 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement) |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |

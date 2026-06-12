@@ -31,7 +31,6 @@ import {
   encodeRunToken,
   isNewerRunTokenVersion,
   reconstructDraftFromToken,
-  RunTokenError,
   RUN_TOKEN_V2_PREFIX,
   tokenDraftConfig,
   versionsAgree,
@@ -41,10 +40,7 @@ import {
 
 import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
-import {
-  buildGameDataFromBundles,
-  buildOriginRecord,
-} from "./run-token.test-harness";
+import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 
 const gameData: GameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
@@ -127,17 +123,13 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     expect(decodeRunToken(tamperedV2((b) => (b.ef.min = 1954)))).toBeNull();
     expect(decodeRunToken(tamperedV2((b) => (b.ef.max = 2030)))).toBeNull();
     expect(
-      decodeRunToken(
-        tamperedV2((b) => (b.ef = { id: "modern", min: 1930, max: 2026 })),
-      ),
+      decodeRunToken(tamperedV2((b) => (b.ef = { id: "modern", min: 1930, max: 2026 }))),
     ).toBeNull();
   });
 
   it("rejects position_first entries with missing ts", () => {
     // Flipping df alone leaves every pick without the now-required ts.
-    expect(
-      decodeRunToken(tamperedV2((b) => (b.df = "position_first"))),
-    ).toBeNull();
+    expect(decodeRunToken(tamperedV2((b) => (b.df = "position_first")))).toBeNull();
   });
 
   it("rejects incoherent ts under EITHER flow", () => {
@@ -204,14 +196,26 @@ describe("t2 — anchor fuzz (every flipped anchor yields skew, never replay)", 
   }
 });
 
-// ─── 4. honest replay gates for not-yet-implemented config ──────────────────
+// ─── 4. replay of the selected rating basis ─────────────────────────────────
 
-describe("t2 — replay refuses config this build does not implement (honest, loud)", () => {
-  it("rb 'current' (gated on MV2-12b) — decodes, never replays", () => {
+describe("t2 — replay carries the rating basis (both bases live)", () => {
+  it("rb 'current' decodes AND replays, recording the current basis on the draft", () => {
     const decoded = decodeRunToken(tamperedV2((b) => (b.rb = "current")));
-    expect(decoded).not.toBeNull(); // single token evolution: schema-valid…
-    expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(RunTokenError);
-    expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(/MV2-12b/);
+    expect(decoded).not.toBeNull();
+    const draft = reconstructDraftFromToken(decoded!, gameData);
+    expect(draft.rating_basis).toBe("current");
+  });
+
+  it("the basis is the ONLY difference vs a career replay (spins are basis-independent)", () => {
+    const current = reconstructDraftFromToken(
+      decodeRunToken(tamperedV2((b) => (b.rb = "current")))!,
+      gameData,
+    );
+    const career = reconstructDraftFromToken(
+      decodeRunToken(tamperedV2((b) => (b.rb = "career")))!,
+      gameData,
+    );
+    expect({ ...current, rating_basis: "career" }).toEqual(career);
   });
 });
 
