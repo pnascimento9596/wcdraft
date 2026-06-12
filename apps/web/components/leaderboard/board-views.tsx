@@ -24,8 +24,8 @@ export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Best verified run per manager this season. Finish a run and post it from your
-        results screen.
+        Best verified run per manager this season. Finish a run and post it from your results
+        screen.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>
@@ -42,10 +42,7 @@ export function BoardToolbar({
   return (
     <div className={s.toolbar}>
       <div className={s.modeTabs} aria-label="Board mode">
-        <span className={s.modeTab}>Casual</span>
-        <span className={s.modeTabDark}>
-          Ranked<span className={s.modeTabSoon}>soon</span>
-        </span>
+        <span className={s.modeTab}>Casual leaderboard</span>
       </div>
       <div className="segmented" role="group" aria-label="Draft mode filter">
         {BOARD_FILTERS.map((f) => (
@@ -103,9 +100,7 @@ export function BoardRows({
                 <span className={s.rowMeta}>
                   {r.isMine && <span className={`${s.badge} ${s.badgeYou}`}>You</span>}
                   <span
-                    className={
-                      r.draftMode === "hidden" ? `${s.badge} ${s.badgeHidden}` : s.badge
-                    }
+                    className={r.draftMode === "hidden" ? `${s.badge} ${s.badgeHidden}` : s.badge}
                   >
                     {r.draftMode === "hidden" ? "Memory" : "Classic"}
                   </span>
@@ -153,8 +148,8 @@ export function BoardError({ onRetry }: { onRetry: () => void }) {
     <div className={s.stateBox} role="alert">
       <p className={s.stateTitle}>Couldn&rsquo;t load the board</p>
       <p>
-        The standings didn&rsquo;t come back from the server. Nothing is shown rather than
-        something made up.
+        The standings didn&rsquo;t come back from the server. Nothing is shown rather than something
+        made up.
       </p>
       <button type="button" className="btn btn--ghost" onClick={onRetry}>
         Try again

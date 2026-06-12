@@ -678,14 +678,6 @@ main {
   color: var(--ink-faint);
 }
 
-.coming-soon {
-  font-family: var(--font-text), serif;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  color: var(--ink-faint);
-  font-style: italic;
-}
-
 /* "Live now" status caption under the hero — honest shipped-state, not a disclaimer. */
 .hero__live {
   display: inline-flex;
@@ -914,16 +906,6 @@ main {
 .setting__control {
   flex: none;
 }
-.tag-soon {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-faint);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.3rem 0.7rem;
-}
-
 /* Segmented theme control (settings page) */
 .segmented {
   display: inline-flex;
@@ -983,9 +965,11 @@ main {
 .contact-card a:hover {
   text-decoration: underline;
 }
-.contact-card .placeholder {
+.contact-card p {
+  margin: 0;
   color: var(--ink-faint);
-  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 /* Callout */

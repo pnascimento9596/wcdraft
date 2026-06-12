@@ -1,8 +1,8 @@
 // F-3.5 — /sign-in
 //
 // Server Component shell. Ship-dark gate: when auth is disabled this page
-// renders a "coming soon" notice instead of an unusable form (no broken
-// "I never received an email" flow in production). The actual form lives
+// renders an unavailable notice instead of an unusable form (no broken
+// email delivery flow in production). The actual form lives
 // in the SignInForm client component.
 import type { Metadata } from "next";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in to wcdraft to save your runs, surface your history, and chase the perfect 8-0.",
+  description:
+    "Sign in to wcdraft to save your runs, surface your history, and chase the perfect 8-0.",
   robots: { index: false, follow: false },
 };
 
@@ -31,19 +32,14 @@ export default function SignInPage(): React.ReactElement {
             <span className="signin-screen__dot" aria-hidden="true" />
             <span>your account</span>
           </div>
-          <h1 className="signin-screen__title display">
-            sign&nbsp;in
-          </h1>
+          <h1 className="signin-screen__title display">sign&nbsp;in</h1>
           <p className="signin-screen__sub">
-            We&rsquo;ll email a single&#8209;use link. No password, no rate of decay&nbsp;&mdash; just the run you&rsquo;ll come back for.
+            We&rsquo;ll email a single&#8209;use link. No password, no rate of decay&nbsp;&mdash;
+            just the run you&rsquo;ll come back for.
           </p>
         </header>
 
-        {authEnabled ? (
-          <SignInForm />
-        ) : (
-          <DisabledNotice />
-        )}
+        {authEnabled ? <SignInForm /> : <DisabledNotice />}
 
         <ul className="signin-screen__crumbs" aria-label="What sign in gets you">
           <li>
@@ -67,11 +63,10 @@ export default function SignInPage(): React.ReactElement {
 function DisabledNotice(): React.ReactElement {
   return (
     <div className="signin-screen__disabled" role="status" aria-live="polite">
-      <span className="signin-screen__disabled-tag">soon</span>
+      <span className="signin-screen__disabled-tag">unavailable</span>
       <p>
-        Sign&#8209;in goes live once <code>RESEND_API_KEY</code> +{" "}
-        <code>AUTH_EMAIL_FROM</code> + <code>AUTH_BASE_URL</code> are configured
-        in the deployment. Your anonymous runs keep saving locally in the meantime.
+        Sign&#8209;in is not available in this deployment. You can still draft and keep anonymous
+        runs in this browser when storage is available.
       </p>
     </div>
   );
