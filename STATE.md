@@ -88,6 +88,7 @@ than hidden regressions.
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
 | @wcdraft/web `test`                                     | 625 passed, 1 skipped (626) (ws-ux/mobile-content: +3 draft-overflow contract tests)                  |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
+| @wcdraft/marketing-x `test`                             | 54 passed (6 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement) |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |
 | etl V1 focused merit suite                              | 42 passed                                                                                             |
 | etl V1 `pytest -q`                                      | 233 passed                                                                                            |
@@ -125,6 +126,13 @@ than hidden regressions.
   never prod) · **etl-rating** (ruff · rating tests · ratings.json byte-determinism).
 - `etl.yml`: ingest · identity-QA · determinism, path-filtered to `etl/**`; upstream
   Fjelstul pinned `f41e9437`.
+- `marketing-x.yml` (q-007): organic X poster for @WCDraft. `post` job on six jittered
+  cron slots/day + `engage` job (Phase B/C). Both gate on `vars.MARKETING_PAUSED != 'true'`
+  (kill switch). Dry-run unless `vars.MARKETING_LIVE == 'true'` (or dispatch `live=true`).
+  Secrets `X_API_KEY/X_API_SECRET/X_ACCESS_TOKEN/X_ACCESS_SECRET/X_BEARER_TOKEN` set as repo
+  Actions secrets 2026-06-12. @WCDraft is **Free API tier** (search → 402) so Phase B/C
+  ship gated OFF; Phase A posting works. Live posts commit `marketing/x/ledger/posts.ledger.jsonl`
+  back to main with `[skip ci]`.
 - Triggers (both): PR + push on `main`, `engine-*`, `merit-*`, `season-*`.
 - Branch protection requires PR CI; repo auto-merge DISABLED (checks ~7 min; realism ~4 min).
 
@@ -145,6 +153,10 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
   leaderboard gated until ranked tiers ship.
 - Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
   re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
+- GitHub **Actions secrets** (not Vercel): `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`,
+  `X_ACCESS_SECRET`, `X_BEARER_TOKEN` (q-007 marketing). Repo **vars** govern the lane:
+  `MARKETING_PAUSED` (kill switch, default off), `MARKETING_LIVE` (default off → dry-run),
+  `MARKETING_DAILY_CAP` (optional, clamped to 6).
 
 ## Branch / merge convention (from git history)
 
