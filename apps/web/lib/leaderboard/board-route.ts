@@ -24,7 +24,7 @@ import {
   boardPage,
   identityBoardRank,
   recentEntriesFor,
-  toApiEntry,
+  toApiEntryWithProfile,
   type ApiLeaderboardEntry,
   type BoardCursor,
   type BoardDraftMode,
@@ -221,19 +221,14 @@ export async function handleLeaderboardMeGet(
     const bestRow = best ? (recent.find((r) => r.id === best.entryId) ?? null) : null;
     // The best entry may be older than the recent window — fetch it directly
     // if so (still the same identity scope, so no leak surface).
-    const bestApi =
-      best && !bestRow
-        ? await fetchEntryById(deps.db, best.entryId)
-        : bestRow
-          ? toApiEntry(bestRow)
-          : null;
+    const bestApi = best && !bestRow ? await fetchEntryById(deps.db, best.entryId) : bestRow;
 
     const body: MeResponseBody = {
       season_key: base.seasonKey,
       mode: base.mode,
       best: bestApi,
       rank: best?.rank ?? null,
-      recent: recent.map(toApiEntry),
+      recent,
     };
     const res = NextResponse.json(body);
     res.headers.set("Cache-Control", "no-store");
@@ -253,5 +248,5 @@ async function fetchEntryById(db: Db, id: string): Promise<ApiLeaderboardEntry |
     .from(leaderboardEntries)
     .where(eq(leaderboardEntries.id, id))
     .limit(1);
-  return rows[0] ? toApiEntry(rows[0]) : null;
+  return rows[0] ? toApiEntryWithProfile(db, rows[0]) : null;
 }

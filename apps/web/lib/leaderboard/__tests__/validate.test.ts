@@ -62,7 +62,7 @@ function submit(overrides: Partial<SubmissionBody>) {
     {
       token: originToken,
       claimed_score: originExpected.score,
-      display_name: "Honest Player",
+      display_name: "honest_player",
       ...overrides,
     },
     data,
@@ -230,19 +230,17 @@ describe("step 3b — NON_CANONICAL_CONFIG (DC-1, owner-ratified canonical-only 
     });
     // Invalid name + non-canonical config → config code wins (it is checked
     // first; the name is never inspected for a run that cannot rank).
-    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe(
-      "NON_CANONICAL_CONFIG",
-    );
+    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe("NON_CANONICAL_CONFIG");
   });
 });
 
 describe("step 5 — display-name rules (plan §5.1)", () => {
   it("rejects through the pipeline with INVALID_NAME + category, raw value not echoed", () => {
-    const v = submit({ display_name: "http://spam.example/x" });
+    const v = submit({ display_name: "bad-name" });
     expect(rejectionCode(v)).toBe("INVALID_NAME");
     if (v.status === "rejected") {
       expect(v.name_reason).toBe("invalid_chars");
-      expect(v.reason).not.toContain("spam.example");
+      expect(v.reason).not.toContain("bad-name");
     }
   });
 
@@ -255,14 +253,18 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
       ["http://example.com/x", "invalid_chars"], // URL — ':' and '/' excluded
       ["Zer\u200Bo One", "invalid_chars"], // zero-width space (escaped on purpose)
       ["Tab\tName", "invalid_chars"], // control char
-      ["_leading", "edge_separator"],
-      ["trailing.", "edge_separator"],
-      ["admin99", "blocked_term"],
-      ["a.d-m_i n", "blocked_term"], // separator-stripped fold catches spacing tricks
-      ["WcDrAfT Team", "blocked_term"], // impersonation, case-folded
+      ["has space", "invalid_chars"],
+      ["has.dots", "invalid_chars"],
+      ["admin", "blocked_term"],
+      ["api", "blocked_term"],
+      ["mod", "blocked_term"],
+      ["WcDrAfT", "blocked_term"], // reserved exact word, case-folded
+      ["xxniggerxx", "blocked_term"], // original local abuse stem list
       ["abc", null],
-      ["Müller.São-10", null], // unicode letters + full separator set
-      ["José 10", null],
+      ["_leading", null],
+      ["trailing_", null],
+      ["muller_sao_10", null],
+      ["jose10", null],
     ];
     for (const [raw, expected] of cases) {
       const r = validateDisplayName(raw);
@@ -275,10 +277,9 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
     }
   });
 
-  it("normalizes (trim + NFC) and returns the persistable form", () => {
-    // NFD "Müller" (decomposed u + combining diaeresis) → NFC composed.
-    const r = validateDisplayName("  Müller  ");
-    expect(r).toEqual({ ok: true, name: "Müller" });
+  it("normalizes (trim + lowercase) and returns the persistable form", () => {
+    const r = validateDisplayName("  Honest_Player  ");
+    expect(r).toEqual({ ok: true, name: "honest_player" });
   });
 
   it("ORDER LOCK: name validation fires before the replay keystone", () => {
@@ -288,7 +289,7 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
       const i = b.pl.findIndex((p) => p.k === "p");
       (b.pl[i] as { c: string }).c = "p99999_t1"; // garbage card
     });
-    const v = submit({ token: t, display_name: "_bad" });
+    const v = submit({ token: t, display_name: "bad-name" });
     expect(rejectionCode(v)).toBe("INVALID_NAME");
   });
 });
@@ -431,13 +432,13 @@ describe("step 9 — SCORE_MISMATCH (T2 tampered score)", () => {
 
 describe("acceptance contract", () => {
   it("the honest origin run is ACCEPTED with canonical fields", () => {
-    const v = submit({ display_name: "  Honest Player  " });
+    const v = submit({ display_name: "  Honest_Player  " });
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.verified_score).toBe(originExpected.score);
     expect(v.season_key).toBe(deriveSeasonKey(data.gameData.versions));
     expect(v.draft_mode).toBe("classic");
-    expect(v.display_name).toBe("Honest Player"); // normalized, not raw
+    expect(v.display_alias).toBe("honest_player"); // normalized, not raw
     expect(v.token_body.ps).toBe(ORIGIN_SEED);
   });
 

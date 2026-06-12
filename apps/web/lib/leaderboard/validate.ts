@@ -5,7 +5,7 @@
 //   1. body shape + token size guard                     → INVALID_BODY / TOKEN_TOO_LARGE
 //   2. decodeRunToken === null                           → MALFORMED_TOKEN
 //   3. strict 6-anchor versionsAgree (= season check)    → WRONG_SEASON
-//   5. display-name validity (§5.1)                      → INVALID_NAME
+//   5. optional alias validity (§5.1)                     → INVALID_NAME
 //   7. DRAFT LEGALITY = full token replay (the keystone) → ILLEGAL_PICK
 //   8. deterministic re-sim (buildRunScenario + runTournamentFull)
 //   9. claimed-vs-resimmed score equality                → SCORE_MISMATCH
@@ -118,8 +118,8 @@ export interface AcceptedSubmission {
   season_key: string;
   /** Self-declared fairness dimension from the token's `md` (see plan §7). */
   draft_mode: "classic" | "hidden";
-  /** Normalized (trimmed + NFC) name — persist THIS, not the raw input. */
-  display_name: string;
+  /** Normalized alias — persist THIS, not the raw input. Null means username fallback. */
+  display_alias: string | null;
   /** Decoded token body (rid / ps available to the route for logging). */
   token_body: RunTokenBody;
 }
@@ -143,7 +143,10 @@ export type SubmitVerdict = AcceptedSubmission | RejectedSubmission;
 export interface SubmissionBody {
   token: unknown;
   claimed_score: unknown;
-  display_name: unknown;
+  /** New field name. */
+  display_alias?: unknown;
+  /** Legacy client field; treated as alias while the UI migrates. */
+  display_name?: unknown;
 }
 
 /** Injected server-owned data — built once per process by the route (U3). */
@@ -208,16 +211,21 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     );
   }
 
-  // 5 — display name (4 and 6 are route seams; both are O(1) DB/header work
+  // 5 — optional display alias (4 and 6 are route seams; both are O(1) DB/header work
   // and MUST run before the CPU-bound steps below — see module header).
-  const name = validateDisplayName(body.display_name);
-  if (!name.ok) {
-    return {
-      status: "rejected",
-      code: "INVALID_NAME",
-      reason: `display name rejected (${name.reason})`,
-      name_reason: name.reason,
-    };
+  const rawAlias = body.display_alias ?? body.display_name ?? null;
+  let displayAlias: string | null = null;
+  if (rawAlias !== null && rawAlias !== "") {
+    const alias = validateDisplayName(rawAlias);
+    if (!alias.ok) {
+      return {
+        status: "rejected",
+        code: "INVALID_NAME",
+        reason: `display alias rejected (${alias.reason})`,
+        name_reason: alias.reason,
+      };
+    }
+    displayAlias = alias.name;
   }
 
   // 7 — THE KEYSTONE: full replay re-derives every spin's candidates from the
@@ -270,7 +278,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     score_breakdown: run.score_breakdown,
     season_key: deriveSeasonKey(data.gameData.versions),
     draft_mode: token.md,
-    display_name: name.name,
+    display_alias: displayAlias,
     token_body: token,
   };
 }

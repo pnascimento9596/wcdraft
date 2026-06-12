@@ -1,71 +1,86 @@
-// F-4 U2 — display-name validity rules (plan §5.1, pipeline step 5).
+// Public leaderboard name validation for usernames and per-entry aliases.
 //
-// Pure and deterministic: no I/O, no DB, no clock. Enforced server-side at
-// submit time; the DB CHECK (char_length BETWEEN 3 AND 24, migration 0004)
-// is the structural backstop, this module is the full rule set.
+// Owner decision for this season:
+//   - users.username and leaderboard_entries.display_alias share the same
+//     public grammar: 3-20 chars, [a-z0-9_], normalized to lowercase.
+//   - reserved platform words are exact matches.
+//   - abuse/slur stems use the original local blocklist; no external package
+//     or licensed list is pulled into the intake path.
 //
-// Rule order (plan §5.1): trim → NFC-normalize → length 3–24 → allowlist
-// `[\p{L}\p{N} _.\-]` (excludes URLs-with-scheme, control/zero-width chars) →
-// no leading/trailing separators → case-folded blocklist check.
-//
-// The rejected value is NEVER echoed back in `reason` strings — callers log
-// the category only (plan: no echo of the bad value beyond a hash).
+// The legacy export names stay in place because the submit/board code already
+// treats "display name" as the public rendered string. The DB column is now
+// display_alias and serializers derive display_name from alias-or-username.
 
-import { DISPLAY_NAME_BLOCKLIST } from "./display-name-blocklist";
+import {
+  BLOCKED_IMPERSONATION_TERMS,
+  BLOCKED_PROFANITY_TERMS,
+  BLOCKED_SLUR_TERMS,
+  DISPLAY_NAME_BLOCKLIST,
+} from "./display-name-blocklist";
 
 export { DISPLAY_NAME_BLOCKLIST };
 
-/** Inclusive code-point length bounds — match the DB CHECK (char_length). */
+/** Inclusive code-point length bounds — match the DB CHECK. */
 export const DISPLAY_NAME_MIN = 3;
-export const DISPLAY_NAME_MAX = 24;
+export const DISPLAY_NAME_MAX = 20;
 
-/** Why a display name was rejected — category only, safe to log and return. */
+export const RESERVED_PUBLIC_NAMES: readonly string[] = [
+  ...BLOCKED_IMPERSONATION_TERMS,
+  "api",
+  "mod",
+];
+
+const BLOCKED_PUBLIC_NAME_STEMS: readonly string[] = [
+  ...BLOCKED_PROFANITY_TERMS,
+  ...BLOCKED_SLUR_TERMS,
+];
+
+/** Why a public name was rejected — category only, safe to log and return. */
 export type DisplayNameRejection =
   | "not_a_string"
   | "too_short"
   | "too_long"
   | "invalid_chars"
-  | "edge_separator"
   | "blocked_term";
 
 export type DisplayNameResult =
-  | { ok: true; /** Trimmed + NFC-normalized form — what gets persisted. */ name: string }
+  | { ok: true; /** Trimmed + lowercased + NFC-normalized form. */ name: string }
   | { ok: false; reason: DisplayNameRejection };
 
-const ALLOWED_CHARS = /^[\p{L}\p{N} _.-]+$/u;
-const STARTS_ALNUM = /^[\p{L}\p{N}]/u;
-const ENDS_ALNUM = /[\p{L}\p{N}]$/u;
-const SEPARATORS = /[ _.-]/gu;
+const PUBLIC_NAME_RE = /^[a-z0-9_]+$/;
 
-/**
- * The fold the blocklist is matched against: case-folded, separators
- * stripped (defeats `a.d.m.i.n` spacing tricks at the cost of rare false
- * positives — accepted v1 posture, see display-name-blocklist.ts). Exported
- * so the blocklist hygiene test can assert every term is already in this
- * form — a term that isn't can never match.
- */
+/** The persisted public form used for usernames and per-entry aliases. */
+export function normalizePublicName(value: string): string {
+  return value.trim().normalize("NFC").toLowerCase();
+}
+
+/** The folded form used for reserved/stem checks. */
 export function foldForBlocklist(value: string): string {
-  return value.toLowerCase().replace(SEPARATORS, "");
+  return normalizePublicName(value).replace(/_/g, "");
 }
 
 /**
- * Validate a raw (untrusted) display name. Returns the normalized name on
- * success — callers MUST persist `result.name`, not the raw input.
+ * Validate a raw (untrusted) username or alias. Returns the normalized public
+ * name on success — callers MUST persist `result.name`, not the raw input.
  */
 export function validateDisplayName(raw: unknown): DisplayNameResult {
   if (typeof raw !== "string") return { ok: false, reason: "not_a_string" };
-  const name = raw.trim().normalize("NFC");
+  const name = normalizePublicName(raw);
   // Code points (not UTF-16 units) — matches Postgres char_length semantics.
   const length = [...name].length;
   if (length < DISPLAY_NAME_MIN) return { ok: false, reason: "too_short" };
   if (length > DISPLAY_NAME_MAX) return { ok: false, reason: "too_long" };
-  if (!ALLOWED_CHARS.test(name)) return { ok: false, reason: "invalid_chars" };
-  if (!STARTS_ALNUM.test(name) || !ENDS_ALNUM.test(name)) {
-    return { ok: false, reason: "edge_separator" };
-  }
+  if (!PUBLIC_NAME_RE.test(name)) return { ok: false, reason: "invalid_chars" };
   const folded = foldForBlocklist(name);
-  for (const term of DISPLAY_NAME_BLOCKLIST) {
+  if (RESERVED_PUBLIC_NAMES.includes(name) || RESERVED_PUBLIC_NAMES.includes(folded)) {
+    return { ok: false, reason: "blocked_term" };
+  }
+  for (const term of BLOCKED_PUBLIC_NAME_STEMS) {
     if (folded.includes(term)) return { ok: false, reason: "blocked_term" };
   }
   return { ok: true, name };
 }
+
+export const validatePublicName = validateDisplayName;
+export type PublicNameRejection = DisplayNameRejection;
+export type PublicNameResult = DisplayNameResult;

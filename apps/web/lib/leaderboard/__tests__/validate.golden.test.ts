@@ -68,7 +68,7 @@ describe("leaderboard validation golden — committed accepted fixtures", () => 
       expect(verdict.verified_score).toBe(g.expected.verified_score);
       expect(verdict.season_key).toBe(g.expected.season_key);
       expect(verdict.draft_mode).toBe(g.expected.draft_mode);
-      expect(verdict.display_name).toBe(g.display_name);
+      expect(verdict.display_alias).toBe(g.display_name);
       expect(asPlain(verdict.score_breakdown)).toEqual(g.expected.score_breakdown);
       // Transparent-score invariant: the breakdown reassembles the score.
       const sum = verdict.score_breakdown.reduce((acc, c) => acc + c.points, 0);

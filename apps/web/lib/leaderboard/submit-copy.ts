@@ -104,8 +104,7 @@ export function submitStatusCopy(code: string): SubmitStatusCopy {
 export const NAME_HINT: Readonly<Record<DisplayNameRejection, string>> = {
   not_a_string: "Enter a display name.",
   too_short: "At least 3 characters.",
-  too_long: "At most 24 characters.",
-  invalid_chars: "Letters, numbers, spaces, and _ . - only.",
-  edge_separator: "Must start and end with a letter or number.",
+  too_long: "At most 20 characters.",
+  invalid_chars: "Letters, numbers, and _ only.",
   blocked_term: "That name contains a blocked term.",
 };

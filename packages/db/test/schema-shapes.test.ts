@@ -57,10 +57,14 @@ describe("@wcdraft/db schema — shape", () => {
     expectTypeOf<User>().toMatchTypeOf<{
       id: string;
       email: string | null;
+      username: string | null;
       createdAt: Date;
     }>();
     // email is nullable, so the insert type allows omission
-    expectTypeOf<NewUser>().toMatchTypeOf<{ email?: string | null }>();
+    expectTypeOf<NewUser>().toMatchTypeOf<{
+      email?: string | null;
+      username?: string | null;
+    }>();
   });
 
   it("infers row and insert types for magic_link_tokens", () => {
@@ -144,7 +148,7 @@ describe("@wcdraft/db schema — shape", () => {
       draftMode: string;
       userId: string | null;
       sessionId: string | null;
-      displayName: string;
+      displayAlias: string | null;
       token: string;
       verifiedScore: number;
       scoreBreakdown: unknown;
@@ -156,7 +160,7 @@ describe("@wcdraft/db schema — shape", () => {
       seasonKey: string;
       mode: string;
       draftMode: string;
-      displayName: string;
+      displayAlias?: string | null;
       token: string;
       verifiedScore: number;
     }>();

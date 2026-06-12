@@ -96,7 +96,7 @@ function validBody(over: Record<string, unknown> = {}): Record<string, unknown> 
   return {
     token: GOLDEN.classic.token,
     claimed_score: GOLDEN.classic.expected.verified_score,
-    display_name: "Route Tester",
+    display_alias: "route_tester",
     ...over,
   };
 }
@@ -265,7 +265,7 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
 
   it("INVALID_NAME → 422 with category, raw value never echoed", async () => {
     const res = await handleLeaderboardSubmit(
-      makeReq({ body: validBody({ display_name: "xx" }) }),
+      makeReq({ body: validBody({ display_alias: "xx" }) }),
       makeDeps(),
     );
     expect(res.status).toBe(422);
@@ -329,7 +329,7 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     expect(body.entry.season_key).toBe(GOLDEN.season_key);
     expect(body.entry.mode).toBe("casual");
     expect(body.entry.draft_mode).toBe("classic");
-    expect(body.entry.display_name).toBe("Route Tester");
+    expect(body.entry.display_name).toBe("route_tester");
     expect(body.entry.verified_score).toBe(GOLDEN.classic.expected.verified_score);
 
     const rows = await allRows();
@@ -372,7 +372,7 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
         body: {
           token: GOLDEN.hidden.token,
           claimed_score: GOLDEN.hidden.expected.verified_score,
-          display_name: "Hidden Tester",
+          display_alias: "hidden_tester",
         },
       }),
       makeDeps(),
@@ -403,6 +403,24 @@ describe("session identity + CSRF (plan §5.3 — like POST /api/runs)", () => {
     expect(res.status).toBe(201);
     const rows = await allRows();
     expect(rows[0]!.userId).toBe(inserted[0]!.id);
+  });
+
+  it("account-bound session with no alias → displays username fallback, never email", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "profile-fallback@example.com", username: "profile_user" })
+      .returning();
+    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: validBody({ display_alias: undefined, display_name: undefined }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as {
+      entry: Record<string, unknown>;
+    };
+    expect(body.entry.display_name).toBe("profile_user");
+    expect(JSON.stringify(body)).not.toContain("profile-fallback@example.com");
   });
 
   it("missing x-csrf-token header → 403 CSRF_FAILED, no row", async () => {

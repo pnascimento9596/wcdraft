@@ -68,7 +68,7 @@ export function AccountMenu(): React.ReactElement | null {
     return <span className="account-chip account-chip--loading" aria-hidden="true" />;
   }
 
-  const identity = session?.userId ? shortenId(session.userId) : "me";
+  const identity = session?.username ?? (session?.userId ? shortenId(session.userId) : "me");
   return (
     <div ref={wrapRef} className="account-menu" data-open={open || undefined}>
       <button
@@ -81,7 +81,12 @@ export function AccountMenu(): React.ReactElement | null {
         <span className="account-chip__glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
             <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M4.5 20c1.5-3.5 4.4-5 7.5-5s6 1.5 7.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path
+              d="M4.5 20c1.5-3.5 4.4-5 7.5-5s6 1.5 7.5 5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
           </svg>
         </span>
         <span className="account-chip__label">Account</span>
@@ -93,10 +98,20 @@ export function AccountMenu(): React.ReactElement | null {
             <span className="account-pop__eyebrow">signed in as</span>
             <span className="account-pop__id mono">{identity}</span>
           </div>
-          <Link href="/play/history" role="menuitem" className="account-pop__link" onClick={() => setOpen(false)}>
+          <Link
+            href="/play/history"
+            role="menuitem"
+            className="account-pop__link"
+            onClick={() => setOpen(false)}
+          >
             View history
           </Link>
-          <Link href="/settings" role="menuitem" className="account-pop__link" onClick={() => setOpen(false)}>
+          <Link
+            href="/settings"
+            role="menuitem"
+            className="account-pop__link"
+            onClick={() => setOpen(false)}
+          >
             Settings
           </Link>
           <button
