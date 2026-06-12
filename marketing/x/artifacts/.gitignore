@@ -1,0 +1,3 @@
+# Dry-run artifacts are generated, not committed.
+dry-run-*.jsonl
+dry-run.ledger.jsonl

@@ -1,0 +1,11 @@
+{
+  "id": "managers-pick",
+  "family": "literal",
+  "status": "queued",
+  "scheduled_at": null,
+  "params": {
+    "text": "You draft a manager too — one of your 17 spins, a real pick that shapes the squad. Most draft games skip it. Build your all-time XI free, in your browser. https://www.wcdraft.com/play",
+    "deep_link": "https://www.wcdraft.com/play",
+    "referenced_feature_ids": ["manager_pick", "seventeen_spins", "free_browser"]
+  }
+}
