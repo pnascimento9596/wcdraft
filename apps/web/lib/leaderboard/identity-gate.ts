@@ -93,7 +93,10 @@ export async function requireSubmitIdentity(
     session = await validateSessionCookie(cookie, sessionDeps(deps));
   } catch (err) {
     if (err instanceof AuthError) {
-      throw new LeaderboardGateError("AUTH_REQUIRED", `session invalid (${err.code})`);
+      const message = deps.requireAccount()
+        ? RANKED_AUTH_REQUIRED_MESSAGE
+        : `session invalid (${err.code})`;
+      throw new LeaderboardGateError("AUTH_REQUIRED", message);
     }
     throw err;
   }

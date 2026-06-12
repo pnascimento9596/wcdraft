@@ -516,7 +516,10 @@ describe("ranked account gate", () => {
       makeDeps(),
     );
     expect(res.status).toBe(401);
-    expect((await errorOf(res)).error).toBe("AUTH_REQUIRED");
+    expect(await errorOf(res)).toMatchObject({
+      error: "AUTH_REQUIRED",
+      message: RANKED_AUTH_REQUIRED_MESSAGE,
+    });
     expect(await allRows()).toHaveLength(0);
   });
 
@@ -532,7 +535,10 @@ describe("ranked account gate", () => {
       makeDeps({ now: () => now + 2 }),
     );
     expect(res.status).toBe(401);
-    expect((await errorOf(res)).error).toBe("AUTH_REQUIRED");
+    expect(await errorOf(res)).toMatchObject({
+      error: "AUTH_REQUIRED",
+      message: RANKED_AUTH_REQUIRED_MESSAGE,
+    });
     expect(await allRows()).toHaveLength(0);
   });
 
