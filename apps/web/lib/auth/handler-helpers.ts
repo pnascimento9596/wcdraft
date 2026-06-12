@@ -56,8 +56,8 @@ export function validateCookieSecret(
 ): string {
   const v = raw?.trim() ?? "";
   if (!v) {
-    // Typed (q-001 carryover c) — same 500 status, but a clean typed JSON
-    // body via jsonError instead of the generic INTERNAL_ERROR path.
+    // Typed (q-001 carryover c) — a clean typed 503 JSON body via jsonError
+    // instead of the generic INTERNAL_ERROR 500 path.
     throw new AuthError(
       "SECRET_MISCONFIGURED",
       `${varName} is not set. Generate with ` +
