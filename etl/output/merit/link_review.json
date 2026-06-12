@@ -1965,6 +1965,171 @@
       "year": null
     },
     {
+      "candidates": [
+        {
+          "player_id": "P-34403",
+          "player_name": "Alfredo Di Stéfano"
+        }
+      ],
+      "family": "retrospective_selection",
+      "nation_token": "Argentina",
+      "occurrences": 1,
+      "raw_name": "Alfredo Di Stéfano",
+      "reason": "nation_divergent",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ghana",
+      "occurrences": 1,
+      "raw_name": "Abedi Pele",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "India",
+      "occurrences": 1,
+      "raw_name": "Bhaichung Bhutia",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "South Korea",
+      "occurrences": 1,
+      "raw_name": "Cha Bum-kun",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Liberia",
+      "occurrences": 1,
+      "raw_name": "George Weah",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Hao Haidong",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Mahmoud El Khatib",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Nigeria",
+      "occurrences": 1,
+      "raw_name": "Mikel John Obi",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Egypt",
+      "occurrences": 1,
+      "raw_name": "Mohamed Aboutrika",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Qatar",
+      "occurrences": 1,
+      "raw_name": "Mubarak Mustafa",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Ukraine",
+      "occurrences": 1,
+      "raw_name": "Oleg Blokhin",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Spain",
+      "occurrences": 1,
+      "raw_name": "Paco Gento",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Wales",
+      "occurrences": 1,
+      "raw_name": "Ryan Giggs",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "China",
+      "occurrences": 1,
+      "raw_name": "Sun Jihai",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Turkey",
+      "occurrences": 1,
+      "raw_name": "Tanju Çolak",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "candidates": [],
+      "family": "retrospective_selection",
+      "nation_token": "Iraq",
+      "occurrences": 1,
+      "raw_name": "Younis Mahmoud",
+      "reason": "no_candidate",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "candidates": [],
       "family": "global_annual_recognition",
       "nation_token": "Norway",
@@ -7858,6 +8023,205 @@
       "year": 2016
     },
     {
+      "candidates": [
+        {
+          "player_id": "P-48546",
+          "player_name": "Jan Olsson"
+        },
+        {
+          "player_id": "P-96792",
+          "player_name": "Jan Olsson"
+        }
+      ],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Jan Olsson",
+      "reason": "multi_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1970
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Alexander Isak",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2025
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Bengt Nyholm",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1961
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Bertil Nordahl",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1948
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 2,
+      "raw_name": "Dejan Kulusevski",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2022
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Eke Johansson",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1957
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 2,
+      "raw_name": "Fredrik Ljungberg",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2002
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Gösta Sandberg",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1956
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Gunnar Nordahl",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1947
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Hans Mild",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1964
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Harry Bild",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1963
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Ingvar Svahn",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1967
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Pär Zetterberg",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1997
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Robert Prytz",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1986
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Rolf Zetterlund",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1980
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Sven Dahlkvist",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1984
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Sven-Ove Svensson",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1954
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Torbjörn Jonsson",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1960
+    },
+    {
+      "candidates": [],
+      "family": "club_season_honors",
+      "nation_token": "Sweden",
+      "occurrences": 1,
+      "raw_name": "Viktor Gyökeres",
+      "reason": "no_candidate",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2024
+    },
+    {
       "candidates": [],
       "family": "position_balanced_selection",
       "nation_token": null,
@@ -7903,355 +8267,6 @@
       "year": 2020
     },
     {
-      "candidates": [
-        {
-          "player_id": "P-62722",
-          "player_name": "Ronaldo"
-        },
-        {
-          "player_id": "P-70442",
-          "player_name": "Cristiano Ronaldo"
-        }
-      ],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Ronaldo",
-      "reason": "multi_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 10,
-      "raw_name": "A.C. Milan",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 2,
-      "raw_name": "AFC Ajax",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Alisson Becker",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Andy Robertson",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 7,
-      "raw_name": "Arsenal F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 2,
-      "raw_name": "Atlético Madrid",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Bayer 04 Leverkusen",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Blackburn Rovers F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Borussia Dortmund",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 8,
-      "raw_name": "Chelsea F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Cosmin Contra",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Cristian Chivu",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 3,
-      "raw_name": "David Alaba",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Deportivo Alavés",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 18,
-      "raw_name": "FC Barcelona",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 12,
-      "raw_name": "FC Bayern Munich",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 2,
-      "raw_name": "FC Porto",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Fenerbahçe S.K.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 4,
-      "raw_name": "Inter Milan",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 12,
-      "raw_name": "Juventus FC",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 9,
-      "raw_name": "Liverpool F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Maicon Sisenando",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 3,
-      "raw_name": "Manchester City F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 7,
-      "raw_name": "Manchester United F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Olympique Lyonnais",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 6,
-      "raw_name": "Paris Saint-Germain F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 17,
-      "raw_name": "Real Madrid CF",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Sami Hyypiä",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Sevilla FC",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "S.S. Lazio",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 1,
-      "raw_name": "Thiago Alcântara",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 2,
-      "raw_name": "Tottenham Hotspur F.C.",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "candidates": [],
-      "family": "position_balanced_selection",
-      "nation_token": null,
-      "occurrences": 2,
-      "raw_name": "Valencia CF",
-      "reason": "no_candidate",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
       "candidates": [],
       "family": "global_annual_recognition",
       "nation_token": "Norway",
@@ -8262,7 +8277,7 @@
       "year": 2023
     }
   ],
-  "review_count": 751,
-  "version": "merit-source-set-2.0.0",
-  "withheld_occurrences": 980
+  "review_count": 752,
+  "version": "merit-source-set-2.1.0",
+  "withheld_occurrences": 875
 }

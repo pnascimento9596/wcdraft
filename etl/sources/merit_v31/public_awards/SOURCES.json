@@ -1,0 +1,23 @@
+{
+  "note": "merit-v3.1 public award source snapshots fetched on 2026-06-12. These files are committed evidence for citation-backed W1 staging; rows cite the subset they consume. Non-evidence public client-side key-like script literals are redacted to satisfy repository secret scanning; article/table evidence is preserved.",
+  "files": [
+    {
+      "file": "etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html",
+      "url": "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year",
+      "bytes": 184501,
+      "sha256": "dc822a3cc092dece807ac643d95ddf6d39fa42d3bc4bb47539924cf2c48b65fe"
+    },
+    {
+      "file": "etl/sources/merit_v31/public_awards/lukaku_uefa_europa_league_player_2019_20.html",
+      "url": "https://www.uefa.com/uefaeuropaleague/news/0262-10836e08a61e-46e10483802f-1000--romelu-lukaku-named-europa-league-player-of-the-season/",
+      "bytes": 78637,
+      "sha256": "46a0d3eb73638d59ecb770ee32b232debfa46690da817d74f84f73d6ba93452e"
+    },
+    {
+      "file": "etl/sources/merit_v31/public_awards/lukaku_lega_serie_a_best_overall_2020_21.html",
+      "url": "https://web.archive.org/web/20210602225006/https://www.legaseriea.it/en/press/news/info/the-mvps-of-the-2020-2021-season-romelu-lukaku-best-overall",
+      "bytes": 84834,
+      "sha256": "5bffc6b6a45c5ea86c539f216cfadce6adaa37a26e588fdd28d0f94f078f6afe"
+    }
+  ]
+}

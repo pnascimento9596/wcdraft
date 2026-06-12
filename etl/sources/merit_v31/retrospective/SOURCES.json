@@ -1,0 +1,96 @@
+{
+  "version": "merit-v3.1-retrospective-snapshots",
+  "entries": [
+    {
+      "source_id": "african_poy",
+      "source_scope": "African Player of the Year support facts used by restored W2b players.",
+      "url": "https://www.rsssf.org/miscellaneous/afr-poy.html",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/african_poy.html",
+      "retrieved": "2026-06-08",
+      "bytes": 9045,
+      "sha256": "3e3ab1edd7c4d0c8c9a63dbe9c0eab6f6eb9e39dcc963cee778f8964cff525db"
+    },
+    {
+      "source_id": "esm_team_of_the_season",
+      "source_scope": "ESM Team of the Season support facts used by restored W2b players.",
+      "url": "https://en.wikipedia.org/wiki/ESM_Team_of_the_Season",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/esm_team_of_the_season.html",
+      "retrieved": "2026-06-08",
+      "bytes": 339525,
+      "sha256": "d24dbd7075a13d457ac8f5d3fa8ad9b6f304899de18044699312073233ea7367"
+    },
+    {
+      "source_id": "european_poy",
+      "source_scope": "European Player of the Year winners used as major factual recognition support for the pre-1967 route.",
+      "url": "https://www.rsssf.org/miscellaneous/europa-poy.html",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/european_poy.html",
+      "retrieved": "2026-06-08",
+      "bytes": 61757,
+      "sha256": "768facf762739de46a6adad785de265916422838bae85c66667b353b9ecb64a0"
+    },
+    {
+      "source_id": "iffhs_century",
+      "source_scope": "IFFHS Century elections used by the pre-1967 retrospective-consensus route.",
+      "url": "https://www.rsssf.org/miscellaneous/iffhs-century.html",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/iffhs_century.html",
+      "retrieved": "2026-06-08",
+      "bytes": 41692,
+      "sha256": "a787c9d8af6b2466a63e23c907e28d622b807925b3bb9617d65a8612d327e336"
+    },
+    {
+      "source_id": "iffhs_men_legends",
+      "source_scope": "IFFHS Men Legends section only, parsed from the IFFHS World's Best Player public page; same snapshot also backs iffhs_worlds_best annual winners.",
+      "url": "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Player",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/iffhs_worlds_best.html",
+      "retrieved": "2026-06-08",
+      "bytes": 582175,
+      "sha256": "2f8d278a938012fe3a56528ce76e2d56ce1dd3a7dfa49fa9ad25057c98c1085d"
+    },
+    {
+      "source_id": "international_century_caps",
+      "source_scope": "International caps/goals public list used as a major-fact support route, including pre-1967 context.",
+      "url": "https://www.rsssf.org/miscellaneous/century.html",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/international_century_caps.html",
+      "retrieved": "2026-06-08",
+      "bytes": 192821,
+      "sha256": "04bdeadf6ad3287a4cd8fd89515a0575afce2414b25161b974187cf2ea1a7a62"
+    },
+    {
+      "source_id": "living_legends_2004",
+      "source_scope": "2004 living-legends list used by the pre-1967 retrospective-consensus route.",
+      "url": "https://en.wikipedia.org/wiki/FIFA_100",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/living_legends_2004.html",
+      "retrieved": "2026-06-08",
+      "bytes": 338044,
+      "sha256": "eaf96fa9ca6a3521e49d37e230309abcd6464d452db22055b35cc8281144f34b"
+    },
+    {
+      "source_id": "research_wc_all_star",
+      "source_scope": "Citation-backed World Cup All-Star research backstop used by pre-1967 W2 support facts.",
+      "url": "research note cites public player pages in its rows",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/research_wc_all_star.json",
+      "retrieved": "2026-06-08",
+      "bytes": 8242,
+      "sha256": "a3bea5924f6edeb783b5b0bfe3ef23a52c5f3c56e4ba301aa6144943a44dcaed"
+    },
+    {
+      "source_id": "swedish_footballer_of_year",
+      "source_scope": "Complete non-fan Sweden Footballer of the Year (Guldbollen) winners table used by the W2b national-player-of-year extension.",
+      "url": "https://www.rsssf.org/miscellaneous/zwedpoy.html",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/swedish_footballer_of_year.html",
+      "retrieved": "2026-06-08",
+      "bytes": 3945,
+      "sha256": "b1614246913ff889e2f7769a6dc41d678d352e1a6e9f0fe2c7ba48cb87af9fea"
+    },
+    {
+      "source_id": "uefa_club_positional",
+      "source_scope": "UEFA Club positional award support facts used by restored W2b players.",
+      "url": "https://en.wikipedia.org/wiki/UEFA_Club_Football_Awards",
+      "snapshot_path": "etl/sources/merit_v31/retrospective/uefa_club_positional.html",
+      "retrieved": "2026-06-08",
+      "bytes": 444500,
+      "sha256": "a5236d39d3a41357d830feed7895358d012d1acbad3e7ad3025b23bb3ebc4f1f"
+    }
+  ],
+  "note": "merit-v3.1 retrospective support snapshots. Non-evidence public client-side key-like script literals are redacted in HTML snapshots to satisfy repository secret scanning; article/table evidence is preserved."
+}

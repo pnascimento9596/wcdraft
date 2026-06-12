@@ -1,6 +1,6 @@
 {
   "cutoff_date": "2026-06-01",
-  "fact_count": 61,
+  "fact_count": 63,
   "facts": [
     {
       "citation": {
@@ -89,6 +89,42 @@
     },
     {
       "citation": {
+        "claim": "The LPFP Primeira Liga Player of the Year public award table lists Bruno Fernandes as the 2017-18 winner.",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html",
+        "url": "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year"
+      },
+      "detail": "domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2017-18",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-39584",
+      "player_name": "Bruno Fernandes",
+      "position": "MF",
+      "raw_name": "Bruno Fernandes",
+      "source_id": "active_public_season_honors",
+      "year": 2018
+    },
+    {
+      "citation": {
+        "claim": "The LPFP Primeira Liga Player of the Year public award table lists Bruno Fernandes as the 2018-19 winner.",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html",
+        "url": "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year"
+      },
+      "detail": "domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2018-19",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-39584",
+      "player_name": "Bruno Fernandes",
+      "position": "MF",
+      "raw_name": "Bruno Fernandes",
+      "source_id": "active_public_season_honors",
+      "year": 2019
+    },
+    {
+      "citation": {
         "claim": "UEFA's 2023 Champions League final match record shows Manchester City beat Inter 1-0, with Rodri scoring the winning goal.",
         "url": "https://www.uefa.com/uefachampionsleague/match/2037765--man-city-vs-inter/"
       },
@@ -120,6 +156,42 @@
       "raw_name": "José Giménez",
       "source_id": "active_captaincy",
       "year": null
+    },
+    {
+      "citation": {
+        "claim": "UEFA states that Internazionale forward Romelu Lukaku was named the 2019/20 UEFA Europa League Player of the Season.",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/lukaku_uefa_europa_league_player_2019_20.html",
+        "url": "https://www.uefa.com/uefaeuropaleague/news/0262-10836e08a61e-46e10483802f-1000--romelu-lukaku-named-europa-league-player-of-the-season/"
+      },
+      "detail": "uefa_secondary_competition_player_of_season: UEFA Europa League Player of the Season 2019-20",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-72637",
+      "player_name": "Romelu Lukaku",
+      "position": "FW",
+      "raw_name": "Romelu Lukaku",
+      "source_id": "active_public_season_honors",
+      "year": 2020
+    },
+    {
+      "citation": {
+        "claim": "The archived Lega Serie A page states that the 2020/2021 Best Overall award went to Inter forward Romelu Lukaku.",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/lukaku_lega_serie_a_best_overall_2020_21.html",
+        "url": "https://web.archive.org/web/20210602225006/https://www.legaseriea.it/en/press/news/info/the-mvps-of-the-2020-2021-season-romelu-lukaku-best-overall"
+      },
+      "detail": "top_tier_league_mvp: Serie A Most Valuable Player 2020-21",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-72637",
+      "player_name": "Romelu Lukaku",
+      "position": "FW",
+      "raw_name": "Romelu Lukaku",
+      "source_id": "active_public_season_honors",
+      "year": 2021
     },
     {
       "citation": {
@@ -291,45 +363,6 @@
       "raw_name": "David Alaba",
       "source_id": "international_century_caps",
       "year": null
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "family": "position_balanced_selection",
-      "identity_space": "minted_2026",
-      "method": "minted:full_name",
-      "nation_token": null,
-      "player_id": "P-W26-0050",
-      "player_name": "David Alaba",
-      "position": null,
-      "raw_name": "David Alaba",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "family": "position_balanced_selection",
-      "identity_space": "minted_2026",
-      "method": "minted:full_name",
-      "nation_token": null,
-      "player_id": "P-W26-0050",
-      "player_name": "David Alaba",
-      "position": null,
-      "raw_name": "David Alaba",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "family": "position_balanced_selection",
-      "identity_space": "minted_2026",
-      "method": "minted:full_name",
-      "nation_token": null,
-      "player_id": "P-W26-0050",
-      "player_name": "David Alaba",
-      "position": null,
-      "raw_name": "David Alaba",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
     },
     {
       "citation": {
@@ -724,19 +757,6 @@
       "year": 2019
     },
     {
-      "detail": "uefa_team_of_the_year 2019",
-      "family": "position_balanced_selection",
-      "identity_space": "minted_2026",
-      "method": "minted:full_name",
-      "nation_token": null,
-      "player_id": "P-W26-0574",
-      "player_name": "Andy Robertson",
-      "position": null,
-      "raw_name": "Andy Robertson",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
       "detail": "esm_tots MF 2024",
       "family": "position_balanced_selection",
       "identity_space": "minted_2026",
@@ -840,6 +860,32 @@
       "year": 2024
     },
     {
+      "detail": "national_player_of_year: Guldbollen 2024",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-W26-0670",
+      "player_name": "Viktor Gyökeres",
+      "position": null,
+      "raw_name": "Viktor Gyökeres",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2024
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2025",
+      "family": "club_season_honors",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-W26-0679",
+      "player_name": "Alexander Isak",
+      "position": null,
+      "raw_name": "Alexander Isak",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2025
+    },
+    {
       "citation": {
         "claim": "He plays for and captains the Turkey national team, becoming his nation's captain in March 2022.",
         "url": "https://en.wikipedia.org/wiki/Hakan_%C3%87alhano%C4%9Flu"
@@ -896,6 +942,6 @@
       "year": null
     }
   ],
-  "linked_player_count": 26,
-  "version": "active-career-source-set-2.0.0"
+  "linked_player_count": 30,
+  "version": "active-career-source-set-2.1.0"
 }

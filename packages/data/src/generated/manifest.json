@@ -55,31 +55,31 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 87203409,
-      "bytes_brotli": 1210059,
-      "bytes_gzip": 2889566,
+      "bytes": 87206215,
+      "bytes_brotli": 1211851,
+      "bytes_gzip": 2895059,
       "path": "draft-pool.compact.json",
-      "sha256": "93a05d9ecb56f26b8aa186355abf7bf32180f8eb6392a4f4a231e02f60da1821"
+      "sha256": "ba238aa16d21006989279f6bc74bb8fcc6d7e7768ec4716dbc4c78b47ceb6c02"
     },
     "scenario_2026": {
       "bytes": 108775,
-      "bytes_brotli": 4451,
-      "bytes_gzip": 7725,
+      "bytes_brotli": 4459,
+      "bytes_gzip": 7724,
       "path": "scenario-2026.compact.json",
-      "sha256": "238e56a88f0ac2c9052baaa638164ffc733bf29e26f793d37f437e138c320098"
+      "sha256": "182546ab9bf3d67f774e5773933f963b6d5915b3cd96f5785f8d5e48d7578463"
     }
   },
   "counts": {
     "baseline_anchor_estimate": 386,
-    "career_stature_estimate": 478,
+    "career_stature_estimate": 482,
     "knockout_slots": 62,
-    "legend": 270,
+    "legend": 287,
     "manager_cards": 501,
     "player_cards": 12219,
     "rating_basis": {
       "career": {
         "baseline_anchor_estimate": 386,
-        "career_stature_estimate": 478,
+        "career_stature_estimate": 482,
         "ratings": 12219
       },
       "current": {
@@ -93,8 +93,8 @@
   },
   "dataset_version": "2026-06-04",
   "engine_version": "engine-2026.06.12",
-  "rating_version_historical": "wc-perf-5.0.0",
-  "rating_version_projected": "proj-career-4.0.0",
+  "rating_version_historical": "wc-perf-5.1.0",
+  "rating_version_projected": "proj-career-4.1.0",
   "ruleset_version": "ruleset-2026.06.04",
-  "schema_version": "runtime-data-2.0.0"
+  "schema_version": "runtime-data-2.1.0"
 }

@@ -78,13 +78,16 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-4.1.0 (merit-v3.1): projected ratings consume the same
+# career-stature-3.1.0 source-curation update as historical ratings; the
+# projected formula itself is unchanged.
 # proj-career-4.0.0 (merit-v3 V3, design §2): D1 age-conditional quantile curves
 # replace the all-age caps/goals percentiles (age_factor RETIRED — keeping both
 # would re-create the youth double penalty), the stature seam consults the
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-4.0.0"
+RATING_VERSION = "proj-career-4.1.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -146,7 +149,7 @@ LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.2
 
 
 def _load_career_stature(output_dir: Path) -> dict[str, dict]:
-    """player_id -> FULL career-stature-3.0.0 row (merit-v3 V3).
+    """player_id -> FULL career-stature-3.1.0 row (merit-v3.1).
 
     V3 retires the V1 rating-compat pin: the projected stage now consumes the
     same full v3 person-identity rows as the historical wc-perf-5.0.0 stage —
