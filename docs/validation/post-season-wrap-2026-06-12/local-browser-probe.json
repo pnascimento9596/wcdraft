@@ -1,0 +1,94 @@
+{
+  "base": "http://localhost:3019",
+  "tokenPrefix": "t2.eyJ2IjoyLCJyaWQiOiJydW4tdjEtMSIsImZpZ",
+  "lockRunId": "run-v1-1",
+  "target": "4-3-3.GK",
+  "screenshots": [
+    "docs/validation/post-season-wrap-2026-06-12/results-light-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/share-light-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/lockbar-light-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/results-dark-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/share-dark-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/lockbar-dark-390x844.png",
+    "docs/validation/post-season-wrap-2026-06-12/results-light-360x800.png",
+    "docs/validation/post-season-wrap-2026-06-12/share-light-360x800.png",
+    "docs/validation/post-season-wrap-2026-06-12/lockbar-light-360x800.png",
+    "docs/validation/post-season-wrap-2026-06-12/results-dark-360x800.png",
+    "docs/validation/post-season-wrap-2026-06-12/share-dark-360x800.png",
+    "docs/validation/post-season-wrap-2026-06-12/lockbar-dark-360x800.png"
+  ],
+  "probes": {
+    "results-light-390x844": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "share-light-390x844": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "lockbar-light-390x844": {
+      "lockText": "Locked target: GK XI (4-3-3.GK). Select a player for this slot.\nLOCK PICK 🔒"
+    },
+    "results-dark-390x844": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "share-dark-390x844": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "lockbar-dark-390x844": {
+      "lockText": "Locked target: GK XI (4-3-3.GK). Select a player for this slot.\nLOCK PICK 🔒"
+    },
+    "results-light-360x800": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "share-light-360x800": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "lockbar-light-360x800": {
+      "lockText": "Locked target: GK XI (4-3-3.GK). Select a player for this slot.\nLOCK PICK 🔒"
+    },
+    "results-dark-360x800": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "share-dark-360x800": {
+      "badgeText": "2018-2026\nPosition First"
+    },
+    "lockbar-dark-360x800": {
+      "lockText": "Locked target: GK XI (4-3-3.GK). Select a player for this slot.\nLOCK PICK 🔒"
+    },
+    "serviceWorker": {
+      "serviceWorkerSupported": true,
+      "registrationScope": "http://localhost:3019/",
+      "activeScriptURL": "http://localhost:3019/sw.js",
+      "updateViaCache": "none",
+      "controllerPresent": true,
+      "manifestHref": "http://localhost:3019/manifest.webmanifest",
+      "manifestName": "wcdraft — World Cup draft game",
+      "manifestDisplay": "standalone",
+      "manifestIcons": [
+        "/icons/icon-192.png 192x192",
+        "/icons/icon-512.png 512x512",
+        "/icons/icon-maskable-512.png 512x512"
+      ],
+      "swConfig": {
+        "deploy_revision": "2b0f6f3a11ca73ff",
+        "data_revision": "ad009e280c8fdd70",
+        "schema_version": "runtime-data-2.0.0",
+        "dataset_version": "2026-06-04",
+        "bundle_hashes": {
+          "draft_pool": "93a05d9ecb56f26b8aa186355abf7bf32180f8eb6392a4f4a231e02f60da1821",
+          "scenario_2026": "238e56a88f0ac2c9052baaa638164ffc733bf29e26f793d37f437e138c320098"
+        },
+        "cache_names": {
+          "data": "wcdraft-data-d:2b0f6f3a11ca73ff-b:ad009e280c8fdd70",
+          "shell": "wcdraft-shell-d:2b0f6f3a11ca73ff"
+        }
+      },
+      "cacheKeys": [
+        "wcdraft-data-d:2b0f6f3a11ca73ff-b:ad009e280c8fdd70"
+      ],
+      "oldCachesEvicted": true,
+      "expectedDataCachePresent": true,
+      "oldCacheSeedError": null
+    }
+  },
+  "consoleErrors": []
+}
