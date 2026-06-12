@@ -137,10 +137,10 @@ async function assertDuplicateRejected(
         "This is the spam vector the independent reviewer caught.",
     );
   }
-  const msg = String(actualError);
+  const msg = errorDiagnostics(actualError);
   // Verify the rejection was the unique-constraint violation we expect,
   // not some unrelated error (e.g. connection drop).
-  if (!/unique|duplicate/i.test(msg)) {
+  if (!/unique|duplicate|23505/i.test(msg)) {
     throw new Error(
       `[rollback-check] FATAL: ${description} — rejection was not a unique ` +
         `constraint violation. Error: ${msg.slice(0, 300)}`,
@@ -171,7 +171,7 @@ async function assertInsertRejected(
         "its name drifted from the schema.",
     );
   }
-  const msg = String(actualError);
+  const msg = errorDiagnostics(actualError);
   if (!expectedReason.test(msg)) {
     throw new Error(
       `[rollback-check] FATAL: ${description} — rejection did not match ` +
@@ -179,6 +179,69 @@ async function assertInsertRejected(
     );
   }
   console.log(`  ✓ ${description}`);
+}
+
+function errorDiagnostics(err: unknown): string {
+  const parts: string[] = [];
+  const seen = new Set<unknown>();
+  const queue: unknown[] = [err];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (current === null || current === undefined || seen.has(current)) {
+      continue;
+    }
+    seen.add(current);
+    if (current instanceof Error) {
+      parts.push(current.message);
+      queue.push((current as { cause?: unknown }).cause);
+      if (current instanceof AggregateError) {
+        queue.push(...current.errors);
+      }
+      const detail = current as {
+        code?: unknown;
+        constraint?: unknown;
+        detail?: unknown;
+        severity?: unknown;
+      };
+      for (const key of ["code", "constraint", "detail", "severity"] as const) {
+        const value = detail[key];
+        if (typeof value === "string" && value.length > 0) {
+          parts.push(`${key}=${value}`);
+        }
+      }
+      continue;
+    }
+    if (typeof current === "object") {
+      const detail = current as {
+        cause?: unknown;
+        errors?: unknown;
+        message?: unknown;
+        code?: unknown;
+        constraint?: unknown;
+        detail?: unknown;
+        severity?: unknown;
+      };
+      for (const key of [
+        "message",
+        "code",
+        "constraint",
+        "detail",
+        "severity",
+      ] as const) {
+        const value = detail[key];
+        if (typeof value === "string" && value.length > 0) {
+          parts.push(`${key}=${value}`);
+        }
+      }
+      queue.push(detail.cause);
+      if (Array.isArray(detail.errors)) {
+        queue.push(...detail.errors);
+      }
+      continue;
+    }
+    parts.push(String(current));
+  }
+  return parts.join("\n");
 }
 
 async function main(): Promise<void> {
