@@ -59,10 +59,20 @@ function brotliLen(buf: Buffer): number {
   }).length;
 }
 
+function measuredFingerprint(
+  fps: SizeReport["bundles"],
+  key: keyof SizeReport["bundles"],
+): SizeReport["bundles"][keyof SizeReport["bundles"]] {
+  const fp = fps[key];
+  if (!fp) throw new Error(`missing cached fingerprint for ${key}`);
+  return fp;
+}
+
 describe("compact-data golden", () => {
   let tmpDir: string;
   let rebuilt: Record<string, Buffer>;
   let committed: Record<string, Buffer>;
+  let committedFingerprints: SizeReport["bundles"];
 
   beforeAll(() => {
     tmpDir = mkdtempSync(path.join(tmpdir(), "wcdraft-data-golden-"));
@@ -80,7 +90,23 @@ describe("compact-data golden", () => {
     committed = Object.fromEntries(
       BUNDLE_FILES.map((f) => [f, readFileSync(path.join(COMMITTED_DIR, f))]),
     );
-  });
+    committedFingerprints = Object.fromEntries(
+      BUNDLE_FILES.map((f) => [
+        f === "draft-pool.compact.json"
+          ? "draft_pool"
+          : f === "scenario-2026.compact.json"
+            ? "scenario_2026"
+            : "manifest",
+        {
+          path: f,
+          bytes: committed[f]!.length,
+          sha256: sha256Hex(committed[f]!),
+          bytes_brotli: brotliLen(committed[f]!),
+          bytes_gzip: 0,
+        },
+      ]),
+    ) as SizeReport["bundles"];
+  }, 300_000);
 
   afterAll(() => {
     if (tmpDir) rmSync(tmpDir, { recursive: true, force: true });
@@ -103,18 +129,22 @@ describe("compact-data golden", () => {
     ]) {
       const fp = manifest.bundles[key];
       const onDisk = committed[bundlePath]!;
+      const measured = measuredFingerprint(committedFingerprints, key);
       expect(fp.path).toBe(bundlePath);
       expect(fp.bytes, `${key} bytes`).toBe(onDisk.length);
-      expect(fp.sha256, `${key} sha256`).toBe(sha256Hex(onDisk));
-      expect(fp.bytes_brotli, `${key} brotli`).toBe(brotliLen(onDisk));
+      expect(fp.sha256, `${key} sha256`).toBe(measured.sha256);
+      expect(fp.bytes_brotli, `${key} brotli`).toBe(measured.bytes_brotli);
     }
   });
 
   it("each bundle is within the committed brotli size budget", () => {
     const budget = JSON.parse(readFileSync(BUDGET_PATH, "utf8")) as SizeBudget;
     let totalMeasured = 0;
-    for (const [key, { max_bytes_brotli, path: relPath }] of Object.entries(budget.bundles)) {
-      const measured = brotliLen(committed[relPath]!);
+    for (const [key, { max_bytes_brotli }] of Object.entries(budget.bundles)) {
+      const measured = measuredFingerprint(
+        committedFingerprints,
+        key as keyof SizeReport["bundles"],
+      ).bytes_brotli;
       totalMeasured += measured;
       expect(
         measured,
@@ -136,11 +166,12 @@ describe("compact-data golden", () => {
     ]) {
       const bytes = committed[bundlePath]!;
       const fp = report.bundles[key];
+      const measured = measuredFingerprint(committedFingerprints, key);
       expect(fp).toBeDefined();
       expect(fp!.path).toBe(bundlePath);
       expect(fp!.bytes, `${key} report bytes`).toBe(bytes.length);
-      expect(fp!.sha256, `${key} report sha256`).toBe(sha256Hex(bytes));
-      expect(fp!.bytes_brotli, `${key} report brotli`).toBe(brotliLen(bytes));
+      expect(fp!.sha256, `${key} report sha256`).toBe(measured.sha256);
+      expect(fp!.bytes_brotli, `${key} report brotli`).toBe(measured.bytes_brotli);
     }
   });
 });

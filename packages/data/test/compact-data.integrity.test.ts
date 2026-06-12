@@ -106,15 +106,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the MV2 merit versions; engine_version is the draft-config season stamp", () => {
-    // wc-perf-4.2.1 = wc-perf-4.2.0 + the basis-gate stature alignment (a
-    // label-only fix that re-routes Maier-1966 off the [66,73] estimate cap).
-    // proj-career-3.0.0 = the 2026 stature reconciliation (MV2-5). The
-    // draft-config season bumps engine_version for replay semantics; this
-    // prep unit does not move sim/rating bytes.
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-4.2.1");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-3.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.11");
+  it("rating_version anchors are the merit-v3 versions; engine_version carries the V8 season stamp", () => {
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-5.0.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-4.0.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.12");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {
@@ -167,6 +162,57 @@ describe("compact-data integrity", () => {
       expect(allowed.has(r.rating_version), `unexpected rating_version ${r.rating_version}`)
         .toBe(true);
     }
+  });
+
+  it("carries complete career and current basis ratings for every card", () => {
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.ratings).toBe(
+      DRAFT_POOL_BUNDLE.ratings.length,
+    );
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.ratings).toBe(
+      DRAFT_POOL_BUNDLE.ratings.length,
+    );
+
+    for (const card of DRAFT_POOL_BUNDLE.player_cards) {
+      const career = DRAFT_POOL_BUNDLE.ratings.find((r) => r.card_id === card.card_id);
+      const current = career?.basis_ratings.current;
+      expect(career, `${card.card_id} career basis`).toBeDefined();
+      expect(current, `${card.card_id} current basis`).toBeDefined();
+      expect(career!.basis_metadata?.basis, `${card.card_id} career metadata`).toBe("career");
+      expect(current!.basis_metadata?.basis, `${card.card_id} current metadata`).toBe("current");
+      expect(career!.rating_version).toBe(
+        card.tournament_id === 2026
+          ? RUNTIME_DATA_MANIFEST.rating_version_projected
+          : RUNTIME_DATA_MANIFEST.rating_version_historical,
+      );
+      expect(current!.rating_version).toBe(career!.rating_version);
+    }
+  });
+
+  it("legacy ratings array is the career basis alias", () => {
+    for (const r of DRAFT_POOL_BUNDLE.ratings) {
+      expect(r.basis_metadata?.basis, `${r.card_id} career alias`).toBe("career");
+    }
+  });
+
+  it("basis census locks match measured basis rows", () => {
+    const careerRows = DRAFT_POOL_BUNDLE.ratings;
+    const currentRows = DRAFT_POOL_BUNDLE.ratings.map((r) => r.basis_ratings.current);
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.baseline_anchor_estimate).toBe(
+      careerRows.filter((r) => r.overall_basis === "baseline_anchor_estimate").length,
+    );
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.career_stature_estimate).toBe(
+      careerRows.filter((r) => r.overall_basis === "career_stature_estimate").length,
+    );
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.baseline_anchor_estimate).toBe(
+      currentRows.filter((r) => r.overall_basis === "baseline_anchor_estimate").length,
+    );
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.career_stature_estimate).toBe(
+      currentRows.filter((r) => r.overall_basis === "career_stature_estimate").length,
+    );
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.baseline_anchor_estimate).toBe(386);
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.career_stature_estimate).toBe(478);
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.baseline_anchor_estimate).toBe(388);
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.career_stature_estimate).toBe(0);
   });
 
   it("nation_by_card_id covers every player card", () => {
@@ -223,24 +269,24 @@ describe("compact-data integrity", () => {
     }
   });
 
-  // ── MV2-10 — required source-derived `legend` field ─────────────────────────
+  // ── Merit-v3 V6 — required source-derived `legend` field ────────────────────
   //
-  // runtime-data-1.1.0: the compact passthrough is wired and `legend` is
+  // runtime-data-2.0.0: the compact passthrough is wired and `legend` is
   // REQUIRED on every rating row (historical + 2026). The flag is the ETL
   // source-derived boolean — never re-derived from `overall` — and the count is
   // locked on the manifest for the honest-state census.
-  describe("MV2-10 required legend field", () => {
-    const EXPECTED_LEGEND_TOTAL = 302;
-    const EXPECTED_LEGEND_HISTORICAL = 292;
-    const EXPECTED_LEGEND_2026 = 10;
+  describe("runtime-data-2.0.0 required legend field", () => {
+    const EXPECTED_LEGEND_TOTAL = 270;
+    const EXPECTED_LEGEND_HISTORICAL = 256;
+    const EXPECTED_LEGEND_2026 = 14;
 
-    it("every rating carries a boolean legend flag (required as of runtime-data-1.1.0)", () => {
+    it("every rating carries a boolean legend flag (required as of runtime-data-2.0.0)", () => {
       for (const r of DRAFT_POOL_BUNDLE.ratings) {
         expect(typeof r.legend, `${r.card_id} legend`).toBe("boolean");
       }
     });
 
-    it("legend count matches the manifest census: 302 = 292 historical + 10 2026", () => {
+    it("legend count matches the manifest census: 270 = 256 historical + 14 2026", () => {
       const legends = DRAFT_POOL_BUNDLE.ratings.filter((r) => r.legend);
       expect(RUNTIME_DATA_MANIFEST.counts.legend).toBe(EXPECTED_LEGEND_TOTAL);
       expect(legends.length).toBe(EXPECTED_LEGEND_TOTAL);

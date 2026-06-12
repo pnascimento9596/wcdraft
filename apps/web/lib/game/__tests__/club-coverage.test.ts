@@ -9,9 +9,9 @@
 //   - Squad-header flag: SVG flag asset when mapped; the existing
 //     nation-code text chip as fallback when no asset exists — never a wrong
 //     or approximate flag. Mode-independent (identity, not rating).
-//   - Bundle census (diagnosis lock): club coverage today is 2026-only.
-//     When the MV2-12b backfill regen lands, the census assertions below are
-//     EXPECTED to flip and must be updated with the new real counts.
+//   - Bundle census (diagnosis lock): V6 compact regen carries the historical
+//     club backfill plus 2026 squad clubs. The remaining historical nulls are
+//     verified-absent rows and must stay honest null.
 
 import { describe, expect, it } from "vitest";
 
@@ -72,15 +72,40 @@ describe("club-at-tournament display", () => {
     expect(html).toContain(`· ${view.club_label!}`);
   });
 
-  it("bundle census lock — club is 2026-only today (flips at MV2-12b backfill)", () => {
+  it("bundle census lock — V6 carries historical club backfill plus 2026 clubs", () => {
     const withClub = DRAFT_POOL_BUNDLE.player_cards.filter(
       (c) => (c.club_at_tournament ?? c.club) != null,
     );
-    expect(DRAFT_POOL_BUNDLE.player_cards.length).toBe(12219);
-    expect(withClub.length).toBe(1246);
-    expect(withClub.every((c) => idx.tournamentById.get(c.tournament_id)?.year === 2026)).toBe(
-      true,
+    const historical = DRAFT_POOL_BUNDLE.player_cards.filter((c) => c.tournament_id !== 2026);
+    const historicalWithClub = historical.filter((c) => c.club_at_tournament != null);
+    const historicalNulls = historical.filter((c) => c.club_at_tournament == null);
+    const projectedWithClub = DRAFT_POOL_BUNDLE.player_cards.filter(
+      (c) => c.tournament_id === 2026 && (c.club_at_tournament ?? c.club) != null,
     );
+
+    expect(DRAFT_POOL_BUNDLE.player_cards.length).toBe(12219);
+    expect(withClub.length).toBe(12203);
+    expect(historical.length).toBe(10973);
+    expect(historicalWithClub.length).toBe(10957);
+    expect(projectedWithClub.length).toBe(1246);
+    expect(historicalNulls.map((c) => c.source_card_id).sort()).toEqual([
+      "P-01918:WC-1934",
+      "P-11648:WC-1930",
+      "P-16278:WC-1938",
+      "P-29687:WC-1930",
+      "P-41536:WC-1930",
+      "P-44740:WC-1934",
+      "P-46561:WC-1950",
+      "P-53883:WC-1950",
+      "P-54466:WC-1950",
+      "P-58460:WC-1930",
+      "P-63886:WC-1934",
+      "P-71162:WC-1950",
+      "P-79551:WC-2010",
+      "P-79649:WC-1950",
+      "P-92120:WC-1938",
+      "P-92190:WC-1934",
+    ]);
   });
 });
 
