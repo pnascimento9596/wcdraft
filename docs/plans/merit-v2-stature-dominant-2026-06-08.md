@@ -1,6 +1,10 @@
 # Merit-v2: Stature-Dominant Ratings — Plan
 
-> Status: **DRAFT — awaiting Paulo review**. Plan only; no code yet. Implementation will follow as engine-v2 sub-unit **merit-v2** (supersedes the unfinished E-4 lift composite).
+> **SUPERSEDED 2026-06-12:** This draft plan is historical. The shipped
+> replacement is merit-v3: `runtime-data-2.0.0`, `wc-perf-5.0.0`,
+> `proj-career-4.0.0`, `career-stature-3.0.0`, and `engine-2026.06.12`.
+> Sections below retain the original design/evidence trail and include stale
+> point-in-time anchors such as `engine-2026.06.08`.
 
 ## Goal
 
@@ -12,20 +16,20 @@ Replace the current `raw_tournament + capped_lift` composite (where `career_stat
 
 The merged E-4.2 lift code shipped in `wc-perf-3.0.0`. Verified per-card outcomes from the committed `etl/output/ratings.json`:
 
-| Card | `overall` | `attack` | `mid` | `def` | `gk` | `career_stature_score` | `career_stature_lift` |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Pelé `WC-1966` (`P-38906`) | 84 | 66 | 48 | 34 | 20 | 0.590 | 0.119 |
-| Messi `WC-2010` (`P-14758`) | 84 | 66 | 48 | 34 | 20 | 0.657 | 0.225 |
+| Card                        | `overall` | `attack` | `mid` | `def` | `gk` | `career_stature_score` | `career_stature_lift` |
+| --------------------------- | --------: | -------: | ----: | ----: | ---: | ---------------------: | --------------------: |
+| Pelé `WC-1966` (`P-38906`)  |        84 |       66 |    48 |    34 |   20 |                  0.590 |                 0.119 |
+| Messi `WC-2010` (`P-14758`) |        84 |       66 |    48 |    34 |   20 |                  0.657 |                 0.225 |
 
-The lift is working as designed but the *design* underweights stature. Per Probe A's count over the committed JSON:
+The lift is working as designed but the _design_ underweights stature. Per Probe A's count over the committed JSON:
 
-| Outcome | Cards |
-|---|---:|
-| Total historical rating cards | 10,973 |
-| No `career_stature` row at all | 9,612 (87.6%) |
-| Has row but `coverage < 0.25` (gate) | 872 |
-| Has row & coverage but `target ≤ raw` (no positive gap) | 346 |
-| **Positive `career_stature_lift`** | **143** |
+| Outcome                                                 |         Cards |
+| ------------------------------------------------------- | ------------: |
+| Total historical rating cards                           |        10,973 |
+| No `career_stature` row at all                          | 9,612 (87.6%) |
+| Has row but `coverage < 0.25` (gate)                    |           872 |
+| Has row & coverage but `target ≤ raw` (no positive gap) |           346 |
+| **Positive `career_stature_lift`**                      |       **143** |
 
 `etl/output/merit/CAREER_STATURE.md` reports the score distribution on the 644 scored players: max `career_stature_score = 0.658` (Maradona); legends Cruyff 0.083, Cafu 0.406, Maldini 0.162 — clear source-coverage gaps for non-attacker / non-BdO legends. The 0–1 score scale itself tops out near 0.66 even for the all-time peak.
 
@@ -58,13 +62,13 @@ score  = clamp01(base + anchor)
 
 Read from the committed `etl/output/ratings_2026.json` (1,246 rows, OVR `66/73/99`), the top-10 is:
 
-| Rank | OVR | Player |
-|---:|---:|---|
-| 1–4 | 99 | Bernardo Silva, Bruno Fernandes, Hee-chan Hwang, Tomáš Souček |
-| 5–6 | 98 | Youri Tielemans, John McGinn |
-| 7 | 96 | Granit Xhaka |
-| 8 | 95 | **Kylian Mbappé** |
-| 9–10 | 93–92 | José Giménez, Federico Valverde |
+| Rank |   OVR | Player                                                        |
+| ---: | ----: | ------------------------------------------------------------- |
+|  1–4 |    99 | Bernardo Silva, Bruno Fernandes, Hee-chan Hwang, Tomáš Souček |
+|  5–6 |    98 | Youri Tielemans, John McGinn                                  |
+|    7 |    96 | Granit Xhaka                                                  |
+|    8 |    95 | **Kylian Mbappé**                                             |
+| 9–10 | 93–92 | José Giménez, Federico Valverde                               |
 
 For reference: **Messi-2026 sits at OVR 79**; **Vinícius Jr at 84**. The cohort-percentile formula plus age decay produces this distribution. Career stature is not in the math.
 
@@ -72,18 +76,18 @@ Display curves are fit **separately** for historical and 2026 (`rating.py:655` v
 
 ### Engine cascade state on HEAD (Probe B)
 
-| Surface | State |
-|---|---|
-| `engine_version` | `engine-2026.06.08` — `packages/data/scripts/build-compact-data.mjs:49` |
-| Historical `rating_version` | `wc-perf-3.0.0` |
-| Projected `rating_version` | `proj-career-2.0.0` (no career lift on 2026) |
-| λ math | **Four-channel live** — `lambdaForFour` in `packages/core/src/engine/calibration.ts:462-470`, called from `match.ts:404-405`; uses attack, `defensiveResistance(def,gk)`, `midfieldControl(mid,mid)`. |
-| λ constants | `BASE=0.85`, `SPREAD=6.5`, `MIN=0.40`, `MAX=3.4`, `W_DEF=0.70`, `W_GK=0.30`, `GAMMA_MID=0.50`, `CONTROL_BAND=[0.85, 1.15]`, `CHANCES.REGULATION=50`, `LAMBDA_DISP.OUTER_PROB=0.20`/`A=0.75` (`calibration.ts:76-260`) |
-| Symmetric realism gate | `packages/data/test/realism-modern-norms.golden.test.ts` — bands `mean_goals [2.478, 2.594]`, `group_draw [0.2288, 0.2652]`, `margin_ge_4 [0.0412, 0.0570]`, `ko_et [0.2961, 0.3648]`, `ko_shootout [0.1843, 0.2443]`. Narrow — current state lands centrally. |
-| Asymmetric realism gate | `packages/data/test/realism/realism.gate.test.ts` — heavy-gated by `WCDRAFT_REALISM_HEAVY=1`, separate CI job; shape bands plus goals-per-game lower floor `2.4`. Golden anchors `engine-2026.06.04`. |
-| Faithfulness suite | **`packages/core/src/faithfulness.test.ts` exists on HEAD** (memory said it was deferred — stale). 11 `it()` cases: determinism, 4-channel monotonicity, elite ceiling (99/99/99/99 vs 50/50/50/50: KO win ≥ 0.85, < 1.0; group max goals ≥ 6), dominance-not-certainty (85 vs 60: win ∈ [0.65, 0.95]), legibility (attack/GK directional), no-inversion. Stature-dominant should *help* this gate. |
-| Skew test | `apps/web/lib/game/__tests__/run-token.test.ts:251-292` — pre-bump tokens (`engine-2026.06.04 + wc-perf-2.0.0`) trip skew cleanly; merit-v2 stamp bump (e.g. `engine-2026.06.10 + wc-perf-4.0.0`) will trip persisted runs the same way. By design — no silent re-sim. |
-| Heavy CI split | `WCDRAFT_REALISM_HEAVY=1` env-gates asymmetric realism off the default test path; `.github/workflows/ci.yml:83-114` runs a separate `realism` job. |
+| Surface                     | State                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `engine_version`            | `engine-2026.06.08` — `packages/data/scripts/build-compact-data.mjs:49`                                                                                                                                                                                                                                                                                                                             |
+| Historical `rating_version` | `wc-perf-3.0.0`                                                                                                                                                                                                                                                                                                                                                                                     |
+| Projected `rating_version`  | `proj-career-2.0.0` (no career lift on 2026)                                                                                                                                                                                                                                                                                                                                                        |
+| λ math                      | **Four-channel live** — `lambdaForFour` in `packages/core/src/engine/calibration.ts:462-470`, called from `match.ts:404-405`; uses attack, `defensiveResistance(def,gk)`, `midfieldControl(mid,mid)`.                                                                                                                                                                                               |
+| λ constants                 | `BASE=0.85`, `SPREAD=6.5`, `MIN=0.40`, `MAX=3.4`, `W_DEF=0.70`, `W_GK=0.30`, `GAMMA_MID=0.50`, `CONTROL_BAND=[0.85, 1.15]`, `CHANCES.REGULATION=50`, `LAMBDA_DISP.OUTER_PROB=0.20`/`A=0.75` (`calibration.ts:76-260`)                                                                                                                                                                               |
+| Symmetric realism gate      | `packages/data/test/realism-modern-norms.golden.test.ts` — bands `mean_goals [2.478, 2.594]`, `group_draw [0.2288, 0.2652]`, `margin_ge_4 [0.0412, 0.0570]`, `ko_et [0.2961, 0.3648]`, `ko_shootout [0.1843, 0.2443]`. Narrow — current state lands centrally.                                                                                                                                      |
+| Asymmetric realism gate     | `packages/data/test/realism/realism.gate.test.ts` — heavy-gated by `WCDRAFT_REALISM_HEAVY=1`, separate CI job; shape bands plus goals-per-game lower floor `2.4`. Golden anchors `engine-2026.06.04`.                                                                                                                                                                                               |
+| Faithfulness suite          | **`packages/core/src/faithfulness.test.ts` exists on HEAD** (memory said it was deferred — stale). 11 `it()` cases: determinism, 4-channel monotonicity, elite ceiling (99/99/99/99 vs 50/50/50/50: KO win ≥ 0.85, < 1.0; group max goals ≥ 6), dominance-not-certainty (85 vs 60: win ∈ [0.65, 0.95]), legibility (attack/GK directional), no-inversion. Stature-dominant should _help_ this gate. |
+| Skew test                   | `apps/web/lib/game/__tests__/run-token.test.ts:251-292` — pre-bump tokens (`engine-2026.06.04 + wc-perf-2.0.0`) trip skew cleanly; merit-v2 stamp bump (e.g. `engine-2026.06.10 + wc-perf-4.0.0`) will trip persisted runs the same way. By design — no silent re-sim.                                                                                                                              |
+| Heavy CI split              | `WCDRAFT_REALISM_HEAVY=1` env-gates asymmetric realism off the default test path; `.github/workflows/ci.yml:83-114` runs a separate `realism` job.                                                                                                                                                                                                                                                  |
 
 ### Card UI / Legend badge seam (Probe C)
 

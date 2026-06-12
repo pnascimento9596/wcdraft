@@ -139,6 +139,405 @@ function sha256Hex(buf) {
   return createHash("sha256").update(buf).digest("hex");
 }
 
+// ─── Runtime bundle validators ──────────────────────────────────────────────
+
+function failBundle(pathName, message) {
+  throw new Error(`build-compact-data: ${pathName}: ${message}`);
+}
+
+function assertObject(value, pathName) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    failBundle(pathName, `expected object, got ${value === null ? "null" : typeof value}`);
+  }
+  return value;
+}
+
+function assertArray(value, pathName) {
+  if (!Array.isArray(value)) {
+    failBundle(pathName, `expected array, got ${value === null ? "null" : typeof value}`);
+  }
+  return value;
+}
+
+function assertString(value, pathName) {
+  if (typeof value !== "string" || value.length === 0) {
+    failBundle(pathName, `expected non-empty string, got ${JSON.stringify(value)}`);
+  }
+  return value;
+}
+
+function assertOptionalString(value, pathName) {
+  if (value !== undefined && typeof value !== "string") {
+    failBundle(pathName, `expected optional string, got ${JSON.stringify(value)}`);
+  }
+}
+
+function assertNullableString(value, pathName) {
+  if (value !== null && typeof value !== "string") {
+    failBundle(pathName, `expected string|null, got ${JSON.stringify(value)}`);
+  }
+}
+
+function assertNumber(value, pathName) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    failBundle(pathName, `expected finite number, got ${JSON.stringify(value)}`);
+  }
+  return value;
+}
+
+function assertInteger(value, pathName) {
+  const n = assertNumber(value, pathName);
+  if (!Number.isSafeInteger(n)) failBundle(pathName, `expected safe integer, got ${n}`);
+  return n;
+}
+
+function assertNullableNumber(value, pathName) {
+  if (value !== null) assertNumber(value, pathName);
+}
+
+function assertOptionalNullableNumber(value, pathName) {
+  if (value !== undefined && value !== null) assertNumber(value, pathName);
+}
+
+function assertBoolean(value, pathName) {
+  if (typeof value !== "boolean") {
+    failBundle(pathName, `expected boolean, got ${JSON.stringify(value)}`);
+  }
+}
+
+function assertNullableBoolean(value, pathName) {
+  if (value !== null && typeof value !== "boolean") {
+    failBundle(pathName, `expected boolean|null, got ${JSON.stringify(value)}`);
+  }
+}
+
+function assertSchemaVersion(value, pathName) {
+  if (value !== SCHEMA_VERSION) {
+    failBundle(pathName, `schema_version must be ${SCHEMA_VERSION}, got ${JSON.stringify(value)}`);
+  }
+}
+
+function assertSourceRefs(sources, pathName) {
+  for (const [idx, source] of assertArray(sources, pathName).entries()) {
+    const src = assertObject(source, `${pathName}[${idx}]`);
+    assertString(src.source, `${pathName}[${idx}].source`);
+    assertString(src.source_type, `${pathName}[${idx}].source_type`);
+    assertString(src.citation, `${pathName}[${idx}].citation`);
+    assertNullableString(src.retrieved_date, `${pathName}[${idx}].retrieved_date`);
+  }
+}
+
+function assertStringMap(value, pathName, validateValue) {
+  const obj = assertObject(value, pathName);
+  for (const [key, item] of Object.entries(obj)) {
+    if (key.length === 0) failBundle(pathName, "contains an empty key");
+    validateValue(item, `${pathName}.${key}`);
+  }
+}
+
+function assertBasisMetadata(value, pathName, expectedBasis) {
+  const metadata = assertObject(value, pathName);
+  if (metadata.basis !== expectedBasis) {
+    failBundle(pathName, `basis must be ${expectedBasis}, got ${JSON.stringify(metadata.basis)}`);
+  }
+  assertString(metadata.rating_version, `${pathName}.rating_version`);
+  assertNumber(metadata.score_0_100, `${pathName}.score_0_100`);
+}
+
+function assertRuntimeRating(value, pathName, expectedBasis) {
+  const rating = assertObject(value, pathName);
+  const parsed = parseCardForValidation(
+    assertString(rating.card_id, `${pathName}.card_id`),
+    "card_id",
+    pathName,
+  );
+  assertString(rating.player_id, `${pathName}.player_id`);
+  assertInteger(rating.tournament_id, `${pathName}.tournament_id`);
+  if (rating.player_id !== parsed.ownerId || rating.tournament_id !== parsed.tournamentId) {
+    failBundle(pathName, "card_id does not match player_id + tournament_id");
+  }
+  for (const channel of ["overall", "attack", "midfield", "defense", "goalkeeping"]) {
+    assertNumber(rating[channel], `${pathName}.${channel}`);
+  }
+  assertArray(rating.components, `${pathName}.components`);
+  assertNumber(rating.coverage, `${pathName}.coverage`);
+  assertString(rating.coverage_basis, `${pathName}.coverage_basis`);
+  assertString(rating.provenance, `${pathName}.provenance`);
+  assertString(rating.rating_version, `${pathName}.rating_version`);
+  assertOptionalString(rating.overall_basis, `${pathName}.overall_basis`);
+  assertOptionalString(rating.appearances_source, `${pathName}.appearances_source`);
+  assertBoolean(rating.legend, `${pathName}.legend`);
+  assertBasisMetadata(rating.basis_metadata, `${pathName}.basis_metadata`, expectedBasis);
+}
+
+function parseCardForValidation(cardId, fieldName, pathName) {
+  const idx = cardId.lastIndexOf(":");
+  if (idx <= 0 || idx >= cardId.length - 1) {
+    failBundle(`${pathName}.${fieldName}`, "must be '<id>:<tournament_id>'");
+  }
+  const ownerId = cardId.slice(0, idx);
+  const tournamentId = Number(cardId.slice(idx + 1));
+  if (!Number.isSafeInteger(tournamentId) || tournamentId <= 0) {
+    failBundle(`${pathName}.${fieldName}`, `invalid tournament id in ${JSON.stringify(cardId)}`);
+  }
+  return { ownerId, tournamentId };
+}
+
+function assertPlayerCard(card, pathName) {
+  const value = assertObject(card, pathName);
+  const parsed = parseCardForValidation(
+    assertString(value.card_id, `${pathName}.card_id`),
+    "card_id",
+    pathName,
+  );
+  assertString(value.player_id, `${pathName}.player_id`);
+  assertInteger(value.tournament_id, `${pathName}.tournament_id`);
+  if (value.player_id !== parsed.ownerId || value.tournament_id !== parsed.tournamentId) {
+    failBundle(pathName, "card_id does not match player_id + tournament_id");
+  }
+  assertString(value.nation_id, `${pathName}.nation_id`);
+  assertString(value.common_name, `${pathName}.common_name`);
+  assertString(value.full_name, `${pathName}.full_name`);
+  assertString(value.primary_position, `${pathName}.primary_position`);
+  assertArray(value.eligible_positions, `${pathName}.eligible_positions`).forEach((pos, idx) =>
+    assertString(pos, `${pathName}.eligible_positions[${idx}]`),
+  );
+  assertNullableString(value.birth_date, `${pathName}.birth_date`);
+  assertNullableString(value.position_listed, `${pathName}.position_listed`);
+  assertNullableNumber(value.shirt_number, `${pathName}.shirt_number`);
+  assertNullableString(value.club_at_tournament, `${pathName}.club_at_tournament`);
+  assertNullableBoolean(value.captain, `${pathName}.captain`);
+  assertNumber(value.coverage, `${pathName}.coverage`);
+  assertOptionalNullableNumber(value.appearances, `${pathName}.appearances`);
+  assertOptionalNullableNumber(value.goals, `${pathName}.goals`);
+  if (value.awards !== undefined && value.awards !== null) {
+    assertArray(value.awards, `${pathName}.awards`);
+  }
+  assertOptionalString(value.appearances_source, `${pathName}.appearances_source`);
+  assertOptionalNullableNumber(value.caps, `${pathName}.caps`);
+  assertOptionalNullableNumber(value.intl_goals, `${pathName}.intl_goals`);
+  if (value.club !== undefined) assertNullableString(value.club, `${pathName}.club`);
+  if (value.club_nation_code !== undefined) {
+    assertNullableString(value.club_nation_code, `${pathName}.club_nation_code`);
+  }
+  if (value.group !== undefined) assertNullableString(value.group, `${pathName}.group`);
+  if (value.link_status !== undefined) {
+    assertNullableString(value.link_status, `${pathName}.link_status`);
+  }
+  assertString(value.source_card_id, `${pathName}.source_card_id`);
+  assertString(value.source_tournament_id, `${pathName}.source_tournament_id`);
+  assertSourceRefs(value.sources, `${pathName}.sources`);
+}
+
+function assertManagerCard(card, pathName) {
+  const value = assertObject(card, pathName);
+  const parsed = parseCardForValidation(
+    assertString(value.manager_card_id, `${pathName}.manager_card_id`),
+    "manager_card_id",
+    pathName,
+  );
+  assertString(value.manager_id, `${pathName}.manager_id`);
+  assertInteger(value.tournament_id, `${pathName}.tournament_id`);
+  if (value.manager_id !== parsed.ownerId || value.tournament_id !== parsed.tournamentId) {
+    failBundle(pathName, "manager_card_id does not match manager_id + tournament_id");
+  }
+  assertString(value.nation_id, `${pathName}.nation_id`);
+  assertString(value.common_name, `${pathName}.common_name`);
+  assertString(value.full_name, `${pathName}.full_name`);
+  assertString(value.own_nation_id, `${pathName}.own_nation_id`);
+  assertNullableString(value.birth_date, `${pathName}.birth_date`);
+  assertNullableNumber(value.matches, `${pathName}.matches`);
+  assertNullableNumber(value.final_placement, `${pathName}.final_placement`);
+  assertString(value.source_manager_card_id, `${pathName}.source_manager_card_id`);
+  assertString(value.source_tournament_id, `${pathName}.source_tournament_id`);
+  assertSourceRefs(value.sources, `${pathName}.sources`);
+}
+
+function validateDraftPoolBundle(bundle) {
+  const value = assertObject(bundle, "draft-pool.compact.json");
+  assertSchemaVersion(value.schema_version, "draft-pool.compact.json.schema_version");
+  assertArray(value.player_cards, "draft-pool.compact.json.player_cards").forEach((card, idx) =>
+    assertPlayerCard(card, `draft-pool.compact.json.player_cards[${idx}]`),
+  );
+  assertArray(value.manager_cards, "draft-pool.compact.json.manager_cards").forEach((card, idx) =>
+    assertManagerCard(card, `draft-pool.compact.json.manager_cards[${idx}]`),
+  );
+  assertArray(value.ratings, "draft-pool.compact.json.ratings").forEach((rating, idx) => {
+    assertRuntimeRating(rating, `draft-pool.compact.json.ratings[${idx}]`, "career");
+    const current = assertObject(
+      assertObject(rating, `draft-pool.compact.json.ratings[${idx}]`).basis_ratings,
+      `draft-pool.compact.json.ratings[${idx}].basis_ratings`,
+    ).current;
+    assertRuntimeRating(
+      current,
+      `draft-pool.compact.json.ratings[${idx}].basis_ratings.current`,
+      "current",
+    );
+  });
+  assertStringMap(
+    value.nation_by_card_id,
+    "draft-pool.compact.json.nation_by_card_id",
+    assertString,
+  );
+  assertStringMap(
+    value.nation_by_manager_card_id,
+    "draft-pool.compact.json.nation_by_manager_card_id",
+    assertString,
+  );
+  assertStringMap(value.tournaments, "draft-pool.compact.json.tournaments", (item, pathName) => {
+    const tournament = assertObject(item, pathName);
+    assertInteger(tournament.year, `${pathName}.year`);
+    assertString(tournament.name, `${pathName}.name`);
+  });
+  assertStringMap(value.nations, "draft-pool.compact.json.nations", (item, pathName) => {
+    const nation = assertObject(item, pathName);
+    assertString(nation.canonical_name, `${pathName}.canonical_name`);
+    assertNullableString(nation.code, `${pathName}.code`);
+  });
+}
+
+function validateScenario2026Bundle(bundle) {
+  const value = assertObject(bundle, "scenario-2026.compact.json");
+  assertSchemaVersion(value.schema_version, "scenario-2026.compact.json.schema_version");
+  assertInteger(value.tournament_id, "scenario-2026.compact.json.tournament_id");
+  assertString(value.format_version, "scenario-2026.compact.json.format_version");
+  assertArray(value.groups, "scenario-2026.compact.json.groups").forEach((group, idx) => {
+    const valueGroup = assertObject(group, `scenario-2026.compact.json.groups[${idx}]`);
+    assertString(valueGroup.group_id, `scenario-2026.compact.json.groups[${idx}].group_id`);
+    assertArray(valueGroup.team_ids, `scenario-2026.compact.json.groups[${idx}].team_ids`).forEach(
+      (teamId, teamIdx) =>
+        assertString(teamId, `scenario-2026.compact.json.groups[${idx}].team_ids[${teamIdx}]`),
+    );
+  });
+  assertArray(value.knockout_slots, "scenario-2026.compact.json.knockout_slots").forEach(
+    (slot, idx) => {
+      const valueSlot = assertObject(slot, `scenario-2026.compact.json.knockout_slots[${idx}]`);
+      assertString(valueSlot.slot_id, `scenario-2026.compact.json.knockout_slots[${idx}].slot_id`);
+      assertString(valueSlot.round, `scenario-2026.compact.json.knockout_slots[${idx}].round`);
+    },
+  );
+  assertArray(value.teams, "scenario-2026.compact.json.teams").forEach((team, idx) => {
+    const valueTeam = assertObject(team, `scenario-2026.compact.json.teams[${idx}]`);
+    assertString(valueTeam.team_id, `scenario-2026.compact.json.teams[${idx}].team_id`);
+    assertString(valueTeam.nation_id, `scenario-2026.compact.json.teams[${idx}].nation_id`);
+    assertString(valueTeam.group, `scenario-2026.compact.json.teams[${idx}].group`);
+    assertInteger(valueTeam.group_slot, `scenario-2026.compact.json.teams[${idx}].group_slot`);
+    assertArray(
+      valueTeam.squad_card_ids,
+      `scenario-2026.compact.json.teams[${idx}].squad_card_ids`,
+    ).forEach((cardId, cardIdx) =>
+      parseCardForValidation(
+        assertString(cardId, `scenario-2026.compact.json.teams[${idx}].squad_card_ids[${cardIdx}]`),
+        "card_id",
+        `scenario-2026.compact.json.teams[${idx}].squad_card_ids[${cardIdx}]`,
+      ),
+    );
+    const aggregate = assertObject(
+      valueTeam.aggregate_rating,
+      `scenario-2026.compact.json.teams[${idx}].aggregate_rating`,
+    );
+    for (const channel of ["attack", "midfield", "defense", "goalkeeping", "coverage"]) {
+      assertNumber(aggregate[channel], `scenario-2026.compact.json.teams[${idx}].${channel}`);
+    }
+    assertString(valueTeam.squad_status, `scenario-2026.compact.json.teams[${idx}].squad_status`);
+    assertString(
+      valueTeam.rating_version,
+      `scenario-2026.compact.json.teams[${idx}].rating_version`,
+    );
+    assertSourceRefs(valueTeam.sources, `scenario-2026.compact.json.teams[${idx}].sources`);
+  });
+  assertStringMap(
+    value.team_display_names,
+    "scenario-2026.compact.json.team_display_names",
+    assertString,
+  );
+  assertObject(
+    value.default_knockout_opponent_rule,
+    "scenario-2026.compact.json.default_knockout_opponent_rule",
+  );
+}
+
+function assertFingerprint(value, pathName) {
+  const fp = assertObject(value, pathName);
+  assertString(fp.path, `${pathName}.path`);
+  assertString(fp.sha256, `${pathName}.sha256`);
+  assertInteger(fp.bytes, `${pathName}.bytes`);
+  assertInteger(fp.bytes_gzip, `${pathName}.bytes_gzip`);
+  assertInteger(fp.bytes_brotli, `${pathName}.bytes_brotli`);
+}
+
+function validateRuntimeDataManifest(manifest) {
+  const value = assertObject(manifest, "manifest.json");
+  assertSchemaVersion(value.schema_version, "manifest.json.schema_version");
+  for (const field of [
+    "dataset_version",
+    "rating_version_historical",
+    "rating_version_projected",
+    "engine_version",
+    "ruleset_version",
+  ]) {
+    assertString(value[field], `manifest.json.${field}`);
+  }
+  const bundles = assertObject(value.bundles, "manifest.json.bundles");
+  assertFingerprint(bundles.draft_pool, "manifest.json.bundles.draft_pool");
+  assertFingerprint(bundles.scenario_2026, "manifest.json.bundles.scenario_2026");
+  const counts = assertObject(value.counts, "manifest.json.counts");
+  for (const field of [
+    "player_cards",
+    "manager_cards",
+    "ratings",
+    "teams",
+    "knockout_slots",
+    "baseline_anchor_estimate",
+    "career_stature_estimate",
+    "legend",
+  ]) {
+    assertInteger(counts[field], `manifest.json.counts.${field}`);
+  }
+  const ratingBasis = assertObject(counts.rating_basis, "manifest.json.counts.rating_basis");
+  for (const basis of ["career", "current"]) {
+    const basisCounts = assertObject(
+      ratingBasis[basis],
+      `manifest.json.counts.rating_basis.${basis}`,
+    );
+    assertInteger(basisCounts.ratings, `manifest.json.counts.rating_basis.${basis}.ratings`);
+    assertInteger(
+      basisCounts.baseline_anchor_estimate,
+      `manifest.json.counts.rating_basis.${basis}.baseline_anchor_estimate`,
+    );
+    assertInteger(
+      basisCounts.career_stature_estimate,
+      `manifest.json.counts.rating_basis.${basis}.career_stature_estimate`,
+    );
+  }
+  const attribution = assertObject(value.attribution, "manifest.json.attribution");
+  assertString(attribution.combined_attribution, "manifest.json.attribution.combined_attribution");
+  assertString(
+    attribution.redistributed_license,
+    "manifest.json.attribution.redistributed_license",
+  );
+  assertString(
+    attribution.redistributed_license_url,
+    "manifest.json.attribution.redistributed_license_url",
+  );
+  assertString(attribution.modifications, "manifest.json.attribution.modifications");
+  assertString(
+    attribution.not_affiliated_disclaimer,
+    "manifest.json.attribution.not_affiliated_disclaimer",
+  );
+  assertArray(attribution.sources, "manifest.json.attribution.sources").forEach((source, idx) => {
+    const pathName = `manifest.json.attribution.sources[${idx}]`;
+    const src = assertObject(source, pathName);
+    assertString(src.source_id, `${pathName}.source_id`);
+    assertString(src.label, `${pathName}.label`);
+    assertString(src.license, `${pathName}.license`);
+    assertString(src.license_url, `${pathName}.license_url`);
+    assertString(src.revision, `${pathName}.revision`);
+    assertString(src.url, `${pathName}.url`);
+    assertNullableString(src.retrieved_date, `${pathName}.retrieved_date`);
+  });
+}
+
 // ─── Tournament ID rewrite ───────────────────────────────────────────────────
 
 /**
@@ -339,9 +738,9 @@ async function build() {
       );
     }
     if (
-      typeof runtimeRating.overall !== "number"
-      || runtimeRating.overall < DISPLAY_FLOOR
-      || runtimeRating.overall > DISPLAY_MAX
+      typeof runtimeRating.overall !== "number" ||
+      runtimeRating.overall < DISPLAY_FLOOR ||
+      runtimeRating.overall > DISPLAY_MAX
     ) {
       throw new Error(
         `build-compact-data: rating ${rating.card_id} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
@@ -371,9 +770,7 @@ async function build() {
       );
     }
     if (!Array.isArray(player.eligible_positions) || player.eligible_positions.length === 0) {
-      throw new Error(
-        `build-compact-data: 2026 player ${pt.player_id} has no eligible_positions.`,
-      );
+      throw new Error(`build-compact-data: 2026 player ${pt.player_id} has no eligible_positions.`);
     }
     const card = {
       card_id: cardId,
@@ -410,9 +807,9 @@ async function build() {
       );
     }
     if (
-      typeof runtimeRating.overall !== "number"
-      || runtimeRating.overall < DISPLAY_FLOOR
-      || runtimeRating.overall > DISPLAY_MAX
+      typeof runtimeRating.overall !== "number" ||
+      runtimeRating.overall < DISPLAY_FLOOR ||
+      runtimeRating.overall > DISPLAY_MAX
     ) {
       throw new Error(
         `build-compact-data: 2026 rating ${rating.card_id} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
@@ -586,9 +983,15 @@ async function build() {
     default_knockout_opponent_rule: DEFAULT_KNOCKOUT_OPPONENT_RULE,
   };
 
+  validateDraftPoolBundle(draftPoolBundle);
+  validateScenario2026Bundle(scenario2026Bundle);
+
   // ── Attribution ──────────────────────────────────────────────────────────
   const datasetVersion = cliDatasetVersion ?? deriveDatasetVersion(manifest2026);
-  const ratingVersionHistorical = inferRatingVersion(mensRatings, RATING_VERSION_HISTORICAL_FALLBACK);
+  const ratingVersionHistorical = inferRatingVersion(
+    mensRatings,
+    RATING_VERSION_HISTORICAL_FALLBACK,
+  );
   const ratingVersionProjected = inferRatingVersion(ratings2026, RATING_VERSION_PROJECTED_FALLBACK);
 
   const attribution = buildAttribution(historicalManifest, manifest2026);
@@ -606,9 +1009,8 @@ async function build() {
           baseline_anchor_estimate: rows.filter(
             (r) => r.overall_basis === "baseline_anchor_estimate",
           ).length,
-          career_stature_estimate: rows.filter(
-            (r) => r.overall_basis === "career_stature_estimate",
-          ).length,
+          career_stature_estimate: rows.filter((r) => r.overall_basis === "career_stature_estimate")
+            .length,
         },
       ];
     }),
@@ -645,6 +1047,7 @@ async function build() {
     },
     attribution,
   };
+  validateRuntimeDataManifest(manifestObj);
   const manifestBytes = Buffer.from(stableStringify(manifestObj), "utf8");
 
   // ── Emit outputs + reports ───────────────────────────────────────────────
@@ -675,10 +1078,7 @@ async function build() {
       draftPoolFingerprint.bytes_gzip +
       scenario2026Fingerprint.bytes_gzip,
   };
-  await writeFile(
-    path.join(reportsDir, "compact-size.json"),
-    stableStringify(sizeReport),
-  );
+  await writeFile(path.join(reportsDir, "compact-size.json"), stableStringify(sizeReport));
 
   // ── Console summary ──────────────────────────────────────────────────────
   process.stdout.write(
@@ -716,8 +1116,22 @@ function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
     );
   }
   return {
-    career: materializeBasisRating(rating, basisRatings.career, "career", runtimeCardId, yyyy, opts),
-    current: materializeBasisRating(rating, basisRatings.current, "current", runtimeCardId, yyyy, opts),
+    career: materializeBasisRating(
+      rating,
+      basisRatings.career,
+      "career",
+      runtimeCardId,
+      yyyy,
+      opts,
+    ),
+    current: materializeBasisRating(
+      rating,
+      basisRatings.current,
+      "current",
+      runtimeCardId,
+      yyyy,
+      opts,
+    ),
   };
 }
 
@@ -730,7 +1144,14 @@ function withCurrentBasis(basisRatings) {
   };
 }
 
-function materializeBasisRating(parentRating, basisRating, expectedBasis, runtimeCardId, yyyy, opts = {}) {
+function materializeBasisRating(
+  parentRating,
+  basisRating,
+  expectedBasis,
+  runtimeCardId,
+  yyyy,
+  opts = {},
+) {
   if (!basisRating || typeof basisRating !== "object") {
     throw new Error(
       `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.0.0 requires both bases.`,
@@ -755,7 +1176,8 @@ function materializeBasisRating(parentRating, basisRating, expectedBasis, runtim
     coverage: basisRating.coverage ?? parentRating.coverage,
     coverage_basis: basisRating.coverage_basis ?? parentRating.coverage_basis,
     provenance: basisRating.provenance ?? parentRating.provenance,
-    rating_version: basisRating.rating_version ?? basisMetadata.rating_version ?? parentRating.rating_version,
+    rating_version:
+      basisRating.rating_version ?? basisMetadata.rating_version ?? parentRating.rating_version,
     ...(basisRating.overall_basis ? { overall_basis: basisRating.overall_basis } : {}),
     ...(opts.appearancesSource ? { appearances_source: opts.appearancesSource } : {}),
     legend: requireLegend(parentRating),
@@ -768,9 +1190,7 @@ function materializeBasisRating(parentRating, basisRating, expectedBasis, runtim
 function validateRuntimeRating(runtimeRating, sourceCardId, basis) {
   for (const ch of ["attack", "midfield", "defense", "goalkeeping"]) {
     if (typeof runtimeRating[ch] !== "number") {
-      throw new Error(
-        `build-compact-data: ${sourceCardId} basis ${basis} missing numeric ${ch}.`,
-      );
+      throw new Error(`build-compact-data: ${sourceCardId} basis ${basis} missing numeric ${ch}.`);
     }
   }
   if (runtimeRating.overall === null) {
@@ -779,9 +1199,9 @@ function validateRuntimeRating(runtimeRating, sourceCardId, basis) {
     );
   }
   if (
-    typeof runtimeRating.overall !== "number"
-    || runtimeRating.overall < DISPLAY_FLOOR
-    || runtimeRating.overall > DISPLAY_MAX
+    typeof runtimeRating.overall !== "number" ||
+    runtimeRating.overall < DISPLAY_FLOOR ||
+    runtimeRating.overall > DISPLAY_MAX
   ) {
     throw new Error(
       `build-compact-data: rating ${sourceCardId} basis ${basis} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,

@@ -48,6 +48,30 @@ type Mode =
   | { kind: "skew"; title: string; message: string }
   | { kind: "error"; title: string; message: string };
 
+type ShareSvgColors = {
+  bgStart: string;
+  bgEnd: string;
+  accentStart: string;
+  accentEnd: string;
+  goldStart: string;
+  goldMid: string;
+  goldEnd: string;
+  text: string;
+  muted: string;
+};
+
+const SHARE_SVG_COLOR_VARS: ShareSvgColors = {
+  bgStart: "var(--field)",
+  bgEnd: "var(--accent-ink)",
+  accentStart: "var(--accent)",
+  accentEnd: "var(--accent-strong)",
+  goldStart: "var(--gold-strong)",
+  goldMid: "var(--gold)",
+  goldEnd: "var(--gold)",
+  text: "var(--field-ink)",
+  muted: "var(--ink-soft)",
+};
+
 export function ShareScreen() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -244,6 +268,7 @@ function ShareBody({
   linkRunValue: string | null;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const svgColors = useShareSvgColors();
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState<"idle" | "ok" | "unsupported">("idle");
 
@@ -367,7 +392,7 @@ function ShareBody({
 
       {/* ── The SVG card (rendered + serialisable for export) ──────────── */}
       <div className={s.shareCardFrame}>
-        <ShareCardSvg svgRef={svgRef} view={view} shareUrl={shareUrl} />
+        <ShareCardSvg svgRef={svgRef} view={view} shareUrl={shareUrl} colors={svgColors} />
       </div>
 
       {/* ── Caption + actions ─────────────────────────────────────────── */}
@@ -518,18 +543,43 @@ function ConfigBadgeRow({ badges }: { badges: readonly ConfigBadge[] }) {
   );
 }
 
+function useShareSvgColors(): ShareSvgColors {
+  const [colors, setColors] = useState<ShareSvgColors>(SHARE_SVG_COLOR_VARS);
+
+  useEffect(() => {
+    const styles = getComputedStyle(document.documentElement);
+    const token = (name: string, fallback: string) =>
+      styles.getPropertyValue(name).trim() || fallback;
+    setColors({
+      bgStart: token("--field", SHARE_SVG_COLOR_VARS.bgStart),
+      bgEnd: token("--accent-ink", SHARE_SVG_COLOR_VARS.bgEnd),
+      accentStart: token("--accent", SHARE_SVG_COLOR_VARS.accentStart),
+      accentEnd: token("--accent-strong", SHARE_SVG_COLOR_VARS.accentEnd),
+      goldStart: token("--gold-strong", SHARE_SVG_COLOR_VARS.goldStart),
+      goldMid: token("--gold", SHARE_SVG_COLOR_VARS.goldMid),
+      goldEnd: token("--gold", SHARE_SVG_COLOR_VARS.goldEnd),
+      text: token("--field-ink", SHARE_SVG_COLOR_VARS.text),
+      muted: token("--ink-soft", SHARE_SVG_COLOR_VARS.muted),
+    });
+  }, []);
+
+  return colors;
+}
+
 // ─── The SVG itself ──────────────────────────────────────────────────────────
 
 function ShareCardSvg({
   svgRef,
   view,
   shareUrl,
+  colors,
 }: {
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
   view: ShareView;
   shareUrl: string | null;
+  colors: ShareSvgColors;
 }) {
-  const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : "#e9f9f2";
+  const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : colors.text;
   const headline = view.headline;
   const formationLabel = view.manager
     ? `${view.formation_name} · mgr ${view.manager.nation_code} ${view.manager.name}`
@@ -548,17 +598,17 @@ function ShareCardSvg({
     >
       <defs>
         <linearGradient id="wcBg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#141b24" />
-          <stop offset="1" stopColor="#0a0e13" />
+          <stop offset="0" stopColor={colors.bgStart} />
+          <stop offset="1" stopColor={colors.bgEnd} />
         </linearGradient>
         <linearGradient id="wcEmerald" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#54e3ab" />
-          <stop offset="1" stopColor="#1c9e6e" />
+          <stop offset="0" stopColor={colors.accentStart} />
+          <stop offset="1" stopColor={colors.accentEnd} />
         </linearGradient>
         <linearGradient id="wcGold" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor="#c8861a" />
-          <stop offset="0.5" stopColor="#f5b62a" />
-          <stop offset="1" stopColor="#ffd86a" />
+          <stop offset="0" stopColor={colors.goldStart} />
+          <stop offset="0.5" stopColor={colors.goldMid} />
+          <stop offset="1" stopColor={colors.goldEnd} />
         </linearGradient>
       </defs>
 
@@ -572,7 +622,7 @@ function ShareCardSvg({
         <text
           x="0"
           y="0"
-          fill="#e9f9f2"
+          fill={colors.text}
           fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
           fontSize="28"
           fontWeight="700"
@@ -586,7 +636,7 @@ function ShareCardSvg({
         <text
           x={CARD_WIDTH - 96}
           y="0"
-          fill="#a7b3bd"
+          fill={colors.muted}
           fontFamily="ui-monospace, SF Mono, Menlo, monospace"
           fontSize="14"
           textAnchor="end"
@@ -600,7 +650,7 @@ function ShareCardSvg({
         x={CARD_WIDTH / 2}
         y="180"
         textAnchor="middle"
-        fill="#e9f9f2"
+        fill={colors.text}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="32"
         fontWeight="600"
@@ -614,7 +664,7 @@ function ShareCardSvg({
         x={CARD_WIDTH / 2}
         y="244"
         textAnchor="middle"
-        fill="#9bb6ad"
+        fill={colors.muted}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="18"
         fontWeight="600"
@@ -642,7 +692,7 @@ function ShareCardSvg({
         x={CARD_WIDTH / 2}
         y="470"
         textAnchor="middle"
-        fill="#9bb6ad"
+        fill={colors.muted}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="16"
         letterSpacing="0.06em"
@@ -652,12 +702,23 @@ function ShareCardSvg({
 
       {/* Stats row */}
       <g transform={`translate(0, 540)`}>
-        <ShareStat x={CARD_WIDTH * 0.2} num={String(view.goals_for)} label="scored" />
-        <ShareStat x={CARD_WIDTH * 0.5} num={String(view.goals_against)} label="conceded" />
+        <ShareStat
+          x={CARD_WIDTH * 0.2}
+          num={String(view.goals_for)}
+          label="scored"
+          colors={colors}
+        />
+        <ShareStat
+          x={CARD_WIDTH * 0.5}
+          num={String(view.goals_against)}
+          label="conceded"
+          colors={colors}
+        />
         <ShareStat
           x={CARD_WIDTH * 0.8}
           num={view.top_scorer ? String(view.top_scorer.goals) : "—"}
           label={view.top_scorer ? truncate(view.top_scorer.name, 14) : "top scorer"}
+          colors={colors}
         />
       </g>
 
@@ -667,7 +728,7 @@ function ShareCardSvg({
           x="0"
           y="-30"
           textAnchor="middle"
-          fill="#5e7068"
+          fill={colors.muted}
           fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
           fontSize="12"
           letterSpacing="0.32em"
@@ -678,7 +739,7 @@ function ShareCardSvg({
           x="0"
           y="0"
           textAnchor="middle"
-          fill="#cfe5db"
+          fill={colors.text}
           fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
           fontSize="18"
           fontWeight="500"
@@ -694,7 +755,7 @@ function ShareCardSvg({
         x={CARD_WIDTH / 2}
         y={CARD_HEIGHT - 32}
         textAnchor="middle"
-        fill="#5e7068"
+        fill={colors.muted}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="11"
         letterSpacing="0.28em"
@@ -705,14 +766,24 @@ function ShareCardSvg({
   );
 }
 
-function ShareStat({ x, num, label }: { x: number; num: string; label: string }) {
+function ShareStat({
+  x,
+  num,
+  label,
+  colors,
+}: {
+  x: number;
+  num: string;
+  label: string;
+  colors: ShareSvgColors;
+}) {
   return (
     <g transform={`translate(${x}, 0)`}>
       <text
         x="0"
         y="0"
         textAnchor="middle"
-        fill="#e9f9f2"
+        fill={colors.text}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="40"
         fontWeight="800"
@@ -723,7 +794,7 @@ function ShareStat({ x, num, label }: { x: number; num: string; label: string })
         x="0"
         y="22"
         textAnchor="middle"
-        fill="#5e7068"
+        fill={colors.muted}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="11"
         letterSpacing="0.28em"

@@ -1,5 +1,10 @@
 # merit-v3 Season Design — D2 Activation · D1 Age Cohorts · Index Bias · Ceiling
 
+> **SUPERSEDED 2026-06-12:** merit-v3 shipped to production via #104 and is
+> now the current data season (`runtime-data-2.0.0`, `wc-perf-5.0.0`,
+> `proj-career-4.0.0`, `career-stature-3.0.0`, `engine-2026.06.12`). This
+> document remains the Red design audit trail, not an open implementation queue.
+
 - **Date:** 2026-06-11 · **Branch:** `merit-v3-udesign` off `merit-v3` (= main `b41b8e0`)
 - **Tier:** RED PLANNING, DOCS-ONLY. No implementation, no schema/rating/runtime change in
   this PR. Every implementation unit below is DISPATCH-ONLY and carries the full Red chain.

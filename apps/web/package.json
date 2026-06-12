@@ -30,10 +30,10 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.3.10",
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
-    "drizzle-orm": "^0.36.0",
-    "vitest": "^4.1.8",
-    "@electric-sql/pglite": "^0.3.10"
+    "drizzle-orm": "^0.45.2",
+    "vitest": "^4.1.8"
   }
 }

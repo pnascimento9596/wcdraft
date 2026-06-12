@@ -68,6 +68,30 @@ async function entriesOfUser(userId: string) {
   return env.db.select().from(leaderboardEntries).where(eq(leaderboardEntries.userId, userId));
 }
 
+function errorMessages(err: unknown): string[] {
+  const messages: string[] = [];
+  const seen = new Set<unknown>();
+  let current: unknown = err;
+  while (current && typeof current === "object" && !seen.has(current)) {
+    seen.add(current);
+    if (current instanceof Error) messages.push(current.message);
+    current = (current as { cause?: unknown }).cause;
+  }
+  if (messages.length === 0) messages.push(String(err));
+  return messages;
+}
+
+async function expectRejectsWithCause(promise: Promise<unknown>, pattern: RegExp): Promise<void> {
+  let caught: unknown;
+  try {
+    await promise;
+  } catch (err) {
+    caught = err;
+  }
+  expect(caught).toBeDefined();
+  expect(errorMessages(caught).join("\n")).toMatch(pattern);
+}
+
 // ── claimLeaderboardEntries ─────────────────────────────────────────────
 
 describe("claimLeaderboardEntries — happy transfer", () => {
@@ -221,9 +245,10 @@ describe("claimLeaderboardEntries — multi-session + idempotence", () => {
 describe("claimLeaderboardEntries — constraint interplay + isolation", () => {
   it("anon ranked rows are structurally impossible (ranked CHECK), so transfers are casual-only", async () => {
     await makeSession({ id: "ses-anon" });
-    await expect(
+    await expectRejectsWithCause(
       makeEntry({ token: "t1.rk", sessionId: "ses-anon", mode: "ranked" }),
-    ).rejects.toThrow(/leaderboard_entries_ranked_user_chk/);
+      /leaderboard_entries_ranked_user_chk/,
+    );
   });
 
   it("a ranked user-bound row carrying the claiming session's id is untouched (no reassignment)", async () => {
@@ -353,9 +378,10 @@ describe("claimAnonArtifacts — one transaction, two transfers", () => {
         FOR EACH ROW EXECUTE FUNCTION u6_test_fail_update();
     `);
     try {
-      await expect(
+      await expectRejectsWithCause(
         claimAnonArtifacts({ sessionId: "ses-anon", userId: uid }, deps()),
-      ).rejects.toThrow(/u6-injected-failure/);
+        /u6-injected-failure/,
+      );
 
       // The runs transfer ran before the leaderboard failure — it must be
       // rolled back: row still anon, still claimable.
