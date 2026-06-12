@@ -196,7 +196,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       createElement(SubmitPanelView, {
         score: 41,
         draftMode: "classic",
-        name: "Golden XI",
+        name: "golden_xi",
         nameHint: null,
         phase,
         retryRemaining,
@@ -287,11 +287,11 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       kind: "rejected",
       code: "INVALID_NAME",
       copy: submitStatusCopy("INVALID_NAME"),
-      nameHint: "At most 24 characters.",
+      nameHint: "At most 20 characters.",
       retryAfterSeconds: null,
     });
     expect(html).toContain("Name not accepted");
-    expect(html).toContain("At most 24 characters.");
+    expect(html).toContain("At most 20 characters.");
   });
 
   it("unreachable: transport failure is its own honest state", () => {
@@ -311,7 +311,7 @@ describe("board views", () => {
         rank: 1,
         id: "a",
         draft_mode: "classic",
-        display_name: "Alpha XI",
+        display_name: "alpha_xi",
         verified_score: 88,
         score_breakdown: [{ label: "Goals scored", raw: 4, weight: 3, points: 12 }],
         created_at: new Date(NOW - 120_000).toISOString(),
@@ -320,7 +320,7 @@ describe("board views", () => {
         rank: 2,
         id: "b",
         draft_mode: "hidden",
-        display_name: "Blind Side",
+        display_name: "blind_side",
         verified_score: 70,
         score_breakdown: null,
         created_at: new Date(NOW - 3_600_000).toISOString(),
@@ -333,7 +333,7 @@ describe("board views", () => {
     const html = renderToStaticMarkup(
       createElement(BoardRows, { rows, openKey: null, onToggle: () => undefined }),
     );
-    expect(html).toContain("Alpha XI");
+    expect(html).toContain("alpha_xi");
     expect(html).toContain("88");
     expect(html).toContain("Classic");
     expect(html).toContain("Memory"); // hidden-mode badge

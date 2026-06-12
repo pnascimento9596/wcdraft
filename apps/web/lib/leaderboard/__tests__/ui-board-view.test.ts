@@ -21,7 +21,7 @@ const NOW = Date.parse("2026-06-10T12:00:00.000Z");
 function entry(over: Partial<BoardEntryWire> & { id: string; rank: number }): BoardEntryWire {
   return {
     draft_mode: "classic",
-    display_name: `Manager ${over.rank}`,
+    display_name: `manager_${over.rank}`,
     verified_score: 100 - over.rank,
     score_breakdown: [{ label: "Goals scored", raw: 2, weight: 3, points: 6 }],
     created_at: new Date(NOW - 3_600_000).toISOString(),

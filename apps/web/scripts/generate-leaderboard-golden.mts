@@ -39,14 +39,13 @@ const CASES = [
     key: "classic",
     mode: "classic",
     parent_seed: "wcdraft:f4-u2-golden:classic:1",
-    display_name: "Golden XI",
+    display_name: "golden_xi",
   },
   {
     key: "hidden",
     mode: "hidden",
     parent_seed: "wcdraft:f4-u2-golden:hidden:1",
-    // Unicode letters + the full allowed separator set — locks the name path.
-    display_name: "Müller.São-10",
+    display_name: "memory_xi_10",
   },
 ] as const;
 
@@ -70,9 +69,7 @@ for (const c of CASES) {
     { gameData, scenario },
   );
   if (verdict.status !== "accepted") {
-    throw new Error(
-      `generator self-check failed for ${c.key}: ${JSON.stringify(verdict)}`,
-    );
+    throw new Error(`generator self-check failed for ${c.key}: ${JSON.stringify(verdict)}`);
   }
   if (
     verdict.verified_score !== expected.score ||

@@ -36,6 +36,13 @@
       "when": 1781091099182,
       "tag": "0004_f4_leaderboard",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1781301379932,
+      "tag": "0005_leaderboard_profiles",
+      "breakpoints": true
     }
   ]
 }

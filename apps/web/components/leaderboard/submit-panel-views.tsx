@@ -63,7 +63,7 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
                 className={s.nameInput}
                 value={props.name}
                 maxLength={48}
-                placeholder="Display name (3–24 characters)"
+                placeholder="Alias (3-20 chars: a-z, 0-9, _)"
                 autoComplete="nickname"
                 onChange={(e) => props.onNameChange(e.target.value)}
                 disabled={phase.kind === "submitting"}

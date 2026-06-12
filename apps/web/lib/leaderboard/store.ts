@@ -19,11 +19,13 @@
 // incremented locally across pages.
 
 import type { ScoreComponent } from "@wcdraft/core";
-import { leaderboardEntries, type Db, type LeaderboardEntry } from "@wcdraft/db";
+import { leaderboardEntries, users, type Db, type LeaderboardEntry } from "@wcdraft/db";
 import { and, desc, eq, isNull, sql, type SQL } from "drizzle-orm";
 
 /** `COALESCE(user_id::text, session_id, id::text)` — the board identity. */
-const IDENTITY_EXPR = sql.raw("COALESCE(user_id::text, session_id, id::text)");
+const IDENTITY_EXPR = sql.raw(
+  "COALESCE(leaderboard_entries.user_id::text, leaderboard_entries.session_id, leaderboard_entries.id::text)",
+);
 
 export type BoardMode = "casual" | "ranked";
 export type BoardDraftMode = "classic" | "hidden";
@@ -36,7 +38,7 @@ export interface AcceptedEntryInsert {
   readonly draftMode: BoardDraftMode;
   readonly userId: string | null;
   readonly sessionId: string | null;
-  readonly displayName: string;
+  readonly displayAlias: string | null;
   readonly token: string;
   readonly verifiedScore: number;
   readonly scoreBreakdown: ScoreComponent[];
@@ -66,7 +68,7 @@ export async function insertAcceptedEntry(
       draftMode: entry.draftMode,
       userId: entry.userId,
       sessionId: entry.sessionId,
-      displayName: entry.displayName,
+      displayAlias: entry.displayAlias,
       token: entry.token,
       verifiedScore: entry.verifiedScore,
       scoreBreakdown: entry.scoreBreakdown,
@@ -133,7 +135,7 @@ export interface BoardRow {
 type RawBoardRow = {
   id: string;
   draft_mode: BoardDraftMode;
-  display_name: string;
+  display_name: string | null;
   verified_score: number | string;
   score_breakdown: unknown;
   created_at: string | Date;
@@ -141,11 +143,12 @@ type RawBoardRow = {
 };
 
 function toBoardRow(r: RawBoardRow): BoardRow {
+  const displayName = assertPublicDisplayName(r.display_name, r.id);
   return {
     rank: Number(r.rank),
     id: r.id,
     draft_mode: r.draft_mode,
-    display_name: r.display_name,
+    display_name: displayName,
     verified_score: Number(r.verified_score),
     score_breakdown: r.score_breakdown,
     created_at: new Date(r.created_at),
@@ -163,11 +166,11 @@ export async function boardPage(
   q: BoardPageQuery,
 ): Promise<{ rows: BoardRow[]; hasMore: boolean }> {
   const filters: SQL[] = [
-    sql`season_key = ${q.seasonKey}`,
-    sql`mode = ${q.mode}`,
-    sql`hidden_at IS NULL`,
+    sql`${leaderboardEntries.seasonKey} = ${q.seasonKey}`,
+    sql`${leaderboardEntries.mode} = ${q.mode}`,
+    sql`${leaderboardEntries.hiddenAt} IS NULL`,
   ];
-  if (q.draftMode !== null) filters.push(sql`draft_mode = ${q.draftMode}`);
+  if (q.draftMode !== null) filters.push(sql`${leaderboardEntries.draftMode} = ${q.draftMode}`);
   const cursorPredicate = q.cursor
     ? sql`WHERE verified_score < ${q.cursor.score}
             OR (verified_score = ${q.cursor.score}
@@ -177,8 +180,14 @@ export async function boardPage(
   const result = await db.execute<RawBoardRow>(sql`
     WITH best AS (
       SELECT DISTINCT ON (${IDENTITY_EXPR})
-             id, draft_mode, display_name, verified_score, score_breakdown, created_at
+             ${leaderboardEntries.id} AS id,
+             ${leaderboardEntries.draftMode} AS draft_mode,
+             COALESCE(${leaderboardEntries.displayAlias}, ${users.username}) AS display_name,
+             ${leaderboardEntries.verifiedScore} AS verified_score,
+             ${leaderboardEntries.scoreBreakdown} AS score_breakdown,
+             ${leaderboardEntries.createdAt} AS created_at
         FROM ${leaderboardEntries}
+        LEFT JOIN ${users} ON ${users.id} = ${leaderboardEntries.userId}
        WHERE ${sql.join(filters, sql` AND `)}
        ORDER BY ${IDENTITY_EXPR}, verified_score DESC, created_at ASC, id ASC
     ),
@@ -267,14 +276,18 @@ export async function recentEntriesFor(
     sessionId: string;
     limit: number;
   },
-): Promise<LeaderboardEntry[]> {
+): Promise<ApiLeaderboardEntry[]> {
   const ownership =
     q.userId !== null
       ? eq(leaderboardEntries.userId, q.userId)
       : eq(leaderboardEntries.sessionId, q.sessionId);
-  return db
-    .select()
+  const rows = await db
+    .select({
+      row: leaderboardEntries,
+      username: users.username,
+    })
     .from(leaderboardEntries)
+    .leftJoin(users, eq(users.id, leaderboardEntries.userId))
     .where(
       and(
         eq(leaderboardEntries.seasonKey, q.seasonKey),
@@ -285,6 +298,7 @@ export async function recentEntriesFor(
     )
     .orderBy(desc(leaderboardEntries.createdAt), desc(leaderboardEntries.id))
     .limit(q.limit);
+  return rows.map(({ row, username }) => toApiEntry(row, username));
 }
 
 // ─── API shape ──────────────────────────────────────────────────────────────
@@ -302,15 +316,37 @@ export interface ApiLeaderboardEntry {
   readonly created_at: string;
 }
 
-export function toApiEntry(row: LeaderboardEntry): ApiLeaderboardEntry {
+export function toApiEntry(row: LeaderboardEntry, username: string | null): ApiLeaderboardEntry {
   return {
     id: row.id,
     season_key: row.seasonKey,
     mode: row.mode,
     draft_mode: row.draftMode,
-    display_name: row.displayName,
+    display_name: publicDisplayName(row, username),
     verified_score: row.verifiedScore,
     score_breakdown: row.scoreBreakdown ?? null,
     created_at: row.createdAt.toISOString(),
   };
+}
+
+export async function toApiEntryWithProfile(
+  db: Db,
+  row: LeaderboardEntry,
+): Promise<ApiLeaderboardEntry> {
+  if (row.userId === null) return toApiEntry(row, null);
+  const profile = await db
+    .select({ username: users.username })
+    .from(users)
+    .where(eq(users.id, row.userId))
+    .limit(1);
+  return toApiEntry(row, profile[0]?.username ?? null);
+}
+
+function publicDisplayName(row: LeaderboardEntry, username: string | null): string {
+  return assertPublicDisplayName(row.displayAlias ?? username, row.id);
+}
+
+function assertPublicDisplayName(value: string | null, entryId: string): string {
+  if (typeof value === "string" && value.length > 0) return value;
+  throw new Error(`leaderboard entry ${entryId} has no public username or alias`);
 }

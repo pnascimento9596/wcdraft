@@ -22,8 +22,15 @@
 // touching any secret-dependent dep. There is no in-flight session to clear
 // when the sign-in UI is dark.
 import { NextResponse, type NextRequest } from "next/server";
+import { users } from "@wcdraft/db";
+import { eq } from "drizzle-orm";
 import { validateSessionCookie, deleteSession } from "@/lib/auth/sessions";
-import { verifyCsrfDoubleSubmit, verifyOriginHost, CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
+import {
+  verifyCsrfDoubleSubmit,
+  verifyOriginHost,
+  CSRF_COOKIE_NAME,
+  CSRF_HEADER_NAME,
+} from "@/lib/auth/csrf";
 import { AuthError } from "@/lib/auth/errors";
 import {
   buildRuntimeDeps,
@@ -53,9 +60,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const deps = buildRuntimeDeps();
     try {
       const session = await validateSessionCookie(cookie, deps);
+      const username = session.userId === null ? null : await readUsername(deps.db, session.userId);
       return NextResponse.json({
         session: {
           userId: session.userId,
+          username,
           isAnonymous: session.userId === null,
           expiresAt: session.expiresAt.toISOString(),
         },
@@ -69,6 +78,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     return jsonError(err);
   }
+}
+
+async function readUsername(
+  db: ReturnType<typeof buildRuntimeDeps>["db"],
+  userId: string,
+): Promise<string | null> {
+  const rows = await db
+    .select({ username: users.username })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  return rows[0]?.username ?? null;
 }
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {

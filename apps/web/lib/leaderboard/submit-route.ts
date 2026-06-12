@@ -17,7 +17,8 @@
 // error is a typed code — never prose-only.
 
 import { NextResponse, type NextRequest } from "next/server";
-import type { Db } from "@wcdraft/db";
+import { users, type Db } from "@wcdraft/db";
+import { eq } from "drizzle-orm";
 
 import { readClientIp } from "../auth/handler-helpers";
 import {
@@ -28,7 +29,7 @@ import {
 import {
   identityBoardRank,
   insertAcceptedEntry,
-  toApiEntry,
+  toApiEntryWithProfile,
   type ApiLeaderboardEntry,
 } from "./store";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
@@ -139,6 +140,7 @@ export async function handleLeaderboardSubmit(
       {
         token: body.token,
         claimed_score: body.claimed_score,
+        display_alias: body.display_alias,
         display_name: body.display_name,
       },
       deps.getValidation(),
@@ -162,6 +164,19 @@ export async function handleLeaderboardSubmit(
       );
     }
 
+    const username =
+      identity.userId === null ? null : await publicUsernameForUser(deps.db, identity.userId);
+    if (verdict.display_alias === null && username === null) {
+      return NextResponse.json(
+        {
+          error: "INVALID_NAME",
+          message: "a username or display alias is required for public board entries",
+          name_reason: "not_a_string",
+        },
+        { status: SUBMIT_ERROR_HTTP_STATUS.INVALID_NAME },
+      );
+    }
+
     // 7 — persist + honest dedupe; rank is a SECOND read after the insert
     // (current rank, not the insert's snapshot).
     const result = await insertAcceptedEntry(
@@ -172,7 +187,7 @@ export async function handleLeaderboardSubmit(
         draftMode: verdict.draft_mode,
         userId: identity.userId,
         sessionId: identity.sessionId,
-        displayName: verdict.display_name,
+        displayAlias: verdict.display_alias,
         // validateSubmission guaranteed this is a string (step 1).
         token: body.token as string,
         verifiedScore: verdict.verified_score,
@@ -186,7 +201,7 @@ export async function handleLeaderboardSubmit(
       identityKey: result.row.userId ?? result.row.sessionId ?? result.row.id,
     });
     const responseBody: SubmitResponseBody = {
-      entry: toApiEntry(result.row),
+      entry: await toApiEntryWithProfile(deps.db, result.row),
       duplicate: result.kind === "duplicate",
       rank: best?.rank ?? null,
     };
@@ -200,6 +215,15 @@ export async function handleLeaderboardSubmit(
     console.error("[leaderboard] unexpected submit error", err);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
   }
+}
+
+async function publicUsernameForUser(db: Db, userId: string): Promise<string | null> {
+  const row = await db
+    .select({ username: users.username })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  return row[0]?.username ?? null;
 }
 
 function gateDeps(deps: SubmitRouteDeps): IdentityGateDeps {

@@ -14,9 +14,7 @@ const CSRF_HEADER = "x-csrf-token";
 
 function readCsrfCookie(): string | null {
   if (typeof document === "undefined") return null;
-  const match = new RegExp(
-    `(?:^|;\\s*)${CSRF_COOKIE}=([^;]+)`,
-  ).exec(document.cookie);
+  const match = new RegExp(`(?:^|;\\s*)${CSRF_COOKIE}=([^;]+)`).exec(document.cookie);
   return match?.[1] ?? null;
 }
 
@@ -51,10 +49,7 @@ export interface FetchWithCsrfInit {
  * credentials. Throws on transport failure; returns the Response for
  * callers to inspect status/body.
  */
-export async function fetchWithCsrf(
-  url: string,
-  init: FetchWithCsrfInit,
-): Promise<Response> {
+export async function fetchWithCsrf(url: string, init: FetchWithCsrfInit): Promise<Response> {
   const csrf = await ensureCsrfToken();
   const headers: Record<string, string> = {
     Accept: "application/json",
@@ -96,6 +91,7 @@ export async function deleteCsrf(url: string): Promise<Response> {
 export interface SessionInfoResponse {
   session: {
     userId: string | null;
+    username: string | null;
     isAnonymous: boolean;
     expiresAt: string;
   } | null;

@@ -96,7 +96,7 @@ export async function submitRun(input: {
       body: JSON.stringify({
         token: input.token,
         claimed_score: input.claimedScore,
-        display_name: input.displayName,
+        display_alias: input.displayName,
         mode: "casual",
       }),
     });

@@ -22,12 +22,7 @@ import { requestMagicLink } from "@/lib/auth/magic-link";
 import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, validateSessionCookie } from "@/lib/auth/sessions";
 import { sha256Hex } from "@/lib/auth/tokens";
-import {
-  leaderboardEntries,
-  magicLinkTokens,
-  savedRuns,
-  sessions,
-} from "@wcdraft/db";
+import { leaderboardEntries, magicLinkTokens, savedRuns, sessions } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 import { claimAnonArtifacts } from "@/lib/leaderboard/claim";
 
@@ -61,9 +56,7 @@ async function issueLink(args: { now: number; email?: string }): Promise<{
     { email: args.email ?? "u@example.com", ipAddress: "1.1.1.1" },
     { ...deps(args.now), sender },
   );
-  const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-    "token",
-  )!;
+  const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
   return { rawToken, tokenHash: sha256Hex(rawToken) };
 }
 
@@ -115,9 +108,7 @@ describe("safeNextPath", () => {
     expect(safeNextPath("/play%g")).toBe("/play");
   });
   it("ALLOWS benign percent-encoding (visible characters)", () => {
-    expect(safeNextPath("/play?q=hello%20world")).toBe(
-      "/play?q=hello%20world",
-    );
+    expect(safeNextPath("/play?q=hello%20world")).toBe("/play?q=hello%20world");
   });
 });
 
@@ -150,7 +141,7 @@ describe("renderVerifyInterstitialHtml", () => {
     expect(html).not.toContain("<script>");
     expect(html).toContain("&quot;");
     expect(html).toContain("&lt;");
-    expect(html).toContain('csrf&quot;abc');
+    expect(html).toContain("csrf&quot;abc");
   });
   it("marks the page noindex (search engines should not list interstitials)", () => {
     const html = renderVerifyInterstitialHtml({
@@ -264,10 +255,7 @@ describe("consumeAndIssueSession (POST) — guarded consume", () => {
     expect(result.redirectTo).toBe("/play/draft");
     expect(await tokenIsConsumed(setup.tokenHash)).toBe(true);
     // Session rotated: new csrfSecret, but row preserved.
-    const validated = await validateSessionCookie(
-      result.sessionCookieValue,
-      deps(now + 2),
-    );
+    const validated = await validateSessionCookie(result.sessionCookieValue, deps(now + 2));
     expect(validated.userId).not.toBeNull();
     expect(validated.csrfSecret).toBe(result.csrfSecret);
     expect(validated.csrfSecret).not.toBe(setup.csrfSecret);
@@ -449,8 +437,8 @@ describe("prefetch-then-click round-trip — the reviewer's catch", () => {
         {
           token: rawToken,
           next: "/play",
-          csrfFromForm: view.csrfSecret,       // stale
-          csrfFromCookie: view.csrfSecret,     // stale
+          csrfFromForm: view.csrfSecret, // stale
+          csrfFromCookie: view.csrfSecret, // stale
           sessionCookieValue: view.sessionCookieValue,
           origin: "https://wcdraft.com",
           referer: null,
@@ -489,8 +477,8 @@ describe("prefetch-then-click round-trip — the reviewer's catch", () => {
         {
           token: rawToken,
           next: "/play",
-          csrfFromForm: first.csrfSecret,          // current
-          csrfFromCookie: first.csrfSecret,        // current
+          csrfFromForm: first.csrfSecret, // current
+          csrfFromCookie: first.csrfSecret, // current
           sessionCookieValue: first.sessionCookieValue,
           origin: "https://wcdraft.com",
           referer: null,
@@ -512,9 +500,7 @@ describe("session rotation on consume", () => {
       { email: "rot@example.com", ipAddress: "1.1.1.1" },
       { ...deps(now), sender },
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
     const result = await consumeAndIssueSession(
       {
         token: rawToken,
@@ -529,10 +515,7 @@ describe("session rotation on consume", () => {
       deps(now + 1),
     );
     // Session id unchanged → F-4 anon-attempt bindings survive.
-    const after = await env.db
-      .select()
-      .from(sessions)
-      .where(eq(sessions.id, created.session.id));
+    const after = await env.db.select().from(sessions).where(eq(sessions.id, created.session.id));
     expect(after[0]?.id).toBe(created.session.id);
     // csrfSecret rotated.
     expect(after[0]?.csrfSecret).not.toBe(created.session.csrfSecret);
@@ -552,9 +535,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
       { email: "hook@example.com", ipAddress: "1.1.1.1" },
       { ...deps(now), sender },
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
     const calls: Array<{ sessionId: string; userId: string }> = [];
     await consumeAndIssueSession(
       {
@@ -589,9 +570,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
       { email: "swallow@example.com", ipAddress: "1.1.1.1" },
       { ...deps(now), sender },
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
     const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     try {
       const result = await consumeAndIssueSession(
@@ -616,10 +595,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
       errSpy.mockRestore();
     }
     // Session is still rotated even though the hook threw.
-    const validated = await validateSessionCookie(
-      created.cookieValue,
-      deps(now + 2),
-    );
+    const validated = await validateSessionCookie(created.cookieValue, deps(now + 2));
     void validated;
   });
 
@@ -641,7 +617,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
       draftMode: "classic",
       userId: null,
       sessionId: created.session.id,
-      displayName: "Anon Verify",
+      displayAlias: "anon_verify",
       token: "t1.verify-claimed-board",
       verifiedScore: 777,
     });
@@ -651,9 +627,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
       { email: "claim-via-verify@example.com", ipAddress: "1.1.1.1" },
       { ...deps(now), sender },
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
 
     const result = await consumeAndIssueSession(
       {
@@ -673,10 +647,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
     );
 
     expect(result.redirectTo).toBe("/history");
-    const authedSession = await validateSessionCookie(
-      result.sessionCookieValue,
-      deps(now + 2),
-    );
+    const authedSession = await validateSessionCookie(result.sessionCookieValue, deps(now + 2));
     expect(authedSession.id).toBe(created.session.id);
     expect(authedSession.userId).not.toBeNull();
     const userId = authedSession.userId!;
@@ -699,10 +670,7 @@ describe("onAuthenticatedSessionReady hook (F-3 claim wiring)", () => {
     expect(claimedEntries[0]!.sessionId).toBeNull();
 
     expect(
-      await env.db
-        .select()
-        .from(savedRuns)
-        .where(eq(savedRuns.sessionId, created.session.id)),
+      await env.db.select().from(savedRuns).where(eq(savedRuns.sessionId, created.session.id)),
     ).toHaveLength(0);
     expect(
       await env.db

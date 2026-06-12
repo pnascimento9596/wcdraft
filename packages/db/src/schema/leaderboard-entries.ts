@@ -25,9 +25,9 @@
 //
 // F-4 U1 (migration 0004) additions, per the F-4 plan §7 + Lead-Architect
 // rulings:
-//   - `display_name`: anonymous-first identity on the board (NOT NULL;
-//     length 3–24 enforced at the DB so a write outside the validation
-//     pipeline cannot land an out-of-contract name).
+//   - `display_alias`: optional per-entry public alias. Board serializers
+//     render COALESCE(display_alias, users.username), never email. Anonymous
+//     casual rows must carry an alias because they have no username fallback.
 //   - `session_id`: anon ownership for my-entry lookup + the anon→account
 //     claim. ON DELETE SET NULL, NOT cascade — board entries are public
 //     artifacts that must survive session expiry/sweep (the entry just
@@ -41,7 +41,7 @@
 //   - RANKED IS ACCOUNT-REQUIRED (ruling): `leaderboard_entries_ranked_user_chk`
 //     makes the bound-user requirement structural — a ranked row with a
 //     NULL user cannot exist regardless of application-layer bugs. The
-//     casual path stays anonymous-capable (nullable user + display_name).
+//     casual path stays anonymous-capable (nullable user + display_alias).
 import {
   pgTable,
   text,
@@ -69,7 +69,7 @@ export const leaderboardEntries = pgTable(
     sessionId: text("session_id").references(() => sessions.id, {
       onDelete: "set null",
     }),
-    displayName: text("display_name").notNull(),
+    displayAlias: text("display_alias"),
     token: text("token").notNull(),
     verifiedScore: integer("verified_score").notNull(),
     scoreBreakdown: jsonb("score_breakdown"),
@@ -77,9 +77,7 @@ export const leaderboardEntries = pgTable(
       onDelete: "set null",
     }),
     hiddenAt: timestamp("hidden_at", { withTimezone: true }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     // Exact board read: filter (season, mode), sort verified_score DESC,
@@ -97,17 +95,15 @@ export const leaderboardEntries = pgTable(
     unique("leaderboard_entries_dedupe_uq")
       .on(t.seasonKey, t.mode, t.userId, t.token)
       .nullsNotDistinct(),
+    check("leaderboard_entries_mode_chk", sql`${t.mode} IN ('casual', 'ranked')`),
+    check("leaderboard_entries_draft_mode_chk", sql`${t.draftMode} IN ('classic', 'hidden')`),
     check(
-      "leaderboard_entries_mode_chk",
-      sql`${t.mode} IN ('casual', 'ranked')`,
+      "leaderboard_entries_display_alias_chk",
+      sql`${t.displayAlias} IS NULL OR ${t.displayAlias} ~ '^[a-z0-9_]{3,20}$'`,
     ),
     check(
-      "leaderboard_entries_draft_mode_chk",
-      sql`${t.draftMode} IN ('classic', 'hidden')`,
-    ),
-    check(
-      "leaderboard_entries_display_name_chk",
-      sql`char_length(${t.displayName}) BETWEEN 3 AND 24`,
+      "leaderboard_entries_public_name_chk",
+      sql`${t.userId} IS NOT NULL OR ${t.displayAlias} IS NOT NULL`,
     ),
     // RANKED IS ACCOUNT-REQUIRED — structural, not application-layer.
     check(
