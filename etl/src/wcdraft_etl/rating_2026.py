@@ -66,12 +66,11 @@ from .rating import (
     _channel,
     _clamp01,
     _display_score,
-    _load_career_stature,
-    _percentile_map,
     _quantile,
     _stature_model_weight,
     _stature_target,
 )
+from .rating import _load_career_stature as _load_historical_career_stature
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 
@@ -79,7 +78,13 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
-RATING_VERSION = "proj-career-3.0.0"
+# proj-career-4.0.0 (merit-v3 V3, design §2): D1 age-conditional quantile curves
+# replace the all-age caps/goals percentiles (age_factor RETIRED — keeping both
+# would re-create the youth double penalty), the stature seam consults the
+# career-stature-3.0.0 person-identity rows for linked AND minted cards, the
+# MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
+# distribution, and rows emit the additive Career/Current dual-basis payload.
+RATING_VERSION = "proj-career-4.0.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -89,16 +94,25 @@ COVERAGE_BASIS = "career_signals"
 _AGE_AS_OF = (2026, 6, 11)
 
 # ─── CALIBRATION ──────────────────────────────────────────────────────────────
-# Age-curve modifier in [AGE_FLOOR, 1.0]. A factual career-stage positioner: a
-# prime-age player sits at the top of the band their box score earns; the very
-# young (still developing) and the older (past peak) are modestly tempered. These
-# are CALIBRATION constants (golden-locked, tunable without touching the formula).
-AGE_PRIME_LO = 24
-AGE_PRIME_HI = 30
-AGE_FLOOR = 0.80  # most-tempered multiplier (very young / well past peak)
-# Linear ramps either side of the prime plateau.
-AGE_YOUNG_REF = 17  # youngest expected; maps to AGE_FLOOR
-AGE_OLD_REF = 38  # oldest expected; maps to AGE_FLOOR
+# D1 age-conditional quantile conditioning (merit-v3 V3, design §2.1). The old
+# all-age percentiles punished youth twice (Yamal: all-age caps p0.502 vs U21-FW
+# cohort p0.919, THEN an age_factor floor 0.80 on top), while hard age-band
+# cohorts are too grainy (U21 FW n=31). Both all-age percentiles AND age_factor
+# are replaced by ONE mechanism: per position × signal, a pooled monotone-in-age
+# conditional quantile surface over the full 2026 pool — a player's evidence
+# percentile is their signal's quantile AT THEIR AGE. age_factor is RETIRED (the
+# career-stage job lives entirely in the conditioning; keeping both re-creates
+# the double penalty). Constants are CALIBRATION (golden-locked, tunable):
+#   AGE_QUANTILE_BANDWIDTH — triangular-kernel half-width (years) of the pooled
+#     smoothing window; soft weights, no hard band edges (the n=31 grain trap).
+#     Fit IN-UNIT against the §2.1 pre-registered distribution lock (the minted
+#     raw-path age signature must FLATTEN, not invert): measured gap old-vs-young
+#     was +4.16 display points pre-V3; h=4 inverted it to −2.31 (overcorrection),
+#     h=8 lands +0.09 with every §7.2 control inside its band. Locked at 8.0.
+#   AGE_QUANTILE_P_STEPS — resolution of the per-age quantile column (the p-grid
+#     has AGE_QUANTILE_P_STEPS + 1 points).
+AGE_QUANTILE_BANDWIDTH = 8.0
+AGE_QUANTILE_P_STEPS = 200
 
 # Cross-sectional QUALITY anchor — club-league strength. caps + international
 # goals measure EXPERIENCE and PRODUCTIVITY, which over-reward longevity (a minnow
@@ -131,6 +145,18 @@ LEAGUE_STRENGTH: dict[str, float] = {
 LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.28}
 
 
+def _load_career_stature(output_dir: Path) -> dict[str, dict]:
+    """player_id -> FULL career-stature-3.0.0 row (merit-v3 V3).
+
+    V3 retires the V1 rating-compat pin: the projected stage now consumes the
+    same full v3 person-identity rows as the historical wc-perf-5.0.0 stage —
+    one table, one scale, both eras. Minted 2026 players resolved by the V1
+    person-identity resolver carry rows keyed by their minted player_id, so the
+    same player_id lookup serves linked and minted cards alike.
+    """
+    return _load_historical_career_stature(output_dir)
+
+
 # ─── STATURE RECONCILIATION (proj-career-3.0.0, merit-v2 MV2-5) ───────────────
 # Linked + material-stature 2026 players are evaluated through the SAME stature
 # scale as the historical wc-perf-4.x cards (plan §"2026 reconciliation"): the
@@ -157,28 +183,31 @@ PROJECTED_MOD_GAIN: dict[str, float] = {"FW": 0.40, "MF": 0.40, "DF": 0.35, "GK"
 
 def _historical_raw_only_internal(output_dir: Path) -> list[float]:
     """Sorted internal scores (in [0,1]) of the HISTORICAL PURE raw-only cards
-    (``stature_model_weight == 0``), read READ-ONLY from the committed
-    ``ratings.json`` — the exact population MV2-6's single monotonic curve pools.
+    (``stature_model_weight == 0``) under the LIVE wc-perf-5.0.0 view.
 
-    ``ratings.json`` materializes the display ``overall`` and the components, not the
-    pre-display internal ``score_0_100``; for a pure raw-only card the internal score
-    is ``min(raw_tournament_score, RAW_ONLY_GLOBAL_CEILING)`` — the raw composite
-    (carried verbatim in the ``raw_tournament_score`` component) under the same global
-    elite ceiling the historical engine applies. The per-(tournament, pos) ceiling
-    tightening never binds BELOW the global ceiling across the committed population
-    (the material-stature finals that could tighten it sit well above 0.62), so this
-    reconstruction reproduces the committed internal raw-only distribution to within
-    the stored 6-dp rounding. Empty (``ratings.json`` absent) ⇒ no band to match and
-    the quantile map degrades to a rank-preserving pass-through.
+    merit-v3 V3 re-derives the MV2-5 cross-era quantile map against V2's new
+    historical raw-only distribution (design §2.1: same mechanism, new inputs).
+    The V2-era compatibility reconstruction (rating_compat + legacy raw component)
+    is removed: the target is now each raw-only card's actual internal final —
+    its ``raw_only_score``, i.e. the participation-scaled raw path including the
+    §4.1 award-gated headroom — exactly the population the unified display curve
+    pools. (2026 cards have null awards pre-tournament, so their own ceiling
+    clamp in pass 1d still binds at the no-award clamp.)
     """
-    path = output_dir / "ratings.json"
-    if not path.exists():
-        return []
     target: list[float] = []
-    for r in json.loads(path.read_text(encoding="utf-8")):
+    internal, _curve = rating.build_internal_view(
+        players=rating._load(output_dir, "players"),
+        cards=rating._load(output_dir, "player_tournaments"),
+        tournaments=rating._load(output_dir, "tournaments"),
+        manager_tournaments=rating._load(output_dir, "manager_tournaments"),
+        career_stature_by_player=rating._load_career_stature(output_dir),
+    )
+    for r in internal:
         comps = {c["signal"]: c["value"] for c in r["components"]}
         if comps.get("stature_model_weight") == 0.0:
-            target.append(min(comps["raw_tournament_score"], RAW_ONLY_GLOBAL_CEILING))
+            # For a weight==0 card the blend collapses to the raw path, so the
+            # emitted raw_only_score IS the card's internal final score.
+            target.append(comps["raw_only_score"])
     return sorted(target)
 
 
@@ -269,19 +298,102 @@ def _age_at(birth_date: str | None) -> int | None:
     return ay - y - ((am, ad) < (m, d))
 
 
-def _age_factor(age: int | None) -> float:
-    """Career-stage multiplier in [AGE_FLOOR, 1.0]; 1.0 across the prime plateau."""
-    if age is None:
-        return 1.0  # unknown age does not penalize (honest neutral)
-    if AGE_PRIME_LO <= age <= AGE_PRIME_HI:
-        return 1.0
-    if age < AGE_PRIME_LO:
-        span = AGE_PRIME_LO - AGE_YOUNG_REF
-        f = AGE_FLOOR + (1.0 - AGE_FLOOR) * (age - AGE_YOUNG_REF) / span
-    else:
-        span = AGE_OLD_REF - AGE_PRIME_HI
-        f = AGE_FLOOR + (1.0 - AGE_FLOOR) * (AGE_OLD_REF - age) / span
-    return round(max(AGE_FLOOR, min(1.0, f)), _PRECISION)
+class AgeConditionalQuantiles:
+    """D1 (merit-v3 V3, design §2.1): a pooled, monotone-in-age conditional
+    quantile surface for one position × signal over the full 2026 pool.
+
+    Construction (deterministic, no randomness):
+      1. For every integer age on the observed [min_age, max_age] grid, the
+         conditional quantile column ``Q[age][k]`` (k over the p-grid, Hazen
+         weighted quantiles) is computed from ALL pool members weighted by a
+         triangular kernel ``max(0, 1 − |age_i − age| / AGE_QUANTILE_BANDWIDTH)``
+         — pooled smoothing, no hard band edges.
+      2. Monotone-in-age is then ENFORCED structurally: for each fixed p, the
+         expected signal accrual Q(p, age) is made non-decreasing in age by a
+         running max along the age axis (caps/goals are career accruals — an
+         older cohort's quantile curve can never sit below a younger one's).
+
+    Lookup: ``percentile(value, age)`` is the mid-rank of ``value`` within the
+    (clamped) age's quantile column — the signal's quantile AT THAT AGE.
+    Properties (asserted by tests): monotone non-decreasing in ``value`` at any
+    fixed age, and monotone NON-INCREASING in ``age`` at any fixed value (the
+    same accrual ranks lower against an older expectation), which is exactly the
+    structure that removes the youth double penalty without a veteran bonus.
+    Unknown age falls back to the unconditional (all-weight-1) column — honest
+    neutral, never a penalty.
+    """
+
+    __slots__ = ("min_age", "max_age", "columns", "unconditional")
+
+    def __init__(self, pairs: list[tuple[int | None, float]]) -> None:
+        aged = [(a, float(v)) for a, v in pairs if a is not None]
+        if not aged:
+            raise ValueError("AgeConditionalQuantiles needs at least one aged member")
+        self.min_age = min(a for a, _ in aged)
+        self.max_age = max(a for a, _ in aged)
+        by_value = sorted(aged, key=lambda av: (av[1], av[0]))
+        values = [v for _, v in by_value]
+        ages = [a for a, _ in by_value]
+
+        self.unconditional = self._weighted_column(values, [1.0] * len(values))
+        raw_columns: list[list[float]] = []
+        for age in range(self.min_age, self.max_age + 1):
+            w = [
+                max(0.0, 1.0 - abs(ai - age) / AGE_QUANTILE_BANDWIDTH) for ai in ages
+            ]
+            if sum(w) <= 0.0:  # pragma: no cover — grid spans observed ages
+                w = [1.0] * len(values)
+            raw_columns.append(self._weighted_column(values, w))
+        # Structural monotone-in-age pass: running max along age for each p.
+        self.columns = []
+        prev: list[float] | None = None
+        for col in raw_columns:
+            if prev is not None:
+                col = [max(p, c) for p, c in zip(prev, col, strict=True)]
+            self.columns.append(col)
+            prev = col
+
+    @staticmethod
+    def _weighted_column(sorted_values: list[float], weights: list[float]) -> list[float]:
+        """Hazen weighted quantiles of ``sorted_values`` (ascending, with the
+        paired ``weights``) at every p on the fixed p-grid. Deterministic linear
+        interpolation between weighted mid-rank positions; clamped at extremes."""
+        total = sum(weights)
+        # Weighted Hazen plotting positions: ((cumw before) + w/2) / total.
+        positions: list[float] = []
+        values: list[float] = []
+        cum = 0.0
+        for v, w in zip(sorted_values, weights, strict=True):
+            if w <= 0.0:
+                continue
+            positions.append((cum + 0.5 * w) / total)
+            values.append(v)
+            cum += w
+        col: list[float] = []
+        for k in range(AGE_QUANTILE_P_STEPS + 1):
+            p = k / AGE_QUANTILE_P_STEPS
+            if p <= positions[0]:
+                col.append(values[0])
+            elif p >= positions[-1]:
+                col.append(values[-1])
+            else:
+                hi = bisect.bisect_left(positions, p)
+                lo = hi - 1
+                span = positions[hi] - positions[lo]
+                frac = (p - positions[lo]) / span if span > 0.0 else 0.0
+                col.append(values[lo] * (1.0 - frac) + values[hi] * frac)
+        return col
+
+    def percentile(self, value: float, age: int | None) -> float:
+        """Mid-rank of ``value`` within the age's quantile column, in [0,1]."""
+        if age is None:
+            col = self.unconditional
+        else:
+            a = min(max(age, self.min_age), self.max_age)
+            col = self.columns[a - self.min_age]
+        less = bisect.bisect_left(col, float(value))
+        more = bisect.bisect_right(col, float(value))
+        return round((less + 0.5 * (more - less)) / len(col), _PRECISION)
 
 
 def career_coverage(card: dict) -> float:
@@ -299,11 +411,15 @@ def career_coverage(card: dict) -> float:
 
 
 def _projected_raw_score(c: dict, g_pct: float, a_pct: float) -> tuple[float, dict]:
-    """The factual projected RAW composite (caps/goals percentile band, age-curve
-    modulated, plus the league-strength quality anchor) in [0,1], with the eff-weight
-    bookkeeping. UNCHANGED from proj-career-2.0.0 — under MV2-5 this is the projected
-    CONTEXT signal (cohort reference + bounded modulation for material players; the
-    capped raw path for everyone else), not the standalone final score."""
+    """The factual projected RAW composite (AGE-CONDITIONED caps/goals percentile
+    band plus the league-strength quality anchor) in [0,1], with the eff-weight
+    bookkeeping. merit-v3 V3 (design §2.1): the incoming percentiles are already
+    conditioned on age by the D1 quantile surface, and ``age_factor`` is RETIRED —
+    applying a second age temper on an already-age-conditioned percentile would
+    re-create the youth double penalty the unit exists to remove. Under MV2-5
+    semantics this remains the projected CONTEXT signal (cohort reference +
+    bounded modulation for material players; the capped raw path for everyone
+    else), not the standalone final score."""
     pos = c["position_listed"]
     bw = BASE_WEIGHTS[pos]
     # caps takes the appearances-role weight; intl goals the goals-role weight.
@@ -317,21 +433,19 @@ def _projected_raw_score(c: dict, g_pct: float, a_pct: float) -> tuple[float, di
 
     blend = sum(w * v for _, v, w in present) / present_w  # caps always present
     age = _age_at(c.get("birth_date"))
-    af = _age_factor(age)
     league = _league_score(c.get("club_nation_code"))
-    # Performance band (caps/goals percentile), modulated by career stage, plus
-    # the league-strength quality anchor — the projected analog of wc-perf's
-    # award/finish anchor, supplying headroom above BASE_CEILING. The tournament
-    # award/finish anchors themselves are UNEARNED pre-tournament -> dropped.
+    # Age-conditioned performance band plus the league-strength quality anchor —
+    # the projected analog of wc-perf's award/finish anchor, supplying headroom
+    # above BASE_CEILING. The tournament award/finish anchors themselves are
+    # UNEARNED pre-tournament -> dropped.
     # An UNKNOWN club drops the anchor entirely (honest-state), never 0-substituted.
-    base = REPLACEMENT_BASE + (BASE_CEILING - REPLACEMENT_BASE) * blend * af
+    base = REPLACEMENT_BASE + (BASE_CEILING - REPLACEMENT_BASE) * blend
     league_weight = LEAGUE_WEIGHT[pos] if league is not None else 0.0
     anchor = league_weight * (league or 0.0)
     score = _clamp01(base + anchor)
     eff = {n: round(w / present_w, _PRECISION) for (n, _, w) in present}
     book = {
         "age": age,
-        "af": af,
         "league": league,
         "league_weight": league_weight,
         "eff": eff,
@@ -350,38 +464,43 @@ def _build_internal_rows(
     ``build_internal_view`` for the acceptance suite, which asserts the INTERNAL
     score behavior (the assertable MV2-5 quantity; display is provisional → MV2-6).
 
-    MV2-5: linked players whose canonical career row clears the material-stature gate
-    are reconciled onto the SAME stature scale as the historical wc-perf-4.x cards
-    (stature target + bounded projected-context modulation); minted / unlinked /
-    ambiguous / linked-but-below-material players stay on the honest projected raw
-    path, capped below the recognized-greats band by the shared raw-only ceiling and
-    never carrying a factual ``legend``.
+    Whose career row clears the material-stature gate is reconciled onto the SAME
+    stature scale as the historical wc-perf-5.x cards (stature target + bounded
+    projected-context modulation). merit-v3 V3: the stature seam is PERSON
+    identity — linked cards consult by their shared canonical id, minted cards by
+    their minted id (the V1 resolver materializes minted persons' rows under
+    those ids; ambiguity is withheld upstream and yields no row). Cards with no
+    career row stay on the honest projected raw path, capped below the
+    recognized-greats band by the shared raw-only ceiling and never carrying a
+    factual ``legend``.
     """
     career_stature_by_player = career_stature_by_player or {}
     historical_raw_only_internal = historical_raw_only_internal or []
 
-    # Within-(tournament, position) cohorts — for 2026 there is one tournament, so
-    # the cohort is effectively (position) across all 48 squads: a striker is
-    # era-fairly normalized against every other 2026 striker, exactly as wc-perf
-    # normalizes within a tournament.
-    goals_cohort: dict[str, list[int]] = {}
-    caps_cohort: dict[str, list[int]] = {}
+    # D1 age-conditional quantile surfaces per (position × signal) — for 2026
+    # there is one tournament, so the cohort is (position) across all 48 squads:
+    # a striker is normalized against every other 2026 striker AT THEIR AGE
+    # (design §2.1), replacing the all-age percentile maps.
+    goals_cohort: dict[str, list[tuple[int | None, float]]] = {}
+    caps_cohort: dict[str, list[tuple[int | None, float]]] = {}
     for c in cards:
         pos = c["position_listed"]
         if pos not in COARSE_POSITIONS:
             raise ValueError(f"2026 card {c['card_id']} has non-coarse position {pos!r}")
-        goals_cohort.setdefault(pos, []).append(c["intl_goals"])
-        caps_cohort.setdefault(pos, []).append(c["caps"])
-    goals_pct = {p: _percentile_map(v) for p, v in goals_cohort.items()}
-    caps_pct = {p: _percentile_map(v) for p, v in caps_cohort.items()}
+        age = _age_at(c.get("birth_date"))
+        goals_cohort.setdefault(pos, []).append((age, c["intl_goals"]))
+        caps_cohort.setdefault(pos, []).append((age, c["caps"]))
+    goals_curves = {p: AgeConditionalQuantiles(v) for p, v in goals_cohort.items()}
+    caps_curves = {p: AgeConditionalQuantiles(v) for p, v in caps_cohort.items()}
 
     # ── PASS 1a: projected RAW composite + per-pos raw cohort (the context base) ─
     staged: list[dict] = []
     raw_by_pos: dict[str, list[float]] = {}
     for c in cards:
         pos = c["position_listed"]
-        g_pct = goals_pct[pos][c["intl_goals"]]
-        a_pct = caps_pct[pos][c["caps"]]
+        age = _age_at(c.get("birth_date"))
+        g_pct = goals_curves[pos].percentile(c["intl_goals"], age)
+        a_pct = caps_curves[pos].percentile(c["caps"], age)
         projected_raw, book = _projected_raw_score(c, g_pct, a_pct)
         raw_by_pos.setdefault(pos, []).append(projected_raw)
         staged.append(
@@ -419,9 +538,17 @@ def _build_internal_rows(
         link_status = c.get("link_status")
         if link_status is None:
             raise ValueError(f"2026 card {c['card_id']} has no link_status")
-        # Only EXACTLY "linked" cards may consult career_stature.json. minted /
-        # unlinked / ambiguous / any future status stay non-stature by construction.
-        cs = career_stature_by_player.get(c["player_id"]) if link_status == "linked" else None
+        # merit-v3 V3 person-identity seam (design §1.1): "linked" cards consult
+        # by their shared canonical id; "minted" cards consult by their minted id
+        # (the V1 person-identity resolver emits minted persons' rows under those
+        # ids — Audit-1 C1's structural bar is removed). Any OTHER status (an
+        # unlinked/ambiguous future state) stays non-stature by construction:
+        # ambiguity is withheld, never assigned (the Timber-twins trap).
+        cs = (
+            career_stature_by_player.get(c["player_id"])
+            if link_status in ("linked", "minted")
+            else None
+        )
         weight = _stature_model_weight(cs)
         ref = _projected_ref(pos, s["projected_raw"])
         if cs is not None:
@@ -495,16 +622,19 @@ def _build_internal_rows(
         else:
             overall_basis = "measured_performance"
 
-        # Factual legend joins the linked player's career row (missing row → False).
-        # minted / unlinked / ambiguous never consulted career stature (cs is None) →
-        # legend False. In practice every legend=true linked player is material, so
-        # this never tags a below-material card as a legend.
+        # Factual legend joins the person's career row (missing row → False).
+        # A card with no career row (or a barred status) never consulted stature
+        # (cs is None) → legend False. In practice every legend=true person is
+        # material, so this never tags a below-material card as a legend.
         legend = bool(cs["legend"]) if cs else False
 
         components = [
             {"signal": "caps", "value": c["caps"], "weight": 0.0},
             {"signal": "intl_goals", "value": c["intl_goals"], "weight": 0.0},
             {"signal": "age", "value": s["age"], "weight": 0.0},
+            # D1 (proj-career-4.0.0): the two percentiles below are AGE-CONDITIONED
+            # (the signal's quantile at the player's age); age_factor is retired
+            # and intentionally absent from this array.
             {
                 "signal": "goals_percentile",
                 "value": s["g_pct"],
@@ -515,7 +645,6 @@ def _build_internal_rows(
                 "value": s["a_pct"],
                 "weight": s["eff"].get("appearances", 0.0),
             },
-            {"signal": "age_factor", "value": s["af"], "weight": 0.0},
             {"signal": "club_nation", "value": None, "weight": 0.0},  # raw code on the card
             {"signal": "league_strength", "value": s["league"], "weight": s["league_weight"]},
             # The wc-perf cross-era anchors are structurally UNEARNED pre-tournament:
@@ -560,7 +689,15 @@ def _build_internal_rows(
                 "tournament_id": c["tournament_id"],
                 "pos": pos,
                 "score_0_100": score_0_100,
+                # Current basis (design §5): the at-2026 measured path — the D1
+                # age-conditioned projected raw, quantile-mapped and ceiling-capped
+                # (raw_path) — with no career-stature blend. For a weight==0 card
+                # current == career by construction.
+                "current_score_0_100": 100.0 * raw_path,
                 "overall_basis": overall_basis,
+                # 2026 caps are always present, so the current basis is always the
+                # measured projected path (never baseline_anchor_estimate).
+                "current_basis": "measured_performance",
                 "legend": legend,
                 "components": components,
                 "coverage": c["coverage"],
@@ -609,9 +746,12 @@ def build_ratings(
     ``curve`` is the MV2-6 UNIFIED display curve (fit on the pooled historical +
     2026 internal distribution by ``display_curve.fit_unified_curve``). Passing
     ``None`` self-fits it so a bare call still emits the final unified display.
-    The 2026 ``rating_version`` stays ``proj-career-3.0.0``: the INTERNAL projected
-    algorithm is unchanged — only the display ``overall`` moved from the MV2-5
-    provisional 2026-only curve onto the shared wc-perf-4.2.0 unified curve.
+
+    merit-v3 V3: every row additionally carries the ``basis_ratings`` payload
+    (design §5) — ``career`` (the full stature-dominant blend; identical to the
+    top-level compatibility surface) and ``current`` (the at-2026 measured path:
+    the D1 age-conditioned projected raw, quantile-mapped + ceiling-capped, no
+    career blend, no career badge). Both bases share the ONE display curve.
 
     ``internal_rows`` accepts the precomputed pass-1 rows (``build_internal_view``
     output for the SAME cards/career/distribution args) so a caller that also
@@ -641,10 +781,45 @@ def build_ratings(
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
         overall = _display_score(s, curve, estimate=estimate)
+        current_s = row["current_score_0_100"]
+        current_overall = _display_score(current_s, curve, estimate=False)
         channels = {
             # DECOUPLED CHANNELS — see rating.py for rationale. Sim channels stay on
             # the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays calibrated.
             ch: _channel(s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS
+        }
+        current_channels = {
+            ch: _channel(current_s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS
+        }
+        career_basis = {
+            "overall": overall,
+            "overall_basis": row["overall_basis"],
+            "attack": channels["attack"],
+            "midfield": channels["midfield"],
+            "defense": channels["defense"],
+            "goalkeeping": channels["goalkeeping"],
+            "coverage": row["coverage"],
+            "components": row["components"],
+            "basis_metadata": {
+                "basis": "career",
+                "score_0_100": round(s, _PRECISION),
+                "rating_version": RATING_VERSION,
+            },
+        }
+        current_basis = {
+            "overall": current_overall,
+            "overall_basis": row["current_basis"],
+            "attack": current_channels["attack"],
+            "midfield": current_channels["midfield"],
+            "defense": current_channels["defense"],
+            "goalkeeping": current_channels["goalkeeping"],
+            "coverage": row["coverage"],
+            "components": row["components"],
+            "basis_metadata": {
+                "basis": "current",
+                "score_0_100": round(current_s, _PRECISION),
+                "rating_version": RATING_VERSION,
+            },
         }
         ratings.append(
             {
@@ -661,6 +836,10 @@ def build_ratings(
                 "midfield": channels["midfield"],
                 "defense": channels["defense"],
                 "goalkeeping": channels["goalkeeping"],
+                "basis_ratings": {
+                    "career": career_basis,
+                    "current": current_basis,
+                },
                 "components": row["components"],
                 "coverage": row["coverage"],
                 "coverage_basis": COVERAGE_BASIS,
@@ -815,12 +994,11 @@ def render_merit_v2_sample_2026(
     return "\n".join(L) + "\n"
 
 
-def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
-    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md as the historical MV2-4 section
-    (rendered fresh from rating.py) FOLLOWED BY the 2026 MV2-5 reconciliation section.
-    Deterministic and order-independent: the whole file is regenerated from the
-    committed canonical + career-stature + 2026 tables, so a clean rebuild reproduces
-    the committed bytes regardless of which stage ran last."""
+def render_merit_v2_sample_full(output_dir: Path = OUTPUT_DIR) -> str:
+    """Render the full 3-section MERIT_V2_SAMPLE.md (no write): historical MV2-4
+    section (rendered fresh from rating.py) + 2026 MV2-5 reconciliation section +
+    MV2-6 unified-display section. Deterministic: regenerated entirely from the
+    committed canonical + career-stature + 2026 tables."""
     cards = json.loads((output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8"))
     career = _load_career_stature(output_dir)
     historical_raw_only = _historical_raw_only_internal(output_dir)
@@ -839,7 +1017,15 @@ def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     from . import display_curve
 
     section_display = display_curve.render_unified_display_sample(output_dir)
-    md = historical + section_2026 + section_display
+    return historical + section_2026 + section_display
+
+
+def write_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
+    """(Re)write etl/output/merit/MERIT_V2_SAMPLE.md — the SOLE owner of that file
+    (invoked from ``ingest_2026.run``; ``rating.run`` deliberately does not write
+    it). Runs LAST in the ingest lane and regenerates the whole 3-section file, so
+    a clean rebuild reproduces the committed bytes regardless of stage order."""
+    md = render_merit_v2_sample_full(output_dir)
     out = output_dir / "merit" / "MERIT_V2_SAMPLE.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(md, encoding="utf-8")

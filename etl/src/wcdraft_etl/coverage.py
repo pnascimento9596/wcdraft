@@ -54,6 +54,7 @@ def render(tables: dict[str, list[dict]]) -> str:
         "| Goals, squad selection, awards, standings, managers | **1930** | — (full history) |\n"
         "| Match appearances / lineups, bookings, substitutions | **1970** | `null` (no match-level data) |\n"  # noqa: E501
         "| Shirt numbers | **1954** | `null` (no squad numbers assigned) |\n"
+        "| Club at tournament | **pinned Wikipedia squad pages (men's 1930–2022)** | `null` where the pinned source lacks a club row/value or no unambiguous join exists |\n"  # noqa: E501
         "| **Assists, minutes played** | **never** | permanently absent — omitted, not fabricated |\n"  # noqa: E501
     )
     L.append(
@@ -73,7 +74,8 @@ def render(tables: dict[str, list[dict]]) -> str:
     L.append("## Null-rate per nullable column\n")
     L.append(
         "Only honest-state nullable columns are listed. `club_at_tournament` is\n"
-        "**100% null by design** (no club column exists upstream); managers'\n"
+        "populated only where the pinned Wikipedia squad source carries a factual\n"
+        "club name and the row joins unambiguously to a canonical card; managers'\n"
         "`birth_date` is **100% null** (no birth_date column upstream); and\n"
         "`final_placement` is null except for semifinalists, because the upstream\n"
         "`tournament_standings` ranks only positions 1–4 per tournament. These are\n"
@@ -92,9 +94,10 @@ def render(tables: dict[str, list[dict]]) -> str:
     L.append(
         "`coverage` = fraction of the per-card signal universe "
         "{selection, position_listed, goals, awards, appearances, shirt} present\n"
-        "for that card. Signals absent for every card at every era "
-        "(club, assists, minutes) are excluded from the universe so coverage is not\n"
-        "uniformly deflated. The values cluster at three tiers matching the cliffs.\n"
+        "for that card. Signals outside the rating-input universe "
+        "(club, assists, minutes) are excluded: club is optional display metadata,\n"
+        "while assists/minutes are absent. The values cluster at\n"
+        "three tiers matching the cliffs.\n"
     )
     buckets: dict[str, list[float]] = {"pre-1954": [], "1954–1969": [], "1970+": []}
     for c in cards:

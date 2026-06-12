@@ -8,8 +8,8 @@ switcher has multiple cards with one stable player_id across different nation_id
 Honest-state aggregates:
   - shirt              0 -> null (no squad numbers before 1954)
   - position_listed    coarse code the player was listed at that tournament
-  - club_at_tournament ALWAYS null — the upstream database has no club column;
-                       we surface the field but never fabricate a value
+  - club_at_tournament parsed from pinned Wikipedia squad-page revisions where
+                       a factual club row joins unambiguously; otherwise null
   - appearances        match-level data exists only 1970+ -> null before 1970,
                        else the count of matches the player appeared in (0 if
                        named in the squad but never dressed — a real measured 0)
@@ -32,9 +32,10 @@ from .util import s_or_none, shirt_or_none
 # Era cliffs (see COVERAGE.md). Match-level appearance data starts in 1970.
 APPEARANCES_FROM = 1970
 
-# Per-card signal universe used for the coverage fraction. We exclude signals
-# that are absent for EVERY card at EVERY era (club, assists, minutes): including
-# them would deflate coverage uniformly and falsely imply they could be present.
+# Per-card signal universe used for the coverage fraction. We exclude optional
+# sourced display metadata (club) and signals that are absent for every card
+# (assists, minutes): including them would make coverage a rating-input proxy
+# for fields the model intentionally does not consume.
 # The two era-gated signals (appearances, shirt) are what make coverage vary,
 # directly encoding the two era cliffs.
 COVERAGE_SIGNALS = ("selection", "position_listed", "goals", "awards", "appearances", "shirt")
@@ -67,6 +68,7 @@ def build(
     goals: pd.DataFrame | None = None,
     appearances: pd.DataFrame | None = None,
     award_winners: pd.DataFrame | None = None,
+    club_lookup: dict[tuple[str, str], str] | None = None,
 ) -> list[dict]:
     """Return canonical card records, sorted by card_id."""
     sdf = squads if squads is not None else source.load("squads")
@@ -74,6 +76,7 @@ def build(
     gdf = goals if goals is not None else source.load("goals")
     adf = appearances if appearances is not None else source.load("player_appearances")
     wdf = award_winners if award_winners is not None else source.load("award_winners")
+    clubs = club_lookup or {}
 
     year_of = {t.tournament_id: int(t.year) for t in tdf.itertuples(index=False)}
 
@@ -111,7 +114,7 @@ def build(
                 "nation_id": r.team_id,
                 "shirt": shirt,
                 "position_listed": s_or_none(r.position_code),
-                "club_at_tournament": None,  # not in source — never fabricated
+                "club_at_tournament": clubs.get(k),
                 "appearances": appearances_val,
                 # provenance for the appearances value: native Fjelstul match
                 # events (1970+) or null pre-1970 at base build. The WS-A

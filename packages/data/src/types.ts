@@ -45,10 +45,11 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
-// runtime-data-1.2.0 (draft-config season): runtime replay now includes the
-// config axes carried by `t2.` tokens plus era-filtered and position-first
-// draft semantics.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-1.2.0" as const;
+// runtime-data-2.0.0 (merit-v3 V6): every compact rating now carries both
+// basis ratings (`career` + `current`) and the runtime replay shape includes
+// the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
+// array remains the Career alias until the product toggle ships.
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.0.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
@@ -134,9 +135,9 @@ export interface RuntimeBundleFingerprint {
  *
  * 2026 ratings (`provenance: "projected_career"`) carry neither field; both
  * are emitted as `undefined` so the JSON omits them. `legend` (below) is
- * carried by BOTH eras and is required as of runtime-data-1.1.0.
+ * carried by BOTH eras and is required as of runtime-data-2.0.0.
  */
-export interface RuntimeRating extends Rating {
+export interface RuntimeBasisRating extends Rating {
   /** Historical only. UI badge for estimate-anchored ratings. */
   overall_basis?:
     | "measured_performance"
@@ -147,7 +148,7 @@ export interface RuntimeRating extends Rating {
   /**
    * Source-derived "legend" flag (MV2-7 contract, MV2-10 data). Display/
    * honest-state only — NEVER a sim input, never crosses the `Rating` sim
-   * boundary. REQUIRED as of runtime-data-1.1.0: the compact passthrough is
+   * boundary. REQUIRED as of runtime-data-2.0.0: the compact passthrough is
    * wired and every rating row (historical + 2026) carries the ETL-joined
    * flag, so it is the source of truth for the gold legend badge. An explicit
    * `false` SUPPRESSES legend styling even for an OVR≥96 card (the UI's
@@ -155,6 +156,28 @@ export interface RuntimeRating extends Rating {
    * pre-1.1.0 data shapes).
    */
   legend: boolean;
+  /**
+   * Basis metadata emitted by merit-v3 ETL. Present on rows inside
+   * `rating_by_card_id_by_basis`; omitted/ignored by legacy consumers that
+   * read the Career alias from `ratings`.
+   */
+  basis_metadata?: {
+    basis: "career" | "current";
+    rating_version: string;
+    score_0_100: number;
+    [key: string]: unknown;
+  };
+}
+
+export interface RuntimeRating extends RuntimeBasisRating {
+  /**
+   * Additional basis ratings for this card. The containing `RuntimeRating`
+   * row is the Career basis compatibility alias; `basis_ratings.current`
+   * carries the Current basis without duplicating the Career row.
+   */
+  basis_ratings: {
+    current: RuntimeBasisRating;
+  };
 }
 
 // ─── Player card ─────────────────────────────────────────────────────────────
@@ -414,8 +437,21 @@ export interface RuntimeDataManifest {
     baseline_anchor_estimate: number;
     /** Cards flagged `overall_basis === "career_stature_estimate"` (MV2-4.1 basis tag). */
     career_stature_estimate: number;
-    /** Ratings carrying `legend: true` (MV2-10 passthrough) — 302 expected (292 historical + 10 2026). */
+    /** Ratings carrying `legend: true` (merit-v3 V6 census) — 270 expected. */
     legend: number;
+    /** Basis-specific census locks for runtime-data-2.0.0. */
+    rating_basis: {
+      career: {
+        ratings: number;
+        baseline_anchor_estimate: number;
+        career_stature_estimate: number;
+      };
+      current: {
+        ratings: number;
+        baseline_anchor_estimate: number;
+        career_stature_estimate: number;
+      };
+    };
   };
   /** Full attribution block (UI surface). */
   attribution: RuntimeAttribution;

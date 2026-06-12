@@ -57,10 +57,21 @@ from __future__ import annotations
 
 import json
 import re
+from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
-from . import ERA_BUCKETS, SOURCE_SET_VERSION, VERSION
+from .. import identity_2026
+from . import (
+    ACTIVE_CUTOFF_DATE,
+    ACTIVE_SOURCE_SET_VERSION,
+    ERA_BUCKETS,
+    SOURCE_SET_VERSION,
+    VERSION,
+    era_bucket,
+)
 from .paths import OUTPUT_DIR
+from .text import norm
 
 # career_stature.json lives next to the canonical tables (the rating stage reads it
 # from there), NOT under merit/output — it is a first-class ETL artifact.
@@ -70,9 +81,10 @@ CAREER_STATURE_PATH = _CANON_DIR / "career_stature.json"
 # Float rounding so emitted JSON is byte-stable (matches rating._PRECISION).
 _PRECISION = 6
 
-# ─── v2 family taxonomy (position-balanced) ───────────────────────────────────
-# The families the v2 table scores, in the fixed combine order. ``club_honors`` is
-# registered for schema stability but weight 0.0 in every era (deferred, no source).
+# ─── v3 family taxonomy (position-balanced + club-season honors) ─────────────
+# The families the v3 table scores, in fixed combine order. ``club_honors`` stays
+# as a zero-weight legacy placeholder for old reports; ``club_season_honors`` is
+# the merit-v3 V1 continental-title/final-participation family.
 # The legacy v1 ``annual_recognition`` key is NOT scored here — v2 splits annual
 # recognition into the global_/regional_ families.
 _V2_FAMILY_KEYS: tuple[str, ...] = (
@@ -84,6 +96,12 @@ _V2_FAMILY_KEYS: tuple[str, ...] = (
     "retrospective_selection",
     "captaincy",
     "club_honors",
+    "club_season_honors",
+)
+
+_RATING_COMPAT_STATURE_VERSION = "career-stature-2.1.0"
+_RATING_COMPAT_FAMILY_KEYS: tuple[str, ...] = tuple(
+    fam for fam in _V2_FAMILY_KEYS if fam != "club_season_honors"
 )
 
 # ─── era-bucketed family weights (v2) ─────────────────────────────────────────
@@ -101,8 +119,46 @@ _V2_FAMILY_KEYS: tuple[str, ...] = (
 #     which carry heavy weight in those eras. This is what lets a pre-1991 defender
 #     (Baresi, Beckenbauer) clear the material gate on all-time selections alone,
 #     instead of being penalised for missing awards that could not exist in-era.
-#   * club_honors deferred everywhere (weight 0.0, no source).
+#   * club_honors remains a legacy zero-weight placeholder.
+#   * club_season_honors is active for every era because top-tier continental
+#     club titles exist across the post-war table; V1 only curates active rows.
 ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
+    "pre_1956": {
+        "wc_legacy": 0.26,
+        "global_annual_recognition": 0.00,
+        "regional_annual_recognition": 0.00,
+        "position_balanced_selection": 0.00,
+        "international_record": 0.14,
+        "retrospective_selection": 0.50,
+        "captaincy": 0.04,
+        "club_honors": 0.00,
+        "club_season_honors": 0.06,
+    },
+    "1956_1990": {
+        "wc_legacy": 0.20,
+        "global_annual_recognition": 0.22,
+        "regional_annual_recognition": 0.10,
+        "position_balanced_selection": 0.00,
+        "international_record": 0.07,
+        "retrospective_selection": 0.25,
+        "captaincy": 0.04,
+        "club_honors": 0.00,
+        "club_season_honors": 0.12,
+    },
+    "1991_plus": {
+        "wc_legacy": 0.17,
+        "global_annual_recognition": 0.20,
+        "regional_annual_recognition": 0.07,
+        "position_balanced_selection": 0.18,
+        "international_record": 0.09,
+        "retrospective_selection": 0.06,
+        "captaincy": 0.03,
+        "club_honors": 0.00,
+        "club_season_honors": 0.20,
+    },
+}
+
+_RATING_COMPAT_ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
     "pre_1956": {
         "wc_legacy": 0.30,
         "global_annual_recognition": 0.00,
@@ -228,6 +284,28 @@ _GOALS_CEILING_STRENGTH = 0.65
 _CAPTAINCY_WC_WINNER = 0.60
 _CAPTAINCY_BASE = 0.40
 
+# Top-tier continental club title with documented final participation. This is a
+# title/final-participation fact, not a subjective "importance" grade; repeated
+# titles saturate through the same per-family product as every other family.
+_CLUB_SEASON_TITLE_FINAL_PARTICIPANT = 0.60
+
+# Active-career stage normalization. A dated active family is evaluated against a
+# deterministic accrual-to-date expectation from age 18 to 34, then capped at the
+# normal completed-family [0,1] scale. Undated active families use the completed
+# denominator (no inflation by default).
+_ACTIVE_STAGE_START_AGE = 18
+_ACTIVE_STAGE_FULL_AGE = 34
+_ACTIVE_STAGE_MIN_FRACTION = 0.35
+
+# Index-bias controls (§3): the top band requires breadth, and sparse profiles
+# cannot occupy the extreme all-time tier on a tiny fact count. Below the gold
+# floor the index is left untouched.
+GOLD_FLOOR_INDEX = 0.85
+SINGLE_FAMILY_INDEX_CAP = 0.84
+SPARSE_FACT_COUNT_THRESHOLD = 6
+SPARSE_FAMILY_COUNT_THRESHOLD = 4
+SPARSE_FACT_CONFIDENCE_DENOMINATOR = 24
+
 # ─── career_stature_index — global monotonic re-spread ────────────────────────
 # The saturating ``career_stature_score`` is structurally compressed: cross-family
 # ``1 − Π(1 − w[f]·fs[f])`` tops out near ~0.67 even for the all-time peak, and the
@@ -350,6 +428,12 @@ def _fact_strength(fact: dict) -> float:
             raise KeyError(f"unrecognized WC award {kind!r} in fact {fact!r}")
         return _WC_AWARD_STRENGTH[kind]
     if family == "global_annual_recognition":
+        if sid == "active_global_annual":
+            if "Ballon d'Or" in detail and "runner-up" in detail:
+                return 0.60
+            if "Kopa Trophy" in detail:
+                return 0.45
+            raise KeyError(f"unrecognized active-global annual fact {detail!r}")
         if sid == "onze_awards":
             for token, s in _ONZE_STRENGTH.items():
                 if token in detail:
@@ -365,6 +449,8 @@ def _fact_strength(fact: dict) -> float:
             raise KeyError(f"unrecognized regional-annual source {sid!r}")
         return _REGIONAL_ANNUAL_STRENGTH[sid]
     if family == "position_balanced_selection":
+        if sid == "active_gk_award":
+            return _POSITION_BALANCED_STRENGTH["research_gk_award"]
         if sid not in _POSITION_BALANCED_STRENGTH:
             raise KeyError(f"unrecognized position-balanced source {sid!r}")
         return _POSITION_BALANCED_STRENGTH[sid]
@@ -403,6 +489,12 @@ def _fact_strength(fact: dict) -> float:
         raise KeyError(f"unrecognized international-record fact {detail!r}")
     if family == "captaincy":
         return _CAPTAINCY_WC_WINNER if "lifted the" in detail else _CAPTAINCY_BASE
+    if family == "club_season_honors":
+        if sid == "active_club_season_honors":
+            return _CLUB_SEASON_TITLE_FINAL_PARTICIPANT
+        raise KeyError(f"unrecognized club-season honors source {sid!r}")
+    if family == "club_honors":
+        raise KeyError(f"legacy deferred club_honors fact is not scoreable: {fact!r}")
     raise KeyError(f"fact carries unknown family {family!r}: {fact!r}")
 
 
@@ -539,14 +631,382 @@ def _modal_position(facts: list[dict]) -> str | None:
     return min(counts, key=lambda p: (-counts[p], order.get(p, 9)))
 
 
+@dataclass(frozen=True)
+class _ScoringContext:
+    resolver: _PersonIdentityResolver
+    birth_year: dict[str, int | None]
+    confederations: dict[str, set[str]]
+
+
+class _PersonIdentityResolver:
+    """Resolve historical and 2026 ids onto one person key.
+
+    The 2026 ingest's real links are consumed first because linked cards already
+    carry the historical ``P-*`` id. The explicit bridge table is second and only
+    applies to still-minted natural keys. Ambiguity is not guessed here.
+    """
+
+    def __init__(self, players: list[dict], players_2026: list[dict], cards_2026: list[dict]):
+        self._alias_to_person: dict[str, str] = {}
+        self._alias_method: dict[str, str] = {}
+        self._aliases_by_person: dict[str, set[str]] = defaultdict(set)
+        self._historical_ids = {p["player_id"] for p in players}
+        for pid in self._historical_ids:
+            self._set_alias(pid, pid, "historical")
+        players_2026_by_id = {p["player_id"]: p for p in players_2026}
+        for c in cards_2026:
+            pid = c["player_id"]
+            status = c.get("link_status")
+            if status == "linked":
+                if pid not in self._historical_ids:
+                    raise ValueError(f"linked 2026 card points at unknown historical id {pid}")
+                self._set_alias(pid, pid, "u0_link")
+                continue
+            if status != "minted":
+                raise ValueError(f"2026 card {c['card_id']} has bad link_status {status!r}")
+            p = players_2026_by_id.get(pid)
+            if p is None:
+                raise ValueError(f"minted 2026 card {c['card_id']} has no players_2026 row")
+            bridge_pid = self._bridge_target(p, c["nation_id"])
+            if bridge_pid is not None:
+                self._set_alias(pid, bridge_pid, "identity_bridge")
+            else:
+                self._set_alias(pid, pid, "minted")
+
+    def _set_alias(self, alias: str, person: str, method: str) -> None:
+        prior = self._alias_to_person.get(alias)
+        if prior is not None and prior != person:
+            raise ValueError(f"identity alias {alias} resolves to both {prior} and {person}")
+        self._alias_to_person[alias] = person
+        self._alias_method[alias] = method
+        self._aliases_by_person[person].add(alias)
+
+    def _bridge_target(self, p: dict, nation_id: str) -> str | None:
+        birth_date = p.get("birth_date")
+        if not birth_date:
+            return None
+        names = {
+            norm(p.get("full_name") or ""),
+            norm(p.get("common_name") or ""),
+            norm(p.get("family_name") or ""),
+        }
+        full = p.get("full_name") or ""
+        if full:
+            names.add(norm(full.split()[-1]))
+        for n in names:
+            if not n:
+                continue
+            target = identity_2026.IDENTITY_BRIDGES.get((nation_id, birth_date, n))
+            if target is None:
+                continue
+            if target not in self._historical_ids:
+                raise ValueError(f"identity bridge for {p['player_id']} targets unknown {target}")
+            return target
+        return None
+
+    def resolve(self, player_id: str) -> str:
+        return self._alias_to_person.get(player_id, player_id)
+
+    def aliases_for(self, person_id: str) -> list[str]:
+        return sorted(self._aliases_by_person.get(person_id, {person_id}))
+
+    def methods_for(self, aliases: list[str]) -> list[str]:
+        return sorted({self._alias_method.get(a, "source_fact") for a in aliases})
+
+
+def _birth_years(
+    players: list[dict],
+    players_2026: list[dict],
+    cards_2026: list[dict],
+    resolver: _PersonIdentityResolver,
+) -> dict[str, int | None]:
+    years: dict[str, int | None] = {}
+
+    def add(pid: str, birth_date: str | None) -> None:
+        person = resolver.resolve(pid)
+        year = int(birth_date[:4]) if birth_date and birth_date[:4].isdigit() else None
+        if years.get(person) is None and year is not None:
+            years[person] = year
+        else:
+            years.setdefault(person, year)
+
+    for p in players:
+        add(p["player_id"], p.get("birth_date"))
+    for p in players_2026:
+        add(p["player_id"], p.get("birth_date"))
+    for c in cards_2026:
+        add(c["player_id"], c.get("birth_date"))
+    return years
+
+
+def _player_confederations(
+    cards: list[dict],
+    cards_2026: list[dict],
+    nations: list[dict],
+    nations_2026: list[dict],
+    resolver: _PersonIdentityResolver,
+) -> dict[str, set[str]]:
+    confed_of = {n["nation_id"]: n.get("confederation") for n in (*nations, *nations_2026)}
+    out: dict[str, set[str]] = defaultdict(set)
+    for c in (*cards, *cards_2026):
+        confed = confed_of.get(c["nation_id"])
+        if confed:
+            out[resolver.resolve(c["player_id"])].add(confed)
+    return out
+
+
+def _build_context(
+    players: list[dict],
+    players_2026: list[dict],
+    cards: list[dict],
+    cards_2026: list[dict],
+    nations: list[dict],
+    nations_2026: list[dict],
+) -> _ScoringContext:
+    resolver = _PersonIdentityResolver(players, players_2026, cards_2026)
+    return _ScoringContext(
+        resolver=resolver,
+        birth_year=_birth_years(players, players_2026, cards_2026, resolver),
+        confederations=_player_confederations(cards, cards_2026, nations, nations_2026, resolver),
+    )
+
+
+def _active_stage_fraction(person_id: str, ctx: _ScoringContext | None) -> float:
+    if ctx is None:
+        return 1.0
+    born = ctx.birth_year.get(person_id)
+    if born is None:
+        return 1.0
+    cutoff_year = int(ACTIVE_CUTOFF_DATE[:4])
+    age = cutoff_year - born
+    raw = (age - _ACTIVE_STAGE_START_AGE) / (_ACTIVE_STAGE_FULL_AGE - _ACTIVE_STAGE_START_AGE)
+    return max(_ACTIVE_STAGE_MIN_FRACTION, min(1.0, raw))
+
+
+def _stage_normalized_family_score(
+    person_id: str, facts: list[dict], completed_score: float, ctx: _ScoringContext | None
+) -> tuple[float, float | None]:
+    active = [f for f in facts if f.get("active_source_set_version")]
+    if not active or not any(f.get("year") is not None for f in active):
+        return completed_score, None
+    fraction = _active_stage_fraction(person_id, ctx)
+    return min(1.0, completed_score / fraction), round(fraction, _PRECISION)
+
+
+def _eligible_family_weights(
+    person_id: str,
+    era: str,
+    family_scores: dict[str, float],
+    ctx: _ScoringContext | None,
+) -> tuple[dict[str, float], list[str]]:
+    base = ERA_FAMILY_WEIGHTS[era]
+    eligible = {fam: w for fam, w in base.items() if w > 0.0}
+    removed: list[str] = []
+    # Pre-1995 Ballon d'Or was not open to non-European players. The global family
+    # also contains open global lists; only remove it when the player has no global
+    # facts and their World Cup nations are outside UEFA.
+    if (
+        era != "1991_plus"
+        and "global_annual_recognition" in eligible
+        and not family_scores.get("global_annual_recognition")
+        and ctx is not None
+        and "UEFA" not in ctx.confederations.get(person_id, set())
+    ):
+        eligible.pop("global_annual_recognition")
+        removed.append("global_annual_recognition:pre_1995_ballondor_ineligible")
+    total = sum(eligible.values())
+    if total <= 0.0:
+        return {fam: 0.0 for fam in _V2_FAMILY_KEYS}, removed
+    normalized = {fam: round(eligible.get(fam, 0.0) / total, _PRECISION) for fam in _V2_FAMILY_KEYS}
+    return normalized, removed
+
+
+def _apply_index_bias_controls(
+    index: float, family_scores: dict[str, float], fact_count: int
+) -> tuple[float, list[str]]:
+    adjusted = index
+    flags: list[str] = []
+    material_family_count = sum(1 for v in family_scores.values() if (v or 0.0) > 0.0)
+    if material_family_count <= 1 and adjusted > SINGLE_FAMILY_INDEX_CAP:
+        adjusted = SINGLE_FAMILY_INDEX_CAP
+        flags.append("single_family_index_saturation")
+    if adjusted > GOLD_FLOOR_INDEX and (
+        fact_count < SPARSE_FACT_COUNT_THRESHOLD
+        or material_family_count < SPARSE_FAMILY_COUNT_THRESHOLD
+    ):
+        confidence = min(
+            1.0,
+            max(
+                0.0,
+                min(
+                    fact_count / SPARSE_FACT_CONFIDENCE_DENOMINATOR,
+                    material_family_count / SPARSE_FAMILY_COUNT_THRESHOLD,
+                ),
+            ),
+        )
+        adjusted = GOLD_FLOOR_INDEX + (adjusted - GOLD_FLOOR_INDEX) * confidence
+        flags.append("sparse_fact_count_shrinkage")
+    return round(adjusted, _PRECISION), flags
+
+
+def _merge_active_channel(
+    source_facts: dict,
+    active_facts: dict,
+    active_staging: dict,
+    mens_years: dict[str, list[int]],
+    ctx: _ScoringContext,
+) -> tuple[dict, dict]:
+    if active_facts.get("version") != ACTIVE_SOURCE_SET_VERSION:
+        raise ValueError(
+            f"active fact version {active_facts.get('version')!r} != "
+            f"{ACTIVE_SOURCE_SET_VERSION!r}"
+        )
+    if active_staging.get("version") != ACTIVE_SOURCE_SET_VERSION:
+        raise ValueError(
+            f"active staging version {active_staging.get('version')!r} != "
+            f"{ACTIVE_SOURCE_SET_VERSION!r}"
+        )
+    unresolved_bridges = active_staging.get("identity_bridge_review") or []
+    if unresolved_bridges:
+        preview = ", ".join(
+            f"{b.get('minted_player_id')}->{b.get('historical_player_id')}"
+            for b in unresolved_bridges[:5]
+        )
+        raise ValueError(
+            "active staging has unresolved identity bridges; promote/merge before "
+            f"career-stature scoring: {preview}"
+        )
+    active_pids = {f["player_id"] for f in active_facts["facts"]}
+    staged_pids = {e["player_id"] for e in active_staging["entries"]}
+    if active_pids != staged_pids:
+        raise ValueError("active source facts and active staging entries disagree")
+
+    merged: list[dict] = []
+    active_persons: set[str] = set()
+    alias_pairs: dict[str, set[str]] = defaultdict(set)
+
+    def add_fact(f: dict, active_source_set_version: str | None) -> None:
+        original = f["player_id"]
+        person = ctx.resolver.resolve(original)
+        nf = dict(f)
+        nf["source_player_id"] = original
+        nf["player_id"] = person
+        nf["person_id"] = person
+        if active_source_set_version is not None:
+            nf["active_source_set_version"] = active_source_set_version
+            nf.setdefault("era", era_bucket((mens_years.get(person) or [2026])[0]))
+            active_persons.add(person)
+        alias_pairs[person].add(original)
+        merged.append(nf)
+
+    for f in source_facts["facts"]:
+        add_fact(f, None)
+    for f in active_facts["facts"]:
+        add_fact(f, active_facts["version"])
+
+    merged_doc = {
+        "version": source_facts.get("version"),
+        "active_source_set_version": active_facts["version"],
+        "fact_count": len(merged),
+        "linked_player_count": len({f["person_id"] for f in merged}),
+        "facts": merged,
+    }
+    meta = {
+        "active_fact_count": len(active_facts["facts"]),
+        "active_person_count": len(active_persons),
+        "active_person_ids": sorted(active_persons),
+        "resolved_aliases": {p: sorted(a) for p, a in sorted(alias_pairs.items()) if len(a) > 1},
+    }
+    return merged_doc, meta
+
+
 # ─── row build ────────────────────────────────────────────────────────────────
 
 
-def _build_player_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> list[dict]:
-    """Build the per-player rows WITHOUT tier (tier needs the whole cohort). Pure."""
+def _build_rating_compat_rows(
+    source_facts: dict, mens_years: dict[str, list[int]]
+) -> tuple[list[dict], dict]:
+    """Build the career-stature-2.1.0 view rating.py must keep consuming until
+    merit-v3 V2 deliberately flips the rating consumer.
+
+    V1 changes the stature artifact, but not the shipped rating semantics. Keeping
+    this view generated from the same source facts avoids a hand-copied legacy
+    snapshot while making the compatibility boundary explicit in the v3 table.
+    """
     by_player: dict[str, list[dict]] = {}
     for f in source_facts["facts"]:
         by_player.setdefault(f["player_id"], []).append(f)
+
+    rows: list[dict] = []
+    for pid in sorted(by_player):
+        pfacts = by_player[pid]
+        eras = {f["era"] for f in pfacts}
+        if len(eras) != 1:
+            raise ValueError(f"player {pid} has conflicting fact eras {eras}")
+        era = next(iter(eras))
+        if era not in ERA_BUCKETS:
+            raise ValueError(f"player {pid} has unknown era {era!r}")
+        weights = _RATING_COMPAT_ERA_FAMILY_WEIGHTS[era]
+
+        family_facts: dict[str, list[dict]] = {}
+        for f in pfacts:
+            fam = f["family"]
+            if fam not in _RATING_COMPAT_FAMILY_KEYS:
+                raise ValueError(f"player {pid} compat fact in unknown family {fam!r}")
+            family_facts.setdefault(fam, []).append(f)
+        family_scores: dict[str, float] = {
+            fam: round(_saturate([_fact_strength(f) for f in ff]), _PRECISION)
+            for fam, ff in family_facts.items()
+        }
+
+        active = [fam for fam in _RATING_COMPAT_FAMILY_KEYS if weights.get(fam, 0.0) > 0.0]
+        acc = 1.0
+        for fam in active:
+            acc *= 1.0 - weights[fam] * family_scores.get(fam, 0.0)
+        career_score = round(1.0 - acc, _PRECISION)
+        career_index = round(_index_of(career_score), _PRECISION)
+
+        total_w = sum(weights[fam] for fam in active)
+        present_w = sum(
+            weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0
+        )
+        coverage = round(present_w / total_w, _PRECISION) if total_w > 0 else 0.0
+        legend_codes = _legend_reason_codes(pfacts, career_index)
+        rows.append(
+            {
+                "player_id": pid,
+                "stature_version": _RATING_COMPAT_STATURE_VERSION,
+                "source_set_version": SOURCE_SET_VERSION,
+                "career_stature_score": career_score,
+                "career_stature_index": career_index,
+                "coverage": coverage,
+                "stature_tier": None,
+                "legend": bool(legend_codes),
+                "legend_reason_codes": legend_codes,
+                "fact_count": len(pfacts),
+                "review_flags": _review_flags(coverage, career_index, family_scores),
+            }
+        )
+    tier_meta = _assign_tiers(rows)
+    return rows, tier_meta
+
+
+def _build_player_rows(
+    source_facts: dict,
+    mens_years: dict[str, list[int]],
+    ctx: _ScoringContext | None = None,
+) -> list[dict]:
+    """Build the per-player rows WITHOUT tier (tier needs the whole cohort). Pure."""
+    by_player: dict[str, list[dict]] = {}
+    for f in source_facts["facts"]:
+        pid = f.get("person_id") or (
+            ctx.resolver.resolve(f["player_id"]) if ctx else f["player_id"]
+        )
+        nf = dict(f)
+        nf["player_id"] = pid
+        nf["person_id"] = pid
+        nf.setdefault("source_player_id", f["player_id"])
+        by_player.setdefault(pid, []).append(nf)
 
     rows: list[dict] = []
     for pid in sorted(by_player):
@@ -559,7 +1019,6 @@ def _build_player_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> 
         era = next(iter(eras))
         if era not in ERA_BUCKETS:
             raise ValueError(f"player {pid} has unknown era {era!r}")
-        weights = ERA_FAMILY_WEIGHTS[era]
 
         # Per-family saturating fold over that family's facts.
         family_facts: dict[str, list[dict]] = {}
@@ -569,36 +1028,65 @@ def _build_player_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> 
                 raise ValueError(f"player {pid} fact in unknown family {fam!r}")
             family_facts.setdefault(fam, []).append(f)
         family_scores: dict[str, float] = {}
+        stage_factors: dict[str, float | None] = {}
         for fam, ff in family_facts.items():
-            family_scores[fam] = round(
+            completed = round(
                 _saturate([_fact_strength(f) for f in ff]), _PRECISION
             )
+            normalized, stage_factor = _stage_normalized_family_score(pid, ff, completed, ctx)
+            family_scores[fam] = round(normalized, _PRECISION)
+            stage_factors[fam] = stage_factor
 
-        # Era-weighted saturating combine across the structurally-available families.
+        weights, eligibility_adjustments = _eligible_family_weights(pid, era, family_scores, ctx)
+
+        # Eligibility-weighted saturating combine across the available families.
         active = [fam for fam in _V2_FAMILY_KEYS if weights.get(fam, 0.0) > 0.0]
         acc = 1.0
         for fam in active:
             acc *= 1.0 - weights[fam] * family_scores.get(fam, 0.0)
         career_score = round(1.0 - acc, _PRECISION)
-        career_index = round(_index_of(career_score), _PRECISION)
+        raw_index = round(_index_of(career_score), _PRECISION)
+        career_index, index_adjustments = _apply_index_bias_controls(
+            raw_index, family_scores, len(pfacts)
+        )
 
-        # Coverage: fraction of era-available family weight that has a positive fact.
+        # Coverage: fraction of eligible family weight that has a positive fact.
         total_w = sum(weights[fam] for fam in active)
         present_w = sum(
             weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0
         )
-        coverage = round(present_w / total_w, _PRECISION) if total_w > 0 else 0.0
+        coverage_denominator = total_w
+        active_stage_values = [v for v in stage_factors.values() if v is not None]
+        if active_stage_values:
+            coverage_denominator *= min(active_stage_values)
+        coverage = (
+            round(min(1.0, present_w / coverage_denominator), _PRECISION)
+            if coverage_denominator > 0
+            else 0.0
+        )
 
         legend_codes = _legend_reason_codes(pfacts, career_index)
         peak_year = _career_peak_year(mens_years.get(pid, []))
         source_refs = sorted({f"{f['source_id']}:{f['detail']}" for f in pfacts})
+        aliases = ctx.resolver.aliases_for(pid) if ctx else [pid]
+        source_player_ids = sorted({f.get("source_player_id", pid) for f in pfacts})
+        active_count = sum(1 for f in pfacts if f.get("active_source_set_version"))
 
         rows.append(
             {
                 "player_id": pid,
+                "person_id": pid,
+                "resolved_player_ids": sorted(set(aliases) | set(source_player_ids)),
+                "person_resolution_methods": (
+                    ctx.resolver.methods_for(aliases) if ctx else ["historical"]
+                ),
                 "stature_version": VERSION,
                 "source_set_version": SOURCE_SET_VERSION,
+                "active_source_set_version": (
+                    ACTIVE_SOURCE_SET_VERSION if active_count else None
+                ),
                 "career_stature_score": career_score,
+                "career_stature_index_raw": raw_index,
                 "career_stature_index": career_index,
                 "coverage": coverage,
                 "era_bucket": era,
@@ -608,10 +1096,18 @@ def _build_player_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> 
                     fam: family_scores.get(fam, None) for fam in _V2_FAMILY_KEYS
                 },
                 "family_weights": {fam: weights.get(fam, 0.0) for fam in _V2_FAMILY_KEYS},
+                "family_weight_adjustments": eligibility_adjustments,
+                "active_stage_factors": {
+                    fam: stage_factors.get(fam)
+                    for fam in _V2_FAMILY_KEYS
+                    if stage_factors.get(fam) is not None
+                },
                 "stature_tier": None,  # filled by _assign_tiers over the full cohort
                 "legend": bool(legend_codes),
                 "legend_reason_codes": legend_codes,
                 "fact_count": len(pfacts),
+                "active_fact_count": active_count,
+                "index_adjustments": index_adjustments,
                 "review_flags": _review_flags(coverage, career_index, family_scores),
                 "source_refs": source_refs,
             }
@@ -658,9 +1154,13 @@ def _assign_tiers(rows: list[dict]) -> dict[str, float | None]:
     return {"gold_min_index": gold_cut, "silver_min_index": silver_cut}
 
 
-def build_rows(source_facts: dict, mens_years: dict[str, list[int]]) -> tuple[list[dict], dict]:
+def build_rows(
+    source_facts: dict,
+    mens_years: dict[str, list[int]],
+    ctx: _ScoringContext | None = None,
+) -> tuple[list[dict], dict]:
     """Build the sorted per-player career-stature rows + tier meta (pure)."""
-    rows = _build_player_rows(source_facts, mens_years)
+    rows = _build_player_rows(source_facts, mens_years, ctx)
     tier_meta = _assign_tiers(rows)
     return rows, tier_meta
 
@@ -683,11 +1183,43 @@ def build(write: bool = True) -> dict:
     source_facts = json.loads(
         (OUTPUT_DIR / "source_facts.json").read_text(encoding="utf-8")
     )
+    active_facts = json.loads(
+        (OUTPUT_DIR / "source_facts_active.json").read_text(encoding="utf-8")
+    )
+    active_staging = json.loads(
+        (OUTPUT_DIR / "career_stature_active_staging.json").read_text(encoding="utf-8")
+    )
+    players = json.loads((_CANON_DIR / "players.json").read_text("utf-8"))
     cards = json.loads((_CANON_DIR / "player_tournaments.json").read_text("utf-8"))
     tournaments = json.loads((_CANON_DIR / "tournaments.json").read_text("utf-8"))
-    mens_years = _mens_wc_years(cards, tournaments)
+    nations = json.loads((_CANON_DIR / "nations.json").read_text("utf-8"))
+    players_2026 = json.loads((_CANON_DIR / "players_2026.json").read_text("utf-8"))
+    cards_2026 = json.loads((_CANON_DIR / "player_tournaments_2026.json").read_text("utf-8"))
+    tournaments_2026 = json.loads((_CANON_DIR / "tournaments_2026.json").read_text("utf-8"))
+    nations_2026 = json.loads((_CANON_DIR / "nations_2026.json").read_text("utf-8"))
+    ctx = _build_context(players, players_2026, cards, cards_2026, nations, nations_2026)
+    legacy_mens_years = _mens_wc_years(cards, tournaments)
+    mens_years = _mens_wc_years([*cards, *cards_2026], [*tournaments, *tournaments_2026])
+    merged_facts, active_meta = _merge_active_channel(
+        source_facts, active_facts, active_staging, mens_years, ctx
+    )
 
-    rows, tier_meta = build_rows(source_facts, mens_years)
+    compat_rows, compat_tier_meta = _build_rating_compat_rows(source_facts, legacy_mens_years)
+    compat_by_player = {r["player_id"]: r for r in compat_rows}
+    rows, tier_meta = build_rows(merged_facts, mens_years, ctx)
+    for r in rows:
+        compat = compat_by_player.get(r["player_id"])
+        if compat is None:
+            continue
+        r["rating_compat"] = {
+            "version": _RATING_COMPAT_STATURE_VERSION,
+            "career_stature_score": compat["career_stature_score"],
+            "career_stature_index": compat["career_stature_index"],
+            "coverage": compat["coverage"],
+            "stature_tier": compat["stature_tier"],
+            "legend": compat["legend"],
+            "legend_reason_codes": compat["legend_reason_codes"],
+        }
     review = [r for r in rows if r["review_flags"]]
     material = [r for r in rows if _is_material(r)]
     legends = [r for r in rows if r["legend"]]
@@ -695,9 +1227,25 @@ def build(write: bool = True) -> dict:
     table = {
         "version": VERSION,
         "source_set_version": SOURCE_SET_VERSION,
+        "active_source_set_version": ACTIVE_SOURCE_SET_VERSION,
         "player_count": len(rows),
         "material_count": len(material),
         "legend_count": len(legends),
+        "rating_consumption": {
+            "status": "locked_compat_until_merit_v3_v2",
+            "version": _RATING_COMPAT_STATURE_VERSION,
+            "field": "rating_compat",
+            "player_count": len(compat_rows),
+            "tier_thresholds": compat_tier_meta,
+        },
+        "active_channel": active_meta,
+        "index_bias_controls": {
+            "gold_floor_index": GOLD_FLOOR_INDEX,
+            "single_family_index_cap": SINGLE_FAMILY_INDEX_CAP,
+            "sparse_fact_count_threshold": SPARSE_FACT_COUNT_THRESHOLD,
+            "sparse_family_count_threshold": SPARSE_FAMILY_COUNT_THRESHOLD,
+            "sparse_fact_confidence_denominator": SPARSE_FACT_CONFIDENCE_DENOMINATOR,
+        },
         "material_gate": {
             "min_coverage": MATERIAL_MIN_COVERAGE,
             "min_index": MATERIAL_MIN_INDEX,
@@ -707,6 +1255,7 @@ def build(write: bool = True) -> dict:
     }
     review_doc = {
         "version": VERSION,
+        "active_source_set_version": ACTIVE_SOURCE_SET_VERSION,
         "review_count": len(review),
         "coverage_gate": MATERIAL_MIN_COVERAGE,
         "index_gate": MATERIAL_MIN_INDEX,
@@ -784,10 +1333,16 @@ def _render_report(rows: list[dict], tier_meta: dict) -> str:
     L.append(
         "Per-player career-stature BASE consumed by the stature-dominant rating "
         "stage (MV2-4). NOT a rating. Built deterministically from the committed "
-        f"`merit/source_facts.json` ({SOURCE_SET_VERSION}) + canonical men's World "
-        "Cup years.\n"
+        f"`merit/source_facts.json` ({SOURCE_SET_VERSION}), "
+        f"`merit/source_facts_active.json` ({ACTIVE_SOURCE_SET_VERSION}), and "
+        "canonical men's World Cup years. Active facts are merged by person "
+        "identity and stage-normalized in this table; rating-output consumption "
+        f"remains locked to `{_RATING_COMPAT_STATURE_VERSION}` through each row's "
+        "`rating_compat` field until the later merit-v3 rating units flip the "
+        "consumer deliberately.\n"
     )
     L.append(f"- Players scored: **{len(rows)}**")
+    L.append(f"- Rows with active facts: **{sum(1 for r in rows if r['active_fact_count'])}**")
     L.append(
         f"- Material-stature (coverage ≥ {MATERIAL_MIN_COVERAGE} AND index ≥ "
         f"{MATERIAL_MIN_INDEX}): **{len(material)}** (the cohort the rating stage "

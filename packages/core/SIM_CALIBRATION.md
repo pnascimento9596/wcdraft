@@ -1,5 +1,22 @@
 # WS-B Sim + Scoring — Calibration
 
+> **merit-v3 V8 (`engine-2026.06.12`) — λ refit against the post-V6
+> Career channels.** The merit-v3 rating/display changes moved the Career
+> channels that feed the sim, so the MV2-11b tuple no longer landed inside
+> the D5-tight symmetric realism bands. The deterministic fitter was re-run
+> with the required upward `GAMMA_MID` grid extension, then extended again
+> when the first result touched grid edges. Final accepted tuple:
+> **`LAMBDA.BASE = 1.05`, `LAMBDA.SPREAD = 6.5`, `LAMBDA.MIN = 0.70`,
+> `LAMBDA.GAMMA_MID = 0.80`, `LAMBDA.KO_LAMBDA_FACTOR = 0.82`**; `MAX`,
+> `W_DEF/W_GK`, `CHANCES`, and `LAMBDA_DISP` remain unchanged from MV2-11b.
+> Fitter: `175` evaluations; seed landing `goals=2.168`, `draw=29.17%`,
+> `margin>=4=3.49%`, `KO->ET=38.27%`, `SO=24.40%`; winner landing
+> `goals=2.534`, `draw=25.18%`, `margin>=4=4.96%`, `KO->ET=33.47%`,
+> `SO=21.33%`. Faithfulness remains 11/11; heavy asymmetric realism remains
+> 7/7 after re-locking Wilson/floor shape bands. V8 lands the season's single
+> engine stamp: `engine-2026.06.12`.
+> Evidence: `docs/reports/merit-v3-v7-lambda-refit.md`.
+
 > **MV2-11b (engine-2026.06.09) — λ refit against merit-v2 stature-dominant
 > channels.** The merit-v2 rating model (`wc-perf-4.2.0` / `proj-career-3.0.0`)
 > moved every channel, so the E-3a REFIT λ tuple no longer landed inside the
@@ -92,28 +109,28 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | **MV2-11b (shipped)** | Why (MV2-11b) |
-|---|---|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | **1.0** | raised — the merit-v2 DF/GK stature lift compresses the defResist range; BASE moves up so mean goals/match lands at norm |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | **7.0** | nudged — wider SPREAD restores the `margin ≥ 4` band against the compressed channel spread |
-| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | unchanged |
-| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
-| `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | unchanged |
-| `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
-| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | **0.60** | raised — midfield channel needs more pull after the stature lift flattens its spread |
-| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
-| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
-| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | **0.82** | tightened — after the BASE/SPREAD lift, KO regulation needed a slightly larger drop to keep KO → ET in band |
-| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | unchanged |
-| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | unchanged |
-| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | unchanged |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | unchanged |
-| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | unchanged |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | unchanged |
-| `LAMBDA_DISP.OUTER_PROB` | — | — | 0.20 | 0.20 | unchanged |
-| `LAMBDA_DISP.A` | — | — | 0.75 | 0.75 | unchanged |
-| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | 0.10 | 0.10 | unchanged |
-| `LAMBDA_DISP.GROUP_A` | — | — | 0.50 | 0.50 | unchanged |
+| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | **merit-v3 V8 (`engine-2026.06.12`)** | Why (V7) |
+|---|---|---|---|---|---|---|
+| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | **1.05** | raised — restores mean goals under the post-V6 Career channels |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | **6.5** | returned to the E-3a refit value; margin>=4 stays in band with the higher floor/midfield pull |
+| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | **0.70** | raised — keeps underdog goal threat credible under the new channel distribution |
+| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
+| `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | 0.70 | unchanged |
+| `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | 0.60 | **0.80** | raised on the extended grid; midfield needs more pull after V6 |
+| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
+| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | 0.82 | 0.82 | unchanged from MV2-11b |
+| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | 50 | unchanged |
+| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | 17 | unchanged |
+| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | 0.14 | unchanged |
+| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | 0.22 | unchanged |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | 0.04 | unchanged |
+| `LAMBDA_DISP.OUTER_PROB` | — | — | 0.20 | 0.20 | 0.20 | unchanged |
+| `LAMBDA_DISP.A` | — | — | 0.75 | 0.75 | 0.75 | unchanged |
+| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | 0.10 | 0.10 | 0.10 | unchanged |
+| `LAMBDA_DISP.GROUP_A` | — | — | 0.50 | 0.50 | 0.50 | unchanged |
 
 ## E-3a REFIT (current) — match-level λ dispersion (D1 path)
 
@@ -166,17 +183,18 @@ upstream) are unchanged.
 
 `packages/data/scripts/fit-calibration.mjs` runs a seeded coordinate
 descent on the symmetric Team2026-vs-Team2026 sweep (the same population
-the existing `realism-modern-norms.golden.test.ts` measures). 2 passes ×
-~30 evaluations × ~3,006 matches per evaluation = ~3 min wall-clock; the
-schedule + grids are pinned, so the winner is reproducible.
+the existing `realism-modern-norms.golden.test.ts` measures). V7 used
+3 passes, 175 evaluations, and 3,006 matches per evaluation after extending
+the grids away from edge landings; the schedule + grids are pinned, so the
+winner is reproducible.
 
-| Norm | Modern-WC target | D5-tight band | E-3a initial landing | **E-3a REFIT landing** |
-|---|---|---|---|---|
-| goals / game           | 2.54  | [2.478, 2.594]  | 2.40 (Δ −0.13, FAIL ↓)        | **2.534 (Δ −0.006, ✓ near centre)** |
-| group draw %           | 24.7  | [22.88%, 26.52%] | 26.4 (Δ +1.7pp, ✓ narrow)     | **25.84% (Δ +1.14pp, ✓)**           |
-| margin ≥ 4 %           | 4.9   | [4.12%, 5.70%]   | 2.93 (Δ −2.0pp, FAIL ↓)       | **4.72% (Δ −0.18pp, ✓)**            |
-| KO → ET %              | 33.0  | [29.61%, 36.48%] | 29.6 (Δ −3.4pp, FAIL ↓)       | **33.60% (Δ +0.60pp, ✓)**           |
-| shootout %             | 21.4  | [18.43%, 24.43%] | 15.7 (Δ −5.7pp, FAIL ↓)       | **22.93% (Δ +1.53pp, ✓)**           |
+| Norm | Modern-WC target | D5-tight band | E-3a initial landing | E-3a REFIT landing | **merit-v3 V7 landing** |
+|---|---|---|---|---|---|
+| goals / game           | 2.54  | [2.478, 2.594]  | 2.40 (Δ −0.13, FAIL ↓)        | 2.534 (Δ −0.006, ✓ near centre) | **2.534 (Δ −0.001, ✓)** |
+| group draw %           | 24.7  | [22.88%, 26.52%] | 26.4 (Δ +1.7pp, ✓ narrow)     | 25.84% (Δ +1.14pp, ✓)           | **25.18% (Δ +0.48pp, ✓)** |
+| margin ≥ 4 %           | 4.9   | [4.12%, 5.70%]   | 2.93 (Δ −2.0pp, FAIL ↓)       | 4.72% (Δ −0.18pp, ✓)            | **4.96% (Δ +0.05pp, ✓)** |
+| KO → ET %              | 33.0  | [29.61%, 36.48%] | 29.6 (Δ −3.4pp, FAIL ↓)       | 33.60% (Δ +0.60pp, ✓)           | **33.47% (Δ +0.43pp, ✓)** |
+| shootout %             | 21.4  | [18.43%, 24.43%] | 15.7 (Δ −5.7pp, FAIL ↓)       | 22.93% (Δ +1.53pp, ✓)           | **21.33% (Δ −0.10pp, ✓)** |
 
 All 5 symmetric realism norms land STRICTLY INSIDE the D5-tight bands —
 the realism gate is no longer toothless. Faithfulness (`packages/core/src/faithfulness.test.ts`,
@@ -215,7 +233,7 @@ Two harnesses, complementary:
 1. **Symmetric (existing, hard gate)** —
    `packages/data/test/realism-modern-norms.golden.test.ts`. A 3,006-match
    Team2026-vs-Team2026 sweep against modern-era WC norms. Locked bands
-   that catch any engine regression. Updated `it()` titles for E-3a
+   that catch any engine regression. Updated `it()` titles for V7
    landings; all 5 norms pass.
 
 2. **Asymmetric (E-3b — PASS GATE on a COMPETENT user population)** —
@@ -324,13 +342,18 @@ amplification visible in all four channels rather than only `attack` and
 Integer weights keep `points = raw × weight` exact so `score = Σ points`
 holds byte-for-byte. See table in `calibration.ts`.
 
-## Golden lock — E-3a re-locked artifacts
+## Golden lock — sim/realism artifacts
 
 | Fixture | Why it moved | Regenerator |
 |---|---|---|
 | `packages/core/test/fixtures/sim-golden.json` | every scoreline/event/score is downstream of λ + n | `pnpm --filter @wcdraft/core run gen:sim-golden` |
 | `packages/data/test/fixtures/e2e-real-run-golden.json` | real-data run is downstream of the same | `pnpm --filter @wcdraft/data run gen:e2e-golden` |
 | `packages/data/test/realism-modern-norms.golden.test.ts` (Δ labels) | landings shift; bands still cover | hand-edit `it()` titles |
+
+For merit-v3 V7, `sim-golden.json`, `realism-modern-norms.golden.test.ts`, and
+`asym-realism-golden.json` re-lock. `e2e-real-run-golden.json` stayed green
+against the new tuple and was not regenerated. Runtime manifest, leaderboard
+season key, and stamp-carrying compact anchors remain V8 work.
 
 Unaffected (no regen): `synergy.golden`, `scenario.golden`, `narrative.golden`,
 `opponent-selection.golden`, `top-scorer.golden`, `draft.golden`,

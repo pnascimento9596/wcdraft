@@ -241,6 +241,28 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect(body.mismatched_anchors).toEqual(["engine_version"]);
   });
 
+  it("pre-V6 leaderboard token anchors → 409 WRONG_SEASON, never persisted", async () => {
+    const preV6Token = tamperedToken((b) => {
+      b.sv = "runtime-data-1.1.0";
+      b.rv = "wc-perf-4.2.1+proj-career-3.0.0";
+      b.hv =
+        "58120edad54af5f7f137024675fe7d6faf8f08c5fa7ebafb69677468f44da45b+b8cffe3128a3bf659be2dadd3239a85f30505c336215819e75ab93f7f01e3a15";
+    });
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ token: preV6Token }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(409);
+    const body = await errorOf(res);
+    expect(body.error).toBe("WRONG_SEASON");
+    expect(body.mismatched_anchors).toEqual([
+      "schema_version",
+      "rating_version",
+      "data_bundle_hash",
+    ]);
+    expect(await allRows()).toHaveLength(0);
+  });
+
   it("INVALID_NAME → 422 with category, raw value never echoed", async () => {
     const res = await handleLeaderboardSubmit(
       makeReq({ body: validBody({ display_name: "xx" }) }),
