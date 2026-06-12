@@ -92,7 +92,7 @@
     "teams": 48
   },
   "dataset_version": "2026-06-04",
-  "engine_version": "engine-2026.06.11",
+  "engine_version": "engine-2026.06.12",
   "rating_version_historical": "wc-perf-5.0.0",
   "rating_version_projected": "proj-career-4.0.0",
   "ruleset_version": "ruleset-2026.06.04",

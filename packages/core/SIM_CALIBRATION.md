@@ -1,6 +1,6 @@
 # WS-B Sim + Scoring — Calibration
 
-> **merit-v3 V7 (pending V8 engine stamp) — λ refit against the post-V6
+> **merit-v3 V8 (`engine-2026.06.12`) — λ refit against the post-V6
 > Career channels.** The merit-v3 rating/display changes moved the Career
 > channels that feed the sim, so the MV2-11b tuple no longer landed inside
 > the D5-tight symmetric realism bands. The deterministic fitter was re-run
@@ -13,9 +13,8 @@
 > `margin>=4=3.49%`, `KO->ET=38.27%`, `SO=24.40%`; winner landing
 > `goals=2.534`, `draw=25.18%`, `margin>=4=4.96%`, `KO->ET=33.47%`,
 > `SO=21.33%`. Faithfulness remains 11/11; heavy asymmetric realism remains
-> 7/7 after re-locking Wilson/floor shape bands. After the draft-config rebase,
-> runtime `engine_version` intentionally remains `engine-2026.06.11` until
-> V8's single season stamp.
+> 7/7 after re-locking Wilson/floor shape bands. V8 lands the season's single
+> engine stamp: `engine-2026.06.12`.
 > Evidence: `docs/reports/merit-v3-v7-lambda-refit.md`.
 
 > **MV2-11b (engine-2026.06.09) — λ refit against merit-v2 stature-dominant
@@ -110,7 +109,7 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | **merit-v3 V7 pending V8 stamp** | Why (V7) |
+| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | **merit-v3 V8 (`engine-2026.06.12`)** | Why (V7) |
 |---|---|---|---|---|---|---|
 | `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | **1.05** | raised — restores mean goals under the post-V6 Career channels |
 | `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | **6.5** | returned to the E-3a refit value; margin>=4 stays in band with the higher floor/midfield pull |

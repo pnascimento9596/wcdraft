@@ -4,148 +4,75 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-11 · draft-config cumulative merge review on
-`engine-draft-config` at `f0a9f5c` plus the fix-forward token-route patch:
-`pnpm build && pnpm typecheck && pnpm lint && pnpm test` green (build 4/4
-tasks, typecheck 7/7, lint 4/4, test 7/7). Web count is now 594 passed, 1
-skipped after integrating current `main` plus the versioned run-token
-navigation regression. Compact
-rebuild, token skew, leaderboard canonical-config, era honesty, and golden
-diff gates were re-executed in the fresh season-merge review. merit-v3 U0 also
-measured ETL ruff clean, ETL pytest 199 passed (+17 identity-link tests), 2026
-ingest run-twice byte-identical, and linker-conservatism byte-stability for
-`source_facts.json`/`link_review.json`/`career_stature.json`. merit-v3 V1
-measured ETL ruff clean, focused merit suite 42 passed, full ETL pytest 233
-passed, active/stature generation run twice byte-identical, and ratings plus
-compact generated artifacts unchanged. Active-career source set stays
-`active-career-source-set-2.0.0`; club-season honors is census-locked at 14 rows
-/ 9 finals over the 26-player active scope; Alaba 2020 is pinned to UEFA match
-2030150 and all 14 cited final pages were re-verified. Club-at-tournament
-backfill remains staged for MV2-12b
-(`docs/reports/club-backfill-manifest-2026-06-10.md`).
-merit-v3 V2 measured ETL ruff clean, focused V2/curve/projected suite 91
-passed, full ETL pytest 241 passed, three mutation proofs failed when
-deliberately broken, historical artifact generation was two-run byte-identical,
-and 2026 outputs plus `career_stature.json` plus compact/runtime artifacts
-remained unchanged.
-merit-v3 V3/V4 measured ETL ruff clean, full ETL pytest 288 passed, V3
-`proj-career-4.0.0` projected re-score with dual-basis emission, V4 display
-curve re-lock with both-basis channels byte-identical, committed §7 gate tests,
-run-twice determinism across both stage orders, and strict boundary proof that
-`career_stature.json`, canonical tables, compact/runtime goldens, canary, and
-lambda/realism stayed untouched.
+Last measured: 2026-06-12 · merit-v3 V8 prep on the rebased integration head.
+`merit-v3` was rebased onto main after draft-config shipped
+(`origin/main` `18cdbef`, prod manifest `runtime-data-1.2.0` /
+`engine-2026.06.11`). Phase 3 revalidation at rebased head `00dc7e2` was green:
+root `pnpm typecheck && pnpm lint && pnpm test && pnpm build`, all core/data/web
+goldens, ETL ruff + pytest, heavy realism, and token fuzz/skew. V8 then landed the
+season's single engine stamp (`engine-2026.06.12`), regenerated compact manifest,
+e2e/era/leaderboard/canary/asymmetric goldens, and refreshed the committed
+production PREV skew fixture from the now-live draft-config manifest commit
+`18cdbef10fa41debff396c398adf52f4639fd34b`.
+
+merit-v3 as-built facts: U0 linked the 17 Audit-2 2026 identity misses; V1 emitted
+`career-stature-3.0.0` with active-career source set
+`active-career-source-set-2.0.0` and the club-season honors census; V2 emitted
+`wc-perf-5.0.0`; V3 emitted `proj-career-4.0.0`; V4 re-fit the shared display curve
+as `unified_pooled_piecewise_power_v2`; V5 backfilled historical club-at-tournament
+coverage; V6 emitted `runtime-data-2.0.0` dual-basis compact data and locked the
+source-derived legend census at 270; V7 refit lambda and realism bands; V8 owns the
+single public engine stamp and season merge docs. Current shipped basis remains
+Career; Current is materialized in `basis_ratings.current` for draft-config use.
+
+Open acceptance items are not hidden: the §7 waiver ledger contains the pre-registered
+misses (Yamal, Haaland, Valverde-2026, Neymar-2026, Lukaku, B. Fernandes, Kocsis card,
+Cruyff-1974 card, pile-up, inversion, 9 pre-1967 coherence violations, legend census
+302→270, and Dembélé non-material legend). Those require owner waiver or targeted
+fix-forward before main merge.
 
 ## Lanes in flight at last measurement
 
-- F-4 U1–U6 all MERGED on main (U5 = PR #72, this change). Remaining F-4: U7 ranked
-  lane (dark, blocked on plan §10 Q2) + the HUMAN-gated light-up checklist
-  (`docs/queue/q-003-f4-remaining.md`).
-- MV2-12 audits: Audit-1 (`docs/reports/mv212-ratings-audit-2026-06-10.md`) +
-  Audit-2 face-validity sweep (`docs/reports/mv212-face-validity-2026-06-10.md`,
-  this change — report-only, zero runtime change; reproduction re-proven
-  12,219/12,219 at `b4f8651`). Audit-2 surfaces a P0 data defect: 17 minted-2026
-  identity link misses (Neymar/Rodri live distortion) — fix unit pending dispatch.
-- Draft config deep plan (`docs/plans/draft-config-2026-06-10.md`) + queue mirror
-  (`docs/queue/q-006-draft-config.md`) staged on `ws-plan/draft-config` off
-  `dbc1f0a` — docs-only, zero runtime change. Plan default: `t2` token schema,
-  v1 era presets only, `Current` rating basis gated on MV2-12b, and a future
-  `engine-draft-config` integration branch for implementation.
-- Draft-config season E1+E2+E3 + prep BUILT on the `engine-draft-config` integration
-  branch (NOT main): DC-1 `t2.` config token + explicit DraftState config axes
-  (#94), DC-2 era-preset bounded sampling (#95), DC-3 position-first state
-  machine (#96), then prep bumped anchors to `runtime-data-1.2.0` /
-  `engine-2026.06.11`, re-locked compact/era/token/leaderboard/e2e header
-  goldens, added the shipped-manifest `current_prod_t1` skew fixture, and
-  fixed the terminal position-first coachless dead-end copy. Measured on the
-  prep branch before PR review: compact rebuild deterministic; era/token/
-  leaderboard generators rerun; e2e seed `:29` unchanged except anchor strings;
-  no sim/rating/math paths changed. `Current` basis stays gated on MV2-12b;
-  the board rejects every non-canonical config (`NON_CANONICAL_CONFIG`).
-  Consolidated fresh-session review found one fix-forward blocker: replay/share
-  routing accepted only legacy `t1.` tokens while current shares emit `t2.`;
-  the parser now routes versioned `tN.` tokens to the decoder so current tokens
-  round-trip and future versions reach the newer-version notice. Season merge to
-  main remains Red (review + owner approval). Screenshots:
-  `docs/validation/draft-config-2026-06-11/`; build report:
-  `docs/reports/draft-config-e1-e3-build-2026-06-11.md`.
-- UX: `ws-ux/pitch-realism` is Yellow/display-only (realistic pitch markings +
-  low-ink formation mini-pitches), with before/after 390×844 screenshots under
-  `docs/validation/ws-ux-pitch-realism/`.
-- Brand/marketing assets: `ws-brand/marketing-assets` adds the marketing-only
-  medallion/banner intake, generated OG/social PNGs, site-wide static metadata
-  wiring, a pick-screen attribution line, and the organic X plan + q-007 queue
-  item. In-app SVG mark and PWA icon family remain locked/unchanged.
-- MV2-12a active-career intake (`ws-etl/mv212a-active-career-intake`, RED, IN REVIEW):
-  facts-only inert channel, 47 facts / 23 players; rating outputs + compact bundles
-  byte-identical (see `docs/queue/q-002-mv2-12-candidate.md`). 12b stays DISPATCH-ONLY.
-- merit-v3 SEASON DESIGN landed (this change, docs-only):
-  `docs/plans/merit-v3-design-2026-06-11.md` on integration branch `merit-v3` —
-  D2 activation (person-identity stature seam, stage-normalized active index,
-  inertness-guard flips), D1 age-conditioned projected scoring (age_factor retired),
-  index-bias mitigation (eligibility re-norm + sparse-fact saturation; archive
-  re-research ledgered), award-gated raw-ceiling headroom + curve re-fit, dual-basis
-  Career/Current internals materialized for `engine-draft-config`, club backfill in
-  the same single skew event. Version matrix: wc-perf-5.0.0 / proj-career-4.0.0 /
-  career-stature-3.0.0 / runtime-data-2.0.0 / engine bump. Units U0 (in flight) +
-  V1–V8, all DISPATCH-ONLY; acceptance probes pre-registered in plan §7.
-- merit-v3 U0 identity-link fix (this change, RED, on `merit-v3` only): the 17
-  Audit-2 §H.3 seam misses now LINK (2026 linked census 335→352, minted 911→894,
-  minted ids renumbered); 4 staged 12a bridges promoted into the real linker path
-  (`identity_2026.IDENTITY_BRIDGES`, mechanism-agreement-guarded); Neymar-2026
-  88→93 + legend, Rodri-2026 88→90 + legend (both inside plan §7 probe bands);
-  80 further cards +1 single-channel (weight==0 quantile-pool shift, zero
-  negative). `*_2026.json` + merit active staging re-locked ON BRANCH; NO version
-  bumps / compact regen / canary / λ (V6–V8 own those). 5 near-miss identity
-  candidates surfaced for human verification (PR table) — withheld, not linked.
-- merit-v3 V1 stature core fix-forward (this change, PR #91): top-tier
-  continental club honors intake is now an explicit scope x finals-registry
-  census (14 rows over 26 active-scope players), with completeness tested from
-  manifest metadata; Alaba 2020 is re-pinned from UEFA match 2029490 to 2030150,
-  and the active-note verification ledger confirms all 14 cited final pages name
-  the player. Active/archive access now fails unresolved identity bridges before
-  stature merge, with mutation proof in the test suite; V1 report, delta CSV, and
-  STATE updated. No compact goldens or rating consumer artifacts changed.
-- merit-v3 V3+V4 chained (this change, RED, in review): V3 projected re-score
-  (proj-career-4.0.0) + V4 curve re-fit (`…_v2`) with the §7 probe gate
-  committed as tests (`etl/tests/test_merit_v3_gate.py`) — scoreboard in
-  `docs/reports/merit-v3-v4-curve-gate.md`, per-card deltas in
-  `docs/reports/merit-v3-v3-projected-rescore-delta.csv` (1,246 rows) and
-  `…-v4-curve-refit-delta.csv` (12,219 rows). V6 owns compact regen + canary;
-  V7 owns λ.
-- merit-v3 V2 historical re-score (MERGED into merit-v3 as `bc4f671`, PR #92,
-  after fix-forward 5053751 single-owner MERIT_V2_SAMPLE.md writer): historical
-  rating now consumes the full `career-stature-3.0.0` table, applies award-gated
-  raw headroom, participation-scaled finish/down-cap mechanics, and emits
-  additive Career/Current basis payloads while keeping the top-level surface
-  Career-compatible. `ratings.json`, `MERIT_V2_SAMPLE.md`, and the review-only
-  merit divergence artifact are re-locked; `ratings_2026.json`,
-  `career_stature.json`, compact/runtime goldens, canary, and lambda/realism
-  goldens remain untouched. V4 owns curve refit and final probe gate; V6/V7 own
-  compact/canary/lambda.
+- merit-v3 V8 is in final prep/review. Main merge is still blocked until the
+  cumulative fresh-context review passes and the owner approves the exact SHA plus
+  the waiver table.
+- Draft-config is already shipped on main and production as
+  `runtime-data-1.2.0` / `engine-2026.06.11`; it is now the committed PREV skew
+  artifact for merit-v3.
+- F-4 U1–U6 are live; remaining account/email light-up is still gated on owner-held
+  Resend/auth secrets. Ranked leaderboard remains human-gated.
+- Post-season backlog starts with the full archive re-research wave for unsung-role
+  and pre-1967 legend-coherence gaps; this was deliberately ledgered out of merit-v3.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
 | Field                       | Value              |
 | --------------------------- | ------------------ |
-| schema_version              | runtime-data-1.2.0 |
+| schema_version              | runtime-data-2.0.0 |
 | dataset_version             | 2026-06-04         |
 | ruleset_version             | ruleset-2026.06.04 |
-| engine_version              | engine-2026.06.11  |
-| rating_version (historical) | wc-perf-4.2.1      |
-| rating_version (projected)  | proj-career-3.0.0  |
+| engine_version              | engine-2026.06.12  |
+| rating_version (historical) | wc-perf-5.0.0      |
+| rating_version (projected)  | proj-career-4.0.0  |
+| career_stature              | career-stature-3.0.0 |
+| active source set           | active-career-source-set-2.0.0 |
+| runtime legend census       | 270                |
+| runtime ratings             | 12,219             |
+| leaderboard season key      | engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434 |
+| compact brotli total        | 1,216,305 bytes    |
 
-## Test counts (run 2026-06-11; draft-config cumulative review + token-route fix-forward)
+## Test counts (latest measured on V8 final local diff)
 
 | Suite                                                   | Result                      |
 | ------------------------------------------------------- | --------------------------- |
 | @wcdraft/core `test`                                    | 331 passed, 3 skipped (334) |
 | @wcdraft/core `test:golden` (RNG)                       | 3 passed                    |
 | @wcdraft/core `test:golden:draft`                       | 37 passed                   |
-| @wcdraft/data `test`                                    | 62 passed, 7 skipped (69)   |
-| @wcdraft/data `test:golden:data`                        | 28 passed                   |
+| @wcdraft/data `test`                                    | 65 passed, 7 skipped (72)   |
+| @wcdraft/data `test:golden:data`                        | 31 passed                   |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                   |
 | @wcdraft/db `test`                                      | 74 passed                   |
-| @wcdraft/web `test`                                     | 594 passed, 1 skipped (595) |
+| @wcdraft/web `test`                                     | 595 passed, 1 skipped (596) |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                    |
 | etl V1 `ruff check src tests`                           | clean                       |
 | etl V1 focused merit suite                              | 42 passed                   |
@@ -165,7 +92,13 @@ lambda/realism stayed untouched.
 | merit-v3 V3/V4 distribution/coherence probes             | median and 90+ pass; pile-up, inversion, and 9 pre-1967 violations pinned for V8 waiver |
 | merit-v3 V3/V4 determinism                              | both stage orders run-twice byte-identical |
 | merit-v3 V3/V4 boundary                                 | career_stature, canonical tables, compact, canary, lambda/realism untouched |
-| `pnpm build && pnpm typecheck && pnpm lint && pnpm test` | build 4/4 · typecheck 7/7 · lint 4/4 · test 7/7 |
+| merit-v3 V6 compact regen                               | 12,219 ratings · 270 legends · dual basis 12,219/12,219 · 1,216,302 bytes before V8 stamp |
+| merit-v3 V7 lambda                                      | evals 175 · winner BASE 1.05 / SPREAD 6.5 / MIN 0.70 / GAMMA_MID 0.80 / KO 0.82 |
+| merit-v3 V8 compact stamp                               | `build:compact` ok · 12,219 ratings · 270 legends · 1,216,305 bytes |
+| merit-v3 V8 generators                                  | e2e seed `:29`, era, leaderboard, token-skew, canary, asym realism regenerated |
+| `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS on V8 final local diff: typecheck 7/7 · lint 4/4 · test 7/7 · build 4/4 |
+| V8 explicit goldens + ETL + heavy realism              | core 3 + 37 · data 31 + 22 · web leaderboard 5 · ETL ruff clean / pytest 288 · heavy realism 7/7 |
+| V8 regen byte-stability                                | compact/e2e/era/canary/asym/leaderboard/token-skew output hashes unchanged after rerun |
 
 ## CI (`.github/workflows/`)
 

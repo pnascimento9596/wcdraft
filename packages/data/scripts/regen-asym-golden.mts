@@ -6,9 +6,9 @@
 // around the strategicAutoDraft landing using the pre-existing recipe:
 // max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor).
 //
-// What this DELIBERATELY preserves byte-for-byte: `ensemble`, `engine_version`,
-// and each policy's `_doc`. V7 keeps the runtime manifest's old engine_version
-// until V8, so the header records that the new tuple is pending the V8 stamp.
+// What this DELIBERATELY preserves byte-for-byte: `ensemble` and each policy's
+// `_doc`. V8 updates the engine_version header to the season stamp while
+// preserving the V7 tuple and shape-band recipe.
 //
 //   pnpm --filter @wcdraft/data exec tsx scripts/regen-asym-golden.mts
 
@@ -85,9 +85,10 @@ for (const policy of ALL_POLICIES) {
 
 const strategic = golden.policies.strategicAutoDraft;
 golden.$schema_doc =
-  "merit-v3 V7 asymmetric realism gate -- locked landings + Wilson/floor shape bands after lambda refit. Runtime engine_version remains engine-2026.06.11 after the draft-config rebase until V8's single season stamp; the tuple is pending that V8 anchor.";
+  "merit-v3 V8 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the V7 lambda refit. Runtime engine_version is engine-2026.06.12.";
 golden.engine_anchor =
-  "merit-v3 V7 lambda refit on post-V6 Career channels; runtime engine_version stamp deferred to V8";
+  "merit-v3 V8 season stamp for the V7 lambda refit on post-V6 Career channels";
+golden.engine_version = "engine-2026.06.12";
 golden.shape_bands._doc =
   "V7 RE-LOCK: shape bands are centered on strategicAutoDraft after the post-V6 Career-channel lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
 for (const key of SHAPE_KEYS) {
@@ -109,4 +110,4 @@ golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
 };
 
 writeFileSync(GOLDEN_PATH, JSON.stringify(golden, null, 2) + "\n", "utf-8");
-console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands re-derived, engine_version preserved for V8)`);
+console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands re-derived, engine_version stamped for V8)`);

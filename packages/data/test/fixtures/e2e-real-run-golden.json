@@ -1065,7 +1065,7 @@
     ],
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-5.0.0+proj-career-4.0.0",
-    "engine_version": "engine-2026.06.11",
+    "engine_version": "engine-2026.06.12",
     "draft_flow": "squad_first",
     "rating_basis": "career",
     "era_preset": "all_time"
@@ -1113,7 +1113,7 @@
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-5.0.0+proj-career-4.0.0",
-    "engine_version": "engine-2026.06.11",
+    "engine_version": "engine-2026.06.12",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:29",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",

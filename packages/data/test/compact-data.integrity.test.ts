@@ -106,10 +106,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the merit-v3 versions; engine_version carries the draft-config stamp until V8", () => {
+  it("rating_version anchors are the merit-v3 versions; engine_version carries the V8 season stamp", () => {
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-5.0.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-4.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.11");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.12");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {

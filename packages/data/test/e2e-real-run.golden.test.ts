@@ -52,7 +52,7 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 // deterministic first-satisfying-seed search re-ran under the refit engine
 // (engine-2026.06.09) and landed on :29 (was :198 on the MV2-10 compact under
 // the pre-refit λ, :801 before that). The draft-config prep only relocks the
-// stamped engine anchor to engine-2026.06.11; the seed and run bytes stay the
+// stamped engine anchor to engine-2026.06.12; the seed and run bytes stay the
 // same. Same search criteria, same prefix — see scripts/generate-e2e-golden.mjs.
 const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:29";
 const RUN_SEED = PARENT_SEED;

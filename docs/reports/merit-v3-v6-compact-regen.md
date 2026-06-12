@@ -17,7 +17,7 @@ Runtime anchors:
 - `schema_version`: `runtime-data-2.0.0`
 - `rating_version_historical`: `wc-perf-5.0.0`
 - `rating_version_projected`: `proj-career-4.0.0`
-- `engine_version`: `engine-2026.06.11` (draft-config stamp after rebase; V8 owns the next engine stamp)
+- `engine_version`: `engine-2026.06.11` at the V6 unit boundary after rebase; V8 owns the next engine stamp.
 
 Manifest counts:
 
