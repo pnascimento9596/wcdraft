@@ -37,6 +37,7 @@ import {
   SUPPORTED_FORMATION_OPTIONS,
   type SupportedFormationId,
 } from "@/lib/game/formation-layout";
+import { draftTargetLabel, lockBarIdleCopy } from "@/lib/game/config-badges";
 import { draftHref, reviewHref } from "@/lib/game/navigation";
 import {
   createNewRunRecord,
@@ -402,7 +403,11 @@ function DraftSetupDisclosure({
           <div className={s.setupAxis}>
             <span className={s.setupAxisLabel}>Rating basis</span>
             <div className={s.setupSeg} role="group" aria-label="Rating basis">
-              <button type="button" className={`${s.setupSegBtn} ${s.setupSegBtnActive}`} aria-pressed>
+              <button
+                type="button"
+                className={`${s.setupSegBtn} ${s.setupSegBtnActive}`}
+                aria-pressed
+              >
                 Career
               </button>
               <button type="button" className={s.setupSegBtn} disabled>
@@ -574,8 +579,8 @@ function DraftBoard({
   // assignment once the squad rolled (the lock action fills only the target).
   const positionFirst = draft.draft_flow === "position_first";
   const awaitingTarget = positionFirst && spin?.status === "awaiting_slot";
-  const lockedTarget =
-    positionFirst && spin?.status === "pending" ? spin.target_slot_id : null;
+  const lockedTarget = positionFirst && spin?.status === "pending" ? spin.target_slot_id : null;
+  const lockedTargetLabel = lockedTarget ? draftTargetLabel(draft, lockedTarget) : null;
 
   // Adapter views.
   const { starters, bench } = useMemo(
@@ -1272,10 +1277,12 @@ function DraftBoard({
             </span>
           ) : showReviewCta ? (
             <span className={s.lockHint}>
-              Draft complete — review your squad and prep for the run.
+              {lockBarIdleCopy({ lockedTargetLabel: null, showReviewCta })}
             </span>
           ) : (
-            <span className={s.lockHint}>Select a player and a slot, or pick the manager.</span>
+            <span className={s.lockHint}>
+              {lockBarIdleCopy({ lockedTargetLabel, showReviewCta })}
+            </span>
           )}
         </div>
         <div className={s.lockActions}>

@@ -6,19 +6,19 @@ Spec: `docs/plans/merit-v3-design-2026-06-11.md`
 
 ## Anchor Matrix
 
-| Anchor | Final value |
-|---|---|
-| `schema_version` | `runtime-data-2.0.0` |
-| `dataset_version` | `2026-06-04` |
-| `ruleset_version` | `ruleset-2026.06.04` |
-| `engine_version` | `engine-2026.06.12` |
-| historical rating | `wc-perf-5.0.0` |
-| projected rating | `proj-career-4.0.0` |
-| career stature | `career-stature-3.0.0` |
-| active source set | `active-career-source-set-2.0.0` |
-| display curve | `unified_pooled_piecewise_power_v2` |
-| compact hash | `93a05d9ecb56f26b8aa186355abf7bf32180f8eb6392a4f4a231e02f60da1821+238e56a88f0ac2c9052baaa638164ffc733bf29e26f793d37f437e138c320098` |
-| leaderboard season key | `engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434` |
+| Anchor                 | Final value                                                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `schema_version`       | `runtime-data-2.0.0`                                                                                                                |
+| `dataset_version`      | `2026-06-04`                                                                                                                        |
+| `ruleset_version`      | `ruleset-2026.06.04`                                                                                                                |
+| `engine_version`       | `engine-2026.06.12`                                                                                                                 |
+| historical rating      | `wc-perf-5.0.0`                                                                                                                     |
+| projected rating       | `proj-career-4.0.0`                                                                                                                 |
+| career stature         | `career-stature-3.0.0`                                                                                                              |
+| active source set      | `active-career-source-set-2.0.0`                                                                                                    |
+| display curve          | `unified_pooled_piecewise_power_v2`                                                                                                 |
+| compact hash           | `93a05d9ecb56f26b8aa186355abf7bf32180f8eb6392a4f4a231e02f60da1821+238e56a88f0ac2c9052baaa638164ffc733bf29e26f793d37f437e138c320098` |
+| leaderboard season key | `engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434`                                          |
 
 V8 is the season's single public engine bump after the V7 lambda refit. The
 compact data payload did not change beyond the manifest stamp/hash: draft pool
@@ -53,21 +53,21 @@ to `e2bec1bb3f527b4930ab74bcbc7ac230fb70671bdcb106de3b8e60efa8254c4e`.
 Every entry below is a pre-registered miss or explicit owner-ledger item. V8 must
 either receive owner waiver or fix-forward the ordered exception before merge.
 
-| Item | Measured | Registered target | Mechanism / disposition |
-|---|---:|---:|---|
-| Yamal 2026 | 92, legend | 85-91 | Miss +1. D1+D2 worked, but V1 active row index 0.641 overshoots the prediction. |
-| Haaland 2026 | 98, legend | 89-93 | Miss +5. Active index 0.843 maps near peak; wall exit proven but magnitude high. |
-| Valverde 2026 | 88 | 89-91 | Miss -1. `career_stature_index` lands exactly 0.40, so the continuity weight is exactly 0.50; design §1.3 said not to force the weight. |
-| Neymar 2026 | 91, legend | 92-94 | Miss -1. Declared watch item; index 0.600 plus age-34 down-modulation. |
-| Lukaku 2022 | 71 | >=78, conditional on citable facts | Honest miss. No V1 facts were staged; no fabricated fact was added to satisfy the band. |
-| B. Fernandes 2018 | 72 | upward direction, conditional on citable facts | Honest miss. Same no-staged-fact mechanism as Lukaku. |
-| Kocsis index/card | index 0.876, rank 3; card 99 | index <=0.90 and not #1; card 94-97 | Split result. Index half passes; card remains +2 above band because 0.876 sits only 0.002 below Pele and both map near ceiling. |
-| Cruyff vs Owen / Cruyff-1974 | Cruyff index 0.720 > Owen 0.677; cards 94 > 93; Cruyff-1974 card 94 | ordering restored; card 96-98 | Split result. Ordering half passes; card is -2 below band. |
-| Pile-up | 88 = 11.3%; also 71 = 17.8%, 72 = 15.3% | no value >4% | Structural miss. The 88 wall contains a 1,150-card internal-62.0 point mass from no-award historical cards pinned byte-stable by the no-award invariant; a monotone display curve cannot spread identical inputs. |
-| Cross-era inversion | 0.588% (36,476 / 6,200,282 pairs) | <=0.5% | Marginal miss. Award-gated headroom lifts historical measured award cards while 2026 projected cards are award-null pre-tournament. |
-| Pre-1967 legend coherence | 9 violations | 0 | Miss pinned exactly: Hidegkuti-1954, F. Walter-1954/1958, Albert-1966, N. Santos-1962, Ocwirk-1954, Andrade-1930, Bozsik-1954, Hanappi-1954. |
-| Legend census | 302 -> 270 | re-measured | Source-derived compact census moved -32 with 42 losses and 10 gains; see flip list below. |
-| Dembélé non-material legend | 2026 OVR 81, 2018/2022 OVR 83, `legend: true` | ledgered non-material legend | Non-material legend remains intentionally source-derived, not an OVR threshold re-derivation. |
+| Item                         |                                                            Measured |                              Registered target | Mechanism / disposition                                                                                                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------: | ---------------------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Yamal 2026                   |                                                          92, legend |                                          85-91 | Miss +1. D1+D2 worked, but V1 active row index 0.641 overshoots the prediction.                                                                                                                                   |
+| Haaland 2026                 |                                                          98, legend |                                          89-93 | Miss +5. Active index 0.843 maps near peak; wall exit proven but magnitude high.                                                                                                                                  |
+| Valverde 2026                |                                                                  88 |                                          89-91 | Miss -1. `career_stature_index` lands exactly 0.40, so the continuity weight is exactly 0.50; design §1.3 said not to force the weight.                                                                           |
+| Neymar 2026                  |                                                          91, legend |                                          92-94 | Miss -1. Declared watch item; index 0.600 plus age-34 down-modulation.                                                                                                                                            |
+| Lukaku 2022                  |                                                                  71 |             >=78, conditional on citable facts | Honest miss. No V1 facts were staged; no fabricated fact was added to satisfy the band.                                                                                                                           |
+| B. Fernandes 2018            |                                                                  72 | upward direction, conditional on citable facts | Honest miss. Same no-staged-fact mechanism as Lukaku.                                                                                                                                                             |
+| Kocsis index/card            |                                        index 0.876, rank 3; card 99 |            index <=0.90 and not #1; card 94-97 | Split result. Index half passes; card remains +2 above band because 0.876 sits only 0.002 below Pele and both map near ceiling.                                                                                   |
+| Cruyff vs Owen / Cruyff-1974 | Cruyff index 0.720 > Owen 0.677; cards 94 > 93; Cruyff-1974 card 94 |                  ordering restored; card 96-98 | Split result. Ordering half passes; card is -2 below band.                                                                                                                                                        |
+| Pile-up                      |                             88 = 11.3%; also 71 = 17.8%, 72 = 15.3% |                                   no value >4% | Structural miss. The 88 wall contains a 1,150-card internal-62.0 point mass from no-award historical cards pinned byte-stable by the no-award invariant; a monotone display curve cannot spread identical inputs. |
+| Cross-era inversion          |                                   0.588% (36,476 / 6,200,282 pairs) |                                         <=0.5% | Marginal miss. Award-gated headroom lifts historical measured award cards while 2026 projected cards are award-null pre-tournament.                                                                               |
+| Pre-1967 legend coherence    |                                                        9 violations |                                              0 | Miss pinned exactly: Hidegkuti-1954, F. Walter-1954/1958, Albert-1966, N. Santos-1962, Ocwirk-1954, Andrade-1930, Bozsik-1954, Hanappi-1954.                                                                      |
+| Legend census                |                                                          302 -> 270 |                                    re-measured | Source-derived compact census moved -32 with 42 losses and 10 gains; see flip list below.                                                                                                                         |
+| Dembélé non-material legend  |                       2026 OVR 81, 2018/2022 OVR 83, `legend: true` |                   ledgered non-material legend | Non-material legend remains intentionally source-derived, not an OVR threshold re-derivation.                                                                                                                     |
 
 ## Legend Census Flip List
 
@@ -137,5 +137,8 @@ Completed locally before the V8 commit: root typecheck/lint/test/build, explicit
 core/data/web goldens, ETL ruff + pytest, heavy realism, focused token/skew
 tests, and byte-identical regen hash proof for the generated artifacts.
 
-Pending: cumulative fresh-context review, owner waiver decision, and owner
-approval pinned to the exact SHA.
+Post-merge addendum (2026-06-12): V8 shipped to main/prod via #104 as squash
+`1552e44`. The follow-up #105 hotfix (`a0d0828`) corrected leaderboard runtime
+data loading from public assets and did not change the manifest anchors above.
+The waiver table remains the permanent truth ledger for the shipped season,
+not a pending pre-merge checklist.
