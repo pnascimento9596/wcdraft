@@ -99,7 +99,7 @@ than hidden regressions.
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
 | @wcdraft/web `test`                                     | 634 passed, 1 skipped (635) (ui/ux-basis-wave: +rating-basis seam/divergence/determinism tests)       |
 | @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
-| @wcdraft/marketing-x `test`                             | 54 passed (6 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement) |
+| @wcdraft/marketing-x `test`                             | 65 passed (7 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement, weekly-pack + reply/quote banks) |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |
 | etl V1 focused merit suite                              | 42 passed                                                                                             |
 | etl V1 `pytest -q`                                      | 233 passed                                                                                            |
@@ -137,13 +137,17 @@ than hidden regressions.
   never prod) · **etl-rating** (ruff · rating tests · ratings.json byte-determinism).
 - `etl.yml`: ingest · identity-QA · determinism, path-filtered to `etl/**`; upstream
   Fjelstul pinned `f41e9437`.
-- `marketing-x.yml` (q-007): organic X poster for @WCDraft. `post` job on six jittered
-  cron slots/day + `engage` job (Phase B/C). Both gate on `vars.MARKETING_PAUSED != 'true'`
-  (kill switch). Dry-run unless `vars.MARKETING_LIVE == 'true'` (or dispatch `live=true`).
-  Secrets `X_API_KEY/X_API_SECRET/X_ACCESS_TOKEN/X_ACCESS_SECRET/X_BEARER_TOKEN` set as repo
-  Actions secrets 2026-06-12. @WCDraft is **Free API tier** (search → 402) so Phase B/C
-  ship gated OFF; Phase A posting works. Live posts commit `marketing/x/ledger/posts.ledger.jsonl`
-  back to main with `[skip ci]`.
+- `marketing-x.yml` (q-007): **ZERO-API content-pack model.** @WCDraft has no X API
+  credits — both `POST /2/tweets` AND search return 402 `CreditsDepleted` — and the owner
+  will not buy credits, so there is NO automated posting. The workflow is a weekly `pack`
+  job (Mondays 06:00 UTC + `workflow_dispatch`) that runs the composer → commits
+  `marketing/x/packs/pack-YYYY-WW.md` + refreshed `reply-bank.md`/`quote-bank.md` to main
+  with `[skip ci]`. The owner schedules posts by hand via X's native composer
+  (`marketing/x/ROUTINE.md`). The live poster (`run-poster`/`run-engagement`) + X client
+  stay built + tested but DORMANT behind `MARKETING_PAUSED=true` (currently set); they
+  activate only if credits are ever loaded. Secrets `X_API_KEY/.../X_BEARER_TOKEN` remain
+  in repo Actions secrets (unused under the pack model). Browser-automation posting is
+  forbidden (X ToS).
 - Triggers (both): PR + push on `main`, `engine-*`, `merit-*`, `season-*`.
 - Branch protection requires PR CI; repo auto-merge DISABLED (checks ~7 min; realism ~4 min).
 
