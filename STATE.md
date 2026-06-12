@@ -4,10 +4,11 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-12 · `origin/main` `a0d0828612f6103ea37e310aa76389e4ead28a3e`
-after the merit-v3 V8 season merge (#104, squash `1552e44`) and the leaderboard
-runtime-data hotfix (#105, squash `a0d0828`). The live repo pins are now
-`runtime-data-2.0.0` / `engine-2026.06.12`; draft-config's
+Last measured: 2026-06-12 · `origin/main` `c174775d223d8776f8950749b50a0e6099ca456b`
+after the merit-v3 V8 season merge (#104, squash `1552e44`), the leaderboard
+runtime-data hotfix (#105, squash `a0d0828`), and accounts/email production
+light-up/docs (#108/#109). The live repo pins are now `runtime-data-2.0.0` /
+`engine-2026.06.12`; draft-config's
 `runtime-data-1.2.0` / `engine-2026.06.11` anchors are historical PREV-skew
 fixtures, not the current production season.
 
@@ -68,7 +69,7 @@ than hidden regressions.
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | @wcdraft/core `test`                                    | 331 passed, 3 skipped (334)                                                                           |
 | @wcdraft/core `test:golden` (RNG)                       | 3 passed                                                                                              |
-| @wcdraft/core `test:golden:draft`                       | 37 passed                                                                                             |
+| @wcdraft/core `test:golden:draft`                       | 40 passed (entity-resolution and manager-identity goldens now wired)                                  |
 | @wcdraft/data `test`                                    | 65 passed, 7 skipped (72)                                                                             |
 | @wcdraft/data `test:golden:data`                        | 31 passed                                                                                             |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                                                                                             |

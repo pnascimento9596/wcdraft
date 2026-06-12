@@ -1,12 +1,12 @@
 # wcdraft
 
-A deterministic World Cup draft simulator — pick squads, simulate tournaments, compare outcomes.
+A deterministic World Cup draft simulator: spin World Cup squads, draft one
+player per spin plus a manager, simulate the 2026 bracket, and compare runs.
 
-> **Status: WS-0 foundation scaffold.** This repository currently contains only
-> the monorepo skeleton, tooling, and the deterministic RNG primitive. There is
-> **no** domain model, data, ETL, draft, or simulation logic yet. Domain
-> data-contract types (Player, Rating, Sim, DraftState, MatchResult, …) are
-> deferred to **WS-0b**, pending an oracle review.
+Current production anchors are recorded in
+[`STATE.md`](STATE.md): `runtime-data-2.0.0`, `engine-2026.06.12`, and the
+2026-06-04 data snapshot. Accounts/email sign-in is live; ranked leaderboard
+submission remains dark behind the account-required gate.
 
 ## Disclaimer
 
@@ -19,12 +19,12 @@ descriptively. All trademarks belong to their respective owners.
 ```
 wcdraft/
 ├── apps/
-│   └── web/            # Next.js (App Router) front end — placeholder stub page
+│   └── web/            # Next.js App Router game, auth, share, leaderboard UI
 ├── packages/
-│   ├── core/           # Deterministic primitives. Today: the seeded RNG.
-│   │                   #   (single source of randomness — no domain types yet)
-│   └── data/           # Curated datasets + loaders (empty skeleton; CC-BY-SA — see its README)
-├── etl/                # Python ETL project (empty skeleton; standalone, not a pnpm workspace)
+│   ├── core/           # Domain contracts, deterministic draft/sim engine, RNG
+│   ├── data/           # Runtime compact bundles, loaders, data integrity tests
+│   └── db/             # Drizzle schema, migrations, Neon branch checks
+├── etl/                # Deterministic Python ETL and ratings pipeline
 ├── turbo.json          # Turborepo task pipelines (build/lint/typecheck/test)
 ├── pnpm-workspace.yaml # pnpm workspaces (apps/*, packages/*)
 └── tsconfig.base.json  # Shared strict TypeScript config
@@ -32,16 +32,17 @@ wcdraft/
 
 ### Workspaces
 
-| Package         | Path            | Purpose                                            |
-| --------------- | --------------- | -------------------------------------------------- |
-| `@wcdraft/web`  | `apps/web`      | Front end (Next.js App Router). Stub page for now. |
-| `@wcdraft/core` | `packages/core` | Deterministic RNG primitive; domain types later.   |
-| `@wcdraft/data` | `packages/data` | Datasets + access helpers (empty skeleton).        |
-| `wcdraft-etl`   | `etl`           | Python ETL (empty skeleton, standalone).           |
+| Package         | Path            | Purpose                                                 |
+| --------------- | --------------- | ------------------------------------------------------- |
+| `@wcdraft/web`  | `apps/web`      | Next.js game, share/results, auth, and leaderboard app. |
+| `@wcdraft/core` | `packages/core` | Domain contracts, deterministic draft/sim engine, RNG.  |
+| `@wcdraft/data` | `packages/data` | Compact runtime data, loaders, integrity/golden gates.  |
+| `@wcdraft/db`   | `packages/db`   | Database schema, migrations, and rollback checks.       |
+| `wcdraft-etl`   | `etl`           | Deterministic Python ETL and rating generation.         |
 
 ## Determinism
 
-`@wcdraft/core` exposes the **single source of randomness** for the whole system:
+`@wcdraft/core` exposes the single source of randomness for the engine:
 
 ```ts
 import { createRng } from "@wcdraft/core";
@@ -58,6 +59,10 @@ seed produces a byte-identical sequence on every platform — enforced by a
 committed golden fixture (`packages/core/test/fixtures/rng-golden.json`) and a
 path-selected golden test (`packages/core/src/rng.golden.test.ts`) that
 re-derives the sequence at runtime and is run as a dedicated CI job.
+
+The draft and sim engine also avoid wall-clock state and hidden entropy. Runtime
+share tokens carry version anchors so stale runs fail honestly instead of being
+silently re-simulated against a different season.
 
 ## Getting started
 
@@ -85,19 +90,25 @@ pnpm --filter @wcdraft/web dev
 pnpm --filter @wcdraft/core gen:golden
 ```
 
-## Data attribution (placeholder)
+## Data Attribution
 
-Datasets in `@wcdraft/data` are expected to derive from **CC-BY-SA** sources:
+Runtime data in `@wcdraft/data` derives from committed, pinned sources and is
+redistributed with attribution. The shipped manifest records source revisions,
+license URLs, bundle hashes, and byte sizes.
 
 - **The Fjelstul World Cup Database** — Joshua C. Fjelstul (CC-BY-SA).
-- **Wikipedia / Wikidata** (CC-BY-SA).
+- **Wikipedia** 2026 squad/draw/bracket snapshots (CC-BY-SA).
+- **RSSSF** match-archive appearance supplements, used with acknowledgement.
 
-CC-BY-SA requires **attribution** and **ShareAlike** redistribution. Exact
-source URLs, snapshot dates, license versions, and attribution strings will be
-recorded in `packages/data/` before any data is committed. See
+No proprietary player-rating feeds are ingested. Absences are preserved as
+`null` or omitted when a field is not applicable for an era; the ETL and compact
+builder must not fabricate zeroes.
+
+See `packages/data/src/generated/manifest.json` and
 [`packages/data/README.md`](packages/data/README.md).
 
 ## License
 
-TBD. (Note: ingested CC-BY-SA data carries ShareAlike obligations independent of
-the code license — see above.)
+TBD for source code. Ingested CC-BY-SA data carries ShareAlike obligations
+independent of the code license; keep attribution visible in redistributed
+runtime bundles and UI surfaces.

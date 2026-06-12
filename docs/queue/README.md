@@ -15,11 +15,11 @@ Rules (binding, from `CLAUDE.md`):
 
 ## Index
 
-| Item                                                      | Tier / mode                     | One-line                                                                                                                  |
-| --------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| [q-001-micro-yellow-bundle](q-001-micro-yellow-bundle.md) | Yellow · SELF-SERVE:YELLOW      | Five small verified polish debts (synergy float, narrative labels, sim-golden ledger note, prettier sweep, U3 carryovers) |
-| [q-002-mv2-12-candidate](q-002-mv2-12-candidate.md)       | Red · DISPATCH-ONLY · CANDIDATE | Next merit-model iteration — verified deferred threads, no authored spec yet                                              |
-| [q-003-f4-remaining](q-003-f4-remaining.md)               | Red · DISPATCH-ONLY             | F-4 leaderboard remainder: U4/U5/U6 lanes in flight (reference only), U7 ranked lane dark, light-up checklist             |
-| [q-004-accounts-activation](q-004-accounts-activation.md) | HUMAN-ONLY                      | Resend API key + sender domain verify — Paulo only, never agent-served                                                    |
-| [q-006-draft-config](q-006-draft-config.md)               | Red · DISPATCH-ONLY             | Draft config wave: Position First, era presets, Career/Current basis, leaderboard policy                                  |
+| Item                                                      | Tier / mode                       | One-line                                                                                                                   |
+| --------------------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [q-001-micro-yellow-bundle](q-001-micro-yellow-bundle.md) | Yellow · SELF-SERVE:YELLOW        | Five small verified polish debts (synergy float, narrative labels, sim-golden ledger note, prettier sweep, U3 carryovers)  |
+| [q-002-mv2-12-candidate](q-002-mv2-12-candidate.md)       | Red · DISPATCH-ONLY · SUPERSEDED  | Historical MV2-12 audit trail; merit-v3 shipped the replacement season                                                     |
+| [q-003-f4-remaining](q-003-f4-remaining.md)               | Red · DISPATCH-ONLY               | Leaderboard ranked lane remains dark; casual board and account light-up are live                                           |
+| [q-004-accounts-activation](q-004-accounts-activation.md) | HUMAN-ONLY · DONE                 | Accounts/email activation completed in prod via #108/#109; historical credential checklist retained                        |
+| [q-006-draft-config](q-006-draft-config.md)               | Red · DISPATCH-ONLY               | Draft config wave: Position First, era presets, Career/Current basis, leaderboard policy                                   |
 | [q-008-micro-yellow-2](q-008-micro-yellow-2.md)           | Yellow · SELF-SERVE:YELLOW · DONE | Micro-bundle 2: OG mark gold re-ink, CI push+PR dedupe, auth error-body scrub (q-003 item), surname disambiguation (q-005) |

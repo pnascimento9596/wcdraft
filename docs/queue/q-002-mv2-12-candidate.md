@@ -2,6 +2,12 @@
 
 - **Tier:** Red (rating model) · **Mode:** DISPATCH-ONLY — Lead Architect authors the
   prompt; never self-served.
+- **Status update 2026-06-12 — SUPERSEDED / SHIPPED.** The replacement
+  merit-v3 season shipped via #104 and is now the production data season:
+  `runtime-data-2.0.0`, `wc-perf-5.0.0`, `proj-career-4.0.0`,
+  `career-stature-3.0.0`, and `engine-2026.06.12`. The MV2-12/12b labels below
+  remain only as historical audit-trail language; they are not a current queue
+  item.
 - **Status update 2026-06-11 — DESIGNED.** The Lead-Architect season design landed:
   [`docs/plans/merit-v3-design-2026-06-11.md`](../plans/merit-v3-design-2026-06-11.md)
   (integration branch `merit-v3`). It supersedes the "MV2-12b" label: the rating
@@ -11,8 +17,8 @@
   version matrix (wc-perf-5.0.0 / proj-career-4.0.0 / career-stature-3.0.0 /
   runtime-data-2.0.0 / engine bump), the §H.2-derived acceptance-probe set
   pre-registered, and the one-skew-event rule. Per this item's done-when, q-002 is
-  replaced by the plan's units; all remain DISPATCH-ONLY. The sections below stay as
-  the audit-trail record.
+  replaced by the plan's units; those units have now shipped through merit-v3.
+  The sections below stay as the audit-trail record.
 - **Status:** AUDITED — diagnostic pre-work executed 2026-06-10; see
   [`docs/reports/mv212-ratings-audit-2026-06-10.md`](../reports/mv212-ratings-audit-2026-06-10.md).
   **GO recommended** (option D2 + D1: active-career recognition intake with a
@@ -21,8 +27,9 @@
   age/all-age-percentile double penalty (secondary); the raw-path ceiling (internal
   0.62 → display 88) makes everything above 88 stature-only in BOTH eras.
   "Maldini 71" ruled Cesare-1962 (surname display-ambiguity UX follow-up — now filed as
-  [`q-005`](q-005-surname-disambiguation.md)). The audit's severable **12a intake unit is
-  built and IN REVIEW** (below); **12b remains DISPATCH-ONLY**.
+  [`q-005`](q-005-surname-disambiguation.md)). The audit's severable **12a intake unit was
+  built and reviewed** as part of the superseded design chain; **12b language is
+  historical only** after merit-v3.
 - **Audit-2 (face-validity sweep) executed 2026-06-10; see
   [`docs/reports/mv212-face-validity-2026-06-10.md`](../reports/mv212-face-validity-2026-06-10.md).**
   Adds: (1) **P0 NEW DEFECT — 17 identity-seam link misses among minted 2026 cards**
@@ -35,7 +42,7 @@
   acceptance-probe set incl. Valverde-2022 counterfactual (injected index 0.42 → 84,
   matching the owner's instinct — D2 fixes him organically).
 
-## MV2-12a — active-career stature intake (FACTS-ONLY) — IN REVIEW
+## MV2-12a — active-career stature intake (FACTS-ONLY, historical)
 
 - Branch `ws-etl/mv212a-active-career-intake`: extends the merit intake to in-progress
   careers via a structurally INERT active channel — 47 facts / 23 players
@@ -50,7 +57,7 @@
 - Anti-fab drops recorded in the notes: Valverde Uruguay-captaincy REFUTED (Giménez is
   the citable 2026 captain); Hajsafi century-caps absent from the pinned snapshot.
 
-## MV2-12b — rating integration (DISPATCH-ONLY, not started)
+## MV2-12b — rating integration (historical label, superseded by merit-v3)
 
 Activates the channel per the audit's D2+D1: player-identity stature seam (not
 historical-card link), career-stage-normalized index for in-progress careers,

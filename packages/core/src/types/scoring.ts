@@ -1,11 +1,13 @@
 // Scoring layer of the wcdraft data contract.
 //
-// SHAPES ONLY. The weights below are PLACEHOLDERS — real values are calibrated
-// in WS-B and LOCKED via golden fixtures (the same way the RNG sequence is
-// locked in `rng-golden.json`). The CONTRACT here is only:
+// This file declares the scoring contract shape only:
 //   - the field set on `ScoringConfig`,
 //   - the per-round multiplier map shape, and
 //   - the breakdown component shape returned by `computeScore`.
+//
+// Live engine defaults live in `engine/calibration.ts` as
+// `DEFAULT_SCORING_CONFIG`; this type module intentionally does not export
+// fallback weights.
 //
 // DETERMINISM CONTRACT: a fixed (DraftState, RunScenario, seed, version
 // anchors) → identical RunResult INCLUDING score + breakdown. Therefore
@@ -15,9 +17,8 @@
 import type { MatchRound } from "./primitives.js";
 
 /**
- * Tournament-wide scoring weights. Calibration happens in WS-B; the values
- * shipped here are PLACEHOLDERS to lock the shape only — DO NOT use these
- * defaults as if they were tuned weights.
+ * Tournament-wide scoring weights. This module defines the shape only; live
+ * calibrated defaults are exported from `engine/calibration.ts`.
  *
  * `round_progression_multipliers` is a per-round bonus map covering every
  * MatchRound (group rounds get small multipliers; knockout rounds escalate).
@@ -65,31 +66,3 @@ export interface ScoreComponent {
   /** `raw * weight` — the points contribution from this component. */
   points: number;
 }
-
-// ─── PLACEHOLDER DEFAULT CONFIG ───────────────────────────────────────────────
-// TODO(WS-B): replace with calibrated weights and lock via a scoring-golden
-// fixture (same pattern as `rng-golden.json`). The placeholder values exist so
-// downstream code can typecheck against `ScoringConfig` without an undefined.
-// The numbers below are NOT tuned and MUST NOT be relied upon for game balance.
-export const PLACEHOLDER_SCORING_CONFIG: ScoringConfig = {
-  goal_points: 0,
-  goal_difference_weight: 0,
-  clean_sheet_bonus: 0,
-  round_progression_multipliers: {
-    G1: 0,
-    G2: 0,
-    G3: 0,
-    R32: 0,
-    R16: 0,
-    QF: 0,
-    SF: 0,
-    F: 0,
-  },
-  undefeated_bonus: 0,
-  conceded_penalty: 0,
-  yellow_penalty: 0,
-  red_penalty: 0,
-  foul_penalty: 0,
-  offside_penalty: 0,
-  missed_pen_penalty: 0,
-};

@@ -1,4 +1,10 @@
-import { describe, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { describe, expect, it } from "vitest";
+
+import { buildCardId, parseCardId } from "./types/index.js";
 
 // GOLDEN INVARIANT (WS-0b contract, WS-A implementation):
 //   ENTITY RESOLUTION yields ONE stable Player.player_id for a human who
@@ -13,21 +19,48 @@ import { describe, it } from "vitest";
 // the same human could be drafted twice. If ER merges two humans into one
 // player_id by mistake, one would be invisibly excluded.
 //
-// FIXTURING DEFERRED: the candidate switcher (Puskás and other historical
-// dual-nationals) must be VERIFIED against the Fjelstul dataset before the
-// fixture is committed — I am NOT going to fabricate a dual-nation player
-// from memory for a golden contract.
+type RuntimePlayerCard = {
+  card_id: string;
+  player_id: string;
+  tournament_id: number;
+  nation_id: string;
+  common_name: string;
+  full_name: string;
+  source_card_id: string;
+  source_tournament_id: string;
+};
 
-describe.skip("entity resolution — nation-switcher dedup", () => {
-  it.skip("a verified nation-switcher resolves to ONE player_id across two nation_ids", () => {
-    // FIXTURE TODO (WS-A):
-    //   - Pick a player VERIFIED in the Fjelstul dataset to have represented
-    //     two different national federations (e.g. Puskás HUN'54 / ESP'62).
-    //   - Construct two PlayerTournament cards with the same person but
-    //     different nation_ids + tournament_ids.
-    //   - Run the WS-A entity-resolution pipeline.
-    //   - Assert: both PlayerTournament rows share ONE player_id.
-    //   - Assert: that player_id appears exactly once in
-    //     DraftState.deduped_player_ids after both cards are added.
+type DraftPoolFixture = {
+  player_cards: RuntimePlayerCard[];
+};
+
+const here = dirname(fileURLToPath(import.meta.url));
+const draftPoolPath = join(here, "..", "..", "data", "src", "generated", "draft-pool.compact.json");
+const draftPool = JSON.parse(readFileSync(draftPoolPath, "utf8")) as DraftPoolFixture;
+
+describe("entity resolution — nation-switcher dedup", () => {
+  it("Ferenc Puskás resolves to ONE player_id across HUN 1954 and ESP 1962 cards", () => {
+    const puskasCards = draftPool.player_cards
+      .filter((card) => card.player_id === "P-12676")
+      .sort((a, b) => a.tournament_id - b.tournament_id);
+
+    expect(puskasCards.map((card) => card.tournament_id)).toEqual([1954, 1962]);
+    expect(new Set(puskasCards.map((card) => card.nation_id))).toEqual(new Set(["T-36", "T-73"]));
+    expect(new Set(puskasCards.map((card) => card.player_id))).toEqual(new Set(["P-12676"]));
+    expect(puskasCards.map((card) => card.source_tournament_id)).toEqual(["WC-1954", "WC-1962"]);
+
+    for (const card of puskasCards) {
+      expect(card.common_name).toBe("Puskás");
+      expect(card.full_name).toBe("Ferenc Puskás");
+      expect(card.card_id).toBe(buildCardId("P-12676", card.tournament_id));
+      expect(parseCardId(card.card_id)).toEqual({
+        player_id: "P-12676",
+        tournament_id: card.tournament_id,
+      });
+    }
+
+    // Draft dedup is keyed on player_id, not on card_id or represented nation.
+    expect(new Set(puskasCards.map((card) => card.player_id)).size).toBe(1);
+    expect(new Set(puskasCards.map((card) => card.card_id)).size).toBe(2);
   });
 });

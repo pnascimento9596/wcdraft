@@ -1,16 +1,22 @@
 # wcdraft — Memory (Hidden) Mode — Build Plan
 
+> **SUPERSEDED 2026-06-12:** Memory mode is shipped. This file is retained as
+> the build-plan audit trail; current behavior is enforced by the live web
+> tests and `STATE.md`, not by treating the work items below as open tasks.
+
 Yellow, UI-only. The data layer is ALREADY plumbed: DraftState.mode: 'classic' | 'hidden' is typed; mode rides
 the t1. token's `md` field, replay, and saved-run; the engine has ZERO mode branches; no DB migration. This
 activates the second mode on the surface.
 
 ## Premise
+
 In hidden mode the draft hides all rating SIGNALS during draft + review, so the player picks on football
 knowledge (recognizing who/when), not on a visible OVR. Everything reveals after Simulate. The premise only
 pays off on accurate ratings (someone who knows Maldini-1990 is elite must be rewarded) — which is why it
 builds on merit-v2.
 
 ## Blind set (hidden during draft + review, hidden mode ONLY)
+
 - OVR, channels (ATT/MID/DEF/GK)
 - Coverage (numeric %, bars, expanded detail) — coverage is rating-confidence metadata, so it rides the blind
   set (Lead-Architect amendment, 2026-06-09)
@@ -19,6 +25,7 @@ builds on merit-v2.
 - Synergy NUMERIC (score, strength-mult, links-live count)
 
 ## Keep set (ALWAYS shown — these are how knowledge applies, not ratings)
+
 - Player name, nation flag, World Cup year
 - Position SHAPE (GK square / DF triangle / MF diamond / FW circle) — identity, not a rating
 - Position-fit / compatibility numerics (slot fit %, assignment-sheet %, validation-warning compatibility
@@ -33,6 +40,7 @@ builds on merit-v2.
 - Formation pitch, slot assignment, squad counter, honest "—" states
 
 ## Architecture rule (replaces "no mode conditionals in components")
+
 - Rating-masking logic exists ONLY in `blindCardRatingView` (apps/web/lib/game/view-models.ts).
 - Screen-level `draft.mode === 'hidden'` branches are permitted SOLELY for plumbing: threading
   `{ blindRatings }` through adapter calls, sort default/options, and MemoryReveal mounting (incl. the
@@ -43,6 +51,7 @@ builds on merit-v2.
   views via the adapter `{ blindRatings }` opts — the masked null comes out of the seam, not a screen ternary.
 
 ## Compliance notes — post-merge fix-pass (ws-ux/seam-and-quota)
+
 - `lineStrengthViews(idx, draft, opts?)` now mirrors `squadAverageOverall`: every channel folds through
   `ratingView(...)` (the single `blindCardRatingView` seam). Under blind, per-line `value` is honestly null and
   the screen renders the row list unconditionally — no real channel averages are computed or held in React
@@ -54,15 +63,18 @@ builds on merit-v2.
   `persistenceWarning` is truthy. One line, centered, no layout regression on the compact density bar.
 
 ## Reveal (post-Simulate)
+
 - Reveal the full blind set via a thin MemoryReveal wrapper around the existing surfaces (do NOT overload
   SynergyBar). Auto-expand; prefers-reduced-motion → instant (no animation).
 
 ## Resolved decisions
+
 - Share/replay of a hidden run REVEALS on web (the sim already ran). `md` rides the t1. token; a hidden-mode
   replay reconstructs + reveals.
 - NO feature flag: the Memory option surfaces only when fully wired (completeness gate — MEM-2 lands last).
 
 ## Work items
+
 - MEM-1 mode toggle on Mode-select (Classic ships; add Memory) → DraftState.mode='hidden'.
 - MEM-2 draft-screen blinding (candidate cards + picked nodes): blind set hidden, keep set shown. LANDS LAST
   (completeness gate).
@@ -73,6 +85,7 @@ builds on merit-v2.
   mode.
 
 ## Scope / gates (Yellow)
+
 - Frontend only (apps/web). No engine change, no schema change, no DB migration, no rating/sim change.
 - The blind is DISPLAY-ONLY — the sim still consumes the real channels. Hidden mode changes what the USER
   sees, NEVER what the sim computes. Honest-state preserved.

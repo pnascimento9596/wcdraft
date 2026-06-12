@@ -2,7 +2,7 @@
   "name": "@wcdraft/core",
   "version": "0.0.0",
   "private": true,
-  "description": "Core primitives for wcdraft. Today: the deterministic seeded RNG (single source of randomness). Domain types are deferred to WS-0b.",
+  "description": "Core domain contracts, deterministic draft and sim engine, and seeded RNG for wcdraft.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,7 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "test:golden": "vitest run src/rng.golden.test.ts",
-    "test:golden:draft": "vitest run src/draft.golden.test.ts src/lock-on-pick.golden.test.ts src/position-compatibility.golden.test.ts",
+    "test:golden:draft": "vitest run src/draft.golden.test.ts src/lock-on-pick.golden.test.ts src/position-compatibility.golden.test.ts src/entity-resolution.golden.test.ts src/manager-identity.golden.test.ts",
     "gen:golden": "tsx scripts/generate-golden.ts",
     "gen:sim-golden": "tsx scripts/generate-sim-golden.ts",
     "gen:golden:draft": "tsx scripts/generate-draft-golden.ts"
