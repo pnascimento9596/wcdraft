@@ -54,6 +54,7 @@ import {
   type DraftFlow,
   type DraftState,
   type EraPresetId,
+  type MatchRound,
   type RatingBasis,
 } from "@wcdraft/core";
 
@@ -111,6 +112,32 @@ export type RunTokenPickV2 =
   | { k: "m"; ts?: "manager" }
   | { k: "p"; c: string; s: string; ts?: string };
 
+/**
+ * Compact result summary for server-side share-image rendering.
+ *
+ * This is intentionally NOT a second simulation payload. It is copied from the
+ * already-computed persisted simulation when a completed run is shared, so a
+ * cold crawler can render the final record without running the game server-side.
+ */
+export interface RunTokenOgSummary {
+  /** Wins. */
+  w: number;
+  /** Losses. */
+  l: number;
+  /** Matches played. */
+  mp: number;
+  /** Goals for. */
+  gf: number;
+  /** Goals against. */
+  ga: number;
+  /** Round reached. */
+  rr: MatchRound;
+  /** Champion flag. */
+  ch: boolean;
+  /** Shootout wins. */
+  sw: number;
+}
+
 /** DC-1 config-bearing token body. Anchor fields are identical to v1. */
 export interface RunTokenV2Body {
   /** Token version sentinel. Always `2` for `t2.` prefix. */
@@ -133,6 +160,12 @@ export interface RunTokenV2Body {
   ef: { id: EraPresetId; min: number; max: number };
   /** 17 picks in spin-index order. */
   pl: RunTokenPickV2[];
+  /**
+   * Optional compact result summary. Tokens minted before dynamic OG do not
+   * have this and remain replay-compatible; they simply cannot get a per-run
+   * server image without violating the no-server-sim firewall.
+   */
+  og?: RunTokenOgSummary;
   // Version anchors — identical semantics to v1.
   sv: string;
   dv: string;
@@ -251,6 +284,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
     throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
   });
   const preset = ERA_PRESETS[era_preset];
+  const og = buildRunTokenOgSummary(record);
   return {
     v: 2,
     rid: record.run_id,
@@ -262,12 +296,29 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
     rb: rating_basis,
     ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
     pl,
+    ...(og ? { og } : {}),
     sv: record.versions.schema_version,
     dv: record.versions.dataset_version,
     rv: record.versions.rating_version,
     ev: record.versions.engine_version,
     uv: record.versions.ruleset_version,
     hv: record.versions.data_bundle_hash,
+  };
+}
+
+/** Extract the completed-run OG summary, if the record has already simulated. */
+export function buildRunTokenOgSummary(record: RunRecordV1): RunTokenOgSummary | null {
+  if (!record.simulation) return null;
+  const { run, matches } = record.simulation;
+  return {
+    w: run.wins,
+    l: run.losses,
+    mp: matches.length,
+    gf: run.aggregate.goals_for,
+    ga: run.aggregate.goals_against,
+    rr: run.reached_round,
+    ch: run.is_champion,
+    sw: run.shootout_wins,
   };
 }
 
@@ -308,6 +359,37 @@ function isPickV2(x: unknown, positionFirst: boolean): x is RunTokenPickV2 {
     return true;
   }
   return false;
+}
+
+const MATCH_ROUNDS: ReadonlySet<MatchRound> = new Set([
+  "G1",
+  "G2",
+  "G3",
+  "R32",
+  "R16",
+  "QF",
+  "SF",
+  "F",
+]);
+
+function isNonNegativeInt(x: unknown): x is number {
+  return typeof x === "number" && Number.isInteger(x) && x >= 0;
+}
+
+function isRunTokenOgSummary(x: unknown): x is RunTokenOgSummary {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  if (!isNonNegativeInt(o.w) || o.w > 8) return false;
+  if (!isNonNegativeInt(o.l) || o.l > 8) return false;
+  if (!isNonNegativeInt(o.mp) || o.mp < 3 || o.mp > 8) return false;
+  if (!isNonNegativeInt(o.gf) || o.gf > 99) return false;
+  if (!isNonNegativeInt(o.ga) || o.ga > 99) return false;
+  if (!MATCH_ROUNDS.has(o.rr as MatchRound)) return false;
+  if (typeof o.ch !== "boolean") return false;
+  if (!isNonNegativeInt(o.sw) || o.sw > o.w) return false;
+  if (o.w + o.l > o.mp) return false;
+  if (o.ch && o.rr !== "F") return false;
+  return true;
 }
 
 function isRunTokenV1Body(x: unknown): x is RunTokenV1Body {
@@ -351,6 +433,7 @@ function isRunTokenV2Body(x: unknown): x is RunTokenV2Body {
   const positionFirst = o.df === "position_first";
   if (!Array.isArray(o.pl) || o.pl.length !== 17) return false;
   for (const p of o.pl) if (!isPickV2(p, positionFirst)) return false;
+  if (o.og !== undefined && !isRunTokenOgSummary(o.og)) return false;
   if (typeof o.sv !== "string") return false;
   if (typeof o.dv !== "string") return false;
   if (typeof o.rv !== "string") return false;
@@ -409,6 +492,11 @@ export function decodeRunToken(value: string): RunTokenBody | null {
   }
   if (v === 1) return isRunTokenV1Body(parsed) ? parsed : null;
   return isRunTokenV2Body(parsed) ? parsed : null;
+}
+
+/** Dynamic-OG summary accessor. Legacy t1 and pre-summary t2 tokens return null. */
+export function runTokenOgSummary(token: RunTokenBody): RunTokenOgSummary | null {
+  return token.v === 2 && token.og ? token.og : null;
 }
 
 /** True iff every version anchor on the token matches the current bundle. */

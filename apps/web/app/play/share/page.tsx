@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { loadDataManifest } from "@wcdraft/data/client";
 import { ShareScreen } from "../../../components/game/share-screen";
+import { composeVersions } from "../../../lib/game/data";
+import { shareOgImageForRunValue } from "../../../lib/game/run-og-metadata";
 import {
   OG_DEFAULT_IMAGE,
   OG_DEFAULT_IMAGE_ALT,
@@ -10,15 +13,10 @@ import {
 } from "../../../lib/site-metadata";
 
 // ws-results/history-share — link-unfurl metadata.
-//
-// Per-run dynamic OG (rendering the card from the `?run=` token via
-// `@vercel/og` / Next's `opengraph-image` convention) is a deliberate
-// FOLLOW-ON. The repo currently has no rasterizer or `@vercel/og` dep, and
-// the share route's primary data lives client-side; standing up server-side
-// per-run reconstruction remains the F-4-server backlog item. This pass keeps
-// share links on the same static marketing default as the rest of the site.
 
-export const metadata: Metadata = {
+export const dynamic = "force-dynamic";
+
+const STATIC_SHARE_METADATA: Metadata = {
   title: "Share card",
   description:
     "A deterministic, seed-locked shareable card for your run. Names and national flag codes only — no competition marks.",
@@ -50,6 +48,42 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ run?: string | string[] }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const versions = await currentVersionsForMetadata();
+  const image = versions ? shareOgImageForRunValue(params.run, versions) : null;
+  if (!image || !image.dynamic) return STATIC_SHARE_METADATA;
+  return {
+    ...STATIC_SHARE_METADATA,
+    openGraph: {
+      ...STATIC_SHARE_METADATA.openGraph,
+      url: "/play/share",
+      images: [
+        {
+          url: image.url,
+          width: image.width,
+          height: image.height,
+          alt: image.alt,
+        },
+      ],
+    },
+    twitter: {
+      ...STATIC_SHARE_METADATA.twitter,
+      card: "summary_large_image",
+      images: [
+        {
+          url: image.url,
+          alt: image.alt,
+        },
+      ],
+    },
+  };
+}
+
 export default function SharePage() {
   return (
     <div className="container page game-page game-page--share">
@@ -62,4 +96,24 @@ export default function SharePage() {
 
 function ShareFallback() {
   return <div style={{ padding: "2rem", textAlign: "center" }}>Loading share card…</div>;
+}
+
+async function currentVersionsForMetadata() {
+  try {
+    const manifest = await loadDataManifest({
+      basePath: runtimeDataBasePath(),
+      fetch: fetch.bind(globalThis),
+    });
+    return composeVersions(manifest);
+  } catch {
+    return null;
+  }
+}
+
+function runtimeDataBasePath(): string {
+  const base =
+    process.env.WCDRAFT_SITE_URL ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  return new URL("/data/wcdraft", base).toString();
 }

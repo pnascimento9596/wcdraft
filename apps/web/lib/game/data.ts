@@ -109,7 +109,7 @@ export async function loadGameData(): Promise<GameData> {
   return inFlight;
 }
 
-function buildGameData(
+export function buildGameData(
   manifest: RuntimeDataManifest,
   draftPool: DraftPoolBundle,
 ): GameData {
