@@ -1,10 +1,11 @@
 // F-4 U3 — GET /api/leaderboard (board) + GET /api/leaderboard/me handlers.
 //
 // Board: public read, keyset pagination riding the partial
-// `leaderboard_entries_top_idx` exactly — (season_key, mode,
+// `leaderboard_entries_top_idx` exactly — (season_key, mode, draft_mode,
 // verified_score DESC, created_at ASC, id), `hidden_at IS NULL` always.
 // Season defaults to the CURRENT derived key (plan §3); `draft_mode` is the
-// only extra filter (plan §6). CDN-cached 30 s (plan §5.2).
+// explicit Classic / Memory lane (default: Classic). CDN-cached 30 s
+// (plan §5.2).
 //
 // /me: session required (no CSRF — read-only); caller's best + rank +
 // recent entries for the season, uncached.
@@ -24,7 +25,7 @@ import {
   boardPage,
   identityBoardRank,
   recentEntriesFor,
-  toApiEntry,
+  toApiEntryWithProfile,
   type ApiLeaderboardEntry,
   type BoardCursor,
   type BoardDraftMode,
@@ -94,11 +95,19 @@ function parseSeasonAndMode(
   if (seasonKey.length === 0 || seasonKey.length > 256) {
     return queryError("season is not a valid season key");
   }
-  const mode = q.get("mode") ?? "casual";
+  const mode = q.get("mode") ?? "ranked";
   if (mode !== "casual" && mode !== "ranked") {
     return queryError("mode must be 'casual' or 'ranked'");
   }
   return { seasonKey, mode };
+}
+
+function parseDraftMode(req: NextRequest): BoardDraftMode | NextResponse {
+  const draftModeRaw = req.nextUrl.searchParams.get("draft_mode") ?? "classic";
+  if (draftModeRaw !== "classic" && draftModeRaw !== "hidden") {
+    return queryError("draft_mode must be 'classic' or 'hidden'");
+  }
+  return draftModeRaw;
 }
 
 // ─── GET /api/leaderboard ───────────────────────────────────────────────────
@@ -107,7 +116,7 @@ export interface BoardResponseBody {
   readonly season_key: string;
   readonly current_season_key: string;
   readonly mode: BoardMode;
-  readonly draft_mode: BoardDraftMode | null;
+  readonly draft_mode: BoardDraftMode;
   readonly entries: readonly (Omit<BoardRow, "created_at"> & { created_at: string })[];
   readonly next_cursor: string | null;
 }
@@ -121,11 +130,8 @@ export async function handleLeaderboardBoardGet(
     if (base instanceof NextResponse) return base;
     const q = req.nextUrl.searchParams;
 
-    const draftModeRaw = q.get("draft_mode");
-    if (draftModeRaw !== null && draftModeRaw !== "classic" && draftModeRaw !== "hidden") {
-      return queryError("draft_mode must be 'classic' or 'hidden'");
-    }
-    const draftMode: BoardDraftMode | null = draftModeRaw;
+    const draftMode = parseDraftMode(req);
+    if (draftMode instanceof NextResponse) return draftMode;
 
     const limitRaw = q.get("limit");
     let limit = BOARD_DEFAULT_LIMIT;
@@ -185,6 +191,7 @@ export async function handleLeaderboardBoardGet(
 export interface MeResponseBody {
   readonly season_key: string;
   readonly mode: BoardMode;
+  readonly draft_mode: BoardDraftMode;
   readonly best: ApiLeaderboardEntry | null;
   /** Board rank of the caller's best visible entry; null when boardless. */
   readonly rank: number | null;
@@ -203,12 +210,15 @@ export async function handleLeaderboardMeGet(
     });
     const base = parseSeasonAndMode(req, deps);
     if (base instanceof NextResponse) return base;
+    const draftMode = parseDraftMode(req);
+    if (draftMode instanceof NextResponse) return draftMode;
 
     // requireReadIdentity guarantees a session id.
     const sessionId = identity.sessionId as string;
     const recent = await recentEntriesFor(deps.db, {
       seasonKey: base.seasonKey,
       mode: base.mode,
+      draftMode,
       userId: identity.userId,
       sessionId,
       limit: ME_RECENT_LIMIT,
@@ -216,24 +226,21 @@ export async function handleLeaderboardMeGet(
     const best = await identityBoardRank(deps.db, {
       seasonKey: base.seasonKey,
       mode: base.mode,
+      draftMode,
       identityKey: identity.userId ?? sessionId,
     });
     const bestRow = best ? (recent.find((r) => r.id === best.entryId) ?? null) : null;
     // The best entry may be older than the recent window — fetch it directly
     // if so (still the same identity scope, so no leak surface).
-    const bestApi =
-      best && !bestRow
-        ? await fetchEntryById(deps.db, best.entryId)
-        : bestRow
-          ? toApiEntry(bestRow)
-          : null;
+    const bestApi = best && !bestRow ? await fetchEntryById(deps.db, best.entryId) : bestRow;
 
     const body: MeResponseBody = {
       season_key: base.seasonKey,
       mode: base.mode,
+      draft_mode: draftMode,
       best: bestApi,
       rank: best?.rank ?? null,
-      recent: recent.map(toApiEntry),
+      recent,
     };
     const res = NextResponse.json(body);
     res.headers.set("Cache-Control", "no-store");
@@ -253,5 +260,5 @@ async function fetchEntryById(db: Db, id: string): Promise<ApiLeaderboardEntry |
     .from(leaderboardEntries)
     .where(eq(leaderboardEntries.id, id))
     .limit(1);
-  return rows[0] ? toApiEntry(rows[0]) : null;
+  return rows[0] ? toApiEntryWithProfile(db, rows[0]) : null;
 }

@@ -59,10 +59,7 @@ function readJournal(): Journal {
 }
 
 function readDown(tag: string): string {
-  return readFileSync(
-    new URL(`../migrations/${tag}.down.sql`, import.meta.url),
-    "utf8",
-  );
+  return readFileSync(new URL(`../migrations/${tag}.down.sql`, import.meta.url), "utf8");
 }
 
 async function neonGet<T>(path: string, apiKey: string): Promise<T> {
@@ -111,9 +108,7 @@ async function guardEphemeralBranch(): Promise<void> {
         "Rollback-check is only safe against an ephemeral branch.",
     );
   }
-  console.log(
-    `[rollback-check] guard: confirmed branch ${ephemeralId} is non-primary`,
-  );
+  console.log(`[rollback-check] guard: confirmed branch ${ephemeralId} is non-primary`);
 }
 
 async function assertDuplicateRejected(
@@ -221,13 +216,7 @@ function errorDiagnostics(err: unknown): string {
         detail?: unknown;
         severity?: unknown;
       };
-      for (const key of [
-        "message",
-        "code",
-        "constraint",
-        "detail",
-        "severity",
-      ] as const) {
+      for (const key of ["message", "code", "constraint", "detail", "severity"] as const) {
         const value = detail[key];
         if (typeof value === "string" && value.length > 0) {
           parts.push(`${key}=${value}`);
@@ -262,9 +251,7 @@ async function main(): Promise<void> {
     // level — the test now exercises that more specific shape PLUS the
     // negative case: anon rows with the SAME token across DIFFERENT
     // sessions are allowed.
-    console.log(
-      "[rollback-check] step 2/6 — saved_runs anonymous dedupe (session-scoped)",
-    );
+    console.log("[rollback-check] step 2/6 — saved_runs anonymous dedupe (session-scoped)");
     const dupToken = `rollback-check-token-${Math.floor(performance.now()).toString()}`;
     const sessionA = `rollback-check-session-a-${Math.floor(performance.now()).toString()}`;
     const sessionB = `rollback-check-session-b-${Math.floor(performance.now()).toString()}`;
@@ -302,17 +289,39 @@ async function main(): Promise<void> {
       "  ✓ saved_runs: NULL-owner rows in DIFFERENT sessions with the same token are allowed",
     );
 
-    // STEP 3 — assert anonymous leaderboard_entries dedupe + F-4 U1
-    // column-shape probes (0004_f4_leaderboard).
+    // STEP 3 — assert users.username + anonymous leaderboard_entries dedupe
+    // + column-shape probes (0004_f4_leaderboard, 0005_leaderboard_profiles).
     console.log(
-      "[rollback-check] step 3/6 — leaderboard_entries anonymous dedupe + 0004 column shape",
+      "[rollback-check] step 3/6 — username/profile shape + leaderboard_entries anonymous dedupe",
     );
     const lbToken = `rollback-check-lb-token-${Math.floor(performance.now()).toString()}`;
     const lbSeason = "rollback-check-season-001";
     await db.execute(sql`
+      INSERT INTO users (email, username)
+      VALUES ('rollback-check-a@example.com', 'caseuser')
+    `);
+    await assertInsertRejected(
+      "users: duplicate username must be rejected by users_username_ci_uq",
+      () =>
+        db.execute(sql`
+          INSERT INTO users (email, username)
+          VALUES ('rollback-check-b@example.com', 'caseuser')
+        `),
+      /users_username_ci_uq|unique|duplicate|23505/i,
+    );
+    await assertInsertRejected(
+      "users: uppercase username must be rejected by format CHECK (server normalizes before write)",
+      () =>
+        db.execute(sql`
+          INSERT INTO users (email, username)
+          VALUES ('rollback-check-c@example.com', 'CaseUser')
+        `),
+      /users_username_format_chk|check constraint/i,
+    );
+    await db.execute(sql`
       INSERT INTO leaderboard_entries
-        (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
-      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback-check', ${lbToken}, 0)
+        (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback_check', ${lbToken}, 0)
     `);
     await assertDuplicateRejected(
       db,
@@ -320,43 +329,53 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback-check', ${lbToken}, 0)
+            (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback_check', ${lbToken}, 0)
         `),
     );
     // NULLS-NOT-DISTINCT × new-column interaction: the dedupe key is still
     // (season_key, mode, user_id, token) ONLY — a different session_id,
-    // display_name, or draft_mode must NOT open a second row for the same
+    // display_alias, or draft_mode must NOT open a second row for the same
     // anon token. (draft_mode is deliberately NOT a dedupe dimension: the
     // token IS the run, `md` is inside it.)
     await assertDuplicateRejected(
       db,
-      "leaderboard_entries: differing session_id/display_name/draft_mode must NOT bypass the anon dedupe",
+      "leaderboard_entries: differing session_id/display_alias/draft_mode must NOT bypass the anon dedupe",
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'hidden', NULL, ${sessionB}, 'other-name', ${lbToken}, 0)
+            (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'hidden', NULL, ${sessionB}, 'other_name', ${lbToken}, 0)
         `),
     );
     // 0004 CHECK probes — every constraint must hold at the DB layer.
     await assertInsertRejected(
-      "leaderboard_entries: display_name shorter than 3 chars must be rejected (CHECK)",
+      "leaderboard_entries: display_alias shorter than 3 chars must be rejected (CHECK)",
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
+            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
           VALUES (${lbSeason}, 'casual', 'classic', NULL, 'ab', ${`${lbToken}-shortname`}, 0)
         `),
-      /leaderboard_entries_display_name_chk|check constraint/i,
+      /leaderboard_entries_display_alias_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: anonymous row without display_alias must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', NULL, NULL, ${`${lbToken}-noname`}, 0)
+        `),
+      /leaderboard_entries_public_name_chk|check constraint/i,
     );
     await assertInsertRejected(
       "leaderboard_entries: draft_mode outside (classic|hidden) must be rejected (CHECK)",
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'speedrun', NULL, 'rollback-check', ${`${lbToken}-badmode`}, 0)
+            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'speedrun', NULL, 'rollback_check', ${`${lbToken}-badmode`}, 0)
         `),
       /leaderboard_entries_draft_mode_chk|check constraint/i,
     );
@@ -368,8 +387,8 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_name, token, verified_score)
-          VALUES (${lbSeason}, 'ranked', 'classic', NULL, 'rollback-check', ${`${lbToken}-ranked`}, 0)
+            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'ranked', 'classic', NULL, 'rollback_check', ${`${lbToken}-ranked`}, 0)
         `),
       /leaderboard_entries_ranked_user_chk|check constraint/i,
     );
@@ -390,8 +409,8 @@ async function main(): Promise<void> {
     const setNullToken = `${lbToken}-setnull`;
     await db.execute(sql`
       INSERT INTO leaderboard_entries
-        (season_key, mode, draft_mode, user_id, session_id, display_name, token, verified_score)
-      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionB}, 'rollback-check', ${setNullToken}, 0)
+        (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionB}, 'rollback_check', ${setNullToken}, 0)
     `);
     await db.execute(sql`DELETE FROM sessions WHERE id = ${sessionB}`);
     const survivors = await db.execute<{ session_id: string | null }>(sql`
@@ -404,9 +423,7 @@ async function main(): Promise<void> {
           `(rows=${survivors.rows.length.toString()}, session_id=${String(survivors.rows[0]?.session_id)})`,
       );
     }
-    console.log(
-      "  ✓ leaderboard_entries: row survives session deletion with session_id SET NULL",
-    );
+    console.log("  ✓ leaderboard_entries: row survives session deletion with session_id SET NULL");
 
     // CLEANUP — drop the runtime-test rows BEFORE attempting to roll back.
     // The session-scoped positive case in step 2 seeds two NULL-owner rows
@@ -417,9 +434,7 @@ async function main(): Promise<void> {
     // index build would fail with 23505. A real-world rollback would need
     // the same purge (or a per-row dedupe), so this is also a documentary
     // signal: F-3 → F-1 rollback on a populated DB requires data cleanup.
-    console.log(
-      "[rollback-check] step 4/6 — purging runtime-test rows pre-rollback",
-    );
+    console.log("[rollback-check] step 4/6 — purging runtime-test rows pre-rollback");
     await db.execute(sql`DELETE FROM saved_runs`);
     await db.execute(sql`DELETE FROM leaderboard_entries`);
     await db.execute(sql`DELETE FROM sessions`);

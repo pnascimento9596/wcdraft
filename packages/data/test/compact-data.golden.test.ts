@@ -30,6 +30,10 @@ const SCRIPT_PATH = path.join(PACKAGE_DIR, "scripts", "build-compact-data.mjs");
 const BUDGET_PATH = path.join(PACKAGE_DIR, "size-budget.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const BUNDLE_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
+// Cold CI runners can spend several minutes re-running the full compact-data
+// builder before these assertions execute; keep this timeout scoped to the
+// golden rebuild rather than relaxing unrelated data tests.
+const COMPACT_GOLDEN_REBUILD_TIMEOUT_MS = 600_000;
 
 interface SizeBudget {
   bundles: Record<string, { max_bytes_brotli: number; path: string }>;
@@ -106,7 +110,7 @@ describe("compact-data golden", () => {
         },
       ]),
     ) as SizeReport["bundles"];
-  }, 300_000);
+  }, COMPACT_GOLDEN_REBUILD_TIMEOUT_MS);
 
   afterAll(() => {
     if (tmpDir) rmSync(tmpDir, { recursive: true, force: true });

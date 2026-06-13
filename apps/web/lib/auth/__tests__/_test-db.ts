@@ -45,6 +45,7 @@ export async function setupTestDb(): Promise<{
     "0002_history_session_scope.sql",
     "0003_summary_jsonb.sql",
     "0004_f4_leaderboard.sql",
+    "0005_leaderboard_profiles.sql",
   ]) {
     const sql = loadMigration(file).replace(/-->\s*statement-breakpoint/g, "");
     await pg.exec(sql);
@@ -75,5 +76,7 @@ export async function setupTestDb(): Promise<{
  * across tests when seed is set; varied per-test by default.
  */
 export function testCookieSecret(seed = "ws-f-2-test"): string {
-  return Buffer.from(`${seed}--${"x".repeat(32)}`).toString("base64url").slice(0, 43);
+  return Buffer.from(`${seed}--${"x".repeat(32)}`)
+    .toString("base64url")
+    .slice(0, 43);
 }

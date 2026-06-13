@@ -15,15 +15,9 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 
-const initSql = readFileSync(
-  new URL("../migrations/0000_init.sql", import.meta.url),
-  "utf8",
-);
+const initSql = readFileSync(new URL("../migrations/0000_init.sql", import.meta.url), "utf8");
 
-const downSql = readFileSync(
-  new URL("../migrations/0000_init.down.sql", import.meta.url),
-  "utf8",
-);
+const downSql = readFileSync(new URL("../migrations/0000_init.down.sql", import.meta.url), "utf8");
 
 const authSql = readFileSync(
   new URL("../migrations/0001_auth_rate_limits.sql", import.meta.url),
@@ -65,16 +59,23 @@ const f4DownSql = readFileSync(
   "utf8",
 );
 
+const profilesSql = readFileSync(
+  new URL("../migrations/0005_leaderboard_profiles.sql", import.meta.url),
+  "utf8",
+);
+
+const profilesDownSql = readFileSync(
+  new URL("../migrations/0005_leaderboard_profiles.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
-  readFileSync(
-    new URL("../migrations/meta/_journal.json", import.meta.url),
-    "utf8",
-  ),
+  readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(5);
+    expect(journal.entries).toHaveLength(6);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -85,6 +86,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[3]?.idx).toBe(3);
     expect(journal.entries[4]?.tag).toBe("0004_f4_leaderboard");
     expect(journal.entries[4]?.idx).toBe(4);
+    expect(journal.entries[5]?.tag).toBe("0005_leaderboard_profiles");
+    expect(journal.entries[5]?.idx).toBe(5);
   });
 
   it.each([
@@ -122,12 +125,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     // Belt-and-suspenders: catch a future refactor that quietly swaps the
     // constraint back to `uniqueIndex(...)` (which would re-introduce the
     // anonymous-spam vector).
-    expect(initSql).not.toMatch(
-      /CREATE UNIQUE INDEX[^;]*"saved_runs_owner_token_uq"/,
-    );
-    expect(initSql).not.toMatch(
-      /CREATE UNIQUE INDEX[^;]*"leaderboard_entries_dedupe_uq"/,
-    );
+    expect(initSql).not.toMatch(/CREATE UNIQUE INDEX[^;]*"saved_runs_owner_token_uq"/);
+    expect(initSql).not.toMatch(/CREATE UNIQUE INDEX[^;]*"leaderboard_entries_dedupe_uq"/);
   });
 
   it("emits CHECK on saved_runs.claim_state (anonymous|claimed)", () => {
@@ -175,12 +174,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
   });
 
   it("uses timestamp with time zone for all timestamp columns", () => {
-    expect(initSql).toMatch(
-      /"expires_at"\s+timestamp\s+with\s+time\s+zone\s+NOT\s+NULL/,
-    );
-    expect(initSql).toMatch(
-      /"window_expires_at"\s+timestamp\s+with\s+time\s+zone\s+NOT\s+NULL/,
-    );
+    expect(initSql).toMatch(/"expires_at"\s+timestamp\s+with\s+time\s+zone\s+NOT\s+NULL/);
+    expect(initSql).toMatch(/"window_expires_at"\s+timestamp\s+with\s+time\s+zone\s+NOT\s+NULL/);
   });
 
   it("does NOT touch the legacy LeaderboardSubmissionSchema (that's F-4)", () => {
@@ -212,6 +207,52 @@ describe("@wcdraft/db migrations — 0000_init", () => {
   });
 });
 
+describe("@wcdraft/db migrations — 0005_leaderboard_profiles", () => {
+  it("adds users.username with case-insensitive unique index and lowercase format CHECK", () => {
+    expect(profilesSql).toMatch(/ALTER TABLE "users" ADD COLUMN "username" text/);
+    expect(profilesSql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "users_username_ci_uq" ON "users" USING btree \(lower\("username"\)\)/,
+    );
+    expect(profilesSql).toMatch(/users_username_format_chk/);
+    expect(profilesSql).toMatch(/\^\[a-z0-9_\]\{3,20\}\$/);
+  });
+
+  it("replaces leaderboard_entries.display_name with nullable display_alias", () => {
+    expect(profilesSql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "display_alias" text/,
+    );
+    expect(profilesSql).toMatch(/UPDATE "leaderboard_entries" AS e/);
+    expect(profilesSql).toMatch(/DROP COLUMN "display_name"/);
+    expect(profilesSql).toMatch(/leaderboard_entries_display_alias_chk/);
+    expect(profilesSql).toMatch(/leaderboard_entries_public_name_chk/);
+  });
+
+  it("backfills legacy display names deterministically without selecting email", () => {
+    expect(profilesSql).toMatch(/regexp_replace\(lower\("display_name"\)/);
+    expect(profilesSql).toMatch(/reserved_terms\(term\)/);
+    expect(profilesSql).toMatch(/blocked_stems\(term\)/);
+    expect(profilesSql).toMatch(/replace\(n\.candidate, '_', ''\)/);
+    expect(profilesSql).toMatch(/'player_' \|\| substring\(md5\(e\."id"::text\)/);
+    expect(profilesSql).not.toMatch(/"email"/);
+  });
+
+  it("does NOT change leaderboard dedupe or top-rank indexes", () => {
+    expect(profilesSql).not.toMatch(/leaderboard_entries_dedupe_uq/);
+    expect(profilesSql).not.toMatch(/leaderboard_entries_top_idx/);
+  });
+
+  it("down-migration restores display_name and drops username artifacts", () => {
+    expect(profilesDownSql).toMatch(
+      /ALTER TABLE "leaderboard_entries" ADD COLUMN "display_name" text/,
+    );
+    expect(profilesDownSql).toMatch(/ALTER COLUMN "display_name" SET NOT NULL/);
+    expect(profilesDownSql).toMatch(/leaderboard_entries_display_name_chk/);
+    expect(profilesDownSql).toMatch(/DROP COLUMN IF EXISTS "display_alias"/);
+    expect(profilesDownSql).toMatch(/DROP INDEX IF EXISTS "users_username_ci_uq"/);
+    expect(profilesDownSql).toMatch(/DROP COLUMN IF EXISTS "username"/);
+  });
+});
+
 describe("@wcdraft/db migrations — 0001_auth_rate_limits", () => {
   it("creates auth_rate_limits table", () => {
     expect(authSql).toMatch(/CREATE TABLE IF NOT EXISTS "auth_rate_limits"/);
@@ -238,15 +279,11 @@ describe("@wcdraft/db migrations — 0001_auth_rate_limits", () => {
 
 describe("@wcdraft/db migrations — 0002_history_session_scope", () => {
   it("DROPS the F-1 global UNIQUE NULLS NOT DISTINCT constraint", () => {
-    expect(histSql).toMatch(
-      /ALTER TABLE "saved_runs" DROP CONSTRAINT "saved_runs_owner_token_uq"/,
-    );
+    expect(histSql).toMatch(/ALTER TABLE "saved_runs" DROP CONSTRAINT "saved_runs_owner_token_uq"/);
   });
 
   it("adds saved_runs.session_id column (nullable text)", () => {
-    expect(histSql).toMatch(
-      /ALTER TABLE "saved_runs" ADD COLUMN "session_id" text/,
-    );
+    expect(histSql).toMatch(/ALTER TABLE "saved_runs" ADD COLUMN "session_id" text/);
   });
 
   it("adds FK saved_runs.session_id → sessions.id ON DELETE set null", () => {
@@ -295,18 +332,14 @@ describe("@wcdraft/db migrations — 0002_history_session_scope", () => {
 
 describe("@wcdraft/db migrations — 0003_summary_jsonb", () => {
   it("adds saved_runs.summary as a nullable jsonb column", () => {
-    expect(summarySql).toMatch(
-      /ALTER TABLE "saved_runs" ADD COLUMN "summary" jsonb/,
-    );
+    expect(summarySql).toMatch(/ALTER TABLE "saved_runs" ADD COLUMN "summary" jsonb/);
     // Single-statement additive migration — no schema reshape.
     expect(summarySql).not.toMatch(/CREATE TABLE/);
     expect(summarySql).not.toMatch(/DROP/);
   });
 
   it("down-migration drops the summary column (idempotent IF EXISTS)", () => {
-    expect(summaryDownSql).toMatch(
-      /ALTER TABLE "saved_runs" DROP COLUMN IF EXISTS "summary"/,
-    );
+    expect(summaryDownSql).toMatch(/ALTER TABLE "saved_runs" DROP COLUMN IF EXISTS "summary"/);
   });
 
   it("does NOT touch any other table (additive on saved_runs only)", () => {
@@ -333,9 +366,7 @@ describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
   });
 
   it("adds leaderboard_entries.session_id with ON DELETE SET NULL (NOT cascade — board entries survive session sweep)", () => {
-    expect(f4Sql).toMatch(
-      /ALTER TABLE "leaderboard_entries" ADD COLUMN "session_id" text/,
-    );
+    expect(f4Sql).toMatch(/ALTER TABLE "leaderboard_entries" ADD COLUMN "session_id" text/);
     expect(f4Sql).toMatch(
       /ADD CONSTRAINT "leaderboard_entries_session_id_sessions_id_fk" FOREIGN KEY \("session_id"\) REFERENCES "public"\."sessions"\("id"\) ON DELETE set null/,
     );
@@ -376,9 +407,7 @@ describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
 
   // ── Lead-Architect ruling: RANKED IS ACCOUNT-REQUIRED (structural) ─────
   it("makes ranked_attempts.user_id NOT NULL (server-issued seeds tie to a user)", () => {
-    expect(f4Sql).toMatch(
-      /ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" SET NOT NULL/,
-    );
+    expect(f4Sql).toMatch(/ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" SET NOT NULL/);
   });
 
   it("forbids ranked leaderboard rows with a NULL user at the DB", () => {
@@ -409,12 +438,8 @@ describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
 
   // ── Hand-paired down-migration restores the 0003 snapshot shape ────────
   it("down-migration drops both new indexes before the columns", () => {
-    expect(f4DownSql).toMatch(
-      /DROP INDEX IF EXISTS "leaderboard_entries_session_idx"/,
-    );
-    expect(f4DownSql).toMatch(
-      /DROP INDEX IF EXISTS "leaderboard_entries_top_idx"/,
-    );
+    expect(f4DownSql).toMatch(/DROP INDEX IF EXISTS "leaderboard_entries_session_idx"/);
+    expect(f4DownSql).toMatch(/DROP INDEX IF EXISTS "leaderboard_entries_top_idx"/);
   });
 
   it("down-migration drops the three CHECKs + FK + four columns", () => {
@@ -426,12 +451,7 @@ describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
     ]) {
       expect(f4DownSql).toContain(`DROP CONSTRAINT IF EXISTS "${constraint}"`);
     }
-    for (const column of [
-      "hidden_at",
-      "display_name",
-      "session_id",
-      "draft_mode",
-    ]) {
+    for (const column of ["hidden_at", "display_name", "session_id", "draft_mode"]) {
       expect(f4DownSql).toContain(`DROP COLUMN IF EXISTS "${column}"`);
     }
   });
@@ -440,9 +460,6 @@ describe("@wcdraft/db migrations — 0004_f4_leaderboard", () => {
     expect(f4DownSql).toMatch(
       /CREATE INDEX IF NOT EXISTS "leaderboard_entries_top_idx"\s+ON "leaderboard_entries" USING btree \("season_key","mode","verified_score"\)/,
     );
-    expect(f4DownSql).toMatch(
-      /ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" DROP NOT NULL/,
-    );
+    expect(f4DownSql).toMatch(/ALTER TABLE "ranked_attempts" ALTER COLUMN "user_id" DROP NOT NULL/);
   });
 });
-

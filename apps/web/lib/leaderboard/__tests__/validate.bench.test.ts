@@ -50,7 +50,7 @@ function quantile(sorted: number[], q: number): number {
       return {
         token: encodeRunToken(record),
         claimed_score: expectedRunFor(data.gameData, data.scenario, record).score,
-        display_name: "Bench Player",
+        display_name: "bench_player",
       };
     });
 

@@ -59,6 +59,7 @@ describe("leaderboard validation golden — committed accepted fixtures", () => 
         {
           token: g.token,
           claimed_score: g.expected.verified_score,
+          draft_mode: g.expected.draft_mode,
           display_name: g.display_name,
         },
         data,
@@ -68,7 +69,7 @@ describe("leaderboard validation golden — committed accepted fixtures", () => 
       expect(verdict.verified_score).toBe(g.expected.verified_score);
       expect(verdict.season_key).toBe(g.expected.season_key);
       expect(verdict.draft_mode).toBe(g.expected.draft_mode);
-      expect(verdict.display_name).toBe(g.display_name);
+      expect(verdict.display_alias).toBe(g.display_name);
       expect(asPlain(verdict.score_breakdown)).toEqual(g.expected.score_breakdown);
       // Transparent-score invariant: the breakdown reassembles the score.
       const sum = verdict.score_breakdown.reduce((acc, c) => acc + c.points, 0);
@@ -81,6 +82,7 @@ describe("leaderboard validation golden — committed accepted fixtures", () => 
       const body = {
         token: g.token,
         claimed_score: g.expected.verified_score,
+        draft_mode: g.expected.draft_mode,
         display_name: g.display_name,
       };
       const a = validateSubmission(body, data);
@@ -88,4 +90,23 @@ describe("leaderboard validation golden — committed accepted fixtures", () => 
       expect(asPlain(a)).toEqual(asPlain(b));
     });
   }
+
+  it("hidden fixture proves Memory re-sim parity on the committed blind token", () => {
+    const g = GOLDEN.hidden;
+    const verdict = validateSubmission(
+      {
+        token: g.token,
+        claimed_score: g.expected.verified_score,
+        draft_mode: "hidden",
+        display_name: g.display_name,
+      },
+      data,
+    );
+    expect(decodeRunToken(g.token)?.md).toBe("hidden");
+    expect(verdict.status).toBe("accepted");
+    if (verdict.status !== "accepted") return;
+    expect(verdict.draft_mode).toBe("hidden");
+    expect(verdict.verified_score).toBe(g.expected.verified_score);
+    expect(asPlain(verdict.score_breakdown)).toEqual(g.expected.score_breakdown);
+  });
 });

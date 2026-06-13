@@ -27,12 +27,13 @@ export function isLeaderboardEnabled(): boolean {
 }
 
 /**
- * Swappable identity posture (plan §5.3): when "1", anonymous submissions
- * are rejected with 401 AUTH_REQUIRED and only account-bound sessions may
- * submit. Launch default (unset) = anonymous-first casual.
+ * Legacy identity-posture seam. L2 removes the OFF state for ranked:
+ * ranked submissions are always account-required, while casual submissions
+ * stay anonymous-capable in the submit route itself. Keep the helper as an
+ * explicit no-op-off contract for code that still imports the old seam.
  */
 export function isLeaderboardAccountRequired(): boolean {
-  return (process.env.LEADERBOARD_REQUIRE_ACCOUNT ?? "").trim() === "1";
+  return true;
 }
 
 /** The dark response: a bare 404 with no JSON body, no headers of note. */
