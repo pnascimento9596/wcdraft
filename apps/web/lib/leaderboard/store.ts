@@ -115,7 +115,7 @@ export interface BoardCursor {
 export interface BoardPageQuery {
   readonly seasonKey: string;
   readonly mode: BoardMode;
-  readonly draftMode: BoardDraftMode | null;
+  readonly draftMode: BoardDraftMode;
   readonly limit: number;
   readonly cursor: BoardCursor | null;
 }
@@ -168,9 +168,9 @@ export async function boardPage(
   const filters: SQL[] = [
     sql`${leaderboardEntries.seasonKey} = ${q.seasonKey}`,
     sql`${leaderboardEntries.mode} = ${q.mode}`,
+    sql`${leaderboardEntries.draftMode} = ${q.draftMode}`,
     sql`${leaderboardEntries.hiddenAt} IS NULL`,
   ];
-  if (q.draftMode !== null) filters.push(sql`${leaderboardEntries.draftMode} = ${q.draftMode}`);
   const cursorPredicate = q.cursor
     ? sql`WHERE verified_score < ${q.cursor.score}
             OR (verified_score = ${q.cursor.score}
@@ -226,12 +226,12 @@ export interface IdentityBest {
 
 /**
  * The identity's best visible entry and its CURRENT board rank in
- * (season, mode) — unfiltered view, same-snapshot window. Null when the
- * identity has no visible entry (e.g. all hidden).
+ * (season, mode, draft_mode) — same-snapshot window. Null when the identity
+ * has no visible entry (e.g. all hidden or only present in a different lane).
  */
 export async function identityBoardRank(
   db: Db,
-  q: { seasonKey: string; mode: BoardMode; identityKey: string },
+  q: { seasonKey: string; mode: BoardMode; draftMode: BoardDraftMode; identityKey: string },
 ): Promise<IdentityBest | null> {
   const result = await db.execute<{
     id: string;
@@ -242,7 +242,10 @@ export async function identityBoardRank(
       SELECT DISTINCT ON (${IDENTITY_EXPR})
              ${IDENTITY_EXPR} AS identity, id, verified_score, created_at
         FROM ${leaderboardEntries}
-       WHERE season_key = ${q.seasonKey} AND mode = ${q.mode} AND hidden_at IS NULL
+       WHERE season_key = ${q.seasonKey}
+         AND mode = ${q.mode}
+         AND draft_mode = ${q.draftMode}
+         AND hidden_at IS NULL
        ORDER BY ${IDENTITY_EXPR}, verified_score DESC, created_at ASC, id ASC
     ),
     ranked AS (
@@ -264,7 +267,7 @@ export async function identityBoardRank(
 // ─── Caller's recent entries (/me) ──────────────────────────────────────────
 
 /**
- * Newest-first visible entries owned by the caller in (season, mode).
+ * Newest-first visible entries owned by the caller in (season, mode, draft_mode).
  * Ownership = user_id when the session is account-bound, else session_id.
  */
 export async function recentEntriesFor(
@@ -272,6 +275,7 @@ export async function recentEntriesFor(
   q: {
     seasonKey: string;
     mode: BoardMode;
+    draftMode: BoardDraftMode;
     userId: string | null;
     sessionId: string;
     limit: number;
@@ -292,6 +296,7 @@ export async function recentEntriesFor(
       and(
         eq(leaderboardEntries.seasonKey, q.seasonKey),
         eq(leaderboardEntries.mode, q.mode),
+        eq(leaderboardEntries.draftMode, q.draftMode),
         isNull(leaderboardEntries.hiddenAt),
         ownership,
       ),

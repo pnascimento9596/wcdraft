@@ -21,6 +21,7 @@ import {
   BoardError,
   BoardHead,
   BoardRows,
+  BoardToolbar,
   EmptyBoard,
   MeChip,
 } from "@/components/leaderboard/board-views";
@@ -438,6 +439,19 @@ describe("board views", () => {
   it("empty board is words, not placeholder rows", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard));
     expect(html).toContain("No verified entries yet");
+    expect(html).toContain("ranked run");
+  });
+
+  it("toolbar exposes ranked Classic and Memory lanes without a mixed view", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardToolbar, { filter: "classic", onFilter: () => undefined }),
+    );
+    expect(html).toContain("Ranked");
+    expect(html).toContain("Classic");
+    expect(html).toContain("Memory");
+    expect(html).not.toContain("All");
+    expect(html).not.toContain("soon");
+    expect(html).not.toContain("Casual");
   });
 
   it("error state is an alert with retry — never an empty board", () => {

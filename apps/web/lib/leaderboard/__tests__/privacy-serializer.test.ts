@@ -38,7 +38,7 @@ describe("leaderboard public serializers", () => {
     const page = await boardPage(db, {
       seasonKey: "season-privacy",
       mode: "ranked",
-      draftMode: null,
+      draftMode: "classic",
       limit: 10,
       cursor: null,
     });

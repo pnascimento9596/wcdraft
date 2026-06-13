@@ -106,6 +106,7 @@ export function LeaderboardSubmitPanel({
       token,
       score,
       mode: submitMode,
+      draftMode: record.draft.mode,
       displayName: preparedName.value,
       needsUsername: submitMode === "ranked" && isSignedIn && publicUsername === null,
       refresh,
@@ -184,6 +185,7 @@ async function submitAfterProfile({
   token,
   score,
   mode,
+  draftMode,
   displayName,
   needsUsername,
   refresh,
@@ -191,6 +193,7 @@ async function submitAfterProfile({
   token: string;
   score: number;
   mode: SubmitBoardMode;
+  draftMode: "classic" | "hidden";
   displayName: string | null;
   needsUsername: boolean;
   refresh: () => Promise<void>;
@@ -226,6 +229,7 @@ async function submitAfterProfile({
     token,
     claimedScore: score,
     mode,
+    draftMode,
     displayName: aliasForEntry,
   });
 }

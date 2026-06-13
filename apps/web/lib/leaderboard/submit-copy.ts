@@ -3,7 +3,8 @@
 // Every wire outcome the submit route can produce maps 1:1 to honest copy
 // here — components never invent strings per call site, and a code the table
 // doesn't know falls back to UNEXPECTED (shown as such, never dressed up as
-// success). draft_mode is honor-system: nothing below polices or accuses.
+// success). Lane/config rejections stay policy-neutral in copy: no accusing
+// the player, just the server verdict.
 
 import type { SubmitErrorCode } from "./validate";
 import type { DisplayNameRejection } from "./display-name";

@@ -96,6 +96,7 @@ function validBody(over: Record<string, unknown> = {}): Record<string, unknown> 
   return {
     token: GOLDEN.classic.token,
     claimed_score: GOLDEN.classic.expected.verified_score,
+    draft_mode: "classic",
     display_alias: "route_tester",
     ...over,
   };
@@ -383,6 +384,7 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
         body: {
           token: GOLDEN.hidden.token,
           claimed_score: GOLDEN.hidden.expected.verified_score,
+          draft_mode: "hidden",
           display_alias: "hidden_tester",
         },
       }),
@@ -392,6 +394,30 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     const body = (await res.json()) as { entry: { draft_mode: string } };
     expect(body.entry.draft_mode).toBe("hidden");
     expect(await allRows()).toHaveLength(2);
+  });
+
+  it("cross-lane token mismatch → 422 NON_CANONICAL_CONFIG, no row", async () => {
+    const hiddenAsClassic = await handleLeaderboardSubmit(
+      makeReq({
+        body: {
+          token: GOLDEN.hidden.token,
+          claimed_score: GOLDEN.hidden.expected.verified_score,
+          draft_mode: "classic",
+          display_alias: "hidden_tester",
+        },
+      }),
+      makeDeps(),
+    );
+    expect(hiddenAsClassic.status).toBe(422);
+    expect((await errorOf(hiddenAsClassic)).error).toBe("NON_CANONICAL_CONFIG");
+
+    const classicAsHidden = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ draft_mode: "hidden" }) }),
+      makeDeps(),
+    );
+    expect(classicAsHidden.status).toBe(422);
+    expect((await errorOf(classicAsHidden)).error).toBe("NON_CANONICAL_CONFIG");
+    expect(await allRows()).toHaveLength(0);
   });
 });
 
@@ -584,6 +610,60 @@ describe("ranked account gate", () => {
     const body = (await res.json()) as { entry: Record<string, unknown> };
     expect(body.entry.display_name).toBe("alias_user");
     expect(JSON.stringify(body)).not.toContain("alias-ranked@example.com");
+  });
+
+  it("account-bound ranked Memory submit ranks inside the Memory lane only", async () => {
+    const player = await db
+      .insert(users)
+      .values({ email: "memory-ranked@example.com", username: "memory_player" })
+      .returning();
+    const rival = await db
+      .insert(users)
+      .values({ email: "memory-rival@example.com", username: "memory_rival" })
+      .returning();
+    await db.insert(leaderboardEntries).values({
+      seasonKey: GOLDEN.season_key,
+      mode: "ranked",
+      draftMode: "hidden",
+      userId: rival[0]!.id,
+      sessionId: null,
+      displayAlias: null,
+      token: "t1.memory-rival",
+      verifiedScore: -10,
+      scoreBreakdown: [],
+      createdAt: new Date(Date.now() - 1000),
+    });
+    const { opts } = await sessionReqOpts(player[0]!.id);
+    const classic = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body: validBody({ mode: "ranked", display_alias: undefined, display_name: undefined }),
+      }),
+      makeDeps(),
+    );
+    expect(classic.status).toBe(201);
+
+    const hidden = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body: {
+          token: GOLDEN.hidden.token,
+          claimed_score: GOLDEN.hidden.expected.verified_score,
+          draft_mode: "hidden",
+          mode: "ranked",
+          display_alias: undefined,
+          display_name: undefined,
+        },
+      }),
+      makeDeps(),
+    );
+    expect(hidden.status).toBe(201);
+    const body = (await hidden.json()) as {
+      rank: number | null;
+      entry: Record<string, unknown>;
+    };
+    expect(body.entry.draft_mode).toBe("hidden");
+    expect(body.rank).toBe(2);
   });
 });
 

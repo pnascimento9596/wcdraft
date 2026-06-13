@@ -4,10 +4,13 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-12 · `origin/main` `c174775d223d8776f8950749b50a0e6099ca456b`
-after the merit-v3 V8 season merge (#104, squash `1552e44`), the leaderboard
-runtime-data hotfix (#105, squash `a0d0828`), and accounts/email production
-light-up/docs (#108/#109). The live repo pins are now `runtime-data-2.0.0` /
+Last measured for leaderboard-profiles in-flight work: 2026-06-12 ·
+`origin/leaderboard-profiles` `2884571e1517df817fc8f56d2f29aeedfb0f46d5`
+plus local L3 Memory-lane validation before PR. Production/main facts below
+remain from the prior 2026-06-12 measurement unless explicitly noted: after the
+merit-v3 V8 season merge (#104, squash `1552e44`), the leaderboard runtime-data
+hotfix (#105, squash `a0d0828`), and accounts/email production light-up/docs
+(#108/#109). The live repo pins are now `runtime-data-2.0.0` /
 `engine-2026.06.12`; draft-config's
 `runtime-data-1.2.0` / `engine-2026.06.11` anchors are historical PREV-skew
 fixtures, not the current production season.
@@ -39,6 +42,14 @@ than hidden regressions.
   `AUTH_BASE_URL` set in Vercel Production, magic-link verify proven end-to-end
   with a real owner sign-in). Ranked leaderboard remains human-gated
   (`LEADERBOARD_REQUIRE_ACCOUNT` still UNSET — casual board only).
+- Leaderboard-profiles Red season is in flight on integration branch
+  `leaderboard-profiles`: L1 schema/profiles (#114) and L2 ranked-requires-account
+  (#117) are landed into the integration branch. L3 local Memory-lane work makes
+  public board reads ranked Classic/Memory lanes (`draft_mode` first-class,
+  default Classic), requires submit bodies to carry an explicit `draft_mode`, and
+  rejects Classic↔Memory token/lane mismatches with `NON_CANONICAL_CONFIG` before
+  persistence. Explicit `mode=casual` reads and casual submit/share semantics remain
+  supported for casual artifacts; no golden fixtures were regenerated.
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -68,7 +79,7 @@ than hidden regressions.
 | leaderboard season key      | engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434 |
 | compact brotli total        | 1,216,305 bytes                                                                          |
 
-## Test counts (latest measured on `ws-wrap/post-season`)
+## Test counts (latest relevant measurements; branch noted where not main)
 
 | Suite                                                   | Result                                                                                                |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -79,8 +90,8 @@ than hidden regressions.
 | @wcdraft/data `test:golden:data`                        | 31 passed                                                                                             |
 | @wcdraft/data `test:golden:integration`                 | 22 passed                                                                                             |
 | @wcdraft/db `test`                                      | 74 passed                                                                                             |
-| @wcdraft/web `test`                                     | 603 passed, 1 skipped (604)                                                                           |
-| @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
+| @wcdraft/web `test` (leaderboard-profiles L3)           | 649 passed, 1 skipped (650)                                                                           |
+| @wcdraft/web `test:golden:leaderboard` (L3)             | 6 passed                                                                                              |
 | etl V1 `ruff check src tests`                           | clean                                                                                                 |
 | etl V1 focused merit suite                              | 42 passed                                                                                             |
 | etl V1 `pytest -q`                                      | 233 passed                                                                                            |
@@ -108,6 +119,9 @@ than hidden regressions.
 | V8 regen byte-stability                                 | compact/e2e/era/canary/asym/leaderboard/token-skew output hashes unchanged after rerun                |
 | post-season focused web tests                           | SW registration/cache + config badges/copy: 28 passed                                                 |
 | post-season browser proof                               | local production build: 12 screenshots · SW registered · stale test caches evicted · console errors 0 |
+| leaderboard-profiles L3 focused suite                   | validation + golden + submit + board + UI + serializer: 145 passed                                    |
+| leaderboard-profiles L3 lane mutation proof             | disabling the token.md↔draft_mode guard failed validate + submit cross-lane tests; restored 77 passed |
+| @wcdraft/web `build` (leaderboard-profiles L3)          | PASS; existing Next/Webpack circular chunk warnings only                                              |
 
 ## CI (`.github/workflows/`)
 
@@ -134,8 +148,9 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
   `vercel env ls production` 2026-06-12. All three auth env names are also
   declared in `turbo.json`'s `tasks.build.env` so the SSG'd root layout
   prerenders `authEnabled:true` (see PR #108).
-- UNSET (dark by design): `LEADERBOARD_REQUIRE_ACCOUNT` — keeps the ranked
-  leaderboard gated until ranked tiers ship.
+- UNSET in current production pre-season-merge: `LEADERBOARD_REQUIRE_ACCOUNT`.
+  On the in-flight `leaderboard-profiles` integration branch, ranked submit no
+  longer has an anonymous-open OFF state; ranked requires an account in code.
 - Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
   re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
 

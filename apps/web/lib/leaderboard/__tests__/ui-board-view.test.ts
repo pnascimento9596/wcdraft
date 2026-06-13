@@ -33,6 +33,8 @@ function page(entries: BoardEntryWire[], nextCursor: string | null): BoardPageWi
   return {
     season_key: "s",
     current_season_key: "s",
+    mode: "ranked",
+    draft_mode: "classic",
     entries,
     next_cursor: nextCursor,
   };
@@ -123,13 +125,12 @@ describe("appendBoardPage (pagination walk)", () => {
 });
 
 describe("boardQueryString", () => {
-  it("'all' sends no draft_mode (server default view)", () => {
-    expect(boardQueryString({ draftMode: "all", cursor: null })).toBe("");
-  });
-  it("filter + cursor compose", () => {
-    expect(boardQueryString({ draftMode: "hidden", cursor: null })).toBe("?draft_mode=hidden");
+  it("always sends ranked mode plus an explicit lane", () => {
+    expect(boardQueryString({ draftMode: "hidden", cursor: null })).toBe(
+      "?mode=ranked&draft_mode=hidden",
+    );
     expect(boardQueryString({ draftMode: "classic", cursor: "C 1" })).toBe(
-      "?draft_mode=classic&cursor=C+1",
+      "?mode=ranked&draft_mode=classic&cursor=C+1",
     );
   });
 });
