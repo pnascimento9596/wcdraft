@@ -47,3 +47,26 @@ venv/
 # manifest + a per-deploy revision. Source of truth is the generator;
 # checking this in would defeat the per-deploy cache-bust contract.
 apps/web/public/sw-version.js
+
+# --- Local-checkout hygiene (agent scratch + review captures) ---
+# Vercel CLI project link. Holds only project.json (projectId/orgId/projectName)
+# + README.txt — no secrets — but it is machine-local and never belongs in git.
+.vercel/
+
+# Browser-automation scratch dirs (Playwright CLI / MCP run artifacts).
+.playwright-cli/
+.playwright-mcp/
+
+# Prompt / marketing export scratch dropped by agent runs.
+prompt-exports/
+
+# Loose verification screenshots captured at the repo ROOT during review
+# passes. Leading slash anchors this to the top level only, so committed
+# brand/marketing icons (apps/web/public/**) and review captures under
+# docs/screenshots/** stay tracked. Keep durable shots under docs/, not here.
+/*.png
+
+# uv-generated Python lockfile. etl deps are pinned via etl/pyproject.toml and
+# the uv lock is not part of the committed reproducibility contract (etl/output
+# byte-stability is the gate). Tracking it would add unreviewed lock churn.
+etl/uv.lock
