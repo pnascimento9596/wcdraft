@@ -37,13 +37,14 @@ export default function PrivacyPage() {
           <li>
             <strong>Gameplay and history data.</strong> Draft runs can include the run id, parent
             seed, version anchors, squad, manager, match results, score summary, share token, claim
-            state, and timestamps. Anonymous runs are kept in this browser. Signed-in runs can also
-            be saved to the server so they can appear in account history.
+            state, and timestamps. Runs are saved locally in this browser. Completed runs may also
+            be mirrored to the server under an anonymous session or a signed-in account so history,
+            claiming, and replay can work across the site.
           </li>
           <li>
             <strong>Leaderboard data.</strong> When you post a result, we store the season, board
             mode, draft mode, display name, run token, verified score, score breakdown, account or
-            session link, attempt id, and timestamps.
+            session link, and timestamps.
           </li>
           <li>
             <strong>Share links.</strong> Share URLs contain a self-contained run token. Anyone you
@@ -113,9 +114,9 @@ export default function PrivacyPage() {
         <p>
           Magic links expire quickly and are single-use. Session cookies expire automatically.
           Browser runs stay in local storage until you clear browser data, delete a local run, or
-          the app evicts old local records. Signed-in server history is capped to recent saved runs
-          per account or session. Leaderboard entries may remain visible as season standings unless
-          they are removed for moderation, security, or a valid privacy request.
+          the app evicts old local records. Server history is capped to recent saved runs per
+          account or anonymous session. Leaderboard entries may remain visible as season standings
+          unless they are removed for moderation, security, or a valid privacy request.
         </p>
         <p>
           Deleting a run from local history removes that browser copy. It does not remove a run that
