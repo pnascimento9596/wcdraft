@@ -6,6 +6,7 @@
 // a false prop so the submit affordance never mounts. Component states are
 // string-rendered (no DOM env) — every submit outcome + board state.
 
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -361,6 +362,29 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
     expect(html).toContain("Post ranked run");
   });
 
+  it("ranked username text is HTML-escaped by construction", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: '<script>alert("x")</script>',
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Posting as");
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;");
+  });
+
   it("INVALID_NAME: server verdict + mirrored hint", () => {
     const html = render({
       kind: "rejected",
@@ -419,6 +443,31 @@ describe("board views", () => {
     expect(html).toContain("2m ago");
     expect(html).toContain("You"); // me-highlight badge on entry b only
     expect(html).toContain('data-mine="true"');
+  });
+
+  it("public board names and breakdown labels render as escaped text", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardRows, {
+        rows: [
+          {
+            key: "hostile",
+            rank: 1,
+            displayName: '<img src=x onerror="alert(1)">',
+            score: 99,
+            draftMode: "classic",
+            timeLabel: "10m ago",
+            isMine: false,
+            breakdown: [{ label: "<script>breakdown()</script>", points: 1 }],
+          },
+        ],
+        openKey: "hostile",
+        onToggle: () => undefined,
+      }),
+    );
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;");
+    expect(html).toContain("&lt;script&gt;breakdown()&lt;/script&gt;");
   });
 
   it("open row shows the verified score breakdown (evidence)", () => {
@@ -480,5 +529,20 @@ describe("board views", () => {
     );
     expect(html).toContain("Season 2026-06-04 · engine-2026.06.11");
     expect(html).toContain("f166edc0");
+  });
+});
+
+describe("identity rendering implementation guard", () => {
+  it("profile/leaderboard name surfaces do not use dangerouslySetInnerHTML", () => {
+    const files = [
+      "../../../components/account-menu.tsx",
+      "../../../components/leaderboard/board-views.tsx",
+      "../../../components/leaderboard/submit-panel-views.tsx",
+    ];
+    for (const file of files) {
+      expect(readFileSync(new URL(file, import.meta.url), "utf8"), file).not.toContain(
+        "dangerouslySetInnerHTML",
+      );
+    }
   });
 });
