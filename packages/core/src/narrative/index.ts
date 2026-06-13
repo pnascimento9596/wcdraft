@@ -4,7 +4,12 @@
 // (data, not a model), an event-log-driven facts reducer, deterministic token
 // resolution, and sub-seed-threaded template selection. No runtime LLM.
 
-export { NARRATIVE_TEMPLATES, templatesForClass, classifyOutcome } from "./templates.js";
+export {
+  NARRATIVE_TEMPLATES,
+  templatesForClass,
+  templatesForScenarioFamily,
+  classifyOutcome,
+} from "./templates.js";
 export { deriveNarrativeFacts } from "./facts.js";
 export {
   resolveNarrativeTokens,

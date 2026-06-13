@@ -134,9 +134,7 @@
           "P-92866:2014",
           "P-95269:2014"
         ],
-        "excluded_player_ids": [
-          "P-05559"
-        ],
+        "excluded_player_ids": ["P-05559"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-03735:2014",
@@ -180,10 +178,7 @@
           "P-W26-0608:2026",
           "P-W26-0609:2026"
         ],
-        "excluded_player_ids": [
-          "P-05559",
-          "P-03735"
-        ],
+        "excluded_player_ids": ["P-05559", "P-03735"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-09292:2026",
@@ -223,11 +218,7 @@
           "P-93788:1978",
           "P-99788:1978"
         ],
-        "excluded_player_ids": [
-          "P-05559",
-          "P-03735",
-          "P-09292"
-        ],
+        "excluded_player_ids": ["P-05559", "P-03735", "P-09292"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-03775:1978",
@@ -268,12 +259,7 @@
           "P-85128:2006",
           "P-87039:2006"
         ],
-        "excluded_player_ids": [
-          "P-05559",
-          "P-03735",
-          "P-09292",
-          "P-03775"
-        ],
+        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-05783:2006",
@@ -314,13 +300,7 @@
           "P-94825:2002",
           "P-97840:2002"
         ],
-        "excluded_player_ids": [
-          "P-05559",
-          "P-03735",
-          "P-09292",
-          "P-03775",
-          "P-05783"
-        ],
+        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775", "P-05783"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-00447:2002",
@@ -360,14 +340,7 @@
           "P-82311:1950",
           "P-92865:1950"
         ],
-        "excluded_player_ids": [
-          "P-05559",
-          "P-03735",
-          "P-09292",
-          "P-03775",
-          "P-05783",
-          "P-00447"
-        ],
+        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775", "P-05783", "P-00447"],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-07639:1950",
@@ -882,9 +855,7 @@
         "player_id": "P-03735",
         "tournament_id": 2014,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: MF in LB slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: MF in LB slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.LCB",
@@ -894,9 +865,7 @@
         "player_id": "P-09292",
         "tournament_id": 2026,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: MF in LCB slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: MF in LCB slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.RCB",
@@ -916,9 +885,7 @@
         "player_id": "P-05783",
         "tournament_id": 2006,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: MF in RB slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: MF in RB slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.CDM",
@@ -928,9 +895,7 @@
         "player_id": "P-00447",
         "tournament_id": 2002,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: FW in CDM slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: FW in CDM slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.LCM",
@@ -950,9 +915,7 @@
         "player_id": "P-02465",
         "tournament_id": 2018,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: DF in RCM slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: DF in RCM slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.LW",
@@ -962,9 +925,7 @@
         "player_id": "P-04785",
         "tournament_id": 2006,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: MF in LW slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: MF in LW slot (compatibility 0.75)"]
       },
       {
         "slot_id": "4-3-3.ST",
@@ -1006,9 +967,7 @@
         "player_id": "P-W26-0161",
         "tournament_id": 2026,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: MF in CB slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: MF in CB slot (compatibility 0.75)"]
       },
       {
         "slot_id": "bench.2",
@@ -1018,9 +977,7 @@
         "player_id": "P-06148",
         "tournament_id": 1938,
         "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: DF in CM slot (compatibility 0.75)"
-        ]
+        "validation_warnings": ["out-of-position: DF in CM slot (compatibility 0.75)"]
       },
       {
         "slot_id": "bench.3",
@@ -1065,7 +1022,7 @@
     ],
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
-    "engine_version": "engine-2026.06.12",
+    "engine_version": "engine-2026.06.13",
     "draft_flow": "squad_first",
     "rating_basis": "career",
     "era_preset": "all_time"
@@ -1073,20 +1030,10 @@
   "scenario": {
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "user_group_id": "G",
-    "group_opponent_team_ids": [
-      "WC2026-G1",
-      "WC2026-G3",
-      "WC2026-G4"
-    ],
+    "group_opponent_team_ids": ["WC2026-G1", "WC2026-G3", "WC2026-G4"],
     "knockout_opponent_rule": {
       "kind": "escalating_strength_seeded",
-      "rounds": [
-        "R32",
-        "R16",
-        "QF",
-        "SF",
-        "F"
-      ],
+      "rounds": ["R32", "R16", "QF", "SF", "F"],
       "seed_suffix": "opponent_selection"
     },
     "ruleset_version": "ruleset-2026.06.04",
@@ -1096,24 +1043,15 @@
     "scenario_seed": "wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "user_group_id": "G",
     "replaced_team_id": "WC2026-G2",
-    "source_group_team_ids": [
-      "WC2026-G1",
-      "WC2026-G2",
-      "WC2026-G3",
-      "WC2026-G4"
-    ],
-    "group_opponent_team_ids": [
-      "WC2026-G1",
-      "WC2026-G3",
-      "WC2026-G4"
-    ]
+    "source_group_team_ids": ["WC2026-G1", "WC2026-G2", "WC2026-G3", "WC2026-G4"],
+    "group_opponent_team_ids": ["WC2026-G1", "WC2026-G3", "WC2026-G4"]
   },
   "run": {
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
-    "engine_version": "engine-2026.06.12",
+    "engine_version": "engine-2026.06.13",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:29",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",
@@ -3097,9 +3035,9 @@
       }
     ],
     "narrative": {
-      "template_id": "r32_exit_05",
+      "template_id": "scn_elimination_heartbreak_02",
       "narrative_seed": "wcdraft:narrative:v1:3f1c8c38261e95159b6a82530b5f7edc",
-      "filled_text": "Reaching the knockouts was the floor, not the ceiling — but the ceiling came fast. WC2026-I4 ended Unavailable's tournament in the round of 32."
+      "filled_text": "Unavailable's tournament ended in the round of 32, 1-3 against WC2026-I4. The last whistle made the round feel final."
     }
   },
   "matches": [
@@ -10057,9 +9995,7 @@
         "fallback_reason": null,
         "user_slot_id": "R32-M77/2",
         "opposite_slot_id": "R32-M77/1",
-        "candidate_group_ids": [
-          "I"
-        ]
+        "candidate_group_ids": ["I"]
       },
       {
         "round": "R16",

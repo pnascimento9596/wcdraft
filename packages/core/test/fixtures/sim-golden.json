@@ -3629,9 +3629,9 @@
           }
         ],
         "narrative": {
-          "template_id": "champ_undefeated_05",
+          "template_id": "scn_perfect_run_milestone_02",
           "narrative_seed": "wcdraft:narrative:v1:bfbe9a62b51ac963e937ce2c44a90c75",
-          "filled_text": "An unbeaten champion is a rare thing, and Unavailable earned every word of it. Unavailable's side closed out a 8-0-0 campaign with u06 finishing as the tournament's defining forward."
+          "filled_text": "Eight matches, eight wins, a champion's clean line. Unavailable made 8-0 feel inevitable, with u06 turning the final past T09."
         }
       }
     },
@@ -5970,9 +5970,9 @@
           }
         ],
         "narrative": {
-          "template_id": "r16_exit_02",
+          "template_id": "scn_shootout_drama_01",
           "narrative_seed": "wcdraft:narrative:v1:1074df01e23f7e0421a4fbdc513c923b",
-          "filled_text": "The first knockout hurdle proved the last. a penalty shootout held sent Unavailable home in the round of 16, with u03 left to rue the fine margins."
+          "filled_text": "Penalties wrote their own chapter in the round of 32. u06 was tied to the final walk from the spot as the shootout finished 4-3."
         }
       }
     },
@@ -8822,9 +8822,9 @@
           }
         ],
         "narrative": {
-          "template_id": "qf_exit_02",
+          "template_id": "scn_shootout_drama_01",
           "narrative_seed": "wcdraft:narrative:v1:af077109808f9664b3f94a470a74678e",
-          "filled_text": "Eight teams left, and Unavailable were not among the four that went on. a stirring comeback settled a tense quarter-final in T03's favour."
+          "filled_text": "Penalties wrote their own chapter in the quarter-final. u05 was tied to the final walk from the spot as the shootout finished 3-4."
         }
       }
     },
@@ -12168,9 +12168,9 @@
           }
         ],
         "narrative": {
-          "template_id": "champ_draws_03",
+          "template_id": "scn_shootout_drama_01",
           "narrative_seed": "wcdraft:narrative:v1:9d6be81679e3f4f9ec0c2168a098a166",
-          "filled_text": "They wobbled, they recovered, they won. A 8-0-0 campaign and a penalty shootout held along the way could not stop Unavailable from getting their hands on the trophy."
+          "filled_text": "Penalties wrote their own chapter in the semi-final. u07 was tied to the final walk from the spot as the shootout finished 4-2."
         }
       }
     },
@@ -13847,9 +13847,9 @@
           }
         ],
         "narrative": {
-          "template_id": "group_winless_02",
+          "template_id": "scn_elimination_heartbreak_01",
           "narrative_seed": "wcdraft:narrative:v1:0a58dd448447afd9a99ee2d4f6de05d3",
-          "filled_text": "A tournament to forget. Unavailable left the group stage winless, a vital equaliser about the only thing worth replaying from a difficult three games."
+          "filled_text": "The exit came in the decisive group match, and it came with a scoreline that will sit badly: 1-3. T00p01 was the name on the other side of the heartbreak."
         }
       }
     }

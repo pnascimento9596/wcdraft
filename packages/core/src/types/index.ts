@@ -131,10 +131,14 @@ export type {
 export type {
   // narrative.ts
   KeyMoment,
+  NarrativeMatchMethod,
+  NarrativeScenarioFamily,
+  NarrativeScenarioSpotlight,
   NarrativeFacts,
   OutcomeClass,
   TokenName,
   NarrativeLabels,
+  NarrativeTemplateOutcomeClass,
   NarrativeTemplate,
 } from "./narrative.js";
 

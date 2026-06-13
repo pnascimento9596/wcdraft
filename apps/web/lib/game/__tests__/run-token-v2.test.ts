@@ -271,7 +271,7 @@ describe("committed PREV-skew fixtures (fixtures/run-token-skew.json)", () => {
     expect(decoded!.sv).not.toBe(gameData.versions.schema_version);
     expect(decoded!.rv).not.toBe(gameData.versions.rating_version);
     expect(decoded!.hv).not.toBe(gameData.versions.data_bundle_hash);
-    expect(decoded!.ev).toBe(gameData.versions.engine_version);
+    expect(decoded!.ev).not.toBe(gameData.versions.engine_version);
   });
 
   it("prev-build t1 token: decodes, default config, trips skew", () => {

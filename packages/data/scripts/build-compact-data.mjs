@@ -51,8 +51,9 @@ const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
 const SCHEMA_VERSION = "runtime-data-2.1.0";
-// merit-v3 V8: single season engine bump after the V7 lambda refit.
-const ENGINE_VERSION = "engine-2026.06.12";
+// narrative-v2: deterministic scenario-aware narrative selection changes
+// RunResult.narrative bytes while leaving sim math/data bundles untouched.
+const ENGINE_VERSION = "engine-2026.06.13";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // merit-v3.1 model (wc-perf-5.1.0 historical, unified display curve v2);
