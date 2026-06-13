@@ -62,7 +62,8 @@ function submit(overrides: Partial<SubmissionBody>) {
     {
       token: originToken,
       claimed_score: originExpected.score,
-      display_name: "Honest Player",
+      draft_mode: "classic",
+      display_name: "honest_player",
       ...overrides,
     },
     data,
@@ -90,6 +91,11 @@ describe("step 1 — shape + size guard", () => {
     expect(rejectionCode(submit({ claimed_score: 1.5 }))).toBe("INVALID_BODY");
     expect(rejectionCode(submit({ claimed_score: "12" }))).toBe("INVALID_BODY");
     expect(rejectionCode(submit({ claimed_score: Number.NaN }))).toBe("INVALID_BODY");
+  });
+
+  it("rejects a missing or unknown draft_mode (INVALID_BODY)", () => {
+    expect(rejectionCode(submit({ draft_mode: undefined }))).toBe("INVALID_BODY");
+    expect(rejectionCode(submit({ draft_mode: "all" }))).toBe("INVALID_BODY");
   });
 
   it("ORDER LOCK: size guard fires before name validation", () => {
@@ -230,19 +236,17 @@ describe("step 3b — NON_CANONICAL_CONFIG (DC-1, owner-ratified canonical-only 
     });
     // Invalid name + non-canonical config → config code wins (it is checked
     // first; the name is never inspected for a run that cannot rank).
-    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe(
-      "NON_CANONICAL_CONFIG",
-    );
+    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe("NON_CANONICAL_CONFIG");
   });
 });
 
 describe("step 5 — display-name rules (plan §5.1)", () => {
   it("rejects through the pipeline with INVALID_NAME + category, raw value not echoed", () => {
-    const v = submit({ display_name: "http://spam.example/x" });
+    const v = submit({ display_name: "bad-name" });
     expect(rejectionCode(v)).toBe("INVALID_NAME");
     if (v.status === "rejected") {
       expect(v.name_reason).toBe("invalid_chars");
-      expect(v.reason).not.toContain("spam.example");
+      expect(v.reason).not.toContain("bad-name");
     }
   });
 
@@ -255,14 +259,18 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
       ["http://example.com/x", "invalid_chars"], // URL — ':' and '/' excluded
       ["Zer\u200Bo One", "invalid_chars"], // zero-width space (escaped on purpose)
       ["Tab\tName", "invalid_chars"], // control char
-      ["_leading", "edge_separator"],
-      ["trailing.", "edge_separator"],
-      ["admin99", "blocked_term"],
-      ["a.d-m_i n", "blocked_term"], // separator-stripped fold catches spacing tricks
-      ["WcDrAfT Team", "blocked_term"], // impersonation, case-folded
+      ["has space", "invalid_chars"],
+      ["has.dots", "invalid_chars"],
+      ["admin", "blocked_term"],
+      ["api", "blocked_term"],
+      ["mod", "blocked_term"],
+      ["WcDrAfT", "blocked_term"], // reserved exact word, case-folded
+      ["xxniggerxx", "blocked_term"], // original local abuse stem list
       ["abc", null],
-      ["Müller.São-10", null], // unicode letters + full separator set
-      ["José 10", null],
+      ["_leading", null],
+      ["trailing_", null],
+      ["muller_sao_10", null],
+      ["jose10", null],
     ];
     for (const [raw, expected] of cases) {
       const r = validateDisplayName(raw);
@@ -275,10 +283,9 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
     }
   });
 
-  it("normalizes (trim + NFC) and returns the persistable form", () => {
-    // NFD "Müller" (decomposed u + combining diaeresis) → NFC composed.
-    const r = validateDisplayName("  Müller  ");
-    expect(r).toEqual({ ok: true, name: "Müller" });
+  it("normalizes (trim + lowercase) and returns the persistable form", () => {
+    const r = validateDisplayName("  Honest_Player  ");
+    expect(r).toEqual({ ok: true, name: "honest_player" });
   });
 
   it("ORDER LOCK: name validation fires before the replay keystone", () => {
@@ -288,7 +295,7 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
       const i = b.pl.findIndex((p) => p.k === "p");
       (b.pl[i] as { c: string }).c = "p99999_t1"; // garbage card
     });
-    const v = submit({ token: t, display_name: "_bad" });
+    const v = submit({ token: t, display_name: "bad-name" });
     expect(rejectionCode(v)).toBe("INVALID_NAME");
   });
 });
@@ -431,31 +438,38 @@ describe("step 9 — SCORE_MISMATCH (T2 tampered score)", () => {
 
 describe("acceptance contract", () => {
   it("the honest origin run is ACCEPTED with canonical fields", () => {
-    const v = submit({ display_name: "  Honest Player  " });
+    const v = submit({ display_name: "  Honest_Player  " });
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.verified_score).toBe(originExpected.score);
     expect(v.season_key).toBe(deriveSeasonKey(data.gameData.versions));
     expect(v.draft_mode).toBe("classic");
-    expect(v.display_name).toBe("Honest Player"); // normalized, not raw
+    expect(v.display_alias).toBe("honest_player"); // normalized, not raw
     expect(v.token_body.ps).toBe(ORIGIN_SEED);
   });
 
-  it("BEHAVIOR LOCK: md classic→hidden flip is ACCEPTED as hidden (self-declared tag)", () => {
-    // `mode` never feeds spin derivation or the sim — a flipped tag replays
-    // and re-sims identically. The server CANNOT prove which UI the player
-    // saw; draft_mode is a self-declared fairness dimension (plan §7), and
-    // any policy gating belongs to U3+/product, not this core. This test
-    // exists so a future engine change that makes mode mechanical (and thus
-    // detectable) shows up as a diff here.
+  it("hidden mode remains re-sim/display-only when the requested lane matches", () => {
+    // `md` never feeds spin derivation or the sim — the blind seam is display
+    // only. A token that declares Memory must target the Memory lane, but the
+    // replay and score path stay mode-agnostic.
     const t = tampered((b) => {
       b.md = "hidden";
     });
-    const v = submit({ token: t });
+    const v = submit({ token: t, draft_mode: "hidden" });
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.draft_mode).toBe("hidden");
     expect(v.verified_score).toBe(originExpected.score);
+  });
+
+  it("cross-lane mismatch rejects before replay persistence", () => {
+    expect(rejectionCode(submit({ draft_mode: "hidden" }))).toBe("NON_CANONICAL_CONFIG");
+    const hiddenToken = tampered((b) => {
+      b.md = "hidden";
+    });
+    expect(rejectionCode(submit({ token: hiddenToken, draft_mode: "classic" }))).toBe(
+      "NON_CANONICAL_CONFIG",
+    );
   });
 
   it("rejected verdicts are deterministic too (two runs, deep-equal)", () => {

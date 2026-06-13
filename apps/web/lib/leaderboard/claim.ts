@@ -11,11 +11,11 @@
 //      already exists among the user's own rows. The dedupe constraint
 //      `leaderboard_entries_dedupe_uq` on (season_key, mode, user_id, token)
 //      NULLS NOT DISTINCT would reject the transfer of such a row; the
-//      account row is the source of truth (it keeps its own display_name and
+//      account row is the source of truth (it keeps its own display_alias and
 //      created_at), so the anon duplicate is discarded.
 //   2. UPDATE the survivors: set `user_id = userId`, `session_id = NULL`.
-//      `display_name` is deliberately NOT touched — the name shown on the
-//      board at submit time stays on the entry after the claim.
+//      `display_alias` is deliberately NOT touched — the alias chosen at
+//      submit time stays on the entry after the claim.
 //
 // Same-bucket collisions are NOT conflicts: per the F-4 plan §4, ALL
 // accepted entries are retained as rows (audit + re-rank freedom later) and
@@ -110,7 +110,7 @@ export async function claimLeaderboardEntries(
     RETURNING e.id
   `);
 
-  // Step 2 — transfer survivors. display_name / hidden_at / created_at are
+  // Step 2 — transfer survivors. display_alias / hidden_at / created_at are
   // deliberately untouched (see module header).
   const transferred = await deps.db
     .update(leaderboardEntries)

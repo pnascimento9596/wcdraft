@@ -6,7 +6,7 @@
 // server rows verbatim; a malformed breakdown renders as absent ("—"),
 // never re-derived client-side.
 
-export type BoardDraftModeFilter = "all" | "classic" | "hidden";
+export type BoardDraftModeFilter = "classic" | "hidden";
 
 /** Wire shape of one GET /api/leaderboard entry (BoardResponseBody.entries[i]). */
 export interface BoardEntryWire {
@@ -22,6 +22,8 @@ export interface BoardEntryWire {
 export interface BoardPageWire {
   readonly season_key: string;
   readonly current_season_key: string;
+  readonly mode: "casual" | "ranked";
+  readonly draft_mode: BoardDraftModeFilter;
   readonly entries: readonly BoardEntryWire[];
   readonly next_cursor: string | null;
 }
@@ -142,10 +144,10 @@ export function boardQueryString(opts: {
   cursor: string | null;
 }): string {
   const q = new URLSearchParams();
-  if (opts.draftMode !== "all") q.set("draft_mode", opts.draftMode);
+  q.set("mode", "ranked");
+  q.set("draft_mode", opts.draftMode);
   if (opts.cursor !== null) q.set("cursor", opts.cursor);
-  const s = q.toString();
-  return s.length > 0 ? `?${s}` : "";
+  return `?${q.toString()}`;
 }
 
 // ─── Season label ────────────────────────────────────────────────────────────

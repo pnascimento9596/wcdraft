@@ -21,7 +21,7 @@ const NOW = Date.parse("2026-06-10T12:00:00.000Z");
 function entry(over: Partial<BoardEntryWire> & { id: string; rank: number }): BoardEntryWire {
   return {
     draft_mode: "classic",
-    display_name: `Manager ${over.rank}`,
+    display_name: `manager_${over.rank}`,
     verified_score: 100 - over.rank,
     score_breakdown: [{ label: "Goals scored", raw: 2, weight: 3, points: 6 }],
     created_at: new Date(NOW - 3_600_000).toISOString(),
@@ -33,6 +33,8 @@ function page(entries: BoardEntryWire[], nextCursor: string | null): BoardPageWi
   return {
     season_key: "s",
     current_season_key: "s",
+    mode: "ranked",
+    draft_mode: "classic",
     entries,
     next_cursor: nextCursor,
   };
@@ -123,13 +125,12 @@ describe("appendBoardPage (pagination walk)", () => {
 });
 
 describe("boardQueryString", () => {
-  it("'all' sends no draft_mode (server default view)", () => {
-    expect(boardQueryString({ draftMode: "all", cursor: null })).toBe("");
-  });
-  it("filter + cursor compose", () => {
-    expect(boardQueryString({ draftMode: "hidden", cursor: null })).toBe("?draft_mode=hidden");
+  it("always sends ranked mode plus an explicit lane", () => {
+    expect(boardQueryString({ draftMode: "hidden", cursor: null })).toBe(
+      "?mode=ranked&draft_mode=hidden",
+    );
     expect(boardQueryString({ draftMode: "classic", cursor: "C 1" })).toBe(
-      "?draft_mode=classic&cursor=C+1",
+      "?mode=ranked&draft_mode=classic&cursor=C+1",
     );
   });
 });

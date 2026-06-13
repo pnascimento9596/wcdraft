@@ -1,6 +1,6 @@
 // F-4 U6 — claim bridge: leaderboard_entries anon→account transfer.
 //
-// Runs against pglite at the full 0004 shape (real PostgreSQL 16 semantics:
+// Runs against pglite at the full migration shape (real PostgreSQL 16 semantics:
 // UNIQUE NULLS NOT DISTINCT, CHECK constraints, FK SET NULL) so the
 // drop-then-transfer ordering and the constraint interplay behave exactly
 // as they will on Neon. RED-adjacent: a regression here either leaks rows
@@ -43,7 +43,7 @@ async function makeEntry(args: {
   seasonKey?: string;
   mode?: "casual" | "ranked";
   draftMode?: "classic" | "hidden";
-  displayName?: string;
+  displayAlias?: string;
   verifiedScore?: number;
   hiddenAt?: Date | null;
 }) {
@@ -55,7 +55,7 @@ async function makeEntry(args: {
       draftMode: args.draftMode ?? "classic",
       userId: args.userId ?? null,
       sessionId: args.sessionId ?? null,
-      displayName: args.displayName ?? "Anon Ace",
+      displayAlias: args.displayAlias ?? "anon_ace",
       token: args.token,
       verifiedScore: args.verifiedScore ?? 100,
       hiddenAt: args.hiddenAt ?? null,
@@ -101,7 +101,7 @@ describe("claimLeaderboardEntries — happy transfer", () => {
     const before = await makeEntry({
       token: "t1.aaa",
       sessionId: "ses-anon",
-      displayName: "Night Fox",
+      displayAlias: "night_fox",
       verifiedScore: 123,
     });
 
@@ -114,7 +114,8 @@ describe("claimLeaderboardEntries — happy transfer", () => {
     expect(row.id).toBe(before.id);
     expect(row.sessionId).toBeNull();
     // The submit-time identity survives the claim verbatim.
-    expect(row.displayName).toBe("Night Fox");
+    expect(row.mode).toBe("casual");
+    expect(row.displayAlias).toBe("night_fox");
     expect(row.token).toBe("t1.aaa");
     expect(row.verifiedScore).toBe(123);
     expect(row.createdAt).toEqual(before.createdAt);
@@ -160,7 +161,7 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
     const owned = await makeEntry({
       token: "t1.dup",
       userId: uid,
-      displayName: "Account Name",
+      displayAlias: "account_name",
       verifiedScore: 200,
     });
     // Same token as anon is insertable (NULLS NOT DISTINCT keys on user_id
@@ -168,7 +169,7 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
     await makeEntry({
       token: "t1.dup",
       sessionId: "ses-anon",
-      displayName: "Anon Name",
+      displayAlias: "anon_name",
       verifiedScore: 150,
     });
     // …but transferring it would collide; the drop step resolves it first.
@@ -179,7 +180,7 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
     const rows = await entriesOfUser(uid);
     expect(rows).toHaveLength(1);
     expect(rows[0]!.id).toBe(owned.id);
-    expect(rows[0]!.displayName).toBe("Account Name");
+    expect(rows[0]!.displayAlias).toBe("account_name");
     expect(rows[0]!.verifiedScore).toBe(200);
   });
 

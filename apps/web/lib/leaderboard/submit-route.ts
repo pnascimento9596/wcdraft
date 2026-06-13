@@ -4,8 +4,9 @@
 //   0. feature flag                  — in the route FILE, before deps exist
 //   1. method                        — only POST is exported by the route file
 //   2. content-type / body size      — 415 / 413, before any parse
-//   3. JSON shape + mode             — 400 INVALID_BODY / 403 BAD_ATTEMPT
-//   4. identity gate (plan §5.3)     — 401 AUTH_REQUIRED / 403 CSRF_FAILED
+//   3. JSON shape + mode             — 400 INVALID_BODY
+//   4. identity gate                 — ranked requires account;
+//                                      401 AUTH_REQUIRED / 403 CSRF_FAILED
 //   5. rate-limit SEAM (U5 plugs in) — 429 RATE_LIMITED + Retry-After
 //   6. validateSubmission (U2)       — steps 1–3, 5, 7–9; SUBMIT_ERROR_HTTP_STATUS
 //   7. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
@@ -17,7 +18,8 @@
 // error is a typed code — never prose-only.
 
 import { NextResponse, type NextRequest } from "next/server";
-import type { Db } from "@wcdraft/db";
+import { users, type Db } from "@wcdraft/db";
+import { eq } from "drizzle-orm";
 
 import { readClientIp } from "../auth/handler-helpers";
 import {
@@ -28,8 +30,9 @@ import {
 import {
   identityBoardRank,
   insertAcceptedEntry,
-  toApiEntry,
+  toApiEntryWithProfile,
   type ApiLeaderboardEntry,
+  type BoardMode,
 } from "./store";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
 import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
@@ -46,7 +49,6 @@ export interface SubmitRouteDeps {
   /** Lazy heavy server data — only touched after every cheap gate passed. */
   readonly getValidation: () => ValidationData;
   readonly rateLimiter: SubmitRateLimiter;
-  readonly requireAccount: () => boolean;
 }
 
 /** Route-transport error codes owned by this handler (not pipeline codes). */
@@ -65,7 +67,7 @@ function transportError(code: TransportErrorCode, message: string): NextResponse
 export interface SubmitResponseBody {
   readonly entry: ApiLeaderboardEntry;
   readonly duplicate: boolean;
-  /** Identity's CURRENT board rank (season+mode view), read by a second
+  /** Identity's CURRENT board rank (season+mode+draft_mode view), read by a second
    *  statement after the insert — a concurrent insert can move it between
    *  the two. Null only if the identity has no visible entry. */
   readonly rank: number | null;
@@ -92,9 +94,8 @@ export async function handleLeaderboardSubmit(
       return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
     }
 
-    // 3 — JSON object shape + mode. Ranked is a DARK lane in U3: the token
-    // mint/consume flow does not exist yet, so a ranked submission is an
-    // out-of-protocol attempt, not an invalid body.
+    // 3 — JSON object shape + mode. Ranked is open only to account-bound
+    // sessions; casual remains anonymous-capable.
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
@@ -106,18 +107,13 @@ export async function handleLeaderboardSubmit(
     }
     const body = parsed as Record<string, unknown>;
     const mode = body.mode ?? "casual";
-    if (mode === "ranked") {
-      return NextResponse.json(
-        { error: "BAD_ATTEMPT", message: "ranked submissions are not open" },
-        { status: SUBMIT_ERROR_HTTP_STATUS.BAD_ATTEMPT },
-      );
+    if (mode !== "casual" && mode !== "ranked") {
+      return transportError("INVALID_BODY", "mode must be 'casual' or 'ranked'");
     }
-    if (mode !== "casual") {
-      return transportError("INVALID_BODY", "mode must be 'casual'");
-    }
+    const submissionMode: BoardMode = mode;
 
     // 4 — identity gate (throws LeaderboardGateError).
-    const identity = await requireSubmitIdentity(req, gateDeps(deps));
+    const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));
 
     // 5 — rate-limit seam (deny-nothing default in U3; U5 implements).
     const decision = await deps.rateLimiter.checkSubmit({
@@ -139,6 +135,8 @@ export async function handleLeaderboardSubmit(
       {
         token: body.token,
         claimed_score: body.claimed_score,
+        draft_mode: body.draft_mode,
+        display_alias: body.display_alias,
         display_name: body.display_name,
       },
       deps.getValidation(),
@@ -162,17 +160,30 @@ export async function handleLeaderboardSubmit(
       );
     }
 
+    const username =
+      identity.userId === null ? null : await publicUsernameForUser(deps.db, identity.userId);
+    if (verdict.display_alias === null && username === null) {
+      return NextResponse.json(
+        {
+          error: "INVALID_NAME",
+          message: "a username or display alias is required for public board entries",
+          name_reason: "not_a_string",
+        },
+        { status: SUBMIT_ERROR_HTTP_STATUS.INVALID_NAME },
+      );
+    }
+
     // 7 — persist + honest dedupe; rank is a SECOND read after the insert
     // (current rank, not the insert's snapshot).
     const result = await insertAcceptedEntry(
       deps.db,
       {
         seasonKey: verdict.season_key,
-        mode: "casual",
+        mode: submissionMode,
         draftMode: verdict.draft_mode,
         userId: identity.userId,
         sessionId: identity.sessionId,
-        displayName: verdict.display_name,
+        displayAlias: verdict.display_alias,
         // validateSubmission guaranteed this is a string (step 1).
         token: body.token as string,
         verifiedScore: verdict.verified_score,
@@ -182,11 +193,12 @@ export async function handleLeaderboardSubmit(
     );
     const best = await identityBoardRank(deps.db, {
       seasonKey: verdict.season_key,
-      mode: "casual",
+      mode: submissionMode,
+      draftMode: verdict.draft_mode,
       identityKey: result.row.userId ?? result.row.sessionId ?? result.row.id,
     });
     const responseBody: SubmitResponseBody = {
-      entry: toApiEntry(result.row),
+      entry: await toApiEntryWithProfile(deps.db, result.row),
       duplicate: result.kind === "duplicate",
       rank: best?.rank ?? null,
     };
@@ -202,11 +214,20 @@ export async function handleLeaderboardSubmit(
   }
 }
 
-function gateDeps(deps: SubmitRouteDeps): IdentityGateDeps {
+async function publicUsernameForUser(db: Db, userId: string): Promise<string | null> {
+  const row = await db
+    .select({ username: users.username })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  return row[0]?.username ?? null;
+}
+
+function gateDeps(deps: SubmitRouteDeps, mode: BoardMode): IdentityGateDeps {
   return {
     db: deps.db,
     now: deps.now,
     getCookieSecret: deps.getCookieSecret,
-    requireAccount: deps.requireAccount,
+    requireAccount: () => mode === "ranked",
   };
 }

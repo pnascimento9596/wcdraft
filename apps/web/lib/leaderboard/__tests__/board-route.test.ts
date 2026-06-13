@@ -53,24 +53,37 @@ interface SeedOpts {
   /** Seconds offset from BASE_MS for created_at (ms precision, keyset-exact). */
   at?: number;
   seasonKey?: string;
+  mode?: "casual" | "ranked";
   draftMode?: "classic" | "hidden";
   userId?: string | null;
   sessionId?: string | null;
-  displayName?: string;
+  displayAlias?: string | null;
   hiddenAt?: Date | null;
 }
 
 async function seed(opts: SeedOpts): Promise<string> {
   seq += 1;
+  const mode = opts.mode ?? "ranked";
+  let userId = opts.userId ?? null;
+  if (mode === "ranked" && userId === null) {
+    const [u] = await db
+      .insert(users)
+      .values({ email: `seed-${seq}@example.com`, username: `seed_user_${seq}` })
+      .returning();
+    userId = u!.id;
+  }
   const inserted = await db
     .insert(leaderboardEntries)
     .values({
       seasonKey: opts.seasonKey ?? CURRENT_SEASON,
-      mode: "casual",
+      mode,
       draftMode: opts.draftMode ?? "classic",
-      userId: opts.userId ?? null,
+      userId,
       sessionId: opts.sessionId ?? null,
-      displayName: opts.displayName ?? `Player ${String(seq).padStart(2, "0")}`,
+      displayAlias:
+        opts.displayAlias === undefined
+          ? `player_${String(seq).padStart(2, "0")}`
+          : opts.displayAlias,
       token: `t1.seed-${seq}`,
       verifiedScore: opts.score,
       scoreBreakdown: [],
@@ -118,52 +131,58 @@ describe("GET /api/leaderboard — board page", () => {
     expect(body.next_cursor).toBeNull();
     expect(body.season_key).toBe(CURRENT_SEASON);
     expect(body.current_season_key).toBe(CURRENT_SEASON);
+    expect(body.mode).toBe("ranked");
+    expect(body.draft_mode).toBe("classic");
     expect(res.headers.get("Cache-Control")).toBe(
       "public, s-maxage=30, stale-while-revalidate=120",
     );
   });
 
   it("orders by score DESC, created_at ASC (first-to-score wins ties), ranks 1..n", async () => {
-    await seed({ score: 80, at: 20, displayName: "LateEighty" });
-    await seed({ score: 90, at: 30, displayName: "Ninety" });
-    await seed({ score: 80, at: 10, displayName: "EarlyEighty" });
-    await seed({ score: 70, at: 5, displayName: "Seventy" });
+    await seed({ score: 80, at: 20, displayAlias: "late_eighty" });
+    await seed({ score: 90, at: 30, displayAlias: "ninety" });
+    await seed({ score: 80, at: 10, displayAlias: "early_eighty" });
+    await seed({ score: 70, at: 5, displayAlias: "seventy" });
     const { body } = await getBoard();
     expect(body.entries.map((e) => e.display_name)).toEqual([
-      "Ninety",
-      "EarlyEighty",
-      "LateEighty",
-      "Seventy",
+      "ninety",
+      "early_eighty",
+      "late_eighty",
+      "seventy",
     ]);
     expect(body.entries.map((e) => e.rank)).toEqual([1, 2, 3, 4]);
   });
 
   it("shows only the BEST entry per identity (session-keyed)", async () => {
     const sid = await seedSession("board-sess-1");
-    await seed({ score: 60, sessionId: sid, at: 1, displayName: "Grinder" });
-    await seed({ score: 95, sessionId: sid, at: 2, displayName: "Grinder" });
-    await seed({ score: 70, at: 3, displayName: "Other" });
-    const { body } = await getBoard();
+    await seed({ score: 60, mode: "casual", sessionId: sid, at: 1, displayAlias: "grinder" });
+    await seed({ score: 95, mode: "casual", sessionId: sid, at: 2, displayAlias: "grinder" });
+    await seed({ score: 70, mode: "casual", at: 3, displayAlias: "other" });
+    const { body } = await getBoard({ mode: "casual" });
     expect(body.entries.map((e) => [e.display_name, e.verified_score, e.rank])).toEqual([
-      ["Grinder", 95, 1],
-      ["Other", 70, 2],
+      ["grinder", 95, 1],
+      ["other", 70, 2],
     ]);
   });
 
   it("user identity dedupes across sessions-then-claimed rows (user-keyed)", async () => {
-    const u = await db.insert(users).values({ email: "board@example.com" }).returning();
+    const u = await db
+      .insert(users)
+      .values({ email: "board@example.com", username: "board_user" })
+      .returning();
     await seed({ score: 50, userId: u[0]!.id, at: 1 });
-    await seed({ score: 88, userId: u[0]!.id, at: 2, displayName: "Claimed" });
+    await seed({ score: 88, userId: u[0]!.id, at: 2, displayAlias: null });
     const { body } = await getBoard();
     expect(body.entries).toHaveLength(1);
     expect(body.entries[0]!.verified_score).toBe(88);
+    expect(body.entries[0]!.display_name).toBe("board_user");
   });
 
   it("hidden_at rows never appear and ranks close over them", async () => {
-    await seed({ score: 99, hiddenAt: new Date(BASE_MS), displayName: "Moderated" });
-    await seed({ score: 80, displayName: "Clean" });
+    await seed({ score: 99, hiddenAt: new Date(BASE_MS), displayAlias: "moderated" });
+    await seed({ score: 80, displayAlias: "clean" });
     const { body } = await getBoard();
-    expect(body.entries.map((e) => e.display_name)).toEqual(["Clean"]);
+    expect(body.entries.map((e) => e.display_name)).toEqual(["clean"]);
     expect(body.entries[0]!.rank).toBe(1);
   });
 
@@ -178,13 +197,25 @@ describe("GET /api/leaderboard — board page", () => {
     expect(old.body.current_season_key).toBe(CURRENT_SEASON);
   });
 
-  it("draft_mode filter splits the fairness dimension", async () => {
-    await seed({ score: 90, draftMode: "hidden", displayName: "Blind" });
-    await seed({ score: 80, draftMode: "classic", displayName: "Sighted" });
+  it("explicit ?mode=casual still reads casual entries", async () => {
+    await seed({ score: 90, mode: "casual", displayAlias: "casual_entry" });
+    await seed({ score: 70, mode: "ranked", displayAlias: "ranked_entry" });
+    const ranked = await getBoard();
+    expect(ranked.body.entries.map((e) => e.display_name)).toEqual(["ranked_entry"]);
+    const casual = await getBoard({ mode: "casual" });
+    expect(casual.body.entries.map((e) => e.display_name)).toEqual(["casual_entry"]);
+    expect(casual.body.mode).toBe("casual");
+  });
+
+  it("draft_mode lane splits the fairness dimension with Classic as the default", async () => {
+    await seed({ score: 90, draftMode: "hidden", displayAlias: "blind" });
+    await seed({ score: 80, draftMode: "classic", displayAlias: "sighted" });
     const hidden = await getBoard({ draft_mode: "hidden" });
-    expect(hidden.body.entries.map((e) => e.display_name)).toEqual(["Blind"]);
-    const all = await getBoard();
-    expect(all.body.entries).toHaveLength(2);
+    expect(hidden.body.entries.map((e) => e.display_name)).toEqual(["blind"]);
+    expect(hidden.body.draft_mode).toBe("hidden");
+    const classic = await getBoard();
+    expect(classic.body.entries.map((e) => e.display_name)).toEqual(["sighted"]);
+    expect(classic.body.draft_mode).toBe("classic");
   });
 
   it("keyset walk: no overlap, no skip, continuous ranks across a score tie", async () => {
@@ -248,12 +279,14 @@ describe("GET /api/leaderboard/me", () => {
       { userId: null },
       { db, now: () => Date.now(), cookieSecret: SECRET },
     );
-    await seed({ score: 50, sessionId: session.id, at: 1 });
-    const bestId = await seed({ score: 75, sessionId: session.id, at: 2 });
-    await seed({ score: 80, at: 3, displayName: "Rival" });
-    const res = await handleLeaderboardMeGet(meReq({}, cookieValue), deps());
+    await seed({ score: 50, mode: "casual", sessionId: session.id, at: 1 });
+    const bestId = await seed({ score: 75, mode: "casual", sessionId: session.id, at: 2 });
+    await seed({ score: 80, mode: "casual", at: 3, displayAlias: "rival" });
+    const res = await handleLeaderboardMeGet(meReq({ mode: "casual" }, cookieValue), deps());
     expect(res.status).toBe(200);
     const body = (await res.json()) as MeResponseBody;
+    expect(body.mode).toBe("casual");
+    expect(body.draft_mode).toBe("classic");
     expect(body.best?.id).toBe(bestId);
     expect(body.rank).toBe(2);
     expect(body.recent.map((r) => r.verified_score)).toEqual([75, 50]);
@@ -267,9 +300,9 @@ describe("GET /api/leaderboard/me", () => {
       { db, now: () => Date.now(), cookieSecret: SECRET },
     );
     const otherSid = await seedSession("someone-else");
-    await seed({ score: 92, userId: u[0]!.id, at: 1 });
-    await seed({ score: 99, sessionId: otherSid, at: 2 });
-    const res = await handleLeaderboardMeGet(meReq({}, cookieValue), deps());
+    await seed({ score: 92, mode: "casual", userId: u[0]!.id, at: 1 });
+    await seed({ score: 99, mode: "casual", sessionId: otherSid, at: 2 });
+    const res = await handleLeaderboardMeGet(meReq({ mode: "casual" }, cookieValue), deps());
     const body = (await res.json()) as MeResponseBody;
     expect(body.best?.verified_score).toBe(92);
     expect(body.rank).toBe(2);
@@ -288,14 +321,59 @@ describe("GET /api/leaderboard/me", () => {
     expect(body.recent).toEqual([]);
   });
 
+  it("/me scopes best, rank, and recent to the selected draft_mode lane", async () => {
+    const { session, cookieValue } = await createSession(
+      { userId: null },
+      { db, now: () => Date.now(), cookieSecret: SECRET },
+    );
+    await seed({ score: 50, mode: "casual", sessionId: session.id, draftMode: "classic", at: 1 });
+    const hiddenId = await seed({
+      score: 90,
+      mode: "casual",
+      sessionId: session.id,
+      draftMode: "hidden",
+      at: 2,
+    });
+    await seed({
+      score: 95,
+      mode: "casual",
+      draftMode: "hidden",
+      at: 3,
+      displayAlias: "memory_rival",
+    });
+
+    const classic = await handleLeaderboardMeGet(meReq({ mode: "casual" }, cookieValue), deps());
+    const classicBody = (await classic.json()) as MeResponseBody;
+    expect(classicBody.draft_mode).toBe("classic");
+    expect(classicBody.best?.verified_score).toBe(50);
+    expect(classicBody.rank).toBe(1);
+    expect(classicBody.recent.map((r) => r.draft_mode)).toEqual(["classic"]);
+
+    const hidden = await handleLeaderboardMeGet(
+      meReq({ mode: "casual", draft_mode: "hidden" }, cookieValue),
+      deps(),
+    );
+    const hiddenBody = (await hidden.json()) as MeResponseBody;
+    expect(hiddenBody.draft_mode).toBe("hidden");
+    expect(hiddenBody.best?.id).toBe(hiddenId);
+    expect(hiddenBody.rank).toBe(2);
+    expect(hiddenBody.recent.map((r) => r.draft_mode)).toEqual(["hidden"]);
+  });
+
   it("hidden entries are excluded from best/recent (moderation honest-state)", async () => {
     const { session, cookieValue } = await createSession(
       { userId: null },
       { db, now: () => Date.now(), cookieSecret: SECRET },
     );
-    await seed({ score: 99, sessionId: session.id, hiddenAt: new Date(BASE_MS), at: 1 });
-    await seed({ score: 40, sessionId: session.id, at: 2 });
-    const res = await handleLeaderboardMeGet(meReq({}, cookieValue), deps());
+    await seed({
+      score: 99,
+      mode: "casual",
+      sessionId: session.id,
+      hiddenAt: new Date(BASE_MS),
+      at: 1,
+    });
+    await seed({ score: 40, mode: "casual", sessionId: session.id, at: 2 });
+    const res = await handleLeaderboardMeGet(meReq({ mode: "casual" }, cookieValue), deps());
     const body = (await res.json()) as MeResponseBody;
     expect(body.best?.verified_score).toBe(40);
     expect(body.recent).toHaveLength(1);

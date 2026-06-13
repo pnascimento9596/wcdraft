@@ -10,7 +10,7 @@
 import { ensureCsrfToken } from "../auth/client";
 import type { BoardDraftModeFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
-import { outcomeFromResponse, type SubmitPhase } from "./submit-state";
+import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./submit-state";
 
 // ─── Board page ──────────────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ export async function fetchBoardPage(opts: {
 export interface MyBoardPresence {
   /** Entry id of the caller's best visible entry (matches a board row id). */
   readonly bestEntryId: string;
-  /** Board rank of that entry (season+mode view, unfiltered). */
+  /** Board rank of that entry (season+mode+draft_mode view). */
   readonly rank: number | null;
   readonly verifiedScore: number;
 }
@@ -48,9 +48,11 @@ export interface MyBoardPresence {
  * honestly (no session → 401, feature dark → 404, transport failure) — the
  * board then simply renders without a highlight.
  */
-export async function fetchMyPresence(): Promise<MyBoardPresence | null> {
+export async function fetchMyPresence(opts: {
+  draftMode: BoardDraftModeFilter;
+}): Promise<MyBoardPresence | null> {
   try {
-    const r = await fetch("/api/leaderboard/me", {
+    const r = await fetch(`/api/leaderboard/me${boardQueryString({ ...opts, cursor: null })}`, {
       credentials: "include",
       headers: { Accept: "application/json" },
     });
@@ -80,7 +82,9 @@ export async function fetchMyPresence(): Promise<MyBoardPresence | null> {
 export async function submitRun(input: {
   token: string;
   claimedScore: number;
-  displayName: string;
+  mode: SubmitBoardMode;
+  draftMode: BoardDraftModeFilter;
+  displayName: string | null;
 }): Promise<SubmitPhase> {
   let r: Response;
   try {
@@ -96,8 +100,9 @@ export async function submitRun(input: {
       body: JSON.stringify({
         token: input.token,
         claimed_score: input.claimedScore,
-        display_name: input.displayName,
-        mode: "casual",
+        draft_mode: input.draftMode,
+        display_alias: input.displayName,
+        mode: input.mode,
       }),
     });
   } catch {

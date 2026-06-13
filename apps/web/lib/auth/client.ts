@@ -14,9 +14,7 @@ const CSRF_HEADER = "x-csrf-token";
 
 function readCsrfCookie(): string | null {
   if (typeof document === "undefined") return null;
-  const match = new RegExp(
-    `(?:^|;\\s*)${CSRF_COOKIE}=([^;]+)`,
-  ).exec(document.cookie);
+  const match = new RegExp(`(?:^|;\\s*)${CSRF_COOKIE}=([^;]+)`).exec(document.cookie);
   return match?.[1] ?? null;
 }
 
@@ -51,10 +49,7 @@ export interface FetchWithCsrfInit {
  * credentials. Throws on transport failure; returns the Response for
  * callers to inspect status/body.
  */
-export async function fetchWithCsrf(
-  url: string,
-  init: FetchWithCsrfInit,
-): Promise<Response> {
+export async function fetchWithCsrf(url: string, init: FetchWithCsrfInit): Promise<Response> {
   const csrf = await ensureCsrfToken();
   const headers: Record<string, string> = {
     Accept: "application/json",
@@ -88,6 +83,25 @@ export async function postJson<T>(
   return { ok: r.ok, status: r.status, data };
 }
 
+/** PUT with a JSON body (sets Content-Type) + CSRF. */
+export async function putJson<T>(
+  url: string,
+  body: unknown,
+): Promise<{ ok: boolean; status: number; data: T | null }> {
+  const r = await fetchWithCsrf(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  let data: T | null;
+  try {
+    data = (await r.json()) as T;
+  } catch {
+    data = null;
+  }
+  return { ok: r.ok, status: r.status, data };
+}
+
 /** DELETE with CSRF. */
 export async function deleteCsrf(url: string): Promise<Response> {
   return fetchWithCsrf(url, { method: "DELETE" });
@@ -96,6 +110,7 @@ export async function deleteCsrf(url: string): Promise<Response> {
 export interface SessionInfoResponse {
   session: {
     userId: string | null;
+    username: string | null;
     isAnonymous: boolean;
     expiresAt: string;
   } | null;

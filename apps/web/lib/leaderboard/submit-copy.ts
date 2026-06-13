@@ -3,7 +3,8 @@
 // Every wire outcome the submit route can produce maps 1:1 to honest copy
 // here — components never invent strings per call site, and a code the table
 // doesn't know falls back to UNEXPECTED (shown as such, never dressed up as
-// success). draft_mode is honor-system: nothing below polices or accuses.
+// success). Lane/config rejections stay policy-neutral in copy: no accusing
+// the player, just the server verdict.
 
 import type { SubmitErrorCode } from "./validate";
 import type { DisplayNameRejection } from "./display-name";
@@ -61,7 +62,7 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
   },
   AUTH_REQUIRED: {
     title: "Account required",
-    message: "The board currently requires a signed-in account to post runs.",
+    message: "Sign in to post ranked runs — casual runs stay shareable",
   },
   CSRF_FAILED: {
     title: "Session check failed",
@@ -104,8 +105,7 @@ export function submitStatusCopy(code: string): SubmitStatusCopy {
 export const NAME_HINT: Readonly<Record<DisplayNameRejection, string>> = {
   not_a_string: "Enter a display name.",
   too_short: "At least 3 characters.",
-  too_long: "At most 24 characters.",
-  invalid_chars: "Letters, numbers, spaces, and _ . - only.",
-  edge_separator: "Must start and end with a letter or number.",
+  too_long: "At most 20 characters.",
+  invalid_chars: "Letters, numbers, and _ only.",
   blocked_term: "That name contains a blocked term.",
 };

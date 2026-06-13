@@ -13,7 +13,6 @@ import type { MyBoardPresence } from "@/lib/leaderboard/client";
 import s from "./leaderboard.module.css";
 
 export const BOARD_FILTERS: readonly { key: BoardDraftModeFilter; label: string }[] = [
-  { key: "all", label: "All" },
   { key: "classic", label: "Classic" },
   { key: "hidden", label: "Memory" },
 ];
@@ -24,8 +23,8 @@ export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Best verified run per manager this season. Finish a run and post it from your results
-        screen.
+        Ranked standings for each manager&rsquo;s best verified run this season. Finish a run and
+        post it from your results screen.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>
@@ -42,9 +41,9 @@ export function BoardToolbar({
   return (
     <div className={s.toolbar}>
       <div className={s.modeTabs} aria-label="Board mode">
-        <span className={s.modeTab}>Casual leaderboard</span>
+        <span className={s.modeTab}>Ranked</span>
       </div>
-      <div className="segmented" role="group" aria-label="Draft mode filter">
+      <div className="segmented" role="group" aria-label="Ranked lane">
         {BOARD_FILTERS.map((f) => (
           <button
             key={f.key}
@@ -138,7 +137,7 @@ export function EmptyBoard() {
   return (
     <div className={s.stateBox}>
       <p className={s.stateTitle}>No verified entries yet</p>
-      <p>Finish a run and be the first manager on the board this season.</p>
+      <p>Finish a ranked run and be the first manager in this lane.</p>
     </div>
   );
 }

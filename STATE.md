@@ -4,11 +4,14 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured: 2026-06-12 · `origin/main` `c174775d223d8776f8950749b50a0e6099ca456b`
-after the merit-v3 V8 season merge (#104, squash `1552e44`), the leaderboard
-runtime-data hotfix (#105, squash `a0d0828`), and accounts/email production
-light-up/docs (#108/#109). The live repo pins are now `runtime-data-2.0.0` /
-`engine-2026.06.12`; draft-config's
+Last measured for leaderboard-profiles in-flight work: 2026-06-13 ·
+`origin/leaderboard-profiles` `af7b002f5a7d8f0427f85a2fc94c7549012cab44`
+plus local post-main-sync validation against `origin/main`
+`595049b0afd6779ca3c3f8ab1443d6e51866321c`. Production/main facts below remain
+from the prior 2026-06-12 measurement unless explicitly noted: after the merit-v3
+V8 season merge (#104, squash `1552e44`), the leaderboard runtime-data hotfix
+(#105, squash `a0d0828`), and accounts/email production light-up/docs (#108/#109).
+The live repo pins are now `runtime-data-2.0.0` / `engine-2026.06.12`; draft-config's
 `runtime-data-1.2.0` / `engine-2026.06.11` anchors are historical PREV-skew
 fixtures, not the current production season.
 
@@ -42,6 +45,14 @@ than hidden regressions.
   `AUTH_BASE_URL` set in Vercel Production, magic-link verify proven end-to-end
   with a real owner sign-in). Ranked leaderboard remains human-gated
   (`LEADERBOARD_REQUIRE_ACCOUNT` still UNSET — casual board only).
+- Leaderboard-profiles Red season is in flight on integration branch
+  `leaderboard-profiles`: L1 schema/profiles (#114), L2 ranked-requires-account
+  (#117), and L3 Memory ranked lane (#122; squash `d6569175`) are landed into the
+  integration branch. L4 local board-display/privacy work adds a route-level public
+  payload email sweep across all 17 currently exported `apps/web/app/api/**/route.ts`
+  methods beyond the leaderboard serializer, pins React text escaping for username/alias
+  rendering, and captures Classic/Memory board screenshots in light/dark themes at
+  390×844 / 360×800. No schema, core, data, or golden fixtures were changed.
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -86,47 +97,58 @@ than hidden regressions.
 | leaderboard season key      | engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434 |
 | compact brotli total        | 1,216,305 bytes                                                                          |
 
-## Test counts (latest measured on `ws-wrap/post-season`)
+## Test counts (latest relevant measurements; branch noted where not main)
 
-| Suite                                                   | Result                                                                                                |
-| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| @wcdraft/core `test`                                    | 338 passed (ui/ux-basis-wave: current-basis recorded, no longer refused)                              |
-| @wcdraft/core `test:golden` (RNG)                       | 3 passed                                                                                              |
-| @wcdraft/core `test:golden:draft`                       | 40 passed (entity-resolution and manager-identity goldens now wired)                                  |
-| @wcdraft/data `test`                                    | 65 passed, 7 skipped (72)                                                                             |
-| @wcdraft/data `test:golden:data`                        | 31 passed                                                                                             |
-| @wcdraft/data `test:golden:integration`                 | 22 passed                                                                                             |
-| @wcdraft/db `test`                                      | 74 passed                                                                                             |
-| @wcdraft/web `test`                                     | 634 passed, 1 skipped (635) (ui/ux-basis-wave: +rating-basis seam/divergence/determinism tests)       |
-| @wcdraft/web `test:golden:leaderboard`                  | 5 passed                                                                                              |
-| @wcdraft/marketing-x `test`                             | 64 passed (7 files: engine app-parity, composer/lexicon/feature-truth, pipeline idempotency, queue, X client, engagement, weekly-pack + reply/quote banks) |
-| etl V1 `ruff check src tests`                           | clean                                                                                                 |
-| etl V1 focused merit suite                              | 42 passed                                                                                             |
-| etl V1 `pytest -q`                                      | 233 passed                                                                                            |
-| merit-v3 V1 club-season citation verifier               | 14/14 rows verified                                                                                   |
-| merit-v3 V1 active/stature generation                   | two-run byte-identical hash match                                                                     |
-| merit-v3 V1 conservatism                                | ratings + compact generated artifacts unchanged                                                       |
-| etl V2 `ruff check src tests`                           | clean                                                                                                 |
-| etl V2 focused rating/display/projected suite           | 91 passed                                                                                             |
-| etl V2 `pytest -q`                                      | 241 passed                                                                                            |
-| merit-v3 V2 mutation proofs                             | 3/3 guards failed when deliberately broken                                                            |
-| merit-v3 V2 historical artifact generation              | two-run byte-identical hash match                                                                     |
-| merit-v3 V2 conservatism                                | 2026 outputs + career_stature + compact unchanged                                                     |
-| etl V3/V4 `ruff check src tests`                        | clean                                                                                                 |
-| etl V3/V4 `pytest -q`                                   | 288 passed                                                                                            |
-| merit-v3 V3/V4 §7 movers/controls                       | 14 in-band, 6 pinned-miss elements; controls 7/7 evaluable pass                                       |
-| merit-v3 V3/V4 distribution/coherence probes            | median and 90+ pass; pile-up, inversion, and 9 pre-1967 violations pinned for V8 waiver               |
-| merit-v3 V3/V4 determinism                              | both stage orders run-twice byte-identical                                                            |
-| merit-v3 V3/V4 boundary                                 | career_stature, canonical tables, compact, canary, lambda/realism untouched                           |
-| merit-v3 V6 compact regen                               | 12,219 ratings · 270 legends · dual basis 12,219/12,219 · 1,216,302 bytes before V8 stamp             |
-| merit-v3 V7 lambda                                      | evals 175 · winner BASE 1.05 / SPREAD 6.5 / MIN 0.70 / GAMMA_MID 0.80 / KO 0.82                       |
-| merit-v3 V8 compact stamp                               | `build:compact` ok · 12,219 ratings · 270 legends · 1,216,305 bytes                                   |
-| merit-v3 V8 generators                                  | e2e seed `:29`, era, leaderboard, token-skew, canary, asym realism regenerated                        |
-| `pnpm exec turbo run typecheck lint test build --force` | PASS on post-season wrap final local diff: 16/16 tasks · 0 cached                                     |
-| V8 explicit goldens + ETL + heavy realism               | core 3 + 37 · data 31 + 22 · web leaderboard 5 · ETL ruff clean / pytest 288 · heavy realism 7/7      |
-| V8 regen byte-stability                                 | compact/e2e/era/canary/asym/leaderboard/token-skew output hashes unchanged after rerun                |
-| post-season focused web tests                           | SW registration/cache + config badges/copy: 28 passed                                                 |
-| post-season browser proof                               | local production build: 12 screenshots · SW registered · stale test caches evicted · console errors 0 |
+| Suite                                                     | Result                                                                                                    |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| @wcdraft/core `test`                                      | 338 passed (ui/ux-basis-wave: current-basis recorded, no longer refused)                                  |
+| @wcdraft/core `test:golden` (RNG)                         | 3 passed                                                                                                  |
+| @wcdraft/core `test:golden:draft`                         | 40 passed (entity-resolution and manager-identity goldens now wired)                                      |
+| @wcdraft/data `test`                                      | 65 passed, 7 skipped (72)                                                                                 |
+| @wcdraft/data `test:golden:data`                          | 31 passed                                                                                                 |
+| @wcdraft/data `test:golden:integration`                   | 22 passed                                                                                                 |
+| @wcdraft/db `test`                                        | 74 passed                                                                                                 |
+| @wcdraft/web `test` (ui/ux-basis-wave on main)            | 634 passed, 1 skipped (635) (+rating-basis seam/divergence/determinism tests)                             |
+| @wcdraft/web `test` (leaderboard-profiles L4)             | 653 passed, 1 skipped (654)                                                                               |
+| @wcdraft/web `test` (leaderboard-profiles main-sync)      | 665 passed, 1 skipped (666)                                                                               |
+| @wcdraft/web `test:golden:leaderboard` (main)             | 5 passed                                                                                                  |
+| @wcdraft/web `test:golden:leaderboard` (L4)               | 6 passed                                                                                                  |
+| @wcdraft/marketing-x `test`                               | 64 passed (engine parity, composer/lexicon, pipeline, queue, X client, engagement, weekly pack/banks)     |
+| etl V1 `ruff check src tests`                             | clean                                                                                                     |
+| etl V1 focused merit suite                                | 42 passed                                                                                                 |
+| etl V1 `pytest -q`                                        | 233 passed                                                                                                |
+| merit-v3 V1 club-season citation verifier                 | 14/14 rows verified                                                                                       |
+| merit-v3 V1 active/stature generation                     | two-run byte-identical hash match                                                                         |
+| merit-v3 V1 conservatism                                  | ratings + compact generated artifacts unchanged                                                           |
+| etl V2 `ruff check src tests`                             | clean                                                                                                     |
+| etl V2 focused rating/display/projected suite             | 91 passed                                                                                                 |
+| etl V2 `pytest -q`                                        | 241 passed                                                                                                |
+| merit-v3 V2 mutation proofs                               | 3/3 guards failed when deliberately broken                                                                |
+| merit-v3 V2 historical artifact generation                | two-run byte-identical hash match                                                                         |
+| merit-v3 V2 conservatism                                  | 2026 outputs + career_stature + compact unchanged                                                         |
+| etl V3/V4 `ruff check src tests`                          | clean                                                                                                     |
+| etl V3/V4 `pytest -q`                                     | 288 passed                                                                                                |
+| merit-v3 V3/V4 §7 movers/controls                         | 14 in-band, 6 pinned-miss elements; controls 7/7 evaluable pass                                           |
+| merit-v3 V3/V4 distribution/coherence probes              | median and 90+ pass; pile-up, inversion, and 9 pre-1967 violations pinned for V8 waiver                   |
+| merit-v3 V3/V4 determinism                                | both stage orders run-twice byte-identical                                                                |
+| merit-v3 V3/V4 boundary                                   | career_stature, canonical tables, compact, canary, lambda/realism untouched                               |
+| merit-v3 V6 compact regen                                 | 12,219 ratings · 270 legends · dual basis 12,219/12,219 · 1,216,302 bytes before V8 stamp                 |
+| merit-v3 V7 lambda                                        | evals 175 · winner BASE 1.05 / SPREAD 6.5 / MIN 0.70 / GAMMA_MID 0.80 / KO 0.82                           |
+| merit-v3 V8 compact stamp                                 | `build:compact` ok · 12,219 ratings · 270 legends · 1,216,305 bytes                                       |
+| merit-v3 V8 generators                                    | e2e seed `:29`, era, leaderboard, token-skew, canary, asym realism regenerated                            |
+| `pnpm exec turbo run typecheck lint test build --force`   | PASS on post-season wrap final local diff: 16/16 tasks · 0 cached                                         |
+| V8 explicit goldens + ETL + heavy realism                 | core 3 + 37 · data 31 + 22 · web leaderboard 5 · ETL ruff clean / pytest 288 · heavy realism 7/7          |
+| V8 regen byte-stability                                   | compact/e2e/era/canary/asym/leaderboard/token-skew output hashes unchanged after rerun                    |
+| post-season focused web tests                             | SW registration/cache + config badges/copy: 28 passed                                                     |
+| post-season browser proof                                 | local production build: 12 screenshots · SW registered · stale test caches evicted · console errors 0     |
+| leaderboard-profiles L3 focused suite                     | validation + golden + submit + board + UI + serializer: 145 passed                                        |
+| leaderboard-profiles L3 lane mutation proof               | disabling the token.md<->draft_mode guard failed validate + submit cross-lane tests; restored 77 passed   |
+| leaderboard-profiles L4 focused privacy/UI suite          | all exported API-method public-payload email sweep + UI render/XSS guards: 37 passed                      |
+| leaderboard-profiles L4 screenshots                       | 4 local Playwright captures: Classic/Memory x light/dark at 390x844 / 360x800; rendered email probe false |
+| @wcdraft/web `build` (leaderboard-profiles L4)            | PASS; existing Next/Webpack circular chunk warnings only                                                  |
+| leaderboard-profiles main-sync focused suite              | privacy sweep + UI gating + board-view tests: 49 passed                                                   |
+| @wcdraft/web `typecheck` (leaderboard-profiles main-sync) | PASS                                                                                                      |
+| @wcdraft/web `build` (leaderboard-profiles main-sync)     | PASS; existing Next/Webpack circular chunk warnings only                                                  |
 
 ## CI (`.github/workflows/`)
 
@@ -164,8 +186,9 @@ Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.
   `vercel env ls production` 2026-06-12. All three auth env names are also
   declared in `turbo.json`'s `tasks.build.env` so the SSG'd root layout
   prerenders `authEnabled:true` (see PR #108).
-- UNSET (dark by design): `LEADERBOARD_REQUIRE_ACCOUNT` — keeps the ranked
-  leaderboard gated until ranked tiers ship.
+- UNSET in current production pre-season-merge: `LEADERBOARD_REQUIRE_ACCOUNT`.
+  On the in-flight `leaderboard-profiles` integration branch, ranked submit no
+  longer has an anonymous-open OFF state; ranked requires an account in code.
 - Neon prod DB: migrations 0000–0004 applied (provisioned + verified live 2026-06-10;
   re-verify with `pnpm --filter @wcdraft/db db:migrate` status before relying on it).
 - GitHub **Actions secrets** (not Vercel): `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`,

@@ -6,6 +6,7 @@
 // a false prop so the submit affordance never mounts. Component states are
 // string-rendered (no DOM env) — every submit outcome + board state.
 
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -21,6 +22,7 @@ import {
   BoardError,
   BoardHead,
   BoardRows,
+  BoardToolbar,
   EmptyBoard,
   MeChip,
 } from "@/components/leaderboard/board-views";
@@ -158,7 +160,7 @@ describe("LeaderboardSubmitPanel (container)", () => {
       const html = renderToStaticMarkup(
         createElement(LeaderboardSubmitPanel, { gameData, record: simulatedRecord(mode) }),
       );
-      expect(html).toContain("Post to leaderboard");
+      expect(html).toContain("Post casual run");
       expect(html).toContain(mode === "hidden" ? "Memory" : "Classic");
     }
   });
@@ -196,10 +198,15 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
       createElement(SubmitPanelView, {
         score: 41,
         draftMode: "classic",
-        name: "Golden XI",
+        submitMode: "casual",
+        authReady: true,
+        isSignedIn: false,
+        publicUsername: null,
+        name: "golden_xi",
         nameHint: null,
         phase,
         retryRemaining,
+        onModeChange: () => undefined,
         onNameChange: () => undefined,
         onSubmit: () => undefined,
       }),
@@ -209,7 +216,8 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
   it("idle: form with name input + submit", () => {
     const html = render({ kind: "idle" });
     expect(html).toContain("lb-display-name");
-    expect(html).toContain("Post to leaderboard");
+    expect(html).toContain("Post casual run");
+    expect(html).toContain("Ranked");
     expect(html).toContain("41");
   });
 
@@ -282,16 +290,111 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
     expect(html).toContain('href="/sign-in"');
   });
 
+  it("ranked signed-out: rule copy appears before submit and button is disabled", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: false,
+        publicUsername: null,
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Sign in to post ranked runs — casual runs stay shareable");
+    expect(html).toContain('href="/sign-in"');
+    expect(html).toContain("Post ranked run");
+    expect(html).toContain("disabled");
+  });
+
+  it("ranked signed-in without username: collects a username before posting", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: null,
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Choose a username for ranked.");
+    expect(html).toContain("lb-username");
+    expect(html).toContain("Username (3-20 chars: a-z, 0-9, _)");
+    expect(html).not.toContain("disabled");
+  });
+
+  it("ranked signed-in with username: alias is optional per entry", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: "public_user",
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Posting as");
+    expect(html).toContain("public_user");
+    expect(html).toContain("Optional alias (3-20 chars)");
+    expect(html).toContain("Post ranked run");
+  });
+
+  it("ranked username text is HTML-escaped by construction", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        publicUsername: '<script>alert("x")</script>',
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Posting as");
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;");
+  });
+
   it("INVALID_NAME: server verdict + mirrored hint", () => {
     const html = render({
       kind: "rejected",
       code: "INVALID_NAME",
       copy: submitStatusCopy("INVALID_NAME"),
-      nameHint: "At most 24 characters.",
+      nameHint: "At most 20 characters.",
       retryAfterSeconds: null,
     });
     expect(html).toContain("Name not accepted");
-    expect(html).toContain("At most 24 characters.");
+    expect(html).toContain("At most 20 characters.");
   });
 
   it("unreachable: transport failure is its own honest state", () => {
@@ -311,7 +414,7 @@ describe("board views", () => {
         rank: 1,
         id: "a",
         draft_mode: "classic",
-        display_name: "Alpha XI",
+        display_name: "alpha_xi",
         verified_score: 88,
         score_breakdown: [{ label: "Goals scored", raw: 4, weight: 3, points: 12 }],
         created_at: new Date(NOW - 120_000).toISOString(),
@@ -320,7 +423,7 @@ describe("board views", () => {
         rank: 2,
         id: "b",
         draft_mode: "hidden",
-        display_name: "Blind Side",
+        display_name: "blind_side",
         verified_score: 70,
         score_breakdown: null,
         created_at: new Date(NOW - 3_600_000).toISOString(),
@@ -333,13 +436,38 @@ describe("board views", () => {
     const html = renderToStaticMarkup(
       createElement(BoardRows, { rows, openKey: null, onToggle: () => undefined }),
     );
-    expect(html).toContain("Alpha XI");
+    expect(html).toContain("alpha_xi");
     expect(html).toContain("88");
     expect(html).toContain("Classic");
     expect(html).toContain("Memory"); // hidden-mode badge
     expect(html).toContain("2m ago");
     expect(html).toContain("You"); // me-highlight badge on entry b only
     expect(html).toContain('data-mine="true"');
+  });
+
+  it("public board names and breakdown labels render as escaped text", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardRows, {
+        rows: [
+          {
+            key: "hostile",
+            rank: 1,
+            displayName: '<img src=x onerror="alert(1)">',
+            score: 99,
+            draftMode: "classic",
+            timeLabel: "10m ago",
+            isMine: false,
+            breakdown: [{ label: "<script>breakdown()</script>", points: 1 }],
+          },
+        ],
+        openKey: "hostile",
+        onToggle: () => undefined,
+      }),
+    );
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;");
+    expect(html).toContain("&lt;script&gt;breakdown()&lt;/script&gt;");
   });
 
   it("open row shows the verified score breakdown (evidence)", () => {
@@ -360,6 +488,19 @@ describe("board views", () => {
   it("empty board is words, not placeholder rows", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard));
     expect(html).toContain("No verified entries yet");
+    expect(html).toContain("ranked run");
+  });
+
+  it("toolbar exposes ranked Classic and Memory lanes without a mixed view", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardToolbar, { filter: "classic", onFilter: () => undefined }),
+    );
+    expect(html).toContain("Ranked");
+    expect(html).toContain("Classic");
+    expect(html).toContain("Memory");
+    expect(html).not.toContain("All");
+    expect(html).not.toContain("soon");
+    expect(html).not.toContain("Casual");
   });
 
   it("error state is an alert with retry — never an empty board", () => {
@@ -388,5 +529,20 @@ describe("board views", () => {
     );
     expect(html).toContain("Season 2026-06-04 · engine-2026.06.11");
     expect(html).toContain("f166edc0");
+  });
+});
+
+describe("identity rendering implementation guard", () => {
+  it("profile/leaderboard name surfaces do not use dangerouslySetInnerHTML", () => {
+    const files = [
+      "../../../components/account-menu.tsx",
+      "../../../components/leaderboard/board-views.tsx",
+      "../../../components/leaderboard/submit-panel-views.tsx",
+    ];
+    for (const file of files) {
+      expect(readFileSync(new URL(file, import.meta.url), "utf8"), file).not.toContain(
+        "dangerouslySetInnerHTML",
+      );
+    }
   });
 });

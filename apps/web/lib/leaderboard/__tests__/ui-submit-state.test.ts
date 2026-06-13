@@ -29,7 +29,7 @@ const ENTRY = {
   season_key: "s",
   mode: "casual",
   draft_mode: "classic",
-  display_name: "Golden XI",
+  display_name: "golden_xi",
   verified_score: 42,
   score_breakdown: [],
   created_at: "2026-06-10T12:00:00.000Z",
@@ -129,7 +129,6 @@ describe("status table — single-sourced and exhaustive", () => {
       "too_short",
       "too_long",
       "invalid_chars",
-      "edge_separator",
       "blocked_term",
     ];
     for (const c of categories) expect(NAME_HINT[c].length).toBeGreaterThan(0);
@@ -145,6 +144,7 @@ describe("local memory", () => {
   it("tokenMemoryKey is deterministic and content-sensitive", () => {
     expect(tokenMemoryKey("t1.abc")).toBe(tokenMemoryKey("t1.abc"));
     expect(tokenMemoryKey("t1.abc")).not.toBe(tokenMemoryKey("t1.abd"));
+    expect(tokenMemoryKey("t1.abc", "casual")).not.toBe(tokenMemoryKey("t1.abc", "ranked"));
   });
 
   it("no window → safe no-ops (never throws, never claims submitted)", () => {
@@ -152,7 +152,7 @@ describe("local memory", () => {
     expect(loadLastDisplayName()).toBe("");
     expect(wasTokenSubmitted("t1.x")).toBe(false);
     expect(() => {
-      saveLastDisplayName("Golden XI");
+      saveLastDisplayName("golden_xi");
       rememberTokenSubmitted("t1.x");
     }).not.toThrow();
   });
@@ -178,9 +178,9 @@ describe("local memory", () => {
 
     it("remembers the last-used display name (not a secret)", () => {
       install();
-      saveLastDisplayName("Golden XI");
-      expect(loadLastDisplayName()).toBe("Golden XI");
-      expect(store.get(LAST_NAME_KEY)).toBe("Golden XI");
+      saveLastDisplayName("golden_xi");
+      expect(loadLastDisplayName()).toBe("golden_xi");
+      expect(store.get(LAST_NAME_KEY)).toBe("golden_xi");
     });
 
     it("remembers submitted tokens and caps the list", () => {
@@ -188,6 +188,9 @@ describe("local memory", () => {
       expect(wasTokenSubmitted("t1.one")).toBe(false);
       rememberTokenSubmitted("t1.one");
       expect(wasTokenSubmitted("t1.one")).toBe(true);
+      expect(wasTokenSubmitted("t1.one", "ranked")).toBe(false);
+      rememberTokenSubmitted("t1.one", "ranked");
+      expect(wasTokenSubmitted("t1.one", "ranked")).toBe(true);
       expect(wasTokenSubmitted("t1.two")).toBe(false);
 
       for (let i = 0; i < 60; i++) rememberTokenSubmitted(`t1.fill-${i}`);
