@@ -29,10 +29,11 @@ export default function PrivacyPage() {
         </p>
         <ul>
           <li>
-            <strong>Account and sign-in data.</strong> If you sign in, we store your email address.
-            Magic-link sign-in also uses a token hash, expiry time, consumed time, session
-            identifier, CSRF secret, and session expiry so the link can be single-use and your
-            session can stay secure.
+            <strong>Account and sign-in data.</strong> If you request a magic-link sign-in, we
+            store the submitted email address with the magic-link record. If you complete sign-in,
+            we also store and use it as your account email. Magic-link sign-in also uses a token
+            hash, expiry time, consumed time, session identifier, CSRF secret, and session expiry so
+            the link can be single-use and your session can stay secure.
           </li>
           <li>
             <strong>Gameplay and history data.</strong> Draft runs can include the run id, parent
@@ -113,14 +114,14 @@ export default function PrivacyPage() {
         <h2>Retention and deletion</h2>
         <p>
           Magic links expire quickly and are single-use. Session cookies expire automatically.
-          Browser runs stay in local storage until you clear browser data, delete a local run, or
-          the app evicts old local records. Server history is capped to recent saved runs per
-          account or anonymous session. Leaderboard entries may remain visible as season standings
-          unless they are removed for moderation, security, or a valid privacy request.
+          Browser runs stay in local storage until you clear browser data or the app evicts old
+          local records. Server history is capped to recent saved runs per account or anonymous
+          session. Leaderboard entries may remain visible as season standings unless they are
+          removed for moderation, security, or a valid privacy request.
         </p>
         <p>
-          Deleting a run from local history removes that browser copy. It does not remove a run that
-          was already saved to the server, posted to the leaderboard, or shared with someone else.
+          Clearing browser data removes local browser copies. It does not remove a run that was
+          already saved to the server, posted to the leaderboard, or shared with someone else.
           Contact us if you want help with server-side access, correction, deletion, or export.
         </p>
 
