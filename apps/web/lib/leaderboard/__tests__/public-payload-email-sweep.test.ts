@@ -7,6 +7,9 @@
 // but no public response body or header is allowed to contain it.
 
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { leaderboardEntries, magicLinkTokens, savedRuns, users } from "@wcdraft/db";
@@ -29,11 +32,11 @@ vi.mock("@/lib/auth/handler-helpers", async (importOriginal) => {
 import { GET as authConfigGet } from "@/app/api/auth/config/route";
 import { GET as csrfGet } from "@/app/api/auth/csrf/route";
 import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
-import { GET as sessionGet } from "@/app/api/auth/session/route";
-import { GET as verifyGet } from "@/app/api/auth/verify/route";
-import { GET as profileGet } from "@/app/api/profile/route";
-import { GET as runsGet } from "@/app/api/runs/route";
-import { GET as runDetailGet } from "@/app/api/runs/[id]/route";
+import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
+import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
+import { GET as profileGet, PUT as profilePut } from "@/app/api/profile/route";
+import { GET as runsGet, POST as runsPost } from "@/app/api/runs/route";
+import { DELETE as runDelete, GET as runDetailGet } from "@/app/api/runs/[id]/route";
 import { POST as runsClaimPost } from "@/app/api/runs/claim/route";
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
 import { LogEmailSender } from "@/lib/auth/email";
@@ -52,6 +55,34 @@ const COOKIE_SECRET = testCookieSecret("l4-public-payload-sweep");
 const PRIVATE_EMAIL = "private-route-sweep@example.com";
 const MAGIC_EMAIL = "magic-route-sweep@example.com";
 const SEASON = "season-route-sweep";
+const API_ROOT = fileURLToPath(new URL("../../../app/api", import.meta.url));
+const ROUTE_EXPORT_RE =
+  /\bexport\s+(?:(?:async\s+)?function|const)\s+(GET|POST|PUT|DELETE|PATCH)\b/g;
+const PUBLIC_API_METHODS = [
+  "DELETE /api/auth/session",
+  "DELETE /api/runs/[id]",
+  "GET /api/auth/config",
+  "GET /api/auth/csrf",
+  "GET /api/auth/session",
+  "GET /api/auth/verify",
+  "GET /api/leaderboard",
+  "GET /api/leaderboard/me",
+  "GET /api/profile",
+  "GET /api/runs",
+  "GET /api/runs/[id]",
+  "POST /api/auth/magic-link",
+  "POST /api/auth/verify",
+  "POST /api/leaderboard/submit",
+  "POST /api/runs",
+  "POST /api/runs/claim",
+  "PUT /api/profile",
+] as const;
+type PublicApiMethod = (typeof PUBLIC_API_METHODS)[number];
+interface CapturedResponse {
+  readonly route: PublicApiMethod;
+  readonly label: string;
+  readonly res: NextResponse;
+}
 const GOLDEN = fixtureJson as unknown as {
   classic: { token: string; expected: { verified_score: number } };
 };
@@ -122,14 +153,57 @@ function expectNoEmail(label: string, payload: string): void {
   expect(payload, label).not.toContain('"email"');
 }
 
+function routeCapture(
+  route: PublicApiMethod,
+  res: NextResponse,
+  label: string = route,
+): CapturedResponse {
+  return { route, label, res };
+}
+
+function expectedPublicApiMethods(): string[] {
+  return [...PUBLIC_API_METHODS].sort();
+}
+
+function discoverExportedApiMethods(dir = API_ROOT): string[] {
+  const found: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      found.push(...discoverExportedApiMethods(path));
+      continue;
+    }
+    if (!entry.isFile() || entry.name !== "route.ts") continue;
+    const routeDir = relative(API_ROOT, dirname(path)).split(sep).join("/");
+    const route = routeDir === "" ? "/api" : `/api/${routeDir}`;
+    const source = readFileSync(path, "utf8");
+    for (const match of source.matchAll(ROUTE_EXPORT_RE)) {
+      found.push(`${match[1]} ${route}`);
+    }
+  }
+  return found.sort();
+}
+
 describe("public route payload email sweep", () => {
   it("never serializes email across auth/profile/runs/leaderboard public responses", async () => {
+    expect(discoverExportedApiMethods()).toEqual(expectedPublicApiMethods());
+
     const [user] = await db
       .insert(users)
       .values({ email: PRIVATE_EMAIL, username: "route_user" })
       .returning();
     const session = await createSession({ userId: user!.id }, runtime.deps!);
     const authHeaders = signedHeaders(session.cookieValue, session.session.csrfSecret);
+    const verifySession = await createSession({ userId: null }, runtime.deps!);
+    const verifyHeaders = signedHeaders(
+      verifySession.cookieValue,
+      verifySession.session.csrfSecret,
+    );
+    const signoutSession = await createSession({ userId: user!.id }, runtime.deps!);
+    const signoutHeaders = signedHeaders(
+      signoutSession.cookieValue,
+      signoutSession.session.csrfSecret,
+    );
 
     const [accountRun] = await db
       .insert(savedRuns)
@@ -204,114 +278,227 @@ describe("public route payload email sweep", () => {
       },
     ]);
 
-    const captures: Array<[string, NextResponse]> = [];
-    captures.push(["GET /api/auth/config", await authConfigGet()]);
-    captures.push([
-      "GET /api/auth/csrf",
-      await csrfGet(req("/api/auth/csrf", { headers: authHeaders })),
-    ]);
-    captures.push([
-      "GET /api/auth/session",
-      await sessionGet(req("/api/auth/session", { headers: authHeaders })),
-    ]);
-    captures.push([
-      "POST /api/auth/magic-link",
-      await magicLinkPost(
-        req("/api/auth/magic-link", {
-          method: "POST",
-          headers: {
-            ...authHeaders,
-            "content-type": "application/json",
-            "x-forwarded-for": "127.0.0.1",
-          },
-          body: JSON.stringify({ email: MAGIC_EMAIL }),
-        }),
+    const captures: CapturedResponse[] = [];
+    captures.push(routeCapture("GET /api/auth/config", await authConfigGet()));
+    captures.push(
+      routeCapture(
+        "GET /api/auth/csrf",
+        await csrfGet(req("/api/auth/csrf", { headers: authHeaders })),
       ),
-    ]);
+    );
+    captures.push(
+      routeCapture(
+        "GET /api/auth/session",
+        await sessionGet(req("/api/auth/session", { headers: authHeaders })),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/magic-link",
+        await magicLinkPost(
+          req("/api/auth/magic-link", {
+            method: "POST",
+            headers: {
+              ...verifyHeaders,
+              "content-type": "application/json",
+              "x-forwarded-for": "127.0.0.1",
+            },
+            body: JSON.stringify({ email: MAGIC_EMAIL }),
+          }),
+        ),
+      ),
+    );
 
     const tokenHashRow = await db.select().from(magicLinkTokens).limit(1);
     expect(tokenHashRow).toHaveLength(1);
     const verifyToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
-    captures.push([
-      "GET /api/auth/verify",
-      await verifyGet(
-        req(`/api/auth/verify?token=${verifyToken}&next=/play`, { headers: authHeaders }),
+    captures.push(
+      routeCapture(
+        "GET /api/auth/verify",
+        await verifyGet(
+          req(`/api/auth/verify?token=${verifyToken}&next=/play`, { headers: verifyHeaders }),
+        ),
       ),
-    ]);
-    captures.push([
-      "GET /api/profile",
-      await profileGet(req("/api/profile", { headers: authHeaders })),
-    ]);
-    captures.push(["GET /api/runs", await runsGet(req("/api/runs", { headers: authHeaders }))]);
-    captures.push([
-      "GET /api/runs/[id]",
-      await runDetailGet(req(`/api/runs/${accountRun!.id}`, { headers: authHeaders }), {
-        params: Promise.resolve({ id: accountRun!.id }),
-      }),
-    ]);
-    captures.push([
-      "POST /api/runs/claim",
-      await runsClaimPost(req("/api/runs/claim", { method: "POST", headers: authHeaders })),
-    ]);
-
-    captures.push([
-      "GET /api/leaderboard classic",
-      await handleLeaderboardBoardGet(req(`/api/leaderboard?season=${SEASON}&draft_mode=classic`), {
-        db,
-        now: () => NOW,
-        getCookieSecret: () => COOKIE_SECRET,
-        currentSeasonKey: () => SEASON,
-      }),
-    ]);
-    captures.push([
-      "GET /api/leaderboard hidden",
-      await handleLeaderboardBoardGet(req(`/api/leaderboard?season=${SEASON}&draft_mode=hidden`), {
-        db,
-        now: () => NOW,
-        getCookieSecret: () => COOKIE_SECRET,
-        currentSeasonKey: () => SEASON,
-      }),
-    ]);
-    captures.push([
-      "GET /api/leaderboard/me",
-      await handleLeaderboardMeGet(
-        req(`/api/leaderboard/me?season=${SEASON}&draft_mode=classic`, { headers: authHeaders }),
-        {
-          db,
-          now: () => NOW,
-          getCookieSecret: () => COOKIE_SECRET,
-          currentSeasonKey: () => SEASON,
-        },
+    );
+    captures.push(
+      routeCapture(
+        "GET /api/profile",
+        await profileGet(req("/api/profile", { headers: authHeaders })),
       ),
-    ]);
-    captures.push([
-      "POST /api/leaderboard/submit",
-      await handleLeaderboardSubmit(
-        req("/api/leaderboard/submit", {
-          method: "POST",
-          headers: { ...authHeaders, "content-type": "application/json" },
-          body: JSON.stringify({
-            token: GOLDEN.classic.token,
-            claimed_score: GOLDEN.classic.expected.verified_score,
-            mode: "ranked",
-            draft_mode: "classic",
-            display_alias: "route_alias",
+    );
+    captures.push(
+      routeCapture(
+        "PUT /api/profile",
+        await profilePut(
+          req("/api/profile", {
+            method: "PUT",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({ username: "route_user" }),
           }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture("GET /api/runs", await runsGet(req("/api/runs", { headers: authHeaders }))),
+    );
+
+    const saveRunRes = await runsPost(
+      req("/api/runs", {
+        method: "POST",
+        headers: { ...authHeaders, "content-type": "application/json" },
+        body: JSON.stringify({
+          token: "t1.post-route-sweep",
+          versionAnchors: { dataset_version: "route-sweep" },
+          runId: "run-post-route-sweep",
+          parentSeed: "seed-post-route-sweep",
+          summary: {
+            team_name: "Post XI",
+            display_record: "1-0",
+            formation_name: "4-3-3",
+            key_picks: [],
+            is_champion: false,
+            seed: "seed-post-route-sweep",
+          },
         }),
-        {
-          db,
-          now: () => NOW,
-          getCookieSecret: () => COOKIE_SECRET,
-          getValidation: () => ({
-            gameData: buildServerGameData(),
-            scenario: serverScenarioBundle(),
-          }),
-          rateLimiter: { checkSubmit: async () => ({ allowed: true }) },
-        },
-      ),
-    ]);
+      }),
+    );
+    const saveRunBody = (await saveRunRes.clone().json()) as { run?: { id?: unknown } };
+    expect(typeof saveRunBody.run?.id).toBe("string");
+    const savedRouteRunId = saveRunBody.run!.id as string;
+    captures.push(routeCapture("POST /api/runs", saveRunRes));
 
-    for (const [label, res] of captures) {
+    captures.push(
+      routeCapture(
+        "GET /api/runs/[id]",
+        await runDetailGet(req(`/api/runs/${accountRun!.id}`, { headers: authHeaders }), {
+          params: Promise.resolve({ id: accountRun!.id }),
+        }),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "DELETE /api/runs/[id]",
+        await runDelete(
+          req(`/api/runs/${savedRouteRunId}`, { method: "DELETE", headers: authHeaders }),
+          {
+            params: Promise.resolve({ id: savedRouteRunId }),
+          },
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/runs/claim",
+        await runsClaimPost(req("/api/runs/claim", { method: "POST", headers: authHeaders })),
+      ),
+    );
+
+    captures.push(
+      routeCapture(
+        "GET /api/leaderboard",
+        await handleLeaderboardBoardGet(
+          req(`/api/leaderboard?season=${SEASON}&draft_mode=classic`),
+          {
+            db,
+            now: () => NOW,
+            getCookieSecret: () => COOKIE_SECRET,
+            currentSeasonKey: () => SEASON,
+          },
+        ),
+        "GET /api/leaderboard classic",
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "GET /api/leaderboard",
+        await handleLeaderboardBoardGet(
+          req(`/api/leaderboard?season=${SEASON}&draft_mode=hidden`),
+          {
+            db,
+            now: () => NOW,
+            getCookieSecret: () => COOKIE_SECRET,
+            currentSeasonKey: () => SEASON,
+          },
+        ),
+        "GET /api/leaderboard hidden",
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "GET /api/leaderboard/me",
+        await handleLeaderboardMeGet(
+          req(`/api/leaderboard/me?season=${SEASON}&draft_mode=classic`, {
+            headers: authHeaders,
+          }),
+          {
+            db,
+            now: () => NOW,
+            getCookieSecret: () => COOKIE_SECRET,
+            currentSeasonKey: () => SEASON,
+          },
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/leaderboard/submit",
+        await handleLeaderboardSubmit(
+          req("/api/leaderboard/submit", {
+            method: "POST",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({
+              token: GOLDEN.classic.token,
+              claimed_score: GOLDEN.classic.expected.verified_score,
+              mode: "ranked",
+              draft_mode: "classic",
+              display_alias: "route_alias",
+            }),
+          }),
+          {
+            db,
+            now: () => NOW,
+            getCookieSecret: () => COOKIE_SECRET,
+            getValidation: () => ({
+              gameData: buildServerGameData(),
+              scenario: serverScenarioBundle(),
+            }),
+            rateLimiter: { checkSubmit: async () => ({ allowed: true }) },
+          },
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/verify",
+        await verifyPost(
+          req("/api/auth/verify", {
+            method: "POST",
+            headers: {
+              ...verifyHeaders,
+              "content-type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              token: verifyToken,
+              next: "/play",
+              csrf: verifySession.session.csrfSecret,
+            }),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "DELETE /api/auth/session",
+        await sessionDelete(
+          req("/api/auth/session", { method: "DELETE", headers: signoutHeaders }),
+        ),
+      ),
+    );
+
+    const coveredRoutes = Array.from(new Set(captures.map((capture) => capture.route))).sort();
+    expect(coveredRoutes).toEqual(expectedPublicApiMethods());
+
+    for (const { label, res } of captures) {
       expect(res.status, label).toBeLessThan(400);
       expectNoEmail(label, await payloadOf(res));
     }

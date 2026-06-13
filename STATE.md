@@ -46,9 +46,10 @@ than hidden regressions.
   `leaderboard-profiles`: L1 schema/profiles (#114), L2 ranked-requires-account
   (#117), and L3 Memory ranked lane (#122; squash `d6569175`) are landed into the
   integration branch. L4 local board-display/privacy work adds a route-level public
-  payload email sweep beyond the leaderboard serializer, pins React text escaping for
-  username/alias rendering, and captures Classic/Memory board screenshots in light/dark
-  themes at 390×844 / 360×800. No schema, core, data, or golden fixtures were changed.
+  payload email sweep across all 17 currently exported `apps/web/app/api/**/route.ts`
+  methods beyond the leaderboard serializer, pins React text escaping for username/alias
+  rendering, and captures Classic/Memory board screenshots in light/dark themes at
+  390×844 / 360×800. No schema, core, data, or golden fixtures were changed.
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -120,7 +121,7 @@ than hidden regressions.
 | post-season browser proof                               | local production build: 12 screenshots · SW registered · stale test caches evicted · console errors 0     |
 | leaderboard-profiles L3 focused suite                   | validation + golden + submit + board + UI + serializer: 145 passed                                        |
 | leaderboard-profiles L3 lane mutation proof             | disabling the token.md↔draft_mode guard failed validate + submit cross-lane tests; restored 77 passed     |
-| leaderboard-profiles L4 focused privacy/UI suite        | public-payload email sweep + UI render/XSS guards: 37 passed                                              |
+| leaderboard-profiles L4 focused privacy/UI suite        | all exported API-method public-payload email sweep + UI render/XSS guards: 37 passed                      |
 | leaderboard-profiles L4 screenshots                     | 4 local Playwright captures: Classic/Memory × light/dark at 390×844 / 360×800; rendered email probe false |
 | @wcdraft/web `build` (leaderboard-profiles L4)          | PASS; existing Next/Webpack circular chunk warnings only                                                  |
 

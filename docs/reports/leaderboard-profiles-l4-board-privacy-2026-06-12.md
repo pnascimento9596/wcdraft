@@ -15,12 +15,15 @@ contracts with broader negative coverage.
 ## Changes
 
 - Added `public-payload-email-sweep.test.ts`, which seeds real private email
-  addresses and verifies public payloads do not serialize them across:
+  addresses, inventories every exported `apps/web/app/api/**/route.ts` method,
+  and verifies public payloads do not serialize private email across all 17
+  current API method surfaces:
   - auth config / csrf / session
+  - auth sign-out
   - magic-link request response
-  - verify interstitial
-  - profile GET
-  - saved-run list/detail/claim responses
+  - verify interstitial and verify POST redirect
+  - profile GET / PUT
+  - saved-run list/save/detail/delete/claim responses
   - leaderboard Classic and Memory board reads
   - leaderboard `/me`
   - ranked submit response
@@ -34,7 +37,8 @@ contracts with broader negative coverage.
 
 - Focused L4 suite:
   - `pnpm --filter @wcdraft/web exec vitest run lib/leaderboard/__tests__/public-payload-email-sweep.test.ts lib/leaderboard/__tests__/ui-gating.test.ts`
-  - Result: 2 files, 37 tests passed.
+  - Result: 2 files, 37 tests passed; the route inventory guard covered all 17
+    currently exported API methods.
 - Full web package:
   - `pnpm --filter @wcdraft/web test`
   - Result: 57 files passed, 1 skipped; 653 passed, 1 skipped.
