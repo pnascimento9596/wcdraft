@@ -94,6 +94,14 @@ merge, deploy, and live verification.
   blinding); leaderboard still refuses Current as `NON_CANONICAL_CONFIG`. The
   Career path is byte-identical (goldens untouched, no regen; heavy realism 7/7).
   Stale MV2-12b/selected-basis gate language swept from code comments + setup.
+- `feature/dynamic-og` is the active Red share-image lane: new completed-run `t2`
+  tokens carry a compact `og` result summary copied from the already-computed
+  simulation; `/play/share` metadata points current-anchor summary tokens at
+  `/api/og/run?run=...&v=...`; the image route decodes the token cold, verifies
+  anchors, replays the pick log for the XI, and renders the card without running
+  the tournament server-side. Malformed, legacy `t1`, pre-summary `t2`, and
+  foreign-build tokens retain the static `/brand/marketing/og-default.png`
+  fallback and must not 500 crawlers.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
