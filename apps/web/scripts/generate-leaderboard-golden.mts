@@ -65,7 +65,12 @@ for (const c of CASES) {
   const expected = expectedRunFor(gameData, scenario, record);
 
   const verdict = validateSubmission(
-    { token, claimed_score: expected.score, display_name: c.display_name },
+    {
+      token,
+      claimed_score: expected.score,
+      draft_mode: c.mode,
+      display_name: c.display_name,
+    },
     { gameData, scenario },
   );
   if (verdict.status !== "accepted") {

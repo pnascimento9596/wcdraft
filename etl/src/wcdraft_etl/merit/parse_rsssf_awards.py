@@ -5,6 +5,7 @@
     south_american_poy_placements  -> rsssf/sam-poy.html      (regional_annual)
     world_soccer_poy               -> rsssf/wsoc-awards.html  (global_annual)
     onze_awards                    -> rsssf/onze-awards.html  (global_annual)
+    swedish_footballer_of_year     -> rsssf/zwedpoy.html      (public annual honor)
 
 Every parser is a PURE function of the committed snapshot bytes — no network, clock,
 randomness, fuzzy lookup, or LLM call. Each RSSSF page renders fixed-width columns
@@ -153,6 +154,40 @@ def parse_world_soccer_poy(source_id: str = "world_soccer_poy") -> list[MeritRec
                 nation_token=nation_token,
                 year=year,
                 detail=f"{source_id} winner {year}",
+            )
+        )
+    return records
+
+
+# ─── Sweden Footballer of the Year / Guldbollen (complete winners table) ──
+# Row shape: ``YEAR Player, Club`` in the single preformatted table. Guldbollen is a
+# public individual national player-of-year honor presented by Aftonbladet and the
+# Swedish Football Association, not a fan vote. The parser reads the complete table;
+# it does not inspect any target player ids.
+_SWEDISH_FOY_RE = re.compile(r"^\s*(\d{4})\s+([^,\n]+),")
+
+
+def parse_swedish_footballer_of_year(
+    source_id: str = "swedish_footballer_of_year",
+) -> list[MeritRecord]:
+    src = SOURCE_BY_ID[source_id]
+    records: list[MeritRecord] = []
+    for line in _plain(source_id).split("\n"):
+        m = _SWEDISH_FOY_RE.match(line)
+        if not m:
+            continue
+        year = int(m.group(1))
+        name = collapse_ws(m.group(2))
+        if not name:
+            continue
+        records.append(
+            MeritRecord(
+                source_id=source_id,
+                family=src.family,
+                name=name,
+                nation_token="Sweden",
+                year=year,
+                detail=f"national_player_of_year: Guldbollen {year}",
             )
         )
     return records

@@ -45,20 +45,22 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 
+// runtime-data-2.1.0 (merit-v3.1): compact data carries the curated
+// career-stature-3.1.0 / rating 5.1 family outputs.
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.0.0";
+const SCHEMA_VERSION = "runtime-data-2.1.0";
 // merit-v3 V8: single season engine bump after the V7 lambda refit.
 const ENGINE_VERSION = "engine-2026.06.12";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// merit-v3 model (wc-perf-5.0.0 historical, unified display curve v2);
-// projected proj-career-4.0.0 (2026 linked-material on the stature scale).
+// merit-v3.1 model (wc-perf-5.1.0 historical, unified display curve v2);
+// projected proj-career-4.1.0 (2026 linked-material on the stature scale).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-5.0.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-4.0.0";
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-5.1.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-4.1.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
@@ -1112,7 +1114,7 @@ function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
   const basisRatings = rating.basis_ratings;
   if (!basisRatings || typeof basisRatings !== "object") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.0.0 requires career + current.`,
+      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.1.0 requires career + current.`,
     );
   }
   return {
@@ -1154,7 +1156,7 @@ function materializeBasisRating(
 ) {
   if (!basisRating || typeof basisRating !== "object") {
     throw new Error(
-      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.0.0 requires both bases.`,
+      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.1.0 requires both bases.`,
     );
   }
   const basisMetadata = basisRating.basis_metadata;
@@ -1231,12 +1233,12 @@ function humanBytes(n) {
 }
 
 function requireLegend(rating) {
-  // runtime-data-2.0.0: `legend` is REQUIRED on every compact rating.
+  // runtime-data-2.1.0: `legend` is REQUIRED on every compact rating.
   // The ETL emits the source-derived boolean on every row (historical + 2026);
   // anything else is a contract violation surfaced loudly, never defaulted.
   if (typeof rating.legend !== "boolean") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.0.0 requires a boolean on every row. Refusing to emit.`,
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.1.0 requires a boolean on every row. Refusing to emit.`,
     );
   }
   return rating.legend;

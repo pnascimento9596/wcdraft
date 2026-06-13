@@ -131,8 +131,33 @@
       "row_count": 1,
       "sha256": "2fc858eb8f4a40ee5032cf11598df3c58adeb7be162c93f6bc0fc1987aa58acf",
       "source_id": "active_international_record"
+    },
+    {
+      "bytes": 6144,
+      "census": {
+        "exclusion_count": 0,
+        "finals_registry_count": 0,
+        "rule": "Credit public individual club/league/competition season honors established on or before the 2022 World Cup final for every final merit-v3 V8 waived historical card whose miss was explicitly attributed to unstaged active-career facts. Included honor types: domestic top-flight league MVP/player-of-year and UEFA senior club competition player-of-season. Excluded honor types: fan votes, proprietary ratings, monthly awards, club-only player-of-year, team/squad selections already covered by position-balanced sources, and post-2022 honors.",
+        "rule_id": "w1_public_individual_season_honors_v1",
+        "scope_count": 2,
+        "scope_player_ids": [
+          "P-39584",
+          "P-72637"
+        ],
+        "top_tier_competitions": []
+      },
+      "cited_urls": [
+        "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year",
+        "https://web.archive.org/web/20210602225006/https://www.legaseriea.it/en/press/news/info/the-mvps-of-the-2020-2021-season-romelu-lukaku-best-overall",
+        "https://www.uefa.com/uefaeuropaleague/news/0262-10836e08a61e-46e10483802f-1000--romelu-lukaku-named-europa-league-player-of-the-season/"
+      ],
+      "family": "club_season_honors",
+      "file": "active/public-season-honors.json",
+      "row_count": 4,
+      "sha256": "780a6eff26b8391bd5d136def289ef5029732d1b3eb190bc3efb1a1198aeb931",
+      "source_id": "active_public_season_honors"
     }
   ],
-  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-3.0.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
-  "version": "active-career-source-set-2.0.0"
+  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-3.1.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
+  "version": "active-career-source-set-2.1.0"
 }

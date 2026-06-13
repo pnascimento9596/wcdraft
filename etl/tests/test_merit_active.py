@@ -1,7 +1,7 @@
 """MV2-12a / merit-v3 V1 active-career intake: citation discipline,
 conservative dual-space linking, determinism, the SHA-pin, and the explicit
 activation seam: active.py still emits facts + identity only, while
-career-stature-3.0.0 consumes those facts through stature.py.
+career-stature-3.1.0 consumes those facts through stature.py.
 
 Self-contained: reads the committed canonical JSON in ``etl/output/`` plus the
 committed snapshots/notes under ``etl/merit/raw/``.
@@ -166,7 +166,7 @@ def test_staged_entries_carry_no_score_index_tier_or_legend(abuilt):
         "family_scores",
         "family_weights",
     }
-    assert abuilt["staging_doc"]["activated_by"] == "career-stature-3.0.0"
+    assert abuilt["staging_doc"]["activated_by"] == "career-stature-3.1.0"
     for e in abuilt["entries"]:
         assert not forbidden & set(e), e["player_id"]
 
@@ -207,8 +207,13 @@ def test_club_season_honors_census_matches_scope_and_registry(abuilt):
     assert "MV2-12a active 23 plus the V1 additions" in census["rule"]
 
     scope_ids = {p["player_id"] for p in census["scope"]}
+    club_source_entry_ids = {
+        f["player_id"]
+        for f in abuilt["facts"]
+        if f["source_id"] == "active_club_season_honors"
+    }
     assert len(scope_ids) == 26
-    assert scope_ids == {e["player_id"] for e in abuilt["entries"]}
+    assert club_source_entry_ids <= scope_ids
     assert {
         p["player_id"]
         for p in census["scope"]

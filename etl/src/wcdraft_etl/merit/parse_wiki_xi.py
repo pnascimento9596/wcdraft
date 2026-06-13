@@ -2,7 +2,6 @@
 
     uefa_club_positional    -> wiki/uefa-club-awards.html   (GK/DF/MF/FW best awards)
     esm_team_of_the_season  -> wiki/esm-tots.html           (GK/DF/MF/FW formation XI)
-    uefa_team_of_the_year   -> wiki/uefa-toty.html          (annual XI, recognition)
     fifpro_world11          -> wiki/fifpro-world11.html     (player-voted World 11)
     ballondor_dream_team    -> wiki/ballondor-dreamteam.html (all-time 1st/2nd/3rd XIs)
 
@@ -17,6 +16,8 @@ so the conservative linker in ``link.py`` resolves them; these parsers never ass
 ``player_id`` and never invent a player."""
 
 from __future__ import annotations
+
+import re as _re
 
 from . import SOURCE_BY_ID, MeritRecord
 from . import wikihtml as W
@@ -129,41 +130,6 @@ def parse_esm_team_of_the_season(
                             extra={"selection": f"esm_{pos.lower()}"},
                         )
                     )
-    return records
-
-
-# ─── UEFA Team of the Year (annual XI — recognition breadth; positions vary, so None) ──
-# One "Team of the Year YYYY" table per year. The XI is a recognition fact per player
-# per year; the formation order is not position-labelled, so position is left None
-# (the explicit positional repair comes from the positional / ESM / dream-team
-# sources). A player selected across several years yields several year-keyed facts.
-import re as _re  # noqa: E402  (local: only the TOTY year header needs a pattern)
-
-_TOTY_HEADER_RE = _re.compile(r"^Team of the Year (\d{4})$")
-
-
-def parse_uefa_team_of_the_year(
-    source_id: str = "uefa_team_of_the_year",
-) -> list[MeritRecord]:
-    src = SOURCE_BY_ID[source_id]
-    raw = _raw(source_id)
-    records: list[MeritRecord] = []
-    for offset, label in W.headers(raw):
-        m = _TOTY_HEADER_RE.match(label)
-        if not m:
-            continue
-        year = int(m.group(1))
-        for _slug, name in W.player_anchors(W.table_after(raw, offset)):
-            records.append(
-                MeritRecord(
-                    source_id=source_id,
-                    family=src.family,
-                    name=name,
-                    nation_token=None,
-                    year=year,
-                    detail=f"uefa_team_of_the_year {year}",
-                )
-            )
     return records
 
 

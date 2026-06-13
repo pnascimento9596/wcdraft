@@ -156,6 +156,16 @@ def _record(source, row: dict) -> MeritRecord:
         "citation": {"url": url, "claim": claim},
         "scope": row["scope"],
     }
+    snapshot_path = cite.get("snapshot_path")
+    if snapshot_path is not None:
+        if (
+            not isinstance(snapshot_path, str)
+            or not snapshot_path.startswith("etl/sources/")
+        ):
+            raise ActiveIntakeError(
+                f"{source.raw_file}: {name!r} bad citation.snapshot_path {snapshot_path!r}"
+            )
+        extra["citation"]["snapshot_path"] = snapshot_path
     # Optional ``kind`` keeps genuinely distinct same-year facts from collapsing
     # in the (player, source, year, discriminator) de-dup (e.g. two distinct
     # 2025 distinctions from the same active source).
@@ -500,11 +510,11 @@ def build(write: bool = True) -> dict:
     staging_doc = {
         "version": ACTIVE_SOURCE_SET_VERSION,
         "cutoff_date": ACTIVE_CUTOFF_DATE,
-        "activated_by": "career-stature-3.0.0",
+        "activated_by": "career-stature-3.1.0",
         "note": (
             "Active-career staging entries. Facts + identity only: no "
             "career_stature_score, index, tier or legend is computed here. "
-            "career-stature-3.0.0 consumes source_facts_active.json plus this "
+            "career-stature-3.1.0 consumes source_facts_active.json plus this "
             "staging artifact and applies the person-level, career-stage-"
             "normalized merge."
         ),
@@ -610,7 +620,7 @@ def _render_report(facts, entries, review, bridges, curation_notes) -> str:
     L.append(
         "MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year "
         f"ceiling 2022). Curation cutoff **{ACTIVE_CUTOFF_DATE}**. Activated by "
-        "career-stature-3.0.0: stature.py consumes these artifacts, while this "
+        "career-stature-3.1.0: stature.py consumes these artifacts, while this "
         "module still emits facts + identity only and no rating output.\n"
     )
     L.append(f"- Linked active facts: **{len(facts)}**")
@@ -721,7 +731,7 @@ def manifest_from_committed() -> dict:
         "cutoff_date": ACTIVE_CUTOFF_DATE,
         "note": (
             "Active-career intake notes. Citation-backed public facts for "
-            "in-progress careers, staged for career-stature-3.0.0. Each note is "
+            "in-progress careers, staged for career-stature-3.1.0. Each note is "
             "SHA-pinned and every row carries a fetchable public citation URL plus "
             "the specific claim it supports; editing a citation changes the bytes "
             "and therefore the pinned sha256. An uncited row fails the build."

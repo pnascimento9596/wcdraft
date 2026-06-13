@@ -1,8 +1,8 @@
-"""Deterministic merit / career-stature source intake (merit-source-set-2.0.0).
+"""Deterministic merit / career-stature source intake (merit-source-set-2.1.0).
 
 This package SOURCES public, factually-grounded recognition records for players —
 global & regional player-of-the-year ballots, position-balanced selections (UEFA
-positional awards / Team of the Year, FIFPro World 11, ESM Team of the Season),
+positional awards, FIFPro World 11, ESM Team of the Season),
 all-time dream teams (the Ballon d'Or Dream Team, IFFHS), century international-cap/
 goal records, retrospective century elections, and a living-legends list — and LINKS
 each record to a canonical ``player_id``. It is the *coverage proof* for the
@@ -69,13 +69,14 @@ from dataclasses import dataclass, field
 #
 # Keeping these axes separate is what lets the factual table move without
 # accidentally changing historical/projected rating outputs or compact bundles.
-SOURCE_SET_VERSION = "merit-source-set-2.0.0"
-# career-stature-3.0.0 (merit-v3 V1): the table activates the active-career
+SOURCE_SET_VERSION = "merit-source-set-2.1.0"
+# career-stature-3.1.0 (merit-v3.1): the table carries the IFFHS Men Legends
+# source-scope extension and the W1 active public-season-honors note.
 # channel through stature.py, adds eligibility-aware family re-normalization,
 # sparse-profile controls, person-identity resolution, and the
 # club_season_honors family. The base merit source set remains 2.0.0; the active
 # source set has its own version below.
-VERSION = "career-stature-3.0.0"
+VERSION = "career-stature-3.1.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
@@ -158,7 +159,7 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
         "Position-balanced selection (positional awards / formation XIs)",
         None,
         "Position-aware best-of selections: UEFA Club positional awards (GK/DF/MF/"
-        "FW), UEFA Team of the Year, FIFPro World 11, ESM Team of the Season. Each "
+        "FW), FIFPro World 11, ESM Team of the Season. Each "
         "fact carries a first-class position — the defender / goalkeeper repair.",
     ),
     SignalFamily(
@@ -388,6 +389,15 @@ _V2_SOURCES: tuple[Source, ...] = (
         "World Soccer Player of the Year — annual winners",
     ),
     Source(
+        "swedish_footballer_of_year",
+        "club_season_honors",
+        "rsssf/zwedpoy.html",
+        "https://www.rsssf.org/miscellaneous/zwedpoy.html",
+        "iso-8859-1",
+        "fact",
+        "Sweden Footballer of the Year (Guldbollen) — complete winners table",
+    ),
+    Source(
         "onze_awards",
         "global_annual_recognition",
         "rsssf/onze-awards.html",
@@ -405,15 +415,6 @@ _V2_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "UEFA Club positional awards — Best Goalkeeper/Defender/Midfielder/Forward",
-    ),
-    Source(
-        "uefa_team_of_the_year",
-        "position_balanced_selection",
-        "wiki/uefa-toty.html",
-        "https://en.wikipedia.org/wiki/UEFA_Team_of_the_Year",
-        "utf-8",
-        "fact",
-        "UEFA Team of the Year — annual position-normalised XI",
     ),
     Source(
         "fifpro_world11",
@@ -451,6 +452,15 @@ _V2_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "IFFHS All-Time World / continental / national dream teams",
+    ),
+    Source(
+        "iffhs_men_legends",
+        "retrospective_selection",
+        "wiki/iffhs-worlds-best.html",
+        "https://en.wikipedia.org/wiki/IFFHS_World%27s_Best_Player",
+        "utf-8",
+        "fact",
+        "IFFHS Men Legends — complete retrospective legend selection",
     ),
 )
 
@@ -517,7 +527,7 @@ RESEARCH_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _RESEARCH_S
 # backstop otherwise: every row carries a fetchable public citation (url +
 # claim) verified before commit; an uncited row fails the build; the notes are
 # SHA-pinned in their own manifest (merit/raw/active/manifest.json).
-ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-2.0.0"
+ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-2.1.0"
 # Curation cutoff: a note in this set may only assert facts established on or
 # before this date (the 2026 squad-pin season boundary). Re-curation of active
 # careers is expected each dataset revision — active records drift by nature.
@@ -567,6 +577,15 @@ _ACTIVE_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "Top-tier continental club titles with documented final participation",
+    ),
+    Source(
+        "active_public_season_honors",
+        "club_season_honors",
+        "active/public-season-honors.json",
+        "(active-career intake — per-row citations in merit/raw/active/manifest.json)",
+        "utf-8",
+        "fact",
+        "Public club/league/competition season honors for W1 honest-miss facts",
     ),
 )
 ACTIVE_SOURCES: tuple[Source, ...] = _ACTIVE_SOURCES

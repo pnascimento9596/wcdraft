@@ -63,7 +63,8 @@ def test_scores_and_coverage_are_finite_in_unit_interval():
 def test_club_honors_legacy_zero_and_club_season_honors_active():
     """V1 adds the narrow club_season_honors family. The legacy club_honors key
     remains the explicit zero-weight placeholder, while cited active title/final
-    participation facts score only through the new family."""
+    participation facts and v3.1 static public season awards score only through
+    the new family."""
     club_rows = []
     for r in _committed()["career_stature"]:
         assert r["family_scores"]["club_honors"] is None
@@ -71,12 +72,19 @@ def test_club_honors_legacy_zero_and_club_season_honors_active():
         if r["family_scores"]["club_season_honors"]:
             club_rows.append(r)
             assert r["family_weights"]["club_season_honors"] > 0.0
-            assert r["active_source_set_version"] == ACTIVE_SOURCE_SET_VERSION
+            if r["active_fact_count"]:
+                assert r["active_source_set_version"] == ACTIVE_SOURCE_SET_VERSION
+            else:
+                assert any(
+                    ref.startswith("swedish_footballer_of_year:")
+                    for ref in r["source_refs"]
+                ), r["player_id"]
     assert {
         "P-05174",
         "P-21531",
         "P-62341",
         "P-92812",
+        "P-80105",
         "P-W26-0050",
         "P-W26-0115",
         "P-W26-0477",
@@ -204,7 +212,9 @@ def test_legend_is_source_derived_with_closed_reason_codes():
         assert r["legend"] == bool(codes)
         # Re-derive from source facts alone — proves no rating leaked into the flag.
         rederived = stature._legend_reason_codes(
-            facts_by_player[r["player_id"]], r["career_stature_index"]
+            facts_by_player[r["player_id"]],
+            r["career_stature_index"],
+            r.get("career_peak_year"),
         )
         assert rederived == codes, r["player_id"]
 

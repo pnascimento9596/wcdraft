@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 
 from . import SOURCE_BY_ID, MeritRecord
+from . import wikihtml as W
 from .paths import read_raw
 from .text import collapse_ws, norm, strip_tags, unescape
 
@@ -84,6 +85,65 @@ def parse_iffhs_best(source_id: str = "iffhs_worlds_best") -> list[MeritRecord]:
                 nation_token=nation,
                 year=year,
                 detail=f"{source_id} winner {year}",
+            )
+        )
+    return records
+
+
+def parse_iffhs_men_legends(source_id: str = "iffhs_men_legends") -> list[MeritRecord]:
+    """Parse the complete IFFHS Men Legends section.
+
+    This is a broad retrospective source on the same committed IFFHS snapshot as
+    the annual winners. The parser is deliberately section-bounded: it starts at
+    the "Men Legends" header and stops before the next men's section, so women's
+    lists, monthly awards, and navbox rows cannot leak in.
+    """
+    src = SOURCE_BY_ID[source_id]
+    raw = read_raw(src.raw_file, src.charset)
+    hs = W.headers(raw)
+    start = next((o for o, t in hs if t == "Men Legends"), -1)
+    if start < 0:
+        return []
+    end = next(
+        (
+            o
+            for o, t in hs
+            if o > start and t in {"The Men's Player of the Month", "Women's winners"}
+        ),
+        len(raw),
+    )
+    region = raw[start:end]
+    records: list[MeritRecord] = []
+    seen: set[str] = set()
+    for row in W.rows(region):
+        cells = W.cells(row)
+        if len(cells) < 2:
+            continue
+        players = W.player_anchors(cells[0])
+        if not players:
+            continue
+        slug, name = players[0]
+        if slug in seen:
+            continue
+        seen.add(slug)
+        nation = None
+        for _slug, title, text in W.anchors(cells[1]):
+            if text and "national football team" in title.lower():
+                nation = (
+                    title.rsplit(" national football team", 1)[0]
+                    .removesuffix(" men's")
+                    .removesuffix(" women's")
+                )
+                break
+        records.append(
+            MeritRecord(
+                source_id=source_id,
+                family=src.family,
+                name=name,
+                nation_token=nation,
+                year=2021,
+                detail="IFFHS Men Legends selection",
+                extra={"selection": "iffhs_men_legends"},
             )
         )
     return records

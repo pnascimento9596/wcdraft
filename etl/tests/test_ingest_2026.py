@@ -249,11 +249,11 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-4.0.0 = merit-v3 V3: D1 age conditioning (age_factor retired),
-    # person-identity stature seam, re-derived cross-era quantile map, dual-basis.
-    assert rating_2026.RATING_VERSION == "proj-career-4.0.0"
+    # proj-career-4.1.0 = merit-v3.1 curation season: same projected formula as
+    # 4.0, consuming career-stature-3.1.0 source-derived rows.
+    assert rating_2026.RATING_VERSION == "proj-career-4.1.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-4.0.0"
+        assert r["rating_version"] == "proj-career-4.1.0"
 
 
 def test_projected_distribution_shape(ratings):
@@ -421,7 +421,7 @@ def test_manifest_and_attribution(built):
 # were OVR-99 projected MF cards on the old proj-career-2.0.0 raw formula.
 _MESSI = "P-14758"
 _UPAMECANO = "P-03945"  # linked with a career row BELOW the material ramp (idx ~0.14)
-_SPURIOUS_99 = ("P-34205", "P-39584", "P-58692", "P-W26-0177")
+_SPURIOUS_99 = ("P-34205", "P-58692", "P-W26-0177")
 _DF_LEGEND = "P-56029"  # van Dijk
 _GK_LEGEND = "P-19408"  # Neuer
 
@@ -564,10 +564,11 @@ def test_messi_no_longer_age_dominated(internal_2026):
 
 
 def test_spurious_high_raw_cards_capped_below_material(internal_2026):
-    """The four previously-OVR-99 projected MF cards (strong caps + top league, no
+    """The remaining previously-OVR-99 projected MF cards (strong caps + top league, no
     material career stature) are now confined to the raw-only band: stature weight 0,
     measured_performance basis, no legend, internal score at/below the raw-only
-    ceiling — strictly below the recognized-greats band. The Souček-class fix."""
+    ceiling — strictly below the recognized-greats band. Bruno Fernandes left this
+    control set in merit-v3.1 because W1 staged his public season-honor facts."""
     for pid in _SPURIOUS_99:
         row = internal_2026[pid]
         assert _comp(row, "stature_model_weight") == 0.0, pid
@@ -575,6 +576,18 @@ def test_spurious_high_raw_cards_capped_below_material(internal_2026):
         assert row["legend"] is False, pid
         # raw-only ceiling band, never the stature/legend band.
         assert row["score_0_100"] / 100.0 <= rating.RAW_ONLY_GLOBAL_CEILING + 1e-9, pid
+
+
+def test_w1_bruno_fernandes_is_material_but_not_legend(internal_2026):
+    """W1 stages Bruno Fernandes' pre-2022 public season honors, so his projected
+    card legitimately moves out of the raw-only control set. The curation changes
+    materiality only; it does not fabricate a legend flag."""
+    row = internal_2026["P-39584"]
+    assert _comp(row, "career_stature_index") == 0.4399
+    assert _comp(row, "stature_model_weight") > rating.STATURE_DOMINANT_WEIGHT
+    assert row["overall_basis"] == "career_stature_estimate"
+    assert row["legend"] is False
+    assert row["score_0_100"] / 100.0 > rating.RAW_ONLY_GLOBAL_CEILING
 
 
 def test_nonmaterial_quantiles_match_historical_raw_only(

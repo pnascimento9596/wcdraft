@@ -1,0 +1,114 @@
+{
+  "source_id": "active_public_season_honors",
+  "family": "club_season_honors",
+  "cutoff_date": "2026-06-01",
+  "note": "merit-v3.1 W1 honest-miss staging. Scope is the final merit-v3 V8 waived historical cards whose misses were explicitly attributed to unstaged active-career facts: Romelu Lukaku WC-2022 and Bruno Fernandes WC-2018. Honor scope is public, individual club/league/competition season honors established on or before the 2022 World Cup final: domestic top-flight league MVP/player-of-year and UEFA senior club competition player-of-season. Excluded: fan votes, proprietary ratings, monthly awards, club-only player-of-year, team/squad selections already covered by position-balanced sources, and post-2022 honors.",
+  "census": {
+    "rule_id": "w1_public_individual_season_honors_v1",
+    "rule": "Credit public individual club/league/competition season honors established on or before the 2022 World Cup final for every final merit-v3 V8 waived historical card whose miss was explicitly attributed to unstaged active-career facts. Included honor types: domestic top-flight league MVP/player-of-year and UEFA senior club competition player-of-season. Excluded honor types: fan votes, proprietary ratings, monthly awards, club-only player-of-year, team/squad selections already covered by position-balanced sources, and post-2022 honors.",
+    "scope_basis": "Final merit-v3 V8 waiver table and season ledger honest misses due to unstaged active-career facts.",
+    "scope": [
+      {
+        "player_id": "P-72637",
+        "card_id": "P-72637:WC-2022",
+        "name": "Romelu Lukaku",
+        "scope_reason": "v8_honest_miss_due_unstaged_active_facts"
+      },
+      {
+        "player_id": "P-39584",
+        "card_id": "P-39584:WC-2018",
+        "name": "Bruno Fernandes",
+        "scope_reason": "v8_honest_miss_due_unstaged_active_facts"
+      }
+    ],
+    "scope_cards": [
+      {
+        "card_id": "P-72637:WC-2022",
+        "name": "Romelu Lukaku",
+        "pre_registered_effect": "expected to move toward or above the 78 display band"
+      },
+      {
+        "card_id": "P-39584:WC-2018",
+        "name": "Bruno Fernandes",
+        "pre_registered_effect": "expected upward movement"
+      }
+    ],
+    "included_honor_types": [
+      "domestic top-flight league MVP/player-of-year",
+      "UEFA senior club competition player-of-season"
+    ],
+    "excluded_honor_types": [
+      "fan votes",
+      "proprietary ratings",
+      "monthly awards",
+      "club-only player-of-year",
+      "team/squad selections already covered by position-balanced sources",
+      "post-2022 honors"
+    ],
+    "top_tier_competitions": [],
+    "finals_registry": [],
+    "completeness_assertion": "Within this declared scope, all public individual season honors found in the pinned snapshots for Lukaku and Bruno Fernandes through the 2022 World Cup close are represented as rows below."
+  },
+  "curation_notes": [
+    "Bruno Fernandes also appears second in UEFA's 2019/20 Europa League player ranking in the Lukaku UEFA snapshot; W1 does not stage ranking depth from that UEFA competition because the declared honor type is winner/player-of-season, not top-ten ranking.",
+    "Bruno Fernandes 2025-26 Premier League/FWA claims visible in the current Wikipedia snapshot are outside this W1 historical-card repair scope and are not staged here."
+  ],
+  "rows": [
+    {
+      "scope": "active_career",
+      "name": "Romelu Lukaku",
+      "nation_token": "Belgium",
+      "year": 2020,
+      "position": "FW",
+      "kind": "uefa_secondary_competition_player_of_season",
+      "detail": "uefa_secondary_competition_player_of_season: UEFA Europa League Player of the Season 2019-20",
+      "citation": {
+        "url": "https://www.uefa.com/uefaeuropaleague/news/0262-10836e08a61e-46e10483802f-1000--romelu-lukaku-named-europa-league-player-of-the-season/",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/lukaku_uefa_europa_league_player_2019_20.html",
+        "claim": "UEFA states that Internazionale forward Romelu Lukaku was named the 2019/20 UEFA Europa League Player of the Season."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Romelu Lukaku",
+      "nation_token": "Belgium",
+      "year": 2021,
+      "position": "FW",
+      "kind": "top_tier_league_mvp",
+      "detail": "top_tier_league_mvp: Serie A Most Valuable Player 2020-21",
+      "citation": {
+        "url": "https://web.archive.org/web/20210602225006/https://www.legaseriea.it/en/press/news/info/the-mvps-of-the-2020-2021-season-romelu-lukaku-best-overall",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/lukaku_lega_serie_a_best_overall_2020_21.html",
+        "claim": "The archived Lega Serie A page states that the 2020/2021 Best Overall award went to Inter forward Romelu Lukaku."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Bruno Fernandes",
+      "nation_token": "Portugal",
+      "year": 2018,
+      "position": "MF",
+      "kind": "domestic_top_flight_player_of_year",
+      "detail": "domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2017-18",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html",
+        "claim": "The LPFP Primeira Liga Player of the Year public award table lists Bruno Fernandes as the 2017-18 winner."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Bruno Fernandes",
+      "nation_token": "Portugal",
+      "year": 2019,
+      "position": "MF",
+      "kind": "domestic_top_flight_player_of_year",
+      "detail": "domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2018-19",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/LPFP_Primeira_Liga_Player_of_the_Year",
+        "snapshot_path": "etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html",
+        "claim": "The LPFP Primeira Liga Player of the Year public award table lists Bruno Fernandes as the 2018-19 winner."
+      }
+    }
+  ]
+}

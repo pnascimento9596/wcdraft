@@ -384,8 +384,8 @@ def test_source_set_and_stature_table_versions_are_independent():
     """The two version axes move independently: MV2-1/2 bumped the SOURCE-SET to v2;
     merit-v3 V1 now bumps the career-stature TABLE to v3 to activate active-career
     scoring. They are distinct strings (different schemas, different cadences)."""
-    assert SOURCE_SET_VERSION == "merit-source-set-2.0.0"
-    assert VERSION == "career-stature-3.0.0"
+    assert SOURCE_SET_VERSION == "merit-source-set-2.1.0"
+    assert VERSION == "career-stature-3.1.0"
     assert SOURCE_SET_VERSION != VERSION
 
 
@@ -413,9 +413,9 @@ def test_v2_sources_each_contribute_linked_facts(built):
         "south_american_poy_placements",
         "uefa_mens_poy",
         "world_soccer_poy",
+        "swedish_footballer_of_year",
         "onze_awards",
         "uefa_club_positional",
-        "uefa_team_of_the_year",
         "fifpro_world11",
         "esm_team_of_the_season",
         "ballondor_dream_team",
@@ -512,7 +512,7 @@ def test_v2_stature_table_scores_the_full_source_set():
     table = json.loads(
         (REPO_ROOT / "etl" / "output" / "career_stature.json").read_text("utf-8")
     )
-    assert table["version"] == "career-stature-3.0.0"
+    assert table["version"] == "career-stature-3.1.0"
     # The v2-only families carry positive scores on real rows — they are scored, not
     # staged-and-ignored as they were under the v1 table.
     for fam in (

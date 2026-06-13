@@ -1,7 +1,7 @@
 """MERIT-V2 MV2-3 — deterministic per-player career-stature composite (v2).
 
 Reads the committed v2 linked-fact file (``etl/output/merit/source_facts.json`` —
-the full ``merit-source-set-2.0.0`` set: WC legacy + global/regional annual
+the full ``merit-source-set-2.1.0`` set: WC legacy + global/regional annual
 recognition + position-balanced selections + international records + retrospective
 all-time selections + captaincy) and the canonical men's World Cup years, and emits
 one career-stature row per linked ``player_id``:
@@ -112,8 +112,8 @@ _RATING_COMPAT_FAMILY_KEYS: tuple[str, ...] = tuple(
 # Era-gating rationale (the defender/GK repair):
 #   * Annual player-of-the-year ballots did not exist pre-1956 (first Ballon d'Or
 #     1956) and continental ballots not until ~1970 → weight 0 pre_1956.
-#   * Annual position-balanced XIs (UEFA Team of the Year 2001+, FIFPro 2005+, ESM
-#     1994+, UEFA positional 1997+) did not exist DURING a 1956–1990 player's career
+#   * Annual position-balanced XIs (FIFPro 2005+, ESM 1994+, UEFA positional 1997+)
+#     did not exist DURING a 1956–1990 player's career
 #     → position_balanced weight 0 for pre_1956 / 1956_1990. A pre-1991 great's
 #     position-balanced recognition lives in the RETROSPECTIVE all-time dream teams,
 #     which carry heavy weight in those eras. This is what lets a pre-1991 defender
@@ -121,7 +121,8 @@ _RATING_COMPAT_FAMILY_KEYS: tuple[str, ...] = tuple(
 #     instead of being penalised for missing awards that could not exist in-era.
 #   * club_honors remains a legacy zero-weight placeholder.
 #   * club_season_honors is active for every era because top-tier continental
-#     club titles exist across the post-war table; V1 only curates active rows.
+#     club titles and public annual player-of-year honors exist across the post-war
+#     table; v3.1 adds the complete Guldbollen table as a non-fan W2b extension.
 ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
     "pre_1956": {
         "wc_legacy": 0.26,
@@ -243,12 +244,12 @@ _SAM_PLACEMENT_STRENGTH = {"2nd": 0.38, "3rd": 0.26}
 
 # Position-balanced selections (the defender / goalkeeper repair). A UEFA positional
 # award (the single best GK/DF/MF/FW in Europe that year) is the strongest; the
-# player-voted FIFPro World 11 and the annual UEFA Team of the Year rank below; ESM
-# (league-scope) lowest. Each selection is one input; repeats saturate.
+# player-voted FIFPro World 11 and ESM's league-scope team rank below. Fan-voted
+# selections are deliberately excluded from the source set. Each selection is one
+# input; repeats saturate.
 _POSITION_BALANCED_STRENGTH: dict[str, float] = {
     "uefa_club_positional": 0.62,
     "fifpro_world11": 0.50,
-    "uefa_team_of_the_year": 0.45,
     "esm_team_of_the_season": 0.40,
     # MV2-3.5 — World's-Best-Goalkeeper annual award (the research_gk_award gap-fill):
     # the GK-specific analogue of the single-best-at-a-position UEFA award. NEW
@@ -269,6 +270,15 @@ _RETRO_CONTINENTAL_CENTURY = 0.72
 _RETRO_LIVING_LEGENDS = 0.55
 _BALLONDOR_DREAM_TEAM_STRENGTH = {"first": 0.95, "second": 0.80, "third": 0.65}
 _IFFHS_DREAM_TEAM_STRENGTH = 0.90
+
+# Public season honors for W1 active historical honest-miss cards. These are
+# individual season distinctions, so they ride the existing club-season-honors
+# family but remain below the top-tier continental-title final-participant anchor.
+_PUBLIC_SEASON_HONOR_STRENGTH: dict[str, float] = {
+    "top_tier_league_mvp": 0.55,
+    "uefa_secondary_competition_player_of_season": 0.50,
+    "domestic_top_flight_player_of_year": 0.45,
+}
 
 # International longevity records. Caps and goals are LONGEVITY/volume signals, not
 # peak-quality signals, so they saturate to a deliberately modest ceiling.
@@ -382,6 +392,7 @@ _LEGEND_REASON_CODES: tuple[str, ...] = (
     "approved_all_time_selection",
     "position_balanced_world_xi_3plus",
     "retrospective_plus_major_fact",
+    "pre_1967_retrospective_consensus",
 )
 
 # Sources counted as a GLOBAL ANNUAL WIN for the legend gate (onze handled by tier).
@@ -463,6 +474,8 @@ def _fact_strength(fact: dict) -> float:
             raise KeyError(f"unrecognized century fact {detail!r}")
         if sid == "living_legends_2004":
             return _RETRO_LIVING_LEGENDS
+        if sid == "iffhs_men_legends":
+            return _RETRO_LIVING_LEGENDS
         if sid == "ballondor_dream_team":
             for token, s in _BALLONDOR_DREAM_TEAM_STRENGTH.items():
                 if token in detail:
@@ -492,6 +505,13 @@ def _fact_strength(fact: dict) -> float:
     if family == "club_season_honors":
         if sid == "active_club_season_honors":
             return _CLUB_SEASON_TITLE_FINAL_PARTICIPANT
+        if sid == "swedish_footballer_of_year":
+            return _PUBLIC_SEASON_HONOR_STRENGTH["domestic_top_flight_player_of_year"]
+        if sid == "active_public_season_honors":
+            for token, strength in _PUBLIC_SEASON_HONOR_STRENGTH.items():
+                if token in detail:
+                    return strength
+            raise KeyError(f"unrecognized public season honor fact {detail!r}")
         raise KeyError(f"unrecognized club-season honors source {sid!r}")
     if family == "club_honors":
         raise KeyError(f"legacy deferred club_honors fact is not scoreable: {fact!r}")
@@ -524,7 +544,7 @@ def _legend_aggregates(facts: list[dict]) -> dict:
     position_balanced = 0
     regional = 0
     caps_100 = False
-    living_legends = False
+    broad_retrospective = False
     for f in facts:
         sid = f["source_id"]
         fam = f["family"]
@@ -545,19 +565,50 @@ def _legend_aggregates(facts: list[dict]) -> dict:
             m = re.search(r"caps=(\d+)", detail)
             if m and int(m.group(1)) >= 100:
                 caps_100 = True
-        if sid == "living_legends_2004":
-            living_legends = True
+        if sid in {"living_legends_2004", "iffhs_men_legends"}:
+            broad_retrospective = True
     return {
         "global_wins": global_wins,
         "approved_all_time": approved_all_time,
         "position_balanced": position_balanced,
         "regional": regional,
         "caps_100": caps_100,
-        "living_legends": living_legends,
+        "living_legends": broad_retrospective,
     }
 
 
-def _legend_reason_codes(facts: list[dict], index: float) -> list[str]:
+def _pre_1967_retrospective_consensus(
+    facts: list[dict], index: float, career_peak_year: int | None
+) -> bool:
+    """Pre-1967 legend coherence route.
+
+    The shipped v3 route counted only world-tier all-time selections, modern
+    repeated XI selections, or the 2004 living-legends list. That left
+    high-index pre-1967 players with continental/national player-of-century
+    consensus as high-90s non-legends. This route stays source-derived: it reads
+    only existing public retrospective facts plus major corroboration and never
+    inspects a card's display overall.
+    """
+    if career_peak_year is None or career_peak_year >= 1967 or index < 0.70:
+        return False
+    century = sum(
+        1
+        for f in facts
+        if f["source_id"] == "iffhs_century" and "century election:" in f["detail"]
+    )
+    has_international_record = any(f["family"] == "international_record" for f in facts)
+    living_legends = any(f["source_id"] == "living_legends_2004" for f in facts)
+    wc_legacy = sum(1 for f in facts if f["family"] == "wc_legacy")
+    return (
+        century >= 2
+        or (century >= 1 and has_international_record)
+        or (living_legends and wc_legacy >= 2)
+    )
+
+
+def _legend_reason_codes(
+    facts: list[dict], index: float, career_peak_year: int | None = None
+) -> list[str]:
     """Closed-set legend reason codes for a player (empty list ⇒ not a legend)."""
     a = _legend_aggregates(facts)
     codes: list[str] = []
@@ -587,6 +638,11 @@ def _legend_reason_codes(facts: list[dict], index: float) -> list[str]:
     )
     if a["living_legends"] and major_fact and index >= LEGEND_INDEX_FLOOR:
         codes.append("retrospective_plus_major_fact")
+    # Route 5 — pre-1967 retrospective consensus. This closes the v3 coherence
+    # gap for players whose source evidence is continental/national century
+    # recognition rather than modern annual/XI ballots.
+    if _pre_1967_retrospective_consensus(facts, index, career_peak_year):
+        codes.append("pre_1967_retrospective_consensus")
     return codes
 
 
@@ -939,7 +995,11 @@ def _build_rating_compat_rows(
 
     rows: list[dict] = []
     for pid in sorted(by_player):
-        pfacts = by_player[pid]
+        pfacts = [
+            f for f in by_player[pid] if f["family"] in _RATING_COMPAT_FAMILY_KEYS
+        ]
+        if not pfacts:
+            continue
         eras = {f["era"] for f in pfacts}
         if len(eras) != 1:
             raise ValueError(f"player {pid} has conflicting fact eras {eras}")
@@ -971,7 +1031,8 @@ def _build_rating_compat_rows(
             weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0
         )
         coverage = round(present_w / total_w, _PRECISION) if total_w > 0 else 0.0
-        legend_codes = _legend_reason_codes(pfacts, career_index)
+        peak_year = _career_peak_year(mens_years.get(pid, []))
+        legend_codes = _legend_reason_codes(pfacts, career_index, peak_year)
         rows.append(
             {
                 "player_id": pid,
@@ -1065,8 +1126,8 @@ def _build_player_rows(
             else 0.0
         )
 
-        legend_codes = _legend_reason_codes(pfacts, career_index)
         peak_year = _career_peak_year(mens_years.get(pid, []))
+        legend_codes = _legend_reason_codes(pfacts, career_index, peak_year)
         source_refs = sorted({f"{f['source_id']}:{f['detail']}" for f in pfacts})
         aliases = ctx.resolver.aliases_for(pid) if ctx else [pid]
         source_player_ids = sorted({f.get("source_player_id", pid) for f in pfacts})

@@ -1,5 +1,5 @@
 {
-  "fact_count": 2188,
+  "fact_count": 2133,
   "facts": [
     {
       "citation": {
@@ -374,6 +374,773 @@
       "raw_name": "Cafu",
       "source_id": "research_captaincy",
       "year": 2002
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2021",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-04686",
+      "player_name": "Emil Forsberg",
+      "position": null,
+      "raw_name": "Emil Forsberg",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2021
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2003",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-06256",
+      "player_name": "Olof Mellberg",
+      "position": null,
+      "raw_name": "Olof Mellberg",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2003
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2000",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-07902",
+      "player_name": "Magnus Hedman",
+      "position": null,
+      "raw_name": "Magnus Hedman",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2000
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1952",
+      "era": "pre_1956",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-15746",
+      "player_name": "Kalle Svensson",
+      "position": null,
+      "raw_name": "Kalle Svensson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1952
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1969",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-22223",
+      "player_name": "Tommy Svensson",
+      "position": null,
+      "raw_name": "Tommy Svensson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1969
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1987",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-22289",
+      "player_name": "Peter Larsson",
+      "position": null,
+      "raw_name": "Peter Larsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1987
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1996",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-23360",
+      "player_name": "Roland Nilsson",
+      "position": null,
+      "raw_name": "Roland Nilsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1996
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1958",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-25529",
+      "player_name": "Orvar Bergmark",
+      "position": null,
+      "raw_name": "Orvar Bergmark",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1958
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1990",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-26281",
+      "player_name": "Tomas Brolin",
+      "position": null,
+      "raw_name": "Tomas Brolin",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1990
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1994",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-26281",
+      "player_name": "Tomas Brolin",
+      "position": null,
+      "raw_name": "Tomas Brolin",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1994
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1968",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-29454",
+      "player_name": "Björn Nordqvist",
+      "position": null,
+      "raw_name": "Björn Nordqvist",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1968
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1983",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-31156",
+      "player_name": "Glenn Hysén",
+      "position": null,
+      "raw_name": "Glenn Hysén",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1983
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1988",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-31156",
+      "player_name": "Glenn Hysén",
+      "position": null,
+      "raw_name": "Glenn Hysén",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1988
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2018",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-31431",
+      "player_name": "Victor Lindelöf",
+      "position": null,
+      "raw_name": "Victor Lindelöf",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2018
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2019",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-31431",
+      "player_name": "Victor Lindelöf",
+      "position": null,
+      "raw_name": "Victor Lindelöf",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2019
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2017",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-34998",
+      "player_name": "Andreas Granqvist",
+      "position": null,
+      "raw_name": "Andreas Granqvist",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2017
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1975",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-37942",
+      "player_name": "Kent Karlsson",
+      "position": null,
+      "raw_name": "Kent Karlsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1975
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1951",
+      "era": "pre_1956",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-38468",
+      "player_name": "Olle Åhlund",
+      "position": null,
+      "raw_name": "Olle Åhlund",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1951
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1949",
+      "era": "pre_1956",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-39211",
+      "player_name": "Knut Nordahl",
+      "position": null,
+      "raw_name": "Knut Nordahl",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1949
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1992",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-39219",
+      "player_name": "Jan Eriksson",
+      "position": null,
+      "raw_name": "Jan Eriksson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1992
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1972",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-39318",
+      "player_name": "Ralf Edström",
+      "position": null,
+      "raw_name": "Ralf Edström",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1972
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1974",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-39318",
+      "player_name": "Ralf Edström",
+      "position": null,
+      "raw_name": "Ralf Edström",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1974
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1998",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-42895",
+      "player_name": "Henrik Larsson",
+      "position": null,
+      "raw_name": "Henrik Larsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1998
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2004",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-42895",
+      "player_name": "Henrik Larsson",
+      "position": null,
+      "raw_name": "Henrik Larsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2004
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1971",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-43209",
+      "player_name": "Ronnie Hellström",
+      "position": null,
+      "raw_name": "Ronnie Hellström",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1971
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1978",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-43209",
+      "player_name": "Ronnie Hellström",
+      "position": null,
+      "raw_name": "Ronnie Hellström",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1978
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1982",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-55852",
+      "player_name": "Torbjörn Nilsson",
+      "position": null,
+      "raw_name": "Torbjörn Nilsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1982
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1991",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-59805",
+      "player_name": "Anders Limpar",
+      "position": null,
+      "raw_name": "Anders Limpár",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1991
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1977",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-60570",
+      "player_name": "Roy Andersson",
+      "position": null,
+      "raw_name": "Roy Andersson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1977
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1993",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-63429",
+      "player_name": "Martin Dahlin",
+      "position": null,
+      "raw_name": "Martin Dahlin",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1993
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1999",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-63692",
+      "player_name": "Stefan Schwarz",
+      "position": null,
+      "raw_name": "Stefan Schwarz",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1999
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1995",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-63774",
+      "player_name": "Patrik Andersson",
+      "position": null,
+      "raw_name": "Patrik Andersson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1995
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2001",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-63774",
+      "player_name": "Patrik Andersson",
+      "position": null,
+      "raw_name": "Patrik Andersson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2001
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1962",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-63780",
+      "player_name": "Prawitz Öberg",
+      "position": null,
+      "raw_name": "Prawitz Öberg",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1962
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1953",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-65514",
+      "player_name": "Bengt Gustavsson",
+      "position": null,
+      "raw_name": "Bengt Gustavsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1953
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1985",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-67329",
+      "player_name": "Glenn Strömberg",
+      "position": null,
+      "raw_name": "Glenn Strömberg",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1985
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1976",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-69553",
+      "player_name": "Anders Linderoth",
+      "position": null,
+      "raw_name": "Anders Linderoth",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1976
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1946",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-69813",
+      "player_name": "Gunnar Gren",
+      "position": null,
+      "raw_name": "Gunnar Gren",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1946
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1966",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-73517",
+      "player_name": "Ove Kindvall",
+      "position": null,
+      "raw_name": "Ove Kindvall",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1966
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2005",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2005
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2007",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2007
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2008",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2008
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2009",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2009
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2010",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2010
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2011",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2011
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2012",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2012
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2013",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2013
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2014",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2014
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2015",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2015
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2016",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2016
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 2020",
+      "era": "1991_plus",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimovic",
+      "source_id": "swedish_footballer_of_year",
+      "year": 2020
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1955",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-81709",
+      "player_name": "Gösta Löfgren",
+      "position": null,
+      "raw_name": "Gösta Löfgren",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1955
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1959",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-82312",
+      "player_name": "Agne Simonsson",
+      "position": null,
+      "raw_name": "Agne Simonsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1959
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1950",
+      "era": "pre_1956",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-85347",
+      "player_name": "Erik Nilsson",
+      "position": null,
+      "raw_name": "Erik Nilsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1950
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1965",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-86931",
+      "player_name": "Bo Larsson",
+      "position": null,
+      "raw_name": "Bo Larsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1965
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1973",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-86931",
+      "player_name": "Bo Larsson",
+      "position": null,
+      "raw_name": "Bo Larsson",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1973
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1979",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-91463",
+      "player_name": "Jan Möller",
+      "position": null,
+      "raw_name": "Jan Möller",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1979
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1989",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-92339",
+      "player_name": "Jonas Thern",
+      "position": null,
+      "raw_name": "Jonas Thern",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1989
+    },
+    {
+      "detail": "national_player_of_year: Guldbollen 1981",
+      "era": "1956_1990",
+      "family": "club_season_honors",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-94051",
+      "player_name": "Thomas Ravelli",
+      "position": null,
+      "raw_name": "Thomas Ravelli",
+      "source_id": "swedish_footballer_of_year",
+      "year": 1981
     },
     {
       "detail": "iffhs_worlds_best winner 2020",
@@ -10437,32 +11204,6 @@
       "year": 2019
     },
     {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-00549",
-      "player_name": "Robert Lewandowski",
-      "position": null,
-      "raw_name": "Robert Lewandowski",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-00549",
-      "player_name": "Robert Lewandowski",
-      "position": null,
-      "raw_name": "Robert Lewandowski",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
       "detail": "esm_tots DF 2007",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -10528,19 +11269,6 @@
       "year": 2002
     },
     {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-03013",
-      "player_name": "Ruud van Nistelrooy",
-      "position": null,
-      "raw_name": "Ruud van Nistelrooy",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
       "detail": "esm_tots GK 2017",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -10593,19 +11321,6 @@
       "year": 2022
     },
     {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-03367",
-      "player_name": "Marc-André ter Stegen",
-      "position": null,
-      "raw_name": "Marc-André ter Stegen",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
       "detail": "esm_tots DF 2019",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -10645,32 +11360,6 @@
       "year": 1999
     },
     {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-04224",
-      "player_name": "Jérôme Boateng",
-      "position": null,
-      "raw_name": "Jérôme Boateng",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-04469",
-      "player_name": "Eric Abidal",
-      "position": null,
-      "raw_name": "Eric Abidal",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
       "detail": "esm_tots DF 2019",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -10708,19 +11397,6 @@
       "raw_name": "Trent Alexander-Arnold",
       "source_id": "esm_team_of_the_season",
       "year": 2024
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-05318",
-      "player_name": "Trent Alexander-Arnold",
-      "position": null,
-      "raw_name": "Trent Alexander-Arnold",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
     },
     {
       "detail": "esm_tots DF 1994",
@@ -10957,71 +11633,6 @@
       "year": 2018
     },
     {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-09441",
-      "player_name": "Dani Alves",
-      "position": null,
-      "raw_name": "Dani Alves",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-09441",
-      "player_name": "Dani Alves",
-      "position": null,
-      "raw_name": "Dani Alves",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-09441",
-      "player_name": "Dani Alves",
-      "position": null,
-      "raw_name": "Dani Alves",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-09441",
-      "player_name": "Dani Alves",
-      "position": null,
-      "raw_name": "Dani Alves",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-09441",
-      "player_name": "Dani Alves",
-      "position": null,
-      "raw_name": "Dani Alves",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
       "detail": "esm_tots GK 2013",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -11085,19 +11696,6 @@
       "raw_name": "Rúben Dias",
       "source_id": "uefa_club_positional",
       "year": 2020
-    },
-    {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11130",
-      "player_name": "Kily González",
-      "position": null,
-      "raw_name": "Kily González",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
     },
     {
       "detail": "esm_tots GK 2009",
@@ -11215,110 +11813,6 @@
       "raw_name": "Gianluigi Buffon",
       "source_id": "uefa_club_positional",
       "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11392",
-      "player_name": "Gianluigi Buffon",
-      "position": null,
-      "raw_name": "Gianluigi Buffon",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11392",
-      "player_name": "Gianluigi Buffon",
-      "position": null,
-      "raw_name": "Gianluigi Buffon",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11392",
-      "player_name": "Gianluigi Buffon",
-      "position": null,
-      "raw_name": "Gianluigi Buffon",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11392",
-      "player_name": "Gianluigi Buffon",
-      "position": null,
-      "raw_name": "Gianluigi Buffon",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-11392",
-      "player_name": "Gianluigi Buffon",
-      "position": null,
-      "raw_name": "Gianluigi Buffon",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-12167",
-      "player_name": "David Trezeguet",
-      "position": null,
-      "raw_name": "David Trezeguet",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-12818",
-      "player_name": "Mesut Özil",
-      "position": null,
-      "raw_name": "Mesut Özil",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-12818",
-      "player_name": "Mesut Özil",
-      "position": null,
-      "raw_name": "Mesut Özil",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
     },
     {
       "detail": "esm_tots DF 2022",
@@ -11750,162 +12244,6 @@
       "year": 2018
     },
     {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-14758",
-      "player_name": "Lionel Messi",
-      "position": null,
-      "raw_name": "Lionel Messi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
       "detail": "esm_tots MF 2023",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -11958,19 +12296,6 @@
       "year": 2025
     },
     {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-16059",
-      "player_name": "Santiago Cañizares",
-      "position": null,
-      "raw_name": "Santiago Cañizares",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
       "detail": "esm_tots DF 2003",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -11982,45 +12307,6 @@
       "raw_name": "Paulo Ferreira",
       "source_id": "esm_team_of_the_season",
       "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-16378",
-      "player_name": "Paulo Ferreira",
-      "position": null,
-      "raw_name": "Paulo Ferreira",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-16557",
-      "player_name": "Ashley Cole",
-      "position": null,
-      "raw_name": "Ashley Cole",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-16557",
-      "player_name": "Ashley Cole",
-      "position": null,
-      "raw_name": "Ashley Cole",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
     },
     {
       "detail": "esm_tots GK 1994",
@@ -12101,32 +12387,6 @@
       "year": 2018
     },
     {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-17509",
-      "player_name": "Paul Pogba",
-      "position": null,
-      "raw_name": "Paul Pogba",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-17581",
-      "player_name": "Maniche",
-      "position": null,
-      "raw_name": "Maniche",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
       "detail": "uefa_best_mf 2018",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -12138,32 +12398,6 @@
       "raw_name": "Frenkie de Jong",
       "source_id": "uefa_club_positional",
       "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-17688",
-      "player_name": "Frenkie de Jong",
-      "position": null,
-      "raw_name": "Frenkie de Jong",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18106",
-      "player_name": "Damien Duff",
-      "position": null,
-      "raw_name": "Damien Duff",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
     },
     {
       "detail": "esm_tots DF 2012",
@@ -12190,71 +12424,6 @@
       "raw_name": "Philipp Lahm",
       "source_id": "esm_team_of_the_season",
       "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18599",
-      "player_name": "Philipp Lahm",
-      "position": null,
-      "raw_name": "Philipp Lahm",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18599",
-      "player_name": "Philipp Lahm",
-      "position": null,
-      "raw_name": "Philipp Lahm",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18599",
-      "player_name": "Philipp Lahm",
-      "position": null,
-      "raw_name": "Philipp Lahm",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18599",
-      "player_name": "Philipp Lahm",
-      "position": null,
-      "raw_name": "Philipp Lahm",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-18599",
-      "player_name": "Philipp Lahm",
-      "position": null,
-      "raw_name": "Philipp Lahm",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
     },
     {
       "detail": "esm_tots GK 2011",
@@ -12361,58 +12530,6 @@
       "year": 2019
     },
     {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-19408",
-      "player_name": "Manuel Neuer",
-      "position": null,
-      "raw_name": "Manuel Neuer",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-19408",
-      "player_name": "Manuel Neuer",
-      "position": null,
-      "raw_name": "Manuel Neuer",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-19408",
-      "player_name": "Manuel Neuer",
-      "position": null,
-      "raw_name": "Manuel Neuer",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-19408",
-      "player_name": "Manuel Neuer",
-      "position": null,
-      "raw_name": "Manuel Neuer",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
       "detail": "esm_tots FW 2000",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -12488,32 +12605,6 @@
       "position": "MF",
       "raw_name": "Arjen Robben",
       "source_id": "esm_team_of_the_season",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-23705",
-      "player_name": "Arjen Robben",
-      "position": null,
-      "raw_name": "Arjen Robben",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-23705",
-      "player_name": "Arjen Robben",
-      "position": null,
-      "raw_name": "Arjen Robben",
-      "source_id": "uefa_team_of_the_year",
       "year": 2014
     },
     {
@@ -12606,19 +12697,6 @@
       "raw_name": "Raúl",
       "source_id": "uefa_club_positional",
       "year": 2001
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-25905",
-      "player_name": "Luis García",
-      "position": null,
-      "raw_name": "Luis García",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
     },
     {
       "detail": "esm_tots GK 1995",
@@ -12868,71 +12946,6 @@
       "year": 2008
     },
     {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-29415",
-      "player_name": "Xavi",
-      "position": null,
-      "raw_name": "Xavi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-29415",
-      "player_name": "Xavi",
-      "position": null,
-      "raw_name": "Xavi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-29415",
-      "player_name": "Xavi",
-      "position": null,
-      "raw_name": "Xavi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-29415",
-      "player_name": "Xavi",
-      "position": null,
-      "raw_name": "Xavi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-29415",
-      "player_name": "Xavi",
-      "position": null,
-      "raw_name": "Xavi",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
       "detail": "esm_tots MF 2021",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -13050,45 +13063,6 @@
       "year": 2017
     },
     {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-29491",
-      "player_name": "Luka Modrić",
-      "position": null,
-      "raw_name": "Luka Modrić",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-29491",
-      "player_name": "Luka Modrić",
-      "position": null,
-      "raw_name": "Luka Modrić",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-29491",
-      "player_name": "Luka Modrić",
-      "position": null,
-      "raw_name": "Luka Modrić",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
       "detail": "esm_tots DF 2018",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -13113,19 +13087,6 @@
       "raw_name": "Joshua Kimmich",
       "source_id": "uefa_club_positional",
       "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-30316",
-      "player_name": "Joshua Kimmich",
-      "position": null,
-      "raw_name": "Joshua Kimmich",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
     },
     {
       "detail": "esm_tots FW 2013",
@@ -13230,45 +13191,6 @@
       "raw_name": "Thiago Silva",
       "source_id": "fifpro_world11",
       "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-32798",
-      "player_name": "Thiago Silva",
-      "position": null,
-      "raw_name": "Thiago Silva",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-32798",
-      "player_name": "Thiago Silva",
-      "position": null,
-      "raw_name": "Thiago Silva",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-32798",
-      "player_name": "Thiago Silva",
-      "position": null,
-      "raw_name": "Thiago Silva",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
     },
     {
       "detail": "esm_tots GK 1999",
@@ -13617,19 +13539,6 @@
       "year": 2003
     },
     {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-37760",
-      "player_name": "Ricardo Carvalho",
-      "position": null,
-      "raw_name": "Ricardo Carvalho",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
       "detail": "esm_tots FW 2002",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -13706,45 +13615,6 @@
       "raw_name": "Toni Kroos",
       "source_id": "fifpro_world11",
       "year": 2024
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-39356",
-      "player_name": "Toni Kroos",
-      "position": null,
-      "raw_name": "Toni Kroos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-39356",
-      "player_name": "Toni Kroos",
-      "position": null,
-      "raw_name": "Toni Kroos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-39356",
-      "player_name": "Toni Kroos",
-      "position": null,
-      "raw_name": "Toni Kroos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
     },
     {
       "detail": "esm_tots MF 2020",
@@ -13836,45 +13706,6 @@
       "raw_name": "Ángel Di María",
       "source_id": "esm_team_of_the_season",
       "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-42113",
-      "player_name": "Ángel Di María",
-      "position": null,
-      "raw_name": "Ángel Di María",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-42227",
-      "player_name": "Gianluca Zambrotta",
-      "position": null,
-      "raw_name": "Gianluca Zambrotta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-42326",
-      "player_name": "Raphaël Varane",
-      "position": null,
-      "raw_name": "Raphaël Varane",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
     },
     {
       "detail": "esm_tots DF 2001",
@@ -13979,32 +13810,6 @@
       "raw_name": "Paolo Maldini",
       "source_id": "uefa_club_positional",
       "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1956_1990",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-43222",
-      "player_name": "Paolo Maldini",
-      "position": null,
-      "raw_name": "Paolo Maldini",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1956_1990",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-43222",
-      "player_name": "Paolo Maldini",
-      "position": null,
-      "raw_name": "Paolo Maldini",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
     },
     {
       "detail": "esm_tots MF 2012",
@@ -14135,19 +13940,6 @@
       "raw_name": "Jaap Stam",
       "source_id": "uefa_club_positional",
       "year": 1999
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-46358",
-      "player_name": "Alphonso Davies",
-      "position": null,
-      "raw_name": "Alphonso Davies",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
     },
     {
       "detail": "esm_tots MF 2017",
@@ -14293,58 +14085,6 @@
       "year": 2019
     },
     {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-48955",
-      "player_name": "Kevin De Bruyne",
-      "position": null,
-      "raw_name": "Kevin De Bruyne",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-48955",
-      "player_name": "Kevin De Bruyne",
-      "position": null,
-      "raw_name": "Kevin De Bruyne",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-48955",
-      "player_name": "Kevin De Bruyne",
-      "position": null,
-      "raw_name": "Kevin De Bruyne",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-49097",
-      "player_name": "David Villa",
-      "position": null,
-      "raw_name": "David Villa",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
       "detail": "esm_tots DF 2017",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14462,84 +14202,6 @@
       "year": 2005
     },
     {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51089",
-      "player_name": "Carles Puyol",
-      "position": null,
-      "raw_name": "Carles Puyol",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
       "detail": "esm_tots FW 2000",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14618,19 +14280,6 @@
       "year": 2009
     },
     {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51336",
-      "player_name": "Wesley Sneijder",
-      "position": null,
-      "raw_name": "Wesley Sneijder",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
       "detail": "esm_tots FW 2003",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14642,71 +14291,6 @@
       "raw_name": "Thierry Henry",
       "source_id": "esm_team_of_the_season",
       "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51395",
-      "player_name": "Thierry Henry",
-      "position": null,
-      "raw_name": "Thierry Henry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51395",
-      "player_name": "Thierry Henry",
-      "position": null,
-      "raw_name": "Thierry Henry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51395",
-      "player_name": "Thierry Henry",
-      "position": null,
-      "raw_name": "Thierry Henry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51395",
-      "player_name": "Thierry Henry",
-      "position": null,
-      "raw_name": "Thierry Henry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-51395",
-      "player_name": "Thierry Henry",
-      "position": null,
-      "raw_name": "Thierry Henry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
     },
     {
       "detail": "esm_tots GK 2010",
@@ -14787,19 +14371,6 @@
       "year": 2007
     },
     {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-53062",
-      "player_name": "Petr Čech",
-      "position": null,
-      "raw_name": "Petr Čech",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
       "detail": "esm_tots DF 2013",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14839,58 +14410,6 @@
       "year": 2000
     },
     {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55511",
-      "player_name": "Alessandro Nesta",
-      "position": null,
-      "raw_name": "Alessandro Nesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55511",
-      "player_name": "Alessandro Nesta",
-      "position": null,
-      "raw_name": "Alessandro Nesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55511",
-      "player_name": "Alessandro Nesta",
-      "position": null,
-      "raw_name": "Alessandro Nesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55511",
-      "player_name": "Alessandro Nesta",
-      "position": null,
-      "raw_name": "Alessandro Nesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
       "detail": "esm_tots DF 2022",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -14915,32 +14434,6 @@
       "raw_name": "Franck Ribéry",
       "source_id": "esm_team_of_the_season",
       "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55659",
-      "player_name": "Franck Ribéry",
-      "position": null,
-      "raw_name": "Franck Ribéry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-55659",
-      "player_name": "Franck Ribéry",
-      "position": null,
-      "raw_name": "Franck Ribéry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
     },
     {
       "citation": {
@@ -15103,45 +14596,6 @@
       "year": 2018
     },
     {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56029",
-      "player_name": "Virgil van Dijk",
-      "position": null,
-      "raw_name": "Virgil van Dijk",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56029",
-      "player_name": "Virgil van Dijk",
-      "position": null,
-      "raw_name": "Virgil van Dijk",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56029",
-      "player_name": "Virgil van Dijk",
-      "position": null,
-      "raw_name": "Virgil van Dijk",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
       "detail": "esm_tots MF 2010",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -15285,84 +14739,6 @@
       "year": 2017
     },
     {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56330",
-      "player_name": "Andrés Iniesta",
-      "position": null,
-      "raw_name": "Andrés Iniesta",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
       "detail": "esm_tots MF 1997",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -15428,45 +14804,6 @@
       "year": 1997
     },
     {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56430",
-      "player_name": "Zinedine Zidane",
-      "position": null,
-      "raw_name": "Zinedine Zidane",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56430",
-      "player_name": "Zinedine Zidane",
-      "position": null,
-      "raw_name": "Zinedine Zidane",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56430",
-      "player_name": "Zinedine Zidane",
-      "position": null,
-      "raw_name": "Zinedine Zidane",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
       "detail": "esm_tots DF 1998",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -15478,19 +14815,6 @@
       "raw_name": "Bixente Lizarazu",
       "source_id": "esm_team_of_the_season",
       "year": 1998
-    },
-    {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-56735",
-      "player_name": "Bixente Lizarazu",
-      "position": null,
-      "raw_name": "Bixente Lizarazu",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
     },
     {
       "detail": "esm_tots MF 1994",
@@ -15555,19 +14879,6 @@
       "position": "DF",
       "raw_name": "Leonardo Bonucci",
       "source_id": "esm_team_of_the_season",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-57248",
-      "player_name": "Leonardo Bonucci",
-      "position": null,
-      "raw_name": "Leonardo Bonucci",
-      "source_id": "uefa_team_of_the_year",
       "year": 2016
     },
     {
@@ -15662,45 +14973,6 @@
       "year": 2004
     },
     {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-57361",
-      "player_name": "Ronaldinho",
-      "position": null,
-      "raw_name": "Ronaldinho",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-57361",
-      "player_name": "Ronaldinho",
-      "position": null,
-      "raw_name": "Ronaldinho",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-57361",
-      "player_name": "Ronaldinho",
-      "position": null,
-      "raw_name": "Ronaldinho",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
       "detail": "esm_tots MF 1997",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -15725,19 +14997,6 @@
       "raw_name": "Luís Figo",
       "source_id": "esm_team_of_the_season",
       "year": 1999
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-57496",
-      "player_name": "Luís Figo",
-      "position": null,
-      "raw_name": "Luís Figo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
     },
     {
       "detail": "esm_tots FW 1996",
@@ -15818,45 +15077,6 @@
       "year": 2006
     },
     {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-58388",
-      "player_name": "Kaká",
-      "position": null,
-      "raw_name": "Kaká",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-58388",
-      "player_name": "Kaká",
-      "position": null,
-      "raw_name": "Kaká",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-58388",
-      "player_name": "Kaká",
-      "position": null,
-      "raw_name": "Kaká",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
       "detail": "esm_tots FW 2023",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -15881,19 +15101,6 @@
       "raw_name": "Edinson Cavani",
       "source_id": "esm_team_of_the_season",
       "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61478",
-      "player_name": "Rüştü Reçber",
-      "position": null,
-      "raw_name": "Rüştü Reçber",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
     },
     {
       "detail": "esm_tots FW 2004",
@@ -15959,32 +15166,6 @@
       "raw_name": "Samuel Eto'o",
       "source_id": "uefa_club_positional",
       "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61703",
-      "player_name": "Samuel Eto'o",
-      "position": null,
-      "raw_name": "Samuel Eto'o",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61703",
-      "player_name": "Samuel Eto'o",
-      "position": null,
-      "raw_name": "Samuel Eto'o",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
     },
     {
       "detail": "esm_tots GK 2007",
@@ -16065,84 +15246,6 @@
       "year": 2012
     },
     {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-61793",
-      "player_name": "Iker Casillas",
-      "position": null,
-      "raw_name": "Iker Casillas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
       "detail": "esm_tots MF 1998",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -16206,45 +15309,6 @@
       "raw_name": "Steven Gerrard",
       "source_id": "fifpro_world11",
       "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-62157",
-      "player_name": "Steven Gerrard",
-      "position": null,
-      "raw_name": "Steven Gerrard",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-62157",
-      "player_name": "Steven Gerrard",
-      "position": null,
-      "raw_name": "Steven Gerrard",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-62157",
-      "player_name": "Steven Gerrard",
-      "position": null,
-      "raw_name": "Steven Gerrard",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
     },
     {
       "detail": "esm_tots MF 1999",
@@ -16325,19 +15389,6 @@
       "year": 1994
     },
     {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-63774",
-      "player_name": "Patrik Andersson",
-      "position": null,
-      "raw_name": "Patrik Andersson",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
       "detail": "esm_tots FW 2012",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -16349,32 +15400,6 @@
       "raw_name": "Gareth Bale",
       "source_id": "esm_team_of_the_season",
       "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-63927",
-      "player_name": "Gareth Bale",
-      "position": null,
-      "raw_name": "Gareth Bale",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-63927",
-      "player_name": "Gareth Bale",
-      "position": null,
-      "raw_name": "Gareth Bale",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
     },
     {
       "detail": "esm_tots FW 2022",
@@ -16492,19 +15517,6 @@
       "raw_name": "Kylian Mbappé",
       "source_id": "fifpro_world11",
       "year": 2025
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64077",
-      "player_name": "Kylian Mbappé",
-      "position": null,
-      "raw_name": "Kylian Mbappé",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
     },
     {
       "detail": "esm_tots MF 2017",
@@ -16637,71 +15649,6 @@
       "year": 2016
     },
     {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64348",
-      "player_name": "Gerard Piqué",
-      "position": null,
-      "raw_name": "Gerard Piqué",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64348",
-      "player_name": "Gerard Piqué",
-      "position": null,
-      "raw_name": "Gerard Piqué",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64348",
-      "player_name": "Gerard Piqué",
-      "position": null,
-      "raw_name": "Gerard Piqué",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64348",
-      "player_name": "Gerard Piqué",
-      "position": null,
-      "raw_name": "Gerard Piqué",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64348",
-      "player_name": "Gerard Piqué",
-      "position": null,
-      "raw_name": "Gerard Piqué",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
       "detail": "esm_tots MF 2000",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -16739,45 +15686,6 @@
       "raw_name": "Pavel Nedvěd",
       "source_id": "uefa_club_positional",
       "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64760",
-      "player_name": "Pavel Nedvěd",
-      "position": null,
-      "raw_name": "Pavel Nedvěd",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64760",
-      "player_name": "Pavel Nedvěd",
-      "position": null,
-      "raw_name": "Pavel Nedvěd",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-64760",
-      "player_name": "Pavel Nedvěd",
-      "position": null,
-      "raw_name": "Pavel Nedvěd",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
     },
     {
       "detail": "esm_tots DF 2015",
@@ -17287,201 +16195,6 @@
       "year": 2017
     },
     {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2010",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2010
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-70442",
-      "player_name": "Cristiano Ronaldo",
-      "position": null,
-      "raw_name": "Cristiano Ronaldo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
       "detail": "esm_tots DF 2015",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -17584,45 +16297,6 @@
       "raw_name": "Marcelo",
       "source_id": "fifpro_world11",
       "year": 2019
-    },
-    {
-      "detail": "uefa_team_of_the_year 2011",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-70650",
-      "player_name": "Marcelo",
-      "position": null,
-      "raw_name": "Marcelo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-70650",
-      "player_name": "Marcelo",
-      "position": null,
-      "raw_name": "Marcelo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-70650",
-      "player_name": "Marcelo",
-      "position": null,
-      "raw_name": "Marcelo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
     },
     {
       "detail": "esm_tots DF 2023",
@@ -17781,58 +16455,6 @@
       "year": 2008
     },
     {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-71420",
-      "player_name": "John Terry",
-      "position": null,
-      "raw_name": "John Terry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-71420",
-      "player_name": "John Terry",
-      "position": null,
-      "raw_name": "John Terry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-71420",
-      "player_name": "John Terry",
-      "position": null,
-      "raw_name": "John Terry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-71420",
-      "player_name": "John Terry",
-      "position": null,
-      "raw_name": "John Terry",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
       "detail": "esm_tots FW 2007",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -17844,19 +16466,6 @@
       "raw_name": "Fernando Torres",
       "source_id": "esm_team_of_the_season",
       "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-71661",
-      "player_name": "Fernando Torres",
-      "position": null,
-      "raw_name": "Fernando Torres",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
     },
     {
       "detail": "esm_tots MF 2014",
@@ -17883,58 +16492,6 @@
       "raw_name": "Eden Hazard",
       "source_id": "esm_team_of_the_season",
       "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-72011",
-      "player_name": "Eden Hazard",
-      "position": null,
-      "raw_name": "Eden Hazard",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-72011",
-      "player_name": "Eden Hazard",
-      "position": null,
-      "raw_name": "Eden Hazard",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-72916",
-      "player_name": "Patrice Evra",
-      "position": null,
-      "raw_name": "Patrice Evra",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-73572",
-      "player_name": "Matthijs de Ligt",
-      "position": null,
-      "raw_name": "Matthijs de Ligt",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
     },
     {
       "detail": "esm_tots MF 1998",
@@ -18106,19 +16663,6 @@
       "year": 2015
     },
     {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-78440",
-      "player_name": "Diego Godín",
-      "position": null,
-      "raw_name": "Diego Godín",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
       "detail": "esm_tots MF 1997",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18143,19 +16687,6 @@
       "raw_name": "Sadio Mané",
       "source_id": "esm_team_of_the_season",
       "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2019",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-79299",
-      "player_name": "Sadio Mané",
-      "position": null,
-      "raw_name": "Sadio Mané",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2019
     },
     {
       "detail": "esm_tots FW 2006",
@@ -18210,58 +16741,6 @@
       "year": 2013
     },
     {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-80105",
-      "player_name": "Zlatan Ibrahimović",
-      "position": null,
-      "raw_name": "Zlatan Ibrahimović",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
-      "detail": "uefa_team_of_the_year 2009",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-80105",
-      "player_name": "Zlatan Ibrahimović",
-      "position": null,
-      "raw_name": "Zlatan Ibrahimović",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2009
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-80105",
-      "player_name": "Zlatan Ibrahimović",
-      "position": null,
-      "raw_name": "Zlatan Ibrahimović",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-80105",
-      "player_name": "Zlatan Ibrahimović",
-      "position": null,
-      "raw_name": "Zlatan Ibrahimović",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
       "detail": "esm_tots MF 1998",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18286,32 +16765,6 @@
       "raw_name": "David Beckham",
       "source_id": "uefa_club_positional",
       "year": 1998
-    },
-    {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-81049",
-      "player_name": "David Beckham",
-      "position": null,
-      "raw_name": "David Beckham",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-81049",
-      "player_name": "David Beckham",
-      "position": null,
-      "raw_name": "David Beckham",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
     },
     {
       "detail": "esm_tots GK 1998",
@@ -18364,32 +16817,6 @@
       "raw_name": "Cesc Fàbregas",
       "source_id": "esm_team_of_the_season",
       "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-81297",
-      "player_name": "Cesc Fàbregas",
-      "position": null,
-      "raw_name": "Cesc Fàbregas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-81297",
-      "player_name": "Cesc Fàbregas",
-      "position": null,
-      "raw_name": "Cesc Fàbregas",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
     },
     {
       "detail": "esm_tots GK 2015",
@@ -18574,19 +17001,6 @@
       "year": 2001
     },
     {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-84003",
-      "player_name": "Michael Ballack",
-      "position": null,
-      "raw_name": "Michael Ballack",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
       "detail": "esm_tots MF 2001",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18730,32 +17144,6 @@
       "year": 2002
     },
     {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-85176",
-      "player_name": "Roberto Carlos",
-      "position": null,
-      "raw_name": "Roberto Carlos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2003",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-85176",
-      "player_name": "Roberto Carlos",
-      "position": null,
-      "raw_name": "Roberto Carlos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2003
-    },
-    {
       "detail": "esm_tots FW 1999",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18808,32 +17196,6 @@
       "year": 1998
     },
     {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-86650",
-      "player_name": "Andriy Shevchenko",
-      "position": null,
-      "raw_name": "Andriy Shevchenko",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-86650",
-      "player_name": "Andriy Shevchenko",
-      "position": null,
-      "raw_name": "Andriy Shevchenko",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
-    },
-    {
       "detail": "esm_tots FW 2017",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18845,32 +17207,6 @@
       "raw_name": "Neymar",
       "source_id": "esm_team_of_the_season",
       "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-87008",
-      "player_name": "Neymar",
-      "position": null,
-      "raw_name": "Neymar",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-87008",
-      "player_name": "Neymar",
-      "position": null,
-      "raw_name": "Neymar",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
     },
     {
       "detail": "esm_tots DF 2016",
@@ -18925,19 +17261,6 @@
       "year": 2004
     },
     {
-      "detail": "uefa_team_of_the_year 2006",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-88863",
-      "player_name": "Fabio Cannavaro",
-      "position": null,
-      "raw_name": "Fabio Cannavaro",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2006
-    },
-    {
       "detail": "esm_tots MF 1996",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -18962,32 +17285,6 @@
       "raw_name": "Clarence Seedorf",
       "source_id": "uefa_club_positional",
       "year": 2006
-    },
-    {
-      "detail": "uefa_team_of_the_year 2002",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-88946",
-      "player_name": "Clarence Seedorf",
-      "position": null,
-      "raw_name": "Clarence Seedorf",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2002
-    },
-    {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-88946",
-      "player_name": "Clarence Seedorf",
-      "position": null,
-      "raw_name": "Clarence Seedorf",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
     },
     {
       "detail": "esm_tots DF 2007",
@@ -19211,149 +17508,6 @@
       "year": 2017
     },
     {
-      "detail": "uefa_team_of_the_year 2008",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2008
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
-    },
-    {
-      "detail": "uefa_team_of_the_year 2014",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2014
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2020",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89177",
-      "player_name": "Sergio Ramos",
-      "position": null,
-      "raw_name": "Sergio Ramos",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2020
-    },
-    {
-      "detail": "uefa_team_of_the_year 2015",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-89392",
-      "player_name": "James Rodríguez",
-      "position": null,
-      "raw_name": "James Rodríguez",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2015
-    },
-    {
-      "detail": "uefa_team_of_the_year 2016",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-90908",
-      "player_name": "Antoine Griezmann",
-      "position": null,
-      "raw_name": "Antoine Griezmann",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2016
-    },
-    {
       "detail": "esm_tots MF 1999",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -19378,32 +17532,6 @@
       "raw_name": "Jürgen Klinsmann",
       "source_id": "esm_team_of_the_season",
       "year": 1994
-    },
-    {
-      "detail": "uefa_team_of_the_year 2004",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-91718",
-      "player_name": "Cafu",
-      "position": null,
-      "raw_name": "Cafu",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2004
-    },
-    {
-      "detail": "uefa_team_of_the_year 2005",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "surname+year",
-      "nation_token": null,
-      "player_id": "P-91718",
-      "player_name": "Cafu",
-      "position": null,
-      "raw_name": "Cafu",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2005
     },
     {
       "detail": "esm_tots DF 1994",
@@ -19484,19 +17612,6 @@
       "year": 2017
     },
     {
-      "detail": "uefa_team_of_the_year 2017",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-92874",
-      "player_name": "Giorgio Chiellini",
-      "position": null,
-      "raw_name": "Giorgio Chiellini",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2017
-    },
-    {
       "detail": "esm_tots MF 1995",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -19534,19 +17649,6 @@
       "raw_name": "Marco Reus",
       "source_id": "esm_team_of_the_season",
       "year": 2018
-    },
-    {
-      "detail": "uefa_team_of_the_year 2013",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-94447",
-      "player_name": "Marco Reus",
-      "position": null,
-      "raw_name": "Marco Reus",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2013
     },
     {
       "detail": "esm_tots DF 2008",
@@ -19666,19 +17768,6 @@
       "year": 2005
     },
     {
-      "detail": "uefa_team_of_the_year 2001",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-96540",
-      "player_name": "Patrick Vieira",
-      "position": null,
-      "raw_name": "Patrick Vieira",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2001
-    },
-    {
       "detail": "esm_tots MF 2015",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -19718,19 +17807,6 @@
       "year": 2020
     },
     {
-      "detail": "uefa_team_of_the_year 2018",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-98287",
-      "player_name": "N'Golo Kanté",
-      "position": null,
-      "raw_name": "N'Golo Kanté",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2018
-    },
-    {
       "detail": "uefa_best_gk 2005",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -19757,19 +17833,6 @@
       "year": 2006
     },
     {
-      "detail": "uefa_team_of_the_year 2007",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-99466",
-      "player_name": "Didier Drogba",
-      "position": null,
-      "raw_name": "Didier Drogba",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2007
-    },
-    {
       "detail": "esm_tots MF 2011",
       "era": "1991_plus",
       "family": "position_balanced_selection",
@@ -19781,19 +17844,6 @@
       "raw_name": "Andrea Pirlo",
       "source_id": "esm_team_of_the_season",
       "year": 2011
-    },
-    {
-      "detail": "uefa_team_of_the_year 2012",
-      "era": "1991_plus",
-      "family": "position_balanced_selection",
-      "method": "full_name",
-      "nation_token": null,
-      "player_id": "P-99537",
-      "player_name": "Andrea Pirlo",
-      "position": null,
-      "raw_name": "Andrea Pirlo",
-      "source_id": "uefa_team_of_the_year",
-      "year": 2012
     },
     {
       "detail": "esm_tots FW 2011",
@@ -22136,6 +20186,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-03013",
+      "player_name": "Ruud van Nistelrooy",
+      "position": null,
+      "raw_name": "Ruud van Nistelrooy",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -22147,6 +20210,19 @@
       "raw_name": "Ruud van Nistelrooy",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-03048",
+      "player_name": "Majed Abdullah",
+      "position": null,
+      "raw_name": "Majed Abdullah",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Austria - Player of the Century",
@@ -22188,6 +20264,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Poland",
+      "player_id": "P-03652",
+      "player_name": "Zbigniew Boniek",
+      "position": null,
+      "raw_name": "Zbigniew Boniek",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -22212,6 +20301,19 @@
       "raw_name": "Mohamed Timoumi",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name",
+      "nation_token": null,
+      "player_id": "P-05728",
+      "player_name": "Landon Donovan",
+      "position": null,
+      "raw_name": "Landon Donovan",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Europe - Player of the Century",
@@ -22264,6 +20366,19 @@
       "raw_name": "Bobby Charlton",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-08601",
+      "player_name": "Bobby Charlton",
+      "position": null,
+      "raw_name": "Bobby Charlton",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -22357,6 +20472,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-08939",
+      "player_name": "Michel Platini",
+      "position": null,
+      "raw_name": "Michel Platini",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -22420,6 +20548,32 @@
       "raw_name": "Lev YASHIN",
       "source_id": "iffhs_dream_teams",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Russia",
+      "player_id": "P-09317",
+      "player_name": "Lev Yashin",
+      "position": null,
+      "raw_name": "Lev Yashin",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Japan",
+      "player_id": "P-09349",
+      "player_name": "Hidetoshi Nakata",
+      "position": null,
+      "raw_name": "Hidetoshi Nakata",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -22498,6 +20652,19 @@
       "raw_name": "Gianluigi BUFFON",
       "source_id": "iffhs_dream_teams",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-11392",
+      "player_name": "Gianluigi Buffon",
+      "position": null,
+      "raw_name": "Gianluigi Buffon",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -22630,6 +20797,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Hungary",
+      "player_id": "P-12676",
+      "player_name": "Ferenc Puskás",
+      "position": null,
+      "raw_name": "Ferenc Puskás",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -22641,6 +20821,19 @@
       "raw_name": "Ferenc Puskás",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-12818",
+      "player_name": "Mesut Özil",
+      "position": null,
+      "raw_name": "Mesut Özil",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Spain - Player of the Century",
@@ -22773,6 +20966,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-18599",
+      "player_name": "Philipp Lahm",
+      "position": null,
+      "raw_name": "Philipp Lahm",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Uruguay - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -22890,6 +21096,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-22409",
+      "player_name": "Dennis Bergkamp",
+      "position": null,
+      "raw_name": "Dennis Bergkamp",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -22968,6 +21187,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-23705",
+      "player_name": "Arjen Robben",
+      "position": null,
+      "raw_name": "Arjen Robben",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Asia - Player of the Century",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -22979,6 +21211,19 @@
       "raw_name": "Zhi-Yi Fan",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Spain",
+      "player_id": "P-24556",
+      "player_name": "Raúl",
+      "position": null,
+      "raw_name": "Raúl",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23098,6 +21343,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-26316",
+      "player_name": "Hugo Sánchez",
+      "position": null,
+      "raw_name": "Hugo Sánchez",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23109,6 +21367,19 @@
       "raw_name": "Hugo Sánchez",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-27787",
+      "player_name": "Miroslav Klose",
+      "position": null,
+      "raw_name": "Miroslav Klose",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23163,6 +21434,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Spain",
+      "player_id": "P-29415",
+      "player_name": "Xavi",
+      "position": null,
+      "raw_name": "Xavi",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Asia - Player of the Century",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -23174,6 +21458,32 @@
       "raw_name": "Masami Ihara",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-30161",
+      "player_name": "Yousuf Al-Thunayan",
+      "position": null,
+      "raw_name": "Yousuf Al-Thunayan",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Romania",
+      "player_id": "P-30739",
+      "player_name": "Gheorghe Hagi",
+      "position": null,
+      "raw_name": "Gheorghe Hagi",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23280,6 +21590,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-32830",
+      "player_name": "Ruud Gullit",
+      "position": null,
+      "raw_name": "Ruud Gullit",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23304,6 +21627,19 @@
       "raw_name": "Karl Koller",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-33751",
+      "player_name": "Oliver Kahn",
+      "position": null,
+      "raw_name": "Oliver Kahn",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23436,6 +21772,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-35082",
+      "player_name": "Mario Kempes",
+      "position": null,
+      "raw_name": "Mario Kempes",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23447,6 +21796,19 @@
       "raw_name": "Mario Kempes",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-35183",
+      "player_name": "Peter Schmeichel",
+      "position": null,
+      "raw_name": "Peter Schmeichel",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23475,6 +21837,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Paraguay",
+      "player_id": "P-36426",
+      "player_name": "José Luis Chilavert",
+      "position": null,
+      "raw_name": "José Luis Chilavert",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: South America - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23499,6 +21874,19 @@
       "raw_name": "Enzo Francescoli",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-36582",
+      "player_name": "Enzo Francescoli",
+      "position": null,
+      "raw_name": "Enzo Francescoli",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23551,6 +21939,19 @@
       "raw_name": "Zico",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-37483",
+      "player_name": "Zico",
+      "position": null,
+      "raw_name": "Zico",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23644,6 +22045,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "New Zealand",
+      "player_id": "P-38027",
+      "player_name": "Wynton Rufer",
+      "position": null,
+      "raw_name": "Wynton Rufer",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Asia - Player of the Century",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -23655,6 +22069,19 @@
       "raw_name": "Ali Daei",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Iran",
+      "player_id": "P-38371",
+      "player_name": "Ali Daei",
+      "position": null,
+      "raw_name": "Ali Daei",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: South America - Player of the Century",
@@ -23694,6 +22121,19 @@
       "raw_name": "Juan Alberto Schiaffino",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Uruguay",
+      "player_id": "P-38873",
+      "player_name": "Juan Alberto Schiaffino",
+      "position": null,
+      "raw_name": "Juan Alberto Schiaffino",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23761,6 +22201,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-38906",
+      "player_name": "Pelé",
+      "position": null,
+      "raw_name": "Pelé",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23787,6 +22240,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-39356",
+      "player_name": "Toni Kroos",
+      "position": null,
+      "raw_name": "Toni Kroos",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Brazil - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23811,6 +22277,19 @@
       "raw_name": "Ademir da Guía",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42038",
+      "player_name": "Francesco Totti",
+      "position": null,
+      "raw_name": "Francesco Totti",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -23891,6 +22370,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-42920",
+      "player_name": "Franco Baresi",
+      "position": null,
+      "raw_name": "Franco Baresi",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23956,6 +22448,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-43222",
+      "player_name": "Paolo Maldini",
+      "position": null,
+      "raw_name": "Paolo Maldini",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23982,6 +22487,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-44763",
+      "player_name": "Rafael Márquez",
+      "position": null,
+      "raw_name": "Rafael Márquez",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Africa - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -23993,6 +22511,32 @@
       "raw_name": "Rabah Madjer",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Algeria",
+      "player_id": "P-45774",
+      "player_name": "Rabah Madjer",
+      "position": null,
+      "raw_name": "Rabah Madjer",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-45916",
+      "player_name": "Edgar Davids",
+      "position": null,
+      "raw_name": "Edgar Davids",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24032,6 +22576,19 @@
       "raw_name": "Garrincha",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-46080",
+      "player_name": "Garrincha",
+      "position": null,
+      "raw_name": "Garrincha",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24097,6 +22654,19 @@
       "raw_name": "Willy van de Kerkhof",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-48831",
+      "player_name": "Dino Zoff",
+      "position": null,
+      "raw_name": "Dino Zoff",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24177,6 +22747,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-49502",
+      "player_name": "Lothar Matthäus",
+      "position": null,
+      "raw_name": "Lothar Matthäus",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24188,6 +22771,19 @@
       "raw_name": "Lothar Matthäus",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Colombia",
+      "player_id": "P-49600",
+      "player_name": "Carlos Valderrama",
+      "position": null,
+      "raw_name": "Carlos Valderrama",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24242,6 +22838,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-50128",
+      "player_name": "Kevin Keegan",
+      "position": null,
+      "raw_name": "Kevin Keegan",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24268,6 +22877,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-50564",
+      "player_name": "Johan Cruyff",
+      "position": null,
+      "raw_name": "Johan Cruyff",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24279,6 +22901,19 @@
       "raw_name": "Johan Cruyff",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-51089",
+      "player_name": "Carles Puyol",
+      "position": null,
+      "raw_name": "Carles Puyol",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24346,6 +22981,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-51382",
+      "player_name": "Stanley Matthews",
+      "position": null,
+      "raw_name": "Stanley Matthews",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "ballondor_third_team",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -24357,6 +23005,19 @@
       "raw_name": "Thierry Henry",
       "source_id": "ballondor_dream_team",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-51395",
+      "player_name": "Thierry Henry",
+      "position": null,
+      "raw_name": "Thierry Henry",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24435,6 +23096,19 @@
       "raw_name": "Bobby MOORE",
       "source_id": "iffhs_dream_teams",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Czech Republic",
+      "player_id": "P-53062",
+      "player_name": "Petr Čech",
+      "position": null,
+      "raw_name": "Petr Čech",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Central and North America - Player of the Century",
@@ -24528,6 +23202,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-55659",
+      "player_name": "Franck Ribéry",
+      "position": null,
+      "raw_name": "Franck Ribéry",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "ballondor_third_team",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -24539,6 +23226,19 @@
       "raw_name": "Andrés Iniesta",
       "source_id": "ballondor_dream_team",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-56330",
+      "player_name": "Andrés Iniesta",
+      "position": null,
+      "raw_name": "Andrés Iniesta",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "ballondor_second_team",
@@ -24567,6 +23267,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "France",
+      "player_id": "P-56430",
+      "player_name": "Zinedine Zidane",
+      "position": null,
+      "raw_name": "Zinedine Zidane",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -24578,6 +23291,32 @@
       "raw_name": "Zinedine Zidane",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name",
+      "nation_token": null,
+      "player_id": "P-56543",
+      "player_name": "Lucas Radebe",
+      "position": null,
+      "raw_name": "Lucas Radebe",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Denmark",
+      "player_id": "P-56788",
+      "player_name": "Michael Laudrup",
+      "position": null,
+      "raw_name": "Michael Laudrup",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24606,6 +23345,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-57361",
+      "player_name": "Ronaldinho",
+      "position": null,
+      "raw_name": "Ronaldinho",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -24617,6 +23369,19 @@
       "raw_name": "Ronaldinho",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-57496",
+      "player_name": "Luís Figo",
+      "position": null,
+      "raw_name": "Luís Figo",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24684,6 +23449,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Cameroon",
+      "player_id": "P-58080",
+      "player_name": "Roger Milla",
+      "position": null,
+      "raw_name": "Roger Milla",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24697,6 +23475,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Croatia",
+      "player_id": "P-58374",
+      "player_name": "Davor Šuker",
+      "position": null,
+      "raw_name": "Davor Šuker",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24708,6 +23499,19 @@
       "raw_name": "Davor Šuker",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-58388",
+      "player_name": "Kaká",
+      "position": null,
+      "raw_name": "Kaká",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24749,6 +23553,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-59574",
+      "player_name": "Karl-Heinz Rummenigge",
+      "position": null,
+      "raw_name": "Karl-Heinz Rummenigge",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24775,6 +23592,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-61251",
+      "player_name": "Romário",
+      "position": null,
+      "raw_name": "Romário",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -24799,6 +23629,32 @@
       "raw_name": "Rüştü Reçber",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Cameroon",
+      "player_id": "P-61703",
+      "player_name": "Samuel Eto'o",
+      "position": null,
+      "raw_name": "Samuel Eto'o",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Spain",
+      "player_id": "P-61793",
+      "player_name": "Iker Casillas",
+      "position": null,
+      "raw_name": "Iker Casillas",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -24890,6 +23746,19 @@
       "raw_name": "Luis Nazario de Lima RONALDO",
       "source_id": "iffhs_dream_teams",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-62722",
+      "player_name": "Ronaldo",
+      "position": null,
+      "raw_name": "Ronaldo",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25022,6 +23891,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Czech Republic",
+      "player_id": "P-64760",
+      "player_name": "Pavel Nedvěd",
+      "position": null,
+      "raw_name": "Pavel Nedvěd",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -25046,6 +23928,19 @@
       "raw_name": "Doo-Ik Pak",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-65802",
+      "player_name": "Daniele De Rossi",
+      "position": null,
+      "raw_name": "Daniele De Rossi",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Europe - Player of the Century",
@@ -25139,6 +24034,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Scotland",
+      "player_id": "P-68584",
+      "player_name": "Kenny Dalglish",
+      "position": null,
+      "raw_name": "Kenny Dalglish",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25150,6 +24058,19 @@
       "raw_name": "Kenny Dalglish",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "pre_1956",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Mexico",
+      "player_id": "P-69496",
+      "player_name": "Antonio Carbajal",
+      "position": null,
+      "raw_name": "Antonio Carbajal",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "century election: Europe - Player of the Century",
@@ -25256,6 +24177,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-72441",
+      "player_name": "Gerd Müller",
+      "position": null,
+      "raw_name": "Gerd Müller",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25347,6 +24281,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Germany",
+      "player_id": "P-72864",
+      "player_name": "Franz Beckenbauer",
+      "position": null,
+      "raw_name": "Franz Beckenbauer",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25373,6 +24320,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-72919",
+      "player_name": "Ronald Koeman",
+      "position": null,
+      "raw_name": "Ronald Koeman",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Belgium - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25397,6 +24357,19 @@
       "raw_name": "Zizinho",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-74261",
+      "player_name": "Rivaldo",
+      "position": null,
+      "raw_name": "Rivaldo",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25449,6 +24422,19 @@
       "raw_name": "Eusébio",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Portugal",
+      "player_id": "P-74747",
+      "player_name": "Eusébio",
+      "position": null,
+      "raw_name": "Eusébio",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25620,6 +24606,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-76874",
+      "player_name": "Marco van Basten",
+      "position": null,
+      "raw_name": "Marco van Basten",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25698,6 +24697,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "surname+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-78605",
+      "player_name": "Sócrates",
+      "position": null,
+      "raw_name": "Sócrates",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25737,6 +24749,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-78756",
+      "player_name": "Roberto Baggio",
+      "position": null,
+      "raw_name": "Roberto Baggio",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25763,6 +24788,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Sweden",
+      "player_id": "P-80105",
+      "player_name": "Zlatan Ibrahimović",
+      "position": null,
+      "raw_name": "Zlatan Ibrahimović",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Argentina - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25787,6 +24825,19 @@
       "raw_name": "Daniel PASSARELLA",
       "source_id": "iffhs_dream_teams",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-80376",
+      "player_name": "Daniel Passarella",
+      "position": null,
+      "raw_name": "Daniel Passarella",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25828,6 +24879,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-80404",
+      "player_name": "Diego Maradona",
+      "position": null,
+      "raw_name": "Diego Maradona",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -25841,6 +24905,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-81049",
+      "player_name": "David Beckham",
+      "position": null,
+      "raw_name": "David Beckham",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -25852,6 +24929,19 @@
       "raw_name": "David Beckham",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Bulgaria",
+      "player_id": "P-81648",
+      "player_name": "Hristo Stoichkov",
+      "position": null,
+      "raw_name": "Hristo Stoichkov",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25893,6 +24983,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Nigeria",
+      "player_id": "P-83122",
+      "player_name": "Jay-Jay Okocha",
+      "position": null,
+      "raw_name": "Jay-Jay Okocha",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -25904,6 +25007,19 @@
       "raw_name": "Jay-Jay Okocha",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-83836",
+      "player_name": "Alessandro Del Piero",
+      "position": null,
+      "raw_name": "Alessandro Del Piero",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -25932,6 +25048,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Argentina",
+      "player_id": "P-84542",
+      "player_name": "Gabriel Batistuta",
+      "position": null,
+      "raw_name": "Gabriel Batistuta",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -25943,6 +25072,19 @@
       "raw_name": "Gabriel Batistuta",
       "source_id": "living_legends_2004",
       "year": 2004
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Belgium",
+      "player_id": "P-84816",
+      "player_name": "Jean-Marie Pfaff",
+      "position": null,
+      "raw_name": "Jean-Marie Pfaff",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -26023,6 +25165,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Brazil",
+      "player_id": "P-85176",
+      "player_name": "Roberto Carlos",
+      "position": null,
+      "raw_name": "Roberto Carlos",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -26060,6 +25215,19 @@
       "raw_name": "Fritz Szepan",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Ukraine",
+      "player_id": "P-86650",
+      "player_name": "Andriy Shevchenko",
+      "position": null,
+      "raw_name": "Andriy Shevchenko",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -26114,6 +25282,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-90435",
+      "player_name": "Mohammed Noor",
+      "position": null,
+      "raw_name": "Mohammed Noor",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "2004 living-legends selection",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -26166,6 +25347,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Nigeria",
+      "player_id": "P-91516",
+      "player_name": "Nwankwo Kanu",
+      "position": null,
+      "raw_name": "Nwankwo Kanu",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Italy - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -26177,6 +25371,19 @@
       "raw_name": "Paolo Rossi",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-91717",
+      "player_name": "Paolo Rossi",
+      "position": null,
+      "raw_name": "Paolo Rossi",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -26242,6 +25449,19 @@
       "raw_name": "Frank Rijkaard",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-92391",
+      "player_name": "Frank Rijkaard",
+      "position": null,
+      "raw_name": "Frank Rijkaard",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "2004 living-legends selection",
@@ -26452,6 +25672,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1956_1990",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Kuwait",
+      "player_id": "P-97692",
+      "player_name": "Jasem Yaqoub",
+      "position": null,
+      "raw_name": "Jasem Yaqoub",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Austria - Player of the Century",
       "era": "pre_1956",
       "family": "retrospective_selection",
@@ -26491,6 +25724,19 @@
       "year": 2004
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Ivory Coast",
+      "player_id": "P-99466",
+      "player_name": "Didier Drogba",
+      "position": null,
+      "raw_name": "Didier Drogba",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "ballondor_second_team",
       "era": "1991_plus",
       "family": "retrospective_selection",
@@ -26504,6 +25750,19 @@
       "year": null
     },
     {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Italy",
+      "player_id": "P-99537",
+      "player_name": "Andrea Pirlo",
+      "position": null,
+      "raw_name": "Andrea Pirlo",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
       "detail": "century election: Italy - Player of the Century",
       "era": "1956_1990",
       "family": "retrospective_selection",
@@ -26515,6 +25774,32 @@
       "raw_name": "Gaetano Scirea",
       "source_id": "iffhs_century",
       "year": null
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "Netherlands",
+      "player_id": "P-99934",
+      "player_name": "Robin van Persie",
+      "position": null,
+      "raw_name": "Robin van Persie",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
+    },
+    {
+      "detail": "IFFHS Men Legends selection",
+      "era": "1991_plus",
+      "family": "retrospective_selection",
+      "method": "full_name+nation",
+      "nation_token": "England",
+      "player_id": "P-99967",
+      "player_name": "Wayne Rooney",
+      "position": null,
+      "raw_name": "Wayne Rooney",
+      "source_id": "iffhs_men_legends",
+      "year": 2021
     },
     {
       "detail": "Golden Glove WC-1994",
@@ -28622,6 +27907,6 @@
       "year": 2006
     }
   ],
-  "linked_player_count": 791,
-  "version": "merit-source-set-2.0.0"
+  "linked_player_count": 819,
+  "version": "merit-source-set-2.1.0"
 }
