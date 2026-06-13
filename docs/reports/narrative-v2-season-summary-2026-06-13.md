@@ -1,7 +1,7 @@
 # Narrative v2 Deterministic Expansion
 
 Branch: `feature/narrative-v2`
-Base: `origin/main` `88ae0c3b6294b3f35ca973371d59ce7ef42a1d6f`
+Base: `origin/main` `c195f8736e4df4f74f63c55d8d5d095a86568e40`
 Candidate engine stamp: `engine-2026.06.13`
 Status: candidate only. No merge, deploy, or live production verification has
 occurred for this branch.
