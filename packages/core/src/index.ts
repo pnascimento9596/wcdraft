@@ -105,10 +105,14 @@ export type {
   PlayerRunStats,
   // narrative
   KeyMoment,
+  NarrativeMatchMethod,
+  NarrativeScenarioFamily,
+  NarrativeScenarioSpotlight,
   NarrativeFacts,
   OutcomeClass,
   TokenName,
   NarrativeLabels,
+  NarrativeTemplateOutcomeClass,
   NarrativeTemplate,
   // run
   RoundResult,
@@ -164,6 +168,7 @@ export {
   headlineMoment,
   classifyOutcome,
   templatesForClass,
+  templatesForScenarioFamily,
   NARRATIVE_TEMPLATES,
   UNAVAILABLE_TOKEN_TEXT,
   // WS-0c

@@ -17,6 +17,64 @@
 import type { MatchRound } from "./primitives.js";
 
 /**
+ * Scenario-aware narrative families. These are more specific than the coarse
+ * `OutcomeClass`: they are triggered from concrete match data such as score,
+ * method, player events, lineup position, or tournament-year mix.
+ */
+export type NarrativeScenarioFamily =
+  | "dominant_blowout"
+  | "narrow_one_nil"
+  | "comeback_from_behind"
+  | "extra_time_winner"
+  | "shootout_drama"
+  | "clean_sheet_masterclass"
+  | "hat_trick_hero"
+  | "multi_goal_hero"
+  | "demolition_margin_four"
+  | "low_event_grind"
+  | "manager_masterstroke"
+  | "defensive_wall"
+  | "midfield_control"
+  | "perfect_run_milestone"
+  | "elimination_heartbreak"
+  | "era_clash"
+  | "debut_tournament_core"
+  | "bench_impact"
+  | "cross_era_matchup"
+  | "final_hero"
+  | "early_breakthrough"
+  | "late_winner"
+  | "red_card_resilience"
+  | "penalty_miss_redemption"
+  | "keeper_penalty_save";
+
+export type NarrativeMatchMethod = "regulation" | "extra_time" | "penalties";
+
+/**
+ * The concrete source row behind a scenario family. Every field is either
+ * derived from the event/lineup/result stream or null when the family does not
+ * need that slot. Templates resolve from this object; they never inspect raw
+ * events directly and never invent missing entities.
+ */
+export interface NarrativeScenarioSpotlight {
+  family: NarrativeScenarioFamily;
+  match_id: string | null;
+  round: MatchRound | null;
+  player_id: string | null;
+  secondary_player_id: string | null;
+  tertiary_player_id: string | null;
+  opponent_team_id: string | null;
+  score: { user: number; opp: number } | null;
+  method: NarrativeMatchMethod | null;
+  minute: number | null;
+  goal_count: number | null;
+  margin: number | null;
+  clean_sheets: number | null;
+  era_min_year: number | null;
+  era_max_year: number | null;
+}
+
+/**
  * A single in-event moment of dramatic weight — the building block for late
  * winners, equalizers, comeback runs, etc.
  *
@@ -90,6 +148,8 @@ export interface NarrativeFacts {
   eliminated_in_match_id: string | null;
   /** Dramatic moments in chronological order. */
   key_moments: KeyMoment[];
+  /** Specific scenario families that truly fired for this run. */
+  scenario_spotlights: NarrativeScenarioSpotlight[];
   /**
    * Narrative sub-seed used by template selection. MUST equal
    * `deriveSubseed(run.seed, "narrative")` and is persisted as
@@ -152,7 +212,18 @@ export type TokenName =
   | "VILLAIN"
   | "OPPONENT"
   | "KEY_MOMENT"
-  | "RECORD";
+  | "RECORD"
+  | "SCENARIO_PLAYER"
+  | "SCENARIO_PLAYER_TWO"
+  | "SCENARIO_PLAYER_THREE"
+  | "SCENARIO_OPPONENT"
+  | "SCENARIO_ROUND"
+  | "SCENARIO_SCORE"
+  | "SCENARIO_METHOD"
+  | "SCENARIO_GOALS"
+  | "SCENARIO_MARGIN"
+  | "SCENARIO_CLEAN_SHEETS"
+  | "SCENARIO_ERA_NOTE";
 
 /**
  * Optional display-label overrides supplied by a caller (e.g. the UI layer)
@@ -182,11 +253,18 @@ export interface NarrativeLabels {
  * keyed on `outcome_class`; the run's narrative sub-seed only chooses among
  * the variants that share the class.
  */
+export type NarrativeTemplateOutcomeClass = OutcomeClass | "ANY";
+
 export interface NarrativeTemplate {
   /** Stable id, persisted on `RunResult.narrative.template_id`. */
   id: string;
-  /** The outcome class this template belongs to. */
-  outcome_class: OutcomeClass;
+  /**
+   * The outcome class this template belongs to. Scenario templates may use
+   * "ANY" when the family itself provides the gating condition.
+   */
+  outcome_class: NarrativeTemplateOutcomeClass;
+  /** Optional specific family. Absent means this is a coarse fallback template. */
+  scenario_family?: NarrativeScenarioFamily;
   /** Prose with `{TOKEN}` placeholders. */
   text: string;
 }

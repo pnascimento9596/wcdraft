@@ -10,7 +10,7 @@ import { createRng } from "../rng.js";
 import type { MatchResult } from "../types/sim.js";
 import type { NarrativeFacts, NarrativeLabels, NarrativeTemplate } from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
-import { classifyOutcome, templatesForClass } from "./templates.js";
+import { classifyOutcome, templatesForClass, templatesForScenarioFamily } from "./templates.js";
 import { deriveNarrativeFacts } from "./facts.js";
 import { fillTemplate, resolveNarrativeTokens } from "./tokens.js";
 
@@ -23,7 +23,15 @@ import { fillTemplate, resolveNarrativeTokens } from "./tokens.js";
  * never a fresh RNG.
  */
 export function selectNarrativeTemplate(run: RunResult, facts: NarrativeFacts): NarrativeTemplate {
-  const bank = templatesForClass(classifyOutcome(run));
+  const outcome = classifyOutcome(run);
+  for (const spotlight of facts.scenario_spotlights) {
+    const bank = templatesForScenarioFamily(outcome, spotlight.family);
+    if (bank.length > 0) {
+      const rng = createRng(`${facts.narrative_seed}:scenario:${spotlight.family}`);
+      return rng.pick(bank);
+    }
+  }
+  const bank = templatesForClass(outcome);
   const rng = createRng(facts.narrative_seed);
   return rng.pick(bank);
 }
@@ -44,7 +52,7 @@ export function buildNarrative(
 ): RunResult["narrative"] {
   const facts = deriveNarrativeFacts(run, matches);
   const template = selectNarrativeTemplate(run, facts);
-  const tokens = resolveNarrativeTokens(run, facts, labels);
+  const tokens = resolveNarrativeTokens(run, facts, labels, template);
   return {
     template_id: template.id,
     narrative_seed: facts.narrative_seed,
