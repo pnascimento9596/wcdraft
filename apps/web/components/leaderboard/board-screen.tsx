@@ -17,26 +17,15 @@ import {
   type BoardAccumulator,
   type BoardDraftModeFilter,
 } from "@/lib/leaderboard/board-view";
-import {
-  fetchBoardPage,
-  fetchMyPresence,
-  type MyBoardPresence,
-} from "@/lib/leaderboard/client";
+import { fetchBoardPage, fetchMyPresence, type MyBoardPresence } from "@/lib/leaderboard/client";
 
-import {
-  BoardError,
-  BoardHead,
-  BoardRows,
-  BoardToolbar,
-  EmptyBoard,
-  MeChip,
-} from "./board-views";
+import { BoardError, BoardHead, BoardRows, BoardToolbar, EmptyBoard, MeChip } from "./board-views";
 import s from "./leaderboard.module.css";
 
 type LoadPhase = "loading" | "ready" | "error";
 
 export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
-  const [filter, setFilter] = useState<BoardDraftModeFilter>("all");
+  const [filter, setFilter] = useState<BoardDraftModeFilter>("classic");
   const [acc, setAcc] = useState<BoardAccumulator>(EMPTY_BOARD);
   const [phase, setPhase] = useState<LoadPhase>("loading");
   const [loadingMore, setLoadingMore] = useState(false);
@@ -69,8 +58,15 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   // Your-entry highlight — anonymous session or account; absent when
   // unresolvable (no session / dark / transport failure).
   useEffect(() => {
-    void fetchMyPresence().then(setMe);
-  }, []);
+    let cancelled = false;
+    setMe(null);
+    void fetchMyPresence({ draftMode: filter }).then((presence) => {
+      if (!cancelled) setMe(presence);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [filter]);
 
   const loadMore = useCallback(() => {
     if (acc.nextCursor === null || loadingMore) return;

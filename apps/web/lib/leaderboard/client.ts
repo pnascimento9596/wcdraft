@@ -38,7 +38,7 @@ export async function fetchBoardPage(opts: {
 export interface MyBoardPresence {
   /** Entry id of the caller's best visible entry (matches a board row id). */
   readonly bestEntryId: string;
-  /** Board rank of that entry (season+mode view, unfiltered). */
+  /** Board rank of that entry (season+mode+draft_mode view). */
   readonly rank: number | null;
   readonly verifiedScore: number;
 }
@@ -48,9 +48,11 @@ export interface MyBoardPresence {
  * honestly (no session → 401, feature dark → 404, transport failure) — the
  * board then simply renders without a highlight.
  */
-export async function fetchMyPresence(): Promise<MyBoardPresence | null> {
+export async function fetchMyPresence(opts: {
+  draftMode: BoardDraftModeFilter;
+}): Promise<MyBoardPresence | null> {
   try {
-    const r = await fetch("/api/leaderboard/me", {
+    const r = await fetch(`/api/leaderboard/me${boardQueryString({ ...opts, cursor: null })}`, {
       credentials: "include",
       headers: { Accept: "application/json" },
     });
@@ -81,6 +83,7 @@ export async function submitRun(input: {
   token: string;
   claimedScore: number;
   mode: SubmitBoardMode;
+  draftMode: BoardDraftModeFilter;
   displayName: string | null;
 }): Promise<SubmitPhase> {
   let r: Response;
@@ -97,6 +100,7 @@ export async function submitRun(input: {
       body: JSON.stringify({
         token: input.token,
         claimed_score: input.claimedScore,
+        draft_mode: input.draftMode,
         display_alias: input.displayName,
         mode: input.mode,
       }),

@@ -62,6 +62,7 @@ function submit(overrides: Partial<SubmissionBody>) {
     {
       token: originToken,
       claimed_score: originExpected.score,
+      draft_mode: "classic",
       display_name: "honest_player",
       ...overrides,
     },
@@ -90,6 +91,11 @@ describe("step 1 — shape + size guard", () => {
     expect(rejectionCode(submit({ claimed_score: 1.5 }))).toBe("INVALID_BODY");
     expect(rejectionCode(submit({ claimed_score: "12" }))).toBe("INVALID_BODY");
     expect(rejectionCode(submit({ claimed_score: Number.NaN }))).toBe("INVALID_BODY");
+  });
+
+  it("rejects a missing or unknown draft_mode (INVALID_BODY)", () => {
+    expect(rejectionCode(submit({ draft_mode: undefined }))).toBe("INVALID_BODY");
+    expect(rejectionCode(submit({ draft_mode: "all" }))).toBe("INVALID_BODY");
   });
 
   it("ORDER LOCK: size guard fires before name validation", () => {
@@ -442,21 +448,28 @@ describe("acceptance contract", () => {
     expect(v.token_body.ps).toBe(ORIGIN_SEED);
   });
 
-  it("BEHAVIOR LOCK: md classic→hidden flip is ACCEPTED as hidden (self-declared tag)", () => {
-    // `mode` never feeds spin derivation or the sim — a flipped tag replays
-    // and re-sims identically. The server CANNOT prove which UI the player
-    // saw; draft_mode is a self-declared fairness dimension (plan §7), and
-    // any policy gating belongs to U3+/product, not this core. This test
-    // exists so a future engine change that makes mode mechanical (and thus
-    // detectable) shows up as a diff here.
+  it("hidden mode remains re-sim/display-only when the requested lane matches", () => {
+    // `md` never feeds spin derivation or the sim — the blind seam is display
+    // only. A token that declares Memory must target the Memory lane, but the
+    // replay and score path stay mode-agnostic.
     const t = tampered((b) => {
       b.md = "hidden";
     });
-    const v = submit({ token: t });
+    const v = submit({ token: t, draft_mode: "hidden" });
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.draft_mode).toBe("hidden");
     expect(v.verified_score).toBe(originExpected.score);
+  });
+
+  it("cross-lane mismatch rejects before replay persistence", () => {
+    expect(rejectionCode(submit({ draft_mode: "hidden" }))).toBe("NON_CANONICAL_CONFIG");
+    const hiddenToken = tampered((b) => {
+      b.md = "hidden";
+    });
+    expect(rejectionCode(submit({ token: hiddenToken, draft_mode: "classic" }))).toBe(
+      "NON_CANONICAL_CONFIG",
+    );
   });
 
   it("rejected verdicts are deterministic too (two runs, deep-equal)", () => {

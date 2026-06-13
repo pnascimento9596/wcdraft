@@ -2,9 +2,10 @@
 //
 // Token-in / verdict-out. This module owns pipeline steps 1–3, 5 and 7–9:
 //
-//   1. body shape + token size guard                     → INVALID_BODY / TOKEN_TOO_LARGE
+//   1. body shape + token size guard + target lane       → INVALID_BODY / TOKEN_TOO_LARGE
 //   2. decodeRunToken === null                           → MALFORMED_TOKEN
 //   3. strict 6-anchor versionsAgree (= season check)    → WRONG_SEASON
+//   4. canonical config + lane match                     → NON_CANONICAL_CONFIG
 //   5. optional alias validity (§5.1)                     → INVALID_NAME
 //   7. DRAFT LEGALITY = full token replay (the keystone) → ILLEGAL_PICK
 //   8. deterministic re-sim (buildRunScenario + runTournamentFull)
@@ -116,8 +117,8 @@ export interface AcceptedSubmission {
   score_breakdown: ScoreComponent[];
   /** Season = full 6-anchor tuple, derived from the server's versions (§3). */
   season_key: string;
-  /** Self-declared fairness dimension from the token's `md` (see plan §7). */
-  draft_mode: "classic" | "hidden";
+  /** First-class ranked lane; explicitly requested and matched to token `md`. */
+  draft_mode: SubmissionDraftMode;
   /** Normalized alias — persist THIS, not the raw input. Null means username fallback. */
   display_alias: string | null;
   /** Decoded token body (rid / ps available to the route for logging). */
@@ -140,9 +141,13 @@ export type SubmitVerdict = AcceptedSubmission | RejectedSubmission;
 // ─── Inputs ──────────────────────────────────────────────────────────────────
 
 /** Untrusted POST body fields (already JSON-parsed by the route). */
+export type SubmissionDraftMode = "classic" | "hidden";
+
 export interface SubmissionBody {
   token: unknown;
   claimed_score: unknown;
+  /** Required explicit target lane; never inferred from board UI state. */
+  draft_mode?: unknown;
   /** New field name. */
   display_alias?: unknown;
   /** Legacy client field; treated as alias while the UI migrates. */
@@ -165,6 +170,10 @@ function mismatchedAnchors(token: RunTokenBody, versions: RunRecordVersions): Ve
   return VERSION_ANCHORS.filter(([t, v]) => token[t] !== versions[v]).map(([, v]) => v);
 }
 
+function isSubmissionDraftMode(value: unknown): value is SubmissionDraftMode {
+  return value === "classic" || value === "hidden";
+}
+
 /**
  * Validate one leaderboard submission. Pure and deterministic over
  * (`body`, `data`); strictly cheapest-rejection-first.
@@ -181,6 +190,10 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
   if (typeof body.claimed_score !== "number" || !Number.isSafeInteger(body.claimed_score)) {
     return rejected("INVALID_BODY", "claimed_score must be an integer");
   }
+  if (!isSubmissionDraftMode(body.draft_mode)) {
+    return rejected("INVALID_BODY", "draft_mode must be 'classic' or 'hidden'");
+  }
+  const targetDraftMode = body.draft_mode;
 
   // 2 — decode (never throws; null on any malformation incl. bad mode tag).
   const token = decodeRunToken(body.token);
@@ -200,14 +213,20 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
 
   // 3b — DC-1 canonical-config gate (owner-ratified): board submissions must
   // carry the canonical config axes (squad_first / career / all_time). `t1.`
-  // tokens are canonical by compatibility. The pre-existing Classic / Memory
-  // visibility lanes (`md`) are a separate board dimension and stay accepted.
-  // O(1) — runs before name/replay work.
+  // tokens are canonical by compatibility. The Classic / Memory lane is also
+  // explicit on the request and must match the token's declared `md`. O(1) —
+  // runs before name/replay work.
   const config = tokenDraftConfig(token);
   if (!isCanonicalDraftConfig(config)) {
     return rejected(
       "NON_CANONICAL_CONFIG",
       `board submissions require the canonical config (squad_first/career/all_time); token carries ${config.draft_flow}/${config.rating_basis}/${config.era_preset}`,
+    );
+  }
+  if (token.md !== targetDraftMode) {
+    return rejected(
+      "NON_CANONICAL_CONFIG",
+      `board submissions require draft_mode ${targetDraftMode}; token carries ${token.md}`,
     );
   }
 
@@ -277,7 +296,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     verified_score: run.score,
     score_breakdown: run.score_breakdown,
     season_key: deriveSeasonKey(data.gameData.versions),
-    draft_mode: token.md,
+    draft_mode: targetDraftMode,
     display_alias: displayAlias,
     token_body: token,
   };
