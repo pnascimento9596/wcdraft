@@ -1,4 +1,12 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-3.0.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-4.1.0`)
+
+> **proj-career-4.1.0 (merit-v3.1 candidate):** the projected formula, shared
+> display curve, and engine calibration are unchanged from merit-v3. The bump
+> tracks the same career-stature source curation as historical `wc-perf-5.1.0`:
+> `career-stature-3.1.0` / `merit-source-set-2.1.0` /
+> `active-career-source-set-2.1.0`. Runtime 2026 rows still use the Career
+> compatibility surface at top level and carry `basis_ratings.current` for the
+> at-tournament basis.
 
 > **MV2-6 (unified display curve):** the 2026 `rating_version` stays
 > `proj-career-3.0.0` — the projected INTERNAL algorithm is unchanged. What changed
@@ -182,9 +190,11 @@ is computed as of the opening match (2026-06-11).
 ## Honest-state
 
 * Every current player has caps and international goals (real measured
-  integers, possibly 0), so 2026 cards never take the estimate path. There
-  is **no `overall_basis` field** on projected ratings — distinct from the
-  historical schema, by design.
+  integers, possibly 0), so 2026 cards never take the baseline-anchor estimate
+  path. Projected rows now carry `overall_basis`: most remain
+  `measured_performance`, while source-linked material careers can emit
+  `career_stature_estimate`; every runtime 2026 row also carries
+  `basis_ratings.career` and `basis_ratings.current`.
 * `coverage_basis = "career_signals"`; `coverage = 5/7 ≈ 0.7143` reflects the
   five signals we have against an ideal that also wants club-competition
   minutes and a qualification box-score — neither is in the source.
@@ -227,7 +237,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-3.0.0`)
+* **projected rating version** check (`proj-career-4.1.0`)
 * **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
   no 100s)
 * **projected basis** is `career_stature_estimate` | `measured_performance`,
@@ -261,7 +271,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 ## Migration & versioning
 
 - `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0` →
-  `proj-career-3.0.0` (MV2-5 stature reconciliation).
+  `proj-career-4.1.0` (merit-v3.1 source-curation replay anchor).
 - Rows gain `overall_basis` and a first-class `legend` boolean (joined from
   `career_stature.json` for linked players). `ratings_2026.json` and
   `teams_2026.json` regenerate; the unified display curve is MV2-6.

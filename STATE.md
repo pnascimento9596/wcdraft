@@ -4,14 +4,12 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for leaderboard-profiles in-flight work: 2026-06-13 ·
-`origin/leaderboard-profiles` `af7b002f5a7d8f0427f85a2fc94c7549012cab44`
-plus local post-main-sync validation against `origin/main`
-`595049b0afd6779ca3c3f8ab1443d6e51866321c`. Production/main facts below remain
-from the prior 2026-06-12 measurement unless explicitly noted: after the merit-v3
-V8 season merge (#104, squash `1552e44`), the leaderboard runtime-data hotfix
-(#105, squash `a0d0828`), and accounts/email production light-up/docs (#108/#109).
-The live repo pins are now `runtime-data-2.0.0` / `engine-2026.06.12`; draft-config's
+Last measured for merit-v3.1 rebase work: 2026-06-13 · `origin/main`
+`12dd2b934760a2deac8670b195b932ef4f2638a2` (leaderboard-profiles shipped).
+Production runtime-data anchor last verified: 2026-06-12 · manifest commit
+`c174775d223d8776f8950749b50a0e6099ca456b` (the static data bundle deployed at
+www.wcdraft.com before merit-v3.1 ships). The live repo pins before this season
+remain `runtime-data-2.0.0` / `engine-2026.06.12`; draft-config's
 `runtime-data-1.2.0` / `engine-2026.06.11` anchors are historical PREV-skew
 fixtures, not the current production season.
 
@@ -34,6 +32,22 @@ pile-up, inversion, 9 pre-1967 coherence violations, legend census 302→270, an
 Dembélé non-material legend remain documented carryovers / waived misses rather
 than hidden regressions.
 
+merit-v3.1 candidate status: W1 staged complete scoped public season-honor facts
+for the final honest-miss class (Lukaku and B. Fernandes); W2 added a
+source-derived pre-1967 retrospective-consensus route; W2b added the complete
+non-fan public source extension (IFFHS Men Legends + RSSSF Guldbollen) and
+restored Raúl, Eto'o, and Ibrahimović cards from the V8 42-card loss ledger.
+The season also removed the fan-voted UEFA Team of the Year route, producing
+11 explicit guardrail legend losses rather than retaining fan-vote evidence.
+W3 was intentionally stopped: the requested global <=4% pile-up gate is
+mathematically incompatible with the standing median/control constraints, so no
+88-wall implementation landed. The Sweden-2002 ordering exemplar now passes:
+Ibrahimović is restored as a legend and moves 86->90, above every no-award
+Sweden teammate. This branch is rebased on `origin/main`
+`12dd2b934760a2deac8670b195b932ef4f2638a2` and emits the candidate versions
+below, but is not shipped until fresh Red re-review, owner SHA-pinned approval,
+merge, deploy, and live verification.
+
 ## Lanes in flight at last measurement
 
 - merit-v3 V8 is live on main/prod via #104; #105 then hotfixed leaderboard
@@ -45,14 +59,15 @@ than hidden regressions.
   `AUTH_BASE_URL` set in Vercel Production, magic-link verify proven end-to-end
   with a real owner sign-in). Ranked leaderboard remains human-gated
   (`LEADERBOARD_REQUIRE_ACCOUNT` still UNSET — casual board only).
-- Leaderboard-profiles Red season is in flight on integration branch
-  `leaderboard-profiles`: L1 schema/profiles (#114), L2 ranked-requires-account
-  (#117), and L3 Memory ranked lane (#122; squash `d6569175`) are landed into the
-  integration branch. L4 local board-display/privacy work adds a route-level public
-  payload email sweep across all 17 currently exported `apps/web/app/api/**/route.ts`
-  methods beyond the leaderboard serializer, pins React text escaping for username/alias
-  rendering, and captures Classic/Memory board screenshots in light/dark themes at
-  390×844 / 360×800. No schema, core, data, or golden fixtures were changed.
+- Leaderboard-profiles Red season shipped on main as `12dd2b934760a2deac8670b195b932ef4f2638a2`:
+  L1 schema/profiles (#114), L2 ranked-requires-account (#117), L3 Memory ranked
+  lane (#122; squash `d6569175`), and L4 board-display/privacy work are now the
+  base for later seasons. The main merge included the route-level public-payload
+  email sweep, React escaping guardrails, Classic/Memory board screenshots, and
+  migration 0005.
+- `merit-v3.1` is the active Red-tier curation candidate rebased on that shipped
+  main. No merit-v3.1 merge, production deploy, or live production verification has
+  occurred for this branch yet.
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -96,6 +111,25 @@ than hidden regressions.
 | runtime ratings             | 12,219                                                                                   |
 | leaderboard season key      | engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434 |
 | compact brotli total        | 1,216,305 bytes                                                                          |
+
+## Candidate versions (`merit-v3.1`, not shipped)
+
+| Field                       | Value                                                           |
+| --------------------------- | --------------------------------------------------------------- |
+| schema_version              | runtime-data-2.1.0                                              |
+| dataset_version             | 2026-06-04                                                      |
+| ruleset_version             | ruleset-2026.06.04                                              |
+| engine_version              | engine-2026.06.12                                               |
+| rating_version (historical) | wc-perf-5.1.0                                                   |
+| rating_version (projected)  | proj-career-4.1.0                                               |
+| career_stature              | career-stature-3.1.0                                            |
+| merit source set            | merit-source-set-2.1.0                                          |
+| active source set           | active-career-source-set-2.1.0                                  |
+| runtime legend census       | 287                                                             |
+| runtime ratings             | 12,219                                                          |
+| Career basis counts         | 11,351 measured · 482 career-stature · 386 baseline             |
+| compact brotli total        | 1,218,099 bytes                                                 |
+| compact sha256              | manifest `d5b32a05…` · draft `ba238aa1…` · scenario `182546ab…` |
 
 ## Test counts (latest relevant measurements; branch noted where not main)
 
@@ -147,6 +181,11 @@ than hidden regressions.
 | leaderboard-profiles L4 screenshots                       | 4 local Playwright captures: Classic/Memory x light/dark at 390x844 / 360x800; rendered email probe false |
 | @wcdraft/web `build` (leaderboard-profiles L4)            | PASS; existing Next/Webpack circular chunk warnings only                                                  |
 | leaderboard-profiles main-sync focused suite              | privacy sweep + UI gating + board-view tests: 49 passed                                                   |
+| merit-v3.1 ETL gates                                    | `ruff check .` clean · `pytest -q` 291 passed · `tests/test_merit_v3_gate.py` 34 passed                |
+| merit-v3.1 compact/goldens                              | `build:compact` twice byte-identical · data golden 31 passed · integration golden 22 passed           |
+| merit-v3.1 canary                                       | regen twice + normal run passed · hash `151528048c35a8cb5053eebddb2bba742a8d2831b1f3b8ba712954c24df9acc1` |
+| merit-v3.1 leaderboard/token skew                       | leaderboard golden 6 passed · run-token v1/v2 skew tests 44 passed                                    |
+| merit-v3.1 fix-forward local gates                      | gitleaks no leaks · source snapshot manifests ok · heavy realism 7 passed after re-lock               |
 | @wcdraft/web `typecheck` (leaderboard-profiles main-sync) | PASS                                                                                                      |
 | @wcdraft/web `build` (leaderboard-profiles main-sync)     | PASS; existing Next/Webpack circular chunk warnings only                                                  |
 

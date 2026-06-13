@@ -205,27 +205,39 @@ def test_probe_03_valverde_2026_MISSED_one_below_band(proj):
 
 
 def test_probe_06_neymar_2026_MISSED_one_below_band(proj):
-    """#6 Neymar 2026: band 92–94 + legend. MEASURED 91 + legend ✓. The DECLARED
-    watch-item. Mechanism: idx 0.600 (post-U0 link) maps to a stature target at
-    the silver/gold boundary; his age-conditioned projected context (age 34)
-    takes the full gold-tier down-modulation. Owner information for V8."""
+    """#6 Neymar 2026: band 92–94 + legend. MEASURED 90 + non-legend after
+    the merit-v3.1 no-fan-vote guardrail removes the former UEFA fan Team of
+    the Year route. The miss is pinned rather than backfilled with selective
+    evidence."""
     r = proj["P-87008:WC-2026"]
-    assert r["legend"] is True  # the badge half of the probe HOLDS
-    assert r["overall"] == 91, r["overall"]  # pinned measured miss (band 92–94)
+    assert r["legend"] is False
+    assert r["overall"] == 90, r["overall"]  # pinned measured miss (band 92–94)
 
 
-def test_probe_13_lukaku_2022_MISSED_no_facts_landed(hist):
-    """#13 Lukaku 2022: band ≥78, CONDITIONAL on citable facts landing
-    ("if none land, report the miss honestly"). No Lukaku facts were staged in
-    the V1 source-set increment → no row movement → MEASURED 71 (unchanged).
-    The honest-miss branch of the probe's own registration."""
-    assert _ovr(hist, "P-72637:WC-2022") == 71
+def test_probe_13_lukaku_2022_w1_facts_landed(hist):
+    """#13 Lukaku 2022: merit-v3.1 W1 stages citable public season honors
+    (UEFA Europa League Player of the Season 2019-20; Serie A Best Overall
+    2020-21). The conditional ≥78 band now lands; the card moves from the
+    honest-miss branch to material career-stature, without a legend grant."""
+    r = hist["P-72637:WC-2022"]
+    assert r["overall"] == 88
+    assert r["overall_basis"] == "career_stature_estimate"
+    assert r["legend"] is False
+    assert _comp(r, "career_stature_index") == 0.549347
+    assert _comp(r, "stature_model_weight") == 1.0
 
 
-def test_probe_14_b_fernandes_2018_MISSED_no_facts_landed(hist):
-    """#14 B. Fernandes 2018: direction ↑ (T6-b class, same conditional
-    mechanism as #13). No facts landed → MEASURED 72 (unchanged)."""
-    assert _ovr(hist, "P-39584:WC-2018") == 72
+def test_probe_14_b_fernandes_2018_w1_facts_landed(hist):
+    """#14 B. Fernandes 2018: merit-v3.1 W1 stages complete scoped public
+    season honors through the 2022 World Cup close (LPFP Primeira Liga Player
+    of the Year 2017-18 and 2018-19). The pre-registered upward direction lands:
+    72 → 81, material but not legend."""
+    r = hist["P-39584:WC-2018"]
+    assert r["overall"] == 81
+    assert r["overall_basis"] == "career_stature_estimate"
+    assert r["legend"] is False
+    assert _comp(r, "career_stature_index") == 0.4399
+    assert _comp(r, "stature_model_weight") > rating.STATURE_DOMINANT_WEIGHT
 
 
 def test_probe_17_kocsis_card_MISSED_above_band(hist):
@@ -357,33 +369,112 @@ def test_distribution_inversion_rate_MISSED_marginally(hist, proj):
     # distribution moved — re-evaluate the gate, don't let it rot
 
 
-def test_coherence_census_MISSED_nine_pinned(hist, proj):
-    """§3.3/§7.3 legend-band coherence: no 94+ display without legend or a
-    measured-award path. MISSED — exactly NINE historical cards violate, all
-    1930s–1966 career_stature_estimate cards (idx 0.72–0.85) whose V1 legend
-    re-derivation did NOT award the badge: Hidegkuti-54, F. Walter-54/58,
-    Albert-66, N. Santos-62, Ocwirk-54, Andrade-30, Bozsik-54, Hanappi-54.
-    Mechanism: §3.3 required the inconsistency to 'close in whichever direction
-    the new index sends each entry' — the index sent them ABOVE 94 on the card
-    side while the V1 legend gate (reason-code driven) kept the badge off; the
-    closure needed either a legend grant or a larger §3.2 shrinkage. V1-owned
-    constants; ledgered for V8. The set is pinned exactly — growth is red."""
+def test_coherence_census_pre_1967_gap_closed(hist, proj):
+    """merit-v3.1 W2 closes the pre-1967 legend-band coherence gap by deriving a
+    retrospective-consensus legend route from public sources. No 94+ display card
+    may remain without either a source-derived legend flag or measured award path."""
     violations = set()
     for pool in (hist, proj):
         for cid, r in pool.items():
             if r["overall"] >= 94 and not r["legend"] and not _comp(r, "award_score"):
                 violations.add(cid)
-    assert violations == {
-        "P-01173:WC-1954",
-        "P-09973:WC-1954",
-        "P-09973:WC-1958",
-        "P-21188:WC-1966",
-        "P-52002:WC-1962",
-        "P-53882:WC-1954",
-        "P-63826:WC-1930",
-        "P-70989:WC-1954",
-        "P-98569:WC-1954",
-    }, violations
+    assert violations == set(), violations
+
+
+def test_w2b_census_loss_extension_restores_exact_scoped_cards(hist, proj):
+    """W2b audits the V8 42-card census-loss list against the complete
+    non-fan public source extension. The rule restores Raúl, Eto'o, and
+    Ibrahimović tournament cards, and leaves the remaining 33 losses non-legend
+    because the extended scope does not satisfy their legend route."""
+    pools = {**hist, **proj}
+    restored = {
+        "P-24556:WC-1998",
+        "P-24556:WC-2002",
+        "P-24556:WC-2006",
+        "P-61703:WC-1998",
+        "P-61703:WC-2002",
+        "P-61703:WC-2010",
+        "P-61703:WC-2014",
+        "P-80105:WC-2002",
+        "P-80105:WC-2006",
+    }
+    not_restored = {
+        "P-03013:WC-2006",
+        "P-30486:WC-2010",
+        "P-30486:WC-2014",
+        "P-30486:WC-2018",
+        "P-30486:WC-2022",
+        "P-32798:WC-2010",
+        "P-32798:WC-2014",
+        "P-32798:WC-2018",
+        "P-32798:WC-2022",
+        "P-35183:WC-1998",
+        "P-39356:WC-2010",
+        "P-39356:WC-2014",
+        "P-39356:WC-2018",
+        "P-48955:WC-2014",
+        "P-48955:WC-2018",
+        "P-48955:WC-2022",
+        "P-48955:WC-2026",
+        "P-53062:WC-2006",
+        "P-55511:WC-1998",
+        "P-55511:WC-2002",
+        "P-55511:WC-2006",
+        "P-56947:WC-1998",
+        "P-56947:WC-2002",
+        "P-56947:WC-2006",
+        "P-64348:WC-2010",
+        "P-64348:WC-2014",
+        "P-64348:WC-2018",
+        "P-81297:WC-2006",
+        "P-81297:WC-2010",
+        "P-81297:WC-2014",
+        "P-84003:WC-2002",
+        "P-84003:WC-2006",
+        "P-88946:WC-1998",
+    }
+    assert {cid for cid in restored if pools[cid]["legend"]} == restored
+    assert {cid for cid in not_restored if pools[cid]["legend"]} == set()
+
+
+def test_w2b_sweden_2002_ibrahimovic_exemplar_pinned(hist):
+    """Owner exemplar: Ibrahimović-2002 regains source-derived legend status and
+    clears the strict pre-registered ordering probe
+    (`Ibrahimović > every no-award Sweden-2002 squad member`). W3 still stops
+    separately because the global pile-up target is mathematically incompatible."""
+    ibra = hist["P-80105:WC-2002"]
+    assert ibra["legend"] is True
+    assert ibra["overall"] == 90
+    no_award_sweden_2002 = {
+        cid: r["overall"]
+        for cid, r in hist.items()
+        if cid in {
+            "P-07902:WC-2002",
+            "P-42808:WC-2002",
+            "P-42895:WC-2002",
+            "P-85432:WC-2002",
+            "P-68329:WC-2002",
+            "P-56718:WC-2002",
+            "P-30568:WC-2002",
+            "P-06256:WC-2002",
+            "P-59548:WC-2002",
+            "P-05583:WC-2002",
+            "P-71531:WC-2002",
+            "P-45212:WC-2002",
+            "P-84022:WC-2002",
+            "P-20557:WC-2002",
+            "P-47401:WC-2002",
+            "P-22071:WC-2002",
+            "P-74139:WC-2002",
+            "P-62207:WC-2002",
+            "P-95369:WC-2002",
+            "P-63774:WC-2002",
+            "P-53821:WC-2002",
+            "P-35312:WC-2002",
+        }
+    }
+    assert sorted(set(no_award_sweden_2002.values())) == [68, 70, 71, 72, 73, 80, 86, 88]
+    assert max(no_award_sweden_2002.values()) < ibra["overall"]
 
 
 def test_basis_transition_assert(hist):

@@ -45,7 +45,11 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-# wc-perf-5.0.0 (merit-v3 V2): historical ratings now consume the full
+# wc-perf-5.1.0 (merit-v3.1): historical ratings consume the
+# career-stature-3.1.0 curation update. W1/W2/W2b source-derived stature facts
+# move ratings through the existing formula; W3 made no rating-formula change
+# because the requested global pile-up gate is documented as incompatible.
+# wc-perf-5.0.0 (merit-v3 V2): historical ratings consume the full
 # career-stature-3.0.0 table, replace the raw-only hard clamp with award-gated
 # soft headroom, scale weak-tournament stature modulation and team-finish credit
 # by participation evidence, and emit additive Career/Current basis material for
@@ -57,7 +61,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-5.0.0"
+RATING_VERSION = "wc-perf-5.1.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring

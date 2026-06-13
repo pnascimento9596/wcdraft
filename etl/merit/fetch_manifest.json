@@ -100,6 +100,17 @@
       "url": "https://www.rsssf.org/miscellaneous/wsoc-awards.html"
     },
     {
+      "bytes": 3945,
+      "charset": "iso-8859-1",
+      "family": "club_season_honors",
+      "file": "rsssf/zwedpoy.html",
+      "retrieved": "2026-06-08",
+      "role": "fact",
+      "sha256": "b1614246913ff889e2f7769a6dc41d678d352e1a6e9f0fe2c7ba48cb87af9fea",
+      "source_id": "swedish_footballer_of_year",
+      "url": "https://www.rsssf.org/miscellaneous/zwedpoy.html"
+    },
+    {
       "bytes": 310569,
       "charset": "utf-8",
       "family": "retrospective_selection",
@@ -188,17 +199,6 @@
       "url": "https://en.wikipedia.org/wiki/UEFA_Men%27s_Player_of_the_Year_Award"
     },
     {
-      "bytes": 505135,
-      "charset": "utf-8",
-      "family": "position_balanced_selection",
-      "file": "wiki/uefa-toty.html",
-      "retrieved": "2026-06-08",
-      "role": "fact",
-      "sha256": "875ed9cbe68d98c8a6b49118b1d61123b57b1d07803ea0a82614357e970f5fe9",
-      "source_id": "uefa_team_of_the_year",
-      "url": "https://en.wikipedia.org/wiki/UEFA_Team_of_the_Year"
-    },
-    {
       "bytes": 1759702,
       "charset": "utf-8",
       "family": "wc_legacy",
@@ -211,5 +211,5 @@
     }
   ],
   "note": "SHA-pinned public snapshots; fetch is OFF the deterministic build path.",
-  "version": "merit-source-set-2.0.0"
+  "version": "merit-source-set-2.1.0"
 }

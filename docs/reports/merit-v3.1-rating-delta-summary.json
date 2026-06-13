@@ -1,0 +1,33 @@
+{
+  "old_total": 12219,
+  "new_total": 12219,
+  "display_changed_cards": 208,
+  "basis_changed_cards": 42,
+  "legend_changed_cards": 39,
+  "old_legend_cards": 270,
+  "new_legend_cards": 287,
+  "old_basis_counts": {
+    "baseline_anchor_estimate": 386,
+    "career_stature_estimate": 478,
+    "measured_performance": 11355
+  },
+  "new_basis_counts": {
+    "baseline_anchor_estimate": 386,
+    "career_stature_estimate": 482,
+    "measured_performance": 11351
+  },
+  "old_max_pile": {
+    "value": 71,
+    "count": 2171,
+    "share": 0.1776741140846223
+  },
+  "new_max_pile": {
+    "value": 71,
+    "count": 2168,
+    "share": 0.17742859481135936
+  },
+  "old_88_count": 1381,
+  "new_88_count": 1358,
+  "old_88_share": 0.11302070545871185,
+  "new_88_share": 0.11113839103036255
+}

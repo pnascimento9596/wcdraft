@@ -79,5 +79,5 @@
     }
   ],
   "note": "MV2-2 deterministic factual research backstop. Citation-backed public facts for coverage gaps the parser-only lists miss (curated historical defender/GK/non-European greats + the bounded top-5-per-2026-linked-team slice). Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. The linker treats research rows identically to parser rows; an uncited row fails the build.",
-  "version": "merit-source-set-2.0.0"
+  "version": "merit-source-set-2.1.0"
 }

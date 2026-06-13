@@ -9,7 +9,8 @@
 //   prev_t2_nondefault  — a valid `t2.` NON-default token (position_first +
 //                         modern, ts on every pick) with previous-build anchors.
 //   current_prod_t1     — a valid `t1.` token stamped with anchors read from a
-//                         real shipped manifest commit (engine-2026.06.11 era).
+//                         real shipped manifest commit (current production
+//                         runtime-data-2.0.0 / engine-2026.06.12 era).
 //   tampered_current_t2 — a CURRENT-anchor `t2.` token whose era bounds were
 //                         tampered AFTER encode (must fail decode; this
 //                         assertion is anchor-stable across future bumps).
@@ -57,7 +58,7 @@ const PREV = {
 // Shipped production manifest used for the live-today t1 skew case. The
 // explicit commit keeps fixture regeneration stable even after origin/main
 // moves; this is a real git artifact, not invented anchors.
-const CURRENT_PROD_MANIFEST_COMMIT = "18cdbef10fa41debff396c398adf52f4639fd34b";
+const CURRENT_PROD_MANIFEST_COMMIT = "c174775d223d8776f8950749b50a0e6099ca456b";
 
 function b64url(s: string): string {
   return Buffer.from(s, "utf8").toString("base64url");

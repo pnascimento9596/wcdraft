@@ -1,25 +1,23 @@
-# wcdraft Player Rating — Methodology (`wc-perf-5.0.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-5.1.0`)
 
-> **wc-perf-5.0.0 / proj-career-4.0.0 / career-stature-3.0.0
-> (merit-v3):** the rating stack now consumes the full person-identity
-> career-stature table, including the activated active-career source set
-> (`active-career-source-set-2.0.0`), eligibility-aware family
-> normalization, sparse-fact saturation, and the bounded
-> `club_season_honors` family. Historical ratings replace the old raw-only
-> hard clamp with award-gated soft headroom, scale weak-tournament stature
-> modulation and team-finish credit by participation evidence, and emit both
-> `Career` and `Current` basis payloads. Projected 2026 ratings retire
-> `age_factor`, use age-conditioned caps/goals quantile curves, consult the
-> same person-identity stature rows for linked and minted players, and
-> re-derive the cross-era quantile map against the live `wc-perf-5.0.0`
-> raw-only distribution. The display curve is re-fit as
-> `unified_pooled_piecewise_power_v2` over the union of both bases' internal
-> pools. Runtime `ratings[]` remains the Career compatibility surface;
+> **wc-perf-5.1.0 / proj-career-4.1.0 / career-stature-3.1.0
+> (merit-v3.1 candidate):** this is a source-curation and derivation bump on
+> the merit-v3 formula, not a formula/curve rewrite. The rating stack still
+> consumes the full person-identity career-stature table, including the active
+> source set (`active-career-source-set-2.1.0`), eligibility-aware family
+> normalization, sparse-fact saturation, and bounded public
+> `club_season_honors`. v3.1 adds scoped public season-honor facts for the
+> final honest-miss class, a complete non-fan public extension (IFFHS Men
+> Legends plus RSSSF Guldbollen), removal of the fan-voted UEFA Team of the
+> Year route, and a pre-1967 retrospective-consensus legend route. W3's requested global
+> ≤4%-per-display pile gate was stopped as incompatible with the standing
+> median/control constraints, so no 88-wall spreader or display-curve refit
+> landed. Runtime `ratings[]` remains the Career compatibility surface;
 > `basis_ratings.current` carries the at-tournament basis for later product
 > use. Measured emitted counts: 10,973 historical rows + 1,246 projected rows
 > = 12,219 runtime ratings; top-level Career basis counts are
-> `measured_performance=11,355`, `career_stature_estimate=478`,
-> `baseline_anchor_estimate=386`; compact legend census is 270.
+> `measured_performance=11,351`, `career_stature_estimate=482`,
+> `baseline_anchor_estimate=386`; compact legend census is 287.
 >
 > **wc-perf-4.2.1 (basis-gate stature alignment):** the internal merit model, the
 > four sim channels, the display curve, and the engine were unchanged. The single
@@ -321,7 +319,7 @@ semantic rating changes move the internal scores/channels, lambda must be
 re-fit before realism bands are re-locked; merit-v3 did that in V7 and stamps
 the result in V8.
 
-## Stature-dominant composite (`wc-perf-5.0.0`)
+## Stature-dominant composite (`wc-perf-5.1.0`)
 
 `wc-perf-3.0.0`'s capped-lift design (raw was the base, stature could only
 ADD a positive, capped fraction of the gap) is **removed**: there is no
@@ -349,7 +347,7 @@ score          = clamp01( stature_weight * stature_path
 ```
 
 `career_stature_index` and `coverage` come from `etl/output/career_stature.json`
-(`career-stature-3.0.0`, person-identity rows, active-career facts, eligibility
+(`career-stature-3.1.0`, person-identity rows, active-career facts, eligibility
 normalization, sparse-fact saturation, and club-season honors over the locked
 merit source sets). The blend **ramps continuously** from
 raw-only (`weight = 0`) to stature-dominant (`weight = 1`) across a small band
@@ -389,17 +387,17 @@ score/coverage/index in `components[]`. Managers remain rating-unavailable.
 There is **no per-player override table** — every blend is the same formula
 over the same public facts.
 
-## `overall_basis` semantics (`wc-perf-5.0.0`)
+## `overall_basis` semantics (`wc-perf-5.1.0`)
 
 The three-label split now describes the Career compatibility surface emitted
 in top-level `ratings[]`; `basis_ratings.current` carries its own basis label
 for the at-tournament path.
 
-- **`measured_performance`** (11,355 runtime cards: 10,131 historical + 1,224 projected) — the card had at least one
+- **`measured_performance`** (11,351 runtime cards: 10,128 historical + 1,223 projected) — the card had at least one
   positively-weighted individual signal (goals for FW/MF, appearances for
   any position), or a projected raw path in 2026. The vast majority of cards,
   including the pre-1970 cards whose appearances came from the RSSSF supplement.
-- **`career_stature_estimate`** (478 runtime cards: 456 historical + 22 projected) — the
+- **`career_stature_estimate`** (482 runtime cards: 459 historical + 23 projected) — the
   player's career row is material and the stature path dominates the Career
   blend (`stature_weight ≥ STATURE_DOMINANT_WEIGHT`). This can apply even when
   the card has measured tournament signals: the label reports what primarily
@@ -421,7 +419,7 @@ for the at-tournament path.
 > `stature_model_weight ≥ STATURE_DOMINANT_WEIGHT ⇔ career_stature_estimate`
 > for no-signal cards.
 
-## 2026 reconcile (`proj-career-4.0.0`, merit-v3)
+## 2026 reconcile (`proj-career-4.1.0`, merit-v3.1)
 
 The 2026 rating model (`etl/src/wcdraft_etl/rating_2026.py`) shares the
 stature-dominant scale with the historical model:
@@ -451,7 +449,7 @@ formula is the SAME stature-dominant blend used historically — including
 the continuity ramp through the material band. The Current basis is the
 age-conditioned projected raw path with no career-stature blend.
 
-## Unified display curve (`wc-perf-5.0.0` — merit-v3 v2 curve)
+## Unified display curve (`wc-perf-5.1.0` — merit-v3 v2 curve)
 
 Phase 1 introduced one global low-DOF monotonic curve on the four internal
 quantiles of the emitted dataset (min, p50, p95, max → 66, 73, 88, 99) — the
@@ -467,8 +465,10 @@ curve is the honest mapping — no per-era table, no per-player pin.
 For merit-v3 the curve kind is
 `unified_pooled_piecewise_power_v2`, fit over the union of both bases'
 internal pools (historical Career + historical Current + projected Career +
-projected Current; n=24,438). The 2026 cards (`proj-career-4.0.0`) ship
-through the same unified curve. This remains a display-`overall` mapping;
+projected Current; n=24,438). The 2026 cards (`proj-career-4.1.0`) ship
+through the same unified curve. merit-v3.1 proved the display-curve source
+code and persisted curve behavior unchanged, so the V7 lambda-refit protocol
+did not fire. This remains a display-`overall` mapping;
 the sim channels are still derived from internal scores, not from the
 display curve.
 
@@ -479,7 +479,7 @@ A `baseline_anchor_estimate` is always `< 1.0`. Low-coverage ratings are
 **flagged, not faked**. `coverage_basis = "wc_signals"`,
 `provenance = "wc_performance"`, `appearances_source` records the appearance
 origin (`fjelstul_match_events` / `rsssf_starting_xi` / `null`), and
-`rating_version = "wc-perf-5.0.0"` (a replay anchor — bump on any change to
+`rating_version = "wc-perf-5.1.0"` (a replay anchor — bump on any change to
 weights, normalization, the display curve, the stature-dominant blend, or
 the source set).
 
@@ -522,7 +522,7 @@ Fixed canonical input → byte-identical `etl/output/ratings.json`. Guarded by
 CI additionally enforces byte identity with `git diff --exit-code` after a
 clean rebuild.
 
-## Sanity bands (asserted, not eyeballed — `wc-perf-5.0.0` display scale)
+## Sanity bands (asserted, not eyeballed — `wc-perf-5.1.0` display scale)
 
 | Card | overall | Band rationale |
 |---|---|---|
@@ -540,6 +540,20 @@ Estimate-tier cards (`baseline_anchor_estimate`) land in `[66, 73]` on overall.
 Their sim channels remain on the `[FLOOR_CHANNEL, 100]` channel scale described
 above and naturally sit near the floor because the underlying merit signal is
 low. The estimate band is a display-overall promise, not a channel clamp.
+
+## Migration & versioning (merit-v3.1 candidate)
+
+- Historical `rating_version`: `wc-perf-5.0.0` → `wc-perf-5.1.0`.
+- Projected 2026 `rating_version`: `proj-career-4.0.0` →
+  `proj-career-4.1.0`.
+- `career_stature.json`: `career-stature-3.0.0` →
+  `career-stature-3.1.0`; source set is `merit-source-set-2.1.0`;
+  active source set is `active-career-source-set-2.1.0`.
+- Runtime data schema: `runtime-data-2.0.0` → `runtime-data-2.1.0`.
+- Sim `engine_version`: unchanged at `engine-2026.06.12`; W3 stopped before
+  any 88-wall implementation and the display curve/lambda path stayed unchanged.
+- Compact candidate counts: 12,219 ratings, 287 runtime legends,
+  482 Career `career_stature_estimate`, 386 Career `baseline_anchor_estimate`.
 
 ## Migration & versioning (merit-v3 season merge)
 

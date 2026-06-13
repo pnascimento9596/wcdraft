@@ -4,7 +4,7 @@
   "seed_prefix": "wcdraft:realism:e3a:v1",
   "formation_id": "4-3-3",
   "n_seeds": 5,
-  "rating_version": "wc-perf-5.0.0+proj-career-4.0.0",
+  "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
   "engine_version": "engine-2026.06.12",
   "dataset_version": "2026-06-04",
   "records": [
@@ -331,7 +331,7 @@
         {
           "spin": 9,
           "picked_kind": "player",
-          "picked_card_id": "P-29578:2026",
+          "picked_card_id": "P-72637:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LW"
         },

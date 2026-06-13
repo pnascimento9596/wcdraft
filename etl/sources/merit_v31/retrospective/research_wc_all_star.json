@@ -1,0 +1,199 @@
+{
+  "source_id": "research_wc_all_star",
+  "family": "wc_legacy",
+  "note": "MV2-3.5 deterministic factual research backstop. World Cup All-Star Team / Team-of-the-Tournament selections — a contemporaneous, position-aware tournament best-XI recognition that credits exactly the elite defenders and goalkeepers the recognition-weighted source set structurally under-credits (they win far fewer individual player-of-the-year awards than forwards). Scope is a BOUNDED gap-fill, not an exhaustive parse of every All-Star Team: it covers only the consensus-great defenders/keepers the MV2-9 recon-divergence read identified as under-credited by OUR model (etl/output/merit/RECON_DIVERGENCE.md). Each row is a citation-backed public fact transcribed from the named player's own public encyclopedia page — the player's display name as the canonical card carries it, their nation, the World Cup year of the selection, the source-stated position (DF/GK), a human detail, and a fetchable citation URL plus the specific claim it supports. An official, technically-selected World Cup All-Star Team ran through the 2010 edition (the Technical Study Group All-Star Team, formalised 1994-2010); earlier (1930-1990) editions are the widely-recorded tournament best-XI selections as documented on the cited pages. All carry the SAME modest bronze-tier strength in the EXISTING wc_legacy scorer (a best-XI-of-tournament selection, never an MVP). Scope is strictly the official/technical through-2010 selection: the post-2010 World Cup 'Dream Team' editions (2014, 2018, 2022) are PUBLIC/FAN VOTES, not technical Team-of-the-Tournament selections, and are deliberately excluded — as are 'Reserve', 'Fantasy Team' and 'Fans' All-Star Team' designations. Only full-XI, technically-selected entries are sourced. NO rating numbers, rankings, OVR/channel/boost/override, NO recon values — only the selection record. The conservative linker treats these rows identically to parser rows (unique high-confidence link only; ambiguous withheld to review); an uncited row fails the build.",
+  "rows": [
+    {
+      "scope": "recon_undercredit",
+      "name": "Djalma Santos",
+      "nation_token": "Brazil",
+      "year": 1954,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1954",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos",
+        "claim": "He was included in the World Cup All-Star Team for the 1954 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Djalma Santos",
+      "nation_token": "Brazil",
+      "year": 1958,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1958",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos",
+        "claim": "He was included in the World Cup All-Star Team for the 1958 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Djalma Santos",
+      "nation_token": "Brazil",
+      "year": 1962,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1962",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Djalma_Santos",
+        "claim": "He was selected as a defender in the 1962 World Cup Team of the Tournament (All-Star Team)."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Nílton Santos",
+      "nation_token": "Brazil",
+      "year": 1958,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1958",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/N%C3%ADlton_Santos",
+        "claim": "He was named to the World Cup All-Star Team for the 1958 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Bobby Moore",
+      "nation_token": "England",
+      "year": 1966,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1966",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Bobby_Moore",
+        "claim": "He was named to the World Cup All-Star Team for the 1966 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Giacinto Facchetti",
+      "nation_token": "Italy",
+      "year": 1970,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1970",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Giacinto_Facchetti",
+        "claim": "He was named to the Team of the Tournament (World Cup All-Star Team) at the 1970 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Carlos Alberto",
+      "nation_token": "Brazil",
+      "year": 1970,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1970",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Carlos_Alberto_Torres",
+        "claim": "He was named to the 1970 World Cup All-Star Team."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Dino Zoff",
+      "nation_token": "Italy",
+      "year": 1982,
+      "position": "GK",
+      "detail": "WC All-Star Team WC-1982",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Dino_Zoff",
+        "claim": "He was named to the World Cup All-Star Team for the 1982 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Gordon Banks",
+      "nation_token": "England",
+      "year": 1966,
+      "position": "GK",
+      "detail": "WC All-Star Team WC-1966",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Gordon_Banks",
+        "claim": "He was named to the World Cup All-Star Team for the 1966 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Sepp Maier",
+      "nation_token": "West Germany",
+      "year": 1974,
+      "position": "GK",
+      "detail": "WC All-Star Team WC-1974",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Sepp_Maier",
+        "claim": "He was named to the World Cup All-Star Team for the 1974 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Franco Baresi",
+      "nation_token": "Italy",
+      "year": 1990,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1990",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Franco_Baresi",
+        "claim": "He was named to the World Cup All-Star Team (Team of the tournament) for the 1990 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Roberto Carlos",
+      "nation_token": "Brazil",
+      "year": 1998,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-1998",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Roberto_Carlos",
+        "claim": "He was named to the World Cup All-Star Team for the 1998 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Roberto Carlos",
+      "nation_token": "Brazil",
+      "year": 2002,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-2002",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Roberto_Carlos",
+        "claim": "He was named to the World Cup All-Star Team for the 2002 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Gianluca Zambrotta",
+      "nation_token": "Italy",
+      "year": 2006,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-2006",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Gianluca_Zambrotta",
+        "claim": "He was selected in the Team of the Tournament (World Cup All-Star Team) for the 2006 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Fabien Barthez",
+      "nation_token": "France",
+      "year": 1998,
+      "position": "GK",
+      "detail": "WC All-Star Team WC-1998",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Fabien_Barthez",
+        "claim": "He was named to the World Cup All-Star Team for the 1998 World Cup."
+      }
+    },
+    {
+      "scope": "recon_undercredit",
+      "name": "Carles Puyol",
+      "nation_token": "Spain",
+      "year": 2010,
+      "position": "DF",
+      "detail": "WC All-Star Team WC-2010",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/Carles_Puyol",
+        "claim": "He was named to the World Cup Dream Team (All-Star Team) for the 2010 World Cup."
+      }
+    }
+  ]
+}

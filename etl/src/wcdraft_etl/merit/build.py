@@ -67,15 +67,16 @@ def collect_records() -> list:
     #   global annual recognition
     records += parse_wiki_awards.parse_uefa_mens_poy()
     records += parse_rsssf_awards.parse_world_soccer_poy()
+    records += parse_rsssf_awards.parse_swedish_footballer_of_year()
     records += parse_rsssf_awards.parse_onze_awards()
     #   position-balanced selections (the defender / goalkeeper repair)
     records += parse_wiki_xi.parse_uefa_club_positional()
-    records += parse_wiki_xi.parse_uefa_team_of_the_year()
     records += parse_wiki_xi.parse_fifpro_world11()
     records += parse_wiki_xi.parse_esm_team_of_the_season()
     #   retrospective / all-time selections (position-aware)
     records += parse_wiki_xi.parse_ballondor_dream_team()
     records += parse_iffhs_dreamteams.parse()
+    records += parse_wiki.parse_iffhs_men_legends()
     # MV2-2 deterministic factual research backstop (citation-backed; uncited fails
     # the build). Linked identically to parser rows downstream.
     records += parse_research.collect()

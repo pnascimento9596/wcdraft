@@ -1,12 +1,14 @@
 {
-  "activated_by": "career-stature-3.0.0",
+  "activated_by": "career-stature-3.1.0",
   "curation_notes": [
     "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance.",
     "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no captaincy fact in this pass (missing captaincy stays missing).",
     "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision.",
     "Census rule: top-tier continental club titles, Champions League and Libertadores class across all confederations with a top-tier equivalent, with documented final participation, applied to the MV2-12a active 23 plus V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
     "Luiz Henrique is in active scope as P-W26-0115 and his 2024 Copa Libertadores final goal/title fact is included.",
-    "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
+    "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp.",
+    "Bruno Fernandes also appears second in UEFA's 2019/20 Europa League player ranking in the Lukaku UEFA snapshot; W1 does not stage ranking depth from that UEFA competition because the declared honor type is winner/player-of-season, not top-ten ranking.",
+    "Bruno Fernandes 2025-26 Premier League/FWA claims visible in the current Wikipedia snapshot are outside this W1 historical-card repair scope and are not staged here."
   ],
   "cutoff_date": "2026-06-01",
   "entries": [
@@ -47,6 +49,23 @@
       ]
     },
     {
+      "fact_count": 2,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-39584",
+      "player_name": "Bruno Fernandes",
+      "positions": [
+        "MF"
+      ],
+      "source_refs": [
+        "active_public_season_honors:domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2017-18",
+        "active_public_season_honors:domestic_top_flight_player_of_year: LPFP Primeira Liga Player of the Year 2018-19"
+      ]
+    },
+    {
       "fact_count": 1,
       "families": [
         "club_season_honors"
@@ -76,6 +95,23 @@
       ],
       "source_refs": [
         "active_captaincy:national-team captain — captains Uruguay; listed as captain of Uruguay's 2026 World Cup squad"
+      ]
+    },
+    {
+      "fact_count": 2,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "historical",
+      "in_2026_squad": true,
+      "player_id": "P-72637",
+      "player_name": "Romelu Lukaku",
+      "positions": [
+        "FW"
+      ],
+      "source_refs": [
+        "active_public_season_honors:top_tier_league_mvp: Serie A Most Valuable Player 2020-21",
+        "active_public_season_honors:uefa_secondary_competition_player_of_season: UEFA Europa League Player of the Season 2019-20"
       ]
     },
     {
@@ -127,7 +163,7 @@
       ]
     },
     {
-      "fact_count": 9,
+      "fact_count": 6,
       "families": [
         "captaincy",
         "club_season_honors",
@@ -147,10 +183,7 @@
         "active_club_season_honors:UEFA Champions League title with final participation — Bayern Munich 2019-20 winner; started/played the 2020 final",
         "active_club_season_honors:UEFA Champions League title with final participation — Real Madrid 2021-22 winner; started/played the 2022 final",
         "esm_team_of_the_season:esm_tots DF 2013",
-        "international_century_caps:caps=111 (2009-2025)",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2013",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2014",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2015"
+        "international_century_caps:caps=111 (2009-2025)"
       ]
     },
     {
@@ -337,7 +370,7 @@
       ]
     },
     {
-      "fact_count": 4,
+      "fact_count": 3,
       "families": [
         "captaincy",
         "club_season_honors",
@@ -353,8 +386,7 @@
       "source_refs": [
         "active_captaincy:national-team captain — Scotland captain since 2018; record holder for most games as Scotland captain",
         "active_club_season_honors:UEFA Champions League title with final participation — Liverpool 2018-19 winner; started/played the 2019 final",
-        "esm_team_of_the_season:esm_tots DF 2019",
-        "uefa_team_of_the_year:uefa_team_of_the_year 2019"
+        "esm_team_of_the_season:esm_tots DF 2019"
       ]
     },
     {
@@ -412,6 +444,34 @@
       ]
     },
     {
+      "fact_count": 1,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0670",
+      "player_name": "Viktor Gyökeres",
+      "positions": [],
+      "source_refs": [
+        "swedish_footballer_of_year:national_player_of_year: Guldbollen 2024"
+      ]
+    },
+    {
+      "fact_count": 1,
+      "families": [
+        "club_season_honors"
+      ],
+      "identity_space": "minted_2026",
+      "in_2026_squad": true,
+      "player_id": "P-W26-0679",
+      "player_name": "Alexander Isak",
+      "positions": [],
+      "source_refs": [
+        "swedish_footballer_of_year:national_player_of_year: Guldbollen 2025"
+      ]
+    },
+    {
       "fact_count": 2,
       "families": [
         "captaincy",
@@ -458,8 +518,8 @@
       ]
     }
   ],
-  "entry_count": 26,
+  "entry_count": 30,
   "identity_bridge_review": [],
-  "note": "Active-career staging entries. Facts + identity only: no career_stature_score, index, tier or legend is computed here. career-stature-3.0.0 consumes source_facts_active.json plus this staging artifact and applies the person-level, career-stage-normalized merge.",
-  "version": "active-career-source-set-2.0.0"
+  "note": "Active-career staging entries. Facts + identity only: no career_stature_score, index, tier or legend is computed here. career-stature-3.1.0 consumes source_facts_active.json plus this staging artifact and applies the person-level, career-stage-normalized merge.",
+  "version": "active-career-source-set-2.1.0"
 }
