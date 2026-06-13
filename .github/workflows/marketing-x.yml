@@ -1,0 +1,65 @@
+# q-007 — @WCDraft marketing automation (ZERO-API operating model).
+#
+# The account has no X API credits, so there is NO automated posting. This
+# workflow only GENERATES content: every Monday (and on demand) it runs the
+# composer to produce a ready-to-paste weekly pack and refreshes the reply/
+# quote banks, then commits them to main. The owner schedules posts by hand via
+# X's native composer (see marketing/x/ROUTINE.md).
+#
+# The live API poster (run-poster / run-engagement) + the X client are kept in
+# the repo, fully built and tested, but DORMANT: they require credits and are
+# gated behind MARKETING_PAUSED=true. They are intentionally NOT scheduled here.
+# Browser-automation posting is forbidden (X ToS / account-ban risk).
+
+name: marketing-x
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC — generate the week's pack
+  workflow_dispatch:
+    inputs:
+      week_date:
+        description: "Generate the pack for the ISO week containing this date (YYYY-MM-DD); blank = current week"
+        type: string
+        default: ""
+
+concurrency:
+  group: marketing-x-pack
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build engine deps (core + data)
+        run: pnpm exec turbo run build --filter=@wcdraft/core --filter=@wcdraft/data
+      - name: Generate the weekly pack + refresh banks
+        env:
+          WEEK_DATE: ${{ inputs.week_date }}
+        run: |
+          pnpm --filter @wcdraft/marketing-x run gen:pack "$WEEK_DATE"
+          pnpm --filter @wcdraft/marketing-x run gen:banks
+      - name: Commit the pack + banks (if changed)
+        run: |
+          if ! git diff --quiet -- marketing/x/packs marketing/x/reply-bank.md marketing/x/quote-bank.md; then
+            git config user.name "wcdraft-marketing-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add marketing/x/packs marketing/x/reply-bank.md marketing/x/quote-bank.md
+            git commit -m "chore(marketing): weekly content pack [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi

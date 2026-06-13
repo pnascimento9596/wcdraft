@@ -23,8 +23,8 @@ export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Ranked standings for the best verified run per manager this season. Finish a run and post it
-        from your results screen.
+        Ranked standings for each manager&rsquo;s best verified run this season. Finish a run and
+        post it from your results screen.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>

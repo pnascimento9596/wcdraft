@@ -629,6 +629,15 @@ button.benchSlot:not(:disabled):hover {
 
 .candList {
   display: grid;
+  /* Single column must be allowed to shrink BELOW its min-content. A bare
+     `grid` track defaults to `auto`, whose minimum is the row's min-content —
+     and `.candRowName`/`.candRowSub` are `white-space: nowrap`, so a long club
+     line (e.g. "Vitória de Guimarães") makes that min-content wider than the
+     viewport. The track then refuses to shrink and the whole draft column
+     scrolls horizontally (formation title clips to "-3-3", flag half off,
+     scrollbar under the pitch). `minmax(0, 1fr)` lets the track collapse so the
+     `min-width: 0` ellipsis on the name/sub lines actually engages. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.7rem;
 }
 .cand {
@@ -5059,6 +5068,28 @@ button.benchSlot:not(:disabled):hover {
   color: var(--gold);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+
+/* Rating-basis chip — marks a Current-basis run on the squad/card surfaces.
+   CONFIG, not a rating: a neutral ember hue, deliberately NOT one of the
+   provenance hues (cyan/periwinkle/orange/gold) so it never reads as a rating
+   tier or legend. Shown only when the run basis is `current`; Career runs are
+   chip-free. `flex: 0 0 auto` so it never pressures the row width. */
+.basisChip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ember);
+  border: 1px solid color-mix(in srgb, var(--ember) 55%, transparent);
+  background: color-mix(in srgb, var(--ember) 12%, transparent);
 }
 
 @keyframes rarePulse {

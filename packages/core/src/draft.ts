@@ -153,11 +153,12 @@ export interface CreateDraftParams {
   engine_version: string;
   /**
    * DC-1 config axes. Omitted fields default to today's shipped behavior
-   * (`squad_first` / `career` / `all_time`). Non-default values are gated on
-   * their implementation units: `position_first` (DC-3), era-filtered
-   * catalogs (DC-2), `current` basis (MV2-12b season) — `createDraft` throws
-   * honestly on a value whose semantics this build does not implement, it
-   * never records config it did not enforce.
+   * (`squad_first` / `career` / `all_time`). All axis values are now
+   * implemented: `position_first` (DC-3), era-filtered catalogs (DC-2), and
+   * the `current` rating basis (selected-basis lane) — the latter re-rates the
+   * user squad from `basis_ratings.current` at sim build time (display + sim,
+   * see web `buildSimWorldInputs` / adapters). `createDraft` records the config
+   * it is given; the value is validated by `DraftStateSchema`.
    */
   draft_flow?: DraftFlow;
   rating_basis?: RatingBasis;
@@ -668,8 +669,7 @@ function rollPendingSpinFromEntry(
       rolled_card_ids.push(buildCardId(card.player_id, card.tournament_id));
     }
   }
-  const offerCoach =
-    target_slot_id === null ? !managerPicked : target_slot_id === "manager";
+  const offerCoach = target_slot_id === null ? !managerPicked : target_slot_id === "manager";
   const rolled_manager_card_id: ManagerCardId | null =
     offerCoach && entry.coach
       ? buildManagerCardId(entry.coach.manager_id, entry.coach.tournament_id)
@@ -750,11 +750,7 @@ function drawValueForIndex(draft_seed: string, index: number): number {
  * `rolled_manager_card_id` becomes null even if the drawn (T, N) carries a
  * coach in the catalog).
  */
-function rebuildSpins(
-  catalog: DraftCatalog,
-  draft_seed: string,
-  spins: readonly Spin[],
-): Spin[] {
+function rebuildSpins(catalog: DraftCatalog, draft_seed: string, spins: readonly Spin[]): Spin[] {
   const rng = createRng(draft_seed);
   const priorPlayerPicks: string[] = [];
   let managerPicked = false;
@@ -773,9 +769,7 @@ function rebuildSpins(
     }
     const excluded = new Set(priorPlayerPicks);
     const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, managerPicked);
-    out.push(
-      rollPendingSpinFromEntry(entry, i, priorPlayerPicks, managerPicked, draw_probability),
-    );
+    out.push(rollPendingSpinFromEntry(entry, i, priorPlayerPicks, managerPicked, draw_probability));
   }
   return out;
 }
@@ -791,7 +785,12 @@ function buildInitialSpins(catalog: DraftCatalog, draft_seed: string): Spin[] {
   const spins: Spin[] = [];
   for (let i = 0; i < SPIN_COUNT; i++) {
     const u = rng.next();
-    const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, /*managerPicked*/ false);
+    const { entry, draw_probability } = drawSpinEntry(
+      catalog,
+      u,
+      excluded,
+      /*managerPicked*/ false,
+    );
     spins.push(rollPendingSpinFromEntry(entry, i, [], false, draw_probability));
   }
   return spins;
@@ -923,12 +922,11 @@ export function createDraft(catalog: DraftCatalog, params: CreateDraftParams): D
   const draft_flow = params.draft_flow ?? DEFAULT_DRAFT_FLOW;
   const rating_basis = params.rating_basis ?? DEFAULT_RATING_BASIS;
   const era_preset = params.era_preset ?? DEFAULT_ERA_PRESET;
-  if (rating_basis !== "career") {
-    // Gated on the MV2-12b dual-basis season — no fake fallback to career.
-    throw new RangeError(
-      `createDraft: rating_basis "${rating_basis}" is not available in this build (gated on MV2-12b)`,
-    );
-  }
+  // Both `career` and `current` are materialized (runtime-data-2.0.0 dual
+  // basis). createDraft records the basis; the squad's ratings are resolved
+  // per-basis downstream (display adapter + sim world build), so the engine
+  // consumes `basis_ratings.current` channels for a `current` run. The
+  // DraftStateSchema parse below rejects any non-RatingBasis value.
   if (era_preset !== catalog.era.id) {
     // DC-2 coherence: a draft must never record a preset its catalog did not
     // enforce — the caller builds the catalog with the same preset it passes.
@@ -1189,9 +1187,7 @@ export function pickPlayer(
     slot_id = active.target_slot_id ?? undefined;
   }
   if (!active.rolled_card_ids.includes(card_id)) {
-    throw new RangeError(
-      `pickPlayer: card ${card_id} is not a candidate on spin ${active.index}`,
-    );
+    throw new RangeError(`pickPlayer: card ${card_id} is not a candidate on spin ${active.index}`);
   }
   const parsed = parseCardId(card_id);
   if (!parsed) {
@@ -1205,7 +1201,9 @@ export function pickPlayer(
   if (state.deduped_player_ids.includes(parsed.player_id)) {
     // Defensive: rolled candidates are already dedup-filtered; this can only
     // fire on a contract bug.
-    throw new RangeError(`pickPlayer: player ${parsed.player_id} is already drafted (global dedup)`);
+    throw new RangeError(
+      `pickPlayer: player ${parsed.player_id} is already drafted (global dedup)`,
+    );
   }
 
   // STRAND GUARD: a complete draft needs exactly one manager.
@@ -1417,8 +1415,7 @@ export function validateSquad(state: DraftState): SquadValidation {
   const starters = state.squad.filter((s) => s.is_starter);
   const is_fieldable = starters.every((s) => s.card_id !== null);
   const gkSlot = starters.find((s) => slotPositionLine(s.slot_position) === "GK");
-  const has_goalkeeper =
-    !!gkSlot && gkSlot.card_id !== null && gkSlot.position_compatibility === 1;
+  const has_goalkeeper = !!gkSlot && gkSlot.card_id !== null && gkSlot.position_compatibility === 1;
 
   const warnings: string[] = [];
   for (const slot of state.squad) {

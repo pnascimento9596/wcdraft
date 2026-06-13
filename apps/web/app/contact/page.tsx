@@ -20,29 +20,14 @@ export default function ContactPage() {
         <div className="contact-card">
           <span className="eyebrow">General &amp; support</span>
           <a href="mailto:hello@wcdraft.app">hello@wcdraft.app</a>
+          <p>Use this for support, bug reports, feedback, press, or partnership notes.</p>
         </div>
 
         <div className="contact-card">
           <span className="eyebrow">Privacy &amp; data requests</span>
           <a href="mailto:privacy@wcdraft.app">privacy@wcdraft.app</a>
+          <p>Use this for privacy questions, access, correction, deletion, or export requests.</p>
         </div>
-
-        <div className="contact-card">
-          <span className="eyebrow">Social</span>
-          <span className="placeholder">Handles coming soon</span>
-        </div>
-
-        <div className="contact-card">
-          <span className="eyebrow">Community</span>
-          <span className="placeholder">Community links coming soon</span>
-        </div>
-      </div>
-
-      <div className="callout">
-        <p>
-          Contact details are placeholders for the shell milestone and will be confirmed before
-          launch.
-        </p>
       </div>
     </div>
   );
