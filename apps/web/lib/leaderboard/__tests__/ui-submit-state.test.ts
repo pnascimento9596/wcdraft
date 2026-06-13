@@ -144,6 +144,7 @@ describe("local memory", () => {
   it("tokenMemoryKey is deterministic and content-sensitive", () => {
     expect(tokenMemoryKey("t1.abc")).toBe(tokenMemoryKey("t1.abc"));
     expect(tokenMemoryKey("t1.abc")).not.toBe(tokenMemoryKey("t1.abd"));
+    expect(tokenMemoryKey("t1.abc", "casual")).not.toBe(tokenMemoryKey("t1.abc", "ranked"));
   });
 
   it("no window → safe no-ops (never throws, never claims submitted)", () => {
@@ -187,6 +188,9 @@ describe("local memory", () => {
       expect(wasTokenSubmitted("t1.one")).toBe(false);
       rememberTokenSubmitted("t1.one");
       expect(wasTokenSubmitted("t1.one")).toBe(true);
+      expect(wasTokenSubmitted("t1.one", "ranked")).toBe(false);
+      rememberTokenSubmitted("t1.one", "ranked");
+      expect(wasTokenSubmitted("t1.one", "ranked")).toBe(true);
       expect(wasTokenSubmitted("t1.two")).toBe(false);
 
       for (let i = 0; i < 60; i++) rememberTokenSubmitted(`t1.fill-${i}`);

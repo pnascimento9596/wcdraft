@@ -10,6 +10,8 @@
 import { submitStatusCopy, NAME_HINT, type SubmitStatusCopy } from "./submit-copy";
 import type { DisplayNameRejection } from "./display-name";
 
+export type SubmitBoardMode = "casual" | "ranked";
+
 // ─── Phases ──────────────────────────────────────────────────────────────────
 
 export type SubmitPhase =
@@ -100,13 +102,13 @@ const SUBMITTED_CAP = 50;
 
 /** FNV-1a over the token string — a compact local dedupe key (the full
  *  token is ≤8 KB; storing 50 of those would bloat localStorage). */
-export function tokenMemoryKey(token: string): string {
+export function tokenMemoryKey(token: string, mode: SubmitBoardMode = "casual"): string {
   let h = 0x811c9dc5;
   for (let i = 0; i < token.length; i++) {
     h ^= token.charCodeAt(i);
     h = Math.imul(h, 0x01000193);
   }
-  return `${(h >>> 0).toString(36)}.${token.length.toString(36)}`;
+  return `${mode}:${(h >>> 0).toString(36)}.${token.length.toString(36)}`;
 }
 
 function storage(): Storage | null {
@@ -142,16 +144,16 @@ function loadSubmittedKeys(s: Storage): string[] {
   }
 }
 
-export function wasTokenSubmitted(token: string): boolean {
+export function wasTokenSubmitted(token: string, mode: SubmitBoardMode = "casual"): boolean {
   const s = storage();
   if (s === null) return false;
-  return loadSubmittedKeys(s).includes(tokenMemoryKey(token));
+  return loadSubmittedKeys(s).includes(tokenMemoryKey(token, mode));
 }
 
-export function rememberTokenSubmitted(token: string): void {
+export function rememberTokenSubmitted(token: string, mode: SubmitBoardMode = "casual"): void {
   const s = storage();
   if (s === null) return;
-  const key = tokenMemoryKey(token);
+  const key = tokenMemoryKey(token, mode);
   const keys = loadSubmittedKeys(s).filter((k) => k !== key);
   keys.push(key);
   s.setItem(SUBMITTED_TOKENS_KEY, JSON.stringify(keys.slice(-SUBMITTED_CAP)));

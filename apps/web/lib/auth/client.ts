@@ -83,6 +83,25 @@ export async function postJson<T>(
   return { ok: r.ok, status: r.status, data };
 }
 
+/** PUT with a JSON body (sets Content-Type) + CSRF. */
+export async function putJson<T>(
+  url: string,
+  body: unknown,
+): Promise<{ ok: boolean; status: number; data: T | null }> {
+  const r = await fetchWithCsrf(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  let data: T | null;
+  try {
+    data = (await r.json()) as T;
+  } catch {
+    data = null;
+  }
+  return { ok: r.ok, status: r.status, data };
+}
+
 /** DELETE with CSRF. */
 export async function deleteCsrf(url: string): Promise<Response> {
   return fetchWithCsrf(url, { method: "DELETE" });

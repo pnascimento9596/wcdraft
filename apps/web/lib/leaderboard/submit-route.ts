@@ -4,8 +4,9 @@
 //   0. feature flag                  — in the route FILE, before deps exist
 //   1. method                        — only POST is exported by the route file
 //   2. content-type / body size      — 415 / 413, before any parse
-//   3. JSON shape + mode             — 400 INVALID_BODY / 403 BAD_ATTEMPT
-//   4. identity gate (plan §5.3)     — 401 AUTH_REQUIRED / 403 CSRF_FAILED
+//   3. JSON shape + mode             — 400 INVALID_BODY
+//   4. identity gate                 — ranked requires account;
+//                                      401 AUTH_REQUIRED / 403 CSRF_FAILED
 //   5. rate-limit SEAM (U5 plugs in) — 429 RATE_LIMITED + Retry-After
 //   6. validateSubmission (U2)       — steps 1–3, 5, 7–9; SUBMIT_ERROR_HTTP_STATUS
 //   7. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
@@ -31,6 +32,7 @@ import {
   insertAcceptedEntry,
   toApiEntryWithProfile,
   type ApiLeaderboardEntry,
+  type BoardMode,
 } from "./store";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
 import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
@@ -47,7 +49,6 @@ export interface SubmitRouteDeps {
   /** Lazy heavy server data — only touched after every cheap gate passed. */
   readonly getValidation: () => ValidationData;
   readonly rateLimiter: SubmitRateLimiter;
-  readonly requireAccount: () => boolean;
 }
 
 /** Route-transport error codes owned by this handler (not pipeline codes). */
@@ -93,9 +94,8 @@ export async function handleLeaderboardSubmit(
       return transportError("BODY_TOO_LARGE", `body exceeds ${MAX_SUBMIT_BODY_BYTES} bytes`);
     }
 
-    // 3 — JSON object shape + mode. Ranked is a DARK lane in U3: the token
-    // mint/consume flow does not exist yet, so a ranked submission is an
-    // out-of-protocol attempt, not an invalid body.
+    // 3 — JSON object shape + mode. Ranked is open only to account-bound
+    // sessions; casual remains anonymous-capable.
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
@@ -107,18 +107,13 @@ export async function handleLeaderboardSubmit(
     }
     const body = parsed as Record<string, unknown>;
     const mode = body.mode ?? "casual";
-    if (mode === "ranked") {
-      return NextResponse.json(
-        { error: "BAD_ATTEMPT", message: "ranked submissions are not open" },
-        { status: SUBMIT_ERROR_HTTP_STATUS.BAD_ATTEMPT },
-      );
+    if (mode !== "casual" && mode !== "ranked") {
+      return transportError("INVALID_BODY", "mode must be 'casual' or 'ranked'");
     }
-    if (mode !== "casual") {
-      return transportError("INVALID_BODY", "mode must be 'casual'");
-    }
+    const submissionMode: BoardMode = mode;
 
     // 4 — identity gate (throws LeaderboardGateError).
-    const identity = await requireSubmitIdentity(req, gateDeps(deps));
+    const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));
 
     // 5 — rate-limit seam (deny-nothing default in U3; U5 implements).
     const decision = await deps.rateLimiter.checkSubmit({
@@ -183,7 +178,7 @@ export async function handleLeaderboardSubmit(
       deps.db,
       {
         seasonKey: verdict.season_key,
-        mode: "casual",
+        mode: submissionMode,
         draftMode: verdict.draft_mode,
         userId: identity.userId,
         sessionId: identity.sessionId,
@@ -197,7 +192,7 @@ export async function handleLeaderboardSubmit(
     );
     const best = await identityBoardRank(deps.db, {
       seasonKey: verdict.season_key,
-      mode: "casual",
+      mode: submissionMode,
       identityKey: result.row.userId ?? result.row.sessionId ?? result.row.id,
     });
     const responseBody: SubmitResponseBody = {
@@ -226,11 +221,11 @@ async function publicUsernameForUser(db: Db, userId: string): Promise<string | n
   return row[0]?.username ?? null;
 }
 
-function gateDeps(deps: SubmitRouteDeps): IdentityGateDeps {
+function gateDeps(deps: SubmitRouteDeps, mode: BoardMode): IdentityGateDeps {
   return {
     db: deps.db,
     now: deps.now,
     getCookieSecret: deps.getCookieSecret,
-    requireAccount: deps.requireAccount,
+    requireAccount: () => mode === "ranked",
   };
 }
