@@ -106,10 +106,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the merit-v3 versions; engine_version carries the V8 season stamp", () => {
+  it("rating_version anchors are the merit-v3 versions; engine_version carries the narrative-v2 stamp", () => {
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-5.1.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-4.1.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.12");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.13");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {
@@ -148,8 +148,10 @@ describe("compact-data integrity", () => {
     for (const card of DRAFT_POOL_BUNDLE.player_cards) {
       const rating = ratingByCardId.get(card.card_id);
       expect(rating, `missing rating for card ${card.card_id}`).toBeDefined();
-      expect(card.eligible_positions.length, `empty eligible_positions for ${card.card_id}`)
-        .toBeGreaterThan(0);
+      expect(
+        card.eligible_positions.length,
+        `empty eligible_positions for ${card.card_id}`,
+      ).toBeGreaterThan(0);
     }
   });
 
@@ -159,8 +161,9 @@ describe("compact-data integrity", () => {
       RUNTIME_DATA_MANIFEST.rating_version_projected,
     ]);
     for (const r of DRAFT_POOL_BUNDLE.ratings) {
-      expect(allowed.has(r.rating_version), `unexpected rating_version ${r.rating_version}`)
-        .toBe(true);
+      expect(allowed.has(r.rating_version), `unexpected rating_version ${r.rating_version}`).toBe(
+        true,
+      );
     }
   });
 

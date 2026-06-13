@@ -6,7 +6,15 @@
 // renders `null` as `UNAVAILABLE_TOKEN_TEXT`. IDs fall back to themselves —
 // a real, event-derived value, never an invented name.
 
-import type { KeyMoment, NarrativeFacts, NarrativeLabels, TokenName } from "../types/narrative.js";
+import type {
+  KeyMoment,
+  NarrativeFacts,
+  NarrativeLabels,
+  NarrativeScenarioFamily,
+  NarrativeScenarioSpotlight,
+  NarrativeTemplate,
+  TokenName,
+} from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
 
 /** Rendered in place of any token that resolves to `null`. */
@@ -74,6 +82,14 @@ export function headlineMoment(facts: NarrativeFacts): KeyMoment | null {
   return best;
 }
 
+export function scenarioSpotlightForFamily(
+  facts: NarrativeFacts,
+  family: NarrativeScenarioFamily | undefined,
+): NarrativeScenarioSpotlight | null {
+  if (family === undefined) return null;
+  return facts.scenario_spotlights.find((spotlight) => spotlight.family === family) ?? null;
+}
+
 function beatsHeadline(a: KeyMoment, b: KeyMoment): boolean {
   const ap = HEADLINE_PRIORITY.indexOf(a.kind);
   const bp = HEADLINE_PRIORITY.indexOf(b.kind);
@@ -97,6 +113,62 @@ function teamLabel(id: string | null, labels?: NarrativeLabels): string | null {
   return labels?.team_names?.[id] ?? id;
 }
 
+function roundLabel(round: string | null): string | null {
+  switch (round) {
+    case "G1":
+      return "the group opener";
+    case "G2":
+      return "the second group match";
+    case "G3":
+      return "the decisive group match";
+    case "R32":
+      return "the round of 32";
+    case "R16":
+      return "the round of 16";
+    case "QF":
+      return "the quarter-final";
+    case "SF":
+      return "the semi-final";
+    case "F":
+      return "the final";
+    case null:
+      return null;
+    default:
+      return round;
+  }
+}
+
+function methodLabel(method: NarrativeScenarioSpotlight["method"]): string | null {
+  switch (method) {
+    case "regulation":
+      return "in regulation";
+    case "extra_time":
+      return "after extra time";
+    case "penalties":
+      return "on penalties";
+    case null:
+      return null;
+  }
+}
+
+function scoreLabel(score: NarrativeScenarioSpotlight["score"]): string | null {
+  return score ? `${score.user}-${score.opp}` : null;
+}
+
+function numberLabel(n: number | null): string | null {
+  return n === null ? null : String(n);
+}
+
+function displayRecord(run: RunResult): string {
+  return `${run.wins}-${run.losses}`;
+}
+
+function eraNote(spotlight: NarrativeScenarioSpotlight | null): string | null {
+  if (!spotlight || spotlight.era_min_year === null || spotlight.era_max_year === null) return null;
+  if (spotlight.era_min_year === spotlight.era_max_year) return `${spotlight.era_min_year}`;
+  return `${spotlight.era_min_year}-to-${spotlight.era_max_year}`;
+}
+
 /**
  * Resolve every `TokenName` to a string value or `null` (no source). Pure and
  * deterministic. Labels only change DISPLAY, never which entity is selected.
@@ -105,8 +177,10 @@ export function resolveNarrativeTokens(
   run: RunResult,
   facts: NarrativeFacts,
   labels?: NarrativeLabels,
+  template?: NarrativeTemplate,
 ): Record<TokenName, string | null> {
   const headline = headlineMoment(facts);
+  const scenario = scenarioSpotlightForFamily(facts, template?.scenario_family);
   return {
     TEAM_NAME: labels?.team_name ?? null,
     MANAGER: labels?.manager_name ?? null,
@@ -115,7 +189,18 @@ export function resolveNarrativeTokens(
     VILLAIN: playerLabel(facts.villain_player_id, labels),
     OPPONENT: teamLabel(facts.nemesis_team_id, labels),
     KEY_MOMENT: headline ? KEY_MOMENT_PHRASE[headline.kind] : null,
-    RECORD: run.record,
+    RECORD: displayRecord(run),
+    SCENARIO_PLAYER: playerLabel(scenario?.player_id ?? null, labels),
+    SCENARIO_PLAYER_TWO: playerLabel(scenario?.secondary_player_id ?? null, labels),
+    SCENARIO_PLAYER_THREE: playerLabel(scenario?.tertiary_player_id ?? null, labels),
+    SCENARIO_OPPONENT: teamLabel(scenario?.opponent_team_id ?? null, labels),
+    SCENARIO_ROUND: roundLabel(scenario?.round ?? null),
+    SCENARIO_SCORE: scoreLabel(scenario?.score ?? null),
+    SCENARIO_METHOD: methodLabel(scenario?.method ?? null),
+    SCENARIO_GOALS: numberLabel(scenario?.goal_count ?? null),
+    SCENARIO_MARGIN: numberLabel(scenario?.margin ?? null),
+    SCENARIO_CLEAN_SHEETS: numberLabel(scenario?.clean_sheets ?? null),
+    SCENARIO_ERA_NOTE: eraNote(scenario),
   };
 }
 

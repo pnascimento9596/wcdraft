@@ -15,7 +15,11 @@
 // TOKENS (see `TokenName`): {TEAM_NAME} {MANAGER} {TOP_SCORER} {FINAL_HERO}
 // {VILLAIN} {OPPONENT} {KEY_MOMENT} {RECORD}.
 
-import type { NarrativeTemplate, OutcomeClass } from "../types/narrative.js";
+import type {
+  NarrativeScenarioFamily,
+  NarrativeTemplate,
+  OutcomeClass,
+} from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
 
 /**
@@ -286,6 +290,308 @@ export const NARRATIVE_TEMPLATES: readonly NarrativeTemplate[] = [
     outcome_class: "GROUP_WINLESS",
     text: "Even {TOP_SCORER} could not spark a win. {TEAM_NAME} departed the group stage with nothing but lessons, the campaign over before it began.",
   },
+
+  // ─── SCENARIO-AWARE FAMILIES (deterministic, event-derived) ────────────────
+  {
+    id: "scn_dominant_blowout_01",
+    outcome_class: "ANY",
+    scenario_family: "dominant_blowout",
+    text: "The run found its stride in {SCENARIO_ROUND}: a {SCENARIO_SCORE} win {SCENARIO_METHOD}, a {SCENARIO_MARGIN}-goal cushion, and {SCENARIO_PLAYER} at the front of the charge.",
+  },
+  {
+    id: "scn_dominant_blowout_02",
+    outcome_class: "ANY",
+    scenario_family: "dominant_blowout",
+    text: "{SCENARIO_ROUND} was the match that announced {TEAM_NAME}. {SCENARIO_PLAYER} helped turn it into a {SCENARIO_SCORE} statement, the kind of margin that makes the bracket look twice.",
+  },
+  {
+    id: "scn_narrow_one_nil_01",
+    outcome_class: "ANY",
+    scenario_family: "narrow_one_nil",
+    text: "Not every step was loud. {SCENARIO_ROUND} was won 1-0, {SCENARIO_PLAYER} supplying the thin line between control and trouble.",
+  },
+  {
+    id: "scn_narrow_one_nil_02",
+    outcome_class: "ANY",
+    scenario_family: "narrow_one_nil",
+    text: "The quiet win mattered. In {SCENARIO_ROUND}, {TEAM_NAME} protected a 1-0 edge and let {SCENARIO_PLAYER}'s finish carry the day.",
+  },
+  {
+    id: "scn_comeback_from_behind_01",
+    outcome_class: "ANY",
+    scenario_family: "comeback_from_behind",
+    text: "The tournament bent toward trouble before {TEAM_NAME} bent it back. In {SCENARIO_ROUND}, the match became a comeback, with {SCENARIO_PLAYER} dragging the scoreline to {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_comeback_from_behind_02",
+    outcome_class: "ANY",
+    scenario_family: "comeback_from_behind",
+    text: "Behind on the board, not beaten in the match. {TEAM_NAME} turned {SCENARIO_ROUND} around {SCENARIO_METHOD}, and {SCENARIO_PLAYER} was on the page where the response began.",
+  },
+  {
+    id: "scn_extra_time_winner_01",
+    outcome_class: "ANY",
+    scenario_family: "extra_time_winner",
+    text: "Extra time did not blur the story; it sharpened it. {SCENARIO_PLAYER} found the decisive touch in {SCENARIO_ROUND}, pushing {TEAM_NAME} through {SCENARIO_METHOD}.",
+  },
+  {
+    id: "scn_extra_time_winner_02",
+    outcome_class: "ANY",
+    scenario_family: "extra_time_winner",
+    text: "The legs were heavy and the margin was still there to win. {SCENARIO_PLAYER} settled {SCENARIO_ROUND} after extra time, a {SCENARIO_SCORE} verdict that felt earned.",
+  },
+  {
+    id: "scn_shootout_drama_01",
+    outcome_class: "ANY",
+    scenario_family: "shootout_drama",
+    text: "Penalties wrote their own chapter in {SCENARIO_ROUND}. {SCENARIO_PLAYER} was tied to the final walk from the spot as the shootout finished {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_shootout_drama_02",
+    outcome_class: "ANY",
+    scenario_family: "shootout_drama",
+    text: "In {SCENARIO_ROUND}, the match went all the way to penalties, where it shrank to breath, boots, and nerve. The shootout finished {SCENARIO_SCORE}, with {SCENARIO_PLAYER} in the sequence.",
+  },
+  {
+    id: "scn_clean_sheet_masterclass_01",
+    outcome_class: "ANY",
+    scenario_family: "clean_sheet_masterclass",
+    text: "The defence had a name at its base: {SCENARIO_PLAYER}. {TEAM_NAME} stacked clean sheets across the run, with {SCENARIO_ROUND}'s {SCENARIO_SCORE} shutout the clearest proof.",
+  },
+  {
+    id: "scn_clean_sheet_masterclass_02",
+    outcome_class: "ANY",
+    scenario_family: "clean_sheet_masterclass",
+    text: "Every run needs a match where the door stays locked. {SCENARIO_PLAYER} kept it that way in {SCENARIO_ROUND}, part of a {SCENARIO_CLEAN_SHEETS}-clean-sheet campaign.",
+  },
+  {
+    id: "scn_hat_trick_hero_01",
+    outcome_class: "ANY",
+    scenario_family: "hat_trick_hero",
+    text: "{SCENARIO_PLAYER} did not just score; he took the match home. {SCENARIO_GOALS} goals in {SCENARIO_ROUND} turned the score into {SCENARIO_SCORE} and the headline into his.",
+  },
+  {
+    id: "scn_hat_trick_hero_02",
+    outcome_class: "ANY",
+    scenario_family: "hat_trick_hero",
+    text: "There are team wins, and then there are matches seized by one finisher. {SCENARIO_PLAYER}'s {SCENARIO_GOALS}-goal burst in {SCENARIO_ROUND} gave {TEAM_NAME} that kind of day.",
+  },
+  {
+    id: "scn_multi_goal_hero_01",
+    outcome_class: "ANY",
+    scenario_family: "multi_goal_hero",
+    text: "{SCENARIO_PLAYER} delivered the repeat blow in {SCENARIO_ROUND}, scoring {SCENARIO_GOALS} as {TEAM_NAME} shaped a {SCENARIO_SCORE} result.",
+  },
+  {
+    id: "scn_multi_goal_hero_02",
+    outcome_class: "ANY",
+    scenario_family: "multi_goal_hero",
+    text: "When {SCENARIO_ROUND} asked for a finisher, {SCENARIO_PLAYER} answered twice. Those {SCENARIO_GOALS} goals gave the run a sharper edge.",
+  },
+  {
+    id: "scn_demolition_margin_four_01",
+    outcome_class: "ANY",
+    scenario_family: "demolition_margin_four",
+    text: "{SCENARIO_ROUND} was not a contest for long. {TEAM_NAME} finished it {SCENARIO_SCORE}, a {SCENARIO_MARGIN}-goal demolition that reset the tournament's volume.",
+  },
+  {
+    id: "scn_demolition_margin_four_02",
+    outcome_class: "ANY",
+    scenario_family: "demolition_margin_four",
+    text: "The biggest swing came in {SCENARIO_ROUND}: {SCENARIO_SCORE}, {SCENARIO_METHOD}, and a margin wide enough to leave no argument.",
+  },
+  {
+    id: "scn_low_event_grind_01",
+    outcome_class: "ANY",
+    scenario_family: "low_event_grind",
+    text: "The grind was real in {SCENARIO_ROUND}. Few chances, no waste, and {SCENARIO_PLAYER} making the decisive touch in a {SCENARIO_SCORE} win.",
+  },
+  {
+    id: "scn_low_event_grind_02",
+    outcome_class: "ANY",
+    scenario_family: "low_event_grind",
+    text: "{TEAM_NAME} also knew how to win without spectacle. In {SCENARIO_ROUND}, it was a low-event squeeze, settled {SCENARIO_SCORE} by {SCENARIO_PLAYER}.",
+  },
+  {
+    id: "scn_manager_masterstroke_01",
+    outcome_class: "ANY",
+    scenario_family: "manager_masterstroke",
+    text: "{MANAGER} found a lever in {SCENARIO_ROUND}. {SCENARIO_PLAYER} came from the bench as the match tilted, and {TEAM_NAME} walked out with a {SCENARIO_SCORE} win.",
+  },
+  {
+    id: "scn_manager_masterstroke_02",
+    outcome_class: "ANY",
+    scenario_family: "manager_masterstroke",
+    text: "The touchline mattered in {SCENARIO_ROUND}. {MANAGER}'s change introduced {SCENARIO_PLAYER}, and the match finished {SCENARIO_SCORE} in {TEAM_NAME}'s favour.",
+  },
+  {
+    id: "scn_defensive_wall_01",
+    outcome_class: "ANY",
+    scenario_family: "defensive_wall",
+    text: "{SCENARIO_PLAYER} and {SCENARIO_PLAYER_TWO} gave the run its hard edge. The defensive wall held in {SCENARIO_ROUND}, where {TEAM_NAME} kept the score at {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_defensive_wall_02",
+    outcome_class: "ANY",
+    scenario_family: "defensive_wall",
+    text: "Before the forwards could decorate it, {SCENARIO_PLAYER} and {SCENARIO_PLAYER_TWO} protected it. {SCENARIO_ROUND}'s clean sheet was not accidental.",
+  },
+  {
+    id: "scn_midfield_control_01",
+    outcome_class: "ANY",
+    scenario_family: "midfield_control",
+    text: "{SCENARIO_PLAYER} gave {TEAM_NAME} the rhythm in {SCENARIO_ROUND}. The match finished {SCENARIO_SCORE}, but the control started in midfield.",
+  },
+  {
+    id: "scn_midfield_control_02",
+    outcome_class: "ANY",
+    scenario_family: "midfield_control",
+    text: "The scoreboard says {SCENARIO_SCORE}; the match tape points to {SCENARIO_PLAYER}. {SCENARIO_ROUND} was managed through midfield before it was finished up front.",
+  },
+  {
+    id: "scn_perfect_run_milestone_01",
+    outcome_class: "CHAMPION_UNDEFEATED",
+    scenario_family: "perfect_run_milestone",
+    text: "Perfect really means perfect here: {RECORD}, trophy won, and no result left to explain away. {FINAL_HERO} closed the final against {SCENARIO_OPPONENT}; {TOP_SCORER} carried the threat through the whole run.",
+  },
+  {
+    id: "scn_perfect_run_milestone_02",
+    outcome_class: "CHAMPION_UNDEFEATED",
+    scenario_family: "perfect_run_milestone",
+    text: "Eight matches, eight wins, a champion's clean line. {TEAM_NAME} made {RECORD} feel inevitable, with {FINAL_HERO} turning the final past {SCENARIO_OPPONENT}.",
+  },
+  {
+    id: "scn_elimination_heartbreak_01",
+    outcome_class: "ANY",
+    scenario_family: "elimination_heartbreak",
+    text: "The exit came in {SCENARIO_ROUND}, and it came with a scoreline that will sit badly: {SCENARIO_SCORE}. {SCENARIO_PLAYER} was the name on the other side of the heartbreak.",
+  },
+  {
+    id: "scn_elimination_heartbreak_02",
+    outcome_class: "ANY",
+    scenario_family: "elimination_heartbreak",
+    text: "{TEAM_NAME}'s tournament ended in {SCENARIO_ROUND}, {SCENARIO_SCORE} against {SCENARIO_OPPONENT}. The last whistle made the round feel final.",
+  },
+  {
+    id: "scn_era_clash_01",
+    outcome_class: "ANY",
+    scenario_family: "era_clash",
+    text: "This was a {SCENARIO_ERA_NOTE} dressing room: {SCENARIO_PLAYER} from one football age, {SCENARIO_PLAYER_TWO} from another, both pulled into the same run.",
+  },
+  {
+    id: "scn_era_clash_02",
+    outcome_class: "ANY",
+    scenario_family: "era_clash",
+    text: "{TEAM_NAME} looked like a cross-era argument in motion. The {SCENARIO_ERA_NOTE} spread put {SCENARIO_PLAYER} and {SCENARIO_PLAYER_TWO} in the same XI.",
+  },
+  {
+    id: "scn_debut_tournament_core_01",
+    outcome_class: "ANY",
+    scenario_family: "debut_tournament_core",
+    text: "The modern core was not decoration. {SCENARIO_PLAYER} and the 2026 group gave {TEAM_NAME} a present-tense spine inside the wider all-era build.",
+  },
+  {
+    id: "scn_debut_tournament_core_02",
+    outcome_class: "ANY",
+    scenario_family: "debut_tournament_core",
+    text: "A run this old-and-new still had a 2026 pulse. {SCENARIO_PLAYER} stood for the debut-tournament core that kept the side current.",
+  },
+  {
+    id: "scn_bench_impact_01",
+    outcome_class: "ANY",
+    scenario_family: "bench_impact",
+    text: "The bench was not just cover. {SCENARIO_PLAYER} changed {SCENARIO_ROUND}, helping push the match to {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_bench_impact_02",
+    outcome_class: "ANY",
+    scenario_family: "bench_impact",
+    text: "In {SCENARIO_ROUND}, the match needed a second wave, and {SCENARIO_PLAYER} supplied it. The rotation note became a result note at {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_cross_era_matchup_01",
+    outcome_class: "ANY",
+    scenario_family: "cross_era_matchup",
+    text: "{SCENARIO_ROUND} carried the feel of a cross-era matchup: {SCENARIO_PLAYER} and {SCENARIO_PLAYER_TWO} on one side of the timeline, {SCENARIO_OPPONENT} on the other.",
+  },
+  {
+    id: "scn_cross_era_matchup_02",
+    outcome_class: "ANY",
+    scenario_family: "cross_era_matchup",
+    text: "The bracket gave {TEAM_NAME} a modern opponent in {SCENARIO_OPPONENT}; the XI answered with a {SCENARIO_ERA_NOTE} blend led by {SCENARIO_PLAYER} and {SCENARIO_PLAYER_TWO}.",
+  },
+  {
+    id: "scn_final_hero_01",
+    outcome_class: "ANY",
+    scenario_family: "final_hero",
+    text: "Finals remember names. This one remembered {SCENARIO_PLAYER}, whose final touch helped settle {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_final_hero_02",
+    outcome_class: "ANY",
+    scenario_family: "final_hero",
+    text: "{SCENARIO_PLAYER} became the final's answer. {SCENARIO_SCORE} was the scoreline; the moment belonged to the player who made it count.",
+  },
+  {
+    id: "scn_early_breakthrough_01",
+    outcome_class: "ANY",
+    scenario_family: "early_breakthrough",
+    text: "{TEAM_NAME} did not wait for permission in {SCENARIO_ROUND}. {SCENARIO_PLAYER}'s early breakthrough gave the match its first shape.",
+  },
+  {
+    id: "scn_early_breakthrough_02",
+    outcome_class: "ANY",
+    scenario_family: "early_breakthrough",
+    text: "The first punch in {SCENARIO_ROUND} came early, from {SCENARIO_PLAYER}. After that, {TEAM_NAME} had a match to manage rather than chase.",
+  },
+  {
+    id: "scn_late_winner_01",
+    outcome_class: "ANY",
+    scenario_family: "late_winner",
+    text: "Late winners change the temperature of a run. {SCENARIO_PLAYER} found one in {SCENARIO_ROUND}, and the {SCENARIO_SCORE} result carried extra weight.",
+  },
+  {
+    id: "scn_late_winner_02",
+    outcome_class: "ANY",
+    scenario_family: "late_winner",
+    text: "{SCENARIO_ROUND} was still alive late, which made {SCENARIO_PLAYER}'s winner feel bigger than one goal. The board read {SCENARIO_SCORE}; the run read belief.",
+  },
+  {
+    id: "scn_red_card_resilience_01",
+    outcome_class: "ANY",
+    scenario_family: "red_card_resilience",
+    text: "A red card to {SCENARIO_PLAYER} should have made {SCENARIO_ROUND} tilt away. Instead {TEAM_NAME} held together and still reached a {SCENARIO_SCORE} result.",
+  },
+  {
+    id: "scn_red_card_resilience_02",
+    outcome_class: "ANY",
+    scenario_family: "red_card_resilience",
+    text: "The hardest minutes came after {SCENARIO_PLAYER}'s dismissal. {TEAM_NAME} absorbed them in {SCENARIO_ROUND}, turning chaos into {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_penalty_miss_redemption_01",
+    outcome_class: "ANY",
+    scenario_family: "penalty_miss_redemption",
+    text: "{SCENARIO_PLAYER} had to live with a missed penalty in {SCENARIO_ROUND}, then helped write the recovery. The match still finished {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_penalty_miss_redemption_02",
+    outcome_class: "ANY",
+    scenario_family: "penalty_miss_redemption",
+    text: "The spot kick did not go, but the head did not drop. {SCENARIO_PLAYER} stayed in the story as {TEAM_NAME} recovered to {SCENARIO_SCORE}.",
+  },
+  {
+    id: "scn_keeper_penalty_save_01",
+    outcome_class: "ANY",
+    scenario_family: "keeper_penalty_save",
+    text: "{SCENARIO_PLAYER} owned the penalty moment in {SCENARIO_ROUND}. One save, one swing, and a {SCENARIO_SCORE} result that had his gloves on it.",
+  },
+  {
+    id: "scn_keeper_penalty_save_02",
+    outcome_class: "ANY",
+    scenario_family: "keeper_penalty_save",
+    text: "Penalty saves are not footnotes. {SCENARIO_PLAYER}'s stop in {SCENARIO_ROUND} gave {TEAM_NAME} the room to finish {SCENARIO_SCORE}.",
+  },
 ];
 
 /**
@@ -305,7 +611,9 @@ const TEMPLATES_BY_CLASS: Readonly<Record<OutcomeClass, readonly NarrativeTempla
     GROUP_WINLESS: [],
   };
   for (const t of NARRATIVE_TEMPLATES) {
-    groups[t.outcome_class].push(t);
+    if (t.scenario_family === undefined && t.outcome_class !== "ANY") {
+      groups[t.outcome_class].push(t);
+    }
   }
   return groups;
 })();
@@ -321,6 +629,20 @@ export function templatesForClass(outcome: OutcomeClass): readonly NarrativeTemp
     throw new Error(`no narrative templates registered for outcome class: ${outcome}`);
   }
   return bank;
+}
+
+/**
+ * Return scenario templates for a fired family and current outcome. Scenario
+ * templates can either opt into a specific outcome class or use "ANY".
+ */
+export function templatesForScenarioFamily(
+  outcome: OutcomeClass,
+  family: NarrativeScenarioFamily,
+): readonly NarrativeTemplate[] {
+  return NARRATIVE_TEMPLATES.filter(
+    (t) =>
+      t.scenario_family === family && (t.outcome_class === "ANY" || t.outcome_class === outcome),
+  );
 }
 
 /**

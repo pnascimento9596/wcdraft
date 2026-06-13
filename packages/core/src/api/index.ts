@@ -18,6 +18,7 @@ export {
   headlineMoment,
   classifyOutcome,
   templatesForClass,
+  templatesForScenarioFamily,
   NARRATIVE_TEMPLATES,
   UNAVAILABLE_TOKEN_TEXT,
 } from "./narrative.js";

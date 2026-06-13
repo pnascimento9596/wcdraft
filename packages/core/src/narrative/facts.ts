@@ -14,7 +14,13 @@
 
 import { deriveSubseed } from "../rng.js";
 import type { MatchEvent, MatchResult } from "../types/sim.js";
-import type { KeyMoment, NarrativeFacts } from "../types/narrative.js";
+import type {
+  KeyMoment,
+  NarrativeFacts,
+  NarrativeMatchMethod,
+  NarrativeScenarioFamily,
+  NarrativeScenarioSpotlight,
+} from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
 
 // ─── EVENT HELPERS ────────────────────────────────────────────────────────────
@@ -45,6 +51,49 @@ const PERIOD_RANK: Record<string, number> = {
   ET1: 2,
   ET2: 3,
   shootout: 4,
+};
+
+const SCENARIO_PRIORITY: readonly NarrativeScenarioFamily[] = [
+  "perfect_run_milestone",
+  "shootout_drama",
+  "extra_time_winner",
+  "comeback_from_behind",
+  "elimination_heartbreak",
+  "late_winner",
+  "hat_trick_hero",
+  "demolition_margin_four",
+  "keeper_penalty_save",
+  "red_card_resilience",
+  "penalty_miss_redemption",
+  "bench_impact",
+  "manager_masterstroke",
+  "final_hero",
+  "clean_sheet_masterclass",
+  "defensive_wall",
+  "midfield_control",
+  "narrow_one_nil",
+  "low_event_grind",
+  "dominant_blowout",
+  "multi_goal_hero",
+  "early_breakthrough",
+  "era_clash",
+  "cross_era_matchup",
+  "debut_tournament_core",
+];
+
+const SCENARIO_PRIORITY_INDEX = new Map(
+  SCENARIO_PRIORITY.map((family, index) => [family, index] as const),
+);
+
+const ROUND_ORDER: Record<string, number> = {
+  G1: 0,
+  G2: 1,
+  G3: 2,
+  R32: 3,
+  R16: 4,
+  QF: 5,
+  SF: 6,
+  F: 7,
 };
 
 // ─── TOP SCORER (run-wide + final-only) ───────────────────────────────────────
@@ -202,6 +251,592 @@ function totalGoals(m: MatchResult): { user: number; opp: number } {
   };
 }
 
+function matchMethod(m: MatchResult): NarrativeMatchMethod {
+  if (m.shootout !== null) return "penalties";
+  if (m.user_goals_et !== null || m.opp_goals_et !== null) return "extra_time";
+  return "regulation";
+}
+
+function userMargin(m: MatchResult): number {
+  const tg = totalGoals(m);
+  return tg.user - tg.opp;
+}
+
+function userFeaturedIds(m: MatchResult): Set<string> {
+  return new Set(m.lineup.filter((entry) => entry.side === "user").map((entry) => entry.player_id));
+}
+
+function userLineup(m: MatchResult): MatchResult["lineup"] {
+  return m.lineup.filter((entry) => entry.side === "user");
+}
+
+function userStarted(m: MatchResult): MatchResult["lineup"] {
+  return userLineup(m).filter((entry) => entry.started);
+}
+
+function sortLineup(a: MatchResult["lineup"][number], b: MatchResult["lineup"][number]): number {
+  return b.minutes - a.minutes || a.player_id.localeCompare(b.player_id);
+}
+
+function startedByPosition(
+  m: MatchResult,
+  position: "GK" | "DF" | "MF" | "FW",
+): MatchResult["lineup"] {
+  return userStarted(m)
+    .filter((entry) => entry.position === position)
+    .sort(sortLineup);
+}
+
+function userGoalCounts(m: MatchResult): Map<string, number> {
+  const featured = userFeaturedIds(m);
+  const counts = new Map<string, number>();
+  for (const e of m.events) {
+    if (e.side !== "user") continue;
+    if (e.type === "goal" && featured.has(e.scorer_player_id)) {
+      counts.set(e.scorer_player_id, (counts.get(e.scorer_player_id) ?? 0) + 1);
+    } else if (e.type === "pen_scored" && featured.has(e.taker_player_id)) {
+      counts.set(e.taker_player_id, (counts.get(e.taker_player_id) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
+function topUserScorerInMatch(
+  m: MatchResult,
+  minGoals: number,
+  maxGoals = Number.POSITIVE_INFINITY,
+): { player_id: string; goals: number } | null {
+  const counts = userGoalCounts(m);
+  let best: { player_id: string; goals: number } | null = null;
+  for (const [player_id, goals] of counts) {
+    if (goals < minGoals || goals > maxGoals) continue;
+    if (
+      best === null ||
+      goals > best.goals ||
+      (goals === best.goals && player_id.localeCompare(best.player_id) < 0)
+    ) {
+      best = { player_id, goals };
+    }
+  }
+  return best;
+}
+
+function shotLikeEventCount(m: MatchResult): number {
+  return m.events.filter(
+    (e) =>
+      e.type === "goal" ||
+      e.type === "own_goal" ||
+      e.type === "pen_scored" ||
+      e.type === "pen_missed" ||
+      e.type === "shot_on" ||
+      e.type === "shot_off",
+  ).length;
+}
+
+function firstUserScorer(m: MatchResult): string | null {
+  const featured = userFeaturedIds(m);
+  for (const e of m.events) {
+    if (e.side !== "user") continue;
+    if (e.type === "goal" && featured.has(e.scorer_player_id)) return e.scorer_player_id;
+    if (e.type === "pen_scored" && featured.has(e.taker_player_id)) return e.taker_player_id;
+  }
+  return null;
+}
+
+function userPlayerFromMoment(
+  moments: readonly KeyMoment[],
+  family: KeyMoment["kind"],
+): KeyMoment | null {
+  for (let i = moments.length - 1; i >= 0; i -= 1) {
+    const mo = moments[i]!;
+    if (mo.kind === family) return mo;
+  }
+  return null;
+}
+
+function findMatch(matches: readonly MatchResult[], matchId: string | null): MatchResult | null {
+  if (matchId === null) return null;
+  return matches.find((m) => m.match_id === matchId) ?? null;
+}
+
+function lastUserShootoutTaker(m: MatchResult): string | null {
+  const kicks = m.shootout?.sequence.length
+    ? m.shootout.sequence
+    : m.events.filter(
+        (e): e is Extract<MatchEvent, { type: "shootout_kick" }> => e.type === "shootout_kick",
+      );
+  for (let i = kicks.length - 1; i >= 0; i -= 1) {
+    const kick = kicks[i]!;
+    if (kick.side === "user" && kick.taker_player_id !== null) return kick.taker_player_id;
+  }
+  return null;
+}
+
+function midfieldController(m: MatchResult): string | null {
+  const midfielders = new Set(startedByPosition(m, "MF").map((entry) => entry.player_id));
+  if (midfielders.size === 0) return null;
+  const score = new Map<string, number>();
+  for (const e of m.events) {
+    if (e.type === "goal" && e.assist_player_id !== null && midfielders.has(e.assist_player_id)) {
+      score.set(e.assist_player_id, (score.get(e.assist_player_id) ?? 0) + 3);
+    } else if (e.type === "key_pass" && midfielders.has(e.player_id)) {
+      score.set(e.player_id, (score.get(e.player_id) ?? 0) + 2);
+    } else if (e.type === "goal" && midfielders.has(e.scorer_player_id)) {
+      score.set(e.scorer_player_id, (score.get(e.scorer_player_id) ?? 0) + 1);
+    }
+  }
+  let best: string | null = null;
+  for (const [player_id, value] of score) {
+    if (
+      best === null ||
+      value > (score.get(best) ?? 0) ||
+      (value === (score.get(best) ?? 0) && player_id.localeCompare(best) < 0)
+    ) {
+      best = player_id;
+    }
+  }
+  return best;
+}
+
+function benchImpactPlayer(m: MatchResult): string | null {
+  const subbedOn = new Set<string>();
+  for (const e of m.events) {
+    if (e.type === "sub" && e.side === "user") {
+      subbedOn.add(e.in_player_id);
+      continue;
+    }
+    if (subbedOn.size === 0 || e.side !== "user") continue;
+    if (e.type === "goal") {
+      if (subbedOn.has(e.scorer_player_id)) return e.scorer_player_id;
+      if (e.assist_player_id !== null && subbedOn.has(e.assist_player_id))
+        return e.assist_player_id;
+    } else if (e.type === "pen_scored" && subbedOn.has(e.taker_player_id)) {
+      return e.taker_player_id;
+    } else if (e.type === "key_pass" && subbedOn.has(e.player_id)) {
+      return e.player_id;
+    }
+  }
+  return null;
+}
+
+function firstSubbedOnPlayer(m: MatchResult): string | null {
+  for (const e of m.events) {
+    if (e.type === "sub" && e.side === "user") return e.in_player_id;
+  }
+  return null;
+}
+
+function firstUserRed(m: MatchResult): string | null {
+  const featured = userFeaturedIds(m);
+  for (const e of m.events) {
+    if (e.type === "red" && e.side === "user" && featured.has(e.player_id)) return e.player_id;
+  }
+  return null;
+}
+
+function penaltyMissRedemptionPlayer(m: MatchResult): string | null {
+  const missed = new Set<string>();
+  for (const e of m.events) {
+    if (e.type === "pen_missed" && e.side === "user") {
+      missed.add(e.taker_player_id);
+      continue;
+    }
+    if (missed.size === 0 || e.side !== "user") continue;
+    if (e.type === "goal" && missed.has(e.scorer_player_id)) return e.scorer_player_id;
+    if (e.type === "pen_scored" && missed.has(e.taker_player_id)) return e.taker_player_id;
+  }
+  return m.outcome === "W" ? ([...missed].sort()[0] ?? null) : null;
+}
+
+function keeperPenaltySave(m: MatchResult): string | null {
+  const featured = userFeaturedIds(m);
+  for (const e of m.events) {
+    if (
+      e.type === "pen_missed" &&
+      e.side === "opp" &&
+      e.saved_by_player_id !== null &&
+      featured.has(e.saved_by_player_id)
+    ) {
+      return e.saved_by_player_id;
+    }
+  }
+  return null;
+}
+
+interface EraSpread {
+  minYear: number;
+  maxYear: number;
+  minPlayerId: string;
+  maxPlayerId: string;
+  count2026: number;
+}
+
+function eraSpread(matches: readonly MatchResult[]): EraSpread | null {
+  let minYear = Number.POSITIVE_INFINITY;
+  let maxYear = Number.NEGATIVE_INFINITY;
+  let minPlayerId = "";
+  let maxPlayerId = "";
+  const seen2026 = new Set<string>();
+  for (const m of matches) {
+    for (const entry of userStarted(m)) {
+      if (entry.tournament_id < minYear) {
+        minYear = entry.tournament_id;
+        minPlayerId = entry.player_id;
+      }
+      if (entry.tournament_id > maxYear) {
+        maxYear = entry.tournament_id;
+        maxPlayerId = entry.player_id;
+      }
+      if (entry.tournament_id === 2026) seen2026.add(entry.player_id);
+    }
+  }
+  if (!Number.isFinite(minYear) || !Number.isFinite(maxYear)) return null;
+  return { minYear, maxYear, minPlayerId, maxPlayerId, count2026: seen2026.size };
+}
+
+function scenarioSpotlight(
+  family: NarrativeScenarioFamily,
+  match: MatchResult | null,
+  overrides: Partial<NarrativeScenarioSpotlight> = {},
+): NarrativeScenarioSpotlight {
+  const score = match ? totalGoals(match) : null;
+  return {
+    family,
+    match_id: match?.match_id ?? null,
+    round: match?.round ?? null,
+    player_id: null,
+    secondary_player_id: null,
+    tertiary_player_id: null,
+    opponent_team_id: match?.opponent_team_id ?? null,
+    score,
+    method: match ? matchMethod(match) : null,
+    minute: null,
+    goal_count: null,
+    margin: match ? userMargin(match) : null,
+    clean_sheets: null,
+    era_min_year: null,
+    era_max_year: null,
+    ...overrides,
+  };
+}
+
+function roundRank(round: string | null): number {
+  if (round === null) return -1;
+  return ROUND_ORDER[round] ?? -1;
+}
+
+function compareScenario(a: NarrativeScenarioSpotlight, b: NarrativeScenarioSpotlight): number {
+  const ap = SCENARIO_PRIORITY_INDEX.get(a.family) ?? 999;
+  const bp = SCENARIO_PRIORITY_INDEX.get(b.family) ?? 999;
+  if (ap !== bp) return ap - bp;
+  const ar = roundRank(a.round);
+  const br = roundRank(b.round);
+  if (ar !== br) return br - ar;
+  if ((a.margin ?? -999) !== (b.margin ?? -999)) return (b.margin ?? -999) - (a.margin ?? -999);
+  return (a.match_id ?? "").localeCompare(b.match_id ?? "");
+}
+
+function deriveScenarioSpotlights(
+  run: RunResult,
+  matches: readonly MatchResult[],
+  keyMoments: readonly KeyMoment[],
+  finalHero: string | null,
+  villain: string | null,
+): NarrativeScenarioSpotlight[] {
+  const out: NarrativeScenarioSpotlight[] = [];
+  const seen = new Set<NarrativeScenarioFamily>();
+  const add = (spotlight: NarrativeScenarioSpotlight | null): void => {
+    if (spotlight === null || seen.has(spotlight.family)) return;
+    seen.add(spotlight.family);
+    out.push(spotlight);
+  };
+
+  const ordered = [...matches].sort((a, b) => a.match_index - b.match_index);
+  const finalMatch = ordered.find((m) => m.round === "F") ?? null;
+  const cleanSheets = ordered.filter((m) => totalGoals(m).opp === 0).length;
+
+  if (
+    run.is_champion &&
+    run.undefeated_regulation &&
+    run.wins === 8 &&
+    run.draws === 0 &&
+    run.losses === 0
+  ) {
+    add(
+      scenarioSpotlight("perfect_run_milestone", finalMatch, {
+        player_id: finalHero ?? run.aggregate.top_scorer_player_id,
+        clean_sheets: cleanSheets,
+      }),
+    );
+  }
+
+  const shootout = [...ordered].reverse().find((m) => m.shootout !== null) ?? null;
+  if (shootout) {
+    add(
+      scenarioSpotlight("shootout_drama", shootout, {
+        player_id: lastUserShootoutTaker(shootout),
+        score: shootout.shootout
+          ? { user: shootout.shootout.user, opp: shootout.shootout.opp }
+          : null,
+        method: "penalties",
+      }),
+    );
+  }
+
+  const extraTimeWin =
+    [...ordered]
+      .reverse()
+      .find((m) => m.outcome === "W" && m.shootout === null && matchMethod(m) === "extra_time") ??
+    null;
+  if (extraTimeWin) {
+    const etMoment =
+      keyMoments.find(
+        (mo) =>
+          mo.match_id === extraTimeWin.match_id &&
+          (mo.kind === "late_winner" || mo.kind === "stoppage_winner") &&
+          (mo.period === "ET1" || mo.period === "ET2"),
+      ) ?? null;
+    add(
+      scenarioSpotlight("extra_time_winner", extraTimeWin, {
+        player_id: etMoment?.player_id ?? firstUserScorer(extraTimeWin),
+        minute: etMoment?.minute ?? null,
+      }),
+    );
+  }
+
+  const comeback = userPlayerFromMoment(keyMoments, "comeback_win");
+  if (comeback) {
+    const match = findMatch(ordered, comeback.match_id);
+    add(
+      scenarioSpotlight("comeback_from_behind", match, {
+        player_id: match ? firstUserScorer(match) : null,
+        minute: comeback.minute,
+      }),
+    );
+  }
+
+  const late =
+    userPlayerFromMoment(keyMoments, "stoppage_winner") ??
+    userPlayerFromMoment(keyMoments, "late_winner");
+  if (late) {
+    add(
+      scenarioSpotlight("late_winner", findMatch(ordered, late.match_id), {
+        player_id: late.player_id,
+        minute: late.minute,
+      }),
+    );
+  }
+
+  const hat = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, scorer: topUserScorerInMatch(m, 3) }))
+    .find((row) => row.scorer !== null);
+  if (hat?.scorer) {
+    add(
+      scenarioSpotlight("hat_trick_hero", hat.match, {
+        player_id: hat.scorer.player_id,
+        goal_count: hat.scorer.goals,
+      }),
+    );
+  }
+
+  const demolition =
+    [...ordered].reverse().find((m) => m.outcome === "W" && userMargin(m) >= 4) ?? null;
+  if (demolition) add(scenarioSpotlight("demolition_margin_four", demolition));
+
+  const keeperSave = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, keeper: keeperPenaltySave(m) }))
+    .find((row) => row.keeper !== null);
+  if (keeperSave?.keeper) {
+    add(
+      scenarioSpotlight("keeper_penalty_save", keeperSave.match, { player_id: keeperSave.keeper }),
+    );
+  }
+
+  const redResilience = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, player: firstUserRed(m) }))
+    .find((row) => row.player !== null && row.match.outcome === "W");
+  if (redResilience?.player) {
+    add(
+      scenarioSpotlight("red_card_resilience", redResilience.match, {
+        player_id: redResilience.player,
+      }),
+    );
+  }
+
+  const missRedemption = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, player: penaltyMissRedemptionPlayer(m) }))
+    .find((row) => row.player !== null);
+  if (missRedemption?.player) {
+    add(
+      scenarioSpotlight("penalty_miss_redemption", missRedemption.match, {
+        player_id: missRedemption.player,
+      }),
+    );
+  }
+
+  const bench = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, player: benchImpactPlayer(m) }))
+    .find((row) => row.player !== null);
+  if (bench?.player)
+    add(scenarioSpotlight("bench_impact", bench.match, { player_id: bench.player }));
+
+  const managerSub = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, player: firstSubbedOnPlayer(m) }))
+    .find((row) => row.player !== null && row.match.outcome === "W");
+  if (managerSub?.player) {
+    add(
+      scenarioSpotlight("manager_masterstroke", managerSub.match, { player_id: managerSub.player }),
+    );
+  }
+
+  if (finalMatch && finalHero !== null) {
+    const finalGoals = userGoalCounts(finalMatch).get(finalHero) ?? null;
+    add(
+      scenarioSpotlight("final_hero", finalMatch, {
+        player_id: finalHero,
+        goal_count: finalGoals,
+      }),
+    );
+  }
+
+  if (!run.is_champion && ordered.length > 0) {
+    const exit = lastMatch(ordered);
+    add(scenarioSpotlight("elimination_heartbreak", exit, { player_id: villain }));
+  }
+
+  const clean =
+    [...ordered].reverse().find((m) => totalGoals(m).opp === 0 && startedByPosition(m, "GK")[0]) ??
+    null;
+  if (clean) {
+    add(
+      scenarioSpotlight("clean_sheet_masterclass", clean, {
+        player_id: startedByPosition(clean, "GK")[0]!.player_id,
+        clean_sheets: cleanSheets,
+      }),
+    );
+  }
+
+  const defensive = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, defenders: startedByPosition(m, "DF") }))
+    .find((row) => totalGoals(row.match).opp === 0 && row.defenders.length >= 2);
+  if (defensive) {
+    add(
+      scenarioSpotlight("defensive_wall", defensive.match, {
+        player_id: defensive.defenders[0]!.player_id,
+        secondary_player_id: defensive.defenders[1]!.player_id,
+        clean_sheets: cleanSheets,
+      }),
+    );
+  }
+
+  const midfield = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, player: midfieldController(m) }))
+    .find((row) => row.player !== null && row.match.outcome === "W");
+  if (midfield?.player) {
+    add(scenarioSpotlight("midfield_control", midfield.match, { player_id: midfield.player }));
+  }
+
+  const oneNil =
+    [...ordered]
+      .reverse()
+      .find((m) => m.outcome === "W" && totalGoals(m).user === 1 && totalGoals(m).opp === 0) ??
+    null;
+  if (oneNil)
+    add(scenarioSpotlight("narrow_one_nil", oneNil, { player_id: firstUserScorer(oneNil) }));
+
+  const grind =
+    [...ordered]
+      .reverse()
+      .find(
+        (m) =>
+          m.outcome === "W" &&
+          userMargin(m) === 1 &&
+          totalGoals(m).user <= 2 &&
+          shotLikeEventCount(m) <= 6,
+      ) ?? null;
+  if (grind)
+    add(scenarioSpotlight("low_event_grind", grind, { player_id: firstUserScorer(grind) }));
+
+  const blowout =
+    [...ordered].reverse().find((m) => m.outcome === "W" && userMargin(m) === 3) ?? null;
+  if (blowout)
+    add(scenarioSpotlight("dominant_blowout", blowout, { player_id: firstUserScorer(blowout) }));
+
+  const multi = [...ordered]
+    .reverse()
+    .map((m) => ({ match: m, scorer: topUserScorerInMatch(m, 2, 2) }))
+    .find((row) => row.scorer !== null);
+  if (multi?.scorer) {
+    add(
+      scenarioSpotlight("multi_goal_hero", multi.match, {
+        player_id: multi.scorer.player_id,
+        goal_count: multi.scorer.goals,
+      }),
+    );
+  }
+
+  const early = userPlayerFromMoment(keyMoments, "early_lead");
+  if (early) {
+    add(
+      scenarioSpotlight("early_breakthrough", findMatch(ordered, early.match_id), {
+        player_id: early.player_id,
+        minute: early.minute,
+      }),
+    );
+  }
+
+  const spread = eraSpread(ordered);
+  if (spread && spread.minYear <= 1970 && spread.maxYear >= 2018) {
+    add(
+      scenarioSpotlight("era_clash", finalMatch ?? lastMatch(ordered), {
+        player_id: spread.minPlayerId,
+        secondary_player_id: spread.maxPlayerId,
+        era_min_year: spread.minYear,
+        era_max_year: spread.maxYear,
+      }),
+    );
+  }
+
+  if (
+    spread &&
+    spread.maxYear - spread.minYear >= 40 &&
+    ordered.some((m) => m.phase === "knockout")
+  ) {
+    add(
+      scenarioSpotlight("cross_era_matchup", finalMatch ?? lastMatch(ordered), {
+        player_id: spread.minPlayerId,
+        secondary_player_id: spread.maxPlayerId,
+        era_min_year: spread.minYear,
+        era_max_year: spread.maxYear,
+      }),
+    );
+  }
+
+  if (spread && spread.count2026 >= 4) {
+    const modern = ordered
+      .flatMap((m) => userStarted(m))
+      .filter((entry) => entry.tournament_id === 2026)
+      .sort(sortLineup)[0];
+    add(
+      scenarioSpotlight("debut_tournament_core", finalMatch ?? lastMatch(ordered), {
+        player_id: modern?.player_id ?? null,
+        era_min_year: 2026,
+        era_max_year: 2026,
+      }),
+    );
+  }
+
+  return out.sort(compareScenario);
+}
+
 /**
  * Derive the dramatic moments for a single match from its event log + result.
  * Pure and deterministic; ordering inside the match is by (period, minute).
@@ -321,7 +956,9 @@ function decisiveGoAhead(scoring: readonly ScoringEvent[]): ScoringEvent | null 
     const sa = e.score_after;
     if (sa.user !== sa.opp + 1) continue; // must be the goal that took the lead by one
     // Held to the end iff every later goal still leaves the user ahead.
-    const held = scoring.slice(i + 1).every((later) => later.score_after.user > later.score_after.opp);
+    const held = scoring
+      .slice(i + 1)
+      .every((later) => later.score_after.user > later.score_after.opp);
     if (held) winner = e;
   }
   return winner;
@@ -413,6 +1050,7 @@ export function deriveNarrativeFacts(run: RunResult, matches: MatchResult[]): Na
     : ordered.length > 0
       ? lastMatch(ordered).match_id
       : null;
+  const scenarioSpotlights = deriveScenarioSpotlights(run, ordered, keyMoments, finalHero, villain);
 
   return {
     reached_round: run.reached_round,
@@ -424,6 +1062,7 @@ export function deriveNarrativeFacts(run: RunResult, matches: MatchResult[]): Na
     nemesis_team_id: nemesisTeamId(ordered),
     eliminated_in_match_id: eliminatedIn,
     key_moments: keyMoments,
+    scenario_spotlights: scenarioSpotlights,
     narrative_seed: deriveSubseed(run.seed, "narrative"),
   };
 }

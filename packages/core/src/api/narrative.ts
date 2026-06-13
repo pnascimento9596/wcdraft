@@ -39,7 +39,12 @@ import type { RunResult } from "../types/run.js";
 export type DeriveNarrativeFactsFn = (run: RunResult, matches: MatchResult[]) => NarrativeFacts;
 
 export { deriveNarrativeFacts } from "../narrative/facts.js";
-export { NARRATIVE_TEMPLATES, templatesForClass, classifyOutcome } from "../narrative/templates.js";
+export {
+  NARRATIVE_TEMPLATES,
+  templatesForClass,
+  templatesForScenarioFamily,
+  classifyOutcome,
+} from "../narrative/templates.js";
 export {
   resolveNarrativeTokens,
   fillTemplate,

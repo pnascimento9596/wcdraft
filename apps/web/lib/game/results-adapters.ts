@@ -26,6 +26,7 @@ import {
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
+import { managerCardView, playerCardView } from "./adapters";
 
 // ─── Round labels ────────────────────────────────────────────────────────────
 
@@ -119,7 +120,8 @@ export function resolveScorerName(
   if (card_id) {
     const c = gameData.indexes.playerByCardId.get(card_id);
     if (c) {
-      const display = c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name;
+      const display =
+        c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name;
       return display;
     }
   }
@@ -348,10 +350,12 @@ export function buildNarrativeLabels(
   draft: DraftState,
 ): NarrativeLabels {
   const player_names: Record<string, string> = {};
-  for (const c of gameData.indexes.playerByCardId.values()) {
-    const display =
-      c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name;
-    if (display) player_names[c.player_id] = display;
+  const playerCards = [...gameData.indexes.playerByCardId.values()].sort((a, b) =>
+    a.card_id.localeCompare(b.card_id),
+  );
+  for (const c of playerCards) {
+    const view = playerCardView(gameData.indexes, c.card_id);
+    if (view.name) player_names[c.player_id] = view.name;
   }
   const team_names: Record<string, string> = {};
   for (const t of scenario.teams) {
@@ -359,13 +363,9 @@ export function buildNarrativeLabels(
     if (name) team_names[t.team_id] = name;
   }
   const managerCard = draft.manager_card_id
-    ? gameData.indexes.managerByCardId.get(draft.manager_card_id)
+    ? managerCardView(gameData.indexes, draft.manager_card_id)
     : null;
-  const manager_name = managerCard
-    ? managerCard.common_name && managerCard.common_name.trim().length > 0
-      ? managerCard.common_name
-      : managerCard.full_name
-    : null;
+  const manager_name = managerCard?.name ?? null;
   return { team_name: draft.team_name, manager_name, player_names, team_names };
 }
 
