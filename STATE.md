@@ -146,6 +146,15 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
   no-op whitespace search re-rendered `23/23` visible `CandidateCard` rows; the
   follow-up branch re-rendered `0/23`. Report:
   `docs/reports/a11y-perf-followups-2026-06-14.md`.
+- **Safe dependency bump (2026-06-14)** updates only patch-level framework/tooling
+  dependencies: `next 16.2.7 -> 16.2.9`, `@types/react 19.2.16 -> 19.2.17`,
+  `@types/node 25.9.1 -> 25.9.3`, `prettier 3.8.3 -> 3.8.4`, and
+  `turbo 2.9.16 -> 2.9.18`. No app code, schema, rating, sim, data-contract,
+  auth, or leaderboard behavior changed. Validation for the branch: root
+  `pnpm typecheck`, `pnpm lint`, `pnpm test`, and `pnpm build` passed; root test
+  counts were core 366, data 65/7 skipped, db 79, marketing-x 64, and web
+  674/1 skipped. Local `next start` on Next 16.2.9 served `/`,
+  `/robots.txt`, `/data/wcdraft/manifest.json`, and the bad-token OG fallback.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
