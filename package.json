@@ -10,6 +10,8 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "check:agent-contracts": "node scripts/check-agent-contracts.mjs",
+    "check:generated": "node packages/data/scripts/ensure-generated-artifacts.mjs --check",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",

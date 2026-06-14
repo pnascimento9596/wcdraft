@@ -34,6 +34,7 @@ dropped — the count is reported by ``run()``.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -1234,6 +1235,23 @@ def _write_json(path: Path, obj) -> None:
     )
 
 
+def _write_ratings_with_lock(output_dir: Path, ratings: list[dict]) -> None:
+    text = _json_text(ratings)
+    raw = text.encode("utf-8")
+    (output_dir / "ratings.json").write_text(text, encoding="utf-8")
+    _write_json(
+        output_dir / "ratings.lock.json",
+        {
+            "path": "ratings.json",
+            "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest(),
+            "rating_version": RATING_VERSION,
+            "ratings": len(ratings),
+            "generated_by": "python -m wcdraft_etl.rating",
+        },
+    )
+
+
 # ─── MV2-4 accuracy-eyeball SAMPLE (INTERNAL-score shape) ─────────────────────
 # A human-readable shape sample for Paulo's first eyeball BEFORE MV2-5/MV2-6 commit
 # further effort. It shows INTERNAL scores (final, stature_path ingredients, four
@@ -1383,7 +1401,7 @@ def run(output_dir: Path = OUTPUT_DIR) -> list[dict]:
     sample is owned solely by ``rating_2026.write_merit_v2_sample`` (via
     ``ingest_2026.run``); see ``render_merit_v2_sample``."""
     ratings = build_all(output_dir)
-    _write_json(output_dir / "ratings.json", ratings)
+    _write_ratings_with_lock(output_dir, ratings)
     return ratings
 
 

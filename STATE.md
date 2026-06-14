@@ -4,49 +4,41 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for merit-v3.1 rebase work: 2026-06-13 · `origin/main`
-`12dd2b934760a2deac8670b195b932ef4f2638a2` (leaderboard-profiles shipped).
-Production runtime-data anchor last verified: 2026-06-12 · manifest commit
-`c174775d223d8776f8950749b50a0e6099ca456b` (the static data bundle deployed at
-www.wcdraft.com before merit-v3.1 ships). The live repo pins before this season
-remain `runtime-data-2.0.0` / `engine-2026.06.12`; draft-config's
-`runtime-data-1.2.0` / `engine-2026.06.11` anchors are historical PREV-skew
-fixtures, not the current production season.
+Last measured for oversized-artifact migration + merit-v4 doc refresh:
+2026-06-13 · `origin/main` `34a8dfb` (`feat(rating): rebuild merit-v4 ratings`,
+PR #130) with merit-v4 already live on production. Production runtime-data anchor
+verified live from `https://www.wcdraft.com/data/wcdraft/manifest.json` on
+2026-06-13: `runtime-data-2.2.0` / `engine-2026.06.13-merit-v4` /
+`wc-perf-6.0.0` / `proj-career-5.0.0`, legend census `295`,
+career-stature-estimate `505`, dataset `2026-06-04`, ruleset
+`ruleset-2026.06.04`. Live leaderboard API also reports current season key
+`engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844`.
 
-merit-v3 as-built facts: U0 linked the 17 Audit-2 2026 identity misses; V1 emitted
-`career-stature-3.0.0` with active-career source set
-`active-career-source-set-2.0.0` and the club-season honors census; V2 emitted
-`wc-perf-5.0.0`; V3 emitted `proj-career-4.0.0`; V4 re-fit the shared display curve
-as `unified_pooled_piecewise_power_v2`; V5 backfilled historical club-at-tournament
-coverage; V6 emitted `runtime-data-2.0.0` dual-basis compact data and locked the
-source-derived legend census at 270; V7 refit lambda and realism bands; V8 owns the
-single public engine stamp and season merge docs. The default basis is Career;
-the Current basis (materialized in `basis_ratings.current`) is now SELECTABLE at
-setup and rides the existing t2 token — a Current run re-rates the user squad
-from `basis_ratings.current` for both display and sim, and is non-canonical
-(casual-only, honest `NON_CANONICAL_CONFIG` 422 on the ranked board).
+merit-v4 as-built facts: ratings now use individual merit contextualized by a
+public national-team-strength prior and objective club achievement. The
+national-strength prior is built from World Football Elo all-years plus official
+FIFA ranking snapshots from 1994 onward; it replaces the old nation-blind raw-only
+`0.62` ceiling with a smooth `(tournament, nation)` prior from `0.500` to `0.625`.
+The `club_honors` family is active for public-factual internal inputs only
+(major club trophies, continental club titles, league top-scorer by goals,
+world-record/era-defining transfer facts). Fan-vote/proprietary-ratings exclusion
+still stands.
 
-Merit-v3 shipped with its §7 waiver ledger preserved, not erased: Yamal, Haaland,
-Valverde-2026, Neymar-2026, Lukaku, B. Fernandes, Kocsis card, Cruyff-1974 card,
-pile-up, inversion, 9 pre-1967 coherence violations, legend census 302→270, and
-Dembélé non-material legend remain documented carryovers / waived misses rather
-than hidden regressions.
+The merit-v3.1 88-wall STOP is retired, not deleted. The STOP was correct for the
+old merit-v3.1 request because a global `<=4% at any display value` wall conflicts
+with fixed median/control constraints by pigeonhole lower bound. merit-v4 changes
+the internal layer instead: `raw_only_ceiling == 0.62` goes `10,735 -> 0`, exact
+`raw_only_score == 0.62` goes `1,162 -> 0`, the 88 display share falls from
+`1,358 / 11.114%` to `685 / 5.606%`, and the old pigeonhole-vs-fixed-median
+incompatibility no longer binds as a release blocker. Residual low-band clustering
+and the legacy measured-vs-measured cross-era inversion metric remain explicit
+carryovers, not hidden regressions.
 
-merit-v3.1 candidate status: W1 staged complete scoped public season-honor facts
-for the final honest-miss class (Lukaku and B. Fernandes); W2 added a
-source-derived pre-1967 retrospective-consensus route; W2b added the complete
-non-fan public source extension (IFFHS Men Legends + RSSSF Guldbollen) and
-restored Raúl, Eto'o, and Ibrahimović cards from the V8 42-card loss ledger.
-The season also removed the fan-voted UEFA Team of the Year route, producing
-11 explicit guardrail legend losses rather than retaining fan-vote evidence.
-W3 was intentionally stopped: the requested global <=4% pile-up gate is
-mathematically incompatible with the standing median/control constraints, so no
-88-wall implementation landed. The Sweden-2002 ordering exemplar now passes:
-Ibrahimović is restored as a legend and moves 86->90, above every no-award
-Sweden teammate. This branch is rebased on `origin/main`
-`12dd2b934760a2deac8670b195b932ef4f2638a2` and emits the candidate versions
-below, but is not shipped until fresh Red re-review, owner SHA-pinned approval,
-merge, deploy, and live verification.
+merit-v4 anchor deltas: Son 2022 `81 -> 89`, Bale 2022 `82 -> 90`, Ibrahimović
+2002/2006 holds `90`, Haaland 2026 `98 -> 92` under active-career cap, Saudi
+Arabia 2022 weak-nation wall collapses to max `79`, South Korea 2022 spreads
+`68-89` with Son on top, pooled `90+` is `290 / 12,219 = 2.373%`, and the
+strategic-pick canary was intentionally regenerated with 6 documented pick flips.
 
 ## Lanes in flight at last measurement
 
@@ -65,16 +57,18 @@ merge, deploy, and live verification.
   base for later seasons. The main merge included the route-level public-payload
   email sweep, React escaping guardrails, Classic/Memory board screenshots, and
   migration 0005.
-- `merit-v3.1` is the active Red-tier curation candidate rebased on that shipped
-  main. No merit-v3.1 merge, production deploy, or live production verification has
-  occurred for this branch yet.
-- `merit-v4` is the active Red-tier ratings rebuild candidate on `origin/main`
-  `b4d7fe89a4c6ceb71071d6ee530eae4b4436815d`. It lands national-strength
-  raw-only ceilings, objective `club_honors`, projected active-career damping,
-  compact regen, and λ/golden relocks. It is **not shipped** until fresh-session
-  independent review re-executes the gates, the owner gives SHA-pinned in-session
-  approval, the branch is squash-merged, deploy reaches READY, and live production
-  sanity is completed.
+- `merit-v3.1` is superseded by merit-v4. Its W3 88-wall STOP remains preserved as
+  a valid proof for the old fixed-ceiling/fixed-median request, but it is no
+  longer the active release blocker because merit-v4 dissolved the `0.62` internal
+  shelf instead of trying to patch the display wall alone.
+- `merit-v4` is live on main/prod via PR #130 at `34a8dfb`. It lands
+  national-strength raw-only ceilings, objective `club_honors`, projected
+  active-career damping, compact regen, λ/golden relocks, leaderboard season reset,
+  and the public runtime anchors listed below.
+- `ws-meta/oversized-merit-v4` is the current repo-health branch. It removes the
+  two oversized deterministic generated blobs from normal git going forward,
+  replaces them with tracked fingerprints + on-demand regeneration, and preserves
+  existing-history bloat as a documented carryover (no destructive history rewrite).
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -122,20 +116,25 @@ merge, deploy, and live verification.
 
 | Field                       | Value                                                                                    |
 | --------------------------- | ---------------------------------------------------------------------------------------- |
-| schema_version              | runtime-data-2.0.0                                                                       |
+| schema_version              | runtime-data-2.2.0                                                                       |
 | dataset_version             | 2026-06-04                                                                               |
 | ruleset_version             | ruleset-2026.06.04                                                                       |
-| engine_version              | engine-2026.06.12                                                                        |
-| rating_version (historical) | wc-perf-5.0.0                                                                            |
-| rating_version (projected)  | proj-career-4.0.0                                                                        |
-| career_stature              | career-stature-3.0.0                                                                     |
-| active source set           | active-career-source-set-2.0.0                                                           |
-| runtime legend census       | 270                                                                                      |
+| engine_version              | engine-2026.06.13-merit-v4                                                              |
+| rating_version (historical) | wc-perf-6.0.0                                                                            |
+| rating_version (projected)  | proj-career-5.0.0                                                                        |
+| career_stature              | career-stature-4.0.0                                                                     |
+| merit source set            | merit-source-set-2.2.0                                                                   |
+| active source set           | active-career-source-set-2.1.0                                                           |
+| runtime legend census       | 295                                                                                      |
 | runtime ratings             | 12,219                                                                                   |
-| leaderboard season key      | engine-2026.06.12_wc-perf-5.0.0+proj-career-4.0.0_2026-06-04_ruleset-2026.06.04_03bc6434 |
-| compact brotli total        | 1,216,305 bytes                                                                          |
+| Career basis counts         | 11,328 measured · 505 career-stature · 386 baseline                                      |
+| career-stature table        | 845 players · 209 material · 114 source-derived legends                                  |
+| leaderboard season key      | engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844 |
+| compact brotli total        | 1,434,624 normalized bytes                                                               |
+| compact sha256              | manifest `70135193…` · draft `8ec327f6…` · scenario `214bccae…`                          |
+| oversized artifact locks    | ratings `ea459d84…` / 59,551,789 bytes · draft-pool `8ec327f6…` / 100,702,891 bytes      |
 
-## Candidate versions (`merit-v3.1`, not shipped)
+## Superseded candidate versions (`merit-v3.1`, not shipped)
 
 | Field                       | Value                                                           |
 | --------------------------- | --------------------------------------------------------------- |
@@ -153,27 +152,6 @@ merge, deploy, and live verification.
 | Career basis counts         | 11,351 measured · 482 career-stature · 386 baseline             |
 | compact brotli total        | 1,218,099 bytes                                                 |
 | compact sha256              | manifest `d5b32a05…` · draft `ba238aa1…` · scenario `182546ab…` |
-
-## Candidate versions (`merit-v4`, not shipped)
-
-| Field                       | Value                                                                                    |
-| --------------------------- | ---------------------------------------------------------------------------------------- |
-| schema_version              | runtime-data-2.2.0                                                                       |
-| dataset_version             | 2026-06-04                                                                               |
-| ruleset_version             | ruleset-2026.06.04                                                                       |
-| engine_version              | engine-2026.06.13-merit-v4                                                              |
-| rating_version (historical) | wc-perf-6.0.0                                                                            |
-| rating_version (projected)  | proj-career-5.0.0                                                                        |
-| career_stature              | career-stature-4.0.0                                                                     |
-| merit source set            | merit-source-set-2.2.0                                                                   |
-| active source set           | active-career-source-set-2.1.0                                                           |
-| runtime legend census       | 295                                                                                      |
-| runtime ratings             | 12,219                                                                                   |
-| Career basis counts         | 11,328 measured · 505 career-stature · 386 baseline                                      |
-| career-stature table        | 845 players · 209 material · 114 source-derived legends                                  |
-| leaderboard season key      | engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844 |
-| compact brotli total        | 1,434,624 normalized bytes                                                               |
-| compact sha256              | manifest `f96fc734…` · draft `8ec327f6…` · scenario `214bccae…`                          |
 
 ## Candidate versions (`feature/narrative-v2`, not shipped)
 
@@ -254,6 +232,7 @@ merge, deploy, and live verification.
 | merit-v4 compact metadata CI fix                          | normalized Brotli metadata to 128-byte upper-bound buckets after Linux CI measured draft-pool Brotli 2 bytes below macOS · data test 65/7 · root gate rerun 8/5/8/4 · data golden 31 + integration 22 |
 | merit-v4 lambda/realism                                   | fit 175 evals · winner BASE 1.10 / SPREAD 6.0 / MIN 0.30 / GAMMA_MID 0.80 / KO 0.82 · symmetric goals 2.544, draw 24.87%, margin4 4.86%, ET 34.13%, SO 21.33% · heavy realism 7/7 |
 | merit-v4 canary                                           | strategic-pick canary regenerated; 6 intentional pick flips documented for review                                       |
+| oversized artifact migration                              | inventory exactly 2 tracked blobs >40 MB · `pnpm run check:generated` PASS after full regen · ETL rating 42 passed · data golden 31 passed · core draft golden 40 passed · copy-web-assets PASS · forced full turbo 19/19 tasks, 0 cached · fresh verifier PASS · Vercel preview READY |
 | @wcdraft/web `typecheck` (leaderboard-profiles main-sync) | PASS                                                                                                                     |
 | @wcdraft/web `build` (leaderboard-profiles main-sync)     | PASS; existing Next/Webpack circular chunk warnings only                                                                 |
 | narrative-v2 focused goldens                              | narrative golden 64 passed · narrative+sim golden 117 passed                                                             |
@@ -265,10 +244,10 @@ merge, deploy, and live verification.
 ## CI (`.github/workflows/`)
 
 - `ci.yml` jobs: **dedupe** (skips push-event runs when the pushed branch has an open
-  PR — the pull_request run still gates; q-008) · **verify** (typecheck·lint·test·build) · **golden** (RNG + draft) ·
+  PR — the pull_request run still gates; q-008) · **verify** (generated-data determinism · AGENTS/CLAUDE drift check · typecheck·lint·test·build) · **golden** (RNG + draft) ·
   **realism** (heavy asymmetric gate, N=2000 × 3 policies) · **db-gate → db-rollback-check**
   (path-filtered to `packages/db/**`+workflow+lockfile+turbo.json; ephemeral Neon branch,
-  never prod) · **etl-rating** (ruff · rating tests · ratings.json byte-determinism).
+  never prod) · **etl-rating** (ruff · rating tests · ratings.lock.json byte-determinism).
 - `etl.yml`: ingest · identity-QA · determinism, path-filtered to `etl/**`; upstream
   Fjelstul pinned `f41e9437`.
 - `marketing-x.yml` (q-007): **ZERO-API content-pack model.** @WCDraft has no X API
@@ -289,7 +268,9 @@ merge, deploy, and live verification.
 
 Vercel project `wcdraft-web` (team `pnascimento9596s-projects`) → www.wcdraft.com.
 **Push/merge to `main` = automatic production deploy.** Build runs
-`pnpm turbo run build --filter=@wcdraft/web...` (apps/web/vercel.json).
+`pnpm turbo run build --filter=@wcdraft/web...` (apps/web/vercel.json); data build
+regenerates ignored oversized artifacts from tracked fingerprints before copying
+web static assets.
 
 ## Prod env (names only — never record values here)
 

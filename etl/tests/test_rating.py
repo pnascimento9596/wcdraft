@@ -4,7 +4,7 @@
 SELF-CONTAINED: the rating stage reads the committed canonical JSON in
 ``etl/output/``, so the suite runs without the upstream Fjelstul CSV clone
 (unlike the ingestion tests). The fixed input dataset is the committed canonical
-tables; the locked output is the committed ratings.json.
+tables; the locked output is the tracked ratings lockfile fingerprint.
 
 PHASE 1 RECALIBRATION (wc-perf-2.0.0):
   * Display floor 66, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
@@ -22,6 +22,8 @@ PHASE 1 RECALIBRATION (wc-perf-2.0.0):
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -103,12 +105,18 @@ def test_build_is_deterministic():
 
 
 def test_matches_committed_golden(built: list[dict]):
-    """Committed ratings.json must equal a fresh build, byte for byte. The CI
-    git-diff guard enforces the same after a clean rebuild."""
-    committed_text = (rating.OUTPUT_DIR / "ratings.json").read_text(encoding="utf-8")
+    """Tracked ratings.lock.json must equal a fresh build, byte for byte.
+
+    ratings.json itself is regenerated on demand and ignored to stay below
+    GitHub's hard blob limit; the lockfile is the committed determinism contract.
+    """
+    lock = json.loads((rating.OUTPUT_DIR / "ratings.lock.json").read_text(encoding="utf-8"))
     fresh_text = rating._json_text(built)
-    assert committed_text == fresh_text, (
-        "etl/output/ratings.json is stale — run `python -m wcdraft_etl.rating` and commit."
+    fresh_bytes = fresh_text.encode("utf-8")
+    assert lock["bytes"] == len(fresh_bytes)
+    assert lock["sha256"] == hashlib.sha256(fresh_bytes).hexdigest(), (
+        "etl/output/ratings.lock.json is stale — run `python -m wcdraft_etl.rating` "
+        "and commit the lockfile."
     )
 
 

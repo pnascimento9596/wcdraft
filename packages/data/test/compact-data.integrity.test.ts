@@ -1,7 +1,7 @@
-// Schema / join / honest-state / ID-rewrite integrity for the committed
-// compact bundles. Runs against the on-disk artifacts in `src/generated/`
-// — this is the contract that the builder is allowed to break only when
-// the bundles are explicitly regenerated.
+// Schema / join / honest-state / ID-rewrite integrity for the generated compact
+// bundles. Runs against the on-disk artifacts in `src/generated/`; the largest
+// bundle is intentionally ignored by normal git and locked by manifest/report
+// fingerprints.
 //
 // Tests in this file are CHEAP — they iterate the in-memory bundles
 // without re-running the builder. Determinism + size-budget assertions

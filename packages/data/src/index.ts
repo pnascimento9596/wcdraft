@@ -3,14 +3,14 @@
 // Layers:
 //   1. Runtime data CONTRACTS (types) — bridge between ETL output and
 //      `@wcdraft/core` / `@wcdraft/web`.
-//   2. The committed compact BUNDLES (read-only JSON in `src/generated/`),
-//      re-exported as typed values.
+//   2. The generated compact BUNDLES (read-only JSON in `src/generated/`,
+//      locked by tracked manifest/report fingerprints), re-exported as typed values.
 //
 // Loaders for production code live in subpath entry points:
 //   - `@wcdraft/data/client` — browser fetch-based loaders.
 //   - `@wcdraft/data/node`   — file-system loaders (tests, scripts).
 //
-// The top-level barrel exports types + the committed bundles for tests,
+// The top-level barrel exports types + the generated locked bundles for tests,
 // scripts, and server-only tooling. Browser code MUST use
 // `@wcdraft/data/client`.
 

@@ -19,9 +19,9 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "vitest run",
+    "test": "node ../data/scripts/ensure-generated-artifacts.mjs && vitest run",
     "test:golden": "vitest run src/rng.golden.test.ts src/narrative.golden.test.ts",
-    "test:golden:draft": "vitest run src/draft.golden.test.ts src/lock-on-pick.golden.test.ts src/position-compatibility.golden.test.ts src/entity-resolution.golden.test.ts src/manager-identity.golden.test.ts",
+    "test:golden:draft": "node ../data/scripts/ensure-generated-artifacts.mjs && vitest run src/draft.golden.test.ts src/lock-on-pick.golden.test.ts src/position-compatibility.golden.test.ts src/entity-resolution.golden.test.ts src/manager-identity.golden.test.ts",
     "gen:golden": "tsx scripts/generate-golden.ts",
     "gen:sim-golden": "tsx scripts/generate-sim-golden.ts",
     "gen:golden:draft": "tsx scripts/generate-draft-golden.ts"

@@ -77,6 +77,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generated data determinism
+        run: pnpm run check:generated
+
+      - name: Agent contract drift check
+        run: pnpm run check:agent-contracts
+
       - name: Typecheck
         run: pnpm run typecheck
 
@@ -296,7 +302,7 @@ jobs:
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
     # etl/output/, so this job needs no upstream Fjelstul CSV clone. It lints the
     # rating code, runs the rating test suite, and proves byte-determinism by
-    # regenerating ratings.json and failing on any git diff (the moat's guard).
+    # regenerating ratings.json and failing if the tracked lockfile drifts.
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -317,8 +323,8 @@ jobs:
         working-directory: etl
         run: python -m pytest tests/test_rating.py -q
 
-      - name: Golden determinism — ratings.json must be byte-stable
+      - name: Golden determinism — ratings lockfile must be byte-stable
         run: |
           python -m wcdraft_etl.rating
-          git diff --exit-code -- etl/output/ratings.json \
-            || (echo "::error::etl/output/ratings.json is stale — run 'python -m wcdraft_etl.rating' and commit." && exit 1)
+          git diff --exit-code -- etl/output/ratings.lock.json \
+            || (echo "::error::etl/output/ratings.lock.json is stale — run 'python -m wcdraft_etl.rating' and commit the lockfile." && exit 1)

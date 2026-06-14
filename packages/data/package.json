@@ -25,15 +25,15 @@
     "src/generated"
   ],
   "scripts": {
-    "build": "NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "node scripts/ensure-generated-artifacts.mjs && NODE_OPTIONS=--max-old-space-size=8192 tsc -p tsconfig.build.json",
+    "typecheck": "node scripts/ensure-generated-artifacts.mjs && tsc -p tsconfig.json --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "vitest run",
-    "test:golden": "vitest run test/compact-data.golden.test.ts",
-    "test:golden:data": "vitest run test/compact-data.golden.test.ts test/compact-data.integrity.test.ts",
-    "test:golden:integration": "vitest run test/e2e-real-run.golden.test.ts test/era-presets.golden.test.ts",
-    "test:realism:heavy": "WCDRAFT_REALISM_HEAVY=1 vitest run test/realism/realism.gate.test.ts",
-    "build:compact": "node scripts/build-compact-data.mjs",
+    "test": "node scripts/ensure-generated-artifacts.mjs && vitest run",
+    "test:golden": "node scripts/ensure-generated-artifacts.mjs && vitest run test/compact-data.golden.test.ts",
+    "test:golden:data": "node scripts/ensure-generated-artifacts.mjs && vitest run test/compact-data.golden.test.ts test/compact-data.integrity.test.ts",
+    "test:golden:integration": "node scripts/ensure-generated-artifacts.mjs && vitest run test/e2e-real-run.golden.test.ts test/era-presets.golden.test.ts",
+    "test:realism:heavy": "node scripts/ensure-generated-artifacts.mjs && WCDRAFT_REALISM_HEAVY=1 vitest run test/realism/realism.gate.test.ts",
+    "build:compact": "node scripts/ensure-generated-artifacts.mjs --inputs-only && node scripts/build-compact-data.mjs",
     "copy:web-assets": "node scripts/copy-web-assets.mjs",
     "gen:e2e-golden": "tsx scripts/generate-e2e-golden.mjs",
     "gen:era-golden": "tsx scripts/generate-era-golden.mts"
