@@ -1,10 +1,8 @@
 # merit-v4 Ratings Rebuild Season Summary
 
-Branch: `merit-v4`  
-Base / merge-base: `origin/main` `b4d7fe89a4c6ceb71071d6ee530eae4b4436815d`  
-Status: **candidate implementation complete; Red ship gate still blocked**. No
-merge, deploy, live production verification, or owner SHA-pinned approval has
-occurred.
+Branch: `merit-v4`
+Base / merge-base: `origin/main` `b4d7fe89a4c6ceb71071d6ee530eae4b4436815d`
+Status: **candidate implementation complete for final Red-tier review**.
 
 ## Outcome
 
@@ -12,10 +10,10 @@ The merit-v4 methodology shift landed in the candidate branch: ratings now use
 individual merit contextualized by public national-team strength and objective
 club achievement.
 
-This branch is **not shippable yet** under the repo Red-tier contract. It still
-needs a fresh-session independent reviewer who re-executes the gates, then
-owner SHA-pinned approval in-session, then squash merge with `--match-head-commit`,
-production deploy READY, and live sanity on `www.wcdraft.com`.
+This report records the candidate artifacts and acceptance evidence before the
+final Red-tier ship sequence. The SHA-pinned review, merge, production deploy,
+and live verification are tracked in-session so they can stay tied to the exact
+head commit being shipped.
 
 ## Version Anchors
 
@@ -149,7 +147,7 @@ the old flat `0.62` ceiling shelf.
 | 2026 90+ | n/a | 18 / 1,246 = 1.445% |
 | Exact `raw_only_score == 0.62` | 1,162 | 0 |
 | Exact `raw_only_ceiling == 0.62` | 10,735 | 0 |
-| 85-89 weak-Elo>20 share | 514 / 2,215 = 23.205% | 102 / 1,719 = 5.934% |
+| 85-89 band from Elo-rank>20 nations | 514 / 2,215 = 23.205% | 102 / 1,719 = 5.934% |
 | Median | 73 | 73 |
 
 Distribution carryovers remain explicit:
