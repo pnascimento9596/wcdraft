@@ -66,6 +66,7 @@ from . import (
     ACTIVE_CUTOFF_DATE,
     ACTIVE_SOURCE_SET_VERSION,
     ACTIVE_SOURCES,
+    VERSION,
     MeritRecord,
 )
 from . import build as merit_build
@@ -510,13 +511,12 @@ def build(write: bool = True) -> dict:
     staging_doc = {
         "version": ACTIVE_SOURCE_SET_VERSION,
         "cutoff_date": ACTIVE_CUTOFF_DATE,
-        "activated_by": "career-stature-3.1.0",
+        "activated_by": VERSION,
         "note": (
             "Active-career staging entries. Facts + identity only: no "
             "career_stature_score, index, tier or legend is computed here. "
-            "career-stature-3.1.0 consumes source_facts_active.json plus this "
-            "staging artifact and applies the person-level, career-stage-"
-            "normalized merge."
+            f"{VERSION} consumes source_facts_active.json plus this staging "
+            "artifact and applies the person-level, career-stage-normalized merge."
         ),
         "entry_count": len(entries),
         "entries": entries,
@@ -620,7 +620,7 @@ def _render_report(facts, entries, review, bridges, curation_notes) -> str:
     L.append(
         "MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year "
         f"ceiling 2022). Curation cutoff **{ACTIVE_CUTOFF_DATE}**. Activated by "
-        "career-stature-3.1.0: stature.py consumes these artifacts, while this "
+        f"{VERSION}: stature.py consumes these artifacts, while this "
         "module still emits facts + identity only and no rating output.\n"
     )
     L.append(f"- Linked active facts: **{len(facts)}**")
@@ -731,7 +731,7 @@ def manifest_from_committed() -> dict:
         "cutoff_date": ACTIVE_CUTOFF_DATE,
         "note": (
             "Active-career intake notes. Citation-backed public facts for "
-            "in-progress careers, staged for career-stature-3.1.0. Each note is "
+            f"in-progress careers, staged for {VERSION}. Each note is "
             "SHA-pinned and every row carries a fetchable public citation URL plus "
             "the specific claim it supports; editing a citation changes the bytes "
             "and therefore the pinned sha256. An uncited row fails the build."

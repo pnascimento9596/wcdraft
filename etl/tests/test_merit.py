@@ -382,10 +382,11 @@ def test_committed_outputs_are_in_sync_with_a_fresh_build(built):
 
 def test_source_set_and_stature_table_versions_are_independent():
     """The two version axes move independently: MV2-1/2 bumped the SOURCE-SET to v2;
-    merit-v3 V1 now bumps the career-stature TABLE to v3 to activate active-career
-    scoring. They are distinct strings (different schemas, different cadences)."""
-    assert SOURCE_SET_VERSION == "merit-source-set-2.1.0"
-    assert VERSION == "career-stature-3.1.0"
+    merit-v4 bumps both axes for objective club-achievement facts and the downstream
+    scoring contract. They are distinct strings (different schemas, different
+    cadences)."""
+    assert SOURCE_SET_VERSION == "merit-source-set-2.2.0"
+    assert VERSION == "career-stature-4.0.0"
     assert SOURCE_SET_VERSION != VERSION
 
 
@@ -505,20 +506,21 @@ def test_v2_review_reasons_are_the_same_conservative_set(built):
 
 def test_v2_stature_table_scores_the_full_source_set():
     """MV2-3 removed the v1 isolation; merit-v3 V1 keeps the full source-set
-    scoring and adds the active club-season family. The active channel is consumed
-    by stature.py, not by rating or compact-data modules."""
+    scoring, merit-v4 adds objective club-achievement facts, and the active channel
+    is consumed by stature.py, not by rating or compact-data modules."""
     from wcdraft_etl.merit import stature
 
     table = json.loads(
         (REPO_ROOT / "etl" / "output" / "career_stature.json").read_text("utf-8")
     )
-    assert table["version"] == "career-stature-3.1.0"
+    assert table["version"] == "career-stature-4.0.0"
     # The v2-only families carry positive scores on real rows — they are scored, not
     # staged-and-ignored as they were under the v1 table.
     for fam in (
         "regional_annual_recognition",
         "position_balanced_selection",
         "captaincy",
+        "club_honors",
         "club_season_honors",
     ):
         assert any(

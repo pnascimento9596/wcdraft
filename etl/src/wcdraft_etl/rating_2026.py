@@ -49,7 +49,7 @@ from pathlib import Path
 # QUANTILE MAPPING (not an affine rescale) — see _raw_only_quantile_map — so the
 # 2026 non-material internal-score DISTRIBUTION matches the historical raw-only
 # quantiles cross-era, the population MV2-6's single monotonic curve pools.
-from . import rating
+from . import national_strength, rating
 from .rating import (
     _PRECISION,
     BASE_CEILING,
@@ -78,8 +78,8 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
-# proj-career-4.1.0 (merit-v3.1): projected ratings consume the same
-# career-stature-3.1.0 source-curation update as historical ratings; the
+# proj-career-5.0.0 (merit-v4): projected ratings consume the same
+# career-stature-4.0.0 source-curation update as historical ratings; the
 # projected formula itself is unchanged.
 # proj-career-4.0.0 (merit-v3 V3, design §2): D1 age-conditional quantile curves
 # replace the all-age caps/goals percentiles (age_factor RETIRED — keeping both
@@ -87,7 +87,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-4.1.0"
+RATING_VERSION = "proj-career-5.0.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -147,9 +147,18 @@ LEAGUE_STRENGTH: dict[str, float] = {
 # letting any single signal pin the score at 100.
 LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.28}
 
+# merit-v4: active career-stature rows are stage-normalized so young in-progress
+# players can clear materiality before their career is complete. That is right for
+# "has enough evidence to leave raw-only" but too strong if the projected 2026 path
+# treats the normalized row as a completed all-time career. Cap the projected
+# stature path by the active stage already emitted by career_stature.json; completed
+# / non-active rows are untouched.
+PROJECTED_ACTIVE_STATURE_CAP_FLOOR = 0.72
+PROJECTED_ACTIVE_STATURE_CAP_SPAN = 0.25
+
 
 def _load_career_stature(output_dir: Path) -> dict[str, dict]:
-    """player_id -> FULL career-stature-3.1.0 row (merit-v3.1).
+    """player_id -> FULL career-stature-4.0.0 row (merit-v4).
 
     V3 retires the V1 rating-compat pin: the projected stage now consumes the
     same full v3 person-identity rows as the historical wc-perf-5.0.0 stage —
@@ -158,6 +167,19 @@ def _load_career_stature(output_dir: Path) -> dict[str, dict]:
     same player_id lookup serves linked and minted cards alike.
     """
     return _load_historical_career_stature(output_dir)
+
+
+def _projected_active_stature_cap(cs: dict | None) -> float | None:
+    if not cs or not cs.get("active_source_set_version"):
+        return None
+    stage_factors = cs.get("active_stage_factors") or {}
+    if not stage_factors:
+        return None
+    stage = min(float(v) for v in stage_factors.values())
+    return _clamp01(
+        PROJECTED_ACTIVE_STATURE_CAP_FLOOR
+        + PROJECTED_ACTIVE_STATURE_CAP_SPAN * _clamp01(stage)
+    )
 
 
 # ─── STATURE RECONCILIATION (proj-career-3.0.0, merit-v2 MV2-5) ───────────────
@@ -460,6 +482,7 @@ def _build_internal_rows(
     cards: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
     historical_raw_only_internal: list[float] | None = None,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
 ) -> list[dict]:
     """Pass 1 of the projected build — one INTERNAL row per 2026 card carrying the
     pre-display ``score_0_100`` (now on the stature scale for linked-material cards),
@@ -559,10 +582,18 @@ def _build_internal_rows(
             tier = cs.get("stature_tier")
             target = _stature_target(pos, index)
             modulation = _projected_modulation(s["projected_raw"], ref, pos, tier)
-            stature_path = _clamp01(target + modulation)
+            uncapped_stature_path = _clamp01(target + modulation)
+            active_stature_cap = _projected_active_stature_cap(cs)
+            stature_path = (
+                min(uncapped_stature_path, active_stature_cap)
+                if active_stature_cap is not None
+                else uncapped_stature_path
+            )
         else:
             target = None
             modulation = 0.0
+            uncapped_stature_path = 0.0
+            active_stature_cap = None
             stature_path = 0.0
         s["link_status"] = link_status
         s["cs"] = cs
@@ -570,6 +601,8 @@ def _build_internal_rows(
         s["ref"] = ref
         s["target"] = target
         s["modulation"] = modulation
+        s["uncapped_stature_path"] = uncapped_stature_path
+        s["active_stature_cap"] = active_stature_cap
         s["stature_path"] = stature_path
         if weight >= STATURE_DOMINANT_WEIGHT:
             material_finals_by_pos.setdefault(pos, []).append(stature_path)
@@ -599,7 +632,13 @@ def _build_internal_rows(
         raw = s["projected_raw"]
 
         cohort_material = material_finals_by_pos.get(pos)
-        raw_only_ceiling = RAW_ONLY_GLOBAL_CEILING if has_any_material else 1.0
+        strength_row = rating._national_strength_row(national_strength_by_key, c)
+        national_raw_only_ceiling = (
+            strength_row["raw_only_ceiling"]
+            if strength_row is not None
+            else RAW_ONLY_GLOBAL_CEILING
+        )
+        raw_only_ceiling = national_raw_only_ceiling if has_any_material else 1.0
         if cohort_material:
             raw_only_ceiling = min(raw_only_ceiling, _quantile(sorted(cohort_material), 0.5))
         raw_path = min(
@@ -668,6 +707,39 @@ def _build_internal_rows(
                 "value": round(s["modulation"], _PRECISION) if weight > 0.0 else 0.0,
                 "weight": 0.0,
             },
+            {
+                "signal": "raw_only_ceiling",
+                "value": round(raw_only_ceiling, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_team_strength",
+                "value": (
+                    round(strength_row["strength"], _PRECISION)
+                    if strength_row is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_team_elo_rank",
+                "value": strength_row["elo_global_rank"] if strength_row is not None else None,
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_team_fifa_rank",
+                "value": strength_row["fifa_rank"] if strength_row is not None else None,
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_raw_only_ceiling_prior",
+                "value": (
+                    round(national_raw_only_ceiling, _PRECISION)
+                    if strength_row is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
             {"signal": "career_stature_score", "value": career_score_val, "weight": 0.0},
             {"signal": "career_stature_index", "value": career_index_val, "weight": 0.0},
             {"signal": "career_stature_coverage", "value": career_coverage, "weight": 0.0},
@@ -679,6 +751,23 @@ def _build_internal_rows(
                     round(s["target"], _PRECISION)
                     if (weight > 0.0 and s["target"] is not None)
                     else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "projected_active_stature_cap",
+                "value": (
+                    round(s["active_stature_cap"], _PRECISION)
+                    if s["active_stature_cap"] is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "projected_active_stature_cap_delta",
+                "value": round(
+                    max(0.0, s["uncapped_stature_path"] - s["stature_path"]),
+                    _PRECISION,
                 ),
                 "weight": 0.0,
             },
@@ -715,6 +804,7 @@ def build_internal_view(
     career_stature_by_player: dict[str, dict] | None = None,
     historical_raw_only_internal: list[float] | None = None,
     output_dir: Path = OUTPUT_DIR,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
 ) -> list[dict]:
     """Pass 1, exposed for the acceptance suite — internal rows carrying the
     pre-display stature-scale ``score_0_100``, ``overall_basis``, ``legend``, and
@@ -725,8 +815,13 @@ def build_internal_view(
     committed ``ratings.json`` raw-only distribution under ``output_dir``."""
     if historical_raw_only_internal is None:
         historical_raw_only_internal = _historical_raw_only_internal(output_dir)
+    if national_strength_by_key is None:
+        national_strength_by_key = national_strength.load_by_key(output_dir)
     return _build_internal_rows(
-        cards, career_stature_by_player, historical_raw_only_internal
+        cards,
+        career_stature_by_player,
+        historical_raw_only_internal,
+        national_strength_by_key,
     )
 
 
@@ -737,6 +832,7 @@ def build_ratings(
     output_dir: Path = OUTPUT_DIR,
     curve=None,
     internal_rows: list[dict] | None = None,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
 ) -> list[dict]:
     """Return projected Rating-shaped records for every 2026 card, sorted by card_id.
 
@@ -765,9 +861,14 @@ def build_ratings(
 
     if historical_raw_only_internal is None:
         historical_raw_only_internal = _historical_raw_only_internal(output_dir)
+    if national_strength_by_key is None:
+        national_strength_by_key = national_strength.load_by_key(output_dir)
     if internal_rows is None:
         internal_rows = _build_internal_rows(
-            cards, career_stature_by_player, historical_raw_only_internal
+            cards,
+            career_stature_by_player,
+            historical_raw_only_internal,
+            national_strength_by_key,
         )
 
     # ── PASS 2: materialize Rating rows on the UNIFIED display curve (MV2-6) ───
@@ -863,7 +964,13 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
     # Historical raw-only internal distribution (the quantile-map target), read
     # READ-ONLY from the committed ratings.json. Missing → [] (raw passes through).
     historical_raw_only = _historical_raw_only_internal(output_dir)
-    return build_ratings(cards, career, historical_raw_only, output_dir)
+    return build_ratings(
+        cards,
+        career,
+        historical_raw_only,
+        output_dir,
+        national_strength_by_key=national_strength.load_by_key(output_dir),
+    )
 
 
 # ─── MV2-5 accuracy-eyeball SAMPLE (2026 INTERNAL-score shape) ────────────────
@@ -1005,7 +1112,9 @@ def render_merit_v2_sample_full(output_dir: Path = OUTPUT_DIR) -> str:
     cards = json.loads((output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8"))
     career = _load_career_stature(output_dir)
     historical_raw_only = _historical_raw_only_internal(output_dir)
-    internal_rows = _build_internal_rows(cards, career, historical_raw_only)
+    internal_rows = _build_internal_rows(
+        cards, career, historical_raw_only, national_strength.load_by_key(output_dir)
+    )
 
     players_canon = json.loads((output_dir / "players.json").read_text(encoding="utf-8"))
     players_minted = json.loads((output_dir / "players_2026.json").read_text(encoding="utf-8"))

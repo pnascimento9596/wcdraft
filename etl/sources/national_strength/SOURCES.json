@@ -1,0 +1,197 @@
+{
+  "fifa_ranking": {
+    "base_url": "https://inside.fifa.com/api/ranking-overview",
+    "files": [
+      {
+        "date_id": "id11",
+        "file": "fifa/1994_id11.json",
+        "release_date": "1994-06-14",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id11&rankingType=football",
+        "year": 1994
+      },
+      {
+        "date_id": "id50",
+        "file": "fifa/1998_id50.json",
+        "release_date": "1998-05-20",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id50&rankingType=football",
+        "year": 1998
+      },
+      {
+        "date_id": "id97",
+        "file": "fifa/2002_id97.json",
+        "release_date": "2002-05-15",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id97&rankingType=football",
+        "year": 2002
+      },
+      {
+        "date_id": "id145",
+        "file": "fifa/2006_id145.json",
+        "release_date": "2006-05-17",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id145&rankingType=football",
+        "year": 2006
+      },
+      {
+        "date_id": "id9276",
+        "file": "fifa/2010_id9276.json",
+        "release_date": "2010-05-26",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id9276&rankingType=football",
+        "year": 2010
+      },
+      {
+        "date_id": "id10747",
+        "file": "fifa/2014_id10747.json",
+        "release_date": "2014-06-05",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id10747&rankingType=football",
+        "year": 2014
+      },
+      {
+        "date_id": "id12210",
+        "file": "fifa/2018_id12210.json",
+        "release_date": "2018-06-07",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id12210&rankingType=football",
+        "year": 2018
+      },
+      {
+        "date_id": "id13792",
+        "file": "fifa/2022_id13792.json",
+        "release_date": "2022-10-06",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id13792&rankingType=football",
+        "year": 2022
+      },
+      {
+        "date_id": "id15136",
+        "file": "fifa/2026_id15136.json",
+        "release_date": "2026-06-11",
+        "url": "https://inside.fifa.com/api/ranking-overview?locale=en&dateId=id15136&rankingType=football",
+        "year": 2026
+      }
+    ],
+    "license_note": "Official FIFA/Coca-Cola Men's World Ranking API snapshots; rank/points facts are used as public national-team strength inputs."
+  },
+  "retrieved_date": "2026-06-13",
+  "world_football_elo": {
+    "base_url": "https://www.eloratings.net",
+    "files": [
+      {
+        "file": "elo/en.teams.tsv",
+        "url": "https://www.eloratings.net/en.teams.tsv"
+      },
+      {
+        "file": "elo/1930_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1930_World_Cup_start.tsv",
+        "year": 1930
+      },
+      {
+        "file": "elo/1934_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1934_World_Cup_start.tsv",
+        "year": 1934
+      },
+      {
+        "file": "elo/1938_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1938_World_Cup_start.tsv",
+        "year": 1938
+      },
+      {
+        "file": "elo/1950_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1950_World_Cup_start.tsv",
+        "year": 1950
+      },
+      {
+        "file": "elo/1954_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1954_World_Cup_start.tsv",
+        "year": 1954
+      },
+      {
+        "file": "elo/1958_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1958_World_Cup_start.tsv",
+        "year": 1958
+      },
+      {
+        "file": "elo/1962_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1962_World_Cup_start.tsv",
+        "year": 1962
+      },
+      {
+        "file": "elo/1966_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1966_World_Cup_start.tsv",
+        "year": 1966
+      },
+      {
+        "file": "elo/1970_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1970_World_Cup_start.tsv",
+        "year": 1970
+      },
+      {
+        "file": "elo/1974_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1974_World_Cup_start.tsv",
+        "year": 1974
+      },
+      {
+        "file": "elo/1978_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1978_World_Cup_start.tsv",
+        "year": 1978
+      },
+      {
+        "file": "elo/1982_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1982_World_Cup_start.tsv",
+        "year": 1982
+      },
+      {
+        "file": "elo/1986_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1986_World_Cup_start.tsv",
+        "year": 1986
+      },
+      {
+        "file": "elo/1990_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1990_World_Cup_start.tsv",
+        "year": 1990
+      },
+      {
+        "file": "elo/1994_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1994_World_Cup_start.tsv",
+        "year": 1994
+      },
+      {
+        "file": "elo/1998_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/1998_World_Cup_start.tsv",
+        "year": 1998
+      },
+      {
+        "file": "elo/2002_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2002_World_Cup_start.tsv",
+        "year": 2002
+      },
+      {
+        "file": "elo/2006_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2006_World_Cup_start.tsv",
+        "year": 2006
+      },
+      {
+        "file": "elo/2010_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2010_World_Cup_start.tsv",
+        "year": 2010
+      },
+      {
+        "file": "elo/2014_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2014_World_Cup_start.tsv",
+        "year": 2014
+      },
+      {
+        "file": "elo/2018_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2018_World_Cup_start.tsv",
+        "year": 2018
+      },
+      {
+        "file": "elo/2022_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2022_World_Cup_start.tsv",
+        "year": 2022
+      },
+      {
+        "file": "elo/2026_World_Cup_start.tsv",
+        "url": "https://www.eloratings.net/2026_World_Cup_start.tsv",
+        "year": 2026
+      }
+    ],
+    "license_note": "World Football Elo Ratings public TSV pages; rank/rating facts are used as public national-team strength inputs."
+  }
+}

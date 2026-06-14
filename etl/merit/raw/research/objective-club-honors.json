@@ -1,0 +1,139 @@
+{
+  "source_id": "research_objective_club_honors",
+  "family": "club_honors",
+  "note": "merit-v4 deterministic factual research backstop. Objective club-achievement facts that the parser source set does not carry but that are within the owner-ratified scope for contextualized individual merit: major trophy achievement, league top-scorer by goals, and world-record / era-defining transfer facts. Voting-decided awards, fan votes, player-of-the-year honors, and subjective club accolades are excluded. Each row is a citation-backed public fact: the player's canonical display name, nation, fact year, position, detail token, and fetchable citation URL plus the specific claim. No rating numbers, rankings, OVR/channel/boost/override, or per-player tuning are present; the conservative linker treats these rows identically to parser rows, and an uncited row fails the build.",
+  "rows": [
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Heung-min Son",
+      "nation_token": "South Korea",
+      "year": 2022,
+      "position": "FW",
+      "detail": "league_top_scorer: Premier League Golden Boot 2021-22 joint winner; 23 goals",
+      "citation": {
+        "url": "https://www.premierleague.com/en/news/2626553",
+        "claim": "The Premier League reported that Son Heung-min and Mohamed Salah shared the 2021/22 Golden Boot after ending the season on 23 goals."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Gareth Bale",
+      "nation_token": "Wales",
+      "year": 2022,
+      "position": "FW",
+      "detail": "major_club_trophy_count_5plus: Real Madrid 5 European Cups / Champions Leagues between 2014 and 2022",
+      "citation": {
+        "url": "https://www.realmadrid.com/en-US/the-club/history/football-legends/gareth-bale",
+        "claim": "Real Madrid's official Gareth Bale profile states that he won five European Cups between 2014 and 2022."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Gareth Bale",
+      "nation_token": "Wales",
+      "year": 2013,
+      "position": "FW",
+      "detail": "world_record_transfer: Tottenham to Real Madrid transfer reported around EUR100m, most expensive in sport at the time",
+      "citation": {
+        "url": "https://english.elpais.com/elpais/2013/09/01/inenglish/1378061135_102744.html",
+        "claim": "El Pais reported Bale's Real Madrid fee at about 100 million euros, making the transfer the most expensive in the history of the sport at that time."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Frank Lampard",
+      "nation_token": "England",
+      "year": 2014,
+      "position": "MF",
+      "detail": "major_club_trophy_count_5plus: Chelsea 13 pieces of silverware including UEFA Champions League 2012, UEFA Europa League 2013, three Premier League titles, four FA Cups, and two League Cups",
+      "citation": {
+        "url": "https://www.chelseafc.com/en/news/article/everything-you-need-to-know-about-frank-lampard",
+        "claim": "Chelsea's official Frank Lampard profile lists 13 pieces of silverware with the club, including the Champions League, Europa League, three Premier League titles, four FA Cups, and two League Cups."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Ruud van Nistelrooy",
+      "nation_token": "Netherlands",
+      "year": 2003,
+      "position": "FW",
+      "detail": "league_top_scorer: Premier League Golden Boot 2002-03 winner; 25 goals",
+      "citation": {
+        "url": "https://www.premierleague.com/en/news/1206108",
+        "claim": "The Premier League Golden Boot winners table lists Ruud van Nistelrooy as the 2002/03 winner for Manchester United with 25 goals."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Clarence Seedorf",
+      "nation_token": "Netherlands",
+      "year": 2007,
+      "position": "MF",
+      "detail": "continental_club_titles_4plus: four European Cup / Champions League titles with Ajax, Real Madrid, and Milan",
+      "citation": {
+        "url": "https://www.realmadrid.com/en-US/the-club/history/football-legends/clarence-seedorf",
+        "claim": "Real Madrid's official Clarence Seedorf profile states that he became the first footballer to win four European Cup titles with three different teams."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Yaya Toure",
+      "nation_token": "Cote d'Ivoire",
+      "year": 2018,
+      "position": "MF",
+      "detail": "major_club_trophy_count_5plus: Manchester City three Premier League titles, three League Cups, an FA Cup, and Community Shield",
+      "citation": {
+        "url": "https://www.mancity.com/news/mens/yaya-toure-shortlisted-for-premier-league-hall-of-fame-63815759",
+        "claim": "Manchester City reported that Yaya Toure won three Premier League titles, three League Cups, an FA Cup, and a Community Shield with the club."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Wayne Rooney",
+      "nation_token": "England",
+      "year": 2017,
+      "position": "FW",
+      "detail": "major_club_trophy_count_5plus: Manchester United 13 major trophies",
+      "citation": {
+        "url": "https://www.manutd.com/en/news/the-stats-behind-wayne-rooneys-man-utd-career",
+        "claim": "Manchester United's official career stats article states that Wayne Rooney won 13 major trophies during his time at United."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Arturo Vidal",
+      "nation_token": "Chile",
+      "year": 2019,
+      "position": "MF",
+      "detail": "major_club_trophy_count_5plus: eight consecutive domestic league titles across Juventus, Bayern Munich, and Barcelona",
+      "citation": {
+        "url": "https://www.fcbarcelona.com/en/news/1198503/arturo-vidal-the-king-of-back-to-back-league-titles",
+        "claim": "FC Barcelona reported that Arturo Vidal became the first player to claim eight domestic league titles in a row in three different major European leagues."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Ilkay Gundogan",
+      "nation_token": "Germany",
+      "year": 2025,
+      "position": "MF",
+      "detail": "major_club_trophy_count_5plus: Manchester City Champions League, five Premier League titles, two FA Cups, four League Cups, and two Community Shields",
+      "citation": {
+        "url": "https://www.mancity.com/mancitylegends/gundogan-ilkay",
+        "claim": "Manchester City's official Ilkay Gundogan profile lists a Champions League, five Premier League titles, two FA Cups, four League Cups, and two Community Shields."
+      }
+    },
+    {
+      "scope": "merit_v4_objective_club_context",
+      "name": "Joshua Kimmich",
+      "nation_token": "Germany",
+      "year": 2025,
+      "position": "MF",
+      "detail": "major_club_trophy_count_5plus: Bayern Munich eight Bundesliga titles, Champions League, and Club World Cup among other honours",
+      "citation": {
+        "url": "https://fcbayern.com/en/news/2025/03/fc-bayern-and-joshua-kimmich-extend-until-2029",
+        "claim": "Bayern Munich's official contract-extension article states that Joshua Kimmich had won eight Bundesliga titles, the Champions League, and the Club World Cup, among other honours."
+      }
+    }
+  ]
+}

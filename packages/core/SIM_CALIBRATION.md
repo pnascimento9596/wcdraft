@@ -1,5 +1,18 @@
 # WS-B Sim + Scoring — Calibration
 
+> **merit-v4 (`engine-2026.06.13-merit-v4`) — λ refit against
+> national-strength + objective-club merit channels.** merit-v4 changed the
+> rating/channel distribution and tripped the strategic-pick canary, so the
+> deterministic fitter was re-run after the final source expansion. The
+> accepted tuple remains:
+> **`LAMBDA.BASE = 1.10`, `LAMBDA.SPREAD = 6.0`, `LAMBDA.MIN = 0.30`,
+> `LAMBDA.GAMMA_MID = 0.80`, `LAMBDA.KO_LAMBDA_FACTOR = 0.82`**; `MAX`,
+> `W_DEF/W_GK`, `CHANCES`, and `LAMBDA_DISP` remain unchanged from merit-v3 V8.
+> Fitter: `175` evaluations; winner landing `goals=2.544`, `draw=24.87%`,
+> `margin>=4=4.86%`, `KO->ET=34.13%`, `SO=21.33%`. Symmetric realism remains
+> 5/5 in band; heavy asymmetric realism remains 7/7 after re-locking
+> Wilson/floor shape bands. Runtime stamp: `engine-2026.06.13-merit-v4`.
+
 > **merit-v3 V8 (`engine-2026.06.12`) — λ refit against the post-V6
 > Career channels.** The merit-v3 rating/display changes moved the Career
 > channels that feed the sim, so the MV2-11b tuple no longer landed inside
@@ -109,15 +122,15 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | **merit-v3 V8 (`engine-2026.06.12`)** | Why (V7) |
+| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | **merit-v4 (`engine-2026.06.13-merit-v4`)** | Why (merit-v4) |
 |---|---|---|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | **1.05** | raised — restores mean goals under the post-V6 Career channels |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | **6.5** | returned to the E-3a refit value; margin>=4 stays in band with the higher floor/midfield pull |
-| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | **0.70** | raised — keeps underdog goal threat credible under the new channel distribution |
+| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | **1.10** | raised from V8 1.05 to restore mean goals under the merit-v4 channel distribution |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | **6.0** | lowered from V8 6.5; margin>=4 stays in band with the higher BASE |
+| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | **0.30** | returned to the pre-E3a floor after BASE/SPREAD refit; symmetric and asymmetric gates stay green |
 | `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
 | `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | 0.70 | unchanged |
 | `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
-| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | 0.60 | **0.80** | raised on the extended grid; midfield needs more pull after V6 |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | 0.60 | **0.80** | unchanged from V8 |
 | `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
 | `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
 | `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | 0.82 | 0.82 | unchanged from MV2-11b |
@@ -245,12 +258,12 @@ Two harnesses, complementary:
    `packages/data/test/realism/asym-realism-golden.json`.
 
    ```
-   [REALISM] ── policy=strategicAutoDraft       qualifying=393/2000 matches=6561 groups=6000 KO=561
-   [REALISM]    ✓ goals/game     obs=   2.476  (lower floor 2.40)
-   [REALISM]    ✓ draw% (group)  obs=  22.48%  band 22.48% ± 1.50%
-   [REALISM]    ✓ margin≥4%      obs=   9.05%  band  9.05% ± 1.50%
-   [REALISM]    ✓ KO→ET%         obs=  30.66%  band 30.66% ± 5.00%
-   [REALISM]    ✓ shootout%      obs=  19.96%  band 19.96% ± 4.00%
+   [REALISM] ── policy=strategicAutoDraft       qualifying=1611/2000 matches=9965 groups=6000 KO=3965
+   [REALISM]    ✓ goals/game     obs=   2.586  (lower floor 2.52)
+   [REALISM]    ✓ draw% (group)  obs=  25.28%  band 25.28% ± 1.50%
+   [REALISM]    ✓ margin≥4%      obs=   4.64%  band  4.64% ± 1.50%
+   [REALISM]    ✓ KO→ET%         obs=  32.41%  band 32.41% ± 1.50%
+   [REALISM]    ✓ shootout%      obs=  19.87%  band 19.87% ± 1.50%
    ```
 
    **Gate mechanism (durable infrastructure).**

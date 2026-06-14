@@ -1,12 +1,17 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-4.1.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-5.0.0`)
 
-> **proj-career-4.1.0 (merit-v3.1 candidate):** the projected formula, shared
-> display curve, and engine calibration are unchanged from merit-v3. The bump
-> tracks the same career-stature source curation as historical `wc-perf-5.1.0`:
-> `career-stature-3.1.0` / `merit-source-set-2.1.0` /
-> `active-career-source-set-2.1.0`. Runtime 2026 rows still use the Career
-> compatibility surface at top level and carry `basis_ratings.current` for the
-> at-tournament basis.
+> **proj-career-5.0.0 (merit-v4):** the projected formula shares the
+> historical `wc-perf-6.0.0` national-strength raw-only ceiling prior,
+> `career-stature-4.0.0` objective club-honors evidence, and the same unified
+> display curve. Incomplete active-career projected rows also carry an explicit
+> read-time stature cap so young active stars can project elite without turning
+> sparse career evidence into an unbounded all-time peak. The rating/channel
+> movement flipped the strategic-pick canary, so λ was refit and the runtime
+> engine stamp is `engine-2026.06.13-merit-v4`. Runtime 2026 rows still use the
+> Career compatibility surface at top level and carry `basis_ratings.current`
+> for the at-tournament basis. Final emitted 2026 counts are 1,246 ratings:
+> 1,221 `measured_performance`, 25 `career_stature_estimate`, 12 legends,
+> and 18 cards at OVR 90+ (1.445%).
 
 > **MV2-6 (unified display curve):** the 2026 `rating_version` stays
 > `proj-career-3.0.0` — the projected INTERNAL algorithm is unchanged. What changed
@@ -237,7 +242,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-4.1.0`)
+* **projected rating version** check (`proj-career-5.0.0`)
 * **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
   no 100s)
 * **projected basis** is `career_stature_estimate` | `measured_performance`,
@@ -264,14 +269,14 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
   debutant/minnow (Curaçao, Cape Verde, Haiti, Uzbekistan, Jordan, New
   Zealand, South Africa) with a clear basket-mean gap on the compressed
   scale.
-* 335 of 1,246 cards link to a canonical 1930-2022 player id (Messi, Ronaldo,
+* 352 of 1,246 cards link to a canonical 1930-2022 player id (Messi, Ronaldo,
   Modrić — one id across 2014/18/22 + 2026); no canonical id is reused for
   two different 2026 players.
 
 ## Migration & versioning
 
 - `rating_version` changes `proj-career-1.0.0` → `proj-career-2.0.0` →
-  `proj-career-4.1.0` (merit-v3.1 source-curation replay anchor).
+  `proj-career-5.0.0` (merit-v4 national-strength/objective-club replay anchor).
 - Rows gain `overall_basis` and a first-class `legend` boolean (joined from
   `career_stature.json` for linked players). `ratings_2026.json` and
   `teams_2026.json` regenerate; the unified display curve is MV2-6.

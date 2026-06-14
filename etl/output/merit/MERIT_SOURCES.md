@@ -2,10 +2,10 @@
 
 > Career-stature records sourced from public archives — the Rec.Sport.Soccer Statistics Foundation (RSSSF, https://www.rsssf.org/), Wikipedia (https://en.wikipedia.org/, CC BY-SA), and the IFFHS (https://www.iffhs.com/) — used with acknowledgement. Each record is transcribed from a SHA-pinned snapshot and linked to a canonical player_id only when the match is unique and high-confidence; ambiguous names are withheld for human review and never assigned.
 
-- **Source-set version:** `merit-source-set-2.1.0`
+- **Source-set version:** `merit-source-set-2.2.0`
 - **Scope:** coverage only — **no rating output, engine, or compact data is changed by this build.** The v2 source families are staged in `source_facts.json` for the career-stature-2.0.0 table (MV2-3).
-- **Linked facts:** 2,133 across 819 distinct players (men's World Cup pool) — **1,948 parser-derived** + **141 native** World Cup awards + **44 research-backstop** (citation-backed, MV2-2).
-- **First-class position facts:** 449 (GK/DF/MF/FW) from the position-balanced + all-time + research sources.
+- **Linked facts:** 2,144 across 819 distinct players (men's World Cup pool) — **1,948 parser-derived** + **141 native** World Cup awards + **55 research-backstop** (citation-backed, MV2-2).
+- **First-class position facts:** 460 (GK/DF/MF/FW) from the position-balanced + all-time + research sources.
 - **Withheld to review (never assigned):** 752 distinct ambiguities.
 
 
@@ -20,8 +20,8 @@
 | Int'l record | 21 | 75 | 358 | 454 |
 | Retrospective | 30 | 108 | 92 | 230 |
 | Captaincy | 0 | 9 | 13 | 22 |
+| Club honors | 0 | 0 | 10 | 10 |
 | annual_recognition | — | — | — | _reserved / legacy (no v2 source)_ |
-| club_honors | — | — | — | _reserved / legacy (no v2 source)_ |
 
 ## Linked facts per source
 
@@ -44,6 +44,7 @@
 | National-team captaincy records (research backstop, citation-backed) | captaincy | research | 22 |
 | World's Best Goalkeeper annual award wins (research backstop) | position_balanced_selection | research | 3 |
 | Global annual recognition recovered under canonical names (research backstop) | global_annual_recognition | research | 3 |
+| Objective club-achievement facts (research backstop) | club_honors | research | 11 |
 | World Cup All-Star Team / Team-of-the-Tournament selections (research backstop) | wc_legacy | research | 16 |
 | South American Player of the Year (Rey de América) — annual winners | regional_annual_recognition | parser | 52 |
 | South American Player of the Year — annual top-3 placements (2nd/3rd) | regional_annual_recognition | parser | 57 |
@@ -55,11 +56,12 @@
 
 ## Research backstop (MV2-2) — citation-backed gap closure
 
-The deterministic research backstop adds **44 citation-backed** facts that parser-only public lists miss: each row carries a fetchable public citation URL and the specific claim it supports (an uncited row fails the build), and is linked by the SAME conservative linker as parser rows. It activates the `captaincy` family (no SHA-pinnable web source) and recovers global recognition the parser list holds under a non-canonical spelling.
+The deterministic research backstop adds **55 citation-backed** facts that parser-only public lists miss: each row carries a fetchable public citation URL and the specific claim it supports (an uncited row fails the build), and is linked by the SAME conservative linker as parser rows. It activates the `captaincy` family (no SHA-pinnable web source) and recovers global recognition the parser list holds under a non-canonical spelling.
 
 | Family | Research facts | Distinct players |
 |---|---:|---:|
 | Captaincy | 22 | 22 |
+| Club honors | 11 | 10 |
 | Global annual | 3 | 1 |
 | Position XI | 3 | 2 |
 | WC legacy | 16 | 13 |
@@ -77,7 +79,7 @@ The deterministic research backstop adds **44 citation-backed** facts that parse
 | Giacinto Facchetti (DF) | 2 | WC legacy, Retrospective, Captaincy |
 | Daniel Passarella (DF) | 1 | Retrospective, Captaincy |
 
-_32 distinct players carry a research-backstop fact. Yashin's national-team captaincy was evaluated and WITHHELD — the cited source states he rarely captained his side — so no captaincy row was authored for him (anti-fabrication: a claim a citation does not support is never committed)._
+_42 distinct players carry a research-backstop fact. Yashin's national-team captaincy was evaluated and WITHHELD — the cited source states he rarely captained his side — so no captaincy row was authored for him (anti-fabrication: a claim a citation does not support is never committed)._
 
 
 ## World Cup Golden Ball cross-check (native data is canonical)
@@ -119,34 +121,34 @@ _Position is read from each source's own structure (a positional section or a fo
 
 Each legend should visibly pick up stature across families. ✓ = at least one linked fact in that family.
 
-| Great | Era | WC legacy | Global annual | Regional annual | Position XI | Int'l record | Retrospective | Captaincy | Families |
-|---|---|---|---|---|---|---|---|---|---|
-| Pelé | 1956–1990 | ✓ | — | ✓ | — | ✓ | ✓ | — | 4/7 |
-| Alfredo Di Stéfano | 1956–1990 | — | ✓ | — | — | — | ✓ | — | 2/7 |
-| Garrincha | 1956–1990 | ✓ | — | — | — | — | ✓ | — | 2/7 |
-| Ferenc Puskás | pre-1956 | — | — | — | — | ✓ | ✓ | — | 2/7 |
-| Lev Yashin (GK) | 1956–1990 | — | ✓ | — | — | — | ✓ | — | 2/7 |
-| Bobby Charlton | 1956–1990 | — | ✓ | — | — | ✓ | ✓ | — | 3/7 |
-| Eusébio | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | 4/7 |
-| Franz Beckenbauer | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | 5/7 |
-| Johan Cruyff | 1956–1990 | — | ✓ | — | — | — | ✓ | — | 2/7 |
-| Gerd Müller | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | 4/7 |
-| Diego Maradona | 1956–1990 | ✓ | ✓ | ✓ | — | ✓ | ✓ | ✓ | 6/7 |
-| Michel Platini | 1956–1990 | — | ✓ | — | — | ✓ | ✓ | — | 3/7 |
-| Zico | 1956–1990 | ✓ | ✓ | ✓ | — | ✓ | ✓ | — | 5/7 |
-| Karl-Heinz Rummenigge | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | 4/7 |
-| Franco Baresi (DF) | 1956–1990 | ✓ | — | — | — | — | ✓ | ✓ | 3/7 |
-| Lothar Matthäus | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | 5/7 |
-| Marco van Basten | 1956–1990 | — | ✓ | — | — | — | ✓ | — | 2/7 |
-| Roberto Baggio | 1956–1990 | ✓ | ✓ | — | — | — | ✓ | — | 3/7 |
-| Zinedine Zidane | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | 5/7 |
-| Ronaldo | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | 5/7 |
-| Ronaldinho | 1991+ | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | 5/7 |
-| Cafu (DF) | 1991+ | — | — | ✓ | — | ✓ | ✓ | ✓ | 4/7 |
-| Gianluigi Buffon (GK) | 1991+ | ✓ | — | — | ✓ | ✓ | ✓ | — | 4/7 |
-| Paolo Maldini (DF) | 1956–1990 | — | ✓ | — | ✓ | ✓ | ✓ | — | 4/7 |
-| Lionel Messi | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | 5/7 |
-| Cristiano Ronaldo | 1991+ | — | ✓ | — | ✓ | ✓ | ✓ | — | 4/7 |
+| Great | Era | WC legacy | Global annual | Regional annual | Position XI | Int'l record | Retrospective | Captaincy | Club honors | Families |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Pelé | 1956–1990 | ✓ | — | ✓ | — | ✓ | ✓ | — | — | 4/8 |
+| Alfredo Di Stéfano | 1956–1990 | — | ✓ | — | — | — | ✓ | — | — | 2/8 |
+| Garrincha | 1956–1990 | ✓ | — | — | — | — | ✓ | — | — | 2/8 |
+| Ferenc Puskás | pre-1956 | — | — | — | — | ✓ | ✓ | — | — | 2/8 |
+| Lev Yashin (GK) | 1956–1990 | — | ✓ | — | — | — | ✓ | — | — | 2/8 |
+| Bobby Charlton | 1956–1990 | — | ✓ | — | — | ✓ | ✓ | — | — | 3/8 |
+| Eusébio | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | — | 4/8 |
+| Franz Beckenbauer | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | 5/8 |
+| Johan Cruyff | 1956–1990 | — | ✓ | — | — | — | ✓ | — | — | 2/8 |
+| Gerd Müller | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | — | 4/8 |
+| Diego Maradona | 1956–1990 | ✓ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | 6/8 |
+| Michel Platini | 1956–1990 | — | ✓ | — | — | ✓ | ✓ | — | — | 3/8 |
+| Zico | 1956–1990 | ✓ | ✓ | ✓ | — | ✓ | ✓ | — | — | 5/8 |
+| Karl-Heinz Rummenigge | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | — | — | 4/8 |
+| Franco Baresi (DF) | 1956–1990 | ✓ | — | — | — | — | ✓ | ✓ | — | 3/8 |
+| Lothar Matthäus | 1956–1990 | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | 5/8 |
+| Marco van Basten | 1956–1990 | — | ✓ | — | — | — | ✓ | — | — | 2/8 |
+| Roberto Baggio | 1956–1990 | ✓ | ✓ | — | — | — | ✓ | — | — | 3/8 |
+| Zinedine Zidane | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | — | 5/8 |
+| Ronaldo | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | — | 5/8 |
+| Ronaldinho | 1991+ | — | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | 5/8 |
+| Cafu (DF) | 1991+ | — | — | ✓ | — | ✓ | ✓ | ✓ | — | 4/8 |
+| Gianluigi Buffon (GK) | 1991+ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | 4/8 |
+| Paolo Maldini (DF) | 1956–1990 | — | ✓ | — | ✓ | ✓ | ✓ | — | — | 4/8 |
+| Lionel Messi | 1991+ | ✓ | ✓ | — | ✓ | ✓ | ✓ | — | — | 5/8 |
+| Cristiano Ronaldo | 1991+ | — | ✓ | — | ✓ | ✓ | ✓ | — | — | 4/8 |
 
 **26/26** canonical greats picked up at least one linked stature fact.
 

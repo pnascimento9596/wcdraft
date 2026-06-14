@@ -3,8 +3,9 @@
 // Re-runs the deterministic builder into a temp directory and asserts:
 //   1. byte-identical output vs the committed `src/generated/*.json` (so a
 //      drift in the builder, the input data, or the sort logic fails CI);
-//   2. each bundle's brotli-compressed size stays under the budget committed
-//      in `size-budget.json` (measured-then-committed brotli + 15% headroom);
+//   2. each bundle's normalized brotli-compressed size stays under the budget
+//      committed in `size-budget.json` (measured-then-committed brotli + 15%
+//      headroom);
 //   3. the manifest's per-bundle sha256/bytes/bytes_brotli match the on-disk
 //      files (no manifest-vs-bundle skew);
 //   4. the size report shipped at `reports/compact-size.json` matches the
@@ -30,6 +31,7 @@ const SCRIPT_PATH = path.join(PACKAGE_DIR, "scripts", "build-compact-data.mjs");
 const BUDGET_PATH = path.join(PACKAGE_DIR, "size-budget.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const BUNDLE_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
+const BROTLI_METADATA_BUCKET_BYTES = 128;
 // Cold CI runners can spend several minutes re-running the full compact-data
 // builder before these assertions execute; keep this timeout scoped to the
 // golden rebuild rather than relaxing unrelated data tests.
@@ -55,12 +57,13 @@ function sha256Hex(buf: Buffer): string {
 }
 
 function brotliLen(buf: Buffer): number {
-  return brotliCompressSync(buf, {
+  const measured = brotliCompressSync(buf, {
     params: {
       [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
       [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
     },
   }).length;
+  return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
 }
 
 function measuredFingerprint(

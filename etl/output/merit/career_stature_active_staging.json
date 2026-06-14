@@ -1,5 +1,5 @@
 {
-  "activated_by": "career-stature-3.1.0",
+  "activated_by": "career-stature-4.0.0",
   "curation_notes": [
     "Recognition that the pinned parser snapshots already carry for active players (e.g. annual-XI selections, century caps lists) is NOT re-asserted here — the build recovers those withheld parser records directly against the 2026 identity space, keeping snapshot provenance.",
     "Federico Valverde (Uruguay) was ATTEMPTED and DROPPED on anti-fabrication grounds: his article identifies José María Giménez as Uruguay's 2026 World Cup captain (Luis Suárez at the 2024 Copa América) and credits Valverde only with a club vice-captaincy. The verifiable Uruguay captaincy fact is recorded for Giménez instead; Valverde carries no captaincy fact in this pass (missing captaincy stays missing).",
@@ -520,6 +520,6 @@
   ],
   "entry_count": 30,
   "identity_bridge_review": [],
-  "note": "Active-career staging entries. Facts + identity only: no career_stature_score, index, tier or legend is computed here. career-stature-3.1.0 consumes source_facts_active.json plus this staging artifact and applies the person-level, career-stage-normalized merge.",
+  "note": "Active-career staging entries. Facts + identity only: no career_stature_score, index, tier or legend is computed here. career-stature-4.0.0 consumes source_facts_active.json plus this staging artifact and applies the person-level, career-stage-normalized merge.",
   "version": "active-career-source-set-2.1.0"
 }

@@ -1,0 +1,5490 @@
+{
+  "rankings": [
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1874.81,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARG",
+        "countryURL": "/fifa-world-ranking/ARG",
+        "flag": {
+          "alt": "Argentina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARG",
+          "title": "Argentina",
+          "width": 70
+        },
+        "idTeam": "43922",
+        "name": "Argentina",
+        "previousRank": 3,
+        "rank": 1,
+        "totalPoints": 1877.27
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1876.4,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ESP",
+        "countryURL": "/fifa-world-ranking/ESP",
+        "flag": {
+          "alt": "Spain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ESP",
+          "title": "Spain",
+          "width": 70
+        },
+        "idTeam": "43969",
+        "name": "Spain",
+        "previousRank": 2,
+        "rank": 2,
+        "totalPoints": 1874.71
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1877.32,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRA",
+        "countryURL": "/fifa-world-ranking/FRA",
+        "flag": {
+          "alt": "France",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRA",
+          "title": "France",
+          "width": 70
+        },
+        "idTeam": "43946",
+        "name": "France",
+        "previousRank": 1,
+        "rank": 3,
+        "totalPoints": 1870.7
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1825.97,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ENG",
+        "countryURL": "/fifa-world-ranking/ENG",
+        "flag": {
+          "alt": "England",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ENG",
+          "title": "England",
+          "width": 70
+        },
+        "idTeam": "43942",
+        "name": "England",
+        "previousRank": 4,
+        "rank": 4,
+        "totalPoints": 1828.02
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1763.83,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POR",
+        "countryURL": "/fifa-world-ranking/POR",
+        "flag": {
+          "alt": "Portugal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POR",
+          "title": "Portugal",
+          "width": 70
+        },
+        "idTeam": "43963",
+        "name": "Portugal",
+        "previousRank": 5,
+        "rank": 5,
+        "totalPoints": 1767.85
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1761.16,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRA",
+        "countryURL": "/fifa-world-ranking/BRA",
+        "flag": {
+          "alt": "Brazil",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRA",
+          "title": "Brazil",
+          "width": 70
+        },
+        "idTeam": "43924",
+        "name": "Brazil",
+        "previousRank": 6,
+        "rank": 6,
+        "totalPoints": 1765.86
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1755.87,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAR",
+        "countryURL": "/fifa-world-ranking/MAR",
+        "flag": {
+          "alt": "Morocco",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAR",
+          "title": "Morocco",
+          "width": 70
+        },
+        "idTeam": "43872",
+        "name": "Morocco",
+        "previousRank": 8,
+        "rank": 7,
+        "totalPoints": 1755.1
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1757.87,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NED",
+        "countryURL": "/fifa-world-ranking/NED",
+        "flag": {
+          "alt": "Netherlands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NED",
+          "title": "Netherlands",
+          "width": 70
+        },
+        "idTeam": "43960",
+        "name": "Netherlands",
+        "previousRank": 7,
+        "rank": 8,
+        "totalPoints": 1753.57
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1734.71,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEL",
+        "countryURL": "/fifa-world-ranking/BEL",
+        "flag": {
+          "alt": "Belgium",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEL",
+          "title": "Belgium",
+          "width": 70
+        },
+        "idTeam": "43935",
+        "name": "Belgium",
+        "previousRank": 9,
+        "rank": 9,
+        "totalPoints": 1742.24
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1730.37,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GER",
+        "countryURL": "/fifa-world-ranking/GER",
+        "flag": {
+          "alt": "Germany",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GER",
+          "title": "Germany",
+          "width": 70
+        },
+        "idTeam": "43948",
+        "name": "Germany",
+        "previousRank": 10,
+        "rank": 10,
+        "totalPoints": 1735.77
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1717.07,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRO",
+        "countryURL": "/fifa-world-ranking/CRO",
+        "flag": {
+          "alt": "Croatia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRO",
+          "title": "Croatia",
+          "width": 70
+        },
+        "idTeam": "43938",
+        "name": "Croatia",
+        "previousRank": 11,
+        "rank": 11,
+        "totalPoints": 1714.87
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1700.37,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ITA",
+        "countryURL": "/fifa-world-ranking/ITA",
+        "flag": {
+          "alt": "Italy",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ITA",
+          "title": "Italy",
+          "width": 70
+        },
+        "idTeam": "43954",
+        "name": "Italy",
+        "previousRank": 12,
+        "rank": 12,
+        "totalPoints": 1704.73
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1693.09,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COL",
+        "countryURL": "/fifa-world-ranking/COL",
+        "flag": {
+          "alt": "Colombia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COL",
+          "title": "Colombia",
+          "width": 70
+        },
+        "idTeam": "43926",
+        "name": "Colombia",
+        "previousRank": 13,
+        "rank": 13,
+        "totalPoints": 1698.35
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1681.03,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MEX",
+        "countryURL": "/fifa-world-ranking/MEX",
+        "flag": {
+          "alt": "Mexico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MEX",
+          "title": "Mexico",
+          "width": 70
+        },
+        "idTeam": "43911",
+        "name": "Mexico",
+        "previousRank": 15,
+        "rank": 14,
+        "totalPoints": 1687.48
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1688.99,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEN",
+        "countryURL": "/fifa-world-ranking/SEN",
+        "flag": {
+          "alt": "Senegal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEN",
+          "title": "Senegal",
+          "width": 70
+        },
+        "idTeam": "43879",
+        "name": "Senegal",
+        "previousRank": 14,
+        "rank": 15,
+        "totalPoints": 1684.07
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1673.07,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "URU",
+        "countryURL": "/fifa-world-ranking/URU",
+        "flag": {
+          "alt": "Uruguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/URU",
+          "title": "Uruguay",
+          "width": 70
+        },
+        "idTeam": "43930",
+        "name": "Uruguay",
+        "previousRank": 17,
+        "rank": 16,
+        "totalPoints": 1673.07
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1673.13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "USA",
+        "countryURL": "/fifa-world-ranking/USA",
+        "flag": {
+          "alt": "USA",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/USA",
+          "title": "USA",
+          "width": 70
+        },
+        "idTeam": "43921",
+        "name": "USA",
+        "previousRank": 16,
+        "rank": 17,
+        "totalPoints": 1671.23
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1660.43,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JPN",
+        "countryURL": "/fifa-world-ranking/JPN",
+        "flag": {
+          "alt": "Japan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JPN",
+          "title": "Japan",
+          "width": 70
+        },
+        "idTeam": "43819",
+        "name": "Japan",
+        "previousRank": 18,
+        "rank": 18,
+        "totalPoints": 1661.58
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1649.4,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUI",
+        "countryURL": "/fifa-world-ranking/SUI",
+        "flag": {
+          "alt": "Switzerland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUI",
+          "title": "Switzerland",
+          "width": 70
+        },
+        "idTeam": "43971",
+        "name": "Switzerland",
+        "previousRank": 19,
+        "rank": 19,
+        "totalPoints": 1650.06
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1615.3,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRN",
+        "countryURL": "/fifa-world-ranking/IRN",
+        "flag": {
+          "alt": "IR Iran",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRN",
+          "title": "IR Iran",
+          "width": 70
+        },
+        "idTeam": "43817",
+        "name": "IR Iran",
+        "previousRank": 21,
+        "rank": 20,
+        "totalPoints": 1619.58
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1620.81,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DEN",
+        "countryURL": "/fifa-world-ranking/DEN",
+        "flag": {
+          "alt": "Denmark",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DEN",
+          "title": "Denmark",
+          "width": 70
+        },
+        "idTeam": "43941",
+        "name": "Denmark",
+        "previousRank": 20,
+        "rank": 21,
+        "totalPoints": 1619.47
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1599.04,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUR",
+        "countryURL": "/fifa-world-ranking/TUR",
+        "flag": {
+          "alt": "Türkiye",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUR",
+          "title": "Türkiye",
+          "width": 70
+        },
+        "idTeam": "43972",
+        "name": "Türkiye",
+        "previousRank": 22,
+        "rank": 22,
+        "totalPoints": 1605.73
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1594.78,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ECU",
+        "countryURL": "/fifa-world-ranking/ECU",
+        "flag": {
+          "alt": "Ecuador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ECU",
+          "title": "Ecuador",
+          "width": 70
+        },
+        "idTeam": "43927",
+        "name": "Ecuador",
+        "previousRank": 23,
+        "rank": 23,
+        "totalPoints": 1598.52
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1593.45,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUT",
+        "countryURL": "/fifa-world-ranking/AUT",
+        "flag": {
+          "alt": "Austria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUT",
+          "title": "Austria",
+          "width": 70
+        },
+        "idTeam": "43934",
+        "name": "Austria",
+        "previousRank": 24,
+        "rank": 24,
+        "totalPoints": 1597.4
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1588.66,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KOR",
+        "countryURL": "/fifa-world-ranking/KOR",
+        "flag": {
+          "alt": "Korea Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KOR",
+          "title": "Korea Republic",
+          "width": 70
+        },
+        "idTeam": "43822",
+        "name": "Korea Republic",
+        "previousRank": 25,
+        "rank": 25,
+        "totalPoints": 1591.63
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1585.09,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NGA",
+        "countryURL": "/fifa-world-ranking/NGA",
+        "flag": {
+          "alt": "Nigeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NGA",
+          "title": "Nigeria",
+          "width": 70
+        },
+        "idTeam": "43876",
+        "name": "Nigeria",
+        "previousRank": 26,
+        "rank": 26,
+        "totalPoints": 1585.02
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1580.67,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUS",
+        "countryURL": "/fifa-world-ranking/AUS",
+        "flag": {
+          "alt": "Australia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUS",
+          "title": "Australia",
+          "width": 70
+        },
+        "idTeam": "43976",
+        "name": "Australia",
+        "previousRank": 27,
+        "rank": 27,
+        "totalPoints": 1579.34
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1564.26,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALG",
+        "countryURL": "/fifa-world-ranking/ALG",
+        "flag": {
+          "alt": "Algeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALG",
+          "title": "Algeria",
+          "width": 70
+        },
+        "idTeam": "43843",
+        "name": "Algeria",
+        "previousRank": 28,
+        "rank": 28,
+        "totalPoints": 1571.03
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1563.24,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EGY",
+        "countryURL": "/fifa-world-ranking/EGY",
+        "flag": {
+          "alt": "Egypt",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EGY",
+          "title": "Egypt",
+          "width": 70
+        },
+        "idTeam": "43855",
+        "name": "Egypt",
+        "previousRank": 29,
+        "rank": 29,
+        "totalPoints": 1562.37
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1556.48,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAN",
+        "countryURL": "/fifa-world-ranking/CAN",
+        "flag": {
+          "alt": "Canada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAN",
+          "title": "Canada",
+          "width": 70
+        },
+        "idTeam": "43899",
+        "name": "Canada",
+        "previousRank": 30,
+        "rank": 30,
+        "totalPoints": 1559.48
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1550.94,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NOR",
+        "countryURL": "/fifa-world-ranking/NOR",
+        "flag": {
+          "alt": "Norway",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NOR",
+          "title": "Norway",
+          "width": 70
+        },
+        "idTeam": "43961",
+        "name": "Norway",
+        "previousRank": 31,
+        "rank": 31,
+        "totalPoints": 1557.44
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1546.88,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UKR",
+        "countryURL": "/fifa-world-ranking/UKR",
+        "flag": {
+          "alt": "Ukraine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UKR",
+          "title": "Ukraine",
+          "width": 70
+        },
+        "idTeam": "43973",
+        "name": "Ukraine",
+        "previousRank": 32,
+        "rank": 32,
+        "totalPoints": 1549.29
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1532.98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CIV",
+        "countryURL": "/fifa-world-ranking/CIV",
+        "flag": {
+          "alt": "Côte d'Ivoire",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CIV",
+          "title": "Côte d'Ivoire",
+          "width": 70
+        },
+        "idTeam": "43854",
+        "name": "Côte d'Ivoire",
+        "previousRank": 34,
+        "rank": 33,
+        "totalPoints": 1540.87
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1540.64,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAN",
+        "countryURL": "/fifa-world-ranking/PAN",
+        "flag": {
+          "alt": "Panama",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAN",
+          "title": "Panama",
+          "width": 70
+        },
+        "idTeam": "43914",
+        "name": "Panama",
+        "previousRank": 33,
+        "rank": 34,
+        "totalPoints": 1539.16
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1525.6,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RUS",
+        "countryURL": "/fifa-world-ranking/RUS",
+        "flag": {
+          "alt": "Russia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RUS",
+          "title": "Russia",
+          "width": 70
+        },
+        "idTeam": "43965",
+        "name": "Russia",
+        "previousRank": 36,
+        "rank": 35,
+        "totalPoints": 1529.6
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1528,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POL",
+        "countryURL": "/fifa-world-ranking/POL",
+        "flag": {
+          "alt": "Poland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POL",
+          "title": "Poland",
+          "width": 70
+        },
+        "idTeam": "43962",
+        "name": "Poland",
+        "previousRank": 35,
+        "rank": 36,
+        "totalPoints": 1526.18
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1524.29,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "WAL",
+        "countryURL": "/fifa-world-ranking/WAL",
+        "flag": {
+          "alt": "Wales",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/WAL",
+          "title": "Wales",
+          "width": 70
+        },
+        "idTeam": "43974",
+        "name": "Wales",
+        "previousRank": 37,
+        "rank": 37,
+        "totalPoints": 1516.95
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1514.77,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWE",
+        "countryURL": "/fifa-world-ranking/SWE",
+        "flag": {
+          "alt": "Sweden",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWE",
+          "title": "Sweden",
+          "width": 70
+        },
+        "idTeam": "43970",
+        "name": "Sweden",
+        "previousRank": 38,
+        "rank": 38,
+        "totalPoints": 1509.79
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1500.58,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HUN",
+        "countryURL": "/fifa-world-ranking/HUN",
+        "flag": {
+          "alt": "Hungary",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HUN",
+          "title": "Hungary",
+          "width": 70
+        },
+        "idTeam": "43950",
+        "name": "Hungary",
+        "previousRank": 42,
+        "rank": 39,
+        "totalPoints": 1506.39
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1501.38,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CZE",
+        "countryURL": "/fifa-world-ranking/CZE",
+        "flag": {
+          "alt": "Czechia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CZE",
+          "title": "Czechia",
+          "width": 70
+        },
+        "idTeam": "43995",
+        "name": "Czechia",
+        "previousRank": 41,
+        "rank": 40,
+        "totalPoints": 1505.74
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1503.5,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAR",
+        "countryURL": "/fifa-world-ranking/PAR",
+        "flag": {
+          "alt": "Paraguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAR",
+          "title": "Paraguay",
+          "width": 70
+        },
+        "idTeam": "43928",
+        "name": "Paraguay",
+        "previousRank": 40,
+        "rank": 41,
+        "totalPoints": 1505.35
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1498.35,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SCO",
+        "countryURL": "/fifa-world-ranking/SCO",
+        "flag": {
+          "alt": "Scotland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SCO",
+          "title": "Scotland",
+          "width": 70
+        },
+        "idTeam": "43967",
+        "name": "Scotland",
+        "previousRank": 43,
+        "rank": 42,
+        "totalPoints": 1503.34
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1508.65,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SRB",
+        "countryURL": "/fifa-world-ranking/SRB",
+        "flag": {
+          "alt": "Serbia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SRB",
+          "title": "Serbia",
+          "width": 70
+        },
+        "idTeam": "1902465",
+        "name": "Serbia",
+        "previousRank": 39,
+        "rank": 43,
+        "totalPoints": 1502.13
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1481.24,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CMR",
+        "countryURL": "/fifa-world-ranking/CMR",
+        "flag": {
+          "alt": "Cameroon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CMR",
+          "title": "Cameroon",
+          "width": 70
+        },
+        "idTeam": "43849",
+        "name": "Cameroon",
+        "previousRank": 45,
+        "rank": 44,
+        "totalPoints": 1481.24
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1483.05,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUN",
+        "countryURL": "/fifa-world-ranking/TUN",
+        "flag": {
+          "alt": "Tunisia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUN",
+          "title": "Tunisia",
+          "width": 70
+        },
+        "idTeam": "43888",
+        "name": "Tunisia",
+        "previousRank": 44,
+        "rank": 45,
+        "totalPoints": 1476.41
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1478.35,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COD",
+        "countryURL": "/fifa-world-ranking/COD",
+        "flag": {
+          "alt": "Congo DR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COD",
+          "title": "Congo DR",
+          "width": 70
+        },
+        "idTeam": "20014",
+        "name": "Congo DR",
+        "previousRank": 46,
+        "rank": 46,
+        "totalPoints": 1474.43
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1473.94,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVK",
+        "countryURL": "/fifa-world-ranking/SVK",
+        "flag": {
+          "alt": "Slovakia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVK",
+          "title": "Slovakia",
+          "width": 70
+        },
+        "idTeam": "44002",
+        "name": "Slovakia",
+        "previousRank": 48,
+        "rank": 47,
+        "totalPoints": 1473.66
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1475.82,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRE",
+        "countryURL": "/fifa-world-ranking/GRE",
+        "flag": {
+          "alt": "Greece",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRE",
+          "title": "Greece",
+          "width": 70
+        },
+        "idTeam": "43949",
+        "name": "Greece",
+        "previousRank": 47,
+        "rank": 48,
+        "totalPoints": 1473.19
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1468.05,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VEN",
+        "countryURL": "/fifa-world-ranking/VEN",
+        "flag": {
+          "alt": "Venezuela",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VEN",
+          "title": "Venezuela",
+          "width": 70
+        },
+        "idTeam": "43931",
+        "name": "Venezuela",
+        "previousRank": 49,
+        "rank": 49,
+        "totalPoints": 1469.18
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1465.34,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UZB",
+        "countryURL": "/fifa-world-ranking/UZB",
+        "flag": {
+          "alt": "Uzbekistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UZB",
+          "title": "Uzbekistan",
+          "width": 70
+        },
+        "idTeam": "44005",
+        "name": "Uzbekistan",
+        "previousRank": 50,
+        "rank": 50,
+        "totalPoints": 1458.73
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1455.28,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHI",
+        "countryURL": "/fifa-world-ranking/CHI",
+        "flag": {
+          "alt": "Chile",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHI",
+          "title": "Chile",
+          "width": 70
+        },
+        "idTeam": "43925",
+        "name": "Chile",
+        "previousRank": 54,
+        "rank": 51,
+        "totalPoints": 1458.2
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1455.87,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PER",
+        "countryURL": "/fifa-world-ranking/PER",
+        "flag": {
+          "alt": "Peru",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PER",
+          "title": "Peru",
+          "width": 70
+        },
+        "idTeam": "43929",
+        "name": "Peru",
+        "previousRank": 53,
+        "rank": 52,
+        "totalPoints": 1457.69
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1459.9,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRC",
+        "countryURL": "/fifa-world-ranking/CRC",
+        "flag": {
+          "alt": "Costa Rica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRC",
+          "title": "Costa Rica",
+          "width": 70
+        },
+        "idTeam": "43901",
+        "name": "Costa Rica",
+        "previousRank": 51,
+        "rank": 53,
+        "totalPoints": 1456.03
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1451.16,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ROU",
+        "countryURL": "/fifa-world-ranking/ROU",
+        "flag": {
+          "alt": "Romania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ROU",
+          "title": "Romania",
+          "width": 70
+        },
+        "idTeam": "43964",
+        "name": "Romania",
+        "previousRank": 56,
+        "rank": 54,
+        "totalPoints": 1455.89
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1459.13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLI",
+        "countryURL": "/fifa-world-ranking/MLI",
+        "flag": {
+          "alt": "Mali",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLI",
+          "title": "Mali",
+          "width": 70
+        },
+        "idTeam": "43869",
+        "name": "Mali",
+        "previousRank": 52,
+        "rank": 55,
+        "totalPoints": 1455.59
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1454.96,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "QAT",
+        "countryURL": "/fifa-world-ranking/QAT",
+        "flag": {
+          "alt": "Qatar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/QAT",
+          "title": "Qatar",
+          "width": 70
+        },
+        "idTeam": "43834",
+        "name": "Qatar",
+        "previousRank": 55,
+        "rank": 56,
+        "totalPoints": 1450.31
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1447.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRQ",
+        "countryURL": "/fifa-world-ranking/IRQ",
+        "flag": {
+          "alt": "Iraq",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRQ",
+          "title": "Iraq",
+          "width": 70
+        },
+        "idTeam": "43818",
+        "name": "Iraq",
+        "previousRank": 57,
+        "rank": 57,
+        "totalPoints": 1446.28
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1436.63,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRL",
+        "countryURL": "/fifa-world-ranking/IRL",
+        "flag": {
+          "alt": "Republic of Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRL",
+          "title": "Republic of Ireland",
+          "width": 70
+        },
+        "idTeam": "43953",
+        "name": "Republic of Ireland",
+        "previousRank": 59,
+        "rank": 58,
+        "totalPoints": 1441.1
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1446.44,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVN",
+        "countryURL": "/fifa-world-ranking/SVN",
+        "flag": {
+          "alt": "Slovenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVN",
+          "title": "Slovenia",
+          "width": 70
+        },
+        "idTeam": "43968",
+        "name": "Slovenia",
+        "previousRank": 58,
+        "rank": 59,
+        "totalPoints": 1441.09
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1429.73,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RSA",
+        "countryURL": "/fifa-world-ranking/RSA",
+        "flag": {
+          "alt": "South Africa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RSA",
+          "title": "South Africa",
+          "width": 70
+        },
+        "idTeam": "43883",
+        "name": "South Africa",
+        "previousRank": 60,
+        "rank": 60,
+        "totalPoints": 1428.38
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1421.43,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KSA",
+        "countryURL": "/fifa-world-ranking/KSA",
+        "flag": {
+          "alt": "Saudi Arabia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KSA",
+          "title": "Saudi Arabia",
+          "width": 70
+        },
+        "idTeam": "43835",
+        "name": "Saudi Arabia",
+        "previousRank": 61,
+        "rank": 61,
+        "totalPoints": 1423.88
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1412.49,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BFA",
+        "countryURL": "/fifa-world-ranking/BFA",
+        "flag": {
+          "alt": "Burkina Faso",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BFA",
+          "title": "Burkina Faso",
+          "width": 70
+        },
+        "idTeam": "43847",
+        "name": "Burkina Faso",
+        "previousRank": 62,
+        "rank": 62,
+        "totalPoints": 1406.99
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1391.45,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JOR",
+        "countryURL": "/fifa-world-ranking/JOR",
+        "flag": {
+          "alt": "Jordan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JOR",
+          "title": "Jordan",
+          "width": 70
+        },
+        "idTeam": "43820",
+        "name": "Jordan",
+        "previousRank": 63,
+        "rank": 63,
+        "totalPoints": 1387.74
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1385.84,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BIH",
+        "countryURL": "/fifa-world-ranking/BIH",
+        "flag": {
+          "alt": "Bosnia and Herzegovina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BIH",
+          "title": "Bosnia and Herzegovina",
+          "width": 70
+        },
+        "idTeam": "44037",
+        "name": "Bosnia and Herzegovina",
+        "previousRank": 65,
+        "rank": 64,
+        "totalPoints": 1387.22
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1380.27,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HON",
+        "countryURL": "/fifa-world-ranking/HON",
+        "flag": {
+          "alt": "Honduras",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HON",
+          "title": "Honduras",
+          "width": 70
+        },
+        "idTeam": "43909",
+        "name": "Honduras",
+        "previousRank": 66,
+        "rank": 65,
+        "totalPoints": 1378.97
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1388.06,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALB",
+        "countryURL": "/fifa-world-ranking/ALB",
+        "flag": {
+          "alt": "Albania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALB",
+          "title": "Albania",
+          "width": 70
+        },
+        "idTeam": "43932",
+        "name": "Albania",
+        "previousRank": 64,
+        "rank": 66,
+        "totalPoints": 1376.03
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1366.13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CPV",
+        "countryURL": "/fifa-world-ranking/CPV",
+        "flag": {
+          "alt": "Cabo Verde",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CPV",
+          "title": "Cabo Verde",
+          "width": 70
+        },
+        "idTeam": "43850",
+        "name": "Cabo Verde",
+        "previousRank": 69,
+        "rank": 67,
+        "totalPoints": 1371.11
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1370.47,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UAE",
+        "countryURL": "/fifa-world-ranking/UAE",
+        "flag": {
+          "alt": "United Arab Emirates",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UAE",
+          "title": "United Arab Emirates",
+          "width": 70
+        },
+        "idTeam": "43840",
+        "name": "United Arab Emirates",
+        "previousRank": 68,
+        "rank": 68,
+        "totalPoints": 1370.47
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1372.04,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MKD",
+        "countryURL": "/fifa-world-ranking/MKD",
+        "flag": {
+          "alt": "North Macedonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MKD",
+          "title": "North Macedonia",
+          "width": 70
+        },
+        "idTeam": "44000",
+        "name": "North Macedonia",
+        "previousRank": 67,
+        "rank": 69,
+        "totalPoints": 1369.16
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1362.16,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIR",
+        "countryURL": "/fifa-world-ranking/NIR",
+        "flag": {
+          "alt": "Northern Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIR",
+          "title": "Northern Ireland",
+          "width": 70
+        },
+        "idTeam": "43952",
+        "name": "Northern Ireland",
+        "previousRank": 70,
+        "rank": 70,
+        "totalPoints": 1365.3
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1358,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JAM",
+        "countryURL": "/fifa-world-ranking/JAM",
+        "flag": {
+          "alt": "Jamaica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JAM",
+          "title": "Jamaica",
+          "width": 70
+        },
+        "idTeam": "43910",
+        "name": "Jamaica",
+        "previousRank": 71,
+        "rank": 71,
+        "totalPoints": 1357.84
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1350.18,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GEO",
+        "countryURL": "/fifa-world-ranking/GEO",
+        "flag": {
+          "alt": "Georgia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GEO",
+          "title": "Georgia",
+          "width": 70
+        },
+        "idTeam": "43947",
+        "name": "Georgia",
+        "previousRank": 72,
+        "rank": 72,
+        "totalPoints": 1355.26
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1346.31,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GHA",
+        "countryURL": "/fifa-world-ranking/GHA",
+        "flag": {
+          "alt": "Ghana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GHA",
+          "title": "Ghana",
+          "width": 70
+        },
+        "idTeam": "43860",
+        "name": "Ghana",
+        "previousRank": 74,
+        "rank": 73,
+        "totalPoints": 1346.88
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1345.07,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISL",
+        "countryURL": "/fifa-world-ranking/ISL",
+        "flag": {
+          "alt": "Iceland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISL",
+          "title": "Iceland",
+          "width": 70
+        },
+        "idTeam": "43951",
+        "name": "Iceland",
+        "previousRank": 75,
+        "rank": 74,
+        "totalPoints": 1342.77
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1346.41,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIN",
+        "countryURL": "/fifa-world-ranking/FIN",
+        "flag": {
+          "alt": "Finland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIN",
+          "title": "Finland",
+          "width": 70
+        },
+        "idTeam": "43945",
+        "name": "Finland",
+        "previousRank": 73,
+        "rank": 75,
+        "totalPoints": 1341.92
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1328.33,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISR",
+        "countryURL": "/fifa-world-ranking/ISR",
+        "flag": {
+          "alt": "Israel",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISR",
+          "title": "Israel",
+          "width": 70
+        },
+        "idTeam": "43984",
+        "name": "Israel",
+        "previousRank": 77,
+        "rank": 76,
+        "totalPoints": 1333.9
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1329.42,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOL",
+        "countryURL": "/fifa-world-ranking/BOL",
+        "flag": {
+          "alt": "Bolivia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOL",
+          "title": "Bolivia",
+          "width": 70
+        },
+        "idTeam": "43923",
+        "name": "Bolivia",
+        "previousRank": 76,
+        "rank": 77,
+        "totalPoints": 1326
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1318.83,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KOS",
+        "countryURL": "/fifa-world-ranking/KOS",
+        "flag": {
+          "alt": "Kosovo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KOS",
+          "title": "Kosovo",
+          "width": 70
+        },
+        "idTeam": "1942535",
+        "name": "Kosovo",
+        "previousRank": 78,
+        "rank": 78,
+        "totalPoints": 1319.12
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1313.46,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "OMA",
+        "countryURL": "/fifa-world-ranking/OMA",
+        "flag": {
+          "alt": "Oman",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/OMA",
+          "title": "Oman",
+          "width": 70
+        },
+        "idTeam": "43831",
+        "name": "Oman",
+        "previousRank": 79,
+        "rank": 79,
+        "totalPoints": 1306.9
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1295.52,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MNE",
+        "countryURL": "/fifa-world-ranking/MNE",
+        "flag": {
+          "alt": "Montenegro",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MNE",
+          "title": "Montenegro",
+          "width": 70
+        },
+        "idTeam": "1903356",
+        "name": "Montenegro",
+        "previousRank": 81,
+        "rank": 80,
+        "totalPoints": 1301.98
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1300.01,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUI",
+        "countryURL": "/fifa-world-ranking/GUI",
+        "flag": {
+          "alt": "Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUI",
+          "title": "Guinea",
+          "width": 70
+        },
+        "idTeam": "43861",
+        "name": "Guinea",
+        "previousRank": 80,
+        "rank": 81,
+        "totalPoints": 1295.6
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1294.65,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CUW",
+        "countryURL": "/fifa-world-ranking/CUW",
+        "flag": {
+          "alt": "Curaçao",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CUW",
+          "title": "Curaçao",
+          "width": 70
+        },
+        "idTeam": "1895293",
+        "name": "Curaçao",
+        "previousRank": 82,
+        "rank": 82,
+        "totalPoints": 1294.77
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1291.71,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HAI",
+        "countryURL": "/fifa-world-ranking/HAI",
+        "flag": {
+          "alt": "Haiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HAI",
+          "title": "Haiti",
+          "width": 70
+        },
+        "idTeam": "43908",
+        "name": "Haiti",
+        "previousRank": 83,
+        "rank": 83,
+        "totalPoints": 1293.1
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1288.56,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SYR",
+        "countryURL": "/fifa-world-ranking/SYR",
+        "flag": {
+          "alt": "Syria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SYR",
+          "title": "Syria",
+          "width": 70
+        },
+        "idTeam": "43838",
+        "name": "Syria",
+        "previousRank": 84,
+        "rank": 84,
+        "totalPoints": 1283.05
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1281.57,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NZL",
+        "countryURL": "/fifa-world-ranking/NZL",
+        "flag": {
+          "alt": "New Zealand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NZL",
+          "title": "New Zealand",
+          "width": 70
+        },
+        "idTeam": "43978",
+        "name": "New Zealand",
+        "previousRank": 85,
+        "rank": 85,
+        "totalPoints": 1275.58
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1272.51,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAB",
+        "countryURL": "/fifa-world-ranking/GAB",
+        "flag": {
+          "alt": "Gabon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAB",
+          "title": "Gabon",
+          "width": 70
+        },
+        "idTeam": "43858",
+        "name": "Gabon",
+        "previousRank": 87,
+        "rank": 86,
+        "totalPoints": 1272.51
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1278.9,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BUL",
+        "countryURL": "/fifa-world-ranking/BUL",
+        "flag": {
+          "alt": "Bulgaria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BUL",
+          "title": "Bulgaria",
+          "width": 70
+        },
+        "idTeam": "43936",
+        "name": "Bulgaria",
+        "previousRank": 86,
+        "rank": 87,
+        "totalPoints": 1271.68
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1263.1,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ANG",
+        "countryURL": "/fifa-world-ranking/ANG",
+        "flag": {
+          "alt": "Angola",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ANG",
+          "title": "Angola",
+          "width": 70
+        },
+        "idTeam": "43844",
+        "name": "Angola",
+        "previousRank": 89,
+        "rank": 88,
+        "totalPoints": 1265.58
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1264.09,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UGA",
+        "countryURL": "/fifa-world-ranking/UGA",
+        "flag": {
+          "alt": "Uganda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UGA",
+          "title": "Uganda",
+          "width": 70
+        },
+        "idTeam": "43889",
+        "name": "Uganda",
+        "previousRank": 88,
+        "rank": 89,
+        "totalPoints": 1264.09
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1255.82,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZAM",
+        "countryURL": "/fifa-world-ranking/ZAM",
+        "flag": {
+          "alt": "Zambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZAM",
+          "title": "Zambia",
+          "width": 70
+        },
+        "idTeam": "43891",
+        "name": "Zambia",
+        "previousRank": 92,
+        "rank": 90,
+        "totalPoints": 1255.82
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1251.6,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHN",
+        "countryURL": "/fifa-world-ranking/CHN",
+        "flag": {
+          "alt": "China PR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHN",
+          "title": "China PR",
+          "width": 70
+        },
+        "idTeam": "43812",
+        "name": "China PR",
+        "previousRank": 94,
+        "rank": 91,
+        "totalPoints": 1254.81
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1258.53,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHR",
+        "countryURL": "/fifa-world-ranking/BHR",
+        "flag": {
+          "alt": "Bahrain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHR",
+          "title": "Bahrain",
+          "width": 70
+        },
+        "idTeam": "43808",
+        "name": "Bahrain",
+        "previousRank": 91,
+        "rank": 92,
+        "totalPoints": 1254.41
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1258.98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEN",
+        "countryURL": "/fifa-world-ranking/BEN",
+        "flag": {
+          "alt": "Benin",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEN",
+          "title": "Benin",
+          "width": 70
+        },
+        "idTeam": "43845",
+        "name": "Benin",
+        "previousRank": 90,
+        "rank": 93,
+        "totalPoints": 1252.17
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1252.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "THA",
+        "countryURL": "/fifa-world-ranking/THA",
+        "flag": {
+          "alt": "Thailand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/THA",
+          "title": "Thailand",
+          "width": 70
+        },
+        "idTeam": "43839",
+        "name": "Thailand",
+        "previousRank": 93,
+        "rank": 94,
+        "totalPoints": 1250.8
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1244.73,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PLE",
+        "countryURL": "/fifa-world-ranking/PLE",
+        "flag": {
+          "alt": "Palestine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PLE",
+          "title": "Palestine",
+          "width": 70
+        },
+        "idTeam": "43989",
+        "name": "Palestine",
+        "previousRank": 95,
+        "rank": 95,
+        "totalPoints": 1243.71
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1235.82,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLR",
+        "countryURL": "/fifa-world-ranking/BLR",
+        "flag": {
+          "alt": "Belarus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLR",
+          "title": "Belarus",
+          "width": 70
+        },
+        "idTeam": "43937",
+        "name": "Belarus",
+        "previousRank": 97,
+        "rank": 96,
+        "totalPoints": 1242.88
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1243.47,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUA",
+        "countryURL": "/fifa-world-ranking/GUA",
+        "flag": {
+          "alt": "Guatemala",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUA",
+          "title": "Guatemala",
+          "width": 70
+        },
+        "idTeam": "43906",
+        "name": "Guatemala",
+        "previousRank": 96,
+        "rank": 97,
+        "totalPoints": 1238.74
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1227.77,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LUX",
+        "countryURL": "/fifa-world-ranking/LUX",
+        "flag": {
+          "alt": "Luxembourg",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LUX",
+          "title": "Luxembourg",
+          "width": 70
+        },
+        "idTeam": "43958",
+        "name": "Luxembourg",
+        "previousRank": 98,
+        "rank": 98,
+        "totalPoints": 1232.82
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1225.68,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIE",
+        "countryURL": "/fifa-world-ranking/VIE",
+        "flag": {
+          "alt": "Vietnam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIE",
+          "title": "Vietnam",
+          "width": 70
+        },
+        "idTeam": "43841",
+        "name": "Vietnam",
+        "previousRank": 99,
+        "rank": 99,
+        "totalPoints": 1225.68
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1225.26,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLV",
+        "countryURL": "/fifa-world-ranking/SLV",
+        "flag": {
+          "alt": "El Salvador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLV",
+          "title": "El Salvador",
+          "width": 70
+        },
+        "idTeam": "43904",
+        "name": "El Salvador",
+        "previousRank": 100,
+        "rank": 100,
+        "totalPoints": 1225.34
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1221.78,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TJK",
+        "countryURL": "/fifa-world-ranking/TJK",
+        "flag": {
+          "alt": "Tajikistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TJK",
+          "title": "Tajikistan",
+          "width": 70
+        },
+        "idTeam": "44003",
+        "name": "Tajikistan",
+        "previousRank": 103,
+        "rank": 101,
+        "totalPoints": 1224.19
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1222.94,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TRI",
+        "countryURL": "/fifa-world-ranking/TRI",
+        "flag": {
+          "alt": "Trinidad and Tobago",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TRI",
+          "title": "Trinidad and Tobago",
+          "width": 70
+        },
+        "idTeam": "43920",
+        "name": "Trinidad and Tobago",
+        "previousRank": 102,
+        "rank": 102,
+        "totalPoints": 1219.59
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1224.31,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MOZ",
+        "countryURL": "/fifa-world-ranking/MOZ",
+        "flag": {
+          "alt": "Mozambique",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MOZ",
+          "title": "Mozambique",
+          "width": 70
+        },
+        "idTeam": "43873",
+        "name": "Mozambique",
+        "previousRank": 101,
+        "rank": 103,
+        "totalPoints": 1218.62
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1203.76,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAD",
+        "countryURL": "/fifa-world-ranking/MAD",
+        "flag": {
+          "alt": "Madagascar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAD",
+          "title": "Madagascar",
+          "width": 70
+        },
+        "idTeam": "43867",
+        "name": "Madagascar",
+        "previousRank": 104,
+        "rank": 104,
+        "totalPoints": 1202.69
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1195.2,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EQG",
+        "countryURL": "/fifa-world-ranking/EQG",
+        "flag": {
+          "alt": "Equatorial Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EQG",
+          "title": "Equatorial Guinea",
+          "width": 70
+        },
+        "idTeam": "43856",
+        "name": "Equatorial Guinea",
+        "previousRank": 105,
+        "rank": 105,
+        "totalPoints": 1195.2
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1191.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KGZ",
+        "countryURL": "/fifa-world-ranking/KGZ",
+        "flag": {
+          "alt": "Kyrgyz Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KGZ",
+          "title": "Kyrgyz Republic",
+          "width": 70
+        },
+        "idTeam": "43999",
+        "name": "Kyrgyz Republic",
+        "previousRank": 107,
+        "rank": 106,
+        "totalPoints": 1192.16
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1191.42,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARM",
+        "countryURL": "/fifa-world-ranking/ARM",
+        "flag": {
+          "alt": "Armenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARM",
+          "title": "Armenia",
+          "width": 70
+        },
+        "idTeam": "43933",
+        "name": "Armenia",
+        "previousRank": 106,
+        "rank": 107,
+        "totalPoints": 1189.63
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1187.91,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COM",
+        "countryURL": "/fifa-world-ranking/COM",
+        "flag": {
+          "alt": "Comoros",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COM",
+          "title": "Comoros",
+          "width": 70
+        },
+        "idTeam": "1896913",
+        "name": "Comoros",
+        "previousRank": 109,
+        "rank": 108,
+        "totalPoints": 1187.91
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1182.23,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KEN",
+        "countryURL": "/fifa-world-ranking/KEN",
+        "flag": {
+          "alt": "Kenya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KEN",
+          "title": "Kenya",
+          "width": 70
+        },
+        "idTeam": "43863",
+        "name": "Kenya",
+        "previousRank": 111,
+        "rank": 109,
+        "totalPoints": 1185.08
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1182.08,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBY",
+        "countryURL": "/fifa-world-ranking/LBY",
+        "flag": {
+          "alt": "Libya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBY",
+          "title": "Libya",
+          "width": 70
+        },
+        "idTeam": "43866",
+        "name": "Libya",
+        "previousRank": 112,
+        "rank": 110,
+        "totalPoints": 1182.08
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1182.96,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KAZ",
+        "countryURL": "/fifa-world-ranking/KAZ",
+        "flag": {
+          "alt": "Kazakhstan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KAZ",
+          "title": "Kazakhstan",
+          "width": 70
+        },
+        "idTeam": "44027",
+        "name": "Kazakhstan",
+        "previousRank": 110,
+        "rank": 111,
+        "totalPoints": 1180.78
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1180.27,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAN",
+        "countryURL": "/fifa-world-ranking/TAN",
+        "flag": {
+          "alt": "Tanzania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAN",
+          "title": "Tanzania",
+          "width": 70
+        },
+        "idTeam": "43886",
+        "name": "Tanzania",
+        "previousRank": 113,
+        "rank": 112,
+        "totalPoints": 1180.27
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1170.72,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MTN",
+        "countryURL": "/fifa-world-ranking/MTN",
+        "flag": {
+          "alt": "Mauritania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MTN",
+          "title": "Mauritania",
+          "width": 70
+        },
+        "idTeam": "43870",
+        "name": "Mauritania",
+        "previousRank": 115,
+        "rank": 113,
+        "totalPoints": 1176.68
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1179.66,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIG",
+        "countryURL": "/fifa-world-ranking/NIG",
+        "flag": {
+          "alt": "Niger",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIG",
+          "title": "Niger",
+          "width": 70
+        },
+        "idTeam": "43875",
+        "name": "Niger",
+        "previousRank": 114,
+        "rank": 114,
+        "totalPoints": 1175.33
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1187.96,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBN",
+        "countryURL": "/fifa-world-ranking/LBN",
+        "flag": {
+          "alt": "Lebanon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBN",
+          "title": "Lebanon",
+          "width": 70
+        },
+        "idTeam": "43825",
+        "name": "Lebanon",
+        "previousRank": 108,
+        "rank": 115,
+        "totalPoints": 1172.22
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1160.38,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAM",
+        "countryURL": "/fifa-world-ranking/GAM",
+        "flag": {
+          "alt": "The Gambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAM",
+          "title": "The Gambia",
+          "width": 70
+        },
+        "idTeam": "43859",
+        "name": "The Gambia",
+        "previousRank": 116,
+        "rank": 116,
+        "totalPoints": 1159.64
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1157.22,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SDN",
+        "countryURL": "/fifa-world-ranking/SDN",
+        "flag": {
+          "alt": "Sudan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SDN",
+          "title": "Sudan",
+          "width": 70
+        },
+        "idTeam": "43884",
+        "name": "Sudan",
+        "previousRank": 117,
+        "rank": 117,
+        "totalPoints": 1157.22
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1144.88,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IDN",
+        "countryURL": "/fifa-world-ranking/IDN",
+        "flag": {
+          "alt": "Indonesia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IDN",
+          "title": "Indonesia",
+          "width": 70
+        },
+        "idTeam": "43816",
+        "name": "Indonesia",
+        "previousRank": 122,
+        "rank": 118,
+        "totalPoints": 1157.14
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1147.31,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TOG",
+        "countryURL": "/fifa-world-ranking/TOG",
+        "flag": {
+          "alt": "Togo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TOG",
+          "title": "Togo",
+          "width": 70
+        },
+        "idTeam": "43887",
+        "name": "Togo",
+        "previousRank": 121,
+        "rank": 119,
+        "totalPoints": 1152.76
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1151.05,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PRK",
+        "countryURL": "/fifa-world-ranking/PRK",
+        "flag": {
+          "alt": "DPR Korea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PRK",
+          "title": "DPR Korea",
+          "width": 70
+        },
+        "idTeam": "43821",
+        "name": "DPR Korea",
+        "previousRank": 118,
+        "rank": 120,
+        "totalPoints": 1151.05
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1148.84,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NAM",
+        "countryURL": "/fifa-world-ranking/NAM",
+        "flag": {
+          "alt": "Namibia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NAM",
+          "title": "Namibia",
+          "width": 70
+        },
+        "idTeam": "43874",
+        "name": "Namibia",
+        "previousRank": 120,
+        "rank": 121,
+        "totalPoints": 1148.84
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1148.98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLE",
+        "countryURL": "/fifa-world-ranking/SLE",
+        "flag": {
+          "alt": "Sierra Leone",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLE",
+          "title": "Sierra Leone",
+          "width": 70
+        },
+        "idTeam": "43881",
+        "name": "Sierra Leone",
+        "previousRank": 119,
+        "rank": 122,
+        "totalPoints": 1147.56
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1137.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRO",
+        "countryURL": "/fifa-world-ranking/FRO",
+        "flag": {
+          "alt": "Faroe Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRO",
+          "title": "Faroe Islands",
+          "width": 70
+        },
+        "idTeam": "43944",
+        "name": "Faroe Islands",
+        "previousRank": 123,
+        "rank": 123,
+        "totalPoints": 1136.59
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1128.33,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CYP",
+        "countryURL": "/fifa-world-ranking/CYP",
+        "flag": {
+          "alt": "Cyprus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CYP",
+          "title": "Cyprus",
+          "width": 70
+        },
+        "idTeam": "43939",
+        "name": "Cyprus",
+        "previousRank": 126,
+        "rank": 124,
+        "totalPoints": 1133.25
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1132.43,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUR",
+        "countryURL": "/fifa-world-ranking/SUR",
+        "flag": {
+          "alt": "Suriname",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUR",
+          "title": "Suriname",
+          "width": 70
+        },
+        "idTeam": "43919",
+        "name": "Suriname",
+        "previousRank": 125,
+        "rank": 125,
+        "totalPoints": 1132.43
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1136.67,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AZE",
+        "countryURL": "/fifa-world-ranking/AZE",
+        "flag": {
+          "alt": "Azerbaijan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AZE",
+          "title": "Azerbaijan",
+          "width": 70
+        },
+        "idTeam": "43994",
+        "name": "Azerbaijan",
+        "previousRank": 124,
+        "rank": 126,
+        "totalPoints": 1132
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1121.1,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EST",
+        "countryURL": "/fifa-world-ranking/EST",
+        "flag": {
+          "alt": "Estonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EST",
+          "title": "Estonia",
+          "width": 70
+        },
+        "idTeam": "43943",
+        "name": "Estonia",
+        "previousRank": 129,
+        "rank": 127,
+        "totalPoints": 1130.64
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1126.62,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RWA",
+        "countryURL": "/fifa-world-ranking/RWA",
+        "flag": {
+          "alt": "Rwanda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RWA",
+          "title": "Rwanda",
+          "width": 70
+        },
+        "idTeam": "43877",
+        "name": "Rwanda",
+        "previousRank": 128,
+        "rank": 128,
+        "totalPoints": 1126.62
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1128.03,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MWI",
+        "countryURL": "/fifa-world-ranking/MWI",
+        "flag": {
+          "alt": "Malawi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MWI",
+          "title": "Malawi",
+          "width": 70
+        },
+        "idTeam": "43868",
+        "name": "Malawi",
+        "previousRank": 127,
+        "rank": 129,
+        "totalPoints": 1122.05
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1118.12,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZIM",
+        "countryURL": "/fifa-world-ranking/ZIM",
+        "flag": {
+          "alt": "Zimbabwe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZIM",
+          "title": "Zimbabwe",
+          "width": 70
+        },
+        "idTeam": "43892",
+        "name": "Zimbabwe",
+        "previousRank": 130,
+        "rank": 130,
+        "totalPoints": 1119.78
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1115.13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NCA",
+        "countryURL": "/fifa-world-ranking/NCA",
+        "flag": {
+          "alt": "Nicaragua",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NCA",
+          "title": "Nicaragua",
+          "width": 70
+        },
+        "idTeam": "43913",
+        "name": "Nicaragua",
+        "previousRank": 131,
+        "rank": 131,
+        "totalPoints": 1114.63
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1108.38,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GNB",
+        "countryURL": "/fifa-world-ranking/GNB",
+        "flag": {
+          "alt": "Guinea-Bissau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GNB",
+          "title": "Guinea-Bissau",
+          "width": 70
+        },
+        "idTeam": "43862",
+        "name": "Guinea-Bissau",
+        "previousRank": 132,
+        "rank": 132,
+        "totalPoints": 1108.38
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1105.1,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KUW",
+        "countryURL": "/fifa-world-ranking/KUW",
+        "flag": {
+          "alt": "Kuwait",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KUW",
+          "title": "Kuwait",
+          "width": 70
+        },
+        "idTeam": "43823",
+        "name": "Kuwait",
+        "previousRank": 134,
+        "rank": 133,
+        "totalPoints": 1106.47
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1105.96,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CGO",
+        "countryURL": "/fifa-world-ranking/CGO",
+        "flag": {
+          "alt": "Congo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CGO",
+          "title": "Congo",
+          "width": 70
+        },
+        "idTeam": "43853",
+        "name": "Congo",
+        "previousRank": 133,
+        "rank": 134,
+        "totalPoints": 1105.96
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1094.1,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PHI",
+        "countryURL": "/fifa-world-ranking/PHI",
+        "flag": {
+          "alt": "Philippines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PHI",
+          "title": "Philippines",
+          "width": 70
+        },
+        "idTeam": "43833",
+        "name": "Philippines",
+        "previousRank": 135,
+        "rank": 135,
+        "totalPoints": 1100.95
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1086.22,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAS",
+        "countryURL": "/fifa-world-ranking/MAS",
+        "flag": {
+          "alt": "Malaysia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAS",
+          "title": "Malaysia",
+          "width": 70
+        },
+        "idTeam": "43827",
+        "name": "Malaysia",
+        "previousRank": 138,
+        "rank": 136,
+        "totalPoints": 1086.22
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1090.57,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LVA",
+        "countryURL": "/fifa-world-ranking/LVA",
+        "flag": {
+          "alt": "Latvia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LVA",
+          "title": "Latvia",
+          "width": 70
+        },
+        "idTeam": "43955",
+        "name": "Latvia",
+        "previousRank": 137,
+        "rank": 137,
+        "totalPoints": 1085.66
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1091.03,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IND",
+        "countryURL": "/fifa-world-ranking/IND",
+        "flag": {
+          "alt": "India",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IND",
+          "title": "India",
+          "width": 70
+        },
+        "idTeam": "43815",
+        "name": "India",
+        "previousRank": 136,
+        "rank": 138,
+        "totalPoints": 1084.93
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1083.57,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CTA",
+        "countryURL": "/fifa-world-ranking/CTA",
+        "flag": {
+          "alt": "Central African Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CTA",
+          "title": "Central African Republic",
+          "width": 70
+        },
+        "idTeam": "43851",
+        "name": "Central African Republic",
+        "previousRank": 139,
+        "rank": 139,
+        "totalPoints": 1080.82
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1079.02,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBR",
+        "countryURL": "/fifa-world-ranking/LBR",
+        "flag": {
+          "alt": "Liberia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBR",
+          "title": "Liberia",
+          "width": 70
+        },
+        "idTeam": "43865",
+        "name": "Liberia",
+        "previousRank": 140,
+        "rank": 140,
+        "totalPoints": 1080.44
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1078.65,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TKM",
+        "countryURL": "/fifa-world-ranking/TKM",
+        "flag": {
+          "alt": "Turkmenistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TKM",
+          "title": "Turkmenistan",
+          "width": 70
+        },
+        "idTeam": "44004",
+        "name": "Turkmenistan",
+        "previousRank": 141,
+        "rank": 141,
+        "totalPoints": 1078.65
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1078.01,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BDI",
+        "countryURL": "/fifa-world-ranking/BDI",
+        "flag": {
+          "alt": "Burundi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BDI",
+          "title": "Burundi",
+          "width": 70
+        },
+        "idTeam": "43848",
+        "name": "Burundi",
+        "previousRank": 142,
+        "rank": 142,
+        "totalPoints": 1078.01
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1071.55,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ETH",
+        "countryURL": "/fifa-world-ranking/ETH",
+        "flag": {
+          "alt": "Ethiopia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ETH",
+          "title": "Ethiopia",
+          "width": 70
+        },
+        "idTeam": "43857",
+        "name": "Ethiopia",
+        "previousRank": 144,
+        "rank": 143,
+        "totalPoints": 1077.52
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1077.95,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DOM",
+        "countryURL": "/fifa-world-ranking/DOM",
+        "flag": {
+          "alt": "Dominican Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DOM",
+          "title": "Dominican Republic",
+          "width": 70
+        },
+        "idTeam": "43903",
+        "name": "Dominican Republic",
+        "previousRank": 143,
+        "rank": 144,
+        "totalPoints": 1076.5
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1049.49,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "YEM",
+        "countryURL": "/fifa-world-ranking/YEM",
+        "flag": {
+          "alt": "Yemen",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/YEM",
+          "title": "Yemen",
+          "width": 70
+        },
+        "idTeam": "43842",
+        "name": "Yemen",
+        "previousRank": 149,
+        "rank": 145,
+        "totalPoints": 1065.24
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1067.13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LES",
+        "countryURL": "/fifa-world-ranking/LES",
+        "flag": {
+          "alt": "Lesotho",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LES",
+          "title": "Lesotho",
+          "width": 70
+        },
+        "idTeam": "43864",
+        "name": "Lesotho",
+        "previousRank": 145,
+        "rank": 146,
+        "totalPoints": 1064.29
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1063.63,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOT",
+        "countryURL": "/fifa-world-ranking/BOT",
+        "flag": {
+          "alt": "Botswana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOT",
+          "title": "Botswana",
+          "width": 70
+        },
+        "idTeam": "43846",
+        "name": "Botswana",
+        "previousRank": 146,
+        "rank": 147,
+        "totalPoints": 1063.63
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1059.53,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SGP",
+        "countryURL": "/fifa-world-ranking/SGP",
+        "flag": {
+          "alt": "Singapore",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SGP",
+          "title": "Singapore",
+          "width": 70
+        },
+        "idTeam": "43836",
+        "name": "Singapore",
+        "previousRank": 147,
+        "rank": 148,
+        "totalPoints": 1057.95
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1058.42,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LTU",
+        "countryURL": "/fifa-world-ranking/LTU",
+        "flag": {
+          "alt": "Lithuania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LTU",
+          "title": "Lithuania",
+          "width": 70
+        },
+        "idTeam": "43957",
+        "name": "Lithuania",
+        "previousRank": 148,
+        "rank": 149,
+        "totalPoints": 1056.85
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1049.32,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUY",
+        "countryURL": "/fifa-world-ranking/GUY",
+        "flag": {
+          "alt": "Guyana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUY",
+          "title": "Guyana",
+          "width": 70
+        },
+        "idTeam": "43907",
+        "name": "Guyana",
+        "previousRank": 150,
+        "rank": 150,
+        "totalPoints": 1049.32
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1036.95,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NCL",
+        "countryURL": "/fifa-world-ranking/NCL",
+        "flag": {
+          "alt": "New Caledonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NCL",
+          "title": "New Caledonia",
+          "width": 70
+        },
+        "idTeam": "20010",
+        "name": "New Caledonia",
+        "previousRank": 151,
+        "rank": 151,
+        "totalPoints": 1036.95
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1036.33,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SKN",
+        "countryURL": "/fifa-world-ranking/SKN",
+        "flag": {
+          "alt": "St Kitts and Nevis",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SKN",
+          "title": "St Kitts and Nevis",
+          "width": 70
+        },
+        "idTeam": "43916",
+        "name": "St Kitts and Nevis",
+        "previousRank": 152,
+        "rank": 152,
+        "totalPoints": 1036.33
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1031.89,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOL",
+        "countryURL": "/fifa-world-ranking/SOL",
+        "flag": {
+          "alt": "Solomon Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOL",
+          "title": "Solomon Islands",
+          "width": 70
+        },
+        "idTeam": "43980",
+        "name": "Solomon Islands",
+        "previousRank": 153,
+        "rank": 153,
+        "totalPoints": 1031.89
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1026.11,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PUR",
+        "countryURL": "/fifa-world-ranking/PUR",
+        "flag": {
+          "alt": "Puerto Rico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PUR",
+          "title": "Puerto Rico",
+          "width": 70
+        },
+        "idTeam": "43915",
+        "name": "Puerto Rico",
+        "previousRank": 156,
+        "rank": 154,
+        "totalPoints": 1024.3
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1029.7,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIJ",
+        "countryURL": "/fifa-world-ranking/FIJ",
+        "flag": {
+          "alt": "Fiji",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIJ",
+          "title": "Fiji",
+          "width": 70
+        },
+        "idTeam": "43977",
+        "name": "Fiji",
+        "previousRank": 154,
+        "rank": 155,
+        "totalPoints": 1024.17
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1026.63,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HKG",
+        "countryURL": "/fifa-world-ranking/HKG",
+        "flag": {
+          "alt": "Hong Kong, China",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HKG",
+          "title": "Hong Kong, China",
+          "width": 70
+        },
+        "idTeam": "43814",
+        "name": "Hong Kong, China",
+        "previousRank": 155,
+        "rank": 156,
+        "totalPoints": 1024.16
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1019.04,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAH",
+        "countryURL": "/fifa-world-ranking/TAH",
+        "flag": {
+          "alt": "Tahiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAH",
+          "title": "Tahiti",
+          "width": 70
+        },
+        "idTeam": "43981",
+        "name": "Tahiti",
+        "previousRank": 157,
+        "rank": 157,
+        "totalPoints": 1019.04
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1011.88,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MYA",
+        "countryURL": "/fifa-world-ranking/MYA",
+        "flag": {
+          "alt": "Myanmar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MYA",
+          "title": "Myanmar",
+          "width": 70
+        },
+        "idTeam": "43829",
+        "name": "Myanmar",
+        "previousRank": 158,
+        "rank": 158,
+        "totalPoints": 1010.91
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 1004.16,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDA",
+        "countryURL": "/fifa-world-ranking/MDA",
+        "flag": {
+          "alt": "Moldova",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDA",
+          "title": "Moldova",
+          "width": 70
+        },
+        "idTeam": "44036",
+        "name": "Moldova",
+        "previousRank": 159,
+        "rank": 159,
+        "totalPoints": 1008.24
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 997.01,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VAN",
+        "countryURL": "/fifa-world-ranking/VAN",
+        "flag": {
+          "alt": "Vanuatu",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VAN",
+          "title": "Vanuatu",
+          "width": 70
+        },
+        "idTeam": "43982",
+        "name": "Vanuatu",
+        "previousRank": 160,
+        "rank": 160,
+        "totalPoints": 1002.53
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 987.73,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLT",
+        "countryURL": "/fifa-world-ranking/MLT",
+        "flag": {
+          "alt": "Malta",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLT",
+          "title": "Malta",
+          "width": 70
+        },
+        "idTeam": "43959",
+        "name": "Malta",
+        "previousRank": 161,
+        "rank": 161,
+        "totalPoints": 992.79
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 986.58,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ATG",
+        "countryURL": "/fifa-world-ranking/ATG",
+        "flag": {
+          "alt": "Antigua and Barbuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ATG",
+          "title": "Antigua and Barbuda",
+          "width": 70
+        },
+        "idTeam": "1882218",
+        "name": "Antigua and Barbuda",
+        "previousRank": 162,
+        "rank": 162,
+        "totalPoints": 986.58
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 982.57,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRN",
+        "countryURL": "/fifa-world-ranking/GRN",
+        "flag": {
+          "alt": "Grenada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRN",
+          "title": "Grenada",
+          "width": 70
+        },
+        "idTeam": "43905",
+        "name": "Grenada",
+        "previousRank": 163,
+        "rank": 163,
+        "totalPoints": 981.82
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 981.42,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CUB",
+        "countryURL": "/fifa-world-ranking/CUB",
+        "flag": {
+          "alt": "Cuba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CUB",
+          "title": "Cuba",
+          "width": 70
+        },
+        "idTeam": "43902",
+        "name": "Cuba",
+        "previousRank": 164,
+        "rank": 164,
+        "totalPoints": 981.42
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 979.01,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWZ",
+        "countryURL": "/fifa-world-ranking/SWZ",
+        "flag": {
+          "alt": "Eswatini",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWZ",
+          "title": "Eswatini",
+          "width": 70
+        },
+        "idTeam": "43885",
+        "name": "Eswatini",
+        "previousRank": 165,
+        "rank": 165,
+        "totalPoints": 979.01
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 976.71,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LCA",
+        "countryURL": "/fifa-world-ranking/LCA",
+        "flag": {
+          "alt": "St Lucia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LCA",
+          "title": "St Lucia",
+          "width": 70
+        },
+        "idTeam": "43917",
+        "name": "St Lucia",
+        "previousRank": 167,
+        "rank": 166,
+        "totalPoints": 976.71
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 976.87,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BER",
+        "countryURL": "/fifa-world-ranking/BER",
+        "flag": {
+          "alt": "Bermuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BER",
+          "title": "Bermuda",
+          "width": 70
+        },
+        "idTeam": "43898",
+        "name": "Bermuda",
+        "previousRank": 166,
+        "rank": 167,
+        "totalPoints": 975.05
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 974.9,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PNG",
+        "countryURL": "/fifa-world-ranking/PNG",
+        "flag": {
+          "alt": "Papua New Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PNG",
+          "title": "Papua New Guinea",
+          "width": 70
+        },
+        "idTeam": "43979",
+        "name": "Papua New Guinea",
+        "previousRank": 168,
+        "rank": 168,
+        "totalPoints": 974.9
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 970.94,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SSD",
+        "countryURL": "/fifa-world-ranking/SSD",
+        "flag": {
+          "alt": "South Sudan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SSD",
+          "title": "South Sudan",
+          "width": 70
+        },
+        "idTeam": "1935341",
+        "name": "South Sudan",
+        "previousRank": 170,
+        "rank": 169,
+        "totalPoints": 970.94
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 968.27,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIN",
+        "countryURL": "/fifa-world-ranking/VIN",
+        "flag": {
+          "alt": "St Vincent and the Grenadines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIN",
+          "title": "St Vincent and the Grenadines",
+          "width": 70
+        },
+        "idTeam": "43918",
+        "name": "St Vincent and the Grenadines",
+        "previousRank": 171,
+        "rank": 170,
+        "totalPoints": 968.27
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 972.75,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AFG",
+        "countryURL": "/fifa-world-ranking/AFG",
+        "flag": {
+          "alt": "Afghanistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AFG",
+          "title": "Afghanistan",
+          "width": 70
+        },
+        "idTeam": "20000",
+        "name": "Afghanistan",
+        "previousRank": 169,
+        "rank": 171,
+        "totalPoints": 968.07
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 945.34,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AND",
+        "countryURL": "/fifa-world-ranking/AND",
+        "flag": {
+          "alt": "Andorra",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AND",
+          "title": "Andorra",
+          "width": 70
+        },
+        "idTeam": "20001",
+        "name": "Andorra",
+        "previousRank": 173,
+        "rank": 172,
+        "totalPoints": 946.43
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 954.93,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDV",
+        "countryURL": "/fifa-world-ranking/MDV",
+        "flag": {
+          "alt": "Maldives",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDV",
+          "title": "Maldives",
+          "width": 70
+        },
+        "idTeam": "43828",
+        "name": "Maldives",
+        "previousRank": 172,
+        "rank": 173,
+        "totalPoints": 943.92
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 923.78,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TPE",
+        "countryURL": "/fifa-world-ranking/TPE",
+        "flag": {
+          "alt": "Chinese Taipei",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TPE",
+          "title": "Chinese Taipei",
+          "width": 70
+        },
+        "idTeam": "43813",
+        "name": "Chinese Taipei",
+        "previousRank": 174,
+        "rank": 174,
+        "totalPoints": 923.78
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 911.54,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAM",
+        "countryURL": "/fifa-world-ranking/CAM",
+        "flag": {
+          "alt": "Cambodia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAM",
+          "title": "Cambodia",
+          "width": 70
+        },
+        "idTeam": "44009",
+        "name": "Cambodia",
+        "previousRank": 177,
+        "rank": 175,
+        "totalPoints": 922.32
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 916.75,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MSR",
+        "countryURL": "/fifa-world-ranking/MSR",
+        "flag": {
+          "alt": "Montserrat",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MSR",
+          "title": "Montserrat",
+          "width": 70
+        },
+        "idTeam": "20009",
+        "name": "Montserrat",
+        "previousRank": 175,
+        "rank": 176,
+        "totalPoints": 916.75
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 914.54,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NEP",
+        "countryURL": "/fifa-world-ranking/NEP",
+        "flag": {
+          "alt": "Nepal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NEP",
+          "title": "Nepal",
+          "width": 70
+        },
+        "idTeam": "43830",
+        "name": "Nepal",
+        "previousRank": 176,
+        "rank": 177,
+        "totalPoints": 914.54
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 911.49,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MRI",
+        "countryURL": "/fifa-world-ranking/MRI",
+        "flag": {
+          "alt": "Mauritius",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MRI",
+          "title": "Mauritius",
+          "width": 70
+        },
+        "idTeam": "43871",
+        "name": "Mauritius",
+        "previousRank": 178,
+        "rank": 178,
+        "totalPoints": 911.49
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 909.89,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRB",
+        "countryURL": "/fifa-world-ranking/BRB",
+        "flag": {
+          "alt": "Barbados",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRB",
+          "title": "Barbados",
+          "width": 70
+        },
+        "idTeam": "43896",
+        "name": "Barbados",
+        "previousRank": 179,
+        "rank": 179,
+        "totalPoints": 909.89
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 907,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLZ",
+        "countryURL": "/fifa-world-ranking/BLZ",
+        "flag": {
+          "alt": "Belize",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLZ",
+          "title": "Belize",
+          "width": 70
+        },
+        "idTeam": "44011",
+        "name": "Belize",
+        "previousRank": 180,
+        "rank": 180,
+        "totalPoints": 907
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 899.53,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAN",
+        "countryURL": "/fifa-world-ranking/BAN",
+        "flag": {
+          "alt": "Bangladesh",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAN",
+          "title": "Bangladesh",
+          "width": 70
+        },
+        "idTeam": "43809",
+        "name": "Bangladesh",
+        "previousRank": 181,
+        "rank": 181,
+        "totalPoints": 902.93
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 897.69,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DMA",
+        "countryURL": "/fifa-world-ranking/DMA",
+        "flag": {
+          "alt": "Dominica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DMA",
+          "title": "Dominica",
+          "width": 70
+        },
+        "idTeam": "43997",
+        "name": "Dominica",
+        "previousRank": 182,
+        "rank": 182,
+        "totalPoints": 897.69
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 896.85,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHA",
+        "countryURL": "/fifa-world-ranking/CHA",
+        "flag": {
+          "alt": "Chad",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHA",
+          "title": "Chad",
+          "width": 70
+        },
+        "idTeam": "43852",
+        "name": "Chad",
+        "previousRank": 183,
+        "rank": 183,
+        "totalPoints": 896.85
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 887.06,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ERI",
+        "countryURL": "/fifa-world-ranking/ERI",
+        "flag": {
+          "alt": "Eritrea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ERI",
+          "title": "Eritrea",
+          "width": 70
+        },
+        "idTeam": "20006",
+        "name": "Eritrea",
+        "previousRank": 184,
+        "rank": 184,
+        "totalPoints": 887.06
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 885.03,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LAO",
+        "countryURL": "/fifa-world-ranking/LAO",
+        "flag": {
+          "alt": "Laos",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LAO",
+          "title": "Laos",
+          "width": 70
+        },
+        "idTeam": "43824",
+        "name": "Laos",
+        "previousRank": 185,
+        "rank": 185,
+        "totalPoints": 885.03
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 877.53,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COK",
+        "countryURL": "/fifa-world-ranking/COK",
+        "flag": {
+          "alt": "Cook Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COK",
+          "title": "Cook Islands",
+          "width": 70
+        },
+        "idTeam": "44007",
+        "name": "Cook Islands",
+        "previousRank": 188,
+        "rank": 186,
+        "totalPoints": 877.53
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 871.82,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SRI",
+        "countryURL": "/fifa-world-ranking/SRI",
+        "flag": {
+          "alt": "Sri Lanka",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SRI",
+          "title": "Sri Lanka",
+          "width": 70
+        },
+        "idTeam": "43837",
+        "name": "Sri Lanka",
+        "previousRank": 191,
+        "rank": 187,
+        "totalPoints": 876.86
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 876.41,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SAM",
+        "countryURL": "/fifa-world-ranking/SAM",
+        "flag": {
+          "alt": "Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SAM",
+          "title": "Samoa",
+          "width": 70
+        },
+        "idTeam": "1882637",
+        "name": "Samoa",
+        "previousRank": 190,
+        "rank": 188,
+        "totalPoints": 876.41
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 877.3,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARU",
+        "countryURL": "/fifa-world-ranking/ARU",
+        "flag": {
+          "alt": "Aruba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARU",
+          "title": "Aruba",
+          "width": 70
+        },
+        "idTeam": "43894",
+        "name": "Aruba",
+        "previousRank": 189,
+        "rank": 189,
+        "totalPoints": 875.61
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 879.75,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MNG",
+        "countryURL": "/fifa-world-ranking/MNG",
+        "flag": {
+          "alt": "Mongolia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MNG",
+          "title": "Mongolia",
+          "width": 70
+        },
+        "idTeam": "20008",
+        "name": "Mongolia",
+        "previousRank": 187,
+        "rank": 190,
+        "totalPoints": 874.47
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 871.61,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ASA",
+        "countryURL": "/fifa-world-ranking/ASA",
+        "flag": {
+          "alt": "American Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ASA",
+          "title": "American Samoa",
+          "width": 70
+        },
+        "idTeam": "20012",
+        "name": "American Samoa",
+        "previousRank": 192,
+        "rank": 191,
+        "totalPoints": 871.61
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 880.55,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHU",
+        "countryURL": "/fifa-world-ranking/BHU",
+        "flag": {
+          "alt": "Bhutan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHU",
+          "title": "Bhutan",
+          "width": 70
+        },
+        "idTeam": "20003",
+        "name": "Bhutan",
+        "previousRank": 186,
+        "rank": 192,
+        "totalPoints": 870.81
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 858.03,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAC",
+        "countryURL": "/fifa-world-ranking/MAC",
+        "flag": {
+          "alt": "Macau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAC",
+          "title": "Macau",
+          "width": 70
+        },
+        "idTeam": "43826",
+        "name": "Macau",
+        "previousRank": 194,
+        "rank": 193,
+        "totalPoints": 858.03
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 863.09,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRU",
+        "countryURL": "/fifa-world-ranking/BRU",
+        "flag": {
+          "alt": "Brunei Darussalam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRU",
+          "title": "Brunei Darussalam",
+          "width": 70
+        },
+        "idTeam": "43810",
+        "name": "Brunei Darussalam",
+        "previousRank": 193,
+        "rank": 194,
+        "totalPoints": 857.73
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 855.44,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "STP",
+        "countryURL": "/fifa-world-ranking/STP",
+        "flag": {
+          "alt": "São Tomé and Príncipe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/STP",
+          "title": "São Tomé and Príncipe",
+          "width": 70
+        },
+        "idTeam": "43878",
+        "name": "São Tomé and Príncipe",
+        "previousRank": 196,
+        "rank": 195,
+        "totalPoints": 855.44
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 853.58,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DJI",
+        "countryURL": "/fifa-world-ranking/DJI",
+        "flag": {
+          "alt": "Djibouti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DJI",
+          "title": "Djibouti",
+          "width": 70
+        },
+        "idTeam": "43996",
+        "name": "Djibouti",
+        "previousRank": 197,
+        "rank": 196,
+        "totalPoints": 853.58
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 855.45,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAY",
+        "countryURL": "/fifa-world-ranking/CAY",
+        "flag": {
+          "alt": "Cayman Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAY",
+          "title": "Cayman Islands",
+          "width": 70
+        },
+        "idTeam": "43900",
+        "name": "Cayman Islands",
+        "previousRank": 195,
+        "rank": 197,
+        "totalPoints": 850.06
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 824.6,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAK",
+        "countryURL": "/fifa-world-ranking/PAK",
+        "flag": {
+          "alt": "Pakistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAK",
+          "title": "Pakistan",
+          "width": 70
+        },
+        "idTeam": "43832",
+        "name": "Pakistan",
+        "previousRank": 202,
+        "rank": 198,
+        "totalPoints": 840.28
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 839.17,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOM",
+        "countryURL": "/fifa-world-ranking/SOM",
+        "flag": {
+          "alt": "Somalia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOM",
+          "title": "Somalia",
+          "width": 70
+        },
+        "idTeam": "43882",
+        "name": "Somalia",
+        "previousRank": 198,
+        "rank": 199,
+        "totalPoints": 839.17
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 835.64,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TGA",
+        "countryURL": "/fifa-world-ranking/TGA",
+        "flag": {
+          "alt": "Tonga",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TGA",
+          "title": "Tonga",
+          "width": 70
+        },
+        "idTeam": "44039",
+        "name": "Tonga",
+        "previousRank": 199,
+        "rank": 200,
+        "totalPoints": 835.64
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 825.64,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TLS",
+        "countryURL": "/fifa-world-ranking/TLS",
+        "flag": {
+          "alt": "Timor-Leste",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TLS",
+          "title": "Timor-Leste",
+          "width": 70
+        },
+        "idTeam": "1890334",
+        "name": "Timor-Leste",
+        "previousRank": 200,
+        "rank": 201,
+        "totalPoints": 831
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 810.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GIB",
+        "countryURL": "/fifa-world-ranking/GIB",
+        "flag": {
+          "alt": "Gibraltar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GIB",
+          "title": "Gibraltar",
+          "width": 70
+        },
+        "idTeam": "1941613",
+        "name": "Gibraltar",
+        "previousRank": 203,
+        "rank": 202,
+        "totalPoints": 820.26
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 825.43,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUM",
+        "countryURL": "/fifa-world-ranking/GUM",
+        "flag": {
+          "alt": "Guam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUM",
+          "title": "Guam",
+          "width": 70
+        },
+        "idTeam": "20007",
+        "name": "Guam",
+        "previousRank": 201,
+        "rank": 203,
+        "totalPoints": 819.54
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 804.16,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEY",
+        "countryURL": "/fifa-world-ranking/SEY",
+        "flag": {
+          "alt": "Seychelles",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEY",
+          "title": "Seychelles",
+          "width": 70
+        },
+        "idTeam": "43880",
+        "name": "Seychelles",
+        "previousRank": 204,
+        "rank": 204,
+        "totalPoints": 804.16
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 803.98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TCA",
+        "countryURL": "/fifa-world-ranking/TCA",
+        "flag": {
+          "alt": "Turks and Caicos Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TCA",
+          "title": "Turks and Caicos Islands",
+          "width": 70
+        },
+        "idTeam": "20011",
+        "name": "Turks and Caicos Islands",
+        "previousRank": 205,
+        "rank": 205,
+        "totalPoints": 803.98
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 803.57,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LIE",
+        "countryURL": "/fifa-world-ranking/LIE",
+        "flag": {
+          "alt": "Liechtenstein",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LIE",
+          "title": "Liechtenstein",
+          "width": 70
+        },
+        "idTeam": "43956",
+        "name": "Liechtenstein",
+        "previousRank": 206,
+        "rank": 206,
+        "totalPoints": 797.7
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 786.82,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAH",
+        "countryURL": "/fifa-world-ranking/BAH",
+        "flag": {
+          "alt": "Bahamas",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAH",
+          "title": "Bahamas",
+          "width": 70
+        },
+        "idTeam": "43895",
+        "name": "Bahamas",
+        "previousRank": 207,
+        "rank": 207,
+        "totalPoints": 786.82
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 779.76,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIR",
+        "countryURL": "/fifa-world-ranking/VIR",
+        "flag": {
+          "alt": "US Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIR",
+          "title": "US Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "1881967",
+        "name": "US Virgin Islands",
+        "previousRank": 209,
+        "rank": 208,
+        "totalPoints": 779.76
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 782.14,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VGB",
+        "countryURL": "/fifa-world-ranking/VGB",
+        "flag": {
+          "alt": "British Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VGB",
+          "title": "British Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "20004",
+        "name": "British Virgin Islands",
+        "previousRank": 208,
+        "rank": 209,
+        "totalPoints": 777.41
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 760.25,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AIA",
+        "countryURL": "/fifa-world-ranking/AIA",
+        "flag": {
+          "alt": "Anguilla",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AIA",
+          "title": "Anguilla",
+          "width": 70
+        },
+        "idTeam": "20002",
+        "name": "Anguilla",
+        "previousRank": 210,
+        "rank": 210,
+        "totalPoints": 760.25
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2026-06-11T10:00:00+00:00",
+      "nextUpdateDate": null,
+      "previousPoints": 726.33,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SMR",
+        "countryURL": "/fifa-world-ranking/SMR",
+        "flag": {
+          "alt": "San Marino",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SMR",
+          "title": "San Marino",
+          "width": 70
+        },
+        "idTeam": "43966",
+        "name": "San Marino",
+        "previousRank": 211,
+        "rank": 211,
+        "totalPoints": 721.2
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    }
+  ]
+}

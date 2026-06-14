@@ -249,11 +249,12 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-4.1.0 = merit-v3.1 curation season: same projected formula as
-    # 4.0, consuming career-stature-3.1.0 source-derived rows.
-    assert rating_2026.RATING_VERSION == "proj-career-4.1.0"
+    # proj-career-5.0.0 = merit-v4: projected ratings consume career-stature-4.0.0
+    # and cap active, stage-normalized rows so incomplete careers do not read as
+    # completed all-time careers.
+    assert rating_2026.RATING_VERSION == "proj-career-5.0.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-4.1.0"
+        assert r["rating_version"] == "proj-career-5.0.0"
 
 
 def test_projected_distribution_shape(ratings):
@@ -473,6 +474,8 @@ def test_new_stature_components_emitted(ratings):
         "career_stature_index",
         "career_stature_coverage",
         "stature_target_score",
+        "projected_active_stature_cap",
+        "projected_active_stature_cap_delta",
         "stature_model_weight",
     }
     for r in ratings:
@@ -525,6 +528,22 @@ def test_minted_person_rows_are_consulted(internal_2026, cards, career_2026):
             assert row["overall_basis"] == "career_stature_estimate", pid
             assert _comp(row, "stature_target_score") is not None, pid
     assert material > 0  # e.g. Haaland / Yamal / Alaba ride the stature path
+
+
+def test_active_projected_stature_cap_limits_incomplete_career_rows(internal_2026):
+    """Active career rows are stage-normalized for materiality, but projected 2026
+    must not treat a still-in-progress career as completed. Haaland's row remains
+    material while the active-stage cap keeps him in the intended low-90s band."""
+    haaland = internal_2026["P-W26-0477"]
+    yamal = internal_2026["P-W26-0663"]
+    assert _comp(haaland, "projected_active_stature_cap") == 0.845
+    assert _comp(haaland, "projected_active_stature_cap_delta") > 0.0
+    assert haaland["score_0_100"] == 84.5
+    assert _comp(yamal, "projected_active_stature_cap_delta") > 0.0
+
+    messi = internal_2026[_MESSI]
+    assert _comp(messi, "projected_active_stature_cap") is None
+    assert _comp(messi, "projected_active_stature_cap_delta") == 0.0
 
 
 def test_linked_material_reconciled_onto_stature_scale(internal_2026, cards):
@@ -601,12 +620,19 @@ def test_nonmaterial_quantiles_match_historical_raw_only(
     bounds and left the 2026 floor ~0.14 and the median ~0.055 above historical (a
     2026 journeyman systematically out-rating a comparable historical one, which a
     monotonic curve cannot undo). Quantile mapping closes the whole distribution: the
-    per-quantile cross-era gap must be ~0, not merely the bounds."""
+    per-quantile cross-era gap must be ~0 through the middle of the distribution;
+    the upper raw-only tail may sit below historical after merit-v4's national-team
+    ceiling, but it must never lift above the historical target."""
     assert historical_raw_only_sorted and projected_raw_only_sorted
-    for q in (0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99):
+    for q in (0.01, 0.10, 0.25, 0.50):
         h = rating._quantile(historical_raw_only_sorted, q)
         n = rating._quantile(projected_raw_only_sorted, q)
         assert abs(h - n) <= 0.01, (q, h, n)
+    for q in (0.75, 0.90, 0.99):
+        h = rating._quantile(historical_raw_only_sorted, q)
+        n = rating._quantile(projected_raw_only_sorted, q)
+        assert n <= h + 0.01, (q, h, n)
+        assert h - n <= 0.04, (q, h, n)
     # Floors coincide exactly — the affine map's lifted 2026 floor is the regression
     # this guards: a 2026 reserve can sink to the historical replacement floor.
     assert min(projected_raw_only_sorted) <= min(historical_raw_only_sorted) + 1e-9

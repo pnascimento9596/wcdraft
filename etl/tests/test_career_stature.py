@@ -28,6 +28,26 @@ def _committed() -> dict:
     return json.loads((_OUTPUT / "career_stature.json").read_text("utf-8"))
 
 
+def _expected_normalized_weights(eligible: dict[str, float]) -> dict[str, float]:
+    total = sum(eligible.values())
+    expected = {
+        fam: round(
+            (eligible.get(fam, 0.0) / total) if eligible.get(fam, 0.0) > 0.0 else 0.0,
+            stature._PRECISION,
+        )
+        for fam in stature._V2_FAMILY_KEYS
+    }
+    remainder = round(1.0 - sum(expected.values()), stature._PRECISION)
+    if remainder:
+        positives = [fam for fam in stature._V2_FAMILY_KEYS if expected[fam] > 0.0]
+        anchor = max(
+            positives,
+            key=lambda fam: (expected[fam], -stature._V2_FAMILY_KEYS.index(fam)),
+        )
+        expected[anchor] = round(expected[anchor] + remainder, stature._PRECISION)
+    return expected
+
+
 def test_rebuild_is_byte_identical_to_committed():
     """A fresh build over the committed source facts reproduces the committed
     artifact byte-for-byte (the determinism moat)."""
@@ -60,17 +80,25 @@ def test_scores_and_coverage_are_finite_in_unit_interval():
             assert fs is None or (0.0 <= fs <= 1.0)
 
 
-def test_club_honors_legacy_zero_and_club_season_honors_active():
-    """V1 adds the narrow club_season_honors family. The legacy club_honors key
-    remains the explicit zero-weight placeholder, while cited active title/final
-    participation facts and v3.1 static public season awards score only through
-    the new family."""
-    club_rows = []
+def test_club_honors_and_club_season_honors_are_cited_and_evidence_gated():
+    """merit-v4 activates objective club_honors while keeping honest absence:
+    players with no objective club fact get zero club_honors weight; players with a
+    cited fact carry the family score/weight. club_season_honors remains active for
+    the narrower title/final-participation and public-season-honor channel."""
+    club_season_rows = []
+    club_honor_rows = []
     for r in _committed()["career_stature"]:
-        assert r["family_scores"]["club_honors"] is None
-        assert r["family_weights"]["club_honors"] == 0.0
+        if r["family_scores"]["club_honors"]:
+            club_honor_rows.append(r)
+            assert r["family_weights"]["club_honors"] > 0.0
+            assert any(
+                ref.startswith("research_objective_club_honors:")
+                for ref in r["source_refs"]
+            ), r["player_id"]
+        else:
+            assert r["family_weights"]["club_honors"] == 0.0
         if r["family_scores"]["club_season_honors"]:
-            club_rows.append(r)
+            club_season_rows.append(r)
             assert r["family_weights"]["club_season_honors"] > 0.0
             if r["active_fact_count"]:
                 assert r["active_source_set_version"] == ACTIVE_SOURCE_SET_VERSION
@@ -79,6 +107,18 @@ def test_club_honors_legacy_zero_and_club_season_honors_active():
                     ref.startswith("swedish_footballer_of_year:")
                     for ref in r["source_refs"]
                 ), r["player_id"]
+    assert {
+        "P-03013",
+        "P-08896",
+        "P-30316",
+        "P-41001",
+        "P-44934",
+        "P-63927",
+        "P-65534",
+        "P-77335",
+        "P-88946",
+        "P-99967",
+    } == {r["player_id"] for r in club_honor_rows}
     assert {
         "P-05174",
         "P-21531",
@@ -90,7 +130,7 @@ def test_club_honors_legacy_zero_and_club_season_honors_active():
         "P-W26-0477",
         "P-W26-0512",
         "P-W26-0574",
-    } <= {r["player_id"] for r in club_rows}
+    } <= {r["player_id"] for r in club_season_rows}
 
 
 def test_family_weights_are_era_based_with_documented_eligibility_adjustments():
@@ -101,7 +141,10 @@ def test_family_weights_are_era_based_with_documented_eligibility_adjustments():
         base = stature.ERA_FAMILY_WEIGHTS[r["era_bucket"]]
         weights = r["family_weights"]
         assert set(weights) == set(stature._V2_FAMILY_KEYS), r["player_id"]
-        assert weights["club_honors"] == 0.0
+        if r["family_scores"]["club_honors"]:
+            assert weights["club_honors"] > 0.0
+        else:
+            assert weights["club_honors"] == 0.0
         for fam, base_weight in base.items():
             if base_weight == 0.0:
                 assert weights[fam] == 0.0, (r["player_id"], fam)
@@ -111,12 +154,10 @@ def test_family_weights_are_era_based_with_documented_eligibility_adjustments():
             "global_annual_recognition:pre_1995_ballondor_ineligible"
         }
         if not adjustments:
-            total = sum(w for w in base.values() if w > 0.0)
-            expected = {
-                fam: round((base.get(fam, 0.0) / total) if base.get(fam, 0.0) > 0.0 else 0.0,
-                           stature._PRECISION)
-                for fam in stature._V2_FAMILY_KEYS
-            }
+            eligible = {fam: w for fam, w in base.items() if w > 0.0}
+            if not r["family_scores"]["club_honors"]:
+                eligible.pop("club_honors", None)
+            expected = _expected_normalized_weights(eligible)
             assert weights == expected, r["player_id"]
 
     pele = {r["player_id"]: r for r in _committed()["career_stature"]}["P-38906"]
