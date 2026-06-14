@@ -2,8 +2,8 @@
 
 Date: 2026-06-14
 Branch: `merit-v4.1`
-Base: `origin/main` at `4c22e375dc605f0a401d84d836b0b379fe8856a3`
-Status: local gates pass; independent review, merge, deploy, and live verification still follow this report.
+Base: `origin/main` at `97392d07b34f23708406a3d50921c9c4800b0063`
+Status: local gates pass on the rebased implementation; independent review, CI, merge, deploy, and live verification still follow this report.
 
 ## Outcome
 
@@ -126,13 +126,16 @@ Heavy asymmetric realism was rederived after the final projected snap:
 
 ## Validation
 
-Local gates run on branch `merit-v4.1`:
+Local gates run on branch `merit-v4.1`. In a fresh clone, run
+`node packages/data/scripts/ensure-generated-artifacts.mjs --inputs-only` before
+the ETL pytest gate because `etl/output/ratings.json` is intentionally generated
+on demand.
 
-- `cd etl && ruff check src tests && pytest -q` - PASS, 297 passed.
+- `node packages/data/scripts/ensure-generated-artifacts.mjs --inputs-only`, then `cd etl && ruff check src tests && pytest -q` - PASS, 297 passed.
 - `pnpm typecheck && pnpm lint && pnpm test && pnpm build` - PASS.
   - Typecheck: 8/8 tasks.
   - Lint: 5/5 tasks.
-  - Test: 8/8 tasks, including core 366, data 71 plus 7 skipped heavy gate, db 79, web 674 plus 1 skipped, marketing-x 64.
+  - Test: 8/8 tasks, including core 366, data 71 plus 7 skipped heavy gate, db 79, web 683 plus 1 skipped, marketing-x 64.
   - Build: 4/4 tasks. Next build emitted existing chunk-cycle/edge-runtime warnings only.
 - `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core` - PASS, 67 + 40 tests.
 - `pnpm exec turbo run test:golden:data test:golden:integration --filter=@wcdraft/data` - PASS, 31 + 22 tests.
@@ -171,4 +174,4 @@ Generated/relocked surfaces:
 
 ## Human Actions
 
-None requested or required by this autonomous dispatch.
+None requested or required by this autonomous dispatch. The normal Red human-approval gate is intentionally waived by the explicit season dispatch; the fresh-context review and CI gates remain mandatory before merge.
