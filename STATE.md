@@ -111,6 +111,15 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
   `engine-2026.06.13` because `RunResult.narrative` bytes change. It is not
   shipped until fresh Red review, owner SHA-pinned approval, merge, deploy, and
   live production verification.
+- **Platform improvement pass (2026-06-14)** shipped four Yellow fix-forward PRs to
+  prod, each fresh-reviewed + CI-green + live-verified: #133 SEO surface + themed
+  404/error (`ae6be47`), #134 light/dark AA contrast + 44px tap targets (`337c40a`),
+  #135 security response headers (`4810b27`), #136 perf parallel data-fetch + lazy
+  MemoryReveal (`7044aa6`). No schema/rating/sim/data-contract change. Owner-
+  contractual items (ratings-coverage extension `merit-v4.1`, data-delivery
+  5MB→1.4MB wire, OG-edge full-pool parse, sim-payload narrowing, share-token
+  integrity, full CSP) are PROPOSALS in
+  `docs/reports/platform-improvement-pass-2026-06-14.md` — NOT shipped.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -183,6 +192,7 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
 | @wcdraft/web `test` (ui/ux-basis-wave on main)            | 634 passed, 1 skipped (635) (+rating-basis seam/divergence/determinism tests)                                            |
 | @wcdraft/web `test` (leaderboard-profiles L4)             | 653 passed, 1 skipped (654)                                                                                              |
 | @wcdraft/web `test` (leaderboard-profiles main-sync)      | 665 passed, 1 skipped (666)                                                                                              |
+| @wcdraft/web `test` (main @ 2026-06-14 improvement pass)  | 674 passed, 1 skipped (675) (#133–#136 added no tests; metadata/CSS/header/perf only)                                    |
 | @wcdraft/web `test:golden:leaderboard` (main)             | 5 passed                                                                                                                 |
 | @wcdraft/web `test:golden:leaderboard` (L4)               | 6 passed                                                                                                                 |
 | @wcdraft/marketing-x `test`                               | 64 passed (engine parity, composer/lexicon, pipeline, queue, X client, engagement, weekly pack/banks)                    |
