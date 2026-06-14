@@ -1956,7 +1956,7 @@ button.benchSlot:not(:disabled):hover {
 .setupRowLabel {
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 .setupRowValue {
@@ -1964,7 +1964,7 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .setupRowChevron {
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 .setupPanel {
@@ -1990,7 +1990,7 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 .setupSeg {
@@ -2040,7 +2040,7 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 .targetGrid {
@@ -2078,13 +2078,13 @@ button.benchSlot:not(:disabled):hover {
 .targetChipId {
   font-family: var(--f-mono);
   font-size: var(--t-xs);
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 .setupAxisNote {
   margin: 0;
   font-size: var(--t-xs);
-  color: var(--ink-400);
+  color: var(--ink-soft);
 }
 
 /* ── Mini-pitch on the formation cards ──────────────────────────────────── */

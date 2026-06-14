@@ -51,7 +51,7 @@
   --gold: #f5b62a; /* gold — pick / win / legend / perfect-run */
   --gold-strong: #c8861a;
   --gold-ink: #1a1206; /* legible ink on gold */
-  --brand-wordmark-accent: var(--accent);
+  --brand-wordmark-accent: var(--accent-text);
   --field: #1c4332; /* pitch green */
   --field-ink: #f2ecdc;
 

@@ -43,6 +43,7 @@ describe("synergy display rounding (display seam only)", () => {
       }),
     );
     expect(shown).toContain("▲ 2");
+    expect(shown).toContain("Synergy up 2 points");
     expect(shown).not.toContain("2.35");
 
     const hidden = renderToStaticMarkup(

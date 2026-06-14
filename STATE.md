@@ -135,6 +135,17 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
   skipped, db 79, marketing-x 64, and web 679/1 skipped. Fresh-context review
   caught and fix-forwarded the CSP report intake to byte-bound reads plus `413`
   oversized-body rejection.
+- **A11y/perf follow-up (2026-06-14)** clears the bounded remaining UI items from
+  the platform pass: Synergy delta SR text, collapsed candidate provenance SR text,
+  one spin live region, account-menu and slot-sheet focus traps/restores, spin→lineup
+  heading focus, setup contrast fixes found by axe, and `CandidateCard` /
+  `ManagerCandidate` memoization with stable draft-screen selection callbacks.
+  Browser axe is `0` violations on formation select, selected lineup, and slot sheet
+  at `390x844` and `360x800`; interaction proof covers selection, sort, slot sheet,
+  lock-pick, and position-first target. Render measurement: baseline `origin/main`
+  no-op whitespace search re-rendered `23/23` visible `CandidateCard` rows; the
+  follow-up branch re-rendered `0/23`. Report:
+  `docs/reports/a11y-perf-followups-2026-06-14.md`.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
@@ -208,6 +219,8 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
 | @wcdraft/web `test` (leaderboard-profiles L4)             | 653 passed, 1 skipped (654)                                                                                              |
 | @wcdraft/web `test` (leaderboard-profiles main-sync)      | 665 passed, 1 skipped (666)                                                                                              |
 | @wcdraft/web `test` (main @ 2026-06-14 improvement pass)  | 674 passed, 1 skipped (675) (#133–#136 added no tests; metadata/CSS/header/perf only)                                    |
+| @wcdraft/web focused a11y/perf follow-up                  | 32 passed (a11y focus/perf, club provenance, Synergy SR delta, position-first, full-path final, tap-stability)            |
+| Root `pnpm test` (a11y/perf follow-up branch)             | core 366 passed · data 65 passed/7 skipped · db 79 passed · marketing-x 64 passed · web 678 passed/1 skipped             |
 | @wcdraft/web `test:golden:leaderboard` (main)             | 5 passed                                                                                                                 |
 | @wcdraft/web `test:golden:leaderboard` (L4)               | 6 passed                                                                                                                 |
 | @wcdraft/marketing-x `test`                               | 64 passed (engine parity, composer/lexicon, pipeline, queue, X client, engagement, weekly pack/banks)                    |
