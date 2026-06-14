@@ -2000,7 +2000,13 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .setupSegBtn {
-  padding: 0.3rem 0.6rem;
+  /* a11y: 44px min tap target (WCAG 2.5.5). Flex-center keeps the short label
+     vertically centered now that min-height exceeds the text+padding box. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.7rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: transparent;
@@ -2047,6 +2053,8 @@ button.benchSlot:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  min-height: 44px; /* a11y: 44px min tap target (WCAG 2.5.5) */
   gap: 0.1rem;
   padding: 0.5rem 0.6rem;
   border: 1px solid var(--line);
