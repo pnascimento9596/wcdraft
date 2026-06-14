@@ -1,8 +1,45 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { metadataBaseUrl, SITE_DESCRIPTION, SITE_NAME } from "../lib/site-metadata";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
+  const base = metadataBaseUrl().toString();
+  // Minimal, accurate structured data: a WebSite + a free, browser-based
+  // VideoGame. Helps search engines understand the surface and enables richer
+  // results. Additive only — no user input flows into this.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${base}#website`,
+        url: base,
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+      },
+      {
+        "@type": "VideoGame",
+        "@id": `${base}#game`,
+        name: SITE_NAME,
+        url: base,
+        description: SITE_DESCRIPTION,
+        applicationCategory: "Game",
+        genre: "Sports",
+        operatingSystem: "Web browser",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      },
+    ],
+  };
   return (
     <section className="hero">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Chalk pitch markings — decorative, original line-art (no marks). */}
       <svg
         className="hero__pitch"
@@ -62,7 +99,7 @@ export default function HomePage() {
         </div>
 
         <p className="hero__live">
-          Live now on real football data from 1930–2022 plus 2026. The deterministic draft
+          Live now on real football data from 1930–2026. The deterministic draft
           engine, the match simulator, and real scoring all run in your browser.
         </p>
       </div>
