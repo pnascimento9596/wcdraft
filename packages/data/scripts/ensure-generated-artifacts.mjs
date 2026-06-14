@@ -4,9 +4,10 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { brotliDecompressSync } from "node:zlib";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_DIR = path.resolve(SCRIPT_DIR, "..");
@@ -26,6 +27,7 @@ const RUNTIME_MANIFEST_PATH = path.join(GENERATED_DIR, "manifest.json");
 const SCENARIO_PATH = path.join(GENERATED_DIR, "scenario-2026.compact.json");
 const DRAFT_POOL_PATH = path.join(GENERATED_DIR, "draft-pool.compact.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
+const RETAINED_RUNTIME_DATA_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-data");
 
 const TRACKED_FINGERPRINT_PATHS = [
   "etl/output/ratings.lock.json",
@@ -142,6 +144,40 @@ function validateCompactArtifacts() {
   }
 }
 
+function validateRetainedRuntimeData() {
+  if (!existsSync(RETAINED_RUNTIME_DATA_DIR)) return;
+  for (const entry of readdirSync(RETAINED_RUNTIME_DATA_DIR, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const version = entry.name;
+    const dir = path.join(RETAINED_RUNTIME_DATA_DIR, version);
+    const manifestPath = path.join(dir, "manifest.json");
+    const scenarioPath = path.join(dir, "scenario-2026.compact.json");
+    const draftBrPath = path.join(dir, "draft-pool.compact.json.br");
+    if (!existsSync(manifestPath)) fail(`retained ${version}/manifest.json missing`);
+    if (!existsSync(scenarioPath)) fail(`retained ${version}/scenario-2026.compact.json missing`);
+    if (!existsSync(draftBrPath)) fail(`retained ${version}/draft-pool.compact.json.br missing`);
+
+    const manifest = readJson(manifestPath);
+    if (manifest.schema_version !== version) {
+      fail(
+        `retained ${version} directory does not match manifest schema_version ${manifest.schema_version}`,
+      );
+    }
+    validateFingerprint(scenarioPath, manifest.bundles.scenario_2026, `${version} scenario`);
+
+    const decompressed = brotliDecompressSync(readFileSync(draftBrPath));
+    const actual = { bytes: decompressed.length, sha256: sha256(decompressed) };
+    const expected = manifest.bundles.draft_pool;
+    if (actual.bytes !== expected.bytes || actual.sha256 !== expected.sha256) {
+      fail(
+        `retained ${version} draft-pool.compact.json.br fingerprint mismatch: ` +
+          `got ${actual.bytes} bytes / ${actual.sha256}, ` +
+          `expected ${expected.bytes} bytes / ${expected.sha256}`,
+      );
+    }
+  }
+}
+
 function runCompactBuilder() {
   ensureCoreBuild({ force: true });
   run(process.execPath, [BUILD_COMPACT_SCRIPT]);
@@ -188,6 +224,7 @@ try {
   ensureRatings();
   ensureCoreBuild({ force: INPUTS_ONLY });
   if (!INPUTS_ONLY) ensureCompactArtifacts();
+  validateRetainedRuntimeData();
   if (CHECK_MODE) {
     checkFingerprintPathsTracked();
     checkTrackedFingerprintsClean();

@@ -4,12 +4,23 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for merit-v4.1 ratings coverage season:
-2026-06-14 · branch `merit-v4.1` before merge/deploy. Local runtime-data anchor:
+Last measured for perf-delivery Red season:
+2026-06-14 · branch `perf-delivery` off `origin/main`
+`c5eb8e8` after merit-v4.1 merged. Local runtime-data anchor remains:
 `runtime-data-2.3.0` / `engine-2026.06.14-merit-v4.1` / `wc-perf-6.1.0` /
 `proj-career-5.1.0`, legend census `295`, career-stature-estimate `541`, dataset
 `2026-06-04`, ruleset `ruleset-2026.06.04`. Local leaderboard season key:
 `engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e`.
+
+perf-delivery is DELIVERY-only over the current merit-v4.1 compact bytes:
+`draft-pool.compact.json` remains `101,026,822` decompressed bytes with sha256
+`f0f76fd3c2f8d003a3ee5062957220c591431e37fc6ea54daa689c6e992e11b7`.
+The browser delivery path moves to
+`/data/wcdraft/runtime-data-2.3.0/draft-pool.compact.json.br`, generated at
+Brotli quality 11 and measured locally at `1,429,691` encoded bytes; decompressed
+sha256 equals the manifest draft-pool sha. The fixed legacy `/data/wcdraft/*`
+paths remain copied for old clients/server filesystem readers. The SW precache
+now targets the versioned compressed artifact, not the raw draft-pool path.
 
 merit-v4 as-built facts: ratings now use individual merit contextualized by a
 public national-team-strength prior and objective club achievement. The
@@ -168,28 +179,39 @@ the under-covered AFC/CAF/CONCACAF 2026 squad set.
   AFC/CAF/CONCACAF standouts, a smoothed league prior, display-curve refit, λ refit
   (`GAMMA_MID=1.00`), compact/data/web golden relocks, and a new leaderboard season
   key. Human approval is intentionally waived by dispatch for this lane.
+- `perf-delivery` is the active Red delivery/performance season implementing
+  platform-improvement Proposals B/C/D plus atomic versioned delivery. It is
+  coordinated after the merit-v4.1 merge (`origin/main` `c5eb8e8`), changes no
+  compact DATA bytes, and moves delivery to schema-versioned runtime-data paths
+  with a max-quality retained `.br` draft-pool artifact. Local proof:
+  prod-before Brotli wire `5,015,795` bytes on the fixed path; candidate
+  artifact `1,429,691` bytes with identical decompressed sha; sim worker payload
+  fixture `500,458 -> 155,336` JSON bytes while preserving byte-identical
+  simulation output; `/api/og/run` no longer imports the full draft-pool render
+  path under the current unsigned-summary contract.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                       | Value                                                                                    |
-| --------------------------- | ---------------------------------------------------------------------------------------- |
-| schema_version              | runtime-data-2.3.0                                                                       |
-| dataset_version             | 2026-06-04                                                                               |
-| ruleset_version             | ruleset-2026.06.04                                                                       |
-| engine_version              | engine-2026.06.14-merit-v4.1                                                            |
-| rating_version (historical) | wc-perf-6.1.0                                                                            |
-| rating_version (projected)  | proj-career-5.1.0                                                                        |
-| career_stature              | career-stature-4.1.0                                                                     |
-| merit source set            | merit-source-set-2.2.0                                                                   |
-| active source set           | active-career-source-set-2.2.0                                                           |
-| runtime legend census       | 295                                                                                      |
-| runtime ratings             | 12,219                                                                                   |
-| Career basis counts         | 11,292 measured · 541 career-stature · 386 baseline                                      |
-| career-stature table        | 847 players · 209 material · 114 source-derived legends                                  |
-| leaderboard season key      | engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e |
-| compact brotli total        | 1,436,160 normalized bytes                                                               |
-| compact sha256              | manifest `126a77fb…` · draft `f0f76fd3…` · scenario `bd362cb7…`                          |
-| oversized artifact locks    | ratings `81c2a6ab…` / 59,551,889 bytes · draft-pool `f0f76fd3…` / 101,026,822 bytes      |
+| Field                         | Value                                                                                                          |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| schema_version                | runtime-data-2.3.0                                                                                             |
+| dataset_version               | 2026-06-04                                                                                                     |
+| ruleset_version               | ruleset-2026.06.04                                                                                             |
+| engine_version                | engine-2026.06.14-merit-v4.1                                                                                   |
+| rating_version (historical)   | wc-perf-6.1.0                                                                                                  |
+| rating_version (projected)    | proj-career-5.1.0                                                                                              |
+| career_stature                | career-stature-4.1.0                                                                                           |
+| merit source set              | merit-source-set-2.2.0                                                                                         |
+| active source set             | active-career-source-set-2.2.0                                                                                 |
+| runtime legend census         | 295                                                                                                            |
+| runtime ratings               | 12,219                                                                                                         |
+| Career basis counts           | 11,292 measured · 541 career-stature · 386 baseline                                                            |
+| career-stature table          | 847 players · 209 material · 114 source-derived legends                                                        |
+| leaderboard season key        | engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e            |
+| compact brotli total          | 1,436,160 normalized bytes                                                                                     |
+| served draft-pool br artifact | 1,429,691 bytes at `/data/wcdraft/runtime-data-2.3.0/draft-pool.compact.json.br`; decompressed sha `f0f76fd3…` |
+| compact sha256                | manifest `126a77fb…` · draft `f0f76fd3…` · scenario `bd362cb7…`                                                |
+| oversized artifact locks      | ratings `81c2a6ab…` / 59,551,889 bytes · draft-pool `f0f76fd3…` / 101,026,822 bytes                            |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 
@@ -292,6 +314,7 @@ the under-covered AFC/CAF/CONCACAF 2026 squad set.
 | merit-v4 compact metadata CI fix                          | normalized Brotli metadata to 128-byte upper-bound buckets after Linux CI measured draft-pool Brotli 2 bytes below macOS · data test 65/7 · root gate rerun 8/5/8/4 · data golden 31 + integration 22 |
 | merit-v4 lambda/realism                                   | fit 175 evals · winner BASE 1.10 / SPREAD 6.0 / MIN 0.30 / GAMMA_MID 0.80 / KO 0.82 · symmetric goals 2.544, draw 24.87%, margin4 4.86%, ET 34.13%, SO 21.33% · heavy realism 7/7 |
 | merit-v4 canary                                           | strategic-pick canary regenerated; 6 intentional pick flips documented for review                                       |
+| perf-delivery local gates                                 | data/web focused 8+38 · root typecheck/lint/test/build 8/5/8/4 · goldens core 67+40, data 31+22, web 6 · heavy realism 7 · ETL ruff clean / pytest 297 |
 | oversized artifact migration                              | inventory exactly 2 tracked blobs >40 MB · `pnpm run check:generated` PASS after full regen · ETL rating 42 passed · data golden 31 passed · core draft golden 40 passed · copy-web-assets PASS · forced full turbo 19/19 tasks, 0 cached · fresh verifier PASS · Vercel preview READY |
 | @wcdraft/web `typecheck` (leaderboard-profiles main-sync) | PASS                                                                                                                     |
 | @wcdraft/web `build` (leaderboard-profiles main-sync)     | PASS; existing Next/Webpack circular chunk warnings only                                                                 |

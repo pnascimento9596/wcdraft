@@ -187,7 +187,9 @@ function readManifest(manifestPath) {
   try {
     parsed = JSON.parse(raw);
   } catch (err) {
-    throw new Error(`generate-sw-version: manifest at ${manifestPath} is not valid JSON`, { cause: err });
+    throw new Error(`generate-sw-version: manifest at ${manifestPath} is not valid JSON`, {
+      cause: err,
+    });
   }
   return parsed;
 }
@@ -209,6 +211,12 @@ export function run({ webRoot, env = process.env, repoRoot, manifestOverride } =
     data_revision: dataRevision,
     schema_version: manifest.schema_version,
     dataset_version: manifest.dataset_version,
+    runtime_data_base_path: `/data/wcdraft/${manifest.schema_version}`,
+    precache_data_urls: [
+      `/data/wcdraft/${manifest.schema_version}/manifest.json`,
+      `/data/wcdraft/${manifest.schema_version}/draft-pool.compact.json.br`,
+      `/data/wcdraft/${manifest.schema_version}/scenario-2026.compact.json`,
+    ],
     bundle_hashes: Object.fromEntries(
       Object.keys(manifest.bundles)
         .sort()
@@ -222,8 +230,7 @@ export function run({ webRoot, env = process.env, repoRoot, manifestOverride } =
   writeFileSync(outPath, renderSwVersionScript(config), "utf-8");
 
   console.log(
-    `generate-sw-version: wrote ${outPath} ` +
-      `(data=${dataRevision}, deploy=${deployRevision})`,
+    `generate-sw-version: wrote ${outPath} ` + `(data=${dataRevision}, deploy=${deployRevision})`,
   );
 
   return { outPath, config };
