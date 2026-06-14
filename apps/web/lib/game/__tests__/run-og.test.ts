@@ -15,8 +15,6 @@ import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
 import {
   defaultRunOgImage,
-  RUN_OG_HEIGHT,
-  RUN_OG_WIDTH,
   shareOgImageForRunValue,
 } from "../run-og-metadata";
 import { buildRunOgModel } from "../run-og-model";
@@ -119,6 +117,16 @@ describe("dynamic run OG tokens", () => {
     const tampered = encodeBody({ ...decoded, og: { ...decoded.og, w: 9 } });
     expect(decodeRunToken(tampered)).toBeNull();
   });
+
+  it("does not trust syntactically valid unsigned summaries for server-rendered OG", () => {
+    const decoded = decodeV2(encodeRunToken(complete()));
+    const forgedSummary = { ...decoded.og!, w: decoded.og!.mp, l: 0, ch: false };
+    const forged = encodeBody({ ...decoded, og: forgedSummary });
+    const forgedDecoded = decodeV2(forged);
+
+    expect(forgedDecoded.og).toMatchObject(forgedSummary);
+    expect(shareOgImageForRunValue(forged, gameData.versions)).toEqual(defaultRunOgImage());
+  });
 });
 
 describe("dynamic run OG metadata decision", () => {
@@ -137,38 +145,48 @@ describe("dynamic run OG metadata decision", () => {
     expect(shareOgImageForRunValue(foreign, gameData.versions)).toEqual(defaultRunOgImage());
   });
 
-  it("builds a cache-keyed large-card image descriptor for current t2 summary tokens", () => {
+  it("uses the static default for current unsigned t2 summary tokens", () => {
     const token = encodeRunToken(complete());
     const image = shareOgImageForRunValue(token, gameData.versions, {
       VERCEL_GIT_COMMIT_SHA: "abc1234567890",
     });
-    expect(image.dynamic).toBe(true);
-    expect(image.width).toBe(RUN_OG_WIDTH);
-    expect(image.height).toBe(RUN_OG_HEIGHT);
-    expect(image.url).toContain("/api/og/run?");
-    expect(image.url).toContain("run=t2.");
-    expect(image.url).toContain("abc1234567890");
-    expect(image.alt).toContain("Origin XI");
+    expect(image).toEqual(defaultRunOgImage());
   });
 });
 
 describe("dynamic run OG model and image", () => {
-  it("replays the token into the same XI display model without server simulation", () => {
+  it("refuses unsigned token summaries before building an image model", () => {
     const token = encodeRunToken(complete());
     const decoded = decodeV2(token);
     const model = buildRunOgModel(gameData, decoded);
-    expect(model).not.toBeNull();
-    expect(model!.team_name).toBe("Origin XI");
-    expect(model!.mode_label).toBe("Classic");
-    expect(model!.lineup).toHaveLength(11);
-    expect(model!.stars).toHaveLength(3);
-    expect(model!.result_label).toMatch(/^\d-\d/);
+    expect(model).toBeNull();
   });
 
-  it("renders byte-identical ImageResponse bytes for the same token", async () => {
-    const token = encodeRunToken(complete());
-    const decoded = decodeV2(token);
-    const model = buildRunOgModel(gameData, decoded)!;
+  it("renders byte-identical ImageResponse bytes for an already trusted model", async () => {
+    const summary = buildRunTokenOgSummary(complete())!;
+    const model = {
+      team_name: "Origin XI",
+      mode_label: "Classic" as const,
+      formation_name: "4-3-3",
+      result_label: "3-1, R32",
+      record: `${summary.w}-${summary.l}`,
+      summary,
+      badges: [],
+      lineup: [
+        {
+          slot_id: "GK",
+          slot_label: "GK",
+          position: "GK" as const,
+          shape: "square" as const,
+          x_pct: 50,
+          y_pct: 88,
+          name: "Keeper",
+          nation_code: "AAA",
+        },
+      ],
+      stars: [],
+      manager: null,
+    };
     const assets = localAssets();
 
     const start = performance.now();

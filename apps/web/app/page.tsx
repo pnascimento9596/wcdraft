@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { metadataBaseUrl, SITE_DESCRIPTION, SITE_NAME } from "../lib/site-metadata";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const base = metadataBaseUrl().toString();
   // Minimal, accurate structured data: a WebSite + a free, browser-based
   // VideoGame. Helps search engines understand the surface and enables richer
@@ -37,6 +39,7 @@ export default function HomePage() {
   return (
     <section className="hero">
       <script
+        nonce={nonce}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />

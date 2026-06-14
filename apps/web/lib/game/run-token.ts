@@ -494,9 +494,17 @@ export function decodeRunToken(value: string): RunTokenBody | null {
   return isRunTokenV2Body(parsed) ? parsed : null;
 }
 
-/** Dynamic-OG summary accessor. Legacy t1 and pre-summary t2 tokens return null. */
+/**
+ * Dynamic-OG summary accessor.
+ *
+ * `og` is a browser-minted, self-attested display summary. It remains decoded
+ * for replay compatibility, but it is not trusted by server-rendered metadata
+ * or the OG image route because no server-held secret can sign a client-minted
+ * summary without either exposing the secret or adding a public signing oracle.
+ */
 export function runTokenOgSummary(token: RunTokenBody): RunTokenOgSummary | null {
-  return token.v === 2 && token.og ? token.og : null;
+  void token;
+  return null;
 }
 
 /** True iff every version anchor on the token matches the current bundle. */
