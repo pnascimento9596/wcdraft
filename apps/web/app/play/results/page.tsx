@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Run results",
   description:
     "Your 8-match run: per-match box scores from the event log, the final record, the generated narrative, and a seed-locked replay.",
+  // Transient client-state route — renders empty without a live run; noindex.
+  robots: { index: false, follow: true },
 };
 
 export default function ResultsPage() {
