@@ -44,24 +44,25 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
+const BROTLI_METADATA_BUCKET_BYTES = 128;
 
-// runtime-data-2.1.0 (merit-v3.1): compact data carries the curated
-// career-stature-3.1.0 / rating 5.1 family outputs.
+// runtime-data-2.2.0 (merit-v4): compact data carries national-strength
+// contextual ceilings plus objective club-achievement source facts.
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.1.0";
+const SCHEMA_VERSION = "runtime-data-2.2.0";
 // narrative-v2: deterministic scenario-aware narrative selection changes
 // RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.13";
+const ENGINE_VERSION = "engine-2026.06.13-merit-v4";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// merit-v3.1 model (wc-perf-5.1.0 historical, unified display curve v2);
-// projected proj-career-4.1.0 (2026 linked-material on the stature scale).
+// merit-v4 model (wc-perf-6.0.0 historical, unified display curve v2);
+// projected proj-career-5.0.0 (2026 linked-material on the stature scale).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-5.1.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-4.1.0";
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.0.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.0.0";
 const DISPLAY_FLOOR = 66;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
@@ -1115,7 +1116,7 @@ function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
   const basisRatings = rating.basis_ratings;
   if (!basisRatings || typeof basisRatings !== "object") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.1.0 requires career + current.`,
+      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.2.0 requires career + current.`,
     );
   }
   return {
@@ -1157,7 +1158,7 @@ function materializeBasisRating(
 ) {
   if (!basisRating || typeof basisRating !== "object") {
     throw new Error(
-      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.1.0 requires both bases.`,
+      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.2.0 requires both bases.`,
     );
   }
   const basisMetadata = basisRating.basis_metadata;
@@ -1218,13 +1219,22 @@ function fingerprint(buf, relativePath) {
     sha256: sha256Hex(buf),
     bytes: buf.length,
     bytes_gzip: gzipSync(buf, { level: 9 }).length,
-    bytes_brotli: brotliCompressSync(buf, {
-      params: {
-        [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
-        [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
-      },
-    }).length,
+    bytes_brotli: brotliMetadataBytes(buf),
   };
+}
+
+function brotliMetadataBytes(buf) {
+  // Brotli's exact compressed length can vary by a few bytes across OS/CPU
+  // builds even under the same Node version. Manifest/report metadata must be
+  // byte-stable across local macOS and Linux CI, so publish a conservative
+  // rounded-up size bucket while keeping raw bytes and sha256 exact.
+  const measured = brotliCompressSync(buf, {
+    params: {
+      [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
+      [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
+    },
+  }).length;
+  return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
 }
 
 function humanBytes(n) {
@@ -1234,12 +1244,12 @@ function humanBytes(n) {
 }
 
 function requireLegend(rating) {
-  // runtime-data-2.1.0: `legend` is REQUIRED on every compact rating.
+  // runtime-data-2.2.0: `legend` is REQUIRED on every compact rating.
   // The ETL emits the source-derived boolean on every row (historical + 2026);
   // anything else is a contract violation surfaced loudly, never defaulted.
   if (typeof rating.legend !== "boolean") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.1.0 requires a boolean on every row. Refusing to emit.`,
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.2.0 requires a boolean on every row. Refusing to emit.`,
     );
   }
   return rating.legend;

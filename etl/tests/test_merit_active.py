@@ -1,7 +1,7 @@
 """MV2-12a / merit-v3 V1 active-career intake: citation discipline,
 conservative dual-space linking, determinism, the SHA-pin, and the explicit
 activation seam: active.py still emits facts + identity only, while
-career-stature-3.1.0 consumes those facts through stature.py.
+career-stature-4.0.0 consumes those facts through stature.py.
 
 Self-contained: reads the committed canonical JSON in ``etl/output/`` plus the
 committed snapshots/notes under ``etl/merit/raw/``.
@@ -166,7 +166,7 @@ def test_staged_entries_carry_no_score_index_tier_or_legend(abuilt):
         "family_scores",
         "family_weights",
     }
-    assert abuilt["staging_doc"]["activated_by"] == "career-stature-3.1.0"
+    assert abuilt["staging_doc"]["activated_by"] == "career-stature-4.0.0"
     for e in abuilt["entries"]:
         assert not forbidden & set(e), e["player_id"]
 

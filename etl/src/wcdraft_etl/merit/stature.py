@@ -1,7 +1,7 @@
 """MERIT-V2 MV2-3 — deterministic per-player career-stature composite (v2).
 
 Reads the committed v2 linked-fact file (``etl/output/merit/source_facts.json`` —
-the full ``merit-source-set-2.1.0`` set: WC legacy + global/regional annual
+the full ``merit-source-set-2.2.0`` set: WC legacy + global/regional annual
 recognition + position-balanced selections + international records + retrospective
 all-time selections + captaincy) and the canonical men's World Cup years, and emits
 one career-stature row per linked ``player_id``:
@@ -81,10 +81,10 @@ CAREER_STATURE_PATH = _CANON_DIR / "career_stature.json"
 # Float rounding so emitted JSON is byte-stable (matches rating._PRECISION).
 _PRECISION = 6
 
-# ─── v3 family taxonomy (position-balanced + club-season honors) ─────────────
-# The families the v3 table scores, in fixed combine order. ``club_honors`` stays
-# as a zero-weight legacy placeholder for old reports; ``club_season_honors`` is
-# the merit-v3 V1 continental-title/final-participation family.
+# ─── v4 family taxonomy (position-balanced + club achievement) ───────────────
+# The families the v4 table scores, in fixed combine order. ``club_honors`` is
+# active only when a player has an objective club-achievement fact; absent club
+# evidence is dropped from that player's eligible denominator.
 # The legacy v1 ``annual_recognition`` key is NOT scored here — v2 splits annual
 # recognition into the global_/regional_ families.
 _V2_FAMILY_KEYS: tuple[str, ...] = (
@@ -119,7 +119,9 @@ _RATING_COMPAT_FAMILY_KEYS: tuple[str, ...] = tuple(
 #     which carry heavy weight in those eras. This is what lets a pre-1991 defender
 #     (Baresi, Beckenbauer) clear the material gate on all-time selections alone,
 #     instead of being penalised for missing awards that could not exist in-era.
-#   * club_honors remains a legacy zero-weight placeholder.
+#   * club_honors is objective-only and evidence-gated. When no such fact is
+#     present, the family is removed from the player's denominator, preserving
+#     the existing honest-absence semantics.
 #   * club_season_honors is active for every era because top-tier continental
 #     club titles and public annual player-of-year honors exist across the post-war
 #     table; v3.1 adds the complete Guldbollen table as a non-fan W2b extension.
@@ -132,7 +134,7 @@ ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
         "international_record": 0.14,
         "retrospective_selection": 0.50,
         "captaincy": 0.04,
-        "club_honors": 0.00,
+        "club_honors": 0.08,
         "club_season_honors": 0.06,
     },
     "1956_1990": {
@@ -143,7 +145,7 @@ ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
         "international_record": 0.07,
         "retrospective_selection": 0.25,
         "captaincy": 0.04,
-        "club_honors": 0.00,
+        "club_honors": 0.18,
         "club_season_honors": 0.12,
     },
     "1991_plus": {
@@ -154,7 +156,7 @@ ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
         "international_record": 0.09,
         "retrospective_selection": 0.06,
         "captaincy": 0.03,
-        "club_honors": 0.00,
+        "club_honors": 0.35,
         "club_season_honors": 0.20,
     },
 }
@@ -298,6 +300,15 @@ _CAPTAINCY_BASE = 0.40
 # title/final-participation fact, not a subjective "importance" grade; repeated
 # titles saturate through the same per-family product as every other family.
 _CLUB_SEASON_TITLE_FINAL_PARTICIPANT = 0.60
+
+# Objective club-achievement facts. These are factual achievements and market facts,
+# not subjective player-of-year votes. Repeated facts saturate inside the family.
+_CLUB_HONORS_STRENGTH: dict[str, float] = {
+    "league_top_scorer": 1.00,
+    "major_club_trophy_count_5plus": 0.85,
+    "continental_club_titles_4plus": 0.85,
+    "world_record_transfer": 0.85,
+}
 
 # Active-career stage normalization. A dated active family is evaluated against a
 # deterministic accrual-to-date expectation from age 18 to 34, then capped at the
@@ -514,7 +525,12 @@ def _fact_strength(fact: dict) -> float:
             raise KeyError(f"unrecognized public season honor fact {detail!r}")
         raise KeyError(f"unrecognized club-season honors source {sid!r}")
     if family == "club_honors":
-        raise KeyError(f"legacy deferred club_honors fact is not scoreable: {fact!r}")
+        if sid != "research_objective_club_honors":
+            raise KeyError(f"unrecognized club-honors source {sid!r}")
+        kind = detail.split(":", 1)[0]
+        if kind not in _CLUB_HONORS_STRENGTH:
+            raise KeyError(f"unrecognized club-honors fact {detail!r}")
+        return _CLUB_HONORS_STRENGTH[kind]
     raise KeyError(f"fact carries unknown family {family!r}: {fact!r}")
 
 
@@ -858,6 +874,8 @@ def _eligible_family_weights(
     base = ERA_FAMILY_WEIGHTS[era]
     eligible = {fam: w for fam, w in base.items() if w > 0.0}
     removed: list[str] = []
+    if "club_honors" in eligible and not family_scores.get("club_honors"):
+        eligible.pop("club_honors")
     # Pre-1995 Ballon d'Or was not open to non-European players. The global family
     # also contains open global lists; only remove it when the player has no global
     # facts and their World Cup nations are outside UEFA.
@@ -873,7 +891,15 @@ def _eligible_family_weights(
     total = sum(eligible.values())
     if total <= 0.0:
         return {fam: 0.0 for fam in _V2_FAMILY_KEYS}, removed
-    normalized = {fam: round(eligible.get(fam, 0.0) / total, _PRECISION) for fam in _V2_FAMILY_KEYS}
+    normalized = {
+        fam: round(eligible.get(fam, 0.0) / total, _PRECISION)
+        for fam in _V2_FAMILY_KEYS
+    }
+    remainder = round(1.0 - sum(normalized.values()), _PRECISION)
+    if remainder:
+        positives = [fam for fam in _V2_FAMILY_KEYS if normalized[fam] > 0.0]
+        anchor = max(positives, key=lambda fam: (normalized[fam], -_V2_FAMILY_KEYS.index(fam)))
+        normalized[anchor] = round(normalized[anchor] + remainder, _PRECISION)
     return normalized, removed
 
 

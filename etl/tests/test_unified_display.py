@@ -121,10 +121,10 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-5.1.0"
-    assert rating_2026.RATING_VERSION == "proj-career-4.1.0"
-    assert all(r["rating_version"] == "wc-perf-5.1.0" for r in hist)
-    assert all(r["rating_version"] == "proj-career-4.1.0" for r in proj)
+    assert rating.RATING_VERSION == "wc-perf-6.0.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.0.0"
+    assert all(r["rating_version"] == "wc-perf-6.0.0" for r in hist)
+    assert all(r["rating_version"] == "proj-career-5.0.0" for r in proj)
 
 
 # ─── decoupling: the curve reshapes `overall` ONLY ────────────────────────────
@@ -207,12 +207,13 @@ def test_2026_anchors_land_elite(proj):
 
 def test_spurious_99_cards_display_mid_80s(proj):
     """The four previously-OVR-99 projected MF cards (strong caps + top league, no
-    material career stature) now display in the mid-80s on the raw-only path — a
-    clear notch below the recognized-greats band, never 99."""
+    material career stature) now display well below the recognized-greats band on
+    the raw-only path; merit-v4's national-strength cap may push weak-context
+    controls into the low 80s, but never back near 99."""
     by = {r["player_id"]: r for r in proj}
     for pid in ("P-34205", "P-39584", "P-58692", "P-W26-0166"):  # 0177->0166: merit-v3 U0 renumber
         ov = by[pid]["overall"]
-        assert 84 <= ov <= 90, (pid, ov)
+        assert 80 <= ov <= 90, (pid, ov)
         assert by[pid]["legend"] is False, pid
 
 

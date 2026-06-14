@@ -1,7 +1,7 @@
 {
-  "$schema_doc": "merit-v3 V8 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the V7 lambda refit. Runtime engine_version is engine-2026.06.12.",
-  "engine_anchor": "merit-v3 V8 season stamp for the V7 lambda refit on post-V6 Career channels",
-  "engine_version": "engine-2026.06.12",
+  "$schema_doc": "merit-v4 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the merit-v4 lambda refit. Runtime engine_version is engine-2026.06.13-merit-v4.",
+  "engine_anchor": "merit-v4 lambda refit on national-strength and objective-club merit channels",
+  "engine_version": "engine-2026.06.13-merit-v4",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
     "N_runs": 2000,
@@ -10,72 +10,72 @@
   "policies": {
     "strategicAutoDraft": {
       "_doc": "PASS-gate measurement target. Slot-fit best-available: for each spin, scan rolled_card_ids and pick max(positionCompatibility(eligible, slot_position) * rating[channel_for_slot]); tiebreak by overall DESC then card_id ASC. Manager-first flow + first-vacant slot order unchanged from canonical autoDraft.",
-      "qualifying": 1582,
-      "matches": 9750,
+      "qualifying": 1611,
+      "matches": 9965,
       "groupMatches": 6000,
-      "knockoutMatches": 3750,
-      "goalsTotal": 24886,
-      "draws": 1569,
-      "margin4plus": 430,
-      "koEt": 1232,
-      "koShootout": 767,
+      "knockoutMatches": 3965,
+      "goalsTotal": 25768,
+      "draws": 1517,
+      "margin4plus": 462,
+      "koEt": 1285,
+      "koShootout": 788,
       "observed": {
-        "goals_per_game": 2.552410256410256,
-        "draw_pct": 0.2615,
-        "margin4plus_pct": 0.0441025641025641,
-        "ko_et_pct": 0.32853333333333334,
-        "shootout_pct": 0.20453333333333334
+        "goals_per_game": 2.5858504766683392,
+        "draw_pct": 0.25283333333333335,
+        "margin4plus_pct": 0.04636226793778224,
+        "ko_et_pct": 0.3240857503152585,
+        "shootout_pct": 0.1987389659520807
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.032359583886331346,
-        "draw_pct": 0.011346592733797518,
-        "margin4plus_pct": 0.0041587733863277555,
-        "ko_et_pct": 0.015339680386838911,
-        "shootout_pct": 0.013173688884090698
+        "goals_per_game": 0.032217589861830195,
+        "draw_pct": 0.011222258800820475,
+        "margin4plus_pct": 0.004212747150580075,
+        "ko_et_pct": 0.014865659090146945,
+        "shootout_pct": 0.012674677691841277
       },
       "telemetry": {
         "channelMean": {
-          "attack": 43.9155,
-          "midfield": 46.9325,
-          "defense": 45.8695,
-          "goalkeeping": 23.7045
+          "attack": 43.3415,
+          "midfield": 46.1875,
+          "defense": 45.006,
+          "goalkeeping": 23.526
         },
         "synergyMultiplierMean": 1.010280999999991,
         "managerModifierMean": 1,
-        "coverageMean": 0.9523455500000021
+        "coverageMean": 0.9524288636363657
       }
     },
     "autoDraft": {
       "_doc": "Canonical first-card autoDraft — TELEMETRY ONLY. Production engine fixture (byte-stable for goldens); a measurement artifact when used as the realism population (see docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md).",
-      "qualifying": 117,
-      "matches": 6139,
+      "qualifying": 87,
+      "matches": 6105,
       "groupMatches": 6000,
-      "knockoutMatches": 139,
-      "goalsTotal": 19965,
-      "draws": 839,
-      "margin4plus": 1230,
-      "koEt": 30,
-      "koShootout": 16,
+      "knockoutMatches": 105,
+      "goalsTotal": 17506,
+      "draws": 785,
+      "margin4plus": 1280,
+      "koEt": 19,
+      "koShootout": 11,
       "observed": {
-        "goals_per_game": 3.2521583319758918,
-        "draw_pct": 0.13983333333333334,
-        "margin4plus_pct": 0.2003583645544877,
-        "ko_et_pct": 0.2158273381294964,
-        "shootout_pct": 0.11510791366906475
+        "goals_per_game": 2.8674856674856675,
+        "draw_pct": 0.13083333333333333,
+        "margin4plus_pct": 0.20966420966420968,
+        "ko_et_pct": 0.18095238095238095,
+        "shootout_pct": 0.10476190476190476
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.04603276050344239,
-        "draw_pct": 0.008954699779900394,
-        "margin4plus_pct": 0.010217217001206353,
-        "ko_et_pct": 0.06978814771162535,
-        "shootout_pct": 0.054140260655816105
+        "goals_per_game": 0.043344878453112516,
+        "draw_pct": 0.008706931040736922,
+        "margin4plus_pct": 0.010419698123875243,
+        "ko_et_pct": 0.07514015267486304,
+        "shootout_pct": 0.0597731738117208
       },
       "telemetry": {
         "channelMean": {
-          "attack": 22.469,
-          "midfield": 24.319,
-          "defense": 23.227,
-          "goalkeeping": 13.8055
+          "attack": 22.229,
+          "midfield": 24.047,
+          "defense": 22.9395,
+          "goalkeeping": 13.7675
         },
         "synergyMultiplierMean": 1.010280999999991,
         "managerModifierMean": 1,
@@ -84,44 +84,44 @@
     },
     "greedyOverallAutoDraft": {
       "_doc": "Position-blind max-overall NEGATIVE CONTROL. The gate ASSERTS this policy lands OUTSIDE every shape band, so nobody can 'fix' realism by maxing OVR — competent must mean slot-fit-aware, not max-overall.",
-      "qualifying": 267,
-      "matches": 6377,
+      "qualifying": 379,
+      "matches": 6588,
       "groupMatches": 6000,
-      "knockoutMatches": 377,
-      "goalsTotal": 21094,
-      "draws": 942,
-      "margin4plus": 1115,
-      "koEt": 84,
-      "koShootout": 51,
+      "knockoutMatches": 588,
+      "goalsTotal": 20449,
+      "draws": 1048,
+      "margin4plus": 921,
+      "koEt": 154,
+      "koShootout": 89,
       "observed": {
-        "goals_per_game": 3.307824996079661,
-        "draw_pct": 0.157,
-        "margin4plus_pct": 0.17484710679002666,
-        "ko_et_pct": 0.22281167108753316,
-        "shootout_pct": 0.13527851458885942
+        "goals_per_game": 3.1039769277474196,
+        "draw_pct": 0.17466666666666666,
+        "margin4plus_pct": 0.13979963570127504,
+        "ko_et_pct": 0.2619047619047619,
+        "shootout_pct": 0.15136054421768708
       },
       "wilson_half_widths_around_observed": {
-        "goals_per_game": 0.045550489616808486,
-        "draw_pct": 0.009393295481352643,
-        "margin4plus_pct": 0.009513015968459894,
-        "ko_et_pct": 0.042863874387146485,
-        "shootout_pct": 0.03522993634164716
+        "goals_per_game": 0.043412264723740136,
+        "draw_pct": 0.00980334032263909,
+        "margin4plus_pct": 0.008544881244471957,
+        "ko_et_pct": 0.03626345939165414,
+        "shootout_pct": 0.02956033031580801
       },
       "telemetry": {
         "channelMean": {
-          "attack": 30.495,
-          "midfield": 29.1225,
-          "defense": 24.4615,
-          "goalkeeping": 14.0165
+          "attack": 32.087,
+          "midfield": 30.7795,
+          "defense": 25.822,
+          "goalkeeping": 13.932
         },
         "synergyMultiplierMean": 1.010280999999991,
         "managerModifierMean": 1,
-        "coverageMean": 0.952171404545457
+        "coverageMean": 0.9523152863636386
       }
     }
   },
   "shape_bands": {
-    "_doc": "V7 RE-LOCK: shape bands are centered on strategicAutoDraft after the post-V6 Career-channel lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
+    "_doc": "merit-v4 RE-LOCK: shape bands are centered on strategicAutoDraft after the national-strength/objective-club lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
     "draw_pct": {
       "center_policy": "strategicAutoDraft",
       "half_width": 0.015
@@ -132,7 +132,7 @@
     },
     "ko_et_pct": {
       "center_policy": "strategicAutoDraft",
-      "half_width": 0.015339680386838911
+      "half_width": 0.015
     },
     "shootout_pct": {
       "center_policy": "strategicAutoDraft",
@@ -141,14 +141,14 @@
   },
   "goals_per_game_lower_floor": {
     "_doc": "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2x Wilson half-width, rounded down to keep honest residual cushion.",
-    "lower_bound": 2.48
+    "lower_bound": 2.52
   },
   "wilson_target_for_ko_metrics": {
-    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. V7 records the strategicAutoDraft observed half-widths under the post-V6 Career-channel lambda refit.",
+    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4 records the strategicAutoDraft observed half-widths under the national-strength/objective-club lambda refit.",
     "target_half_width_pp": 4,
     "observed_half_width_pp": {
-      "ko_et_pct": 1.53,
-      "shootout_pct": 1.32
+      "ko_et_pct": 1.49,
+      "shootout_pct": 1.27
     }
   }
 }

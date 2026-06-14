@@ -4,8 +4,8 @@
   "seed_prefix": "wcdraft:realism:e3a:v1",
   "formation_id": "4-3-3",
   "n_seeds": 5,
-  "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
-  "engine_version": "engine-2026.06.13",
+  "rating_version": "wc-perf-6.0.0+proj-career-5.0.0",
+  "engine_version": "engine-2026.06.13-merit-v4",
   "dataset_version": "2026-06-04",
   "records": [
     {
@@ -58,7 +58,7 @@
         {
           "spin": 6,
           "picked_kind": "player",
-          "picked_card_id": "P-68952:2026",
+          "picked_card_id": "P-14151:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.CDM"
         },
@@ -93,7 +93,7 @@
         {
           "spin": 11,
           "picked_kind": "player",
-          "picked_card_id": "P-71308:2014",
+          "picked_card_id": "P-77335:2014",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RW"
         },
@@ -471,14 +471,14 @@
         {
           "spin": 11,
           "picked_kind": "player",
-          "picked_card_id": "P-27540:2026",
+          "picked_card_id": "P-28911:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RW"
         },
         {
           "spin": 12,
           "picked_kind": "player",
-          "picked_card_id": "P-50688:2022",
+          "picked_card_id": "P-15566:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.0"
         },
@@ -569,7 +569,7 @@
         {
           "spin": 7,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0019:2026",
+          "picked_card_id": "P-96340:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LCM"
         },
@@ -611,7 +611,7 @@
         {
           "spin": 13,
           "picked_kind": "player",
-          "picked_card_id": "P-09614:2022",
+          "picked_card_id": "P-00597:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.1"
         },

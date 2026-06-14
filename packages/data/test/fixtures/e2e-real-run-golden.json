@@ -134,7 +134,9 @@
           "P-92866:2014",
           "P-95269:2014"
         ],
-        "excluded_player_ids": ["P-05559"],
+        "excluded_player_ids": [
+          "P-05559"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-03735:2014",
@@ -178,7 +180,10 @@
           "P-W26-0608:2026",
           "P-W26-0609:2026"
         ],
-        "excluded_player_ids": ["P-05559", "P-03735"],
+        "excluded_player_ids": [
+          "P-05559",
+          "P-03735"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-09292:2026",
@@ -218,7 +223,11 @@
           "P-93788:1978",
           "P-99788:1978"
         ],
-        "excluded_player_ids": ["P-05559", "P-03735", "P-09292"],
+        "excluded_player_ids": [
+          "P-05559",
+          "P-03735",
+          "P-09292"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-03775:1978",
@@ -259,7 +268,12 @@
           "P-85128:2006",
           "P-87039:2006"
         ],
-        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775"],
+        "excluded_player_ids": [
+          "P-05559",
+          "P-03735",
+          "P-09292",
+          "P-03775"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-05783:2006",
@@ -300,7 +314,13 @@
           "P-94825:2002",
           "P-97840:2002"
         ],
-        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775", "P-05783"],
+        "excluded_player_ids": [
+          "P-05559",
+          "P-03735",
+          "P-09292",
+          "P-03775",
+          "P-05783"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-00447:2002",
@@ -340,7 +360,14 @@
           "P-82311:1950",
           "P-92865:1950"
         ],
-        "excluded_player_ids": ["P-05559", "P-03735", "P-09292", "P-03775", "P-05783", "P-00447"],
+        "excluded_player_ids": [
+          "P-05559",
+          "P-03735",
+          "P-09292",
+          "P-03775",
+          "P-05783",
+          "P-00447"
+        ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
         "picked_card_id": "P-07639:1950",
@@ -855,7 +882,9 @@
         "player_id": "P-03735",
         "tournament_id": 2014,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: MF in LB slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: MF in LB slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.LCB",
@@ -865,7 +894,9 @@
         "player_id": "P-09292",
         "tournament_id": 2026,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: MF in LCB slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: MF in LCB slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.RCB",
@@ -885,7 +916,9 @@
         "player_id": "P-05783",
         "tournament_id": 2006,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: MF in RB slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: MF in RB slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.CDM",
@@ -895,7 +928,9 @@
         "player_id": "P-00447",
         "tournament_id": 2002,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: FW in CDM slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: FW in CDM slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.LCM",
@@ -915,7 +950,9 @@
         "player_id": "P-02465",
         "tournament_id": 2018,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: DF in RCM slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: DF in RCM slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.LW",
@@ -925,7 +962,9 @@
         "player_id": "P-04785",
         "tournament_id": 2006,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: MF in LW slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: MF in LW slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.ST",
@@ -967,7 +1006,9 @@
         "player_id": "P-W26-0161",
         "tournament_id": 2026,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: MF in CB slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: MF in CB slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "bench.2",
@@ -977,7 +1018,9 @@
         "player_id": "P-06148",
         "tournament_id": 1938,
         "position_compatibility": 0.75,
-        "validation_warnings": ["out-of-position: DF in CM slot (compatibility 0.75)"]
+        "validation_warnings": [
+          "out-of-position: DF in CM slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "bench.3",
@@ -1021,8 +1064,8 @@
       "P-02273"
     ],
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
-    "engine_version": "engine-2026.06.13",
+    "rating_version": "wc-perf-6.0.0+proj-career-5.0.0",
+    "engine_version": "engine-2026.06.13-merit-v4",
     "draft_flow": "squad_first",
     "rating_basis": "career",
     "era_preset": "all_time"
@@ -1030,10 +1073,20 @@
   "scenario": {
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "user_group_id": "G",
-    "group_opponent_team_ids": ["WC2026-G1", "WC2026-G3", "WC2026-G4"],
+    "group_opponent_team_ids": [
+      "WC2026-G1",
+      "WC2026-G3",
+      "WC2026-G4"
+    ],
     "knockout_opponent_rule": {
       "kind": "escalating_strength_seeded",
-      "rounds": ["R32", "R16", "QF", "SF", "F"],
+      "rounds": [
+        "R32",
+        "R16",
+        "QF",
+        "SF",
+        "F"
+      ],
       "seed_suffix": "opponent_selection"
     },
     "ruleset_version": "ruleset-2026.06.04",
@@ -1043,23 +1096,32 @@
     "scenario_seed": "wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "user_group_id": "G",
     "replaced_team_id": "WC2026-G2",
-    "source_group_team_ids": ["WC2026-G1", "WC2026-G2", "WC2026-G3", "WC2026-G4"],
-    "group_opponent_team_ids": ["WC2026-G1", "WC2026-G3", "WC2026-G4"]
+    "source_group_team_ids": [
+      "WC2026-G1",
+      "WC2026-G2",
+      "WC2026-G3",
+      "WC2026-G4"
+    ],
+    "group_opponent_team_ids": [
+      "WC2026-G1",
+      "WC2026-G3",
+      "WC2026-G4"
+    ]
   },
   "run": {
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:ce4e19b3808cc66ab327b876f9ff912c",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-5.1.0+proj-career-4.1.0",
-    "engine_version": "engine-2026.06.13",
+    "rating_version": "wc-perf-6.0.0+proj-career-5.0.0",
+    "engine_version": "engine-2026.06.13-merit-v4",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:29",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",
     "is_champion": false,
     "undefeated_regulation": false,
-    "record": "0-3-1",
-    "wins": 0,
-    "draws": 3,
+    "record": "1-2-1",
+    "wins": 1,
+    "draws": 2,
     "losses": 1,
     "shootout_wins": 0,
     "shootout_losses": 0,
@@ -1081,9 +1143,9 @@
       {
         "round": "G3",
         "advanced": false,
-        "outcome": "D",
+        "outcome": "W",
         "goals_for": 2,
-        "goals_against": 2
+        "goals_against": 1
       },
       {
         "round": "R32",
@@ -1095,11 +1157,11 @@
     ],
     "aggregate": {
       "goals_for": 5,
-      "goals_against": 7,
+      "goals_against": 6,
       "clean_sheets": 0,
       "top_scorer_player_id": "P-00447"
     },
-    "score": -4,
+    "score": -2,
     "score_breakdown": [
       {
         "label": "Goals scored",
@@ -1109,9 +1171,9 @@
       },
       {
         "label": "Goal difference",
-        "raw": -2,
+        "raw": -1,
         "weight": 1,
-        "points": -2
+        "points": -1
       },
       {
         "label": "Clean sheets",
@@ -1133,9 +1195,9 @@
       },
       {
         "label": "Goals conceded",
-        "raw": 7,
+        "raw": 6,
         "weight": -1,
-        "points": -7
+        "points": -6
       },
       {
         "label": "Yellow cards",
@@ -1157,7 +1219,7 @@
       },
       {
         "label": "Offsides",
-        "raw": 5,
+        "raw": 6,
         "weight": 0,
         "points": 0
       },
@@ -1232,7 +1294,7 @@
             "shots": 0,
             "shots_on_target": 0,
             "key_passes": 1,
-            "fouls_committed": 1,
+            "fouls_committed": 0,
             "fouls_suffered": 0,
             "offsides": 0,
             "yellows": 0,
@@ -1261,7 +1323,7 @@
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
-            "saves": 8,
+            "saves": 7,
             "pens_won": 0,
             "pens_scored": 0,
             "pens_missed": 0,
@@ -1277,18 +1339,18 @@
           "shots": 0,
           "shots_on_target": 0,
           "key_passes": 1,
-          "fouls_committed": 3,
+          "fouls_committed": 2,
           "fouls_suffered": 0,
           "offsides": 0,
           "yellows": 0,
           "reds": 0,
-          "saves": 23,
+          "saves": 22,
           "pens_won": 0,
           "pens_scored": 0,
           "pens_missed": 0,
           "minutes": 360
         },
-        "rating_at_draft": 77
+        "rating_at_draft": 76
       },
       {
         "player_id": "P-03735",
@@ -1351,7 +1413,7 @@
             "match_id": "e2e-real-run-golden.m0",
             "goals": 0,
             "assists": 0,
-            "shots": 4,
+            "shots": 3,
             "shots_on_target": 0,
             "key_passes": 3,
             "fouls_committed": 1,
@@ -1399,13 +1461,13 @@
             "match_id": "e2e-real-run-golden.m2",
             "goals": 0,
             "assists": 0,
-            "shots": 1,
+            "shots": 0,
             "shots_on_target": 0,
-            "key_passes": 5,
-            "fouls_committed": 3,
+            "key_passes": 6,
+            "fouls_committed": 1,
             "fouls_suffered": 1,
             "offsides": 0,
-            "yellows": 1,
+            "yellows": 0,
             "reds": 0,
             "saves": 0,
             "pens_won": 0,
@@ -1444,13 +1506,13 @@
         "totals": {
           "goals": 1,
           "assists": 0,
-          "shots": 8,
+          "shots": 6,
           "shots_on_target": 2,
-          "key_passes": 11,
-          "fouls_committed": 6,
+          "key_passes": 12,
+          "fouls_committed": 4,
           "fouls_suffered": 9,
           "offsides": 1,
-          "yellows": 1,
+          "yellows": 0,
           "reds": 1,
           "saves": 0,
           "pens_won": 0,
@@ -1458,7 +1520,7 @@
           "pens_missed": 0,
           "minutes": 300
         },
-        "rating_at_draft": 88
+        "rating_at_draft": 85
       },
       {
         "player_id": "P-03775",
@@ -1474,10 +1536,10 @@
             "assists": 0,
             "shots": 0,
             "shots_on_target": 0,
-            "key_passes": 1,
+            "key_passes": 0,
             "fouls_committed": 0,
-            "fouls_suffered": 0,
-            "offsides": 0,
+            "fouls_suffered": 1,
+            "offsides": 1,
             "yellows": 0,
             "reds": 0,
             "saves": 0,
@@ -1498,7 +1560,7 @@
             "assists": 0,
             "shots": 1,
             "shots_on_target": 0,
-            "key_passes": 6,
+            "key_passes": 5,
             "fouls_committed": 1,
             "fouls_suffered": 2,
             "offsides": 0,
@@ -1523,7 +1585,7 @@
             "shots": 0,
             "shots_on_target": 0,
             "key_passes": 3,
-            "fouls_committed": 1,
+            "fouls_committed": 0,
             "fouls_suffered": 0,
             "offsides": 0,
             "yellows": 0,
@@ -1567,10 +1629,10 @@
           "assists": 0,
           "shots": 2,
           "shots_on_target": 0,
-          "key_passes": 15,
-          "fouls_committed": 3,
-          "fouls_suffered": 3,
-          "offsides": 0,
+          "key_passes": 13,
+          "fouls_committed": 2,
+          "fouls_suffered": 4,
+          "offsides": 1,
           "yellows": 0,
           "reds": 0,
           "saves": 0,
@@ -1643,9 +1705,9 @@
             "assists": 0,
             "shots": 2,
             "shots_on_target": 1,
-            "key_passes": 5,
+            "key_passes": 3,
             "fouls_committed": 3,
-            "fouls_suffered": 1,
+            "fouls_suffered": 3,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -1688,9 +1750,9 @@
           "assists": 1,
           "shots": 6,
           "shots_on_target": 5,
-          "key_passes": 14,
+          "key_passes": 12,
           "fouls_committed": 8,
-          "fouls_suffered": 2,
+          "fouls_suffered": 4,
           "offsides": 1,
           "yellows": 1,
           "reds": 0,
@@ -1764,11 +1826,11 @@
             "assists": 0,
             "shots": 2,
             "shots_on_target": 2,
-            "key_passes": 1,
-            "fouls_committed": 1,
+            "key_passes": 0,
+            "fouls_committed": 2,
             "fouls_suffered": 1,
             "offsides": 0,
-            "yellows": 0,
+            "yellows": 1,
             "reds": 0,
             "saves": 0,
             "pens_won": 0,
@@ -1809,11 +1871,11 @@
           "assists": 1,
           "shots": 10,
           "shots_on_target": 7,
-          "key_passes": 8,
-          "fouls_committed": 4,
+          "key_passes": 7,
+          "fouls_committed": 5,
           "fouls_suffered": 3,
           "offsides": 0,
-          "yellows": 1,
+          "yellows": 2,
           "reds": 0,
           "saves": 0,
           "pens_won": 0,
@@ -1835,7 +1897,7 @@
             "match_id": "e2e-real-run-golden.m0",
             "goals": 0,
             "assists": 0,
-            "shots": 2,
+            "shots": 3,
             "shots_on_target": 0,
             "key_passes": 2,
             "fouls_committed": 3,
@@ -1885,9 +1947,9 @@
             "assists": 0,
             "shots": 0,
             "shots_on_target": 0,
-            "key_passes": 3,
+            "key_passes": 2,
             "fouls_committed": 1,
-            "fouls_suffered": 2,
+            "fouls_suffered": 0,
             "offsides": 1,
             "yellows": 0,
             "reds": 0,
@@ -1928,11 +1990,11 @@
         "totals": {
           "goals": 0,
           "assists": 0,
-          "shots": 2,
+          "shots": 3,
           "shots_on_target": 0,
-          "key_passes": 11,
+          "key_passes": 10,
           "fouls_committed": 5,
-          "fouls_suffered": 6,
+          "fouls_suffered": 4,
           "offsides": 1,
           "yellows": 1,
           "reds": 0,
@@ -2004,10 +2066,10 @@
             "match_id": "e2e-real-run-golden.m2",
             "goals": 0,
             "assists": 0,
-            "shots": 0,
+            "shots": 1,
             "shots_on_target": 0,
-            "key_passes": 2,
-            "fouls_committed": 0,
+            "key_passes": 4,
+            "fouls_committed": 2,
             "fouls_suffered": 2,
             "offsides": 0,
             "yellows": 0,
@@ -2049,10 +2111,10 @@
         "totals": {
           "goals": 0,
           "assists": 0,
-          "shots": 3,
+          "shots": 4,
           "shots_on_target": 0,
-          "key_passes": 9,
-          "fouls_committed": 3,
+          "key_passes": 11,
+          "fouls_committed": 5,
           "fouls_suffered": 7,
           "offsides": 0,
           "yellows": 1,
@@ -2081,7 +2143,7 @@
             "shots_on_target": 0,
             "key_passes": 2,
             "fouls_committed": 0,
-            "fouls_suffered": 1,
+            "fouls_suffered": 0,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -2128,7 +2190,7 @@
             "shots": 1,
             "shots_on_target": 0,
             "key_passes": 4,
-            "fouls_committed": 2,
+            "fouls_committed": 1,
             "fouls_suffered": 0,
             "offsides": 0,
             "yellows": 0,
@@ -2173,8 +2235,8 @@
           "shots": 2,
           "shots_on_target": 0,
           "key_passes": 9,
-          "fouls_committed": 5,
-          "fouls_suffered": 2,
+          "fouls_committed": 4,
+          "fouls_suffered": 1,
           "offsides": 1,
           "yellows": 2,
           "reds": 0,
@@ -2248,9 +2310,9 @@
             "assists": 0,
             "shots": 2,
             "shots_on_target": 0,
-            "key_passes": 3,
-            "fouls_committed": 0,
-            "fouls_suffered": 1,
+            "key_passes": 4,
+            "fouls_committed": 3,
+            "fouls_suffered": 2,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -2293,9 +2355,9 @@
           "assists": 0,
           "shots": 8,
           "shots_on_target": 0,
-          "key_passes": 23,
-          "fouls_committed": 1,
-          "fouls_suffered": 13,
+          "key_passes": 24,
+          "fouls_committed": 4,
+          "fouls_suffered": 14,
           "offsides": 0,
           "yellows": 0,
           "reds": 0,
@@ -2305,7 +2367,7 @@
           "pens_missed": 0,
           "minutes": 390
         },
-        "rating_at_draft": 94
+        "rating_at_draft": 93
       },
       {
         "player_id": "P-02853",
@@ -2345,7 +2407,7 @@
             "assists": 0,
             "shots": 1,
             "shots_on_target": 1,
-            "key_passes": 6,
+            "key_passes": 7,
             "fouls_committed": 0,
             "fouls_suffered": 1,
             "offsides": 0,
@@ -2367,11 +2429,11 @@
             "match_id": "e2e-real-run-golden.m2",
             "goals": 1,
             "assists": 0,
-            "shots": 4,
+            "shots": 5,
             "shots_on_target": 3,
             "key_passes": 1,
-            "fouls_committed": 1,
-            "fouls_suffered": 3,
+            "fouls_committed": 0,
+            "fouls_suffered": 1,
             "offsides": 0,
             "yellows": 0,
             "reds": 0,
@@ -2412,11 +2474,11 @@
         "totals": {
           "goals": 1,
           "assists": 0,
-          "shots": 8,
+          "shots": 9,
           "shots_on_target": 5,
-          "key_passes": 13,
-          "fouls_committed": 5,
-          "fouls_suffered": 8,
+          "key_passes": 14,
+          "fouls_committed": 4,
+          "fouls_suffered": 6,
           "offsides": 0,
           "yellows": 0,
           "reds": 1,
@@ -2547,7 +2609,7 @@
           "pens_missed": 0,
           "minutes": 30
         },
-        "rating_at_draft": 80
+        "rating_at_draft": 79
       },
       {
         "player_id": "P-W26-0161",
@@ -3037,7 +3099,7 @@
     "narrative": {
       "template_id": "scn_elimination_heartbreak_02",
       "narrative_seed": "wcdraft:narrative:v1:3f1c8c38261e95159b6a82530b5f7edc",
-      "filled_text": "Unavailable's tournament ended in the round of 32, 1-3 against WC2026-I4. The last whistle made the round feel final."
+      "filled_text": "Unavailable's tournament ended in the round of 32, 1-3 against WC2026-D4. The last whistle made the round feel final."
     }
   },
   "matches": [
@@ -3545,8 +3607,8 @@
           "type": "foul",
           "committed_by_card_id": "P-72637:2026",
           "committed_by_player_id": "P-72637",
-          "suffered_by_card_id": "P-04785:2006",
-          "suffered_by_player_id": "P-04785"
+          "suffered_by_card_id": "P-03775:1978",
+          "suffered_by_player_id": "P-03775"
         },
         {
           "minute": 7,
@@ -4006,10 +4068,9 @@
           "period": "1H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m0.e52",
-          "type": "key_pass",
+          "type": "offside",
           "card_id": "P-03775:1978",
-          "player_id": "P-03775",
-          "for_event_id": null
+          "player_id": "P-03775"
         },
         {
           "minute": 44,
@@ -4185,8 +4246,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m0.e70",
           "type": "shot_off",
-          "card_id": "P-09292:2026",
-          "player_id": "P-09292"
+          "card_id": "P-07639:1950",
+          "player_id": "P-07639"
         },
         {
           "minute": 59,
@@ -5240,8 +5301,8 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m1.e16",
           "type": "key_pass",
-          "card_id": "P-03775:1978",
-          "player_id": "P-03775",
+          "card_id": "P-02853:1998",
+          "player_id": "P-02853",
           "for_event_id": null
         },
         {
@@ -6264,12 +6325,12 @@
       "phase": "group",
       "opponent_team_id": "WC2026-G4",
       "user_goals": 2,
-      "opp_goals": 2,
+      "opp_goals": 1,
       "user_goals_et": null,
       "opp_goals_et": null,
       "shootout": null,
-      "outcome": "D",
-      "counts_as_run_win": false,
+      "outcome": "W",
+      "counts_as_run_win": true,
       "advanced": false,
       "lineup": [
         {
@@ -6685,21 +6746,10 @@
       ],
       "events": [
         {
-          "minute": 1,
-          "period": "1H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e0",
-          "type": "foul",
-          "committed_by_card_id": "P-05783:2006",
-          "committed_by_player_id": "P-05783",
-          "suffered_by_card_id": "P-W26-0444:2026",
-          "suffered_by_player_id": "P-W26-0444"
-        },
-        {
           "minute": 2,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e1",
+          "event_id": "e2e-real-run-golden.m2.e0",
           "type": "key_pass",
           "card_id": "P-05783:2006",
           "player_id": "P-05783",
@@ -6709,12 +6759,23 @@
           "minute": 2,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e2",
+          "event_id": "e2e-real-run-golden.m2.e1",
           "type": "foul",
-          "committed_by_card_id": "P-02853:1998",
-          "committed_by_player_id": "P-02853",
+          "committed_by_card_id": "P-09292:2026",
+          "committed_by_player_id": "P-09292",
           "suffered_by_card_id": "P-W26-0437:2026",
           "suffered_by_player_id": "P-W26-0437"
+        },
+        {
+          "minute": 3,
+          "period": "1H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e2",
+          "type": "foul",
+          "committed_by_card_id": "P-02465:2018",
+          "committed_by_player_id": "P-02465",
+          "suffered_by_card_id": "P-84524:2026",
+          "suffered_by_player_id": "P-84524"
         },
         {
           "minute": 4,
@@ -6746,20 +6807,10 @@
           "shot_event_id": "e2e-real-run-golden.m2.e4"
         },
         {
-          "minute": 5,
-          "period": "1H",
-          "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e6",
-          "type": "key_pass",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441",
-          "for_event_id": null
-        },
-        {
           "minute": 6,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e7",
+          "event_id": "e2e-real-run-golden.m2.e6",
           "type": "shot_off",
           "card_id": "P-00549:2022",
           "player_id": "P-00549"
@@ -6768,16 +6819,35 @@
           "minute": 6,
           "period": "1H",
           "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e7",
+          "type": "key_pass",
+          "card_id": "P-W26-0442:2026",
+          "player_id": "P-W26-0442",
+          "for_event_id": null
+        },
+        {
+          "minute": 7,
+          "period": "1H",
+          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e8",
           "type": "shot_off",
           "card_id": "P-84524:2026",
           "player_id": "P-84524"
         },
         {
+          "minute": 8,
+          "period": "1H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e9",
+          "type": "shot_off",
+          "card_id": "P-W26-0440:2026",
+          "player_id": "P-W26-0440"
+        },
+        {
           "minute": 9,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e9",
+          "event_id": "e2e-real-run-golden.m2.e10",
           "type": "key_pass",
           "card_id": "P-05559:2022",
           "player_id": "P-05559",
@@ -6787,7 +6857,7 @@
           "minute": 9,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e10",
+          "event_id": "e2e-real-run-golden.m2.e11",
           "type": "goal",
           "scorer_card_id": "P-02853:1998",
           "scorer_player_id": "P-02853",
@@ -6797,15 +6867,6 @@
             "user": 1,
             "opp": 0
           }
-        },
-        {
-          "minute": 9,
-          "period": "1H",
-          "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e11",
-          "type": "shot_off",
-          "card_id": "P-W26-0440:2026",
-          "player_id": "P-W26-0440"
         },
         {
           "minute": 10,
@@ -6819,7 +6880,7 @@
           "suffered_by_player_id": "P-02465"
         },
         {
-          "minute": 11,
+          "minute": 10,
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e13",
@@ -6829,13 +6890,13 @@
           "for_event_id": null
         },
         {
-          "minute": 11,
+          "minute": 10,
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e14",
           "type": "goal",
-          "scorer_card_id": "P-84524:2026",
-          "scorer_player_id": "P-84524",
+          "scorer_card_id": "P-W26-0440:2026",
+          "scorer_player_id": "P-W26-0440",
           "assist_card_id": "P-W26-0437:2026",
           "assist_player_id": "P-W26-0437",
           "score_after": {
@@ -6849,8 +6910,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e15",
           "type": "shot_on",
-          "card_id": "P-W26-0439:2026",
-          "player_id": "P-W26-0439"
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436"
         },
         {
           "minute": 12,
@@ -6895,9 +6956,10 @@
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e20",
-          "type": "offside",
-          "card_id": "P-W26-0439:2026",
-          "player_id": "P-W26-0439"
+          "type": "key_pass",
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441",
+          "for_event_id": null
         },
         {
           "minute": 15,
@@ -6915,8 +6977,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e22",
           "type": "shot_on",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441"
+          "card_id": "P-W26-0440:2026",
+          "player_id": "P-W26-0440"
         },
         {
           "minute": 16,
@@ -6944,8 +7006,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e25",
           "type": "key_pass",
-          "card_id": "P-W26-0438:2026",
-          "player_id": "P-W26-0438",
+          "card_id": "P-W26-0442:2026",
+          "player_id": "P-W26-0442",
           "for_event_id": null
         },
         {
@@ -6959,13 +7021,13 @@
           "for_event_id": null
         },
         {
-          "minute": 20,
+          "minute": 19,
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e27",
           "type": "key_pass",
-          "card_id": "P-W26-0444:2026",
-          "player_id": "P-W26-0444",
+          "card_id": "P-W26-0442:2026",
+          "player_id": "P-W26-0442",
           "for_event_id": null
         },
         {
@@ -6988,15 +7050,15 @@
           "shot_event_id": "e2e-real-run-golden.m2.e28"
         },
         {
-          "minute": 21,
+          "minute": 22,
           "period": "1H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e30",
           "type": "foul",
-          "committed_by_card_id": "P-09292:2026",
-          "committed_by_player_id": "P-09292",
-          "suffered_by_card_id": "P-W26-0442:2026",
-          "suffered_by_player_id": "P-W26-0442"
+          "committed_by_card_id": "P-05783:2006",
+          "committed_by_player_id": "P-05783",
+          "suffered_by_card_id": "P-W26-0437:2026",
+          "suffered_by_player_id": "P-W26-0437"
         },
         {
           "minute": 23,
@@ -7015,10 +7077,10 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e32",
           "type": "foul",
-          "committed_by_card_id": "P-09292:2026",
-          "committed_by_player_id": "P-09292",
-          "suffered_by_card_id": "P-W26-0436:2026",
-          "suffered_by_player_id": "P-W26-0436"
+          "committed_by_card_id": "P-00549:2022",
+          "committed_by_player_id": "P-00549",
+          "suffered_by_card_id": "P-W26-0439:2026",
+          "suffered_by_player_id": "P-W26-0439"
         },
         {
           "minute": 24,
@@ -7035,10 +7097,10 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e34",
           "type": "foul",
-          "committed_by_card_id": "P-04785:2006",
-          "committed_by_player_id": "P-04785",
-          "suffered_by_card_id": "P-W26-0437:2026",
-          "suffered_by_player_id": "P-W26-0437"
+          "committed_by_card_id": "P-02465:2018",
+          "committed_by_player_id": "P-02465",
+          "suffered_by_card_id": "P-W26-0443:2026",
+          "suffered_by_player_id": "P-W26-0443"
         },
         {
           "minute": 26,
@@ -7051,13 +7113,13 @@
           "for_event_id": null
         },
         {
-          "minute": 26,
+          "minute": 27,
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e36",
           "type": "shot_off",
-          "card_id": "P-W26-0440:2026",
-          "player_id": "P-W26-0440"
+          "card_id": "P-W26-0438:2026",
+          "player_id": "P-W26-0438"
         },
         {
           "minute": 28,
@@ -7070,25 +7132,33 @@
           "for_event_id": null
         },
         {
-          "minute": 28,
+          "minute": 29,
           "period": "1H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e38",
-          "type": "goal",
-          "scorer_card_id": "P-W26-0443:2026",
-          "scorer_player_id": "P-W26-0443",
-          "assist_card_id": null,
-          "assist_player_id": null,
-          "score_after": {
-            "user": 1,
-            "opp": 2
-          }
+          "type": "pen_won",
+          "won_by_card_id": "P-W26-0443:2026",
+          "won_by_player_id": "P-W26-0443",
+          "conceded_by_card_id": null,
+          "conceded_by_player_id": null
+        },
+        {
+          "minute": 29,
+          "period": "1H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e39",
+          "type": "pen_missed",
+          "taker_card_id": "P-W26-0443:2026",
+          "taker_player_id": "P-W26-0443",
+          "on_target": true,
+          "saved_by_card_id": "P-05559:2022",
+          "saved_by_player_id": "P-05559"
         },
         {
           "minute": 30,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e39",
+          "event_id": "e2e-real-run-golden.m2.e40",
           "type": "key_pass",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -7098,18 +7168,18 @@
           "minute": 30,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e40",
+          "event_id": "e2e-real-run-golden.m2.e41",
           "type": "foul",
           "committed_by_card_id": "P-05783:2006",
           "committed_by_player_id": "P-05783",
-          "suffered_by_card_id": "P-W26-0442:2026",
-          "suffered_by_player_id": "P-W26-0442"
+          "suffered_by_card_id": "P-W26-0437:2026",
+          "suffered_by_player_id": "P-W26-0437"
         },
         {
           "minute": 31,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e41",
+          "event_id": "e2e-real-run-golden.m2.e42",
           "type": "foul",
           "committed_by_card_id": "P-W26-0442:2026",
           "committed_by_player_id": "P-W26-0442",
@@ -7117,21 +7187,21 @@
           "suffered_by_player_id": "P-00447"
         },
         {
-          "minute": 33,
+          "minute": 32,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e42",
+          "event_id": "e2e-real-run-golden.m2.e43",
           "type": "foul",
-          "committed_by_card_id": "P-05783:2006",
-          "committed_by_player_id": "P-05783",
-          "suffered_by_card_id": "P-W26-0443:2026",
-          "suffered_by_player_id": "P-W26-0443"
+          "committed_by_card_id": "P-07639:1950",
+          "committed_by_player_id": "P-07639",
+          "suffered_by_card_id": "P-W26-0444:2026",
+          "suffered_by_player_id": "P-W26-0444"
         },
         {
           "minute": 34,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e43",
+          "event_id": "e2e-real-run-golden.m2.e44",
           "type": "shot_off",
           "card_id": "P-02853:1998",
           "player_id": "P-02853"
@@ -7140,10 +7210,10 @@
           "minute": 34,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e44",
+          "event_id": "e2e-real-run-golden.m2.e45",
           "type": "foul",
-          "committed_by_card_id": "P-07639:1950",
-          "committed_by_player_id": "P-07639",
+          "committed_by_card_id": "P-04785:2006",
+          "committed_by_player_id": "P-04785",
           "suffered_by_card_id": "P-W26-0440:2026",
           "suffered_by_player_id": "P-W26-0440"
         },
@@ -7151,7 +7221,7 @@
           "minute": 35,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e45",
+          "event_id": "e2e-real-run-golden.m2.e46",
           "type": "shot_off",
           "card_id": "P-00549:2022",
           "player_id": "P-00549"
@@ -7160,17 +7230,17 @@
           "minute": 36,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e46",
+          "event_id": "e2e-real-run-golden.m2.e47",
           "type": "key_pass",
-          "card_id": "P-W26-0443:2026",
-          "player_id": "P-W26-0443",
+          "card_id": "P-W26-0442:2026",
+          "player_id": "P-W26-0442",
           "for_event_id": null
         },
         {
           "minute": 37,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e47",
+          "event_id": "e2e-real-run-golden.m2.e48",
           "type": "shot_on",
           "card_id": "P-00447:2002",
           "player_id": "P-00447"
@@ -7179,36 +7249,36 @@
           "minute": 37,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e48",
+          "event_id": "e2e-real-run-golden.m2.e49",
           "type": "save",
           "keeper_card_id": "P-17136:2026",
           "keeper_player_id": "P-17136",
-          "shot_event_id": "e2e-real-run-golden.m2.e47"
+          "shot_event_id": "e2e-real-run-golden.m2.e48"
         },
         {
-          "minute": 37,
+          "minute": 38,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e49",
+          "event_id": "e2e-real-run-golden.m2.e50",
           "type": "shot_on",
-          "card_id": "P-W26-0440:2026",
-          "player_id": "P-W26-0440"
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436"
         },
         {
-          "minute": 37,
+          "minute": 38,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e50",
+          "event_id": "e2e-real-run-golden.m2.e51",
           "type": "save",
           "keeper_card_id": "P-05559:2022",
           "keeper_player_id": "P-05559",
-          "shot_event_id": "e2e-real-run-golden.m2.e49"
+          "shot_event_id": "e2e-real-run-golden.m2.e50"
         },
         {
           "minute": 39,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e51",
+          "event_id": "e2e-real-run-golden.m2.e52",
           "type": "offside",
           "card_id": "P-07639:1950",
           "player_id": "P-07639"
@@ -7217,27 +7287,27 @@
           "minute": 39,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e52",
+          "event_id": "e2e-real-run-golden.m2.e53",
           "type": "offside",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437"
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441"
         },
         {
           "minute": 40,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e53",
+          "event_id": "e2e-real-run-golden.m2.e54",
           "type": "foul",
-          "committed_by_card_id": "P-04785:2006",
-          "committed_by_player_id": "P-04785",
-          "suffered_by_card_id": "P-W26-0442:2026",
-          "suffered_by_player_id": "P-W26-0442"
+          "committed_by_card_id": "P-05783:2006",
+          "committed_by_player_id": "P-05783",
+          "suffered_by_card_id": "P-84524:2026",
+          "suffered_by_player_id": "P-84524"
         },
         {
           "minute": 41,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e54",
+          "event_id": "e2e-real-run-golden.m2.e55",
           "type": "key_pass",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -7247,7 +7317,7 @@
           "minute": 43,
           "period": "1H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e55",
+          "event_id": "e2e-real-run-golden.m2.e56",
           "type": "foul",
           "committed_by_card_id": "P-W26-0440:2026",
           "committed_by_player_id": "P-W26-0440",
@@ -7258,27 +7328,28 @@
           "minute": 43,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e56",
+          "event_id": "e2e-real-run-golden.m2.e57",
           "type": "foul",
-          "committed_by_card_id": "P-09292:2026",
-          "committed_by_player_id": "P-09292",
-          "suffered_by_card_id": "P-84524:2026",
-          "suffered_by_player_id": "P-84524"
+          "committed_by_card_id": "P-00447:2002",
+          "committed_by_player_id": "P-00447",
+          "suffered_by_card_id": "P-W26-0441:2026",
+          "suffered_by_player_id": "P-W26-0441"
         },
         {
-          "minute": 43,
+          "minute": 44,
           "period": "1H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e57",
-          "type": "yellow",
-          "card_id": "P-09292:2026",
-          "player_id": "P-09292"
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e58",
+          "type": "key_pass",
+          "card_id": "P-W26-0442:2026",
+          "player_id": "P-W26-0442",
+          "for_event_id": null
         },
         {
           "minute": 45,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e58",
+          "event_id": "e2e-real-run-golden.m2.e59",
           "type": "key_pass",
           "card_id": "P-04785:2006",
           "player_id": "P-04785",
@@ -7288,7 +7359,7 @@
           "minute": 45,
           "period": "1H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e59",
+          "event_id": "e2e-real-run-golden.m2.e60",
           "type": "goal",
           "scorer_card_id": "P-00447:2002",
           "scorer_player_id": "P-00447",
@@ -7296,18 +7367,8 @@
           "assist_player_id": "P-04785",
           "score_after": {
             "user": 2,
-            "opp": 2
+            "opp": 1
           }
-        },
-        {
-          "minute": 45,
-          "period": "1H",
-          "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e60",
-          "type": "key_pass",
-          "card_id": "P-W26-0438:2026",
-          "player_id": "P-W26-0438",
-          "for_event_id": null
         },
         {
           "minute": 46,
@@ -7315,10 +7376,10 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e61",
           "type": "foul",
-          "committed_by_card_id": "P-03775:1978",
-          "committed_by_player_id": "P-03775",
-          "suffered_by_card_id": "P-W26-0437:2026",
-          "suffered_by_player_id": "P-W26-0437"
+          "committed_by_card_id": "P-00549:2022",
+          "committed_by_player_id": "P-00549",
+          "suffered_by_card_id": "P-W26-0438:2026",
+          "suffered_by_player_id": "P-W26-0438"
         },
         {
           "minute": 47,
@@ -7342,13 +7403,13 @@
           "for_event_id": null
         },
         {
-          "minute": 49,
+          "minute": 48,
           "period": "2H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e64",
           "type": "shot_off",
-          "card_id": "P-W26-0436:2026",
-          "player_id": "P-W26-0436"
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441"
         },
         {
           "minute": 50,
@@ -7366,8 +7427,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e66",
           "type": "key_pass",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437",
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436",
           "for_event_id": null
         },
         {
@@ -7387,27 +7448,27 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e68",
           "type": "shot_off",
-          "card_id": "P-W26-0436:2026",
-          "player_id": "P-W26-0436"
-        },
-        {
-          "minute": 53,
-          "period": "2H",
-          "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e69",
-          "type": "key_pass",
-          "card_id": "P-W26-0444:2026",
-          "player_id": "P-W26-0444",
-          "for_event_id": null
+          "card_id": "P-W26-0437:2026",
+          "player_id": "P-W26-0437"
         },
         {
           "minute": 54,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e70",
+          "event_id": "e2e-real-run-golden.m2.e69",
           "type": "key_pass",
           "card_id": "P-05783:2006",
           "player_id": "P-05783",
+          "for_event_id": null
+        },
+        {
+          "minute": 54,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e70",
+          "type": "key_pass",
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436",
           "for_event_id": null
         },
         {
@@ -7426,8 +7487,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e72",
           "type": "shot_on",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437"
+          "card_id": "P-W26-0444:2026",
+          "player_id": "P-W26-0444"
         },
         {
           "minute": 55,
@@ -7440,36 +7501,33 @@
           "shot_event_id": "e2e-real-run-golden.m2.e72"
         },
         {
-          "minute": 56,
+          "minute": 57,
           "period": "2H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e74",
-          "type": "foul",
-          "committed_by_card_id": "P-00447:2002",
-          "committed_by_player_id": "P-00447",
-          "suffered_by_card_id": "P-W26-0436:2026",
-          "suffered_by_player_id": "P-W26-0436"
+          "type": "shot_off",
+          "card_id": "P-02853:1998",
+          "player_id": "P-02853"
         },
         {
           "minute": 57,
           "period": "2H",
-          "side": "opp",
+          "side": "user",
           "event_id": "e2e-real-run-golden.m2.e75",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0444:2026",
-          "committed_by_player_id": "P-W26-0444",
-          "suffered_by_card_id": "P-02853:1998",
-          "suffered_by_player_id": "P-02853"
+          "committed_by_card_id": "P-00447:2002",
+          "committed_by_player_id": "P-00447",
+          "suffered_by_card_id": "P-W26-0437:2026",
+          "suffered_by_player_id": "P-W26-0437"
         },
         {
-          "minute": 59,
+          "minute": 57,
           "period": "2H",
-          "side": "opp",
+          "side": "user",
           "event_id": "e2e-real-run-golden.m2.e76",
-          "type": "key_pass",
-          "card_id": "P-W26-0442:2026",
-          "player_id": "P-W26-0442",
-          "for_event_id": null
+          "type": "yellow",
+          "card_id": "P-00447:2002",
+          "player_id": "P-00447"
         },
         {
           "minute": 60,
@@ -7477,18 +7535,18 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e77",
           "type": "key_pass",
-          "card_id": "P-07639:1950",
-          "player_id": "P-07639",
+          "card_id": "P-09292:2026",
+          "player_id": "P-09292",
           "for_event_id": null
         },
         {
           "minute": 60,
           "period": "2H",
-          "side": "user",
+          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e78",
           "type": "key_pass",
-          "card_id": "P-09292:2026",
-          "player_id": "P-09292",
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441",
           "for_event_id": null
         },
         {
@@ -7497,8 +7555,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e79",
           "type": "key_pass",
-          "card_id": "P-W26-0438:2026",
-          "player_id": "P-W26-0438",
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441",
           "for_event_id": null
         },
         {
@@ -7507,68 +7565,69 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e80",
           "type": "key_pass",
-          "card_id": "P-05783:2006",
-          "player_id": "P-05783",
+          "card_id": "P-07639:1950",
+          "player_id": "P-07639",
           "for_event_id": null
         },
         {
-          "minute": 63,
+          "minute": 62,
           "period": "2H",
-          "side": "opp",
+          "side": "user",
           "event_id": "e2e-real-run-golden.m2.e81",
           "type": "key_pass",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441",
+          "card_id": "P-09292:2026",
+          "player_id": "P-09292",
+          "for_event_id": null
+        },
+        {
+          "minute": 62,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e82",
+          "type": "key_pass",
+          "card_id": "P-W26-0443:2026",
+          "player_id": "P-W26-0443",
           "for_event_id": null
         },
         {
           "minute": 64,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e82",
+          "event_id": "e2e-real-run-golden.m2.e83",
           "type": "foul",
-          "committed_by_card_id": "P-84524:2026",
-          "committed_by_player_id": "P-84524",
-          "suffered_by_card_id": "P-07639:1950",
-          "suffered_by_player_id": "P-07639"
+          "committed_by_card_id": "P-W26-0439:2026",
+          "committed_by_player_id": "P-W26-0439",
+          "suffered_by_card_id": "P-05783:2006",
+          "suffered_by_player_id": "P-05783"
         },
         {
           "minute": 65,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e83",
+          "event_id": "e2e-real-run-golden.m2.e84",
           "type": "key_pass",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437",
+          "card_id": "P-W26-0441:2026",
+          "player_id": "P-W26-0441",
           "for_event_id": null
         },
         {
           "minute": 66,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e84",
+          "event_id": "e2e-real-run-golden.m2.e85",
           "type": "shot_off",
-          "card_id": "P-09292:2026",
-          "player_id": "P-09292"
+          "card_id": "P-02465:2018",
+          "player_id": "P-02465"
         },
         {
           "minute": 66,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e85",
-          "type": "key_pass",
-          "card_id": "P-W26-0442:2026",
-          "player_id": "P-W26-0442",
-          "for_event_id": null
-        },
-        {
-          "minute": 67,
-          "period": "2H",
-          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e86",
-          "type": "shot_off",
+          "type": "key_pass",
           "card_id": "P-W26-0438:2026",
-          "player_id": "P-W26-0438"
+          "player_id": "P-W26-0438",
+          "for_event_id": null
         },
         {
           "minute": 68,
@@ -7576,87 +7635,86 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e87",
           "type": "key_pass",
+          "card_id": "P-09292:2026",
+          "player_id": "P-09292",
+          "for_event_id": null
+        },
+        {
+          "minute": 69,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e88",
+          "type": "shot_off",
+          "card_id": "P-84524:2026",
+          "player_id": "P-84524"
+        },
+        {
+          "minute": 70,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e89",
+          "type": "key_pass",
           "card_id": "P-02853:1998",
           "player_id": "P-02853",
           "for_event_id": null
         },
         {
-          "minute": 69,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e88",
-          "type": "key_pass",
-          "card_id": "P-00549:2022",
-          "player_id": "P-00549",
-          "for_event_id": null
-        },
-        {
-          "minute": 69,
+          "minute": 70,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e89",
-          "type": "shot_on",
-          "card_id": "P-W26-0440:2026",
-          "player_id": "P-W26-0440"
-        },
-        {
-          "minute": 69,
-          "period": "2H",
-          "side": "user",
           "event_id": "e2e-real-run-golden.m2.e90",
-          "type": "save",
-          "keeper_card_id": "P-05559:2022",
-          "keeper_player_id": "P-05559",
-          "shot_event_id": "e2e-real-run-golden.m2.e89"
+          "type": "shot_on",
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436"
         },
         {
-          "minute": 71,
+          "minute": 70,
           "period": "2H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e91",
+          "type": "save",
+          "keeper_card_id": "P-05559:2022",
+          "keeper_player_id": "P-05559",
+          "shot_event_id": "e2e-real-run-golden.m2.e90"
+        },
+        {
+          "minute": 71,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e92",
           "type": "key_pass",
           "card_id": "P-00549:2022",
           "player_id": "P-00549",
           "for_event_id": null
         },
         {
-          "minute": 71,
+          "minute": 72,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e92",
+          "event_id": "e2e-real-run-golden.m2.e93",
           "type": "key_pass",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437",
+          "card_id": "P-84524:2026",
+          "player_id": "P-84524",
+          "for_event_id": null
+        },
+        {
+          "minute": 73,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e94",
+          "type": "key_pass",
+          "card_id": "P-00549:2022",
+          "player_id": "P-00549",
           "for_event_id": null
         },
         {
           "minute": 73,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e93",
-          "type": "key_pass",
-          "card_id": "P-W26-0437:2026",
-          "player_id": "P-W26-0437",
-          "for_event_id": null
-        },
-        {
-          "minute": 74,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e94",
-          "type": "key_pass",
-          "card_id": "P-04785:2006",
-          "player_id": "P-04785",
-          "for_event_id": null
-        },
-        {
-          "minute": 74,
-          "period": "2H",
-          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e95",
           "type": "key_pass",
-          "card_id": "P-W26-0438:2026",
-          "player_id": "P-W26-0438",
+          "card_id": "P-W26-0436:2026",
+          "player_id": "P-W26-0436",
           "for_event_id": null
         },
         {
@@ -7665,59 +7723,58 @@
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e96",
           "type": "key_pass",
-          "card_id": "P-05783:2006",
-          "player_id": "P-05783",
+          "card_id": "P-04785:2006",
+          "player_id": "P-04785",
           "for_event_id": null
         },
         {
-          "minute": 77,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e97",
-          "type": "key_pass",
-          "card_id": "P-02465:2018",
-          "player_id": "P-02465",
-          "for_event_id": null
-        },
-        {
-          "minute": 77,
+          "minute": 75,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e98",
+          "event_id": "e2e-real-run-golden.m2.e97",
           "type": "key_pass",
           "card_id": "P-84524:2026",
           "player_id": "P-84524",
           "for_event_id": null
         },
         {
-          "minute": 79,
+          "minute": 76,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e99",
+          "event_id": "e2e-real-run-golden.m2.e98",
           "type": "key_pass",
           "card_id": "P-05783:2006",
           "player_id": "P-05783",
           "for_event_id": null
         },
         {
-          "minute": 79,
+          "minute": 77,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e100",
-          "type": "shot_off",
-          "card_id": "P-W26-0439:2026",
-          "player_id": "P-W26-0439"
+          "event_id": "e2e-real-run-golden.m2.e99",
+          "type": "key_pass",
+          "card_id": "P-W26-0438:2026",
+          "player_id": "P-W26-0438",
+          "for_event_id": null
         },
         {
-          "minute": 80,
+          "minute": 78,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e100",
+          "type": "key_pass",
+          "card_id": "P-02465:2018",
+          "player_id": "P-02465",
+          "for_event_id": null
+        },
+        {
+          "minute": 78,
           "period": "2H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e101",
-          "type": "foul",
-          "committed_by_card_id": "P-W26-0439:2026",
-          "committed_by_player_id": "P-W26-0439",
-          "suffered_by_card_id": "P-00549:2022",
-          "suffered_by_player_id": "P-00549"
+          "type": "shot_off",
+          "card_id": "P-W26-0443:2026",
+          "player_id": "P-W26-0443"
         },
         {
           "minute": 80,
@@ -7725,66 +7782,76 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e102",
           "type": "key_pass",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441",
+          "card_id": "P-84524:2026",
+          "player_id": "P-84524",
           "for_event_id": null
         },
         {
-          "minute": 82,
+          "minute": 81,
           "period": "2H",
-          "side": "user",
+          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e103",
-          "type": "key_pass",
-          "card_id": "P-07639:1950",
-          "player_id": "P-07639",
-          "for_event_id": null
+          "type": "foul",
+          "committed_by_card_id": "P-W26-0437:2026",
+          "committed_by_player_id": "P-W26-0437",
+          "suffered_by_card_id": "P-05783:2006",
+          "suffered_by_player_id": "P-05783"
+        },
+        {
+          "minute": 81,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e104",
+          "type": "yellow",
+          "card_id": "P-W26-0437:2026",
+          "player_id": "P-W26-0437"
         },
         {
           "minute": 82,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e104",
-          "type": "foul",
-          "committed_by_card_id": "P-05559:2022",
-          "committed_by_player_id": "P-05559",
-          "suffered_by_card_id": "P-W26-0436:2026",
-          "suffered_by_player_id": "P-W26-0436"
-        },
-        {
-          "minute": 84,
           "period": "2H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m2.e105",
           "type": "key_pass",
-          "card_id": "P-09292:2026",
-          "player_id": "P-09292",
+          "card_id": "P-02465:2018",
+          "player_id": "P-02465",
+          "for_event_id": null
+        },
+        {
+          "minute": 83,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e106",
+          "type": "foul",
+          "committed_by_card_id": "P-00549:2022",
+          "committed_by_player_id": "P-00549",
+          "suffered_by_card_id": "P-W26-0437:2026",
+          "suffered_by_player_id": "P-W26-0437"
+        },
+        {
+          "minute": 85,
+          "period": "2H",
+          "side": "user",
+          "event_id": "e2e-real-run-golden.m2.e107",
+          "type": "key_pass",
+          "card_id": "P-00549:2022",
+          "player_id": "P-00549",
           "for_event_id": null
         },
         {
           "minute": 85,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e106",
+          "event_id": "e2e-real-run-golden.m2.e108",
           "type": "key_pass",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441",
-          "for_event_id": null
-        },
-        {
-          "minute": 86,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e107",
-          "type": "key_pass",
-          "card_id": "P-00447:2002",
-          "player_id": "P-00447",
+          "card_id": "P-W26-0443:2026",
+          "player_id": "P-W26-0443",
           "for_event_id": null
         },
         {
           "minute": 86,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e108",
+          "event_id": "e2e-real-run-golden.m2.e109",
           "type": "key_pass",
           "card_id": "P-W26-0441:2026",
           "player_id": "P-W26-0441",
@@ -7794,48 +7861,58 @@
           "minute": 87,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m2.e109",
-          "type": "foul",
-          "committed_by_card_id": "P-W26-0442:2026",
-          "committed_by_player_id": "P-W26-0442",
-          "suffered_by_card_id": "P-02853:1998",
-          "suffered_by_player_id": "P-02853"
-        },
-        {
-          "minute": 89,
-          "period": "2H",
-          "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e110",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0443:2026",
-          "committed_by_player_id": "P-W26-0443",
-          "suffered_by_card_id": "P-07639:1950",
-          "suffered_by_player_id": "P-07639"
+          "committed_by_card_id": "P-W26-0438:2026",
+          "committed_by_player_id": "P-W26-0438",
+          "suffered_by_card_id": "P-00549:2022",
+          "suffered_by_player_id": "P-00549"
         },
         {
-          "minute": 89,
+          "minute": 87,
           "period": "2H",
-          "side": "opp",
+          "side": "user",
           "event_id": "e2e-real-run-golden.m2.e111",
           "type": "key_pass",
-          "card_id": "P-W26-0441:2026",
-          "player_id": "P-W26-0441",
+          "card_id": "P-02465:2018",
+          "player_id": "P-02465",
           "for_event_id": null
         },
         {
-          "minute": 89,
+          "minute": 88,
           "period": "2H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m2.e112",
-          "type": "offside",
-          "card_id": "P-W26-0442:2026",
-          "player_id": "P-W26-0442"
+          "type": "key_pass",
+          "card_id": "P-W26-0444:2026",
+          "player_id": "P-W26-0444",
+          "for_event_id": null
         },
         {
-          "minute": 58,
+          "minute": 90,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e113",
+          "type": "foul",
+          "committed_by_card_id": "P-W26-0443:2026",
+          "committed_by_player_id": "P-W26-0443",
+          "suffered_by_card_id": "P-00549:2022",
+          "suffered_by_player_id": "P-00549"
+        },
+        {
+          "minute": 90,
+          "period": "2H",
+          "side": "opp",
+          "event_id": "e2e-real-run-golden.m2.e114",
+          "type": "offside",
+          "card_id": "P-84524:2026",
+          "player_id": "P-84524"
+        },
+        {
+          "minute": 60,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m2.e113",
+          "event_id": "e2e-real-run-golden.m2.e115",
           "type": "sub",
           "in_card_id": "P-W26-0161:2026",
           "in_player_id": "P-W26-0161",
@@ -7850,7 +7927,7 @@
       "match_index": 3,
       "round": "R32",
       "phase": "knockout",
-      "opponent_team_id": "WC2026-I4",
+      "opponent_team_id": "WC2026-D4",
       "user_goals": 1,
       "opp_goals": 1,
       "user_goals_et": 0,
@@ -8012,8 +8089,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0460:2026",
-          "player_id": "P-W26-0460",
+          "card_id": "P-W26-0715:2026",
+          "player_id": "P-W26-0715",
           "tournament_id": 2026,
           "slot_id": "opp.starter.0",
           "position": "GK",
@@ -8022,8 +8099,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "tournament_id": 2026,
           "slot_id": "opp.starter.1",
           "position": "DF",
@@ -8032,8 +8109,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "tournament_id": 2026,
           "slot_id": "opp.starter.2",
           "position": "DF",
@@ -8042,8 +8119,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0463:2026",
-          "player_id": "P-W26-0463",
+          "card_id": "P-W26-0718:2026",
+          "player_id": "P-W26-0718",
           "tournament_id": 2026,
           "slot_id": "opp.starter.3",
           "position": "DF",
@@ -8052,8 +8129,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0464:2026",
-          "player_id": "P-W26-0464",
+          "card_id": "P-W26-0719:2026",
+          "player_id": "P-W26-0719",
           "tournament_id": 2026,
           "slot_id": "opp.starter.4",
           "position": "DF",
@@ -8062,8 +8139,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465",
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720",
           "tournament_id": 2026,
           "slot_id": "opp.starter.5",
           "position": "MF",
@@ -8072,8 +8149,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466",
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721",
           "tournament_id": 2026,
           "slot_id": "opp.starter.6",
           "position": "MF",
@@ -8082,8 +8159,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "tournament_id": 2026,
           "slot_id": "opp.starter.7",
           "position": "MF",
@@ -8092,8 +8169,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0468:2026",
-          "player_id": "P-W26-0468",
+          "card_id": "P-W26-0723:2026",
+          "player_id": "P-W26-0723",
           "tournament_id": 2026,
           "slot_id": "opp.starter.8",
           "position": "FW",
@@ -8102,8 +8179,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469",
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724",
           "tournament_id": 2026,
           "slot_id": "opp.starter.9",
           "position": "FW",
@@ -8112,8 +8189,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "tournament_id": 2026,
           "slot_id": "opp.starter.10",
           "position": "FW",
@@ -8122,8 +8199,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0471:2026",
-          "player_id": "P-W26-0471",
+          "card_id": "P-W26-0726:2026",
+          "player_id": "P-W26-0726",
           "tournament_id": 2026,
           "slot_id": "opp.bench.0",
           "position": "MF",
@@ -8132,8 +8209,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0472:2026",
-          "player_id": "P-W26-0472",
+          "card_id": "P-W26-0727:2026",
+          "player_id": "P-W26-0727",
           "tournament_id": 2026,
           "slot_id": "opp.bench.1",
           "position": "MF",
@@ -8142,8 +8219,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0473:2026",
-          "player_id": "P-W26-0473",
+          "card_id": "P-W26-0728:2026",
+          "player_id": "P-W26-0728",
           "tournament_id": 2026,
           "slot_id": "opp.bench.2",
           "position": "MF",
@@ -8152,8 +8229,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0474:2026",
-          "player_id": "P-W26-0474",
+          "card_id": "P-W26-0729:2026",
+          "player_id": "P-W26-0729",
           "tournament_id": 2026,
           "slot_id": "opp.bench.3",
           "position": "MF",
@@ -8162,8 +8239,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0475:2026",
-          "player_id": "P-W26-0475",
+          "card_id": "P-W26-0730:2026",
+          "player_id": "P-W26-0730",
           "tournament_id": 2026,
           "slot_id": "opp.bench.4",
           "position": "MF",
@@ -8172,8 +8249,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0476:2026",
-          "player_id": "P-W26-0476",
+          "card_id": "P-W26-0731:2026",
+          "player_id": "P-W26-0731",
           "tournament_id": 2026,
           "slot_id": "opp.bench.5",
           "position": "MF",
@@ -8182,8 +8259,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0477:2026",
-          "player_id": "P-W26-0477",
+          "card_id": "P-W26-0732:2026",
+          "player_id": "P-W26-0732",
           "tournament_id": 2026,
           "slot_id": "opp.bench.6",
           "position": "MF",
@@ -8192,8 +8269,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0478:2026",
-          "player_id": "P-W26-0478",
+          "card_id": "P-W26-0733:2026",
+          "player_id": "P-W26-0733",
           "tournament_id": 2026,
           "slot_id": "opp.bench.7",
           "position": "MF",
@@ -8202,8 +8279,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0479:2026",
-          "player_id": "P-W26-0479",
+          "card_id": "P-W26-0734:2026",
+          "player_id": "P-W26-0734",
           "tournament_id": 2026,
           "slot_id": "opp.bench.8",
           "position": "MF",
@@ -8212,8 +8289,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0480:2026",
-          "player_id": "P-W26-0480",
+          "card_id": "P-W26-0735:2026",
+          "player_id": "P-W26-0735",
           "tournament_id": 2026,
           "slot_id": "opp.bench.9",
           "position": "MF",
@@ -8222,8 +8299,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0481:2026",
-          "player_id": "P-W26-0481",
+          "card_id": "P-W26-0736:2026",
+          "player_id": "P-W26-0736",
           "tournament_id": 2026,
           "slot_id": "opp.bench.10",
           "position": "MF",
@@ -8232,8 +8309,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0482:2026",
-          "player_id": "P-W26-0482",
+          "card_id": "P-W26-0737:2026",
+          "player_id": "P-W26-0737",
           "tournament_id": 2026,
           "slot_id": "opp.bench.11",
           "position": "MF",
@@ -8242,8 +8319,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0483:2026",
-          "player_id": "P-W26-0483",
+          "card_id": "P-W26-0738:2026",
+          "player_id": "P-W26-0738",
           "tournament_id": 2026,
           "slot_id": "opp.bench.12",
           "position": "MF",
@@ -8252,8 +8329,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0484:2026",
-          "player_id": "P-W26-0484",
+          "card_id": "P-W26-0739:2026",
+          "player_id": "P-W26-0739",
           "tournament_id": 2026,
           "slot_id": "opp.bench.13",
           "position": "MF",
@@ -8262,8 +8339,8 @@
         },
         {
           "side": "opp",
-          "card_id": "P-W26-0485:2026",
-          "player_id": "P-W26-0485",
+          "card_id": "P-W26-0740:2026",
+          "player_id": "P-W26-0740",
           "tournament_id": 2026,
           "slot_id": "opp.bench.14",
           "position": "MF",
@@ -8288,8 +8365,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e1",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
@@ -8308,8 +8385,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e3",
           "type": "key_pass",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469",
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724",
           "for_event_id": null
         },
         {
@@ -8318,8 +8395,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e4",
           "type": "shot_on",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469"
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724"
         },
         {
           "minute": 4,
@@ -8337,8 +8414,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e6",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0460:2026",
-          "committed_by_player_id": "P-W26-0460",
+          "committed_by_card_id": "P-W26-0715:2026",
+          "committed_by_player_id": "P-W26-0715",
           "suffered_by_card_id": "P-02465:2018",
           "suffered_by_player_id": "P-02465"
         },
@@ -8358,8 +8435,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e8",
           "type": "shot_off",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469"
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724"
         },
         {
           "minute": 8,
@@ -8367,8 +8444,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e9",
           "type": "key_pass",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469",
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724",
           "for_event_id": null
         },
         {
@@ -8397,8 +8474,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e12",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8407,8 +8484,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e13",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0468:2026",
-          "committed_by_player_id": "P-W26-0468",
+          "committed_by_card_id": "P-W26-0723:2026",
+          "committed_by_player_id": "P-W26-0723",
           "suffered_by_card_id": "P-00549:2022",
           "suffered_by_player_id": "P-00549"
         },
@@ -8420,8 +8497,8 @@
           "type": "foul",
           "committed_by_card_id": "P-03775:1978",
           "committed_by_player_id": "P-03775",
-          "suffered_by_card_id": "P-W26-0464:2026",
-          "suffered_by_player_id": "P-W26-0464"
+          "suffered_by_card_id": "P-W26-0719:2026",
+          "suffered_by_player_id": "P-W26-0719"
         },
         {
           "minute": 13,
@@ -8429,8 +8506,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e15",
           "type": "shot_on",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467"
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722"
         },
         {
           "minute": 13,
@@ -8448,8 +8525,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e17",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0469:2026",
-          "committed_by_player_id": "P-W26-0469",
+          "committed_by_card_id": "P-W26-0724:2026",
+          "committed_by_player_id": "P-W26-0724",
           "suffered_by_card_id": "P-03775:1978",
           "suffered_by_player_id": "P-03775"
         },
@@ -8468,8 +8545,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e19",
           "type": "save",
-          "keeper_card_id": "P-W26-0460:2026",
-          "keeper_player_id": "P-W26-0460",
+          "keeper_card_id": "P-W26-0715:2026",
+          "keeper_player_id": "P-W26-0715",
           "shot_event_id": "e2e-real-run-golden.m3.e18"
         },
         {
@@ -8478,8 +8555,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e20",
           "type": "key_pass",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466",
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721",
           "for_event_id": null
         },
         {
@@ -8497,8 +8574,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e22",
           "type": "save",
-          "keeper_card_id": "P-W26-0460:2026",
-          "keeper_player_id": "P-W26-0460",
+          "keeper_card_id": "P-W26-0715:2026",
+          "keeper_player_id": "P-W26-0715",
           "shot_event_id": "e2e-real-run-golden.m3.e21"
         },
         {
@@ -8507,8 +8584,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e23",
           "type": "shot_off",
-          "card_id": "P-W26-0464:2026",
-          "player_id": "P-W26-0464"
+          "card_id": "P-W26-0719:2026",
+          "player_id": "P-W26-0719"
         },
         {
           "minute": 20,
@@ -8526,8 +8603,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e25",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8546,8 +8623,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e27",
           "type": "key_pass",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466",
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721",
           "for_event_id": null
         },
         {
@@ -8565,8 +8642,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e29",
           "type": "shot_off",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466"
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721"
         },
         {
           "minute": 24,
@@ -8599,8 +8676,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e32",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8609,8 +8686,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e33",
           "type": "offside",
-          "card_id": "P-W26-0463:2026",
-          "player_id": "P-W26-0463"
+          "card_id": "P-W26-0718:2026",
+          "player_id": "P-W26-0718"
         },
         {
           "minute": 27,
@@ -8618,8 +8695,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e34",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0464:2026",
-          "committed_by_player_id": "P-W26-0464",
+          "committed_by_card_id": "P-W26-0719:2026",
+          "committed_by_player_id": "P-W26-0719",
           "suffered_by_card_id": "P-02853:1998",
           "suffered_by_player_id": "P-02853"
         },
@@ -8629,8 +8706,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e35",
           "type": "yellow",
-          "card_id": "P-W26-0464:2026",
-          "player_id": "P-W26-0464"
+          "card_id": "P-W26-0719:2026",
+          "player_id": "P-W26-0719"
         },
         {
           "minute": 29,
@@ -8638,8 +8715,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e36",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0465:2026",
-          "committed_by_player_id": "P-W26-0465",
+          "committed_by_card_id": "P-W26-0720:2026",
+          "committed_by_player_id": "P-W26-0720",
           "suffered_by_card_id": "P-00549:2022",
           "suffered_by_player_id": "P-00549"
         },
@@ -8649,8 +8726,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e37",
           "type": "yellow",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465"
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720"
         },
         {
           "minute": 29,
@@ -8658,8 +8735,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e38",
           "type": "shot_on",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467"
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722"
         },
         {
           "minute": 29,
@@ -8677,8 +8754,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e40",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8696,8 +8773,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e42",
           "type": "save",
-          "keeper_card_id": "P-W26-0460:2026",
-          "keeper_player_id": "P-W26-0460",
+          "keeper_card_id": "P-W26-0715:2026",
+          "keeper_player_id": "P-W26-0715",
           "shot_event_id": "e2e-real-run-golden.m3.e41"
         },
         {
@@ -8715,8 +8792,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e44",
           "type": "goal",
-          "scorer_card_id": "P-W26-0465:2026",
-          "scorer_player_id": "P-W26-0465",
+          "scorer_card_id": "P-W26-0720:2026",
+          "scorer_player_id": "P-W26-0720",
           "assist_card_id": null,
           "assist_player_id": null,
           "score_after": {
@@ -8740,8 +8817,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e46",
           "type": "key_pass",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465",
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720",
           "for_event_id": null
         },
         {
@@ -8750,8 +8827,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e47",
           "type": "key_pass",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "for_event_id": null
         },
         {
@@ -8760,8 +8837,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e48",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0461:2026",
-          "committed_by_player_id": "P-W26-0461",
+          "committed_by_card_id": "P-W26-0716:2026",
+          "committed_by_player_id": "P-W26-0716",
           "suffered_by_card_id": "P-00549:2022",
           "suffered_by_player_id": "P-00549"
         },
@@ -8781,8 +8858,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e50",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
@@ -8800,8 +8877,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e52",
           "type": "save",
-          "keeper_card_id": "P-W26-0460:2026",
-          "keeper_player_id": "P-W26-0460",
+          "keeper_card_id": "P-W26-0715:2026",
+          "keeper_player_id": "P-W26-0715",
           "shot_event_id": "e2e-real-run-golden.m3.e51"
         },
         {
@@ -8810,8 +8887,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e53",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8830,8 +8907,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e55",
           "type": "key_pass",
-          "card_id": "P-W26-0463:2026",
-          "player_id": "P-W26-0463",
+          "card_id": "P-W26-0718:2026",
+          "player_id": "P-W26-0718",
           "for_event_id": null
         },
         {
@@ -8840,8 +8917,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e56",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
@@ -8850,8 +8927,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e57",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0464:2026",
-          "committed_by_player_id": "P-W26-0464",
+          "committed_by_card_id": "P-W26-0719:2026",
+          "committed_by_player_id": "P-W26-0719",
           "suffered_by_card_id": "P-09292:2026",
           "suffered_by_player_id": "P-09292"
         },
@@ -8861,8 +8938,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e58",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0460:2026",
-          "committed_by_player_id": "P-W26-0460",
+          "committed_by_card_id": "P-W26-0715:2026",
+          "committed_by_player_id": "P-W26-0715",
           "suffered_by_card_id": "P-09292:2026",
           "suffered_by_player_id": "P-09292"
         },
@@ -8872,8 +8949,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e59",
           "type": "yellow",
-          "card_id": "P-W26-0460:2026",
-          "player_id": "P-W26-0460"
+          "card_id": "P-W26-0715:2026",
+          "player_id": "P-W26-0715"
         },
         {
           "minute": 45,
@@ -8881,8 +8958,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e60",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8901,8 +8978,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e62",
           "type": "key_pass",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "for_event_id": null
         },
         {
@@ -8911,8 +8988,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e63",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
@@ -8940,8 +9017,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e66",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
@@ -8950,8 +9027,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e67",
           "type": "shot_on",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462"
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717"
         },
         {
           "minute": 52,
@@ -8978,8 +9055,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e70",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
@@ -8988,8 +9065,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e71",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0464:2026",
-          "committed_by_player_id": "P-W26-0464",
+          "committed_by_card_id": "P-W26-0719:2026",
+          "committed_by_player_id": "P-W26-0719",
           "suffered_by_card_id": "P-05783:2006",
           "suffered_by_player_id": "P-05783"
         },
@@ -9011,8 +9088,8 @@
           "type": "foul",
           "committed_by_card_id": "P-05783:2006",
           "committed_by_player_id": "P-05783",
-          "suffered_by_card_id": "P-W26-0470:2026",
-          "suffered_by_player_id": "P-W26-0470"
+          "suffered_by_card_id": "P-W26-0725:2026",
+          "suffered_by_player_id": "P-W26-0725"
         },
         {
           "minute": 57,
@@ -9020,8 +9097,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e74",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0461:2026",
-          "committed_by_player_id": "P-W26-0461",
+          "committed_by_card_id": "P-W26-0716:2026",
+          "committed_by_player_id": "P-W26-0716",
           "suffered_by_card_id": "P-02853:1998",
           "suffered_by_player_id": "P-02853"
         },
@@ -9031,8 +9108,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e75",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
@@ -9041,8 +9118,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e76",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0469:2026",
-          "committed_by_player_id": "P-W26-0469",
+          "committed_by_card_id": "P-W26-0724:2026",
+          "committed_by_player_id": "P-W26-0724",
           "suffered_by_card_id": "P-00447:2002",
           "suffered_by_player_id": "P-00447"
         },
@@ -9062,8 +9139,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e78",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
@@ -9074,8 +9151,8 @@
           "type": "foul",
           "committed_by_card_id": "P-09292:2026",
           "committed_by_player_id": "P-09292",
-          "suffered_by_card_id": "P-W26-0467:2026",
-          "suffered_by_player_id": "P-W26-0467"
+          "suffered_by_card_id": "P-W26-0722:2026",
+          "suffered_by_player_id": "P-W26-0722"
         },
         {
           "minute": 62,
@@ -9093,8 +9170,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e81",
           "type": "shot_on",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469"
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724"
         },
         {
           "minute": 62,
@@ -9121,8 +9198,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e84",
           "type": "key_pass",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465",
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720",
           "for_event_id": null
         },
         {
@@ -9133,8 +9210,8 @@
           "type": "foul",
           "committed_by_card_id": "P-02853:1998",
           "committed_by_player_id": "P-02853",
-          "suffered_by_card_id": "P-W26-0467:2026",
-          "suffered_by_player_id": "P-W26-0467"
+          "suffered_by_card_id": "P-W26-0722:2026",
+          "suffered_by_player_id": "P-W26-0722"
         },
         {
           "minute": 67,
@@ -9161,8 +9238,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e88",
           "type": "save",
-          "keeper_card_id": "P-W26-0460:2026",
-          "keeper_player_id": "P-W26-0460",
+          "keeper_card_id": "P-W26-0715:2026",
+          "keeper_player_id": "P-W26-0715",
           "shot_event_id": "e2e-real-run-golden.m3.e87"
         },
         {
@@ -9171,8 +9248,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e89",
           "type": "key_pass",
-          "card_id": "P-W26-0463:2026",
-          "player_id": "P-W26-0463",
+          "card_id": "P-W26-0718:2026",
+          "player_id": "P-W26-0718",
           "for_event_id": null
         },
         {
@@ -9191,8 +9268,8 @@
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e91",
           "type": "key_pass",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465",
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720",
           "for_event_id": null
         },
         {
@@ -9210,36 +9287,26 @@
           "period": "2H",
           "side": "opp",
           "event_id": "e2e-real-run-golden.m3.e93",
-          "type": "shot_on",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466"
+          "type": "shot_off",
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721"
         },
         {
-          "minute": 71,
+          "minute": 73,
           "period": "2H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m3.e94",
-          "type": "save",
-          "keeper_card_id": "P-05559:2022",
-          "keeper_player_id": "P-05559",
-          "shot_event_id": "e2e-real-run-golden.m3.e93"
+          "type": "foul",
+          "committed_by_card_id": "P-02853:1998",
+          "committed_by_player_id": "P-02853",
+          "suffered_by_card_id": "P-W26-0723:2026",
+          "suffered_by_player_id": "P-W26-0723"
         },
         {
           "minute": 73,
           "period": "2H",
           "side": "user",
           "event_id": "e2e-real-run-golden.m3.e95",
-          "type": "foul",
-          "committed_by_card_id": "P-02853:1998",
-          "committed_by_player_id": "P-02853",
-          "suffered_by_card_id": "P-W26-0468:2026",
-          "suffered_by_player_id": "P-W26-0468"
-        },
-        {
-          "minute": 73,
-          "period": "2H",
-          "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e96",
           "type": "red",
           "card_id": "P-02853:1998",
           "player_id": "P-02853"
@@ -9248,7 +9315,7 @@
           "minute": 74,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e97",
+          "event_id": "e2e-real-run-golden.m3.e96",
           "type": "key_pass",
           "card_id": "P-00549:2022",
           "player_id": "P-00549",
@@ -9258,7 +9325,7 @@
           "minute": 76,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e98",
+          "event_id": "e2e-real-run-golden.m3.e97",
           "type": "key_pass",
           "card_id": "P-02465:2018",
           "player_id": "P-02465",
@@ -9268,28 +9335,28 @@
           "minute": 76,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e99",
+          "event_id": "e2e-real-run-golden.m3.e98",
           "type": "foul",
           "committed_by_card_id": "P-02853:1998",
           "committed_by_player_id": "P-02853",
-          "suffered_by_card_id": "P-W26-0461:2026",
-          "suffered_by_player_id": "P-W26-0461"
+          "suffered_by_card_id": "P-W26-0716:2026",
+          "suffered_by_player_id": "P-W26-0716"
         },
         {
           "minute": 76,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e100",
+          "event_id": "e2e-real-run-golden.m3.e99",
           "type": "key_pass",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "for_event_id": null
         },
         {
           "minute": 77,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e101",
+          "event_id": "e2e-real-run-golden.m3.e100",
           "type": "key_pass",
           "card_id": "P-03775:1978",
           "player_id": "P-03775",
@@ -9299,10 +9366,10 @@
           "minute": 79,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e102",
+          "event_id": "e2e-real-run-golden.m3.e101",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0470:2026",
-          "committed_by_player_id": "P-W26-0470",
+          "committed_by_card_id": "P-W26-0725:2026",
+          "committed_by_player_id": "P-W26-0725",
           "suffered_by_card_id": "P-09292:2026",
           "suffered_by_player_id": "P-09292"
         },
@@ -9310,16 +9377,16 @@
           "minute": 79,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e103",
+          "event_id": "e2e-real-run-golden.m3.e102",
           "type": "shot_off",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466"
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721"
         },
         {
           "minute": 80,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e104",
+          "event_id": "e2e-real-run-golden.m3.e103",
           "type": "key_pass",
           "card_id": "P-03775:1978",
           "player_id": "P-03775",
@@ -9329,18 +9396,18 @@
           "minute": 81,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e105",
+          "event_id": "e2e-real-run-golden.m3.e104",
           "type": "foul",
           "committed_by_card_id": "P-07639:1950",
           "committed_by_player_id": "P-07639",
-          "suffered_by_card_id": "P-W26-0464:2026",
-          "suffered_by_player_id": "P-W26-0464"
+          "suffered_by_card_id": "P-W26-0719:2026",
+          "suffered_by_player_id": "P-W26-0719"
         },
         {
           "minute": 82,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e106",
+          "event_id": "e2e-real-run-golden.m3.e105",
           "type": "key_pass",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -9350,17 +9417,17 @@
           "minute": 82,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e107",
+          "event_id": "e2e-real-run-golden.m3.e106",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
           "minute": 83,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e108",
+          "event_id": "e2e-real-run-golden.m3.e107",
           "type": "offside",
           "card_id": "P-04785:2006",
           "player_id": "P-04785"
@@ -9369,17 +9436,17 @@
           "minute": 84,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e109",
+          "event_id": "e2e-real-run-golden.m3.e108",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
           "minute": 85,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e110",
+          "event_id": "e2e-real-run-golden.m3.e109",
           "type": "key_pass",
           "card_id": "P-07639:1950",
           "player_id": "P-07639",
@@ -9389,17 +9456,17 @@
           "minute": 85,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e111",
+          "event_id": "e2e-real-run-golden.m3.e110",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
           "minute": 87,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e112",
+          "event_id": "e2e-real-run-golden.m3.e111",
           "type": "key_pass",
           "card_id": "P-02465:2018",
           "player_id": "P-02465",
@@ -9409,16 +9476,16 @@
           "minute": 87,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e113",
+          "event_id": "e2e-real-run-golden.m3.e112",
           "type": "offside",
-          "card_id": "P-W26-0469:2026",
-          "player_id": "P-W26-0469"
+          "card_id": "P-W26-0724:2026",
+          "player_id": "P-W26-0724"
         },
         {
           "minute": 90,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e114",
+          "event_id": "e2e-real-run-golden.m3.e113",
           "type": "shot_off",
           "card_id": "P-09292:2026",
           "player_id": "P-09292"
@@ -9427,29 +9494,29 @@
           "minute": 90,
           "period": "2H",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e115",
+          "event_id": "e2e-real-run-golden.m3.e114",
           "type": "shot_on",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466"
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721"
         },
         {
           "minute": 90,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e116",
+          "event_id": "e2e-real-run-golden.m3.e115",
           "type": "save",
           "keeper_card_id": "P-05559:2022",
           "keeper_player_id": "P-05559",
-          "shot_event_id": "e2e-real-run-golden.m3.e115"
+          "shot_event_id": "e2e-real-run-golden.m3.e114"
         },
         {
           "minute": 91,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e117",
+          "event_id": "e2e-real-run-golden.m3.e116",
           "type": "goal",
-          "scorer_card_id": "P-W26-0463:2026",
-          "scorer_player_id": "P-W26-0463",
+          "scorer_card_id": "P-W26-0718:2026",
+          "scorer_player_id": "P-W26-0718",
           "assist_card_id": null,
           "assist_player_id": null,
           "score_after": {
@@ -9461,7 +9528,7 @@
           "minute": 92,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e118",
+          "event_id": "e2e-real-run-golden.m3.e117",
           "type": "key_pass",
           "card_id": "P-00447:2002",
           "player_id": "P-00447",
@@ -9471,7 +9538,7 @@
           "minute": 93,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e119",
+          "event_id": "e2e-real-run-golden.m3.e118",
           "type": "key_pass",
           "card_id": "P-02853:1998",
           "player_id": "P-02853",
@@ -9481,20 +9548,20 @@
           "minute": 94,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e120",
+          "event_id": "e2e-real-run-golden.m3.e119",
           "type": "key_pass",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "for_event_id": null
         },
         {
           "minute": 94,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e121",
+          "event_id": "e2e-real-run-golden.m3.e120",
           "type": "goal",
-          "scorer_card_id": "P-W26-0462:2026",
-          "scorer_player_id": "P-W26-0462",
+          "scorer_card_id": "P-W26-0717:2026",
+          "scorer_player_id": "P-W26-0717",
           "assist_card_id": null,
           "assist_player_id": null,
           "score_after": {
@@ -9506,7 +9573,7 @@
           "minute": 96,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e122",
+          "event_id": "e2e-real-run-golden.m3.e121",
           "type": "key_pass",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -9516,10 +9583,10 @@
           "minute": 97,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e123",
+          "event_id": "e2e-real-run-golden.m3.e122",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0466:2026",
-          "committed_by_player_id": "P-W26-0466",
+          "committed_by_card_id": "P-W26-0721:2026",
+          "committed_by_player_id": "P-W26-0721",
           "suffered_by_card_id": "P-02465:2018",
           "suffered_by_player_id": "P-02465"
         },
@@ -9527,36 +9594,36 @@
           "minute": 97,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e124",
+          "event_id": "e2e-real-run-golden.m3.e123",
           "type": "key_pass",
-          "card_id": "P-W26-0465:2026",
-          "player_id": "P-W26-0465",
+          "card_id": "P-W26-0720:2026",
+          "player_id": "P-W26-0720",
           "for_event_id": null
         },
         {
           "minute": 98,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e125",
+          "event_id": "e2e-real-run-golden.m3.e124",
           "type": "shot_on",
-          "card_id": "P-W26-0464:2026",
-          "player_id": "P-W26-0464"
+          "card_id": "P-W26-0719:2026",
+          "player_id": "P-W26-0719"
         },
         {
           "minute": 98,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e126",
+          "event_id": "e2e-real-run-golden.m3.e125",
           "type": "save",
           "keeper_card_id": "P-05559:2022",
           "keeper_player_id": "P-05559",
-          "shot_event_id": "e2e-real-run-golden.m3.e125"
+          "shot_event_id": "e2e-real-run-golden.m3.e124"
         },
         {
           "minute": 99,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e127",
+          "event_id": "e2e-real-run-golden.m3.e126",
           "type": "key_pass",
           "card_id": "P-00549:2022",
           "player_id": "P-00549",
@@ -9566,10 +9633,10 @@
           "minute": 99,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e128",
+          "event_id": "e2e-real-run-golden.m3.e127",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0466:2026",
-          "committed_by_player_id": "P-W26-0466",
+          "committed_by_card_id": "P-W26-0721:2026",
+          "committed_by_player_id": "P-W26-0721",
           "suffered_by_card_id": "P-09292:2026",
           "suffered_by_player_id": "P-09292"
         },
@@ -9577,20 +9644,20 @@
           "minute": 100,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e129",
+          "event_id": "e2e-real-run-golden.m3.e128",
           "type": "key_pass",
-          "card_id": "P-W26-0470:2026",
-          "player_id": "P-W26-0470",
+          "card_id": "P-W26-0725:2026",
+          "player_id": "P-W26-0725",
           "for_event_id": null
         },
         {
           "minute": 102,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e130",
+          "event_id": "e2e-real-run-golden.m3.e129",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0461:2026",
-          "committed_by_player_id": "P-W26-0461",
+          "committed_by_card_id": "P-W26-0716:2026",
+          "committed_by_player_id": "P-W26-0716",
           "suffered_by_card_id": "P-00549:2022",
           "suffered_by_player_id": "P-00549"
         },
@@ -9598,30 +9665,30 @@
           "minute": 102,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e131",
+          "event_id": "e2e-real-run-golden.m3.e130",
           "type": "offside",
-          "card_id": "P-W26-0464:2026",
-          "player_id": "P-W26-0464"
+          "card_id": "P-W26-0719:2026",
+          "player_id": "P-W26-0719"
         },
         {
           "minute": 103,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e132",
+          "event_id": "e2e-real-run-golden.m3.e131",
           "type": "foul",
           "committed_by_card_id": "P-04785:2006",
           "committed_by_player_id": "P-04785",
-          "suffered_by_card_id": "P-W26-0466:2026",
-          "suffered_by_player_id": "P-W26-0466"
+          "suffered_by_card_id": "P-W26-0721:2026",
+          "suffered_by_player_id": "P-W26-0721"
         },
         {
           "minute": 104,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e133",
+          "event_id": "e2e-real-run-golden.m3.e132",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0466:2026",
-          "committed_by_player_id": "P-W26-0466",
+          "committed_by_card_id": "P-W26-0721:2026",
+          "committed_by_player_id": "P-W26-0721",
           "suffered_by_card_id": "P-04785:2006",
           "suffered_by_player_id": "P-04785"
         },
@@ -9629,26 +9696,26 @@
           "minute": 104,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e134",
+          "event_id": "e2e-real-run-golden.m3.e133",
           "type": "yellow",
-          "card_id": "P-W26-0466:2026",
-          "player_id": "P-W26-0466"
+          "card_id": "P-W26-0721:2026",
+          "player_id": "P-W26-0721"
         },
         {
           "minute": 105,
           "period": "ET1",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e135",
+          "event_id": "e2e-real-run-golden.m3.e134",
           "type": "key_pass",
-          "card_id": "P-W26-0462:2026",
-          "player_id": "P-W26-0462",
+          "card_id": "P-W26-0717:2026",
+          "player_id": "P-W26-0717",
           "for_event_id": null
         },
         {
           "minute": 106,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e136",
+          "event_id": "e2e-real-run-golden.m3.e135",
           "type": "shot_off",
           "card_id": "P-00549:2022",
           "player_id": "P-00549"
@@ -9657,7 +9724,7 @@
           "minute": 108,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e137",
+          "event_id": "e2e-real-run-golden.m3.e136",
           "type": "key_pass",
           "card_id": "P-07639:1950",
           "player_id": "P-07639",
@@ -9667,27 +9734,27 @@
           "minute": 108,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e138",
+          "event_id": "e2e-real-run-golden.m3.e137",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
           "minute": 108,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e139",
+          "event_id": "e2e-real-run-golden.m3.e138",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
           "minute": 110,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e140",
+          "event_id": "e2e-real-run-golden.m3.e139",
           "type": "shot_off",
           "card_id": "P-04785:2006",
           "player_id": "P-04785"
@@ -9696,7 +9763,7 @@
           "minute": 111,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e141",
+          "event_id": "e2e-real-run-golden.m3.e140",
           "type": "key_pass",
           "card_id": "P-00549:2022",
           "player_id": "P-00549",
@@ -9706,20 +9773,20 @@
           "minute": 111,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e142",
+          "event_id": "e2e-real-run-golden.m3.e141",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
           "minute": 112,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e143",
+          "event_id": "e2e-real-run-golden.m3.e142",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0465:2026",
-          "committed_by_player_id": "P-W26-0465",
+          "committed_by_card_id": "P-W26-0720:2026",
+          "committed_by_player_id": "P-W26-0720",
           "suffered_by_card_id": "P-07639:1950",
           "suffered_by_player_id": "P-07639"
         },
@@ -9727,28 +9794,28 @@
           "minute": 113,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e144",
+          "event_id": "e2e-real-run-golden.m3.e143",
           "type": "foul",
           "committed_by_card_id": "P-00447:2002",
           "committed_by_player_id": "P-00447",
-          "suffered_by_card_id": "P-W26-0464:2026",
-          "suffered_by_player_id": "P-W26-0464"
+          "suffered_by_card_id": "P-W26-0719:2026",
+          "suffered_by_player_id": "P-W26-0719"
         },
         {
           "minute": 114,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e145",
+          "event_id": "e2e-real-run-golden.m3.e144",
           "type": "key_pass",
-          "card_id": "P-W26-0467:2026",
-          "player_id": "P-W26-0467",
+          "card_id": "P-W26-0722:2026",
+          "player_id": "P-W26-0722",
           "for_event_id": null
         },
         {
           "minute": 115,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e146",
+          "event_id": "e2e-real-run-golden.m3.e145",
           "type": "key_pass",
           "card_id": "P-05783:2006",
           "player_id": "P-05783",
@@ -9758,17 +9825,17 @@
           "minute": 115,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e147",
+          "event_id": "e2e-real-run-golden.m3.e146",
           "type": "key_pass",
-          "card_id": "P-W26-0461:2026",
-          "player_id": "P-W26-0461",
+          "card_id": "P-W26-0716:2026",
+          "player_id": "P-W26-0716",
           "for_event_id": null
         },
         {
           "minute": 116,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e148",
+          "event_id": "e2e-real-run-golden.m3.e147",
           "type": "key_pass",
           "card_id": "P-07639:1950",
           "player_id": "P-07639",
@@ -9778,7 +9845,7 @@
           "minute": 117,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e149",
+          "event_id": "e2e-real-run-golden.m3.e148",
           "type": "key_pass",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -9788,21 +9855,21 @@
           "minute": 118,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e150",
+          "event_id": "e2e-real-run-golden.m3.e149",
           "type": "foul",
           "committed_by_card_id": "P-05559:2022",
           "committed_by_player_id": "P-05559",
-          "suffered_by_card_id": "P-W26-0461:2026",
-          "suffered_by_player_id": "P-W26-0461"
+          "suffered_by_card_id": "P-W26-0716:2026",
+          "suffered_by_player_id": "P-W26-0716"
         },
         {
           "minute": 119,
           "period": "ET2",
           "side": "opp",
-          "event_id": "e2e-real-run-golden.m3.e151",
+          "event_id": "e2e-real-run-golden.m3.e150",
           "type": "foul",
-          "committed_by_card_id": "P-W26-0465:2026",
-          "committed_by_player_id": "P-W26-0465",
+          "committed_by_card_id": "P-W26-0720:2026",
+          "committed_by_player_id": "P-W26-0720",
           "suffered_by_card_id": "P-00549:2022",
           "suffered_by_player_id": "P-00549"
         },
@@ -9810,18 +9877,18 @@
           "minute": 120,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e152",
+          "event_id": "e2e-real-run-golden.m3.e151",
           "type": "foul",
           "committed_by_card_id": "P-04785:2006",
           "committed_by_player_id": "P-04785",
-          "suffered_by_card_id": "P-W26-0465:2026",
-          "suffered_by_player_id": "P-W26-0465"
+          "suffered_by_card_id": "P-W26-0720:2026",
+          "suffered_by_player_id": "P-W26-0720"
         },
         {
           "minute": 120,
           "period": "ET2",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e153",
+          "event_id": "e2e-real-run-golden.m3.e152",
           "type": "yellow",
           "card_id": "P-04785:2006",
           "player_id": "P-04785"
@@ -9830,7 +9897,7 @@
           "minute": 59,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e154",
+          "event_id": "e2e-real-run-golden.m3.e153",
           "type": "injury",
           "card_id": "P-00447:2002",
           "player_id": "P-00447",
@@ -9840,7 +9907,7 @@
           "minute": 59,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e155",
+          "event_id": "e2e-real-run-golden.m3.e154",
           "type": "sub",
           "in_card_id": "P-06148:1938",
           "in_player_id": "P-06148",
@@ -9852,7 +9919,7 @@
           "minute": 103,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e156",
+          "event_id": "e2e-real-run-golden.m3.e155",
           "type": "injury",
           "card_id": "P-09292:2026",
           "player_id": "P-09292",
@@ -9862,7 +9929,7 @@
           "minute": 103,
           "period": "ET1",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e157",
+          "event_id": "e2e-real-run-golden.m3.e156",
           "type": "sub",
           "in_card_id": "P-W26-0161:2026",
           "in_player_id": "P-W26-0161",
@@ -9874,7 +9941,7 @@
           "minute": 75,
           "period": "2H",
           "side": "user",
-          "event_id": "e2e-real-run-golden.m3.e158",
+          "event_id": "e2e-real-run-golden.m3.e157",
           "type": "sub",
           "in_card_id": "P-03401:2002",
           "in_player_id": "P-03401",
@@ -9890,21 +9957,6 @@
     "standings": [
       {
         "rank": 1,
-        "participant_id": "WC2026-G4",
-        "kind": "team",
-        "team_id": "WC2026-G4",
-        "played": 3,
-        "wins": 1,
-        "draws": 2,
-        "losses": 0,
-        "goals_for": 6,
-        "goals_against": 3,
-        "goal_difference": 3,
-        "points": 5,
-        "draw_lots_rank": 4
-      },
-      {
-        "rank": 2,
         "participant_id": "WC2026-G1",
         "kind": "team",
         "team_id": "WC2026-G1",
@@ -9913,25 +9965,40 @@
         "draws": 2,
         "losses": 0,
         "goals_for": 4,
-        "goals_against": 2,
-        "goal_difference": 2,
+        "goals_against": 3,
+        "goal_difference": 1,
         "points": 5,
         "draw_lots_rank": 1
       },
       {
-        "rank": 3,
+        "rank": 2,
         "participant_id": "__USER__",
         "kind": "user",
         "team_id": null,
         "played": 3,
-        "wins": 0,
-        "draws": 3,
+        "wins": 1,
+        "draws": 2,
         "losses": 0,
         "goals_for": 4,
-        "goals_against": 4,
-        "goal_difference": 0,
-        "points": 3,
+        "goals_against": 3,
+        "goal_difference": 1,
+        "points": 5,
         "draw_lots_rank": 2
+      },
+      {
+        "rank": 3,
+        "participant_id": "WC2026-G4",
+        "kind": "team",
+        "team_id": "WC2026-G4",
+        "played": 3,
+        "wins": 1,
+        "draws": 1,
+        "losses": 1,
+        "goals_for": 5,
+        "goals_against": 3,
+        "goal_difference": 2,
+        "points": 4,
+        "draw_lots_rank": 4
       },
       {
         "rank": 4,
@@ -9942,16 +10009,16 @@
         "wins": 0,
         "draws": 1,
         "losses": 2,
-        "goals_for": 1,
+        "goals_for": 2,
         "goals_against": 6,
-        "goal_difference": -5,
+        "goal_difference": -4,
         "points": 1,
         "draw_lots_rank": 3
       }
     ],
-    "user_rank": 3,
+    "user_rank": 2,
     "user_qualified": true,
-    "qualification": "best_third_threshold",
+    "qualification": "top_two",
     "other_matches": [
       {
         "other_match_index": 0,
@@ -9960,7 +10027,7 @@
         "team_a_id": "WC2026-G1",
         "team_b_id": "WC2026-G3",
         "team_a_goals": 2,
-        "team_b_goals": 0,
+        "team_b_goals": 1,
         "outcome": "A"
       },
       {
@@ -9989,17 +10056,19 @@
     "rounds": [
       {
         "round": "R32",
-        "opponent_team_id": "WC2026-I4",
+        "opponent_team_id": "WC2026-D4",
         "bracket_constrained": true,
         "fallback": false,
         "fallback_reason": null,
-        "user_slot_id": "R32-M77/2",
-        "opposite_slot_id": "R32-M77/1",
-        "candidate_group_ids": ["I"]
+        "user_slot_id": "R32-M88/2",
+        "opposite_slot_id": "R32-M88/1",
+        "candidate_group_ids": [
+          "D"
+        ]
       },
       {
         "round": "R16",
-        "opponent_team_id": "WC2026-A1",
+        "opponent_team_id": "WC2026-D3",
         "bracket_constrained": false,
         "fallback": false,
         "fallback_reason": null,
@@ -10009,7 +10078,7 @@
       },
       {
         "round": "QF",
-        "opponent_team_id": "WC2026-J2",
+        "opponent_team_id": "WC2026-A3",
         "bracket_constrained": false,
         "fallback": false,
         "fallback_reason": null,
@@ -10019,7 +10088,7 @@
       },
       {
         "round": "SF",
-        "opponent_team_id": "WC2026-D1",
+        "opponent_team_id": "WC2026-J3",
         "bracket_constrained": false,
         "fallback": false,
         "fallback_reason": null,

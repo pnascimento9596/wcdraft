@@ -22,7 +22,6 @@ PHASE 1 RECALIBRATION (wc-perf-2.0.0):
 
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
 
@@ -98,8 +97,8 @@ def _quantile(xs: list[int | float], q: float) -> float:
 
 
 def test_build_is_deterministic():
-    a = json.dumps(rating.build_all(), ensure_ascii=False, indent=2, sort_keys=True)
-    b = json.dumps(rating.build_all(), ensure_ascii=False, indent=2, sort_keys=True)
+    a = rating._json_text(rating.build_all())
+    b = rating._json_text(rating.build_all())
     assert a == b
 
 
@@ -107,7 +106,7 @@ def test_matches_committed_golden(built: list[dict]):
     """Committed ratings.json must equal a fresh build, byte for byte. The CI
     git-diff guard enforces the same after a clean rebuild."""
     committed_text = (rating.OUTPUT_DIR / "ratings.json").read_text(encoding="utf-8")
-    fresh_text = json.dumps(built, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    fresh_text = rating._json_text(built)
     assert committed_text == fresh_text, (
         "etl/output/ratings.json is stale — run `python -m wcdraft_etl.rating` and commit."
     )
@@ -155,13 +154,12 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v31_historical_curation(built: list[dict]):
-    # wc-perf-5.1.0 = merit-v3.1 curation season: source-derived W1/W2/W2b
-    # career-stature changes through the existing 5.0 formula; W3 stopped with a
-    # documented design incompatibility, so no wall-spread formula lands here.
-    assert rating.RATING_VERSION == "wc-perf-5.1.0"
+def test_rating_version_is_merit_v4_historical_rebuild(built: list[dict]):
+    # wc-perf-6.0.0 = merit-v4: historical ratings consume career-stature-4.0.0
+    # objective club facts plus the national-strength raw-only ceiling prior.
+    assert rating.RATING_VERSION == "wc-perf-6.0.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-5.1.0"
+        assert r["rating_version"] == "wc-perf-6.0.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
@@ -169,7 +167,7 @@ def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
     compat = rating._load_career_stature(rating.OUTPUT_DIR, use_rating_compat=True)
     assert full["P-38906"]["career_stature_index"] == 0.878288  # Pelé v3 row
     assert compat["P-38906"]["career_stature_index"] == 0.807005
-    assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-3.1.0"
+    assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-4.0.0"
 
 
 def test_every_row_emits_career_and_current_basis_payloads(built: list[dict]):

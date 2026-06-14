@@ -32,9 +32,9 @@
 //   goldens (sim / rng / draft) did NOT move; only stamp-carrying payloads
 //   (e2e-real-run, run-record, compact manifest, asym-realism) re-locked.
 //
-//   merit-v3 V7/V8: λ refit against the post-V6 Career channels moved
-//   BASE/SPREAD/MIN/GAMMA_MID, sim behavior CHANGED, and the realism goldens
-//   re-locked. V8 stamped the shipped season as `engine-2026.06.12`.
+//   merit-v4: λ refit against the national-strength + objective-club merit
+//   channels moved BASE/SPREAD/MIN, sim behavior CHANGED, and the realism
+//   goldens re-locked. Runtime stamp: `engine-2026.06.13-merit-v4`.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
@@ -77,27 +77,24 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * merit-v3 V7 REFIT: BASE=1.05 (was 1.0). The post-V6 Career channel
-   * distribution again shifted goal volume; BASE is the primary
-   * goal-volume lever that restores the 2.54 norm.
+   * merit-v4 REFIT: BASE=1.10 (was 1.05). The merit-v4 channel distribution
+   * shifted the symmetric sweep slightly low on goal volume; BASE is the
+   * primary goal-volume lever that restores the 2.54 norm.
    */
-  BASE: 1.05,
+  BASE: 1.10,
   /**
    * Sensitivity to the (attack − defResist) edge, per 100 channel points.
    * E-3a lifted SPREAD 4.0 → 6.5 to unlock the `margin ≥ 4 ≈ 4.9%` tight
-   * band; merit-v3 V7 lands at 6.5 after the post-V6 channel movement.
-   * Combined with the `MIN = 0.70` floor the underdog λ still produces
-   * credible goals for the weakest 2026-pool pairs (the D4 elite-ceiling /
-   * dominance-not-certainty faithfulness assertions still pass).
+   * band; merit-v4 lands at 6.0 after the national-strength/objective-club
+   * channel movement.
    */
-  SPREAD: 6.5,
+  SPREAD: 6.0,
   /**
-   * Floor — even a hopeless attack still threatens occasionally. merit-v3
-   * V7 raises MIN to 0.70 after the Career-channel refit; the symmetric
-   * realism and faithfulness gates lock that this remains variance, not
-   * certainty.
+   * Floor — even a hopeless attack still threatens occasionally. merit-v4
+   * returns MIN to 0.30 after the BASE/SPREAD refit; the symmetric realism
+   * and faithfulness gates lock that this remains variance, not certainty.
    */
-  MIN: 0.70,
+  MIN: 0.30,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
   MAX: 3.4,
   /**
