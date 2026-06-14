@@ -64,6 +64,7 @@ import {
   type PlayerCardView,
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
+import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
 import { Pitch, PitchMarkings } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { SquadHeaderFlag } from "./squad-header-flag";
@@ -649,6 +650,12 @@ function DraftBoard({
   //    we scroll the window to the spin-stage origin to put the flags
   //    card at the top of the viewport (no mid-page landing).
   const formationPanelRef = useRef<HTMLElement | null>(null);
+  const lineupHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const focusLineupHeadingRef = useRef(false);
+  const slotPickerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const sheetRef = useRef<HTMLDivElement | null>(null);
+  const sheetCloseButtonRef = useRef<HTMLButtonElement | null>(null);
+  const sheetRestoreFocusRef = useRef<HTMLElement | null>(null);
   const lastSelectedPlayerRef = useRef<string | null>(null);
   // Set by handleLock to signal the post-lock spin-stage scroll on next
   // render. Tracked in a ref (not state) so it doesn't cause an extra
@@ -667,6 +674,8 @@ function DraftBoard({
     setPhase("spin");
     setAnim("idle");
     lastSelectedPlayerRef.current = null;
+    focusLineupHeadingRef.current = false;
+    sheetRestoreFocusRef.current = null;
   }, [spin?.index]);
 
   // Post-lock scroll alignment. handleLock sets `justLockedRef` AND
@@ -706,13 +715,54 @@ function DraftBoard({
     });
   }, [sel, reducedMotion]);
 
+  useEffect(() => {
+    if (phase !== "lineup") return;
+    if (!focusLineupHeadingRef.current) return;
+    focusLineupHeadingRef.current = false;
+    lineupHeadingRef.current?.focus({ preventScroll: true });
+  }, [phase]);
+
+  useEffect(() => {
+    if (!sheetOpen || sel?.kind !== "player") return undefined;
+    const frame = requestAnimationFrame(() => {
+      const activeSlot = sheetRef.current?.querySelector<HTMLElement>("[data-active='true']");
+      if (activeSlot) {
+        activeSlot.focus();
+        return;
+      }
+      focusFirstWithin(sheetRef.current, sheetCloseButtonRef.current);
+    });
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setSheetOpen(false);
+        return;
+      }
+      trapTabWithin(event, sheetRef.current);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", onKey);
+      const restoreTarget = sheetRestoreFocusRef.current;
+      sheetRestoreFocusRef.current = null;
+      if (!restoreTarget) return;
+      requestAnimationFrame(() => {
+        if (document.contains(restoreTarget)) restoreTarget.focus();
+      });
+    };
+  }, [sheetOpen, sel?.kind]);
+
   // SPIN clicked: reduced-motion skips the 2–3s reveal straight to settled;
   // otherwise the drum animates and `onSettle` (animationend) flips to settled.
   const handleSpin = useCallback(() => {
     setAnim(reducedMotion ? "settled" : "spinning");
   }, [reducedMotion]);
   const handleSettle = useCallback(() => setAnim("settled"), []);
-  const handleReveal = useCallback(() => setPhase("lineup"), []);
+  const handleReveal = useCallback(() => {
+    focusLineupHeadingRef.current = true;
+    setPhase("lineup");
+  }, []);
 
   // DC-3 — commit a position-first target, roll the squad, persist. A
   // DraftTargetDeadEndError leaves the spin UNCONSUMED: we surface the
@@ -782,7 +832,7 @@ function DraftBoard({
   // Open vacant slots (engine truth).
   const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
 
-  function bestSlotFor(card: PlayerCardView): string | null {
+  const bestSlotFor = useCallback((card: PlayerCardView): string | null => {
     const starterOpens = openSlots.filter((sl) => sl.is_starter);
     const pool = starterOpens.length > 0 ? starterOpens : openSlots;
     let best: { id: string; c: number } | null = null;
@@ -791,20 +841,33 @@ function DraftBoard({
       if (!best || c > best.c) best = { id: slot.slot_id, c };
     }
     return best?.id ?? null;
-  }
+  }, [openSlots]);
 
-  function selectPlayer(card: PlayerCardView) {
+  const selectPlayer = useCallback((card: PlayerCardView) => {
     setSel({ kind: "player", card });
     // Position-first: the slot was committed before the reveal — the pick
     // can only fill the locked target.
     setSelSlot(lockedTarget ?? bestSlotFor(card));
     setTransitionError(null);
-  }
-  function selectManager(card: ManagerCardView) {
+  }, [bestSlotFor, lockedTarget]);
+
+  const selectManager = useCallback((card: ManagerCardView) => {
     setSel({ kind: "manager", card });
     setSelSlot(null);
     setTransitionError(null);
-  }
+  }, []);
+
+  const openSlotSheet = useCallback(() => {
+    sheetRestoreFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : slotPickerButtonRef.current;
+    setSheetOpen(true);
+  }, []);
+
+  const closeSlotSheet = useCallback(() => {
+    setSheetOpen(false);
+  }, []);
 
   // Preview compatibility per open slot, given the selected player.
   const previewCompat = useMemo(() => {
@@ -1129,7 +1192,13 @@ function DraftBoard({
             </p>
           ) : null}
           <div className={s.panelHead}>
-            <h2 className={`${s.panelTitle} ${s.formationTitleInline}`}>{formation.name}</h2>
+            <h2
+              ref={lineupHeadingRef}
+              tabIndex={-1}
+              className={`${s.panelTitle} ${s.formationTitleInline}`}
+            >
+              {formation.name}
+            </h2>
             {basis === "current" ? (
               <span
                 className={s.basisChip}
@@ -1271,7 +1340,7 @@ function DraftBoard({
                 selected={sel?.kind === "manager"}
                 disabled={draft.manager_card_id !== null}
                 rarePick={spin?.rare === true}
-                onSelect={() => selectManager(candidates.manager!)}
+                onSelect={selectManager}
               />
             ) : null}
 
@@ -1283,7 +1352,7 @@ function DraftBoard({
                   selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
                   disabled={false}
                   rarePick={spin?.rare === true}
-                  onSelect={() => selectPlayer(card)}
+                  onSelect={selectPlayer}
                 />
               ))}
               {visibleCandidates.length === 0 ? (
@@ -1327,9 +1396,10 @@ function DraftBoard({
         <div className={s.lockActions}>
           {sel?.kind === "player" && openSlots.length > 0 && !lockedTarget ? (
             <button
+              ref={slotPickerButtonRef}
               type="button"
               className={`btn btn--ghost ${s.lockSecondary}`}
-              onClick={() => setSheetOpen(true)}
+              onClick={openSlotSheet}
             >
               Choose slot
             </button>
@@ -1357,19 +1427,25 @@ function DraftBoard({
 
       {/* Bottom-sheet slot picker (mobile thumb zone) */}
       {sheetOpen && sel?.kind === "player" ? (
-        <div className={s.sheetBackdrop} onClick={() => setSheetOpen(false)}>
+        <div className={s.sheetBackdrop} onClick={closeSlotSheet}>
           <div
+            ref={sheetRef}
             className={s.sheet}
             role="dialog"
-            aria-label="Assign slot"
+            aria-modal="true"
+            aria-labelledby="slot-picker-title"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={s.sheetHead}>
-              <span className={s.sheetTitle}>Assign to slot</span>
+              <span id="slot-picker-title" className={s.sheetTitle}>
+                Assign to slot
+              </span>
               <button
+                ref={sheetCloseButtonRef}
                 type="button"
                 className={s.sheetClose}
-                onClick={() => setSheetOpen(false)}
+                onClick={closeSlotSheet}
                 aria-label="Close"
               >
                 ×
@@ -1387,9 +1463,10 @@ function DraftBoard({
                     className={`${s.sheetSlot} ${s[`tier_${tier}`]!} ${
                       isSel ? s.sheetSlotActive : ""
                     }`}
+                    data-active={isSel ? "true" : undefined}
                     onClick={() => {
                       setSelSlot(slot.slot_id);
-                      setSheetOpen(false);
+                      closeSlotSheet();
                     }}
                   >
                     <span className={s.sheetSlotPos}>{slot.slot_position}</span>

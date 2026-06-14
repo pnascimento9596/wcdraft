@@ -175,9 +175,9 @@ export function SpinStage({
       </div>
 
       {/* ── Result ───────────────────────────────────────────────────── */}
-      <div className={s.spinResultBlock}>
+      <div className={s.spinResultBlock} aria-live="polite" aria-atomic="true">
         <span className={s.spinResultEyebrow}>Spin result</span>
-        <h2 className={s.spinResultName} aria-live="polite">
+        <h2 className={s.spinResultName}>
           {settled ? (
             <>
               <span className={s.spinResultNation}>{result.nationName}</span>{" "}
@@ -190,16 +190,14 @@ export function SpinStage({
           )}
         </h2>
         <p className={s.spinResultTag}>{tagline}</p>
+        {settled && isRare ? (
+          <p className="visually-hidden">Rare pick. Draw probability {drawProbabilityLabel}.</p>
+        ) : null}
       </div>
 
       {/* ── ENGINE-V2 E-2 — Rare-pick moment (additive) ──────────────── */}
       {settled && isRare ? (
-        <div
-          className={s.rareMoment}
-          role="status"
-          aria-live="polite"
-          aria-label={`Rare pick — draw probability ${drawProbabilityLabel}`}
-        >
+        <div className={s.rareMoment} aria-hidden="true">
           <span className={s.rareMomentTitle}>RARE PICK!</span>
           <span className={s.rareMomentProbability}>
             Draw probability: {drawProbabilityLabel}

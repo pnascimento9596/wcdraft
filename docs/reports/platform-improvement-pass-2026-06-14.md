@@ -217,6 +217,9 @@ production enforcement by default, and observable reports via
 
 ## Remaining bounded a11y items (identified, ready, not landed this pass)
 
+Status update (2026-06-14): cleared by
+`docs/reports/a11y-perf-followups-2026-06-14.md`.
+
 Honest disclosure — these are bounded (not contractual) but were scoped out of #134 to keep that
 PR a high-confidence, fully-measurable CSS unit. Each is a small, ready follow-up:
 - **SR text alternatives:** synergy delta arrows (`synergy-bar.tsx`) need an `aria-label`/visually-
