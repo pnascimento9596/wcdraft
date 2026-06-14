@@ -102,6 +102,7 @@ export function SynergyBar({
   // the real value still drives the fill width and the sim untouched.
   const overallText = showDash ? "—" : String(Math.round(result.overall));
   const fillPct = showDash ? 0 : result.overall;
+  const roundedDelta = !blind && delta != null ? Math.round(delta) : 0;
 
   return (
     <div
@@ -120,9 +121,17 @@ export function SynergyBar({
           <span className={s.synergyBarNum}>{overallText}</span>
           {/* Display rounding only — fractional deltas rendered raw before
               (e.g. 18.649350649350648); a delta that rounds to 0 hides. */}
-          {!blind && delta != null && Math.round(delta) !== 0 ? (
-            <span className={delta > 0 ? s.deltaUp : s.deltaDown}>
-              {delta > 0 ? "▲" : "▼"} {Math.abs(Math.round(delta))}
+          {roundedDelta !== 0 ? (
+            <span
+              className={roundedDelta > 0 ? s.deltaUp : s.deltaDown}
+              aria-label={`Synergy ${roundedDelta > 0 ? "up" : "down"} ${Math.abs(roundedDelta)} points`}
+            >
+              <span aria-hidden="true">
+                {roundedDelta > 0 ? "▲" : "▼"} {Math.abs(roundedDelta)}
+              </span>
+              <span className="visually-hidden">
+                Synergy {roundedDelta > 0 ? "up" : "down"} {Math.abs(roundedDelta)} points
+              </span>
             </span>
           ) : null}
           <span className={s.synergyBarChevron} aria-hidden="true">

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./auth-context";
 import { deleteCsrf } from "@/lib/auth/client";
+import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
 
 export function AccountMenu(): React.ReactElement | null {
   const { authEnabled, isSignedIn, session, ready, refresh } = useAuth();
@@ -21,6 +22,9 @@ export function AccountMenu(): React.ReactElement | null {
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -28,7 +32,12 @@ export function AccountMenu(): React.ReactElement | null {
       if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+      trapTabWithin(e, menuRef.current);
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -37,6 +46,33 @@ export function AccountMenu(): React.ReactElement | null {
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const frame = requestAnimationFrame(() => {
+      focusFirstWithin(menuRef.current, menuRef.current);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      const restoreTarget = restoreFocusRef.current;
+      restoreFocusRef.current = null;
+      if (!restoreTarget) return;
+      requestAnimationFrame(() => {
+        if (document.contains(restoreTarget)) restoreTarget.focus();
+      });
+    };
+  }, [open]);
+
+  const toggleOpen = useCallback(() => {
+    setOpen((value) => {
+      const next = !value;
+      if (next) {
+        restoreFocusRef.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : triggerRef.current;
+      }
+      return next;
+    });
+  }, []);
 
   const signOut = useCallback(async () => {
     setSigningOut(true);
@@ -72,11 +108,13 @@ export function AccountMenu(): React.ReactElement | null {
   return (
     <div ref={wrapRef} className="account-menu" data-open={open || undefined}>
       <button
+        ref={triggerRef}
         type="button"
         className="account-chip"
         aria-expanded={open}
         aria-haspopup="menu"
-        onClick={() => setOpen((v) => !v)}
+        aria-controls="account-menu-popover"
+        onClick={toggleOpen}
       >
         <span className="account-chip__glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
@@ -93,7 +131,14 @@ export function AccountMenu(): React.ReactElement | null {
       </button>
 
       {open ? (
-        <div className="account-pop" role="menu" aria-label="Account menu">
+        <div
+          ref={menuRef}
+          id="account-menu-popover"
+          className="account-pop"
+          role="menu"
+          aria-label="Account menu"
+          tabIndex={-1}
+        >
           <div className="account-pop__row account-pop__row--id">
             <span className="account-pop__eyebrow">signed in as</span>
             <span className="account-pop__id mono">{identity}</span>

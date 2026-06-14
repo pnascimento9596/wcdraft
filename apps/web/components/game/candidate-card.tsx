@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useCallback } from "react";
 import {
   formatNullableNumber,
   formatStatValue,
@@ -76,7 +77,7 @@ function PositionGlyph({ position }: { position: PlayerCardView["eligible_positi
  * real runtime values (`null` is the Memory-mode blind — "—" with an empty
  * bar); provenance is encoded by the left hue stripe + dot.
  */
-export function CandidateCard({
+export const CandidateCard = memo(function CandidateCard({
   card,
   selected,
   disabled,
@@ -88,8 +89,10 @@ export function CandidateCard({
   disabled?: boolean;
   /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
   rarePick?: boolean;
-  onSelect: () => void;
+  onSelect: (card: PlayerCardView) => void;
 }) {
+  const handleSelect = useCallback(() => onSelect(card), [card, onSelect]);
+
   const classes = [s.candRow];
   classes.push(s[`prov_${card.rating.badge_kind}`]!);
   if (selected) classes.push(s.candRowSelected);
@@ -107,7 +110,7 @@ export function CandidateCard({
     <button
       type="button"
       className={classes.join(" ")}
-      onClick={onSelect}
+      onClick={handleSelect}
       disabled={disabled}
       aria-pressed={selected}
       aria-expanded={selected}
@@ -146,6 +149,7 @@ export function CandidateCard({
           title={card.rating.badge_label}
           aria-hidden="true"
         />
+        <span className="visually-hidden">Rating provenance: {card.rating.badge_label}</span>
         <span className={`${s.candRowShape} ${s[`shapeDot_${headShape}`]!}`} aria-hidden="true" />
 
         <span className={s.candRowBars} aria-hidden="true">
@@ -233,9 +237,11 @@ export function CandidateCard({
       ) : null}
     </button>
   );
-}
+});
 
-export function ManagerCandidate({
+CandidateCard.displayName = "CandidateCard";
+
+export const ManagerCandidate = memo(function ManagerCandidate({
   manager,
   selected,
   disabled,
@@ -247,8 +253,10 @@ export function ManagerCandidate({
   disabled?: boolean;
   /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
   rarePick?: boolean;
-  onSelect: () => void;
+  onSelect: (manager: ManagerCardView) => void;
 }) {
+  const handleSelect = useCallback(() => onSelect(manager), [manager, onSelect]);
+
   const classes = [s.candRow, s.candRowManager, s.prov_manager];
   if (selected) classes.push(s.candRowSelected);
   if (disabled) classes.push(s.candRowDisabled);
@@ -257,7 +265,7 @@ export function ManagerCandidate({
     <button
       type="button"
       className={classes.join(" ")}
-      onClick={onSelect}
+      onClick={handleSelect}
       disabled={disabled}
       aria-pressed={selected}
       aria-expanded={selected}
@@ -322,4 +330,6 @@ export function ManagerCandidate({
       ) : null}
     </button>
   );
-}
+});
+
+ManagerCandidate.displayName = "ManagerCandidate";

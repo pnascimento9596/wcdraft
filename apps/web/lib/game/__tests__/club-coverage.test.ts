@@ -54,6 +54,13 @@ describe("club-at-tournament display", () => {
     expect(html).toContain(`· ${view.club_label!}`);
   });
 
+  it("exposes collapsed rating provenance to screen readers", () => {
+    expect(cardWithClub).toBeDefined();
+    const view = playerCardView(idx, cardWithClub!.card_id);
+    const html = renderCandidate(view);
+    expect(html).toContain(`Rating provenance: ${view.rating.badge_label}`);
+  });
+
   it("honest-state: renders NO club text when the bundle has none (never fabricated)", () => {
     expect(cardWithoutClub).toBeDefined();
     const view = playerCardView(idx, cardWithoutClub!.card_id);
