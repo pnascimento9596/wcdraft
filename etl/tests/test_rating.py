@@ -162,12 +162,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v4_historical_rebuild(built: list[dict]):
-    # wc-perf-6.0.0 = merit-v4: historical ratings consume career-stature-4.0.0
-    # objective club facts plus the national-strength raw-only ceiling prior.
-    assert rating.RATING_VERSION == "wc-perf-6.0.0"
+def test_rating_version_is_merit_v41_historical_rebuild(built: list[dict]):
+    # wc-perf-6.1.0 = merit-v4.1: historical ratings consume
+    # career-stature-4.1.0 objective-achievement curation. The historical
+    # formula itself remains unchanged.
+    assert rating.RATING_VERSION == "wc-perf-6.1.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.0.0"
+        assert r["rating_version"] == "wc-perf-6.1.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
@@ -175,7 +176,7 @@ def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
     compat = rating._load_career_stature(rating.OUTPUT_DIR, use_rating_compat=True)
     assert full["P-38906"]["career_stature_index"] == 0.878288  # Pelé v3 row
     assert compat["P-38906"]["career_stature_index"] == 0.807005
-    assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-4.0.0"
+    assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-4.1.0"
 
 
 def test_every_row_emits_career_and_current_basis_payloads(built: list[dict]):

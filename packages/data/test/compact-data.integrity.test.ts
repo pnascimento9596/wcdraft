@@ -106,10 +106,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the merit-v4 versions; engine_version carries the merit-v4 refit stamp", () => {
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.0.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.0.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.13-merit-v4");
+  it("rating_version anchors are the merit-v4.1 versions; engine_version carries the merit-v4.1 refit stamp", () => {
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.1.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.1.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.14-merit-v4.1");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {
@@ -213,7 +213,7 @@ describe("compact-data integrity", () => {
       currentRows.filter((r) => r.overall_basis === "career_stature_estimate").length,
     );
     expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.baseline_anchor_estimate).toBe(386);
-    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.career_stature_estimate).toBe(505);
+    expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.career.career_stature_estimate).toBe(541);
     expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.baseline_anchor_estimate).toBe(388);
     expect(RUNTIME_DATA_MANIFEST.counts.rating_basis.current.career_stature_estimate).toBe(0);
   });
@@ -274,16 +274,16 @@ describe("compact-data integrity", () => {
 
   // ── Merit-v3 V6 — required source-derived `legend` field ────────────────────
   //
-  // runtime-data-2.2.0: the compact passthrough is wired and `legend` is
+  // runtime-data-2.3.0: the compact passthrough is wired and `legend` is
   // REQUIRED on every rating row (historical + 2026). The flag is the ETL
   // source-derived boolean — never re-derived from `overall` — and the count is
   // locked on the manifest for the honest-state census.
-  describe("runtime-data-2.2.0 required legend field", () => {
+  describe("runtime-data-2.3.0 required legend field", () => {
     const EXPECTED_LEGEND_TOTAL = 295;
     const EXPECTED_LEGEND_HISTORICAL = 283;
     const EXPECTED_LEGEND_2026 = 12;
 
-    it("every rating carries a boolean legend flag (required as of runtime-data-2.2.0)", () => {
+    it("every rating carries a boolean legend flag (required as of runtime-data-2.3.0)", () => {
       for (const r of DRAFT_POOL_BUNDLE.ratings) {
         expect(typeof r.legend, `${r.card_id} legend`).toBe("boolean");
       }

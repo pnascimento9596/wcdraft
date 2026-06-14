@@ -70,6 +70,9 @@ from dataclasses import dataclass, field
 # Keeping these axes separate is what lets the factual table move without
 # accidentally changing historical/projected rating outputs or compact bundles.
 SOURCE_SET_VERSION = "merit-source-set-2.2.0"
+# career-stature-4.1.0 (merit-v4.1): expands active objective-achievement staging
+# and supports the projected 2026 objective-record pathway while preserving the
+# completed-career all-time material gate.
 # career-stature-4.0.0 (merit-v4): activates objective club-achievement facts
 # through the citation-backed research backstop, while keeping absent club facts
 # out of a player's eligible family denominator.
@@ -77,7 +80,7 @@ SOURCE_SET_VERSION = "merit-source-set-2.2.0"
 # sparse-profile controls, person-identity resolution, and the
 # club_season_honors family. The base merit source set remains 2.0.0; the active
 # source set has its own version below.
-VERSION = "career-stature-4.0.0"
+VERSION = "career-stature-4.1.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
@@ -539,7 +542,7 @@ RESEARCH_SOURCE_IDS: frozenset[str] = frozenset(s.source_id for s in _RESEARCH_S
 # backstop otherwise: every row carries a fetchable public citation (url +
 # claim) verified before commit; an uncited row fails the build; the notes are
 # SHA-pinned in their own manifest (merit/raw/active/manifest.json).
-ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-2.1.0"
+ACTIVE_SOURCE_SET_VERSION = "active-career-source-set-2.2.0"
 # Curation cutoff: a note in this set may only assert facts established on or
 # before this date (the 2026 squad-pin season boundary). Re-curation of active
 # careers is expected each dataset revision — active records drift by nature.

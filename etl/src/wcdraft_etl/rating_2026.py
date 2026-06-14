@@ -78,6 +78,10 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-5.1.0 (merit-v4.1): reduces the league-of-employment prior from a
+# dominant pre-tournament anchor to a smoother quality input and adds a 2026-only
+# objective-record pathway for citation-backed active-career standouts. The
+# completed-career all-time material gate remains unchanged in rating.py.
 # proj-career-5.0.0 (merit-v4): projected ratings consume the same
 # career-stature-4.0.0 source-curation update as historical ratings; the
 # projected formula itself is unchanged.
@@ -87,7 +91,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-5.0.0"
+RATING_VERSION = "proj-career-5.1.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -140,12 +144,11 @@ LEAGUE_STRENGTH: dict[str, float] = {
     code: score for score, codes in _LEAGUE_TIERS.items() for code in codes
 }
 # Position weights for the league anchor (an apex top-5 club lifts every position).
-# Weighted as the DOMINANT quality signal — deliberately above wc-perf's award
-# weights — because for a PROJECTION the club level a player holds down is a better
-# quality proxy than caps/goals, which over-reward longevity (a minnow veteran
-# out-caps a young elite). This widens the powers-vs-minnows separation without
-# letting any single signal pin the score at 100.
-LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.28}
+# merit-v4.1 trims the prior from "dominant quality signal" to "smooth quality
+# context": league still separates elite club employment from weaker/domestic
+# leagues, but objective individual records can now overcome it through the
+# projected objective-record pathway below.
+LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.18, "MF": 0.20, "DF": 0.18, "GK": 0.16}
 
 # merit-v4: active career-stature rows are stage-normalized so young in-progress
 # players can clear materiality before their career is complete. That is right for
@@ -156,9 +159,106 @@ LEAGUE_WEIGHT: dict[str, float] = {"FW": 0.31, "MF": 0.34, "DF": 0.31, "GK": 0.2
 PROJECTED_ACTIVE_STATURE_CAP_FLOOR = 0.72
 PROJECTED_ACTIVE_STATURE_CAP_SPAN = 0.25
 
+# merit-v4.1 projected objective-record pathway. The all-time stature gate in
+# rating.py stays deliberately high (coverage >= .25, index >= .40). For the 2026
+# projection, however, the product requirement is different: a currently-active
+# player with citation-backed objective records (regional player-of-year,
+# continental title/MVP facts, or high international-record strength) should be
+# able to leave the raw-only league-prior path even if they are not an all-time
+# global great. This pathway is 2026-only, source-derived, and still conservative:
+# no career row -> no lift; no objective family evidence -> no lift; ordinary weak-
+# league players with only squad-table caps/goals stay raw/current-path.
+PROJECTED_OBJECTIVE_MIN_COVERAGE = 0.07
+PROJECTED_OBJECTIVE_MIN_INDEX = 0.05
+PROJECTED_OBJECTIVE_HIGH_INTL_RECORD = 0.30
+PROJECTED_OBJECTIVE_MATERIAL_WEIGHT = 0.70
+PROJECTED_OBJECTIVE_PRIORITY_NATION_IDS = frozenset(
+    {
+        # AFC 2026 squads
+        "T-04",  # Australia
+        "T-38",  # Iran
+        "T-39",  # Iraq
+        "T-44",  # Japan
+        "T-59",  # Qatar
+        "T-63",  # Saudi Arabia
+        "T-W26-5",  # Uzbekistan
+        # CONCACAF 2026 squads
+        "T-12",  # Canada
+        "T-34",  # Haiti
+        "T-46",  # Mexico
+        "T-54",  # Panama
+        "T-83",  # United States
+        # CAF 2026 squads
+        "T-01",  # Algeria
+        "T-26",  # Egypt
+        "T-32",  # Ghana
+        "T-42",  # Ivory Coast
+        "T-47",  # Morocco
+        "T-65",  # Senegal
+        "T-70",  # South Africa
+        "T-79",  # Tunisia
+    }
+)
+PROJECTED_OBJECTIVE_FAMILIES = frozenset(
+    {
+        "club_honors",
+        "club_season_honors",
+        "global_annual_recognition",
+        "position_balanced_selection",
+        "regional_annual_recognition",
+        "retrospective_selection",
+        "wc_legacy",
+    }
+)
+
+
+def _projected_objective_record_weight(
+    cs: dict | None, base_weight: float, nation_id: str
+) -> float:
+    """Projected-only material entry for active objective records.
+
+    The shared _stature_model_weight remains the all-time gate. This overlay admits
+    objectively distinguished active players from the under-covered AFC, CAF, and
+    CONCACAF squad set into the 2026 stature path when their career-stature row has
+    enough cited evidence to be a national/continental standout. It does not lower
+    the historical all-time gate, and it does not make thin European control rows
+    material merely because they have one position-balanced or longevity fact.
+    """
+    if cs is None or base_weight >= STATURE_DOMINANT_WEIGHT:
+        return base_weight
+    if (
+        cs.get("coverage", 0.0) < PROJECTED_OBJECTIVE_MIN_COVERAGE
+        or cs.get("career_stature_index", 0.0) < PROJECTED_OBJECTIVE_MIN_INDEX
+    ):
+        return base_weight
+
+    family_scores = cs.get("family_scores") or {}
+    objective_family = any(
+        (family_scores.get(fam) or 0.0) > 0.0
+        for fam in PROJECTED_OBJECTIVE_FAMILIES
+    )
+    captaincy = float(family_scores.get("captaincy") or 0.0)
+    international_record = float(family_scores.get("international_record") or 0.0)
+    enough_record_breadth = (
+        int(cs.get("fact_count") or 0) >= 2
+        and (captaincy > 0.0 or international_record > 0.0)
+    )
+    high_international_record = international_record >= PROJECTED_OBJECTIVE_HIGH_INTL_RECORD
+
+    active_current_fact = int(cs.get("active_fact_count") or 0) > 0
+    priority_squad = nation_id in PROJECTED_OBJECTIVE_PRIORITY_NATION_IDS
+
+    if active_current_fact and (objective_family or high_international_record):
+        return max(base_weight, PROJECTED_OBJECTIVE_MATERIAL_WEIGHT)
+    if priority_squad and (
+        objective_family or enough_record_breadth or high_international_record
+    ):
+        return max(base_weight, PROJECTED_OBJECTIVE_MATERIAL_WEIGHT)
+    return base_weight
+
 
 def _load_career_stature(output_dir: Path) -> dict[str, dict]:
-    """player_id -> FULL career-stature-4.0.0 row (merit-v4).
+    """player_id -> FULL career-stature-4.1.0 row (merit-v4.1).
 
     V3 retires the V1 rating-compat pin: the projected stage now consumes the
     same full v3 person-identity rows as the historical wc-perf-5.0.0 stage —
@@ -204,6 +304,7 @@ def _projected_active_stature_cap(cs: dict | None) -> float | None:
 # recognized stature: the down-cap is tightest at the gold tier (a gold legend's
 # weak projected context dips at most DOWN_CAP["gold"] below their stature target).
 PROJECTED_MOD_GAIN: dict[str, float] = {"FW": 0.40, "MF": 0.40, "DF": 0.35, "GK": 0.30}
+PROJECTED_MATERIAL_UP_CAP_SNAP_EPSILON = 0.005
 
 
 def _historical_raw_only_internal(output_dir: Path) -> list[float]:
@@ -286,7 +387,7 @@ def _raw_only_quantile_map(
 
 
 def _projected_modulation(
-    projected_raw: float, projected_ref: float, pos: str, tier: str | None
+    projected_raw: float, projected_ref: float, pos: str, tier: str | None, material_weight: float
 ) -> float:
     """Signed, bounded projected-context modulation around the stature target —
     the 2026 analog of rating._tournament_modulation. Positive when the card's
@@ -295,7 +396,14 @@ def _projected_modulation(
     delta = projected_raw - projected_ref
     down_cap = TOURNAMENT_DOWN_CAP[pos][tier or "bronze"]
     up_cap = TOURNAMENT_UP_CAP[pos]
-    return max(-down_cap, min(up_cap, PROJECTED_MOD_GAIN[pos] * delta))
+    scaled = PROJECTED_MOD_GAIN[pos] * delta
+    if (
+        material_weight >= 1.0
+        and scaled > 0.0
+        and up_cap - scaled <= PROJECTED_MATERIAL_UP_CAP_SNAP_EPSILON
+    ):
+        scaled = up_cap
+    return max(-down_cap, min(up_cap, scaled))
 
 
 def _league_score(club_nation_code: str | None) -> float | None:
@@ -575,13 +683,14 @@ def _build_internal_rows(
             if link_status in ("linked", "minted")
             else None
         )
-        weight = _stature_model_weight(cs)
+        base_weight = _stature_model_weight(cs)
+        weight = _projected_objective_record_weight(cs, base_weight, c["nation_id"])
         ref = _projected_ref(pos, s["projected_raw"])
         if cs is not None:
             index = cs["career_stature_index"]
             tier = cs.get("stature_tier")
             target = _stature_target(pos, index)
-            modulation = _projected_modulation(s["projected_raw"], ref, pos, tier)
+            modulation = _projected_modulation(s["projected_raw"], ref, pos, tier, weight)
             uncapped_stature_path = _clamp01(target + modulation)
             active_stature_cap = _projected_active_stature_cap(cs)
             stature_path = (
@@ -597,6 +706,7 @@ def _build_internal_rows(
             stature_path = 0.0
         s["link_status"] = link_status
         s["cs"] = cs
+        s["base_weight"] = base_weight
         s["weight"] = weight
         s["ref"] = ref
         s["target"] = target
@@ -769,6 +879,11 @@ def _build_internal_rows(
                     max(0.0, s["uncapped_stature_path"] - s["stature_path"]),
                     _PRECISION,
                 ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "projected_objective_record_path",
+                "value": 1.0 if weight > s["base_weight"] else 0.0,
                 "weight": 0.0,
             },
             {"signal": "stature_model_weight", "value": round(weight, _PRECISION), "weight": 1.0},

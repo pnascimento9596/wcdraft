@@ -1193,6 +1193,20 @@
       "primary_channel_before": 64
     },
     {
+      "card_id": "P-49502:WC-1998",
+      "career_coverage": 0.78,
+      "career_stature_score": 0.523726,
+      "delta_overall": 10,
+      "delta_primary_channel": 33,
+      "overall_after": 95,
+      "overall_before": 85,
+      "player_id": "P-49502",
+      "position": "DF",
+      "primary_channel": "defense",
+      "primary_channel_after": 92,
+      "primary_channel_before": 59
+    },
+    {
       "card_id": "P-54036:WC-2014",
       "career_coverage": null,
       "career_stature_score": null,
@@ -1233,20 +1247,6 @@
       "primary_channel": "goalkeeping",
       "primary_channel_after": 61,
       "primary_channel_before": 94
-    },
-    {
-      "card_id": "P-49502:WC-1998",
-      "career_coverage": 0.78,
-      "career_stature_score": 0.523726,
-      "delta_overall": 9,
-      "delta_primary_channel": 33,
-      "overall_after": 95,
-      "overall_before": 86,
-      "player_id": "P-49502",
-      "position": "DF",
-      "primary_channel": "defense",
-      "primary_channel_after": 92,
-      "primary_channel_before": 59
     },
     {
       "card_id": "P-53255:WC-1954",
@@ -13923,5 +13923,5 @@
     "abs_delta_overall_min": 8,
     "abs_delta_primary_channel_min": 10
   },
-  "version": "career-stature-4.0.0"
+  "version": "career-stature-4.1.0"
 }

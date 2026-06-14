@@ -1,22 +1,21 @@
-# wcdraft Player Rating — Methodology (`wc-perf-6.0.0`)
+# wcdraft Player Rating — Methodology (`wc-perf-6.1.0`)
 
-> **wc-perf-6.0.0 / proj-career-5.0.0 / career-stature-4.0.0
-> (merit-v4):** this rebuild keeps the stature-dominant formula family but
-> changes two load-bearing factual priors. First, raw-only ceilings are no
-> longer the flat `0.62` global cap: they are derived per `(tournament, nation)`
-> from World Football Elo tournament-start rank plus official FIFA ranking
-> where available, then mapped through a smooth public-team-strength curve
-> (`0.500` to `0.625`). This removes the exact `62.0` raw-only pile while
-> preserving an overcomable ceiling for players from weaker national teams.
-> Second, objective `club_honors` is active and evidence-gated for public,
-> non-voting club achievement facts (major club trophies, continental club
-> titles, league top scorer, world-record/era-defining transfer facts). Fan votes and proprietary ratings
-> remain excluded. merit-v4 also refits λ because the strategic-pick canary
-> flipped after the rating/channel movement; runtime stamp is
-> `engine-2026.06.13-merit-v4`. Measured emitted counts: 10,973 historical
-> rows + 1,246 projected rows = 12,219 runtime ratings; top-level Career basis
-> counts are `measured_performance=11,328`,
-> `career_stature_estimate=505`, `baseline_anchor_estimate=386`; compact
+> **wc-perf-6.1.0 / proj-career-5.1.0 / career-stature-4.1.0
+> (merit-v4.1):** historical tournament scoring keeps the merit-v4
+> stature-dominant formula family, but the replay anchor moves because the
+> source-derived career-stature table, unified display fit, and engine season
+> move together. The active source set expands objective-achievement staging
+> for under-covered active 2026 players, and the projected model changes the
+> league-of-employment prior from a dominant pre-tournament anchor into a
+> smooth, overcomable quality input. Citation-backed active objective records
+> can open a projected-only stature path for under-covered AFC/CAF/CONCACAF
+> standouts without changing the completed-career all-time material gate. Fan
+> votes and proprietary ratings remain excluded. merit-v4.1 also refits λ
+> because the strategic-pick canary moved after the rating/channel movement;
+> runtime stamp is `engine-2026.06.14-merit-v4.1`. Measured emitted counts:
+> 10,973 historical rows + 1,246 projected rows = 12,219 runtime ratings;
+> top-level Career basis counts are `measured_performance=11,292`,
+> `career_stature_estimate=541`, `baseline_anchor_estimate=386`; compact
 > legend census is 295.
 >
 > **wc-perf-4.2.1 (basis-gate stature alignment):** the internal merit model, the
@@ -317,10 +316,11 @@ curve drives ``overall`` ONLY. The four sim channels stay on the
 pre-recalibration ``[FLOOR_CHANNEL, 100]`` band so the engine's λ
 stays calibrated to the engine's full attack-minus-defense range. When
 semantic rating changes move the internal scores/channels, lambda must be
-re-fit before realism bands are re-locked; merit-v4 did that and stamps the
-result as `engine-2026.06.13-merit-v4`.
+re-fit before realism bands are re-locked; merit-v4 and merit-v4.1 both did
+that, with merit-v4.1 stamping the result as
+`engine-2026.06.14-merit-v4.1`.
 
-## Stature-dominant composite (`wc-perf-6.0.0`)
+## Stature-dominant composite (`wc-perf-6.1.0`)
 
 `wc-perf-3.0.0`'s capped-lift design (raw was the base, stature could only
 ADD a positive, capped fraction of the gap) is **removed**: there is no
@@ -348,7 +348,7 @@ score          = clamp01( stature_weight * stature_path
 ```
 
 `career_stature_index` and `coverage` come from `etl/output/career_stature.json`
-(`career-stature-4.0.0`, 845 person-identity rows, 209 material rows,
+(`career-stature-4.1.0`, 847 person-identity rows, 209 material rows,
 114 source-derived legend rows, active-career facts, eligibility
 normalization, sparse-fact saturation, club-season honors, and objective
 club-honors facts over the locked merit source sets). The blend **ramps continuously** from
@@ -389,17 +389,17 @@ score/coverage/index in `components[]`. Managers remain rating-unavailable.
 There is **no per-player override table** — every blend is the same formula
 over the same public facts.
 
-## `overall_basis` semantics (`wc-perf-6.0.0`)
+## `overall_basis` semantics (`wc-perf-6.1.0`)
 
 The three-label split now describes the Career compatibility surface emitted
 in top-level `ratings[]`; `basis_ratings.current` carries its own basis label
 for the at-tournament path.
 
-- **`measured_performance`** (11,328 runtime cards: 10,107 historical + 1,221 projected) — the card had at least one
+- **`measured_performance`** (11,292 runtime cards: 10,107 historical + 1,185 projected) — the card had at least one
   positively-weighted individual signal (goals for FW/MF, appearances for
   any position), or a projected raw path in 2026. The vast majority of cards,
   including the pre-1970 cards whose appearances came from the RSSSF supplement.
-- **`career_stature_estimate`** (505 runtime cards: 480 historical + 25 projected) — the
+- **`career_stature_estimate`** (541 runtime cards: 480 historical + 61 projected) — the
   player's career row is material and the stature path dominates the Career
   blend (`stature_weight ≥ STATURE_DOMINANT_WEIGHT`). This can apply even when
   the card has measured tournament signals: the label reports what primarily
@@ -421,7 +421,7 @@ for the at-tournament path.
 > `stature_model_weight ≥ STATURE_DOMINANT_WEIGHT ⇔ career_stature_estimate`
 > for no-signal cards.
 
-## 2026 reconcile (`proj-career-5.0.0`, merit-v4)
+## 2026 reconcile (`proj-career-5.1.0`, merit-v4.1)
 
 The 2026 rating model (`etl/src/wcdraft_etl/rating_2026.py`) shares the
 stature-dominant scale with the historical model:
@@ -433,6 +433,17 @@ stature-dominant scale with the historical model:
 - **Age-conditioned evidence** replaces all-age caps/goals percentiles and
   removes the former `age_factor`; youth no longer gets punished once by
   all-age accumulation and again by an age multiplier.
+- **League-of-employment strength** remains present but is no longer a
+  dominant pre-tournament prior: `FW/MF/DF/GK` weights move from
+  `0.31/0.34/0.31/0.28` to `0.18/0.20/0.18/0.16`, so objective individual
+  record can overcome club-league context while ordinary weak-league players
+  still stay on the measured raw path.
+- **Projected objective-record material entry** is 2026-only and conservative.
+  It requires a linked career-stature row with minimum coverage/index plus
+  active current facts or membership in the under-covered AFC/CAF/CONCACAF
+  2026 squad set, and it is limited to citation-backed objective families
+  such as continental club titles, continental/international objective awards,
+  captaincy, and high caps/goals records. Ambiguous names stay withheld.
 - **Non-material 2026 cards** are placed onto the historical raw-only
   internal distribution via an **empirical quantile map**
   (`_raw_only_quantile_map`): the card's percentile within the 2026
@@ -451,7 +462,7 @@ formula is the SAME stature-dominant blend used historically — including
 the continuity ramp through the material band. The Current basis is the
 age-conditioned projected raw path with no career-stature blend.
 
-## Unified display curve (`wc-perf-6.0.0` — merit-v4 curve)
+## Unified display curve (`wc-perf-6.1.0` — merit-v4.1 curve)
 
 Phase 1 introduced one global low-DOF monotonic curve on the four internal
 quantiles of the emitted dataset (min, p50, p95, max → 66, 73, 88, 99) — the
@@ -464,12 +475,13 @@ MV2-5 made the two internal scales cross-era fair (2026 non-material cards
 quantile-mapped onto the historical raw-only distribution), so one pooled
 curve is the honest mapping — no per-era table, no per-player pin.
 
-For merit-v4 the curve kind is
+For merit-v4.1 the curve kind is
 `unified_pooled_piecewise_power_v2`, fit over the union of both bases'
 internal pools (historical Career + historical Current + projected Career +
-projected Current; n=24,438). The 2026 cards (`proj-career-5.0.0`) ship
-through the same unified curve. merit-v4 refits against the new national-strength
-and club-honors distribution without introducing a per-player map. This remains a display-`overall` mapping;
+projected Current; n=24,438). The 2026 cards (`proj-career-5.1.0`) ship
+through the same unified curve. merit-v4.1 refits against the expanded
+objective-record and smoothed-prior distribution without introducing a
+per-player map. This remains a display-`overall` mapping;
 the sim channels are still derived from internal scores, not from the
 display curve.
 
@@ -480,7 +492,7 @@ A `baseline_anchor_estimate` is always `< 1.0`. Low-coverage ratings are
 **flagged, not faked**. `coverage_basis = "wc_signals"`,
 `provenance = "wc_performance"`, `appearances_source` records the appearance
 origin (`fjelstul_match_events` / `rsssf_starting_xi` / `null`), and
-`rating_version = "wc-perf-6.0.0"` (a replay anchor — bump on any change to
+`rating_version = "wc-perf-6.1.0"` (a replay anchor — bump on any change to
 weights, normalization, the display curve, the stature-dominant blend, or
 the source set).
 
@@ -524,7 +536,7 @@ Guarded by `etl/tests/test_rating.py` — the Phase 1 acceptance suite:
 CI additionally regenerates the artifact and enforces that the tracked lockfile
 does not drift after a clean rebuild.
 
-## Sanity bands (asserted, not eyeballed — `wc-perf-6.0.0` display scale)
+## Sanity bands (asserted, not eyeballed — `wc-perf-6.1.0` display scale)
 
 | Card | overall | Band rationale |
 |---|---|---|
@@ -542,6 +554,24 @@ Estimate-tier cards (`baseline_anchor_estimate`) land in `[66, 73]` on overall.
 Their sim channels remain on the `[FLOOR_CHANNEL, 100]` channel scale described
 above and naturally sit near the floor because the underlying merit signal is
 low. The estimate band is a display-overall promise, not a channel clamp.
+
+## Migration & versioning (merit-v4.1)
+
+- Historical `rating_version`: `wc-perf-6.0.0` -> `wc-perf-6.1.0`.
+- Projected 2026 `rating_version`: `proj-career-5.0.0` ->
+  `proj-career-5.1.0`.
+- `career_stature.json`: `career-stature-4.0.0` ->
+  `career-stature-4.1.0`; source set remains `merit-source-set-2.2.0`;
+  active source set moves to `active-career-source-set-2.2.0`.
+- Runtime data schema: `runtime-data-2.2.0` -> `runtime-data-2.3.0`.
+- Sim `engine_version`: `engine-2026.06.13-merit-v4` ->
+  `engine-2026.06.14-merit-v4.1` after the λ refit documented in
+  `packages/core/SIM_CALIBRATION.md`.
+- Compact candidate counts: 12,219 ratings, 295 runtime legends,
+  541 Career `career_stature_estimate`, 386 Career `baseline_anchor_estimate`,
+  1,436,160 total brotli bytes.
+- Strategic-pick canary was regenerated with 2 documented pick flips after
+  the rating/channel movement.
 
 ## Migration & versioning (merit-v4)
 

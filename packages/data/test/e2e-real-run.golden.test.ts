@@ -48,8 +48,8 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-// :29 remains the first satisfying seed after the merit-v4 rating rebuild and
-// lambda refit (`engine-2026.06.13-merit-v4`). Same search criteria, same
+// :29 remains the first satisfying seed after the merit-v4.1 rating rebuild and
+// lambda refit (`engine-2026.06.14-merit-v4.1`). Same search criteria, same
 // prefix — see scripts/generate-e2e-golden.mjs.
 const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:29";
 const RUN_SEED = PARENT_SEED;
