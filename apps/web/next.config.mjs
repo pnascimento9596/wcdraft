@@ -10,6 +10,25 @@ const nextConfig = {
    */
   async headers() {
     return [
+      // Global security response headers. HSTS is intentionally omitted — the
+      // Vercel platform already sets `Strict-Transport-Security: max-age=63072000`
+      // on every response, and emitting a second value here would duplicate it.
+      // A full Content-Security-Policy is deferred (it needs careful allowances
+      // for next/font, the next/og Satori path, and the theme inline script);
+      // `X-Frame-Options: DENY` covers the clickjacking case the CSRF design
+      // (lib/auth/csrf.ts) explicitly assumes until a scoped CSP lands.
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+        ],
+      },
       {
         source: "/sw.js",
         headers: [
