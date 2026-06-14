@@ -1,5 +1,5 @@
 // F-4 U3 — POST /api/leaderboard/submit handler tests over PGlite at the
-// 0004 schema shape + the REAL committed bundles (golden fixture tokens).
+// 0004 schema shape + the REAL generated locked bundles (golden fixture tokens).
 //
 // Coverage per the Red gate:
 //   - transport gates: content-type, declared/actual size, malformed JSON

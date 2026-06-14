@@ -71,6 +71,20 @@ jobs:
             exit 1
           fi
 
+      - name: Run historical rating stage
+        # ratings.json is regenerated, not tracked; ratings.lock.json is the
+        # tracked deterministic fingerprint that must remain byte-stable.
+        working-directory: ${{ github.workspace }}
+        run: python -m wcdraft_etl.rating
+
+      - name: Historical rating determinism lock current
+        working-directory: ${{ github.workspace }}
+        run: |
+          if ! git diff --exit-code -- etl/output/ratings.lock.json; then
+            echo "::error::etl/output/ratings.lock.json changed after a clean rebuild — run 'python -m wcdraft_etl.rating' and commit the lockfile." >&2
+            exit 1
+          fi
+
       - name: Run 2026 ingest (offline — pinned Wikipedia snapshots, no network)
         # Reads the committed canonical tables (just regenerated) + the pinned
         # CC-BY-SA Wikipedia snapshots in etl/sources/wikipedia_2026/.

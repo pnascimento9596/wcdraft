@@ -87,7 +87,7 @@ function serverDraftPool(): DraftPoolBundle {
 }
 
 /**
- * Server-shaped `GameData` over the committed compact bundles. Mirrors the
+ * Server-shaped `GameData` over the generated locked compact bundles. Mirrors the
  * e2e golden construction (`packages/data/test/e2e-real-run.golden.test.ts`)
  * field-for-field. Fresh build per call — production callers go through the
  * memoized `getValidationData()`.
@@ -135,8 +135,6 @@ let cachedSeasonKey: string | null = null;
  * Light: composes versions from the manifest only; no catalog build.
  */
 export function currentSeasonKey(): string {
-  cachedSeasonKey ??= deriveSeasonKey(
-    composeVersions(serverManifest()),
-  );
+  cachedSeasonKey ??= deriveSeasonKey(composeVersions(serverManifest()));
   return cachedSeasonKey;
 }

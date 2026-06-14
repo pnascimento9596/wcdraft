@@ -11,7 +11,7 @@
 // in a result-spotlight post therefore matches what the live app shows for the
 // same share token, or it is not posted.
 //
-// The data comes straight from the committed compact bundle (@wcdraft/data),
+// The data comes straight from the generated locked compact bundle (@wcdraft/data),
 // the same bytes the app ships, so a record produced here is the record a
 // player sees.
 

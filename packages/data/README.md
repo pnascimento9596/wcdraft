@@ -13,9 +13,11 @@ browser and Node consumers.
 
 ## Bundles
 
-All artifacts live in `src/generated/` (committed) and are mirrored to
+Artifacts live in `src/generated/` and are mirrored to
 `apps/web/public/data/wcdraft/` by `scripts/copy-web-assets.mjs` so Next.js
-can serve them as static assets.
+can serve them as static assets. The manifest, scenario bundle, and compact-size
+report are tracked; the oversized draft pool is regenerated on demand and locked
+by the tracked manifest/report fingerprints.
 
 | File | Shape | Purpose |
 |------|-------|---------|
@@ -51,7 +53,9 @@ service-worker cache + persisted `RunRecord`s must be evicted.
 
 ## Determinism guarantees
 
-- The builder reads only committed inputs (`etl/output/*.json`).
+- The builder reads deterministic ETL outputs under `etl/output/`. The oversized
+  historical `ratings.json` is regenerated on demand from committed canonical
+  ETL tables and locked by `etl/output/ratings.lock.json`.
 - JSON is serialised with sort-by-key at every depth; arrays are
   canonically sorted at the source (cards by `card_id`, managers by
   `manager_card_id`, teams by `team_id`, groups by `group_id`, slots by
@@ -70,10 +74,11 @@ service-worker cache + persisted `RunRecord`s must be evicted.
 - The builder FAILS LOUDLY on any tournament_id not matching `WC-YYYY`,
   any draftable card with no rating, any team with an unknown nation, any
   squad card id pointing outside the emitted pool, or any historical
-  `baseline_anchor_estimate` count other than 388.
+  `baseline_anchor_estimate` count other than 386.
 
 Two runs of `pnpm --filter @wcdraft/data run build:compact` produce
-byte-identical files. The golden test enforces this.
+byte-identical files. The golden test enforces this against the tracked
+fingerprints.
 
 ## Honest state, preserved on the runtime layer
 
@@ -82,10 +87,10 @@ byte-identical files. The golden test enforces this.
 `club_at_tournament` — every nullable upstream field stays `null` when the
 source did not record it. **NEVER coerced to `0`.**
 
-`RuntimeRating.overall_basis === "baseline_anchor_estimate"` flags the 387
+`RuntimeRating.overall_basis === "baseline_anchor_estimate"` flags the 386
 historical cards whose `overall` came from an era-anchor estimate instead
 of measured tournament performance. `overall_basis === "career_stature_estimate"`
-flags the 485 historical cards (MV2-4.1) where the player has a clearly
+flags the 505 historical cards where the player has a clearly
 material career stature but no individual tournament signal on this card.
 UI surfaces both as coverage badges — the number is never rendered as a
 measured value.
@@ -94,7 +99,7 @@ measured value.
 > per-card `overall_basis` field is emitted by the ETL on `ratings_2026.json`
 > but is **NOT** carried through to `RuntimeRating` on 2026 cards in the
 > compact bundles. The field is shipped **historical-only**: the 2026
-> rating model (`proj-career-3.0.0`) draws every card on the
+> rating model (`proj-career-5.0.0`) draws every card on the
 > linked-stature / quantile-mapped raw path with no honest-state estimate
 > tier, so the runtime contract intentionally omits it. The integrity
 > tests assert the historical count is exact (387) and do not assert the
@@ -150,13 +155,16 @@ perturbed.** Compact bundles are redistributed under CC-BY-SA 4.0
 ## Regeneration workflow
 
 ```sh
-# 1. Rebuild the compact bundles from the committed ETL output.
+# 1. Ensure oversized generated ETL/runtime artifacts exist and match locks.
+pnpm run check:generated
+
+# 2. Rebuild the compact bundles from deterministic ETL output.
 pnpm --filter @wcdraft/data run build:compact
 
-# 2. Mirror them into apps/web (also runs automatically pre-build).
+# 3. Mirror them into apps/web (also runs automatically pre-build).
 pnpm --filter @wcdraft/data run copy:web-assets
 
-# 3. Validate (determinism + size budget + schema integrity).
+# 4. Validate (determinism + size budget + schema integrity).
 pnpm --filter @wcdraft/data run test
 ```
 

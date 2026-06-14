@@ -1,8 +1,9 @@
 // Determinism + size-budget gate for the compact runtime bundles.
 //
 // Re-runs the deterministic builder into a temp directory and asserts:
-//   1. byte-identical output vs the committed `src/generated/*.json` (so a
-//      drift in the builder, the input data, or the sort logic fails CI);
+//   1. byte-identical output vs the generated `src/generated/*.json` artifacts
+//      (the largest blob is regenerated on demand and locked by manifest/report
+//      fingerprints, so drift in the builder, inputs, or sort logic fails CI);
 //   2. each bundle's normalized brotli-compressed size stays under the budget
 //      committed in `size-budget.json` (measured-then-committed brotli + 15%
 //      headroom);
@@ -26,7 +27,7 @@ import type { RuntimeDataManifest } from "../src/types.js";
 
 const TEST_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_DIR = path.resolve(TEST_DIR, "..");
-const COMMITTED_DIR = path.join(PACKAGE_DIR, "src", "generated");
+const GENERATED_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const SCRIPT_PATH = path.join(PACKAGE_DIR, "scripts", "build-compact-data.mjs");
 const BUDGET_PATH = path.join(PACKAGE_DIR, "size-budget.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
@@ -78,26 +79,25 @@ function measuredFingerprint(
 describe("compact-data golden", () => {
   let tmpDir: string;
   let rebuilt: Record<string, Buffer>;
-  let committed: Record<string, Buffer>;
-  let committedFingerprints: SizeReport["bundles"];
+  let generated: Record<string, Buffer>;
+  let generatedFingerprints: SizeReport["bundles"];
 
   beforeAll(() => {
     tmpDir = mkdtempSync(path.join(tmpdir(), "wcdraft-data-golden-"));
-    const result = spawnSync(
-      process.execPath,
-      [SCRIPT_PATH, "--out-dir", tmpDir],
-      { stdio: ["ignore", "pipe", "pipe"], encoding: "utf8" },
-    );
+    const result = spawnSync(process.execPath, [SCRIPT_PATH, "--out-dir", tmpDir], {
+      stdio: ["ignore", "pipe", "pipe"],
+      encoding: "utf8",
+    });
     if (result.status !== 0) {
       throw new Error(
         `build-compact-data exited ${result.status}. stderr:\n${result.stderr}\nstdout:\n${result.stdout}`,
       );
     }
     rebuilt = Object.fromEntries(BUNDLE_FILES.map((f) => [f, readFileSync(path.join(tmpDir, f))]));
-    committed = Object.fromEntries(
-      BUNDLE_FILES.map((f) => [f, readFileSync(path.join(COMMITTED_DIR, f))]),
+    generated = Object.fromEntries(
+      BUNDLE_FILES.map((f) => [f, readFileSync(path.join(GENERATED_DIR, f))]),
     );
-    committedFingerprints = Object.fromEntries(
+    generatedFingerprints = Object.fromEntries(
       BUNDLE_FILES.map((f) => [
         f === "draft-pool.compact.json"
           ? "draft_pool"
@@ -106,9 +106,9 @@ describe("compact-data golden", () => {
             : "manifest",
         {
           path: f,
-          bytes: committed[f]!.length,
-          sha256: sha256Hex(committed[f]!),
-          bytes_brotli: brotliLen(committed[f]!),
+          bytes: generated[f]!.length,
+          sha256: sha256Hex(generated[f]!),
+          bytes_brotli: brotliLen(generated[f]!),
           bytes_gzip: 0,
         },
       ]),
@@ -120,23 +120,25 @@ describe("compact-data golden", () => {
   });
 
   it.each(BUNDLE_FILES)(
-    "rebuilds %s byte-identical to the committed artifact (two-build hash stability)",
+    "rebuilds %s byte-identical to the generated locked artifact (two-build hash stability)",
     (file) => {
-      const a = sha256Hex(committed[file]!);
+      const a = sha256Hex(generated[file]!);
       const b = sha256Hex(rebuilt[file]!);
-      expect(b, `${file} rebuild diverged from the committed bytes`).toBe(a);
+      expect(b, `${file} rebuild diverged from the generated locked bytes`).toBe(a);
     },
   );
 
   it("manifest fingerprints match the on-disk bundle bytes (no manifest-vs-bundle skew)", () => {
-    const manifest = JSON.parse(committed["manifest.json"]!.toString("utf8")) as RuntimeDataManifest;
+    const manifest = JSON.parse(
+      generated["manifest.json"]!.toString("utf8"),
+    ) as RuntimeDataManifest;
     for (const [key, bundlePath] of [
       ["draft_pool", "draft-pool.compact.json"] as const,
       ["scenario_2026", "scenario-2026.compact.json"] as const,
     ]) {
       const fp = manifest.bundles[key];
-      const onDisk = committed[bundlePath]!;
-      const measured = measuredFingerprint(committedFingerprints, key);
+      const onDisk = generated[bundlePath]!;
+      const measured = measuredFingerprint(generatedFingerprints, key);
       expect(fp.path).toBe(bundlePath);
       expect(fp.bytes, `${key} bytes`).toBe(onDisk.length);
       expect(fp.sha256, `${key} sha256`).toBe(measured.sha256);
@@ -149,7 +151,7 @@ describe("compact-data golden", () => {
     let totalMeasured = 0;
     for (const [key, { max_bytes_brotli }] of Object.entries(budget.bundles)) {
       const measured = measuredFingerprint(
-        committedFingerprints,
+        generatedFingerprints,
         key as keyof SizeReport["bundles"],
       ).bytes_brotli;
       totalMeasured += measured;
@@ -164,16 +166,16 @@ describe("compact-data golden", () => {
     ).toBeLessThanOrEqual(budget.total_max_bytes_brotli);
   });
 
-  it("committed reports/compact-size.json matches the live measurement", () => {
+  it("tracked reports/compact-size.json matches the live measurement", () => {
     const report = JSON.parse(readFileSync(SIZE_REPORT_PATH, "utf8")) as SizeReport;
     for (const [key, bundlePath] of [
       ["draft_pool", "draft-pool.compact.json"] as const,
       ["scenario_2026", "scenario-2026.compact.json"] as const,
       ["manifest", "manifest.json"] as const,
     ]) {
-      const bytes = committed[bundlePath]!;
+      const bytes = generated[bundlePath]!;
       const fp = report.bundles[key];
-      const measured = measuredFingerprint(committedFingerprints, key);
+      const measured = measuredFingerprint(generatedFingerprints, key);
       expect(fp).toBeDefined();
       expect(fp!.path).toBe(bundlePath);
       expect(fp!.bytes, `${key} report bytes`).toBe(bytes.length);
