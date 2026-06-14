@@ -1,6 +1,6 @@
 // I3.6 — real-data end-to-end determinism golden.
 //
-// Loads the committed compact bundles, drives the full pipeline:
+// Loads the generated locked compact bundles, drives the full pipeline:
 //   real DraftPoolBundle  → DraftCatalog
 //                         → autoDraft (deterministic, fixed seed)
 //                         → buildRunScenario (real Bracket2026 + Team2026[])

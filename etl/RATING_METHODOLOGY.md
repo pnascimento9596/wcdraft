@@ -143,8 +143,9 @@ exclusion is surfaced, not silent.
    and stay on the pre-recal `[FLOOR_CHANNEL, 100]` band; they are NOT
    passed through the display curve.
 
-This is deterministic: same canonical input → same internal scores → same
-fitted curve anchors → byte-identical `ratings.json`.
+This is deterministic: same canonical input -> same internal scores -> same
+fitted curve anchors -> byte-identical `ratings.json`, with the oversized file
+locked by `etl/output/ratings.lock.json` rather than tracked by normal git.
 
 ## The internal merit formula
 
@@ -499,10 +500,11 @@ emitted row alone, with no `_career_lift` field anywhere.
 
 ## Determinism & validation
 
-Fixed canonical input → byte-identical `etl/output/ratings.json`. Guarded by
-`etl/tests/test_rating.py` — the Phase 1 acceptance suite:
+Fixed canonical input -> byte-identical `etl/output/ratings.json`, locked by
+the tracked `etl/output/ratings.lock.json` sha256/byte-count fingerprint.
+Guarded by `etl/tests/test_rating.py` — the Phase 1 acceptance suite:
 
-- determinism + committed-golden equality + sorted rows + schema bounds
+- determinism + tracked-lock equality + sorted rows + schema bounds
 - **distribution shape** (floor 66, median ~73, p95 ~88, max 99, no 100s,
   thin elite tail)
 - **low-DOF curve guard** (3 exponents, 4 measured anchors, no per-player map)
@@ -519,8 +521,8 @@ Fixed canonical input → byte-identical `etl/output/ratings.json`. Guarded by
   `fifa-ratings`, `easports`, `pro evolution soccer`, `efootball`, etc., in
   `etl/sources/` and `etl/supplement/raw/`
 
-CI additionally enforces byte identity with `git diff --exit-code` after a
-clean rebuild.
+CI additionally regenerates the artifact and enforces that the tracked lockfile
+does not drift after a clean rebuild.
 
 ## Sanity bands (asserted, not eyeballed — `wc-perf-6.0.0` display scale)
 

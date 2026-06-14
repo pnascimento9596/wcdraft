@@ -154,5 +154,8 @@ Regression guards that must pass in CI:
 
 Same input commit → identical output bytes (verified byte-identical across
 Python 3.11/pandas 2.2 and 3.14/pandas 3.0). CI rebuilds and runs
-`git diff --exit-code -- etl/output`, so committed artifacts can never silently
-drift from the source.
+`git diff --exit-code -- etl/output` for tracked ETL artifacts. The oversized
+historical `ratings.json` is regenerated on demand by
+`python -m wcdraft_etl.rating` and locked by the tracked
+`etl/output/ratings.lock.json` sha256/byte-count fingerprint, so it can stay out
+of normal git without weakening determinism checks.

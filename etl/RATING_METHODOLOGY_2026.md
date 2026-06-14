@@ -55,7 +55,7 @@ not a replacement.
 > count is no longer 0. Minted / unlinked / ambiguous / linked-but-below-material
 > players **never** consult career stature and stay on the honest projected raw
 > path, with the projected raw composite **quantile-mapped onto the historical
-> raw-only internal distribution** (read read-only from the committed `ratings.json`)
+> raw-only internal distribution** (read read-only from the generated, lockfile-pinned `ratings.json`)
 > so a strong-caps-plus-top-league role player **cannot** occupy the recognized-
 > greats / legend band on the projection alone (the fix for the spurious OVR-99
 > projected MF cards) **and** a 2026 reserve lands at the same internal score as a

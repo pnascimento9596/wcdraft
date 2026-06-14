@@ -1,13 +1,11 @@
 #!/usr/bin/env node
-// Copies the committed compact bundles into `apps/web/public/data/wcdraft/`
-// so Next.js serves them as static assets. Runs as a pre-build step from
-// `apps/web/package.json`.
-//
-// IMPORTANT: this script does NOT regenerate the bundles. It only copies
-// the committed artifacts in `packages/data/src/generated/`. Regeneration
-// runs via `pnpm --filter @wcdraft/data run build:compact` and is gated
-// by the data golden tests.
+// Copies the compact bundles into `apps/web/public/data/wcdraft/` so Next.js
+// serves them as static assets. Runs as a pre-build step from
+// `apps/web/package.json`; the default source is generated on demand from the
+// tracked fingerprints because the largest bundle is intentionally not tracked
+// by normal git.
 
+import { spawnSync } from "node:child_process";
 import { copyFile, mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,11 +17,25 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_SOURCE_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const DEFAULT_TARGET_DIR = path.join(REPO_ROOT, "apps", "web", "public", "data", "wcdraft");
 
-const EXPECTED_FILES = [
-  "manifest.json",
-  "draft-pool.compact.json",
-  "scenario-2026.compact.json",
-];
+const EXPECTED_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
+
+function ensureDefaultSourceGenerated(sourceDir) {
+  if (path.resolve(sourceDir) !== DEFAULT_SOURCE_DIR) return;
+  const result = spawnSync(
+    process.execPath,
+    [path.join(SCRIPT_DIR, "ensure-generated-artifacts.mjs")],
+    {
+      cwd: REPO_ROOT,
+      stdio: "inherit",
+    },
+  );
+  if (result.error) {
+    throw new Error(`failed to start generated-artifact check: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    throw new Error(`generated-artifact check exited ${result.status ?? "without a status"}`);
+  }
+}
 
 function parseArgs(argv) {
   const out = { sourceDir: DEFAULT_SOURCE_DIR, targetDir: DEFAULT_TARGET_DIR };
@@ -48,12 +60,13 @@ function parseArgs(argv) {
 
 async function main() {
   const { sourceDir, targetDir } = parseArgs(process.argv.slice(2));
+  ensureDefaultSourceGenerated(sourceDir);
 
   const present = new Set(await readdir(sourceDir));
   const missing = EXPECTED_FILES.filter((f) => !present.has(f));
   if (missing.length > 0) {
     throw new Error(
-      `copy-web-assets: missing committed bundles in ${sourceDir}: ${missing.join(", ")}. ` +
+      `copy-web-assets: missing generated bundles in ${sourceDir}: ${missing.join(", ")}. ` +
         `Run \`pnpm --filter @wcdraft/data run build:compact\` to regenerate.`,
     );
   }

@@ -40,7 +40,7 @@ any commit pushed after approval voids it — re-verify, re-pin.
   the golden embeds `rating_version`) and prove pick equality (zero pick flips).
 - λ re-fit (engine calibration) BEFORE re-locking realism bands; never re-lock bands to
   make a red gate pass.
-- Licensing/terminology guardrails live in the Codex.ai Project Instructions: no
+- Licensing/terminology guardrails live in the project instructions: no
   fan-vote/proprietary-ratings ingestion; terminology is "Synergy" (not Chemistry),
   "manager" (not coach), "football" — no FIFA branding on shipped surfaces.
 - ETL is deterministic: committed `etl/output/*` must be byte-stable after a clean rebuild;
