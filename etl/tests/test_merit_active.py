@@ -1,7 +1,7 @@
 """MV2-12a / merit-v3 V1 active-career intake: citation discipline,
 conservative dual-space linking, determinism, the SHA-pin, and the explicit
 activation seam: active.py still emits facts + identity only, while
-career-stature-4.0.0 consumes those facts through stature.py.
+career-stature-4.1.0 consumes those facts through stature.py.
 
 Self-contained: reads the committed canonical JSON in ``etl/output/`` plus the
 committed snapshots/notes under ``etl/merit/raw/``.
@@ -166,7 +166,7 @@ def test_staged_entries_carry_no_score_index_tier_or_legend(abuilt):
         "family_scores",
         "family_weights",
     }
-    assert abuilt["staging_doc"]["activated_by"] == "career-stature-4.0.0"
+    assert abuilt["staging_doc"]["activated_by"] == "career-stature-4.1.0"
     for e in abuilt["entries"]:
         assert not forbidden & set(e), e["player_id"]
 
@@ -212,13 +212,18 @@ def test_club_season_honors_census_matches_scope_and_registry(abuilt):
         for f in abuilt["facts"]
         if f["source_id"] == "active_club_season_honors"
     }
-    assert len(scope_ids) == 26
+    assert len(scope_ids) == 27
     assert club_source_entry_ids <= scope_ids
     assert {
         p["player_id"]
         for p in census["scope"]
         if p["scope_reason"] == "v1_club_season_honors_addition"
     } == {"P-05174", "P-62341", "P-92812"}
+    assert {
+        p["player_id"]
+        for p in census["scope"]
+        if p["scope_reason"] == "merit_v4_1_objective_achievement_addition"
+    } == {"P-70583"}
     assert {c["confederation"] for c in census["top_tier_competitions"]} == {
         "AFC",
         "CAF",
@@ -241,7 +246,7 @@ def test_club_season_honors_census_matches_scope_and_registry(abuilt):
     verified = {r["row_key"]: r for r in verification["rows"]}
     row_keys = {f"{r['player_id']}:{r['year']}:{r['competition']}" for r in note["rows"]}
     assert set(verified) == row_keys
-    assert len(verified) == len(note["rows"]) == 14
+    assert len(verified) == len(note["rows"]) == 16
     alaba_2020 = next(
         r
         for r in note["rows"]
@@ -267,7 +272,7 @@ def test_club_season_honors_census_matches_scope_and_registry(abuilt):
         ("P-W26-0512", 2021, "Copa Libertadores"),
         ("P-W26-0115", 2024, "Copa Libertadores"),
     }
-    assert len(note["rows"]) == 14
+    assert len(note["rows"]) == 16
     assert {r["player_id"] for r in note["rows"]} <= scope_ids
     assert {r["player_id"] for r in note["rows"] if r["name"] == "Luiz Henrique"} == {
         "P-W26-0115"

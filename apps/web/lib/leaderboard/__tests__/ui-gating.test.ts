@@ -98,7 +98,7 @@ describe("ship-dark — flag on", () => {
     expect(html).toContain("Leaderboard");
     expect(html).toContain("Season ");
     // The full derived key is shown as evidence.
-    expect(html).toMatch(/engine-[0-9.]+(?:-[a-z0-9-]+)?_/);
+    expect(html).toMatch(/engine-[0-9.]+(?:-[a-z0-9.-]+)?_/);
   });
 
   it("nav gains the Leaderboard entry between History and How to Play", () => {

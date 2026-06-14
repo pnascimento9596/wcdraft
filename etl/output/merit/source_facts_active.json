@@ -1,6 +1,6 @@
 {
   "cutoff_date": "2026-06-01",
-  "fact_count": 63,
+  "fact_count": 67,
   "facts": [
     {
       "citation": {
@@ -155,6 +155,57 @@
       "position": "DF",
       "raw_name": "José Giménez",
       "source_id": "active_captaincy",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "The 2019 AFC Champions League final page records Al-Hilal's 3-0 aggregate title win and lists Salem Al-Dawsari in Al-Hilal's second-leg line-up, with his 74th-minute goal.",
+        "url": "https://en.wikipedia.org/wiki/2019_AFC_Champions_League_final"
+      },
+      "detail": "AFC Champions League title with final participation — Al-Hilal 2019 winner; started/scored in the second leg of the final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-70583",
+      "player_name": "Salem Al-Dawsari",
+      "position": "FW",
+      "raw_name": "Salem Al-Dawsari",
+      "source_id": "active_club_season_honors",
+      "year": 2019
+    },
+    {
+      "citation": {
+        "claim": "The 2021 AFC Champions League final page records Al-Hilal's 2-0 title win over Pohang Steelers and lists Salem Al-Dawsari in Al-Hilal's starting line-up.",
+        "url": "https://en.wikipedia.org/wiki/2021_AFC_Champions_League_final"
+      },
+      "detail": "AFC Champions League title with final participation — Al-Hilal 2021 winner; started/played the final",
+      "family": "club_season_honors",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-70583",
+      "player_name": "Salem Al-Dawsari",
+      "position": "FW",
+      "raw_name": "Salem Al-Dawsari",
+      "source_id": "active_club_season_honors",
+      "year": 2021
+    },
+    {
+      "citation": {
+        "claim": "The pinned RSSSF century-caps snapshot lists Saudi Arabia's Salem Al-Dosari with 105 caps from 2012 to 2025; this row recovers the canonical Al-Dawsari spelling used by the 2026 card.",
+        "url": "https://www.rsssf.org/miscellaneous/century.html"
+      },
+      "detail": "caps=105 (2012-2025)",
+      "family": "international_record",
+      "identity_space": "historical",
+      "method": "full_name+nation",
+      "nation_token": "Saudi Arabia",
+      "player_id": "P-70583",
+      "player_name": "Salem Al-Dawsari",
+      "position": "FW",
+      "raw_name": "Salem Al-Dawsari",
+      "source_id": "active_international_record",
       "year": null
     },
     {
@@ -431,6 +482,23 @@
       "position": null,
       "raw_name": "Frantzdy Pierrot",
       "source_id": "international_century_caps",
+      "year": null
+    },
+    {
+      "citation": {
+        "claim": "The pinned RSSSF international-goals section lists Iraq forward Ayman Hussein with 32 goals and 91 caps from 2015 to 2025; this row recovers the canonical Aymen Hussein spelling used by the 2026 card.",
+        "url": "https://www.rsssf.org/miscellaneous/century.html"
+      },
+      "detail": "goals=32",
+      "family": "international_record",
+      "identity_space": "minted_2026",
+      "method": "minted:full_name+nation",
+      "nation_token": "Iraq",
+      "player_id": "P-W26-0332",
+      "player_name": "Aymen Hussein",
+      "position": "FW",
+      "raw_name": "Aymen Hussein",
+      "source_id": "active_international_record",
       "year": null
     },
     {
@@ -942,6 +1010,6 @@
       "year": null
     }
   ],
-  "linked_player_count": 30,
-  "version": "active-career-source-set-2.1.0"
+  "linked_player_count": 32,
+  "version": "active-career-source-set-2.2.0"
 }

@@ -121,10 +121,10 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-6.0.0"
-    assert rating_2026.RATING_VERSION == "proj-career-5.0.0"
-    assert all(r["rating_version"] == "wc-perf-6.0.0" for r in hist)
-    assert all(r["rating_version"] == "proj-career-5.0.0" for r in proj)
+    assert rating.RATING_VERSION == "wc-perf-6.1.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.1.0"
+    assert all(r["rating_version"] == "wc-perf-6.1.0" for r in hist)
+    assert all(r["rating_version"] == "proj-career-5.1.0" for r in proj)
 
 
 # ─── decoupling: the curve reshapes `overall` ONLY ────────────────────────────

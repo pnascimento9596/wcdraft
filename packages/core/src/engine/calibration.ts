@@ -32,9 +32,9 @@
 //   goldens (sim / rng / draft) did NOT move; only stamp-carrying payloads
 //   (e2e-real-run, run-record, compact manifest, asym-realism) re-locked.
 //
-//   merit-v4: λ refit against the national-strength + objective-club merit
-//   channels moved BASE/SPREAD/MIN, sim behavior CHANGED, and the realism
-//   goldens re-locked. Runtime stamp: `engine-2026.06.13-merit-v4`.
+//   merit-v4.1: λ refit after the projected objective-record and display-curve
+//   move changed the strategic-pick basis. The fit keeps the merit-v4 tuple
+//   except GAMMA_MID=1.00. Runtime stamp: `engine-2026.06.14-merit-v4.1`.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
@@ -109,11 +109,12 @@ export const LAMBDA = Object.freeze({
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
    * points). E-3a raised γ_mid to 0.50; MV2-11b raised it to 0.60;
-   * merit-v3 V7 lands at 0.80 on the extended grid. The bounded
-   * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL
-   * amplifies, never replaces, the attack/defense edge.
+   * merit-v3 V7 landed at 0.80 on the extended grid; merit-v4.1 lands at
+   * 1.00 after the projected objective-record display move. The bounded
+   * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies,
+   * never replaces, the attack/defense edge.
    */
-  GAMMA_MID: 0.80,
+  GAMMA_MID: 1.00,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */

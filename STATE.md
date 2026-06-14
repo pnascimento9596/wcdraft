@@ -4,15 +4,12 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for oversized-artifact migration + merit-v4 doc refresh:
-2026-06-13 · `origin/main` `34a8dfb` (`feat(rating): rebuild merit-v4 ratings`,
-PR #130) with merit-v4 already live on production. Production runtime-data anchor
-verified live from `https://www.wcdraft.com/data/wcdraft/manifest.json` on
-2026-06-13: `runtime-data-2.2.0` / `engine-2026.06.13-merit-v4` /
-`wc-perf-6.0.0` / `proj-career-5.0.0`, legend census `295`,
-career-stature-estimate `505`, dataset `2026-06-04`, ruleset
-`ruleset-2026.06.04`. Live leaderboard API also reports current season key
-`engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844`.
+Last measured for merit-v4.1 ratings coverage season:
+2026-06-14 · branch `merit-v4.1` before merge/deploy. Local runtime-data anchor:
+`runtime-data-2.3.0` / `engine-2026.06.14-merit-v4.1` / `wc-perf-6.1.0` /
+`proj-career-5.1.0`, legend census `295`, career-stature-estimate `541`, dataset
+`2026-06-04`, ruleset `ruleset-2026.06.04`. Local leaderboard season key:
+`engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e`.
 
 merit-v4 as-built facts: ratings now use individual merit contextualized by a
 public national-team-strength prior and objective club achievement. The
@@ -39,6 +36,16 @@ merit-v4 anchor deltas: Son 2022 `81 -> 89`, Bale 2022 `82 -> 90`, Ibrahimović
 Arabia 2022 weak-nation wall collapses to max `79`, South Korea 2022 spreads
 `68-89` with Son on top, pooled `90+` is `290 / 12,219 = 2.373%`, and the
 strategic-pick canary was intentionally regenerated with 6 documented pick flips.
+
+merit-v4.1 anchor deltas: Son 2026 holds `90` (acceptance `>=88`), Salem
+Al-Dawsari 2026 moves `77 -> 86` and becomes top Saudi, AFC coverage moves
+`0/7 -> 7/7` squads with material headroom, CONCACAF moves `0/5 -> 5/5`, CAF
+moves `2/8 -> 4/8`, pooled `90+` is `290 / 12,219 = 2.373%`, and the strategic
+pick canary was intentionally regenerated with 2 documented pick flips. The
+league-of-employment prior is reduced from dominant context to smooth context
+(`FW/MF/DF/GK` weights `0.31/0.34/0.31/0.28 -> 0.18/0.20/0.18/0.16`) and the
+projected-only objective-record pathway is limited to active current facts plus
+the under-covered AFC/CAF/CONCACAF 2026 squad set.
 
 ## Lanes in flight at last measurement
 
@@ -155,28 +162,34 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
   counts were core 366, data 65/7 skipped, db 79, marketing-x 64, and web
   674/1 skipped. Local `next start` on Next 16.2.9 served `/`,
   `/robots.txt`, `/data/wcdraft/manifest.json`, and the bad-token OG fallback.
+- `merit-v4.1` is the active Red ratings coverage season. It implements Proposal A
+  from the platform-improvement pass with citation-backed Salem/Aymen active-note
+  recovery, projected-only objective-record material entry for under-covered
+  AFC/CAF/CONCACAF standouts, a smoothed league prior, display-curve refit, λ refit
+  (`GAMMA_MID=1.00`), compact/data/web golden relocks, and a new leaderboard season
+  key. Human approval is intentionally waived by dispatch for this lane.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
 | Field                       | Value                                                                                    |
 | --------------------------- | ---------------------------------------------------------------------------------------- |
-| schema_version              | runtime-data-2.2.0                                                                       |
+| schema_version              | runtime-data-2.3.0                                                                       |
 | dataset_version             | 2026-06-04                                                                               |
 | ruleset_version             | ruleset-2026.06.04                                                                       |
-| engine_version              | engine-2026.06.13-merit-v4                                                              |
-| rating_version (historical) | wc-perf-6.0.0                                                                            |
-| rating_version (projected)  | proj-career-5.0.0                                                                        |
-| career_stature              | career-stature-4.0.0                                                                     |
+| engine_version              | engine-2026.06.14-merit-v4.1                                                            |
+| rating_version (historical) | wc-perf-6.1.0                                                                            |
+| rating_version (projected)  | proj-career-5.1.0                                                                        |
+| career_stature              | career-stature-4.1.0                                                                     |
 | merit source set            | merit-source-set-2.2.0                                                                   |
-| active source set           | active-career-source-set-2.1.0                                                           |
+| active source set           | active-career-source-set-2.2.0                                                           |
 | runtime legend census       | 295                                                                                      |
 | runtime ratings             | 12,219                                                                                   |
-| Career basis counts         | 11,328 measured · 505 career-stature · 386 baseline                                      |
-| career-stature table        | 845 players · 209 material · 114 source-derived legends                                  |
-| leaderboard season key      | engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844 |
-| compact brotli total        | 1,434,624 normalized bytes                                                               |
-| compact sha256              | manifest `70135193…` · draft `8ec327f6…` · scenario `214bccae…`                          |
-| oversized artifact locks    | ratings `ea459d84…` / 59,551,789 bytes · draft-pool `8ec327f6…` / 100,702,891 bytes      |
+| Career basis counts         | 11,292 measured · 541 career-stature · 386 baseline                                      |
+| career-stature table        | 847 players · 209 material · 114 source-derived legends                                  |
+| leaderboard season key      | engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e |
+| compact brotli total        | 1,436,160 normalized bytes                                                               |
+| compact sha256              | manifest `126a77fb…` · draft `f0f76fd3…` · scenario `bd362cb7…`                          |
+| oversized artifact locks    | ratings `81c2a6ab…` / 59,551,889 bytes · draft-pool `f0f76fd3…` / 101,026,822 bytes      |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

@@ -2,11 +2,11 @@
   "source_id": "active_club_season_honors",
   "family": "club_season_honors",
   "cutoff_date": "2026-06-01",
-  "note": "merit-v3 V1 active-career curation. Top-tier continental club titles with documented final participation only; titles are credited as factual honors, never as subjective player-importance rankings. Every row is citation-backed and staged for career-stature-3.0.0.",
+  "note": "merit-v4.1 active-career curation. Top-tier continental club titles with documented final participation only; titles are credited as factual honors, never as subjective player-importance rankings. Every row is citation-backed and staged for career-stature-4.1.0.",
   "census": {
     "rule_id": "top_tier_continental_club_title_final_participation_v1",
-    "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
-    "scope_basis": "All players staged by the active-career source set after V1: the MV2-12a active 23 plus V1 club-season-honors additions.",
+    "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior, plus the merit-v4.1 objective-achievement addition Salem Al-Dawsari.",
+    "scope_basis": "All players staged by the active-career source set after merit-v4.1: the MV2-12a active 23 plus V1 club-season-honors additions plus Salem Al-Dawsari.",
     "top_tier_competitions": [
       {
         "confederation": "AFC",
@@ -53,6 +53,11 @@
         "player_id": "P-65659",
         "name": "José Giménez",
         "scope_reason": "mv2_12a_active_scope"
+      },
+      {
+        "player_id": "P-70583",
+        "name": "Salem Al-Dawsari",
+        "scope_reason": "merit_v4_1_objective_achievement_addition"
       },
       {
         "player_id": "P-80826",
@@ -166,6 +171,34 @@
       }
     ],
     "finals_registry": [
+      {
+        "registry_key": "afc_champions_league_2019_al_hilal",
+        "competition": "AFC Champions League",
+        "confederation": "AFC",
+        "year": 2019,
+        "champion": "Al-Hilal",
+        "citation_url": "https://en.wikipedia.org/wiki/2019_AFC_Champions_League_final",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-70583",
+            "name": "Salem Al-Dawsari"
+          }
+        ]
+      },
+      {
+        "registry_key": "afc_champions_league_2021_al_hilal",
+        "competition": "AFC Champions League",
+        "confederation": "AFC",
+        "year": 2021,
+        "champion": "Al-Hilal",
+        "citation_url": "https://en.wikipedia.org/wiki/2021_AFC_Champions_League_final",
+        "qualifying_scope_players": [
+          {
+            "player_id": "P-70583",
+            "name": "Salem Al-Dawsari"
+          }
+        ]
+      },
       {
         "registry_key": "uefa_champions_league_2013_bayern",
         "competition": "UEFA Champions League",
@@ -327,8 +360,9 @@
     ]
   },
   "curation_notes": [
-    "Census rule: top-tier continental club titles, Champions League and Libertadores class across all confederations with a top-tier equivalent, with documented final participation, applied to the MV2-12a active 23 plus V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+    "Census rule: top-tier continental club titles, Champions League and Libertadores class across all confederations with a top-tier equivalent, with documented final participation, applied to the MV2-12a active 23 plus V1 additions Federico Valverde, Rodri, and Vinícius Júnior plus the merit-v4.1 objective-achievement addition Salem Al-Dawsari.",
     "Luiz Henrique is in active scope as P-W26-0115 and his 2024 Copa Libertadores final goal/title fact is included.",
+    "Salem Al-Dawsari is included for merit-v4.1 because the 2026 Saudi squad had zero objective-achievement headroom despite his citation-backed AFC Champions League title-final participation.",
     "Bounded near-miss bridge curation for Ró-Ró/Pedro Miguel, El Khannouss, Issahaku/Abdul Fatawu, Baba Rahman, and Bárcenas is deferred to V2: V1 already changes the scoring table and activation guards, so mixing identity-bridge research into the same diff would make review less crisp."
   ],
   "verification_notes": {
@@ -418,6 +452,18 @@
         "name": "Luiz Henrique",
         "citation_url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
         "result": "OK: ESPN's 2024 Copa Libertadores final match page names Luiz Henrique for Botafogo and credits his 35th-minute goal."
+      },
+      {
+        "row_key": "P-70583:2019:AFC Champions League",
+        "name": "Salem Al-Dawsari",
+        "citation_url": "https://en.wikipedia.org/wiki/2019_AFC_Champions_League_final",
+        "result": "OK: the 2019 AFC Champions League final page records Al-Hilal as the 3-0 aggregate winner and lists Salem Al-Dawsari in the second-leg line-up and scoring summary."
+      },
+      {
+        "row_key": "P-70583:2021:AFC Champions League",
+        "name": "Salem Al-Dawsari",
+        "citation_url": "https://en.wikipedia.org/wiki/2021_AFC_Champions_League_final",
+        "result": "OK: the 2021 AFC Champions League final page records Al-Hilal as the 2-0 winner and lists Salem Al-Dawsari in Al-Hilal's starting line-up."
       }
     ]
   },
@@ -658,6 +704,40 @@
       "citation": {
         "url": "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
         "claim": "ESPN's 2024 Copa Libertadores final match record shows Botafogo beat Atlético Mineiro 3-1 and credits Luiz Henrique with Botafogo's 35th-minute goal."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-70583",
+      "name": "Salem Al-Dawsari",
+      "nation_token": "Saudi Arabia",
+      "year": 2019,
+      "position": "FW",
+      "kind": "afc_cl_title_final_participant",
+      "competition": "AFC Champions League",
+      "confederation": "AFC",
+      "club": "Al-Hilal",
+      "detail": "AFC Champions League title with final participation — Al-Hilal 2019 winner; started/scored in the second leg of the final",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/2019_AFC_Champions_League_final",
+        "claim": "The 2019 AFC Champions League final page records Al-Hilal's 3-0 aggregate title win and lists Salem Al-Dawsari in Al-Hilal's second-leg line-up, with his 74th-minute goal."
+      }
+    },
+    {
+      "scope": "active_career",
+      "player_id": "P-70583",
+      "name": "Salem Al-Dawsari",
+      "nation_token": "Saudi Arabia",
+      "year": 2021,
+      "position": "FW",
+      "kind": "afc_cl_title_final_participant",
+      "competition": "AFC Champions League",
+      "confederation": "AFC",
+      "club": "Al-Hilal",
+      "detail": "AFC Champions League title with final participation — Al-Hilal 2021 winner; started/played the final",
+      "citation": {
+        "url": "https://en.wikipedia.org/wiki/2021_AFC_Champions_League_final",
+        "claim": "The 2021 AFC Champions League final page records Al-Hilal's 2-0 title win over Pohang Steelers and lists Salem Al-Dawsari in Al-Hilal's starting line-up."
       }
     }
   ]

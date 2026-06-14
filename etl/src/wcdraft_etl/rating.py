@@ -48,6 +48,9 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-6.1.0 (merit-v4.1): historical ratings consume career-stature-4.1.0
+# active objective-achievement curation; the historical formula itself is
+# unchanged, but the replay anchor moves with the source-derived table.
 # wc-perf-6.0.0 (merit-v4): historical ratings consume national-strength
 # contextual ceilings plus the career-stature-4.0.0 curation update. W1/W2/W2b
 # source-derived stature facts
@@ -65,7 +68,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-6.0.0"
+RATING_VERSION = "wc-perf-6.1.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring

@@ -90,20 +90,17 @@ source did not record it. **NEVER coerced to `0`.**
 `RuntimeRating.overall_basis === "baseline_anchor_estimate"` flags the 386
 historical cards whose `overall` came from an era-anchor estimate instead
 of measured tournament performance. `overall_basis === "career_stature_estimate"`
-flags the 505 historical cards where the player has a clearly
-material career stature but no individual tournament signal on this card.
-UI surfaces both as coverage badges — the number is never rendered as a
-measured value.
+flags runtime cards where source-derived career/objective-record stature supplies
+the headroom path: 480 historical cards plus 61 projected 2026 cards in
+`runtime-data-2.3.0`. UI surfaces both as coverage badges — the number is never
+rendered as a measured value.
 
-> **2026 ETL↔compact divergence (deliberate, documented here):** the
-> per-card `overall_basis` field is emitted by the ETL on `ratings_2026.json`
-> but is **NOT** carried through to `RuntimeRating` on 2026 cards in the
-> compact bundles. The field is shipped **historical-only**: the 2026
-> rating model (`proj-career-5.0.0`) draws every card on the
-> linked-stature / quantile-mapped raw path with no honest-state estimate
-> tier, so the runtime contract intentionally omits it. The integrity
-> tests assert the historical count is exact (387) and do not assert the
-> field on 2026 rows. Documenting current design — not changing it.
+> **2026 projected basis (merit-v4.1):** `proj-career-5.1.0` carries
+> `overall_basis` through the compact runtime for projected cards. Most 2026
+> cards remain on the measured/current path (`1,185` rows), but citation-backed
+> objective-record standouts from the active-career table can now render as
+> `career_stature_estimate` (`61` projected rows). This is intentional runtime
+> visibility, not a silent fallback.
 
 ## ⚠️ Attribution obligation (CC-BY-SA 4.0)
 

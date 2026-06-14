@@ -45,13 +45,15 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
-// runtime-data-2.2.0 (merit-v4): schema-compatible data bump for the curated
-// career-stature-4.0.0 / rating 6.0 family outputs.
+// runtime-data-2.3.0 (merit-v4.1): schema-compatible season bump for expanded
+// objective-achievement coverage, rating 6.1/5.1 anchors, and a new replay season.
+// runtime-data-2.3.0 (merit-v4.1): schema-compatible data bump for the
+// career-stature-4.1.0 / rating 6.1 family outputs.
 // runtime-data-2.0.0 (merit-v3 V6): every compact rating now carries both
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.2.0" as const;
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.3.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
