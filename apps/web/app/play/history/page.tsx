@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "Run history",
   description:
     "Your most recent completed wcdraft runs, stored locally in this browser. Re-open each run via its seed-locked replay link.",
+  // Local-only, per-browser content — nothing to index; noindex.
+  robots: { index: false, follow: true },
 };
 
 export default function HistoryPage() {

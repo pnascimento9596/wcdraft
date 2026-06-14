@@ -4,6 +4,7 @@ import { ThemeSetting } from "../../components/theme-setting";
 export const metadata: Metadata = {
   title: "Settings",
   description: "Choose your wcdraft display theme.",
+  robots: { index: false, follow: true },
 };
 
 export default function SettingsPage() {
