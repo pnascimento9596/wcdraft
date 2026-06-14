@@ -120,6 +120,21 @@ strategic-pick canary was intentionally regenerated with 6 documented pick flips
   5MB→1.4MB wire, OG-edge full-pool parse, sim-payload narrowing, share-token
   integrity, full CSP) are PROPOSALS in
   `docs/reports/platform-improvement-pass-2026-06-14.md` — NOT shipped.
+- **Security E/F follow-up (2026-06-14)** clears the bounded CSP and share-summary
+  integrity proposals without touching rating/data/sim semantics. CSP now lives in
+  `apps/web/proxy.ts` with per-request nonces, preview/dev report-only mode,
+  production enforcement, and `/api/csp-report` logging. Current browser-minted
+  share tokens still carry `og` for decode compatibility, but server-rendered OG
+  metadata treats that summary as untrusted and uses the neutral static card; the
+  share/results pages continue to replay the token client-side from the pick log.
+  HMAC signing was not added because the current browser-only minting path cannot
+  use a server-held secret without exposing it or creating a signing oracle.
+  Validation for the branch: web focused CSP/share/public-payload sweep passed
+  3 files / 15 tests; root `pnpm typecheck`, `pnpm lint`, `pnpm test`, and
+  `pnpm build` passed, with root test counts unchanged at core 366, data 65/7
+  skipped, db 79, marketing-x 64, and web 679/1 skipped. Fresh-context review
+  caught and fix-forwarded the CSP report intake to byte-bound reads plus `413`
+  oversized-body rejection.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
