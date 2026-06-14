@@ -92,8 +92,14 @@ export async function loadGameData(): Promise<GameData> {
   if (inFlight) return inFlight;
   inFlight = (async () => {
     try {
-      const manifest = await loadDataManifest();
-      const draftPool = await loadDraftPoolBundle();
+      // Manifest (~6 KB) and the draft-pool bundle (~5 MB brotli) load from
+      // independent static URLs, so fetch them concurrently instead of serially
+      // — removes one manifest round-trip from the first-play critical path.
+      // Promise.all preserves the prior error semantics (reject on first error).
+      const [manifest, draftPool] = await Promise.all([
+        loadDataManifest(),
+        loadDraftPoolBundle(),
+      ]);
       const gd = buildGameData(manifest, draftPool);
       cachedGameData = gd;
       return gd;
