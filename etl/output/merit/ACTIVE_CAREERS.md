@@ -1,6 +1,6 @@
 # Active-career intake (active-career-source-set-2.1.0)
 
-MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year ceiling 2022). Curation cutoff **2026-06-01**. Activated by career-stature-3.1.0: stature.py consumes these artifacts, while this module still emits facts + identity only and no rating output.
+MV2-12a facts-only intake for IN-PROGRESS careers (archive peak-year ceiling 2022). Curation cutoff **2026-06-01**. Activated by career-stature-4.0.0: stature.py consumes these artifacts, while this module still emits facts + identity only and no rating output.
 
 - Linked active facts: **63**
 - Players staged: **30**

@@ -37,6 +37,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from . import national_strength
+
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # stage reads/writes the same place regardless of the caller's cwd. Mirrors
 # pipeline.OUTPUT_DIR.
@@ -45,8 +47,9 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
-# wc-perf-5.1.0 (merit-v3.1): historical ratings consume the
-# career-stature-3.1.0 curation update. W1/W2/W2b source-derived stature facts
+# wc-perf-6.0.0 (merit-v4): historical ratings consume national-strength
+# contextual ceilings plus the career-stature-4.0.0 curation update. W1/W2/W2b
+# source-derived stature facts
 # move ratings through the existing formula; W3 made no rating-formula change
 # because the requested global pile-up gate is documented as incompatible.
 # wc-perf-5.0.0 (merit-v3 V2): historical ratings consume the full
@@ -61,7 +64,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-5.1.0"
+RATING_VERSION = "wc-perf-6.0.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -189,14 +192,13 @@ TOURNAMENT_DOWN_CAP: dict[str, dict[str, float]] = {
 # then to the card's own raw score (→ delta 0, no modulation).
 COHORT_MIN_N = 8
 
-# Global raw-only elite ceiling (internal score). A non-material card's raw_path is
-# capped at the LOWER of (a) this fixed global ceiling and (b) the median final
-# internal score of the material-stature cards in its (tournament_id, pos) cohort —
-# so a journeyman's strong tournament never enters the high-stature / legend
-# internal band. Never a per-player value; never silently zeroed (the card keeps its
-# honest raw score up to the ceiling). Sits below the marginal-material STATURE
-# floor (0.58–0.60) so raw-only cards stay below the recognized-greats band.
-RAW_ONLY_GLOBAL_CEILING = 0.62
+# merit-v4: raw-only elite ceiling prior. A non-material card's raw_path is capped
+# at the LOWER of (a) a smooth national-team-strength ceiling read from
+# national_strength.json and (b) the median final internal score of the material-
+# stature cards in its (tournament_id, pos) cohort. The old fixed 0.62 wall is
+# retired for real builds; this alias remains as the absolute top of the smooth
+# prior and for tests that need a global upper-bound constant.
+RAW_ONLY_GLOBAL_CEILING = national_strength.RAW_ONLY_CEILING_TOP
 
 # merit-v3 V2 §4.1: raw-only tournament performances may escape the old 0.62
 # ceiling only when the card has public major-individual-award evidence. No award
@@ -579,6 +581,21 @@ def _raw_only_score(
     return _clamp01(capped + headroom)
 
 
+def _national_strength_row(
+    national_strength_by_key: dict[tuple[str, str], dict] | None,
+    card: dict,
+) -> dict | None:
+    if national_strength_by_key is None:
+        return None
+    key = (card["tournament_id"], card["nation_id"])
+    try:
+        return national_strength_by_key[key]
+    except KeyError as exc:
+        raise ValueError(
+            f"card {card['card_id']} has no national_strength row for {key}"
+        ) from exc
+
+
 def _tournament_modulation(
     raw_tournament_score: float,
     tournament_ref: float,
@@ -624,6 +641,7 @@ def _build_internal_rows(
     tournaments: list[dict],
     manager_tournaments: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
 ) -> list[dict]:
     """Pass 1 of the rating build — return one INTERNAL row per men's card,
     carrying the pre-display COMPOSITE merit score ``score_0_100``, the
@@ -818,7 +836,13 @@ def _build_internal_rows(
         raw = s["raw_tournament_score"]
 
         cohort_material = material_finals_by_cohort.get((c["tournament_id"], pos))
-        raw_only_ceiling = RAW_ONLY_GLOBAL_CEILING if has_any_material else 1.0
+        strength_row = _national_strength_row(national_strength_by_key, c)
+        national_raw_only_ceiling = (
+            strength_row["raw_only_ceiling"]
+            if strength_row is not None
+            else RAW_ONLY_GLOBAL_CEILING
+        )
+        raw_only_ceiling = national_raw_only_ceiling if has_any_material else 1.0
         if cohort_material:
             raw_only_ceiling = min(
                 raw_only_ceiling, _quantile(sorted(cohort_material), 0.5)
@@ -916,6 +940,34 @@ def _build_internal_rows(
                 "weight": 0.0,
             },
             {
+                "signal": "national_team_strength",
+                "value": (
+                    round(strength_row["strength"], _PRECISION)
+                    if strength_row is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_team_elo_rank",
+                "value": strength_row["elo_global_rank"] if strength_row is not None else None,
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_team_fifa_rank",
+                "value": strength_row["fifa_rank"] if strength_row is not None else None,
+                "weight": 0.0,
+            },
+            {
+                "signal": "national_raw_only_ceiling_prior",
+                "value": (
+                    round(national_raw_only_ceiling, _PRECISION)
+                    if strength_row is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
                 "signal": "award_headroom",
                 "value": round(award_headroom, _PRECISION),
                 "weight": 0.0,
@@ -1006,6 +1058,7 @@ def build_internal_view(
     tournaments: list[dict],
     manager_tournaments: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
 ) -> tuple[list[dict], DisplayCurve]:
     """Pass 1 + curve fit, exposed for the §4 acceptance suite.
 
@@ -1015,8 +1068,15 @@ def build_internal_view(
     composite for measured cards — the right curve invariant — without
     surrogate channel-vs-overall checks.
     """
+    if national_strength_by_key is None:
+        national_strength_by_key = national_strength.load_by_key(OUTPUT_DIR)
     internal = _build_internal_rows(
-        players, cards, tournaments, manager_tournaments, career_stature_by_player
+        players,
+        cards,
+        tournaments,
+        manager_tournaments,
+        career_stature_by_player,
+        national_strength_by_key,
     )
     curve = _fit_display_curve([r["score_0_100"] for r in internal])
     return internal, curve
@@ -1028,6 +1088,7 @@ def build_ratings(
     tournaments: list[dict],
     manager_tournaments: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
+    national_strength_by_key: dict[tuple[str, str], dict] | None = None,
     curve: DisplayCurve | None = None,
 ) -> list[dict]:
     """Return Rating-shaped records for every men's card, sorted by card_id.
@@ -1048,7 +1109,12 @@ def build_ratings(
 
     # ── PASS 2: materialize Rating rows on the UNIFIED display curve ───────────
     internal_rows, _self_curve = build_internal_view(
-        players, cards, tournaments, manager_tournaments, career_stature_by_player
+        players,
+        cards,
+        tournaments,
+        manager_tournaments,
+        career_stature_by_player,
+        national_strength_by_key,
     )
     if curve is None:
         curve = display_curve.fit_unified_curve()
@@ -1149,15 +1215,21 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
         tournaments=_load(output_dir, "tournaments"),
         manager_tournaments=_load(output_dir, "manager_tournaments"),
         career_stature_by_player=_load_career_stature(output_dir),
+        national_strength_by_key=national_strength.load_by_key(output_dir),
         curve=display_curve.fit_unified_curve(output_dir),
     )
 
 
+def _json_text(obj) -> str:
+    # ratings.json is large enough that pretty indentation can cross GitHub's
+    # hard blob limit; keep deterministic ordering while using compact JSON.
+    return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
+
+
 def _write_json(path: Path, obj) -> None:
-    # Byte-identical with the ingestion's emitter: sorted keys, stable indent,
-    # trailing newline, no timestamps.
+    # Byte-identical on rebuild: sorted keys, trailing newline, no timestamps.
     path.write_text(
-        json.dumps(obj, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        _json_text(obj),
         encoding="utf-8",
     )
 

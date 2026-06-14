@@ -39,15 +39,14 @@ from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 
-# Fit at V4 lock time on the union pool (see fit_unified_curve(refit=True));
-# test_unified_display pins frozen == live-refit. NOTE (recorded for the gate
-# report): the union p95 anchor still lands exactly ON the internal-62.0 clamp
-# pile — 1,150 historical no-award cards sit at exactly 62.0, byte-stable under
-# V2's own §4.1 no-award invariant, so no monotone curve can spread them.
+# Fit at merit-v4 lock time on the union pool (see fit_unified_curve(refit=True));
+# test_unified_display pins frozen == live-refit. The smooth national-strength
+# raw-only prior removes the old exact-62.0 p95 lock; the remaining high anchor is
+# a normal quantile over the pooled internal scores, not a hard cap point mass.
 FROZEN_UNIFIED_CURVE_V2_ANCHORS = {
     "raw_floor": 20.0,
     "raw_median": 42.325568000000004,
-    "raw_p95": 62.0,
+    "raw_p95": 62.3652,
     "raw_max": 100.0,
 }
 
@@ -73,14 +72,19 @@ def _projected_internal_rows(output_dir: Path) -> list[dict]:
     """Internal rows of every 2026 card, rebuilt with the EXACT production
     projected path (the same ``_historical_raw_only_internal`` quantile-map
     target the committed ``ratings_2026.json`` was built from)."""
-    from . import rating_2026  # lazy: avoid an import cycle
+    from . import (
+        national_strength,
+        rating_2026,  # lazy: avoid an import cycle
+    )
 
     cards = json.loads(
         (output_dir / "player_tournaments_2026.json").read_text(encoding="utf-8")
     )
     career = rating_2026._load_career_stature(output_dir)
     historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
-    return rating_2026._build_internal_rows(cards, career, historical_raw_only)
+    return rating_2026._build_internal_rows(
+        cards, career, historical_raw_only, national_strength.load_by_key(output_dir)
+    )
 
 
 def _union_pool(output_dir: Path) -> list[float]:

@@ -94,19 +94,19 @@ const CONSTANT_GRIDS = [
   { name: "GROUP_A",          bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.60, 0.70] },
 ];
 
-// Seed tuple — MV2-11b: seed at the COMMITTED E-3a tuple (calibration.ts as shipped) so
-// the seed evaluation reproduces the observed merit-v2 RED landing exactly
-// and every descent step is an audited move away from the shipped engine.
+// Seed tuple — current shipped merit-v4 tuple from calibration.ts. Keep this
+// in sync with packages/core/src/engine/calibration.ts so the seed evaluation
+// represents the live engine before any audited refit move.
 const SEED_TUPLE = {
   LAMBDA: {
-    SPREAD: 6.50,
-    BASE: 0.85,
-    MIN: 0.40,
+    SPREAD: 6.00,
+    BASE: 1.10,
+    MIN: 0.30,
     MAX: 3.40,
     W_DEF: 0.70,
     W_GK: 0.30,
-    GAMMA_MID: 0.50,
-    KO_LAMBDA_FACTOR: 0.85,
+    GAMMA_MID: 0.80,
+    KO_LAMBDA_FACTOR: 0.82,
   },
   CHANCES: {
     REGULATION: 50,

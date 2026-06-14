@@ -33,6 +33,7 @@ _ACTIVE_FAMILIES = (
     "international_record",
     "retrospective_selection",
     "captaincy",
+    "club_honors",
 )
 _FAMILY_SHORT = {
     "wc_legacy": "WC legacy",
@@ -42,6 +43,7 @@ _FAMILY_SHORT = {
     "international_record": "Int'l record",
     "retrospective_selection": "Retrospective",
     "captaincy": "Captaincy",
+    "club_honors": "Club honors",
 }
 
 _ERA_LABEL = {"pre_1956": "pre-1956", "1956_1990": "1956–1990", "1991_plus": "1991+"}

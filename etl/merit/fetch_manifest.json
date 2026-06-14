@@ -211,5 +211,5 @@
     }
   ],
   "note": "SHA-pinned public snapshots; fetch is OFF the deterministic build path.",
-  "version": "merit-source-set-2.1.0"
+  "version": "merit-source-set-2.2.0"
 }

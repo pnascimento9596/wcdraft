@@ -1,0 +1,5412 @@
+{
+  "rankings": [
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1611,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRA",
+        "countryURL": "/fifa-world-ranking/BRA",
+        "flag": {
+          "alt": "Brazil",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRA",
+          "title": "Brazil",
+          "width": 70
+        },
+        "idTeam": "43924",
+        "name": "Brazil",
+        "previousRank": 1,
+        "rank": 1,
+        "totalPoints": 1611
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1565,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ESP",
+        "countryURL": "/fifa-world-ranking/ESP",
+        "flag": {
+          "alt": "Spain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ESP",
+          "title": "Spain",
+          "width": 70
+        },
+        "idTeam": "43969",
+        "name": "Spain",
+        "previousRank": 2,
+        "rank": 2,
+        "totalPoints": 1565
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1249,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POR",
+        "countryURL": "/fifa-world-ranking/POR",
+        "flag": {
+          "alt": "Portugal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POR",
+          "title": "Portugal",
+          "width": 70
+        },
+        "idTeam": "43963",
+        "name": "Portugal",
+        "previousRank": 3,
+        "rank": 3,
+        "totalPoints": 1249
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1221,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NED",
+        "countryURL": "/fifa-world-ranking/NED",
+        "flag": {
+          "alt": "Netherlands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NED",
+          "title": "Netherlands",
+          "width": 70
+        },
+        "idTeam": "43960",
+        "name": "Netherlands",
+        "previousRank": 4,
+        "rank": 4,
+        "totalPoints": 1231
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1184,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ITA",
+        "countryURL": "/fifa-world-ranking/ITA",
+        "flag": {
+          "alt": "Italy",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ITA",
+          "title": "Italy",
+          "width": 70
+        },
+        "idTeam": "43954",
+        "name": "Italy",
+        "previousRank": 5,
+        "rank": 5,
+        "totalPoints": 1184
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1107,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GER",
+        "countryURL": "/fifa-world-ranking/GER",
+        "flag": {
+          "alt": "Germany",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GER",
+          "title": "Germany",
+          "width": 70
+        },
+        "idTeam": "43948",
+        "name": "Germany",
+        "previousRank": 6,
+        "rank": 6,
+        "totalPoints": 1082
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1084,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARG",
+        "countryURL": "/fifa-world-ranking/ARG",
+        "flag": {
+          "alt": "Argentina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARG",
+          "title": "Argentina",
+          "width": 70
+        },
+        "idTeam": "43922",
+        "name": "Argentina",
+        "previousRank": 7,
+        "rank": 7,
+        "totalPoints": 1076
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1068,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ENG",
+        "countryURL": "/fifa-world-ranking/ENG",
+        "flag": {
+          "alt": "England",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ENG",
+          "title": "England",
+          "width": 70
+        },
+        "idTeam": "43942",
+        "name": "England",
+        "previousRank": 8,
+        "rank": 8,
+        "totalPoints": 1068
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1044,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRA",
+        "countryURL": "/fifa-world-ranking/FRA",
+        "flag": {
+          "alt": "France",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRA",
+          "title": "France",
+          "width": 70
+        },
+        "idTeam": "43946",
+        "name": "France",
+        "previousRank": 10,
+        "rank": 9,
+        "totalPoints": 1044
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1052,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRO",
+        "countryURL": "/fifa-world-ranking/CRO",
+        "flag": {
+          "alt": "Croatia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRO",
+          "title": "Croatia",
+          "width": 70
+        },
+        "idTeam": "43938",
+        "name": "Croatia",
+        "previousRank": 9,
+        "rank": 10,
+        "totalPoints": 1041
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 1003,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RUS",
+        "countryURL": "/fifa-world-ranking/RUS",
+        "flag": {
+          "alt": "Russia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RUS",
+          "title": "Russia",
+          "width": 70
+        },
+        "idTeam": "43965",
+        "name": "Russia",
+        "previousRank": 11,
+        "rank": 11,
+        "totalPoints": 1015
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 967,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EGY",
+        "countryURL": "/fifa-world-ranking/EGY",
+        "flag": {
+          "alt": "Egypt",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EGY",
+          "title": "Egypt",
+          "width": 70
+        },
+        "idTeam": "43855",
+        "name": "Egypt",
+        "previousRank": 13,
+        "rank": 12,
+        "totalPoints": 967
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 968,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRE",
+        "countryURL": "/fifa-world-ranking/GRE",
+        "flag": {
+          "alt": "Greece",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRE",
+          "title": "Greece",
+          "width": 70
+        },
+        "idTeam": "43949",
+        "name": "Greece",
+        "previousRank": 12,
+        "rank": 13,
+        "totalPoints": 964
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 950,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "USA",
+        "countryURL": "/fifa-world-ranking/USA",
+        "flag": {
+          "alt": "USA",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/USA",
+          "title": "USA",
+          "width": 70
+        },
+        "idTeam": "43921",
+        "name": "USA",
+        "previousRank": 14,
+        "rank": 14,
+        "totalPoints": 957
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 944,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SRB",
+        "countryURL": "/fifa-world-ranking/SRB",
+        "flag": {
+          "alt": "Serbia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SRB",
+          "title": "Serbia",
+          "width": 70
+        },
+        "idTeam": "1902465",
+        "name": "Serbia",
+        "previousRank": 16,
+        "rank": 15,
+        "totalPoints": 947
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 902,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "URU",
+        "countryURL": "/fifa-world-ranking/URU",
+        "flag": {
+          "alt": "Uruguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/URU",
+          "title": "Uruguay",
+          "width": 70
+        },
+        "idTeam": "43930",
+        "name": "Uruguay",
+        "previousRank": 18,
+        "rank": 16,
+        "totalPoints": 899
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 936,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MEX",
+        "countryURL": "/fifa-world-ranking/MEX",
+        "flag": {
+          "alt": "Mexico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MEX",
+          "title": "Mexico",
+          "width": 70
+        },
+        "idTeam": "43911",
+        "name": "Mexico",
+        "previousRank": 17,
+        "rank": 17,
+        "totalPoints": 895
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 948,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHI",
+        "countryURL": "/fifa-world-ranking/CHI",
+        "flag": {
+          "alt": "Chile",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHI",
+          "title": "Chile",
+          "width": 70
+        },
+        "idTeam": "43925",
+        "name": "Chile",
+        "previousRank": 15,
+        "rank": 18,
+        "totalPoints": 888
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 887,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CMR",
+        "countryURL": "/fifa-world-ranking/CMR",
+        "flag": {
+          "alt": "Cameroon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CMR",
+          "title": "Cameroon",
+          "width": 70
+        },
+        "idTeam": "43849",
+        "name": "Cameroon",
+        "previousRank": 19,
+        "rank": 19,
+        "totalPoints": 887
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 883,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUS",
+        "countryURL": "/fifa-world-ranking/AUS",
+        "flag": {
+          "alt": "Australia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUS",
+          "title": "Australia",
+          "width": 70
+        },
+        "idTeam": "43976",
+        "name": "Australia",
+        "previousRank": 20,
+        "rank": 20,
+        "totalPoints": 886
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 883,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NGA",
+        "countryURL": "/fifa-world-ranking/NGA",
+        "flag": {
+          "alt": "Nigeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NGA",
+          "title": "Nigeria",
+          "width": 70
+        },
+        "idTeam": "43876",
+        "name": "Nigeria",
+        "previousRank": 20,
+        "rank": 21,
+        "totalPoints": 883
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 879,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NOR",
+        "countryURL": "/fifa-world-ranking/NOR",
+        "flag": {
+          "alt": "Norway",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NOR",
+          "title": "Norway",
+          "width": 70
+        },
+        "idTeam": "43961",
+        "name": "Norway",
+        "previousRank": 22,
+        "rank": 22,
+        "totalPoints": 882
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 855,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UKR",
+        "countryURL": "/fifa-world-ranking/UKR",
+        "flag": {
+          "alt": "Ukraine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UKR",
+          "title": "Ukraine",
+          "width": 70
+        },
+        "idTeam": "43973",
+        "name": "Ukraine",
+        "previousRank": 25,
+        "rank": 23,
+        "totalPoints": 875
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 854,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUI",
+        "countryURL": "/fifa-world-ranking/SUI",
+        "flag": {
+          "alt": "Switzerland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUI",
+          "title": "Switzerland",
+          "width": 70
+        },
+        "idTeam": "43971",
+        "name": "Switzerland",
+        "previousRank": 26,
+        "rank": 24,
+        "totalPoints": 866
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 860,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVN",
+        "countryURL": "/fifa-world-ranking/SVN",
+        "flag": {
+          "alt": "Slovenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVN",
+          "title": "Slovenia",
+          "width": 70
+        },
+        "idTeam": "43968",
+        "name": "Slovenia",
+        "previousRank": 23,
+        "rank": 25,
+        "totalPoints": 860
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 857,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISR",
+        "countryURL": "/fifa-world-ranking/ISR",
+        "flag": {
+          "alt": "Israel",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISR",
+          "title": "Israel",
+          "width": 70
+        },
+        "idTeam": "43984",
+        "name": "Israel",
+        "previousRank": 24,
+        "rank": 26,
+        "totalPoints": 857
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 846,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CIV",
+        "countryURL": "/fifa-world-ranking/CIV",
+        "flag": {
+          "alt": "Côte d'Ivoire",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CIV",
+          "title": "Côte d'Ivoire",
+          "width": 70
+        },
+        "idTeam": "43854",
+        "name": "Côte d'Ivoire",
+        "previousRank": 27,
+        "rank": 27,
+        "totalPoints": 856
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 843,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ROU",
+        "countryURL": "/fifa-world-ranking/ROU",
+        "flag": {
+          "alt": "Romania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ROU",
+          "title": "Romania",
+          "width": 70
+        },
+        "idTeam": "43964",
+        "name": "Romania",
+        "previousRank": 28,
+        "rank": 28,
+        "totalPoints": 853
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 798,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUR",
+        "countryURL": "/fifa-world-ranking/TUR",
+        "flag": {
+          "alt": "Turkey",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUR",
+          "title": "Turkey",
+          "width": 70
+        },
+        "idTeam": "43972",
+        "name": "Turkey",
+        "previousRank": 33,
+        "rank": 29,
+        "totalPoints": 830
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 821,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALG",
+        "countryURL": "/fifa-world-ranking/ALG",
+        "flag": {
+          "alt": "Algeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALG",
+          "title": "Algeria",
+          "width": 70
+        },
+        "idTeam": "43843",
+        "name": "Algeria",
+        "previousRank": 31,
+        "rank": 30,
+        "totalPoints": 821
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 822,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAR",
+        "countryURL": "/fifa-world-ranking/PAR",
+        "flag": {
+          "alt": "Paraguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAR",
+          "title": "Paraguay",
+          "width": 70
+        },
+        "idTeam": "43928",
+        "name": "Paraguay",
+        "previousRank": 30,
+        "rank": 31,
+        "totalPoints": 820
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 802,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GHA",
+        "countryURL": "/fifa-world-ranking/GHA",
+        "flag": {
+          "alt": "Ghana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GHA",
+          "title": "Ghana",
+          "width": 70
+        },
+        "idTeam": "43860",
+        "name": "Ghana",
+        "previousRank": 32,
+        "rank": 32,
+        "totalPoints": 800
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 827,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CZE",
+        "countryURL": "/fifa-world-ranking/CZE",
+        "flag": {
+          "alt": "Czech Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CZE",
+          "title": "Czech Republic",
+          "width": 70
+        },
+        "idTeam": "43995",
+        "name": "Czech Republic",
+        "previousRank": 29,
+        "rank": 33,
+        "totalPoints": 793
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 742,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVK",
+        "countryURL": "/fifa-world-ranking/SVK",
+        "flag": {
+          "alt": "Slovakia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVK",
+          "title": "Slovakia",
+          "width": 70
+        },
+        "idTeam": "44002",
+        "name": "Slovakia",
+        "previousRank": 38,
+        "rank": 34,
+        "totalPoints": 777
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 777,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COL",
+        "countryURL": "/fifa-world-ranking/COL",
+        "flag": {
+          "alt": "Colombia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COL",
+          "title": "Colombia",
+          "width": 70
+        },
+        "idTeam": "43926",
+        "name": "Colombia",
+        "previousRank": 34,
+        "rank": 35,
+        "totalPoints": 776
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 767,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DEN",
+        "countryURL": "/fifa-world-ranking/DEN",
+        "flag": {
+          "alt": "Denmark",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DEN",
+          "title": "Denmark",
+          "width": 70
+        },
+        "idTeam": "43941",
+        "name": "Denmark",
+        "previousRank": 35,
+        "rank": 36,
+        "totalPoints": 767
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 757,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWE",
+        "countryURL": "/fifa-world-ranking/SWE",
+        "flag": {
+          "alt": "Sweden",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWE",
+          "title": "Sweden",
+          "width": 70
+        },
+        "idTeam": "43970",
+        "name": "Sweden",
+        "previousRank": 37,
+        "rank": 37,
+        "totalPoints": 761
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 727,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HON",
+        "countryURL": "/fifa-world-ranking/HON",
+        "flag": {
+          "alt": "Honduras",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HON",
+          "title": "Honduras",
+          "width": 70
+        },
+        "idTeam": "43909",
+        "name": "Honduras",
+        "previousRank": 40,
+        "rank": 38,
+        "totalPoints": 734
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 740,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BUL",
+        "countryURL": "/fifa-world-ranking/BUL",
+        "flag": {
+          "alt": "Bulgaria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BUL",
+          "title": "Bulgaria",
+          "width": 70
+        },
+        "idTeam": "43936",
+        "name": "Bulgaria",
+        "previousRank": 39,
+        "rank": 39,
+        "totalPoints": 711
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 706,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRC",
+        "countryURL": "/fifa-world-ranking/CRC",
+        "flag": {
+          "alt": "Costa Rica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRC",
+          "title": "Costa Rica",
+          "width": 70
+        },
+        "idTeam": "43901",
+        "name": "Costa Rica",
+        "previousRank": 42,
+        "rank": 40,
+        "totalPoints": 710
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 690,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRL",
+        "countryURL": "/fifa-world-ranking/IRL",
+        "flag": {
+          "alt": "Republic of Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRL",
+          "title": "Republic of Ireland",
+          "width": 70
+        },
+        "idTeam": "43953",
+        "name": "Republic of Ireland",
+        "previousRank": 43,
+        "rank": 41,
+        "totalPoints": 709
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 707,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAB",
+        "countryURL": "/fifa-world-ranking/GAB",
+        "flag": {
+          "alt": "Gabon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAB",
+          "title": "Gabon",
+          "width": 70
+        },
+        "idTeam": "43858",
+        "name": "Gabon",
+        "previousRank": 41,
+        "rank": 42,
+        "totalPoints": 700
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 684,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SCO",
+        "countryURL": "/fifa-world-ranking/SCO",
+        "flag": {
+          "alt": "Scotland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SCO",
+          "title": "Scotland",
+          "width": 70
+        },
+        "idTeam": "43967",
+        "name": "Scotland",
+        "previousRank": 44,
+        "rank": 43,
+        "totalPoints": 699
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 763,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ECU",
+        "countryURL": "/fifa-world-ranking/ECU",
+        "flag": {
+          "alt": "Ecuador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ECU",
+          "title": "Ecuador",
+          "width": 70
+        },
+        "idTeam": "43927",
+        "name": "Ecuador",
+        "previousRank": 36,
+        "rank": 44,
+        "totalPoints": 694
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 674,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JPN",
+        "countryURL": "/fifa-world-ranking/JPN",
+        "flag": {
+          "alt": "Japan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JPN",
+          "title": "Japan",
+          "width": 70
+        },
+        "idTeam": "43819",
+        "name": "Japan",
+        "previousRank": 45,
+        "rank": 45,
+        "totalPoints": 682
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 652,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LVA",
+        "countryURL": "/fifa-world-ranking/LVA",
+        "flag": {
+          "alt": "Latvia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LVA",
+          "title": "Latvia",
+          "width": 70
+        },
+        "idTeam": "43955",
+        "name": "Latvia",
+        "previousRank": 46,
+        "rank": 46,
+        "totalPoints": 652
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 619,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KOR",
+        "countryURL": "/fifa-world-ranking/KOR",
+        "flag": {
+          "alt": "Korea Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KOR",
+          "title": "Korea Republic",
+          "width": 70
+        },
+        "idTeam": "43822",
+        "name": "Korea Republic",
+        "previousRank": 47,
+        "rank": 47,
+        "totalPoints": 632
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 589,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BFA",
+        "countryURL": "/fifa-world-ranking/BFA",
+        "flag": {
+          "alt": "Burkina Faso",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BFA",
+          "title": "Burkina Faso",
+          "width": 70
+        },
+        "idTeam": "43847",
+        "name": "Burkina Faso",
+        "previousRank": 52,
+        "rank": 48,
+        "totalPoints": 611
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 605,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VEN",
+        "countryURL": "/fifa-world-ranking/VEN",
+        "flag": {
+          "alt": "Venezuela",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VEN",
+          "title": "Venezuela",
+          "width": 70
+        },
+        "idTeam": "43931",
+        "name": "Venezuela",
+        "previousRank": 49,
+        "rank": 49,
+        "totalPoints": 608
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 616,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LTU",
+        "countryURL": "/fifa-world-ranking/LTU",
+        "flag": {
+          "alt": "Lithuania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LTU",
+          "title": "Lithuania",
+          "width": 70
+        },
+        "idTeam": "43957",
+        "name": "Lithuania",
+        "previousRank": 48,
+        "rank": 49,
+        "totalPoints": 608
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 604,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BIH",
+        "countryURL": "/fifa-world-ranking/BIH",
+        "flag": {
+          "alt": "Bosnia and Herzegovina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BIH",
+          "title": "Bosnia and Herzegovina",
+          "width": 70
+        },
+        "idTeam": "44037",
+        "name": "Bosnia and Herzegovina",
+        "previousRank": 51,
+        "rank": 51,
+        "totalPoints": 604
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 605,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIN",
+        "countryURL": "/fifa-world-ranking/FIN",
+        "flag": {
+          "alt": "Finland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIN",
+          "title": "Finland",
+          "width": 70
+        },
+        "idTeam": "43945",
+        "name": "Finland",
+        "previousRank": 49,
+        "rank": 52,
+        "totalPoints": 584
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 579,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PER",
+        "countryURL": "/fifa-world-ranking/PER",
+        "flag": {
+          "alt": "Peru",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PER",
+          "title": "Peru",
+          "width": 70
+        },
+        "idTeam": "43929",
+        "name": "Peru",
+        "previousRank": 53,
+        "rank": 53,
+        "totalPoints": 578
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 575,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLI",
+        "countryURL": "/fifa-world-ranking/MLI",
+        "flag": {
+          "alt": "Mali",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLI",
+          "title": "Mali",
+          "width": 70
+        },
+        "idTeam": "43869",
+        "name": "Mali",
+        "previousRank": 54,
+        "rank": 54,
+        "totalPoints": 575
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 574,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUN",
+        "countryURL": "/fifa-world-ranking/TUN",
+        "flag": {
+          "alt": "Tunisia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUN",
+          "title": "Tunisia",
+          "width": 70
+        },
+        "idTeam": "43888",
+        "name": "Tunisia",
+        "previousRank": 55,
+        "rank": 55,
+        "totalPoints": 574
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 555,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIR",
+        "countryURL": "/fifa-world-ranking/NIR",
+        "flag": {
+          "alt": "Northern Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIR",
+          "title": "Northern Ireland",
+          "width": 70
+        },
+        "idTeam": "43952",
+        "name": "Northern Ireland",
+        "previousRank": 57,
+        "rank": 56,
+        "totalPoints": 566
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 567,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HUN",
+        "countryURL": "/fifa-world-ranking/HUN",
+        "flag": {
+          "alt": "Hungary",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HUN",
+          "title": "Hungary",
+          "width": 70
+        },
+        "idTeam": "43950",
+        "name": "Hungary",
+        "previousRank": 56,
+        "rank": 57,
+        "totalPoints": 565
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 552,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POL",
+        "countryURL": "/fifa-world-ranking/POL",
+        "flag": {
+          "alt": "Poland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POL",
+          "title": "Poland",
+          "width": 70
+        },
+        "idTeam": "43962",
+        "name": "Poland",
+        "previousRank": 58,
+        "rank": 58,
+        "totalPoints": 561
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 518,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEL",
+        "countryURL": "/fifa-world-ranking/BEL",
+        "flag": {
+          "alt": "Belgium",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEL",
+          "title": "Belgium",
+          "width": 70
+        },
+        "idTeam": "43935",
+        "name": "Belgium",
+        "previousRank": 62,
+        "rank": 59,
+        "totalPoints": 541
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 531,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEN",
+        "countryURL": "/fifa-world-ranking/BEN",
+        "flag": {
+          "alt": "Benin",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEN",
+          "title": "Benin",
+          "width": 70
+        },
+        "idTeam": "43845",
+        "name": "Benin",
+        "previousRank": 59,
+        "rank": 60,
+        "totalPoints": 531
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 521,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRN",
+        "countryURL": "/fifa-world-ranking/IRN",
+        "flag": {
+          "alt": "IR Iran",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRN",
+          "title": "IR Iran",
+          "width": 70
+        },
+        "idTeam": "43817",
+        "name": "IR Iran",
+        "previousRank": 60,
+        "rank": 61,
+        "totalPoints": 521
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 521,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MKD",
+        "countryURL": "/fifa-world-ranking/MKD",
+        "flag": {
+          "alt": "FYR Macedonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MKD",
+          "title": "FYR Macedonia",
+          "width": 70
+        },
+        "idTeam": "44000",
+        "name": "FYR Macedonia",
+        "previousRank": 60,
+        "rank": 61,
+        "totalPoints": 521
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 516,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAN",
+        "countryURL": "/fifa-world-ranking/CAN",
+        "flag": {
+          "alt": "Canada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAN",
+          "title": "Canada",
+          "width": 70
+        },
+        "idTeam": "43899",
+        "name": "Canada",
+        "previousRank": 63,
+        "rank": 63,
+        "totalPoints": 516
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 500,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MNE",
+        "countryURL": "/fifa-world-ranking/MNE",
+        "flag": {
+          "alt": "Montenegro",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MNE",
+          "title": "Montenegro",
+          "width": 70
+        },
+        "idTeam": "999",
+        "name": "Montenegro",
+        "previousRank": 65,
+        "rank": 64,
+        "totalPoints": 500
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 491,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOL",
+        "countryURL": "/fifa-world-ranking/BOL",
+        "flag": {
+          "alt": "Bolivia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOL",
+          "title": "Bolivia",
+          "width": 70
+        },
+        "idTeam": "43923",
+        "name": "Bolivia",
+        "previousRank": 67,
+        "rank": 65,
+        "totalPoints": 499
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 495,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KSA",
+        "countryURL": "/fifa-world-ranking/KSA",
+        "flag": {
+          "alt": "Saudi Arabia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KSA",
+          "title": "Saudi Arabia",
+          "width": 70
+        },
+        "idTeam": "43835",
+        "name": "Saudi Arabia",
+        "previousRank": 66,
+        "rank": 66,
+        "totalPoints": 498
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 488,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CYP",
+        "countryURL": "/fifa-world-ranking/CYP",
+        "flag": {
+          "alt": "Cyprus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CYP",
+          "title": "Cyprus",
+          "width": 70
+        },
+        "idTeam": "43939",
+        "name": "Cyprus",
+        "previousRank": 68,
+        "rank": 67,
+        "totalPoints": 486
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 509,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUT",
+        "countryURL": "/fifa-world-ranking/AUT",
+        "flag": {
+          "alt": "Austria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUT",
+          "title": "Austria",
+          "width": 70
+        },
+        "idTeam": "43934",
+        "name": "Austria",
+        "previousRank": 64,
+        "rank": 68,
+        "totalPoints": 479
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 475,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHR",
+        "countryURL": "/fifa-world-ranking/BHR",
+        "flag": {
+          "alt": "Bahrain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHR",
+          "title": "Bahrain",
+          "width": 70
+        },
+        "idTeam": "43808",
+        "name": "Bahrain",
+        "previousRank": 69,
+        "rank": 69,
+        "totalPoints": 475
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 469,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAR",
+        "countryURL": "/fifa-world-ranking/MAR",
+        "flag": {
+          "alt": "Morocco",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAR",
+          "title": "Morocco",
+          "width": 70
+        },
+        "idTeam": "43872",
+        "name": "Morocco",
+        "previousRank": 70,
+        "rank": 70,
+        "totalPoints": 463
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 452,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZAM",
+        "countryURL": "/fifa-world-ranking/ZAM",
+        "flag": {
+          "alt": "Zambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZAM",
+          "title": "Zambia",
+          "width": 70
+        },
+        "idTeam": "43891",
+        "name": "Zambia",
+        "previousRank": 71,
+        "rank": 71,
+        "totalPoints": 456
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 452,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLV",
+        "countryURL": "/fifa-world-ranking/SLV",
+        "flag": {
+          "alt": "El Salvador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLV",
+          "title": "El Salvador",
+          "width": 70
+        },
+        "idTeam": "43904",
+        "name": "El Salvador",
+        "previousRank": 71,
+        "rank": 72,
+        "totalPoints": 452
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 437,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UGA",
+        "countryURL": "/fifa-world-ranking/UGA",
+        "flag": {
+          "alt": "Uganda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UGA",
+          "title": "Uganda",
+          "width": 70
+        },
+        "idTeam": "43889",
+        "name": "Uganda",
+        "previousRank": 74,
+        "rank": 73,
+        "totalPoints": 440
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 421,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAN",
+        "countryURL": "/fifa-world-ranking/PAN",
+        "flag": {
+          "alt": "Panama",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAN",
+          "title": "Panama",
+          "width": 70
+        },
+        "idTeam": "43914",
+        "name": "Panama",
+        "previousRank": 76,
+        "rank": 74,
+        "totalPoints": 434
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 414,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEN",
+        "countryURL": "/fifa-world-ranking/SEN",
+        "flag": {
+          "alt": "Senegal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEN",
+          "title": "Senegal",
+          "width": 70
+        },
+        "idTeam": "43879",
+        "name": "Senegal",
+        "previousRank": 77,
+        "rank": 75,
+        "totalPoints": 422
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 438,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TOG",
+        "countryURL": "/fifa-world-ranking/TOG",
+        "flag": {
+          "alt": "Togo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TOG",
+          "title": "Togo",
+          "width": 70
+        },
+        "idTeam": "43887",
+        "name": "Togo",
+        "previousRank": 73,
+        "rank": 76,
+        "totalPoints": 418
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 429,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "WAL",
+        "countryURL": "/fifa-world-ranking/WAL",
+        "flag": {
+          "alt": "Wales",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/WAL",
+          "title": "Wales",
+          "width": 70
+        },
+        "idTeam": "43974",
+        "name": "Wales",
+        "previousRank": 75,
+        "rank": 77,
+        "totalPoints": 415
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 413,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NZL",
+        "countryURL": "/fifa-world-ranking/NZL",
+        "flag": {
+          "alt": "New Zealand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NZL",
+          "title": "New Zealand",
+          "width": 70
+        },
+        "idTeam": "43978",
+        "name": "New Zealand",
+        "previousRank": 78,
+        "rank": 78,
+        "totalPoints": 410
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 406,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALB",
+        "countryURL": "/fifa-world-ranking/ALB",
+        "flag": {
+          "alt": "Albania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALB",
+          "title": "Albania",
+          "width": 70
+        },
+        "idTeam": "43932",
+        "name": "Albania",
+        "previousRank": 80,
+        "rank": 79,
+        "totalPoints": 406
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 394,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRQ",
+        "countryURL": "/fifa-world-ranking/IRQ",
+        "flag": {
+          "alt": "Iraq",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRQ",
+          "title": "Iraq",
+          "width": 70
+        },
+        "idTeam": "43818",
+        "name": "Iraq",
+        "previousRank": 82,
+        "rank": 80,
+        "totalPoints": 405
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 412,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JAM",
+        "countryURL": "/fifa-world-ranking/JAM",
+        "flag": {
+          "alt": "Jamaica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JAM",
+          "title": "Jamaica",
+          "width": 70
+        },
+        "idTeam": "43910",
+        "name": "Jamaica",
+        "previousRank": 79,
+        "rank": 81,
+        "totalPoints": 399
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 397,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLR",
+        "countryURL": "/fifa-world-ranking/BLR",
+        "flag": {
+          "alt": "Belarus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLR",
+          "title": "Belarus",
+          "width": 70
+        },
+        "idTeam": "43937",
+        "name": "Belarus",
+        "previousRank": 81,
+        "rank": 82,
+        "totalPoints": 397
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 369,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RSA",
+        "countryURL": "/fifa-world-ranking/RSA",
+        "flag": {
+          "alt": "South Africa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RSA",
+          "title": "South Africa",
+          "width": 70
+        },
+        "idTeam": "43883",
+        "name": "South Africa",
+        "previousRank": 90,
+        "rank": 83,
+        "totalPoints": 392
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 390,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHN",
+        "countryURL": "/fifa-world-ranking/CHN",
+        "flag": {
+          "alt": "China PR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHN",
+          "title": "China PR",
+          "width": 70
+        },
+        "idTeam": "43812",
+        "name": "China PR",
+        "previousRank": 85,
+        "rank": 84,
+        "totalPoints": 387
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 378,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MOZ",
+        "countryURL": "/fifa-world-ranking/MOZ",
+        "flag": {
+          "alt": "Mozambique",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MOZ",
+          "title": "Mozambique",
+          "width": 70
+        },
+        "idTeam": "43873",
+        "name": "Mozambique",
+        "previousRank": 89,
+        "rank": 85,
+        "totalPoints": 383
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 394,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MWI",
+        "countryURL": "/fifa-world-ranking/MWI",
+        "flag": {
+          "alt": "Malawi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MWI",
+          "title": "Malawi",
+          "width": 70
+        },
+        "idTeam": "43868",
+        "name": "Malawi",
+        "previousRank": 82,
+        "rank": 86,
+        "totalPoints": 382
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 381,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUI",
+        "countryURL": "/fifa-world-ranking/GUI",
+        "flag": {
+          "alt": "Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUI",
+          "title": "Guinea",
+          "width": 70
+        },
+        "idTeam": "43861",
+        "name": "Guinea",
+        "previousRank": 87,
+        "rank": 87,
+        "totalPoints": 381
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 390,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ANG",
+        "countryURL": "/fifa-world-ranking/ANG",
+        "flag": {
+          "alt": "Angola",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ANG",
+          "title": "Angola",
+          "width": 70
+        },
+        "idTeam": "43844",
+        "name": "Angola",
+        "previousRank": 85,
+        "rank": 88,
+        "totalPoints": 379
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 392,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDA",
+        "countryURL": "/fifa-world-ranking/MDA",
+        "flag": {
+          "alt": "Moldova",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDA",
+          "title": "Moldova",
+          "width": 70
+        },
+        "idTeam": "44036",
+        "name": "Moldova",
+        "previousRank": 84,
+        "rank": 89,
+        "totalPoints": 378
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 367,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISL",
+        "countryURL": "/fifa-world-ranking/ISL",
+        "flag": {
+          "alt": "Iceland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISL",
+          "title": "Iceland",
+          "width": 70
+        },
+        "idTeam": "43951",
+        "name": "Iceland",
+        "previousRank": 91,
+        "rank": 90,
+        "totalPoints": 367
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 346,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "OMA",
+        "countryURL": "/fifa-world-ranking/OMA",
+        "flag": {
+          "alt": "Oman",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/OMA",
+          "title": "Oman",
+          "width": 70
+        },
+        "idTeam": "43831",
+        "name": "Oman",
+        "previousRank": 97,
+        "rank": 91,
+        "totalPoints": 362
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 381,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HAI",
+        "countryURL": "/fifa-world-ranking/HAI",
+        "flag": {
+          "alt": "Haiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HAI",
+          "title": "Haiti",
+          "width": 70
+        },
+        "idTeam": "43908",
+        "name": "Haiti",
+        "previousRank": 87,
+        "rank": 91,
+        "totalPoints": 362
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 361,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAM",
+        "countryURL": "/fifa-world-ranking/GAM",
+        "flag": {
+          "alt": "Gambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAM",
+          "title": "Gambia",
+          "width": 70
+        },
+        "idTeam": "43859",
+        "name": "Gambia",
+        "previousRank": 93,
+        "rank": 93,
+        "totalPoints": 361
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 354,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UZB",
+        "countryURL": "/fifa-world-ranking/UZB",
+        "flag": {
+          "alt": "Uzbekistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UZB",
+          "title": "Uzbekistan",
+          "width": 70
+        },
+        "idTeam": "44005",
+        "name": "Uzbekistan",
+        "previousRank": 94,
+        "rank": 94,
+        "totalPoints": 354
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 367,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TRI",
+        "countryURL": "/fifa-world-ranking/TRI",
+        "flag": {
+          "alt": "Trinidad and Tobago",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TRI",
+          "title": "Trinidad and Tobago",
+          "width": 70
+        },
+        "idTeam": "43920",
+        "name": "Trinidad and Tobago",
+        "previousRank": 91,
+        "rank": 95,
+        "totalPoints": 353
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 351,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "QAT",
+        "countryURL": "/fifa-world-ranking/QAT",
+        "flag": {
+          "alt": "Qatar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/QAT",
+          "title": "Qatar",
+          "width": 70
+        },
+        "idTeam": "43834",
+        "name": "Qatar",
+        "previousRank": 95,
+        "rank": 96,
+        "totalPoints": 351
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 348,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KUW",
+        "countryURL": "/fifa-world-ranking/KUW",
+        "flag": {
+          "alt": "Kuwait",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KUW",
+          "title": "Kuwait",
+          "width": 70
+        },
+        "idTeam": "43823",
+        "name": "Kuwait",
+        "previousRank": 96,
+        "rank": 97,
+        "totalPoints": 350
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 342,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SYR",
+        "countryURL": "/fifa-world-ranking/SYR",
+        "flag": {
+          "alt": "Syria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SYR",
+          "title": "Syria",
+          "width": 70
+        },
+        "idTeam": "43838",
+        "name": "Syria",
+        "previousRank": 98,
+        "rank": 98,
+        "totalPoints": 343
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 296,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EST",
+        "countryURL": "/fifa-world-ranking/EST",
+        "flag": {
+          "alt": "Estonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EST",
+          "title": "Estonia",
+          "width": 70
+        },
+        "idTeam": "43943",
+        "name": "Estonia",
+        "previousRank": 104,
+        "rank": 99,
+        "totalPoints": 320
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 311,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARM",
+        "countryURL": "/fifa-world-ranking/ARM",
+        "flag": {
+          "alt": "Armenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARM",
+          "title": "Armenia",
+          "width": 70
+        },
+        "idTeam": "43933",
+        "name": "Armenia",
+        "previousRank": 99,
+        "rank": 100,
+        "totalPoints": 311
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 310,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UAE",
+        "countryURL": "/fifa-world-ranking/UAE",
+        "flag": {
+          "alt": "United Arab Emirates",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UAE",
+          "title": "United Arab Emirates",
+          "width": 70
+        },
+        "idTeam": "43840",
+        "name": "United Arab Emirates",
+        "previousRank": 100,
+        "rank": 101,
+        "totalPoints": 310
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 305,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBY",
+        "countryURL": "/fifa-world-ranking/LBY",
+        "flag": {
+          "alt": "Libya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBY",
+          "title": "Libya",
+          "width": 70
+        },
+        "idTeam": "43866",
+        "name": "Libya",
+        "previousRank": 102,
+        "rank": 102,
+        "totalPoints": 309
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 308,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CGO",
+        "countryURL": "/fifa-world-ranking/CGO",
+        "flag": {
+          "alt": "Congo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CGO",
+          "title": "Congo",
+          "width": 70
+        },
+        "idTeam": "43853",
+        "name": "Congo",
+        "previousRank": 101,
+        "rank": 103,
+        "totalPoints": 308
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 301,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JOR",
+        "countryURL": "/fifa-world-ranking/JOR",
+        "flag": {
+          "alt": "Jordan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JOR",
+          "title": "Jordan",
+          "width": 70
+        },
+        "idTeam": "43820",
+        "name": "Jordan",
+        "previousRank": 103,
+        "rank": 104,
+        "totalPoints": 300
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 292,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PRK",
+        "countryURL": "/fifa-world-ranking/PRK",
+        "flag": {
+          "alt": "Korea DPR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PRK",
+          "title": "Korea DPR",
+          "width": 70
+        },
+        "idTeam": "43821",
+        "name": "Korea DPR",
+        "previousRank": 106,
+        "rank": 105,
+        "totalPoints": 285
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 294,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "THA",
+        "countryURL": "/fifa-world-ranking/THA",
+        "flag": {
+          "alt": "Thailand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/THA",
+          "title": "Thailand",
+          "width": 70
+        },
+        "idTeam": "43839",
+        "name": "Thailand",
+        "previousRank": 105,
+        "rank": 106,
+        "totalPoints": 276
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 269,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RWA",
+        "countryURL": "/fifa-world-ranking/RWA",
+        "flag": {
+          "alt": "Rwanda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RWA",
+          "title": "Rwanda",
+          "width": 70
+        },
+        "idTeam": "43877",
+        "name": "Rwanda",
+        "previousRank": 107,
+        "rank": 107,
+        "totalPoints": 269
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 259,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAN",
+        "countryURL": "/fifa-world-ranking/TAN",
+        "flag": {
+          "alt": "Tanzania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAN",
+          "title": "Tanzania",
+          "width": 70
+        },
+        "idTeam": "43886",
+        "name": "Tanzania",
+        "previousRank": 108,
+        "rank": 108,
+        "totalPoints": 261
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 257,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AZE",
+        "countryURL": "/fifa-world-ranking/AZE",
+        "flag": {
+          "alt": "Azerbaijan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AZE",
+          "title": "Azerbaijan",
+          "width": 70
+        },
+        "idTeam": "43994",
+        "name": "Azerbaijan",
+        "previousRank": 110,
+        "rank": 109,
+        "totalPoints": 259
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 248,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZIM",
+        "countryURL": "/fifa-world-ranking/ZIM",
+        "flag": {
+          "alt": "Zimbabwe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZIM",
+          "title": "Zimbabwe",
+          "width": 70
+        },
+        "idTeam": "43892",
+        "name": "Zimbabwe",
+        "previousRank": 113,
+        "rank": 110,
+        "totalPoints": 258
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 251,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NAM",
+        "countryURL": "/fifa-world-ranking/NAM",
+        "flag": {
+          "alt": "Namibia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NAM",
+          "title": "Namibia",
+          "width": 70
+        },
+        "idTeam": "43874",
+        "name": "Namibia",
+        "previousRank": 112,
+        "rank": 111,
+        "totalPoints": 251
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 258,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "YEM",
+        "countryURL": "/fifa-world-ranking/YEM",
+        "flag": {
+          "alt": "Yemen",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/YEM",
+          "title": "Yemen",
+          "width": 70
+        },
+        "idTeam": "43842",
+        "name": "Yemen",
+        "previousRank": 109,
+        "rank": 112,
+        "totalPoints": 248
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 243,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KEN",
+        "countryURL": "/fifa-world-ranking/KEN",
+        "flag": {
+          "alt": "Kenya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KEN",
+          "title": "Kenya",
+          "width": 70
+        },
+        "idTeam": "43863",
+        "name": "Kenya",
+        "previousRank": 114,
+        "rank": 113,
+        "totalPoints": 243
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 236,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CPV",
+        "countryURL": "/fifa-world-ranking/CPV",
+        "flag": {
+          "alt": "Cape Verde Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CPV",
+          "title": "Cape Verde Islands",
+          "width": 70
+        },
+        "idTeam": "43850",
+        "name": "Cape Verde Islands",
+        "previousRank": 117,
+        "rank": 114,
+        "totalPoints": 241
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 241,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUA",
+        "countryURL": "/fifa-world-ranking/GUA",
+        "flag": {
+          "alt": "Guatemala",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUA",
+          "title": "Guatemala",
+          "width": 70
+        },
+        "idTeam": "43906",
+        "name": "Guatemala",
+        "previousRank": 115,
+        "rank": 114,
+        "totalPoints": 241
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 237,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOT",
+        "countryURL": "/fifa-world-ranking/BOT",
+        "flag": {
+          "alt": "Botswana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOT",
+          "title": "Botswana",
+          "width": 70
+        },
+        "idTeam": "43846",
+        "name": "Botswana",
+        "previousRank": 116,
+        "rank": 116,
+        "totalPoints": 236
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 231,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIE",
+        "countryURL": "/fifa-world-ranking/VIE",
+        "flag": {
+          "alt": "Vietnam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIE",
+          "title": "Vietnam",
+          "width": 70
+        },
+        "idTeam": "43841",
+        "name": "Vietnam",
+        "previousRank": 118,
+        "rank": 117,
+        "totalPoints": 231
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 211,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SDN",
+        "countryURL": "/fifa-world-ranking/SDN",
+        "flag": {
+          "alt": "Sudan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SDN",
+          "title": "Sudan",
+          "width": 70
+        },
+        "idTeam": "43884",
+        "name": "Sudan",
+        "previousRank": 121,
+        "rank": 118,
+        "totalPoints": 219
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 217,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ATG",
+        "countryURL": "/fifa-world-ranking/ATG",
+        "flag": {
+          "alt": "Antigua and Barbuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ATG",
+          "title": "Antigua and Barbuda",
+          "width": 70
+        },
+        "idTeam": "1882218",
+        "name": "Antigua and Barbuda",
+        "previousRank": 119,
+        "rank": 119,
+        "totalPoints": 218
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 217,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GEO",
+        "countryURL": "/fifa-world-ranking/GEO",
+        "flag": {
+          "alt": "Georgia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GEO",
+          "title": "Georgia",
+          "width": 70
+        },
+        "idTeam": "43947",
+        "name": "Georgia",
+        "previousRank": 119,
+        "rank": 120,
+        "totalPoints": 217
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 253,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COD",
+        "countryURL": "/fifa-world-ranking/COD",
+        "flag": {
+          "alt": "Congo DR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COD",
+          "title": "Congo DR",
+          "width": 70
+        },
+        "idTeam": "20014",
+        "name": "Congo DR",
+        "previousRank": 111,
+        "rank": 121,
+        "totalPoints": 215
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 205,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUY",
+        "countryURL": "/fifa-world-ranking/GUY",
+        "flag": {
+          "alt": "Guyana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUY",
+          "title": "Guyana",
+          "width": 70
+        },
+        "idTeam": "43907",
+        "name": "Guyana",
+        "previousRank": 122,
+        "rank": 122,
+        "totalPoints": 205
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 204,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ETH",
+        "countryURL": "/fifa-world-ranking/ETH",
+        "flag": {
+          "alt": "Ethiopia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ETH",
+          "title": "Ethiopia",
+          "width": 70
+        },
+        "idTeam": "43857",
+        "name": "Ethiopia",
+        "previousRank": 123,
+        "rank": 123,
+        "totalPoints": 200
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 198,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRN",
+        "countryURL": "/fifa-world-ranking/GRN",
+        "flag": {
+          "alt": "Grenada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRN",
+          "title": "Grenada",
+          "width": 70
+        },
+        "idTeam": "43905",
+        "name": "Grenada",
+        "previousRank": 124,
+        "rank": 124,
+        "totalPoints": 198
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 196,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRO",
+        "countryURL": "/fifa-world-ranking/FRO",
+        "flag": {
+          "alt": "Faroe Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRO",
+          "title": "Faroe Islands",
+          "width": 70
+        },
+        "idTeam": "43944",
+        "name": "Faroe Islands",
+        "previousRank": 125,
+        "rank": 125,
+        "totalPoints": 196
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 196,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CUB",
+        "countryURL": "/fifa-world-ranking/CUB",
+        "flag": {
+          "alt": "Cuba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CUB",
+          "title": "Cuba",
+          "width": 70
+        },
+        "idTeam": "43902",
+        "name": "Cuba",
+        "previousRank": 125,
+        "rank": 126,
+        "totalPoints": 194
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 193,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LUX",
+        "countryURL": "/fifa-world-ranking/LUX",
+        "flag": {
+          "alt": "Luxembourg",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LUX",
+          "title": "Luxembourg",
+          "width": 70
+        },
+        "idTeam": "43958",
+        "name": "Luxembourg",
+        "previousRank": 127,
+        "rank": 127,
+        "totalPoints": 193
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 193,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SGP",
+        "countryURL": "/fifa-world-ranking/SGP",
+        "flag": {
+          "alt": "Singapore",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SGP",
+          "title": "Singapore",
+          "width": 70
+        },
+        "idTeam": "43836",
+        "name": "Singapore",
+        "previousRank": 127,
+        "rank": 127,
+        "totalPoints": 193
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 180,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KAZ",
+        "countryURL": "/fifa-world-ranking/KAZ",
+        "flag": {
+          "alt": "Kazakhstan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KAZ",
+          "title": "Kazakhstan",
+          "width": 70
+        },
+        "idTeam": "44027",
+        "name": "Kazakhstan",
+        "previousRank": 129,
+        "rank": 129,
+        "totalPoints": 183
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 162,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLE",
+        "countryURL": "/fifa-world-ranking/SLE",
+        "flag": {
+          "alt": "Sierra Leone",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLE",
+          "title": "Sierra Leone",
+          "width": 70
+        },
+        "idTeam": "43881",
+        "name": "Sierra Leone",
+        "previousRank": 133,
+        "rank": 130,
+        "totalPoints": 181
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 165,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWZ",
+        "countryURL": "/fifa-world-ranking/SWZ",
+        "flag": {
+          "alt": "Swaziland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWZ",
+          "title": "Swaziland",
+          "width": 70
+        },
+        "idTeam": "43885",
+        "name": "Swaziland",
+        "previousRank": 131,
+        "rank": 131,
+        "totalPoints": 171
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 167,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIJ",
+        "countryURL": "/fifa-world-ranking/FIJ",
+        "flag": {
+          "alt": "Fiji",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIJ",
+          "title": "Fiji",
+          "width": 70
+        },
+        "idTeam": "43977",
+        "name": "Fiji",
+        "previousRank": 130,
+        "rank": 132,
+        "totalPoints": 167
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 164,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IND",
+        "countryURL": "/fifa-world-ranking/IND",
+        "flag": {
+          "alt": "India",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IND",
+          "title": "India",
+          "width": 70
+        },
+        "idTeam": "43815",
+        "name": "India",
+        "previousRank": 132,
+        "rank": 133,
+        "totalPoints": 163
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 160,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BER",
+        "countryURL": "/fifa-world-ranking/BER",
+        "flag": {
+          "alt": "Bermuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BER",
+          "title": "Bermuda",
+          "width": 70
+        },
+        "idTeam": "43898",
+        "name": "Bermuda",
+        "previousRank": 134,
+        "rank": 134,
+        "totalPoints": 160
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 157,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRB",
+        "countryURL": "/fifa-world-ranking/BRB",
+        "flag": {
+          "alt": "Barbados",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRB",
+          "title": "Barbados",
+          "width": 70
+        },
+        "idTeam": "43896",
+        "name": "Barbados",
+        "previousRank": 135,
+        "rank": 135,
+        "totalPoints": 155
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 157,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TJK",
+        "countryURL": "/fifa-world-ranking/TJK",
+        "flag": {
+          "alt": "Tajikistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TJK",
+          "title": "Tajikistan",
+          "width": 70
+        },
+        "idTeam": "44003",
+        "name": "Tajikistan",
+        "previousRank": 135,
+        "rank": 135,
+        "totalPoints": 155
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 147,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUR",
+        "countryURL": "/fifa-world-ranking/SUR",
+        "flag": {
+          "alt": "Suriname",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUR",
+          "title": "Suriname",
+          "width": 70
+        },
+        "idTeam": "43919",
+        "name": "Suriname",
+        "previousRank": 140,
+        "rank": 137,
+        "totalPoints": 153
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 153,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IDN",
+        "countryURL": "/fifa-world-ranking/IDN",
+        "flag": {
+          "alt": "Indonesia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IDN",
+          "title": "Indonesia",
+          "width": 70
+        },
+        "idTeam": "43816",
+        "name": "Indonesia",
+        "previousRank": 137,
+        "rank": 137,
+        "totalPoints": 153
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 153,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TKM",
+        "countryURL": "/fifa-world-ranking/TKM",
+        "flag": {
+          "alt": "Turkmenistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TKM",
+          "title": "Turkmenistan",
+          "width": 70
+        },
+        "idTeam": "44004",
+        "name": "Turkmenistan",
+        "previousRank": 137,
+        "rank": 139,
+        "totalPoints": 151
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 150,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HKG",
+        "countryURL": "/fifa-world-ranking/HKG",
+        "flag": {
+          "alt": "Hong Kong",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HKG",
+          "title": "Hong Kong",
+          "width": 70
+        },
+        "idTeam": "43814",
+        "name": "Hong Kong",
+        "previousRank": 139,
+        "rank": 140,
+        "totalPoints": 150
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 142,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EQG",
+        "countryURL": "/fifa-world-ranking/EQG",
+        "flag": {
+          "alt": "Equatorial Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EQG",
+          "title": "Equatorial Guinea",
+          "width": 70
+        },
+        "idTeam": "43856",
+        "name": "Equatorial Guinea",
+        "previousRank": 141,
+        "rank": 141,
+        "totalPoints": 142
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 129,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDV",
+        "countryURL": "/fifa-world-ranking/MDV",
+        "flag": {
+          "alt": "Maldives",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDV",
+          "title": "Maldives",
+          "width": 70
+        },
+        "idTeam": "43828",
+        "name": "Maldives",
+        "previousRank": 143,
+        "rank": 142,
+        "totalPoints": 129
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 128,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHA",
+        "countryURL": "/fifa-world-ranking/CHA",
+        "flag": {
+          "alt": "Chad",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHA",
+          "title": "Chad",
+          "width": 70
+        },
+        "idTeam": "43852",
+        "name": "Chad",
+        "previousRank": 144,
+        "rank": 143,
+        "totalPoints": 128
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 127,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BDI",
+        "countryURL": "/fifa-world-ranking/BDI",
+        "flag": {
+          "alt": "Burundi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BDI",
+          "title": "Burundi",
+          "width": 70
+        },
+        "idTeam": "43848",
+        "name": "Burundi",
+        "previousRank": 145,
+        "rank": 144,
+        "totalPoints": 127
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 126,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NCL",
+        "countryURL": "/fifa-world-ranking/NCL",
+        "flag": {
+          "alt": "New Caledonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NCL",
+          "title": "New Caledonia",
+          "width": 70
+        },
+        "idTeam": "20010",
+        "name": "New Caledonia",
+        "previousRank": 146,
+        "rank": 145,
+        "totalPoints": 126
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 123,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAS",
+        "countryURL": "/fifa-world-ranking/MAS",
+        "flag": {
+          "alt": "Malaysia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAS",
+          "title": "Malaysia",
+          "width": 70
+        },
+        "idTeam": "43827",
+        "name": "Malaysia",
+        "previousRank": 147,
+        "rank": 146,
+        "totalPoints": 123
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 141,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MYA",
+        "countryURL": "/fifa-world-ranking/MYA",
+        "flag": {
+          "alt": "Myanmar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MYA",
+          "title": "Myanmar",
+          "width": 70
+        },
+        "idTeam": "43829",
+        "name": "Myanmar",
+        "previousRank": 142,
+        "rank": 147,
+        "totalPoints": 122
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 115,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAD",
+        "countryURL": "/fifa-world-ranking/MAD",
+        "flag": {
+          "alt": "Madagascar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAD",
+          "title": "Madagascar",
+          "width": 70
+        },
+        "idTeam": "43867",
+        "name": "Madagascar",
+        "previousRank": 149,
+        "rank": 148,
+        "totalPoints": 121
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 117,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LIE",
+        "countryURL": "/fifa-world-ranking/LIE",
+        "flag": {
+          "alt": "Liechtenstein",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LIE",
+          "title": "Liechtenstein",
+          "width": 70
+        },
+        "idTeam": "43956",
+        "name": "Liechtenstein",
+        "previousRank": 148,
+        "rank": 149,
+        "totalPoints": 117
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 112,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBR",
+        "countryURL": "/fifa-world-ranking/LBR",
+        "flag": {
+          "alt": "Liberia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBR",
+          "title": "Liberia",
+          "width": 70
+        },
+        "idTeam": "43865",
+        "name": "Liberia",
+        "previousRank": 152,
+        "rank": 150,
+        "totalPoints": 114
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 113,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SKN",
+        "countryURL": "/fifa-world-ranking/SKN",
+        "flag": {
+          "alt": "St. Kitts and Nevis",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SKN",
+          "title": "St. Kitts and Nevis",
+          "width": 70
+        },
+        "idTeam": "43916",
+        "name": "St. Kitts and Nevis",
+        "previousRank": 151,
+        "rank": 151,
+        "totalPoints": 113
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 115,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LES",
+        "countryURL": "/fifa-world-ranking/LES",
+        "flag": {
+          "alt": "Lesotho",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LES",
+          "title": "Lesotho",
+          "width": 70
+        },
+        "idTeam": "43864",
+        "name": "Lesotho",
+        "previousRank": 149,
+        "rank": 152,
+        "totalPoints": 109
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 108,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VAN",
+        "countryURL": "/fifa-world-ranking/VAN",
+        "flag": {
+          "alt": "Vanuatu",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VAN",
+          "title": "Vanuatu",
+          "width": 70
+        },
+        "idTeam": "43982",
+        "name": "Vanuatu",
+        "previousRank": 153,
+        "rank": 153,
+        "totalPoints": 108
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ANT",
+        "countryURL": "/fifa-world-ranking/ANT",
+        "flag": {
+          "alt": "Netherlands Antilles",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ANT",
+          "title": "Netherlands Antilles",
+          "width": 70
+        },
+        "idTeam": "43912",
+        "name": "Netherlands Antilles",
+        "previousRank": 157,
+        "rank": 154,
+        "totalPoints": 103
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 95,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ERI",
+        "countryURL": "/fifa-world-ranking/ERI",
+        "flag": {
+          "alt": "Eritrea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ERI",
+          "title": "Eritrea",
+          "width": 70
+        },
+        "idTeam": "20006",
+        "name": "Eritrea",
+        "previousRank": 159,
+        "rank": 155,
+        "totalPoints": 101
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 101,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NCA",
+        "countryURL": "/fifa-world-ranking/NCA",
+        "flag": {
+          "alt": "Nicaragua",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NCA",
+          "title": "Nicaragua",
+          "width": 70
+        },
+        "idTeam": "43913",
+        "name": "Nicaragua",
+        "previousRank": 155,
+        "rank": 155,
+        "totalPoints": 101
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 103,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLT",
+        "countryURL": "/fifa-world-ranking/MLT",
+        "flag": {
+          "alt": "Malta",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLT",
+          "title": "Malta",
+          "width": 70
+        },
+        "idTeam": "43959",
+        "name": "Malta",
+        "previousRank": 154,
+        "rank": 157,
+        "totalPoints": 100
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 94,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAN",
+        "countryURL": "/fifa-world-ranking/BAN",
+        "flag": {
+          "alt": "Bangladesh",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAN",
+          "title": "Bangladesh",
+          "width": 70
+        },
+        "idTeam": "43809",
+        "name": "Bangladesh",
+        "previousRank": 160,
+        "rank": 157,
+        "totalPoints": 100
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 99,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SRI",
+        "countryURL": "/fifa-world-ranking/SRI",
+        "flag": {
+          "alt": "Sri Lanka",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SRI",
+          "title": "Sri Lanka",
+          "width": 70
+        },
+        "idTeam": "43837",
+        "name": "Sri Lanka",
+        "previousRank": 156,
+        "rank": 159,
+        "totalPoints": 99
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LIB",
+        "countryURL": "/fifa-world-ranking/LIB",
+        "flag": {
+          "alt": "Lebanon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LIB",
+          "title": "Lebanon",
+          "width": 70
+        },
+        "idTeam": "43825",
+        "name": "Lebanon",
+        "previousRank": 157,
+        "rank": 160,
+        "totalPoints": 98
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 92,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NEP",
+        "countryURL": "/fifa-world-ranking/NEP",
+        "flag": {
+          "alt": "Nepal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NEP",
+          "title": "Nepal",
+          "width": 70
+        },
+        "idTeam": "43830",
+        "name": "Nepal",
+        "previousRank": 161,
+        "rank": 161,
+        "totalPoints": 96
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 92,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIG",
+        "countryURL": "/fifa-world-ranking/NIG",
+        "flag": {
+          "alt": "Niger",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIG",
+          "title": "Niger",
+          "width": 70
+        },
+        "idTeam": "43875",
+        "name": "Niger",
+        "previousRank": 161,
+        "rank": 162,
+        "totalPoints": 92
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 91,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIN",
+        "countryURL": "/fifa-world-ranking/VIN",
+        "flag": {
+          "alt": "St. Vincent / Grenadines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIN",
+          "title": "St. Vincent / Grenadines",
+          "width": 70
+        },
+        "idTeam": "43918",
+        "name": "St. Vincent / Grenadines",
+        "previousRank": 164,
+        "rank": 163,
+        "totalPoints": 91
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 81,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MTN",
+        "countryURL": "/fifa-world-ranking/MTN",
+        "flag": {
+          "alt": "Mauritania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MTN",
+          "title": "Mauritania",
+          "width": 70
+        },
+        "idTeam": "43870",
+        "name": "Mauritania",
+        "previousRank": 165,
+        "rank": 164,
+        "totalPoints": 81
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 78,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAK",
+        "countryURL": "/fifa-world-ranking/PAK",
+        "flag": {
+          "alt": "Pakistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAK",
+          "title": "Pakistan",
+          "width": 70
+        },
+        "idTeam": "43832",
+        "name": "Pakistan",
+        "previousRank": 166,
+        "rank": 165,
+        "totalPoints": 78
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 76,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PUR",
+        "countryURL": "/fifa-world-ranking/PUR",
+        "flag": {
+          "alt": "Puerto Rico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PUR",
+          "title": "Puerto Rico",
+          "width": 70
+        },
+        "idTeam": "43915",
+        "name": "Puerto Rico",
+        "previousRank": 168,
+        "rank": 166,
+        "totalPoints": 76
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 78,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TPE",
+        "countryURL": "/fifa-world-ranking/TPE",
+        "flag": {
+          "alt": "Chinese Taipei",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TPE",
+          "title": "Chinese Taipei",
+          "width": 70
+        },
+        "idTeam": "43813",
+        "name": "Chinese Taipei",
+        "previousRank": 166,
+        "rank": 167,
+        "totalPoints": 75
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 92,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KGZ",
+        "countryURL": "/fifa-world-ranking/KGZ",
+        "flag": {
+          "alt": "Kyrgyz Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KGZ",
+          "title": "Kyrgyz Republic",
+          "width": 70
+        },
+        "idTeam": "43999",
+        "name": "Kyrgyz Republic",
+        "previousRank": 161,
+        "rank": 168,
+        "totalPoints": 74
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 55,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PHI",
+        "countryURL": "/fifa-world-ranking/PHI",
+        "flag": {
+          "alt": "Philippines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PHI",
+          "title": "Philippines",
+          "width": 70
+        },
+        "idTeam": "43833",
+        "name": "Philippines",
+        "previousRank": 170,
+        "rank": 169,
+        "totalPoints": 67
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 60,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOL",
+        "countryURL": "/fifa-world-ranking/SOL",
+        "flag": {
+          "alt": "Solomon Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOL",
+          "title": "Solomon Islands",
+          "width": 70
+        },
+        "idTeam": "43980",
+        "name": "Solomon Islands",
+        "previousRank": 169,
+        "rank": 170,
+        "totalPoints": 60
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 43,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COM",
+        "countryURL": "/fifa-world-ranking/COM",
+        "flag": {
+          "alt": "Comoros",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COM",
+          "title": "Comoros",
+          "width": 70
+        },
+        "idTeam": "1896913",
+        "name": "Comoros",
+        "previousRank": 172,
+        "rank": 171,
+        "totalPoints": 43
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 40,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MRI",
+        "countryURL": "/fifa-world-ranking/MRI",
+        "flag": {
+          "alt": "Mauritius",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MRI",
+          "title": "Mauritius",
+          "width": 70
+        },
+        "idTeam": "43871",
+        "name": "Mauritius",
+        "previousRank": 173,
+        "rank": 172,
+        "totalPoints": 40
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 39,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOM",
+        "countryURL": "/fifa-world-ranking/SOM",
+        "flag": {
+          "alt": "Somalia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOM",
+          "title": "Somalia",
+          "width": 70
+        },
+        "idTeam": "43882",
+        "name": "Somalia",
+        "previousRank": 174,
+        "rank": 173,
+        "totalPoints": 39
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 39,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LAO",
+        "countryURL": "/fifa-world-ranking/LAO",
+        "flag": {
+          "alt": "Laos",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LAO",
+          "title": "Laos",
+          "width": 70
+        },
+        "idTeam": "43824",
+        "name": "Laos",
+        "previousRank": 174,
+        "rank": 173,
+        "totalPoints": 39
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 39,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAY",
+        "countryURL": "/fifa-world-ranking/CAY",
+        "flag": {
+          "alt": "Cayman Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAY",
+          "title": "Cayman Islands",
+          "width": 70
+        },
+        "idTeam": "43900",
+        "name": "Cayman Islands",
+        "previousRank": 174,
+        "rank": 173,
+        "totalPoints": 39
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 39,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PLE",
+        "countryURL": "/fifa-world-ranking/PLE",
+        "flag": {
+          "alt": "Palestine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PLE",
+          "title": "Palestine",
+          "width": 70
+        },
+        "idTeam": "43989",
+        "name": "Palestine",
+        "previousRank": 174,
+        "rank": 173,
+        "totalPoints": 39
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 38,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SAM",
+        "countryURL": "/fifa-world-ranking/SAM",
+        "flag": {
+          "alt": "Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SAM",
+          "title": "Samoa",
+          "width": 70
+        },
+        "idTeam": "1882637",
+        "name": "Samoa",
+        "previousRank": 179,
+        "rank": 177,
+        "totalPoints": 38
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 39,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEY",
+        "countryURL": "/fifa-world-ranking/SEY",
+        "flag": {
+          "alt": "Seychelles",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEY",
+          "title": "Seychelles",
+          "width": 70
+        },
+        "idTeam": "43880",
+        "name": "Seychelles",
+        "previousRank": 174,
+        "rank": 178,
+        "totalPoints": 37
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 36,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MNG",
+        "countryURL": "/fifa-world-ranking/MNG",
+        "flag": {
+          "alt": "Mongolia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MNG",
+          "title": "Mongolia",
+          "width": 70
+        },
+        "idTeam": "20008",
+        "name": "Mongolia",
+        "previousRank": 180,
+        "rank": 179,
+        "totalPoints": 36
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 34,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLZ",
+        "countryURL": "/fifa-world-ranking/BLZ",
+        "flag": {
+          "alt": "Belize",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLZ",
+          "title": "Belize",
+          "width": 70
+        },
+        "idTeam": "44011",
+        "name": "Belize",
+        "previousRank": 181,
+        "rank": 179,
+        "totalPoints": 36
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 34,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAH",
+        "countryURL": "/fifa-world-ranking/BAH",
+        "flag": {
+          "alt": "Bahamas",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAH",
+          "title": "Bahamas",
+          "width": 70
+        },
+        "idTeam": "43895",
+        "name": "Bahamas",
+        "previousRank": 181,
+        "rank": 181,
+        "totalPoints": 34
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 34,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COK",
+        "countryURL": "/fifa-world-ranking/COK",
+        "flag": {
+          "alt": "Cook Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COK",
+          "title": "Cook Islands",
+          "width": 70
+        },
+        "idTeam": "44007",
+        "name": "Cook Islands",
+        "previousRank": 181,
+        "rank": 181,
+        "totalPoints": 34
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 33,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DMA",
+        "countryURL": "/fifa-world-ranking/DMA",
+        "flag": {
+          "alt": "Dominica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DMA",
+          "title": "Dominica",
+          "width": 70
+        },
+        "idTeam": "43997",
+        "name": "Dominica",
+        "previousRank": 184,
+        "rank": 183,
+        "totalPoints": 33
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 32,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TCA",
+        "countryURL": "/fifa-world-ranking/TCA",
+        "flag": {
+          "alt": "Turks and Caicos Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TCA",
+          "title": "Turks and Caicos Islands",
+          "width": 70
+        },
+        "idTeam": "20011",
+        "name": "Turks and Caicos Islands",
+        "previousRank": 185,
+        "rank": 184,
+        "totalPoints": 32
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 54,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAM",
+        "countryURL": "/fifa-world-ranking/CAM",
+        "flag": {
+          "alt": "Cambodia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAM",
+          "title": "Cambodia",
+          "width": 70
+        },
+        "idTeam": "44009",
+        "name": "Cambodia",
+        "previousRank": 171,
+        "rank": 185,
+        "totalPoints": 30
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 28,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TGA",
+        "countryURL": "/fifa-world-ranking/TGA",
+        "flag": {
+          "alt": "Tonga",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TGA",
+          "title": "Tonga",
+          "width": 70
+        },
+        "idTeam": "44039",
+        "name": "Tonga",
+        "previousRank": 186,
+        "rank": 186,
+        "totalPoints": 28
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 26,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DOM",
+        "countryURL": "/fifa-world-ranking/DOM",
+        "flag": {
+          "alt": "Dominican Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DOM",
+          "title": "Dominican Republic",
+          "width": 70
+        },
+        "idTeam": "43903",
+        "name": "Dominican Republic",
+        "previousRank": 187,
+        "rank": 187,
+        "totalPoints": 26
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 23,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DJI",
+        "countryURL": "/fifa-world-ranking/DJI",
+        "flag": {
+          "alt": "Djibouti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DJI",
+          "title": "Djibouti",
+          "width": 70
+        },
+        "idTeam": "43996",
+        "name": "Djibouti",
+        "previousRank": 188,
+        "rank": 188,
+        "totalPoints": 23
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 17,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRU",
+        "countryURL": "/fifa-world-ranking/BRU",
+        "flag": {
+          "alt": "Brunei Darussalam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRU",
+          "title": "Brunei Darussalam",
+          "width": 70
+        },
+        "idTeam": "43810",
+        "name": "Brunei Darussalam",
+        "previousRank": 193,
+        "rank": 189,
+        "totalPoints": 21
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 17,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AFG",
+        "countryURL": "/fifa-world-ranking/AFG",
+        "flag": {
+          "alt": "Afghanistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AFG",
+          "title": "Afghanistan",
+          "width": 70
+        },
+        "idTeam": "20000",
+        "name": "Afghanistan",
+        "previousRank": 193,
+        "rank": 189,
+        "totalPoints": 21
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 19,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LCA",
+        "countryURL": "/fifa-world-ranking/LCA",
+        "flag": {
+          "alt": "St. Lucia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LCA",
+          "title": "St. Lucia",
+          "width": 70
+        },
+        "idTeam": "43917",
+        "name": "St. Lucia",
+        "previousRank": 189,
+        "rank": 191,
+        "totalPoints": 19
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 19,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GNB",
+        "countryURL": "/fifa-world-ranking/GNB",
+        "flag": {
+          "alt": "Guinea-Bissau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GNB",
+          "title": "Guinea-Bissau",
+          "width": 70
+        },
+        "idTeam": "43862",
+        "name": "Guinea-Bissau",
+        "previousRank": 189,
+        "rank": 191,
+        "totalPoints": 19
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 19,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAH",
+        "countryURL": "/fifa-world-ranking/TAH",
+        "flag": {
+          "alt": "Tahiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAH",
+          "title": "Tahiti",
+          "width": 70
+        },
+        "idTeam": "43981",
+        "name": "Tahiti",
+        "previousRank": 189,
+        "rank": 191,
+        "totalPoints": 19
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 18,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VGB",
+        "countryURL": "/fifa-world-ranking/VGB",
+        "flag": {
+          "alt": "British Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VGB",
+          "title": "British Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "20004",
+        "name": "British Virgin Islands",
+        "previousRank": 192,
+        "rank": 194,
+        "totalPoints": 18
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 17,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUM",
+        "countryURL": "/fifa-world-ranking/GUM",
+        "flag": {
+          "alt": "Guam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUM",
+          "title": "Guam",
+          "width": 70
+        },
+        "idTeam": "20007",
+        "name": "Guam",
+        "previousRank": 193,
+        "rank": 195,
+        "totalPoints": 17
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 11,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHU",
+        "countryURL": "/fifa-world-ranking/BHU",
+        "flag": {
+          "alt": "Bhutan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHU",
+          "title": "Bhutan",
+          "width": 70
+        },
+        "idTeam": "20003",
+        "name": "Bhutan",
+        "previousRank": 197,
+        "rank": 196,
+        "totalPoints": 15
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 15,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAC",
+        "countryURL": "/fifa-world-ranking/MAC",
+        "flag": {
+          "alt": "Macau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAC",
+          "title": "Macau",
+          "width": 70
+        },
+        "idTeam": "43826",
+        "name": "Macau",
+        "previousRank": 196,
+        "rank": 197,
+        "totalPoints": 14
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 11,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARU",
+        "countryURL": "/fifa-world-ranking/ARU",
+        "flag": {
+          "alt": "Aruba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARU",
+          "title": "Aruba",
+          "width": 70
+        },
+        "idTeam": "43894",
+        "name": "Aruba",
+        "previousRank": 197,
+        "rank": 198,
+        "totalPoints": 11
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 5,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIR",
+        "countryURL": "/fifa-world-ranking/VIR",
+        "flag": {
+          "alt": "US Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIR",
+          "title": "US Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "1881967",
+        "name": "US Virgin Islands",
+        "previousRank": 199,
+        "rank": 199,
+        "totalPoints": 5
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 4,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TLS",
+        "countryURL": "/fifa-world-ranking/TLS",
+        "flag": {
+          "alt": "Timor-Leste",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TLS",
+          "title": "Timor-Leste",
+          "width": 70
+        },
+        "idTeam": "1890334",
+        "name": "Timor-Leste",
+        "previousRank": 200,
+        "rank": 200,
+        "totalPoints": 4
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 2,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AND",
+        "countryURL": "/fifa-world-ranking/AND",
+        "flag": {
+          "alt": "Andorra",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AND",
+          "title": "Andorra",
+          "width": 70
+        },
+        "idTeam": "20001",
+        "name": "Andorra",
+        "previousRank": 201,
+        "rank": 201,
+        "totalPoints": 2
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CTA",
+        "countryURL": "/fifa-world-ranking/CTA",
+        "flag": {
+          "alt": "Central African Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CTA",
+          "title": "Central African Republic",
+          "width": 70
+        },
+        "idTeam": "43851",
+        "name": "Central African Republic",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PNG",
+        "countryURL": "/fifa-world-ranking/PNG",
+        "flag": {
+          "alt": "Papua New Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PNG",
+          "title": "Papua New Guinea",
+          "width": 70
+        },
+        "idTeam": "43979",
+        "name": "Papua New Guinea",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SMR",
+        "countryURL": "/fifa-world-ranking/SMR",
+        "flag": {
+          "alt": "San Marino",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SMR",
+          "title": "San Marino",
+          "width": 70
+        },
+        "idTeam": "43966",
+        "name": "San Marino",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AIA",
+        "countryURL": "/fifa-world-ranking/AIA",
+        "flag": {
+          "alt": "Anguilla",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AIA",
+          "title": "Anguilla",
+          "width": 70
+        },
+        "idTeam": "20002",
+        "name": "Anguilla",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MSR",
+        "countryURL": "/fifa-world-ranking/MSR",
+        "flag": {
+          "alt": "Montserrat",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MSR",
+          "title": "Montserrat",
+          "width": 70
+        },
+        "idTeam": "20009",
+        "name": "Montserrat",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ASA",
+        "countryURL": "/fifa-world-ranking/ASA",
+        "flag": {
+          "alt": "American Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ASA",
+          "title": "American Samoa",
+          "width": 70
+        },
+        "idTeam": "20012",
+        "name": "American Samoa",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2010-05-26T00:00:00Z",
+      "nextUpdateDate": "2010-07-14T00:00:00Z",
+      "previousPoints": 0,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "STP",
+        "countryURL": "/fifa-world-ranking/STP",
+        "flag": {
+          "alt": "Sao Tome e Principe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/STP",
+          "title": "Sao Tome e Principe",
+          "width": 70
+        },
+        "idTeam": "43878",
+        "name": "Sao Tome e Principe",
+        "previousRank": 208,
+        "rank": 208,
+        "totalPoints": 0
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    }
+  ]
+}

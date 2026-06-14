@@ -68,6 +68,13 @@ merge, deploy, and live verification.
 - `merit-v3.1` is the active Red-tier curation candidate rebased on that shipped
   main. No merit-v3.1 merge, production deploy, or live production verification has
   occurred for this branch yet.
+- `merit-v4` is the active Red-tier ratings rebuild candidate on `origin/main`
+  `b4d7fe89a4c6ceb71071d6ee530eae4b4436815d`. It lands national-strength
+  raw-only ceilings, objective `club_honors`, projected active-career damping,
+  compact regen, and λ/golden relocks. It is **not shipped** until fresh-session
+  independent review re-executes the gates, the owner gives SHA-pinned in-session
+  approval, the branch is squash-merged, deploy reaches READY, and live production
+  sanity is completed.
 - Auth hardening mop-up is in flight on `auth/base-url-gate`: `AUTH_BASE_URL`
   now participates in the ship-dark auth gate, and production magic-link
   verify URLs must be https and non-localhost before any token is persisted or
@@ -147,6 +154,27 @@ merge, deploy, and live verification.
 | compact brotli total        | 1,218,099 bytes                                                 |
 | compact sha256              | manifest `d5b32a05…` · draft `ba238aa1…` · scenario `182546ab…` |
 
+## Candidate versions (`merit-v4`, not shipped)
+
+| Field                       | Value                                                                                    |
+| --------------------------- | ---------------------------------------------------------------------------------------- |
+| schema_version              | runtime-data-2.2.0                                                                       |
+| dataset_version             | 2026-06-04                                                                               |
+| ruleset_version             | ruleset-2026.06.04                                                                       |
+| engine_version              | engine-2026.06.13-merit-v4                                                              |
+| rating_version (historical) | wc-perf-6.0.0                                                                            |
+| rating_version (projected)  | proj-career-5.0.0                                                                        |
+| career_stature              | career-stature-4.0.0                                                                     |
+| merit source set            | merit-source-set-2.2.0                                                                   |
+| active source set           | active-career-source-set-2.1.0                                                           |
+| runtime legend census       | 295                                                                                      |
+| runtime ratings             | 12,219                                                                                   |
+| Career basis counts         | 11,328 measured · 505 career-stature · 386 baseline                                      |
+| career-stature table        | 845 players · 209 material · 114 source-derived legends                                  |
+| leaderboard season key      | engine-2026.06.13-merit-v4_wc-perf-6.0.0+proj-career-5.0.0_2026-06-04_ruleset-2026.06.04_2923a844 |
+| compact brotli total        | 1,434,624 normalized bytes                                                               |
+| compact sha256              | manifest `f96fc734…` · draft `8ec327f6…` · scenario `214bccae…`                          |
+
 ## Candidate versions (`feature/narrative-v2`, not shipped)
 
 | Field                       | Value                                                           |
@@ -218,6 +246,14 @@ merge, deploy, and live verification.
 | merit-v3.1 canary                                         | regen twice + normal run passed · hash `151528048c35a8cb5053eebddb2bba742a8d2831b1f3b8ba712954c24df9acc1`                |
 | merit-v3.1 leaderboard/token skew                         | leaderboard golden 6 passed · run-token v1/v2 skew tests 44 passed                                                       |
 | merit-v3.1 fix-forward local gates                        | gitleaks no leaks · source snapshot manifests ok · heavy realism 7 passed after re-lock                                  |
+| merit-v4 root gate                                        | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` PASS: typecheck 8/8 · lint 5/5 · test 8/8 (core 366, data 65 passed/7 skipped, db 79, web 674/1 skipped, marketing-x 64) · build 4/4 |
+| merit-v4 explicit goldens                                 | core `test:golden` 67 + `test:golden:draft` 40 · data `test:golden:data` 31 + `test:golden:integration` 22 · web leaderboard 6 |
+| merit-v4 ETL gates                                        | `ruff check src tests` clean · focused v4 probe suite 225 passed · full `pytest -q` 297 passed                           |
+| merit-v4 GitHub blob-limit fix                            | deterministic compact `ratings.json` encoding lowered artifact to 59,551,789 bytes · post-amend ruff clean / pytest 297 · `git diff --check` clean |
+| merit-v4 compact/generators                               | `build:compact` ok · 12,219 ratings · 295 legends · dual basis 12,219/12,219 · 1,434,624 normalized brotli bytes · e2e/era/canary/asym/leaderboard/token-skew regenerated |
+| merit-v4 compact metadata CI fix                          | normalized Brotli metadata to 128-byte upper-bound buckets after Linux CI measured draft-pool Brotli 2 bytes below macOS · data test 65/7 · root gate rerun 8/5/8/4 · data golden 31 + integration 22 |
+| merit-v4 lambda/realism                                   | fit 175 evals · winner BASE 1.10 / SPREAD 6.0 / MIN 0.30 / GAMMA_MID 0.80 / KO 0.82 · symmetric goals 2.544, draw 24.87%, margin4 4.86%, ET 34.13%, SO 21.33% · heavy realism 7/7 |
+| merit-v4 canary                                           | strategic-pick canary regenerated; 6 intentional pick flips documented for review                                       |
 | @wcdraft/web `typecheck` (leaderboard-profiles main-sync) | PASS                                                                                                                     |
 | @wcdraft/web `build` (leaderboard-profiles main-sync)     | PASS; existing Next/Webpack circular chunk warnings only                                                                 |
 | narrative-v2 focused goldens                              | narrative golden 64 passed · narrative+sim golden 117 passed                                                             |

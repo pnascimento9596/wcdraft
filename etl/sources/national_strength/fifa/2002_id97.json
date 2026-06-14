@@ -1,0 +1,5256 @@
+{
+  "rankings": [
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 810,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRA",
+        "countryURL": "/fifa-world-ranking/FRA",
+        "flag": {
+          "alt": "France",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRA",
+          "title": "France",
+          "width": 70
+        },
+        "idTeam": "43946",
+        "name": "France",
+        "previousRank": 1,
+        "rank": 1,
+        "totalPoints": 802
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 787,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRA",
+        "countryURL": "/fifa-world-ranking/BRA",
+        "flag": {
+          "alt": "Brazil",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRA",
+          "title": "Brazil",
+          "width": 70
+        },
+        "idTeam": "43924",
+        "name": "Brazil",
+        "previousRank": 2,
+        "rank": 2,
+        "totalPoints": 784
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 786,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARG",
+        "countryURL": "/fifa-world-ranking/ARG",
+        "flag": {
+          "alt": "Argentina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARG",
+          "title": "Argentina",
+          "width": 70
+        },
+        "idTeam": "43922",
+        "name": "Argentina",
+        "previousRank": 3,
+        "rank": 3,
+        "totalPoints": 784
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 731,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COL",
+        "countryURL": "/fifa-world-ranking/COL",
+        "flag": {
+          "alt": "Colombia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COL",
+          "title": "Colombia",
+          "width": 70
+        },
+        "idTeam": "43926",
+        "name": "Colombia",
+        "previousRank": 4,
+        "rank": 4,
+        "totalPoints": 728
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 726,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POR",
+        "countryURL": "/fifa-world-ranking/POR",
+        "flag": {
+          "alt": "Portugal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POR",
+          "title": "Portugal",
+          "width": 70
+        },
+        "idTeam": "43963",
+        "name": "Portugal",
+        "previousRank": 5,
+        "rank": 5,
+        "totalPoints": 726
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 722,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ITA",
+        "countryURL": "/fifa-world-ranking/ITA",
+        "flag": {
+          "alt": "Italy",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ITA",
+          "title": "Italy",
+          "width": 70
+        },
+        "idTeam": "43954",
+        "name": "Italy",
+        "previousRank": 6,
+        "rank": 6,
+        "totalPoints": 717
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 715,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MEX",
+        "countryURL": "/fifa-world-ranking/MEX",
+        "flag": {
+          "alt": "Mexico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MEX",
+          "title": "Mexico",
+          "width": 70
+        },
+        "idTeam": "43911",
+        "name": "Mexico",
+        "previousRank": 7,
+        "rank": 7,
+        "totalPoints": 716
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 715,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ESP",
+        "countryURL": "/fifa-world-ranking/ESP",
+        "flag": {
+          "alt": "Spain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ESP",
+          "title": "Spain",
+          "width": 70
+        },
+        "idTeam": "43969",
+        "name": "Spain",
+        "previousRank": 8,
+        "rank": 8,
+        "totalPoints": 713
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 714,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NED",
+        "countryURL": "/fifa-world-ranking/NED",
+        "flag": {
+          "alt": "Netherlands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NED",
+          "title": "Netherlands",
+          "width": 70
+        },
+        "idTeam": "43960",
+        "name": "Netherlands",
+        "previousRank": 9,
+        "rank": 9,
+        "totalPoints": 703
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 702,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "YUG",
+        "countryURL": "/fifa-world-ranking/YUG",
+        "flag": {
+          "alt": "Yugoslavia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/YUG",
+          "title": "Yugoslavia",
+          "width": 70
+        },
+        "idTeam": "43975",
+        "name": "Yugoslavia",
+        "previousRank": 10,
+        "rank": 10,
+        "totalPoints": 702
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 697,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GER",
+        "countryURL": "/fifa-world-ranking/GER",
+        "flag": {
+          "alt": "Germany",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GER",
+          "title": "Germany",
+          "width": 70
+        },
+        "idTeam": "43948",
+        "name": "Germany",
+        "previousRank": 12,
+        "rank": 11,
+        "totalPoints": 695
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 698,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ENG",
+        "countryURL": "/fifa-world-ranking/ENG",
+        "flag": {
+          "alt": "England",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ENG",
+          "title": "England",
+          "width": 70
+        },
+        "idTeam": "43942",
+        "name": "England",
+        "previousRank": 11,
+        "rank": 12,
+        "totalPoints": 694
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 694,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "USA",
+        "countryURL": "/fifa-world-ranking/USA",
+        "flag": {
+          "alt": "USA",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/USA",
+          "title": "USA",
+          "width": 70
+        },
+        "idTeam": "43921",
+        "name": "USA",
+        "previousRank": 13,
+        "rank": 13,
+        "totalPoints": 690
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 673,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ROU",
+        "countryURL": "/fifa-world-ranking/ROU",
+        "flag": {
+          "alt": "Romania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ROU",
+          "title": "Romania",
+          "width": 70
+        },
+        "idTeam": "43964",
+        "name": "Romania",
+        "previousRank": 16,
+        "rank": 14,
+        "totalPoints": 675
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 670,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRL",
+        "countryURL": "/fifa-world-ranking/IRL",
+        "flag": {
+          "alt": "Republic of Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRL",
+          "title": "Republic of Ireland",
+          "width": 70
+        },
+        "idTeam": "43953",
+        "name": "Republic of Ireland",
+        "previousRank": 19,
+        "rank": 15,
+        "totalPoints": 674
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 678,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CZE",
+        "countryURL": "/fifa-world-ranking/CZE",
+        "flag": {
+          "alt": "Czech Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CZE",
+          "title": "Czech Republic",
+          "width": 70
+        },
+        "idTeam": "43995",
+        "name": "Czech Republic",
+        "previousRank": 14,
+        "rank": 16,
+        "totalPoints": 674
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 670,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CMR",
+        "countryURL": "/fifa-world-ranking/CMR",
+        "flag": {
+          "alt": "Cameroon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CMR",
+          "title": "Cameroon",
+          "width": 70
+        },
+        "idTeam": "43849",
+        "name": "Cameroon",
+        "previousRank": 18,
+        "rank": 17,
+        "totalPoints": 672
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 678,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAR",
+        "countryURL": "/fifa-world-ranking/PAR",
+        "flag": {
+          "alt": "Paraguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAR",
+          "title": "Paraguay",
+          "width": 70
+        },
+        "idTeam": "43928",
+        "name": "Paraguay",
+        "previousRank": 15,
+        "rank": 18,
+        "totalPoints": 671
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 671,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWE",
+        "countryURL": "/fifa-world-ranking/SWE",
+        "flag": {
+          "alt": "Sweden",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWE",
+          "title": "Sweden",
+          "width": 70
+        },
+        "idTeam": "43970",
+        "name": "Sweden",
+        "previousRank": 17,
+        "rank": 19,
+        "totalPoints": 665
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 660,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DEN",
+        "countryURL": "/fifa-world-ranking/DEN",
+        "flag": {
+          "alt": "Denmark",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DEN",
+          "title": "Denmark",
+          "width": 70
+        },
+        "idTeam": "43941",
+        "name": "Denmark",
+        "previousRank": 20,
+        "rank": 20,
+        "totalPoints": 657
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 653,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRO",
+        "countryURL": "/fifa-world-ranking/CRO",
+        "flag": {
+          "alt": "Croatia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRO",
+          "title": "Croatia",
+          "width": 70
+        },
+        "idTeam": "43938",
+        "name": "Croatia",
+        "previousRank": 23,
+        "rank": 21,
+        "totalPoints": 655
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 650,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUR",
+        "countryURL": "/fifa-world-ranking/TUR",
+        "flag": {
+          "alt": "Turkey",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUR",
+          "title": "Turkey",
+          "width": 70
+        },
+        "idTeam": "43972",
+        "name": "Turkey",
+        "previousRank": 25,
+        "rank": 22,
+        "totalPoints": 654
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 657,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEL",
+        "countryURL": "/fifa-world-ranking/BEL",
+        "flag": {
+          "alt": "Belgium",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEL",
+          "title": "Belgium",
+          "width": 70
+        },
+        "idTeam": "43935",
+        "name": "Belgium",
+        "previousRank": 22,
+        "rank": 23,
+        "totalPoints": 653
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 660,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "URU",
+        "countryURL": "/fifa-world-ranking/URU",
+        "flag": {
+          "alt": "Uruguay",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/URU",
+          "title": "Uruguay",
+          "width": 70
+        },
+        "idTeam": "43930",
+        "name": "Uruguay",
+        "previousRank": 21,
+        "rank": 24,
+        "totalPoints": 652
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 644,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVN",
+        "countryURL": "/fifa-world-ranking/SVN",
+        "flag": {
+          "alt": "Slovenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVN",
+          "title": "Slovenia",
+          "width": 70
+        },
+        "idTeam": "43968",
+        "name": "Slovenia",
+        "previousRank": 28,
+        "rank": 25,
+        "totalPoints": 649
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 649,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HON",
+        "countryURL": "/fifa-world-ranking/HON",
+        "flag": {
+          "alt": "Honduras",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HON",
+          "title": "Honduras",
+          "width": 70
+        },
+        "idTeam": "43909",
+        "name": "Honduras",
+        "previousRank": 26,
+        "rank": 26,
+        "totalPoints": 647
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 640,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NGA",
+        "countryURL": "/fifa-world-ranking/NGA",
+        "flag": {
+          "alt": "Nigeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NGA",
+          "title": "Nigeria",
+          "width": 70
+        },
+        "idTeam": "43876",
+        "name": "Nigeria",
+        "previousRank": 29,
+        "rank": 27,
+        "totalPoints": 644
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 650,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RUS",
+        "countryURL": "/fifa-world-ranking/RUS",
+        "flag": {
+          "alt": "Russia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RUS",
+          "title": "Russia",
+          "width": 70
+        },
+        "idTeam": "43965",
+        "name": "Russia",
+        "previousRank": 24,
+        "rank": 28,
+        "totalPoints": 644
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 645,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CRC",
+        "countryURL": "/fifa-world-ranking/CRC",
+        "flag": {
+          "alt": "Costa Rica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CRC",
+          "title": "Costa Rica",
+          "width": 70
+        },
+        "idTeam": "43901",
+        "name": "Costa Rica",
+        "previousRank": 27,
+        "rank": 29,
+        "totalPoints": 643
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 634,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRN",
+        "countryURL": "/fifa-world-ranking/IRN",
+        "flag": {
+          "alt": "IR Iran",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRN",
+          "title": "IR Iran",
+          "width": 70
+        },
+        "idTeam": "43817",
+        "name": "IR Iran",
+        "previousRank": 32,
+        "rank": 30,
+        "totalPoints": 635
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 640,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TUN",
+        "countryURL": "/fifa-world-ranking/TUN",
+        "flag": {
+          "alt": "Tunisia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TUN",
+          "title": "Tunisia",
+          "width": 70
+        },
+        "idTeam": "43888",
+        "name": "Tunisia",
+        "previousRank": 30,
+        "rank": 31,
+        "totalPoints": 635
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 632,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JPN",
+        "countryURL": "/fifa-world-ranking/JPN",
+        "flag": {
+          "alt": "Japan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JPN",
+          "title": "Japan",
+          "width": 70
+        },
+        "idTeam": "43819",
+        "name": "Japan",
+        "previousRank": 33,
+        "rank": 32,
+        "totalPoints": 634
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 637,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NOR",
+        "countryURL": "/fifa-world-ranking/NOR",
+        "flag": {
+          "alt": "Norway",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NOR",
+          "title": "Norway",
+          "width": 70
+        },
+        "idTeam": "43961",
+        "name": "Norway",
+        "previousRank": 31,
+        "rank": 33,
+        "totalPoints": 631
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 628,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KSA",
+        "countryURL": "/fifa-world-ranking/KSA",
+        "flag": {
+          "alt": "Saudi Arabia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KSA",
+          "title": "Saudi Arabia",
+          "width": 70
+        },
+        "idTeam": "43835",
+        "name": "Saudi Arabia",
+        "previousRank": 34,
+        "rank": 34,
+        "totalPoints": 627
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 626,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TRI",
+        "countryURL": "/fifa-world-ranking/TRI",
+        "flag": {
+          "alt": "Trinidad and Tobago",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TRI",
+          "title": "Trinidad and Tobago",
+          "width": 70
+        },
+        "idTeam": "43920",
+        "name": "Trinidad and Tobago",
+        "previousRank": 35,
+        "rank": 35,
+        "totalPoints": 624
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 624,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ECU",
+        "countryURL": "/fifa-world-ranking/ECU",
+        "flag": {
+          "alt": "Ecuador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ECU",
+          "title": "Ecuador",
+          "width": 70
+        },
+        "idTeam": "43927",
+        "name": "Ecuador",
+        "previousRank": 36,
+        "rank": 36,
+        "totalPoints": 624
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 624,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RSA",
+        "countryURL": "/fifa-world-ranking/RSA",
+        "flag": {
+          "alt": "South Africa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RSA",
+          "title": "South Africa",
+          "width": 70
+        },
+        "idTeam": "43883",
+        "name": "South Africa",
+        "previousRank": 37,
+        "rank": 37,
+        "totalPoints": 623
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 620,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "POL",
+        "countryURL": "/fifa-world-ranking/POL",
+        "flag": {
+          "alt": "Poland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/POL",
+          "title": "Poland",
+          "width": 70
+        },
+        "idTeam": "43962",
+        "name": "Poland",
+        "previousRank": 38,
+        "rank": 38,
+        "totalPoints": 615
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 615,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAR",
+        "countryURL": "/fifa-world-ranking/MAR",
+        "flag": {
+          "alt": "Morocco",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAR",
+          "title": "Morocco",
+          "width": 70
+        },
+        "idTeam": "43872",
+        "name": "Morocco",
+        "previousRank": 39,
+        "rank": 39,
+        "totalPoints": 612
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 602,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KOR",
+        "countryURL": "/fifa-world-ranking/KOR",
+        "flag": {
+          "alt": "Korea Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KOR",
+          "title": "Korea Republic",
+          "width": 70
+        },
+        "idTeam": "43822",
+        "name": "Korea Republic",
+        "previousRank": 41,
+        "rank": 40,
+        "totalPoints": 603
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 601,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIN",
+        "countryURL": "/fifa-world-ranking/FIN",
+        "flag": {
+          "alt": "Finland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIN",
+          "title": "Finland",
+          "width": 70
+        },
+        "idTeam": "43945",
+        "name": "Finland",
+        "previousRank": 42,
+        "rank": 41,
+        "totalPoints": 600
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 596,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEN",
+        "countryURL": "/fifa-world-ranking/SEN",
+        "flag": {
+          "alt": "Senegal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEN",
+          "title": "Senegal",
+          "width": 70
+        },
+        "idTeam": "43879",
+        "name": "Senegal",
+        "previousRank": 43,
+        "rank": 42,
+        "totalPoints": 599
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 604,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EGY",
+        "countryURL": "/fifa-world-ranking/EGY",
+        "flag": {
+          "alt": "Egypt",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EGY",
+          "title": "Egypt",
+          "width": 70
+        },
+        "idTeam": "43855",
+        "name": "Egypt",
+        "previousRank": 40,
+        "rank": 43,
+        "totalPoints": 598
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 589,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UKR",
+        "countryURL": "/fifa-world-ranking/UKR",
+        "flag": {
+          "alt": "Ukraine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UKR",
+          "title": "Ukraine",
+          "width": 70
+        },
+        "idTeam": "43973",
+        "name": "Ukraine",
+        "previousRank": 45,
+        "rank": 44,
+        "totalPoints": 593
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 594,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHI",
+        "countryURL": "/fifa-world-ranking/CHI",
+        "flag": {
+          "alt": "Chile",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHI",
+          "title": "Chile",
+          "width": 70
+        },
+        "idTeam": "43925",
+        "name": "Chile",
+        "previousRank": 44,
+        "rank": 45,
+        "totalPoints": 590
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 586,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CIV",
+        "countryURL": "/fifa-world-ranking/CIV",
+        "flag": {
+          "alt": "Côte d'Ivoire",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CIV",
+          "title": "Côte d'Ivoire",
+          "width": 70
+        },
+        "idTeam": "43854",
+        "name": "Côte d'Ivoire",
+        "previousRank": 46,
+        "rank": 46,
+        "totalPoints": 580
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 586,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PER",
+        "countryURL": "/fifa-world-ranking/PER",
+        "flag": {
+          "alt": "Peru",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PER",
+          "title": "Peru",
+          "width": 70
+        },
+        "idTeam": "43929",
+        "name": "Peru",
+        "previousRank": 47,
+        "rank": 47,
+        "totalPoints": 578
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 581,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUS",
+        "countryURL": "/fifa-world-ranking/AUS",
+        "flag": {
+          "alt": "Australia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUS",
+          "title": "Australia",
+          "width": 70
+        },
+        "idTeam": "43976",
+        "name": "Australia",
+        "previousRank": 48,
+        "rank": 48,
+        "totalPoints": 575
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 577,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SVK",
+        "countryURL": "/fifa-world-ranking/SVK",
+        "flag": {
+          "alt": "Slovakia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SVK",
+          "title": "Slovakia",
+          "width": 70
+        },
+        "idTeam": "44002",
+        "name": "Slovakia",
+        "previousRank": 49,
+        "rank": 49,
+        "totalPoints": 574
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 566,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHN",
+        "countryURL": "/fifa-world-ranking/CHN",
+        "flag": {
+          "alt": "China PR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHN",
+          "title": "China PR",
+          "width": 70
+        },
+        "idTeam": "43812",
+        "name": "China PR",
+        "previousRank": 51,
+        "rank": 50,
+        "totalPoints": 566
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 570,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISR",
+        "countryURL": "/fifa-world-ranking/ISR",
+        "flag": {
+          "alt": "Israel",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISR",
+          "title": "Israel",
+          "width": 70
+        },
+        "idTeam": "43984",
+        "name": "Israel",
+        "previousRank": 50,
+        "rank": 51,
+        "totalPoints": 563
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 558,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GHA",
+        "countryURL": "/fifa-world-ranking/GHA",
+        "flag": {
+          "alt": "Ghana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GHA",
+          "title": "Ghana",
+          "width": 70
+        },
+        "idTeam": "43860",
+        "name": "Ghana",
+        "previousRank": 57,
+        "rank": 52,
+        "totalPoints": 558
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 562,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRE",
+        "countryURL": "/fifa-world-ranking/GRE",
+        "flag": {
+          "alt": "Greece",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRE",
+          "title": "Greece",
+          "width": 70
+        },
+        "idTeam": "43949",
+        "name": "Greece",
+        "previousRank": 54,
+        "rank": 53,
+        "totalPoints": 558
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 564,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BUL",
+        "countryURL": "/fifa-world-ranking/BUL",
+        "flag": {
+          "alt": "Bulgaria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BUL",
+          "title": "Bulgaria",
+          "width": 70
+        },
+        "idTeam": "43936",
+        "name": "Bulgaria",
+        "previousRank": 52,
+        "rank": 54,
+        "totalPoints": 557
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 564,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SCO",
+        "countryURL": "/fifa-world-ranking/SCO",
+        "flag": {
+          "alt": "Scotland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SCO",
+          "title": "Scotland",
+          "width": 70
+        },
+        "idTeam": "43967",
+        "name": "Scotland",
+        "previousRank": 53,
+        "rank": 55,
+        "totalPoints": 557
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 559,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ISL",
+        "countryURL": "/fifa-world-ranking/ISL",
+        "flag": {
+          "alt": "Iceland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ISL",
+          "title": "Iceland",
+          "width": 70
+        },
+        "idTeam": "43951",
+        "name": "Iceland",
+        "previousRank": 56,
+        "rank": 56,
+        "totalPoints": 553
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 556,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JAM",
+        "countryURL": "/fifa-world-ranking/JAM",
+        "flag": {
+          "alt": "Jamaica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JAM",
+          "title": "Jamaica",
+          "width": 70
+        },
+        "idTeam": "43910",
+        "name": "Jamaica",
+        "previousRank": 58,
+        "rank": 57,
+        "totalPoints": 549
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 552,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ANG",
+        "countryURL": "/fifa-world-ranking/ANG",
+        "flag": {
+          "alt": "Angola",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ANG",
+          "title": "Angola",
+          "width": 70
+        },
+        "idTeam": "43844",
+        "name": "Angola",
+        "previousRank": 59,
+        "rank": 58,
+        "totalPoints": 545
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 561,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GEO",
+        "countryURL": "/fifa-world-ranking/GEO",
+        "flag": {
+          "alt": "Georgia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GEO",
+          "title": "Georgia",
+          "width": 70
+        },
+        "idTeam": "43947",
+        "name": "Georgia",
+        "previousRank": 55,
+        "rank": 59,
+        "totalPoints": 545
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 547,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "THA",
+        "countryURL": "/fifa-world-ranking/THA",
+        "flag": {
+          "alt": "Thailand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/THA",
+          "title": "Thailand",
+          "width": 70
+        },
+        "idTeam": "43839",
+        "name": "Thailand",
+        "previousRank": 61,
+        "rank": 60,
+        "totalPoints": 544
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 547,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AUT",
+        "countryURL": "/fifa-world-ranking/AUT",
+        "flag": {
+          "alt": "Austria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AUT",
+          "title": "Austria",
+          "width": 70
+        },
+        "idTeam": "43934",
+        "name": "Austria",
+        "previousRank": 60,
+        "rank": 61,
+        "totalPoints": 543
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 540,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUA",
+        "countryURL": "/fifa-world-ranking/GUA",
+        "flag": {
+          "alt": "Guatemala",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUA",
+          "title": "Guatemala",
+          "width": 70
+        },
+        "idTeam": "43906",
+        "name": "Guatemala",
+        "previousRank": 63,
+        "rank": 62,
+        "totalPoints": 538
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 542,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UAE",
+        "countryURL": "/fifa-world-ranking/UAE",
+        "flag": {
+          "alt": "United Arab Emirates",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UAE",
+          "title": "United Arab Emirates",
+          "width": 70
+        },
+        "idTeam": "43840",
+        "name": "United Arab Emirates",
+        "previousRank": 62,
+        "rank": 63,
+        "totalPoints": 536
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 532,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUI",
+        "countryURL": "/fifa-world-ranking/SUI",
+        "flag": {
+          "alt": "Switzerland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUI",
+          "title": "Switzerland",
+          "width": 70
+        },
+        "idTeam": "43971",
+        "name": "Switzerland",
+        "previousRank": 65,
+        "rank": 64,
+        "totalPoints": 531
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 532,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZAM",
+        "countryURL": "/fifa-world-ranking/ZAM",
+        "flag": {
+          "alt": "Zambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZAM",
+          "title": "Zambia",
+          "width": 70
+        },
+        "idTeam": "43891",
+        "name": "Zambia",
+        "previousRank": 66,
+        "rank": 65,
+        "totalPoints": 530
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 532,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ZIM",
+        "countryURL": "/fifa-world-ranking/ZIM",
+        "flag": {
+          "alt": "Zimbabwe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ZIM",
+          "title": "Zimbabwe",
+          "width": 70
+        },
+        "idTeam": "43892",
+        "name": "Zimbabwe",
+        "previousRank": 67,
+        "rank": 66,
+        "totalPoints": 527
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 538,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UZB",
+        "countryURL": "/fifa-world-ranking/UZB",
+        "flag": {
+          "alt": "Uzbekistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UZB",
+          "title": "Uzbekistan",
+          "width": 70
+        },
+        "idTeam": "44005",
+        "name": "Uzbekistan",
+        "previousRank": 64,
+        "rank": 67,
+        "totalPoints": 523
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 528,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HUN",
+        "countryURL": "/fifa-world-ranking/HUN",
+        "flag": {
+          "alt": "Hungary",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HUN",
+          "title": "Hungary",
+          "width": 70
+        },
+        "idTeam": "43950",
+        "name": "Hungary",
+        "previousRank": 68,
+        "rank": 68,
+        "totalPoints": 523
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 525,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TOG",
+        "countryURL": "/fifa-world-ranking/TOG",
+        "flag": {
+          "alt": "Togo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TOG",
+          "title": "Togo",
+          "width": 70
+        },
+        "idTeam": "43887",
+        "name": "Togo",
+        "previousRank": 69,
+        "rank": 69,
+        "totalPoints": 518
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 524,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOL",
+        "countryURL": "/fifa-world-ranking/BOL",
+        "flag": {
+          "alt": "Bolivia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOL",
+          "title": "Bolivia",
+          "width": 70
+        },
+        "idTeam": "43923",
+        "name": "Bolivia",
+        "previousRank": 70,
+        "rank": 70,
+        "totalPoints": 512
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 517,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IRQ",
+        "countryURL": "/fifa-world-ranking/IRQ",
+        "flag": {
+          "alt": "Iraq",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IRQ",
+          "title": "Iraq",
+          "width": 70
+        },
+        "idTeam": "43818",
+        "name": "Iraq",
+        "previousRank": 72,
+        "rank": 71,
+        "totalPoints": 509
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 513,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BIH",
+        "countryURL": "/fifa-world-ranking/BIH",
+        "flag": {
+          "alt": "Bosnia and Herzegovina",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BIH",
+          "title": "Bosnia and Herzegovina",
+          "width": 70
+        },
+        "idTeam": "44037",
+        "name": "Bosnia and Herzegovina",
+        "previousRank": 73,
+        "rank": 72,
+        "totalPoints": 508
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 505,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "QAT",
+        "countryURL": "/fifa-world-ranking/QAT",
+        "flag": {
+          "alt": "Qatar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/QAT",
+          "title": "Qatar",
+          "width": 70
+        },
+        "idTeam": "43834",
+        "name": "Qatar",
+        "previousRank": 76,
+        "rank": 73,
+        "totalPoints": 507
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 520,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COD",
+        "countryURL": "/fifa-world-ranking/COD",
+        "flag": {
+          "alt": "Congo DR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COD",
+          "title": "Congo DR",
+          "width": 70
+        },
+        "idTeam": "20014",
+        "name": "Congo DR",
+        "previousRank": 71,
+        "rank": 74,
+        "totalPoints": 505
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 511,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAN",
+        "countryURL": "/fifa-world-ranking/CAN",
+        "flag": {
+          "alt": "Canada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAN",
+          "title": "Canada",
+          "width": 70
+        },
+        "idTeam": "43899",
+        "name": "Canada",
+        "previousRank": 74,
+        "rank": 75,
+        "totalPoints": 504
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 504,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBR",
+        "countryURL": "/fifa-world-ranking/LBR",
+        "flag": {
+          "alt": "Liberia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBR",
+          "title": "Liberia",
+          "width": 70
+        },
+        "idTeam": "43865",
+        "name": "Liberia",
+        "previousRank": 77,
+        "rank": 76,
+        "totalPoints": 500
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 502,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KUW",
+        "countryURL": "/fifa-world-ranking/KUW",
+        "flag": {
+          "alt": "Kuwait",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KUW",
+          "title": "Kuwait",
+          "width": 70
+        },
+        "idTeam": "43823",
+        "name": "Kuwait",
+        "previousRank": 80,
+        "rank": 77,
+        "totalPoints": 500
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 502,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CUB",
+        "countryURL": "/fifa-world-ranking/CUB",
+        "flag": {
+          "alt": "Cuba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CUB",
+          "title": "Cuba",
+          "width": 70
+        },
+        "idTeam": "43902",
+        "name": "Cuba",
+        "previousRank": 79,
+        "rank": 78,
+        "totalPoints": 498
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 503,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALG",
+        "countryURL": "/fifa-world-ranking/ALG",
+        "flag": {
+          "alt": "Algeria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALG",
+          "title": "Algeria",
+          "width": 70
+        },
+        "idTeam": "43843",
+        "name": "Algeria",
+        "previousRank": 78,
+        "rank": 79,
+        "totalPoints": 497
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 505,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BFA",
+        "countryURL": "/fifa-world-ranking/BFA",
+        "flag": {
+          "alt": "Burkina Faso",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BFA",
+          "title": "Burkina Faso",
+          "width": 70
+        },
+        "idTeam": "43847",
+        "name": "Burkina Faso",
+        "previousRank": 75,
+        "rank": 80,
+        "totalPoints": 497
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 493,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HAI",
+        "countryURL": "/fifa-world-ranking/HAI",
+        "flag": {
+          "alt": "Haiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HAI",
+          "title": "Haiti",
+          "width": 70
+        },
+        "idTeam": "43908",
+        "name": "Haiti",
+        "previousRank": 82,
+        "rank": 81,
+        "totalPoints": 496
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 493,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CYP",
+        "countryURL": "/fifa-world-ranking/CYP",
+        "flag": {
+          "alt": "Cyprus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CYP",
+          "title": "Cyprus",
+          "width": 70
+        },
+        "idTeam": "43939",
+        "name": "Cyprus",
+        "previousRank": 81,
+        "rank": 82,
+        "totalPoints": 492
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 488,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VEN",
+        "countryURL": "/fifa-world-ranking/VEN",
+        "flag": {
+          "alt": "Venezuela",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VEN",
+          "title": "Venezuela",
+          "width": 70
+        },
+        "idTeam": "43931",
+        "name": "Venezuela",
+        "previousRank": 83,
+        "rank": 83,
+        "totalPoints": 488
+      },
+      "tag": {
+        "id": "CONMEBOL",
+        "text": "CONMEBOL"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 481,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLV",
+        "countryURL": "/fifa-world-ranking/SLV",
+        "flag": {
+          "alt": "El Salvador",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLV",
+          "title": "El Salvador",
+          "width": 70
+        },
+        "idTeam": "43904",
+        "name": "El Salvador",
+        "previousRank": 84,
+        "rank": 84,
+        "totalPoints": 480
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 472,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLI",
+        "countryURL": "/fifa-world-ranking/MLI",
+        "flag": {
+          "alt": "Mali",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLI",
+          "title": "Mali",
+          "width": 70
+        },
+        "idTeam": "43869",
+        "name": "Mali",
+        "previousRank": 86,
+        "rank": 85,
+        "totalPoints": 471
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 479,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EST",
+        "countryURL": "/fifa-world-ranking/EST",
+        "flag": {
+          "alt": "Estonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EST",
+          "title": "Estonia",
+          "width": 70
+        },
+        "idTeam": "43943",
+        "name": "Estonia",
+        "previousRank": 85,
+        "rank": 86,
+        "totalPoints": 471
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 472,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NZL",
+        "countryURL": "/fifa-world-ranking/NZL",
+        "flag": {
+          "alt": "New Zealand",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NZL",
+          "title": "New Zealand",
+          "width": 70
+        },
+        "idTeam": "43978",
+        "name": "New Zealand",
+        "previousRank": 87,
+        "rank": 87,
+        "totalPoints": 471
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 464,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLR",
+        "countryURL": "/fifa-world-ranking/BLR",
+        "flag": {
+          "alt": "Belarus",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLR",
+          "title": "Belarus",
+          "width": 70
+        },
+        "idTeam": "43937",
+        "name": "Belarus",
+        "previousRank": 88,
+        "rank": 88,
+        "totalPoints": 463
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 455,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MKD",
+        "countryURL": "/fifa-world-ranking/MKD",
+        "flag": {
+          "alt": "FYR Macedonia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MKD",
+          "title": "FYR Macedonia",
+          "width": 70
+        },
+        "idTeam": "44000",
+        "name": "FYR Macedonia",
+        "previousRank": 93,
+        "rank": 89,
+        "totalPoints": 462
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 462,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIR",
+        "countryURL": "/fifa-world-ranking/NIR",
+        "flag": {
+          "alt": "Northern Ireland",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIR",
+          "title": "Northern Ireland",
+          "width": 70
+        },
+        "idTeam": "43952",
+        "name": "Northern Ireland",
+        "previousRank": 91,
+        "rank": 90,
+        "totalPoints": 455
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 463,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "OMA",
+        "countryURL": "/fifa-world-ranking/OMA",
+        "flag": {
+          "alt": "Oman",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/OMA",
+          "title": "Oman",
+          "width": 70
+        },
+        "idTeam": "43831",
+        "name": "Oman",
+        "previousRank": 89,
+        "rank": 91,
+        "totalPoints": 454
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 458,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IDN",
+        "countryURL": "/fifa-world-ranking/IDN",
+        "flag": {
+          "alt": "Indonesia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IDN",
+          "title": "Indonesia",
+          "width": 70
+        },
+        "idTeam": "43816",
+        "name": "Indonesia",
+        "previousRank": 92,
+        "rank": 92,
+        "totalPoints": 453
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 463,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SYR",
+        "countryURL": "/fifa-world-ranking/SYR",
+        "flag": {
+          "alt": "Syria",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SYR",
+          "title": "Syria",
+          "width": 70
+        },
+        "idTeam": "43838",
+        "name": "Syria",
+        "previousRank": 90,
+        "rank": 93,
+        "totalPoints": 449
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 454,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBN",
+        "countryURL": "/fifa-world-ranking/LBN",
+        "flag": {
+          "alt": "Lebanon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBN",
+          "title": "Lebanon",
+          "width": 70
+        },
+        "idTeam": "43825",
+        "name": "Lebanon",
+        "previousRank": 95,
+        "rank": 94,
+        "totalPoints": 445
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 453,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ALB",
+        "countryURL": "/fifa-world-ranking/ALB",
+        "flag": {
+          "alt": "Albania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ALB",
+          "title": "Albania",
+          "width": 70
+        },
+        "idTeam": "43932",
+        "name": "Albania",
+        "previousRank": 96,
+        "rank": 95,
+        "totalPoints": 442
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 442,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "WAL",
+        "countryURL": "/fifa-world-ranking/WAL",
+        "flag": {
+          "alt": "Wales",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/WAL",
+          "title": "Wales",
+          "width": 70
+        },
+        "idTeam": "43974",
+        "name": "Wales",
+        "previousRank": 97,
+        "rank": 96,
+        "totalPoints": 440
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 454,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CGO",
+        "countryURL": "/fifa-world-ranking/CGO",
+        "flag": {
+          "alt": "Congo",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CGO",
+          "title": "Congo",
+          "width": 70
+        },
+        "idTeam": "43853",
+        "name": "Congo",
+        "previousRank": 94,
+        "rank": 97,
+        "totalPoints": 439
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 439,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LTU",
+        "countryURL": "/fifa-world-ranking/LTU",
+        "flag": {
+          "alt": "Lithuania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LTU",
+          "title": "Lithuania",
+          "width": 70
+        },
+        "idTeam": "43957",
+        "name": "Lithuania",
+        "previousRank": 100,
+        "rank": 98,
+        "totalPoints": 436
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 426,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LVA",
+        "countryURL": "/fifa-world-ranking/LVA",
+        "flag": {
+          "alt": "Latvia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LVA",
+          "title": "Latvia",
+          "width": 70
+        },
+        "idTeam": "43955",
+        "name": "Latvia",
+        "previousRank": 105,
+        "rank": 99,
+        "totalPoints": 435
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 440,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "JOR",
+        "countryURL": "/fifa-world-ranking/JOR",
+        "flag": {
+          "alt": "Jordan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/JOR",
+          "title": "Jordan",
+          "width": 70
+        },
+        "idTeam": "43820",
+        "name": "Jordan",
+        "previousRank": 98,
+        "rank": 100,
+        "totalPoints": 434
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 439,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARM",
+        "countryURL": "/fifa-world-ranking/ARM",
+        "flag": {
+          "alt": "Armenia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARM",
+          "title": "Armenia",
+          "width": 70
+        },
+        "idTeam": "43933",
+        "name": "Armenia",
+        "previousRank": 99,
+        "rank": 101,
+        "totalPoints": 433
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 434,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KAZ",
+        "countryURL": "/fifa-world-ranking/KAZ",
+        "flag": {
+          "alt": "Kazakhstan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KAZ",
+          "title": "Kazakhstan",
+          "width": 70
+        },
+        "idTeam": "44027",
+        "name": "Kazakhstan",
+        "previousRank": 101,
+        "rank": 102,
+        "totalPoints": 429
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 430,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDA",
+        "countryURL": "/fifa-world-ranking/MDA",
+        "flag": {
+          "alt": "Moldova",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDA",
+          "title": "Moldova",
+          "width": 70
+        },
+        "idTeam": "44036",
+        "name": "Moldova",
+        "previousRank": 102,
+        "rank": 103,
+        "totalPoints": 425
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 428,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAB",
+        "countryURL": "/fifa-world-ranking/GAB",
+        "flag": {
+          "alt": "Gabon",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAB",
+          "title": "Gabon",
+          "width": 70
+        },
+        "idTeam": "43858",
+        "name": "Gabon",
+        "previousRank": 103,
+        "rank": 104,
+        "totalPoints": 422
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 428,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NAM",
+        "countryURL": "/fifa-world-ranking/NAM",
+        "flag": {
+          "alt": "Namibia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NAM",
+          "title": "Namibia",
+          "width": 70
+        },
+        "idTeam": "43874",
+        "name": "Namibia",
+        "previousRank": 104,
+        "rank": 105,
+        "totalPoints": 422
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 422,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KEN",
+        "countryURL": "/fifa-world-ranking/KEN",
+        "flag": {
+          "alt": "Kenya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KEN",
+          "title": "Kenya",
+          "width": 70
+        },
+        "idTeam": "43863",
+        "name": "Kenya",
+        "previousRank": 106,
+        "rank": 106,
+        "totalPoints": 418
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 422,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIE",
+        "countryURL": "/fifa-world-ranking/VIE",
+        "flag": {
+          "alt": "Vietnam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIE",
+          "title": "Vietnam",
+          "width": 70
+        },
+        "idTeam": "43841",
+        "name": "Vietnam",
+        "previousRank": 107,
+        "rank": 107,
+        "totalPoints": 417
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 408,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHR",
+        "countryURL": "/fifa-world-ranking/BHR",
+        "flag": {
+          "alt": "Bahrain",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHR",
+          "title": "Bahrain",
+          "width": 70
+        },
+        "idTeam": "43808",
+        "name": "Bahrain",
+        "previousRank": 109,
+        "rank": 108,
+        "totalPoints": 409
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 412,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRB",
+        "countryURL": "/fifa-world-ranking/BRB",
+        "flag": {
+          "alt": "Barbados",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRB",
+          "title": "Barbados",
+          "width": 70
+        },
+        "idTeam": "43896",
+        "name": "Barbados",
+        "previousRank": 108,
+        "rank": 109,
+        "totalPoints": 407
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 404,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUI",
+        "countryURL": "/fifa-world-ranking/GUI",
+        "flag": {
+          "alt": "Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUI",
+          "title": "Guinea",
+          "width": 70
+        },
+        "idTeam": "43861",
+        "name": "Guinea",
+        "previousRank": 110,
+        "rank": 110,
+        "totalPoints": 399
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 393,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAN",
+        "countryURL": "/fifa-world-ranking/PAN",
+        "flag": {
+          "alt": "Panama",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAN",
+          "title": "Panama",
+          "width": 70
+        },
+        "idTeam": "43914",
+        "name": "Panama",
+        "previousRank": 111,
+        "rank": 111,
+        "totalPoints": 388
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 389,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAS",
+        "countryURL": "/fifa-world-ranking/MAS",
+        "flag": {
+          "alt": "Malaysia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAS",
+          "title": "Malaysia",
+          "width": 70
+        },
+        "idTeam": "43827",
+        "name": "Malaysia",
+        "previousRank": 112,
+        "rank": 112,
+        "totalPoints": 384
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 384,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SGP",
+        "countryURL": "/fifa-world-ranking/SGP",
+        "flag": {
+          "alt": "Singapore",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SGP",
+          "title": "Singapore",
+          "width": 70
+        },
+        "idTeam": "43836",
+        "name": "Singapore",
+        "previousRank": 114,
+        "rank": 113,
+        "totalPoints": 381
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 386,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TKM",
+        "countryURL": "/fifa-world-ranking/TKM",
+        "flag": {
+          "alt": "Turkmenistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TKM",
+          "title": "Turkmenistan",
+          "width": 70
+        },
+        "idTeam": "44004",
+        "name": "Turkmenistan",
+        "previousRank": 113,
+        "rank": 114,
+        "totalPoints": 377
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 381,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AZE",
+        "countryURL": "/fifa-world-ranking/AZE",
+        "flag": {
+          "alt": "Azerbaijan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AZE",
+          "title": "Azerbaijan",
+          "width": 70
+        },
+        "idTeam": "43994",
+        "name": "Azerbaijan",
+        "previousRank": 115,
+        "rank": 115,
+        "totalPoints": 377
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 377,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LBY",
+        "countryURL": "/fifa-world-ranking/LBY",
+        "flag": {
+          "alt": "Libya",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LBY",
+          "title": "Libya",
+          "width": 70
+        },
+        "idTeam": "43866",
+        "name": "Libya",
+        "previousRank": 116,
+        "rank": 116,
+        "totalPoints": 374
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 364,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAD",
+        "countryURL": "/fifa-world-ranking/MAD",
+        "flag": {
+          "alt": "Madagascar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAD",
+          "title": "Madagascar",
+          "width": 70
+        },
+        "idTeam": "43867",
+        "name": "Madagascar",
+        "previousRank": 120,
+        "rank": 117,
+        "totalPoints": 366
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 356,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MLT",
+        "countryURL": "/fifa-world-ranking/MLT",
+        "flag": {
+          "alt": "Malta",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MLT",
+          "title": "Malta",
+          "width": 70
+        },
+        "idTeam": "43959",
+        "name": "Malta",
+        "previousRank": 122,
+        "rank": 118,
+        "totalPoints": 366
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 368,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FRO",
+        "countryURL": "/fifa-world-ranking/FRO",
+        "flag": {
+          "alt": "Faroe Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FRO",
+          "title": "Faroe Islands",
+          "width": 70
+        },
+        "idTeam": "43944",
+        "name": "Faroe Islands",
+        "previousRank": 118,
+        "rank": 119,
+        "totalPoints": 365
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 369,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "UGA",
+        "countryURL": "/fifa-world-ranking/UGA",
+        "flag": {
+          "alt": "Uganda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/UGA",
+          "title": "Uganda",
+          "width": 70
+        },
+        "idTeam": "43889",
+        "name": "Uganda",
+        "previousRank": 117,
+        "rank": 120,
+        "totalPoints": 364
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 365,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SDN",
+        "countryURL": "/fifa-world-ranking/SDN",
+        "flag": {
+          "alt": "Sudan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SDN",
+          "title": "Sudan",
+          "width": 70
+        },
+        "idTeam": "43884",
+        "name": "Sudan",
+        "previousRank": 119,
+        "rank": 121,
+        "totalPoints": 360
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 357,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MWI",
+        "countryURL": "/fifa-world-ranking/MWI",
+        "flag": {
+          "alt": "Malawi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MWI",
+          "title": "Malawi",
+          "width": 70
+        },
+        "idTeam": "43868",
+        "name": "Malawi",
+        "previousRank": 121,
+        "rank": 122,
+        "totalPoints": 353
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 355,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "IND",
+        "countryURL": "/fifa-world-ranking/IND",
+        "flag": {
+          "alt": "India",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/IND",
+          "title": "India",
+          "width": 70
+        },
+        "idTeam": "43815",
+        "name": "India",
+        "previousRank": 123,
+        "rank": 123,
+        "totalPoints": 350
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 321,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SWZ",
+        "countryURL": "/fifa-world-ranking/SWZ",
+        "flag": {
+          "alt": "Eswatini",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SWZ",
+          "title": "Eswatini",
+          "width": 70
+        },
+        "idTeam": "43885",
+        "name": "Eswatini",
+        "previousRank": 134,
+        "rank": 124,
+        "totalPoints": 349
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 343,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "FIJ",
+        "countryURL": "/fifa-world-ranking/FIJ",
+        "flag": {
+          "alt": "Fiji",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/FIJ",
+          "title": "Fiji",
+          "width": 70
+        },
+        "idTeam": "43977",
+        "name": "Fiji",
+        "previousRank": 124,
+        "rank": 125,
+        "totalPoints": 340
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 339,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PRK",
+        "countryURL": "/fifa-world-ranking/PRK",
+        "flag": {
+          "alt": "Korea DPR",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PRK",
+          "title": "Korea DPR",
+          "width": 70
+        },
+        "idTeam": "43821",
+        "name": "Korea DPR",
+        "previousRank": 126,
+        "rank": 126,
+        "totalPoints": 339
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 338,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MRI",
+        "countryURL": "/fifa-world-ranking/MRI",
+        "flag": {
+          "alt": "Mauritius",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MRI",
+          "title": "Mauritius",
+          "width": 70
+        },
+        "idTeam": "43871",
+        "name": "Mauritius",
+        "previousRank": 127,
+        "rank": 127,
+        "totalPoints": 335
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 333,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAH",
+        "countryURL": "/fifa-world-ranking/TAH",
+        "flag": {
+          "alt": "Tahiti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAH",
+          "title": "Tahiti",
+          "width": 70
+        },
+        "idTeam": "43981",
+        "name": "Tahiti",
+        "previousRank": 128,
+        "rank": 128,
+        "totalPoints": 332
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 343,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MOZ",
+        "countryURL": "/fifa-world-ranking/MOZ",
+        "flag": {
+          "alt": "Mozambique",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MOZ",
+          "title": "Mozambique",
+          "width": 70
+        },
+        "idTeam": "43873",
+        "name": "Mozambique",
+        "previousRank": 125,
+        "rank": 129,
+        "totalPoints": 330
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 331,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BDI",
+        "countryURL": "/fifa-world-ranking/BDI",
+        "flag": {
+          "alt": "Burundi",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BDI",
+          "title": "Burundi",
+          "width": 70
+        },
+        "idTeam": "43848",
+        "name": "Burundi",
+        "previousRank": 129,
+        "rank": 130,
+        "totalPoints": 328
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 331,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIN",
+        "countryURL": "/fifa-world-ranking/VIN",
+        "flag": {
+          "alt": "St. Vincent and the Grenadines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIN",
+          "title": "St. Vincent and the Grenadines",
+          "width": 70
+        },
+        "idTeam": "43918",
+        "name": "St. Vincent and the Grenadines",
+        "previousRank": 130,
+        "rank": 131,
+        "totalPoints": 327
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 324,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SKN",
+        "countryURL": "/fifa-world-ranking/SKN",
+        "flag": {
+          "alt": "St. Kitts and Nevis",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SKN",
+          "title": "St. Kitts and Nevis",
+          "width": 70
+        },
+        "idTeam": "43916",
+        "name": "St. Kitts and Nevis",
+        "previousRank": 131,
+        "rank": 132,
+        "totalPoints": 320
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 321,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "RWA",
+        "countryURL": "/fifa-world-ranking/RWA",
+        "flag": {
+          "alt": "Rwanda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/RWA",
+          "title": "Rwanda",
+          "width": 70
+        },
+        "idTeam": "43877",
+        "name": "Rwanda",
+        "previousRank": 132,
+        "rank": 133,
+        "totalPoints": 319
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 293,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ETH",
+        "countryURL": "/fifa-world-ranking/ETH",
+        "flag": {
+          "alt": "Ethiopia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ETH",
+          "title": "Ethiopia",
+          "width": 70
+        },
+        "idTeam": "43857",
+        "name": "Ethiopia",
+        "previousRank": 140,
+        "rank": 134,
+        "totalPoints": 318
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 321,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LCA",
+        "countryURL": "/fifa-world-ranking/LCA",
+        "flag": {
+          "alt": "St. Lucia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LCA",
+          "title": "St. Lucia",
+          "width": 70
+        },
+        "idTeam": "43917",
+        "name": "St. Lucia",
+        "previousRank": 133,
+        "rank": 135,
+        "totalPoints": 318
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 316,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LES",
+        "countryURL": "/fifa-world-ranking/LES",
+        "flag": {
+          "alt": "Lesotho",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LES",
+          "title": "Lesotho",
+          "width": 70
+        },
+        "idTeam": "43864",
+        "name": "Lesotho",
+        "previousRank": 135,
+        "rank": 136,
+        "totalPoints": 313
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 306,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOL",
+        "countryURL": "/fifa-world-ranking/SOL",
+        "flag": {
+          "alt": "Solomon Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOL",
+          "title": "Solomon Islands",
+          "width": 70
+        },
+        "idTeam": "43980",
+        "name": "Solomon Islands",
+        "previousRank": 137,
+        "rank": 137,
+        "totalPoints": 305
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 308,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GRN",
+        "countryURL": "/fifa-world-ranking/GRN",
+        "flag": {
+          "alt": "Grenada",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GRN",
+          "title": "Grenada",
+          "width": 70
+        },
+        "idTeam": "43905",
+        "name": "Grenada",
+        "previousRank": 136,
+        "rank": 138,
+        "totalPoints": 305
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 303,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BOT",
+        "countryURL": "/fifa-world-ranking/BOT",
+        "flag": {
+          "alt": "Botswana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BOT",
+          "title": "Botswana",
+          "width": 70
+        },
+        "idTeam": "43846",
+        "name": "Botswana",
+        "previousRank": 138,
+        "rank": 139,
+        "totalPoints": 303
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 299,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "YEM",
+        "countryURL": "/fifa-world-ranking/YEM",
+        "flag": {
+          "alt": "Yemen",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/YEM",
+          "title": "Yemen",
+          "width": 70
+        },
+        "idTeam": "43842",
+        "name": "Yemen",
+        "previousRank": 139,
+        "rank": 140,
+        "totalPoints": 297
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 272,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AND",
+        "countryURL": "/fifa-world-ranking/AND",
+        "flag": {
+          "alt": "Andorra",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AND",
+          "title": "Andorra",
+          "width": 70
+        },
+        "idTeam": "20001",
+        "name": "Andorra",
+        "previousRank": 144,
+        "rank": 141,
+        "totalPoints": 286
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 281,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SRI",
+        "countryURL": "/fifa-world-ranking/SRI",
+        "flag": {
+          "alt": "Sri Lanka",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SRI",
+          "title": "Sri Lanka",
+          "width": 70
+        },
+        "idTeam": "43837",
+        "name": "Sri Lanka",
+        "previousRank": 143,
+        "rank": 142,
+        "totalPoints": 281
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 284,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "HKG",
+        "countryURL": "/fifa-world-ranking/HKG",
+        "flag": {
+          "alt": "Hong Kong",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/HKG",
+          "title": "Hong Kong",
+          "width": 70
+        },
+        "idTeam": "43814",
+        "name": "Hong Kong",
+        "previousRank": 141,
+        "rank": 143,
+        "totalPoints": 280
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 283,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SLE",
+        "countryURL": "/fifa-world-ranking/SLE",
+        "flag": {
+          "alt": "Sierra Leone",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SLE",
+          "title": "Sierra Leone",
+          "width": 70
+        },
+        "idTeam": "43881",
+        "name": "Sierra Leone",
+        "previousRank": 142,
+        "rank": 144,
+        "totalPoints": 279
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 262,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LUX",
+        "countryURL": "/fifa-world-ranking/LUX",
+        "flag": {
+          "alt": "Luxembourg",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LUX",
+          "title": "Luxembourg",
+          "width": 70
+        },
+        "idTeam": "43958",
+        "name": "Luxembourg",
+        "previousRank": 146,
+        "rank": 145,
+        "totalPoints": 266
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 263,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SUR",
+        "countryURL": "/fifa-world-ranking/SUR",
+        "flag": {
+          "alt": "Suriname",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SUR",
+          "title": "Suriname",
+          "width": 70
+        },
+        "idTeam": "43919",
+        "name": "Suriname",
+        "previousRank": 145,
+        "rank": 146,
+        "totalPoints": 260
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 249,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PLE",
+        "countryURL": "/fifa-world-ranking/PLE",
+        "flag": {
+          "alt": "Palestine",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PLE",
+          "title": "Palestine",
+          "width": 70
+        },
+        "idTeam": "43989",
+        "name": "Palestine",
+        "previousRank": 147,
+        "rank": 147,
+        "totalPoints": 247
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 246,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MDV",
+        "countryURL": "/fifa-world-ranking/MDV",
+        "flag": {
+          "alt": "Maldives",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MDV",
+          "title": "Maldives",
+          "width": 70
+        },
+        "idTeam": "43828",
+        "name": "Maldives",
+        "previousRank": 148,
+        "rank": 148,
+        "totalPoints": 245
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 244,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAN",
+        "countryURL": "/fifa-world-ranking/BAN",
+        "flag": {
+          "alt": "Bangladesh",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAN",
+          "title": "Bangladesh",
+          "width": 70
+        },
+        "idTeam": "43809",
+        "name": "Bangladesh",
+        "previousRank": 149,
+        "rank": 149,
+        "totalPoints": 241
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 238,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LIE",
+        "countryURL": "/fifa-world-ranking/LIE",
+        "flag": {
+          "alt": "Liechtenstein",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LIE",
+          "title": "Liechtenstein",
+          "width": 70
+        },
+        "idTeam": "43956",
+        "name": "Liechtenstein",
+        "previousRank": 152,
+        "rank": 150,
+        "totalPoints": 241
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 242,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BEN",
+        "countryURL": "/fifa-world-ranking/BEN",
+        "flag": {
+          "alt": "Benin",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BEN",
+          "title": "Benin",
+          "width": 70
+        },
+        "idTeam": "43845",
+        "name": "Benin",
+        "previousRank": 150,
+        "rank": 151,
+        "totalPoints": 239
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 239,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TAN",
+        "countryURL": "/fifa-world-ranking/TAN",
+        "flag": {
+          "alt": "Tanzania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TAN",
+          "title": "Tanzania",
+          "width": 70
+        },
+        "idTeam": "43886",
+        "name": "Tanzania",
+        "previousRank": 151,
+        "rank": 152,
+        "totalPoints": 237
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 232,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MYA",
+        "countryURL": "/fifa-world-ranking/MYA",
+        "flag": {
+          "alt": "Myanmar",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MYA",
+          "title": "Myanmar",
+          "width": 70
+        },
+        "idTeam": "43829",
+        "name": "Myanmar",
+        "previousRank": 153,
+        "rank": 153,
+        "totalPoints": 229
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 230,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GAM",
+        "countryURL": "/fifa-world-ranking/GAM",
+        "flag": {
+          "alt": "Gambia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GAM",
+          "title": "Gambia",
+          "width": 70
+        },
+        "idTeam": "43859",
+        "name": "Gambia",
+        "previousRank": 154,
+        "rank": 154,
+        "totalPoints": 227
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 224,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TJK",
+        "countryURL": "/fifa-world-ranking/TJK",
+        "flag": {
+          "alt": "Tajikistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TJK",
+          "title": "Tajikistan",
+          "width": 70
+        },
+        "idTeam": "44003",
+        "name": "Tajikistan",
+        "previousRank": 155,
+        "rank": 155,
+        "totalPoints": 221
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 216,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NEP",
+        "countryURL": "/fifa-world-ranking/NEP",
+        "flag": {
+          "alt": "Nepal",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NEP",
+          "title": "Nepal",
+          "width": 70
+        },
+        "idTeam": "43830",
+        "name": "Nepal",
+        "previousRank": 156,
+        "rank": 156,
+        "totalPoints": 214
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 202,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BLZ",
+        "countryURL": "/fifa-world-ranking/BLZ",
+        "flag": {
+          "alt": "Belize",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BLZ",
+          "title": "Belize",
+          "width": 70
+        },
+        "idTeam": "44011",
+        "name": "Belize",
+        "previousRank": 160,
+        "rank": 157,
+        "totalPoints": 211
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 213,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ATG",
+        "countryURL": "/fifa-world-ranking/ATG",
+        "flag": {
+          "alt": "Antigua and Barbuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ATG",
+          "title": "Antigua and Barbuda",
+          "width": 70
+        },
+        "idTeam": "1882218",
+        "name": "Antigua and Barbuda",
+        "previousRank": 157,
+        "rank": 158,
+        "totalPoints": 211
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 207,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SMR",
+        "countryURL": "/fifa-world-ranking/SMR",
+        "flag": {
+          "alt": "San Marino",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SMR",
+          "title": "San Marino",
+          "width": 70
+        },
+        "idTeam": "43966",
+        "name": "San Marino",
+        "previousRank": 158,
+        "rank": 159,
+        "totalPoints": 204
+      },
+      "tag": {
+        "id": "UEFA",
+        "text": "UEFA"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 204,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CPV",
+        "countryURL": "/fifa-world-ranking/CPV",
+        "flag": {
+          "alt": "Cape Verde Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CPV",
+          "title": "Cape Verde Islands",
+          "width": 70
+        },
+        "idTeam": "43850",
+        "name": "Cape Verde Islands",
+        "previousRank": 159,
+        "rank": 160,
+        "totalPoints": 202
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 200,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DOM",
+        "countryURL": "/fifa-world-ranking/DOM",
+        "flag": {
+          "alt": "Dominican Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DOM",
+          "title": "Dominican Republic",
+          "width": 70
+        },
+        "idTeam": "43903",
+        "name": "Dominican Republic",
+        "previousRank": 162,
+        "rank": 161,
+        "totalPoints": 198
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 199,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VGB",
+        "countryURL": "/fifa-world-ranking/VGB",
+        "flag": {
+          "alt": "British Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VGB",
+          "title": "British Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "20004",
+        "name": "British Virgin Islands",
+        "previousRank": 163,
+        "rank": 162,
+        "totalPoints": 197
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 199,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DMA",
+        "countryURL": "/fifa-world-ranking/DMA",
+        "flag": {
+          "alt": "Dominica",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DMA",
+          "title": "Dominica",
+          "width": 70
+        },
+        "idTeam": "43997",
+        "name": "Dominica",
+        "previousRank": 164,
+        "rank": 163,
+        "totalPoints": 197
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 201,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "LAO",
+        "countryURL": "/fifa-world-ranking/LAO",
+        "flag": {
+          "alt": "Laos",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/LAO",
+          "title": "Laos",
+          "width": 70
+        },
+        "idTeam": "43824",
+        "name": "Laos",
+        "previousRank": 161,
+        "rank": 164,
+        "totalPoints": 196
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 189,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SAM",
+        "countryURL": "/fifa-world-ranking/SAM",
+        "flag": {
+          "alt": "Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SAM",
+          "title": "Samoa",
+          "width": 70
+        },
+        "idTeam": "1882637",
+        "name": "Samoa",
+        "previousRank": 168,
+        "rank": 165,
+        "totalPoints": 195
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 197,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "KGZ",
+        "countryURL": "/fifa-world-ranking/KGZ",
+        "flag": {
+          "alt": "Kyrgyz Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/KGZ",
+          "title": "Kyrgyz Republic",
+          "width": 70
+        },
+        "idTeam": "43999",
+        "name": "Kyrgyz Republic",
+        "previousRank": 165,
+        "rank": 166,
+        "totalPoints": 195
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 190,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAY",
+        "countryURL": "/fifa-world-ranking/CAY",
+        "flag": {
+          "alt": "Cayman Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAY",
+          "title": "Cayman Islands",
+          "width": 70
+        },
+        "idTeam": "43900",
+        "name": "Cayman Islands",
+        "previousRank": 166,
+        "rank": 167,
+        "totalPoints": 188
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 189,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BER",
+        "countryURL": "/fifa-world-ranking/BER",
+        "flag": {
+          "alt": "Bermuda",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BER",
+          "title": "Bermuda",
+          "width": 70
+        },
+        "idTeam": "43898",
+        "name": "Bermuda",
+        "previousRank": 167,
+        "rank": 168,
+        "totalPoints": 187
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 184,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ERI",
+        "countryURL": "/fifa-world-ranking/ERI",
+        "flag": {
+          "alt": "Eritrea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ERI",
+          "title": "Eritrea",
+          "width": 70
+        },
+        "idTeam": "20006",
+        "name": "Eritrea",
+        "previousRank": 169,
+        "rank": 169,
+        "totalPoints": 182
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 181,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VAN",
+        "countryURL": "/fifa-world-ranking/VAN",
+        "flag": {
+          "alt": "Vanuatu",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VAN",
+          "title": "Vanuatu",
+          "width": 70
+        },
+        "idTeam": "43982",
+        "name": "Vanuatu",
+        "previousRank": 170,
+        "rank": 170,
+        "totalPoints": 180
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 177,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CAM",
+        "countryURL": "/fifa-world-ranking/CAM",
+        "flag": {
+          "alt": "Cambodia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CAM",
+          "title": "Cambodia",
+          "width": 70
+        },
+        "idTeam": "44009",
+        "name": "Cambodia",
+        "previousRank": 171,
+        "rank": 171,
+        "totalPoints": 175
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 172,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TPE",
+        "countryURL": "/fifa-world-ranking/TPE",
+        "flag": {
+          "alt": "Chinese Taipei",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TPE",
+          "title": "Chinese Taipei",
+          "width": 70
+        },
+        "idTeam": "43813",
+        "name": "Chinese Taipei",
+        "previousRank": 172,
+        "rank": 172,
+        "totalPoints": 170
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 156,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TGA",
+        "countryURL": "/fifa-world-ranking/TGA",
+        "flag": {
+          "alt": "Tonga",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TGA",
+          "title": "Tonga",
+          "width": 70
+        },
+        "idTeam": "44039",
+        "name": "Tonga",
+        "previousRank": 173,
+        "rank": 173,
+        "totalPoints": 157
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 148,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GNB",
+        "countryURL": "/fifa-world-ranking/GNB",
+        "flag": {
+          "alt": "Guinea-Bissau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GNB",
+          "title": "Guinea-Bissau",
+          "width": 70
+        },
+        "idTeam": "43862",
+        "name": "Guinea-Bissau",
+        "previousRank": 174,
+        "rank": 174,
+        "totalPoints": 147
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 148,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PHI",
+        "countryURL": "/fifa-world-ranking/PHI",
+        "flag": {
+          "alt": "Philippines",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PHI",
+          "title": "Philippines",
+          "width": 70
+        },
+        "idTeam": "43833",
+        "name": "Philippines",
+        "previousRank": 175,
+        "rank": 175,
+        "totalPoints": 145
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 146,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CHA",
+        "countryURL": "/fifa-world-ranking/CHA",
+        "flag": {
+          "alt": "Chad",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CHA",
+          "title": "Chad",
+          "width": 70
+        },
+        "idTeam": "43852",
+        "name": "Chad",
+        "previousRank": 176,
+        "rank": 176,
+        "totalPoints": 144
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 144,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUY",
+        "countryURL": "/fifa-world-ranking/GUY",
+        "flag": {
+          "alt": "Guyana",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUY",
+          "title": "Guyana",
+          "width": 70
+        },
+        "idTeam": "43907",
+        "name": "Guyana",
+        "previousRank": 177,
+        "rank": 177,
+        "totalPoints": 143
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 143,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MTN",
+        "countryURL": "/fifa-world-ranking/MTN",
+        "flag": {
+          "alt": "Mauritania",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MTN",
+          "title": "Mauritania",
+          "width": 70
+        },
+        "idTeam": "43870",
+        "name": "Mauritania",
+        "previousRank": 178,
+        "rank": 178,
+        "totalPoints": 140
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 141,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "COK",
+        "countryURL": "/fifa-world-ranking/COK",
+        "flag": {
+          "alt": "Cook Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/COK",
+          "title": "Cook Islands",
+          "width": 70
+        },
+        "idTeam": "44007",
+        "name": "Cook Islands",
+        "previousRank": 179,
+        "rank": 179,
+        "totalPoints": 139
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 130,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PNG",
+        "countryURL": "/fifa-world-ranking/PNG",
+        "flag": {
+          "alt": "Papua New Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PNG",
+          "title": "Papua New Guinea",
+          "width": 70
+        },
+        "idTeam": "43979",
+        "name": "Papua New Guinea",
+        "previousRank": 181,
+        "rank": 180,
+        "totalPoints": 130
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 130,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PAK",
+        "countryURL": "/fifa-world-ranking/PAK",
+        "flag": {
+          "alt": "Pakistan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PAK",
+          "title": "Pakistan",
+          "width": 70
+        },
+        "idTeam": "43832",
+        "name": "Pakistan",
+        "previousRank": 180,
+        "rank": 181,
+        "totalPoints": 130
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 111,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MAC",
+        "countryURL": "/fifa-world-ranking/MAC",
+        "flag": {
+          "alt": "Macau",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MAC",
+          "title": "Macau",
+          "width": 70
+        },
+        "idTeam": "43826",
+        "name": "Macau",
+        "previousRank": 182,
+        "rank": 182,
+        "totalPoints": 109
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 108,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "CTA",
+        "countryURL": "/fifa-world-ranking/CTA",
+        "flag": {
+          "alt": "Central African Republic",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/CTA",
+          "title": "Central African Republic",
+          "width": 70
+        },
+        "idTeam": "43851",
+        "name": "Central African Republic",
+        "previousRank": 183,
+        "rank": 183,
+        "totalPoints": 106
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 104,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BAH",
+        "countryURL": "/fifa-world-ranking/BAH",
+        "flag": {
+          "alt": "Bahamas",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BAH",
+          "title": "Bahamas",
+          "width": 70
+        },
+        "idTeam": "43895",
+        "name": "Bahamas",
+        "previousRank": 184,
+        "rank": 184,
+        "totalPoints": 103
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 100,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ARU",
+        "countryURL": "/fifa-world-ranking/ARU",
+        "flag": {
+          "alt": "Aruba",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ARU",
+          "title": "Aruba",
+          "width": 70
+        },
+        "idTeam": "43894",
+        "name": "Aruba",
+        "previousRank": 186,
+        "rank": 186,
+        "totalPoints": 99
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 98,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "STP",
+        "countryURL": "/fifa-world-ranking/STP",
+        "flag": {
+          "alt": "Sao Tome e Principe",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/STP",
+          "title": "Sao Tome e Principe",
+          "width": 70
+        },
+        "idTeam": "43878",
+        "name": "Sao Tome e Principe",
+        "previousRank": 187,
+        "rank": 187,
+        "totalPoints": 97
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 92,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MNG",
+        "countryURL": "/fifa-world-ranking/MNG",
+        "flag": {
+          "alt": "Mongolia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MNG",
+          "title": "Mongolia",
+          "width": 70
+        },
+        "idTeam": "20008",
+        "name": "Mongolia",
+        "previousRank": 188,
+        "rank": 188,
+        "totalPoints": 92
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 88,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NCA",
+        "countryURL": "/fifa-world-ranking/NCA",
+        "flag": {
+          "alt": "Nicaragua",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NCA",
+          "title": "Nicaragua",
+          "width": 70
+        },
+        "idTeam": "43913",
+        "name": "Nicaragua",
+        "previousRank": 189,
+        "rank": 189,
+        "totalPoints": 88
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 84,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BRU",
+        "countryURL": "/fifa-world-ranking/BRU",
+        "flag": {
+          "alt": "Brunei Darussalam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BRU",
+          "title": "Brunei Darussalam",
+          "width": 70
+        },
+        "idTeam": "43810",
+        "name": "Brunei Darussalam",
+        "previousRank": 190,
+        "rank": 190,
+        "totalPoints": 83
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 77,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "EQG",
+        "countryURL": "/fifa-world-ranking/EQG",
+        "flag": {
+          "alt": "Equatorial Guinea",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/EQG",
+          "title": "Equatorial Guinea",
+          "width": 70
+        },
+        "idTeam": "43856",
+        "name": "Equatorial Guinea",
+        "previousRank": 191,
+        "rank": 191,
+        "totalPoints": 76
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 74,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "DJI",
+        "countryURL": "/fifa-world-ranking/DJI",
+        "flag": {
+          "alt": "Djibouti",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/DJI",
+          "title": "Djibouti",
+          "width": 70
+        },
+        "idTeam": "43996",
+        "name": "Djibouti",
+        "previousRank": 192,
+        "rank": 192,
+        "totalPoints": 73
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 70,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "NIG",
+        "countryURL": "/fifa-world-ranking/NIG",
+        "flag": {
+          "alt": "Niger",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/NIG",
+          "title": "Niger",
+          "width": 70
+        },
+        "idTeam": "43875",
+        "name": "Niger",
+        "previousRank": 193,
+        "rank": 193,
+        "totalPoints": 68
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 68,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SEY",
+        "countryURL": "/fifa-world-ranking/SEY",
+        "flag": {
+          "alt": "Seychelles",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SEY",
+          "title": "Seychelles",
+          "width": 70
+        },
+        "idTeam": "43880",
+        "name": "Seychelles",
+        "previousRank": 194,
+        "rank": 194,
+        "totalPoints": 67
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 66,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "SOM",
+        "countryURL": "/fifa-world-ranking/SOM",
+        "flag": {
+          "alt": "Somalia",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/SOM",
+          "title": "Somalia",
+          "width": 70
+        },
+        "idTeam": "43882",
+        "name": "Somalia",
+        "previousRank": 195,
+        "rank": 195,
+        "totalPoints": 66
+      },
+      "tag": {
+        "id": "CAF",
+        "text": "CAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 64,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "AIA",
+        "countryURL": "/fifa-world-ranking/AIA",
+        "flag": {
+          "alt": "Anguilla",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/AIA",
+          "title": "Anguilla",
+          "width": 70
+        },
+        "idTeam": "20002",
+        "name": "Anguilla",
+        "previousRank": 196,
+        "rank": 196,
+        "totalPoints": 63
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 54,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "PUR",
+        "countryURL": "/fifa-world-ranking/PUR",
+        "flag": {
+          "alt": "Puerto Rico",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/PUR",
+          "title": "Puerto Rico",
+          "width": 70
+        },
+        "idTeam": "43915",
+        "name": "Puerto Rico",
+        "previousRank": 197,
+        "rank": 197,
+        "totalPoints": 53
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 47,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "VIR",
+        "countryURL": "/fifa-world-ranking/VIR",
+        "flag": {
+          "alt": "US Virgin Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/VIR",
+          "title": "US Virgin Islands",
+          "width": 70
+        },
+        "idTeam": "1881967",
+        "name": "US Virgin Islands",
+        "previousRank": 198,
+        "rank": 198,
+        "totalPoints": 46
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 24,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "GUM",
+        "countryURL": "/fifa-world-ranking/GUM",
+        "flag": {
+          "alt": "Guam",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/GUM",
+          "title": "Guam",
+          "width": 70
+        },
+        "idTeam": "20007",
+        "name": "Guam",
+        "previousRank": 199,
+        "rank": 199,
+        "totalPoints": 24
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 19,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "TCA",
+        "countryURL": "/fifa-world-ranking/TCA",
+        "flag": {
+          "alt": "Turks and Caicos Islands",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/TCA",
+          "title": "Turks and Caicos Islands",
+          "width": 70
+        },
+        "idTeam": "20011",
+        "name": "Turks and Caicos Islands",
+        "previousRank": 201,
+        "rank": 200,
+        "totalPoints": 19
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 19,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "ASA",
+        "countryURL": "/fifa-world-ranking/ASA",
+        "flag": {
+          "alt": "American Samoa",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/ASA",
+          "title": "American Samoa",
+          "width": 70
+        },
+        "idTeam": "20012",
+        "name": "American Samoa",
+        "previousRank": 200,
+        "rank": 201,
+        "totalPoints": 19
+      },
+      "tag": {
+        "id": "OFC",
+        "text": "OFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 13,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "BHU",
+        "countryURL": "/fifa-world-ranking/BHU",
+        "flag": {
+          "alt": "Bhutan",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/BHU",
+          "title": "Bhutan",
+          "width": 70
+        },
+        "idTeam": "20003",
+        "name": "Bhutan",
+        "previousRank": 202,
+        "rank": 202,
+        "totalPoints": 13
+      },
+      "tag": {
+        "id": "AFC",
+        "text": "AFC"
+      }
+    },
+    {
+      "lastUpdateDate": "2002-05-15T00:00:00Z",
+      "nextUpdateDate": "2002-07-03T00:00:00Z",
+      "previousPoints": 9,
+      "rankingItem": {
+        "active": false,
+        "countryCode": "MSR",
+        "countryURL": "/fifa-world-ranking/MSR",
+        "flag": {
+          "alt": "Montserrat",
+          "height": 46,
+          "src": "https://api.fifa.com/api/v3/picture/flags-sq-2/MSR",
+          "title": "Montserrat",
+          "width": 70
+        },
+        "idTeam": "20009",
+        "name": "Montserrat",
+        "previousRank": 203,
+        "rank": 203,
+        "totalPoints": 9
+      },
+      "tag": {
+        "id": "CONCACAF",
+        "text": "CONCACAF"
+      }
+    }
+  ]
+}

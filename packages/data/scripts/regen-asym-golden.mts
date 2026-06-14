@@ -1,5 +1,5 @@
-// V7 — refresh the asymmetric realism gate golden after a rating-channel + λ
-// refit.
+// merit-v4 — refresh the asymmetric realism gate golden after a rating-channel
+// + λ refit.
 //
 // What this updates: per-policy run counts + raw event totals + observed rates +
 // per-observed Wilson half-widths + telemetry, then re-centers the shape bands
@@ -7,8 +7,7 @@
 // max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor).
 //
 // What this DELIBERATELY preserves byte-for-byte: `ensemble` and each policy's
-// `_doc`. V8 updates the engine_version header to the season stamp while
-// preserving the V7 tuple and shape-band recipe.
+// `_doc`.
 //
 //   pnpm --filter @wcdraft/data exec tsx scripts/regen-asym-golden.mts
 
@@ -85,12 +84,12 @@ for (const policy of ALL_POLICIES) {
 
 const strategic = golden.policies.strategicAutoDraft;
 golden.$schema_doc =
-  "merit-v3 V8 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the V7 lambda refit. Runtime engine_version is engine-2026.06.12.";
+  "merit-v4 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the merit-v4 lambda refit. Runtime engine_version is engine-2026.06.13-merit-v4.";
 golden.engine_anchor =
-  "merit-v3 V8 season stamp for the V7 lambda refit on post-V6 Career channels";
-golden.engine_version = "engine-2026.06.12";
+  "merit-v4 lambda refit on national-strength and objective-club merit channels";
+golden.engine_version = "engine-2026.06.13-merit-v4";
 golden.shape_bands._doc =
-  "V7 RE-LOCK: shape bands are centered on strategicAutoDraft after the post-V6 Career-channel lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
+  "merit-v4 RE-LOCK: shape bands are centered on strategicAutoDraft after the national-strength/objective-club lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
 for (const key of SHAPE_KEYS) {
   golden.shape_bands[key] = {
     center_policy: "strategicAutoDraft",
@@ -103,11 +102,11 @@ golden.goals_per_game_lower_floor.lower_bound = Math.floor(
   (strategic.observed.goals_per_game - 2 * strategic.wilson_half_widths_around_observed.goals_per_game) * 100,
 ) / 100;
 golden.wilson_target_for_ko_metrics._doc =
-  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. V7 records the strategicAutoDraft observed half-widths under the post-V6 Career-channel lambda refit.";
+  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4 records the strategicAutoDraft observed half-widths under the national-strength/objective-club lambda refit.";
 golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
   ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
   shootout_pct: Number((100 * strategic.wilson_half_widths_around_observed.shootout_pct).toFixed(2)),
 };
 
 writeFileSync(GOLDEN_PATH, JSON.stringify(golden, null, 2) + "\n", "utf-8");
-console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands re-derived, engine_version stamped for V8)`);
+console.log(`\nWROTE ${GOLDEN_PATH} (shape_bands re-derived, engine_version stamped for merit-v4)`);

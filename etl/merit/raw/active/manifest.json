@@ -158,6 +158,6 @@
       "source_id": "active_public_season_honors"
     }
   ],
-  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-3.1.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
+  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-4.0.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
   "version": "active-career-source-set-2.1.0"
 }

@@ -55,6 +55,27 @@
       "source_id": "research_global_annual"
     },
     {
+      "bytes": 7424,
+      "cited_urls": [
+        "https://english.elpais.com/elpais/2013/09/01/inenglish/1378061135_102744.html",
+        "https://fcbayern.com/en/news/2025/03/fc-bayern-and-joshua-kimmich-extend-until-2029",
+        "https://www.chelseafc.com/en/news/article/everything-you-need-to-know-about-frank-lampard",
+        "https://www.fcbarcelona.com/en/news/1198503/arturo-vidal-the-king-of-back-to-back-league-titles",
+        "https://www.mancity.com/mancitylegends/gundogan-ilkay",
+        "https://www.mancity.com/news/mens/yaya-toure-shortlisted-for-premier-league-hall-of-fame-63815759",
+        "https://www.manutd.com/en/news/the-stats-behind-wayne-rooneys-man-utd-career",
+        "https://www.premierleague.com/en/news/1206108",
+        "https://www.premierleague.com/en/news/2626553",
+        "https://www.realmadrid.com/en-US/the-club/history/football-legends/clarence-seedorf",
+        "https://www.realmadrid.com/en-US/the-club/history/football-legends/gareth-bale"
+      ],
+      "family": "club_honors",
+      "file": "research/objective-club-honors.json",
+      "row_count": 11,
+      "sha256": "1922e759538dbe0e9c032886e38f88ce6b640a2ec2981f5d90234f03430aad90",
+      "source_id": "research_objective_club_honors"
+    },
+    {
       "bytes": 8242,
       "cited_urls": [
         "https://en.wikipedia.org/wiki/Bobby_Moore",
@@ -79,5 +100,5 @@
     }
   ],
   "note": "MV2-2 deterministic factual research backstop. Citation-backed public facts for coverage gaps the parser-only lists miss (curated historical defender/GK/non-European greats + the bounded top-5-per-2026-linked-team slice). Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. The linker treats research rows identically to parser rows; an uncited row fails the build.",
-  "version": "merit-source-set-2.1.0"
+  "version": "merit-source-set-2.2.0"
 }

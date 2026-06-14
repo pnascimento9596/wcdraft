@@ -1,4 +1,4 @@
-"""Deterministic merit / career-stature source intake (merit-source-set-2.1.0).
+"""Deterministic merit / career-stature source intake (merit-source-set-2.2.0).
 
 This package SOURCES public, factually-grounded recognition records for players —
 global & regional player-of-the-year ballots, position-balanced selections (UEFA
@@ -69,14 +69,15 @@ from dataclasses import dataclass, field
 #
 # Keeping these axes separate is what lets the factual table move without
 # accidentally changing historical/projected rating outputs or compact bundles.
-SOURCE_SET_VERSION = "merit-source-set-2.1.0"
-# career-stature-3.1.0 (merit-v3.1): the table carries the IFFHS Men Legends
-# source-scope extension and the W1 active public-season-honors note.
+SOURCE_SET_VERSION = "merit-source-set-2.2.0"
+# career-stature-4.0.0 (merit-v4): activates objective club-achievement facts
+# through the citation-backed research backstop, while keeping absent club facts
+# out of a player's eligible family denominator.
 # channel through stature.py, adds eligibility-aware family re-normalization,
 # sparse-profile controls, person-identity resolution, and the
 # club_season_honors family. The base merit source set remains 2.0.0; the active
 # source set has its own version below.
-VERSION = "career-stature-3.1.0"
+VERSION = "career-stature-4.0.0"
 
 # Closed set of player positions a fact may carry. Position-balanced sources
 # (positional awards, formation XIs, all-time dream teams) emit a first-class
@@ -104,8 +105,8 @@ def era_bucket(first_wc_year: int) -> str:
 # ─── signal families ──────────────────────────────────────────────────────────
 # Families group sourced facts by *kind* of distinction for the coverage table.
 # ``weight`` is deliberately NOT set here for the active families: E-4.1 proves
-# coverage and assigns no rating weight at all. ``club_honors`` is registered now
-# but explicitly weight 0.0 and carries no source — it is deferred to E-4b.
+# coverage and assigns no rating weight at all. ``club_honors`` is now active for
+# objective club-achievement facts only; subjective/voted club awards remain out.
 @dataclass(frozen=True)
 class SignalFamily:
     key: str
@@ -116,8 +117,7 @@ class SignalFamily:
 
 # v2 position-balanced taxonomy. ``weight`` is intentionally NOT set for the active
 # families: MV2-1 proves coverage and assigns no rating weight (MV2-3 owns weights).
-# One family is reserved (no live source yet): ``club_honors`` (deferred to a later
-# approval). ``captaincy`` was reserved in MV2-1 (its only named web source,
+# ``captaincy`` was reserved in MV2-1 (its only named web source,
 # eu-football.info, serves JS-gated empty bodies to non-browser clients and is not
 # cleanly SHA-pinnable); MV2-2 ACTIVATES it via the deterministic research backstop
 # — citation-backed captaincy records authored from fetched-and-verified public
@@ -194,8 +194,10 @@ SIGNAL_FAMILIES: tuple[SignalFamily, ...] = (
     SignalFamily(
         "club_honors",
         "Club honours",
-        0.0,  # deferred; present for schema stability, no source yet
-        "DEFERRED: no source fetched, weight 0.0, zero facts in this build.",
+        None,
+        "Objective club-achievement facts from the deterministic research backstop: "
+        "major trophy totals, league top-scorer by goals, and world-record / "
+        "era-defining transfer facts. Voting-decided club awards are excluded.",
     ),
     SignalFamily(
         "club_season_honors",
@@ -220,6 +222,7 @@ ACTIVE_SOURCE_FAMILIES: frozenset[str] = frozenset(
         "international_record",
         "retrospective_selection",
         "captaincy",
+        "club_honors",
         "club_season_honors",
     }
 )
@@ -513,6 +516,15 @@ _RESEARCH_SOURCES: tuple[Source, ...] = (
         "utf-8",
         "fact",
         "World's Best Goalkeeper annual award wins (research backstop)",
+    ),
+    Source(
+        "research_objective_club_honors",
+        "club_honors",
+        "research/objective-club-honors.json",
+        "(research backstop — per-row citations in merit/raw/research/manifest.json)",
+        "utf-8",
+        "fact",
+        "Objective club-achievement facts (research backstop)",
     ),
 )
 RESEARCH_SOURCES: tuple[Source, ...] = _RESEARCH_SOURCES
