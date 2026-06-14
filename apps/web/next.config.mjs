@@ -39,6 +39,15 @@ const nextConfig = {
         source: "/sw-version.js",
         headers: [{ key: "Cache-Control", value: "no-store, must-revalidate" }],
       },
+      {
+        source: "/data/wcdraft/:version/draft-pool.compact.json.br",
+        headers: [
+          { key: "Content-Type", value: "application/json; charset=utf-8" },
+          { key: "Content-Encoding", value: "br" },
+          { key: "Vary", value: "Accept-Encoding" },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
   },
   // Disable webpack's persistent build cache for production builds.

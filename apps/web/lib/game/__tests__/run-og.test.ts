@@ -13,10 +13,7 @@ import {
 } from "../run-token";
 import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
-import {
-  defaultRunOgImage,
-  shareOgImageForRunValue,
-} from "../run-og-metadata";
+import { defaultRunOgImage, shareOgImageForRunValue } from "../run-og-metadata";
 import { buildRunOgModel } from "../run-og-model";
 import { renderRunOgImage, type RunOgImageAssets } from "../run-og-image";
 import { GET as runOgRouteGet } from "../../../app/api/og/run/route";
@@ -206,7 +203,9 @@ describe("dynamic run OG route scope", () => {
       new Request("http://localhost/api/og/run?run=malformed-token&v=test"),
     );
     expect(response.status).toBe(307);
-    expect(response.headers.get("location")).toBe("http://localhost/brand/marketing/og-default.png");
+    expect(response.headers.get("location")).toBe(
+      "http://localhost/brand/marketing/og-default.png",
+    );
     expect(response.headers.get("cache-control")).toBe("public, max-age=300");
   });
 
@@ -217,6 +216,16 @@ describe("dynamic run OG route scope", () => {
     );
     const modelSrc = readFileSync(new URL("../run-og-model.ts", import.meta.url), "utf8");
     expect(`${routeSrc}\n${modelSrc}`).not.toMatch(/runSimulation(?:Sync)?/u);
+  });
+
+  it("keeps the edge route out of the full draft-pool parse path", () => {
+    const routeSrc = readFileSync(
+      new URL("../../../app/api/og/run/route.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(routeSrc).not.toContain("loadDraftPoolBundle");
+    expect(routeSrc).not.toContain("buildGameData");
+    expect(routeSrc).not.toContain("renderRunOgImage");
   });
 
   it("keeps the share page wired for query-aware large-card unfurls", () => {

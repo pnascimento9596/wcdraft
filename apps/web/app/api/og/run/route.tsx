@@ -1,19 +1,11 @@
-import { loadDataManifest, loadDraftPoolBundle } from "@wcdraft/data/client";
+import { DEFAULT_RUNTIME_DATA_BASE_PATH, loadDataManifest } from "@wcdraft/data/client";
 
 import { OG_DEFAULT_IMAGE } from "../../../../lib/site-metadata";
-import { buildGameData, composeVersions } from "../../../../lib/game/data";
-import { renderRunOgImage, type RunOgImageAssets } from "../../../../lib/game/run-og-image";
-import { buildRunOgModel } from "../../../../lib/game/run-og-model";
-import {
-  decodeRunToken,
-  runTokenOgSummary,
-  versionsAgree,
-  type RunTokenV2Body,
-} from "../../../../lib/game/run-token";
+import { composeVersions } from "../../../../lib/game/data";
+import { decodeRunToken, runTokenOgSummary, versionsAgree } from "../../../../lib/game/run-token";
 
 export const runtime = "edge";
 
-const IMMUTABLE_CACHE = "public, max-age=31536000, immutable";
 const FALLBACK_CACHE = "public, max-age=300";
 
 export async function GET(request: Request): Promise<Response> {
@@ -27,19 +19,17 @@ export async function GET(request: Request): Promise<Response> {
       return staticFallback(request);
     }
 
-    const basePath = new URL("/data/wcdraft", request.url).toString();
+    const basePath = new URL(DEFAULT_RUNTIME_DATA_BASE_PATH, request.url).toString();
     const manifest = await loadDataManifest({ basePath, fetch: fetch.bind(globalThis) });
     const versions = composeVersions(manifest);
     if (!versionsAgree(token, versions)) return staticFallback(request);
 
-    const draftPool = await loadDraftPoolBundle({ basePath, fetch: fetch.bind(globalThis) });
-    const gameData = buildGameData(manifest, draftPool);
-    const model = buildRunOgModel(gameData, token as RunTokenV2Body);
-    if (!model) return staticFallback(request);
-
-    const response = renderRunOgImage(model, await loadAssets(request));
-    response.headers.set("Cache-Control", IMMUTABLE_CACHE);
-    return response;
+    // Current `t2` summaries are browser-minted and intentionally unsigned.
+    // Until a future signed/server-minted token carries enough trusted display
+    // detail to render without replaying the full draft catalog, the safe edge
+    // behavior is the static default. This keeps the route out of the full
+    // 100MB draft-pool parse path on every cold render.
+    return staticFallback(request);
   } catch {
     return staticFallback(request);
   }
@@ -53,32 +43,4 @@ function staticFallback(request: Request): Response {
       "Cache-Control": FALLBACK_CACHE,
     },
   });
-}
-
-async function loadAssets(request: Request): Promise<RunOgImageAssets> {
-  const [sairaCondensedBold, soraSemiBold, soraBold, jetBrainsMonoBold, markSvg] =
-    await Promise.all([
-      fetchAsset(request, "/fonts/og/SairaCondensed-Bold.ttf"),
-      fetchAsset(request, "/fonts/og/Sora-SemiBold.ttf"),
-      fetchAsset(request, "/fonts/og/Sora-Bold.ttf"),
-      fetchAsset(request, "/fonts/og/JetBrainsMono-Bold.ttf"),
-      fetch(new URL("/brand/wcdraft-mark.svg", request.url)).then(async (res) => {
-        if (!res.ok) throw new Error(`failed to load mark svg (${res.status})`);
-        return res.text();
-      }),
-    ]);
-  return {
-    markSvgDataUri: svgToDataUri(markSvg),
-    fonts: { sairaCondensedBold, soraSemiBold, soraBold, jetBrainsMonoBold },
-  };
-}
-
-async function fetchAsset(request: Request, path: string): Promise<ArrayBuffer> {
-  const res = await fetch(new URL(path, request.url));
-  if (!res.ok) throw new Error(`failed to load ${path} (${res.status})`);
-  return res.arrayBuffer();
-}
-
-function svgToDataUri(svg: string): string {
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }

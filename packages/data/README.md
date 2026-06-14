@@ -19,16 +19,66 @@ can serve them as static assets. The manifest, scenario bundle, and compact-size
 report are tracked; the oversized draft pool is regenerated on demand and locked
 by the tracked manifest/report fingerprints.
 
-| File | Shape | Purpose |
-|------|-------|---------|
-| `manifest.json` | `RuntimeDataManifest` | Schema/dataset/rating/engine/ruleset version anchors + per-bundle sha256/bytes/gzip/brotli + attribution. |
-| `draft-pool.compact.json` | `DraftPoolBundle` | All draftable player + manager cards (1930–2026) + per-card ratings + lookup tables (`nation_by_card_id`, `tournaments`, `nations`). |
-| `scenario-2026.compact.json` | `Scenario2026Bundle` | The 48 real 2026 teams + the published 2026 bracket (groups + knockout slots) + team display names. |
+| File                         | Shape                 | Purpose                                                                                                                              |
+| ---------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `manifest.json`              | `RuntimeDataManifest` | Schema/dataset/rating/engine/ruleset version anchors + per-bundle sha256/bytes/gzip/brotli + attribution.                            |
+| `draft-pool.compact.json`    | `DraftPoolBundle`     | All draftable player + manager cards (1930–2026) + per-card ratings + lookup tables (`nation_by_card_id`, `tournaments`, `nations`). |
+| `scenario-2026.compact.json` | `Scenario2026Bundle`  | The 48 real 2026 teams + the published 2026 bracket (groups + knockout slots) + team display names.                                  |
 
 The committed `reports/compact-size.json` records measured raw / gzip /
 brotli sizes for each bundle; `size-budget.json` pins the brotli ceiling
 (measured brotli + 15% headroom). The data golden test fails if any bundle
 exceeds the committed budget.
+
+## Browser delivery contract
+
+Browser clients fetch runtime data from a schema-versioned path:
+
+```text
+/data/wcdraft/<runtime-data-schema>/manifest.json
+/data/wcdraft/<runtime-data-schema>/draft-pool.compact.json.br
+/data/wcdraft/<runtime-data-schema>/scenario-2026.compact.json
+```
+
+The fixed legacy paths under `/data/wcdraft/{manifest,draft-pool,scenario}...`
+are still mirrored for old clients and server-side filesystem readers, but new
+browser code must use the versioned base path exported by
+`@wcdraft/data/client`. This removes the mid-deploy hard-fail window where newly
+deployed code can receive an edge-cached manifest from a previous runtime schema.
+
+`draft-pool.compact.json.br` is a max-quality Brotli encoding of the exact
+`draft-pool.compact.json` bytes fingerprinted by the manifest. Next.js serves
+that static file with:
+
+- `Content-Encoding: br`
+- `Content-Type: application/json; charset=utf-8`
+- `Cache-Control: public, max-age=31536000, immutable`
+
+The browser transparently decompresses it, so `fetch(...).json()` still returns
+the normal `DraftPoolBundle`. The invariant is:
+
+```text
+sha256(brotli_decompress(draft-pool.compact.json.br))
+  == RuntimeDataManifest.bundles.draft_pool.sha256
+```
+
+The service worker receives concrete versioned precache URLs from generated
+`/sw-version.js` and precaches the compressed draft-pool artifact, not the raw
+96 MiB JSON path.
+
+## Retained runtime data
+
+`src/retained-runtime-data/<runtime-data-schema>/` stores the compressed
+draft-pool artifact plus manifest and scenario bundle for retained schemas.
+`copy-web-assets.mjs` validates every retained directory by decompressing the
+`.br` artifact and checking it against its manifest fingerprint, then copies
+retained versions alongside the current generated version.
+
+This retention is the atomic-versioning contract for future schema/data bumps:
+a client built against version `N` can continue resolving `N` assets after
+version `N+1` deploys, while new clients fetch `N+1` from a different path. Keep
+at least the immediately previous shipped runtime-data schema retained whenever
+the runtime data version changes.
 
 ## Loaders
 
@@ -134,7 +184,7 @@ attribution preserved verbatim on every `RuntimeDataManifest`:
   - "2026 World Cup squads" (Wikipedia, oldid `1357762108`),
   - "2026 World Cup draw" (Wikipedia, oldid `1357747592`),
   - "2026 World Cup knockout stage" (Wikipedia, oldid `1357752786`),
-  retrieved 2026-06-04.
+    retrieved 2026-06-04.
 
 ### Modifications by wcdraft
 

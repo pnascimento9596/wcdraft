@@ -42,23 +42,27 @@ if (!SW_CONFIG.cache_names || typeof SW_CONFIG.cache_names !== "object") {
 }
 const CACHE_NAME_DATA = SW_CONFIG.cache_names.data;
 const CACHE_NAME_SHELL = SW_CONFIG.cache_names.shell;
+const PRECACHE_DATA_URLS = SW_CONFIG.precache_data_urls;
 if (
   typeof CACHE_NAME_DATA !== "string" ||
   !CACHE_NAME_DATA.startsWith("wcdraft-data-") ||
   typeof CACHE_NAME_SHELL !== "string" ||
   !CACHE_NAME_SHELL.startsWith("wcdraft-shell-")
 ) {
+  throw new Error("wcdraft sw: cache_names must include wcdraft-data-* and wcdraft-shell-* values");
+}
+if (
+  !Array.isArray(PRECACHE_DATA_URLS) ||
+  PRECACHE_DATA_URLS.length === 0 ||
+  !PRECACHE_DATA_URLS.every((url) => typeof url === "string" && url.startsWith("/data/wcdraft/")) ||
+  PRECACHE_DATA_URLS.some((url) => url.endsWith("/draft-pool.compact.json"))
+) {
   throw new Error(
-    "wcdraft sw: cache_names must include wcdraft-data-* and wcdraft-shell-* values",
+    "wcdraft sw: precache_data_urls must point at versioned runtime assets and the compressed draft pool",
   );
 }
 
 const DATA_PREFIX = "/data/wcdraft/";
-const PRECACHE_DATA_URLS = [
-  `${DATA_PREFIX}manifest.json`,
-  `${DATA_PREFIX}draft-pool.compact.json`,
-  `${DATA_PREFIX}scenario-2026.compact.json`,
-];
 
 // The full set of cache names this build expects to own. The activation
 // handler evicts anything outside this set whose name starts with

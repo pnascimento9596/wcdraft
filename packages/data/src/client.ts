@@ -17,10 +17,16 @@ import {
 } from "./types.js";
 
 /**
- * Default site-relative directory where `scripts/copy-web-assets.mjs` lands
- * the compact bundles.
+ * Default site-relative directory where `scripts/copy-web-assets.mjs` lands the
+ * compact bundles for THIS compiled runtime-data schema. Versioning the path is
+ * the mid-deploy atomicity contract: old and new manifests/bundles can coexist
+ * at the edge instead of racing over `/data/wcdraft/manifest.json`.
  */
-export const DEFAULT_RUNTIME_DATA_BASE_PATH = "/data/wcdraft" as const;
+export const DEFAULT_RUNTIME_DATA_BASE_PATH =
+  `/data/wcdraft/${RUNTIME_DATA_SCHEMA_VERSION}` as const;
+
+/** Draft-pool payload URL inside the versioned runtime data directory. */
+export const DRAFT_POOL_BROTLI_PATH = "draft-pool.compact.json.br" as const;
 
 /** Options accepted by all client loaders. */
 export interface LoaderOptions {
@@ -91,7 +97,7 @@ export async function loadDataManifest(opts?: LoaderOptions): Promise<RuntimeDat
 /** Load the draft-pool compact bundle (1930–2026). */
 export async function loadDraftPoolBundle(opts?: LoaderOptions): Promise<DraftPoolBundle> {
   const resolved = resolveOptions(opts);
-  return fetchJson<DraftPoolBundle>(`${resolved.basePath}/draft-pool.compact.json`, resolved);
+  return fetchJson<DraftPoolBundle>(`${resolved.basePath}/${DRAFT_POOL_BROTLI_PATH}`, resolved);
 }
 
 /** Load the 2026 scenario compact bundle (teams + bracket). */
