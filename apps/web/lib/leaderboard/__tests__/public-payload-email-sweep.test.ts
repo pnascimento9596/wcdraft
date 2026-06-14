@@ -10,7 +10,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vites
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { leaderboardEntries, magicLinkTokens, savedRuns, users } from "@wcdraft/db";
 
@@ -34,6 +34,7 @@ import { GET as csrfGet } from "@/app/api/auth/csrf/route";
 import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
+import { POST as cspReportPost } from "@/app/api/csp-report/route";
 import { GET as profileGet, PUT as profilePut } from "@/app/api/profile/route";
 import { GET as runsGet, POST as runsPost } from "@/app/api/runs/route";
 import { DELETE as runDelete, GET as runDetailGet } from "@/app/api/runs/[id]/route";
@@ -72,6 +73,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/runs/[id]",
   "POST /api/auth/magic-link",
   "POST /api/auth/verify",
+  "POST /api/csp-report",
   "POST /api/leaderboard/submit",
   "POST /api/runs",
   "POST /api/runs/claim",
@@ -81,7 +83,7 @@ type PublicApiMethod = (typeof PUBLIC_API_METHODS)[number];
 interface CapturedResponse {
   readonly route: PublicApiMethod;
   readonly label: string;
-  readonly res: NextResponse;
+  readonly res: Response;
 }
 const GOLDEN = fixtureJson as unknown as {
   classic: { token: string; expected: { verified_score: number } };
@@ -139,7 +141,7 @@ function signedHeaders(cookieValue: string, csrfSecret: string): Record<string, 
   };
 }
 
-async function payloadOf(res: NextResponse): Promise<string> {
+async function payloadOf(res: Response): Promise<string> {
   const body = await res.text();
   const headers = Array.from(res.headers.entries())
     .map(([k, v]) => `${k}: ${v}`)
@@ -155,7 +157,7 @@ function expectNoEmail(label: string, payload: string): void {
 
 function routeCapture(
   route: PublicApiMethod,
-  res: NextResponse,
+  res: Response,
   label: string = route,
 ): CapturedResponse {
   return { route, label, res };
@@ -304,6 +306,24 @@ describe("public route payload email sweep", () => {
               "x-forwarded-for": "127.0.0.1",
             },
             body: JSON.stringify({ email: MAGIC_EMAIL }),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/csp-report",
+        await cspReportPost(
+          req("/api/csp-report", {
+            method: "POST",
+            headers: { "content-type": "application/csp-report" },
+            body: JSON.stringify({
+              "csp-report": {
+                "document-uri": "http://localhost/",
+                "violated-directive": "script-src",
+                "blocked-uri": "inline",
+              },
+            }),
           }),
         ),
       ),

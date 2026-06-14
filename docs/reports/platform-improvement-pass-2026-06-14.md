@@ -18,7 +18,16 @@ class (ratings coverage) plus five measured engineering proposals stopped for a 
 | **#135** security response headers | Yellow | security | **MERGED** `4810b27`, live-verified (4 headers on prod) |
 | **#136** perf: parallel data fetch + lazy MemoryReveal | Yellow | performance | **MERGED** `7044aa6`, live-verified |
 
-All Reds and the ratings-coverage class were **NOT** self-merged — they are proposals below.
+All Reds and the ratings-coverage class were **NOT** self-merged during the
+original pass — they are proposals below.
+
+Follow-up status, 2026-06-14: Security Proposals E and F were cleared in the
+bounded security follow-up documented at
+`docs/reports/security-ef-csp-share-integrity-2026-06-14.md`. The current
+implementation enforces a nonce CSP in production, keeps preview/dev in
+report-only mode by default, logs CSP reports at `POST /api/csp-report`, and
+treats browser-minted share-token `og` summaries as untrusted for server-rendered
+metadata/OG cards.
 
 ## Measured baseline (production build, mobile)
 
@@ -190,10 +199,21 @@ a fictional-but-plausible record on the share card. **Not a leaderboard cheat** 
 re-sims server-side). Fixing it means re-simming in the OG edge route, which violates the
 documented no-server-sim firewall there — **owner decision** on the cost/firewall tradeoff.
 
+**Follow-up status:** cleared by the security E/F follow-up. Because current
+tokens are minted in the browser, a server-held HMAC cannot sign the browser-
+computed summary without either exposing the secret or adding a signing oracle.
+Server-rendered OG metadata now treats `og` as self-attested/untrusted and uses
+the neutral static card instead.
+
 ### F. Full Content-Security-Policy
 #135 added the four cheap headers; a full CSP needs careful allowances for `next/font`, the
 `next/og` Satori path, and the theme inline script. Recommend a scoped follow-up (report-only
 mode first, then enforce).
+
+**Follow-up status:** cleared by the security E/F follow-up with a per-request
+nonce CSP emitted from `apps/web/proxy.ts`, preview/dev report-only by default,
+production enforcement by default, and observable reports via
+`POST /api/csp-report`.
 
 ## Remaining bounded a11y items (identified, ready, not landed this pass)
 

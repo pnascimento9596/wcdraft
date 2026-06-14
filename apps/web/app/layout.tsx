@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { connection } from "next/server";
 import { Anton, Newsreader } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-context";
@@ -90,7 +91,10 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // The CSP uses a fresh per-request nonce. Next can only attach that nonce to
+  // framework runtime tags when this layout renders per request.
+  await connection();
   // Ship-dark gate — computed server-side so the client never has to
   // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY,
   // AUTH_EMAIL_FROM, and AUTH_BASE_URL in the Vercel env flips this true.
