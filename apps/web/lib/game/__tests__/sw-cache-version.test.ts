@@ -38,9 +38,7 @@ import {
 
 const REPO_ROOT = new URL("../../../../../", import.meta.url);
 const SW_PATH = fileURLToPath(new URL("apps/web/public/sw.js", REPO_ROOT));
-const SW_REGISTER_PATH = fileURLToPath(
-  new URL("apps/web/components/sw-register.tsx", REPO_ROOT),
-);
+const SW_REGISTER_PATH = fileURLToPath(new URL("apps/web/components/sw-register.tsx", REPO_ROOT));
 const MANIFEST_PATH = fileURLToPath(
   new URL("packages/data/src/generated/manifest.json", REPO_ROOT),
 );
@@ -95,7 +93,9 @@ describe("deriveDataRevision", () => {
   });
 
   it("rejects malformed manifests", () => {
-    expect(() => deriveDataRevision(null as unknown as Parameters<typeof deriveDataRevision>[0])).toThrow();
+    expect(() =>
+      deriveDataRevision(null as unknown as Parameters<typeof deriveDataRevision>[0]),
+    ).toThrow();
     expect(() => deriveDataRevision({ ...baseManifest, schema_version: "" })).toThrow();
     expect(() =>
       deriveDataRevision({
@@ -193,6 +193,12 @@ describe("renderSwVersionScript", () => {
       data_revision: "b".repeat(16),
       schema_version: "runtime-data-1.0.0",
       dataset_version: "2026-06-04",
+      runtime_data_base_path: "/data/wcdraft/runtime-data-1.0.0",
+      precache_data_urls: [
+        "/data/wcdraft/runtime-data-1.0.0/manifest.json",
+        "/data/wcdraft/runtime-data-1.0.0/draft-pool.compact.json.br",
+        "/data/wcdraft/runtime-data-1.0.0/scenario-2026.compact.json",
+      ],
       bundle_hashes: { draft_pool: "a".repeat(64), scenario_2026: "b".repeat(64) },
       cache_names: {
         data: "wcdraft-data-d:aaaaaaaaaaaaaaaa-b:bbbbbbbbbbbbbbbb",
@@ -203,6 +209,7 @@ describe("renderSwVersionScript", () => {
     expect(script).toContain("Object.freeze(");
     expect(script).toContain("wcdraft-data-d:aaaaaaaaaaaaaaaa-b:bbbbbbbbbbbbbbbb");
     expect(script).toContain("wcdraft-shell-d:aaaaaaaaaaaaaaaa");
+    expect(script).toContain("/data/wcdraft/runtime-data-1.0.0/draft-pool.compact.json.br");
   });
 });
 
@@ -232,6 +239,13 @@ describe("committed sw.js source contract", () => {
   it("derives the live cache names from SW_CONFIG (not literals)", () => {
     expect(swSource).toContain("SW_CONFIG.cache_names.data");
     expect(swSource).toContain("SW_CONFIG.cache_names.shell");
+  });
+
+  it("pre-caches generated versioned data URLs and not the raw draft-pool path", () => {
+    expect(swSource).toContain("SW_CONFIG.precache_data_urls");
+    expect(swSource).toContain("const PRECACHE_DATA_URLS = SW_CONFIG.precache_data_urls");
+    expect(swSource).not.toContain("`${DATA_PREFIX}draft-pool.compact.json`");
+    expect(swSource).not.toContain('"/data/wcdraft/draft-pool.compact.json"');
   });
 
   it("throws on missing/malformed config so a bad worker never installs", () => {

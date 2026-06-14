@@ -23,12 +23,18 @@ export interface SwConfig {
   data_revision: string;
   schema_version: string;
   dataset_version: string;
+  runtime_data_base_path: string;
+  precache_data_urls: string[];
   bundle_hashes: Record<string, string>;
   cache_names: SwCacheNames;
 }
 
 export interface DeployRevisionSource {
-  source: "WCDRAFT_DEPLOY_REVISION" | "VERCEL_URL" | "VERCEL_DEPLOYMENT_ID" | "VERCEL_GIT_COMMIT_SHA";
+  source:
+    | "WCDRAFT_DEPLOY_REVISION"
+    | "VERCEL_URL"
+    | "VERCEL_DEPLOYMENT_ID"
+    | "VERCEL_GIT_COMMIT_SHA";
   raw: string;
 }
 
@@ -41,7 +47,9 @@ export function deriveCacheNames(args: {
 
 export function renderSwVersionScript(config: SwConfig): string;
 
-export function resolveDeployRevisionFromEnv(env: Record<string, string | undefined>): DeployRevisionSource | null;
+export function resolveDeployRevisionFromEnv(
+  env: Record<string, string | undefined>,
+): DeployRevisionSource | null;
 
 export function run(args?: {
   webRoot?: string;

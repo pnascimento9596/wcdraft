@@ -15,16 +15,13 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
   DEFAULT_RUNTIME_DATA_BASE_PATH,
+  DRAFT_POOL_BROTLI_PATH,
   loadDataManifest,
   loadDraftPoolBundle,
   loadRuntimeData,
   loadScenario2026Bundle,
 } from "../src/client.js";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-} from "../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../src/index.js";
 
 // ─── Strict global-fetch harness ─────────────────────────────────────────────
 
@@ -63,7 +60,7 @@ function installStrictFetch(): void {
     if (url.endsWith("/manifest.json")) {
       return Promise.resolve(jsonResponse(RUNTIME_DATA_MANIFEST));
     }
-    if (url.endsWith("/draft-pool.compact.json")) {
+    if (url.endsWith(`/${DRAFT_POOL_BROTLI_PATH}`)) {
       return Promise.resolve(jsonResponse(DRAFT_POOL_BUNDLE));
     }
     if (url.endsWith("/scenario-2026.compact.json")) {
@@ -123,6 +120,7 @@ describe("client.ts — global fetch binding regression", () => {
     const pool = await loadDraftPoolBundle();
     expect(pool.schema_version).toBe(DRAFT_POOL_BUNDLE.schema_version);
     expect(calls.length).toBe(1);
+    expect(calls[0]!.url).toBe(`${DEFAULT_RUNTIME_DATA_BASE_PATH}/${DRAFT_POOL_BROTLI_PATH}`);
     expect(calls[0]!.receiver).toBe(globalThis);
   });
 

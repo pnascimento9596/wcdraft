@@ -11,11 +11,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  autoDraft,
-  buildDraftCatalog,
-  type DraftDataset,
-} from "@wcdraft/core";
+import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
 import {
   DRAFT_POOL_BUNDLE,
   RUNTIME_DATA_MANIFEST,
@@ -26,7 +22,12 @@ import {
 import type { GameData, RunRecordVersions } from "../data";
 import { buildGameDataIndexes, composeVersions } from "../data";
 import type { RunRecordV1 } from "../run-record";
-import { runSimulationSync, type SyncSimulationResult } from "../simulate";
+import {
+  buildWorkerSimInputs,
+  handleWorkerInput,
+  runSimulationSync,
+  type SyncSimulationResult,
+} from "../simulate";
 
 // ─── Test harness ────────────────────────────────────────────────────────────
 
@@ -149,12 +150,9 @@ describe("simulate.ts — determinism / telemetry separation", () => {
 
   it("an injected clock produces the expected duration_ms in telemetry only", () => {
     let tick = 100;
-    const { simulation, telemetry } = runSimulationSync(
-      gameData,
-      SCENARIO_2026_BUNDLE,
-      record,
-      { clock: () => (tick += 50) },
-    );
+    const { simulation, telemetry } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record, {
+      clock: () => (tick += 50),
+    });
     expect(telemetry.duration_ms).toBe(50);
     // Re-run with the SAME deterministic inputs and a DIFFERENT clock: the
     // simulation must still be byte-identical.
@@ -164,5 +162,38 @@ describe("simulate.ts — determinism / telemetry separation", () => {
     });
     expect(second.telemetry.duration_ms).toBeCloseTo(0.1, 5);
     expect(JSON.stringify(second.simulation)).toBe(JSON.stringify(simulation));
+  });
+
+  it("worker payload pruning preserves byte-identical simulation output", () => {
+    const workerInputs = buildWorkerSimInputs(gameData, SCENARIO_2026_BUNDLE, record);
+    const workerOutput = handleWorkerInput({
+      kind: "run",
+      draft: record.draft,
+      parent_seed: record.parent_seed,
+      world: workerInputs.world,
+      scenario: workerInputs.scenario,
+    });
+    const sync = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, record).simulation;
+
+    expect(workerOutput.kind).toBe("done");
+    if (workerOutput.kind !== "done") return;
+    expect(JSON.stringify(workerOutput.simulation)).toBe(JSON.stringify(sync));
+  });
+
+  it("worker payload only carries drafted-card nations, not the full pool map", () => {
+    const workerInputs = buildWorkerSimInputs(gameData, SCENARIO_2026_BUNDLE, record);
+    const draftedCardIds = new Set(
+      record.draft.squad
+        .map((slot) => slot.card_id)
+        .filter((cardId): cardId is NonNullable<typeof cardId> => cardId !== null)
+        .map(String),
+    );
+
+    expect(Object.keys(workerInputs.world.nationByCardId ?? {}).sort()).toEqual(
+      [...draftedCardIds].sort(),
+    );
+    expect(Object.keys(workerInputs.world.nationByCardId ?? {}).length).toBeLessThan(
+      Object.keys(gameData.nationByCardId).length,
+    );
   });
 });

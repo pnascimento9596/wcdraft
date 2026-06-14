@@ -68,6 +68,14 @@ export interface ResolvedSimInputs {
   bracket: Bracket2026;
 }
 
+/** Worker payload after deterministic scenario construction and clone pruning. */
+export interface ResolvedWorkerSimInputs {
+  /** Pre-resolved `SimWorld`, pruned to the worker-visible fields the run uses. */
+  world: SimWorld;
+  /** Deterministic scoped run path, built on the main thread before postMessage. */
+  scenario: RunScenario;
+}
+
 /**
  * Build the resolved sim inputs from the loaded game data + scenario bundle +
  * persisted draft. Fails loudly on any missing rating / manager join.
@@ -143,6 +151,46 @@ export function buildSimWorldInputs(
   };
 
   return { world, teams: scenario.teams as Team2026[], bracket };
+}
+
+/**
+ * Build the worker-specific payload. The synchronous path keeps the full local
+ * inputs; only the structured-clone boundary is narrowed.
+ */
+export function buildWorkerSimInputs(
+  gameData: GameData,
+  scenarioBundle: Scenario2026Bundle,
+  record: RunRecordV1,
+): ResolvedWorkerSimInputs {
+  const inputs = buildSimWorldInputs(gameData, scenarioBundle, record);
+  const { scenario } = buildRunScenario({
+    parent_seed: record.parent_seed,
+    teams: inputs.teams,
+    bracket: inputs.bracket,
+    ruleset_version: record.versions.ruleset_version,
+  });
+  return {
+    world: narrowWorldForWorker(inputs.world, record),
+    scenario,
+  };
+}
+
+function narrowWorldForWorker(world: SimWorld, record: RunRecordV1): SimWorld {
+  const neededNationCardIds = new Set<string>();
+  for (const slot of record.draft.squad) {
+    if (slot.card_id !== null) neededNationCardIds.add(slot.card_id as string);
+  }
+
+  const nationByCardId: Record<string, string> = {};
+  for (const cardId of neededNationCardIds) {
+    const nation = world.nationByCardId?.[cardId];
+    if (nation !== undefined) nationByCardId[cardId] = nation;
+  }
+
+  return {
+    ...world,
+    nationByCardId,
+  };
 }
 
 // ─── Deterministic simulation ─────────────────────────────────────────────────
@@ -305,9 +353,9 @@ export function runSimulation(
       return;
     }
 
-    let inputs: ResolvedSimInputs;
+    let inputs: ResolvedWorkerSimInputs;
     try {
-      inputs = buildSimWorldInputs(gameData, scenario, record);
+      inputs = buildWorkerSimInputs(gameData, scenario, record);
     } catch (err) {
       worker.terminate();
       reject(err);
@@ -364,10 +412,8 @@ export function runSimulation(
       kind: "run",
       draft: record.draft,
       parent_seed: record.parent_seed,
-      ruleset_version: record.versions.ruleset_version,
       world: inputs.world,
-      teams: inputs.teams,
-      bracket: inputs.bracket,
+      scenario: inputs.scenario,
     };
     worker.postMessage(input);
   });
@@ -391,10 +437,8 @@ export interface WorkerInput {
   kind: "run";
   draft: RunRecordV1["draft"];
   parent_seed: string;
-  ruleset_version: string;
   world: SimWorld;
-  teams: Team2026[];
-  bracket: Bracket2026;
+  scenario: RunScenario;
 }
 
 export type WorkerOutput =
@@ -411,14 +455,7 @@ export function handleWorkerInput(input: WorkerInput): WorkerOutput {
       typeof performance !== "undefined" && typeof performance.now === "function"
         ? performance.now()
         : null;
-    const { scenario, meta } = buildRunScenario({
-      parent_seed: input.parent_seed,
-      teams: input.teams,
-      bracket: input.bracket,
-      ruleset_version: input.ruleset_version,
-    });
-    void meta;
-    const result = runTournamentFull(input.draft, scenario, input.parent_seed, input.world);
+    const result = runTournamentFull(input.draft, input.scenario, input.parent_seed, input.world);
     const t1 =
       typeof performance !== "undefined" && typeof performance.now === "function"
         ? performance.now()
@@ -426,7 +463,7 @@ export function handleWorkerInput(input: WorkerInput): WorkerOutput {
     return {
       kind: "done",
       simulation: {
-        scenario,
+        scenario: input.scenario,
         run: result.run,
         matches: result.matches,
         group_stage: result.group_stage,
