@@ -1,9 +1,9 @@
-# Career-stature composite (career-stature-4.0.0)
+# Career-stature composite (career-stature-4.1.0)
 
-Per-player career-stature BASE consumed by the stature-dominant rating stage (MV2-4). NOT a rating. Built deterministically from the committed `merit/source_facts.json` (merit-source-set-2.2.0), `merit/source_facts_active.json` (active-career-source-set-2.1.0), and canonical men's World Cup years. Active facts are merged by person identity and stage-normalized in this table; rating-output consumption remains locked to `career-stature-2.1.0` through each row's `rating_compat` field until the later merit-v3 rating units flip the consumer deliberately.
+Per-player career-stature BASE consumed by the stature-dominant rating stage (MV2-4). NOT a rating. Built deterministically from the committed `merit/source_facts.json` (merit-source-set-2.2.0), `merit/source_facts_active.json` (active-career-source-set-2.2.0), and canonical men's World Cup years. Active facts are merged by person identity and stage-normalized in this table; rating-output consumption remains locked to `career-stature-2.1.0` through each row's `rating_compat` field until the later merit-v3 rating units flip the consumer deliberately.
 
-- Players scored: **845**
-- Rows with active facts: **30**
+- Players scored: **847**
+- Rows with active facts: **32**
 - Material-stature (coverage ≥ 0.25 AND index ≥ 0.4): **209** (the cohort the rating stage ramps onto the stature-dominant path; the rest stay raw-tournament)
 - Factual legends: **114**
 - Tier cuts (index quantiles of the material cohort): gold ≥ `0.762683`, silver ≥ `0.608619`, bronze = qualifying remainder
@@ -14,7 +14,7 @@ Per-player career-stature BASE consumed by the stature-dominant rating stage (MV
 |---|---:|---|---|
 | `pre_1956` | 63 | 0.027 / 0.234 / 0.652 | 0.054 / 0.468 / 0.876 |
 | `1956_1990` | 224 | 0.000 / 0.179 / 0.597 | 0.000 / 0.357 / 0.928 |
-| `1991_plus` | 558 | 0.012 / 0.057 / 0.527 | 0.024 / 0.113 / 0.867 |
+| `1991_plus` | 560 | 0.012 / 0.057 / 0.527 | 0.024 / 0.113 / 0.867 |
 
 ## Material-cohort index by modal position
 

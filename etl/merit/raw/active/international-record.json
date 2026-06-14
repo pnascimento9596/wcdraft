@@ -2,7 +2,7 @@
   "source_id": "active_international_record",
   "family": "international_record",
   "cutoff_date": "2026-06-01",
-  "note": "MV2-12a active-career intake. International longevity records for in-progress careers that the pinned century-caps snapshot holds but cannot link because the source renders the player's name in a spelling the canonical card does not carry — the same canonical-name recovery the MV2-2 research backstop used for Cruyff. Each row re-asserts the SAME public fact under the canonical display name with a fetchable public citation. Staged in the inert active channel.",
+  "note": "merit-v4.1 active-career intake. International longevity records for in-progress careers that the pinned century-caps snapshot holds but cannot link because the source renders the player's name in a spelling the canonical card does not carry — the same canonical-name recovery the MV2-2 research backstop used for Cruyff. Each row re-asserts the SAME public fact under the canonical display name with a fetchable public citation. Staged in the active channel and consumed by the projected objective-record pathway.",
   "curation_notes": [
     "Ehsan Hajsafi (Iran, 145 caps per the 2026 squad table) was ATTEMPTED and DROPPED: he is absent from the pinned century-caps snapshot under any spelling, so there is no withheld parser record to recover, and the unit's bounded scope takes only snapshot-recoverable longevity records in this pass. Recorded as an open curation gap for the next active-set revision."
   ],
@@ -18,6 +18,32 @@
       "citation": {
         "url": "https://en.wikipedia.org/wiki/Guillermo_Ochoa",
         "claim": "Francisco Guillermo Ochoa Magaña has 152 caps for Mexico (2005–present), Mexico's most-capped goalkeeper and third most-capped player; the pinned century-caps snapshot lists him as 'Francisco Ochoa', which the canonical card cannot match."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Salem Al-Dawsari",
+      "nation_token": "Saudi Arabia",
+      "year": null,
+      "position": "FW",
+      "kind": "caps",
+      "detail": "caps=105 (2012-2025)",
+      "citation": {
+        "url": "https://www.rsssf.org/miscellaneous/century.html",
+        "claim": "The pinned RSSSF century-caps snapshot lists Saudi Arabia's Salem Al-Dosari with 105 caps from 2012 to 2025; this row recovers the canonical Al-Dawsari spelling used by the 2026 card."
+      }
+    },
+    {
+      "scope": "active_career",
+      "name": "Aymen Hussein",
+      "nation_token": "Iraq",
+      "year": null,
+      "position": "FW",
+      "kind": "goals",
+      "detail": "goals=32",
+      "citation": {
+        "url": "https://www.rsssf.org/miscellaneous/century.html",
+        "claim": "The pinned RSSSF international-goals section lists Iraq forward Ayman Hussein with 32 goals and 91 caps from 2015 to 2025; this row recovers the canonical Aymen Hussein spelling used by the 2026 card."
       }
     }
   ]

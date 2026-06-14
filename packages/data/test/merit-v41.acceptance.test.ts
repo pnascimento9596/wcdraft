@@ -17,14 +17,18 @@ const teamByName = new Map(
   ]),
 );
 
+function asCardId(cardId: string): RuntimeRating["card_id"] {
+  return cardId as RuntimeRating["card_id"];
+}
+
 function rating(cardId: string): RuntimeRating {
-  const value = ratingByCardId.get(cardId);
+  const value = ratingByCardId.get(asCardId(cardId));
   if (!value) throw new Error(`missing rating for ${cardId}`);
   return value;
 }
 
 function card(cardId: string): RuntimePlayerCard {
-  const value = cardByCardId.get(cardId);
+  const value = cardByCardId.get(asCardId(cardId));
   if (!value) throw new Error(`missing player card for ${cardId}`);
   return value;
 }

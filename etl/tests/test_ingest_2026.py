@@ -249,12 +249,13 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-5.0.0 = merit-v4: projected ratings consume career-stature-4.0.0
-    # and cap active, stage-normalized rows so incomplete careers do not read as
+    # proj-career-5.1.0 = merit-v4.1: projected ratings consume
+    # career-stature-4.1.0 and add the active objective-record pathway while
+    # capping active, stage-normalized rows so incomplete careers do not read as
     # completed all-time careers.
-    assert rating_2026.RATING_VERSION == "proj-career-5.0.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.1.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-5.0.0"
+        assert r["rating_version"] == "proj-career-5.1.0"
 
 
 def test_projected_distribution_shape(ratings):
@@ -557,6 +558,7 @@ def test_linked_material_reconciled_onto_stature_scale(internal_2026, cards):
         for pid, row in internal_2026.items()
         if link_of[pid] == "linked"
         and _comp(row, "stature_model_weight") >= rating.STATURE_DOMINANT_WEIGHT
+        and _comp(row, "projected_objective_record_path") == 0.0
     ]
     assert len(material) >= 10  # the recognized 2026 greats
     for row in material:

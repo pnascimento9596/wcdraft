@@ -17,18 +17,19 @@
       "source_id": "active_captaincy"
     },
     {
-      "bytes": 27455,
+      "bytes": 31130,
       "census": {
         "exclusion_count": 2,
-        "finals_registry_count": 9,
-        "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior.",
+        "finals_registry_count": 11,
+        "rule": "Credit top-tier continental club titles, Champions League and Libertadores class across every confederation with a top-tier equivalent, only when the player has documented final participation for the winning club. Apply the rule to every player in the active-career scope: the MV2-12a active 23 plus the V1 additions Federico Valverde, Rodri, and Vinícius Júnior, plus the merit-v4.1 objective-achievement addition Salem Al-Dawsari.",
         "rule_id": "top_tier_continental_club_title_final_participation_v1",
-        "scope_count": 26,
+        "scope_count": 27,
         "scope_player_ids": [
           "P-05174",
           "P-21531",
           "P-62341",
           "P-65659",
+          "P-70583",
           "P-80826",
           "P-92812",
           "P-W26-0049",
@@ -80,7 +81,9 @@
         ]
       },
       "cited_urls": [
+        "https://en.wikipedia.org/wiki/2019_AFC_Champions_League_final",
         "https://en.wikipedia.org/wiki/2020_Copa_Libertadores_final",
+        "https://en.wikipedia.org/wiki/2021_AFC_Champions_League_final",
         "https://en.wikipedia.org/wiki/2021_Copa_Libertadores_final",
         "https://www.espn.com/soccer/match/_/gameId/723106/botafogo-atletico-mg",
         "https://www.uefa.com/uefachampionsleague/match/2009612--b-dortmund-vs-bayern-munchen/lineups/",
@@ -93,8 +96,8 @@
       ],
       "family": "club_season_honors",
       "file": "active/club-season-honors.json",
-      "row_count": 14,
-      "sha256": "e9b0dda56569b4a78f326d4be4a2fdd36b4e3b03288bba5906d1e744ca654e81",
+      "row_count": 16,
+      "sha256": "e48d93f95273992c227b2b5ccbda9a9fac7a0316b4fe1f68fdf8128b0f770183",
       "source_id": "active_club_season_honors"
     },
     {
@@ -122,14 +125,15 @@
       "source_id": "active_global_annual"
     },
     {
-      "bytes": 1576,
+      "bytes": 2665,
       "cited_urls": [
-        "https://en.wikipedia.org/wiki/Guillermo_Ochoa"
+        "https://en.wikipedia.org/wiki/Guillermo_Ochoa",
+        "https://www.rsssf.org/miscellaneous/century.html"
       ],
       "family": "international_record",
       "file": "active/international-record.json",
-      "row_count": 1,
-      "sha256": "2fc858eb8f4a40ee5032cf11598df3c58adeb7be162c93f6bc0fc1987aa58acf",
+      "row_count": 3,
+      "sha256": "8ec2bd4fc2044add3f5d60822f815a3f5cea3f519672d84ef0558a5c3172b63a",
       "source_id": "active_international_record"
     },
     {
@@ -158,6 +162,6 @@
       "source_id": "active_public_season_honors"
     }
   ],
-  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-4.0.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
-  "version": "active-career-source-set-2.1.0"
+  "note": "Active-career intake notes. Citation-backed public facts for in-progress careers, staged for career-stature-4.1.0. Each note is SHA-pinned and every row carries a fetchable public citation URL plus the specific claim it supports; editing a citation changes the bytes and therefore the pinned sha256. An uncited row fails the build.",
+  "version": "active-career-source-set-2.2.0"
 }

@@ -1,7 +1,7 @@
 {
   "_comment": "DC-2 era-preset golden — one deterministic autoDraft per preset from one seed. Regen: pnpm --filter @wcdraft/data gen:era-golden",
-  "rating_version": "wc-perf-6.0.0+proj-career-5.0.0",
-  "engine_version": "engine-2026.06.13-merit-v4",
+  "rating_version": "wc-perf-6.1.0+proj-career-5.1.0",
+  "engine_version": "engine-2026.06.14-merit-v4.1",
   "dataset_version": "2026-06-04",
   "parent_seed": "wcdraft:era-presets-golden:v1:1",
   "records": [
