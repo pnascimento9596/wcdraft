@@ -30,7 +30,7 @@
   /* Ink */
   --ink: #15241d; /* deep pitch ink */
   --ink-soft: #4c5a50;
-  --ink-faint: #7a8579;
+  --ink-faint: #566154; /* AA: 4.6:1+ on light surfaces (was #7a8579 = 3.18:1, failed AA) */
 
   /* Lines / borders (chalk on paper) */
   --line: rgba(21, 36, 29, 0.16);
@@ -40,9 +40,14 @@
      Emerald = brand / action / structure (everyday). Gold = pick / win / legend (precious).
      Sourced from apps/web/app/ds/tokens.css; aliased here so every shell surface
      using --accent inherits the locked palette without per-component patching. */
-  --accent: #2ecf92; /* emerald — primary action + structure */
+  --accent: #2ecf92; /* emerald — primary action + structure (FILL: pairs with --accent-ink) */
   --accent-strong: #1c9e6e; /* emerald deep — hover/active */
   --accent-ink: #0a1a14; /* legible ink on emerald (both themes) */
+  /* Emerald for TEXT/icons/focus-rings ON light surfaces. #2ecf92 as text on
+     cream is only 1.66:1 (fails AA); this deepened shade is 4.96:1+ on every
+     light surface and matches the game-module's shipped light --ember-bright.
+     --accent stays the brand fill (with dark --accent-ink on top). */
+  --accent-text: #116647;
   --gold: #f5b62a; /* gold — pick / win / legend / perfect-run */
   --gold-strong: #c8861a;
   --gold-ink: #1a1206; /* legible ink on gold */
@@ -64,7 +69,7 @@
 
   --ink: #ece4d2; /* warm cream */
   --ink-soft: #a3b3a7;
-  --ink-faint: #6f8076;
+  --ink-faint: #808e84; /* AA: 4.9:1+ on dark surfaces (was #6f8076 = 4.03:1 on panel, failed AA) */
 
   --line: rgba(236, 228, 210, 0.16);
   --line-strong: rgba(236, 228, 210, 0.4);
@@ -72,6 +77,7 @@
   --accent: #54e3ab; /* emerald bright — dark contrast */
   --accent-strong: #2ecf92;
   --accent-ink: #0a1a14;
+  --accent-text: #54e3ab; /* emerald text/icons on dark — 11.5:1, already AA */
   --gold: #f5b62a;
   --gold-strong: #c8861a;
   --gold-ink: #1a1206;
@@ -163,7 +169,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2.5px solid var(--accent);
+  outline: 2.5px solid var(--accent-text);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -196,12 +202,12 @@ h3 {
 }
 
 p a {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 45%, transparent);
 }
 p a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent-text);
 }
 
 .eyebrow {
@@ -210,7 +216,7 @@ p a:hover {
   letter-spacing: 0.28em;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .lede {
@@ -459,7 +465,7 @@ main {
 .mobile-menu__num {
   font-family: var(--font-display), sans-serif;
   font-size: 0.85rem;
-  color: var(--accent);
+  color: var(--accent-text);
   letter-spacing: 0.05em;
 }
 .mobile-menu__footer {
@@ -639,7 +645,7 @@ main {
   margin-block: 0.3rem 0.2rem;
 }
 .hero h1 .accent {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .hero h1 .gold,
 .stat__num .gold {
@@ -669,7 +675,7 @@ main {
   color: var(--ink);
 }
 .stat__num .accent {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .stat__label {
   font-size: 0.78rem;
@@ -786,7 +792,7 @@ main {
   gap: 0.5rem;
 }
 .prose li::marker {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .prose hr {
   border: none;
@@ -957,7 +963,7 @@ main {
   color: var(--ink-faint);
 }
 .contact-card a {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 600;
   text-decoration: none;
   word-break: break-word;
@@ -1048,7 +1054,7 @@ main {
 .account-chip__glyph {
   width: 1rem;
   height: 1rem;
-  color: var(--accent);
+  color: var(--accent-text);
   display: inline-grid;
   place-items: center;
 }
