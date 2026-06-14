@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -43,8 +44,11 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
-import { MemoryReveal } from "./memory-reveal";
 import s from "./game.module.css";
+
+// MemoryReveal renders only for hidden-mode runs (see below). Lazy-load it so
+// Classic-mode players never ship or parse its chunk on the results route.
+const MemoryReveal = dynamic(() => import("./memory-reveal").then((m) => m.MemoryReveal));
 
 type Mode =
   | { kind: "loading" }
