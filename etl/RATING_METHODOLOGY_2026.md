@@ -1,21 +1,22 @@
-# wcdraft 2026 Projected Rating — Methodology (`proj-career-5.1.0`)
+# wcdraft 2026 Projected Rating — Methodology (`proj-career-5.2.0`)
 
-> **proj-career-5.1.0 (merit-v4.1):** the projected formula shares the
-> historical `wc-perf-6.1.0` national-strength raw-only ceiling prior,
+> **proj-career-5.2.0 (merit-v4.2):** the projected formula shares the
+> historical `wc-perf-6.2.0` national-strength raw-only ceiling prior,
 > `career-stature-4.1.0` objective-achievement evidence, and the same unified
-> display curve. The league-of-employment prior is reduced from a dominant
-> pre-tournament anchor into a smooth, overcomable quality input, and
-> citation-backed active objective records can open a projected-only stature
-> path for under-covered AFC/CAF/CONCACAF standouts. Incomplete active-career
-> projected rows still carry an explicit read-time stature cap so young active
-> stars can project elite without turning sparse career evidence into an
-> unbounded all-time peak. The rating/channel movement flipped the
-> strategic-pick canary, so λ was refit and the runtime engine stamp is
-> `engine-2026.06.14-merit-v4.1`. Runtime 2026 rows still use the Career
+> display curve. Non-material raw-only rows now use per-player public context
+> from the pinned 2026 squad table (caps, international goals, club nation)
+> inside the existing raw-only band; tournament role is omitted because no 2026
+> minutes exist yet. Citation-backed active objective records can still open a
+> projected-only stature path for under-covered AFC/CAF/CONCACAF standouts.
+> Incomplete active-career projected rows still carry an explicit read-time
+> stature cap so young active stars can project elite without turning sparse
+> career evidence into an unbounded all-time peak. The rating/channel movement
+> required a λ refit and the runtime engine stamp is
+> `engine-2026.06.15-merit-v4.2`. Runtime 2026 rows still use the Career
 > compatibility surface at top level and carry `basis_ratings.current` for the
 > at-tournament basis. Final emitted 2026 counts are 1,246 ratings:
 > 1,185 `measured_performance`, 61 `career_stature_estimate`, 12 legends,
-> and 17 cards at OVR 90+ (1.364%).
+> and 18 cards at OVR 90+ (1.445%).
 
 > **MV2-6 (unified display curve):** the 2026 `rating_version` stays
 > `proj-career-3.0.0` — the projected INTERNAL algorithm is unchanged. What changed
@@ -41,8 +42,8 @@ not a replacement.
 > anchors, same exponents). The curve drives **`overall` ONLY** under the
 > decoupled path (plan §3.2 fallback): the four sim channels stay on the
 > pre-recal `[FLOOR_CHANNEL, 100]` band, identical to `proj-career-1.0.0`.
-> Historical and projected pools emit `overall` on the same display band
-> `[66, 99]` and channels on the same pre-recal sim band, so the engine's λ
+> Historical and projected measured rows emit `overall` on the same display
+> band `[60, 99]` and channels on the same pre-recal sim band, so the engine's λ
 > stays calibrated to the engine's full attack-minus-defense range and
 > `packages/core/src/engine/calibration.ts` is UNCHANGED from `origin/main`.
 > No new ingestion; Phase 2 will add Ballon d'Or / all-time list signals
@@ -161,14 +162,15 @@ cards the final is `projected_raw` **quantile-mapped onto the historical raw-onl
 internal distribution** (see the summary's cross-era density note). `score_0_100 =
 100 · final` is the input to the SHARED display curve.
 
-The **display curve** then maps `score_0_100` onto the band `[66, 99]` for
-the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
+The **display curve** then maps `score_0_100` onto the measured-row band
+`[60, 99]` for the emitted `overall` only, via the same `DisplayCurve` / `_display_score`
 helpers as `wc-perf-2.0.0`. Channels are derived from `score_0_100` via
 `_channel(score_0_100, spread)` (unchanged pre-recal formula) — they do NOT
 pass through the display curve. Under **MV2-6** the projected pool no longer fits
 its own curve: the display `overall` is mapped by the ONE curve fit over the
 **pooled** historical + 2026 internal scores (`display_curve.fit_unified_curve`),
-identical for both eras. The TARGET anchors remain 66/73/88/99 and, because MV2-5
+identical for both eras. The merit-v4.2 measured-row TARGET anchors are
+60/73/88/99 and, because MV2-5
 made the internal scales cross-era fair, historical and projected display values
 sit on the same honest scale with no per-era table.
 
@@ -225,10 +227,10 @@ is computed as of the opening match (2026-06-11).
 
 `nations_2026`, `players_2026` (minted only), `player_tournaments_2026`
 (1,246 cards, `card_id = player_id:WC-2026`), `ratings_2026` (now with
-`overall` on the shared merit-v4.1 display band), `teams_2026` (48
-`Team2026`, aggregate re-derived on the projected v5.1 channels),
+`overall` on the shared merit-v4.2 display band), `teams_2026` (48
+`Team2026`, aggregate re-derived on the projected v5.2 channels),
 `bracket_2026`, `tournaments_2026`, plus `manifest_2026.json`. The
-1930-2022 historical tables ship under their separate `wc-perf-6.1.0`
+1930-2022 historical tables ship under their separate `wc-perf-6.2.0`
 replay anchor.
 
 ### `Team2026.aggregate_rating`
@@ -237,8 +239,8 @@ Best-available-XI semantics: the 11 cards with the highest projected
 `overall`, averaged per sim channel + coverage. Under the decoupled path,
 the display curve still drives `overall` only; the four sim channels are
 derived from internal projected scores on the `[FLOOR_CHANNEL, 100]` channel
-band. merit-v4.1 re-derives those channel inputs after the smoothed
-league-prior/objective-record movement, then refits λ before realism bands are
+band. merit-v4.2 re-derives those channel inputs after factual declustering
+and objective-record movement, then refits λ before realism bands are
 re-locked.
 
 ## Determinism & validation
@@ -248,8 +250,8 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
 * determinism + committed-golden equality + 48-team/squad-size/3-GK structure
 * link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-5.1.0`)
-* **projected distribution shape** (floor 66, median ~73, p95 ~88, max 99,
+* **projected rating version** check (`proj-career-5.2.0`)
+* **projected distribution shape** (floor 60, median ~73, p95 ~88, max 99,
   no 100s)
 * **projected basis** is `career_stature_estimate` | `measured_performance`,
   never `baseline_anchor_estimate`; both paths exercised by the real squads
@@ -268,7 +270,7 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 ## Sanity results (Phase 1, asserted)
 
 * All 48 teams present, 12 groups × 4, every squad 23-26 with ≥3 GK.
-* Projected `overall` on the recalibrated band `[66, 99]`; **zero** null
+* Projected `overall` on the recalibrated band `[60, 99]`; **zero** null
   overalls; **zero** at the 100 ceiling.
 * Every traditional power (Brazil, Argentina, France, Spain, Germany,
   England, Portugal, Netherlands) aggregates higher than every
@@ -282,8 +284,8 @@ by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 ## Migration & versioning
 
 - `rating_version` changes `proj-career-1.0.0` -> `proj-career-2.0.0` ->
-  `proj-career-5.0.0` -> `proj-career-5.1.0` (merit-v4.1 smoothed
-  league-prior/objective-record replay anchor).
+  `proj-career-5.0.0` -> `proj-career-5.1.0` -> `proj-career-5.2.0`
+  (merit-v4.2 factual per-player declustering replay anchor).
 - Rows gain `overall_basis` and a first-class `legend` boolean (joined from
   `career_stature.json` for linked players). `ratings_2026.json` and
   `teams_2026.json` regenerate; the unified display curve is MV2-6.

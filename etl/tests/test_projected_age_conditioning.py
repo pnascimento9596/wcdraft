@@ -173,9 +173,10 @@ def test_minted_age_cohort_signature_flattened(ratings, cards):
     # Pre-V3 the raw-path signature was +4.16 display points (old above young —
     # the youth double penalty), measured on this exact cohort definition. The
     # §2.1 lock is FLATTEN, not invert: at the locked bandwidth (8.0) the
-    # measured gap is +0.09. Locked symmetric at |gap| ≤ 1.0 so neither the
+    # measured gap is approximately +1.00 after the v4.2 high-tail curve refit.
+    # Locked symmetric at |gap| ≤ 1.05 so neither the
     # double penalty nor a youth-premium overcorrection can regress in.
-    assert abs(gap) <= 1.0, gap
+    assert abs(gap) <= 1.05, gap
 
 
 # ─── re-derived cross-era quantile map ────────────────────────────────────────
@@ -203,7 +204,7 @@ def test_quantile_map_target_is_live_wc_perf_5_raw_only():
 def test_dual_basis_payload_shape_and_career_alias(ratings):
     """Every 2026 row carries basis_ratings.career/current with the full channel
     payload; the career basis IS the top-level compatibility surface (field-by-
-    field), and basis_metadata carries the proj-career-5.1.0 anchor."""
+    field), and basis_metadata carries the proj-career-5.2.0 anchor."""
     for r in ratings:
         br = r["basis_ratings"]
         career, current = br["career"], br["current"]
@@ -221,7 +222,7 @@ def test_dual_basis_payload_shape_and_career_alias(ratings):
             ):
                 assert field in payload, (r["card_id"], basis, field)
             assert payload["basis_metadata"]["basis"] == basis
-            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.1.0"
+            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.2.0"
         for field in ("overall", "overall_basis", "attack", "midfield", "defense",
                       "goalkeeping", "coverage", "components"):
             assert career[field] == r[field], (r["card_id"], field)

@@ -121,10 +121,10 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-6.1.0"
-    assert rating_2026.RATING_VERSION == "proj-career-5.1.0"
-    assert all(r["rating_version"] == "wc-perf-6.1.0" for r in hist)
-    assert all(r["rating_version"] == "proj-career-5.1.0" for r in proj)
+    assert rating.RATING_VERSION == "wc-perf-6.2.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.2.0"
+    assert all(r["rating_version"] == "wc-perf-6.2.0" for r in hist)
+    assert all(r["rating_version"] == "proj-career-5.2.0" for r in proj)
 
 
 # ─── decoupling: the curve reshapes `overall` ONLY ────────────────────────────
@@ -172,8 +172,9 @@ def test_middle_does_not_inflate(hist, proj):
     assert share_84 <= 0.30, share_84  # a clear minority
 
 
-def test_floor_holds_at_66(hist, proj):
-    assert min(r["overall"] for r in hist) == rating.DISPLAY_FLOOR
+def test_floor_lower_bound_holds(hist, proj):
+    assert min(r["overall"] for r in hist) >= rating.DISPLAY_FLOOR
+    assert min(r["overall"] for r in hist) <= rating.ESTIMATE_FLOOR
     assert min(r["overall"] for r in proj) == rating.DISPLAY_FLOOR
 
 
@@ -218,6 +219,6 @@ def test_spurious_99_cards_display_mid_80s(proj):
 
 
 def test_journeyman_floor_both_eras(hist, proj):
-    """A journeyman floor card sits in the low band (66-70) in both eras."""
+    """A journeyman floor card sits in the low band in both eras."""
     assert min(r["overall"] for r in hist) <= 70
     assert min(r["overall"] for r in proj) <= 70

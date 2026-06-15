@@ -39,14 +39,15 @@ from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 
-# Fit at merit-v4.1 lock time on the union pool (see fit_unified_curve(refit=True));
+# Fit at merit-v4.2 lock time on the union pool (see fit_unified_curve(refit=True));
 # test_unified_display pins frozen == live-refit. The smooth national-strength
-# raw-only prior removes the old exact-62.0 p95 lock; the remaining high anchor is
-# a normal quantile over the pooled internal scores, not a hard cap point mass.
+# raw-only prior plus factual per-player context removes the old exact high-band
+# lock; the remaining high anchor is a normal quantile over the pooled internal
+# scores, not a hard cap point mass.
 FROZEN_UNIFIED_CURVE_V2_ANCHORS = {
     "raw_floor": 20.0,
-    "raw_median": 42.325599999999994,
-    "raw_p95": 62.36725499999997,
+    "raw_median": 41.84577933310018,
+    "raw_p95": 59.14638138639868,
     "raw_max": 100.0,
 }
 

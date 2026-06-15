@@ -136,7 +136,7 @@ function stubOgRouteFetch() {
       const href =
         typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
       const { pathname } = new URL(href);
-      if (pathname.endsWith("/data/wcdraft/runtime-data-2.3.0/manifest.json")) {
+      if (pathname.endsWith(`/data/wcdraft/${gameData.manifest.schema_version}/manifest.json`)) {
         return Response.json(gameData.manifest);
       }
       if (pathname === "/brand/wcdraft-mark.svg") {

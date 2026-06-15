@@ -51,7 +51,13 @@ def build_all() -> dict[str, list[dict]]:
         "nations": nations.build(teams),
         "players": players.build(players_df, squads),
         "player_tournaments": cards.build(
-            squads, tours, goals_df, appearances_df, award_winners, club_backfill.clubs
+            squads,
+            tours,
+            goals_df,
+            appearances_df,
+            award_winners,
+            club_backfill.clubs,
+            club_backfill.contexts,
         ),
         "managers": managers.build_managers(managers_df, teams),
         "manager_tournaments": managers.build_manager_tournaments(
@@ -118,7 +124,10 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
             "license": historical_clubs.SOURCE_LICENSE,
             "license_url": historical_clubs.SOURCE_LICENSE_URL,
             "attribution": historical_clubs.ATTRIBUTION,
-            "sourced_field": "player_tournaments.club_at_tournament (men's 1930-2022)",
+            "sourced_field": (
+                "player_tournaments.club_at_tournament, caps, intl_goals, "
+                "club_nation_code (men's 1930-2022 where present)"
+            ),
             "fetch_manifest": "sources/wikipedia_historical_squads/fetch_manifest.json",
             "cards_populated": club_populated,
             "honest_null_cards": club_null,
@@ -129,8 +138,9 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
                 "assists (no source, never synthesised)",
                 "minutes (no source, never synthesised — not derived as matches*90)",
                 (
-                    "club_at_tournament stays null where pinned squad pages lack a club "
-                    "row/value or no unambiguous canonical join exists"
+                    "historical Wikipedia squad facts (club_at_tournament, caps, "
+                    "intl_goals, club_nation_code) stay null/absent where pinned "
+                    "squad pages lack a row/value or no unambiguous canonical join exists"
                 ),
                 "manager birth_date (no source column)",
             ],

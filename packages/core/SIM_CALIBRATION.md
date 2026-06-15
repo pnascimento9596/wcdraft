@@ -1,5 +1,19 @@
 # WS-B Sim + Scoring — Calibration
 
+> **merit-v4.2 (`engine-2026.06.15-merit-v4.2`) — λ refit after public factual
+> declustering.** merit-v4.2 stages squad-table caps/goals/club facts into
+> raw-only rating rows and widens the measured display floor, moving the channel
+> distribution under the symmetric realism gate. The deterministic fitter was
+> re-run before any realism re-lock. Accepted tuple:
+> **`LAMBDA.BASE = 1.05`, `LAMBDA.SPREAD = 6.5`, `LAMBDA.MIN = 0.30`,
+> `LAMBDA.GAMMA_MID = 0.70`, `LAMBDA.KO_LAMBDA_FACTOR = 0.82`**; `MAX`,
+> `W_DEF/W_GK`, `CHANCES`, and `LAMBDA_DISP` remain unchanged from merit-v4.1.
+> Fitter: `175` evaluations; final post-declustering landing `goals=2.549`,
+> `draw=25.00%`, `margin>=4=5.06%`, `KO->ET=33.73%`, `SO=22.13%`.
+> Symmetric realism remains 5/5 in band; heavy asymmetric realism re-locks
+> Wilson/floor shape bands. Runtime stamp:
+> `engine-2026.06.15-merit-v4.2`.
+
 > **merit-v4.1 (`engine-2026.06.14-merit-v4.1`) — λ refit after projected
 > objective-record and display-curve movement.** merit-v4.1 changed the
 > strategic-pick canary basis by 2 picks across 5 locked seeds. The deterministic
@@ -133,28 +147,28 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | merit-v4 | **merit-v4.1 (`engine-2026.06.14-merit-v4.1`)** | Why (merit-v4.1) |
-|---|---|---|---|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | 1.10 | **1.10** | unchanged from merit-v4; mean goals stays in band |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | 6.0 | **6.0** | unchanged from merit-v4 |
-| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | 0.30 | **0.30** | unchanged from merit-v4 |
-| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
-| `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | 0.70 | 0.70 | unchanged |
-| `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
-| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | 0.60 | 0.80 | **1.00** | moved by the v4.1 fit after strategic-pick canary movement |
-| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
-| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
-| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | 0.82 | 0.82 | 0.82 | unchanged from MV2-11b |
-| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | 50 | 50 | unchanged |
-| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | 17 | 17 | unchanged |
-| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | unchanged |
-| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | unchanged |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | unchanged |
-| `LAMBDA_DISP.OUTER_PROB` | — | — | 0.20 | 0.20 | 0.20 | 0.20 | unchanged |
-| `LAMBDA_DISP.A` | — | — | 0.75 | 0.75 | 0.75 | 0.75 | unchanged |
-| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
-| `LAMBDA_DISP.GROUP_A` | — | — | 0.50 | 0.50 | 0.50 | 0.50 | unchanged |
+| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | merit-v4 | merit-v4.1 | **merit-v4.2 (`engine-2026.06.15-merit-v4.2`)** | Why (merit-v4.2) |
+|---|---|---|---|---|---|---|---|---|
+| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | 1.10 | 1.10 | **1.05** | lowers goal volume after factual declustering widened raw-only channels |
+| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | 6.0 | 6.0 | **6.5** | restores margin>=4 while BASE comes down |
+| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | 0.30 | 0.30 | **0.30** | unchanged from merit-v4/v4.1 |
+| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
+| `LAMBDA.W_DEF` | — | 0.65 | 0.70 | 0.70 | 0.70 | 0.70 | 0.70 | unchanged |
+| `LAMBDA.W_GK` | — | 0.35 | 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | unchanged (W_GK + W_DEF ≡ 1) |
+| `LAMBDA.GAMMA_MID` | — | 0.45 | 0.50 | 0.60 | 0.80 | 1.00 | **0.70** | re-centers draw/ET rates under the v4.2 channel mix |
+| `LAMBDA.CONTROL_BAND_LO/HI` | — | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged — bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
+| `LAMBDA.KO_LAMBDA_FACTOR` | — | — | 0.85 | 0.82 | 0.82 | 0.82 | 0.82 | unchanged from MV2-11b |
+| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | 50 | 50 | 50 | unchanged |
+| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | 17 | 17 | 17 | unchanged |
+| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | unchanged |
+| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | unchanged |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | unchanged |
+| `LAMBDA_DISP.OUTER_PROB` | — | — | 0.20 | 0.20 | 0.20 | 0.20 | 0.20 | unchanged |
+| `LAMBDA_DISP.A` | — | — | 0.75 | 0.75 | 0.75 | 0.75 | 0.75 | unchanged |
+| `LAMBDA_DISP.GROUP_OUTER_PROB` | — | — | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
+| `LAMBDA_DISP.GROUP_A` | — | — | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | unchanged |
 
 ## E-3a REFIT (current) — match-level λ dispersion (D1 path)
 

@@ -1,0 +1,663 @@
+{
+  "versions": {
+    "schema_version": "runtime-data-2.4.0",
+    "historical": "wc-perf-6.2.0",
+    "projected": "proj-career-5.2.0",
+    "engine": "engine-2026.06.15-merit-v4.2"
+  },
+  "manifest": {
+    "attribution": {
+      "combined_attribution": "Contains information from The Fjelstul World Cup Database (v1.2.0) by Joshua C. Fjelstul, Ph.D., © 2023 Joshua C. Fjelstul, Ph.D., used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode). Source: https://www.github.com/jfjelstul/worldcup (pinned commit f41e9437a007498bdbf3751305818101f96cb6fb). Modifications by wcdraft: normalized into canonical nation/player/card/manager/tournament tables; derived coarse positions, per-card goal/appearance/award aggregates and a per-card coverage score; added a curated historical-entity / alias reference for nations. No upstream values were altered, imputed, or back-filled; absent signals are preserved as null. wcdraft derived data is redistributed under CC-BY-SA 4.0 (ShareAlike). Pre-1970 World Cup tournament appearances sourced from the Rec.Sport.Soccer Statistics Foundation (RSSSF) match archive (https://www.rsssf.org/), used with acknowledgement. Each appearance count is the number of a team's matches whose starting XI (no substitutes existed pre-1970) lists the player, transcribed from the committed RSSSF snapshots and linked to the canonical player_id on name + nation + tournament. Unlinkable names are withheld (null) and emitted for human review; minutes and assists remain unavailable and are never synthesised. 2026 World Cup squads, draw, and knockout-bracket facts are from Wikipedia (English), used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Pinned revisions: '2026 World Cup squads' (oldid 1357762108), '2026 World Cup draw' (oldid 1357747592), and '2026 World Cup knockout stage' (oldid 1357752786), retrieved 2026-06-04. Modifications by wcdraft: parsed into canonical 2026 player cards, Team2026, and Bracket2026 records; linked players/nations to the canonical 1930-2022 identity space; derived ORIGINAL projected-career player ratings from the factual career signals (international caps, international goals, age, listed position) by wcdraft's own era-fair, position-weighted formula. No proprietary (e.g. EA Sports) ratings were ingested or perturbed; absent signals are preserved as null, never fabricated. wcdraft derived 2026 data is redistributed under CC-BY-SA 4.0 (ShareAlike).",
+      "modifications": "wcdraft normalised the upstream sources into compact runtime player/manager cards, ratings, 2026 teams, and bracket records; canonicalised tournament IDs (WC-YYYY -> numeric YYYY); rebuilt card_id and manager_card_id via buildCardId/buildManagerCardId; preserved source IDs for audit. No upstream values were altered, imputed, or back-filled; absent signals remain null. Compact bundles are redistributed under CC-BY-SA 4.0 (ShareAlike).",
+      "not_affiliated_disclaimer": "wcdraft is not affiliated with, endorsed by, or sponsored by any official competition, governing body, participating national football association, club, or player. All names and factual statistics are derived from publicly licensed sources; no official competition marks or player likenesses are used. The game refers to the sport as football throughout.",
+      "redistributed_license": "CC-BY-SA 4.0",
+      "redistributed_license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "sources": [
+        {
+          "label": "The Fjelstul World Cup Database (Joshua C. Fjelstul, Ph.D.)",
+          "license": "CC-BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
+          "retrieved_date": null,
+          "revision": "f41e9437a007498bdbf3751305818101f96cb6fb",
+          "source_id": "fjelstul",
+          "url": "https://www.github.com/jfjelstul/worldcup"
+        },
+        {
+          "label": "Rec.Sport.Soccer Statistics Foundation (RSSSF)",
+          "license": "Free use with acknowledgement (RSSSF terms)",
+          "license_url": "https://www.rsssf.org/",
+          "retrieved_date": null,
+          "revision": "snapshot",
+          "source_id": "rsssf-supplement",
+          "url": "https://www.rsssf.org/"
+        },
+        {
+          "label": "2026 World Cup draw",
+          "license": "CC-BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "retrieved_date": "2026-06-04",
+          "revision": "1357747592",
+          "source_id": "wikipedia-2026-draw",
+          "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_draw"
+        },
+        {
+          "label": "2026 World Cup knockout stage",
+          "license": "CC-BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "retrieved_date": "2026-06-04",
+          "revision": "1357752786",
+          "source_id": "wikipedia-2026-knockout",
+          "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage"
+        },
+        {
+          "label": "2026 World Cup squads",
+          "license": "CC-BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "retrieved_date": "2026-06-04",
+          "revision": "1357762108",
+          "source_id": "wikipedia-2026-squads",
+          "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads"
+        }
+      ]
+    },
+    "bundles": {
+      "draft_pool": {
+        "bytes": 126794469,
+        "bytes_brotli": 2131456,
+        "bytes_gzip": 4424274,
+        "path": "draft-pool.compact.json",
+        "sha256": "c0312658ba09f305a70509ba9a8dbfe87c5cd2ffefbbb6fd28e6a0247fa695ca"
+      },
+      "scenario_2026": {
+        "bytes": 108775,
+        "bytes_brotli": 4480,
+        "bytes_gzip": 7685,
+        "path": "scenario-2026.compact.json",
+        "sha256": "b482b03b0628d63eb5701089f5faec7773d03ce400a941438186faf93fc78ef4"
+      }
+    },
+    "counts": {
+      "baseline_anchor_estimate": 386,
+      "career_stature_estimate": 541,
+      "knockout_slots": 62,
+      "legend": 295,
+      "manager_cards": 501,
+      "player_cards": 12219,
+      "rating_basis": {
+        "career": {
+          "baseline_anchor_estimate": 386,
+          "career_stature_estimate": 541,
+          "ratings": 12219
+        },
+        "current": {
+          "baseline_anchor_estimate": 388,
+          "career_stature_estimate": 0,
+          "ratings": 12219
+        }
+      },
+      "ratings": 12219,
+      "teams": 48
+    },
+    "dataset_version": "2026-06-04",
+    "engine_version": "engine-2026.06.15-merit-v4.2",
+    "rating_version_historical": "wc-perf-6.2.0",
+    "rating_version_projected": "proj-career-5.2.0",
+    "ruleset_version": "ruleset-2026.06.04",
+    "schema_version": "runtime-data-2.4.0"
+  },
+  "leaderboard_season_key": "engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452",
+  "staged": {
+    "historical_player_cards": 10973,
+    "historical_with_caps": 10809,
+    "historical_with_intl_goals": 1573,
+    "historical_with_club_nation": 10949,
+    "projected_2026_player_cards": 1246,
+    "projected_2026_with_caps": 1246,
+    "projected_2026_with_intl_goals": 1246,
+    "projected_2026_with_club_nation": 1246
+  },
+  "before_clusters": 1451,
+  "before_clustered_rows": 9767,
+  "before_modern_clustered_rows": 5416,
+  "before_2010plus_clustered_rows": 3518,
+  "after_clusters": 468,
+  "after_clustered_rows": 2712,
+  "after_modern_clustered_rows": 938,
+  "after_2010plus_clustered_rows": 637,
+  "targetSquads": {
+    "Ghana 2022": {
+      "before": {
+        "career": 7,
+        "current": 7
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "Morocco 2022": {
+      "before": {
+        "career": 17,
+        "current": 17
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "Tunisia 2022": {
+      "before": {
+        "career": 13,
+        "current": 13
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "Ghana 2026": {
+      "before": {
+        "career": 8,
+        "current": 8
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "Ivory Coast 2026": {
+      "before": {
+        "career": 12,
+        "current": 12
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "South Africa 2026": {
+      "before": {
+        "career": 5,
+        "current": 5
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "Tunisia 2026": {
+      "before": {
+        "career": 7,
+        "current": 7
+      },
+      "after": {
+        "career": 4,
+        "current": 4
+      }
+    },
+    "North Korea 2010": {
+      "before": {
+        "career": 6,
+        "current": 6
+      },
+      "after": {
+        "career": 5,
+        "current": 5
+      }
+    }
+  },
+  "after_top_clusters": [
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 1930,
+      "nation": "Uruguay",
+      "overall": 88,
+      "size": 13,
+      "score_min": 59.25,
+      "score_max": 62.3652,
+      "score_span": 3.1152000000000015,
+      "caps_min": 10,
+      "caps_max": 49,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "URUGUAY",
+      "overall_bases": "measured_performance",
+      "players_sample": "Scarone (49 caps); Andrade (30 caps); Nasazzi (28 caps); Fernández (20 caps); Castro (17 caps); Gestido (10 caps); Anselmo; Dorado"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "career",
+      "year": 1954,
+      "nation": "Turkey",
+      "overall": 66,
+      "size": 11,
+      "score_min": 22.835301,
+      "score_max": 25.601991,
+      "score_span": 2.7666900000000005,
+      "caps_min": 0,
+      "caps_max": 11,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "TURKEY",
+      "overall_bases": "baseline_anchor_estimate",
+      "players_sample": "Şeren (11 caps); Ertan (4 caps); Dirimlili (3 caps); Ersoy (3 caps); Beratlıgil (2 caps); Bolatlı (2 caps); Akgün (1 caps); Berman (0 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 1954,
+      "nation": "Turkey",
+      "overall": 66,
+      "size": 11,
+      "score_min": 22.835301,
+      "score_max": 25.601991,
+      "score_span": 2.7666900000000005,
+      "caps_min": 0,
+      "caps_max": 11,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "TURKEY",
+      "overall_bases": "baseline_anchor_estimate",
+      "players_sample": "Şeren (11 caps); Ertan (4 caps); Dirimlili (3 caps); Ersoy (3 caps); Beratlıgil (2 caps); Bolatlı (2 caps); Akgün (1 caps); Berman (0 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "career",
+      "year": 1954,
+      "nation": "Scotland",
+      "overall": 69,
+      "size": 11,
+      "score_min": 31.995395,
+      "score_max": 33.11273,
+      "score_span": 1.1173350000000006,
+      "caps_min": 0,
+      "caps_max": 5,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ENGLAND|SCOTLAND",
+      "overall_bases": "baseline_anchor_estimate|measured_performance",
+      "players_sample": "Hamilton (5 caps); Mackenzie (4 caps); Combe (3 caps); McMillan (3 caps); Ormond (3 caps); Anderson (1 caps); Fernie (1 caps); Mochan (1 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 1954,
+      "nation": "Scotland",
+      "overall": 69,
+      "size": 11,
+      "score_min": 31.995395,
+      "score_max": 33.11273,
+      "score_span": 1.1173350000000006,
+      "caps_min": 0,
+      "caps_max": 5,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ENGLAND|SCOTLAND",
+      "overall_bases": "baseline_anchor_estimate|measured_performance",
+      "players_sample": "Hamilton (5 caps); Mackenzie (4 caps); Combe (3 caps); McMillan (3 caps); Ormond (3 caps); Anderson (1 caps); Fernie (1 caps); Mochan (1 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "career",
+      "year": 1930,
+      "nation": "Uruguay",
+      "overall": 88,
+      "size": 10,
+      "score_min": 59.25,
+      "score_max": 62.3652,
+      "score_span": 3.1152000000000015,
+      "caps_min": 10,
+      "caps_max": 20,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "URUGUAY",
+      "overall_bases": "measured_performance",
+      "players_sample": "Fernández (20 caps); Castro (17 caps); Gestido (10 caps); Anselmo; Dorado; Iriarte; Mascheroni; Melogno"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 2010,
+      "nation": "Spain",
+      "overall": 88,
+      "size": 10,
+      "score_min": 60.058202,
+      "score_max": 62.4988,
+      "score_span": 2.4405980000000014,
+      "caps_min": 16,
+      "caps_max": 87,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ENG|ESP",
+      "overall_bases": "measured_performance",
+      "players_sample": "Xavi (87 caps); Puyol (83 caps); Torres (73 caps); Alonso (69 caps); Ramos (60 caps); Marchena (59 caps); Fàbregas (49 caps); Capdevila (46 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "career",
+      "year": 1934,
+      "nation": "Argentina",
+      "overall": 69,
+      "size": 10,
+      "score_min": 31.390213,
+      "score_max": 33.433065,
+      "score_span": 2.042852,
+      "caps_min": 0,
+      "caps_max": 3,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ARG",
+      "overall_bases": "measured_performance",
+      "players_sample": "Devincenzi (3 caps); López (2 caps); Belis (0 caps); Irañeta (0 caps); Izzeta (0 caps); Nehin (0 caps); Pedevilla (0 caps); Pérez (0 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 1934,
+      "nation": "Argentina",
+      "overall": 69,
+      "size": 10,
+      "score_min": 31.390213,
+      "score_max": 33.433065,
+      "score_span": 2.042852,
+      "caps_min": 0,
+      "caps_max": 3,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ARG",
+      "overall_bases": "measured_performance",
+      "players_sample": "Devincenzi (3 caps); López (2 caps); Belis (0 caps); Irañeta (0 caps); Izzeta (0 caps); Nehin (0 caps); Pedevilla (0 caps); Pérez (0 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 2006,
+      "nation": "Brazil",
+      "overall": 88,
+      "size": 9,
+      "score_min": 58.703373,
+      "score_max": 65.213393,
+      "score_span": 6.510019999999997,
+      "caps_min": 32,
+      "caps_max": 138,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ESP|GER|ITA",
+      "overall_bases": "measured_performance",
+      "players_sample": "Cafu (138 caps); Carlos (121 caps); Ronaldo (92 caps); Dida (86 caps); Zé Roberto (79 caps); Lúcio (50 caps); Juan (38 caps); Kaká (38 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "current",
+      "year": 2010,
+      "nation": "Netherlands",
+      "overall": 88,
+      "size": 9,
+      "score_min": 59.883817,
+      "score_max": 62.4213,
+      "score_span": 2.5374830000000017,
+      "caps_min": 40,
+      "caps_max": 97,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "ENG|ESP|GER|NED",
+      "overall_bases": "measured_performance",
+      "players_sample": "van Bronckhorst (97 caps); van der Vaart (75 caps); Kuyt (60 caps); van Bommel (54 caps); Mathijsen (53 caps); Heitinga (51 caps); Robben (46 caps); van Persie (41 caps)"
+    },
+    {
+      "snapshot": "after-runtime-data-2.4.0",
+      "basis": "career",
+      "year": 1938,
+      "nation": "Norway",
+      "overall": 71,
+      "size": 9,
+      "score_min": 35.787307,
+      "score_max": 38.074485,
+      "score_span": 2.2871780000000044,
+      "caps_min": 0,
+      "caps_max": 44,
+      "intl_goals_min": "",
+      "intl_goals_max": "",
+      "club_nations": "NORWAY",
+      "overall_bases": "measured_performance",
+      "players_sample": "Johansen (44 caps); Eriksen (34 caps); Kvammen (29 caps); Holmsen (22 caps); Holmberg (18 caps); Martinsen (17 caps); Andreassen (0 caps); Berglie (0 caps)"
+    }
+  ],
+  "ninety_plus": {
+    "count": 306,
+    "total": 12219,
+    "share": 0.025042965872821017
+  },
+  "basisCounts": {
+    "measured_performance": 11292,
+    "baseline_anchor_estimate": 386,
+    "career_stature_estimate": 541
+  },
+  "samples": [
+    {
+      "player": "Son",
+      "full_name": "Heung-min Son",
+      "year": 2026,
+      "nation": "South Korea",
+      "card_id": "P-77335:2026",
+      "club": "Los Angeles FC",
+      "club_nation": "USA",
+      "caps": 144,
+      "intl_goals": 56,
+      "career_overall": 91,
+      "current_overall": 84,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.73365,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Bale",
+      "full_name": "Gareth Bale",
+      "year": 2022,
+      "nation": "Wales",
+      "card_id": "P-63927:2022",
+      "club": "Los Angeles FC",
+      "club_nation": "USA",
+      "caps": 108,
+      "intl_goals": 40,
+      "apps": 3,
+      "career_overall": 90,
+      "current_overall": 83,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.768276,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Ibrahimovic",
+      "full_name": "Zlatan Ibrahimović",
+      "year": 2002,
+      "nation": "Sweden",
+      "card_id": "P-80105:2002",
+      "club": "Ajax",
+      "club_nation": "NETHERLANDS",
+      "caps": 9,
+      "apps": 2,
+      "career_overall": 90,
+      "current_overall": 70,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.36499,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Ibrahimovic",
+      "full_name": "Zlatan Ibrahimović",
+      "year": 2006,
+      "nation": "Sweden",
+      "card_id": "P-80105:2006",
+      "club": "Juventus",
+      "club_nation": "ITA",
+      "caps": 38,
+      "apps": 3,
+      "career_overall": 90,
+      "current_overall": 72,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.736523,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Haaland",
+      "full_name": "Erling Haaland",
+      "year": 2026,
+      "nation": "Norway",
+      "card_id": "P-W26-0477:2026",
+      "club": "Manchester City",
+      "club_nation": "ENG",
+      "caps": 49,
+      "intl_goals": 55,
+      "career_overall": 92,
+      "current_overall": 88,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.879779,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Al-Dawsari",
+      "full_name": "Salem Al-Dawsari",
+      "year": 2026,
+      "nation": "Saudi Arabia",
+      "card_id": "P-70583:2026",
+      "club": "Al-Hilal",
+      "club_nation": "KSA",
+      "caps": 108,
+      "intl_goals": 26,
+      "career_overall": 87,
+      "current_overall": 78,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.724811,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Pulisic",
+      "full_name": "Christian Pulisic",
+      "year": 2026,
+      "nation": "United States",
+      "card_id": "P-11737:2026",
+      "club": "Milan",
+      "club_nation": "ITA",
+      "caps": 85,
+      "intl_goals": 33,
+      "career_overall": 88,
+      "current_overall": 83,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 0.909093,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Salah",
+      "full_name": "Mohamed Salah",
+      "year": 2026,
+      "nation": "Egypt",
+      "card_id": "P-75890:2026",
+      "club": "Liverpool",
+      "club_nation": "ENG",
+      "caps": 115,
+      "intl_goals": 67,
+      "career_overall": 93,
+      "current_overall": 81,
+      "career_basis": "career_stature_estimate",
+      "current_basis": "measured_performance",
+      "context_score": 1,
+      "context_adjustment": 0
+    },
+    {
+      "player": "Partey",
+      "full_name": "Thomas Partey",
+      "year": 2026,
+      "nation": "Ghana",
+      "card_id": "P-07875:2026",
+      "club": "Villarreal",
+      "club_nation": "ESP",
+      "caps": 57,
+      "intl_goals": 15,
+      "career_overall": 79,
+      "current_overall": 79,
+      "career_basis": "measured_performance",
+      "current_basis": "measured_performance",
+      "context_score": 0.862839,
+      "context_adjustment": -0.012784
+    },
+    {
+      "player": "Kessie",
+      "full_name": "Franck Kessié",
+      "year": 2026,
+      "nation": "Ivory Coast",
+      "card_id": "P-W26-0356:2026",
+      "club": "Al-Ahli",
+      "club_nation": "KSA",
+      "caps": 102,
+      "intl_goals": 15,
+      "career_overall": 78,
+      "current_overall": 78,
+      "career_basis": "measured_performance",
+      "current_basis": "measured_performance",
+      "context_score": 0.691332,
+      "context_adjustment": -0.029544
+    },
+    {
+      "player": "Khazri",
+      "full_name": "Wahbi Khazri",
+      "year": 2022,
+      "nation": "Tunisia",
+      "card_id": "P-42223:2022",
+      "club": "Montpellier",
+      "club_nation": "FRA",
+      "caps": 72,
+      "intl_goals": 24,
+      "apps": 2,
+      "career_overall": 80,
+      "current_overall": 80,
+      "career_basis": "measured_performance",
+      "current_basis": "measured_performance",
+      "context_score": 0.841224,
+      "context_adjustment": -0.010601
+    },
+    {
+      "player": "Kudus",
+      "full_name": "Mohammed Kudus",
+      "year": 2022,
+      "nation": "Ghana",
+      "card_id": "P-23821:2022",
+      "club": "Ajax",
+      "club_nation": "NED",
+      "caps": 18,
+      "intl_goals": 5,
+      "apps": 3,
+      "career_overall": 76,
+      "current_overall": 76,
+      "career_basis": "measured_performance",
+      "current_basis": "measured_performance",
+      "context_score": 0.516607,
+      "context_adjustment": -0.046282
+    },
+    {
+      "player": "Nasser Al-Dawsari",
+      "full_name": "Nasser Al-Dawsari",
+      "year": 2026,
+      "nation": "Saudi Arabia",
+      "card_id": "P-10907:2026",
+      "club": "Al-Hilal",
+      "club_nation": "KSA",
+      "caps": 42,
+      "intl_goals": 0,
+      "career_overall": 72,
+      "current_overall": 72,
+      "career_basis": "measured_performance",
+      "current_basis": "measured_performance",
+      "context_score": 0.438216,
+      "context_adjustment": -0.01997
+    }
+  ]
+}

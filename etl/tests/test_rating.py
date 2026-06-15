@@ -1,13 +1,13 @@
 """WS-A Rating: golden determinism, schema bounds, honest-state, and the
-``wc-perf-2.0.0`` recalibration acceptance suite.
+``wc-perf-6.2.0`` recalibration acceptance suite.
 
 SELF-CONTAINED: the rating stage reads the committed canonical JSON in
 ``etl/output/``, so the suite runs without the upstream Fjelstul CSV clone
 (unlike the ingestion tests). The fixed input dataset is the committed canonical
 tables; the locked output is the tracked ratings lockfile fingerprint.
 
-PHASE 1 RECALIBRATION (wc-perf-2.0.0):
-  * Display floor 66, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
+PHASE 1 RECALIBRATION (wc-perf-6.2.0):
+  * Display floor 60, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
   * baseline_anchor_estimate cards banded into [66, 73] on OVERALL only.
   * Decoupled path (plan section 3.2 fallback) LANDED: the calibration curve
     drives ``overall`` ONLY. The four sim channels stay on the pre-recal
@@ -162,13 +162,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v41_historical_rebuild(built: list[dict]):
-    # wc-perf-6.1.0 = merit-v4.1: historical ratings consume
-    # career-stature-4.1.0 objective-achievement curation. The historical
-    # formula itself remains unchanged.
-    assert rating.RATING_VERSION == "wc-perf-6.1.0"
+def test_rating_version_is_merit_v42_historical_rebuild(built: list[dict]):
+    # wc-perf-6.2.0 = merit-v4.2: historical ratings consume factual
+    # per-player context for raw-only declustering without changing the
+    # career-stature source version.
+    assert rating.RATING_VERSION == "wc-perf-6.2.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.1.0"
+        assert r["rating_version"] == "wc-perf-6.2.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
@@ -217,11 +217,12 @@ def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
 
 
 def test_overall_distribution_shape(built: list[dict]):
-    """Reshaped onto [66, 99] with the documented anchors. The exact target
+    """Reshaped onto [60, 99] with the documented anchors. The exact target
     quantiles are slightly elastic (±1) because the curve is fit on measured
-    internal anchors, but the floor and max are HARD."""
+    internal anchors, but the lower bound and max are HARD."""
     overalls = [r["overall"] for r in built]
-    assert min(overalls) == rating.DISPLAY_FLOOR
+    assert min(overalls) >= rating.DISPLAY_FLOOR
+    assert min(overalls) <= rating.ESTIMATE_FLOOR
     assert max(overalls) <= rating.DISPLAY_MAX
     assert max(overalls) >= rating.DISPLAY_MAX - 1  # the elite tail must reach the top
     assert 0 not in {ov for ov in overalls}  # no zero-filled holes
@@ -748,15 +749,18 @@ def test_award_gated_headroom_moves_major_award_measured_cards(players, cards, b
 
 
 def test_no_award_raw_only_headroom_is_byte_stable():
-    """No-award cards get exactly the old raw-only clamp from the headroom helper.
+    """No-award cards get only the bounded factual-context movement.
 
-    Participation mechanics can still move their underlying raw tournament score;
-    this test isolates the award-headroom invariant by comparing `raw_only_score`
-    against the old `min(raw_tournament_score, raw_only_ceiling)` formula wherever
-    `award_score == 0`.
+    Participation mechanics can still move the underlying raw tournament score.
+    merit-v4.2 then allows non-material, no-headroom rows to move inside the
+    existing replacement-to-ceiling band according to public per-player context.
+    Stature/material rows and award-headroom rows remain unchanged by this
+    declustering adjustment.
     """
     internal = _internal_by_card()
     checked = 0
+    context_moved = 0
+    protected_checked = 0
     for row in internal.values():
         if _career_comp(row, "award_score") != 0.0:
             continue
@@ -764,19 +768,34 @@ def test_no_award_raw_only_headroom_is_byte_stable():
             _career_comp(row, "raw_tournament_score"),
             _career_comp(row, "raw_only_ceiling"),
         )
+        adjustment = _career_comp(row, "factual_context_adjustment")
+        expected = max(
+            rating.REPLACEMENT_BASE,
+            min(_career_comp(row, "raw_only_ceiling"), old_clamp + adjustment),
+        )
         assert _career_comp(row, "award_headroom") == 0.0, row["card_id"]
-        assert _career_comp(row, "raw_only_score") == round(old_clamp, rating._PRECISION), (
+        assert _career_comp(row, "raw_only_score") == pytest.approx(
+            round(expected, rating._PRECISION), abs=2e-6
+        ), (
             row["card_id"],
             _career_comp(row, "raw_only_score"),
-            old_clamp,
+            expected,
         )
+        if abs(adjustment) > 0.0:
+            context_moved += 1
+            assert _career_comp(row, "stature_model_weight") < rating.STATURE_DOMINANT_WEIGHT
+        else:
+            protected_checked += 1
         checked += 1
     assert checked > 10_000
+    assert context_moved > 1_000
+    assert protected_checked > 100
 
 
 def test_participation_scaled_finish_anchor_drops_zero_app_champion_reserves(by_id):
     """V2 §4.3b: 0-app champion keepers keep bounded squad credit, not starter
-    full finish credit. The named reserve family lands in the 76-83 band."""
+    full finish credit. v4.2 factual context can push zero-role reserve keepers
+    lower, but they remain above the replacement floor and preserve squad credit."""
     for cid in (
         "P-36188:WC-2022",  # Rulli
         "P-39788:WC-2022",  # Armani
@@ -784,7 +803,7 @@ def test_participation_scaled_finish_anchor_drops_zero_app_champion_reserves(by_
         "P-06015:WC-1970",  # Leão
     ):
         row = by_id[cid]
-        assert 76 <= row["overall"] <= 83, (cid, row["overall"])
+        assert 73 <= row["overall"] <= 83, (cid, row["overall"])
         assert _career_comp(row, "appearances") == 0
         assert _career_comp(row, "team_finish") == 1.0
         assert _career_comp(row, "finish_participation_factor") == (

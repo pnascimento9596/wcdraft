@@ -10,6 +10,9 @@ Honest-state aggregates:
   - position_listed    coarse code the player was listed at that tournament
   - club_at_tournament parsed from pinned Wikipedia squad-page revisions where
                        a factual club row joins unambiguously; otherwise null
+  - caps / intl_goals / club_nation_code are optional historical squad-list
+                       facts parsed from those same pinned Wikipedia rows where
+                       present and joined unambiguously; otherwise absent/null
   - appearances        match-level data exists only 1970+ -> null before 1970,
                        else the count of matches the player appeared in (0 if
                        named in the squad but never dressed — a real measured 0)
@@ -69,6 +72,7 @@ def build(
     appearances: pd.DataFrame | None = None,
     award_winners: pd.DataFrame | None = None,
     club_lookup: dict[tuple[str, str], str] | None = None,
+    historical_context_lookup: dict[tuple[str, str], dict] | None = None,
 ) -> list[dict]:
     """Return canonical card records, sorted by card_id."""
     sdf = squads if squads is not None else source.load("squads")
@@ -77,6 +81,7 @@ def build(
     adf = appearances if appearances is not None else source.load("player_appearances")
     wdf = award_winners if award_winners is not None else source.load("award_winners")
     clubs = club_lookup or {}
+    historical_context = historical_context_lookup or {}
 
     year_of = {t.tournament_id: int(t.year) for t in tdf.itertuples(index=False)}
 
@@ -106,27 +111,30 @@ def build(
         # appearances: null before the 1970 match-event cliff, else count (default 0)
         has_appearances = year is not None and year >= APPEARANCES_FROM
         appearances_val = appear_ct.get(k, 0) if has_appearances else None
-        rows.append(
-            {
-                "card_id": f"{pid}:{tid}",
-                "player_id": pid,
-                "tournament_id": tid,
-                "nation_id": r.team_id,
-                "shirt": shirt,
-                "position_listed": s_or_none(r.position_code),
-                "club_at_tournament": clubs.get(k),
-                "appearances": appearances_val,
-                # provenance for the appearances value: native Fjelstul match
-                # events (1970+) or null pre-1970 at base build. The WS-A
-                # supplement overlay refines this to the RSSSF tag for any
-                # pre-1970 card whose appearances it sources & links.
-                "appearances_source": (
-                    "fjelstul_match_events" if appearances_val is not None else None
-                ),
-                "goals": goal_ct.get(k, 0),
-                "awards": sorted(awards_by.get(k, [])),
-                "coverage": coverage_score(appearances_val is not None, shirt),
-            }
-        )
+        context = historical_context.get(k) or {}
+        row = {
+            "card_id": f"{pid}:{tid}",
+            "player_id": pid,
+            "tournament_id": tid,
+            "nation_id": r.team_id,
+            "shirt": shirt,
+            "position_listed": s_or_none(r.position_code),
+            "club_at_tournament": clubs.get(k),
+            "appearances": appearances_val,
+            # provenance for the appearances value: native Fjelstul match
+            # events (1970+) or null pre-1970 at base build. The WS-A
+            # supplement overlay refines this to the RSSSF tag for any
+            # pre-1970 card whose appearances it sources & links.
+            "appearances_source": (
+                "fjelstul_match_events" if appearances_val is not None else None
+            ),
+            "goals": goal_ct.get(k, 0),
+            "awards": sorted(awards_by.get(k, [])),
+            "coverage": coverage_score(appearances_val is not None, shirt),
+        }
+        for field in ("caps", "intl_goals", "club_nation_code"):
+            if field in context:
+                row[field] = context[field]
+        rows.append(row)
     rows.sort(key=lambda x: x["card_id"])
     return rows

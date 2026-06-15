@@ -142,10 +142,10 @@ historical cards whose `overall` came from an era-anchor estimate instead
 of measured tournament performance. `overall_basis === "career_stature_estimate"`
 flags runtime cards where source-derived career/objective-record stature supplies
 the headroom path: 480 historical cards plus 61 projected 2026 cards in
-`runtime-data-2.3.0`. UI surfaces both as coverage badges — the number is never
+`runtime-data-2.4.0`. UI surfaces both as coverage badges — the number is never
 rendered as a measured value.
 
-> **2026 projected basis (merit-v4.1):** `proj-career-5.1.0` carries
+> **2026 projected basis (merit-v4.2):** `proj-career-5.2.0` carries
 > `overall_basis` through the compact runtime for projected cards. Most 2026
 > cards remain on the measured/current path (`1,185` rows), but citation-backed
 > objective-record standouts from the active-career table can now render as

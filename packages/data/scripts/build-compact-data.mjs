@@ -54,6 +54,8 @@ const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
 const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 
+// runtime-data-2.4.0 (merit-v4.2): public factual context declusters raw-only
+// historical/projected ratings and widens the measured display floor to 60.
 // runtime-data-2.3.0 (merit-v4.1): expanded objective-achievement coverage and
 // replay-anchor reset for rating 6.1/5.1 and the merit-v4.1 engine season.
 // runtime-data-2.2.0 (merit-v4): compact data carries national-strength
@@ -61,19 +63,19 @@ const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.3.0";
+const SCHEMA_VERSION = "runtime-data-2.4.0";
 // narrative-v2: deterministic scenario-aware narrative selection changes
 // RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.14-merit-v4.1";
+const ENGINE_VERSION = "engine-2026.06.15-merit-v4.2";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// merit-v4.1 model (wc-perf-6.1.0 historical, unified display curve v2);
-// projected proj-career-5.1.0 (2026 objective-record material pathway).
+// merit-v4.2 model (wc-perf-6.2.0 historical, unified display curve v2);
+// projected proj-career-5.2.0 (2026 factual-context raw-only allocation).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.1.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.1.0";
-const DISPLAY_FLOOR = 66;
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.2.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.2.0";
+const DISPLAY_FLOOR = 60;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
 const ESTIMATE_DISPLAY_MAX = 73;
@@ -714,6 +716,11 @@ async function build() {
       appearances: pt.appearances ?? null,
       goals: pt.goals ?? null,
       awards: awardsForCard,
+      ...(pt.caps !== undefined ? { caps: pt.caps ?? null } : {}),
+      ...(pt.intl_goals !== undefined ? { intl_goals: pt.intl_goals ?? null } : {}),
+      ...(pt.club_nation_code !== undefined
+        ? { club_nation_code: pt.club_nation_code ?? null }
+        : {}),
       ...(pt.appearances_source ? { appearances_source: pt.appearances_source } : {}),
       source_card_id: pt.card_id,
       source_tournament_id: pt.tournament_id,
@@ -1126,7 +1133,7 @@ function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
   const basisRatings = rating.basis_ratings;
   if (!basisRatings || typeof basisRatings !== "object") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.3.0 requires career + current.`,
+      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.4.0 requires career + current.`,
     );
   }
   return {
@@ -1168,7 +1175,7 @@ function materializeBasisRating(
 ) {
   if (!basisRating || typeof basisRating !== "object") {
     throw new Error(
-      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.3.0 requires both bases.`,
+      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.4.0 requires both bases.`,
     );
   }
   const basisMetadata = basisRating.basis_metadata;
@@ -1276,12 +1283,13 @@ function humanBytes(n) {
 }
 
 function requireLegend(rating) {
-  // runtime-data-2.3.0: `legend` is REQUIRED on every compact rating.
+  // runtime-data-2.4.0 preserves the runtime-data-2.3.0 contract: `legend` is
+  // REQUIRED on every compact rating.
   // The ETL emits the source-derived boolean on every row (historical + 2026);
   // anything else is a contract violation surfaced loudly, never defaulted.
   if (typeof rating.legend !== "boolean") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.3.0 requires a boolean on every row. Refusing to emit.`,
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.4.0 requires a boolean on every row. Refusing to emit.`,
     );
   }
   return rating.legend;
