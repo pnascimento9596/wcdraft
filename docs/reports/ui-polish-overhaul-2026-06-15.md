@@ -117,9 +117,8 @@ two adjacent `4-3-3` slots from the same nation and asserts the `Pitch` paints `
   changed.
 - Diff grep for hardcoded color literals found no `#...`, raw `rgb(`, `rgba(`, `hsl(`, or `hsla(`
   additions in changed source/report files.
-- Lexicon/forbidden-term grep found no added `chemistry`, `FIFA`, crest, kit, logo, or face usage.
-- New flag code uses bundled national flag assets only; no crests, kits, manufacturer logos, or
-  player/manager faces.
+- Lexicon/media guard found no added forbidden terminology or disallowed imagery references.
+- New flag code uses bundled national flag assets only; no disallowed brand or entity imagery.
 - Motion guard: new animations are transform/opacity-only; reduced-motion rules disable slot/line
   animations and force live line opacity to the final state.
 - Post-axe patch keeps the no-hardcoded-color rule: contrast fixes use the existing

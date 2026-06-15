@@ -20,7 +20,7 @@ Pitch/Synergy overlay inspection is also clean. [pitch.tsx](/private/tmp/wcdraft
 - `git diff --check`: PASS, no output.
 - Path guard across tracked and untracked files: PASS, no `packages/core`, `packages/data`, `packages/db`, `etl`, schema/migration, rating/sim, `formations.json`, or synergy mechanic paths changed.
 - Added-line source color guard: PASS, no added hex, rgb/hsl/oklch/lab/lch functional color literals, or named hue literals.
-- Added-line lexicon guard: PASS, no added `chemistry`, `FIFA`, `coach`, `crest`, `kit`, `logo`, or `face` terms.
+- Added-line lexicon/media guard: PASS, no forbidden terminology or disallowed imagery references were added.
 - `jq` on `docs/reports/ui-polish-overhaul-axe.json`: PASS. `results=8`, axe violations `0`, console error rows `0`, page error rows `0`, document overflow rows `0`, flag-count failures `0`, live-line-count failures `0`, reduced motion `mediaMatches=true`, `liveAnimationName=none`, `liveOpacity=1`, `slotAnimationName=none`.
 - `jq` on `docs/reports/ui-polish-overhaul-local.json`: PASS for requested local checks. `results=72`, viewport counts `36` at `390x844` and `36` at `360x800`, non-permitted overflow failures `0`, non-permitted document-delta rows `0`.
 - Screenshot directory check: PASS. `72` PNGs parsed, `36` actual `360x800`, `36` actual `390x844`, zero path/dimension mismatches, report screenshot list matches files.
@@ -30,4 +30,3 @@ Pitch/Synergy overlay inspection is also clean. [pitch.tsx](/private/tmp/wcdraft
 I did not run full root gates, start a browser/dev server, deploy, or perform live production verification, per your review-only constraints and your note that the full root gate already passed after the a11y patch.
 
 One non-blocking artifact note: `docs/reports/ui-polish-overhaul-local.json` still has a top-level `errors` array with `18` broad screenshot-pass console/page entries. I did not classify that as a blocker because your requested local report gate was overflow/count/dimension scoped, and the stricter fix-forward `ui-polish-overhaul-axe.json` has zero console/page error rows across the targeted 8 a11y rows.
-
