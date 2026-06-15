@@ -15,6 +15,7 @@ import {
 } from "@/lib/game/formation-layout";
 import { adjustPitchLayoutForRender } from "@/lib/game/pitch-layout";
 import { buildSynergySegments } from "@/lib/game/synergy-overlay";
+import { MiniNationFlag } from "./mini-nation-flag";
 import s from "./game.module.css";
 
 export interface PitchProps {
@@ -51,27 +52,7 @@ const FALLBACK_LINE: Record<string, FormationVisualSlot["visual_line"]> = {
 
 type PitchMarkingsVariant = "full" | "mini";
 
-const FIELD_X = 4;
-const FIELD_Y = 4;
-const FIELD_W = 92;
-const FIELD_H = 92;
-const FIELD_CX = 50;
-const FIELD_CY = 50;
-const PENALTY_AREA_X = 22.7;
-const PENALTY_AREA_W = 54.6;
-const PENALTY_AREA_H = 14.5;
-const SIX_YARD_X = 37.6;
-const SIX_YARD_W = 24.8;
-const SIX_YARD_H = 4.8;
-const PENALTY_SPOT_TOP_Y = 13.6;
-const PENALTY_SPOT_BOTTOM_Y = 86.4;
-const CENTER_RX = 12.4;
-const CENTER_RY = 8;
-const PENALTY_ARC_START_X = 40.1;
-const PENALTY_ARC_END_X = 59.9;
-const PENALTY_ARC_TOP_Y = FIELD_Y + PENALTY_AREA_H;
-const PENALTY_ARC_BOTTOM_Y = FIELD_Y + FIELD_H - PENALTY_AREA_H;
-const CORNER_R = 2.5;
+const PITCH_MARKING_VIEWBOX = "0 0 100 150";
 
 export function PitchMarkings({ variant = "full" }: { variant?: PitchMarkingsVariant }) {
   return (
@@ -79,107 +60,38 @@ export function PitchMarkings({ variant = "full" }: { variant?: PitchMarkingsVar
       className={`${s.pitchMarkings} ${
         variant === "mini" ? s.pitchMarkingsMini : s.pitchMarkingsFull
       }`}
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
+      viewBox={PITCH_MARKING_VIEWBOX}
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
       focusable="false"
       data-pitch-markings={variant}
     >
       <rect
-        x={FIELD_X}
-        y={FIELD_Y}
-        width={FIELD_W}
-        height={FIELD_H}
+        x="3"
+        y="3"
+        width="94"
+        height="144"
+        rx="3"
         className={`${s.pitchMarkingLine} ${s.pitchMarkingTouchline}`}
-        data-mark="touchline"
+        data-mark="outer"
       />
-      <line
-        x1={FIELD_X}
-        y1={FIELD_CY}
-        x2={FIELD_X + FIELD_W}
-        y2={FIELD_CY}
-        className={s.pitchMarkingLine}
-        data-mark="halfway"
-      />
-      <ellipse
-        cx={FIELD_CX}
-        cy={FIELD_CY}
-        rx={CENTER_RX}
-        ry={CENTER_RY}
-        className={s.pitchMarkingLine}
-        data-mark="center-circle"
-      />
+      <line x1="3" y1="75" x2="97" y2="75" className={s.pitchMarkingLine} data-mark="halfway" />
+      <circle cx="50" cy="75" r="13" className={s.pitchMarkingLine} data-mark="center-circle" />
       <circle
-        cx={FIELD_CX}
-        cy={FIELD_CY}
+        cx="50"
+        cy="75"
         r="0.75"
         className={`${s.pitchMarkingSpot} ${s.pitchMarkingDetail}`}
         data-mark="center-spot"
       />
 
       <g data-mark="penalty-area">
-        <rect
-          x={PENALTY_AREA_X}
-          y={FIELD_Y}
-          width={PENALTY_AREA_W}
-          height={PENALTY_AREA_H}
-          className={s.pitchMarkingLine}
-        />
-        <rect
-          x={PENALTY_AREA_X}
-          y={FIELD_Y + FIELD_H - PENALTY_AREA_H}
-          width={PENALTY_AREA_W}
-          height={PENALTY_AREA_H}
-          className={s.pitchMarkingLine}
-        />
+        <rect x="26" y="3" width="48" height="20" className={s.pitchMarkingLine} />
+        <rect x="26" y="127" width="48" height="20" className={s.pitchMarkingLine} />
       </g>
-      <g data-mark="six-yard-box">
-        <rect
-          x={SIX_YARD_X}
-          y={FIELD_Y}
-          width={SIX_YARD_W}
-          height={SIX_YARD_H}
-          className={s.pitchMarkingLine}
-        />
-        <rect
-          x={SIX_YARD_X}
-          y={FIELD_Y + FIELD_H - SIX_YARD_H}
-          width={SIX_YARD_W}
-          height={SIX_YARD_H}
-          className={s.pitchMarkingLine}
-        />
-      </g>
-      <g className={s.pitchMarkingDetail} data-mark="penalty-spots">
-        <circle cx={FIELD_CX} cy={PENALTY_SPOT_TOP_Y} r="0.68" className={s.pitchMarkingSpot} />
-        <circle cx={FIELD_CX} cy={PENALTY_SPOT_BOTTOM_Y} r="0.68" className={s.pitchMarkingSpot} />
-      </g>
-      <g className={s.pitchMarkingDetail} data-mark="penalty-arcs">
-        <path
-          d={`M ${PENALTY_ARC_START_X} ${PENALTY_ARC_TOP_Y} A ${CENTER_RX} ${CENTER_RY} 0 0 0 ${PENALTY_ARC_END_X} ${PENALTY_ARC_TOP_Y}`}
-          className={s.pitchMarkingLine}
-        />
-        <path
-          d={`M ${PENALTY_ARC_START_X} ${PENALTY_ARC_BOTTOM_Y} A ${CENTER_RX} ${CENTER_RY} 0 0 1 ${PENALTY_ARC_END_X} ${PENALTY_ARC_BOTTOM_Y}`}
-          className={s.pitchMarkingLine}
-        />
-      </g>
-      <g className={s.pitchMarkingDetail} data-mark="corner-arcs">
-        <path
-          d={`M ${FIELD_X} ${FIELD_Y + CORNER_R} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + CORNER_R} ${FIELD_Y}`}
-          className={s.pitchMarkingLine}
-        />
-        <path
-          d={`M ${FIELD_X + FIELD_W - CORNER_R} ${FIELD_Y} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + FIELD_W} ${FIELD_Y + CORNER_R}`}
-          className={s.pitchMarkingLine}
-        />
-        <path
-          d={`M ${FIELD_X + FIELD_W} ${FIELD_Y + FIELD_H - CORNER_R} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X + FIELD_W - CORNER_R} ${FIELD_Y + FIELD_H}`}
-          className={s.pitchMarkingLine}
-        />
-        <path
-          d={`M ${FIELD_X + CORNER_R} ${FIELD_Y + FIELD_H} A ${CORNER_R} ${CORNER_R} 0 0 1 ${FIELD_X} ${FIELD_Y + FIELD_H - CORNER_R}`}
-          className={s.pitchMarkingLine}
-        />
+      <g data-mark="goal-box">
+        <rect x="40" y="3" width="20" height="8" className={s.pitchMarkingLine} />
+        <rect x="40" y="139" width="20" height="8" className={s.pitchMarkingLine} />
       </g>
     </svg>
   );
@@ -291,13 +203,17 @@ function SlotChip({
   onSelect?: (slotId: string) => void;
 }) {
   const filled = !!slot.card;
+  const card = slot.card;
   const tier = filled ? compatTier(slot.position_compatibility) : null;
   const previewTier = previewCompat != null ? compatTier(previewCompat) : null;
   const shape = positionShape(slot.line);
 
   const classes = [s.slot, s[`slotShape_${shape}`]!];
-  if (filled) classes.push(s.slotFilled, s.slotLocked);
-  else classes.push(s.slotEmpty);
+  if (filled) {
+    classes.push(s.slotFilled, s.slotLocked, s[`slotProv_${card!.rating.badge_kind}`]!);
+  } else {
+    classes.push(s.slotEmpty);
+  }
   if (selected) classes.push(s.slotSelected);
   if (tier) classes.push(s[`tier_${tier}`]!);
   if (previewTier) classes.push(s.slotPreview, s[`tierPreview_${previewTier}`]!);
@@ -314,11 +230,17 @@ function SlotChip({
     <>
       <span className={s.slotHead}>
         {shapeMarker}
+        <MiniNationFlag
+          nationId={card!.nation_id}
+          nationName={card!.nation_name}
+          nationCode={card!.nation_code}
+          className={s.slotMiniFlag}
+        />
         <span className={s.slotPos}>{slot.slot_position}</span>
       </span>
-      <span className={s.slotName}>{slot.card!.name}</span>
+      <span className={s.slotName}>{card!.name}</span>
       <span className={s.slotMeta}>
-        <span className={s.slotRating}>{formatNullableNumber(slot.card!.rating.overall)}</span>
+        <span className={s.slotRating}>{formatNullableNumber(card!.rating.overall)}</span>
       </span>
     </>
   ) : (
