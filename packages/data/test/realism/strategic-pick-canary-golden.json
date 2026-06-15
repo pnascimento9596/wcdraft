@@ -4,8 +4,8 @@
   "seed_prefix": "wcdraft:realism:e3a:v1",
   "formation_id": "4-3-3",
   "n_seeds": 5,
-  "rating_version": "wc-perf-6.1.0+proj-career-5.1.0",
-  "engine_version": "engine-2026.06.14-merit-v4.1",
+  "rating_version": "wc-perf-6.2.0+proj-career-5.2.0",
+  "engine_version": "engine-2026.06.15-merit-v4.2",
   "dataset_version": "2026-06-04",
   "records": [
     {
@@ -58,7 +58,7 @@
         {
           "spin": 6,
           "picked_kind": "player",
-          "picked_card_id": "P-14151:2026",
+          "picked_card_id": "P-68952:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.CDM"
         },
@@ -114,7 +114,7 @@
         {
           "spin": 14,
           "picked_kind": "player",
-          "picked_card_id": "P-35818:2018",
+          "picked_card_id": "P-39460:2018",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.2"
         },
@@ -156,7 +156,7 @@
         {
           "spin": 2,
           "picked_kind": "player",
-          "picked_card_id": "P-27079:2022",
+          "picked_card_id": "P-73455:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LB"
         },
@@ -170,7 +170,7 @@
         {
           "spin": 4,
           "picked_kind": "player",
-          "picked_card_id": "P-09704:2010",
+          "picked_card_id": "P-09988:2010",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RCB"
         },
@@ -282,7 +282,7 @@
         {
           "spin": 2,
           "picked_kind": "player",
-          "picked_card_id": "P-51118:2022",
+          "picked_card_id": "P-89217:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LB"
         },
@@ -296,14 +296,14 @@
         {
           "spin": 4,
           "picked_kind": "player",
-          "picked_card_id": "P-27808:2002",
+          "picked_card_id": "P-72404:2002",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RCB"
         },
         {
           "spin": 5,
           "picked_kind": "player",
-          "picked_card_id": "P-08916:2018",
+          "picked_card_id": "P-56297:2018",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RB"
         },
@@ -317,7 +317,7 @@
         {
           "spin": 7,
           "picked_kind": "player",
-          "picked_card_id": "P-05918:2006",
+          "picked_card_id": "P-52850:2006",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LCM"
         },
@@ -359,7 +359,7 @@
         {
           "spin": 13,
           "picked_kind": "player",
-          "picked_card_id": "P-37930:2010",
+          "picked_card_id": "P-65611:2010",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.1"
         },
@@ -429,21 +429,21 @@
         {
           "spin": 5,
           "picked_kind": "player",
-          "picked_card_id": "P-22192:2014",
+          "picked_card_id": "P-64104:2014",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RB"
         },
         {
           "spin": 6,
           "picked_kind": "player",
-          "picked_card_id": "P-31160:2010",
+          "picked_card_id": "P-38095:2010",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.CDM"
         },
         {
           "spin": 7,
           "picked_kind": "player",
-          "picked_card_id": "P-23821:2022",
+          "picked_card_id": "P-07875:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LCM"
         },
@@ -478,7 +478,7 @@
         {
           "spin": 12,
           "picked_kind": "player",
-          "picked_card_id": "P-15566:2022",
+          "picked_card_id": "P-50688:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.0"
         },
@@ -548,7 +548,7 @@
         {
           "spin": 4,
           "picked_kind": "player",
-          "picked_card_id": "P-10172:2018",
+          "picked_card_id": "P-42160:2018",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.RCB"
         },
@@ -569,7 +569,7 @@
         {
           "spin": 7,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0019:2026",
+          "picked_card_id": "P-96340:2026",
           "picked_manager_card_id": null,
           "assigned_slot_id": "4-3-3.LCM"
         },
@@ -611,14 +611,14 @@
         {
           "spin": 13,
           "picked_kind": "player",
-          "picked_card_id": "P-00597:2022",
+          "picked_card_id": "P-45288:2022",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.1"
         },
         {
           "spin": 14,
           "picked_kind": "player",
-          "picked_card_id": "P-82311:1950",
+          "picked_card_id": "P-69140:1950",
           "picked_manager_card_id": null,
           "assigned_slot_id": "bench.2"
         },

@@ -1,20 +1,20 @@
 {
   "comment": "F-4 U2 golden — regen via `pnpm --filter @wcdraft/web gen:leaderboard-golden` on anchor bumps; never written by tests.",
-  "season_key": "engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e",
+  "season_key": "engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452",
   "versions": {
-    "schema_version": "runtime-data-2.3.0",
+    "schema_version": "runtime-data-2.4.0",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-6.1.0+proj-career-5.1.0",
-    "engine_version": "engine-2026.06.14-merit-v4.1",
+    "rating_version": "wc-perf-6.2.0+proj-career-5.2.0",
+    "engine_version": "engine-2026.06.15-merit-v4.2",
     "ruleset_version": "ruleset-2026.06.04",
-    "data_bundle_hash": "f0f76fd3c2f8d003a3ee5062957220c591431e37fc6ea54daa689c6e992e11b7+bd362cb7a509b8081ec7febf440749217fe94f7fc7d14d9431ce28347803f420"
+    "data_bundle_hash": "c0312658ba09f305a70509ba9a8dbfe87c5cd2ffefbbb6fd28e6a0247fa695ca+b482b03b0628d63eb5701089f5faec7773d03ce400a941438186faf93fc78ef4"
   },
   "classic": {
     "parent_seed": "wcdraft:f4-u2-golden:classic:1",
     "display_name": "golden_xi",
-    "token": "t2.eyJ2IjoyLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImMiOiJQLTAwNTQ5OjIwMTgiLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiYyI6IlAtMTA3Mzk6MjAyNiIsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjIjoiUC0wMDQ2NToyMDIyIiwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjIjoiUC0wMjMwNToyMDIyIiwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjIjoiUC0wMDU3NzoxOTU4IiwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImMiOiJQLTE5NTc4OjE5OTgiLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImMiOiJQLTAwMzg0OjIwMDYiLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImMiOiJQLTAwMDY1OjIwMDIiLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImMiOiJQLTA2MTE3OjIwMTAiLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiYyI6IlAtMDMwMjY6MjAwMiIsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjIjoiUC0wMjQ1NToxOTMwIiwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImMiOiJQLTIzMzcxOjIwMTQiLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjIjoiUC0xMDAxNDoyMDE0IiwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiYyI6IlAtMDQxNTc6MjAyNiIsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImMiOiJQLTA0Nzg1OjIwMDIiLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjIjoiUC0yMTQ5NToxOTk4IiwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMy4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuMS4wK3Byb2otY2FyZWVyLTUuMS4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4xNC1tZXJpdC12NC4xIiwidXYiOiJydWxlc2V0LTIwMjYuMDYuMDQiLCJodiI6ImYwZjc2ZmQzYzJmOGQwMDNhM2VlNTA2Mjk1NzIyMGM1OTE0MzFlMzdmYzZlYTU0ZGFhNjg5YzZlOTkyZTExYjcrYmQzNjJjYjdhNTA5YjgwODFlYzdmZWJmNDQwNzQ5MjE3ZmU5NGY3ZmM3ZDE0ZDk0MzFjZTI4MzQ3ODAzZjQyMCJ9",
+    "token": "t2.eyJ2IjoyLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImMiOiJQLTAwNTQ5OjIwMTgiLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiYyI6IlAtMTA3Mzk6MjAyNiIsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjIjoiUC0wMDQ2NToyMDIyIiwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjIjoiUC0wMjMwNToyMDIyIiwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjIjoiUC0wMDU3NzoxOTU4IiwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImMiOiJQLTE5NTc4OjE5OTgiLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImMiOiJQLTAwMzg0OjIwMDYiLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImMiOiJQLTAwMDY1OjIwMDIiLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImMiOiJQLTA2MTE3OjIwMTAiLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiYyI6IlAtMDMwMjY6MjAwMiIsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjIjoiUC0wMjQ1NToxOTMwIiwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImMiOiJQLTIzMzcxOjIwMTQiLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjIjoiUC0xMDAxNDoyMDE0IiwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiYyI6IlAtMDQxNTc6MjAyNiIsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImMiOiJQLTA0Nzg1OjIwMDIiLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjIjoiUC0yMTQ5NToxOTk4IiwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuNC4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuMi4wK3Byb2otY2FyZWVyLTUuMi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4xNS1tZXJpdC12NC4yIiwidXYiOiJydWxlc2V0LTIwMjYuMDYuMDQiLCJodiI6ImMwMzEyNjU4YmEwOWYzMDVhNzA1MDliYTlhOGRiZmU4N2M1Y2QyZmZlZmJiYjZmZDI4ZTZhMDI0N2ZhNjk1Y2ErYjQ4MmIwM2IwNjI4ZDYzZWI1NzAxMDg5ZjVmYWVjNzc3M2QwM2NlNDAwYTk0MTQzODE4NmZhZjkzZmM3OGVmNCJ9",
     "expected": {
-      "verified_score": -1,
+      "verified_score": -3,
       "score_breakdown": [
         {
           "label": "Goals scored",
@@ -54,9 +54,9 @@
         },
         {
           "label": "Yellow cards",
-          "raw": 4,
+          "raw": 6,
           "weight": -1,
-          "points": -4
+          "points": -6
         },
         {
           "label": "Red cards",
@@ -66,7 +66,7 @@
         },
         {
           "label": "Fouls committed",
-          "raw": 24,
+          "raw": 25,
           "weight": 0,
           "points": 0
         },
@@ -83,14 +83,14 @@
           "points": 0
         }
       ],
-      "season_key": "engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e",
+      "season_key": "engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452",
       "draft_mode": "classic"
     }
   },
   "hidden": {
     "parent_seed": "wcdraft:f4-u2-golden:hidden:1",
     "display_name": "memory_xi_10",
-    "token": "t2.eyJ2IjoyLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImMiOiJQLTAwNjQwOjIwMDIiLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiYyI6IlAtMDE0MTY6MjAyMiIsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjIjoiUC0wMDIxMjoyMDEwIiwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjIjoiUC0wNTU1OToyMDIyIiwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjIjoiUC0wMDU0ODoyMDEwIiwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImMiOiJQLTA1NzgzOjIwMDYiLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImMiOiJQLVcyNi0wMzUyOjIwMjYiLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImMiOiJQLVcyNi0wMjg4OjIwMjYiLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImMiOiJQLTAwNDQ3OjIwMDIiLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiYyI6IlAtMDk3MDU6MTk5OCIsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjIjoiUC0wMDU0OToyMDE4IiwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImMiOiJQLTAxOTQ1OjIwMTAiLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjIjoiUC0xMjcwNzoyMDE4IiwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiYyI6IlAtMDIzMDU6MjAyMiIsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImMiOiJQLTAxMTY0OjIwMTgiLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjIjoiUC0wNDcyNjoyMDEwIiwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuMy4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuMS4wK3Byb2otY2FyZWVyLTUuMS4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4xNC1tZXJpdC12NC4xIiwidXYiOiJydWxlc2V0LTIwMjYuMDYuMDQiLCJodiI6ImYwZjc2ZmQzYzJmOGQwMDNhM2VlNTA2Mjk1NzIyMGM1OTE0MzFlMzdmYzZlYTU0ZGFhNjg5YzZlOTkyZTExYjcrYmQzNjJjYjdhNTA5YjgwODFlYzdmZWJmNDQwNzQ5MjE3ZmU5NGY3ZmM3ZDE0ZDk0MzFjZTI4MzQ3ODAzZjQyMCJ9",
+    "token": "t2.eyJ2IjoyLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImMiOiJQLTAwNjQwOjIwMDIiLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiYyI6IlAtMDE0MTY6MjAyMiIsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjIjoiUC0wMDIxMjoyMDEwIiwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjIjoiUC0wNTU1OToyMDIyIiwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjIjoiUC0wMDU0ODoyMDEwIiwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImMiOiJQLTA1NzgzOjIwMDYiLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImMiOiJQLVcyNi0wMzUyOjIwMjYiLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImMiOiJQLVcyNi0wMjg4OjIwMjYiLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImMiOiJQLTAwNDQ3OjIwMDIiLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiYyI6IlAtMDk3MDU6MTk5OCIsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjIjoiUC0wMDU0OToyMDE4IiwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImMiOiJQLTAxOTQ1OjIwMTAiLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjIjoiUC0xMjcwNzoyMDE4IiwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiYyI6IlAtMDIzMDU6MjAyMiIsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImMiOiJQLTAxMTY0OjIwMTgiLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjIjoiUC0wNDcyNjoyMDEwIiwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuNC4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuMi4wK3Byb2otY2FyZWVyLTUuMi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4xNS1tZXJpdC12NC4yIiwidXYiOiJydWxlc2V0LTIwMjYuMDYuMDQiLCJodiI6ImMwMzEyNjU4YmEwOWYzMDVhNzA1MDliYTlhOGRiZmU4N2M1Y2QyZmZlZmJiYjZmZDI4ZTZhMDI0N2ZhNjk1Y2ErYjQ4MmIwM2IwNjI4ZDYzZWI1NzAxMDg5ZjVmYWVjNzc3M2QwM2NlNDAwYTk0MTQzODE4NmZhZjkzZmM3OGVmNCJ9",
     "expected": {
       "verified_score": -25,
       "score_breakdown": [
@@ -102,9 +102,9 @@
         },
         {
           "label": "Goal difference",
-          "raw": -11,
+          "raw": -10,
           "weight": 1,
-          "points": -11
+          "points": -10
         },
         {
           "label": "Clean sheets",
@@ -126,15 +126,15 @@
         },
         {
           "label": "Goals conceded",
-          "raw": 12,
+          "raw": 11,
           "weight": -1,
-          "points": -12
+          "points": -11
         },
         {
           "label": "Yellow cards",
-          "raw": 4,
+          "raw": 6,
           "weight": -1,
-          "points": -4
+          "points": -6
         },
         {
           "label": "Red cards",
@@ -161,7 +161,7 @@
           "points": 0
         }
       ],
-      "season_key": "engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e",
+      "season_key": "engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452",
       "draft_mode": "hidden"
     }
   }

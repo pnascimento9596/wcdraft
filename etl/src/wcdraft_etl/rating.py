@@ -36,9 +36,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
-from . import national_strength
+from . import league_strength, national_strength
 
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # stage reads/writes the same place regardless of the caller's cwd. Mirrors
@@ -48,6 +49,11 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-6.2.0 (merit-v4.2): historical raw-only rows consume resolved public
+# squad-list facts (caps, international goals when available, club league, and
+# tournament role) to allocate within raw-only plateaus; the display floor widens
+# to 60 so weak-squad differences remain visible instead of rounding into filler
+# walls. Stature/award rows remain protected by their existing gates.
 # wc-perf-6.1.0 (merit-v4.1): historical ratings consume career-stature-4.1.0
 # active objective-achievement curation; the historical formula itself is
 # unchanged, but the replay anchor moves with the source-derived table.
@@ -68,7 +74,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-6.1.0"
+RATING_VERSION = "wc-perf-6.2.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -211,6 +217,25 @@ RAW_AWARD_GATE_START = 0.30
 RAW_AWARD_GATE_FULL = AWARD_POINTS["Golden Ball"]
 RAW_AWARD_HEADROOM = 0.18
 
+# merit-v4.2 declustering: non-material raw-only cards are allocated WITHIN the
+# replacement-to-raw-ceiling band by that player's own public factual record.
+# The movement is bounded and cannot escape the existing raw-only ceiling. It is
+# inactive for career-stature-dominant or award-headroom rows, so elite gates stay
+# source-derived and the term cannot create new 90+ players.
+RAW_CONTEXT_LIFT_PRESSURE = 0.60
+RAW_CONTEXT_DROP_PRESSURE = 0.35
+RAW_CONTEXT_MAX_LIFT = 0.14
+RAW_CONTEXT_MAX_DROP = 0.14
+RAW_CONTEXT_TARGET_EXPONENT = 0.88
+
+FACTUAL_CONTEXT_MIN_SQUAD_COVERAGE = 0.80
+FACTUAL_CONTEXT_WEIGHTS: dict[str, float] = {
+    "caps": 0.42,
+    "intl_goals": 0.13,
+    "league": 0.32,
+    "role": 0.13,
+}
+
 # merit-v3 V2 §4.3a: weak-tournament stature modulation should read participation
 # evidence. Unknown historical participation is neutral; sourced low/no-show
 # participation both widens the allowed down-cap and adds a bounded negative
@@ -271,7 +296,7 @@ _PRECISION = 6
 # Its output `score_0_100` is mapped through a deterministic monotonic
 # piecewise-power curve onto the display band [DISPLAY_FLOOR, DISPLAY_MAX].
 # The curve fits ONLY four global INTERNAL anchors of the emitted dataset
-# (min, p50, p95, max) onto fixed display targets (66, 73, 88, 99). It is the
+# (min, p50, p95, max) onto fixed display targets (60, 73, 88, 99). It is the
 # SINGLE knob that reshapes the emitted distribution; the merit math is
 # untouched. Low-DOF (three exponents, four data anchors, no per-player
 # tuning) so it cannot fudge individuals and stays auditable.
@@ -286,23 +311,22 @@ _PRECISION = 6
 #
 # DESIGN INVARIANT: applied to `overall` ONLY. The four sim channels stay
 # on the pre-recalibration `[FLOOR_CHANNEL, 100]` band — they are NOT routed
-# through the display curve. This is the DECOUPLED path (plan §3.2 fallback);
-# `packages/core/src/engine/calibration.ts` (λ, channel scale, engine_version)
-# is UNCHANGED from `origin/main`, and the sim is byte-identical to main
-# (sim-golden.json: 0 diff). OVR is the believability view of the pre-display
-# COMPOSITE merit score; channels are the sim-strength inputs. They DIVERGE
-# by design — see `packages/core/SIM_CALIBRATION.md`.
+# through the display curve. OVR is the believability view of the pre-display
+# COMPOSITE merit score; channels are the sim-strength inputs. They diverge by
+# design, and any λ refit lives in `packages/core/src/engine/calibration.ts`
+# rather than here — see `packages/core/SIM_CALIBRATION.md`.
 #
 # ESTIMATE BAND: `baseline_anchor_estimate` cards are capped into
 # [ESTIMATE_FLOOR, ESTIMATE_CEILING] AFTER the curve. They never out-rate
 # linked greats, never fabricate a box score (the absent stat stays null in
 # components), and remain flagged via overall_basis + low coverage.
-# merit-v3 V4: re-fit on the UNION of both bases' (career + current) internal
-# pools across both eras (design §4.4 + §5) — the v2 kind. The curve form and
-# the three exponents are unchanged; only the anchor data moved.
+# merit-v4.2: re-fit on the UNION of both bases' (career + current) internal
+# pools across both eras (design §4.4 + §5). The high-tail exponent is re-locked
+# to keep the registered active-elite anchors inside the rare 90+ tail after
+# factual-context declustering shifts the p95 anchor.
 DISPLAY_CURVE_KIND = "unified_pooled_piecewise_power_v2"
 
-DISPLAY_FLOOR = 66
+DISPLAY_FLOOR = 60
 DISPLAY_MEDIAN = 73
 DISPLAY_P95 = 88
 DISPLAY_MAX = 99
@@ -315,7 +339,7 @@ ESTIMATE_CEILING = 73
 # Fixed globally; no per-player or per-era override.
 DISPLAY_LOW_EXPONENT = 0.65
 DISPLAY_MID_EXPONENT = 1.00
-DISPLAY_HIGH_EXPONENT = 1.85
+DISPLAY_HIGH_EXPONENT = 2.00
 
 
 class DisplayCurve:
@@ -574,6 +598,80 @@ def _award_gate(award_anchor: float) -> float:
     return _ramp01(award_anchor, RAW_AWARD_GATE_START, RAW_AWARD_GATE_FULL)
 
 
+def _thresholded_log_component(
+    value: int | float | None, *, start: float, full: float
+) -> float | None:
+    if value is None:
+        return None
+    value = float(value)
+    if value <= start:
+        return 0.0
+    return _clamp01(
+        (math.log1p(value) - math.log1p(start))
+        / (math.log1p(full) - math.log1p(start))
+    )
+
+
+def _active_component_names(cards: list[dict], component_available) -> set[str]:
+    if not cards:
+        return set()
+    active: set[str] = set()
+    for name in FACTUAL_CONTEXT_WEIGHTS:
+        count = sum(1 for card in cards if component_available(card, name))
+        if count / len(cards) >= FACTUAL_CONTEXT_MIN_SQUAD_COVERAGE:
+            active.add(name)
+    return active
+
+
+def _renormalized_context_score(values: dict[str, float | None], active: set[str]) -> float | None:
+    weighted: list[tuple[float, float]] = []
+    for name in sorted(active):
+        weight = FACTUAL_CONTEXT_WEIGHTS[name]
+        value = values.get(name)
+        weighted.append((weight, _clamp01(float(value or 0.0))))
+    total = sum(weight for weight, _ in weighted)
+    if total <= 0.0:
+        return None
+    return _clamp01(sum(weight * value for weight, value in weighted) / total)
+
+
+def _context_adjusted_raw_only_score(
+    *,
+    raw_score: float,
+    raw_only_ceiling: float,
+    raw_path: float,
+    context_score: float | None,
+    material_weight: float,
+    award_headroom: float = 0.0,
+) -> tuple[float, float, float, float]:
+    """Apply the merit-v4.2 factual declustering adjustment.
+
+    Returns ``(adjusted_raw_path, context_score_or_null, signed_adjustment,
+    context_band)``. The adjustment is active only for non-material,
+    no-award-headroom rows. It can move a row up or down inside the existing
+    replacement-to-ceiling band, but it cannot push a score above the raw-only
+    ceiling or below replacement.
+    """
+    if (
+        context_score is None
+        or material_weight >= STATURE_DOMINANT_WEIGHT
+        or award_headroom > 0.0
+        or raw_only_ceiling <= REPLACEMENT_BASE
+    ):
+        return raw_path, context_score if context_score is not None else None, 0.0, 0.0
+    base = min(raw_path, raw_only_ceiling)
+    context = _clamp01(context_score)
+    band = raw_only_ceiling - REPLACEMENT_BASE
+    target = REPLACEMENT_BASE + band * (context ** RAW_CONTEXT_TARGET_EXPONENT)
+    delta = target - base
+    if delta >= 0.0:
+        movement = min(RAW_CONTEXT_MAX_LIFT, RAW_CONTEXT_LIFT_PRESSURE * delta)
+    else:
+        movement = -min(RAW_CONTEXT_MAX_DROP, RAW_CONTEXT_DROP_PRESSURE * abs(delta))
+    adjusted = max(REPLACEMENT_BASE, min(raw_only_ceiling, base + movement))
+    return adjusted, context, movement, band
+
+
 def _raw_only_score(
     raw_tournament_score: float, raw_only_ceiling: float, award_anchor: float
 ) -> float:
@@ -639,6 +737,86 @@ def _coarse_pos(card: dict, position_of_player: dict[str, str | None]) -> str:
     return pos
 
 
+def _historical_factual_context_by_card(
+    cards: list[dict],
+    position_of_player: dict[str, str | None],
+) -> dict[str, dict]:
+    """card_id -> public factual context score for raw-only declustering.
+
+    Components activate at the squad level only when the pinned sources provide
+    that field for >=80% of the squad. Missing individual values for an active
+    component are then honest-low (0), while inactive components are omitted and
+    weights are renormalized. This prevents a half-sourced page from creating
+    arbitrary gaps.
+    """
+
+    by_squad: dict[tuple[str, str], list[dict]] = {}
+    for card in cards:
+        by_squad.setdefault((card["tournament_id"], card["nation_id"]), []).append(card)
+
+    out: dict[str, dict] = {}
+
+    def available(card: dict, name: str) -> bool:
+        if name == "caps":
+            return card.get("caps") is not None
+        if name == "intl_goals":
+            pos = _coarse_pos(card, position_of_player)
+            return pos != "GK" and card.get("intl_goals") is not None
+        if name == "league":
+            return league_strength.league_context_component(
+                card.get("club_nation_code")
+            ) is not None
+        if name == "role":
+            return card.get("appearances") is not None
+        raise KeyError(name)
+
+    for squad_cards in by_squad.values():
+        active = _active_component_names(squad_cards, available)
+        if not active:
+            for card in squad_cards:
+                out[card["card_id"]] = {
+                    "score": None,
+                    "active_count": 0,
+                    "caps": None,
+                    "intl_goals": None,
+                    "league": None,
+                    "role": None,
+                }
+            continue
+        max_apps = max(
+            (
+                int(card["appearances"])
+                for card in squad_cards
+                if card.get("appearances") is not None
+            ),
+            default=0,
+        )
+        for card in squad_cards:
+            pos = _coarse_pos(card, position_of_player)
+            caps = _thresholded_log_component(card.get("caps"), start=5.0, full=100.0)
+            intl_goals = (
+                None
+                if pos == "GK"
+                else _thresholded_log_component(card.get("intl_goals"), start=2.0, full=30.0)
+            )
+            league = league_strength.league_context_component(card.get("club_nation_code"))
+            role = None
+            if card.get("appearances") is not None and max_apps > 0:
+                role = _clamp01(int(card["appearances"]) / max_apps)
+            values = {
+                "caps": caps,
+                "intl_goals": intl_goals,
+                "league": league,
+                "role": role,
+            }
+            out[card["card_id"]] = {
+                "score": _renormalized_context_score(values, active),
+                "active_count": len(active),
+                **values,
+            }
+    return out
+
+
 def _build_internal_rows(
     players: list[dict],
     cards: list[dict],
@@ -676,6 +854,9 @@ def _build_internal_rows(
         finish_of[key] = fp if key not in finish_of else min(finish_of[key], fp)
 
     mens_cards = [c for c in cards if c["tournament_id"] in mens]
+    factual_context_by_card = _historical_factual_context_by_card(
+        mens_cards, position_of_player
+    )
 
     # Build per-(tournament, position) percentile maps for the two era-dependent
     # performance signals. Appearances are null pre-1970 and excluded from their
@@ -853,6 +1034,20 @@ def _build_internal_rows(
             )
         raw_path = _raw_only_score(raw, raw_only_ceiling, s["award_score"])
         award_headroom = raw_path - min(raw, raw_only_ceiling)
+        factual_context = factual_context_by_card.get(c["card_id"], {})
+        (
+            raw_path,
+            context_score,
+            context_adjustment,
+            context_window,
+        ) = _context_adjusted_raw_only_score(
+            raw_score=raw,
+            raw_only_ceiling=raw_only_ceiling,
+            raw_path=raw_path,
+            context_score=factual_context.get("score"),
+            material_weight=weight,
+            award_headroom=award_headroom,
+        )
 
         # The continuous blend: weight 0 ⇒ raw-only, weight 1 ⇒ stature-dominant.
         final = _clamp01(weight * s["stature_path"] + (1.0 - weight) * raw_path)
@@ -979,6 +1174,66 @@ def _build_internal_rows(
             {
                 "signal": "raw_only_score",
                 "value": round(raw_path, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_score",
+                "value": (
+                    round(context_score, _PRECISION)
+                    if context_score is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_active_components",
+                "value": factual_context.get("active_count"),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_caps",
+                "value": (
+                    round(factual_context["caps"], _PRECISION)
+                    if factual_context.get("caps") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_intl_goals",
+                "value": (
+                    round(factual_context["intl_goals"], _PRECISION)
+                    if factual_context.get("intl_goals") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_league",
+                "value": (
+                    round(factual_context["league"], _PRECISION)
+                    if factual_context.get("league") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_role",
+                "value": (
+                    round(factual_context["role"], _PRECISION)
+                    if factual_context.get("role") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_adjustment",
+                "value": round(context_adjustment, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_band",
+                "value": round(context_window, _PRECISION),
                 "weight": 0.0,
             },
             {

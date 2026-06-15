@@ -249,19 +249,20 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-5.1.0 = merit-v4.1: projected ratings consume
-    # career-stature-4.1.0 and add the active objective-record pathway while
-    # capping active, stage-normalized rows so incomplete careers do not read as
-    # completed all-time careers.
-    assert rating_2026.RATING_VERSION == "proj-career-5.1.0"
+    # proj-career-5.2.0 = merit-v4.2: projected ratings consume
+    # career-stature-4.1.0, active objective records, and factual per-player
+    # context for raw-only declustering.
+    assert rating_2026.RATING_VERSION == "proj-career-5.2.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-5.1.0"
+        assert r["rating_version"] == "proj-career-5.2.0"
 
 
 def test_projected_distribution_shape(ratings):
-    """Projected pool reshaped onto [66, 99] by the shared display curve.
+    """Projected pool reshaped onto [60, 99] by the shared display curve.
     Slightly looser than historical because n=1,246 vs n=10,973, but same
-    contract: floor exact, max <= 99, no 100s, thin elite tail."""
+    contract: lower bound exact, max <= 99, no 100s, thin elite tail. merit-v4.2
+    factual declustering deliberately lets the projected p95 sit below the global
+    display p95 instead of inflating non-material players."""
     overalls = sorted(r["overall"] for r in ratings)
     n = len(overalls)
     assert overalls[0] == rating.DISPLAY_FLOOR
@@ -271,7 +272,7 @@ def test_projected_distribution_shape(ratings):
     median = overalls[n // 2]
     p95 = overalls[int(0.95 * (n - 1))]
     assert rating.DISPLAY_MEDIAN - 2 <= median <= rating.DISPLAY_MEDIAN + 2, median
-    assert rating.DISPLAY_P95 - 2 <= p95 <= rating.DISPLAY_P95 + 2, p95
+    assert rating.DISPLAY_P95 - 4 <= p95 <= rating.DISPLAY_P95, p95
     share_95 = sum(1 for ov in overalls if ov >= 95) / n
     share_98 = sum(1 for ov in overalls if ov >= 98) / n
     assert share_95 <= 0.030, share_95
@@ -614,27 +615,20 @@ def test_w1_bruno_fernandes_is_material_but_not_legend(internal_2026):
 def test_nonmaterial_quantiles_match_historical_raw_only(
     historical_raw_only_sorted, projected_raw_only_sorted
 ):
-    """MV2-5 cross-era DENSITY neutralization (the headline fix). The 2026 pure
-    raw-only (weight==0) INTERNAL distribution is empirically quantile-mapped onto the
-    historical raw-only internal distribution, so a 2026 reserve at percentile p lands
-    at the SAME internal score as a historical raw-only card at p — the population
-    MV2-6's single monotonic curve pools. The replaced affine map matched only the
-    bounds and left the 2026 floor ~0.14 and the median ~0.055 above historical (a
-    2026 journeyman systematically out-rating a comparable historical one, which a
-    monotonic curve cannot undo). Quantile mapping closes the whole distribution: the
-    per-quantile cross-era gap must be ~0 through the middle of the distribution;
-    the upper raw-only tail may sit below historical after merit-v4's national-team
-    ceiling, but it must never lift above the historical target."""
+    """MV2-5 cross-era density neutralization plus v4.2 factual context.
+
+    The 2026 pure raw-only (weight==0) INTERNAL distribution remains anchored to
+    the historical raw-only population and must not lift above comparable
+    historical rows. merit-v4.2 then uses public per-player context to lower weak
+    or thin records inside the raw-only band, so the right invariant is bounded
+    underfill, not exact quantile equality.
+    """
     assert historical_raw_only_sorted and projected_raw_only_sorted
-    for q in (0.01, 0.10, 0.25, 0.50):
-        h = rating._quantile(historical_raw_only_sorted, q)
-        n = rating._quantile(projected_raw_only_sorted, q)
-        assert abs(h - n) <= 0.01, (q, h, n)
-    for q in (0.75, 0.90, 0.99):
+    for q in (0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99):
         h = rating._quantile(historical_raw_only_sorted, q)
         n = rating._quantile(projected_raw_only_sorted, q)
         assert n <= h + 0.01, (q, h, n)
-        assert h - n <= 0.04, (q, h, n)
+        assert h - n <= 0.035, (q, h, n)
     # Floors coincide exactly — the affine map's lifted 2026 floor is the regression
     # this guards: a 2026 reserve can sink to the historical replacement floor.
     assert min(projected_raw_only_sorted) <= min(historical_raw_only_sorted) + 1e-9

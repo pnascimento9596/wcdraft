@@ -49,7 +49,7 @@ from pathlib import Path
 # QUANTILE MAPPING (not an affine rescale) — see _raw_only_quantile_map — so the
 # 2026 non-material internal-score DISTRIBUTION matches the historical raw-only
 # quantiles cross-era, the population MV2-6's single monotonic curve pools.
-from . import national_strength, rating
+from . import league_strength, national_strength, rating
 from .rating import (
     _PRECISION,
     BASE_CEILING,
@@ -63,12 +63,16 @@ from .rating import (
     STATURE_DOMINANT_WEIGHT,
     TOURNAMENT_DOWN_CAP,
     TOURNAMENT_UP_CAP,
+    _active_component_names,
     _channel,
     _clamp01,
+    _context_adjusted_raw_only_score,
     _display_score,
     _quantile,
+    _renormalized_context_score,
     _stature_model_weight,
     _stature_target,
+    _thresholded_log_component,
 )
 from .rating import _load_career_stature as _load_historical_career_stature
 
@@ -78,6 +82,10 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-5.2.0 (merit-v4.2): projected raw-only rows use the same public
+# factual context allocation as historical ratings, applying caps/goals/club
+# nation inside raw-only plateaus without lifting any row above the existing
+# ceiling.
 # proj-career-5.1.0 (merit-v4.1): reduces the league-of-employment prior from a
 # dominant pre-tournament anchor to a smoother quality input and adds a 2026-only
 # objective-record pathway for citation-backed active-career standouts. The
@@ -91,7 +99,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-5.1.0"
+RATING_VERSION = "proj-career-5.2.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -130,19 +138,8 @@ AGE_QUANTILE_P_STEPS = 200
 # nation code (the squad source's `clubnat`), grouped into transparent tiers — a
 # CALIBRATION prior (golden-locked, tunable), entirely wcdraft's own; NOT a
 # proprietary club/player rating.
-_LEAGUE_TIERS: dict[float, tuple[str, ...]] = {
-    1.00: ("ENG", "ESP"),
-    0.90: ("GER", "ITA", "FRA"),
-    0.74: ("POR", "NED", "BRA"),
-    0.58: (
-        "BEL", "TUR", "ARG", "USA", "KSA", "MEX", "GRE", "SUI", "RUS", "AUT",
-        "SCO", "DEN", "CRO", "JPN", "KOR", "NOR", "CZE", "POL", "SRB", "UKR",
-    ),
-}
-LEAGUE_DEFAULT = 0.42  # any league not tiered above (developing / domestic minnow)
-LEAGUE_STRENGTH: dict[str, float] = {
-    code: score for score, codes in _LEAGUE_TIERS.items() for code in codes
-}
+LEAGUE_DEFAULT = league_strength.LEAGUE_DEFAULT
+LEAGUE_STRENGTH = league_strength.LEAGUE_STRENGTH
 # Position weights for the league anchor (an apex top-5 club lifts every position).
 # merit-v4.1 trims the prior from "dominant quality signal" to "smooth quality
 # context": league still separates elite club employment from weaker/domestic
@@ -411,9 +408,7 @@ def _league_score(club_nation_code: str | None) -> float | None:
     UNKNOWN. A present-but-untiered league gets the legitimate baseline tier
     (LEAGUE_DEFAULT); an ABSENT club returns None so the anchor is honestly DROPPED
     (never a fabricated 0.42 applied to a player whose club we don't know)."""
-    if not club_nation_code:
-        return None
-    return LEAGUE_STRENGTH.get(club_nation_code, LEAGUE_DEFAULT)
+    return league_strength.league_score(club_nation_code)
 
 
 # Honest career-signal coverage: signals we DO have vs an ideal that also includes
@@ -543,6 +538,51 @@ def career_coverage(card: dict) -> float:
     return round(sum(present[s] for s in CAREER_IDEAL_SIGNALS) / len(CAREER_IDEAL_SIGNALS), 4)
 
 
+def _projected_factual_context_by_card(cards: list[dict]) -> dict[str, dict]:
+    by_squad: dict[str, list[dict]] = {}
+    for card in cards:
+        by_squad.setdefault(card.get("nation_id", "__unknown__"), []).append(card)
+
+    def available(card: dict, name: str) -> bool:
+        if name == "caps":
+            return card.get("caps") is not None
+        if name == "intl_goals":
+            return card.get("position_listed") != "GK" and card.get("intl_goals") is not None
+        if name == "league":
+            return league_strength.league_context_component(
+                card.get("club_nation_code")
+            ) is not None
+        if name == "role":
+            return False
+        raise KeyError(name)
+
+    out: dict[str, dict] = {}
+    for squad_cards in by_squad.values():
+        active = _active_component_names(squad_cards, available)
+        active.discard("role")
+        for card in squad_cards:
+            pos = card["position_listed"]
+            caps = _thresholded_log_component(card.get("caps"), start=5.0, full=100.0)
+            intl_goals = (
+                None
+                if pos == "GK"
+                else _thresholded_log_component(card.get("intl_goals"), start=2.0, full=30.0)
+            )
+            league = league_strength.league_context_component(card.get("club_nation_code"))
+            values = {
+                "caps": caps,
+                "intl_goals": intl_goals,
+                "league": league,
+                "role": None,
+            }
+            out[card["card_id"]] = {
+                "score": _renormalized_context_score(values, active),
+                "active_count": len(active),
+                **values,
+            }
+    return out
+
+
 def _projected_raw_score(c: dict, g_pct: float, a_pct: float) -> tuple[float, dict]:
     """The factual projected RAW composite (AGE-CONDITIONED caps/goals percentile
     band plus the league-strength quality anchor) in [0,1], with the eff-weight
@@ -610,6 +650,7 @@ def _build_internal_rows(
     """
     career_stature_by_player = career_stature_by_player or {}
     historical_raw_only_internal = historical_raw_only_internal or []
+    factual_context_by_card = _projected_factual_context_by_card(cards)
 
     # D1 age-conditional quantile surfaces per (position × signal) — for 2026
     # there is one tournament, so the cohort is (position) across all 48 squads:
@@ -751,9 +792,22 @@ def _build_internal_rows(
         raw_only_ceiling = national_raw_only_ceiling if has_any_material else 1.0
         if cohort_material:
             raw_only_ceiling = min(raw_only_ceiling, _quantile(sorted(cohort_material), 0.5))
-        raw_path = min(
-            _raw_only_quantile_map(raw, raw_only_cohort_sorted, historical_raw_only_internal),
-            raw_only_ceiling,
+        mapped_raw = _raw_only_quantile_map(
+            raw, raw_only_cohort_sorted, historical_raw_only_internal
+        )
+        raw_path = min(mapped_raw, raw_only_ceiling)
+        factual_context = factual_context_by_card.get(c["card_id"], {})
+        (
+            raw_path,
+            context_score,
+            context_adjustment,
+            context_window,
+        ) = _context_adjusted_raw_only_score(
+            raw_score=mapped_raw,
+            raw_only_ceiling=raw_only_ceiling,
+            raw_path=raw_path,
+            context_score=factual_context.get("score"),
+            material_weight=weight,
         )
 
         # Continuous blend: weight 0 ⇒ projected-raw-only, weight 1 ⇒ stature-dominant.
@@ -820,6 +874,67 @@ def _build_internal_rows(
             {
                 "signal": "raw_only_ceiling",
                 "value": round(raw_only_ceiling, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "raw_only_quantile_mapped_score",
+                "value": round(mapped_raw, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "raw_only_score",
+                "value": round(raw_path, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_score",
+                "value": (
+                    round(context_score, _PRECISION)
+                    if context_score is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_active_components",
+                "value": factual_context.get("active_count"),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_caps",
+                "value": (
+                    round(factual_context["caps"], _PRECISION)
+                    if factual_context.get("caps") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_intl_goals",
+                "value": (
+                    round(factual_context["intl_goals"], _PRECISION)
+                    if factual_context.get("intl_goals") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_league",
+                "value": (
+                    round(factual_context["league"], _PRECISION)
+                    if factual_context.get("league") is not None
+                    else None
+                ),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_adjustment",
+                "value": round(context_adjustment, _PRECISION),
+                "weight": 0.0,
+            },
+            {
+                "signal": "factual_context_band",
+                "value": round(context_window, _PRECISION),
                 "weight": 0.0,
             },
             {

@@ -61,15 +61,25 @@ function isEliteGated(row: RuntimeRating): boolean {
   );
 }
 
-describe("merit-v4.1 ratings-coverage acceptance probes", () => {
-  it("bumps every shipped replay/data/version anchor for the merit-v4.1 season", () => {
-    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.3.0");
-    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.3.0");
-    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.3.0");
-    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.3.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.1.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.1.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.14-merit-v4.1");
+function currentRating(cardId: string): RuntimeRating {
+  return rating(cardId).basis_ratings.current as RuntimeRating;
+}
+
+function maxDuplicateOverall(rows: RuntimeRating[]): number {
+  const counts = new Map<number, number>();
+  for (const row of rows) counts.set(row.overall ?? -1, (counts.get(row.overall ?? -1) ?? 0) + 1);
+  return Math.max(...counts.values());
+}
+
+describe("merit-v4.2 ratings-coverage acceptance probes", () => {
+  it("bumps every shipped replay/data/version anchor for the merit-v4.2 season", () => {
+    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.4.0");
+    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.4.0");
+    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.4.0");
+    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.4.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.2.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.2.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.2");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {
@@ -153,6 +163,47 @@ describe("merit-v4.1 ratings-coverage acceptance probes", () => {
         isEliteGated(row),
         `${row.card_id} 90+ row should be legend, material-stature, or honor gated`,
       ).toBe(true);
+    }
+  });
+
+  it("declusters the owner-reported CAF weak-squad raw-only plateaus", () => {
+    const squads = [
+      ["Ghana 2022", "2022", "Ghana"],
+      ["Morocco 2022", "2022", "Morocco"],
+      ["Tunisia 2022", "2022", "Tunisia"],
+      ["Ghana 2026", "2026", "Ghana"],
+      ["Ivory Coast 2026", "2026", "Ivory Coast"],
+      ["South Africa 2026", "2026", "South Africa"],
+      ["Tunisia 2026", "2026", "Tunisia"],
+    ] as const;
+
+    for (const [label, tournament, nation] of squads) {
+      const rows = DRAFT_POOL_BUNDLE.player_cards
+        .filter((c) => c.tournament_id === Number(tournament) && c.nation_id)
+        .filter((c) => {
+          const teamName =
+            tournament === "2026"
+              ? SCENARIO_2026_BUNDLE.team_display_names[
+                  SCENARIO_2026_BUNDLE.teams.find((team) =>
+                    team.squad_card_ids.includes(c.card_id),
+                  )?.team_id ?? ""
+                ]
+              : undefined;
+          if (tournament === "2026") return teamName === nation;
+          return (
+            DRAFT_POOL_BUNDLE.nations[c.nation_id]?.canonical_name === nation
+          );
+        })
+        .map((c) => currentRating(c.card_id));
+
+      expect(rows.length, `${label} rows`).toBeGreaterThanOrEqual(23);
+      expect(maxDuplicateOverall(rows), `${label} max duplicate current OVR`).toBeLessThan(5);
+      for (const row of rows) {
+        expect(
+          component(row, "factual_context_score"),
+          `${label} ${row.card_id} factual context`,
+        ).not.toBeUndefined();
+      }
     }
   });
 });

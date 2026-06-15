@@ -57,14 +57,16 @@ HISTORICAL_YEARS = (
 )
 
 ATTRIBUTION = (
-    "Historical club-at-tournament names for men's World Cup player cards are factual "
-    "text parsed from English Wikipedia squad-page revisions, used under CC-BY-SA 4.0 "
+    "Historical club-at-tournament names, caps, international goals, and club-nation "
+    "codes for men's World Cup player cards are factual text parsed from English "
+    "Wikipedia squad-page revisions, used under CC-BY-SA 4.0 "
     f"({SOURCE_LICENSE_URL}). One revision is pinned per tournament in "
     "etl/sources/wikipedia_historical_squads/fetch_manifest.json; raw wikitext is "
     "committed under etl/sources/wikipedia_<year>/. Modifications by wcdraft: parsed "
-    "only factual club names, joined them to canonical player-tournament cards by "
-    "deterministic entity-resolution keys, and preserved null where the source or join "
-    "is absent/ambiguous. No crests, badges, kits, or proprietary ratings are ingested."
+    "only factual squad-table fields, joined them to canonical player-tournament cards "
+    "by deterministic entity-resolution keys, and preserved null where the source or "
+    "join is absent/ambiguous. No crests, badges, kits, or proprietary ratings are "
+    "ingested."
 )
 
 _USER_AGENT = "wcdraft-etl/1.0 (research; contact via repo)"
@@ -109,6 +111,9 @@ class ParsedClubRow:
     club: str | None
     club_title: str | None
     source_revid: int
+    caps: int | None = None
+    intl_goals: int | None = None
+    club_nation_code: str | None = None
 
 
 @dataclass(frozen=True)
@@ -123,6 +128,7 @@ class ClubAliasBridge:
 @dataclass(frozen=True)
 class ClubBackfillResult:
     clubs: dict[tuple[str, str], str]
+    contexts: dict[tuple[str, str], dict]
     methods: dict[str, int]
     review: list[dict]
 
@@ -432,6 +438,9 @@ def parse_squad_wikitext(wikitext: str, year: int, source_revid: int = 0) -> lis
                     position=(kv.get("pos", "").strip().upper() or None),
                     club=_strip_link(club_raw) or None,
                     club_title=_link_target(club_raw),
+                    caps=_parse_int(kv.get("caps")),
+                    intl_goals=_parse_int(kv.get("goals")),
+                    club_nation_code=(kv.get("clubnat", "").strip().upper() or None),
                     source_revid=source_revid,
                 )
             )
@@ -681,7 +690,9 @@ def build_club_lookup(
             by_shirt[(squad.tournament_id, squad.team_id, shirt)].append(squad.player_id)
 
     clubs: dict[tuple[str, str], str] = {}
+    contexts: dict[tuple[str, str], dict] = {}
     method_by_key: dict[tuple[str, str], str] = {}
+    context_method_by_key: dict[tuple[str, str], str] = {}
     review: list[dict] = []
     methods: Counter[str] = Counter()
 
@@ -747,6 +758,47 @@ def build_club_lookup(
                 }
             )
             continue
+
+        key = (player_id, row.tournament_id)
+        context_fields: dict[str, object] = {}
+        if row.caps is not None:
+            context_fields["caps"] = row.caps
+        if row.intl_goals is not None:
+            context_fields["intl_goals"] = row.intl_goals
+        if row.club_nation_code is not None:
+            context_fields["club_nation_code"] = row.club_nation_code
+        if context_fields:
+            existing_context = contexts.get(key)
+            if existing_context is None:
+                contexts[key] = context_fields
+                context_method_by_key[key] = method
+            elif existing_context != context_fields:
+                old_method = context_method_by_key[key]
+                if _RESOLUTION_RANK[method] < _RESOLUTION_RANK[old_method]:
+                    contexts[key] = context_fields
+                    context_method_by_key[key] = method
+                    kept_context = context_fields
+                    dropped_context = existing_context
+                    kept_method = method
+                    dropped_method = old_method
+                else:
+                    kept_context = existing_context
+                    dropped_context = context_fields
+                    kept_method = old_method
+                    dropped_method = method
+                review.append(
+                    {
+                        "reason": "conflicting_lower_confidence_context_row",
+                        "tournament_id": row.tournament_id,
+                        "team_name": row.team_name,
+                        "player_id": player_id,
+                        "player_name": row.player_name,
+                        "kept": kept_context,
+                        "dropped": dropped_context,
+                        "kept_method": kept_method,
+                        "dropped_method": dropped_method,
+                    }
+                )
         if row.club is None:
             review.append(
                 {
@@ -759,7 +811,6 @@ def build_club_lookup(
             )
             continue
 
-        key = (player_id, row.tournament_id)
         existing = clubs.get(key)
         if existing is None:
             clubs[key] = row.club
@@ -794,7 +845,12 @@ def build_club_lookup(
             }
         )
 
-    return ClubBackfillResult(clubs=clubs, methods=dict(+methods), review=review)
+    return ClubBackfillResult(
+        clubs=clubs,
+        contexts=contexts,
+        methods=dict(+methods),
+        review=review,
+    )
 
 
 def coverage_by_tournament(cards: list[dict]) -> list[dict]:

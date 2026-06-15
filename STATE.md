@@ -4,29 +4,27 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for era closeout and post-purge doc refresh:
-2026-06-15 · post-purge `origin/main`
-`a7580ea1728844a6c7d4c33998baff14d2a23dde`, then docs-only branch
-`ws-meta/era-closeout-doc-refresh`. The live production manifest was read from
-both `/data/wcdraft/manifest.json` and
-`/data/wcdraft/runtime-data-2.3.0/manifest.json`; both returned sha256
-`126a77fba59e9bf432b0163c6691a79eb3e70d93d037f7a8f92bad0a14de16ea`.
+Last measured for merit-v4.2 decluster:
+2026-06-15 · branch `merit-v4.2` off current `origin/main`.
+Candidate report: `docs/reports/merit-v4.2-decluster-2026-06-15.md`;
+full before/after cluster inventory:
+`docs/reports/merit-v4.2-decluster-cluster-inventory.csv`.
 
-Current live runtime anchor:
-`runtime-data-2.3.0` / `engine-2026.06.14-merit-v4.1` / `wc-perf-6.1.0` /
-`proj-career-5.1.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
+Current repo runtime anchor:
+`runtime-data-2.4.0` / `engine-2026.06.15-merit-v4.2` / `wc-perf-6.2.0` /
+`proj-career-5.2.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
-knockout slots `62`. Live leaderboard season key:
-`engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e`.
+knockout slots `62`. Leaderboard season key:
+`engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452`.
 
-Live data/bundle anchors:
-`draft-pool.compact.json` raw bytes `101,026,822` with sha256
-`f0f76fd3c2f8d003a3ee5062957220c591431e37fc6ea54daa689c6e992e11b7`;
-served versioned Brotli artifact bytes `1,429,691` with encoded sha256
-`b7422612f3dd8284dac92b74949a232e6d381367dadb84b75846fe091cbd5fcf`;
-manifest Brotli metadata is the normalized bucket `1,429,760`.
+Data/bundle anchors:
+`draft-pool.compact.json` raw bytes `126,794,469` with sha256
+`c0312658ba09f305a70509ba9a8dbfe87c5cd2ffefbbb6fd28e6a0247fa695ca`;
+draft-pool manifest Brotli bucket `2,131,456` and copied `.br` bytes
+`2,131,348`; manifest sha256
+`e4075505351419b7ce9d00ad909017c3f25bd16ea9c730f679536fb3311cd377`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
-`bd362cb7a509b8081ec7febf440749217fe94f7fc7d14d9431ce28347803f420`.
+`b482b03b0628d63eb5701089f5faec7773d03ce400a941438186faf93fc78ef4`.
 
 The named canonical doc files (`Build State`, `Architecture`, `Roadmap`,
 `Surface Inventory`) are not present in this repo. The owner-filed doc-set
@@ -128,21 +126,23 @@ broken-pipe MCP transport error.
   compact regen, lambda/realism relock, and leaderboard season reset. The old
   merit-v3.1 88-wall STOP remains preserved as historical proof for the old
   fixed-ceiling/fixed-median request, but it is no longer an active blocker.
-- merit-v4.1 is current production: pool-wide objective-achievement staging,
-  smoothed league-strength prior (`FW/MF/DF/GK`
-  `0.31/0.34/0.31/0.28 -> 0.18/0.20/0.18/0.16`), `0.70` cap on the projected
-  objective-record pathway, AFC `0/7 -> 7/7`, CONCACAF `0/5 -> 5/5`, CAF
-  `2/8 -> 4/8`, Son 2026 `90`, Salem Al-Dawsari 2026 `86`, Pulisic 2026 `88`,
-  pooled runtime `90+` `290 / 12,219 = 2.373%`.
-- The only known ratings carryover for this closeout is the deliberately deferred
-  CAF-4 honest miss set: Ghana, Ivory Coast, South Africa, and Tunisia still lack
-  material headroom cards under the current conservative linker/source surface.
+- merit-v4.2 is the current ratings/data season in this repo: public factual
+  per-player declustering for raw-only rows, historical squad-table caps/goals/
+  club-nation staging, projected 2026 caps/goals/club-nation context, measured
+  display floor widened to 60, λ refit to
+  `BASE=1.05/SPREAD=6.5/GAMMA_MID=0.70`, and leaderboard season reset. Target
+  max duplicate Current OVR clusters moved: Ghana 2022 `7 -> 4`, Morocco 2022
+  `17 -> 4`, Tunisia 2022 `13 -> 4`, Ghana 2026 `8 -> 4`, Ivory Coast 2026
+  `12 -> 4`, South Africa 2026 `5 -> 4`, Tunisia 2026 `7 -> 4`.
+- Residual >=5-player clusters are dominated by older/sparse squads. North Korea
+  2010 remains at max duplicate 5 because the clustered rows have genuinely
+  near-identical public records, not because of a filler floor.
 - Platform pass is DONE-LIVE: #133 SEO + themed 404/error, #134 AA contrast +
   44px targets, #135 response headers, #138 nonce CSP + unsigned-summary
   neutralization, #136/#142 performance and atomic versioned delivery, #139 a11y
   and candidate render memoization, #140 safe patch dependencies.
 - Runtime data delivery is atomic/versioned at
-  `/data/wcdraft/runtime-data-2.3.0/`; fixed legacy `/data/wcdraft/*` paths remain
+  `/data/wcdraft/runtime-data-2.4.0/`; fixed legacy `/data/wcdraft/*` paths remain
   for old clients/server readers. Future data-version bumps must retain the
   immediately previous versioned directory across N+1 deploys.
 - Trusted OG is DONE-LIVE via #143: `/api/og/sign` validates replay tokens against
@@ -155,12 +155,12 @@ broken-pipe MCP transport error.
 
 | Field                         | Value                                                                                                          |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| schema_version                | runtime-data-2.3.0                                                                                             |
+| schema_version                | runtime-data-2.4.0                                                                                             |
 | dataset_version               | 2026-06-04                                                                                                     |
 | ruleset_version               | ruleset-2026.06.04                                                                                             |
-| engine_version                | engine-2026.06.14-merit-v4.1                                                                                   |
-| rating_version (historical)   | wc-perf-6.1.0                                                                                                  |
-| rating_version (projected)    | proj-career-5.1.0                                                                                              |
+| engine_version                | engine-2026.06.15-merit-v4.2                                                                                   |
+| rating_version (historical)   | wc-perf-6.2.0                                                                                                  |
+| rating_version (projected)    | proj-career-5.2.0                                                                                              |
 | career_stature                | career-stature-4.1.0                                                                                           |
 | merit source set              | merit-source-set-2.2.0                                                                                         |
 | active source set             | active-career-source-set-2.2.0                                                                                 |
@@ -168,11 +168,11 @@ broken-pipe MCP transport error.
 | runtime ratings               | 12,219                                                                                                         |
 | Career basis counts           | 11,292 measured · 541 career-stature · 386 baseline                                                            |
 | career-stature table          | 847 players · 209 material · 114 source-derived legends                                                        |
-| leaderboard season key        | engine-2026.06.14-merit-v4.1_wc-perf-6.1.0+proj-career-5.1.0_2026-06-04_ruleset-2026.06.04_11cbbd5e            |
-| compact brotli total          | 1,436,160 normalized bytes                                                                                     |
-| served draft-pool br artifact | 1,429,691 bytes at `/data/wcdraft/runtime-data-2.3.0/draft-pool.compact.json.br`; decompressed sha `f0f76fd3…` |
-| compact sha256                | manifest `126a77fb…` · draft `f0f76fd3…` · scenario `bd362cb7…`                                                |
-| oversized artifact locks      | ratings `81c2a6ab…` / 59,551,889 bytes · draft-pool `f0f76fd3…` / 101,026,822 bytes                            |
+| leaderboard season key        | engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452            |
+| compact brotli total          | 2,137,856 measured bytes                                                                                       |
+| served draft-pool br artifact | 2,131,348 bytes at `/data/wcdraft/runtime-data-2.4.0/draft-pool.compact.json.br`; manifest bucket `2,131,456`; decompressed sha `c0312658…` |
+| compact sha256                | manifest `e4075505…` · draft `c0312658…` · scenario `b482b03b…`                                                |
+| generated artifact locks      | ratings lock `026664aa…` / 212 bytes · draft-pool `c0312658…` / 126,794,469 bytes                              |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

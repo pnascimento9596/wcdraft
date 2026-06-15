@@ -45,6 +45,9 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
+// runtime-data-2.4.0 (merit-v4.2): measured/projected ratings may occupy the
+// wider [60, 99] display band after public factual context declustering; the
+// baseline-anchor estimate band remains [66, 73].
 // runtime-data-2.3.0 (merit-v4.1): schema-compatible season bump for expanded
 // objective-achievement coverage, rating 6.1/5.1 anchors, and a new replay season.
 // runtime-data-2.3.0 (merit-v4.1): schema-compatible data bump for the
@@ -53,7 +56,7 @@ import type {
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.3.0" as const;
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.4.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
@@ -192,10 +195,11 @@ export interface RuntimeRating extends RuntimeBasisRating {
  * can consume without branching.
  *
  * Historical-only fields (`appearances`, `goals`, `awards`,
- * `appearances_source`) and 2026-only fields (`caps`, `intl_goals`, `club`,
- * `club_nation_code`, `group`, `link_status`) are both `?` — `undefined` is
- * "not applicable for this era". `null` keeps the honest-state "unknown"
- * meaning.
+ * `appearances_source`) and projection-only fields (`club`, `group`,
+ * `link_status`) are `?` — `undefined` is "not applicable for this era".
+ * `caps`, `intl_goals`, and `club_nation_code` are present for 2026 rows and
+ * for historical rows whose pinned squad-list facts resolve unambiguously.
+ * `null` keeps the honest-state "unknown" meaning.
  *
  * `rating` is the per-card `RuntimeRating`; the builder fails loudly if a
  * draftable card is missing one.
@@ -243,15 +247,17 @@ export interface RuntimePlayerCard {
   /** Appearances-count provenance ("rsssf_supplement", "fjelstul_match_events", ...). */
   appearances_source?: string;
 
-  // ── 2026-only signals ─────────────────────────────────────────────────────
+  // ── Squad-list career/context signals ─────────────────────────────────────
   /** International caps before the tournament; null when unknown. */
   caps?: number | null;
   /** International goals before the tournament; null when unknown. */
   intl_goals?: number | null;
-  /** Club at squad publication; null when unknown. */
-  club?: string | null;
   /** Three-letter country code of the club's nation; null when unknown. */
   club_nation_code?: string | null;
+
+  // ── 2026-only signals ─────────────────────────────────────────────────────
+  /** Club at squad publication; null when unknown. */
+  club?: string | null;
   /** Wikipedia-letter group bucket (A..L); null when unknown. */
   group?: GroupId | null;
   /** Entity-link status ("linked", "unlinked", "ambiguous"); null when unknown. */

@@ -32,9 +32,10 @@
 //   goldens (sim / rng / draft) did NOT move; only stamp-carrying payloads
 //   (e2e-real-run, run-record, compact manifest, asym-realism) re-locked.
 //
-//   merit-v4.1: λ refit after the projected objective-record and display-curve
-//   move changed the strategic-pick basis. The fit keeps the merit-v4 tuple
-//   except GAMMA_MID=1.00. Runtime stamp: `engine-2026.06.14-merit-v4.1`.
+//   merit-v4.2: λ refit after public factual context declustering moved raw-only
+//   channel distribution. The fit lowers BASE, re-widens SPREAD, and lands
+//   GAMMA_MID at 0.70 while keeping merit-v4/v4.1 KO and dispersion settings.
+//   Runtime stamp: `engine-2026.06.15-merit-v4.2`.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
@@ -77,18 +78,18 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * merit-v4 REFIT: BASE=1.10 (was 1.05). The merit-v4 channel distribution
-   * shifted the symmetric sweep slightly low on goal volume; BASE is the
-   * primary goal-volume lever that restores the 2.54 norm.
+   * merit-v4.2 REFIT: BASE=1.05 (from v4/v4.1's 1.10). Public factual
+   * raw-only declustering increased symmetric-sweep goal volume, so BASE is
+   * lowered to restore the 2.54 modern-WC norm.
    */
-  BASE: 1.10,
+  BASE: 1.05,
   /**
    * Sensitivity to the (attack − defResist) edge, per 100 channel points.
    * E-3a lifted SPREAD 4.0 → 6.5 to unlock the `margin ≥ 4 ≈ 4.9%` tight
-   * band; merit-v4 lands at 6.0 after the national-strength/objective-club
-   * channel movement.
+   * band; merit-v4 landed at 6.0 after the national-strength/objective-club
+   * channel movement; merit-v4.2 returns to 6.5 after raw-only declustering.
    */
-  SPREAD: 6.0,
+  SPREAD: 6.5,
   /**
    * Floor — even a hopeless attack still threatens occasionally. merit-v4
    * returns MIN to 0.30 after the BASE/SPREAD refit; the symmetric realism
@@ -109,12 +110,13 @@ export const LAMBDA = Object.freeze({
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
    * points). E-3a raised γ_mid to 0.50; MV2-11b raised it to 0.60;
-   * merit-v3 V7 landed at 0.80 on the extended grid; merit-v4.1 lands at
-   * 1.00 after the projected objective-record display move. The bounded
+   * merit-v3 V7 landed at 0.80 on the extended grid; merit-v4.1 landed at
+   * 1.00 after the projected objective-record display move; merit-v4.2 lands
+   * at 0.70 after public factual declustering. The bounded
    * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies,
    * never replaces, the attack/defense edge.
    */
-  GAMMA_MID: 1.00,
+  GAMMA_MID: 0.70,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */
