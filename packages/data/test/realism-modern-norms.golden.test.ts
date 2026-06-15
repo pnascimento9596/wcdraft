@@ -183,9 +183,9 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
 
   // Each it() title shows VALUE, Δ from norm, and the test band — so a reader
   // can read the drift without expanding the test report. The committed
-  // Δ values reflect the merit-v4.2 λ refit landing on the factual
-  // per-player declustered 2026 pool under engine-2026.06.15-merit-v4.2.
-  it(`mean goals/match: 2.549 (Δ +0.013 vs norm 2.54, merit-v4.2 refit) — tight band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
+  // Δ values reflect the merit-v4.3 λ refit landing on the factual
+  // per-player declustered 2026 pool under engine-2026.06.15-merit-v4.3.
+  it(`mean goals/match: 2.514 (Δ -0.022 vs norm 2.54, merit-v4.3 refit) — tight band [${BANDS.mean_goals.lo}, ${BANDS.mean_goals.hi}]`, () => {
     const delta = m.mean_goals - NORMS.mean_goals_per_match_regulation;
     expect(m.mean_goals).toBeGreaterThanOrEqual(BANDS.mean_goals.lo);
     expect(m.mean_goals).toBeLessThanOrEqual(BANDS.mean_goals.hi);
@@ -195,28 +195,28 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
     expect(Math.abs(delta)).toBeLessThan(0.10);
   });
 
-  it(`group draw rate: 25.00% (Δ +0.30pp vs norm 24.7%, merit-v4.2 refit) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {
+  it(`group draw rate: 25.27% (Δ +0.57pp vs norm 24.7%, merit-v4.3 refit) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {
     const delta = m.group_draw - NORMS.group_stage_draw_rate;
     expect(m.group_draw).toBeGreaterThanOrEqual(BANDS.group_draw.lo);
     expect(m.group_draw).toBeLessThanOrEqual(BANDS.group_draw.hi);
     expect(Math.abs(delta)).toBeLessThan(0.025);
   });
 
-  it(`margin ≥ 4: 5.06% (Δ +0.15pp vs norm 4.9%, merit-v4.2 refit — phase-split DISP) — tight band [${(100 * BANDS.margin_ge_4.lo).toFixed(2)}%, ${(100 * BANDS.margin_ge_4.hi).toFixed(2)}%]`, () => {
+  it(`margin ≥ 4: 4.99% (Δ +0.08pp vs norm 4.9%, merit-v4.3 refit — phase-split DISP) — tight band [${(100 * BANDS.margin_ge_4.lo).toFixed(2)}%, ${(100 * BANDS.margin_ge_4.hi).toFixed(2)}%]`, () => {
     const delta = m.margin_ge_4 - NORMS.regulation_margin_ge_4;
     expect(m.margin_ge_4).toBeGreaterThanOrEqual(BANDS.margin_ge_4.lo);
     expect(m.margin_ge_4).toBeLessThanOrEqual(BANDS.margin_ge_4.hi);
     expect(Math.abs(delta)).toBeLessThan(0.015);
   });
 
-  it(`KO → ET: 33.73% (Δ +0.69pp vs norm 33.0%, merit-v4.2 refit) — tight band [${(100 * BANDS.ko_et.lo).toFixed(2)}%, ${(100 * BANDS.ko_et.hi).toFixed(2)}%]`, () => {
+  it(`KO → ET: 32.67% (Δ -0.37pp vs norm 33.0%, merit-v4.3 refit) — tight band [${(100 * BANDS.ko_et.lo).toFixed(2)}%, ${(100 * BANDS.ko_et.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_et - NORMS.knockout_extra_time_rate;
     expect(m.ko_et).toBeGreaterThanOrEqual(BANDS.ko_et.lo);
     expect(m.ko_et).toBeLessThanOrEqual(BANDS.ko_et.hi);
     expect(Math.abs(delta)).toBeLessThan(0.05);
   });
 
-  it(`KO → shootout: 22.13% (Δ +0.70pp vs norm 21.4%, merit-v4.2 refit) — tight band [${(100 * BANDS.ko_shootout.lo).toFixed(2)}%, ${(100 * BANDS.ko_shootout.hi).toFixed(2)}%]`, () => {
+  it(`KO → shootout: 21.73% (Δ +0.30pp vs norm 21.4%, merit-v4.3 refit) — tight band [${(100 * BANDS.ko_shootout.lo).toFixed(2)}%, ${(100 * BANDS.ko_shootout.hi).toFixed(2)}%]`, () => {
     const delta = m.ko_shootout - NORMS.knockout_shootout_rate;
     expect(m.ko_shootout).toBeGreaterThanOrEqual(BANDS.ko_shootout.lo);
     expect(m.ko_shootout).toBeLessThanOrEqual(BANDS.ko_shootout.hi);

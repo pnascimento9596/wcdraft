@@ -50,7 +50,7 @@ describe("compact-data integrity", () => {
   // estimate cap on display `overall`; the channel materializer never reads
   // `overall_basis`).
   const EXPECTED_BASELINE_ANCHOR_ESTIMATE = 386;
-  const DISPLAY_FLOOR = 60;
+  const DISPLAY_FLOOR = 0;
   const DISPLAY_MAX = 99;
   const ESTIMATE_DISPLAY_MIN = 66;
   const ESTIMATE_DISPLAY_MAX = 73;
@@ -69,12 +69,17 @@ describe("compact-data integrity", () => {
   // estimates. Sim channels stay on the pre-recalibration [FLOOR_CHANNEL, 100]
   // band so the engine's λ stays calibrated to the modern-era WC norms — see
   // realism-modern-norms.golden.test.ts.
-  it("every baseline_anchor_estimate row sits inside the overall estimate band [66, 73]", () => {
+  function hasManualOverride(r: RuntimeRating): boolean {
+    return r.components.some((c) => c.signal === "manual_rating_override");
+  }
+
+  it("every non-manual baseline_anchor_estimate row sits inside the overall estimate band [66, 73]", () => {
     const estimates = DRAFT_POOL_BUNDLE.ratings.filter(
       (r) => r.overall_basis === "baseline_anchor_estimate",
     );
     expect(estimates.length).toBe(EXPECTED_BASELINE_ANCHOR_ESTIMATE);
     for (const r of estimates) {
+      if (hasManualOverride(r)) continue;
       expect(r.overall).not.toBeNull();
       expect(r.overall as number).toBeGreaterThanOrEqual(ESTIMATE_DISPLAY_MIN);
       expect(r.overall as number).toBeLessThanOrEqual(ESTIMATE_DISPLAY_MAX);
@@ -97,7 +102,7 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("every runtime rating overall lives in the recalibrated display band [60, 99]", () => {
+  it("every runtime rating overall lives in the runtime rating band [0, 99]", () => {
     for (const r of DRAFT_POOL_BUNDLE.ratings) {
       expect(r.overall, `${r.card_id} overall`).not.toBeNull();
       expect(r.overall as number, `${r.card_id} overall`).toBeGreaterThanOrEqual(DISPLAY_FLOOR);
@@ -106,10 +111,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the merit-v4.2 versions; engine_version carries the merit-v4.2 stamp", () => {
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.2.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.2.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.2");
+  it("rating_version anchors are the merit-v4.3 versions; engine_version carries the merit-v4.3 stamp", () => {
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.3.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.3.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.3");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {
@@ -274,16 +279,16 @@ describe("compact-data integrity", () => {
 
   // ── Merit-v3 V6 — required source-derived `legend` field ────────────────────
   //
-  // runtime-data-2.4.0 preserves the runtime-data-2.3.0 `legend` contract:
+  // runtime-data-2.5.0 preserves the runtime-data-2.3.0 `legend` contract:
   // REQUIRED on every rating row (historical + 2026). The flag is the ETL
   // source-derived boolean — never re-derived from `overall` — and the count is
   // locked on the manifest for the honest-state census.
-  describe("runtime-data-2.4.0 required legend field", () => {
+  describe("runtime-data-2.5.0 required legend field", () => {
     const EXPECTED_LEGEND_TOTAL = 295;
     const EXPECTED_LEGEND_HISTORICAL = 283;
     const EXPECTED_LEGEND_2026 = 12;
 
-    it("every rating carries a boolean legend flag (required as of runtime-data-2.4.0)", () => {
+    it("every rating carries a boolean legend flag (required as of runtime-data-2.5.0)", () => {
       for (const r of DRAFT_POOL_BUNDLE.ratings) {
         expect(typeof r.legend, `${r.card_id} legend`).toBe("boolean");
       }

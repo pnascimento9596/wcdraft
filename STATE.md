@@ -4,27 +4,42 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
-Last measured for merit-v4.2 decluster:
-2026-06-15 · branch `merit-v4.2` off current `origin/main`.
-Candidate report: `docs/reports/merit-v4.2-decluster-2026-06-15.md`;
-full before/after cluster inventory:
-`docs/reports/merit-v4.2-decluster-cluster-inventory.csv`.
+Last measured for merit-v4.3 owner override:
+2026-06-15 · branch `ws-merit/v4.3-owner-overrides` off `origin/main`
+`6164abd52be3e0e6743d4c9db620682ebcdb9396`.
+Candidate report: `docs/reports/merit-v4.3-override-2026-06-15.md`;
+explained pick-flip artifact:
+`docs/reports/merit-v4.3-pick-flips-2026-06-15.md`.
 
 Current repo runtime anchor:
-`runtime-data-2.4.0` / `engine-2026.06.15-merit-v4.2` / `wc-perf-6.2.0` /
-`proj-career-5.2.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
+`runtime-data-2.5.0` / `engine-2026.06.15-merit-v4.3` / `wc-perf-6.3.0` /
+`proj-career-5.3.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Leaderboard season key:
-`engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452`.
+`engine-2026.06.15-merit-v4.3_wc-perf-6.3.0+proj-career-5.3.0_2026-06-04_ruleset-2026.06.04_923c4a93`.
+
+Manual rating override source:
+`etl/overrides/manual-ratings-v4.3.csv`, sha256
+`f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6`,
+2,516 data rows. Rule buckets: agree `1,055`, avg `455`, f2-only `811`,
+f1-only `190`, f1-corrupt->f2 `5`. Resolution artifacts measured 2,300 matched
+rows (`91.4149%`), 216 honest misses, and 2,246 effective canonical card pins
+after duplicate-card consolidation. Every applied pin is sourced from
+`etl/output/manual-ratings-v4.3-effective.csv`; unmatched rows remain in
+`etl/output/manual-ratings-v4.3-unmatched.csv`.
 
 Data/bundle anchors:
-`draft-pool.compact.json` raw bytes `126,794,469` with sha256
-`c0312658ba09f305a70509ba9a8dbfe87c5cd2ffefbbb6fd28e6a0247fa695ca`;
-draft-pool manifest Brotli bucket `2,131,456` and copied `.br` bytes
-`2,131,348`; manifest sha256
-`e4075505351419b7ce9d00ad909017c3f25bd16ea9c730f679536fb3311cd377`.
+`draft-pool.compact.json` raw bytes `129,249,025` with sha256
+`e9d3a20b7d5cc1dab239bd54c07e45f3f1ccff137b29ca85f3a6176959d8a448`;
+draft-pool manifest Brotli bucket `2,209,280` and copied `.br` bytes
+`2,209,180`; manifest sha256
+`9c51eea804b537b3772756673b54fc3caffd99ca23498a3b7529918949dd81a0`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
-`b482b03b0628d63eb5701089f5faec7773d03ce400a941438186faf93fc78ef4`.
+`4e8752ed14c3cd8842e7b8e3f409dddd4a7bb6fa2cd7a10e206ae614fd760d83`.
+Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.5.0/`, with
+`runtime-data-2.4.0` retained under
+`packages/data/src/retained-runtime-data/runtime-data-2.4.0/` for N+1
+propagation.
 
 The named canonical doc files (`Build State`, `Architecture`, `Roadmap`,
 `Surface Inventory`) are not present in this repo. The owner-filed doc-set
@@ -126,14 +141,15 @@ broken-pipe MCP transport error.
   compact regen, lambda/realism relock, and leaderboard season reset. The old
   merit-v3.1 88-wall STOP remains preserved as historical proof for the old
   fixed-ceiling/fixed-median request, but it is no longer an active blocker.
-- merit-v4.2 is the current ratings/data season in this repo: public factual
-  per-player declustering for raw-only rows, historical squad-table caps/goals/
-  club-nation staging, projected 2026 caps/goals/club-nation context, measured
-  display floor widened to 60, λ refit to
-  `BASE=1.05/SPREAD=6.5/GAMMA_MID=0.70`, and leaderboard season reset. Target
-  max duplicate Current OVR clusters moved: Ghana 2022 `7 -> 4`, Morocco 2022
-  `17 -> 4`, Tunisia 2022 `13 -> 4`, Ghana 2026 `8 -> 4`, Ivory Coast 2026
-  `12 -> 4`, South Africa 2026 `5 -> 4`, Tunisia 2026 `7 -> 4`.
+- merit-v4.3 is the current candidate ratings/data season in this repo:
+  owner-authored manual pins are applied after merit scoring as internal-score
+  pins, so display OVERALL, best-XI selection, and the Poisson sim all consume
+  the authoritative value for resolved cards. Non-manual cards are unchanged
+  relative to v4.2. The v4.3 lambda refit is
+  `BASE=0.95/SPREAD=5.5/MIN=0.8/MAX=3.4/W_DEF=0.7/W_GK=0.30/GAMMA_MID=0.7`
+  with `KO_LAMBDA_FACTOR=0.82`, `CHANCES.REGULATION=50`, `EXTRA_TIME=17`,
+  `LAMBDA_DISP.OUTER_PROB=0.2`, `LAMBDA_DISP.A=0.75`,
+  `GROUP_OUTER_PROB=0.04`, and `GROUP_A=0.4`.
 - Residual >=5-player clusters are dominated by older/sparse squads. North Korea
   2010 remains at max duplicate 5 because the clustered rows have genuinely
   near-identical public records, not because of a filler floor.
@@ -142,9 +158,9 @@ broken-pipe MCP transport error.
   neutralization, #136/#142 performance and atomic versioned delivery, #139 a11y
   and candidate render memoization, #140 safe patch dependencies.
 - Runtime data delivery is atomic/versioned at
-  `/data/wcdraft/runtime-data-2.4.0/`; fixed legacy `/data/wcdraft/*` paths remain
-  for old clients/server readers. Future data-version bumps must retain the
-  immediately previous versioned directory across N+1 deploys.
+  `/data/wcdraft/runtime-data-2.5.0/`; fixed legacy `/data/wcdraft/*` paths remain
+  for old clients/server readers and `runtime-data-2.4.0` is retained for N+1
+  propagation.
 - Trusted OG is DONE-LIVE via #143: `/api/og/sign` validates replay tokens against
   the current manifest, reconstructs the draft, runs the deterministic engine, and
   signs the canonical OG render model plus token hash; `/api/og/run` verifies the
@@ -155,12 +171,12 @@ broken-pipe MCP transport error.
 
 | Field                         | Value                                                                                                          |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| schema_version                | runtime-data-2.4.0                                                                                             |
+| schema_version                | runtime-data-2.5.0                                                                                             |
 | dataset_version               | 2026-06-04                                                                                                     |
 | ruleset_version               | ruleset-2026.06.04                                                                                             |
-| engine_version                | engine-2026.06.15-merit-v4.2                                                                                   |
-| rating_version (historical)   | wc-perf-6.2.0                                                                                                  |
-| rating_version (projected)    | proj-career-5.2.0                                                                                              |
+| engine_version                | engine-2026.06.15-merit-v4.3                                                                                   |
+| rating_version (historical)   | wc-perf-6.3.0                                                                                                  |
+| rating_version (projected)    | proj-career-5.3.0                                                                                              |
 | career_stature                | career-stature-4.1.0                                                                                           |
 | merit source set              | merit-source-set-2.2.0                                                                                         |
 | active source set             | active-career-source-set-2.2.0                                                                                 |
@@ -168,11 +184,11 @@ broken-pipe MCP transport error.
 | runtime ratings               | 12,219                                                                                                         |
 | Career basis counts           | 11,292 measured · 541 career-stature · 386 baseline                                                            |
 | career-stature table          | 847 players · 209 material · 114 source-derived legends                                                        |
-| leaderboard season key        | engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452            |
-| compact brotli total          | 2,137,856 measured bytes                                                                                       |
-| served draft-pool br artifact | 2,131,348 bytes at `/data/wcdraft/runtime-data-2.4.0/draft-pool.compact.json.br`; manifest bucket `2,131,456`; decompressed sha `c0312658…` |
-| compact sha256                | manifest `e4075505…` · draft `c0312658…` · scenario `b482b03b…`                                                |
-| generated artifact locks      | ratings lock `026664aa…` / 212 bytes · draft-pool `c0312658…` / 126,794,469 bytes                              |
+| leaderboard season key        | engine-2026.06.15-merit-v4.3_wc-perf-6.3.0+proj-career-5.3.0_2026-06-04_ruleset-2026.06.04_923c4a93            |
+| compact brotli total          | 2,215,680 measured bytes                                                                                       |
+| served draft-pool br artifact | 2,209,180 bytes at `/data/wcdraft/runtime-data-2.5.0/draft-pool.compact.json.br`; manifest bucket `2,209,280`; decompressed sha `e9d3a20b…` |
+| compact sha256                | manifest `9c51eea8…` · draft `e9d3a20b…` · scenario `4e8752ed…`                                                |
+| generated artifact locks      | ratings lock `f8989adb…` / 78,403,016 bytes · draft-pool `e9d3a20b…` / 129,249,025 bytes                       |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

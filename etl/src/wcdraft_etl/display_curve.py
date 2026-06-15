@@ -29,7 +29,10 @@ pools across both eras (historical career + historical current + 2026 career +
 2026 current; n = 24,438). One shared curve maps every basis of every era, so
 the same internal score renders identically across bases (draft-config §D).
 The fitted anchors are FROZEN below for byte-determinism; the lock test asserts
-the frozen tuple equals a live refit, so the freeze cannot go silently stale.
+the frozen tuple equals a live refit of the base merit pool, so the freeze cannot
+go silently stale. merit-v4.3 manual owner overrides are applied after the base
+internal score is computed; they are intentionally excluded from this curve fit
+so non-overridden players keep their merit-v4.2 display values.
 """
 
 from __future__ import annotations
@@ -65,6 +68,8 @@ def _historical_internal_rows(output_dir: Path) -> list[dict]:
         tournaments=rating._load(output_dir, "tournaments"),
         manager_tournaments=rating._load(output_dir, "manager_tournaments"),
         career_stature_by_player=rating._load_career_stature(output_dir),
+        output_dir=output_dir,
+        apply_manual_overrides=False,
     )
     return internal
 
@@ -83,8 +88,13 @@ def _projected_internal_rows(output_dir: Path) -> list[dict]:
     )
     career = rating_2026._load_career_stature(output_dir)
     historical_raw_only = rating_2026._historical_raw_only_internal(output_dir)
-    return rating_2026._build_internal_rows(
-        cards, career, historical_raw_only, national_strength.load_by_key(output_dir)
+    return rating_2026.build_internal_view(
+        cards,
+        career,
+        historical_raw_only,
+        output_dir,
+        national_strength.load_by_key(output_dir),
+        apply_manual_overrides=False,
     )
 
 

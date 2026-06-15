@@ -1,19 +1,21 @@
 """WS-A Rating: golden determinism, schema bounds, honest-state, and the
-``wc-perf-6.2.0`` recalibration acceptance suite.
+``wc-perf-6.3.0`` recalibration acceptance suite.
 
 SELF-CONTAINED: the rating stage reads the committed canonical JSON in
 ``etl/output/``, so the suite runs without the upstream Fjelstul CSV clone
 (unlike the ingestion tests). The fixed input dataset is the committed canonical
 tables; the locked output is the tracked ratings lockfile fingerprint.
 
-PHASE 1 RECALIBRATION (wc-perf-6.2.0):
+PHASE 1 RECALIBRATION (wc-perf-6.3.0):
   * Display floor 60, p50 ~ 73, p95 ~ 88, max 99 (no 100s).
+  * merit-v4.3 owner overrides may pin individual display OVERALL below 60;
+    those rows carry a manual_rating_override component and pin internal
+    score/channels from the same value.
   * baseline_anchor_estimate cards banded into [66, 73] on OVERALL only.
   * Decoupled path (plan section 3.2 fallback) LANDED: the calibration curve
     drives ``overall`` ONLY. The four sim channels stay on the pre-recal
-    ``[FLOOR_CHANNEL, 100]`` band; ``calibration.ts`` is UNCHANGED from
-    ``origin/main`` (lambda, channels, engine_version all unchanged). The sim
-    is byte-identical to ``origin/main`` (sim-golden.json: 0 diff).
+    ``[FLOOR_CHANNEL, 100]`` band, then v4.3 refits lambda and re-locks the sim
+    goldens for the new owner-authored rating distribution.
   * OVR is the believability view of the pre-display COMPOSITE merit score;
     it is NOT a per-channel proxy and not a sim-strength predictor (sim uses
     channels). OVR<->channel divergence is by design.
@@ -95,6 +97,10 @@ def _quantile(xs: list[int | float], q: float) -> float:
     return float(xs[lo]) * (1.0 - (pos - lo)) + float(xs[hi]) * (pos - lo)
 
 
+def _has_manual_override(row: dict) -> bool:
+    return any(c["signal"] == "manual_rating_override" for c in row["components"])
+
+
 # ─── determinism + golden ─────────────────────────────────────────────────────
 
 
@@ -141,11 +147,14 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
                 ch,
                 r[ch],
             )
-        # overall is ALWAYS a real int in [DISPLAY_FLOOR, DISPLAY_MAX].
+        # overall is ALWAYS a real int in [0, DISPLAY_MAX]. Non-manual merit
+        # rows stay in [DISPLAY_FLOOR, DISPLAY_MAX].
         assert (
             isinstance(r["overall"], int)
-            and rating.DISPLAY_FLOOR <= r["overall"] <= rating.DISPLAY_MAX
+            and 0 <= r["overall"] <= rating.DISPLAY_MAX
         ), r["card_id"]
+        if not _has_manual_override(r):
+            assert r["overall"] >= rating.DISPLAY_FLOOR, r["card_id"]
         assert r["overall_basis"] in (
             "measured_performance",
             "career_stature_estimate",
@@ -162,13 +171,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v42_historical_rebuild(built: list[dict]):
-    # wc-perf-6.2.0 = merit-v4.2: historical ratings consume factual
+def test_rating_version_is_merit_v43_historical_rebuild(built: list[dict]):
+    # wc-perf-6.3.0 = merit-v4.3: historical ratings consume factual
     # per-player context for raw-only declustering without changing the
     # career-stature source version.
-    assert rating.RATING_VERSION == "wc-perf-6.2.0"
+    assert rating.RATING_VERSION == "wc-perf-6.3.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.2.0"
+        assert r["rating_version"] == "wc-perf-6.3.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
@@ -217,21 +226,21 @@ def test_scope_is_mens_only(built: list[dict], tournaments: dict[str, dict]):
 
 
 def test_overall_distribution_shape(built: list[dict]):
-    """Reshaped onto [60, 99] with the documented anchors. The exact target
-    quantiles are slightly elastic (±1) because the curve is fit on measured
-    internal anchors, but the lower bound and max are HARD."""
+    """Base merit rows remain on [60, 99]; owner-pinned rows may be lower."""
     overalls = [r["overall"] for r in built]
-    assert min(overalls) >= rating.DISPLAY_FLOOR
-    assert min(overalls) <= rating.ESTIMATE_FLOOR
+    non_manual = [r["overall"] for r in built if not _has_manual_override(r)]
+    assert min(overalls) >= 0
+    assert min(non_manual) >= rating.DISPLAY_FLOOR
+    assert min(non_manual) <= rating.ESTIMATE_FLOOR
     assert max(overalls) <= rating.DISPLAY_MAX
     assert max(overalls) >= rating.DISPLAY_MAX - 1  # the elite tail must reach the top
     assert 0 not in {ov for ov in overalls}  # no zero-filled holes
-    assert all(rating.DISPLAY_FLOOR <= ov <= rating.DISPLAY_MAX for ov in overalls)
+    assert all(0 <= ov <= rating.DISPLAY_MAX for ov in overalls)
     # No 100s — the old pinned-at-ceiling failure mode.
     assert 100 not in set(overalls), "wc-perf-2.0.0 caps the display max at 99 — no overall == 100"
 
-    median = _quantile(overalls, 0.50)
-    p95 = _quantile(overalls, 0.95)
+    median = _quantile(non_manual, 0.50)
+    p95 = _quantile(non_manual, 0.95)
     assert rating.DISPLAY_MEDIAN - 1 <= median <= rating.DISPLAY_MEDIAN + 1, median
     assert rating.DISPLAY_P95 - 1 <= p95 <= rating.DISPLAY_P95 + 1, p95
 
@@ -349,6 +358,7 @@ def _build_internal_view():
         tournaments=tournaments_rows,
         manager_tournaments=mt_rows,
         career_stature_by_player=rating._load_career_stature(rating.OUTPUT_DIR),
+        apply_manual_overrides=False,
     )
 
 
@@ -688,7 +698,9 @@ def test_no_card_has_null_overall(built: list[dict]):
     nulls = [r["card_id"] for r in built if r["overall"] is None]
     assert nulls == []
     for r in built:
-        assert isinstance(r["overall"], int) and r["overall"] >= rating.DISPLAY_FLOOR, r["card_id"]
+        assert isinstance(r["overall"], int) and r["overall"] >= 0, r["card_id"]
+        if not _has_manual_override(r):
+            assert r["overall"] >= rating.DISPLAY_FLOOR, r["card_id"]
 
 
 def test_defenders_and_keepers_are_never_rated_on_goals(built: list[dict], cards: dict[str, dict]):
@@ -752,7 +764,7 @@ def test_no_award_raw_only_headroom_is_byte_stable():
     """No-award cards get only the bounded factual-context movement.
 
     Participation mechanics can still move the underlying raw tournament score.
-    merit-v4.2 then allows non-material, no-headroom rows to move inside the
+    merit-v4.3 then allows non-material, no-headroom rows to move inside the
     existing replacement-to-ceiling band according to public per-player context.
     Stature/material rows and award-headroom rows remain unchanged by this
     declustering adjustment.

@@ -37,6 +37,10 @@ function component(row: RuntimeRating, signal: string): unknown {
   return row.components?.find((c) => c.signal === signal)?.value;
 }
 
+function hasManualOverride(row: RuntimeRating): boolean {
+  return component(row, "manual_rating_override") !== undefined;
+}
+
 function squadRatings(teamName: string): Array<{ card: RuntimePlayerCard; rating: RuntimeRating }> {
   const team = teamByName.get(teamName);
   if (!team) throw new Error(`missing 2026 team ${teamName}`);
@@ -54,6 +58,7 @@ function isMaterialHeadroom(row: RuntimeRating): boolean {
 
 function isEliteGated(row: RuntimeRating): boolean {
   return (
+    hasManualOverride(row) ||
     row.legend ||
     isMaterialHeadroom(row) ||
     Number(component(row, "award_headroom") ?? 0) > 0 ||
@@ -71,15 +76,15 @@ function maxDuplicateOverall(rows: RuntimeRating[]): number {
   return Math.max(...counts.values());
 }
 
-describe("merit-v4.2 ratings-coverage acceptance probes", () => {
-  it("bumps every shipped replay/data/version anchor for the merit-v4.2 season", () => {
-    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.4.0");
-    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.4.0");
-    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.4.0");
-    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.4.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.2.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.2.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.2");
+describe("merit-v4.3 ratings-coverage acceptance probes", () => {
+  it("bumps every shipped replay/data/version anchor for the merit-v4.3 season", () => {
+    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.5.0");
+    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.5.0");
+    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.5.0");
+    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.5.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.3.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.3.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.3");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {
@@ -161,7 +166,7 @@ describe("merit-v4.2 ratings-coverage acceptance probes", () => {
     for (const row of eliteRows) {
       expect(
         isEliteGated(row),
-        `${row.card_id} 90+ row should be legend, material-stature, or honor gated`,
+        `${row.card_id} 90+ row should be manual-pinned, legend, material-stature, or honor gated`,
       ).toBe(true);
     }
   });
@@ -196,8 +201,13 @@ describe("merit-v4.2 ratings-coverage acceptance probes", () => {
         })
         .map((c) => currentRating(c.card_id));
 
+      const nonManualRows = rows.filter((row) => !hasManualOverride(row));
+
       expect(rows.length, `${label} rows`).toBeGreaterThanOrEqual(23);
-      expect(maxDuplicateOverall(rows), `${label} max duplicate current OVR`).toBeLessThan(5);
+      expect(
+        maxDuplicateOverall(nonManualRows),
+        `${label} max duplicate non-manual current OVR`,
+      ).toBeLessThan(5);
       for (const row of rows) {
         expect(
           component(row, "factual_context_score"),
