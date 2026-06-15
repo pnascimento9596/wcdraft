@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function LeaderboardPage() {
   if (!isLeaderboardEnabled()) notFound();
   return (
-    <div className="container container--narrow page">
+    <div className="container container--narrow page leaderboard-page">
       <BoardScreen currentSeasonKey={currentSeasonKey()} />
     </div>
   );

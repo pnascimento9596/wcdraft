@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAuth } from "@/components/auth-context";
 import {
   appendBoardPage,
   boardRowViews,
@@ -25,6 +26,7 @@ import s from "./leaderboard.module.css";
 type LoadPhase = "loading" | "ready" | "error";
 
 export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
+  const auth = useAuth();
   const [filter, setFilter] = useState<BoardDraftModeFilter>("classic");
   const [acc, setAcc] = useState<BoardAccumulator>(EMPTY_BOARD);
   const [phase, setPhase] = useState<LoadPhase>("loading");
@@ -60,13 +62,18 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   useEffect(() => {
     let cancelled = false;
     setMe(null);
+    if (!auth.ready || auth.session === null) {
+      return () => {
+        cancelled = true;
+      };
+    }
     void fetchMyPresence({ draftMode: filter }).then((presence) => {
       if (!cancelled) setMe(presence);
     });
     return () => {
       cancelled = true;
     };
-  }, [filter]);
+  }, [auth.ready, auth.session, filter]);
 
   const loadMore = useCallback(() => {
     if (acc.nextCursor === null || loadingMore) return;

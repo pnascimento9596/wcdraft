@@ -35,6 +35,65 @@ Build State v10, Architecture v6, Roadmap v6, and Surface Inventory v6, each
 superseding the prior version. This `STATE.md` is the in-repo closeout truth
 surface.
 
+## UI polish overhaul local state
+
+Branch `ws-ux/ui-polish-v2` is the active fix-forward from reverted
+`origin/main` `1db44cba1f3328ccc90a84b952619a27f6557626` for the mobile
+polish overhaul. Attempt v1 shipped through PR #146 at merge
+`4590a7a383b1d1bac7c898d5b9e99cf37d5a5621` and Vercel deployment
+`6A38ktV3PY2E8v9qbtSqonAoEncX`, then failed live verification because the
+production `/leaderboard` page still scrolled at both target mobile widths
+and emitted an anonymous `/me` 401 resource console error. Per dispatch, v1
+was auto-reverted through PR #147 at merge
+`1db44cba1f3328ccc90a84b952619a27f6557626` and Vercel deployment
+`w76cFPSm6Kp6SJYoxbmPG7BugZtU`; post-revert board API checks stayed clean.
+Production leaderboard synthetic test rows were removed via Neon production
+branch `br-blue-heart-aqcejtyf`, and live API checks for ranked Classic,
+ranked Memory, casual Classic, and casual Memory returned 200 with the probe
+rows absent.
+
+Local UI implementation evidence is captured in
+`docs/reports/ui-polish-overhaul-2026-06-15.md`,
+`docs/reports/ui-polish-overhaul-local.json`,
+`docs/reports/ui-polish-overhaul-axe.json`,
+`docs/reports/ui-polish-overhaul-independent-review.md`, and 72 screenshots
+under `docs/screenshots/ui-polish-overhaul/` (18 surfaces × 390×844/360×800 ×
+light/dark). The local measurement report shows zero document overflow on all
+non-permitted-scroll core-loop routes, including `squad-review`; permitted long
+content remains `attribution`, `how-to-play`, `privacy`, and `results`.
+
+Implemented presentation-only surfaces: thin vertical SVG pitch, compact
+position-shaped/provenance-hued nodes with national mini flags, starter/bench/
+manager flags, presentation-only Synergy adjacency lines from existing
+`computeSynergy(...).linked_pairs`, compact Synergy score strip, mobile
+compaction, transform/opacity-only motion with reduced-motion snapping, and a
+v2 leaderboard mobile compaction/fetch-gate pass. The leaderboard pass hides
+the footer on mobile leaderboard, tightens the header/season key/toolbar/panel
+and empty state, and skips the `/api/leaderboard/me` highlight fetch until the
+existing auth context has a real browser session. No schema, database, ETL,
+sim, rating, compact data, `formations.json`, auth contract, or Synergy
+mechanic files are changed.
+
+Local gates run so far: `pnpm --filter @wcdraft/web typecheck`, `pnpm --filter
+@wcdraft/web lint`, focused `vitest` for `pitch-markings` and
+`synergy-overlay` (2 files / 11 tests), `git diff --check`, hardcoded-color and
+lexicon guard greps, browser screenshot/fit measurement against
+`http://localhost:3002`, post-fix Playwright + axe on `draft-complete` and
+`review` at 390×844/360×800 in both themes (8/8 zero violations, zero
+console/page errors, zero document overflow, 17 flags, one lit Synergy line,
+reduced-motion snap verified), v2 leaderboard recapture against
+`http://127.0.0.1:3020/leaderboard` with `LEADERBOARD_ENABLED=1` and
+intercepted public board reads (4/4 zero document overflow and zero
+console/page errors), independent fresh-context Codex CLI review from this
+WCDraft worktree (PASS / no Yellow blockers), and full root `pnpm typecheck &&
+pnpm lint && pnpm test && pnpm build` (typecheck 8/8, lint 5/5, test 8/8 with
+core 366, data 73 passed / 7 skipped, db 79, marketing-x 64, web 694 passed /
+1 skipped, build 4/4). RepoPrompt review could not run because the active
+RepoPrompt workspace was bound to BiotraxIQ, not this WCDraft worktree; a
+later attempt to rebind RepoPrompt to `/tmp/wcdraft-ui-polish` failed with a
+broken-pipe MCP transport error. v2 PR/merge, deploy, and live production UI
+verification are still pending.
+
 ## Era closeout status at last measurement
 
 - Branch/PR graveyard cleanup completed before the purge window. PR #76 was closed
