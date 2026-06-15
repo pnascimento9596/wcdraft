@@ -57,11 +57,11 @@ const STATIC_SHARE_METADATA: Metadata = {
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ run?: string | string[] }>;
+  searchParams: Promise<{ run?: string | string[]; og?: string | string[] }>;
 }): Promise<Metadata> {
   const params = await searchParams;
   const versions = await currentVersionsForMetadata();
-  const image = versions ? shareOgImageForRunValue(params.run, versions) : null;
+  const image = versions ? shareOgImageForRunValue(params.run, params.og, versions) : null;
   if (!image || !image.dynamic) return STATIC_SHARE_METADATA;
   return {
     ...STATIC_SHARE_METADATA,

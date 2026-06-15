@@ -35,6 +35,7 @@ import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
 import { POST as cspReportPost } from "@/app/api/csp-report/route";
+import { POST as ogSignPost } from "@/app/api/og/sign/route";
 import { GET as profileGet, PUT as profilePut } from "@/app/api/profile/route";
 import { GET as runsGet, POST as runsPost } from "@/app/api/runs/route";
 import { DELETE as runDelete, GET as runDetailGet } from "@/app/api/runs/[id]/route";
@@ -75,6 +76,7 @@ const PUBLIC_API_METHODS = [
   "POST /api/auth/verify",
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
+  "POST /api/og/sign",
   "POST /api/runs",
   "POST /api/runs/claim",
   "PUT /api/profile",
@@ -84,6 +86,7 @@ interface CapturedResponse {
   readonly route: PublicApiMethod;
   readonly label: string;
   readonly res: Response;
+  readonly statusLessThan: number;
 }
 const GOLDEN = fixtureJson as unknown as {
   classic: { token: string; expected: { verified_score: number } };
@@ -97,6 +100,7 @@ function snapshotAuthEnv(): Record<string, string | undefined> {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     AUTH_EMAIL_FROM: process.env.AUTH_EMAIL_FROM,
     AUTH_BASE_URL: process.env.AUTH_BASE_URL,
+    WCDRAFT_OG_SIGNING_SECRET: process.env.WCDRAFT_OG_SIGNING_SECRET,
   };
 }
 
@@ -113,6 +117,7 @@ beforeEach(async () => {
   process.env.RESEND_API_KEY = "re_test_l4";
   process.env.AUTH_EMAIL_FROM = "wcdraft <onboarding@example.com>";
   process.env.AUTH_BASE_URL = "https://wcdraft.com";
+  process.env.WCDRAFT_OG_SIGNING_SECRET = "public-payload-sweep-og-secret-32-bytes-minimum";
   sender = new LogEmailSender(() => undefined);
   runtime.deps = {
     db,
@@ -159,8 +164,9 @@ function routeCapture(
   route: PublicApiMethod,
   res: Response,
   label: string = route,
+  statusLessThan = 400,
 ): CapturedResponse {
-  return { route, label, res };
+  return { route, label, res, statusLessThan };
 }
 
 function expectedPublicApiMethods(): string[] {
@@ -326,6 +332,20 @@ describe("public route payload email sweep", () => {
             }),
           }),
         ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/og/sign",
+        await ogSignPost(
+          req("/api/og/sign", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({}),
+          }),
+        ),
+        "POST /api/og/sign validation error",
+        500,
       ),
     );
 
@@ -518,8 +538,8 @@ describe("public route payload email sweep", () => {
     const coveredRoutes = Array.from(new Set(captures.map((capture) => capture.route))).sort();
     expect(coveredRoutes).toEqual(expectedPublicApiMethods());
 
-    for (const { label, res } of captures) {
-      expect(res.status, label).toBeLessThan(400);
+    for (const { label, res, statusLessThan } of captures) {
+      expect(res.status, label).toBeLessThan(statusLessThan);
       expectNoEmail(label, await payloadOf(res));
     }
 
