@@ -334,18 +334,23 @@ describe("trusted run OG signing", () => {
 
   it("bounds repeated uncached sign attempts before re-sim work", async () => {
     vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const nowSpy = vi.spyOn(Date, "now").mockReturnValue(Date.UTC(2026, 5, 15, 12, 0, 30));
     let last: Response | null = null;
-    for (let i = 0; i < 31; i += 1) {
-      last = await runOgSignRoutePost(
-        new Request("http://localhost/api/og/sign", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            "x-forwarded-for": "198.51.100.77",
-          },
-          body: JSON.stringify({ run: "not-a-token" }),
-        }),
-      );
+    try {
+      for (let i = 0; i < 31; i += 1) {
+        last = await runOgSignRoutePost(
+          new Request("http://localhost/api/og/sign", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-forwarded-for": "198.51.100.77",
+            },
+            body: JSON.stringify({ run: "not-a-token" }),
+          }),
+        );
+      }
+    } finally {
+      nowSpy.mockRestore();
     }
     expect(last?.status).toBe(429);
     expect(last?.headers.get("retry-after")).toMatch(/^[1-9]\d*$/u);

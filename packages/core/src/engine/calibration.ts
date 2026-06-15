@@ -32,10 +32,10 @@
 //   goldens (sim / rng / draft) did NOT move; only stamp-carrying payloads
 //   (e2e-real-run, run-record, compact manifest, asym-realism) re-locked.
 //
-//   merit-v4.2: λ refit after public factual context declustering moved raw-only
-//   channel distribution. The fit lowers BASE, re-widens SPREAD, and lands
-//   GAMMA_MID at 0.70 while keeping merit-v4/v4.1 KO and dispersion settings.
-//   Runtime stamp: `engine-2026.06.15-merit-v4.2`.
+//   merit-v4.3: λ refit after the owner-authored manual override distribution
+//   moved the 2026 channel pool. The fit lowers BASE/SPREAD, raises MIN, and
+//   trims group-phase dispersion while keeping the KO factor and KO dispersion.
+//   Runtime stamp: `engine-2026.06.15-merit-v4.3`.
 //
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
@@ -78,24 +78,24 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * merit-v4.2 REFIT: BASE=1.05 (from v4/v4.1's 1.10). Public factual
-   * raw-only declustering increased symmetric-sweep goal volume, so BASE is
-   * lowered to restore the 2.54 modern-WC norm.
+   * merit-v4.3 REFIT: BASE=0.95. Owner-authored manual pins changed the
+   * projected channel pool enough that the v4.2 tuple overshot goals and
+   * margin>=4; lowering BASE re-centers the modern-WC sweep.
    */
-  BASE: 1.05,
+  BASE: 0.95,
   /**
    * Sensitivity to the (attack − defResist) edge, per 100 channel points.
-   * E-3a lifted SPREAD 4.0 → 6.5 to unlock the `margin ≥ 4 ≈ 4.9%` tight
-   * band; merit-v4 landed at 6.0 after the national-strength/objective-club
-   * channel movement; merit-v4.2 returns to 6.5 after raw-only declustering.
+   * E-3a lifted SPREAD 4.0 -> 6.5 to unlock the `margin >= 4 ~= 4.9%` tight
+   * band. merit-v4.3 lands at 5.5 after owner pins lowered much of the pool
+   * but preserved enough channel separation to keep high-margin results in band.
    */
-  SPREAD: 6.5,
+  SPREAD: 5.5,
   /**
-   * Floor — even a hopeless attack still threatens occasionally. merit-v4
-   * returns MIN to 0.30 after the BASE/SPREAD refit; the symmetric realism
+   * Floor — even a hopeless attack still threatens occasionally. merit-v4.3
+   * raises MIN to 0.80 after the BASE/SPREAD refit; the symmetric realism
    * and faithfulness gates lock that this remains variance, not certainty.
    */
-  MIN: 0.30,
+  MIN: 0.80,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
   MAX: 3.4,
   /**
@@ -109,10 +109,10 @@ export const LAMBDA = Object.freeze({
   W_GK: 0.30,
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
-   * points). E-3a raised γ_mid to 0.50; MV2-11b raised it to 0.60;
+   * points). E-3a raised gamma_mid to 0.50; MV2-11b raised it to 0.60;
    * merit-v3 V7 landed at 0.80 on the extended grid; merit-v4.1 landed at
-   * 1.00 after the projected objective-record display move; merit-v4.2 lands
-   * at 0.70 after public factual declustering. The bounded
+   * 1.00 after the projected objective-record display move; merit-v4.2 and
+   * merit-v4.3 land at 0.70 after the later channel-pool moves. The bounded
    * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies,
    * never replaces, the attack/defense edge.
    */
@@ -242,21 +242,21 @@ export const LAMBDA_DISP = Object.freeze({
   A: 0.75,
   /**
    * GROUP-phase outer mass. Same shape as `OUTER_PROB` but applied to group
-   * matches. E-3a REFIT D6: GROUP_OUTER_PROB=0.10 (much smaller than KO's
+   * matches. merit-v4.3 REFIT: GROUP_OUTER_PROB=0.04 (much smaller than KO's
    * 0.20) — group_draw must stay inside the D5-tight band [22.88%, 26.52%],
-   * so the group dispersion is only frequent enough to lift `margin ≥ 4`
+   * so the group dispersion is only frequent enough to lift `margin >= 4`
    * into [4.12%, 5.70%] without inflating group_draw past 26.5%.
    * Set to 0 to disable group dispersion.
    */
-  GROUP_OUTER_PROB: 0.10,
+  GROUP_OUTER_PROB: 0.04,
   /**
-   * GROUP-phase half-width. E-3a REFIT D6: GROUP_A=0.50 — wider than the
+   * GROUP-phase half-width. merit-v4.3 REFIT: GROUP_A=0.40 — lower than the
    * default to drive the high-margin tail (~4.7% margin≥4) while the
    * sparse OUTER_PROB keeps the group_draw rate inside the tight band.
    * Group phase doesn't need the KO-tied lift, only the asymmetric-
    * scoreline tail boost.
    */
-  GROUP_A: 0.50,
+  GROUP_A: 0.40,
 });
 
 // ─── PER-CHANCE OUTCOME SPLIT (conditioned on a chance occurring, non-goal) ────

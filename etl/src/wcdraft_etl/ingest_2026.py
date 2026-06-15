@@ -30,7 +30,7 @@ import json
 from pathlib import Path
 
 from . import identity_2026 as idn
-from . import rating_2026, source_2026, wiki2026
+from . import manual_overrides, rating_2026, source_2026, wiki2026
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 TOURNAMENT_ID = source_2026.TOURNAMENT_ID  # "WC-2026"
@@ -392,6 +392,7 @@ def run(output_dir: Path = OUTPUT_DIR) -> dict:
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest_2026.json", _manifest(tables))
+    manual_overrides.write_resolution_artifacts(output_dir)
     # MV2-5 accuracy-eyeball sample: rewrite MERIT_V2_SAMPLE.md as the historical
     # MV2-4 section + the 2026 reconciliation section. Runs LAST (after the 2026
     # tables are on disk) and regenerates the whole file deterministically.

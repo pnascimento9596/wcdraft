@@ -268,6 +268,10 @@ def test_controls_within_one_point(hist, proj):
     ]
     for pool, cid, expected, label in controls:
         got = pool[cid]["overall"]
+        manual = _comp(pool[cid], "manual_rating_override")
+        if manual is not None:
+            assert got == int(manual), (label, manual, got)
+            continue
         assert abs(got - expected) <= 1, (label, expected, got)
 
 
@@ -306,17 +310,17 @@ def test_distribution_median_and_tail(hist, proj):
 def test_distribution_pileup_MISSED_structurally(hist, proj):
     """§7.3 pile-up gate: no single display value >4% of the pool. Still
     structurally missed in the low band through integer display rounding, but
-    merit-v4.2 removes the high-band filler wall: 88 is now ~3.4%, not a dominant
-    raw-only pigeonhole."""
+    merit-v4.3 owner pins keep 88 below 3% and shift the visible pile-ups into
+    the lower owner-authored band."""
     ov = _career_pool_overalls(hist, proj)
     n = len(ov)
     shares = {v: c / n for v, c in Counter(ov).items()}
     assert shares[88] < 0.040  # old high-band wall is gone
     # pinned measured piles (loud if they drift)
-    assert shares[88] == pytest.approx(0.0348, abs=0.003)
-    assert shares[70] == pytest.approx(0.0746, abs=0.005)
-    assert shares[71] == pytest.approx(0.0838, abs=0.005)
-    assert shares[72] == pytest.approx(0.0847, abs=0.005)
+    assert shares[88] == pytest.approx(0.0273, abs=0.003)
+    assert shares[70] == pytest.approx(0.0651, abs=0.005)
+    assert shares[71] == pytest.approx(0.0769, abs=0.005)
+    assert shares[72] == pytest.approx(0.0785, abs=0.005)
 
 
 def test_distribution_inversion_rate_MERIT_V4_REBASE_LEDGER(hist, proj):
@@ -349,7 +353,7 @@ def test_distribution_inversion_rate_MERIT_V4_REBASE_LEDGER(hist, proj):
         dominated += k
         inversions += sum(cum[k][r["overall"] + 1 :])
     rate = inversions / dominated
-    assert rate == pytest.approx(0.1609, abs=0.002), rate
+    assert rate == pytest.approx(0.2276, abs=0.002), rate
 
 
 def test_coherence_census_pre_1967_gap_closed(hist, proj):
@@ -359,7 +363,12 @@ def test_coherence_census_pre_1967_gap_closed(hist, proj):
     violations = set()
     for pool in (hist, proj):
         for cid, r in pool.items():
-            if r["overall"] >= 94 and not r["legend"] and not _comp(r, "award_score"):
+            if (
+                r["overall"] >= 94
+                and not r["legend"]
+                and not _comp(r, "award_score")
+                and _comp(r, "manual_rating_override") is None
+            ):
                 violations.add(cid)
     assert violations == set(), violations
 
@@ -465,14 +474,13 @@ def test_w2b_sweden_2002_ibrahimovic_exemplar_pinned(hist):
         72,
         73,
         74,
+        76,
         77,
+        78,
         79,
+        80,
         81,
-        83,
-        84,
-        86,
         87,
-        88,
     ]
     assert max(no_award_sweden_2002.values()) < ibra["overall"]
 
@@ -505,12 +513,22 @@ def test_determinism_rebuild_reproduces_committed_overall(hist, proj):
     internal = display_curve._historical_internal_rows(OUT)
     ok = 0
     for r in internal:
+        manual = _comp(hist[r["card_id"]], "manual_rating_override")
+        if manual is not None:
+            assert hist[r["card_id"]]["overall"] == int(manual), r["card_id"]
+            ok += 1
+            continue
         est = r["overall_basis"] == "baseline_anchor_estimate"
         assert hist[r["card_id"]]["overall"] == rating._display_score(
             r["score_0_100"], curve, estimate=est
         ), r["card_id"]
         ok += 1
     for r in display_curve._projected_internal_rows(OUT):
+        manual = _comp(proj[r["card_id"]], "manual_rating_override")
+        if manual is not None:
+            assert proj[r["card_id"]]["overall"] == int(manual), r["card_id"]
+            ok += 1
+            continue
         assert proj[r["card_id"]]["overall"] == rating._display_score(
             r["score_0_100"], curve
         ), r["card_id"]

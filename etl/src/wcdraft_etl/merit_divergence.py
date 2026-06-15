@@ -65,10 +65,22 @@ def build(output_dir: Path = rating.OUTPUT_DIR, write: bool = True) -> dict:
 
     curve = display_curve.fit_unified_curve(output_dir)
     before = rating.build_ratings(
-        players, cards, tournaments, manager_tournaments, {}, curve=curve
+        players,
+        cards,
+        tournaments,
+        manager_tournaments,
+        {},
+        curve=curve,
+        apply_manual_overrides=False,
     )
     after = rating.build_ratings(
-        players, cards, tournaments, manager_tournaments, career, curve=curve
+        players,
+        cards,
+        tournaments,
+        manager_tournaments,
+        career,
+        curve=curve,
+        apply_manual_overrides=False,
     )
     before_by = {r["card_id"]: r for r in before}
     players_by_id = {p["player_id"]: p for p in players}

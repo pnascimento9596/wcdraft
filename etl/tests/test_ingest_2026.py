@@ -47,6 +47,10 @@ def teams(built) -> list[dict]:
     return built["teams_2026"]
 
 
+def _has_manual_override(row: dict) -> bool:
+    return any(c["signal"] == "manual_rating_override" for c in row["components"])
+
+
 @pytest.fixture(scope="session")
 def bracket(built) -> dict:
     return built["bracket_2026"]
@@ -207,14 +211,16 @@ def test_ratings_join_and_bounds(ratings, cards):
     for r in ratings:
         assert r["card_id"] in by_card
         assert r["card_id"] == f"{r['player_id']}:{r['tournament_id']}"
-        # Phase 1.1 decoupled: sim channels on [FLOOR_CHANNEL, 100] band;
-        # only `overall` lives on the recalibrated display band [66, 99].
+        # Phase 1.1 decoupled: sim channels on [FLOOR_CHANNEL, 100] band.
+        # Manual owner pins may put display overall below the base display floor.
         for ch in ("attack", "midfield", "defense", "goalkeeping"):
             assert isinstance(r[ch], int) and rating.FLOOR_CHANNEL <= r[ch] <= 100
         assert (
             isinstance(r["overall"], int)
-            and rating.DISPLAY_FLOOR <= r["overall"] <= rating.DISPLAY_MAX
+            and 0 <= r["overall"] <= rating.DISPLAY_MAX
         )
+        if not _has_manual_override(r):
+            assert r["overall"] >= rating.DISPLAY_FLOOR
         assert r["provenance"] == "projected_career"
         assert r["coverage_basis"] == "career_signals"
         assert r["rating_version"] == rating_2026.RATING_VERSION
@@ -249,32 +255,34 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-5.2.0 = merit-v4.2: projected ratings consume
+    # proj-career-5.3.0 = merit-v4.3: projected ratings consume
     # career-stature-4.1.0, active objective records, and factual per-player
     # context for raw-only declustering.
-    assert rating_2026.RATING_VERSION == "proj-career-5.2.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.3.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-5.2.0"
+        assert r["rating_version"] == "proj-career-5.3.0"
 
 
 def test_projected_distribution_shape(ratings):
-    """Projected pool reshaped onto [60, 99] by the shared display curve.
+    """Projected pool base merit rows stay on [60, 99] by the shared display curve.
     Slightly looser than historical because n=1,246 vs n=10,973, but same
-    contract: lower bound exact, max <= 99, no 100s, thin elite tail. merit-v4.2
+    contract: lower bound exact, max <= 99, no 100s, thin elite tail. merit-v4.3
     factual declustering deliberately lets the projected p95 sit below the global
     display p95 instead of inflating non-material players."""
     overalls = sorted(r["overall"] for r in ratings)
-    n = len(overalls)
-    assert overalls[0] == rating.DISPLAY_FLOOR
+    non_manual = sorted(r["overall"] for r in ratings if not _has_manual_override(r))
+    n = len(non_manual)
+    assert overalls[0] >= 0
+    assert non_manual[0] == rating.DISPLAY_FLOOR
     assert overalls[-1] <= rating.DISPLAY_MAX
     assert overalls[-1] >= rating.DISPLAY_MAX - 1
     assert 100 not in set(overalls)
-    median = overalls[n // 2]
-    p95 = overalls[int(0.95 * (n - 1))]
+    median = non_manual[n // 2]
+    p95 = non_manual[int(0.95 * (n - 1))]
     assert rating.DISPLAY_MEDIAN - 2 <= median <= rating.DISPLAY_MEDIAN + 2, median
     assert rating.DISPLAY_P95 - 4 <= p95 <= rating.DISPLAY_P95, p95
-    share_95 = sum(1 for ov in overalls if ov >= 95) / n
-    share_98 = sum(1 for ov in overalls if ov >= 98) / n
+    share_95 = sum(1 for ov in non_manual if ov >= 95) / n
+    share_98 = sum(1 for ov in non_manual if ov >= 98) / n
     assert share_95 <= 0.030, share_95
     assert share_98 <= 0.010, share_98
 
@@ -292,15 +300,19 @@ def test_projected_basis_is_stature_or_measured_never_baseline(ratings):
     assert seen == {"career_stature_estimate", "measured_performance"}
 
 def test_strong_nations_aggregate_higher(teams, nation_name):
-    """Every traditional power outranks every debutant/minnow — a robust ordering
-    invariant that does not hinge on the exact elite ranking."""
+    """Traditional powers stay stronger as a basket after owner pins.
+
+    merit-v4.3 intentionally authorizes player-level overrides, so a single
+    minnow can outrank a single weakened power. The robust invariant is now
+    median and mean basket separation.
+    """
     power_scores = [_team_score(t) for t in teams if nation_name[t["nation_id"]] in POWERS]
     minnow_scores = [_team_score(t) for t in teams if nation_name[t["nation_id"]] in MINNOWS]
     assert len(power_scores) == len(POWERS)
     assert len(minnow_scores) == len(MINNOWS)
-    # The weakest power outranks the strongest minnow (no inversion).
-    assert min(power_scores) > max(minnow_scores), (min(power_scores), max(minnow_scores))
-    # ...and the basket means are clearly separated (not a knife-edge).
+    power_median = sorted(power_scores)[len(power_scores) // 2]
+    minnow_median = sorted(minnow_scores)[len(minnow_scores) // 2]
+    assert power_median - minnow_median >= 5.0, (power_median, minnow_median)
     assert sum(power_scores) / len(power_scores) - sum(minnow_scores) / len(minnow_scores) >= 2.5
 
 
@@ -359,9 +371,11 @@ def test_best_xi_selected_on_internal_score(teams, cards, ratings):
         by_display = sorted(squad, key=lambda r: (-r["overall"], r["card_id"]))[:11]
         dropped = {r["card_id"] for r in by_display} - {r["card_id"] for r in by_internal}
         added = {r["card_id"] for r in by_internal} - {r["card_id"] for r in by_display}
-        assert {rating_by_card[c]["overall"] for c in dropped} == {
-            rating_by_card[c]["overall"] for c in added
-        }, (t["team_id"], dropped, added)
+        changed = dropped | added
+        if not any(_has_manual_override(rating_by_card[c]) for c in changed):
+            assert {rating_by_card[c]["overall"] for c in dropped} == {
+                rating_by_card[c]["overall"] for c in added
+            }, (t["team_id"], dropped, added)
 
 
 # ─── Bracket2026 ──────────────────────────────────────────────────────────────
@@ -438,8 +452,16 @@ def career_2026() -> dict[str, dict]:
 
 @pytest.fixture(scope="session")
 def internal_2026(cards, career_2026) -> dict[str, dict]:
-    """player_id -> INTERNAL projected row (pre-display, on the stature scale)."""
-    rows = rating_2026.build_internal_view(cards, career_2026)
+    """player_id -> base INTERNAL projected row before owner manual pins.
+
+    The tests in this block prove the projected merit model mechanics. v4.3's
+    shipped output separately proves authoritative owner pins.
+    """
+    rows = rating_2026.build_internal_view(
+        cards,
+        career_2026,
+        apply_manual_overrides=False,
+    )
     return {r["player_id"]: r for r in rows}
 
 
@@ -619,7 +641,7 @@ def test_nonmaterial_quantiles_match_historical_raw_only(
 
     The 2026 pure raw-only (weight==0) INTERNAL distribution remains anchored to
     the historical raw-only population and must not lift above comparable
-    historical rows. merit-v4.2 then uses public per-player context to lower weak
+    historical rows. merit-v4.3 then uses public per-player context to lower weak
     or thin records inside the raw-only band, so the right invariant is bounded
     underfill, not exact quantile equality.
     """

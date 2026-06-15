@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-6.2.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-6.3.0)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -51,7 +51,7 @@ First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = st
 | Maldini | `WC-1990` | DF | 0.720971 | 1.00 | 0.796 | 0.803282 | +0.070 | 0.873 | 44 | 60 | 87 | 20 | ✓ |
 | Baresi | `WC-1990` | DF | 0.61763 | 1.00 | 0.796 | 0.737832 | +0.070 | 0.808 | 41 | 56 | 81 | 20 | ✓ |
 | Beckenbauer | `WC-1966` | MF | 0.862417 | 1.00 | 0.941 | 0.908278 | +0.080 | 0.988 | 71 | 99 | 67 | 20 | ✓ |
-| Cafu | `WC-2002` | DF | 0.314164 | 0.00 | 0.908 | — | +0.000 | 0.608 | 34 | 44 | 61 | 20 | ✓ |
+| Cafu | `WC-2002` | DF | 0.314164 | 0.00 | 0.908 | — | +0.000 | 0.900 | 44 | 62 | 90 | 20 | ✓ |
 | Yashin | `WC-1958` | GK | 0.70969 | 1.00 | 0.628 | 0.776137 | +0.060 | 0.836 | 23 | 33 | 55 | 84 | ✓ |
 | Buffon | `WC-2002` | GK | 0.680351 | 1.00 | 0.623 | 0.757556 | +0.060 | 0.818 | 23 | 32 | 54 | 82 | ✓ |
 | Matthäus | `WC-1986` | MF | 0.86411 | 1.00 | 0.769 | 0.909407 | +0.080 | 0.989 | 71 | 99 | 67 | 20 | ✓ |
@@ -61,19 +61,19 @@ First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = st
 
 | Player | Card | Pos | Index | Wt | Raw | Target | Mod | Final | ATT | MID | DEF | GK | Lgd |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| Ivanov | `WC-1962` | FW | 0.36 | 0.00 | 0.831 | — | +0.000 | 0.779 | 78 | 55 | 37 | 20 | — |
-| Jerković | `WC-1962` | FW | 0.36 | 0.00 | 0.908 | — | +0.000 | 0.779 | 78 | 55 | 37 | 20 | — |
-| Martínez | `WC-2022` | GK | 0.289 | 0.00 | 1.000 | — | +0.000 | 0.766 | 23 | 31 | 51 | 77 | — |
-| Salenko | `WC-1994` | FW | 0.306 | 0.00 | 0.809 | — | +0.000 | 0.753 | 75 | 53 | 37 | 20 | — |
-| Schumacher | `WC-1986` | GK | 0.28 | 0.00 | 1.000 | — | +0.000 | 0.727 | 23 | 31 | 49 | 73 | — |
-| Preud'homme | `WC-1994` | GK | 0.34 | 0.00 | 0.794 | — | +0.000 | 0.712 | 23 | 30 | 48 | 71 | — |
+| Adriano | `WC-2006` | FW | — | 0.00 | 0.634 | — | +0.000 | 0.940 | 94 | 64 | 42 | 20 | — |
+| Lúcio | `WC-2002` | DF | 0.327944 | 0.00 | 0.908 | — | +0.000 | 0.930 | 46 | 64 | 93 | 20 | — |
+| Marcos | `WC-2002` | GK | — | 0.00 | 0.944 | — | +0.000 | 0.930 | 24 | 35 | 60 | 93 | — |
+| Trezeguet | `WC-2002` | FW | 0.12402 | 0.00 | 0.384 | — | +0.000 | 0.920 | 92 | 63 | 42 | 20 | — |
+| Zé Roberto | `WC-2006` | MF | — | 0.00 | 0.634 | — | +0.000 | 0.920 | 67 | 92 | 63 | 20 | — |
+| Toldo | `WC-2002` | GK | 0.144 | 0.00 | 0.347 | — | +0.000 | 0.920 | 24 | 34 | 60 | 92 | — |
 
 _SHAPE check only. A recognized great's weak tournament should still read elite (bounded down-modulation off a high stature target); an apex tournament can exceed the target; a raw-only control stays below the material band (capped at the global raw-only ceiling 0.625)._
 
 
 ---
 
-# 2026 reconciliation INTERNAL-score sample (proj-career-5.2.0)
+# 2026 reconciliation INTERNAL-score sample (proj-career-5.3.0)
 
 MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale as the historical wc-perf-4.x cards, and caps non-material 2026 cards below the recognized-greats band on the projected raw path. Columns mirror the historical sample: **Status** (linked·material / linked·below / minted), career **Index**, stature model **Wt**, **Raw** projected score, stature **Target**, projected **Mod**ulation, blended **Final** (internal, NOT display — display is provisional until MV2-6), the four sim channels, and the factual **L**e**g**en**d** flag.
 
@@ -178,7 +178,7 @@ _A non-material 2026 card's projected raw path is capped at the global raw-only 
 
 ---
 
-# Unified display-curve sample (wc-perf-6.2.0 curve; maps proj-career-5.2.0 too)
+# Unified display-curve sample (wc-perf-6.3.0 curve; maps proj-career-5.3.0 too)
 
 MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v2`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→60, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 2.0). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
@@ -188,9 +188,9 @@ MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_po
 
 | Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Historical | 10973 | 73 | 5416 (49.4%) | 3613 (32.9%) | 1552 (14.1%) | 205 (1.9%) | 1757 (16.0%) | 288 (2.6%) |
-| 2026 | 1246 | 72 | 648 (52.0%) | 405 (32.5%) | 122 (9.8%) | 12 (1.0%) | 134 (10.8%) | 18 (1.4%) |
-| Pooled | 12219 | 73 | 6064 (49.6%) | 4018 (32.9%) | 1674 (13.7%) | 217 (1.8%) | 1891 (15.5%) | 306 (2.5%) |
+| Historical | 10973 | 73 | 5122 (46.7%) | 3850 (35.1%) | 1374 (12.5%) | 215 (2.0%) | 1589 (14.5%) | 305 (2.8%) |
+| 2026 | 1246 | 73 | 554 (44.5%) | 471 (37.8%) | 108 (8.7%) | 12 (1.0%) | 120 (9.6%) | 19 (1.5%) |
+| Pooled | 12219 | 73 | 5676 (46.5%) | 4321 (35.4%) | 1482 (12.1%) | 227 (1.9%) | 1709 (14.0%) | 324 (2.7%) |
 
 _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
 
@@ -218,7 +218,7 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 | Messi 2026 | `P-14758:WC-2026` | career_stature_estimate | ✓ | **99** |
 | Mbappé 2026 | `P-64077:WC-2026` | career_stature_estimate | ✓ | **96** |
 | Vinícius 2026 | `P-92812:WC-2026` | career_stature_estimate | — | **90** |
-| Bellingham 2026 | `P-15674:WC-2026` | measured_performance | — | **87** |
+| Bellingham 2026 | `P-15674:WC-2026` | measured_performance | — | **90** |
 | Modrić 2026 | `P-29491:WC-2026` | career_stature_estimate | ✓ | **97** |
 
 ## Previously-spurious OVR-99 2026 cards (now mid-80s, not 99)
@@ -227,17 +227,17 @@ _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin ta
 |---|---|---|---|---:|
 | Silva | `P-34205:WC-2026` | measured_performance | — | **88** |
 | Fernandes | `P-39584:WC-2026` | career_stature_estimate | — | **89** |
-| Hwang | `P-58692:WC-2026` | measured_performance | — | **83** |
-| Jurasek | `P-W26-0177:WC-2026` | measured_performance | — | **71** |
+| Hwang | `P-58692:WC-2026` | measured_performance | — | **75** |
+| Jurasek | `P-W26-0177:WC-2026` | measured_performance | — | **73** |
 
 ## Mid-band starter + journeyman floor controls (both eras)
 
 | Control | Player | Card | Basis | Display OVR |
 |---|---|---|---|---:|
 | Historical starter | Milutinović | `P-00042:WC-1958` | measured_performance | **73** |
-| Historical floor | Ashraf | `P-02028:WC-2018` | measured_performance | **63** |
-| 2026 starter | Moon-hwan | `P-07233:WC-2026` | measured_performance | **72** |
-| 2026 floor | Soliman | `P-W26-0200:WC-2026` | measured_performance | **60** |
+| Historical floor | Dossevi | `P-12652:WC-2006` | measured_performance | **46** |
+| 2026 starter | Mvogo | `P-01729:WC-2026` | measured_performance | **73** |
+| 2026 floor | Paugain | `P-W26-0309:WC-2026` | measured_performance | **55** |
 
 _One curve, both eras, ordering preserved: recognized greats land in-band by their internal score (never hard-pinned), the broad middle holds at the median, and the four spurious projected cards collapse from a raw-only 99 to the mid-80s. No card displays 100._
 

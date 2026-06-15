@@ -65,6 +65,13 @@ def proj_internal() -> dict[str, dict]:
     return {r["card_id"]: r for r in rows}
 
 
+def _manual_override_value(row: dict) -> int | None:
+    for component in row["components"]:
+        if component["signal"] == "manual_rating_override":
+            return int(component["value"])
+    return None
+
+
 # ─── the curve is ONE pooled curve, shared across both eras ───────────────────
 
 
@@ -77,24 +84,36 @@ def test_default_curve_is_frozen_v2_and_freeze_tracks_live_refit(curve):
     assert curve.raw_p95 == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_p95"]
     assert curve.raw_max == display_curve.FROZEN_UNIFIED_CURVE_V2_ANCHORS["raw_max"]
     live = display_curve.fit_unified_curve(OUT, refit=True)
-    assert (live.raw_floor, live.raw_median, live.raw_p95, live.raw_max) == (
-        curve.raw_floor,
-        curve.raw_median,
-        curve.raw_p95,
-        curve.raw_max,
-    )
+    assert live.raw_floor == pytest.approx(curve.raw_floor)
+    assert live.raw_median == pytest.approx(curve.raw_median)
+    assert live.raw_p95 == pytest.approx(curve.raw_p95)
+    assert live.raw_max == pytest.approx(curve.raw_max)
 
 
 def test_refit_is_fit_on_the_union_pool(hist_internal, proj_internal):
     """V4 (design §5): the refit population is the UNION of both bases'
     (career + current) internal scores across both eras."""
-    pooled = sorted(
-        [r["score_0_100"] for r in hist_internal.values()]
-        + [r["current_score_0_100"] for r in hist_internal.values()]
-        + [r["score_0_100"] for r in proj_internal.values()]
-        + [r["current_score_0_100"] for r in proj_internal.values()]
+    hist_base, _ = rating.build_internal_view(
+        rating._load(OUT, "players"),
+        rating._load(OUT, "player_tournaments"),
+        rating._load(OUT, "tournaments"),
+        rating._load(OUT, "manager_tournaments"),
+        rating._load_career_stature(OUT),
+        apply_manual_overrides=False,
     )
-    assert len(pooled) == 2 * (len(hist_internal) + len(proj_internal))
+    cards = json.loads((OUT / "player_tournaments_2026.json").read_text())
+    proj_base = rating_2026.build_internal_view(
+        cards,
+        rating_2026._load_career_stature(OUT),
+        apply_manual_overrides=False,
+    )
+    pooled = sorted(
+        [r["score_0_100"] for r in hist_base]
+        + [r["current_score_0_100"] for r in hist_base]
+        + [r["score_0_100"] for r in proj_base]
+        + [r["current_score_0_100"] for r in proj_base]
+    )
+    assert len(pooled) == 2 * (len(hist_base) + len(proj_base))
     curve = display_curve.fit_unified_curve(OUT, refit=True)
     assert curve.raw_floor == pooled[0]
     assert curve.raw_max == pooled[-1]
@@ -106,12 +125,20 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
     applied to that card's internal score — proof the ONE curve maps both eras."""
     for r in hist:
         ir = hist_internal[r["card_id"]]
+        manual = _manual_override_value(r)
+        if manual is not None:
+            assert r["overall"] == manual == int(ir["score_0_100"]), r["card_id"]
+            continue
         est = r["overall_basis"] == "baseline_anchor_estimate"
         assert r["overall"] == rating._display_score(
             ir["score_0_100"], curve, estimate=est
         ), r["card_id"]
     for r in proj:
         ir = proj_internal[r["card_id"]]
+        manual = _manual_override_value(r)
+        if manual is not None:
+            assert r["overall"] == manual == int(ir["score_0_100"]), r["card_id"]
+            continue
         # 2026 never carries baseline_anchor_estimate (caps always present).
         assert r["overall"] == rating._display_score(ir["score_0_100"], curve), r[
             "card_id"
@@ -121,10 +148,10 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-6.2.0"
-    assert rating_2026.RATING_VERSION == "proj-career-5.2.0"
-    assert all(r["rating_version"] == "wc-perf-6.2.0" for r in hist)
-    assert all(r["rating_version"] == "proj-career-5.2.0" for r in proj)
+    assert rating.RATING_VERSION == "wc-perf-6.3.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.3.0"
+    assert all(r["rating_version"] == "wc-perf-6.3.0" for r in hist)
+    assert all(r["rating_version"] == "proj-career-5.3.0" for r in proj)
 
 
 # ─── decoupling: the curve reshapes `overall` ONLY ────────────────────────────
@@ -173,9 +200,12 @@ def test_middle_does_not_inflate(hist, proj):
 
 
 def test_floor_lower_bound_holds(hist, proj):
-    assert min(r["overall"] for r in hist) >= rating.DISPLAY_FLOOR
-    assert min(r["overall"] for r in hist) <= rating.ESTIMATE_FLOOR
-    assert min(r["overall"] for r in proj) == rating.DISPLAY_FLOOR
+    hist_non_manual = [r["overall"] for r in hist if _manual_override_value(r) is None]
+    proj_non_manual = [r["overall"] for r in proj if _manual_override_value(r) is None]
+    assert min(r["overall"] for r in hist + proj) >= 0
+    assert min(hist_non_manual) >= rating.DISPLAY_FLOOR
+    assert min(hist_non_manual) <= rating.ESTIMATE_FLOOR
+    assert min(proj_non_manual) == rating.DISPLAY_FLOOR
 
 
 # ─── named greats land in-band (ordering preserved, no hard-pin) ──────────────
@@ -214,6 +244,10 @@ def test_spurious_99_cards_display_mid_80s(proj):
     by = {r["player_id"]: r for r in proj}
     for pid in ("P-34205", "P-39584", "P-58692", "P-W26-0166"):  # 0177->0166: merit-v3 U0 renumber
         ov = by[pid]["overall"]
+        if _manual_override_value(by[pid]) is not None:
+            assert 0 <= ov <= 90, (pid, ov)
+            assert by[pid]["legend"] is False, pid
+            continue
         assert 80 <= ov <= 90, (pid, ov)
         assert by[pid]["legend"] is False, pid
 

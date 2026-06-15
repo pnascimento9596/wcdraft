@@ -1,0 +1,2517 @@
+country,year,player_name,final_rating,rule,file1_val,file2_val,current_baseline
+Algeria,2010,Madjid Bougherra,77,"avg(78,76)",78,76,79
+Algeria,2010,Nadir Belhadj,76,"avg(74,77)",74,77,79
+Algeria,2010,Karim Ziani,76,"avg(77,75)",77,75,76
+Algeria,2010,Mehdi Lacen,75,f1-only,75,,76
+Algeria,2010,Anthar Yahia,73,"avg(74,72)",74,72,79
+Algeria,2010,Adlene Guedioura,73,f2-only,,73,76
+Algeria,2010,Foued Kadir,73,f2-only,,73,76
+Algeria,2010,Medhi Lacen,73,f2-only,,73,76
+Algeria,2010,Hassan Yebda,73,f2-only,,73,76
+Algeria,2010,Rafik Halliche,72,"avg(71,73)",71,73,79
+Algeria,2010,Faouzi Chaouchi,72,f2-only,,72,79
+Algeria,2010,Bolhi,72,f2-only,,72,79
+Algeria,2014,Sofiane Feghouli,81,agree,81,81,79
+Algeria,2014,Yacine Brahimi,74,"avg(75,73)",75,73,79
+Algeria,2014,Islam Slimani,74,agree,74,74,79
+Algeria,2014,Aissa Mandi,74,"avg(75,72)",75,72,79
+Algeria,2014,Madjid Bougherra,74,f2-only,,74,79
+Algeria,2014,Bolhi,73,f2-only,,73,79
+Algeria,2014,Essaid Belkalem,72,"avg(69,74)",69,74,79
+Algeria,2014,Abdelmoumene Djabou,72,f2-only,,72,79
+Algeria,2014,Carl Medjani,70,agree,70,70,79
+Algeria,2014,Rafik Halliche,68,agree,68,68,79
+Angola,2006,Flávio Amado,70,f2-only,,70,79
+Angola,2006,João Ricardo,70,f2-only,,70,79
+Angola,2006,Jamba,70,f2-only,,70,79
+Angola,2006,Kali,70,f2-only,,70,79
+Angola,2006,Locó,70,f2-only,,70,79
+Angola,2006,Norberto Delgado,70,f2-only,,70,79
+Angola,2006,Hipólito,62,f2-only,,62,71
+Angola,2006,Lamá,62,f2-only,,62,71
+Angola,2006,Love,62,f2-only,,62,71
+Angola,2006,Nobre,62,f2-only,,62,71
+Angola,2006,Titi Buengo,58,"avg(53,62)",53,62,71
+Argentina,2002,Matias Almeyda,82,agree,82,82,71
+Argentina,2002,German Burgos,76,f2-only,,76,71
+Argentina,2002,Claudio Caniggia,76,f2-only,,76,71
+Argentina,2002,Jose Chamot,76,f2-only,,76,71
+Argentina,2002,Roberto Bonano,75,agree,75,75,71
+Argentina,2006,Gabriel Milito,86,agree,86,86,71
+Argentina,2006,Rodrigo Palacio,76,agree,76,76,71
+Argentina,2006,Lionel Scaloni,76,agree,76,76,71
+Argentina,2006,Oscar Ustari,74,f2-only,,74,71
+Argentina,2006,Leandro Cufré,69,agree,69,69,71
+Argentina,2010,Carlos Tevez,85,agree,85,85,88
+Argentina,2010,Gonzalo Higuaín,82,agree,82,82,88
+Argentina,2010,Martin Demichelis,81,agree,81,81,88
+Argentina,2010,Nicolas Burdisso,77,agree,77,77,88
+Argentina,2010,Sergio Romero,77,agree,77,77,88
+Argentina,2014,Angel Di María,86,agree,86,86,88
+Argentina,2014,Gonzalo Higuaín,85,"avg(84,86)",84,86,88
+Argentina,2014,Javier Mascherano,84,agree,84,84,88
+Argentina,2014,Ezequiel Garay,82,agree,82,82,84
+Argentina,2014,Pablo Zabaleta,82,agree,82,82,84
+Argentina,2014,Martin Demichelis,81,"avg(79,82)",79,82,84
+Argentina,2014,Lucas Biglia,77,"avg(77,76)",77,76,88
+Argentina,2014,Fernando Gago,77,agree,77,77,88
+Argentina,2014,Marcos Rojo,77,"avg(77,76)",77,76,84
+Argentina,2014,Federico Fernández,75,agree,75,75,84
+Argentina,2014,Sergio Romero,74,"avg(72,76)",72,76,88
+Argentina,2018,Paulo Dybala,88,"avg(88,87)",88,87,71
+Argentina,2018,Lucas Biglia,83,"avg(83,82)",83,82,71
+Argentina,2018,Federico Fazio,82,agree,82,82,71
+Argentina,2018,Marcos Acuña,79,agree,79,79,71
+Argentina,2018,Nahuel Guzmán,78,agree,78,78,71
+Argentina,2022,Marcos Acuña,85,agree,85,85,88
+Argentina,2022,Rodrigo De Paul,84,agree,84,84,88
+Argentina,2022,Ángel Di María,84,agree,84,84,88
+Argentina,2022,Cristian Romero,83,agree,83,83,88
+Argentina,2022,Nicolas Gonzalo,82,"avg(81,82)",81,82,88
+Argentina,2022,Lisandro Martínez,81,agree,81,81,88
+Argentina,2022,Nicolas Tagliafico,81,agree,81,81,88
+Argentina,2022,Leandro Paredes,80,agree,80,80,88
+Argentina,2022,Julian Álvarez,79,"avg(78,79)",78,79,88
+Argentina,2022,Gonzalo Montiel,79,agree,79,79,88
+Argentina,2022,Alexis Mac Allister,78,"avg(76,80)",76,80,88
+Argentina,2022,Enzo Fernández,78,agree,78,78,88
+Argentina,2022,Nahuel Lucero,78,agree,78,78,88
+Argentina,2022,German Pezzella,77,agree,77,77,88
+Australia,2006,Harry Kewell,85,agree,85,85,82
+Australia,2006,Mark Schwarzer,83,agree,83,83,82
+Australia,2006,Tim Cahill,82,agree,82,82,82
+Australia,2006,Craig Moore,77,agree,77,77,82
+Australia,2006,Scott Chipperfield,75,agree,75,75,80
+Australia,2006,Mark Bresciano,73,f1-only,73,,80
+Australia,2006,Marco Bresciano,73,f2-only,,73,80
+Australia,2006,Lucas Neill,71,agree,71,71,82
+Australia,2006,Brett Emerton,70,agree,70,70,80
+Australia,2006,Vince Grella,70,agree,70,70,80
+Australia,2006,John Aloisi,66,agree,66,66,82
+Australia,2006,Jason Culina,60,agree,60,60,80
+Australia,2010,Harry Kewell,78,agree,78,78,71
+Australia,2010,Vincenzo Grella,72,agree,72,72,71
+Australia,2010,Adam Federici,71,"avg(70,72)",70,72,71
+Australia,2010,Michael Beauchamp,67,"avg(64,70)",64,70,71
+Australia,2010,Eugene Galekovic,66,"avg(62,70)",62,70,71
+Australia,2010,Mile Jedinak,65,agree,65,65,71
+Australia,2014,Mitchell Langerak,70,agree,70,70,71
+Australia,2014,Mark Milligan,68,agree,68,68,71
+Australia,2014,Adam Taggart,68,agree,68,68,71
+Australia,2014,Ivan Franjic,67,agree,67,67,71
+Australia,2014,Eugene Galeković,67,f1-only,67,,71
+Australia,2014,Eugene Australia,67,f2-only,,67,71
+Australia,2018,Bradley Scott Jones,77,f1-only,77,,71
+Australia,2018,Brad Jones,77,f2-only,,77,71
+Australia,2018,Jamie Maclaren,73,agree,73,73,71
+Australia,2018,Robbie Kruse,72,agree,72,72,72
+Australia,2018,Mathew Leckie,72,agree,72,72,72
+Australia,2018,Tomi Juric,71,"avg(72,70)",72,70,72
+Australia,2018,Tim Cahill,70,f1-only,70,,71
+Australia,2018,Daniel Vuković,70,f1-only,70,,71
+Australia,2018,Timothy Filiga,70,f2-only,,70,71
+Australia,2018,Danny Vukovic,70,f2-only,,70,71
+Australia,2018,Dimitri Petratos,66,agree,66,66,71
+Australia,2018,Andrew Nabbout,65,agree,65,65,72
+Australia,2018,Daniel Arzani,58,agree,58,58,72
+Australia,2022,Mathew Ryan,78,agree,78,78,80
+Australia,2022,Aaron Mooy,76,"avg(76,75)",76,75,80
+Australia,2022,Craig Goodwin,75,agree,75,75,80
+Australia,2022,Harry Souttar,73,"avg(72,73)",72,73,80
+Australia,2022,Milos Degenek,72,agree,72,72,80
+Australia,2022,Jackson Irvine,71,"avg(70,71)",70,71,80
+Australia,2022,Mathew Leckie,71,agree,71,71,80
+Australia,2022,Riley McGree,71,agree,71,71,80
+Australia,2022,Aziz Behich,70,"avg(70,69)",70,69,80
+Australia,2022,Awer Mabil,70,agree,70,70,71
+Australia,2022,Daniel Vuković,70,f1-only,70,,71
+Australia,2022,Danny Vukovic,70,f2-only,,70,71
+Australia,2022,Jason Cummings,69,"avg(68,69)",68,69,71
+Australia,2022,Mitchell Duke,68,"avg(67,68)",67,68,80
+Australia,2022,Kye Rowles,68,"avg(67,69)",67,69,80
+Australia,2022,Bailey Wright,68,agree,68,68,71
+Australia,2022,Keanu Baccus,68,f2-only,,68,80
+Australia,2022,Nathaniel Atkinson,67,"avg(68,66)",68,66,71
+Australia,2022,Marco Tilio,65,agree,65,65,71
+Australia,2022,Andrew Redmayne,65,agree,65,65,71
+Australia,2022,Garang Kuol,64,f2-only,,64,71
+Australia,2026,Paul Izzo,70,agree,70,70,71
+Australia,2026,Cristian Volpato,69,f2-only,,69,71
+Australia,2026,Patrick Beach,65,agree,65,65,71
+Australia,2026,Nishan Velupillay,65,agree,65,65,71
+Australia,2026,Lucas Herrington,59,agree,59,59,71
+Austria,2026,Konrad Laimer,83,"avg(82,84)",82,84,84
+Austria,2026,Marcel Sabitzer,81,"avg(80,81)",80,81,84
+Austria,2026,Stefan Posch,79,"avg(79,78)",79,78,84
+Austria,2026,Xaver Schlager,79,"avg(80,78)",80,78,84
+Austria,2026,Carney Chukwuemeka,78,f2-only,,78,72
+Austria,2026,Patrick Wimmer,77,agree,77,77,72
+Austria,2026,Michael Gregoritsch,75,agree,75,75,84
+Austria,2026,Alexander Prass,75,"avg(74,75)",74,75,72
+Austria,2026,Sasa Kalajdzic,74,"avg(74,73)",74,73,72
+Austria,2026,Alessandro Schopf,68,agree,68,68,72
+Belgium,2002,Glen De Boeck,77,agree,77,77,72
+Belgium,2002,Sven Vermant,76,agree,76,76,71
+Belgium,2002,Mbo Mpenza,72,agree,72,72,72
+Belgium,2002,Peter Van der Heyden,71,agree,71,71,72
+Belgium,2002,Eric Deflandre,71,agree,71,71,71
+Belgium,2002,Nico van Kerckhoven,71,f1-only,71,,72
+Belgium,2002,Eric Van Kerckhoven,71,f2-only,,71,72
+Belgium,2002,Eric Van Meir,70,f2-only,,70,72
+Belgium,2002,Frederic Herpoel,69,agree,69,69,71
+Belgium,2002,Branko Strupar,68,f2-only,,68,71
+Belgium,2002,Franky Vandendriessche,65,agree,65,65,71
+Belgium,2014,Vincent Kompany,86,agree,86,86,84
+Belgium,2014,Simon Mignolet,82,agree,82,82,71
+Belgium,2014,Dries Mertens,82,agree,82,82,84
+Belgium,2014,Jan Vertonghen,82,agree,82,82,84
+Belgium,2014,Thomas Vermaelen,79,agree,79,79,71
+Belgium,2014,Toby Alderweireld,78,agree,78,78,84
+Belgium,2014,Daniel Van Buyten,78,f2-only,,78,84
+Belgium,2014,Nicolas Lombaerts,76,agree,76,76,71
+Belgium,2014,Steven Defour,75,agree,75,75,71
+Belgium,2014,Sammy Bossut,71,"avg(71,70)",71,70,71
+Belgium,2014,Divock Origi,71,agree,71,71,84
+Belgium,2014,Anthony Borre,70,"avg(71,69)",71,69,71
+Belgium,2014,Adnan Januzaj,68,"avg(73,63)",73,63,71
+Belgium,2018,Dries Mertens,87,"avg(86,87)",86,87,88
+Belgium,2018,Toby Alderweireld,86,"avg(86,85)",86,85,88
+Belgium,2018,Jan Vertonghen,85,agree,85,85,88
+Belgium,2018,Vincent Kompany,85,agree,85,85,88
+Belgium,2018,Axel Witsel,82,agree,82,82,88
+Belgium,2018,Thomas Meunier,81,agree,81,81,88
+Belgium,2018,Marouane Fellaini,79,agree,79,79,88
+Belgium,2018,Nacer Chadli,78,agree,78,78,88
+Belgium,2022,Yannick Carrasco,85,agree,85,85,71
+Belgium,2022,Koen Casteels,84,agree,84,84,71
+Belgium,2022,Dries Mertens,84,agree,84,84,71
+Belgium,2022,Simon Mignolet,80,agree,80,80,71
+Belgium,2022,Charles De Ketelaere,78,agree,78,78,71
+Belgium,2022,Jeremy Doku,75,agree,75,75,71
+Belgium,2022,Ikoma Openda,75,agree,75,75,71
+Belgium,2026,Diego Moreira,77,agree,77,77,71
+Belgium,2026,Nicolas Raskin,77,agree,77,77,71
+Belgium,2026,Matias Fernandez-Pardo,75,f2-only,,75,71
+Belgium,2026,Joaquin Seys,73,"avg(73,72)",73,72,71
+Belgium,2026,Mike Penders,73,agree,73,73,71
+Belgium,2026,Nathan Ngoy,72,"avg(69,75)",69,75,71
+Bosnia and Herzegovina,2014,Senad Lulić,79,agree,79,79,72
+Bosnia and Herzegovina,2014,Zvjezdan Misimović,78,f2-only,,78,72
+Bosnia and Herzegovina,2014,Sejad Salihović,77,agree,77,77,72
+Bosnia and Herzegovina,2014,Izet Hajrović,75,agree,75,75,72
+Bosnia and Herzegovina,2014,Tino-Sven Sušić,75,f2-only,,75,72
+Bosnia and Herzegovina,2014,Ermin Bičakčić,73,"avg(73,72)",73,72,71
+Bosnia and Herzegovina,2014,Haris Medunjanin,72,f2-only,,72,72
+Bosnia and Herzegovina,2014,Avdija Vršajević,67,f2-only,,67,71
+Bosnia and Herzegovina,2014,Anel Hadžić,66,agree,66,66,71
+Bosnia and Herzegovina,2014,Asmir Avdukić,64,f2-only,,64,71
+Bosnia and Herzegovina,2014,Ognjen Vranješ,64,f2-only,,64,71
+Bosnia and Herzegovina,2014,Edin Višća,64,f2-only,,64,71
+Bosnia and Herzegovina,2014,Jasmin Fejzić,63,agree,63,63,71
+Bosnia and Herzegovina,2026,Edin Džeko,81,agree,81,81,79
+Bosnia and Herzegovina,2026,Sead Kolašinac,79,agree,79,79,79
+Bosnia and Herzegovina,2026,Nikola Vasilj,77,agree,77,77,79
+Bosnia and Herzegovina,2026,Amar Dedic,74,"avg(74,73)",74,73,79
+Bosnia and Herzegovina,2026,Haris Tabakovic,73,agree,73,73,72
+Bosnia and Herzegovina,2026,Armin Gigovic,72,agree,72,72,72
+Bosnia and Herzegovina,2026,Amar Memic,72,agree,72,72,71
+Bosnia and Herzegovina,2026,Dennis Hadzikadunic,70,"avg(70,69)",70,69,79
+Bosnia and Herzegovina,2026,Nikola Katic,69,agree,69,69,72
+Bosnia and Herzegovina,2026,Samed Bazdar,69,agree,69,69,71
+Bosnia and Herzegovina,2026,Dzenis Burnic,68,agree,68,68,72
+Bosnia and Herzegovina,2026,Martin Zlomislic,68,f2-only,,68,71
+Bosnia and Herzegovina,2026,Esmir Bajraktarevic,67,agree,67,67,72
+Bosnia and Herzegovina,2026,Nihad Mujakic,67,agree,67,67,71
+Bosnia and Herzegovina,2026,Ivan Basic,66,f2-only,,66,71
+Bosnia and Herzegovina,2026,Nidal Čelik,64,agree,64,64,71
+Bosnia and Herzegovina,2026,Kerim Alajbegovic,62,"avg(63,61)",63,61,72
+Brazil,2002,Lúcio,93,agree,93,93,87
+Brazil,2002,Marcos,93,agree,93,93,87
+Brazil,2002,Cafu,90,agree,90,90,87
+Brazil,2002,Gilberto Silva,89,f2-only,,89,87
+Brazil,2002,Edmílson,84,agree,84,84,87
+Brazil,2002,Kléberson,83,agree,83,83,87
+Brazil,2002,José Vitor Roque Junior,81,f1-only,81,,87
+Brazil,2002,R. Júnior,81,f2-only,,81,87
+Brazil,2002,Paulista,79,"avg(70,87)",70,87,87
+Brazil,2006,Adriano,94,agree,94,94,88
+Brazil,2006,Zé Roberto,92,agree,92,92,88
+Brazil,2006,Dida,91,agree,91,91,88
+Brazil,2006,Lúcio,90,agree,90,90,88
+Brazil,2006,Juan dos Santos,85,agree,85,85,88
+Brazil,2010,Júlio César,89,f1-only,89,,88
+Brazil,2010,Júlio de Espindola,89,f2-only,,89,88
+Brazil,2010,Maicon Sisenando,86,"avg(86,85)",86,85,88
+Brazil,2010,Dani Alves,86,f1-only,86,,88
+Brazil,2010,Daniel da Silva,86,f2-only,,86,88
+Brazil,2010,Luís Fabiano,85,agree,85,85,88
+Brazil,2010,Lúcio,85,"avg(85,84)",85,84,88
+Brazil,2010,Robinho,85,f1-only,85,,88
+Brazil,2010,Juan dos Santos,84,agree,84,84,88
+Brazil,2010,Grafite,83,f1-only,83,,71
+Brazil,2010,Edinaldo Libanio,83,f2-only,,83,71
+Brazil,2010,Michel Bastos,82,agree,82,82,88
+Brazil,2010,Josué de Oliveira,82,"avg(82,81)",82,81,71
+Brazil,2010,Julio Baptista,81,agree,81,81,71
+Brazil,2010,Heurelho Gomes,81,"avg(79,82)",79,82,71
+Brazil,2010,Robson de Souza,81,f2-only,,81,88
+Brazil,2010,Doni,79,f1-only,79,,71
+Brazil,2010,Donieber Marangao,78,f2-only,,78,71
+Brazil,2010,Jose Pereira,76,f2-only,,76,71
+Brazil,2010,Kléberson,74,f1-only,74,,71
+Brazil,2014,Oscar,84,agree,84,84,88
+Brazil,2014,Dante Santos,84,agree,84,84,72
+Brazil,2014,Jefferson,82,agree,82,82,72
+Brazil,2014,Fernandinho,82,f1-only,82,,88
+Brazil,2014,Júlio César,82,f1-only,82,,88
+Brazil,2014,Júlio de Espindola,82,f2-only,,82,88
+Brazil,2014,Ramires do Nascimento,81,agree,81,81,88
+Brazil,2014,Luiz Gustavo,81,f1-only,81,,88
+Brazil,2014,Paulinho,81,f1-only,81,,88
+Brazil,2014,Fernando Roza,81,f2-only,,81,88
+Brazil,2014,Luiz Dias,81,f2-only,,81,88
+Brazil,2014,Jose Junior,81,f2-only,,81,88
+Brazil,2014,Victor Bagy,79,agree,79,79,72
+Brazil,2014,Fred,79,f1-only,79,,88
+Brazil,2014,Frederico Guedes,79,f2-only,,79,88
+Brazil,2014,Maxwell,77,agree,77,77,72
+Brazil,2014,N. Henrique,76,agree,76,76,72
+Brazil,2018,Ederson de Moraes,84,"avg(83,85)",83,85,71
+Brazil,2018,Marcos Corrêa,84,"avg(83,84)",83,84,71
+Brazil,2018,Taison Freda,82,agree,82,82,71
+Brazil,2018,Danilo,79,f2-only,,79,71
+Brazil,2018,Cássio Ramos,77,f2-only,,77,71
+Brazil,2018,Cássio Albuquerque dos Anjos,75,f1-only,75,,71
+Brazil,2022,Gleison Nascimento,83,agree,83,83,73
+Brazil,2022,Raphael Belloli,83,agree,83,83,73
+Brazil,2022,Antony dos Santos,82,agree,82,82,73
+Brazil,2022,Bruno Guimarães,82,"avg(81,83)",81,83,73
+Brazil,2022,Rodrygo de Goes,82,"avg(81,83)",81,83,73
+Brazil,2022,Alex Telles,80,agree,80,80,73
+Brazil,2022,Daniel da Silva,77,f2-only,,77,73
+Brazil,2022,Lucas Pedro Alves de Lima,72,f1-only,72,,73
+Brazil,2026,Matheus Cunha,83,agree,83,83,72
+Brazil,2026,Wesley Lima,78,"avg(77,79)",77,79,72
+Brazil,2026,Rayan Rocha,78,f2-only,,78,72
+Brazil,2026,Alex Sandro,77,f2-only,,77,72
+Brazil,2026,Igor Thiago,75,agree,75,75,72
+Cameroon,2002,Geremi Fotso,84,agree,84,84,78
+Cameroon,2002,Rigobert Song,80,f1-only,80,,78
+Cameroon,2002,Rigobert Bahanag,80,f2-only,,80,78
+Cameroon,2002,Raymond Kalla,79,f1-only,79,,78
+Cameroon,2002,Raymond Nkongo,79,f2-only,,79,78
+Cameroon,2002,Joseph-Desire Job,75,agree,75,75,71
+Cameroon,2002,Bill Tchato,75,agree,75,75,78
+Cameroon,2002,Carlos Kameni,74,agree,74,74,71
+Cameroon,2002,Pius Ndiefi,71,agree,71,71,71
+Cameroon,2002,Womé,70,f1-only,70,,78
+Cameroon,2002,Pierre Nlend,70,f2-only,,70,78
+Cameroon,2002,Jacques o,69,f2-only,,69,71
+Cameroon,2002,Patrick Suffo,67,agree,67,67,71
+Cameroon,2002,Pierre Njanka,65,f1-only,65,,71
+Cameroon,2002,Pierre Beaka,65,f2-only,,65,71
+Cameroon,2010,Carlos Kameni,81,agree,81,81,71
+Cameroon,2010,Alexandre Song,79,agree,79,79,71
+Cameroon,2010,Rigobert Song,79,agree,79,79,71
+Cameroon,2010,Achille Emaná,76,agree,76,76,72
+Cameroon,2010,Pierre Webó,75,agree,75,75,72
+Cameroon,2010,Aurelien Chedjou,73,agree,73,73,71
+Cameroon,2010,Eyong Enoh,73,agree,73,73,72
+Cameroon,2010,Guemo,72,f1-corrupt->f2,39,72,71
+Cameroon,2010,Mohamadou Idrissou,71,agree,71,71,72
+Cameroon,2010,Joel Matip,71,f2-only,,71,71
+Cameroon,2010,Vincent Aboubakar,71,f2-only,,71,72
+Cameroon,2010,Eric Choupo-Moting,67,f2-only,,67,72
+Cameroon,2010,Gaetan Bong,63,agree,63,63,71
+Cameroon,2010,Guy-Roland Assembé,61,f2-only,,61,71
+Cameroon,2014,Alexandre Song-Billong,83,agree,83,83,72
+Cameroon,2014,Henri Bedimo,76,f1-only,76,,71
+Cameroon,2014,Henri Nsame,76,f2-only,,76,71
+Cameroon,2014,Vincent Aboubakar,75,"avg(76,73)",76,73,71
+Cameroon,2014,Guemo,75,f1-corrupt->f2,39,75,71
+Cameroon,2014,Eric Maxim Choupo-Moting,75,f1-only,75,,72
+Cameroon,2014,Pierre Webó,75,f1-only,75,,72
+Cameroon,2014,Pierre Kouamo,75,f2-only,,75,72
+Cameroon,2014,Jean Makoun,74,agree,74,74,71
+Cameroon,2014,Jean-Eric Choupo-Moting,74,f2-only,,74,72
+Cameroon,2014,Allan-Romeo Nyom,73,agree,73,73,71
+Cameroon,2014,Sammy Ndjock,72,agree,72,72,71
+Cameroon,2014,Benjamin Moukandjo,69,f1-only,69,,72
+Cameroon,2014,Benjamin Bile,69,f2-only,,69,72
+Cameroon,2014,Edgar Salli,68,agree,68,68,72
+Cameroon,2014,Cedric Djeugoué,63,agree,63,63,71
+Cameroon,2014,Maxime Nguegang,52,f2-only,,52,71
+Cameroon,2022,André Onana,83,"avg(82,83)",82,83,79
+Cameroon,2022,Nicolas Ndoubena,81,f2-only,,81,73
+Cameroon,2022,Jean-Eric Choupo-Moting,77,"avg(75,78)",75,78,79
+Cameroon,2022,Jean-Pierre Nsame,76,"avg(75,76)",75,76,71
+Cameroon,2022,Vincent Aboubakar,76,"avg(75,77)",75,77,79
+Cameroon,2022,Georges-Kevin Mbida,75,f2-only,,75,73
+Cameroon,2022,Jean-Charles Castelletto,74,agree,74,74,73
+Cameroon,2022,Christian Bassogog,74,agree,74,74,71
+Cameroon,2022,Nicolas Ngamaleu,74,f2-only,,74,71
+Cameroon,2022,Pierre Malong,73,f2-only,,73,73
+Cameroon,2022,Martin Hongla Yma,72,f1-only,72,,73
+Cameroon,2022,Jules Ntcham,72,f2-only,,72,71
+Cameroon,2022,Enzo Ebosse,71,"avg(70,71)",70,71,71
+Cameroon,2022,Nouhou Tolo,71,"avg(70,71)",70,71,79
+Cameroon,2022,Martin II,71,f2-only,,71,73
+Cameroon,2022,Collins Fai,70,agree,70,70,79
+Cameroon,2022,Christopher Wooh,69,"avg(68,70)",68,70,71
+Cameroon,2022,Samuel Gouet,68,agree,68,68,73
+Cameroon,2022,Gael Ondoua,68,agree,68,68,73
+Cameroon,2022,Devis Mboka,67,"avg(66,68)",66,68,79
+Cameroon,2022,Simon Ngapandouetnbu,67,f2-only,,67,71
+Cameroon,2022,Jerome Mbekeli,66,f2-only,,66,71
+Canada,2022,Dayne Tristan,74,f2-only,,74,71
+Canada,2022,Ike Ugbo,72,agree,72,72,71
+Canada,2022,Kamal Miller,72,"avg(71,72)",71,72,79
+Canada,2022,Richie Mamah Laryea,72,f1-only,72,,79
+Canada,2022,Mark-Anthony Kaye,71,agree,71,71,71
+Canada,2022,Alistair Johnston,71,"avg(70,71)",70,71,79
+Canada,2022,Lucas Cavallini,71,agree,71,71,71
+Canada,2022,Dayne St. Clair,71,f1-only,71,,71
+Canada,2022,Richmond Mamah,71,f2-only,,71,79
+Canada,2022,Samuel Adekugbe,70,agree,70,70,79
+Canada,2022,Steven Vitória,70,"avg(69,71)",69,71,79
+Canada,2022,Liam Millar,68,"avg(67,68)",67,68,71
+Canada,2022,David Wotherspoon,67,"avg(67,66)",67,66,71
+Canada,2022,James Pantemis,66,agree,66,66,71
+Cape Verde,2026,Steven Moreira,72,f2-only,,72,71
+Cape Verde,2026,Telmo Arcanjo,71,f2-only,,71,72
+Cape Verde,2026,Wagner Pina,71,f2-only,,71,72
+Cape Verde,2026,Garry Rodrigues,70,f2-only,,70,72
+Cape Verde,2026,Deroy Duarte,69,f2-only,,69,71
+Cape Verde,2026,Willy Semedo,68,f2-only,,68,71
+Cape Verde,2026,Kevin Pina,67,f2-only,,67,72
+Cape Verde,2026,Sidny Cabral,67,f2-only,,67,72
+Cape Verde,2026,Helio Varela,67,f2-only,,67,71
+Cape Verde,2026,Roberto Lopes,66,f2-only,,66,72
+Cape Verde,2026,João Fernandes,65,f2-only,,65,72
+Cape Verde,2026,Marcio Rosa,64,f2-only,,64,72
+Cape Verde,2026,Edilson Borges,63,f2-only,,63,72
+Cape Verde,2026,Yannick Semedo,63,f2-only,,63,71
+Chile,2010,Rodrigo Tello,79,agree,79,79,71
+Chile,2010,Fabian Orellana,74,agree,74,74,71
+Chile,2010,Luis Marín,74,f2-only,,74,71
+Chile,2010,Miguel Pinto,74,f2-only,,74,71
+Chile,2010,Marco Estrada,74,f2-only,,74,71
+Chile,2010,Ismael Fuentes,73,"avg(71,74)",71,74,71
+China,2002,Du Wei,63,f2-only,,63,72
+China,2002,Hao Haidong,63,f2-only,,63,72
+China,2002,Ma Mingyu,63,f2-only,,63,72
+China,2002,Yang Pu,63,f2-only,,63,72
+China,2002,Qu Bo,63,f2-only,,63,72
+China,2002,Shao Jiayi,63,f2-only,,63,72
+China,2002,Yu Genwei,63,f2-only,,63,72
+China,2002,Zhao Junzhe,63,f2-only,,63,72
+China,2002,Yang Chen,62,f2-only,,62,71
+China,2002,Fan Zhiyi,62,f2-only,,62,71
+China,2002,Ou Chuliang,62,f2-only,,62,71
+China,2002,An Qi,62,f2-only,,62,71
+China,2002,Qi Hong,62,f2-only,,62,71
+China,2002,Su Maozhen,62,f2-only,,62,71
+China,2002,Sun Jihai,62,f2-only,,62,71
+Colombia,2014,Carlos Bacca,78,agree,78,78,71
+Colombia,2014,Camilo Vargas,75,agree,75,75,71
+Colombia,2014,Éder Balanta,75,agree,75,75,71
+Colombia,2014,Carlos Valdés,73,agree,73,73,71
+Colombia,2014,Carlos Carbonero,73,agree,73,73,71
+Colombia,2018,Juan Cuadrado,82,agree,82,82,86
+Colombia,2018,Davinson Sánchez,82,"avg(81,82)",81,82,86
+Colombia,2018,Juan Guillermo Cuadrado Bello,82,f1-only,82,,86
+Colombia,2018,Jose Izquierdo,80,"avg(78,82)",78,82,71
+Colombia,2018,Cristian Zapata,78,agree,78,78,71
+Colombia,2018,Santiago Arias,78,"avg(77,79)",77,79,86
+Colombia,2018,Oscar Murillo,77,"avg(76,77)",76,77,71
+Colombia,2018,Juan Quintero,77,agree,77,77,86
+Colombia,2018,Miguel Borja,77,f2-only,,77,71
+Colombia,2018,Abel Aguilar,75,agree,75,75,71
+Colombia,2018,Camilo Vargas,75,agree,75,75,71
+Colombia,2018,José Cuadrado,74,f2-only,,74,71
+Colombia,2018,Johan Mojica,72,"avg(70,73)",70,73,86
+Colombia,2018,Cristian Martínez Borja,69,f1-only,69,,71
+Colombia,2026,Luis Suarez,80,f2-only,,80,72
+Colombia,2026,Juan Hernández,79,f2-only,,79,72
+Colombia,2026,Camilo Vargas,77,f2-only,,77,72
+Colombia,2026,Jorge Carrascal,77,f2-only,,77,72
+Colombia,2026,Kevin Castano,76,"avg(77,74)",77,74,72
+Colombia,2026,Álvaro Montero,75,agree,75,75,72
+Colombia,2026,Carlos Gómez,72,f2-only,,72,72
+Colombia,2026,Michael David Barrios Puerta,71,f1-only,71,,72
+Colombia,2026,Rafael Andrés Carrascal Avilez,70,f1-only,70,,72
+Colombia,2026,Kerwin Andrés Calderón Vargas,68,f1-only,68,,72
+Colombia,2026,Gustavo Puerta,68,f2-only,,68,72
+Costa Rica,2002,Mauricio Wright,70,"avg(71,69)",71,69,78
+Costa Rica,2002,C. Castro,69,f2-only,,69,78
+Costa Rica,2002,Gilberto Vidal,69,f2-only,,69,78
+Costa Rica,2002,Harold McDonald,69,f2-only,,69,78
+Costa Rica,2002,Likely Marín,69,f2-only,,69,78
+Costa Rica,2002,Luis Antonio Marin,65,f1-only,65,,78
+Costa Rica,2002,Gilberto Martinez,64,f1-only,64,,78
+Costa Rica,2006,Álvaro Saborío,72,f1-only,72,,72
+Costa Rica,2006,to Saborío,72,f2-only,,72,72
+Costa Rica,2006,Douglas Sequeira,69,f1-only,69,,72
+Costa Rica,2006,D. Sequeira,69,f2-only,,69,72
+Costa Rica,2006,to Bolaños,68,f2-only,,68,72
+Costa Rica,2006,Likely Hernández,68,f2-only,,68,72
+Costa Rica,2006,to Fonseca,68,f2-only,,68,72
+Costa Rica,2006,Gilberto Martinez Vidal,64,f1-only,64,,71
+Costa Rica,2006,G. Martínez,64,f2-only,,64,71
+Costa Rica,2006,Cristian Badilla,63,f1-only,63,,71
+Costa Rica,2006,Likely Azofeifa,62,f2-only,,62,71
+Costa Rica,2006,Likely Badilla,62,f2-only,,62,71
+Costa Rica,2006,to Bernard,62,f2-only,,62,71
+Costa Rica,2006,Likely Mesén,62,f2-only,,62,71
+Costa Rica,2006,to Núñez,62,f2-only,,62,71
+Costa Rica,2006,W. Alfaro,62,f2-only,,62,71
+Costa Rica,2014,Bryan Ruiz,80,"avg(78,82)",78,82,82
+Costa Rica,2014,Joel Campbell,75,"avg(76,74)",76,74,82
+Costa Rica,2014,Christian Navarro,74,f2-only,,74,82
+Costa Rica,2014,Celso Borges,72,f1-only,72,,82
+Costa Rica,2014,Giancarlo González,72,f1-only,72,,82
+Costa Rica,2014,Celso Mora,72,f2-only,,72,82
+Costa Rica,2014,Junior Díaz,71,agree,71,71,82
+Costa Rica,2014,Cristian Gamboa,70,"avg(71,69)",71,69,82
+Costa Rica,2014,Christian Bolaños,70,f1-only,70,,82
+Costa Rica,2014,Oscar Duarte,69,agree,69,69,82
+Costa Rica,2014,Yeltsin Tejeda,69,f2-only,,69,82
+Costa Rica,2014,Michael Corrales,69,f2-only,,69,82
+Costa Rica,2014,Giancarlo Castro,66,f2-only,,66,82
+Costa Rica,2014,Marcos Ureña,62,agree,62,62,82
+Costa Rica,2018,Joel Campbell,77,"avg(77,76)",77,76,72
+Costa Rica,2018,Kendall Waston,74,agree,74,74,71
+Costa Rica,2018,Christian Bolaños,71,agree,71,71,72
+Costa Rica,2018,Randall Azofeifa,71,f2-only,,71,71
+Costa Rica,2018,Marco Ureña,69,f2-only,,69,72
+Costa Rica,2018,Rodney Wallace,68,agree,68,68,71
+Costa Rica,2018,Yeltsin Tejeda,68,agree,68,68,71
+Costa Rica,2018,Johan Venegas,68,"avg(67,68)",67,68,72
+Costa Rica,2018,Marcos Danilo Ureña Porras,68,f1-only,68,,72
+Costa Rica,2018,Ian Smith,66,f2-only,,66,71
+Costa Rica,2018,Patrick Pemberton,66,f2-only,,66,71
+Costa Rica,2018,Daniel Colindres,63,f2-only,,63,72
+Costa Rica,2018,Leonel Moreira,62,f2-only,,62,71
+Costa Rica,2022,Bryan Ruiz,78,f2-only,,78,71
+Costa Rica,2022,Juan Vargas,71,f2-only,,71,71
+Costa Rica,2022,Esteban Alvarado,67,f2-only,,67,71
+Costa Rica,2022,Johan Venegas,67,f2-only,,67,71
+Costa Rica,2022,Patrick Sequeira,62,agree,62,62,71
+Costa Rica,2022,Carlos Martínez,62,f2-only,,62,71
+Costa Rica,2022,Daniel Chacón,62,f2-only,,62,71
+Costa Rica,2022,Gerson Barrantes,62,f2-only,,62,71
+Costa Rica,2022,Roan Wilson,61,f2-only,,61,71
+Costa Rica,2022,Alvaro Zamora,61,f2-only,,61,71
+Croatia,2002,Zvonimir Soldo,82,agree,82,82,72
+Croatia,2002,Boris Živković,80,agree,80,80,71
+Croatia,2002,Bosko Balaban,80,agree,80,80,71
+Croatia,2002,Josip Šimunić,79,agree,79,79,78
+Croatia,2002,Robert Kovač,78,agree,78,78,78
+Croatia,2002,Dario Šimić,77,agree,77,77,72
+Croatia,2002,Robert Jarni,76,f2-only,,76,78
+Croatia,2002,Šarić,76,f2-only,,76,78
+Croatia,2002,Alen Bokšić,75,f2-only,,75,72
+Croatia,2002,Mario Stanić,75,f2-only,,75,72
+Croatia,2002,Stjepan Tomas,74,f1-only,74,,78
+Croatia,2002,Igor No,74,f2-only,,74,78
+Croatia,2002,Jurica Vranjes,73,f1-only,73,,72
+Croatia,2002,Robert Prosinečki,73,f2-only,,73,71
+Croatia,2002,Vladimir Vasilj,73,f2-only,,73,71
+Croatia,2002,Goran Vlaović,73,f2-only,,73,71
+Croatia,2002,J. Vranješ,73,f2-only,,73,72
+Croatia,2002,Tomislav Butina,70,agree,70,70,71
+Croatia,2002,Davor Vugrinec,62,agree,62,62,71
+Croatia,2006,Bosko Balaban,79,agree,79,79,71
+Croatia,2006,Stjepan Tomas,76,agree,76,76,71
+Croatia,2006,Ivan Bošnjak,71,f2-only,,71,71
+Croatia,2006,Tomislav Butina,70,agree,70,70,71
+Croatia,2006,Joseph Didulica,70,agree,70,70,71
+Croatia,2014,Nikica Jelavić,75,agree,75,75,71
+Croatia,2014,Danijel Subašić,75,agree,75,75,71
+Croatia,2014,Eduardo,75,agree,75,75,71
+Croatia,2014,Sammir,73,agree,73,73,71
+Croatia,2014,Marcelo Brozović,73,f2-only,,73,71
+Croatia,2014,Oliver Zelenika,73,f2-only,,73,71
+Croatia,2018,Ivan Rakitić,87,agree,87,87,86
+Croatia,2018,Danijel Subašić,85,agree,85,85,86
+Croatia,2018,Marcelo Brozović,83,"avg(81,85)",81,85,86
+Croatia,2018,Mario Mandžukić,83,agree,83,83,86
+Croatia,2018,Ivan Perišić,83,"avg(84,82)",84,82,86
+Croatia,2018,Mateo Kovačić,82,agree,82,82,86
+Croatia,2018,Vedran Ćorluka,82,agree,82,82,86
+Croatia,2018,Andrej Kramarić,81,agree,81,81,86
+Croatia,2018,Dejan Lovren,81,"avg(81,80)",81,80,86
+Croatia,2018,Sime Vrsaljko,80,"avg(79,80)",79,80,86
+Croatia,2018,Josip Pivarić,79,f2-only,,79,86
+Croatia,2018,Domagoj Vida,79,f2-only,,79,86
+Croatia,2018,Milan Badelj,78,agree,78,78,86
+Croatia,2018,Lovre Kalinić,77,"avg(77,76)",77,76,86
+Croatia,2018,Ivan Strinić,75,agree,75,75,86
+Croatia,2018,Ante Rebić,74,"avg(72,76)",72,76,86
+Croatia,2022,Marcelo Brozović,86,agree,86,86,87
+Croatia,2022,Mateo Kovačić,84,"avg(84,83)",84,83,87
+Croatia,2022,Ivan Perišić,84,agree,84,84,87
+Croatia,2022,Josko Gvardiol,82,"avg(81,82)",81,82,87
+Croatia,2022,Andrej Kramarić,82,agree,82,82,87
+Croatia,2022,Mario Pašalić,81,"avg(81,80)",81,80,87
+Croatia,2022,Lovro Majer,80,"avg(80,79)",80,79,87
+Croatia,2022,Dominik Livaković,80,agree,80,80,87
+Croatia,2022,Borna Sosa,78,agree,78,78,87
+Croatia,2022,Dejan Lovren,78,agree,78,78,87
+Croatia,2022,Nikola Vlašić,78,agree,78,78,87
+Croatia,2022,Marko Livaja,77,agree,77,77,87
+Croatia,2022,Mislav Oršić,77,agree,77,77,87
+Croatia,2022,Bruno Petković,75,agree,75,75,87
+Croatia,2022,Josip Juranović,75,agree,75,75,87
+Curaçao,2026,Tijjani Noslin,74,f2-only,,74,71
+Curaçao,2026,Armando Obispo,74,f2-only,,74,71
+Curaçao,2026,Tahith Chong,71,"avg(71,70)",71,70,73
+Curaçao,2026,Joshua Brenet,70,f2-only,,70,71
+Curaçao,2026,Shurandy Sambo,68,"avg(68,67)",68,67,71
+Curaçao,2026,Jeremy Antonisse,68,f2-only,,68,73
+Curaçao,2026,Brandley Kuwas,67,agree,67,67,71
+Curaçao,2026,Tyrese Noslin,66,f1-only,66,,71
+Curaçao,2026,Godfried Roemeratoe,65,f2-only,,65,73
+Curaçao,2026,Gervane Kastaneer,63,f2-only,,63,73
+Curaçao,2026,Jearl Margaritha,63,f2-only,,63,73
+Curaçao,2026,Livano Comenencia,62,agree,62,62,73
+Curaçao,2026,Tyrick Bodak,60,agree,60,60,73
+Czech Republic,2006,Milan Baroš,86,agree,86,86,71
+Czech Republic,2006,Jaromir Blažek,78,agree,78,78,71
+Czech Republic,2006,Marek Heinz,76,agree,76,76,71
+Czech Republic,2006,Radoslav Kováč,76,f2-only,,76,71
+Czech Republic,2006,Libor Sionko,72,"avg(67,76)",67,76,71
+Czech Republic,2006,David Jarolím,71,"avg(66,76)",66,76,71
+Czech Republic,2006,Antonín Kinský,68,agree,68,68,71
+Czech Republic,2026,Patrik Schick,85,agree,85,85,81
+Czech Republic,2026,Tomas Soucek,78,agree,78,78,81
+Czech Republic,2026,Adam Hlozek,77,agree,77,77,81
+Czech Republic,2026,Tomas Holes,76,agree,76,76,72
+Czech Republic,2026,Tomas Chory,75,agree,75,75,72
+Czech Republic,2026,Matej Kovar,75,agree,75,75,81
+Czech Republic,2026,Lukas Cerv,74,agree,74,74,72
+Czech Republic,2026,Jan Kuchta,73,agree,73,73,72
+Czech Republic,2026,Vladimir Coufal,73,agree,73,73,81
+Czech Republic,2026,David Jurasek,73,f2-only,,73,72
+Czech Republic,2026,Robin Hranac,71,agree,71,71,72
+DR Congo,2026,Yoane Wissa,82,agree,82,82,79
+DR Congo,2026,Aaron Wan-Bissaka,80,agree,80,80,72
+DR Congo,2026,Cedric Bakambu,77,agree,77,77,79
+DR Congo,2026,Arthur Masuaku,75,agree,75,75,79
+DR Congo,2026,Chancel Mbemba,75,agree,75,75,79
+DR Congo,2026,Joris Kayembe,74,agree,74,74,72
+DR Congo,2026,Ngal Mukau,74,agree,74,74,72
+DR Congo,2026,Axel Tuanzebe,73,agree,73,73,72
+DR Congo,2026,Matthieu Epolo,73,f2-only,,73,71
+DR Congo,2026,Gael Kakuta,72,f2-only,,72,71
+DR Congo,2026,Fiston Mayele,72,f2-only,,72,72
+DR Congo,2026,Edo Kayembe,71,agree,71,71,79
+DR Congo,2026,Dylan Batubinsika,71,agree,71,71,71
+DR Congo,2026,Meschack Elia,70,agree,70,70,79
+DR Congo,2026,Timothy Fayulu,69,f2-only,,69,71
+DR Congo,2026,Lionel M'Pasi N'Zau,67,f1-only,67,,79
+DR Congo,2026,Mayele Fabrice N'Sakala,67,f1-only,67,,72
+DR Congo,2026,Lionel Mpasi,67,f2-only,,67,79
+DR Congo,2026,Brian Cipenga,66,agree,66,66,71
+DR Congo,2026,Aaron Tshibola,64,f2-only,,64,71
+Denmark,2002,Jon Tomasson,87,agree,87,87,86
+Denmark,2002,Dennis Rommedahl,85,agree,85,85,86
+Denmark,2002,Martin Laursen,83,agree,83,83,86
+Denmark,2002,Thomas Sørensen,82,agree,82,82,86
+Denmark,2002,Peter Løvenkrands,82,agree,82,82,71
+Denmark,2002,Thomas Helveg,79,agree,79,79,86
+Denmark,2002,Claus Jensen,79,agree,79,79,71
+Denmark,2002,Peter Madsen,79,agree,79,79,71
+Denmark,2002,P. Kjær,77,f2-only,,77,71
+Denmark,2002,Rene Henriksen,74,agree,74,74,86
+Denmark,2002,Christiansen,63,agree,63,63,71
+Denmark,2002,Steen Nielsen,59,agree,59,59,71
+Denmark,2010,Daniel Jensen,77,agree,77,77,71
+Denmark,2010,Per Krøldrup,76,agree,76,76,71
+Denmark,2010,Stephan Andersen,75,agree,75,75,71
+Denmark,2010,Jesper Christiansen,73,agree,73,73,71
+Denmark,2010,Søren Larsen,70,agree,70,70,71
+Denmark,2010,Thomas Enevoldsen,69,agree,69,69,71
+Denmark,2010,Mikkel Beckmann,65,agree,65,65,71
+Denmark,2018,Christian Eriksen,88,"avg(87,88)",87,88,86
+Denmark,2018,Kasper Schmeichel,83,agree,83,83,86
+Denmark,2018,Andreas Christensen,82,"avg(81,82)",81,82,86
+Denmark,2018,Simon Thorup Kjær,81,f1-only,81,,86
+Denmark,2018,Simon Kjaer,80,f2-only,,80,86
+Denmark,2018,Michael Krohn-Dehli,78,"avg(79,77)",79,77,71
+Denmark,2018,Kasper Rasmussen,78,agree,78,78,71
+Denmark,2018,Viktor Fischer,76,"avg(75,76)",75,76,71
+Denmark,2018,Jonas Lössl,75,agree,75,75,71
+Denmark,2018,Lukas Lerager,74,agree,74,74,71
+Denmark,2018,Frederik Rønnow,74,"avg(73,74)",73,74,71
+Denmark,2018,Henrik Dalsgaard,71,agree,71,71,86
+Denmark,2018,Jonas Knudsen,70,"avg(69,71)",69,71,71
+Denmark,2018,William Vitved Kvist Jørgensen,70,f1-only,70,,71
+Denmark,2018,William Jorgensen,70,f2-only,,70,71
+Denmark,2022,Simon Kjær,82,agree,82,82,71
+Denmark,2022,Thomas Delaney,81,"avg(81,80)",81,80,71
+Denmark,2022,Martin Braithwaite,77,"avg(76,78)",76,78,71
+Denmark,2022,Yussuf Poulsen,77,agree,77,77,71
+Denmark,2022,Victor Nelsson,76,"avg(75,77)",75,77,71
+Denmark,2022,Christian Nørgaard,76,agree,76,76,71
+Denmark,2022,Frederik Rønnow,76,"avg(75,77)",75,77,71
+Denmark,2022,Jonas Wind,76,agree,76,76,71
+Denmark,2022,Andreas Skov Olsen,76,f1-only,76,,71
+Denmark,2022,Robert Skov,74,f2-only,,74,71
+Denmark,2022,Oliver Christensen,72,"avg(70,74)",70,74,71
+Ecuador,2002,Ulises de la Cruz,72,"avg(75,69)",75,69,78
+Ecuador,2002,A. Porozo,69,f2-only,,69,78
+Ecuador,2002,Guerrón,69,f2-only,,69,78
+Ecuador,2002,Marlon Ayoví,69,f2-only,,69,78
+Ecuador,2002,Iván Kaviedes,68,"avg(73,62)",73,62,71
+Ecuador,2002,Iván Hurtado,63,"avg(57,69)",57,69,78
+Ecuador,2002,Asencio,62,f2-only,,62,71
+Ecuador,2002,O. Ibarra,62,f2-only,,62,71
+Ecuador,2002,Viteri,62,f2-only,,62,71
+Ecuador,2002,Ángel Fernández,62,f2-only,,62,71
+Ecuador,2006,Agustin Delgado,81,f2-only,,81,79
+Ecuador,2006,Giovanny Espinoza,80,f2-only,,80,79
+Ecuador,2006,Edison Méndez,79,f2-only,,79,79
+Ecuador,2006,Edwin Tenorio,78,f2-only,,78,79
+Ecuador,2006,Ivan Hurtado,78,f2-only,,78,79
+Ecuador,2006,Neicer Reasco,78,f2-only,,78,79
+Ecuador,2006,Cristian Villafuerte,77,f2-only,,77,71
+Ecuador,2006,Cristian Mora,76,f2-only,,76,79
+Ecuador,2006,Carlos Tenorio,76,f2-only,,76,79
+Ecuador,2006,Neicer s,76,f2-only,,76,79
+Ecuador,2006,Jorge Lanza,76,f2-only,,76,71
+Ecuador,2006,Ulises de la Cruz,75,agree,75,75,79
+Ecuador,2006,Ivan Kaviedes,75,f2-only,,75,79
+Ecuador,2006,Christian Benítez,70,f2-only,,70,71
+Ecuador,2006,Felix Borja,70,f2-only,,70,71
+Ecuador,2006,Marlon Ambrossi,67,f2-only,,67,71
+Ecuador,2006,Marlon Ayoví,67,f2-only,,67,71
+Ecuador,2006,Luis Valencia,60,agree,60,60,79
+Ecuador,2014,Renato Ibarra,73,"avg(74,72)",74,72,71
+Ecuador,2014,Joao Rojas,72,agree,72,72,71
+Ecuador,2014,Edison Méndez,72,"avg(71,72)",71,72,71
+Ecuador,2014,Maximo Banguera,70,agree,70,70,71
+Ecuador,2014,Adrian Bone,70,f2-only,,70,71
+Ecuador,2022,José Cifuentes,73,agree,73,73,73
+Ecuador,2022,Carlos Gruezo,73,"avg(72,73)",72,73,71
+Ecuador,2022,Wellington Ramírez,70,agree,70,70,71
+Ecuador,2022,Arón David Rodríguez Franco,70,f1-only,70,,73
+Ecuador,2022,Alexander Carabalí,70,f2-only,,70,71
+Ecuador,2022,Jackson Porozo,69,"avg(68,70)",68,70,73
+Ecuador,2022,Jhegson Méndez,69,f2-only,,69,73
+Ecuador,2022,Alan Franco,68,f2-only,,68,73
+Ecuador,2022,Romario Ibarra,68,f2-only,,68,73
+Ecuador,2022,Kevin Rodríguez,67,f2-only,,67,71
+Ecuador,2022,Djorkaeff Reasco,66,agree,66,66,71
+Ecuador,2026,Hernan Galíndez,74,agree,74,74,71
+Ecuador,2026,Jackson Porozo,72,f2-only,,72,71
+Ecuador,2026,Yaimar Medina,70,agree,70,70,71
+Ecuador,2026,Jordy Alcivar,68,agree,68,68,71
+Ecuador,2026,Anthony Valencia,67,agree,67,67,71
+Ecuador,2026,Jordy Caicedo,66,agree,66,66,71
+Ecuador,2026,Jeremy Mera,66,f2-only,,66,71
+Egypt,2018,Ahmed Hegazi,78,f2-only,,78,79
+Egypt,2018,Mohamed Abdel-Shafy,74,f2-only,,74,79
+Egypt,2018,Ahmed Fathi,74,f2-only,,74,79
+Egypt,2018,Essam El Hadary,73,"avg(70,75)",70,75,79
+Egypt,2018,Ahmed Naser Mahmoud Al Shenawy,73,f1-only,73,,79
+Egypt,2018,Ali Gabr,71,"avg(67,74)",67,74,79
+Egypt,2018,Mohamed Abdul Shafy Sayed Abouezeid,71,f1-only,71,,79
+Egypt,2018,Ahmed Fathy Abdel Meneim Ibrahim,67,f1-only,67,,79
+Egypt,2018,Mohamed El Shenawy,67,f2-only,,67,79
+Egypt,2026,Emam Ghany,75,f2-only,,75,71
+Egypt,2026,Haissem Hassan,73,f2-only,,73,71
+Egypt,2026,Mahmoud Saber,70,f2-only,,70,71
+Egypt,2026,Hossam Abdelmaguid,69,f2-only,,69,71
+Egypt,2026,Hamza Selim,60,f2-only,,60,71
+England,2002,Rio Ferdinand,86,"avg(92,79)",92,79,88
+England,2002,Sol Campbell,86,"avg(93,79)",93,79,88
+England,2002,Ashley Cole,84,"avg(88,79)",88,79,88
+England,2002,David Seaman,79,f2-only,,79,88
+England,2002,Danny Mills,77,"avg(74,79)",74,79,88
+England,2006,Rio Ferdinand,91,agree,91,91,88
+England,2006,John Terry,90,agree,90,90,88
+England,2006,Sol Campbell,90,agree,90,90,71
+England,2006,Paul Robinson,87,agree,87,87,88
+England,2006,Ashley Cole,85,agree,85,85,88
+England,2006,David James,85,agree,85,85,71
+England,2006,Michael Carrick,80,agree,80,80,71
+England,2006,Joe Cole,76,agree,76,76,88
+England,2006,Scott Carson,75,agree,75,75,71
+England,2006,Theo Walcott,71,f2-only,,71,71
+England,2014,James Milner,80,agree,80,80,71
+England,2014,Phil Jones,79,agree,79,79,71
+England,2014,Danny Welbeck,78,agree,78,78,71
+England,2014,Rickie Lambert,76,agree,76,76,71
+England,2014,Chris Smalling,76,agree,76,76,71
+England,2014,Fraser Forster,75,"avg(75,74)",75,74,71
+England,2014,Luke Shaw,74,agree,74,74,71
+England,2018,Alli,84,"avg(84,83)",84,83,88
+England,2018,Kyle Walker,83,agree,83,83,88
+England,2018,Gary Cahill,83,"avg(84,81)",84,81,72
+England,2018,Rose,82,"avg(82,81)",82,81,88
+England,2018,Jacob Maguire,82,f2-only,,82,88
+England,2018,Eric Dier,81,"avg(82,80)",82,80,88
+England,2018,Jesse Lingard,81,"avg(78,83)",78,83,88
+England,2018,Jack Butland,81,agree,81,81,72
+England,2018,Jordan Pickford,80,"avg(77,82)",77,82,88
+England,2018,John Stones,80,"avg(79,80)",79,80,88
+England,2018,Welbeck,80,"avg(80,79)",80,79,72
+England,2018,Kieran Trippier,79,"avg(78,80)",78,80,88
+England,2018,Fabian Delph,78,"avg(77,79)",77,79,88
+England,2018,Ashley Young,77,"avg(75,79)",75,79,88
+England,2018,Harry Maguire,77,f1-only,77,,88
+England,2018,Trent Alexander-Arnold,73,"avg(69,76)",69,76,72
+England,2018,Pope,73,"avg(68,78)",68,78,72
+England,2022,Philip Foden,85,f1-only,85,,87
+England,2022,Jude Bellingham,84,agree,84,84,87
+England,2022,Phil Foden,84,f2-only,,84,87
+England,2022,Jordan Henderson,83,agree,83,83,87
+England,2022,John Stones,83,agree,83,83,87
+England,2022,Jordan Pickford,82,agree,82,82,87
+England,2022,Marcus Rashford,82,"avg(81,83)",81,83,87
+England,2022,Bukayo Saka,82,agree,82,82,87
+England,2022,Harry Maguire,81,agree,81,81,87
+England,2022,Luke Shaw,80,agree,80,80,87
+England,2026,Jude Bellingham,90,"avg(90,89)",90,89,88
+England,2026,Declan Rice,88,"avg(87,88)",87,88,88
+England,2026,Bukayo Saka,88,"avg(88,87)",88,87,88
+England,2026,Jordan Pickford,85,"avg(84,85)",84,85,88
+England,2026,John Stones,82,agree,82,82,88
+England,2026,Marcus Rashford,81,"avg(80,82)",80,82,88
+France,2002,David Trezeguet,92,agree,92,92,72
+France,2002,Djibril Cissé,90,agree,90,90,72
+France,2002,Johan Micoud,85,agree,85,85,72
+France,2002,Christophe Dugarry,83,f2-only,,83,72
+France,2002,Emmanuel Petit,83,f2-only,,83,72
+France,2002,Frank Leboeuf,83,f2-only,,83,72
+France,2002,Youri Djorkaeff,83,f2-only,,83,72
+France,2002,Vincent Candela,80,agree,80,80,72
+France,2002,Sylvain Wiltord,76,agree,76,76,72
+France,2006,Patrick Vieira,89,agree,89,89,88
+France,2006,Claude Makélélé,88,agree,88,88,88
+France,2006,Willy Sagnol,87,agree,87,87,88
+France,2006,William Gallas,86,"avg(86,85)",86,85,88
+France,2006,Florent Malouda,82,agree,82,82,88
+France,2006,Eric Abidal,81,agree,81,81,88
+France,2010,Nicolas Anelka,85,agree,85,85,72
+France,2010,Yoann Gourcuff,85,agree,85,85,72
+France,2010,Gaël Clichy,83,agree,83,83,71
+France,2010,Steve Mandanda,83,agree,83,83,71
+France,2010,Jérémy Toulalan,83,agree,83,83,72
+France,2010,Cédric Carrasso,82,"avg(81,82)",81,82,71
+France,2010,André-Pierre Gignac,82,agree,82,82,72
+France,2010,Sébastien Squillaci,81,agree,81,81,71
+France,2010,Sidney Govou,81,"avg(81,80)",81,80,72
+France,2010,Djibril Cissé,80,"avg(79,80)",79,80,71
+France,2010,Alou Diarra,77,"avg(80,74)",80,74,71
+France,2010,Mathieu Valbuena,76,agree,76,76,71
+France,2014,Stephane Ruffier,82,agree,82,82,71
+France,2014,Laurent Koscielny,82,agree,82,82,84
+France,2014,Mamadou Sakho,81,agree,81,81,84
+France,2014,Raphael Varane,81,agree,81,81,84
+France,2014,Rio Mavuba,81,agree,81,81,71
+France,2014,Mickael Landreau,81,f2-only,,81,71
+France,2014,Loic Rémy,80,agree,80,80,71
+France,2014,Bacary Sagna,80,agree,80,80,71
+France,2014,Mathieu Debuchy,80,agree,80,80,84
+France,2014,Patrice Evra,80,agree,80,80,84
+France,2014,Olivier Giroud,79,agree,79,79,84
+France,2014,Morgan Schneiderlin,78,agree,78,78,71
+France,2014,Lucas Digne,75,agree,75,75,71
+France,2018,Hugo Lloris,88,agree,88,88,88
+France,2018,N Kanté,88,"avg(87,88)",87,88,88
+France,2018,Blaise Matuidi,85,agree,85,85,88
+France,2018,Raphaël Varane,85,agree,85,85,88
+France,2018,Samuel Umtiti,84,"avg(83,84)",83,84,88
+France,2018,Steven Nzonzi,83,agree,83,83,88
+France,2018,Steve Mandanda,82,agree,82,82,88
+France,2018,Corentin Tolisso,82,agree,82,82,88
+France,2018,Lucas Pi,78,"avg(77,79)",77,79,88
+France,2018,Benjamin Pavard,75,"avg(72,77)",72,77,88
+France,2022,Karim Benzema,91,agree,91,91,88
+France,2022,Hugo Lloris,87,agree,87,87,88
+France,2022,Raphaël Varane,85,"avg(84,85)",84,85,88
+France,2022,Theo Hernandez,85,agree,85,85,88
+France,2022,Jules Koundé,84,agree,84,84,88
+France,2022,Lucas Hernandez,84,agree,84,84,73
+France,2022,Olivier Giroud,83,"avg(82,83)",82,83,88
+France,2022,Aurélien Tchouaméni,83,"avg(82,83)",82,83,88
+France,2022,Dayot Upamecano,83,f2-only,,83,88
+France,2022,William Saliba,82,"avg(80,83)",80,83,73
+France,2022,Ibrahima Konaté,81,agree,81,81,88
+France,2022,Adrien Rabiot,81,"avg(80,82)",80,82,88
+France,2022,Benjamin Pavard,81,"avg(79,82)",79,82,73
+France,2022,Dayotchanculle Oswald Upamecano,81,f1-only,81,,88
+France,2022,Youssouf Fofana,80,"avg(79,80)",79,80,88
+France,2022,Mattéo Guendouzi,80,agree,80,80,73
+France,2022,Steve Mandanda,79,agree,79,79,88
+France,2022,Jordan Veretout,79,agree,79,79,73
+France,2022,Axel Disasi,78,"avg(77,79)",77,79,88
+France,2026,N Kanté,85,agree,85,85,72
+France,2026,Jean-Philippe Mateta,82,agree,82,82,72
+France,2026,Rayan Cherki,81,agree,81,81,72
+France,2026,Maghnes Akliouche,80,agree,80,80,72
+France,2026,Kouadio Koné,79,f2-only,,79,72
+Germany,2002,Christoph Metzelder,89,agree,89,89,87
+Germany,2002,Dietmar Hamann,85,agree,85,85,87
+Germany,2002,Torsten Frings,85,agree,85,85,87
+Germany,2002,Thomas Linke,83,agree,83,83,87
+Germany,2002,Bernd Schneider,83,agree,83,83,87
+Germany,2002,Oliver Bierhoff,81,f2-only,,81,87
+Germany,2002,Marco Bode,81,f2-only,,81,87
+Germany,2002,Carsten Jancker,76,"avg(70,81)",70,81,87
+Germany,2002,Carsten Ramelow,76,agree,76,76,87
+Germany,2002,Christian Ziege,76,agree,76,76,87
+Germany,2002,Jens Jeremies,74,agree,74,74,87
+Germany,2002,Oliver Neuville,73,agree,73,73,87
+Germany,2006,Christoph Metzelder,86,agree,86,86,87
+Germany,2006,Jens Lehmann,84,agree,84,84,87
+Germany,2006,Arne Friedrich,83,agree,83,83,87
+Germany,2006,Per Mertesacker,83,agree,83,83,87
+Germany,2006,Torsten Frings,81,agree,81,81,87
+Germany,2006,Bernd Schneider,81,agree,81,81,87
+Germany,2006,Oliver Neuville,78,agree,78,78,87
+Germany,2006,Tim Borowski,76,agree,76,76,87
+Germany,2006,Bastian Schweinsteiger,76,agree,76,76,87
+Germany,2010,Philipp Lahm,86,agree,86,86,88
+Germany,2010,Per Mertesacker,84,agree,84,84,88
+Germany,2010,Lukas Podolski,81,"avg(81,80)",81,80,88
+Germany,2010,Bastian Schweinsteiger,81,agree,81,81,88
+Germany,2010,Mesut Özil,81,"avg(80,81)",80,81,88
+Germany,2010,Arne Friedrich,80,"avg(80,79)",80,79,88
+Germany,2010,Marcell Jansen,79,"avg(77,80)",77,80,88
+Germany,2010,Sami Khedira,78,agree,78,78,88
+Germany,2010,Cacau,77,agree,77,77,88
+Germany,2010,Jérôme Boateng,77,"avg(76,77)",76,77,88
+Germany,2010,Toni Kroos,77,"avg(75,79)",75,79,88
+Germany,2014,Bastian Schweinsteiger,88,agree,88,88,88
+Germany,2014,Philipp Lahm,87,agree,87,87,88
+Germany,2014,Mesut Özil,87,agree,87,87,88
+Germany,2014,Mario Götze,85,agree,85,85,88
+Germany,2014,Mats Hummels,85,agree,85,85,84
+Germany,2014,Toni Kroos,84,agree,84,84,88
+Germany,2014,Sami Khedira,84,agree,84,84,88
+Germany,2014,Jérôme Boateng,83,"avg(84,81)",84,81,84
+Germany,2014,Per Mertesacker,82,agree,82,82,84
+Germany,2014,Benedikt Höwedes,81,agree,81,81,84
+Germany,2014,André Schürrle,80,agree,80,80,88
+Germany,2014,Shkodran Mustafi,72,"avg(76,68)",76,68,84
+Germany,2018,Mesut Özil,88,agree,88,88,72
+Germany,2018,Marc-Andre ter Stegen,85,agree,85,85,71
+Germany,2018,Niklas Süle,84,"avg(83,84)",83,84,71
+Germany,2018,Julian Draxler,84,agree,84,84,72
+Germany,2018,Sami Khedira,84,agree,84,84,72
+Germany,2018,Timo Werner,83,"avg(82,83)",82,83,72
+Germany,2018,Leon Goretzka,83,"avg(82,83)",82,83,71
+Germany,2018,Antonio Rüdiger,82,agree,82,82,71
+Germany,2018,Kevin Trapp,82,agree,82,82,71
+Germany,2018,Mario García,82,"avg(82,81)",82,81,72
+Germany,2018,Sebastian Rudy,81,agree,81,81,71
+Germany,2018,Marvin Plattenhardt,78,agree,78,78,71
+Germany,2022,Marc-Andre ter Stegen,88,agree,88,88,71
+Germany,2022,Kevin Trapp,86,agree,86,86,71
+Germany,2022,Leroy Sané,84,agree,84,84,73
+Germany,2022,Matthias Ginter,83,"avg(82,83)",82,83,71
+Germany,2022,Nico Schlotterbeck,82,agree,82,82,73
+Germany,2022,Mario Götze,81,agree,81,81,73
+Germany,2022,Jonas Hofmann,81,agree,81,81,73
+Germany,2022,Lukas Klostermann,80,agree,80,80,73
+Germany,2022,Jan Kehrer,76,agree,76,76,71
+Germany,2022,Karim-David Adeyemi,75,agree,75,75,71
+Germany,2022,Youssoufa Moukoko,70,"avg(69,71)",69,71,71
+Germany,2026,Waldemar Anton,83,"avg(82,83)",82,83,71
+Germany,2026,Angelo Stiller,83,agree,83,83,71
+Germany,2026,Nadiem Amiri,81,"avg(81,80)",81,80,71
+Germany,2026,Alexander Nubel,81,"avg(81,80)",81,80,71
+Germany,2026,Maximilian Beier,80,"avg(79,80)",79,80,71
+Germany,2026,Malick Thiaw,80,"avg(78,81)",78,81,71
+Germany,2026,Pascal Groß,80,f1-only,80,,71
+Germany,2026,Nathaniel Brown,79,"avg(77,80)",77,80,71
+Germany,2026,Pascal Gross,79,f2-only,,79,71
+Germany,2026,Lennart Karl,69,"avg(63,75)",63,75,71
+Ghana,2006,Stephen Appiah,77,agree,77,77,79
+Ghana,2006,Christian Gyan,64,f1-only,64,,79
+Ghana,2006,Eric Addo,62,agree,62,62,79
+Ghana,2006,Sulley Muntari,61,agree,61,61,79
+Ghana,2006,John Mensah,60,agree,60,60,79
+Ghana,2006,Asamoah Gyan,60,f2-only,,60,79
+Ghana,2006,Richard Kingson,60,f2-only,,60,79
+Ghana,2006,John Pantsil,60,f2-only,,60,79
+Ghana,2006,Illiasu Shilla,60,f2-only,,60,79
+Ghana,2010,Sulley Muntari,80,agree,80,80,80
+Ghana,2010,Kwadwo Asamoah,78,agree,78,78,80
+Ghana,2010,Kevin-Prince Boateng,78,f2-only,,78,80
+Ghana,2010,Anthony Annan,76,agree,76,76,80
+Ghana,2010,John Mensah,76,agree,76,76,80
+Ghana,2010,John Paintsil,75,"avg(75,74)",75,74,80
+Ghana,2010,Asamoah Gyan,74,"avg(73,75)",73,75,80
+Ghana,2010,Hans Sarpei,68,agree,68,68,80
+Ghana,2010,Andre Ayew,66,"avg(64,67)",64,67,80
+Ghana,2010,Richard Kingson,66,agree,66,66,80
+Ghana,2014,Kevin-Prince Boateng,81,"avg(80,82)",80,82,71
+Ghana,2014,Michael Essien,79,"avg(76,81)",76,81,71
+Ghana,2014,Abdul Waris,73,"avg(74,71)",74,71,71
+Ghana,2014,Afriyie Acquah,72,agree,72,72,71
+Ghana,2014,Albert Adomah,71,agree,71,71,71
+Ghana,2014,Daniel Opare,71,agree,71,71,71
+Ghana,2014,Sadick Adams,51,f2-only,,51,71
+Ghana,2022,Mohammed Kudus,77,"avg(76,77)",76,77,79
+Ghana,2022,Mohamed Salisu Abdul Karim,77,f1-only,77,,79
+Ghana,2022,Daniel Amartey,76,agree,76,76,79
+Ghana,2022,Mohammed Karim,76,f2-only,,76,79
+Ghana,2022,Andre Ayew,75,agree,75,75,79
+Ghana,2022,Lawrence Ati-Zigi,72,"avg(70,74)",70,74,79
+Ghana,2022,Denis Odoi,72,agree,72,72,71
+Ghana,2022,Osman Bukari,72,f2-only,,72,79
+Ghana,2022,Gideon Mensah,71,"avg(70,71)",70,71,71
+Ghana,2022,Antoine Semenyo,70,agree,70,70,71
+Ghana,2022,Abdul Baba,70,agree,70,70,79
+Ghana,2022,Ibrahim Danlad,68,agree,68,68,71
+Ghana,2022,Abdul Issahaku,67,agree,67,67,71
+Ghana,2022,Abdul Nurudeen,66,agree,66,66,71
+Ghana,2026,Thomas Partey,83,agree,83,83,79
+Ghana,2026,Antoine Semenyo,80,agree,80,80,79
+Ghana,2026,Abdul Mumin,77,agree,77,77,71
+Ghana,2026,Issahaku Fatawu,76,agree,76,76,79
+Ghana,2026,Ernest Nuamah,75,agree,75,75,79
+Ghana,2026,Benjamin Asare,75,f2-only,,75,71
+Ghana,2026,Gideon Mensah,74,agree,74,74,79
+Ghana,2026,Lawrence Zigi,73,agree,73,73,79
+Ghana,2026,Jordan Ayew,73,agree,73,73,79
+Ghana,2026,Jerome Opoku,72,f2-only,,72,71
+Ghana,2026,Augustine Boakye,69,agree,69,69,71
+Ghana,2026,Kwasi Sibo,69,agree,69,69,71
+Ghana,2026,Brandon Thomas-Asante,69,agree,69,69,71
+Ghana,2026,Marvin Senaya,69,f2-only,,69,71
+Ghana,2026,Kojo Oppong,67,"avg(68,65)",68,65,71
+Ghana,2026,Nicholas Opoku,67,f1-only,67,,71
+Greece,2010,Giourkas Seitaridis,77,agree,77,77,71
+Greece,2010,Michalis Sifakis,76,agree,76,76,71
+Greece,2010,Konstantinos Chalkias,75,agree,75,75,71
+Greece,2010,Nikos Spyropoulos,73,agree,73,73,71
+Greece,2010,Angelos Charisteas,72,agree,72,72,71
+Greece,2010,Pantelis Kapetanos,72,f2-only,,72,71
+Greece,2010,Vangelis Moras,68,agree,68,68,71
+Haiti,2026,Jean-Ricner Bellegarde,75,agree,75,75,71
+Haiti,2026,Wilson Isidor,72,f2-only,,72,71
+Haiti,2026,Jean-Kevin Duverne,71,agree,71,71,71
+Haiti,2026,Josue Casimir,71,f2-only,,71,71
+Haiti,2026,Duke Lacroix,60,f2-only,,60,71
+Haiti,2026,Wilguens Paugain,55,agree,55,55,71
+Honduras,2010,David Suazo,79,agree,79,79,72
+Honduras,2010,Edgar Álvarez,74,"avg(73,75)",73,75,72
+Honduras,2010,Hendry Thomas,71,"avg(69,73)",69,73,72
+Honduras,2010,Jerry Palacios,71,f2-only,,71,72
+Honduras,2010,Danilo Turcios,71,f2-only,,71,72
+Honduras,2010,Walter Martínez,71,f2-only,,71,72
+Honduras,2010,Georgie Welcome,71,f2-only,,71,72
+Honduras,2010,Carlos Pavón,69,f2-only,,69,71
+Honduras,2010,Amado Guevara,68,agree,68,68,72
+Honduras,2010,Victor Bernárdez,67,agree,67,67,71
+Honduras,2010,Ricardo Canales,66,f2-only,,66,71
+Honduras,2010,Donis Escober,66,f2-only,,66,71
+Honduras,2010,Mauricio Sabillón,66,f2-only,,66,71
+Honduras,2010,Roger Espinoza,63,"avg(61,65)",61,65,72
+Honduras,2014,Maynor Figueroa,75,agree,75,75,79
+Honduras,2014,Andy Najar,71,agree,71,71,72
+Honduras,2014,Victor Bernárdez,70,agree,70,70,79
+Honduras,2014,Wilson Palacios,70,agree,70,70,72
+Honduras,2014,Identified Brayan,70,f2-only,,70,79
+Honduras,2014,Carlo Costly,70,f2-only,,70,79
+Honduras,2014,Noel Valladares,70,f2-only,,70,79
+Honduras,2014,Luis Garrido,65,agree,65,65,72
+Honduras,2014,Marvin Chávez,64,agree,64,64,72
+Honduras,2014,Osman Chávez,64,f2-only,,64,71
+Honduras,2014,Jerry Bengtson,62,agree,62,62,72
+Honduras,2014,Donis Escober,62,f2-only,,62,71
+Honduras,2014,Jerry Palacios,62,f2-only,,62,71
+Honduras,2014,López,62,f2-only,,62,71
+Honduras,2014,Mario,62,f2-only,,62,71
+Iceland,2018,Jón Böðvarsson,72,"avg(69,74)",69,74,71
+Iceland,2018,Arnór Traustason,71,"avg(70,71)",70,71,71
+Iceland,2018,Albert Guðmundsson,66,"avg(66,65)",66,65,71
+Iceland,2018,Frederik Schram,66,f2-only,,66,71
+Iceland,2018,Rúnar Rúnarsson,65,"avg(64,66)",64,66,71
+Iran,2006,Vahid Hashemian,81,agree,81,81,72
+Iran,2006,Ferydoon Zandi,80,agree,80,80,72
+Iran,2006,Arash Borhani,78,f2-only,,78,72
+Iran,2006,Ali Daei,78,f2-only,,78,72
+Iran,2006,Rasoul Khatibi,78,f2-only,,78,72
+Iran,2006,Javad Nekounam,78,f2-only,,78,72
+Iran,2006,Reza Enayati,77,f2-only,,77,71
+Iran,2006,Javad Kazemian,77,f2-only,,77,71
+Iran,2006,Masoud Shojaei,77,f2-only,,77,71
+Iran,2006,Hassan Roudbarian,77,f2-only,,77,71
+Iran,2006,Vahid Talebloo,77,f2-only,,77,71
+Iran,2006,Mohammed Karimi,71,agree,71,71,72
+Iran,2014,Ashkan Dejagah,74,agree,74,74,76
+Iran,2014,Masoud Shojaei,72,agree,72,72,76
+Iran,2014,Amir Sadeghi,72,f2-only,,72,79
+Iran,2014,Khosro Heydari,72,f2-only,,72,79
+Iran,2014,Seyed Hosseini,72,f2-only,,72,79
+Iran,2014,Pejman Montazeri,72,f2-only,,72,79
+Iran,2014,Mehrdad Pooladi,72,f2-only,,72,79
+Iran,2014,Ehsan Hajsafi,71,f2-only,,71,76
+Iran,2014,Javad Nekounam,71,f2-only,,71,76
+Iran,2014,Andranik Teymourian,71,f2-only,,71,76
+Iran,2018,Sardar Azmoun,77,agree,77,77,72
+Iran,2018,Alireza Jahanbakhsh,75,agree,75,75,72
+Iran,2018,Mehdi Taremi,74,f2-only,,74,72
+Iran,2018,Saman Ghoddos,72,"avg(71,72)",71,72,72
+Iran,2018,Reza Nournia,72,agree,72,72,71
+Iran,2018,Masoud Soleimani,72,f2-only,,72,71
+Iran,2018,Saeid Afagh,67,"avg(66,68)",66,68,72
+Iran,2018,Amir Abedzadeh,65,"avg(62,68)",62,68,71
+Iran,2018,Mohammad Mazaheri,62,f2-only,,62,71
+Iran,2018,Roozbeh Cheshmi,60,f2-only,,60,71
+Iran,2022,Mohammad Kanaanizadegan,75,f2-only,,75,71
+Iran,2022,Ahmad Nourollahi,74,f2-only,,74,76
+Iran,2022,Ali Gholizadeh,73,agree,73,73,76
+Iran,2022,Karim Ansarifard,73,f2-only,,73,71
+Iran,2022,Saeid Ezatolahi,73,f2-only,,73,76
+Iran,2022,Amir Abedzadeh,72,agree,72,72,71
+Iran,2022,Sadegh Moharrami,71,"avg(72,70)",72,70,71
+Iran,2022,Mehdi Torabi,71,f2-only,,71,76
+Iran,2022,Saman Ghoddos,68,agree,68,68,71
+Iran,2022,Abolfazl Jalali,68,f2-only,,68,71
+Iran,2022,Seyed Niazmand,68,f2-only,,68,71
+Iran,2022,Ali Karimi,65,agree,65,65,76
+Iran,2026,Likely Ghorbani,65,f2-only,,65,71
+Iran,2026,strong: Hosseini,65,f2-only,,65,71
+Iran,2026,strong: Hardani,65,f2-only,,65,71
+Iran,2026,Likely Nemati,65,f2-only,,65,71
+Iran,2026,Likely Yousefi,65,f2-only,,65,71
+Iraq,2026,Marko Farji,67,"avg(66,67)",66,67,71
+Iraq,2026,Akam Hashem,65,f2-only,,65,71
+Iraq,2026,Ahmed Yahya,65,f2-only,,65,71
+Iraq,2026,Frans Putros,65,f2-only,,65,71
+Iraq,2026,Mustafa Saadoon,65,f2-only,,65,71
+Iraq,2026,Ali Jasim,62,agree,62,62,73
+Iraq,2026,Basil,60,f2-only,,60,73
+Iraq,2026,Rebin Sulaka,60,f2-only,,60,73
+Iraq,2026,Fahad Talib,60,f2-only,,60,73
+Iraq,2026,Manaf Younis,60,f2-only,,60,73
+Italy,2002,Francesco Toldo,92,agree,92,92,71
+Italy,2002,Filippo Inzaghi,90,agree,90,90,71
+Italy,2002,Vincenzo Montella,86,agree,86,86,71
+Italy,2002,Christian Abbiati,83,agree,83,83,71
+Italy,2002,Mark Iuliano,82,f2-only,,82,71
+Italy,2002,Marco Materazzi,79,agree,79,79,71
+Italy,2002,Luigi Di Biagio,76,"avg(69,82)",69,82,71
+Italy,2002,Marco Delvecchio,74,agree,74,74,71
+Italy,2006,Gianluca Zambrotta,91,agree,91,91,87
+Italy,2006,Alessandro Nesta,90,agree,90,90,87
+Italy,2006,Alessandro Del Piero,89,agree,89,89,87
+Italy,2006,Francesco Totti,89,agree,89,89,87
+Italy,2006,Alberto Gilardino,87,agree,87,87,87
+Italy,2006,Gennaro Gattuso,87,agree,87,87,87
+Italy,2006,Mauro Camoranesi,84,agree,84,84,87
+Italy,2006,Simone Perrotta,81,agree,81,81,87
+Italy,2006,Luca Toni,80,agree,80,80,87
+Italy,2006,Marco Materazzi,79,f2-only,,79,87
+Italy,2006,Vincenzo Iaquinta,70,agree,70,70,87
+Italy,2006,Fabio Grosso,65,agree,65,65,87
+Italy,2006,Cristian Zaccardo,63,agree,63,63,87
+Italy,2010,Giorgio Chiellini,86,agree,86,86,79
+Italy,2010,Andrea Pirlo,85,agree,85,85,79
+Italy,2010,Fabio Quagliarella,83,agree,83,83,79
+Italy,2010,Gianluca Zambrotta,81,agree,81,81,79
+Italy,2010,Domenico Criscito,77,agree,77,77,79
+Italy,2014,Antonio Cassano,81,"avg(81,80)",81,80,71
+Italy,2014,Alessio Cerci,81,"avg(81,80)",81,80,71
+Italy,2014,Ciro Immobile,80,agree,80,80,71
+Italy,2014,Leonardo Bonucci,79,agree,79,79,71
+Italy,2014,Lorenzo Insigne,79,agree,79,79,71
+Italy,2014,Ignazio Abate,77,agree,77,77,71
+Italy,2014,Mattia De Sciglio,77,"avg(77,76)",77,76,71
+Italy,2014,Mattia Perin,77,agree,77,77,71
+Italy,2014,Gabriel Paletta,75,"avg(80,70)",80,70,71
+Ivory Coast,2006,Cyril Domoraud,78,agree,78,78,71
+Ivory Coast,2006,Gilles Yapo,77,agree,77,77,71
+Ivory Coast,2006,Blaise Kouassi,71,agree,71,71,71
+Ivory Coast,2006,Gerard Gnanhouan,69,agree,69,69,71
+Ivory Coast,2006,Romaric,69,agree,69,69,71
+Ivory Coast,2014,Kolo Touré,80,"avg(79,80)",79,80,71
+Ivory Coast,2014,Didier Konan,78,"avg(77,78)",77,78,71
+Ivory Coast,2014,Max-Alain Gradel,74,agree,74,74,71
+Ivory Coast,2014,Giovanni Sio,74,"avg(74,73)",74,73,71
+Ivory Coast,2014,Constant Djakpa,72,"avg(72,71)",72,71,71
+Ivory Coast,2014,Sylvain Gbohouo,71,f2-only,,71,71
+Ivory Coast,2014,Sayouba Mandé,68,"avg(64,71)",64,71,71
+Ivory Coast,2014,Mathis Bolly,65,"avg(64,66)",64,66,71
+Ivory Coast,2014,Ismael Diomandé,64,agree,64,64,71
+Ivory Coast,2026,Evan Ndicka,81,agree,81,81,79
+Ivory Coast,2026,Nicolas Pépé,80,agree,80,80,79
+Ivory Coast,2026,Amad Diallo,80,"avg(79,80)",79,80,79
+Ivory Coast,2026,Franck Kessie,80,agree,80,80,79
+Ivory Coast,2026,Odilon Kossounou,80,agree,80,80,79
+Ivory Coast,2026,Wilfried Singo,80,agree,80,80,79
+Ivory Coast,2026,Bafode Diakite,79,f2-only,,79,79
+Ivory Coast,2026,Ange-Yoan Bonny,78,f2-only,,78,71
+Ivory Coast,2026,Ibrahim Sangare,77,agree,77,77,79
+Ivory Coast,2026,Simon Adingra,76,agree,76,76,79
+Ivory Coast,2026,Yahia Fofana,76,agree,76,76,79
+Ivory Coast,2026,Alban Lafont,75,agree,75,75,71
+Ivory Coast,2026,Elye Wahi,75,f2-only,,75,71
+Ivory Coast,2026,Yan Diomande,74,"avg(66,81)",66,81,79
+Ivory Coast,2026,Christopher Operi,74,agree,74,74,71
+Ivory Coast,2026,Ghislain Konan,72,agree,72,72,79
+Ivory Coast,2026,Oumar Diakité,72,f1-only,72,,79
+Ivory Coast,2026,Christ Oulai,66,"avg(64,68)",64,68,71
+Japan,2002,Hidetoshi Nakata,78,agree,78,78,85
+Japan,2002,Koji Nakata,74,f2-only,,74,85
+Japan,2002,Naoki Matsuda,74,f2-only,,74,85
+Japan,2002,Tsuneyasu Miyamoto,74,f2-only,,74,85
+Japan,2002,Seigo Narazaki,74,f2-only,,74,85
+Japan,2002,Junichi Inamoto,73,agree,73,73,85
+Japan,2002,Yoshikatsu Kawaguchi,59,agree,59,59,71
+Japan,2002,Takashi Fukunishi,57,f2-only,,57,71
+Japan,2002,Toshihiro Hattori,57,f2-only,,57,71
+Japan,2002,Ryuzo Morioka,57,f2-only,,57,71
+Japan,2002,Masashi Nakayama,57,f2-only,,57,71
+Japan,2002,Akinori Nishizawa,57,f2-only,,57,71
+Japan,2002,Mitsuo Ogasawara,57,f2-only,,57,71
+Japan,2002,Hitoshi Sogahata,57,f2-only,,57,71
+Japan,2006,Shinji Ono,77,agree,77,77,71
+Japan,2006,Naohiro Takahara,74,agree,74,74,72
+Japan,2006,Koji Nakata,73,agree,73,73,71
+Japan,2006,Junichi Inamoto,73,agree,73,73,72
+Japan,2006,Yoichi Doi,73,f2-only,,73,71
+Japan,2006,Yuichi Komano,73,f2-only,,73,71
+Japan,2006,Seiichiro Maki,73,f2-only,,73,71
+Japan,2006,Teruyuki Moniwa,73,f2-only,,73,71
+Japan,2006,Seigo Narazaki,73,f2-only,,73,71
+Japan,2006,Takashi Fukunishi,71,f2-only,,71,72
+Japan,2006,Mitsuo Ogasawara,71,f2-only,,71,72
+Japan,2006,Masashi Oguro,71,f2-only,,71,72
+Japan,2006,Atsushi Yanagisawa,63,agree,63,63,72
+Japan,2010,Shunsuke Nakamura,79,"avg(81,77)",81,77,71
+Japan,2010,Keisuke Honda,78,"avg(77,78)",77,78,79
+Japan,2010,Takayuki Morimoto,76,agree,76,76,71
+Japan,2010,Makoto Hasebe,74,"avg(73,75)",73,75,79
+Japan,2010,Yuki Abe,74,f2-only,,74,79
+Japan,2010,Yasuhito Endō,74,f2-only,,74,79
+Japan,2010,Eiji Kawashima,74,f2-only,,74,79
+Japan,2010,Yuichi Komano,74,f2-only,,74,79
+Japan,2010,Marcus Tanaka,74,f2-only,,74,79
+Japan,2010,Yuto Nagatomo,74,f2-only,,74,79
+Japan,2010,Yuji Nakazawa,74,f2-only,,74,79
+Japan,2010,Shinji Okazaki,74,f2-only,,74,79
+Japan,2010,Yoshikatsu Kawaguchi,74,f2-only,,74,71
+Japan,2010,Kengo Nakamura,74,f2-only,,74,71
+Japan,2010,Yasuyuki Konno,74,f2-only,,74,71
+Japan,2010,Seigo Narazaki,74,f2-only,,74,71
+Japan,2010,Kisho Yano,74,f2-only,,74,71
+Japan,2014,Hiroshi Kiyotake,76,agree,76,76,71
+Japan,2014,Yuya Osako,71,agree,71,71,71
+Japan,2014,Toshihiro Aoyama,68,f2-only,,68,71
+Japan,2014,Yoichiro Kakitani,68,f2-only,,68,71
+Japan,2014,Masato Morishige,68,f2-only,,68,71
+Japan,2014,Shusaku Nishikawa,68,f2-only,,68,71
+Japan,2014,Shuichi Gonda,67,f2-only,,67,71
+Japan,2018,Shinji Kagawa,83,f2-only,,83,79
+Japan,2018,Keisuke Honda,79,f2-only,,79,79
+Japan,2018,Takashi Inui,78,f2-only,,78,79
+Japan,2018,Hiroki Sakai,77,f2-only,,77,79
+Japan,2018,Makoto Hasebe,77,f2-only,,77,79
+Japan,2018,Yoshinori Muto,76,f2-only,,76,71
+Japan,2018,酒井 宏樹,75,f1-only;merged-dup(17),75,,79
+Japan,2018,Gaku Shibasaki,75,f2-only,,75,79
+Japan,2018,Yuya Osako,75,f2-only,,75,79
+Japan,2018,Maya Yoshida,75,f2-only,,75,79
+Japan,2018,Genki Haraguchi,74,f2-only,,74,79
+Japan,2018,Eiji Kawashima,74,f2-only,,74,79
+Japan,2018,Yuto Nagatomo,74,f2-only,,74,79
+Japan,2018,Gotoku Sakai,74,f2-only,,74,71
+Japan,2018,Gen Shoji,73,f2-only,,73,79
+Japan,2018,Masaaki Higashiguchi,72,f2-only,,72,71
+Japan,2018,Kosuke Nakamura,71,f2-only,,71,71
+Japan,2018,Tomoaki Makino,71,f2-only,,71,71
+Japan,2022,Daichi Kamada,80,f2-only,,80,81
+Japan,2022,Wataru Endo,78,f2-only,,78,81
+Japan,2022,Junya Ito,78,f2-only,,78,81
+Japan,2022,Ritsu Dōan,77,f2-only,,77,83
+Japan,2022,Yuto Nagatomo,75,f2-only,,75,83
+Japan,2022,上田 綺世,74,f1-only;merged-dup(13),70,,71
+Japan,2022,Kaoru Mitoma,74,f2-only,,74,81
+Japan,2022,Takuma Asano,73,f2-only,,73,83
+Japan,2022,Maya Yoshida,73,f2-only,,73,83
+Japan,2022,Hiroki Ito,72,f2-only,,72,71
+Japan,2022,Eiji Kawashima,72,f2-only,,72,71
+Japan,2022,Daizen Maeda,72,f2-only,,72,81
+Japan,2022,Ao Tanaka,71,f2-only,,71,83
+Japan,2022,Ayase Ueda,70,f2-only,,70,71
+Japan,2022,Daniel Schmidt,69,f2-only,,69,71
+Japan,2022,Shuto Machino,68,f2-only,,68,71
+Japan,2022,Miki Yamane,68,f2-only,,68,71
+Japan,2022,Shuichi Gonda,68,f2-only,,68,83
+Japan,2022,Yuki Soma,62,f2-only,,62,71
+Japan,2026,Ritsu Dōan,82,agree,82,82,86
+Japan,2026,Takefusa Kubo,82,agree,82,82,86
+Japan,2026,Daichi Kamada,77,agree,77,77,86
+Japan,2026,Ao Tanaka,76,agree,76,76,86
+Japan,2026,Tsuyoshi Watanabe,75,agree,75,75,71
+Japan,2026,Zion Suzuki,74,agree,74,74,86
+Japan,2026,Yuito Suzuki,71,agree,71,71,71
+Japan,2026,Tomoki Hayakawa,71,f2-only,,71,71
+Japan,2026,Junnosuke Suzuki,66,agree,66,66,71
+Japan,2026,Kento Shiogai,66,agree,66,66,71
+Jordan,2026,Yazan Al-Arab,75,agree,75,75,79
+Jordan,2026,Musa Al-Tamari,75,f2-only,,75,79
+Jordan,2026,Abdallah Nasib,72,f2-only,,72,79
+Jordan,2026,Ibrahim Sadeh,68,f2-only,,68,79
+Jordan,2026,Ihsan Haddad,67,f2-only,,67,79
+Jordan,2026,Yazeed Abulaila,66,f2-only,,66,79
+Jordan,2026,Ali Olwan,64,f2-only,,64,79
+Mexico,2002,Rafael Márquez,80,"avg(83,77)",83,77,86
+Mexico,2002,Oscar Rojas,77,f2-only,,77,86
+Mexico,2002,Jared Borgetti,75,"avg(72,77)",72,77,86
+Mexico,2002,Salvador Carmona,74,"avg(70,77)",70,77,86
+Mexico,2002,Óscar Pérez,73,f1-only,73,,86
+Mexico,2002,Gerardo Torrado,70,"avg(63,77)",63,77,86
+Mexico,2002,Manuel Vidrio,70,"avg(63,77)",63,77,86
+Mexico,2002,Oswaldo Sánchez,70,"avg(78,62)",78,62,71
+Mexico,2002,Rafael García,70,f1-only,70,,71
+Mexico,2002,Francisco Palencia,66,"avg(69,62)",69,62,71
+Mexico,2002,Alberto Aspe,62,f2-only,,62,71
+Mexico,2002,Rafael Torres,62,f2-only,,62,71
+Mexico,2002,Jorge Campos,60,"avg(57,62)",57,62,71
+Mexico,2006,Oswaldo Sánchez,83,agree,83,83,87
+Mexico,2006,Rafael Márquez,77,agree,77,77,87
+Mexico,2006,José Corona,74,agree,74,74,71
+Mexico,2006,Omar Bravo,73,agree,73,73,87
+Mexico,2006,Sinha,72,f2-only,,72,87
+Mexico,2006,F. Ochoa,69,agree,69,69,71
+Mexico,2006,Carlos Salcido,68,agree,68,68,87
+Mexico,2006,Francisco Rodríguez,67,agree,67,67,71
+Mexico,2006,Jesus Arellano,66,agree,66,66,71
+Mexico,2006,Andres Guardado,66,f2-only,,66,71
+Mexico,2006,Gonzalo Pineda,65,agree,65,65,87
+Mexico,2006,Mario Méndez,63,agree,63,63,87
+Mexico,2006,Ricardo Osorio,61,agree,61,61,87
+Mexico,2010,Guillermo Ochoa,80,f1-only,80,,71
+Mexico,2010,Francisco Ochoa,80,f2-only,,80,71
+Mexico,2010,Adolfo Bautista,74,f1-only,74,,71
+Mexico,2010,Israel Castro,74,f1-only,74,,71
+Mexico,2010,Adolfo Herrera,74,f2-only,,74,71
+Mexico,2010,Israel Macias,74,f2-only,,74,71
+Mexico,2010,Luis Michel,73,agree,73,73,71
+Mexico,2010,Paul Aguilar,69,agree,69,69,71
+Mexico,2014,Hector Moreno,78,agree,78,78,84
+Mexico,2014,José Corona,77,agree,77,77,71
+Mexico,2014,Carlos Peña,75,agree,75,75,71
+Mexico,2014,Rafael Márquez,75,f1-only,75,,84
+Mexico,2014,Rodríguez,74,"avg(74,73)",74,73,84
+Mexico,2014,Diego Reyes,73,agree,73,73,71
+Mexico,2014,Javier Aquino,73,agree,73,73,71
+Mexico,2014,Raul Jiménez,73,agree,73,73,71
+Mexico,2014,Miguel Layún,73,agree,73,73,84
+Mexico,2014,Paul Aguilar,73,agree,73,73,84
+Mexico,2014,Alfredo Talavera,72,"avg(74,70)",74,70,71
+Mexico,2014,Rafael Alvarez,71,f2-only,,71,84
+Mexico,2018,Jonathan dos Santos,80,agree,80,80,71
+Mexico,2018,Andrés Guardado,80,agree,80,80,79
+Mexico,2018,Héctor Moreno,80,agree,80,80,79
+Mexico,2018,Marco Fabián,79,agree,79,79,71
+Mexico,2018,Giovani dos Santos,79,agree,79,79,71
+Mexico,2018,Miguel Layún,78,agree,78,78,79
+Mexico,2018,Alfredo Díaz,77,f2-only,,77,71
+Mexico,2018,Oribe Morones,76,agree,76,76,71
+Mexico,2018,José Corona,76,agree,76,76,71
+Mexico,2018,Rafael Álvarez,73,f2-only,,73,79
+Mexico,2018,Jesús Gallardo,72,agree,72,72,79
+Mexico,2022,Edson Álvarez,80,agree,80,80,73
+Mexico,2022,Hector Herrera,80,agree,80,80,73
+Mexico,2022,Alfredo Talavera,79,agree,79,79,71
+Mexico,2022,Andres Guardado,77,agree,77,77,71
+Mexico,2022,Orbelin Pineda,77,"avg(76,77)",76,77,71
+Mexico,2022,Rodolfo Robles,76,"avg(76,75)",76,75,71
+Mexico,2022,Erick Gutiérrez,76,agree,76,76,71
+Mexico,2022,Carlos Rodríguez,76,agree,76,76,73
+Mexico,2022,Jorge Sánchez,76,agree,76,76,73
+Mexico,2022,Nestor Araujo,75,agree,75,75,71
+Mexico,2022,Rogelio Mori,75,f2-only,,75,71
+Mexico,2022,Kevin Álvarez,75,f2-only,,75,73
+Mexico,2022,Roberto Alvarado,74,f2-only,,74,71
+Mexico,2026,Julián Quinones,81,"avg(80,81)",80,81,71
+Mexico,2026,Fidalgo,77,f2-only,,77,71
+Mexico,2026,Chavez,75,"avg(72,78)",72,78,72
+Mexico,2026,Lira,74,"avg(73,75)",73,75,71
+Mexico,2026,C. Acevedo,74,f2-only,,74,72
+Mexico,2026,Armando Alba,74,f2-only,,74,71
+Mexico,2026,Huerta,73,agree,73,73,72
+Mexico,2026,G. Mora,73,f2-only,,73,72
+Mexico,2026,O. Vargas,71,f2-only,,71,72
+Mexico,2026,Guillermo Ayala,71,f2-only,,71,71
+Mexico,2026,Obed Gómez Vargas,69,f1-only,69,,72
+Mexico,2026,Brian Gutiérrez,69,f2-only,,69,72
+Morocco,2018,Younes Belhanda,81,"avg(81,80)",81,80,74
+Morocco,2018,Hakim Ziyech,81,agree,81,81,74
+Morocco,2018,Karim El Ahmadi,80,agree,80,80,74
+Morocco,2018,Noureddine Amrabat,79,f1-only,79,,74
+Morocco,2018,Nordin Amrabat,78,f2-only,,78,74
+Morocco,2018,Mbark Boussoufa,77,f2-only,,77,74
+Morocco,2018,Mehdi Carcela-Gonzalez,76,"avg(77,74)",77,74,71
+Morocco,2018,Sofyan Amrabat,74,agree,74,74,71
+Morocco,2018,Amine Harit,73,"avg(71,75)",71,75,71
+Morocco,2018,Ahmed Tagnaouti,72,f2-only,,72,71
+Morocco,2018,Yassine Bounou,71,"avg(71,70)",71,70,71
+Morocco,2022,Yassine Bounou,84,agree,84,84,83
+Morocco,2022,Achraf Hakimi,84,agree,84,84,83
+Morocco,2022,Hakim Ziyech,83,agree,83,83,83
+Morocco,2022,Noussair Mazraoui,82,agree,82,82,83
+Morocco,2022,Nayef Aguerd,80,agree,80,80,83
+Morocco,2022,Youssef En-Nesyri,80,agree,80,80,83
+Morocco,2022,Romain Saïss,78,"avg(77,78)",77,78,83
+Morocco,2022,Sofiane Boufal,77,"avg(77,76)",77,76,83
+Morocco,2022,Sofyan Amrabat,77,"avg(76,78)",76,78,83
+Morocco,2022,Jawad El Yamiq,75,agree,75,75,83
+Morocco,2022,Selim Amallah,74,"avg(73,74)",73,74,83
+Morocco,2022,Zakaria Aboukhlal,73,"avg(71,74)",71,74,83
+Morocco,2022,Munir Mohand Mohamedi,73,f1-only,73,,83
+Morocco,2022,Badr Benoun,73,f2-only,,73,83
+Morocco,2022,Munir El Kajoui,73,f2-only,,73,83
+Morocco,2022,Yahya Attiat-Allah,72,"avg(70,73)",70,73,83
+Morocco,2022,Azzedine Ounahi,72,"avg(70,73)",70,73,83
+Morocco,2022,Achraf Dari,69,agree,69,69,83
+Morocco,2026,Brahim Díaz,82,"avg(82,81)",82,81,85
+Morocco,2026,Yassine Bounouياسين بونو,82,f1-only,82,,71
+Morocco,2026,Nayef Aguerd,81,agree,81,81,85
+Morocco,2026,Noussair Mazraoui,80,agree,80,80,85
+Morocco,2026,Azzedine Ounahi,78,"avg(76,79)",76,79,85
+Morocco,2026,Bilal El Khannouss,77,"avg(76,78)",76,78,85
+Morocco,2026,Issa Diop,76,f2-only,,76,71
+Morocco,2026,Ayyoub Bouaddi,75,f2-only,,75,71
+Morocco,2026,Samir El Mourabet,68,"avg(66,69)",66,69,71
+Morocco,2026,Ayoube Amaimouni-Echghouyab,67,"avg(63,70)",63,70,71
+Morocco,2026,Gessime Yassine,67,f2-only,,67,71
+Morocco,2026,Youssef Belammari,66,f2-only,,66,71
+Netherlands,2006,Jan Hesselink,74,f2-only,,74,71
+Netherlands,2006,Maarten Stekelenburg,73,agree,73,73,71
+Netherlands,2006,Hedwiges Maduro,70,agree,70,70,71
+Netherlands,2006,Ryan Babel,69,agree,69,69,71
+Netherlands,2006,Henk Timmer,67,"avg(65,68)",65,68,71
+Netherlands,2006,Tim de Cler,65,"avg(62,68)",62,68,71
+Netherlands,2006,Kew Jaliens,60,agree,60,60,71
+Netherlands,2010,Robin van Persie,85,agree,85,85,88
+Netherlands,2010,Rafael van der Vaart,84,"avg(83,84)",83,84,88
+Netherlands,2010,Dirk Kuyt,83,agree,83,83,88
+Netherlands,2010,Klaas-Jan Huntelaar,81,"avg(82,80)",82,80,88
+Netherlands,2010,Joris Mathijsen,80,agree,80,80,88
+Netherlands,2010,Mark van Bommel,80,agree,80,80,88
+Netherlands,2010,John Heitinga,79,agree,79,79,88
+Netherlands,2010,Nigel de Jong,79,agree,79,79,88
+Netherlands,2010,Maarten Stekelenburg,77,"avg(76,77)",76,77,88
+Netherlands,2010,Gregory van der Wiel,75,"avg(74,75)",74,75,88
+Netherlands,2010,Giovanni van Bronckhorst,74,agree,74,74,88
+Netherlands,2014,Robin van Persie,89,agree,89,89,88
+Netherlands,2014,Klaas-Jan Huntelaar,84,agree,84,84,84
+Netherlands,2014,Ron Vlaar,78,agree,78,78,84
+Netherlands,2014,Jasper Cillessen,78,agree,78,78,88
+Netherlands,2014,Nigel de Jong,78,agree,78,78,88
+Netherlands,2014,Georginio Wijnaldum,78,agree,78,78,88
+Netherlands,2014,Daley Blind,77,f1-only,77,,84
+Netherlands,2014,Netherlands LB,77,f2-only,,77,84
+Netherlands,2014,Memphis Depay,76,agree,76,76,88
+Netherlands,2014,Daryl Janmaat,75,agree,75,75,84
+Netherlands,2014,Stefan de Vrij,75,agree,75,75,84
+Netherlands,2014,Bruno Martins Indi,73,agree,73,73,84
+Netherlands,2022,Frenkie de Jong,87,agree,87,87,88
+Netherlands,2022,Cody Gakpo,83,agree,83,83,88
+Netherlands,2022,Denzel Dumfries,82,agree,82,82,88
+Netherlands,2022,Daley Blind,80,agree,80,80,88
+Netherlands,2022,Nathan Aké,79,"avg(78,79)",78,79,88
+Netherlands,2022,Davy Klaassen,79,agree,79,79,88
+Netherlands,2022,Justin Bijlow,79,"avg(79,78)",79,78,71
+Netherlands,2022,Luuk de Jong,79,agree,79,79,71
+Netherlands,2022,Noa Noëll Lang,78,f1-only,78,,71
+Netherlands,2022,N. Lang,78,f2-only,,78,71
+Netherlands,2022,Remko Pasveer,76,"avg(75,77)",75,77,71
+Netherlands,2022,K. Taylor,75,f2-only,,75,71
+Netherlands,2022,X. Simons,75,f2-only,,75,71
+Netherlands,2022,Vincent Janssen,73,agree,73,73,71
+Netherlands,2022,Kenneth Ina Dorothea Taylor,73,f1-only,73,,71
+Netherlands,2022,Xavi Quentin Shay Simons,73,f1-only,73,,71
+Netherlands,2022,Andries Noppert,71,"avg(70,72)",70,72,88
+Netherlands,2026,Marten de Roon,81,agree,81,81,72
+Netherlands,2026,Jan van Hecke,80,agree,80,80,72
+Netherlands,2026,Noa Lang,80,agree,80,80,72
+Netherlands,2026,Quinten Timber,80,agree,80,80,72
+Netherlands,2026,Justin Kluivert,79,agree,79,79,72
+Netherlands,2026,Mark Flekken,78,agree,78,78,72
+Netherlands,2026,Brian Brobbey,77,agree,77,77,72
+New Zealand,2010,Ryan Nelsen,78,agree,78,78,79
+New Zealand,2010,Tony Lochhead,76,f2-only,,76,79
+New Zealand,2010,Mark Paston,76,f2-only,,76,79
+New Zealand,2010,Tommy Smith,76,f2-only,,76,79
+New Zealand,2010,Winston Reid,76,f2-only,,76,79
+New Zealand,2010,Shane Smeltz,72,"avg(67,76)",67,76,79
+New Zealand,2010,Ivan Vicelich,69,"avg(62,76)",62,76,79
+New Zealand,2026,Christopher Grant Wood,82,f1-only,82,,79
+New Zealand,2026,Chris Wood,81,f2-only,,81,79
+New Zealand,2026,Joe Bell,75,"avg(74,75)",74,75,72
+New Zealand,2026,Liberato Cacace,72,agree,72,72,79
+New Zealand,2026,Francis De Vries,70,"avg(69,70)",69,70,71
+New Zealand,2026,Tyler Bindon,70,"avg(69,70)",69,70,79
+New Zealand,2026,Max Crocombe,69,f2-only,,69,79
+New Zealand,2026,Elijah Just,68,"avg(66,69)",66,69,79
+New Zealand,2026,Benjamin Craig Old,68,f1-only,68,,79
+New Zealand,2026,Konstantinos BarbarousesΚωνσταντίνος Μπαρμπαρούσης,68,f1-only,68,,71
+New Zealand,2026,Ben Old,68,f2-only,,68,79
+New Zealand,2026,Sarpreet Singh,68,f2-only,,68,72
+New Zealand,2026,Nando Pijnaker,67,agree,67,67,72
+New Zealand,2026,Alex Rufer,67,"avg(67,66)",67,66,71
+New Zealand,2026,Kosta Barbarouses,67,f2-only,,67,71
+New Zealand,2026,Ryan Thomas,66,agree,66,66,72
+New Zealand,2026,Matthew Garbett,65,agree,65,65,79
+New Zealand,2026,Maxime Teremoana Crocombe,65,f1-only,65,,79
+New Zealand,2026,Jesse Randall,64,"avg(60,67)",60,67,71
+New Zealand,2026,Callan Elliot,63,"avg(62,63)",62,63,71
+New Zealand,2026,Benjamin Peter Waine,62,f1-only,62,,79
+New Zealand,2026,Ben Waine,62,f2-only,,62,79
+New Zealand,2026,Michael Woud,61,"avg(60,61)",60,61,72
+Nigeria,2002,Nwankwo Kanu,82,agree,82,82,71
+Nigeria,2002,Bartholomew Ogbeche,74,agree,74,74,71
+Nigeria,2002,John Utaka,74,agree,74,74,71
+Nigeria,2002,Likely Obiorah,68,f2-only,,68,71
+Nigeria,2002,Femi Opabunmi,68,f2-only,,68,71
+Nigeria,2002,Agustine Ejide,65,f1-only,65,,71
+Nigeria,2002,Likely Ejide,65,f2-only,,65,71
+Nigeria,2002,Benedict Akwuegbu,63,f1-only,63,,71
+Nigeria,2002,Likely Akwuegbu,63,f2-only,,63,71
+Nigeria,2002,Garba Lawal,62,f1-only,62,,71
+Nigeria,2002,Likely Lawal,62,f2-only,,62,71
+Nigeria,2010,Obafemi Martins,81,f1-only,81,,72
+Nigeria,2010,O. Martins,81,f2-only,,81,72
+Nigeria,2010,Chinedu Obasi,79,agree,79,79,72
+Nigeria,2010,John Utaka,77,agree,77,77,71
+Nigeria,2010,Peter Odemwingie,77,"avg(76,77)",76,77,72
+Nigeria,2010,Nwankwo Kanu,73,agree,73,73,71
+Nigeria,2010,Victor Nsofor,71,agree,71,71,72
+Nigeria,2010,Bamidele,71,f2-only,,71,71
+Nigeria,2010,Augustine,71,f2-only,,71,71
+Nigeria,2010,Ayila Yussuf,71,f2-only,,71,71
+Nigeria,2010,Sani Kaita,68,"avg(68,67)",68,67,72
+Nigeria,2010,Brown Ideye,67,f2-only,,67,71
+Nigeria,2010,Lukman Haruna,63,agree,63,63,72
+Nigeria,2014,Vincent Enyeama,79,agree,79,79,81
+Nigeria,2014,Ahmed Musa,76,"avg(75,76)",75,76,81
+Nigeria,2014,Joseph Yobo,74,agree,74,74,81
+Nigeria,2014,Peter Odemwingie,71,agree,71,71,81
+Nigeria,2014,Shola Ameobi,70,agree,70,70,71
+Nigeria,2014,Efe Ambrose,69,f1-only,69,,81
+Nigeria,2014,Efe Celtic,68,f2-only,,68,81
+Nigeria,2014,Kenneth Omeruo,67,"avg(68,66)",68,66,81
+Nigeria,2014,Uche Nwofor,65,agree,65,65,71
+Nigeria,2014,Michael Uchebo,64,agree,64,64,71
+Nigeria,2014,Ramon Azeez,63,"avg(64,61)",64,61,71
+Nigeria,2014,Reuben Gabriel,63,agree,63,63,71
+Nigeria,2014,Chigozie Agbim,62,f2-only,,62,71
+Nigeria,2014,Austin Ejide,62,f2-only,,62,71
+Nigeria,2014,Godfrey Oboabona,62,f2-only,,62,71
+Nigeria,2014,Ejike Uzoenyi,62,f2-only,,62,71
+Nigeria,2014,Juwon Oshaniwa,55,f2-only,,55,81
+Nigeria,2018,Victor Moses,79,agree,79,79,79
+Nigeria,2018,Ahmed Musa,76,"avg(76,75)",76,75,79
+Nigeria,2018,Leon Balogun,75,"avg(75,74)",75,74,79
+Nigeria,2018,William Troost-Ekong,72,"avg(71,72)",71,72,79
+Nigeria,2018,Brian Idowu,70,f2-only,,70,79
+Nigeria,2018,Francis Uzoho,68,f2-only,,68,79
+North Korea,2010,Pak Chol-jin,71,f2-only,,71,79
+North Korea,2010,Cha Jong-hyok,71,f2-only,,71,79
+North Korea,2010,Ri Jun-il,71,f2-only,,71,79
+North Korea,2010,Ri Kwang-chon,71,f2-only,,71,79
+North Korea,2010,Ri Myong-guk,71,f2-only,,71,79
+North Korea,2010,Ji Yun-nam,71,f2-only,,71,79
+North Korea,2010,An Chol-hyok,63,f2-only,,63,71
+North Korea,2010,Choe Kum-chol,63,f2-only,,63,71
+North Korea,2010,Kim Myong-gil,63,f2-only,,63,71
+North Korea,2010,Kim Myong-won,63,f2-only,,63,71
+North Korea,2010,Pak Nam-chol,63,f2-only,,63,71
+North Korea,2010,Kim Yong-jun,63,f2-only,,63,71
+Norway,2026,Julian Ryerson,80,"avg(79,80)",79,80,72
+Norway,2026,Patrick Berg,78,"avg(77,79)",77,79,72
+Norway,2026,Andreas Schjelderup,76,"avg(75,77)",75,77,72
+Norway,2026,Fredrik Bjorkan,75,f2-only,,75,72
+Norway,2026,Fredrik André Bjørkan,74,f1-only,74,,72
+Norway,2026,Torbjorn Heggem,74,f2-only,,74,72
+Norway,2026,Torbjørn Lysaker Heggem,73,f1-only,73,,72
+Norway,2026,Morten Thorsby,72,agree,72,72,72
+Norway,2026,Thelo Aasgaard,71,f2-only,,71,72
+Norway,2026,Thelonious Gerard Aasgaard,68,f1-only,68,,72
+Panama,2018,Adolfo Machado,71,agree,71,71,71
+Panama,2018,Gabriel Torres,68,agree,68,68,72
+Panama,2018,Gabriel Arturo Torres Tejada,68,f1-only,68,,72
+Panama,2018,Armando Cooper,67,agree,67,67,72
+Panama,2018,Harold Cummings,66,agree,66,66,71
+Panama,2018,Ismael Díaz,66,f2-only,,66,71
+Panama,2018,Abdiel Arroyo,66,f2-only,,66,72
+Panama,2018,Blas Pérez,66,f2-only,,66,72
+Panama,2018,Luis Tejada,66,f2-only,,66,72
+Panama,2018,Ricardo Ávila,66,f2-only,,66,72
+Panama,2018,Felipe Baloy,64,f2-only,,64,71
+Panama,2018,Most Jose,64,f2-only,,64,71
+Panama,2018,Jose Rodríguez,64,f2-only,,64,71
+Panama,2018,Luis Ovalle,57,agree,57,57,71
+Panama,2026,Michael Murillo,76,agree,76,76,80
+Panama,2026,Ismael de Leon,72,f2-only,,72,80
+Panama,2026,Edgar Barcenas,71,f2-only,,71,80
+Panama,2026,Andres Andrade,69,agree,69,69,80
+Panama,2026,José Córdoba,68,agree,68,68,80
+Panama,2026,José Rodríguez,68,f2-only,,68,80
+Panama,2026,Eric Davis,67,f2-only,,67,80
+Panama,2026,Fidel Mendieta,65,f2-only,,65,80
+Paraguay,2002,Roque Santa Cruz,75,"avg(77,73)",77,73,82
+Paraguay,2002,Carlos Gamarra,74,"avg(74,73)",74,73,82
+Paraguay,2002,Celso Ayala,73,"avg(72,73)",72,73,82
+Paraguay,2002,Jose Chilavert,73,f2-only,,73,82
+Paraguay,2002,Jorge Campos,73,f2-only,,73,82
+Paraguay,2002,Nelson Cuevas,71,"avg(69,73)",69,73,82
+Paraguay,2002,Denis Caniza,70,"avg(67,73)",67,73,82
+Paraguay,2002,Francisco Arce,69,"avg(64,73)",64,73,82
+Paraguay,2002,Julio Cáceres,69,"avg(65,73)",65,73,82
+Paraguay,2006,Roque Santa Cruz,84,agree,84,84,72
+Paraguay,2006,Carlos Gamarra,84,agree,84,84,80
+Paraguay,2006,Nelson Haedo,77,agree,77,77,72
+Paraguay,2006,Paulo da Silva,74,agree,74,74,71
+Paraguay,2006,Nelson Cuevas,74,agree,74,74,80
+Paraguay,2006,Salvador Cabañas,73,agree,73,73,71
+Paraguay,2006,Derlis Gómez,71,f2-only,,71,71
+Paraguay,2006,Dante López,71,f2-only,,71,71
+Paraguay,2006,Julio Manzur,71,f2-only,,71,71
+Paraguay,2006,Cristian Riveros,70,f2-only,,70,72
+Paraguay,2006,Julio dos Santos,70,f2-only,,70,72
+Paraguay,2006,Julio Cáceres,69,agree,69,69,80
+Paraguay,2006,Denis Caniza,67,agree,67,67,80
+Paraguay,2006,Edgar Barreto,66,agree,66,66,72
+Paraguay,2006,Delio Toledo,63,agree,63,63,71
+Paraguay,2006,Jorge Núñez,62,agree,62,62,80
+Paraguay,2006,Carlos Bonet,61,agree,61,61,72
+Paraguay,2010,Paulo da Silva,76,agree,76,76,83
+Paraguay,2010,Justo Villar,76,agree,76,76,83
+Paraguay,2010,Denis Caniza,75,agree,75,75,71
+Paraguay,2010,Aldo Bobadilla,74,agree,74,74,71
+Paraguay,2010,Dario Verón,73,agree,73,73,71
+Paraguay,2010,Cristian Riveros,73,agree,73,73,83
+Paraguay,2010,Julio Cáceres,73,agree,73,73,71
+Paraguay,2010,Claudio Morel,73,agree,73,73,83
+Paraguay,2010,José María Ortigoza,72,f1-only,72,,71
+Paraguay,2010,Enrique Vera,71,agree,71,71,83
+Paraguay,2010,Carlos Gamarra,71,f2-only,,71,71
+Paraguay,2010,Nestor Ortigoza,69,f2-only,,69,71
+Paraguay,2010,Antolin Alcaraz,68,f1-only,68,,83
+Paraguay,2010,Antolin Viveros,68,f2-only,,68,83
+Paraguay,2010,Diego Barreto,67,agree,67,67,71
+Poland,2002,Maciej Żurawski,80,agree,80,80,72
+Poland,2002,Jacek Bąk,76,agree,76,76,71
+Poland,2002,Jacek Zieliński,74,agree,74,74,71
+Poland,2002,Radoslaw Kaluzny,74,f1-only,74,,72
+Poland,2002,Radosław Kałużny,74,f2-only,,74,72
+Poland,2002,Michał Żewłakow,73,agree,73,73,72
+Poland,2002,Tomasz Rząsa,72,f1-only,72,,71
+Poland,2002,Marek Rząsa,72,f2-only,,72,71
+Poland,2002,Tomasz Kłos,71,agree,71,71,72
+Poland,2002,Arkadiusz Bąk,71,f2-only,,71,71
+Poland,2002,Bartosz Kucharski,71,f2-only,,71,71
+Poland,2002,Tomasz Matysek,71,f2-only,,71,71
+Poland,2002,Maciej Murawski,71,f2-only,,71,71
+Poland,2002,Paweł Sibik,71,f2-only,,71,71
+Poland,2002,Piotr Świerczewski,71,f2-only,,71,72
+Poland,2002,Arkadiusz Głowacki,66,agree,66,66,71
+Poland,2002,Tomasz Hajto,64,agree,64,64,72
+Poland,2006,Euzebiusz Smolarek,82,f1-only,82,,72
+Poland,2006,E. Smolarek,82,f2-only,,82,72
+Poland,2006,Ireneusz Jeleń,77,agree,77,77,72
+Poland,2006,Maciej Żurawski,76,agree,76,76,72
+Poland,2006,Tomasz Kuszczak,70,agree,70,70,71
+Poland,2006,Radosław Sobolewski,68,agree,68,68,72
+Poland,2006,Kamil Kosowski,68,agree,68,68,71
+Poland,2006,Brożek,68,"avg(62,74)",62,74,72
+Poland,2006,Grzegorz Rasiak,67,agree,67,67,71
+Poland,2006,Dariusz Dudka,66,agree,66,66,71
+Poland,2006,Mariusz Jop,65,f2-only,,65,71
+Poland,2006,Mirosław Szymkowiak,62,agree,62,62,72
+Poland,2006,Łukasz Fabiański,52,agree,52,52,71
+Poland,2018,Arkadiusz Milik,80,"avg(79,80)",79,80,71
+Poland,2018,Jakub Błaszczykowski,77,"avg(76,77)",76,77,71
+Poland,2018,Bartosz Białkowski,74,"avg(74,73)",74,73,71
+Poland,2018,Artur Jędrzejczyk,74,"avg(73,74)",73,74,71
+Poland,2018,Thiago Cionek,71,agree,71,71,71
+Poland,2018,Sławomir Peszko,70,"avg(69,70)",69,70,71
+Poland,2018,Rafał Kurzawa,67,"avg(66,68)",66,68,71
+Poland,2022,Wojciech Szczęsny,86,agree,86,86,84
+Poland,2022,Piotr Zieliński,83,agree,83,83,84
+Poland,2022,Matty Cash,79,f1-only,79,,84
+Poland,2022,Matthew Stuart,79,f2-only,,79,84
+Poland,2022,Jan Bednarek,76,"avg(76,75)",76,75,71
+Poland,2022,Łukasz Skorupski,76,f1-only,76,,71
+Poland,2022,Lukasz Skorupski,76,f2-only,,76,71
+Poland,2022,Krzysztof Piątek,75,"avg(75,74)",75,74,71
+Poland,2022,Karol Świderski,74,agree,74,74,71
+Poland,2022,Kamil Grosicki,73,agree,73,73,71
+Poland,2022,Bartosz Bereszyński,73,agree,73,73,84
+Poland,2022,Kamil Grabara,73,agree,73,73,71
+Poland,2022,Jakub Kiwior,71,agree,71,71,84
+Poland,2022,Damian Szymański,71,agree,71,71,71
+Poland,2022,Kamil Glik,71,agree,71,71,84
+Poland,2022,Artur Jędrzejczyk,69,agree,69,69,71
+Poland,2022,Michał Skóraś,68,f1-only,68,,71
+Poland,2022,Michal Skóraś,68,f2-only,,68,71
+Portugal,2002,Rui Costa,89,agree,89,89,78
+Portugal,2002,Jorge Andrade,87,f2-only,,87,78
+Portugal,2002,Fernando Couto,84,agree,84,84,78
+Portugal,2002,Nuno Gomes,82,agree,82,82,71
+Portugal,2002,Ricardo,82,f1-only,82,,71
+Portugal,2002,Jorge Costa,81,agree,81,81,78
+Portugal,2002,Ricardo Pereira,79,f2-only;merged-dup(2),,76,71
+Portugal,2002,Abel Xavier,76,f2-only,,76,71
+Portugal,2002,Nuno Frechaut,75,agree,75,75,71
+Portugal,2002,Nuno Capucho,74,agree,74,74,71
+Portugal,2002,Beto,73,agree,73,73,78
+Portugal,2002,Rui Jorge,69,f1-only,69,,78
+Portugal,2006,Deco,87,agree,87,87,88
+Portugal,2006,Fernando Meira,87,agree,87,87,88
+Portugal,2006,Ricardo Carvalho,86,agree,86,86,88
+Portugal,2006,Pauleta,85,agree,85,85,88
+Portugal,2006,Maniche,83,agree,83,83,88
+Portugal,2006,Luis Monteiro,83,f2-only,,83,88
+Portugal,2006,Ricardo,82,agree,82,82,88
+Portugal,2006,Simão Sabrosa,82,"avg(80,83)",80,83,88
+Portugal,2006,Luis Boa Morte,80,agree,80,80,72
+Portugal,2006,Miguel,79,f1-only,79,,88
+Portugal,2006,Nuno Valente,77,agree,77,77,88
+Portugal,2006,Marco Caneira,77,f2-only,,77,72
+Portugal,2006,Quim,76,"avg(74,78)",74,78,72
+Portugal,2006,Ricardo Costa,73,"avg(69,77)",69,77,72
+Portugal,2006,Paulo Santos,68,"avg(58,77)",58,77,72
+Portugal,2010,Deco,82,agree,82,82,71
+Portugal,2010,Beto,79,f1-only,79,,71
+Portugal,2010,Paulo Ferreira,78,"avg(78,77)",78,77,71
+Portugal,2010,Bastos Pimparel,78,f2-only,,78,71
+Portugal,2010,Miguel,77,f1-only,77,,71
+Portugal,2010,Luis Monteiro,77,f2-only,,77,71
+Portugal,2010,Ruben Amorim,76,agree,76,76,71
+Portugal,2010,Daniel Fernandes,75,"avg(74,75)",74,75,71
+Portugal,2014,Fabio Coentrão,79,agree,79,79,71
+Portugal,2014,Vieirinha,78,agree,78,78,71
+Portugal,2014,Helder Postiga,76,agree,76,76,71
+Portugal,2014,Hugo de Almeida,76,f2-only,,76,71
+Portugal,2014,Ruben Amorim,70,"avg(63,76)",63,76,71
+Portugal,2018,Anthony Lopes,83,agree,83,83,71
+Portugal,2018,Gelson Martins,81,agree,81,81,71
+Portugal,2018,Manuel Fernandes,80,agree,80,80,71
+Portugal,2018,Ricardo Pereira,80,agree,80,80,71
+Portugal,2018,Antonio Pimparel,76,agree,76,76,71
+Portugal,2022,Rui Patrício,82,agree,82,82,71
+Portugal,2022,André Miguel Valente da Silva,82,f1-only,82,,71
+Portugal,2022,Portugal striker,82,f2-only,,82,71
+Portugal,2022,José Sá,81,agree,81,81,71
+Portugal,2022,Danilo Pereira,80,agree,80,80,71
+Portugal,2022,Nuno Mendes,80,agree,80,80,71
+Portugal,2022,Portugal center-back,69,f2-only,,69,71
+Portugal,2022,António João Tavares Silva,66,f1-only,66,,71
+Qatar,2022,Boualem Khoukhi,71,agree,71,71,79
+Qatar,2022,Ali Qambar,69,f2-only,,69,71
+Qatar,2022,Ró-Ró,69,f2-only,,69,79
+Qatar,2022,Bassam Al-Rawi,68,agree,68,68,71
+Qatar,2022,Saad Al-Sheeb,68,agree,68,68,79
+Qatar,2022,Homam Al Amin Mohamed Ahmed,68,agree,68,68,79
+Qatar,2022,Mohammed Muntari,67,agree,67,67,79
+Qatar,2022,Tarek Salman,66,f1-only,66,,71
+Qatar,2022,Tarek Odeh,66,f2-only,,66,71
+Qatar,2022,Meshaal Barsham,65,agree,65,65,79
+Qatar,2022,Musab Kheder,65,f1-only,65,,71
+Qatar,2022,Yousef Hassan,65,f1-only,65,,71
+Qatar,2022,Ahmed Alaaeldin,65,f2-only,,65,71
+Qatar,2022,Musab Djebril,65,f2-only,,65,71
+Qatar,2022,Yousef Ali,65,f2-only,,65,71
+Qatar,2022,Khalid Mazeed,64,f2-only,,64,71
+Qatar,2026,Lucas Mendes,70,"avg(70,69)",70,69,71
+Qatar,2026,Sultan Al Brake,68,f2-only,,68,71
+Qatar,2026,Ahmed Al-Ganehi,67,agree,67,67,71
+Qatar,2026,Ahmed Abdoulla,67,f2-only,,67,71
+Qatar,2026,Mahmoud Abunada,64,f2-only,,64,71
+Qatar,2026,Ayoub Al-Oui,60,f2-only,,60,71
+Qatar,2026,Al-Hashmi Al-Hussain,58,f2-only,,58,71
+Republic of Ireland,2002,Steve Finnan,78,"avg(77,79)",77,79,86
+Republic of Ireland,2002,Ian Harte,78,"avg(79,76)",79,76,86
+Republic of Ireland,2002,Dean Kiely,75,"avg(79,70)",79,70,71
+Republic of Ireland,2002,Clinton Morrison,75,"avg(76,74)",76,74,71
+Republic of Ireland,2002,Gary Breen,73,"avg(70,75)",70,75,86
+Republic of Ireland,2002,David Connolly,72,f1-only,72,,71
+Republic of Ireland,2002,Stephen Kelly,72,f2-only;merged-dup(2),,74,86
+Republic of Ireland,2002,Steve Staunton,71,"avg(68,74)",68,74,86
+Republic of Ireland,2002,Lee Carsley,71,"avg(72,70)",72,70,71
+Republic of Ireland,2002,Gary Kelly,70,f1-only,70,,86
+Republic of Ireland,2002,Aaron Connolly,70,f2-only,,70,71
+Russia,2002,Alexandr Kerzhakov,82,f1-only,82,,71
+Russia,2002,Dmitry Sennikov,78,f1-only,78,,71
+Russia,2002,Stanislav Cherchesov,62,f2-only,,62,71
+Russia,2002,Aleksandr Filimonov,62,f2-only,,62,71
+Russia,2002,Aleksandr Kerzhakov,62,f2-only,,62,71
+Russia,2002,Ruslan Pimenov,62,f2-only,,62,71
+Russia,2002,Dmitri Sennikov,62,f2-only,,62,71
+Russia,2018,Mário Fernandes,81,agree,81,81,79
+Russia,2018,Igor Akinfeev,80,"avg(79,80)",79,80,79
+Russia,2018,Aleksandr Samedov,80,"avg(79,80)",79,80,79
+Russia,2018,Igor Smolnikov,79,"avg(80,78)",80,78,71
+Russia,2018,Artem Dzyuba,78,agree,78,78,79
+Russia,2018,Aleksandr Golovin,78,"avg(76,79)",76,79,79
+Russia,2018,Sergey Ignashevich,78,"avg(78,77)",78,77,79
+Russia,2018,Roman Zobnin,78,"avg(77,78)",77,78,79
+Russia,2018,Andrey Lunev,78,f2-only,,78,71
+Russia,2018,Denis Cheryshev,77,"avg(78,76)",78,76,79
+Russia,2018,Aleksey Miranchuk,77,"avg(74,79)",74,79,71
+Russia,2018,Daler Kuzyayev,77,f2-only,,77,79
+Russia,2018,Yuriy Gazinskiy,75,f2-only,,75,79
+Russia,2018,Fedor Kudryashov,74,"avg(73,74)",73,74,79
+Russia,2018,Vladimir Gabulov,74,agree,74,74,71
+Russia,2018,Ilya Kutepov,73,agree,73,73,79
+Russia,2018,Vladimir Granat,72,agree,72,72,71
+Saudi Arabia,2002,Al-Dokhi,63,f2-only,,63,72
+Saudi Arabia,2002,Al-Jahani,63,f2-only,,63,72
+Saudi Arabia,2002,Al-Jumaan,63,f2-only,,63,72
+Saudi Arabia,2002,Al-Waked,63,f2-only,,63,72
+Saudi Arabia,2002,Al-Yami,63,f2-only,,63,72
+Saudi Arabia,2002,F. Al-Shehri,63,f2-only,,63,72
+Saudi Arabia,2002,K. Al-Dosari,63,f2-only,,63,72
+Saudi Arabia,2002,Mohammed Noor,63,f2-only,,63,72
+Saudi Arabia,2002,Sami Heroes,62,f2-only,,62,71
+Saudi Arabia,2002,Al-Khojali,62,f2-only,,62,71
+Saudi Arabia,2002,Mohammad Al-Shalhoub,62,f2-only,,62,71
+Saudi Arabia,2002,O. Al-Dosari,62,f2-only,,62,71
+Saudi Arabia,2002,Zaid,62,f2-only,,62,71
+Saudi Arabia,2006,Ahmed Al-Dokhi,70,f2-only,,70,79
+Saudi Arabia,2006,Real-world Al-Jaber,70,f2-only,,70,79
+Saudi Arabia,2006,Real-world Al-Montashari,70,f2-only,,70,79
+Saudi Arabia,2006,Yasser Al-Qahtani,70,f2-only,,70,79
+Saudi Arabia,2006,Real-world Abdulghani,70,f2-only,,70,79
+Saudi Arabia,2006,Redha Tukar,70,f2-only,,70,79
+Saudi Arabia,2006,Mabrouk Zaid,70,f2-only,,70,79
+Saudi Arabia,2018,Salman Al Faraj,75,"avg(74,75)",74,75,79
+Saudi Arabia,2018,Osama Hawsawi,75,agree,75,75,79
+Saudi Arabia,2018,Yasir Gharsan Al-Shahrani,74,f1-only,74,,79
+Saudi Arabia,2018,Taisir Jabir Al Jassim,74,f1-only,74,,72
+Saudi Arabia,2018,Yasser Al Shahrani,74,f2-only,,74,79
+Saudi Arabia,2018,Taiseer Al Jassam,74,f2-only,,74,72
+Saudi Arabia,2018,Mohammed Al Owais,73,"avg(73,72)",73,72,79
+Saudi Arabia,2018,Fahad Al Muwallad,73,"avg(74,72)",74,72,72
+Saudi Arabia,2018,Mohammad Ibrahim Mohammad Al-Sahlawi,73,f1-only,73,,72
+Saudi Arabia,2018,Mohammed Al Sahlawi,73,f2-only,,73,72
+Saudi Arabia,2018,Yasser Al Mosailem,71,"avg(71,70)",71,70,79
+Saudi Arabia,2018,Housain Ali Jassim Al-Mogahwi,71,f1-only,71,,72
+Saudi Arabia,2018,Mohammed Al Buraik,71,f2-only,,71,79
+Saudi Arabia,2018,Hussain Al Moqahwi,71,f2-only,,71,72
+Saudi Arabia,2018,Yehya Sulaiman Ali Al-Shehri,70,f1-only,70,,72
+Saudi Arabia,2018,Abdullah Al Mayoof,70,f2-only,,70,79
+Saudi Arabia,2018,Yahia Al Shehri,70,f2-only,,70,72
+Saudi Arabia,2018,Abdullah Ibrahim Al Maiouf,69,f1-only,69,,79
+Saudi Arabia,2018,Muhannad Asiri,67,f2-only,,67,72
+Saudi Arabia,2018,Ahmad Mohammed Al Assiri,55,f1-only,55,,72
+Saudi Arabia,2022,Salman Al-Faraj,74,"avg(75,73)",75,73,71
+Saudi Arabia,2022,Yasir Gharsan Al-Shahrani,73,f1-only,73,,71
+Saudi Arabia,2022,Yasser Al-Shahrani,73,f2-only,,73,71
+Saudi Arabia,2022,Saud Abdulhamid,73,f2-only,,73,79
+Saudi Arabia,2022,Sultan Al-Ghannam,72,"avg(72,71)",72,71,79
+Saudi Arabia,2022,Abdulelah Al-Amri,71,"avg(71,70)",71,70,79
+Saudi Arabia,2022,Saud Abdullah Abdul Hamid,71,f1-only,71,,79
+Saudi Arabia,2022,Hattan Bahebri,70,"avg(69,70)",69,70,71
+Saudi Arabia,2022,Mohammed Al-Owais,69,"avg(69,68)",69,68,79
+Saudi Arabia,2022,Sami Al-Najei,69,agree,69,69,71
+Saudi Arabia,2022,Ahmed Mohammed Sharahili,69,f1-only,69,,71
+Saudi Arabia,2022,Saleh Al-Shehri,68,agree,68,68,79
+Saudi Arabia,2022,Nawaf Al-Abed,68,f2-only,,68,71
+Saudi Arabia,2022,Ali Al-Bulaihi,67,agree,67,67,79
+Saudi Arabia,2022,Saeed Awadh Al Rubaie Al Yami,67,f1-only,67,,71
+Saudi Arabia,2022,Riyadh Sharahili,67,f2-only,,67,71
+Saudi Arabia,2022,Ali Al-Hassan,66,agree,66,66,71
+Saudi Arabia,2022,Abdullah Madu,66,agree,66,66,71
+Saudi Arabia,2022,Nasser Al-Dawsari,66,"avg(67,65)",67,65,71
+Saudi Arabia,2022,Abdulfattah Tawfiq Jaber Asiri,66,f1-only,66,,71
+Saudi Arabia,2022,Mohammed Al-Rubaie,66,f2-only,,66,71
+Saudi Arabia,2022,Haitham Asiri,66,f2-only,,66,71
+Saudi Arabia,2022,Nawaf Al-Aqidi,59,"avg(58,59)",58,59,71
+Saudi Arabia,2026,Saud Abdullah Abdul Hamidسعود عبدالحميد,75,f1-only,75,,79
+Saudi Arabia,2026,Firas Tariq Nasser Al Buraikanفراس طارق ناصر البريكان,75,f1-only,75,,79
+Saudi Arabia,2026,Musab Fahd Al Juwayrمصعب فهد الجوير,75,f1-only,75,,79
+Saudi Arabia,2026,Saud Abdulhamid,75,f2-only,,75,79
+Saudi Arabia,2026,Firas Al Birekan,75,f2-only,,75,79
+Saudi Arabia,2026,Musab Al Juwair,75,f2-only,,75,79
+Saudi Arabia,2026,Nawaf Al Aqidi,72,agree,72,72,79
+Saudi Arabia,2026,Mohamed Ibrahim Abdullah Kannoمحمد كنو,72,f1-only,72,,79
+Saudi Arabia,2026,Hassan Tombakti,72,f2-only,,72,79
+Saudi Arabia,2026,Mohammed Kanno,72,f2-only,,72,79
+Saudi Arabia,2026,Hassan Kadesh Mahboobحسن كادش محبوب,71,f1-only,71,,71
+Saudi Arabia,2026,Hassan Kadish,71,f2-only,,71,71
+Saudi Arabia,2026,Ayman Yahya,68,agree,68,68,71
+Saudi Arabia,2026,Mohammed Abu Al Shamat,67,agree,67,67,71
+Saudi Arabia,2026,Ziyad Al Johani,67,agree,67,67,71
+Saudi Arabia,2026,Moteb Saad Al Harbiمتعب سعد الحربي,67,f1-only,67,,71
+Saudi Arabia,2026,Mohammed Al-Owais,67,f2-only,,67,79
+Saudi Arabia,2026,Muteb Al Harbi,67,f2-only,,67,71
+Saudi Arabia,2026,Jehad Abdullatif Ahmed Thakriجهاد ذكري,66,f1-only,66,,71
+Saudi Arabia,2026,Jehad Thekri,66,f2-only,,66,71
+Saudi Arabia,2026,Abdullah Al Hamdan,64,agree,64,64,79
+Saudi Arabia,2026,Ahmed Al Kassar,63,agree,63,63,71
+Scotland,2026,Lewis Ferguson,78,agree,78,78,73
+Scotland,2026,Jack Hendry,74,agree,74,74,73
+Scotland,2026,Ben Gannon-Doak,71,agree,71,71,73
+Scotland,2026,Anthony Ralston,71,agree,71,71,73
+Scotland,2026,Craig Gordon,67,agree,67,67,73
+Senegal,2002,Henri Camara,77,agree,77,77,80
+Senegal,2002,Tony Sylva,75,agree,75,75,80
+Senegal,2002,Papa Bouba Diop,75,f1-only,75,,80
+Senegal,2002,Salif Diao,74,agree,74,74,80
+Senegal,2002,Lamine Diatta,72,agree,72,72,80
+Senegal,2002,Papa Diop,72,"avg(69,75)",69,75,80
+Senegal,2002,Aliou Cissé,71,agree,71,71,80
+Senegal,2002,Omar Daf,70,agree,70,70,80
+Senegal,2002,Souleymane Camara,70,agree,70,70,71
+Senegal,2002,Khalilou Fadiga,70,f2-only,,70,80
+Senegal,2002,Pape Sarr,69,agree,69,69,71
+Senegal,2002,Pape Diop,69,f2-only,,69,80
+Senegal,2002,Ferdinand Coly,67,agree,67,67,80
+Senegal,2002,Pape Thiaw,65,agree,65,65,71
+Senegal,2002,Kalidou Cissokho,65,f2-only,,65,71
+Senegal,2002,Omar Diallo,65,f2-only,,65,71
+Senegal,2002,Amara Traoré,65,f2-only,,65,71
+Senegal,2002,Dour,64,f1-corrupt->f2,39,64,71
+Senegal,2002,Habibou Traoré,60,f1-only,60,,71
+Senegal,2018,Keita Diao,81,"avg(82,80)",82,80,71
+Senegal,2018,Diaye,76,"avg(77,74)",77,74,72
+Senegal,2018,Mame Diouf,76,"avg(77,74)",77,74,72
+Senegal,2018,Badou Ndiaye,76,f2-only,,76,71
+Senegal,2018,Diafra Sakho,75,agree,75,75,71
+Senegal,2018,Doye,75,"avg(76,74)",76,74,72
+Senegal,2018,Moussa Sow,75,f2-only,,75,71
+Senegal,2018,Ismaila Sarr,74,"avg(73,74)",73,74,72
+Senegal,2018,Pape Konaté,74,agree,74,74,72
+Senegal,2018,Alfred Gomis,72,"avg(73,70)",73,70,71
+Senegal,2018,Abdoulaye Diallo,70,agree,70,70,71
+Senegal,2018,Lamine Gassama,70,"avg(68,71)",68,71,71
+Senegal,2022,Kalidou Koulibaly,85,"avg(87,82)",87,82,80
+Senegal,2022,Edouard Mendy,83,"avg(86,80)",86,80,80
+Senegal,2022,Boulaye Dia,80,"avg(79,80)",79,80,80
+Senegal,2022,Abdou Diallo,77,agree,77,77,80
+Senegal,2022,Ismaila Sarr,77,agree,77,77,80
+Senegal,2022,Youssouf Sabaly,77,"avg(76,77)",76,77,80
+Senegal,2022,Cheikhou Kouyaté,76,"avg(77,74)",77,74,71
+Senegal,2022,Nicolas Jackson,76,"avg(71,81)",71,81,71
+Senegal,2022,Alfred Gomis,75,"avg(77,73)",77,73,71
+Senegal,2022,Nampalys Mendy,74,"avg(74,73)",74,73,80
+Senegal,2022,Ahmadou Dieng,74,agree,74,74,80
+Senegal,2022,Ismail Jakobs,74,f2-only,,74,80
+Senegal,2022,Seny Dieng,72,"avg(72,71)",72,71,71
+Senegal,2022,Fode Ballo-Touré,71,"avg(72,70)",72,70,71
+Senegal,2026,Kalidou Koulibaly,82,agree,82,82,85
+Senegal,2026,Ismaila Sarr,79,agree,79,79,85
+Senegal,2026,Pape Sarr,79,agree,79,79,85
+Senegal,2026,Iliman Cheikh Baroy Ndiaye,79,f1-only,79,,71
+Senegal,2026,Yehvann Diouf,78,agree,78,78,71
+Senegal,2026,Pape Gueye,78,agree,78,78,85
+Senegal,2026,Lamine Camara,77,agree,77,77,85
+Senegal,2026,Assane Diaoune,76,agree,76,76,71
+Senegal,2026,Krepin Diatta,74,agree,74,74,85
+Senegal,2026,Abdoulaye Seck,73,f2-only,,73,71
+Senegal,2026,Bara Ndiaye,71,f2-only,,71,71
+Senegal,2026,Mory Diaw,70,agree,70,70,71
+Senegal,2026,Cherif Ndiaye,70,f2-only,,70,71
+Senegal,2026,Ibrahima Seck,60,f1-only,60,,71
+Serbia,2010,Gojko Kačar,78,agree,78,78,71
+Serbia,2010,Nenad Milijaš,75,"avg(74,76)",74,76,71
+Serbia,2010,Zoran Tošić,75,agree,75,75,71
+Serbia,2010,Ivan Obradović,74,"avg(73,75)",73,75,71
+Serbia,2010,Bojan Isailović,73,f2-only,,73,71
+Serbia,2010,Dragan Mrđa,73,f2-only,,73,71
+Serbia,2010,Radosav Petrović,73,f2-only,,73,71
+Serbia,2010,Anđelko Đuričić,68,f2-only,,68,71
+Serbia,2018,Nemanja Matić,84,"avg(83,84)",83,84,74
+Serbia,2018,Sergej Milinković-Savić,82,"avg(80,83)",80,83,74
+Serbia,2018,Adem Ljajić,79,"avg(79,78)",79,78,74
+Serbia,2018,Dusan Tadić,79,"avg(80,78)",80,78,74
+Serbia,2018,Andrija Živković,78,"avg(77,79)",77,79,71
+Serbia,2018,Filip Kostić,77,"avg(78,76)",78,76,74
+Serbia,2018,Slobodan Rajković,75,f1-only,75,,71
+Serbia,2018,Marko Dmitrović,74,agree,74,74,71
+Serbia,2018,Aleksandar Prijović,74,agree,74,74,71
+Serbia,2018,Milos Veljković,74,"avg(73,74)",73,74,71
+Serbia,2018,Luka Jović,72,"avg(70,74)",70,74,71
+Serbia,2018,Predrag Rajković,69,f2-only,,69,71
+Serbia,2022,Marko Dmitrović,80,agree,80,80,71
+Serbia,2022,Luka Jović,79,"avg(79,78)",79,78,71
+Serbia,2022,Predrag Rajković,78,agree,78,78,71
+Serbia,2022,Darko Lazović,77,"avg(77,76)",77,76,71
+Serbia,2022,Marko Grujić,76,agree,76,76,71
+Serbia,2022,Ivan Ilić,76,agree,76,76,71
+Serbia,2022,Filip Đuričić,74,"avg(75,73)",75,73,71
+Serbia,2022,Srđan Babić,74,"avg(73,75)",73,75,71
+Serbia,2022,Stefan Mitrović,74,agree,74,74,71
+Serbia,2022,Filip Mladenović,69,agree,69,69,71
+Serbia and Montenegro,2006,Mateja Kežman,84,agree,84,84,72
+Serbia and Montenegro,2006,Savo Milošević,81,agree,81,81,72
+Serbia and Montenegro,2006,Danijel Ljuboja,79,agree,79,79,72
+Serbia and Montenegro,2006,Ognjen Koroman,78,f2-only,,78,72
+Serbia and Montenegro,2006,Ivan Ergić,74,f2-only,,74,72
+Slovakia,2010,Martin Škrtel,82,agree,82,82,79
+Slovakia,2010,Marek Hamšík,81,agree,81,81,79
+Slovakia,2010,Róbert Vittek,75,agree,75,75,79
+Slovakia,2010,Marek Sapara,75,agree,75,75,71
+Slovakia,2010,Peter Pekarík,73,"avg(72,73)",72,73,79
+Slovakia,2010,Ján Ďurica,73,agree,73,73,79
+Slovakia,2010,Miroslav Stoch,72,agree,72,72,79
+Slovakia,2010,Martin Jakubko,72,agree,72,72,71
+Slovakia,2010,Marek Čech,70,f1-only,70,,71
+Slovakia,2010,Marek Slovak,70,f2-only,,70,71
+Slovakia,2010,Radoslav Zabavník,69,agree,69,69,79
+Slovakia,2010,Ján Kozák,69,f2-only,,69,71
+Slovakia,2010,Dušan Kuciak,69,f2-only,,69,71
+Slovakia,2010,Dušan Perniš,69,f2-only,,69,71
+Slovakia,2010,Kornel Saláta,69,f2-only,,69,71
+Slovakia,2010,Ján Mucha,66,agree,66,66,79
+Slovakia,2010,Martin Petráš,65,agree,65,65,71
+Slovenia,2002,Aleksander Knavs,78,agree,78,78,72
+Slovenia,2002,Zlatko Zahovič,76,agree,76,76,71
+Slovenia,2002,Nastja Čeh,75,agree,75,75,72
+Slovenia,2002,Gajser,74,f2-only,,74,71
+Slovenia,2002,Galič,74,f2-only,,74,71
+Slovenia,2002,Nemec,74,f2-only,,74,71
+Slovenia,2002,Tiganj,74,f2-only,,74,71
+Slovenia,2002,Saša Vugdalić,74,f2-only,,74,71
+Slovenia,2002,Bulajič,74,f2-only,,74,72
+Slovenia,2002,Milan Osterc,74,f2-only,,74,72
+Slovenia,2002,Mladen Rudonja,74,f2-only,,74,72
+Slovenia,2002,Tavčar,67,"avg(60,74)",60,74,71
+South Africa,2002,Bennedict Saul McCarthy,81,f1-only,81,,79
+South Africa,2002,Quinton Fortune,73,"avg(75,70)",75,70,79
+South Africa,2002,Andre Arendse,70,f2-only,,70,79
+South Africa,2002,Benni McCarthy,70,f2-only,,70,79
+South Africa,2002,Teboho Mokoena,70,f2-only,,70,79
+South Africa,2002,Delron Buckley,65,"avg(68,62)",68,62,71
+South Africa,2002,Molefe,62,agree,62,62,71
+South Africa,2002,Pule,62,agree,62,62,71
+South Africa,2002,Pierre Issa,62,f2-only,,62,71
+South Africa,2002,Jacob Lekgetho,62,f2-only,,62,71
+South Africa,2002,Marlin,62,f2-only,,62,71
+South Africa,2002,Mukansi,62,f2-only,,62,71
+South Africa,2002,Hans Vonk,60,"avg(58,62)",58,62,71
+South Africa,2002,Siyabonga Nomvethe,59,"avg(48,70)",48,70,79
+South Africa,2010,Aaron Mokoena,72,agree,72,72,79
+South Africa,2010,Siphiwe Tshabalala,71,agree,71,71,79
+South Africa,2010,Macbeth Sibaya,71,agree,71,71,71
+South Africa,2010,Siboniso Gaxa,70,agree,70,70,79
+South Africa,2010,Itumeleng Khune,67,agree,67,67,79
+South Africa,2010,Bongani Khumalo,66,agree,66,66,79
+South Africa,2010,Moeneeb Josephs,65,"avg(64,65)",64,65,79
+South Africa,2010,Thanduyise Khuboni,65,f2-only,,65,71
+South Africa,2010,Surprise Moriri,65,f2-only,,65,71
+South Africa,2010,Siyabonga Nomvethe,65,f2-only,,65,71
+South Africa,2010,Shu-Aib Walters,65,f2-only,,65,71
+South Africa,2010,Thwala,64,"avg(63,65)",63,65,71
+South Africa,2010,Peter Masilela,63,agree,63,63,79
+South Africa,2010,Katlego Mphela,63,agree,63,63,79
+South Africa,2010,Anele Ngcongca,63,agree,63,63,71
+South Africa,2026,Khuliso Mudau,73,f2-only,,73,72
+South Africa,2026,Themba Zwane,73,f2-only,,73,72
+South Africa,2026,Thalente Mbatha,69,f2-only,,69,72
+South Africa,2026,Ime Okon,67,agree,67,67,72
+South Africa,2026,Sphephelo Sithole,65,agree,65,65,72
+South Korea,2002,J. S. Park,77,f1-only,77,,81
+South Korea,2002,Lee Young-pyo,76,"avg(79,72)",79,72,81
+South Korea,2002,Lee W. J.,76,f1-only,76,,81
+South Korea,2002,Song Chong-gug,74,"avg(75,72)",75,72,81
+South Korea,2002,Choi J. C.,74,f1-only,74,,81
+South Korea,2002,Seol K.H.,74,f1-only,74,,81
+South Korea,2002,Kim N. I.,74,f1-only,74,,81
+South Korea,2002,Kim T. Y.,74,f1-only,74,,81
+South Korea,2002,Ahn Jung-hwan,72,f2-only,,72,81
+South Korea,2002,Lee Eul-yong,72,f2-only,,72,81
+South Korea,2002,Choi Jin-cheul,72,f2-only,,72,81
+South Korea,2002,Park Ji-sung,72,f2-only,,72,81
+South Korea,2002,Seol Ki-hyeon,72,f2-only,,72,81
+South Korea,2002,Kim Nam-il,72,f2-only,,72,81
+South Korea,2002,Yoo Sang-chul,72,f2-only,,72,81
+South Korea,2002,Hwang Sun-hong,72,f2-only,,72,81
+South Korea,2002,Kim Tae-young,72,f2-only,,72,81
+South Korea,2002,Lee Woon-jae,72,f2-only,,72,81
+South Korea,2002,Ahn H. Y.,66,f1-only,66,,81
+South Korea,2006,Yeong Gwang Kim,75,f1-only,75,,71
+South Korea,2006,Kim Dae,66,"avg(69,62)",69,62,71
+South Korea,2006,Song Chong-gug,62,f2-only,,62,71
+South Korea,2006,Park Young,62,f2-only,,62,71
+South Korea,2006,Chung Kyung-ho,62,f2-only,,62,71
+South Korea,2006,Kim Young-kwang,62,f2-only,,62,71
+South Korea,2010,Park Ji-sung,80,agree,80,80,82
+South Korea,2010,Lee Young-pyo,74,agree,74,74,82
+South Korea,2010,Lee Woon-Jae,73,agree,73,73,71
+South Korea,2010,Park Chu-young,73,f2-only,,73,82
+South Korea,2010,Lee Chung-yong,72,agree,72,72,82
+South Korea,2010,Kim Dong-jin,72,f2-only,,72,71
+South Korea,2010,Jung Sung-ryong,71,agree,71,71,82
+South Korea,2010,Kim Young-kwang,71,agree,71,71,71
+South Korea,2010,Ahn,69,f2-only,,69,71
+South Korea,2010,Lee Jung-soo,66,f2-only,,66,82
+South Korea,2010,Oh Beom-seok,65,agree,65,65,71
+South Korea,2010,Lee Seung-yeoul,62,agree,62,62,71
+South Korea,2014,Koo Ja-cheol,76,agree,76,76,79
+South Korea,2014,Kim Shin-wook,73,agree,73,73,71
+South Korea,2014,Hong Jeong-ho,71,agree,71,71,79
+South Korea,2014,Ji Dong-won,71,agree,71,71,71
+South Korea,2014,Park Chu-young,70,f2-only,,70,71
+South Korea,2014,Lee Keun-ho,69,agree,69,69,79
+South Korea,2014,Kim Young-gwon,69,"avg(68,70)",68,70,79
+South Korea,2014,Yun Suk-young,68,agree,68,68,79
+South Korea,2014,Jung Sung-ryong,68,"avg(67,69)",67,69,79
+South Korea,2014,Lee Yong,68,"avg(74,62)",74,62,79
+South Korea,2014,Ju Young Park,68,f1-only,68,,71
+South Korea,2014,Lee Bum-young,66,"avg(68,63)",68,63,71
+South Korea,2014,Hwang Seok-ho,63,f2-only,,63,71
+South Korea,2018,Ki Sung-yueng,78,f2-only,,78,72
+South Korea,2018,Koo Ja-cheol,76,f2-only,,76,72
+South Korea,2018,Kim Shin-wook,74,f2-only,,74,71
+South Korea,2018,Park Joo-ho,73,f2-only,,73,71
+South Korea,2018,Kim Jin-hyeon,72,f2-only,,72,71
+South Korea,2018,Yun Young-sun,72,f2-only,,72,71
+South Korea,2018,Hwang Hee-chan,71,f2-only,,71,72
+South Korea,2018,Ju Se-jong,71,f2-only,,71,72
+South Korea,2018,Kim Seung-gyu,71,f2-only,,71,71
+South Korea,2018,박선주 朴宣住,69,f1-only;merged-dup(10),64,,72
+South Korea,2018,Go Yo-han,69,f2-only,,69,71
+South Korea,2018,황의조 Ui Jo Hwang,68,f1-only,68,,72
+South Korea,2018,Lee Seung-woo,68,f2-only,,68,72
+South Korea,2018,Moon Seon-min,67,f2-only,,67,72
+South Korea,2022,Jo Woo,73,f2-only,,73,71
+South Korea,2022,Jeong Yeong,72,agree,72,72,71
+South Korea,2022,Hong Chul,71,f2-only,,71,71
+South Korea,2022,Cho Min,71,f2-only,,71,71
+South Korea,2022,Kim Su,71,f2-only,,71,83
+South Korea,2022,Kim Gwon,71,f2-only,,71,83
+South Korea,2022,Song Keun,70,agree,70,70,71
+South Korea,2022,Cho Sung,70,"avg(70,69)",70,69,83
+South Korea,2022,홍철 洪喆,70,f1-only;merged-dup(6),71,,71
+South Korea,2022,Kim Gyu,70,f2-only,,70,83
+South Korea,2022,Kim Hwan,68,agree,68,68,83
+South Korea,2022,Kwon Hoon,66,f2-only,,66,71
+South Korea,2022,Kyu Min Park,56,f1-only,56,,71
+South Korea,2026,Kim Jae,82,agree,82,82,82
+South Korea,2026,Lee In,79,agree,79,79,82
+South Korea,2026,Hwang Beom,77,agree,77,77,82
+South Korea,2026,Lee Sung,77,agree,77,77,82
+South Korea,2026,In-beom Hwang황인범,77,f1-only,77,,82
+South Korea,2026,Hwang Chan,75,f2-only,,75,82
+South Korea,2026,Song Keun,74,agree,74,74,71
+South Korea,2026,Kim Gyu,73,f2-only,,73,82
+South Korea,2026,Eom Sung,71,agree,71,71,71
+South Korea,2026,Yang Jun,71,"avg(70,71)",70,71,71
+South Korea,2026,Lee Beom,69,agree,69,69,71
+South Korea,2026,Tae-hyeon Kim김태현,67,f1-only,67,,71
+South Korea,2026,Kim Hyun,67,f2-only,,67,71
+Spain,2002,Albert Luque,87,agree,87,87,71
+Spain,2002,D. Tristan,87,f1-only,87,,71
+Spain,2002,Diego Herrera,87,f2-only,,87,71
+Spain,2002,Pedro Contreras,85,f2-only,,85,71
+Spain,2002,Sergio Soriano,81,"avg(76,85)",76,85,71
+Spain,2002,Ricardo Felipe,80,"avg(74,85)",74,85,71
+Spain,2002,C. Torres,79,f1-only,79,,71
+Spain,2002,Cristobal Torres,79,f2-only,,79,71
+Spain,2006,Michel Salgado,87,agree,87,87,71
+Spain,2006,Carlos Marchena,86,agree,86,86,71
+Spain,2006,José Reyes,86,agree,86,86,71
+Spain,2006,Pepe Reina,85,f2-only,,85,71
+Spain,2006,Juanito,84,f1-only,84,,71
+Spain,2006,Juan Moreno,84,f2-only,,84,71
+Spain,2006,Antonio López,75,f1-only,75,,71
+Spain,2006,Antonio Guerrero,75,f2-only,,75,71
+Spain,2010,Francesc Fabregas,87,f1-only,87,,88
+Spain,2010,Cesc Fàbregas,87,f2-only,,87,88
+Spain,2010,Xabi Alonso,84,agree,84,84,88
+Spain,2010,Carlos Marchena,82,agree,82,82,88
+Spain,2010,Gerard Piqué,82,agree,82,82,88
+Spain,2010,Joan Capdevila,80,agree,80,80,88
+Spain,2010,Sergio Busquets,76,agree,76,76,88
+Spain,2014,Diego Costa,84,"avg(84,83)",84,83,71
+Spain,2014,Pedro Rodriguez,84,agree,84,84,71
+Spain,2014,Javi Martinez,84,f1-only,84,,71
+Spain,2014,Javier Aginaga,84,f2-only,,84,71
+Spain,2014,David de Gea,83,agree,83,83,71
+Spain,2014,Raúl Albiol,80,f1-only,80,,71
+Spain,2014,Raul Tortajada,80,f2-only,,80,71
+Spain,2014,Juanfran,79,f1-only,79,,71
+Spain,2014,Juan Torres,79,f2-only,,79,71
+Spain,2022,Marcos Llorente,84,agree,84,84,71
+Spain,2022,Pau Torres,83,agree,83,83,71
+Spain,2022,Pablo Sarabia,81,agree,81,81,71
+Spain,2022,Yeremy Pino,79,agree,79,79,71
+Spain,2022,Anssumane Fati,79,f1-only,79,,71
+Spain,2022,Ansu Fati,79,f2-only,,79,71
+Spain,2022,David Raya,78,"avg(76,80)",76,80,71
+Spain,2022,Robert Sánchez,78,"avg(77,79)",77,79,71
+Sweden,2002,Johan Mjällby,80,"avg(83,77)",83,77,86
+Sweden,2002,Olof Mellberg,79,"avg(81,77)",81,77,86
+Sweden,2002,Anders Svensson,78,"avg(79,77)",79,77,86
+Sweden,2002,Magnus Hedman,77,agree,77,77,86
+Sweden,2002,Teddy Lučić,77,"avg(76,77)",76,77,86
+Sweden,2002,Niclas Alexandersson,76,"avg(75,77)",75,77,86
+Sweden,2002,Andreas Jakobsson,74,"avg(70,77)",70,77,86
+Sweden,2006,Kim Källström,79,agree,79,79,80
+Sweden,2006,Christian Wilhelmsson,79,agree,79,79,80
+Sweden,2006,Anders Svensson,76,agree,76,76,71
+Sweden,2006,Marcus Rosenberg,75,f1-only,75,,71
+Sweden,2006,Markus Rosenberg,75,f2-only,,75,71
+Sweden,2006,Niclas Alexandersson,71,agree,71,71,80
+Sweden,2006,Daniel Andersson,71,agree,71,71,71
+Sweden,2006,Tobias Linderoth,70,agree,70,70,80
+Sweden,2006,Mattias Jonson,69,agree,69,69,80
+Sweden,2006,John Alvbåge,66,"avg(61,71)",61,71,71
+Sweden,2006,Petter Hansson,64,agree,64,64,71
+Sweden,2018,Emil Forsberg,83,agree,83,83,85
+Sweden,2018,Andreas Granqvist,80,agree,80,80,85
+Sweden,2018,Victor Lindelöf,79,agree,79,79,85
+Sweden,2018,Ola Toivonen,75,agree,75,75,85
+Sweden,2018,Robin Olsen,75,"avg(74,76)",74,76,85
+Sweden,2018,Ludwig Augustinsson,74,"avg(73,74)",73,74,85
+Sweden,2018,Mikael Lustig,74,"avg(73,74)",73,74,85
+Sweden,2026,Anthony Elanga,81,agree,81,81,79
+Sweden,2026,Isak Hien,78,agree,78,78,79
+Sweden,2026,Carl Starfelt,78,agree,78,78,72
+Sweden,2026,Lucas Bergvall,77,agree,77,77,72
+Sweden,2026,Victor Lindelöf,76,"avg(75,76)",75,76,79
+Sweden,2026,Mattias Svanberg,76,agree,76,76,79
+Sweden,2026,Jesper Karlstrom,75,agree,75,75,71
+Sweden,2026,Yasin Ayari,75,agree,75,75,79
+Sweden,2026,Gustaf Nilsson,75,agree,75,75,71
+Sweden,2026,Viktor Johansson,74,agree,74,74,79
+Sweden,2026,Benjamin Nygren,73,"avg(73,72)",73,72,72
+Sweden,2026,Hjalmar Ekdal,72,agree,72,72,72
+Sweden,2026,Besfort Zeneli,72,agree,72,72,71
+Sweden,2026,Alexander Bernhardsson,72,agree,72,72,71
+Sweden,2026,Kristoffer Nordfeldt,72,agree,72,72,71
+Sweden,2026,Jacob Zetterstrom,71,agree,71,71,72
+Sweden,2026,Gustaf Lagerbielke,71,"avg(71,70)",71,70,71
+Sweden,2026,Ken Sema,70,agree,70,70,72
+Switzerland,2006,Alexander Frei,83,agree,83,83,83
+Switzerland,2006,Patrick Müller,81,agree,81,81,83
+Switzerland,2006,Philippe Senderos,79,agree,79,79,80
+Switzerland,2006,Ricardo Cabanas,78,agree,78,78,80
+Switzerland,2006,Raphael Wicky,76,agree,76,76,83
+Switzerland,2006,Pascal Zuberbühler,75,agree,75,75,83
+Switzerland,2006,Johann Vogel,75,agree,75,75,80
+Switzerland,2006,Ludovic Magnin,75,agree,75,75,80
+Switzerland,2006,Philipp Degen,74,agree,74,74,83
+Switzerland,2006,Johan Djourou,74,f2-only,,74,80
+Switzerland,2006,Stéphane Grichting,72,"avg(74,70)",74,70,71
+Switzerland,2006,Christoph Spycher,72,agree,72,72,71
+Switzerland,2006,Tranquillo Barnetta,71,agree,71,71,83
+Switzerland,2006,Valon Behrami,70,agree,70,70,71
+Switzerland,2006,Fabio Coltorti,70,agree,70,70,71
+Switzerland,2006,Diego Benaglio,70,f2-only,,70,71
+Switzerland,2010,Valon Behrami,77,agree,77,77,71
+Switzerland,2010,Philippe Senderos,76,agree,76,76,71
+Switzerland,2010,Mario Eggimann,73,agree,73,73,71
+Switzerland,2010,Johnny Leoni,72,agree,72,72,71
+Switzerland,2010,Marco Wölfli,71,f1-only,71,,71
+Switzerland,2010,Marco Woelfli,71,f2-only,,71,71
+Switzerland,2010,Albert Bunjaku,67,agree,67,67,71
+Switzerland,2010,Xherdan Shaqiri,55,f2-only,,55,71
+Switzerland,2014,Valentin Stocker,79,agree,79,79,71
+Switzerland,2014,Yann Sommer,79,agree,79,79,71
+Switzerland,2014,Roman Bürki,74,agree,74,74,71
+Switzerland,2014,Gelson Fernandes,73,agree,73,73,71
+Switzerland,2014,Philippe Senderos,72,"avg(71,72)",71,72,71
+Switzerland,2014,Michael Lang,67,agree,67,67,71
+Switzerland,2018,Xherdan Shaqiri,82,agree,82,82,86
+Switzerland,2018,Granit Xhaka,82,agree,82,82,86
+Switzerland,2018,Ricardo Araya,81,"avg(81,80)",81,80,86
+Switzerland,2018,Blerim Džemaili,78,agree,78,78,86
+Switzerland,2018,Manuel Akanji,74,"avg(72,75)",72,75,86
+Switzerland,2022,Denis Lado,81,"avg(81,80)",81,80,73
+Switzerland,2022,Jonas Omlin,79,agree,79,79,71
+Switzerland,2022,Fabian Schär,78,"avg(77,78)",77,78,73
+Switzerland,2022,Nico Elvedi,77,agree,77,77,73
+Switzerland,2022,Christian Fassnacht,76,agree,76,76,71
+Switzerland,2022,Renato Steffen,76,agree,76,76,71
+Switzerland,2022,Michel Aebischer,75,"avg(75,74)",75,74,71
+Switzerland,2022,Rubén Martínez,75,"avg(75,74)",75,74,73
+Switzerland,2022,Fabian Frei,73,"avg(71,74)",71,74,73
+Switzerland,2022,Eray Cömert,73,"avg(72,73)",72,73,73
+Switzerland,2022,Philipp Köhn,71,"avg(70,71)",70,71,71
+Switzerland,2022,Fabian Rieder,70,"avg(68,72)",68,72,73
+Switzerland,2022,Ardon Jashari,67,"avg(65,69)",65,69,71
+Switzerland,2026,Granit Xhaka,85,agree,85,85,86
+Switzerland,2026,Manuel Akanji,82,agree,82,82,86
+Switzerland,2026,Remo Freuler,81,agree,81,81,86
+Switzerland,2026,Nico Elvedi,77,agree,77,77,86
+Switzerland,2026,Ardon Jashari,77,agree,77,77,71
+Switzerland,2026,Breel Embolo,77,agree,77,77,86
+Switzerland,2026,Zeki Amdouni,75,agree,75,75,86
+Switzerland,2026,Ruben Vargas,75,agree,75,75,86
+Switzerland,2026,Miro Muheim,75,agree,75,75,71
+Switzerland,2026,Ricardo Rodríguez,74,agree,74,74,86
+Switzerland,2026,Christian Fassnacht,72,agree,72,72,71
+Switzerland,2026,Marvin Keller,72,agree,72,72,71
+Switzerland,2026,Luca Jaquez,69,agree,69,69,71
+Togo,2006,Sheyi Adebayor,82,agree,82,82,72
+Togo,2006,Mohamed Kader,71,f1-only,71,,79
+Togo,2006,Mohamed Coubadja,71,f2-only,,71,79
+Togo,2006,Yao Aziawonou,69,agree,69,69,72
+Togo,2006,Kossi Agassa,67,agree,67,67,79
+Togo,2006,Forson,67,f2-only,,67,79
+Togo,2006,Dare Nibombé,67,f2-only,,67,79
+Togo,2006,Tchangai,67,f2-only,,67,79
+Togo,2006,Agboh,63,f2-only,,63,71
+Togo,2006,Assemoassa,63,f2-only,,63,71
+Togo,2006,Erassa,63,f2-only,,63,71
+Togo,2006,Malm,63,f2-only,,63,71
+Togo,2006,Kodjovi Obilalé,63,f2-only,,63,71
+Togo,2006,Adekambi Olufadé,63,f2-only,,63,71
+Togo,2006,Ouro-Nimini Tchagnirou,63,f2-only,,63,71
+Togo,2006,Alaixys Romao,61,f2-only,,61,72
+Togo,2006,Mustapha Salifou,57,f1-only,57,,72
+Togo,2006,Moustapha Salifou,57,f2-only,,57,72
+Togo,2006,Thomas Dossevi,46,agree,46,46,72
+Trinidad and Tobago,2006,Stern John,70,agree,70,70,72
+Trinidad and Tobago,2006,Kenwyne Jones,65,f2-only,,65,72
+Trinidad and Tobago,2006,Wise,65,f2-only,,65,72
+Trinidad and Tobago,2006,Dwight Yorke,65,f2-only,,65,72
+Trinidad and Tobago,2006,Cornell Glen,64,agree,64,64,72
+Tunisia,2002,Tunisian Gabsi,63,f2-only,,63,72
+Tunisia,2002,Kaies Ghodhbane,63,f2-only,,63,72
+Tunisia,2002,Tunisian Melki,63,f2-only,,63,72
+Tunisia,2002,Tunisian Zitouni,63,f2-only,,63,72
+Tunisia,2002,Ziad Jaziri,62,"avg(60,63)",60,63,72
+Tunisia,2002,Bejaoui,62,f2-only,,62,71
+Tunisia,2002,Ahmed Jaouachi,62,f2-only,,62,71
+Tunisia,2002,Jose Clayton,62,f2-only,,62,71
+Tunisia,2002,Tunisian Jelassi,62,f2-only,,62,71
+Tunisia,2002,Tunisian Mhedhebi,62,f2-only,,62,71
+Tunisia,2002,Tunisian Mkacher,62,f2-only,,62,71
+Tunisia,2002,Adel Sellimi,62,f2-only,,62,71
+Tunisia,2002,Mohamed Mkacher,56,f1-only,56,,71
+Tunisia,2006,Francileudo Santos,80,agree,80,80,71
+Tunisia,2006,Hatem Trabelsi,75,agree,75,75,80
+Tunisia,2006,Radhi Jaïdi,74,agree,74,74,80
+Tunisia,2006,Mehdi Nafti,74,agree,74,74,75
+Tunisia,2006,Adel Chedli,70,agree,70,70,75
+Tunisia,2006,Karim Haggui,69,agree,69,69,80
+Tunisia,2006,Essediri,69,agree,69,69,71
+Tunisia,2006,Alaeddine Yahia,66,agree,66,66,71
+Tunisia,2006,Kaies Ghodhbane,66,f2-only,,66,75
+Tunisia,2006,Hamed Namouchi,64,agree,64,64,75
+Tunisia,2006,Jemmali,64,f2-only,,64,71
+Tunisia,2006,Hamdi Kasraoui,64,f2-only,,64,71
+Tunisia,2006,Adel Nefzi,64,f2-only,,64,71
+Tunisia,2006,Yassine Chikhaoui,64,f2-only,,64,71
+Tunisia,2006,Jawhar Mnari,63,agree,63,63,80
+Tunisia,2006,Riadh Bouazizi,62,agree,62,62,75
+Tunisia,2006,Haykel Guemamdia,62,f2-only,,62,71
+Tunisia,2006,Ziad Jaziri,59,agree,59,59,80
+Tunisia,2006,Chaouki Ben Saada,51,agree,51,51,71
+Tunisia,2006,Ali Boumnijel,51,agree,51,51,80
+Tunisia,2018,Yohan Benalouane,75,agree,75,75,71
+Tunisia,2018,Mohamed Ben Amor,72,f2-only,,72,71
+Tunisia,2018,Ghaylene Chaalali,72,f2-only,,72,71
+Tunisia,2018,Rami Bedoui,70,f2-only,,70,71
+Tunisia,2018,Saif-Eddine Khaoui,70,f2-only,,70,71
+Tunisia,2018,Bassem Srarfi,68,agree,68,68,71
+Tunisia,2018,Ahmed Khalil,68,f2-only,,68,71
+Tunisia,2018,Saber Khalifa,68,f2-only,,68,71
+Tunisia,2018,Oussama Haddadi,67,"avg(66,67)",66,67,71
+Tunisia,2022,Wahbi Khazri,75,agree,75,75,79
+Tunisia,2022,Naim Sliti,74,"avg(76,72)",76,72,71
+Tunisia,2022,Ali Maâloul,72,f2-only,,72,71
+Tunisia,2022,Seifeddine Jaziri,72,f2-only,,72,71
+Tunisia,2022,Ali Abdi,71,"avg(71,70)",71,70,79
+Tunisia,2022,Youssef Msakni,71,f2-only,,71,71
+Tunisia,2022,Yassine Meriah,71,f2-only,,71,79
+Tunisia,2022,Ghailene Chaalali,70,f2-only,,70,71
+Tunisia,2022,Taha Khenissi,70,f2-only,,70,71
+Tunisia,2022,Mohamed Ben Romdhane,69,f2-only,,69,71
+Tunisia,2022,Bechir Ben Saïd,69,f2-only,,69,71
+Tunisia,2022,Montassar Talbi,68,"avg(67,69)",67,69,79
+Tunisia,2022,Mouez Hassen,68,f2-only,,68,71
+Tunisia,2022,Aymen Mathlouthi,68,f2-only,,68,71
+Tunisia,2022,Anis Ben Slimane,67,agree,67,67,71
+Tunisia,2022,Nader Ghandri,67,f2-only,,67,71
+Tunisia,2022,Hannibal Mejbri,66,"avg(64,68)",64,68,71
+Tunisia,2022,Wajdi Kechrida,65,f2-only,,65,79
+Tunisia,2026,Ellyes Skhiri,79,"avg(80,77)",80,77,79
+Tunisia,2026,Ali Abdi,76,agree,76,76,79
+Tunisia,2026,Rani Khedira,76,f2-only,,76,71
+Tunisia,2026,Hannibal Mejbri,75,"avg(74,75)",74,75,79
+Tunisia,2026,Montassar Talbi,74,"avg(73,75)",73,75,79
+Tunisia,2026,Seifeddine Tounekti,73,f2-only,,73,72
+Tunisia,2026,Aymen Dahmen,72,f2-only,,72,79
+Tunisia,2026,Yan Valery,71,agree,71,71,72
+Tunisia,2026,Elias Achouri,71,"avg(72,70)",72,70,72
+Tunisia,2026,Mortadha Ben Ouanes,69,agree,69,69,71
+Tunisia,2026,Sebastian Tounektiسيباستيان توناكتي,69,f1-only,69,,72
+Tunisia,2026,Dylan Bronn,68,agree,68,68,79
+Tunisia,2026,Hazem Mastouri,68,f2-only,,68,72
+Tunisia,2026,Anis Slimane,67,agree,67,67,79
+Tunisia,2026,K. Ayari,65,f2-only,,65,71
+Tunisia,2026,Firas Chaouat,64,f2-only,,64,72
+Tunisia,2026,Moutaz Neffati,63,agree,63,63,71
+Tunisia,2026,Abdelmouhib Chamakh,62,f2-only,,62,71
+Turkey,2002,Yildiray Baştürk,85,agree,85,85,83
+Turkey,2002,Emre Belözoğlu,82,f2-only,,82,83
+Turkey,2002,Rustu Reçber,82,f2-only,,82,83
+Turkey,2002,Hakan Şükür,81,agree,81,81,83
+Turkey,2002,Hasan Şaş,80,agree,80,80,83
+Turkey,2002,Ergun Penbe,77,agree,77,77,83
+Turkey,2002,Bulent Korkmaz,76,agree,76,76,83
+Turkey,2002,Hakan Ünsal,74,agree,74,74,83
+Turkey,2002,Tugay Kerimoğlu,74,agree,74,74,83
+Turkey,2002,Ilhan Mansız,74,f2-only,,74,83
+Turkey,2002,Alpay Özalan,74,f2-only,,74,83
+Turkey,2002,Umit Davala,72,f2-only,,72,83
+Turkey,2002,Fatih Akyel,67,f1-only,67,,83
+Turkey,2002,Fevzi Akyel,67,f2-only,,67,83
+Turkey,2002,Omer Çatkıç,64,f2-only,,64,83
+Turkey,2026,Abdulkerim Bardakci,80,f2-only,,80,72
+Turkey,2026,Yunus Akgun,78,f2-only,,78,72
+Turkey,2026,Fehmi Gunok,78,f2-only,,78,72
+Turkey,2026,Ismail Yuksek,77,f2-only,,77,72
+Turkey,2026,Deniz Gul,76,f2-only,,76,72
+Turkey,2026,Baris Yilmaz,76,f2-only,,76,72
+Turkey,2026,Can Uzun,74,f2-only,,74,72
+Ukraine,2006,Anatoliy Tymoshchuk,75,agree,75,75,82
+Ukraine,2006,Andriy Husin,73,f2-only,,73,82
+Ukraine,2006,Oleg Husyev,73,f2-only,,73,82
+Ukraine,2006,Maksym Kalynychenko,73,f2-only,,73,82
+Ukraine,2006,Andriy Nesmachniy,73,f2-only,,73,82
+Ukraine,2006,Sergei Rebrov,73,f2-only,,73,82
+Ukraine,2006,Andriy Rusol,73,f2-only,,73,82
+Ukraine,2006,Oleh Shelayev,73,f2-only,,73,82
+Ukraine,2006,Oleksandr Shovkovskyi,73,f2-only,,73,82
+United States,2002,Brad Friedel,81,"avg(85,76)",85,76,85
+United States,2002,Eddie Pope,78,"avg(80,76)",80,76,85
+United States,2002,Brian McBride,77,"avg(77,76)",77,76,85
+United States,2002,Tony Sanneh,76,agree,76,76,85
+United States,2002,Brien,76,f1-corrupt->f2,39,76,85
+United States,2006,Tim Howard,73,"avg(84,62)",84,62,71
+United States,2006,Josh Wolff,68,"avg(73,62)",73,62,71
+United States,2006,Brian Ching,67,"avg(72,62)",72,62,71
+United States,2006,Ben Olsen,66,"avg(69,62)",69,62,71
+United States,2006,Marcus Hahnemann,65,"avg(68,62)",68,62,71
+United States,2006,Brien,62,f1-corrupt->f2,39,62,71
+United States,2010,Tim Howard,83,agree,83,83,85
+United States,2010,Clint Dempsey,77,agree,77,77,85
+United States,2010,Bradley Guzan,77,agree,77,77,71
+United States,2010,Michael Bradley,76,agree,76,76,85
+United States,2010,Carlos Bocanegra,74,agree,74,74,85
+United States,2010,Marcus Hahnemann,74,agree,74,74,71
+United States,2010,Steve Cherundolo,72,agree,72,72,85
+United States,2010,Jay DeMerit,72,agree,72,72,85
+United States,2010,José Torres,72,agree,72,72,71
+United States,2010,DaMarcus Beasley,70,agree,70,70,71
+United States,2010,Stuart Holden,69,agree,69,69,71
+United States,2014,Brad Guzan,78,agree,78,78,71
+United States,2014,Jozy Altidore,74,agree,74,74,71
+United States,2014,Aron Jóhannsson,73,agree,73,73,71
+United States,2014,Nick Rimando,73,"avg(76,70)",76,70,71
+United States,2014,Chris Wondolowski,72,agree,72,72,71
+United States,2014,Brad Davis,71,agree,71,71,71
+United States,2014,John Brooks,71,agree,71,71,71
+United States,2022,Christian Pulisic,82,agree,82,82,84
+United States,2022,Giovanni Reyna,78,"avg(77,78)",77,78,71
+United States,2022,Sergiño Dest,77,"avg(77,76)",77,76,84
+United States,2022,Matthew Charles Turner,77,f1-only,77,,84
+United States,2022,Matt Turner,77,f2-only,,77,84
+United States,2022,Walker Zimmerman,76,agree,76,76,84
+United States,2022,Antonee Robinson,75,"avg(74,76)",74,76,84
+United States,2022,Cameron Carter-Vickers,75,"avg(74,76)",74,76,71
+United States,2022,Timothy Weah,75,"avg(74,75)",74,75,84
+United States,2022,Jesus Ferreira,75,"avg(74,75)",74,75,71
+United States,2022,Sean Johnson,73,agree,73,73,71
+United States,2022,Tim Ream,73,f2-only,,73,84
+United States,2022,Jordan Morris,72,"avg(71,72)",71,72,71
+United States,2022,Ethan Horvath,72,"avg(71,72)",71,72,71
+United States,2022,Haji Wright,70,"avg(68,71)",68,71,84
+United States,2022,Timothy Michael Ream,70,f1-only,70,,84
+United States,2026,Antonee Robinson,82,agree,82,82,81
+United States,2026,Malik Tillman,82,agree,82,82,81
+United States,2026,Sergiño Dest,79,agree,79,79,81
+United States,2026,Tyler Adams,79,agree,79,79,81
+United States,2026,Weston McKennie,78,agree,78,78,81
+United States,2026,Folarin Balogun,77,agree,77,77,81
+United States,2026,Timothy Weah,77,agree,77,77,81
+United States,2026,Christopher Jeffrey Richards,77,f1-only,77,,81
+United States,2026,Chris Richards,77,f2-only,,77,81
+United States,2026,Ricardo Pepi,76,agree,76,76,81
+United States,2026,Giovanni Reyna,75,agree,75,75,81
+United States,2026,Brenden Aaronson,74,agree,74,74,81
+United States,2026,Matthew Charles Turner,74,f1-only,74,,81
+United States,2026,Joseph Michael Scally,74,f1-only,74,,81
+United States,2026,Matt Turner,74,f2-only,,74,81
+United States,2026,Joe Scally,74,f2-only,,74,81
+Uruguay,2002,Darío Silva,81,agree,81,81,72
+Uruguay,2002,Federico Magallanes,77,agree,77,77,71
+Uruguay,2002,de Santos,77,agree,77,77,71
+Uruguay,2002,M. Romero,76,f1-only,76,,72
+Uruguay,2002,Probable Romero,76,f2-only,,76,72
+Uruguay,2002,Adrián Elduayen,75,f2-only,,75,71
+Uruguay,2002,Gustavo Méndez,75,f2-only,,75,71
+Uruguay,2002,Nicolás Olivera,75,f2-only,,75,71
+Uruguay,2002,Gustavo Munúa,74,agree,74,74,71
+Uruguay,2002,Alejandro Lembo,72,agree,72,72,72
+Uruguay,2002,Gustavo Varela,67,agree,67,67,72
+Uruguay,2002,Gianni Guigou,67,agree,67,67,72
+Uruguay,2002,Sebastián Abreu,67,agree,67,67,72
+Uruguay,2002,Mario Regueiro,64,agree,64,64,72
+Uruguay,2010,Diego Lugano,82,agree,82,82,86
+Uruguay,2010,Diego Godín,78,agree,78,78,86
+Uruguay,2010,Edinson Cavani,77,agree,77,77,86
+Uruguay,2010,Jorge Fucile,76,agree,76,76,86
+Uruguay,2010,Fernando Muslera,76,f1-only,76,,86
+Uruguay,2010,Nestor Muslera,76,f2-only,,76,86
+Uruguay,2010,Maximiliano Pereira,75,f1-only,75,,86
+Uruguay,2010,Maxi Pereira,75,f2-only,,75,86
+Uruguay,2010,Álvaro Pereira,74,agree,74,74,86
+Uruguay,2010,Egidio Arévalo,74,f2-only,,74,86
+Uruguay,2010,Mauricio Victorino,74,f2-only,,74,86
+Uruguay,2010,Diego Pérez,70,agree,70,70,86
+Uruguay,2014,Walter Gargano,75,"avg(72,77)",72,77,71
+Uruguay,2014,Diego Lugano,75,"avg(74,76)",74,76,71
+Uruguay,2014,Abel Hernández,73,"avg(72,73)",72,73,71
+Uruguay,2014,Jorge Fucile,72,agree,72,72,71
+Uruguay,2014,Martín Silva,71,agree,71,71,71
+Uruguay,2014,Sebastián Coates,71,f1-only,71,,71
+Uruguay,2014,Sebastián Nión,71,f2-only,,71,71
+Uruguay,2014,Rodrigo Muñoz,70,agree,70,70,71
+Uruguay,2018,Matías Vecino,79,"avg(78,79)",78,79,82
+Uruguay,2018,Lucas di Pascua,76,"avg(75,77)",75,77,82
+Uruguay,2018,Cristian Rodríguez,75,agree,75,75,82
+Uruguay,2018,Rodrigo Colman,73,"avg(69,76)",69,76,82
+Uruguay,2018,Nahitan Nández,73,"avg(70,76)",70,76,82
+Uruguay,2022,Nestor Muslera,80,"avg(79,80)",79,80,71
+Uruguay,2022,Maximiliano Gómez González,78,f1-only,78,,71
+Uruguay,2022,Maxi Gómez,78,f2-only,,78,71
+Uruguay,2022,Carlos Sosa,75,agree,75,75,71
+Uruguay,2022,Facundo Torres,73,agree,73,73,71
+Uruguay,2022,Agustin Graviz,73,f2-only,,73,71
+Uruguay,2022,Jose Cáceres,72,f2-only,,72,71
+Uruguay,2026,Rodrigo Zalazar,79,agree,79,79,72
+Uruguay,2026,Santiago Bueno,76,agree,76,76,71
+Uruguay,2026,Guillermo Varela,76,f2-only,,76,72
+Uruguay,2026,Joaquin Piquerez,76,f2-only,,76,71
+Uruguay,2026,Matias Vina,75,f2-only,,75,72
+Uruguay,2026,Agustin Canobbio,74,f2-only,,74,72
+Uruguay,2026,Santiago Mele,74,f2-only,,74,72
+Uruguay,2026,Juan Sanabria,74,f2-only,,74,71
+Uruguay,2026,Facundo Pellistri,73,agree,73,73,72
+Uruguay,2026,Emiliano Martínez,73,f2-only,,73,71
+Uruguay,2026,Federico Sebastián Viñas Barboza,72,f1-only,72,,72
+Uruguay,2026,Enzo Gabriel Martínez Suárez,71,f1-only,71,,71
+Uruguay,2026,Rodrigo Aguirre,69,f2-only,,69,71
+Uzbekistan,2026,Abdukodir Khusanov,77,agree,77,77,79
+Uzbekistan,2026,Jaloliddin Masharipov,69,f2-only,,69,79
+Uzbekistan,2026,Otabek Shukurov,69,f2-only,,69,79
+Uzbekistan,2026,Oston Urunov,66,f2-only,,66,79
+Uzbekistan,2026,Abbosbek Fayzullaev,65,agree,65,65,79
+Wales,2022,Benjamin Davies,78,"avg(79,77)",79,77,79
+Wales,2022,Connor Roberts,75,"avg(75,74)",75,74,79
+Wales,2022,Ethan Ampadu,74,"avg(73,74)",73,74,79
+Wales,2022,Joe Rodon,73,"avg(72,74)",72,74,79
+Wales,2022,Neco Williams,72,"avg(71,73)",71,73,79
+Wales,2022,Christopher James Mepham,71,f1-only,71,,79
+Wales,2022,Chris Mepham,71,f2-only,,71,79

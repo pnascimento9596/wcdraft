@@ -1,0 +1,2247 @@
+card_id,player_id,tournament_id,nation_id,matched_name,effective_final_rating,effective_rule,source_lines,source_player_names,source_final_ratings
+P-00052:WC-2022,P-00052,WC-2022,T-59,Ró-Ró,69,f2-only,1716,Ró-Ró,69
+P-00077:WC-2006,P-00077,WC-2006,T-77,Assemoassa,63,f2-only,2262,Assemoassa,63
+P-00111:WC-2006,P-00111,WC-2006,T-38,Shojaei,77,f2-only,1044,Masoud Shojaei,77
+P-00111:WC-2014,P-00111,WC-2014,T-38,Shojaei,72,agree,1049,Masoud Shojaei,72
+P-00148:WC-2010,P-00148,WC-2010,T-44,Abe,74,f2-only,1193,Yuki Abe,74
+P-00212:WC-2002,P-00212,WC-2002,T-22,Sørensen,82,agree,620,Thomas Sørensen,82
+P-00244:WC-2022,P-00244,WC-2022,T-75,Frei,73,"avg(71,74)",2235,Fabian Frei,73
+P-00429:WC-2006,P-00429,WC-2006,T-55,Núñez,62,agree,1589,Jorge Núñez,62
+P-00465:WC-2022,P-00465,WC-2022,T-30,Veretout,79,agree,849,Jordan Veretout,79
+P-00596:WC-2010,P-00596,WC-2010,T-01,M'Bolhi,72,f2-only,13,Bolhi,72
+P-00596:WC-2014,P-00596,WC-2014,T-01,M'Bolhi,73,f2-only,19,Bolhi,73
+P-00597:WC-2022,P-00597,WC-2022,T-47,Benoun,73,f2-only,1373,Badr Benoun,73
+P-00640:WC-2002,P-00640,WC-2002,T-79,Jaziri,62,"avg(60,63)",2281,Ziad Jaziri,62
+P-00640:WC-2006,P-00640,WC-2006,T-79,Jaziri,59,agree,2307,Ziad Jaziri,59
+P-00668:WC-2002,P-00668,WC-2002,T-79,Melki,63,f2-only,2279,Tunisian Melki,63
+P-00683:WC-2002,P-00683,WC-2002,T-63,Al-Yami,63,f2-only,1776,Al-Yami,63
+P-00781:WC-2018,P-00781,WC-2018,T-17,Colindres,63,f2-only,493,Daniel Colindres,63
+P-00809:WC-2022,P-00809,WC-2022,T-12,Millar,68,"avg(67,68)",377,Liam Millar,68
+P-00875:WC-2014,P-00875,WC-2014,T-75,Stocker,79,agree,2216,Valentin Stocker,79
+P-00916:WC-2002,P-00916,WC-2002,T-30,Wiltord,76,agree,790,Sylvain Wiltord,76
+P-00957:WC-2010,P-00957,WC-2010,T-01,Belhadj,76,"avg(74,77)",3,Nadir Belhadj,76
+P-00981:WC-2018,P-00981,WC-2018,T-03,Fazio,82,agree,63,Federico Fazio,82
+P-01018:WC-2002,P-01018,WC-2002,T-57,Matysek,71,f2-only,1617,Tomasz Matysek,71
+P-01045:WC-2010,P-01045,WC-2010,T-41,Quagliarella,83,agree,1118,Fabio Quagliarella,83
+P-01078:WC-2014,P-01078,WC-2014,T-41,Immobile,80,agree,1123,Ciro Immobile,80
+P-01169:WC-2014,P-01169,WC-2014,T-83,Jóhannsson,73,agree,2410,Aron Jóhannsson,73
+P-01249:WC-2002,P-01249,WC-2002,T-28,Ferdinand,86,"avg(92,79)",727,Rio Ferdinand,86
+P-01249:WC-2006,P-01249,WC-2006,T-28,Ferdinand,91,agree,732,Rio Ferdinand,91
+P-01311:WC-2002,P-01311,WC-2002,T-41,Montella,86,agree,1097,Vincenzo Montella,86
+P-01347:WC-2018,P-01347,WC-2018,T-50,Idowu,70,f2-only,1519,Brian Idowu,70
+P-01454:WC-2010,P-01454,WC-2010,T-51,Ji,71,f2-only,1526,Ji Yun-nam,71
+P-01462:WC-2002,P-01462,WC-2002,T-65,Camara,77,agree,1862,Henri Camara,77
+P-01505:WC-2018,P-01505,WC-2018,T-16,Arias,78,"avg(77,79)",425,Santiago Arias,78
+P-01560:WC-2014,P-01560,WC-2014,T-30,Ruffier,82,agree,809,Stephane Ruffier,82
+P-01674:WC-2006,P-01674,WC-2006,T-17,Bernard,62,f2-only,464,to Bernard,62
+P-01792:WC-2022,P-01792,WC-2022,T-83,Horvath,72,"avg(71,72)",2428,Ethan Horvath,72
+P-01835:WC-2010,P-01835,WC-2010,T-46,Aguilar,69,agree,1300,Paul Aguilar,69
+P-01835:WC-2014,P-01835,WC-2014,T-46,Aguilar,73,agree,1310,Paul Aguilar,73
+P-01945:WC-2010,P-01945,WC-2010,T-32,Ayew,66,"avg(64,67)",950,Andre Ayew,66
+P-01945:WC-2022,P-01945,WC-2022,T-32,Ayew,75,agree,963,Andre Ayew,75
+P-02071:WC-2022,P-02071,WC-2022,T-57,Skóraś,68,f1-only,1659;1660,Michał Skóraś;Michal Skóraś,68;68
+P-02115:WC-2006,P-02115,WC-2006,T-74,Alvbåge,66,"avg(61,71)",2165,John Alvbåge,66
+P-02210:WC-2006,P-02210,WC-2006,T-57,Dudka,66,agree,1632,Dariusz Dudka,66
+P-02231:WC-2014,P-02231,WC-2014,T-73,Costa,84,"avg(84,83)",2132,Diego Costa,84
+P-02328:WC-2006,P-02328,WC-2006,T-31,Mertesacker,83,agree,871,Per Mertesacker,83
+P-02328:WC-2010,P-02328,WC-2010,T-31,Mertesacker,84,agree,878,Per Mertesacker,84
+P-02328:WC-2014,P-02328,WC-2014,T-31,Mertesacker,82,agree,896,Per Mertesacker,82
+P-02423:WC-2002,P-02423,WC-2002,T-70,Fortune,73,"avg(75,70)",1986,Quinton Fortune,73
+P-02461:WC-2010,P-02461,WC-2010,T-46,Castro,74,f1-only,1296,Israel Castro,74
+P-02465:WC-2018,P-02465,WC-2018,T-28,Maguire,77,f1-only,763,Harry Maguire,77
+P-02465:WC-2022,P-02465,WC-2022,T-28,Maguire,81,agree,774,Harry Maguire,81
+P-02525:WC-2010,P-02525,WC-2010,T-51,Kim,63,f2-only,1532,Kim Yong-jun,63
+P-02673:WC-2002,P-02673,WC-2002,T-65,Diallo,65,f2-only,1877,Omar Diallo,65
+P-02759:WC-2022,P-02759,WC-2022,T-11,Ebosse,71,"avg(70,71)",356,Enzo Ebosse,71
+P-02778:WC-2018,P-02778,WC-2018,T-79,Khalifa,68,f2-only,2317,Saber Khalifa,68
+P-02795:WC-2006,P-02795,WC-2006,T-09,Dida,91,agree,239,Dida,91
+P-02839:WC-2022,P-02839,WC-2022,T-25,Rodríguez,67,f2-only,704,Kevin Rodríguez,67
+P-02842:WC-2002,P-02842,WC-2002,T-83,Pope,78,"avg(80,76)",2387,Eddie Pope,78
+P-02919:WC-2014,P-02919,WC-2014,T-18,Zelenika,73,f2-only,534,Oliver Zelenika,73
+P-02947:WC-2018,P-02947,WC-2018,T-71,Lee,68,f2-only,2081,Lee Seung-woo,68
+P-02977:WC-2002,P-02977,WC-2002,T-06,Van der Heyden,71,agree,156,Peter Van der Heyden,71
+P-03026:WC-2002,P-03026,WC-2002,T-31,Bode,81,f2-only,862,Marco Bode,81
+P-03038:WC-2002,P-03038,WC-2002,T-06,Strupar,68,f2-only,162,Branko Strupar,68
+P-03128:WC-2002,P-03128,WC-2002,T-25,Kaviedes,68,"avg(73,62)",666,Iván Kaviedes,68
+P-03128:WC-2006,P-03128,WC-2006,T-25,Kaviedes,75,f2-only,684,Ivan Kaviedes,75
+P-03144:WC-2018,P-03144,WC-2018,T-54,Tejada,66,f2-only,1551,Luis Tejada,66
+P-03146:WC-2014,P-03146,WC-2014,T-08,Hajrović,75,agree,201,Izet Hajrović,75
+P-03191:WC-2018,P-03191,WC-2018,T-79,Benalouane,75,agree,2310,Yohan Benalouane,75
+P-03231:WC-2002,P-03231,WC-2002,T-84,Romero,76,f1-only,2450;2451,M. Romero;Probable Romero,76;76
+P-03287:WC-2014,P-03287,WC-2014,T-46,Reyes,73,agree,1306,Diego Reyes,73
+P-03367:WC-2018,P-03367,WC-2018,T-31,ter Stegen,85,agree,901,Marc-Andre ter Stegen,85
+P-03367:WC-2022,P-03367,WC-2022,T-31,ter Stegen,88,agree,912,Marc-Andre ter Stegen,88
+P-03457:WC-2006,P-03457,WC-2006,T-02,Locó,70,f2-only,28,Locó,70
+P-03484:WC-2026,P-03484,WC-2026,T-83,Aaronson,74,agree,2442,Brenden Aaronson,74
+P-03524:WC-2006,P-03524,WC-2006,T-78,Wise,65,f2-only,2274,Wise,65
+P-03558:WC-2006,P-03558,WC-2006,T-48,Timmer,67,"avg(65,68)",1394,Henk Timmer,67
+P-03616:WC-2022,P-03616,WC-2022,T-17,Alvarado,67,f2-only,497,Esteban Alvarado,67
+P-03735:WC-2014,P-03735,WC-2014,T-06,Defour,75,agree,172,Steven Defour,75
+P-03886:WC-2014,P-03886,WC-2014,T-50,Ameobi,70,agree,1502,Shola Ameobi,70
+P-03922:WC-2014,P-03922,WC-2014,T-71,Ji,71,agree,2059,Ji Dong-won,71
+P-03945:WC-2022,P-03945,WC-2022,T-30,Upamecano,83,f2-only,840,Dayot Upamecano,83
+P-04065:WC-2002,P-04065,WC-2002,T-31,Metzelder,89,agree,856,Christoph Metzelder,89
+P-04065:WC-2006,P-04065,WC-2006,T-31,Metzelder,86,agree,868,Christoph Metzelder,86
+P-04137:WC-2022,P-04137,WC-2022,T-31,Moukoko,70,"avg(69,71)",922,Youssoufa Moukoko,70
+P-04157:WC-2022,P-04157,WC-2022,T-71,Jo,73,f2-only,2083,Jo Woo,73
+P-04210:WC-2006,P-04210,WC-2006,T-77,Kader,71,f1-only,2254,Mohamed Kader,71
+P-04221:WC-2014,P-04221,WC-2014,T-41,Cassano,81,"avg(81,80)",1121,Antonio Cassano,81
+P-04224:WC-2010,P-04224,WC-2010,T-31,Boateng,77,"avg(76,77)",886,Jérôme Boateng,77
+P-04224:WC-2014,P-04224,WC-2014,T-31,Boateng,83,"avg(84,81)",895,Jérôme Boateng,83
+P-04333:WC-2010,P-04333,WC-2010,T-50,Yussuf,71,f2-only,1494,Ayila Yussuf,71
+P-04349:WC-2006,P-04349,WC-2006,T-20,Jarolím,71,"avg(66,76)",584,David Jarolím,71
+P-04393:WC-2002,P-04393,WC-2002,T-22,Steen Nielsen,59,agree,628,Steen Nielsen,59
+P-04420:WC-2014,P-04420,WC-2014,T-32,Opare,71,agree,957,Daniel Opare,71
+P-04469:WC-2006,P-04469,WC-2006,T-30,Abidal,81,agree,796,Eric Abidal,81
+P-04541:WC-2022,P-04541,WC-2022,T-38,Torabi,71,f2-only,1075,Mehdi Torabi,71
+P-04672:WC-2002,P-04672,WC-2002,T-69,Knavs,78,agree,1973,Aleksander Knavs,78
+P-04686:WC-2018,P-04686,WC-2018,T-74,Forsberg,83,agree,2167,Emil Forsberg,83
+P-04726:WC-2010,P-04726,WC-2010,T-35,Guevara,68,agree,1010,Amado Guevara,68
+P-04767:WC-2010,P-04767,WC-2010,T-75,Bunjaku,67,agree,2214,Albert Bunjaku,67
+P-04785:WC-2006,P-04785,WC-2006,T-44,Ono,77,agree,1176,Shinji Ono,77
+P-04803:WC-2006,P-04803,WC-2006,T-02,Lamá,62,f2-only,31,Lamá,62
+P-04808:WC-2014,P-04808,WC-2014,T-17,González,72,f1-only,472,Giancarlo González,72
+P-04964:WC-2018,P-04964,WC-2018,T-30,Matuidi,85,agree,824,Blaise Matuidi,85
+P-04977:WC-2006,P-04977,WC-2006,T-71,Chung,62,f2-only,2042,Chung Kyung-ho,62
+P-05029:WC-2002,P-05029,WC-2002,T-65,Camara,70,agree,1870,Souleymane Camara,70
+P-05120:WC-2006,P-05120,WC-2006,T-46,de Jesús Corona,74,agree,1282,José Corona,74
+P-05120:WC-2014,P-05120,WC-2014,T-46,de Jesús Corona,77,agree,1302,José Corona,77
+P-05120:WC-2018,P-05120,WC-2018,T-46,de Jesús Corona,76,agree,1321,José Corona,76
+P-05235:WC-2002,P-05235,WC-2002,T-14,Ma,63,f2-only,402,Ma Mingyu,63
+P-05318:WC-2018,P-05318,WC-2018,T-28,Alexander-Arnold,73,"avg(69,76)",764,Trent Alexander-Arnold,73
+P-05369:WC-2014,P-05369,WC-2014,T-35,Martínez,62,f2-only,1030,Mario,62
+P-05425:WC-2006,P-05425,WC-2006,T-57,Sobolewski,68,agree,1628,Radosław Sobolewski,68
+P-05583:WC-2006,P-05583,WC-2006,T-74,Linderoth,70,agree,2163,Tobias Linderoth,70
+P-05707:WC-2010,P-05707,WC-2010,T-22,Larsen,70,agree,633,Søren Larsen,70
+P-05758:WC-2014,P-05758,WC-2014,T-73,Martínez,84,f1-only,2134,Javi Martinez,84
+P-05805:WC-2014,P-05805,WC-2014,T-11,Nyom,73,agree,337,Allan-Romeo Nyom,73
+P-05845:WC-2002,P-05845,WC-2002,T-14,Su,62,f2-only,413,Su Maozhen,62
+P-05864:WC-2022,P-05864,WC-2022,T-04,Kuol,64,f2-only,137,Garang Kuol,64
+P-05901:WC-2022,P-05901,WC-2022,T-31,Adeyemi,75,agree,921,Karim-David Adeyemi,75
+P-05917:WC-2022,P-05917,WC-2022,T-71,Yu-min,71,f2-only,2086,Cho Min,71
+P-05922:WC-2018,P-05922,WC-2018,T-62,Zobnin,78,"avg(77,78)",1762,Roman Zobnin,78
+P-06117:WC-2010,P-06117,WC-2010,T-11,Choupo-Moting,67,f2-only,324,Eric Choupo-Moting,67
+P-06117:WC-2014,P-06117,WC-2014,T-11,Choupo-Moting,75,"canonical-duplicate-avg(75,74)",332;336,Eric Maxim Choupo-Moting;Jean-Eric Choupo-Moting,75;74
+P-06117:WC-2022,P-06117,WC-2022,T-11,Choupo-Moting,77,"avg(75,78)",346,Jean-Eric Choupo-Moting,77
+P-06256:WC-2002,P-06256,WC-2002,T-74,Mellberg,79,"avg(81,77)",2150,Olof Mellberg,79
+P-06338:WC-2022,P-06338,WC-2022,T-06,Carrasco,85,agree,185,Yannick Carrasco,85
+P-06356:WC-2018,P-06356,WC-2018,T-62,Samedov,80,"avg(79,80)",1757,Aleksandr Samedov,80
+P-06446:WC-2022,P-06446,WC-2022,T-09,Rodrygo,82,"avg(81,83)",289,Rodrygo de Goes,82
+P-06468:WC-2006,P-06468,WC-2006,T-25,Espinoza,80,f2-only,673,Giovanny Espinoza,80
+P-06476:WC-2010,P-06476,WC-2010,T-35,Turcios,71,f2-only,1006,Danilo Turcios,71
+P-06608:WC-2006,P-06608,WC-2006,T-71,Park,62,f2-only,2041,Park Young,62
+P-06608:WC-2010,P-06608,WC-2010,T-71,Park,73,f2-only,2047,Park Chu-young,73
+P-06608:WC-2014,P-06608,WC-2014,T-71,Park,70,f2-only,2060,Park Chu-young,70
+P-06659:WC-2022,P-06659,WC-2022,T-63,Al-Rubaie,66,f2-only,1832,Mohammed Al-Rubaie,66
+P-06696:WC-2018,P-06696,WC-2018,T-54,Cooper,67,agree,1546,Armando Cooper,67
+P-06750:WC-2022,P-06750,WC-2022,T-63,Sharahili,67,f2-only,1827,Riyadh Sharahili,67
+P-06789:WC-2022,P-06789,WC-2022,T-63,Al-Ghannam,72,"avg(72,71)",1816,Sultan Al-Ghannam,72
+P-06851:WC-2014,P-06851,WC-2014,T-28,Jones,79,agree,743,Phil Jones,79
+P-06967:WC-2010,P-06967,WC-2010,T-70,Ngcongca,63,agree,2013,Anele Ngcongca,63
+P-06977:WC-2010,P-06977,WC-2010,T-58,Fernandes,75,"avg(74,75)",1695,Daniel Fernandes,75
+P-06985:WC-2002,P-06985,WC-2002,T-22,Madsen,79,agree,624,Peter Madsen,79
+P-07038:WC-2014,P-07038,WC-2014,T-28,Forster,75,"avg(75,74)",747,Fraser Forster,75
+P-07076:WC-2014,P-07076,WC-2014,T-42,Diomandé,64,agree,1143,Ismael Diomandé,64
+P-07088:WC-2002,P-07088,WC-2002,T-57,Żurawski,80,agree,1606,Maciej Żurawski,80
+P-07088:WC-2006,P-07088,WC-2006,T-57,Żurawski,76,agree,1626,Maciej Żurawski,76
+P-07089:WC-2022,P-07089,WC-2022,T-30,Saliba,82,"avg(80,83)",841,William Saliba,82
+P-07148:WC-2006,P-07148,WC-2006,T-74,Rosenberg,75,f1-only,2159;2160,Marcus Rosenberg;Markus Rosenberg,75;75
+P-07259:WC-2014,P-07259,WC-2014,T-71,Kim,69,"avg(68,70)",2062,Kim Young-gwon,69
+P-07259:WC-2022,P-07259,WC-2022,T-71,Kim,71,f2-only,2088,Kim Gwon,71
+P-07302:WC-2006,P-07302,WC-2006,T-75,Coltorti,70,agree,2206,Fabio Coltorti,70
+P-07304:WC-2022,P-07304,WC-2022,T-22,Christensen,72,"avg(70,74)",661,Oliver Christensen,72
+P-07338:WC-2006,P-07338,WC-2006,T-20,Kinský,68,agree,585,Antonín Kinský,68
+P-07368:WC-2006,P-07368,WC-2006,T-81,Rusol,73,f2-only,2383,Andriy Rusol,73
+P-07475:WC-2014,P-07475,WC-2014,T-83,Altidore,74,agree,2409,Jozy Altidore,74
+P-07494:WC-2010,P-07494,WC-2010,T-71,Lee,66,f2-only,2053,Lee Jung-soo,66
+P-07520:WC-2002,P-07520,WC-2002,T-11,Kalla,79,f1-only,301,Raymond Kalla,79
+P-07559:WC-2002,P-07559,WC-2002,T-58,Capucho,74,agree,1670,Nuno Capucho,74
+P-07594:WC-2018,P-07594,WC-2018,T-50,Uzoho,68,f2-only,1520,Francis Uzoho,68
+P-07614:WC-2018,P-07614,WC-2018,T-17,Azofeifa,71,f2-only,485,Randall Azofeifa,71
+P-07670:WC-2018,P-07670,WC-2018,T-18,Kovačić,82,agree,540,Mateo Kovačić,82
+P-07670:WC-2022,P-07670,WC-2022,T-18,Kovačić,84,"avg(84,83)",552,Mateo Kovačić,84
+P-07683:WC-2002,P-07683,WC-2002,T-60,Kelly,70,f1-only,1746,Gary Kelly,70
+P-07796:WC-2018,P-07796,WC-2018,T-16,Mojica,72,"avg(70,73)",432,Johan Mojica,72
+P-07864:WC-2010,P-07864,WC-2010,T-04,Galekovic,66,"avg(62,70)",96,Eugene Galekovic,66
+P-07864:WC-2014,P-07864,WC-2014,T-04,Galekovic,67,f1-only,102,Eugene Galeković,67
+P-07865:WC-2002,P-07865,WC-2002,T-71,Choi,72,f2-only,2029,Choi Jin-cheul,72
+P-07875:WC-2026,P-07875,WC-2026,T-32,Partey,83,agree,973,Thomas Partey,83
+P-07902:WC-2002,P-07902,WC-2002,T-74,Hedman,77,agree,2152,Magnus Hedman,77
+P-07928:WC-2010,P-07928,WC-2010,T-33,Sifakis,76,agree,990,Michalis Sifakis,76
+P-08028:WC-2006,P-08028,WC-2006,T-77,Tchagnirou,63,f2-only,2267,Ouro-Nimini Tchagnirou,63
+P-08125:WC-2022,P-08125,WC-2022,T-63,Abdulhamid,73,f2-only,1815,Saud Abdulhamid,73
+P-08125:WC-2026,P-08125,WC-2026,T-63,Abdulhamid,75,f2-only,1838,Saud Abdulhamid,75
+P-08154:WC-2006,P-08154,WC-2006,T-31,Borowski,76,agree,875,Tim Borowski,76
+P-08169:WC-2022,P-08169,WC-2022,T-28,Henderson,83,agree,769,Jordan Henderson,83
+P-08305:WC-2010,P-08305,WC-2010,T-13,Estrada,74,f2-only,398,Marco Estrada,74
+P-08310:WC-2006,P-08310,WC-2006,T-77,Agboh,63,f2-only,2261,Agboh,63
+P-08359:WC-2022,P-08359,WC-2022,T-32,Odoi,72,agree,965,Denis Odoi,72
+P-08365:WC-2006,P-08365,WC-2006,T-77,Tchangai,67,f2-only,2260,Tchangai,67
+P-08442:WC-2022,P-08442,WC-2022,T-22,Poulsen,77,agree,654,Yussuf Poulsen,77
+P-08539:WC-2006,P-08539,WC-2006,T-71,Kim,62,f2-only,2043,Kim Young-kwang,62
+P-08539:WC-2010,P-08539,WC-2010,T-71,Kim,71,agree,2051,Kim Young-kwang,71
+P-08689:WC-2010,P-08689,WC-2010,T-51,Ri,71,f2-only,1525,Ri Myong-guk,71
+P-08714:WC-2026,P-08714,WC-2026,T-74,Nordfeldt,72,agree,2188,Kristoffer Nordfeldt,72
+P-08916:WC-2018,P-08916,WC-2018,T-18,Ćorluka,82,agree,541,Vedran Ćorluka,82
+P-09041:WC-2006,P-09041,WC-2006,T-79,Santos,80,agree,2290,Francileudo Santos,80
+P-09058:WC-2022,P-09058,WC-2022,T-46,Álvarez,75,f2-only,1335,Kevin Álvarez,75
+P-09062:WC-2022,P-09062,WC-2022,T-04,Atkinson,67,"avg(68,66)",134,Nathaniel Atkinson,67
+P-09113:WC-2018,P-09113,WC-2018,T-38,Azmoun,77,agree,1058,Sardar Azmoun,77
+P-09246:WC-2018,P-09246,WC-2018,T-28,Young,77,"avg(75,79)",762,Ashley Young,77
+P-09270:WC-2002,P-09270,WC-2002,T-09,Edmílson,84,agree,232,Edmílson,84
+P-09292:WC-2026,P-09292,WC-2026,T-65,Diatta,74,agree,1915,Krepin Diatta,74
+P-09338:WC-2018,P-09338,WC-2018,T-71,Ju,71,f2-only,2076,Ju Se-jong,71
+P-09349:WC-2002,P-09349,WC-2002,T-44,Nakata,78,agree,1162,Hidetoshi Nakata,78
+P-09441:WC-2010,P-09441,WC-2010,T-09,Alves,86,f1-only,245,Dani Alves,86
+P-09569:WC-2018,P-09569,WC-2018,T-79,Chaalali,72,f2-only,2312,Ghaylene Chaalali,72
+P-09569:WC-2022,P-09569,WC-2022,T-79,Chaalali,70,f2-only,2326,Ghailene Chaalali,70
+P-09579:WC-2002,P-09579,WC-2002,T-57,Sibik,71,f2-only,1619,Paweł Sibik,71
+P-09584:WC-2018,P-09584,WC-2018,T-57,Kurzawa,67,"avg(66,68)",1642,Rafał Kurzawa,67
+P-09614:WC-2022,P-09614,WC-2022,T-47,Mazraoui,82,agree,1363,Noussair Mazraoui,82
+P-09614:WC-2026,P-09614,WC-2026,T-47,Mazraoui,80,agree,1381,Noussair Mazraoui,80
+P-09632:WC-2014,P-09632,WC-2014,T-71,Hwang,63,f2-only,2068,Hwang Seok-ho,63
+P-09728:WC-2006,P-09728,WC-2006,T-32,Appiah,77,agree,933,Stephen Appiah,77
+P-09856:WC-2018,P-09856,WC-2018,T-22,Knudsen,70,"avg(69,71)",648,Jonas Knudsen,70
+P-09867:WC-2022,P-09867,WC-2022,T-30,Hernandez,85,agree,835,Theo Hernandez,85
+P-09884:WC-2010,P-09884,WC-2010,T-30,Toulalan,83,agree,801,Jérémy Toulalan,83
+P-09945:WC-2018,P-09945,WC-2018,T-54,Díaz,66,f2-only,1548,Ismael Díaz,66
+P-09951:WC-2018,P-09951,WC-2018,T-46,dos Santos,80,agree,1313,Jonathan dos Santos,80
+P-10014:WC-2010,P-10014,WC-2010,T-84,Muslera,76,f1-only,2465;2466,Fernando Muslera;Nestor Muslera,76;76
+P-10014:WC-2022,P-10014,WC-2022,T-84,Muslera,80,"avg(79,80)",2486,Nestor Muslera,80
+P-10063:WC-2014,P-10063,WC-2014,T-46,Layún,73,agree,1309,Miguel Layún,73
+P-10063:WC-2018,P-10063,WC-2018,T-46,Layún,78,agree,1318,Miguel Layún,78
+P-10167:WC-2018,P-10167,WC-2018,T-04,Arzani,58,agree,116,Daniel Arzani,58
+P-10172:WC-2022,P-10172,WC-2022,T-57,Bednarek,76,"avg(76,75)",1647,Jan Bednarek,76
+P-10221:WC-2018,P-10221,WC-2018,T-74,Toivonen,75,agree,2170,Ola Toivonen,75
+P-10244:WC-2022,P-10244,WC-2022,T-04,Ryan,78,agree,117,Mathew Ryan,78
+P-10313:WC-2014,P-10313,WC-2014,T-06,Mignolet,82,agree,165,Simon Mignolet,82
+P-10313:WC-2022,P-10313,WC-2022,T-06,Mignolet,80,agree,188,Simon Mignolet,80
+P-10439:WC-2002,P-10439,WC-2002,T-70,Lekgetho,62,f2-only,1994,Jacob Lekgetho,62
+P-10501:WC-2022,P-10501,WC-2022,T-28,Foden,84,f2-only,768,Phil Foden,84
+P-10636:WC-2006,P-10636,WC-2006,T-44,Oguro,71,f2-only,1187,Masashi Oguro,71
+P-10638:WC-2002,P-10638,WC-2002,T-18,Vugrinec,62,agree,523,Davor Vugrinec,62
+P-10713:WC-2010,P-10713,WC-2010,T-31,Cacau,77,agree,885,Cacau,77
+P-10731:WC-2014,P-10731,WC-2014,T-42,Gradel,74,agree,1137,Max-Alain Gradel,74
+P-10739:WC-2022,P-10739,WC-2022,T-03,Fernández,78,agree,77,Enzo Fernández,78
+P-10789:WC-2006,P-10789,WC-2006,T-75,Degen,74,agree,2200,Philipp Degen,74
+P-10830:WC-2010,P-10830,WC-2010,T-11,Webó,75,agree,317,Pierre Webó,75
+P-10830:WC-2014,P-10830,WC-2014,T-11,Webó,75,f1-only,333,Pierre Webó,75
+P-10860:WC-2006,P-10860,WC-2006,T-46,Pineda,65,agree,1290,Gonzalo Pineda,65
+P-10907:WC-2022,P-10907,WC-2022,T-63,Al-Dawsari,66,"avg(67,65)",1830,Nasser Al-Dawsari,66
+P-10953:WC-2006,P-10953,WC-2006,T-75,Spycher,72,agree,2203,Christoph Spycher,72
+P-10960:WC-2010,P-10960,WC-2010,T-49,Lochhead,76,f2-only,1445,Tony Lochhead,76
+P-11013:WC-2022,P-11013,WC-2022,T-57,Piątek,75,"avg(75,74)",1650,Krzysztof Piątek,75
+P-11064:WC-2018,P-11064,WC-2018,T-62,Miranchuk,77,"avg(74,79)",1765,Aleksey Miranchuk,77
+P-11075:WC-2010,P-11075,WC-2010,T-84,Pereira,74,agree,2469,Álvaro Pereira,74
+P-11191:WC-2006,P-11191,WC-2006,T-46,Rodríguez,67,agree,1287,Francisco Rodríguez,67
+P-11191:WC-2014,P-11191,WC-2014,T-46,Rodríguez,74,"avg(74,73)",1305,Rodríguez,74
+P-11262:WC-2002,P-11262,WC-2002,T-63,Al-Shalhoub,62,f2-only,1782,Mohammad Al-Shalhoub,62
+P-11275:WC-2010,P-11275,WC-2010,T-09,César,89,f1-only,242,Júlio César,89
+P-11275:WC-2014,P-11275,WC-2014,T-09,César,82,f1-only,266,Júlio César,82
+P-11307:WC-2014,P-11307,WC-2014,T-17,Ureña,62,agree,481,Marcos Ureña,62
+P-11307:WC-2018,P-11307,WC-2018,T-17,Ureña,69,f2-only,486,Marco Ureña,69
+P-11411:WC-2018,P-11411,WC-2018,T-44,Higashiguchi,72,f2-only,1228,Masaaki Higashiguchi,72
+P-11424:WC-2002,P-11424,WC-2002,T-58,Frechaut,75,agree,1669,Nuno Frechaut,75
+P-11462:WC-2018,P-11462,WC-2018,T-62,Granat,72,agree,1771,Vladimir Granat,72
+P-11629:WC-2010,P-11629,WC-2010,T-58,Amorim,76,agree,1694,Ruben Amorim,76
+P-11629:WC-2014,P-11629,WC-2014,T-58,Amorim,70,"avg(63,76)",1700,Ruben Amorim,70
+P-11675:WC-2018,P-11675,WC-2018,T-04,Vukovic,70,f1-only,111;113,Daniel Vuković;Danny Vukovic,70;70
+P-11675:WC-2022,P-11675,WC-2022,T-04,Vukovic,70,f1-only,127;128,Daniel Vuković;Danny Vukovic,70;70
+P-11737:WC-2022,P-11737,WC-2022,T-83,Pulisic,82,agree,2415,Christian Pulisic,82
+P-11751:WC-2010,P-11751,WC-2010,T-13,Marín,74,f2-only,396,Luis Marín,74
+P-11767:WC-2014,P-11767,WC-2014,T-17,Borges,72,f1-only,471,Celso Borges,72
+P-11817:WC-2006,P-11817,WC-2006,T-75,Cabanas,78,agree,2195,Ricardo Cabanas,78
+P-11879:WC-2026,P-11879,WC-2026,T-79,Bronn,68,agree,2348,Dylan Bronn,68
+P-11915:WC-2002,P-11915,WC-2002,T-44,Miyamoto,74,f2-only,1165,Tsuneyasu Miyamoto,74
+P-11933:WC-2022,P-11933,WC-2022,T-31,Kehrer,76,agree,920,Jan Kehrer,76
+P-12056:WC-2002,P-12056,WC-2002,T-03,Bonano,75,agree,39,Roberto Bonano,75
+P-12111:WC-2014,P-12111,WC-2014,T-04,Franjic,67,agree,101,Ivan Franjic,67
+P-12165:WC-2014,P-12165,WC-2014,T-01,Feghouli,81,agree,14,Sofiane Feghouli,81
+P-12167:WC-2002,P-12167,WC-2002,T-30,Trezeguet,92,agree,782,David Trezeguet,92
+P-12335:WC-2022,P-12335,WC-2022,T-63,Al-Amri,71,"avg(71,70)",1817,Abdulelah Al-Amri,71
+P-12376:WC-2002,P-12376,WC-2002,T-44,Ogasawara,57,f2-only,1174,Mitsuo Ogasawara,57
+P-12376:WC-2006,P-12376,WC-2006,T-44,Ogasawara,71,f2-only,1186,Mitsuo Ogasawara,71
+P-12381:WC-2018,P-12381,WC-2018,T-57,Milik,80,"avg(79,80)",1636,Arkadiusz Milik,80
+P-12476:WC-2014,P-12476,WC-2014,T-16,Bacca,78,agree,415,Carlos Bacca,78
+P-12511:WC-2002,P-12511,WC-2002,T-69,Tiganj,74,f2-only,1979,Tiganj,74
+P-12548:WC-2010,P-12548,WC-2010,T-83,Bocanegra,74,agree,2401,Carlos Bocanegra,74
+P-12635:WC-2022,P-12635,WC-2022,T-12,Johnston,71,"avg(70,71)",371,Alistair Johnston,71
+P-12652:WC-2006,P-12652,WC-2006,T-77,Dossevi,46,agree,2271,Thomas Dossevi,46
+P-12777:WC-2002,P-12777,WC-2002,T-06,Vandendriessche,65,agree,163,Franky Vandendriessche,65
+P-12781:WC-2010,P-12781,WC-2010,T-44,Morimoto,76,agree,1191,Takayuki Morimoto,76
+P-12805:WC-2014,P-12805,WC-2014,T-32,Essien,79,"avg(76,81)",953,Michael Essien,79
+P-12810:WC-2022,P-12810,WC-2022,T-59,Khoukhi,71,agree,1714,Boualem Khoukhi,71
+P-12818:WC-2010,P-12818,WC-2010,T-31,Özil,81,"avg(80,81)",881,Mesut Özil,81
+P-12818:WC-2014,P-12818,WC-2014,T-31,Özil,87,agree,890,Mesut Özil,87
+P-12818:WC-2018,P-12818,WC-2018,T-31,Özil,88,agree,900,Mesut Özil,88
+P-12859:WC-2018,P-12859,WC-2018,T-79,Khalil,68,f2-only,2316,Ahmed Khalil,68
+P-13029:WC-2010,P-13029,WC-2010,T-31,Khedira,78,agree,884,Sami Khedira,78
+P-13029:WC-2014,P-13029,WC-2014,T-31,Khedira,84,agree,894,Sami Khedira,84
+P-13029:WC-2018,P-13029,WC-2018,T-31,Khedira,84,agree,904,Sami Khedira,84
+P-13271:WC-2014,P-13271,WC-2014,T-71,Yun,68,agree,2063,Yun Suk-young,68
+P-13285:WC-2002,P-13285,WC-2002,T-28,Seaman,79,f2-only,730,David Seaman,79
+P-13321:WC-2022,P-13321,WC-2022,T-25,Gruezo,73,"avg(72,73)",696,Carlos Gruezo,73
+P-13354:WC-2010,P-13354,WC-2010,T-09,Robinho,83,"canonical-duplicate-avg(85,81)",249;257,Robinho;Robson de Souza,85;81
+P-13377:WC-2006,P-13377,WC-2006,T-48,de Cler,65,"avg(62,68)",1395,Tim de Cler,65
+P-13524:WC-2006,P-13524,WC-2006,T-57,Jeleń,77,agree,1625,Ireneusz Jeleń,77
+P-13744:WC-2006,P-13744,WC-2006,T-02,Nobre,62,f2-only,33,Nobre,62
+P-13782:WC-2002,P-13782,WC-2002,T-70,Marlin,62,f2-only,1995,Marlin,62
+P-13809:WC-2006,P-13809,WC-2006,T-38,Borhani,78,f2-only,1038,Arash Borhani,78
+P-13917:WC-2002,P-13917,WC-2002,T-46,Vidrio,70,"avg(63,77)",1273,Manuel Vidrio,70
+P-13964:WC-2006,P-13964,WC-2006,T-73,López,75,f1-only,2123,Antonio López,75
+P-13966:WC-2002,P-13966,WC-2002,T-69,Vugdalić,74,f2-only,1980,Saša Vugdalić,74
+P-14026:WC-2022,P-14026,WC-2022,T-47,El Yamiq,75,agree,1369,Jawad El Yamiq,75
+P-14138:WC-2010,P-14138,WC-2010,T-35,Canales,66,f2-only,1012,Ricardo Canales,66
+P-14151:WC-2026,P-14151,WC-2026,T-83,Adams,79,agree,2434,Tyler Adams,79
+P-14179:WC-2022,P-14179,WC-2022,T-32,Semenyo,70,agree,968,Antoine Semenyo,70
+P-14179:WC-2026,P-14179,WC-2026,T-32,Semenyo,80,agree,974,Antoine Semenyo,80
+P-14180:WC-2018,P-14180,WC-2018,T-84,Rodríguez,75,agree,2483,Cristian Rodríguez,75
+P-14196:WC-2018,P-14196,WC-2018,T-79,Khaoui,70,f2-only,2314,Saif-Eddine Khaoui,70
+P-14267:WC-2006,P-14267,WC-2006,T-41,Zaccardo,63,agree,1115,Cristian Zaccardo,63
+P-14290:WC-2006,P-14290,WC-2006,T-04,Kewell,85,agree,80,Harry Kewell,85
+P-14290:WC-2010,P-14290,WC-2010,T-04,Kewell,78,agree,92,Harry Kewell,78
+P-14360:WC-2026,P-14360,WC-2026,T-71,Min-jae,82,agree,2096,Kim Jae,82
+P-14428:WC-2014,P-14428,WC-2014,T-58,Almeida,76,f2-only,1699,Hugo de Almeida,76
+P-14456:WC-2002,P-14456,WC-2002,T-73,Sergio,81,"avg(76,85)",2113,Sergio Soriano,81
+P-14458:WC-2002,P-14458,WC-2002,T-11,Job,75,agree,303,Joseph-Desire Job,75
+P-14499:WC-2018,P-14499,WC-2018,T-16,Quintero,77,agree,427,Juan Quintero,77
+P-14764:WC-2010,P-14764,WC-2010,T-68,Vittek,75,agree,1958,Róbert Vittek,75
+P-14907:WC-2006,P-14907,WC-2006,T-20,Baroš,86,agree,579,Milan Baroš,86
+P-14952:WC-2014,P-14952,WC-2014,T-50,Oboabona,62,f2-only,1512,Godfrey Oboabona,62
+P-14988:WC-2022,P-14988,WC-2022,T-22,Kjær,82,agree,651,Simon Kjær,82
+P-15025:WC-2002,P-15025,WC-2002,T-79,Sellimi,62,f2-only,2288,Adel Sellimi,62
+P-15064:WC-2014,P-15064,WC-2014,T-04,Langerak,70,agree,98,Mitchell Langerak,70
+P-15097:WC-2014,P-15097,WC-2014,T-50,Uchebo,64,agree,1507,Michael Uchebo,64
+P-15123:WC-2014,P-15123,WC-2014,T-25,Bone,70,f2-only,694,Adrian Bone,70
+P-15161:WC-2022,P-15161,WC-2022,T-59,Al-Rawi,68,agree,1717,Bassam Al-Rawi,68
+P-15185:WC-2014,P-15185,WC-2014,T-35,Palacios,70,agree,1019,Wilson Palacios,70
+P-15222:WC-2002,P-15222,WC-2002,T-71,Hwang,72,f2-only,2034,Hwang Sun-hong,72
+P-15282:WC-2022,P-15282,WC-2022,T-48,Bijlow,79,"avg(79,78)",1426,Justin Bijlow,79
+P-15314:WC-2006,P-15314,WC-2006,T-73,Marchena,86,agree,2118,Carlos Marchena,86
+P-15314:WC-2010,P-15314,WC-2010,T-73,Marchena,82,agree,2128,Carlos Marchena,82
+P-15428:WC-2006,P-15428,WC-2006,T-18,Bošnjak,71,f2-only,526,Ivan Bošnjak,71
+P-15457:WC-2014,P-15457,WC-2014,T-08,Hadžić,66,agree,206,Anel Hadžić,66
+P-15566:WC-2022,P-15566,WC-2022,T-47,Mohamedi,73,f1-only,1372,Munir Mohand Mohamedi,73
+P-15578:WC-2002,P-15578,WC-2002,T-57,Żewłakow,73,agree,1611,Michał Żewłakow,73
+P-15665:WC-2014,P-15665,WC-2014,T-18,Eduardo,75,agree,531,Eduardo,75
+P-15674:WC-2022,P-15674,WC-2022,T-28,Bellingham,84,agree,767,Jude Bellingham,84
+P-15674:WC-2026,P-15674,WC-2026,T-28,Bellingham,90,"avg(90,89)",776,Jude Bellingham,90
+P-15736:WC-2014,P-15736,WC-2014,T-71,Kim,73,agree,2057,Kim Shin-wook,73
+P-15736:WC-2018,P-15736,WC-2018,T-71,Kim,74,f2-only,2071,Kim Shin-wook,74
+P-15858:WC-2002,P-15858,WC-2002,T-79,Gabsi,63,f2-only,2277,Tunisian Gabsi,63
+P-15870:WC-2018,P-15870,WC-2018,T-50,Troost-Ekong,72,"avg(71,72)",1518,William Troost-Ekong,72
+P-15896:WC-2014,P-15896,WC-2014,T-06,Januzaj,68,"avg(73,63)",176,Adnan Januzaj,68
+P-15988:WC-2018,P-15988,WC-2018,T-65,Ndiaye,76,f2-only,1884,Badou Ndiaye,76
+P-16046:WC-2002,P-16046,WC-2002,T-65,Diatta,72,agree,1866,Lamine Diatta,72
+P-16053:WC-2018,P-16053,WC-2018,T-28,Delph,78,"avg(77,79)",761,Fabian Delph,78
+P-16148:WC-2022,P-16148,WC-2022,T-32,Danlad,68,agree,970,Ibrahim Danlad,68
+P-16260:WC-2010,P-16260,WC-2010,T-44,Nakamura,74,f2-only,1202,Kengo Nakamura,74
+P-16333:WC-2022,P-16333,WC-2022,T-73,Torres,83,agree,2142,Pau Torres,83
+P-16378:WC-2010,P-16378,WC-2010,T-58,Ferreira,78,"avg(78,77)",1690,Paulo Ferreira,78
+P-16416:WC-2006,P-16416,WC-2006,T-38,Karimi,71,agree,1047,Mohammed Karimi,71
+P-16484:WC-2022,P-16484,WC-2022,T-18,Juranović,75,agree,565,Josip Juranović,75
+P-16489:WC-2018,P-16489,WC-2018,T-71,Park,73,f2-only,2072,Park Joo-ho,73
+P-16541:WC-2006,P-16541,WC-2006,T-03,Cufré,69,agree,44,Leandro Cufré,69
+P-16557:WC-2002,P-16557,WC-2002,T-28,Cole,84,"avg(88,79)",729,Ashley Cole,84
+P-16557:WC-2006,P-16557,WC-2006,T-28,Cole,85,agree,736,Ashley Cole,85
+P-16571:WC-2002,P-16571,WC-2002,T-65,Sylva,75,agree,1863,Tony Sylva,75
+P-17028:WC-2006,P-17028,WC-2006,T-17,Núñez,62,f2-only,466,to Núñez,62
+P-17035:WC-2002,P-17035,WC-2002,T-41,Delvecchio,74,agree,1102,Marco Delvecchio,74
+P-17048:WC-2022,P-17048,WC-2022,T-59,Muntari,67,agree,1720,Mohammed Muntari,67
+P-17071:WC-2002,P-17071,WC-2002,T-06,Deflandre,71,agree,157,Eric Deflandre,71
+P-17099:WC-2022,P-17099,WC-2022,T-57,Cash,79,f1-only,1645,Matty Cash,79
+P-17136:WC-2026,P-17136,WC-2026,T-49,Wood,81,f2-only,1452,Chris Wood,81
+P-17148:WC-2006,P-17148,WC-2006,T-75,Vogel,75,agree,2198,Johann Vogel,75
+P-17205:WC-2010,P-17205,WC-2010,T-01,Chaouchi,72,f2-only,12,Faouzi Chaouchi,72
+P-17321:WC-2002,P-17321,WC-2002,T-84,Méndez,75,f2-only,2453,Gustavo Méndez,75
+P-17415:WC-2018,P-17415,WC-2018,T-62,Kuzyayev,77,f2-only,1766,Daler Kuzyayev,77
+P-17420:WC-2006,P-17420,WC-2006,T-81,Nesmachniy,73,f2-only,2381,Andriy Nesmachniy,73
+P-17496:WC-2022,P-17496,WC-2022,T-75,Jashari,67,"avg(65,69)",2239,Ardon Jashari,67
+P-17496:WC-2026,P-17496,WC-2026,T-75,Jashari,77,agree,2244,Ardon Jashari,77
+P-17506:WC-2006,P-17506,WC-2006,T-44,Maki,73,f2-only,1182,Seiichiro Maki,73
+P-17520:WC-2002,P-17520,WC-2002,T-31,Linke,83,agree,859,Thomas Linke,83
+P-17581:WC-2006,P-17581,WC-2006,T-58,Maniche,83,agree,1677,Maniche,83
+P-17688:WC-2022,P-17688,WC-2022,T-48,de Jong,87,agree,1420,Frenkie de Jong,87
+P-17784:WC-2022,P-17784,WC-2022,T-38,Niazmand,68,f2-only,1078,Seyed Niazmand,68
+P-17872:WC-2018,P-17872,WC-2018,T-62,Fernandes,81,agree,1755,Mário Fernandes,81
+P-17943:WC-2022,P-17943,WC-2022,T-57,Skorupski,76,f1-only,1648;1649,Łukasz Skorupski;Lukasz Skorupski,76;76
+P-17967:WC-2006,P-17967,WC-2006,T-48,Babel,69,agree,1393,Ryan Babel,69
+P-17974:WC-2014,P-17974,WC-2014,T-06,Vanden Borre,70,"avg(71,69)",175,Anthony Borre,70
+P-18164:WC-2006,P-18164,WC-2006,T-41,Gattuso,87,agree,1108,Gennaro Gattuso,87
+P-18188:WC-2022,P-18188,WC-2022,T-31,Hofmann,81,agree,918,Jonas Hofmann,81
+P-18210:WC-2010,P-18210,WC-2010,T-55,Vera,71,agree,1600,Enrique Vera,71
+P-18222:WC-2014,P-18222,WC-2014,T-03,Rojo,77,"avg(77,76)",58,Marcos Rojo,77
+P-18230:WC-2014,P-18230,WC-2014,T-84,Muñoz,70,agree,2480,Rodrigo Muñoz,70
+P-18444:WC-2018,P-18444,WC-2018,T-03,Guzmán,78,agree,65,Nahuel Guzmán,78
+P-18564:WC-2026,P-18564,WC-2026,T-84,Viña,75,f2-only,2497,Matias Vina,75
+P-18598:WC-2018,P-18598,WC-2018,T-71,Yun,72,f2-only,2074,Yun Young-sun,72
+P-18599:WC-2010,P-18599,WC-2010,T-31,Lahm,86,agree,877,Philipp Lahm,86
+P-18599:WC-2014,P-18599,WC-2014,T-31,Lahm,87,agree,889,Philipp Lahm,87
+P-18657:WC-2010,P-18657,WC-2010,T-22,Jensen,77,agree,629,Daniel Jensen,77
+P-18672:WC-2010,P-18672,WC-2010,T-83,Dempsey,77,agree,2398,Clint Dempsey,77
+P-18830:WC-2006,P-18830,WC-2006,T-30,Malouda,82,agree,795,Florent Malouda,82
+P-18894:WC-2006,P-18894,WC-2006,T-25,Mora,76,f2-only,679,Cristian Mora,76
+P-18921:WC-2022,P-18921,WC-2022,T-48,Pasveer,76,"avg(75,77)",1430,Remko Pasveer,76
+P-18923:WC-2018,P-18923,WC-2018,T-22,Christensen,82,"avg(81,82)",638,Andreas Christensen,82
+P-18963:WC-2014,P-18963,WC-2014,T-71,Lee,66,"avg(68,63)",2067,Lee Bum-young,66
+P-19069:WC-2022,P-19069,WC-2022,T-66,Mitrović,74,agree,1949,Stefan Mitrović,74
+P-19075:WC-2026,P-19075,WC-2026,T-75,Embolo,77,agree,2245,Breel Embolo,77
+P-19156:WC-2006,P-19156,WC-2006,T-25,Delgado,81,f2-only,672,Agustin Delgado,81
+P-19193:WC-2022,P-19193,WC-2022,T-75,Elvedi,77,agree,2230,Nico Elvedi,77
+P-19193:WC-2026,P-19193,WC-2026,T-75,Elvedi,77,agree,2243,Nico Elvedi,77
+P-19229:WC-2002,P-19229,WC-2002,T-73,Torres,79,f1-only,2115;2116,C. Torres;Cristobal Torres,79;79
+P-19241:WC-2002,P-19241,WC-2002,T-55,Gamarra,74,"avg(74,73)",1566,Carlos Gamarra,74
+P-19241:WC-2006,P-19241,WC-2006,T-55,Gamarra,84,agree,1575,Carlos Gamarra,84
+P-19339:WC-2018,P-19339,WC-2018,T-31,Werner,83,"avg(82,83)",905,Timo Werner,83
+P-19411:WC-2002,P-19411,WC-2002,T-14,Yu,63,f2-only,406,Yu Genwei,63
+P-19453:WC-2010,P-19453,WC-2010,T-01,Halliche,72,"avg(71,73)",11,Rafik Halliche,72
+P-19453:WC-2014,P-19453,WC-2014,T-01,Halliche,68,agree,23,Rafik Halliche,68
+P-19512:WC-2014,P-19512,WC-2014,T-38,Hosseini,72,f2-only,1052,Seyed Hosseini,72
+P-19564:WC-2014,P-19564,WC-2014,T-35,López,62,f2-only,1029,López,62
+P-19591:WC-2014,P-19591,WC-2014,T-50,Musa,76,"avg(75,76)",1499,Ahmed Musa,76
+P-19591:WC-2018,P-19591,WC-2018,T-50,Musa,76,"avg(76,75)",1516,Ahmed Musa,76
+P-19618:WC-2022,P-19618,WC-2022,T-46,Rodríguez,76,agree,1331,Carlos Rodríguez,76
+P-19776:WC-2022,P-19776,WC-2022,T-03,Álvarez,79,"avg(78,79)",74,Julian Álvarez,79
+P-19907:WC-2002,P-19907,WC-2002,T-30,Leboeuf,83,f2-only,787,Frank Leboeuf,83
+P-19914:WC-2022,P-19914,WC-2022,T-84,Sosa,75,agree,2489,Carlos Sosa,75
+P-20051:WC-2014,P-20051,WC-2014,T-84,Coates,71,f1-only,2478,Sebastián Coates,71
+P-20084:WC-2010,P-20084,WC-2010,T-48,van der Wiel,75,"avg(74,75)",1406,Gregory van der Wiel,75
+P-20085:WC-2002,P-20085,WC-2002,T-57,Rząsa,72,f1-only,1612;1613,Tomasz Rząsa;Marek Rząsa,72;72
+P-20087:WC-2018,P-20087,WC-2018,T-04,Maclaren,73,agree,106,Jamie Maclaren,73
+P-20127:WC-2018,P-20127,WC-2018,T-44,Nakamura,71,f2-only,1229,Kosuke Nakamura,71
+P-20273:WC-2006,P-20273,WC-2006,T-74,Hansson,64,agree,2166,Petter Hansson,64
+P-20335:WC-2006,P-20335,WC-2006,T-42,Domoraud,78,agree,1130,Cyril Domoraud,78
+P-20372:WC-2006,P-20372,WC-2006,T-09,Adriano,94,agree,237,Adriano,94
+P-20388:WC-2022,P-20388,WC-2022,T-63,Madu,66,agree,1829,Abdullah Madu,66
+P-20389:WC-2002,P-20389,WC-2002,T-09,Paulista,79,"avg(70,87)",236,Paulista,79
+P-20482:WC-2022,P-20482,WC-2022,T-75,Steffen,76,agree,2232,Renato Steffen,76
+P-20557:WC-2006,P-20557,WC-2006,T-74,Jonson,69,agree,2164,Mattias Jonson,69
+P-20571:WC-2018,P-20571,WC-2018,T-62,Gazinsky,75,f2-only,1767,Yuriy Gazinskiy,75
+P-20792:WC-2002,P-20792,WC-2002,T-60,Connolly,72,f1-only,1742,David Connolly,72
+P-20969:WC-2014,P-20969,WC-2014,T-38,Teymourian,71,f2-only,1057,Andranik Teymourian,71
+P-20974:WC-2014,P-20974,WC-2014,T-42,Ya Konan,78,"avg(77,78)",1136,Didier Konan,78
+P-21000:WC-2010,P-21000,WC-2010,T-70,Sibaya,71,agree,2001,Macbeth Sibaya,71
+P-21070:WC-2014,P-21070,WC-2014,T-06,Van Buyten,78,f2-only,170,Daniel Van Buyten,78
+P-21108:WC-2002,P-21108,WC-2002,T-80,Baştürk,85,agree,2355,Yildiray Baştürk,85
+P-21116:WC-2010,P-21116,WC-2010,T-01,Bougherra,77,"avg(78,76)",2,Madjid Bougherra,77
+P-21116:WC-2014,P-21116,WC-2014,T-01,Bougherra,74,f2-only,18,Madjid Bougherra,74
+P-21208:WC-2014,P-21208,WC-2014,T-46,Moreno,78,agree,1301,Hector Moreno,78
+P-21208:WC-2018,P-21208,WC-2018,T-46,Moreno,80,agree,1315,Héctor Moreno,80
+P-21222:WC-2002,P-21222,WC-2002,T-44,Matsuda,74,f2-only,1164,Naoki Matsuda,74
+P-21451:WC-2006,P-21451,WC-2006,T-57,Rasiak,67,agree,1631,Grzegorz Rasiak,67
+P-21495:WC-2002,P-21495,WC-2002,T-46,García Aspe,62,f2-only,1277,Alberto Aspe,62
+P-21511:WC-2006,P-21511,WC-2006,T-77,Malm,63,f2-only,2264,Malm,63
+P-21518:WC-2010,P-21518,WC-2010,T-55,Gamarra,71,f2-only,1601,Carlos Gamarra,71
+P-21524:WC-2018,P-21524,WC-2018,T-31,Draxler,84,agree,903,Julian Draxler,84
+P-21701:WC-2006,P-21701,WC-2006,T-20,Heinz,76,agree,581,Marek Heinz,76
+P-21704:WC-2014,P-21704,WC-2014,T-01,Medjani,70,agree,22,Carl Medjani,70
+P-21776:WC-2014,P-21776,WC-2014,T-30,Rémy,80,agree,815,Loic Rémy,80
+P-21790:WC-2014,P-21790,WC-2014,T-48,Janmaat,75,agree,1417,Daryl Janmaat,75
+P-21798:WC-2014,P-21798,WC-2014,T-48,Vlaar,78,agree,1410,Ron Vlaar,78
+P-21820:WC-2022,P-21820,WC-2022,T-32,Abdul Samed,70,agree,969,Abdul Baba,70
+P-21832:WC-2010,P-21832,WC-2010,T-48,van Bronckhorst,74,agree,1407,Giovanni van Bronckhorst,74
+P-21864:WC-2006,P-21864,WC-2006,T-04,Culina,60,agree,91,Jason Culina,60
+P-21865:WC-2022,P-21865,WC-2022,T-79,Khenissi,70,f2-only,2327,Taha Khenissi,70
+P-21945:WC-2010,P-21945,WC-2010,T-46,Michel,73,agree,1299,Luis Michel,73
+P-21962:WC-2018,P-21962,WC-2018,T-79,Ben Amor,72,f2-only,2311,Mohamed Ben Amor,72
+P-21988:WC-2002,P-21988,WC-2002,T-22,Christiansen,63,agree,627,Christiansen,63
+P-21988:WC-2010,P-21988,WC-2010,T-22,Christiansen,73,agree,632,Jesper Christiansen,73
+P-22016:WC-2018,P-22016,WC-2018,T-54,Ovalle,57,agree,1556,Luis Ovalle,57
+P-22102:WC-2018,P-22102,WC-2018,T-65,Sakho,75,agree,1885,Diafra Sakho,75
+P-22160:WC-2022,P-22160,WC-2022,T-18,Vlašić,78,agree,561,Nikola Vlašić,78
+P-22192:WC-2014,P-22192,WC-2014,T-50,Ambrose,69,f1-only,1503,Efe Ambrose,69
+P-22209:WC-2002,P-22209,WC-2002,T-60,Breen,73,"avg(70,75)",1741,Gary Breen,73
+P-22302:WC-2006,P-22302,WC-2006,T-55,Bonet,61,agree,1590,Carlos Bonet,61
+P-22378:WC-2006,P-22378,WC-2006,T-41,Camoranesi,84,agree,1109,Mauro Camoranesi,84
+P-22393:WC-2002,P-22393,WC-2002,T-70,Nomvethe,59,"avg(48,70)",1998,Siyabonga Nomvethe,59
+P-22393:WC-2010,P-22393,WC-2010,T-70,Nomvethe,65,f2-only,2008,Siyabonga Nomvethe,65
+P-22470:WC-2006,P-22470,WC-2006,T-55,Manzur,71,f2-only,1582,Julio Manzur,71
+P-22489:WC-2002,P-22489,WC-2002,T-84,Olivera,75,f2-only,2454,Nicolás Olivera,75
+P-22568:WC-2010,P-22568,WC-2010,T-70,Moriri,65,f2-only,2007,Surprise Moriri,65
+P-22631:WC-2022,P-22631,WC-2022,T-17,Zamora,61,f2-only,504,Alvaro Zamora,61
+P-22633:WC-2022,P-22633,WC-2022,T-44,Mitoma,74,f2-only,1237,Kaoru Mitoma,74
+P-22778:WC-2018,P-22778,WC-2018,T-62,Golovin,78,"avg(76,79)",1760,Aleksandr Golovin,78
+P-22876:WC-2002,P-22876,WC-2002,T-30,Candela,80,agree,789,Vincent Candela,80
+P-22927:WC-2022,P-22927,WC-2022,T-11,Ngapandouetnbu,67,f2-only,364,Simon Ngapandouetnbu,67
+P-22930:WC-2018,P-22930,WC-2018,T-06,Meunier,81,agree,182,Thomas Meunier,81
+P-23070:WC-2022,P-23070,WC-2022,T-03,Martínez,81,agree,71,Lisandro Martínez,81
+P-23169:WC-2014,P-23169,WC-2014,T-42,Bolly,65,"avg(64,66)",1142,Mathis Bolly,65
+P-23272:WC-2014,P-23272,WC-2014,T-38,Montazeri,72,f2-only,1053,Pejman Montazeri,72
+P-23304:WC-2022,P-23304,WC-2022,T-30,Fofana,80,"avg(79,80)",846,Youssouf Fofana,80
+P-23315:WC-2006,P-23315,WC-2006,T-30,Sagnol,87,agree,793,Willy Sagnol,87
+P-23330:WC-2022,P-23330,WC-2022,T-47,Amallah,74,"avg(73,74)",1370,Selim Amallah,74
+P-23336:WC-2002,P-23336,WC-2002,T-73,Luque,87,agree,2109,Albert Luque,87
+P-23371:WC-2014,P-23371,WC-2014,T-44,Osako,71,agree,1207,Yuya Osako,71
+P-23371:WC-2018,P-23371,WC-2018,T-44,Osako,75,f2-only,1221,Yuya Osako,75
+P-23484:WC-2010,P-23484,WC-2010,T-01,Lacen,75,f1-only,5,Mehdi Lacen,75
+P-23568:WC-2018,P-23568,WC-2018,T-63,Al-Shehri,70,f1-only,1806;1808,Yehya Sulaiman Ali Al-Shehri;Yahia Al Shehri,70;70
+P-23821:WC-2022,P-23821,WC-2022,T-32,Kudus,77,"avg(76,77)",959,Mohammed Kudus,77
+P-23883:WC-2002,P-23883,WC-2002,T-80,Şaş,80,agree,2359,Hasan Şaş,80
+P-23925:WC-2018,P-23925,WC-2018,T-75,Akanji,74,"avg(72,75)",2226,Manuel Akanji,74
+P-23925:WC-2026,P-23925,WC-2026,T-75,Akanji,82,agree,2241,Manuel Akanji,82
+P-23927:WC-2002,P-23927,WC-2002,T-58,Couto,84,agree,1663,Fernando Couto,84
+P-23972:WC-2006,P-23972,WC-2006,T-20,Kováč,76,f2-only,582,Radoslav Kováč,76
+P-23990:WC-2014,P-23990,WC-2014,T-58,Vieirinha,78,agree,1697,Vieirinha,78
+P-23993:WC-2022,P-23993,WC-2022,T-17,Wilson,61,f2-only,503,Roan Wilson,61
+P-24015:WC-2006,P-24015,WC-2006,T-28,Walcott,71,f2-only,741,Theo Walcott,71
+P-24062:WC-2022,P-24062,WC-2022,T-46,Sánchez,76,agree,1332,Jorge Sánchez,76
+P-24251:WC-2002,P-24251,WC-2002,T-44,Narazaki,74,f2-only,1166,Seigo Narazaki,74
+P-24251:WC-2006,P-24251,WC-2006,T-44,Narazaki,73,f2-only,1184,Seigo Narazaki,73
+P-24251:WC-2010,P-24251,WC-2010,T-44,Narazaki,74,f2-only,1204,Seigo Narazaki,74
+P-24301:WC-2018,P-24301,WC-2018,T-63,Al-Muwallad,73,"avg(74,72)",1799,Fahad Al Muwallad,73
+P-24388:WC-2014,P-24388,WC-2014,T-32,Waris,73,"avg(74,71)",954,Abdul Waris,73
+P-24493:WC-2006,P-24493,WC-2006,T-57,Kosowski,68,agree,1629,Kamil Kosowski,68
+P-24535:WC-2002,P-24535,WC-2002,T-14,Fan,62,f2-only,409,Fan Zhiyi,62
+P-24586:WC-2010,P-24586,WC-2010,T-32,Sarpei,68,agree,949,Hans Sarpei,68
+P-24647:WC-2014,P-24647,WC-2014,T-73,Albiol,80,f1-only,2137,Raúl Albiol,80
+P-24667:WC-2026,P-24667,WC-2026,T-84,Canobbio,74,f2-only,2498,Agustin Canobbio,74
+P-24713:WC-2010,P-24713,WC-2010,T-68,Perniš,69,f2-only,1969,Dušan Perniš,69
+P-24893:WC-2006,P-24893,WC-2006,T-02,Hipólito,62,f2-only,30,Hipólito,62
+P-24930:WC-2006,P-24930,WC-2006,T-02,Ricardo,70,f2-only,25,João Ricardo,70
+P-24978:WC-2014,P-24978,WC-2014,T-17,Tejeda,69,f2-only,478,Yeltsin Tejeda,69
+P-24978:WC-2018,P-24978,WC-2018,T-17,Tejeda,68,agree,488,Yeltsin Tejeda,68
+P-24983:WC-2014,P-24983,WC-2014,T-01,Brahimi,74,"avg(75,73)",15,Yacine Brahimi,74
+P-25083:WC-2006,P-25083,WC-2006,T-32,Paintsil,60,f2-only,940,John Pantsil,60
+P-25083:WC-2010,P-25083,WC-2010,T-32,Paintsil,75,"avg(75,74)",947,John Paintsil,75
+P-25131:WC-2022,P-25131,WC-2022,T-75,Schär,78,"avg(77,78)",2229,Fabian Schär,78
+P-25398:WC-2014,P-25398,WC-2014,T-42,Touré,80,"avg(79,80)",1135,Kolo Touré,80
+P-25428:WC-2014,P-25428,WC-2014,T-18,Subašić,75,agree,530,Danijel Subašić,75
+P-25428:WC-2018,P-25428,WC-2018,T-18,Subašić,85,agree,536,Danijel Subašić,85
+P-25507:WC-2010,P-25507,WC-2010,T-66,Tošić,75,agree,1923,Zoran Tošić,75
+P-25541:WC-2002,P-25541,WC-2002,T-22,Kjær,77,f2-only,625,P. Kjær,77
+P-25593:WC-2022,P-25593,WC-2022,T-75,Rieder,70,"avg(68,72)",2238,Fabian Rieder,70
+P-25724:WC-2002,P-25724,WC-2002,T-71,Park,75,"canonical-duplicate-avg(77,72)",2019;2030,J. S. Park;Park Ji-sung,77;72
+P-25724:WC-2010,P-25724,WC-2010,T-71,Park,80,agree,2044,Park Ji-sung,80
+P-25741:WC-2022,P-25741,WC-2022,T-79,Msakni,71,f2-only,2324,Youssef Msakni,71
+P-25745:WC-2018,P-25745,WC-2018,T-18,Mandžukić,83,agree,538,Mario Mandžukić,83
+P-25758:WC-2006,P-25758,WC-2006,T-75,Djourou,74,f2-only,2201,Johan Djourou,74
+P-25845:WC-2014,P-25845,WC-2014,T-42,Gbohouo,71,f2-only,1140,Sylvain Gbohouo,71
+P-25925:WC-2022,P-25925,WC-2022,T-83,Carter-Vickers,75,"avg(74,76)",2422,Cameron Carter-Vickers,75
+P-25937:WC-2018,P-25937,WC-2018,T-28,Trippier,79,"avg(78,80)",760,Kieran Trippier,79
+P-25985:WC-2014,P-25985,WC-2014,T-41,Insigne,79,agree,1125,Lorenzo Insigne,79
+P-25989:WC-2022,P-25989,WC-2022,T-79,Mathlouthi,68,f2-only,2332,Aymen Mathlouthi,68
+P-26068:WC-2022,P-26068,WC-2022,T-47,Saïss,78,"avg(77,78)",1366,Romain Saïss,78
+P-26126:WC-2010,P-26126,WC-2010,T-55,Bobadilla,74,agree,1594,Aldo Bobadilla,74
+P-26303:WC-2010,P-26303,WC-2010,T-44,Nagatomo,74,f2-only,1198,Yuto Nagatomo,74
+P-26303:WC-2018,P-26303,WC-2018,T-44,Nagatomo,74,f2-only,1225,Yuto Nagatomo,74
+P-26303:WC-2022,P-26303,WC-2022,T-44,Nagatomo,75,f2-only,1235,Yuto Nagatomo,75
+P-26367:WC-2022,P-26367,WC-2022,T-83,Ream,73,f2-only,2426,Tim Ream,73
+P-26414:WC-2002,P-26414,WC-2002,T-18,Jarni,76,f2-only,511,Robert Jarni,76
+P-26483:WC-2014,P-26483,WC-2014,T-17,Gamboa,70,"avg(71,69)",475,Cristian Gamboa,70
+P-26542:WC-2018,P-26542,WC-2018,T-16,Murillo,77,"avg(76,77)",426,Oscar Murillo,77
+P-26546:WC-2018,P-26546,WC-2018,T-46,Álvarez,73,f2-only,1322,Rafael Álvarez,73
+P-26546:WC-2022,P-26546,WC-2022,T-46,Álvarez,80,agree,1324,Edson Álvarez,80
+P-26566:WC-2018,P-26566,WC-2018,T-71,Go,69,f2-only,2079,Go Yo-han,69
+P-26609:WC-2002,P-26609,WC-2002,T-69,Tavčar,67,"avg(60,74)",1984,Tavčar,67
+P-26616:WC-2002,P-26616,WC-2002,T-71,Ahn,69,"canonical-duplicate-avg(72,66)",2027;2037,Ahn Jung-hwan;Ahn H. Y.,72;66
+P-26616:WC-2010,P-26616,WC-2010,T-71,Ahn,69,f2-only,2052,Ahn,69
+P-26673:WC-2010,P-26673,WC-2010,T-68,Kozák,69,f2-only,1967,Ján Kozák,69
+P-26759:WC-2002,P-26759,WC-2002,T-22,Jensen,79,agree,623,Claus Jensen,79
+P-26868:WC-2002,P-26868,WC-2002,T-63,Al-Jumaan,63,f2-only,1774,Al-Jumaan,63
+P-26900:WC-2018,P-26900,WC-2018,T-50,Moses,79,agree,1515,Victor Moses,79
+P-26942:WC-2022,P-26942,WC-2022,T-18,Oršić,77,agree,563,Mislav Oršić,77
+P-26943:WC-2018,P-26943,WC-2018,T-74,Olsen,75,"avg(74,76)",2171,Robin Olsen,75
+P-26953:WC-2022,P-26953,WC-2022,T-09,Telles,80,agree,290,Alex Telles,80
+P-27035:WC-2022,P-27035,WC-2022,T-04,Baccus,68,f2-only,133,Keanu Baccus,68
+P-27059:WC-2010,P-27059,WC-2010,T-58,Beto,79,f1-only,1689,Beto,79
+P-27079:WC-2022,P-27079,WC-2022,T-79,Kechrida,65,f2-only,2336,Wajdi Kechrida,65
+P-27162:WC-2006,P-27162,WC-2006,T-25,Lanza,76,f2-only,682,Jorge Lanza,76
+P-27229:WC-2002,P-27229,WC-2002,T-65,Daf,70,agree,1869,Omar Daf,70
+P-27263:WC-2014,P-27263,WC-2014,T-44,Morishige,68,f2-only,1210,Masato Morishige,68
+P-27327:WC-2014,P-27327,WC-2014,T-16,Vargas,75,agree,416,Camilo Vargas,75
+P-27327:WC-2018,P-27327,WC-2018,T-16,Vargas,75,agree,430,Camilo Vargas,75
+P-27327:WC-2026,P-27327,WC-2026,T-16,Vargas,77,f2-only,436,Camilo Vargas,77
+P-27402:WC-2010,P-27402,WC-2010,T-09,Gomes,81,"avg(79,82)",256,Heurelho Gomes,81
+P-27417:WC-2018,P-27417,WC-2018,T-57,Peszko,70,"avg(69,70)",1641,Sławomir Peszko,70
+P-27419:WC-2006,P-27419,WC-2006,T-03,Palacio,76,agree,41,Rodrigo Palacio,76
+P-27445:WC-2002,P-27445,WC-2002,T-14,Hao,63,f2-only,401,Hao Haidong,63
+P-27540:WC-2014,P-27540,WC-2014,T-48,Depay,76,agree,1416,Memphis Depay,76
+P-27582:WC-2022,P-27582,WC-2022,T-03,Paredes,80,agree,73,Leandro Paredes,80
+P-27618:WC-2006,P-27618,WC-2006,T-79,Chikhaoui,64,f2-only,2303,Yassine Chikhaoui,64
+P-27744:WC-2018,P-27744,WC-2018,T-66,Milinković-Savić,82,"avg(80,83)",1930,Sergej Milinković-Savić,82
+P-27802:WC-2002,P-27802,WC-2002,T-70,Pule,62,agree,1992,Pule,62
+P-27808:WC-2002,P-27808,WC-2002,T-22,Laursen,83,agree,619,Martin Laursen,83
+P-27913:WC-2022,P-27913,WC-2022,T-11,Ngamaleu,74,f2-only,352,Nicolas Ngamaleu,74
+P-28010:WC-2010,P-28010,WC-2010,T-73,Busquets,76,agree,2131,Sergio Busquets,76
+P-28119:WC-2014,P-28119,WC-2014,T-50,Uzoenyi,62,f2-only,1513,Ejike Uzoenyi,62
+P-28151:WC-2018,P-28151,WC-2018,T-03,Dybala,88,"avg(88,87)",61,Paulo Dybala,88
+P-28333:WC-2010,P-28333,WC-2010,T-66,Đuričić,68,f2-only,1928,Anđelko Đuričić,68
+P-28357:WC-2018,P-28357,WC-2018,T-22,Lössl,75,agree,644,Jonas Lössl,75
+P-28364:WC-2022,P-28364,WC-2022,T-25,Franco,68,f2-only,702,Alan Franco,68
+P-28497:WC-2006,P-28497,WC-2006,T-58,Miguel,79,f1-only,1682,Miguel,79
+P-28497:WC-2010,P-28497,WC-2010,T-58,Miguel,77,f1-only,1692,Miguel,77
+P-28517:WC-2022,P-28517,WC-2022,T-32,Mensah,71,"avg(70,71)",967,Gideon Mensah,71
+P-28517:WC-2026,P-28517,WC-2026,T-32,Mensah,74,agree,979,Gideon Mensah,74
+P-28762:WC-2014,P-28762,WC-2014,T-44,Nishikawa,68,f2-only,1211,Shusaku Nishikawa,68
+P-28811:WC-2022,P-28811,WC-2022,T-59,Barsham,65,agree,1723,Meshaal Barsham,65
+P-28816:WC-2002,P-28816,WC-2002,T-03,Chamot,76,f2-only,38,Jose Chamot,76
+P-28832:WC-2010,P-28832,WC-2010,T-48,Heitinga,79,agree,1403,John Heitinga,79
+P-28883:WC-2002,P-28883,WC-2002,T-06,Van Kerckhoven,71,f1-only,158;159,Nico van Kerckhoven;Eric Van Kerckhoven,71;71
+P-28911:WC-2022,P-28911,WC-2022,T-48,Gakpo,83,agree,1421,Cody Gakpo,83
+P-29046:WC-2022,P-29046,WC-2022,T-57,Glik,71,agree,1657,Kamil Glik,71
+P-29075:WC-2010,P-29075,WC-2010,T-09,Baptista,81,agree,255,Julio Baptista,81
+P-29080:WC-2010,P-29080,WC-2010,T-03,Tevez,85,agree,45,Carlos Tevez,85
+P-29107:WC-2002,P-29107,WC-2002,T-63,Al-Khojali,62,f2-only,1781,Al-Khojali,62
+P-29136:WC-2018,P-29136,WC-2018,T-65,Diouf,76,"avg(77,74)",1883,Mame Diouf,76
+P-29161:WC-2018,P-29161,WC-2018,T-26,Abdel Shafy,74,f2-only,714,Mohamed Abdel-Shafy,74
+P-29172:WC-2002,P-29172,WC-2002,T-41,Inzaghi,90,agree,1096,Filippo Inzaghi,90
+P-29185:WC-2018,P-29185,WC-2018,T-38,Mazaheri,62,f2-only,1066,Mohammad Mazaheri,62
+P-29212:WC-2018,P-29212,WC-2018,T-16,Cuadrado,74,f2-only,431,José Cuadrado,74
+P-29298:WC-2022,P-29298,WC-2022,T-03,Pezzella,77,agree,79,German Pezzella,77
+P-29398:WC-2010,P-29398,WC-2010,T-03,Higuaín,82,agree,46,Gonzalo Higuaín,82
+P-29398:WC-2014,P-29398,WC-2014,T-03,Higuaín,85,"avg(84,86)",51,Gonzalo Higuaín,85
+P-29399:WC-2006,P-29399,WC-2006,T-25,Villafuerte,77,f2-only,678,Cristian Villafuerte,77
+P-29462:WC-2010,P-29462,WC-2010,T-44,Tanaka,74,f2-only,1197,Marcus Tanaka,74
+P-29578:WC-2022,P-29578,WC-2022,T-06,Doku,75,agree,190,Jeremy Doku,75
+P-29621:WC-2002,P-29621,WC-2002,T-18,Šimunić,79,agree,508,Josip Šimunić,79
+P-29674:WC-2014,P-29674,WC-2014,T-35,Garrido,65,agree,1023,Luis Garrido,65
+P-29757:WC-2018,P-29757,WC-2018,T-71,Kim,72,f2-only,2073,Kim Jin-hyeon,72
+P-29799:WC-2010,P-29799,WC-2010,T-75,Leoni,72,agree,2211,Johnny Leoni,72
+P-29833:WC-2018,P-29833,WC-2018,T-74,Lustig,74,"avg(73,74)",2173,Mikael Lustig,74
+P-29967:WC-2006,P-29967,WC-2006,T-32,Mensah,60,agree,937,John Mensah,60
+P-29967:WC-2010,P-29967,WC-2010,T-32,Mensah,76,agree,946,John Mensah,76
+P-29986:WC-2002,P-29986,WC-2002,T-57,Kałużny,74,f2-only,1610,Radosław Kałużny,74
+P-30163:WC-2006,P-30163,WC-2006,T-17,Fonseca,68,f2-only,458,to Fonseca,68
+P-30206:WC-2022,P-30206,WC-2022,T-44,Maeda,72,f2-only,1242,Daizen Maeda,72
+P-30252:WC-2022,P-30252,WC-2022,T-83,Weah,75,"avg(74,75)",2423,Timothy Weah,75
+P-30252:WC-2026,P-30252,WC-2026,T-83,Weah,77,agree,2437,Timothy Weah,77
+P-30283:WC-2018,P-30283,WC-2018,T-66,Veljković,74,"avg(73,74)",1938,Milos Veljković,74
+P-30306:WC-2006,P-30306,WC-2006,T-25,Tenorio,78,f2-only,675,Edwin Tenorio,78
+P-30416:WC-2006,P-30416,WC-2006,T-77,Agassa,67,agree,2257,Kossi Agassa,67
+P-30524:WC-2002,P-30524,WC-2002,T-69,Rudonja,74,f2-only,1983,Mladen Rudonja,74
+P-30568:WC-2002,P-30568,WC-2002,T-74,Lučić,77,"avg(76,77)",2153,Teddy Lučić,77
+P-30596:WC-2022,P-30596,WC-2022,T-04,Redmayne,65,agree,136,Andrew Redmayne,65
+P-30651:WC-2006,P-30651,WC-2006,T-46,Sinha,72,f2-only,1284,Sinha,72
+P-30652:WC-2014,P-30652,WC-2014,T-30,Landreau,81,f2-only,814,Mickael Landreau,81
+P-30711:WC-2018,P-30711,WC-2018,T-30,Lloris,88,agree,822,Hugo Lloris,88
+P-30711:WC-2022,P-30711,WC-2022,T-30,Lloris,87,agree,833,Hugo Lloris,87
+P-30803:WC-2010,P-30803,WC-2010,T-66,Petrović,73,f2-only,1927,Radosav Petrović,73
+P-30891:WC-2006,P-30891,WC-2006,T-55,da Silva,74,agree,1577,Paulo da Silva,74
+P-30891:WC-2010,P-30891,WC-2010,T-55,da Silva,76,agree,1591,Paulo da Silva,76
+P-30892:WC-2006,P-30892,WC-2006,T-02,Love,62,f2-only,32,Love,62
+P-30935:WC-2010,P-30935,WC-2010,T-68,Zabavník,69,agree,1966,Radoslav Zabavník,69
+P-30993:WC-2018,P-30993,WC-2018,T-74,Augustinsson,74,"avg(73,74)",2172,Ludwig Augustinsson,74
+P-31125:WC-2014,P-31125,WC-2014,T-35,Figueroa,75,agree,1016,Maynor Figueroa,75
+P-31160:WC-2010,P-31160,WC-2010,T-70,Tshabalala,71,agree,2000,Siphiwe Tshabalala,71
+P-31166:WC-2006,P-31166,WC-2006,T-02,Buengo,58,"avg(53,62)",34,Titi Buengo,58
+P-31219:WC-2018,P-31219,WC-2018,T-28,Dier,81,"avg(82,80)",754,Eric Dier,81
+P-31347:WC-2006,P-31347,WC-2006,T-79,Essediri,69,agree,2296,Essediri,69
+P-31352:WC-2002,P-31352,WC-2002,T-84,Lembo,72,agree,2456,Alejandro Lembo,72
+P-31431:WC-2018,P-31431,WC-2018,T-74,Lindelöf,79,agree,2169,Victor Lindelöf,79
+P-31431:WC-2026,P-31431,WC-2026,T-74,Lindelöf,76,"avg(75,76)",2178,Victor Lindelöf,76
+P-31496:WC-2002,P-31496,WC-2002,T-14,An,62,f2-only,411,An Qi,62
+P-31548:WC-2010,P-31548,WC-2010,T-75,Eggimann,73,agree,2210,Mario Eggimann,73
+P-31566:WC-2002,P-31566,WC-2002,T-80,Davala,72,f2-only,2366,Umit Davala,72
+P-31606:WC-2022,P-31606,WC-2022,T-57,Szczęsny,86,agree,1643,Wojciech Szczęsny,86
+P-31643:WC-2022,P-31643,WC-2022,T-18,Livaja,77,agree,562,Marko Livaja,77
+P-31668:WC-2010,P-31668,WC-2010,T-30,Govou,81,"avg(81,80)",805,Sidney Govou,81
+P-31755:WC-2010,P-31755,WC-2010,T-13,Orellana,74,agree,395,Fabian Orellana,74
+P-31765:WC-2026,P-31765,WC-2026,T-32,Ayew,73,agree,981,Jordan Ayew,73
+P-31806:WC-2022,P-31806,WC-2022,T-12,Miller,72,"avg(71,72)",368,Kamal Miller,72
+P-31839:WC-2026,P-31839,WC-2026,T-08,Džeko,81,agree,211,Edin Džeko,81
+P-31941:WC-2018,P-31941,WC-2018,T-37,Böðvarsson,72,"avg(69,74)",1031,Jón Böðvarsson,72
+P-32124:WC-2010,P-32124,WC-2010,T-33,Charisteas,72,agree,993,Angelos Charisteas,72
+P-32136:WC-2002,P-32136,WC-2002,T-31,Schneider,83,agree,860,Bernd Schneider,83
+P-32136:WC-2006,P-32136,WC-2006,T-31,Schneider,81,agree,873,Bernd Schneider,81
+P-32165:WC-2022,P-32165,WC-2022,T-57,Zieliński,83,agree,1644,Piotr Zieliński,83
+P-32222:WC-2022,P-32222,WC-2022,T-75,Aebischer,75,"avg(75,74)",2233,Michel Aebischer,75
+P-32279:WC-2006,P-32279,WC-2006,T-58,Simão,82,"avg(80,83)",1680,Simão Sabrosa,82
+P-32431:WC-2022,P-32431,WC-2022,T-30,Guendouzi,80,agree,847,Mattéo Guendouzi,80
+P-32448:WC-2018,P-32448,WC-2018,T-26,El Hadary,73,"avg(70,75)",716,Essam El Hadary,73
+P-32449:WC-2002,P-32449,WC-2002,T-69,Nemec,74,f2-only,1978,Nemec,74
+P-32567:WC-2002,P-32567,WC-2002,T-25,Guerrón,69,f2-only,664,Guerrón,69
+P-32594:WC-2002,P-32594,WC-2002,T-46,Carmona,74,"avg(70,77)",1270,Salvador Carmona,74
+P-32696:WC-2002,P-32696,WC-2002,T-17,Martínez,64,f1-only,451,Gilberto Martinez,64
+P-32696:WC-2006,P-32696,WC-2006,T-17,Martínez,64,f1-only,459;460,Gilberto Martinez Vidal;G. Martínez,64;64
+P-32773:WC-2022,P-32773,WC-2022,T-11,Ngom Mbekeli,66,f2-only,365,Jerome Mbekeli,66
+P-32803:WC-2026,P-32803,WC-2026,T-79,Dahmen,72,f2-only,2343,Aymen Dahmen,72
+P-32949:WC-2022,P-32949,WC-2022,T-59,Kheder,65,f1-only,1724,Musab Kheder,65
+P-33089:WC-2014,P-33089,WC-2014,T-25,Rojas,72,agree,691,Joao Rojas,72
+P-33115:WC-2014,P-33115,WC-2014,T-42,Sio,74,"avg(74,73)",1138,Giovanni Sio,74
+P-33175:WC-2010,P-33175,WC-2010,T-44,Honda,78,"avg(77,78)",1190,Keisuke Honda,78
+P-33175:WC-2018,P-33175,WC-2018,T-44,Honda,79,f2-only,1214,Keisuke Honda,79
+P-33293:WC-2006,P-33293,WC-2006,T-79,Guemamdia,62,f2-only,2306,Haykel Guemamdia,62
+P-33312:WC-2010,P-33312,WC-2010,T-48,Kuyt,83,agree,1399,Dirk Kuyt,83
+P-33390:WC-2018,P-33390,WC-2018,T-66,Tadić,79,"avg(80,78)",1932,Dusan Tadić,79
+P-33400:WC-2010,P-33400,WC-2010,T-30,Squillaci,81,agree,804,Sébastien Squillaci,81
+P-33433:WC-2022,P-33433,WC-2022,T-73,Raya,78,"avg(76,80)",2147,David Raya,78
+P-33622:WC-2022,P-33622,WC-2022,T-65,Dia,80,"avg(79,80)",1895,Boulaye Dia,80
+P-33665:WC-2006,P-33665,WC-2006,T-78,Jones,65,f2-only,2273,Kenwyne Jones,65
+P-33785:WC-2018,P-33785,WC-2018,T-62,Gabulov,74,agree,1769,Vladimir Gabulov,74
+P-33804:WC-2022,P-33804,WC-2022,T-59,Ahmed,68,agree,1719,Homam Al Amin Mohamed Ahmed,68
+P-33804:WC-2026,P-33804,WC-2026,T-59,Ahmed,67,f2-only,1733,Ahmed Abdoulla,67
+P-33854:WC-2022,P-33854,WC-2022,T-73,Fati,79,f1-only,2145;2146,Anssumane Fati;Ansu Fati,79;79
+P-33989:WC-2010,P-33989,WC-2010,T-04,Federici,71,"avg(70,72)",94,Adam Federici,71
+P-34018:WC-2018,P-34018,WC-2018,T-71,Moon,67,f2-only,2082,Moon Seon-min,67
+P-34118:WC-2010,P-34118,WC-2010,T-50,Kaita,68,"avg(68,67)",1495,Sani Kaita,68
+P-34132:WC-2022,P-34132,WC-2022,T-83,Ferreira,75,"avg(74,75)",2424,Jesus Ferreira,75
+P-34386:WC-2006,P-34386,WC-2006,T-38,Zandi,80,agree,1037,Ferydoon Zandi,80
+P-34448:WC-2018,P-34448,WC-2018,T-54,Rodríguez,64,f2-only,1555,Jose Rodríguez,64
+P-34448:WC-2026,P-34448,WC-2026,T-54,Rodríguez,68,f2-only,1562,José Rodríguez,68
+P-34458:WC-2022,P-34458,WC-2022,T-48,Simons,75,f2-only,1432,X. Simons,75
+P-34530:WC-2002,P-34530,WC-2002,T-55,Santa Cruz,75,"avg(77,73)",1565,Roque Santa Cruz,75
+P-34530:WC-2006,P-34530,WC-2006,T-55,Santa Cruz,84,agree,1574,Roque Santa Cruz,84
+P-34543:WC-2022,P-34543,WC-2022,T-25,Ibarra,68,f2-only,703,Romario Ibarra,68
+P-34633:WC-2022,P-34633,WC-2022,T-11,Hongla,72,f1-only,354,Martin Hongla Yma,72
+P-34709:WC-2002,P-34709,WC-2002,T-57,Świerczewski,71,f2-only,1620,Piotr Świerczewski,71
+P-34727:WC-2014,P-34727,WC-2014,T-08,Medunjanin,72,f2-only,204,Haris Medunjanin,72
+P-34822:WC-2022,P-34822,WC-2022,T-04,Irvine,71,"avg(70,71)",122,Jackson Irvine,71
+P-34878:WC-2014,P-34878,WC-2014,T-35,Najar,71,agree,1017,Andy Najar,71
+P-34895:WC-2006,P-34895,WC-2006,T-57,Kuszczak,70,agree,1627,Tomasz Kuszczak,70
+P-34915:WC-2022,P-34915,WC-2022,T-04,Tilio,65,agree,135,Marco Tilio,65
+P-34957:WC-2002,P-34957,WC-2002,T-55,Ayala,73,"avg(72,73)",1567,Celso Ayala,73
+P-34977:WC-2006,P-34977,WC-2006,T-46,Bravo,73,agree,1283,Omar Bravo,73
+P-34998:WC-2018,P-34998,WC-2018,T-74,Granqvist,80,agree,2168,Andreas Granqvist,80
+P-35019:WC-2002,P-35019,WC-2002,T-65,Diao,74,agree,1865,Salif Diao,74
+P-35081:WC-2018,P-35081,WC-2018,T-58,Pereira,80,agree,1704,Ricardo Pereira,80
+P-35118:WC-2014,P-35118,WC-2014,T-08,Vršajević,67,f2-only,205,Avdija Vršajević,67
+P-35157:WC-2014,P-35157,WC-2014,T-73,Juanfran,79,f1-only,2139,Juanfran,79
+P-35173:WC-2022,P-35173,WC-2022,T-03,Tagliafico,81,agree,72,Nicolas Tagliafico,81
+P-35264:WC-2002,P-35264,WC-2002,T-31,Frings,85,agree,858,Torsten Frings,85
+P-35264:WC-2006,P-35264,WC-2006,T-31,Frings,81,agree,872,Torsten Frings,81
+P-35334:WC-2014,P-35334,WC-2014,T-06,Lombaerts,76,agree,171,Nicolas Lombaerts,76
+P-35408:WC-2022,P-35408,WC-2022,T-30,Benzema,91,agree,832,Karim Benzema,91
+P-35595:WC-2006,P-35595,WC-2006,T-55,dos Santos,70,f2-only,1584,Julio dos Santos,70
+P-35711:WC-2018,P-35711,WC-2018,T-65,Gassama,70,"avg(68,71)",1892,Lamine Gassama,70
+P-35746:WC-2010,P-35746,WC-2010,T-51,Pak,71,f2-only,1521,Pak Chol-jin,71
+P-35773:WC-2018,P-35773,WC-2018,T-66,Rajković,69,f2-only,1940,Predrag Rajković,69
+P-35773:WC-2022,P-35773,WC-2022,T-66,Rajković,78,agree,1943,Predrag Rajković,78
+P-35818:WC-2018,P-35818,WC-2018,T-75,Džemaili,78,agree,2225,Blerim Džemaili,78
+P-35837:WC-2018,P-35837,WC-2018,T-04,Leckie,72,agree,108,Mathew Leckie,72
+P-35837:WC-2022,P-35837,WC-2022,T-04,Leckie,71,agree,123,Mathew Leckie,71
+P-35873:WC-2002,P-35873,WC-2002,T-03,Caniggia,76,f2-only,37,Claudio Caniggia,76
+P-35882:WC-2006,P-35882,WC-2006,T-44,Yanagisawa,63,agree,1188,Atsushi Yanagisawa,63
+P-35902:WC-2002,P-35902,WC-2002,T-31,Hamann,85,agree,857,Dietmar Hamann,85
+P-35930:WC-2018,P-35930,WC-2018,T-22,Rønnow,74,"avg(73,74)",646,Frederik Rønnow,74
+P-35930:WC-2022,P-35930,WC-2022,T-22,Rønnow,76,"avg(75,77)",657,Frederik Rønnow,76
+P-35934:WC-2010,P-35934,WC-2010,T-55,Barreto,67,agree,1605,Diego Barreto,67
+P-36126:WC-2022,P-36126,WC-2022,T-31,Ginter,83,"avg(82,83)",915,Matthias Ginter,83
+P-36196:WC-2014,P-36196,WC-2014,T-04,Milligan,68,agree,99,Mark Milligan,68
+P-36278:WC-2018,P-36278,WC-2018,T-44,Muto,76,f2-only,1218,Yoshinori Muto,76
+P-36287:WC-2010,P-36287,WC-2010,T-31,Podolski,81,"avg(81,80)",879,Lukas Podolski,81
+P-36400:WC-2014,P-36400,WC-2014,T-28,Shaw,74,agree,748,Luke Shaw,74
+P-36400:WC-2022,P-36400,WC-2022,T-28,Shaw,80,agree,775,Luke Shaw,80
+P-36426:WC-2002,P-36426,WC-2002,T-55,Chilavert,73,f2-only,1568,Jose Chilavert,73
+P-36522:WC-2018,P-36522,WC-2018,T-63,Assiri,67,f2-only,1810,Muhannad Asiri,67
+P-36601:WC-2014,P-36601,WC-2014,T-35,Chávez,64,agree,1024,Marvin Chávez,64
+P-36638:WC-2022,P-36638,WC-2022,T-32,Manaf Nurudeen,66,agree,972,Abdul Nurudeen,66
+P-36687:WC-2018,P-36687,WC-2018,T-46,Fabián,79,agree,1316,Marco Fabián,79
+P-36689:WC-2002,P-36689,WC-2002,T-18,Šarić,76,f2-only,512,Šarić,76
+P-36707:WC-2022,P-36707,WC-2022,T-11,Ondoua,68,agree,362,Gael Ondoua,68
+P-36850:WC-2006,P-36850,WC-2006,T-48,Stekelenburg,73,agree,1391,Maarten Stekelenburg,73
+P-36850:WC-2010,P-36850,WC-2010,T-48,Stekelenburg,77,"avg(76,77)",1405,Maarten Stekelenburg,77
+P-36964:WC-2018,P-36964,WC-2018,T-44,Kagawa,83,f2-only,1213,Shinji Kagawa,83
+P-37092:WC-2006,P-37092,WC-2006,T-17,Sequeira,69,f1-only,454;455,Douglas Sequeira;D. Sequeira,69;69
+P-37126:WC-2002,P-37126,WC-2002,T-41,Materazzi,79,agree,1100,Marco Materazzi,79
+P-37126:WC-2006,P-37126,WC-2006,T-41,Materazzi,79,f2-only,1112,Marco Materazzi,79
+P-37133:WC-2010,P-37133,WC-2010,T-55,Ortigoza,69,f2-only,1602,Nestor Ortigoza,69
+P-37140:WC-2002,P-37140,WC-2002,T-58,Beto,73,agree,1671,Beto,73
+P-37239:WC-2014,P-37239,WC-2014,T-09,Oscar,84,agree,262,Oscar,84
+P-37275:WC-2010,P-37275,WC-2010,T-04,Jedinak,65,agree,97,Mile Jedinak,65
+P-37308:WC-2022,P-37308,WC-2022,T-63,Al-Shehri,68,agree,1823,Saleh Al-Shehri,68
+P-37314:WC-2022,P-37314,WC-2022,T-03,De Paul,84,agree,67,Rodrigo De Paul,84
+P-37402:WC-2002,P-37402,WC-2002,T-14,Shao,63,f2-only,405,Shao Jiayi,63
+P-37461:WC-2002,P-37461,WC-2002,T-18,Soldo,82,agree,505,Zvonimir Soldo,82
+P-37656:WC-2006,P-37656,WC-2006,T-75,Müller,81,agree,2193,Patrick Müller,81
+P-37696:WC-2018,P-37696,WC-2018,T-47,Amrabat,78,f2-only,1353,Nordin Amrabat,78
+P-37701:WC-2002,P-37701,WC-2002,T-57,Głowacki,66,agree,1621,Arkadiusz Głowacki,66
+P-37702:WC-2010,P-37702,WC-2010,T-01,Guedioura,73,f2-only,7,Adlene Guedioura,73
+P-37760:WC-2006,P-37760,WC-2006,T-58,Carvalho,86,agree,1675,Ricardo Carvalho,86
+P-37840:WC-2018,P-37840,WC-2018,T-62,Dzyuba,78,agree,1759,Artem Dzyuba,78
+P-37844:WC-2002,P-37844,WC-2002,T-70,Buckley,65,"avg(68,62)",1990,Delron Buckley,65
+P-37860:WC-2022,P-37860,WC-2022,T-09,Antony,82,agree,287,Antony dos Santos,82
+P-37893:WC-2006,P-37893,WC-2006,T-67,Kežman,84,agree,1951,Mateja Kežman,84
+P-37924:WC-2002,P-37924,WC-2002,T-65,Coly,67,agree,1874,Ferdinand Coly,67
+P-37930:WC-2010,P-37930,WC-2010,T-70,Masilela,63,agree,2011,Peter Masilela,63
+P-37933:WC-2006,P-37933,WC-2006,T-28,Cole,76,agree,739,Joe Cole,76
+P-37935:WC-2018,P-37935,WC-2018,T-65,Sarr,74,"avg(73,74)",1888,Ismaila Sarr,74
+P-37935:WC-2022,P-37935,WC-2022,T-65,Sarr,77,agree,1897,Ismaila Sarr,77
+P-37935:WC-2026,P-37935,WC-2026,T-65,Sarr,79,agree,1908,Ismaila Sarr,79
+P-37984:WC-2018,P-37984,WC-2018,T-17,Waston,74,agree,483,Kendall Waston,74
+P-38004:WC-2010,P-38004,WC-2010,T-30,Carrasso,82,"avg(81,82)",802,Cédric Carrasso,82
+P-38105:WC-2022,P-38105,WC-2022,T-85,Rodon,73,"avg(72,74)",2514,Joe Rodon,73
+P-38371:WC-2006,P-38371,WC-2006,T-38,Daei,78,f2-only,1039,Ali Daei,78
+P-38372:WC-2018,P-38372,WC-2018,T-28,Butland,81,agree,756,Jack Butland,81
+P-38529:WC-2022,P-38529,WC-2022,T-46,Araujo,75,agree,1333,Nestor Araujo,75
+P-38556:WC-2006,P-38556,WC-2006,T-32,Gyan,60,f2-only,938,Asamoah Gyan,60
+P-38556:WC-2010,P-38556,WC-2010,T-32,Gyan,74,"avg(73,75)",948,Asamoah Gyan,74
+P-38574:WC-2010,P-38574,WC-2010,T-70,Khune,67,agree,2003,Itumeleng Khune,67
+P-38594:WC-2018,P-38594,WC-2018,T-16,Sánchez,82,"avg(81,82)",421,Davinson Sánchez,82
+P-38599:WC-2006,P-38599,WC-2006,T-41,Iaquinta,70,agree,1113,Vincenzo Iaquinta,70
+P-38647:WC-2014,P-38647,WC-2014,T-03,Biglia,77,"avg(77,76)",56,Lucas Biglia,77
+P-38647:WC-2018,P-38647,WC-2018,T-03,Biglia,83,"avg(83,82)",62,Lucas Biglia,83
+P-38682:WC-2014,P-38682,WC-2014,T-35,Costly,70,f2-only,1021,Carlo Costly,70
+P-38789:WC-2006,P-38789,WC-2006,T-75,Zuberbühler,75,agree,2197,Pascal Zuberbühler,75
+P-38799:WC-2018,P-38799,WC-2018,T-65,Sow,75,f2-only,1887,Moussa Sow,75
+P-38800:WC-2022,P-38800,WC-2022,T-75,Köhn,71,"avg(70,71)",2237,Philipp Köhn,71
+P-38928:WC-2010,P-38928,WC-2010,T-66,Isailović,73,f2-only,1925,Bojan Isailović,73
+P-38940:WC-2022,P-38940,WC-2022,T-83,Johnson,73,agree,2425,Sean Johnson,73
+P-38981:WC-2022,P-38981,WC-2022,T-79,Maâloul,72,f2-only,2321,Ali Maâloul,72
+P-39008:WC-2010,P-39008,WC-2010,T-70,Khuboni,65,f2-only,2006,Thanduyise Khuboni,65
+P-39078:WC-2010,P-39078,WC-2010,T-70,Mphela,63,agree,2012,Katlego Mphela,63
+P-39138:WC-2014,P-39138,WC-2014,T-18,Sammir,73,agree,532,Sammir,73
+P-39199:WC-2002,P-39199,WC-2002,T-58,Xavier,76,f2-only,1668,Abel Xavier,76
+P-39239:WC-2022,P-39239,WC-2022,T-11,Nsame,76,"avg(75,76)",347,Jean-Pierre Nsame,76
+P-39249:WC-2014,P-39249,WC-2014,T-50,Enyeama,79,agree,1498,Vincent Enyeama,79
+P-39281:WC-2022,P-39281,WC-2022,T-17,Martínez,62,f2-only,500,Carlos Martínez,62
+P-39347:WC-2022,P-39347,WC-2022,T-25,Ramírez,70,agree,697,Wellington Ramírez,70
+P-39356:WC-2010,P-39356,WC-2010,T-31,Kroos,77,"avg(75,79)",887,Toni Kroos,77
+P-39356:WC-2014,P-39356,WC-2014,T-31,Kroos,84,agree,893,Toni Kroos,84
+P-39459:WC-2010,P-39459,WC-2010,T-66,Milijaš,75,"avg(74,76)",1922,Nenad Milijaš,75
+P-39460:WC-2010,P-39460,WC-2010,T-75,Shaqiri,55,f2-only,2215,Xherdan Shaqiri,55
+P-39460:WC-2018,P-39460,WC-2018,T-75,Shaqiri,82,agree,2222,Xherdan Shaqiri,82
+P-39464:WC-2022,P-39464,WC-2022,T-31,Sané,84,agree,914,Leroy Sané,84
+P-39485:WC-2010,P-39485,WC-2010,T-50,Ideye,67,f2-only,1496,Brown Ideye,67
+P-39545:WC-2006,P-39545,WC-2006,T-09,Zé Roberto,92,agree,238,Zé Roberto,92
+P-39774:WC-2014,P-39774,WC-2014,T-41,Cerci,81,"avg(81,80)",1122,Alessio Cerci,81
+P-39810:WC-2010,P-39810,WC-2010,T-03,Demichelis,81,agree,47,Martin Demichelis,81
+P-39810:WC-2014,P-39810,WC-2014,T-03,Demichelis,81,"avg(79,82)",55,Martin Demichelis,81
+P-39861:WC-2014,P-39861,WC-2014,T-48,Blind,77,f1-only,1414,Daley Blind,77
+P-39861:WC-2022,P-39861,WC-2022,T-48,Blind,80,agree,1423,Daley Blind,80
+P-39942:WC-2026,P-39942,WC-2026,T-44,Kubo,82,agree,1251,Takefusa Kubo,82
+P-39956:WC-2010,P-39956,WC-2010,T-32,Asamoah,78,agree,943,Kwadwo Asamoah,78
+P-40137:WC-2018,P-40137,WC-2018,T-09,Danilo,79,f2-only,282,Danilo,79
+P-40197:WC-2010,P-40197,WC-2010,T-48,Mathijsen,80,agree,1401,Joris Mathijsen,80
+P-40292:WC-2018,P-40292,WC-2018,T-57,Białkowski,74,"avg(74,73)",1638,Bartosz Białkowski,74
+P-40312:WC-2006,P-40312,WC-2006,T-46,Guardado,66,f2-only,1289,Andres Guardado,66
+P-40312:WC-2018,P-40312,WC-2018,T-46,Guardado,80,agree,1314,Andrés Guardado,80
+P-40312:WC-2022,P-40312,WC-2022,T-46,Guardado,77,agree,1327,Andres Guardado,77
+P-40400:WC-2002,P-40400,WC-2002,T-30,Petit,83,f2-only,786,Emmanuel Petit,83
+P-40442:WC-2018,P-40442,WC-2018,T-63,Al-Mosailem,71,"avg(71,70)",1802,Yasser Al Mosailem,71
+P-40487:WC-2022,P-40487,WC-2022,T-63,Asiri,66,f1-only,1831;1833,Abdulfattah Tawfiq Jaber Asiri;Haitham Asiri,66;66
+P-40618:WC-2018,P-40618,WC-2018,T-66,Prijović,74,agree,1937,Aleksandar Prijović,74
+P-40619:WC-2022,P-40619,WC-2022,T-47,Ounahi,72,"avg(70,73)",1376,Azzedine Ounahi,72
+P-40619:WC-2026,P-40619,WC-2026,T-47,Ounahi,78,"avg(76,79)",1382,Azzedine Ounahi,78
+P-40630:WC-2014,P-40630,WC-2014,T-32,Adams,51,f2-only,958,Sadick Adams,51
+P-40666:WC-2006,P-40666,WC-2006,T-20,Sionko,72,"avg(67,76)",583,Libor Sionko,72
+P-40820:WC-2018,P-40820,WC-2018,T-57,Cionek,71,agree,1640,Thiago Cionek,71
+P-40927:WC-2010,P-40927,WC-2010,T-71,Lee,72,agree,2048,Lee Chung-yong,72
+P-40995:WC-2006,P-40995,WC-2006,T-44,Doi,73,f2-only,1180,Yoichi Doi,73
+P-41052:WC-2014,P-41052,WC-2014,T-83,Davis,71,agree,2413,Brad Davis,71
+P-41085:WC-2006,P-41085,WC-2006,T-77,Nibombé,67,f2-only,2259,Dare Nibombé,67
+P-41133:WC-2002,P-41133,WC-2002,T-80,Mansız,74,f2-only,2364,Ilhan Mansız,74
+P-41251:WC-2014,P-41251,WC-2014,T-01,Belkalem,72,"avg(69,74)",20,Essaid Belkalem,72
+P-41262:WC-2014,P-41262,WC-2014,T-83,Brooks,71,agree,2414,John Brooks,71
+P-41271:WC-2002,P-41271,WC-2002,T-22,Løvenkrands,82,agree,621,Peter Løvenkrands,82
+P-41303:WC-2010,P-41303,WC-2010,T-22,Enevoldsen,69,agree,634,Thomas Enevoldsen,69
+P-41422:WC-2014,P-41422,WC-2014,T-09,Jefferson,82,agree,264,Jefferson,82
+P-41620:WC-2002,P-41620,WC-2002,T-79,Ghodhbane,63,f2-only,2278,Kaies Ghodhbane,63
+P-41620:WC-2006,P-41620,WC-2006,T-79,Ghodhbane,66,f2-only,2298,Kaies Ghodhbane,66
+P-41694:WC-2002,P-41694,WC-2002,T-84,Varela,67,agree,2457,Gustavo Varela,67
+P-41724:WC-2002,P-41724,WC-2002,T-18,Šimić,77,agree,510,Dario Šimić,77
+P-41758:WC-2014,P-41758,WC-2014,T-09,Fernandinho,82,f1-only,265,Fernandinho,82
+P-41902:WC-2022,P-41902,WC-2022,T-44,Ito,72,f2-only,1240,Hiroki Ito,72
+P-41907:WC-2006,P-41907,WC-2006,T-67,Ergić,74,f2-only,1955,Ivan Ergić,74
+P-41944:WC-2010,P-41944,WC-2010,T-84,Pereira,75,f2-only,2468,Maxi Pereira,75
+P-42018:WC-2014,P-42018,WC-2014,T-44,Kiyotake,76,agree,1206,Hiroshi Kiyotake,76
+P-42038:WC-2006,P-42038,WC-2006,T-41,Totti,89,agree,1106,Francesco Totti,89
+P-42078:WC-2022,P-42078,WC-2022,T-48,Klaassen,79,agree,1425,Davy Klaassen,79
+P-42107:WC-2010,P-42107,WC-2010,T-01,Ziani,76,"avg(77,75)",4,Karim Ziani,76
+P-42113:WC-2014,P-42113,WC-2014,T-03,Di María,86,agree,50,Angel Di María,86
+P-42113:WC-2022,P-42113,WC-2022,T-03,Di María,84,agree,68,Ángel Di María,84
+P-42160:WC-2022,P-42160,WC-2022,T-57,Bereszyński,73,agree,1653,Bartosz Bereszyński,73
+P-42215:WC-2022,P-42215,WC-2022,T-38,Nourollahi,74,f2-only,1069,Ahmad Nourollahi,74
+P-42223:WC-2022,P-42223,WC-2022,T-79,Khazri,75,agree,2319,Wahbi Khazri,75
+P-42227:WC-2006,P-42227,WC-2006,T-41,Zambrotta,91,agree,1103,Gianluca Zambrotta,91
+P-42227:WC-2010,P-42227,WC-2010,T-41,Zambrotta,81,agree,1119,Gianluca Zambrotta,81
+P-42228:WC-2006,P-42228,WC-2006,T-55,Toledo,63,agree,1588,Delio Toledo,63
+P-42326:WC-2014,P-42326,WC-2014,T-30,Varane,81,agree,812,Raphael Varane,81
+P-42326:WC-2018,P-42326,WC-2018,T-30,Varane,85,agree,825,Raphaël Varane,85
+P-42326:WC-2022,P-42326,WC-2022,T-30,Varane,85,"avg(84,85)",834,Raphaël Varane,85
+P-42390:WC-2022,P-42390,WC-2022,T-12,Laryea,72,f1-only,369,Richie Mamah Laryea,72
+P-42392:WC-2010,P-42392,WC-2010,T-51,Kim,63,f2-only,1529,Kim Myong-gil,63
+P-42517:WC-2022,P-42517,WC-2022,T-47,En-Nesyri,80,agree,1365,Youssef En-Nesyri,80
+P-42523:WC-2018,P-42523,WC-2018,T-71,Kim,71,f2-only,2077,Kim Seung-gyu,71
+P-42523:WC-2022,P-42523,WC-2022,T-71,Kim,70,f2-only,2092,Kim Gyu,70
+P-42534:WC-2006,P-42534,WC-2006,T-25,Méndez,79,f2-only,674,Edison Méndez,79
+P-42534:WC-2014,P-42534,WC-2014,T-25,Méndez,72,"avg(71,72)",692,Edison Méndez,72
+P-42575:WC-2022,P-42575,WC-2022,T-79,Ben Romdhane,69,f2-only,2328,Mohamed Ben Romdhane,69
+P-42644:WC-2018,P-42644,WC-2018,T-17,Wallace,68,agree,487,Rodney Wallace,68
+P-42659:WC-2002,P-42659,WC-2002,T-41,Di Biagio,76,"avg(69,82)",1101,Luigi Di Biagio,76
+P-42663:WC-2022,P-42663,WC-2022,T-59,Salman,66,f1-only,1721,Tarek Salman,66
+P-42706:WC-2010,P-42706,WC-2010,T-30,Gignac,82,agree,803,André-Pierre Gignac,82
+P-42808:WC-2002,P-42808,WC-2002,T-74,Alexandersson,76,"avg(75,77)",2154,Niclas Alexandersson,76
+P-42808:WC-2006,P-42808,WC-2006,T-74,Alexandersson,71,agree,2161,Niclas Alexandersson,71
+P-42911:WC-2022,P-42911,WC-2022,T-46,Herrera,80,agree,1325,Hector Herrera,80
+P-42918:WC-2002,P-42918,WC-2002,T-09,Lúcio,93,agree,228,Lúcio,93
+P-42918:WC-2006,P-42918,WC-2006,T-09,Lúcio,90,agree,240,Lúcio,90
+P-42918:WC-2010,P-42918,WC-2010,T-09,Lúcio,85,"avg(85,84)",248,Lúcio,85
+P-43350:WC-2014,P-43350,WC-2014,T-30,Debuchy,80,agree,817,Mathieu Debuchy,80
+P-43367:WC-2026,P-43367,WC-2026,T-75,Rodríguez,74,agree,2249,Ricardo Rodríguez,74
+P-43400:WC-2006,P-43400,WC-2006,T-31,Schweinsteiger,76,agree,876,Bastian Schweinsteiger,76
+P-43400:WC-2010,P-43400,WC-2010,T-31,Schweinsteiger,81,agree,880,Bastian Schweinsteiger,81
+P-43400:WC-2014,P-43400,WC-2014,T-31,Schweinsteiger,88,agree,888,Bastian Schweinsteiger,88
+P-43410:WC-2014,P-43410,WC-2014,T-09,Gustavo,81,f1-only,269,Luiz Gustavo,81
+P-43481:WC-2006,P-43481,WC-2006,T-31,Friedrich,83,agree,870,Arne Friedrich,83
+P-43481:WC-2010,P-43481,WC-2010,T-31,Friedrich,80,"avg(80,79)",882,Arne Friedrich,80
+P-43675:WC-2018,P-43675,WC-2018,T-62,Cheryshev,77,"avg(78,76)",1764,Denis Cheryshev,77
+P-43931:WC-2006,P-43931,WC-2006,T-77,Aziawonou,69,agree,2256,Yao Aziawonou,69
+P-44011:WC-2002,P-44011,WC-2002,T-79,Clayton,62,f2-only,2284,Jose Clayton,62
+P-44035:WC-2018,P-44035,WC-2018,T-65,Diallo,70,agree,1891,Abdoulaye Diallo,70
+P-44097:WC-2006,P-44097,WC-2006,T-77,Olufadé,63,f2-only,2266,Adekambi Olufadé,63
+P-44205:WC-2006,P-44205,WC-2006,T-02,Kali,70,f2-only,27,Kali,70
+P-44308:WC-2010,P-44308,WC-2010,T-51,Cha,71,f2-only,1522,Cha Jong-hyok,71
+P-44328:WC-2022,P-44328,WC-2022,T-44,Machino,68,f2-only,1246,Shuto Machino,68
+P-44334:WC-2006,P-44334,WC-2006,T-73,Reina,85,f2-only,2120,Pepe Reina,85
+P-44386:WC-2018,P-44386,WC-2018,T-22,Dalsgaard,71,agree,647,Henrik Dalsgaard,71
+P-44396:WC-2006,P-44396,WC-2006,T-55,Barreto,66,agree,1587,Edgar Barreto,66
+P-44407:WC-2002,P-44407,WC-2002,T-79,Mkacher,56,f1-only,2289,Mohamed Mkacher,56
+P-44438:WC-2010,P-44438,WC-2010,T-46,Bautista,74,f1-only,1295,Adolfo Bautista,74
+P-44463:WC-2018,P-44463,WC-2018,T-18,Rebić,74,"avg(72,76)",550,Ante Rebić,74
+P-44505:WC-2026,P-44505,WC-2026,T-54,Davis,67,f2-only,1563,Eric Davis,67
+P-44581:WC-2014,P-44581,WC-2014,T-11,Ndjock,72,agree,338,Sammy Ndjock,72
+P-44682:WC-2010,P-44682,WC-2010,T-70,Thwala,64,"avg(63,65)",2010,Thwala,64
+P-44699:WC-2022,P-44699,WC-2022,T-57,Szymański,71,agree,1656,Damian Szymański,71
+P-44716:WC-2002,P-44716,WC-2002,T-06,Herpoel,69,agree,161,Frederic Herpoel,69
+P-44763:WC-2002,P-44763,WC-2002,T-46,Márquez,80,"avg(83,77)",1267,Rafael Márquez,80
+P-44763:WC-2006,P-44763,WC-2006,T-46,Márquez,77,agree,1281,Rafael Márquez,77
+P-44763:WC-2014,P-44763,WC-2014,T-46,Márquez,75,f1-only,1304,Rafael Márquez,75
+P-44775:WC-2006,P-44775,WC-2006,T-20,Blažek,78,agree,580,Jaromir Blažek,78
+P-44780:WC-2022,P-44780,WC-2022,T-57,Kiwior,71,agree,1655,Jakub Kiwior,71
+P-44850:WC-2002,P-44850,WC-2002,T-80,Özalan,74,f2-only,2365,Alpay Özalan,74
+P-44926:WC-2006,P-44926,WC-2006,T-04,Cahill,82,agree,82,Tim Cahill,82
+P-44926:WC-2018,P-44926,WC-2018,T-04,Cahill,70,f1-only,110,Tim Cahill,70
+P-45005:WC-2010,P-45005,WC-2010,T-22,Beckmann,65,agree,635,Mikkel Beckmann,65
+P-45039:WC-2002,P-45039,WC-2002,T-73,Ricardo,80,"avg(74,85)",2114,Ricardo Felipe,80
+P-45056:WC-2002,P-45056,WC-2002,T-84,Guigou,67,agree,2458,Gianni Guigou,67
+P-45182:WC-2014,P-45182,WC-2014,T-30,Schneiderlin,78,agree,820,Morgan Schneiderlin,78
+P-45221:WC-2010,P-45221,WC-2010,T-35,Thomas,71,"avg(69,73)",1004,Hendry Thomas,71
+P-45280:WC-2026,P-45280,WC-2026,T-65,Gueye,78,agree,1912,Pape Gueye,78
+P-45288:WC-2022,P-45288,WC-2022,T-47,Hakimi,84,agree,1361,Achraf Hakimi,84
+P-45399:WC-2022,P-45399,WC-2022,T-65,Mendy,83,"avg(86,80)",1894,Edouard Mendy,83
+P-45413:WC-2022,P-45413,WC-2022,T-63,Al-Hassan,66,agree,1828,Ali Al-Hassan,66
+P-45457:WC-2018,P-45457,WC-2018,T-63,Al-Shahrani,74,f1-only,1794;1796,Yasir Gharsan Al-Shahrani;Yasser Al Shahrani,74;74
+P-45457:WC-2022,P-45457,WC-2022,T-63,Al-Shahrani,73,f1-only,1813;1814,Yasir Gharsan Al-Shahrani;Yasser Al-Shahrani,73;73
+P-45490:WC-2002,P-45490,WC-2002,T-31,Jancker,76,"avg(70,81)",863,Carsten Jancker,76
+P-45505:WC-2018,P-45505,WC-2018,T-66,Ljajić,79,"avg(79,78)",1931,Adem Ljajić,79
+P-45528:WC-2018,P-45528,WC-2018,T-04,Kruse,72,agree,107,Robbie Kruse,72
+P-45653:WC-2022,P-45653,WC-2022,T-38,Gholizadeh,73,agree,1070,Ali Gholizadeh,73
+P-45680:WC-2022,P-45680,WC-2022,T-79,Ben Slimane,67,agree,2333,Anis Ben Slimane,67
+P-45680:WC-2026,P-45680,WC-2026,T-79,Ben Slimane,67,agree,2350,Anis Slimane,67
+P-45712:WC-2002,P-45712,WC-2002,T-58,Ricardo,82,f1-only,1665,Ricardo,82
+P-45712:WC-2006,P-45712,WC-2006,T-58,Ricardo,82,agree,1679,Ricardo,82
+P-45956:WC-2002,P-45956,WC-2002,T-09,Silva,89,f2-only,231,Gilberto Silva,89
+P-45981:WC-2022,P-45981,WC-2022,T-44,Yamane,68,f2-only,1247,Miki Yamane,68
+P-46091:WC-2006,P-46091,WC-2006,T-44,Komano,73,f2-only,1181,Yuichi Komano,73
+P-46091:WC-2010,P-46091,WC-2010,T-44,Komano,74,f2-only,1196,Yuichi Komano,74
+P-46176:WC-2018,P-46176,WC-2018,T-44,Shoji,73,f2-only,1227,Gen Shoji,73
+P-46257:WC-2010,P-46257,WC-2010,T-01,Kadir,73,f2-only,8,Foued Kadir,73
+P-46325:WC-2006,P-46325,WC-2006,T-75,Benaglio,70,f2-only,2207,Diego Benaglio,70
+P-46461:WC-2022,P-46461,WC-2022,T-18,Petković,75,agree,564,Bruno Petković,75
+P-46497:WC-2002,P-46497,WC-2002,T-80,Belözoğlu,82,f2-only,2356,Emre Belözoğlu,82
+P-46519:WC-2002,P-46519,WC-2002,T-71,Lee,76,"avg(79,72)",2020,Lee Young-pyo,76
+P-46519:WC-2010,P-46519,WC-2010,T-71,Lee,74,agree,2045,Lee Young-pyo,74
+P-46553:WC-2018,P-46553,WC-2018,T-47,Boussoufa,77,f2-only,1354,Mbark Boussoufa,77
+P-46554:WC-2002,P-46554,WC-2002,T-84,Regueiro,64,agree,2460,Mario Regueiro,64
+P-46785:WC-2018,P-46785,WC-2018,T-84,Vecino,79,"avg(78,79)",2481,Matías Vecino,79
+P-46807:WC-2002,P-46807,WC-2002,T-44,Inamoto,73,agree,1167,Junichi Inamoto,73
+P-46807:WC-2006,P-46807,WC-2006,T-44,Inamoto,73,agree,1179,Junichi Inamoto,73
+P-46873:WC-2002,P-46873,WC-2002,T-57,Bąk,76,agree,1607,Jacek Bąk,76
+P-46898:WC-2022,P-46898,WC-2022,T-73,Pino,79,agree,2144,Yeremy Pino,79
+P-46913:WC-2022,P-46913,WC-2022,T-44,Asano,73,f2-only,1238,Takuma Asano,73
+P-46979:WC-2014,P-46979,WC-2014,T-31,Schürrle,80,agree,898,André Schürrle,80
+P-47081:WC-2010,P-47081,WC-2010,T-11,Bong,63,agree,325,Gaetan Bong,63
+P-47180:WC-2014,P-47180,WC-2014,T-09,Maxwell,77,agree,277,Maxwell,77
+P-47188:WC-2010,P-47188,WC-2010,T-33,Moras,68,agree,995,Vangelis Moras,68
+P-47321:WC-2022,P-47321,WC-2022,T-65,Koulibaly,85,"avg(87,82)",1893,Kalidou Koulibaly,85
+P-47321:WC-2026,P-47321,WC-2026,T-65,Koulibaly,82,agree,1907,Kalidou Koulibaly,82
+P-47335:WC-2006,P-47335,WC-2006,T-81,Husin,73,f2-only,2378,Andriy Husin,73
+P-47440:WC-2014,P-47440,WC-2014,T-71,Koo,76,agree,2056,Koo Ja-cheol,76
+P-47440:WC-2018,P-47440,WC-2018,T-71,Koo,76,f2-only,2070,Koo Ja-cheol,76
+P-47469:WC-2002,P-47469,WC-2002,T-25,Ibarra,62,f2-only,669,O. Ibarra,62
+P-47490:WC-2022,P-47490,WC-2022,T-47,Aguerd,80,agree,1364,Nayef Aguerd,80
+P-47490:WC-2026,P-47490,WC-2026,T-47,Aguerd,81,agree,1380,Nayef Aguerd,81
+P-47539:WC-2006,P-47539,WC-2006,T-38,Hashemian,81,agree,1036,Vahid Hashemian,81
+P-47677:WC-2022,P-47677,WC-2022,T-11,Fai,70,agree,359,Collins Fai,70
+P-47753:WC-2010,P-47753,WC-2010,T-73,Capdevila,80,agree,2130,Joan Capdevila,80
+P-47809:WC-2010,P-47809,WC-2010,T-71,Lee,62,agree,2055,Lee Seung-yeoul,62
+P-47815:WC-2026,P-47815,WC-2026,T-79,Skhiri,79,"avg(80,77)",2337,Ellyes Skhiri,79
+P-47851:WC-2018,P-47851,WC-2018,T-62,Kudryashov,74,"avg(73,74)",1768,Fedor Kudryashov,74
+P-47974:WC-2010,P-47974,WC-2010,T-11,Matip,71,f2-only,322,Joel Matip,71
+P-47983:WC-2002,P-47983,WC-2002,T-50,Ejide,65,f1-only,1479,Agustine Ejide,65
+P-47983:WC-2014,P-47983,WC-2014,T-50,Ejide,62,f2-only,1511,Austin Ejide,62
+P-48250:WC-2006,P-48250,WC-2006,T-67,Milošević,81,agree,1952,Savo Milošević,81
+P-48279:WC-2006,P-48279,WC-2006,T-63,Al-Montashari,70,f2-only,1787,Real-world Al-Montashari,70
+P-48288:WC-2002,P-48288,WC-2002,T-50,Akwuegbu,63,f1-only,1481,Benedict Akwuegbu,63
+P-48295:WC-2022,P-48295,WC-2022,T-47,Aboukhlal,73,"avg(71,74)",1371,Zakaria Aboukhlal,73
+P-48349:WC-2002,P-48349,WC-2002,T-63,Al-Shehri,63,f2-only,1777,F. Al-Shehri,63
+P-48433:WC-2018,P-48433,WC-2018,T-71,Ki,78,f2-only,2069,Ki Sung-yueng,78
+P-48455:WC-2010,P-48455,WC-2010,T-11,Enoh,73,agree,319,Eyong Enoh,73
+P-48480:WC-2018,P-48480,WC-2018,T-28,Rose,82,"avg(82,81)",752,Rose,82
+P-48550:WC-2002,P-48550,WC-2002,T-50,Ogbeche,74,agree,1475,Bartholomew Ogbeche,74
+P-48643:WC-2006,P-48643,WC-2006,T-58,Caneira,77,f2-only,1684,Marco Caneira,77
+P-48645:WC-2006,P-48645,WC-2006,T-41,Gilardino,87,agree,1107,Alberto Gilardino,87
+P-48737:WC-2018,P-48737,WC-2018,T-31,Süle,84,"avg(83,84)",902,Niklas Süle,84
+P-48772:WC-2006,P-48772,WC-2006,T-77,Adebayor,82,agree,2253,Sheyi Adebayor,82
+P-48887:WC-2022,P-48887,WC-2022,T-79,Mejbri,66,"avg(64,68)",2335,Hannibal Mejbri,66
+P-48887:WC-2026,P-48887,WC-2026,T-79,Mejbri,75,"avg(74,75)",2340,Hannibal Mejbri,75
+P-48903:WC-2022,P-48903,WC-2022,T-83,Turner,77,f1-only,2418;2419,Matthew Charles Turner;Matt Turner,77;77
+P-48903:WC-2026,P-48903,WC-2026,T-83,Turner,74,f1-only,2443;2445,Matthew Charles Turner;Matt Turner,74;74
+P-48910:WC-2002,P-48910,WC-2002,T-69,Osterc,74,f2-only,1982,Milan Osterc,74
+P-48946:WC-2002,P-48946,WC-2002,T-69,Galič,74,f2-only,1977,Galič,74
+P-48976:WC-2018,P-48976,WC-2018,T-37,Traustason,71,"avg(70,71)",1032,Arnór Traustason,71
+P-49090:WC-2022,P-49090,WC-2022,T-71,Bum-keun,70,agree,2089,Song Keun,70
+P-49090:WC-2026,P-49090,WC-2026,T-71,Bum-keun,74,agree,2102,Song Keun,74
+P-49127:WC-2006,P-49127,WC-2006,T-75,Grichting,72,"avg(74,70)",2202,Stéphane Grichting,72
+P-49265:WC-2006,P-49265,WC-2006,T-25,Valencia,60,agree,689,Luis Valencia,60
+P-49454:WC-2022,P-49454,WC-2022,T-22,Nelsson,76,"avg(75,77)",655,Victor Nelsson,76
+P-49485:WC-2002,P-49485,WC-2002,T-80,Çatkıç,64,f2-only,2369,Omer Çatkıç,64
+P-49610:WC-2002,P-49610,WC-2002,T-44,Morioka,57,f2-only,1171,Ryuzo Morioka,57
+P-49915:WC-2022,P-49915,WC-2022,T-12,Wotherspoon,67,"avg(67,66)",378,David Wotherspoon,67
+P-50012:WC-2006,P-50012,WC-2006,T-67,Koroman,78,f2-only,1954,Ognjen Koroman,78
+P-50104:WC-2018,P-50104,WC-2018,T-22,Eriksen,88,"avg(87,88)",636,Christian Eriksen,88
+P-50109:WC-2002,P-50109,WC-2002,T-55,Cáceres,69,"avg(65,73)",1573,Julio Cáceres,69
+P-50109:WC-2006,P-50109,WC-2006,T-55,Cáceres,69,agree,1585,Julio Cáceres,69
+P-50109:WC-2010,P-50109,WC-2010,T-55,Cáceres,73,agree,1597,Julio Cáceres,73
+P-50270:WC-2010,P-50270,WC-2010,T-32,Annan,76,agree,945,Anthony Annan,76
+P-50303:WC-2002,P-50303,WC-2002,T-65,Malick Diop,69,f2-only,1873,Pape Diop,69
+P-50318:WC-2006,P-50318,WC-2006,T-71,Kim,66,"avg(69,62)",2039,Kim Dae,66
+P-50326:WC-2010,P-50326,WC-2010,T-31,Jansen,79,"avg(77,80)",883,Marcell Jansen,79
+P-50398:WC-2022,P-50398,WC-2022,T-85,Ampadu,74,"avg(73,74)",2513,Ethan Ampadu,74
+P-50470:WC-2002,P-50470,WC-2002,T-18,Bokšić,75,f2-only,513,Alen Bokšić,75
+P-50519:WC-2002,P-50519,WC-2002,T-14,Sun,62,f2-only,414,Sun Jihai,62
+P-50522:WC-2006,P-50522,WC-2006,T-83,Howard,73,"avg(84,62)",2391,Tim Howard,73
+P-50522:WC-2010,P-50522,WC-2010,T-83,Howard,83,agree,2397,Tim Howard,83
+P-50534:WC-2002,P-50534,WC-2002,T-22,Tomasson,87,agree,617,Jon Tomasson,87
+P-50641:WC-2006,P-50641,WC-2006,T-32,Muntari,61,agree,936,Sulley Muntari,61
+P-50641:WC-2010,P-50641,WC-2010,T-32,Muntari,80,agree,942,Sulley Muntari,80
+P-50688:WC-2018,P-50688,WC-2018,T-47,Bounou,71,"avg(71,70)",1359,Yassine Bounou,71
+P-50688:WC-2022,P-50688,WC-2022,T-47,Bounou,84,agree,1360,Yassine Bounou,84
+P-50688:WC-2026,P-50688,WC-2026,T-47,Bounou,82,f1-only,1379,Yassine Bounouياسين بونو,82
+P-50718:WC-2006,P-50718,WC-2006,T-28,Carrick,80,agree,738,Michael Carrick,80
+P-50749:WC-2002,P-50749,WC-2002,T-17,Marín,65,f1-only,450,Luis Antonio Marin,65
+P-50787:WC-2002,P-50787,WC-2002,T-46,Campos,60,"avg(57,62)",1279,Jorge Campos,60
+P-50943:WC-2014,P-50943,WC-2014,T-28,Welbeck,78,agree,744,Danny Welbeck,78
+P-50943:WC-2018,P-50943,WC-2018,T-28,Welbeck,80,"avg(80,79)",759,Welbeck,80
+P-51100:WC-2010,P-51100,WC-2010,T-68,Čech,70,f1-only,1964,Marek Čech,70
+P-51118:WC-2022,P-51118,WC-2022,T-04,Behich,70,"avg(70,69)",125,Aziz Behich,70
+P-51201:WC-2018,P-51201,WC-2018,T-31,Rüdiger,82,agree,907,Antonio Rüdiger,82
+P-51266:WC-2006,P-51266,WC-2006,T-42,Gnanhouan,69,agree,1133,Gerard Gnanhouan,69
+P-51406:WC-2022,P-51406,WC-2022,T-04,McGree,71,agree,124,Riley McGree,71
+P-51440:WC-2006,P-51440,WC-2006,T-73,Juanito,84,f1-only,2121,Juanito,84
+P-51549:WC-2022,P-51549,WC-2022,T-11,Bassogog,74,agree,351,Christian Bassogog,74
+P-51633:WC-2010,P-51633,WC-2010,T-33,Chalkias,75,agree,991,Konstantinos Chalkias,75
+P-51689:WC-2022,P-51689,WC-2022,T-46,Funes Mori,75,f2-only,1334,Rogelio Mori,75
+P-51733:WC-2006,P-51733,WC-2006,T-25,Borja,70,f2-only,686,Felix Borja,70
+P-51785:WC-2002,P-51785,WC-2002,T-71,Kim,72,f2-only,2032,Kim Nam-il,72
+P-51894:WC-2014,P-51894,WC-2014,T-03,Gago,77,agree,57,Fernando Gago,77
+P-51960:WC-2018,P-51960,WC-2018,T-65,N'Doye,75,"avg(76,74)",1886,Doye,75
+P-51990:WC-2022,P-51990,WC-2022,T-32,Ati-Zigi,72,"avg(70,74)",964,Lawrence Ati-Zigi,72
+P-51990:WC-2026,P-51990,WC-2026,T-32,Ati-Zigi,73,agree,980,Lawrence Zigi,73
+P-52013:WC-2022,P-52013,WC-2022,T-47,Dari,69,agree,1377,Achraf Dari,69
+P-52099:WC-2002,P-52099,WC-2002,T-50,Opabunmi,68,f2-only,1478,Femi Opabunmi,68
+P-52217:WC-2014,P-52217,WC-2014,T-73,de Gea,83,agree,2136,David de Gea,83
+P-52362:WC-2010,P-52362,WC-2010,T-13,Pinto,74,f2-only,397,Miguel Pinto,74
+P-52437:WC-2006,P-52437,WC-2006,T-32,Shilla,60,f2-only,941,Illiasu Shilla,60
+P-52444:WC-2018,P-52444,WC-2018,T-54,Arroyo,66,f2-only,1549,Abdiel Arroyo,66
+P-52464:WC-2014,P-52464,WC-2014,T-08,Vranješ,64,f2-only,208,Ognjen Vranješ,64
+P-52510:WC-2010,P-52510,WC-2010,T-50,Martins,81,f1-only,1485;1486,Obafemi Martins;O. Martins,81;81
+P-52641:WC-2006,P-52641,WC-2006,T-79,Boumnijel,51,agree,2309,Ali Boumnijel,51
+P-52784:WC-2002,P-52784,WC-2002,T-46,Pérez,73,f1-only,1271,Óscar Pérez,73
+P-53024:WC-2006,P-53024,WC-2006,T-77,Erassa,63,f2-only,2263,Erassa,63
+P-53028:WC-2010,P-53028,WC-2010,T-55,Morel,73,agree,1598,Claudio Morel,73
+P-53035:WC-2014,P-53035,WC-2014,T-50,Agbim,62,f2-only,1510,Chigozie Agbim,62
+P-53048:WC-2018,P-53048,WC-2018,T-06,Witsel,82,agree,181,Axel Witsel,82
+P-53060:WC-2010,P-53060,WC-2010,T-35,Espinoza,63,"avg(61,65)",1015,Roger Espinoza,63
+P-53197:WC-2002,P-53197,WC-2002,T-11,Njanka,65,f1-only,311,Pierre Njanka,65
+P-53254:WC-2010,P-53254,WC-2010,T-84,Pérez,70,agree,2472,Diego Pérez,70
+P-53272:WC-2010,P-53272,WC-2010,T-44,Kawashima,74,f2-only,1195,Eiji Kawashima,74
+P-53272:WC-2018,P-53272,WC-2018,T-44,Kawashima,74,f2-only,1224,Eiji Kawashima,74
+P-53272:WC-2022,P-53272,WC-2022,T-44,Kawashima,72,f2-only,1241,Eiji Kawashima,72
+P-53282:WC-2022,P-53282,WC-2022,T-44,Endo,78,f2-only,1232,Wataru Endo,78
+P-53363:WC-2014,P-53363,WC-2014,T-35,Chávez,64,f2-only,1025,Osman Chávez,64
+P-53378:WC-2006,P-53378,WC-2006,T-55,Gómez,71,f2-only,1580,Derlis Gómez,71
+P-53385:WC-2018,P-53385,WC-2018,T-54,Cummings,66,agree,1547,Harold Cummings,66
+P-53448:WC-2002,P-53448,WC-2002,T-63,Al-Dokhi,63,f2-only,1772,Al-Dokhi,63
+P-53448:WC-2006,P-53448,WC-2006,T-63,Al-Dokhi,70,f2-only,1785,Ahmed Al-Dokhi,70
+P-53452:WC-2010,P-53452,WC-2010,T-11,Aboubakar,71,f2-only,323,Vincent Aboubakar,71
+P-53452:WC-2014,P-53452,WC-2014,T-11,Aboubakar,75,"avg(76,73)",330,Vincent Aboubakar,75
+P-53452:WC-2022,P-53452,WC-2022,T-11,Aboubakar,76,"avg(75,77)",348,Vincent Aboubakar,76
+P-53533:WC-2002,P-53533,WC-2002,T-30,Cissé,90,agree,783,Djibril Cissé,90
+P-53533:WC-2010,P-53533,WC-2010,T-30,Cissé,80,"avg(79,80)",806,Djibril Cissé,80
+P-53593:WC-2010,P-53593,WC-2010,T-11,Idrissou,71,agree,321,Mohamadou Idrissou,71
+P-53668:WC-2010,P-53668,WC-2010,T-48,de Jong,79,agree,1404,Nigel de Jong,79
+P-53668:WC-2014,P-53668,WC-2014,T-48,de Jong,78,agree,1412,Nigel de Jong,78
+P-53680:WC-2002,P-53680,WC-2002,T-62,Sennikov,70,"canonical-duplicate-avg(78,62)",1749;1754,Dmitry Sennikov;Dmitri Sennikov,78;62
+P-53694:WC-2018,P-53694,WC-2018,T-65,Gomis,72,"avg(73,70)",1890,Alfred Gomis,72
+P-53694:WC-2022,P-53694,WC-2022,T-65,Gomis,75,"avg(77,73)",1901,Alfred Gomis,75
+P-53723:WC-2002,P-53723,WC-2002,T-41,Toldo,92,agree,1095,Francesco Toldo,92
+P-53809:WC-2002,P-53809,WC-2002,T-25,Viteri,62,f2-only,670,Viteri,62
+P-53829:WC-2002,P-53829,WC-2002,T-57,Hajto,64,agree,1622,Tomasz Hajto,64
+P-53874:WC-2002,P-53874,WC-2002,T-18,Balaban,80,agree,507,Bosko Balaban,80
+P-53874:WC-2006,P-53874,WC-2006,T-18,Balaban,79,agree,524,Bosko Balaban,79
+P-53943:WC-2006,P-53943,WC-2006,T-58,Meira,87,agree,1674,Fernando Meira,87
+P-53957:WC-2022,P-53957,WC-2022,T-38,Ansarifard,73,f2-only,1071,Karim Ansarifard,73
+P-54013:WC-2014,P-54013,WC-2014,T-09,Paulinho,81,f1-only,270,Paulinho,81
+P-54036:WC-2014,P-54036,WC-2014,T-31,Höwedes,81,agree,897,Benedikt Höwedes,81
+P-54042:WC-2014,P-54042,WC-2014,T-09,Fred,79,f1-only,275,Fred,79
+P-54102:WC-2002,P-54102,WC-2002,T-69,Bulajič,74,f2-only,1981,Bulajič,74
+P-54137:WC-2018,P-54137,WC-2018,T-47,Carcela,76,"avg(77,74)",1355,Mehdi Carcela-Gonzalez,76
+P-54138:WC-2018,P-54138,WC-2018,T-44,Haraguchi,74,f2-only,1223,Genki Haraguchi,74
+P-54211:WC-2022,P-54211,WC-2022,T-66,Lazović,77,"avg(77,76)",1944,Darko Lazović,77
+P-54298:WC-2002,P-54298,WC-2002,T-44,Kawaguchi,59,agree,1168,Yoshikatsu Kawaguchi,59
+P-54298:WC-2010,P-54298,WC-2010,T-44,Kawaguchi,74,f2-only,1201,Yoshikatsu Kawaguchi,74
+P-54429:WC-2002,P-54429,WC-2002,T-84,Elduayen,75,f2-only,2452,Adrián Elduayen,75
+P-54461:WC-2018,P-54461,WC-2018,T-30,Tolisso,82,agree,829,Corentin Tolisso,82
+P-54506:WC-2022,P-54506,WC-2022,T-65,Jakobs,74,f2-only,1904,Ismail Jakobs,74
+P-54517:WC-2022,P-54517,WC-2022,T-30,Tchouaméni,83,"avg(82,83)",839,Aurélien Tchouaméni,83
+P-54694:WC-2010,P-54694,WC-2010,T-41,Criscito,77,agree,1120,Domenico Criscito,77
+P-54713:WC-2006,P-54713,WC-2006,T-75,Behrami,70,agree,2205,Valon Behrami,70
+P-54713:WC-2010,P-54713,WC-2010,T-75,Behrami,77,agree,2208,Valon Behrami,77
+P-54768:WC-2006,P-54768,WC-2006,T-79,Ben Saada,51,agree,2308,Chaouki Ben Saada,51
+P-54804:WC-2010,P-54804,WC-2010,T-35,Suazo,79,agree,1002,David Suazo,79
+P-54903:WC-2006,P-54903,WC-2006,T-55,Cabañas,73,agree,1579,Salvador Cabañas,73
+P-55017:WC-2010,P-55017,WC-2010,T-68,Kuciak,69,f2-only,1968,Dušan Kuciak,69
+P-55140:WC-2022,P-55140,WC-2022,T-65,Kouyaté,76,"avg(77,74)",1899,Cheikhou Kouyaté,76
+P-55298:WC-2022,P-55298,WC-2022,T-65,Sabaly,77,"avg(76,77)",1898,Youssouf Sabaly,77
+P-55321:WC-2006,P-55321,WC-2006,T-58,Costa,73,"avg(69,77)",1686,Ricardo Costa,73
+P-55367:WC-2022,P-55367,WC-2022,T-11,Tolo,71,"avg(70,71)",357,Nouhou Tolo,71
+P-55404:WC-2010,P-55404,WC-2010,T-68,Pekarík,73,"avg(72,73)",1960,Peter Pekarík,73
+P-55453:WC-2014,P-55453,WC-2014,T-71,Hong,71,agree,2058,Hong Jeong-ho,71
+P-55504:WC-2002,P-55504,WC-2002,T-31,Neuville,73,agree,867,Oliver Neuville,73
+P-55504:WC-2006,P-55504,WC-2006,T-31,Neuville,78,agree,874,Oliver Neuville,78
+P-55511:WC-2006,P-55511,WC-2006,T-41,Nesta,90,agree,1104,Alessandro Nesta,90
+P-55518:WC-2002,P-55518,WC-2002,T-63,Al-Jahani,63,f2-only,1773,Al-Jahani,63
+P-55538:WC-2010,P-55538,WC-2010,T-83,Torres,72,agree,2405,José Torres,72
+P-55581:WC-2006,P-55581,WC-2006,T-42,Romaric,69,agree,1134,Romaric,69
+P-55739:WC-2006,P-55739,WC-2006,T-38,Talebloo,77,f2-only,1046,Vahid Talebloo,77
+P-55762:WC-2014,P-55762,WC-2014,T-06,Bossut,71,"avg(71,70)",173,Sammy Bossut,71
+P-55781:WC-2006,P-55781,WC-2006,T-17,Saborío,72,f1-only,452;453,Álvaro Saborío;to Saborío,72;72
+P-55784:WC-2006,P-55784,WC-2006,T-58,Santos,68,"avg(58,77)",1687,Paulo Santos,68
+P-55809:WC-2014,P-55809,WC-2014,T-08,Višća,64,f2-only,209,Edin Višća,64
+P-55821:WC-2022,P-55821,WC-2022,T-12,Adekugbe,70,agree,375,Samuel Adekugbe,70
+P-55965:WC-2026,P-55965,WC-2026,T-48,de Roon,81,agree,1437,Marten de Roon,81
+P-56006:WC-2006,P-56006,WC-2006,T-75,Wicky,76,agree,2196,Raphael Wicky,76
+P-56182:WC-2022,P-56182,WC-2022,T-22,Nørgaard,76,agree,656,Christian Nørgaard,76
+P-56280:WC-2018,P-56280,WC-2018,T-28,Cahill,83,"avg(84,81)",751,Gary Cahill,83
+P-56293:WC-2002,P-56293,WC-2002,T-79,El-Jaouachi,62,f2-only,2283,Ahmed Jaouachi,62
+P-56297:WC-2018,P-56297,WC-2018,T-18,Lovren,81,"avg(81,80)",543,Dejan Lovren,81
+P-56297:WC-2022,P-56297,WC-2022,T-18,Lovren,78,agree,560,Dejan Lovren,78
+P-56347:WC-2026,P-56347,WC-2026,T-25,Galíndez,74,agree,706,Hernan Galíndez,74
+P-56385:WC-2002,P-56385,WC-2002,T-03,Burgos,76,f2-only,36,German Burgos,76
+P-56398:WC-2018,P-56398,WC-2018,T-44,Sakai,77,f2-only,1216,Hiroki Sakai,77
+P-56503:WC-2022,P-56503,WC-2022,T-85,Roberts,75,"avg(75,74)",2512,Connor Roberts,75
+P-56532:WC-2010,P-56532,WC-2010,T-03,Burdisso,77,agree,48,Nicolas Burdisso,77
+P-56553:WC-2006,P-56553,WC-2006,T-81,Rebrov,73,f2-only,2382,Sergei Rebrov,73
+P-56584:WC-2006,P-56584,WC-2006,T-81,Shelayev,73,f2-only,2384,Oleh Shelayev,73
+P-56613:WC-2002,P-56613,WC-2002,T-17,Wright,70,"avg(71,69)",445,Mauricio Wright,70
+P-56626:WC-2002,P-56626,WC-2002,T-71,Seol,73,"canonical-duplicate-avg(74,72)",2024;2031,Seol K.H.;Seol Ki-hyeon,74;72
+P-56718:WC-2002,P-56718,WC-2002,T-74,Mjällby,80,"avg(83,77)",2149,Johan Mjällby,80
+P-56778:WC-2002,P-56778,WC-2002,T-60,Finnan,78,"avg(77,79)",1737,Steve Finnan,78
+P-56839:WC-2022,P-56839,WC-2022,T-25,Méndez,69,f2-only,701,Jhegson Méndez,69
+P-56868:WC-2022,P-56868,WC-2022,T-75,Cömert,73,"avg(72,73)",2236,Eray Cömert,73
+P-56897:WC-2006,P-56897,WC-2006,T-44,Takahara,74,agree,1177,Naohiro Takahara,74
+P-56998:WC-2006,P-56998,WC-2006,T-38,Khatibi,78,f2-only,1040,Rasoul Khatibi,78
+P-57029:WC-2022,P-57029,WC-2022,T-83,Zimmerman,76,agree,2420,Walker Zimmerman,76
+P-57058:WC-2010,P-57058,WC-2010,T-49,Reid,76,f2-only,1448,Winston Reid,76
+P-57087:WC-2022,P-57087,WC-2022,T-48,Janssen,73,agree,1433,Vincent Janssen,73
+P-57100:WC-2022,P-57100,WC-2022,T-59,Alaaeldin,65,f2-only,1726,Ahmed Alaaeldin,65
+P-57150:WC-2022,P-57150,WC-2022,T-17,Chacón,62,f2-only,501,Daniel Chacón,62
+P-57240:WC-2010,P-57240,WC-2010,T-30,Anelka,85,agree,797,Nicolas Anelka,85
+P-57248:WC-2014,P-57248,WC-2014,T-41,Bonucci,79,agree,1124,Leonardo Bonucci,79
+P-57284:WC-2002,P-57284,WC-2002,T-60,Carsley,71,"avg(72,70)",1745,Lee Carsley,71
+P-57303:WC-2022,P-57303,WC-2022,T-79,Hassen,68,f2-only,2331,Mouez Hassen,68
+P-57309:WC-2006,P-57309,WC-2006,T-77,Salifou,57,f1-only,2269;2270,Mustapha Salifou;Moustapha Salifou,57;57
+P-57338:WC-2002,P-57338,WC-2002,T-14,Qu,63,f2-only,404,Qu Bo,63
+P-57401:WC-2022,P-57401,WC-2022,T-30,Rabiot,81,"avg(80,82)",843,Adrien Rabiot,81
+P-57447:WC-2006,P-57447,WC-2006,T-28,Carson,75,agree,740,Scott Carson,75
+P-57476:WC-2006,P-57476,WC-2006,T-57,Fabiański,52,agree,1635,Łukasz Fabiański,52
+P-57494:WC-2018,P-57494,WC-2018,T-57,Błaszczykowski,77,"avg(76,77)",1637,Jakub Błaszczykowski,77
+P-57529:WC-2006,P-57529,WC-2006,T-41,Perrotta,81,agree,1110,Simone Perrotta,81
+P-57586:WC-2022,P-57586,WC-2022,T-44,Ueda,70,f2-only,1244,Ayase Ueda,70
+P-57588:WC-2002,P-57588,WC-2002,T-31,Ramelow,76,agree,864,Carsten Ramelow,76
+P-57595:WC-2002,P-57595,WC-2002,T-70,Arendse,70,f2-only,1987,Andre Arendse,70
+P-57606:WC-2010,P-57606,WC-2010,T-68,Škrtel,82,agree,1956,Martin Škrtel,82
+P-57615:WC-2022,P-57615,WC-2022,T-22,Delaney,81,"avg(81,80)",652,Thomas Delaney,81
+P-57626:WC-2002,P-57626,WC-2002,T-70,Vonk,60,"avg(58,62)",1997,Hans Vonk,60
+P-57631:WC-2002,P-57631,WC-2002,T-58,Gomes,82,agree,1664,Nuno Gomes,82
+P-57722:WC-2006,P-57722,WC-2006,T-17,Bolaños,68,f2-only,456,to Bolaños,68
+P-57722:WC-2014,P-57722,WC-2014,T-17,Bolaños,70,f1-only,476,Christian Bolaños,70
+P-57722:WC-2018,P-57722,WC-2018,T-17,Bolaños,71,agree,484,Christian Bolaños,71
+P-57865:WC-2014,P-57865,WC-2014,T-46,Jiménez,73,agree,1308,Raul Jiménez,73
+P-57903:WC-2022,P-57903,WC-2022,T-48,Lang,78,f1-only,1428;1429,Noa Noëll Lang;N. Lang,78;78
+P-57903:WC-2026,P-57903,WC-2026,T-48,Lang,80,agree,1439,Noa Lang,80
+P-57906:WC-2002,P-57906,WC-2002,T-30,Micoud,85,agree,784,Johan Micoud,85
+P-57982:WC-2006,P-57982,WC-2006,T-58,Pauleta,85,agree,1676,Pauleta,85
+P-58061:WC-2022,P-58061,WC-2022,T-12,Cavallini,71,agree,372,Lucas Cavallini,71
+P-58212:WC-2002,P-58212,WC-2002,T-80,Şükür,81,agree,2358,Hakan Şükür,81
+P-58363:WC-2018,P-58363,WC-2018,T-66,Živković,78,"avg(77,79)",1933,Andrija Živković,78
+P-58383:WC-2014,P-58383,WC-2014,T-01,Mandi,74,"avg(75,72)",17,Aissa Mandi,74
+P-58415:WC-2010,P-58415,WC-2010,T-30,Diarra,77,"avg(80,74)",807,Alou Diarra,77
+P-58420:WC-2022,P-58420,WC-2022,T-18,Gvardiol,82,"avg(81,82)",554,Josko Gvardiol,82
+P-58476:WC-2014,P-58476,WC-2014,T-83,Guzan,78,agree,2408,Brad Guzan,78
+P-58634:WC-2006,P-58634,WC-2006,T-42,Yapi Yapo,77,agree,1131,Gilles Yapo,77
+P-58665:WC-2002,P-58665,WC-2002,T-65,Cissokho,65,f2-only,1876,Kalidou Cissokho,65
+P-58669:WC-2018,P-58669,WC-2018,T-17,Venegas,68,"avg(67,68)",489,Johan Venegas,68
+P-58669:WC-2022,P-58669,WC-2022,T-17,Venegas,67,f2-only,498,Johan Venegas,67
+P-58692:WC-2018,P-58692,WC-2018,T-71,Hwang,71,f2-only,2075,Hwang Hee-chan,71
+P-58692:WC-2026,P-58692,WC-2026,T-71,Hwang,75,f2-only,2101,Hwang Chan,75
+P-58731:WC-2006,P-58731,WC-2006,T-77,Forson,67,f2-only,2258,Forson,67
+P-58755:WC-2018,P-58755,WC-2018,T-22,Schmeichel,83,agree,637,Kasper Schmeichel,83
+P-58907:WC-2022,P-58907,WC-2022,T-44,Dōan,77,f2-only,1234,Ritsu Dōan,77
+P-58907:WC-2026,P-58907,WC-2026,T-44,Dōan,82,agree,1250,Ritsu Dōan,82
+P-58954:WC-2002,P-58954,WC-2002,T-79,Bejaoui,62,f2-only,2282,Bejaoui,62
+P-59023:WC-2010,P-59023,WC-2010,T-66,Obradović,74,"avg(73,75)",1924,Ivan Obradović,74
+P-59033:WC-2022,P-59033,WC-2022,T-47,Boufal,77,"avg(77,76)",1367,Sofiane Boufal,77
+P-59039:WC-2006,P-59039,WC-2006,T-04,Aloisi,66,agree,90,John Aloisi,66
+P-59138:WC-2010,P-59138,WC-2010,T-84,Cavani,77,agree,2463,Edinson Cavani,77
+P-59147:WC-2014,P-59147,WC-2014,T-01,Djabou,72,f2-only,21,Abdelmoumene Djabou,72
+P-59199:WC-2014,P-59199,WC-2014,T-01,Slimani,74,agree,16,Islam Slimani,74
+P-59270:WC-2010,P-59270,WC-2010,T-33,Kapetanos,72,f2-only,994,Pantelis Kapetanos,72
+P-59298:WC-2002,P-59298,WC-2002,T-70,McCarthy,70,f2-only,1988,Benni McCarthy,70
+P-59301:WC-2010,P-59301,WC-2010,T-35,Pavón,69,f2-only,1009,Carlos Pavón,69
+P-59303:WC-2022,P-59303,WC-2022,T-11,Castelletto,74,agree,350,Jean-Charles Castelletto,74
+P-59324:WC-2006,P-59324,WC-2006,T-28,James,85,agree,737,David James,85
+P-59372:WC-2002,P-59372,WC-2002,T-25,Porozo,69,f2-only,663,A. Porozo,69
+P-59412:WC-2002,P-59412,WC-2002,T-60,Harte,78,"avg(79,76)",1738,Ian Harte,78
+P-59609:WC-2022,P-59609,WC-2022,T-22,Wind,76,agree,658,Jonas Wind,76
+P-59683:WC-2002,P-59683,WC-2002,T-11,Kameni,74,agree,305,Carlos Kameni,74
+P-59683:WC-2010,P-59683,WC-2010,T-11,Kameni,81,agree,313,Carlos Kameni,81
+P-59727:WC-2022,P-59727,WC-2022,T-04,Degenek,72,agree,121,Milos Degenek,72
+P-59802:WC-2014,P-59802,WC-2014,T-84,Silva,71,agree,2477,Martín Silva,71
+P-59837:WC-2022,P-59837,WC-2022,T-28,Rashford,82,"avg(81,83)",772,Marcus Rashford,82
+P-59837:WC-2026,P-59837,WC-2026,T-28,Rashford,81,"avg(80,82)",781,Marcus Rashford,81
+P-59901:WC-2006,P-59901,WC-2006,T-38,Nekounam,78,f2-only,1041,Javad Nekounam,78
+P-59901:WC-2014,P-59901,WC-2014,T-38,Nekounam,71,f2-only,1056,Javad Nekounam,71
+P-59950:WC-2018,P-59950,WC-2018,T-16,Borja,77,f2-only,428,Miguel Borja,77
+P-59970:WC-2006,P-59970,WC-2006,T-18,Didulica,70,agree,528,Joseph Didulica,70
+P-60008:WC-2006,P-60008,WC-2006,T-04,Chipperfield,75,agree,84,Scott Chipperfield,75
+P-60304:WC-2010,P-60304,WC-2010,T-49,Paston,76,f2-only,1446,Mark Paston,76
+P-60422:WC-2006,P-60422,WC-2006,T-77,Obilalé,63,f2-only,2265,Kodjovi Obilalé,63
+P-60541:WC-2010,P-60541,WC-2010,T-03,Romero,77,agree,49,Sergio Romero,77
+P-60541:WC-2014,P-60541,WC-2014,T-03,Romero,74,"avg(72,76)",60,Sergio Romero,74
+P-60562:WC-2002,P-60562,WC-2002,T-71,Lee,72,f2-only,2028,Lee Eul-yong,72
+P-60564:WC-2006,P-60564,WC-2006,T-38,Kazemian,77,f2-only,1043,Javad Kazemian,77
+P-60597:WC-2002,P-60597,WC-2002,T-83,McBride,77,"avg(77,76)",2388,Brian McBride,77
+P-60652:WC-2018,P-60652,WC-2018,T-30,Pavard,75,"avg(72,77)",831,Benjamin Pavard,75
+P-60652:WC-2022,P-60652,WC-2022,T-30,Pavard,81,"avg(79,82)",844,Benjamin Pavard,81
+P-60675:WC-2006,P-60675,WC-2006,T-81,Tymoshchuk,75,agree,2377,Anatoliy Tymoshchuk,75
+P-60686:WC-2002,P-60686,WC-2002,T-14,Du,63,f2-only,400,Du Wei,63
+P-60766:WC-2002,P-60766,WC-2002,T-11,Tchato,75,agree,304,Bill Tchato,75
+P-60769:WC-2014,P-60769,WC-2014,T-41,Perin,77,agree,1128,Mattia Perin,77
+P-60945:WC-2006,P-60945,WC-2006,T-83,Olsen,66,"avg(69,62)",2394,Ben Olsen,66
+P-61051:WC-2014,P-61051,WC-2014,T-03,Garay,82,agree,53,Ezequiel Garay,82
+P-61068:WC-2002,P-61068,WC-2002,T-58,Jorge,69,f1-only,1672,Rui Jorge,69
+P-61229:WC-2006,P-61229,WC-2006,T-25,Reasco,78,f2-only,677,Neicer Reasco,78
+P-61256:WC-2018,P-61256,WC-2018,T-04,Juric,71,"avg(72,70)",109,Tomi Juric,71
+P-61292:WC-2010,P-61292,WC-2010,T-44,Endō,74,f2-only,1194,Yasuhito Endō,74
+P-61478:WC-2002,P-61478,WC-2002,T-80,Reçber,82,f2-only,2357,Rustu Reçber,82
+P-61496:WC-2018,P-61496,WC-2018,T-63,Al-Mayouf,70,f2-only,1807,Abdullah Al Mayoof,70
+P-61550:WC-2010,P-61550,WC-2010,T-71,Kim,72,f2-only,2049,Kim Dong-jin,72
+P-61610:WC-2010,P-61610,WC-2010,T-70,Walters,65,f2-only,2009,Shu-Aib Walters,65
+P-61649:WC-2010,P-61649,WC-2010,T-71,Oh,65,agree,2054,Oh Beom-seok,65
+P-61666:WC-2002,P-61666,WC-2002,T-18,Kovač,78,agree,509,Robert Kovač,78
+P-61670:WC-2006,P-61670,WC-2006,T-79,Namouchi,64,agree,2299,Hamed Namouchi,64
+P-61684:WC-2006,P-61684,WC-2006,T-75,Frei,83,agree,2192,Alexander Frei,83
+P-61810:WC-2022,P-61810,WC-2022,T-06,De Ketelaere,78,agree,189,Charles De Ketelaere,78
+P-61813:WC-2018,P-61813,WC-2018,T-57,Jędrzejczyk,74,"avg(73,74)",1639,Artur Jędrzejczyk,74
+P-61813:WC-2022,P-61813,WC-2022,T-57,Jędrzejczyk,69,agree,1658,Artur Jędrzejczyk,69
+P-61845:WC-2006,P-61845,WC-2006,T-02,Jamba,70,f2-only,26,Jamba,70
+P-61850:WC-2006,P-61850,WC-2006,T-79,Mnari,63,agree,2304,Jawhar Mnari,63
+P-61927:WC-2010,P-61927,WC-2010,T-09,Doni,79,f1-only,258,Doni,79
+P-61943:WC-2010,P-61943,WC-2010,T-70,Khumalo,66,agree,2004,Bongani Khumalo,66
+P-61949:WC-2022,P-61949,WC-2022,T-12,Pantemis,66,agree,379,James Pantemis,66
+P-61979:WC-2022,P-61979,WC-2022,T-04,Mabil,70,agree,126,Awer Mabil,70
+P-62033:WC-2018,P-62033,WC-2018,T-66,Jović,72,"avg(70,74)",1939,Luka Jović,72
+P-62033:WC-2022,P-62033,WC-2022,T-66,Jović,79,"avg(79,78)",1942,Luka Jović,79
+P-62162:WC-2018,P-62162,WC-2018,T-31,Rudy,81,agree,910,Sebastian Rudy,81
+P-62207:WC-2006,P-62207,WC-2006,T-74,Andersson,71,agree,2162,Daniel Andersson,71
+P-62364:WC-2018,P-62364,WC-2018,T-47,El Ahmadi,80,agree,1351,Karim El Ahmadi,80
+P-62437:WC-2006,P-62437,WC-2006,T-58,Valente,77,agree,1683,Nuno Valente,77
+P-62448:WC-2010,P-62448,WC-2010,T-50,Obasi,79,agree,1487,Chinedu Obasi,79
+P-62618:WC-2022,P-62618,WC-2022,T-11,Ntcham,72,f2-only,355,Jules Ntcham,72
+P-62769:WC-2018,P-62769,WC-2018,T-44,Sakai,74,f2-only,1226,Gotoku Sakai,74
+P-62808:WC-2002,P-62808,WC-2002,T-58,Costa,89,agree,1661,Rui Costa,89
+P-62854:WC-2022,P-62854,WC-2022,T-32,Issahaku,67,agree,971,Abdul Issahaku,67
+P-62858:WC-2022,P-62858,WC-2022,T-38,Jalali,68,f2-only,1077,Abolfazl Jalali,68
+P-62861:WC-2002,P-62861,WC-2002,T-18,Prosinečki,73,f2-only,518,Robert Prosinečki,73
+P-62952:WC-2022,P-62952,WC-2022,T-44,Kamada,80,f2-only,1231,Daichi Kamada,80
+P-62952:WC-2026,P-62952,WC-2026,T-44,Kamada,77,agree,1252,Daichi Kamada,77
+P-62977:WC-2002,P-62977,WC-2002,T-65,Fadiga,70,f2-only,1871,Khalilou Fadiga,70
+P-63068:WC-2006,P-63068,WC-2006,T-79,Chedli,70,agree,2294,Adel Chedli,70
+P-63089:WC-2002,P-63089,WC-2002,T-80,Kerimoğlu,74,agree,2363,Tugay Kerimoğlu,74
+P-63129:WC-2006,P-63129,WC-2006,T-04,Grella,70,agree,89,Vince Grella,70
+P-63129:WC-2010,P-63129,WC-2010,T-04,Grella,72,agree,93,Vincenzo Grella,72
+P-63312:WC-2014,P-63312,WC-2014,T-75,Sommer,79,agree,2217,Yann Sommer,79
+P-63363:WC-2018,P-63363,WC-2018,T-06,Fellaini,79,agree,183,Marouane Fellaini,79
+P-63370:WC-2014,P-63370,WC-2014,T-32,Acquah,72,agree,955,Afriyie Acquah,72
+P-63618:WC-2006,P-63618,WC-2006,T-25,Benítez,70,f2-only,685,Christian Benítez,70
+P-63620:WC-2018,P-63620,WC-2018,T-28,Lingard,81,"avg(78,83)",755,Jesse Lingard,81
+P-63673:WC-2014,P-63673,WC-2014,T-31,Götze,85,agree,891,Mario Götze,85
+P-63673:WC-2022,P-63673,WC-2022,T-31,Götze,81,agree,917,Mario Götze,81
+P-63796:WC-2006,P-63796,WC-2006,T-57,Jop,65,f2-only,1633,Mariusz Jop,65
+P-63856:WC-2006,P-63856,WC-2006,T-48,Vennegoor of Hesselink,74,f2-only,1390,Jan Hesselink,74
+P-63865:WC-2018,P-63865,WC-2018,T-17,Smith,66,f2-only,491,Ian Smith,66
+P-63923:WC-2022,P-63923,WC-2022,T-11,Gouet,68,agree,361,Samuel Gouet,68
+P-63935:WC-2002,P-63935,WC-2002,T-79,Zitouni,63,f2-only,2280,Tunisian Zitouni,63
+P-63942:WC-2006,P-63942,WC-2006,T-73,Salgado,87,agree,2117,Michel Salgado,87
+P-63951:WC-2018,P-63951,WC-2018,T-58,Martins,81,agree,1702,Gelson Martins,81
+P-64049:WC-2014,P-64049,WC-2014,T-06,Vertonghen,82,agree,167,Jan Vertonghen,82
+P-64049:WC-2018,P-64049,WC-2018,T-06,Vertonghen,85,agree,179,Jan Vertonghen,85
+P-64056:WC-2022,P-64056,WC-2022,T-44,Soma,62,f2-only,1249,Yuki Soma,62
+P-64104:WC-2014,P-64104,WC-2014,T-50,Yobo,74,agree,1500,Joseph Yobo,74
+P-64125:WC-2018,P-64125,WC-2018,T-47,Belhanda,81,"avg(81,80)",1349,Younes Belhanda,81
+P-64146:WC-2006,P-64146,WC-2006,T-38,Enayati,77,f2-only,1042,Reza Enayati,77
+P-64261:WC-2022,P-64261,WC-2022,T-57,Grosicki,73,agree,1652,Kamil Grosicki,73
+P-64299:WC-2022,P-64299,WC-2022,T-46,Gutiérrez,76,agree,1330,Erick Gutiérrez,76
+P-64344:WC-2010,P-64344,WC-2010,T-48,Huntelaar,81,"avg(82,80)",1400,Klaas-Jan Huntelaar,81
+P-64344:WC-2014,P-64344,WC-2014,T-48,Huntelaar,84,agree,1409,Klaas-Jan Huntelaar,84
+P-64348:WC-2010,P-64348,WC-2010,T-73,Piqué,82,agree,2129,Gerard Piqué,82
+P-64353:WC-2022,P-64353,WC-2022,T-18,Majer,80,"avg(80,79)",557,Lovro Majer,80
+P-64372:WC-2002,P-64372,WC-2002,T-84,Abreu,67,agree,2459,Sebastián Abreu,67
+P-64377:WC-2002,P-64377,WC-2002,T-09,Marcos,93,agree,229,Marcos,93
+P-64438:WC-2022,P-64438,WC-2022,T-48,Aké,79,"avg(78,79)",1424,Nathan Aké,79
+P-64551:WC-2022,P-64551,WC-2022,T-48,de Jong,79,agree,1427,Luuk de Jong,79
+P-64597:WC-2018,P-64597,WC-2018,T-62,Smolnikov,79,"avg(80,78)",1758,Igor Smolnikov,79
+P-64619:WC-2002,P-64619,WC-2002,T-69,Zahovič,76,agree,1974,Zlatko Zahovič,76
+P-64718:WC-2014,P-64718,WC-2014,T-71,Lee,68,"avg(74,62)",2065,Lee Yong,68
+P-64893:WC-2002,P-64893,WC-2002,T-50,Utaka,74,agree,1476,John Utaka,74
+P-64893:WC-2010,P-64893,WC-2010,T-50,Utaka,77,agree,1488,John Utaka,77
+P-64924:WC-2022,P-64924,WC-2022,T-79,Abdi,71,"avg(71,70)",2323,Ali Abdi,71
+P-64924:WC-2026,P-64924,WC-2026,T-79,Abdi,76,agree,2338,Ali Abdi,76
+P-64961:WC-2002,P-64961,WC-2002,T-44,Hattori,57,f2-only,1170,Toshihiro Hattori,57
+P-65059:WC-2002,P-65059,WC-2002,T-70,Mukansi,62,f2-only,1996,Mukansi,62
+P-65108:WC-2002,P-65108,WC-2002,T-31,Jeremies,74,agree,866,Jens Jeremies,74
+P-65182:WC-2018,P-65182,WC-2018,T-18,Kramarić,81,agree,542,Andrej Kramarić,81
+P-65182:WC-2022,P-65182,WC-2022,T-18,Kramarić,82,agree,555,Andrej Kramarić,82
+P-65298:WC-2002,P-65298,WC-2002,T-80,Penbe,77,agree,2360,Ergun Penbe,77
+P-65367:WC-2014,P-65367,WC-2014,T-18,Jelavić,75,agree,529,Nikica Jelavić,75
+P-65411:WC-2006,P-65411,WC-2006,T-44,Moniwa,73,f2-only,1183,Teruyuki Moniwa,73
+P-65425:WC-2018,P-65425,WC-2018,T-18,Vrsaljko,80,"avg(79,80)",544,Sime Vrsaljko,80
+P-65611:WC-2010,P-65611,WC-2010,T-70,Mokoena,72,agree,1999,Aaron Mokoena,72
+P-65777:WC-2022,P-65777,WC-2022,T-17,Vargas,71,f2-only,496,Juan Vargas,71
+P-65806:WC-2002,P-65806,WC-2002,T-70,Issa,62,f2-only,1993,Pierre Issa,62
+P-65896:WC-2014,P-65896,WC-2014,T-11,Moukandjo,69,f1-only,339,Benjamin Moukandjo,69
+P-65907:WC-2006,P-65907,WC-2006,T-74,Wilhelmsson,79,agree,2157,Christian Wilhelmsson,79
+P-65946:WC-2018,P-65946,WC-2018,T-22,Fischer,76,"avg(75,76)",643,Viktor Fischer,76
+P-65978:WC-2018,P-65978,WC-2018,T-50,Balogun,75,"avg(75,74)",1517,Leon Balogun,75
+P-65979:WC-2018,P-65979,WC-2018,T-18,Rakitić,87,agree,535,Ivan Rakitić,87
+P-66184:WC-2018,P-66184,WC-2018,T-66,Matić,84,"avg(83,84)",1929,Nemanja Matić,84
+P-66286:WC-2014,P-66286,WC-2014,T-08,Bičakčić,73,"avg(73,72)",203,Ermin Bičakčić,73
+P-66310:WC-2010,P-66310,WC-2010,T-51,Ri,71,f2-only,1523,Ri Jun-il,71
+P-66316:WC-2010,P-66316,WC-2010,T-32,Boateng,78,f2-only,944,Kevin-Prince Boateng,78
+P-66316:WC-2014,P-66316,WC-2014,T-32,Boateng,81,"avg(80,82)",952,Kevin-Prince Boateng,81
+P-66577:WC-2006,P-66577,WC-2006,T-79,Nefzi,64,f2-only,2302,Adel Nefzi,64
+P-66580:WC-2006,P-66580,WC-2006,T-03,Ustari,74,f2-only,43,Oscar Ustari,74
+P-66598:WC-2006,P-66598,WC-2006,T-48,Maduro,70,agree,1392,Hedwiges Maduro,70
+P-66636:WC-2018,P-66636,WC-2018,T-63,Al-Jassim,74,f1-only,1795;1797,Taisir Jabir Al Jassim;Taiseer Al Jassam,74;74
+P-66681:WC-2002,P-66681,WC-2002,T-57,Zieliński,74,agree,1608,Jacek Zieliński,74
+P-66906:WC-2014,P-66906,WC-2014,T-44,Gonda,67,f2-only,1212,Shuichi Gonda,67
+P-66906:WC-2022,P-66906,WC-2022,T-44,Gonda,68,f2-only,1248,Shuichi Gonda,68
+P-66908:WC-2006,P-66908,WC-2006,T-04,Moore,77,agree,83,Craig Moore,77
+P-67012:WC-2014,P-67012,WC-2014,T-11,Makoun,74,agree,335,Jean Makoun,74
+P-67035:WC-2022,P-67035,WC-2022,T-63,Al-Aqidi,59,"avg(58,59)",1834,Nawaf Al-Aqidi,59
+P-67035:WC-2026,P-67035,WC-2026,T-63,Al-Aqidi,72,agree,1841,Nawaf Al Aqidi,72
+P-67089:WC-2022,P-67089,WC-2022,T-04,Cummings,69,"avg(68,69)",129,Jason Cummings,69
+P-67127:WC-2022,P-67127,WC-2022,T-11,Onana,83,"avg(82,83)",344,André Onana,83
+P-67129:WC-2014,P-67129,WC-2014,T-30,Digne,75,agree,821,Lucas Digne,75
+P-67164:WC-2006,P-67164,WC-2006,T-57,Brożek,68,"avg(62,74)",1630,Brożek,68
+P-67168:WC-2002,P-67168,WC-2002,T-11,Womé,70,f1-only,307,Womé,70
+P-67176:WC-2018,P-67176,WC-2018,T-54,Ávila,66,f2-only,1552,Ricardo Ávila,66
+P-67189:WC-2014,P-67189,WC-2014,T-32,Adomah,71,agree,956,Albert Adomah,71
+P-67290:WC-2014,P-67290,WC-2014,T-35,Bengtson,62,agree,1026,Jerry Bengtson,62
+P-67297:WC-2018,P-67297,WC-2018,T-30,Umtiti,84,"avg(83,84)",826,Samuel Umtiti,84
+P-67414:WC-2014,P-67414,WC-2014,T-31,Mustafi,72,"avg(76,68)",899,Shkodran Mustafi,72
+P-67466:WC-2002,P-67466,WC-2002,T-11,Ndiefi,71,agree,306,Pius Ndiefi,71
+P-67516:WC-2026,P-67516,WC-2026,T-71,In-beom,77,agree,2098;2100,Hwang Beom;In-beom Hwang황인범,77;77
+P-67544:WC-2002,P-67544,WC-2002,T-31,Ziege,76,agree,865,Christian Ziege,76
+P-67615:WC-2014,P-67615,WC-2014,T-41,De Sciglio,77,"avg(77,76)",1127,Mattia De Sciglio,77
+P-67641:WC-2022,P-67641,WC-2022,T-66,Ilić,76,agree,1946,Ivan Ilić,76
+P-68024:WC-2002,P-68024,WC-2002,T-70,Molefe,62,agree,1991,Molefe,62
+P-68056:WC-2002,P-68056,WC-2002,T-14,Qi,62,f2-only,412,Qi Hong,62
+P-68060:WC-2026,P-68060,WC-2026,T-75,Freuler,81,agree,2242,Remo Freuler,81
+P-68125:WC-2010,P-68125,WC-2010,T-48,van der Vaart,84,"avg(83,84)",1398,Rafael van der Vaart,84
+P-68131:WC-2022,P-68131,WC-2022,T-83,Wright,70,"avg(68,71)",2429,Haji Wright,70
+P-68161:WC-2022,P-68161,WC-2022,T-79,Ghandri,67,f2-only,2334,Nader Ghandri,67
+P-68164:WC-2002,P-68164,WC-2002,T-28,Mills,77,"avg(74,79)",731,Danny Mills,77
+P-68329:WC-2002,P-68329,WC-2002,T-74,Jakobsson,74,"avg(70,77)",2155,Andreas Jakobsson,74
+P-68375:WC-2006,P-68375,WC-2006,T-58,Boa Morte,80,agree,1681,Luis Boa Morte,80
+P-68395:WC-2014,P-68395,WC-2014,T-48,Cillessen,78,agree,1411,Jasper Cillessen,78
+P-68430:WC-2022,P-68430,WC-2022,T-84,Torres,73,agree,2490,Facundo Torres,73
+P-68649:WC-2014,P-68649,WC-2014,T-09,Henrique,76,agree,278,N. Henrique,76
+P-68803:WC-2006,P-68803,WC-2006,T-30,Gallas,86,"avg(86,85)",794,William Gallas,86
+P-68833:WC-2002,P-68833,WC-2002,T-57,Murawski,71,f2-only,1618,Maciej Murawski,71
+P-68842:WC-2022,P-68842,WC-2022,T-38,Karimi,65,agree,1079,Ali Karimi,65
+P-68952:WC-2026,P-68952,WC-2026,T-83,McKennie,78,agree,2435,Weston McKennie,78
+P-69034:WC-2006,P-69034,WC-2006,T-79,Nafti,74,agree,2293,Mehdi Nafti,74
+P-69064:WC-2010,P-69064,WC-2010,T-33,Spyropoulos,73,agree,992,Nikos Spyropoulos,73
+P-69089:WC-2010,P-69089,WC-2010,T-04,Beauchamp,67,"avg(64,70)",95,Michael Beauchamp,67
+P-69192:WC-2018,P-69192,WC-2018,T-37,Guðmundsson,66,"avg(66,65)",1033,Albert Guðmundsson,66
+P-69217:WC-2022,P-69217,WC-2022,T-25,Reasco,66,agree,705,Djorkaeff Reasco,66
+P-69329:WC-2014,P-69329,WC-2014,T-48,Martins Indi,73,agree,1419,Bruno Martins Indi,73
+P-69430:WC-2006,P-69430,WC-2006,T-79,Jemmali,64,f2-only,2300,Jemmali,64
+P-69451:WC-2018,P-69451,WC-2018,T-30,Nzonzi,83,agree,827,Steven Nzonzi,83
+P-69530:WC-2014,P-69530,WC-2014,T-30,Sagna,80,agree,816,Bacary Sagna,80
+P-69594:WC-2010,P-69594,WC-2010,T-30,Mandanda,83,agree,800,Steve Mandanda,83
+P-69594:WC-2018,P-69594,WC-2018,T-30,Mandanda,82,agree,828,Steve Mandanda,82
+P-69594:WC-2022,P-69594,WC-2022,T-30,Mandanda,79,agree,848,Steve Mandanda,79
+P-69700:WC-2010,P-69700,WC-2010,T-48,van Bommel,80,agree,1402,Mark van Bommel,80
+P-69785:WC-2018,P-69785,WC-2018,T-31,Plattenhardt,78,agree,911,Marvin Plattenhardt,78
+P-69793:WC-2022,P-69793,WC-2022,T-79,Sliti,74,"avg(76,72)",2320,Naim Sliti,74
+P-69817:WC-2002,P-69817,WC-2002,T-60,Staunton,71,"avg(68,74)",1744,Steve Staunton,71
+P-69919:WC-2018,P-69919,WC-2018,T-06,Chadli,78,agree,184,Nacer Chadli,78
+P-70006:WC-2010,P-70006,WC-2010,T-50,Odemwingie,77,"avg(76,77)",1489,Peter Odemwingie,77
+P-70006:WC-2014,P-70006,WC-2014,T-50,Odemwingie,71,agree,1501,Peter Odemwingie,71
+P-70100:WC-2002,P-70100,WC-2002,T-18,Živković,80,agree,506,Boris Živković,80
+P-70237:WC-2014,P-70237,WC-2014,T-44,Aoyama,68,f2-only,1208,Toshihiro Aoyama,68
+P-70280:WC-2014,P-70280,WC-2014,T-48,de Vrij,75,agree,1418,Stefan de Vrij,75
+P-70515:WC-2022,P-70515,WC-2022,T-66,Babić,74,"avg(73,75)",1948,Srđan Babić,74
+P-70547:WC-2014,P-70547,WC-2014,T-06,Alderweireld,78,agree,169,Toby Alderweireld,78
+P-70547:WC-2018,P-70547,WC-2018,T-06,Alderweireld,86,"avg(86,85)",178,Toby Alderweireld,86
+P-70560:WC-2010,P-70560,WC-2010,T-01,Yebda,73,f2-only,10,Hassan Yebda,73
+P-70595:WC-2014,P-70595,WC-2014,T-28,Lambert,76,agree,745,Rickie Lambert,76
+P-70618:WC-2018,P-70618,WC-2018,T-28,Pickford,80,"avg(77,82)",757,Jordan Pickford,80
+P-70618:WC-2022,P-70618,WC-2022,T-28,Pickford,82,agree,771,Jordan Pickford,82
+P-70618:WC-2026,P-70618,WC-2026,T-28,Pickford,85,"avg(84,85)",779,Jordan Pickford,85
+P-70671:WC-2022,P-70671,WC-2022,T-84,Gómez,78,f1-only,2487;2488,Maximiliano Gómez González;Maxi Gómez,78;78
+P-70691:WC-2022,P-70691,WC-2022,T-06,Openda,75,agree,191,Ikoma Openda,75
+P-70715:WC-2018,P-70715,WC-2018,T-47,Ziyech,81,agree,1350,Hakim Ziyech,81
+P-70715:WC-2022,P-70715,WC-2022,T-47,Ziyech,83,agree,1362,Hakim Ziyech,83
+P-70793:WC-2010,P-70793,WC-2010,T-33,Seitaridis,77,agree,989,Giourkas Seitaridis,77
+P-70812:WC-2014,P-70812,WC-2014,T-17,Campbell,75,"avg(76,74)",469,Joel Campbell,75
+P-70812:WC-2018,P-70812,WC-2018,T-17,Campbell,77,"avg(77,76)",482,Joel Campbell,77
+P-70867:WC-2022,P-70867,WC-2022,T-83,Robinson,75,"avg(74,76)",2421,Antonee Robinson,75
+P-70867:WC-2026,P-70867,WC-2026,T-83,Robinson,82,agree,2431,Antonee Robinson,82
+P-70879:WC-2022,P-70879,WC-2022,T-59,Al-Sheeb,68,agree,1718,Saad Al-Sheeb,68
+P-71023:WC-2018,P-71023,WC-2018,T-47,Amrabat,74,agree,1356,Sofyan Amrabat,74
+P-71023:WC-2022,P-71023,WC-2022,T-47,Amrabat,77,"avg(76,78)",1368,Sofyan Amrabat,77
+P-71080:WC-2006,P-71080,WC-2006,T-83,Ching,67,"avg(72,62)",2393,Brian Ching,67
+P-71130:WC-2002,P-71130,WC-2002,T-73,Tristán,87,f1-only,2110,D. Tristan,87
+P-71236:WC-2010,P-71236,WC-2010,T-35,Sabillón,66,f2-only,1014,Mauricio Sabillón,66
+P-71308:WC-2014,P-71308,WC-2014,T-71,Lee,69,agree,2061,Lee Keun-ho,69
+P-71343:WC-2022,P-71343,WC-2022,T-03,Mac Allister,78,"avg(76,80)",76,Alexis Mac Allister,78
+P-71420:WC-2006,P-71420,WC-2006,T-28,Terry,90,agree,733,John Terry,90
+P-71525:WC-2018,P-71525,WC-2018,T-22,Krohn-Dehli,78,"avg(79,77)",641,Michael Krohn-Dehli,78
+P-71601:WC-2002,P-71601,WC-2002,T-06,Van Meir,70,f2-only,160,Eric Van Meir,70
+P-71633:WC-2014,P-71633,WC-2014,T-30,Sakho,81,agree,811,Mamadou Sakho,81
+P-71661:WC-2014,P-71661,WC-2014,T-73,Torres,79,f2-only,2140,Juan Torres,79
+P-71859:WC-2022,P-71859,WC-2022,T-31,Schlotterbeck,82,agree,916,Nico Schlotterbeck,82
+P-71875:WC-2022,P-71875,WC-2022,T-75,Fassnacht,76,agree,2231,Christian Fassnacht,76
+P-71875:WC-2026,P-71875,WC-2026,T-75,Fassnacht,72,agree,2250,Christian Fassnacht,72
+P-71995:WC-2006,P-71995,WC-2006,T-55,Valdez,77,agree,1576,Nelson Haedo,77
+P-72028:WC-2022,P-72028,WC-2022,T-58,Patrício,82,agree,1706,Rui Patrício,82
+P-72244:WC-2014,P-72244,WC-2014,T-03,Fernández,75,agree,59,Federico Fernández,75
+P-72363:WC-2022,P-72363,WC-2022,T-32,Bukari,72,f2-only,966,Osman Bukari,72
+P-72399:WC-2022,P-72399,WC-2022,T-12,Kaye,71,agree,370,Mark-Anthony Kaye,71
+P-72404:WC-2002,P-72404,WC-2002,T-22,Helveg,79,agree,622,Thomas Helveg,79
+P-72448:WC-2006,P-72448,WC-2006,T-79,Haggui,69,agree,2295,Karim Haggui,69
+P-72474:WC-2010,P-72474,WC-2010,T-51,Ri,71,f2-only,1524,Ri Kwang-chon,71
+P-72737:WC-2014,P-72737,WC-2014,T-11,Salli,68,agree,341,Edgar Salli,68
+P-72770:WC-2018,P-72770,WC-2018,T-66,Dmitrović,74,agree,1936,Marko Dmitrović,74
+P-72770:WC-2022,P-72770,WC-2022,T-66,Dmitrović,80,agree,1941,Marko Dmitrović,80
+P-72780:WC-2002,P-72780,WC-2002,T-79,Mhedhebi,62,f2-only,2286,Tunisian Mhedhebi,62
+P-72795:WC-2010,P-72795,WC-2010,T-30,Gourcuff,85,agree,798,Yoann Gourcuff,85
+P-72819:WC-2026,P-72819,WC-2026,T-54,Murillo,76,agree,1557,Michael Murillo,76
+P-72859:WC-2006,P-72859,WC-2006,T-28,Robinson,87,agree,735,Paul Robinson,87
+P-72916:WC-2014,P-72916,WC-2014,T-30,Evra,80,agree,818,Patrice Evra,80
+P-73160:WC-2010,P-73160,WC-2010,T-35,Palacios,71,f2-only,1005,Jerry Palacios,71
+P-73160:WC-2014,P-73160,WC-2014,T-35,Palacios,62,f2-only,1028,Jerry Palacios,62
+P-73169:WC-2002,P-73169,WC-2002,T-17,Castro,69,f2-only,446,C. Castro,69
+P-73455:WC-2022,P-73455,WC-2022,T-79,Talbi,68,"avg(67,69)",2330,Montassar Talbi,68
+P-73455:WC-2026,P-73455,WC-2026,T-79,Talbi,74,"avg(73,75)",2341,Montassar Talbi,74
+P-73468:WC-2010,P-73468,WC-2010,T-70,Josephs,65,"avg(64,65)",2005,Moeneeb Josephs,65
+P-73491:WC-2022,P-73491,WC-2022,T-46,Alvarado,74,f2-only,1336,Roberto Alvarado,74
+P-73520:WC-2014,P-73520,WC-2014,T-25,Ibarra,73,"avg(74,72)",690,Renato Ibarra,73
+P-73608:WC-2006,P-73608,WC-2006,T-74,Källström,79,agree,2156,Kim Källström,79
+P-73619:WC-2006,P-73619,WC-2006,T-03,Scaloni,76,agree,42,Lionel Scaloni,76
+P-73649:WC-2014,P-73649,WC-2014,T-41,Paletta,75,"avg(80,70)",1129,Gabriel Paletta,75
+P-73694:WC-2022,P-73694,WC-2022,T-25,Porozo,69,"avg(68,70)",700,Jackson Porozo,69
+P-73694:WC-2026,P-73694,WC-2026,T-25,Porozo,72,f2-only,707,Jackson Porozo,72
+P-73712:WC-2018,P-73712,WC-2018,T-03,Acuña,79,agree,64,Marcos Acuña,79
+P-73712:WC-2022,P-73712,WC-2022,T-03,Acuña,85,agree,66,Marcos Acuña,85
+P-73722:WC-2002,P-73722,WC-2002,T-58,Costa,81,agree,1666,Jorge Costa,81
+P-73924:WC-2010,P-73924,WC-2010,T-73,Alonso,84,agree,2127,Xabi Alonso,84
+P-73975:WC-2010,P-73975,WC-2010,T-68,Hamšík,81,agree,1957,Marek Hamšík,81
+P-74058:WC-2022,P-74058,WC-2022,T-84,Cáceres,72,f2-only,2492,Jose Cáceres,72
+P-74059:WC-2006,P-74059,WC-2006,T-38,Roudbarian,77,f2-only,1045,Hassan Roudbarian,77
+P-74065:WC-2002,P-74065,WC-2002,T-30,Dugarry,83,f2-only,785,Christophe Dugarry,83
+P-74071:WC-2018,P-74071,WC-2018,T-28,Walker,83,agree,750,Kyle Walker,83
+P-74278:WC-2014,P-74278,WC-2014,T-08,Lulić,79,agree,198,Senad Lulić,79
+P-74323:WC-2002,P-74323,WC-2002,T-25,Asencio,62,f2-only,668,Asencio,62
+P-74688:WC-2022,P-74688,WC-2022,T-09,Guimarães,82,"avg(81,83)",288,Bruno Guimarães,82
+P-74863:WC-2002,P-74863,WC-2002,T-84,Silva,81,agree,2447,Darío Silva,81
+P-74888:WC-2022,P-74888,WC-2022,T-85,Mepham,71,f2-only,2517,Chris Mepham,71
+P-74894:WC-2022,P-74894,WC-2022,T-11,Wooh,69,"avg(68,70)",360,Christopher Wooh,69
+P-74981:WC-2002,P-74981,WC-2002,T-69,Čeh,75,agree,1975,Nastja Čeh,75
+P-75090:WC-2018,P-75090,WC-2018,T-16,Izquierdo,80,"avg(78,82)",423,Jose Izquierdo,80
+P-75095:WC-2002,P-75095,WC-2002,T-69,Gajser,74,f2-only,1976,Gajser,74
+P-75104:WC-2006,P-75104,WC-2006,T-02,Delgado,70,f2-only,29,Norberto Delgado,70
+P-75191:WC-2010,P-75191,WC-2010,T-68,Saláta,69,f2-only,1970,Kornel Saláta,69
+P-75255:WC-2002,P-75255,WC-2002,T-71,Yoo,72,f2-only,2033,Yoo Sang-chul,72
+P-75377:WC-2002,P-75377,WC-2002,T-18,Stanić,75,f2-only,514,Mario Stanić,75
+P-75443:WC-2014,P-75443,WC-2014,T-11,Djeugoué,63,agree,342,Cedric Djeugoué,63
+P-75462:WC-2014,P-75462,WC-2014,T-41,Abate,77,agree,1126,Ignazio Abate,77
+P-75487:WC-2010,P-75487,WC-2010,T-75,Wölfli,71,f1-only,2212;2213,Marco Wölfli;Marco Woelfli,71;71
+P-75618:WC-2022,P-75618,WC-2022,T-59,Hassan,65,f1-only,1725,Yousef Hassan,65
+P-75628:WC-2022,P-75628,WC-2022,T-25,Cifuentes,73,agree,695,José Cifuentes,73
+P-75667:WC-2014,P-75667,WC-2014,T-44,Kakitani,68,f2-only,1209,Yoichiro Kakitani,68
+P-75785:WC-2014,P-75785,WC-2014,T-38,Hajsafi,71,f2-only,1055,Ehsan Hajsafi,71
+P-75813:WC-2002,P-75813,WC-2002,T-63,Al-Waked,63,f2-only,1775,Al-Waked,63
+P-75905:WC-2006,P-75905,WC-2006,T-25,Ambrosi,67,f2-only,687,Marlon Ambrossi,67
+P-75923:WC-2002,P-75923,WC-2002,T-65,Traoré,65,f2-only,1878,Amara Traoré,65
+P-75926:WC-2022,P-75926,WC-2022,T-75,Omlin,79,agree,2228,Jonas Omlin,79
+P-75959:WC-2014,P-75959,WC-2014,T-42,Djakpa,72,"avg(72,71)",1139,Constant Djakpa,72
+P-75995:WC-2014,P-75995,WC-2014,T-08,Misimović,78,f2-only,199,Zvjezdan Misimović,78
+P-76077:WC-2014,P-76077,WC-2014,T-16,Carbonero,73,agree,419,Carlos Carbonero,73
+P-76191:WC-2002,P-76191,WC-2002,T-83,Friedel,81,"avg(85,76)",2386,Brad Friedel,81
+P-76203:WC-2002,P-76203,WC-2002,T-62,Filimonov,62,f2-only,1751,Aleksandr Filimonov,62
+P-76271:WC-2014,P-76271,WC-2014,T-08,Fejzić,63,agree,210,Jasmin Fejzić,63
+P-76368:WC-2018,P-76368,WC-2018,T-54,Baloy,64,f2-only,1553,Felipe Baloy,64
+P-76375:WC-2002,P-76375,WC-2002,T-62,Pimenov,62,f2-only,1753,Ruslan Pimenov,62
+P-76468:WC-2022,P-76468,WC-2022,T-22,Skov,74,f2-only,660,Robert Skov,74
+P-76542:WC-2002,P-76542,WC-2002,T-50,Lawal,62,f1-only,1483,Garba Lawal,62
+P-76596:WC-2018,P-76596,WC-2018,T-44,Makino,71,f2-only,1230,Tomoaki Makino,71
+P-76678:WC-2002,P-76678,WC-2002,T-55,Arce,69,"avg(64,73)",1572,Francisco Arce,69
+P-76705:WC-2018,P-76705,WC-2018,T-16,Aguilar,75,agree,429,Abel Aguilar,75
+P-76769:WC-2006,P-76769,WC-2006,T-79,Jaïdi,74,agree,2292,Radhi Jaïdi,74
+P-76835:WC-2026,P-76835,WC-2026,T-65,Sarr,79,agree,1909,Pape Sarr,79
+P-76842:WC-2022,P-76842,WC-2022,T-28,Saka,82,agree,773,Bukayo Saka,82
+P-76842:WC-2026,P-76842,WC-2026,T-28,Saka,88,"avg(88,87)",778,Bukayo Saka,88
+P-76850:WC-2018,P-76850,WC-2018,T-54,Pérez,66,f2-only,1550,Blas Pérez,66
+P-76864:WC-2022,P-76864,WC-2022,T-63,Al-Abed,68,f2-only,1824,Nawaf Al-Abed,68
+P-77047:WC-2018,P-77047,WC-2018,T-46,dos Santos,79,agree,1317,Giovani dos Santos,79
+P-77063:WC-2014,P-77063,WC-2014,T-03,Mascherano,84,agree,52,Javier Mascherano,84
+P-77199:WC-2006,P-77199,WC-2006,T-63,Abdulghani,70,f2-only,1789,Real-world Abdulghani,70
+P-77224:WC-2018,P-77224,WC-2018,T-75,Xhaka,82,agree,2223,Granit Xhaka,82
+P-77224:WC-2026,P-77224,WC-2026,T-75,Xhaka,85,agree,2240,Granit Xhaka,85
+P-77238:WC-2010,P-77238,WC-2010,T-83,Cherundolo,72,agree,2403,Steve Cherundolo,72
+P-77249:WC-2010,P-77249,WC-2010,T-30,Clichy,83,agree,799,Gaël Clichy,83
+P-77257:WC-2018,P-77257,WC-2018,T-37,Rúnarsson,65,"avg(64,66)",1035,Rúnar Rúnarsson,65
+P-77277:WC-2010,P-77277,WC-2010,T-44,Nakamura,79,"avg(81,77)",1189,Shunsuke Nakamura,79
+P-77301:WC-2018,P-77301,WC-2018,T-79,Srarfi,68,agree,2315,Bassem Srarfi,68
+P-77402:WC-2022,P-77402,WC-2022,T-83,Morris,72,"avg(71,72)",2427,Jordan Morris,72
+P-77419:WC-2014,P-77419,WC-2014,T-46,Aquino,73,agree,1307,Javier Aquino,73
+P-77467:WC-2006,P-77467,WC-2006,T-46,Méndez,63,agree,1291,Mario Méndez,63
+P-77489:WC-2014,P-77489,WC-2014,T-46,Peña,75,agree,1303,Carlos Peña,75
+P-77553:WC-2014,P-77553,WC-2014,T-75,Fernandes,73,agree,2219,Gelson Fernandes,73
+P-77619:WC-2014,P-77619,WC-2014,T-06,Origi,71,agree,174,Divock Origi,71
+P-77742:WC-2010,P-77742,WC-2010,T-01,Yahia,73,"avg(74,72)",6,Anthar Yahia,73
+P-77757:WC-2006,P-77757,WC-2006,T-32,Addo,62,agree,935,Eric Addo,62
+P-77769:WC-2022,P-77769,WC-2022,T-65,Diallo,77,agree,1896,Abdou Diallo,77
+P-77789:WC-2018,P-77789,WC-2018,T-18,Badelj,78,agree,547,Milan Badelj,78
+P-77827:WC-2022,P-77827,WC-2022,T-44,Schmidt,69,f2-only,1245,Daniel Schmidt,69
+P-77853:WC-2018,P-77853,WC-2018,T-63,Al-Mogahwi,71,f2-only,1805,Hussain Al Moqahwi,71
+P-77892:WC-2018,P-77892,WC-2018,T-54,Machado,71,agree,1543,Adolfo Machado,71
+P-77916:WC-2014,P-77916,WC-2014,T-16,Valdés,73,agree,418,Carlos Valdés,73
+P-77979:WC-2010,P-77979,WC-2010,T-68,Petráš,65,agree,1972,Martin Petráš,65
+P-78024:WC-2014,P-78024,WC-2014,T-83,Wondolowski,72,agree,2412,Chris Wondolowski,72
+P-78050:WC-2006,P-78050,WC-2006,T-78,Glen,64,agree,2276,Cornell Glen,64
+P-78068:WC-2006,P-78068,WC-2006,T-83,Wolff,68,"avg(73,62)",2392,Josh Wolff,68
+P-78106:WC-2018,P-78106,WC-2018,T-54,Torres,68,agree,1544,Gabriel Torres,68
+P-78113:WC-2014,P-78113,WC-2014,T-83,Rimando,73,"avg(76,70)",2411,Nick Rimando,73
+P-78276:WC-2014,P-78276,WC-2014,T-08,Avdukić,64,f2-only,207,Asmir Avdukić,64
+P-78347:WC-2014,P-78347,WC-2014,T-50,Azeez,63,"avg(64,61)",1508,Ramon Azeez,63
+P-78418:WC-2014,P-78418,WC-2014,T-73,Pedro,84,agree,2133,Pedro Rodriguez,84
+P-78440:WC-2010,P-78440,WC-2010,T-84,Godín,78,agree,2462,Diego Godín,78
+P-78483:WC-2006,P-78483,WC-2006,T-02,Flávio,70,f2-only,24,Flávio Amado,70
+P-78484:WC-2022,P-78484,WC-2022,T-30,Koundé,84,agree,836,Jules Koundé,84
+P-78533:WC-2002,P-78533,WC-2002,T-80,Ünsal,74,agree,2362,Hakan Ünsal,74
+P-78557:WC-2002,P-78557,WC-2002,T-55,Campos,73,f2-only,1569,Jorge Campos,73
+P-78640:WC-2010,P-78640,WC-2010,T-83,DeMerit,72,agree,2404,Jay DeMerit,72
+P-78654:WC-2006,P-78654,WC-2006,T-55,Riveros,70,f2-only,1583,Cristian Riveros,70
+P-78654:WC-2010,P-78654,WC-2010,T-55,Riveros,73,agree,1596,Cristian Riveros,73
+P-78735:WC-2014,P-78735,WC-2014,T-84,Gargano,75,"avg(72,77)",2473,Walter Gargano,75
+P-78745:WC-2018,P-78745,WC-2018,T-16,Zapata,78,agree,424,Cristian Zapata,78
+P-78836:WC-2010,P-78836,WC-2010,T-68,Stoch,72,agree,1962,Miroslav Stoch,72
+P-78863:WC-2006,P-78863,WC-2006,T-04,Schwarzer,83,agree,81,Mark Schwarzer,83
+P-78932:WC-2026,P-78932,WC-2026,T-84,Varela,76,f2-only,2495,Guillermo Varela,76
+P-79048:WC-2014,P-79048,WC-2014,T-50,Oshaniwa,55,f2-only,1514,Juwon Oshaniwa,55
+P-79072:WC-2002,P-79072,WC-2002,T-60,Kiely,75,"avg(79,70)",1739,Dean Kiely,75
+P-79130:WC-2002,P-79130,WC-2002,T-80,Akyel,67,f1-only,2367;2368,Fatih Akyel;Fevzi Akyel,67;67
+P-79202:WC-2006,P-79202,WC-2006,T-79,Kasraoui,64,f2-only,2301,Hamdi Kasraoui,64
+P-79215:WC-2014,P-79215,WC-2014,T-18,Brozović,73,f2-only,533,Marcelo Brozović,73
+P-79215:WC-2018,P-79215,WC-2018,T-18,Brozović,83,"avg(81,85)",537,Marcelo Brozović,83
+P-79215:WC-2022,P-79215,WC-2022,T-18,Brozović,86,agree,551,Marcelo Brozović,86
+P-79283:WC-2002,P-79283,WC-2002,T-09,Kléberson,83,agree,233,Kléberson,83
+P-79283:WC-2010,P-79283,WC-2010,T-09,Kléberson,74,f1-only,261,Kléberson,74
+P-79409:WC-2018,P-79409,WC-2018,T-31,Goretzka,83,"avg(82,83)",906,Leon Goretzka,83
+P-79590:WC-2018,P-79590,WC-2018,T-22,Lerager,74,agree,645,Lukas Lerager,74
+P-79650:WC-2022,P-79650,WC-2022,T-03,Romero,83,agree,69,Cristian Romero,83
+P-79754:WC-2022,P-79754,WC-2022,T-66,Đuričić,74,"avg(75,73)",1947,Filip Đuričić,74
+P-79763:WC-2018,P-79763,WC-2018,T-62,Ignashevich,78,"avg(78,77)",1761,Sergey Ignashevich,78
+P-79836:WC-2002,P-79836,WC-2002,T-84,Munúa,74,agree,2455,Gustavo Munúa,74
+P-80088:WC-2018,P-80088,WC-2018,T-46,Gallardo,72,agree,1323,Jesús Gallardo,72
+P-80170:WC-2002,P-80170,WC-2002,T-22,Rommedahl,85,agree,618,Dennis Rommedahl,85
+P-80183:WC-2002,P-80183,WC-2002,T-46,Palencia,66,"avg(69,62)",1276,Francisco Palencia,66
+P-80410:WC-2006,P-80410,WC-2006,T-77,Romao,61,f2-only,2268,Alaixys Romao,61
+P-80505:WC-2018,P-80505,WC-2018,T-38,Abedzadeh,65,"avg(62,68)",1065,Amir Abedzadeh,65
+P-80505:WC-2022,P-80505,WC-2022,T-38,Abedzadeh,72,agree,1073,Amir Abedzadeh,72
+P-80634:WC-2010,P-80634,WC-2010,T-51,Kim,63,f2-only,1530,Kim Myong-won,63
+P-80668:WC-2010,P-80668,WC-2010,T-84,Arévalo Ríos,74,f2-only,2470,Egidio Arévalo,74
+P-80680:WC-2002,P-80680,WC-2002,T-30,Djorkaeff,83,f2-only,788,Youri Djorkaeff,83
+P-80738:WC-2018,P-80738,WC-2018,T-66,Kostić,77,"avg(78,76)",1934,Filip Kostić,77
+P-80826:WC-2006,P-80826,WC-2006,T-46,Ochoa,69,agree,1285,F. Ochoa,69
+P-80826:WC-2010,P-80826,WC-2010,T-46,Ochoa,80,f1-only,1293;1294,Guillermo Ochoa;Francisco Ochoa,80;80
+P-80838:WC-2026,P-80838,WC-2026,T-83,Scally,74,f1-only,2444;2446,Joseph Michael Scally;Joe Scally,74;74
+P-80902:WC-2006,P-80902,WC-2006,T-42,Kouassi,71,agree,1132,Blaise Kouassi,71
+P-81025:WC-2010,P-81025,WC-2010,T-35,Escober,66,f2-only,1013,Donis Escober,66
+P-81025:WC-2014,P-81025,WC-2014,T-35,Escober,62,f2-only,1027,Donis Escober,62
+P-81067:WC-2014,P-81067,WC-2014,T-04,Taggart,68,agree,100,Adam Taggart,68
+P-81126:WC-2010,P-81126,WC-2010,T-49,Nelsen,78,agree,1444,Ryan Nelsen,78
+P-81142:WC-2022,P-81142,WC-2022,T-17,Sequeira,62,agree,499,Patrick Sequeira,62
+P-81297:WC-2010,P-81297,WC-2010,T-73,Fàbregas,87,f1-only,2125;2126,Francesc Fabregas;Cesc Fàbregas,87;87
+P-81393:WC-2002,P-81393,WC-2002,T-41,Abbiati,83,agree,1098,Christian Abbiati,83
+P-81414:WC-2006,P-81414,WC-2006,T-48,Jaliens,60,agree,1396,Kew Jaliens,60
+P-81427:WC-2022,P-81427,WC-2022,T-73,Sarabia,81,agree,2143,Pablo Sarabia,81
+P-81447:WC-2014,P-81447,WC-2014,T-31,Hummels,85,agree,892,Mats Hummels,85
+P-81643:WC-2002,P-81643,WC-2002,T-46,Borgetti,75,"avg(72,77)",1269,Jared Borgetti,75
+P-81689:WC-2018,P-81689,WC-2018,T-26,Hegazi,78,f2-only,713,Ahmed Hegazi,78
+P-81706:WC-2022,P-81706,WC-2022,T-79,Meriah,71,f2-only,2325,Yassine Meriah,71
+P-81778:WC-2006,P-81778,WC-2006,T-32,Kingson,60,f2-only,939,Richard Kingson,60
+P-81778:WC-2010,P-81778,WC-2010,T-32,Kingson,66,agree,951,Richard Kingson,66
+P-81779:WC-2014,P-81779,WC-2014,T-17,Díaz,71,agree,474,Junior Díaz,71
+P-81872:WC-2010,P-81872,WC-2010,T-66,Mrđa,73,f2-only,1926,Dragan Mrđa,73
+P-81947:WC-2018,P-81947,WC-2018,T-31,Trapp,82,agree,908,Kevin Trapp,82
+P-81947:WC-2022,P-81947,WC-2022,T-31,Trapp,86,agree,913,Kevin Trapp,86
+P-81950:WC-2010,P-81950,WC-2010,T-68,Sapara,75,agree,1959,Marek Sapara,75
+P-81968:WC-2002,P-81968,WC-2002,T-65,Sarr,69,agree,1872,Pape Sarr,69
+P-82000:WC-2022,P-82000,WC-2022,T-48,Noppert,71,"avg(70,72)",1436,Andries Noppert,71
+P-82010:WC-2022,P-82010,WC-2022,T-04,Goodwin,75,agree,119,Craig Goodwin,75
+P-82056:WC-2022,P-82056,WC-2022,T-79,Jaziri,72,f2-only,2322,Seifeddine Jaziri,72
+P-82143:WC-2022,P-82143,WC-2022,T-66,Mladenović,69,agree,1950,Filip Mladenović,69
+P-82191:WC-2002,P-82191,WC-2002,T-58,Andrade,87,f2-only,1662,Jorge Andrade,87
+P-82210:WC-2002,P-82210,WC-2002,T-62,Cherchesov,62,f2-only,1750,Stanislav Cherchesov,62
+P-82212:WC-2002,P-82212,WC-2002,T-65,Diop,74,"canonical-duplicate-avg(75,72)",1864;1867,Papa Bouba Diop;Papa Diop,75;72
+P-82213:WC-2014,P-82213,WC-2014,T-38,Heydari,72,f2-only,1051,Khosro Heydari,72
+P-82307:WC-2006,P-82307,WC-2006,T-81,Husyev,73,f2-only,2379,Oleg Husyev,73
+P-82313:WC-2022,P-82313,WC-2022,T-22,Olsen,76,f1-only,659,Andreas Skov Olsen,76
+P-82447:WC-2022,P-82447,WC-2022,T-44,Tanaka,71,f2-only,1243,Ao Tanaka,71
+P-82447:WC-2026,P-82447,WC-2026,T-44,Tanaka,76,agree,1253,Ao Tanaka,76
+P-82456:WC-2010,P-82456,WC-2010,T-09,Grafite,83,f1-only,251,Grafite,83
+P-82458:WC-2002,P-82458,WC-2002,T-55,Caniza,70,"avg(67,73)",1571,Denis Caniza,70
+P-82458:WC-2006,P-82458,WC-2006,T-55,Caniza,67,agree,1586,Denis Caniza,67
+P-82458:WC-2010,P-82458,WC-2010,T-55,Caniza,75,agree,1593,Denis Caniza,75
+P-82522:WC-2010,P-82522,WC-2010,T-68,Jakubko,72,agree,1963,Martin Jakubko,72
+P-82601:WC-2002,P-82601,WC-2002,T-65,N'Dour,64,f1-corrupt->f2,1879,Dour,64
+P-82657:WC-2022,P-82657,WC-2022,T-79,Ben Saïd,69,f2-only,2329,Bechir Ben Saïd,69
+P-82662:WC-2010,P-82662,WC-2010,T-35,Bernárdez,67,agree,1011,Victor Bernárdez,67
+P-82662:WC-2014,P-82662,WC-2014,T-35,Bernárdez,70,agree,1018,Victor Bernárdez,70
+P-82792:WC-2018,P-82792,WC-2018,T-62,Kutepov,73,agree,1770,Ilya Kutepov,73
+P-82814:WC-2006,P-82814,WC-2006,T-75,Magnin,75,agree,2199,Ludovic Magnin,75
+P-82853:WC-2006,P-82853,WC-2006,T-17,Alfaro,62,f2-only,467,W. Alfaro,62
+P-82870:WC-2006,P-82870,WC-2006,T-79,Trabelsi,75,agree,2291,Hatem Trabelsi,75
+P-82889:WC-2022,P-82889,WC-2022,T-71,Jin-su,71,f2-only,2087,Kim Su,71
+P-82956:WC-2022,P-82956,WC-2022,T-32,Amartey,76,agree,961,Daniel Amartey,76
+P-83165:WC-2010,P-83165,WC-2010,T-22,Andersen,75,agree,631,Stephan Andersen,75
+P-83198:WC-2018,P-83198,WC-2018,T-04,Petratos,66,agree,114,Dimitri Petratos,66
+P-83216:WC-2018,P-83216,WC-2018,T-16,Cuadrado,82,agree,420,Juan Cuadrado,82
+P-83293:WC-2018,P-83293,WC-2018,T-26,Gabr,71,"avg(67,74)",718,Ali Gabr,71
+P-83363:WC-2018,P-83363,WC-2018,T-28,Alli,84,"avg(84,83)",749,Alli,84
+P-83418:WC-2002,P-83418,WC-2002,T-60,Morrison,75,"avg(76,74)",1740,Clinton Morrison,75
+P-83544:WC-2002,P-83544,WC-2002,T-71,Song,74,"avg(75,72)",2022,Song Chong-gug,74
+P-83544:WC-2006,P-83544,WC-2006,T-71,Song,62,f2-only,2040,Song Chong-gug,62
+P-83566:WC-2006,P-83566,WC-2006,T-04,Emerton,70,agree,88,Brett Emerton,70
+P-83625:WC-2010,P-83625,WC-2010,T-22,Krøldrup,76,agree,630,Per Krøldrup,76
+P-83711:WC-2006,P-83711,WC-2006,T-73,Reyes,86,agree,2119,José Reyes,86
+P-83734:WC-2018,P-83734,WC-2018,T-63,Al-Sahlawi,73,f1-only,1800;1801,Mohammad Ibrahim Mohammad Al-Sahlawi;Mohammed Al Sahlawi,73;73
+P-83822:WC-2022,P-83822,WC-2022,T-12,Ugbo,72,agree,367,Ike Ugbo,72
+P-83836:WC-2006,P-83836,WC-2006,T-41,Del Piero,89,agree,1105,Alessandro Del Piero,89
+P-83900:WC-2014,P-83900,WC-2014,T-58,Postiga,76,agree,1698,Helder Postiga,76
+P-83904:WC-2010,P-83904,WC-2010,T-68,Mucha,66,agree,1971,Ján Mucha,66
+P-83943:WC-2002,P-83943,WC-2002,T-14,Yang,63,f2-only,403,Yang Pu,63
+P-84093:WC-2002,P-84093,WC-2002,T-41,Iuliano,82,f2-only,1099,Mark Iuliano,82
+P-84190:WC-2022,P-84190,WC-2022,T-18,Sosa,78,agree,559,Borna Sosa,78
+P-84312:WC-2010,P-84312,WC-2010,T-30,Valbuena,76,agree,808,Mathieu Valbuena,76
+P-84382:WC-2022,P-84382,WC-2022,T-38,Moharrami,71,"avg(72,70)",1074,Sadegh Moharrami,71
+P-84406:WC-2014,P-84406,WC-2014,T-38,Dejagah,74,agree,1048,Ashkan Dejagah,74
+P-84424:WC-2022,P-84424,WC-2022,T-30,Hernandez,84,agree,837,Lucas Hernandez,84
+P-84486:WC-2006,P-84486,WC-2006,T-04,Bresciano,73,f1-only,85;86,Mark Bresciano;Marco Bresciano,73;73
+P-84524:WC-2010,P-84524,WC-2010,T-49,Smith,76,f2-only,1447,Tommy Smith,76
+P-84534:WC-2002,P-84534,WC-2002,T-31,Bierhoff,81,f2-only,861,Oliver Bierhoff,81
+P-84536:WC-2018,P-84536,WC-2018,T-04,Jones,77,f1-only,104;105,Bradley Scott Jones;Brad Jones,77;77
+P-84550:WC-2002,P-84550,WC-2002,T-14,Yang,62,f2-only,408,Yang Chen,62
+P-84563:WC-2022,P-84563,WC-2022,T-63,Bahebri,70,"avg(69,70)",1819,Hattan Bahebri,70
+P-84762:WC-2002,P-84762,WC-2002,T-44,Nakayama,57,f2-only,1172,Masashi Nakayama,57
+P-84787:WC-2026,P-84787,WC-2026,T-28,Rice,88,"avg(87,88)",777,Declan Rice,88
+P-84807:WC-2010,P-84807,WC-2010,T-44,Okazaki,74,f2-only,1200,Shinji Okazaki,74
+P-84852:WC-2014,P-84852,WC-2014,T-06,Mertens,82,agree,166,Dries Mertens,82
+P-84852:WC-2018,P-84852,WC-2018,T-06,Mertens,87,"avg(86,87)",177,Dries Mertens,87
+P-84852:WC-2022,P-84852,WC-2022,T-06,Mertens,84,agree,187,Dries Mertens,84
+P-84945:WC-2010,P-84945,WC-2010,T-51,An,63,f2-only,1527,An Chol-hyok,63
+P-85204:WC-2022,P-85204,WC-2022,T-58,Sá,81,agree,1709,José Sá,81
+P-85432:WC-2002,P-85432,WC-2002,T-74,Svensson,78,"avg(79,77)",2151,Anders Svensson,78
+P-85432:WC-2006,P-85432,WC-2006,T-74,Svensson,76,agree,2158,Anders Svensson,76
+P-85438:WC-2018,P-85438,WC-2018,T-63,Al-Owais,73,"avg(73,72)",1798,Mohammed Al Owais,73
+P-85438:WC-2022,P-85438,WC-2022,T-63,Al-Owais,69,"avg(69,68)",1820,Mohammed Al-Owais,69
+P-85438:WC-2026,P-85438,WC-2026,T-63,Al-Owais,67,f2-only,1851,Mohammed Al-Owais,67
+P-85465:WC-2010,P-85465,WC-2010,T-66,Kačar,78,agree,1921,Gojko Kačar,78
+P-85532:WC-2018,P-85532,WC-2018,T-84,Nández,73,"avg(70,76)",2485,Nahitan Nández,73
+P-85579:WC-2022,P-85579,WC-2022,T-22,Braithwaite,77,"avg(76,78)",653,Martin Braithwaite,77
+P-85630:WC-2022,P-85630,WC-2022,T-57,Świderski,74,agree,1651,Karol Świderski,74
+P-85698:WC-2014,P-85698,WC-2014,T-48,Wijnaldum,78,agree,1413,Georginio Wijnaldum,78
+P-85736:WC-2002,P-85736,WC-2002,T-25,Fernández,62,f2-only,671,Ángel Fernández,62
+P-85823:WC-2026,P-85823,WC-2026,T-75,Vargas,75,agree,2247,Ruben Vargas,75
+P-85824:WC-2010,P-85824,WC-2010,T-44,Konno,74,f2-only,1203,Yasuyuki Konno,74
+P-85860:WC-2018,P-85860,WC-2018,T-38,Taremi,74,f2-only,1060,Mehdi Taremi,74
+P-85878:WC-2022,P-85878,WC-2022,T-83,Reyna,78,"avg(77,78)",2416,Giovanni Reyna,78
+P-85878:WC-2026,P-85878,WC-2026,T-83,Reyna,75,agree,2441,Giovanni Reyna,75
+P-85929:WC-2014,P-85929,WC-2014,T-08,Sušić,75,f2-only,202,Tino-Sven Sušić,75
+P-86004:WC-2018,P-86004,WC-2018,T-18,Strinić,75,agree,549,Ivan Strinić,75
+P-86080:WC-2018,P-86080,WC-2018,T-26,El Shenawy,67,f2-only,721,Mohamed El Shenawy,67
+P-86095:WC-2022,P-86095,WC-2022,T-65,Ballo-Touré,71,"avg(72,70)",1906,Fode Ballo-Touré,71
+P-86163:WC-2010,P-86163,WC-2010,T-09,Bastos,82,agree,253,Michel Bastos,82
+P-86345:WC-2002,P-86345,WC-2002,T-22,Henriksen,74,agree,626,Rene Henriksen,74
+P-86404:WC-2014,P-86404,WC-2014,T-16,Álvarez Balanta,75,agree,417,Éder Balanta,75
+P-86465:WC-2002,P-86465,WC-2002,T-11,Geremi,84,agree,298,Geremi Fotso,84
+P-86499:WC-2014,P-86499,WC-2014,T-09,Ramires,81,agree,268,Ramires do Nascimento,81
+P-86534:WC-2006,P-86534,WC-2006,T-58,Quim,76,"avg(74,78)",1685,Quim,76
+P-86625:WC-2010,P-86625,WC-2010,T-11,Chedjou,73,agree,318,Aurelien Chedjou,73
+P-86811:WC-2006,P-86811,WC-2006,T-57,Szymkowiak,62,agree,1634,Mirosław Szymkowiak,62
+P-86871:WC-2022,P-86871,WC-2022,T-73,Llorente,84,agree,2141,Marcos Llorente,84
+P-86909:WC-2022,P-86909,WC-2022,T-44,Ito,78,f2-only,1233,Junya Ito,78
+P-86920:WC-2022,P-86920,WC-2022,T-30,Konaté,81,agree,842,Ibrahima Konaté,81
+P-86937:WC-2022,P-86937,WC-2022,T-65,Jackson,76,"avg(71,81)",1900,Nicolas Jackson,76
+P-86943:WC-2006,P-86943,WC-2006,T-25,Tenorio,76,f2-only,680,Carlos Tenorio,76
+P-87003:WC-2022,P-87003,WC-2022,T-58,Mendes,80,agree,1711,Nuno Mendes,80
+P-87039:WC-2006,P-87039,WC-2006,T-67,Ljuboja,79,agree,1953,Danijel Ljuboja,79
+P-87114:WC-2006,P-87114,WC-2006,T-63,Al-Qahtani,70,f2-only,1788,Yasser Al-Qahtani,70
+P-87169:WC-2022,P-87169,WC-2022,T-71,Gue-sung,70,"avg(70,69)",2090,Cho Sung,70
+P-87187:WC-2002,P-87187,WC-2002,T-18,Tomas,74,f1-only,515,Stjepan Tomas,74
+P-87187:WC-2006,P-87187,WC-2006,T-18,Tomas,76,agree,525,Stjepan Tomas,76
+P-87190:WC-2022,P-87190,WC-2022,T-85,Williams,72,"avg(71,73)",2515,Neco Williams,72
+P-87199:WC-2018,P-87199,WC-2018,T-47,Harit,73,"avg(71,75)",1357,Amine Harit,73
+P-87284:WC-2022,P-87284,WC-2022,T-63,Al-Bulaihi,67,agree,1825,Ali Al-Bulaihi,67
+P-87449:WC-2014,P-87449,WC-2014,T-09,Luiz,81,f2-only,272,Luiz Dias,81
+P-87514:WC-2026,P-87514,WC-2026,T-71,Kang-in,79,agree,2097,Lee In,79
+P-87569:WC-2022,P-87569,WC-2022,T-63,Al-Najei,69,agree,1821,Sami Al-Najei,69
+P-87592:WC-2002,P-87592,WC-2002,T-46,García,70,f1-only,1275,Rafael García,70
+P-87661:WC-2014,P-87661,WC-2014,T-28,Smalling,76,agree,746,Chris Smalling,76
+P-87786:WC-2018,P-87786,WC-2018,T-38,Ghoddos,72,"avg(71,72)",1061,Saman Ghoddos,72
+P-87786:WC-2022,P-87786,WC-2022,T-38,Ghoddos,68,agree,1076,Saman Ghoddos,68
+P-87859:WC-2010,P-87859,WC-2010,T-55,Alcaraz,68,f1-only,1603,Antolin Alcaraz,68
+P-88041:WC-2006,P-88041,WC-2006,T-63,Al-Jaber,70,f2-only,1786,Real-world Al-Jaber,70
+P-88043:WC-2002,P-88043,WC-2002,T-83,O'Brien,76,f1-corrupt->f2,2390,Brien,76
+P-88043:WC-2006,P-88043,WC-2006,T-83,O'Brien,62,f1-corrupt->f2,2396,Brien,62
+P-88160:WC-2010,P-88160,WC-2010,T-35,Martínez,71,f2-only,1007,Walter Martínez,71
+P-88203:WC-2002,P-88203,WC-2002,T-03,Almeyda,82,agree,35,Matias Almeyda,82
+P-88273:WC-2022,P-88273,WC-2022,T-04,Rowles,68,"avg(67,69)",131,Kye Rowles,68
+P-88360:WC-2022,P-88360,WC-2022,T-71,Chang-hoon,66,f2-only,2094,Kwon Hoon,66
+P-88370:WC-2010,P-88370,WC-2010,T-83,Holden,69,agree,2407,Stuart Holden,69
+P-88680:WC-2010,P-88680,WC-2010,T-68,Ďurica,73,agree,1961,Ján Ďurica,73
+P-88715:WC-2022,P-88715,WC-2022,T-06,Casteels,84,agree,186,Koen Casteels,84
+P-88732:WC-2010,P-88732,WC-2010,T-11,N'Guémo,72,f1-corrupt->f2,320,Guemo,72
+P-88732:WC-2014,P-88732,WC-2014,T-11,N'Guémo,75,f1-corrupt->f2,331,Guemo,75
+P-88818:WC-2018,P-88818,WC-2018,T-79,Haddadi,67,"avg(66,67)",2318,Oussama Haddadi,67
+P-88830:WC-2006,P-88830,WC-2006,T-78,John,70,agree,2272,Stern John,70
+P-88869:WC-2018,P-88869,WC-2018,T-47,Tagnaouti,72,f2-only,1358,Ahmed Tagnaouti,72
+P-88896:WC-2018,P-88896,WC-2018,T-17,Pemberton,66,f2-only,492,Patrick Pemberton,66
+P-88899:WC-2002,P-88899,WC-2002,T-55,Cuevas,71,"avg(69,73)",1570,Nelson Cuevas,71
+P-88899:WC-2006,P-88899,WC-2006,T-55,Cuevas,74,agree,1578,Nelson Cuevas,74
+P-88939:WC-2010,P-88939,WC-2010,T-71,Jung,71,agree,2050,Jung Sung-ryong,71
+P-88939:WC-2014,P-88939,WC-2014,T-71,Jung,68,"avg(67,69)",2064,Jung Sung-ryong,68
+P-89070:WC-2018,P-89070,WC-2018,T-28,Pope,73,"avg(68,78)",765,Pope,73
+P-89113:WC-2018,P-89113,WC-2018,T-18,Kalinić,77,"avg(77,76)",548,Lovre Kalinić,77
+P-89154:WC-2006,P-89154,WC-2006,T-79,Bouazizi,62,agree,2305,Riadh Bouazizi,62
+P-89217:WC-2022,P-89217,WC-2022,T-04,Souttar,73,"avg(72,73)",120,Harry Souttar,73
+P-89248:WC-2018,P-89248,WC-2018,T-09,Ederson,84,"avg(83,85)",279,Ederson de Moraes,84
+P-89292:WC-2002,P-89292,WC-2002,T-44,Fukunishi,57,f2-only,1169,Takashi Fukunishi,57
+P-89292:WC-2006,P-89292,WC-2006,T-44,Fukunishi,71,f2-only,1185,Takashi Fukunishi,71
+P-89297:WC-2002,P-89297,WC-2002,T-46,Torrado,70,"avg(63,77)",1272,Gerardo Torrado,70
+P-89321:WC-2018,P-89321,WC-2018,T-44,Yoshida,75,f2-only,1222,Maya Yoshida,75
+P-89321:WC-2022,P-89321,WC-2022,T-44,Yoshida,73,f2-only,1239,Maya Yoshida,73
+P-89420:WC-2018,P-89420,WC-2018,T-18,Pivarić,79,f2-only,545,Josip Pivarić,79
+P-89452:WC-2022,P-89452,WC-2022,T-83,Dest,77,"avg(77,76)",2417,Sergiño Dest,77
+P-89452:WC-2026,P-89452,WC-2026,T-83,Dest,79,agree,2433,Sergiño Dest,79
+P-89573:WC-2022,P-89573,WC-2022,T-66,Grujić,76,agree,1945,Marko Grujić,76
+P-89710:WC-2022,P-89710,WC-2022,T-12,Vitória,70,"avg(69,71)",376,Steven Vitória,70
+P-89713:WC-2014,P-89713,WC-2014,T-42,Mandé,68,"avg(64,71)",1141,Sayouba Mandé,68
+P-89750:WC-2014,P-89750,WC-2014,T-30,Giroud,79,agree,819,Olivier Giroud,79
+P-89750:WC-2022,P-89750,WC-2022,T-30,Giroud,83,"avg(82,83)",838,Olivier Giroud,83
+P-89840:WC-2010,P-89840,WC-2010,T-44,Yano,74,f2-only,1205,Kisho Yano,74
+P-89845:WC-2026,P-89845,WC-2026,T-63,Al-Buraikan,75,f1-only,1836,Firas Tariq Nasser Al Buraikanفراس طارق ناصر البريكان,75
+P-89863:WC-2022,P-89863,WC-2022,T-31,Klostermann,80,agree,919,Lukas Klostermann,80
+P-89878:WC-2010,P-89878,WC-2010,T-84,Lugano,82,agree,2461,Diego Lugano,82
+P-89878:WC-2014,P-89878,WC-2014,T-84,Lugano,75,"avg(74,76)",2474,Diego Lugano,75
+P-89922:WC-2002,P-89922,WC-2002,T-79,Jelassi,62,f2-only,2285,Tunisian Jelassi,62
+P-89948:WC-2022,P-89948,WC-2022,T-18,Pašalić,81,"avg(81,80)",556,Mario Pašalić,81
+P-89971:WC-2002,P-89971,WC-2002,T-62,Kerzhakov,72,"canonical-duplicate-avg(82,62)",1748;1752,Alexandr Kerzhakov;Aleksandr Kerzhakov,82;62
+P-89984:WC-2018,P-89984,WC-2018,T-44,Inui,78,f2-only,1215,Takashi Inui,78
+P-90061:WC-2002,P-90061,WC-2002,T-14,Zhao,63,f2-only,407,Zhao Junzhe,63
+P-90145:WC-2010,P-90145,WC-2010,T-49,Smeltz,72,"avg(67,76)",1449,Shane Smeltz,72
+P-90321:WC-2002,P-90321,WC-2002,T-57,Bąk,71,f2-only,1615,Arkadiusz Bąk,71
+P-90361:WC-2014,P-90361,WC-2014,T-75,Bürki,74,agree,2218,Roman Bürki,74
+P-90430:WC-2010,P-90430,WC-2010,T-44,Nakazawa,74,f2-only,1199,Yuji Nakazawa,74
+P-90435:WC-2002,P-90435,WC-2002,T-63,Noor,63,f2-only,1779,Mohammed Noor,63
+P-90633:WC-2002,P-90633,WC-2002,T-06,Mpenza,72,agree,155,Mbo Mpenza,72
+P-90725:WC-2006,P-90725,WC-2006,T-63,Tukar,70,f2-only,1790,Redha Tukar,70
+P-90807:WC-2010,P-90807,WC-2010,T-13,Tello,79,agree,394,Rodrigo Tello,79
+P-90857:WC-2002,P-90857,WC-2002,T-25,Ayoví,69,f2-only,665,Marlon Ayoví,69
+P-90857:WC-2006,P-90857,WC-2006,T-25,Ayoví,67,f2-only,688,Marlon Ayoví,67
+P-90913:WC-2022,P-90913,WC-2022,T-57,Grabara,73,agree,1654,Kamil Grabara,73
+P-91029:WC-2022,P-91029,WC-2022,T-04,Duke,68,"avg(67,68)",130,Mitchell Duke,68
+P-91114:WC-2014,P-91114,WC-2014,T-30,Koscielny,82,agree,810,Laurent Koscielny,82
+P-91190:WC-2002,P-91190,WC-2002,T-18,Vranješ,73,f1-only,517;521,Jurica Vranjes;J. Vranješ,73;73
+P-91268:WC-2026,P-91268,WC-2026,T-63,Kanno,72,f1-only,1842;1844,Mohamed Ibrahim Abdullah Kannoمحمد كنو;Mohammed Kanno,72;72
+P-91294:WC-2018,P-91294,WC-2018,T-18,Vida,79,f2-only,546,Domagoj Vida,79
+P-91308:WC-2002,P-91308,WC-2002,T-65,Thiaw,65,agree,1875,Pape Thiaw,65
+P-91324:WC-2022,P-91324,WC-2022,T-30,Disasi,78,"avg(77,79)",850,Axel Disasi,78
+P-91329:WC-2018,P-91329,WC-2018,T-04,Nabbout,65,agree,115,Andrew Nabbout,65
+P-91357:WC-2006,P-91357,WC-2006,T-03,Milito,86,agree,40,Gabriel Milito,86
+P-91430:WC-2010,P-91430,WC-2010,T-35,Welcome,71,f2-only,1008,Georgie Welcome,71
+P-91431:WC-2022,P-91431,WC-2022,T-03,Montiel,79,agree,75,Gonzalo Montiel,79
+P-91516:WC-2002,P-91516,WC-2002,T-50,Kanu,82,agree,1474,Nwankwo Kanu,82
+P-91516:WC-2010,P-91516,WC-2010,T-50,Kanu,73,agree,1490,Nwankwo Kanu,73
+P-91649:WC-2006,P-91649,WC-2006,T-81,Shovkovskyi,73,f2-only,2385,Oleksandr Shovkovskyi,73
+P-91718:WC-2002,P-91718,WC-2002,T-09,Cafu,90,agree,230,Cafu,90
+P-91793:WC-2010,P-91793,WC-2010,T-44,Hasebe,74,"avg(73,75)",1192,Makoto Hasebe,74
+P-91793:WC-2018,P-91793,WC-2018,T-44,Hasebe,77,f2-only,1217,Makoto Hasebe,77
+P-91831:WC-2002,P-91831,WC-2002,T-06,Vermant,76,agree,154,Sven Vermant,76
+P-91832:WC-2006,P-91832,WC-2006,T-04,Neill,71,agree,87,Lucas Neill,71
+P-91889:WC-2022,P-91889,WC-2022,T-71,Hong,71,f2-only,2085,Hong Chul,71
+P-91976:WC-2010,P-91976,WC-2010,T-83,Beasley,70,agree,2406,DaMarcus Beasley,70
+P-92000:WC-2014,P-92000,WC-2014,T-58,Coentrão,79,agree,1696,Fabio Coentrão,79
+P-92064:WC-2002,P-92064,WC-2002,T-83,Sanneh,76,agree,2389,Tony Sanneh,76
+P-92121:WC-2010,P-92121,WC-2010,T-51,Choe,63,f2-only,1528,Choe Kum-chol,63
+P-92129:WC-2002,P-92129,WC-2002,T-14,Ou,62,f2-only,410,Ou Chuliang,62
+P-92146:WC-2002,P-92146,WC-2002,T-25,de la Cruz,72,"avg(75,69)",662,Ulises de la Cruz,72
+P-92146:WC-2006,P-92146,WC-2006,T-25,de la Cruz,75,agree,683,Ulises de la Cruz,75
+P-92476:WC-2018,P-92476,WC-2018,T-17,Moreira,62,f2-only,494,Leonel Moreira,62
+P-92513:WC-2022,P-92513,WC-2022,T-73,Sánchez,78,"avg(77,79)",2148,Robert Sánchez,78
+P-92547:WC-2006,P-92547,WC-2006,T-46,Arellano,66,agree,1288,Jesus Arellano,66
+P-92628:WC-2018,P-92628,WC-2018,T-28,Stones,80,"avg(79,80)",758,John Stones,80
+P-92628:WC-2022,P-92628,WC-2022,T-28,Stones,83,agree,770,John Stones,83
+P-92628:WC-2026,P-92628,WC-2026,T-28,Stones,82,agree,780,John Stones,82
+P-92649:WC-2010,P-92649,WC-2010,T-84,Victorino,74,f2-only,2471,Mauricio Victorino,74
+P-92673:WC-2006,P-92673,WC-2006,T-83,Hahnemann,65,"avg(68,62)",2395,Marcus Hahnemann,65
+P-92673:WC-2010,P-92673,WC-2010,T-83,Hahnemann,74,agree,2402,Marcus Hahnemann,74
+P-92866:WC-2014,P-92866,WC-2014,T-06,Vermaelen,79,agree,168,Thomas Vermaelen,79
+P-92874:WC-2010,P-92874,WC-2010,T-41,Chiellini,86,agree,1116,Giorgio Chiellini,86
+P-92932:WC-2002,P-92932,WC-2002,T-46,Sánchez,70,"avg(78,62)",1274,Oswaldo Sánchez,70
+P-92932:WC-2006,P-92932,WC-2006,T-46,Sánchez,83,agree,1280,Oswaldo Sánchez,83
+P-93048:WC-2006,P-93048,WC-2006,T-30,Makélélé,88,agree,792,Claude Makélélé,88
+P-93059:WC-2014,P-93059,WC-2014,T-35,Valladares,70,f2-only,1022,Noel Valladares,70
+P-93173:WC-2026,P-93173,WC-2026,T-63,Al-Tambakti,72,f2-only,1843,Hassan Tombakti,72
+P-93586:WC-2018,P-93586,WC-2018,T-58,Lopes,83,agree,1701,Anthony Lopes,83
+P-93619:WC-2014,P-93619,WC-2014,T-09,Dante,84,agree,263,Dante Santos,84
+P-93688:WC-2018,P-93688,WC-2018,T-63,Al-Faraj,75,"avg(74,75)",1792,Salman Al Faraj,75
+P-93688:WC-2022,P-93688,WC-2022,T-63,Al-Faraj,74,"avg(75,73)",1812,Salman Al-Faraj,74
+P-93803:WC-2018,P-93803,WC-2018,T-37,Schram,66,f2-only,1034,Frederik Schram,66
+P-93812:WC-2002,P-93812,WC-2002,T-57,Kucharski,71,f2-only,1616,Bartosz Kucharski,71
+P-93884:WC-2018,P-93884,WC-2018,T-18,Perišić,83,"avg(84,82)",539,Ivan Perišić,83
+P-93884:WC-2022,P-93884,WC-2022,T-18,Perišić,84,agree,553,Ivan Perišić,84
+P-93920:WC-2026,P-93920,WC-2026,T-71,Lee,77,agree,2099,Lee Sung,77
+P-93941:WC-2014,P-93941,WC-2014,T-25,Banguera,70,agree,693,Maximo Banguera,70
+P-94009:WC-2010,P-94009,WC-2010,T-70,Gaxa,70,agree,2002,Siboniso Gaxa,70
+P-94060:WC-2010,P-94060,WC-2010,T-55,Villar,76,agree,1592,Justo Villar,76
+P-94095:WC-2014,P-94095,WC-2014,T-09,Victor,79,agree,274,Victor Bagy,79
+P-94155:WC-2014,P-94155,WC-2014,T-84,Hernández,73,"avg(72,73)",2475,Abel Hernández,73
+P-94161:WC-2006,P-94161,WC-2006,T-75,Senderos,79,agree,2194,Philippe Senderos,79
+P-94161:WC-2010,P-94161,WC-2010,T-75,Senderos,76,agree,2209,Philippe Senderos,76
+P-94161:WC-2014,P-94161,WC-2014,T-75,Senderos,72,"avg(71,72)",2220,Philippe Senderos,72
+P-94201:WC-2006,P-94201,WC-2006,T-78,Yorke,65,f2-only,2275,Dwight Yorke,65
+P-94249:WC-2014,P-94249,WC-2014,T-38,Pooladi,72,f2-only,1054,Mehrdad Pooladi,72
+P-94317:WC-2022,P-94317,WC-2022,T-12,St. Clair,71,f1-only,373,Dayne St. Clair,71
+P-94434:WC-2014,P-94434,WC-2014,T-08,Salihović,77,agree,200,Sejad Salihović,77
+P-94440:WC-2010,P-94440,WC-2010,T-11,N'dy Assembé,61,f2-only,326,Guy-Roland Assembé,61
+P-94500:WC-2022,P-94500,WC-2022,T-71,Woo-yeong,72,agree,2084,Jeong Yeong,72
+P-94511:WC-2002,P-94511,WC-2002,T-44,Sogahata,57,f2-only,1175,Hitoshi Sogahata,57
+P-94551:WC-2010,P-94551,WC-2010,T-09,Maicon,86,"avg(86,85)",244,Maicon Sisenando,86
+P-94559:WC-2002,P-94559,WC-2002,T-80,Korkmaz,76,agree,2361,Bulent Korkmaz,76
+P-94570:WC-2014,P-94570,WC-2014,T-38,Sadeghi,72,f2-only,1050,Amir Sadeghi,72
+P-94596:WC-2018,P-94596,WC-2018,T-65,Konaté,74,agree,1889,Pape Konaté,74
+P-94668:WC-2002,P-94668,WC-2002,T-18,Vasilj,73,f2-only,519,Vladimir Vasilj,73
+P-94736:WC-2002,P-94736,WC-2002,T-06,De Boeck,77,agree,153,Glen De Boeck,77
+P-94823:WC-2014,P-94823,WC-2014,T-50,Gabriel,63,agree,1509,Reuben Gabriel,63
+P-94928:WC-2014,P-94928,WC-2014,T-46,Talavera,72,"avg(74,70)",1311,Alfredo Talavera,72
+P-94928:WC-2022,P-94928,WC-2022,T-46,Talavera,79,agree,1326,Alfredo Talavera,79
+P-95038:WC-2010,P-95038,WC-2010,T-55,Verón,73,agree,1595,Dario Verón,73
+P-95062:WC-2026,P-95062,WC-2026,T-84,Pellistri,73,agree,2501,Facundo Pellistri,73
+P-95116:WC-2002,P-95116,WC-2002,T-73,Contreras,85,f2-only,2112,Pedro Contreras,85
+P-95122:WC-2002,P-95122,WC-2002,T-71,Lee,72,f2-only,2036,Lee Woon-jae,72
+P-95122:WC-2010,P-95122,WC-2010,T-71,Lee,73,agree,2046,Lee Woon-Jae,73
+P-95196:WC-2010,P-95196,WC-2010,T-84,Fucile,76,agree,2464,Jorge Fucile,76
+P-95196:WC-2014,P-95196,WC-2014,T-84,Fucile,72,agree,2476,Jorge Fucile,72
+P-95198:WC-2022,P-95198,WC-2022,T-46,Pineda,77,"avg(76,77)",1328,Orbelin Pineda,77
+P-95259:WC-2002,P-95259,WC-2002,T-44,Nakata,74,f2-only,1163,Koji Nakata,74
+P-95259:WC-2006,P-95259,WC-2006,T-44,Nakata,73,agree,1178,Koji Nakata,73
+P-95269:WC-2014,P-95269,WC-2014,T-06,Kompany,86,agree,164,Vincent Kompany,86
+P-95269:WC-2018,P-95269,WC-2018,T-06,Kompany,85,agree,180,Vincent Kompany,85
+P-95302:WC-2002,P-95302,WC-2002,T-65,Cissé,71,agree,1868,Aliou Cissé,71
+P-95345:WC-2018,P-95345,WC-2018,T-63,Hawsawi,75,agree,1793,Osama Hawsawi,75
+P-95374:WC-2022,P-95374,WC-2022,T-38,Ezatolahi,73,f2-only,1072,Saeid Ezatolahi,73
+P-95453:WC-2018,P-95453,WC-2018,T-62,Akinfeev,80,"avg(79,80)",1756,Igor Akinfeev,80
+P-95458:WC-2010,P-95458,WC-2010,T-49,Vicelich,69,"avg(62,76)",1450,Ivan Vicelich,69
+P-95507:WC-2014,P-95507,WC-2014,T-75,Lang,67,agree,2221,Michael Lang,67
+P-95616:WC-2014,P-95616,WC-2014,T-28,Milner,80,agree,742,James Milner,80
+P-95763:WC-2022,P-95763,WC-2022,T-48,Taylor,75,f2-only,1431,K. Taylor,75
+P-95847:WC-2022,P-95847,WC-2022,T-04,Mooy,76,"avg(76,75)",118,Aaron Mooy,76
+P-95900:WC-2006,P-95900,WC-2006,T-57,Smolarek,82,f1-only,1623;1624,Euzebiusz Smolarek;E. Smolarek,82;82
+P-95938:WC-2002,P-95938,WC-2002,T-84,Magallanes,77,agree,2448,Federico Magallanes,77
+P-96029:WC-2018,P-96029,WC-2018,T-79,Bedoui,70,f2-only,2313,Rami Bedoui,70
+P-96110:WC-2002,P-96110,WC-2002,T-18,Vlaović,73,f2-only,520,Goran Vlaović,73
+P-96267:WC-2002,P-96267,WC-2002,T-71,Kim,72,f2-only,2035,Kim Tae-young,72
+P-96343:WC-2006,P-96343,WC-2006,T-58,Deco,87,agree,1673,Deco,87
+P-96343:WC-2010,P-96343,WC-2010,T-58,Deco,82,agree,1688,Deco,82
+P-96363:WC-2006,P-96363,WC-2006,T-79,Yahia,66,agree,2297,Alaeddine Yahia,66
+P-96512:WC-2006,P-96512,WC-2006,T-41,Toni,80,agree,1111,Luca Toni,80
+P-96540:WC-2006,P-96540,WC-2006,T-30,Vieira,89,agree,791,Patrick Vieira,89
+P-96639:WC-2014,P-96639,WC-2014,T-03,Zabaleta,82,agree,54,Pablo Zabaleta,82
+P-96697:WC-2022,P-96697,WC-2022,T-65,Mendy,74,"avg(74,73)",1902,Nampalys Mendy,74
+P-96890:WC-2010,P-96890,WC-2010,T-11,Emaná,76,agree,316,Achille Emaná,76
+P-96934:WC-2026,P-96934,WC-2026,T-08,Kolašinac,79,agree,212,Sead Kolašinac,79
+P-97143:WC-2006,P-97143,WC-2006,T-75,Barnetta,71,agree,2204,Tranquillo Barnetta,71
+P-97258:WC-2010,P-97258,WC-2010,T-83,Bradley,76,agree,2400,Michael Bradley,76
+P-97422:WC-2022,P-97422,WC-2022,T-04,Wright,68,agree,132,Bailey Wright,68
+P-97434:WC-2006,P-97434,WC-2006,T-46,Salcido,68,agree,1286,Carlos Salcido,68
+P-97615:WC-2022,P-97615,WC-2022,T-48,Dumfries,82,agree,1422,Denzel Dumfries,82
+P-97635:WC-2014,P-97635,WC-2014,T-11,Bedimo,76,f1-only,328,Henri Bedimo,76
+P-97689:WC-2010,P-97689,WC-2010,T-35,Álvarez,74,"avg(73,75)",1003,Edgar Álvarez,74
+P-97698:WC-2026,P-97698,WC-2026,T-09,Sandro,77,f2-only,296,Alex Sandro,77
+P-97840:WC-2002,P-97840,WC-2002,T-28,Campbell,86,"avg(93,79)",728,Sol Campbell,86
+P-97840:WC-2006,P-97840,WC-2006,T-28,Campbell,90,agree,734,Sol Campbell,90
+P-97867:WC-2014,P-97867,WC-2014,T-50,Nwofor,65,agree,1506,Uche Nwofor,65
+P-97912:WC-2014,P-97912,WC-2014,T-17,Duarte,69,agree,477,Oscar Duarte,69
+P-97927:WC-2006,P-97927,WC-2006,T-17,Badilla,63,f1-only,461,Cristian Badilla,63
+P-97963:WC-2002,P-97963,WC-2002,T-84,de los Santos,77,agree,2449,de Santos,77
+P-98031:WC-2002,P-98031,WC-2002,T-25,Hurtado,63,"avg(57,69)",667,Iván Hurtado,63
+P-98031:WC-2006,P-98031,WC-2006,T-25,Hurtado,78,f2-only,676,Ivan Hurtado,78
+P-98143:WC-2014,P-98143,WC-2014,T-30,Mavuba,81,agree,813,Rio Mavuba,81
+P-98173:WC-2002,P-98173,WC-2002,T-11,Song,80,f1-only,299,Rigobert Song,80
+P-98173:WC-2010,P-98173,WC-2010,T-11,Song,79,agree,315,Rigobert Song,79
+P-98287:WC-2018,P-98287,WC-2018,T-30,Kanté,88,"avg(87,88)",823,N Kanté,88
+P-98287:WC-2026,P-98287,WC-2026,T-30,Kanté,85,agree,851,N Kanté,85
+P-98387:WC-2006,P-98387,WC-2006,T-81,Kalynychenko,73,f2-only,2380,Maksym Kalynychenko,73
+P-98486:WC-2006,P-98486,WC-2006,T-46,Osorio,61,agree,1292,Ricardo Osorio,61
+P-98511:WC-2006,P-98511,WC-2006,T-31,Lehmann,84,agree,869,Jens Lehmann,84
+P-98528:WC-2010,P-98528,WC-2010,T-09,Fabiano,85,agree,247,Luís Fabiano,85
+P-98593:WC-2010,P-98593,WC-2010,T-13,Fuentes,73,"avg(71,74)",399,Ismael Fuentes,73
+P-98607:WC-2006,P-98607,WC-2006,T-09,Juan,85,agree,241,Juan dos Santos,85
+P-98607:WC-2010,P-98607,WC-2010,T-09,Juan,84,agree,250,Juan dos Santos,84
+P-98747:WC-2018,P-98747,WC-2018,T-38,Cheshmi,60,f2-only,1067,Roozbeh Cheshmi,60
+P-98775:WC-2018,P-98775,WC-2018,T-38,Jahanbakhsh,75,agree,1059,Alireza Jahanbakhsh,75
+P-98806:WC-2014,P-98806,WC-2014,T-50,Omeruo,67,"avg(68,66)",1505,Kenneth Omeruo,67
+P-98826:WC-2010,P-98826,WC-2010,T-50,Haruna,63,agree,1497,Lukman Haruna,63
+P-98929:WC-2022,P-98929,WC-2022,T-58,Pereira,80,agree,1710,Danilo Pereira,80
+P-99270:WC-2002,P-99270,WC-2002,T-63,Zaid,62,f2-only,1784,Zaid,62
+P-99270:WC-2006,P-99270,WC-2006,T-63,Zaid,70,f2-only,1791,Mabrouk Zaid,70
+P-99403:WC-2006,P-99403,WC-2006,T-55,López,71,f2-only,1581,Dante López,71
+P-99407:WC-2014,P-99407,WC-2014,T-11,Song,83,agree,327,Alexandre Song-Billong,83
+P-99473:WC-2006,P-99473,WC-2006,T-41,Grosso,65,agree,1114,Fabio Grosso,65
+P-99521:WC-2002,P-99521,WC-2002,T-70,Mokoena,70,f2-only,1989,Teboho Mokoena,70
+P-99537:WC-2010,P-99537,WC-2010,T-41,Pirlo,85,agree,1117,Andrea Pirlo,85
+P-99558:WC-2002,P-99558,WC-2002,T-57,Kłos,71,agree,1614,Tomasz Kłos,71
+P-99590:WC-2014,P-99590,WC-2014,T-17,Ruiz,80,"avg(78,82)",468,Bryan Ruiz,80
+P-99590:WC-2022,P-99590,WC-2022,T-17,Ruiz,78,f2-only,495,Bryan Ruiz,78
+P-99681:WC-2002,P-99681,WC-2002,T-11,Suffo,67,agree,310,Patrick Suffo,67
+P-99721:WC-2002,P-99721,WC-2002,T-44,Nishizawa,57,f2-only,1173,Akinori Nishizawa,57
+P-99817:WC-2018,P-99817,WC-2018,T-44,Shibasaki,75,f2-only,1220,Gaku Shibasaki,75
+P-99821:WC-2022,P-99821,WC-2022,T-65,Dieng,72,"avg(72,71)",1905,Seny Dieng,72
+P-99830:WC-2002,P-99830,WC-2002,T-18,Butina,70,agree,522,Tomislav Butina,70
+P-99830:WC-2006,P-99830,WC-2006,T-18,Butina,70,agree,527,Tomislav Butina,70
+P-99900:WC-2018,P-99900,WC-2018,T-58,Fernandes,80,agree,1703,Manuel Fernandes,80
+P-99934:WC-2010,P-99934,WC-2010,T-48,van Persie,85,agree,1397,Robin van Persie,85
+P-99934:WC-2014,P-99934,WC-2014,T-48,van Persie,89,agree,1408,Robin van Persie,89
+P-99988:WC-2022,P-99988,WC-2022,T-18,Livaković,80,agree,558,Dominik Livaković,80
+P-W26-0033:WC-2026,P-W26-0033,WC-2026,T-04,Izzo,70,agree,138,Paul Izzo,70
+P-W26-0038:WC-2026,P-W26-0038,WC-2026,T-04,Velupillay,65,agree,141,Nishan Velupillay,65
+P-W26-0042:WC-2026,P-W26-0042,WC-2026,T-04,Beach,65,agree,140,Patrick Beach,65
+P-W26-0044:WC-2026,P-W26-0044,WC-2026,T-04,Volpato,69,f2-only,139,Cristian Volpato,69
+P-W26-0048:WC-2026,P-W26-0048,WC-2026,T-04,Herrington,59,agree,142,Lucas Herrington,59
+P-W26-0052:WC-2026,P-W26-0052,WC-2026,T-05,Schopf,68,agree,152,Alessandro Schopf,68
+P-W26-0053:WC-2026,P-W26-0053,WC-2026,T-05,Sabitzer,81,"avg(80,81)",144,Marcel Sabitzer,81
+P-W26-0054:WC-2026,P-W26-0054,WC-2026,T-05,Gregoritsch,75,agree,149,Michael Gregoritsch,75
+P-W26-0059:WC-2026,P-W26-0059,WC-2026,T-05,Posch,79,"avg(79,78)",145,Stefan Posch,79
+P-W26-0060:WC-2026,P-W26-0060,WC-2026,T-05,Laimer,83,"avg(82,84)",143,Konrad Laimer,83
+P-W26-0061:WC-2026,P-W26-0061,WC-2026,T-05,Kalajdzic,74,"avg(74,73)",151,Sasa Kalajdzic,74
+P-W26-0062:WC-2026,P-W26-0062,WC-2026,T-05,Schlager,79,"avg(80,78)",146,Xaver Schlager,79
+P-W26-0070:WC-2026,P-W26-0070,WC-2026,T-05,Prass,75,"avg(74,75)",150,Alexander Prass,75
+P-W26-0071:WC-2026,P-W26-0071,WC-2026,T-05,Wimmer,77,agree,148,Patrick Wimmer,77
+P-W26-0072:WC-2026,P-W26-0072,WC-2026,T-05,Chukwuemeka,78,f2-only,147,Carney Chukwuemeka,78
+P-W26-0078:WC-2026,P-W26-0078,WC-2026,T-06,Raskin,77,agree,193,Nicolas Raskin,77
+P-W26-0081:WC-2026,P-W26-0081,WC-2026,T-06,Ngoy,72,"avg(69,75)",197,Nathan Ngoy,72
+P-W26-0082:WC-2026,P-W26-0082,WC-2026,T-06,Moreira,77,agree,192,Diego Moreira,77
+P-W26-0083:WC-2026,P-W26-0083,WC-2026,T-06,Fernandez-Pardo,75,f2-only,194,Matias Fernandez-Pardo,75
+P-W26-0084:WC-2026,P-W26-0084,WC-2026,T-06,Seys,73,"avg(73,72)",195,Joaquin Seys,73
+P-W26-0085:WC-2026,P-W26-0085,WC-2026,T-06,Penders,73,agree,196,Mike Penders,73
+P-W26-0086:WC-2026,P-W26-0086,WC-2026,T-08,Tabakovic,73,agree,215,Haris Tabakovic,73
+P-W26-0087:WC-2026,P-W26-0087,WC-2026,T-08,Vasilj,77,agree,213,Nikola Vasilj,77
+P-W26-0089:WC-2026,P-W26-0089,WC-2026,T-08,Katic,69,agree,219,Nikola Katic,69
+P-W26-0093:WC-2026,P-W26-0093,WC-2026,T-08,Mujakic,67,agree,224,Nihad Mujakic,67
+P-W26-0094:WC-2026,P-W26-0094,WC-2026,T-08,Burnic,68,agree,221,Dzenis Burnic,68
+P-W26-0095:WC-2026,P-W26-0095,WC-2026,T-08,Hadzikadunic,70,"avg(70,69)",218,Dennis Hadzikadunic,70
+P-W26-0096:WC-2026,P-W26-0096,WC-2026,T-08,Zlomislic,68,f2-only,222,Martin Zlomislic,68
+P-W26-0098:WC-2026,P-W26-0098,WC-2026,T-08,Memic,72,agree,217,Amar Memic,72
+P-W26-0099:WC-2026,P-W26-0099,WC-2026,T-08,Gigovic,72,agree,216,Armin Gigovic,72
+P-W26-0100:WC-2026,P-W26-0100,WC-2026,T-08,Basic,66,f2-only,225,Ivan Basic,66
+P-W26-0101:WC-2026,P-W26-0101,WC-2026,T-08,Dedic,74,"avg(74,73)",214,Amar Dedic,74
+P-W26-0104:WC-2026,P-W26-0104,WC-2026,T-08,Bazdar,69,agree,220,Samed Bazdar,69
+P-W26-0105:WC-2026,P-W26-0105,WC-2026,T-08,Bajraktarevic,67,agree,223,Esmir Bajraktarevic,67
+P-W26-0107:WC-2026,P-W26-0107,WC-2026,T-08,Celik,64,agree,226,Nidal Čelik,64
+P-W26-0108:WC-2026,P-W26-0108,WC-2026,T-08,Alajbegovic,62,"avg(63,61)",227,Kerim Alajbegovic,62
+P-W26-0114:WC-2026,P-W26-0114,WC-2026,T-09,Cunha,83,agree,293,Matheus Cunha,83
+P-W26-0117:WC-2026,P-W26-0117,WC-2026,T-09,Igor Thiago,75,agree,297,Igor Thiago,75
+P-W26-0118:WC-2026,P-W26-0118,WC-2026,T-09,Wesley,78,"avg(77,79)",294,Wesley Lima,78
+P-W26-0120:WC-2026,P-W26-0120,WC-2026,T-09,Rayan,78,f2-only,295,Rayan Rocha,78
+P-W26-0135:WC-2026,P-W26-0135,WC-2026,T-16,Montero,75,agree,439,Álvaro Montero,75
+P-W26-0139:WC-2026,P-W26-0139,WC-2026,T-16,Suarez,80,f2-only,434,Luis Suarez,80
+P-W26-0141:WC-2026,P-W26-0141,WC-2026,T-16,Carrascal,77,f2-only,437,Jorge Carrascal,77
+P-W26-0144:WC-2026,P-W26-0144,WC-2026,T-16,Hernandez,79,f2-only,435,Juan Hernández,79
+P-W26-0147:WC-2026,P-W26-0147,WC-2026,T-16,Castano,76,"avg(77,74)",438,Kevin Castano,76
+P-W26-0148:WC-2026,P-W26-0148,WC-2026,T-16,Gomez,72,f2-only,440,Carlos Gómez,72
+P-W26-0149:WC-2026,P-W26-0149,WC-2026,T-16,Puerta,68,f2-only,444,Gustavo Puerta,68
+P-W26-0163:WC-2026,P-W26-0163,WC-2026,T-20,Coufal,73,agree,594,Vladimir Coufal,73
+P-W26-0164:WC-2026,P-W26-0164,WC-2026,T-20,Holes,76,agree,589,Tomas Holes,76
+P-W26-0165:WC-2026,P-W26-0165,WC-2026,T-20,Chory,75,agree,590,Tomas Chory,75
+P-W26-0166:WC-2026,P-W26-0166,WC-2026,T-20,Soucek,78,agree,587,Tomas Soucek,78
+P-W26-0167:WC-2026,P-W26-0167,WC-2026,T-20,Schick,85,agree,586,Patrik Schick,85
+P-W26-0170:WC-2026,P-W26-0170,WC-2026,T-20,Kuchta,73,agree,593,Jan Kuchta,73
+P-W26-0175:WC-2026,P-W26-0175,WC-2026,T-20,Hranac,71,agree,596,Robin Hranac,71
+P-W26-0176:WC-2026,P-W26-0176,WC-2026,T-20,Kovar,75,agree,591,Matej Kovar,75
+P-W26-0177:WC-2026,P-W26-0177,WC-2026,T-20,Jurasek,73,f2-only,595,David Jurasek,73
+P-W26-0180:WC-2026,P-W26-0180,WC-2026,T-20,Cerv,74,agree,592,Lukas Cerv,74
+P-W26-0182:WC-2026,P-W26-0182,WC-2026,T-20,Hlozek,77,agree,588,Adam Hlozek,77
+P-W26-0188:WC-2026,P-W26-0188,WC-2026,T-25,Caicedo,66,agree,711,Jordy Caicedo,66
+P-W26-0189:WC-2026,P-W26-0189,WC-2026,T-25,Alcivar,68,agree,709,Jordy Alcivar,68
+P-W26-0194:WC-2026,P-W26-0194,WC-2026,T-25,Valencia,67,agree,710,Anthony Valencia,67
+P-W26-0197:WC-2026,P-W26-0197,WC-2026,T-25,Medina,70,agree,708,Yaimar Medina,70
+P-W26-0218:WC-2026,P-W26-0218,WC-2026,T-26,Abdelmaguid,69,f2-only,725,Hossam Abdelmaguid,69
+P-W26-0219:WC-2026,P-W26-0219,WC-2026,T-26,Saber,70,f2-only,724,Mahmoud Saber,70
+P-W26-0221:WC-2026,P-W26-0221,WC-2026,T-26,Hassan,73,f2-only,723,Haissem Hassan,73
+P-W26-0243:WC-2026,P-W26-0243,WC-2026,T-30,Mateta,82,agree,852,Jean-Philippe Mateta,82
+P-W26-0245:WC-2026,P-W26-0245,WC-2026,T-30,Kone,79,f2-only,855,Kouadio Koné,79
+P-W26-0247:WC-2026,P-W26-0247,WC-2026,T-30,Akliouche,80,agree,854,Maghnes Akliouche,80
+P-W26-0250:WC-2026,P-W26-0250,WC-2026,T-30,Cherki,81,agree,853,Rayan Cherki,81
+P-W26-0255:WC-2026,P-W26-0255,WC-2026,T-31,Gross,80,"canonical-duplicate-avg(80,79)",929;931,Pascal Groß;Pascal Gross,80;79
+P-W26-0258:WC-2026,P-W26-0258,WC-2026,T-31,Anton,83,"avg(82,83)",923,Waldemar Anton,83
+P-W26-0259:WC-2026,P-W26-0259,WC-2026,T-31,Nubel,81,"avg(81,80)",926,Alexander Nubel,81
+P-W26-0260:WC-2026,P-W26-0260,WC-2026,T-31,Amiri,81,"avg(81,80)",925,Nadiem Amiri,81
+P-W26-0263:WC-2026,P-W26-0263,WC-2026,T-31,Stiller,83,agree,924,Angelo Stiller,83
+P-W26-0264:WC-2026,P-W26-0264,WC-2026,T-31,Thiaw,80,"avg(78,81)",928,Malick Thiaw,80
+P-W26-0266:WC-2026,P-W26-0266,WC-2026,T-31,Beier,80,"avg(79,80)",927,Maximilian Beier,80
+P-W26-0268:WC-2026,P-W26-0268,WC-2026,T-31,Brown,79,"avg(77,80)",930,Nathaniel Brown,79
+P-W26-0270:WC-2026,P-W26-0270,WC-2026,T-31,Karl,69,"avg(63,75)",932,Lennart Karl,69
+P-W26-0271:WC-2026,P-W26-0271,WC-2026,T-32,Asare,75,f2-only,978,Benjamin Asare,75
+P-W26-0274:WC-2026,P-W26-0274,WC-2026,T-32,Mumin,77,agree,975,Abdul Mumin,77
+P-W26-0275:WC-2026,P-W26-0275,WC-2026,T-32,Sibo,69,agree,984,Kwasi Sibo,69
+P-W26-0276:WC-2026,P-W26-0276,WC-2026,T-32,Opoku,72,f2-only,982,Jerome Opoku,72
+P-W26-0277:WC-2026,P-W26-0277,WC-2026,T-32,Thomas-Asante,69,agree,985,Brandon Thomas-Asante,69
+P-W26-0279:WC-2026,P-W26-0279,WC-2026,T-32,Boakye,69,agree,983,Augustine Boakye,69
+P-W26-0280:WC-2026,P-W26-0280,WC-2026,T-32,Senaya,69,f2-only,986,Marvin Senaya,69
+P-W26-0282:WC-2026,P-W26-0282,WC-2026,T-32,Nuamah,75,agree,977,Ernest Nuamah,75
+P-W26-0284:WC-2026,P-W26-0284,WC-2026,T-32,Fatawu,76,agree,976,Issahaku Fatawu,76
+P-W26-0285:WC-2026,P-W26-0285,WC-2026,T-32,Peprah Oppong,67,"avg(68,65)",987,Kojo Oppong,67
+P-W26-0290:WC-2026,P-W26-0290,WC-2026,T-34,Lacroix,60,f2-only,1000,Duke Lacroix,60
+P-W26-0295:WC-2026,P-W26-0295,WC-2026,T-34,Duverne,71,agree,998,Jean-Kevin Duverne,71
+P-W26-0297:WC-2026,P-W26-0297,WC-2026,T-34,Bellegarde,75,agree,996,Jean-Ricner Bellegarde,75
+P-W26-0304:WC-2026,P-W26-0304,WC-2026,T-34,Isidor,72,f2-only,997,Wilson Isidor,72
+P-W26-0309:WC-2026,P-W26-0309,WC-2026,T-34,Paugain,55,agree,1001,Wilguens Paugain,55
+P-W26-0310:WC-2026,P-W26-0310,WC-2026,T-34,Casimir,71,f2-only,999,Josue Casimir,71
+P-W26-0327:WC-2026,P-W26-0327,WC-2026,T-39,Sulaka,60,f2-only,1092,Rebin Sulaka,60
+P-W26-0328:WC-2026,P-W26-0328,WC-2026,T-39,Putros,65,f2-only,1088,Frans Putros,65
+P-W26-0329:WC-2026,P-W26-0329,WC-2026,T-39,Talib,60,f2-only,1093,Fahad Talib,60
+P-W26-0330:WC-2026,P-W26-0330,WC-2026,T-39,Yahya,65,f2-only,1087,Ahmed Yahya,65
+P-W26-0333:WC-2026,P-W26-0333,WC-2026,T-39,Basil,60,f2-only,1091,Basil,60
+P-W26-0334:WC-2026,P-W26-0334,WC-2026,T-39,Younis,60,f2-only,1094,Manaf Younis,60
+P-W26-0336:WC-2026,P-W26-0336,WC-2026,T-39,Hashim,65,f2-only,1086,Akam Hashem,65
+P-W26-0342:WC-2026,P-W26-0342,WC-2026,T-39,Saadoon,65,f2-only,1089,Mustafa Saadoon,65
+P-W26-0350:WC-2026,P-W26-0350,WC-2026,T-39,Jasim,62,agree,1090,Ali Jasim,62
+P-W26-0351:WC-2026,P-W26-0351,WC-2026,T-39,Farji,67,"avg(66,67)",1085,Marko Farji,67
+P-W26-0354:WC-2026,P-W26-0354,WC-2026,T-42,Pepe,80,agree,1145,Nicolas Pépé,80
+P-W26-0355:WC-2026,P-W26-0355,WC-2026,T-42,Konan,72,agree,1159,Ghislain Konan,72
+P-W26-0356:WC-2026,P-W26-0356,WC-2026,T-42,Kessie,80,agree,1147,Franck Kessie,80
+P-W26-0357:WC-2026,P-W26-0357,WC-2026,T-42,Operi,74,agree,1158,Christopher Operi,74
+P-W26-0359:WC-2026,P-W26-0359,WC-2026,T-42,Sangare,77,agree,1152,Ibrahim Sangare,77
+P-W26-0360:WC-2026,P-W26-0360,WC-2026,T-42,Lafont,75,agree,1155,Alban Lafont,75
+P-W26-0361:WC-2026,P-W26-0361,WC-2026,T-42,Ndicka,81,agree,1144,Evan Ndicka,81
+P-W26-0362:WC-2026,P-W26-0362,WC-2026,T-42,Fofana,76,agree,1154,Yahia Fofana,76
+P-W26-0363:WC-2026,P-W26-0363,WC-2026,T-42,Singo,80,agree,1149,Wilfried Singo,80
+P-W26-0364:WC-2026,P-W26-0364,WC-2026,T-42,Kossounou,80,agree,1148,Odilon Kossounou,80
+P-W26-0367:WC-2026,P-W26-0367,WC-2026,T-42,Adingra,76,agree,1153,Simon Adingra,76
+P-W26-0369:WC-2026,P-W26-0369,WC-2026,T-42,Diallo,80,"avg(79,80)",1146,Amad Diallo,80
+P-W26-0371:WC-2026,P-W26-0371,WC-2026,T-42,Wahi,75,f2-only,1156,Elye Wahi,75
+P-W26-0372:WC-2026,P-W26-0372,WC-2026,T-42,Bonny,78,f2-only,1151,Ange-Yoan Bonny,78
+P-W26-0374:WC-2026,P-W26-0374,WC-2026,T-42,Diakite,72,f1-only,1160,Oumar Diakité,72
+P-W26-0376:WC-2026,P-W26-0376,WC-2026,T-42,Inao Oulai,66,"avg(64,68)",1161,Christ Oulai,66
+P-W26-0377:WC-2026,P-W26-0377,WC-2026,T-42,Diomande,74,"avg(66,81)",1157,Yan Diomande,74
+P-W26-0378:WC-2026,P-W26-0378,WC-2026,T-44,Watanabe,75,agree,1254,Tsuyoshi Watanabe,75
+P-W26-0380:WC-2026,P-W26-0380,WC-2026,T-44,Hayakawa,71,f2-only,1257,Tomoki Hayakawa,71
+P-W26-0386:WC-2026,P-W26-0386,WC-2026,T-44,Suzuki,71,agree,1256,Yuito Suzuki,71
+P-W26-0387:WC-2026,P-W26-0387,WC-2026,T-44,Suzuki,74,agree,1255,Zion Suzuki,74
+P-W26-0388:WC-2026,P-W26-0388,WC-2026,T-44,Suzuki,66,agree,1258,Junnosuke Suzuki,66
+P-W26-0389:WC-2026,P-W26-0389,WC-2026,T-44,Shiogai,66,agree,1259,Kento Shiogai,66
+P-W26-0392:WC-2026,P-W26-0392,WC-2026,T-46,Acevedo,74,f2-only,1341,C. Acevedo,74
+P-W26-0393:WC-2026,P-W26-0393,WC-2026,T-46,Quinones,81,"avg(80,81)",1337,Julián Quinones,81
+P-W26-0394:WC-2026,P-W26-0394,WC-2026,T-46,Fidalgo,77,f2-only,1338,Fidalgo,77
+P-W26-0396:WC-2026,P-W26-0396,WC-2026,T-46,Lira,74,"avg(73,75)",1340,Lira,74
+P-W26-0398:WC-2026,P-W26-0398,WC-2026,T-46,Huerta,73,agree,1343,Huerta,73
+P-W26-0401:WC-2026,P-W26-0401,WC-2026,T-46,Gutierrez,69,f2-only,1348,Brian Gutiérrez,69
+P-W26-0403:WC-2026,P-W26-0403,WC-2026,T-46,Vargas,71,f2-only,1345,O. Vargas,71
+P-W26-0404:WC-2026,P-W26-0404,WC-2026,T-46,Mora,73,f2-only,1344,G. Mora,73
+P-W26-0406:WC-2026,P-W26-0406,WC-2026,T-47,Diop,76,f2-only,1384,Issa Diop,76
+P-W26-0407:WC-2026,P-W26-0407,WC-2026,T-47,Belammari,66,f2-only,1389,Youssef Belammari,66
+P-W26-0408:WC-2026,P-W26-0408,WC-2026,T-47,Diaz,82,"avg(82,81)",1378,Brahim Díaz,82
+P-W26-0415:WC-2026,P-W26-0415,WC-2026,T-47,Khannouss,77,"avg(76,78)",1383,Bilal El Khannouss,77
+P-W26-0416:WC-2026,P-W26-0416,WC-2026,T-47,Amaimouni,67,"avg(63,70)",1387,Ayoube Amaimouni-Echghouyab,67
+P-W26-0418:WC-2026,P-W26-0418,WC-2026,T-47,Mourabet,68,"avg(66,69)",1386,Samir El Mourabet,68
+P-W26-0419:WC-2026,P-W26-0419,WC-2026,T-47,Yassine,67,f2-only,1388,Gessime Yassine,67
+P-W26-0420:WC-2026,P-W26-0420,WC-2026,T-47,Bouaddi,75,f2-only,1385,Ayyoub Bouaddi,75
+P-W26-0421:WC-2026,P-W26-0421,WC-2026,T-48,Flekken,78,agree,1442,Mark Flekken,78
+P-W26-0425:WC-2026,P-W26-0425,WC-2026,T-48,Kluivert,79,agree,1441,Justin Kluivert,79
+P-W26-0427:WC-2026,P-W26-0427,WC-2026,T-48,Hecke,80,agree,1438,Jan van Hecke,80
+P-W26-0429:WC-2026,P-W26-0429,WC-2026,T-48,Timber,80,agree,1440,Quinten Timber,80
+P-W26-0431:WC-2026,P-W26-0431,WC-2026,T-48,Brobbey,77,agree,1443,Brian Brobbey,77
+P-W26-0437:WC-2026,P-W26-0437,WC-2026,T-49,Barbarouses,67,f2-only,1465,Kosta Barbarouses,67
+P-W26-0438:WC-2026,P-W26-0438,WC-2026,T-49,Crocombe,69,f2-only,1457,Max Crocombe,69
+P-W26-0440:WC-2026,P-W26-0440,WC-2026,T-49,De Vries,70,"avg(69,70)",1455,Francis De Vries,70
+P-W26-0441:WC-2026,P-W26-0441,WC-2026,T-49,Thomas,66,agree,1466,Ryan Thomas,66
+P-W26-0442:WC-2026,P-W26-0442,WC-2026,T-49,Rufer,67,"avg(67,66)",1464,Alex Rufer,67
+P-W26-0443:WC-2026,P-W26-0443,WC-2026,T-49,Woud,61,"avg(60,61)",1473,Michael Woud,61
+P-W26-0444:WC-2026,P-W26-0444,WC-2026,T-49,Singh,68,f2-only,1462,Sarpreet Singh,68
+P-W26-0445:WC-2026,P-W26-0445,WC-2026,T-49,Pijnaker,67,agree,1463,Nando Pijnaker,67
+P-W26-0446:WC-2026,P-W26-0446,WC-2026,T-49,Bell,75,"avg(74,75)",1453,Joe Bell,75
+P-W26-0448:WC-2026,P-W26-0448,WC-2026,T-49,Elliot,63,"avg(62,63)",1470,Callan Elliot,63
+P-W26-0449:WC-2026,P-W26-0449,WC-2026,T-49,Just,68,"avg(66,69)",1458,Elijah Just,68
+P-W26-0450:WC-2026,P-W26-0450,WC-2026,T-49,Cacace,72,agree,1454,Liberato Cacace,72
+P-W26-0451:WC-2026,P-W26-0451,WC-2026,T-49,Waine,62,f1-only,1471;1472,Benjamin Peter Waine;Ben Waine,62;62
+P-W26-0453:WC-2026,P-W26-0453,WC-2026,T-49,Garbett,65,agree,1467,Matthew Garbett,65
+P-W26-0456:WC-2026,P-W26-0456,WC-2026,T-49,Old,68,f2-only,1461,Ben Old,68
+P-W26-0457:WC-2026,P-W26-0457,WC-2026,T-49,Randall,64,"avg(60,67)",1469,Jesse Randall,64
+P-W26-0459:WC-2026,P-W26-0459,WC-2026,T-49,Bindon,70,"avg(69,70)",1456,Tyler Bindon,70
+P-W26-0463:WC-2026,P-W26-0463,WC-2026,T-53,Thorsby,72,agree,1540,Morten Thorsby,72
+P-W26-0465:WC-2026,P-W26-0465,WC-2026,T-53,Ryerson,80,"avg(79,80)",1533,Julian Ryerson,80
+P-W26-0466:WC-2026,P-W26-0466,WC-2026,T-53,Berg,78,"avg(77,79)",1534,Patrick Berg,78
+P-W26-0469:WC-2026,P-W26-0469,WC-2026,T-53,Bjorkan,75,"canonical-duplicate-avg(75,74)",1536;1537,Fredrik Bjorkan;Fredrik André Bjørkan,75;74
+P-W26-0471:WC-2026,P-W26-0471,WC-2026,T-53,Heggem,74,"canonical-duplicate-avg(74,73)",1538;1539,Torbjorn Heggem;Torbjørn Lysaker Heggem,74;73
+P-W26-0480:WC-2026,P-W26-0480,WC-2026,T-53,Aasgaard,71,f2-only,1541,Thelo Aasgaard,71
+P-W26-0484:WC-2026,P-W26-0484,WC-2026,T-53,Schjelderup,76,"avg(75,77)",1535,Andreas Schjelderup,76
+P-W26-0491:WC-2026,P-W26-0491,WC-2026,T-54,Barcenas,71,f2-only,1559,Edgar Barcenas,71
+P-W26-0499:WC-2026,P-W26-0499,WC-2026,T-54,Andrade,69,agree,1560,Andres Andrade,69
+P-W26-0503:WC-2026,P-W26-0503,WC-2026,T-54,Cordoba,68,agree,1561,José Córdoba,68
+P-W26-0542:WC-2026,P-W26-0542,WC-2026,T-59,Mendes,70,"avg(70,69)",1730,Lucas Mendes,70
+P-W26-0546:WC-2026,P-W26-0546,WC-2026,T-59,Brake,68,f2-only,1731,Sultan Al Brake,68
+P-W26-0550:WC-2026,P-W26-0550,WC-2026,T-59,Abunada,64,f2-only,1734,Mahmoud Abunada,64
+P-W26-0551:WC-2026,P-W26-0551,WC-2026,T-59,Ganehi,67,agree,1732,Ahmed Al-Ganehi,67
+P-W26-0553:WC-2026,P-W26-0553,WC-2026,T-59,Hussain,58,f2-only,1736,Al-Hashmi Al-Hussain,58
+P-W26-0554:WC-2026,P-W26-0554,WC-2026,T-59,Oui,60,f2-only,1735,Ayoub Al-Oui,60
+P-W26-0556:WC-2026,P-W26-0556,WC-2026,T-63,Kassar,63,agree,1856,Ahmed Al Kassar,63
+P-W26-0557:WC-2026,P-W26-0557,WC-2026,T-63,Kadesh,71,f1-only,1845;1846,Hassan Kadesh Mahboobحسن كادش محبوب;Hassan Kadish,71;71
+P-W26-0561:WC-2026,P-W26-0561,WC-2026,T-63,Hamdan,64,agree,1855,Abdullah Al Hamdan,64
+P-W26-0564:WC-2026,P-W26-0564,WC-2026,T-63,Harbi,67,f1-only,1850;1852,Moteb Saad Al Harbiمتعب سعد الحربي;Muteb Al Harbi,67;67
+P-W26-0566:WC-2026,P-W26-0566,WC-2026,T-63,Yahya,68,agree,1847,Ayman Yahya,68
+P-W26-0567:WC-2026,P-W26-0567,WC-2026,T-63,Thakri,66,f1-only,1853;1854,Jehad Abdullatif Ahmed Thakriجهاد ذكري;Jehad Thekri,66;66
+P-W26-0568:WC-2026,P-W26-0568,WC-2026,T-63,Johani,67,agree,1849,Ziyad Al Johani,67
+P-W26-0569:WC-2026,P-W26-0569,WC-2026,T-63,Abu Shamat,67,agree,1848,Mohammed Abu Al Shamat,67
+P-W26-0570:WC-2026,P-W26-0570,WC-2026,T-63,Juwayr,75,f1-only,1837;1840,Musab Fahd Al Juwayrمصعب فهد الجوير;Musab Al Juwair,75;75
+P-W26-0571:WC-2026,P-W26-0571,WC-2026,T-64,Gordon,67,agree,1861,Craig Gordon,67
+P-W26-0577:WC-2026,P-W26-0577,WC-2026,T-64,Hendry,74,agree,1858,Jack Hendry,74
+P-W26-0589:WC-2026,P-W26-0589,WC-2026,T-64,Ralston,71,agree,1860,Anthony Ralston,71
+P-W26-0591:WC-2026,P-W26-0591,WC-2026,T-64,Ferguson,78,agree,1857,Lewis Ferguson,78
+P-W26-0594:WC-2026,P-W26-0594,WC-2026,T-64,Gannon-Doak,71,agree,1859,Ben Gannon-Doak,71
+P-W26-0597:WC-2026,P-W26-0597,WC-2026,T-65,Seck,73,f2-only,1916,Abdoulaye Seck,73
+P-W26-0598:WC-2026,P-W26-0598,WC-2026,T-65,Diaw,70,agree,1918,Mory Diaw,70
+P-W26-0599:WC-2026,P-W26-0599,WC-2026,T-65,Ndiaye,70,f2-only,1919,Cherif Ndiaye,70
+P-W26-0601:WC-2026,P-W26-0601,WC-2026,T-65,Diouf,78,agree,1911,Yehvann Diouf,78
+P-W26-0602:WC-2026,P-W26-0602,WC-2026,T-65,Camara,77,agree,1913,Lamine Camara,77
+P-W26-0608:WC-2026,P-W26-0608,WC-2026,T-65,Sapoko Ndiaye,71,f2-only,1917,Bara Ndiaye,71
+P-W26-0610:WC-2026,P-W26-0610,WC-2026,T-70,Zwane,73,f2-only,2015,Themba Zwane,73
+P-W26-0613:WC-2026,P-W26-0613,WC-2026,T-70,Mudau,73,f2-only,2014,Khuliso Mudau,73
+P-W26-0620:WC-2026,P-W26-0620,WC-2026,T-70,Sithole,65,agree,2018,Sphephelo Sithole,65
+P-W26-0621:WC-2026,P-W26-0621,WC-2026,T-70,Mbatha,69,f2-only,2016,Thalente Mbatha,69
+P-W26-0631:WC-2026,P-W26-0631,WC-2026,T-70,Okon,67,agree,2017,Ime Okon,67
+P-W26-0641:WC-2026,P-W26-0641,WC-2026,T-71,Kim,67,f1-only,2107,Tae-hyeon Kim김태현,67
+P-W26-0644:WC-2026,P-W26-0644,WC-2026,T-71,Eom,71,agree,2104,Eom Sung,71
+P-W26-0645:WC-2026,P-W26-0645,WC-2026,T-71,Yang,71,"avg(70,71)",2105,Yang Jun,71
+P-W26-0646:WC-2026,P-W26-0646,WC-2026,T-71,Lee,69,agree,2106,Lee Beom,69
+P-W26-0664:WC-2026,P-W26-0664,WC-2026,T-74,Sema,70,agree,2191,Ken Sema,70
+P-W26-0665:WC-2026,P-W26-0665,WC-2026,T-74,Starfelt,78,agree,2176,Carl Starfelt,78
+P-W26-0666:WC-2026,P-W26-0666,WC-2026,T-74,Karlstrom,75,agree,2180,Jesper Karlstrom,75
+P-W26-0668:WC-2026,P-W26-0668,WC-2026,T-74,Nilsson,75,agree,2182,Gustaf Nilsson,75
+P-W26-0672:WC-2026,P-W26-0672,WC-2026,T-74,Widell Zetterstrom,71,agree,2189,Jacob Zetterstrom,71
+P-W26-0673:WC-2026,P-W26-0673,WC-2026,T-74,Bernhardsson,72,agree,2187,Alexander Bernhardsson,72
+P-W26-0674:WC-2026,P-W26-0674,WC-2026,T-74,Johansson,74,agree,2183,Viktor Johansson,74
+P-W26-0675:WC-2026,P-W26-0675,WC-2026,T-74,Ekdal,72,agree,2185,Hjalmar Ekdal,72
+P-W26-0676:WC-2026,P-W26-0676,WC-2026,T-74,Svanberg,76,agree,2179,Mattias Svanberg,76
+P-W26-0677:WC-2026,P-W26-0677,WC-2026,T-74,Hien,78,agree,2175,Isak Hien,78
+P-W26-0680:WC-2026,P-W26-0680,WC-2026,T-74,Lagerbielke,71,"avg(71,70)",2190,Gustaf Lagerbielke,71
+P-W26-0681:WC-2026,P-W26-0681,WC-2026,T-74,Nygren,73,"avg(73,72)",2184,Benjamin Nygren,73
+P-W26-0683:WC-2026,P-W26-0683,WC-2026,T-74,Elanga,81,agree,2174,Anthony Elanga,81
+P-W26-0685:WC-2026,P-W26-0685,WC-2026,T-74,Zeneli,72,agree,2186,Besfort Zeneli,72
+P-W26-0686:WC-2026,P-W26-0686,WC-2026,T-74,Ayari,75,agree,2181,Yasin Ayari,75
+P-W26-0687:WC-2026,P-W26-0687,WC-2026,T-74,Bergvall,77,agree,2177,Lucas Bergvall,77
+P-W26-0689:WC-2026,P-W26-0689,WC-2026,T-75,Muheim,75,agree,2248,Miro Muheim,75
+P-W26-0691:WC-2026,P-W26-0691,WC-2026,T-75,Amdouni,75,agree,2246,Zeki Amdouni,75
+P-W26-0692:WC-2026,P-W26-0692,WC-2026,T-75,Keller,72,agree,2251,Marvin Keller,72
+P-W26-0693:WC-2026,P-W26-0693,WC-2026,T-75,Jaquez,69,agree,2252,Luca Jaquez,69
+P-W26-0696:WC-2026,P-W26-0696,WC-2026,T-79,Khedira,76,f2-only,2339,Rani Khedira,76
+P-W26-0697:WC-2026,P-W26-0697,WC-2026,T-79,Ben Ouanes,69,agree,2346,Mortadha Ben Ouanes,69
+P-W26-0699:WC-2026,P-W26-0699,WC-2026,T-79,Chaouat,64,f2-only,2352,Firas Chaouat,64
+P-W26-0701:WC-2026,P-W26-0701,WC-2026,T-79,Mastouri,68,f2-only,2349,Hazem Mastouri,68
+P-W26-0702:WC-2026,P-W26-0702,WC-2026,T-79,Achouri,71,"avg(72,70)",2345,Elias Achouri,71
+P-W26-0703:WC-2026,P-W26-0703,WC-2026,T-79,Valery,71,agree,2344,Yan Valery,71
+P-W26-0706:WC-2026,P-W26-0706,WC-2026,T-79,Chamakh,62,f2-only,2354,Abdelmouhib Chamakh,62
+P-W26-0708:WC-2026,P-W26-0708,WC-2026,T-79,Tounekti,69,f1-only,2347,Sebastian Tounektiسيباستيان توناكتي,69
+P-W26-0712:WC-2026,P-W26-0712,WC-2026,T-79,Neffati,63,agree,2353,Moutaz Neffati,63
+P-W26-0713:WC-2026,P-W26-0713,WC-2026,T-79,Ayari,65,f2-only,2351,K. Ayari,65
+P-W26-0715:WC-2026,P-W26-0715,WC-2026,T-80,Gunok,78,f2-only,2372,Fehmi Gunok,78
+P-W26-0718:WC-2026,P-W26-0718,WC-2026,T-80,Bardakci,80,f2-only,2370,Abdulkerim Bardakci,80
+P-W26-0728:WC-2026,P-W26-0728,WC-2026,T-80,Yuksek,77,f2-only,2373,Ismail Yuksek,77
+P-W26-0732:WC-2026,P-W26-0732,WC-2026,T-80,Yilmaz,76,f2-only,2375,Baris Yilmaz,76
+P-W26-0734:WC-2026,P-W26-0734,WC-2026,T-80,Akgun,78,f2-only,2371,Yunus Akgun,78
+P-W26-0737:WC-2026,P-W26-0737,WC-2026,T-80,Gul,76,f2-only,2374,Deniz Gul,76
+P-W26-0740:WC-2026,P-W26-0740,WC-2026,T-80,Uzun,74,f2-only,2376,Can Uzun,74
+P-W26-0746:WC-2026,P-W26-0746,WC-2026,T-83,Richards,77,f1-only,2438;2439,Christopher Jeffrey Richards;Chris Richards,77;77
+P-W26-0749:WC-2026,P-W26-0749,WC-2026,T-83,Balogun,77,agree,2436,Folarin Balogun,77
+P-W26-0750:WC-2026,P-W26-0750,WC-2026,T-83,Tillman,82,agree,2432,Malik Tillman,82
+P-W26-0751:WC-2026,P-W26-0751,WC-2026,T-83,Pepi,76,agree,2440,Ricardo Pepi,76
+P-W26-0754:WC-2026,P-W26-0754,WC-2026,T-84,Aguirre,69,f2-only,2505,Rodrigo Aguirre,69
+P-W26-0755:WC-2026,P-W26-0755,WC-2026,T-84,Mele,74,f2-only,2499,Santiago Mele,74
+P-W26-0757:WC-2026,P-W26-0757,WC-2026,T-84,Piquerez,76,f2-only,2496,Joaquin Piquerez,76
+P-W26-0758:WC-2026,P-W26-0758,WC-2026,T-84,Bueno,76,agree,2494,Santiago Bueno,76
+P-W26-0759:WC-2026,P-W26-0759,WC-2026,T-84,Zalazar,79,agree,2493,Rodrigo Zalazar,79
+P-W26-0760:WC-2026,P-W26-0760,WC-2026,T-84,Martinez,73,f2-only,2502,Emiliano Martínez,73
+P-W26-0763:WC-2026,P-W26-0763,WC-2026,T-84,Sanabria,74,f2-only,2500,Juan Sanabria,74
+P-W26-0768:WC-2026,P-W26-0768,WC-2026,T-W26-1,Rodrigues,70,f2-only,383,Garry Rodrigues,70
+P-W26-0770:WC-2026,P-W26-0770,WC-2026,T-W26-1,Lopes,66,f2-only,389,Roberto Lopes,66
+P-W26-0772:WC-2026,P-W26-0772,WC-2026,T-W26-1,Semedo,68,f2-only,385,Willy Semedo,68
+P-W26-0773:WC-2026,P-W26-0773,WC-2026,T-W26-1,Moreira,72,f2-only,380,Steven Moreira,72
+P-W26-0775:WC-2026,P-W26-0775,WC-2026,T-W26-1,Semedo,63,f2-only,393,Yannick Semedo,63
+P-W26-0776:WC-2026,P-W26-0776,WC-2026,T-W26-1,Pina,67,f2-only,386,Kevin Pina,67
+P-W26-0777:WC-2026,P-W26-0777,WC-2026,T-W26-1,Rosa,64,f2-only,391,Marcio Rosa,64
+P-W26-0779:WC-2026,P-W26-0779,WC-2026,T-W26-1,João Paulo,65,f2-only,390,João Fernandes,65
+P-W26-0781:WC-2026,P-W26-0781,WC-2026,T-W26-1,Duarte,69,f2-only,384,Deroy Duarte,69
+P-W26-0786:WC-2026,P-W26-0786,WC-2026,T-W26-1,Arcanjo,71,f2-only,381,Telmo Arcanjo,71
+P-W26-0788:WC-2026,P-W26-0788,WC-2026,T-W26-1,Varela,67,f2-only,388,Helio Varela,67
+P-W26-0789:WC-2026,P-W26-0789,WC-2026,T-W26-1,Lopes Cabral,67,f2-only,387,Sidny Cabral,67
+P-W26-0790:WC-2026,P-W26-0790,WC-2026,T-W26-1,Pina,71,f2-only,382,Wagner Pina,71
+P-W26-0793:WC-2026,P-W26-0793,WC-2026,T-W26-2,Kuwas,67,agree,572,Brandley Kuwas,67
+P-W26-0796:WC-2026,P-W26-0796,WC-2026,T-W26-2,Brenet,70,f2-only,569,Joshua Brenet,70
+P-W26-0798:WC-2026,P-W26-0798,WC-2026,T-W26-2,Kastaneer,63,f2-only,575,Gervane Kastaneer,63
+P-W26-0803:WC-2026,P-W26-0803,WC-2026,T-W26-2,Obispo,74,f2-only,567,Armando Obispo,74
+P-W26-0805:WC-2026,P-W26-0805,WC-2026,T-W26-2,Roemeratoe,65,f2-only,574,Godfried Roemeratoe,65
+P-W26-0807:WC-2026,P-W26-0807,WC-2026,T-W26-2,Chong,71,"avg(71,70)",568,Tahith Chong,71
+P-W26-0808:WC-2026,P-W26-0808,WC-2026,T-W26-2,Margaritha,63,f2-only,576,Jearl Margaritha,63
+P-W26-0809:WC-2026,P-W26-0809,WC-2026,T-W26-2,Sambo,68,"avg(68,67)",570,Shurandy Sambo,68
+P-W26-0810:WC-2026,P-W26-0810,WC-2026,T-W26-2,Antonisse,68,f2-only,571,Jeremy Antonisse,68
+P-W26-0811:WC-2026,P-W26-0811,WC-2026,T-W26-2,Bodak,60,agree,578,Tyrick Bodak,60
+P-W26-0813:WC-2026,P-W26-0813,WC-2026,T-W26-2,Noslin,66,f1-only,573,Tyrese Noslin,66
+P-W26-0816:WC-2026,P-W26-0816,WC-2026,T-W26-2,Comenencia,62,agree,577,Livano Comenencia,62
+P-W26-0817:WC-2026,P-W26-0817,WC-2026,T-W26-3,Bakambu,77,agree,599,Cedric Bakambu,77
+P-W26-0818:WC-2026,P-W26-0818,WC-2026,T-W26-3,Kakuta,72,f2-only,606,Gael Kakuta,72
+P-W26-0819:WC-2026,P-W26-0819,WC-2026,T-W26-3,Masuaku,75,agree,600,Arthur Masuaku,75
+P-W26-0820:WC-2026,P-W26-0820,WC-2026,T-W26-3,Mayele,72,f2-only,607,Fiston Mayele,72
+P-W26-0821:WC-2026,P-W26-0821,WC-2026,T-W26-3,Mpasi,67,f2-only,614,Lionel Mpasi,67
+P-W26-0822:WC-2026,P-W26-0822,WC-2026,T-W26-3,Mbemba,75,agree,601,Chancel Mbemba,75
+P-W26-0823:WC-2026,P-W26-0823,WC-2026,T-W26-3,Kayembe,74,agree,602,Joris Kayembe,74
+P-W26-0824:WC-2026,P-W26-0824,WC-2026,T-W26-3,Tshibola,64,f2-only,616,Aaron Tshibola,64
+P-W26-0826:WC-2026,P-W26-0826,WC-2026,T-W26-3,Batubinsika,71,agree,609,Dylan Batubinsika,71
+P-W26-0829:WC-2026,P-W26-0829,WC-2026,T-W26-3,Wissa,82,agree,597,Yoane Wissa,82
+P-W26-0831:WC-2026,P-W26-0831,WC-2026,T-W26-3,Elia,70,agree,610,Meschack Elia,70
+P-W26-0833:WC-2026,P-W26-0833,WC-2026,T-W26-3,Tuanzebe,73,agree,604,Axel Tuanzebe,73
+P-W26-0834:WC-2026,P-W26-0834,WC-2026,T-W26-3,Wan-Bissaka,80,agree,598,Aaron Wan-Bissaka,80
+P-W26-0835:WC-2026,P-W26-0835,WC-2026,T-W26-3,Cipenga,66,agree,615,Brian Cipenga,66
+P-W26-0837:WC-2026,P-W26-0837,WC-2026,T-W26-3,Kayembe,71,agree,608,Edo Kayembe,71
+P-W26-0838:WC-2026,P-W26-0838,WC-2026,T-W26-3,Fayulu,69,f2-only,611,Timothy Fayulu,69
+P-W26-0840:WC-2026,P-W26-0840,WC-2026,T-W26-3,Mukau,74,agree,603,Ngal Mukau,74
+P-W26-0842:WC-2026,P-W26-0842,WC-2026,T-W26-3,Epolo,73,f2-only,605,Matthieu Epolo,73
+P-W26-0845:WC-2026,P-W26-0845,WC-2026,T-W26-4,Abulaila,66,f2-only,1265,Yazeed Abulaila,66
+P-W26-0849:WC-2026,P-W26-0849,WC-2026,T-W26-4,Haddad,67,f2-only,1264,Ihsan Haddad,67
+P-W26-0850:WC-2026,P-W26-0850,WC-2026,T-W26-4,Nasib,72,f2-only,1262,Abdallah Nasib,72
+P-W26-0852:WC-2026,P-W26-0852,WC-2026,T-W26-4,Arab,75,agree,1260,Yazan Al-Arab,75
+P-W26-0855:WC-2026,P-W26-0855,WC-2026,T-W26-4,Taamari,75,f2-only,1261,Musa Al-Tamari,75
+P-W26-0860:WC-2026,P-W26-0860,WC-2026,T-W26-4,Olwan,64,f2-only,1266,Ali Olwan,64
+P-W26-0861:WC-2026,P-W26-0861,WC-2026,T-W26-4,Sadeh,68,f2-only,1263,Ibrahim Sadeh,68
+P-W26-0873:WC-2026,P-W26-0873,WC-2026,T-W26-5,Masharipov,69,f2-only,2507,Jaloliddin Masharipov,69
+P-W26-0878:WC-2026,P-W26-0878,WC-2026,T-W26-5,Shukurov,69,f2-only,2508,Otabek Shukurov,69
+P-W26-0888:WC-2026,P-W26-0888,WC-2026,T-W26-5,Urunov,66,f2-only,2509,Oston Urunov,66
+P-W26-0891:WC-2026,P-W26-0891,WC-2026,T-W26-5,Fayzullaev,65,agree,2510,Abbosbek Fayzullaev,65
+P-W26-0893:WC-2026,P-W26-0893,WC-2026,T-W26-5,Khusanov,77,agree,2506,Abdukodir Khusanov,77

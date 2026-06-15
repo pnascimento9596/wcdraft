@@ -54,6 +54,9 @@ const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
 const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 
+// runtime-data-2.5.0 (merit-v4.3): owner-authored manual rating overrides may
+// pin display OVERALL below the merit display floor; all runtime rating channels
+// remain schema-valid integers in [0, 100].
 // runtime-data-2.4.0 (merit-v4.2): public factual context declusters raw-only
 // historical/projected ratings and widens the measured display floor to 60.
 // runtime-data-2.3.0 (merit-v4.1): expanded objective-achievement coverage and
@@ -63,19 +66,19 @@ const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.4.0";
+const SCHEMA_VERSION = "runtime-data-2.5.0";
 // narrative-v2: deterministic scenario-aware narrative selection changes
 // RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.15-merit-v4.2";
+const ENGINE_VERSION = "engine-2026.06.15-merit-v4.3";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// merit-v4.2 model (wc-perf-6.2.0 historical, unified display curve v2);
-// projected proj-career-5.2.0 (2026 factual-context raw-only allocation).
+// merit-v4.3 model (wc-perf-6.3.0 historical manual owner pins);
+// projected proj-career-5.3.0 (same owner pin path for 2026).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.2.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.2.0";
-const DISPLAY_FLOOR = 60;
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.3.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.3.0";
+const DISPLAY_FLOOR = 0;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;
 const ESTIMATE_DISPLAY_MAX = 73;
@@ -738,7 +741,10 @@ async function build() {
       appearancesSource: rating.appearances_source,
     });
     const runtimeRating = withCurrentBasis(basisRatings);
-    if (rating.overall_basis === "baseline_anchor_estimate") {
+    if (
+      rating.overall_basis === "baseline_anchor_estimate" &&
+      !hasManualRatingOverride(runtimeRating)
+    ) {
       estimateCount += 1;
       // Phase 1.1 decoupled: only OVERALL is on the display band. Sim channels
       // stay on the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays
@@ -1133,7 +1139,7 @@ function materializeBasisRatings(rating, runtimeCardId, yyyy, opts = {}) {
   const basisRatings = rating.basis_ratings;
   if (!basisRatings || typeof basisRatings !== "object") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.4.0 requires career + current.`,
+      `build-compact-data: rating ${rating.card_id} is missing basis_ratings; runtime-data-2.5.0 requires career + current.`,
     );
   }
   return {
@@ -1175,7 +1181,7 @@ function materializeBasisRating(
 ) {
   if (!basisRating || typeof basisRating !== "object") {
     throw new Error(
-      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.4.0 requires both bases.`,
+      `build-compact-data: rating ${parentRating.card_id} is missing basis_ratings.${expectedBasis}; runtime-data-2.5.0 requires both bases.`,
     );
   }
   const basisMetadata = basisRating.basis_metadata;
@@ -1228,6 +1234,12 @@ function validateRuntimeRating(runtimeRating, sourceCardId, basis) {
       `build-compact-data: rating ${sourceCardId} basis ${basis} overall=${runtimeRating.overall} outside display band [${DISPLAY_FLOOR}, ${DISPLAY_MAX}].`,
     );
   }
+}
+
+function hasManualRatingOverride(runtimeRating) {
+  return Array.isArray(runtimeRating.components)
+    ? runtimeRating.components.some((c) => c?.signal === "manual_rating_override")
+    : false;
 }
 
 function fingerprint(buf, relativePath) {
@@ -1283,13 +1295,13 @@ function humanBytes(n) {
 }
 
 function requireLegend(rating) {
-  // runtime-data-2.4.0 preserves the runtime-data-2.3.0 contract: `legend` is
+  // runtime-data-2.5.0 preserves the runtime-data-2.3.0 contract: `legend` is
   // REQUIRED on every compact rating.
   // The ETL emits the source-derived boolean on every row (historical + 2026);
   // anything else is a contract violation surfaced loudly, never defaulted.
   if (typeof rating.legend !== "boolean") {
     throw new Error(
-      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.4.0 requires a boolean on every row. Refusing to emit.`,
+      `build-compact-data: rating ${rating.card_id} carries legend=${JSON.stringify(rating.legend)}; runtime-data-2.5.0 requires a boolean on every row. Refusing to emit.`,
     );
   }
   return rating.legend;

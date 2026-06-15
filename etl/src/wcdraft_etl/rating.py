@@ -39,7 +39,7 @@ import json
 import math
 from pathlib import Path
 
-from . import league_strength, national_strength
+from . import league_strength, manual_overrides, national_strength
 
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # stage reads/writes the same place regardless of the caller's cwd. Mirrors
@@ -49,6 +49,11 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-6.3.0 (merit-v4.3): owner-authored manual rating overrides are resolved
+# to canonical card_id and applied as an authoritative post-merit internal-score
+# pin. For resolved rows, score_0_100/current_score_0_100, display overall, and
+# sim channels all move from the same target value; non-overridden rows keep the
+# base merit-v4.2 numeric score/curve behavior.
 # wc-perf-6.2.0 (merit-v4.2): historical raw-only rows consume resolved public
 # squad-list facts (caps, international goals when available, club league, and
 # tournament role) to allocate within raw-only plateaus; the display floor widens
@@ -74,7 +79,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-6.2.0"
+RATING_VERSION = "wc-perf-6.3.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -1318,6 +1323,9 @@ def build_internal_view(
     manager_tournaments: list[dict],
     career_stature_by_player: dict[str, dict] | None = None,
     national_strength_by_key: dict[tuple[str, str], dict] | None = None,
+    *,
+    output_dir: Path = OUTPUT_DIR,
+    apply_manual_overrides: bool = True,
 ) -> tuple[list[dict], DisplayCurve]:
     """Pass 1 + curve fit, exposed for the §4 acceptance suite.
 
@@ -1337,6 +1345,8 @@ def build_internal_view(
         career_stature_by_player,
         national_strength_by_key,
     )
+    if apply_manual_overrides:
+        manual_overrides.apply_to_internal_rows(internal, output_dir)
     curve = _fit_display_curve([r["score_0_100"] for r in internal])
     return internal, curve
 
@@ -1349,6 +1359,9 @@ def build_ratings(
     career_stature_by_player: dict[str, dict] | None = None,
     national_strength_by_key: dict[tuple[str, str], dict] | None = None,
     curve: DisplayCurve | None = None,
+    *,
+    output_dir: Path = OUTPUT_DIR,
+    apply_manual_overrides: bool = True,
 ) -> list[dict]:
     """Return Rating-shaped records for every men's card, sorted by card_id.
 
@@ -1374,6 +1387,8 @@ def build_ratings(
         manager_tournaments,
         career_stature_by_player,
         national_strength_by_key,
+        output_dir=output_dir,
+        apply_manual_overrides=apply_manual_overrides,
     )
     if curve is None:
         curve = display_curve.fit_unified_curve()
@@ -1382,10 +1397,19 @@ def build_ratings(
         pos = row["pos"]
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
-        overall = _display_score(s, curve, estimate=estimate)
+        manual_overall = manual_overrides.manual_overall(row)
+        overall = (
+            manual_overall
+            if manual_overall is not None
+            else _display_score(s, curve, estimate=estimate)
+        )
         current_s = row["current_score_0_100"]
         current_estimate = row["current_basis"] == "baseline_anchor_estimate"
-        current_overall = _display_score(current_s, curve, estimate=current_estimate)
+        current_overall = (
+            manual_overall
+            if manual_overall is not None
+            else _display_score(current_s, curve, estimate=current_estimate)
+        )
         # DECOUPLED CHANNELS (Phase 1.1, plan §3.2 fallback).
         # Sim channels stay on the pre-recal [FLOOR_CHANNEL, 100] band so the
         # ENGINE's λ stays calibrated and the symmetric coherent-XI control
@@ -1476,6 +1500,7 @@ def build_all(output_dir: Path = OUTPUT_DIR) -> list[dict]:
         career_stature_by_player=_load_career_stature(output_dir),
         national_strength_by_key=national_strength.load_by_key(output_dir),
         curve=display_curve.fit_unified_curve(output_dir),
+        output_dir=output_dir,
     )
 
 
@@ -1644,9 +1669,11 @@ def render_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     manager_tournaments = _load(output_dir, "manager_tournaments")
     career = _load_career_stature(output_dir)
     internal, _curve = build_internal_view(
-        players, cards, tournaments, manager_tournaments, career
+        players, cards, tournaments, manager_tournaments, career, output_dir=output_dir
     )
-    ratings = build_ratings(players, cards, tournaments, manager_tournaments, career)
+    ratings = build_ratings(
+        players, cards, tournaments, manager_tournaments, career, output_dir=output_dir
+    )
     return _render_merit_v2_sample(
         internal, {r["card_id"]: r for r in ratings}, players, career
     )

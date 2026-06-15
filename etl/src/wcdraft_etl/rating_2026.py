@@ -49,7 +49,7 @@ from pathlib import Path
 # QUANTILE MAPPING (not an affine rescale) — see _raw_only_quantile_map — so the
 # 2026 non-material internal-score DISTRIBUTION matches the historical raw-only
 # quantiles cross-era, the population MV2-6's single monotonic curve pools.
-from . import league_strength, national_strength, rating
+from . import league_strength, manual_overrides, national_strength, rating
 from .rating import (
     _PRECISION,
     BASE_CEILING,
@@ -82,6 +82,10 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-5.3.0 (merit-v4.3): owner-authored manual rating overrides are
+# resolved to canonical WC-2026 cards and applied as the same authoritative
+# internal-score pin used by historical ratings. Best-XI selection, team
+# aggregates, display overall, and sim channels all consume the pinned score.
 # proj-career-5.2.0 (merit-v4.2): projected raw-only rows use the same public
 # factual context allocation as historical ratings, applying caps/goals/club
 # nation inside raw-only plateaus without lifting any row above the existing
@@ -99,7 +103,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-5.2.0"
+RATING_VERSION = "proj-career-5.3.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -1035,6 +1039,8 @@ def build_internal_view(
     historical_raw_only_internal: list[float] | None = None,
     output_dir: Path = OUTPUT_DIR,
     national_strength_by_key: dict[tuple[str, str], dict] | None = None,
+    *,
+    apply_manual_overrides: bool = True,
 ) -> list[dict]:
     """Pass 1, exposed for the acceptance suite — internal rows carrying the
     pre-display stature-scale ``score_0_100``, ``overall_basis``, ``legend``, and
@@ -1047,12 +1053,15 @@ def build_internal_view(
         historical_raw_only_internal = _historical_raw_only_internal(output_dir)
     if national_strength_by_key is None:
         national_strength_by_key = national_strength.load_by_key(output_dir)
-    return _build_internal_rows(
+    internal_rows = _build_internal_rows(
         cards,
         career_stature_by_player,
         historical_raw_only_internal,
         national_strength_by_key,
     )
+    if apply_manual_overrides:
+        manual_overrides.apply_to_internal_rows(internal_rows, output_dir)
+    return internal_rows
 
 
 def build_ratings(
@@ -1063,6 +1072,7 @@ def build_ratings(
     curve=None,
     internal_rows: list[dict] | None = None,
     national_strength_by_key: dict[tuple[str, str], dict] | None = None,
+    apply_manual_overrides: bool = True,
 ) -> list[dict]:
     """Return projected Rating-shaped records for every 2026 card, sorted by card_id.
 
@@ -1094,11 +1104,13 @@ def build_ratings(
     if national_strength_by_key is None:
         national_strength_by_key = national_strength.load_by_key(output_dir)
     if internal_rows is None:
-        internal_rows = _build_internal_rows(
+        internal_rows = build_internal_view(
             cards,
             career_stature_by_player,
             historical_raw_only_internal,
+            output_dir,
             national_strength_by_key,
+            apply_manual_overrides=apply_manual_overrides,
         )
 
     # ── PASS 2: materialize Rating rows on the UNIFIED display curve (MV2-6) ───
@@ -1114,9 +1126,18 @@ def build_ratings(
         pos = row["pos"]
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
-        overall = _display_score(s, curve, estimate=estimate)
+        manual_overall = manual_overrides.manual_overall(row)
+        overall = (
+            manual_overall
+            if manual_overall is not None
+            else _display_score(s, curve, estimate=estimate)
+        )
         current_s = row["current_score_0_100"]
-        current_overall = _display_score(current_s, curve, estimate=False)
+        current_overall = (
+            manual_overall
+            if manual_overall is not None
+            else _display_score(current_s, curve, estimate=False)
+        )
         channels = {
             # DECOUPLED CHANNELS — see rating.py for rationale. Sim channels stay on
             # the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays calibrated.

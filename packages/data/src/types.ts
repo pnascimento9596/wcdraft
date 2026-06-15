@@ -20,7 +20,7 @@
 //      upstream source did not record them. NEVER coerce to 0.
 //
 // `RuntimeRating` extends the core `Rating` with `overall_basis?` (historical
-// ratings only — surfaces the 388-card honest-state estimate flag) and
+// ratings only — surfaces the baseline-anchor honest-state estimate flag) and
 // `appearances_source?` (historical ratings only — RSSSF supplement vs.
 // Fjelstul match-events provenance).
 
@@ -45,6 +45,8 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
+// runtime-data-2.5.0 (merit-v4.3): owner-authored manual rating overrides can
+// pin display OVERALL below the merit display floor while staying in [0, 99].
 // runtime-data-2.4.0 (merit-v4.2): measured/projected ratings may occupy the
 // wider [60, 99] display band after public factual context declustering; the
 // baseline-anchor estimate band remains [66, 73].
@@ -56,7 +58,7 @@ import type {
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.4.0" as const;
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.5.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────
