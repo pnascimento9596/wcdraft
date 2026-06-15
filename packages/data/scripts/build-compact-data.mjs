@@ -29,10 +29,16 @@
 // caller must pass — never derived from wall-clock time.
 
 import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { gzipSync, brotliCompressSync, constants as zlibConstants } from "node:zlib";
+import {
+  gzipSync,
+  brotliCompressSync,
+  brotliDecompressSync,
+  constants as zlibConstants,
+} from "node:zlib";
 
 import { buildCardId, buildManagerCardId } from "@wcdraft/core";
 
@@ -45,6 +51,8 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const BROTLI_METADATA_BUCKET_BYTES = 128;
+const DRAFT_POOL_FILE = "draft-pool.compact.json";
+const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 
 // runtime-data-2.3.0 (merit-v4.1): expanded objective-achievement coverage and
 // replay-anchor reset for rating 6.1/5.1 and the merit-v4.1 engine season.
@@ -1026,7 +1034,7 @@ async function build() {
   const draftPoolBytes = Buffer.from(stableStringify(draftPoolBundle), "utf8");
   const scenario2026Bytes = Buffer.from(stableStringify(scenario2026Bundle), "utf8");
 
-  const draftPoolFingerprint = fingerprint(draftPoolBytes, "draft-pool.compact.json");
+  const draftPoolFingerprint = fingerprint(draftPoolBytes, DRAFT_POOL_FILE);
   const scenario2026Fingerprint = fingerprint(scenario2026Bytes, "scenario-2026.compact.json");
 
   const manifestObj = {
@@ -1059,7 +1067,7 @@ async function build() {
   // ── Emit outputs + reports ───────────────────────────────────────────────
   await mkdir(outDir, { recursive: true });
   await writeFile(path.join(outDir, "manifest.json"), manifestBytes);
-  await writeFile(path.join(outDir, "draft-pool.compact.json"), draftPoolBytes);
+  await writeFile(path.join(outDir, DRAFT_POOL_FILE), draftPoolBytes);
   await writeFile(path.join(outDir, "scenario-2026.compact.json"), scenario2026Bytes);
 
   // Size report — committed at packages/data/reports/compact-size.json so
@@ -1221,11 +1229,16 @@ function fingerprint(buf, relativePath) {
     sha256: sha256Hex(buf),
     bytes: buf.length,
     bytes_gzip: gzipSync(buf, { level: 9 }).length,
-    bytes_brotli: brotliMetadataBytes(buf),
+    bytes_brotli: brotliMetadataBytes(buf, relativePath),
   };
 }
 
-function brotliMetadataBytes(buf) {
+function brotliMetadataBytes(buf, relativePath) {
+  if (relativePath === DRAFT_POOL_FILE) {
+    const retained = retainedDraftPoolBrotliMetadataBytes(buf);
+    if (retained !== null) return retained;
+  }
+
   // Brotli's exact compressed length can vary by a few bytes across OS/CPU
   // builds even under the same Node version. Manifest/report metadata must be
   // byte-stable across local macOS and Linux CI, so publish a conservative
@@ -1237,6 +1250,23 @@ function brotliMetadataBytes(buf) {
     },
   }).length;
   return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
+}
+
+function retainedDraftPoolBrotliMetadataBytes(buf) {
+  const retainedPath = path.join(
+    PACKAGE_DIR,
+    "src",
+    "retained-runtime-data",
+    SCHEMA_VERSION,
+    DRAFT_POOL_BROTLI_FILE,
+  );
+  if (!existsSync(retainedPath)) return null;
+  const compressed = readFileSync(retainedPath);
+  const decompressed = brotliDecompressSync(compressed);
+  if (decompressed.length !== buf.length || sha256Hex(decompressed) !== sha256Hex(buf)) {
+    return null;
+  }
+  return Math.ceil(compressed.length / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
 }
 
 function humanBytes(n) {

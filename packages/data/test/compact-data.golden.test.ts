@@ -16,11 +16,11 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { brotliCompressSync, constants as zlibConstants } from "node:zlib";
+import { brotliCompressSync, brotliDecompressSync, constants as zlibConstants } from "node:zlib";
 
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import type { RuntimeDataManifest } from "../src/types.js";
@@ -33,6 +33,7 @@ const BUDGET_PATH = path.join(PACKAGE_DIR, "size-budget.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const BUNDLE_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
 const BROTLI_METADATA_BUCKET_BYTES = 128;
+const DRAFT_POOL_FILE = "draft-pool.compact.json";
 // Cold CI runners can spend several minutes re-running the full compact-data
 // builder before these assertions execute; keep this timeout scoped to the
 // golden rebuild rather than relaxing unrelated data tests.
@@ -57,7 +58,12 @@ function sha256Hex(buf: Buffer): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
-function brotliLen(buf: Buffer): number {
+function brotliLen(buf: Buffer, relativePath: string): number {
+  if (relativePath === DRAFT_POOL_FILE) {
+    const retained = retainedDraftPoolBrotliLen(buf);
+    if (retained !== null) return retained;
+  }
+
   const measured = brotliCompressSync(buf, {
     params: {
       [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
@@ -65,6 +71,25 @@ function brotliLen(buf: Buffer): number {
     },
   }).length;
   return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
+}
+
+function retainedDraftPoolBrotliLen(buf: Buffer): number | null {
+  const schemaVersion = JSON.parse(readFileSync(path.join(GENERATED_DIR, "manifest.json"), "utf8"))
+    .schema_version as string;
+  const retainedPath = path.join(
+    PACKAGE_DIR,
+    "src",
+    "retained-runtime-data",
+    schemaVersion,
+    `${DRAFT_POOL_FILE}.br`,
+  );
+  if (!existsSync(retainedPath)) return null;
+  const compressed = readFileSync(retainedPath);
+  const decompressed = brotliDecompressSync(compressed);
+  if (decompressed.length !== buf.length || sha256Hex(decompressed) !== sha256Hex(buf)) {
+    return null;
+  }
+  return Math.ceil(compressed.length / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
 }
 
 function measuredFingerprint(
@@ -108,7 +133,7 @@ describe("compact-data golden", () => {
           path: f,
           bytes: generated[f]!.length,
           sha256: sha256Hex(generated[f]!),
-          bytes_brotli: brotliLen(generated[f]!),
+          bytes_brotli: brotliLen(generated[f]!, f),
           bytes_gzip: 0,
         },
       ]),

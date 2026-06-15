@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { RUN_OG_HEIGHT, RUN_OG_WIDTH } from "./run-og-metadata";
+import { RUN_OG_HEIGHT, RUN_OG_WIDTH } from "./run-og-constants";
 import type { RunOgLineupSlot, RunOgModel } from "./run-og-model";
 
 export interface RunOgImageAssets {

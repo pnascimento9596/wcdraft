@@ -271,6 +271,7 @@ function ShareBody({
   const svgColors = useShareSvgColors();
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState<"idle" | "ok" | "unsupported">("idle");
+  const [signedOg, setSignedOg] = useState<string | null>(null);
 
   // Replay URL: a self-contained `?run=<token>` URL so a fresh browser with
   // no matching localStorage can reproduce the run byte-for-byte. The token
@@ -283,13 +284,15 @@ function ShareBody({
   // NO share URL and surface an honest disabled/error state instead of a
   // non-reproducible `run-v1-*` link.
   const shareLink = useMemo<
-    { kind: "ready"; url: string } | { kind: "ssr" } | { kind: "error"; message: string }
+    | { kind: "ready"; origin: string; token: string }
+    | { kind: "ssr" }
+    | { kind: "error"; message: string }
   >(() => {
     if (typeof window === "undefined") return { kind: "ssr" };
     const origin = window.location.origin;
     try {
       const token = encodeRunToken(record);
-      return { kind: "ready", url: `${origin}${shareHref(token)}` };
+      return { kind: "ready", origin, token };
     } catch (err) {
       return {
         kind: "error",
@@ -301,7 +304,38 @@ function ShareBody({
     }
   }, [record]);
 
-  const shareUrl = shareLink.kind === "ready" ? shareLink.url : null;
+  useEffect(() => {
+    let cancelled = false;
+    setSignedOg(null);
+    if (shareLink.kind !== "ready") return;
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch("/api/og/sign", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ run: shareLink.token }),
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+        const body = (await response.json()) as { ok?: unknown; signed?: unknown };
+        if (!cancelled && body.ok === true && typeof body.signed === "string") {
+          setSignedOg(body.signed);
+        }
+      } catch {
+        // Static unfurl fallback is acceptable; the replay URL remains valid.
+      }
+    })();
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [shareLink]);
+
+  const shareUrl =
+    shareLink.kind === "ready"
+      ? `${shareLink.origin}${shareHref(shareLink.token, signedOg)}`
+      : null;
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
   const configBadges: ConfigBadge[] = useMemo(() => {
     const replayBadges =

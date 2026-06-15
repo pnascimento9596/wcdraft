@@ -9,6 +9,7 @@
 // can branch cleanly.
 
 const RUN_PARAM = "run";
+const OG_PARAM = "og";
 
 // Local run-id format: matches `run-v1-<base36>` plus older lenient ids. The
 // upper length cap stays narrow (64) so a token can never be mistaken for one.
@@ -24,9 +25,7 @@ const RUN_TOKEN_ROUTE_RX = /^t\d{1,4}\./;
 // `?run=` is well under common 8KB URL limits).
 const RUN_PARAM_MAX_LEN = 8192;
 
-export type RunParam =
-  | { kind: "id"; run_id: string }
-  | { kind: "token"; token: string };
+export type RunParam = { kind: "id"; run_id: string } | { kind: "token"; token: string };
 
 /** Tolerant extraction: accepts `URLSearchParams` and plain `?run=...` strings. */
 export function getRunIdFromSearchParams(
@@ -65,8 +64,11 @@ export function parseRunSearchParams(
  * Build a `?run=<value>` URL. Accepts EITHER a run-id (in-app navigation) or
  * a run token (shared / replay URLs).
  */
-function runHrefFor(base: string, value: string | null): string {
-  return value ? `${base}?${RUN_PARAM}=${encodeURIComponent(value)}` : base;
+function runHrefFor(base: string, value: string | null, signedOg?: string | null): string {
+  if (!value) return base;
+  const params = new URLSearchParams({ [RUN_PARAM]: value });
+  if (signedOg) params.set(OG_PARAM, signedOg);
+  return `${base}?${params.toString()}`;
 }
 
 export function draftHref(run_id: string | null): string {
@@ -81,8 +83,8 @@ export function resultsHref(run_id: string | null): string {
   return runHrefFor("/play/results", run_id);
 }
 
-export function shareHref(run_id: string | null): string {
-  return runHrefFor("/play/share", run_id);
+export function shareHref(run_id: string | null, signedOg?: string | null): string {
+  return runHrefFor("/play/share", run_id, signedOg);
 }
 
 /**
