@@ -1,9 +1,11 @@
-# UI polish overhaul — local integration report
+# UI polish overhaul — production closeout report
 
 Branch: `ws-ux/ui-polish-v2` from reverted `origin/main`
 `1db44cba1f3328ccc90a84b952619a27f6557626`.
 
-Status: **v2 local implementation + validation evidence captured; not merged or deployed yet**.
+Status: **SHIPPED** via PR #148, merge `fa796cbd79da7e1c2673f9717fc283c5656cb06d`,
+Vercel production deployment `6XzjEFQAiN3cgvw5nAenQyU9Skgr`. Main CI and production
+live verification both passed. v2 was **not reverted**.
 RepoPrompt review was attempted first, but its active workspace was bound to BiotraxIQ and a later
 rebind to `/tmp/wcdraft-ui-polish` failed with an MCP broken-pipe transport error. A separate
 ephemeral Codex CLI process then performed the fresh-context independent review from this WCDraft
@@ -16,6 +18,13 @@ Vercel deployment `6A38ktV3PY2E8v9qbtSqonAoEncX`, then failed live verification 
 console error from the anonymous `/me` probe. Per dispatch, PR #146 was auto-reverted through
 PR #147, merge `1db44cba1f3328ccc90a84b952619a27f6557626`, Vercel deployment
 `w76cFPSm6Kp6SJYoxbmPG7BugZtU`; post-revert board API checks stayed clean.
+
+Attempt v2 shipped through PR #148 at merge
+`fa796cbd79da7e1c2673f9717fc283c5656cb06d`, Vercel production deployment
+`6XzjEFQAiN3cgvw5nAenQyU9Skgr`. The production probe passed 48 page checks
+(12 surfaces × 2 viewports × 2 themes), 4 leaderboard API checks, zero failures,
+zero non-permitted document overflow, zero console-error pages, 17 review flags,
+one live Synergy line, and `leaderboardMaxDelta=0`.
 
 ## Task 0 — production board cleanup
 
@@ -142,8 +151,24 @@ two adjacent `4-3-3` slots from the same nation and asserts the `Pitch` paints `
   data 73 passed / 7 skipped, db 79, marketing-x 64, web 694 passed / 1 skipped.
   Build emitted the existing Next/Webpack circular chunk warnings and the existing Edge-runtime
   static-generation warning.
-
-CI, PR merge, deploy, and v2 live production UI verification are still pending at this report point.
+- PR #148 CI — PASS: Vercel Preview Comments, GitGuardian, Vercel preview, dedupe, db path filter,
+  ETL rating/lint/golden, golden RNG, heavy realism, and typecheck/lint/test/build were green before
+  merge.
+- Main CI on merge `fa796cbd79da7e1c2673f9717fc283c5656cb06d` — PASS: dedupe 5s, ETL
+  rating/lint/golden 37s, heavy realism 3m45s, typecheck/lint/test/build 4m43s, golden RNG 50s,
+  db path filter 10s, db ephemeral branch skipped by path filter.
+- Vercel production deployment `6XzjEFQAiN3cgvw5nAenQyU9Skgr` — PASS / completed.
+- Production live probe against `https://www.wcdraft.com` — PASS:
+  - leaderboard APIs ranked Classic, ranked Memory, casual Classic, casual Memory returned 200,
+    zero matching probe rows.
+  - 48 page checks across home, mode select, leaderboard, history, settings, sign-in,
+    attribution, how-to-play, privacy, setup/draft, squad review, and share at `390×844` and
+    `360×800` in light/dark: zero failures, zero non-permitted document overflow, zero
+    console-error pages.
+  - squad review and share showed 17 national flags, 11 locked pitch nodes, and at least one live
+    Synergy line.
+  - reduced-motion production proof passed: media query matched, live line animation `none`,
+    live opacity `1`, slot animation `none`.
 
 ## Local browser noise
 
@@ -172,4 +197,6 @@ Add to the external Surface Inventory v6 successor:
 - Independent fresh-context review: **PASS via ephemeral Codex CLI**. RepoPrompt remained unavailable
   because of workspace mismatch / broken-pipe on attempted rebind.
 - Local axe on changed draft/review surfaces: **PASS** after a focused a11y fix-forward.
-- Merge SHA / PR / deploy ID / live production verification / revert status: **not yet available**.
+- Merge SHA / PR / deploy ID / live production verification / revert status:
+  **PR #148 merged at `fa796cbd79da7e1c2673f9717fc283c5656cb06d`; Vercel production
+  `6XzjEFQAiN3cgvw5nAenQyU9Skgr`; live verification PASS; v2 not reverted**.
