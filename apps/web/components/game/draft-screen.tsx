@@ -69,6 +69,7 @@ import { Pitch, PitchMarkings } from "./pitch";
 import { CandidateCard, ManagerCandidate } from "./candidate-card";
 import { SquadHeaderFlag } from "./squad-header-flag";
 import { ManagerSlot } from "./manager-slot";
+import { MiniNationFlag } from "./mini-nation-flag";
 import { SpinStage, type SpinAnimState } from "./slot-machine";
 import { SynergyBar } from "./synergy-bar";
 import s from "./game.module.css";
@@ -361,9 +362,15 @@ function DraftSetupDisclosure({
   onRatingBasis: (b: RatingBasis) => void;
   disabled: boolean;
 }) {
-  // Default-OPEN on first arrival (owner decision): collapsed axes are easy to
-  // miss. Still collapsible; the summary line stays either way.
-  const [open, setOpen] = useState(true);
+  // Mobile-first no-scroll contract: the summary row is the default surface;
+  // the full axes stay one tap away. Desktop has room, so it auto-expands on
+  // mount after hydration.
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 720px)").matches) {
+      setOpen(true);
+    }
+  }, []);
   // Summary mirrors all three config axes.
   const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
@@ -832,24 +839,30 @@ function DraftBoard({
   // Open vacant slots (engine truth).
   const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
 
-  const bestSlotFor = useCallback((card: PlayerCardView): string | null => {
-    const starterOpens = openSlots.filter((sl) => sl.is_starter);
-    const pool = starterOpens.length > 0 ? starterOpens : openSlots;
-    let best: { id: string; c: number } | null = null;
-    for (const slot of pool) {
-      const c = positionCompatibility(card.eligible_positions, slot.slot_position);
-      if (!best || c > best.c) best = { id: slot.slot_id, c };
-    }
-    return best?.id ?? null;
-  }, [openSlots]);
+  const bestSlotFor = useCallback(
+    (card: PlayerCardView): string | null => {
+      const starterOpens = openSlots.filter((sl) => sl.is_starter);
+      const pool = starterOpens.length > 0 ? starterOpens : openSlots;
+      let best: { id: string; c: number } | null = null;
+      for (const slot of pool) {
+        const c = positionCompatibility(card.eligible_positions, slot.slot_position);
+        if (!best || c > best.c) best = { id: slot.slot_id, c };
+      }
+      return best?.id ?? null;
+    },
+    [openSlots],
+  );
 
-  const selectPlayer = useCallback((card: PlayerCardView) => {
-    setSel({ kind: "player", card });
-    // Position-first: the slot was committed before the reveal — the pick
-    // can only fill the locked target.
-    setSelSlot(lockedTarget ?? bestSlotFor(card));
-    setTransitionError(null);
-  }, [bestSlotFor, lockedTarget]);
+  const selectPlayer = useCallback(
+    (card: PlayerCardView) => {
+      setSel({ kind: "player", card });
+      // Position-first: the slot was committed before the reveal — the pick
+      // can only fill the locked target.
+      setSelSlot(lockedTarget ?? bestSlotFor(card));
+      setTransitionError(null);
+    },
+    [bestSlotFor, lockedTarget],
+  );
 
   const selectManager = useCallback((card: ManagerCardView) => {
     setSel({ kind: "manager", card });
@@ -1149,7 +1162,7 @@ function DraftBoard({
         {complete ? (
           <section className={`${s.panel} ${s.completePanel}`}>
             <span className={s.eyebrowAccent}>Draft complete</span>
-            <h2 className={s.panelTitle}>All 17 spins resolved.</h2>
+            <h1 className={s.panelTitle}>All 17 spins resolved.</h1>
             <p className={s.completeNote}>
               Lock-on-pick — nothing else can be rearranged. Step into review for line ratings,
               Synergy, and your final XI.
@@ -1269,7 +1282,17 @@ function DraftBoard({
                     onClick={() => setSelSlot(b.slot_id)}
                     aria-pressed={isSel}
                   >
-                    <span className={s.slotPos}>{b.slot_position}</span>
+                    <span className={s.benchSlotTop}>
+                      <span className={s.slotPos}>{b.slot_position}</span>
+                      {b.card ? (
+                        <MiniNationFlag
+                          nationId={b.card.nation_id}
+                          nationName={b.card.nation_name}
+                          nationCode={b.card.nation_code}
+                          className={s.benchMiniFlag}
+                        />
+                      ) : null}
+                    </span>
                     <span className={s.slotName}>
                       {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
                     </span>

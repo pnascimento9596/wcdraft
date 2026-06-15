@@ -1,6 +1,7 @@
 "use client";
 
 import type { ManagerCardView } from "@/lib/game/view-models";
+import { MiniNationFlag } from "./mini-nation-flag";
 import s from "./game.module.css";
 
 /**
@@ -38,7 +39,8 @@ export function ManagerSlot({
       : s.managerSlotOpen;
 
   return (
-    <aside
+    <div
+      role="group"
       className={`${s.managerSlot} ${stateClass}`}
       aria-label={
         isCommitted
@@ -52,13 +54,12 @@ export function ManagerSlot({
       {display ? (
         <>
           <div className={s.managerSlotIdentity}>
-            <span
+            <MiniNationFlag
+              nationId={display.nation_id}
+              nationName={display.nation_name}
+              nationCode={display.nation_code}
               className={`${s.managerSlotFlag} ${s.flagShape_diamond}`}
-              aria-label={display.nation_name}
-              title={display.nation_name}
-            >
-              {display.nation_code}
-            </span>
+            />
             <div className={s.managerSlotNameWrap}>
               <span className={s.managerSlotName}>{display.name}</span>
               <span className={s.managerSlotMeta}>
@@ -68,10 +69,7 @@ export function ManagerSlot({
           </div>
           {isPreview ? <span className={s.managerSlotBadge}>Preview</span> : null}
           {display.traits.length > 0 ? (
-            <span
-              className={s.managerTraits}
-              aria-label="Manager style traits — flavor only"
-            >
+            <span className={s.managerTraits} aria-label="Manager style traits — flavor only">
               {display.traits.map((t) => (
                 <span
                   key={t.id}
@@ -85,10 +83,8 @@ export function ManagerSlot({
           ) : null}
         </>
       ) : (
-        <p className={s.managerSlotEmpty}>
-          Open — pick a manager on any spin to fill this slot.
-        </p>
+        <p className={s.managerSlotEmpty}>Open — pick a manager on any spin to fill this slot.</p>
       )}
-    </aside>
+    </div>
   );
 }

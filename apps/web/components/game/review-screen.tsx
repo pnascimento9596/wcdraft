@@ -28,6 +28,7 @@ import { runSimulation } from "@/lib/game/simulate";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
+import { MiniNationFlag } from "./mini-nation-flag";
 import { SynergyBar } from "./synergy-bar";
 import s from "./game.module.css";
 
@@ -296,7 +297,7 @@ function ReviewBoard({
           </p>
         ) : null}
         <div className={s.panelHead}>
-          <h2 className={s.panelTitle}>{formation.name}</h2>
+          <h1 className={s.panelTitle}>{formation.name}</h1>
           {basis === "current" ? (
             <span
               className={s.basisChip}
@@ -327,7 +328,17 @@ function ReviewBoard({
                   b.card ? s.slotLocked : ""
                 }`}
               >
-                <span className={s.slotPos}>{b.slot_position}</span>
+                <span className={s.benchSlotTop}>
+                  <span className={s.slotPos}>{b.slot_position}</span>
+                  {b.card ? (
+                    <MiniNationFlag
+                      nationId={b.card.nation_id}
+                      nationName={b.card.nation_name}
+                      nationCode={b.card.nation_code}
+                      className={s.benchMiniFlag}
+                    />
+                  ) : null}
+                </span>
                 <span className={s.slotName}>{b.card ? b.card.name : "Open"}</span>
               </div>
             ))}
@@ -359,8 +370,14 @@ function ReviewBoard({
       </section>
 
       {validation.warnings.length > 0 ? (
-        <section className={`${s.panel} ${s.warningsPanel}`}>
-          <h3 className={s.panelSubTitle}>Squad warnings</h3>
+        <section
+          className={`${s.panel} ${s.warningsPanel}`}
+          tabIndex={0}
+          aria-labelledby="squad-warnings-title"
+        >
+          <h3 id="squad-warnings-title" className={s.panelSubTitle}>
+            Squad warnings
+          </h3>
           <ul className={s.warnList}>
             {validation.warnings.map((w, i) => (
               <li key={i}>{w}</li>
