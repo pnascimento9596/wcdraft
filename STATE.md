@@ -35,11 +35,12 @@ Build State v10, Architecture v6, Roadmap v6, and Surface Inventory v6, each
 superseding the prior version. This `STATE.md` is the in-repo closeout truth
 surface.
 
-## UI polish overhaul local state
+## UI polish overhaul shipped state
 
-Branch `ws-ux/ui-polish-v2` is the active fix-forward from reverted
-`origin/main` `1db44cba1f3328ccc90a84b952619a27f6557626` for the mobile
-polish overhaul. Attempt v1 shipped through PR #146 at merge
+PR #148 shipped the mobile polish overhaul from fix-forward branch
+`ws-ux/ui-polish-v2`, based on reverted `origin/main`
+`1db44cba1f3328ccc90a84b952619a27f6557626`. Attempt v1 shipped through
+PR #146 at merge
 `4590a7a383b1d1bac7c898d5b9e99cf37d5a5621` and Vercel deployment
 `6A38ktV3PY2E8v9qbtSqonAoEncX`, then failed live verification because the
 production `/leaderboard` page still scrolled at both target mobile widths
@@ -51,6 +52,16 @@ Production leaderboard synthetic test rows were removed via Neon production
 branch `br-blue-heart-aqcejtyf`, and live API checks for ranked Classic,
 ranked Memory, casual Classic, and casual Memory returned 200 with the probe
 rows absent.
+
+v2 shipped through PR #148 at merge `fa796cbd79da7e1c2673f9717fc283c5656cb06d`
+and Vercel production deployment `6XzjEFQAiN3cgvw5nAenQyU9Skgr`. Main CI on the
+merge commit passed: dedupe 5s, ETL rating/lint/golden 37s, heavy realism 3m45s,
+typecheck/lint/test/build 4m43s, golden RNG 50s, db path filter 10s, db ephemeral
+branch skipped by path filter. Production live verification against
+`https://www.wcdraft.com` passed 48 page checks (12 surfaces × 390×844/360×800 ×
+light/dark), 4 leaderboard API checks, zero failures, zero non-permitted document
+overflow, zero console-error pages, 17 review flags, one live Synergy line,
+`leaderboardMaxDelta=0`, and reduced-motion snap proof. v2 was not reverted.
 
 Local UI implementation evidence is captured in
 `docs/reports/ui-polish-overhaul-2026-06-15.md`,
@@ -91,8 +102,7 @@ core 366, data 73 passed / 7 skipped, db 79, marketing-x 64, web 694 passed /
 1 skipped, build 4/4). RepoPrompt review could not run because the active
 RepoPrompt workspace was bound to BiotraxIQ, not this WCDraft worktree; a
 later attempt to rebind RepoPrompt to `/tmp/wcdraft-ui-polish` failed with a
-broken-pipe MCP transport error. v2 PR/merge, deploy, and live production UI
-verification are still pending.
+broken-pipe MCP transport error.
 
 ## Era closeout status at last measurement
 
