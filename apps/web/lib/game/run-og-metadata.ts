@@ -1,15 +1,10 @@
-import type { RunRecordVersions } from "./data";
-import {
-  decodeRunToken,
-  runTokenOgSummary,
-  versionsAgree,
-  type RunTokenOgSummary,
-} from "./run-token";
+import { decodeRunToken, versionsAgree, type RunTokenOgSummary } from "./run-token";
+import { isLikelySignedRunOg } from "./run-og-signing";
+import { RUN_OG_HEIGHT, RUN_OG_IMAGE_ROUTE, RUN_OG_WIDTH } from "./run-og-constants";
+import type { RunRecordVersions } from "./versions";
 import { OG_DEFAULT_IMAGE, OG_DEFAULT_IMAGE_ALT } from "../site-metadata";
 
-export const RUN_OG_IMAGE_ROUTE = "/api/og/run" as const;
-export const RUN_OG_WIDTH = 1200 as const;
-export const RUN_OG_HEIGHT = 630 as const;
+export { RUN_OG_HEIGHT, RUN_OG_IMAGE_ROUTE, RUN_OG_WIDTH } from "./run-og-constants";
 
 export interface RunOgImageDescriptor {
   url: string;
@@ -46,33 +41,37 @@ export function buildRunOgCacheKey(
   return `${deploy}.${bundleHash}`.replace(/[^A-Za-z0-9_.-]/gu, "-").slice(0, 96);
 }
 
-export function buildRunOgImagePath(runValue: string, cacheKey: string): string {
-  const params = new URLSearchParams({ run: runValue, v: cacheKey });
+export function buildRunOgImagePath(
+  runValue: string,
+  signedValue: string,
+  cacheKey: string,
+): string {
+  const params = new URLSearchParams({ run: runValue, og: signedValue, v: cacheKey });
   return `${RUN_OG_IMAGE_ROUTE}?${params.toString()}`;
 }
 
 export function shareOgImageForRunValue(
   runValue: string | string[] | null | undefined,
+  signedValue: string | string[] | null | undefined,
   currentVersions: RunRecordVersions,
   env: Record<string, string | undefined> = process.env,
 ): RunOgImageDescriptor {
   const value = typeof runValue === "string" ? runValue : null;
+  const signed = typeof signedValue === "string" ? signedValue : null;
   if (!value) return defaultRunOgImage();
+  if (!signed || !isLikelySignedRunOg(signed)) return defaultRunOgImage();
 
   const decoded = decodeRunToken(value);
   if (!decoded || decoded.v !== 2 || !versionsAgree(decoded, currentVersions)) {
     return defaultRunOgImage();
   }
 
-  const summary = runTokenOgSummary(decoded);
-  if (!summary) return defaultRunOgImage();
-
   const cacheKey = buildRunOgCacheKey(currentVersions, env);
   return {
-    url: buildRunOgImagePath(value, cacheKey),
+    url: buildRunOgImagePath(value, signed, cacheKey),
     width: RUN_OG_WIDTH,
     height: RUN_OG_HEIGHT,
-    alt: runOgAltText(decoded.tn, decoded.md, summary),
+    alt: "Verified wcdraft run preview",
     dynamic: true,
   };
 }
@@ -97,19 +96,4 @@ export function shortRoundLabel(round: RunTokenOgSummary["rr"]): string {
     default:
       return round;
   }
-}
-
-function runOgAltText(
-  teamName: string,
-  mode: "classic" | "hidden",
-  summary: RunTokenOgSummary,
-): string {
-  const modeLabel = mode === "hidden" ? "Memory" : "Classic";
-  return `wcdraft run preview for ${truncate(teamName, 48)}: ${formatRunOgResult(summary)} in ${modeLabel}`;
-}
-
-function truncate(value: string, max: number): string {
-  const cleaned = value.replace(/\s+/gu, " ").trim();
-  if (cleaned.length <= max) return cleaned;
-  return `${cleaned.slice(0, Math.max(0, max - 1)).trimEnd()}...`;
 }

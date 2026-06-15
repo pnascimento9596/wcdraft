@@ -30,18 +30,9 @@ import type {
 } from "@wcdraft/data";
 
 import { MissingRecordError, RuntimeDataLoadError } from "./errors";
+import { composeVersions, type RunRecordVersions } from "./versions";
 
-/** Version-anchor bundle written into every `RunRecordV1`. */
-export interface RunRecordVersions {
-  schema_version: string;
-  dataset_version: string;
-  /** Combined `historical+projected` per the e2e golden convention. */
-  rating_version: string;
-  engine_version: string;
-  ruleset_version: string;
-  /** Composite `draft_pool.sha256+scenario_2026.sha256`. */
-  data_bundle_hash: string;
-}
+export { composeVersions, type RunRecordVersions } from "./versions";
 
 /** Read-only lookup maps over the compact bundle. */
 export interface GameDataIndexes {
@@ -96,10 +87,7 @@ export async function loadGameData(): Promise<GameData> {
       // independent static URLs, so fetch them concurrently instead of serially
       // — removes one manifest round-trip from the first-play critical path.
       // Promise.all preserves the prior error semantics (reject on first error).
-      const [manifest, draftPool] = await Promise.all([
-        loadDataManifest(),
-        loadDraftPoolBundle(),
-      ]);
+      const [manifest, draftPool] = await Promise.all([loadDataManifest(), loadDraftPoolBundle()]);
       const gd = buildGameData(manifest, draftPool);
       cachedGameData = gd;
       return gd;
@@ -115,10 +103,7 @@ export async function loadGameData(): Promise<GameData> {
   return inFlight;
 }
 
-export function buildGameData(
-  manifest: RuntimeDataManifest,
-  draftPool: DraftPoolBundle,
-): GameData {
+export function buildGameData(manifest: RuntimeDataManifest, draftPool: DraftPoolBundle): GameData {
   const indexes = buildGameDataIndexes(draftPool);
   validateIndexes(draftPool, indexes);
   const draftDataset = buildDraftDataset(draftPool);
@@ -158,18 +143,6 @@ export function getCatalogForEra(gameData: GameData, era_preset: EraPresetId): D
     cache.set(era_preset, catalog);
   }
   return catalog;
-}
-
-/** Compose the eviction-key version bundle from the manifest. */
-export function composeVersions(manifest: RuntimeDataManifest): RunRecordVersions {
-  return {
-    schema_version: manifest.schema_version,
-    dataset_version: manifest.dataset_version,
-    rating_version: `${manifest.rating_version_historical}+${manifest.rating_version_projected}`,
-    engine_version: manifest.engine_version,
-    ruleset_version: manifest.ruleset_version,
-    data_bundle_hash: `${manifest.bundles.draft_pool.sha256}+${manifest.bundles.scenario_2026.sha256}`,
-  };
 }
 
 /** Build read-only Maps from the compact bundle arrays + objects. */
@@ -286,11 +259,7 @@ function validateIndexes(bundle: DraftPoolBundle, idx: GameDataIndexes): void {
       throw new MissingRecordError("nation", c.nation_id, `for card ${c.card_id}`);
     }
     if (!idx.tournamentById.has(c.tournament_id)) {
-      throw new MissingRecordError(
-        "tournament",
-        String(c.tournament_id),
-        `for card ${c.card_id}`,
-      );
+      throw new MissingRecordError("tournament", String(c.tournament_id), `for card ${c.card_id}`);
     }
   }
   for (const m of bundle.manager_cards) {

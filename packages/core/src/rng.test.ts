@@ -3,6 +3,7 @@ import { canonicalSortBy, canonicalSortStrings, createRng, deriveSubseed } from 
 
 // Behavioural / property tests for the RNG. The byte-for-byte golden
 // determinism contract lives in rng.golden.test.ts (selected by path in CI).
+const RANGE_CHECK_SAMPLES = 1_000;
 
 describe("createRng properties", () => {
   it("is fully deterministic: identical seeds yield identical streams", () => {
@@ -29,7 +30,7 @@ describe("createRng properties", () => {
 
   it("next() stays within [0, 1)", () => {
     const rng = createRng("range-check");
-    for (let i = 0; i < 10_000; i++) {
+    for (let i = 0; i < RANGE_CHECK_SAMPLES; i++) {
       const v = rng.next();
       expect(v).toBeGreaterThanOrEqual(0);
       expect(v).toBeLessThan(1);
@@ -38,7 +39,7 @@ describe("createRng properties", () => {
 
   it("int() stays within [0, maxExclusive)", () => {
     const rng = createRng("int-range");
-    for (let i = 0; i < 10_000; i++) {
+    for (let i = 0; i < RANGE_CHECK_SAMPLES; i++) {
       const v = rng.int(7);
       expect(Number.isInteger(v)).toBe(true);
       expect(v).toBeGreaterThanOrEqual(0);

@@ -1,5 +1,6 @@
 import type { DraftState, Position } from "@wcdraft/core";
 
+import { playerCardView } from "./adapters";
 import { configBadgesFromToken, type ConfigBadge } from "./config-badges";
 import type { GameData } from "./data";
 import { getFormationVisualSlots } from "./formation-layout";
@@ -7,7 +8,6 @@ import { adjustPitchLayoutForRender } from "./pitch-layout";
 import { positionShape, type PositionShape } from "./view-models";
 import {
   reconstructDraftFromToken,
-  runTokenOgSummary,
   type RunTokenOgSummary,
   type RunTokenV2Body,
 } from "./run-token";
@@ -44,13 +44,26 @@ export interface RunOgModel {
   manager: ShareManager | null;
 }
 
-export function buildRunOgModel(gameData: GameData, token: RunTokenV2Body): RunOgModel | null {
-  const summary = runTokenOgSummary(token);
-  if (!summary) return null;
+const TEAM_NAME_MAX = 80;
+
+export function buildRunOgModelFromTrustedSummary(
+  gameData: GameData,
+  token: RunTokenV2Body,
+  summary: RunTokenOgSummary,
+): RunOgModel {
   const draft = reconstructDraftFromToken(token, gameData);
+  return buildRunOgModelFromTrustedDraft(gameData, token, draft, summary);
+}
+
+export function buildRunOgModelFromTrustedDraft(
+  gameData: GameData,
+  token: RunTokenV2Body,
+  draft: DraftState,
+  summary: RunTokenOgSummary,
+): RunOgModel {
   const lineup = buildLineup(gameData, draft);
   return {
-    team_name: draft.team_name,
+    team_name: boundedText(draft.team_name, "Your XI", TEAM_NAME_MAX),
     mode_label: draft.mode === "hidden" ? "Memory" : "Classic",
     formation_name: formationName(draft),
     result_label: formatRunOgResult(summary),
@@ -63,6 +76,14 @@ export function buildRunOgModel(gameData: GameData, token: RunTokenV2Body): RunO
   };
 }
 
+function boundedText(value: string, fallback: string, max: number): string {
+  const cleaned = value.replace(/\s+/gu, " ").trim();
+  const source = cleaned.length > 0 ? cleaned : fallback;
+  if (source.length <= max) return source;
+  const suffix = "...";
+  return `${source.slice(0, Math.max(0, max - suffix.length)).trimEnd()}${suffix}`;
+}
+
 function buildLineup(gameData: GameData, draft: DraftState): RunOgLineupSlot[] {
   const visualSlots = adjustPitchLayoutForRender(getFormationVisualSlots(draft.formation_id));
   return visualSlots.map((visual) => {
@@ -73,7 +94,7 @@ function buildLineup(gameData: GameData, draft: DraftState): RunOgLineupSlot[] {
     const cardId = squadSlot.card_id as string;
     const card = gameData.indexes.playerByCardId.get(cardId);
     if (!card) throw new Error(`run OG lineup: missing player card ${cardId}`);
-    const nation = gameData.indexes.nationById.get(card.nation_id);
+    const view = playerCardView(gameData.indexes, cardId, { basis: draft.rating_basis });
     return {
       slot_id: visual.slot_id,
       slot_label: visual.display_label,
@@ -81,12 +102,8 @@ function buildLineup(gameData: GameData, draft: DraftState): RunOgLineupSlot[] {
       shape: positionShape(visual.position_line),
       x_pct: visual.x_pct,
       y_pct: visual.y_pct,
-      name:
-        gameData.indexes.displayNameByCardId.get(card.card_id) ??
-        (card.common_name && card.common_name.trim().length > 0
-          ? card.common_name
-          : card.full_name),
-      nation_code: nation?.code ?? card.nation_id.toUpperCase(),
+      name: view.name,
+      nation_code: view.nation_code,
     };
   });
 }

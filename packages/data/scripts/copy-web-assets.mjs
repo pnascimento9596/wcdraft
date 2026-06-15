@@ -97,6 +97,33 @@ async function writeBrotliJson(sourcePath, targetPath) {
   return { rawBytes: raw.length, rawSha256: sha256(raw), compressedBytes: compressed.length };
 }
 
+async function copyRetainedBrotliJson(retainedDir, targetPath, currentVersion, manifest) {
+  const retainedPath = path.join(retainedDir, currentVersion, COMPRESSED_DRAFT_FILE);
+  let compressed;
+  try {
+    compressed = await readFile(retainedPath);
+  } catch (err) {
+    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
+      return null;
+    }
+    throw err;
+  }
+
+  const raw = await brotliDecompressAsync(compressed);
+  assertFingerprint(
+    `${currentVersion}/${COMPRESSED_DRAFT_FILE}`,
+    raw,
+    manifest.bundles?.draft_pool,
+  );
+  await writeFile(targetPath, compressed);
+  return {
+    rawBytes: raw.length,
+    rawSha256: sha256(raw),
+    compressedBytes: compressed.length,
+    reusedRetained: true,
+  };
+}
+
 function assertManifestVersion(manifest) {
   if (!manifest || typeof manifest !== "object") {
     throw new Error("manifest.json is not an object");
@@ -204,10 +231,17 @@ async function main() {
   for (const file of VERSIONED_JSON_FILES) {
     await copyFile(path.join(sourceDir, file), path.join(currentTargetDir, file));
   }
-  const compressed = await writeBrotliJson(
-    path.join(sourceDir, "draft-pool.compact.json"),
-    path.join(currentTargetDir, COMPRESSED_DRAFT_FILE),
-  );
+  const compressed =
+    (await copyRetainedBrotliJson(
+      retainedDir,
+      path.join(currentTargetDir, COMPRESSED_DRAFT_FILE),
+      currentVersion,
+      manifest,
+    )) ??
+    (await writeBrotliJson(
+      path.join(sourceDir, "draft-pool.compact.json"),
+      path.join(currentTargetDir, COMPRESSED_DRAFT_FILE),
+    ));
   if (
     compressed.rawBytes !== manifest.bundles?.draft_pool?.bytes ||
     compressed.rawSha256 !== manifest.bundles?.draft_pool?.sha256
@@ -221,7 +255,7 @@ async function main() {
   const retainedCount = await copyRetainedVersions(retainedDir, targetDir, currentVersion);
   process.stdout.write(
     `copy-web-assets: ok — copied legacy assets plus ${currentVersion}/${COMPRESSED_DRAFT_FILE} ` +
-      `(${compressed.compressedBytes} bytes) to ${targetDir}` +
+      `(${compressed.compressedBytes} bytes${compressed.reusedRetained ? ", retained" : ""}) to ${targetDir}` +
       (retainedCount > 0 ? `; retained ${retainedCount} prior version(s)` : "") +
       "\n",
   );
