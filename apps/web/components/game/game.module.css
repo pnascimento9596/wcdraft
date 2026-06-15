@@ -42,7 +42,7 @@
   letter-spacing: 0.26em;
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--accent-text);
+  color: var(--accent);
 }
 .demoBadge {
   font-size: 0.66rem;
@@ -266,6 +266,7 @@
   height: 100%;
   background: var(--accent);
   border-radius: 999px;
+  transition: width 0.4s ease;
 }
 
 .draftGrid {
@@ -489,13 +490,6 @@ button.benchSlot:not(:disabled):hover {
 }
 .benchSlot .slotName {
   color: inherit;
-}
-.benchSlotTop {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  max-width: 100%;
 }
 .mgrFilled,
 .mgrEmpty {
@@ -905,6 +899,7 @@ button.benchSlot:not(:disabled):hover {
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(to right, var(--field), var(--accent));
+  transition: width 0.35s ease;
 }
 .synergyMeta {
   display: grid;
@@ -1084,7 +1079,7 @@ button.benchSlot:not(:disabled):hover {
 .squadAvg {
   font-family: var(--font-display), sans-serif;
   font-size: 1.5rem;
-  color: var(--accent-text);
+  color: var(--accent);
 }
 .lineRatings {
   display: grid;
@@ -2197,14 +2192,14 @@ button.benchSlot:not(:disabled):hover {
 .pitchMarkingLine {
   fill: none;
   stroke: var(--pitch-line);
-  stroke-width: 0.7;
+  stroke-width: 1.15;
   stroke-linejoin: round;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
 .pitchMarkingTouchline {
-  stroke-width: 0.7;
+  stroke-width: 1.25;
 }
 
 .pitchMarkingSpot {
@@ -2212,7 +2207,7 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .pitchMarkingsFull {
-  opacity: 0.78;
+  opacity: 0.9;
 }
 
 .pitchMarkingsMini {
@@ -2220,7 +2215,7 @@ button.benchSlot:not(:disabled):hover {
 }
 
 .pitchMarkingsMini .pitchMarkingLine {
-  stroke-width: 0.7;
+  stroke-width: 0.9;
 }
 
 .pitchMarkingsMini .pitchMarkingDetail {
@@ -2302,48 +2297,6 @@ button.benchSlot:not(:disabled):hover {
   border-color: var(--lock);
   background: color-mix(in srgb, var(--bg-700) 95%, rgba(var(--lock-rgb), 0.08));
   cursor: default;
-}
-
-.pitch .slotFilled.slotProv_historical {
-  background: color-mix(in srgb, var(--prov-historical) 22%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-historical) 58%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_projected {
-  background: color-mix(in srgb, var(--prov-projected) 22%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-projected) 58%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_estimate {
-  background: color-mix(in srgb, var(--prov-estimate) 24%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-estimate) 62%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_legend {
-  background: color-mix(in srgb, var(--prov-legend) 20%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-legend) 62%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_masked {
-  background: color-mix(in srgb, var(--prov-unknown) 18%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-unknown) 52%, var(--line-2));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .pitch .slotFilled {
-    animation: slot-settle var(--d-med) var(--e-snap) both;
-  }
-}
-
-@keyframes slot-settle {
-  from {
-    opacity: 0.72;
-    transform: translate(-50%, -50%) scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
 }
 
 /* Tier accents on pitch slots: the generic `.tier_*` rules set a 4px
@@ -3773,30 +3726,14 @@ button.benchSlot:not(:disabled):hover {
 }
 
 /* Emerald link = same-nation, both slots filled (year-agnostic; ENGINE-V2 E-2
-   made synergy nation-only). Token `--accent` carries the locked emerald
-   line hue, and --glow-ember keeps the halo theme-aware. */
+   made synergy nation-only). Token `--ember` carries the locked emerald brand
+   hue, and --glow-ember keeps the halo theme-aware. */
 .synergyLineLive {
-  stroke: var(--accent);
+  stroke: var(--ember);
   stroke-width: 1.25;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 4px rgba(var(--glow-ember), 0.5));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .synergyLineLive {
-    opacity: 0;
-    animation: synergy-line-ignite var(--d-fast) var(--e-out) both;
-  }
-}
-
-@keyframes synergy-line-ignite {
-  from {
-    opacity: 0.2;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 /* Visible label naming the layer. The brand glossary says "Synergy",
@@ -3845,46 +3782,6 @@ button.benchSlot:not(:disabled):hover {
   align-items: center;
   gap: 4px;
   line-height: 1;
-  max-width: 100%;
-}
-
-.miniNationFlag,
-.miniNationFlagFallback {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 18px;
-  height: 12px;
-  border-radius: 2px;
-  border: 1px solid color-mix(in srgb, var(--ink-100) 22%, transparent);
-  background: color-mix(in srgb, var(--bg-700) 82%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg-900) 24%, transparent);
-}
-
-.miniNationFlag {
-  object-fit: cover;
-}
-
-.miniNationFlagFallback {
-  width: auto;
-  min-width: 18px;
-  padding-inline: 2px;
-  font-family: var(--f-mono);
-  font-size: 7px;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  color: var(--ink-100);
-}
-
-.slotMiniFlag {
-  width: 15px;
-  height: 10px;
-}
-
-.benchMiniFlag {
-  width: 16px;
-  height: 11px;
 }
 
 .slotShapeMarker {
@@ -3992,7 +3889,6 @@ button.benchSlot:not(:disabled):hover {
   font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-100);
-  object-fit: cover;
 }
 
 .managerSlotNameWrap {
@@ -4492,8 +4388,8 @@ button.benchSlot:not(:disabled):hover {
   font-feature-settings: "tnum" 1;
 }
 
-/* Thin strength track. Single emerald fill. The width is intentionally
-   non-animated so new motion remains transform/opacity-only. */
+/* Thin strength track. Single emerald fill — no gradient mid-tone, the
+   token does the work. Width animates only when motion is allowed. */
 .synergyBarTrack {
   position: relative;
   height: 4px;
@@ -4511,7 +4407,7 @@ button.benchSlot:not(:disabled):hover {
     color-mix(in srgb, var(--ember) 65%, transparent),
     var(--ember)
   );
-  transition: none;
+  transition: width var(--d-base) ease;
 }
 
 .synergyBarFigures {
@@ -4612,11 +4508,6 @@ button.benchSlot:not(:disabled):hover {
   .candRow {
     transition: none !important;
   }
-  .pitch .slotFilled,
-  .synergyLineLive {
-    animation: none !important;
-    opacity: 1;
-  }
   .synergyLineLive {
     filter: none;
   }
@@ -4653,8 +4544,7 @@ button.benchSlot:not(:disabled):hover {
   .draftShell,
   .reviewShell {
     gap: 8px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
-    min-height: calc(100svh - 72px);
+    padding: 8px 8px calc(72px + env(safe-area-inset-bottom, 0px));
   }
   .draftAppBar {
     padding: 5px 8px;
@@ -4719,7 +4609,7 @@ button.benchSlot:not(:disabled):hover {
   /* ── SpinStage (full-screen spin reveal) ───────────────────────── */
   .spinShell {
     gap: 10px;
-    padding: 10px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 10px calc(16px + env(safe-area-inset-bottom, 0px));
   }
   .spinStage {
     gap: var(--s-3);
@@ -4905,272 +4795,6 @@ button.benchSlot:not(:disabled):hover {
     height: 30px;
   }
 
-  /* ── Squad review: one-screen mobile composition ─────────────────
-     The review route can carry long honest-state warnings, but the core
-     loop must stay viewport-fit. Keep every datum reachable while moving
-     variable-length warning details into a small internal scroll surface. */
-  .reviewShell {
-    overflow: hidden;
-  }
-  .reviewShell > .draftAppBar {
-    padding-block: 4px;
-  }
-  .reviewHead {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: end;
-    gap: 4px 8px;
-    padding: 0;
-  }
-  .reviewHead > .eyebrowAccent {
-    align-self: center;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-  }
-  .reviewHead .teamNameRow {
-    gap: 2px;
-  }
-  .reviewHead .teamNameLabel {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-  .reviewHead .teamNameInput {
-    min-height: 34px;
-    padding: 5px 8px;
-    font-size: 18px;
-  }
-  .reviewShell > .panel {
-    padding: 7px;
-    border-radius: var(--r-2);
-  }
-  .reviewShell .synergyBar {
-    padding: 0 8px 4px;
-    margin-bottom: 5px;
-    gap: 2px;
-    border-radius: var(--r-2);
-  }
-  .reviewShell .synergyBarToggle {
-    min-height: 32px;
-  }
-  .reviewShell .panelHead {
-    margin-bottom: 4px;
-  }
-  .reviewShell .panelTitle {
-    font-size: 14px;
-  }
-  .reviewShell .panelMeta {
-    font-size: 10px;
-  }
-  .reviewShell .squadStage {
-    gap: 5px;
-  }
-  .reviewShell .squadStage .pitch {
-    max-width: 248px;
-  }
-  .reviewShell .managerSlot {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 3px 7px;
-    padding: 5px 7px;
-  }
-  .reviewShell .managerSlotEyebrow {
-    font-size: 8px;
-    letter-spacing: 0.12em;
-  }
-  .reviewShell .managerSlotIdentity {
-    gap: 6px;
-  }
-  .reviewShell .managerSlotFlag {
-    min-width: 24px;
-    width: 24px;
-    height: 18px;
-    padding: 0;
-  }
-  .reviewShell .managerSlotName {
-    font-size: 12px;
-  }
-  .reviewShell .managerSlotMeta {
-    font-size: 10px;
-  }
-  .reviewShell .managerTraits {
-    grid-column: 1 / -1;
-    flex-wrap: nowrap;
-    gap: 3px;
-    margin-top: 1px;
-    overflow: hidden;
-  }
-  .reviewShell .managerTraitChip {
-    padding: 1px 5px;
-    font-size: 8px;
-    white-space: nowrap;
-  }
-  .reviewShell .bench {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 4px;
-    margin-top: 5px;
-  }
-  .reviewShell .benchLabel {
-    margin: 0;
-    font-size: 8px;
-    letter-spacing: 0.08em;
-  }
-  .reviewShell .benchSlots {
-    gap: 3px;
-  }
-  .reviewShell .benchSlot {
-    min-height: 34px;
-    padding: 2px 1px;
-  }
-  .reviewShell .benchSlot .slotPos,
-  .reviewShell .benchSlot .slotName {
-    font-size: 8px;
-    line-height: 1.05;
-  }
-  .reviewShell .benchMiniFlag {
-    width: 13px;
-    height: 9px;
-  }
-  .reviewShell .squadAvg {
-    font-size: 13px;
-  }
-  .reviewShell .lineRatings {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
-  }
-  .reviewShell .lineRow {
-    grid-template-columns: 1fr;
-    gap: 2px;
-    padding: 3px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-2);
-    background: var(--bg-sunken);
-  }
-  .reviewShell .lineName {
-    font-size: 8px;
-    line-height: 1.05;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .reviewShell .lineTrack {
-    height: 3px;
-  }
-  .reviewShell .lineVal {
-    font-size: 12px;
-    text-align: left;
-  }
-  .reviewShell .warningsPanel {
-    max-height: 58px;
-    overflow: auto;
-    padding: 6px 8px;
-  }
-  .reviewShell .panelSubTitle {
-    margin-bottom: 3px;
-    font-size: 12px;
-  }
-  .reviewShell .warnList {
-    display: grid;
-    gap: 2px;
-    padding-left: 14px;
-    font-size: 9px;
-    line-height: 1.15;
-  }
-  .reviewShell .warnList li {
-    margin-bottom: 0;
-  }
-  .reviewShell .simPanel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 5px;
-  }
-  .reviewShell .simNote {
-    font-size: 10px;
-    line-height: 1.2;
-  }
-  .reviewShell .simPanel :global(.btn) {
-    min-height: 34px;
-    padding: 6px 8px;
-    font-size: 10px;
-    white-space: nowrap;
-  }
-
-  /* ── Share screen ─────────────────────────────────────────────── */
-  .share {
-    gap: 0;
-  }
-  .share :global(.page-head) {
-    gap: 5px;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-  }
-  .share :global(.page-head h1) {
-    font-size: clamp(32px, 10vw, 42px);
-  }
-  .share :global(.page-head__note) {
-    display: none;
-  }
-  .shareCardFrame {
-    margin: 6px 0 8px;
-  }
-  .shareSvg {
-    max-width: min(62vw, 236px);
-    border-radius: 16px;
-    box-shadow: var(--shadow-card);
-  }
-  .sharePanel {
-    margin-top: 0;
-    padding: 8px;
-    gap: 5px;
-  }
-  .shareCaptionLabel {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-  }
-  .shareCaption {
-    max-height: 48px;
-    overflow: auto;
-    font-size: 11px;
-    line-height: 1.25;
-    padding: 6px 8px;
-    border-radius: var(--r-2);
-  }
-  .sharePanel .resultsActions {
-    gap: 4px;
-  }
-  .sharePanel :global(.btn) {
-    min-height: 34px;
-    padding: 6px 8px;
-    border-radius: var(--r-2);
-    font-size: 11px;
-  }
-  .shareIntentGroup {
-    margin-top: 2px;
-    gap: 4px;
-  }
-  .shareIntentLabel {
-    font-size: 9px;
-  }
-  .shareIntentRow {
-    gap: 4px;
-  }
-  .shareIntentButton {
-    font-size: 10px;
-    padding-inline: 6px;
-  }
-  .shareHint {
-    font-size: 10px;
-    line-height: 1.3;
-  }
-
   /* ── GK warning slim variant ──────────────────────────────────── */
   .gkWarnPanel {
     padding: 8px 10px;
@@ -5333,8 +4957,7 @@ button.benchSlot:not(:disabled):hover {
      (the actual unusable width). */
   .draftShell,
   .reviewShell {
-    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
-    min-height: calc(100svh - 68px);
+    padding: 6px 6px calc(68px + env(safe-area-inset-bottom, 0px));
     gap: 6px;
   }
   .candRowLine {

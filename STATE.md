@@ -35,50 +35,6 @@ Build State v10, Architecture v6, Roadmap v6, and Surface Inventory v6, each
 superseding the prior version. This `STATE.md` is the in-repo closeout truth
 surface.
 
-## UI polish overhaul local state
-
-Branch `ui-polish` was created from `origin/main`
-`ccb80a81b5ce90921ee181532dbe00b0f5fbec94` for the mobile polish overhaul.
-At this local checkpoint, production leaderboard synthetic test rows were
-removed via Neon production branch `br-blue-heart-aqcejtyf`, and live API
-checks for ranked Classic, ranked Memory, casual Classic, and casual Memory
-returned 200 with the probe rows absent.
-
-Local UI implementation evidence is captured in
-`docs/reports/ui-polish-overhaul-2026-06-15.md`,
-`docs/reports/ui-polish-overhaul-local.json`,
-`docs/reports/ui-polish-overhaul-axe.json`,
-`docs/reports/ui-polish-overhaul-independent-review.md`, and 72 screenshots
-under `docs/screenshots/ui-polish-overhaul/` (18 surfaces × 390×844/360×800 ×
-light/dark). The local measurement report shows zero document overflow on all
-non-permitted-scroll core-loop routes, including `squad-review`; permitted long
-content remains `attribution`, `how-to-play`, `privacy`, and `results`.
-
-Implemented presentation-only surfaces: thin vertical SVG pitch, compact
-position-shaped/provenance-hued nodes with national mini flags, starter/bench/
-manager flags, presentation-only Synergy adjacency lines from existing
-`computeSynergy(...).linked_pairs`, compact Synergy score strip, mobile
-compaction, and transform/opacity-only motion with reduced-motion snapping.
-No schema, database, ETL, sim, rating, compact data, `formations.json`, or
-Synergy mechanic files are changed.
-
-Local gates run so far: `pnpm --filter @wcdraft/web typecheck`, `pnpm --filter
-@wcdraft/web lint`, focused `vitest` for `pitch-markings` and
-`synergy-overlay` (2 files / 11 tests), `git diff --check`, hardcoded-color and
-lexicon guard greps, browser screenshot/fit measurement against
-`http://localhost:3002`, post-fix Playwright + axe on `draft-complete` and
-`review` at 390×844/360×800 in both themes (8/8 zero violations, zero
-console/page errors, zero document overflow, 17 flags, one lit Synergy line,
-reduced-motion snap verified), independent fresh-context Codex CLI review
-from this WCDraft worktree (PASS / no Yellow blockers), and full root `pnpm
-typecheck && pnpm lint && pnpm test && pnpm build` (typecheck 8/8, lint 5/5,
-test 8/8 with core 366, data 73 passed / 7 skipped, db 79, marketing-x 64, web
-694 passed / 1 skipped, build 4/4). RepoPrompt review could not run because
-the active RepoPrompt workspace was bound to BiotraxIQ, not this WCDraft
-worktree; a later attempt to rebind RepoPrompt to `/tmp/wcdraft-ui-polish`
-failed with a broken-pipe MCP transport error. PR/merge, deploy, and live
-production UI verification are still pending.
-
 ## Era closeout status at last measurement
 
 - Branch/PR graveyard cleanup completed before the purge window. PR #76 was closed
