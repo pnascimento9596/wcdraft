@@ -6,7 +6,7 @@ into one operator guide, in two formats:
 - **`wcdraft-x-playbook.docx`** — Word
 - **`wcdraft-x-playbook.pdf`** — PDF
 
-Both hold identical content (cover · how-to · X native scheduler steps · the week's 43
+Both hold identical content (cover · how-to · X native scheduler steps · the current week's
 posts as individual copy-paste blocks · reply bank · quote-post bank · cadence · guardrails).
 
 ## Source of truth — never edited here
@@ -14,7 +14,7 @@ posts as individual copy-paste blocks · reply bank · quote-post bank · cadenc
 All post / reply / quote copy is **parsed verbatim** by `build_playbook.py` from the
 committed source files and rendered without alteration:
 
-- `../packs/pack-2026-W24.md` (the week's 43 posts)
+- `../packs/pack-2026-W25.md` (the current week's posts)
 - `../reply-bank.md`, `../quote-bank.md`
 - `../ROUTINE.md`, `../README.md` (operating posture)
 
@@ -28,5 +28,5 @@ python3 -m venv .venv && .venv/bin/pip install python-docx reportlab
 .venv/bin/python build_playbook.py   # writes the .docx and .pdf next to this README
 ```
 
-When a new weekly pack lands, update the pack path + `WEEK_LABEL`/`GENERATED` constants at
-the top of `build_playbook.py` and re-run.
+When a new weekly pack lands, update `WEEK_LABEL`, `GENERATED`, and `PACK_FILE` at the top
+of `build_playbook.py` and re-run.

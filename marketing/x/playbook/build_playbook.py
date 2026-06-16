@@ -16,8 +16,9 @@ import re
 HERE = os.path.dirname(os.path.abspath(__file__))
 MKT = os.path.normpath(os.path.join(HERE, ".."))  # marketing/x
 
-WEEK_LABEL = "2026-W24"
-GENERATED = "2026-06-14"
+WEEK_LABEL = "2026-W25"
+GENERATED = "2026-06-15"
+PACK_FILE = "packs/pack-2026-W25.md"
 
 # ---- Brand palette -------------------------------------------------------
 EMERALD = "#2ecf92"
@@ -65,7 +66,7 @@ def link_note(text):
 
 
 def parse_pack():
-    src = read("packs/pack-2026-W24.md")
+    src = read(PACK_FILE)
     # day sections: "## Monday" ... "## Result spotlights"
     days = []
     spotlights = []
@@ -375,10 +376,12 @@ def build_docx(path, pack_days, spotlights, replies, reply_disc, quotes, quote_d
     heading("X Native Scheduler — step by step")
     callout(SCHEDULER_INTRO, SCHEDULER_BLOCKS)
 
+    post_count = sum(len(blocks) for _, blocks in pack_days) + len(spotlights)
+
     # ---------------- THIS WEEK'S POSTS ----------------
     doc.add_page_break()
-    heading("This week's posts (W24)")
-    body("43 ready-to-paste posts, grouped by day. Pick the strongest 3–5 per day — you "
+    heading(f"This week's posts ({WEEK_LABEL.split('-')[-1]})")
+    body(f"{post_count} ready-to-paste posts, grouped by day. Pick the strongest 3–5 per day — you "
          "don't post them all. Copy one block, paste into the composer, schedule.",
          color=MUTED, after=8)
     for dayname, blocks in pack_days:
@@ -613,6 +616,7 @@ def build_pdf(path, pack_days, spotlights, replies, reply_disc, quotes, quote_di
         return t
 
     story = []
+    post_count = sum(len(blocks) for _, blocks in pack_days) + len(spotlights)
 
     # COVER (drawn on first page via frame; use spacers)
     story.append(Spacer(1, 2.2 * inch))
@@ -646,8 +650,8 @@ def build_pdf(path, pack_days, spotlights, replies, reply_disc, quotes, quote_di
     story.append(PageBreak())
 
     # POSTS
-    story += h1("This week's posts (W24)")
-    story.append(Paragraph("43 ready-to-paste posts, grouped by day. Pick the strongest 3–5 "
+    story += h1(f"This week's posts ({WEEK_LABEL.split('-')[-1]})")
+    story.append(Paragraph(f"{post_count} ready-to-paste posts, grouped by day. Pick the strongest 3–5 "
                            "per day — you don't post them all. Copy one block, paste into the "
                            "composer, schedule.", styles["muted"]))
     story.append(Spacer(1, 4))
@@ -749,7 +753,7 @@ def build_pdf(path, pack_days, spotlights, replies, reply_disc, quotes, quote_di
         # footer
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(MT)
-        canvas.drawString(0.85 * inch, 0.5 * inch, "wcdraft — X Marketing Playbook · W24")
+        canvas.drawString(0.85 * inch, 0.5 * inch, f"wcdraft — X Marketing Playbook · {WEEK_LABEL.split('-')[-1]}")
         canvas.drawRightString(w - 0.85 * inch, 0.5 * inch, "Page %d" % doc_.page)
         canvas.restoreState()
 

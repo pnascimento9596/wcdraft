@@ -18,6 +18,15 @@ census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Leaderboard season key:
 `engine-2026.06.15-merit-v4.3_wc-perf-6.3.0+proj-career-5.3.0_2026-06-04_ruleset-2026.06.04_923c4a93`.
 
+X marketing lane:
+source assets are present on `origin/main` as of
+`b67d1e54bac8b16e9eee4a5a4bc1d39a2e343907`; current operator pack is
+`marketing/x/packs/pack-2026-W25.md`, generated/refreshed 2026-06-15 for the Jun 16-22
+tournament hook frame. The playbook artifacts at
+`marketing/x/playbook/wcdraft-x-playbook.{docx,pdf}` are regenerated from W25 plus the
+committed reply and quote banks. Organic posting is unblocked; paid promotion remains
+blocked on trademark counsel.
+
 Manual rating override source:
 `etl/overrides/manual-ratings-v4.3.csv`, sha256
 `f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6`,
