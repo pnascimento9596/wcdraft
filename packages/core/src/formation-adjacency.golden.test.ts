@@ -28,7 +28,7 @@ import {
 // canonicalised/sorted/de-duplicated, every edge satisfies the rule) guard the
 // shape; the literal `EXPECTED_ADJACENCY` pins the exact edges.
 
-// Hand-written expected adjacency edge set for each of the six MVP formations.
+// Hand-written expected adjacency edge set for each shipped formation.
 // Canonical form: each edge `[a, b]` has `a < b`; the array is sorted
 // lexicographically by (a, then b). This is the source-of-truth fixture the
 // shipped/derived adjacency is asserted against.
@@ -245,10 +245,91 @@ const EXPECTED_ADJACENCY: Readonly<Record<string, ReadonlyArray<readonly [string
     ["5-3-2.RCM", "5-3-2.RF"],
     ["5-3-2.RCM", "5-3-2.RWB"],
   ],
+  // 4-1-4-1 — back four · single pivot (CDM) · flat MF four (LM/LCM/RCM/RM) ·
+  // lone ST. CDM + the four all project to the MF line (like the 4-2-3-1 double
+  // pivot), so the CDM links across the whole MF band and down to the ST.
+  "4-1-4-1": [
+    ["4-1-4-1.CDM", "4-1-4-1.LB"],
+    ["4-1-4-1.CDM", "4-1-4-1.LCB"],
+    ["4-1-4-1.CDM", "4-1-4-1.LCM"],
+    ["4-1-4-1.CDM", "4-1-4-1.LM"],
+    ["4-1-4-1.CDM", "4-1-4-1.RB"],
+    ["4-1-4-1.CDM", "4-1-4-1.RCB"],
+    ["4-1-4-1.CDM", "4-1-4-1.RCM"],
+    ["4-1-4-1.CDM", "4-1-4-1.ST"],
+    ["4-1-4-1.GK", "4-1-4-1.LB"],
+    ["4-1-4-1.GK", "4-1-4-1.LCB"],
+    ["4-1-4-1.GK", "4-1-4-1.RB"],
+    ["4-1-4-1.GK", "4-1-4-1.RCB"],
+    ["4-1-4-1.LB", "4-1-4-1.LCB"],
+    ["4-1-4-1.LB", "4-1-4-1.LCM"],
+    ["4-1-4-1.LB", "4-1-4-1.LM"],
+    ["4-1-4-1.LB", "4-1-4-1.RCM"],
+    ["4-1-4-1.LCB", "4-1-4-1.LCM"],
+    ["4-1-4-1.LCB", "4-1-4-1.LM"],
+    ["4-1-4-1.LCB", "4-1-4-1.RCB"],
+    ["4-1-4-1.LCB", "4-1-4-1.RCM"],
+    ["4-1-4-1.LCB", "4-1-4-1.RM"],
+    ["4-1-4-1.LCM", "4-1-4-1.RB"],
+    ["4-1-4-1.LCM", "4-1-4-1.RCB"],
+    ["4-1-4-1.LCM", "4-1-4-1.RCM"],
+    ["4-1-4-1.LCM", "4-1-4-1.ST"],
+    ["4-1-4-1.LM", "4-1-4-1.RCB"],
+    ["4-1-4-1.LM", "4-1-4-1.ST"],
+    ["4-1-4-1.RB", "4-1-4-1.RCB"],
+    ["4-1-4-1.RB", "4-1-4-1.RCM"],
+    ["4-1-4-1.RB", "4-1-4-1.RM"],
+    ["4-1-4-1.RCB", "4-1-4-1.RCM"],
+    ["4-1-4-1.RCB", "4-1-4-1.RM"],
+    ["4-1-4-1.RCM", "4-1-4-1.RM"],
+    ["4-1-4-1.RCM", "4-1-4-1.ST"],
+    ["4-1-4-1.RM", "4-1-4-1.ST"],
+  ],
+  // 3-4-2-1 — back three · flat MF four (LM/LCM/RCM/RM) · two 10s (LAM/RAM,
+  // role AM) · lone ST. The four + the two 10s all project to the MF line, so
+  // the centre-backs (channel C) link across the entire MF band and the ST
+  // links up to every MF slot.
+  "3-4-2-1": [
+    ["3-4-2-1.CB", "3-4-2-1.GK"],
+    ["3-4-2-1.CB", "3-4-2-1.LAM"],
+    ["3-4-2-1.CB", "3-4-2-1.LCB"],
+    ["3-4-2-1.CB", "3-4-2-1.LCM"],
+    ["3-4-2-1.CB", "3-4-2-1.LM"],
+    ["3-4-2-1.CB", "3-4-2-1.RAM"],
+    ["3-4-2-1.CB", "3-4-2-1.RCB"],
+    ["3-4-2-1.CB", "3-4-2-1.RCM"],
+    ["3-4-2-1.CB", "3-4-2-1.RM"],
+    ["3-4-2-1.GK", "3-4-2-1.LCB"],
+    ["3-4-2-1.GK", "3-4-2-1.RCB"],
+    ["3-4-2-1.LAM", "3-4-2-1.LCB"],
+    ["3-4-2-1.LAM", "3-4-2-1.LCM"],
+    ["3-4-2-1.LAM", "3-4-2-1.LM"],
+    ["3-4-2-1.LAM", "3-4-2-1.RCB"],
+    ["3-4-2-1.LAM", "3-4-2-1.ST"],
+    ["3-4-2-1.LCB", "3-4-2-1.LCM"],
+    ["3-4-2-1.LCB", "3-4-2-1.LM"],
+    ["3-4-2-1.LCB", "3-4-2-1.RAM"],
+    ["3-4-2-1.LCB", "3-4-2-1.RCB"],
+    ["3-4-2-1.LCB", "3-4-2-1.RCM"],
+    ["3-4-2-1.LCB", "3-4-2-1.RM"],
+    ["3-4-2-1.LCM", "3-4-2-1.RCB"],
+    ["3-4-2-1.LCM", "3-4-2-1.RCM"],
+    ["3-4-2-1.LCM", "3-4-2-1.ST"],
+    ["3-4-2-1.LM", "3-4-2-1.RCB"],
+    ["3-4-2-1.LM", "3-4-2-1.ST"],
+    ["3-4-2-1.RAM", "3-4-2-1.RCB"],
+    ["3-4-2-1.RAM", "3-4-2-1.RM"],
+    ["3-4-2-1.RAM", "3-4-2-1.ST"],
+    ["3-4-2-1.RCB", "3-4-2-1.RCM"],
+    ["3-4-2-1.RCB", "3-4-2-1.RM"],
+    ["3-4-2-1.RCM", "3-4-2-1.RM"],
+    ["3-4-2-1.RCM", "3-4-2-1.ST"],
+    ["3-4-2-1.RM", "3-4-2-1.ST"],
+  ],
 };
 
 describe("formation-adjacency — shipped templates match hand-written expected edge sets", () => {
-  it("EXPECTED_ADJACENCY covers exactly the six MVP formation ids", () => {
+  it("EXPECTED_ADJACENCY covers exactly the shipped formation ids", () => {
     expect(Object.keys(EXPECTED_ADJACENCY).sort()).toEqual([...FORMATION_IDS].sort());
   });
 
