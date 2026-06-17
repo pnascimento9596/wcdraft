@@ -122,8 +122,8 @@ Runtime bundle anchors (2.6.0):
 - Draft-pool raw bytes: 129,690,546; sha256
   `a65ae19048cea5c2ec6c…` (full value in `src/generated/manifest.json`).
 - Draft-pool brotli: 2,221,824 bytes (budget 2,540,672 — within budget).
-- Ratings lock: 78,727,042 bytes, sha256
-  `21fc95027fbc235478aa230e9f49800ed26346915ed3fb92da5be3e8f8a802bd`,
+- `ratings.json` (gitignored; tracked via `ratings.lock.json`): 78,727,042 bytes,
+  sha256 `21fc95027fbc235478aa230e9f49800ed26346915ed3fb92da5be3e8f8a802bd`,
   rating_version `wc-perf-6.4.0`.
 
 ## Distribution (the elite-band shift)
@@ -178,7 +178,7 @@ which v4.4 does not change. Therefore:
 | core RNG/draft goldens | PASS — test:golden 67 · test:golden:draft 40 |
 | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS — typecheck 8 · lint 5 · test 8 (web 694+1skip, data 74+7skip, core 366, db 79, marketing-x 64) · build 4 |
 | `git diff --check` | PASS — `.gitattributes` marks the fingerprinted override CSVs `-text -whitespace` (intrinsic CRLF) |
-| Fresh-context independent review | PENDING |
+| Fresh-context independent review | PASS — fresh `origin/ws-merit/v4.4` clone re-executed all gates + all 8 contract clauses (Career unchanged 0/12,219, 515/515 current targets, 639 blanks untouched, 0 canary flips, determinism byte-identical); 0 blockers |
 | CI | PENDING |
 | Merge / deploy / live verify | PENDING owner approval |
 
