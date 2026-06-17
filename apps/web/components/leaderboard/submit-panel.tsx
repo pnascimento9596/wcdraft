@@ -17,6 +17,7 @@ import { putJson } from "@/lib/auth/client";
 import type { GameData } from "@/lib/game/data";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { buildRunTokenBody, encodeRunToken, versionsAgree } from "@/lib/game/run-token";
+import { boardQueryString, type BoardFilter } from "@/lib/leaderboard/board-view";
 import { validateDisplayName, type DisplayNameRejection } from "@/lib/leaderboard/display-name";
 import { submitRun } from "@/lib/leaderboard/client";
 import { NAME_HINT, submitStatusCopy } from "@/lib/leaderboard/submit-copy";
@@ -87,6 +88,7 @@ export function LeaderboardSubmitPanel({
 
   if (sim === null || token === null) return null;
   const score = sim.run.score;
+  const leaderboardHref = leaderboardHrefForRecord(record, submitMode);
 
   const preparedName = preparePublicName({ mode: submitMode, raw: name, publicUsername });
   const nameHint = touched && !preparedName.ok ? NAME_HINT[preparedName.reason] : null;
@@ -127,6 +129,7 @@ export function LeaderboardSubmitPanel({
       authReady={authReady}
       isSignedIn={isSignedIn}
       publicUsername={publicUsername}
+      leaderboardHref={leaderboardHref}
       name={name}
       nameHint={nameHint}
       phase={phase}
@@ -142,6 +145,17 @@ export function LeaderboardSubmitPanel({
       onSubmit={onSubmit}
     />
   );
+}
+
+function leaderboardHrefForRecord(record: RunRecordV1, lane: SubmitBoardMode): string {
+  const filter: BoardFilter = {
+    lane,
+    draftMode: record.draft.mode,
+    draftOrder: record.draft.draft_flow ?? "squad_first",
+    era: record.draft.era_preset ?? "all_time",
+    ratingBasis: record.draft.rating_basis ?? "career",
+  };
+  return `/leaderboard${boardQueryString({ filter, cursor: null })}`;
 }
 
 type PreparedPublicName =

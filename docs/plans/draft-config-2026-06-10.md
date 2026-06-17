@@ -2,10 +2,11 @@
 
 **Date:** 2026-06-10
 **Branch:** `ws-plan/draft-config` off `origin/main` at `dbc1f0a`
-**Status:** historical design. DC-1 token/config schema, DC-2 era presets,
-DC-3 Position First, and DC-4 setup/badge/copy polish have shipped. The plan
-remains the audit trail for the still-Red selected-basis and leaderboard-policy
-work.
+**Status:** historical design with current amendments. DC-1 token/config schema,
+DC-2 era presets, DC-3 Position First, DC-4 setup/badge/copy polish, and
+selected-basis runtime exposure have shipped. DC-8 was dispatched on
+2026-06-17 as a Red per-config leaderboard lane: both casual and ranked accept
+every legal config, and ranked remains account-required but per-config.
 
 This plan adds pre-draft configuration on top of the existing Classic / Memory
 mode select:
@@ -52,8 +53,9 @@ matching contract sections are currently distributed across `apps/web/lib/game/r
   `strategicAutoDraft`, and the heavy gate is intentionally not multiplied
   over every UI mode. Source: `packages/data/test/realism/draft-policies.ts`,
   `packages/data/test/realism/realism.gate.test.ts`.
-- F-4 season semantics derive from the six version anchors, and current
-  leaderboard storage knows `draft_mode` only as Classic / Memory. Source:
+- F-4 season semantics derive from the six version anchors. DC-8 leaderboard
+  storage now records `draft_mode`, `draft_order`, `era`, and `rating_basis` as
+  exact filter columns. Source:
   `docs/plans/f4-leaderboard-2026-06-10.md`,
   `apps/web/lib/leaderboard/season.ts`,
   `packages/db/src/schema/leaderboard-entries.ts`.
@@ -461,56 +463,38 @@ F-4 seasons are currently the equivalence class of the six version anchors.
 Config axes fragment competitive fairness because they change the pool, the
 state machine, and the sim channels.
 
-Option 1: config joins the season key.
+**2026-06-17 owner decision:** use per-config boards for both lanes. Every legal
+config posts to its exact board for casual and ranked. Ranked still requires a
+signed-in account, but the single canonical ranked ladder no longer exists.
+The default landing remains canonical for familiarity:
+Classic + Squad First + Career + All-time.
 
-- Example key input: six anchors + `{md,df,rb,ef}`.
+Selected policy: config is a board partition, not part of the season key.
+
+- Board partition key: `{mode, draft_mode, draft_order, era, rating_basis}`.
 - Pros: every board is fair by construction; server replay reproduces config
-  directly from `t2`; anti-cheat stays clean.
+  directly from `t2`; anti-cheat stays clean; old season logic remains the
+  six-anchor season key.
 - Cons: up to 32 boards per season before ranked/casual, sparse traffic, noisy
   board UX, and more "why is my score not on the main board?" confusion.
 
-Option 2: ranked play restricted to one canonical config; all others casual-only.
-
-- Canonical default: Classic + Squad First + Career + All-time.
-- Pros: keeps ranked meaningful, keeps CI/calibration bounded, avoids
-  fragmentation, and preserves today's shipped default as the competitive
-  lane.
-- Cons: players who prefer Memory, Current, Position First, or Modern cannot
-  rank those runs in v1.
-
-Option 3: small whitelisted ranked set.
-
-- Example: Classic/Squad/Career/All-time plus Memory/Squad/Career/All-time,
-  or plus Modern.
-- Pros: supports more play styles without opening all 32 boards.
-- Cons: every whitelist entry needs explicit calibration and UX; the product
-  still has to explain why some configs rank and others do not.
-
-Recommendation: **Option 2 for v1.** Ranked should launch, or stay dark, on one
-canonical config only. Non-default configs should remain casual/shareable until
-we have traffic and calibration evidence. Casual board filtering can still show
-config badges, but ranked should not fragment on day one.
-
 Anti-cheat implication:
 
-- Server replay must decode `t2`, reconstruct the exact config, and reject a
-  ranked submission whose config is not canonical (or not whitelisted if Paulo
-  chooses option 3).
-- `t1` submissions are canonical by compatibility and remain eligible only for
-  canonical-ranked if all other ranked gates pass.
+- Server replay must decode `t1`/`t2`, reconstruct the exact config, reject
+  stale anchors with `WRONG_SEASON`, and persist only the replay-derived config.
+- The old canonical-config submit gate is removed. A `t1` token remains
+  canonical by compatibility; a `t2` token posts to its own exact board.
+- Memory ranked is `mode=ranked` + `draft_mode=hidden`; no standalone Memory
+  ranked endpoint or separate lane model.
 
 Board UX implication:
 
-- If option 2: ranked board copy stays simple; casual/history/share pages show
-  config badges for non-default runs.
-- If option 1 or 3: board page needs config selectors, separate empty states,
-  and rank labels scoped to the selected config. A single unfiltered rank would
-  be dishonest.
-
-**Question for Paulo:** Should ranked leaderboard submissions be limited to the
-canonical config `Classic + Squad First + Career + All-time` for v1, with every
-other config casual/share-only? Default recommendation: **yes, canonical ranked
-only**.
+- `/leaderboard` exposes lane tabs and filters for Mode, Draft Order, Era, and
+  Rating Basis. Filters are open by default on tab select.
+- Empty configs say no runs exist for that config; no placeholder/fabricated
+  rows.
+- Rank copy must be scoped to the active lane+config. A single unfiltered ranked
+  rank would be dishonest.
 
 ## G. Defaults, UX, And Migration
 
@@ -535,9 +519,9 @@ Pre-draft UX:
   - Draft mode: Squad First / Position First;
   - Rating basis: Career / Current;
   - Era: All-time / Post-2000 / Post-2010 / Modern.
-- Until the selected-basis Red lane lands, `Current` remains disabled with
-  honest copy. The data rows exist; the sim/leaderboard product contract does
-  not yet.
+- `Current` is an enabled rating-basis axis only through the selected-basis
+  runtime/sim path. The leaderboard must persist `rating_basis = current` from
+  replayed tokens and must never silently fall back to Career.
 - No free range slider in v1. The measured `2026-only` invalid case proves
   arbitrary ranges need dynamic manager and coverage validation before they can
   be safely offered.
@@ -567,18 +551,18 @@ All items below are **DISPATCH-ONLY**. Red units require fresh-session
 independent review and human approval per `CLAUDE.md`; the docs-only planning
 PR remains Green.
 
-| Unit                       | Tier                | Status                        | Scope                                                                                  | Depends on          |
-| -------------------------- | ------------------- | ----------------------------- | -------------------------------------------------------------------------------------- | ------------------- |
-| DC-0 plan + queue          | Green docs          | Unblocked now                 | This plan, `q-006`, `STATE.md` note                                                    | none                |
-| DC-1 token schema          | Red                 | SHIPPED                       | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures                        | DC-0                |
-| DC-2 era presets           | Red                 | SHIPPED                       | filtered catalog input, preset constants, pool-depth census, era goldens               | DC-1 preferred      |
-| DC-3 position-first core   | Red                 | SHIPPED                       | target-selection state, token `ts` replay, transition goldens                          | DC-1                |
-| DC-4 config UX dark        | Yellow/Red boundary | SHIPPED for setup/badges/copy | formation-screen setup disclosure, share badges, Memory leak tests, `Current` disabled | DC-1..3             |
-| DC-5 MV2-12 link seam      | Red                 | SUPERSEDED by merit-v3 U0     | fix 2026 identity-link misses called out by Audit-2                                    | q-002 dispatch      |
-| DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                              | DC-5                |
-| DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens                    | DC-6                |
-| DC-8 leaderboard policy    | Red                 | Gated on HUMAN                | ranked/casual config policy, DB/API/board changes                                      | Paulo decision F    |
-| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, human approval           | DC-1..8 as selected |
+| Unit                       | Tier                | Status                        | Scope                                                                        | Depends on          |
+| -------------------------- | ------------------- | ----------------------------- | ---------------------------------------------------------------------------- | ------------------- |
+| DC-0 plan + queue          | Green docs          | Unblocked now                 | This plan, `q-006`, `STATE.md` note                                          | none                |
+| DC-1 token schema          | Red                 | SHIPPED                       | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures              | DC-0                |
+| DC-2 era presets           | Red                 | SHIPPED                       | filtered catalog input, preset constants, pool-depth census, era goldens     | DC-1 preferred      |
+| DC-3 position-first core   | Red                 | SHIPPED                       | target-selection state, token `ts` replay, transition goldens                | DC-1                |
+| DC-4 config UX             | Yellow/Red boundary | SHIPPED for setup/badges/copy | formation-screen setup disclosure, share badges, Memory leak tests           | DC-1..3             |
+| DC-5 MV2-12 link seam      | Red                 | SUPERSEDED by merit-v3 U0     | fix 2026 identity-link misses called out by Audit-2                          | q-002 dispatch      |
+| DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                    | DC-5                |
+| DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens          | DC-6                |
+| DC-8 leaderboard policy    | Red                 | DISPATCHED 2026-06-17         | per-config ranked/casual boards, DB/API/board changes                        | Paulo decision F    |
+| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, human approval | DC-1..8 as selected |
 
 Integration-branch decision:
 
@@ -603,9 +587,8 @@ reviewed and gated.
 
 ## Human Decision List
 
-1. **Leaderboard policy:** default recommendation is canonical ranked only:
-   `Classic + Squad First + Career + All-time`; all other configs casual/share
-   in v1.
+1. **Leaderboard policy:** resolved 2026-06-17. Both casual and ranked post to
+   exact per-config boards; ranked remains account-required.
 2. **Era slider:** default recommendation is **out of v1**. Presets only until
    dynamic range validation can reject invalid ranges such as `2026-only`.
 3. **Rating-basis naming:** confirm UI labels exactly `Career` and `Current`.

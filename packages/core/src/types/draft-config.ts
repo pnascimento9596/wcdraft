@@ -95,11 +95,7 @@ export function isEraPresetId(x: unknown): x is EraPresetId {
   return x === "all_time" || x === "post_2000" || x === "post_2010" || x === "modern";
 }
 
-/**
- * True iff the config is THE canonical competitive config (owner-ratified:
- * ranked submissions are canonical-config only in v1; the Classic / Memory
- * visibility lanes are a separate, pre-existing axis on the board).
- */
+/** True iff the config is the default Classic-era setup used for first load. */
 export function isCanonicalDraftConfig(config: DraftConfig): boolean {
   return (
     config.draft_flow === DEFAULT_DRAFT_FLOW &&

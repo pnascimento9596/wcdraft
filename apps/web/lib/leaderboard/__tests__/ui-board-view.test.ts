@@ -15,12 +15,16 @@ import {
   type BoardEntryWire,
   type BoardPageWire,
 } from "../board-view";
+import { DEFAULT_BOARD_FILTER } from "../config";
 
 const NOW = Date.parse("2026-06-10T12:00:00.000Z");
 
 function entry(over: Partial<BoardEntryWire> & { id: string; rank: number }): BoardEntryWire {
   return {
     draft_mode: "classic",
+    draft_order: "squad_first",
+    era: "all_time",
+    rating_basis: "career",
     display_name: `manager_${over.rank}`,
     verified_score: 100 - over.rank,
     score_breakdown: [{ label: "Goals scored", raw: 2, weight: 3, points: 6 }],
@@ -35,6 +39,9 @@ function page(entries: BoardEntryWire[], nextCursor: string | null): BoardPageWi
     current_season_key: "s",
     mode: "ranked",
     draft_mode: "classic",
+    draft_order: "squad_first",
+    era: "all_time",
+    rating_basis: "career",
     entries,
     next_cursor: nextCursor,
   };
@@ -125,12 +132,28 @@ describe("appendBoardPage (pagination walk)", () => {
 });
 
 describe("boardQueryString", () => {
-  it("always sends ranked mode plus an explicit lane", () => {
-    expect(boardQueryString({ draftMode: "hidden", cursor: null })).toBe(
-      "?mode=ranked&draft_mode=hidden",
+  it("sends the selected lane plus every config axis", () => {
+    expect(
+      boardQueryString({
+        filter: { ...DEFAULT_BOARD_FILTER, draftMode: "hidden" },
+        cursor: null,
+      }),
+    ).toBe(
+      "?mode=ranked&draft_mode=hidden&draft_order=squad_first&era=all_time&rating_basis=career",
     );
-    expect(boardQueryString({ draftMode: "classic", cursor: "C 1" })).toBe(
-      "?mode=ranked&draft_mode=classic&cursor=C+1",
+    expect(
+      boardQueryString({
+        filter: {
+          lane: "casual",
+          draftMode: "classic",
+          draftOrder: "position_first",
+          era: "modern",
+          ratingBasis: "current",
+        },
+        cursor: "C 1",
+      }),
+    ).toBe(
+      "?mode=casual&draft_mode=classic&draft_order=position_first&era=modern&rating_basis=current&cursor=C+1",
     );
   });
 });

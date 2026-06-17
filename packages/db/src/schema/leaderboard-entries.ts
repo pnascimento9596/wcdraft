@@ -36,6 +36,9 @@
 //   - `draft_mode`: the token's `md` is a fairness dimension (hidden
 //     drafting is blind); stored at write so board filtering never
 //     re-parses tokens.
+//   - `draft_order` / `era` / `rating_basis`: the rest of the token's draft
+//     config. Existing legacy rows may be NULL when the config was not safely
+//     derivable; new accepted submissions always write all three.
 //   - `hidden_at`: reversible moderation hide; board queries filter
 //     `hidden_at IS NULL`. Hard delete only for legal demands.
 //   - RANKED IS ACCOUNT-REQUIRED (ruling): `leaderboard_entries_ranked_user_chk`
@@ -65,6 +68,9 @@ export const leaderboardEntries = pgTable(
     seasonKey: text("season_key").notNull(),
     mode: text("mode").notNull(),
     draftMode: text("draft_mode").notNull(),
+    draftOrder: text("draft_order"),
+    era: text("era"),
+    ratingBasis: text("rating_basis"),
     userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
     sessionId: text("session_id").references(() => sessions.id, {
       onDelete: "set null",
@@ -80,13 +86,22 @@ export const leaderboardEntries = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    // Exact board read: filter (season, mode), sort verified_score DESC,
-    // created_at ASC (first to reach a score ranks first), id for total
-    // order — the same triple the keyset cursor paginates on. Partial on
-    // `hidden_at IS NULL` because every ranking query filters hidden rows;
-    // moderation/audit reads are rare and may seq-scan.
+    // Exact board read: filter (season, lane, full config), sort verified_score
+    // DESC, created_at ASC (first to reach a score ranks first), id for total
+    // order. Partial on `hidden_at IS NULL` because every ranking query
+    // filters hidden rows; moderation/audit reads are rare and may seq-scan.
     index("leaderboard_entries_top_idx")
-      .on(t.seasonKey, t.mode, t.verifiedScore.desc(), t.createdAt.asc(), t.id)
+      .on(
+        t.seasonKey,
+        t.mode,
+        t.draftMode,
+        t.draftOrder,
+        t.era,
+        t.ratingBasis,
+        t.verifiedScore.desc(),
+        t.createdAt.asc(),
+        t.id,
+      )
       .where(sql`${t.hiddenAt} IS NULL`),
     // Claim UPDATE + my-entry lookup; only anon-owned rows carry a session.
     index("leaderboard_entries_session_idx")
@@ -97,6 +112,26 @@ export const leaderboardEntries = pgTable(
       .nullsNotDistinct(),
     check("leaderboard_entries_mode_chk", sql`${t.mode} IN ('casual', 'ranked')`),
     check("leaderboard_entries_draft_mode_chk", sql`${t.draftMode} IN ('classic', 'hidden')`),
+    check(
+      "leaderboard_entries_draft_order_chk",
+      sql`${t.draftOrder} IS NULL OR ${t.draftOrder} IN ('squad_first', 'position_first')`,
+    ),
+    check(
+      "leaderboard_entries_era_chk",
+      sql`${t.era} IS NULL OR ${t.era} IN ('all_time', 'post_2000', 'post_2010', 'modern')`,
+    ),
+    check(
+      "leaderboard_entries_rating_basis_chk",
+      sql`${t.ratingBasis} IS NULL OR ${t.ratingBasis} IN ('career', 'current')`,
+    ),
+    check(
+      "leaderboard_entries_config_complete_chk",
+      sql`(
+        ${t.draftOrder} IS NULL AND ${t.era} IS NULL AND ${t.ratingBasis} IS NULL
+      ) OR (
+        ${t.draftOrder} IS NOT NULL AND ${t.era} IS NOT NULL AND ${t.ratingBasis} IS NOT NULL
+      )`,
+    ),
     check(
       "leaderboard_entries_display_alias_chk",
       sql`${t.displayAlias} IS NULL OR ${t.displayAlias} ~ '^[a-z0-9_]{3,20}$'`,

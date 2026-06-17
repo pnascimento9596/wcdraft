@@ -69,13 +69,23 @@ const profilesDownSql = readFileSync(
   "utf8",
 );
 
+const configSql = readFileSync(
+  new URL("../migrations/0006_leaderboard_config_filters.sql", import.meta.url),
+  "utf8",
+);
+
+const configDownSql = readFileSync(
+  new URL("../migrations/0006_leaderboard_config_filters.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(6);
+    expect(journal.entries).toHaveLength(7);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -88,6 +98,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[4]?.idx).toBe(4);
     expect(journal.entries[5]?.tag).toBe("0005_leaderboard_profiles");
     expect(journal.entries[5]?.idx).toBe(5);
+    expect(journal.entries[6]?.tag).toBe("0006_leaderboard_config_filters");
+    expect(journal.entries[6]?.idx).toBe(6);
   });
 
   it.each([
@@ -204,6 +216,45 @@ describe("@wcdraft/db migrations — 0000_init", () => {
 
   it("down-migration also drops the drizzle bookkeeping schema", () => {
     expect(downSql).toMatch(/DROP SCHEMA IF EXISTS "drizzle" CASCADE/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0006_leaderboard_config_filters", () => {
+  it("adds nullable explicit config columns and exact-config top index", () => {
+    expect(configSql).toMatch(/ADD COLUMN "draft_order" text/);
+    expect(configSql).toMatch(/ADD COLUMN "era" text/);
+    expect(configSql).toMatch(/ADD COLUMN "rating_basis" text/);
+    expect(configSql).toMatch(
+      /"season_key",\s*"mode",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"verified_score" DESC/s,
+    );
+  });
+
+  it("backfills only current-season derivable token configs without guessing legacy rows", () => {
+    expect(configSql).toContain(
+      "engine-2026.06.16-merit-v4.4_wc-perf-6.4.0+proj-career-5.4.0_2026-06-04_ruleset-2026.06.04_f79ba870",
+    );
+    expect(configSql).toMatch(/__wcdraft_leaderboard_token_json/);
+    expect(configSql).toMatch(/c\.token_mode = e\."draft_mode"/);
+    expect(configSql).toMatch(/c\.body#>>'\{ef,min\}' = '1930'/);
+  });
+
+  it("guards legal config values and all-or-null legacy completeness", () => {
+    expect(configSql).toMatch(/leaderboard_entries_draft_order_chk/);
+    expect(configSql).toMatch(/'squad_first', 'position_first'/);
+    expect(configSql).toMatch(/leaderboard_entries_era_chk/);
+    expect(configSql).toMatch(/'all_time', 'post_2000', 'post_2010', 'modern'/);
+    expect(configSql).toMatch(/leaderboard_entries_rating_basis_chk/);
+    expect(configSql).toMatch(/'career', 'current'/);
+    expect(configSql).toMatch(/leaderboard_entries_config_complete_chk/);
+  });
+
+  it("down-migration drops config artifacts and restores the 0005 top index shape", () => {
+    expect(configDownSql).toMatch(/DROP COLUMN IF EXISTS "rating_basis"/);
+    expect(configDownSql).toMatch(/DROP COLUMN IF EXISTS "era"/);
+    expect(configDownSql).toMatch(/DROP COLUMN IF EXISTS "draft_order"/);
+    expect(configDownSql).toMatch(
+      /"season_key",\s*"mode",\s*"verified_score" DESC NULLS LAST,\s*"created_at",\s*"id"/s,
+    );
   });
 });
 

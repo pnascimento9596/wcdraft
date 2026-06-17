@@ -10,8 +10,8 @@
 //   - CONTROL vs DATA: the setup control offers exactly the bases the served
 //     runtime bundle carries — the UI can never silently lag the data.
 //
-// Leaderboard refusal of `current` (NON_CANONICAL_CONFIG, before any re-sim)
-// is pinned in lib/leaderboard/__tests__/validate.test.ts.
+// Leaderboard acceptance of `current` as a per-config board axis is pinned in
+// lib/leaderboard/__tests__/validate.test.ts.
 
 import { describe, expect, it } from "vitest";
 

@@ -5,11 +5,12 @@
 - **Status:** PARTLY SHIPPED / OPEN - see
   [`docs/plans/draft-config-2026-06-10.md`](../plans/draft-config-2026-06-10.md).
 
-> **Current reality 2026-06-12:** DC-1 token/config schema, DC-2 era presets,
-> DC-3 Position First, and DC-4 share/config-badge/copy polish have shipped.
-> The shipped runtime data now materializes both Career and Current rows in
-> `basis_ratings.current`, but product exposure of `rating_basis: "current"`
-> still requires the selected-basis sim/runtime/leaderboard policy work below.
+> **Current reality 2026-06-17:** DC-1 token/config schema, DC-2 era presets,
+> DC-3 Position First, DC-4 share/config-badge/copy polish, and selected-basis
+> runtime exposure have shipped. DC-8 is dispatched as a Red per-config
+> leaderboard lane: every legal casual or ranked run posts to its exact
+> `mode × draft_order × era × rating_basis` board, with ranked still requiring
+> sign-in.
 
 ## Spec
 
@@ -32,19 +33,18 @@ The implementation units are dispatch-only:
 | DC-5 | MV2-12 link-seam prerequisite                                    | SUPERSEDED by merit-v3 U0         |
 | DC-6 | MV2-12b dual-basis materialization                               | SHIPPED by merit-v3 V6            |
 | DC-7 | selected-basis sim inputs + shared lambda validation             | Red review                        |
-| DC-8 | leaderboard config policy/schema/API/UX                          | Red review, HUMAN policy decision |
+| DC-8 | leaderboard config policy/schema/API/UX                          | Red review, DISPATCHED 2026-06-17 |
 | DC-9 | integration season merge and anchor/golden re-lock               | Red review + human approval       |
 
 ## Blockers / Decisions
 
-- **HUMAN:** leaderboard config policy. Plan default: ranked accepts only
-  `Classic + Squad First + Career + All-time`; other configs are casual/share
-  in v1.
+- **Resolved 2026-06-17:** leaderboard config policy is per-config for both
+  casual and ranked; ranked remains account-required.
 - **HUMAN:** era slider in/out. Plan default: out of v1.
 - **HUMAN:** confirm rating-basis labels and copy: `Career` and `Current`.
-- **Dependency:** Current rows exist in runtime data, but selected-basis sim
-  input, canaries/goldens, and leaderboard policy remain Red scope. Do not
-  flip Current by reusing Career or by silently falling back.
+- **Dependency:** Current rows exist in runtime data. Leaderboard posts must
+  persist the replay-derived basis and must not reuse Career or silently fall
+  back when a Current token is submitted.
 - **Integration branch:** `engine-draft-config` carried DC-1..3; future
   selected-basis/leaderboard work should dispatch under a fresh Red lane.
 
@@ -67,4 +67,4 @@ Per `docs/plans/draft-config-2026-06-10.md`:
 - runtime dual-basis compact integrity (shipped by merit-v3) plus selected-basis
   sim/leaderboard validation before exposing Current;
 - shared-lambda realism validation for shipped basis configs;
-- leaderboard replay/policy tests once Paulo answers the HUMAN policy decision.
+- leaderboard replay/policy tests for per-config casual and ranked boards.

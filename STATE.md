@@ -63,6 +63,17 @@ Build State v10, Architecture v6, Roadmap v6, and Surface Inventory v6, each
 superseding the prior version. This `STATE.md` is the in-repo closeout truth
 surface.
 
+Per-config leaderboard candidate (`ws-f4/per-config-leaderboard`, Red,
+2026-06-17): DC-8 policy is resolved to exact per-config boards for both
+casual and ranked. Ranked remains account-required, but the single canonical
+ranked ladder is removed. Board partition key is
+`mode × draft_mode × draft_order × era × rating_basis`; default landing remains
+Ranked · Classic · Squad First · Career · All-time. Migration `0006` adds
+nullable `draft_order`, `era`, and `rating_basis`, backfills only current-season
+rows whose stored token yields a coherent config, and excludes legacy/old-season
+NULL-config rows from filterable views. Candidate report:
+`docs/reports/per-config-leaderboard-2026-06-17.md`.
+
 ## UI polish overhaul shipped state
 
 PR #148 shipped the mobile polish overhaul from fix-forward branch

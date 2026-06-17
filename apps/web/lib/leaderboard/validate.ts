@@ -5,7 +5,7 @@
 //   1. body shape + token size guard + target lane       → INVALID_BODY / TOKEN_TOO_LARGE
 //   2. decodeRunToken === null                           → MALFORMED_TOKEN
 //   3. strict 6-anchor versionsAgree (= season check)    → WRONG_SEASON
-//   4. canonical config + lane match                     → NON_CANONICAL_CONFIG
+//   4. token mode + requested mode match                 → INVALID_BODY
 //   5. optional alias validity (§5.1)                     → INVALID_NAME
 //   7. DRAFT LEGALITY = full token replay (the keystone) → ILLEGAL_PICK
 //   8. deterministic re-sim (buildRunScenario + runTournamentFull)
@@ -37,8 +37,6 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData, RunRecordVersions } from "../game/data";
 import type { RunRecordV1 } from "../game/run-record";
-import { isCanonicalDraftConfig } from "@wcdraft/core";
-
 import {
   decodeRunToken,
   RUN_TOKEN_MAX_LEN,
@@ -50,6 +48,7 @@ import {
 import { buildSimWorldInputs } from "../game/simulate";
 import { validateDisplayName, type DisplayNameRejection } from "./display-name";
 import { deriveSeasonKey } from "./season";
+import type { BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 
 // ─── Codes ───────────────────────────────────────────────────────────────────
 
@@ -59,7 +58,6 @@ export type SubmitRejectionCode =
   | "TOKEN_TOO_LARGE"
   | "MALFORMED_TOKEN"
   | "WRONG_SEASON"
-  | "NON_CANONICAL_CONFIG"
   | "INVALID_NAME"
   | "ILLEGAL_PICK"
   | "SIM_FAILURE"
@@ -81,7 +79,6 @@ export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>>
   TOKEN_TOO_LARGE: 400,
   MALFORMED_TOKEN: 400,
   WRONG_SEASON: 409,
-  NON_CANONICAL_CONFIG: 422,
   AUTH_REQUIRED: 401,
   CSRF_FAILED: 403,
   INVALID_NAME: 422,
@@ -117,8 +114,12 @@ export interface AcceptedSubmission {
   score_breakdown: ScoreComponent[];
   /** Season = full 6-anchor tuple, derived from the server's versions (§3). */
   season_key: string;
-  /** First-class ranked lane; explicitly requested and matched to token `md`. */
+  /** First-class board mode; explicitly requested and matched to token `md`. */
   draft_mode: SubmissionDraftMode;
+  /** Token-derived config axes persisted with the row for exact board filters. */
+  draft_order: BoardDraftOrder;
+  era: BoardEra;
+  rating_basis: BoardRatingBasis;
   /** Normalized alias — persist THIS, not the raw input. Null means username fallback. */
   display_alias: string | null;
   /** Decoded token body (rid / ps available to the route for logging). */
@@ -211,22 +212,15 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     };
   }
 
-  // 3b — DC-1 canonical-config gate (owner-ratified): board submissions must
-  // carry the canonical config axes (squad_first / career / all_time). `t1.`
-  // tokens are canonical by compatibility. The Classic / Memory lane is also
-  // explicit on the request and must match the token's declared `md`. O(1) —
-  // runs before name/replay work.
+  // 3b — board mode target: every legal config can post, but the explicit
+  // request target must still agree with the token's declared Classic/Memory
+  // mode. That prevents a client from submitting a Memory token to a Classic
+  // board (or vice versa) while preserving all non-canonical config axes.
   const config = tokenDraftConfig(token);
-  if (!isCanonicalDraftConfig(config)) {
-    return rejected(
-      "NON_CANONICAL_CONFIG",
-      `board submissions require the canonical config (squad_first/career/all_time); token carries ${config.draft_flow}/${config.rating_basis}/${config.era_preset}`,
-    );
-  }
   if (token.md !== targetDraftMode) {
     return rejected(
-      "NON_CANONICAL_CONFIG",
-      `board submissions require draft_mode ${targetDraftMode}; token carries ${token.md}`,
+      "INVALID_BODY",
+      `draft_mode ${targetDraftMode} does not match token mode ${token.md}`,
     );
   }
 
@@ -297,6 +291,9 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     score_breakdown: run.score_breakdown,
     season_key: deriveSeasonKey(data.gameData.versions),
     draft_mode: targetDraftMode,
+    draft_order: config.draft_flow,
+    era: config.era_preset,
+    rating_basis: config.rating_basis,
     display_alias: displayAlias,
     token_body: token,
   };

@@ -4,9 +4,9 @@ A deterministic World Cup draft simulator: spin World Cup squads, draft one
 player per spin plus a manager, simulate the 2026 bracket, and compare runs.
 
 Current production anchors are recorded in
-[`STATE.md`](STATE.md): `runtime-data-2.0.0`, `engine-2026.06.12`, and the
-2026-06-04 data snapshot. Accounts/email sign-in is live; ranked leaderboard
-submission remains dark behind the account-required gate.
+[`STATE.md`](STATE.md). Accounts/email sign-in is live. Leaderboard submission
+uses server replay; ranked submissions require a signed-in account, while casual
+submissions can stay anonymous-with-claim.
 
 ## Disclaimer
 

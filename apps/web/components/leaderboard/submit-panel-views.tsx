@@ -21,6 +21,7 @@ export interface SubmitPanelViewProps {
   authReady: boolean;
   isSignedIn: boolean;
   publicUsername: string | null;
+  leaderboardHref: string;
   name: string;
   /** Live U2-mirror hint; null when the name is fine or untouched. */
   nameHint: string | null;
@@ -138,7 +139,11 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
         </>
       )}
 
-      <SubmitOutcome phase={phase} retryRemaining={props.retryRemaining} />
+      <SubmitOutcome
+        phase={phase}
+        retryRemaining={props.retryRemaining}
+        leaderboardHref={props.leaderboardHref}
+      />
     </section>
   );
 }
@@ -182,9 +187,11 @@ function SubmitModeNote({
 function SubmitOutcome({
   phase,
   retryRemaining,
+  leaderboardHref,
 }: {
   phase: SubmitPhase;
   retryRemaining: number | null;
+  leaderboardHref: string;
 }) {
   if (phase.kind === "idle" || phase.kind === "submitting") return null;
 
@@ -197,7 +204,7 @@ function SubmitOutcome({
         ) : (
           <p className={s.outcomeMsg}>Posted — your rank will show on the board.</p>
         )}
-        <Link href="/leaderboard" className="btn btn--ghost">
+        <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard
         </Link>
       </div>
@@ -212,7 +219,7 @@ function SubmitOutcome({
           This exact run was posted before
           {phase.rank !== null ? ` — your best sits at rank #${phase.rank}.` : "."}
         </p>
-        <Link href="/leaderboard" className="btn btn--ghost">
+        <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard
         </Link>
       </div>
@@ -224,7 +231,7 @@ function SubmitOutcome({
       <div className={s.outcome} role="status">
         <p className={s.outcomeTitle}>Posted from this device</p>
         <p className={s.outcomeMsg}>This run was already submitted to the board.</p>
-        <Link href="/leaderboard" className="btn btn--ghost">
+        <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard
         </Link>
       </div>

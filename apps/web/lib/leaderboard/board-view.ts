@@ -5,14 +5,25 @@
 // deterministic under test. Honest-state: ranks/scores/times come from the
 // server rows verbatim; a malformed breakdown renders as absent ("—"),
 // never re-derived client-side.
+import type {
+  BoardConfigFilter,
+  BoardDraftMode,
+  BoardDraftOrder,
+  BoardEra,
+  BoardRatingBasis,
+} from "./config";
 
-export type BoardDraftModeFilter = "classic" | "hidden";
+export type BoardDraftModeFilter = BoardDraftMode;
+export type BoardFilter = BoardConfigFilter;
 
 /** Wire shape of one GET /api/leaderboard entry (BoardResponseBody.entries[i]). */
 export interface BoardEntryWire {
   readonly rank: number;
   readonly id: string;
-  readonly draft_mode: "classic" | "hidden";
+  readonly draft_mode: BoardDraftMode;
+  readonly draft_order: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly rating_basis: BoardRatingBasis;
   readonly display_name: string;
   readonly verified_score: number;
   readonly score_breakdown: unknown;
@@ -24,6 +35,9 @@ export interface BoardPageWire {
   readonly current_season_key: string;
   readonly mode: "casual" | "ranked";
   readonly draft_mode: BoardDraftModeFilter;
+  readonly draft_order: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly rating_basis: BoardRatingBasis;
   readonly entries: readonly BoardEntryWire[];
   readonly next_cursor: string | null;
 }
@@ -92,7 +106,10 @@ export interface BoardRowView {
   readonly rank: number;
   readonly displayName: string;
   readonly score: number;
-  readonly draftMode: "classic" | "hidden";
+  readonly draftMode: BoardDraftMode;
+  readonly draftOrder: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly ratingBasis: BoardRatingBasis;
   readonly timeLabel: string;
   readonly isMine: boolean;
   readonly breakdown: BreakdownLineView[] | null;
@@ -108,6 +125,9 @@ export function boardRowViews(
     displayName: e.display_name,
     score: e.verified_score,
     draftMode: e.draft_mode,
+    draftOrder: e.draft_order,
+    era: e.era,
+    ratingBasis: e.rating_basis,
     timeLabel: relativeTimeLabel(opts.nowMs, e.created_at),
     isMine: opts.myEntryId !== null && e.id === opts.myEntryId,
     breakdown: breakdownLines(e.score_breakdown),
@@ -139,13 +159,13 @@ export function appendBoardPage(acc: BoardAccumulator, page: BoardPageWire): Boa
 
 /** Query string for GET /api/leaderboard — current season is the server's
  *  default, so no season param is ever sent by the v1 board. */
-export function boardQueryString(opts: {
-  draftMode: BoardDraftModeFilter;
-  cursor: string | null;
-}): string {
+export function boardQueryString(opts: { filter: BoardFilter; cursor: string | null }): string {
   const q = new URLSearchParams();
-  q.set("mode", "ranked");
-  q.set("draft_mode", opts.draftMode);
+  q.set("mode", opts.filter.lane);
+  q.set("draft_mode", opts.filter.draftMode);
+  q.set("draft_order", opts.filter.draftOrder);
+  q.set("era", opts.filter.era);
+  q.set("rating_basis", opts.filter.ratingBasis);
   if (opts.cursor !== null) q.set("cursor", opts.cursor);
   return `?${q.toString()}`;
 }
