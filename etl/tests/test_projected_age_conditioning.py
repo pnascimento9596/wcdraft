@@ -204,7 +204,7 @@ def test_quantile_map_target_is_live_wc_perf_5_raw_only():
 def test_dual_basis_payload_shape_and_career_alias(ratings):
     """Every 2026 row carries basis_ratings.career/current with the full channel
     payload; the career basis IS the top-level compatibility surface (field-by-
-    field), and basis_metadata carries the proj-career-5.3.0 anchor."""
+    field), and basis_metadata carries the proj-career-5.4.0 anchor."""
     for r in ratings:
         br = r["basis_ratings"]
         career, current = br["career"], br["current"]
@@ -222,7 +222,7 @@ def test_dual_basis_payload_shape_and_career_alias(ratings):
             ):
                 assert field in payload, (r["card_id"], basis, field)
             assert payload["basis_metadata"]["basis"] == basis
-            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.3.0"
+            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.4.0"
         for field in ("overall", "overall_basis", "attack", "midfield", "defense",
                       "goalkeeping", "coverage", "components"):
             assert career[field] == r[field], (r["card_id"], field)
@@ -232,10 +232,23 @@ def test_current_basis_is_measured_raw_path(ratings):
     """The current basis is the at-2026 measured path: always
     measured_performance (caps always exist), never a career badge holder by
     construction, and for a weight==0 card current == career exactly (the blend
-    collapses to the raw path)."""
+    collapses to the raw path).
+
+    merit-v4.4: the owner re-rate pins the CURRENT basis independently of the raw
+    measured path for the cards it covers, so the weight==0 current==career
+    collapse no longer holds for those cards; their current overall is the owner
+    target verbatim. The overall_basis label remains measured_performance (the
+    pin records provenance in components, not the basis label — same convention
+    as merit-v4.3)."""
+    from wcdraft_etl import manual_overrides
+
+    v44_pins = {r.card_id: r.final_rating for r in manual_overrides.resolve_overrides_v44().matched}
     for r in ratings:
         cur = r["basis_ratings"]["current"]
         assert cur["overall_basis"] == "measured_performance", r["card_id"]
+        if r["card_id"] in v44_pins:
+            assert cur["overall"] == v44_pins[r["card_id"]], r["card_id"]
+            continue
         if _comp(r, "stature_model_weight") == 0.0:
             assert cur["overall"] == r["overall"], r["card_id"]
             assert cur["basis_metadata"]["score_0_100"] == pytest.approx(

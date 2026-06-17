@@ -1,0 +1,516 @@
+source_line,country,year,player_name,final_rating,rule,current_baseline,card_id,player_id,tournament_id,nation_id,matched_name,match_method
+363,Hungary,1954,Ferenc Puskás,92,v4.4-target,88,P-12676:WC-1954,P-12676,WC-1954,T-36,Puskás,exact:full_name
+33,Brazil,1958,Pelé,95,v4.4-target,90,P-38906:WC-1958,P-38906,WC-1958,T-09,Pelé,exact:common_name
+464,Soviet Union,1958,Lev Yashin,92,v4.4-target,88,P-09317:WC-1958,P-09317,WC-1958,T-72,Yashin,exact:full_name
+14,Brazil,1962,Garrincha,92,v4.4-target,90,P-46080:WC-1962,P-46080,WC-1962,T-09,Garrincha,exact:common_name
+350,Brazil,1962,Pelé,95,v4.4-target,88,P-38906:WC-1962,P-38906,WC-1962,T-09,Pelé,exact:common_name
+164,England,1962,Bobby Charlton,92,v4.4-target,88,P-08601:WC-1962,P-08601,WC-1962,T-28,Charlton,exact:full_name
+165,England,1966,Bobby Charlton,92,v4.4-target,88,P-08601:WC-1966,P-08601,WC-1966,T-28,Charlton,exact:full_name
+235,England,1966,Geoff Hurst,88,v4.4-target,88,P-34802:WC-1966,P-34802,WC-1966,T-28,Hurst,exact:full_name
+310,England,1966,Bobby Moore,90,v4.4-target,88,P-52816:WC-1966,P-52816,WC-1966,T-28,Moore,exact:full_name
+11,Portugal,1966,Eusébio,91,v4.4-target,90,P-74747:WC-1966,P-74747,WC-1966,T-58,Eusébio,exact:common_name
+465,Soviet Union,1966,Lev Yashin,92,v4.4-target,88,P-09317:WC-1966,P-09317,WC-1966,T-72,Yashin,exact:full_name
+46,West Germany,1966,Franz Beckenbauer,92,v4.4-target,89,P-72864:WC-1966,P-72864,WC-1966,T-86,Beckenbauer,exact:full_name
+60,Brazil,1970,Jairzinho,89,v4.4-target,89,P-77430:WC-1970,P-77430,WC-1970,T-09,Jairzinho,exact:common_name
+89,Brazil,1970,Carlos Alberto,91,v4.4-target,88,P-25829:WC-1970,P-25829,WC-1970,T-09,Alberto,exact:full_name
+351,Brazil,1970,Pelé,95,v4.4-target,88,P-38906:WC-1970,P-38906,WC-1970,T-09,Pelé,exact:common_name
+311,England,1970,Bobby Moore,90,v4.4-target,88,P-52816:WC-1970,P-52816,WC-1970,T-28,Moore,exact:full_name
+1001,England,1970,Geoff Hurst,88,v4.4-target,85,P-34802:WC-1970,P-34802,WC-1970,T-28,Hurst,exact:full_name
+28,West Germany,1970,Gerd Müller,92,v4.4-target,90,P-72441:WC-1970,P-72441,WC-1970,T-86,Müller,exact:full_name
+114,West Germany,1970,Franz Beckenbauer,92,v4.4-target,88,P-72864:WC-1970,P-72864,WC-1970,T-86,Beckenbauer,exact:full_name
+241,Brazil,1974,Jairzinho,89,v4.4-target,88,P-77430:WC-1974,P-77430,WC-1974,T-09,Jairzinho,exact:common_name
+175,Netherlands,1974,Johan Cruyff,93,v4.4-target,88,P-50564:WC-1974,P-50564,WC-1974,T-48,Cruyff,exact:full_name
+115,West Germany,1974,Franz Beckenbauer,92,v4.4-target,88,P-72864:WC-1974,P-72864,WC-1974,T-86,Beckenbauer,exact:full_name
+318,West Germany,1974,Gerd Müller,92,v4.4-target,88,P-72441:WC-1974,P-72441,WC-1974,T-86,Müller,exact:full_name
+547,West Germany,1974,Uli Hoeneß,86,v4.4-target,87,P-92173:WC-1974,P-92173,WC-1974,T-86,Hoeneß,exact:full_name
+468,Brazil,1978,Zico,91,v4.4-target,88,P-37483:WC-1978,P-37483,WC-1978,T-09,Zico,exact:common_name
+945,Scotland,1978,Kenny Dalglish,89,v4.4-target,85,P-68584:WC-1978,P-68584,WC-1978,T-64,Dalglish,exact:full_name
+291,Argentina,1982,Diego Maradona,95,v4.4-target,88,P-80404:WC-1982,P-80404,WC-1982,T-03,Maradona,exact:full_name
+430,Brazil,1982,Sócrates,89,v4.4-target,88,P-78605:WC-1982,P-78605,WC-1982,T-09,Sócrates,exact:common_name
+469,Brazil,1982,Zico,91,v4.4-target,88,P-37483:WC-1982,P-37483,WC-1982,T-09,Zico,exact:common_name
+431,Brazil,1986,Sócrates,89,v4.4-target,88,P-78605:WC-1986,P-78605,WC-1986,T-09,Sócrates,exact:common_name
+269,Denmark,1986,Michael Laudrup,88,v4.4-target,88,P-56788:WC-1986,P-56788,WC-1986,T-22,Laudrup,exact:full_name
+24,England,1986,Gary Lineker,89,v4.4-target,90,P-36651:WC-1986,P-36651,WC-1986,T-28,Lineker,exact:full_name
+343,France,1986,Jean-Pierre Papin,89,v4.4-target,88,P-31235:WC-1986,P-31235,WC-1986,T-30,Papin,exact:full_name
+627,Mexico,1986,Hugo Sánchez,89,v4.4-target,87,P-26316:WC-1986,P-26316,WC-1986,T-46,Sánchez,exact:full_name
+47,Spain,1986,Emilio Butragueño,89,v4.4-target,89,P-12940:WC-1986,P-12940,WC-1986,T-73,Butragueño,exact:full_name
+205,Uruguay,1986,Enzo Francescoli,88,v4.4-target,88,P-36582:WC-1986,P-36582,WC-1986,T-84,Francescoli,exact:full_name
+298,West Germany,1986,Lothar Matthäus,90,v4.4-target,88,P-49502:WC-1986,P-49502,WC-1986,T-86,Matthäus,exact:full_name
+454,West Germany,1986,Rudi Völler,89,v4.4-target,88,P-04572:WC-1986,P-04572,WC-1986,T-86,Völler,exact:full_name
+498,West Germany,1986,Andreas Brehme,87,v4.4-target,87,P-67713:WC-1986,P-67713,WC-1986,T-86,Brehme,exact:full_name
+292,Argentina,1990,Diego Maradona,95,v4.4-target,88,P-80404:WC-1990,P-80404,WC-1990,T-03,Maradona,exact:full_name
+274,England,1990,Gary Lineker,89,v4.4-target,88,P-36651:WC-1990,P-36651,WC-1990,T-28,Lineker,exact:full_name
+490,England,1990,John Barnes,87,v4.4-target,87,P-38921:WC-1990,P-38921,WC-1990,T-28,Barnes,exact:full_name
+104,Italy,1990,Roberto Baggio,91,v4.4-target,88,P-78756:WC-1990,P-78756,WC-1990,T-41,Baggio,exact:full_name
+107,Italy,1990,Franco Baresi,91,v4.4-target,88,P-42920:WC-1990,P-42920,WC-1990,T-41,Baresi,exact:full_name
+287,Italy,1990,Paolo Maldini,92,v4.4-target,88,P-43222:WC-1990,P-43222,WC-1990,T-41,Maldini,exact:full_name
+223,Netherlands,1990,Ruud Gullit,90,v4.4-target,88,P-32830:WC-1990,P-32830,WC-1990,T-48,Gullit,exact:full_name
+62,West Germany,1990,Lothar Matthäus,90,v4.4-target,89,P-49502:WC-1990,P-49502,WC-1990,T-86,Matthäus,exact:full_name
+139,West Germany,1990,Andreas Brehme,87,v4.4-target,88,P-67713:WC-1990,P-67713,WC-1990,T-86,Brehme,exact:full_name
+455,West Germany,1990,Rudi Völler,89,v4.4-target,88,P-04572:WC-1990,P-04572,WC-1990,T-86,Völler,exact:full_name
+561,West Germany,1990,Jürgen Kohler,89,v4.4-target,87,P-83968:WC-1990,P-83968,WC-1990,T-86,Kohler,exact:full_name
+110,Argentina,1994,Gabriel Batistuta,89,v4.4-target,88,P-84542:WC-1994,P-84542,WC-1994,T-03,Batistuta,exact:full_name
+191,Brazil,1994,Dunga,87,v4.4-target,88,P-32466:WC-1994,P-32466,WC-1994,T-09,Dunga,exact:common_name
+921,Brazil,1994,Cafu,91,v4.4-target,85,P-91718:WC-1994,P-91718,WC-1994,T-09,Cafu,exact:common_name
+75,Bulgaria,1994,Hristo Stoichkov,89,v4.4-target,89,P-81648:WC-1994,P-81648,WC-1994,T-10,Stoichkov,exact:full_name
+140,Germany,1994,Andreas Brehme,87,v4.4-target,88,P-67713:WC-1994,P-67713,WC-1994,T-31,Brehme,exact:full_name
+258,Germany,1994,Jürgen Kohler,89,v4.4-target,88,P-83968:WC-1994,P-83968,WC-1994,T-31,Kohler,exact:full_name
+299,Germany,1994,Lothar Matthäus,90,v4.4-target,88,P-49502:WC-1994,P-49502,WC-1994,T-31,Matthäus,exact:full_name
+644,Germany,1994,Rudi Völler,89,v4.4-target,87,P-04572:WC-1994,P-04572,WC-1994,T-31,Völler,exact:full_name
+44,Italy,1994,Roberto Baggio,91,v4.4-target,89,P-78756:WC-1994,P-78756,WC-1994,T-41,Baggio,exact:full_name
+288,Italy,1994,Paolo Maldini,92,v4.4-target,88,P-43222:WC-1994,P-43222,WC-1994,T-41,Maldini,exact:full_name
+489,Italy,1994,Franco Baresi,91,v4.4-target,87,P-42920:WC-1994,P-42920,WC-1994,T-41,Baresi,exact:full_name
+122,Netherlands,1994,Dennis Bergkamp,90,v4.4-target,88,P-22409:WC-1994,P-22409,WC-1994,T-48,Bergkamp,exact:full_name
+257,Netherlands,1994,Ronald Koeman,88,v4.4-target,88,P-72919:WC-1994,P-72919,WC-1994,T-48,Koeman,exact:full_name
+225,Romania,1994,Gheorghe Hagi,88,v4.4-target,88,P-30739:WC-1994,P-30739,WC-1994,T-61,Hagi,exact:full_name
+546,Spain,1994,Fernando Hierro,88,v4.4-target,87,P-35246:WC-1994,P-35246,WC-1994,T-73,Hierro,exact:full_name
+678,Sweden,1994,Tomas Brolin,87,v4.4-target,86,P-26281:WC-1994,P-26281,WC-1994,T-74,Brolin,exact:full_name
+45,Argentina,1998,Gabriel Batistuta,89,v4.4-target,89,P-84542:WC-1998,P-84542,WC-1998,T-03,Batistuta,exact:full_name
+648,Argentina,1998,Javier Zanetti,89,v4.4-target,87,P-53716:WC-1998,P-53716,WC-1998,T-03,Zanetti,exact:full_name
+149,Brazil,1998,Cafu,91,v4.4-target,88,P-91718:WC-1998,P-91718,WC-1998,T-09,Cafu,exact:common_name
+155,Brazil,1998,Roberto Carlos,90,v4.4-target,88,P-85176:WC-1998,P-85176,WC-1998,T-09,Carlos,exact:full_name
+379,Brazil,1998,Rivaldo,90,v4.4-target,88,P-74261:WC-1998,P-74261,WC-1998,T-09,Rivaldo,exact:common_name
+524,Brazil,1998,Dunga,87,v4.4-target,87,P-32466:WC-1998,P-32466,WC-1998,T-09,Dunga,exact:common_name
+43,Croatia,1998,Davor Šuker,87,v4.4-target,90,P-58374:WC-1998,P-58374,WC-1998,T-18,Šuker,exact:full_name
+270,Denmark,1998,Michael Laudrup,88,v4.4-target,88,P-56788:WC-1998,P-56788,WC-1998,T-22,Laudrup,exact:full_name
+402,Denmark,1998,Peter Schmeichel,89,v4.4-target,88,P-35183:WC-1998,P-35183,WC-1998,T-22,Schmeichel,exact:full_name
+339,England,1998,Michael Owen,88,v4.4-target,88,P-51130:WC-1998,P-51130,WC-1998,T-28,Owen,exact:full_name
+411,England,1998,Alan Shearer,89,v4.4-target,88,P-63416:WC-1998,P-63416,WC-1998,T-28,Shearer,exact:full_name
+923,England,1998,Sol Campbell,86,v4.4-target,85,P-97840:WC-1998,P-97840,WC-1998,T-28,Campbell,exact:full_name
+131,France,1998,Laurent Blanc,88,v4.4-target,88,P-74952:WC-1998,P-74952,WC-1998,T-30,Blanc,exact:full_name
+183,France,1998,Marcel Desailly,88,v4.4-target,88,P-79380:WC-1998,P-79380,WC-1998,T-30,Desailly,exact:full_name
+229,France,1998,Thierry Henry,91,v4.4-target,88,P-51395:WC-1998,P-51395,WC-1998,T-30,Henry,exact:full_name
+437,France,1998,Lilian Thuram,88,v4.4-target,88,P-56947:WC-1998,P-56947,WC-1998,T-30,Thuram,exact:full_name
+470,France,1998,Zinedine Zidane,94,v4.4-target,88,P-56430:WC-1998,P-56430,WC-1998,T-30,Zidane,exact:full_name
+566,France,1998,Bixente Lizarazu,88,v4.4-target,87,P-56735:WC-1998,P-56735,WC-1998,T-30,Lizarazu,exact:full_name
+596,France,1998,Emmanuel Petit,87,v4.4-target,87,P-40400:WC-1998,P-40400,WC-1998,T-30,Petit,exact:full_name
+129,Germany,1998,Oliver Bierhoff,86,v4.4-target,88,P-84534:WC-1998,P-84534,WC-1998,T-31,Bierhoff,exact:full_name
+259,Germany,1998,Jürgen Kohler,89,v4.4-target,88,P-83968:WC-1998,P-83968,WC-1998,T-31,Kohler,exact:full_name
+300,Germany,1998,Lothar Matthäus,90,v4.4-target,88,P-49502:WC-1998,P-49502,WC-1998,T-31,Matthäus,exact:full_name
+82,Italy,1998,Christian Vieri,86,v4.4-target,89,P-34670:WC-1998,P-34670,WC-1998,T-41,Vieri,exact:full_name
+105,Italy,1998,Roberto Baggio,91,v4.4-target,88,P-78756:WC-1998,P-78756,WC-1998,T-41,Baggio,exact:full_name
+153,Italy,1998,Fabio Cannavaro,89,v4.4-target,88,P-88863:WC-1998,P-88863,WC-1998,T-41,Cannavaro,exact:full_name
+289,Italy,1998,Paolo Maldini,92,v4.4-target,88,P-43222:WC-1998,P-43222,WC-1998,T-41,Maldini,exact:full_name
+686,Mexico,1998,Jorge Campos,87,v4.4-target,86,P-50787:WC-1998,P-50787,WC-1998,T-46,Campos,exact:full_name
+992,Mexico,1998,Luis Hernández,86,v4.4-target,85,P-45941:WC-1998,P-45941,WC-1998,T-46,Hernández,exact:full_name
+123,Netherlands,1998,Dennis Bergkamp,90,v4.4-target,88,P-22409:WC-1998,P-22409,WC-1998,T-48,Bergkamp,exact:full_name
+589,Netherlands,1998,Marc Overmars,86,v4.4-target,87,P-33834:WC-1998,P-33834,WC-1998,T-48,Overmars,exact:full_name
+1019,Netherlands,1998,Patrick Kluivert,87,v4.4-target,85,P-59191:WC-1998,P-59191,WC-1998,T-48,Kluivert,exact:full_name
+1133,Netherlands,1998,Edwin van der Sar,88,v4.4-target,85,P-26572:WC-1998,P-26572,WC-1998,T-48,van der Sar,exact:full_name
+6,Brazil,2002,Cafu,91,v4.4-target,90,P-91718:WC-2002,P-91718,WC-2002,T-09,Cafu,exact:common_name
+70,Brazil,2002,Rivaldo,90,v4.4-target,89,P-74261:WC-2002,P-74261,WC-2002,T-09,Rivaldo,exact:common_name
+74,Brazil,2002,Gilberto Silva,87,v4.4-target,89,P-45956:WC-2002,P-45956,WC-2002,T-09,Silva,exact:full_name
+156,Brazil,2002,Roberto Carlos,90,v4.4-target,88,P-85176:WC-2002,P-85176,WC-2002,T-09,Carlos,exact:full_name
+385,Brazil,2002,Ronaldinho,93,v4.4-target,88,P-57361:WC-2002,P-57361,WC-2002,T-09,Ronaldinho,exact:common_name
+116,England,2002,David Beckham,88,v4.4-target,88,P-81049:WC-2002,P-81049,WC-2002,T-28,Beckham,exact:full_name
+340,England,2002,Michael Owen,88,v4.4-target,88,P-51130:WC-2002,P-51130,WC-2002,T-28,Owen,exact:full_name
+685,England,2002,Sol Campbell,86,v4.4-target,86,P-97840:WC-2002,P-97840,WC-2002,T-28,Campbell,exact:full_name
+720,England,2002,Rio Ferdinand,88,v4.4-target,86,P-01249:WC-2002,P-01249,WC-2002,T-28,Ferdinand,exact:full_name
+1094,England,2002,Paul Scholes,88,v4.4-target,85,P-63916:WC-2002,P-63916,WC-2002,T-28,Scholes,exact:full_name
+704,France,2002,Marcel Desailly,88,v4.4-target,86,P-79380:WC-2002,P-79380,WC-2002,T-30,Desailly,exact:full_name
+61,Germany,2002,Miroslav Klose,88,v4.4-target,89,P-27787:WC-2002,P-27787,WC-2002,T-31,Klose,exact:full_name
+669,Germany,2002,Michael Ballack,87,v4.4-target,86,P-84003:WC-2002,P-84003,WC-2002,T-31,Ballack,exact:full_name
+146,Italy,2002,Gianluigi Buffon,91,v4.4-target,88,P-11392:WC-2002,P-11392,WC-2002,T-41,Buffon,exact:full_name
+290,Italy,2002,Paolo Maldini,92,v4.4-target,88,P-43222:WC-2002,P-43222,WC-2002,T-41,Maldini,exact:full_name
+451,Italy,2002,Christian Vieri,86,v4.4-target,88,P-34670:WC-2002,P-34670,WC-2002,T-41,Vieri,exact:full_name
+887,Italy,2002,Gianluca Zambrotta,86,v4.4-target,86,P-42227:WC-2002,P-42227,WC-2002,T-41,Zambrotta,exact:full_name
+53,Portugal,2002,Rui Costa,87,v4.4-target,89,P-62808:WC-2002,P-62808,WC-2002,T-58,Costa,exact:full_name
+251,Republic of Ireland,2002,Robbie Keane,86,v4.4-target,88,P-84878:WC-2002,P-84878,WC-2002,T-60,Keane,exact:full_name
+160,Spain,2002,Iker Casillas,90,v4.4-target,88,P-61793:WC-2002,P-61793,WC-2002,T-73,Casillas,exact:full_name
+233,Spain,2002,Fernando Hierro,88,v4.4-target,88,P-35246:WC-2002,P-35246,WC-2002,T-73,Hierro,exact:full_name
+364,Spain,2002,Carles Puyol,89,v4.4-target,88,P-51089:WC-2002,P-51089,WC-2002,T-73,Puyol,exact:full_name
+371,Spain,2002,Raúl,90,v4.4-target,88,P-24556:WC-2002,P-24556,WC-2002,T-73,Raúl,exact:common_name
+579,Spain,2002,Fernando Morientes,89,v4.4-target,87,P-08514:WC-2002,P-08514,WC-2002,T-73,Morientes,exact:full_name
+1027,Sweden,2002,Henrik Larsson,86,v4.4-target,85,P-42895:WC-2002,P-42895,WC-2002,T-74,Larsson,exact:full_name
+189,United States,2002,Landon Donovan,86,v4.4-target,88,P-05728:WC-2002,P-05728,WC-2002,T-83,Donovan,exact:full_name
+54,Argentina,2006,Hernán Crespo,88,v4.4-target,89,P-19888:WC-2006,P-19888,WC-2006,T-03,Crespo,exact:full_name
+103,Argentina,2006,Roberto Ayala,88,v4.4-target,88,P-83403:WC-2006,P-83403,WC-2006,T-03,Ayala,exact:full_name
+424,Argentina,2006,Juan Pablo Sorín,79,v4.4-target,88,P-60914:WC-2006,P-60914,WC-2006,T-03,Sorín,exact:full_name
+503,Argentina,2006,Esteban Cambiasso,85,v4.4-target,87,P-66229:WC-2006,P-66229,WC-2006,T-03,Cambiasso,exact:full_name
+542,Argentina,2006,Gabriel Heinze,84,v4.4-target,87,P-64352:WC-2006,P-64352,WC-2006,T-03,Heinze,exact:full_name
+808,Argentina,2006,Gabriel Milito,86,v4.4-target,86,P-91357:WC-2006,P-91357,WC-2006,T-03,Milito,exact:full_name
+841,Argentina,2006,Maxi Rodríguez,77,v4.4-target,86,P-33570:WC-2006,P-33570,WC-2006,T-03,Rodríguez,exact:full_name
+1018,Australia,2006,Harry Kewell,85,v4.4-target,85,P-14290:WC-2006,P-14290,WC-2006,T-04,Kewell,exact:full_name
+25,Brazil,2006,Lúcio,90,v4.4-target,90,P-42918:WC-2006,P-42918,WC-2006,T-09,Lúcio,exact:common_name
+150,Brazil,2006,Cafu,87,v4.4-target,88,P-91718:WC-2006,P-91718,WC-2006,T-09,Cafu,exact:common_name
+157,Brazil,2006,Roberto Carlos,87,v4.4-target,88,P-85176:WC-2006,P-85176,WC-2006,T-09,Carlos,exact:full_name
+246,Brazil,2006,Kaká,90,v4.4-target,88,P-58388:WC-2006,P-58388,WC-2006,T-09,Kaká,exact:common_name
+386,Brazil,2006,Ronaldo,94,v4.4-target,88,P-62722:WC-2006,P-62722,WC-2006,T-09,Ronaldo,exact:common_name
+1011,Brazil,2006,Juan,85,v4.4-target,85,P-98607:WC-2006,P-98607,WC-2006,T-09,Juan,exact:common_name
+670,Czech Republic,2006,Milan Baroš,86,v4.4-target,86,P-14907:WC-2006,P-14907,WC-2006,T-20,Baroš,exact:full_name
+896,Czech Republic,2006,Petr Čech,94,v4.4-target,86,P-53062:WC-2006,P-53062,WC-2006,T-20,Čech,exact:full_name
+1086,Czech Republic,2006,Tomáš Rosický,86,v4.4-target,85,P-29090:WC-2006,P-29090,WC-2006,T-20,Rosický,exact:full_name
+7,England,2006,Sol Campbell,90,v4.4-target,90,P-97840:WC-2006,P-97840,WC-2006,T-28,Campbell,exact:full_name
+40,England,2006,John Terry,90,v4.4-target,90,P-71420:WC-2006,P-71420,WC-2006,T-28,Terry,exact:full_name
+117,England,2006,David Beckham,89,v4.4-target,88,P-81049:WC-2006,P-81049,WC-2006,T-28,Beckham,exact:full_name
+209,England,2006,Steven Gerrard,91,v4.4-target,88,P-62157:WC-2006,P-62157,WC-2006,T-28,Gerrard,exact:full_name
+505,England,2006,Jamie Carragher,85,v4.4-target,87,P-50944:WC-2006,P-50944,WC-2006,T-28,Carragher,exact:full_name
+606,England,2006,Paul Robinson,87,v4.4-target,87,P-72859:WC-2006,P-72859,WC-2006,T-28,Robinson,exact:full_name
+934,England,2006,Ashley Cole,85,v4.4-target,85,P-16557:WC-2006,P-16557,WC-2006,T-28,Cole,exact:full_name
+1007,England,2006,David James,85,v4.4-target,85,P-59324:WC-2006,P-59324,WC-2006,T-28,James,exact:full_name
+81,France,2006,Patrick Vieira,89,v4.4-target,89,P-96540:WC-2006,P-96540,WC-2006,T-30,Vieira,exact:full_name
+108,France,2006,Fabien Barthez,89,v4.4-target,88,P-55991:WC-2006,P-55991,WC-2006,T-30,Barthez,exact:full_name
+230,France,2006,Thierry Henry,92,v4.4-target,88,P-51395:WC-2006,P-51395,WC-2006,T-30,Henry,exact:full_name
+286,France,2006,Claude Makélélé,88,v4.4-target,88,P-93048:WC-2006,P-93048,WC-2006,T-30,Makélélé,exact:full_name
+375,France,2006,Franck Ribéry,76,v4.4-target,88,P-55659:WC-2006,P-55659,WC-2006,T-30,Ribéry,exact:full_name
+438,France,2006,Lilian Thuram,90,v4.4-target,88,P-56947:WC-2006,P-56947,WC-2006,T-30,Thuram,exact:full_name
+611,France,2006,Willy Sagnol,87,v4.4-target,87,P-23315:WC-2006,P-23315,WC-2006,T-30,Sagnol,exact:full_name
+732,France,2006,William Gallas,86,v4.4-target,86,P-68803:WC-2006,P-68803,WC-2006,T-30,Gallas,exact:full_name
+882,France,2006,Sylvain Wiltord,84,v4.4-target,86,P-00916:WC-2006,P-00916,WC-2006,T-30,Wiltord,exact:full_name
+20,Germany,2006,Miroslav Klose,83,v4.4-target,90,P-27787:WC-2006,P-27787,WC-2006,T-31,Klose,exact:full_name
+245,Germany,2006,Oliver Kahn,93,v4.4-target,88,P-33751:WC-2006,P-33751,WC-2006,T-31,Kahn,exact:full_name
+358,Germany,2006,Lukas Podolski,88,v4.4-target,88,P-36287:WC-2006,P-36287,WC-2006,T-31,Podolski,exact:full_name
+487,Germany,2006,Michael Ballack,86,v4.4-target,87,P-84003:WC-2006,P-84003,WC-2006,T-31,Ballack,exact:full_name
+785,Germany,2006,Philipp Lahm,85,v4.4-target,86,P-18599:WC-2006,P-18599,WC-2006,T-31,Lahm,exact:full_name
+806,Germany,2006,Christoph Metzelder,86,v4.4-target,86,P-04065:WC-2006,P-04065,WC-2006,T-31,Metzelder,exact:full_name
+5,Italy,2006,Gianluigi Buffon,95,v4.4-target,90,P-11392:WC-2006,P-11392,WC-2006,T-41,Buffon,exact:full_name
+31,Italy,2006,Alessandro Nesta,90,v4.4-target,90,P-55511:WC-2006,P-55511,WC-2006,T-41,Nesta,exact:full_name
+49,Italy,2006,Fabio Cannavaro,89,v4.4-target,89,P-88863:WC-2006,P-88863,WC-2006,T-41,Cannavaro,exact:full_name
+56,Italy,2006,Alessandro Del Piero,89,v4.4-target,89,P-83836:WC-2006,P-83836,WC-2006,T-41,Del Piero,exact:full_name
+79,Italy,2006,Francesco Totti,89,v4.4-target,89,P-42038:WC-2006,P-42038,WC-2006,T-41,Totti,exact:full_name
+355,Italy,2006,Andrea Pirlo,86,v4.4-target,88,P-99537:WC-2006,P-99537,WC-2006,T-41,Pirlo,exact:full_name
+533,Italy,2006,Gennaro Gattuso,87,v4.4-target,87,P-18164:WC-2006,P-18164,WC-2006,T-41,Gattuso,exact:full_name
+535,Italy,2006,Alberto Gilardino,87,v4.4-target,87,P-48645:WC-2006,P-48645,WC-2006,T-41,Gilardino,exact:full_name
+1005,Italy,2006,Filippo Inzaghi,90,v4.4-target,85,P-29172:WC-2006,P-29172,WC-2006,T-41,Inzaghi,exact:full_name
+448,Netherlands,2006,Edwin van der Sar,86,v4.4-target,88,P-26572:WC-2006,P-26572,WC-2006,T-48,van der Sar,exact:full_name
+918,Netherlands,2006,Khalid Boulahrouz,78,v4.4-target,85,P-46895:WC-2006,P-46895,WC-2006,T-48,Boulahrouz,exact:full_name
+1062,Netherlands,2006,André Ooijer,76,v4.4-target,85,P-96131:WC-2006,P-96131,WC-2006,T-48,Ooijer,exact:full_name
+1132,Netherlands,2006,Giovanni van Bronckhorst,81,v4.4-target,85,P-21832:WC-2006,P-21832,WC-2006,T-48,van Bronckhorst,exact:full_name
+203,Portugal,2006,Luís Figo,89,v4.4-target,88,P-57496:WC-2006,P-57496,WC-2006,T-58,Figo,exact:full_name
+387,Portugal,2006,Cristiano Ronaldo,91,v4.4-target,88,P-70442:WC-2006,P-70442,WC-2006,T-58,Ronaldo,exact:full_name
+517,Portugal,2006,Deco,87,v4.4-target,87,P-96343:WC-2006,P-96343,WC-2006,T-58,Deco,exact:common_name
+573,Portugal,2006,Fernando Meira,87,v4.4-target,87,P-53943:WC-2006,P-53943,WC-2006,T-58,Meira,exact:full_name
+689,Portugal,2006,Ricardo Carvalho,86,v4.4-target,86,P-37760:WC-2006,P-37760,WC-2006,T-58,Carvalho,exact:full_name
+826,Portugal,2006,Petit,77,v4.4-target,86,P-92307:WC-2006,P-92307,WC-2006,T-58,Petit,exact:common_name
+965,Portugal,2006,Paulo Ferreira,83,v4.4-target,85,P-16378:WC-2006,P-16378,WC-2006,T-58,Ferreira,exact:full_name
+1067,Portugal,2006,Pauleta,85,v4.4-target,85,P-57982:WC-2006,P-57982,WC-2006,T-58,Pauleta,exact:common_name
+1125,Portugal,2006,Tiago,79,v4.4-target,85,P-21434:WC-2006,P-21434,WC-2006,T-58,Tiago,exact:common_name
+442,Spain,2006,Fernando Torres,84,v4.4-target,88,P-71661:WC-2006,P-71661,WC-2006,T-73,Torres,exact:full_name
+603,Spain,2006,Raúl,89,v4.4-target,87,P-24556:WC-2006,P-24556,WC-2006,T-73,Raúl,exact:common_name
+613,Spain,2006,Míchel Salgado,87,v4.4-target,87,P-63942:WC-2006,P-63942,WC-2006,T-73,Salgado,exact:full_name
+691,Spain,2006,Iker Casillas,95,v4.4-target,86,P-61793:WC-2006,P-61793,WC-2006,T-73,Casillas,exact:full_name
+797,Spain,2006,Carlos Marchena,86,v4.4-target,86,P-15314:WC-2006,P-15314,WC-2006,T-73,Marchena,exact:full_name
+835,Spain,2006,José Antonio Reyes,86,v4.4-target,86,P-83711:WC-2006,P-83711,WC-2006,T-73,Reyes,exact:full_name
+876,Spain,2006,David Villa,84,v4.4-target,86,P-49097:WC-2006,P-49097,WC-2006,T-73,Villa,exact:full_name
+1081,Spain,2006,Pepe Reina,85,v4.4-target,85,P-44334:WC-2006,P-44334,WC-2006,T-73,Reina,exact:full_name
+266,Sweden,2006,Henrik Larsson,80,v4.4-target,88,P-42895:WC-2006,P-42895,WC-2006,T-74,Larsson,exact:full_name
+276,Sweden,2006,Freddie Ljungberg,84,v4.4-target,88,P-84022:WC-2006,P-84022,WC-2006,T-74,Ljungberg,exact:full_name
+305,Sweden,2006,Olof Mellberg,80,v4.4-target,88,P-06256:WC-2006,P-06256,WC-2006,T-74,Mellberg,exact:full_name
+525,Sweden,2006,Erik Edman,73,v4.4-target,87,P-35312:WC-2006,P-35312,WC-2006,T-74,Edman,exact:full_name
+1006,Sweden,2006,Andreas Isaksson,80,v4.4-target,85,P-47401:WC-2006,P-47401,WC-2006,T-74,Isaksson,exact:full_name
+1035,Sweden,2006,Teddy Lučić,76,v4.4-target,85,P-30568:WC-2006,P-30568,WC-2006,T-74,Lučić,exact:full_name
+557,United States,2006,Kasey Keller,77,v4.4-target,87,P-07553:WC-2006,P-07553,WC-2006,T-83,Keller,exact:full_name
+543,Argentina,2010,Gabriel Heinze,79,v4.4-target,87,P-64352:WC-2010,P-64352,WC-2010,T-03,Heinze,exact:full_name
+1040,Argentina,2010,Javier Mascherano,85,v4.4-target,85,P-77063:WC-2010,P-77063,WC-2010,T-03,Mascherano,exact:full_name
+1083,Argentina,2010,Maxi Rodríguez,84,v4.4-target,85,P-33570:WC-2010,P-33570,WC-2010,T-03,Rodríguez,exact:full_name
+1124,Argentina,2010,Carlos Tevez,85,v4.4-target,85,P-29080:WC-2010,P-29080,WC-2010,T-03,Tevez,exact:full_name
+849,Australia,2010,Mark Schwarzer,79,v4.4-target,86,P-78863:WC-2010,P-78863,WC-2010,T-04,Schwarzer,exact:full_name
+55,Brazil,2010,Júlio César,89,v4.4-target,89,P-11275:WC-2010,P-11275,WC-2010,T-09,César,exact:full_name
+658,Brazil,2010,Dani Alves,86,v4.4-target,86,P-09441:WC-2010,P-09441,WC-2010,T-09,Alves,exact:full_name
+795,Brazil,2010,Maicon,86,v4.4-target,86,P-94551:WC-2010,P-94551,WC-2010,T-09,Maicon,exact:common_name
+963,Brazil,2010,Luís Fabiano,85,v4.4-target,85,P-98528:WC-2010,P-98528,WC-2010,T-09,Fabiano,exact:full_name
+1037,Brazil,2010,Lúcio,85,v4.4-target,85,P-42918:WC-2010,P-42918,WC-2010,T-09,Lúcio,exact:common_name
+137,Chile,2010,Claudio Bravo,75,v4.4-target,88,P-89601:WC-2010,P-89601,WC-2010,T-13,Bravo,exact:full_name
+553,Chile,2010,Gonzalo Jara,64,v4.4-target,87,P-21890:WC-2010,P-21890,WC-2010,T-13,Jara,exact:full_name
+1119,Denmark,2010,Thomas Sørensen,74,v4.4-target,85,P-00212:WC-2010,P-00212,WC-2010,T-22,Sørensen,exact:full_name
+168,England,2010,Ashley Cole,83,v4.4-target,88,P-16557:WC-2010,P-16557,WC-2010,T-28,Cole,exact:full_name
+210,England,2010,Steven Gerrard,88,v4.4-target,88,P-62157:WC-2010,P-62157,WC-2010,T-28,Gerrard,exact:full_name
+435,England,2010,John Terry,87,v4.4-target,88,P-71420:WC-2010,P-71420,WC-2010,T-28,Terry,exact:full_name
+764,England,2010,David James,79,v4.4-target,86,P-59324:WC-2010,P-59324,WC-2010,T-28,James,exact:full_name
+769,England,2010,Glen Johnson,80,v4.4-target,86,P-43764:WC-2010,P-43764,WC-2010,T-28,Johnson,exact:full_name
+951,England,2010,Jermain Defoe,81,v4.4-target,85,P-42890:WC-2010,P-42890,WC-2010,T-28,Defoe,exact:full_name
+796,France,2010,Florent Malouda,82,v4.4-target,86,P-18830:WC-2010,P-18830,WC-2010,T-30,Malouda,exact:full_name
+904,France,2010,Nicolas Anelka,85,v4.4-target,85,P-57240:WC-2010,P-57240,WC-2010,T-30,Anelka,exact:full_name
+974,France,2010,William Gallas,84,v4.4-target,85,P-68803:WC-2010,P-68803,WC-2010,T-30,Gallas,exact:full_name
+981,France,2010,Yoann Gourcuff,85,v4.4-target,85,P-72795:WC-2010,P-72795,WC-2010,T-30,Gourcuff,exact:full_name
+255,Germany,2010,Miroslav Klose,84,v4.4-target,88,P-27787:WC-2010,P-27787,WC-2010,T-31,Klose,exact:full_name
+324,Germany,2010,Manuel Neuer,83,v4.4-target,88,P-19408:WC-2010,P-19408,WC-2010,T-31,Neuer,exact:full_name
+786,Germany,2010,Philipp Lahm,86,v4.4-target,86,P-18599:WC-2010,P-18599,WC-2010,T-31,Lahm,exact:full_name
+1130,Germany,2010,Piotr Trochowski,82,v4.4-target,85,P-47324:WC-2010,P-47324,WC-2010,T-31,Trochowski,exact:full_name
+692,Italy,2010,Giorgio Chiellini,86,v4.4-target,86,P-92874:WC-2010,P-92874,WC-2010,T-41,Chiellini,exact:full_name
+950,Italy,2010,Daniele De Rossi,85,v4.4-target,85,P-65802:WC-2010,P-65802,WC-2010,T-41,De Rossi,exact:full_name
+1004,Italy,2010,Vincenzo Iaquinta,83,v4.4-target,85,P-38599:WC-2010,P-38599,WC-2010,T-41,Iaquinta,exact:full_name
+1074,Italy,2010,Andrea Pirlo,85,v4.4-target,85,P-99537:WC-2010,P-99537,WC-2010,T-41,Pirlo,exact:full_name
+314,Mexico,2010,Rafael Márquez,84,v4.4-target,88,P-44763:WC-2010,P-44763,WC-2010,T-46,Márquez,exact:full_name
+333,Mexico,2010,Ricardo Osorio,74,v4.4-target,88,P-98486:WC-2010,P-98486,WC-2010,T-46,Osorio,exact:full_name
+612,Mexico,2010,Carlos Salcido,77,v4.4-target,87,P-97434:WC-2010,P-97434,WC-2010,T-46,Salcido,exact:full_name
+830,Mexico,2010,Óscar Pérez,71,v4.4-target,86,P-52784:WC-2010,P-52784,WC-2010,T-46,Pérez,exact:full_name
+840,Mexico,2010,Francisco Javier Rodríguez,73,v4.4-target,86,P-11191:WC-2010,P-11191,WC-2010,T-46,Rodríguez,exact:full_name
+38,Netherlands,2010,Wesley Sneijder,83,v4.4-target,90,P-51336:WC-2010,P-51336,WC-2010,T-48,Sneijder,exact:full_name
+382,Netherlands,2010,Arjen Robben,85,v4.4-target,88,P-23705:WC-2010,P-23705,WC-2010,T-48,Robben,exact:full_name
+1134,Netherlands,2010,Robin van Persie,85,v4.4-target,85,P-99934:WC-2010,P-99934,WC-2010,T-48,van Persie,exact:full_name
+158,Portugal,2010,Ricardo Carvalho,84,v4.4-target,88,P-37760:WC-2010,P-37760,WC-2010,T-58,Carvalho,exact:full_name
+388,Portugal,2010,Cristiano Ronaldo,89,v4.4-target,88,P-70442:WC-2010,P-70442,WC-2010,T-58,Ronaldo,exact:full_name
+420,Portugal,2010,Simão,84,v4.4-target,88,P-32279:WC-2010,P-32279,WC-2010,T-58,Simão,exact:common_name
+439,Portugal,2010,Tiago,78,v4.4-target,88,P-21434:WC-2010,P-21434,WC-2010,T-58,Tiago,exact:common_name
+805,Portugal,2010,Raul Meireles,82,v4.4-target,86,P-88101:WC-2010,P-88101,WC-2010,T-58,Meireles,exact:full_name
+901,Portugal,2010,Bruno Alves,83,v4.4-target,85,P-76960:WC-2010,P-76960,WC-2010,T-58,Alves,exact:full_name
+959,Portugal,2010,Eduardo,79,v4.4-target,85,P-37990:WC-2010,P-37990,WC-2010,T-58,Eduardo,exact:common_name
+8,Spain,2010,Iker Casillas,90,v4.4-target,90,P-61793:WC-2010,P-61793,WC-2010,T-73,Casillas,exact:full_name
+42,Spain,2010,David Villa,87,v4.4-target,90,P-49097:WC-2010,P-49097,WC-2010,T-73,Villa,exact:full_name
+239,Spain,2010,Andrés Iniesta,87,v4.4-target,88,P-56330:WC-2010,P-56330,WC-2010,T-73,Iniesta,exact:full_name
+365,Spain,2010,Carles Puyol,88,v4.4-target,88,P-51089:WC-2010,P-51089,WC-2010,T-73,Puyol,exact:full_name
+367,Spain,2010,Sergio Ramos,85,v4.4-target,88,P-89177:WC-2010,P-89177,WC-2010,T-73,Ramos,exact:full_name
+443,Spain,2010,Fernando Torres,88,v4.4-target,88,P-71661:WC-2010,P-71661,WC-2010,T-73,Torres,exact:full_name
+462,Spain,2010,Xavi,87,v4.4-target,88,P-29415:WC-2010,P-29415,WC-2010,T-73,Xavi,exact:common_name
+532,Spain,2010,Cesc Fàbregas,87,v4.4-target,87,P-81297:WC-2010,P-81297,WC-2010,T-73,Fàbregas,exact:full_name
+955,United States,2010,Landon Donovan,82,v4.4-target,85,P-05728:WC-2010,P-05728,WC-2010,T-83,Donovan,exact:full_name
+13,Uruguay,2010,Diego Forlán,86,v4.4-target,90,P-86087:WC-2010,P-86087,WC-2010,T-84,Forlán,exact:full_name
+427,Uruguay,2010,Luis Suárez,82,v4.4-target,88,P-30486:WC-2010,P-30486,WC-2010,T-84,Suárez,exact:full_name
+707,Argentina,2014,Ángel Di María,86,v4.4-target,86,P-42113:WC-2014,P-42113,WC-2014,T-03,Di María,exact:full_name
+995,Argentina,2014,Gonzalo Higuaín,84,v4.4-target,85,P-29398:WC-2014,P-29398,WC-2014,T-03,Higuaín,exact:full_name
+171,Belgium,2014,Thibaut Courtois,84,v4.4-target,88,P-09658:WC-2014,P-09658,WC-2014,T-06,Courtois,exact:full_name
+178,Belgium,2014,Kevin De Bruyne,81,v4.4-target,88,P-48955:WC-2014,P-48955,WC-2014,T-06,De Bruyne,exact:full_name
+198,Belgium,2014,Marouane Fellaini,80,v4.4-target,88,P-63363:WC-2014,P-63363,WC-2014,T-06,Fellaini,exact:full_name
+781,Belgium,2014,Vincent Kompany,86,v4.4-target,86,P-95269:WC-2014,P-95269,WC-2014,T-06,Kompany,exact:full_name
+1034,Belgium,2014,Romelu Lukaku,80,v4.4-target,85,P-72637:WC-2014,P-72637,WC-2014,T-06,Lukaku,exact:full_name
+325,Brazil,2014,Neymar,85,v4.4-target,88,P-87008:WC-2014,P-87008,WC-2014,T-09,Neymar,exact:common_name
+659,Brazil,2014,Dani Alves,84,v4.4-target,86,P-09441:WC-2014,P-09441,WC-2014,T-09,Alves,exact:full_name
+1104,Brazil,2014,Thiago Silva,88,v4.4-target,85,P-32798:WC-2014,P-32798,WC-2014,T-09,Silva,exact:full_name
+138,Chile,2014,Claudio Bravo,81,v4.4-target,88,P-89601:WC-2014,P-89601,WC-2014,T-13,Bravo,exact:full_name
+429,Chile,2014,Alexis Sánchez,82,v4.4-target,88,P-30014:WC-2014,P-30014,WC-2014,T-13,Sánchez,exact:full_name
+767,Chile,2014,Gonzalo Jara,68,v4.4-target,86,P-21890:WC-2014,P-21890,WC-2014,T-13,Jara,exact:full_name
+906,Chile,2014,Charles Aránguiz,75,v4.4-target,85,P-22391:WC-2014,P-22391,WC-2014,T-13,Aránguiz,exact:full_name
+34,Colombia,2014,James Rodríguez,83,v4.4-target,90,P-89392:WC-2014,P-89392,WC-2014,T-16,Rodríguez,exact:full_name
+334,Colombia,2014,David Ospina,76,v4.4-target,88,P-94838:WC-2014,P-94838,WC-2014,T-16,Ospina,exact:full_name
+512,Colombia,2014,Juan Cuadrado,82,v4.4-target,87,P-83216:WC-2014,P-83216,WC-2014,T-16,Cuadrado,exact:full_name
+663,Colombia,2014,Pablo Armero,75,v4.4-target,86,P-95402:WC-2014,P-95402,WC-2014,T-16,Armero,exact:full_name
+885,Colombia,2014,Mario Yepes,74,v4.4-target,86,P-92771:WC-2014,P-92771,WC-2014,T-16,Yepes,exact:full_name
+1152,Colombia,2014,Juan Camilo Zúñiga,74,v4.4-target,85,P-61178:WC-2014,P-61178,WC-2014,T-16,Zúñiga,exact:full_name
+121,France,2014,Karim Benzema,85,v4.4-target,88,P-35408:WC-2014,P-35408,WC-2014,T-30,Benzema,exact:full_name
+277,France,2014,Hugo Lloris,84,v4.4-target,88,P-30711:WC-2014,P-30711,WC-2014,T-30,Lloris,exact:full_name
+359,France,2014,Paul Pogba,81,v4.4-target,88,P-17509:WC-2014,P-17509,WC-2014,T-30,Pogba,exact:full_name
+801,France,2014,Blaise Matuidi,83,v4.4-target,86,P-04964:WC-2014,P-04964,WC-2014,T-30,Matuidi,exact:full_name
+853,France,2014,Moussa Sissoko,75,v4.4-target,86,P-07870:WC-2014,P-07870,WC-2014,T-30,Sissoko,exact:full_name
+870,France,2014,Mathieu Valbuena,80,v4.4-target,86,P-84312:WC-2014,P-84312,WC-2014,T-30,Valbuena,exact:full_name
+29,Germany,2014,Thomas Müller,85,v4.4-target,90,P-28154:WC-2014,P-28154,WC-2014,T-31,Müller,exact:full_name
+32,Germany,2014,Manuel Neuer,87,v4.4-target,90,P-19408:WC-2014,P-19408,WC-2014,T-31,Neuer,exact:full_name
+256,Germany,2014,Miroslav Klose,82,v4.4-target,88,P-27787:WC-2014,P-27787,WC-2014,T-31,Klose,exact:full_name
+404,Germany,2014,Bastian Schweinsteiger,88,v4.4-target,88,P-43400:WC-2014,P-43400,WC-2014,T-31,Schweinsteiger,exact:full_name
+563,Germany,2014,Philipp Lahm,87,v4.4-target,87,P-18599:WC-2014,P-18599,WC-2014,T-31,Lahm,exact:full_name
+650,Germany,2014,Mesut Özil,87,v4.4-target,87,P-12818:WC-2014,P-12818,WC-2014,T-31,Özil,exact:full_name
+986,Germany,2014,Mario Götze,85,v4.4-target,85,P-63673:WC-2014,P-63673,WC-2014,T-31,Götze,exact:full_name
+1000,Germany,2014,Mats Hummels,85,v4.4-target,85,P-81447:WC-2014,P-81447,WC-2014,T-31,Hummels,exact:full_name
+778,Greece,2014,Giorgos Karagounis,70,v4.4-target,86,P-17698:WC-2014,P-17698,WC-2014,T-33,Karagounis,exact:full_name
+1015,Greece,2014,Orestis Karnezis,74,v4.4-target,85,P-01064:WC-2014,P-01064,WC-2014,T-33,Karnezis,exact:full_name
+1065,Greece,2014,Sokratis Papastathopoulos,82,v4.4-target,85,P-11436:WC-2014,P-11436,WC-2014,T-33,Papastathopoulos,exact:full_name
+1129,Greece,2014,Vasilis Torosidis,75,v4.4-target,85,P-05210:WC-2014,P-05210,WC-2014,T-33,Torosidis,exact:full_name
+522,Mexico,2014,Giovani dos Santos,80,v4.4-target,87,P-77047:WC-2014,P-77047,WC-2014,T-46,dos Santos,exact:full_name
+743,Mexico,2014,Andrés Guardado,75,v4.4-target,86,P-40312:WC-2014,P-40312,WC-2014,T-46,Guardado,exact:full_name
+991,Mexico,2014,Javier Hernández,82,v4.4-target,85,P-36515:WC-2014,P-36515,WC-2014,T-46,Hernández,exact:full_name
+1059,Mexico,2014,Guillermo Ochoa,78,v4.4-target,85,P-80826:WC-2014,P-80826,WC-2014,T-46,Ochoa,exact:full_name
+80,Netherlands,2014,Robin van Persie,89,v4.4-target,89,P-99934:WC-2014,P-99934,WC-2014,T-48,van Persie,exact:full_name
+383,Netherlands,2014,Arjen Robben,88,v4.4-target,88,P-23705:WC-2014,P-23705,WC-2014,T-48,Robben,exact:full_name
+423,Netherlands,2014,Wesley Sneijder,85,v4.4-target,88,P-51336:WC-2014,P-51336,WC-2014,T-48,Sneijder,exact:full_name
+582,Portugal,2014,Nani,82,v4.4-target,87,P-78296:WC-2014,P-78296,WC-2014,T-58,Nani,exact:common_name
+94,Spain,2014,Xabi Alonso,85,v4.4-target,88,P-73924:WC-2014,P-73924,WC-2014,T-73,Alonso,exact:full_name
+118,Switzerland,2014,Diego Benaglio,80,v4.4-target,88,P-46325:WC-2014,P-46325,WC-2014,T-75,Benaglio,exact:full_name
+621,Switzerland,2014,Xherdan Shaqiri,80,v4.4-target,87,P-39460:WC-2014,P-39460,WC-2014,T-75,Shaqiri,exact:full_name
+884,Switzerland,2014,Granit Xhaka,76,v4.4-target,86,P-77224:WC-2014,P-77224,WC-2014,T-75,Xhaka,exact:full_name
+954,Switzerland,2014,Johan Djourou,74,v4.4-target,85,P-25758:WC-2014,P-25758,WC-2014,T-75,Djourou,exact:full_name
+1030,Switzerland,2014,Stephan Lichtsteiner,79,v4.4-target,85,P-09988:WC-2014,P-09988,WC-2014,T-75,Lichtsteiner,exact:full_name
+234,United States,2014,Tim Howard,81,v4.4-target,88,P-50522:WC-2014,P-50522,WC-2014,T-83,Howard,exact:full_name
+700,United States,2014,Clint Dempsey,81,v4.4-target,86,P-18672:WC-2014,P-18672,WC-2014,T-83,Dempsey,exact:full_name
+1008,United States,2014,Jermaine Jones,77,v4.4-target,85,P-10072:WC-2014,P-10072,WC-2014,T-83,Jones,exact:full_name
+741,Uruguay,2014,Diego Godín,82,v4.4-target,86,P-78440:WC-2014,P-78440,WC-2014,T-84,Godín,exact:full_name
+811,Uruguay,2014,Fernando Muslera,82,v4.4-target,86,P-10014:WC-2014,P-10014,WC-2014,T-84,Muslera,exact:full_name
+839,Uruguay,2014,Cristian Rodríguez,80,v4.4-target,86,P-14180:WC-2014,P-14180,WC-2014,T-84,Rodríguez,exact:full_name
+929,Uruguay,2014,Edinson Cavani,87,v4.4-target,85,P-59138:WC-2014,P-59138,WC-2014,T-84,Cavani,exact:full_name
+943,Uruguay,2014,Martín Cáceres,79,v4.4-target,85,P-74058:WC-2014,P-74058,WC-2014,T-84,Cáceres,exact:full_name
+1116,Uruguay,2014,Luis Suárez,89,v4.4-target,85,P-30486:WC-2014,P-30486,WC-2014,T-84,Suárez,exact:full_name
+86,Argentina,2018,Sergio Agüero,89,v4.4-target,88,P-36870:WC-2018,P-36870,WC-2018,T-03,Agüero,exact:full_name
+192,Argentina,2018,Paulo Dybala,89,v4.4-target,88,P-28151:WC-2018,P-28151,WC-2018,T-03,Dybala,exact:full_name
+575,Argentina,2018,Lionel Messi,94,v4.4-target,87,P-14758:WC-2018,P-14758,WC-2018,T-03,Messi,exact:full_name
+588,Argentina,2018,Nicolás Otamendi,85,v4.4-target,87,P-49114:WC-2018,P-49114,WC-2018,T-03,Otamendi,exact:full_name
+952,Argentina,2018,Ángel Di María,84,v4.4-target,85,P-42113:WC-2018,P-42113,WC-2018,T-03,Di María,exact:full_name
+10,Belgium,2018,Thibaut Courtois,89,v4.4-target,90,P-09658:WC-2018,P-09658,WC-2018,T-06,Courtois,exact:full_name
+59,Belgium,2018,Eden Hazard,91,v4.4-target,89,P-72011:WC-2018,P-72011,WC-2018,T-06,Hazard,exact:full_name
+179,Belgium,2018,Kevin De Bruyne,91,v4.4-target,88,P-48955:WC-2018,P-48955,WC-2018,T-06,De Bruyne,exact:full_name
+279,Belgium,2018,Romelu Lukaku,86,v4.4-target,88,P-72637:WC-2018,P-72637,WC-2018,T-06,Lukaku,exact:full_name
+574,Belgium,2018,Dries Mertens,87,v4.4-target,87,P-84852:WC-2018,P-84852,WC-2018,T-06,Mertens,exact:full_name
+656,Belgium,2018,Toby Alderweireld,85,v4.4-target,86,P-70547:WC-2018,P-70547,WC-2018,T-06,Alderweireld,exact:full_name
+699,Belgium,2018,Mousa Dembélé,84,v4.4-target,86,P-12533:WC-2018,P-12533,WC-2018,T-06,Dembélé,exact:full_name
+875,Belgium,2018,Thomas Vermaelen,78,v4.4-target,86,P-92866:WC-2018,P-92866,WC-2018,T-06,Vermaelen,exact:full_name
+1022,Belgium,2018,Vincent Kompany,85,v4.4-target,85,P-95269:WC-2018,P-95269,WC-2018,T-06,Kompany,exact:full_name
+1137,Belgium,2018,Jan Vertonghen,86,v4.4-target,85,P-64049:WC-2018,P-64049,WC-2018,T-06,Vertonghen,exact:full_name
+91,Brazil,2018,Alisson,84,v4.4-target,88,P-21531:WC-2018,P-21531,WC-2018,T-09,Alisson,exact:common_name
+173,Brazil,2018,Philippe Coutinho,87,v4.4-target,88,P-37171:WC-2018,P-37171,WC-2018,T-09,Coutinho,exact:full_name
+326,Brazil,2018,Neymar,92,v4.4-target,88,P-87008:WC-2018,P-87008,WC-2018,T-09,Neymar,exact:common_name
+348,Brazil,2018,Paulinho,83,v4.4-target,88,P-54013:WC-2018,P-54013,WC-2018,T-09,Paulinho,exact:common_name
+418,Brazil,2018,Thiago Silva,87,v4.4-target,88,P-32798:WC-2018,P-32798,WC-2018,T-09,Silva,exact:full_name
+570,Brazil,2018,Marcelo,87,v4.4-target,87,P-70650:WC-2018,P-70650,WC-2018,T-09,Marcelo,exact:common_name
+576,Brazil,2018,Miranda,85,v4.4-target,87,P-84301:WC-2018,P-84301,WC-2018,T-09,Miranda,exact:common_name
+968,Brazil,2018,Roberto Firmino,85,v4.4-target,85,P-37877:WC-2018,P-37877,WC-2018,T-09,Firmino,exact:full_name
+1144,Brazil,2018,Willian,84,v4.4-target,85,P-62621:WC-2018,P-62621,WC-2018,T-09,Willian,exact:common_name
+335,Colombia,2018,David Ospina,78,v4.4-target,88,P-94838:WC-2018,P-94838,WC-2018,T-16,Ospina,exact:full_name
+527,Colombia,2018,Radamel Falcao,85,v4.4-target,87,P-74655:WC-2018,P-74655,WC-2018,T-16,Falcao,exact:full_name
+27,Croatia,2018,Luka Modrić,89,v4.4-target,90,P-29491:WC-2018,P-29491,WC-2018,T-18,Modrić,exact:full_name
+602,Croatia,2018,Ivan Rakitić,86,v4.4-target,87,P-65979:WC-2018,P-65979,WC-2018,T-18,Rakitić,exact:full_name
+1114,Croatia,2018,Danijel Subašić,84,v4.4-target,85,P-25428:WC-2018,P-25428,WC-2018,T-18,Subašić,exact:full_name
+195,Denmark,2018,Christian Eriksen,88,v4.4-target,88,P-50104:WC-2018,P-50104,WC-2018,T-22,Eriksen,exact:full_name
+558,Denmark,2018,Simon Kjær,78,v4.4-target,87,P-14988:WC-2018,P-14988,WC-2018,T-22,Kjær,exact:full_name
+19,England,2018,Harry Kane,88,v4.4-target,90,P-58924:WC-2018,P-58924,WC-2018,T-28,Kane,exact:full_name
+753,England,2018,Jordan Henderson,81,v4.4-target,86,P-08169:WC-2018,P-08169,WC-2018,T-28,Henderson,exact:full_name
+15,France,2018,Antoine Griezmann,88,v4.4-target,90,P-90908:WC-2018,P-90908,WC-2018,T-30,Griezmann,exact:full_name
+63,France,2018,Kylian Mbappé,84,v4.4-target,89,P-64077:WC-2018,P-64077,WC-2018,T-30,Mbappé,exact:full_name
+217,France,2018,Olivier Giroud,82,v4.4-target,88,P-89750:WC-2018,P-89750,WC-2018,T-30,Giroud,exact:full_name
+250,France,2018,N'Golo Kanté,88,v4.4-target,88,P-98287:WC-2018,P-98287,WC-2018,T-30,Kanté,exact:full_name
+278,France,2018,Hugo Lloris,88,v4.4-target,88,P-30711:WC-2018,P-30711,WC-2018,T-30,Lloris,exact:full_name
+360,France,2018,Paul Pogba,88,v4.4-target,88,P-17509:WC-2018,P-17509,WC-2018,T-30,Pogba,exact:full_name
+1042,France,2018,Blaise Matuidi,85,v4.4-target,85,P-04964:WC-2018,P-04964,WC-2018,T-30,Matuidi,exact:full_name
+1135,France,2018,Raphaël Varane,85,v4.4-target,85,P-42326:WC-2018,P-42326,WC-2018,T-30,Varane,exact:full_name
+477,Germany,2018,Mesut Özil,87,v4.4-target,88,P-12818:WC-2018,P-12818,WC-2018,T-31,Özil,exact:full_name
+583,Germany,2018,Manuel Neuer,92,v4.4-target,87,P-19408:WC-2018,P-19408,WC-2018,T-31,Neuer,exact:full_name
+1123,Germany,2018,Marc-André ter Stegen,87,v4.4-target,85,P-03367:WC-2018,P-03367,WC-2018,T-31,ter Stegen,exact:full_name
+231,Mexico,2018,Javier Hernández,79,v4.4-target,88,P-36515:WC-2018,P-36515,WC-2018,T-46,Hernández,exact:full_name
+993,Mexico,2018,Héctor Herrera,80,v4.4-target,85,P-42911:WC-2018,P-42911,WC-2018,T-46,Herrera,exact:full_name
+985,Peru,2018,Paolo Guerrero,81,v4.4-target,85,P-29117:WC-2018,P-29117,WC-2018,T-56,Guerrero,exact:full_name
+389,Portugal,2018,Cristiano Ronaldo,94,v4.4-target,88,P-70442:WC-2018,P-70442,WC-2018,T-58,Ronaldo,exact:full_name
+593,Portugal,2018,Rui Patrício,83,v4.4-target,87,P-72028:WC-2018,P-72028,WC-2018,T-58,Patrício,exact:full_name
+984,Portugal,2018,Raphaël Guerreiro,80,v4.4-target,85,P-67578:WC-2018,P-67578,WC-2018,T-58,Guerreiro,exact:full_name
+1068,Portugal,2018,Pepe,85,v4.4-target,85,P-81972:WC-2018,P-81972,WC-2018,T-58,Pepe,exact:common_name
+1038,Senegal,2018,Sadio Mané,84,v4.4-target,85,P-79299:WC-2018,P-79299,WC-2018,T-65,Mané,exact:full_name
+87,Spain,2018,Jordi Alba,87,v4.4-target,88,P-01416:WC-2018,P-01416,WC-2018,T-73,Alba,exact:full_name
+354,Spain,2018,Gerard Piqué,87,v4.4-target,88,P-64348:WC-2018,P-64348,WC-2018,T-73,Piqué,exact:full_name
+368,Spain,2018,Sergio Ramos,90,v4.4-target,88,P-89177:WC-2018,P-89177,WC-2018,T-73,Ramos,exact:full_name
+509,Spain,2018,Diego Costa,85,v4.4-target,87,P-02231:WC-2018,P-02231,WC-2018,T-73,Costa,exact:full_name
+515,Spain,2018,David de Gea,91,v4.4-target,87,P-52217:WC-2018,P-52217,WC-2018,T-73,de Gea,exact:full_name
+552,Spain,2018,Isco,86,v4.4-target,87,P-52418:WC-2018,P-52418,WC-2018,T-73,Isco,exact:common_name
+842,Switzerland,2018,Ricardo Rodríguez,80,v4.4-target,86,P-43367:WC-2018,P-43367,WC-2018,T-75,Rodríguez,exact:full_name
+855,Switzerland,2018,Yann Sommer,82,v4.4-target,86,P-63312:WC-2018,P-63312,WC-2018,T-75,Sommer,exact:full_name
+162,Uruguay,2018,Edinson Cavani,88,v4.4-target,88,P-59138:WC-2018,P-59138,WC-2018,T-84,Cavani,exact:full_name
+219,Uruguay,2018,Diego Godín,88,v4.4-target,88,P-78440:WC-2018,P-78440,WC-2018,T-84,Godín,exact:full_name
+428,Uruguay,2018,Luis Suárez,92,v4.4-target,88,P-30486:WC-2018,P-30486,WC-2018,T-84,Suárez,exact:full_name
+513,Uruguay,2018,Martín Cáceres,78,v4.4-target,87,P-74058:WC-2018,P-74058,WC-2018,T-84,Cáceres,exact:full_name
+740,Uruguay,2018,José Giménez,83,v4.4-target,86,P-65659:WC-2018,P-65659,WC-2018,T-84,Giménez,exact:full_name
+1054,Uruguay,2018,Fernando Muslera,81,v4.4-target,85,P-10014:WC-2018,P-10014,WC-2018,T-84,Muslera,exact:full_name
+26,Argentina,2022,Emiliano Martínez,85,v4.4-target,90,P-13162:WC-2022,P-13162,WC-2022,T-03,Martínez,exact:full_name
+336,Argentina,2022,Nicolás Otamendi,82,v4.4-target,88,P-49114:WC-2022,P-49114,WC-2022,T-03,Otamendi,exact:full_name
+578,Argentina,2022,Nahuel Molina,80,v4.4-target,87,P-84430:WC-2022,P-84430,WC-2022,T-03,Molina,exact:full_name
+800,Argentina,2022,Lautaro Martínez,85,v4.4-target,86,P-81505:WC-2022,P-81505,WC-2022,T-03,Martínez,exact:full_name
+900,Argentina,2022,Marcos Acuña,85,v4.4-target,85,P-73712:WC-2022,P-73712,WC-2022,T-03,Acuña,exact:full_name
+511,Belgium,2022,Thibaut Courtois,90,v4.4-target,87,P-09658:WC-2022,P-09658,WC-2022,T-06,Courtois,exact:full_name
+926,Belgium,2022,Yannick Carrasco,84,v4.4-target,85,P-06338:WC-2022,P-06338,WC-2022,T-06,Carrasco,exact:full_name
+1146,Belgium,2022,Axel Witsel,79,v4.4-target,85,P-53048:WC-2022,P-53048,WC-2022,T-06,Witsel,exact:full_name
+92,Brazil,2022,Alisson,89,v4.4-target,88,P-21531:WC-2022,P-21531,WC-2022,T-09,Alisson,exact:common_name
+159,Brazil,2022,Casemiro,89,v4.4-target,88,P-02305:WC-2022,P-02305,WC-2022,T-09,Casemiro,exact:common_name
+293,Brazil,2022,Marquinhos,88,v4.4-target,88,P-76060:WC-2022,P-76060,WC-2022,T-09,Marquinhos,exact:common_name
+327,Brazil,2022,Neymar,89,v4.4-target,88,P-87008:WC-2022,P-87008,WC-2022,T-09,Neymar,exact:common_name
+344,Brazil,2022,Lucas Paquetá,82,v4.4-target,88,P-05164:WC-2022,P-05164,WC-2022,T-09,Paquetá,exact:full_name
+377,Brazil,2022,Richarlison,81,v4.4-target,88,P-68016:WC-2022,P-68016,WC-2022,T-09,Richarlison,exact:common_name
+419,Brazil,2022,Thiago Silva,85,v4.4-target,88,P-32798:WC-2022,P-32798,WC-2022,T-09,Silva,exact:full_name
+776,Brazil,2022,Vinícius Júnior,86,v4.4-target,86,P-92812:WC-2022,P-92812,WC-2022,T-09,Júnior,exact:full_name
+1047,Brazil,2022,Éder Militão,85,v4.4-target,85,P-55590:WC-2022,P-55590,WC-2022,T-09,Militão,exact:full_name
+308,Croatia,2022,Luka Modrić,88,v4.4-target,88,P-29491:WC-2022,P-29491,WC-2022,T-18,Modrić,exact:full_name
+679,Croatia,2022,Marcelo Brozović,84,v4.4-target,86,P-79215:WC-2022,P-79215,WC-2022,T-18,Brozović,exact:full_name
+847,Denmark,2022,Kasper Schmeichel,82,v4.4-target,86,P-58755:WC-2022,P-58755,WC-2022,T-22,Schmeichel,exact:full_name
+961,Denmark,2022,Christian Eriksen,83,v4.4-target,85,P-50104:WC-2022,P-50104,WC-2022,T-22,Eriksen,exact:full_name
+248,England,2022,Harry Kane,89,v4.4-target,88,P-58924:WC-2022,P-58924,WC-2022,T-28,Kane,exact:full_name
+1110,England,2022,Raheem Sterling,85,v4.4-target,85,P-21553:WC-2022,P-21553,WC-2022,T-28,Sterling,exact:full_name
+568,France,2022,Hugo Lloris,84,v4.4-target,87,P-30711:WC-2022,P-30711,WC-2022,T-30,Lloris,exact:full_name
+983,France,2022,Antoine Griezmann,86,v4.4-target,85,P-90908:WC-2022,P-90908,WC-2022,T-30,Griezmann,exact:full_name
+990,France,2022,Théo Hernandez,85,v4.4-target,85,P-09867:WC-2022,P-09867,WC-2022,T-30,Hernandez,exact:full_name
+1136,France,2022,Raphaël Varane,85,v4.4-target,85,P-42326:WC-2022,P-42326,WC-2022,T-30,Varane,exact:full_name
+434,Germany,2022,Marc-André ter Stegen,88,v4.4-target,88,P-03367:WC-2022,P-03367,WC-2022,T-31,ter Stegen,exact:full_name
+584,Germany,2022,Manuel Neuer,89,v4.4-target,87,P-19408:WC-2022,P-19408,WC-2022,T-31,Neuer,exact:full_name
+748,Germany,2022,İlkay Gündoğan,85,v4.4-target,86,P-08896:WC-2022,P-08896,WC-2022,T-31,Gündoğan,exact:full_name
+867,Germany,2022,Kevin Trapp,86,v4.4-target,86,P-81947:WC-2022,P-81947,WC-2022,T-31,Trapp,exact:full_name
+182,Netherlands,2022,Memphis Depay,85,v4.4-target,88,P-27540:WC-2022,P-27540,WC-2022,T-48,Depay,exact:full_name
+449,Netherlands,2022,Virgil van Dijk,88,v4.4-target,88,P-56029:WC-2022,P-56029,WC-2022,T-48,van Dijk,exact:full_name
+516,Netherlands,2022,Frenkie de Jong,87,v4.4-target,87,P-17688:WC-2022,P-17688,WC-2022,T-48,de Jong,exact:full_name
+565,Poland,2022,Robert Lewandowski,91,v4.4-target,87,P-00549:WC-2022,P-00549,WC-2022,T-57,Lewandowski,exact:full_name
+864,Poland,2022,Wojciech Szczęsny,86,v4.4-target,86,P-31606:WC-2022,P-31606,WC-2022,T-57,Szczęsny,exact:full_name
+199,Portugal,2022,Bruno Fernandes,87,v4.4-target,88,P-39584:WC-2022,P-39584,WC-2022,T-58,Fernandes,exact:full_name
+504,Portugal,2022,João Cancelo,87,v4.4-target,87,P-16736:WC-2022,P-16736,WC-2022,T-58,Cancelo,exact:full_name
+595,Portugal,2022,Pepe,81,v4.4-target,87,P-81972:WC-2022,P-81972,WC-2022,T-58,Pepe,exact:common_name
+609,Portugal,2022,Cristiano Ronaldo,87,v4.4-target,87,P-70442:WC-2022,P-70442,WC-2022,T-58,Ronaldo,exact:full_name
+708,Portugal,2022,Rúben Dias,88,v4.4-target,86,P-10712:WC-2022,P-10712,WC-2022,T-58,Dias,exact:full_name
+744,Portugal,2022,Raphaël Guerreiro,83,v4.4-target,86,P-67578:WC-2022,P-67578,WC-2022,T-58,Guerreiro,exact:full_name
+1029,Portugal,2022,Rafael Leão,84,v4.4-target,85,P-27349:WC-2022,P-27349,WC-2022,T-58,Leão,exact:full_name
+1023,Senegal,2022,Kalidou Koulibaly,84,v4.4-target,85,P-47321:WC-2022,P-47321,WC-2022,T-65,Koulibaly,exact:full_name
+577,Serbia,2022,Aleksandar Mitrović,79,v4.4-target,87,P-85696:WC-2022,P-85696,WC-2022,T-66,Mitrović,exact:full_name
+88,Spain,2022,Jordi Alba,85,v4.4-target,88,P-01416:WC-2022,P-01416,WC-2022,T-73,Alba,exact:full_name
+313,Spain,2022,Álvaro Morata,82,v4.4-target,88,P-29274:WC-2022,P-29274,WC-2022,T-73,Morata,exact:full_name
+444,Spain,2022,Ferran Torres,82,v4.4-target,88,P-31301:WC-2022,P-31301,WC-2022,T-73,Torres,exact:full_name
+623,Spain,2022,Unai Simón,83,v4.4-target,87,P-94271:WC-2022,P-94271,WC-2022,T-73,Simón,exact:full_name
+736,Spain,2022,Gavi,80,v4.4-target,86,P-88433:WC-2022,P-88433,WC-2022,T-73,Gavi,exact:common_name
+919,Spain,2022,Sergio Busquets,85,v4.4-target,85,P-28010:WC-2022,P-28010,WC-2022,T-73,Busquets,exact:full_name
+526,Switzerland,2022,Breel Embolo,78,v4.4-target,87,P-19075:WC-2022,P-19075,WC-2022,T-75,Embolo,exact:full_name
+531,Switzerland,2022,Remo Freuler,79,v4.4-target,87,P-68060:WC-2022,P-68060,WC-2022,T-75,Freuler,exact:full_name
+607,Switzerland,2022,Ricardo Rodríguez,75,v4.4-target,87,P-43367:WC-2022,P-43367,WC-2022,T-75,Rodríguez,exact:full_name
+653,Switzerland,2022,Manuel Akanji,82,v4.4-target,86,P-23925:WC-2022,P-23925,WC-2022,T-75,Akanji,exact:full_name
+1107,Switzerland,2022,Yann Sommer,85,v4.4-target,85,P-63312:WC-2022,P-63312,WC-2022,T-75,Sommer,exact:full_name
+1147,Switzerland,2022,Granit Xhaka,82,v4.4-target,85,P-77224:WC-2022,P-77224,WC-2022,T-75,Xhaka,exact:full_name
+295,Argentina,2026,Lautaro Martínez,88,v4.4-target,88,P-81505:WC-2026,P-81505,WC-2026,T-03,Martínez,exact:full_name
+809,Argentina,2026,Nahuel Molina,77,v4.4-target,86,P-84430:WC-2026,P-84430,WC-2026,T-03,Molina,exact:full_name
+894,Argentina,2026,Julián Álvarez,86,v4.4-target,86,P-19776:WC-2026,P-19776,WC-2026,T-03,Álvarez,exact:full_name
+964,Argentina,2026,Enzo Fernández,85,v4.4-target,85,P-10739:WC-2026,P-10739,WC-2026,T-03,Fernández,exact:full_name
+1043,Argentina,2026,Lionel Messi,86,v4.4-target,85,P-14758:WC-2026,P-14758,WC-2026,T-03,Messi,exact:full_name
+1064,Argentina,2026,Nicolás Otamendi,80,v4.4-target,85,P-49114:WC-2026,P-49114,WC-2026,T-03,Otamendi,exact:full_name
+1087,Australia,2026,Mathew Ryan,79,v4.4-target,85,P-10244:WC-2026,P-10244,WC-2026,T-04,Ryan,exact:full_name
+654,Austria,2026,David Alaba,80,v4.4-target,86,P-W26-0050:WC-2026,P-W26-0050,WC-2026,T-05,Alaba,exact:full_name
+172,Belgium,2026,Thibaut Courtois,90,v4.4-target,88,P-09658:WC-2026,P-09658,WC-2026,T-06,Courtois,exact:full_name
+180,Belgium,2026,Kevin De Bruyne,87,v4.4-target,88,P-48955:WC-2026,P-48955,WC-2026,T-06,De Bruyne,exact:full_name
+280,Belgium,2026,Romelu Lukaku,83,v4.4-target,88,P-72637:WC-2026,P-72637,WC-2026,T-06,Lukaku,exact:full_name
+440,Belgium,2026,Youri Tielemans,85,v4.4-target,88,P-47906:WC-2026,P-47906,WC-2026,T-06,Tielemans,exact:full_name
+460,Belgium,2026,Axel Witsel,76,v4.4-target,88,P-53048:WC-2026,P-53048,WC-2026,T-06,Witsel,exact:full_name
+928,Belgium,2026,Timothy Castagne,75,v4.4-target,85,P-56069:WC-2026,P-56069,WC-2026,T-06,Castagne,exact:full_name
+294,Brazil,2026,Marquinhos,87,v4.4-target,88,P-76060:WC-2026,P-76060,WC-2026,T-09,Marquinhos,exact:common_name
+585,Brazil,2026,Neymar,83,v4.4-target,87,P-87008:WC-2026,P-87008,WC-2026,T-09,Neymar,exact:common_name
+657,Brazil,2026,Alisson,88,v4.4-target,86,P-21531:WC-2026,P-21531,WC-2026,T-09,Alisson,exact:common_name
+690,Brazil,2026,Casemiro,82,v4.4-target,86,P-02305:WC-2026,P-02305,WC-2026,T-09,Casemiro,exact:common_name
+1012,Brazil,2026,Vinícius Júnior,89,v4.4-target,85,P-92812:WC-2026,P-92812,WC-2026,T-09,Júnior,exact:full_name
+947,Canada,2026,Jonathan David,81,v4.4-target,85,P-48340:WC-2026,P-48340,WC-2026,T-12,David,exact:full_name
+948,Canada,2026,Alphonso Davies,83,v4.4-target,85,P-46358:WC-2026,P-46358,WC-2026,T-12,Davies,exact:full_name
+1026,Canada,2026,Cyle Larin,74,v4.4-target,85,P-01925:WC-2026,P-01925,WC-2026,T-12,Larin,exact:full_name
+709,Colombia,2026,Luis Diaz,87,v4.4-target,86,P-W26-0137:WC-2026,P-W26-0137,WC-2026,T-16,Diaz,exact:full_name
+309,Croatia,2026,Luka Modrić,85,v4.4-target,88,P-29491:WC-2026,P-29491,WC-2026,T-18,Modrić,exact:full_name
+562,Croatia,2026,Mateo Kovačić,82,v4.4-target,87,P-07670:WC-2026,P-07670,WC-2026,T-18,Kovačić,exact:full_name
+747,Croatia,2026,Joško Gvardiol,85,v4.4-target,86,P-58420:WC-2026,P-58420,WC-2026,T-18,Gvardiol,exact:full_name
+784,Croatia,2026,Andrej Kramarić,81,v4.4-target,86,P-65182:WC-2026,P-65182,WC-2026,T-18,Kramarić,exact:full_name
+822,Croatia,2026,Mario Pašalić,79,v4.4-target,86,P-89948:WC-2026,P-89948,WC-2026,T-18,Pašalić,exact:full_name
+1140,Croatia,2026,Nikola Vlašić,80,v4.4-target,85,P-22160:WC-2026,P-22160,WC-2026,T-18,Vlašić,exact:full_name
+1092,Czech Republic,2026,Patrik Schick,85,v4.4-target,85,P-W26-0167:WC-2026,P-W26-0167,WC-2026,T-20,Schick,exact:full_name
+684,Ecuador,2026,Moisés Caicedo,88,v4.4-target,86,P-82216:WC-2026,P-82216,WC-2026,T-25,Caicedo,exact:full_name
+756,Ecuador,2026,Piero Hincapié,83,v4.4-target,86,P-29713:WC-2026,P-29713,WC-2026,T-25,Hincapié,exact:full_name
+4,England,2026,Jude Bellingham,89,v4.4-target,90,P-15674:WC-2026,P-15674,WC-2026,T-28,Bellingham,exact:full_name
+249,England,2026,Harry Kane,90,v4.4-target,88,P-58924:WC-2026,P-58924,WC-2026,T-28,Kane,exact:full_name
+376,England,2026,Declan Rice,88,v4.4-target,88,P-84787:WC-2026,P-84787,WC-2026,T-28,Rice,exact:full_name
+392,England,2026,Bukayo Saka,87,v4.4-target,88,P-76842:WC-2026,P-76842,WC-2026,T-28,Saka,exact:full_name
+1073,England,2026,Jordan Pickford,85,v4.4-target,85,P-70618:WC-2026,P-70618,WC-2026,T-28,Pickford,exact:full_name
+302,France,2026,Kylian Mbappé,91,v4.4-target,88,P-64077:WC-2026,P-64077,WC-2026,T-30,Mbappé,exact:full_name
+1014,France,2026,N'Golo Kanté,84,v4.4-target,85,P-98287:WC-2026,P-98287,WC-2026,T-30,Kanté,exact:full_name
+252,Germany,2026,Joshua Kimmich,89,v4.4-target,88,P-30316:WC-2026,P-30316,WC-2026,T-31,Kimmich,exact:full_name
+459,Germany,2026,Florian Wirtz,87,v4.4-target,88,P-W26-0267:WC-2026,P-W26-0267,WC-2026,T-31,Wirtz,exact:full_name
+541,Germany,2026,Kai Havertz,82,v4.4-target,87,P-77743:WC-2026,P-77743,WC-2026,T-31,Havertz,exact:full_name
+845,Germany,2026,Antonio Rüdiger,84,v4.4-target,86,P-51201:WC-2026,P-51201,WC-2026,T-31,Rüdiger,exact:full_name
+979,Germany,2026,Leon Goretzka,81,v4.4-target,85,P-79409:WC-2026,P-79409,WC-2026,T-31,Goretzka,exact:full_name
+1052,Germany,2026,Jamal Musiala,87,v4.4-target,85,P-47182:WC-2026,P-47182,WC-2026,T-31,Musiala,exact:full_name
+813,Japan,2026,Yuto Nagatomo,71,v4.4-target,86,P-26303:WC-2026,P-26303,WC-2026,T-44,Nagatomo,exact:full_name
+768,Mexico,2026,Raúl Jiménez,78,v4.4-target,86,P-57865:WC-2026,P-57865,WC-2026,T-46,Jiménez,exact:full_name
+226,Morocco,2026,Achraf Hakimi,89,v4.4-target,88,P-45288:WC-2026,P-45288,WC-2026,T-47,Hakimi,exact:full_name
+641,Netherlands,2026,Virgil van Dijk,88,v4.4-target,87,P-56029:WC-2026,P-56029,WC-2026,T-48,van Dijk,exact:full_name
+703,Netherlands,2026,Memphis Depay,80,v4.4-target,86,P-27540:WC-2026,P-27540,WC-2026,T-48,Depay,exact:full_name
+714,Netherlands,2026,Denzel Dumfries,84,v4.4-target,86,P-97615:WC-2026,P-97615,WC-2026,T-48,Dumfries,exact:full_name
+730,Netherlands,2026,Cody Gakpo,83,v4.4-target,86,P-28911:WC-2026,P-28911,WC-2026,T-48,Gakpo,exact:full_name
+224,Norway,2026,Erling Haaland,91,v4.4-target,88,P-W26-0477:WC-2026,P-W26-0477,WC-2026,T-53,Haaland,exact:full_name
+586,Norway,2026,Martin Odegaard,86,v4.4-target,87,P-W26-0470:WC-2026,P-W26-0470,WC-2026,T-53,Odegaard,exact:full_name
+624,Norway,2026,Alexander Sorloth,83,v4.4-target,87,P-W26-0461:WC-2026,P-W26-0461,WC-2026,T-53,Sorloth,exact:full_name
+978,Paraguay,2026,Gustavo Gomez,78,v4.4-target,85,P-W26-0512:WC-2026,P-W26-0512,WC-2026,T-55,Gomez,exact:full_name
+200,Portugal,2026,Bruno Fernandes,88,v4.4-target,88,P-39584:WC-2026,P-39584,WC-2026,T-58,Fernandes,exact:full_name
+416,Portugal,2026,Bernardo Silva,83,v4.4-target,88,P-34205:WC-2026,P-34205,WC-2026,T-58,Silva,exact:full_name
+519,Portugal,2026,Rúben Dias,87,v4.4-target,87,P-10712:WC-2026,P-10712,WC-2026,T-58,Dias,exact:full_name
+687,Portugal,2026,João Cancelo,84,v4.4-target,86,P-16736:WC-2026,P-16736,WC-2026,T-58,Cancelo,exact:full_name
+1085,Portugal,2026,Cristiano Ronaldo,85,v4.4-target,85,P-70442:WC-2026,P-70442,WC-2026,T-58,Ronaldo,exact:full_name
+745,Senegal,2026,Idrissa Gueye,79,v4.4-target,86,P-40621:WC-2026,P-40621,WC-2026,T-65,Gueye,exact:full_name
+445,Spain,2026,Ferran Torres,84,v4.4-target,88,P-31301:WC-2026,P-31301,WC-2026,T-73,Torres,exact:full_name
+590,Spain,2026,Mikel Oyarzabal,83,v4.4-target,87,P-W26-0654:WC-2026,P-W26-0654,WC-2026,T-73,Oyarzabal,exact:full_name
+647,Spain,2026,Lamine Yamal,89,v4.4-target,87,P-W26-0663:WC-2026,P-W26-0663,WC-2026,T-73,Yamal,exact:full_name
+823,Spain,2026,Pedri,90,v4.4-target,86,P-24897:WC-2026,P-24897,WC-2026,T-73,Pedri,exact:common_name
+852,Spain,2026,Unai Simón,84,v4.4-target,86,P-94271:WC-2026,P-94271,WC-2026,T-73,Simón,exact:full_name
+1061,Spain,2026,Dani Olmo,84,v4.4-target,85,P-40007:WC-2026,P-40007,WC-2026,T-73,Olmo,exact:full_name
+1148,Switzerland,2026,Granit Xhaka,85,v4.4-target,85,P-77224:WC-2026,P-77224,WC-2026,T-75,Xhaka,exact:full_name
+151,Turkey,2026,Hakan Calhanoglu,86,v4.4-target,88,P-W26-0716:WC-2026,P-W26-0716,WC-2026,T-80,Calhanoglu,exact:full_name
+215,Uruguay,2026,José Giménez,83,v4.4-target,88,P-65659:WC-2026,P-65659,WC-2026,T-84,Giménez,exact:full_name
+447,Uruguay,2026,Federico Valverde,89,v4.4-target,88,P-05174:WC-2026,P-05174,WC-2026,T-84,Valverde,exact:full_name
+912,Uruguay,2026,Rodrigo Bentancur,80,v4.4-target,85,P-58791:WC-2026,P-58791,WC-2026,T-84,Bentancur,exact:full_name

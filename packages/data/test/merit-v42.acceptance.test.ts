@@ -38,7 +38,13 @@ function component(row: RuntimeRating, signal: string): unknown {
 }
 
 function hasManualOverride(row: RuntimeRating): boolean {
-  return component(row, "manual_rating_override") !== undefined;
+  // merit-v4.3 pinned the career (default) basis via `manual_rating_override`;
+  // merit-v4.4 pins the CURRENT basis via `manual_current_rating_override`. Both
+  // are owner pins and are exempt from the non-manual de-clustering invariant.
+  return (
+    component(row, "manual_rating_override") !== undefined ||
+    component(row, "manual_current_rating_override") !== undefined
+  );
 }
 
 function squadRatings(teamName: string): Array<{ card: RuntimePlayerCard; rating: RuntimeRating }> {
@@ -76,15 +82,15 @@ function maxDuplicateOverall(rows: RuntimeRating[]): number {
   return Math.max(...counts.values());
 }
 
-describe("merit-v4.3 ratings-coverage acceptance probes", () => {
-  it("bumps every shipped replay/data/version anchor for the merit-v4.3 season", () => {
-    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.5.0");
-    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.5.0");
-    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.5.0");
-    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.5.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.3.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.3.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.15-merit-v4.3");
+describe("merit-v4.4 ratings-coverage acceptance probes", () => {
+  it("bumps every shipped replay/data/version anchor for the merit-v4.4 season", () => {
+    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.6.0");
+    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.6.0");
+    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.6.0");
+    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.6.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.4.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.4.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.16-merit-v4.4");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {

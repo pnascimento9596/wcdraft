@@ -37,6 +37,12 @@
 //   trims group-phase dispersion while keeping the KO factor and KO dispersion.
 //   Runtime stamp: `engine-2026.06.15-merit-v4.3`.
 //
+//   merit-v4.4: NO λ change. The owner re-rate moves the CURRENT basis only; the
+//   realism gate and strategic-pick canary sim the default/Career basis, whose
+//   channel distribution is untouched. λ is carried over verbatim (refitting here
+//   would be re-locking calibration to a distribution that did not move). Runtime
+//   stamp bumps to `engine-2026.06.16-merit-v4.4` (stamp-only carry-over).
+//
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
 // output on every platform/engine. λ is a clamped LINEAR map and goal counts

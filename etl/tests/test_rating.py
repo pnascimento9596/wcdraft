@@ -171,13 +171,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v43_historical_rebuild(built: list[dict]):
-    # wc-perf-6.3.0 = merit-v4.3: historical ratings consume factual
-    # per-player context for raw-only declustering without changing the
-    # career-stature source version.
-    assert rating.RATING_VERSION == "wc-perf-6.3.0"
+def test_rating_version_is_merit_v44_historical_rebuild(built: list[dict]):
+    # wc-perf-6.4.0 = merit-v4.4: owner re-rate of the 85–90 CURRENT-basis band
+    # layered on v4.3. The historical Career basis is unchanged; only the version
+    # stamp and the CURRENT basis move.
+    assert rating.RATING_VERSION == "wc-perf-6.4.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.3.0"
+        assert r["rating_version"] == "wc-perf-6.4.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
@@ -737,7 +737,18 @@ def _final(internal_row: dict) -> float:
 
 def test_award_gated_headroom_moves_major_award_measured_cards(players, cards, by_id):
     """V2 §4.1: measured award cards escape the old 88 wall through the Current
-    raw-only basis, while still staying below high-90s stature territory."""
+    raw-only basis, while still staying below high-90s stature territory.
+
+    merit-v4.4: the owner re-rate authoritatively pins the CURRENT display
+    overall for some of these cards (the owner's 85–90 Current-basis re-rate),
+    superseding the model band. The model's award-headroom mechanism itself is a
+    CAREER-internal property (award_headroom / raw_only_score components), which
+    v4.4 leaves untouched and is still asserted for every probe; the current
+    display band is asserted only where the owner did not pin it.
+    """
+    from wcdraft_etl import manual_overrides
+
+    v44_pins = {r.card_id: r.final_rating for r in manual_overrides.resolve_overrides_v44().matched}
     probes = {
         "P-13162:WC-2022": (89, 92),  # E. Martínez Golden Glove, champion
         "P-07171:WC-1986": (89, 92),  # Schumacher Silver Ball
@@ -749,7 +760,11 @@ def test_award_gated_headroom_moves_major_award_measured_cards(players, cards, b
     for cid, (lo, hi) in probes.items():
         row = by_id[cid]
         current = row["basis_ratings"]["current"]
-        assert lo <= current["overall"] <= hi, (cid, current["overall"])
+        if cid in v44_pins:
+            # Owner re-rate pins the Current display overall verbatim.
+            assert current["overall"] == v44_pins[cid], (cid, current["overall"], v44_pins[cid])
+        else:
+            assert lo <= current["overall"] <= hi, (cid, current["overall"])
         assert _career_comp(row, "award_headroom") > 0.0, cid
         assert _career_comp(row, "raw_only_score") > rating.RAW_ONLY_GLOBAL_CEILING, cid
 

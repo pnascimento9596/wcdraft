@@ -1,0 +1,13 @@
+{
+  "canonical_duplicate_avg_cards": 0,
+  "effective_cards": 515,
+  "match_rate": 1.0,
+  "matched": 515,
+  "rows": 515,
+  "rule_counts": {
+    "v4.4-target": 515
+  },
+  "sha256": "d51f188357d645f2ff558d8a851434ab78d7e5755136e0be189ad34cdab143a0",
+  "source": "overrides/manual-ratings-v4.4.csv",
+  "unmatched": 0
+}

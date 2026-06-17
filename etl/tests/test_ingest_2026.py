@@ -255,12 +255,12 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-5.3.0 = merit-v4.3: projected ratings consume
-    # career-stature-4.1.0, active objective records, and factual per-player
-    # context for raw-only declustering.
-    assert rating_2026.RATING_VERSION == "proj-career-5.3.0"
+    # proj-career-5.4.0 = merit-v4.4: owner re-rate of the 85–90 CURRENT-basis
+    # band. The projected Career basis is unchanged; only the version stamp and
+    # the CURRENT basis move for re-rated cards.
+    assert rating_2026.RATING_VERSION == "proj-career-5.4.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-5.3.0"
+        assert r["rating_version"] == "proj-career-5.4.0"
 
 
 def test_projected_distribution_shape(ratings):

@@ -1,7 +1,7 @@
 {
-  "$schema_doc": "merit-v4.3 asymmetric realism gate -- locked landings + Wilson/floor shape bands after the merit-v4.3 lambda refit. Runtime engine_version is engine-2026.06.15-merit-v4.3.",
-  "engine_anchor": "merit-v4.3 lambda refit on owner-authored manual rating overrides",
-  "engine_version": "engine-2026.06.15-merit-v4.3",
+  "$schema_doc": "merit-v4.4 asymmetric realism gate -- the gate sims the default/Career basis, which merit-v4.4 (CURRENT-basis-only re-rate) does NOT change; lambda is UNCHANGED from merit-v4.3 (no refit) and landings/shape bands carry over. Only the engine_version stamp moves. Runtime engine_version is engine-2026.06.16-merit-v4.4.",
+  "engine_anchor": "merit-v4.4 current-basis re-rate; lambda unchanged (career sim distribution untouched)",
+  "engine_version": "engine-2026.06.16-merit-v4.4",
   "ensemble": {
     "seed_prefix": "wcdraft:realism:e3a:v1",
     "N_runs": 2000,
@@ -121,7 +121,7 @@
     }
   },
   "shape_bands": {
-    "_doc": "merit-v4.3 RE-LOCK: shape bands are centered on strategicAutoDraft after the owner-authored manual-rating lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
+    "_doc": "merit-v4.4 carry-over: shape bands centered on strategicAutoDraft. lambda is UNCHANGED from merit-v4.3 because the gate sims the Career basis and merit-v4.4 only re-rates the Current basis; no refit was performed. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).",
     "draw_pct": {
       "center_policy": "strategicAutoDraft",
       "half_width": 0.015
@@ -144,7 +144,7 @@
     "lower_bound": 2.39
   },
   "wilson_target_for_ko_metrics": {
-    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4.3 records the strategicAutoDraft observed half-widths under the owner-authored manual-rating lambda refit.",
+    "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4.4 carries over the merit-v4.3 strategicAutoDraft observed half-widths (Career-basis sim unchanged).",
     "target_half_width_pp": 4,
     "observed_half_width_pp": {
       "ko_et_pct": 1.6,

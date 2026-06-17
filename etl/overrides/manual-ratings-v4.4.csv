@@ -1,0 +1,1155 @@
+first_name,last_name,country,year,current_rating,target_rating,delta
+,Ademir,Brazil,1950,90,,
+Fabien,Barthez,France,1998,90,,
+Jude,Bellingham,England,2026,90,89,1
+Gianluigi,Buffon,Italy,2006,90,95,-5
+,Cafu,Brazil,2002,90,91,-1
+Sol,Campbell,England,2006,90,90,0
+Iker,Casillas,Spain,2010,90,90,0
+Djibril,Cissé,France,2002,90,,
+Thibaut,Courtois,Belgium,2018,90,89,1
+,Eusébio,Portugal,1966,90,91,-1
+Just,Fontaine,France,1958,90,,
+Diego,Forlán,Uruguay,2010,90,86,4
+,Garrincha,Brazil,1962,90,92,-2
+Antoine,Griezmann,France,2018,90,88,2
+Filippo,Inzaghi,Italy,2002,90,,
+Valentin,Ivanov,Soviet Union,1962,90,,
+Dražan,Jerković,Yugoslavia,1962,90,,
+Harry,Kane,England,2018,90,88,2
+Miroslav,Klose,Germany,2006,90,83,7
+Sándor,Kocsis,Hungary,1954,90,,
+Grzegorz,Lato,Poland,1974,90,,
+,Leônidas,Brazil,1938,90,,
+Gary,Lineker,England,1986,90,89,1
+,Lúcio,Brazil,2006,90,90,0
+Emiliano,Martínez,Argentina,2022,90,85,5
+Luka,Modrić,Croatia,2018,90,89,1
+Gerd,Müller,West Germany,1970,90,92,-2
+Thomas,Müller,Germany,2014,90,85,5
+Oldřich,Nejedlý,Czechoslovakia,1934,90,,
+Alessandro,Nesta,Italy,2006,90,90,0
+Manuel,Neuer,Germany,2014,90,87,3
+,Pelé,Brazil,1958,90,95,-5
+James,Rodríguez,Colombia,2014,90,83,7
+Paolo,Rossi,Italy,1982,90,,
+Karl-Heinz,Rummenigge,West Germany,1982,90,,
+Oleg,Salenko,Russia,1994,90,,
+Wesley,Sneijder,Netherlands,2010,90,83,7
+Guillermo,Stábile,Argentina,1930,90,,
+John,Terry,England,2006,90,90,0
+,Vavá,Brazil,1962,90,,
+David,Villa,Spain,2010,90,87,3
+Davor,Šuker,Croatia,1998,90,87,3
+Roberto,Baggio,Italy,1994,89,91,-2
+Gabriel,Batistuta,Argentina,1998,89,89,0
+Franz,Beckenbauer,West Germany,1966,89,92,-3
+Emilio,Butragueño,Spain,1986,89,89,0
+Antonio,Cabrini,Italy,1978,89,,
+Fabio,Cannavaro,Italy,2006,89,89,0
+,Careca,Brazil,1986,89,,
+Pedro,Cea,Uruguay,1930,89,,
+Edmund,Conen,Germany,1934,89,,
+Rui,Costa,Portugal,2002,89,87,2
+Hernán,Crespo,Argentina,2006,89,88,1
+Júlio,César,Brazil,2010,89,89,0
+Alessandro,Del Piero,Italy,2006,89,89,0
+,Falcão,Brazil,1982,89,,
+Helmut,Haller,West Germany,1966,89,,
+Eden,Hazard,Belgium,2018,89,91,-2
+,Jairzinho,Brazil,1970,89,89,0
+Miroslav,Klose,Germany,2002,89,88,1
+Lothar,Matthäus,West Germany,1990,89,90,-1
+Kylian,Mbappé,France,2018,89,84,5
+Christoph,Metzelder,Germany,2002,89,,
+Max,Morlock,West Germany,1954,89,,
+Silvio,Piola,Italy,1938,89,,
+Michel,Preud'homme,Belgium,1994,89,,
+Erich,Probst,Austria,1954,89,,
+Helmut,Rahn,West Germany,1958,89,,
+,Rivaldo,Brazil,2002,89,90,-1
+Paolo,Rossi,Italy,1978,89,,
+Angelo,Schiavio,Italy,1934,89,,
+Harald,Schumacher,West Germany,1986,89,,
+Gilberto,Silva,Brazil,2002,89,87,2
+Hristo,Stoichkov,Bulgaria,1994,89,89,0
+Andrzej,Szarmach,Poland,1974,89,,
+Leonel,Sánchez,Chile,1962,89,,
+György,Sárosi,Hungary,1938,89,,
+Francesco,Totti,Italy,2006,89,89,0
+Robin,van Persie,Netherlands,2014,89,89,0
+Patrick,Vieira,France,2006,89,89,0
+Christian,Vieri,Italy,1998,89,86,3
+Gyula,Zsengellér,Hungary,1938,89,,
+Władysław,Żmuda,Poland,1974,89,,
+Tony,Adams,England,1998,88,,
+Sergio,Agüero,Argentina,2018,88,89,-1
+Jordi,Alba,Spain,2018,88,87,1
+Jordi,Alba,Spain,2022,88,85,3
+Carlos,Alberto,Brazil,1970,88,91,-3
+,Aldair,Brazil,1998,88,,
+,Alisson,Brazil,2018,88,84,4
+,Alisson,Brazil,2022,88,89,-1
+Klaus,Allofs,West Germany,1986,88,,
+Xabi,Alonso,Spain,2014,88,85,3
+Alessandro,Altobelli,Italy,1986,88,,
+Manuel,Amoros,France,1982,88,,
+Manuel,Amoros,France,1986,88,,
+Kennet,Andersson,Sweden,1994,88,,
+José Leandro,Andrade,Uruguay,1930,88,,
+Peregrino,Anselmo,Uruguay,1930,88,,
+Osvaldo,Ardiles,Argentina,1982,88,,
+Roberto,Ayala,Argentina,1998,88,,
+Roberto,Ayala,Argentina,2006,88,88,0
+Roberto,Baggio,Italy,1990,88,91,-3
+Roberto,Baggio,Italy,1998,88,91,-3
+Gordon,Banks,England,1966,88,,
+Franco,Baresi,Italy,1990,88,91,-3
+Fabien,Barthez,France,2006,88,89,-1
+Estanislau,Basora,Spain,1950,88,,
+Gabriel,Batistuta,Argentina,1994,88,89,-1
+Patrick,Battiston,France,1986,88,,
+,Bebeto,Brazil,1994,88,,
+,Bebeto,Brazil,1998,88,,
+Franz,Beckenbauer,West Germany,1970,88,92,-4
+Franz,Beckenbauer,West Germany,1974,88,92,-4
+David,Beckham,England,2002,88,88,0
+David,Beckham,England,2006,88,89,-1
+Diego,Benaglio,Switzerland,2014,88,80,8
+Ferenc,Bene,Hungary,1966,88,,
+Romeo,Benetti,Italy,1978,88,,
+Karim,Benzema,France,2014,88,85,3
+Dennis,Bergkamp,Netherlands,1994,88,90,-2
+Dennis,Bergkamp,Netherlands,1998,88,90,-2
+Giuseppe,Bergomi,Italy,1990,88,,
+Thomas,Berthold,West Germany,1990,88,,
+Thomas,Berthold,Germany,1994,88,,
+Nicola,Berti,Italy,1994,88,,
+Roberto,Bettega,Italy,1978,88,,
+Oliver,Bierhoff,Germany,1998,88,86,2
+Stig Inge,Bjørnebye,Norway,1998,88,,
+Laurent,Blanc,France,1998,88,88,0
+Oleh,Blokhin,Soviet Union,1982,88,,
+Zbigniew,Boniek,Poland,1978,88,,
+Zbigniew,Boniek,Poland,1982,88,,
+Maxime,Bossis,France,1986,88,,
+József,Bozsik,Hungary,1954,88,,
+Claudio,Bravo,Chile,2010,88,75,13
+Claudio,Bravo,Chile,2014,88,81,7
+Andreas,Brehme,West Germany,1990,88,87,1
+Andreas,Brehme,Germany,1994,88,87,1
+Paul,Breitner,West Germany,1974,88,,
+Paul,Breitner,West Germany,1982,88,,
+Hans-Peter,Briegel,West Germany,1982,88,,
+Hans-Peter,Briegel,West Germany,1986,88,,
+Guido,Buchwald,West Germany,1990,88,,
+Gianluigi,Buffon,Italy,2002,88,91,-3
+Tarcisio,Burgnich,Italy,1970,88,,
+Terry,Butcher,England,1986,88,,
+,Cafu,Brazil,1998,88,91,-3
+,Cafu,Brazil,2006,88,87,1
+Hakan,Calhanoglu,Turkey,2026,88,86,2
+José Antonio,Camacho,Spain,1986,88,,
+Fabio,Cannavaro,Italy,1998,88,89,-1
+,Careca,Brazil,1990,88,,
+Roberto,Carlos,Brazil,1998,88,90,-2
+Roberto,Carlos,Brazil,2002,88,90,-2
+Roberto,Carlos,Brazil,2006,88,87,1
+Ricardo,Carvalho,Portugal,2010,88,84,4
+,Casemiro,Brazil,2022,88,89,-1
+Iker,Casillas,Spain,2002,88,90,-2
+Héctor,Castro,Uruguay,1930,88,,
+Edinson,Cavani,Uruguay,2018,88,88,0
+Jan,Ceulemans,Belgium,1990,88,,
+Bobby,Charlton,England,1962,88,92,-4
+Bobby,Charlton,England,1966,88,92,-4
+,Chico,Brazil,1950,88,,
+George,Cohen,England,1966,88,,
+Ashley,Cole,England,2010,88,83,5
+Gianpiero,Combi,Italy,1934,88,,
+Alessandro,Costacurta,Italy,1998,88,,
+Thibaut,Courtois,Belgium,2014,88,84,4
+Thibaut,Courtois,Belgium,2026,88,90,-2
+Philippe,Coutinho,Brazil,2018,88,87,1
+Jürgen,Croy,East Germany,1974,88,,
+Johan,Cruyff,Netherlands,1974,88,93,-5
+Teófilo,Cubillas,Peru,1970,88,,
+Teófilo,Cubillas,Peru,1978,88,,
+Kevin,De Bruyne,Belgium,2014,88,81,7
+Kevin,De Bruyne,Belgium,2018,88,91,-3
+Kevin,De Bruyne,Belgium,2026,88,87,1
+Fernando,De Napoli,Italy,1990,88,,
+Memphis,Depay,Netherlands,2022,88,85,3
+Marcel,Desailly,France,1998,88,88,0
+Didier,Deschamps,France,1998,88,,
+,Didi,Brazil,1962,88,,
+,Dirceu,Brazil,1978,88,,
+Youri,Djorkaeff,France,1998,88,,
+Roberto,Donadoni,Italy,1994,88,,
+Landon,Donovan,United States,2002,88,86,2
+Pablo,Dorado,Uruguay,1930,88,,
+,Dunga,Brazil,1994,88,87,1
+Paulo,Dybala,Argentina,2018,88,89,-1
+,Edinho,Brazil,1986,88,,
+Preben,Elkjær,Denmark,1986,88,,
+Christian,Eriksen,Denmark,2018,88,88,0
+Giacinto,Facchetti,Italy,1970,88,,
+László,Fazekas,Hungary,1982,88,,
+Marouane,Fellaini,Belgium,2014,88,80,8
+Bruno,Fernandes,Portugal,2022,88,87,1
+Bruno,Fernandes,Portugal,2026,88,88,0
+Lorenzo,Fernández,Uruguay,1930,88,,
+Riccardo,Ferri,Italy,1990,88,,
+Luís,Figo,Portugal,2006,88,89,-1
+Klaus,Fischer,West Germany,1982,88,,
+Enzo,Francescoli,Uruguay,1986,88,88,0
+Trevor,Francis,England,1982,88,,
+Karlheinz,Förster,West Germany,1982,88,,
+Karlheinz,Förster,West Germany,1986,88,,
+Steven,Gerrard,England,2006,88,91,-3
+Steven,Gerrard,England,2010,88,88,0
+Álvaro,Gestido,Uruguay,1930,88,,
+Alcides,Ghiggia,Uruguay,1950,88,,
+Giuseppe,Giannini,Italy,1990,88,,
+,Gilmar,Brazil,1962,88,,
+José,Giménez,Uruguay,2026,88,83,5
+Alain,Giresse,France,1986,88,,
+Olivier,Giroud,France,2018,88,82,6
+Shay,Given,Republic of Ireland,2002,88,,
+Diego,Godín,Uruguay,2018,88,88,0
+Jürgen,Grabowski,West Germany,1974,88,,
+Gunnar,Gren,Sweden,1958,88,,
+Frode,Grodås,Norway,1998,88,,
+Ruud,Gullit,Netherlands,1990,88,90,-2
+Erling,Haaland,Norway,2026,88,91,-3
+Gheorghe,Hagi,Romania,1994,88,88,0
+Achraf,Hakimi,Morocco,2026,88,89,-1
+Gerhard,Hanappi,Austria,1954,88,,
+Ernst,Happel,Austria,1954,88,,
+Thierry,Henry,France,1998,88,91,-3
+Thierry,Henry,France,2006,88,92,-4
+Javier,Hernández,Mexico,2018,88,79,9
+Nándor,Hidegkuti,Hungary,1954,88,,
+Fernando,Hierro,Spain,2002,88,88,0
+Tim,Howard,United States,2014,88,81,7
+Geoff,Hurst,England,1966,88,88,0
+Horst-Dieter,Höttges,West Germany,1970,88,,
+Josef,Hügi,Switzerland,1954,88,,
+Bodo,Illgner,Germany,1994,88,,
+Andrés,Iniesta,Spain,2010,88,87,1
+Santos,Iriarte,Uruguay,1930,88,,
+,Jairzinho,Brazil,1974,88,89,-1
+Wim,Jansen,Netherlands,1978,88,,
+Pat,Jennings,Northern Ireland,1986,88,,
+,Jorginho,Brazil,1994,88,,
+Oliver,Kahn,Germany,2006,88,93,-5
+,Kaká,Brazil,2006,88,90,-2
+Manfred,Kaltz,West Germany,1982,88,,
+Harry,Kane,England,2022,88,89,-1
+Harry,Kane,England,2026,88,90,-2
+N'Golo,Kanté,France,2018,88,88,0
+Robbie,Keane,Republic of Ireland,2002,88,86,2
+Joshua,Kimmich,Germany,2026,88,89,-1
+Jürgen,Klinsmann,Germany,1994,88,,
+Jürgen,Klinsmann,Germany,1998,88,,
+Miroslav,Klose,Germany,2010,88,84,4
+Miroslav,Klose,Germany,2014,88,82,6
+Ronald,Koeman,Netherlands,1994,88,88,0
+Jürgen,Kohler,Germany,1994,88,89,-1
+Jürgen,Kohler,Germany,1998,88,89,-1
+Karl,Koller,Austria,1954,88,,
+Raymond,Kopa,France,1958,88,,
+Hans,Krankl,Austria,1978,88,,
+Ruud,Krol,Netherlands,1974,88,,
+Ruud,Krol,Netherlands,1978,88,,
+Andreas,Köpke,Germany,1998,88,,
+Henrik,Larsson,Sweden,2006,88,80,8
+Grzegorz,Lato,Poland,1978,88,,
+Grzegorz,Lato,Poland,1982,88,,
+Michael,Laudrup,Denmark,1986,88,88,0
+Michael,Laudrup,Denmark,1998,88,88,0
+,Leonardo,Brazil,1998,88,,
+,Leão,Brazil,1978,88,,
+Dong-woon,Li,North Korea,1966,88,,
+Gary,Lineker,England,1990,88,89,-1
+Pierre,Littbarski,West Germany,1990,88,,
+Freddie,Ljungberg,Sweden,2006,88,84,4
+Hugo,Lloris,France,2014,88,84,4
+Hugo,Lloris,France,2018,88,88,0
+Romelu,Lukaku,Belgium,2018,88,86,2
+Romelu,Lukaku,Belgium,2026,88,83,5
+Silviu,Lung,Romania,1990,88,,
+Felix,Magath,West Germany,1986,88,,
+Sepp,Maier,West Germany,1970,88,,
+Sepp,Maier,West Germany,1974,88,,
+Sepp,Maier,West Germany,1978,88,,
+Claude,Makélélé,France,2006,88,88,0
+Paolo,Maldini,Italy,1990,88,92,-4
+Paolo,Maldini,Italy,1994,88,92,-4
+Paolo,Maldini,Italy,1998,88,92,-4
+Paolo,Maldini,Italy,2002,88,92,-4
+Diego,Maradona,Argentina,1982,88,95,-7
+Diego,Maradona,Argentina,1990,88,95,-7
+,Marquinhos,Brazil,2022,88,88,0
+,Marquinhos,Brazil,2026,88,87,1
+Lautaro,Martínez,Argentina,2026,88,88,0
+Ernesto,Mascheroni,Uruguay,1930,88,,
+Josef,Masopust,Czechoslovakia,1962,88,,
+Lothar,Matthäus,West Germany,1986,88,90,-2
+Lothar,Matthäus,Germany,1994,88,90,-2
+Lothar,Matthäus,Germany,1998,88,90,-2
+Sandro,Mazzola,Italy,1970,88,,
+Kylian,Mbappé,France,2026,88,91,-3
+Giuseppe,Meazza,Italy,1934,88,,
+Giuseppe,Meazza,Italy,1938,88,,
+Olof,Mellberg,Sweden,2006,88,80,8
+Ángel,Melogno,Uruguay,1930,88,,
+Mick,Mills,England,1982,88,,
+Luka,Modrić,Croatia,2022,88,88,0
+Luka,Modrić,Croatia,2026,88,85,3
+Bobby,Moore,England,1966,88,90,-2
+Bobby,Moore,England,1970,88,90,-2
+Kevin,Moran,Republic of Ireland,1990,88,,
+Álvaro,Morata,Spain,2022,88,82,6
+Rafael,Márquez,Mexico,2010,88,84,4
+,Míchel,Spain,1990,88,,
+Oscar,Míguez,Uruguay,1950,88,,
+,Müller,Brazil,1990,88,,
+Gerd,Müller,West Germany,1974,88,92,-4
+Miguel Ángel,Nadal,Spain,2002,88,,
+José,Nasazzi,Uruguay,1930,88,,
+Johan,Neeskens,Netherlands,1974,88,,
+Johan,Neeskens,Netherlands,1978,88,,
+Oldřich,Nejedlý,Czechoslovakia,1938,88,,
+Manuel,Neuer,Germany,2010,88,83,5
+,Neymar,Brazil,2014,88,85,3
+,Neymar,Brazil,2018,88,92,-4
+,Neymar,Brazil,2022,88,89,-1
+Roland,Nilsson,Sweden,1994,88,,
+Ladislav,Novák,Czechoslovakia,1962,88,,
+Ernst,Ocwirk,Austria,1954,88,,
+Jesper,Olsen,Denmark,1986,88,,
+Ariel,Ortega,Argentina,1998,88,,
+Ricardo,Osorio,Mexico,2010,88,74,14
+David,Ospina,Colombia,2014,88,76,12
+David,Ospina,Colombia,2018,88,78,10
+Nicolás,Otamendi,Argentina,2022,88,82,6
+Wolfgang,Overath,West Germany,1970,88,,
+Wolfgang,Overath,West Germany,1974,88,,
+Michael,Owen,England,1998,88,88,0
+Michael,Owen,England,2002,88,88,0
+Doo-ik,Pak,North Korea,1966,88,,
+Seung-zin,Pak,North Korea,1966,88,,
+Jean-Pierre,Papin,France,1986,88,89,-1
+Lucas,Paquetá,Brazil,2022,88,82,6
+Daniel,Passarella,Argentina,1978,88,,
+Daniel,Passarella,Argentina,1982,88,,
+Bert,Patenaude,United States,1930,88,,
+,Paulinho,Brazil,2018,88,83,5
+Stuart,Pearce,England,1990,88,,
+,Pelé,Brazil,1962,88,95,-7
+,Pelé,Brazil,1970,88,95,-7
+Martin,Peters,England,1970,88,,
+Bruno,Pezzey,Austria,1982,88,,
+Gerard,Piqué,Spain,2018,88,87,1
+Andrea,Pirlo,Italy,2006,88,86,2
+Michel,Platini,France,1982,88,,
+Michel,Platini,France,1986,88,,
+Lukas,Podolski,Germany,2006,88,88,0
+Paul,Pogba,France,2014,88,81,7
+Paul,Pogba,France,2018,88,88,0
+Valeriy,Porkujan,Soviet Union,1966,88,,
+Robert,Prosinečki,Yugoslavia,1990,88,,
+Ferenc,Puskás,Hungary,1954,88,92,-4
+Carles,Puyol,Spain,2002,88,89,-1
+Carles,Puyol,Spain,2010,88,88,0
+Conduelo,Píriz,Uruguay,1930,88,,
+Sergio,Ramos,Spain,2010,88,85,3
+Sergio,Ramos,Spain,2018,88,90,-2
+Thomas,Ravelli,Sweden,1994,88,,
+,Raí,Brazil,1994,88,,
+,Raúl,Spain,2002,88,90,-2
+Kjetil,Rekdal,Norway,1998,88,,
+Rob,Rensenbrink,Netherlands,1974,88,,
+Rob,Rensenbrink,Netherlands,1978,88,,
+Franck,Ribéry,France,2006,88,76,12
+Declan,Rice,England,2026,88,88,0
+,Richarlison,Brazil,2022,88,81,7
+Carlos,Riolfo,Uruguay,1930,88,,
+,Rivaldo,Brazil,1998,88,90,-2
+,Rivellino,Brazil,1974,88,,
+Gianni,Rivera,Italy,1970,88,,
+Arjen,Robben,Netherlands,2010,88,85,3
+Arjen,Robben,Netherlands,2014,88,88,0
+Dominique,Rocheteau,France,1986,88,,
+,Ronaldinho,Brazil,2002,88,93,-5
+,Ronaldo,Brazil,2006,88,94,-6
+Cristiano,Ronaldo,Portugal,2006,88,91,-3
+Cristiano,Ronaldo,Portugal,2010,88,89,-1
+Cristiano,Ronaldo,Portugal,2018,88,94,-6
+Karl-Heinz,Rummenigge,West Germany,1978,88,,
+Karl-Heinz,Rummenigge,West Germany,1986,88,,
+Bukayo,Saka,England,2026,88,87,1
+Kenny,Sansom,England,1986,88,,
+Djalma,Santos,Brazil,1962,88,,
+Márcio,Santos,Brazil,1994,88,,
+Nílton,Santos,Brazil,1958,88,,
+Nílton,Santos,Brazil,1962,88,,
+Héctor,Scarone,Uruguay,1930,88,,
+Walter,Schachner,Austria,1982,88,,
+Juan Alberto,Schiaffino,Uruguay,1950,88,,
+Juan Alberto,Schiaffino,Uruguay,1954,88,,
+Peter,Schmeichel,Denmark,1998,88,89,-1
+Karl-Heinz,Schnellinger,West Germany,1970,88,,
+Bastian,Schweinsteiger,Germany,2014,88,88,0
+Enzo,Scifo,Belgium,1986,88,,
+David,Seaman,England,1998,88,,
+Uwe,Seeler,West Germany,1958,88,,
+Uwe,Seeler,West Germany,1962,88,,
+Uwe,Seeler,West Germany,1966,88,,
+Uwe,Seeler,West Germany,1970,88,,
+Alan,Shearer,England,1998,88,89,-1
+Albert,Shesternyov,Soviet Union,1970,88,,
+Peter,Shilton,England,1982,88,,
+Peter,Shilton,England,1986,88,,
+Peter,Shilton,England,1990,88,,
+Bernardo,Silva,Portugal,2026,88,83,5
+Mauro,Silva,Brazil,1994,88,,
+Thiago,Silva,Brazil,2018,88,87,1
+Thiago,Silva,Brazil,2022,88,85,3
+,Simão,Portugal,2010,88,84,4
+Matthias,Sindelar,Austria,1934,88,,
+Tomáš,Skuhravý,Czechoslovakia,1990,88,,
+Wesley,Sneijder,Netherlands,2014,88,85,3
+Juan Pablo,Sorín,Argentina,2006,88,79,9
+Uli,Stielike,West Germany,1982,88,,
+Wim,Suurbier,Netherlands,1978,88,,
+Luis,Suárez,Uruguay,2010,88,82,6
+Luis,Suárez,Uruguay,2018,88,92,-4
+Alexis,Sánchez,Chile,2014,88,82,6
+,Sócrates,Brazil,1982,88,89,-1
+,Sócrates,Brazil,1986,88,89,-1
+Cláudio,Taffarel,Brazil,1994,88,,
+Cláudio,Taffarel,Brazil,1998,88,,
+Marc-André,ter Stegen,Germany,2022,88,88,0
+John,Terry,England,2010,88,87,1
+Phil,Thompson,England,1982,88,,
+Lilian,Thuram,France,1998,88,88,0
+Lilian,Thuram,France,2006,88,90,-2
+,Tiago,Portugal,2010,88,78,10
+Youri,Tielemans,Belgium,2026,88,85,3
+Jean,Tigana,France,1986,88,,
+Fernando,Torres,Spain,2006,88,84,4
+Fernando,Torres,Spain,2010,88,88,0
+Ferran,Torres,Spain,2022,88,82,6
+Ferran,Torres,Spain,2026,88,84,4
+Carlos,Valderrama,Colombia,1990,88,,
+Federico,Valverde,Uruguay,2026,88,89,-1
+Edwin,van der Sar,Netherlands,2006,88,86,2
+Virgil,van Dijk,Netherlands,2022,88,88,0
+,Vavá,Brazil,1958,88,,
+Christian,Vieri,Italy,2002,88,86,2
+Berti,Vogts,West Germany,1974,88,,
+Berti,Vogts,West Germany,1978,88,,
+Rudi,Völler,West Germany,1986,88,89,-1
+Rudi,Völler,West Germany,1990,88,89,-1
+Chris,Waddle,England,1990,88,,
+Fritz,Walter,West Germany,1954,88,,
+Ray,Wilson,England,1966,88,,
+Florian,Wirtz,Germany,2026,88,87,1
+Axel,Witsel,Belgium,2026,88,76,12
+Mark,Wright,England,1990,88,,
+,Xavi,Spain,2010,88,87,1
+Seung-kook,Yang,North Korea,1966,88,,
+Lev,Yashin,Soviet Union,1958,88,92,-4
+Lev,Yashin,Soviet Union,1966,88,92,-4
+Telmo,Zarra,Spain,1950,88,,
+Walter,Zenga,Italy,1990,88,,
+,Zico,Brazil,1978,88,91,-3
+,Zico,Brazil,1982,88,91,-3
+Zinedine,Zidane,France,1998,88,94,-6
+,Zizinho,Brazil,1950,88,,
+Dino,Zoff,Italy,1978,88,,
+Dino,Zoff,Italy,1982,88,,
+Andoni,Zubizarreta,Spain,1990,88,,
+Andoni,Zubizarreta,Spain,1994,88,,
+Andoni,Zubizarreta,Spain,1998,88,,
+Mesut,Özil,Germany,2018,88,87,1
+Juan Bautista,Agüero,Paraguay,1958,87,,
+Enrico,Albertosi,Italy,1970,87,,
+,Aldair,Brazil,1994,87,,
+José Ramón,Alexanko,Spain,1982,87,,
+Florencio,Amarilla,Paraguay,1958,87,,
+Jorge,Andrade,Portugal,2002,87,,
+Giancarlo,Antognoni,Italy,1982,87,,
+Luis,Arconada,Spain,1982,87,,
+Klaus,Augenthaler,West Germany,1990,87,,
+Michael,Ballack,Germany,2006,87,86,1
+Gordon,Banks,England,1970,87,,
+Franco,Baresi,Italy,1994,87,91,-4
+John,Barnes,England,1990,87,87,0
+Joël,Bats,France,1986,87,,
+Henning,Berg,Norway,1998,87,,
+Daniel,Bertoni,Argentina,1982,87,,
+Slaven,Bilić,Croatia,1998,87,,
+Cuauhtémoc,Blanco,Mexico,2002,87,,
+,Branco,Brazil,1994,87,,
+Bernd,Bransch,East Germany,1974,87,,
+Andreas,Brehme,West Germany,1986,87,87,0
+Jorge,Burruchaga,Argentina,1986,87,,
+Anatoliy,Byshovets,Soviet Union,1970,87,,
+Antonio,Cabrini,Italy,1982,87,,
+José Antonio,Camacho,Spain,1982,87,,
+Esteban,Cambiasso,Argentina,2006,87,85,2
+João,Cancelo,Portugal,2022,87,87,0
+Jamie,Carragher,England,2006,87,85,2
+Franco,Causio,Italy,1978,87,,
+Jan,Ceulemans,Belgium,1986,87,,
+Jack,Charlton,England,1966,87,,
+Diego,Costa,Spain,2018,87,85,2
+Alessandro,Costacurta,Italy,1994,87,,
+Thibaut,Courtois,Belgium,2022,87,90,-3
+Juan,Cuadrado,Colombia,2014,87,82,5
+Martín,Cáceres,Uruguay,2018,87,78,9
+Luigi,De Agostini,Italy,1990,87,,
+David,de Gea,Spain,2018,87,91,-4
+Frenkie,de Jong,Netherlands,2022,87,87,0
+,Deco,Portugal,2006,87,87,0
+Kazimierz,Deyna,Poland,1978,87,,
+Rúben,Dias,Portugal,2026,87,87,0
+Angelo,Domenghini,Italy,1970,87,,
+Roberto,Donadoni,Italy,1990,87,,
+Giovani,dos Santos,Mexico,2014,87,80,7
+Damien,Duff,Republic of Ireland,2002,87,,
+,Dunga,Brazil,1998,87,87,0
+Erik,Edman,Sweden,2006,87,73,14
+Breel,Embolo,Switzerland,2022,87,78,9
+Radamel,Falcao,Colombia,2018,87,85,2
+Luis,Fernández,France,1986,87,,
+Albert,Ferrer,Spain,1994,87,,
+Ron,Flowers,England,1962,87,,
+Remo,Freuler,Switzerland,2022,87,79,8
+Cesc,Fàbregas,Spain,2010,87,87,0
+Gennaro,Gattuso,Italy,2006,87,87,0
+Claudio,Gentile,Italy,1982,87,,
+Alberto,Gilardino,Italy,2006,87,87,0
+Andoni,Goikoetxea,Spain,1994,87,,
+Rafael,Gordillo,Spain,1982,87,,
+Francesco,Graziani,Italy,1982,87,,
+,Gérson,Brazil,1970,87,,
+Faruk,Hadžibegić,Yugoslavia,1990,87,,
+Kai,Havertz,Germany,2026,87,82,5
+Gabriel,Heinze,Argentina,2006,87,84,3
+Gabriel,Heinze,Argentina,2010,87,79,8
+Nasser,Hejazi,Iran,1978,87,,
+Ronnie,Hellström,Sweden,1974,87,,
+Fernando,Hierro,Spain,1994,87,88,-1
+Uli,Hoeneß,West Germany,1974,87,86,1
+Matt,Holland,Republic of Ireland,2002,87,,
+Myung-bo,Hong,South Korea,2002,87,,
+Ray,Houghton,Republic of Ireland,1994,87,,
+Klas,Ingesson,Sweden,1994,87,,
+,Isco,Spain,2018,87,86,1
+Gonzalo,Jara,Chile,2010,87,64,23
+Robert,Jarni,Croatia,1998,87,,
+Ronny,Johnsen,Norway,1998,87,,
+Christian,Karembeu,France,1998,87,,
+Kasey,Keller,United States,2006,87,77,10
+Simon,Kjær,Denmark,2018,87,78,9
+Michael,Klein,Romania,1990,87,,
+Jürgen,Klinsmann,West Germany,1990,87,,
+Jürgen,Kohler,West Germany,1990,87,89,-2
+Mateo,Kovačić,Croatia,2026,87,82,5
+Philipp,Lahm,Germany,2014,87,87,0
+Søren,Lerby,Denmark,1986,87,,
+Robert,Lewandowski,Poland,2022,87,91,-4
+Bixente,Lizarazu,France,1998,87,88,-1
+Roger,Ljung,Sweden,1994,87,,
+Hugo,Lloris,France,2022,87,84,3
+Albert,Luque,Spain,2002,87,,
+,Marcelo,Brazil,2018,87,87,0
+Mick,McCarthy,Republic of Ireland,1990,87,,
+Paul,McGrath,Republic of Ireland,1990,87,,
+Fernando,Meira,Portugal,2006,87,87,0
+Dries,Mertens,Belgium,2018,87,87,0
+Lionel,Messi,Argentina,2018,87,94,-7
+,Miranda,Brazil,2018,87,85,2
+Aleksandar,Mitrović,Serbia,2022,87,79,8
+Nahuel,Molina,Argentina,2022,87,80,7
+Fernando,Morientes,Spain,2002,87,89,-2
+Alan,Mullery,England,1970,87,,
+Sándor,Mátrai,Hungary,1966,87,,
+,Nani,Portugal,2014,87,82,5
+Manuel,Neuer,Germany,2018,87,92,-5
+Manuel,Neuer,Germany,2022,87,89,-2
+,Neymar,Brazil,2026,87,83,4
+Martin,Odegaard,Norway,2026,87,86,1
+Raimundo,Orsi,Italy,1934,87,,
+Nicolás,Otamendi,Argentina,2018,87,85,2
+Marc,Overmars,Netherlands,1998,87,86,1
+Mikel,Oyarzabal,Spain,2026,87,83,4
+Gianluca,Pagliuca,Italy,1998,87,,
+José,Parodi,Paraguay,1958,87,,
+Rui,Patrício,Portugal,2018,87,83,4
+,Pauleta,Portugal,2002,87,,
+,Pepe,Portugal,2022,87,81,6
+Emmanuel,Petit,France,1998,87,87,0
+Dan,Petrescu,Romania,1998,87,,
+Svatopluk,Pluskal,Czechoslovakia,1962,87,,
+František,Plánička,Czechoslovakia,1934,87,,
+Gheorghe,Popescu,Romania,1998,87,,
+Antonín,Puč,Czechoslovakia,1934,87,,
+Ivan,Rakitić,Croatia,2018,87,86,1
+,Raúl,Spain,2006,87,89,-2
+Johnny,Rep,Netherlands,1978,87,,
+Gigi,Riva,Italy,1970,87,,
+Paul,Robinson,England,2006,87,87,0
+Ricardo,Rodríguez,Switzerland,2022,87,75,12
+Jorge Lino,Romero,Paraguay,1958,87,,
+Cristiano,Ronaldo,Portugal,2022,87,87,0
+Roberto,Rosato,Italy,1970,87,,
+Willy,Sagnol,France,2006,87,87,0
+Carlos,Salcido,Mexico,2010,87,77,10
+Míchel,Salgado,Spain,2006,87,87,0
+Karl-Heinz,Schnellinger,West Germany,1966,87,,
+Willi,Schulz,West Germany,1966,87,,
+Willi,Schulz,West Germany,1970,87,,
+Harald,Schumacher,West Germany,1982,87,,
+Hans-Georg,Schwarzenbeck,West Germany,1974,87,,
+Hans,Schäfer,West Germany,1958,87,,
+Gaetano,Scirea,Italy,1982,87,,
+Xherdan,Shaqiri,Switzerland,2014,87,80,7
+Kevin,Sheedy,Republic of Ireland,1990,87,,
+Unai,Simón,Spain,2022,87,83,4
+Alexander,Sorloth,Norway,2026,87,83,4
+Jürgen,Sparwasser,East Germany,1974,87,,
+Safet,Sušić,Yugoslavia,1990,87,,
+Hugo,Sánchez,Mexico,1986,87,89,-2
+Marco,Tardelli,Italy,1982,87,,
+Jonas,Thern,Sweden,1994,87,,
+Erik,Thorstvedt,Norway,1994,87,,
+Lajos,Tichy,Hungary,1962,87,,
+Jean,Tigana,France,1982,87,,
+Hans,Tilkowski,West Germany,1966,87,,
+Pál,Titkos,Hungary,1938,87,,
+Géza,Toldi,Hungary,1938,87,,
+Jon Dahl,Tomasson,Denmark,2002,87,,
+,Tostão,Brazil,1970,87,,
+Diego,Tristán,Spain,2002,87,,
+Marius,Trésor,France,1982,87,,
+Juan Carlos,Valerón,Spain,2002,87,,
+Virgil,van Dijk,Netherlands,2026,87,88,-1
+Obdulio,Varela,Uruguay,1954,87,,
+Berti,Vogts,West Germany,1970,87,,
+Rudi,Völler,Germany,1994,87,89,-2
+Des,Walker,England,1990,87,,
+Christian,Wörns,Germany,1998,87,,
+Lamine,Yamal,Spain,2026,87,89,-2
+Javier,Zanetti,Argentina,1998,87,89,-2
+,Zinho,Brazil,1994,87,,
+Mesut,Özil,Germany,2014,87,87,0
+Władysław,Żmuda,Poland,1982,87,,
+,Abelardo,Spain,1994,86,,
+Manuel,Akanji,Switzerland,2022,86,82,4
+David,Alaba,Austria,2026,86,80,6
+Demetrio,Albertini,Italy,1994,86,,
+Toby,Alderweireld,Belgium,2018,86,85,1
+,Alisson,Brazil,2026,86,88,-2
+Dani,Alves,Brazil,2010,86,86,0
+Dani,Alves,Brazil,2014,86,84,2
+,Amaral,Brazil,1978,86,,
+Patrik,Andersson,Sweden,1994,86,,
+Darren,Anderton,England,1998,86,,
+Pablo,Armero,Colombia,2014,86,75,11
+Aljoša,Asanović,Croatia,1998,86,,
+Dino,Baggio,Italy,1994,86,,
+Júnior,Baiano,Brazil,1998,86,,
+Gabi,Balint,Romania,1990,86,,
+Alan,Ball,England,1966,86,,
+Michael,Ballack,Germany,2002,86,87,-1
+Milan,Baroš,Czech Republic,2006,86,86,0
+Fabien,Barthez,France,2002,86,,
+Mauro,Bellugi,Italy,1978,86,,
+Thomas,Berthold,West Germany,1986,86,,
+Luigi,Bertolini,Italy,1934,86,,
+Zvonimir,Boban,Croatia,1998,86,,
+Maxime,Bossis,France,1982,86,,
+,Brito,Brazil,1970,86,,
+Tomas,Brolin,Sweden,1994,86,87,-1
+Marcelo,Brozović,Croatia,2022,86,84,2
+Jaroslav,Burgr,Czechoslovakia,1938,86,,
+Jorge,Burruchaga,Argentina,1990,86,,
+Terry,Butcher,England,1990,86,,
+Antonio,Cabrini,Italy,1986,86,,
+Moisés,Caicedo,Ecuador,2026,86,88,-2
+Sol,Campbell,England,2002,86,86,0
+Jorge,Campos,Mexico,1998,86,87,-1
+João,Cancelo,Portugal,2026,86,84,2
+Daniel,Carnevali,Argentina,1974,86,,
+Ricardo,Carvalho,Portugal,2006,86,86,0
+,Casemiro,Brazil,2026,86,82,4
+Iker,Casillas,Spain,2006,86,95,-9
+Giorgio,Chiellini,Italy,2010,86,86,0
+Héctor,Chumpitaz,Peru,1978,86,,
+Fulvio,Collovati,Italy,1982,86,,
+Rinat,Dasayev,Soviet Union,1982,86,,
+Frank,de Boer,Netherlands,1998,86,,
+Ronald,de Boer,Netherlands,1998,86,,
+Giancarlo,De Sisti,Italy,1970,86,,
+Mousa,Dembélé,Belgium,2018,86,84,2
+Clint,Dempsey,United States,2014,86,81,5
+,Denílson,Brazil,1998,86,,
+,Denílson,Brazil,2002,86,,
+Memphis,Depay,Netherlands,2026,86,80,6
+Marcel,Desailly,France,2002,86,88,-2
+Kazimierz,Deyna,Poland,1974,86,,
+Luigi,Di Biagio,Italy,1998,86,,
+Ángel,Di María,Argentina,2014,86,86,0
+Rúben,Dias,Portugal,2022,86,88,-2
+Luis,Diaz,Colombia,2026,86,87,-1
+,Didi,Brazil,1958,86,,
+Georgi,Dimitrov,Bulgaria,1986,86,,
+Wolfgang,Dremmler,West Germany,1982,86,,
+Christophe,Dugarry,France,1998,86,,
+Denzel,Dumfries,Netherlands,2026,86,84,2
+Vladimir,Durković,Yugoslavia,1962,86,,
+Dragan,Džajić,Yugoslavia,1974,86,,
+Luis,Enrique,Spain,2002,86,,
+Herbert,Erhardt,West Germany,1958,86,,
+Abdulrahman,Fawzi,Egypt,1934,86,,
+Rio,Ferdinand,England,2002,86,88,-2
+Giovanni,Ferrari,Italy,1934,86,,
+Giovanni,Ferrari,Italy,1938,86,,
+Attilio,Ferraris,Italy,1934,86,,
+Jean-Marc,Ferreri,France,1986,86,,
+Klaus,Fichtel,West Germany,1970,86,,
+Ubaldo,Fillol,Argentina,1982,86,,
+Ron,Flowers,England,1966,86,,
+,Félix,Brazil,1970,86,,
+Bernd,Förster,West Germany,1982,86,,
+Cody,Gakpo,Netherlands,2026,86,83,3
+Milan,Galić,Yugoslavia,1962,86,,
+William,Gallas,France,2006,86,86,0
+Alberto,García Aspe,Mexico,1998,86,,
+Luis,García Postigo,Mexico,1994,86,,
+Paul,Gascoigne,England,1990,86,,
+,Gavi,Spain,2022,86,80,6
+Yuri,Gavrilov,Soviet Union,1982,86,,
+Claudio,Gentile,Italy,1978,86,,
+,Gilmar,Brazil,1958,86,,
+José,Giménez,Uruguay,2018,86,83,3
+Diego,Godín,Uruguay,2014,86,82,4
+Gyula,Grosics,Hungary,1954,86,,
+Andrés,Guardado,Mexico,2014,86,75,11
+Raphaël,Guerreiro,Portugal,2022,86,83,3
+Idrissa,Gueye,Senegal,2026,86,79,7
+Bengt,Gustavsson,Sweden,1958,86,,
+Joško,Gvardiol,Croatia,2026,86,85,1
+İlkay,Gündoğan,Germany,2022,86,85,1
+Ivan,Hašek,Czechoslovakia,1990,86,,
+Jörg,Heinrich,Germany,1998,86,,
+Jan,Heintze,Denmark,1998,86,,
+Thomas,Helveg,Denmark,1998,86,,
+Jordan,Henderson,England,2018,86,81,5
+Ramón,Heredia,Argentina,1974,86,,
+Fritz,Herkenrath,West Germany,1958,86,,
+Piero,Hincapié,Ecuador,2026,86,83,3
+Horst,Hrubesch,West Germany,1982,86,,
+Roger,Hunt,England,1966,86,,
+Thomas,Häßler,West Germany,1990,86,,
+Bodo,Illgner,West Germany,1990,86,,
+Tomislav,Ivković,Yugoslavia,1990,86,,
+,Jair,Brazil,1950,86,,
+Ditmar,Jakobs,West Germany,1986,86,,
+David,James,England,2010,86,79,7
+Paweł,Janas,Poland,1982,86,,
+Gérard,Janvion,France,1982,86,,
+Gonzalo,Jara,Chile,2014,86,68,18
+Raúl,Jiménez,Mexico,2026,86,78,8
+Glen,Johnson,England,2010,86,80,6
+Wim,Jonk,Netherlands,1994,86,,
+Wim,Jonk,Netherlands,1998,86,,
+Erich,Juskowiak,West Germany,1958,86,,
+Fahrudin,Jusufi,Yugoslavia,1962,86,,
+,Júnior,Brazil,1982,86,,
+Roque,Júnior,Brazil,2002,86,,
+Vinícius,Júnior,Brazil,2022,86,86,0
+Manfred,Kaltz,West Germany,1978,86,,
+Giorgos,Karagounis,Greece,2014,86,70,16
+Anzor,Kavazashvili,Soviet Union,1970,86,,
+Werner,Kohlmeyer,West Germany,1954,86,,
+Vincent,Kompany,Belgium,2014,86,86,0
+Friedrich,Koncilia,Austria,1982,86,,
+Lajos,Korányi,Hungary,1938,86,,
+Andrej,Kramarić,Croatia,2026,86,81,5
+Philipp,Lahm,Germany,2006,86,85,1
+Philipp,Lahm,Germany,2010,86,86,0
+Mihály,Lantos,Hungary,1954,86,,
+Graeme,Le Saux,England,1998,86,,
+Frank,Leboeuf,France,1998,86,,
+,Leão,Brazil,1974,86,,
+Reinhard,Libuda,West Germany,1970,86,,
+Gyula,Lázár,Hungary,1938,86,,
+Claudio,López,Argentina,1998,86,,
+Marius,Lăcătuș,Romania,1990,86,,
+,Maicon,Brazil,2010,86,86,0
+Florent,Malouda,France,2010,86,82,4
+Carlos,Marchena,Spain,2006,86,86,0
+Javier,Margas,Chile,1998,86,,
+Enver,Marić,Yugoslavia,1974,86,,
+Lautaro,Martínez,Argentina,2022,86,85,1
+Blaise,Matuidi,France,2014,86,83,3
+,Mazinho,Brazil,1994,86,,
+Ladislao,Mazurkiewicz,Uruguay,1970,86,,
+Paul,McGrath,Republic of Ireland,1994,86,,
+Raul,Meireles,Portugal,2010,86,82,4
+Christoph,Metzelder,Germany,2006,86,86,0
+Siniša,Mihajlović,Yugoslavia,1998,86,,
+Gabriel,Milito,Argentina,2006,86,86,0
+Nahuel,Molina,Argentina,2026,86,77,9
+Vincenzo,Montella,Italy,2002,86,,
+Fernando,Muslera,Uruguay,2014,86,82,4
+Kazadi,Mwamba,Zaire,1974,86,,
+Yuto,Nagatomo,Japan,2026,86,71,15
+Erik,Nilsson,Sweden,1950,86,,
+Björn,Nordqvist,Sweden,1974,86,,
+Tibor,Nyilasi,Hungary,1982,86,,
+Branko,Oblak,Yugoslavia,1974,86,,
+,Oscar,Brazil,1982,86,,
+Wolfgang,Overath,West Germany,1966,86,,
+Gianluca,Pagliuca,Italy,1994,86,,
+Christian,Panucci,Italy,2002,86,,
+Mario,Pašalić,Croatia,2026,86,79,7
+,Pedri,Spain,2026,86,90,-4
+Armand,Penverne,France,1958,86,,
+Waldir,Peres,Brazil,1982,86,,
+,Petit,Portugal,2006,86,77,9
+Roger,Piantoni,France,1958,86,,
+Josef,Posipal,West Germany,1954,86,,
+Oleh,Protasov,Soviet Union,1990,86,,
+Óscar,Pérez,Mexico,2010,86,71,15
+Thomas,Ravelli,Sweden,1990,86,,
+Mircea,Rednic,Romania,1990,86,,
+Michael,Reiziger,Netherlands,1998,86,,
+Stefan,Reuter,West Germany,1990,86,,
+José Antonio,Reyes,Spain,2006,86,86,0
+,Rivellino,Brazil,1970,86,,
+Carlos,Roa,Argentina,1998,86,,
+Bryan,Robson,England,1982,86,,
+Cristian,Rodríguez,Uruguay,2014,86,80,6
+Francisco Javier,Rodríguez,Mexico,2010,86,73,13
+Maxi,Rodríguez,Argentina,2006,86,77,9
+Ricardo,Rodríguez,Switzerland,2018,86,80,6
+Hassan,Roshan,Iran,1978,86,,
+Oscar,Ruggeri,Argentina,1990,86,,
+Antonio,Rüdiger,Germany,2026,86,84,2
+Matthias,Sammer,Germany,1994,86,,
+Kasper,Schmeichel,Denmark,2022,86,82,4
+Stefan,Schwarz,Sweden,1994,86,,
+Mark,Schwarzer,Australia,2010,86,79,7
+Gaetano,Scirea,Italy,1986,86,,
+Juan Antonio,Señor,Spain,1986,86,,
+Unai,Simón,Spain,2026,86,84,2
+Moussa,Sissoko,France,2014,86,75,11
+Didier,Six,France,1982,86,,
+Yann,Sommer,Switzerland,2018,86,82,4
+Steve,Staunton,Republic of Ireland,1994,86,,
+Bogdan,Stelea,Romania,1998,86,,
+Gary,Stevens,England,1986,86,,
+Nobby,Stiles,England,1966,86,,
+Dragan,Stojković,Yugoslavia,1990,86,,
+Yannick,Stopyra,France,1986,86,,
+František,Svoboda,Czechoslovakia,1934,86,,
+Antal,Szabó,Hungary,1938,86,,
+Wojciech,Szczęsny,Poland,2022,86,86,0
+Antoni,Szymanowski,Poland,1978,86,,
+Miguel,Tendillo,Spain,1982,86,,
+Kevin,Trapp,Germany,2022,86,86,0
+Toni,Turek,West Germany,1954,86,,
+Thierry,Tusseau,France,1986,86,,
+Mathieu,Valbuena,France,2014,86,80,6
+Jorge,Valdano,Argentina,1986,86,,
+Hans,van Breukelen,Netherlands,1990,86,,
+René,van de Kerkhof,Netherlands,1978,86,,
+Willy,van de Kerkhof,Netherlands,1978,86,,
+Thomas,Vermaelen,Belgium,2018,86,78,8
+David,Villa,Spain,2006,86,84,2
+Goran,Vlaović,Croatia,1998,86,,
+Valery,Voronin,Soviet Union,1966,86,,
+Fritz,Walter,West Germany,1958,86,,
+Ottmar,Walter,West Germany,1954,86,,
+Marc,Wilmots,Belgium,2002,86,,
+Sylvain,Wiltord,France,2006,86,84,2
+Billy,Wright,England,1958,86,,
+Granit,Xhaka,Switzerland,2014,86,76,10
+Mario,Yepes,Colombia,2014,86,74,12
+József,Zakariás,Hungary,1954,86,,
+Gianluca,Zambrotta,Italy,2002,86,86,0
+Christian,Ziege,Germany,1998,86,,
+,Zito,Brazil,1962,86,,
+Dino,Zoff,Italy,1974,86,,
+Andoni,Zubizarreta,Spain,1986,86,,
+,Zé Maria,Brazil,1974,86,,
+,Zózimo,Brazil,1962,86,,
+Julián,Álvarez,Argentina,2026,86,86,0
+,Éder,Brazil,1982,86,,
+Petr,Čech,Czech Republic,2006,86,94,-8
+Goran,Đorović,Yugoslavia,1998,86,,
+Milutin,Šoškić,Yugoslavia,1962,86,,
+Igor,Štimac,Croatia,1998,86,,
+Marcos,Acuña,Argentina,2022,85,85,0
+Bruno,Alves,Portugal,2010,85,83,2
+Sune,Andersson,Sweden,1950,85,,
+Michele,Andreolo,Italy,1938,85,,
+Nicolas,Anelka,France,2010,85,85,0
+Osvaldo,Ardiles,Argentina,1978,85,,
+Charles,Aránguiz,Chile,2014,85,75,10
+William,Ayache,France,1986,85,,
+Vítor,Baía,Portugal,2002,85,,
+Yıldıray,Baştürk,Turkey,2002,85,,
+Miodrag,Belodedici,Romania,1994,85,,
+Antonio,Benarrivo,Italy,1994,85,,
+Rodrigo,Bentancur,Uruguay,2026,85,80,5
+Orvar,Bergmark,Sweden,1958,85,,
+Mario,Bertini,Italy,1970,85,,
+Joachim,Björklund,Sweden,1994,85,,
+Oleh,Blokhin,Soviet Union,1986,85,,
+Pat,Bonner,Republic of Ireland,1994,85,,
+Khalid,Boulahrouz,Netherlands,2006,85,78,7
+Sergio,Busquets,Spain,2022,85,85,0
+Jenő,Buzánszky,Hungary,1954,85,,
+,Cafu,Brazil,1994,85,91,-6
+,Caju,Brazil,1970,85,,
+Sol,Campbell,England,1998,85,86,-1
+Claudio,Caniggia,Argentina,1994,85,,
+,Carlos,Brazil,1986,85,,
+Yannick,Carrasco,Belgium,2022,85,84,1
+Juan,Carreño,Mexico,1930,85,,
+Timothy,Castagne,Belgium,2026,85,75,10
+Edinson,Cavani,Uruguay,2014,85,87,-2
+José,Chamot,Argentina,1998,85,,
+Igor,Chislenko,Soviet Union,1966,85,,
+Ludo,Coeck,Belgium,1982,85,,
+Gino,Colaussi,Italy,1938,85,,
+Ashley,Cole,England,2006,85,85,0
+Mário,Coluna,Portugal,1966,85,,
+Bruno,Conti,Italy,1982,85,,
+Pedro,Contreras,Spain,2002,85,,
+Terry,Cooper,England,1970,85,,
+Julio César,Cortés,Uruguay,1970,85,,
+Luis,Cubilla,Uruguay,1970,85,,
+Bernhard,Cullmann,West Germany,1974,85,,
+Zoltán,Czibor,Hungary,1954,85,,
+Martín,Cáceres,Uruguay,2014,85,79,6
+Martin,Dahlin,Sweden,1994,85,,
+Kenny,Dalglish,Scotland,1978,85,89,-4
+Rinat,Dasayev,Soviet Union,1986,85,,
+Jonathan,David,Canada,2026,85,81,4
+Alphonso,Davies,Canada,2026,85,83,2
+Ed,de Goey,Netherlands,1994,85,,
+Daniele,De Rossi,Italy,2010,85,85,0
+Jermain,Defoe,England,2010,85,81,4
+Ángel,Di María,Argentina,2018,85,84,1
+Roberto,Dinamite,Brazil,1978,85,,
+Johan,Djourou,Switzerland,2014,85,74,11
+Landon,Donovan,United States,2010,85,82,3
+Ilie,Dumitrescu,Romania,1994,85,,
+Marek,Dziuba,Poland,1982,85,,
+Horst,Eckel,West Germany,1954,85,,
+,Eduardo,Portugal,2010,85,79,6
+Dan,Eggen,Norway,1998,85,,
+Christian,Eriksen,Denmark,2022,85,83,2
+Juan,Evaristo,Argentina,1930,85,,
+Luís,Fabiano,Brazil,2010,85,85,0
+Enzo,Fernández,Argentina,2026,85,85,0
+Paulo,Ferreira,Portugal,2006,85,83,2
+Tom,Finney,England,1954,85,,
+Tom,Finney,England,1958,85,,
+Roberto,Firmino,Brazil,2018,85,85,0
+Tore André,Flo,Norway,1998,85,,
+Heinz,Flohe,West Germany,1978,85,,
+César López,Fretes,Paraguay,1950,85,,
+Torsten,Frings,Germany,2002,85,,
+Ronald,Fuentes,Chile,1998,85,,
+William,Gallas,France,2010,85,84,1
+Américo,Gallego,Argentina,1978,85,,
+Giovanni,Galli,Italy,1986,85,,
+Andoni,Goikoetxea,Spain,1986,85,,
+Gustavo,Gomez,Paraguay,2026,85,78,7
+Leon,Goretzka,Germany,2026,85,81,4
+Jerzy,Gorgoń,Poland,1974,85,,
+Yoann,Gourcuff,France,2010,85,85,0
+Jimmy,Greaves,England,1962,85,,
+Antoine,Griezmann,France,2022,85,86,-1
+Raphaël,Guerreiro,Portugal,2018,85,80,5
+Paolo,Guerrero,Peru,2018,85,81,4
+Mario,Götze,Germany,2014,85,85,0
+Arie,Haan,Netherlands,1978,85,,
+Dietmar,Hamann,Germany,2002,85,,
+Ronnie,Hellström,Sweden,1978,85,,
+Théo,Hernandez,France,2022,85,85,0
+Javier,Hernández,Mexico,2014,85,82,3
+Luis,Hernández,Mexico,1998,85,86,-1
+Héctor,Herrera,Mexico,2018,85,80,5
+Emile,Heskey,England,2002,85,,
+Gonzalo,Higuaín,Argentina,2014,85,84,1
+René,Higuita,Colombia,1990,85,,
+Reinhold,Hintermaier,Austria,1982,85,,
+Johann,Horvath,Austria,1934,85,,
+René,Houseman,Argentina,1978,85,,
+Mats,Hummels,Germany,2014,85,85,0
+Geoff,Hurst,England,1970,85,88,-3
+Thomas,Häßler,Germany,1998,85,,
+Horst-Dieter,Höttges,West Germany,1966,85,,
+Vincenzo,Iaquinta,Italy,2010,85,83,2
+Filippo,Inzaghi,Italy,2006,85,90,-5
+Andreas,Isaksson,Sweden,2006,85,80,5
+David,James,England,2006,85,85,0
+Jermaine,Jones,United States,2014,85,77,8
+Jan,Jongbloed,Netherlands,1978,85,,
+Joe,Jordan,Scotland,1978,85,,
+,Juan,Brazil,2006,85,85,0
+Vinícius,Júnior,Brazil,2026,85,89,-4
+Raymond,Kaelbel,France,1958,85,,
+N'Golo,Kanté,France,2026,85,84,1
+Orestis,Karnezis,Greece,2014,85,74,11
+Valeri,Karpin,Russia,2002,85,,
+Josip,Katalinski,Yugoslavia,1974,85,,
+Harry,Kewell,Australia,2006,85,85,0
+Patrick,Kluivert,Netherlands,1998,85,87,-2
+Adrian,Knup,Switzerland,1994,85,,
+Vilmos,Kohut,Hungary,1938,85,,
+Vincent,Kompany,Belgium,2018,85,85,0
+Kalidou,Koulibaly,Senegal,2022,85,84,1
+Josef,Košťálek,Czechoslovakia,1938,85,,
+Hans,Krankl,Austria,1982,85,,
+Cyle,Larin,Canada,2026,85,74,11
+Henrik,Larsson,Sweden,2002,85,86,-1
+Brian,Laudrup,Denmark,1998,85,,
+Rafael,Leão,Portugal,2022,85,84,1
+Stephan,Lichtsteiner,Switzerland,2014,85,79,6
+Pierre,Littbarski,West Germany,1982,85,,
+Christian,Lopez,France,1982,85,,
+,Luizinho,Brazil,1982,85,,
+Romelu,Lukaku,Belgium,2014,85,80,5
+Teddy,Lučić,Sweden,2006,85,76,9
+Gyula,Lóránt,Hungary,1954,85,,
+,Lúcio,Brazil,2010,85,85,0
+Sadio,Mané,Senegal,2018,85,84,1
+Paul,Mariner,England,1982,85,,
+Javier,Mascherano,Argentina,2010,85,85,0
+Daniele,Massaro,Italy,1994,85,,
+Blaise,Matuidi,France,2018,85,85,0
+Lionel,Messi,Argentina,2026,85,86,-1
+Johan,Micoud,France,2002,85,,
+Borislav,Mihaylov,Bulgaria,1986,85,,
+Predrag,Mijatović,Yugoslavia,1998,85,,
+Éder,Militão,Brazil,2022,85,85,0
+Julio,Montero Castillo,Uruguay,1970,85,,
+Luis,Monti,Italy,1934,85,,
+Eraldo,Monzeglio,Italy,1934,85,,
+Juan,Mujica,Uruguay,1970,85,,
+Jamal,Musiala,Germany,2026,85,87,-2
+Adam,Musiał,Poland,1974,85,,
+Fernando,Muslera,Uruguay,2018,85,81,4
+Roque,Máspoli,Uruguay,1954,85,,
+Kálmán,Mészöly,Hungary,1966,85,,
+Allan,Nielsen,Denmark,1998,85,,
+Arthur,Numan,Netherlands,1998,85,,
+Guillermo,Ochoa,Mexico,2014,85,78,7
+Jorge,Olguín,Argentina,1982,85,,
+Dani,Olmo,Spain,2026,85,84,1
+André,Ooijer,Netherlands,2006,85,76,9
+Gabriele,Oriali,Italy,1982,85,,
+Nicolás,Otamendi,Argentina,2026,85,80,5
+Sokratis,Papastathopoulos,Greece,2014,85,82,3
+Paul,Parker,England,1990,85,,
+,Pauleta,Portugal,2006,85,85,0
+,Pepe,Portugal,2018,85,85,0
+Luís,Pereira,Brazil,1974,85,,
+Dan,Petrescu,Romania,1994,85,,
+Jean-Marie,Pfaff,Belgium,1986,85,,
+,Piazza,Brazil,1970,85,,
+Jordan,Pickford,England,2026,85,85,0
+Andrea,Pirlo,Italy,2010,85,85,0
+David,Platt,England,1990,85,,
+Ján,Popluhár,Czechoslovakia,1962,85,,
+Nery,Pumpido,Argentina,1990,85,,
+Jacinto,Quincoces,Spain,1934,85,,
+Helmut,Rahn,West Germany,1954,85,,
+Pietro,Rava,Italy,1938,85,,
+Pepe,Reina,Spain,2006,85,85,0
+Dominique,Rocheteau,France,1982,85,,
+Maxi,Rodríguez,Argentina,2010,85,84,1
+Dennis,Rommedahl,Denmark,2002,85,,
+Cristiano,Ronaldo,Portugal,2026,85,85,0
+Tomáš,Rosický,Czech Republic,2006,85,86,-1
+Mathew,Ryan,Australia,2026,85,79,6
+Marcelo,Salas,Chile,1998,85,,
+César,Sampaio,Brazil,1998,85,,
+Roland,Sandberg,Sweden,1974,85,,
+José,Sasía,Uruguay,1962,85,,
+Patrik,Schick,Czech Republic,2026,85,85,0
+Michael,Schjønberg,Denmark,1998,85,,
+Paul,Scholes,England,2002,85,88,-3
+Viliam,Schrojf,Czechoslovakia,1962,85,,
+Enzo,Scifo,Belgium,1990,85,,
+Gaetano,Scirea,Italy,1978,85,,
+Clarence,Seedorf,Netherlands,1998,85,,
+Pietro,Serantoni,Italy,1938,85,,
+Aldo,Serena,Italy,1990,85,,
+,Sergi,Spain,1994,85,,
+,Serginho,Brazil,1982,85,,
+José Luis,Sierra,Chile,1998,85,,
+Thiago,Silva,Brazil,2014,85,88,-3
+Diego,Simeone,Argentina,1998,85,,
+Zvonimir,Soldo,Croatia,1998,85,,
+Yann,Sommer,Switzerland,2022,85,85,0
+Predrag,Spasić,Yugoslavia,1990,85,,
+Steve,Staunton,Republic of Ireland,1990,85,,
+Raheem,Sterling,England,2022,85,85,0
+Dragan,Stojković,Yugoslavia,1998,85,,
+Vladimir,Stojković,Serbia,2010,85,,
+Joachim,Streich,East Germany,1974,85,,
+Danijel,Subašić,Croatia,2018,85,84,1
+Claudio,Suárez,Mexico,1998,85,,
+Luis,Suárez,Uruguay,2014,85,89,-4
+Horst,Szymaniak,West Germany,1962,85,,
+Antoni,Szymanowski,Poland,1974,85,,
+Thomas,Sørensen,Denmark,2010,85,74,11
+Cláudio,Taffarel,Brazil,1990,85,,
+Nelson,Tapia,Chile,1998,85,,
+Alberto,Tarantini,Argentina,1982,85,,
+Marc-André,ter Stegen,Germany,2018,85,87,-2
+Carlos,Tevez,Argentina,2010,85,85,0
+,Tiago,Portugal,2006,85,79,6
+Jan,Tomaszewski,Poland,1978,85,,
+,Tomás,Spain,1986,85,,
+Juan,Torales,Paraguay,1986,85,,
+Vasilis,Torosidis,Greece,2014,85,75,10
+Piotr,Trochowski,Germany,2010,85,82,3
+Luis,Ubiña,Uruguay,1970,85,,
+Giovanni,van Bronckhorst,Netherlands,2006,85,81,4
+Edwin,van der Sar,Netherlands,1998,85,88,-3
+Robin,van Persie,Netherlands,2010,85,85,0
+Raphaël,Varane,France,2018,85,85,0
+Raphaël,Varane,France,2022,85,85,0
+Jan,Vertonghen,Belgium,2018,85,86,-1
+Todor,Veselinović,Yugoslavia,1958,85,,
+Jean,Vincent,France,1958,85,,
+Nikola,Vlašić,Croatia,2026,85,80,5
+Wolfgang,Weber,West Germany,1966,85,,
+Konrad,Weise,East Germany,1974,85,,
+Ray,Wilkins,England,1982,85,,
+,Willian,Brazil,2018,85,84,1
+Aron,Winter,Netherlands,1998,85,,
+Axel,Witsel,Belgium,2022,85,79,6
+Granit,Xhaka,Switzerland,2022,85,82,3
+Granit,Xhaka,Switzerland,2026,85,85,0
+Renato,Zaccarelli,Italy,1978,85,,
+Mário,Zagallo,Brazil,1962,85,,
+Jesús María,Zamora,Spain,1982,85,,
+Juan Camilo,Zúñiga,Colombia,2014,85,74,11
+Lesław,Ćmikiewicz,Poland,1974,85,,
+Dragoslav,Šekularac,Yugoslavia,1962,85,,
+Władysław,Żmuda,Poland,1978,85,,
