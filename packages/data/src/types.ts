@@ -45,6 +45,9 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
+// runtime-data-2.6.0 (merit-v4.4): owner re-rate of the 85–90 CURRENT-basis band.
+// The compact `basis_ratings.current` overall/channels move for the re-rated
+// cards; the Career/default basis (top-level overall/channels) is unchanged.
 // runtime-data-2.5.0 (merit-v4.3): owner-authored manual rating overrides can
 // pin display OVERALL below the merit display floor while staying in [0, 99].
 // runtime-data-2.4.0 (merit-v4.2): measured/projected ratings may occupy the
@@ -58,7 +61,7 @@ import type {
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.5.0" as const;
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.6.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────

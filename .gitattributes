@@ -1,2 +1,8 @@
 *.docx binary
 *.pdf binary
+
+# Owner-authored manual rating override sources are byte-fingerprinted (sha256
+# pinned in manual_overrides.py) and intentionally CRLF. Mark them -text so git
+# never EOL-normalizes them (which would break the fingerprint) and -whitespace
+# so the intrinsic CR-at-EOL is not flagged by `git diff --check`.
+etl/overrides/manual-ratings-*.csv -text -whitespace

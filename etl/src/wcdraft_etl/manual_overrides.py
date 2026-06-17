@@ -1,8 +1,19 @@
-"""Owner-authored merit-v4.3 manual rating overrides.
+"""Owner-authored manual rating overrides (merit-v4.3 and merit-v4.4).
 
-The CSV in ``etl/overrides/manual-ratings-v4.3.csv`` is the audit source. This
-module validates that source, resolves each row to a canonical card, emits the
-match/miss artifacts, and applies resolved rows as an internal-score pin.
+Two audit sources are layered:
+
+* ``etl/overrides/manual-ratings-v4.3.csv`` — the merit-v4.3 owner override set
+  (whole-pool curation, dual-source merge columns).
+* ``etl/overrides/manual-ratings-v4.4.csv`` — the merit-v4.4 owner re-rate of the
+  85–90 CAREER band (pre-screened delta file). Only rows with a non-blank
+  ``target_rating`` are applied (blank = no change).
+
+Each source is validated, resolved to a canonical card, and emitted as
+match/miss artifacts. Resolved rows are applied as an authoritative internal-
+score pin (both the career ``score_0_100`` and the ``current_score_0_100`` are
+pinned to the owner target — the same mechanism for both versions). When a card
+is named by BOTH sources, the merit-v4.4 target SUPERSEDES the merit-v4.3 value
+(v4.3 ∪ v4.4, v4.4 wins on overlap). Every other card keeps its v4.3/merit value.
 
 Only unambiguous matches are applied. Plausible-but-non-unique rows are honest
 misses and remain visible in the unmatched artifact.
@@ -50,7 +61,97 @@ EXPECTED_HEADER = [
 ]
 MIN_MATCH_RATE = 0.90
 
+# ─── merit-v4.4 owner re-rate (85–90 CAREER band) ─────────────────────────────
+# Pre-screened delta file: one row per card the owner inspected; only rows with a
+# non-blank ``target_rating`` are applied (blank = no change). The merit-v4.4
+# resolution reuses the v4.3 matching machinery but (a) folds non-decomposing
+# stroke/ligature letters to ASCII so heavy diacritics resolve, (b) widens the
+# candidate index to every men's World Cup edition (the band spans 1954–2026),
+# and (c) records absent nation/year blocks as honest misses instead of raising.
+OVERRIDE_PATH_V44 = ETL_DIR / "overrides" / "manual-ratings-v4.4.csv"
+EXPECTED_SHA256_V44 = "d51f188357d645f2ff558d8a851434ab78d7e5755136e0be189ad34cdab143a0"
+EXPECTED_ROWS_V44 = 1154
+EXPECTED_APPLIED_V44 = 515
+EXPECTED_HEADER_V44 = [
+    "first_name",
+    "last_name",
+    "country",
+    "year",
+    "current_rating",
+    "target_rating",
+    "delta",
+]
+
 _TARGET_YEARS = {2002, 2006, 2010, 2014, 2018, 2022, 2026}
+# Every men's World Cup edition present in the canonical dataset (1942/1946 were
+# not contested). The merit-v4.4 band reaches back to 1954.
+_TARGET_YEARS_V44 = frozenset(
+    {
+        1930,
+        1934,
+        1938,
+        1950,
+        1954,
+        1958,
+        1962,
+        1966,
+        1970,
+        1974,
+        1978,
+        1982,
+        1986,
+        1990,
+        1994,
+        1998,
+        2002,
+        2006,
+        2010,
+        2014,
+        2018,
+        2022,
+        2026,
+    }
+)
+
+# Latin letters that NFKD does NOT decompose to ASCII (strokes, bars, ligatures,
+# dotless i). The base merit ``norm`` only strips combining marks, so these would
+# otherwise be deleted mid-token (e.g. "Lesław" -> "les aw"). Folding the raw
+# string before normalization keeps the merit-v4.3 path untouched (fold is opt-in
+# per resolution) while letting merit-v4.4 resolve names like Lesław / Đorđević.
+_STROKE_FOLD = str.maketrans(
+    {
+        "ł": "l",
+        "Ł": "L",
+        "ø": "o",
+        "Ø": "O",
+        "đ": "d",
+        "Đ": "D",
+        "ð": "d",
+        "Ð": "D",
+        "þ": "th",
+        "Þ": "Th",
+        "ı": "i",
+        "İ": "I",
+        "ŧ": "t",
+        "Ŧ": "T",
+        "ħ": "h",
+        "Ħ": "H",
+        "æ": "ae",
+        "Æ": "Ae",
+        "œ": "oe",
+        "Œ": "Oe",
+        "ß": "ss",
+        "ẞ": "Ss",
+    }
+)
+
+
+def _fold_strokes(value: str | None) -> str:
+    return (value or "").translate(_STROKE_FOLD)
+
+
+def _identity(value: str | None) -> str:
+    return value or ""
 _GENERIC_NAME_TOKENS = {
     "al",
     "and",
@@ -129,6 +230,7 @@ class ResolvedOverride:
     nation_id: str
     matched_name: str
     match_method: str
+    source_version: str = "v4.3"
 
 
 @dataclass(frozen=True)
@@ -185,6 +287,7 @@ class OverrideResolution:
                 nation_id=first.nation_id,
                 matched_name=first.matched_name,
                 match_method="canonical_duplicate_avg",
+                source_version=first.source_version,
             )
         return out
 
@@ -218,6 +321,7 @@ class _Score:
 
 
 _RESOLUTION_CACHE: dict[Path, OverrideResolution] = {}
+_RESOLUTION_CACHE_V44: dict[Path, OverrideResolution] = {}
 
 
 def load_override_rows(
@@ -264,20 +368,26 @@ def load_override_rows(
     return tuple(rows), sha, dict(rule_counts)
 
 
-def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
-    output_dir = output_dir.resolve()
-    cached = _RESOLUTION_CACHE.get(output_dir)
-    if cached is not None:
-        return cached
+def _resolve_rows(
+    rows: tuple[OverrideRow, ...],
+    candidates_by_block: dict[tuple[str, int], tuple[_Candidate, ...]],
+    nation_ids_by_name: dict[str, frozenset[str]],
+    *,
+    fold_fn=_identity,
+    source_version: str = "v4.3",
+) -> tuple[list[ResolvedOverride], list[UnmatchedOverride], set[tuple[str, int]]]:
+    """Resolve each owner row to a canonical card.
 
-    rows, sha, rule_counts = load_override_rows()
-    candidates_by_block, nation_ids_by_name = _build_resolution_index(output_dir)
+    ``fold_fn`` is applied to the row's country/player strings before matching so
+    a folded resolution stays internally consistent with a folded candidate
+    index. The default identity fold reproduces the merit-v4.3 behavior exactly.
+    """
     matched: list[ResolvedOverride] = []
     unmatched: list[UnmatchedOverride] = []
     absent_blocks: set[tuple[str, int]] = set()
 
     for row in rows:
-        nation_ids = _resolve_nation_ids(row.country, nation_ids_by_name)
+        nation_ids = _resolve_nation_ids(fold_fn(row.country), nation_ids_by_name)
         block = [
             candidate
             for nation_id in sorted(nation_ids)
@@ -287,11 +397,12 @@ def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
             absent_blocks.add((row.country, row.year))
             unmatched.append(_unmatched(row, "nation_year_block_absent"))
             continue
-        if _looks_like_source_hint(row.player_name):
+        match_name = fold_fn(row.player_name)
+        if _looks_like_source_hint(match_name):
             unmatched.append(_unmatched(row, "source_hint_not_player_name"))
             continue
 
-        score = _resolve_player(row.player_name, block)
+        score = _resolve_player(match_name, block)
         if isinstance(score, _Score):
             matched.append(
                 ResolvedOverride(
@@ -308,6 +419,7 @@ def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
                     nation_id=score.candidate.nation_id,
                     matched_name=score.candidate.display_name,
                     match_method=score.method,
+                    source_version=source_version,
                 )
             )
         elif score:
@@ -324,6 +436,20 @@ def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
             unmatched.append(_unmatched(row, "no_unambiguous_match"))
 
     matched, unmatched = _drop_conflicting_weak_duplicates(matched, unmatched)
+    return matched, unmatched, absent_blocks
+
+
+def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    output_dir = output_dir.resolve()
+    cached = _RESOLUTION_CACHE.get(output_dir)
+    if cached is not None:
+        return cached
+
+    rows, sha, rule_counts = load_override_rows()
+    candidates_by_block, nation_ids_by_name = _build_resolution_index(output_dir)
+    matched, unmatched, absent_blocks = _resolve_rows(
+        rows, candidates_by_block, nation_ids_by_name
+    )
 
     resolution = OverrideResolution(
         rows=rows,
@@ -346,15 +472,134 @@ def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
     return resolution
 
 
+def load_override_rows_v44(
+    path: Path = OVERRIDE_PATH_V44,
+) -> tuple[tuple[OverrideRow, ...], str]:
+    """Load the merit-v4.4 delta file.
+
+    Returns only the rows that carry a non-blank ``target_rating`` (a blank
+    target is an explicit no-change and is skipped entirely). Rows are shaped as
+    ``OverrideRow`` so they flow through the shared resolution machinery; the
+    ``rule`` is ``v4.4-target`` and ``current_baseline`` carries the owner's
+    pre-rate ``current_rating``.
+    """
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    if sha != EXPECTED_SHA256_V44:
+        raise ValueError(
+            f"{path}: sha256 {sha} != expected {EXPECTED_SHA256_V44}; do not apply overrides"
+        )
+
+    text = raw.decode("utf-8-sig")
+    reader = csv.DictReader(text.splitlines())
+    if reader.fieldnames != EXPECTED_HEADER_V44:
+        raise ValueError(f"{path}: header {reader.fieldnames!r} != {EXPECTED_HEADER_V44!r}")
+
+    rows: list[OverrideRow] = []
+    total = 0
+    for source_line, raw_row in enumerate(reader, start=2):
+        total += 1
+        target_raw = (raw_row["target_rating"] or "").strip()
+        if not target_raw:
+            # Blank target = explicit no-change; never coerce blank to a target.
+            continue
+        final_rating = int(target_raw)
+        if not 0 <= final_rating <= 99:
+            raise ValueError(f"{path}:{source_line}: target_rating {final_rating} outside [0, 99]")
+        player_name = f"{raw_row['first_name']} {raw_row['last_name']}".strip()
+        rows.append(
+            OverrideRow(
+                source_line=source_line,
+                country=raw_row["country"],
+                year=int(raw_row["year"]),
+                player_name=html.unescape(player_name),
+                final_rating=final_rating,
+                rule="v4.4-target",
+                file1_val=(raw_row["current_rating"] or "").strip(),
+                file2_val="",
+                current_baseline=(raw_row["current_rating"] or "").strip(),
+            )
+        )
+
+    if total != EXPECTED_ROWS_V44:
+        raise ValueError(f"{path}: {total} data rows != expected {EXPECTED_ROWS_V44}")
+    if len(rows) != EXPECTED_APPLIED_V44:
+        raise ValueError(
+            f"{path}: {len(rows)} applied (non-blank target) rows != expected "
+            f"{EXPECTED_APPLIED_V44}"
+        )
+    return tuple(rows), sha
+
+
+def resolve_overrides_v44(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    output_dir = output_dir.resolve()
+    cached = _RESOLUTION_CACHE_V44.get(output_dir)
+    if cached is not None:
+        return cached
+
+    rows, sha = load_override_rows_v44()
+    candidates_by_block, nation_ids_by_name = _build_resolution_index(
+        output_dir, target_years=_TARGET_YEARS_V44, fold=True
+    )
+    matched, unmatched, _absent_blocks = _resolve_rows(
+        rows,
+        candidates_by_block,
+        nation_ids_by_name,
+        fold_fn=_fold_strokes,
+        source_version="v4.4",
+    )
+    # Absent nation/year blocks are honest misses (already recorded in
+    # ``unmatched`` by ``_resolve_rows``), not a hard contradiction: the band
+    # spans historical editions and the 90% match gate still guards a systematic
+    # resolution failure.
+
+    resolution = OverrideResolution(
+        rows=rows,
+        matched=tuple(sorted(matched, key=lambda r: (r.year, r.country, r.source_line))),
+        unmatched=tuple(sorted(unmatched, key=lambda r: r.source_line)),
+        csv_sha256=sha,
+        rule_counts={"v4.4-target": len(rows)},
+    )
+    if resolution.match_rate < MIN_MATCH_RATE:
+        raise ValueError(
+            "merit-v4.4 manual rating override match rate "
+            f"{resolution.match_rate:.2%} below required {MIN_MATCH_RATE:.0%}"
+        )
+    _ = resolution.matched_by_card_id
+    _RESOLUTION_CACHE_V44[output_dir] = resolution
+    return resolution
+
+
+def combined_overrides_by_card_id(output_dir: Path = OUTPUT_DIR) -> dict[str, ResolvedOverride]:
+    """v4.3 ∪ v4.4 effective pins keyed by canonical card_id, v4.4 superseding."""
+    combined: dict[str, ResolvedOverride] = dict(resolve_overrides(output_dir).matched_by_card_id)
+    combined.update(resolve_overrides_v44(output_dir).matched_by_card_id)
+    return combined
+
+
 def apply_to_internal_rows(
     internal_rows: list[dict],
     output_dir: Path = OUTPUT_DIR,
 ) -> list[dict]:
-    """Pin resolved rows in-place and return ``internal_rows`` for chaining."""
-    overrides = resolve_overrides(output_dir).matched_by_card_id
-    for row in internal_rows:
-        override = overrides.get(row["card_id"])
-        if override is None:
+    """Pin resolved rows in-place and return ``internal_rows`` for chaining.
+
+    Two layers, applied in order:
+
+    * merit-v4.3 pins BOTH the career ``score_0_100`` and the current
+      ``current_score_0_100`` to its owner value (the de-clustering of the
+      default/Career view — unchanged shipped mechanism).
+    * merit-v4.4 pins the CURRENT basis ONLY (``current_score_0_100``), leaving
+      the career score untouched, so historical legends keep their all-time
+      Career rating while the in-tournament/Current view is re-rated. On a card
+      named by both, the v4.4 current target SUPERSEDES the v4.3 current pin; the
+      v4.3 career pin remains.
+    """
+    by_card = {row["card_id"]: row for row in internal_rows}
+
+    # ── merit-v4.3: career + current pin (byte-for-byte the shipped behavior) ──
+    for card_id, override in resolve_overrides(output_dir).matched_by_card_id.items():
+        row = by_card.get(card_id)
+        if row is None:
             continue
         previous_score = row["score_0_100"]
         previous_current = row["current_score_0_100"]
@@ -395,60 +640,125 @@ def apply_to_internal_rows(
                 "weight": 0.0,
             },
         ]
+
+    # ── merit-v4.4: CURRENT basis only; supersedes any v4.3 current pin ────────
+    for card_id, override in resolve_overrides_v44(output_dir).matched_by_card_id.items():
+        row = by_card.get(card_id)
+        if row is None:
+            continue
+        previous_current = row["current_score_0_100"]
+        target = float(override.final_rating)
+        row["current_score_0_100"] = target
+        row["manual_current_override"] = {
+            "source_line": override.source_line,
+            "source_sha256": EXPECTED_SHA256_V44,
+            "source_version": "v4.4",
+            "final_rating": override.final_rating,
+            "rule": override.rule,
+            "player_name": override.player_name,
+            "matched_name": override.matched_name,
+            "match_method": override.match_method,
+            "previous_current_score_0_100": round(previous_current, 6),
+        }
+        # Provenance-only components (weight 0.0): the career score is NOT moved,
+        # so these must not read as score-determining in the shared component
+        # list. The current basis pin is enforced by ``manual_current_overall``.
+        row["components"] = [
+            *row["components"],
+            {
+                "signal": "manual_current_rating_override",
+                "value": override.final_rating,
+                "weight": 0.0,
+            },
+            {
+                "signal": "manual_current_rating_override_source_line",
+                "value": override.source_line,
+                "weight": 0.0,
+            },
+            {
+                "signal": "manual_current_rating_override_previous_current_score",
+                "value": round(previous_current, 6),
+                "weight": 0.0,
+            },
+        ]
     return internal_rows
 
 
 def manual_overall(row: dict) -> int | None:
+    """CAREER-basis (default/top-level) manual pin, or None if not pinned.
+
+    Only the merit-v4.3 career pin reaches this path; merit-v4.4 is current-only.
+    """
     override = row.get("manual_rating_override")
     if not isinstance(override, dict):
         return None
     target = int(override["final_rating"])
     score = int(round(float(row["score_0_100"])))
-    current_score = int(round(float(row.get("current_score_0_100", row["score_0_100"]))))
-    if score != target or current_score != target:
+    if score != target:
         raise ValueError(
-            f"manual override drift for {row.get('card_id')}: "
-            f"source target {target}, score {score}, current_score {current_score}"
+            f"manual career override drift for {row.get('card_id')}: "
+            f"source target {target}, score {score}"
         )
     return score
 
 
+def manual_current_overall(row: dict) -> int | None:
+    """CURRENT-basis manual pin, or None if not pinned.
+
+    Prefers the merit-v4.4 current pin; falls back to the merit-v4.3 pin (which
+    also set the current basis) for cards re-rated only by v4.3.
+    """
+    override = row.get("manual_current_override") or row.get("manual_rating_override")
+    if not isinstance(override, dict):
+        return None
+    target = int(override["final_rating"])
+    current_score = int(round(float(row.get("current_score_0_100", row["score_0_100"]))))
+    if current_score != target:
+        raise ValueError(
+            f"manual current override drift for {row.get('card_id')}: "
+            f"source target {target}, current_score {current_score}"
+        )
+    return current_score
+
+
 def has_manual_override_components(rating_row: dict) -> bool:
     return any(
-        c.get("signal") == "manual_rating_override"
+        c.get("signal") in {"manual_rating_override", "manual_current_rating_override"}
         for c in rating_row.get("components", ())
     )
 
 
-def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
-    resolution = resolve_overrides(output_dir)
+def _write_resolution_artifacts(
+    resolution: OverrideResolution,
+    output_dir: Path,
+    prefix: str,
+    source_rel: str,
+) -> OverrideResolution:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    resolution_path = output_dir / "manual-ratings-v4.3-resolution.csv"
+    resolution_fields = [
+        "source_line",
+        "country",
+        "year",
+        "player_name",
+        "final_rating",
+        "rule",
+        "current_baseline",
+        "card_id",
+        "player_id",
+        "tournament_id",
+        "nation_id",
+        "matched_name",
+        "match_method",
+    ]
+    resolution_path = output_dir / f"{prefix}-resolution.csv"
     with resolution_path.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(
-            fh,
-            fieldnames=[
-                "source_line",
-                "country",
-                "year",
-                "player_name",
-                "final_rating",
-                "rule",
-                "current_baseline",
-                "card_id",
-                "player_id",
-                "tournament_id",
-                "nation_id",
-                "matched_name",
-                "match_method",
-            ],
-        )
+        writer = csv.DictWriter(fh, fieldnames=resolution_fields)
         writer.writeheader()
         for row in resolution.matched:
-            writer.writerow(row.__dict__)
+            writer.writerow({field: getattr(row, field) for field in resolution_fields})
 
-    unmatched_path = output_dir / "manual-ratings-v4.3-unmatched.csv"
+    unmatched_path = output_dir / f"{prefix}-unmatched.csv"
     with unmatched_path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.DictWriter(
             fh,
@@ -476,7 +786,7 @@ def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolut
             )
 
     effective = resolution.matched_by_card_id
-    effective_path = output_dir / "manual-ratings-v4.3-effective.csv"
+    effective_path = output_dir / f"{prefix}-effective.csv"
     matched_by_card: dict[str, list[ResolvedOverride]] = defaultdict(list)
     for row in resolution.matched:
         matched_by_card[row.card_id].append(row)
@@ -520,7 +830,7 @@ def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolut
             1 for row in effective.values() if row.match_method == "canonical_duplicate_avg"
         ),
         "effective_cards": len(effective),
-        "source": str(OVERRIDE_PATH.relative_to(ETL_DIR)),
+        "source": source_rel,
         "sha256": resolution.csv_sha256,
         "rows": len(resolution.rows),
         "matched": len(resolution.matched),
@@ -528,11 +838,29 @@ def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolut
         "match_rate": round(resolution.match_rate, 6),
         "rule_counts": resolution.rule_counts,
     }
-    (output_dir / "manual-ratings-v4.3-summary.json").write_text(
+    (output_dir / f"{prefix}-summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     return resolution
+
+
+def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    return _write_resolution_artifacts(
+        resolve_overrides(output_dir),
+        output_dir,
+        "manual-ratings-v4.3",
+        str(OVERRIDE_PATH.relative_to(ETL_DIR)),
+    )
+
+
+def write_resolution_artifacts_v44(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    return _write_resolution_artifacts(
+        resolve_overrides_v44(output_dir),
+        output_dir,
+        "manual-ratings-v4.4",
+        str(OVERRIDE_PATH_V44.relative_to(ETL_DIR)),
+    )
 
 
 def _rule_bucket(rule: str) -> str:
@@ -647,7 +975,18 @@ def _load_json(output_dir: Path, name: str) -> list[dict]:
 
 def _build_resolution_index(
     output_dir: Path,
+    target_years: Iterable[int] = _TARGET_YEARS,
+    *,
+    fold: bool = False,
 ) -> tuple[dict[tuple[str, int], tuple[_Candidate, ...]], dict[str, frozenset[str]]]:
+    """Build the candidate index + nation lookup.
+
+    ``fold`` opts the index into the stroke/ligature ASCII fold so a folded
+    resolution (merit-v4.4) stays internally consistent. With ``fold=False``
+    (merit-v4.3 default) the index is byte-for-byte unchanged.
+    """
+    target_years = frozenset(target_years)
+    fold_fn = _fold_strokes if fold else _identity
     nations = _load_json(output_dir, "nations") + _load_json(output_dir, "nations_2026")
     players = _load_json(output_dir, "players") + _load_json(output_dir, "players_2026")
     cards = _load_json(output_dir, "player_tournaments") + _load_json(
@@ -657,14 +996,14 @@ def _build_resolution_index(
     nation_ids_by_name: dict[str, set[str]] = defaultdict(set)
     canonical_by_name: dict[str, str] = {}
     for nation in nations:
-        canonical_by_name.setdefault(norm(nation["canonical_name"]), nation["nation_id"])
+        canonical_by_name.setdefault(norm(fold_fn(nation["canonical_name"])), nation["nation_id"])
         for name in (nation["canonical_name"], *nation.get("aliases", [])):
-            key = norm(name)
+            key = norm(fold_fn(name))
             if key:
                 nation_ids_by_name[key].add(nation["nation_id"])
     for alias, canonical_names in _NATION_ALIASES.items():
         for canonical in canonical_names:
-            nation_id = canonical_by_name.get(norm(canonical))
+            nation_id = canonical_by_name.get(norm(fold_fn(canonical)))
             if nation_id:
                 nation_ids_by_name[alias].add(nation_id)
 
@@ -677,12 +1016,14 @@ def _build_resolution_index(
         if not match:
             continue
         year = int(match.group(1))
-        if year not in _TARGET_YEARS:
+        if year not in target_years:
             continue
         player = players_by_id.get(card["player_id"])
         if player is None:
             continue
-        candidate = _candidate_from_card(card, player, aliases.get(card["player_id"], ()))
+        candidate = _candidate_from_card(
+            card, player, aliases.get(card["player_id"], ()), fold_fn=fold_fn
+        )
         candidates_by_block[(card["nation_id"], year)].append(candidate)
 
     return (
@@ -723,7 +1064,9 @@ def _player_aliases(output_dir: Path) -> dict[str, tuple[str, ...]]:
     return {player_id: tuple(sorted(names)) for player_id, names in aliases.items()}
 
 
-def _candidate_from_card(card: dict, player: dict, aliases: Iterable[str]) -> _Candidate:
+def _candidate_from_card(
+    card: dict, player: dict, aliases: Iterable[str], *, fold_fn=_identity
+) -> _Candidate:
     weighted: list[tuple[str, int, str]] = []
     for field, priority in (("common_name", 8), ("full_name", 7)):
         if player.get(field):
@@ -744,8 +1087,8 @@ def _candidate_from_card(card: dict, player: dict, aliases: Iterable[str]) -> _C
     fallback_tokens: set[str] = set()
     seen: set[tuple[str, str]] = set()
     for name, priority, field in weighted:
-        key = norm(name)
-        tokens = _significant_tokens(name)
+        key = norm(fold_fn(name))
+        tokens = _significant_tokens(fold_fn(name))
         if not key and not tokens:
             continue
         dedupe = (key, field)
@@ -962,9 +1305,17 @@ def norm_with_separators(value: str | None) -> str:
 
 
 if __name__ == "__main__":
-    result = write_resolution_artifacts()
+    v43 = write_resolution_artifacts()
     print(
         "manual ratings v4.3: "
-        f"{len(result.matched):,}/{len(result.rows):,} matched "
-        f"({result.match_rate:.2%}); {len(result.unmatched):,} unmatched"
+        f"{len(v43.matched):,}/{len(v43.rows):,} matched "
+        f"({v43.match_rate:.2%}); {len(v43.unmatched):,} unmatched"
+    )
+    v44 = write_resolution_artifacts_v44()
+    combined = combined_overrides_by_card_id()
+    print(
+        "manual ratings v4.4: "
+        f"{len(v44.matched):,}/{len(v44.rows):,} matched "
+        f"({v44.match_rate:.2%}); {len(v44.unmatched):,} unmatched; "
+        f"{len(combined):,} combined effective card pins (v4.3 ∪ v4.4)"
     )

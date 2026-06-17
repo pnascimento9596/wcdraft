@@ -49,6 +49,12 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-6.4.0 (merit-v4.4): owner re-rate of the 85–90 CURRENT-basis band layered
+# on v4.3. v4.4 pins the CURRENT basis ONLY (current_score_0_100); the career
+# score_0_100, the default/Career display overall, and the top-level sim channels
+# are UNTOUCHED — historical legends keep their all-time 95–99. On a card named by
+# both, the v4.4 current target supersedes v4.3's current pin while v4.3's career
+# pin remains. See etl/overrides/manual-ratings-v4.4.csv + manual_overrides.py.
 # wc-perf-6.3.0 (merit-v4.3): owner-authored manual rating overrides are resolved
 # to canonical card_id and applied as an authoritative post-merit internal-score
 # pin. For resolved rows, score_0_100/current_score_0_100, display overall, and
@@ -79,7 +85,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-6.3.0"
+RATING_VERSION = "wc-perf-6.4.0"
 
 # ─── CALIBRATION CONSTANTS ────────────────────────────────────────────────────
 # Everything below is a CALIBRATION choice (like the sim's lambda / scoring
@@ -1397,17 +1403,18 @@ def build_ratings(
         pos = row["pos"]
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
-        manual_overall = manual_overrides.manual_overall(row)
+        manual_career = manual_overrides.manual_overall(row)
         overall = (
-            manual_overall
-            if manual_overall is not None
+            manual_career
+            if manual_career is not None
             else _display_score(s, curve, estimate=estimate)
         )
         current_s = row["current_score_0_100"]
         current_estimate = row["current_basis"] == "baseline_anchor_estimate"
+        manual_current = manual_overrides.manual_current_overall(row)
         current_overall = (
-            manual_overall
-            if manual_overall is not None
+            manual_current
+            if manual_current is not None
             else _display_score(current_s, curve, estimate=current_estimate)
         )
         # DECOUPLED CHANNELS (Phase 1.1, plan §3.2 fallback).

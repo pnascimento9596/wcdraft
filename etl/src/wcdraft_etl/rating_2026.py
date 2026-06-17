@@ -82,6 +82,10 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-5.4.0 (merit-v4.4): owner re-rate of the 85–90 CURRENT-basis band.
+# 2026 cards in the file are pinned on the CURRENT basis ONLY; the Career/default
+# projected overall, team aggregates, and top-level sim channels are UNTOUCHED.
+# On overlap with v4.3 the v4.4 current target supersedes v4.3's current pin.
 # proj-career-5.3.0 (merit-v4.3): owner-authored manual rating overrides are
 # resolved to canonical WC-2026 cards and applied as the same authoritative
 # internal-score pin used by historical ratings. Best-XI selection, team
@@ -103,7 +107,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-5.3.0"
+RATING_VERSION = "proj-career-5.4.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
@@ -1126,16 +1130,17 @@ def build_ratings(
         pos = row["pos"]
         s = row["score_0_100"]
         estimate = row["overall_basis"] == "baseline_anchor_estimate"
-        manual_overall = manual_overrides.manual_overall(row)
+        manual_career = manual_overrides.manual_overall(row)
         overall = (
-            manual_overall
-            if manual_overall is not None
+            manual_career
+            if manual_career is not None
             else _display_score(s, curve, estimate=estimate)
         )
         current_s = row["current_score_0_100"]
+        manual_current = manual_overrides.manual_current_overall(row)
         current_overall = (
-            manual_overall
-            if manual_overall is not None
+            manual_current
+            if manual_current is not None
             else _display_score(current_s, curve, estimate=False)
         )
         channels = {

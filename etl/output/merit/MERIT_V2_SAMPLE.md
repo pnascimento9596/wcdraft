@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-6.3.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-6.4.0)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -73,7 +73,7 @@ _SHAPE check only. A recognized great's weak tournament should still read elite 
 
 ---
 
-# 2026 reconciliation INTERNAL-score sample (proj-career-5.3.0)
+# 2026 reconciliation INTERNAL-score sample (proj-career-5.4.0)
 
 MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale as the historical wc-perf-4.x cards, and caps non-material 2026 cards below the recognized-greats band on the projected raw path. Columns mirror the historical sample: **Status** (linked·material / linked·below / minted), career **Index**, stature model **Wt**, **Raw** projected score, stature **Target**, projected **Mod**ulation, blended **Final** (internal, NOT display — display is provisional until MV2-6), the four sim channels, and the factual **L**e**g**en**d** flag.
 
@@ -178,7 +178,7 @@ _A non-material 2026 card's projected raw path is capped at the global raw-only 
 
 ---
 
-# Unified display-curve sample (wc-perf-6.3.0 curve; maps proj-career-5.3.0 too)
+# Unified display-curve sample (wc-perf-6.4.0 curve; maps proj-career-5.4.0 too)
 
 MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v2`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→60, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 2.0). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
