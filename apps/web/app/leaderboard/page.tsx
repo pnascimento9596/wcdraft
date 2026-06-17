@@ -15,7 +15,7 @@ import { currentSeasonKey } from "@/lib/leaderboard/server-data";
 export const metadata: Metadata = {
   title: "Leaderboard",
   description:
-    "Season standings — the best server-verified run per manager. Finish a run and post it from your results screen.",
+    "Season standings by lane and draft config. Finish a run and post it from your results screen.",
 };
 
 export default function LeaderboardPage() {

@@ -5,15 +5,15 @@
 > whatever your change touches.
 
 Last measured for merit-v4.4 owner re-rate (85–90 CURRENT-basis band):
-2026-06-16 · branch `ws-merit/v4.4` off `origin/main`
-`c3a4b58`.
-Candidate report: `docs/reports/merit-v4.4-rerate-2026-06-16.md`.
+2026-06-17 · shipped via PR #155 merge `03c83ec` on main, then live-verified
+on production.
+Closeout report: `docs/reports/merit-v4.4-rerate-2026-06-16.md`.
 
 BASIS: merit-v4.4 re-rates the **CURRENT** basis only (the file's `current_rating`
 matches the Current overall 515/515, not Career; the Career/default view and the
-canonical ranked board are UNCHANGED — legends keep their all-time 95–99). v4.3's
-career+current pins remain; v4.4 supersedes only the current pin on the 87
-overlap cards.
+Career-basis sim channels are UNCHANGED — legends keep their all-time 95–99).
+v4.3's career+current pins remain; v4.4 supersedes only the current pin on the
+87 overlap cards.
 
 Current repo runtime anchor:
 `runtime-data-2.6.0` / `engine-2026.06.16-merit-v4.4` / `wc-perf-6.4.0` /
@@ -63,15 +63,15 @@ Build State v10, Architecture v6, Roadmap v6, and Surface Inventory v6, each
 superseding the prior version. This `STATE.md` is the in-repo closeout truth
 surface.
 
-Per-config leaderboard candidate (`ws-f4/per-config-leaderboard`, Red,
-2026-06-17): DC-8 policy is resolved to exact per-config boards for both
-casual and ranked. Ranked remains account-required, but the single canonical
-ranked ladder is removed. Board partition key is
+Per-config leaderboard shipped via PR #156 merge `ffb7a4f` (2026-06-17): DC-8
+policy is resolved to exact per-config boards for both casual and ranked. Ranked
+remains account-required, but the single canonical ranked ladder is removed.
+Board partition key is
 `mode × draft_mode × draft_order × era × rating_basis`; default landing remains
 Ranked · Classic · Squad First · Career · All-time. Migration `0006` adds
 nullable `draft_order`, `era`, and `rating_basis`, backfills only current-season
 rows whose stored token yields a coherent config, and excludes legacy/old-season
-NULL-config rows from filterable views. Candidate report:
+NULL-config rows from filterable views. Report:
 `docs/reports/per-config-leaderboard-2026-06-17.md`.
 
 ## UI polish overhaul shipped state
@@ -186,10 +186,10 @@ broken-pipe MCP transport error.
   compact regen, lambda/realism relock, and leaderboard season reset. The old
   merit-v3.1 88-wall STOP remains preserved as historical proof for the old
   fixed-ceiling/fixed-median request, but it is no longer an active blocker.
-- merit-v4.4 is the current candidate ratings/data season: owner re-rate of the
+- merit-v4.4 is the current shipped ratings/data season: owner re-rate of the
   85–90 **CURRENT-basis** band layered on v4.3. v4.4 pins the CURRENT basis only;
-  the Career/default view (display OVERALL, the canonical ranked board, top-level
-  sim channels) is UNCHANGED, so historical legends keep their all-time 95–99.
+  the Career/default view (display OVERALL and top-level sim channels) is
+  UNCHANGED, so historical legends keep their all-time 95–99.
   λ is UNCHANGED from v4.3 (the canary + realism gate sim the Career basis, which
   did not move; refitting would re-lock calibration to an unmoved distribution).
   The carried-over λ is

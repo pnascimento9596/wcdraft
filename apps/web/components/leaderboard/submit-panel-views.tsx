@@ -160,7 +160,9 @@ function SubmitModeNote({
   publicUsername: string | null;
 }) {
   if (mode === "casual") {
-    return <p className={s.submitModeNote}>Casual runs stay shareable.</p>;
+    return (
+      <p className={s.submitModeNote}>Casual posts anonymously; sign in later to claim the run.</p>
+    );
   }
   if (!authReady) {
     return <p className={s.submitModeNote}>Checking account…</p>;
@@ -168,7 +170,7 @@ function SubmitModeNote({
   if (!isSignedIn) {
     return (
       <p className={s.submitModeNote}>
-        Sign in to post ranked runs — casual runs stay shareable.{" "}
+        Sign in to post ranked runs. Casual posts anonymously and can be claimed later.{" "}
         <Link href="/sign-in">Sign in</Link>
       </p>
     );

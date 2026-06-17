@@ -314,7 +314,9 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         onSubmit: () => undefined,
       }),
     );
-    expect(html).toContain("Sign in to post ranked runs — casual runs stay shareable");
+    expect(html).toContain(
+      "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.",
+    );
     expect(html).toContain('href="/sign-in"');
     expect(html).toContain("Post ranked run");
     expect(html).toContain("disabled");
@@ -505,8 +507,8 @@ describe("board views", () => {
 
   it("empty board is config-scoped words, not placeholder rows", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard, { filter: DEFAULT_BOARD_FILTER }));
-    expect(html).toContain("No runs yet for this config");
-    expect(html).toContain("Signed-in ranked runs");
+    expect(html).toContain("No runs yet for this board");
+    expect(html).toContain("Signed-in ranked runs for this exact config");
   });
 
   it("toolbar exposes lane tabs and every config axis without collapsing filters", () => {
