@@ -30,8 +30,8 @@ export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Each board is split by lane and draft config. Finish a run and post it from your results
-        screen.
+        Filter by Lane, Mode, Draft order, Era and Rating basis. Finish a run and post it to the
+        exact board from your results screen.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>
@@ -207,11 +207,11 @@ export function BoardRows({
 export function EmptyBoard({ filter }: { filter: BoardFilter }) {
   return (
     <div className={s.stateBox}>
-      <p className={s.stateTitle}>No runs yet for this config</p>
+      <p className={s.stateTitle}>No runs yet for this board</p>
       <p>
         {filter.lane === "ranked"
-          ? "Signed-in ranked runs will appear here after server verification."
-          : "Casual runs will appear here after server verification."}
+          ? "Signed-in ranked runs for this exact config will appear here after server verification."
+          : "Casual runs for this exact config will appear here after server verification."}
       </p>
     </div>
   );

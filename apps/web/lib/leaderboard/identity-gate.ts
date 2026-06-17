@@ -38,7 +38,7 @@ import { SESSION_COOKIE_NAME, validateSessionCookie, type SessionDeps } from "..
 import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
 
 export const RANKED_AUTH_REQUIRED_MESSAGE =
-  "Sign in to post ranked runs — casual runs stay shareable";
+  "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.";
 
 /** Resolved submitting identity. Both null = anonymous casual submission. */
 export interface SubmitIdentity {
