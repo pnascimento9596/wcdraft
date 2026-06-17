@@ -54,10 +54,10 @@ Implementation-phase gates run in `/tmp/wcdraft-per-config-leaderboard-20260617`
 - `pnpm --filter @wcdraft/web exec vitest run
 lib/leaderboard/__tests__/board-route.test.ts
 lib/leaderboard/__tests__/submit-route.test.ts
-lib/leaderboard/__tests__/validate.test.ts`: PASS, 3 files, 95 tests.
+lib/leaderboard/__tests__/validate.test.ts`: PASS, 3 files, 96 tests.
 - Root `pnpm typecheck`: PASS, 8 Turbo tasks.
 - Root `pnpm lint`: PASS, 5 Turbo tasks.
-- Root `pnpm test`: PASS, 8 Turbo tasks; web 62 passed / 1 skipped files, 703
+- Root `pnpm test`: PASS, 8 Turbo tasks; web 62 passed / 1 skipped files, 704
   passed / 1 skipped tests; data 10 passed / 1 skipped files, 82 passed / 7
   skipped tests.
 - Root `pnpm build`: PASS, 4 Turbo tasks. Next emitted pre-existing warning
@@ -75,6 +75,17 @@ lib/leaderboard/__tests__/validate.test.ts`: PASS, 3 files, 95 tests.
   populated filtered board, and empty config. All cases had filters visible by
   default, no document scroll, and 0 axe violations.
 - `git diff --check`: PASS.
+
+Fresh-review fix-forward:
+
+- Independent reviewer passed focused API/schema tests but could not complete the
+  browser gate because a fresh worktree spent more than 300 seconds recompressing
+  the current runtime draft-pool before the dev server bound. Added the retained
+  `runtime-data-2.6.0` web artifact triplet so `copy-web-assets` reuses the
+  fingerprint-validated current Brotli bundle. Local validation after the
+  fix-forward: `node packages/data/scripts/ensure-generated-artifacts.mjs` PASS,
+  and `node ../../packages/data/scripts/copy-web-assets.mjs` from `apps/web`
+  reported `(2221759 bytes, retained)` in about 2 seconds.
 
 Screenshot artifacts were written under `output/playwright/`:
 
