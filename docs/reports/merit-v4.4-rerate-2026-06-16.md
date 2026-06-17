@@ -2,8 +2,8 @@
 
 Branch: `ws-merit/v4.4`
 Date: 2026-06-16
-Status: pre-merge RED candidate. Merge / deploy / live verification are blocked on
-the owner approval checkpoint.
+Status: SHIPPED. Merged via PR #155 to main SHA `03c83ec`; deployed and
+live-verified on production.
 
 ## Outcome
 
@@ -16,7 +16,11 @@ the owner approval checkpoint.
 - Applied 515 / 1,154 rows (639 blank-target rows are explicit no-changes, skipped).
 - Resolution: 515 / 515 matched (100.0000%); 0 honest misses; 0 ambiguous; 0
   card collisions (515 distinct effective pins).
-- HUMAN ACTION: owner approval is required before merge.
+- Basis: **CURRENT** (not Career). The Career/default view remains untouched.
+- Ship closeout: PR #155 merged at main SHA `03c83ec`, deployed, and
+  live-verified on production with manifest `runtime-data-2.6.0` /
+  `engine-2026.06.16-merit-v4.4`, draft-pool sha256 prefix `a65ae190`, raw
+  draft-pool size `129,690,546` bytes, and season key suffix `f79ba870`.
 
 ## ⚠ Basis correction — the file is the CURRENT basis, not Career
 
@@ -179,10 +183,18 @@ which v4.4 does not change. Therefore:
 | `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS — typecheck 8 · lint 5 · test 8 (web 694+1skip, data 74+7skip, core 366, db 79, marketing-x 64) · build 4 |
 | `git diff --check` | PASS — `.gitattributes` marks the fingerprinted override CSVs `-text -whitespace` (intrinsic CRLF) |
 | Fresh-context independent review | PASS — fresh `origin/ws-merit/v4.4` clone re-executed all gates + all 8 contract clauses (Career unchanged 0/12,219, 515/515 current targets, 639 blanks untouched, 0 canary flips, determinism byte-identical); 0 blockers |
-| CI | PENDING |
-| Merge / deploy / live verify | PENDING owner approval |
+| CI | PASS — PR #155 checks completed successfully; DB ephemeral branch job skipped by path filter |
+| Merge / deploy / live verify | PASS — PR #155 → main `03c83ec`; production manifest `runtime-data-2.6.0` / `engine-2026.06.16-merit-v4.4`; bundle sha `a65ae190` (`129,690,546` B); season key `..._f79ba870` |
 
 ## Ship closeout
 
-- Candidate SHA: posted at the owner approval checkpoint.
-- PR / merge / deploy / live verify / revert: PENDING owner approval.
+- Merged via PR #155 at main SHA `03c83ec`.
+- Production deploy/live verification passed: manifest `runtime-data-2.6.0` /
+  `engine-2026.06.16-merit-v4.4`; draft-pool bundle sha prefix `a65ae190`,
+  raw size `129,690,546` B; leaderboard season key
+  `engine-2026.06.16-merit-v4.4_wc-perf-6.4.0+proj-career-5.4.0_2026-06-04_ruleset-2026.06.04_f79ba870`.
+- Distribution readback: Current 90+ share moved **0.5320% → 1.0066%** (+56
+  entrants at 91–95); Career 90+ share stayed **2.6516%**.
+- Career/default basis was untouched: Pelé and Messi remain Career 99; Jara
+  remains Career 87.
+- Revert: not needed.

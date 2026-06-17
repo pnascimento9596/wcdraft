@@ -89,14 +89,16 @@ export default function HowToPlayPage() {
           which slot) or Position First (choose the slot to fill, then spin for it).{" "}
           <strong>Rating basis</strong> is Career (each card on its whole-career peak) or Current
           (the player at that tournament&rsquo;s strength, estimated where a career is still in
-          progress); a Current run is marked with a chip and counts as casual.
+          progress). Those choices travel with the run instead of being flattened away.
         </p>
 
         <h2>Ranked &amp; casual</h2>
         <p>
-          Only the canonical setup — Squad First, Career basis, all-time era — posts to the ranked
-          leaderboard, in either Classic or Memory. Any other combination still plays in full and is
-          still shareable; it just runs as a casual draft rather than a ranked one.
+          Leaderboards are exact-config boards: filter by Lane (Casual or Ranked), Mode (Classic or
+          Memory), Draft order (Squad First or Position First), Era (All-time, Post-2000, Post-2010
+          or Modern), and Rating basis (Career or Current). Every valid completed run posts to the
+          board that matches the setup you played. Ranked requires sign-in; casual can post
+          anonymously and be claimed later when you sign in.
         </p>
 
         <h2>Sharing &amp; replays</h2>
