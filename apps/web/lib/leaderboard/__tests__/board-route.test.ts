@@ -241,6 +241,29 @@ describe("GET /api/leaderboard — board page", () => {
     expect(alt.body.entries.map((e) => e.display_name)).toEqual(["alt_config"]);
   });
 
+  it("legacy rows with NULL config are excluded from exact-config board reads", async () => {
+    await db.insert(leaderboardEntries).values({
+      seasonKey: CURRENT_SEASON,
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: null,
+      era: null,
+      ratingBasis: null,
+      userId: null,
+      sessionId: null,
+      displayAlias: "legacy_null",
+      token: "t1.legacy-null-config",
+      verifiedScore: 99,
+      scoreBreakdown: [],
+      hiddenAt: null,
+      createdAt: new Date(BASE_MS + 1000),
+    });
+    await seed({ score: 80, mode: "casual", displayAlias: "canonical_config" });
+
+    const { body } = await getBoard({ mode: "casual" });
+    expect(body.entries.map((e) => e.display_name)).toEqual(["canonical_config"]);
+  });
+
   it("keyset walk: no overlap, no skip, continuous ranks across a score tie", async () => {
     await seed({ score: 100, at: 1 });
     await seed({ score: 90, at: 10 });
