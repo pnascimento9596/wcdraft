@@ -43,6 +43,13 @@
       "when": 1781301379932,
       "tag": "0005_leaderboard_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781657956588,
+      "tag": "0006_leaderboard_config_filters",
+      "breakpoints": true
     }
   ]
 }

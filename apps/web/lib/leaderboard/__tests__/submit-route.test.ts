@@ -18,7 +18,7 @@ import { leaderboardEntries, users } from "@wcdraft/db";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
-import { decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
+import { buildRunTokenBody, decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
 import { getValidationData } from "../server-data";
 import { RANKED_AUTH_REQUIRED_MESSAGE } from "../identity-gate";
 import {
@@ -33,6 +33,7 @@ import {
 } from "../submit-rate-limiter-db";
 import type { ValidationData } from "../validate";
 import { encodeBody } from "./_harness";
+import { buildOriginRecord, expectedRunFor } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
 
 const GOLDEN = fixtureJson as unknown as {
@@ -108,6 +109,22 @@ function tamperedToken(mutate: (b: RunTokenV1Body) => void): string {
   const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV1Body;
   mutate(body);
   return encodeBody(body);
+}
+
+function bodyForRecord(
+  seed: string,
+  config: Parameters<typeof buildOriginRecord>[4],
+  over: Record<string, unknown> = {},
+): Record<string, unknown> {
+  const record = buildOriginRecord(data.gameData, seed, "classic", "Config XI", config);
+  const expected = expectedRunFor(data.gameData, data.scenario, record);
+  return {
+    token: encodeBody(buildRunTokenBody(record)),
+    claimed_score: expected.score,
+    draft_mode: record.draft.mode,
+    display_alias: "config_tester",
+    ...over,
+  };
 }
 
 async function allRows() {
@@ -341,6 +358,9 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     expect(body.entry.season_key).toBe(GOLDEN.season_key);
     expect(body.entry.mode).toBe("casual");
     expect(body.entry.draft_mode).toBe("classic");
+    expect(body.entry.draft_order).toBe("squad_first");
+    expect(body.entry.era).toBe("all_time");
+    expect(body.entry.rating_basis).toBe("career");
     expect(body.entry.display_name).toBe("route_tester");
     expect(body.entry.verified_score).toBe(GOLDEN.classic.expected.verified_score);
 
@@ -349,6 +369,9 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     expect(rows[0]!.userId).toBeNull();
     expect(rows[0]!.sessionId).toBeNull();
     expect(rows[0]!.token).toBe(GOLDEN.classic.token);
+    expect(rows[0]!.draftOrder).toBe("squad_first");
+    expect(rows[0]!.era).toBe("all_time");
+    expect(rows[0]!.ratingBasis).toBe("career");
     expect(rows[0]!.hiddenAt).toBeNull();
     // Transparent-score invariant survives the jsonb round-trip.
     const breakdown = rows[0]!.scoreBreakdown as { points: number }[];
@@ -396,7 +419,39 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     expect(await allRows()).toHaveLength(2);
   });
 
-  it("cross-lane token mismatch → 422 NON_CANONICAL_CONFIG, no row", async () => {
+  it("non-canonical casual config → 201, exact config persisted", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        body: bodyForRecord("wcdraft:f4-u3:any-config:casual", {
+          draftFlow: "position_first",
+          eraPreset: "modern",
+          ratingBasis: "current",
+        }),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { entry: Record<string, unknown>; rank: number | null };
+    expect(body.rank).toBe(1);
+    expect(body.entry).toMatchObject({
+      mode: "casual",
+      draft_mode: "classic",
+      draft_order: "position_first",
+      era: "modern",
+      rating_basis: "current",
+    });
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: "position_first",
+      era: "modern",
+      ratingBasis: "current",
+    });
+  });
+
+  it("cross-mode token mismatch → 400 INVALID_BODY, no row", async () => {
     const hiddenAsClassic = await handleLeaderboardSubmit(
       makeReq({
         body: {
@@ -408,15 +463,15 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
       }),
       makeDeps(),
     );
-    expect(hiddenAsClassic.status).toBe(422);
-    expect((await errorOf(hiddenAsClassic)).error).toBe("NON_CANONICAL_CONFIG");
+    expect(hiddenAsClassic.status).toBe(400);
+    expect((await errorOf(hiddenAsClassic)).error).toBe("INVALID_BODY");
 
     const classicAsHidden = await handleLeaderboardSubmit(
       makeReq({ body: validBody({ draft_mode: "hidden" }) }),
       makeDeps(),
     );
-    expect(classicAsHidden.status).toBe(422);
-    expect((await errorOf(classicAsHidden)).error).toBe("NON_CANONICAL_CONFIG");
+    expect(classicAsHidden.status).toBe(400);
+    expect((await errorOf(classicAsHidden)).error).toBe("INVALID_BODY");
     expect(await allRows()).toHaveLength(0);
   });
 });
@@ -612,6 +667,48 @@ describe("ranked account gate", () => {
     expect(JSON.stringify(body)).not.toContain("alias-ranked@example.com");
   });
 
+  it("account-bound ranked non-canonical config → 201 ranked row under exact config", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "ranked-config@example.com", username: "ranked_config" })
+      .returning();
+    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body: bodyForRecord(
+          "wcdraft:f4-u3:any-config:ranked",
+          {
+            draftFlow: "position_first",
+            eraPreset: "post_2010",
+            ratingBasis: "current",
+          },
+          { mode: "ranked", display_alias: undefined, display_name: undefined },
+        ),
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { entry: Record<string, unknown>; rank: number | null };
+    expect(body.rank).toBe(1);
+    expect(body.entry).toMatchObject({
+      mode: "ranked",
+      draft_order: "position_first",
+      era: "post_2010",
+      rating_basis: "current",
+      display_name: "ranked_config",
+    });
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      mode: "ranked",
+      userId: inserted[0]!.id,
+      draftOrder: "position_first",
+      era: "post_2010",
+      ratingBasis: "current",
+    });
+  });
+
   it("account-bound ranked Memory submit ranks inside the Memory lane only", async () => {
     const player = await db
       .insert(users)
@@ -625,6 +722,9 @@ describe("ranked account gate", () => {
       seasonKey: GOLDEN.season_key,
       mode: "ranked",
       draftMode: "hidden",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
       userId: rival[0]!.id,
       sessionId: null,
       displayAlias: null,

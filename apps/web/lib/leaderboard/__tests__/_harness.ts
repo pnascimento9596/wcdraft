@@ -6,10 +6,25 @@
 // fixture-generator imports keep working. Underscore-prefixed so the vitest
 // `*.test.ts` glob skips it.
 
-import { autoDraft, buildRunScenario, runTournamentFull, type ScoreComponent } from "@wcdraft/core";
+import {
+  activeSpin,
+  autoDraft,
+  buildRunScenario,
+  createDraft,
+  isDraftComplete,
+  pickManager,
+  pickPlayer,
+  runTournamentFull,
+  selectDraftTarget,
+  type DraftFlow,
+  type EraPresetId,
+  type RatingBasis,
+  type ScoreComponent,
+} from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "../../game/data";
+import { getCatalogForEra } from "../../game/data";
 import type { RunRecordV1 } from "../../game/run-record";
 import { buildSimWorldInputs } from "../../game/simulate";
 import { buildServerGameData, serverScenarioBundle } from "../server-data";
@@ -23,8 +38,16 @@ export function buildOriginRecord(
   seed: string,
   mode: "classic" | "hidden" = "classic",
   teamName = "Origin XI",
+  config: {
+    readonly draftFlow?: DraftFlow;
+    readonly ratingBasis?: RatingBasis;
+    readonly eraPreset?: EraPresetId;
+  } = {},
 ): RunRecordV1 {
-  const draft = autoDraft({
+  const draftFlow = config.draftFlow ?? "squad_first";
+  const ratingBasis = config.ratingBasis ?? "career";
+  const eraPreset = config.eraPreset ?? "all_time";
+  const params = {
     run_id: `f4-u2-${mode}`,
     parent_seed: seed,
     formation_id: "4-3-3",
@@ -33,8 +56,14 @@ export function buildOriginRecord(
     dataset_version: gameData.versions.dataset_version,
     rating_version: gameData.versions.rating_version,
     engine_version: gameData.versions.engine_version,
-    dataset: gameData.draftDataset,
-  });
+    draft_flow: draftFlow,
+    rating_basis: ratingBasis,
+    era_preset: eraPreset,
+  } as const;
+  const draft =
+    draftFlow === "position_first"
+      ? completePositionFirstDraft(gameData, params)
+      : autoDraft({ ...params, dataset: gameData.draftDataset });
   return {
     record_version: 1,
     run_id: draft.run_id,
@@ -45,6 +74,37 @@ export function buildOriginRecord(
     draft,
     status: "ready",
   };
+}
+
+function completePositionFirstDraft(gameData: GameData, params: Parameters<typeof createDraft>[1]) {
+  const catalog = getCatalogForEra(gameData, params.era_preset ?? "all_time");
+  let draft = createDraft(catalog, params);
+  while (!isDraftComplete(draft)) {
+    const targets: string[] = [];
+    if (draft.manager_card_id === null) targets.push("manager");
+    for (const slot of draft.squad) {
+      if (slot.card_id === null) targets.push(slot.slot_id);
+    }
+    let advanced = false;
+    for (const target of targets) {
+      let rolled;
+      try {
+        rolled = selectDraftTarget(catalog, draft, target);
+      } catch {
+        continue;
+      }
+      const spin = activeSpin(rolled);
+      if (spin === null) continue;
+      draft =
+        target === "manager"
+          ? pickManager(catalog, rolled)
+          : pickPlayer(catalog, rolled, spin.rolled_card_ids[0]!);
+      advanced = true;
+      break;
+    }
+    if (!advanced) throw new Error("position-first harness could not advance");
+  }
+  return draft;
 }
 
 /**

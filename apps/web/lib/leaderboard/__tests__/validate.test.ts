@@ -185,58 +185,93 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
 
 // ─── Step 5 — display names (T5) ─────────────────────────────────────────────
 
-describe("step 3b — NON_CANONICAL_CONFIG (DC-1, owner-ratified canonical-only board)", () => {
-  // Board submissions must carry the canonical config axes (squad_first /
-  // career / all_time). Every non-canonical axis value is rejected with the
-  // dedicated code — these tokens DECODE fine (they are well-formed t2), so
-  // MALFORMED_TOKEN would be the wrong verdict.
-  type V2 = RunTokenV1Body & {
-    df: string;
-    rb: string;
-    ef: { id: string; min: number; max: number };
-    pl: Array<{ k: string; c?: string; s?: string; ts?: string }>;
-  };
+describe("step 3b — per-config boards accept every legal config", () => {
+  function submitRecord(
+    record: typeof origin,
+    draftMode: "classic" | "hidden" = record.draft.mode,
+  ) {
+    const token = encodeBody(buildRunTokenBody(record));
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    return validateSubmission(
+      {
+        token,
+        claimed_score: expected.score,
+        draft_mode: draftMode,
+        display_name: "config_player",
+      },
+      data,
+    );
+  }
 
-  it("rejects rating_basis 'current'", () => {
-    const t = tampered((b) => {
-      (b as unknown as V2).rb = "current";
-    });
-    expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
+  it("accepts rating_basis current and returns the persisted config", () => {
+    const record = buildOriginRecord(
+      data.gameData,
+      `${ORIGIN_SEED}:current`,
+      "classic",
+      "Current XI",
+      {
+        ratingBasis: "current",
+      },
+    );
+    const v = submitRecord(record);
+    expect(v.status).toBe("accepted");
+    if (v.status !== "accepted") return;
+    expect(v.draft_order).toBe("squad_first");
+    expect(v.era).toBe("all_time");
+    expect(v.rating_basis).toBe("current");
   });
 
-  it("rejects every non-default era preset", () => {
-    const presets = [
-      { id: "post_2000", min: 2002, max: 2026 },
-      { id: "post_2010", min: 2014, max: 2026 },
-      { id: "modern", min: 2018, max: 2026 },
-    ];
-    for (const ef of presets) {
-      const t = tampered((b) => {
-        (b as unknown as V2).ef = ef;
-      });
-      expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
-    }
+  it("accepts bounded era presets and returns the era id", () => {
+    const record = buildOriginRecord(
+      data.gameData,
+      `${ORIGIN_SEED}:modern`,
+      "classic",
+      "Modern XI",
+      {
+        eraPreset: "modern",
+      },
+    );
+    const v = submitRecord(record);
+    expect(v.status).toBe("accepted");
+    if (v.status !== "accepted") return;
+    expect(v.era).toBe("modern");
   });
 
-  it("rejects draft_flow 'position_first' (with a coherent ts log)", () => {
-    const t = tampered((b) => {
-      const v2 = b as unknown as V2;
-      v2.df = "position_first";
-      for (const p of v2.pl) {
-        if (p.k === "m") p.ts = "manager";
-        else p.ts = p.s;
-      }
+  it("accepts position_first tokens and returns draft_order", () => {
+    const record = buildOriginRecord(data.gameData, `${ORIGIN_SEED}:pf`, "classic", "PF XI", {
+      draftFlow: "position_first",
     });
-    expect(rejectionCode(submit({ token: t }))).toBe("NON_CANONICAL_CONFIG");
+    const v = submitRecord(record);
+    expect(v.status).toBe("accepted");
+    if (v.status !== "accepted") return;
+    expect(v.draft_order).toBe("position_first");
   });
 
-  it("config gate runs BEFORE the name gate (cheapest-rejection order)", () => {
-    const t = tampered((b) => {
-      (b as unknown as V2).rb = "current";
-    });
-    // Invalid name + non-canonical config → config code wins (it is checked
-    // first; the name is never inspected for a run that cannot rank).
-    expect(rejectionCode(submit({ token: t, display_name: "x" }))).toBe("NON_CANONICAL_CONFIG");
+  it("a bad name on a legal non-canonical config still rejects before replay", () => {
+    const record = buildOriginRecord(
+      data.gameData,
+      `${ORIGIN_SEED}:badname`,
+      "classic",
+      "Bad Name XI",
+      {
+        ratingBasis: "current",
+      },
+    );
+    const token = encodeBody(buildRunTokenBody(record));
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token,
+            claimed_score: expected.score,
+            draft_mode: "classic",
+            display_name: "x",
+          },
+          data,
+        ),
+      ),
+    ).toBe("INVALID_NAME");
   });
 });
 
@@ -444,6 +479,9 @@ describe("acceptance contract", () => {
     expect(v.verified_score).toBe(originExpected.score);
     expect(v.season_key).toBe(deriveSeasonKey(data.gameData.versions));
     expect(v.draft_mode).toBe("classic");
+    expect(v.draft_order).toBe("squad_first");
+    expect(v.era).toBe("all_time");
+    expect(v.rating_basis).toBe("career");
     expect(v.display_alias).toBe("honest_player"); // normalized, not raw
     expect(v.token_body.ps).toBe(ORIGIN_SEED);
   });
@@ -463,12 +501,12 @@ describe("acceptance contract", () => {
   });
 
   it("cross-lane mismatch rejects before replay persistence", () => {
-    expect(rejectionCode(submit({ draft_mode: "hidden" }))).toBe("NON_CANONICAL_CONFIG");
+    expect(rejectionCode(submit({ draft_mode: "hidden" }))).toBe("INVALID_BODY");
     const hiddenToken = tampered((b) => {
       b.md = "hidden";
     });
     expect(rejectionCode(submit({ token: hiddenToken, draft_mode: "classic" }))).toBe(
-      "NON_CANONICAL_CONFIG",
+      "INVALID_BODY",
     );
   });
 
@@ -489,7 +527,6 @@ describe("U3 seam — SUBMIT_ERROR_HTTP_STATUS", () => {
       TOKEN_TOO_LARGE: 400,
       MALFORMED_TOKEN: 400,
       WRONG_SEASON: 409,
-      NON_CANONICAL_CONFIG: 422,
       AUTH_REQUIRED: 401,
       CSRF_FAILED: 403,
       INVALID_NAME: 422,

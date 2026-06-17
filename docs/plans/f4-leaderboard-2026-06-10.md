@@ -26,7 +26,7 @@ through `packages/core` IS the draft-legality proof.**
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `t1.` token = `t1.<base64url(JSON)>`, carries `{v, rid, fid, ps (parent_seed), tn, md, pl (17 picks), sv, dv, rv, ev, uv, hv}`; no signature; ≤ 8192 chars; `decodeRunToken` returns `null` on any malformation                                                                                | `apps/web/lib/game/run-token.ts:48-81`, `run-token.ts:221-240`                                                                                   |
 | `versionsAgree` = strict 6-anchor conjunction: `schema_version`, `dataset_version`, `rating_version`, `engine_version`, `ruleset_version`, `data_bundle_hash`                                                                                                                                  | `apps/web/lib/game/run-token.ts:243-252`                                                                                                         |
-| Historical anchor values at investigated snapshot: `runtime-data-1.2.0` / `2026-06-04` / `wc-perf-4.2.1+proj-career-3.0.0` / `engine-2026.06.11` / `ruleset-2026.06.04` / `<sha256+sha256>`                                                                                                 | `packages/data/src/generated/manifest.json:62-86`, composed at `apps/web/lib/game/data.ts:122-131`                                               |
+| Historical anchor values at investigated snapshot: `runtime-data-1.2.0` / `2026-06-04` / `wc-perf-4.2.1+proj-career-3.0.0` / `engine-2026.06.11` / `ruleset-2026.06.04` / `<sha256+sha256>`                                                                                                    | `packages/data/src/generated/manifest.json:62-86`, composed at `apps/web/lib/game/data.ts:122-131`                                               |
 | Spin candidates derive ONLY from `(draft_seed, prior picks, catalog)`: `deriveSubseed(parent_seed, "draft")` → sfc32 stream → one `rng.next()` per spin → weighted (T,N) draw → canonically-sorted roster minus picked players. No `Date.now`/`Math.random` anywhere in core (ESLint-enforced) | `packages/core/src/rng.ts:17-20,214-240`, `packages/core/src/draft.ts:519-558,567-602,625-670`                                                   |
 | `pickPlayer` **rejects any card not in the active spin's `rolled_card_ids`**, plus tournament match, global player dedup, manager strand-guard, slot vacancy                                                                                                                                   | `packages/core/src/draft.ts:890-952`                                                                                                             |
 | `reconstructDraftFromToken` replays the token's pick log through `createDraft` + `pickPlayer`/`pickManager` and throws `RunTokenError` at the first illegal pick; replayed `DraftState` is byte-equal to origin (test-locked)                                                                  | `apps/web/lib/game/run-token.ts:262-300`, `apps/web/lib/game/__tests__/run-token.test.ts:167-175`                                                |
@@ -68,7 +68,7 @@ the 34 MB `draft-pool.compact.json` static import is well inside Vercel's
 
 | #   | Threat                                                                      | Vector                                                                                             | Defense (cite)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | --- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| T1  | **Fabricated picks** — hand-craft a token whose `pl` names 17 legends       | Token is unsigned JSON; trivially editable                                                         | Replay through `pickPlayer` rejects any card not in the re-derived `rolled_card_ids` for that spin (`packages/core/src/draft.ts:890`). Candidates derive only from `(parent_seed, prior picks, catalog)` (§0). An attacker would need a parent_seed whose derived spin stream _actually offers_ those picks — which is not forgery, it's playing (see T3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| T1  | **Fabricated picks** — hand-craft a token whose `pl` names 17 legends       | Token is unsigned JSON; trivially editable                                                         | Replay through `pickPlayer` rejects any card not in the re-derived `rolled_card_ids` for that spin (`packages/core/src/draft.ts:890`). Candidates derive only from `(parent_seed, prior picks, catalog)` (§0). An attacker would need a parent*seed whose derived spin stream \_actually offers* those picks — which is not forgery, it's playing (see T3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | T2  | **Tampered results / score** — claim a score the run didn't produce         | Token carries no results; client could lie in a side-channel `claimed_score` field                 | Server score is authoritative: `verified_score` comes only from the server's own `runTournamentFull`. The submitted `claimed_score` is compared for equality and the submission is **rejected** on mismatch (honest-state: never persist a number the player didn't see).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | T3  | **Seed-grinding** — offline search for god-squads                           | `parent_seed` is client-chosen in normal play; every grinded attempt is a _legitimate_ playthrough | **Quantified:** measured ~7.6 ms per full attempt single-threaded → ~130 attempts/s/core → ≈ 10⁷ attempts/day on one 8-core laptop using the public client code. So grinding is "playing a lot," accelerated ~10⁴×. It cannot be detected per-submission (the token is indistinguishable from organic play). Mitigations: (a) **casual board**: per-identity submission caps + best-entry-per-identity display bound the payoff (§4); (b) **ranked board**: server-issued seeds via `ranked_attempts` — `issued_parent_seed` minted server-side, short `window_expires_at`, single-use `consumed_at` (`packages/db/src/schema/ranked-attempts.ts:14-38`, intent documented at lines 1-9) make offline seed search impossible; within-window _pick_-search for the issued seed remains possible (that is computer-assisted play, accepted and out of scope). |
 | T4  | **Duplicate / replayed submissions** — resubmit own or someone else's token | Tokens are public in share URLs                                                                    | DB-level dedupe already built: UNIQUE `(season_key, mode, user_id, token)` **NULLS NOT DISTINCT** — two anon rows with the same token cannot both insert (`packages/db/src/schema/leaderboard-entries.ts:63-65`, round-trip-tested in `packages/db/scripts/rollback-check.ts:220-229`). Submitting another player's shared token under your own identity is _not_ preventable cryptographically (tokens are unsigned, by design) — bounded by caps + dedupe; ranked mode closes it fully (attempt is bound to your session/user before play).                                                                                                                                                                                                                                                                                                               |
@@ -277,7 +277,7 @@ with a `claimLeaderboardEntries(sessionId, userId)`:
    user's rows (dedupe constraint would block the transfer — same
    drop-conflicts-then-transfer shape as saved_runs).
 2. `UPDATE ... SET user_id = $userId, session_id = NULL WHERE session_id =
-   $sessionId AND user_id IS NULL`.
+$sessionId AND user_id IS NULL`.
    Hooked into the same two call sites: the verify-POST
    `onAuthenticatedSessionReady` hook (`app/api/auth/verify/route.ts:103-109`)
    and the explicit `/api/runs/claim` retry route (extended or sibling route).
@@ -301,12 +301,12 @@ with a `claimLeaderboardEntries(sessionId, userId)`:
 
 `apps/web/lib/auth/handler-helpers.ts`)
 
-| Route                     | Method | Auth                                | Notes                                                                                                                                            |
-| ------------------------- | ------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF                    | pipeline §2; `maxDuration = 10`                                                                                                                  |
-| `/api/leaderboard`        | GET    | none                                | params: `season` (default current), `mode`, `draft_mode`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
-| `/api/leaderboard/me`     | GET    | session                             | caller's best + recent entries for the season; uncached                                                                                          |
-| `/api/ranked/attempt`     | POST   | gate (account once ranked launches) | **dark** in v1 — issues `ranked_attempts` row (server-minted seed per F-1 intent, `ranked-attempts.ts:1-9`)                                      |
+| Route                     | Method | Auth                                | Notes                                                                                                                                                                                  |
+| ------------------------- | ------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF                    | pipeline §2; `maxDuration = 10`                                                                                                                                                        |
+| `/api/leaderboard`        | GET    | none                                | params: `season` (default current), `mode`, `draft_mode`, `draft_order`, `era`, `rating_basis`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
+| `/api/leaderboard/me`     | GET    | session                             | caller's best + recent entries for the exact season/lane/config board; uncached                                                                                                        |
+| `/api/ranked/attempt`     | POST   | gate (account once ranked launches) | **dark** in v1 — issues `ranked_attempts` row (server-minted seed per F-1 intent, `ranked-attempts.ts:1-9`)                                                                            |
 
 ### UI
 
@@ -318,12 +318,14 @@ with a `claimLeaderboardEntries(sessionId, userId)`:
 #N)` / `duplicate` / `wrong-season (skew notice + refresh prompt)` /
   `rejected (reason)` / `rate-limited (retry-after)`. Every state string maps
   1:1 to a server response — no invented intermediate states.
-- **Board page `/leaderboard`:** season selector (current first; past seasons
-  labeled read-only), mode tab (casual now; ranked tab present but disabled-
-  dark), classic/hidden filter, keyset pagination ("load more"), each row =
-  rank, display name, verified_score, score-breakdown popover (evidence),
-  relative time. My-entry highlight via `/api/leaderboard/me` when a session
-  exists.
+- **Board page `/leaderboard`:** current-season board with lane tabs
+  (`casual`, `ranked`) and always-visible config filters: Classic/Memory
+  (`draft_mode`), Squad First/Position First (`draft_order`), era preset, and
+  Career/Current (`rating_basis`). Default state remains the familiar canonical
+  config: Ranked · Classic · Squad First · Career · All-time. Each row = rank,
+  display name, verified_score, score-breakdown popover (evidence), relative
+  time. My-entry highlight via `/api/leaderboard/me` when a session exists.
+  Empty combos render an honest config-scoped empty state.
 - **Honest-state rules per field:** rank/score/breakdown render only DB rows
   (server-verified); no optimistic insertion of the user's entry before the
   201; "your rank" computed server-side in the same query snapshot as the
@@ -338,6 +340,22 @@ with a `claimLeaderboardEntries(sessionId, userId)`:
 ---
 
 ## 7. Schema reconciliation (as-built F-1 vs needs)
+
+**2026-06-17 update — per-config boards.** Draft-config DC-8 supersedes the
+original canonical-ranked policy. `leaderboard_entries` now needs first-class
+filter columns for every accepted row:
+
+- `draft_mode` remains Classic/Memory and is a board filter axis.
+- `draft_order` is `squad_first | position_first`.
+- `era` is `all_time | post_2000 | post_2010 | modern`.
+- `rating_basis` is `career | current`.
+
+Rows whose config cannot be derived from the stored token, or whose
+`season_key` belongs to an older season, keep NULL config columns and are
+excluded from exact-config board reads. New writes persist the config derived
+from server replay, not from untrusted query/body state. Ranked still requires
+an account, but ranked is now per-config: Memory ranked is `mode=ranked` +
+`draft_mode=hidden`, not a separate endpoint or standalone ladder.
 
 As-built (verified):
 
@@ -365,6 +383,15 @@ Genuine gaps → **one migration `0004_f4_leaderboard.sql` + hand-paired
 | ADD `hidden_at timestamptz NULL`                                                                                                        | moderation §5.5                                                                                                                                                                                      |
 | ADD partial index `ON leaderboard_entries (session_id) WHERE session_id IS NOT NULL`                                                    | claim UPDATE + my-entry lookup                                                                                                                                                                       |
 | REPLACE `leaderboard_entries_top_idx` with `(season_key, mode, verified_score DESC, created_at ASC, id)` filtered or not on `hidden_at` | matches the exact board sort + keyset cursor; the existing ASC index serves DESC scans but not the composite tiebreak                                                                                |
+
+Additional DC-8 migration:
+
+| Change                                                                                                                                                                               | Why                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| ADD nullable `draft_order`, `era`, and `rating_basis` columns                                                                                                                        | exact board filters; nullable so legacy/old-season rows are not guessed                        |
+| Backfill current-season rows only when the stored `t1.`/`t2.` token cleanly exposes a coherent config and token `md` matches `draft_mode`                                            | no fabricated config; old-season and malformed legacy rows stay excluded from filterable views |
+| ADD CHECKs for legal `draft_order`, `era`, `rating_basis`, plus all-or-null config completeness                                                                                      | DB-level contract for new writes while preserving legacy nullability                           |
+| REPLACE `leaderboard_entries_top_idx` with `(season_key, mode, draft_mode, draft_order, era, rating_basis, verified_score DESC, created_at ASC, id)` filtered on `hidden_at IS NULL` | exact-config board reads and keyset pagination ride the same index prefix                      |
 
 Notes: the dedupe constraint stays as-is — `session_id` is deliberately NOT
 in it (NULLS NOT DISTINCT global dedupe per F-1 rationale,

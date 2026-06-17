@@ -55,6 +55,9 @@ interface SeedOpts {
   seasonKey?: string;
   mode?: "casual" | "ranked";
   draftMode?: "classic" | "hidden";
+  draftOrder?: "squad_first" | "position_first";
+  era?: "all_time" | "post_2000" | "post_2010" | "modern";
+  ratingBasis?: "career" | "current";
   userId?: string | null;
   sessionId?: string | null;
   displayAlias?: string | null;
@@ -78,6 +81,9 @@ async function seed(opts: SeedOpts): Promise<string> {
       seasonKey: opts.seasonKey ?? CURRENT_SEASON,
       mode,
       draftMode: opts.draftMode ?? "classic",
+      draftOrder: opts.draftOrder ?? "squad_first",
+      era: opts.era ?? "all_time",
+      ratingBasis: opts.ratingBasis ?? "career",
       userId,
       sessionId: opts.sessionId ?? null,
       displayAlias:
@@ -207,15 +213,55 @@ describe("GET /api/leaderboard — board page", () => {
     expect(casual.body.mode).toBe("casual");
   });
 
-  it("draft_mode lane splits the fairness dimension with Classic as the default", async () => {
+  it("full config filter splits the board with canonical config as the default", async () => {
     await seed({ score: 90, draftMode: "hidden", displayAlias: "blind" });
     await seed({ score: 80, draftMode: "classic", displayAlias: "sighted" });
+    await seed({
+      score: 95,
+      draftMode: "classic",
+      draftOrder: "position_first",
+      era: "modern",
+      ratingBasis: "current",
+      displayAlias: "alt_config",
+    });
     const hidden = await getBoard({ draft_mode: "hidden" });
     expect(hidden.body.entries.map((e) => e.display_name)).toEqual(["blind"]);
     expect(hidden.body.draft_mode).toBe("hidden");
     const classic = await getBoard();
     expect(classic.body.entries.map((e) => e.display_name)).toEqual(["sighted"]);
     expect(classic.body.draft_mode).toBe("classic");
+    expect(classic.body.draft_order).toBe("squad_first");
+    expect(classic.body.era).toBe("all_time");
+    expect(classic.body.rating_basis).toBe("career");
+    const alt = await getBoard({
+      draft_order: "position_first",
+      era: "modern",
+      rating_basis: "current",
+    });
+    expect(alt.body.entries.map((e) => e.display_name)).toEqual(["alt_config"]);
+  });
+
+  it("legacy rows with NULL config are excluded from exact-config board reads", async () => {
+    await db.insert(leaderboardEntries).values({
+      seasonKey: CURRENT_SEASON,
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: null,
+      era: null,
+      ratingBasis: null,
+      userId: null,
+      sessionId: null,
+      displayAlias: "legacy_null",
+      token: "t1.legacy-null-config",
+      verifiedScore: 99,
+      scoreBreakdown: [],
+      hiddenAt: null,
+      createdAt: new Date(BASE_MS + 1000),
+    });
+    await seed({ score: 80, mode: "casual", displayAlias: "canonical_config" });
+
+    const { body } = await getBoard({ mode: "casual" });
+    expect(body.entries.map((e) => e.display_name)).toEqual(["canonical_config"]);
   });
 
   it("keyset walk: no overlap, no skip, continuous ranks across a score tie", async () => {
@@ -241,7 +287,7 @@ describe("GET /api/leaderboard — board page", () => {
     expect(new Set(seen.map((s) => s.id)).size).toBe(5);
   });
 
-  it("typed query errors: bad cursor, bad mode, bad draft_mode, bad limit", async () => {
+  it("typed query errors: bad cursor, bad mode, bad config params, bad limit", async () => {
     const badCursor = await getBoard({ cursor: "@@@not-a-cursor@@@" });
     expect(badCursor.status).toBe(400);
     expect((badCursor.body as unknown as { error: string }).error).toBe("BAD_CURSOR");
@@ -250,6 +296,12 @@ describe("GET /api/leaderboard — board page", () => {
     expect((badMode.body as unknown as { error: string }).error).toBe("INVALID_QUERY");
     const badDraft = await getBoard({ draft_mode: "blindfold" });
     expect(badDraft.status).toBe(400);
+    const badOrder = await getBoard({ draft_order: "reverse" });
+    expect(badOrder.status).toBe(400);
+    const badEra = await getBoard({ era: "2026_only" });
+    expect(badEra.status).toBe(400);
+    const badBasis = await getBoard({ rating_basis: "prime" });
+    expect(badBasis.status).toBe(400);
     const badLimit = await getBoard({ limit: "0" });
     expect(badLimit.status).toBe(400);
     const clamped = await getBoard({ limit: "999" });

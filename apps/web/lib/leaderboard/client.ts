@@ -8,7 +8,7 @@
 // Browser-only — do not import from a Server Component.
 
 import { ensureCsrfToken } from "../auth/client";
-import type { BoardDraftModeFilter, BoardPageWire } from "./board-view";
+import type { BoardDraftModeFilter, BoardFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
 import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./submit-state";
 
@@ -19,7 +19,7 @@ export type BoardFetchResult =
   | { readonly ok: false };
 
 export async function fetchBoardPage(opts: {
-  draftMode: BoardDraftModeFilter;
+  filter: BoardFilter;
   cursor: string | null;
 }): Promise<BoardFetchResult> {
   try {
@@ -49,7 +49,7 @@ export interface MyBoardPresence {
  * board then simply renders without a highlight.
  */
 export async function fetchMyPresence(opts: {
-  draftMode: BoardDraftModeFilter;
+  filter: BoardFilter;
 }): Promise<MyBoardPresence | null> {
   try {
     const r = await fetch(`/api/leaderboard/me${boardQueryString({ ...opts, cursor: null })}`, {

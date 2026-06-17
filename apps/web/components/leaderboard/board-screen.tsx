@@ -16,9 +16,17 @@ import {
   boardRowViews,
   EMPTY_BOARD,
   type BoardAccumulator,
-  type BoardDraftModeFilter,
+  type BoardFilter,
 } from "@/lib/leaderboard/board-view";
 import { fetchBoardPage, fetchMyPresence, type MyBoardPresence } from "@/lib/leaderboard/client";
+import {
+  DEFAULT_BOARD_FILTER,
+  isBoardDraftMode,
+  isBoardDraftOrder,
+  isBoardEra,
+  isBoardLane,
+  isBoardRatingBasis,
+} from "@/lib/leaderboard/config";
 
 import { BoardError, BoardHead, BoardRows, BoardToolbar, EmptyBoard, MeChip } from "./board-views";
 import s from "./leaderboard.module.css";
@@ -27,7 +35,7 @@ type LoadPhase = "loading" | "ready" | "error";
 
 export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
   const auth = useAuth();
-  const [filter, setFilter] = useState<BoardDraftModeFilter>("classic");
+  const [filter, setFilter] = useState<BoardFilter>(DEFAULT_BOARD_FILTER);
   const [acc, setAcc] = useState<BoardAccumulator>(EMPTY_BOARD);
   const [phase, setPhase] = useState<LoadPhase>("loading");
   const [loadingMore, setLoadingMore] = useState(false);
@@ -36,12 +44,17 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   const [openKey, setOpenKey] = useState<string | null>(null);
   const reqSeq = useRef(0);
 
-  const loadFirstPage = useCallback((draftMode: BoardDraftModeFilter) => {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setFilter(filterFromSearch(new URLSearchParams(window.location.search)));
+  }, []);
+
+  const loadFirstPage = useCallback((nextFilter: BoardFilter) => {
     const seq = ++reqSeq.current;
     setPhase("loading");
     setAcc(EMPTY_BOARD);
     setOpenKey(null);
-    void fetchBoardPage({ draftMode, cursor: null }).then((r) => {
+    void fetchBoardPage({ filter: nextFilter, cursor: null }).then((r) => {
       if (seq !== reqSeq.current) return;
       if (!r.ok) {
         setPhase("error");
@@ -67,7 +80,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
         cancelled = true;
       };
     }
-    void fetchMyPresence({ draftMode: filter }).then((presence) => {
+    void fetchMyPresence({ filter }).then((presence) => {
       if (!cancelled) setMe(presence);
     });
     return () => {
@@ -79,7 +92,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
     if (acc.nextCursor === null || loadingMore) return;
     const seq = reqSeq.current;
     setLoadingMore(true);
-    void fetchBoardPage({ draftMode: filter, cursor: acc.nextCursor }).then((r) => {
+    void fetchBoardPage({ filter, cursor: acc.nextCursor }).then((r) => {
       setLoadingMore(false);
       if (seq !== reqSeq.current) return;
       // A failed load-more keeps the loaded rows and the button; honest no-op.
@@ -106,7 +119,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
           </div>
         )}
         {phase === "error" && <BoardError onRetry={() => loadFirstPage(filter)} />}
-        {phase === "ready" && rows.length === 0 && <EmptyBoard />}
+        {phase === "ready" && rows.length === 0 && <EmptyBoard filter={filter} />}
         {phase === "ready" && rows.length > 0 && (
           <BoardRows
             rows={rows}
@@ -131,4 +144,19 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
       </p>
     </div>
   );
+}
+
+function filterFromSearch(params: URLSearchParams): BoardFilter {
+  const lane = params.get("mode");
+  const draftMode = params.get("draft_mode");
+  const draftOrder = params.get("draft_order");
+  const era = params.get("era");
+  const ratingBasis = params.get("rating_basis");
+  return {
+    lane: isBoardLane(lane) ? lane : DEFAULT_BOARD_FILTER.lane,
+    draftMode: isBoardDraftMode(draftMode) ? draftMode : DEFAULT_BOARD_FILTER.draftMode,
+    draftOrder: isBoardDraftOrder(draftOrder) ? draftOrder : DEFAULT_BOARD_FILTER.draftOrder,
+    era: isBoardEra(era) ? era : DEFAULT_BOARD_FILTER.era,
+    ratingBasis: isBoardRatingBasis(ratingBasis) ? ratingBasis : DEFAULT_BOARD_FILTER.ratingBasis,
+  };
 }

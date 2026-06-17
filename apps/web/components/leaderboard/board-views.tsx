@@ -6,16 +6,23 @@
 // empty board says so in words, never placeholder rows; draft_mode badges
 // label the declared mode (honor-system — no policing language).
 
-import type { BoardDraftModeFilter, BoardRowView } from "@/lib/leaderboard/board-view";
+import type { BoardFilter, BoardRowView } from "@/lib/leaderboard/board-view";
 import { seasonLabel } from "@/lib/leaderboard/board-view";
 import type { MyBoardPresence } from "@/lib/leaderboard/client";
+import {
+  BOARD_DRAFT_MODES,
+  BOARD_DRAFT_ORDERS,
+  BOARD_ERAS,
+  BOARD_LANES,
+  BOARD_RATING_BASES,
+  configLabel,
+  type BoardDraftOrder,
+  type BoardEra,
+  type BoardLane,
+  type BoardRatingBasis,
+} from "@/lib/leaderboard/config";
 
 import s from "./leaderboard.module.css";
-
-export const BOARD_FILTERS: readonly { key: BoardDraftModeFilter; label: string }[] = [
-  { key: "classic", label: "Classic" },
-  { key: "hidden", label: "Memory" },
-];
 
 export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
   return (
@@ -23,8 +30,8 @@ export function BoardHead({ currentSeasonKey }: { currentSeasonKey: string }) {
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Ranked standings for each manager&rsquo;s best verified run this season. Finish a run and
-        post it from your results screen.
+        Each board is split by lane and draft config. Finish a run and post it from your results
+        screen.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>
@@ -35,27 +42,91 @@ export function BoardToolbar({
   filter,
   onFilter,
 }: {
-  filter: BoardDraftModeFilter;
-  onFilter: (f: BoardDraftModeFilter) => void;
+  filter: BoardFilter;
+  onFilter: (f: BoardFilter) => void;
 }) {
+  const update = (patch: Partial<BoardFilter>) => onFilter({ ...filter, ...patch });
   return (
     <div className={s.toolbar}>
-      <div className={s.modeTabs} aria-label="Board mode">
-        <span className={s.modeTab}>Ranked</span>
-      </div>
-      <div className="segmented" role="group" aria-label="Ranked lane">
-        {BOARD_FILTERS.map((f) => (
+      <div className={s.laneTabs} role="tablist" aria-label="Leaderboard lane">
+        {BOARD_LANES.map((lane) => (
           <button
-            key={f.key}
+            key={lane.key}
             type="button"
-            aria-pressed={filter === f.key}
-            onClick={() => onFilter(f.key)}
+            role="tab"
+            aria-selected={filter.lane === lane.key}
+            className={filter.lane === lane.key ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
+            onClick={() => update({ lane: lane.key })}
           >
-            {f.label}
+            {lane.label}
           </button>
         ))}
       </div>
+
+      <div className={s.filterGrid} aria-label="Board filters">
+        <div className={s.filterMode} role="group" aria-label="Mode">
+          {BOARD_DRAFT_MODES.map((mode) => (
+            <button
+              key={mode.key}
+              type="button"
+              aria-pressed={filter.draftMode === mode.key}
+              onClick={() => update({ draftMode: mode.key })}
+            >
+              {mode.label}
+            </button>
+          ))}
+        </div>
+        <SelectFilter<BoardDraftOrder>
+          label="Order"
+          value={filter.draftOrder}
+          options={BOARD_DRAFT_ORDERS}
+          onChange={(draftOrder) => update({ draftOrder })}
+        />
+        <SelectFilter<BoardEra>
+          label="Era"
+          value={filter.era}
+          options={BOARD_ERAS}
+          onChange={(era) => update({ era })}
+        />
+        <SelectFilter<BoardRatingBasis>
+          label="Basis"
+          value={filter.ratingBasis}
+          options={BOARD_RATING_BASES}
+          onChange={(ratingBasis) => update({ ratingBasis })}
+        />
+      </div>
+
+      <p className={s.activeConfig}>
+        <strong>{filter.lane === "ranked" ? "Ranked" : "Casual"}</strong>
+        <span>{configLabel(filter)}</span>
+        {filter.lane === "ranked" && <em>Sign-in required to post</em>}
+      </p>
     </div>
+  );
+}
+
+function SelectFilter<T extends BoardLane | BoardDraftOrder | BoardEra | BoardRatingBasis>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: readonly { key: T; label: string }[];
+  onChange: (value: T) => void;
+}) {
+  return (
+    <label className={s.selectFilter}>
+      <span>{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value as T)}>
+        {options.map((option) => (
+          <option key={option.key} value={option.key}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
@@ -133,11 +204,15 @@ export function BoardRows({
   );
 }
 
-export function EmptyBoard() {
+export function EmptyBoard({ filter }: { filter: BoardFilter }) {
   return (
     <div className={s.stateBox}>
-      <p className={s.stateTitle}>No verified entries yet</p>
-      <p>Finish a ranked run and be the first manager in this lane.</p>
+      <p className={s.stateTitle}>No runs yet for this config</p>
+      <p>
+        {filter.lane === "ranked"
+          ? "Signed-in ranked runs will appear here after server verification."
+          : "Casual runs will appear here after server verification."}
+      </p>
     </div>
   );
 }

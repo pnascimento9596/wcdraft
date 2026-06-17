@@ -1,11 +1,10 @@
 // F-4 U3 — GET /api/leaderboard (board) + GET /api/leaderboard/me handlers.
 //
 // Board: public read, keyset pagination riding the partial
-// `leaderboard_entries_top_idx` exactly — (season_key, mode, draft_mode,
+// `leaderboard_entries_top_idx` exactly — (season_key, lane, full config,
 // verified_score DESC, created_at ASC, id), `hidden_at IS NULL` always.
-// Season defaults to the CURRENT derived key (plan §3); `draft_mode` is the
-// explicit Classic / Memory lane (default: Classic). CDN-cached 30 s
-// (plan §5.2).
+// Season defaults to the CURRENT derived key (plan §3); config defaults to
+// Classic / Squad First / Career / All-time. CDN-cached 30 s (plan §5.2).
 //
 // /me: session required (no CSRF — read-only); caller's best + rank +
 // recent entries for the season, uncached.
@@ -20,6 +19,16 @@ import { NextResponse, type NextRequest } from "next/server";
 import { leaderboardEntries, type Db } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
+import {
+  DEFAULT_BOARD_FILTER,
+  isBoardDraftMode,
+  isBoardDraftOrder,
+  isBoardEra,
+  isBoardRatingBasis,
+  type BoardDraftOrder,
+  type BoardEra,
+  type BoardRatingBasis,
+} from "./config";
 import { LeaderboardGateError, requireReadIdentity } from "./identity-gate";
 import {
   boardPage,
@@ -103,11 +112,41 @@ function parseSeasonAndMode(
 }
 
 function parseDraftMode(req: NextRequest): BoardDraftMode | NextResponse {
-  const draftModeRaw = req.nextUrl.searchParams.get("draft_mode") ?? "classic";
-  if (draftModeRaw !== "classic" && draftModeRaw !== "hidden") {
+  const draftModeRaw = req.nextUrl.searchParams.get("draft_mode") ?? DEFAULT_BOARD_FILTER.draftMode;
+  if (!isBoardDraftMode(draftModeRaw)) {
     return queryError("draft_mode must be 'classic' or 'hidden'");
   }
   return draftModeRaw;
+}
+
+interface ParsedConfigParams {
+  readonly draftMode: BoardDraftMode;
+  readonly draftOrder: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly ratingBasis: BoardRatingBasis;
+}
+
+function parseConfig(req: NextRequest): ParsedConfigParams | NextResponse {
+  const q = req.nextUrl.searchParams;
+  const draftMode = parseDraftMode(req);
+  if (draftMode instanceof NextResponse) return draftMode;
+
+  const draftOrder = q.get("draft_order") ?? DEFAULT_BOARD_FILTER.draftOrder;
+  if (!isBoardDraftOrder(draftOrder)) {
+    return queryError("draft_order must be 'squad_first' or 'position_first'");
+  }
+
+  const era = q.get("era") ?? DEFAULT_BOARD_FILTER.era;
+  if (!isBoardEra(era)) {
+    return queryError("era must be 'all_time', 'post_2000', 'post_2010', or 'modern'");
+  }
+
+  const ratingBasis = q.get("rating_basis") ?? DEFAULT_BOARD_FILTER.ratingBasis;
+  if (!isBoardRatingBasis(ratingBasis)) {
+    return queryError("rating_basis must be 'career' or 'current'");
+  }
+
+  return { draftMode, draftOrder, era, ratingBasis };
 }
 
 // ─── GET /api/leaderboard ───────────────────────────────────────────────────
@@ -117,6 +156,9 @@ export interface BoardResponseBody {
   readonly current_season_key: string;
   readonly mode: BoardMode;
   readonly draft_mode: BoardDraftMode;
+  readonly draft_order: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly rating_basis: BoardRatingBasis;
   readonly entries: readonly (Omit<BoardRow, "created_at"> & { created_at: string })[];
   readonly next_cursor: string | null;
 }
@@ -130,8 +172,8 @@ export async function handleLeaderboardBoardGet(
     if (base instanceof NextResponse) return base;
     const q = req.nextUrl.searchParams;
 
-    const draftMode = parseDraftMode(req);
-    if (draftMode instanceof NextResponse) return draftMode;
+    const config = parseConfig(req);
+    if (config instanceof NextResponse) return config;
 
     const limitRaw = q.get("limit");
     let limit = BOARD_DEFAULT_LIMIT;
@@ -158,7 +200,10 @@ export async function handleLeaderboardBoardGet(
     const page = await boardPage(deps.db, {
       seasonKey: base.seasonKey,
       mode: base.mode,
-      draftMode,
+      draftMode: config.draftMode,
+      draftOrder: config.draftOrder,
+      era: config.era,
+      ratingBasis: config.ratingBasis,
       limit,
       cursor,
     });
@@ -167,7 +212,10 @@ export async function handleLeaderboardBoardGet(
       season_key: base.seasonKey,
       current_season_key: deps.currentSeasonKey(),
       mode: base.mode,
-      draft_mode: draftMode,
+      draft_mode: config.draftMode,
+      draft_order: config.draftOrder,
+      era: config.era,
+      rating_basis: config.ratingBasis,
       entries: page.rows.map((r) => ({ ...r, created_at: r.created_at.toISOString() })),
       next_cursor: page.hasMore && lastRow ? encodeBoardCursor(lastRow) : null,
     };
@@ -192,6 +240,9 @@ export interface MeResponseBody {
   readonly season_key: string;
   readonly mode: BoardMode;
   readonly draft_mode: BoardDraftMode;
+  readonly draft_order: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly rating_basis: BoardRatingBasis;
   readonly best: ApiLeaderboardEntry | null;
   /** Board rank of the caller's best visible entry; null when boardless. */
   readonly rank: number | null;
@@ -210,15 +261,18 @@ export async function handleLeaderboardMeGet(
     });
     const base = parseSeasonAndMode(req, deps);
     if (base instanceof NextResponse) return base;
-    const draftMode = parseDraftMode(req);
-    if (draftMode instanceof NextResponse) return draftMode;
+    const config = parseConfig(req);
+    if (config instanceof NextResponse) return config;
 
     // requireReadIdentity guarantees a session id.
     const sessionId = identity.sessionId as string;
     const recent = await recentEntriesFor(deps.db, {
       seasonKey: base.seasonKey,
       mode: base.mode,
-      draftMode,
+      draftMode: config.draftMode,
+      draftOrder: config.draftOrder,
+      era: config.era,
+      ratingBasis: config.ratingBasis,
       userId: identity.userId,
       sessionId,
       limit: ME_RECENT_LIMIT,
@@ -226,7 +280,10 @@ export async function handleLeaderboardMeGet(
     const best = await identityBoardRank(deps.db, {
       seasonKey: base.seasonKey,
       mode: base.mode,
-      draftMode,
+      draftMode: config.draftMode,
+      draftOrder: config.draftOrder,
+      era: config.era,
+      ratingBasis: config.ratingBasis,
       identityKey: identity.userId ?? sessionId,
     });
     const bestRow = best ? (recent.find((r) => r.id === best.entryId) ?? null) : null;
@@ -237,7 +294,10 @@ export async function handleLeaderboardMeGet(
     const body: MeResponseBody = {
       season_key: base.seasonKey,
       mode: base.mode,
-      draft_mode: draftMode,
+      draft_mode: config.draftMode,
+      draft_order: config.draftOrder,
+      era: config.era,
+      rating_basis: config.ratingBasis,
       best: bestApi,
       rank: best?.rank ?? null,
       recent,

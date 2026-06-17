@@ -320,8 +320,8 @@ async function main(): Promise<void> {
     );
     await db.execute(sql`
       INSERT INTO leaderboard_entries
-        (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
-      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionA}, 'rollback_check', ${lbToken}, 0)
+        (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, session_id, display_alias, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'career', NULL, ${sessionA}, 'rollback_check', ${lbToken}, 0)
     `);
     await assertDuplicateRejected(
       db,
@@ -335,17 +335,16 @@ async function main(): Promise<void> {
     );
     // NULLS-NOT-DISTINCT × new-column interaction: the dedupe key is still
     // (season_key, mode, user_id, token) ONLY — a different session_id,
-    // display_alias, or draft_mode must NOT open a second row for the same
-    // anon token. (draft_mode is deliberately NOT a dedupe dimension: the
-    // token IS the run, `md` is inside it.)
+    // display_alias, draft_mode, or config must NOT open a second row for
+    // the same anon token. (The token IS the run and carries config.)
     await assertDuplicateRejected(
       db,
       "leaderboard_entries: differing session_id/display_alias/draft_mode must NOT bypass the anon dedupe",
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'hidden', NULL, ${sessionB}, 'other_name', ${lbToken}, 0)
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, session_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'hidden', 'position_first', 'modern', 'current', NULL, ${sessionB}, 'other_name', ${lbToken}, 0)
         `),
     );
     // 0004 CHECK probes — every constraint must hold at the DB layer.
@@ -354,8 +353,8 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'classic', NULL, 'ab', ${`${lbToken}-shortname`}, 0)
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'career', NULL, 'ab', ${`${lbToken}-shortname`}, 0)
         `),
       /leaderboard_entries_display_alias_chk|check constraint/i,
     );
@@ -364,8 +363,8 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'classic', NULL, NULL, ${`${lbToken}-noname`}, 0)
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'career', NULL, NULL, ${`${lbToken}-noname`}, 0)
         `),
       /leaderboard_entries_public_name_chk|check constraint/i,
     );
@@ -374,10 +373,50 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
-          VALUES (${lbSeason}, 'casual', 'speedrun', NULL, 'rollback_check', ${`${lbToken}-badmode`}, 0)
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'speedrun', 'squad_first', 'all_time', 'career', NULL, 'rollback_check', ${`${lbToken}-badmode`}, 0)
         `),
       /leaderboard_entries_draft_mode_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: draft_order outside (squad_first|position_first) must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'speedrun', 'all_time', 'career', NULL, 'rollback_check', ${`${lbToken}-badorder`}, 0)
+        `),
+      /leaderboard_entries_draft_order_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: era outside preset ids must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', '2026_only', 'career', NULL, 'rollback_check', ${`${lbToken}-badera`}, 0)
+        `),
+      /leaderboard_entries_era_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: rating_basis outside (career|current) must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'prime', NULL, 'rollback_check', ${`${lbToken}-badbasis`}, 0)
+        `),
+      /leaderboard_entries_rating_basis_chk|check constraint/i,
+    );
+    await assertInsertRejected(
+      "leaderboard_entries: partial config must be rejected (CHECK)",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', NULL, 'career', NULL, 'rollback_check', ${`${lbToken}-partialconfig`}, 0)
+        `),
+      /leaderboard_entries_config_complete_chk|check constraint/i,
     );
     // RANKED IS ACCOUNT-REQUIRED (Lead-Architect ruling) — structural at
     // BOTH tables: a ranked entry with NULL user and a ranked attempt
@@ -387,8 +426,8 @@ async function main(): Promise<void> {
       () =>
         db.execute(sql`
           INSERT INTO leaderboard_entries
-            (season_key, mode, draft_mode, user_id, display_alias, token, verified_score)
-          VALUES (${lbSeason}, 'ranked', 'classic', NULL, 'rollback_check', ${`${lbToken}-ranked`}, 0)
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
+          VALUES (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', NULL, 'rollback_check', ${`${lbToken}-ranked`}, 0)
         `),
       /leaderboard_entries_ranked_user_chk|check constraint/i,
     );
@@ -409,8 +448,8 @@ async function main(): Promise<void> {
     const setNullToken = `${lbToken}-setnull`;
     await db.execute(sql`
       INSERT INTO leaderboard_entries
-        (season_key, mode, draft_mode, user_id, session_id, display_alias, token, verified_score)
-      VALUES (${lbSeason}, 'casual', 'classic', NULL, ${sessionB}, 'rollback_check', ${setNullToken}, 0)
+        (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, session_id, display_alias, token, verified_score)
+      VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'career', NULL, ${sessionB}, 'rollback_check', ${setNullToken}, 0)
     `);
     await db.execute(sql`DELETE FROM sessions WHERE id = ${sessionB}`);
     const survivors = await db.execute<{ session_id: string | null }>(sql`

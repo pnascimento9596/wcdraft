@@ -39,11 +39,6 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     message:
       "This run is from a different build/season — the board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
   },
-  NON_CANONICAL_CONFIG: {
-    title: "Casual run",
-    message:
-      "The board only takes runs drafted with the standard setup (Squad First \u00b7 Career \u00b7 All-time). This run is still shareable \u2014 it just doesn't post to the board.",
-  },
   INVALID_NAME: {
     title: "Name not accepted",
     message: "The server rejected that display name.",

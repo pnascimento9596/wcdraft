@@ -1,18 +1,18 @@
 # q-003 — F-4 leaderboard: remaining work
 
 - **Tier:** Red (leaderboard/auth/schema surface) · **Mode:** DISPATCH-ONLY.
-- **Status:** OPEN for U7 ranked only. Casual leaderboard, U1-U6, and account
-  light-up are live; this file now tracks the ranked-lane remainder and keeps
-  the light-up checklist as historical audit context.
+- **Status:** OPEN only for the old server-issued ranked-attempt model. Casual
+  leaderboard, account light-up, and account-required ranked submissions are
+  live surfaces; DC-8 now tracks per-config ranked/casual boards.
 - Shipped: U1 (#67) · U2 (#69) · U3 (#70) · U6 claim bridge (#71, `b34a700`) ·
   U4 UI (#74, `6f76c10`) · U5 abuse hardening (#72) — all on main, routes dark
   behind `LEADERBOARD_ENABLED`.
 
-## Not started
+## Not started / deferred
 
-- **U7 ranked lane** (attempt issuance/consume + dark UI tab) — dark by design; blocked on
-  plan §10 product decision Q2 (ranked = account-required posture). `LEADERBOARD_REQUIRE_ACCOUNT`
-  gate already exists in identity-gate.
+- **Server-issued ranked attempts** (`/api/ranked/attempt` issuance/consume) —
+  deferred. The current ranked board uses the account-required submit gate and
+  server replay; it does not mint server seeds.
 - ~~Scrub env-var names and secret-generation hints from auth-route JSON error bodies~~
   DONE via q-008 micro-Yellow bundle 2 (`jsonError` scrubs `SECRET_MISCONFIGURED`
   detail to server logs; generic client body). Original item:
@@ -25,14 +25,15 @@
 
 Completed before the 2026-06-12 measurement in `STATE.md`: prod migrations are
 current through 0004, `LEADERBOARD_ENABLED` is set in Vercel Production,
-casual submit/board/me are live, and accounts/email sign-in is live. Ranked
-remains dark because `LEADERBOARD_REQUIRE_ACCOUNT` is intentionally unset.
+casual submit/board/me are live, and accounts/email sign-in is live. Later
+ranked work made account-required ranked submissions a live surface; only the
+server-issued ranked-attempt model remains deferred here.
 
 ## Done-when
 
-U7 either ships dark behind the account-required attempt model or is explicitly
-deferred by plan amendment. Casual/account light-up is already done and recorded
-in `STATE.md`.
+The server-issued ranked-attempt model either ships behind a new explicit
+dispatch or remains deferred. Casual/account/ranked board light-up is tracked in
+`STATE.md` and DC-8.
 
 ## Evidence required
 

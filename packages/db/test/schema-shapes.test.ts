@@ -146,6 +146,9 @@ describe("@wcdraft/db schema — shape", () => {
       seasonKey: string;
       mode: string;
       draftMode: string;
+      draftOrder: string | null;
+      era: string | null;
+      ratingBasis: string | null;
       userId: string | null;
       sessionId: string | null;
       displayAlias: string | null;
@@ -160,6 +163,9 @@ describe("@wcdraft/db schema — shape", () => {
       seasonKey: string;
       mode: string;
       draftMode: string;
+      draftOrder?: string | null;
+      era?: string | null;
+      ratingBasis?: string | null;
       displayAlias?: string | null;
       token: string;
       verifiedScore: number;

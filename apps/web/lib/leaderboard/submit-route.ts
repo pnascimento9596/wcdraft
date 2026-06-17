@@ -67,7 +67,7 @@ function transportError(code: TransportErrorCode, message: string): NextResponse
 export interface SubmitResponseBody {
   readonly entry: ApiLeaderboardEntry;
   readonly duplicate: boolean;
-  /** Identity's CURRENT board rank (season+mode+draft_mode view), read by a second
+  /** Identity's CURRENT board rank (season+lane+config view), read by a second
    *  statement after the insert — a concurrent insert can move it between
    *  the two. Null only if the identity has no visible entry. */
   readonly rank: number | null;
@@ -181,6 +181,9 @@ export async function handleLeaderboardSubmit(
         seasonKey: verdict.season_key,
         mode: submissionMode,
         draftMode: verdict.draft_mode,
+        draftOrder: verdict.draft_order,
+        era: verdict.era,
+        ratingBasis: verdict.rating_basis,
         userId: identity.userId,
         sessionId: identity.sessionId,
         displayAlias: verdict.display_alias,
@@ -195,6 +198,9 @@ export async function handleLeaderboardSubmit(
       seasonKey: verdict.season_key,
       mode: submissionMode,
       draftMode: verdict.draft_mode,
+      draftOrder: verdict.draft_order,
+      era: verdict.era,
+      ratingBasis: verdict.rating_basis,
       identityKey: result.row.userId ?? result.row.sessionId ?? result.row.id,
     });
     const responseBody: SubmitResponseBody = {

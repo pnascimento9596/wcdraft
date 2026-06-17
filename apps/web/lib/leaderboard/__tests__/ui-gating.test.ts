@@ -33,6 +33,7 @@ import ResultsPage from "@/app/play/results/page";
 import { ResultsScreen } from "@/components/game/results-screen";
 
 import { boardRowViews } from "../board-view";
+import { DEFAULT_BOARD_FILTER } from "../config";
 import { submitStatusCopy } from "../submit-copy";
 import type { SubmitPhase } from "../submit-state";
 import { runSimulationSync } from "../../game/simulate";
@@ -193,6 +194,9 @@ describe("LeaderboardSubmitPanel (container)", () => {
 // ─── Submit affordance — every outcome state ────────────────────────────────
 
 describe("SubmitPanelView — every outcome state string maps to its phase", () => {
+  const LEADERBOARD_HREF =
+    "/leaderboard?mode=casual&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career";
+
   function render(phase: SubmitPhase, retryRemaining: number | null = null): string {
     return renderToStaticMarkup(
       createElement(SubmitPanelView, {
@@ -202,6 +206,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         authReady: true,
         isSignedIn: false,
         publicUsername: null,
+        leaderboardHref: LEADERBOARD_HREF,
         name: "golden_xi",
         nameHint: null,
         phase,
@@ -231,7 +236,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
     const html = render({ kind: "accepted", rank: 4, score: 41 });
     expect(html).toContain("On the board");
     expect(html).toContain("Rank #4");
-    expect(html).toContain('href="/leaderboard"');
+    expect(html).toContain(`href="${LEADERBOARD_HREF.replace(/&/g, "&amp;")}"`);
   });
 
   it("accepted with null rank: posted, no invented rank", () => {
@@ -299,6 +304,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         authReady: true,
         isSignedIn: false,
         publicUsername: null,
+        leaderboardHref: LEADERBOARD_HREF,
         name: "",
         nameHint: null,
         phase: { kind: "idle" },
@@ -323,6 +329,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         authReady: true,
         isSignedIn: true,
         publicUsername: null,
+        leaderboardHref: LEADERBOARD_HREF,
         name: "",
         nameHint: null,
         phase: { kind: "idle" },
@@ -347,6 +354,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         authReady: true,
         isSignedIn: true,
         publicUsername: "public_user",
+        leaderboardHref: LEADERBOARD_HREF,
         name: "",
         nameHint: null,
         phase: { kind: "idle" },
@@ -371,6 +379,7 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
         authReady: true,
         isSignedIn: true,
         publicUsername: '<script>alert("x")</script>',
+        leaderboardHref: LEADERBOARD_HREF,
         name: "",
         nameHint: null,
         phase: { kind: "idle" },
@@ -414,6 +423,9 @@ describe("board views", () => {
         rank: 1,
         id: "a",
         draft_mode: "classic",
+        draft_order: "squad_first",
+        era: "all_time",
+        rating_basis: "career",
         display_name: "alpha_xi",
         verified_score: 88,
         score_breakdown: [{ label: "Goals scored", raw: 4, weight: 3, points: 12 }],
@@ -423,6 +435,9 @@ describe("board views", () => {
         rank: 2,
         id: "b",
         draft_mode: "hidden",
+        draft_order: "squad_first",
+        era: "all_time",
+        rating_basis: "career",
         display_name: "blind_side",
         verified_score: 70,
         score_breakdown: null,
@@ -455,6 +470,9 @@ describe("board views", () => {
             displayName: '<img src=x onerror="alert(1)">',
             score: 99,
             draftMode: "classic",
+            draftOrder: "squad_first",
+            era: "all_time",
+            ratingBasis: "career",
             timeLabel: "10m ago",
             isMine: false,
             breakdown: [{ label: "<script>breakdown()</script>", points: 1 }],
@@ -485,22 +503,29 @@ describe("board views", () => {
     expect(html).toContain("No breakdown recorded");
   });
 
-  it("empty board is words, not placeholder rows", () => {
-    const html = renderToStaticMarkup(createElement(EmptyBoard));
-    expect(html).toContain("No verified entries yet");
-    expect(html).toContain("ranked run");
+  it("empty board is config-scoped words, not placeholder rows", () => {
+    const html = renderToStaticMarkup(createElement(EmptyBoard, { filter: DEFAULT_BOARD_FILTER }));
+    expect(html).toContain("No runs yet for this config");
+    expect(html).toContain("Signed-in ranked runs");
   });
 
-  it("toolbar exposes ranked Classic and Memory lanes without a mixed view", () => {
+  it("toolbar exposes lane tabs and every config axis without collapsing filters", () => {
     const html = renderToStaticMarkup(
-      createElement(BoardToolbar, { filter: "classic", onFilter: () => undefined }),
+      createElement(BoardToolbar, {
+        filter: DEFAULT_BOARD_FILTER,
+        onFilter: () => undefined,
+      }),
     );
     expect(html).toContain("Ranked");
+    expect(html).toContain("Casual");
     expect(html).toContain("Classic");
     expect(html).toContain("Memory");
-    expect(html).not.toContain("All");
+    expect(html).toContain("Squad First");
+    expect(html).toContain("Position First");
+    expect(html).toContain("Career");
+    expect(html).toContain("Current");
+    expect(html).toContain("All-time");
     expect(html).not.toContain("soon");
-    expect(html).not.toContain("Casual");
   });
 
   it("error state is an alert with retry — never an empty board", () => {
