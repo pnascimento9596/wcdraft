@@ -36,8 +36,10 @@ export const SUPPORTED_FORMATION_IDS = [
   "4-3-3",
   "4-2-3-1",
   "4-4-2",
+  "4-1-4-1",
   "3-5-2",
   "3-4-3",
+  "3-4-2-1",
   "5-3-2",
 ] as const;
 export type SupportedFormationId = (typeof SUPPORTED_FORMATION_IDS)[number];
@@ -50,8 +52,10 @@ const FORMATION_BLURBS: Record<SupportedFormationId, string> = {
   "4-3-3": "Wide front three, single pivot. Press high, run wide.",
   "4-2-3-1": "Double pivot under a lone striker. Stable middle, late runners.",
   "4-4-2": "Two banks of four, strike pair. Classic, balanced, demanding.",
+  "4-1-4-1": "Holding pivot behind a bank of four. Compact, hard to break down.",
   "3-5-2": "Back three, wing-backs do the running. Numbers in midfield.",
   "3-4-3": "Back three behind a front three. Width everywhere, brave transitions.",
+  "3-4-2-1": "Back three, two tens feeding a lone striker. Overloads the half-spaces.",
   "5-3-2": "Back five, midfield three, strike pair. Deep shell, quick counters.",
 };
 

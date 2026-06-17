@@ -10,10 +10,10 @@
 //   5. Unsupported formation ids — the RED tripwire ids — throw, not return
 //      a coarse fallback.
 //
-// The unsupported list intentionally NAMES the five Red-class ids the
-// ws-squad/formations-polish dispatch was asked to ship. If a future Red PR
-// adds them to core + the JSON, REMOVE them from this list — don't widen
-// the test silently.
+// The unsupported list intentionally NAMES Red-class ids core does NOT ship a
+// template for. If a future Red PR adds one of them to core + the JSON, REMOVE
+// it from this list — don't widen the test silently. (ws-f4/formations-results-ux
+// promoted 4-1-4-1 and 3-4-2-1 out of this list and into the supported set.)
 
 import { describe, expect, it } from "vitest";
 import { FORMATION_TEMPLATES, slotPositionLine } from "@wcdraft/core";
@@ -28,18 +28,19 @@ const UNSUPPORTED_FORMATION_IDS = [
   "4-1-2-1-2",
   "4-4-1-1",
   "4-5-1",
-  "3-4-2-1",
   "5-4-1",
 ] as const;
 
 describe("formation-layout — SUPPORTED_FORMATION_IDS", () => {
-  it("exposes exactly the six core-supported ids in the documented order", () => {
+  it("exposes exactly the eight core-supported ids in the documented order", () => {
     expect([...SUPPORTED_FORMATION_IDS]).toEqual([
       "4-3-3",
       "4-2-3-1",
       "4-4-2",
+      "4-1-4-1",
       "3-5-2",
       "3-4-3",
+      "3-4-2-1",
       "5-3-2",
     ]);
   });

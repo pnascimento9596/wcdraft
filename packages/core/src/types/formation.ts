@@ -484,8 +484,42 @@ const FORMATION_5_3_2 = makeTemplate("5-3-2", [
   ["RF", "RF", "C"],
 ]);
 
+// 4-1-4-1 — flat back four, single holding pivot, flat midfield four, lone
+// striker. The "1" pivot (CDM) and the "4" band (LM/LCM/RCM/RM) both project to
+// the MF line, exactly as the 4-2-3-1 double pivot does.
+const FORMATION_4_1_4_1 = makeTemplate("4-1-4-1", [
+  ["GK", "GK", "C"],
+  ["LB", "LB", "L"],
+  ["LCB", "LCB", "C"],
+  ["RCB", "RCB", "C"],
+  ["RB", "RB", "R"],
+  ["CDM", "CDM", "C"],
+  ["LM", "LM", "L"],
+  ["LCM", "LCM", "C"],
+  ["RCM", "RCM", "C"],
+  ["RM", "RM", "R"],
+  ["ST", "ST", "C"],
+]);
+
+// 3-4-2-1 — back three, flat midfield four, two attacking mids behind a lone
+// striker. The midfield four (LM/LCM/RCM/RM) and the two 10s (LAM/RAM, role AM)
+// all project to the MF line; only the striker sits in FW.
+const FORMATION_3_4_2_1 = makeTemplate("3-4-2-1", [
+  ["GK", "GK", "C"],
+  ["LCB", "LCB", "C"],
+  ["CB", "CB", "C"],
+  ["RCB", "RCB", "C"],
+  ["LM", "LM", "L"],
+  ["LCM", "LCM", "C"],
+  ["RCM", "RCM", "C"],
+  ["RM", "RM", "R"],
+  ["LAM", "AM", "L"],
+  ["RAM", "AM", "R"],
+  ["ST", "ST", "C"],
+]);
+
 /**
- * Registry of all locked MVP FormationTemplates, keyed by `formation_id`.
+ * Registry of all locked FormationTemplates, keyed by `formation_id`.
  * Frozen so a downstream consumer cannot mutate it; the schema for
  * `DraftState.formation_id` references this registry to reject unknown ids.
  */
@@ -493,12 +527,14 @@ export const FORMATION_TEMPLATES: Readonly<Record<string, FormationTemplate>> = 
   "4-3-3": FORMATION_4_3_3,
   "4-4-2": FORMATION_4_4_2,
   "4-2-3-1": FORMATION_4_2_3_1,
+  "4-1-4-1": FORMATION_4_1_4_1,
   "3-5-2": FORMATION_3_5_2,
   "3-4-3": FORMATION_3_4_3,
+  "3-4-2-1": FORMATION_3_4_2_1,
   "5-3-2": FORMATION_5_3_2,
 });
 
-/** Convenience: ordered list of MVP formation ids — sorted lexicographically. */
+/** Convenience: ordered list of formation ids — sorted lexicographically. */
 export const FORMATION_IDS: readonly string[] = Object.freeze(
   Object.keys(FORMATION_TEMPLATES).sort(),
 );

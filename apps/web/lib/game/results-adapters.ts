@@ -134,6 +134,16 @@ export interface TopScorerView {
   player_id: string;
   name: string;
   goals: number;
+  /**
+   * Nation of the drafted card that scored — resolved the same way the
+   * starters/bench flags are (card → nation_id → nation record). Stays NULL
+   * when the scorer's card is outside the draftable pool or the nation has no
+   * record, so the UI renders the established no-flag fallback (never a wrong
+   * flag). Honest-state.
+   */
+  nation_id: string | null;
+  nation_code: string | null;
+  nation_name: string | null;
 }
 
 /**
@@ -163,10 +173,29 @@ export function topScorerView(
       }
     }
   }
+  // Resolve the scorer's nation from the drafted card (same path as the
+  // starters/bench mini-flags). Absent card or nation → null → no-flag
+  // fallback at the render site; never a guessed flag.
+  let nation_id: string | null = cardId ? (gameData.nationByCardId[cardId] ?? null) : null;
+  let nation_code: string | null = null;
+  let nation_name: string | null = null;
+  if (nation_id) {
+    const n = gameData.indexes.nationById.get(nation_id);
+    if (n) {
+      nation_code = n.code ?? nation_id.toUpperCase();
+      nation_name = n.canonical_name;
+    } else {
+      // nation_id with no record — drop it so we don't render an unlabeled chip.
+      nation_id = null;
+    }
+  }
   return {
     player_id: pid,
     name: resolveScorerName(gameData, pid, cardId),
     goals,
+    nation_id,
+    nation_code,
+    nation_name,
   };
 }
 

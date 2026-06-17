@@ -1140,6 +1140,11 @@ button.benchSlot:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  /* B1 — the results surface is SANS throughout (Sora body, Saira Condensed
+     headers/numbers). This base family overrides the app's inherited
+     Newsreader serif so the narration + box scores read cleanly; Newsreader
+     usage elsewhere is untouched. */
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   /* The reveal/results column is a terminal scroll surface on iOS — keep its
      last element (bench / leaderboard / replay row) clear of Safari's bottom
      chrome + the home indicator. */
@@ -1156,7 +1161,10 @@ button.benchSlot:not(:disabled):hover {
      glitch. A hairline in the plate's own ink + a 1px outer ring against the
      page tone frame it as a designed insert in both themes. */
   border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
-  border-top: 3px solid var(--accent);
+  /* B2/B5 — the decorative strip is GOLD (canonical), not emerald: emerald is
+     reserved for interaction. Gold-on-cream/gold-on-ink as a 3px bar reads on
+     both inverted-plate themes. */
+  border-top: 3px solid var(--gold);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent),
     var(--shadow-card);
@@ -1164,8 +1172,13 @@ button.benchSlot:not(:disabled):hover {
 :root[data-theme="dark"] .outcome {
   color: var(--bg);
 }
+/* B2 — the plate INVERTS the page theme (dark plate in light theme, cream
+   plate in dark theme). Raw emerald failed AA on the cream plate, and emerald
+   here is decorative anyway. Use the plate's own ink (currentColor) so the
+   eyebrow + W–L are legible by construction on both themes. */
 .outcome .eyebrowAccent {
-  color: var(--accent);
+  color: currentColor;
+  opacity: 0.82;
 }
 .configBadgeRow {
   display: flex;
@@ -1201,9 +1214,11 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.7rem;
 }
 .outcomeBig {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   font-size: clamp(3.5rem, 14vw, 6rem);
   line-height: 0.85;
+  letter-spacing: -0.01em;
 }
 /* I3.8 — 8-0 perfect run rendered in precious gold. */
 .outcomeBigGold {
@@ -1216,12 +1231,19 @@ button.benchSlot:not(:disabled):hover {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 0.05em rgba(245, 182, 42, 0.18);
+  /* B2 — the plate is cream in dark theme; gold text alone would fall under AA
+     there. A 1px ink edge (drawn under the clipped gradient) grounds the digits
+     on either plate while preserving the precious-gold fill. */
+  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, #000);
+  text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
 }
 .outcomeWL {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 600;
   font-size: 1.4rem;
-  color: var(--accent);
+  letter-spacing: 0.04em;
+  color: currentColor;
+  opacity: 0.68;
 }
 .outcomeStats {
   display: grid;
@@ -1236,10 +1258,12 @@ button.benchSlot:not(:disabled):hover {
 .oStat {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.15rem;
+  min-width: 0;
 }
 .oStatNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   font-size: 1.9rem;
   line-height: 1;
 }
@@ -1248,6 +1272,25 @@ button.benchSlot:not(:disabled):hover {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* B4 — top-scorer cell: national flag beside the (truncating) scorer name. */
+.oStatScorer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.oStatScorer .oStatLabel {
+  min-width: 0;
+}
+.oStatFlag {
+  flex: none;
+  width: 1.05rem;
+  height: auto;
+  border-radius: 2px;
 }
 .outcomeFlags {
   display: flex;
@@ -1288,15 +1331,23 @@ button.benchSlot:not(:disabled):hover {
   position: absolute;
   left: 0.7rem;
   top: 0.2rem;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   font-size: 3rem;
-  color: color-mix(in srgb, var(--accent) 40%, transparent);
+  line-height: 1;
+  /* Decorative quote mark (aria-hidden) — gold canonical, muted. */
+  color: color-mix(in srgb, var(--gold) 46%, transparent);
 }
+/* B1/B3 — narration is SANS (Sora), upright for readability, and wraps cleanly
+   inside its card (no horizontal spill on long unbroken clauses). */
 .narrativeText {
-  font-size: 1.08rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1.05rem;
   line-height: 1.6;
   color: var(--ink-soft);
-  font-style: italic;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .matchList {
@@ -1332,7 +1383,8 @@ button.benchSlot:not(:disabled):hover {
   width: 1.7rem;
   height: 1.7rem;
   border-radius: 6px;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   font-size: 0.85rem;
   color: var(--accent-ink);
 }
@@ -1345,35 +1397,51 @@ button.benchSlot:not(:disabled):hover {
 .loss {
   background: var(--accent);
 }
+/* B3 — round label can shrink + ellipsis; never forces the row wider than the
+   card. */
 .matchRound {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 7.5rem;
   font-size: 0.74rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ink-faint);
-  width: 7.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+/* B3 — opponent name is the flexible column: it truncates instead of pushing
+   the score off the row ("vs ENG England" → "vs ENG Engl…" before overlap). */
 .matchOpp {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .matchScore {
   flex: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
   font-size: 1.2rem;
 }
+/* B1/B2 — tag is sans + a neutral chip (not decorative emerald): keeps emerald
+   for interaction and clears AA on the paper panel. */
 .matchTag {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--accent);
-  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.1rem 0.45rem;
+  white-space: nowrap;
 }
 .matchChevron {
   flex: none;
@@ -1850,14 +1918,15 @@ button.benchSlot:not(:disabled):hover {
   max-width: 32ch;
 }
 
-/* MOBILE-FIRST 6+ tile grid (ws-ux/mobile-polish-2 compaction): horizontal
-   tiles — small pitch preview left, name + lock CTA right — so all six
-   shapes land within one phone screen (2-col × 3 rows ≈ 260px) instead of
-   ~2 tiles per screen. Flows to 3/4 columns on tablets+desktop. */
+/* Equal-card formation grid (ws-f4/formations-results-ux redesign): calm
+   vertical tiles — the mini-pitch is the visual focus, the shape name is the
+   hero label, the lock CTA sits beneath. Flows 2-up on phones through
+   auto-fit columns on tablets+desktop; all eight shapes share one scannable
+   grid (no horizontal scroll, no paging). */
 .formationGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
 }
 
 @media (max-width: 320px) {
@@ -1869,35 +1938,35 @@ button.benchSlot:not(:disabled):hover {
   }
 }
 
-/* Pre-draft card system — shares the mode-select design language: 14px
-   radius (12px compact), 1px chalk border, left accent bar, mono uppercase
-   CTA (see .modeCard). Change one, change both. */
+/* Pre-draft formation card — a CALM equal tile: subtle 1px border + soft
+   elevation, no coloured side-rail. Emerald is reserved for the interactive
+   LOCK affordance (the CTA text) and the hover/focus ring — never decorative.
+   Position-by-SHAPE lives inside the mini-pitch (see .miniDot*). */
 .formationCard {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   background: var(--bg-750);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
   border-radius: 14px;
-  padding: 8px 10px;
-  gap: 10px;
+  padding: 14px 12px 12px;
+  gap: 11px;
   cursor: pointer;
   transition:
     transform var(--d-fast) var(--e-snap),
     box-shadow var(--d-fast),
     border-color var(--d-fast);
-  text-align: left;
+  text-align: center;
   color: inherit;
   font-family: inherit;
-  min-height: 76px;
+  box-shadow: var(--sh-1);
 }
 
 .formationCard:hover,
 .formationCard:focus-visible {
   border-color: var(--ember);
   box-shadow: var(--ring-ember);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .formationCard:disabled {
@@ -1913,21 +1982,25 @@ button.benchSlot:not(:disabled):hover {
 .formationCardBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 5px;
   min-width: 0;
+  width: 100%;
 }
 
 .formationCardName {
   font-family: var(--f-display);
-  font-size: 18px;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  font-size: 23px;
+  line-height: 1;
+  letter-spacing: 0.04em;
   color: var(--ink-100);
 }
 
 .formationCardCta {
   font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  font-size: 10px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ember-bright);
 }
@@ -2098,8 +2171,8 @@ button.benchSlot:not(:disabled):hover {
    distortion) sitting on the tile's left so six tiles fit one phone screen. */
 .miniPitch {
   position: relative;
-  flex: 0 0 56px;
-  width: 56px;
+  flex: 0 0 auto;
+  width: 92px;
   aspect-ratio: 5 / 6;
   background:
     radial-gradient(
@@ -2123,8 +2196,8 @@ button.benchSlot:not(:disabled):hover {
 .miniDot {
   position: absolute;
   z-index: 1;
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
   border-radius: 999px;
   background: var(--ink-200);
@@ -4809,34 +4882,32 @@ button.benchSlot:not(:disabled):hover {
   }
   .formationGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 10px;
   }
-  /* Horizontal tile (preview left, name + CTA right) — keeps every shape
-     comparable at 5/6 aspect while all six tiles fit one visible screen.
-     12px radius matches .modeCard at this width (shared card system). */
+  /* Vertical calm tile (pitch focus on top, hero name + lock CTA beneath).
+     Two-up keeps all eight shapes comparable at 5/6 aspect within a single
+     scannable grid. 12px radius matches the shared card system. */
   .formationCard {
-    padding: 6px 8px;
+    padding: 11px 9px 10px;
     gap: 8px;
-    min-height: 60px;
     border-radius: 12px;
   }
   .formationCardBody {
-    gap: 2px;
+    gap: 3px;
   }
   .formationCardName {
-    font-size: 15px;
+    font-size: 19px;
   }
   .formationCardCta {
     font-size: 9px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
   .miniPitch {
-    flex-basis: 48px;
-    width: 48px;
+    width: 78px;
   }
   .miniDot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   /* ── Formation/Synergy section (lineup view) ─────────────────── */

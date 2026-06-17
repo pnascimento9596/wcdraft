@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { connection } from "next/server";
-import { Anton, Newsreader } from "next/font/google";
+import { Anton, Newsreader, Saira_Condensed, Sora } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
@@ -33,6 +33,24 @@ const text = Newsreader({
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-text",
+  display: "swap",
+});
+
+// Brand sans stack (design identity: Saira Condensed / Sora). Loaded here so
+// the variables exist app-wide, but currently consumed only by the results
+// surface (ws-f4/formations-results-ux), which is sans throughout — no
+// Newsreader. Headers/big numbers use Saira Condensed; body + narration Sora.
+const condensed = Saira_Condensed({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-condensed",
+  display: "swap",
+});
+
+const sans = Sora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -103,7 +121,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // is read server-side here; when dark the entry simply doesn't exist.
   const leaderboardEnabled = isLeaderboardEnabled();
   return (
-    <html lang="en" data-theme="light" className={`${display.variable} ${text.variable}`}>
+    <html
+      lang="en"
+      data-theme="light"
+      className={`${display.variable} ${text.variable} ${condensed.variable} ${sans.variable}`}
+    >
       <body>
         <ThemeProvider>
           <AuthProvider authEnabled={authEnabled}>

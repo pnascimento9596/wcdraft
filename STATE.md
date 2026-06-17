@@ -126,6 +126,25 @@ RepoPrompt workspace was bound to BiotraxIQ, not this WCDraft worktree; a
 later attempt to rebind RepoPrompt to `/tmp/wcdraft-ui-polish` failed with a
 broken-pipe MCP transport error.
 
+## Formations + results-page UX wave (ws-f4/formations-results-ux)
+
+- Supported formations expanded **6 → 8**: added `4-1-4-1` and `3-4-2-1` to core
+  `FORMATION_TEMPLATES`, web `SUPPORTED_FORMATION_IDS`/`FORMATION_BLURBS`, and
+  `apps/web/public/brand/formations.json` (mini-pitch rows). Both reuse existing
+  `SlotPosition` roles — no new slot-role/compatibility entries. `formation-adjacency`
+  golden re-locked (EXPECTED_ADJACENCY count 6 → 8); new validity proof
+  `packages/data/test/new-formations-validity.test.ts` (8 tests) drives each new shape
+  through autoDraft → fieldable XI + GK → schema → full sim on real data.
+- Formation lock-page picker redesigned: emerald left-accent rail removed; calm equal
+  vertical tiles with the mini-pitch as focus, hero id, emerald reserved for the
+  `LOCK THIS SHAPE` CTA + focus ring. DRAFT SETUP disclosure unchanged.
+- Results page: sans throughout (Sora body + Saira Condensed numbers via new `next/font`
+  vars — Newsreader untouched elsewhere); outcome-plate emerald → plate-ink/gold so it
+  clears AA on the inverted cream plate; narration + match rows no longer overflow;
+  top-scorer national flag added (honest no-flag fallback). axe 0 violations on picker +
+  results, both themes, 390×844 + 360×800. Evidence:
+  `docs/validation/formations-results-ux-2026-06-16/`.
+
 ## Era closeout status at last measurement
 
 - Branch/PR graveyard cleanup completed before the purge window. PR #76 was closed

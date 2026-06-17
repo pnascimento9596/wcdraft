@@ -39,7 +39,9 @@ import {
   type DerivedBox,
   type MatchCardView,
   type RunSummaryView,
+  type TopScorerView,
 } from "@/lib/game/results-adapters";
+import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
 
@@ -338,10 +340,7 @@ function ResultsBody({
         <div className={s.outcomeStats}>
           <OutcomeStat num={summary.goals_for} label="scored" />
           <OutcomeStat num={summary.goals_against} label="conceded" />
-          <OutcomeStat
-            num={summary.top_scorer ? summary.top_scorer.goals : "—"}
-            label={summary.top_scorer ? summary.top_scorer.name : "top scorer"}
-          />
+          <TopScorerStat scorer={summary.top_scorer} />
           <OutcomeStat num={summary.shootout_wins} label="shootout wins" />
         </div>
         <div className={s.outcomeFlags}>
@@ -459,6 +458,32 @@ function OutcomeStat({ num, label }: { num: number | string; label: string }) {
     <div className={s.oStat}>
       <span className={s.oStatNum}>{num}</span>
       <span className={s.oStatLabel}>{label}</span>
+    </div>
+  );
+}
+
+// B4 — top-scorer stat with the scorer's national flag beside the name. The
+// flag reuses MiniNationFlag (same renderer as the starters/bench), which owns
+// the honest fallback: real flag asset → nation-code chip → "-". When the run
+// has no resolvable top scorer we fall back to the plain "— / top scorer" cell.
+function TopScorerStat({ scorer }: { scorer: TopScorerView | null }) {
+  if (!scorer) {
+    return <OutcomeStat num="—" label="top scorer" />;
+  }
+  return (
+    <div className={s.oStat}>
+      <span className={s.oStatNum}>{scorer.goals}</span>
+      <span className={s.oStatScorer}>
+        {scorer.nation_id ? (
+          <MiniNationFlag
+            nationId={scorer.nation_id}
+            nationName={scorer.nation_name ?? scorer.name}
+            nationCode={scorer.nation_code}
+            className={s.oStatFlag}
+          />
+        ) : null}
+        <span className={s.oStatLabel}>{scorer.name}</span>
+      </span>
     </div>
   );
 }
