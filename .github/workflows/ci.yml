@@ -22,43 +22,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dedupe gate (q-008) ────────────────────────────────────────────────────
-  #
-  # A push to an integration branch (merit-*, engine-*, season-*) that ALSO has
-  # an open PR fires BOTH a push run and a pull_request run on the same head
-  # SHA. This gate skips the push-event duplicate when an open PR with this
-  # branch as head exists — the pull_request run (the one branch protection
-  # reads) always proceeds, so no gate is weakened; only the redundant trigger
-  # is dropped. pull_request events and pushes to main (which never have an
-  # open PR with head=main) always emit run=true.
-  dedupe:
-    name: dedupe · skip push run when an open PR covers this head
-    runs-on: ubuntu-latest
-    outputs:
-      run: ${{ steps.check.outputs.run }}
-    steps:
-      - name: Check for an open PR with this branch as head
-        id: check
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ "${{ github.event_name }}" != "push" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          prs=$(gh api "repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:${GITHUB_REF_NAME}" --jq 'length')
-          if [ "$prs" -gt 0 ]; then
-            echo "::notice::Open PR exists for ${GITHUB_REF_NAME} — skipping duplicate push run (the pull_request run covers this head)."
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-
   verify:
     name: typecheck · lint · test · build
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -101,8 +67,6 @@ jobs:
   golden:
     name: golden RNG determinism
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -141,8 +105,6 @@ jobs:
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -184,8 +146,6 @@ jobs:
   db-gate:
     name: db · path filter
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     outputs:
       run: ${{ steps.filter.outputs.db }}
     steps:
@@ -206,8 +166,8 @@ jobs:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
     runs-on: ubuntu-latest
     needs: db-gate
-    # db-gate is itself behind the dedupe gate; a skipped db-gate emits no
-    # outputs, so this `if` stays false on deduped push runs too.
+    # A skipped db-gate emits no outputs, so this `if` stays false when
+    # package/db-affecting paths were not touched.
     if: ${{ needs.db-gate.outputs.run == 'true' }}
     # SAFETY POSTURE (revised per independent review on PR #26):
     # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
@@ -317,8 +277,6 @@ jobs:
   etl-rating:
     name: ETL rating · lint · golden determinism
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
     # etl/output/, so this job needs no upstream Fjelstul CSV clone. It lints the
     # rating code, runs the rating test suite, and proves byte-determinism by
@@ -357,8 +315,6 @@ jobs:
   gitleaks:
     name: secrets · incremental scan
     runs-on: ubuntu-latest
-    needs: dedupe
-    if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
