@@ -61,15 +61,15 @@ jobs:
     if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
           version: 11.5.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: pnpm
@@ -82,6 +82,9 @@ jobs:
 
       - name: Agent contract drift check
         run: pnpm run check:agent-contracts
+
+      - name: Format check
+        run: pnpm run format:check
 
       - name: Typecheck
         run: pnpm run typecheck
@@ -102,15 +105,15 @@ jobs:
     if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
           version: 11.5.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: pnpm
@@ -129,6 +132,12 @@ jobs:
         # the deterministic 17-spin output drifts from the recorded snapshot.
         run: pnpm exec turbo run test:golden:draft --filter=@wcdraft/core
 
+      - name: Golden DATA determinism + integration
+        run: pnpm exec turbo run test:golden:data test:golden:integration --filter=@wcdraft/data
+
+      - name: Golden WEB leaderboard determinism
+        run: pnpm exec turbo run test:golden:leaderboard --filter=@wcdraft/web
+
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
     runs-on: ubuntu-latest
@@ -136,15 +145,15 @@ jobs:
     if: ${{ needs.dedupe.outputs.run == 'true' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
           version: 11.5.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: pnpm
@@ -181,10 +190,10 @@ jobs:
       run: ${{ steps.filter.outputs.db }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
       - name: Detect DB-affecting changes
         id: filter
-        uses: dorny/paths-filter@v4
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
         with:
           filters: |
             db:
@@ -210,15 +219,15 @@ jobs:
     # (fork PRs don't get secrets; this keeps their CI green).
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
           version: 11.5.1
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: pnpm
@@ -269,6 +278,17 @@ jobs:
           set +a
           pnpm --filter @wcdraft/db db:migrate
 
+      - name: Migration status (read-only)
+        if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+        run: |
+          set -a
+          . "$RUNNER_TEMP/neon-ephemeral.env"
+          set +a
+          pnpm --filter @wcdraft/db db:migrate:status
+
       - name: Rollback-check (apply → anon-dedupe → rollback → assert empty)
         if: ${{ steps.gate.outputs.skip != 'true' && steps.branch_create.outcome == 'success' }}
         env:
@@ -305,26 +325,47 @@ jobs:
     # regenerating ratings.json and failing if the tracked lockfile drifts.
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
-      - name: Install ETL package
-        run: pip install -e './etl[dev]'
+      - name: Setup uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+
+      - name: Install ETL package (+ dev tools)
+        run: uv sync --locked --extra dev
+        working-directory: etl
 
       - name: Lint (ruff)
         working-directory: etl
-        run: ruff check src tests
+        run: uv run ruff check src tests
 
       - name: Rating tests (determinism · honest-state · sanity)
         working-directory: etl
-        run: python -m pytest tests/test_rating.py -q
+        run: uv run python -m pytest tests/test_rating.py -q
 
       - name: Golden determinism — ratings lockfile must be byte-stable
         run: |
-          python -m wcdraft_etl.rating
+          uv run --project etl python -m wcdraft_etl.rating
+          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
           git diff --exit-code -- etl/output/ratings.lock.json \
             || (echo "::error::etl/output/ratings.lock.json is stale — run 'python -m wcdraft_etl.rating' and commit the lockfile." && exit 1)
+
+  gitleaks:
+    name: secrets · incremental scan
+    runs-on: ubuntu-latest
+    needs: dedupe
+    if: ${{ needs.dedupe.outputs.run == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks incremental scan
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

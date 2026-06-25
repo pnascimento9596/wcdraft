@@ -34,34 +34,45 @@ jobs:
         working-directory: etl
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
 
       - name: Clone pinned Fjelstul World Cup Database (CC-BY-SA 4.0)
         run: |
           git clone --filter=blob:none https://github.com/jfjelstul/worldcup vendor/worldcup
           git -C vendor/worldcup checkout "$WORLDCUP_COMMIT"
 
+      - name: Assert Fjelstul checkout matches pin
+        run: |
+          actual="$(git -C vendor/worldcup rev-parse HEAD)"
+          if [ "$actual" != "$WORLDCUP_COMMIT" ]; then
+            echo "::error::Fjelstul worldcup checkout drifted: expected $WORLDCUP_COMMIT, got $actual" >&2
+            exit 1
+          fi
+
       - name: Install ETL package (+ dev tools)
-        run: pip install -e ".[dev]"
+        run: uv sync --locked --extra dev
 
       - name: Lint (ruff)
-        run: ruff check src tests
+        run: uv run ruff check src tests
 
       - name: Verify RSSSF supplement snapshots (sha256 vs fetch manifest)
         # No network: recomputes the committed raw snapshot hashes and fails if
         # any drift from supplement/fetch_manifest.json, proving the sourced
         # appearances were parsed from exactly the pinned public bytes.
-        run: python -m wcdraft_etl.supplement.fetch --verify
+        run: uv run python -m wcdraft_etl.supplement.fetch --verify
 
       - name: Run ETL pipeline
         # Pipeline writes to etl/output relative to the repo root, so run from there.
         working-directory: ${{ github.workspace }}
-        run: python -m wcdraft_etl
+        run: uv run --project etl python -m wcdraft_etl
 
       - name: Determinism + artifacts current (no diff after rebuild)
         working-directory: ${{ github.workspace }}
@@ -75,11 +86,12 @@ jobs:
         # ratings.json is regenerated, not tracked; ratings.lock.json is the
         # tracked deterministic fingerprint that must remain byte-stable.
         working-directory: ${{ github.workspace }}
-        run: python -m wcdraft_etl.rating
+        run: uv run --project etl python -m wcdraft_etl.rating
 
       - name: Historical rating determinism lock current
         working-directory: ${{ github.workspace }}
         run: |
+          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
           if ! git diff --exit-code -- etl/output/ratings.lock.json; then
             echo "::error::etl/output/ratings.lock.json changed after a clean rebuild — run 'python -m wcdraft_etl.rating' and commit the lockfile." >&2
             exit 1
@@ -89,7 +101,7 @@ jobs:
         # Reads the committed canonical tables (just regenerated) + the pinned
         # CC-BY-SA Wikipedia snapshots in etl/sources/wikipedia_2026/.
         working-directory: ${{ github.workspace }}
-        run: python -m wcdraft_etl.ingest_2026
+        run: uv run --project etl python -m wcdraft_etl.ingest_2026
 
       - name: 2026 determinism + artifacts current (no diff after rebuild)
         working-directory: ${{ github.workspace }}
@@ -100,4 +112,34 @@ jobs:
           fi
 
       - name: Identity-QA + rating + 2026 determinism tests
-        run: python -m pytest -q
+        run: uv run python -m pytest -q
+
+  rating-lock-matrix:
+    name: rating lock · Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+
+      - name: Install ETL package (+ dev tools)
+        run: uv sync --locked --extra dev
+        working-directory: etl
+
+      - name: Golden determinism — ratings lockfile must be byte-stable
+        run: |
+          uv run --project etl python -m wcdraft_etl.rating
+          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
+          git diff --exit-code -- etl/output/ratings.lock.json \
+            || (echo "::error::etl/output/ratings.lock.json changed on Python ${{ matrix.python-version }}." >&2 && exit 1)

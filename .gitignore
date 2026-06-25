@@ -65,13 +65,14 @@ apps/web/public/sw-version.js
 # Prompt / marketing export scratch dropped by agent runs.
 prompt-exports/
 
+# Agent scratch from local rating/debug passes. Keep committed CSVs under
+# docs/, etl/output/, etl/overrides/, and etl/merit/ trackable.
+/_rating_delta_run*/
+/*.csv
+.claude/
+
 # Loose verification screenshots captured at the repo ROOT during review
 # passes. Leading slash anchors this to the top level only, so committed
 # brand/marketing icons (apps/web/public/**) and review captures under
 # docs/screenshots/** stay tracked. Keep durable shots under docs/, not here.
 /*.png
-
-# uv-generated Python lockfile. etl deps are pinned via etl/pyproject.toml and
-# the uv lock is not part of the committed reproducibility contract (etl/output
-# byte-stability is the gate). Tracking it would add unreviewed lock churn.
-etl/uv.lock

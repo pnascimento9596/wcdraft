@@ -7,10 +7,10 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": [
         "LEADERBOARD_ENABLED",
-        "LEADERBOARD_REQUIRE_ACCOUNT",
         "DATABASE_URL",
         "AUTH_COOKIE_SECRET",
         "WCDRAFT_OG_SIGNING_SECRET",
+        "WCDRAFT_CSP_REPORT_ONLY",
         "VERCEL_GIT_COMMIT_SHA",
         "VERCEL_URL",
         "VERCEL_DEPLOYMENT_ID",
@@ -36,9 +36,9 @@
         "WCDRAFT_CANARY_REGEN",
         "WCDRAFT_LEADERBOARD_BENCH",
         "LEADERBOARD_ENABLED",
-        "LEADERBOARD_REQUIRE_ACCOUNT",
         "AUTH_COOKIE_SECRET",
         "WCDRAFT_OG_SIGNING_SECRET",
+        "WCDRAFT_CSP_REPORT_ONLY",
         "DATABASE_URL",
         "RESEND_API_KEY",
         "AUTH_EMAIL_FROM",
@@ -76,6 +76,10 @@
       "env": ["DATABASE_URL_UNPOOLED", "DATABASE_URL"]
     },
     "db:migrate": {
+      "cache": false,
+      "env": ["DATABASE_URL_UNPOOLED"]
+    },
+    "db:migrate:status": {
       "cache": false,
       "env": ["DATABASE_URL_UNPOOLED"]
     },
