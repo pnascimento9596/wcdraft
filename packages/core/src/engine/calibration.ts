@@ -107,7 +107,7 @@ export const LAMBDA = Object.freeze({
    * raises MIN to 0.80 after the BASE/SPREAD refit; the symmetric realism
    * and faithfulness gates lock that this remains variance, not certainty.
    */
-  MIN: 0.80,
+  MIN: 0.8,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
   MAX: 3.4,
   /**
@@ -116,9 +116,9 @@ export const LAMBDA = Object.freeze({
    * defensive XIs legible while leaving GK with a meaningful (W_GK=0.30)
    * channel of its own.
    */
-  W_DEF: 0.70,
+  W_DEF: 0.7,
   /** Weight on opponent GOALKEEPING channel inside `defResist`. Must satisfy W_DEF + W_GK === 1. */
-  W_GK: 0.30,
+  W_GK: 0.3,
   /**
    * Sensitivity of `control_for` to the midfield delta (per 100 channel
    * points). E-3a raised gamma_mid to 0.50; MV2-11b raised it to 0.60;
@@ -128,7 +128,7 @@ export const LAMBDA = Object.freeze({
    * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies,
    * never replaces, the attack/defense edge.
    */
-  GAMMA_MID: 0.70,
+  GAMMA_MID: 0.7,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */
@@ -244,7 +244,7 @@ export const LAMBDA_DISP = Object.freeze({
    * E-3a REFIT D6: OUTER_PROB=0.20 → 40% of KO matches are "non-neutral"
    * (cagey OR open), 60% stay at neutral λ.
    */
-  OUTER_PROB: 0.20,
+  OUTER_PROB: 0.2,
   /**
    * KO-phase half-width: ε ∈ {1 − A, 1, 1 + A}. Must satisfy `A < 1`. The
    * KO dispersion magnitude is Var[ε] = 2·OUTER_PROB·A² — E-3a REFIT D6
@@ -268,7 +268,7 @@ export const LAMBDA_DISP = Object.freeze({
    * Group phase doesn't need the KO-tied lift, only the asymmetric-
    * scoreline tail boost.
    */
-  GROUP_A: 0.40,
+  GROUP_A: 0.4,
 });
 
 // ─── PER-CHANCE OUTCOME SPLIT (conditioned on a chance occurring, non-goal) ────
@@ -288,7 +288,7 @@ export const LAMBDA_DISP = Object.freeze({
 //   remainder ~50% is open-play key-pass colour (box-score honest, not noise).
 export const CHANCE_OUTCOME = Object.freeze({
   /** Share of non-goal chances that are shots on target (→ save event). */
-  SAVED_SHARE: 0.10,
+  SAVED_SHARE: 0.1,
   /** Share of non-goal chances that are off-target shots. */
   OFF_TARGET_SHARE: 0.14,
   /** Share of non-goal chances that surface a foul. */
@@ -479,11 +479,7 @@ export function midfieldControl(forSide: TeamStrength, against: TeamStrength): n
 export function lambdaForFour(forSide: TeamStrength, against: TeamStrength): number {
   const L = activeLambda();
   const defResist = defensiveResistance(against);
-  const base = clamp(
-    L.BASE + (L.SPREAD * (forSide.attack - defResist)) / 100,
-    L.MIN,
-    L.MAX,
-  );
+  const base = clamp(L.BASE + (L.SPREAD * (forSide.attack - defResist)) / 100, L.MIN, L.MAX);
   return base * midfieldControl(forSide, against);
 }
 
@@ -524,7 +520,6 @@ export function lambdaDispersionMultiplier(
   if (roll < 2 * outer) return 1 + a;
   return 1;
 }
-
 
 // ─── D6 CALIBRATION FIT OVERRIDE — OFFLINE TOOL ONLY ──────────────────────────
 //
@@ -577,7 +572,10 @@ export function activeLambdaDisp(): typeof LAMBDA_DISP {
 export function __UNSAFE_setCalibrationOverride(o: CalibrationOverride): void {
   __activeLambda = Object.freeze({ ...LAMBDA, ...(o.LAMBDA ?? {}) }) as typeof LAMBDA;
   __activeChances = Object.freeze({ ...CHANCES, ...(o.CHANCES ?? {}) }) as typeof CHANCES;
-  __activeLambdaDisp = Object.freeze({ ...LAMBDA_DISP, ...(o.LAMBDA_DISP ?? {}) }) as typeof LAMBDA_DISP;
+  __activeLambdaDisp = Object.freeze({
+    ...LAMBDA_DISP,
+    ...(o.LAMBDA_DISP ?? {}),
+  }) as typeof LAMBDA_DISP;
 }
 
 /** D6 FIT ONLY. Restore production-default constants. */

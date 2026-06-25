@@ -91,7 +91,12 @@ export function SignInForm(): React.ReactElement {
   }
 
   return (
-    <form className="signin-form" onSubmit={submit} noValidate aria-describedby={state.kind === "error" ? "signin-error" : undefined}>
+    <form
+      className="signin-form"
+      onSubmit={submit}
+      noValidate
+      aria-describedby={state.kind === "error" ? "signin-error" : undefined}
+    >
       <label htmlFor={emailId} className="signin-form__label">
         Email
       </label>
@@ -118,7 +123,9 @@ export function SignInForm(): React.ReactElement {
           disabled={state.kind === "submitting"}
         >
           <span>{state.kind === "submitting" ? "Sending…" : "Send link"}</span>
-          <span className="signin-form__submit-arrow" aria-hidden="true">→</span>
+          <span className="signin-form__submit-arrow" aria-hidden="true">
+            →
+          </span>
         </button>
       </div>
       {state.kind === "error" ? (
@@ -128,7 +135,10 @@ export function SignInForm(): React.ReactElement {
       ) : (
         <p className="signin-form__hint">
           By signing in you agree to wcdraft&rsquo;s{" "}
-          <a href="/privacy" className="signin-form__hint-link">privacy policy</a>.
+          <a href="/privacy" className="signin-form__hint-link">
+            privacy policy
+          </a>
+          .
         </p>
       )}
     </form>
@@ -146,15 +156,21 @@ function CheckYourEmail({
     <div className="signin-sent" role="status" aria-live="polite">
       <div className="signin-sent__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="40" height="40" fill="none">
-          <rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-          <path d="M3 7l9 7 9-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <path d="M16 3l1.5 2L20 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          <rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M3 7l9 7 9-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M16 3l1.5 2L20 4"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
       <h2 className="signin-sent__h display">check your email</h2>
       <p className="signin-sent__msg">
         We sent a single&#8209;use sign&#8209;in link to{" "}
-        <strong className="signin-sent__email mono">{email}</strong>. Open it on this device to finish.
+        <strong className="signin-sent__email mono">{email}</strong>. Open it on this device to
+        finish.
       </p>
       <p className="signin-sent__hint">
         The link expires in 15 minutes. Didn&rsquo;t arrive? Check spam, then{" "}

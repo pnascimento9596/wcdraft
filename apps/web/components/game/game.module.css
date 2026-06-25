@@ -1144,7 +1144,11 @@ button.benchSlot:not(:disabled):hover {
      headers/numbers). This base family overrides the app's inherited
      Newsreader serif so the narration + box scores read cleanly; Newsreader
      usage elsewhere is untouched. */
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-family:
+    var(--font-sans),
+    system-ui,
+    -apple-system,
+    sans-serif;
   /* The reveal/results column is a terminal scroll surface on iOS — keep its
      last element (bench / leaderboard / replay row) clear of Safari's bottom
      chrome + the home indicator. */

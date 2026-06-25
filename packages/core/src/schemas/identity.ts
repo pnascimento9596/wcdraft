@@ -22,11 +22,9 @@ import {
  * safe-integer tournament_id). The schema OUTPUT is the branded `CardId`
  * type so `satisfies z.ZodType<CardId>` on owner schemas type-checks.
  */
-export const CardIdSchema = z
-  .string()
-  .refine((s) => parseCardId(s) !== null, {
-    message: "card_id must be of form '<player_id>:<tournament_id>'",
-  }) as unknown as z.ZodType<CardId>;
+export const CardIdSchema = z.string().refine((s) => parseCardId(s) !== null, {
+  message: "card_id must be of form '<player_id>:<tournament_id>'",
+}) as unknown as z.ZodType<CardId>;
 
 /**
  * Helper: shared cross-field refinement asserting that a record's `card_id`

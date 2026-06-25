@@ -43,8 +43,7 @@ export function SiteHeader({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { theme } = useTheme();
-  const markSrc =
-    theme === "light" ? "/brand/wcdraft-mark-light.svg" : "/brand/wcdraft-mark.svg";
+  const markSrc = theme === "light" ? "/brand/wcdraft-mark-light.svg" : "/brand/wcdraft-mark.svg";
 
   // Close the mobile menu on route change.
   useEffect(() => {
@@ -59,14 +58,7 @@ export function SiteHeader({
             is the same geometry with deeper gold-family stops for the pale
             masthead. Never redraw inline. */}
         <Link href="/" className="wordmark" aria-label="wcdraft — home">
-          <Image
-            src={markSrc}
-            alt=""
-            width={32}
-            height={35}
-            priority
-            className="wordmark__badge"
-          />
+          <Image src={markSrc} alt="" width={32} height={35} priority className="wordmark__badge" />
           <span className="wordmark__text">
             wc<b>draft</b>
           </span>

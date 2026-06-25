@@ -78,13 +78,15 @@ describe("consumeRateLimit", () => {
   it("plaintext is never persisted — bucket_key is sha256-hashed", async () => {
     const now = Date.UTC(2026, 5, 1);
     await consumeRateLimit(
-      { bucket: { kind: "email", value: "secret-address@example.com" }, windowMs: HOUR, maxCount: 3 },
+      {
+        bucket: { kind: "email", value: "secret-address@example.com" },
+        windowMs: HOUR,
+        maxCount: 3,
+      },
       { db: env.db, now: () => now },
     );
     const r = await env.db.execute(`SELECT bucket_key FROM auth_rate_limits`);
-    const keys = (r as unknown as { rows: { bucket_key: string }[] }).rows.map(
-      (x) => x.bucket_key,
-    );
+    const keys = (r as unknown as { rows: { bucket_key: string }[] }).rows.map((x) => x.bucket_key);
     expect(keys).toHaveLength(1);
     expect(keys[0]).not.toContain("secret-address");
     expect(keys[0]).toMatch(/^email:[0-9a-f]{64}$/);

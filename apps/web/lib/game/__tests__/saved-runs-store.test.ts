@@ -29,10 +29,7 @@ async function makeUser(email: string): Promise<string> {
   const [u] = await env.db.insert(users).values({ email }).returning();
   return u!.id;
 }
-async function makeSession(args: {
-  id: string;
-  userId?: string | null;
-}): Promise<void> {
+async function makeSession(args: { id: string; userId?: string | null }): Promise<void> {
   await env.db.insert(sessions).values({
     id: args.id,
     userId: args.userId ?? null,
@@ -107,10 +104,7 @@ describe("saveRun", () => {
       { userId: null, sessionId: "ses-y" },
       deps(),
     );
-    const rows = await env.db
-      .select()
-      .from(savedRuns)
-      .where(eq(savedRuns.token, "t1.shared"));
+    const rows = await env.db.select().from(savedRuns).where(eq(savedRuns.token, "t1.shared"));
     expect(rows).toHaveLength(2);
   });
 
@@ -156,16 +150,8 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
     const b = await makeUser("b@example.com");
     await makeSession({ id: "ses-a", userId: a });
     await makeSession({ id: "ses-b", userId: b });
-    await saveRun(
-      { ...baseArgs, token: "t1.a" },
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-    );
-    await saveRun(
-      { ...baseArgs, token: "t1.b" },
-      { userId: b, sessionId: "ses-b" },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.a" }, { userId: a, sessionId: "ses-a" }, deps());
+    await saveRun({ ...baseArgs, token: "t1.b" }, { userId: b, sessionId: "ses-b" }, deps());
     const list = await listRuns({ userId: a, sessionId: "ses-a" }, deps());
     expect(list.map((r) => r.token)).toEqual(["t1.a"]);
   });
@@ -187,15 +173,8 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
     const a = await makeUser("a@example.com");
     await makeSession({ id: "ses-a", userId: a });
     await makeSession({ id: "ses-anon" });
-    await saveRun(
-      { ...baseArgs, token: "t1.a" },
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-    );
-    const list = await listRuns(
-      { userId: null, sessionId: "ses-anon" },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.a" }, { userId: a, sessionId: "ses-a" }, deps());
+    const list = await listRuns({ userId: null, sessionId: "ses-anon" }, deps());
     expect(list).toEqual([]);
   });
 
@@ -209,11 +188,7 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
       { userId: a, sessionId: "ses-a" },
       deps(),
     );
-    const found = await getRun(
-      saved.row.id,
-      { userId: b, sessionId: "ses-b" },
-      deps(),
-    );
+    const found = await getRun(saved.row.id, { userId: b, sessionId: "ses-b" }, deps());
     expect(found).toBeNull();
   });
 
@@ -227,16 +202,9 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
       { userId: a, sessionId: "ses-a" },
       deps(),
     );
-    const deleted = await deleteRun(
-      saved.row.id,
-      { userId: b, sessionId: "ses-b" },
-      deps(),
-    );
+    const deleted = await deleteRun(saved.row.id, { userId: b, sessionId: "ses-b" }, deps());
     expect(deleted).toBe(false);
-    const stillThere = await env.db
-      .select()
-      .from(savedRuns)
-      .where(eq(savedRuns.id, saved.row.id));
+    const stillThere = await env.db.select().from(savedRuns).where(eq(savedRuns.id, saved.row.id));
     expect(stillThere).toHaveLength(1);
   });
 
@@ -248,16 +216,9 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
       { userId: a, sessionId: "ses-a" },
       deps(),
     );
-    const deleted = await deleteRun(
-      saved.row.id,
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-    );
+    const deleted = await deleteRun(saved.row.id, { userId: a, sessionId: "ses-a" }, deps());
     expect(deleted).toBe(true);
-    const rows = await env.db
-      .select()
-      .from(savedRuns)
-      .where(eq(savedRuns.id, saved.row.id));
+    const rows = await env.db.select().from(savedRuns).where(eq(savedRuns.id, saved.row.id));
     expect(rows).toEqual([]);
   });
 });
@@ -274,11 +235,9 @@ describe("cap + eviction", () => {
         { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, i) },
       );
     }
-    const list = await listRuns(
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-      { limit: SAVED_RUNS_CAP + 5 },
-    );
+    const list = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), {
+      limit: SAVED_RUNS_CAP + 5,
+    });
     expect(list).toHaveLength(SAVED_RUNS_CAP);
     expect(list.map((r) => r.token)).not.toContain("t1.c0");
     expect(list.map((r) => r.token)).not.toContain("t1.c1");
@@ -317,20 +276,9 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
   it("transfers this session's anon rows to the new user_id (sets claim_state = 'claimed')", async () => {
     const a = await makeUser("a@example.com");
     await makeSession({ id: "ses-anon" });
-    await saveRun(
-      { ...baseArgs, token: "t1.1" },
-      { userId: null, sessionId: "ses-anon" },
-      deps(),
-    );
-    await saveRun(
-      { ...baseArgs, token: "t1.2" },
-      { userId: null, sessionId: "ses-anon" },
-      deps(),
-    );
-    const result = await claimAnonRuns(
-      { sessionId: "ses-anon", userId: a },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.1" }, { userId: null, sessionId: "ses-anon" }, deps());
+    await saveRun({ ...baseArgs, token: "t1.2" }, { userId: null, sessionId: "ses-anon" }, deps());
+    const result = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
     expect(result).toEqual({ transferred: 2, dropped: 0 });
     const owned = await listRuns({ userId: a, sessionId: "ses-anon" }, deps());
     expect(owned).toHaveLength(2);
@@ -341,11 +289,7 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
   it("IS IDEMPOTENT: re-running yields zero transfers and zero drops", async () => {
     const a = await makeUser("idem@example.com");
     await makeSession({ id: "ses-anon" });
-    await saveRun(
-      { ...baseArgs, token: "t1.x" },
-      { userId: null, sessionId: "ses-anon" },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.x" }, { userId: null, sessionId: "ses-anon" }, deps());
     const r1 = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
     const r2 = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
     expect(r1).toEqual({ transferred: 1, dropped: 0 });
@@ -357,21 +301,10 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
     await makeSession({ id: "ses-a", userId: a });
     await makeSession({ id: "ses-anon" });
     // Account row exists for token T.
-    await saveRun(
-      { ...baseArgs, token: "t1.T" },
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.T" }, { userId: a, sessionId: "ses-a" }, deps());
     // Anon session also has token T.
-    await saveRun(
-      { ...baseArgs, token: "t1.T" },
-      { userId: null, sessionId: "ses-anon" },
-      deps(),
-    );
-    const result = await claimAnonRuns(
-      { sessionId: "ses-anon", userId: a },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.T" }, { userId: null, sessionId: "ses-anon" }, deps());
+    const result = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
     expect(result).toEqual({ transferred: 0, dropped: 1 });
     const owned = await listRuns({ userId: a, sessionId: "ses-a" }, deps());
     expect(owned).toHaveLength(1);
@@ -388,11 +321,7 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
     await makeSession({ id: "ses-a", userId: a });
     await makeSession({ id: "ses-anon" });
     // Account: t1.alpha
-    await saveRun(
-      { ...baseArgs, token: "t1.alpha" },
-      { userId: a, sessionId: "ses-a" },
-      deps(),
-    );
+    await saveRun({ ...baseArgs, token: "t1.alpha" }, { userId: a, sessionId: "ses-a" }, deps());
     // Anon: t1.alpha (conflict) + t1.beta (transferable) + t1.gamma (transferable)
     await saveRun(
       { ...baseArgs, token: "t1.alpha" },
@@ -409,17 +338,10 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
       { userId: null, sessionId: "ses-anon" },
       deps(),
     );
-    const result = await claimAnonRuns(
-      { sessionId: "ses-anon", userId: a },
-      deps(),
-    );
+    const result = await claimAnonRuns({ sessionId: "ses-anon", userId: a }, deps());
     expect(result).toEqual({ transferred: 2, dropped: 1 });
     const owned = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), { limit: 99 });
-    expect(owned.map((r) => r.token).sort()).toEqual([
-      "t1.alpha",
-      "t1.beta",
-      "t1.gamma",
-    ]);
+    expect(owned.map((r) => r.token).sort()).toEqual(["t1.alpha", "t1.beta", "t1.gamma"]);
   });
 
   it("NO CROSS-SESSION THEFT: claiming session X does not touch session Y", async () => {
@@ -436,10 +358,7 @@ describe("claimAnonRuns — idempotence, conflict, no theft", () => {
       { userId: null, sessionId: "ses-strangers" },
       deps(),
     );
-    const result = await claimAnonRuns(
-      { sessionId: "ses-mine", userId: a },
-      deps(),
-    );
+    const result = await claimAnonRuns({ sessionId: "ses-mine", userId: a }, deps());
     expect(result.transferred).toBe(1);
     // Stranger's anon row is untouched.
     const strangersStill = await env.db
@@ -547,4 +466,3 @@ describe("F-3.5 summary persistence", () => {
     expect(listB).toEqual([]);
   });
 });
-

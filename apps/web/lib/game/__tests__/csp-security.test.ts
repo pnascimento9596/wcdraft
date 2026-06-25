@@ -13,9 +13,7 @@ describe("Content Security Policy", () => {
     expect(cspHeaderName({ NODE_ENV: "production", VERCEL_ENV: "preview" })).toBe(
       "Content-Security-Policy-Report-Only",
     );
-    expect(cspHeaderName({ NODE_ENV: "development" })).toBe(
-      "Content-Security-Policy-Report-Only",
-    );
+    expect(cspHeaderName({ NODE_ENV: "development" })).toBe("Content-Security-Policy-Report-Only");
     expect(cspHeaderName({ NODE_ENV: "production", VERCEL_ENV: "production" })).toBe(
       "Content-Security-Policy",
     );

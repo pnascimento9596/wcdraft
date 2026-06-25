@@ -23,15 +23,11 @@ describe("validateCookieSecret", () => {
   });
 
   it("REJECTS the legacy 16-char ASCII string (was accepted before the fix)", () => {
-    expect(() => validateCookieSecret(SHORT_16_CHAR_ASCII)).toThrow(
-      /at least 32 decoded bytes/i,
-    );
+    expect(() => validateCookieSecret(SHORT_16_CHAR_ASCII)).toThrow(/at least 32 decoded bytes/i);
   });
 
   it("REJECTS a base64url string that decodes to only 16 bytes", () => {
-    expect(() => validateCookieSecret(ONLY_16_BYTES)).toThrow(
-      /at least 32 decoded bytes/i,
-    );
+    expect(() => validateCookieSecret(ONLY_16_BYTES)).toThrow(/at least 32 decoded bytes/i);
   });
 
   it("REJECTS empty / undefined input", () => {
@@ -41,9 +37,7 @@ describe("validateCookieSecret", () => {
 
   it("REJECTS garbage base64url that decodes to <32 bytes", () => {
     // Non-alphabet chars are silently dropped; what remains decodes short.
-    expect(() => validateCookieSecret("!@#$%^&*()_+|}{")).toThrow(
-      /at least 32 decoded bytes/i,
-    );
+    expect(() => validateCookieSecret("!@#$%^&*()_+|}{")).toThrow(/at least 32 decoded bytes/i);
   });
 
   it("trims surrounding whitespace before validating", () => {
@@ -55,9 +49,7 @@ describe("validateCookieSecret", () => {
   });
 
   it("var name override surfaces in the error message", () => {
-    expect(() =>
-      validateCookieSecret("short", "ANOTHER_SECRET"),
-    ).toThrow(/ANOTHER_SECRET/);
+    expect(() => validateCookieSecret("short", "ANOTHER_SECRET")).toThrow(/ANOTHER_SECRET/);
   });
 
   it("byte-length floor is configurable", () => {

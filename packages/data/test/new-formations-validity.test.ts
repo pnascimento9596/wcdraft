@@ -31,11 +31,7 @@ import {
   type Team2026,
 } from "@wcdraft/core";
 
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-} from "../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../src/index.js";
 
 const NEW_FORMATIONS = ["4-1-4-1", "3-4-2-1"] as const;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;

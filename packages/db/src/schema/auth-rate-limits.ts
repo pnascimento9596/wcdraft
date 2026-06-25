@@ -16,14 +16,7 @@
 //
 // Composite primary key (bucket_key, window_start) lets the UPSERT path be
 // a single SQL round-trip with `ON CONFLICT DO UPDATE`.
-import {
-  pgTable,
-  text,
-  timestamp,
-  integer,
-  primaryKey,
-  index,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, primaryKey, index } from "drizzle-orm/pg-core";
 
 export const authRateLimits = pgTable(
   "auth_rate_limits",
@@ -31,9 +24,7 @@ export const authRateLimits = pgTable(
     bucketKey: text("bucket_key").notNull(),
     windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
     count: integer("count").notNull().default(0),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     primaryKey({

@@ -23,12 +23,7 @@ import { sql } from "drizzle-orm";
  * kind: window floors of different lengths can coincide (hour 0 of a day), so
  * sharing a key across windows would double-increment one row.
  */
-export type RateLimitBucketKind =
-  | "email"
-  | "ip"
-  | "lb-identity-1h"
-  | "lb-identity-1d"
-  | "lb-ip-1h";
+export type RateLimitBucketKind = "email" | "ip" | "lb-identity-1h" | "lb-identity-1d" | "lb-ip-1h";
 
 export interface RateLimitArgs {
   /** "<kind>:<plaintext>" — hashed inside. */

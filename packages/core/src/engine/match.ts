@@ -175,7 +175,7 @@ function generateChances(p: ChancePhaseParams): ChanceResult[] {
 
     const attacker = weightedPick(p.attackers, (m) => m.attackWeight, p.eventRng);
     let assist: SimMember | null = null;
-    if ((kind === "goal") && p.eventRng.next() < INCIDENT.ASSIST_PROB) {
+    if (kind === "goal" && p.eventRng.next() < INCIDENT.ASSIST_PROB) {
       const pool = p.creators.filter((m) => m.card_id !== (attacker?.card_id ?? ""));
       assist = weightedPick(pool, (m) => m.creativeWeight, p.eventRng);
     }
@@ -434,7 +434,10 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   // config; only the λ multiplier downstream differs. ε ∈ [1−A, 1+A], mean 1
   // exactly → goals/match mean preserved. Both sides scaled together →
   // favourite/underdog ordering preserved (faithfulness intact).
-  const lambdaEpsilon = lambdaDispersionMultiplier(structRng, phase === "knockout" ? "knockout" : "group");
+  const lambdaEpsilon = lambdaDispersionMultiplier(
+    structRng,
+    phase === "knockout" ? "knockout" : "group",
+  );
   const lambdaUser = lambdaUserRaw * lambdaEpsilon;
   const lambdaOpp = lambdaOppRaw * lambdaEpsilon;
 
@@ -510,7 +513,15 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     oppGoalsEt = etOpp.filter((c) => isGoalKind(c.kind)).length;
 
     if (userGoalsReg + userGoalsEt === oppGoalsReg + oppGoalsEt) {
-      shootout = runShootout(matchId, userStarted, oppStarted, userStrength, oppStrength, structRng, shootoutEvents);
+      shootout = runShootout(
+        matchId,
+        userStarted,
+        oppStarted,
+        userStrength,
+        oppStrength,
+        structRng,
+        shootoutEvents,
+      );
     }
   }
 

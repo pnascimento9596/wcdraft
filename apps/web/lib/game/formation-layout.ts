@@ -65,11 +65,12 @@ export interface FormationOption {
   blurb: string;
 }
 
-export const SUPPORTED_FORMATION_OPTIONS: readonly FormationOption[] =
-  SUPPORTED_FORMATION_IDS.map((fid) => ({
+export const SUPPORTED_FORMATION_OPTIONS: readonly FormationOption[] = SUPPORTED_FORMATION_IDS.map(
+  (fid) => ({
     formation_id: fid,
     blurb: FORMATION_BLURBS[fid],
-  }));
+  }),
+);
 
 /** Type guard for runtime widening (string → SupportedFormationId). */
 export function isSupportedFormationId(id: string): id is SupportedFormationId {

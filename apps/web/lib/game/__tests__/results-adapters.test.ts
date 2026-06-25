@@ -47,9 +47,7 @@ describe("resolveScorerName — honest-state fallback", () => {
   });
 
   it("falls back to full_name when common_name is empty / whitespace", () => {
-    const gd = makeStub([
-      { card_id: "card-2", common_name: "   ", full_name: "Full Name Here" },
-    ]);
+    const gd = makeStub([{ card_id: "card-2", common_name: "   ", full_name: "Full Name Here" }]);
     expect(resolveScorerName(gd, "player-2", "card-2")).toBe("Full Name Here");
   });
 

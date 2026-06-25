@@ -14,16 +14,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getDb, type Db } from "@wcdraft/db";
 import { AuthError } from "./errors";
-import {
-  SESSION_COOKIE_NAME,
-  SESSION_TTL_MS,
-  type SessionDeps,
-} from "./sessions";
+import { SESSION_COOKIE_NAME, SESSION_TTL_MS, type SessionDeps } from "./sessions";
 import { CSRF_COOKIE_NAME } from "./csrf";
-import {
-  getEmailSender,
-  type EmailSender,
-} from "./email";
+import { getEmailSender, type EmailSender } from "./email";
 import type { MagicLinkDeps } from "./magic-link";
 
 export interface RuntimeDeps extends SessionDeps {
@@ -102,8 +95,7 @@ export function buildRuntimeDeps(): RuntimeDeps {
     );
   }
   const verifyBaseUrl = process.env.AUTH_BASE_URL?.trim() ?? "";
-  const fromAddress =
-    process.env.AUTH_EMAIL_FROM?.trim() ?? "wcdraft <onboarding@resend.dev>";
+  const fromAddress = process.env.AUTH_EMAIL_FROM?.trim() ?? "wcdraft <onboarding@resend.dev>";
   return {
     db: db(),
     now: () => Date.now(),
@@ -124,10 +116,7 @@ export function buildMagicLinkDeps(rd: RuntimeDeps): MagicLinkDeps {
   };
 }
 
-export function readRequestCookie(
-  req: NextRequest,
-  name: string,
-): string | null {
+export function readRequestCookie(req: NextRequest, name: string): string | null {
   // NextRequest.cookies has typed `.get`. Fall back to header parse for
   // tests that mint a plain Request.
   const ck = req.cookies?.get(name)?.value;
@@ -231,14 +220,8 @@ export function jsonError(err: unknown): NextResponse {
         { status: err.status },
       );
     }
-    return NextResponse.json(
-      { error: err.code, message: err.message },
-      { status: err.status },
-    );
+    return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
   }
   console.error("[auth] unexpected error", err);
-  return NextResponse.json(
-    { error: "INTERNAL_ERROR" },
-    { status: 500 },
-  );
+  return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
 }

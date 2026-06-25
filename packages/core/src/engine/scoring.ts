@@ -12,7 +12,10 @@ import type { ScoreComponent, ScoringConfig } from "../types/scoring.js";
 import type { ComputeScoreFn, ResolveTopScorerFn } from "../api/scoring.js";
 
 /** Sum a numeric field across every player's run totals. */
-function sumTotals(run: RunResult, field: keyof RunResult["player_stats"][number]["totals"]): number {
+function sumTotals(
+  run: RunResult,
+  field: keyof RunResult["player_stats"][number]["totals"],
+): number {
   let n = 0;
   for (const ps of run.player_stats) n += ps.totals[field];
   return n;
@@ -44,7 +47,11 @@ export const computeScore: ComputeScoreFn = (run, cfg: ScoringConfig) => {
     { label: "Red cards", raw: sumTotals(run, "reds"), weight: cfg.red_penalty },
     { label: "Fouls committed", raw: sumTotals(run, "fouls_committed"), weight: cfg.foul_penalty },
     { label: "Offsides", raw: sumTotals(run, "offsides"), weight: cfg.offside_penalty },
-    { label: "Missed penalties", raw: sumTotals(run, "pens_missed"), weight: cfg.missed_pen_penalty },
+    {
+      label: "Missed penalties",
+      raw: sumTotals(run, "pens_missed"),
+      weight: cfg.missed_pen_penalty,
+    },
   ];
 
   const breakdown: ScoreComponent[] = components.map((c) => ({

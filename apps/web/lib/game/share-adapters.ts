@@ -54,7 +54,8 @@ export function topStars(gameData: GameData, draft: DraftState, n = 3): ShareSta
     if (!rating || !card || rating.overall === null) continue;
     const nation = gameData.indexes.nationById.get(card.nation_id);
     const code = nation?.code ?? card.nation_id.toUpperCase();
-    const name = card.common_name && card.common_name.trim().length > 0 ? card.common_name : card.full_name;
+    const name =
+      card.common_name && card.common_name.trim().length > 0 ? card.common_name : card.full_name;
     stars.push({
       name,
       nation_code: code,

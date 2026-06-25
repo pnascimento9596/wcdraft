@@ -24,12 +24,7 @@ import {
   SUPPORTED_FORMATION_OPTIONS,
 } from "@/lib/game/formation-layout";
 
-const UNSUPPORTED_FORMATION_IDS = [
-  "4-1-2-1-2",
-  "4-4-1-1",
-  "4-5-1",
-  "5-4-1",
-] as const;
+const UNSUPPORTED_FORMATION_IDS = ["4-1-2-1-2", "4-4-1-1", "4-5-1", "5-4-1"] as const;
 
 describe("formation-layout — SUPPORTED_FORMATION_IDS", () => {
   it("exposes exactly the eight core-supported ids in the documented order", () => {
@@ -82,19 +77,16 @@ describe("formation-layout — getFormationVisualSlots", () => {
     },
   );
 
-  it.each([...SUPPORTED_FORMATION_IDS])(
-    "%s coordinates are finite numbers in [0, 100]",
-    (fid) => {
-      for (const v of getFormationVisualSlots(fid)) {
-        expect(Number.isFinite(v.x_pct)).toBe(true);
-        expect(Number.isFinite(v.y_pct)).toBe(true);
-        expect(v.x_pct).toBeGreaterThanOrEqual(0);
-        expect(v.x_pct).toBeLessThanOrEqual(100);
-        expect(v.y_pct).toBeGreaterThanOrEqual(0);
-        expect(v.y_pct).toBeLessThanOrEqual(100);
-      }
-    },
-  );
+  it.each([...SUPPORTED_FORMATION_IDS])("%s coordinates are finite numbers in [0, 100]", (fid) => {
+    for (const v of getFormationVisualSlots(fid)) {
+      expect(Number.isFinite(v.x_pct)).toBe(true);
+      expect(Number.isFinite(v.y_pct)).toBe(true);
+      expect(v.x_pct).toBeGreaterThanOrEqual(0);
+      expect(v.x_pct).toBeLessThanOrEqual(100);
+      expect(v.y_pct).toBeGreaterThanOrEqual(0);
+      expect(v.y_pct).toBeLessThanOrEqual(100);
+    }
+  });
 
   it.each([...SUPPORTED_FORMATION_IDS])(
     "%s position_line is derived from CORE slot_position (not the JSON visual band)",

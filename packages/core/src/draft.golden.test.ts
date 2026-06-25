@@ -345,11 +345,7 @@ describe("draft — at most ONE manager; manager never in a SquadSlot", () => {
       const laterCoach = state.spins.some(
         (s) => s.index > active.index && s.rolled_manager_card_id !== null,
       );
-      if (
-        state.manager_card_id === null &&
-        active.rolled_manager_card_id !== null &&
-        !laterCoach
-      ) {
+      if (state.manager_card_id === null && active.rolled_manager_card_id !== null && !laterCoach) {
         // The strand guard must reject the player pick here.
         if (active.rolled_card_ids.length > 0) {
           expect(() => pickPlayer(catalog, state, active.rolled_card_ids[0]!)).toThrow(/strand/);

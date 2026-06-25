@@ -12,7 +12,7 @@
 ## Crux #1 — limiter atomicity: VERIFIED (probed, not reasoned)
 
 - `consumeRateLimit` is one statement: `INSERT … ON CONFLICT (bucket_key,
-  window_start) DO UPDATE SET count = count + 1 … RETURNING count`. No app-side
+window_start) DO UPDATE SET count = count + 1 … RETURNING count`. No app-side
   read-modify-write window exists.
 - **Real-Postgres probe (docker postgres:16, two genuinely separate connections):**
   seeded a bucket to cap−1=5; session 1 ran the upsert inside an open transaction

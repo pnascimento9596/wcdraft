@@ -41,11 +41,7 @@ import {
   type DraftDataset,
   type DraftState,
 } from "@wcdraft/core";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  type RuntimeDataManifest,
-} from "@wcdraft/data";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, type RuntimeDataManifest } from "@wcdraft/data";
 
 import {
   buildGameDataIndexes,

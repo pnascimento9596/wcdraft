@@ -14,13 +14,7 @@ import {
   buildRunScenario,
 } from "./scenario.js";
 import { deriveSubseed } from "./rng.js";
-import type {
-  Bracket2026,
-  CardId,
-  GroupId,
-  Team2026,
-  TeamStrength,
-} from "./index.js";
+import type { Bracket2026, CardId, GroupId, Team2026, TeamStrength } from "./index.js";
 import { GROUP_IDS, buildCardId } from "./index.js";
 
 const PARENT_SEED = "wcdraft:scenario-golden:v1";

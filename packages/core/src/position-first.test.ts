@@ -87,8 +87,7 @@ describe("DC-3 target → roll — same per-index draw as squad_first", () => {
     const sf = autoDraft({ ...PF_PARAMS, draft_flow: "squad_first", dataset: FIXTURE.dataset });
     let pf = freshPf();
     for (const sfSpin of sf.spins) {
-      const target =
-        sfSpin.picked_kind === "manager" ? "manager" : sfSpin.assigned_slot_id!;
+      const target = sfSpin.picked_kind === "manager" ? "manager" : sfSpin.assigned_slot_id!;
       pf = selectDraftTarget(CATALOG, pf, target);
       const rolled = activeSpin(pf)!;
       expect(rolled.status).toBe("pending");
@@ -106,8 +105,7 @@ describe("DC-3 target → roll — same per-index draw as squad_first", () => {
     expect(pf.manager_card_id as string).toBe(sf.manager_card_id as string);
     // Same humans drafted, same slots filled.
     expect(pf.deduped_player_ids).toEqual(sf.deduped_player_ids);
-    const slotsOf = (d: DraftState) =>
-      d.squad.map((s) => [s.slot_id, s.card_id as string | null]);
+    const slotsOf = (d: DraftState) => d.squad.map((s) => [s.slot_id, s.card_id as string | null]);
     expect(slotsOf(pf)).toEqual(slotsOf(sf));
   });
 

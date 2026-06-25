@@ -108,14 +108,11 @@ export function SynergyBar({
     <div
       className={s.synergyBar}
       role="group"
-      aria-label={blind ? "Squad synergy summary — hidden until you simulate" : "Squad synergy summary"}
+      aria-label={
+        blind ? "Squad synergy summary — hidden until you simulate" : "Squad synergy summary"
+      }
     >
-      <button
-        type="button"
-        className={s.synergyBarToggle}
-        onClick={toggle}
-        aria-expanded={open}
-      >
+      <button type="button" className={s.synergyBarToggle} onClick={toggle} aria-expanded={open}>
         <span className={s.synergyBarLabel}>Synergy</span>
         <span className={s.synergyBarScore} aria-live="polite">
           <span className={s.synergyBarNum}>{overallText}</span>
@@ -143,10 +140,7 @@ export function SynergyBar({
       {open ? (
         <>
           <div className={s.synergyBarTrack} aria-hidden="true">
-            <span
-              className={s.synergyBarFill}
-              style={{ width: `${fillPct}%` }}
-            />
+            <span className={s.synergyBarFill} style={{ width: `${fillPct}%` }} />
           </div>
 
           <dl className={s.synergyBarFigures} aria-label="Synergy components">

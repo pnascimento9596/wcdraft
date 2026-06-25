@@ -43,7 +43,7 @@ column, what missing means. Specifically:
   tagged via `appearances_source` (`fjelstul_match_events` / `rsssf_starting_xi`).
   A pre-1970 card whose lineup name could not be unambiguously linked stays
   `null` (never `0`) and is emitted to `output/supplement/link_review.json`.
-- `goals` — excludes own goals (credited to the scorer but not *their* goal).
+- `goals` — excludes own goals (credited to the scorer but not _their_ goal).
 - `club_at_tournament` — **no upstream column** → always `null`, never fabricated
   (Wikipedia club/caps/DOB enrichment is a separate, sequenced follow-on lane).
 - manager `birth_date` — **no upstream column** → always `null`.
@@ -93,22 +93,22 @@ python -m wcdraft_etl.supplement.fetch --verify # check committed bytes vs manif
 
 ## Output tables (`etl/output/`)
 
-| Artifact | Grain | Key |
-|---|---|---|
-| `nations.json` | one per national entity (historical kept separate, flagged) | `nation_id` (= upstream `team_id`) |
-| `players.json` | one per human | `player_id` |
-| `player_tournaments.json` | one per (player, tournament) — the "card" | `card_id` = `player_id:tournament_id` |
-| `managers.json` | one per human | `manager_id` |
-| `manager_tournaments.json` | one per (manager, tournament, team) | `manager_tournament_id` |
-| `tournaments.json` | one per tournament (men's + women's) | `tournament_id` |
-| `goals.json` | event-level goals | `goal_id` |
-| `appearances.json` | event-level match appearances (1970+) | `appearance_id` |
-| `awards.json` | award winners | `award_winner_id` |
-| `manifest.json` | source pin, attribution (Fjelstul + RSSSF), row counts | — |
-| `COVERAGE.md` | coverage / null-rate report | — |
-| `supplement/appearances_sourced.json` | one per linked pre-1970 card | `card_id` |
-| `supplement/link_review.json` | unlinkable RSSSF names (withheld, for human review) | — |
-| `supplement/SUPPLEMENT.md` | per-tournament link/coverage report | — |
+| Artifact                              | Grain                                                       | Key                                   |
+| ------------------------------------- | ----------------------------------------------------------- | ------------------------------------- |
+| `nations.json`                        | one per national entity (historical kept separate, flagged) | `nation_id` (= upstream `team_id`)    |
+| `players.json`                        | one per human                                               | `player_id`                           |
+| `player_tournaments.json`             | one per (player, tournament) — the "card"                   | `card_id` = `player_id:tournament_id` |
+| `managers.json`                       | one per human                                               | `manager_id`                          |
+| `manager_tournaments.json`            | one per (manager, tournament, team)                         | `manager_tournament_id`               |
+| `tournaments.json`                    | one per tournament (men's + women's)                        | `tournament_id`                       |
+| `goals.json`                          | event-level goals                                           | `goal_id`                             |
+| `appearances.json`                    | event-level match appearances (1970+)                       | `appearance_id`                       |
+| `awards.json`                         | award winners                                               | `award_winner_id`                     |
+| `manifest.json`                       | source pin, attribution (Fjelstul + RSSSF), row counts      | —                                     |
+| `COVERAGE.md`                         | coverage / null-rate report                                 | —                                     |
+| `supplement/appearances_sourced.json` | one per linked pre-1970 card                                | `card_id`                             |
+| `supplement/link_review.json`         | unlinkable RSSSF names (withheld, for human review)         | —                                     |
+| `supplement/SUPPLEMENT.md`            | per-tournament link/coverage report                         | —                                     |
 
 Nations are keyed on `team_id`, **not** `team_code` — `DEU` collides (Germany
 `T-31` vs West Germany `T-86`). Historical entities (West Germany, USSR,

@@ -31,9 +31,7 @@ import { simulateMatchCore, membersFromTeam2026 } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "../src/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const NORMS = JSON.parse(
-  readFileSync(join(HERE, "fixtures", "modern-wc-norms.json"), "utf-8"),
-) as {
+const NORMS = JSON.parse(readFileSync(join(HERE, "fixtures", "modern-wc-norms.json"), "utf-8")) as {
   era: string;
   upstream_commit: string;
   matches_total: number;
@@ -67,10 +65,10 @@ const KO_MATCHES = 750;
 // to lift `margin ≥ 4` into band). See `calibration.ts:LAMBDA_DISP` for
 // the full contract and SIM_CALIBRATION.md for the landing report.
 const BANDS = {
-  mean_goals:  { lo: 2.478,  hi: 2.594  }, // norm 2.54   ± ~0.058 (N=3006)
-  group_draw:  { lo: 0.2288, hi: 0.2652 }, // norm 0.247  ± 0.0182 (N=2256)
-  margin_ge_4: { lo: 0.0412, hi: 0.0570 }, // norm 0.049  ± 0.0079 (N=3006)
-  ko_et:       { lo: 0.2961, hi: 0.3648 }, // norm 0.330  ± 0.0343 (N=750)
+  mean_goals: { lo: 2.478, hi: 2.594 }, // norm 2.54   ± ~0.058 (N=3006)
+  group_draw: { lo: 0.2288, hi: 0.2652 }, // norm 0.247  ± 0.0182 (N=2256)
+  margin_ge_4: { lo: 0.0412, hi: 0.057 }, // norm 0.049  ± 0.0079 (N=3006)
+  ko_et: { lo: 0.2961, hi: 0.3648 }, // norm 0.330  ± 0.0343 (N=750)
   ko_shootout: { lo: 0.1843, hi: 0.2443 }, // norm 0.214  ± 0.0299 (N=750)
 } as const;
 
@@ -173,11 +171,11 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
     // human-readable form.
     process.stderr.write(
       `\n  REALISM SWEEP (${dt}ms, ${m.matches} matches) — value (Δ from modern WC norm):\n` +
-      `    mean_goals      = ${m.mean_goals.toFixed(3)}   (${fmt(dGoals, 3)} vs norm ${NORMS.mean_goals_per_match_regulation.toFixed(2)})\n` +
-      `    group_draw      = ${(100 * m.group_draw).toFixed(2)}%  (${fmt(100 * dDraw, 2)}pp vs norm ${(100 * NORMS.group_stage_draw_rate).toFixed(1)}%)\n` +
-      `    margin_ge_4     = ${(100 * m.margin_ge_4).toFixed(2)}%  (${fmt(100 * dM4, 2)}pp vs norm ${(100 * NORMS.regulation_margin_ge_4).toFixed(1)}%)\n` +
-      `    ko_et           = ${(100 * m.ko_et).toFixed(2)}%  (${fmt(100 * dEt, 2)}pp vs norm ${(100 * NORMS.knockout_extra_time_rate).toFixed(1)}%)\n` +
-      `    ko_shootout     = ${(100 * m.ko_shootout).toFixed(2)}%  (${fmt(100 * dSo, 2)}pp vs norm ${(100 * NORMS.knockout_shootout_rate).toFixed(1)}%)\n`,
+        `    mean_goals      = ${m.mean_goals.toFixed(3)}   (${fmt(dGoals, 3)} vs norm ${NORMS.mean_goals_per_match_regulation.toFixed(2)})\n` +
+        `    group_draw      = ${(100 * m.group_draw).toFixed(2)}%  (${fmt(100 * dDraw, 2)}pp vs norm ${(100 * NORMS.group_stage_draw_rate).toFixed(1)}%)\n` +
+        `    margin_ge_4     = ${(100 * m.margin_ge_4).toFixed(2)}%  (${fmt(100 * dM4, 2)}pp vs norm ${(100 * NORMS.regulation_margin_ge_4).toFixed(1)}%)\n` +
+        `    ko_et           = ${(100 * m.ko_et).toFixed(2)}%  (${fmt(100 * dEt, 2)}pp vs norm ${(100 * NORMS.knockout_extra_time_rate).toFixed(1)}%)\n` +
+        `    ko_shootout     = ${(100 * m.ko_shootout).toFixed(2)}%  (${fmt(100 * dSo, 2)}pp vs norm ${(100 * NORMS.knockout_shootout_rate).toFixed(1)}%)\n`,
     );
   });
 
@@ -192,7 +190,7 @@ describe(`realism (symmetric coherent-XI sweep) vs modern-era WC norms — ${NOR
     // Sanity-cap the drift from the documented landing — anyone moving the
     // engine that pushes this by > 0.10 (≈ 2× the tight half-width) must
     // explicitly update both the committed Δ landing and the bands.
-    expect(Math.abs(delta)).toBeLessThan(0.10);
+    expect(Math.abs(delta)).toBeLessThan(0.1);
   });
 
   it(`group draw rate: 25.27% (Δ +0.57pp vs norm 24.7%, merit-v4.3 refit) — tight band [${(100 * BANDS.group_draw.lo).toFixed(2)}%, ${(100 * BANDS.group_draw.hi).toFixed(2)}%]`, () => {

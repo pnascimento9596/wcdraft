@@ -122,5 +122,5 @@ Not screenshot-verified (rare spins are probabilistic); covered by markup/CSS re
 - Root `pnpm typecheck && pnpm lint && pnpm test && pnpm build` — all green
   (core 302, web 528, data 50).
 - Goldens: `test:golden test:golden:draft` (core), `test:golden:data
-  test:golden:integration` (data), `test:golden:leaderboard` (web) — all green.
+test:golden:integration` (data), `test:golden:leaderboard` (web) — all green.
 - ETL untouched.

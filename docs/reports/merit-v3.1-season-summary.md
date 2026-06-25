@@ -25,12 +25,12 @@ Declared scope before rescoring:
 
 Staged facts and snapshots:
 
-| Player | Fact | Snapshot |
-| --- | --- | --- |
-| Lukaku | UEFA Europa League Player of the Season 2019-20 | `etl/sources/merit_v31/public_awards/lukaku_uefa_europa_league_player_2019_20.html` |
-| Lukaku | Serie A Best Overall / MVP 2020-21 | `etl/sources/merit_v31/public_awards/lukaku_lega_serie_a_best_overall_2020_21.html` |
-| B. Fernandes | LPFP Primeira Liga Player of the Year 2017-18 | `etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html` |
-| B. Fernandes | LPFP Primeira Liga Player of the Year 2018-19 | `etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html` |
+| Player       | Fact                                            | Snapshot                                                                            |
+| ------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Lukaku       | UEFA Europa League Player of the Season 2019-20 | `etl/sources/merit_v31/public_awards/lukaku_uefa_europa_league_player_2019_20.html` |
+| Lukaku       | Serie A Best Overall / MVP 2020-21              | `etl/sources/merit_v31/public_awards/lukaku_lega_serie_a_best_overall_2020_21.html` |
+| B. Fernandes | LPFP Primeira Liga Player of the Year 2017-18   | `etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html`      |
+| B. Fernandes | LPFP Primeira Liga Player of the Year 2018-19   | `etl/sources/merit_v31/public_awards/bruno_fernandes_lpfp_player_of_year.html`      |
 
 Completeness assertion: the active source-set build pins 6 active notes, emits
 63 active facts for 30 players, and the W1 scoped rows are exhaustively consumed
@@ -87,44 +87,44 @@ Generated review artifacts:
 
 Measured summary versus `HEAD` / shipped V8:
 
-| Metric | V8 | v3.1 candidate |
-| --- | ---: | ---: |
-| Runtime ratings | 12,219 | 12,219 |
-| Display-changed cards | n/a | 208 |
-| Basis-changed cards | n/a | 42 |
-| Runtime legends | 270 | 287 |
-| Career measured_performance | 11,355 | 11,351 |
-| Career career_stature_estimate | 478 | 482 |
-| Career baseline_anchor_estimate | 386 | 386 |
-| Largest display pile | 71 at 17.767% | 71 at 17.743% |
-| 88 display share | 11.302% | 11.114% |
+| Metric                          |            V8 | v3.1 candidate |
+| ------------------------------- | ------------: | -------------: |
+| Runtime ratings                 |        12,219 |         12,219 |
+| Display-changed cards           |           n/a |            208 |
+| Basis-changed cards             |           n/a |             42 |
+| Runtime legends                 |           270 |            287 |
+| Career measured_performance     |        11,355 |         11,351 |
+| Career career_stature_estimate  |           478 |            482 |
+| Career baseline_anchor_estimate |           386 |            386 |
+| Largest display pile            | 71 at 17.767% |  71 at 17.743% |
+| 88 display share                |       11.302% |        11.114% |
 
 Compact artifacts:
 
-| Bundle | SHA-256 |
-| --- | --- |
-| manifest | `d5b32a05ab45457087a9f807ac1de949e6c812bc319f7b4dff5cd64f619189a4` |
-| draft pool | `ba238aa16d21006989279f6bc74bb8fcc6d7e7768ec4716dbc4c78b47ceb6c02` |
+| Bundle        | SHA-256                                                            |
+| ------------- | ------------------------------------------------------------------ |
+| manifest      | `d5b32a05ab45457087a9f807ac1de949e6c812bc319f7b4dff5cd64f619189a4` |
+| draft pool    | `ba238aa16d21006989279f6bc74bb8fcc6d7e7768ec4716dbc4c78b47ceb6c02` |
 | 2026 scenario | `182546ab9bf3d67f774e5773933f963b6d5915b3cd96f5785f8d5e48d7578463` |
 
 `build:compact` was run twice and reproduced the same hashes.
 
 ## Probe Outcomes / Decision Table
 
-| Area | Outcome | Decision / waiver posture needed |
-| --- | --- | --- |
-| W1 Lukaku | PASS: `P-72637:WC-2022` 71 -> 88, `career_stature_estimate`, no legend. | No waiver needed. |
-| W1 B. Fernandes | PASS: `P-39584:WC-2018` 72 -> 81, `career_stature_estimate`, no legend. | No waiver needed. |
-| W2 pre-1967 9 | PASS: zero remaining 94+ non-legend/non-award coherence violations. | No waiver needed. |
-| W2b source extension | PARTIAL PASS: Raúl, Eto'o, and Ibrahimović are restored under the declared non-fan public source scope; 33 V8-loss cards remain non-legend. | No waiver needed for non-restores if owner accepts the declared source rule. |
-| W2b guardrail losses | PASS / explicit tradeoff: 11 cards lose legend because fan-voted UEFA Team of the Year was removed. | Owner should affirm this no-fan-vote posture; otherwise the scope must be reopened explicitly. |
-| Sweden-2002 named exemplar | PASS: Ibrahimović is restored and moves 86 -> 90; every no-award Sweden-2002 squad member remains <=88. | No waiver needed for ordering. |
-| Sweden-2002 cohort shelf | PARTIAL PASS: the cohort is not flat (`[68, 70, 71, 72, 73, 80, 86, 88]`), but four no-award players remain at 88 because W3 stopped. | Covered by W3 decision. |
-| W3 88-wall | STOP: no implementation. The requested global `<=4% at any display value` gate conflicts with the standing median/control constraints by pigeonhole lower bound. | Owner decision required: accept STOP proof, or replace the gate with a compatible 88-specific wall metric. |
-| Display curve / lambda | PASS: display-curve code unchanged; no persisted curve artifact moved; lambda refit skipped. | No waiver needed. |
-| Compact/canary | PASS: compact regen stable; canary regen twice and normal canary pass. | No waiver needed. |
-| Leaderboard season key | PASS: new key `engine-2026.06.12_wc-perf-5.1.0+proj-career-4.1.0_2026-06-04_ruleset-2026.06.04_7fcbb544`; current-prod skew fixture derives from `c174775d223d8776f8950749b50a0e6099ca456b`. | No waiver needed. |
-| Live prod verification | PENDING: requires cumulative review, owner approval, merge, deploy, then live checks. | Cannot be waived before merge/deploy. |
+| Area                       | Outcome                                                                                                                                                                                      | Decision / waiver posture needed                                                                           |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| W1 Lukaku                  | PASS: `P-72637:WC-2022` 71 -> 88, `career_stature_estimate`, no legend.                                                                                                                      | No waiver needed.                                                                                          |
+| W1 B. Fernandes            | PASS: `P-39584:WC-2018` 72 -> 81, `career_stature_estimate`, no legend.                                                                                                                      | No waiver needed.                                                                                          |
+| W2 pre-1967 9              | PASS: zero remaining 94+ non-legend/non-award coherence violations.                                                                                                                          | No waiver needed.                                                                                          |
+| W2b source extension       | PARTIAL PASS: Raúl, Eto'o, and Ibrahimović are restored under the declared non-fan public source scope; 33 V8-loss cards remain non-legend.                                                  | No waiver needed for non-restores if owner accepts the declared source rule.                               |
+| W2b guardrail losses       | PASS / explicit tradeoff: 11 cards lose legend because fan-voted UEFA Team of the Year was removed.                                                                                          | Owner should affirm this no-fan-vote posture; otherwise the scope must be reopened explicitly.             |
+| Sweden-2002 named exemplar | PASS: Ibrahimović is restored and moves 86 -> 90; every no-award Sweden-2002 squad member remains <=88.                                                                                      | No waiver needed for ordering.                                                                             |
+| Sweden-2002 cohort shelf   | PARTIAL PASS: the cohort is not flat (`[68, 70, 71, 72, 73, 80, 86, 88]`), but four no-award players remain at 88 because W3 stopped.                                                        | Covered by W3 decision.                                                                                    |
+| W3 88-wall                 | STOP: no implementation. The requested global `<=4% at any display value` gate conflicts with the standing median/control constraints by pigeonhole lower bound.                             | Owner decision required: accept STOP proof, or replace the gate with a compatible 88-specific wall metric. |
+| Display curve / lambda     | PASS: display-curve code unchanged; no persisted curve artifact moved; lambda refit skipped.                                                                                                 | No waiver needed.                                                                                          |
+| Compact/canary             | PASS: compact regen stable; canary regen twice and normal canary pass.                                                                                                                       | No waiver needed.                                                                                          |
+| Leaderboard season key     | PASS: new key `engine-2026.06.12_wc-perf-5.1.0+proj-career-4.1.0_2026-06-04_ruleset-2026.06.04_7fcbb544`; current-prod skew fixture derives from `c174775d223d8776f8950749b50a0e6099ca456b`. | No waiver needed.                                                                                          |
+| Live prod verification     | PENDING: requires cumulative review, owner approval, merge, deploy, then live checks.                                                                                                        | Cannot be waived before merge/deploy.                                                                      |
 
 ## Census Results
 
@@ -181,17 +181,17 @@ scope:
 
 ## Sweden 2002 Exemplar
 
-| Card | Player | Old | New | Legend | Basis |
-| --- | --- | ---: | ---: | --- | --- |
-| `P-80105:WC-2002` | Ibrahimović | 86 | 90 | true | career_stature_estimate |
-| `P-42808:WC-2002` | Alexandersson | 88 | 88 | false | measured_performance |
-| `P-07902:WC-2002` | Hedman | 88 | 88 | false | measured_performance |
-| `P-42895:WC-2002` | Larsson | 88 | 88 | false | measured_performance |
-| `P-85432:WC-2002` | Svensson | 88 | 88 | false | measured_performance |
-| `P-68329:WC-2002` | Jakobsson | 86 | 86 | false | measured_performance |
-| `P-30568:WC-2002` | Lučić | 86 | 86 | false | measured_performance |
-| `P-06256:WC-2002` | Mellberg | 86 | 86 | false | measured_performance |
-| `P-56718:WC-2002` | Mjällby | 86 | 86 | false | measured_performance |
+| Card              | Player        | Old | New | Legend | Basis                   |
+| ----------------- | ------------- | --: | --: | ------ | ----------------------- |
+| `P-80105:WC-2002` | Ibrahimović   |  86 |  90 | true   | career_stature_estimate |
+| `P-42808:WC-2002` | Alexandersson |  88 |  88 | false  | measured_performance    |
+| `P-07902:WC-2002` | Hedman        |  88 |  88 | false  | measured_performance    |
+| `P-42895:WC-2002` | Larsson       |  88 |  88 | false  | measured_performance    |
+| `P-85432:WC-2002` | Svensson      |  88 |  88 | false  | measured_performance    |
+| `P-68329:WC-2002` | Jakobsson     |  86 |  86 | false  | measured_performance    |
+| `P-30568:WC-2002` | Lučić         |  86 |  86 | false  | measured_performance    |
+| `P-06256:WC-2002` | Mellberg      |  86 |  86 | false  | measured_performance    |
+| `P-56718:WC-2002` | Mjällby       |  86 |  86 | false  | measured_performance    |
 
 No-award Sweden-2002 display values after v3.1: `[68, 70, 71, 72, 73, 80, 86, 88]`.
 The cohort is not a flat shelf, and the strict ordering probe now passes because

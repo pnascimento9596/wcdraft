@@ -78,9 +78,7 @@ export class ResendEmailSender implements EmailSender {
     });
     if (!resp.ok) {
       const txt = await resp.text();
-      throw new Error(
-        `Resend API failed: HTTP ${resp.status.toString()} ${txt.slice(0, 300)}`,
-      );
+      throw new Error(`Resend API failed: HTTP ${resp.status.toString()} ${txt.slice(0, 300)}`);
     }
   }
 }

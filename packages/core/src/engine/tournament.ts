@@ -51,10 +51,7 @@ import { deriveUserPlayerRunStats } from "./stats.js";
 import { computeScore, resolveTopScorer } from "./scoring.js";
 import { DEFAULT_SCORING_CONFIG, INJURY } from "./calibration.js";
 import { buildGroupStageResult, simulateOtherGroupMatches } from "./group-stage.js";
-import {
-  selectKnockoutLadderAfterGroup,
-  type KnockoutLadderMeta,
-} from "./opponent-selection.js";
+import { selectKnockoutLadderAfterGroup, type KnockoutLadderMeta } from "./opponent-selection.js";
 
 const GROUP_ROUNDS: ReadonlyArray<"G1" | "G2" | "G3"> = ["G1", "G2", "G3"];
 
@@ -204,9 +201,7 @@ export function runTournamentFull(
     return t;
   });
   if (groupOpponents.length !== 3) {
-    throw new RangeError(
-      `expected exactly 3 group opponents, got ${groupOpponents.length}`,
-    );
+    throw new RangeError(`expected exactly 3 group opponents, got ${groupOpponents.length}`);
   }
 
   const matches: MatchResult[] = [];

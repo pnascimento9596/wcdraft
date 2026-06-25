@@ -180,7 +180,6 @@ describe("buildSlotRevealModel", () => {
   });
 });
 
-
 describe("buildSlotRevealModel — ENGINE-V2 E-2 rare + draw probability", () => {
   it("passes through Spin.rare unchanged", () => {
     const indexes = makeIndexes();

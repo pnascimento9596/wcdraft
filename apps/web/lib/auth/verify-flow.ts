@@ -70,9 +70,7 @@ function escapeHtmlAttr(s: string): string {
  * Auto-submitting via JS would re-introduce the prefetch-burn problem in
  * scanners that DO execute JS, so the button is a hard requirement.
  */
-export function renderVerifyInterstitialHtml(
-  args: RenderInterstitialArgs,
-): string {
+export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): string {
   const action = args.action ?? "/api/auth/verify";
   const token = escapeHtmlAttr(args.token);
   const next = escapeHtmlAttr(args.next);
@@ -142,10 +140,7 @@ export async function prepareVerifyInterstitial(
   args: PrepareInterstitialArgs,
   deps: SessionDeps,
 ): Promise<PrepareInterstitialResult> {
-  const { session, fresh, cookieValue } = await ensureSession(
-    args.existingSessionCookie,
-    deps,
-  );
+  const { session, fresh, cookieValue } = await ensureSession(args.existingSessionCookie, deps);
   const html = renderVerifyInterstitialHtml({
     token: args.token,
     next: args.next,

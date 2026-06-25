@@ -6,11 +6,7 @@
 //        Origin/Host + CSRF double-submit required.
 import { NextResponse, type NextRequest } from "next/server";
 import { resolveAuth } from "@/lib/game/__server-auth-context";
-import {
-  saveRun,
-  listRuns,
-  SAVED_RUNS_CAP,
-} from "@/lib/game/saved-runs-store";
+import { saveRun, listRuns, SAVED_RUNS_CAP } from "@/lib/game/saved-runs-store";
 import {
   CSRF_COOKIE_NAME,
   CSRF_HEADER_NAME,
@@ -40,7 +36,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const auth = await resolveAuth(req);
     const limitRaw = req.nextUrl.searchParams.get("limit");
-    const limit = limitRaw ? Math.min(SAVED_RUNS_CAP, Math.max(0, Number(limitRaw))) : SAVED_RUNS_CAP;
+    const limit = limitRaw
+      ? Math.min(SAVED_RUNS_CAP, Math.max(0, Number(limitRaw)))
+      : SAVED_RUNS_CAP;
     const rows = await listRuns(auth.ctx, auth.deps, { limit });
     return NextResponse.json({
       runs: rows.map(toApiShape),

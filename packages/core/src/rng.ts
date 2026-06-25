@@ -211,11 +211,7 @@ function isSubstream(name: string): name is SubstreamName {
  *  - The first four uint32 outputs of sfc32 are concatenated as zero-padded
  *    hex to produce a 128-bit seed string.
  */
-export function deriveSubseed(
-  runSeed: string,
-  substream: SubstreamName,
-  scopeId?: string,
-): string {
+export function deriveSubseed(runSeed: string, substream: SubstreamName, scopeId?: string): string {
   if (typeof runSeed !== "string" || runSeed.trim().length === 0) {
     throw new RangeError("deriveSubseed requires a non-empty runSeed");
   }

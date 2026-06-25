@@ -7,12 +7,7 @@
 
 import { z } from "zod";
 
-import type {
-  Manager,
-  ManagerCardId,
-  ManagerRating,
-  ManagerTournament,
-} from "../types/manager.js";
+import type { Manager, ManagerCardId, ManagerRating, ManagerTournament } from "../types/manager.js";
 import { buildManagerCardId, parseManagerCardId } from "../types/manager.js";
 import {
   NonEmptyIdSchema,
@@ -30,11 +25,9 @@ import {
  * is the branded `ManagerCardId` type so `satisfies z.ZodType<ManagerCardId>`
  * on owner schemas type-checks.
  */
-export const ManagerCardIdSchema = z
-  .string()
-  .refine((s) => parseManagerCardId(s) !== null, {
-    message: "manager_card_id must be of form '<manager_id>:<tournament_id>'",
-  }) as unknown as z.ZodType<ManagerCardId>;
+export const ManagerCardIdSchema = z.string().refine((s) => parseManagerCardId(s) !== null, {
+  message: "manager_card_id must be of form '<manager_id>:<tournament_id>'",
+}) as unknown as z.ZodType<ManagerCardId>;
 
 /**
  * Helper: shared cross-field refinement asserting that a record's

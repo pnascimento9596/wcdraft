@@ -56,7 +56,9 @@ describe("sim+score golden — fixed inputs reproduce byte-identical RunResult",
         const { run } = runFor(entry.name, entry.seed);
         const parsed = RunResultSchema.safeParse(run);
         if (!parsed.success) {
-          throw new Error(`RunResult schema failed: ${JSON.stringify(parsed.error.issues, null, 2)}`);
+          throw new Error(
+            `RunResult schema failed: ${JSON.stringify(parsed.error.issues, null, 2)}`,
+          );
         }
         expect(parsed.success).toBe(true);
       });

@@ -16,7 +16,10 @@ import { autoDraft, ERA_PRESET_IDS, type DraftDataset } from "@wcdraft/core";
 
 import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST } from "../src/index.js";
 
-const OUT = resolve(dirname(fileURLToPath(import.meta.url)), "../test/fixtures/era-presets-golden.json");
+const OUT = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../test/fixtures/era-presets-golden.json",
+);
 
 const PARENT_SEED = "wcdraft:era-presets-golden:v1:1";
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;

@@ -1,0 +1,50 @@
+title = "wcdraft gitleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Synthetic auth/game/leaderboard test fixtures; values are deterministic test-only secrets."
+paths = [
+  '''^apps/web/lib/auth/__tests__/csrf\.test\.ts$''',
+  '''^apps/web/lib/auth/__tests__/verify-flow\.test\.ts$''',
+  '''^apps/web/lib/game/__tests__/navigation\.test\.ts$''',
+  '''^apps/web/lib/leaderboard/__tests__/public-payload-email-sweep\.test\.ts$''',
+]
+
+[[rules.allowlists]]
+description = "Local browser probe validation artifact; historical run data, not a live credential."
+paths = [
+  '''^docs/validation/post-season-wrap-2026-06-12/local-browser-probe\.json$''',
+]
+
+[[rules.allowlists]]
+description = "Pinned ETL raw active data; matched strings are source-data identifiers/citations."
+paths = [
+  '''^etl/merit/raw/active/club-season-honors\.json$''',
+]
+
+[[rules.allowlists]]
+description = "Pinned ETL raw wiki HTML snapshots; matched strings are page/resource hashes."
+paths = [
+  '''^etl/merit/raw/wiki/ballondor-dreamteam\.html$''',
+  '''^etl/merit/raw/wiki/concacaf-awards\.html$''',
+  '''^etl/merit/raw/wiki/esm-tots\.html$''',
+  '''^etl/merit/raw/wiki/fifpro-world11\.html$''',
+  '''^etl/merit/raw/wiki/iffhs-worlds-best\.html$''',
+  '''^etl/merit/raw/wiki/living-legends-2004\.html$''',
+  '''^etl/merit/raw/wiki/uefa-club-awards\.html$''',
+  '''^etl/merit/raw/wiki/uefa-mens-poy\.html$''',
+  '''^etl/merit/raw/wiki/uefa-toty\.html$''',
+  '''^etl/merit/raw/wiki/wc-awards\.html$''',
+]
+
+[[rules.allowlists]]
+description = "Generated ETL merit audit outputs; matched strings are source hashes/citations."
+paths = [
+  '''^etl/output/merit/link_review\.json$''',
+  '''^etl/output/merit/source_facts\.json$''',
+]

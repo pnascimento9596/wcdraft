@@ -88,9 +88,7 @@ const ERA_REVEAL_LABELS: Record<Exclude<EraPresetId, "all_time">, string> = {
 const TRACK_LEN = 7;
 
 /** Build the deterministic slot-machine model for the given active spin. */
-export function buildSlotRevealModel(
-  params: BuildSlotRevealModelParams,
-): SlotRevealModel {
+export function buildSlotRevealModel(params: BuildSlotRevealModelParams): SlotRevealModel {
   const { activeSpin, allSpins, indexes, totalPicks, eraPreset } = params;
 
   const resultFace = faceFromSpin(activeSpin, indexes, "C");
@@ -108,24 +106,13 @@ export function buildSlotRevealModel(
   // Left = previous (wrap-around). Right = next (wrap-around). On a full
   // 17-spin draft these are always distinct from the active spin.
   const leftSpin =
-    ringLen > 1
-      ? sortedSpins[(activeRingIndex - 1 + ringLen) % ringLen]!
-      : activeSpin;
-  const rightSpin =
-    ringLen > 1
-      ? sortedSpins[(activeRingIndex + 1) % ringLen]!
-      : activeSpin;
+    ringLen > 1 ? sortedSpins[(activeRingIndex - 1 + ringLen) % ringLen]! : activeSpin;
+  const rightSpin = ringLen > 1 ? sortedSpins[(activeRingIndex + 1) % ringLen]! : activeSpin;
 
   const leftLanding = faceFromSpin(leftSpin, indexes, "L");
   const rightLanding = faceFromSpin(rightSpin, indexes, "R");
 
-  const centerTrack = buildTrack(
-    sortedSpins,
-    activeRingIndex,
-    resultFace,
-    indexes,
-    "C",
-  );
+  const centerTrack = buildTrack(sortedSpins, activeRingIndex, resultFace, indexes, "C");
   const leftTrack = buildTrack(
     sortedSpins,
     (activeRingIndex - 1 + ringLen) % ringLen,
@@ -153,8 +140,7 @@ export function buildSlotRevealModel(
     rare: activeSpin.rare,
     drawProbability: activeSpin.draw_probability,
     drawProbabilityLabel: formatDrawProbability(activeSpin.draw_probability),
-    eraPresetLabel:
-      eraPreset && eraPreset !== "all_time" ? ERA_REVEAL_LABELS[eraPreset] : null,
+    eraPresetLabel: eraPreset && eraPreset !== "all_time" ? ERA_REVEAL_LABELS[eraPreset] : null,
   };
 }
 
@@ -190,8 +176,7 @@ function buildTrack(
   const faces: SlotRevealFace[] = [];
   for (let i = 0; i < TRACK_LEN; i++) {
     const ringIdx =
-      (((landingIdx - (TRACK_LEN - 1 - i)) % ring.length) + ring.length) %
-      ring.length;
+      (((landingIdx - (TRACK_LEN - 1 - i)) % ring.length) + ring.length) % ring.length;
     if (i === TRACK_LEN - 1) {
       faces.push(landingFace);
     } else {

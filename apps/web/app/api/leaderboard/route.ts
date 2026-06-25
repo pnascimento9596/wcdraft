@@ -8,10 +8,7 @@ import { getDb } from "@wcdraft/db";
 
 import { validateCookieSecret } from "@/lib/auth/handler-helpers";
 import { handleLeaderboardBoardGet } from "@/lib/leaderboard/board-route";
-import {
-  isLeaderboardEnabled,
-  leaderboardDarkResponse,
-} from "@/lib/leaderboard/enabled";
+import { isLeaderboardEnabled, leaderboardDarkResponse } from "@/lib/leaderboard/enabled";
 import { currentSeasonKey } from "@/lib/leaderboard/server-data";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {

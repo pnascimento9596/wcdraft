@@ -479,7 +479,8 @@ export const MatchResultSchema = z
     }
 
     // Lineup uniqueness on (side, player_id).
-    const lineupKey = (e: { side: string; player_id: string }): string => `${e.side}:${e.player_id}`;
+    const lineupKey = (e: { side: string; player_id: string }): string =>
+      `${e.side}:${e.player_id}`;
     const seen = new Set<string>();
     for (let i = 0; i < m.lineup.length; i++) {
       const k = lineupKey(m.lineup[i]!);

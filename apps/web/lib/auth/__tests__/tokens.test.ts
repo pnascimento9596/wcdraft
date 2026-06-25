@@ -7,10 +7,7 @@ import {
   timingSafeStringEqual,
   base64UrlEncode,
 } from "@/lib/auth/tokens";
-import {
-  signCookie,
-  parseSignedCookie,
-} from "@/lib/auth/sessions";
+import { signCookie, parseSignedCookie } from "@/lib/auth/sessions";
 
 describe("generateOpaqueToken", () => {
   it("returns 43-char base64url (32 bytes, no padding)", () => {

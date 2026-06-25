@@ -9,10 +9,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getDb } from "@wcdraft/db";
 
 import { validateCookieSecret } from "@/lib/auth/handler-helpers";
-import {
-  isLeaderboardEnabled,
-  leaderboardDarkResponse,
-} from "@/lib/leaderboard/enabled";
+import { isLeaderboardEnabled, leaderboardDarkResponse } from "@/lib/leaderboard/enabled";
 import { getValidationData } from "@/lib/leaderboard/server-data";
 import { handleLeaderboardSubmit } from "@/lib/leaderboard/submit-route";
 import { createDbSubmitRateLimiter } from "@/lib/leaderboard/submit-rate-limiter-db";

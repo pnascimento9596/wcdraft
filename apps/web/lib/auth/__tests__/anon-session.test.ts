@@ -1,10 +1,7 @@
 // F-2 — anon session + role gate.
 import { describe, it, expect, beforeAll, afterEach } from "vitest";
 import { setupTestDb, testCookieSecret } from "./_test-db";
-import {
-  ensureSession,
-  requireAuthenticatedSession,
-} from "@/lib/auth/anon-session";
+import { ensureSession, requireAuthenticatedSession } from "@/lib/auth/anon-session";
 import { createSession, signCookie, validateSessionCookie } from "@/lib/auth/sessions";
 import { users } from "@wcdraft/db";
 
@@ -56,15 +53,9 @@ describe("requireAuthenticatedSession (role gate)", () => {
 
   it("returns the session when user_id is set", async () => {
     const now = Date.UTC(2026, 5, 1);
-    const [user] = await env.db
-      .insert(users)
-      .values({ email: "real@example.com" })
-      .returning();
+    const [user] = await env.db.insert(users).values({ email: "real@example.com" }).returning();
     const auth = await createSession({ userId: user!.id }, deps(now));
-    const session = await requireAuthenticatedSession(
-      auth.cookieValue,
-      deps(now + 1),
-    );
+    const session = await requireAuthenticatedSession(auth.cookieValue, deps(now + 1));
     expect(session.userId).toBe(user!.id);
   });
 
@@ -78,14 +69,8 @@ describe("requireAuthenticatedSession (role gate)", () => {
 describe("cross-user isolation", () => {
   it("user A's session cookie validates only to user A's row", async () => {
     const now = Date.UTC(2026, 5, 1);
-    const [a] = await env.db
-      .insert(users)
-      .values({ email: "a@example.com" })
-      .returning();
-    const [b] = await env.db
-      .insert(users)
-      .values({ email: "b@example.com" })
-      .returning();
+    const [a] = await env.db.insert(users).values({ email: "a@example.com" }).returning();
+    const [b] = await env.db.insert(users).values({ email: "b@example.com" }).returning();
     const sa = await createSession({ userId: a!.id }, deps(now));
     const sb = await createSession({ userId: b!.id }, deps(now));
     expect(sa.session.id).not.toBe(sb.session.id);
@@ -97,35 +82,26 @@ describe("cross-user isolation", () => {
 
   it("user A's cookie signature does NOT validate against user B's session id", async () => {
     const now = Date.UTC(2026, 5, 1);
-    const [a] = await env.db
-      .insert(users)
-      .values({ email: "ax@example.com" })
-      .returning();
-    const [b] = await env.db
-      .insert(users)
-      .values({ email: "bx@example.com" })
-      .returning();
+    const [a] = await env.db.insert(users).values({ email: "ax@example.com" }).returning();
+    const [b] = await env.db.insert(users).values({ email: "bx@example.com" }).returning();
     const sa = await createSession({ userId: a!.id }, deps(now));
     const sb = await createSession({ userId: b!.id }, deps(now));
     // Swap signatures across session ids.
     const [, sigA] = sa.cookieValue.split(".");
     const forged = `${sb.session.id}.${sigA ?? ""}`;
-    await expect(
-      validateSessionCookie(forged, deps(now + 1)),
-    ).rejects.toMatchObject({ code: "SESSION_TAMPERED" });
+    await expect(validateSessionCookie(forged, deps(now + 1))).rejects.toMatchObject({
+      code: "SESSION_TAMPERED",
+    });
   });
 
   it("re-signing user A's session id with a wrong secret is rejected", async () => {
     const now = Date.UTC(2026, 5, 1);
-    const [a] = await env.db
-      .insert(users)
-      .values({ email: "ay@example.com" })
-      .returning();
+    const [a] = await env.db.insert(users).values({ email: "ay@example.com" }).returning();
     const sa = await createSession({ userId: a!.id }, deps(now));
     const wrongSecret = `${SECRET.slice(0, -1)}Z`;
     const forged = signCookie(sa.session.id, wrongSecret);
-    await expect(
-      validateSessionCookie(forged, deps(now + 1)),
-    ).rejects.toMatchObject({ code: "SESSION_TAMPERED" });
+    await expect(validateSessionCookie(forged, deps(now + 1))).rejects.toMatchObject({
+      code: "SESSION_TAMPERED",
+    });
   });
 });

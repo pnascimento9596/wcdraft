@@ -81,17 +81,21 @@ const TEAMS = [...SCENARIO_2026_BUNDLE.teams].sort((a, b) =>
 // extend grids whenever a fitted parameter touches an edge. GAMMA_MID is
 // deliberately extended upward first because 0.60 was the prior edge.
 const CONSTANT_GRIDS = [
-  { name: "BASE",             bucket: "LAMBDA",      values: [0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20] },
-  { name: "SPREAD",           bucket: "LAMBDA",      values: [5.50, 6.00, 6.50, 7.00, 7.50, 8.00] },
-  { name: "MIN",              bucket: "LAMBDA",      values: [0.30, 0.40, 0.50, 0.60, 0.70, 0.80] },
-  { name: "MAX",              bucket: "LAMBDA",      values: [3.10, 3.40, 3.70] },
-  { name: "W_DEF",            bucket: "LAMBDA",      values: [0.60, 0.65, 0.70, 0.75] },
-  { name: "GAMMA_MID",        bucket: "LAMBDA",      values: [0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00] },
-  { name: "KO_LAMBDA_FACTOR", bucket: "LAMBDA",      values: [0.78, 0.82, 0.85, 0.88, 0.92] },
-  { name: "OUTER_PROB",       bucket: "LAMBDA_DISP", values: [0.12, 0.16, 0.20, 0.24] },
-  { name: "A",                bucket: "LAMBDA_DISP", values: [0.55, 0.65, 0.75, 0.85] },
-  { name: "GROUP_OUTER_PROB", bucket: "LAMBDA_DISP", values: [0.00, 0.02, 0.04, 0.06, 0.10, 0.14, 0.18] },
-  { name: "GROUP_A",          bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.60, 0.70] },
+  { name: "BASE", bucket: "LAMBDA", values: [0.85, 0.9, 0.95, 1.0, 1.05, 1.1, 1.15, 1.2] },
+  { name: "SPREAD", bucket: "LAMBDA", values: [5.5, 6.0, 6.5, 7.0, 7.5, 8.0] },
+  { name: "MIN", bucket: "LAMBDA", values: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8] },
+  { name: "MAX", bucket: "LAMBDA", values: [3.1, 3.4, 3.7] },
+  { name: "W_DEF", bucket: "LAMBDA", values: [0.6, 0.65, 0.7, 0.75] },
+  { name: "GAMMA_MID", bucket: "LAMBDA", values: [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] },
+  { name: "KO_LAMBDA_FACTOR", bucket: "LAMBDA", values: [0.78, 0.82, 0.85, 0.88, 0.92] },
+  { name: "OUTER_PROB", bucket: "LAMBDA_DISP", values: [0.12, 0.16, 0.2, 0.24] },
+  { name: "A", bucket: "LAMBDA_DISP", values: [0.55, 0.65, 0.75, 0.85] },
+  {
+    name: "GROUP_OUTER_PROB",
+    bucket: "LAMBDA_DISP",
+    values: [0.0, 0.02, 0.04, 0.06, 0.1, 0.14, 0.18],
+  },
+  { name: "GROUP_A", bucket: "LAMBDA_DISP", values: [0.4, 0.5, 0.6, 0.7] },
 ];
 
 // Seed tuple — current shipped merit-v4.5 tuple from calibration.ts. Keep this
@@ -99,13 +103,13 @@ const CONSTANT_GRIDS = [
 // represents the live engine before any audited refit move.
 const SEED_TUPLE = {
   LAMBDA: {
-    SPREAD: 5.50,
+    SPREAD: 5.5,
     BASE: 0.95,
-    MIN: 0.80,
-    MAX: 3.40,
-    W_DEF: 0.70,
-    W_GK: 0.30,
-    GAMMA_MID: 0.70,
+    MIN: 0.8,
+    MAX: 3.4,
+    W_DEF: 0.7,
+    W_GK: 0.3,
+    GAMMA_MID: 0.7,
     KO_LAMBDA_FACTOR: 0.82,
   },
   CHANCES: {
@@ -113,30 +117,30 @@ const SEED_TUPLE = {
     EXTRA_TIME: 17,
   },
   LAMBDA_DISP: {
-    OUTER_PROB: 0.20,
+    OUTER_PROB: 0.2,
     A: 0.75,
     GROUP_OUTER_PROB: 0.02,
-    GROUP_A: 0.40,
+    GROUP_A: 0.4,
   },
 };
 
 const NORM_SCALES = {
   goals: 1.0,
-  draw: 0.10,
+  draw: 0.1,
   margin4: 0.05,
-  ko_et: 0.10,
-  ko_so: 0.10,
+  ko_et: 0.1,
+  ko_so: 0.1,
 };
 
 // D5 TIGHT BANDS (binomial std-err × 2 around the modern-WC norm). The fit
 // MUST land each metric STRICTLY INSIDE these bands; the committed
 // `realism-modern-norms.golden.test.ts` enforces them.
 const TIGHT_BANDS = {
-  goals:   { lo: 2.478,  hi: 2.594  },
-  draw:    { lo: 0.2288, hi: 0.2652 }, // MV2-11b: tightened to the COMMITTED golden band so the fit cannot land outside the gate
-  margin4: { lo: 0.0412, hi: 0.0570 },
-  ko_et:   { lo: 0.2961, hi: 0.3648 },
-  ko_so:   { lo: 0.1843, hi: 0.2443 },
+  goals: { lo: 2.478, hi: 2.594 },
+  draw: { lo: 0.2288, hi: 0.2652 }, // MV2-11b: tightened to the COMMITTED golden band so the fit cannot land outside the gate
+  margin4: { lo: 0.0412, hi: 0.057 },
+  ko_et: { lo: 0.2961, hi: 0.3648 },
+  ko_so: { lo: 0.1843, hi: 0.2443 },
 };
 
 // Band-aware scoring with HARD count-of-outside-bands priority:
@@ -172,16 +176,22 @@ function bandScore(observed) {
 }
 
 function runSweep() {
-  let groupMatches = 0, groupDraws = 0;
-  let koMatches = 0, koToEt = 0, koToShootout = 0;
-  let totalRegGoals = 0, blowoutCount4 = 0, totalMatches = 0;
+  let groupMatches = 0,
+    groupDraws = 0;
+  let koMatches = 0,
+    koToEt = 0,
+    koToShootout = 0;
+  let totalRegGoals = 0,
+    blowoutCount4 = 0,
+    totalMatches = 0;
   const N = TEAMS.length;
 
   let n = 0;
   outerG: for (let h = 0; h < N; h++) {
     for (let a = 0; a < N; a++) {
       if (a === h) continue;
-      const home = TEAMS[h], away = TEAMS[a];
+      const home = TEAMS[h],
+        away = TEAMS[a];
       const seed = `wcdraft:realism:G1:${h}-${a}-${n++}`;
       const structRng = createRng(seed);
       const eventRng = createRng(`${seed}:event`);
@@ -198,7 +208,8 @@ function runSweep() {
         structRng,
         eventRng,
       });
-      groupMatches += 1; totalMatches += 1;
+      groupMatches += 1;
+      totalMatches += 1;
       totalRegGoals += m.user_goals + m.opp_goals;
       if (m.user_goals === m.opp_goals) groupDraws += 1;
       if (Math.abs(m.user_goals - m.opp_goals) >= 4) blowoutCount4 += 1;
@@ -210,7 +221,8 @@ function runSweep() {
   outerK: for (let h = 0; h < N; h++) {
     for (let a = 0; a < N; a++) {
       if (a === h) continue;
-      const home = TEAMS[h], away = TEAMS[a];
+      const home = TEAMS[h],
+        away = TEAMS[a];
       const seed = `wcdraft:realism:R32:${h}-${a}-${nk++}`;
       const structRng = createRng(seed);
       const eventRng = createRng(`${seed}:event`);
@@ -227,12 +239,15 @@ function runSweep() {
         structRng,
         eventRng,
       });
-      koMatches += 1; totalMatches += 1;
+      koMatches += 1;
+      totalMatches += 1;
       const reg = m.user_goals + m.opp_goals;
       totalRegGoals += reg;
       if (m.user_goals_et !== null) koToEt += 1;
       if (m.shootout !== null) koToShootout += 1;
-      const totalMargin = Math.abs(m.user_goals + (m.user_goals_et ?? 0) - (m.opp_goals + (m.opp_goals_et ?? 0)));
+      const totalMargin = Math.abs(
+        m.user_goals + (m.user_goals_et ?? 0) - (m.opp_goals + (m.opp_goals_et ?? 0)),
+      );
       if (totalMargin >= 4) blowoutCount4 += 1;
       if (koMatches >= KO_MATCHES) break outerK;
     }
@@ -264,16 +279,28 @@ function scoreTuple(tuple) {
   }
 
   const score = bandScore(m);
-  return { score, m, lambdaApplied: lambda, chancesApplied: chances, lambdaDispApplied: lambdaDisp };
+  return {
+    score,
+    m,
+    lambdaApplied: lambda,
+    chancesApplied: chances,
+    lambdaDispApplied: lambdaDisp,
+  };
 }
 
 function describeTuple(t) {
-  const L = t.LAMBDA, C = t.CHANCES, D = t.LAMBDA_DISP;
+  const L = t.LAMBDA,
+    C = t.CHANCES,
+    D = t.LAMBDA_DISP;
   return `SPREAD=${L.SPREAD} BASE=${L.BASE} MIN=${L.MIN} MAX=${L.MAX} W_DEF=${L.W_DEF}/W_GK=${(1 - L.W_DEF).toFixed(2)} γ_mid=${L.GAMMA_MID} ko_f=${L.KO_LAMBDA_FACTOR} n=${C.REGULATION} DISP(p=${D.OUTER_PROB},A=${D.A},group_p=${D.GROUP_OUTER_PROB},group_A=${D.GROUP_A})`;
 }
 
-function clone(t) { return { LAMBDA: { ...t.LAMBDA }, CHANCES: { ...t.CHANCES }, LAMBDA_DISP: { ...t.LAMBDA_DISP } }; }
-function fmtPct(x) { return (100 * x).toFixed(2) + "%"; }
+function clone(t) {
+  return { LAMBDA: { ...t.LAMBDA }, CHANCES: { ...t.CHANCES }, LAMBDA_DISP: { ...t.LAMBDA_DISP } };
+}
+function fmtPct(x) {
+  return (100 * x).toFixed(2) + "%";
+}
 function bandFlag(k, v) {
   const b = TIGHT_BANDS[k];
   return v < b.lo ? "↓" : v > b.hi ? "↑" : "✓";
@@ -282,8 +309,12 @@ function fmtNorms(m) {
   return `goals=${m.goals.toFixed(3)}${bandFlag("goals", m.goals)} draw=${fmtPct(m.draw)}${bandFlag("draw", m.draw)} m4=${fmtPct(m.margin4)}${bandFlag("margin4", m.margin4)} ET=${fmtPct(m.ko_et)}${bandFlag("ko_et", m.ko_et)} SO=${fmtPct(m.ko_so)}${bandFlag("ko_so", m.ko_so)}`;
 }
 
-console.log(`[FIT] D6 coord-descent on symmetric sweep (${GROUP_MATCHES} group + ${KO_MATCHES} KO) — passes=${PASSES}`);
-console.log(`[FIT] norms: goals=${NORMS.goals} draw=${fmtPct(NORMS.draw)} m4=${fmtPct(NORMS.margin4)} ET=${fmtPct(NORMS.ko_et)} SO=${fmtPct(NORMS.ko_so)}`);
+console.log(
+  `[FIT] D6 coord-descent on symmetric sweep (${GROUP_MATCHES} group + ${KO_MATCHES} KO) — passes=${PASSES}`,
+);
+console.log(
+  `[FIT] norms: goals=${NORMS.goals} draw=${fmtPct(NORMS.draw)} m4=${fmtPct(NORMS.margin4)} ET=${fmtPct(NORMS.ko_et)} SO=${fmtPct(NORMS.ko_so)}`,
+);
 
 let best = SEED_TUPLE;
 let bestEval = scoreTuple(best);
@@ -302,7 +333,9 @@ for (let pass = 0; pass < PASSES; pass++) {
       const ev = scoreTuple(cand);
       evalCount++;
       const tag = ev.score < coordBestEval.score ? "→" : " ";
-      console.log(`[FIT] #${String(evalCount).padStart(3)} ${tag} ${coord.bucket}.${coord.name}=${String(candidate).padStart(5)} score=${ev.score.toFixed(4)} ${fmtNorms(ev.m)}`);
+      console.log(
+        `[FIT] #${String(evalCount).padStart(3)} ${tag} ${coord.bucket}.${coord.name}=${String(candidate).padStart(5)} score=${ev.score.toFixed(4)} ${fmtNorms(ev.m)}`,
+      );
       if (ev.score < coordBestEval.score) {
         coordBest = cand;
         coordBestEval = ev;
@@ -329,7 +362,9 @@ console.log(`[FIT WINNER]   LAMBDA.W_GK       = ${(1 - best.LAMBDA.W_DEF).toFixe
 console.log(`[FIT WINNER]   LAMBDA.GAMMA_MID  = ${best.LAMBDA.GAMMA_MID}`);
 console.log(`[FIT WINNER]   LAMBDA.KO_LAMBDA_FACTOR= ${best.LAMBDA.KO_LAMBDA_FACTOR}`);
 console.log(`[FIT WINNER]   CHANCES.REGULATION= ${best.CHANCES.REGULATION}`);
-console.log(`[FIT WINNER]   CHANCES.EXTRA_TIME= ${Math.max(1, Math.round((best.CHANCES.REGULATION * 30) / 90))}`);
+console.log(
+  `[FIT WINNER]   CHANCES.EXTRA_TIME= ${Math.max(1, Math.round((best.CHANCES.REGULATION * 30) / 90))}`,
+);
 console.log(`[FIT WINNER]   LAMBDA_DISP.OUTER_PROB= ${best.LAMBDA_DISP.OUTER_PROB}`);
 console.log(`[FIT WINNER]   LAMBDA_DISP.A         = ${best.LAMBDA_DISP.A}`);
 console.log(`[FIT WINNER]   LAMBDA_DISP.GROUP_OUTER_PROB= ${best.LAMBDA_DISP.GROUP_OUTER_PROB}`);

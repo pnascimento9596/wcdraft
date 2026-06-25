@@ -50,8 +50,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
   };
 }
 
-const TOKEN_URL =
-  "https://wcdraft.app/play/share?run=t2.eyJ2IjoyLCJ0Ijoid2NkcmFmdCJ9";
+const TOKEN_URL = "https://wcdraft.app/play/share?run=t2.eyJ2IjoyLCJ0Ijoid2NkcmFmdCJ9";
 
 describe("buildShareCaption", () => {
   it("includes the team record + the standard wcdraft tagline", () => {

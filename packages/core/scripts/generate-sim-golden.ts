@@ -49,9 +49,7 @@ function tournamentEndingInjuryCount(matches: MatchResult[]): number {
 function exhibits(name: ScenarioName, run: RunResult, matches: MatchResult[]): boolean {
   switch (name) {
     case "blowout":
-      return run.round_results.some(
-        (r) => r.outcome === "W" && r.goals_for - r.goals_against >= 4,
-      );
+      return run.round_results.some((r) => r.outcome === "W" && r.goals_for - r.goals_against >= 4);
     case "upset":
       // Weak user qualifies out of group AND wins a knockout match.
       return matches.some((m) => m.phase === "knockout" && m.outcome === "W");

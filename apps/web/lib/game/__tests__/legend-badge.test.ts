@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  provenanceBadgeKind,
-  provenanceBadgeLabel,
-} from "@/lib/game/view-models";
+import { provenanceBadgeKind, provenanceBadgeLabel } from "@/lib/game/view-models";
 
 // MV2-7 — source-derived legend flag, optional + fallback.
 //
@@ -40,26 +37,22 @@ describe("MV2-7 legend badge — flag-with-fallback", () => {
     });
 
     it("explicit undefined legend behaves exactly like absent", () => {
-      expect(
-        provenanceBadgeKind({ overall: 97, provenance: WC, legend: undefined }),
-      ).toBe("legend");
-      expect(
-        provenanceBadgeKind({ overall: 90, provenance: WC, legend: undefined }),
-      ).toBe("historical");
+      expect(provenanceBadgeKind({ overall: 97, provenance: WC, legend: undefined })).toBe(
+        "legend",
+      );
+      expect(provenanceBadgeKind({ overall: 90, provenance: WC, legend: undefined })).toBe(
+        "historical",
+      );
     });
   });
 
   describe("FLAG path (legend present → source of truth, overrides heuristic)", () => {
     it("legend:true promotes a sub-96 card to legend", () => {
-      expect(provenanceBadgeKind({ overall: 88, provenance: WC, legend: true })).toBe(
-        "legend",
-      );
+      expect(provenanceBadgeKind({ overall: 88, provenance: WC, legend: true })).toBe("legend");
     });
 
     it("legend:true promotes even when OVR is unknown (null)", () => {
-      expect(
-        provenanceBadgeKind({ overall: null, provenance: WC, legend: true }),
-      ).toBe("legend");
+      expect(provenanceBadgeKind({ overall: null, provenance: WC, legend: true })).toBe("legend");
     });
 
     it("legend:false SUPPRESSES legend for an OVR≥96 card (flag beats heuristic)", () => {

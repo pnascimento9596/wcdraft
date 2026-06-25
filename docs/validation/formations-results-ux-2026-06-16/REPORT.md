@@ -20,8 +20,8 @@ Formation lock-page redesign + two new formation shapes + results-page redesign.
 - **New validity proof** `packages/data/test/new-formations-validity.test.ts`: for each new
   shape, on REAL compact data — `autoDraft` → fieldable XI with exactly one recognised GK →
   `DraftState` schema clean → full `runTournamentFull` → completed, schema-valid `RunResult`
-  + `MatchResult[]`. (8 tests; not a byte-pinned golden — asserts seed-independent
-  invariants.)
+  - `MatchResult[]`. (8 tests; not a byte-pinned golden — asserts seed-independent
+    invariants.)
 - Web exposure: `SUPPORTED_FORMATION_IDS` + `FORMATION_BLURBS` extended (now 8);
   `/public/brand/formations.json` mini-pitch rows added (index-aligned to core slots);
   `formation-layout.test.ts` updated (8-id order; the two ids promoted out of the

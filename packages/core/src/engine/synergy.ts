@@ -84,7 +84,9 @@ export function computeSynergy(
     const sorted = [...slot_ids].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     nation_clusters.push({ nation_id, slot_ids: sorted, size: sorted.length });
   }
-  nation_clusters.sort((a, b) => (a.nation_id < b.nation_id ? -1 : a.nation_id > b.nation_id ? 1 : 0));
+  nation_clusters.sort((a, b) =>
+    a.nation_id < b.nation_id ? -1 : a.nation_id > b.nation_id ? 1 : 0,
+  );
 
   // ── Component (2): linked pairs, one per adjacency edge (1:1 by index). ──
   const linked_pairs: LinkedPair[] = formation.adjacency.map(([a, b]) => {

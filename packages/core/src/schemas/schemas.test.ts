@@ -89,7 +89,10 @@ function makeTeam2026(): Team2026 {
     nation_id: "eng",
     group: "A",
     group_slot: 1,
-    squad_card_ids: [buildCardId("player.kane.harry", 2026), buildCardId("player.bellingham.jude", 2026)],
+    squad_card_ids: [
+      buildCardId("player.kane.harry", 2026),
+      buildCardId("player.bellingham.jude", 2026),
+    ],
     aggregate_rating: {
       attack: 80,
       midfield: 80,
@@ -143,7 +146,10 @@ function makeDraftState(): DraftState {
     const card_id = buildCardId(player_id, tournament_id);
     const isStarter = i < 11;
     const slotInfo = isStarter
-      ? { slot_id: FIXTURE_STARTER_SLOTS[i]!.slot_id, slot_position: FIXTURE_STARTER_SLOTS[i]!.slot_position }
+      ? {
+          slot_id: FIXTURE_STARTER_SLOTS[i]!.slot_id,
+          slot_position: FIXTURE_STARTER_SLOTS[i]!.slot_position,
+        }
       : FIXTURE_BENCH_SLOTS[i - 11]!;
     spins.push({
       index: i,
@@ -700,7 +706,10 @@ describe("zod boundary schemas — REJECT impossible states", () => {
     const r = makeRunResult();
     const bad: RunResult = {
       ...r,
-      narrative: { ...r.narrative, narrative_seed: "wcdraft:narrative:v1:deadbeef00000000deadbeef00000000" },
+      narrative: {
+        ...r.narrative,
+        narrative_seed: "wcdraft:narrative:v1:deadbeef00000000deadbeef00000000",
+      },
     };
     expect(RunResultSchema.safeParse(bad).success).toBe(false);
   });

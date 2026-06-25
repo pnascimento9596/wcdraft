@@ -75,11 +75,9 @@ type ShippedManifest = {
 };
 
 function shippedManifestAt(commit: string): ShippedManifest {
-  const raw = execFileSync(
-    "git",
-    ["show", `${commit}:packages/data/src/generated/manifest.json`],
-    { encoding: "utf8" },
-  );
+  const raw = execFileSync("git", ["show", `${commit}:packages/data/src/generated/manifest.json`], {
+    encoding: "utf8",
+  });
   return JSON.parse(raw) as ShippedManifest;
 }
 
@@ -154,7 +152,12 @@ const fixtures = {
 };
 
 // ── Self-checks — refuse to write fixtures the decoder disagrees with ───────
-for (const key of ["prev_t1", "current_prod_t1", "prev_t2_default", "prev_t2_nondefault"] as const) {
+for (const key of [
+  "prev_t1",
+  "current_prod_t1",
+  "prev_t2_default",
+  "prev_t2_nondefault",
+] as const) {
   const decoded = decodeRunToken(fixtures[key].token);
   if (decoded === null) throw new Error(`self-check failed: ${key} must decode`);
 }

@@ -81,10 +81,7 @@ export async function validateSessionCookie(
   if (!timingSafeStringEqual(parsed.sig, expected)) {
     throw new AuthError("SESSION_TAMPERED", "signature mismatch");
   }
-  const rows = await deps.db
-    .select()
-    .from(sessions)
-    .where(eq(sessions.id, parsed.payload));
+  const rows = await deps.db.select().from(sessions).where(eq(sessions.id, parsed.payload));
   const row = rows[0];
   if (!row) {
     throw new AuthError("SESSION_INVALID", "session row missing");
@@ -96,10 +93,7 @@ export async function validateSessionCookie(
 }
 
 /** Delete a session row (sign-out). Idempotent. */
-export async function deleteSession(
-  sessionId: string,
-  deps: SessionDeps,
-): Promise<void> {
+export async function deleteSession(sessionId: string, deps: SessionDeps): Promise<void> {
   await deps.db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
@@ -112,9 +106,7 @@ export function signCookie(sessionId: string, secret: string): string {
   return `${sessionId}.${sign(sessionId, secret)}`;
 }
 
-export function parseSignedCookie(
-  cookieValue: string,
-): { payload: string; sig: string } | null {
+export function parseSignedCookie(cookieValue: string): { payload: string; sig: string } | null {
   // Exactly one '.' splits payload from sig.
   const dot = cookieValue.indexOf(".");
   if (dot < 1 || dot === cookieValue.length - 1) return null;
@@ -129,9 +121,7 @@ export function parseSignedCookie(
 }
 
 function sign(payload: string, secret: string): string {
-  return base64UrlEncode(
-    createHmac("sha256", secret).update(payload, "utf8").digest(),
-  );
+  return base64UrlEncode(createHmac("sha256", secret).update(payload, "utf8").digest());
 }
 
 /**

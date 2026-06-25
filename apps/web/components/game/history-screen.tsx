@@ -106,14 +106,13 @@ export function HistoryScreen() {
           <span className="eyebrow">Run history</span>
           <h1 className="display">No completed runs yet</h1>
           <p className="page-head__note">
-            Finish a draft and simulate the run to see it here. Up to {5} recent
-            runs are kept in this browser.
+            Finish a draft and simulate the run to see it here. Up to {5} recent runs are kept in
+            this browser.
           </p>
         </header>
         {mode.persistence === "volatile" ? (
           <p className={s.historyWarn} role="status">
-            History is available in this tab only because browser storage is
-            unavailable.
+            History is available in this tab only because browser storage is unavailable.
           </p>
         ) : null}
         <div className={s.resultsActions}>
@@ -132,15 +131,14 @@ export function HistoryScreen() {
         <span className="eyebrow">Run history</span>
         <h1 className="display">Recent runs</h1>
         <p className="page-head__note">
-          Up to 5 most recent completed runs from this browser. Tap a run to
-          re-open the seed-locked results.
+          Up to 5 most recent completed runs from this browser. Tap a run to re-open the seed-locked
+          results.
         </p>
       </header>
 
       {mode.persistence === "volatile" ? (
         <p className={s.historyWarn} role="status">
-          History is available in this tab only because browser storage is
-          unavailable.
+          History is available in this tab only because browser storage is unavailable.
         </p>
       ) : null}
 
@@ -165,13 +163,7 @@ function HistoryAppBar() {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image
-          src="/brand/wcdraft-mark.svg"
-          alt="wcdraft"
-          width={28}
-          height={31}
-          priority
-        />
+        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>History</span>
       </div>
     </header>

@@ -48,9 +48,7 @@ describe("buildSynergySegments", () => {
       { slot_id_a: "a", slot_id_b: "c", linked: false, nation_id: null },
       { slot_id_a: "b", slot_id_b: "c", linked: false, nation_id: null },
     ];
-    expect(
-      buildSynergySegments(pairs, visualBySlot, new Set(["a", "b"])),
-    ).toEqual([]);
+    expect(buildSynergySegments(pairs, visualBySlot, new Set(["a", "b"]))).toEqual([]);
   });
 
   it("emits one segment per linked pair with both endpoints filled", () => {
@@ -99,11 +97,7 @@ describe("buildSynergySegments", () => {
       { slot_id_a: "a", slot_id_b: "ghost", linked: true, nation_id: "BRA" },
       { slot_id_a: "a", slot_id_b: "b", linked: true, nation_id: "BRA" },
     ];
-    const segs = buildSynergySegments(
-      pairs,
-      visualBySlot,
-      new Set(["a", "b", "ghost"]),
-    );
+    const segs = buildSynergySegments(pairs, visualBySlot, new Set(["a", "b", "ghost"]));
     expect(segs.map((s) => s.key)).toEqual(["a|b"]);
   });
 

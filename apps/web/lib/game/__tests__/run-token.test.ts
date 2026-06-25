@@ -66,9 +66,7 @@ describe("run-token — encode / decode round-trip", () => {
     const managers = body.pl.filter((p) => p.k === "m");
     expect(managers.length).toBe(1);
     // 16 player picks, each with a slot_id + card_id.
-    const players = body.pl.filter(
-      (p): p is { k: "p"; c: string; s: string } => p.k === "p",
-    );
+    const players = body.pl.filter((p): p is { k: "p"; c: string; s: string } => p.k === "p");
     expect(players.length).toBe(16);
     for (const p of players) {
       expect(p.c.length).toBeGreaterThan(0);
@@ -112,11 +110,7 @@ describe("run-token — fresh-context replay (the BLOCKER scenario)", () => {
     const decoded = decodeRunToken(token)!;
     expect(versionsAgree(decoded, gameData.versions)).toBe(true);
     const virtualRecord = virtualRecordFromToken(decoded, gameData);
-    const replaySim = runSimulationSync(
-      gameData,
-      SCENARIO_2026_BUNDLE,
-      virtualRecord,
-    ).simulation;
+    const replaySim = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, virtualRecord).simulation;
 
     // The deterministic subset — `{ scenario, run, matches, group_stage,
     // knockout_ladder_meta }` — must be byte-identical end-to-end.
@@ -182,9 +176,9 @@ describe("run-token — malformed input safety", () => {
     const garbage = (() => {
       const s = JSON.stringify({ hello: "world" });
       // inline base64url encode
-      const b64 = (typeof btoa === "function"
-        ? btoa(s)
-        : Buffer.from(s, "binary").toString("base64"))
+      const b64 = (
+        typeof btoa === "function" ? btoa(s) : Buffer.from(s, "binary").toString("base64")
+      )
         .replace(/\+/g, "-")
         .replace(/\//g, "_")
         .replace(/=+$/u, "");
@@ -215,9 +209,9 @@ describe("run-token — malformed input safety", () => {
       hv: "1",
     };
     const json = JSON.stringify(body);
-    const b64 = (typeof btoa === "function"
-      ? btoa(json)
-      : Buffer.from(json, "binary").toString("base64"))
+    const b64 = (
+      typeof btoa === "function" ? btoa(json) : Buffer.from(json, "binary").toString("base64")
+    )
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/u, "");

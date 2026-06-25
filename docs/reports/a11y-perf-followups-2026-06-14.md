@@ -134,10 +134,10 @@ Method:
 
 Results:
 
-| Build | Visible player rows before | Visible player rows after | `CandidateCard` renders after whitespace keystroke |
-| --- | ---: | ---: | ---: |
-| baseline `origin/main` | 23 | 23 | 23 |
-| memo + stable callback branch | 23 | 23 | 0 |
+| Build                         | Visible player rows before | Visible player rows after | `CandidateCard` renders after whitespace keystroke |
+| ----------------------------- | -------------------------: | ------------------------: | -------------------------------------------------: |
+| baseline `origin/main`        |                         23 |                        23 |                                                 23 |
+| memo + stable callback branch |                         23 |                        23 |                                                  0 |
 
 Delta: `23 -> 0` row renders for the no-op keystroke scenario.
 

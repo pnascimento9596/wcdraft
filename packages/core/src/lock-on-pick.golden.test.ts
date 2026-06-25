@@ -30,7 +30,11 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
-function stepN(catalog: ReturnType<typeof buildDraftCatalog>, state: DraftState, n: number): DraftState {
+function stepN(
+  catalog: ReturnType<typeof buildDraftCatalog>,
+  state: DraftState,
+  n: number,
+): DraftState {
   let s = state;
   for (let i = 0; i < n; i++) s = stepDraft(catalog, s);
   return s;
@@ -55,7 +59,10 @@ describe("lock-on-pick — confirmed picks are IMMUTABLE", () => {
 
     // The occupied slots referenced by the first-N picks are unchanged too.
     const firstNSlotIds = new Set(
-      partial.spins.slice(0, N).map((s) => s.assigned_slot_id).filter((x): x is string => x !== null),
+      partial.spins
+        .slice(0, N)
+        .map((s) => s.assigned_slot_id)
+        .filter((x): x is string => x !== null),
     );
     const completedById = new Map(completed.squad.map((s) => [s.slot_id, s]));
     for (const slot of snapshotSquad) {

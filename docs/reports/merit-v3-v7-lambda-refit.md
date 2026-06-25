@@ -39,12 +39,12 @@ No accepted fitted parameter is on an extendable grid boundary.
 
 Changed in `packages/core/src/engine/calibration.ts`:
 
-| Constant | Before | V7 |
-|---|---:|---:|
-| `LAMBDA.BASE` | 1.00 | 1.05 |
-| `LAMBDA.SPREAD` | 7.00 | 6.50 |
-| `LAMBDA.MIN` | 0.40 | 0.70 |
-| `LAMBDA.GAMMA_MID` | 0.60 | 0.80 |
+| Constant           | Before |   V7 |
+| ------------------ | -----: | ---: |
+| `LAMBDA.BASE`      |   1.00 | 1.05 |
+| `LAMBDA.SPREAD`    |   7.00 | 6.50 |
+| `LAMBDA.MIN`       |   0.40 | 0.70 |
+| `LAMBDA.GAMMA_MID` |   0.60 | 0.80 |
 
 Unchanged: `MAX=3.4`, `W_DEF/W_GK=0.70/0.30`, `KO_LAMBDA_FACTOR=0.82`, `CHANCES=50/17`, `LAMBDA_DISP={0.20,0.75,0.10,0.50}`.
 
@@ -149,18 +149,18 @@ All four greedy shape metrics are outside the strategic bands.
 
 Computed from `packages/data/src/generated/draft-pool.compact.json`, `n=12,219` for both bases.
 
-| Basis | Channel | min | p10 | p25 | median | p75 | p90 | p95 | max | mean |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Career | overall | 66 | 70 | 71 | 73 | 82 | 88 | 88 | 99 | 76.673 |
-| Career | attack | 20 | 21 | 26 | 33 | 39 | 51 | 60 | 100 | 34.582 |
-| Career | midfield | 20 | 23 | 28 | 35 | 44 | 52 | 60 | 100 | 36.838 |
-| Career | defense | 20 | 24 | 27 | 33 | 41 | 51 | 60 | 96 | 35.570 |
-| Career | goalkeeping | 20 | 20 | 20 | 20 | 20 | 33 | 47 | 84 | 22.887 |
-| Current | overall | 66 | 70 | 71 | 73 | 82 | 88 | 88 | 91 | 76.360 |
-| Current | attack | 20 | 21 | 26 | 33 | 38 | 47 | 57 | 80 | 33.960 |
-| Current | midfield | 20 | 23 | 28 | 34 | 44 | 50 | 57 | 80 | 36.238 |
-| Current | defense | 20 | 24 | 27 | 33 | 41 | 51 | 60 | 72 | 35.116 |
-| Current | goalkeeping | 20 | 20 | 20 | 20 | 20 | 33 | 47 | 80 | 22.834 |
+| Basis   | Channel     | min | p10 | p25 | median | p75 | p90 | p95 | max |   mean |
+| ------- | ----------- | --: | --: | --: | -----: | --: | --: | --: | --: | -----: |
+| Career  | overall     |  66 |  70 |  71 |     73 |  82 |  88 |  88 |  99 | 76.673 |
+| Career  | attack      |  20 |  21 |  26 |     33 |  39 |  51 |  60 | 100 | 34.582 |
+| Career  | midfield    |  20 |  23 |  28 |     35 |  44 |  52 |  60 | 100 | 36.838 |
+| Career  | defense     |  20 |  24 |  27 |     33 |  41 |  51 |  60 |  96 | 35.570 |
+| Career  | goalkeeping |  20 |  20 |  20 |     20 |  20 |  33 |  47 |  84 | 22.887 |
+| Current | overall     |  66 |  70 |  71 |     73 |  82 |  88 |  88 |  91 | 76.360 |
+| Current | attack      |  20 |  21 |  26 |     33 |  38 |  47 |  57 |  80 | 33.960 |
+| Current | midfield    |  20 |  23 |  28 |     34 |  44 |  50 |  57 |  80 | 36.238 |
+| Current | defense     |  20 |  24 |  27 |     33 |  41 |  51 |  60 |  72 | 35.116 |
+| Current | goalkeeping |  20 |  20 |  20 |     20 |  20 |  33 |  47 |  80 | 22.834 |
 
 ## Anchor Policy
 

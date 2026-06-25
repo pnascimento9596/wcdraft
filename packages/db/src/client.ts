@@ -32,8 +32,7 @@ let cachedDb: Db | null = null;
  * MUST use the direct URL; runtime route handlers MUST use the pooled URL.
  */
 function readConnectionString(mode: "runtime" | "migrate"): string {
-  const varName =
-    mode === "migrate" ? "DATABASE_URL_UNPOOLED" : "DATABASE_URL";
+  const varName = mode === "migrate" ? "DATABASE_URL_UNPOOLED" : "DATABASE_URL";
   const value = process.env[varName];
   if (!value) {
     throw new Error(

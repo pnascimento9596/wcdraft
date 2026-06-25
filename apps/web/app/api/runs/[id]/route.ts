@@ -20,19 +20,13 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(
-  req: NextRequest,
-  ctx: RouteContext,
-): Promise<NextResponse> {
+export async function GET(req: NextRequest, ctx: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await ctx.params;
     const auth = await resolveAuth(req);
     const row = await getRun(id, auth.ctx, auth.deps);
     if (!row) {
-      return NextResponse.json(
-        { error: "NOT_FOUND" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
     }
     return NextResponse.json({ run: toApiShape(row) });
   } catch (err) {
@@ -40,10 +34,7 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  ctx: RouteContext,
-): Promise<NextResponse> {
+export async function DELETE(req: NextRequest, ctx: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await ctx.params;
     const auth = await resolveAuth(req);

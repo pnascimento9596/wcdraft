@@ -6,6 +6,7 @@ adapter, or blind-seam logic changes. Mobile (390×844) is the primary experienc
 ## Work items
 
 ### 1 — LOCK PICK ergonomics + tap-target audit
+
 - The sticky bottom bar is now mobile-first **column** layout: one compact helper line on
   top, action row below. **LOCK PICK** is a full-prominence primary (`min-height: 52px`,
   `flex: 1`, thumb-zone right / full width when alone); **Choose slot** demoted to a
@@ -17,11 +18,13 @@ adapter, or blind-seam logic changes. Mobile (390×844) is the primary experienc
   pitch chips 59×43px at 390 (container-derived, see item 4), bench 46px, sheet slots 54px.
 
 ### 2 — Mode select on one screen
+
 Both Classic and Memory cards (with CTAs) fit a 390×844 **and** 360×800 viewport with no
 scroll: compacted card padding/type, 3 one-line ellipsized bullets, inline CTA, and a
 `.game-page--mode`-scoped head shave in `globals.css`. No copy changes.
 
 ### 3 — Formation picker comparability
+
 All six shapes now sit in one 390×844 viewport in a tight 2-col grid. The mini-pitch
 previews (the bulk) went to 16/10; blurbs are one ellipsized line; the redundant in-panel
 brand lockup is hidden ≤430px (masthead + app bar already brand the screen). Whole card
@@ -30,6 +33,7 @@ remains the tap target with the explicit "Lock this shape" affordance for a11y. 
 state).
 
 ### 4 — Pitch slot grid: collision-free by construction
+
 - **Root cause:** chip half-height was assumed 6.0% of pitch height in
   `lib/game/pitch-layout.ts`, but the rendered (content-sized) chip was ~15–16% tall —
   hence GK/CB and ST/CAM collisions. Measured on the old build at 390px (4-2-3-1):
@@ -52,6 +56,7 @@ state).
   constants in CI.
 
 ### 5 — Light theme rework (tokens.css)
+
 - **The bug:** slot labels (`.slotPos`, `.slotEmptyLabel`, empty-slot text and pitch chalk
   lines) were `rgba(255,255,255,…)` literals from the legacy always-dark pitch — invisible
   white-on-pale in light mode (see before/after below).
@@ -68,6 +73,7 @@ state).
   Dark screenshots show no regressions.
 
 ### 6 — Manager rows
+
 "Rating unavailable" pill removed from the manager **candidate row** — the
 "Manager · ⟨nation⟩ · ⟨year⟩" subtitle carries the kind; the expand chevron stays. The
 dedicated ManagerSlot card keeps its explicit badge (different surface; documented
@@ -75,6 +81,7 @@ honest-state invariant). No tests asserted the row pill (verified by repo-wide g
 334/334 web tests green.
 
 ### 7 — General tightening
+
 - Synergy bar is now **collapsible**: the head row (label + headline score) is a 44px
   toggle; track + figures collapse. Mobile first paint defaults collapsed, ≥720px defaults
   expanded, explicit user toggle persisted (`wcdraft:ui:synergy-bar-open:v1`) and wins.
@@ -84,15 +91,17 @@ honest-state invariant). No tests asserted the row pill (verified by repo-wide g
   `--r-pill` (shirt, drafted, provenance, compat).
 
 ### 8 — Discretionary polish (all listed)
+
 - **Synergy headline rounding:** review screen surfaced a raw `9.324675324675324` —
   display now rounds to an integer (fill width + sim untouched). Pre-existing bug.
 - **Delta arrows retokened:** `.deltaUp` literal `#3f9e69` → `--teal-deep`; `.deltaDown`
-  was using the *accent* color for a negative delta → `--loss`.
+  was using the _accent_ color for a negative delta → `--loss`.
 - **`--line-strong` (light)** darkened `#d2cdc0`→`#b9b3a4` and `--line-2` to `.2` alpha so
   hairlines on cream actually read.
 - Mode-card hover lift disabled ≤430px (no hover on touch; prevented tap-flicker).
 
 ### Proposed, NOT built (structural — out of YELLOW scope)
+
 - Spin-stage "Synergy 0" status chip before any pick reads as a real score; an honest "—"
   there needs a draft-screen logic touch (`revealSynergyOverall` already nullable — one
   conditional in `draft-screen.tsx`, but it gates on engine state semantics).
@@ -102,26 +111,26 @@ honest-state invariant). No tests asserted the row pill (verified by repo-wide g
 
 ## Validation matrix
 
-| Gate | Result |
-|---|---|
-| `pnpm typecheck` | ✅ 7/7 tasks |
-| `pnpm lint` (`--max-warnings=0`) | ✅ 4/4 tasks |
-| Full test suite | ✅ core 302, db 59, data 50, **web 334** — all green |
-| Screenshot grid 390×844 + 360×800, light + dark | ✅ 4 combos × home / mode / formation / spin / draft+candidates+bar / review (28 shots, `after/`) |
-| Overlap check, all formations, both widths | ✅ 12/12 zero DOM-rect overlaps (before-baseline: 2 real overlaps on 4-2-3-1) |
-| Hidden-mode spot probe | ✅ 0 rating digits pre-reveal: 26 OVR cells, 4 channels, coverage, synergy figures (expanded) all "—"; fit % + pool count intentionally visible |
-| Mode select one-screen | ✅ cards + CTAs above the fold at 390×844 and 360×800 |
-| Hidden seam / view-models | ✅ untouched (`adapters.ts`, `view-models.ts`, `memory-reveal.tsx` zero diff) |
+| Gate                                            | Result                                                                                                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm typecheck`                                | ✅ 7/7 tasks                                                                                                                                    |
+| `pnpm lint` (`--max-warnings=0`)                | ✅ 4/4 tasks                                                                                                                                    |
+| Full test suite                                 | ✅ core 302, db 59, data 50, **web 334** — all green                                                                                            |
+| Screenshot grid 390×844 + 360×800, light + dark | ✅ 4 combos × home / mode / formation / spin / draft+candidates+bar / review (28 shots, `after/`)                                               |
+| Overlap check, all formations, both widths      | ✅ 12/12 zero DOM-rect overlaps (before-baseline: 2 real overlaps on 4-2-3-1)                                                                   |
+| Hidden-mode spot probe                          | ✅ 0 rating digits pre-reveal: 26 OVR cells, 4 channels, coverage, synergy figures (expanded) all "—"; fit % + pool count intentionally visible |
+| Mode select one-screen                          | ✅ cards + CTAs above the fold at 390×844 and 360×800                                                                                           |
+| Hidden seam / view-models                       | ✅ untouched (`adapters.ts`, `view-models.ts`, `memory-reveal.tsx` zero diff)                                                                   |
 
 ## Before / after
 
-| Surface | Before | After |
-|---|---|---|
-| Light pitch (the bug) | ![](before/draft-pitch-390x844-light.png) | ![](after/draft-pitch-390x844-light.png) |
-| Dark pitch + lock bar | ![](before/draft-pitch-390x844-dark.png) | ![](after/draft-pitch-390x844-dark.png) |
+| Surface                 | Before                                                  | After                                                  |
+| ----------------------- | ------------------------------------------------------- | ------------------------------------------------------ |
+| Light pitch (the bug)   | ![](before/draft-pitch-390x844-light.png)               | ![](after/draft-pitch-390x844-light.png)               |
+| Dark pitch + lock bar   | ![](before/draft-pitch-390x844-dark.png)                | ![](after/draft-pitch-390x844-dark.png)                |
 | Candidates + action bar | ![](before/draft-candidates-actionbar-390x844-dark.png) | ![](after/draft-candidates-actionbar-390x844-dark.png) |
-| Mode select | ![](before/mode-select-390x844-dark.png) | ![](after/mode-select-390x844-dark.png) |
-| Formation picker | ![](before/formation-picker-390x844-dark.png) | ![](after/formation-picker-390x844-dark.png) |
+| Mode select             | ![](before/mode-select-390x844-dark.png)                | ![](after/mode-select-390x844-dark.png)                |
+| Formation picker        | ![](before/formation-picker-390x844-dark.png)           | ![](after/formation-picker-390x844-dark.png)           |
 
 After-only: spin reveal (light/dark), squad review (light/dark), hidden-mode probe,
 360×800 pitch, 360×800 light mode select — in `after/`.

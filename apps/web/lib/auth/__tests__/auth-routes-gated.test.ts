@@ -96,9 +96,7 @@ describe("/api/auth/magic-link — ship-dark", () => {
 
 describe("/api/auth/verify — ship-dark", () => {
   it("GET returns 503 AUTH_DISABLED before building deps when auth is disabled", async () => {
-    const req = new NextRequest(
-      "http://localhost/api/auth/verify?token=abc&next=/play",
-    );
+    const req = new NextRequest("http://localhost/api/auth/verify?token=abc&next=/play");
     const res = await verifyGet(req);
     expect(res.status).toBe(503);
     const body = (await res.json()) as { error?: string };

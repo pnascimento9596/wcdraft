@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  _MANAGER_TRAIT_TAXONOMY,
-  managerTraitsFor,
-} from "@/lib/game/manager-traits";
+import { _MANAGER_TRAIT_TAXONOMY, managerTraitsFor } from "@/lib/game/manager-traits";
 import type { ManagerTraitView } from "@/lib/game/view-models";
 
 // ENGINE-V2 E-2 — Manager flavor TRAITS contract.
@@ -17,16 +14,7 @@ import type { ManagerTraitView } from "@/lib/game/view-models";
 //   * Labels contain NO mechanical language (no "boost", "bonus", "rating",
 //     "modifier", "effect").
 
-const BANNED_WORDS = [
-  "boost",
-  "bonus",
-  "rating",
-  "modifier",
-  "buff",
-  "effect",
-  "stat",
-  "ovr",
-];
+const BANNED_WORDS = ["boost", "bonus", "rating", "modifier", "buff", "effect", "stat", "ovr"];
 
 function expectFlavorOnly(traits: readonly ManagerTraitView[]) {
   for (const t of traits) {

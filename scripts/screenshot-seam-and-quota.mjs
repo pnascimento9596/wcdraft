@@ -17,9 +17,7 @@
 //     line-strength rows confirming `value: null` per row.
 
 const PW_DIR = process.env.PW_DIR ?? "/tmp/pw-screenshots/node_modules/playwright";
-const { chromium } = await import(`${PW_DIR}/index.mjs`).catch(() =>
-  import(`${PW_DIR}/index.js`),
-);
+const { chromium } = await import(`${PW_DIR}/index.mjs`).catch(() => import(`${PW_DIR}/index.js`));
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -84,10 +82,7 @@ async function completeDraft(page) {
   throw new Error("completeDraft: Review CTA did not appear within 30 iterations");
 }
 
-const BLIND_DIGIT_SELECTORS = [
-  '[class*="lineVal"]',
-  '[class*="squadAvg"]',
-];
+const BLIND_DIGIT_SELECTORS = ['[class*="lineVal"]', '[class*="squadAvg"]'];
 
 async function blindDigitProbe(page, surface) {
   const offenders = await page.evaluate((selectors) => {
@@ -191,7 +186,10 @@ async function captureBlindReview(page, dir, viewport) {
   await lock433.click();
   await waitForReady(page);
   await completeDraft(page);
-  await page.getByRole("button", { name: /review xi/i }).first().click();
+  await page
+    .getByRole("button", { name: /review xi/i })
+    .first()
+    .click();
   await waitForReady(page);
   // Scroll the Rating-by-line panel into view so the screenshot frames it.
   const lineRatings = page.locator('[class*="lineRatings"]').first();
@@ -294,8 +292,7 @@ async function captureViewport(viewport, outRoot, ctxNote) {
 }
 
 async function main() {
-  const outRoot =
-    process.argv[2] ?? join(process.cwd(), "docs/screenshots/seam-and-quota");
+  const outRoot = process.argv[2] ?? join(process.cwd(), "docs/screenshots/seam-and-quota");
   await mkdir(outRoot, { recursive: true });
   const ctxNote = { dirs: [] };
   for (const viewport of VIEWPORTS) {

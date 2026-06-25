@@ -9,11 +9,7 @@
 import type { NextRequest } from "next/server";
 import { validateSessionCookie } from "@/lib/auth/sessions";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
-import {
-  buildRuntimeDeps,
-  readRequestCookie,
-  type RuntimeDeps,
-} from "@/lib/auth/handler-helpers";
+import { buildRuntimeDeps, readRequestCookie, type RuntimeDeps } from "@/lib/auth/handler-helpers";
 import { AuthError } from "@/lib/auth/errors";
 import type { AuthContext } from "@/lib/game/saved-runs-store";
 

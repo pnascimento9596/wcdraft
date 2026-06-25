@@ -36,17 +36,9 @@ import {
   type Team2026,
 } from "@wcdraft/core";
 
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-} from "../../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../../src/index.js";
 
-import {
-  buildPolicyContext,
-  runAutoDraftPolicy,
-  type PolicyContext,
-} from "./draft-policies.js";
+import { buildPolicyContext, runAutoDraftPolicy, type PolicyContext } from "./draft-policies.js";
 
 export const REALISM_NORMS = {
   goals_per_game: 2.54,
@@ -178,10 +170,7 @@ function makeDraft(
 }
 
 /** Compute the StarterContribution[] the sim aggregator would see for this XI. */
-function starterContributionsFor(
-  draft: DraftState,
-  world: SimWorld,
-): StarterContribution[] {
+function starterContributionsFor(draft: DraftState, world: SimWorld): StarterContribution[] {
   const formation = FORMATION_TEMPLATES[draft.formation_id];
   if (!formation) {
     throw new RangeError(`starterContributionsFor: unknown formation ${draft.formation_id}`);
@@ -253,11 +242,9 @@ export function runRealismEnsembleForPolicy(
       const formation = FORMATION_TEMPLATES[draft.formation_id]!;
       const managerCardId = draft.manager_card_id;
       const managerTournament =
-        managerCardId === null ? null : world.managerTournaments?.[managerCardId] ?? null;
+        managerCardId === null ? null : (world.managerTournaments?.[managerCardId] ?? null);
       const managerRating =
-        managerCardId === null
-          ? null
-          : world.managerRatings?.[managerCardId] ?? null;
+        managerCardId === null ? null : (world.managerRatings?.[managerCardId] ?? null);
       const synergy = computeSynergy(
         draft.squad,
         formation,

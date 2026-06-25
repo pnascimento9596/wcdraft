@@ -11,7 +11,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requestMagicLink } from "@/lib/auth/magic-link";
 import { ensureSession } from "@/lib/auth/anon-session";
-import { verifyCsrfDoubleSubmit, verifyOriginHost, CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
+import {
+  verifyCsrfDoubleSubmit,
+  verifyOriginHost,
+  CSRF_COOKIE_NAME,
+  CSRF_HEADER_NAME,
+} from "@/lib/auth/csrf";
 import {
   buildRuntimeDeps,
   buildMagicLinkDeps,
@@ -59,10 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // 3) Parse + dispatch.
     const body = (await req.json().catch(() => null)) as RequestBody | null;
     const email = typeof body?.email === "string" ? body.email : "";
-    await requestMagicLink(
-      { email, ipAddress: readClientIp(req) },
-      buildMagicLinkDeps(deps),
-    );
+    await requestMagicLink({ email, ipAddress: readClientIp(req) }, buildMagicLinkDeps(deps));
 
     const response = NextResponse.json(
       { ok: true, message: "If the address is valid, a link has been sent." },

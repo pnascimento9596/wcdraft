@@ -5,6 +5,7 @@ Base: `origin/main` `4c22e375dc605f0a401d84d836b0b379fe8856a3`.
 ## Outcome
 
 Proposal F is implemented as a nonce-based CSP:
+
 - Preview and local/dev default to `Content-Security-Policy-Report-Only`.
 - Production defaults to enforcing `Content-Security-Policy`.
 - `WCDRAFT_CSP_REPORT_ONLY=1` can force report-only, and `0` can force enforcement.
@@ -25,14 +26,14 @@ No new secret variable is required.
 
 ## Surface Inventory
 
-| Surface | Change |
-| --- | --- |
-| All document routes | `proxy.ts` adds nonce CSP + `Reporting-Endpoints`; production enforces, preview reports only. |
+| Surface                | Change                                                                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| All document routes    | `proxy.ts` adds nonce CSP + `Reporting-Endpoints`; production enforces, preview reports only.                                               |
 | `POST /api/csp-report` | New Edge route; accepts CSP reports with byte-bounded intake, returns `413` for oversized bodies, and logs bounded/truncated report bodies. |
-| `/` | JSON-LD `<script>` carries the per-request CSP nonce. |
-| Root layout | Calls `connection()` so Next can attach the nonce to runtime scripts/styles per request. |
-| `/play/share` metadata | Current unsigned `t2` result summaries no longer select `/api/og/run`; default OG image is used. |
-| `/api/og/run` | Unsigned, forged, malformed, legacy, pre-summary, and foreign-build tokens all use the static fallback. |
+| `/`                    | JSON-LD `<script>` carries the per-request CSP nonce.                                                                                       |
+| Root layout            | Calls `connection()` so Next can attach the nonce to runtime scripts/styles per request.                                                    |
+| `/play/share` metadata | Current unsigned `t2` result summaries no longer select `/api/og/run`; default OG image is used.                                            |
+| `/api/og/run`          | Unsigned, forged, malformed, legacy, pre-summary, and foreign-build tokens all use the static fallback.                                     |
 
 ## Validation
 

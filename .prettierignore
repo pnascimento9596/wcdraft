@@ -7,6 +7,25 @@ pnpm-lock.yaml
 **/next-env.d.ts
 # Machine-generated; the generator script is the source of truth.
 packages/core/test/fixtures/
+packages/data/src/generated/
+packages/data/src/retained-runtime-data/
+packages/data/test/fixtures/
+packages/data/test/realism/*.json
+apps/web/public/data/
+apps/web/public/brand/*.json
+apps/web/public/flags/manifest.json
+
+# Pinned and generated ETL/runtime data. These files are reproducibility inputs
+# or generated outputs, not prose/source formatting targets.
+etl/output/
+etl/merit/raw/
+etl/sources/
+etl/supplement/raw/
+etl/vendor/
+packages/db/migrations/meta/
+docs/reports/*.json
+docs/screenshots/**/*.json
+docs/validation/**/*.json
 # Python
 .venv
 __pycache__

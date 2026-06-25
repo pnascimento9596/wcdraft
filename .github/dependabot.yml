@@ -1,0 +1,69 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm-workspace:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/apps/web"
+    schedule:
+      interval: "weekly"
+    groups:
+      web:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/core"
+    schedule:
+      interval: "weekly"
+    groups:
+      core:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/data"
+    schedule:
+      interval: "weekly"
+    groups:
+      data:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/db"
+    schedule:
+      interval: "weekly"
+    groups:
+      db:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/marketing/x"
+    schedule:
+      interval: "weekly"
+    groups:
+      marketing-x:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "/etl"
+    schedule:
+      interval: "weekly"
+    groups:
+      etl:
+        patterns:
+          - "*"

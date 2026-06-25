@@ -10,11 +10,7 @@
 // (and later, additional surfaces) under the new user_id. F-2 only ISSUES.
 import { AuthError } from "./errors";
 import type { Session } from "@wcdraft/db";
-import {
-  createSession,
-  validateSessionCookie,
-  type SessionDeps,
-} from "./sessions";
+import { createSession, validateSessionCookie, type SessionDeps } from "./sessions";
 
 export interface EnsureSessionResult {
   readonly session: Session;
@@ -47,10 +43,7 @@ export async function ensureSession(
       if (!(e instanceof AuthError)) throw e;
     }
   }
-  const { session, cookieValue: fresh } = await createSession(
-    { userId: null },
-    deps,
-  );
+  const { session, cookieValue: fresh } = await createSession({ userId: null }, deps);
   return { session, fresh: true, cookieValue: fresh };
 }
 

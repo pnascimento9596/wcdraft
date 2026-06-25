@@ -24,15 +24,15 @@ The committed override CSV was copied verbatim from
 `/Users/paulo/Projects/wcdraft/merit-v4.3-merged-overrides.csv` into
 `etl/overrides/manual-ratings-v4.3.csv`.
 
-| Check | Result |
-|---|---:|
-| data rows | 2,516 |
-| sha256 | `f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6` |
-| `agree` | 1,055 |
-| `avg` | 455 |
-| `f2-only` | 811 |
-| `f1-only` | 190 |
-| `f1-corrupt->f2` | 5 |
+| Check            |                                                             Result |
+| ---------------- | -----------------------------------------------------------------: |
+| data rows        |                                                              2,516 |
+| sha256           | `f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6` |
+| `agree`          |                                                              1,055 |
+| `avg`            |                                                                455 |
+| `f2-only`        |                                                                811 |
+| `f1-only`        |                                                                190 |
+| `f1-corrupt->f2` |                                                                  5 |
 
 Spot rows from the source hold: Morocco 2022 Achraf Dari = 69; Morocco 2022
 Yassine Bounou = 84.
@@ -67,13 +67,13 @@ Those rows are honest misses, not an absent-block contradiction.
 
 Honest-miss reasons:
 
-| Reason | Rows |
-|---|---:|
-| `no_unambiguous_match` | 145 |
-| `duplicate_conflict_weaker_match` | 37 |
-| `source_hint_not_player_name` | 19 |
-| `ambiguous_unapplied` | 11 |
-| `duplicate_conflict_weak_only` | 4 |
+| Reason                            | Rows |
+| --------------------------------- | ---: |
+| `no_unambiguous_match`            |  145 |
+| `duplicate_conflict_weaker_match` |   37 |
+| `source_hint_not_player_name`     |   19 |
+| `ambiguous_unapplied`             |   11 |
+| `duplicate_conflict_weak_only`    |    4 |
 
 Top honest-miss countries: Brazil 20, Cameroon 15, Costa Rica 13, South Korea
 13, Mexico 12, Saudi Arabia 12, Iran 9, Portugal 9, Nigeria 8, Senegal 7,
@@ -120,23 +120,23 @@ the 90+ band. That is distribution shape, not non-manual drift.
 
 Spot checks from generated artifacts:
 
-| Card | Player | Source target | Runtime OVERALL | Channels |
-|---|---|---:|---:|---|
-| `P-52013:WC-2022` | Achraf Dari | 69 | 69 | ATT 37 / MID 49 / DEF 69 / GK 20 |
-| `P-50688:WC-2022` | Bounou | 84 | 84 | GK 84 |
-| `P-45288:WC-2022` | Hakimi | 84 | 84 | DEF 84 |
-| `P-13354:WC-2010` | Robinho | 83 effective from 85/81 | 83 | duplicate half-up average |
-| `P-89971:WC-2002` | Kerzhakov | 72 | 72 | applied historical pin |
+| Card              | Player      |           Source target | Runtime OVERALL | Channels                         |
+| ----------------- | ----------- | ----------------------: | --------------: | -------------------------------- |
+| `P-52013:WC-2022` | Achraf Dari |                      69 |              69 | ATT 37 / MID 49 / DEF 69 / GK 20 |
+| `P-50688:WC-2022` | Bounou      |                      84 |              84 | GK 84                            |
+| `P-45288:WC-2022` | Hakimi      |                      84 |              84 | DEF 84                           |
+| `P-13354:WC-2010` | Robinho     | 83 effective from 85/81 |              83 | duplicate half-up average        |
+| `P-89971:WC-2002` | Kerzhakov   |                      72 |              72 | applied historical pin           |
 
 ## Version Bump
 
-| Anchor | v4.2 | v4.3 |
-|---|---|---|
-| runtime data | `runtime-data-2.4.0` | `runtime-data-2.5.0` |
-| engine | `engine-2026.06.15-merit-v4.2` | `engine-2026.06.15-merit-v4.3` |
-| historical rating | `wc-perf-6.2.0` | `wc-perf-6.3.0` |
-| projected rating | `proj-career-5.2.0` | `proj-career-5.3.0` |
-| leaderboard season | `..._f8de3452` | `..._923c4a93` |
+| Anchor             | v4.2                           | v4.3                           |
+| ------------------ | ------------------------------ | ------------------------------ |
+| runtime data       | `runtime-data-2.4.0`           | `runtime-data-2.5.0`           |
+| engine             | `engine-2026.06.15-merit-v4.2` | `engine-2026.06.15-merit-v4.3` |
+| historical rating  | `wc-perf-6.2.0`                | `wc-perf-6.3.0`                |
+| projected rating   | `proj-career-5.2.0`            | `proj-career-5.3.0`            |
+| leaderboard season | `..._f8de3452`                 | `..._923c4a93`                 |
 
 `runtime-data-2.4.0` is retained under
 `packages/data/src/retained-runtime-data/runtime-data-2.4.0/` so the immediately
@@ -193,26 +193,26 @@ Fitter landing: goals 2.514, group draw 25.27%, margin >=4 4.99%, KO->ET
 This table is updated from actual command output before the owner approval
 checkpoint. Rows marked PENDING are not claimed as passed.
 
-| Gate | Result |
-|---|---|
-| `PYTHONPATH=etl/src python3 -m wcdraft_etl.manual_overrides` | PASS: 2,300 / 2,516 matched; 216 unmatched |
-| `PYTHONPATH=etl/src python3 -m wcdraft_etl.rating` | PASS: 10,973 historical ratings; null overall 0; baseline estimates 386; RSSSF appearances 1,578 |
-| `PYTHONPATH=etl/src python3 -m wcdraft_etl.ingest_2026` | PASS: 1,246 cards; 48 teams; 62 knockout slots |
-| `cd etl && ruff check src tests && pytest -q` | PASS: ruff clean; 297 passed |
-| `pnpm --filter @wcdraft/data build:compact` | PASS: runtime-data-2.5.0; 12,219 ratings; draft-pool brotli bucket 2,209,280 bytes |
-| `pnpm --filter @wcdraft/data test:golden:data` | PASS: 2 files / 31 tests |
-| `pnpm --filter @wcdraft/data test:golden:integration` | PASS after fix-forwarding stale e2e seed constant to `...:105`: 2 files / 22 tests |
-| `pnpm --filter @wcdraft/data exec vitest run test/realism/strategic-pick-canary.golden.test.ts test/realism-modern-norms.golden.test.ts` | PASS: 2 files / 6 tests; realism landing goals 2.514, draw 25.27%, margin>=4 4.99%, KO->ET 32.67%, shootout 21.73% |
-| `pnpm --filter @wcdraft/data test:realism:heavy` | PASS: 1 file / 7 tests |
-| `pnpm --filter @wcdraft/web gen:leaderboard-golden` | PASS during artifact regen: season key `..._923c4a93` |
-| `pnpm --filter @wcdraft/web test:golden:leaderboard` | PASS: 1 file / 6 tests |
-| `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core --force` | PASS with cache bypass: 2 tasks; 107 tests |
-| `pnpm --filter @wcdraft/data test` | PASS after fix-forwarding acceptance semantics for manual pins: 9 files passed / 1 skipped; 74 passed / 7 skipped |
-| `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS: typecheck 8 tasks; lint 5 tasks; test 8 tasks (core 366, data 74 + 7 skipped, db 79, marketing-x 64, web 694 + 1 skipped); build 4 tasks |
-| `git diff --check` | PASS |
-| Fresh-context independent review | PASS fallback: RepoPromptCE worktree binding was unavailable, so `/tmp/wcdraft-merit-v43-review-20260615163949` was created as a detached fresh worktree at the implementation candidate; it re-executed manual override resolution, rating generation, 2026 ingest, contract spot checks, ETL ruff + 297 tests, compact rebuild, data goldens 31 + integration 22, realism/canary 6 + heavy realism 7, web leaderboard golden 6, core RNG/draft goldens 107, OG sign/render 17, and `git diff --check`. A cold-review first web-leaderboard attempt failed before assertions because `@wcdraft/data/dist` was absent; after `pnpm --filter @wcdraft/data build`, the rerun passed. |
-| CI | PENDING |
-| Merge / deploy / live verify | PENDING owner approval |
+| Gate                                                                                                                                     | Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PYTHONPATH=etl/src python3 -m wcdraft_etl.manual_overrides`                                                                             | PASS: 2,300 / 2,516 matched; 216 unmatched                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `PYTHONPATH=etl/src python3 -m wcdraft_etl.rating`                                                                                       | PASS: 10,973 historical ratings; null overall 0; baseline estimates 386; RSSSF appearances 1,578                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `PYTHONPATH=etl/src python3 -m wcdraft_etl.ingest_2026`                                                                                  | PASS: 1,246 cards; 48 teams; 62 knockout slots                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `cd etl && ruff check src tests && pytest -q`                                                                                            | PASS: ruff clean; 297 passed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `pnpm --filter @wcdraft/data build:compact`                                                                                              | PASS: runtime-data-2.5.0; 12,219 ratings; draft-pool brotli bucket 2,209,280 bytes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `pnpm --filter @wcdraft/data test:golden:data`                                                                                           | PASS: 2 files / 31 tests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `pnpm --filter @wcdraft/data test:golden:integration`                                                                                    | PASS after fix-forwarding stale e2e seed constant to `...:105`: 2 files / 22 tests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `pnpm --filter @wcdraft/data exec vitest run test/realism/strategic-pick-canary.golden.test.ts test/realism-modern-norms.golden.test.ts` | PASS: 2 files / 6 tests; realism landing goals 2.514, draw 25.27%, margin>=4 4.99%, KO->ET 32.67%, shootout 21.73%                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `pnpm --filter @wcdraft/data test:realism:heavy`                                                                                         | PASS: 1 file / 7 tests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `pnpm --filter @wcdraft/web gen:leaderboard-golden`                                                                                      | PASS during artifact regen: season key `..._923c4a93`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `pnpm --filter @wcdraft/web test:golden:leaderboard`                                                                                     | PASS: 1 file / 6 tests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core --force`                                                       | PASS with cache bypass: 2 tasks; 107 tests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `pnpm --filter @wcdraft/data test`                                                                                                       | PASS after fix-forwarding acceptance semantics for manual pins: 9 files passed / 1 skipped; 74 passed / 7 skipped                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `pnpm typecheck && pnpm lint && pnpm test && pnpm build`                                                                                 | PASS: typecheck 8 tasks; lint 5 tasks; test 8 tasks (core 366, data 74 + 7 skipped, db 79, marketing-x 64, web 694 + 1 skipped); build 4 tasks                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `git diff --check`                                                                                                                       | PASS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Fresh-context independent review                                                                                                         | PASS fallback: RepoPromptCE worktree binding was unavailable, so `/tmp/wcdraft-merit-v43-review-20260615163949` was created as a detached fresh worktree at the implementation candidate; it re-executed manual override resolution, rating generation, 2026 ingest, contract spot checks, ETL ruff + 297 tests, compact rebuild, data goldens 31 + integration 22, realism/canary 6 + heavy realism 7, web leaderboard golden 6, core RNG/draft goldens 107, OG sign/render 17, and `git diff --check`. A cold-review first web-leaderboard attempt failed before assertions because `@wcdraft/data/dist` was absent; after `pnpm --filter @wcdraft/data build`, the rerun passed. |
+| CI                                                                                                                                       | PENDING                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Merge / deploy / live verify                                                                                                             | PENDING owner approval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ## Ship Closeout
 

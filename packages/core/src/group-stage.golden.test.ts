@@ -7,10 +7,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  buildGroupStageResult,
-  simulateOtherGroupMatches,
-} from "./engine/group-stage.js";
+import { buildGroupStageResult, simulateOtherGroupMatches } from "./engine/group-stage.js";
 import {
   USER_GROUP_PARTICIPANT_ID,
   type GroupOtherMatchSummary,
@@ -63,7 +60,8 @@ function userMatch(
 ): MatchResult {
   const lineup: MatchLineupEntry[] = [];
   const events: MatchEvent[] = [];
-  const outcome: "W" | "D" | "L" = user_goals > opp_goals ? "W" : user_goals < opp_goals ? "L" : "D";
+  const outcome: "W" | "D" | "L" =
+    user_goals > opp_goals ? "W" : user_goals < opp_goals ? "L" : "D";
   return {
     match_id: `${runId}.m${idx}`,
     match_index: idx,

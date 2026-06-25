@@ -10,13 +10,13 @@
 
 Population: 12,219 player cards in `draft-pool.compact.json`.
 
-| Bucket                    |  Count | Definition / evidence                                                                                                                                                  |
-| ------------------------- | -----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Present-and-rendered      |  1,246 | All 2026 cards. `club_at_tournament` populated from the pinned Wikipedia 2026 squads revision (oldid 1357762108); rendered on the candidate-card metadata subline.       |
-| Present-but-unrendered    |  **0** | `club_label` (adapters.ts) is the single seam; `candidate-card.tsx:142` renders it on every pick/lock-in surface (collapsed row + expanded detail share the subline).    |
-| Absent-from-bundle        |  **0** | `build-compact-data.mjs` passes `pt.club_at_tournament ?? null` / `pt.club ?? null` through verbatim — nothing present in ETL output is dropped at compact time.         |
-| Dropped-in-ETL            |  **0** | `etl/src/wcdraft_etl/cards.py:114` hard-nulls the field *because the source has no club column* — a documented honest-state null, not a mapping drop.                    |
-| Source-absent             | 10,973 | Every historical card (1930–2022). The pinned Fjelstul v1.2.0 `squads.csv`/`players.csv` carry **no club column for any tournament year** (coverage 0% across all 21).  |
+| Bucket                 |  Count | Definition / evidence                                                                                                                                                  |
+| ---------------------- | -----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Present-and-rendered   |  1,246 | All 2026 cards. `club_at_tournament` populated from the pinned Wikipedia 2026 squads revision (oldid 1357762108); rendered on the candidate-card metadata subline.     |
+| Present-but-unrendered |  **0** | `club_label` (adapters.ts) is the single seam; `candidate-card.tsx:142` renders it on every pick/lock-in surface (collapsed row + expanded detail share the subline).  |
+| Absent-from-bundle     |  **0** | `build-compact-data.mjs` passes `pt.club_at_tournament ?? null` / `pt.club ?? null` through verbatim — nothing present in ETL output is dropped at compact time.       |
+| Dropped-in-ETL         |  **0** | `etl/src/wcdraft_etl/cards.py:114` hard-nulls the field _because the source has no club column_ — a documented honest-state null, not a mapping drop.                  |
+| Source-absent          | 10,973 | Every historical card (1930–2022). The pinned Fjelstul v1.2.0 `squads.csv`/`players.csv` carry **no club column for any tournament year** (coverage 0% across all 21). |
 
 ETL output cross-check: `player_tournaments.json` = 13,843 cards, 0 non-null
 `club_at_tournament` (the 13,843 → 12,219 gap is the 2,870 women's player-tournaments,
@@ -37,7 +37,7 @@ correctly excluded from the draft pool). `player_tournaments_2026.json` = 1,246 
    Fjelstul player), replacing the hard null at `cards.py:114` with the parsed value.
    Honest-state stands: unresolved rows and blank cells stay null — never coerced.
 3. **Compact regen.** No builder change needed — `build-compact-data.mjs` already passes
-   the field through. The regen itself bumps `dataset_version` (this is *why* it is 12b
+   the field through. The regen itself bumps `dataset_version` (this is _why_ it is 12b
    work: the anchor change skews every live `t1.` token).
 4. **Tests.** Update the census lock in
    `apps/web/lib/game/__tests__/club-coverage.test.ts` (it intentionally pins

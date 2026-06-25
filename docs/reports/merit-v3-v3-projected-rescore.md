@@ -50,32 +50,32 @@ Q. Timber 73 at every h). No §7 probe band was used to pick h.
 
 ## Mechanism delta summary (display deltas on the FROZEN curve)
 
-| Cohort | n | min | p25 | median | p75 | max |
-|---|---:|---:|---:|---:|---:|---:|
-| age_conditioning (raw path, wt==0) | 1,222 | -16 | -1 | 0 | 1 | 10 |
-| person_identity_seam (minted with rows) | 20 | -4 | -1 | 0 | 0 | 17 |
-| index_reconsumption (linked, index moved) | 72 | -16 | -2 | 0 | 0 | 6 |
-| all cards | 1,246 | -16 | -1 | 0 | 1 | 17 |
+| Cohort                                    |     n | min | p25 | median | p75 | max |
+| ----------------------------------------- | ----: | --: | --: | -----: | --: | --: |
+| age_conditioning (raw path, wt==0)        | 1,222 | -16 |  -1 |      0 |   1 |  10 |
+| person_identity_seam (minted with rows)   |    20 |  -4 |  -1 |      0 |   0 |  17 |
+| index_reconsumption (linked, index moved) |    72 | -16 |  -2 |      0 |   0 |   6 |
+| all cards                                 | 1,246 | -16 |  -1 |      0 |   1 |  17 |
 
 753/1,246 cards moved; 12 `overall_basis` flips; 4 legend flips (minted persons gaining
 their factual badge: Haaland, Yamal, Alaba + 1).
 
 ## §7 probe positions (PROVISIONAL — frozen v1 curve; the binding gate is V4's)
 
-| Probe | Old | New (frozen curve) | Current basis | Notes |
-|---|---:|---:|---:|---|
-| Yamal 2026 (#1) | 79 | **92** | 88 | minted person row consulted, idx 0.641, legend ✓ |
-| Haaland 2026 (#2) | 88 | **98** | 88 | idx 0.843, legend ✓ — above the 89–93 band on the frozen curve; V4 judges |
-| Valverde 2026 (#3) | 88 | **88** | 88 | idx 0.400 exactly at the material gate, wt 0.50 — V4 watch |
-| Rodri 2026 (#5) | 90 | **91** | 88 | legend ✓ (band 89–92) |
-| Neymar 2026 (#6) | 93 | **91** | 88 | legend ✓ — below the 92–94 band; KNOWN WATCH-ITEM |
-| Vinícius Jr 2026 (#7) | 87 | **90** | 88 | idx 0.511 (V1 re-curation), material now |
-| Aït-Nouri 2026 (#15) | 83 | **85** | 85 | in 84–87 |
-| Gavi 2026 (#15) | 84 | **88** | 88 | row exists post-U0 pool (V2 had none); "modest ↑" |
-| Khalil Ayari (control) | 71 | **71** | 71 | no facts → no row → no lift |
-| Q. Timber (control) | 72 | **73** | 73 | twins unmerged, ±1 |
-| Perlaza (control) | — | — | — | NOT in the pinned 2026 pool (no row exists; honest absence) |
-| Messi 2026 (stability) | 99 | 98 | 85 | stature path stable |
+| Probe                  | Old | New (frozen curve) | Current basis | Notes                                                                     |
+| ---------------------- | --: | -----------------: | ------------: | ------------------------------------------------------------------------- |
+| Yamal 2026 (#1)        |  79 |             **92** |            88 | minted person row consulted, idx 0.641, legend ✓                          |
+| Haaland 2026 (#2)      |  88 |             **98** |            88 | idx 0.843, legend ✓ — above the 89–93 band on the frozen curve; V4 judges |
+| Valverde 2026 (#3)     |  88 |             **88** |            88 | idx 0.400 exactly at the material gate, wt 0.50 — V4 watch                |
+| Rodri 2026 (#5)        |  90 |             **91** |            88 | legend ✓ (band 89–92)                                                     |
+| Neymar 2026 (#6)       |  93 |             **91** |            88 | legend ✓ — below the 92–94 band; KNOWN WATCH-ITEM                         |
+| Vinícius Jr 2026 (#7)  |  87 |             **90** |            88 | idx 0.511 (V1 re-curation), material now                                  |
+| Aït-Nouri 2026 (#15)   |  83 |             **85** |            85 | in 84–87                                                                  |
+| Gavi 2026 (#15)        |  84 |             **88** |            88 | row exists post-U0 pool (V2 had none); "modest ↑"                         |
+| Khalil Ayari (control) |  71 |             **71** |            71 | no facts → no row → no lift                                               |
+| Q. Timber (control)    |  72 |             **73** |            73 | twins unmerged, ±1                                                        |
+| Perlaza (control)      |   — |                  — |             — | NOT in the pinned 2026 pool (no row exists; honest absence)               |
+| Messi 2026 (stability) |  99 |                 98 |            85 | stature path stable                                                       |
 
 Emergent finding (ledgered for V8): **Dembélé 2026** 89→81 with legend=True — his
 career-stature row (global_annual_multi_winner, 2 facts) sits at coverage 0.20, below
