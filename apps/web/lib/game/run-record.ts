@@ -20,11 +20,18 @@
 
 import {
   createDraft,
+  DraftStateSchema,
+  GroupIdSchema,
+  GroupStageResultSchema,
+  KnockoutRoundSchema,
+  MatchResultSchema,
+  RunResultSchema,
   type DraftState,
   type MatchResult,
   type RunResult,
   type RunScenario,
   type GroupStageResult,
+  type KnockoutRound,
   type DraftFlow,
   type EraPresetId,
   type RatingBasis,
@@ -132,6 +139,14 @@ export const RUN_COUNTER_KEY = "wcdraft:run-counter:v1" as const;
 
 export const RUN_RECORD_CAP = 5 as const;
 export const CREATE_RETRY_LIMIT = 20 as const;
+
+const MAX_RUN_ID_CHARS = 128;
+const MAX_PARENT_SEED_CHARS = 256;
+const MAX_VERSION_ANCHOR_CHARS = 512;
+const MAX_SIM_MATCHES = 8;
+const MIN_SIM_MATCHES = 3;
+const MAX_KNOCKOUT_META_ROUNDS = 5;
+const MAX_CANDIDATE_GROUP_IDS = 8;
 
 // ─── Storage abstraction with in-memory fallback ─────────────────────────────
 
@@ -376,14 +391,8 @@ export function loadRunRecord(
   const storage = getStorage();
   const raw = storage.getItem(recordKey(run_id));
   if (!raw) return { status: "missing", record: null };
-  let parsed: RunRecordV1;
-  try {
-    parsed = JSON.parse(raw) as RunRecordV1;
-  } catch {
-    evictRunRecord(storage, run_id);
-    return { status: "invalid", record: null };
-  }
-  if (parsed.record_version !== RUN_RECORD_SCHEMA_VERSION || !parsed.draft) {
+  const parsed = parseStoredRunRecord(raw, run_id);
+  if (!parsed) {
     evictRunRecord(storage, run_id);
     return { status: "invalid", record: null };
   }
@@ -622,19 +631,11 @@ export function listRunRecords(
       warnings.push(`history: index entry '${entry.run_id}' had no stored record`);
       continue;
     }
-    let parsed: RunRecordV1;
-    try {
-      parsed = JSON.parse(raw) as RunRecordV1;
-    } catch {
+    const parsed = parseStoredRunRecord(raw, entry.run_id);
+    if (!parsed) {
       storage.removeItem(recordKey(entry.run_id));
       indexDirty = true;
       warnings.push(`history: evicted malformed record '${entry.run_id}'`);
-      continue;
-    }
-    if (parsed.record_version !== RUN_RECORD_SCHEMA_VERSION || !parsed.draft) {
-      storage.removeItem(recordKey(entry.run_id));
-      indexDirty = true;
-      warnings.push(`history: evicted invalid record '${entry.run_id}'`);
       continue;
     }
     if (!versionsMatch(parsed.versions, currentVersions)) {
@@ -692,6 +693,261 @@ function evictRunRecord(storage: StorageBackend, run_id: string): void {
   if (next.length !== idx.entries.length) {
     saveIndex(storage, { record_version: RUN_RECORD_SCHEMA_VERSION, entries: next });
   }
+}
+
+function parseStoredRunRecord(raw: string, expectedRunId: string): RunRecordV1 | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  const record = parseRunRecordValue(parsed);
+  if (!record || record.run_id !== expectedRunId) return null;
+  return record;
+}
+
+function parseRunRecordValue(value: unknown): RunRecordV1 | null {
+  if (!isPlainObject(value)) return null;
+  if (value.record_version !== RUN_RECORD_SCHEMA_VERSION) return null;
+  const run_id = boundedString(value.run_id, MAX_RUN_ID_CHARS);
+  const parent_seed = boundedString(value.parent_seed, MAX_PARENT_SEED_CHARS);
+  const created_seq = nonNegativeSafeInteger(value.created_seq);
+  const updated_seq = nonNegativeSafeInteger(value.updated_seq);
+  const versions = parseRunRecordVersions(value.versions);
+  const draft = DraftStateSchema.safeParse(value.draft);
+  const status = parseRunRecordStatus(value.status);
+  if (
+    run_id === null ||
+    parent_seed === null ||
+    created_seq === null ||
+    updated_seq === null ||
+    updated_seq < created_seq ||
+    versions === null ||
+    !draft.success ||
+    status === "invalid"
+  ) {
+    return null;
+  }
+
+  let simulation: PersistedSimulation | undefined;
+  if (value.simulation !== undefined) {
+    const parsedSimulation = parsePersistedSimulation(value.simulation);
+    if (parsedSimulation === null) return null;
+    simulation = parsedSimulation;
+  }
+  if (status === "complete" && simulation === undefined) return null;
+
+  return {
+    record_version: RUN_RECORD_SCHEMA_VERSION,
+    run_id,
+    parent_seed,
+    created_seq,
+    updated_seq,
+    versions,
+    draft: draft.data,
+    ...(status === undefined ? {} : { status }),
+    ...(simulation === undefined ? {} : { simulation }),
+  };
+}
+
+function parsePersistedSimulation(value: unknown): PersistedSimulation | null {
+  if (!isPlainObject(value)) return null;
+  const scenario = parseRunScenario(value.scenario);
+  const run = RunResultSchema.safeParse(value.run);
+  const matches = parseMatches(value.matches);
+  const groupStage = GroupStageResultSchema.safeParse(value.group_stage);
+  const knockout = parseKnockoutMeta(value.knockout_ladder_meta);
+  if (scenario === null || !run.success || matches === null || !groupStage.success || !knockout) {
+    return null;
+  }
+  return {
+    scenario,
+    run: run.data,
+    matches,
+    group_stage: groupStage.data,
+    knockout_ladder_meta: knockout,
+  };
+}
+
+function parseRunScenario(value: unknown): RunScenario | null {
+  if (!isPlainObject(value)) return null;
+  const scenario_id = boundedString(value.scenario_id, 128);
+  const group = GroupIdSchema.safeParse(value.user_group_id);
+  const groupOpponents = parseStringArray(value.group_opponent_team_ids, 3, 3, 128);
+  const rule = parseKnockoutOpponentRule(value.knockout_opponent_rule);
+  const ruleset_version = boundedString(value.ruleset_version, MAX_VERSION_ANCHOR_CHARS);
+  const scenario_seed = boundedString(value.scenario_seed, MAX_PARENT_SEED_CHARS);
+  if (
+    scenario_id === null ||
+    !group.success ||
+    groupOpponents === null ||
+    rule === null ||
+    ruleset_version === null ||
+    scenario_seed === null
+  ) {
+    return null;
+  }
+  return {
+    scenario_id,
+    user_group_id: group.data,
+    group_opponent_team_ids: groupOpponents,
+    knockout_opponent_rule: rule,
+    ruleset_version,
+    scenario_seed,
+  };
+}
+
+function parseKnockoutOpponentRule(value: unknown): RunScenario["knockout_opponent_rule"] | null {
+  if (!isPlainObject(value)) return null;
+  if (value.kind !== "escalating_strength_seeded") return null;
+  if (!Array.isArray(value.rounds) || value.rounds.length === 0 || value.rounds.length > 5) {
+    return null;
+  }
+  const rounds: KnockoutRound[] = [];
+  for (const round of value.rounds) {
+    const parsed = KnockoutRoundSchema.safeParse(round);
+    if (!parsed.success) return null;
+    rounds.push(parsed.data);
+  }
+  const seed_suffix = boundedString(value.seed_suffix, 128);
+  if (seed_suffix === null) return null;
+  return { kind: "escalating_strength_seeded", rounds, seed_suffix };
+}
+
+function parseMatches(value: unknown): MatchResult[] | null {
+  if (!Array.isArray(value) || value.length < MIN_SIM_MATCHES || value.length > MAX_SIM_MATCHES) {
+    return null;
+  }
+  const matches: MatchResult[] = [];
+  for (const match of value) {
+    const parsed = MatchResultSchema.safeParse(match);
+    if (!parsed.success) return null;
+    matches.push(parsed.data);
+  }
+  return matches;
+}
+
+function parseKnockoutMeta(value: unknown): PersistedKnockoutLadderMeta | null {
+  if (!isPlainObject(value) || !Array.isArray(value.rounds)) return null;
+  if (value.rounds.length > MAX_KNOCKOUT_META_ROUNDS) return null;
+  const rounds: PersistedKnockoutLadderRoundMeta[] = [];
+  for (const round of value.rounds) {
+    const parsed = parseKnockoutRoundMeta(round);
+    if (parsed === null) return null;
+    rounds.push(parsed);
+  }
+  return { rounds };
+}
+
+function parseKnockoutRoundMeta(value: unknown): PersistedKnockoutLadderRoundMeta | null {
+  if (!isPlainObject(value)) return null;
+  const round = boundedString(value.round, 16);
+  const opponent_team_id = boundedString(value.opponent_team_id, 128);
+  const fallback_reason = nullableBoundedString(value.fallback_reason, 256);
+  const user_slot_id = nullableBoundedString(value.user_slot_id, 64);
+  const opposite_slot_id = nullableBoundedString(value.opposite_slot_id, 64);
+  const candidate_group_ids = parseStringArray(
+    value.candidate_group_ids,
+    0,
+    MAX_CANDIDATE_GROUP_IDS,
+    16,
+  );
+  if (
+    round === null ||
+    opponent_team_id === null ||
+    typeof value.bracket_constrained !== "boolean" ||
+    typeof value.fallback !== "boolean" ||
+    fallback_reason === INVALID_NULLABLE_STRING ||
+    user_slot_id === INVALID_NULLABLE_STRING ||
+    opposite_slot_id === INVALID_NULLABLE_STRING ||
+    candidate_group_ids === null
+  ) {
+    return null;
+  }
+  return {
+    round,
+    opponent_team_id,
+    bracket_constrained: value.bracket_constrained,
+    fallback: value.fallback,
+    fallback_reason,
+    user_slot_id,
+    opposite_slot_id,
+    candidate_group_ids,
+  };
+}
+
+function parseRunRecordVersions(value: unknown): RunRecordVersions | null {
+  if (!isPlainObject(value)) return null;
+  const schema_version = boundedString(value.schema_version, MAX_VERSION_ANCHOR_CHARS);
+  const dataset_version = boundedString(value.dataset_version, MAX_VERSION_ANCHOR_CHARS);
+  const rating_version = boundedString(value.rating_version, MAX_VERSION_ANCHOR_CHARS);
+  const engine_version = boundedString(value.engine_version, MAX_VERSION_ANCHOR_CHARS);
+  const ruleset_version = boundedString(value.ruleset_version, MAX_VERSION_ANCHOR_CHARS);
+  const data_bundle_hash = boundedString(value.data_bundle_hash, MAX_VERSION_ANCHOR_CHARS);
+  if (
+    schema_version === null ||
+    dataset_version === null ||
+    rating_version === null ||
+    engine_version === null ||
+    ruleset_version === null ||
+    data_bundle_hash === null
+  ) {
+    return null;
+  }
+  return {
+    schema_version,
+    dataset_version,
+    rating_version,
+    engine_version,
+    ruleset_version,
+    data_bundle_hash,
+  };
+}
+
+function parseRunRecordStatus(value: unknown): RunRecordStatus | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  return value === "ready" || value === "simulating" || value === "complete" || value === "failed"
+    ? value
+    : "invalid";
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function boundedString(value: unknown, maxChars: number): string | null {
+  return typeof value === "string" && value.length > 0 && value.length <= maxChars ? value : null;
+}
+
+const INVALID_NULLABLE_STRING = Symbol("invalid-nullable-string");
+
+function nullableBoundedString(
+  value: unknown,
+  maxChars: number,
+): string | null | typeof INVALID_NULLABLE_STRING {
+  if (value === null) return null;
+  return boundedString(value, maxChars) ?? INVALID_NULLABLE_STRING;
+}
+
+function nonNegativeSafeInteger(value: unknown): number | null {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : null;
+}
+
+function parseStringArray(
+  value: unknown,
+  minLength: number,
+  maxLength: number,
+  maxChars: number,
+): string[] | null {
+  if (!Array.isArray(value) || value.length < minLength || value.length > maxLength) return null;
+  const out: string[] = [];
+  for (const item of value) {
+    const parsed = boundedString(item, maxChars);
+    if (parsed === null) return null;
+    out.push(parsed);
+  }
+  return out;
 }
 
 function versionsMatch(a: RunRecordVersions, b: RunRecordVersions): boolean {
