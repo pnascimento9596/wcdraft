@@ -10,6 +10,7 @@ import {
   type SignedRunOgPayload,
 } from "@/lib/game/run-og-signing";
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
+import { readClientIp } from "@/lib/http/client-ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -191,12 +192,6 @@ function trimRateBuckets(): void {
     if (!oldest) break;
     signRateBuckets.delete(oldest);
   }
-}
-
-function readClientIp(request: Request): string {
-  const fwd = request.headers.get("x-forwarded-for");
-  const first = fwd?.split(",")[0]?.trim();
-  return first || request.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 async function readBoundedText(

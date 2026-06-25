@@ -14,6 +14,13 @@ import {
   verifyOriginHost,
 } from "@/lib/auth/csrf";
 import { jsonError, readRequestCookie } from "@/lib/auth/handler-helpers";
+import {
+  BoundedBodyError,
+  boundedPlainObject,
+  nullableBoundedString,
+  requireJsonObject,
+} from "@/lib/http/bounded-body";
+import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
 
 interface SaveBody {
   token?: unknown;
@@ -23,14 +30,12 @@ interface SaveBody {
   summary?: unknown;
 }
 
-function isStringOrNull(x: unknown): x is string | null {
-  return x === null || typeof x === "string";
-}
-function jsonObjOrNull(x: unknown): Record<string, unknown> | null {
-  if (x === null || x === undefined) return null;
-  if (typeof x === "object" && !Array.isArray(x)) return x as Record<string, unknown>;
-  return null;
-}
+const MAX_SAVE_RUN_BODY_BYTES = RUN_TOKEN_MAX_LEN + 12 * 1024;
+const MAX_RUN_ID_CHARS = 128;
+const MAX_PARENT_SEED_CHARS = 256;
+const MAX_SUMMARY_TEXT_CHARS = 256;
+const MAX_SUMMARY_RECORD_CHARS = 32;
+const MAX_KEY_PICKS = 8;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
@@ -63,19 +68,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       sessionCsrfSecret: auth.csrfSecret,
     });
 
-    const body = (await req.json().catch(() => null)) as SaveBody | null;
-    if (!body || typeof body.token !== "string" || body.token.length < 4) {
+    const body = (await requireJsonObject(req, {
+      maxBytes: MAX_SAVE_RUN_BODY_BYTES,
+      allowedContentTypes: ["application/json"],
+    })) as SaveBody;
+    if (typeof body.token !== "string" || body.token.length < 4) {
       return NextResponse.json(
         { error: "TOKEN_MALFORMED", message: "token is required" },
+        { status: 400 },
+      );
+    }
+    if (body.token.length > RUN_TOKEN_MAX_LEN) {
+      return NextResponse.json(
+        { error: "TOKEN_TOO_LARGE", message: `token exceeds ${RUN_TOKEN_MAX_LEN} chars` },
         { status: 400 },
       );
     }
     const result = await saveRun(
       {
         token: body.token,
-        versionAnchors: jsonObjOrNull(body.versionAnchors),
-        runId: isStringOrNull(body.runId) ? body.runId : null,
-        parentSeed: isStringOrNull(body.parentSeed) ? body.parentSeed : null,
+        versionAnchors: boundedPlainObject(body.versionAnchors, {
+          field: "versionAnchors",
+          maxKeys: 16,
+        }),
+        runId: nullableBoundedString(body.runId, {
+          field: "runId",
+          maxChars: MAX_RUN_ID_CHARS,
+          allowEmpty: true,
+        }),
+        parentSeed: nullableBoundedString(body.parentSeed, {
+          field: "parentSeed",
+          maxChars: MAX_PARENT_SEED_CHARS,
+          allowEmpty: true,
+        }),
         summary: coerceSummary(body.summary),
       },
       auth.ctx,
@@ -138,26 +163,51 @@ function coerceSummary(x: unknown): import("@/lib/game/saved-runs-store").SavedR
   if (x === null || x === undefined) return null;
   if (typeof x !== "object" || Array.isArray(x)) return null;
   const o = x as Record<string, unknown>;
-  if (typeof o.team_name !== "string") return null;
-  if (typeof o.display_record !== "string") return null;
-  if (typeof o.formation_name !== "string") return null;
+  const team_name = nullableBoundedString(o.team_name, {
+    field: "summary.team_name",
+    maxChars: MAX_SUMMARY_TEXT_CHARS,
+  });
+  const display_record = nullableBoundedString(o.display_record, {
+    field: "summary.display_record",
+    maxChars: MAX_SUMMARY_RECORD_CHARS,
+  });
+  const formation_name = nullableBoundedString(o.formation_name, {
+    field: "summary.formation_name",
+    maxChars: MAX_SUMMARY_TEXT_CHARS,
+  });
+  const seed = nullableBoundedString(o.seed, {
+    field: "summary.seed",
+    maxChars: MAX_PARENT_SEED_CHARS,
+  });
+  if (team_name === null) return null;
+  if (display_record === null) return null;
+  if (formation_name === null) return null;
   if (typeof o.is_champion !== "boolean") return null;
-  if (typeof o.seed !== "string") return null;
+  if (seed === null) return null;
   if (!Array.isArray(o.key_picks)) return null;
-  const key_picks = o.key_picks.filter(
-    (p): p is { name: string; nation_code: string } =>
-      !!p &&
-      typeof p === "object" &&
-      typeof (p as Record<string, unknown>).name === "string" &&
-      typeof (p as Record<string, unknown>).nation_code === "string",
-  );
+  if (o.key_picks.length > MAX_KEY_PICKS) {
+    throw new BoundedBodyError("INVALID_BODY", `summary.key_picks exceeds ${MAX_KEY_PICKS} items`);
+  }
+  const key_picks = o.key_picks.flatMap((p): Array<{ name: string; nation_code: string }> => {
+    if (!p || typeof p !== "object") return [];
+    const pick = p as Record<string, unknown>;
+    const name = nullableBoundedString(pick.name, {
+      field: "summary.key_picks.name",
+      maxChars: MAX_SUMMARY_TEXT_CHARS,
+    });
+    const nation_code = nullableBoundedString(pick.nation_code, {
+      field: "summary.key_picks.nation_code",
+      maxChars: 16,
+    });
+    return name !== null && nation_code !== null ? [{ name, nation_code }] : [];
+  });
   return {
-    team_name: o.team_name,
-    display_record: o.display_record,
-    formation_name: o.formation_name,
+    team_name,
+    display_record,
+    formation_name,
     key_picks,
     is_champion: o.is_champion,
-    seed: o.seed,
+    seed,
     created_seq: typeof o.created_seq === "number" ? o.created_seq : undefined,
     updated_seq: typeof o.updated_seq === "number" ? o.updated_seq : undefined,
   };

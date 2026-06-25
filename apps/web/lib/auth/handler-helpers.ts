@@ -18,6 +18,8 @@ import { SESSION_COOKIE_NAME, SESSION_TTL_MS, type SessionDeps } from "./session
 import { CSRF_COOKIE_NAME } from "./csrf";
 import { getEmailSender, type EmailSender } from "./email";
 import type { MagicLinkDeps } from "./magic-link";
+import { boundedBodyErrorResponse } from "../http/bounded-body";
+import { readClientIp } from "../http/client-ip";
 
 export interface RuntimeDeps extends SessionDeps {
   readonly sender: EmailSender;
@@ -133,11 +135,7 @@ export function readRequestCookie(req: NextRequest, name: string): string | null
   return null;
 }
 
-export function readClientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip")?.trim() ?? "unknown";
-}
+export { readClientIp };
 
 function isProd(): boolean {
   return process.env.NODE_ENV === "production";
@@ -208,6 +206,8 @@ export function clearSessionCookie(response: NextResponse): void {
 }
 
 export function jsonError(err: unknown): NextResponse {
+  const bodyError = boundedBodyErrorResponse(err);
+  if (bodyError) return bodyError;
   if (err instanceof AuthError) {
     // q-003 — server-misconfiguration detail (env-var names, secret-generation
     // commands) must never reach the client. Log the full message server-side

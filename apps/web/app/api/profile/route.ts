@@ -9,6 +9,7 @@ import { buildRuntimeDeps, jsonError, readRequestCookie } from "@/lib/auth/handl
 import { AuthError } from "@/lib/auth/errors";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 import { readPublicProfile, updateUsername } from "@/lib/auth/profile";
+import { requireJsonObject } from "@/lib/http/bounded-body";
 import {
   CSRF_COOKIE_NAME,
   CSRF_HEADER_NAME,
@@ -23,6 +24,8 @@ export interface PublicProfileBody {
     readonly username: string | null;
   };
 }
+
+const MAX_PROFILE_BODY_BYTES = 2 * 1024;
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
@@ -50,16 +53,11 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
       sessionCsrfSecret: csrfSecret,
     });
 
-    let body: unknown;
-    try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json(
-        { error: "INVALID_BODY", message: "body must be valid JSON" },
-        { status: 400 },
-      );
-    }
-    const username = (body as { username?: unknown } | null)?.username;
+    const body = await requireJsonObject(req, {
+      maxBytes: MAX_PROFILE_BODY_BYTES,
+      allowedContentTypes: ["application/json"],
+    });
+    const username = body.username;
     const deps = buildRuntimeDeps();
     const updated = await updateUsername(deps.db, userId, username);
     if (!updated.ok && updated.code === "INVALID_USERNAME") {

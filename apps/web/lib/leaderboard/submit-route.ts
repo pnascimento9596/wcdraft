@@ -21,7 +21,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { users, type Db } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
-import { readClientIp } from "../auth/handler-helpers";
+import { readClientIp } from "../http/client-ip";
 import {
   LeaderboardGateError,
   requireSubmitIdentity,
