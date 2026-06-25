@@ -1066,8 +1066,8 @@
       "P-07304"
     ],
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-6.4.0+proj-career-5.4.0",
-    "engine_version": "engine-2026.06.16-merit-v4.4",
+    "rating_version": "wc-perf-6.5.0+proj-career-5.5.0",
+    "engine_version": "engine-2026.06.17-merit-v4.5",
     "draft_flow": "squad_first",
     "rating_basis": "career",
     "era_preset": "all_time"
@@ -1114,8 +1114,8 @@
     "run_id": "e2e-real-run-golden",
     "scenario_id": "scenario:wcdraft:scenario:v1:0ba77e4c1e564f5f1cb02f9684a4810c",
     "dataset_version": "2026-06-04",
-    "rating_version": "wc-perf-6.4.0+proj-career-5.4.0",
-    "engine_version": "engine-2026.06.16-merit-v4.4",
+    "rating_version": "wc-perf-6.5.0+proj-career-5.5.0",
+    "engine_version": "engine-2026.06.17-merit-v4.5",
     "seed": "wcdraft:e2e-real-run:engine-v2-e3a:105",
     "reached_round": "R32",
     "eliminated_in_match_id": "e2e-real-run-golden.m3",

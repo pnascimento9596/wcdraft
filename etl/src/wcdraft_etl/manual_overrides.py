@@ -1,19 +1,24 @@
-"""Owner-authored manual rating overrides (merit-v4.3 and merit-v4.4).
+"""Owner-authored manual rating overrides (merit-v4.3 through merit-v4.5).
 
-Two audit sources are layered:
+Three audit sources are layered:
 
 * ``etl/overrides/manual-ratings-v4.3.csv`` — the merit-v4.3 owner override set
   (whole-pool curation, dual-source merge columns).
+* ``etl/overrides/manual-ratings-v4.5-recovered.csv`` — the merit-v4.5
+  conservative recovery set for previously-unresolved merit-v4.3 rows. These
+  rows are validated against v4.3's unmatched artifact and then folded into the
+  same v4.3 canonical duplicate-average contract.
 * ``etl/overrides/manual-ratings-v4.4.csv`` — the merit-v4.4 owner re-rate of the
   85–90 CAREER band (pre-screened delta file). Only rows with a non-blank
   ``target_rating`` are applied (blank = no change).
 
 Each source is validated, resolved to a canonical card, and emitted as
 match/miss artifacts. Resolved rows are applied as an authoritative internal-
-score pin (both the career ``score_0_100`` and the ``current_score_0_100`` are
-pinned to the owner target — the same mechanism for both versions). When a card
-is named by BOTH sources, the merit-v4.4 target SUPERSEDES the merit-v4.3 value
-(v4.3 ∪ v4.4, v4.4 wins on overlap). Every other card keeps its v4.3/merit value.
+score pin. merit-v4.3 plus merit-v4.5 pin both the career ``score_0_100`` and
+the ``current_score_0_100`` to the owner target. merit-v4.4 pins CURRENT only;
+when a card is named by v4.4, that current-basis target supersedes the
+v4.3/v4.5 current pin while the career pin remains. Every other card keeps its
+base merit value.
 
 Only unambiguous matches are applied. Plausible-but-non-unique rows are honest
 misses and remain visible in the unmatched artifact.
@@ -80,6 +85,36 @@ EXPECTED_HEADER_V44 = [
     "current_rating",
     "target_rating",
     "delta",
+]
+
+# ─── merit-v4.5 recovered v4.3 honest misses ─────────────────────────────────
+# This file is NOT a second rating source. It is a conservative recovery list for
+# rows that v4.3 left in ``manual-ratings-v4.3-unmatched.csv``. Each row must
+# byte-match the corresponding v4.3 unmatched source fields and must point to one
+# canonical card in the same nation/year block. Once validated, recovered rows
+# are folded into the same duplicate-average/effective-pin machinery as v4.3.
+OVERRIDE_PATH_V45 = ETL_DIR / "overrides" / "manual-ratings-v4.5-recovered.csv"
+EXPECTED_SHA256_V45 = "3effc3ba9adb7efd5fb4d00c406da5aa82db67d5b64f20e5a049cb807eaef249"
+EXPECTED_ROWS_V45 = 36
+EXPECTED_REMAINING_UNMATCHED_V45 = 180
+EXPECTED_HEADER_V45 = [
+    "source_line",
+    "country",
+    "year",
+    "player_name",
+    "final_rating",
+    "rule",
+    "current_baseline",
+    "original_reason",
+    "card_id",
+    "player_id",
+    "tournament_id",
+    "nation_id",
+    "matched_name",
+    "match_method",
+    "evidence_text",
+    "evidence_source",
+    "evidence_qids",
 ]
 
 _TARGET_YEARS = {2002, 2006, 2010, 2014, 2018, 2022, 2026}
@@ -216,6 +251,27 @@ class OverrideRow:
 
 
 @dataclass(frozen=True)
+class RecoveredOverrideRow:
+    source_line: int
+    country: str
+    year: int
+    player_name: str
+    final_rating: int
+    rule: str
+    current_baseline: str
+    original_reason: str
+    card_id: str
+    player_id: str
+    tournament_id: str
+    nation_id: str
+    matched_name: str
+    match_method: str
+    evidence_text: str
+    evidence_source: str
+    evidence_qids: str
+
+
+@dataclass(frozen=True)
 class ResolvedOverride:
     source_line: int
     country: str
@@ -273,6 +329,7 @@ class OverrideResolution:
                 continue
             merged = _round_half_up(sum(values) / len(values))
             first = rows[0]
+            source_version = "+".join(sorted({row.source_version for row in rows}))
             out[card_id] = ResolvedOverride(
                 source_line=first.source_line,
                 country=first.country,
@@ -287,7 +344,7 @@ class OverrideResolution:
                 nation_id=first.nation_id,
                 matched_name=first.matched_name,
                 match_method="canonical_duplicate_avg",
-                source_version=first.source_version,
+                source_version=source_version,
             )
         return out
 
@@ -321,6 +378,7 @@ class _Score:
 
 
 _RESOLUTION_CACHE: dict[Path, OverrideResolution] = {}
+_RESOLUTION_CACHE_V45: dict[Path, OverrideResolution] = {}
 _RESOLUTION_CACHE_V44: dict[Path, OverrideResolution] = {}
 
 
@@ -472,6 +530,144 @@ def resolve_overrides(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
     return resolution
 
 
+def load_override_rows_v45(
+    path: Path = OVERRIDE_PATH_V45,
+) -> tuple[tuple[RecoveredOverrideRow, ...], str]:
+    """Load the merit-v4.5 recovered honest-miss file."""
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    if sha != EXPECTED_SHA256_V45:
+        raise ValueError(
+            f"{path}: sha256 {sha} != expected {EXPECTED_SHA256_V45}; do not apply overrides"
+        )
+
+    text = raw.decode("utf-8-sig")
+    reader = csv.DictReader(text.splitlines())
+    if reader.fieldnames != EXPECTED_HEADER_V45:
+        raise ValueError(f"{path}: header {reader.fieldnames!r} != {EXPECTED_HEADER_V45!r}")
+
+    rows: list[RecoveredOverrideRow] = []
+    seen_source_lines: set[int] = set()
+    for csv_line, raw_row in enumerate(reader, start=2):
+        source_line = int(raw_row["source_line"])
+        if source_line in seen_source_lines:
+            raise ValueError(f"{path}:{csv_line}: duplicate source_line {source_line}")
+        seen_source_lines.add(source_line)
+        final_rating = int(raw_row["final_rating"])
+        if not 0 <= final_rating <= 99:
+            raise ValueError(f"{path}:{csv_line}: final_rating {final_rating} outside [0, 99]")
+        rows.append(
+            RecoveredOverrideRow(
+                source_line=source_line,
+                country=raw_row["country"],
+                year=int(raw_row["year"]),
+                player_name=html.unescape(raw_row["player_name"]),
+                final_rating=final_rating,
+                rule=raw_row["rule"],
+                current_baseline=raw_row["current_baseline"],
+                original_reason=raw_row["original_reason"],
+                card_id=raw_row["card_id"],
+                player_id=raw_row["player_id"],
+                tournament_id=raw_row["tournament_id"],
+                nation_id=raw_row["nation_id"],
+                matched_name=raw_row["matched_name"],
+                match_method=raw_row["match_method"],
+                evidence_text=html.unescape(raw_row["evidence_text"]),
+                evidence_source=raw_row["evidence_source"],
+                evidence_qids=raw_row["evidence_qids"],
+            )
+        )
+
+    if len(rows) != EXPECTED_ROWS_V45:
+        raise ValueError(f"{path}: {len(rows)} data rows != expected {EXPECTED_ROWS_V45}")
+    return tuple(rows), sha
+
+
+def resolve_overrides_v45(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    """v4.3 baseline plus the validated merit-v4.5 recovered row set."""
+    output_dir = output_dir.resolve()
+    cached = _RESOLUTION_CACHE_V45.get(output_dir)
+    if cached is not None:
+        return cached
+
+    base = resolve_overrides(output_dir)
+    recovered_rows, recovered_sha = load_override_rows_v45()
+    unmatched_by_line = {row.source_line: row for row in base.unmatched}
+    candidates_by_block, nation_ids_by_name = _build_resolution_index(
+        output_dir, target_years=_TARGET_YEARS, fold=True
+    )
+
+    recovered: list[ResolvedOverride] = []
+    recovered_lines: set[int] = set()
+    for row in recovered_rows:
+        source = unmatched_by_line.get(row.source_line)
+        if source is None:
+            raise ValueError(
+                f"{OVERRIDE_PATH_V45}:{row.source_line}: not a v4.3 unmatched source row"
+            )
+        _validate_recovered_row_matches_source(row, source)
+
+        nation_ids = _resolve_nation_ids(_fold_strokes(row.country), nation_ids_by_name)
+        block = [
+            candidate
+            for nation_id in sorted(nation_ids)
+            for candidate in candidates_by_block.get((nation_id, row.year), ())
+        ]
+        candidates = [candidate for candidate in block if candidate.card_id == row.card_id]
+        if len(candidates) != 1:
+            raise ValueError(
+                f"{OVERRIDE_PATH_V45}:{row.source_line}: card_id {row.card_id} does not "
+                "resolve to exactly one candidate in the source nation/year block"
+            )
+        candidate = candidates[0]
+        _validate_recovered_row_matches_candidate(row, candidate)
+
+        recovered.append(
+            ResolvedOverride(
+                source_line=row.source_line,
+                country=row.country,
+                year=row.year,
+                player_name=row.player_name,
+                final_rating=row.final_rating,
+                rule=row.rule,
+                current_baseline=row.current_baseline,
+                card_id=candidate.card_id,
+                player_id=candidate.player_id,
+                tournament_id=candidate.tournament_id,
+                nation_id=candidate.nation_id,
+                matched_name=candidate.display_name,
+                match_method=row.match_method,
+                source_version="v4.5",
+            )
+        )
+        recovered_lines.add(row.source_line)
+
+    remaining_unmatched = tuple(
+        row for row in base.unmatched if row.source_line not in recovered_lines
+    )
+    if len(remaining_unmatched) != EXPECTED_REMAINING_UNMATCHED_V45:
+        raise ValueError(
+            "merit-v4.5 recovered remainder "
+            f"{len(remaining_unmatched)} != expected {EXPECTED_REMAINING_UNMATCHED_V45}"
+        )
+
+    resolution = OverrideResolution(
+        rows=base.rows,
+        matched=tuple(
+            sorted(
+                (*base.matched, *recovered),
+                key=lambda r: (r.year, r.country, r.source_line),
+            )
+        ),
+        unmatched=remaining_unmatched,
+        csv_sha256=f"{base.csv_sha256}+{recovered_sha}",
+        rule_counts={**base.rule_counts, "v4.5-recovered": len(recovered_rows)},
+    )
+    _ = resolution.matched_by_card_id
+    _RESOLUTION_CACHE_V45[output_dir] = resolution
+    return resolution
+
+
 def load_override_rows_v44(
     path: Path = OVERRIDE_PATH_V44,
 ) -> tuple[tuple[OverrideRow, ...], str]:
@@ -571,10 +767,22 @@ def resolve_overrides_v44(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
 
 
 def combined_overrides_by_card_id(output_dir: Path = OUTPUT_DIR) -> dict[str, ResolvedOverride]:
-    """v4.3 ∪ v4.4 effective pins keyed by canonical card_id, v4.4 superseding."""
-    combined: dict[str, ResolvedOverride] = dict(resolve_overrides(output_dir).matched_by_card_id)
+    """v4.3+v4.5 career pins plus v4.4 current pins keyed by canonical card_id."""
+    combined: dict[str, ResolvedOverride] = dict(
+        resolve_overrides_v45(output_dir).matched_by_card_id
+    )
     combined.update(resolve_overrides_v44(output_dir).matched_by_card_id)
     return combined
+
+
+def _source_sha256_for_career_override(source_version: str) -> str:
+    if source_version == "v4.3":
+        return EXPECTED_SHA256
+    if source_version == "v4.5":
+        return EXPECTED_SHA256_V45
+    if source_version == "v4.3+v4.5":
+        return f"{EXPECTED_SHA256}+{EXPECTED_SHA256_V45}"
+    raise ValueError(f"unsupported career override source_version {source_version!r}")
 
 
 def apply_to_internal_rows(
@@ -585,9 +793,9 @@ def apply_to_internal_rows(
 
     Two layers, applied in order:
 
-    * merit-v4.3 pins BOTH the career ``score_0_100`` and the current
-      ``current_score_0_100`` to its owner value (the de-clustering of the
-      default/Career view — unchanged shipped mechanism).
+    * merit-v4.3 plus merit-v4.5 recovered rows pin BOTH the career
+      ``score_0_100`` and the current ``current_score_0_100`` to the owner value
+      (the default/Career view mechanism).
     * merit-v4.4 pins the CURRENT basis ONLY (``current_score_0_100``), leaving
       the career score untouched, so historical legends keep their all-time
       Career rating while the in-tournament/Current view is re-rated. On a card
@@ -596,8 +804,8 @@ def apply_to_internal_rows(
     """
     by_card = {row["card_id"]: row for row in internal_rows}
 
-    # ── merit-v4.3: career + current pin (byte-for-byte the shipped behavior) ──
-    for card_id, override in resolve_overrides(output_dir).matched_by_card_id.items():
+    # ── merit-v4.3 + v4.5 recovered: career + current pin ───────────────────
+    for card_id, override in resolve_overrides_v45(output_dir).matched_by_card_id.items():
         row = by_card.get(card_id)
         if row is None:
             continue
@@ -608,7 +816,8 @@ def apply_to_internal_rows(
         row["current_score_0_100"] = target
         row["manual_rating_override"] = {
             "source_line": override.source_line,
-            "source_sha256": EXPECTED_SHA256,
+            "source_sha256": _source_sha256_for_career_override(override.source_version),
+            "source_version": override.source_version,
             "final_rating": override.final_rating,
             "rule": override.rule,
             "player_name": override.player_name,
@@ -687,7 +896,8 @@ def apply_to_internal_rows(
 def manual_overall(row: dict) -> int | None:
     """CAREER-basis (default/top-level) manual pin, or None if not pinned.
 
-    Only the merit-v4.3 career pin reaches this path; merit-v4.4 is current-only.
+    Only merit-v4.3 plus merit-v4.5 recovered career pins reach this path;
+    merit-v4.4 is current-only.
     """
     override = row.get("manual_rating_override")
     if not isinstance(override, dict):
@@ -705,8 +915,8 @@ def manual_overall(row: dict) -> int | None:
 def manual_current_overall(row: dict) -> int | None:
     """CURRENT-basis manual pin, or None if not pinned.
 
-    Prefers the merit-v4.4 current pin; falls back to the merit-v4.3 pin (which
-    also set the current basis) for cards re-rated only by v4.3.
+    Prefers the merit-v4.4 current pin; falls back to the v4.3/v4.5 career pin
+    (which also set the current basis) for cards not re-rated by v4.4.
     """
     override = row.get("manual_current_override") or row.get("manual_rating_override")
     if not isinstance(override, dict):
@@ -735,6 +945,7 @@ def _write_resolution_artifacts(
     source_rel: str,
 ) -> OverrideResolution:
     output_dir.mkdir(parents=True, exist_ok=True)
+    line_terminator = "\n" if prefix.endswith("v4.5") else "\r\n"
 
     resolution_fields = [
         "source_line",
@@ -753,7 +964,9 @@ def _write_resolution_artifacts(
     ]
     resolution_path = output_dir / f"{prefix}-resolution.csv"
     with resolution_path.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=resolution_fields)
+        writer = csv.DictWriter(
+            fh, fieldnames=resolution_fields, lineterminator=line_terminator
+        )
         writer.writeheader()
         for row in resolution.matched:
             writer.writerow({field: getattr(row, field) for field in resolution_fields})
@@ -774,6 +987,7 @@ def _write_resolution_artifacts(
                 "candidate_card_ids",
                 "candidate_names",
             ],
+            lineterminator=line_terminator,
         )
         writer.writeheader()
         for row in resolution.unmatched:
@@ -805,6 +1019,7 @@ def _write_resolution_artifacts(
                 "source_player_names",
                 "source_final_ratings",
             ],
+            lineterminator=line_terminator,
         )
         writer.writeheader()
         for card_id in sorted(effective):
@@ -851,6 +1066,15 @@ def write_resolution_artifacts(output_dir: Path = OUTPUT_DIR) -> OverrideResolut
         output_dir,
         "manual-ratings-v4.3",
         str(OVERRIDE_PATH.relative_to(ETL_DIR)),
+    )
+
+
+def write_resolution_artifacts_v45(output_dir: Path = OUTPUT_DIR) -> OverrideResolution:
+    return _write_resolution_artifacts(
+        resolve_overrides_v45(output_dir),
+        output_dir,
+        "manual-ratings-v4.5",
+        f"{OVERRIDE_PATH.relative_to(ETL_DIR)} + {OVERRIDE_PATH_V45.relative_to(ETL_DIR)}",
     )
 
 
@@ -909,6 +1133,68 @@ def _unmatched(
         candidate_card_ids=candidate_card_ids,
         candidate_names=candidate_names,
     )
+
+
+def _validate_recovered_row_matches_source(
+    row: RecoveredOverrideRow, source: UnmatchedOverride
+) -> None:
+    checks = {
+        "country": (row.country, source.country),
+        "year": (row.year, source.year),
+        "player_name": (row.player_name, source.player_name),
+        "final_rating": (row.final_rating, source.final_rating),
+        "rule": (row.rule, source.rule),
+        "current_baseline": (row.current_baseline, source.current_baseline),
+        "original_reason": (row.original_reason, source.reason),
+    }
+    mismatches = [
+        f"{field}={actual!r} != {expected!r}"
+        for field, (actual, expected) in checks.items()
+        if actual != expected
+    ]
+    if mismatches:
+        raise ValueError(
+            f"{OVERRIDE_PATH_V45}:{row.source_line}: recovered row does not match "
+            "v4.3 unmatched source: "
+            + "; ".join(mismatches)
+        )
+    if not row.match_method.startswith("v4.5_"):
+        raise ValueError(
+            f"{OVERRIDE_PATH_V45}:{row.source_line}: match_method must be v4.5-prefixed"
+        )
+    if row.evidence_source not in {"local", "wikidata"}:
+        raise ValueError(
+            f"{OVERRIDE_PATH_V45}:{row.source_line}: unsupported evidence_source "
+            f"{row.evidence_source!r}"
+        )
+    if row.evidence_source == "wikidata" and not row.evidence_qids.startswith("Q"):
+        raise ValueError(
+            f"{OVERRIDE_PATH_V45}:{row.source_line}: wikidata evidence requires QID"
+        )
+    if not row.evidence_text:
+        raise ValueError(f"{OVERRIDE_PATH_V45}:{row.source_line}: missing evidence_text")
+
+
+def _validate_recovered_row_matches_candidate(
+    row: RecoveredOverrideRow, candidate: _Candidate
+) -> None:
+    checks = {
+        "player_id": (row.player_id, candidate.player_id),
+        "tournament_id": (row.tournament_id, candidate.tournament_id),
+        "nation_id": (row.nation_id, candidate.nation_id),
+        "matched_name": (row.matched_name, candidate.display_name),
+    }
+    mismatches = [
+        f"{field}={actual!r} != {expected!r}"
+        for field, (actual, expected) in checks.items()
+        if actual != expected
+    ]
+    if mismatches:
+        raise ValueError(
+            f"{OVERRIDE_PATH_V45}:{row.source_line}: recovered row does not match "
+            "canonical candidate: "
+            + "; ".join(mismatches)
+        )
 
 
 def _drop_conflicting_weak_duplicates(
@@ -1311,11 +1597,18 @@ if __name__ == "__main__":
         f"{len(v43.matched):,}/{len(v43.rows):,} matched "
         f"({v43.match_rate:.2%}); {len(v43.unmatched):,} unmatched"
     )
+    v45 = write_resolution_artifacts_v45()
+    print(
+        "manual ratings v4.5: "
+        f"{len(v45.matched):,}/{len(v45.rows):,} matched "
+        f"({v45.match_rate:.2%}); {len(v45.unmatched):,} unmatched; "
+        f"{EXPECTED_ROWS_V45:,} recovered v4.3 honest misses"
+    )
     v44 = write_resolution_artifacts_v44()
     combined = combined_overrides_by_card_id()
     print(
         "manual ratings v4.4: "
         f"{len(v44.matched):,}/{len(v44.rows):,} matched "
         f"({v44.match_rate:.2%}); {len(v44.unmatched):,} unmatched; "
-        f"{len(combined):,} combined effective card pins (v4.3 ∪ v4.4)"
+        f"{len(combined):,} combined effective card pins (v4.3+v4.5 ∪ v4.4)"
     )

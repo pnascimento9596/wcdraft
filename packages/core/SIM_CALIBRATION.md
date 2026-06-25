@@ -1,5 +1,19 @@
 # WS-B Sim + Scoring — Calibration
 
+> **merit-v4.5 (`engine-2026.06.17-merit-v4.5`) — λ recheck after conservative
+> recovery of v4.3 honest misses.** The shipped set is the implementer/reviewer
+> intersection: 36 previously-unresolved owner rows folded into the v4.3
+> Career+Current pin path, with v4.4 still superseding Current on overlap. The
+> deterministic fitter was re-run before realism re-lock. Accepted tuple keeps
+> merit-v4.3's `BASE = 0.95`, `SPREAD = 5.5`, `MIN = 0.80`,
+> `GAMMA_MID = 0.70`, and `KO_LAMBDA_FACTOR = 0.82`; group dispersion moves to
+> **`GROUP_OUTER_PROB = 0.02`, `GROUP_A = 0.40`**. Fitter: `175`
+> evaluations; final landing `goals=2.528` (delta -0.012), `draw=24.96%`
+> (delta +0.26pp), `margin>=4=5.02%` (delta +0.12pp), `KO->ET=32.53%`
+> (delta -0.47pp), `SO=21.73%` (delta +0.33pp). Heavy asymmetric realism
+> re-locks Wilson/floor shape bands. Runtime stamp:
+> `engine-2026.06.17-merit-v4.5`.
+
 > **merit-v4.3 (`engine-2026.06.15-merit-v4.3`) — λ refit after owner manual
 > overrides.** The 2,246 effective owner-authored pins moved the projected
 > channel pool enough that the v4.2 tuple overshot both goals and margin>=4.
@@ -163,33 +177,34 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant | Pre-E3a | E-3a (initial) | E-3a REFIT | MV2-11b | merit-v4 | merit-v4.1 | merit-v4.2 | **merit-v4.3 (`engine-2026.06.15-merit-v4.3`)** | Why (merit-v4.3) |
-|---|---|---|---|---|---|---|---|---|---|
-| `LAMBDA.BASE` | 1.25 | 0.85 | 0.85 | 1.0 | 1.10 | 1.10 | 1.05 | **0.95** | lowers goal volume after owner pins moved the projected channel pool |
-| `LAMBDA.SPREAD` | 4.0 | 4.0 | 6.5 | 7.0 | 6.0 | 6.0 | 6.5 | **5.5** | keeps margin>=4 in band after the BASE reduction |
-| `LAMBDA.MIN` | 0.30 | 0.75 | 0.40 | 0.40 | 0.30 | 0.30 | 0.30 | **0.80** | preserves low-side threat after lowering BASE/SPREAD |
-| `LAMBDA.MAX` | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | 3.40 | unchanged |
-| `LAMBDA.W_DEF` | - | 0.65 | 0.70 | 0.70 | 0.70 | 0.70 | 0.70 | 0.70 | unchanged |
-| `LAMBDA.W_GK` | - | 0.35 | 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | unchanged (W_GK + W_DEF == 1) |
-| `LAMBDA.GAMMA_MID` | - | 0.45 | 0.50 | 0.60 | 0.80 | 1.00 | 0.70 | 0.70 | unchanged from v4.2 |
-| `LAMBDA.CONTROL_BAND_LO/HI` | - | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | unchanged: bounded multiplier still amplifies, never replaces |
-| `LAMBDA.ET_FRACTION` | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | 30/90 | unchanged |
-| `LAMBDA.KO_LAMBDA_FACTOR` | - | - | 0.85 | 0.82 | 0.82 | 0.82 | 0.82 | 0.82 | unchanged from MV2-11b |
-| `CHANCES.REGULATION` | 14 | 50 | 50 | 50 | 50 | 50 | 50 | 50 | unchanged |
-| `CHANCES.EXTRA_TIME` | 5 | 17 | 17 | 17 | 17 | 17 | 17 | 17 | unchanged |
-| `CHANCE_OUTCOME.SAVED_SHARE` | 0.26 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | unchanged |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | 0.14 | unchanged |
-| `CHANCE_OUTCOME.FOUL_SHARE` | 0.16 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | 0.22 | unchanged |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE` | 0.08 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | 0.04 | unchanged |
-| `LAMBDA_DISP.OUTER_PROB` | - | - | 0.20 | 0.20 | 0.20 | 0.20 | 0.20 | 0.20 | unchanged |
-| `LAMBDA_DISP.A` | - | - | 0.75 | 0.75 | 0.75 | 0.75 | 0.75 | 0.75 | unchanged |
-| `LAMBDA_DISP.GROUP_OUTER_PROB` | - | - | 0.10 | 0.10 | 0.10 | 0.10 | 0.10 | **0.04** | trims group dispersion under the owner-pin pool |
-| `LAMBDA_DISP.GROUP_A` | - | - | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | **0.40** | trims group high-margin boost while staying in band |
+| Constant                          | Pre-E3a | E-3a (initial) | E-3a REFIT  | MV2-11b     | merit-v4    | merit-v4.1  | merit-v4.2  | merit-v4.3  | **merit-v4.5 (`engine-2026.06.17-merit-v4.5`)** | Why (merit-v4.5)                                              |
+| --------------------------------- | ------- | -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------------------------------------------- | ------------------------------------------------------------- |
+| `LAMBDA.BASE`                     | 1.25    | 0.85           | 0.85        | 1.0         | 1.10        | 1.10        | 1.05        | 0.95        | **0.95**                                        | unchanged from v4.3 after recovered rows                      |
+| `LAMBDA.SPREAD`                   | 4.0     | 4.0            | 6.5         | 7.0         | 6.0         | 6.0         | 6.5         | 5.5         | **5.5**                                         | unchanged from v4.3                                           |
+| `LAMBDA.MIN`                      | 0.30    | 0.75           | 0.40        | 0.40        | 0.30        | 0.30        | 0.30        | 0.80        | **0.80**                                        | unchanged from v4.3                                           |
+| `LAMBDA.MAX`                      | 3.40    | 3.40           | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40                                            | unchanged                                                     |
+| `LAMBDA.W_DEF`                    | -       | 0.65           | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70                                            | unchanged                                                     |
+| `LAMBDA.W_GK`                     | -       | 0.35           | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30                                            | unchanged (W_GK + W_DEF == 1)                                 |
+| `LAMBDA.GAMMA_MID`                | -       | 0.45           | 0.50        | 0.60        | 0.80        | 1.00        | 0.70        | 0.70        | 0.70                                            | unchanged from v4.3                                           |
+| `LAMBDA.CONTROL_BAND_LO/HI`       | -       | 0.85 / 1.15    | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15                                     | unchanged: bounded multiplier still amplifies, never replaces |
+| `LAMBDA.ET_FRACTION`              | 30/90   | 30/90          | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90                                           | unchanged                                                     |
+| `LAMBDA.KO_LAMBDA_FACTOR`         | -       | -              | 0.85        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82                                            | unchanged from MV2-11b                                        |
+| `CHANCES.REGULATION`              | 14      | 50             | 50          | 50          | 50          | 50          | 50          | 50          | 50                                              | unchanged                                                     |
+| `CHANCES.EXTRA_TIME`              | 5       | 17             | 17          | 17          | 17          | 17          | 17          | 17          | 17                                              | unchanged                                                     |
+| `CHANCE_OUTCOME.SAVED_SHARE`      | 0.26    | 0.10           | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10                                            | unchanged                                                     |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22    | 0.14           | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14                                            | unchanged                                                     |
+| `CHANCE_OUTCOME.FOUL_SHARE`       | 0.16    | 0.22           | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22                                            | unchanged                                                     |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE`    | 0.08    | 0.04           | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04                                            | unchanged                                                     |
+| `LAMBDA_DISP.OUTER_PROB`          | -       | -              | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20                                            | unchanged                                                     |
+| `LAMBDA_DISP.A`                   | -       | -              | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75                                            | unchanged                                                     |
+| `LAMBDA_DISP.GROUP_OUTER_PROB`    | -       | -              | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.04        | **0.02**                                        | trims group dispersion after the recovered-row bundle         |
+| `LAMBDA_DISP.GROUP_A`             | -       | -              | 0.50        | 0.50        | 0.50        | 0.50        | 0.50        | 0.40        | **0.40**                                        | unchanged from v4.3                                           |
 
 ## E-3a REFIT (current) — match-level λ dispersion (D1 path)
 
 E-3a INITIAL pure-Poisson scoring was Pareto-limited against the D5-tight
 bands:
+
 - at λ_per_side ≈ 1.27 (the mean-goals norm), the maximum tie rate is ≈ 24.6%
   while the modern-era KO → ET norm is 33% and shootout 21.4% — no four-channel
   λ + chance-budget grid can clear `mean_goals ≈ 2.54` AND `KO → ET ≈ 33%`
@@ -211,7 +226,7 @@ transcendental-free; cross-platform determinism preserved):
    ONE seeded ε ∈ {1−A, 1, 1+A} (a discrete distribution, mean exactly 1,
    integer/rational arithmetic only). The (`OUTER_PROB`, `A`) pair is
    PHASE-DEPENDENT: KO uses a strong dispersion (0.20, 0.75) → lifts KO →
-   ET and shootout rates; group uses a sparse dispersion (0.04, 0.40)
+   ET and shootout rates; group uses a sparse dispersion (0.02, 0.40)
    → lifts `margin >= 4` into band without pushing `group_draw` past its
    tight upper edge. Mean(ε) = 1 by construction so mean goals/match is
    preserved within each phase.
@@ -242,13 +257,13 @@ the existing `realism-modern-norms.golden.test.ts` measures). V7 used
 the grids away from edge landings; the schedule + grids are pinned, so the
 winner is reproducible.
 
-| Norm | Modern-WC target | D5-tight band | E-3a initial landing | E-3a REFIT landing | merit-v3 V7 landing | **merit-v4.3 landing** |
-|---|---|---|---|---|---|---|
-| goals / game           | 2.54  | [2.478, 2.594]  | 2.40 (delta -0.13, FAIL)  | 2.534 (delta -0.006, pass) | 2.534 (delta -0.001, pass) | **2.514 (delta -0.022, pass)** |
-| group draw %           | 24.7  | [22.88%, 26.52%] | 26.4 (delta +1.7pp, pass) | 25.84% (delta +1.14pp, pass) | 25.18% (delta +0.48pp, pass) | **25.27% (delta +0.57pp, pass)** |
-| margin >= 4 %          | 4.9   | [4.12%, 5.70%]   | 2.93 (delta -2.0pp, FAIL) | 4.72% (delta -0.18pp, pass) | 4.96% (delta +0.05pp, pass) | **4.99% (delta +0.09pp, pass)** |
-| KO -> ET %             | 33.0  | [29.61%, 36.48%] | 29.6 (delta -3.4pp, FAIL) | 33.60% (delta +0.60pp, pass) | 33.47% (delta +0.43pp, pass) | **32.67% (delta -0.33pp, pass)** |
-| shootout %             | 21.4  | [18.43%, 24.43%] | 15.7 (delta -5.7pp, FAIL) | 22.93% (delta +1.53pp, pass) | 21.33% (delta -0.10pp, pass) | **21.73% (delta +0.33pp, pass)** |
+| Norm          | Modern-WC target | D5-tight band    | E-3a initial landing      | E-3a REFIT landing           | merit-v3 V7 landing          | merit-v4.3 landing           | **merit-v4.5 landing**           |
+| ------------- | ---------------- | ---------------- | ------------------------- | ---------------------------- | ---------------------------- | ---------------------------- | -------------------------------- |
+| goals / game  | 2.54             | [2.478, 2.594]   | 2.40 (delta -0.13, FAIL)  | 2.534 (delta -0.006, pass)   | 2.534 (delta -0.001, pass)   | 2.514 (delta -0.022, pass)   | **2.528 (delta -0.012, pass)**   |
+| group draw %  | 24.7             | [22.88%, 26.52%] | 26.4 (delta +1.7pp, pass) | 25.84% (delta +1.14pp, pass) | 25.18% (delta +0.48pp, pass) | 25.27% (delta +0.57pp, pass) | **24.96% (delta +0.26pp, pass)** |
+| margin >= 4 % | 4.9              | [4.12%, 5.70%]   | 2.93 (delta -2.0pp, FAIL) | 4.72% (delta -0.18pp, pass)  | 4.96% (delta +0.05pp, pass)  | 4.99% (delta +0.09pp, pass)  | **5.02% (delta +0.12pp, pass)**  |
+| KO -> ET %    | 33.0             | [29.61%, 36.48%] | 29.6 (delta -3.4pp, FAIL) | 33.60% (delta +0.60pp, pass) | 33.47% (delta +0.43pp, pass) | 32.67% (delta -0.33pp, pass) | **32.53% (delta -0.47pp, pass)** |
+| shootout %    | 21.4             | [18.43%, 24.43%] | 15.7 (delta -5.7pp, FAIL) | 22.93% (delta +1.53pp, pass) | 21.33% (delta -0.10pp, pass) | 21.73% (delta +0.33pp, pass) | **21.73% (delta +0.33pp, pass)** |
 
 All 5 symmetric realism norms land STRICTLY INSIDE the D5-tight bands —
 the realism gate is no longer toothless. Faithfulness (`packages/core/src/faithfulness.test.ts`,
@@ -263,6 +278,7 @@ with rational thresholds — no transcendental math anywhere.
 
 `packages/core/src/faithfulness.test.ts` — 11 deterministic seeded
 ensembles asserting:
+
 - **Determinism**: same (strengths, K, seedLabel) → same summary.
 - **Monotonicity**: bumping `attack` / `midfield` / `defense` /
   `goalkeeping` by 15 weakly raises win-rate (each channel asserted
@@ -299,12 +315,12 @@ Two harnesses, complementary:
    `packages/data/test/realism/asym-realism-golden.json`.
 
    ```
-   [REALISM] ── policy=strategicAutoDraft       qualifying=1611/2000 matches=9965 groups=6000 KO=3965
-   [REALISM]    ✓ goals/game     obs=   2.586  (lower floor 2.52)
-   [REALISM]    ✓ draw% (group)  obs=  25.28%  band 25.28% ± 1.50%
-   [REALISM]    ✓ margin≥4%      obs=   4.64%  band  4.64% ± 1.50%
-   [REALISM]    ✓ KO→ET%         obs=  32.41%  band 32.41% ± 1.50%
-   [REALISM]    ✓ shootout%      obs=  19.87%  band 19.87% ± 1.50%
+   [REALISM] ── policy=strategicAutoDraft       qualifying=1509/2000 matches=9454 groups=6000 KO=3454
+   [REALISM]    ✓ goals/game     obs=   2.471  (lower floor locked in asym-realism-golden.json)
+   [REALISM]    ✓ draw% (group)  obs=  25.17%  band 25.17% ± 1.50%
+   [REALISM]    ✓ margin≥4%      obs=   4.25%  band  4.25% ± 1.50%
+   [REALISM]    ✓ KO→ET%         obs=  33.27%  band 33.27% ± 1.60%
+   [REALISM]    ✓ shootout%      obs=  21.34%  band 21.34% ± 1.50%
    ```
 
    **Gate mechanism (durable infrastructure).**
@@ -398,11 +414,11 @@ holds byte-for-byte. See table in `calibration.ts`.
 
 ## Golden lock — sim/realism artifacts
 
-| Fixture | Why it moved | Regenerator |
-|---|---|---|
-| `packages/core/test/fixtures/sim-golden.json` | every scoreline/event/score is downstream of λ + n | `pnpm --filter @wcdraft/core run gen:sim-golden` |
-| `packages/data/test/fixtures/e2e-real-run-golden.json` | real-data run is downstream of the same | `pnpm --filter @wcdraft/data run gen:e2e-golden` |
-| `packages/data/test/realism-modern-norms.golden.test.ts` (Δ labels) | landings shift; bands still cover | hand-edit `it()` titles |
+| Fixture                                                             | Why it moved                                       | Regenerator                                      |
+| ------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------ |
+| `packages/core/test/fixtures/sim-golden.json`                       | every scoreline/event/score is downstream of λ + n | `pnpm --filter @wcdraft/core run gen:sim-golden` |
+| `packages/data/test/fixtures/e2e-real-run-golden.json`              | real-data run is downstream of the same            | `pnpm --filter @wcdraft/data run gen:e2e-golden` |
+| `packages/data/test/realism-modern-norms.golden.test.ts` (Δ labels) | landings shift; bands still cover                  | hand-edit `it()` titles                          |
 
 For merit-v3 V7, `sim-golden.json`, `realism-modern-norms.golden.test.ts`, and
 `asym-realism-golden.json` re-lock. `e2e-real-run-golden.json` stayed green
@@ -432,15 +448,16 @@ pins `engine-2026.06.04`).
 The `engine-v2` integration branch follows a **deferred-bump policy**: sub-unit
 PRs change deterministic engine output (draft, synergy, sim, calibration)
 without bumping `engine_version`. The single bump + cumulative golden re-lock
-+ client/DB version-skew handling happen **atomically at the
-`engine-v2` → `main` season merge**, not per sub-unit. This matches the
-pre-existing policy already in force above for the Phase 1 decoupled rating
-recalibration (which also stayed at `engine-2026.06.04`).
+
+- client/DB version-skew handling happen **atomically at the
+  `engine-v2` → `main` season merge**, not per sub-unit. This matches the
+  pre-existing policy already in force above for the Phase 1 decoupled rating
+  recalibration (which also stayed at `engine-2026.06.04`).
 
 Why it's safe in dev: `engine-v2` does not deploy. No live client carries any
 intermediate anchor between the current `main` and the eventual
 `engine-v2` → `main` merge, so the `versionsAgree` / `purgeStale` /
-leaderboard-season gates have nothing to enforce *within* the series. At the
+leaderboard-season gates have nothing to enforce _within_ the series. At the
 season-merge moment the bump invalidates every outstanding `main`-anchored
 token / RunRecord / leaderboard season in one stroke.
 
@@ -448,12 +465,12 @@ Within-branch fixture consistency is preserved: every sub-unit re-locks its
 own draft / sim / e2e goldens against the branch state of the moment, so the
 test suite remains byte-deterministic at every commit in the series.
 
-| Sub-unit | Engine output change | Goldens re-locked here | `engine_version` |
-|---|---|---|---|
-| **E-2 — nation-only synergy + rare UI** (squashed `74bb90c`) | Synergy moved from manager-driven to nation-only; rare-spin UI surfaced | synergy + draft (selectively) | not bumped |
-| **E-3a — λ calibration** (queued on `engine-v2-e3a-lambda-calibration`) | `LAMBDA.{BASE,SPREAD,MIN,MAX}` shifted toward realism-control bands | sim + e2e | not bumped |
-| **E-1b — pre-1998 era mass 15% → 10%** (this PR #37) | `RARE_ERA_MASS 0.15 → 0.10`, modern (T,N) per-pair probs × 1.0588 | draft + e2e | not bumped |
-| **E-3b — asymmetric realism gate (test-harness only)** | NONE (no engine bytes change — `sim-golden.json` byte-identical, `engine_version` unchanged) | asym-realism golden landings + shape bands (new fixture) | not bumped |
+| Sub-unit                                                                | Engine output change                                                                         | Goldens re-locked here                                   | `engine_version` |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------- |
+| **E-2 — nation-only synergy + rare UI** (squashed `74bb90c`)            | Synergy moved from manager-driven to nation-only; rare-spin UI surfaced                      | synergy + draft (selectively)                            | not bumped       |
+| **E-3a — λ calibration** (queued on `engine-v2-e3a-lambda-calibration`) | `LAMBDA.{BASE,SPREAD,MIN,MAX}` shifted toward realism-control bands                          | sim + e2e                                                | not bumped       |
+| **E-1b — pre-1998 era mass 15% → 10%** (this PR #37)                    | `RARE_ERA_MASS 0.15 → 0.10`, modern (T,N) per-pair probs × 1.0588                            | draft + e2e                                              | not bumped       |
+| **E-3b — asymmetric realism gate (test-harness only)**                  | NONE (no engine bytes change — `sim-golden.json` byte-identical, `engine_version` unchanged) | asym-realism golden landings + shape bands (new fixture) | not bumped       |
 
 Codex review of PR #37 correctly reproduced the cross-engine-state replay
 failure (`pickPlayer: card P-04469:2010 is not a candidate on spin 2` when an

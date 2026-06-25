@@ -1,4 +1,4 @@
-// merit-v4.3 — refresh the asymmetric realism gate golden after a rating-channel
+// merit-v4.5 — refresh the asymmetric realism gate golden after a rating-channel
 // + λ refit.
 //
 // What this updates: per-policy run counts + raw event totals + observed rates +
@@ -84,12 +84,12 @@ for (const policy of ALL_POLICIES) {
 
 const strategic = golden.policies.strategicAutoDraft;
 golden.$schema_doc =
-  "merit-v4.4 asymmetric realism gate -- the gate sims the default/Career basis, which merit-v4.4 (CURRENT-basis-only re-rate) does NOT change; lambda is UNCHANGED from merit-v4.3 (no refit) and landings/shape bands carry over. Only the engine_version stamp moves. Runtime engine_version is engine-2026.06.16-merit-v4.4.";
+  "merit-v4.5 asymmetric realism gate -- the gate sims the default/Career basis, which merit-v4.5 moves via recovered v4.3 honest misses; lambda was refit before this realism relock. Runtime engine_version is engine-2026.06.17-merit-v4.5.";
 golden.engine_anchor =
-  "merit-v4.4 current-basis re-rate; lambda unchanged (career sim distribution untouched)";
-golden.engine_version = "engine-2026.06.16-merit-v4.4";
+  "merit-v4.5 recovered honest misses; lambda refit on Career-basis distribution";
+golden.engine_version = "engine-2026.06.17-merit-v4.5";
 golden.shape_bands._doc =
-  "merit-v4.4 carry-over: shape bands centered on strategicAutoDraft. lambda is UNCHANGED from merit-v4.3 because the gate sims the Career basis and merit-v4.4 only re-rates the Current basis; no refit was performed. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
+  "merit-v4.5 relock: shape bands centered on strategicAutoDraft after the Career-basis recovery and lambda refit. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
 for (const key of SHAPE_KEYS) {
   golden.shape_bands[key] = {
     center_policy: "strategicAutoDraft",
@@ -102,11 +102,11 @@ golden.goals_per_game_lower_floor.lower_bound = Math.floor(
   (strategic.observed.goals_per_game - 2 * strategic.wilson_half_widths_around_observed.goals_per_game) * 100,
 ) / 100;
 golden.wilson_target_for_ko_metrics._doc =
-  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4.4 carries over the merit-v4.3 strategicAutoDraft observed half-widths (Career-basis sim unchanged).";
+  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4.5 remeasures the strategicAutoDraft observed half-widths after the Career-basis recovery and lambda refit.";
 golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
   ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
   shootout_pct: Number((100 * strategic.wilson_half_widths_around_observed.shootout_pct).toFixed(2)),
 };
 
 writeFileSync(GOLDEN_PATH, JSON.stringify(golden, null, 2) + "\n", "utf-8");
-console.log(`\nWROTE ${GOLDEN_PATH} (engine_version stamped for merit-v4.4; lambda + landings carried over)`);
+console.log(`\nWROTE ${GOLDEN_PATH} (engine_version stamped for merit-v4.5; lambda + landings remeasured)`);

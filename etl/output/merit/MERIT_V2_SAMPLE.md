@@ -1,4 +1,4 @@
-# Merit-v2 internal-score SHAPE sample (wc-perf-6.4.0)
+# Merit-v2 internal-score SHAPE sample (wc-perf-6.5.0)
 
 First-eyeball accuracy check of the stature-dominant INTERNAL scores (final = stature_model_weight·stature_path + (1−weight)·raw_path). NOT final display — the unified display curve is MV2-6 and final display anchors are MV2-8. `overall` is provisional here. Columns: career-stature **Index**, stature model **Wt**(eight), **Raw** tournament score, stature **Target**, tournament **Mod**ulation, blended **Final**, the four sim channels, and the factual **L**e**g**en**d** flag. Channels expose the position shape (a DF/GK legend reads elite on-position, not uniformly elite).
 
@@ -73,7 +73,7 @@ _SHAPE check only. A recognized great's weak tournament should still read elite 
 
 ---
 
-# 2026 reconciliation INTERNAL-score sample (proj-career-5.4.0)
+# 2026 reconciliation INTERNAL-score sample (proj-career-5.5.0)
 
 MV2-5 brings linked + material-stature 2026 players onto the SAME stature scale as the historical wc-perf-4.x cards, and caps non-material 2026 cards below the recognized-greats band on the projected raw path. Columns mirror the historical sample: **Status** (linked·material / linked·below / minted), career **Index**, stature model **Wt**, **Raw** projected score, stature **Target**, projected **Mod**ulation, blended **Final** (internal, NOT display — display is provisional until MV2-6), the four sim channels, and the factual **L**e**g**en**d** flag.
 
@@ -178,7 +178,7 @@ _A non-material 2026 card's projected raw path is capped at the global raw-only 
 
 ---
 
-# Unified display-curve sample (wc-perf-6.4.0 curve; maps proj-career-5.4.0 too)
+# Unified display-curve sample (wc-perf-6.5.0 curve; maps proj-career-5.5.0 too)
 
 MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_power_v2`) over the POOLED historical + 2026 INTERNAL distribution and applies it identically to BOTH eras. The four anchors (floor→60, median→73, p95→88, max→99) are fit on the pool; the three segment exponents are globally fixed (low 0.65, mid 1.0, high 2.0). It reshapes the display `overall` ONLY — the four sim channels are materialized independently from the same internal score and are byte-identical to base.
 
@@ -188,9 +188,9 @@ MV2-6 fits **one** monotonic low-DOF display curve (`unified_pooled_piecewise_po
 
 | Cohort | n | median | 66–73 | 74–83 | 84–90 | 91–99 | ≥84 | ≥90 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Historical | 10973 | 73 | 5122 (46.7%) | 3850 (35.1%) | 1374 (12.5%) | 215 (2.0%) | 1589 (14.5%) | 305 (2.8%) |
+| Historical | 10973 | 73 | 5121 (46.7%) | 3853 (35.1%) | 1372 (12.5%) | 215 (2.0%) | 1587 (14.5%) | 305 (2.8%) |
 | 2026 | 1246 | 73 | 554 (44.5%) | 471 (37.8%) | 108 (8.7%) | 12 (1.0%) | 120 (9.6%) | 19 (1.5%) |
-| Pooled | 12219 | 73 | 5676 (46.5%) | 4321 (35.4%) | 1482 (12.1%) | 227 (1.9%) | 1709 (14.0%) | 324 (2.7%) |
+| Pooled | 12219 | 73 | 5675 (46.4%) | 4324 (35.4%) | 1480 (12.1%) | 227 (1.9%) | 1707 (14.0%) | 324 (2.7%) |
 
 _The broad middle stays put: pooled median ≈ 73, the 91–99 band is a thin tail (≤ ~3%), and 84+ is a clear minority — the middle does not inflate into the high 80s._
 

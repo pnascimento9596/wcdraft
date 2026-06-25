@@ -1,0 +1,18 @@
+{
+  "canonical_duplicate_avg_cards": 17,
+  "effective_cards": 2265,
+  "match_rate": 0.928458,
+  "matched": 2336,
+  "rows": 2516,
+  "rule_counts": {
+    "agree": 1055,
+    "avg": 455,
+    "f1-corrupt->f2": 5,
+    "f1-only": 190,
+    "f2-only": 811,
+    "v4.5-recovered": 36
+  },
+  "sha256": "f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6+3effc3ba9adb7efd5fb4d00c406da5aa82db67d5b64f20e5a049cb807eaef249",
+  "source": "overrides/manual-ratings-v4.3.csv + overrides/manual-ratings-v4.5-recovered.csv",
+  "unmatched": 180
+}

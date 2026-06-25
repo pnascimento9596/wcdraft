@@ -54,6 +54,10 @@ const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
 const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 
+// runtime-data-2.7.0 (merit-v4.5): conservative recovery of 36 previously
+// unresolved merit-v4.3 owner rows. Recovered rows are folded into the v4.3
+// Career+Current pin path, with v4.4 Current-only pins still superseding on
+// current-basis overlap.
 // runtime-data-2.6.0 (merit-v4.4): owner re-rate of the 85–90 CURRENT-basis band;
 // `basis_ratings.current` overall/channels move for the re-rated cards while the
 // Career/default basis is unchanged. All channels remain integers in [0, 100].
@@ -69,17 +73,17 @@ const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.6.0";
+const SCHEMA_VERSION = "runtime-data-2.7.0";
 // narrative-v2: deterministic scenario-aware narrative selection changes
 // RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.16-merit-v4.4";
+const ENGINE_VERSION = "engine-2026.06.17-merit-v4.5";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
-// merit-v4.4 model (wc-perf-6.4.0 historical; proj-career-5.4.0 projected).
+// merit-v4.5 model (wc-perf-6.5.0 historical; proj-career-5.5.0 projected).
 // Fallbacks only apply if a ratings file omits rating_version; the real value is
 // read per-row.
-const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.4.0";
-const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.4.0";
+const RATING_VERSION_HISTORICAL_FALLBACK = "wc-perf-6.5.0";
+const RATING_VERSION_PROJECTED_FALLBACK = "proj-career-5.5.0";
 const DISPLAY_FLOOR = 0;
 const DISPLAY_MAX = 99;
 const ESTIMATE_DISPLAY_MIN = 66;

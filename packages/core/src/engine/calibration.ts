@@ -43,6 +43,12 @@
 //   would be re-locking calibration to a distribution that did not move). Runtime
 //   stamp bumps to `engine-2026.06.16-merit-v4.4` (stamp-only carry-over).
 //
+//   merit-v4.5: λ refit after the recovered v4.3 honest misses moved the
+//   default/Career display and channel distribution. The deterministic fitter
+//   kept the merit-v4.3 λ tuple and only trimmed group-phase dispersion
+//   GROUP_OUTER_PROB 0.04 -> 0.02. Runtime stamp:
+//   `engine-2026.06.17-merit-v4.5`.
+//
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
 // output on every platform/engine. λ is a clamped LINEAR map and goal counts
@@ -248,13 +254,13 @@ export const LAMBDA_DISP = Object.freeze({
   A: 0.75,
   /**
    * GROUP-phase outer mass. Same shape as `OUTER_PROB` but applied to group
-   * matches. merit-v4.3 REFIT: GROUP_OUTER_PROB=0.04 (much smaller than KO's
+   * matches. merit-v4.5 REFIT: GROUP_OUTER_PROB=0.02 (much smaller than KO's
    * 0.20) — group_draw must stay inside the D5-tight band [22.88%, 26.52%],
    * so the group dispersion is only frequent enough to lift `margin >= 4`
    * into [4.12%, 5.70%] without inflating group_draw past 26.5%.
    * Set to 0 to disable group dispersion.
    */
-  GROUP_OUTER_PROB: 0.04,
+  GROUP_OUTER_PROB: 0.02,
   /**
    * GROUP-phase half-width. merit-v4.3 REFIT: GROUP_A=0.40 — lower than the
    * default to drive the high-margin tail (~4.7% margin≥4) while the

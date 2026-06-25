@@ -1,0 +1,37 @@
+source_line,country,year,player_name,final_rating,rule,current_baseline,original_reason,card_id,player_id,tournament_id,nation_id,matched_name,match_method,evidence_text,evidence_source,evidence_qids
+9,Algeria,2010,Medhi Lacen,73,f2-only,76,duplicate_conflict_weaker_match,P-23484:WC-2010,P-23484,WC-2010,T-01,Lacen,v4.5_qid_alias_bound,Medhi Lacen,wikidata,Q431562
+70,Argentina,2022,Nicolas Gonzalo,82,"avg(81,82)",88,no_unambiguous_match,P-49114:WC-2022,P-49114,WC-2022,T-03,Otamendi,v4.5_qid_alias_bound,Nicolás Hernán Gonzalo Otamendi,wikidata,Q182063
+78,Argentina,2022,Nahuel Lucero,78,agree,88,no_unambiguous_match,P-84430:WC-2022,P-84430,WC-2022,T-03,Molina,v4.5_qid_alias_bound,Nahuel Molina Lucero,wikidata,Q22082590
+112,Australia,2018,Timothy Filiga,70,f2-only,71,no_unambiguous_match,P-44926:WC-2018,P-44926,WC-2018,T-04,Cahill,v4.5_qid_alias_bound,Timothy Filiga Cahill,wikidata,Q187238
+234,Brazil,2002,José Vitor Roque Junior,81,f1-only,87,no_unambiguous_match,P-66308:WC-2002,P-66308,WC-2002,T-09,Júnior,v4.5_local_token_subset,Júnior Roque,local,
+243,Brazil,2010,Júlio de Espindola,89,f2-only,88,no_unambiguous_match,P-11275:WC-2010,P-11275,WC-2010,T-09,César,v4.5_qid_alias_bound,Júlio César Soares Espíndola,wikidata,Q182459
+246,Brazil,2010,Daniel da Silva,86,f2-only,88,no_unambiguous_match,P-09441:WC-2010,P-09441,WC-2010,T-09,Alves,v4.5_qid_alias_bound,Daniel Alves da Silva,wikidata,Q172720
+252,Brazil,2010,Edinaldo Libanio,83,f2-only,71,no_unambiguous_match,P-82456:WC-2010,P-82456,WC-2010,T-09,Grafite,v4.5_qid_alias_bound,Edinaldo Batista Libanio,wikidata,Q159059
+259,Brazil,2010,Donieber Marangao,78,f2-only,71,no_unambiguous_match,P-61927:WC-2010,P-61927,WC-2010,T-09,Doni,v4.5_qid_alias_bound,Doniéber Alexander Marangon,wikidata,Q223229
+267,Brazil,2014,Júlio de Espindola,82,f2-only,88,no_unambiguous_match,P-11275:WC-2014,P-11275,WC-2014,T-09,César,v4.5_qid_alias_bound,Júlio César Soares Espíndola,wikidata,Q182459
+271,Brazil,2014,Fernando Roza,81,f2-only,88,no_unambiguous_match,P-41758:WC-2014,P-41758,WC-2014,T-09,Fernandinho,v4.5_qid_alias_bound,Fernando Luiz Roza,wikidata,Q459356
+276,Brazil,2014,Frederico Guedes,79,f2-only,88,no_unambiguous_match,P-54042:WC-2014,P-54042,WC-2014,T-09,Fred,v4.5_qid_alias_bound,Frederico Chaves Guedes,wikidata,Q312772
+280,Brazil,2018,Marcos Corrêa,84,"avg(83,84)",71,no_unambiguous_match,P-76060:WC-2018,P-76060,WC-2018,T-09,Marquinhos,v4.5_qid_alias_bound,Marcos Aoas Correa,wikidata,Q39230
+281,Brazil,2018,Taison Freda,82,agree,71,no_unambiguous_match,P-87266:WC-2018,P-87266,WC-2018,T-09,Taison,v4.5_qid_alias_bound,Taison Barcellos Freda,wikidata,Q303108
+285,Brazil,2022,Gleison Nascimento,83,agree,73,no_unambiguous_match,P-14060:WC-2022,P-14060,WC-2022,T-09,Bremer,v4.5_qid_alias_bound,Gleison Bremer Silva Nascimento,wikidata,Q38693097
+286,Brazil,2022,Raphael Belloli,83,agree,73,no_unambiguous_match,P-83169:WC-2022,P-83169,WC-2022,T-09,Raphinha,v4.5_qid_alias_bound,Raphael Dias Belloli,wikidata,Q28861547
+291,Brazil,2022,Daniel da Silva,77,f2-only,73,no_unambiguous_match,P-09441:WC-2022,P-09441,WC-2022,T-09,Alves,v4.5_qid_alias_bound,Daniel Alves da Silva,wikidata,Q172720
+309,Cameroon,2002,Jacques o,69,f2-only,71,no_unambiguous_match,P-93402:WC-2002,P-93402,WC-2002,T-11,Songo'o,v4.5_local_initials_subset,Jacques Songo'o,local,
+422,Colombia,2018,Juan Guillermo Cuadrado Bello,82,f1-only,86,no_unambiguous_match,P-83216:WC-2018,P-83216,WC-2018,T-16,Cuadrado,v4.5_local_token_subset,Cuadrado Juan,local,
+649,Denmark,2018,William Vitved Kvist Jørgensen,70,f1-only,71,no_unambiguous_match,P-93951:WC-2018,P-93951,WC-2018,T-22,Kvist,v4.5_local_token_subset,Kvist William,local,
+699,Ecuador,2022,Alexander Carabalí,70,f2-only,71,no_unambiguous_match,P-94877:WC-2022,P-94877,WC-2022,T-25,Domínguez,v4.5_qid_alias_bound,Alexánder Domínguez Carabalí,wikidata,Q2667325
+712,Ecuador,2026,Jeremy Mera,66,f2-only,71,no_unambiguous_match,P-W26-0198:WC-2026,P-W26-0198,WC-2026,T-25,Arevalo,v4.5_qid_alias_bound,Jeremy Alberto Arévalo Mera,wikidata,Q121410218
+766,England,2022,Philip Foden,85,f1-only,87,no_unambiguous_match,P-10501:WC-2022,P-10501,WC-2022,T-28,Foden,v4.5_local_token_subset,Foden Phil,local,
+1375,Morocco,2022,Yahya Attiat-Allah,72,"avg(70,73)",83,no_unambiguous_match,P-91543:WC-2022,P-91543,WC-2022,T-47,Attiyat Allah,v4.5_local_token_subset,Attiyat Allah,local,
+1434,Netherlands,2022,Kenneth Ina Dorothea Taylor,73,f1-only,71,duplicate_conflict_weaker_match,P-95763:WC-2022,P-95763,WC-2022,T-48,Taylor,v4.5_local_token_subset,Kenneth Taylor,local,
+1435,Netherlands,2022,Xavi Quentin Shay Simons,73,f1-only,71,duplicate_conflict_weaker_match,P-34458:WC-2022,P-34458,WC-2022,T-48,Simons,v4.5_local_token_subset,Simons Xavi,local,
+1545,Panama,2018,Gabriel Arturo Torres Tejada,68,f1-only,72,no_unambiguous_match,P-78106:WC-2018,P-78106,WC-2018,T-54,Torres,v4.5_local_token_subset,Gabriel Torres,local,
+1609,Poland,2002,Radoslaw Kaluzny,74,f1-only,72,no_unambiguous_match,P-29986:WC-2002,P-29986,WC-2002,T-57,Kałużny,v4.5_local_token_subset,Kałużny Radosław,local,
+1707,Portugal,2022,André Miguel Valente da Silva,82,f1-only,71,no_unambiguous_match,P-33280:WC-2022,P-33280,WC-2022,T-58,Silva,v4.5_local_token_subset,André Silva,local,
+1713,Portugal,2022,António João Tavares Silva,66,f1-only,71,no_unambiguous_match,P-05289:WC-2022,P-05289,WC-2022,T-58,Silva,v4.5_local_token_subset,António Silva,local,
+1715,Qatar,2022,Ali Qambar,69,f2-only,71,no_unambiguous_match,P-51678:WC-2022,P-51678,WC-2022,T-59,Assadalla,v4.5_qid_alias_bound,Ali Assadalla Qambar,wikidata,Q15615816
+1803,Saudi Arabia,2018,Housain Ali Jassim Al-Mogahwi,71,f1-only,72,no_unambiguous_match,P-77853:WC-2018,P-77853,WC-2018,T-63,Al-Mogahwi,v4.5_local_token_subset,Al-Mogahwi Housain,local,
+1910,Senegal,2026,Iliman Cheikh Baroy Ndiaye,79,f1-only,71,no_unambiguous_match,P-33958:WC-2026,P-33958,WC-2026,T-65,Ndiaye,v4.5_local_token_subset,Iliman Ndiaye,local,
+2503,Uruguay,2026,Federico Sebastián Viñas Barboza,72,f1-only,72,no_unambiguous_match,P-W26-0756:WC-2026,P-W26-0756,WC-2026,T-84,Vinas,v4.5_qid_alias_bound,Federico Sebastián Viñas Barboza,wikidata,Q62594816
+2511,Wales,2022,Benjamin Davies,78,"avg(79,77)",79,no_unambiguous_match,P-41198:WC-2022,P-41198,WC-2022,T-85,Davies,v4.5_qid_alias_bound,Benjamin Edward Davies,wikidata,Q28747988
+2516,Wales,2022,Christopher James Mepham,71,f1-only,79,no_unambiguous_match,P-74888:WC-2022,P-74888,WC-2022,T-85,Mepham,v4.5_qid_alias_bound,Christopher James Mepham,wikidata,Q40351320
