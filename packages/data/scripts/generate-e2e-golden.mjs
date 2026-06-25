@@ -21,17 +21,9 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-import {
-  autoDraft,
-  buildRunScenario,
-  runTournamentFull,
-} from "@wcdraft/core";
+import { autoDraft, buildRunScenario, runTournamentFull } from "@wcdraft/core";
 
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-} from "../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../src/index.js";
 
 const SEED_PREFIX = "wcdraft:e2e-real-run:engine-v2-e3a";
 const SEED_LIMIT = 2000;
@@ -114,9 +106,7 @@ function tryRun(parentSeed) {
 }
 
 function meetsCriteria({ draft, result }) {
-  const hasEstimate = draft.squad.some(
-    (s) => s.card_id !== null && estimateCardIds.has(s.card_id),
-  );
+  const hasEstimate = draft.squad.some((s) => s.card_id !== null && estimateCardIds.has(s.card_id));
   if (!hasEstimate) return { ok: false, why: "no-estimate-in-squad" };
   if (!result.group_stage.user_qualified) return { ok: false, why: "user-not-qualified" };
   const r32 = result.knockout_ladder_meta.rounds[0];

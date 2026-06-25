@@ -1,9 +1,6 @@
 // F-2 — CSRF + Origin/Host pure tests.
 import { describe, it, expect } from "vitest";
-import {
-  verifyCsrfDoubleSubmit,
-  verifyOriginHost,
-} from "@/lib/auth/csrf";
+import { verifyCsrfDoubleSubmit, verifyOriginHost } from "@/lib/auth/csrf";
 import { AuthError } from "@/lib/auth/errors";
 
 const SECRET = "csrf-secret-1234567890123456789012345678901234";
@@ -106,9 +103,9 @@ describe("verifyOriginHost", () => {
   });
 
   it("ORIGIN_MISMATCH when both Origin and Referer are null", () => {
-    expect(() =>
-      verifyOriginHost({ origin: null, referer: null, host: "wcdraft.com" }),
-    ).toThrow(expect.objectContaining({ code: "ORIGIN_MISMATCH" }));
+    expect(() => verifyOriginHost({ origin: null, referer: null, host: "wcdraft.com" })).toThrow(
+      expect.objectContaining({ code: "ORIGIN_MISMATCH" }),
+    );
   });
 
   it("ORIGIN_MISMATCH when Host header is missing", () => {

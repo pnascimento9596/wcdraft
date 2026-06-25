@@ -16,11 +16,7 @@ interface BranchResp {
   branch: { id: string; default?: boolean; primary?: boolean; name?: string };
 }
 
-function neonRequest<T>(
-  method: "GET" | "DELETE",
-  path: string,
-  apiKey: string,
-): Promise<T | null> {
+function neonRequest<T>(method: "GET" | "DELETE", path: string, apiKey: string): Promise<T | null> {
   return new Promise((resolve, reject) => {
     const req = request(
       {
@@ -84,9 +80,7 @@ async function main(): Promise<void> {
       `NEON_PROJECT_ID length=${projectId.length.toString()} ` +
       `NEON_EPHEMERAL_BRANCH_ID length=${branchId.length.toString()}`,
   );
-  console.log(
-    `[neon-branch-delete] project=${shortId(projectId)} branch=${shortId(branchId)}`,
-  );
+  console.log(`[neon-branch-delete] project=${shortId(projectId)} branch=${shortId(branchId)}`);
 
   // Belt-and-suspenders: refuse to delete primary/default branches even if
   // env asked us to. Better to leak an ephemeral compute for an hour than

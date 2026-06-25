@@ -26,11 +26,7 @@
 // follow. F-3 lands the provider + the route handlers it consumes so
 // the swap is a one-import change.
 import type { GameData } from "./data";
-import {
-  type HistoryEntry,
-  type HistoryListResult,
-  type RunHistoryProvider,
-} from "./history";
+import { type HistoryEntry, type HistoryListResult, type RunHistoryProvider } from "./history";
 import { decodeRunToken, RunTokenError } from "./run-token";
 import { resultsHref, shareHref } from "./navigation";
 import { RUN_RECORD_CAP } from "./run-record";
@@ -115,9 +111,7 @@ export function createServerRunHistoryProvider(
         return {
           entries: [],
           persistence: "volatile",
-          warnings: [
-            `server-history: GET /api/runs returned HTTP ${response.status.toString()}`,
-          ],
+          warnings: [`server-history: GET /api/runs returned HTTP ${response.status.toString()}`],
         };
       }
       const body = (await response.json().catch(() => null)) as ListResponse | null;

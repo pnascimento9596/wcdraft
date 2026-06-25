@@ -20,6 +20,7 @@ Greenfield additive scaffold:
   This closes the anon-spam vector an independent reviewer caught on PR #26
   — plain unique indexes on nullable columns are toothless under Postgres'
   default NULLS-DISTINCT semantics.
+
 - DB-level CHECK enums on `saved_runs.claim_state` (`'anonymous'|'claimed'`)
   and `leaderboard_entries.mode` (`'casual'|'ranked'`).
 - Initial migration (`migrations/0000_init.sql`) creates all six tables in
@@ -58,19 +59,19 @@ Two **secrets** must live in your local shell env (or a gitignored file you
 source; `~/.config/wcdraft/neon.env` is conventional) and as GitHub repo
 secrets for CI:
 
-| Var               | Purpose                                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------------- |
+| Var               | Purpose                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------- |
 | `NEON_API_KEY`    | Drives `db:branch:create` + `db:branch:delete` (CI's ephemeral-branch lifecycle).         |
 | `NEON_PROJECT_ID` | The Neon project to fork branches from. Set as a repo secret so CI doesn't list projects. |
 
 `db:branch:create` writes the **per-run** DB URLs to a working env file:
 
-| Var                          | URL kind                                  | Used by                                                              |
-| ---------------------------- | ----------------------------------------- | -------------------------------------------------------------------- |
-| `DATABASE_URL`               | Neon **pooled** (`...-pooler.neon.tech`)  | Runtime route handlers (later sub-units) via `getDb()`               |
-| `DATABASE_URL_UNPOOLED`      | Neon **direct** (`...neon.tech`)          | `scripts/migrate.ts` and `scripts/rollback-check.ts` (CLI migrations) |
-| `NEON_EPHEMERAL_BRANCH_ID`   | Branch id sentinel                        | `scripts/rollback-check.ts` safety guard                              |
-| `NEON_PROJECT_ID`            | Echoed back for `db:branch:delete`        | `scripts/neon-branch-delete.ts`                                       |
+| Var                        | URL kind                                 | Used by                                                               |
+| -------------------------- | ---------------------------------------- | --------------------------------------------------------------------- |
+| `DATABASE_URL`             | Neon **pooled** (`...-pooler.neon.tech`) | Runtime route handlers (later sub-units) via `getDb()`                |
+| `DATABASE_URL_UNPOOLED`    | Neon **direct** (`...neon.tech`)         | `scripts/migrate.ts` and `scripts/rollback-check.ts` (CLI migrations) |
+| `NEON_EPHEMERAL_BRANCH_ID` | Branch id sentinel                       | `scripts/rollback-check.ts` safety guard                              |
+| `NEON_PROJECT_ID`          | Echoed back for `db:branch:delete`       | `scripts/neon-branch-delete.ts`                                       |
 
 The working env file is gitignored (covered by `.gitignore`'s `.env.*`
 pattern). Always target a Neon **branch**, never prod, for apply/rollback

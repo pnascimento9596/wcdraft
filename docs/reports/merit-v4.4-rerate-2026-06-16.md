@@ -108,13 +108,13 @@ and coexist cleanly.
 
 ## Version bump
 
-| Anchor | v4.3 | v4.4 |
-|---|---|---|
-| runtime data | `runtime-data-2.5.0` | `runtime-data-2.6.0` |
-| engine | `engine-2026.06.15-merit-v4.3` | `engine-2026.06.16-merit-v4.4` |
-| historical rating | `wc-perf-6.3.0` | `wc-perf-6.4.0` |
-| projected rating | `proj-career-5.3.0` | `proj-career-5.4.0` |
-| leaderboard season | `..._923c4a93` | `..._f79ba870` |
+| Anchor             | v4.3                           | v4.4                           |
+| ------------------ | ------------------------------ | ------------------------------ |
+| runtime data       | `runtime-data-2.5.0`           | `runtime-data-2.6.0`           |
+| engine             | `engine-2026.06.15-merit-v4.3` | `engine-2026.06.16-merit-v4.4` |
+| historical rating  | `wc-perf-6.3.0`                | `wc-perf-6.4.0`                |
+| projected rating   | `proj-career-5.3.0`            | `proj-career-5.4.0`            |
+| leaderboard season | `..._923c4a93`                 | `..._f79ba870`                 |
 
 `runtime-data-2.5.0` is retained under
 `packages/data/src/retained-runtime-data/runtime-data-2.5.0/` (rebuilt from a
@@ -134,13 +134,13 @@ Runtime bundle anchors (2.6.0):
 
 ## Distribution (the elite-band shift)
 
-| Metric | Baseline (v4.3) | v4.4 | Δ |
-|---|---:|---:|---:|
-| **Career** 90+ share | 2.6516% | 2.6516% | 0 (untouched) |
-| **Career** 85–90 band (cards) | 1,204 | 1,204 | 0 (untouched) |
-| **Current** 90+ share | 0.5320% | 1.0066% | +0.4746pp |
-| **Current** 91+ count | 23 | 79 | +56 new entrants (91–95) |
-| **Current** 85–90 band (cards) | 1,154 | 920 | −234 |
+| Metric                         | Baseline (v4.3) |    v4.4 |                        Δ |
+| ------------------------------ | --------------: | ------: | -----------------------: |
+| **Career** 90+ share           |         2.6516% | 2.6516% |            0 (untouched) |
+| **Career** 85–90 band (cards)  |           1,204 |   1,204 |            0 (untouched) |
+| **Current** 90+ share          |         0.5320% | 1.0066% |                +0.4746pp |
+| **Current** 91+ count          |              23 |      79 | +56 new entrants (91–95) |
+| **Current** 85–90 band (cards) |           1,154 |     920 |                     −234 |
 
 The +56 new 91+ entrants are exactly the dispatch's "~56 entrants at 91–95". The
 dispatch's `2.6516%` figure is the **Career** 90+ share — which v4.4 leaves
@@ -167,26 +167,26 @@ which v4.4 does not change. Therefore:
 
 ## Gate log
 
-| Gate | Result |
-|---|---|
-| `python -m wcdraft_etl.manual_overrides` | PASS — v4.3 2,300/2,516; v4.4 515/515; 2,674 combined |
-| `python -m wcdraft_etl.rating` | PASS — 10,973; null 0; baseline 386; RSSSF 1,578 |
-| `python -m wcdraft_etl.ingest_2026` | PASS — 1,246 cards; 48 teams; 62 KO slots |
-| `cd etl && ruff check src tests` | PASS |
-| `cd etl && pytest -q` | PASS — 297 + 5 new (test_manual_overrides_v44.py) |
-| `pnpm --filter @wcdraft/data build:compact` | PASS — runtime-data-2.6.0; 12,219 ratings; legend 295 |
-| `pnpm --filter @wcdraft/data test:golden:data` | PASS — 4 files / 38 tests (after fix-forward of the version-anchor + de-cluster-exempt assertions) |
-| `pnpm --filter @wcdraft/data test:golden:integration` | PASS — e2e seed `:105` unchanged; era 4 presets |
-| strategic-pick canary | PASS — 0 pick flips (stamp-only regen) |
-| asym realism golden | PASS — landings byte-identical; stamp-only |
-| `pnpm --filter @wcdraft/data test:realism:heavy` | PASS — 1 file / 7 tests |
-| `pnpm --filter @wcdraft/web test:golden:leaderboard` | PASS — 6 tests; season key `..._f79ba870` |
-| core RNG/draft goldens | PASS — test:golden 67 · test:golden:draft 40 |
-| `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS — typecheck 8 · lint 5 · test 8 (web 694+1skip, data 74+7skip, core 366, db 79, marketing-x 64) · build 4 |
-| `git diff --check` | PASS — `.gitattributes` marks the fingerprinted override CSVs `-text -whitespace` (intrinsic CRLF) |
-| Fresh-context independent review | PASS — fresh `origin/ws-merit/v4.4` clone re-executed all gates + all 8 contract clauses (Career unchanged 0/12,219, 515/515 current targets, 639 blanks untouched, 0 canary flips, determinism byte-identical); 0 blockers |
-| CI | PASS on PR #155 |
-| Merge / deploy / live verify | SHIPPED — PR #155, main `03c83ec`, production live-verified |
+| Gate                                                     | Result                                                                                                                                                                                                                      |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `python -m wcdraft_etl.manual_overrides`                 | PASS — v4.3 2,300/2,516; v4.4 515/515; 2,674 combined                                                                                                                                                                       |
+| `python -m wcdraft_etl.rating`                           | PASS — 10,973; null 0; baseline 386; RSSSF 1,578                                                                                                                                                                            |
+| `python -m wcdraft_etl.ingest_2026`                      | PASS — 1,246 cards; 48 teams; 62 KO slots                                                                                                                                                                                   |
+| `cd etl && ruff check src tests`                         | PASS                                                                                                                                                                                                                        |
+| `cd etl && pytest -q`                                    | PASS — 297 + 5 new (test_manual_overrides_v44.py)                                                                                                                                                                           |
+| `pnpm --filter @wcdraft/data build:compact`              | PASS — runtime-data-2.6.0; 12,219 ratings; legend 295                                                                                                                                                                       |
+| `pnpm --filter @wcdraft/data test:golden:data`           | PASS — 4 files / 38 tests (after fix-forward of the version-anchor + de-cluster-exempt assertions)                                                                                                                          |
+| `pnpm --filter @wcdraft/data test:golden:integration`    | PASS — e2e seed `:105` unchanged; era 4 presets                                                                                                                                                                             |
+| strategic-pick canary                                    | PASS — 0 pick flips (stamp-only regen)                                                                                                                                                                                      |
+| asym realism golden                                      | PASS — landings byte-identical; stamp-only                                                                                                                                                                                  |
+| `pnpm --filter @wcdraft/data test:realism:heavy`         | PASS — 1 file / 7 tests                                                                                                                                                                                                     |
+| `pnpm --filter @wcdraft/web test:golden:leaderboard`     | PASS — 6 tests; season key `..._f79ba870`                                                                                                                                                                                   |
+| core RNG/draft goldens                                   | PASS — test:golden 67 · test:golden:draft 40                                                                                                                                                                                |
+| `pnpm typecheck && pnpm lint && pnpm test && pnpm build` | PASS — typecheck 8 · lint 5 · test 8 (web 694+1skip, data 74+7skip, core 366, db 79, marketing-x 64) · build 4                                                                                                              |
+| `git diff --check`                                       | PASS — `.gitattributes` marks the fingerprinted override CSVs `-text -whitespace` (intrinsic CRLF)                                                                                                                          |
+| Fresh-context independent review                         | PASS — fresh `origin/ws-merit/v4.4` clone re-executed all gates + all 8 contract clauses (Career unchanged 0/12,219, 515/515 current targets, 639 blanks untouched, 0 canary flips, determinism byte-identical); 0 blockers |
+| CI                                                       | PASS on PR #155                                                                                                                                                                                                             |
+| Merge / deploy / live verify                             | SHIPPED — PR #155, main `03c83ec`, production live-verified                                                                                                                                                                 |
 
 ## Ship closeout
 

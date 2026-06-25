@@ -115,10 +115,7 @@ function pickEscalating(
 }
 
 /** Find slots matching a predicate, lexicographically sorted by `slot_id`. */
-function findSlotsSortedByLex(
-  slots: readonly Slot[],
-  pred: (slot: Slot) => boolean,
-): Slot[] {
+function findSlotsSortedByLex(slots: readonly Slot[], pred: (slot: Slot) => boolean): Slot[] {
   return canonicalSortBy(slots.filter(pred), (s) => [s.slot_id]);
 }
 
@@ -138,17 +135,21 @@ function findUserR32Slot(
   const r32Slots = bracket.knockout_slots.filter((s) => s.round === "R32");
   const userRank = groupStage.user_rank;
   if (userRank === 1 || userRank === 2) {
-    const matches = findSlotsSortedByLex(r32Slots, (s) =>
-      s.source.kind === "group_position" &&
-      s.source.group_id === scenario.user_group_id &&
-      s.source.position === userRank,
+    const matches = findSlotsSortedByLex(
+      r32Slots,
+      (s) =>
+        s.source.kind === "group_position" &&
+        s.source.group_id === scenario.user_group_id &&
+        s.source.position === userRank,
     );
     return matches[0] ?? null;
   }
   if (userRank === 3 && groupStage.user_qualified) {
-    const matches = findSlotsSortedByLex(r32Slots, (s) =>
-      s.source.kind === "best_third" &&
-      s.source.candidate_groups.includes(scenario.user_group_id),
+    const matches = findSlotsSortedByLex(
+      r32Slots,
+      (s) =>
+        s.source.kind === "best_third" &&
+        s.source.candidate_groups.includes(scenario.user_group_id),
     );
     return matches[0] ?? null;
   }
@@ -167,10 +168,7 @@ function findOppositeR32Slot(bracket: Bracket2026, userSlot: Slot): Slot | null 
   if (!userSlot.match_id) return null;
   const matches = findSlotsSortedByLex(
     bracket.knockout_slots,
-    (s) =>
-      s.round === "R32" &&
-      s.match_id === userSlot.match_id &&
-      s.slot_id !== userSlot.slot_id,
+    (s) => s.round === "R32" && s.match_id === userSlot.match_id && s.slot_id !== userSlot.slot_id,
   );
   return matches[0] ?? null;
 }
@@ -336,7 +334,12 @@ function selectR32Opponent(input: R32SelectionInput): R32SelectionResult {
   );
   const sortedConstrained = canonicalStrengthSort(constrained);
   if (sortedConstrained.length === 0) {
-    return fallback("empty_constrained_pool", userSlot.slot_id, oppositeSlot.slot_id, candidateGroups);
+    return fallback(
+      "empty_constrained_pool",
+      userSlot.slot_id,
+      oppositeSlot.slot_id,
+      candidateGroups,
+    );
   }
 
   // Single draw over the constrained pool, lex-canonical via strength sort.

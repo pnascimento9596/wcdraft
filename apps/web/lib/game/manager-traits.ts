@@ -25,11 +25,7 @@
 
 import { createRng } from "@wcdraft/core";
 
-import type {
-  ManagerTraitId,
-  ManagerTraitSource,
-  ManagerTraitView,
-} from "./view-models";
+import type { ManagerTraitId, ManagerTraitSource, ManagerTraitView } from "./view-models";
 
 /** Fixed-order taxonomy. The order is PART OF the deterministic output. */
 const TAXONOMY: readonly ManagerTraitId[] = [
@@ -197,9 +193,7 @@ export function managerTraitsFor(
 }
 
 /** Deterministic two-trait draw from the taxonomy, seeded by manager_id. */
-function deriveFallback(
-  manager_id: string,
-): readonly [ManagerTraitView, ManagerTraitView] {
+function deriveFallback(manager_id: string): readonly [ManagerTraitView, ManagerTraitView] {
   // Empty/whitespace manager_id is not expected at runtime (schema
   // guarantees non-empty), but stay honest if it ever sneaks in.
   const seed = `wcdraft:manager-traits:v1:${manager_id || "unknown"}`;

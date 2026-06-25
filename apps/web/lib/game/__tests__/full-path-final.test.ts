@@ -24,19 +24,11 @@
 //   `is_perfect_eight_zero` rendering branch.
 
 import { describe, expect, it } from "vitest";
-import type {
-  MatchResult,
-  MatchRound,
-  RunResult,
-} from "@wcdraft/core";
+import type { MatchResult, MatchRound, RunResult } from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData, GameDataIndexes } from "../data";
-import {
-  buildRunSummary,
-  matchCardViews,
-  roundLabel,
-} from "../results-adapters";
+import { buildRunSummary, matchCardViews, roundLabel } from "../results-adapters";
 
 // ─── Round table (ground truth — pinned here to fail loudly on relabeling) ──
 

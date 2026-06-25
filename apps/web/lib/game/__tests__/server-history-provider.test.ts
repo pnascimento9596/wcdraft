@@ -59,8 +59,7 @@ describe("createServerRunHistoryProvider", () => {
 
   it("returns empty entries with a warning on malformed body", async () => {
     const provider = createServerRunHistoryProvider({
-      fetcher: async () =>
-        new Response(JSON.stringify({ unrelated: true }), { status: 200 }),
+      fetcher: async () => new Response(JSON.stringify({ unrelated: true }), { status: 200 }),
     });
     const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
     expect(result.entries).toEqual([]);
@@ -194,8 +193,7 @@ describe("createServerRunHistoryProvider", () => {
 
   it("persistence is 'durable' on success (rows live in Neon, not browser storage)", async () => {
     const provider = createServerRunHistoryProvider({
-      fetcher: async () =>
-        new Response(JSON.stringify({ runs: [], cap: 5 }), { status: 200 }),
+      fetcher: async () => new Response(JSON.stringify({ runs: [], cap: 5 }), { status: 200 }),
     });
     const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
     expect(result.persistence).toBe("durable");
@@ -250,7 +248,7 @@ describe("F-3.5 summary honest-state", () => {
     expect(entry.seed).toBe(summary.seed);
   });
 
-  it("FALLS BACK to honest \"—\" when summary is null (pre-F-3.5 row)", async () => {
+  it('FALLS BACK to honest "—" when summary is null (pre-F-3.5 row)', async () => {
     const provider = createServerRunHistoryProvider({
       fetcher: async () =>
         new Response(
@@ -311,4 +309,3 @@ describe("F-3.5 summary honest-state", () => {
     expect(entry.is_champion).toBe(false);
   });
 });
-

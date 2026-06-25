@@ -189,15 +189,11 @@ function selectPlayerCard(
   const active = activeSpin(state);
   if (!active) throw new RangeError("selectPlayerCard: no active spin");
   if (active.rolled_card_ids.length === 0) {
-    throw new RangeError(
-      `selectPlayerCard: spin ${active.index} has no player candidates`,
-    );
+    throw new RangeError(`selectPlayerCard: spin ${active.index} has no player candidates`);
   }
   const slot = firstVacantSlot(state);
   if (slot === null) {
-    throw new RangeError(
-      `selectPlayerCard: no vacant slot for a player at spin ${active.index}`,
-    );
+    throw new RangeError(`selectPlayerCard: no vacant slot for a player at spin ${active.index}`);
   }
 
   const scored: Scored[] = active.rolled_card_ids.map((cardId) => {

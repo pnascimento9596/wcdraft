@@ -39,11 +39,7 @@ import {
   RunResultSchema,
 } from "@wcdraft/core";
 
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  SCENARIO_2026_BUNDLE,
-} from "../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "../src/index.js";
 import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json" };
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
@@ -232,7 +228,9 @@ describe("e2e real-run determinism golden — committed fixture", () => {
     {
       const r = GroupStageResultSchema.safeParse(group_stage);
       if (!r.success) {
-        throw new Error(`GroupStageResult schema failed: ${JSON.stringify(r.error.issues, null, 2)}`);
+        throw new Error(
+          `GroupStageResult schema failed: ${JSON.stringify(r.error.issues, null, 2)}`,
+        );
       }
     }
   });
@@ -277,7 +275,10 @@ describe("e2e real-run determinism golden — committed fixture", () => {
     const ts = run.aggregate.top_scorer_player_id;
     if (ts === null) return;
     const playerCard = DRAFT_POOL_BUNDLE.player_cards.find((c) => c.player_id === ts);
-    expect(playerCard, `top scorer player_id ${ts} must be in the runtime player pool`).toBeDefined();
+    expect(
+      playerCard,
+      `top scorer player_id ${ts} must be in the runtime player pool`,
+    ).toBeDefined();
     expect(playerCard!.common_name.trim().length).toBeGreaterThan(0);
   });
 

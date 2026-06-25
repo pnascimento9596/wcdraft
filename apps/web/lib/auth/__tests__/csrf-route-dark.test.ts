@@ -27,9 +27,7 @@ type Snapshot = Record<(typeof ENV_KEYS)[number], string | undefined>;
 let originals: Snapshot;
 
 beforeEach(() => {
-  originals = Object.fromEntries(
-    ENV_KEYS.map((k) => [k, process.env[k]]),
-  ) as Snapshot;
+  originals = Object.fromEntries(ENV_KEYS.map((k) => [k, process.env[k]])) as Snapshot;
   for (const k of ENV_KEYS) delete process.env[k];
 });
 afterEach(() => {

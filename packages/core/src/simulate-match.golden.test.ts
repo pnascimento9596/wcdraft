@@ -46,7 +46,9 @@ describe("public simulateMatch (UserXiSimView path)", () => {
       const m = simulateMatch(view, opponent, round, `view-seed-${round}`);
       const parsed = MatchResultSchema.safeParse(m);
       if (!parsed.success) {
-        throw new Error(`schema failed for ${round}: ${JSON.stringify(parsed.error.issues, null, 2)}`);
+        throw new Error(
+          `schema failed for ${round}: ${JSON.stringify(parsed.error.issues, null, 2)}`,
+        );
       }
       expect(parsed.success).toBe(true);
     }

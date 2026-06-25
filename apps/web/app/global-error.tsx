@@ -57,7 +57,9 @@ export default function GlobalError({
             An unexpected error interrupted the page. You can try again, or head back to start a
             fresh run.
           </p>
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+          <div
+            style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}
+          >
             <button
               type="button"
               onClick={() => reset()}
@@ -67,7 +69,12 @@ export default function GlobalError({
             </button>
             <a
               href="/"
-              style={{ ...btn, background: "transparent", color: "#efe9db", border: "1px solid #3a4a40" }}
+              style={{
+                ...btn,
+                background: "transparent",
+                color: "#efe9db",
+                border: "1px solid #3a4a40",
+              }}
             >
               Home
             </a>

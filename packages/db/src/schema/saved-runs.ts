@@ -45,9 +45,7 @@ export const savedRuns = pgTable(
     runId: text("run_id"),
     parentSeed: text("parent_seed"),
     claimState: text("claim_state").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("saved_runs_owner_created_idx").on(t.ownerUserId, t.createdAt),
@@ -58,10 +56,7 @@ export const savedRuns = pgTable(
     uniqueIndex("saved_runs_session_token_uq")
       .on(t.sessionId, t.token)
       .where(sql`${t.ownerUserId} IS NULL AND ${t.sessionId} IS NOT NULL`),
-    check(
-      "saved_runs_claim_state_chk",
-      sql`${t.claimState} IN ('anonymous', 'claimed')`,
-    ),
+    check("saved_runs_claim_state_chk", sql`${t.claimState} IN ('anonymous', 'claimed')`),
   ],
 );
 

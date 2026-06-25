@@ -28,9 +28,7 @@ export const rankedAttempts = pgTable(
     }),
     issuedParentSeed: text("issued_parent_seed").notNull(),
     nonce: text("nonce").notNull(),
-    issuedAt: timestamp("issued_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    issuedAt: timestamp("issued_at", { withTimezone: true }).notNull().defaultNow(),
     windowExpiresAt: timestamp("window_expires_at", {
       withTimezone: true,
     }).notNull(),

@@ -80,26 +80,26 @@ Committed screenshot set: `docs/screenshots/ui-polish-overhaul/`.
 
 Viewport-fit summary from the local JSON:
 
-| Surface | Max document overflow | Status |
-| --- | ---: | --- |
-| home | 0 | fits |
-| mode-select | 0 | fits |
-| leaderboard | 0 | fits |
-| history | 0 | fits |
-| settings | 0 | fits |
-| sign-in | 0 | fits |
-| position-first-target | 0 | fits |
-| setup-formation-lock | 0 | fits |
-| spin-stage | 0 | fits |
-| draft-lineup-initial | 0 | fits |
-| draft-candidates | 0 | fits |
-| draft-assign | 0 | fits |
-| squad-review | 0 | fits |
-| share | 0 | fits |
-| attribution | 518 | permitted static/legal content |
-| how-to-play | 2510 | permitted long static content |
-| privacy | 3907 | permitted long static content |
-| results | 630 | permitted long 8-match results content |
+| Surface               | Max document overflow | Status                                 |
+| --------------------- | --------------------: | -------------------------------------- |
+| home                  |                     0 | fits                                   |
+| mode-select           |                     0 | fits                                   |
+| leaderboard           |                     0 | fits                                   |
+| history               |                     0 | fits                                   |
+| settings              |                     0 | fits                                   |
+| sign-in               |                     0 | fits                                   |
+| position-first-target |                     0 | fits                                   |
+| setup-formation-lock  |                     0 | fits                                   |
+| spin-stage            |                     0 | fits                                   |
+| draft-lineup-initial  |                     0 | fits                                   |
+| draft-candidates      |                     0 | fits                                   |
+| draft-assign          |                     0 | fits                                   |
+| squad-review          |                     0 | fits                                   |
+| share                 |                     0 | fits                                   |
+| attribution           |                   518 | permitted static/legal content         |
+| how-to-play           |                  2510 | permitted long static content          |
+| privacy               |                  3907 | permitted long static content          |
+| results               |                   630 | permitted long 8-match results content |
 
 Squad-review proof after the final compact pass:
 

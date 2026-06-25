@@ -61,7 +61,10 @@ export type ComputeScoreFn = (
 export type ResolveTopScorerFn = (matches: readonly MatchResult[]) => string | null;
 
 // WS-B IMPLEMENTATIONS (engine bodies in `../engine/scoring.ts`).
-import { computeScore as computeScoreImpl, resolveTopScorer as resolveTopScorerImpl } from "../engine/scoring.js";
+import {
+  computeScore as computeScoreImpl,
+  resolveTopScorer as resolveTopScorerImpl,
+} from "../engine/scoring.js";
 
 /** Compute leaderboard points + transparent breakdown for a RunResult. */
 export const computeScore: ComputeScoreFn = computeScoreImpl;

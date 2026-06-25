@@ -28,8 +28,8 @@
 > internal score yet was mislabeled `baseline_anchor_estimate` and display-capped
 > into `[66, 73]`. The classifier was reordered to make the dominance check
 > primary — `if weight ≥ STATURE_DOMINANT_WEIGHT → career_stature_estimate;
-> elif not has_individual_signal → baseline_anchor_estimate; else
-> measured_performance` — and the now-dead `CAREER_ESTIMATE_MIN_INDEX` constant
+elif not has_individual_signal → baseline_anchor_estimate; else
+measured_performance` — and the now-dead `CAREER_ESTIMATE_MIN_INDEX` constant
 > was removed. **Population delta:** exactly one card moved
 > (Sepp Maier P-14080:WC-1966, GK, `career_stature_index=0.446`,
 > `stature_model_weight=0.881`, `score_0_100=62.19`), with `overall`
@@ -110,13 +110,13 @@ output — not the upstream CSVs), so the stage is self-contained and
 byte-deterministic. Signals respect the era cliffs documented in
 `etl/output/COVERAGE.md`:
 
-| Signal | Source | Availability | When absent |
-|---|---|---|---|
-| Goals (excl. own goals) | `player_tournaments.goals` | 1930+ (all eras) | n/a — always present |
-| Match appearances | `player_tournaments.appearances` | native **1970+**; **pre-1970 sourced from RSSSF** (WS-A supplement, `appearances_source` tags origin) | `null` → **dropped**, never 0 (still null where no RSSSF lineup links) |
-| Awards | `player_tournaments.awards` | 1930+, staggered intro | `[]` = confirmed none (real 0 lift) |
-| Team final placement | `manager_tournaments.final_placement` keyed by `(nation_id, tournament_id)` | **semifinalists only** (1–4) | `null` → **dropped**, never 0 |
-| Coarse position | `player_tournaments.position_listed` (fallback: `players.primary_position`) | all eras | — selects the weighting, not scored |
+| Signal                  | Source                                                                      | Availability                                                                                          | When absent                                                            |
+| ----------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Goals (excl. own goals) | `player_tournaments.goals`                                                  | 1930+ (all eras)                                                                                      | n/a — always present                                                   |
+| Match appearances       | `player_tournaments.appearances`                                            | native **1970+**; **pre-1970 sourced from RSSSF** (WS-A supplement, `appearances_source` tags origin) | `null` → **dropped**, never 0 (still null where no RSSSF lineup links) |
+| Awards                  | `player_tournaments.awards`                                                 | 1930+, staggered intro                                                                                | `[]` = confirmed none (real 0 lift)                                    |
+| Team final placement    | `manager_tournaments.final_placement` keyed by `(nation_id, tournament_id)` | **semifinalists only** (1–4)                                                                          | `null` → **dropped**, never 0                                          |
+| Coarse position         | `player_tournaments.position_listed` (fallback: `players.primary_position`) | all eras                                                                                              | — selects the weighting, not scored                                    |
 
 **Deliberately not used** in Phase 1 (Phase 2 plans to ingest some of these with
 pinned public-source snapshots): all-time / decade list rank, Ballon d'Or /
@@ -183,11 +183,11 @@ base  = 0.20 + (0.68 − 0.20) · blend
 ```
 
 | Base weights | goals | appearances |
-|---|---|---|
-| FW | 0.75 | 0.25 |
-| MF | 0.40 | 0.60 |
-| DF | 0.00 | 1.00 |
-| GK | 0.00 | 1.00 |
+| ------------ | ----- | ----------- |
+| FW           | 0.75  | 0.25        |
+| MF           | 0.40  | 0.60        |
+| DF           | 0.00  | 1.00        |
+| GK           | 0.00  | 1.00        |
 
 A defender or keeper is **never rated on goals**.
 
@@ -217,11 +217,11 @@ finish_lift = FINISH_WEIGHT[pos] · finish_points
   placement).
 
 | Position | AWARD_WEIGHT | FINISH_WEIGHT |
-|---|---|---|
-| FW | 0.20 | 0.16 |
-| MF | 0.22 | 0.16 |
-| DF | 0.18 | 0.24 |
-| GK | 0.22 | 0.28 |
+| -------- | ------------ | ------------- |
+| FW       | 0.20         | 0.16          |
+| MF       | 0.22         | 0.16          |
+| DF       | 0.18         | 0.24          |
+| GK       | 0.22         | 0.28          |
 
 ## The display calibration curve (Phase 1 reshape; unified pool in MV2-6)
 
@@ -307,15 +307,15 @@ the raw composite without any display reshape; an off-position channel is
 suppressed toward the merit floor.
 
 | spread → | attack | midfield | defense | goalkeeping |
-|---|---|---|---|---|
-| FW | 1.00 | 0.60 | 0.30 | 0.00 |
-| MF | 0.65 | 1.00 | 0.60 | 0.00 |
-| DF | 0.35 | 0.60 | 1.00 | 0.00 |
-| GK | 0.05 | 0.20 | 0.55 | 1.00 |
+| -------- | ------ | -------- | ------- | ----------- |
+| FW       | 1.00   | 0.60     | 0.30    | 0.00        |
+| MF       | 0.65   | 1.00     | 0.60    | 0.00        |
+| DF       | 0.35   | 0.60     | 1.00    | 0.00        |
+| GK       | 0.05   | 0.20     | 0.55    | 1.00        |
 
 This is the **DECOUPLED path** (plan §3.2 fallback): the rating display
-curve drives ``overall`` ONLY. The four sim channels stay on the
-pre-recalibration ``[FLOOR_CHANNEL, 100]`` band so the engine's λ
+curve drives `overall` ONLY. The four sim channels stay on the
+pre-recalibration `[FLOOR_CHANNEL, 100]` band so the engine's λ
 stays calibrated to the engine's full attack-minus-defense range. When
 semantic rating changes move the internal scores/channels, lambda must be
 re-fit before realism bands are re-locked; merit-v4, merit-v4.1, and
@@ -361,20 +361,20 @@ is a **signed, bounded modulation**: a weak tournament lowers the stature
 target within a (tier-tightened) down-cap; an apex tournament raises it within
 an up-cap.
 
-| Constant | Value | Role |
-|---|---|---|
-| `MATERIAL_STATURE_MIN_COVERAGE` | `0.25` | coverage gate to enter the stature-dominant path |
-| `MATERIAL_STATURE_MIN_INDEX` | `0.40` | index gate to enter the stature-dominant path |
-| `STATURE_RAMP_HALF_WIDTH` | `0.06` | half-width of the continuity ramp on `career_stature_index` |
-| `STATURE_DOMINANT_WEIGHT` | `0.5` | weight at/above which stature path dominates the final blend |
-| `STATURE_TARGET_FLOOR` | FW 0.60 · MF 0.60 · DF 0.60 · GK 0.58 | internal-score floor at the material-stature threshold |
-| `STATURE_TARGET_SPAN` | FW 0.40 · MF 0.40 · DF 0.38 · GK 0.38 | headroom from the floor to the all-time peak (index ≈ 1.0) |
-| `TOURNAMENT_MOD_GAIN` | FW 0.40 · MF 0.40 · DF 0.35 · GK 0.30 | gain on the (raw − cohort_median) delta |
-| `TOURNAMENT_UP_CAP` | FW 0.08 · MF 0.08 · DF 0.07 · GK 0.06 | positive modulation cap |
-| `TOURNAMENT_DOWN_CAP` | per-tier {gold/silver/bronze} = {0.05–0.06, 0.08–0.09, 0.11–0.12} | tier-tightened downward cap |
-| `COHORT_MIN_N` | `8` | (tournament, pos) cohort size needed before using its median |
-| `RAW_ONLY_GLOBAL_CEILING` | top prior `0.625`; per-card national-strength prior `0.500`-`0.625` | internal-score ceiling on `raw_path` for non-material/no-award cards |
-| `RAW_AWARD_HEADROOM` | `0.18` | award-gated soft headroom above the raw-only ceiling for documented major individual awards |
+| Constant                        | Value                                                               | Role                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `MATERIAL_STATURE_MIN_COVERAGE` | `0.25`                                                              | coverage gate to enter the stature-dominant path                                            |
+| `MATERIAL_STATURE_MIN_INDEX`    | `0.40`                                                              | index gate to enter the stature-dominant path                                               |
+| `STATURE_RAMP_HALF_WIDTH`       | `0.06`                                                              | half-width of the continuity ramp on `career_stature_index`                                 |
+| `STATURE_DOMINANT_WEIGHT`       | `0.5`                                                               | weight at/above which stature path dominates the final blend                                |
+| `STATURE_TARGET_FLOOR`          | FW 0.60 · MF 0.60 · DF 0.60 · GK 0.58                               | internal-score floor at the material-stature threshold                                      |
+| `STATURE_TARGET_SPAN`           | FW 0.40 · MF 0.40 · DF 0.38 · GK 0.38                               | headroom from the floor to the all-time peak (index ≈ 1.0)                                  |
+| `TOURNAMENT_MOD_GAIN`           | FW 0.40 · MF 0.40 · DF 0.35 · GK 0.30                               | gain on the (raw − cohort_median) delta                                                     |
+| `TOURNAMENT_UP_CAP`             | FW 0.08 · MF 0.08 · DF 0.07 · GK 0.06                               | positive modulation cap                                                                     |
+| `TOURNAMENT_DOWN_CAP`           | per-tier {gold/silver/bronze} = {0.05–0.06, 0.08–0.09, 0.11–0.12}   | tier-tightened downward cap                                                                 |
+| `COHORT_MIN_N`                  | `8`                                                                 | (tournament, pos) cohort size needed before using its median                                |
+| `RAW_ONLY_GLOBAL_CEILING`       | top prior `0.625`; per-card national-strength prior `0.500`-`0.625` | internal-score ceiling on `raw_path` for non-material/no-award cards                        |
+| `RAW_AWARD_HEADROOM`            | `0.18`                                                              | award-gated soft headroom above the raw-only ceiling for documented major individual awards |
 
 **MV2-3.5 — defender honors (`career-stature-2.1.0`).** Two SHA-pinned
 research notes (WC All-Star → `wc_legacy`, World's-Best-GK →
@@ -453,8 +453,8 @@ stature-dominant scale with the historical model:
   historical raw-only internal scale at the same percentile. This
   density-neutralizes the 2026 raw composite (which runs hot relative to
   the historical box score) instead of affine-rescaling its bounds — so a
-  2026 reserve at percentile *p* lands at the same internal score as a
-  historical raw-only card at percentile *p* (e.g. a 2026 bench defender
+  2026 reserve at percentile _p_ lands at the same internal score as a
+  historical raw-only card at percentile _p_ (e.g. a 2026 bench defender
   aligns with a Mangala-2014-class historical reserve, not above it).
 - **Factual context declustering** then allocates non-material/no-award rows
   inside that existing raw-only band using caps, international goals, and
@@ -545,17 +545,17 @@ does not drift after a clean rebuild.
 
 ## Sanity bands (asserted, not eyeballed — `wc-perf-6.2.0` display scale)
 
-| Card | overall | Band rationale |
-|---|---|---|
-| Maradona '86 (MF, Golden Ball, champion) | 96–99 | decorated apex |
-| Zidane '06 (MF, Golden Ball, runner-up) | 96–99 | decorated apex |
-| Pelé '58 (FW, Best Young Player + Silver Boot, champion) | ≥93 | youngest apex performer |
-| Fontaine '58 (FW, Golden Boot, 13 goals, 3rd) | ≥90 | era-normalized within 1958 |
-| Pelé '70 (FW, champion, no individual award) | ≥85 | champion, no Golden Ball in 1970 |
-| Moore '66 (DF, champion, 6 apps sourced from RSSSF) | ≥88 | top of DF band |
-| Puskás '54 (FW, runner-up) | ≥80 | clearly above modern journeyman |
-| Mertesacker '14 (DF, champion, 6 apps, 0 goals) | ≥88 | DF not rated on goals |
-| Rodrigo '18 (FW, 0 goals, 3 apps, no run) | ≤80 | modern journeyman |
+| Card                                                     | overall | Band rationale                   |
+| -------------------------------------------------------- | ------- | -------------------------------- |
+| Maradona '86 (MF, Golden Ball, champion)                 | 96–99   | decorated apex                   |
+| Zidane '06 (MF, Golden Ball, runner-up)                  | 96–99   | decorated apex                   |
+| Pelé '58 (FW, Best Young Player + Silver Boot, champion) | ≥93     | youngest apex performer          |
+| Fontaine '58 (FW, Golden Boot, 13 goals, 3rd)            | ≥90     | era-normalized within 1958       |
+| Pelé '70 (FW, champion, no individual award)             | ≥85     | champion, no Golden Ball in 1970 |
+| Moore '66 (DF, champion, 6 apps sourced from RSSSF)      | ≥88     | top of DF band                   |
+| Puskás '54 (FW, runner-up)                               | ≥80     | clearly above modern journeyman  |
+| Mertesacker '14 (DF, champion, 6 apps, 0 goals)          | ≥88     | DF not rated on goals            |
+| Rodrigo '18 (FW, 0 goals, 3 apps, no run)                | ≤80     | modern journeyman                |
 
 Estimate-tier cards (`baseline_anchor_estimate`) land in `[66, 73]` on overall.
 Their sim channels remain on the `[FLOOR_CHANNEL, 100]` channel scale described

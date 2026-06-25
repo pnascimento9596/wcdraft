@@ -107,10 +107,7 @@ function scopeWhere(ctx: AuthContext) {
       // sets it null. An account row is identified by owner_user_id alone.
     );
   }
-  return and(
-    isNull(savedRuns.ownerUserId),
-    eq(savedRuns.sessionId, ctx.sessionId),
-  );
+  return and(isNull(savedRuns.ownerUserId), eq(savedRuns.sessionId, ctx.sessionId));
 }
 
 // ── Save ────────────────────────────────────────────────────────────────
@@ -163,17 +160,15 @@ export async function saveRun(
   if (ranked.length > SAVED_RUNS_CAP) {
     const overflow = ranked.slice(SAVED_RUNS_CAP);
     evicted = overflow.map((r) => r.id);
-    await deps.db
-      .delete(savedRuns)
-      .where(
-        and(
-          scopeWhere(ctx),
-          sql`${savedRuns.id} IN (${sql.join(
-            evicted.map((id) => sql`${id}`),
-            sql`, `,
-          )})`,
-        ),
-      );
+    await deps.db.delete(savedRuns).where(
+      and(
+        scopeWhere(ctx),
+        sql`${savedRuns.id} IN (${sql.join(
+          evicted.map((id) => sql`${id}`),
+          sql`, `,
+        )})`,
+      ),
+    );
   }
   return { row, evicted, idempotent: false };
 }
@@ -221,11 +216,7 @@ export async function getRun(
  * "not yours". Callers that need to distinguish 404 from 403 should call
  * `getRun` first.
  */
-export async function deleteRun(
-  id: string,
-  ctx: AuthContext,
-  deps: StoreDeps,
-): Promise<boolean> {
+export async function deleteRun(id: string, ctx: AuthContext, deps: StoreDeps): Promise<boolean> {
   const deleted = await deps.db
     .delete(savedRuns)
     .where(and(scopeWhere(ctx), eq(savedRuns.id, id)))
@@ -293,12 +284,7 @@ export async function claimAnonRuns(
       sessionId: null,
       claimState: "claimed",
     })
-    .where(
-      and(
-        eq(savedRuns.sessionId, args.sessionId),
-        isNull(savedRuns.ownerUserId),
-      ),
-    )
+    .where(and(eq(savedRuns.sessionId, args.sessionId), isNull(savedRuns.ownerUserId)))
     .returning({ id: savedRuns.id });
 
   return { transferred: transferred.length, dropped: dropped.rows.length };
@@ -308,10 +294,7 @@ export async function claimAnonRuns(
 
 /** Predicate used by the listRuns query — exported for ad-hoc count queries. */
 export function whereAccountOwned(userId: string) {
-  return and(
-    eq(savedRuns.ownerUserId, userId),
-    isNotNull(savedRuns.ownerUserId),
-  );
+  return and(eq(savedRuns.ownerUserId, userId), isNotNull(savedRuns.ownerUserId));
 }
 
 /** Newest-first ordering used by `listRuns`. */

@@ -98,15 +98,22 @@ for (const key of SHAPE_KEYS) {
 }
 golden.goals_per_game_lower_floor._doc =
   "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2x Wilson half-width, rounded down to keep honest residual cushion.";
-golden.goals_per_game_lower_floor.lower_bound = Math.floor(
-  (strategic.observed.goals_per_game - 2 * strategic.wilson_half_widths_around_observed.goals_per_game) * 100,
-) / 100;
+golden.goals_per_game_lower_floor.lower_bound =
+  Math.floor(
+    (strategic.observed.goals_per_game -
+      2 * strategic.wilson_half_widths_around_observed.goals_per_game) *
+      100,
+  ) / 100;
 golden.wilson_target_for_ko_metrics._doc =
   "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. merit-v4.5 remeasures the strategicAutoDraft observed half-widths after the Career-basis recovery and lambda refit.";
 golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
   ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
-  shootout_pct: Number((100 * strategic.wilson_half_widths_around_observed.shootout_pct).toFixed(2)),
+  shootout_pct: Number(
+    (100 * strategic.wilson_half_widths_around_observed.shootout_pct).toFixed(2),
+  ),
 };
 
 writeFileSync(GOLDEN_PATH, JSON.stringify(golden, null, 2) + "\n", "utf-8");
-console.log(`\nWROTE ${GOLDEN_PATH} (engine_version stamped for merit-v4.5; lambda + landings remeasured)`);
+console.log(
+  `\nWROTE ${GOLDEN_PATH} (engine_version stamped for merit-v4.5; lambda + landings remeasured)`,
+);

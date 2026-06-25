@@ -24,11 +24,11 @@ The implementation does not claim 150-250 newly hand-authored active rows. The b
 The league-of-employment prior changed from a dominant pre-tournament anchor to a smoother input:
 
 | Position | merit-v4 weight | merit-v4.1 weight |
-|---|---:|---:|
-| FW | 0.31 | 0.18 |
-| MF | 0.34 | 0.20 |
-| DF | 0.31 | 0.18 |
-| GK | 0.28 | 0.16 |
+| -------- | --------------: | ----------------: |
+| FW       |            0.31 |              0.18 |
+| MF       |            0.34 |              0.20 |
+| DF       |            0.31 |              0.18 |
+| GK       |            0.28 |              0.16 |
 
 Projected v4.1 adds a conservative objective-record path for active 2026 cards. It requires a linked/minted career-stature row with minimum coverage/index and then either active current objective evidence or membership in the under-covered AFC/CAF/CONCACAF 2026 squad set. The path is capped at `0.70` material weight, so it can distinguish objective standouts without turning sparse active rows into all-time peaks. Fully material projected rows also snap tiny positive modulation misses to the shared up-cap when already within `0.005`; this preserves the previously approved Vinicius 2026 gate while leaving raw-only/journeyman cards untouched.
 
@@ -38,43 +38,43 @@ The league-prior decision is affirmative: change the prior. The old top-league w
 
 Before values are from `origin/main` tracked 2026 outputs or prior locked merit-v4 anchors. After values are from this branch's generated runtime bundles.
 
-| Anchor | Before | After | Result |
-|---|---:|---:|---|
-| Son 2026 | 90 `career_stature_estimate` | 90 `career_stature_estimate` | Holds acceptance `>=88`; the audit's older `85` example is stale against current `origin/main`. |
-| Salem Al-Dawsari 2026 | 77 `measured_performance` | 86 `career_stature_estimate` | Top Saudi, objective-record path = 1, material weight = 0.70. |
-| Saudi runner-up band | 77-79 measured | 77-79 measured | Salem is separated by 7 points from the top measured Saudi card. |
-| Christian Pulisic 2026 | 81 `measured_performance` | 88 `career_stature_estimate` | United States gains a distinguished headroom card. |
-| Mathew Ryan 2026 | 83 `measured_performance` | 87 `career_stature_estimate` | Australia gains a distinguished headroom card. |
-| Aymen Hussein 2026 | 79 `measured_performance` | 87 `career_stature_estimate` | Iraq gains a distinguished headroom card. |
-| Vinicius Jr 2026 | 90 `career_stature_estimate` | 90 `career_stature_estimate` | Prior merit gate preserved. |
-| Bernardo Silva 2026 | 88 `measured_performance` | 88 `measured_performance` | Non-objective-path control not inflated. |
-| Dayot Upamecano 2026 | 83 `measured_performance` | 82 `measured_performance` | Non-objective-path control remains measured. |
-| Bale 2022 | 90 | 90 | European merit-v4 anchor holds. |
-| Ibrahimovic 2002 | 90 | 90 | European merit-v4 anchor holds. |
-| Ibrahimovic 2006 | 90 | 90 | European merit-v4 anchor holds. |
-| Haaland 2026 | 92 | 92 | European merit-v4 anchor holds. |
+| Anchor                 |                       Before |                        After | Result                                                                                          |
+| ---------------------- | ---------------------------: | ---------------------------: | ----------------------------------------------------------------------------------------------- |
+| Son 2026               | 90 `career_stature_estimate` | 90 `career_stature_estimate` | Holds acceptance `>=88`; the audit's older `85` example is stale against current `origin/main`. |
+| Salem Al-Dawsari 2026  |    77 `measured_performance` | 86 `career_stature_estimate` | Top Saudi, objective-record path = 1, material weight = 0.70.                                   |
+| Saudi runner-up band   |               77-79 measured |               77-79 measured | Salem is separated by 7 points from the top measured Saudi card.                                |
+| Christian Pulisic 2026 |    81 `measured_performance` | 88 `career_stature_estimate` | United States gains a distinguished headroom card.                                              |
+| Mathew Ryan 2026       |    83 `measured_performance` | 87 `career_stature_estimate` | Australia gains a distinguished headroom card.                                                  |
+| Aymen Hussein 2026     |    79 `measured_performance` | 87 `career_stature_estimate` | Iraq gains a distinguished headroom card.                                                       |
+| Vinicius Jr 2026       | 90 `career_stature_estimate` | 90 `career_stature_estimate` | Prior merit gate preserved.                                                                     |
+| Bernardo Silva 2026    |    88 `measured_performance` |    88 `measured_performance` | Non-objective-path control not inflated.                                                        |
+| Dayot Upamecano 2026   |    83 `measured_performance` |    82 `measured_performance` | Non-objective-path control remains measured.                                                    |
+| Bale 2022              |                           90 |                           90 | European merit-v4 anchor holds.                                                                 |
+| Ibrahimovic 2002       |                           90 |                           90 | European merit-v4 anchor holds.                                                                 |
+| Ibrahimovic 2006       |                           90 |                           90 | European merit-v4 anchor holds.                                                                 |
+| Haaland 2026           |                           92 |                           92 | European merit-v4 anchor holds.                                                                 |
 
 Worked league-prior controls:
 
-| Card | League strength | League weight | Projected raw | Objective path | Stature weight | Overall |
-|---|---:|---:|---:|---:|---:|---:|
-| Heung-min Son 2026 | 0.58 | 0.18 | 0.755743 | 0 | 1.00 | 90 |
-| Salem Al-Dawsari 2026 | 0.58 | 0.18 | 0.653057 | 1 | 0.70 | 86 |
-| Nasser Al-Dawsari 2026 | 0.58 | 0.20 | 0.539522 | 0 | 0.00 | 72 |
-| Abdullah Al-Hamdan 2026 | 0.58 | 0.18 | 0.687086 | 0 | 0.00 | 79 |
-| Musab Al-Juwayr 2026 | 0.58 | 0.20 | 0.707642 | 0 | 0.00 | 79 |
-| Cristian Roldan 2026 | 0.58 | 0.20 | 0.482448 | 0 | 0.00 | 72 |
-| Maximilian Arfsten 2026 | 0.58 | 0.18 | 0.544400 | 0 | 0.00 | 73 |
+| Card                    | League strength | League weight | Projected raw | Objective path | Stature weight | Overall |
+| ----------------------- | --------------: | ------------: | ------------: | -------------: | -------------: | ------: |
+| Heung-min Son 2026      |            0.58 |          0.18 |      0.755743 |              0 |           1.00 |      90 |
+| Salem Al-Dawsari 2026   |            0.58 |          0.18 |      0.653057 |              1 |           0.70 |      86 |
+| Nasser Al-Dawsari 2026  |            0.58 |          0.20 |      0.539522 |              0 |           0.00 |      72 |
+| Abdullah Al-Hamdan 2026 |            0.58 |          0.18 |      0.687086 |              0 |           0.00 |      79 |
+| Musab Al-Juwayr 2026    |            0.58 |          0.20 |      0.707642 |              0 |           0.00 |      79 |
+| Cristian Roldan 2026    |            0.58 |          0.20 |      0.482448 |              0 |           0.00 |      72 |
+| Maximilian Arfsten 2026 |            0.58 |          0.18 |      0.544400 |              0 |           0.00 |      73 |
 
 ## Coverage Counts
 
 Material headroom means top-level `overall_basis == "career_stature_estimate"` for at least one 2026 squad card.
 
-| Confederation slice | Before | After | After details |
-|---|---:|---:|---|
-| AFC targeted squads | 0/7 | 7/7 | Australia Ryan 87; Iran Taremi 88; Iraq Aymen Hussein 87; Japan Nagatomo 88; Qatar 5 material cards with Khoukhi/Afif at 87; Saudi Arabia Salem 86; Uzbekistan Shomurodov 88. |
-| CONCACAF targeted squads | 0/5 | 5/5 | Canada Larin 88; Haiti Nazon 87; Mexico Jimenez 88; Panama Carrasquilla 87; United States Pulisic 88. |
-| CAF targeted squads | 2/8 | 4/8 | Egypt Salah 93 and Senegal Mane 90 hold; Algeria and Morocco gain material cards; Ghana, Ivory Coast, South Africa, and Tunisia remain honest misses. |
+| Confederation slice      | Before | After | After details                                                                                                                                                                 |
+| ------------------------ | -----: | ----: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AFC targeted squads      |    0/7 |   7/7 | Australia Ryan 87; Iran Taremi 88; Iraq Aymen Hussein 87; Japan Nagatomo 88; Qatar 5 material cards with Khoukhi/Afif at 87; Saudi Arabia Salem 86; Uzbekistan Shomurodov 88. |
+| CONCACAF targeted squads |    0/5 |   5/5 | Canada Larin 88; Haiti Nazon 87; Mexico Jimenez 88; Panama Carrasquilla 87; United States Pulisic 88.                                                                         |
+| CAF targeted squads      |    2/8 |   4/8 | Egypt Salah 93 and Senegal Mane 90 hold; Algeria and Morocco gain material cards; Ghana, Ivory Coast, South Africa, and Tunisia remain honest misses.                         |
 
 90+ remains rare: `290 / 12,219 = 2.373%` pooled runtime ratings; 2026 alone is `18 / 1,246 = 1.445%`.
 
@@ -82,17 +82,17 @@ Material headroom means top-level `overall_basis == "career_stature_estimate"` f
 
 Measured compact outputs:
 
-| Artifact | Value |
-|---|---|
-| Runtime ratings | 12,219 |
-| Career basis split | 11,292 measured; 541 career-stature; 386 baseline |
-| Career-stature table | 847 players; 209 material rows; 114 source-derived legends |
-| Runtime legend census | 295 |
-| Draft compact | 101,026,822 raw bytes; 1,429,760 brotli; sha `f0f76fd3c2f8d003a3ee5062957220c591431e37fc6ea54daa689c6e992e11b7` |
-| Scenario compact | 108,775 raw bytes; 4,480 brotli; sha `bd362cb7a509b8081ec7febf440749217fe94f7fc7d14d9431ce28347803f420` |
-| Manifest compact | 6,401 raw bytes; 1,920 brotli; sha `126a77fba59e9bf432b0163c6691a79eb3e70d93d037f7a8f92bad0a14de16ea` |
-| Total compact | 101,141,998 raw bytes; 1,436,160 brotli |
-| Ratings lock | 10,973 rows; 59,551,889 bytes; sha `81c2a6ab1983617e2b885db21b91e1f77bab574f2fb5d2d228aaaa956bf2fe26` |
+| Artifact              | Value                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Runtime ratings       | 12,219                                                                                                          |
+| Career basis split    | 11,292 measured; 541 career-stature; 386 baseline                                                               |
+| Career-stature table  | 847 players; 209 material rows; 114 source-derived legends                                                      |
+| Runtime legend census | 295                                                                                                             |
+| Draft compact         | 101,026,822 raw bytes; 1,429,760 brotli; sha `f0f76fd3c2f8d003a3ee5062957220c591431e37fc6ea54daa689c6e992e11b7` |
+| Scenario compact      | 108,775 raw bytes; 4,480 brotli; sha `bd362cb7a509b8081ec7febf440749217fe94f7fc7d14d9431ce28347803f420`         |
+| Manifest compact      | 6,401 raw bytes; 1,920 brotli; sha `126a77fba59e9bf432b0163c6691a79eb3e70d93d037f7a8f92bad0a14de16ea`           |
+| Total compact         | 101,141,998 raw bytes; 1,436,160 brotli                                                                         |
+| Ratings lock          | 10,973 rows; 59,551,889 bytes; sha `81c2a6ab1983617e2b885db21b91e1f77bab574f2fb5d2d228aaaa956bf2fe26`           |
 
 ## Canary, Lambda, Realism
 
@@ -103,10 +103,10 @@ Strategic-pick canary was intentionally regenerated from:
 
 Documented pick flips: 2.
 
-| Seed | Spin | Slot | Before | After |
-|---:|---:|---|---|---|
-| 0 | 3 | `4-3-3.LCB` | `P-W26-0605:2026` | `P-47321:2026` |
-| 4 | 7 | `4-3-3.LCM` | `P-96340:2026` | `P-W26-0019:2026` |
+| Seed | Spin | Slot        | Before            | After             |
+| ---: | ---: | ----------- | ----------------- | ----------------- |
+|    0 |    3 | `4-3-3.LCB` | `P-W26-0605:2026` | `P-47321:2026`    |
+|    4 |    7 | `4-3-3.LCM` | `P-96340:2026`    | `P-W26-0019:2026` |
 
 Lambda was refit before realism relock. Accepted tuple changes only `LAMBDA.GAMMA_MID` from `0.80` to `1.00`; fitter winner after 175 evaluations:
 
@@ -118,11 +118,11 @@ Lambda was refit before realism relock. Accepted tuple changes only `LAMBDA.GAMM
 
 Heavy asymmetric realism was rederived after the final projected snap:
 
-| Policy | Qualifying | Matches | Groups | KO | Goals/game |
-|---|---:|---:|---:|---:|---:|
-| `autoDraft` | 68 | 6,077 | 6,000 | 77 | 2.910 |
-| `strategicAutoDraft` | 1,592 | 9,862 | 6,000 | 3,862 | 2.600 |
-| `greedyOverallAutoDraft` | 345 | 6,550 | 6,000 | 550 | 3.151 |
+| Policy                   | Qualifying | Matches | Groups |    KO | Goals/game |
+| ------------------------ | ---------: | ------: | -----: | ----: | ---------: |
+| `autoDraft`              |         68 |   6,077 |  6,000 |    77 |      2.910 |
+| `strategicAutoDraft`     |      1,592 |   9,862 |  6,000 | 3,862 |      2.600 |
+| `greedyOverallAutoDraft` |        345 |   6,550 |  6,000 |   550 |      3.151 |
 
 ## Validation
 

@@ -138,8 +138,7 @@ export const FormationSchema: z.ZodType<Formation> = z.custom<Formation>(
     return sum === 10;
   },
   {
-    message:
-      "Formation must be 3 or 4 hyphen-separated positive integers summing to exactly 10",
+    message: "Formation must be 3 or 4 hyphen-separated positive integers summing to exactly 10",
   },
 );
 

@@ -98,9 +98,7 @@ describe("requestMagicLink", () => {
       { email: "user@example.com", ipAddress: "1.1.1.1" },
       makeDeps({ now, sender }),
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
     const rows = await env.db.select().from(magicLinkTokens);
     expect(rows).toHaveLength(1);
     expect(rows[0]?.tokenHash).toBe(sha256Hex(rawToken));
@@ -148,16 +146,17 @@ describe("verifyMagicLink", () => {
       { email: opts.email ?? "u@example.com", ipAddress: "9.9.9.9" },
       makeDeps({ now: opts.now, sender }),
     );
-    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get(
-      "token",
-    )!;
+    const rawToken = new URL(sender.lastSent!.magicLinkUrl).searchParams.get("token")!;
     return { rawToken, tokenHash: sha256Hex(rawToken) };
   }
 
   it("happy path: returns the upserted user, marks token consumed", async () => {
     const now = Date.UTC(2026, 5, 1);
     const { rawToken, tokenHash } = await issueToken({ now });
-    const { user } = await verifyMagicLink({ token: rawToken }, { db: env.db, now: () => now + 100 });
+    const { user } = await verifyMagicLink(
+      { token: rawToken },
+      { db: env.db, now: () => now + 100 },
+    );
     expect(user.email).toBe("u@example.com");
     const rows = await env.db
       .select()
@@ -169,10 +168,7 @@ describe("verifyMagicLink", () => {
   it("TOKEN_UNKNOWN for a token never issued", async () => {
     const now = Date.UTC(2026, 5, 1);
     await expect(
-      verifyMagicLink(
-        { token: "B".repeat(43) },
-        { db: env.db, now: () => now },
-      ),
+      verifyMagicLink({ token: "B".repeat(43) }, { db: env.db, now: () => now }),
     ).rejects.toMatchObject({ code: "TOKEN_UNKNOWN" });
   });
 
@@ -191,10 +187,7 @@ describe("verifyMagicLink", () => {
     const now = Date.UTC(2026, 5, 1);
     const { rawToken } = await issueToken({ now });
     await expect(
-      verifyMagicLink(
-        { token: rawToken },
-        { db: env.db, now: () => now + MAGIC_LINK_TTL_MS + 1 },
-      ),
+      verifyMagicLink({ token: rawToken }, { db: env.db, now: () => now + MAGIC_LINK_TTL_MS + 1 }),
     ).rejects.toMatchObject({ code: "TOKEN_EXPIRED" });
   });
 
@@ -203,10 +196,7 @@ describe("verifyMagicLink", () => {
     const { rawToken } = await issueToken({ now });
     await verifyMagicLink({ token: rawToken }, { db: env.db, now: () => now + 1 });
     await expect(
-      verifyMagicLink(
-        { token: rawToken },
-        { db: env.db, now: () => now + 2 },
-      ),
+      verifyMagicLink({ token: rawToken }, { db: env.db, now: () => now + 2 }),
     ).rejects.toMatchObject({ code: "TOKEN_CONSUMED" });
   });
 
@@ -230,9 +220,15 @@ describe("verifyMagicLink", () => {
     const t1 = Date.UTC(2026, 5, 1);
     const t2 = t1 + 60 * 60 * 1000;
     const { rawToken: token1 } = await issueToken({ now: t1, email: "two@example.com" });
-    const { user: u1 } = await verifyMagicLink({ token: token1 }, { db: env.db, now: () => t1 + 1 });
+    const { user: u1 } = await verifyMagicLink(
+      { token: token1 },
+      { db: env.db, now: () => t1 + 1 },
+    );
     const { rawToken: token2 } = await issueToken({ now: t2, email: "two@example.com" });
-    const { user: u2 } = await verifyMagicLink({ token: token2 }, { db: env.db, now: () => t2 + 1 });
+    const { user: u2 } = await verifyMagicLink(
+      { token: token2 },
+      { db: env.db, now: () => t2 + 1 },
+    );
     expect(u2.id).toBe(u1.id);
   });
 });

@@ -6,11 +6,7 @@
 
 import { z } from "zod";
 
-import type {
-  LinkedPair,
-  NationCluster,
-  SynergyResult,
-} from "../types/synergy.js";
+import type { LinkedPair, NationCluster, SynergyResult } from "../types/synergy.js";
 import { NonEmptyIdSchema, NonNegativeIntegerSchema } from "./primitives.js";
 
 export const NationClusterSchema = z

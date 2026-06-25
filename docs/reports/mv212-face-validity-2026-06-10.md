@@ -95,7 +95,7 @@
 
 - **Kocsis (1954) is the #1 card AND the #1 stature index of all time (0.992)** —
   above Maradona 0.952, Messi 0.938, Pelé 0.807. Kocsis's tournament inputs are
-  monstrous (11 goals, Golden Boot) so a 99 *card* is defensible; the *index ordering*
+  monstrous (11 goals, Golden Boot) so a 99 _card_ is defensible; the _index ordering_
   is not — it ranks him the greatest career in football history. Flagged as the
   sharpest symptom of the archive-normalization defect (§C, §H.4).
 - **Piola 99 / Albert 99 / Scarone 98 / Zizinho 98 / Schiaffino 98 vs Pelé's best 97**:
@@ -126,377 +126,389 @@
   with sparse-fact index inflation, not with a plausible all-time ranking.
 
 ## T1-a Top 50 overall (pooled, both eras)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Kocsis (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 97.2 | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00 |
-| 2 | Puskás (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 74.9 | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00 |
-| 3 | Messi (Argentina 2006) ★ | FW | 99 | stature | 100.0 | 55.0 | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 4 | Messi (Argentina 2014) ★ | FW | 99 | stature | 100.0 | 99.2 | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00 |
-| 5 | Messi (Argentina 2018) ★ | FW | 99 | stature | 100.0 | 58.3 | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 6 | Messi (Argentina 2022) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00 |
-| 7 | Messi (Argentina 2026) ★ | FW | 99 | stature | 100.0 | 76.2 | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00 |
-| 8 | Modrić (Croatia 2018) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00 |
-| 9 | Modrić (Croatia 2022) ★ | MF | 99 | stature | 100.0 | 76.5 | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00 |
-| 10 | Modrić (Croatia 2026) ★ | MF | 99 | stature | 100.0 | 88.8 | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00 |
-| 11 | Matthäus (West Germany 1986) ★ | MF | 99 | stature | 100.0 | 77.2 | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00 |
-| 12 | Matthäus (West Germany 1990) ★ | MF | 99 | stature | 100.0 | 98.8 | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00 |
-| 13 | Matthäus (Germany 1994) ★ | MF | 99 | stature | 100.0 | 63.0 | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00 |
-| 14 | Zidane (France 1998) ★ | MF | 99 | stature | 100.0 | 80.6 | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00 |
-| 15 | Zidane (France 2006) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00 |
-| 16 | Rummenigge (West Germany 1978) ★ | FW | 99 | stature | 100.0 | 63.2 | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00 |
-| 17 | Rummenigge (West Germany 1982) ★ | FW | 99 | stature | 100.0 | 95.4 | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00 |
-| 18 | Rummenigge (West Germany 1986) ★ | FW | 99 | stature | 100.0 | 71.8 | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00 |
-| 19 | Ronaldo (Brazil 1998) ★ | FW | 99 | stature | 100.0 | 98.7 | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00 |
-| 20 | Ronaldo (Brazil 2002) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00 |
-| 21 | Ronaldo (Brazil 2006) ★ | FW | 99 | stature | 100.0 | 75.2 | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00 |
-| 22 | Piola (Italy 1938) | FW | 99 | stature | 100.0 | 94.9 | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00 |
-| 23 | Müller (West Germany 1970) ★ | FW | 99 | stature | 100.0 | 94.0 | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00 |
-| 24 | Müller (West Germany 1974) ★ | FW | 99 | stature | 100.0 | 82.1 | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00 |
-| 25 | Beckenbauer (West Germany 1966) ★ | MF | 99 | stature | 100.0 | 94.8 | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
-| 26 | Beckenbauer (West Germany 1970) ★ | MF | 99 | stature | 100.0 | 71.1 | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00 |
-| 27 | Maradona (Argentina 1982) ★ | MF | 99 | stature | 100.0 | 63.3 | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 28 | Maradona (Argentina 1986) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00 |
-| 29 | Maradona (Argentina 1990) ★ | MF | 99 | stature | 100.0 | 79.1 | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00 |
-| 30 | Eusébio (Portugal 1966) ★ | FW | 99 | stature | 100.0 | 94.1 | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00 |
-| 31 | Rossi (Italy 1978) ★ | FW | 99 | stature | 99.9 | 85.6 | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00 |
-| 32 | Rossi (Italy 1982) ★ | FW | 99 | stature | 99.9 | 100.0 | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00 |
-| 33 | Ronaldo (Portugal 2006) ★ | FW | 99 | stature | 99.9 | 65.5 | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00 |
-| 34 | Ronaldo (Portugal 2018) ★ | FW | 99 | stature | 99.9 | 65.0 | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 35 | Ronaldo (Portugal 2022) ★ | FW | 99 | stature | 99.8 | 57.8 | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 36 | Albert (Hungary 1962) | FW | 99 | stature | 99.5 | 82.2 | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00 |
-| 37 | Ronaldo (Portugal 2010) ★ | FW | 99 | stature | 99.4 | 58.7 | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 38 | Ronaldinho (Brazil 2002) ★ | MF | 99 | stature | 99.4 | 81.3 | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00 |
-| 39 | Meazza (Italy 1934) ★ | MF | 98 | stature | 99.0 | 83.2 | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 40 | Meazza (Italy 1938) ★ | MF | 98 | stature | 99.0 | 81.8 | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 41 | Scarone (Uruguay 1930) ★ | FW | 98 | stature | 98.9 | 73.2 | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00 |
-| 42 | Zizinho (Brazil 1950) ★ | FW | 98 | stature | 98.9 | 73.8 | apps 4 (p0.84), goals 2 (p0.88), award 0.00, finish 0.75 · stature idx 0.863/w 1.00 |
-| 43 | Romário (Brazil 1994) ★ | FW | 98 | stature | 98.8 | 100.0 | apps 7 (p0.96), goals 5 (p0.96), award 1.00, finish 1.00 [Bronze Boot,Golden Ball] · stature idx 0.862/w 1.00 |
-| 44 | Zico (Brazil 1978) ★ | MF | 98 | stature | 98.6 | 70.2 | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00 |
-| 45 | Zico (Brazil 1982) ★ | MF | 98 | stature | 98.6 | 74.1 | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00 |
-| 46 | Mbappé (France 2018) ★ | FW | 98 | stature | 98.5 | 94.1 | apps 7 (p0.98), goals 4 (p0.98), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.858/w 1.00 |
-| 47 | Mbappé (France 2022) ★ | FW | 98 | stature | 98.5 | 99.0 | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 0.75 [Golden Boot,Silver Ball] · stature idx 0.858/w 1.00 |
-| 48 | Mbappé (France 2026) ★ | FW | 98 | stature | 98.5 | 97.1 | caps 96 (p0.92), goals 56 (p0.97), age 27 (af 1.00), lg 1.00 · stature idx 0.858/w 1.00 |
-| 49 | Henry (France 1998) ★ | FW | 98 | stature | 98.5 | 81.4 | apps 6 (p0.96), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.857/w 1.00 |
-| 50 | Henry (France 2006) ★ | FW | 98 | stature | 98.5 | 78.8 | apps 7 (p0.98), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.857/w 1.00 |
+
+| #   | card                              | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                        |
+| --- | --------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1   | Kocsis (Hungary 1954) ★           | FW  | 99  | stature | 100.0    | 97.2       | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00                  |
+| 2   | Puskás (Hungary 1954) ★           | FW  | 99  | stature | 100.0    | 74.9       | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00                                 |
+| 3   | Messi (Argentina 2006) ★          | FW  | 99  | stature | 100.0    | 55.0       | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00                                    |
+| 4   | Messi (Argentina 2014) ★          | FW  | 99  | stature | 100.0    | 99.2       | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00                   |
+| 5   | Messi (Argentina 2018) ★          | FW  | 99  | stature | 100.0    | 58.3       | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00                                    |
+| 6   | Messi (Argentina 2022) ★          | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00       |
+| 7   | Messi (Argentina 2026) ★          | FW  | 99  | stature | 100.0    | 76.2       | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00                           |
+| 8   | Modrić (Croatia 2018) ★           | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00                   |
+| 9   | Modrić (Croatia 2022) ★           | MF  | 99  | stature | 100.0    | 76.5       | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00                   |
+| 10  | Modrić (Croatia 2026) ★           | MF  | 99  | stature | 100.0    | 88.8       | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00                            |
+| 11  | Matthäus (West Germany 1986) ★    | MF  | 99  | stature | 100.0    | 77.2       | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00                                 |
+| 12  | Matthäus (West Germany 1990) ★    | MF  | 99  | stature | 100.0    | 98.8       | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00                   |
+| 13  | Matthäus (Germany 1994) ★         | MF  | 99  | stature | 100.0    | 63.0       | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00                                    |
+| 14  | Zidane (France 1998) ★            | MF  | 99  | stature | 100.0    | 80.6       | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00                                 |
+| 15  | Zidane (France 2006) ★            | MF  | 99  | stature | 100.0    | 100.0      | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00                   |
+| 16  | Rummenigge (West Germany 1978) ★  | FW  | 99  | stature | 100.0    | 63.2       | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00                                    |
+| 17  | Rummenigge (West Germany 1982) ★  | FW  | 99  | stature | 100.0    | 95.4       | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00       |
+| 18  | Rummenigge (West Germany 1986) ★  | FW  | 99  | stature | 100.0    | 71.8       | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00                                 |
+| 19  | Ronaldo (Brazil 1998) ★           | FW  | 99  | stature | 100.0    | 98.7       | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00                   |
+| 20  | Ronaldo (Brazil 2002) ★           | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00       |
+| 21  | Ronaldo (Brazil 2006) ★           | FW  | 99  | stature | 100.0    | 75.2       | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00                      |
+| 22  | Piola (Italy 1938)                | FW  | 99  | stature | 100.0    | 94.9       | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00                   |
+| 23  | Müller (West Germany 1970) ★      | FW  | 99  | stature | 100.0    | 94.0       | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00                  |
+| 24  | Müller (West Germany 1974) ★      | FW  | 99  | stature | 100.0    | 82.1       | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00                                 |
+| 25  | Beckenbauer (West Germany 1966) ★ | MF  | 99  | stature | 100.0    | 94.8       | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
+| 26  | Beckenbauer (West Germany 1970) ★ | MF  | 99  | stature | 100.0    | 71.1       | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00                                 |
+| 27  | Maradona (Argentina 1982) ★       | MF  | 99  | stature | 100.0    | 63.3       | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00                                    |
+| 28  | Maradona (Argentina 1986) ★       | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00       |
+| 29  | Maradona (Argentina 1990) ★       | MF  | 99  | stature | 100.0    | 79.1       | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00                   |
+| 30  | Eusébio (Portugal 1966) ★         | FW  | 99  | stature | 100.0    | 94.1       | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00                   |
+| 31  | Rossi (Italy 1978) ★              | FW  | 99  | stature | 99.9     | 85.6       | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00                   |
+| 32  | Rossi (Italy 1982) ★              | FW  | 99  | stature | 99.9     | 100.0      | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00       |
+| 33  | Ronaldo (Portugal 2006) ★         | FW  | 99  | stature | 99.9     | 65.5       | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00                                 |
+| 34  | Ronaldo (Portugal 2018) ★         | FW  | 99  | stature | 99.9     | 65.0       | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00                                    |
+| 35  | Ronaldo (Portugal 2022) ★         | FW  | 99  | stature | 99.8     | 57.8       | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00                                    |
+| 36  | Albert (Hungary 1962)             | FW  | 99  | stature | 99.5     | 82.2       | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00    |
+| 37  | Ronaldo (Portugal 2010) ★         | FW  | 99  | stature | 99.4     | 58.7       | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00                                    |
+| 38  | Ronaldinho (Brazil 2002) ★        | MF  | 99  | stature | 99.4     | 81.3       | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00                                 |
+| 39  | Meazza (Italy 1934) ★             | MF  | 98  | stature | 99.0     | 83.2       | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 40  | Meazza (Italy 1938) ★             | MF  | 98  | stature | 99.0     | 81.8       | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 41  | Scarone (Uruguay 1930) ★          | FW  | 98  | stature | 98.9     | 73.2       | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00                                 |
+| 42  | Zizinho (Brazil 1950) ★           | FW  | 98  | stature | 98.9     | 73.8       | apps 4 (p0.84), goals 2 (p0.88), award 0.00, finish 0.75 · stature idx 0.863/w 1.00                                 |
+| 43  | Romário (Brazil 1994) ★           | FW  | 98  | stature | 98.8     | 100.0      | apps 7 (p0.96), goals 5 (p0.96), award 1.00, finish 1.00 [Bronze Boot,Golden Ball] · stature idx 0.862/w 1.00       |
+| 44  | Zico (Brazil 1978) ★              | MF  | 98  | stature | 98.6     | 70.2       | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00                                 |
+| 45  | Zico (Brazil 1982) ★              | MF  | 98  | stature | 98.6     | 74.1       | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00                      |
+| 46  | Mbappé (France 2018) ★            | FW  | 98  | stature | 98.5     | 94.1       | apps 7 (p0.98), goals 4 (p0.98), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.858/w 1.00             |
+| 47  | Mbappé (France 2022) ★            | FW  | 98  | stature | 98.5     | 99.0       | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 0.75 [Golden Boot,Silver Ball] · stature idx 0.858/w 1.00       |
+| 48  | Mbappé (France 2026) ★            | FW  | 98  | stature | 98.5     | 97.1       | caps 96 (p0.92), goals 56 (p0.97), age 27 (af 1.00), lg 1.00 · stature idx 0.858/w 1.00                             |
+| 49  | Henry (France 1998) ★             | FW  | 98  | stature | 98.5     | 81.4       | apps 6 (p0.96), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.857/w 1.00                                 |
+| 50  | Henry (France 2006) ★             | FW  | 98  | stature | 98.5     | 78.8       | apps 7 (p0.98), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.857/w 1.00                                 |
 
 ## T1-b Top 25 — era <=1958 (n=1890)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Kocsis (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 97.2 | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00 |
-| 2 | Puskás (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 74.9 | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00 |
-| 3 | Piola (Italy 1938) | FW | 99 | stature | 100.0 | 94.9 | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00 |
-| 4 | Meazza (Italy 1934) ★ | MF | 98 | stature | 99.0 | 83.2 | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 5 | Meazza (Italy 1938) ★ | MF | 98 | stature | 99.0 | 81.8 | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 6 | Scarone (Uruguay 1930) ★ | FW | 98 | stature | 98.9 | 73.2 | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00 |
-| 7 | Zizinho (Brazil 1950) ★ | FW | 98 | stature | 98.9 | 73.8 | apps 4 (p0.84), goals 2 (p0.88), award 0.00, finish 0.75 · stature idx 0.863/w 1.00 |
-| 8 | Sindelar (Austria 1934) ★ | FW | 98 | stature | 97.6 | 65.0 | apps 3 (p0.80), goals 1 (p0.81), award 0.00, finish 0.40 · stature idx 0.843/w 1.00 |
-| 9 | Schiaffino (Uruguay 1950) ★ | FW | 98 | stature | 97.6 | 79.8 | apps 4 (p0.84), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.843/w 1.00 |
-| 10 | Schiaffino (Uruguay 1954) ★ | FW | 98 | stature | 97.6 | 67.6 | apps 5 (p0.94), goals 2 (p0.83), award 0.00, finish 0.40 · stature idx 0.843/w 1.00 |
-| 11 | Kopa (France 1958) ★ | MF | 98 | stature | 97.6 | 74.8 | apps 6 (p0.94), goals 3 (p0.98), award 0.00, finish 0.55 · stature idx 0.843/w 1.00 |
-| 12 | Walter (West Germany 1954) | FW | 97 | stature | 96.8 | 80.1 | apps 6 (p0.99), goals 3 (p0.89), award 0.00, finish 1.00 · stature idx 0.832/w 1.00 |
-| 13 | Bozsik (Hungary 1954) | MF | 97 | stature | 96.6 | 67.1 | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.829/w 1.00 |
-| 14 | Cea (Uruguay 1930) | FW | 97 | stature | 96.1 | 95.0 | apps 4 (p0.96), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.822/w 1.00 |
-| 15 | Kopa (France 1954) ★ | FW | 97 | stature | 95.3 | 51.2 | apps 2 (p0.42), goals 1 (p0.73), award 0.00, finish — · stature idx 0.843/w 1.00 |
-| 16 | Ocwirk (Austria 1954) | MF | 97 | stature | 95.3 | 73.7 | apps 5 (p0.91), goals 2 (p0.98), award 0.00, finish 0.55 · stature idx 0.809/w 1.00 |
-| 17 | Andrade (Uruguay 1930) | MF | 97 | stature | 95.3 | 72.3 | apps 4 (p0.94), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.809/w 1.00 |
-| 18 | Pelé (Brazil 1958) ★ | FW | 97 | stature | 95.1 | 97.2 | apps 4 (p0.78), goals 6 (p0.99), award 0.82, finish 1.00 [Best Young Player,Silver Boot] · stature idx 0.807/w 1.00 |
-| 19 | Walter (West Germany 1958) | MF | 96 | stature | 95.0 | 58.1 | apps 5 (p0.80), goals 0 (p0.45), award 0.00, finish 0.40 · stature idx 0.832/w 1.00 |
-| 20 | Hanappi (Austria 1954) | DF | 96 | stature | 92.9 | 76.9 | apps 5 (p0.91), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.809/w 1.00 |
-| 21 | Fontaine (France 1958) ★ | FW | 95 | stature | 91.0 | 94.4 | apps 6 (p0.97), goals 13 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.744/w 1.00 |
-| 22 | Santos (Brazil 1954) | DF | 94 | stature | 90.5 | 48.3 | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 23 | Boniperti (Italy 1954) | FW | 94 | stature | 89.6 | 47.3 | apps 1 (p0.10), goals 1 (p0.73), award 0.00, finish — · stature idx 0.780/w 1.00 |
-| 24 | Matthews (England 1954) ★ | FW | 94 | stature | 89.6 | 36.7 | apps 2 (p0.42), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00 |
-| 25 | Hidegkuti (Hungary 1954) | FW | 94 | stature | 89.3 | 76.4 | apps 4 (p0.84), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.719/w 1.00 |
+
+| #   | card                        | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                        |
+| --- | --------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1   | Kocsis (Hungary 1954) ★     | FW  | 99  | stature | 100.0    | 97.2       | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00                  |
+| 2   | Puskás (Hungary 1954) ★     | FW  | 99  | stature | 100.0    | 74.9       | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00                                 |
+| 3   | Piola (Italy 1938)          | FW  | 99  | stature | 100.0    | 94.9       | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00                   |
+| 4   | Meazza (Italy 1934) ★       | MF  | 98  | stature | 99.0     | 83.2       | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 5   | Meazza (Italy 1938) ★       | MF  | 98  | stature | 99.0     | 81.8       | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 6   | Scarone (Uruguay 1930) ★    | FW  | 98  | stature | 98.9     | 73.2       | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00                                 |
+| 7   | Zizinho (Brazil 1950) ★     | FW  | 98  | stature | 98.9     | 73.8       | apps 4 (p0.84), goals 2 (p0.88), award 0.00, finish 0.75 · stature idx 0.863/w 1.00                                 |
+| 8   | Sindelar (Austria 1934) ★   | FW  | 98  | stature | 97.6     | 65.0       | apps 3 (p0.80), goals 1 (p0.81), award 0.00, finish 0.40 · stature idx 0.843/w 1.00                                 |
+| 9   | Schiaffino (Uruguay 1950) ★ | FW  | 98  | stature | 97.6     | 79.8       | apps 4 (p0.84), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.843/w 1.00                                 |
+| 10  | Schiaffino (Uruguay 1954) ★ | FW  | 98  | stature | 97.6     | 67.6       | apps 5 (p0.94), goals 2 (p0.83), award 0.00, finish 0.40 · stature idx 0.843/w 1.00                                 |
+| 11  | Kopa (France 1958) ★        | MF  | 98  | stature | 97.6     | 74.8       | apps 6 (p0.94), goals 3 (p0.98), award 0.00, finish 0.55 · stature idx 0.843/w 1.00                                 |
+| 12  | Walter (West Germany 1954)  | FW  | 97  | stature | 96.8     | 80.1       | apps 6 (p0.99), goals 3 (p0.89), award 0.00, finish 1.00 · stature idx 0.832/w 1.00                                 |
+| 13  | Bozsik (Hungary 1954)       | MF  | 97  | stature | 96.6     | 67.1       | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.829/w 1.00                                 |
+| 14  | Cea (Uruguay 1930)          | FW  | 97  | stature | 96.1     | 95.0       | apps 4 (p0.96), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.822/w 1.00                   |
+| 15  | Kopa (France 1954) ★        | FW  | 97  | stature | 95.3     | 51.2       | apps 2 (p0.42), goals 1 (p0.73), award 0.00, finish — · stature idx 0.843/w 1.00                                    |
+| 16  | Ocwirk (Austria 1954)       | MF  | 97  | stature | 95.3     | 73.7       | apps 5 (p0.91), goals 2 (p0.98), award 0.00, finish 0.55 · stature idx 0.809/w 1.00                                 |
+| 17  | Andrade (Uruguay 1930)      | MF  | 97  | stature | 95.3     | 72.3       | apps 4 (p0.94), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.809/w 1.00                                 |
+| 18  | Pelé (Brazil 1958) ★        | FW  | 97  | stature | 95.1     | 97.2       | apps 4 (p0.78), goals 6 (p0.99), award 0.82, finish 1.00 [Best Young Player,Silver Boot] · stature idx 0.807/w 1.00 |
+| 19  | Walter (West Germany 1958)  | MF  | 96  | stature | 95.0     | 58.1       | apps 5 (p0.80), goals 0 (p0.45), award 0.00, finish 0.40 · stature idx 0.832/w 1.00                                 |
+| 20  | Hanappi (Austria 1954)      | DF  | 96  | stature | 92.9     | 76.9       | apps 5 (p0.91), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.809/w 1.00                                 |
+| 21  | Fontaine (France 1958) ★    | FW  | 95  | stature | 91.0     | 94.4       | apps 6 (p0.97), goals 13 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.744/w 1.00                  |
+| 22  | Santos (Brazil 1954)        | DF  | 94  | stature | 90.5     | 48.3       | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00                                    |
+| 23  | Boniperti (Italy 1954)      | FW  | 94  | stature | 89.6     | 47.3       | apps 1 (p0.10), goals 1 (p0.73), award 0.00, finish — · stature idx 0.780/w 1.00                                    |
+| 24  | Matthews (England 1954) ★   | FW  | 94  | stature | 89.6     | 36.7       | apps 2 (p0.42), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00                                    |
+| 25  | Hidegkuti (Hungary 1954)    | FW  | 94  | stature | 89.3     | 76.4       | apps 4 (p0.84), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.719/w 1.00                                 |
 
 ## T1-b Top 25 — era 1962-70 (n=1053)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Müller (West Germany 1970) ★ | FW | 99 | stature | 100.0 | 94.0 | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00 |
-| 2 | Beckenbauer (West Germany 1966) ★ | MF | 99 | stature | 100.0 | 94.8 | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
-| 3 | Beckenbauer (West Germany 1970) ★ | MF | 99 | stature | 100.0 | 71.1 | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00 |
-| 4 | Eusébio (Portugal 1966) ★ | FW | 99 | stature | 100.0 | 94.1 | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00 |
-| 5 | Albert (Hungary 1962) | FW | 99 | stature | 99.5 | 82.2 | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00 |
-| 6 | Albert (Hungary 1966) | MF | 97 | stature | 95.5 | 51.0 | apps 4 (p0.79), goals 0 (p0.44), award 0.00, finish — · stature idx 0.872/w 1.00 |
-| 7 | Pelé (Brazil 1962) ★ | FW | 97 | stature | 95.1 | 70.0 | apps 2 (p0.41), goals 1 (p0.81), award 0.00, finish 1.00 · stature idx 0.807/w 1.00 |
-| 8 | Pelé (Brazil 1970) ★ | FW | 97 | stature | 95.1 | 81.8 | apps 6 (p0.95), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.807/w 1.00 |
-| 9 | Cubillas (Peru 1970) ★ | FW | 96 | stature | 93.7 | 79.9 | apps 4 (p0.82), goals 5 (p0.97), award 0.75, finish — [Best Young Player,Bronze Boot] · stature idx 0.786/w 1.00 |
-| 10 | Santos (Brazil 1962) | DF | 95 | stature | 92.7 | 88.3 | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.805/w 1.00 |
-| 11 | Pelé (Brazil 1966) ★ | FW | 95 | stature | 92.5 | 54.1 | apps 2 (p0.42), goals 1 (p0.81), award 0.00, finish — · stature idx 0.807/w 1.00 |
-| 12 | Puskás (Spain 1962) ★ | FW | 95 | stature | 92.4 | 40.9 | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.886/w 1.00 |
-| 13 | Charlton (England 1966) ★ | MF | 95 | stature | 91.2 | 83.1 | apps None (p—), goals 3 (p0.98), award 0.00, finish 1.00 · stature idx 0.748/w 1.00 |
-| 14 | Masopust (Czechoslovakia 1962) ★ | MF | 95 | stature | 90.6 | 75.4 | apps 6 (p0.94), goals 1 (p0.86), award 0.00, finish 0.75 · stature idx 0.739/w 1.00 |
-| 15 | Charlton (England 1962) ★ | FW | 94 | stature | 90.4 | 59.0 | apps 4 (p0.83), goals 1 (p0.81), award 0.00, finish — · stature idx 0.748/w 1.00 |
-| 16 | Rivera (Italy 1970) ★ | MF | 94 | stature | 89.9 | 74.0 | apps 4 (p0.81), goals 2 (p0.97), award 0.00, finish 0.75 · stature idx 0.729/w 1.00 |
-| 17 | Garrincha (Brazil 1962) ★ | FW | 94 | stature | 89.5 | 100.0 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.723/w 1.00 |
-| 18 | Garrincha (Brazil 1966) ★ | FW | 93 | stature | 86.9 | 54.1 | apps 2 (p0.42), goals 1 (p0.81), award 0.00, finish — · stature idx 0.723/w 1.00 |
-| 19 | Santos (Brazil 1966) | DF | 93 | stature | 85.7 | 39.4 | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 20 | Charlton (England 1970) ★ | MF | 93 | stature | 85.5 | 50.8 | apps 4 (p0.81), goals 0 (p0.39), award 0.00, finish — · stature idx 0.748/w 1.00 |
-| 21 | Yashin (Soviet Union 1962) ★ | GK | 92 | stature | 85.4 | 54.1 | apps 4 (p0.71), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00 |
-| 22 | Yashin (Soviet Union 1966) ★ | GK | 92 | stature | 85.4 | 68.4 | apps 4 (p0.78), goals 0 (p0.50), award 0.00, finish 0.40 · stature idx 0.738/w 1.00 |
-| 23 | Santos (Brazil 1962) | DF | 92 | stature | 85.0 | 88.3 | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.684/w 1.00 |
-| 24 | Moore (England 1966) ★ | DF | 92 | stature | 83.7 | 89.7 | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.663/w 1.00 |
-| 25 | Di Stéfano (Spain 1962) ★ | FW | 92 | stature | 83.5 | 37.2 | apps None (p—), goals 0 (p0.36), award 0.00, finish — · stature idx 0.774/w 1.00 |
+
+| #   | card                              | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                        |
+| --- | --------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1   | Müller (West Germany 1970) ★      | FW  | 99  | stature | 100.0    | 94.0       | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00                  |
+| 2   | Beckenbauer (West Germany 1966) ★ | MF  | 99  | stature | 100.0    | 94.8       | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
+| 3   | Beckenbauer (West Germany 1970) ★ | MF  | 99  | stature | 100.0    | 71.1       | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00                                 |
+| 4   | Eusébio (Portugal 1966) ★         | FW  | 99  | stature | 100.0    | 94.1       | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00                   |
+| 5   | Albert (Hungary 1962)             | FW  | 99  | stature | 99.5     | 82.2       | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00    |
+| 6   | Albert (Hungary 1966)             | MF  | 97  | stature | 95.5     | 51.0       | apps 4 (p0.79), goals 0 (p0.44), award 0.00, finish — · stature idx 0.872/w 1.00                                    |
+| 7   | Pelé (Brazil 1962) ★              | FW  | 97  | stature | 95.1     | 70.0       | apps 2 (p0.41), goals 1 (p0.81), award 0.00, finish 1.00 · stature idx 0.807/w 1.00                                 |
+| 8   | Pelé (Brazil 1970) ★              | FW  | 97  | stature | 95.1     | 81.8       | apps 6 (p0.95), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.807/w 1.00                                 |
+| 9   | Cubillas (Peru 1970) ★            | FW  | 96  | stature | 93.7     | 79.9       | apps 4 (p0.82), goals 5 (p0.97), award 0.75, finish — [Best Young Player,Bronze Boot] · stature idx 0.786/w 1.00    |
+| 10  | Santos (Brazil 1962)              | DF  | 95  | stature | 92.7     | 88.3       | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.805/w 1.00                                 |
+| 11  | Pelé (Brazil 1966) ★              | FW  | 95  | stature | 92.5     | 54.1       | apps 2 (p0.42), goals 1 (p0.81), award 0.00, finish — · stature idx 0.807/w 1.00                                    |
+| 12  | Puskás (Spain 1962) ★             | FW  | 95  | stature | 92.4     | 40.9       | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.886/w 1.00                                    |
+| 13  | Charlton (England 1966) ★         | MF  | 95  | stature | 91.2     | 83.1       | apps None (p—), goals 3 (p0.98), award 0.00, finish 1.00 · stature idx 0.748/w 1.00                                 |
+| 14  | Masopust (Czechoslovakia 1962) ★  | MF  | 95  | stature | 90.6     | 75.4       | apps 6 (p0.94), goals 1 (p0.86), award 0.00, finish 0.75 · stature idx 0.739/w 1.00                                 |
+| 15  | Charlton (England 1962) ★         | FW  | 94  | stature | 90.4     | 59.0       | apps 4 (p0.83), goals 1 (p0.81), award 0.00, finish — · stature idx 0.748/w 1.00                                    |
+| 16  | Rivera (Italy 1970) ★             | MF  | 94  | stature | 89.9     | 74.0       | apps 4 (p0.81), goals 2 (p0.97), award 0.00, finish 0.75 · stature idx 0.729/w 1.00                                 |
+| 17  | Garrincha (Brazil 1962) ★         | FW  | 94  | stature | 89.5     | 100.0      | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.723/w 1.00                   |
+| 18  | Garrincha (Brazil 1966) ★         | FW  | 93  | stature | 86.9     | 54.1       | apps 2 (p0.42), goals 1 (p0.81), award 0.00, finish — · stature idx 0.723/w 1.00                                    |
+| 19  | Santos (Brazil 1966)              | DF  | 93  | stature | 85.7     | 39.4       | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00                                    |
+| 20  | Charlton (England 1970) ★         | MF  | 93  | stature | 85.5     | 50.8       | apps 4 (p0.81), goals 0 (p0.39), award 0.00, finish — · stature idx 0.748/w 1.00                                    |
+| 21  | Yashin (Soviet Union 1962) ★      | GK  | 92  | stature | 85.4     | 54.1       | apps 4 (p0.71), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00                                    |
+| 22  | Yashin (Soviet Union 1966) ★      | GK  | 92  | stature | 85.4     | 68.4       | apps 4 (p0.78), goals 0 (p0.50), award 0.00, finish 0.40 · stature idx 0.738/w 1.00                                 |
+| 23  | Santos (Brazil 1962)              | DF  | 92  | stature | 85.0     | 88.3       | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.684/w 1.00                                 |
+| 24  | Moore (England 1966) ★            | DF  | 92  | stature | 83.7     | 89.7       | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.663/w 1.00                                 |
+| 25  | Di Stéfano (Spain 1962) ★         | FW  | 92  | stature | 83.5     | 37.2       | apps None (p—), goals 0 (p0.36), award 0.00, finish — · stature idx 0.774/w 1.00                                    |
 
 ## T1-b Top 25 — era 1974-82 (n=1230)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Rummenigge (West Germany 1978) ★ | FW | 99 | stature | 100.0 | 63.2 | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00 |
-| 2 | Rummenigge (West Germany 1982) ★ | FW | 99 | stature | 100.0 | 95.4 | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00 |
-| 3 | Müller (West Germany 1974) ★ | FW | 99 | stature | 100.0 | 82.1 | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00 |
-| 4 | Maradona (Argentina 1982) ★ | MF | 99 | stature | 100.0 | 63.3 | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 5 | Rossi (Italy 1978) ★ | FW | 99 | stature | 99.9 | 85.6 | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00 |
-| 6 | Rossi (Italy 1982) ★ | FW | 99 | stature | 99.9 | 100.0 | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00 |
-| 7 | Zico (Brazil 1978) ★ | MF | 98 | stature | 98.6 | 70.2 | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00 |
-| 8 | Zico (Brazil 1982) ★ | MF | 98 | stature | 98.6 | 74.1 | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00 |
-| 9 | Beckenbauer (West Germany 1974) ★ | DF | 98 | stature | 97.9 | 89.2 | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.889/w 1.00 |
-| 10 | Kempes (Argentina 1978) ★ | FW | 97 | stature | 96.6 | 100.0 | apps 7 (p0.97), goals 6 (p0.99), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.829/w 1.00 |
-| 11 | Matthäus (West Germany 1982) ★ | MF | 97 | stature | 95.6 | 51.8 | apps 2 (p0.42), goals 0 (p0.40), award 0.00, finish 0.75 · stature idx 0.891/w 1.00 |
-| 12 | Platini (France 1982) ★ | MF | 96 | stature | 95.0 | 69.7 | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish 0.40 · stature idx 0.804/w 1.00 |
-| 13 | Cubillas (Peru 1978) ★ | MF | 96 | stature | 93.7 | 77.1 | apps 6 (p0.86), goals 5 (p1.00), award 0.60, finish — [Silver Boot] · stature idx 0.786/w 1.00 |
-| 14 | Cruyff (Netherlands 1974) ★ | MF | 95 | stature | 91.7 | 78.3 | apps 7 (p0.96), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.755/w 1.00 |
-| 15 | Platini (France 1978) ★ | MF | 94 | stature | 90.6 | 52.2 | apps 3 (p0.54), goals 1 (p0.86), award 0.00, finish — · stature idx 0.804/w 1.00 |
-| 16 | Kempes (Argentina 1974) ★ | FW | 94 | stature | 90.0 | 42.8 | apps 6 (p0.86), goals 0 (p0.35), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 17 | Kempes (Argentina 1982) ★ | FW | 94 | stature | 89.6 | 41.2 | apps 5 (p0.87), goals 0 (p0.30), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 18 | Rensenbrink (Netherlands 1974) ★ | FW | 94 | stature | 88.4 | 69.8 | apps 6 (p0.86), goals 1 (p0.76), award 0.00, finish 0.75 · stature idx 0.705/w 1.00 |
-| 19 | Rensenbrink (Netherlands 1978) ★ | FW | 94 | stature | 88.4 | 88.0 | apps 7 (p0.97), goals 5 (p0.98), award 0.45, finish 0.75 [Bronze Boot] · stature idx 0.705/w 1.00 |
-| 20 | Falcão (Brazil 1982) | MF | 93 | stature | 87.1 | 79.4 | apps 5 (p0.87), goals 3 (p0.99), award 0.70, finish — [Silver Ball] · stature idx 0.686/w 1.00 |
-| 21 | Lato (Poland 1974) | FW | 93 | stature | 87.0 | 94.2 | apps 7 (p0.96), goals 7 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.685/w 1.00 |
-| 22 | Lato (Poland 1978) | FW | 93 | stature | 87.0 | 62.7 | apps 6 (p0.88), goals 2 (p0.89), award 0.00, finish — · stature idx 0.685/w 1.00 |
-| 23 | Lato (Poland 1982) | FW | 93 | stature | 87.0 | 66.9 | apps 7 (p0.98), goals 1 (p0.73), award 0.00, finish 0.55 · stature idx 0.685/w 1.00 |
-| 24 | Cubillas (Peru 1982) ★ | MF | 93 | stature | 85.7 | 44.6 | apps 3 (p0.59), goals 0 (p0.40), award 0.00, finish — · stature idx 0.786/w 1.00 |
-| 25 | Keegan (England 1982) ★ | FW | 92 | stature | 83.2 | 33.3 | apps 1 (p0.21), goals 0 (p0.30), award 0.00, finish — · stature idx 0.781/w 1.00 |
+
+| #   | card                              | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                  |
+| --- | --------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| 1   | Rummenigge (West Germany 1978) ★  | FW  | 99  | stature | 100.0    | 63.2       | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00                              |
+| 2   | Rummenigge (West Germany 1982) ★  | FW  | 99  | stature | 100.0    | 95.4       | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00 |
+| 3   | Müller (West Germany 1974) ★      | FW  | 99  | stature | 100.0    | 82.1       | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00                           |
+| 4   | Maradona (Argentina 1982) ★       | MF  | 99  | stature | 100.0    | 63.3       | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00                              |
+| 5   | Rossi (Italy 1978) ★              | FW  | 99  | stature | 99.9     | 85.6       | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00             |
+| 6   | Rossi (Italy 1982) ★              | FW  | 99  | stature | 99.9     | 100.0      | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00 |
+| 7   | Zico (Brazil 1978) ★              | MF  | 98  | stature | 98.6     | 70.2       | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00                           |
+| 8   | Zico (Brazil 1982) ★              | MF  | 98  | stature | 98.6     | 74.1       | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00                |
+| 9   | Beckenbauer (West Germany 1974) ★ | DF  | 98  | stature | 97.9     | 89.2       | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.889/w 1.00                           |
+| 10  | Kempes (Argentina 1978) ★         | FW  | 97  | stature | 96.6     | 100.0      | apps 7 (p0.97), goals 6 (p0.99), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.829/w 1.00 |
+| 11  | Matthäus (West Germany 1982) ★    | MF  | 97  | stature | 95.6     | 51.8       | apps 2 (p0.42), goals 0 (p0.40), award 0.00, finish 0.75 · stature idx 0.891/w 1.00                           |
+| 12  | Platini (France 1982) ★           | MF  | 96  | stature | 95.0     | 69.7       | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish 0.40 · stature idx 0.804/w 1.00                           |
+| 13  | Cubillas (Peru 1978) ★            | MF  | 96  | stature | 93.7     | 77.1       | apps 6 (p0.86), goals 5 (p1.00), award 0.60, finish — [Silver Boot] · stature idx 0.786/w 1.00                |
+| 14  | Cruyff (Netherlands 1974) ★       | MF  | 95  | stature | 91.7     | 78.3       | apps 7 (p0.96), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.755/w 1.00                           |
+| 15  | Platini (France 1978) ★           | MF  | 94  | stature | 90.6     | 52.2       | apps 3 (p0.54), goals 1 (p0.86), award 0.00, finish — · stature idx 0.804/w 1.00                              |
+| 16  | Kempes (Argentina 1974) ★         | FW  | 94  | stature | 90.0     | 42.8       | apps 6 (p0.86), goals 0 (p0.35), award 0.00, finish — · stature idx 0.829/w 1.00                              |
+| 17  | Kempes (Argentina 1982) ★         | FW  | 94  | stature | 89.6     | 41.2       | apps 5 (p0.87), goals 0 (p0.30), award 0.00, finish — · stature idx 0.829/w 1.00                              |
+| 18  | Rensenbrink (Netherlands 1974) ★  | FW  | 94  | stature | 88.4     | 69.8       | apps 6 (p0.86), goals 1 (p0.76), award 0.00, finish 0.75 · stature idx 0.705/w 1.00                           |
+| 19  | Rensenbrink (Netherlands 1978) ★  | FW  | 94  | stature | 88.4     | 88.0       | apps 7 (p0.97), goals 5 (p0.98), award 0.45, finish 0.75 [Bronze Boot] · stature idx 0.705/w 1.00             |
+| 20  | Falcão (Brazil 1982)              | MF  | 93  | stature | 87.1     | 79.4       | apps 5 (p0.87), goals 3 (p0.99), award 0.70, finish — [Silver Ball] · stature idx 0.686/w 1.00                |
+| 21  | Lato (Poland 1974)                | FW  | 93  | stature | 87.0     | 94.2       | apps 7 (p0.96), goals 7 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.685/w 1.00             |
+| 22  | Lato (Poland 1978)                | FW  | 93  | stature | 87.0     | 62.7       | apps 6 (p0.88), goals 2 (p0.89), award 0.00, finish — · stature idx 0.685/w 1.00                              |
+| 23  | Lato (Poland 1982)                | FW  | 93  | stature | 87.0     | 66.9       | apps 7 (p0.98), goals 1 (p0.73), award 0.00, finish 0.55 · stature idx 0.685/w 1.00                           |
+| 24  | Cubillas (Peru 1982) ★            | MF  | 93  | stature | 85.7     | 44.6       | apps 3 (p0.59), goals 0 (p0.40), award 0.00, finish — · stature idx 0.786/w 1.00                              |
+| 25  | Keegan (England 1982) ★           | FW  | 92  | stature | 83.2     | 33.3       | apps 1 (p0.21), goals 0 (p0.30), award 0.00, finish — · stature idx 0.781/w 1.00                              |
 
 ## T1-b Top 25 — era 1986-94 (n=1584)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Matthäus (West Germany 1986) ★ | MF | 99 | stature | 100.0 | 77.2 | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00 |
-| 2 | Matthäus (West Germany 1990) ★ | MF | 99 | stature | 100.0 | 98.8 | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00 |
-| 3 | Matthäus (Germany 1994) ★ | MF | 99 | stature | 100.0 | 63.0 | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00 |
-| 4 | Rummenigge (West Germany 1986) ★ | FW | 99 | stature | 100.0 | 71.8 | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00 |
-| 5 | Maradona (Argentina 1986) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00 |
-| 6 | Maradona (Argentina 1990) ★ | MF | 99 | stature | 100.0 | 79.1 | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00 |
-| 7 | Romário (Brazil 1994) ★ | FW | 98 | stature | 98.8 | 100.0 | apps 7 (p0.96), goals 5 (p0.96), award 1.00, finish 1.00 [Bronze Boot,Golden Ball] · stature idx 0.862/w 1.00 |
-| 8 | Baggio (Italy 1990) ★ | FW | 98 | stature | 98.2 | 72.6 | apps 5 (p0.91), goals 2 (p0.91), award 0.00, finish 0.55 · stature idx 0.854/w 1.00 |
-| 9 | Baggio (Italy 1994) ★ | FW | 98 | stature | 98.2 | 92.3 | apps 7 (p0.96), goals 5 (p0.96), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.854/w 1.00 |
-| 10 | Maradona (Argentina 1994) ★ | MF | 98 | stature | 98.2 | 47.0 | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 11 | Ronaldo (Brazil 1994) ★ | FW | 98 | stature | 97.2 | 47.6 | apps 0 (p0.07), goals 0 (p0.30), award 0.00, finish 1.00 · stature idx 0.913/w 1.00 |
-| 12 | Platini (France 1986) ★ | MF | 96 | stature | 95.0 | 74.6 | apps 6 (p0.94), goals 2 (p0.97), award 0.00, finish 0.55 · stature idx 0.804/w 1.00 |
-| 13 | Gullit (Netherlands 1990) ★ | MF | 95 | stature | 91.5 | 58.7 | apps 4 (p0.75), goals 1 (p0.89), award 0.00, finish — · stature idx 0.780/w 1.00 |
-| 14 | Zico (Brazil 1986) ★ | MF | 95 | stature | 90.6 | 43.2 | apps 3 (p0.54), goals 0 (p0.41), award 0.00, finish — · stature idx 0.859/w 1.00 |
-| 15 | Rossi (Italy 1986) ★ | FW | 94 | stature | 89.4 | 33.2 | apps 0 (p0.07), goals 0 (p0.34), award 0.00, finish — · stature idx 0.879/w 1.00 |
-| 16 | Maldini (Italy 1990) ★ | DF | 94 | stature | 89.2 | 80.0 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 0.55 · stature idx 0.750/w 1.00 |
-| 17 | Maldini (Italy 1994) ★ | DF | 94 | stature | 89.2 | 85.0 | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 0.75 · stature idx 0.750/w 1.00 |
-| 18 | Romário (Brazil 1990) ★ | FW | 94 | stature | 89.1 | 36.0 | apps 1 (p0.26), goals 0 (p0.36), award 0.00, finish — · stature idx 0.862/w 1.00 |
-| 19 | Lineker (England 1986) | FW | 94 | stature | 88.4 | 84.8 | apps 5 (p0.91), goals 6 (p1.00), award 0.90, finish — [Golden Boot] · stature idx 0.706/w 1.00 |
-| 20 | Lineker (England 1990) | FW | 94 | stature | 88.4 | 82.2 | apps 7 (p0.99), goals 4 (p0.97), award 0.45, finish 0.40 [Bronze Boot] · stature idx 0.706/w 1.00 |
-| 21 | Milla (Cameroon 1990) ★ | FW | 93 | stature | 87.9 | 74.9 | apps 5 (p0.91), goals 4 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.698/w 1.00 |
-| 22 | Papin (France 1986) ★ | FW | 93 | stature | 86.4 | 70.7 | apps 4 (p0.79), goals 2 (p0.90), award 0.00, finish 0.55 · stature idx 0.676/w 1.00 |
-| 23 | van Basten (Netherlands 1990) ★ | FW | 93 | stature | 86.3 | 42.5 | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.781/w 1.00 |
-| 24 | Milla (Cameroon 1994) ★ | FW | 92 | stature | 84.1 | 50.7 | apps 2 (p0.43), goals 1 (p0.71), award 0.00, finish — · stature idx 0.698/w 1.00 |
-| 25 | Cafu (Brazil 1994) ★ | DF | 92 | stature | 83.2 | 71.6 | apps 3 (p0.58), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.656/w 1.00 |
+
+| #   | card                             | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                  |
+| --- | -------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| 1   | Matthäus (West Germany 1986) ★   | MF  | 99  | stature | 100.0    | 77.2       | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00                           |
+| 2   | Matthäus (West Germany 1990) ★   | MF  | 99  | stature | 100.0    | 98.8       | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00             |
+| 3   | Matthäus (Germany 1994) ★        | MF  | 99  | stature | 100.0    | 63.0       | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00                              |
+| 4   | Rummenigge (West Germany 1986) ★ | FW  | 99  | stature | 100.0    | 71.8       | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00                           |
+| 5   | Maradona (Argentina 1986) ★      | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00 |
+| 6   | Maradona (Argentina 1990) ★      | MF  | 99  | stature | 100.0    | 79.1       | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00             |
+| 7   | Romário (Brazil 1994) ★          | FW  | 98  | stature | 98.8     | 100.0      | apps 7 (p0.96), goals 5 (p0.96), award 1.00, finish 1.00 [Bronze Boot,Golden Ball] · stature idx 0.862/w 1.00 |
+| 8   | Baggio (Italy 1990) ★            | FW  | 98  | stature | 98.2     | 72.6       | apps 5 (p0.91), goals 2 (p0.91), award 0.00, finish 0.55 · stature idx 0.854/w 1.00                           |
+| 9   | Baggio (Italy 1994) ★            | FW  | 98  | stature | 98.2     | 92.3       | apps 7 (p0.96), goals 5 (p0.96), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.854/w 1.00             |
+| 10  | Maradona (Argentina 1994) ★      | MF  | 98  | stature | 98.2     | 47.0       | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00                              |
+| 11  | Ronaldo (Brazil 1994) ★          | FW  | 98  | stature | 97.2     | 47.6       | apps 0 (p0.07), goals 0 (p0.30), award 0.00, finish 1.00 · stature idx 0.913/w 1.00                           |
+| 12  | Platini (France 1986) ★          | MF  | 96  | stature | 95.0     | 74.6       | apps 6 (p0.94), goals 2 (p0.97), award 0.00, finish 0.55 · stature idx 0.804/w 1.00                           |
+| 13  | Gullit (Netherlands 1990) ★      | MF  | 95  | stature | 91.5     | 58.7       | apps 4 (p0.75), goals 1 (p0.89), award 0.00, finish — · stature idx 0.780/w 1.00                              |
+| 14  | Zico (Brazil 1986) ★             | MF  | 95  | stature | 90.6     | 43.2       | apps 3 (p0.54), goals 0 (p0.41), award 0.00, finish — · stature idx 0.859/w 1.00                              |
+| 15  | Rossi (Italy 1986) ★             | FW  | 94  | stature | 89.4     | 33.2       | apps 0 (p0.07), goals 0 (p0.34), award 0.00, finish — · stature idx 0.879/w 1.00                              |
+| 16  | Maldini (Italy 1990) ★           | DF  | 94  | stature | 89.2     | 80.0       | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 0.55 · stature idx 0.750/w 1.00                           |
+| 17  | Maldini (Italy 1994) ★           | DF  | 94  | stature | 89.2     | 85.0       | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 0.75 · stature idx 0.750/w 1.00                           |
+| 18  | Romário (Brazil 1990) ★          | FW  | 94  | stature | 89.1     | 36.0       | apps 1 (p0.26), goals 0 (p0.36), award 0.00, finish — · stature idx 0.862/w 1.00                              |
+| 19  | Lineker (England 1986)           | FW  | 94  | stature | 88.4     | 84.8       | apps 5 (p0.91), goals 6 (p1.00), award 0.90, finish — [Golden Boot] · stature idx 0.706/w 1.00                |
+| 20  | Lineker (England 1990)           | FW  | 94  | stature | 88.4     | 82.2       | apps 7 (p0.99), goals 4 (p0.97), award 0.45, finish 0.40 [Bronze Boot] · stature idx 0.706/w 1.00             |
+| 21  | Milla (Cameroon 1990) ★          | FW  | 93  | stature | 87.9     | 74.9       | apps 5 (p0.91), goals 4 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.698/w 1.00                |
+| 22  | Papin (France 1986) ★            | FW  | 93  | stature | 86.4     | 70.7       | apps 4 (p0.79), goals 2 (p0.90), award 0.00, finish 0.55 · stature idx 0.676/w 1.00                           |
+| 23  | van Basten (Netherlands 1990) ★  | FW  | 93  | stature | 86.3     | 42.5       | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.781/w 1.00                              |
+| 24  | Milla (Cameroon 1994) ★          | FW  | 92  | stature | 84.1     | 50.7       | apps 2 (p0.43), goals 1 (p0.71), award 0.00, finish — · stature idx 0.698/w 1.00                              |
+| 25  | Cafu (Brazil 1994) ★             | DF  | 92  | stature | 83.2     | 71.6       | apps 3 (p0.58), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.656/w 1.00                           |
 
 ## T1-b Top 25 — era 1998-2006 (n=2177)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Messi (Argentina 2006) ★ | FW | 99 | stature | 100.0 | 55.0 | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 2 | Zidane (France 1998) ★ | MF | 99 | stature | 100.0 | 80.6 | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00 |
-| 3 | Zidane (France 2006) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00 |
-| 4 | Ronaldo (Brazil 1998) ★ | FW | 99 | stature | 100.0 | 98.7 | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00 |
-| 5 | Ronaldo (Brazil 2002) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00 |
-| 6 | Ronaldo (Brazil 2006) ★ | FW | 99 | stature | 100.0 | 75.2 | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00 |
-| 7 | Ronaldo (Portugal 2006) ★ | FW | 99 | stature | 99.9 | 65.5 | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00 |
-| 8 | Ronaldinho (Brazil 2002) ★ | MF | 99 | stature | 99.4 | 81.3 | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00 |
-| 9 | Henry (France 1998) ★ | FW | 98 | stature | 98.5 | 81.4 | apps 6 (p0.96), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.857/w 1.00 |
-| 10 | Henry (France 2006) ★ | FW | 98 | stature | 98.5 | 78.8 | apps 7 (p0.98), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.857/w 1.00 |
-| 11 | Baggio (Italy 1998) ★ | FW | 98 | stature | 98.2 | 62.1 | apps 4 (p0.84), goals 2 (p0.89), award 0.00, finish — · stature idx 0.854/w 1.00 |
-| 12 | Rivaldo (Brazil 1998) ★ | MF | 97 | stature | 96.7 | 79.4 | apps 7 (p0.98), goals 3 (p1.00), award 0.00, finish 0.75 · stature idx 0.830/w 1.00 |
-| 13 | Rivaldo (Brazil 2002) ★ | MF | 97 | stature | 96.7 | 96.6 | apps 7 (p0.98), goals 5 (p1.00), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.830/w 1.00 |
-| 14 | Shevchenko (Ukraine 2006) ★ | FW | 97 | stature | 96.2 | 64.5 | apps 5 (p0.92), goals 2 (p0.93), award 0.00, finish — · stature idx 0.823/w 1.00 |
-| 15 | Ronaldinho (Brazil 2006) ★ | MF | 97 | stature | 95.1 | 54.1 | apps 5 (p0.90), goals 0 (p0.43), award 0.00, finish — · stature idx 0.870/w 1.00 |
-| 16 | Figo (Portugal 2006) ★ | MF | 96 | stature | 95.1 | 62.9 | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 0.40 · stature idx 0.816/w 1.00 |
-| 17 | Matthäus (Germany 1998) ★ | DF | 96 | stature | 94.6 | 59.0 | apps 4 (p0.81), goals 0 (p0.47), award 0.00, finish — · stature idx 0.891/w 1.00 |
-| 18 | Kaká (Brazil 2006) ★ | MF | 96 | stature | 94.1 | 63.4 | apps 5 (p0.90), goals 1 (p0.91), award 0.00, finish — · stature idx 0.799/w 1.00 |
-| 19 | Cannavaro (Italy 2006) ★ | DF | 96 | stature | 94.0 | 100.0 | apps 7 (p0.99), goals 0 (p0.47), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.827/w 1.00 |
-| 20 | Owen (England 1998) ★ | FW | 96 | stature | 93.9 | 73.1 | apps 4 (p0.84), goals 2 (p0.89), award 0.55, finish — [Best Young Player] · stature idx 0.789/w 1.00 |
-| 21 | Owen (England 2002) ★ | FW | 96 | stature | 93.9 | 63.3 | apps 5 (p0.91), goals 2 (p0.90), award 0.00, finish — · stature idx 0.789/w 1.00 |
-| 22 | Cannavaro (Italy 1998) ★ | DF | 95 | stature | 92.2 | 63.7 | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 23 | Zidane (France 2002) ★ | MF | 95 | stature | 90.7 | 35.1 | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish — · stature idx 0.928/w 1.00 |
-| 24 | Drogba (Ivory Coast 2006) ★ | FW | 94 | stature | 90.4 | 52.0 | apps 2 (p0.35), goals 1 (p0.77), award 0.00, finish — · stature idx 0.776/w 1.00 |
-| 25 | Modrić (Croatia 2006) ★ | MF | 94 | stature | 90.3 | 37.3 | apps 2 (p0.31), goals 0 (p0.43), award 0.00, finish — · stature idx 0.898/w 1.00 |
+
+| #   | card                        | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                  |
+| --- | --------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| 1   | Messi (Argentina 2006) ★    | FW  | 99  | stature | 100.0    | 55.0       | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00                              |
+| 2   | Zidane (France 1998) ★      | MF  | 99  | stature | 100.0    | 80.6       | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00                           |
+| 3   | Zidane (France 2006) ★      | MF  | 99  | stature | 100.0    | 100.0      | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00             |
+| 4   | Ronaldo (Brazil 1998) ★     | FW  | 99  | stature | 100.0    | 98.7       | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00             |
+| 5   | Ronaldo (Brazil 2002) ★     | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00 |
+| 6   | Ronaldo (Brazil 2006) ★     | FW  | 99  | stature | 100.0    | 75.2       | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00                |
+| 7   | Ronaldo (Portugal 2006) ★   | FW  | 99  | stature | 99.9     | 65.5       | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00                           |
+| 8   | Ronaldinho (Brazil 2002) ★  | MF  | 99  | stature | 99.4     | 81.3       | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00                           |
+| 9   | Henry (France 1998) ★       | FW  | 98  | stature | 98.5     | 81.4       | apps 6 (p0.96), goals 3 (p0.94), award 0.00, finish 1.00 · stature idx 0.857/w 1.00                           |
+| 10  | Henry (France 2006) ★       | FW  | 98  | stature | 98.5     | 78.8       | apps 7 (p0.98), goals 3 (p0.97), award 0.00, finish 0.75 · stature idx 0.857/w 1.00                           |
+| 11  | Baggio (Italy 1998) ★       | FW  | 98  | stature | 98.2     | 62.1       | apps 4 (p0.84), goals 2 (p0.89), award 0.00, finish — · stature idx 0.854/w 1.00                              |
+| 12  | Rivaldo (Brazil 1998) ★     | MF  | 97  | stature | 96.7     | 79.4       | apps 7 (p0.98), goals 3 (p1.00), award 0.00, finish 0.75 · stature idx 0.830/w 1.00                           |
+| 13  | Rivaldo (Brazil 2002) ★     | MF  | 97  | stature | 96.7     | 96.6       | apps 7 (p0.98), goals 5 (p1.00), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.830/w 1.00             |
+| 14  | Shevchenko (Ukraine 2006) ★ | FW  | 97  | stature | 96.2     | 64.5       | apps 5 (p0.92), goals 2 (p0.93), award 0.00, finish — · stature idx 0.823/w 1.00                              |
+| 15  | Ronaldinho (Brazil 2006) ★  | MF  | 97  | stature | 95.1     | 54.1       | apps 5 (p0.90), goals 0 (p0.43), award 0.00, finish — · stature idx 0.870/w 1.00                              |
+| 16  | Figo (Portugal 2006) ★      | MF  | 96  | stature | 95.1     | 62.9       | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 0.40 · stature idx 0.816/w 1.00                           |
+| 17  | Matthäus (Germany 1998) ★   | DF  | 96  | stature | 94.6     | 59.0       | apps 4 (p0.81), goals 0 (p0.47), award 0.00, finish — · stature idx 0.891/w 1.00                              |
+| 18  | Kaká (Brazil 2006) ★        | MF  | 96  | stature | 94.1     | 63.4       | apps 5 (p0.90), goals 1 (p0.91), award 0.00, finish — · stature idx 0.799/w 1.00                              |
+| 19  | Cannavaro (Italy 2006) ★    | DF  | 96  | stature | 94.0     | 100.0      | apps 7 (p0.99), goals 0 (p0.47), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.827/w 1.00             |
+| 20  | Owen (England 1998) ★       | FW  | 96  | stature | 93.9     | 73.1       | apps 4 (p0.84), goals 2 (p0.89), award 0.55, finish — [Best Young Player] · stature idx 0.789/w 1.00          |
+| 21  | Owen (England 2002) ★       | FW  | 96  | stature | 93.9     | 63.3       | apps 5 (p0.91), goals 2 (p0.90), award 0.00, finish — · stature idx 0.789/w 1.00                              |
+| 22  | Cannavaro (Italy 1998) ★    | DF  | 95  | stature | 92.2     | 63.7       | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.827/w 1.00                              |
+| 23  | Zidane (France 2002) ★      | MF  | 95  | stature | 90.7     | 35.1       | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish — · stature idx 0.928/w 1.00                              |
+| 24  | Drogba (Ivory Coast 2006) ★ | FW  | 94  | stature | 90.4     | 52.0       | apps 2 (p0.35), goals 1 (p0.77), award 0.00, finish — · stature idx 0.776/w 1.00                              |
+| 25  | Modrić (Croatia 2006) ★     | MF  | 94  | stature | 90.3     | 37.3       | apps 2 (p0.31), goals 0 (p0.43), award 0.00, finish — · stature idx 0.898/w 1.00                              |
 
 ## T1-b Top 25 — era 2010-2018 (n=2208)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Messi (Argentina 2014) ★ | FW | 99 | stature | 100.0 | 99.2 | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00 |
-| 2 | Messi (Argentina 2018) ★ | FW | 99 | stature | 100.0 | 58.3 | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 3 | Modrić (Croatia 2018) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00 |
-| 4 | Ronaldo (Portugal 2018) ★ | FW | 99 | stature | 99.9 | 65.0 | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 5 | Ronaldo (Portugal 2010) ★ | FW | 99 | stature | 99.4 | 58.7 | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 6 | Mbappé (France 2018) ★ | FW | 98 | stature | 98.5 | 94.1 | apps 7 (p0.98), goals 4 (p0.98), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.858/w 1.00 |
-| 7 | Messi (Argentina 2010) ★ | FW | 98 | stature | 97.5 | 43.8 | apps 5 (p0.92), goals 0 (p0.36), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 8 | Iniesta (Spain 2010) ★ | MF | 98 | stature | 97.3 | 82.1 | apps 6 (p0.95), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.839/w 1.00 |
-| 9 | Ronaldo (Portugal 2014) ★ | FW | 97 | stature | 96.8 | 52.5 | apps 3 (p0.54), goals 1 (p0.72), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 10 | Xavi (Spain 2010) ★ | MF | 97 | stature | 95.7 | 72.4 | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.815/w 1.00 |
-| 11 | Salah (Egypt 2018) ★ | FW | 96 | stature | 93.4 | 56.6 | apps 2 (p0.33), goals 2 (p0.91), award 0.00, finish — · stature idx 0.800/w 1.00 |
-| 12 | Modrić (Croatia 2014) ★ | MF | 96 | stature | 93.2 | 45.9 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.898/w 1.00 |
-| 13 | Iniesta (Spain 2018) ★ | MF | 95 | stature | 91.9 | 50.9 | apps 4 (p0.79), goals 0 (p0.42), award 0.00, finish — · stature idx 0.839/w 1.00 |
-| 14 | Drogba (Ivory Coast 2010) ★ | FW | 95 | stature | 91.6 | 56.1 | apps 3 (p0.59), goals 1 (p0.81), award 0.00, finish — · stature idx 0.776/w 1.00 |
-| 15 | Pogba (France 2014) ★ | MF | 94 | stature | 90.2 | 75.9 | apps 5 (p0.92), goals 1 (p0.90), award 0.55, finish — [Best Young Player] · stature idx 0.733/w 1.00 |
-| 16 | Pogba (France 2018) ★ | MF | 94 | stature | 90.2 | 81.5 | apps 6 (p0.97), goals 1 (p0.91), award 0.00, finish 1.00 · stature idx 0.733/w 1.00 |
-| 17 | Benzema (France 2014) ★ | FW | 94 | stature | 89.9 | 65.2 | apps 5 (p0.89), goals 3 (p0.96), award 0.00, finish — · stature idx 0.728/w 1.00 |
-| 18 | Mané (Senegal 2018) ★ | FW | 94 | stature | 89.6 | 55.6 | apps 3 (p0.59), goals 1 (p0.79), award 0.00, finish — · stature idx 0.749/w 1.00 |
-| 19 | Iniesta (Spain 2014) ★ | MF | 94 | stature | 89.3 | 45.9 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.839/w 1.00 |
-| 20 | Henry (France 2010) ★ | FW | 94 | stature | 89.2 | 36.7 | apps 2 (p0.32), goals 0 (p0.36), award 0.00, finish — · stature idx 0.857/w 1.00 |
-| 21 | Kaká (Brazil 2010) ★ | MF | 94 | stature | 89.2 | 52.2 | apps 4 (p0.83), goals 0 (p0.43), award 0.00, finish — · stature idx 0.799/w 1.00 |
-| 22 | Lewandowski (Poland 2018) ★ | FW | 94 | stature | 88.7 | 39.7 | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx 0.831/w 1.00 |
-| 23 | Cannavaro (Italy 2010) ★ | DF | 93 | stature | 87.0 | 50.8 | apps 3 (p0.64), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 24 | Neymar (Brazil 2014) ★ | FW | 93 | stature | 86.8 | 81.5 | apps 5 (p0.89), goals 4 (p0.98), award 0.45, finish 0.40 [Bronze Boot] · stature idx 0.682/w 1.00 |
-| 25 | Neymar (Brazil 2018) ★ | FW | 93 | stature | 86.8 | 63.4 | apps 5 (p0.89), goals 2 (p0.91), award 0.00, finish — · stature idx 0.682/w 1.00 |
+
+| #   | card                        | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                            |
+| --- | --------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------- |
+| 1   | Messi (Argentina 2014) ★    | FW  | 99  | stature | 100.0    | 99.2       | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00       |
+| 2   | Messi (Argentina 2018) ★    | FW  | 99  | stature | 100.0    | 58.3       | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00                        |
+| 3   | Modrić (Croatia 2018) ★     | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00       |
+| 4   | Ronaldo (Portugal 2018) ★   | FW  | 99  | stature | 99.9     | 65.0       | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00                        |
+| 5   | Ronaldo (Portugal 2010) ★   | FW  | 99  | stature | 99.4     | 58.7       | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00                        |
+| 6   | Mbappé (France 2018) ★      | FW  | 98  | stature | 98.5     | 94.1       | apps 7 (p0.98), goals 4 (p0.98), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.858/w 1.00 |
+| 7   | Messi (Argentina 2010) ★    | FW  | 98  | stature | 97.5     | 43.8       | apps 5 (p0.92), goals 0 (p0.36), award 0.00, finish — · stature idx 0.938/w 1.00                        |
+| 8   | Iniesta (Spain 2010) ★      | MF  | 98  | stature | 97.3     | 82.1       | apps 6 (p0.95), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.839/w 1.00                     |
+| 9   | Ronaldo (Portugal 2014) ★   | FW  | 97  | stature | 96.8     | 52.5       | apps 3 (p0.54), goals 1 (p0.72), award 0.00, finish — · stature idx 0.878/w 1.00                        |
+| 10  | Xavi (Spain 2010) ★         | MF  | 97  | stature | 95.7     | 72.4       | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.815/w 1.00                     |
+| 11  | Salah (Egypt 2018) ★        | FW  | 96  | stature | 93.4     | 56.6       | apps 2 (p0.33), goals 2 (p0.91), award 0.00, finish — · stature idx 0.800/w 1.00                        |
+| 12  | Modrić (Croatia 2014) ★     | MF  | 96  | stature | 93.2     | 45.9       | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.898/w 1.00                        |
+| 13  | Iniesta (Spain 2018) ★      | MF  | 95  | stature | 91.9     | 50.9       | apps 4 (p0.79), goals 0 (p0.42), award 0.00, finish — · stature idx 0.839/w 1.00                        |
+| 14  | Drogba (Ivory Coast 2010) ★ | FW  | 95  | stature | 91.6     | 56.1       | apps 3 (p0.59), goals 1 (p0.81), award 0.00, finish — · stature idx 0.776/w 1.00                        |
+| 15  | Pogba (France 2014) ★       | MF  | 94  | stature | 90.2     | 75.9       | apps 5 (p0.92), goals 1 (p0.90), award 0.55, finish — [Best Young Player] · stature idx 0.733/w 1.00    |
+| 16  | Pogba (France 2018) ★       | MF  | 94  | stature | 90.2     | 81.5       | apps 6 (p0.97), goals 1 (p0.91), award 0.00, finish 1.00 · stature idx 0.733/w 1.00                     |
+| 17  | Benzema (France 2014) ★     | FW  | 94  | stature | 89.9     | 65.2       | apps 5 (p0.89), goals 3 (p0.96), award 0.00, finish — · stature idx 0.728/w 1.00                        |
+| 18  | Mané (Senegal 2018) ★       | FW  | 94  | stature | 89.6     | 55.6       | apps 3 (p0.59), goals 1 (p0.79), award 0.00, finish — · stature idx 0.749/w 1.00                        |
+| 19  | Iniesta (Spain 2014) ★      | MF  | 94  | stature | 89.3     | 45.9       | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.839/w 1.00                        |
+| 20  | Henry (France 2010) ★       | FW  | 94  | stature | 89.2     | 36.7       | apps 2 (p0.32), goals 0 (p0.36), award 0.00, finish — · stature idx 0.857/w 1.00                        |
+| 21  | Kaká (Brazil 2010) ★        | MF  | 94  | stature | 89.2     | 52.2       | apps 4 (p0.83), goals 0 (p0.43), award 0.00, finish — · stature idx 0.799/w 1.00                        |
+| 22  | Lewandowski (Poland 2018) ★ | FW  | 94  | stature | 88.7     | 39.7       | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx 0.831/w 1.00                        |
+| 23  | Cannavaro (Italy 2010) ★    | DF  | 93  | stature | 87.0     | 50.8       | apps 3 (p0.64), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00                        |
+| 24  | Neymar (Brazil 2014) ★      | FW  | 93  | stature | 86.8     | 81.5       | apps 5 (p0.89), goals 4 (p0.98), award 0.45, finish 0.40 [Bronze Boot] · stature idx 0.682/w 1.00       |
+| 25  | Neymar (Brazil 2018) ★      | FW  | 93  | stature | 86.8     | 63.4       | apps 5 (p0.89), goals 2 (p0.91), award 0.00, finish — · stature idx 0.682/w 1.00                        |
 
 ## T1-b Top 25 — era 2022-2026 (n=2077)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Messi (Argentina 2022) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00 |
-| 2 | Messi (Argentina 2026) ★ | FW | 99 | stature | 100.0 | 76.2 | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00 |
-| 3 | Modrić (Croatia 2022) ★ | MF | 99 | stature | 100.0 | 76.5 | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00 |
-| 4 | Modrić (Croatia 2026) ★ | MF | 99 | stature | 100.0 | 88.8 | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00 |
-| 5 | Ronaldo (Portugal 2022) ★ | FW | 99 | stature | 99.8 | 57.8 | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 6 | Mbappé (France 2022) ★ | FW | 98 | stature | 98.5 | 99.0 | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 0.75 [Golden Boot,Silver Ball] · stature idx 0.858/w 1.00 |
-| 7 | Mbappé (France 2026) ★ | FW | 98 | stature | 98.5 | 97.1 | caps 96 (p0.92), goals 56 (p0.97), age 27 (af 1.00), lg 1.00 · stature idx 0.858/w 1.00 |
-| 8 | Lewandowski (Poland 2022) ★ | FW | 97 | stature | 96.7 | 61.6 | apps 4 (p0.78), goals 2 (p0.90), award 0.00, finish — · stature idx 0.831/w 1.00 |
-| 9 | Ronaldo (Portugal 2026) ★ | FW | 97 | stature | 96.1 | 76.3 | caps 226 (p1.00), goals 143 (p1.00), age 41 (af 0.80), lg 0.58 · stature idx 0.878/w 1.00 |
-| 10 | Salah (Egypt 2026) ★ | FW | 96 | stature | 94.7 | 94.2 | caps 115 (p0.95), goals 67 (p0.98), age 33 (af 0.93), lg 1.00 · stature idx 0.800/w 1.00 |
-| 11 | Mané (Senegal 2026) ★ | FW | 94 | stature | 88.8 | 79.6 | caps 127 (p0.97), goals 55 (p0.96), age 34 (af 0.90), lg 0.58 · stature idx 0.749/w 1.00 |
-| 12 | van Dijk (Netherlands 2026) ★ | DF | 94 | stature | 88.3 | 92.0 | caps 91 (p0.95), goals 12 (p0.99), age 34 (af 0.90), lg 1.00 · stature idx 0.737/w 1.00 |
-| 13 | Neymar (Brazil 2022) ★ | FW | 93 | stature | 86.8 | 58.8 | apps 3 (p0.54), goals 2 (p0.90), award 0.00, finish — · stature idx 0.682/w 1.00 |
-| 14 | van Dijk (Netherlands 2022) ★ | DF | 93 | stature | 86.2 | 64.4 | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish — · stature idx 0.737/w 1.00 |
-| 15 | Neuer (Germany 2022) ★ | GK | 92 | stature | 85.1 | 57.6 | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00 |
-| 16 | Neuer (Germany 2026) ★ | GK | 92 | stature | 85.1 | 82.7 | caps 124 (p0.98), goals 0 (p0.50), age 40 (af 0.80), lg 0.90 · stature idx 0.733/w 1.00 |
-| 17 | Benzema (France 2022) ★ | FW | 92 | stature | 84.3 | 44.2 | apps 0 (p0.03), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.728/w 1.00 |
-| 18 | Griezmann (France 2022) | FW | 92 | stature | 82.5 | 55.5 | apps 7 (p0.98), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.634/w 1.00 |
-| 19 | De Bruyne (Belgium 2026) ★ | MF | 90 | stature | 78.0 | 93.2 | caps 118 (p0.98), goals 36 (p1.00), age 34 (af 0.90), lg 0.90 · stature idx 0.551/w 1.00 |
-| 20 | Kane (England 2022) | FW | 90 | stature | 78.0 | 63.0 | apps 5 (p0.89), goals 2 (p0.90), award 0.00, finish — · stature idx 0.550/w 1.00 |
-| 21 | Kane (England 2026) | FW | 90 | stature | 78.0 | 92.4 | caps 112 (p0.94), goals 78 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx 0.550/w 1.00 |
-| 22 | Hazard (Belgium 2022) ★ | FW | 90 | stature | 75.3 | 38.2 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.629/w 1.00 |
-| 23 | Dembélé (France 2022) ★ | FW | 89 | stature | 74.1 | 55.5 | apps 7 (p0.98), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.507/w 1.00 |
-| 24 | Rodríguez (Colombia 2026) | MF | 89 | stature | 73.9 | 82.4 | caps 125 (p0.98), goals 31 (p1.00), age 34 (af 0.90), lg 0.58 · stature idx 0.524/w 1.00 |
-| 25 | Courtois (Belgium 2022) | GK | 89 | stature | 73.6 | 57.6 | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.552/w 1.00 |
+
+| #   | card                          | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                  |
+| --- | ----------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| 1   | Messi (Argentina 2022) ★      | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00 |
+| 2   | Messi (Argentina 2026) ★      | FW  | 99  | stature | 100.0    | 76.2       | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00                     |
+| 3   | Modrić (Croatia 2022) ★       | MF  | 99  | stature | 100.0    | 76.5       | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00             |
+| 4   | Modrić (Croatia 2026) ★       | MF  | 99  | stature | 100.0    | 88.8       | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00                      |
+| 5   | Ronaldo (Portugal 2022) ★     | FW  | 99  | stature | 99.8     | 57.8       | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00                              |
+| 6   | Mbappé (France 2022) ★        | FW  | 98  | stature | 98.5     | 99.0       | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 0.75 [Golden Boot,Silver Ball] · stature idx 0.858/w 1.00 |
+| 7   | Mbappé (France 2026) ★        | FW  | 98  | stature | 98.5     | 97.1       | caps 96 (p0.92), goals 56 (p0.97), age 27 (af 1.00), lg 1.00 · stature idx 0.858/w 1.00                       |
+| 8   | Lewandowski (Poland 2022) ★   | FW  | 97  | stature | 96.7     | 61.6       | apps 4 (p0.78), goals 2 (p0.90), award 0.00, finish — · stature idx 0.831/w 1.00                              |
+| 9   | Ronaldo (Portugal 2026) ★     | FW  | 97  | stature | 96.1     | 76.3       | caps 226 (p1.00), goals 143 (p1.00), age 41 (af 0.80), lg 0.58 · stature idx 0.878/w 1.00                     |
+| 10  | Salah (Egypt 2026) ★          | FW  | 96  | stature | 94.7     | 94.2       | caps 115 (p0.95), goals 67 (p0.98), age 33 (af 0.93), lg 1.00 · stature idx 0.800/w 1.00                      |
+| 11  | Mané (Senegal 2026) ★         | FW  | 94  | stature | 88.8     | 79.6       | caps 127 (p0.97), goals 55 (p0.96), age 34 (af 0.90), lg 0.58 · stature idx 0.749/w 1.00                      |
+| 12  | van Dijk (Netherlands 2026) ★ | DF  | 94  | stature | 88.3     | 92.0       | caps 91 (p0.95), goals 12 (p0.99), age 34 (af 0.90), lg 1.00 · stature idx 0.737/w 1.00                       |
+| 13  | Neymar (Brazil 2022) ★        | FW  | 93  | stature | 86.8     | 58.8       | apps 3 (p0.54), goals 2 (p0.90), award 0.00, finish — · stature idx 0.682/w 1.00                              |
+| 14  | van Dijk (Netherlands 2022) ★ | DF  | 93  | stature | 86.2     | 64.4       | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish — · stature idx 0.737/w 1.00                              |
+| 15  | Neuer (Germany 2022) ★        | GK  | 92  | stature | 85.1     | 57.6       | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00                              |
+| 16  | Neuer (Germany 2026) ★        | GK  | 92  | stature | 85.1     | 82.7       | caps 124 (p0.98), goals 0 (p0.50), age 40 (af 0.80), lg 0.90 · stature idx 0.733/w 1.00                       |
+| 17  | Benzema (France 2022) ★       | FW  | 92  | stature | 84.3     | 44.2       | apps 0 (p0.03), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.728/w 1.00                           |
+| 18  | Griezmann (France 2022)       | FW  | 92  | stature | 82.5     | 55.5       | apps 7 (p0.98), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.634/w 1.00                           |
+| 19  | De Bruyne (Belgium 2026) ★    | MF  | 90  | stature | 78.0     | 93.2       | caps 118 (p0.98), goals 36 (p1.00), age 34 (af 0.90), lg 0.90 · stature idx 0.551/w 1.00                      |
+| 20  | Kane (England 2022)           | FW  | 90  | stature | 78.0     | 63.0       | apps 5 (p0.89), goals 2 (p0.90), award 0.00, finish — · stature idx 0.550/w 1.00                              |
+| 21  | Kane (England 2026)           | FW  | 90  | stature | 78.0     | 92.4       | caps 112 (p0.94), goals 78 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx 0.550/w 1.00                      |
+| 22  | Hazard (Belgium 2022) ★       | FW  | 90  | stature | 75.3     | 38.2       | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.629/w 1.00                              |
+| 23  | Dembélé (France 2022) ★       | FW  | 89  | stature | 74.1     | 55.5       | apps 7 (p0.98), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.507/w 1.00                           |
+| 24  | Rodríguez (Colombia 2026)     | MF  | 89  | stature | 73.9     | 82.4       | caps 125 (p0.98), goals 31 (p1.00), age 34 (af 0.90), lg 0.58 · stature idx 0.524/w 1.00                      |
+| 25  | Courtois (Belgium 2022)       | GK  | 89  | stature | 73.6     | 57.6       | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.552/w 1.00                              |
 
 ## T1-c Top 25 — GK (n=1547)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Buffon (Italy 2002) ★ | GK | 93 | stature | 87.9 | 62.2 | apps 4 (p0.88), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00 |
-| 2 | Buffon (Italy 2006) ★ | GK | 93 | stature | 87.9 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.777/w 1.00 |
-| 3 | Buffon (Italy 2010) ★ | GK | 93 | stature | 86.6 | 50.5 | apps 1 (p0.64), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00 |
-| 4 | Yashin (Soviet Union 1958) ★ | GK | 92 | stature | 85.4 | 62.8 | apps 5 (p0.89), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00 |
-| 5 | Yashin (Soviet Union 1962) ★ | GK | 92 | stature | 85.4 | 54.1 | apps 4 (p0.71), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00 |
-| 6 | Yashin (Soviet Union 1966) ★ | GK | 92 | stature | 85.4 | 68.4 | apps 4 (p0.78), goals 0 (p0.50), award 0.00, finish 0.40 · stature idx 0.738/w 1.00 |
-| 7 | Neuer (Germany 2010) ★ | GK | 92 | stature | 85.1 | 81.7 | apps 6 (p0.96), goals 0 (p0.50), award 0.00, finish 0.55 · stature idx 0.733/w 1.00 |
-| 8 | Neuer (Germany 2014) ★ | GK | 92 | stature | 85.1 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.733/w 1.00 |
-| 9 | Neuer (Germany 2018) ★ | GK | 92 | stature | 85.1 | 57.5 | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00 |
-| 10 | Neuer (Germany 2022) ★ | GK | 92 | stature | 85.1 | 57.6 | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00 |
-| 11 | Neuer (Germany 2026) ★ | GK | 92 | stature | 85.1 | 82.7 | caps 124 (p0.98), goals 0 (p0.50), age 40 (af 0.80), lg 0.90 · stature idx 0.733/w 1.00 |
-| 12 | Buffon (Italy 2014) ★ | GK | 92 | stature | 84.6 | 53.5 | apps 2 (p0.70), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00 |
-| 13 | Kahn (Germany 2002) ★ | GK | 92 | stature | 84.2 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 1.00, finish 0.75 [Golden Ball,Golden Glove] · stature idx 0.719/w 1.00 |
-| 14 | Kahn (Germany 2006) ★ | GK | 92 | stature | 84.2 | 65.2 | apps 1 (p0.62), goals 0 (p0.50), award 0.00, finish 0.55 · stature idx 0.719/w 1.00 |
-| 15 | Casillas (Spain 2002) ★ | GK | 92 | stature | 83.6 | 65.0 | apps 5 (p0.94), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00 |
-| 16 | Casillas (Spain 2010) ★ | GK | 92 | stature | 83.6 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.710/w 1.00 |
-| 17 | Casillas (Spain 2006) ★ | GK | 92 | stature | 83.0 | 57.3 | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00 |
-| 18 | Buffon (Italy 1998) ★ | GK | 91 | stature | 81.9 | 34.8 | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00 |
-| 19 | Casillas (Spain 2014) ★ | GK | 91 | stature | 80.3 | 53.5 | apps 2 (p0.70), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00 |
-| 20 | Barthez (France 1998) | GK | 91 | stature | 79.8 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.650/w 1.00 |
-| 21 | Barthez (France 2002) | GK | 91 | stature | 79.8 | 57.0 | apps 3 (p0.77), goals 0 (p0.50), award 0.00, finish — · stature idx 0.650/w 1.00 |
-| 22 | Barthez (France 2006) | GK | 91 | stature | 79.8 | 88.2 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 0.75 · stature idx 0.650/w 1.00 |
-| 23 | Kahn (Germany 1998) ★ | GK | 90 | stature | 78.2 | 34.8 | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00 |
-| 24 | Schmeichel (Denmark 1998) ★ | GK | 90 | stature | 75.1 | 64.9 | apps 5 (p0.94), goals 0 (p0.50), award 0.00, finish — · stature idx 0.575/w 1.00 |
-| 25 | Yashin (Soviet Union 1970) ★ | GK | 89 | stature | 74.6 | 32.5 | apps 0 (p0.26), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00 |
+
+| #   | card                         | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                   |
+| --- | ---------------------------- | --- | --- | ------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| 1   | Buffon (Italy 2002) ★        | GK  | 93  | stature | 87.9     | 62.2       | apps 4 (p0.88), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00                               |
+| 2   | Buffon (Italy 2006) ★        | GK  | 93  | stature | 87.9     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.777/w 1.00             |
+| 3   | Buffon (Italy 2010) ★        | GK  | 93  | stature | 86.6     | 50.5       | apps 1 (p0.64), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00                               |
+| 4   | Yashin (Soviet Union 1958) ★ | GK  | 92  | stature | 85.4     | 62.8       | apps 5 (p0.89), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00                               |
+| 5   | Yashin (Soviet Union 1962) ★ | GK  | 92  | stature | 85.4     | 54.1       | apps 4 (p0.71), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00                               |
+| 6   | Yashin (Soviet Union 1966) ★ | GK  | 92  | stature | 85.4     | 68.4       | apps 4 (p0.78), goals 0 (p0.50), award 0.00, finish 0.40 · stature idx 0.738/w 1.00                            |
+| 7   | Neuer (Germany 2010) ★       | GK  | 92  | stature | 85.1     | 81.7       | apps 6 (p0.96), goals 0 (p0.50), award 0.00, finish 0.55 · stature idx 0.733/w 1.00                            |
+| 8   | Neuer (Germany 2014) ★       | GK  | 92  | stature | 85.1     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.733/w 1.00             |
+| 9   | Neuer (Germany 2018) ★       | GK  | 92  | stature | 85.1     | 57.5       | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00                               |
+| 10  | Neuer (Germany 2022) ★       | GK  | 92  | stature | 85.1     | 57.6       | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.733/w 1.00                               |
+| 11  | Neuer (Germany 2026) ★       | GK  | 92  | stature | 85.1     | 82.7       | caps 124 (p0.98), goals 0 (p0.50), age 40 (af 0.80), lg 0.90 · stature idx 0.733/w 1.00                        |
+| 12  | Buffon (Italy 2014) ★        | GK  | 92  | stature | 84.6     | 53.5       | apps 2 (p0.70), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00                               |
+| 13  | Kahn (Germany 2002) ★        | GK  | 92  | stature | 84.2     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 1.00, finish 0.75 [Golden Ball,Golden Glove] · stature idx 0.719/w 1.00 |
+| 14  | Kahn (Germany 2006) ★        | GK  | 92  | stature | 84.2     | 65.2       | apps 1 (p0.62), goals 0 (p0.50), award 0.00, finish 0.55 · stature idx 0.719/w 1.00                            |
+| 15  | Casillas (Spain 2002) ★      | GK  | 92  | stature | 83.6     | 65.0       | apps 5 (p0.94), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00                               |
+| 16  | Casillas (Spain 2010) ★      | GK  | 92  | stature | 83.6     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.710/w 1.00             |
+| 17  | Casillas (Spain 2006) ★      | GK  | 92  | stature | 83.0     | 57.3       | apps 3 (p0.78), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00                               |
+| 18  | Buffon (Italy 1998) ★        | GK  | 91  | stature | 81.9     | 34.8       | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00                               |
+| 19  | Casillas (Spain 2014) ★      | GK  | 91  | stature | 80.3     | 53.5       | apps 2 (p0.70), goals 0 (p0.50), award 0.00, finish — · stature idx 0.710/w 1.00                               |
+| 20  | Barthez (France 1998)        | GK  | 91  | stature | 79.8     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.650/w 1.00             |
+| 21  | Barthez (France 2002)        | GK  | 91  | stature | 79.8     | 57.0       | apps 3 (p0.77), goals 0 (p0.50), award 0.00, finish — · stature idx 0.650/w 1.00                               |
+| 22  | Barthez (France 2006)        | GK  | 91  | stature | 79.8     | 88.2       | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 0.75 · stature idx 0.650/w 1.00                            |
+| 23  | Kahn (Germany 1998) ★        | GK  | 90  | stature | 78.2     | 34.8       | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00                               |
+| 24  | Schmeichel (Denmark 1998) ★  | GK  | 90  | stature | 75.1     | 64.9       | apps 5 (p0.94), goals 0 (p0.50), award 0.00, finish — · stature idx 0.575/w 1.00                               |
+| 25  | Yashin (Soviet Union 1970) ★ | GK  | 89  | stature | 74.6     | 32.5       | apps 0 (p0.26), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00                               |
 
 ## T1-c Top 25 — DF (n=3772)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Beckenbauer (West Germany 1974) ★ | DF | 98 | stature | 97.9 | 89.2 | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.889/w 1.00 |
-| 2 | Matthäus (Germany 1998) ★ | DF | 96 | stature | 94.6 | 59.0 | apps 4 (p0.81), goals 0 (p0.47), award 0.00, finish — · stature idx 0.891/w 1.00 |
-| 3 | Cannavaro (Italy 2006) ★ | DF | 96 | stature | 94.0 | 100.0 | apps 7 (p0.99), goals 0 (p0.47), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.827/w 1.00 |
-| 4 | Hanappi (Austria 1954) | DF | 96 | stature | 92.9 | 76.9 | apps 5 (p0.91), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.809/w 1.00 |
-| 5 | Santos (Brazil 1962) | DF | 95 | stature | 92.7 | 88.3 | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.805/w 1.00 |
-| 6 | Cannavaro (Italy 1998) ★ | DF | 95 | stature | 92.2 | 63.7 | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 7 | Santos (Brazil 1954) | DF | 94 | stature | 90.5 | 48.3 | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 8 | Maldini (Italy 1990) ★ | DF | 94 | stature | 89.2 | 80.0 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 0.55 · stature idx 0.750/w 1.00 |
-| 9 | Maldini (Italy 1994) ★ | DF | 94 | stature | 89.2 | 85.0 | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 0.75 · stature idx 0.750/w 1.00 |
-| 10 | Santos (Brazil 1958) | DF | 94 | stature | 88.9 | 47.9 | apps 1 (p0.08), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.805/w 1.00 |
-| 11 | Carlos (Brazil 1998) ★ | DF | 94 | stature | 88.7 | 85.2 | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.743/w 1.00 |
-| 12 | Carlos (Brazil 2002) ★ | DF | 94 | stature | 88.7 | 89.9 | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.743/w 1.00 |
-| 13 | van Dijk (Netherlands 2026) ★ | DF | 94 | stature | 88.3 | 92.0 | caps 91 (p0.95), goals 12 (p0.99), age 34 (af 0.90), lg 1.00 · stature idx 0.737/w 1.00 |
-| 14 | Carlos (Brazil 2006) ★ | DF | 93 | stature | 88.0 | 60.9 | apps 4 (p0.85), goals 0 (p0.47), award 0.00, finish — · stature idx 0.743/w 1.00 |
-| 15 | Bozsik (Hungary 1958) | DF | 93 | stature | 87.4 | 39.4 | apps 3 (p0.40), goals 1 (p0.98), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 16 | Maldini (Italy 1998) ★ | DF | 93 | stature | 87.4 | 63.7 | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.750/w 1.00 |
-| 17 | Cannavaro (Italy 2002) ★ | DF | 93 | stature | 87.0 | 49.6 | apps 3 (p0.62), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 18 | Cannavaro (Italy 2010) ★ | DF | 93 | stature | 87.0 | 50.8 | apps 3 (p0.64), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 19 | van Dijk (Netherlands 2022) ★ | DF | 93 | stature | 86.2 | 64.4 | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish — · stature idx 0.737/w 1.00 |
-| 20 | Hanappi (Austria 1958) | DF | 93 | stature | 86.2 | 39.4 | apps 3 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.809/w 1.00 |
-| 21 | Santos (Brazil 1966) | DF | 93 | stature | 85.7 | 39.4 | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 22 | Maldini (Italy 2002) ★ | DF | 93 | stature | 85.7 | 59.5 | apps 4 (p0.82), goals 0 (p0.46), award 0.00, finish — · stature idx 0.750/w 1.00 |
-| 23 | Santos (Brazil 1958) | DF | 92 | stature | 85.0 | 87.7 | apps 6 (p0.91), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.684/w 1.00 |
-| 24 | Santos (Brazil 1962) | DF | 92 | stature | 85.0 | 88.3 | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.684/w 1.00 |
-| 25 | Happel (Austria 1954) | DF | 92 | stature | 83.8 | 70.0 | apps 4 (p0.77), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.665/w 1.00 |
+
+| #   | card                              | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                      |
+| --- | --------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| 1   | Beckenbauer (West Germany 1974) ★ | DF  | 98  | stature | 97.9     | 89.2       | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.889/w 1.00               |
+| 2   | Matthäus (Germany 1998) ★         | DF  | 96  | stature | 94.6     | 59.0       | apps 4 (p0.81), goals 0 (p0.47), award 0.00, finish — · stature idx 0.891/w 1.00                  |
+| 3   | Cannavaro (Italy 2006) ★          | DF  | 96  | stature | 94.0     | 100.0      | apps 7 (p0.99), goals 0 (p0.47), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.827/w 1.00 |
+| 4   | Hanappi (Austria 1954)            | DF  | 96  | stature | 92.9     | 76.9       | apps 5 (p0.91), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.809/w 1.00               |
+| 5   | Santos (Brazil 1962)              | DF  | 95  | stature | 92.7     | 88.3       | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.805/w 1.00               |
+| 6   | Cannavaro (Italy 1998) ★          | DF  | 95  | stature | 92.2     | 63.7       | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.827/w 1.00                  |
+| 7   | Santos (Brazil 1954)              | DF  | 94  | stature | 90.5     | 48.3       | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00                  |
+| 8   | Maldini (Italy 1990) ★            | DF  | 94  | stature | 89.2     | 80.0       | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 0.55 · stature idx 0.750/w 1.00               |
+| 9   | Maldini (Italy 1994) ★            | DF  | 94  | stature | 89.2     | 85.0       | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 0.75 · stature idx 0.750/w 1.00               |
+| 10  | Santos (Brazil 1958)              | DF  | 94  | stature | 88.9     | 47.9       | apps 1 (p0.08), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.805/w 1.00               |
+| 11  | Carlos (Brazil 1998) ★            | DF  | 94  | stature | 88.7     | 85.2       | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.743/w 1.00               |
+| 12  | Carlos (Brazil 2002) ★            | DF  | 94  | stature | 88.7     | 89.9       | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.743/w 1.00               |
+| 13  | van Dijk (Netherlands 2026) ★     | DF  | 94  | stature | 88.3     | 92.0       | caps 91 (p0.95), goals 12 (p0.99), age 34 (af 0.90), lg 1.00 · stature idx 0.737/w 1.00           |
+| 14  | Carlos (Brazil 2006) ★            | DF  | 93  | stature | 88.0     | 60.9       | apps 4 (p0.85), goals 0 (p0.47), award 0.00, finish — · stature idx 0.743/w 1.00                  |
+| 15  | Bozsik (Hungary 1958)             | DF  | 93  | stature | 87.4     | 39.4       | apps 3 (p0.40), goals 1 (p0.98), award 0.00, finish — · stature idx 0.829/w 1.00                  |
+| 16  | Maldini (Italy 1998) ★            | DF  | 93  | stature | 87.4     | 63.7       | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish — · stature idx 0.750/w 1.00                  |
+| 17  | Cannavaro (Italy 2002) ★          | DF  | 93  | stature | 87.0     | 49.6       | apps 3 (p0.62), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00                  |
+| 18  | Cannavaro (Italy 2010) ★          | DF  | 93  | stature | 87.0     | 50.8       | apps 3 (p0.64), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00                  |
+| 19  | van Dijk (Netherlands 2022) ★     | DF  | 93  | stature | 86.2     | 64.4       | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish — · stature idx 0.737/w 1.00                  |
+| 20  | Hanappi (Austria 1958)            | DF  | 93  | stature | 86.2     | 39.4       | apps 3 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.809/w 1.00                  |
+| 21  | Santos (Brazil 1966)              | DF  | 93  | stature | 85.7     | 39.4       | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00                  |
+| 22  | Maldini (Italy 2002) ★            | DF  | 93  | stature | 85.7     | 59.5       | apps 4 (p0.82), goals 0 (p0.46), award 0.00, finish — · stature idx 0.750/w 1.00                  |
+| 23  | Santos (Brazil 1958)              | DF  | 92  | stature | 85.0     | 87.7       | apps 6 (p0.91), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.684/w 1.00               |
+| 24  | Santos (Brazil 1962)              | DF  | 92  | stature | 85.0     | 88.3       | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx 0.684/w 1.00               |
+| 25  | Happel (Austria 1954)             | DF  | 92  | stature | 83.8     | 70.0       | apps 4 (p0.77), goals 0 (p0.48), award 0.00, finish 0.55 · stature idx 0.665/w 1.00               |
 
 ## T1-c Top 25 — MF (n=3741)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Modrić (Croatia 2018) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00 |
-| 2 | Modrić (Croatia 2022) ★ | MF | 99 | stature | 100.0 | 76.5 | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00 |
-| 3 | Modrić (Croatia 2026) ★ | MF | 99 | stature | 100.0 | 88.8 | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00 |
-| 4 | Matthäus (West Germany 1986) ★ | MF | 99 | stature | 100.0 | 77.2 | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00 |
-| 5 | Matthäus (West Germany 1990) ★ | MF | 99 | stature | 100.0 | 98.8 | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00 |
-| 6 | Matthäus (Germany 1994) ★ | MF | 99 | stature | 100.0 | 63.0 | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00 |
-| 7 | Zidane (France 1998) ★ | MF | 99 | stature | 100.0 | 80.6 | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00 |
-| 8 | Zidane (France 2006) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00 |
-| 9 | Beckenbauer (West Germany 1966) ★ | MF | 99 | stature | 100.0 | 94.8 | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
-| 10 | Beckenbauer (West Germany 1970) ★ | MF | 99 | stature | 100.0 | 71.1 | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00 |
-| 11 | Maradona (Argentina 1982) ★ | MF | 99 | stature | 100.0 | 63.3 | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 12 | Maradona (Argentina 1986) ★ | MF | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00 |
-| 13 | Maradona (Argentina 1990) ★ | MF | 99 | stature | 100.0 | 79.1 | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00 |
-| 14 | Ronaldinho (Brazil 2002) ★ | MF | 99 | stature | 99.4 | 81.3 | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00 |
-| 15 | Meazza (Italy 1934) ★ | MF | 98 | stature | 99.0 | 83.2 | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 16 | Meazza (Italy 1938) ★ | MF | 98 | stature | 99.0 | 81.8 | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00 |
-| 17 | Zico (Brazil 1978) ★ | MF | 98 | stature | 98.6 | 70.2 | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00 |
-| 18 | Zico (Brazil 1982) ★ | MF | 98 | stature | 98.6 | 74.1 | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00 |
-| 19 | Maradona (Argentina 1994) ★ | MF | 98 | stature | 98.2 | 47.0 | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 20 | Kopa (France 1958) ★ | MF | 98 | stature | 97.6 | 74.8 | apps 6 (p0.94), goals 3 (p0.98), award 0.00, finish 0.55 · stature idx 0.843/w 1.00 |
-| 21 | Iniesta (Spain 2010) ★ | MF | 98 | stature | 97.3 | 82.1 | apps 6 (p0.95), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.839/w 1.00 |
-| 22 | Rivaldo (Brazil 1998) ★ | MF | 97 | stature | 96.7 | 79.4 | apps 7 (p0.98), goals 3 (p1.00), award 0.00, finish 0.75 · stature idx 0.830/w 1.00 |
-| 23 | Rivaldo (Brazil 2002) ★ | MF | 97 | stature | 96.7 | 96.6 | apps 7 (p0.98), goals 5 (p1.00), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.830/w 1.00 |
-| 24 | Bozsik (Hungary 1954) | MF | 97 | stature | 96.6 | 67.1 | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.829/w 1.00 |
-| 25 | Xavi (Spain 2010) ★ | MF | 97 | stature | 95.7 | 72.4 | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.815/w 1.00 |
+
+| #   | card                              | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                        |
+| --- | --------------------------------- | --- | --- | ------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1   | Modrić (Croatia 2018) ★           | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.99), goals 2 (p0.99), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.898/w 1.00                   |
+| 2   | Modrić (Croatia 2022) ★           | MF  | 99  | stature | 100.0    | 76.5       | apps 7 (p0.98), goals 0 (p0.44), award 0.50, finish 0.55 [Bronze Ball] · stature idx 0.898/w 1.00                   |
+| 3   | Modrić (Croatia 2026) ★           | MF  | 99  | stature | 100.0    | 88.8       | caps 197 (p1.00), goals 28 (p0.99), age 40 (af 0.80), lg 0.90 · stature idx 0.898/w 1.00                            |
+| 4   | Matthäus (West Germany 1986) ★    | MF  | 99  | stature | 100.0    | 77.2       | apps 7 (p0.98), goals 1 (p0.88), award 0.00, finish 0.75 · stature idx 0.891/w 1.00                                 |
+| 5   | Matthäus (West Germany 1990) ★    | MF  | 99  | stature | 100.0    | 98.8       | apps 7 (p0.98), goals 4 (p0.99), award 0.70, finish 1.00 [Silver Ball] · stature idx 0.891/w 1.00                   |
+| 6   | Matthäus (Germany 1994) ★         | MF  | 99  | stature | 100.0    | 63.0       | apps 5 (p0.89), goals 1 (p0.90), award 0.00, finish — · stature idx 0.891/w 1.00                                    |
+| 7   | Zidane (France 1998) ★            | MF  | 99  | stature | 100.0    | 80.6       | apps 5 (p0.90), goals 2 (p0.97), award 0.00, finish 1.00 · stature idx 0.928/w 1.00                                 |
+| 8   | Zidane (France 2006) ★            | MF  | 99  | stature | 100.0    | 100.0      | apps 6 (p0.95), goals 3 (p1.00), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.928/w 1.00                   |
+| 9   | Beckenbauer (West Germany 1966) ★ | MF  | 99  | stature | 100.0    | 94.8       | apps 6 (p0.94), goals 4 (p1.00), award 0.75, finish 0.75 [Best Young Player,Bronze Boot] · stature idx 0.889/w 1.00 |
+| 10  | Beckenbauer (West Germany 1970) ★ | MF  | 99  | stature | 100.0    | 71.1       | apps 5 (p0.89), goals 1 (p0.87), award 0.00, finish 0.55 · stature idx 0.889/w 1.00                                 |
+| 11  | Maradona (Argentina 1982) ★       | MF  | 99  | stature | 100.0    | 63.3       | apps 5 (p0.87), goals 2 (p0.95), award 0.00, finish — · stature idx 0.952/w 1.00                                    |
+| 12  | Maradona (Argentina 1986) ★       | MF  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 5 (p1.00), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.952/w 1.00       |
+| 13  | Maradona (Argentina 1990) ★       | MF  | 99  | stature | 100.0    | 79.1       | apps 7 (p0.98), goals 0 (p0.41), award 0.50, finish 0.75 [Bronze Ball] · stature idx 0.952/w 1.00                   |
+| 14  | Ronaldinho (Brazil 2002) ★        | MF  | 99  | stature | 99.4     | 81.3       | apps 5 (p0.92), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.870/w 1.00                                 |
+| 15  | Meazza (Italy 1934) ★             | MF  | 98  | stature | 99.0     | 83.2       | apps 5 (p0.98), goals 2 (p0.99), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 16  | Meazza (Italy 1938) ★             | MF  | 98  | stature | 99.0     | 81.8       | apps 4 (p0.94), goals 1 (p0.98), award 0.00, finish 1.00 · stature idx 0.865/w 1.00                                 |
+| 17  | Zico (Brazil 1978) ★              | MF  | 98  | stature | 98.6     | 70.2       | apps 6 (p0.86), goals 1 (p0.86), award 0.00, finish 0.55 · stature idx 0.859/w 1.00                                 |
+| 18  | Zico (Brazil 1982) ★              | MF  | 98  | stature | 98.6     | 74.1       | apps 5 (p0.87), goals 4 (p1.00), award 0.45, finish — [Bronze Boot] · stature idx 0.859/w 1.00                      |
+| 19  | Maradona (Argentina 1994) ★       | MF  | 98  | stature | 98.2     | 47.0       | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00                                    |
+| 20  | Kopa (France 1958) ★              | MF  | 98  | stature | 97.6     | 74.8       | apps 6 (p0.94), goals 3 (p0.98), award 0.00, finish 0.55 · stature idx 0.843/w 1.00                                 |
+| 21  | Iniesta (Spain 2010) ★            | MF  | 98  | stature | 97.3     | 82.1       | apps 6 (p0.95), goals 2 (p0.98), award 0.00, finish 1.00 · stature idx 0.839/w 1.00                                 |
+| 22  | Rivaldo (Brazil 1998) ★           | MF  | 97  | stature | 96.7     | 79.4       | apps 7 (p0.98), goals 3 (p1.00), award 0.00, finish 0.75 · stature idx 0.830/w 1.00                                 |
+| 23  | Rivaldo (Brazil 2002) ★           | MF  | 97  | stature | 96.7     | 96.6       | apps 7 (p0.98), goals 5 (p1.00), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.830/w 1.00                   |
+| 24  | Bozsik (Hungary 1954)             | MF  | 97  | stature | 96.6     | 67.1       | apps 5 (p0.91), goals 0 (p0.47), award 0.00, finish 0.75 · stature idx 0.829/w 1.00                                 |
+| 25  | Xavi (Spain 2010) ★               | MF  | 97  | stature | 95.7     | 72.4       | apps 7 (p0.98), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.815/w 1.00                                 |
 
 ## T1-c Top 25 — FW (n=3159)
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Kocsis (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 97.2 | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00 |
-| 2 | Puskás (Hungary 1954) ★ | FW | 99 | stature | 100.0 | 74.9 | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00 |
-| 3 | Messi (Argentina 2006) ★ | FW | 99 | stature | 100.0 | 55.0 | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 4 | Messi (Argentina 2014) ★ | FW | 99 | stature | 100.0 | 99.2 | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00 |
-| 5 | Messi (Argentina 2018) ★ | FW | 99 | stature | 100.0 | 58.3 | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 6 | Messi (Argentina 2022) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00 |
-| 7 | Messi (Argentina 2026) ★ | FW | 99 | stature | 100.0 | 76.2 | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00 |
-| 8 | Rummenigge (West Germany 1978) ★ | FW | 99 | stature | 100.0 | 63.2 | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00 |
-| 9 | Rummenigge (West Germany 1982) ★ | FW | 99 | stature | 100.0 | 95.4 | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00 |
-| 10 | Rummenigge (West Germany 1986) ★ | FW | 99 | stature | 100.0 | 71.8 | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00 |
-| 11 | Ronaldo (Brazil 1998) ★ | FW | 99 | stature | 100.0 | 98.7 | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00 |
-| 12 | Ronaldo (Brazil 2002) ★ | FW | 99 | stature | 100.0 | 100.0 | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00 |
-| 13 | Ronaldo (Brazil 2006) ★ | FW | 99 | stature | 100.0 | 75.2 | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00 |
-| 14 | Piola (Italy 1938) | FW | 99 | stature | 100.0 | 94.9 | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00 |
-| 15 | Müller (West Germany 1970) ★ | FW | 99 | stature | 100.0 | 94.0 | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00 |
-| 16 | Müller (West Germany 1974) ★ | FW | 99 | stature | 100.0 | 82.1 | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00 |
-| 17 | Eusébio (Portugal 1966) ★ | FW | 99 | stature | 100.0 | 94.1 | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00 |
-| 18 | Rossi (Italy 1978) ★ | FW | 99 | stature | 99.9 | 85.6 | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00 |
-| 19 | Rossi (Italy 1982) ★ | FW | 99 | stature | 99.9 | 100.0 | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00 |
-| 20 | Ronaldo (Portugal 2006) ★ | FW | 99 | stature | 99.9 | 65.5 | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00 |
-| 21 | Ronaldo (Portugal 2018) ★ | FW | 99 | stature | 99.9 | 65.0 | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 22 | Ronaldo (Portugal 2022) ★ | FW | 99 | stature | 99.8 | 57.8 | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 23 | Albert (Hungary 1962) | FW | 99 | stature | 99.5 | 82.2 | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00 |
-| 24 | Ronaldo (Portugal 2010) ★ | FW | 99 | stature | 99.4 | 58.7 | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 25 | Scarone (Uruguay 1930) ★ | FW | 98 | stature | 98.9 | 73.2 | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00 |
+
+| #   | card                             | pos | OVR | basis   | internal | raw(uncap) | merit inputs                                                                                                     |
+| --- | -------------------------------- | --- | --- | ------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| 1   | Kocsis (Hungary 1954) ★          | FW  | 99  | stature | 100.0    | 97.2       | apps 5 (p0.94), goals 11 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.992/w 1.00               |
+| 2   | Puskás (Hungary 1954) ★          | FW  | 99  | stature | 100.0    | 74.9       | apps 3 (p0.71), goals 4 (p0.95), award 0.00, finish 0.75 · stature idx 0.886/w 1.00                              |
+| 3   | Messi (Argentina 2006) ★         | FW  | 99  | stature | 100.0    | 55.0       | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00                                 |
+| 4   | Messi (Argentina 2014) ★         | FW  | 99  | stature | 100.0    | 99.2       | apps 7 (p0.99), goals 4 (p0.98), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.938/w 1.00                |
+| 5   | Messi (Argentina 2018) ★         | FW  | 99  | stature | 100.0    | 58.3       | apps 4 (p0.81), goals 1 (p0.79), award 0.00, finish — · stature idx 0.938/w 1.00                                 |
+| 6   | Messi (Argentina 2022) ★         | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 7 (p0.99), award 1.00, finish 1.00 [Golden Ball,Silver Boot] · stature idx 0.938/w 1.00    |
+| 7   | Messi (Argentina 2026) ★         | FW  | 99  | stature | 100.0    | 76.2       | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00                        |
+| 8   | Rummenigge (West Germany 1978) ★ | FW  | 99  | stature | 100.0    | 63.2       | apps 5 (p0.80), goals 3 (p0.93), award 0.00, finish — · stature idx 0.889/w 1.00                                 |
+| 9   | Rummenigge (West Germany 1982) ★ | FW  | 99  | stature | 100.0    | 95.4       | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 0.75 [Bronze Ball,Silver Boot] · stature idx 0.889/w 1.00    |
+| 10  | Rummenigge (West Germany 1986) ★ | FW  | 99  | stature | 100.0    | 71.8       | apps 7 (p0.98), goals 1 (p0.78), award 0.00, finish 0.75 · stature idx 0.889/w 1.00                              |
+| 11  | Ronaldo (Brazil 1998) ★          | FW  | 99  | stature | 100.0    | 98.7       | apps 7 (p0.98), goals 4 (p0.97), award 1.00, finish 0.75 [Golden Ball] · stature idx 0.913/w 1.00                |
+| 12  | Ronaldo (Brazil 2002) ★          | FW  | 99  | stature | 100.0    | 100.0      | apps 7 (p0.98), goals 8 (p1.00), award 0.97, finish 1.00 [Golden Boot,Silver Ball] · stature idx 0.913/w 1.00    |
+| 13  | Ronaldo (Brazil 2006) ★          | FW  | 99  | stature | 100.0    | 75.2       | apps 5 (p0.92), goals 3 (p0.97), award 0.45, finish — [Bronze Boot] · stature idx 0.913/w 1.00                   |
+| 14  | Piola (Italy 1938)               | FW  | 99  | stature | 100.0    | 94.9       | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.911/w 1.00                |
+| 15  | Müller (West Germany 1970) ★     | FW  | 99  | stature | 100.0    | 94.0       | apps 6 (p0.95), goals 10 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.887/w 1.00               |
+| 16  | Müller (West Germany 1974) ★     | FW  | 99  | stature | 100.0    | 82.1       | apps 7 (p0.96), goals 4 (p0.96), award 0.00, finish 1.00 · stature idx 0.887/w 1.00                              |
+| 17  | Eusébio (Portugal 1966) ★        | FW  | 99  | stature | 100.0    | 94.1       | apps 6 (p0.96), goals 9 (p0.99), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.879/w 1.00                |
+| 18  | Rossi (Italy 1978) ★             | FW  | 99  | stature | 99.9     | 85.6       | apps 7 (p0.97), goals 3 (p0.93), award 0.70, finish 0.40 [Silver Ball] · stature idx 0.879/w 1.00                |
+| 19  | Rossi (Italy 1982) ★             | FW  | 99  | stature | 99.9     | 100.0      | apps 7 (p0.98), goals 6 (p1.00), award 1.00, finish 1.00 [Golden Ball,Golden Boot] · stature idx 0.879/w 1.00    |
+| 20  | Ronaldo (Portugal 2006) ★        | FW  | 99  | stature | 99.9     | 65.5       | apps 6 (p0.95), goals 1 (p0.77), award 0.00, finish 0.40 · stature idx 0.878/w 1.00                              |
+| 21  | Ronaldo (Portugal 2018) ★        | FW  | 99  | stature | 99.9     | 65.0       | apps 4 (p0.81), goals 4 (p0.98), award 0.00, finish — · stature idx 0.878/w 1.00                                 |
+| 22  | Ronaldo (Portugal 2022) ★        | FW  | 99  | stature | 99.8     | 57.8       | apps 5 (p0.89), goals 1 (p0.75), award 0.00, finish — · stature idx 0.878/w 1.00                                 |
+| 23  | Albert (Hungary 1962)            | FW  | 99  | stature | 99.5     | 82.2       | apps 3 (p0.67), goals 4 (p0.98), award 0.95, finish — [Best Young Player,Golden Boot] · stature idx 0.872/w 1.00 |
+| 24  | Ronaldo (Portugal 2010) ★        | FW  | 99  | stature | 99.4     | 58.7       | apps 4 (p0.81), goals 1 (p0.81), award 0.00, finish — · stature idx 0.878/w 1.00                                 |
+| 25  | Scarone (Uruguay 1930) ★         | FW  | 98  | stature | 98.9     | 73.2       | apps 3 (p0.78), goals 1 (p0.77), award 0.00, finish 1.00 · stature idx 0.864/w 1.00                              |
 
 ---
 
@@ -528,103 +540,104 @@ Archive = 791 players (career-stature-2.1.0). Legend band = **302 legend cards o
   gate, best card 88 (§F).
 
 ## T2-a Top 60 by career-stature index
-| # | player | pos | index | tier | legend | best hist card (yr) | 2026 card | facts | fact families | flag |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Kocsis | None | 0.992 | gold | Y | 99 (1954) | — | 5 | international_record,retrospective_selection,wc_legacy | ok |
-| 2 | Maradona | MF | 0.952 | gold | Y | 99 (1982) | — | 20 | captaincy,global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 3 | Messi | FW | 0.938 | gold | Y | 99 (2006) | 99 | 69 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 4 | Zidane | MF | 0.928 | gold | Y | 99 (1998) | — | 23 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 5 | Ronaldo | FW | 0.913 | gold | Y | 99 (1998) | — | 16 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 6 | Piola | None | 0.911 | gold | n | 99 (1938) | — | 4 | international_record,retrospective_selection,wc_legacy | NOT-LEGEND |
-| 7 | Modrić | MF | 0.898 | gold | Y | 99 (2018) | 99 | 19 | captaincy,global_annual_recognition,international_record,position_balanced_selection,wc_legacy | ok |
-| 8 | Matthäus | MF | 0.891 | gold | Y | 99 (1986) | — | 14 | captaincy,global_annual_recognition,international_record,retrospective_selection,wc_legacy | ok |
-| 9 | Rummenigge | None | 0.889 | gold | Y | 99 (1978) | — | 11 | global_annual_recognition,international_record,retrospective_selection,wc_legacy | ok |
-| 10 | Beckenbauer | DF | 0.889 | gold | Y | 99 (1966) | — | 12 | captaincy,global_annual_recognition,international_record,retrospective_selection,wc_legacy | ok |
-| 11 | Müller | None | 0.887 | gold | Y | 99 (1970) | — | 7 | global_annual_recognition,international_record,retrospective_selection,wc_legacy | ok |
-| 12 | Puskás | None | 0.886 | gold | Y | 99 (1954) | — | 6 | international_record,retrospective_selection | ok |
-| 13 | Eusébio | None | 0.879 | gold | Y | 99 (1966) | — | 6 | global_annual_recognition,international_record,retrospective_selection,wc_legacy | ok |
-| 14 | Rossi | None | 0.879 | gold | Y | 99 (1978) | — | 8 | global_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 15 | Ronaldo | FW | 0.878 | gold | Y | 99 (2006) | 97 | 56 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 16 | Albert | None | 0.872 | gold | n | 99 (1962) | — | 6 | global_annual_recognition,international_record,retrospective_selection,wc_legacy | NOT-LEGEND |
-| 17 | Ronaldinho | MF | 0.870 | gold | Y | 99 (2002) | — | 20 | global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition,retrospective_selection | ok |
-| 18 | Meazza | None | 0.865 | gold | Y | 98 (1934) | — | 4 | international_record,retrospective_selection | ok |
-| 19 | Scarone | None | 0.864 | gold | Y | 98 (1930) | — | 2 | international_record,retrospective_selection | ok |
-| 20 | Zizinho | None | 0.863 | gold | Y | 98 (1950) | — | 2 | international_record,retrospective_selection | ok |
-| 21 | Romário | None | 0.862 | gold | Y | 98 (1994) | — | 8 | global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 22 | Zico | None | 0.859 | gold | Y | 98 (1978) | — | 9 | global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 23 | Mbappé | FW | 0.858 | gold | Y | 98 (2018) | 98 | 17 | global_annual_recognition,international_record,position_balanced_selection,wc_legacy | ok |
-| 24 | Henry | FW | 0.857 | gold | Y | 98 (1998) | — | 15 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 25 | Baggio | None | 0.854 | gold | Y | 98 (1990) | — | 6 | global_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 26 | Sindelar | None | 0.843 | gold | Y | 98 (1934) | — | 3 | retrospective_selection | ok |
-| 27 | Schiaffino | None | 0.843 | gold | Y | 98 (1950) | — | 3 | retrospective_selection | ok |
-| 28 | Matthews | None | 0.843 | gold | Y | 94 (1954) | — | 4 | global_annual_recognition,retrospective_selection | ok |
-| 29 | Kopa | None | 0.843 | gold | Y | 98 (1958) | — | 5 | global_annual_recognition,retrospective_selection | ok |
-| 30 | Iniesta | MF | 0.839 | gold | Y | 98 (2010) | — | 22 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 31 | Walter | None | 0.832 | gold | n | 97 (1954) | — | 3 | international_record,retrospective_selection | NOT-LEGEND |
-| 32 | Lewandowski | FW | 0.831 | gold | Y | 97 (2022) | — | 16 | global_annual_recognition,international_record,position_balanced_selection | ok |
-| 33 | Rivaldo | MF | 0.830 | gold | Y | 97 (1998) | — | 8 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 34 | Kempes | None | 0.829 | gold | Y | 97 (1978) | — | 5 | global_annual_recognition,regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 35 | Bozsik | None | 0.829 | gold | n | 97 (1954) | — | 3 | international_record,retrospective_selection | NOT-LEGEND |
-| 36 | Cannavaro | DF | 0.827 | gold | Y | 96 (2006) | — | 7 | captaincy,global_annual_recognition,international_record,position_balanced_selection,wc_legacy | ok |
-| 37 | Shevchenko | FW | 0.823 | gold | Y | 97 (2006) | — | 10 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 38 | Cea | None | 0.822 | gold | n | 97 (1930) | — | 2 | retrospective_selection,wc_legacy | NOT-LEGEND |
-| 39 | Nedvěd | MF | 0.818 | gold | Y | 93 (2006) | — | 9 | global_annual_recognition,position_balanced_selection,retrospective_selection | ok |
-| 40 | Figo | MF | 0.816 | gold | Y | 96 (2006) | — | 9 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 41 | Xavi | MF | 0.815 | gold | Y | 97 (2010) | — | 18 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection | ok |
-| 42 | Ocwirk | None | 0.809 | gold | n | 97 (1954) | — | 2 | retrospective_selection | NOT-LEGEND |
-| 43 | Andrade | None | 0.809 | gold | n | 97 (1930) | — | 2 | retrospective_selection | NOT-LEGEND |
-| 44 | Hanappi | None | 0.809 | gold | n | 96 (1954) | — | 2 | retrospective_selection | NOT-LEGEND |
-| 45 | Pelé | None | 0.807 | silver | Y | 97 (1958) | — | 8 | international_record,regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 46 | Santos | DF | 0.805 | silver | n | 95 (1962) | — | 4 | retrospective_selection,wc_legacy | NOT-LEGEND |
-| 47 | Platini | MF | 0.804 | silver | Y | 96 (1982) | — | 16 | global_annual_recognition,international_record,retrospective_selection | ok |
-| 48 | Salah | FW | 0.800 | silver | Y | 96 (2018) | 96 | 9 | captaincy,global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition | ok |
-| 49 | Kaká | MF | 0.799 | silver | Y | 96 (2006) | — | 11 | global_annual_recognition,position_balanced_selection | ok |
-| 50 | Owen | FW | 0.789 | silver | Y | 96 (1998) | — | 7 | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 51 | Cubillas | None | 0.786 | silver | Y | 96 (1970) | — | 7 | regional_annual_recognition,retrospective_selection,wc_legacy | ok |
-| 52 | van Basten | None | 0.781 | silver | Y | 93 (1990) | — | 16 | global_annual_recognition,retrospective_selection | ok |
-| 53 | Keegan | None | 0.781 | silver | Y | 92 (1982) | — | 10 | global_annual_recognition,retrospective_selection | ok |
-| 54 | Boniperti | None | 0.780 | silver | n | 94 (1954) | — | 2 | retrospective_selection | NOT-LEGEND |
-| 55 | Gullit | None | 0.780 | silver | Y | 95 (1990) | — | 9 | global_annual_recognition,retrospective_selection | ok |
-| 56 | Buffon | GK | 0.777 | silver | Y | 93 (2002) | — | 17 | international_record,position_balanced_selection,retrospective_selection,wc_legacy | ok |
-| 57 | Drogba | FW | 0.776 | silver | Y | 95 (2010) | — | 8 | global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition | ok |
-| 58 | Di Stéfano | MF | 0.774 | silver | Y | 92 (1962) | — | 6 | global_annual_recognition,retrospective_selection | ok |
-| 59 | Law | None | 0.760 | silver | Y | 91 (1974) | — | 4 | global_annual_recognition,international_record,retrospective_selection | ok |
-| 60 | Cruyff | FW | 0.755 | silver | Y | 95 (1974) | — | 5 | global_annual_recognition,retrospective_selection | ok |
+
+| #   | player      | pos  | index | tier   | legend | best hist card (yr) | 2026 card | facts | fact families                                                                                                                  | flag       |
+| --- | ----------- | ---- | ----- | ------ | ------ | ------------------- | --------- | ----- | ------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| 1   | Kocsis      | None | 0.992 | gold   | Y      | 99 (1954)           | —         | 5     | international_record,retrospective_selection,wc_legacy                                                                         | ok         |
+| 2   | Maradona    | MF   | 0.952 | gold   | Y      | 99 (1982)           | —         | 20    | captaincy,global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy         | ok         |
+| 3   | Messi       | FW   | 0.938 | gold   | Y      | 99 (2006)           | 99        | 69    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy                   | ok         |
+| 4   | Zidane      | MF   | 0.928 | gold   | Y      | 99 (1998)           | —         | 23    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy                   | ok         |
+| 5   | Ronaldo     | FW   | 0.913 | gold   | Y      | 99 (1998)           | —         | 16    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy                   | ok         |
+| 6   | Piola       | None | 0.911 | gold   | n      | 99 (1938)           | —         | 4     | international_record,retrospective_selection,wc_legacy                                                                         | NOT-LEGEND |
+| 7   | Modrić      | MF   | 0.898 | gold   | Y      | 99 (2018)           | 99        | 19    | captaincy,global_annual_recognition,international_record,position_balanced_selection,wc_legacy                                 | ok         |
+| 8   | Matthäus    | MF   | 0.891 | gold   | Y      | 99 (1986)           | —         | 14    | captaincy,global_annual_recognition,international_record,retrospective_selection,wc_legacy                                     | ok         |
+| 9   | Rummenigge  | None | 0.889 | gold   | Y      | 99 (1978)           | —         | 11    | global_annual_recognition,international_record,retrospective_selection,wc_legacy                                               | ok         |
+| 10  | Beckenbauer | DF   | 0.889 | gold   | Y      | 99 (1966)           | —         | 12    | captaincy,global_annual_recognition,international_record,retrospective_selection,wc_legacy                                     | ok         |
+| 11  | Müller      | None | 0.887 | gold   | Y      | 99 (1970)           | —         | 7     | global_annual_recognition,international_record,retrospective_selection,wc_legacy                                               | ok         |
+| 12  | Puskás      | None | 0.886 | gold   | Y      | 99 (1954)           | —         | 6     | international_record,retrospective_selection                                                                                   | ok         |
+| 13  | Eusébio     | None | 0.879 | gold   | Y      | 99 (1966)           | —         | 6     | global_annual_recognition,international_record,retrospective_selection,wc_legacy                                               | ok         |
+| 14  | Rossi       | None | 0.879 | gold   | Y      | 99 (1978)           | —         | 8     | global_annual_recognition,retrospective_selection,wc_legacy                                                                    | ok         |
+| 15  | Ronaldo     | FW   | 0.878 | gold   | Y      | 99 (2006)           | 97        | 56    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 16  | Albert      | None | 0.872 | gold   | n      | 99 (1962)           | —         | 6     | global_annual_recognition,international_record,retrospective_selection,wc_legacy                                               | NOT-LEGEND |
+| 17  | Ronaldinho  | MF   | 0.870 | gold   | Y      | 99 (2002)           | —         | 20    | global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition,retrospective_selection | ok         |
+| 18  | Meazza      | None | 0.865 | gold   | Y      | 98 (1934)           | —         | 4     | international_record,retrospective_selection                                                                                   | ok         |
+| 19  | Scarone     | None | 0.864 | gold   | Y      | 98 (1930)           | —         | 2     | international_record,retrospective_selection                                                                                   | ok         |
+| 20  | Zizinho     | None | 0.863 | gold   | Y      | 98 (1950)           | —         | 2     | international_record,retrospective_selection                                                                                   | ok         |
+| 21  | Romário     | None | 0.862 | gold   | Y      | 98 (1994)           | —         | 8     | global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy                   | ok         |
+| 22  | Zico        | None | 0.859 | gold   | Y      | 98 (1978)           | —         | 9     | global_annual_recognition,international_record,regional_annual_recognition,retrospective_selection,wc_legacy                   | ok         |
+| 23  | Mbappé      | FW   | 0.858 | gold   | Y      | 98 (2018)           | 98        | 17    | global_annual_recognition,international_record,position_balanced_selection,wc_legacy                                           | ok         |
+| 24  | Henry       | FW   | 0.857 | gold   | Y      | 98 (1998)           | —         | 15    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 25  | Baggio      | None | 0.854 | gold   | Y      | 98 (1990)           | —         | 6     | global_annual_recognition,retrospective_selection,wc_legacy                                                                    | ok         |
+| 26  | Sindelar    | None | 0.843 | gold   | Y      | 98 (1934)           | —         | 3     | retrospective_selection                                                                                                        | ok         |
+| 27  | Schiaffino  | None | 0.843 | gold   | Y      | 98 (1950)           | —         | 3     | retrospective_selection                                                                                                        | ok         |
+| 28  | Matthews    | None | 0.843 | gold   | Y      | 94 (1954)           | —         | 4     | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 29  | Kopa        | None | 0.843 | gold   | Y      | 98 (1958)           | —         | 5     | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 30  | Iniesta     | MF   | 0.839 | gold   | Y      | 98 (2010)           | —         | 22    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 31  | Walter      | None | 0.832 | gold   | n      | 97 (1954)           | —         | 3     | international_record,retrospective_selection                                                                                   | NOT-LEGEND |
+| 32  | Lewandowski | FW   | 0.831 | gold   | Y      | 97 (2022)           | —         | 16    | global_annual_recognition,international_record,position_balanced_selection                                                     | ok         |
+| 33  | Rivaldo     | MF   | 0.830 | gold   | Y      | 97 (1998)           | —         | 8     | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy                   | ok         |
+| 34  | Kempes      | None | 0.829 | gold   | Y      | 97 (1978)           | —         | 5     | global_annual_recognition,regional_annual_recognition,retrospective_selection,wc_legacy                                        | ok         |
+| 35  | Bozsik      | None | 0.829 | gold   | n      | 97 (1954)           | —         | 3     | international_record,retrospective_selection                                                                                   | NOT-LEGEND |
+| 36  | Cannavaro   | DF   | 0.827 | gold   | Y      | 96 (2006)           | —         | 7     | captaincy,global_annual_recognition,international_record,position_balanced_selection,wc_legacy                                 | ok         |
+| 37  | Shevchenko  | FW   | 0.823 | gold   | Y      | 97 (2006)           | —         | 10    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 38  | Cea         | None | 0.822 | gold   | n      | 97 (1930)           | —         | 2     | retrospective_selection,wc_legacy                                                                                              | NOT-LEGEND |
+| 39  | Nedvěd      | MF   | 0.818 | gold   | Y      | 93 (2006)           | —         | 9     | global_annual_recognition,position_balanced_selection,retrospective_selection                                                  | ok         |
+| 40  | Figo        | MF   | 0.816 | gold   | Y      | 96 (2006)           | —         | 9     | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 41  | Xavi        | MF   | 0.815 | gold   | Y      | 97 (2010)           | —         | 18    | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection                             | ok         |
+| 42  | Ocwirk      | None | 0.809 | gold   | n      | 97 (1954)           | —         | 2     | retrospective_selection                                                                                                        | NOT-LEGEND |
+| 43  | Andrade     | None | 0.809 | gold   | n      | 97 (1930)           | —         | 2     | retrospective_selection                                                                                                        | NOT-LEGEND |
+| 44  | Hanappi     | None | 0.809 | gold   | n      | 96 (1954)           | —         | 2     | retrospective_selection                                                                                                        | NOT-LEGEND |
+| 45  | Pelé        | None | 0.807 | silver | Y      | 97 (1958)           | —         | 8     | international_record,regional_annual_recognition,retrospective_selection,wc_legacy                                             | ok         |
+| 46  | Santos      | DF   | 0.805 | silver | n      | 95 (1962)           | —         | 4     | retrospective_selection,wc_legacy                                                                                              | NOT-LEGEND |
+| 47  | Platini     | MF   | 0.804 | silver | Y      | 96 (1982)           | —         | 16    | global_annual_recognition,international_record,retrospective_selection                                                         | ok         |
+| 48  | Salah       | FW   | 0.800 | silver | Y      | 96 (2018)           | 96        | 9     | captaincy,global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition               | ok         |
+| 49  | Kaká        | MF   | 0.799 | silver | Y      | 96 (2006)           | —         | 11    | global_annual_recognition,position_balanced_selection                                                                          | ok         |
+| 50  | Owen        | FW   | 0.789 | silver | Y      | 96 (1998)           | —         | 7     | global_annual_recognition,international_record,position_balanced_selection,retrospective_selection,wc_legacy                   | ok         |
+| 51  | Cubillas    | None | 0.786 | silver | Y      | 96 (1970)           | —         | 7     | regional_annual_recognition,retrospective_selection,wc_legacy                                                                  | ok         |
+| 52  | van Basten  | None | 0.781 | silver | Y      | 93 (1990)           | —         | 16    | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 53  | Keegan      | None | 0.781 | silver | Y      | 92 (1982)           | —         | 10    | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 54  | Boniperti   | None | 0.780 | silver | n      | 94 (1954)           | —         | 2     | retrospective_selection                                                                                                        | NOT-LEGEND |
+| 55  | Gullit      | None | 0.780 | silver | Y      | 95 (1990)           | —         | 9     | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 56  | Buffon      | GK   | 0.777 | silver | Y      | 93 (2002)           | —         | 17    | international_record,position_balanced_selection,retrospective_selection,wc_legacy                                             | ok         |
+| 57  | Drogba      | FW   | 0.776 | silver | Y      | 95 (2010)           | —         | 8     | global_annual_recognition,international_record,position_balanced_selection,regional_annual_recognition                         | ok         |
+| 58  | Di Stéfano  | MF   | 0.774 | silver | Y      | 92 (1962)           | —         | 6     | global_annual_recognition,retrospective_selection                                                                              | ok         |
+| 59  | Law         | None | 0.760 | silver | Y      | 91 (1974)           | —         | 4     | global_annual_recognition,international_record,retrospective_selection                                                         | ok         |
+| 60  | Cruyff      | FW   | 0.755 | silver | Y      | 95 (1974)           | —         | 5     | global_annual_recognition,retrospective_selection                                                                              | ok         |
 
 ## T2-b Legend-band members with the WEAKEST best card (bottom 20 of the band)
-| # | best card | pos | OVR | basis | cs index |
-|---|---|---|---|---|---|
-| 1 | Rijkaard (Netherlands 1994) ★ | MF | 88 | stature | 0.487 |
-| 2 | van Nistelrooy (Netherlands 2006) ★ | FW | 89 | stature | 0.517 |
-| 3 | Sánchez (Mexico 1986) ★ | FW | 89 | stature | 0.500 |
-| 4 | Silva (Brazil 2014) ★ | DF | 89 | stature | 0.521 |
-| 5 | Čech (Czech Republic 2006) ★ | GK | 89 | stature | 0.528 |
-| 6 | Rodri (Spain 2022) ★ | MF | 89 | stature | 0.527 |
-| 7 | Ibrahimović (Sweden 2006) ★ | FW | 89 | stature | 0.560 |
-| 8 | Fàbregas (Spain 2010) ★ | MF | 89 | stature | 0.504 |
-| 9 | Seedorf (Netherlands 1998) ★ | MF | 89 | stature | 0.537 |
-| 10 | Dembélé (France 2018) ★ | FW | 89 | stature | 0.507 |
-| 11 | Sammer (Germany 1994) ★ | DF | 90 | stature | 0.600 |
-| 12 | Suárez (Uruguay 2010) ★ | FW | 90 | stature | 0.537 |
-| 13 | Schmeichel (Denmark 1998) ★ | GK | 90 | stature | 0.575 |
-| 14 | Kroos (Germany 2014) ★ | MF | 90 | stature | 0.525 |
-| 15 | De Bruyne (Belgium 2018) ★ | MF | 90 | stature | 0.551 |
-| 16 | Nesta (Italy 2006) ★ | DF | 90 | stature | 0.542 |
-| 17 | Thuram (France 1998) ★ | DF | 90 | stature | 0.560 |
-| 18 | Seeler (West Germany 1958) ★ | FW | 90 | stature | 0.537 |
-| 19 | Piqué (Spain 2010) ★ | DF | 90 | stature | 0.526 |
-| 20 | Passarella (Argentina 1978) ★ | DF | 90 | stature | 0.529 |
+
+| #   | best card                           | pos | OVR | basis   | cs index |
+| --- | ----------------------------------- | --- | --- | ------- | -------- |
+| 1   | Rijkaard (Netherlands 1994) ★       | MF  | 88  | stature | 0.487    |
+| 2   | van Nistelrooy (Netherlands 2006) ★ | FW  | 89  | stature | 0.517    |
+| 3   | Sánchez (Mexico 1986) ★             | FW  | 89  | stature | 0.500    |
+| 4   | Silva (Brazil 2014) ★               | DF  | 89  | stature | 0.521    |
+| 5   | Čech (Czech Republic 2006) ★        | GK  | 89  | stature | 0.528    |
+| 6   | Rodri (Spain 2022) ★                | MF  | 89  | stature | 0.527    |
+| 7   | Ibrahimović (Sweden 2006) ★         | FW  | 89  | stature | 0.560    |
+| 8   | Fàbregas (Spain 2010) ★             | MF  | 89  | stature | 0.504    |
+| 9   | Seedorf (Netherlands 1998) ★        | MF  | 89  | stature | 0.537    |
+| 10  | Dembélé (France 2018) ★             | FW  | 89  | stature | 0.507    |
+| 11  | Sammer (Germany 1994) ★             | DF  | 90  | stature | 0.600    |
+| 12  | Suárez (Uruguay 2010) ★             | FW  | 90  | stature | 0.537    |
+| 13  | Schmeichel (Denmark 1998) ★         | GK  | 90  | stature | 0.575    |
+| 14  | Kroos (Germany 2014) ★              | MF  | 90  | stature | 0.525    |
+| 15  | De Bruyne (Belgium 2018) ★          | MF  | 90  | stature | 0.551    |
+| 16  | Nesta (Italy 2006) ★                | DF  | 90  | stature | 0.542    |
+| 17  | Thuram (France 1998) ★              | DF  | 90  | stature | 0.560    |
+| 18  | Seeler (West Germany 1958) ★        | FW  | 90  | stature | 0.537    |
+| 19  | Piqué (Spain 2010) ★                | DF  | 90  | stature | 0.526    |
+| 20  | Passarella (Argentina 1978) ★       | DF  | 90  | stature | 0.529    |
 
 ### T2-b annotations
 
-The band floor (88–90) members above are all plausible legend-band *members*; the
+The band floor (88–90) members above are all plausible legend-band _members_; the
 question they raise is compression (legend floor 88 = the ceiling pile display), not
 membership. Weakest membership on face: **Dembélé (France 2018) 89** — a fine career
 but `legend` next to Rijkaard/Sammer/Passarella reads loose. **Rodri (Spain 2022) 89
 as the band entry for the reigning Ballon d'Or holder** is the inverse problem: his
 2024 award postdates the frozen archive (peak-year max 2022 — Audit-1 C1), and his
 2026 card lost the badge entirely to the link miss (§H.3).
-
 
 ---
 
@@ -650,7 +663,7 @@ The list is exactly what the ceiling predicts, with names attached:
   path. A whole face-validity class, not individual noise.
 - 2026 entries in the list (B. Fernandes raw 98.9, Hwang 98.9, Tielemans 98.5…)
   reproduce Audit-1 §B.2's longevity-detector caveat: career-totals percentiles
-  reward accumulation; treat the 2026 members as *candidates*, not a ranking.
+  reward accumulation; treat the 2026 members as _candidates_, not a ranking.
 
 ### T3-b annotations (overrated — top 25)
 
@@ -674,216 +687,218 @@ working. The face-validity question is per-card:
   which is false.
 
 ## T3-a Underrated-100 — display furthest BELOW what the card's own merit inputs imply
+
 (input-implied OVR = the display the card's uncapped input composite would earn on the production curve — historical: raw tournament composite; 2026: quantile-mapped projected raw WITHOUT the raw-only ceiling. The 2026 quantile-map target itself saturates at the historical raw-only ceiling, so 2026 ceiling victims rank by raw strength in T4 instead. Min-signal filter: ≥2 apps or ≥1 goal historical, ≥10 caps projected.)
 
-| # | card | pos | cohort | OVR | input-implied OVR | Δ | basis | input pct | OVR pct | merit inputs |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Schumacher (West Germany 1986) | GK | 1986-94 | 88 | 99 | +11 | measured | 1.00 | 0.93 | apps 7 (p0.98), goals 0 (p0.50), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.308/w 0.00 |
-| 2 | Martínez (Argentina 2022) | GK | 2022-2026 | 88 | 99 | +11 | measured | 0.99 | 0.87 | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.255/w 0.00 |
-| 3 | Vavá (Brazil 1962) | FW | 1962-70 | 88 | 99 | +11 | measured | 1.00 | 0.88 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.396/w 0.00 |
-| 4 | Courtois (Belgium 2018) | GK | 2010-2018 | 89 | 99 | +10 | stature | 0.99 | 0.97 | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 0.55 [Golden Glove] · stature idx 0.552/w 1.00 |
-| 5 | Müller (Germany 2014) | FW | 2010-2018 | 90 | 99 | +9 | stature | 1.00 | 0.95 | apps 7 (p0.99), goals 5 (p1.00), award 0.88, finish 1.00 [Silver Ball,Silver Boot] · stature idx 0.535/w 1.00 |
-| 6 | Villa (Spain 2010) | FW | 2010-2018 | 90 | 99 | +9 | stature | 1.00 | 0.95 | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 1.00 [Bronze Ball,Silver Boot] · stature idx 0.504/w 1.00 |
-| 7 | Barthez (France 1998) | GK | 1998-2006 | 91 | 99 | +8 | stature | 0.99 | 0.97 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.650/w 1.00 |
-| 8 | Thuram (France 1998) ★ | DF | 1998-2006 | 90 | 98 | +8 | stature | 1.00 | 0.98 | apps 6 (p0.95), goals 2 (p0.99), award 0.50, finish 1.00 [Bronze Ball] · stature idx 0.560/w 1.00 |
-| 9 | Ademir (Brazil 1950) | FW | <=1958 | 90 | 98 | +8 | stature | 1.00 | 0.96 | apps 6 (p0.98), goals 9 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00 |
-| 10 | Stábile (Argentina 1930) | FW | <=1958 | 90 | 98 | +8 | stature | 1.00 | 0.96 | apps 4 (p0.96), goals 8 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00 |
-| 11 | Marcos (Brazil 2002) | GK | 1998-2006 | 88 | 96 | +8 | measured | 0.99 | 0.88 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 12 | Pumpido (Argentina 1986) | GK | 1986-94 | 88 | 96 | +8 | measured | 0.99 | 0.93 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 13 | Illgner (West Germany 1990) | GK | 1986-94 | 88 | 96 | +8 | measured | 0.99 | 0.93 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 14 | Gilmar (Brazil 1958) | GK | <=1958 | 88 | 96 | +8 | measured | 1.00 | 0.94 | apps 6 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 15 | Taffarel (Brazil 1994) | GK | 1986-94 | 88 | 96 | +8 | measured | 0.98 | 0.93 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.096/w 0.00 |
-| 16 | Morlock (West Germany 1954) | FW | <=1958 | 88 | 96 | +8 | measured | 0.99 | 0.89 | apps 5 (p0.94), goals 6 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 17 | Jairzinho (Brazil 1970) | FW | 1962-70 | 88 | 96 | +8 | measured | 0.99 | 0.88 | apps 6 (p0.95), goals 7 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.309/w 0.00 |
-| 18 | Lloris (France 2018) | GK | 2010-2018 | 88 | 96 | +8 | measured | 0.99 | 0.88 | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.067/w 0.00 |
-| 19 | Félix (Brazil 1970) | GK | 1962-70 | 88 | 96 | +8 | measured | 1.00 | 0.91 | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 20 | Olivieri (Italy 1938) | GK | <=1958 | 88 | 96 | +8 | measured | 0.99 | 0.94 | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 21 | Fillol (Argentina 1978) | GK | 1974-82 | 88 | 96 | +8 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 22 | Klose (Germany 2006) | FW | 1998-2006 | 88 | 96 | +8 | measured | 0.99 | 0.87 | apps 7 (p0.98), goals 5 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.395/w 0.00 |
-| 23 | Combi (Italy 1934) | GK | <=1958 | 88 | 96 | +8 | measured | 0.99 | 0.94 | apps 5 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 24 | Schiavio (Italy 1934) | FW | <=1958 | 88 | 96 | +8 | measured | 0.99 | 0.89 | apps 4 (p0.90), goals 4 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 25 | Fernández (Argentina 2022) | MF | 2022-2026 | 88 | 96 | +8 | measured | 1.00 | 0.93 | apps 7 (p0.98), goals 1 (p0.93), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.165/w 0.00 |
-| 26 | Maier (West Germany 1974) | GK | 1974-82 | 88 | 96 | +8 | stature | 0.99 | 0.90 | apps 7 (p0.96), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88 |
-| 27 | Forlán (Uruguay 2010) | FW | 2010-2018 | 88 | 96 | +8 | measured | 0.99 | 0.89 | apps 7 (p0.98), goals 5 (p0.99), award 1.00, finish 0.40 [Golden Ball] · stature idx 0.376/w 0.00 |
-| 28 | Míguez (Uruguay 1950) | FW | <=1958 | 88 | 96 | +8 | measured | 0.99 | 0.89 | apps 4 (p0.84), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 29 | Banks (England 1966) | GK | 1962-70 | 88 | 96 | +8 | stature | 0.99 | 0.91 | apps 6 (p0.95), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88 |
-| 30 | Sánchez (Chile 1962) | FW | 1962-70 | 88 | 96 | +8 | measured | 0.98 | 0.88 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.396/w 0.00 |
-| 31 | Neuer (Germany 2014) ★ | GK | 2010-2018 | 92 | 99 | +7 | stature | 0.99 | 0.99 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.733/w 1.00 |
-| 32 | Kahn (Germany 2002) ★ | GK | 1998-2006 | 92 | 99 | +7 | stature | 0.99 | 0.99 | apps 7 (p0.98), goals 0 (p0.50), award 1.00, finish 0.75 [Golden Ball,Golden Glove] · stature idx 0.719/w 1.00 |
-| 33 | Casillas (Spain 2010) ★ | GK | 2010-2018 | 92 | 99 | +7 | stature | 0.99 | 0.99 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.710/w 1.00 |
-| 34 | Griezmann (France 2018) | FW | 2010-2018 | 92 | 99 | +7 | stature | 0.99 | 0.96 | apps 7 (p0.98), goals 4 (p0.98), award 0.80, finish 1.00 [Bronze Ball,Silver Boot] · stature idx 0.634/w 1.00 |
-| 35 | Nejedlý (Czechoslovakia 1934) | FW | <=1958 | 90 | 97 | +7 | stature | 0.99 | 0.96 | apps 4 (p0.90), goals 5 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00 |
-| 36 | Müller (Germany 2010) | MF | 2010-2018 | 90 | 97 | +7 | stature | 1.00 | 0.98 | apps 6 (p0.95), goals 5 (p1.00), award 0.95, finish 0.55 [Best Young Player,Golden Boot] · stature idx 0.535/w 1.00 |
-| 37 | Zoff (Italy 1982) | GK | 1974-82 | 89 | 96 | +7 | stature | 1.00 | 0.99 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.523/w 1.00 |
-| 38 | Stoichkov (Bulgaria 1994) | FW | 1986-94 | 88 | 95 | +7 | stature | 0.99 | 0.88 | apps 7 (p0.96), goals 6 (p0.99), award 0.95, finish 0.40 [Bronze Ball,Golden Boot] · stature idx 0.426/w 0.71 |
-| 39 | Gilmar (Brazil 1962) | GK | 1962-70 | 88 | 95 | +7 | measured | 0.98 | 0.91 | apps 6 (p0.92), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 40 | Turek (West Germany 1954) | GK | <=1958 | 88 | 95 | +7 | measured | 0.98 | 0.94 | apps 5 (p0.92), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 41 | Otamendi (Argentina 2022) | DF | 2022-2026 | 88 | 95 | +7 | measured | 0.99 | 0.93 | apps 7 (p0.99), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx 0.253/w 0.00 |
-| 42 | Romero (Argentina 2022) | DF | 2022-2026 | 88 | 95 | +7 | measured | 0.99 | 0.93 | apps 7 (p0.99), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 43 | Molina (Argentina 2022) | DF | 2022-2026 | 88 | 95 | +7 | measured | 0.99 | 0.93 | apps 7 (p0.99), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 44 | Varane (France 2018) | DF | 2010-2018 | 88 | 95 | +7 | measured | 1.00 | 0.92 | apps 7 (p0.99), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx 0.225/w 0.00 |
-| 45 | Hernandez (France 2018) | DF | 2010-2018 | 88 | 95 | +7 | measured | 1.00 | 0.92 | apps 7 (p0.99), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 46 | Klose (Germany 2002) | FW | 1998-2006 | 88 | 95 | +7 | measured | 0.99 | 0.87 | apps 7 (p0.98), goals 5 (p0.99), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.395/w 0.00 |
-| 47 | Allemandi (Italy 1934) | DF | <=1958 | 88 | 95 | +7 | measured | 1.00 | 0.91 | apps 5 (p0.99), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 48 | Lúcio (Brazil 2002) | DF | 1998-2006 | 88 | 95 | +7 | stature | 1.00 | 0.92 | apps 7 (p0.98), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx 0.430/w 0.75 |
-| 49 | Desailly (France 1998) | DF | 1998-2006 | 88 | 95 | +7 | measured | 0.99 | 0.92 | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.160/w 0.00 |
-| 50 | Sárosi (Hungary 1938) | FW | <=1958 | 88 | 95 | +7 | measured | 0.98 | 0.89 | apps None (p—), goals 5 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 51 | Capdevila (Spain 2010) | DF | 2010-2018 | 88 | 95 | +7 | measured | 0.99 | 0.92 | apps 7 (p0.98), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 52 | Boateng (Germany 2014) | DF | 2010-2018 | 88 | 95 | +7 | measured | 0.99 | 0.92 | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.225/w 0.00 |
-| 53 | Höwedes (Germany 2014) | DF | 2010-2018 | 88 | 95 | +7 | measured | 0.99 | 0.92 | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 54 | Jerković (Yugoslavia 1962) | FW | 1962-70 | 88 | 95 | +7 | measured | 0.98 | 0.88 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.40 [Golden Boot] · stature idx 0.396/w 0.00 |
-| 55 | Santos (Brazil 1994) | DF | 1986-94 | 88 | 95 | +7 | measured | 1.00 | 0.90 | apps 7 (p0.98), goals 1 (p0.97), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 56 | Jorginho (Brazil 1994) | DF | 1986-94 | 88 | 95 | +7 | measured | 1.00 | 0.90 | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 57 | Aldair (Brazil 1994) | DF | 1986-94 | 88 | 95 | +7 | measured | 1.00 | 0.90 | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 58 | Zsengellér (Hungary 1938) | FW | <=1958 | 88 | 95 | +7 | stature | 0.98 | 0.89 | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.438/w 0.82 |
-| 59 | Augenthaler (West Germany 1990) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 60 | Buchwald (West Germany 1990) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 61 | Berthold (West Germany 1990) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 62 | Olarticoechea (Argentina 1986) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 63 | Brown (Argentina 1986) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 64 | Ruggeri (Argentina 1986) | DF | 1986-94 | 88 | 95 | +7 | measured | 0.99 | 0.90 | apps 7 (p0.97), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.140/w 0.00 |
-| 65 | Rava (Italy 1938) | DF | <=1958 | 88 | 95 | +7 | measured | 0.99 | 0.91 | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 66 | Buffon (Italy 2006) ★ | GK | 1998-2006 | 93 | 99 | +6 | stature | 0.99 | 1.00 | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.777/w 1.00 |
-| 67 | Sneijder (Netherlands 2010) ★ | MF | 2010-2018 | 92 | 98 | +6 | stature | 1.00 | 0.99 | apps 7 (p0.98), goals 5 (p1.00), award 0.83, finish 0.75 [Bronze Boot,Silver Ball] · stature idx 0.647/w 1.00 |
-| 68 | Schillaci (Italy 1990) | FW | 1986-94 | 91 | 97 | +6 | stature | 1.00 | 0.96 | apps 7 (p0.99), goals 6 (p1.00), award 1.00, finish 0.55 [Golden Ball,Golden Boot] · stature idx 0.572/w 1.00 |
-| 69 | Leônidas (Brazil 1938) | FW | <=1958 | 90 | 96 | +6 | stature | 0.99 | 0.96 | apps 4 (p0.96), goals 7 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.530/w 1.00 |
-| 70 | Haller (West Germany 1966) | FW | 1962-70 | 88 | 94 | +6 | measured | 0.98 | 0.88 | apps 5 (p0.91), goals 6 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.264/w 0.00 |
-| 71 | Cabrini (Italy 1982) | DF | 1974-82 | 88 | 94 | +6 | measured | 1.00 | 0.90 | apps 7 (p0.97), goals 1 (p0.95), award 0.00, finish 1.00 · stature idx 0.242/w 0.00 |
-| 72 | Collovati (Italy 1982) | DF | 1974-82 | 88 | 94 | +6 | measured | 1.00 | 0.90 | apps 7 (p0.97), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 73 | Scirea (Italy 1982) | DF | 1974-82 | 88 | 94 | +6 | measured | 1.00 | 0.90 | apps 7 (p0.97), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx 0.360/w 0.17 |
-| 74 | Tagliafico (Argentina 2022) | DF | 2022-2026 | 88 | 94 | +6 | measured | 0.99 | 0.93 | apps 6 (p0.96), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 75 | Pavard (France 2018) | DF | 2010-2018 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 76 | Umtiti (France 2018) | DF | 2010-2018 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx 0.200/w 0.00 |
-| 77 | Zambrotta (Italy 2006) | DF | 1998-2006 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.345/w 0.04 |
-| 78 | Grosso (Italy 2006) | DF | 1998-2006 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 79 | Ghiggia (Uruguay 1950) | FW | <=1958 | 88 | 94 | +6 | measured | 0.98 | 0.89 | apps 4 (p0.84), goals 4 (p0.97), award 0.45, finish 1.00 [Bronze Boot] · stature idx 0.270/w 0.00 |
-| 80 | Edmílson (Brazil 2002) | DF | 1998-2006 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 81 | Júnior (Brazil 2002) | DF | 1998-2006 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.96), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 82 | Galván (Argentina 1978) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 7 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 83 | Olguín (Argentina 1978) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 7 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 84 | Tarantini (Argentina 1978) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 7 (p0.95), goals 1 (p0.95), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 85 | Lizarazu (France 1998) | DF | 1998-2006 | 88 | 94 | +6 | measured | 0.99 | 0.92 | apps 6 (p0.95), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.335/w 0.00 |
-| 86 | Wilson (England 1966) | DF | 1962-70 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 87 | Charlton (England 1966) | DF | 1962-70 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 88 | Cohen (England 1966) | DF | 1962-70 | 88 | 94 | +6 | measured | 0.99 | 0.90 | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 89 | Brito (Brazil 1970) | DF | 1962-70 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 6 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 90 | Mertesacker (Germany 2014) | DF | 2010-2018 | 88 | 94 | +6 | measured | 0.98 | 0.92 | apps 6 (p0.95), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.047/w 0.00 |
-| 91 | Hummels (Germany 2014) | DF | 2010-2018 | 88 | 94 | +6 | measured | 0.98 | 0.92 | apps 6 (p0.95), goals 2 (p1.00), award 0.00, finish 1.00 · stature idx 0.320/w 0.00 |
-| 92 | Schwarzenbeck (West Germany 1974) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 93 | Vogts (West Germany 1974) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 94 | Brehme (West Germany 1990) | DF | 1986-94 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 6 (p0.93), goals 3 (p1.00), award 0.00, finish 1.00 · stature idx 0.360/w 0.17 |
-| 95 | Reuter (West Germany 1990) | DF | 1986-94 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 6 (p0.93), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 96 | Cuciuffo (Argentina 1986) | DF | 1986-94 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 6 (p0.93), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 97 | Martínez (Argentina 2022) | DF | 2022-2026 | 88 | 94 | +6 | measured | 0.98 | 0.93 | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 98 | Gentile (Italy 1982) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.97 | 0.90 | apps 6 (p0.92), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 99 | Zózimo (Brazil 1962) | DF | 1962-70 | 88 | 94 | +6 | measured | 0.98 | 0.90 | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 100 | Żmuda (Poland 1974) | DF | 1974-82 | 88 | 94 | +6 | measured | 0.97 | 0.90 | apps 7 (p0.94), goals 0 (p0.47), award 0.55, finish 0.55 [Best Young Player] · stature idx 0.242/w 0.00 |
+| #   | card                              | pos | cohort    | OVR | input-implied OVR | Δ   | basis    | input pct | OVR pct | merit inputs                                                                                                        |
+| --- | --------------------------------- | --- | --------- | --- | ----------------- | --- | -------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
+| 1   | Schumacher (West Germany 1986)    | GK  | 1986-94   | 88  | 99                | +11 | measured | 1.00      | 0.93    | apps 7 (p0.98), goals 0 (p0.50), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.308/w 0.00                   |
+| 2   | Martínez (Argentina 2022)         | GK  | 2022-2026 | 88  | 99                | +11 | measured | 0.99      | 0.87    | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.255/w 0.00                  |
+| 3   | Vavá (Brazil 1962)                | FW  | 1962-70   | 88  | 99                | +11 | measured | 1.00      | 0.88    | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.396/w 0.00                   |
+| 4   | Courtois (Belgium 2018)           | GK  | 2010-2018 | 89  | 99                | +10 | stature  | 0.99      | 0.97    | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 0.55 [Golden Glove] · stature idx 0.552/w 1.00                  |
+| 5   | Müller (Germany 2014)             | FW  | 2010-2018 | 90  | 99                | +9  | stature  | 1.00      | 0.95    | apps 7 (p0.99), goals 5 (p1.00), award 0.88, finish 1.00 [Silver Ball,Silver Boot] · stature idx 0.535/w 1.00       |
+| 6   | Villa (Spain 2010)                | FW  | 2010-2018 | 90  | 99                | +9  | stature  | 1.00      | 0.95    | apps 7 (p0.98), goals 5 (p0.99), award 0.80, finish 1.00 [Bronze Ball,Silver Boot] · stature idx 0.504/w 1.00       |
+| 7   | Barthez (France 1998)             | GK  | 1998-2006 | 91  | 99                | +8  | stature  | 0.99      | 0.97    | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.650/w 1.00                  |
+| 8   | Thuram (France 1998) ★            | DF  | 1998-2006 | 90  | 98                | +8  | stature  | 1.00      | 0.98    | apps 6 (p0.95), goals 2 (p0.99), award 0.50, finish 1.00 [Bronze Ball] · stature idx 0.560/w 1.00                   |
+| 9   | Ademir (Brazil 1950)              | FW  | <=1958    | 90  | 98                | +8  | stature  | 1.00      | 0.96    | apps 6 (p0.98), goals 9 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00                   |
+| 10  | Stábile (Argentina 1930)          | FW  | <=1958    | 90  | 98                | +8  | stature  | 1.00      | 0.96    | apps 4 (p0.96), goals 8 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00                   |
+| 11  | Marcos (Brazil 2002)              | GK  | 1998-2006 | 88  | 96                | +8  | measured | 0.99      | 0.88    | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 12  | Pumpido (Argentina 1986)          | GK  | 1986-94   | 88  | 96                | +8  | measured | 0.99      | 0.93    | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 13  | Illgner (West Germany 1990)       | GK  | 1986-94   | 88  | 96                | +8  | measured | 0.99      | 0.93    | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 14  | Gilmar (Brazil 1958)              | GK  | <=1958    | 88  | 96                | +8  | measured | 1.00      | 0.94    | apps 6 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 15  | Taffarel (Brazil 1994)            | GK  | 1986-94   | 88  | 96                | +8  | measured | 0.98      | 0.93    | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.096/w 0.00                                 |
+| 16  | Morlock (West Germany 1954)       | FW  | <=1958    | 88  | 96                | +8  | measured | 0.99      | 0.89    | apps 5 (p0.94), goals 6 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17                   |
+| 17  | Jairzinho (Brazil 1970)           | FW  | 1962-70   | 88  | 96                | +8  | measured | 0.99      | 0.88    | apps 6 (p0.95), goals 7 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.309/w 0.00                   |
+| 18  | Lloris (France 2018)              | GK  | 2010-2018 | 88  | 96                | +8  | measured | 0.99      | 0.88    | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.067/w 0.00                                 |
+| 19  | Félix (Brazil 1970)               | GK  | 1962-70   | 88  | 96                | +8  | measured | 1.00      | 0.91    | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 20  | Olivieri (Italy 1938)             | GK  | <=1958    | 88  | 96                | +8  | measured | 0.99      | 0.94    | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 21  | Fillol (Argentina 1978)           | GK  | 1974-82   | 88  | 96                | +8  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 22  | Klose (Germany 2006)              | FW  | 1998-2006 | 88  | 96                | +8  | measured | 0.99      | 0.87    | apps 7 (p0.98), goals 5 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.395/w 0.00                   |
+| 23  | Combi (Italy 1934)                | GK  | <=1958    | 88  | 96                | +8  | measured | 0.99      | 0.94    | apps 5 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 24  | Schiavio (Italy 1934)             | FW  | <=1958    | 88  | 96                | +8  | measured | 0.99      | 0.89    | apps 4 (p0.90), goals 4 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17                   |
+| 25  | Fernández (Argentina 2022)        | MF  | 2022-2026 | 88  | 96                | +8  | measured | 1.00      | 0.93    | apps 7 (p0.98), goals 1 (p0.93), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.165/w 0.00             |
+| 26  | Maier (West Germany 1974)         | GK  | 1974-82   | 88  | 96                | +8  | stature  | 0.99      | 0.90    | apps 7 (p0.96), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88                                 |
+| 27  | Forlán (Uruguay 2010)             | FW  | 2010-2018 | 88  | 96                | +8  | measured | 0.99      | 0.89    | apps 7 (p0.98), goals 5 (p0.99), award 1.00, finish 0.40 [Golden Ball] · stature idx 0.376/w 0.00                   |
+| 28  | Míguez (Uruguay 1950)             | FW  | <=1958    | 88  | 96                | +8  | measured | 0.99      | 0.89    | apps 4 (p0.84), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17                   |
+| 29  | Banks (England 1966)              | GK  | 1962-70   | 88  | 96                | +8  | stature  | 0.99      | 0.91    | apps 6 (p0.95), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88                                 |
+| 30  | Sánchez (Chile 1962)              | FW  | 1962-70   | 88  | 96                | +8  | measured | 0.98      | 0.88    | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.396/w 0.00                   |
+| 31  | Neuer (Germany 2014) ★            | GK  | 2010-2018 | 92  | 99                | +7  | stature  | 0.99      | 0.99    | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.733/w 1.00                  |
+| 32  | Kahn (Germany 2002) ★             | GK  | 1998-2006 | 92  | 99                | +7  | stature  | 0.99      | 0.99    | apps 7 (p0.98), goals 0 (p0.50), award 1.00, finish 0.75 [Golden Ball,Golden Glove] · stature idx 0.719/w 1.00      |
+| 33  | Casillas (Spain 2010) ★           | GK  | 2010-2018 | 92  | 99                | +7  | stature  | 0.99      | 0.99    | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.710/w 1.00                  |
+| 34  | Griezmann (France 2018)           | FW  | 2010-2018 | 92  | 99                | +7  | stature  | 0.99      | 0.96    | apps 7 (p0.98), goals 4 (p0.98), award 0.80, finish 1.00 [Bronze Ball,Silver Boot] · stature idx 0.634/w 1.00       |
+| 35  | Nejedlý (Czechoslovakia 1934)     | FW  | <=1958    | 90  | 97                | +7  | stature  | 0.99      | 0.96    | apps 4 (p0.90), goals 5 (p1.00), award 0.90, finish 0.75 [Golden Boot] · stature idx 0.530/w 1.00                   |
+| 36  | Müller (Germany 2010)             | MF  | 2010-2018 | 90  | 97                | +7  | stature  | 1.00      | 0.98    | apps 6 (p0.95), goals 5 (p1.00), award 0.95, finish 0.55 [Best Young Player,Golden Boot] · stature idx 0.535/w 1.00 |
+| 37  | Zoff (Italy 1982)                 | GK  | 1974-82   | 89  | 96                | +7  | stature  | 1.00      | 0.99    | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.523/w 1.00                                 |
+| 38  | Stoichkov (Bulgaria 1994)         | FW  | 1986-94   | 88  | 95                | +7  | stature  | 0.99      | 0.88    | apps 7 (p0.96), goals 6 (p0.99), award 0.95, finish 0.40 [Bronze Ball,Golden Boot] · stature idx 0.426/w 0.71       |
+| 39  | Gilmar (Brazil 1962)              | GK  | 1962-70   | 88  | 95                | +7  | measured | 0.98      | 0.91    | apps 6 (p0.92), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 40  | Turek (West Germany 1954)         | GK  | <=1958    | 88  | 95                | +7  | measured | 0.98      | 0.94    | apps 5 (p0.92), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 41  | Otamendi (Argentina 2022)         | DF  | 2022-2026 | 88  | 95                | +7  | measured | 0.99      | 0.93    | apps 7 (p0.99), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx 0.253/w 0.00                                 |
+| 42  | Romero (Argentina 2022)           | DF  | 2022-2026 | 88  | 95                | +7  | measured | 0.99      | 0.93    | apps 7 (p0.99), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 43  | Molina (Argentina 2022)           | DF  | 2022-2026 | 88  | 95                | +7  | measured | 0.99      | 0.93    | apps 7 (p0.99), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 44  | Varane (France 2018)              | DF  | 2010-2018 | 88  | 95                | +7  | measured | 1.00      | 0.92    | apps 7 (p0.99), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx 0.225/w 0.00                                 |
+| 45  | Hernandez (France 2018)           | DF  | 2010-2018 | 88  | 95                | +7  | measured | 1.00      | 0.92    | apps 7 (p0.99), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 46  | Klose (Germany 2002)              | FW  | 1998-2006 | 88  | 95                | +7  | measured | 0.99      | 0.87    | apps 7 (p0.98), goals 5 (p0.99), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.395/w 0.00                   |
+| 47  | Allemandi (Italy 1934)            | DF  | <=1958    | 88  | 95                | +7  | measured | 1.00      | 0.91    | apps 5 (p0.99), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 48  | Lúcio (Brazil 2002)               | DF  | 1998-2006 | 88  | 95                | +7  | stature  | 1.00      | 0.92    | apps 7 (p0.98), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx 0.430/w 0.75                                 |
+| 49  | Desailly (France 1998)            | DF  | 1998-2006 | 88  | 95                | +7  | measured | 0.99      | 0.92    | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.160/w 0.00                                 |
+| 50  | Sárosi (Hungary 1938)             | FW  | <=1958    | 88  | 95                | +7  | measured | 0.98      | 0.89    | apps None (p—), goals 5 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.360/w 0.17                   |
+| 51  | Capdevila (Spain 2010)            | DF  | 2010-2018 | 88  | 95                | +7  | measured | 0.99      | 0.92    | apps 7 (p0.98), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 52  | Boateng (Germany 2014)            | DF  | 2010-2018 | 88  | 95                | +7  | measured | 0.99      | 0.92    | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.225/w 0.00                                 |
+| 53  | Höwedes (Germany 2014)            | DF  | 2010-2018 | 88  | 95                | +7  | measured | 0.99      | 0.92    | apps 7 (p0.98), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 54  | Jerković (Yugoslavia 1962)        | FW  | 1962-70   | 88  | 95                | +7  | measured | 0.98      | 0.88    | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.40 [Golden Boot] · stature idx 0.396/w 0.00                   |
+| 55  | Santos (Brazil 1994)              | DF  | 1986-94   | 88  | 95                | +7  | measured | 1.00      | 0.90    | apps 7 (p0.98), goals 1 (p0.97), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 56  | Jorginho (Brazil 1994)            | DF  | 1986-94   | 88  | 95                | +7  | measured | 1.00      | 0.90    | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 57  | Aldair (Brazil 1994)              | DF  | 1986-94   | 88  | 95                | +7  | measured | 1.00      | 0.90    | apps 7 (p0.98), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 58  | Zsengellér (Hungary 1938)         | FW  | <=1958    | 88  | 95                | +7  | stature  | 0.98      | 0.89    | apps 4 (p0.96), goals 5 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.438/w 0.82                   |
+| 59  | Augenthaler (West Germany 1990)   | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 60  | Buchwald (West Germany 1990)      | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 61  | Berthold (West Germany 1990)      | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 62  | Olarticoechea (Argentina 1986)    | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 63  | Brown (Argentina 1986)            | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 64  | Ruggeri (Argentina 1986)          | DF  | 1986-94   | 88  | 95                | +7  | measured | 0.99      | 0.90    | apps 7 (p0.97), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.140/w 0.00                                 |
+| 65  | Rava (Italy 1938)                 | DF  | <=1958    | 88  | 95                | +7  | measured | 0.99      | 0.91    | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 66  | Buffon (Italy 2006) ★             | GK  | 1998-2006 | 93  | 99                | +6  | stature  | 0.99      | 1.00    | apps 7 (p0.98), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.777/w 1.00                  |
+| 67  | Sneijder (Netherlands 2010) ★     | MF  | 2010-2018 | 92  | 98                | +6  | stature  | 1.00      | 0.99    | apps 7 (p0.98), goals 5 (p1.00), award 0.83, finish 0.75 [Bronze Boot,Silver Ball] · stature idx 0.647/w 1.00       |
+| 68  | Schillaci (Italy 1990)            | FW  | 1986-94   | 91  | 97                | +6  | stature  | 1.00      | 0.96    | apps 7 (p0.99), goals 6 (p1.00), award 1.00, finish 0.55 [Golden Ball,Golden Boot] · stature idx 0.572/w 1.00       |
+| 69  | Leônidas (Brazil 1938)            | FW  | <=1958    | 90  | 96                | +6  | stature  | 0.99      | 0.96    | apps 4 (p0.96), goals 7 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.530/w 1.00                   |
+| 70  | Haller (West Germany 1966)        | FW  | 1962-70   | 88  | 94                | +6  | measured | 0.98      | 0.88    | apps 5 (p0.91), goals 6 (p0.98), award 0.60, finish 0.75 [Silver Boot] · stature idx 0.264/w 0.00                   |
+| 71  | Cabrini (Italy 1982)              | DF  | 1974-82   | 88  | 94                | +6  | measured | 1.00      | 0.90    | apps 7 (p0.97), goals 1 (p0.95), award 0.00, finish 1.00 · stature idx 0.242/w 0.00                                 |
+| 72  | Collovati (Italy 1982)            | DF  | 1974-82   | 88  | 94                | +6  | measured | 1.00      | 0.90    | apps 7 (p0.97), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 73  | Scirea (Italy 1982)               | DF  | 1974-82   | 88  | 94                | +6  | measured | 1.00      | 0.90    | apps 7 (p0.97), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx 0.360/w 0.17                                 |
+| 74  | Tagliafico (Argentina 2022)       | DF  | 2022-2026 | 88  | 94                | +6  | measured | 0.99      | 0.93    | apps 6 (p0.96), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 75  | Pavard (France 2018)              | DF  | 2010-2018 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 76  | Umtiti (France 2018)              | DF  | 2010-2018 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 1 (p0.94), award 0.00, finish 1.00 · stature idx 0.200/w 0.00                                 |
+| 77  | Zambrotta (Italy 2006)            | DF  | 1998-2006 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.345/w 0.04                                 |
+| 78  | Grosso (Italy 2006)               | DF  | 1998-2006 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 79  | Ghiggia (Uruguay 1950)            | FW  | <=1958    | 88  | 94                | +6  | measured | 0.98      | 0.89    | apps 4 (p0.84), goals 4 (p0.97), award 0.45, finish 1.00 [Bronze Boot] · stature idx 0.270/w 0.00                   |
+| 80  | Edmílson (Brazil 2002)            | DF  | 1998-2006 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 81  | Júnior (Brazil 2002)              | DF  | 1998-2006 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.96), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 82  | Galván (Argentina 1978)           | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 7 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 83  | Olguín (Argentina 1978)           | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 7 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 84  | Tarantini (Argentina 1978)        | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 7 (p0.95), goals 1 (p0.95), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 85  | Lizarazu (France 1998)            | DF  | 1998-2006 | 88  | 94                | +6  | measured | 0.99      | 0.92    | apps 6 (p0.95), goals 1 (p0.96), award 0.00, finish 1.00 · stature idx 0.335/w 0.00                                 |
+| 86  | Wilson (England 1966)             | DF  | 1962-70   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 87  | Charlton (England 1966)           | DF  | 1962-70   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 88  | Cohen (England 1966)              | DF  | 1962-70   | 88  | 94                | +6  | measured | 0.99      | 0.90    | apps 6 (p0.95), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 89  | Brito (Brazil 1970)               | DF  | 1962-70   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 6 (p0.95), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 90  | Mertesacker (Germany 2014)        | DF  | 2010-2018 | 88  | 94                | +6  | measured | 0.98      | 0.92    | apps 6 (p0.95), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx 0.047/w 0.00                                 |
+| 91  | Hummels (Germany 2014)            | DF  | 2010-2018 | 88  | 94                | +6  | measured | 0.98      | 0.92    | apps 6 (p0.95), goals 2 (p1.00), award 0.00, finish 1.00 · stature idx 0.320/w 0.00                                 |
+| 92  | Schwarzenbeck (West Germany 1974) | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 93  | Vogts (West Germany 1974)         | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 7 (p0.94), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 94  | Brehme (West Germany 1990)        | DF  | 1986-94   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 6 (p0.93), goals 3 (p1.00), award 0.00, finish 1.00 · stature idx 0.360/w 0.17                                 |
+| 95  | Reuter (West Germany 1990)        | DF  | 1986-94   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 6 (p0.93), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 96  | Cuciuffo (Argentina 1986)         | DF  | 1986-94   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 6 (p0.93), goals 0 (p0.47), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 97  | Martínez (Argentina 2022)         | DF  | 2022-2026 | 88  | 94                | +6  | measured | 0.98      | 0.93    | apps 5 (p0.92), goals 0 (p0.46), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 98  | Gentile (Italy 1982)              | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.97      | 0.90    | apps 6 (p0.92), goals 0 (p0.45), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 99  | Zózimo (Brazil 1962)              | DF  | 1962-70   | 88  | 94                | +6  | measured | 0.98      | 0.90    | apps 6 (p0.92), goals 0 (p0.49), award 0.00, finish 1.00 · stature idx —/w 0.00                                     |
+| 100 | Żmuda (Poland 1974)               | DF  | 1974-82   | 88  | 94                | +6  | measured | 0.97      | 0.90    | apps 7 (p0.94), goals 0 (p0.47), award 0.55, finish 0.55 [Best Young Player] · stature idx 0.242/w 0.00             |
 
 ## T3-b Overrated-100 — display furthest ABOVE what the card's own merit inputs imply
+
 (Display above inputs = the career-stature path is carrying the card. EXPECTED for true greats in weak tournaments — the annotations call out which entries are facially fine and which are not.)
 
-| # | card | pos | cohort | OVR | input-implied OVR | Δ | basis | input pct | OVR pct | merit inputs |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Messi (Argentina 2010) ★ | FW | 2010-2018 | 98 | 73 | -25 | stature | 0.61 | 0.99 | apps 5 (p0.92), goals 0 (p0.36), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 2 | Zidane (France 2002) ★ | MF | 1998-2006 | 95 | 71 | -24 | stature | 0.20 | 0.99 | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish — · stature idx 0.928/w 1.00 |
-| 3 | Henry (France 2002) ★ | FW | 1998-2006 | 94 | 71 | -23 | stature | 0.25 | 0.97 | apps 2 (p0.31), goals 0 (p0.32), award 0.00, finish — · stature idx 0.857/w 1.00 |
-| 4 | Romário (Brazil 1990) ★ | FW | 1986-94 | 94 | 71 | -23 | stature | 0.29 | 0.98 | apps 1 (p0.26), goals 0 (p0.36), award 0.00, finish — · stature idx 0.862/w 1.00 |
-| 5 | Rossi (Italy 1986) ★ | FW | 1986-94 | 94 | 71 | -23 | stature | 0.06 | 0.98 | apps 0 (p0.07), goals 0 (p0.34), award 0.00, finish — · stature idx 0.879/w 1.00 |
-| 6 | Ronaldo (Brazil 1994) ★ | FW | 1986-94 | 98 | 76 | -22 | stature | 0.61 | 0.99 | apps 0 (p0.07), goals 0 (p0.30), award 0.00, finish 1.00 · stature idx 0.913/w 1.00 |
-| 7 | Maradona (Argentina 1994) ★ | MF | 1986-94 | 98 | 76 | -22 | stature | 0.57 | 0.99 | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00 |
-| 8 | Puskás (Spain 1962) ★ | FW | 1962-70 | 95 | 73 | -22 | stature | 0.50 | 0.98 | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.886/w 1.00 |
-| 9 | Zico (Brazil 1986) ★ | MF | 1986-94 | 95 | 73 | -22 | stature | 0.40 | 0.98 | apps 3 (p0.54), goals 0 (p0.41), award 0.00, finish — · stature idx 0.859/w 1.00 |
-| 10 | Lewandowski (Poland 2018) ★ | FW | 2010-2018 | 94 | 72 | -22 | stature | 0.45 | 0.98 | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx 0.831/w 1.00 |
-| 11 | Modrić (Croatia 2006) ★ | MF | 1998-2006 | 94 | 72 | -22 | stature | 0.31 | 0.98 | apps 2 (p0.31), goals 0 (p0.43), award 0.00, finish — · stature idx 0.898/w 1.00 |
-| 12 | Matthews (England 1954) ★ | FW | <=1958 | 94 | 72 | -22 | stature | 0.35 | 0.98 | apps 2 (p0.42), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00 |
-| 13 | Henry (France 2010) ★ | FW | 2010-2018 | 94 | 72 | -22 | stature | 0.33 | 0.98 | apps 2 (p0.32), goals 0 (p0.36), award 0.00, finish — · stature idx 0.857/w 1.00 |
-| 14 | Matthews (England 1950) ★ | FW | <=1958 | 93 | 71 | -22 | stature | 0.05 | 0.98 | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00 |
-| 15 | Modrić (Croatia 2014) ★ | MF | 2010-2018 | 96 | 75 | -21 | stature | 0.63 | 1.00 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.898/w 1.00 |
-| 16 | Kempes (Argentina 1974) ★ | FW | 1974-82 | 94 | 73 | -21 | stature | 0.57 | 0.97 | apps 6 (p0.86), goals 0 (p0.35), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 17 | Kempes (Argentina 1982) ★ | FW | 1974-82 | 94 | 73 | -21 | stature | 0.53 | 0.97 | apps 5 (p0.87), goals 0 (p0.30), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 18 | Owen (England 2006) ★ | FW | 1998-2006 | 93 | 72 | -21 | stature | 0.47 | 0.97 | apps 3 (p0.60), goals 0 (p0.32), award 0.00, finish — · stature idx 0.789/w 1.00 |
-| 19 | Santos (Brazil 1966) | DF | 1962-70 | 93 | 72 | -21 | stature | 0.45 | 1.00 | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 20 | Bozsik (Hungary 1958) | DF | <=1958 | 93 | 72 | -21 | stature | 0.60 | 0.99 | apps 3 (p0.40), goals 1 (p0.98), award 0.00, finish — · stature idx 0.829/w 1.00 |
-| 21 | Hanappi (Austria 1958) | DF | <=1958 | 93 | 72 | -21 | stature | 0.60 | 0.99 | apps 3 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.809/w 1.00 |
-| 22 | Xavi (Spain 2014) ★ | MF | 2010-2018 | 92 | 71 | -21 | stature | 0.18 | 0.99 | apps 1 (p0.20), goals 0 (p0.41), award 0.00, finish — · stature idx 0.815/w 1.00 |
-| 23 | Keegan (England 1982) ★ | FW | 1974-82 | 92 | 71 | -21 | stature | 0.08 | 0.96 | apps 1 (p0.21), goals 0 (p0.30), award 0.00, finish — · stature idx 0.781/w 1.00 |
-| 24 | Iniesta (Spain 2006) ★ | MF | 1998-2006 | 92 | 71 | -21 | stature | 0.16 | 0.97 | apps 1 (p0.16), goals 0 (p0.43), award 0.00, finish — · stature idx 0.839/w 1.00 |
-| 25 | Jonquet (France 1954) | DF | <=1958 | 89 | 68 | -21 | stature | 0.30 | 0.97 | apps 1 (p0.07), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 26 | van Basten (Netherlands 1990) ★ | FW | 1986-94 | 93 | 73 | -20 | stature | 0.57 | 0.97 | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.781/w 1.00 |
-| 27 | Di Stéfano (Spain 1962) ★ | FW | 1962-70 | 92 | 72 | -20 | stature | 0.22 | 0.96 | apps None (p—), goals 0 (p0.36), award 0.00, finish — · stature idx 0.774/w 1.00 |
-| 28 | Drogba (Ivory Coast 2014) ★ | FW | 2010-2018 | 92 | 72 | -20 | stature | 0.39 | 0.96 | apps 3 (p0.54), goals 0 (p0.30), award 0.00, finish — · stature idx 0.776/w 1.00 |
-| 29 | Hidegkuti (Hungary 1958) | FW | <=1958 | 91 | 71 | -20 | stature | 0.11 | 0.97 | apps 2 (p0.32), goals 0 (p0.32), award 0.00, finish — · stature idx 0.719/w 1.00 |
-| 30 | Charlton (England 1958) ★ | FW | <=1958 | 91 | 71 | -20 | stature | 0.17 | 0.97 | apps None (p—), goals 0 (p0.32), award 0.00, finish — · stature idx 0.748/w 1.00 |
-| 31 | Buffon (Italy 1998) ★ | GK | 1998-2006 | 91 | 71 | -20 | stature | 0.44 | 0.97 | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00 |
-| 32 | Law (Scotland 1974) ★ | FW | 1974-82 | 91 | 71 | -20 | stature | 0.25 | 0.95 | apps 1 (p0.22), goals 0 (p0.35), award 0.00, finish — · stature idx 0.760/w 1.00 |
-| 33 | Rivera (Italy 1962) ★ | FW | 1962-70 | 91 | 71 | -20 | stature | 0.07 | 0.96 | apps 1 (p0.14), goals 0 (p0.36), award 0.00, finish — · stature idx 0.729/w 1.00 |
-| 34 | Boniperti (Italy 1950) | FW | <=1958 | 91 | 71 | -20 | stature | 0.05 | 0.97 | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.780/w 1.00 |
-| 35 | Messi (Argentina 2026) ★ | FW | 2022-2026/26 | 99 | 80 | -19 | stature | 0.71 | 1.00 | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00 |
-| 36 | Iniesta (Spain 2014) ★ | MF | 2010-2018 | 94 | 75 | -19 | stature | 0.63 | 0.99 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.839/w 1.00 |
-| 37 | Nedvěd (Czech Republic 2006) ★ | MF | 1998-2006 | 93 | 74 | -19 | stature | 0.54 | 0.98 | apps 3 (p0.57), goals 0 (p0.43), award 0.00, finish — · stature idx 0.818/w 1.00 |
-| 38 | Cubillas (Peru 1982) ★ | MF | 1974-82 | 93 | 74 | -19 | stature | 0.49 | 0.98 | apps 3 (p0.59), goals 0 (p0.40), award 0.00, finish — · stature idx 0.786/w 1.00 |
-| 39 | Milla (Cameroon 1982) ★ | FW | 1974-82 | 91 | 72 | -19 | stature | 0.41 | 0.95 | apps 3 (p0.59), goals 0 (p0.30), award 0.00, finish — · stature idx 0.698/w 1.00 |
-| 40 | Rivera (Italy 1966) ★ | FW | 1962-70 | 91 | 72 | -19 | stature | 0.40 | 0.96 | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.729/w 1.00 |
-| 41 | Kahn (Germany 1998) ★ | GK | 1998-2006 | 90 | 71 | -19 | stature | 0.44 | 0.96 | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00 |
-| 42 | Happel (Austria 1958) | DF | <=1958 | 89 | 70 | -19 | stature | 0.42 | 0.97 | apps 2 (p0.23), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 43 | Cárdenas (Mexico 1958) | DF | <=1958 | 89 | 70 | -19 | stature | 0.42 | 0.97 | apps 2 (p0.23), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 44 | Albert (Hungary 1966) | MF | 1962-70 | 97 | 79 | -18 | stature | 0.75 | 0.99 | apps 4 (p0.79), goals 0 (p0.44), award 0.00, finish — · stature idx 0.872/w 1.00 |
-| 45 | Kopa (France 1954) ★ | FW | <=1958 | 97 | 79 | -18 | stature | 0.67 | 0.99 | apps 2 (p0.42), goals 1 (p0.73), award 0.00, finish — · stature idx 0.843/w 1.00 |
-| 46 | Boniperti (Italy 1954) | FW | <=1958 | 94 | 76 | -18 | stature | 0.62 | 0.98 | apps 1 (p0.10), goals 1 (p0.73), award 0.00, finish — · stature idx 0.780/w 1.00 |
-| 47 | Xavi (Spain 2002) ★ | MF | 1998-2006 | 93 | 75 | -18 | stature | 0.63 | 0.98 | apps 3 (p0.62), goals 0 (p0.43), award 0.00, finish — · stature idx 0.815/w 1.00 |
-| 48 | Figo (Portugal 2002) ★ | MF | 1998-2006 | 93 | 75 | -18 | stature | 0.63 | 0.98 | apps 3 (p0.62), goals 0 (p0.43), award 0.00, finish — · stature idx 0.816/w 1.00 |
-| 49 | Benzema (France 2022) ★ | FW | 2022-2026 | 92 | 74 | -18 | stature | 0.60 | 0.97 | apps 0 (p0.03), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.728/w 1.00 |
-| 50 | Falcão (Brazil 1986) | MF | 1986-94 | 90 | 72 | -18 | stature | 0.27 | 0.97 | apps 2 (p0.34), goals 0 (p0.41), award 0.00, finish — · stature idx 0.686/w 1.00 |
-| 51 | Suárez (Spain 1962) | FW | 1962-70 | 90 | 72 | -18 | stature | 0.36 | 0.95 | apps 2 (p0.41), goals 0 (p0.36), award 0.00, finish — · stature idx 0.656/w 1.00 |
-| 52 | Suárez (Spain 1966) | FW | 1962-70 | 90 | 72 | -18 | stature | 0.40 | 0.95 | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.656/w 1.00 |
-| 53 | Cárdenas (Mexico 1954) | MF | <=1958 | 90 | 72 | -18 | stature | 0.21 | 0.98 | apps 2 (p0.41), goals 0 (p0.47), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 54 | Hazard (Belgium 2022) ★ | FW | 2022-2026 | 90 | 72 | -18 | stature | 0.43 | 0.96 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.629/w 1.00 |
-| 55 | Santos (Brazil 1950) | DF | <=1958 | 90 | 72 | -18 | stature | 0.57 | 0.98 | apps None (p—), goals 0 (p0.49), award 0.00, finish 0.75 · stature idx 0.684/w 1.00 |
-| 56 | Braine (Belgium 1938) | FW | <=1958 | 90 | 72 | -18 | stature | 0.24 | 0.96 | apps 1 (p0.26), goals 0 (p0.37), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 57 | Szepan (Germany 1938) | FW | <=1958 | 90 | 72 | -18 | stature | 0.45 | 0.96 | apps None (p—), goals 0 (p0.37), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 58 | Yashin (Soviet Union 1970) ★ | GK | 1962-70 | 89 | 71 | -18 | stature | 0.42 | 0.98 | apps 0 (p0.26), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00 |
-| 59 | Kahn (Germany 1994) ★ | GK | 1986-94 | 89 | 71 | -18 | stature | 0.07 | 1.00 | apps 0 (p0.25), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00 |
-| 60 | Šuker (Yugoslavia 1990) ★ | FW | 1986-94 | 89 | 71 | -18 | stature | 0.17 | 0.95 | apps 0 (p0.09), goals 0 (p0.36), award 0.00, finish — · stature idx 0.643/w 1.00 |
-| 61 | Šuker (Croatia 2002) ★ | FW | 1998-2006 | 89 | 71 | -18 | stature | 0.10 | 0.94 | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.643/w 1.00 |
-| 62 | Eto'o (Cameroon 1998) ★ | FW | 1998-2006 | 89 | 71 | -18 | stature | 0.20 | 0.94 | apps 1 (p0.18), goals 0 (p0.33), award 0.00, finish — · stature idx 0.605/w 1.00 |
-| 63 | Eto'o (Cameroon 2014) ★ | FW | 2010-2018 | 89 | 71 | -18 | stature | 0.04 | 0.93 | apps 1 (p0.13), goals 0 (p0.30), award 0.00, finish — · stature idx 0.605/w 1.00 |
-| 64 | Ibrahimović (Sweden 2002) ★ | FW | 1998-2006 | 89 | 71 | -18 | stature | 0.25 | 0.94 | apps 2 (p0.31), goals 0 (p0.32), award 0.00, finish — · stature idx 0.560/w 1.00 |
-| 65 | Messi (Argentina 2006) ★ | FW | 1998-2006 | 99 | 82 | -17 | stature | 0.76 | 0.99 | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00 |
-| 66 | Matthäus (West Germany 1982) ★ | MF | 1974-82 | 97 | 80 | -17 | stature | 0.67 | 0.99 | apps 2 (p0.42), goals 0 (p0.40), award 0.00, finish 0.75 · stature idx 0.891/w 1.00 |
-| 67 | Ronaldo (Portugal 2014) ★ | FW | 2010-2018 | 97 | 80 | -17 | stature | 0.68 | 0.99 | apps 3 (p0.54), goals 1 (p0.72), award 0.00, finish — · stature idx 0.878/w 1.00 |
-| 68 | Ronaldo (Portugal 2026) ★ | FW | 2022-2026/26 | 97 | 80 | -17 | stature | 0.72 | 0.99 | caps 226 (p1.00), goals 143 (p1.00), age 41 (af 0.80), lg 0.58 · stature idx 0.878/w 1.00 |
-| 69 | Santos (Brazil 1954) | DF | <=1958 | 94 | 77 | -17 | stature | 0.72 | 1.00 | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00 |
-| 70 | Santos (Brazil 1958) | DF | <=1958 | 94 | 77 | -17 | stature | 0.68 | 1.00 | apps 1 (p0.08), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.805/w 1.00 |
-| 71 | Masopust (Czechoslovakia 1958) ★ | MF | <=1958 | 92 | 75 | -17 | stature | 0.63 | 0.98 | apps 4 (p0.60), goals 0 (p0.45), award 0.00, finish — · stature idx 0.739/w 1.00 |
-| 72 | Cárdenas (Mexico 1962) | DF | 1962-70 | 91 | 74 | -17 | stature | 0.58 | 0.98 | apps 3 (p0.51), goals 0 (p0.49), award 0.00, finish — · stature idx 0.665/w 1.00 |
-| 73 | Griezmann (France 2014) | FW | 2010-2018 | 90 | 73 | -17 | stature | 0.56 | 0.95 | apps 5 (p0.89), goals 0 (p0.30), award 0.00, finish — · stature idx 0.634/w 1.00 |
-| 74 | Suárez (Uruguay 2022) ★ | FW | 2022-2026 | 89 | 72 | -17 | stature | 0.43 | 0.94 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.537/w 1.00 |
-| 75 | Ibrahimović (Sweden 2006) ★ | FW | 1998-2006 | 89 | 72 | -17 | stature | 0.47 | 0.94 | apps 3 (p0.60), goals 0 (p0.32), award 0.00, finish — · stature idx 0.560/w 1.00 |
-| 76 | ter Stegen (Germany 2018) | GK | 2010-2018 | 88 | 71 | -17 | stature | 0.25 | 0.88 | apps 0 (p0.29), goals 0 (p0.50), award 0.00, finish — · stature idx 0.464/w 1.00 |
-| 77 | ter Stegen (Germany 2022) | GK | 2022-2026 | 88 | 71 | -17 | stature | 0.26 | 0.87 | apps 0 (p0.29), goals 0 (p0.50), award 0.00, finish — · stature idx 0.464/w 1.00 |
-| 78 | Crespo (Argentina 1998) | FW | 1998-2006 | 88 | 71 | -17 | stature | 0.20 | 0.87 | apps 1 (p0.18), goals 0 (p0.33), award 0.00, finish — · stature idx 0.494/w 1.00 |
-| 79 | Sánchez (Mexico 1994) ★ | FW | 1986-94 | 88 | 71 | -17 | stature | 0.12 | 0.88 | apps 1 (p0.26), goals 0 (p0.30), award 0.00, finish — · stature idx 0.500/w 1.00 |
-| 80 | Piqué (Spain 2014) ★ | DF | 2010-2018 | 88 | 71 | -17 | stature | 0.20 | 0.92 | apps 1 (p0.27), goals 0 (p0.47), award 0.00, finish — · stature idx 0.526/w 1.00 |
-| 81 | Lampard (England 2014) | MF | 2010-2018 | 88 | 71 | -17 | stature | 0.18 | 0.91 | apps 1 (p0.20), goals 0 (p0.41), award 0.00, finish — · stature idx 0.496/w 1.00 |
-| 82 | Pirlo (Italy 2010) ★ | MF | 2010-2018 | 88 | 71 | -17 | stature | 0.23 | 0.91 | apps 1 (p0.20), goals 0 (p0.43), award 0.00, finish — · stature idx 0.590/w 1.00 |
-| 83 | Silva (Brazil 2010) ★ | DF | 2010-2018 | 85 | 68 | -17 | stature | 0.14 | 0.74 | apps 0 (p0.09), goals 0 (p0.46), award 0.00, finish — · stature idx 0.521/w 1.00 |
-| 84 | Iniesta (Spain 2018) ★ | MF | 2010-2018 | 95 | 79 | -16 | stature | 0.70 | 0.99 | apps 4 (p0.79), goals 0 (p0.42), award 0.00, finish — · stature idx 0.839/w 1.00 |
-| 85 | Ribéry (France 2010) ★ | MF | 2010-2018 | 91 | 75 | -16 | stature | 0.55 | 0.98 | apps 3 (p0.61), goals 0 (p0.43), award 0.00, finish — · stature idx 0.717/w 1.00 |
-| 86 | Butragueño (Spain 1990) | FW | 1986-94 | 89 | 73 | -16 | stature | 0.57 | 0.95 | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.607/w 1.00 |
-| 87 | Gento (Spain 1966) | FW | 1962-70 | 88 | 72 | -16 | stature | 0.40 | 0.88 | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.461/w 1.00 |
-| 88 | Alves (Brazil 2022) | DF | 2022-2026 | 88 | 72 | -16 | stature | 0.40 | 0.93 | apps 2 (p0.43), goals 0 (p0.46), award 0.00, finish — · stature idx 0.500/w 1.00 |
-| 89 | Sánchez (Mexico 1978) ★ | FW | 1974-82 | 88 | 72 | -16 | stature | 0.50 | 0.87 | apps 3 (p0.62), goals 0 (p0.35), award 0.00, finish — · stature idx 0.500/w 1.00 |
-| 90 | Madjer (Algeria 1986) | FW | 1986-94 | 88 | 72 | -16 | stature | 0.46 | 0.88 | apps 3 (p0.60), goals 0 (p0.34), award 0.00, finish — · stature idx 0.462/w 1.00 |
-| 91 | Fàbregas (Spain 2014) ★ | MF | 2010-2018 | 88 | 72 | -16 | stature | 0.34 | 0.91 | apps 2 (p0.38), goals 0 (p0.41), award 0.00, finish — · stature idx 0.504/w 1.00 |
-| 92 | Faras (Morocco 1970) | FW | 1962-70 | 88 | 72 | -16 | stature | 0.44 | 0.88 | apps 2 (p0.46), goals 0 (p0.37), award 0.00, finish — · stature idx 0.504/w 1.00 |
-| 93 | Ronaldinho (Brazil 2006) ★ | MF | 1998-2006 | 97 | 82 | -15 | stature | 0.82 | 0.99 | apps 5 (p0.90), goals 0 (p0.43), award 0.00, finish — · stature idx 0.870/w 1.00 |
-| 94 | Xavi (Spain 2006) ★ | MF | 1998-2006 | 94 | 79 | -15 | stature | 0.72 | 0.98 | apps 4 (p0.79), goals 0 (p0.43), award 0.00, finish — · stature idx 0.815/w 1.00 |
-| 95 | Kaká (Brazil 2002) ★ | MF | 1998-2006 | 94 | 79 | -15 | stature | 0.71 | 0.98 | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.799/w 1.00 |
-| 96 | Cannavaro (Italy 2002) ★ | DF | 1998-2006 | 93 | 78 | -15 | stature | 0.61 | 0.99 | apps 3 (p0.62), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00 |
-| 97 | Rivera (Italy 1974) ★ | MF | 1974-82 | 92 | 77 | -15 | stature | 0.62 | 0.97 | apps 2 (p0.38), goals 1 (p0.89), award 0.00, finish — · stature idx 0.729/w 1.00 |
-| 98 | Santos (Brazil 1954) | DF | <=1958 | 92 | 77 | -15 | stature | 0.72 | 0.98 | apps 3 (p0.59), goals 0 (p0.48), award 0.00, finish — · stature idx 0.684/w 1.00 |
-| 99 | Gerrard (England 2014) ★ | MF | 2010-2018 | 90 | 75 | -15 | stature | 0.63 | 0.98 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.643/w 1.00 |
-| 100 | Gento (Spain 1962) | FW | 1962-70 | 88 | 73 | -15 | stature | 0.50 | 0.88 | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.461/w 1.00 |
+| #   | card                             | pos | cohort       | OVR | input-implied OVR | Δ   | basis   | input pct | OVR pct | merit inputs                                                                              |
+| --- | -------------------------------- | --- | ------------ | --- | ----------------- | --- | ------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
+| 1   | Messi (Argentina 2010) ★         | FW  | 2010-2018    | 98  | 73                | -25 | stature | 0.61      | 0.99    | apps 5 (p0.92), goals 0 (p0.36), award 0.00, finish — · stature idx 0.938/w 1.00          |
+| 2   | Zidane (France 2002) ★           | MF  | 1998-2006    | 95  | 71                | -24 | stature | 0.20      | 0.99    | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish — · stature idx 0.928/w 1.00          |
+| 3   | Henry (France 2002) ★            | FW  | 1998-2006    | 94  | 71                | -23 | stature | 0.25      | 0.97    | apps 2 (p0.31), goals 0 (p0.32), award 0.00, finish — · stature idx 0.857/w 1.00          |
+| 4   | Romário (Brazil 1990) ★          | FW  | 1986-94      | 94  | 71                | -23 | stature | 0.29      | 0.98    | apps 1 (p0.26), goals 0 (p0.36), award 0.00, finish — · stature idx 0.862/w 1.00          |
+| 5   | Rossi (Italy 1986) ★             | FW  | 1986-94      | 94  | 71                | -23 | stature | 0.06      | 0.98    | apps 0 (p0.07), goals 0 (p0.34), award 0.00, finish — · stature idx 0.879/w 1.00          |
+| 6   | Ronaldo (Brazil 1994) ★          | FW  | 1986-94      | 98  | 76                | -22 | stature | 0.61      | 0.99    | apps 0 (p0.07), goals 0 (p0.30), award 0.00, finish 1.00 · stature idx 0.913/w 1.00       |
+| 7   | Maradona (Argentina 1994) ★      | MF  | 1986-94      | 98  | 76                | -22 | stature | 0.57      | 0.99    | apps 2 (p0.34), goals 1 (p0.90), award 0.00, finish — · stature idx 0.952/w 1.00          |
+| 8   | Puskás (Spain 1962) ★            | FW  | 1962-70      | 95  | 73                | -22 | stature | 0.50      | 0.98    | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.886/w 1.00          |
+| 9   | Zico (Brazil 1986) ★             | MF  | 1986-94      | 95  | 73                | -22 | stature | 0.40      | 0.98    | apps 3 (p0.54), goals 0 (p0.41), award 0.00, finish — · stature idx 0.859/w 1.00          |
+| 10  | Lewandowski (Poland 2018) ★      | FW  | 2010-2018    | 94  | 72                | -22 | stature | 0.45      | 0.98    | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx 0.831/w 1.00          |
+| 11  | Modrić (Croatia 2006) ★          | MF  | 1998-2006    | 94  | 72                | -22 | stature | 0.31      | 0.98    | apps 2 (p0.31), goals 0 (p0.43), award 0.00, finish — · stature idx 0.898/w 1.00          |
+| 12  | Matthews (England 1954) ★        | FW  | <=1958       | 94  | 72                | -22 | stature | 0.35      | 0.98    | apps 2 (p0.42), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00          |
+| 13  | Henry (France 2010) ★            | FW  | 2010-2018    | 94  | 72                | -22 | stature | 0.33      | 0.98    | apps 2 (p0.32), goals 0 (p0.36), award 0.00, finish — · stature idx 0.857/w 1.00          |
+| 14  | Matthews (England 1950) ★        | FW  | <=1958       | 93  | 71                | -22 | stature | 0.05      | 0.98    | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.843/w 1.00          |
+| 15  | Modrić (Croatia 2014) ★          | MF  | 2010-2018    | 96  | 75                | -21 | stature | 0.63      | 1.00    | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.898/w 1.00          |
+| 16  | Kempes (Argentina 1974) ★        | FW  | 1974-82      | 94  | 73                | -21 | stature | 0.57      | 0.97    | apps 6 (p0.86), goals 0 (p0.35), award 0.00, finish — · stature idx 0.829/w 1.00          |
+| 17  | Kempes (Argentina 1982) ★        | FW  | 1974-82      | 94  | 73                | -21 | stature | 0.53      | 0.97    | apps 5 (p0.87), goals 0 (p0.30), award 0.00, finish — · stature idx 0.829/w 1.00          |
+| 18  | Owen (England 2006) ★            | FW  | 1998-2006    | 93  | 72                | -21 | stature | 0.47      | 0.97    | apps 3 (p0.60), goals 0 (p0.32), award 0.00, finish — · stature idx 0.789/w 1.00          |
+| 19  | Santos (Brazil 1966)             | DF  | 1962-70      | 93  | 72                | -21 | stature | 0.45      | 1.00    | apps 2 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.805/w 1.00          |
+| 20  | Bozsik (Hungary 1958)            | DF  | <=1958       | 93  | 72                | -21 | stature | 0.60      | 0.99    | apps 3 (p0.40), goals 1 (p0.98), award 0.00, finish — · stature idx 0.829/w 1.00          |
+| 21  | Hanappi (Austria 1958)           | DF  | <=1958       | 93  | 72                | -21 | stature | 0.60      | 0.99    | apps 3 (p0.40), goals 0 (p0.48), award 0.00, finish — · stature idx 0.809/w 1.00          |
+| 22  | Xavi (Spain 2014) ★              | MF  | 2010-2018    | 92  | 71                | -21 | stature | 0.18      | 0.99    | apps 1 (p0.20), goals 0 (p0.41), award 0.00, finish — · stature idx 0.815/w 1.00          |
+| 23  | Keegan (England 1982) ★          | FW  | 1974-82      | 92  | 71                | -21 | stature | 0.08      | 0.96    | apps 1 (p0.21), goals 0 (p0.30), award 0.00, finish — · stature idx 0.781/w 1.00          |
+| 24  | Iniesta (Spain 2006) ★           | MF  | 1998-2006    | 92  | 71                | -21 | stature | 0.16      | 0.97    | apps 1 (p0.16), goals 0 (p0.43), award 0.00, finish — · stature idx 0.839/w 1.00          |
+| 25  | Jonquet (France 1954)            | DF  | <=1958       | 89  | 68                | -21 | stature | 0.30      | 0.97    | apps 1 (p0.07), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 26  | van Basten (Netherlands 1990) ★  | FW  | 1986-94      | 93  | 73                | -20 | stature | 0.57      | 0.97    | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.781/w 1.00          |
+| 27  | Di Stéfano (Spain 1962) ★        | FW  | 1962-70      | 92  | 72                | -20 | stature | 0.22      | 0.96    | apps None (p—), goals 0 (p0.36), award 0.00, finish — · stature idx 0.774/w 1.00          |
+| 28  | Drogba (Ivory Coast 2014) ★      | FW  | 2010-2018    | 92  | 72                | -20 | stature | 0.39      | 0.96    | apps 3 (p0.54), goals 0 (p0.30), award 0.00, finish — · stature idx 0.776/w 1.00          |
+| 29  | Hidegkuti (Hungary 1958)         | FW  | <=1958       | 91  | 71                | -20 | stature | 0.11      | 0.97    | apps 2 (p0.32), goals 0 (p0.32), award 0.00, finish — · stature idx 0.719/w 1.00          |
+| 30  | Charlton (England 1958) ★        | FW  | <=1958       | 91  | 71                | -20 | stature | 0.17      | 0.97    | apps None (p—), goals 0 (p0.32), award 0.00, finish — · stature idx 0.748/w 1.00          |
+| 31  | Buffon (Italy 1998) ★            | GK  | 1998-2006    | 91  | 71                | -20 | stature | 0.44      | 0.97    | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.777/w 1.00          |
+| 32  | Law (Scotland 1974) ★            | FW  | 1974-82      | 91  | 71                | -20 | stature | 0.25      | 0.95    | apps 1 (p0.22), goals 0 (p0.35), award 0.00, finish — · stature idx 0.760/w 1.00          |
+| 33  | Rivera (Italy 1962) ★            | FW  | 1962-70      | 91  | 71                | -20 | stature | 0.07      | 0.96    | apps 1 (p0.14), goals 0 (p0.36), award 0.00, finish — · stature idx 0.729/w 1.00          |
+| 34  | Boniperti (Italy 1950)           | FW  | <=1958       | 91  | 71                | -20 | stature | 0.05      | 0.97    | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.780/w 1.00          |
+| 35  | Messi (Argentina 2026) ★         | FW  | 2022-2026/26 | 99  | 80                | -19 | stature | 0.71      | 1.00    | caps 198 (p1.00), goals 116 (p1.00), age 38 (af 0.80), lg 0.58 · stature idx 0.938/w 1.00 |
+| 36  | Iniesta (Spain 2014) ★           | MF  | 2010-2018    | 94  | 75                | -19 | stature | 0.63      | 0.99    | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.839/w 1.00          |
+| 37  | Nedvěd (Czech Republic 2006) ★   | MF  | 1998-2006    | 93  | 74                | -19 | stature | 0.54      | 0.98    | apps 3 (p0.57), goals 0 (p0.43), award 0.00, finish — · stature idx 0.818/w 1.00          |
+| 38  | Cubillas (Peru 1982) ★           | MF  | 1974-82      | 93  | 74                | -19 | stature | 0.49      | 0.98    | apps 3 (p0.59), goals 0 (p0.40), award 0.00, finish — · stature idx 0.786/w 1.00          |
+| 39  | Milla (Cameroon 1982) ★          | FW  | 1974-82      | 91  | 72                | -19 | stature | 0.41      | 0.95    | apps 3 (p0.59), goals 0 (p0.30), award 0.00, finish — · stature idx 0.698/w 1.00          |
+| 40  | Rivera (Italy 1966) ★            | FW  | 1962-70      | 91  | 72                | -19 | stature | 0.40      | 0.96    | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.729/w 1.00          |
+| 41  | Kahn (Germany 1998) ★            | GK  | 1998-2006    | 90  | 71                | -19 | stature | 0.44      | 0.96    | apps 0 (p0.31), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00          |
+| 42  | Happel (Austria 1958)            | DF  | <=1958       | 89  | 70                | -19 | stature | 0.42      | 0.97    | apps 2 (p0.23), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 43  | Cárdenas (Mexico 1958)           | DF  | <=1958       | 89  | 70                | -19 | stature | 0.42      | 0.97    | apps 2 (p0.23), goals 0 (p0.48), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 44  | Albert (Hungary 1966)            | MF  | 1962-70      | 97  | 79                | -18 | stature | 0.75      | 0.99    | apps 4 (p0.79), goals 0 (p0.44), award 0.00, finish — · stature idx 0.872/w 1.00          |
+| 45  | Kopa (France 1954) ★             | FW  | <=1958       | 97  | 79                | -18 | stature | 0.67      | 0.99    | apps 2 (p0.42), goals 1 (p0.73), award 0.00, finish — · stature idx 0.843/w 1.00          |
+| 46  | Boniperti (Italy 1954)           | FW  | <=1958       | 94  | 76                | -18 | stature | 0.62      | 0.98    | apps 1 (p0.10), goals 1 (p0.73), award 0.00, finish — · stature idx 0.780/w 1.00          |
+| 47  | Xavi (Spain 2002) ★              | MF  | 1998-2006    | 93  | 75                | -18 | stature | 0.63      | 0.98    | apps 3 (p0.62), goals 0 (p0.43), award 0.00, finish — · stature idx 0.815/w 1.00          |
+| 48  | Figo (Portugal 2002) ★           | MF  | 1998-2006    | 93  | 75                | -18 | stature | 0.63      | 0.98    | apps 3 (p0.62), goals 0 (p0.43), award 0.00, finish — · stature idx 0.816/w 1.00          |
+| 49  | Benzema (France 2022) ★          | FW  | 2022-2026    | 92  | 74                | -18 | stature | 0.60      | 0.97    | apps 0 (p0.03), goals 0 (p0.33), award 0.00, finish 0.75 · stature idx 0.728/w 1.00       |
+| 50  | Falcão (Brazil 1986)             | MF  | 1986-94      | 90  | 72                | -18 | stature | 0.27      | 0.97    | apps 2 (p0.34), goals 0 (p0.41), award 0.00, finish — · stature idx 0.686/w 1.00          |
+| 51  | Suárez (Spain 1962)              | FW  | 1962-70      | 90  | 72                | -18 | stature | 0.36      | 0.95    | apps 2 (p0.41), goals 0 (p0.36), award 0.00, finish — · stature idx 0.656/w 1.00          |
+| 52  | Suárez (Spain 1966)              | FW  | 1962-70      | 90  | 72                | -18 | stature | 0.40      | 0.95    | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.656/w 1.00          |
+| 53  | Cárdenas (Mexico 1954)           | MF  | <=1958       | 90  | 72                | -18 | stature | 0.21      | 0.98    | apps 2 (p0.41), goals 0 (p0.47), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 54  | Hazard (Belgium 2022) ★          | FW  | 2022-2026    | 90  | 72                | -18 | stature | 0.43      | 0.96    | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.629/w 1.00          |
+| 55  | Santos (Brazil 1950)             | DF  | <=1958       | 90  | 72                | -18 | stature | 0.57      | 0.98    | apps None (p—), goals 0 (p0.49), award 0.00, finish 0.75 · stature idx 0.684/w 1.00       |
+| 56  | Braine (Belgium 1938)            | FW  | <=1958       | 90  | 72                | -18 | stature | 0.24      | 0.96    | apps 1 (p0.26), goals 0 (p0.37), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 57  | Szepan (Germany 1938)            | FW  | <=1958       | 90  | 72                | -18 | stature | 0.45      | 0.96    | apps None (p—), goals 0 (p0.37), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 58  | Yashin (Soviet Union 1970) ★     | GK  | 1962-70      | 89  | 71                | -18 | stature | 0.42      | 0.98    | apps 0 (p0.26), goals 0 (p0.50), award 0.00, finish — · stature idx 0.738/w 1.00          |
+| 59  | Kahn (Germany 1994) ★            | GK  | 1986-94      | 89  | 71                | -18 | stature | 0.07      | 1.00    | apps 0 (p0.25), goals 0 (p0.50), award 0.00, finish — · stature idx 0.719/w 1.00          |
+| 60  | Šuker (Yugoslavia 1990) ★        | FW  | 1986-94      | 89  | 71                | -18 | stature | 0.17      | 0.95    | apps 0 (p0.09), goals 0 (p0.36), award 0.00, finish — · stature idx 0.643/w 1.00          |
+| 61  | Šuker (Croatia 2002) ★           | FW  | 1998-2006    | 89  | 71                | -18 | stature | 0.10      | 0.94    | apps 1 (p0.15), goals 0 (p0.32), award 0.00, finish — · stature idx 0.643/w 1.00          |
+| 62  | Eto'o (Cameroon 1998) ★          | FW  | 1998-2006    | 89  | 71                | -18 | stature | 0.20      | 0.94    | apps 1 (p0.18), goals 0 (p0.33), award 0.00, finish — · stature idx 0.605/w 1.00          |
+| 63  | Eto'o (Cameroon 2014) ★          | FW  | 2010-2018    | 89  | 71                | -18 | stature | 0.04      | 0.93    | apps 1 (p0.13), goals 0 (p0.30), award 0.00, finish — · stature idx 0.605/w 1.00          |
+| 64  | Ibrahimović (Sweden 2002) ★      | FW  | 1998-2006    | 89  | 71                | -18 | stature | 0.25      | 0.94    | apps 2 (p0.31), goals 0 (p0.32), award 0.00, finish — · stature idx 0.560/w 1.00          |
+| 65  | Messi (Argentina 2006) ★         | FW  | 1998-2006    | 99  | 82                | -17 | stature | 0.76      | 0.99    | apps 3 (p0.60), goals 1 (p0.77), award 0.00, finish — · stature idx 0.938/w 1.00          |
+| 66  | Matthäus (West Germany 1982) ★   | MF  | 1974-82      | 97  | 80                | -17 | stature | 0.67      | 0.99    | apps 2 (p0.42), goals 0 (p0.40), award 0.00, finish 0.75 · stature idx 0.891/w 1.00       |
+| 67  | Ronaldo (Portugal 2014) ★        | FW  | 2010-2018    | 97  | 80                | -17 | stature | 0.68      | 0.99    | apps 3 (p0.54), goals 1 (p0.72), award 0.00, finish — · stature idx 0.878/w 1.00          |
+| 68  | Ronaldo (Portugal 2026) ★        | FW  | 2022-2026/26 | 97  | 80                | -17 | stature | 0.72      | 0.99    | caps 226 (p1.00), goals 143 (p1.00), age 41 (af 0.80), lg 0.58 · stature idx 0.878/w 1.00 |
+| 69  | Santos (Brazil 1954)             | DF  | <=1958       | 94  | 77                | -17 | stature | 0.72      | 1.00    | apps 3 (p0.59), goals 1 (p0.97), award 0.00, finish — · stature idx 0.805/w 1.00          |
+| 70  | Santos (Brazil 1958)             | DF  | <=1958       | 94  | 77                | -17 | stature | 0.68      | 1.00    | apps 1 (p0.08), goals 0 (p0.48), award 0.00, finish 1.00 · stature idx 0.805/w 1.00       |
+| 71  | Masopust (Czechoslovakia 1958) ★ | MF  | <=1958       | 92  | 75                | -17 | stature | 0.63      | 0.98    | apps 4 (p0.60), goals 0 (p0.45), award 0.00, finish — · stature idx 0.739/w 1.00          |
+| 72  | Cárdenas (Mexico 1962)           | DF  | 1962-70      | 91  | 74                | -17 | stature | 0.58      | 0.98    | apps 3 (p0.51), goals 0 (p0.49), award 0.00, finish — · stature idx 0.665/w 1.00          |
+| 73  | Griezmann (France 2014)          | FW  | 2010-2018    | 90  | 73                | -17 | stature | 0.56      | 0.95    | apps 5 (p0.89), goals 0 (p0.30), award 0.00, finish — · stature idx 0.634/w 1.00          |
+| 74  | Suárez (Uruguay 2022) ★          | FW  | 2022-2026    | 89  | 72                | -17 | stature | 0.43      | 0.94    | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.537/w 1.00          |
+| 75  | Ibrahimović (Sweden 2006) ★      | FW  | 1998-2006    | 89  | 72                | -17 | stature | 0.47      | 0.94    | apps 3 (p0.60), goals 0 (p0.32), award 0.00, finish — · stature idx 0.560/w 1.00          |
+| 76  | ter Stegen (Germany 2018)        | GK  | 2010-2018    | 88  | 71                | -17 | stature | 0.25      | 0.88    | apps 0 (p0.29), goals 0 (p0.50), award 0.00, finish — · stature idx 0.464/w 1.00          |
+| 77  | ter Stegen (Germany 2022)        | GK  | 2022-2026    | 88  | 71                | -17 | stature | 0.26      | 0.87    | apps 0 (p0.29), goals 0 (p0.50), award 0.00, finish — · stature idx 0.464/w 1.00          |
+| 78  | Crespo (Argentina 1998)          | FW  | 1998-2006    | 88  | 71                | -17 | stature | 0.20      | 0.87    | apps 1 (p0.18), goals 0 (p0.33), award 0.00, finish — · stature idx 0.494/w 1.00          |
+| 79  | Sánchez (Mexico 1994) ★          | FW  | 1986-94      | 88  | 71                | -17 | stature | 0.12      | 0.88    | apps 1 (p0.26), goals 0 (p0.30), award 0.00, finish — · stature idx 0.500/w 1.00          |
+| 80  | Piqué (Spain 2014) ★             | DF  | 2010-2018    | 88  | 71                | -17 | stature | 0.20      | 0.92    | apps 1 (p0.27), goals 0 (p0.47), award 0.00, finish — · stature idx 0.526/w 1.00          |
+| 81  | Lampard (England 2014)           | MF  | 2010-2018    | 88  | 71                | -17 | stature | 0.18      | 0.91    | apps 1 (p0.20), goals 0 (p0.41), award 0.00, finish — · stature idx 0.496/w 1.00          |
+| 82  | Pirlo (Italy 2010) ★             | MF  | 2010-2018    | 88  | 71                | -17 | stature | 0.23      | 0.91    | apps 1 (p0.20), goals 0 (p0.43), award 0.00, finish — · stature idx 0.590/w 1.00          |
+| 83  | Silva (Brazil 2010) ★            | DF  | 2010-2018    | 85  | 68                | -17 | stature | 0.14      | 0.74    | apps 0 (p0.09), goals 0 (p0.46), award 0.00, finish — · stature idx 0.521/w 1.00          |
+| 84  | Iniesta (Spain 2018) ★           | MF  | 2010-2018    | 95  | 79                | -16 | stature | 0.70      | 0.99    | apps 4 (p0.79), goals 0 (p0.42), award 0.00, finish — · stature idx 0.839/w 1.00          |
+| 85  | Ribéry (France 2010) ★           | MF  | 2010-2018    | 91  | 75                | -16 | stature | 0.55      | 0.98    | apps 3 (p0.61), goals 0 (p0.43), award 0.00, finish — · stature idx 0.717/w 1.00          |
+| 86  | Butragueño (Spain 1990)          | FW  | 1986-94      | 89  | 73                | -16 | stature | 0.57      | 0.95    | apps 4 (p0.80), goals 0 (p0.36), award 0.00, finish — · stature idx 0.607/w 1.00          |
+| 87  | Gento (Spain 1966)               | FW  | 1962-70      | 88  | 72                | -16 | stature | 0.40      | 0.88    | apps 2 (p0.42), goals 0 (p0.36), award 0.00, finish — · stature idx 0.461/w 1.00          |
+| 88  | Alves (Brazil 2022)              | DF  | 2022-2026    | 88  | 72                | -16 | stature | 0.40      | 0.93    | apps 2 (p0.43), goals 0 (p0.46), award 0.00, finish — · stature idx 0.500/w 1.00          |
+| 89  | Sánchez (Mexico 1978) ★          | FW  | 1974-82      | 88  | 72                | -16 | stature | 0.50      | 0.87    | apps 3 (p0.62), goals 0 (p0.35), award 0.00, finish — · stature idx 0.500/w 1.00          |
+| 90  | Madjer (Algeria 1986)            | FW  | 1986-94      | 88  | 72                | -16 | stature | 0.46      | 0.88    | apps 3 (p0.60), goals 0 (p0.34), award 0.00, finish — · stature idx 0.462/w 1.00          |
+| 91  | Fàbregas (Spain 2014) ★          | MF  | 2010-2018    | 88  | 72                | -16 | stature | 0.34      | 0.91    | apps 2 (p0.38), goals 0 (p0.41), award 0.00, finish — · stature idx 0.504/w 1.00          |
+| 92  | Faras (Morocco 1970)             | FW  | 1962-70      | 88  | 72                | -16 | stature | 0.44      | 0.88    | apps 2 (p0.46), goals 0 (p0.37), award 0.00, finish — · stature idx 0.504/w 1.00          |
+| 93  | Ronaldinho (Brazil 2006) ★       | MF  | 1998-2006    | 97  | 82                | -15 | stature | 0.82      | 0.99    | apps 5 (p0.90), goals 0 (p0.43), award 0.00, finish — · stature idx 0.870/w 1.00          |
+| 94  | Xavi (Spain 2006) ★              | MF  | 1998-2006    | 94  | 79                | -15 | stature | 0.72      | 0.98    | apps 4 (p0.79), goals 0 (p0.43), award 0.00, finish — · stature idx 0.815/w 1.00          |
+| 95  | Kaká (Brazil 2002) ★             | MF  | 1998-2006    | 94  | 79                | -15 | stature | 0.71      | 0.98    | apps 1 (p0.23), goals 0 (p0.43), award 0.00, finish 1.00 · stature idx 0.799/w 1.00       |
+| 96  | Cannavaro (Italy 2002) ★         | DF  | 1998-2006    | 93  | 78                | -15 | stature | 0.61      | 0.99    | apps 3 (p0.62), goals 0 (p0.46), award 0.00, finish — · stature idx 0.827/w 1.00          |
+| 97  | Rivera (Italy 1974) ★            | MF  | 1974-82      | 92  | 77                | -15 | stature | 0.62      | 0.97    | apps 2 (p0.38), goals 1 (p0.89), award 0.00, finish — · stature idx 0.729/w 1.00          |
+| 98  | Santos (Brazil 1954)             | DF  | <=1958       | 92  | 77                | -15 | stature | 0.72      | 0.98    | apps 3 (p0.59), goals 0 (p0.48), award 0.00, finish — · stature idx 0.684/w 1.00          |
+| 99  | Gerrard (England 2014) ★         | MF  | 2010-2018    | 90  | 75                | -15 | stature | 0.63      | 0.98    | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.643/w 1.00          |
+| 100 | Gento (Spain 1962)               | FW  | 1962-70      | 88  | 73                | -15 | stature | 0.50      | 0.88    | apps 3 (p0.67), goals 0 (p0.36), award 0.00, finish — · stature idx 0.461/w 1.00          |
 
 ---
 
@@ -910,58 +925,59 @@ the players who most plausibly belong ABOVE 88 once 12b lifts the ceiling.
   this ranking meaningful.
 
 ## T4 Ceiling census — all cards displaying exactly 88 (n=1469), top 50 by uncapped raw merit
-| # | card | pos | OVR | basis | internal | raw(uncap) | merit inputs |
-|---|---|---|---|---|---|---|---|
-| 1 | Schumacher (West Germany 1986) | GK | 88 | measured | 62.0 | 100.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.308/w 0.00 |
-| 2 | Martínez (Argentina 2022) | GK | 88 | measured | 62.0 | 100.0 | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.255/w 0.00 |
-| 3 | Vavá (Brazil 1962) | FW | 88 | measured | 62.0 | 100.0 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.396/w 0.00 |
-| 4 | Fernandes (Portugal 2026) | MF | 88 | measured | 62.0 | 98.9 | caps 87 (p0.94), goals 28 (p0.99), age 31 (af 0.97), lg 1.00 · stature idx 0.200/w 0.00 |
-| 5 | Hwang (South Korea 2026) | MF | 88 | measured | 62.0 | 98.9 | caps 79 (p0.91), goals 17 (p0.97), age 30 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 6 | Silva (Portugal 2026) | MF | 88 | measured | 62.0 | 98.8 | caps 107 (p0.97), goals 14 (p0.94), age 31 (af 0.97), lg 1.00 · stature idx 0.243/w 0.00 |
-| 7 | Soucek (Czech Republic 2026) | MF | 88 | measured | 62.0 | 98.7 | caps 89 (p0.94), goals 17 (p0.97), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00 |
-| 8 | Mcginn (Scotland 2026) | MF | 88 | measured | 62.0 | 98.5 | caps 85 (p0.93), goals 20 (p0.98), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00 |
-| 9 | Tielemans (Belgium 2026) | MF | 88 | measured | 62.0 | 98.5 | caps 84 (p0.92), goals 13 (p0.93), age 29 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 10 | Xhaka (Switzerland 2026) | MF | 88 | measured | 62.0 | 97.8 | caps 145 (p0.99), goals 17 (p0.97), age 33 (af 0.93), lg 1.00 · stature idx 0.105/w 0.00 |
-| 11 | Giménez (Uruguay 2026) | DF | 88 | measured | 62.0 | 96.3 | caps 99 (p0.97), goals 8 (p0.97), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00 |
-| 12 | Valverde (Uruguay 2026) | MF | 88 | measured | 62.0 | 95.7 | caps 73 (p0.88), goals 9 (p0.86), age 27 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 13 | Rodríguez (Switzerland 2026) | DF | 88 | measured | 62.0 | 95.1 | caps 137 (p0.99), goals 9 (p0.97), age 33 (af 0.93), lg 1.00 · stature idx —/w 0.00 |
-| 14 | Marcos (Brazil 2002) | GK | 88 | measured | 62.0 | 95.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 15 | Pumpido (Argentina 1986) | GK | 88 | measured | 62.0 | 95.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 16 | Illgner (West Germany 1990) | GK | 88 | measured | 62.0 | 95.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 17 | Gilmar (Brazil 1958) | GK | 88 | measured | 62.0 | 95.0 | apps 6 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 18 | Taffarel (Brazil 1994) | GK | 88 | measured | 62.0 | 95.0 | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.096/w 0.00 |
-| 19 | Calhanoglu (Turkey 2026) | MF | 88 | measured | 62.0 | 94.9 | caps 104 (p0.96), goals 22 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx —/w 0.00 |
-| 20 | Morlock (West Germany 1954) | FW | 88 | measured | 63.0 | 94.8 | apps 5 (p0.94), goals 6 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 21 | Jairzinho (Brazil 1970) | FW | 88 | measured | 62.0 | 94.8 | apps 6 (p0.95), goals 7 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.309/w 0.00 |
-| 22 | Dias (Portugal 2026) | DF | 88 | measured | 63.9 | 94.8 | caps 74 (p0.91), goals 3 (p0.84), age 29 (af 1.00), lg 1.00 · stature idx 0.386/w 0.38 |
-| 23 | Sabitzer (Austria 2026) | MF | 88 | measured | 62.0 | 94.7 | caps 98 (p0.95), goals 26 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx —/w 0.00 |
-| 24 | Alaba (Austria 2026) | DF | 88 | measured | 62.0 | 94.6 | caps 113 (p0.98), goals 15 (p1.00), age 33 (af 0.93), lg 1.00 · stature idx —/w 0.00 |
-| 25 | Haaland (Norway 2026) | FW | 88 | measured | 62.0 | 94.6 | caps 49 (p0.75), goals 55 (p0.96), age 25 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 26 | Robertson (Scotland 2026) | DF | 88 | measured | 62.0 | 94.5 | caps 93 (p0.95), goals 4 (p0.90), age 32 (af 0.95), lg 1.00 · stature idx —/w 0.00 |
-| 27 | Lloris (France 2018) | GK | 88 | measured | 62.0 | 94.5 | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.067/w 0.00 |
-| 28 | Félix (Brazil 1970) | GK | 88 | measured | 62.0 | 94.5 | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 29 | Olivieri (Italy 1938) | GK | 88 | measured | 62.0 | 94.5 | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 30 | Fillol (Argentina 1978) | GK | 88 | measured | 62.0 | 94.5 | apps 7 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 31 | Klose (Germany 2006) | FW | 88 | measured | 62.0 | 94.4 | apps 7 (p0.98), goals 5 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.395/w 0.00 |
-| 32 | Combi (Italy 1934) | GK | 88 | measured | 62.0 | 94.4 | apps 5 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00 |
-| 33 | Schiavio (Italy 1934) | FW | 88 | measured | 63.0 | 94.3 | apps 4 (p0.90), goals 4 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 34 | Fernández (Argentina 2022) | MF | 88 | measured | 62.0 | 94.2 | apps 7 (p0.98), goals 1 (p0.93), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.165/w 0.00 |
-| 35 | Christie (Scotland 2026) | MF | 88 | measured | 62.0 | 94.1 | caps 67 (p0.84), goals 10 (p0.88), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00 |
-| 36 | Lindelöf (Sweden 2026) | DF | 88 | measured | 62.0 | 94.1 | caps 76 (p0.92), goals 3 (p0.84), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00 |
-| 37 | Stones (England 2026) | DF | 88 | measured | 62.0 | 94.1 | caps 87 (p0.94), goals 3 (p0.84), age 32 (af 0.95), lg 1.00 · stature idx 0.200/w 0.00 |
-| 38 | Kovačić (Croatia 2026) | MF | 88 | measured | 62.0 | 94.1 | caps 112 (p0.97), goals 5 (p0.74), age 32 (af 0.95), lg 1.00 · stature idx 0.050/w 0.00 |
-| 39 | Ahmed (Qatar 2026) | DF | 88 | measured | 62.0 | 94.0 | caps 67 (p0.90), goals 3 (p0.84), age 26 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 40 | Maier (West Germany 1974) | GK | 88 | stature | 66.3 | 94.0 | apps 7 (p0.96), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88 |
-| 41 | Forlán (Uruguay 2010) | FW | 88 | measured | 62.0 | 94.0 | apps 7 (p0.98), goals 5 (p0.99), award 1.00, finish 0.40 [Golden Ball] · stature idx 0.376/w 0.00 |
-| 42 | Hakimi (Morocco 2026) | DF | 88 | measured | 62.0 | 93.9 | caps 95 (p0.96), goals 11 (p0.98), age 27 (af 1.00), lg 0.90 · stature idx 0.320/w 0.00 |
-| 43 | Rice (England 2026) | MF | 88 | measured | 62.0 | 93.9 | caps 72 (p0.87), goals 6 (p0.78), age 27 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 44 | Sangare (Ivory Coast 2026) | MF | 88 | measured | 62.0 | 93.8 | caps 57 (p0.77), goals 12 (p0.92), age 28 (af 1.00), lg 1.00 · stature idx —/w 0.00 |
-| 45 | Míguez (Uruguay 1950) | FW | 88 | measured | 63.0 | 93.7 | apps 4 (p0.84), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17 |
-| 46 | Mbemba (DR Congo 2026) | DF | 88 | measured | 62.0 | 93.6 | caps 108 (p0.98), goals 7 (p0.95), age 31 (af 0.97), lg 0.90 · stature idx —/w 0.00 |
-| 47 | Banks (England 1966) | GK | 88 | stature | 66.3 | 93.6 | apps 6 (p0.95), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88 |
-| 48 | Sánchez (Chile 1962) | FW | 88 | measured | 62.0 | 93.4 | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.396/w 0.00 |
-| 49 | Pašalić (Croatia 2026) | MF | 88 | measured | 62.0 | 93.4 | caps 84 (p0.92), goals 11 (p0.90), age 31 (af 0.97), lg 0.90 · stature idx —/w 0.00 |
-| 50 | Lee (South Korea 2026) | MF | 88 | measured | 62.0 | 93.3 | caps 105 (p0.97), goals 15 (p0.96), age 33 (af 0.93), lg 0.90 · stature idx —/w 0.00 |
+
+| #   | card                           | pos | OVR | basis    | internal | raw(uncap) | merit inputs                                                                                            |
+| --- | ------------------------------ | --- | --- | -------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------- |
+| 1   | Schumacher (West Germany 1986) | GK  | 88  | measured | 62.0     | 100.0      | apps 7 (p0.98), goals 0 (p0.50), award 0.70, finish 0.75 [Silver Ball] · stature idx 0.308/w 0.00       |
+| 2   | Martínez (Argentina 2022)      | GK  | 88  | measured | 62.0     | 100.0      | apps 7 (p0.99), goals 0 (p0.50), award 0.85, finish 1.00 [Golden Glove] · stature idx 0.255/w 0.00      |
+| 3   | Vavá (Brazil 1962)             | FW  | 88  | measured | 62.0     | 100.0      | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 1.00 [Golden Boot] · stature idx 0.396/w 0.00       |
+| 4   | Fernandes (Portugal 2026)      | MF  | 88  | measured | 62.0     | 98.9       | caps 87 (p0.94), goals 28 (p0.99), age 31 (af 0.97), lg 1.00 · stature idx 0.200/w 0.00                 |
+| 5   | Hwang (South Korea 2026)       | MF  | 88  | measured | 62.0     | 98.9       | caps 79 (p0.91), goals 17 (p0.97), age 30 (af 1.00), lg 1.00 · stature idx —/w 0.00                     |
+| 6   | Silva (Portugal 2026)          | MF  | 88  | measured | 62.0     | 98.8       | caps 107 (p0.97), goals 14 (p0.94), age 31 (af 0.97), lg 1.00 · stature idx 0.243/w 0.00                |
+| 7   | Soucek (Czech Republic 2026)   | MF  | 88  | measured | 62.0     | 98.7       | caps 89 (p0.94), goals 17 (p0.97), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00                     |
+| 8   | Mcginn (Scotland 2026)         | MF  | 88  | measured | 62.0     | 98.5       | caps 85 (p0.93), goals 20 (p0.98), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00                     |
+| 9   | Tielemans (Belgium 2026)       | MF  | 88  | measured | 62.0     | 98.5       | caps 84 (p0.92), goals 13 (p0.93), age 29 (af 1.00), lg 1.00 · stature idx —/w 0.00                     |
+| 10  | Xhaka (Switzerland 2026)       | MF  | 88  | measured | 62.0     | 97.8       | caps 145 (p0.99), goals 17 (p0.97), age 33 (af 0.93), lg 1.00 · stature idx 0.105/w 0.00                |
+| 11  | Giménez (Uruguay 2026)         | DF  | 88  | measured | 62.0     | 96.3       | caps 99 (p0.97), goals 8 (p0.97), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00                      |
+| 12  | Valverde (Uruguay 2026)        | MF  | 88  | measured | 62.0     | 95.7       | caps 73 (p0.88), goals 9 (p0.86), age 27 (af 1.00), lg 1.00 · stature idx —/w 0.00                      |
+| 13  | Rodríguez (Switzerland 2026)   | DF  | 88  | measured | 62.0     | 95.1       | caps 137 (p0.99), goals 9 (p0.97), age 33 (af 0.93), lg 1.00 · stature idx —/w 0.00                     |
+| 14  | Marcos (Brazil 2002)           | GK  | 88  | measured | 62.0     | 95.0       | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 15  | Pumpido (Argentina 1986)       | GK  | 88  | measured | 62.0     | 95.0       | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 16  | Illgner (West Germany 1990)    | GK  | 88  | measured | 62.0     | 95.0       | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 17  | Gilmar (Brazil 1958)           | GK  | 88  | measured | 62.0     | 95.0       | apps 6 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 18  | Taffarel (Brazil 1994)         | GK  | 88  | measured | 62.0     | 95.0       | apps 7 (p0.98), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.096/w 0.00                     |
+| 19  | Calhanoglu (Turkey 2026)       | MF  | 88  | measured | 62.0     | 94.9       | caps 104 (p0.96), goals 22 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx —/w 0.00                    |
+| 20  | Morlock (West Germany 1954)    | FW  | 88  | measured | 63.0     | 94.8       | apps 5 (p0.94), goals 6 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17       |
+| 21  | Jairzinho (Brazil 1970)        | FW  | 88  | measured | 62.0     | 94.8       | apps 6 (p0.95), goals 7 (p0.98), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.309/w 0.00       |
+| 22  | Dias (Portugal 2026)           | DF  | 88  | measured | 63.9     | 94.8       | caps 74 (p0.91), goals 3 (p0.84), age 29 (af 1.00), lg 1.00 · stature idx 0.386/w 0.38                  |
+| 23  | Sabitzer (Austria 2026)        | MF  | 88  | measured | 62.0     | 94.7       | caps 98 (p0.95), goals 26 (p0.99), age 32 (af 0.95), lg 0.90 · stature idx —/w 0.00                     |
+| 24  | Alaba (Austria 2026)           | DF  | 88  | measured | 62.0     | 94.6       | caps 113 (p0.98), goals 15 (p1.00), age 33 (af 0.93), lg 1.00 · stature idx —/w 0.00                    |
+| 25  | Haaland (Norway 2026)          | FW  | 88  | measured | 62.0     | 94.6       | caps 49 (p0.75), goals 55 (p0.96), age 25 (af 1.00), lg 1.00 · stature idx —/w 0.00                     |
+| 26  | Robertson (Scotland 2026)      | DF  | 88  | measured | 62.0     | 94.5       | caps 93 (p0.95), goals 4 (p0.90), age 32 (af 0.95), lg 1.00 · stature idx —/w 0.00                      |
+| 27  | Lloris (France 2018)           | GK  | 88  | measured | 62.0     | 94.5       | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.067/w 0.00                     |
+| 28  | Félix (Brazil 1970)            | GK  | 88  | measured | 62.0     | 94.5       | apps 6 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 29  | Olivieri (Italy 1938)          | GK  | 88  | measured | 62.0     | 94.5       | apps 4 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 30  | Fillol (Argentina 1978)        | GK  | 88  | measured | 62.0     | 94.5       | apps 7 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 31  | Klose (Germany 2006)           | FW  | 88  | measured | 62.0     | 94.4       | apps 7 (p0.98), goals 5 (p1.00), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.395/w 0.00       |
+| 32  | Combi (Italy 1934)             | GK  | 88  | measured | 62.0     | 94.4       | apps 5 (p0.97), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx —/w 0.00                         |
+| 33  | Schiavio (Italy 1934)          | FW  | 88  | measured | 63.0     | 94.3       | apps 4 (p0.90), goals 4 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17       |
+| 34  | Fernández (Argentina 2022)     | MF  | 88  | measured | 62.0     | 94.2       | apps 7 (p0.98), goals 1 (p0.93), award 0.55, finish 1.00 [Best Young Player] · stature idx 0.165/w 0.00 |
+| 35  | Christie (Scotland 2026)       | MF  | 88  | measured | 62.0     | 94.1       | caps 67 (p0.84), goals 10 (p0.88), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00                     |
+| 36  | Lindelöf (Sweden 2026)         | DF  | 88  | measured | 62.0     | 94.1       | caps 76 (p0.92), goals 3 (p0.84), age 31 (af 0.97), lg 1.00 · stature idx —/w 0.00                      |
+| 37  | Stones (England 2026)          | DF  | 88  | measured | 62.0     | 94.1       | caps 87 (p0.94), goals 3 (p0.84), age 32 (af 0.95), lg 1.00 · stature idx 0.200/w 0.00                  |
+| 38  | Kovačić (Croatia 2026)         | MF  | 88  | measured | 62.0     | 94.1       | caps 112 (p0.97), goals 5 (p0.74), age 32 (af 0.95), lg 1.00 · stature idx 0.050/w 0.00                 |
+| 39  | Ahmed (Qatar 2026)             | DF  | 88  | measured | 62.0     | 94.0       | caps 67 (p0.90), goals 3 (p0.84), age 26 (af 1.00), lg 1.00 · stature idx —/w 0.00                      |
+| 40  | Maier (West Germany 1974)      | GK  | 88  | stature  | 66.3     | 94.0       | apps 7 (p0.96), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88                     |
+| 41  | Forlán (Uruguay 2010)          | FW  | 88  | measured | 62.0     | 94.0       | apps 7 (p0.98), goals 5 (p0.99), award 1.00, finish 0.40 [Golden Ball] · stature idx 0.376/w 0.00       |
+| 42  | Hakimi (Morocco 2026)          | DF  | 88  | measured | 62.0     | 93.9       | caps 95 (p0.96), goals 11 (p0.98), age 27 (af 1.00), lg 0.90 · stature idx 0.320/w 0.00                 |
+| 43  | Rice (England 2026)            | MF  | 88  | measured | 62.0     | 93.9       | caps 72 (p0.87), goals 6 (p0.78), age 27 (af 1.00), lg 1.00 · stature idx —/w 0.00                      |
+| 44  | Sangare (Ivory Coast 2026)     | MF  | 88  | measured | 62.0     | 93.8       | caps 57 (p0.77), goals 12 (p0.92), age 28 (af 1.00), lg 1.00 · stature idx —/w 0.00                     |
+| 45  | Míguez (Uruguay 1950)          | FW  | 88  | measured | 63.0     | 93.7       | apps 4 (p0.84), goals 5 (p0.99), award 0.60, finish 1.00 [Silver Boot] · stature idx 0.360/w 0.17       |
+| 46  | Mbemba (DR Congo 2026)         | DF  | 88  | measured | 62.0     | 93.6       | caps 108 (p0.98), goals 7 (p0.95), age 31 (af 0.97), lg 0.90 · stature idx —/w 0.00                     |
+| 47  | Banks (England 1966)           | GK  | 88  | stature  | 66.3     | 93.6       | apps 6 (p0.95), goals 0 (p0.50), award 0.00, finish 1.00 · stature idx 0.446/w 0.88                     |
+| 48  | Sánchez (Chile 1962)           | FW  | 88  | measured | 62.0     | 93.4       | apps 6 (p0.96), goals 4 (p0.98), award 0.90, finish 0.55 [Golden Boot] · stature idx 0.396/w 0.00       |
+| 49  | Pašalić (Croatia 2026)         | MF  | 88  | measured | 62.0     | 93.4       | caps 84 (p0.92), goals 11 (p0.90), age 31 (af 0.97), lg 0.90 · stature idx —/w 0.00                     |
+| 50  | Lee (South Korea 2026)         | MF  | 88  | measured | 62.0     | 93.3       | caps 105 (p0.97), goals 15 (p0.96), age 33 (af 0.93), lg 0.90 · stature idx —/w 0.00                    |
 
 ---
 
@@ -1004,276 +1020,285 @@ the players who most plausibly belong ABOVE 88 once 12b lifts the ceiling.
   champion-captain 2018) idx 0.067 → 88**; Varane idx 0.225 → 88; Kanté absent
   (injured, correctly no card).
 
-
 ## T5 Brazil 1970 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Félix | GK | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Ado | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Leão | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Alberto | DF | 89 | stature | 6/1 | 0.00 | 1.00 | 0.492 | 1.00 |
-| Antônio | DF | 88 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Brito | DF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Everaldo | DF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Fontana | DF | 83 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Baldocchi | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Joel | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Zé Maria | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Caju | MF | 88 | measured | 4/0 | 0.00 | 1.00 | — | 0.00 |
-| Clodoaldo | MF | 88 | measured | 6/1 | 0.00 | 1.00 | — | 0.00 |
-| Gérson | MF | 88 | measured | 4/1 | 0.00 | 1.00 | — | 0.00 |
-| Piazza | MF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Rivellino | MF | 88 | measured | 5/3 | 0.00 | 1.00 | 0.275 | 0.00 |
-| Pelé ★ | FW | 97 | stature | 6/4 | 0.00 | 1.00 | 0.807 | 1.00 |
-| Jairzinho | FW | 88 | measured | 6/7 | 0.60 | 1.00 | 0.309 | 0.00 |
-| Tostão | FW | 88 | measured | 6/2 | 0.00 | 1.00 | 0.187 | 0.00 |
-| Roberto | FW | 82 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Edu | FW | 80 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Dario | FW | 79 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player    | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| --------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Félix     | GK  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Ado       | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Leão      | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Alberto   | DF  | 89  | stature  | 6/1      | 0.00  | 1.00   | 0.492 | 1.00 |
+| Antônio   | DF  | 88  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Brito     | DF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Everaldo  | DF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Fontana   | DF  | 83  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Baldocchi | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Joel      | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Zé Maria  | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Caju      | MF  | 88  | measured | 4/0      | 0.00  | 1.00   | —     | 0.00 |
+| Clodoaldo | MF  | 88  | measured | 6/1      | 0.00  | 1.00   | —     | 0.00 |
+| Gérson    | MF  | 88  | measured | 4/1      | 0.00  | 1.00   | —     | 0.00 |
+| Piazza    | MF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Rivellino | MF  | 88  | measured | 5/3      | 0.00  | 1.00   | 0.275 | 0.00 |
+| Pelé ★    | FW  | 97  | stature  | 6/4      | 0.00  | 1.00   | 0.807 | 1.00 |
+| Jairzinho | FW  | 88  | measured | 6/7      | 0.60  | 1.00   | 0.309 | 0.00 |
+| Tostão    | FW  | 88  | measured | 6/2      | 0.00  | 1.00   | 0.187 | 0.00 |
+| Roberto   | FW  | 82  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Edu       | FW  | 80  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Dario     | FW  | 79  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 Netherlands 1974 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Jongbloed | GK | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| Schrijvers | GK | 83 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| Treijtel | GK | 83 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| Krol | DF | 89 | stature | 7/1 | 0.00 | 0.75 | 0.461 | 1.00 |
-| Israël | DF | 88 | measured | 3/0 | 0.00 | 0.75 | — | 0.00 |
-| Jansen | DF | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| Rijsbergen | DF | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| Suurbier | DF | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| Strik | DF | 74 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| Vos | DF | 74 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| van Ierssel | DF | 74 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| Cruyff ★ | MF | 95 | stature | 7/3 | 0.00 | 0.75 | 0.755 | 1.00 |
-| Neeskens ★ | MF | 91 | stature | 7/5 | 0.60 | 0.75 | 0.597 | 1.00 |
-| Haan | MF | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| de Jong | MF | 88 | measured | 4/1 | 0.00 | 0.75 | — | 0.00 |
-| van Hanegem | MF | 88 | measured | 7/0 | 0.00 | 0.75 | — | 0.00 |
-| van de Kerkhof | MF | 76 | measured | 1/0 | 0.00 | 0.75 | 0.275 | 0.00 |
-| Geels | MF | 73 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| van de Kerkhof | MF | 73 | measured | 0/0 | 0.00 | 0.75 | 0.275 | 0.00 |
-| Rensenbrink ★ | FW | 94 | stature | 6/1 | 0.00 | 0.75 | 0.705 | 1.00 |
-| Rep | FW | 88 | measured | 7/4 | 0.00 | 0.75 | — | 0.00 |
-| Keizer | FW | 76 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
+
+| player         | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| -------------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Jongbloed      | GK  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| Schrijvers     | GK  | 83  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| Treijtel       | GK  | 83  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| Krol           | DF  | 89  | stature  | 7/1      | 0.00  | 0.75   | 0.461 | 1.00 |
+| Israël         | DF  | 88  | measured | 3/0      | 0.00  | 0.75   | —     | 0.00 |
+| Jansen         | DF  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| Rijsbergen     | DF  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| Suurbier       | DF  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| Strik          | DF  | 74  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| Vos            | DF  | 74  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| van Ierssel    | DF  | 74  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| Cruyff ★       | MF  | 95  | stature  | 7/3      | 0.00  | 0.75   | 0.755 | 1.00 |
+| Neeskens ★     | MF  | 91  | stature  | 7/5      | 0.60  | 0.75   | 0.597 | 1.00 |
+| Haan           | MF  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| de Jong        | MF  | 88  | measured | 4/1      | 0.00  | 0.75   | —     | 0.00 |
+| van Hanegem    | MF  | 88  | measured | 7/0      | 0.00  | 0.75   | —     | 0.00 |
+| van de Kerkhof | MF  | 76  | measured | 1/0      | 0.00  | 0.75   | 0.275 | 0.00 |
+| Geels          | MF  | 73  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| van de Kerkhof | MF  | 73  | measured | 0/0      | 0.00  | 0.75   | 0.275 | 0.00 |
+| Rensenbrink ★  | FW  | 94  | stature  | 6/1      | 0.00  | 0.75   | 0.705 | 1.00 |
+| Rep            | FW  | 88  | measured | 7/4      | 0.00  | 0.75   | —     | 0.00 |
+| Keizer         | FW  | 76  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
 
 ## T5 Argentina 1986 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Pumpido | GK | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Islas | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Zelada | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Brown | DF | 88 | measured | 7/1 | 0.00 | 1.00 | — | 0.00 |
-| Cuciuffo | DF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Garré | DF | 88 | measured | 4/0 | 0.00 | 1.00 | — | 0.00 |
-| Olarticoechea | DF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Passarella ★ | DF | 88 | stature | 0/0 | 0.00 | 1.00 | 0.529 | 1.00 |
-| Ruggeri | DF | 88 | measured | 7/1 | 0.00 | 1.00 | 0.140 | 0.00 |
-| Clausen | DF | 83 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Maradona ★ | MF | 99 | stature | 7/5 | 1.00 | 1.00 | 0.952 | 1.00 |
-| Batista | MF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Enrique | MF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Giusti | MF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Borghi | MF | 81 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Tapia | MF | 81 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Bochini | MF | 79 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Trobbiani | MF | 79 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Burruchaga | FW | 88 | measured | 7/2 | 0.00 | 1.00 | — | 0.00 |
-| Pasculli | FW | 88 | measured | 2/1 | 0.00 | 1.00 | — | 0.00 |
-| Valdano | FW | 88 | measured | 7/4 | 0.00 | 1.00 | — | 0.00 |
-| Almirón | FW | 78 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player        | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ------------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Pumpido       | GK  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Islas         | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Zelada        | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Brown         | DF  | 88  | measured | 7/1      | 0.00  | 1.00   | —     | 0.00 |
+| Cuciuffo      | DF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Garré         | DF  | 88  | measured | 4/0      | 0.00  | 1.00   | —     | 0.00 |
+| Olarticoechea | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Passarella ★  | DF  | 88  | stature  | 0/0      | 0.00  | 1.00   | 0.529 | 1.00 |
+| Ruggeri       | DF  | 88  | measured | 7/1      | 0.00  | 1.00   | 0.140 | 0.00 |
+| Clausen       | DF  | 83  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Maradona ★    | MF  | 99  | stature  | 7/5      | 1.00  | 1.00   | 0.952 | 1.00 |
+| Batista       | MF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Enrique       | MF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Giusti        | MF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Borghi        | MF  | 81  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Tapia         | MF  | 81  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Bochini       | MF  | 79  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Trobbiani     | MF  | 79  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Burruchaga    | FW  | 88  | measured | 7/2      | 0.00  | 1.00   | —     | 0.00 |
+| Pasculli      | FW  | 88  | measured | 2/1      | 0.00  | 1.00   | —     | 0.00 |
+| Valdano       | FW  | 88  | measured | 7/4      | 0.00  | 1.00   | —     | 0.00 |
+| Almirón       | FW  | 78  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 Italy 1982 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Zoff | GK | 89 | stature | 7/0 | 0.00 | 1.00 | 0.523 | 1.00 |
-| Bordon | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Galli | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Baresi ★ | DF | 89 | stature | 0/0 | 0.00 | 1.00 | 0.632 | 1.00 |
-| Bergomi | DF | 88 | measured | 3/0 | 0.00 | 1.00 | 0.275 | 0.00 |
-| Cabrini | DF | 88 | measured | 7/1 | 0.00 | 1.00 | 0.242 | 0.00 |
-| Collovati | DF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Gentile | DF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Scirea | DF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.360 | 0.17 |
-| Vierchowod | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Antognoni | MF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Conti | MF | 88 | measured | 7/1 | 0.00 | 1.00 | — | 0.00 |
-| Marini | MF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Oriali | MF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Tardelli | MF | 88 | measured | 7/2 | 0.00 | 1.00 | — | 0.00 |
-| Causio | MF | 83 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Dossena | MF | 76 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Rossi ★ | FW | 99 | stature | 7/6 | 1.00 | 1.00 | 0.879 | 1.00 |
-| Altobelli | FW | 88 | measured | 3/1 | 0.00 | 1.00 | — | 0.00 |
-| Graziani | FW | 88 | measured | 7/1 | 0.00 | 1.00 | — | 0.00 |
-| Massaro | FW | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Selvaggi | FW | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player     | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ---------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Zoff       | GK  | 89  | stature  | 7/0      | 0.00  | 1.00   | 0.523 | 1.00 |
+| Bordon     | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Galli      | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Baresi ★   | DF  | 89  | stature  | 0/0      | 0.00  | 1.00   | 0.632 | 1.00 |
+| Bergomi    | DF  | 88  | measured | 3/0      | 0.00  | 1.00   | 0.275 | 0.00 |
+| Cabrini    | DF  | 88  | measured | 7/1      | 0.00  | 1.00   | 0.242 | 0.00 |
+| Collovati  | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Gentile    | DF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Scirea     | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.360 | 0.17 |
+| Vierchowod | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Antognoni  | MF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Conti      | MF  | 88  | measured | 7/1      | 0.00  | 1.00   | —     | 0.00 |
+| Marini     | MF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Oriali     | MF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Tardelli   | MF  | 88  | measured | 7/2      | 0.00  | 1.00   | —     | 0.00 |
+| Causio     | MF  | 83  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Dossena    | MF  | 76  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Rossi ★    | FW  | 99  | stature  | 7/6      | 1.00  | 1.00   | 0.879 | 1.00 |
+| Altobelli  | FW  | 88  | measured | 3/1      | 0.00  | 1.00   | —     | 0.00 |
+| Graziani   | FW  | 88  | measured | 7/1      | 0.00  | 1.00   | —     | 0.00 |
+| Massaro    | FW  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Selvaggi   | FW  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 Brazil 1982 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Peres | GK | 88 | measured | 5/0 | 0.00 | — | — | 0.00 |
-| Carlos | GK | 71 | measured | 0/0 | 0.00 | — | — | 0.00 |
-| Sérgio | GK | 71 | measured | 0/0 | 0.00 | — | — | 0.00 |
-| Júnior | DF | 87 | measured | 5/1 | 0.00 | — | — | 0.00 |
-| Leandro | DF | 87 | measured | 5/0 | 0.00 | — | — | 0.00 |
-| Luizinho | DF | 87 | measured | 5/0 | 0.00 | — | — | 0.00 |
-| Oscar | DF | 87 | measured | 5/1 | 0.00 | — | — | 0.00 |
-| Edevaldo | DF | 71 | measured | 1/0 | 0.00 | — | — | 0.00 |
-| Edinho | DF | 71 | measured | 1/0 | 0.00 | — | — | 0.00 |
-| Juninho | DF | 68 | measured | 0/0 | 0.00 | — | — | 0.00 |
-| Pedrinho | DF | 68 | measured | 0/0 | 0.00 | — | — | 0.00 |
-| Zico ★ | MF | 98 | stature | 5/4 | 0.45 | — | 0.859 | 1.00 |
-| Falcão | MF | 93 | stature | 5/3 | 0.70 | — | 0.686 | 1.00 |
-| Sócrates | MF | 88 | measured | 5/2 | 0.00 | — | 0.396 | 0.46 |
-| Cerezo | MF | 78 | measured | 4/0 | 0.00 | — | — | 0.00 |
-| Isidoro | MF | 78 | measured | 4/0 | 0.00 | — | — | 0.00 |
-| Batista | MF | 72 | measured | 1/0 | 0.00 | — | — | 0.00 |
-| Dirceu | MF | 72 | measured | 1/0 | 0.00 | — | 0.220 | 0.00 |
-| Renato | MF | 70 | measured | 0/0 | 0.00 | — | — | 0.00 |
-| Serginho | FW | 88 | measured | 5/2 | 0.00 | — | — | 0.00 |
-| Éder | FW | 88 | measured | 5/2 | 0.00 | — | — | 0.00 |
-| Dinamite | FW | 71 | measured | 0/0 | 0.00 | — | — | 0.00 |
+
+| player   | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| -------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Peres    | GK  | 88  | measured | 5/0      | 0.00  | —      | —     | 0.00 |
+| Carlos   | GK  | 71  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
+| Sérgio   | GK  | 71  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
+| Júnior   | DF  | 87  | measured | 5/1      | 0.00  | —      | —     | 0.00 |
+| Leandro  | DF  | 87  | measured | 5/0      | 0.00  | —      | —     | 0.00 |
+| Luizinho | DF  | 87  | measured | 5/0      | 0.00  | —      | —     | 0.00 |
+| Oscar    | DF  | 87  | measured | 5/1      | 0.00  | —      | —     | 0.00 |
+| Edevaldo | DF  | 71  | measured | 1/0      | 0.00  | —      | —     | 0.00 |
+| Edinho   | DF  | 71  | measured | 1/0      | 0.00  | —      | —     | 0.00 |
+| Juninho  | DF  | 68  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
+| Pedrinho | DF  | 68  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
+| Zico ★   | MF  | 98  | stature  | 5/4      | 0.45  | —      | 0.859 | 1.00 |
+| Falcão   | MF  | 93  | stature  | 5/3      | 0.70  | —      | 0.686 | 1.00 |
+| Sócrates | MF  | 88  | measured | 5/2      | 0.00  | —      | 0.396 | 0.46 |
+| Cerezo   | MF  | 78  | measured | 4/0      | 0.00  | —      | —     | 0.00 |
+| Isidoro  | MF  | 78  | measured | 4/0      | 0.00  | —      | —     | 0.00 |
+| Batista  | MF  | 72  | measured | 1/0      | 0.00  | —      | —     | 0.00 |
+| Dirceu   | MF  | 72  | measured | 1/0      | 0.00  | —      | 0.220 | 0.00 |
+| Renato   | MF  | 70  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
+| Serginho | FW  | 88  | measured | 5/2      | 0.00  | —      | —     | 0.00 |
+| Éder     | FW  | 88  | measured | 5/2      | 0.00  | —      | —     | 0.00 |
+| Dinamite | FW  | 71  | measured | 0/0      | 0.00  | —      | —     | 0.00 |
 
 ## T5 France 1998 (n=22)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Barthez | GK | 91 | stature | 7/0 | 0.85 | 1.00 | 0.650 | 1.00 |
-| Charbonnier | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Lama | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Thuram ★ | DF | 90 | stature | 6/2 | 0.50 | 1.00 | 0.560 | 1.00 |
-| Blanc | DF | 88 | measured | 5/1 | 0.00 | 1.00 | 0.392 | 0.43 |
-| Desailly | DF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.160 | 0.00 |
-| Leboeuf | DF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Lizarazu | DF | 88 | measured | 6/1 | 0.00 | 1.00 | 0.335 | 0.00 |
-| Candela | DF | 83 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Zidane ★ | MF | 99 | stature | 5/2 | 0.00 | 1.00 | 0.928 | 1.00 |
-| Boghossian | MF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Deschamps | MF | 88 | measured | 6/0 | 0.00 | 1.00 | 0.209 | 0.00 |
-| Djorkaeff | MF | 88 | measured | 7/1 | 0.00 | 1.00 | — | 0.00 |
-| Karembeu | MF | 88 | measured | 4/0 | 0.00 | 1.00 | 0.144 | 0.00 |
-| Petit | MF | 88 | measured | 6/2 | 0.00 | 1.00 | — | 0.00 |
-| Diomède | MF | 86 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Pires | MF | 86 | measured | 3/0 | 0.00 | 1.00 | 0.253 | 0.00 |
-| Vieira | MF | 82 | measured | 2/0 | 0.00 | 1.00 | 0.363 | 0.19 |
-| Henry ★ | FW | 98 | stature | 6/3 | 0.00 | 1.00 | 0.857 | 1.00 |
-| Dugarry | FW | 88 | measured | 3/1 | 0.00 | 1.00 | — | 0.00 |
-| Trezeguet | FW | 88 | measured | 6/1 | 0.00 | 1.00 | 0.367 | 0.23 |
-| Guivarc'h | FW | 86 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player      | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ----------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Barthez     | GK  | 91  | stature  | 7/0      | 0.85  | 1.00   | 0.650 | 1.00 |
+| Charbonnier | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Lama        | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Thuram ★    | DF  | 90  | stature  | 6/2      | 0.50  | 1.00   | 0.560 | 1.00 |
+| Blanc       | DF  | 88  | measured | 5/1      | 0.00  | 1.00   | 0.392 | 0.43 |
+| Desailly    | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.160 | 0.00 |
+| Leboeuf     | DF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Lizarazu    | DF  | 88  | measured | 6/1      | 0.00  | 1.00   | 0.335 | 0.00 |
+| Candela     | DF  | 83  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Zidane ★    | MF  | 99  | stature  | 5/2      | 0.00  | 1.00   | 0.928 | 1.00 |
+| Boghossian  | MF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Deschamps   | MF  | 88  | measured | 6/0      | 0.00  | 1.00   | 0.209 | 0.00 |
+| Djorkaeff   | MF  | 88  | measured | 7/1      | 0.00  | 1.00   | —     | 0.00 |
+| Karembeu    | MF  | 88  | measured | 4/0      | 0.00  | 1.00   | 0.144 | 0.00 |
+| Petit       | MF  | 88  | measured | 6/2      | 0.00  | 1.00   | —     | 0.00 |
+| Diomède     | MF  | 86  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Pires       | MF  | 86  | measured | 3/0      | 0.00  | 1.00   | 0.253 | 0.00 |
+| Vieira      | MF  | 82  | measured | 2/0      | 0.00  | 1.00   | 0.363 | 0.19 |
+| Henry ★     | FW  | 98  | stature  | 6/3      | 0.00  | 1.00   | 0.857 | 1.00 |
+| Dugarry     | FW  | 88  | measured | 3/1      | 0.00  | 1.00   | —     | 0.00 |
+| Trezeguet   | FW  | 88  | measured | 6/1      | 0.00  | 1.00   | 0.367 | 0.23 |
+| Guivarc'h   | FW  | 86  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 Spain 2010 (n=23)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Casillas ★ | GK | 92 | stature | 7/0 | 0.85 | 1.00 | 0.710 | 1.00 |
-| Reina | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Valdés | GK | 88 | measured | 0/0 | 0.00 | 1.00 | 0.200 | 0.00 |
-| Puyol ★ | DF | 91 | stature | 7/1 | 0.00 | 1.00 | 0.599 | 1.00 |
-| Ramos ★ | DF | 91 | stature | 7/0 | 0.00 | 1.00 | 0.618 | 1.00 |
-| Piqué ★ | DF | 90 | stature | 7/0 | 0.00 | 1.00 | 0.526 | 1.00 |
-| Arbeloa | DF | 88 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Capdevila | DF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Marchena | DF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Albiol | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Iniesta ★ | MF | 98 | stature | 6/2 | 0.00 | 1.00 | 0.839 | 1.00 |
-| Xavi ★ | MF | 97 | stature | 7/0 | 0.00 | 1.00 | 0.815 | 1.00 |
-| Fàbregas ★ | MF | 89 | stature | 4/0 | 0.00 | 1.00 | 0.504 | 1.00 |
-| Alonso | MF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.052 | 0.00 |
-| Busquets | MF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.066 | 0.00 |
-| Navas | MF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Silva | MF | 82 | measured | 2/0 | 0.00 | 1.00 | 0.283 | 0.00 |
-| Martínez | MF | 78 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Mata | MF | 78 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Villa | FW | 90 | stature | 7/5 | 0.80 | 1.00 | 0.504 | 1.00 |
-| Torres | FW | 88 | stature | 7/0 | 0.00 | 1.00 | 0.410 | 0.58 |
-| Pedro | FW | 85 | measured | 4/0 | 0.00 | 1.00 | — | 0.00 |
-| Llorente | FW | 79 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player     | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ---------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Casillas ★ | GK  | 92  | stature  | 7/0      | 0.85  | 1.00   | 0.710 | 1.00 |
+| Reina      | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Valdés     | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | 0.200 | 0.00 |
+| Puyol ★    | DF  | 91  | stature  | 7/1      | 0.00  | 1.00   | 0.599 | 1.00 |
+| Ramos ★    | DF  | 91  | stature  | 7/0      | 0.00  | 1.00   | 0.618 | 1.00 |
+| Piqué ★    | DF  | 90  | stature  | 7/0      | 0.00  | 1.00   | 0.526 | 1.00 |
+| Arbeloa    | DF  | 88  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Capdevila  | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Marchena   | DF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Albiol     | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Iniesta ★  | MF  | 98  | stature  | 6/2      | 0.00  | 1.00   | 0.839 | 1.00 |
+| Xavi ★     | MF  | 97  | stature  | 7/0      | 0.00  | 1.00   | 0.815 | 1.00 |
+| Fàbregas ★ | MF  | 89  | stature  | 4/0      | 0.00  | 1.00   | 0.504 | 1.00 |
+| Alonso     | MF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.052 | 0.00 |
+| Busquets   | MF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.066 | 0.00 |
+| Navas      | MF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Silva      | MF  | 82  | measured | 2/0      | 0.00  | 1.00   | 0.283 | 0.00 |
+| Martínez   | MF  | 78  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Mata       | MF  | 78  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Villa      | FW  | 90  | stature  | 7/5      | 0.80  | 1.00   | 0.504 | 1.00 |
+| Torres     | FW  | 88  | stature  | 7/0      | 0.00  | 1.00   | 0.410 | 0.58 |
+| Pedro      | FW  | 85  | measured | 4/0      | 0.00  | 1.00   | —     | 0.00 |
+| Llorente   | FW  | 79  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 Germany 2014 (n=23)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Neuer ★ | GK | 92 | stature | 7/0 | 0.85 | 1.00 | 0.733 | 1.00 |
-| Weidenfeller | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Zieler | GK | 87 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Lahm ★ | DF | 91 | stature | 7/0 | 0.00 | 1.00 | 0.625 | 1.00 |
-| Boateng | DF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.225 | 0.00 |
-| Hummels | DF | 88 | measured | 6/2 | 0.00 | 1.00 | 0.320 | 0.00 |
-| Höwedes | DF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Mertesacker | DF | 88 | measured | 6/0 | 0.00 | 1.00 | 0.047 | 0.00 |
-| Mustafi | DF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Durm | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Ginter | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Großkreutz | DF | 77 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Kroos ★ | MF | 90 | stature | 7/2 | 0.00 | 1.00 | 0.525 | 1.00 |
-| Götze | MF | 88 | measured | 6/2 | 0.00 | 1.00 | — | 0.00 |
-| Khedira | MF | 88 | measured | 5/1 | 0.00 | 1.00 | — | 0.00 |
-| Kramer | MF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Schweinsteiger | MF | 88 | measured | 6/0 | 0.00 | 1.00 | 0.250 | 0.00 |
-| Özil | MF | 88 | measured | 7/1 | 0.00 | 1.00 | 0.349 | 0.07 |
-| Draxler | MF | 78 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Müller | FW | 90 | stature | 7/5 | 0.88 | 1.00 | 0.535 | 1.00 |
-| Klose | FW | 88 | measured | 5/2 | 0.00 | 1.00 | 0.395 | 0.00 |
-| Schürrle | FW | 88 | measured | 6/3 | 0.00 | 1.00 | — | 0.00 |
-| Podolski | FW | 79 | measured | 2/0 | 0.00 | 1.00 | 0.262 | 0.00 |
+
+| player         | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| -------------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Neuer ★        | GK  | 92  | stature  | 7/0      | 0.85  | 1.00   | 0.733 | 1.00 |
+| Weidenfeller   | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Zieler         | GK  | 87  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Lahm ★         | DF  | 91  | stature  | 7/0      | 0.00  | 1.00   | 0.625 | 1.00 |
+| Boateng        | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.225 | 0.00 |
+| Hummels        | DF  | 88  | measured | 6/2      | 0.00  | 1.00   | 0.320 | 0.00 |
+| Höwedes        | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Mertesacker    | DF  | 88  | measured | 6/0      | 0.00  | 1.00   | 0.047 | 0.00 |
+| Mustafi        | DF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Durm           | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Ginter         | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Großkreutz     | DF  | 77  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Kroos ★        | MF  | 90  | stature  | 7/2      | 0.00  | 1.00   | 0.525 | 1.00 |
+| Götze          | MF  | 88  | measured | 6/2      | 0.00  | 1.00   | —     | 0.00 |
+| Khedira        | MF  | 88  | measured | 5/1      | 0.00  | 1.00   | —     | 0.00 |
+| Kramer         | MF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Schweinsteiger | MF  | 88  | measured | 6/0      | 0.00  | 1.00   | 0.250 | 0.00 |
+| Özil           | MF  | 88  | measured | 7/1      | 0.00  | 1.00   | 0.349 | 0.07 |
+| Draxler        | MF  | 78  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Müller         | FW  | 90  | stature  | 7/5      | 0.88  | 1.00   | 0.535 | 1.00 |
+| Klose          | FW  | 88  | measured | 5/2      | 0.00  | 1.00   | 0.395 | 0.00 |
+| Schürrle       | FW  | 88  | measured | 6/3      | 0.00  | 1.00   | —     | 0.00 |
+| Podolski       | FW  | 79  | measured | 2/0      | 0.00  | 1.00   | 0.262 | 0.00 |
 
 ## T5 Argentina 2022 (n=26)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Armani | GK | 88 | measured | 0/0 | 0.00 | 1.00 | 0.052 | 0.00 |
-| Martínez | GK | 88 | measured | 7/0 | 0.85 | 1.00 | 0.255 | 0.00 |
-| Rulli | GK | 88 | measured | 0/0 | 0.00 | 1.00 | — | 0.00 |
-| Martínez | DF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Molina | DF | 88 | measured | 7/1 | 0.00 | 1.00 | — | 0.00 |
-| Montiel | DF | 88 | measured | 4/0 | 0.00 | 1.00 | — | 0.00 |
-| Otamendi | DF | 88 | measured | 7/0 | 0.00 | 1.00 | 0.253 | 0.00 |
-| Pezzella | DF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Romero | DF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Tagliafico | DF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| Foyth | DF | 83 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Acuña | MF | 88 | measured | 6/0 | 0.00 | 1.00 | — | 0.00 |
-| De Paul | MF | 88 | measured | 7/0 | 0.00 | 1.00 | — | 0.00 |
-| Fernández | MF | 88 | measured | 7/1 | 0.55 | 1.00 | 0.165 | 0.00 |
-| Mac Allister | MF | 88 | measured | 6/1 | 0.00 | 1.00 | — | 0.00 |
-| Palacios | MF | 88 | measured | 3/0 | 0.00 | 1.00 | — | 0.00 |
-| Paredes | MF | 88 | measured | 5/0 | 0.00 | 1.00 | — | 0.00 |
-| Gómez | MF | 84 | measured | 2/0 | 0.00 | 1.00 | — | 0.00 |
-| Almada | MF | 79 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Rodríguez | MF | 79 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
-| Messi ★ | FW | 99 | stature | 7/7 | 1.00 | 1.00 | 0.938 | 1.00 |
-| Di María | FW | 89 | stature | 5/1 | 0.00 | 1.00 | 0.478 | 1.00 |
-| Álvarez | FW | 88 | measured | 7/4 | 0.00 | 1.00 | 0.156 | 0.00 |
-| Martínez | FW | 86 | measured | 6/0 | 0.00 | 1.00 | 0.250 | 0.00 |
-| Dybala | FW | 79 | measured | 2/0 | 0.00 | 1.00 | 0.200 | 0.00 |
-| Correa | FW | 78 | measured | 1/0 | 0.00 | 1.00 | — | 0.00 |
+
+| player       | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ------------ | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Armani       | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | 0.052 | 0.00 |
+| Martínez     | GK  | 88  | measured | 7/0      | 0.85  | 1.00   | 0.255 | 0.00 |
+| Rulli        | GK  | 88  | measured | 0/0      | 0.00  | 1.00   | —     | 0.00 |
+| Martínez     | DF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Molina       | DF  | 88  | measured | 7/1      | 0.00  | 1.00   | —     | 0.00 |
+| Montiel      | DF  | 88  | measured | 4/0      | 0.00  | 1.00   | —     | 0.00 |
+| Otamendi     | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | 0.253 | 0.00 |
+| Pezzella     | DF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Romero       | DF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Tagliafico   | DF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| Foyth        | DF  | 83  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Acuña        | MF  | 88  | measured | 6/0      | 0.00  | 1.00   | —     | 0.00 |
+| De Paul      | MF  | 88  | measured | 7/0      | 0.00  | 1.00   | —     | 0.00 |
+| Fernández    | MF  | 88  | measured | 7/1      | 0.55  | 1.00   | 0.165 | 0.00 |
+| Mac Allister | MF  | 88  | measured | 6/1      | 0.00  | 1.00   | —     | 0.00 |
+| Palacios     | MF  | 88  | measured | 3/0      | 0.00  | 1.00   | —     | 0.00 |
+| Paredes      | MF  | 88  | measured | 5/0      | 0.00  | 1.00   | —     | 0.00 |
+| Gómez        | MF  | 84  | measured | 2/0      | 0.00  | 1.00   | —     | 0.00 |
+| Almada       | MF  | 79  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Rodríguez    | MF  | 79  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
+| Messi ★      | FW  | 99  | stature  | 7/7      | 1.00  | 1.00   | 0.938 | 1.00 |
+| Di María     | FW  | 89  | stature  | 5/1      | 0.00  | 1.00   | 0.478 | 1.00 |
+| Álvarez      | FW  | 88  | measured | 7/4      | 0.00  | 1.00   | 0.156 | 0.00 |
+| Martínez     | FW  | 86  | measured | 6/0      | 0.00  | 1.00   | 0.250 | 0.00 |
+| Dybala       | FW  | 79  | measured | 2/0      | 0.00  | 1.00   | 0.200 | 0.00 |
+| Correa       | FW  | 78  | measured | 1/0      | 0.00  | 1.00   | —     | 0.00 |
 
 ## T5 France 2022 (n=26)
-| player | pos | OVR | basis | apps/gls | award | finish | idx | w |
-|---|---|---|---|---|---|---|---|---|
-| Lloris | GK | 88 | measured | 6/0 | 0.00 | 0.75 | 0.067 | 0.00 |
-| Mandanda | GK | 88 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Areola | GK | 82 | measured | 0/0 | 0.00 | 0.75 | — | 0.00 |
-| Disasi | DF | 88 | measured | 3/0 | 0.00 | 0.75 | — | 0.00 |
-| Hernandez | DF | 88 | measured | 6/1 | 0.00 | 0.75 | 0.200 | 0.00 |
-| Konaté | DF | 88 | measured | 5/0 | 0.00 | 0.75 | — | 0.00 |
-| Koundé | DF | 88 | measured | 6/0 | 0.00 | 0.75 | — | 0.00 |
-| Upamecano | DF | 88 | measured | 5/0 | 0.00 | 0.75 | 0.200 | 0.00 |
-| Varane | DF | 88 | measured | 6/0 | 0.00 | 0.75 | 0.225 | 0.00 |
-| Hernandez | DF | 79 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Pavard | DF | 79 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Saliba | DF | 79 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Fofana | MF | 88 | measured | 6/0 | 0.00 | 0.75 | — | 0.00 |
-| Rabiot | MF | 88 | measured | 6/1 | 0.00 | 0.75 | — | 0.00 |
-| Tchouaméni | MF | 88 | measured | 7/1 | 0.00 | 0.75 | — | 0.00 |
-| Camavinga | MF | 81 | measured | 2/0 | 0.00 | 0.75 | — | 0.00 |
-| Guendouzi | MF | 76 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Veretout | MF | 76 | measured | 1/0 | 0.00 | 0.75 | — | 0.00 |
-| Mbappé ★ | FW | 98 | stature | 7/8 | 0.97 | 0.75 | 0.858 | 1.00 |
-| Benzema ★ | FW | 92 | stature | 0/0 | 0.00 | 0.75 | 0.728 | 1.00 |
-| Griezmann | FW | 92 | stature | 7/0 | 0.00 | 0.75 | 0.634 | 1.00 |
-| Dembélé ★ | FW | 89 | stature | 7/0 | 0.00 | 0.75 | 0.507 | 1.00 |
-| Giroud | FW | 88 | measured | 6/4 | 0.45 | 0.75 | 0.241 | 0.00 |
-| Kolo Muani | FW | 88 | measured | 3/1 | 0.00 | 0.75 | — | 0.00 |
-| Coman | FW | 82 | measured | 6/0 | 0.00 | 0.75 | — | 0.00 |
-| Thuram | FW | 82 | measured | 5/0 | 0.00 | 0.75 | — | 0.00 |
+
+| player     | pos | OVR | basis    | apps/gls | award | finish | idx   | w    |
+| ---------- | --- | --- | -------- | -------- | ----- | ------ | ----- | ---- |
+| Lloris     | GK  | 88  | measured | 6/0      | 0.00  | 0.75   | 0.067 | 0.00 |
+| Mandanda   | GK  | 88  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Areola     | GK  | 82  | measured | 0/0      | 0.00  | 0.75   | —     | 0.00 |
+| Disasi     | DF  | 88  | measured | 3/0      | 0.00  | 0.75   | —     | 0.00 |
+| Hernandez  | DF  | 88  | measured | 6/1      | 0.00  | 0.75   | 0.200 | 0.00 |
+| Konaté     | DF  | 88  | measured | 5/0      | 0.00  | 0.75   | —     | 0.00 |
+| Koundé     | DF  | 88  | measured | 6/0      | 0.00  | 0.75   | —     | 0.00 |
+| Upamecano  | DF  | 88  | measured | 5/0      | 0.00  | 0.75   | 0.200 | 0.00 |
+| Varane     | DF  | 88  | measured | 6/0      | 0.00  | 0.75   | 0.225 | 0.00 |
+| Hernandez  | DF  | 79  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Pavard     | DF  | 79  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Saliba     | DF  | 79  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Fofana     | MF  | 88  | measured | 6/0      | 0.00  | 0.75   | —     | 0.00 |
+| Rabiot     | MF  | 88  | measured | 6/1      | 0.00  | 0.75   | —     | 0.00 |
+| Tchouaméni | MF  | 88  | measured | 7/1      | 0.00  | 0.75   | —     | 0.00 |
+| Camavinga  | MF  | 81  | measured | 2/0      | 0.00  | 0.75   | —     | 0.00 |
+| Guendouzi  | MF  | 76  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Veretout   | MF  | 76  | measured | 1/0      | 0.00  | 0.75   | —     | 0.00 |
+| Mbappé ★   | FW  | 98  | stature  | 7/8      | 0.97  | 0.75   | 0.858 | 1.00 |
+| Benzema ★  | FW  | 92  | stature  | 0/0      | 0.00  | 0.75   | 0.728 | 1.00 |
+| Griezmann  | FW  | 92  | stature  | 7/0      | 0.00  | 0.75   | 0.634 | 1.00 |
+| Dembélé ★  | FW  | 89  | stature  | 7/0      | 0.00  | 0.75   | 0.507 | 1.00 |
+| Giroud     | FW  | 88  | measured | 6/4      | 0.45  | 0.75   | 0.241 | 0.00 |
+| Kolo Muani | FW  | 88  | measured | 3/1      | 0.00  | 0.75   | —     | 0.00 |
+| Coman      | FW  | 82  | measured | 6/0      | 0.00  | 0.75   | —     | 0.00 |
+| Thuram     | FW  | 82  | measured | 5/0      | 0.00  | 0.75   | —     | 0.00 |
 
 ---
 
@@ -1286,17 +1311,17 @@ thresholds), display held on the **production curve** (anchors unchanged). Base 
 WC-2022, MF, raw 0.4697 (= the (WC-2022, MF) cohort reference → modulation 0), no
 archive row → 76.
 
-| injected index | weight | stature target (MF) | internal | **display OVR** | basis |
-|---|---|---|---|---|---|
-| (none — shipped) | 0.000 | — | 46.97 | **76** | measured |
-| 0.300 | 0.000 | — | 46.97 | **76** | measured |
-| 0.350 | 0.083 | 0.600 | 48.05 | **77** | measured |
-| 0.398 (= Godín) | 0.483 | 0.600 | 53.27 | **81** | measured |
-| **0.420** | 0.667 | 0.613 | 56.54 | **84** | career_stature_estimate |
-| 0.460 | 1.000 | 0.640 | 64.00 | **88** | career_stature_estimate |
-| 0.500 | 1.000 | 0.667 | 66.67 | **88** | career_stature_estimate |
-| 0.550 | 1.000 | 0.700 | 70.00 | **89** | career_stature_estimate |
-| 0.600 | 1.000 | 0.733 | 73.33 | **89** | career_stature_estimate |
+| injected index   | weight | stature target (MF) | internal | **display OVR** | basis                   |
+| ---------------- | ------ | ------------------- | -------- | --------------- | ----------------------- |
+| (none — shipped) | 0.000  | —                   | 46.97    | **76**          | measured                |
+| 0.300            | 0.000  | —                   | 46.97    | **76**          | measured                |
+| 0.350            | 0.083  | 0.600               | 48.05    | **77**          | measured                |
+| 0.398 (= Godín)  | 0.483  | 0.600               | 53.27    | **81**          | measured                |
+| **0.420**        | 0.667  | 0.613               | 56.54    | **84**          | career_stature_estimate |
+| 0.460            | 1.000  | 0.640               | 64.00    | **88**          | career_stature_estimate |
+| 0.500            | 1.000  | 0.667               | 66.67    | **88**          | career_stature_estimate |
+| 0.550            | 1.000  | 0.700               | 70.00    | **89**          | career_stature_estimate |
+| 0.600            | 1.000  | 0.733               | 73.33    | **89**          | career_stature_estimate |
 
 **Reading:** the owner's instinct (83–84) corresponds to index ≈ **0.42**. Where would
 a curated career-to-2026 record land him? The in-archive peer band for his profile
@@ -1307,9 +1332,10 @@ Cannavaro 0.827 for podium-class defenders). **Conclusion: Audit-1's D2
 index — he lands 81–88 across the whole plausible band, centered on the owner's
 number. He is hereby proposed as a named 12b acceptance probe** (§H.2). No further
 mechanism is needed for him; the per-tournament measured treatment of his group-exit
-2022 (raw 0.4697 → 76) is fair *within* the measured world.
+2022 (raw 0.4697 → 76) is fair _within_ the measured world.
 
 **Two design caveats for 12b from this sweep:**
+
 1. **Band compression above the pile:** internal 64 → 88 but internal 73.3 → still 89
    (the p95 anchor sits ON the 1,244-card pile). Newly material actives will bunch at
    88–89 until the 12b regen dissolves the pile and the refit curve decompresses the
@@ -1328,48 +1354,49 @@ Kovačić-2014 75, Bentancur-2022 76, Tielemans-2022 76, Witsel-2022 76, Gueye-2
 Full 57-pair join:
 
 ## T6-b Group/early-exit candidates: elite 2026 career inputs (proj raw >= 88, no stature row) with weak 2014+ historical cards (hist OVR <= 80) — 57 pairs
-| hist card | pos | hist OVR | hist inputs | 2026 OVR | 2026 career inputs |
-|---|---|---|---|---|---|
-| Elvedi (Switzerland 2018) | DF | 68 | apps 0 (p0.09), goals 0 (p0.45), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 66, goals 3, raw 90.6 |
-| Endo (Japan 2018) | DF | 68 | apps 0 (p0.09), goals 0 (p0.45), award 0.00, finish — · stature idx 0.040/w 0.00 | 88 | caps 73, goals 4, raw 89.6 |
-| Lo Celso (Argentina 2018) | MF | 70 | apps 0 (p0.06), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 65, goals 4, raw 90.9 |
-| Freuler (Switzerland 2018) | MF | 70 | apps 0 (p0.06), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 87, goals 11, raw 90.5 |
-| Jiménez (Mexico 2014) | FW | 71 | apps 1 (p0.13), goals 0 (p0.30), award 0.00, finish — · stature idx 0.100/w 0.00 | 88 | caps 123, goals 44, raw 90.7 |
-| Digne (France 2014) | DF | 71 | apps 1 (p0.27), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 56, goals 0, raw 88.9 |
-| Lukaku (Belgium 2022) | FW | 71 | apps 2 (p0.29), goals 0 (p0.33), award 0.00, finish — · stature idx 0.251/w 0.00 | 88 | caps 125, goals 90, raw 91.7 |
-| Goretzka (Germany 2018) | MF | 71 | apps 1 (p0.18), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 69, goals 15, raw 92.5 |
-| Larin (Canada 2022) | FW | 72 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.048/w 0.00 | 88 | caps 89, goals 30, raw 93.0 |
-| Elvedi (Switzerland 2022) | DF | 72 | apps 2 (p0.43), goals 0 (p0.46), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 66, goals 3, raw 90.6 |
-| Ayew (Ghana 2014) | FW | 72 | apps 3 (p0.54), goals 0 (p0.30), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 120, goals 34, raw 90.7 |
-| Ayew (Ghana 2022) | FW | 72 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 120, goals 34, raw 90.7 |
-| Sarr (Senegal 2018) | FW | 72 | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 82, goals 19, raw 91.8 |
-| Fernandes (Portugal 2018) | MF | 72 | apps 2 (p0.33), goals 0 (p0.42), award 0.00, finish — · stature idx 0.200/w 0.00 | 88 | caps 87, goals 28, raw 98.9 |
-| Kubo (Japan 2022) | MF | 72 | apps 2 (p0.43), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 49, goals 7, raw 90.3 |
-| David (Canada 2022) | FW | 72 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.158/w 0.00 | 88 | caps 76, goals 39, raw 91.9 |
-| Jiménez (Mexico 2018) | FW | 72 | apps 2 (p0.33), goals 0 (p0.35), award 0.00, finish — · stature idx 0.100/w 0.00 | 88 | caps 123, goals 44, raw 90.7 |
-| Jiménez (Mexico 2022) | FW | 72 | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.100/w 0.00 | 88 | caps 123, goals 44, raw 90.7 |
-| Hwang (South Korea 2018) | FW | 72 | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 79, goals 17, raw 98.9 |
-| Embolo (Switzerland 2018) | FW | 73 | apps 4 (p0.81), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 86, goals 24, raw 90.0 |
-| Silva (Portugal 2022) | FW | 73 | apps 5 (p0.89), goals 0 (p0.33), award 0.00, finish — · stature idx 0.243/w 0.00 | 88 | caps 107, goals 14, raw 98.8 |
-| Kolašinac (Bosnia and Herzegovina 2014) | DF | 73 | apps 2 (p0.43), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 64, goals 0, raw 88.1 |
-| Irvine (Australia 2018) | MF | 74 | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 81, goals 14, raw 91.6 |
-| Gueye (Senegal 2018) | MF | 74 | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx 0.060/w 0.00 | 88 | caps 130, goals 7, raw 91.4 |
-| Skhiri (Tunisia 2018) | MF | 74 | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 82, goals 4, raw 89.2 |
-| Lee (South Korea 2018) | MF | 74 | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 105, goals 15, raw 93.3 |
-| Kovačić (Croatia 2014) | MF | 75 | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.050/w 0.00 | 88 | caps 112, goals 5, raw 94.1 |
-| Valverde (Uruguay 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 73, goals 9, raw 95.7 |
-| Partey (Ghana 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 57, goals 15, raw 92.5 |
-| Diatta (Senegal 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 60, goals 2, raw 89.1 |
-| Gueye (Senegal 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx 0.060/w 0.00 | 88 | caps 130, goals 7, raw 91.4 |
-| Skhiri (Tunisia 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 82, goals 4, raw 89.2 |
-| Tielemans (Belgium 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 84, goals 13, raw 98.5 |
-| Witsel (Belgium 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx 0.062/w 0.00 | 88 | caps 137, goals 12, raw 92.0 |
-| Castagne (Belgium 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 62, goals 2, raw 92.8 |
-| Bentancur (Uruguay 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 74, goals 3, raw 91.2 |
-| Goretzka (Germany 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 69, goals 15, raw 92.5 |
-| Lee (South Korea 2022) | MF | 76 | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 105, goals 15, raw 93.3 |
-| Mandi (Algeria 2014) | DF | 78 | apps 3 (p0.62), goals 0 (p0.47), award 0.00, finish — · stature idx 0.053/w 0.00 | 88 | caps 117, goals 7, raw 90.5 |
-| Giménez (Uruguay 2014) | DF | 78 | apps 3 (p0.62), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00 | 88 | caps 99, goals 8, raw 96.3 |
+
+| hist card                               | pos | hist OVR | hist inputs                                                                      | 2026 OVR | 2026 career inputs           |
+| --------------------------------------- | --- | -------- | -------------------------------------------------------------------------------- | -------- | ---------------------------- |
+| Elvedi (Switzerland 2018)               | DF  | 68       | apps 0 (p0.09), goals 0 (p0.45), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 66, goals 3, raw 90.6   |
+| Endo (Japan 2018)                       | DF  | 68       | apps 0 (p0.09), goals 0 (p0.45), award 0.00, finish — · stature idx 0.040/w 0.00 | 88       | caps 73, goals 4, raw 89.6   |
+| Lo Celso (Argentina 2018)               | MF  | 70       | apps 0 (p0.06), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 65, goals 4, raw 90.9   |
+| Freuler (Switzerland 2018)              | MF  | 70       | apps 0 (p0.06), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 87, goals 11, raw 90.5  |
+| Jiménez (Mexico 2014)                   | FW  | 71       | apps 1 (p0.13), goals 0 (p0.30), award 0.00, finish — · stature idx 0.100/w 0.00 | 88       | caps 123, goals 44, raw 90.7 |
+| Digne (France 2014)                     | DF  | 71       | apps 1 (p0.27), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 56, goals 0, raw 88.9   |
+| Lukaku (Belgium 2022)                   | FW  | 71       | apps 2 (p0.29), goals 0 (p0.33), award 0.00, finish — · stature idx 0.251/w 0.00 | 88       | caps 125, goals 90, raw 91.7 |
+| Goretzka (Germany 2018)                 | MF  | 71       | apps 1 (p0.18), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 69, goals 15, raw 92.5  |
+| Larin (Canada 2022)                     | FW  | 72       | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.048/w 0.00 | 88       | caps 89, goals 30, raw 93.0  |
+| Elvedi (Switzerland 2022)               | DF  | 72       | apps 2 (p0.43), goals 0 (p0.46), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 66, goals 3, raw 90.6   |
+| Ayew (Ghana 2014)                       | FW  | 72       | apps 3 (p0.54), goals 0 (p0.30), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 120, goals 34, raw 90.7 |
+| Ayew (Ghana 2022)                       | FW  | 72       | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 120, goals 34, raw 90.7 |
+| Sarr (Senegal 2018)                     | FW  | 72       | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 82, goals 19, raw 91.8  |
+| Fernandes (Portugal 2018)               | MF  | 72       | apps 2 (p0.33), goals 0 (p0.42), award 0.00, finish — · stature idx 0.200/w 0.00 | 88       | caps 87, goals 28, raw 98.9  |
+| Kubo (Japan 2022)                       | MF  | 72       | apps 2 (p0.43), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 49, goals 7, raw 90.3   |
+| David (Canada 2022)                     | FW  | 72       | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.158/w 0.00 | 88       | caps 76, goals 39, raw 91.9  |
+| Jiménez (Mexico 2018)                   | FW  | 72       | apps 2 (p0.33), goals 0 (p0.35), award 0.00, finish — · stature idx 0.100/w 0.00 | 88       | caps 123, goals 44, raw 90.7 |
+| Jiménez (Mexico 2022)                   | FW  | 72       | apps 3 (p0.54), goals 0 (p0.33), award 0.00, finish — · stature idx 0.100/w 0.00 | 88       | caps 123, goals 44, raw 90.7 |
+| Hwang (South Korea 2018)                | FW  | 72       | apps 3 (p0.59), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 79, goals 17, raw 98.9  |
+| Embolo (Switzerland 2018)               | FW  | 73       | apps 4 (p0.81), goals 0 (p0.35), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 86, goals 24, raw 90.0  |
+| Silva (Portugal 2022)                   | FW  | 73       | apps 5 (p0.89), goals 0 (p0.33), award 0.00, finish — · stature idx 0.243/w 0.00 | 88       | caps 107, goals 14, raw 98.8 |
+| Kolašinac (Bosnia and Herzegovina 2014) | DF  | 73       | apps 2 (p0.43), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 64, goals 0, raw 88.1   |
+| Irvine (Australia 2018)                 | MF  | 74       | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 81, goals 14, raw 91.6  |
+| Gueye (Senegal 2018)                    | MF  | 74       | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx 0.060/w 0.00 | 88       | caps 130, goals 7, raw 91.4  |
+| Skhiri (Tunisia 2018)                   | MF  | 74       | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 82, goals 4, raw 89.2   |
+| Lee (South Korea 2018)                  | MF  | 74       | apps 3 (p0.56), goals 0 (p0.42), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 105, goals 15, raw 93.3 |
+| Kovačić (Croatia 2014)                  | MF  | 75       | apps 3 (p0.62), goals 0 (p0.41), award 0.00, finish — · stature idx 0.050/w 0.00 | 88       | caps 112, goals 5, raw 94.1  |
+| Valverde (Uruguay 2022)                 | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 73, goals 9, raw 95.7   |
+| Partey (Ghana 2022)                     | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 57, goals 15, raw 92.5  |
+| Diatta (Senegal 2022)                   | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 60, goals 2, raw 89.1   |
+| Gueye (Senegal 2022)                    | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx 0.060/w 0.00 | 88       | caps 130, goals 7, raw 91.4  |
+| Skhiri (Tunisia 2022)                   | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 82, goals 4, raw 89.2   |
+| Tielemans (Belgium 2022)                | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 84, goals 13, raw 98.5  |
+| Witsel (Belgium 2022)                   | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx 0.062/w 0.00 | 88       | caps 137, goals 12, raw 92.0 |
+| Castagne (Belgium 2022)                 | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 62, goals 2, raw 92.8   |
+| Bentancur (Uruguay 2022)                | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 74, goals 3, raw 91.2   |
+| Goretzka (Germany 2022)                 | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 69, goals 15, raw 92.5  |
+| Lee (South Korea 2022)                  | MF  | 76       | apps 3 (p0.64), goals 0 (p0.44), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 105, goals 15, raw 93.3 |
+| Mandi (Algeria 2014)                    | DF  | 78       | apps 3 (p0.62), goals 0 (p0.47), award 0.00, finish — · stature idx 0.053/w 0.00 | 88       | caps 117, goals 7, raw 90.5  |
+| Giménez (Uruguay 2014)                  | DF  | 78       | apps 3 (p0.62), goals 0 (p0.47), award 0.00, finish — · stature idx —/w 0.00     | 88       | caps 99, goals 8, raw 96.3   |
 
 ---
 
@@ -1381,64 +1408,64 @@ Severity: **S1** = live distortion a user can see today, mechanism confirmed ·
 **S2** = systematic class with named victims, fix = 12b scope · **S3** = advisory /
 design-ratification.
 
-| # | sev | card(s) / cohort | now | class | evidence | expected fix path |
-|---|---|---|---|---|---|---|
-| 1 | S1 | **Neymar 2026** | 88, no legend | identity link miss (mononym) | §H.3; hist 93/93/93, idx 0.682, legend | link-seam fix unit (pre-12b) |
-| 2 | S1 | **Rodri 2026** | 88, no legend | identity link miss (`"not applicable"` name pollution) | §H.3; hist 89, idx 0.527, legend; reigning Ballon d'Or | link-seam fix unit |
-| 3 | S1 | 15 further minted link misses (Casemiro, Alisson, Ederson, Marquinhos, Fabinho, Raphinha, Weverton, Bremer, Danilo, Pacho, Trézéguet, Vitinha, Pedri, Gavi, C. Devlin) | various | identity link miss | §H.3 | link-seam fix unit |
-| 4 | S2 | **Pelé** (idx 0.807, silver, rank 45; best card 97) | 97 | archive era/eligibility bias | §C; no global_annual_recognition (Ballon d'Or Europeans-only <1995) | 12b index re-normalization |
-| 5 | S2 | **Cruyff** 0.755 / **Garrincha** 0.723 / Di Stéfano 0.774 / Yashin 0.738 / Charlton 0.748 | 95/94/92/92/95 | archive era/eligibility bias | §C | 12b index re-normalization |
-| 6 | S2 | **Kocsis idx 0.992 = #1 all-time**; Piola 0.911, Albert 0.872, Owen 0.789 > Cruyff; 2–3-fact entries at 0.78–0.86 (Boniperti, Ocwirk, Andrade, Hanappi, Scarone) | 94–99 | sparse-fact index inflation | §C | 12b index re-normalization (fact-count/coverage shrinkage) |
-| 7 | S2 | **E. Martínez 2022** (Golden Glove, champion, raw 100) | 88 | measured ceiling vs award-anchored perf | §E | 12b ceiling treatment / D2 row |
-| 8 | S2 | Schumacher 1986 (raw 100) · Vavá 1962 (raw 100) · Jairzinho 1970 (94.8) · **Forlán 2010 (Golden Ball)** · Klose 2006 (Golden Boot) | 88 | measured ceiling | §E | 12b ceiling treatment |
-| 9 | S2 | **Haaland 2026** (49c/55g) · Valverde 2026 (95.7) · Pedri 88 · Wirtz 88 · B. Fernandes 98.9 | 88 | C1+C3 (Audit-1), more names | §E | D1+D2 |
-| 10 | S2 | **Yamal 2026** | 79 | youth double penalty (Audit-1 C3) | Audit-1 §B.2 | D1+D2 |
-| 11 | S2 | **Vinícius Júnior 2026** | 87, idx 0.200 | frozen archive (C1) on a LINKED player | §B | D2 re-curation |
-| 12 | S2 | **Klose** idx 0.395 (gate 0.40) → best 88 · Sócrates 0.396 → 88 · Godín 0.398 → 88(2014)/81 | 88 | material-gate knife edge | §F | 12b: ramp already smooths; needs fact re-curation, not gate move |
-| 13 | S2 | **Busquets 0.066 · X. Alonso 0.052 · Lloris 0.067 · Deschamps 0.209 · Desailly 0.160** | 88 | archive holes: unsung-role greats (extends MV2-9 beyond DF/GK) | §F | D2 family for non-podium leadership |
-| 14 | S2 | Champion-GK class (Marcos, Pumpido, Illgner, Gilmar, Taffarel, Félix, Fillol, Banks, Maier) | 88 | MV2-9 GK under-credit, drawn per-card | §D | MV2-3.5-style GK families |
-| 15 | S2 | Valverde 2022 | 76 | frozen archive (C1) | §G counterfactual: idx 0.42 → 84 | D2 (named probe) |
-| 16 | S2 | T6-b class (Lukaku-2022 71, B. Fernandes-2018 72, Goretzka, Partey, Bentancur, Kovačić…) | 71–76 | frozen archive on historical cards of actives | §G | D2 (same pass) |
-| 17 | S2 | Legend-flag vs display disagreement: Piola/Albert/Walter/Bozsik/Cea/Ocwirk/Andrade/Hanappi/Boniperti/Santos = 94–99 NOT-LEGEND | 94–99 | flag/band inconsistency | §C | 12b legend re-derivation |
-| 18 | S3 | Stature down-cap insensitivity: Rossi-1986 94 (0 apps) · Zidane-2002 95 (1 app) · Messi-2010 98 (0 goals) · Kahn-1994 89 · Eto'o-2014 89 · Keegan-1982 92 · Matthews-1950 93 | 89–98 | design: TOURNAMENT_DOWN_CAP 0.05–0.12 | §D | owner ratifies or 12b widens down-cap |
-| 19 | S3 | Champion-reserve compression: 0-app reserves at 87–88 (Brazil-1970 GKs, Argentina-2022 GKs, Bordon/Galli-1982) | 87–88 | finish-anchor weight on 0-app cards | §F | owner call (display-only feel) |
-| 20 | S3 | 88-wall squad monotony (Argentina-2022: 19×88; Argentina-1986: 16×88; Brazil-1970: 10×88) | 88 | display artifact of the pile (Audit-1 §B.4) | §F | dissolves with 12b internal fix + curve refit; do NOT patch curve alone |
-| 21 | S3 | GK display ceiling 93 (Buffon) vs 10 outfield 99s | ≤93 | recognition-bias residue | §B | monitor after #14 |
+| #   | sev | card(s) / cohort                                                                                                                                                             | now            | class                                                          | evidence                                                            | expected fix path                                                       |
+| --- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 1   | S1  | **Neymar 2026**                                                                                                                                                              | 88, no legend  | identity link miss (mononym)                                   | §H.3; hist 93/93/93, idx 0.682, legend                              | link-seam fix unit (pre-12b)                                            |
+| 2   | S1  | **Rodri 2026**                                                                                                                                                               | 88, no legend  | identity link miss (`"not applicable"` name pollution)         | §H.3; hist 89, idx 0.527, legend; reigning Ballon d'Or              | link-seam fix unit                                                      |
+| 3   | S1  | 15 further minted link misses (Casemiro, Alisson, Ederson, Marquinhos, Fabinho, Raphinha, Weverton, Bremer, Danilo, Pacho, Trézéguet, Vitinha, Pedri, Gavi, C. Devlin)       | various        | identity link miss                                             | §H.3                                                                | link-seam fix unit                                                      |
+| 4   | S2  | **Pelé** (idx 0.807, silver, rank 45; best card 97)                                                                                                                          | 97             | archive era/eligibility bias                                   | §C; no global_annual_recognition (Ballon d'Or Europeans-only <1995) | 12b index re-normalization                                              |
+| 5   | S2  | **Cruyff** 0.755 / **Garrincha** 0.723 / Di Stéfano 0.774 / Yashin 0.738 / Charlton 0.748                                                                                    | 95/94/92/92/95 | archive era/eligibility bias                                   | §C                                                                  | 12b index re-normalization                                              |
+| 6   | S2  | **Kocsis idx 0.992 = #1 all-time**; Piola 0.911, Albert 0.872, Owen 0.789 > Cruyff; 2–3-fact entries at 0.78–0.86 (Boniperti, Ocwirk, Andrade, Hanappi, Scarone)             | 94–99          | sparse-fact index inflation                                    | §C                                                                  | 12b index re-normalization (fact-count/coverage shrinkage)              |
+| 7   | S2  | **E. Martínez 2022** (Golden Glove, champion, raw 100)                                                                                                                       | 88             | measured ceiling vs award-anchored perf                        | §E                                                                  | 12b ceiling treatment / D2 row                                          |
+| 8   | S2  | Schumacher 1986 (raw 100) · Vavá 1962 (raw 100) · Jairzinho 1970 (94.8) · **Forlán 2010 (Golden Ball)** · Klose 2006 (Golden Boot)                                           | 88             | measured ceiling                                               | §E                                                                  | 12b ceiling treatment                                                   |
+| 9   | S2  | **Haaland 2026** (49c/55g) · Valverde 2026 (95.7) · Pedri 88 · Wirtz 88 · B. Fernandes 98.9                                                                                  | 88             | C1+C3 (Audit-1), more names                                    | §E                                                                  | D1+D2                                                                   |
+| 10  | S2  | **Yamal 2026**                                                                                                                                                               | 79             | youth double penalty (Audit-1 C3)                              | Audit-1 §B.2                                                        | D1+D2                                                                   |
+| 11  | S2  | **Vinícius Júnior 2026**                                                                                                                                                     | 87, idx 0.200  | frozen archive (C1) on a LINKED player                         | §B                                                                  | D2 re-curation                                                          |
+| 12  | S2  | **Klose** idx 0.395 (gate 0.40) → best 88 · Sócrates 0.396 → 88 · Godín 0.398 → 88(2014)/81                                                                                  | 88             | material-gate knife edge                                       | §F                                                                  | 12b: ramp already smooths; needs fact re-curation, not gate move        |
+| 13  | S2  | **Busquets 0.066 · X. Alonso 0.052 · Lloris 0.067 · Deschamps 0.209 · Desailly 0.160**                                                                                       | 88             | archive holes: unsung-role greats (extends MV2-9 beyond DF/GK) | §F                                                                  | D2 family for non-podium leadership                                     |
+| 14  | S2  | Champion-GK class (Marcos, Pumpido, Illgner, Gilmar, Taffarel, Félix, Fillol, Banks, Maier)                                                                                  | 88             | MV2-9 GK under-credit, drawn per-card                          | §D                                                                  | MV2-3.5-style GK families                                               |
+| 15  | S2  | Valverde 2022                                                                                                                                                                | 76             | frozen archive (C1)                                            | §G counterfactual: idx 0.42 → 84                                    | D2 (named probe)                                                        |
+| 16  | S2  | T6-b class (Lukaku-2022 71, B. Fernandes-2018 72, Goretzka, Partey, Bentancur, Kovačić…)                                                                                     | 71–76          | frozen archive on historical cards of actives                  | §G                                                                  | D2 (same pass)                                                          |
+| 17  | S2  | Legend-flag vs display disagreement: Piola/Albert/Walter/Bozsik/Cea/Ocwirk/Andrade/Hanappi/Boniperti/Santos = 94–99 NOT-LEGEND                                               | 94–99          | flag/band inconsistency                                        | §C                                                                  | 12b legend re-derivation                                                |
+| 18  | S3  | Stature down-cap insensitivity: Rossi-1986 94 (0 apps) · Zidane-2002 95 (1 app) · Messi-2010 98 (0 goals) · Kahn-1994 89 · Eto'o-2014 89 · Keegan-1982 92 · Matthews-1950 93 | 89–98          | design: TOURNAMENT_DOWN_CAP 0.05–0.12                          | §D                                                                  | owner ratifies or 12b widens down-cap                                   |
+| 19  | S3  | Champion-reserve compression: 0-app reserves at 87–88 (Brazil-1970 GKs, Argentina-2022 GKs, Bordon/Galli-1982)                                                               | 87–88          | finish-anchor weight on 0-app cards                            | §F                                                                  | owner call (display-only feel)                                          |
+| 20  | S3  | 88-wall squad monotony (Argentina-2022: 19×88; Argentina-1986: 16×88; Brazil-1970: 10×88)                                                                                    | 88             | display artifact of the pile (Audit-1 §B.4)                    | §F                                                                  | dissolves with 12b internal fix + curve refit; do NOT patch curve alone |
+| 21  | S3  | GK display ceiling 93 (Buffon) vs 10 outfield 99s                                                                                                                            | ≤93            | recognition-bias residue                                       | §B                                                                  | monitor after #14                                                       |
 
 ### H.2 Proposed 12b acceptance-probe set (named cards, gate assertions)
 
 Expected-movers (direction asserted, magnitude indicative under the frozen curve):
 
-| probe | now | expect after 12b (D1+D2) | asserts |
-|---|---|---|---|
-| Yamal 2026 | 79 | ≥ 85 | C3 youth fix |
-| Haaland 2026 | 88 | > 88 | ceiling escape, minted+D2 |
-| Valverde 2026 | 88 | 89–91 | D2 captaincy/club-honors family |
-| **Valverde 2022** | 76 | 81–88 (center ~84) | D2 reaches historical cards of actives |
-| Rodri 2026 (after link fix) | 88 | ≥ 89 **+ legend badge** | link fix + archive consult |
-| Neymar 2026 (after link fix) | 88 | ~92–93 **+ legend badge** | link fix alone (no model change needed) |
-| Vinícius Júnior 2026 | 87 | ≥ 90 | D2 re-curation of linked actives |
-| E. Martínez 2022 | 88 | > 88 | D2 active-career GK row (or explicit owner waiver) |
-| Lukaku 2022 | 71 | ≥ ~80 | T6-b class |
-| B. Fernandes 2018 | 72 | ↑ | T6-b class |
-| Aït-Nouri 2026 | 83 | mid-80s | D1 (Audit-1 §D1) |
-| Gavi 2026 | 84 | ↑ modest | D1 U22 cohort |
-| Klose 2014 | 88 | > 88 | gate knife-edge resolved by fact curation |
-| Pelé 1970 | 97 | ≥ Maradona/Messi tier **iff** index re-normalization is in 12b scope | archive bias (declare scope explicitly) |
-| Cruyff 1974 | 95 | ↑ iff index re-normalization in scope | archive bias |
+| probe                        | now | expect after 12b (D1+D2)                                             | asserts                                            |
+| ---------------------------- | --- | -------------------------------------------------------------------- | -------------------------------------------------- |
+| Yamal 2026                   | 79  | ≥ 85                                                                 | C3 youth fix                                       |
+| Haaland 2026                 | 88  | > 88                                                                 | ceiling escape, minted+D2                          |
+| Valverde 2026                | 88  | 89–91                                                                | D2 captaincy/club-honors family                    |
+| **Valverde 2022**            | 76  | 81–88 (center ~84)                                                   | D2 reaches historical cards of actives             |
+| Rodri 2026 (after link fix)  | 88  | ≥ 89 **+ legend badge**                                              | link fix + archive consult                         |
+| Neymar 2026 (after link fix) | 88  | ~92–93 **+ legend badge**                                            | link fix alone (no model change needed)            |
+| Vinícius Júnior 2026         | 87  | ≥ 90                                                                 | D2 re-curation of linked actives                   |
+| E. Martínez 2022             | 88  | > 88                                                                 | D2 active-career GK row (or explicit owner waiver) |
+| Lukaku 2022                  | 71  | ≥ ~80                                                                | T6-b class                                         |
+| B. Fernandes 2018            | 72  | ↑                                                                    | T6-b class                                         |
+| Aït-Nouri 2026               | 83  | mid-80s                                                              | D1 (Audit-1 §D1)                                   |
+| Gavi 2026                    | 84  | ↑ modest                                                             | D1 U22 cohort                                      |
+| Klose 2014                   | 88  | > 88                                                                 | gate knife-edge resolved by fact curation          |
+| Pelé 1970                    | 97  | ≥ Maradona/Messi tier **iff** index re-normalization is in 12b scope | archive bias (declare scope explicitly)            |
+| Cruyff 1974                  | 95  | ↑ iff index re-normalization in scope                                | archive bias                                       |
 
 Should-NOT-move controls (zero or ≤1 rounding-grain movement):
 
-| control | now | guards against |
-|---|---|---|
-| Perlaza 2026 | 68 | fringe inflation (no facts → no lift) |
-| Khalil Ayari 2026 | 71 | youth-cohort overcorrection |
-| Dempsey 2010 | 88 | historical measured path untouched |
-| Boufal 2022 | 88 | historical measured path untouched |
-| Messi 2010 | 98 | stature path stability |
-| Kocsis 1954 | 99 | D1/D2 must NOT silently move the archive top (index work is a separate, explicit decision) |
-| Cesare Maldini 1962 | 71 | Audit-1 ruling stands (UX fix only) |
-| Q. Timber 2026 | 72 | link fix must not merge the twins (§H.3) |
+| control             | now | guards against                                                                             |
+| ------------------- | --- | ------------------------------------------------------------------------------------------ |
+| Perlaza 2026        | 68  | fringe inflation (no facts → no lift)                                                      |
+| Khalil Ayari 2026   | 71  | youth-cohort overcorrection                                                                |
+| Dempsey 2010        | 88  | historical measured path untouched                                                         |
+| Boufal 2022         | 88  | historical measured path untouched                                                         |
+| Messi 2010          | 98  | stature path stability                                                                     |
+| Kocsis 1954         | 99  | D1/D2 must NOT silently move the archive top (index work is a separate, explicit decision) |
+| Cesare Maldini 1962 | 71  | Audit-1 ruling stands (UX fix only)                                                        |
+| Q. Timber 2026      | 72  | link fix must not merge the twins (§H.3)                                                   |
 
 ### H.3 New defect #1 — 2026 identity-seam link misses (NOT explained by Audit-1)
 
@@ -1450,25 +1477,25 @@ Mokoena (b.1997 vs 1974), Fathy (Qatar b.1993), A. González (MEX b.2003)) and t
 **Timber twins** (identical birth date, correctly separate people — a trap for any
 naive birth-date join).
 
-| player | minted 2026 (OVR) | historical cards | archive idx | live impact |
-|---|---|---|---|---|
-| Neymar | 88 | 2014:93 · 2018:93 · 2022:93 | 0.682, legend | **−5 OVR + lost legend badge TODAY** |
-| Rodri | 88 | 2022:89 | 0.527, legend | ~−1 OVR + lost legend badge |
-| Casemiro | 88 | 2018:79 · 2022:88 | — | provenance only (no row → same 88) |
-| Alisson | 88 | 2018:88 · 2022:88 | — | provenance only |
-| Marquinhos | 88 | 2018:71 · 2022:88 | 0.046 | provenance only |
-| Ederson | 75 | 2018:71 · 2022:78 | — | provenance only |
-| Raphinha | 88 | 2022:73 | — | provenance only |
-| Pedri | 88 | 2022:80 | — | provenance only |
-| Gavi | 84 | 2022:88 | — | provenance only |
-| Danilo | 85 | 2018:71 · 2022:79 | — | provenance only |
-| Weverton | 72 | 2022:78 | — | provenance only |
-| Fabinho | 71 | 2022:71 | — | provenance only |
-| Bremer | 71 | 2022:72 | — | provenance only |
-| Vitinha | 76 | 2022:76 | — | provenance only |
-| Pacho | 83 | 2022:68 | — | provenance only |
-| Trézéguet (EGY) | 79 | 2018:74 | — | provenance only |
-| C. Devlin | 70 | 2022:70 | — | provenance only |
+| player          | minted 2026 (OVR) | historical cards            | archive idx   | live impact                          |
+| --------------- | ----------------- | --------------------------- | ------------- | ------------------------------------ |
+| Neymar          | 88                | 2014:93 · 2018:93 · 2022:93 | 0.682, legend | **−5 OVR + lost legend badge TODAY** |
+| Rodri           | 88                | 2022:89                     | 0.527, legend | ~−1 OVR + lost legend badge          |
+| Casemiro        | 88                | 2018:79 · 2022:88           | —             | provenance only (no row → same 88)   |
+| Alisson         | 88                | 2018:88 · 2022:88           | —             | provenance only                      |
+| Marquinhos      | 88                | 2018:71 · 2022:88           | 0.046         | provenance only                      |
+| Ederson         | 75                | 2018:71 · 2022:78           | —             | provenance only                      |
+| Raphinha        | 88                | 2022:73                     | —             | provenance only                      |
+| Pedri           | 88                | 2022:80                     | —             | provenance only                      |
+| Gavi            | 84                | 2022:88                     | —             | provenance only                      |
+| Danilo          | 85                | 2018:71 · 2022:79           | —             | provenance only                      |
+| Weverton        | 72                | 2022:78                     | —             | provenance only                      |
+| Fabinho         | 71                | 2022:71                     | —             | provenance only                      |
+| Bremer          | 71                | 2022:72                     | —             | provenance only                      |
+| Vitinha         | 76                | 2022:76                     | —             | provenance only                      |
+| Pacho           | 83                | 2022:68                     | —             | provenance only                      |
+| Trézéguet (EGY) | 79                | 2018:74                     | —             | provenance only                      |
+| C. Devlin       | 70                | 2022:70                     | —             | provenance only                      |
 
 **Mechanisms (both name-form):** (a) mononyms/nicknames — the 2026 squad wikitext
 carries "Casemiro"/"Rodri"/"Pedri" while the historical `full_name` is either the
@@ -1484,7 +1511,7 @@ BEFORE 12b integration; it changes ratings for Neymar/Rodri immediately
 
 ### H.4 New defect #2 — within-archive index normalization bias (12b design input)
 
-Audit-1 established the archive is *frozen in time* (C1). This audit adds that it is
+Audit-1 established the archive is _frozen in time_ (C1). This audit adds that it is
 also **skewed across its own eras and fact-density classes**: (a) pre-1995
 non-European(-club) players cannot have `global_annual_recognition` facts (Ballon
 d'Or eligibility), depressing Pelé/Garrincha/Di Stéfano-class indexes; (b) sparse

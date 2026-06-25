@@ -227,7 +227,9 @@ export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGame
     // simulates on Career ratings only, so a Current-basis token is honest-
     // skipped from result-spotlights (run-from-token returns replay_failed)
     // rather than rendered against the wrong ratings. Never a fabricated stat.
-    throw new Error(`token rating_basis "${config.rating_basis}" is not simulated by the marketing composer (Career only)`);
+    throw new Error(
+      `token rating_basis "${config.rating_basis}" is not simulated by the marketing composer (Career only)`,
+    );
   }
   const catalog = getCatalogForEra(gd, config.era_preset);
   const positionFirst = config.draft_flow === "position_first";

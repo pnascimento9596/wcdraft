@@ -68,7 +68,9 @@ export function AccountMenu(): React.ReactElement | null {
       const next = !value;
       if (next) {
         restoreFocusRef.current =
-          document.activeElement instanceof HTMLElement ? document.activeElement : triggerRef.current;
+          document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : triggerRef.current;
       }
       return next;
     });

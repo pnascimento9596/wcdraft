@@ -117,20 +117,19 @@ async function captureForVariantViewport(variant, viewport, outRoot) {
     // bounding box intersects the viewport. Logged (not asserted) so
     // the harness keeps capturing even if the target slips - the
     // density target is 8-9 rows at 390x844, >= 7 at 360x800.
-    const visibleRows = await page.evaluate(({ vw, vh }) => {
-      const rows = Array.from(
-        document.querySelectorAll(
-          '[aria-label="Candidates"] button[aria-pressed]',
-        ),
-      );
-      return rows.filter((row) => {
-        const r = row.getBoundingClientRect();
-        return r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
-      }).length;
-    }, { vw: viewport.width, vh: viewport.height });
-    console.log(
-      `  · ${variant.label}/${viewport.name} candidate rows visible: ${visibleRows}`,
+    const visibleRows = await page.evaluate(
+      ({ vw, vh }) => {
+        const rows = Array.from(
+          document.querySelectorAll('[aria-label="Candidates"] button[aria-pressed]'),
+        );
+        return rows.filter((row) => {
+          const r = row.getBoundingClientRect();
+          return r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
+        }).length;
+      },
+      { vw: viewport.width, vh: viewport.height },
     );
+    console.log(`  · ${variant.label}/${viewport.name} candidate rows visible: ${visibleRows}`);
   }
 
   // 5) Assign-flow: click the first candidate row → should auto-scroll up

@@ -24,7 +24,10 @@ interface SquadOpts {
   benchNations?: string[];
 }
 
-function buildSquad(opts: SquadOpts): { squad: SquadSlot[]; nationByCardId: Record<string, string> } {
+function buildSquad(opts: SquadOpts): {
+  squad: SquadSlot[];
+  nationByCardId: Record<string, string>;
+} {
   const squad: SquadSlot[] = [];
   const nationByCardId: Record<string, string> = {};
   TEMPLATE.slots.forEach((slot, i) => {
@@ -120,8 +123,14 @@ describe("synergy — identical (squad, formation, manager) yields identical Syn
   });
 
   it("bench cards do NOT contribute to nation_clusters or linked_pairs", () => {
-    const a = buildSquad({ starterNations: ALL("BRA"), benchNations: ["ARG", "ARG", "ARG", "ARG", "ARG"] });
-    const b = buildSquad({ starterNations: ALL("BRA"), benchNations: ["BRA", "BRA", "BRA", "BRA", "BRA"] });
+    const a = buildSquad({
+      starterNations: ALL("BRA"),
+      benchNations: ["ARG", "ARG", "ARG", "ARG", "ARG"],
+    });
+    const b = buildSquad({
+      starterNations: ALL("BRA"),
+      benchNations: ["BRA", "BRA", "BRA", "BRA", "BRA"],
+    });
     const ra = computeSynergy(a.squad, TEMPLATE, null, a.nationByCardId);
     const rb = computeSynergy(b.squad, TEMPLATE, null, b.nationByCardId);
     // Bench composition is invisible (clusters + links identical; multiplier identical).
@@ -236,7 +245,9 @@ describe("team-strength — bounded multiplier (Synergy amplifies, never replace
   it("aggregateUserXiStrength throws unless exactly 11 starters are supplied", () => {
     const { squad, nationByCardId } = buildSquad({ starterNations: ALL("BRA") });
     const synergy = computeSynergy(squad, TEMPLATE, null, nationByCardId);
-    expect(() => aggregateUserXiStrength(starters(50).slice(0, 10), synergy, null)).toThrow(RangeError);
+    expect(() => aggregateUserXiStrength(starters(50).slice(0, 10), synergy, null)).toThrow(
+      RangeError,
+    );
   });
 
   it("null manager folds as a 1.0 modifier (no implicit zero)", () => {
@@ -350,7 +361,7 @@ describe("synergy — ENGINE-V2 E-2 NATION-ONLY (year-agnostic)", () => {
 
   it("different nations do NOT link even when tournament year matches", () => {
     // All starters at 2002, but split BRA / GER 5/6.
-    const nations = ["BRA","BRA","BRA","BRA","BRA","GER","GER","GER","GER","GER","GER"];
+    const nations = ["BRA", "BRA", "BRA", "BRA", "BRA", "GER", "GER", "GER", "GER", "GER", "GER"];
     const years = Array.from({ length: 11 }, () => 2002);
     const { squad, nationByCardId } = buildMixedSquad({
       starterNations: nations,
@@ -378,7 +389,7 @@ describe("synergy — ENGINE-V2 E-2 NATION-ONLY (year-agnostic)", () => {
     // Scenario A: 5 BRA starters mixed across years; 6 non-BRA starters.
     // 5/11 ≈ 0.4545, divided by MANAGER_LINK_FULL_AT (0.6) → ≈ 0.757 ∈ (0, 1).
     const yearsA = [1958, 1962, 1970, 1982, 1994, 2002, 2002, 2002, 2002, 2002, 2002];
-    const nationsA = ["BRA","BRA","BRA","BRA","BRA","GER","ITA","ARG","FRA","ENG","ESP"];
+    const nationsA = ["BRA", "BRA", "BRA", "BRA", "BRA", "GER", "ITA", "ARG", "FRA", "ENG", "ESP"];
     const a = buildMixedSquad({
       starterNations: nationsA,
       starterTournamentIds: yearsA,
@@ -421,13 +432,13 @@ describe("synergy — ENGINE-V2 E-2 NATION-ONLY (year-agnostic)", () => {
     const a = buildMixedSquad({
       starterNations: ALL("BRA"),
       starterTournamentIds: starterYears,
-      benchNations: ["ARG","ARG","ARG","ARG","ARG"],
+      benchNations: ["ARG", "ARG", "ARG", "ARG", "ARG"],
       benchTournamentIds: [1970, 1970, 1970, 1970, 1970],
     });
     const b = buildMixedSquad({
       starterNations: ALL("BRA"),
       starterTournamentIds: starterYears,
-      benchNations: ["ARG","ARG","ARG","ARG","ARG"],
+      benchNations: ["ARG", "ARG", "ARG", "ARG", "ARG"],
       benchTournamentIds: [2026, 2026, 2026, 2026, 2026],
     });
     const mgr = managerTournamentAt("BRA", 2002);

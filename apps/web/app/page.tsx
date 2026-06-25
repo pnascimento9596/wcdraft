@@ -102,8 +102,8 @@ export default async function HomePage() {
         </div>
 
         <p className="hero__live">
-          Live now on real football data from 1930–2026. The deterministic draft
-          engine, the match simulator, and real scoring all run in your browser.
+          Live now on real football data from 1930–2026. The deterministic draft engine, the match
+          simulator, and real scoring all run in your browser.
         </p>
       </div>
     </section>

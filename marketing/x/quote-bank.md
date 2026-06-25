@@ -56,7 +56,6 @@ _API search isn't available, so hunt by hand: open a link, find a good public po
 
 - [All-time XI football chatter](https://x.com/search?q=%22all-time%20XI%22%20football&f=live)
 - [World Cup draft talk](https://x.com/search?q=%22world%20cup%22%20draft&f=live)
-- [Best XI / nostalgia threads](https://x.com/search?q=%22best%20XI%22%20(1970%20OR%201986%20OR%201998%20OR%202006)&f=live)
+- [Best XI / nostalgia threads](<https://x.com/search?q=%22best%20XI%22%20(1970%20OR%201986%20OR%201998%20OR%202006)&f=live>)
 - [World Cup 2026 build-up](https://x.com/search?q=World%20Cup%202026%20squad&f=live)
 - [Football draft games trending](https://x.com/search?q=football%20draft%20game&f=live)
-

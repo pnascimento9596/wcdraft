@@ -70,8 +70,18 @@ describe("buildDisplayNameOverrides (q-005)", () => {
 
   it("same player with many cards is NOT a collision (year disambiguates era)", () => {
     const overrides = buildDisplayNameOverrides([
-      card({ card_id: "C-1", player_id: "P-1", common_name: "Maldini", full_name: "Paolo Maldini" }),
-      card({ card_id: "C-2", player_id: "P-1", common_name: "Maldini", full_name: "Paolo Maldini" }),
+      card({
+        card_id: "C-1",
+        player_id: "P-1",
+        common_name: "Maldini",
+        full_name: "Paolo Maldini",
+      }),
+      card({
+        card_id: "C-2",
+        player_id: "P-1",
+        common_name: "Maldini",
+        full_name: "Paolo Maldini",
+      }),
     ]);
     expect(overrides.size).toBe(0);
   });
@@ -80,8 +90,18 @@ describe("buildDisplayNameOverrides (q-005)", () => {
     const overrides = buildDisplayNameOverrides([
       // Mononym-style common_name unrelated to the full name's last token —
       // the initial form doesn't apply, so the full name is used.
-      card({ card_id: "C-a", player_id: "P-a", common_name: "Ronaldo", full_name: "Ronaldo Luís Nazário de Lima" }),
-      card({ card_id: "C-b", player_id: "P-b", common_name: "Ronaldo", full_name: "Ronaldo de Assis Moreira" }),
+      card({
+        card_id: "C-a",
+        player_id: "P-a",
+        common_name: "Ronaldo",
+        full_name: "Ronaldo Luís Nazário de Lima",
+      }),
+      card({
+        card_id: "C-b",
+        player_id: "P-b",
+        common_name: "Ronaldo",
+        full_name: "Ronaldo de Assis Moreira",
+      }),
     ]);
     expect(overrides.get("C-a")).toBe("Ronaldo Luís Nazário de Lima");
     expect(overrides.get("C-b")).toBe("Ronaldo de Assis Moreira");
@@ -90,7 +110,12 @@ describe("buildDisplayNameOverrides (q-005)", () => {
   it("escalates to full names when initial forms still collide across players", () => {
     const overrides = buildDisplayNameOverrides([
       card({ card_id: "C-a", player_id: "P-a", common_name: "Silva", full_name: "Carlos Silva" }),
-      card({ card_id: "C-b", player_id: "P-b", common_name: "Silva", full_name: "Cristiano Silva" }),
+      card({
+        card_id: "C-b",
+        player_id: "P-b",
+        common_name: "Silva",
+        full_name: "Cristiano Silva",
+      }),
     ]);
     expect(overrides.get("C-a")).toBe("Carlos Silva");
     expect(overrides.get("C-b")).toBe("Cristiano Silva");
@@ -99,7 +124,12 @@ describe("buildDisplayNameOverrides (q-005)", () => {
   it("collision detection is case-insensitive and uses the full_name fallback", () => {
     const overrides = buildDisplayNameOverrides([
       card({ card_id: "C-a", player_id: "P-a", common_name: "", full_name: "Bruno Costa" }),
-      card({ card_id: "C-b", player_id: "P-b", common_name: "bruno costa", full_name: "Bruno Costa" }),
+      card({
+        card_id: "C-b",
+        player_id: "P-b",
+        common_name: "bruno costa",
+        full_name: "Bruno Costa",
+      }),
     ]);
     // Distinct players, identical names everywhere — both get an override
     // (the full name), and the card year remains the only separator.

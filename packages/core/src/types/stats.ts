@@ -101,13 +101,7 @@ export interface PlayerRunStats {
   /** Sum across `per_match`; identity fields and per-match-only flags are dropped. */
   totals: Omit<
     PlayerMatchStats,
-    | "player_id"
-    | "card_id"
-    | "tournament_id"
-    | "match_id"
-    | "subbed_on"
-    | "subbed_off"
-    | "injured"
+    "player_id" | "card_id" | "tournament_id" | "match_id" | "subbed_on" | "subbed_off" | "injured"
   >;
   /**
    * Rating snapshot at draft time (the `Rating.overall` value). `null` allowed

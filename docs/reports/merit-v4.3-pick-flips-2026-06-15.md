@@ -30,43 +30,43 @@ and every non-manual card is unchanged.
 
 Per-seed changed picks:
 
-| Seed | Parent seed | Changed picks | Total picks | Manager changed |
-|---:|---|---:|---:|---|
-| 0 | `wcdraft:realism:e3a:v1:0000` | 2 | 17 | no |
-| 1 | `wcdraft:realism:e3a:v1:0001` | 8 | 17 | no |
-| 2 | `wcdraft:realism:e3a:v1:0002` | 8 | 17 | no |
-| 3 | `wcdraft:realism:e3a:v1:0003` | 7 | 17 | no |
-| 4 | `wcdraft:realism:e3a:v1:0004` | 9 | 17 | no |
+| Seed | Parent seed                   | Changed picks | Total picks | Manager changed |
+| ---: | ----------------------------- | ------------: | ----------: | --------------- |
+|    0 | `wcdraft:realism:e3a:v1:0000` |             2 |          17 | no              |
+|    1 | `wcdraft:realism:e3a:v1:0001` |             8 |          17 | no              |
+|    2 | `wcdraft:realism:e3a:v1:0002` |             8 |          17 | no              |
+|    3 | `wcdraft:realism:e3a:v1:0003` |             7 |          17 | no              |
+|    4 | `wcdraft:realism:e3a:v1:0004` |             9 |          17 | no              |
 
 ## Largest Downward Manual Moves
 
-| Card | Player | From | To | Delta |
-|---|---|---:|---:|---:|
-| `P-52641:WC-2006` | Boumnijel | 77 | 51 | -26 |
-| `P-12652:WC-2006` | Dossevi | 71 | 46 | -25 |
-| `P-98486:WC-2006` | Osorio | 85 | 61 | -24 |
-| `P-00640:WC-2006` | Jaziri | 81 | 59 | -22 |
-| `P-14267:WC-2006` | Zaccardo | 84 | 63 | -21 |
-| `P-77467:WC-2006` | Mendez | 84 | 63 | -21 |
-| `P-79048:WC-2014` | Oshaniwa | 76 | 55 | -21 |
-| `P-99473:WC-2006` | Grosso | 86 | 65 | -21 |
-| `P-10860:WC-2006` | Pineda | 84 | 65 | -19 |
-| `P-54768:WC-2006` | Ben Saada | 70 | 51 | -19 |
+| Card              | Player    | From |  To | Delta |
+| ----------------- | --------- | ---: | --: | ----: |
+| `P-52641:WC-2006` | Boumnijel |   77 |  51 |   -26 |
+| `P-12652:WC-2006` | Dossevi   |   71 |  46 |   -25 |
+| `P-98486:WC-2006` | Osorio    |   85 |  61 |   -24 |
+| `P-00640:WC-2006` | Jaziri    |   81 |  59 |   -22 |
+| `P-14267:WC-2006` | Zaccardo  |   84 |  63 |   -21 |
+| `P-77467:WC-2006` | Mendez    |   84 |  63 |   -21 |
+| `P-79048:WC-2014` | Oshaniwa  |   76 |  55 |   -21 |
+| `P-99473:WC-2006` | Grosso    |   86 |  65 |   -21 |
+| `P-10860:WC-2006` | Pineda    |   84 |  65 |   -19 |
+| `P-54768:WC-2006` | Ben Saada |   70 |  51 |   -19 |
 
 ## Largest Upward Manual Moves
 
-| Card | Player | From | To | Delta |
-|---|---|---:|---:|---:|
-| `P-53723:WC-2002` | Toldo | 72 | 92 | +20 |
-| `P-53533:WC-2002` | Cisse | 72 | 90 | +18 |
-| `P-28151:WC-2018` | Dybala | 71 | 88 | +17 |
-| `P-23336:WC-2002` | Luque | 71 | 87 | +16 |
-| `P-81947:WC-2022` | Trapp | 70 | 86 | +16 |
-| `P-82191:WC-2002` | Andrade | 71 | 87 | +16 |
-| `P-03367:WC-2022` | ter Stegen | 73 | 88 | +15 |
-| `P-29172:WC-2002` | Inzaghi | 75 | 90 | +15 |
-| `P-71130:WC-2002` | Tristan | 72 | 87 | +15 |
-| `P-01311:WC-2002` | Montella | 72 | 86 | +14 |
+| Card              | Player     | From |  To | Delta |
+| ----------------- | ---------- | ---: | --: | ----: |
+| `P-53723:WC-2002` | Toldo      |   72 |  92 |   +20 |
+| `P-53533:WC-2002` | Cisse      |   72 |  90 |   +18 |
+| `P-28151:WC-2018` | Dybala     |   71 |  88 |   +17 |
+| `P-23336:WC-2002` | Luque      |   71 |  87 |   +16 |
+| `P-81947:WC-2022` | Trapp      |   70 |  86 |   +16 |
+| `P-82191:WC-2002` | Andrade    |   71 |  87 |   +16 |
+| `P-03367:WC-2022` | ter Stegen |   73 |  88 |   +15 |
+| `P-29172:WC-2002` | Inzaghi    |   75 |  90 |   +15 |
+| `P-71130:WC-2002` | Tristan    |   72 |  87 |   +15 |
+| `P-01311:WC-2002` | Montella   |   72 |  86 |   +14 |
 
 ## Reproduction Commands
 

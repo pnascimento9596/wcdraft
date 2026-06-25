@@ -76,19 +76,14 @@ function assertUniqueTeams(teams: readonly Team2026[]): void {
   const seen = new Set<string>();
   for (const t of teams) {
     if (seen.has(t.team_id)) {
-      throw new RangeError(
-        `buildRunScenario: duplicate team_id "${t.team_id}" in input teams`,
-      );
+      throw new RangeError(`buildRunScenario: duplicate team_id "${t.team_id}" in input teams`);
     }
     seen.add(t.team_id);
   }
 }
 
 /** Validate every group's team_ids resolves and the group has exactly 4 teams. */
-function eligibleGroupsOrThrow(
-  groups: readonly Group[],
-  teamSet: ReadonlySet<string>,
-): Group[] {
+function eligibleGroupsOrThrow(groups: readonly Group[], teamSet: ReadonlySet<string>): Group[] {
   const eligible: Group[] = [];
   for (const g of groups) {
     for (const tid of g.team_ids) {
@@ -101,9 +96,7 @@ function eligibleGroupsOrThrow(
     if (g.team_ids.length === 4) eligible.push(g);
   }
   if (eligible.length === 0) {
-    throw new RangeError(
-      "buildRunScenario: no eligible 4-team groups found in bracket",
-    );
+    throw new RangeError("buildRunScenario: no eligible 4-team groups found in bracket");
   }
   return eligible;
 }
@@ -116,9 +109,7 @@ function eligibleGroupsOrThrow(
  *   missing referenced team_id, no eligible 4-team groups, or a degenerate
  *   opponent count after the replacement step.
  */
-export function buildRunScenario(
-  params: BuildRunScenarioParams,
-): BuildRunScenarioResult {
+export function buildRunScenario(params: BuildRunScenarioParams): BuildRunScenarioResult {
   const { parent_seed, teams, bracket, ruleset_version } = params;
 
   // `deriveSubseed` already enforces non-empty parent_seed; we still gate the

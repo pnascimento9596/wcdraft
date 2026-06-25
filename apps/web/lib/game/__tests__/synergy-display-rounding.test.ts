@@ -19,9 +19,7 @@ function result(overall: number): SynergyResult {
     overall,
     multiplier: 1.0466,
     manager_link: 0,
-    linked_pairs: [
-      { a: "c1", b: "c2", linked: true, reason: "nation" },
-    ],
+    linked_pairs: [{ a: "c1", b: "c2", linked: true, reason: "nation" }],
   } as unknown as SynergyResult;
 }
 

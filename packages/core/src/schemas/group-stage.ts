@@ -108,11 +108,8 @@ export const GroupOtherMatchSummarySchema = z
     if (m.team_a_id === m.team_b_id) {
       ctx.addIssue({ code: "custom", message: "team_a_id and team_b_id must differ" });
     }
-    const expected = m.team_a_goals > m.team_b_goals
-      ? "A"
-      : m.team_a_goals < m.team_b_goals
-        ? "B"
-        : "D";
+    const expected =
+      m.team_a_goals > m.team_b_goals ? "A" : m.team_a_goals < m.team_b_goals ? "B" : "D";
     if (m.outcome !== expected) {
       ctx.addIssue({
         code: "custom",

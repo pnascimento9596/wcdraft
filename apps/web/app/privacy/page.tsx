@@ -29,11 +29,11 @@ export default function PrivacyPage() {
         </p>
         <ul>
           <li>
-            <strong>Account and sign-in data.</strong> If you request a magic-link sign-in, we
-            store the submitted email address with the magic-link record. If you complete sign-in,
-            we also store and use it as your account email. Magic-link sign-in also uses a token
-            hash, expiry time, consumed time, session identifier, CSRF secret, and session expiry so
-            the link can be single-use and your session can stay secure.
+            <strong>Account and sign-in data.</strong> If you request a magic-link sign-in, we store
+            the submitted email address with the magic-link record. If you complete sign-in, we also
+            store and use it as your account email. Magic-link sign-in also uses a token hash,
+            expiry time, consumed time, session identifier, CSRF secret, and session expiry so the
+            link can be single-use and your session can stay secure.
           </li>
           <li>
             <strong>Gameplay and history data.</strong> Draft runs can include the run id, parent

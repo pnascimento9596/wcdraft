@@ -36,15 +36,15 @@ full-gold treatment from the proof screenshot.
 
 All browser captures used Playwright with a 390x844 viewport and reduced motion.
 
-| Surface | Artifact |
-| --- | --- |
-| Header, light theme | `docs/validation/ws-brand-gold-mark/header-light-390x844.png` |
-| Header, dark theme | `docs/validation/ws-brand-gold-mark/header-dark-390x844.png` |
-| Wordmark option: gold mark + current wordmark | `docs/validation/ws-brand-gold-mark/wordmark-option-current.png` |
-| Wordmark option: full-gold wordmark | `docs/validation/ws-brand-gold-mark/wordmark-option-full-gold.png` |
-| Lockup preview | `docs/validation/ws-brand-gold-mark/lockup-preview.png` |
-| Installed icon previews | `docs/validation/ws-brand-gold-mark/installed-icons-preview.png` |
-| Browser source probe | `docs/validation/ws-brand-gold-mark/browser-probe.json` |
+| Surface                                       | Artifact                                                           |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| Header, light theme                           | `docs/validation/ws-brand-gold-mark/header-light-390x844.png`      |
+| Header, dark theme                            | `docs/validation/ws-brand-gold-mark/header-dark-390x844.png`       |
+| Wordmark option: gold mark + current wordmark | `docs/validation/ws-brand-gold-mark/wordmark-option-current.png`   |
+| Wordmark option: full-gold wordmark           | `docs/validation/ws-brand-gold-mark/wordmark-option-full-gold.png` |
+| Lockup preview                                | `docs/validation/ws-brand-gold-mark/lockup-preview.png`            |
+| Installed icon previews                       | `docs/validation/ws-brand-gold-mark/installed-icons-preview.png`   |
+| Browser source probe                          | `docs/validation/ws-brand-gold-mark/browser-probe.json`            |
 
 Browser probe confirmed:
 
@@ -55,17 +55,17 @@ Browser probe confirmed:
 
 Measured contrast of the brand-mark gradient stops against the header surfaces:
 
-| Stop | Surface | Contrast |
-| --- | --- | --- |
-| `#6e4e00` | light page `#efe9db` | 6.30:1 |
-| `#8a6200` | light page `#efe9db` | 4.53:1 |
-| `#a66f00` | light page `#efe9db` | 3.54:1 |
-| `#6e4e00` | light panel `#e7dfcd` | 5.75:1 |
-| `#8a6200` | light panel `#e7dfcd` | 4.14:1 |
-| `#a66f00` | light panel `#e7dfcd` | 3.23:1 |
-| `#c8861a` | dark page `#0c1411` | 6.12:1 |
-| `#f5b62a` | dark page `#0c1411` | 10.33:1 |
-| `#ffd86a` | dark page `#0c1411` | 13.60:1 |
+| Stop      | Surface               | Contrast |
+| --------- | --------------------- | -------- |
+| `#6e4e00` | light page `#efe9db`  | 6.30:1   |
+| `#8a6200` | light page `#efe9db`  | 4.53:1   |
+| `#a66f00` | light page `#efe9db`  | 3.54:1   |
+| `#6e4e00` | light panel `#e7dfcd` | 5.75:1   |
+| `#8a6200` | light panel `#e7dfcd` | 4.14:1   |
+| `#a66f00` | light panel `#e7dfcd` | 3.23:1   |
+| `#c8861a` | dark page `#0c1411`   | 6.12:1   |
+| `#f5b62a` | dark page `#0c1411`   | 10.33:1  |
+| `#ffd86a` | dark page `#0c1411`   | 13.60:1  |
 
 The light variant clears the 3:1 UI/non-text contrast floor for every stop on the
 light masthead; dark keeps the brighter marketing gradient.
@@ -75,14 +75,14 @@ light masthead; dark keeps the brighter marketing gradient.
 Ran `pnpm --filter @wcdraft/web generate:icons` twice and compared SHA-256 hashes;
 the second run was byte-identical.
 
-| File | SHA-256 |
-| --- | --- |
-| `apps/web/public/icons/icon-192.png` | `6326a8417502e941d93a8f0dd07fe72c49b17307d97a708d4ba4d8c4cc284195` |
-| `apps/web/public/icons/icon-512.png` | `c20298c23c0a9c83a502ae8cc80de35b359cbce39387b15b90a0b7304de92690` |
-| `apps/web/public/icons/apple-touch-icon.png` | `ca30973de33e8f2489a761e9855ec5c5612318772273e8643733a0ac6c1cdc85` |
+| File                                          | SHA-256                                                            |
+| --------------------------------------------- | ------------------------------------------------------------------ |
+| `apps/web/public/icons/icon-192.png`          | `6326a8417502e941d93a8f0dd07fe72c49b17307d97a708d4ba4d8c4cc284195` |
+| `apps/web/public/icons/icon-512.png`          | `c20298c23c0a9c83a502ae8cc80de35b359cbce39387b15b90a0b7304de92690` |
+| `apps/web/public/icons/apple-touch-icon.png`  | `ca30973de33e8f2489a761e9855ec5c5612318772273e8643733a0ac6c1cdc85` |
 | `apps/web/public/icons/icon-maskable-512.png` | `ec216fc0909ee09559f69ad6960e35fbbde9dde6301adc9a5a01d8f08266ab2c` |
-| `apps/web/app/icon.png` | `c20298c23c0a9c83a502ae8cc80de35b359cbce39387b15b90a0b7304de92690` |
-| `apps/web/app/apple-icon.png` | `ca30973de33e8f2489a761e9855ec5c5612318772273e8643733a0ac6c1cdc85` |
+| `apps/web/app/icon.png`                       | `c20298c23c0a9c83a502ae8cc80de35b359cbce39387b15b90a0b7304de92690` |
+| `apps/web/app/apple-icon.png`                 | `ca30973de33e8f2489a761e9855ec5c5612318772273e8643733a0ac6c1cdc85` |
 
 ## Import and literal checks
 
@@ -127,4 +127,4 @@ the second run was byte-identical.
   handled by the parallel marketing/OG lane, or by a later cleanup that replaces inline
   copies with a single source of truth.
 - Browser plugin note: the in-app Browser connector reported `Browser is not available:
-  iab`; saved visual evidence used Playwright instead.
+iab`; saved visual evidence used Playwright instead.

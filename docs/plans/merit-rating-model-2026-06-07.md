@@ -12,12 +12,12 @@ Replace the per-tournament-only measured rating with a **career-stature merit ba
 
 Per-card factual check on the current `etl/output/ratings.json` artifact:
 
-| Card | `overall` | `attack` | `overall_basis` |
-|---|---:|---:|---|
-| `P-38906:WC-1958` (Pelé) | 97 | 97 | measured_performance |
-| `P-38906:WC-1962` | 86 | 70 | measured_performance |
-| `P-38906:WC-1966` | **78** | **54** | measured_performance |
-| `P-38906:WC-1970` | 89 | 82 | measured_performance |
+| Card                     | `overall` | `attack` | `overall_basis`      |
+| ------------------------ | --------: | -------: | -------------------- |
+| `P-38906:WC-1958` (Pelé) |        97 |       97 | measured_performance |
+| `P-38906:WC-1962`        |        86 |       70 | measured_performance |
+| `P-38906:WC-1966`        |    **78** |   **54** | measured_performance |
+| `P-38906:WC-1970`        |        89 |       82 | measured_performance |
 
 **The 54 is the channel, not the OVR.** Displayed `overall` is already lifted by the global display curve to 78. The user-perceived "Pelé-1966 = 54" is the `attack` channel reaching the engine — which is what drives λ, scorer weighting, and shootout edge. So the problem is **decoupled channels**, not OVR.
 
@@ -32,6 +32,7 @@ val = score_0_100 * spread + FLOOR_CHANNEL * (1.0 - spread)  # FLOOR_CHANNEL = 2
 Channels are a convex blend between the **raw internal `score_0_100`** and a hard floor of **20**. They do **not** consume the display-calibrated `overall`. Methodology is explicit on this: "Channels operate on the composite, not the curve's display output" (`etl/RATING_METHODOLOGY.md:231-233`). So the display floor (66) and curve fit do nothing for channels.
 
 For Pelé-1966 (FW, attack spread = 1.00 at `rating.py:127`):
+
 - `g_pct = 0.806`, `a_pct = 0.419`, `base = 0.20 + 0.48 * (0.75*0.806 + 0.25*0.419) = 0.5405`
 - `award_score = 0` (no '66 award), `finish_pts = 0` (no semifinal)
 - `score_0_100 = 54.05` → `attack = 54`
@@ -52,18 +53,21 @@ This is the precise insertion point. The plan adds a **career-stature term** to 
 
 ### The 2026 path already proves the pattern
 
-`rating_2026.py` already uses career signals (caps, intl_goals, age/DOB, club_nation, captaincy, league_strength). It imports `_channel`, `BASE_WEIGHTS`, `CHANNEL_SPREAD`, `_clamp01`, `_fit_display_curve`, `_display_score` from `rating.py` (`rating_2026.py:42-56`). The historical model can mirror this: career signals already power the 2026 anchor; we extend the historical model with a *career stature* anchor independently.
+`rating_2026.py` already uses career signals (caps, intl*goals, age/DOB, club_nation, captaincy, league_strength). It imports `_channel`, `BASE_WEIGHTS`, `CHANNEL_SPREAD`, `_clamp01`, `_fit_display_curve`, `_display_score` from `rating.py` (`rating_2026.py:42-56`). The historical model can mirror this: career signals already power the 2026 anchor; we extend the historical model with a \_career stature* anchor independently.
 
 ### What's already ingested vs missing
 
 **Captured historically** (`etl/output/`):
+
 - WC tournament-card factual data: `player_tournaments.json` (13,843 rows), `goals.json` (3,637, full 1930+), `awards.json` (200: Golden Ball/Boot/Glove/Silver/Bronze/BYP — already per-tournament, trivially career-aggregable), `manager_tournaments.json` (637, with `final_placement` only for semifinalists), `appearances.json` (27,432, native 1970+, RSSSF overlay for pre-1970 via `appearances_source = "rsssf_starting_xi"`).
 - Per-player identity in `players.json` (10,401 rows): DOB, names, gender, `primary_position`, `eligible_positions`.
 
 **Captured in 2026 only** (`etl/output/*_2026.json`):
+
 - Career snapshot fields: `caps`, `intl_goals`, `captain`, `birth_date`, `club`, `club_nation_code`.
 
 **NOT captured (the merit-composite gap)**:
+
 - Ballon d'Or wins / top-N finishes (1956+, RSSSF + Wikipedia structured tables, public)
 - FIFA World Player of the Year / The Best (1991–2009, 2016+; FIFA Ballon d'Or merger 2010–2015)
 - IFFHS World's Best Player (annual: 1988–1990, 2020+; era-thin)
@@ -94,13 +98,14 @@ The firewall is **no proprietary rating IP** (Sofifa/Futbin/EA/PES/eFootball/Kon
 
 **Current `main` checkout** (verified):
 
-| Constant | Value | File |
-|---|---:|---|
-| `engine_version` | `engine-2026.06.04` | `packages/data/scripts/build-compact-data.mjs:48-51` |
-| `LAMBDA.BASE` / `SPREAD` / `MIN` / `MAX` | `1.3` / `1.7` / `0.25` / `3.6` | `packages/core/src/engine/calibration.ts:39-47` |
-| `CHANCES.REGULATION` / ET | `14` / `5` | `calibration.ts:59-66` |
+| Constant                                 |                          Value | File                                                 |
+| ---------------------------------------- | -----------------------------: | ---------------------------------------------------- |
+| `engine_version`                         |            `engine-2026.06.04` | `packages/data/scripts/build-compact-data.mjs:48-51` |
+| `LAMBDA.BASE` / `SPREAD` / `MIN` / `MAX` | `1.3` / `1.7` / `0.25` / `3.6` | `packages/core/src/engine/calibration.ts:39-47`      |
+| `CHANCES.REGULATION` / ET                |                     `14` / `5` | `calibration.ts:59-66`                               |
 
 **Documented engine-v2 E-3a state** (branch `engine-v2-e3a-lambda-calibration`, commit `5c54b8a`, base `2075e3d`, per `docs/investigations/engine-v2-asymmetric-realism-2026-06-07.md:32-35`) — fitted but not yet on `main`:
+
 - Four-channel λ: `defResist = clamp_int(0.65·def + 0.35·gk)`; `λ_for = clamp(BASE + SPREAD·(attack − defResist)/100, MIN, MAX) · control_for`
 - `BASE=0.85`, `SPREAD=4.0`, `MIN=0.75`, `MAX=3.4`, `GAMMA_MID=0.45`, `CONTROL_BAND=[0.85,1.15]`, `CHANCES.REGULATION=50`
 - `LAMBDA_DISP` (match-level λ dispersion) is WIP in dirty worktree, **not in clean E-3a measurements**
@@ -113,6 +118,7 @@ The firewall is **no proprietary rating IP** (Sofifa/Futbin/EA/PES/eFootball/Kon
 4. Shootout edge: `shootoutConvertProb()` at `match.ts:635-643` uses `attack − defense`.
 
 **Hard realism gate that any channel re-base must clear**: `packages/data/test/realism-modern-norms.golden.test.ts` — 3,006-match symmetric coherent-XI sweep, asserts:
+
 - Mean regulation goals/match ∈ [2.20, 2.90]
 - Group draw rate ∈ [20%, 30%]
 - Margin ≥ 4 ∈ [1.5%, 6.0%]
@@ -120,6 +126,7 @@ The firewall is **no proprietary rating IP** (Sofifa/Futbin/EA/PES/eFootball/Kon
 - KO → shootout ∈ [10%, 27%]
 
 **Cascade if every card's channels shift**:
+
 1. ETL: `etl/output/ratings.json`, `ratings_2026.json` regenerate.
 2. `packages/data/scripts/build-compact-data.mjs` rebuilds compact bundles.
 3. Compact integrity gate (`packages/data/test/compact-data.integrity.test.ts:76-91, 103-107`) — channel band [20,100] and engine_version pin.
@@ -159,11 +166,11 @@ Do not implement `channels = current_channels × career_multiplier`. It preserve
 
 ### Source tiers
 
-| Tier | Status | Examples |
-|---|---|---|
-| **Tier 0 — already ingested** | Scoreable immediately | WC awards (`awards.json`, 200 rows), WC goals (`goals.json`, 3,637), team finishes (`manager_tournaments.json`), participation (`player_tournaments.json`) |
-| **Tier 1 — public recognition / records** | Scoreable after pinned-byte fetch + deterministic parse + conservative link | RSSSF Ballon d'Or master, RSSSF Sud-American POY, RSSSF IFFHS century elections, RSSSF 100+ caps, Wikipedia snapshots (FIFA 100, public-award pages) |
-| **Tier 2 — club honors** | **Deferred to E-4b** | Weight `0` in E-4a; reserved family, report-only |
+| Tier                                      | Status                                                                      | Examples                                                                                                                                                   |
+| ----------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Tier 0 — already ingested**             | Scoreable immediately                                                       | WC awards (`awards.json`, 200 rows), WC goals (`goals.json`, 3,637), team finishes (`manager_tournaments.json`), participation (`player_tournaments.json`) |
+| **Tier 1 — public recognition / records** | Scoreable after pinned-byte fetch + deterministic parse + conservative link | RSSSF Ballon d'Or master, RSSSF Sud-American POY, RSSSF IFFHS century elections, RSSSF 100+ caps, Wikipedia snapshots (FIFA 100, public-award pages)       |
+| **Tier 2 — club honors**                  | **Deferred to E-4b**                                                        | Weight `0` in E-4a; reserved family, report-only                                                                                                           |
 
 Tier-2 deferral is intentional pushback on scope: global player-level club-honor extraction has high identity and source-shape risk and would force half-ingested infobox paths that violate no-fabrication discipline. A later E-4b can revisit once an approved deterministic source plan exists.
 
@@ -171,11 +178,11 @@ Tier-2 deferral is intentional pushback on scope: global player-level club-honor
 
 Era-bucketed family weights:
 
-| Era bucket | `wc_legacy` | `annual_recognition` | `international_record` | `retrospective_selection` | `club_honors` |
-|---|---:|---:|---:|---:|---:|
-| `pre_1956` | 0.45 | 0.00 | 0.20 | 0.35 | 0.00 |
-| `1956_1990` | 0.30 | 0.45 | 0.10 | 0.15 | 0.00 |
-| `1991_plus` | 0.25 | 0.45 | 0.20 | 0.10 | 0.00 |
+| Era bucket  | `wc_legacy` | `annual_recognition` | `international_record` | `retrospective_selection` | `club_honors` |
+| ----------- | ----------: | -------------------: | ---------------------: | ------------------------: | ------------: |
+| `pre_1956`  |        0.45 |                 0.00 |                   0.20 |                      0.35 |          0.00 |
+| `1956_1990` |        0.30 |                 0.45 |                   0.10 |                      0.15 |          0.00 |
+| `1991_plus` |        0.25 |                 0.45 |                   0.20 |                      0.10 |          0.00 |
 
 Family scoring (each family folds its inputs via the saturating-product form already used in `rating.py:310-322` — `score = 1 − Π(1 − w_i · s_i)` — so positive evidence accumulates toward 1.0 without ever exceeding it):
 
@@ -238,11 +245,11 @@ Rationale: career stature is a **floor/lift, not an override**. A great tourname
 
 ### `overall_basis` semantics (split estimate)
 
-| Basis | Meaning | Display cap |
-|---|---|---|
-| `measured_performance` | Card has at least one positively weighted tournament signal; career lift may apply. | Normal display curve |
-| `career_stature_estimate` | Card lacks tournament individual signal but has usable career stature (`coverage ≥ 0.50` and `career_stature_score ≥ 0.55`). | Normal display curve, **not** old estimate cap |
-| `baseline_anchor_estimate` | Card lacks tournament individual signal **and** lacks usable career stature. | Existing `[66, 73]` estimate cap |
+| Basis                      | Meaning                                                                                                                      | Display cap                                    |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `measured_performance`     | Card has at least one positively weighted tournament signal; career lift may apply.                                          | Normal display curve                           |
+| `career_stature_estimate`  | Card lacks tournament individual signal but has usable career stature (`coverage ≥ 0.50` and `career_stature_score ≥ 0.55`). | Normal display curve, **not** old estimate cap |
+| `baseline_anchor_estimate` | Card lacks tournament individual signal **and** lacks usable career stature.                                                 | Existing `[66, 73]` estimate cap               |
 
 ETL/data-test semantic only — the core `RatingSchema` does not validate `overall_basis`; `components[]` remains open.
 
@@ -278,6 +285,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Add an E-4 source-ingest package mirroring the RSSSF supplement architecture: fetch raw public bytes outside the build path, parse committed bytes deterministically, link to canonical `player_id`s conservatively, emit review artifacts for ambiguity. The committed snapshots + `MERIT_SOURCES.md` together serve as the source registry — no separate feasibility doc.
 
 **Done when:**
+
 - New package `etl/src/wcdraft_etl/merit/` with split responsibilities:
   - `__init__.py` — constants, source ids, version, source registry (proprietary-IP block list vs allowed public-fact list, club-honors deferred `weight_0`)
   - `fetch.py` — networked maintenance + `--verify`
@@ -292,6 +300,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - No rating outputs change.
 
 **Key files:**
+
 - `etl/src/wcdraft_etl/source.py:1-57` (pinned-source pattern)
 - `etl/src/wcdraft_etl/supplement/__init__.py:1-58`
 - `etl/src/wcdraft_etl/supplement/fetch.py:1-75`
@@ -315,6 +324,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Build the deterministic per-player career-stature table that `rating.py` will consume. This table is the only place where career aggregates live.
 
 **Done when:**
+
 - `merit/stature.py` emits `etl/output/career_stature.json`, `etl/output/merit/CAREER_STATURE.md`, `etl/output/merit/career_stature_review.json`.
 - Rows keyed uniquely by `player_id`; every row carries `player_id`, `stature_version`, `career_stature_score`, `coverage`, `era_bucket`, `career_peak_year`, `family_scores`, `family_weights`, `review_flags`, `source_refs`.
 - `career_stature_score` and `coverage` finite in `[0, 1]`.
@@ -326,6 +336,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - Fresh rebuild is byte-identical.
 
 **Key files:**
+
 - `etl/src/wcdraft_etl/pipeline.py:28-66, 80-132`
 - `etl/output/COVERAGE.md:1-67`
 - `etl/output/supplement/SUPPLEMENT.md:1-45`
@@ -346,6 +357,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Consume `career_stature.json` in the rating stages and apply the career-aware lift to the same internal score that feeds display OVR and sim channels.
 
 **Done when:**
+
 - `rating.py` changes limited to: loading `career_stature.json`; passing `career_stature_by_player` into `build_internal_view()`, `_build_internal_rows()`, `build_ratings()`; computing target/lift after `raw_tournament_score`; appending career-stature summary components; bumping `RATING_VERSION` to `wc-perf-3.0.0`.
 - Signature evolution:
   ```text
@@ -361,6 +373,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - No runtime TypeScript `Rating` or Zod schema change required.
 
 **Key files:**
+
 - `etl/src/wcdraft_etl/rating.py:331-335` (`_channel()` continues to consume final `score_0_100`)
 - `etl/src/wcdraft_etl/rating.py:443-450` (additive insertion point after `base + anchor`)
 - `etl/src/wcdraft_etl/rating.py:513-518, 568-578`
@@ -382,6 +395,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Re-fit the existing low-DOF display curve on the new internal score distribution, keep display bands stable, lock the new semantic scale with tests and methodology docs.
 
 **Done when:**
+
 - Historical `overall` stays in `[66, 99]`; projected `overall` stays in `[66, 99]` if 2026 changes; no `overall == 100`.
 - Display curve remains global low-DOF: same curve kind; no per-player or per-era override tables.
 - `etl/RATING_METHODOLOGY.md` documents career-lift constants: `CAREER_ELITE_EXPONENT`, `CAREER_TARGET_SPAN`, `CAREER_BLEND_HISTORICAL`, `CAREER_MAX_LIFT`, `MIN_CAREER_COVERAGE_FOR_LIFT`.
@@ -395,6 +409,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - `etl/output/ratings.json` is regenerated and committed; the ETL-side basis-count fields in the manifest emit both `baseline_anchor_estimate` and the new `career_stature_estimate` counts. (The runtime-side `RUNTIME_DATA_MANIFEST.counts.baseline_anchor_estimate = 388` pin in `compact-data.integrity.test.ts:47` is updated in E-4.7 after the compact rebuild — see ordering note there.)
 
 **Key files:**
+
 - `etl/src/wcdraft_etl/rating.py:129-196, 198-279` (display curve)
 - `etl/RATING_METHODOLOGY.md:1-74, 173-235`
 - `etl/RATING_METHODOLOGY_2026.md:17-25`
@@ -413,6 +428,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Ensure the four sim channels are derived from the same post-career composite as display OVR, while preserving the runtime schema and explicit sim-consumption contract.
 
 **Done when:**
+
 - `rating.py` channel materialization stays:
   ```text
   channel = _channel(post_career_score_0_100, CHANNEL_SPREAD[pos][channel])
@@ -424,6 +440,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - Manager behavior unchanged: no `manager_ratings.json`; no manager-stature score; missing manager rating stays neutral in `aggregateUserXiStrength()`.
 
 **Key files:**
+
 - `etl/src/wcdraft_etl/rating.py:331-335, 535-548`
 - `packages/core/src/types/rating.ts:1-31`
 - `packages/core/src/schemas/rating.ts:6-39`
@@ -444,6 +461,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Add the acceptance suite that proves E-4 is deterministic, source-clean, honest-state compliant, and materially fixes the historical-legends channel failure without hand-tuning individual players.
 
 **Done when:**
+
 - ETL tests cover: source fetch-manifest verification; parser determinism; source-row link determinism; ambiguous-row withholding; duplicate/conflicting source fact failure; `career_stature.json` schema; finite `[0,1]` scores; no ambiguous source assigned to a player; no per-player override table.
 - Historical rating tests cover: deterministic rebuild equals committed `ratings.json`; `wc-perf-3.0.0` version; display distribution; career component presence and numeric/null values; same `player_id` has same `career_stature_score` on all historical cards; estimate semantics split correctly. (Named-anchor tests live in E-4.4.)
 - Proprietary-source audit scans `etl/sources/`, `etl/supplement/raw/`, `etl/merit/raw/`, plus new merit parser/linker source files.
@@ -453,6 +471,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - Divergence-review default threshold: `abs(Δoverall) ≥ 8` OR `abs(Δprimary_channel) ≥ 10` → review-only queue at `etl/output/merit/merit_divergence_review.json`.
 
 **Key files:**
+
 - `etl/tests/test_rating.py:1-23, 86-180, 331-470, 648-680`
 - `etl/tests/test_supplement.py` (parser/link/review test precedent)
 - `packages/data/test/compact-data.integrity.test.ts:76-124`
@@ -471,6 +490,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 **Goal:** Treat E-4 as a rating/data-model change first, but explicitly validate and re-lock downstream sim artifacts because channels move.
 
 **Done when:**
+
 - Compact bundles regenerate after ETL/rating artifacts: `packages/data/src/generated/manifest.json`, `draft-pool.compact.json`, `scenario-2026.compact.json` (if projected rows or Team2026 aggregates change), `packages/data/reports/compact-size.json`.
 - `build-compact-data.mjs` stamps `rating_version_historical = "wc-perf-3.0.0"`, `rating_version_projected = "proj-career-3.0.0"` (if projected rows change), `engine_version` unchanged unless engine constants change.
 - `compact-data.integrity.test.ts:47` `RUNTIME_DATA_MANIFEST.counts.baseline_anchor_estimate = 388` is updated to the post-rebuild count (and a new `career_stature_estimate` count is added in the same pin). This is the runtime-side counter-update referenced in E-4.4's ordering note.
@@ -481,6 +501,7 @@ Managers remain rating-unavailable/null in E-4. `team-strength.ts` already treat
 - E-3a branch context from the asymmetric-realism investigation resolved before season merge: current main has only the symmetric realism gate; the strategic asymmetric harness from the investigation is branch context, not assumed available on main; `packages/core/src/faithfulness.test.ts` is referenced by the investigation but absent from current main, so it must be restored/recreated before being cited as a hard merge gate.
 
 **Key files:**
+
 - `packages/data/scripts/build-compact-data.mjs:48-51, 320-430`
 - `packages/data/test/compact-data.integrity.test.ts:103-107`
 - `packages/data/test/compact-data.golden.test.ts:1-35`

@@ -153,10 +153,7 @@ export interface RuntimeBundleFingerprint {
  */
 export interface RuntimeBasisRating extends Rating {
   /** Historical only. UI badge for estimate-anchored ratings. */
-  overall_basis?:
-    | "measured_performance"
-    | "baseline_anchor_estimate"
-    | "career_stature_estimate";
+  overall_basis?: "measured_performance" | "baseline_anchor_estimate" | "career_stature_estimate";
   /** Historical only. Provenance of the `appearances` count. */
   appearances_source?: string;
   /**

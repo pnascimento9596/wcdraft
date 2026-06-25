@@ -136,14 +136,14 @@ async function probeRevealedSurface(page, surface) {
   }
   if (probe.lingeringMasks.length > 0) {
     throw new Error(
-      `reveal probe FAILED on ${surface}: ${probe.lingeringMasks.length} `
-        + `lingering masked provenance class(es) inside MemoryReveal:\n  `
-        + probe.lingeringMasks.join("\n  "),
+      `reveal probe FAILED on ${surface}: ${probe.lingeringMasks.length} ` +
+        `lingering masked provenance class(es) inside MemoryReveal:\n  ` +
+        probe.lingeringMasks.join("\n  "),
     );
   }
   console.log(
-    `  ✓ reveal probe clean: ${surface} `
-      + `(squad-avg=${probe.squadAvgDigits}, line-vals=${probe.lineValDigits})`,
+    `  ✓ reveal probe clean: ${surface} ` +
+      `(squad-avg=${probe.squadAvgDigits}, line-vals=${probe.lineValDigits})`,
   );
 }
 
@@ -260,13 +260,19 @@ async function captureViewport(viewport, outRoot) {
 
   // ── Hidden — complete the draft → blinded review ────────────────────────
   await completeDraft(page);
-  await page.getByRole("button", { name: /review xi/i }).first().click();
+  await page
+    .getByRole("button", { name: /review xi/i })
+    .first()
+    .click();
   await waitForReady(page);
   await shot(page, dir, "13-hidden-review");
   await probeHiddenSurface(page, "hidden review");
 
   // ── Hidden — Simulate → results with the MemoryReveal ───────────────────
-  await page.getByRole("button", { name: /simulate the run/i }).first().click();
+  await page
+    .getByRole("button", { name: /simulate the run/i })
+    .first()
+    .click();
   await page.waitForURL(/\/play\/results/, { timeout: 120_000 });
   await waitForReady(page);
   await shot(page, dir, "14-hidden-results-reveal");

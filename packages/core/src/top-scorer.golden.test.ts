@@ -41,11 +41,7 @@ function lineupEntry(player_id: string, minutes: number): MatchLineupEntry {
   };
 }
 
-function match(
-  match_index: number,
-  events: MatchEvent[],
-  lineup: MatchLineupEntry[],
-): MatchResult {
+function match(match_index: number, events: MatchEvent[], lineup: MatchLineupEntry[]): MatchResult {
   // Only `events` + `lineup` are read by resolveTopScorer; the rest is filler.
   return {
     match_id: `m${match_index}`,

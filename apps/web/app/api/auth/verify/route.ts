@@ -111,10 +111,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
       deps,
     );
-    const response = NextResponse.redirect(
-      new URL(result.redirectTo, req.url),
-      303,
-    );
+    const response = NextResponse.redirect(new URL(result.redirectTo, req.url), 303);
     setSessionCookie(response, result.sessionCookieValue);
     setCsrfCookie(response, result.csrfSecret);
     return response;

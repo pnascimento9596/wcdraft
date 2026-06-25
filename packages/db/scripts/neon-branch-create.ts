@@ -164,7 +164,9 @@ async function main(): Promise<void> {
       unpooled = (await neonRequest<ConnectionUriResp>("GET", unpooledQ, apiKey)).uri;
       break;
     } catch (e) {
-      console.log(`[neon-branch-create] endpoint not ready (attempt ${attempt.toString()}/12); waiting 3s`);
+      console.log(
+        `[neon-branch-create] endpoint not ready (attempt ${attempt.toString()}/12); waiting 3s`,
+      );
       await new Promise((r) => setTimeout(r, 3000));
       if (attempt === 12) throw e;
     }

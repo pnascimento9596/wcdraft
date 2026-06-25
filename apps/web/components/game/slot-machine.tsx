@@ -22,11 +22,7 @@ import { useMemo } from "react";
 import type { CSSProperties } from "react";
 
 import s from "./game.module.css";
-import type {
-  SlotRevealFace,
-  SlotRevealModel,
-  SlotRevealReel,
-} from "@/lib/game/slot-reveal";
+import type { SlotRevealFace, SlotRevealModel, SlotRevealReel } from "@/lib/game/slot-reveal";
 
 export type SpinAnimState = "idle" | "spinning" | "settled";
 
@@ -127,13 +123,13 @@ export function SpinStage({
   };
 
   return (
-    <section className={`${s.spinStage} ${settled && isRare ? s.spinRare : ""}`} aria-labelledby="spin-stage-title">
+    <section
+      className={`${s.spinStage} ${settled && isRare ? s.spinRare : ""}`}
+      aria-labelledby="spin-stage-title"
+    >
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={s.spinStatusBar}>
-        <div
-          className={s.spinPickBadge}
-          aria-label={`Pick ${pickNumber} of ${totalPicks}`}
-        >
+        <div className={s.spinPickBadge} aria-label={`Pick ${pickNumber} of ${totalPicks}`}>
           <span className={s.spinPickKicker}>Pick</span>
           <span className={s.spinPickNum}>{pickNum}</span>
           <span className={s.spinPickOf}>of {totalPicks}</span>
@@ -184,9 +180,7 @@ export function SpinStage({
               <span className={s.spinResultYear}>{result.yearLabel}</span>
             </>
           ) : (
-            <span className={s.spinResultPending}>
-              {spinning ? "Spinning…" : "Ready to spin"}
-            </span>
+            <span className={s.spinResultPending}>{spinning ? "Spinning…" : "Ready to spin"}</span>
           )}
         </h2>
         <p className={s.spinResultTag}>{tagline}</p>
@@ -199,9 +193,7 @@ export function SpinStage({
       {settled && isRare ? (
         <div className={s.rareMoment} aria-hidden="true">
           <span className={s.rareMomentTitle}>RARE PICK!</span>
-          <span className={s.rareMomentProbability}>
-            Draw probability: {drawProbabilityLabel}
-          </span>
+          <span className={s.rareMomentProbability}>Draw probability: {drawProbabilityLabel}</span>
         </div>
       ) : null}
 
@@ -210,9 +202,7 @@ export function SpinStage({
         <div className={`${s.spinTile} ${settled && isRare ? s.spinTileRare : ""}`}>
           <span className={s.spinTileLabel}>{settled && isRare ? "Rare" : "Era"}</span>
           <span className={s.spinTileValue}>
-            {settled
-              ? (model.eraPresetLabel ?? (isRare ? "Pre-1998" : "Modern"))
-              : "—"}
+            {settled ? (model.eraPresetLabel ?? (isRare ? "Pre-1998" : "Modern")) : "—"}
           </span>
         </div>
         <div className={s.spinTile}>
@@ -222,9 +212,7 @@ export function SpinStage({
         <div className={s.spinTile}>
           <span className={s.spinTileLabel}>Strength</span>
           <span className={s.spinTileValue}>
-            {settled && synergyMultiplier !== null
-              ? `${synergyMultiplier.toFixed(2)}×`
-              : "—"}
+            {settled && synergyMultiplier !== null ? `${synergyMultiplier.toFixed(2)}×` : "—"}
           </span>
         </div>
       </div>
@@ -286,10 +274,7 @@ function SpinReel({
   // idle | settled → a single face parked on the payline.
   return (
     <div className={windowClass}>
-      <div
-        className={s.spinReelTrack}
-        style={{ transform: `translateY(${CENTER_OFFSET}px)` }}
-      >
+      <div className={s.spinReelTrack} style={{ transform: `translateY(${CENTER_OFFSET}px)` }}>
         {anim === "settled" ? (
           <SpinFace face={reel.landingFace} settled={isCenter} />
         ) : (
@@ -300,13 +285,7 @@ function SpinReel({
   );
 }
 
-function SpinFace({
-  face,
-  settled = false,
-}: {
-  face: SlotRevealFace;
-  settled?: boolean;
-}) {
+function SpinFace({ face, settled = false }: { face: SlotRevealFace; settled?: boolean }) {
   return (
     <div className={`${s.spinFace} ${settled ? s.spinFaceSettled : ""}`}>
       {face.flagSrc ? (
@@ -319,9 +298,7 @@ function SpinFace({
           draggable={false}
         />
       ) : (
-        <span className={s.spinFaceFlagFallback}>
-          {face.nationCode ?? face.nationId}
-        </span>
+        <span className={s.spinFaceFlagFallback}>{face.nationCode ?? face.nationId}</span>
       )}
       <span className={s.spinFaceNation}>{face.nationName}</span>
       <span className={s.spinFaceYear}>{face.yearLabel}</span>

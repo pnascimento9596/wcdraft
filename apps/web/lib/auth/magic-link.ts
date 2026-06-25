@@ -58,10 +58,7 @@ export function buildMagicLinkVerifyUrl(args: {
   try {
     verifyUrl = new URL("/api/auth/verify", args.verifyBaseUrl);
   } catch {
-    throw new AuthError(
-      "SECRET_MISCONFIGURED",
-      "AUTH_BASE_URL is not a valid absolute URL.",
-    );
+    throw new AuthError("SECRET_MISCONFIGURED", "AUTH_BASE_URL is not a valid absolute URL.");
   }
   verifyUrl.searchParams.set("token", args.token);
 
@@ -176,12 +173,7 @@ export async function verifyMagicLink(
   const consumed = await deps.db
     .update(magicLinkTokens)
     .set({ consumedAt: new Date(deps.now()) })
-    .where(
-      and(
-        eq(magicLinkTokens.tokenHash, tokenHash),
-        isNull(magicLinkTokens.consumedAt),
-      ),
-    )
+    .where(and(eq(magicLinkTokens.tokenHash, tokenHash), isNull(magicLinkTokens.consumedAt)))
     .returning({ tokenHash: magicLinkTokens.tokenHash });
   if (consumed.length === 0) {
     throw new AuthError("TOKEN_CONSUMED", "lost the consume race");
@@ -191,16 +183,10 @@ export async function verifyMagicLink(
   // row and a returning user gets their existing one. Drizzle 0.36 lacks
   // a fluent upsert returning helper for nullable-unique conflicts; we
   // do select-first, then insert if missing.
-  const existing = await deps.db
-    .select()
-    .from(users)
-    .where(eq(users.email, row.email));
+  const existing = await deps.db.select().from(users).where(eq(users.email, row.email));
   let user = existing[0];
   if (!user) {
-    const inserted = await deps.db
-      .insert(users)
-      .values({ email: row.email })
-      .returning();
+    const inserted = await deps.db.insert(users).values({ email: row.email }).returning();
     user = inserted[0];
   }
   if (!user) {

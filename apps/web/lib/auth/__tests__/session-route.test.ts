@@ -70,9 +70,7 @@ describe("GET /api/auth/session — ship-dark", () => {
     // A stale cookie from a previous deploy must not cause a 500. The
     // route MUST NOT touch buildRuntimeDeps in ship-dark, so a missing
     // AUTH_COOKIE_SECRET cannot crash this path.
-    const res = await GET(
-      makeReq({ cookie: `${SESSION_COOKIE_NAME}=stale.cookie.value` }),
-    );
+    const res = await GET(makeReq({ cookie: `${SESSION_COOKIE_NAME}=stale.cookie.value` }));
     expect(res.status).toBe(200);
     const body = (await res.json()) as { session: unknown };
     expect(body).toEqual({ session: null });

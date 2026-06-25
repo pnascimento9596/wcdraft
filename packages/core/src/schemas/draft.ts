@@ -149,8 +149,7 @@ export const SpinSchema = z
       if (spin.picked_card_id === null || spin.picked_player_id === null) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message:
-            "player-pick spin must have non-null picked_card_id and picked_player_id",
+          message: "player-pick spin must have non-null picked_card_id and picked_player_id",
           path: ["picked_card_id"],
         });
         return;
@@ -235,7 +234,8 @@ export const SpinSchema = z
       if ((spin.picked_manager_card_id as string) !== (spin.rolled_manager_card_id as string)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "picked_manager_card_id must equal rolled_manager_card_id (cannot pick a manager not on the wheel)",
+          message:
+            "picked_manager_card_id must equal rolled_manager_card_id (cannot pick a manager not on the wheel)",
           path: ["picked_manager_card_id"],
         });
       }

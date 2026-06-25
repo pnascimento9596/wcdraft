@@ -5,6 +5,7 @@ No blockers found. PASS for this Yellow UI/CSS/component final candidate.
 Read `CLAUDE.md` first. I did not edit files, commit, start a dev server, or deploy.
 
 Inspected the a11y fix-forward and did not find a blocker:
+
 - [draft-screen.tsx](/private/tmp/wcdraft-ui-polish/apps/web/components/game/draft-screen.tsx:1165): draft-complete heading is now the page `h1`.
 - [review-screen.tsx](/private/tmp/wcdraft-ui-polish/apps/web/components/game/review-screen.tsx:300): review formation heading is now the page `h1`.
 - [review-screen.tsx](/private/tmp/wcdraft-ui-polish/apps/web/components/game/review-screen.tsx:373): warnings panel is focusable and labelled for the internal scroll region.
@@ -15,6 +16,7 @@ Inspected the a11y fix-forward and did not find a blocker:
 Pitch/Synergy overlay inspection is also clean. [pitch.tsx](/private/tmp/wcdraft-ui-polish/apps/web/components/game/pitch.tsx:137) builds SVG lines from the passed `linkedPairs`, and [synergy-overlay.ts](/private/tmp/wcdraft-ui-polish/apps/web/lib/game/synergy-overlay.ts:55) only emits live segments when the existing `LinkedPair` is `linked`, has non-null `nation_id`, and both endpoints are filled. That is presentation-only over existing `computeSynergy(...).linked_pairs`; no mechanic file is changed.
 
 **Gates Run**
+
 - `git status --short`: modified `STATE.md`, `apps/web/app/globals.css`, `draft-screen.tsx`, `game.module.css`, `manager-slot.tsx`, `pitch.tsx`, `review-screen.tsx`, `pitch-markings.test.ts`; untracked `mini-nation-flag.tsx`, 4 report JSON/MD files, and `docs/screenshots/ui-polish-overhaul/`.
 - `git diff --name-only`: tracked diff only in `STATE.md` plus `apps/web/**`; untracked artifacts separately confirmed by `git status`.
 - `git diff --check`: PASS, no output.

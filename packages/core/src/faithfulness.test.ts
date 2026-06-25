@@ -17,26 +17,26 @@ import type { Position, MatchPhase, MatchRound } from "./types/primitives.js";
 import type { TeamStrength } from "./types/rating.js";
 import type { MatchResult } from "./types/sim.js";
 import { createRng, deriveSubseed } from "./rng.js";
-import {
-  simulateMatchCore,
-  type SimMember,
-} from "./engine/match.js";
+import { simulateMatchCore, type SimMember } from "./engine/match.js";
 
 // ─── ensemble helpers ───────────────────────────────────────────────────────
 
 /** Synthetic 16-card lineup: 11 starters in a 4-3-3 + 5 bench. */
 function buildSide(side: "user" | "opp", strength: TeamStrength): SimMember[] {
-  const POSITIONS: Position[] = [
-    "GK",
-    "DF", "DF", "DF", "DF",
-    "MF", "MF", "MF",
-    "FW", "FW", "FW",
-  ];
+  const POSITIONS: Position[] = ["GK", "DF", "DF", "DF", "DF", "MF", "MF", "MF", "FW", "FW", "FW"];
   const members: SimMember[] = [];
   const prefix = side === "user" ? "u" : "o";
   for (let i = 0; i < 16; i++) {
     const started = i < 11;
-    const pos: Position = started ? POSITIONS[i]! : (i === 11 ? "GK" : i < 14 ? "DF" : i === 14 ? "MF" : "FW");
+    const pos: Position = started
+      ? POSITIONS[i]!
+      : i === 11
+        ? "GK"
+        : i < 14
+          ? "DF"
+          : i === 14
+            ? "MF"
+            : "FW";
     members.push({
       side,
       card_id: `${prefix}_c${String(i).padStart(2, "0")}_t99` as unknown as SimMember["card_id"],
@@ -49,15 +49,21 @@ function buildSide(side: "user" | "opp", strength: TeamStrength): SimMember[] {
       // scorer pool consistent with the aggregate strength. Defenders weight
       // lower for attack picks, attackers higher — matches production.
       attackWeight:
-        pos === "FW" ? strength.attack + 5 :
-        pos === "MF" ? strength.midfield :
-        pos === "DF" ? Math.max(1, strength.defense - 30) :
-        1,
+        pos === "FW"
+          ? strength.attack + 5
+          : pos === "MF"
+            ? strength.midfield
+            : pos === "DF"
+              ? Math.max(1, strength.defense - 30)
+              : 1,
       creativeWeight:
-        pos === "MF" ? strength.midfield + 5 :
-        pos === "FW" ? strength.attack :
-        pos === "DF" ? Math.max(1, strength.defense - 20) :
-        1,
+        pos === "MF"
+          ? strength.midfield + 5
+          : pos === "FW"
+            ? strength.attack
+            : pos === "DF"
+              ? Math.max(1, strength.defense - 20)
+              : 1,
     });
   }
   return members;
@@ -140,7 +146,13 @@ function ensemble(
   };
 }
 
-const BALANCED: TeamStrength = { attack: 70, midfield: 70, defense: 70, goalkeeping: 70, coverage: 1 };
+const BALANCED: TeamStrength = {
+  attack: 70,
+  midfield: 70,
+  defense: 70,
+  goalkeeping: 70,
+  coverage: 1,
+};
 function ts(attack: number, midfield: number, defense: number, goalkeeping: number): TeamStrength {
   return { attack, midfield, defense, goalkeeping, coverage: 1 };
 }
@@ -201,7 +213,7 @@ describe("D4 — ELITE CEILING: uniformly-elite XI wins knockouts at a high rate
     // (engine cap λMAX=3.4 × n=50 → upper percentile readily clears 6, occasionally 8).
     expect(e.maxGoalsFor).toBeGreaterThanOrEqual(6);
     // Margin-≥4 wins must occur — the elite ceiling is legible in the box score, not just W/L.
-    expect(e.margin4plusWins).toBeGreaterThan(K * 0.10);
+    expect(e.margin4plusWins).toBeGreaterThan(K * 0.1);
   });
 });
 

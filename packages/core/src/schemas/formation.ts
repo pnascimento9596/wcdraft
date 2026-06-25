@@ -26,11 +26,7 @@ export const SlotPositionSchema = z.enum(
   SLOT_POSITIONS as unknown as [SlotPosition, ...SlotPosition[]],
 ) satisfies z.ZodType<SlotPosition>;
 
-export const FormationChannelSchema = z.enum([
-  "L",
-  "C",
-  "R",
-]) satisfies z.ZodType<FormationChannel>;
+export const FormationChannelSchema = z.enum(["L", "C", "R"]) satisfies z.ZodType<FormationChannel>;
 
 export const FormationSlotSchema = z.object({
   slot_id: NonEmptyIdSchema,

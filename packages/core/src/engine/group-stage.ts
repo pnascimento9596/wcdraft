@@ -27,11 +27,7 @@ import { USER_GROUP_PARTICIPANT_ID } from "../types/group-stage.js";
 import type { GroupId } from "../types/primitives.js";
 import type { MatchResult } from "../types/sim.js";
 import type { Team2026 } from "../types/tournament.js";
-import {
-  membersFromTeam2026,
-  simulateMatchCore,
-  type SimMember,
-} from "./match.js";
+import { membersFromTeam2026, simulateMatchCore, type SimMember } from "./match.js";
 
 // ─── Best-third threshold (golden-locked at this ruleset version) ────────────
 //
@@ -169,7 +165,10 @@ interface MicroResult {
  * draw over the canonically-sorted participant ids — so the ranks are stable
  * across the run regardless of which standings tie.
  */
-function computeDrawLotsRanks(seed: string, participantIds: readonly string[]): Map<string, number> {
+function computeDrawLotsRanks(
+  seed: string,
+  participantIds: readonly string[],
+): Map<string, number> {
   const sorted = canonicalSortBy(participantIds, (id) => [id]);
   const rng = createRng(deriveSubseed(seed, "group_table"));
   // Fisher–Yates over a cloned array, using `rng.int`.
@@ -226,7 +225,9 @@ export function buildGroupStageResult(input: BuildGroupStageResultInput): GroupS
   const { seed, group_id, user_matches, other_matches } = input;
 
   if (user_matches.length !== 3) {
-    throw new RangeError(`buildGroupStageResult expected 3 user matches, got ${user_matches.length}`);
+    throw new RangeError(
+      `buildGroupStageResult expected 3 user matches, got ${user_matches.length}`,
+    );
   }
   if (other_matches.length !== 3) {
     throw new RangeError(
@@ -260,10 +261,7 @@ export function buildGroupStageResult(input: BuildGroupStageResultInput): GroupS
     }
   }
 
-  const drawLots = computeDrawLotsRanks(
-    seed,
-    [USER_GROUP_PARTICIPANT_ID, ...opponentTeamIds],
-  );
+  const drawLots = computeDrawLotsRanks(seed, [USER_GROUP_PARTICIPANT_ID, ...opponentTeamIds]);
 
   // Initialize stats rows.
   const statsByPid = new Map<string, BaseStats>();

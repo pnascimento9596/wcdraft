@@ -111,9 +111,7 @@ describe("merit-v4.5 ratings-coverage acceptance probes", () => {
     const [top, runnerUp] = saudi;
     expect(top?.card.card_id).toBe("P-70583:2026");
     expect(top?.rating.overall).toBeGreaterThanOrEqual(84);
-    expect((top?.rating.overall ?? 0) - (runnerUp?.rating.overall ?? 0)).toBeGreaterThanOrEqual(
-      3,
-    );
+    expect((top?.rating.overall ?? 0) - (runnerUp?.rating.overall ?? 0)).toBeGreaterThanOrEqual(3);
     expect(isMaterialHeadroom(rating("P-70583:2026"))).toBe(true);
 
     const journeymanControls = [
@@ -125,9 +123,10 @@ describe("merit-v4.5 ratings-coverage acceptance probes", () => {
     ];
     for (const cardId of journeymanControls) {
       const row = rating(cardId);
-      expect(row.overall, `${cardId} should remain outside the elevated standout band`).toBeLessThan(
-        83,
-      );
+      expect(
+        row.overall,
+        `${cardId} should remain outside the elevated standout band`,
+      ).toBeLessThan(83);
       expect(isMaterialHeadroom(row), `${cardId} should stay raw/current-path`).toBe(false);
     }
   });
@@ -195,15 +194,12 @@ describe("merit-v4.5 ratings-coverage acceptance probes", () => {
           const teamName =
             tournament === "2026"
               ? SCENARIO_2026_BUNDLE.team_display_names[
-                  SCENARIO_2026_BUNDLE.teams.find((team) =>
-                    team.squad_card_ids.includes(c.card_id),
-                  )?.team_id ?? ""
+                  SCENARIO_2026_BUNDLE.teams.find((team) => team.squad_card_ids.includes(c.card_id))
+                    ?.team_id ?? ""
                 ]
               : undefined;
           if (tournament === "2026") return teamName === nation;
-          return (
-            DRAFT_POOL_BUNDLE.nations[c.nation_id]?.canonical_name === nation
-          );
+          return DRAFT_POOL_BUNDLE.nations[c.nation_id]?.canonical_name === nation;
         })
         .map((c) => currentRating(c.card_id));
 

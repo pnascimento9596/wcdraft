@@ -46,10 +46,7 @@ const __dirname = path.dirname(__filename);
 
 // ─── STATIC SCAN ──────────────────────────────────────────────────────────────
 
-const SCAN_ROOTS = [
-  path.join(__dirname, "engine"),
-  path.join(__dirname, "api"),
-];
+const SCAN_ROOTS = [path.join(__dirname, "engine"), path.join(__dirname, "api")];
 
 /** Strip `//` line comments and block comments — the loosest read good
  *  enough to keep contract-doc mentions out of the scan. */
@@ -107,7 +104,9 @@ describe("decoupling guard — no sim path may read ManagerRating.overall", () =
         ? ""
         : `decoupling guard breached — re-introduced ManagerRating.overall read(s):\n${offenders
             .map((o) => `  ${path.relative(__dirname, o.file)}:${o.line}  ${o.text}`)
-            .join("\n")}\n\nIf you genuinely need a sim-side manager signal, define a sim-legal\nfield on ManagerRating (NOT \`overall\`, which is display-only) and wire\nthat through engine/team-strength.ts instead.`,
+            .join(
+              "\n",
+            )}\n\nIf you genuinely need a sim-side manager signal, define a sim-legal\nfield on ManagerRating (NOT \`overall\`, which is display-only) and wire\nthat through engine/team-strength.ts instead.`,
     ).toEqual([]);
   });
 });

@@ -184,10 +184,7 @@ export const POSITION_COMPATIBILITY_FACTORS: Readonly<
  * `api/compatibility.ts` as a typed stub; the curve / fold is calibrated in
  * WS-B and locked via the `position-compatibility` golden test.
  */
-export type PositionCompatibilityFn = (
-  eligible: readonly Position[],
-  slot: SlotPosition,
-) => number;
+export type PositionCompatibilityFn = (eligible: readonly Position[], slot: SlotPosition) => number;
 
 // ─── FORMATION TEMPLATE (locked before spin 1) ──────────────────────────────
 

@@ -40,25 +40,12 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  buildDraftCatalog,
-  type CreateDraftParams,
-  type DraftState,
-} from "@wcdraft/core";
+import { buildDraftCatalog, type CreateDraftParams, type DraftState } from "@wcdraft/core";
 
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-} from "../../src/index.js";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST } from "../../src/index.js";
 
-import {
-  buildPolicyContext,
-  runAutoDraftPolicy,
-} from "./draft-policies.js";
-import {
-  buildRealismDataset,
-  DEFAULT_SEED_PREFIX,
-} from "./realism.harness.js";
+import { buildPolicyContext, runAutoDraftPolicy } from "./draft-policies.js";
+import { buildRealismDataset, DEFAULT_SEED_PREFIX } from "./realism.harness.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const GOLDEN_PATH = join(HERE, "strategic-pick-canary-golden.json");
@@ -125,10 +112,7 @@ function extractCanaryPicks(state: DraftState): CanaryPick[] {
 function runCanary(): CanaryGolden {
   const dataset = buildRealismDataset();
   const catalog = buildDraftCatalog(dataset);
-  const ctx = buildPolicyContext(
-    DRAFT_POOL_BUNDLE.player_cards,
-    DRAFT_POOL_BUNDLE.ratings,
-  );
+  const ctx = buildPolicyContext(DRAFT_POOL_BUNDLE.player_cards, DRAFT_POOL_BUNDLE.ratings);
 
   const records: CanarySeedRecord[] = [];
   for (let i = 0; i < N_SEEDS; i++) {

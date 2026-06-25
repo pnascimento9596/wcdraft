@@ -203,11 +203,7 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
 
   beforeAll(() => {
     for (const policy of ALL_POLICIES) {
-      const { measurement, telemetry } = runRealismEnsembleForPolicy(
-        policy,
-        N_RUNS,
-        SEED_PREFIX,
-      );
+      const { measurement, telemetry } = runRealismEnsembleForPolicy(policy, N_RUNS, SEED_PREFIX);
       const observed = computeObserved(measurement);
       const r: PolicyResult = { measurement, telemetry, observed };
       results.set(policy, r);
@@ -236,7 +232,12 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
       if (N_RUNS !== GOLDEN.ensemble.N_runs) continue; // override mode
       if (SEED_PREFIX !== GOLDEN.ensemble.seed_prefix) continue;
       expect(
-        { qualifying: r.measurement.qualifyingRuns, matches: r.measurement.matches, groupMatches: r.measurement.groupMatches, knockoutMatches: r.measurement.knockoutMatches },
+        {
+          qualifying: r.measurement.qualifyingRuns,
+          matches: r.measurement.matches,
+          groupMatches: r.measurement.groupMatches,
+          knockoutMatches: r.measurement.knockoutMatches,
+        },
         `${policy} run counts drifted from golden`,
       ).toEqual({
         qualifying: g.qualifying,
@@ -310,8 +311,14 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
     const halfSo = koMatches > 0 ? 2 * Math.sqrt((pSo * (1 - pSo)) / koMatches) : Infinity;
     const target = GOLDEN.wilson_target_for_ko_metrics.target_half_width_pp / 100;
     if (N_RUNS === GOLDEN.ensemble.N_runs && SEED_PREFIX === GOLDEN.ensemble.seed_prefix) {
-      expect(halfKoEt, `KO→ET Wilson half ≈ ${(halfKoEt * 100).toFixed(2)}pp > target ${(target * 100).toFixed(1)}pp`).toBeLessThanOrEqual(target);
-      expect(halfSo, `shootout Wilson half ≈ ${(halfSo * 100).toFixed(2)}pp > target ${(target * 100).toFixed(1)}pp`).toBeLessThanOrEqual(target);
+      expect(
+        halfKoEt,
+        `KO→ET Wilson half ≈ ${(halfKoEt * 100).toFixed(2)}pp > target ${(target * 100).toFixed(1)}pp`,
+      ).toBeLessThanOrEqual(target);
+      expect(
+        halfSo,
+        `shootout Wilson half ≈ ${(halfSo * 100).toFixed(2)}pp > target ${(target * 100).toFixed(1)}pp`,
+      ).toBeLessThanOrEqual(target);
     }
   });
 

@@ -2,16 +2,8 @@
 // records. Extracted from run-token.test.ts so the DC-1 `t2.` suite
 // (run-token-v2.test.ts) exercises the exact same construction path.
 
-import {
-  autoDraft,
-  buildDraftCatalog,
-  type DraftDataset,
-} from "@wcdraft/core";
-import {
-  DRAFT_POOL_BUNDLE,
-  RUNTIME_DATA_MANIFEST,
-  type RuntimeDataManifest,
-} from "@wcdraft/data";
+import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
+import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, type RuntimeDataManifest } from "@wcdraft/data";
 
 import type { GameData, RunRecordVersions } from "../data";
 import { buildGameDataIndexes, composeVersions } from "../data";

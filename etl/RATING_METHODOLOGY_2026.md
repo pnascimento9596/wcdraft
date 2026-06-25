@@ -53,7 +53,7 @@ not a replacement.
 > players (`link_status == "linked"`) whose canonical `career_stature.json` row
 > clears the material gate are reconciled onto the **same stature scale** as the
 > historical `wc-perf-4.x` cards: `projected_final = stature_target(pos, index) +
-> bounded projected-context modulation`, using the identical stature target,
+bounded projected-context modulation`, using the identical stature target,
 > continuity ramp, and tier-tightened caps as the historical model (imported, not
 > re-implemented). This fixes the headline gap — linked Messi-2026 was age-pinned
 > at 79 on the old raw formula and now reads on the stature scale; the 2026 legend
@@ -87,12 +87,12 @@ not a replacement.
 > read off the historical raw-only internal scores at the SAME percentile. The 2026
 > non-material internal **distribution then matches the historical raw-only
 > quantiles** (per-quantile cross-era gap ≈0, not merely the bounds), so a 2026
-> reserve at percentile *p* lands at the same internal score as a historical raw-only
-> card at *p* (e.g. a 2026 bench defender aligns with a Mangala-2014-class reserve,
+> reserve at percentile _p_ lands at the same internal score as a historical raw-only
+> card at _p_ (e.g. a 2026 bench defender aligns with a Mangala-2014-class reserve,
 > not above it). Monotonic in projected raw ⇒ within-2026 rank preserved. The
 > per-cohort raw-only ceiling (the global elite cap, ≈0.62) still bounds the result
 > below the recognized-greats band — confirmed full-scan. NB: the continuity-ramp
-> blend means a strong *linked-below-material* card can brush an anomalously-low
+> blend means a strong _linked-below-material_ card can brush an anomalously-low
 > marginal-material card at the `weight≈0.5` boundary; this is the cliff-free ramp
 > working and is a property shared with — and far milder than — the historical engine
 > (where non-material reaches 64.8 vs a 44.8 marginal-material floor). The cap that
@@ -138,12 +138,12 @@ rated on goals.
 
 ## The signal swap (career, not single-tournament box score)
 
-| `wc-perf` role | 2026 projected signal | Why |
-|---|---|---|
-| goals (box score) | **international goals** | career productivity |
-| appearances (minutes proxy) | **international caps** | career experience / trust |
+| `wc-perf` role                          | 2026 projected signal    | Why                        |
+| --------------------------------------- | ------------------------ | -------------------------- |
+| goals (box score)                       | **international goals**  | career productivity        |
+| appearances (minutes proxy)             | **international caps**   | career experience / trust  |
 | awards + team finish (cross-era anchor) | **club-league strength** | the quality anchor (below) |
-| — | **age curve** | career-stage positioner |
+| —                                       | **age curve**            | career-stage positioner    |
 
 ## The two-pass formula
 
@@ -200,25 +200,25 @@ is computed as of the opening match (2026-06-11).
 
 ## Honest-state
 
-* Every current player has caps and international goals (real measured
+- Every current player has caps and international goals (real measured
   integers, possibly 0), so 2026 cards never take the baseline-anchor estimate
   path. Projected rows now carry `overall_basis`: most remain
   `measured_performance`, while source-linked material careers can emit
   `career_stature_estimate`; every runtime 2026 row also carries
   `basis_ratings.career` and `basis_ratings.current`.
-* `coverage_basis = "career_signals"`; `coverage = 5/7 ≈ 0.7143` reflects the
+- `coverage_basis = "career_signals"`; `coverage = 5/7 ≈ 0.7143` reflects the
   five signals we have against an ideal that also wants club-competition
   minutes and a qualification box-score — neither is in the source.
-* Assists, minutes, club-competition appearances, qualification stats are
+- Assists, minutes, club-competition appearances, qualification stats are
   not in the squad source and are omitted entirely, never invented.
 
 ## Identity linkage (unchanged)
 
-* **Players**: a 2026 player who already has a 1930-2022 card **links** to
+- **Players**: a 2026 player who already has a 1930-2022 card **links** to
   that canonical `player_id`; the linker is **conservative** — ambiguity
   mints a new id rather than risk a wrong merge. New ids namespaced
   `P-W26-*`.
-* **Nations**: 43 of 48 teams match an existing canonical nation by name; 5
+- **Nations**: 43 of 48 teams match an existing canonical nation by name; 5
   debutants (Cape Verde, Curaçao, DR Congo, Jordan, Uzbekistan) are minted
   (`T-W26-*`). DR Congo is minted fresh with Zaire (`T-88`) recorded as
   predecessor.
@@ -248,36 +248,36 @@ re-locked.
 Fixed snapshots + canonical tables → byte-identical `*_2026.json`. Guarded
 by `tests/test_ingest_2026.py` — the Phase 1 acceptance suite:
 
-* determinism + committed-golden equality + 48-team/squad-size/3-GK structure
-* link correctness incl. no-wrong-merge and twins guards
-* **projected rating version** check (`proj-career-5.2.0`)
-* **projected distribution shape** (floor 60, median ~73, p95 ~88, max 99,
+- determinism + committed-golden equality + 48-team/squad-size/3-GK structure
+- link correctness incl. no-wrong-merge and twins guards
+- **projected rating version** check (`proj-career-5.2.0`)
+- **projected distribution shape** (floor 60, median ~73, p95 ~88, max 99,
   no 100s)
-* **projected basis** is `career_stature_estimate` | `measured_performance`,
+- **projected basis** is `career_stature_estimate` | `measured_performance`,
   never `baseline_anchor_estimate`; both paths exercised by the real squads
-* **MV2-5 stature reconciliation (INTERNAL-score assertions):** minted/non-linked
+- **MV2-5 stature reconciliation (INTERNAL-score assertions):** minted/non-linked
   never consume career stature; linked-material rides the stature scale (Messi no
   longer age-dominated); the 4 previously-spurious OVR-99 cards are capped on the
   raw-only band below the greats; the top of the internal distribution is material,
   not raw artifacts; legend joins linked-material only; DF/GK legends are position-
   channel-shaped; `link_status` missing fails loudly
-* projected rating bounds on the new band + honest-state nulls
-* **strong-nations-aggregate-higher invariant** holds on the compressed
+- projected rating bounds on the new band + honest-state nulls
+- **strong-nations-aggregate-higher invariant** holds on the compressed
   channel scale: every traditional power outranks every debutant/minnow
   with a clear basket-mean margin (≥ 2.5 on the new scale)
-* full bracket integrity
+- full bracket integrity
 
 ## Sanity results (Phase 1, asserted)
 
-* All 48 teams present, 12 groups × 4, every squad 23-26 with ≥3 GK.
-* Projected `overall` on the recalibrated band `[60, 99]`; **zero** null
+- All 48 teams present, 12 groups × 4, every squad 23-26 with ≥3 GK.
+- Projected `overall` on the recalibrated band `[60, 99]`; **zero** null
   overalls; **zero** at the 100 ceiling.
-* Every traditional power (Brazil, Argentina, France, Spain, Germany,
+- Every traditional power (Brazil, Argentina, France, Spain, Germany,
   England, Portugal, Netherlands) aggregates higher than every
   debutant/minnow (Curaçao, Cape Verde, Haiti, Uzbekistan, Jordan, New
   Zealand, South Africa) with a clear basket-mean gap on the compressed
   scale.
-* 352 of 1,246 cards link to a canonical 1930-2022 player id (Messi, Ronaldo,
+- 352 of 1,246 cards link to a canonical 1930-2022 player id (Messi, Ronaldo,
   Modrić — one id across 2014/18/22 + 2026); no canonical id is reused for
   two different 2026 players.
 
