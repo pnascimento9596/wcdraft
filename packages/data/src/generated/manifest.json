@@ -55,18 +55,18 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 129690546,
-      "bytes_brotli": 2221824,
-      "bytes_gzip": 4620886,
+      "bytes": 129711288,
+      "bytes_brotli": 2222592,
+      "bytes_gzip": 4621954,
       "path": "draft-pool.compact.json",
-      "sha256": "a65ae19048cea5c2ec6c2fc9f4ac627a31d9be2120e35cba0b94ba32f571d9c5"
+      "sha256": "976f6ac517b679b02f052606fcc48809df7ae384ee69a6b015559faf9115ff00"
     },
     "scenario_2026": {
       "bytes": 108775,
-      "bytes_brotli": 4480,
-      "bytes_gzip": 7762,
+      "bytes_brotli": 4608,
+      "bytes_gzip": 7768,
       "path": "scenario-2026.compact.json",
-      "sha256": "d09fb607e43c2ed638e099bff78a4cc531ce657528e5f00a745b2c3e1e893cc6"
+      "sha256": "75214e06dd8f90bd11bbe84b458128d39b8eeaf05b9cbf0ffba4b3b612c499c0"
     }
   },
   "counts": {
@@ -92,9 +92,9 @@
     "teams": 48
   },
   "dataset_version": "2026-06-04",
-  "engine_version": "engine-2026.06.16-merit-v4.4",
-  "rating_version_historical": "wc-perf-6.4.0",
-  "rating_version_projected": "proj-career-5.4.0",
+  "engine_version": "engine-2026.06.17-merit-v4.5",
+  "rating_version_historical": "wc-perf-6.5.0",
+  "rating_version_projected": "proj-career-5.5.0",
   "ruleset_version": "ruleset-2026.06.04",
-  "schema_version": "runtime-data-2.6.0"
+  "schema_version": "runtime-data-2.7.0"
 }

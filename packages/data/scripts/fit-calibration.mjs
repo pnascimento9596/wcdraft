@@ -94,7 +94,7 @@ const CONSTANT_GRIDS = [
   { name: "GROUP_A",          bucket: "LAMBDA_DISP", values: [0.40, 0.50, 0.60, 0.70] },
 ];
 
-// Seed tuple — current shipped merit-v4.3 tuple from calibration.ts. Keep this
+// Seed tuple — current shipped merit-v4.5 tuple from calibration.ts. Keep this
 // in sync with packages/core/src/engine/calibration.ts so the seed evaluation
 // represents the live engine before any audited refit move.
 const SEED_TUPLE = {
@@ -115,7 +115,7 @@ const SEED_TUPLE = {
   LAMBDA_DISP: {
     OUTER_PROB: 0.20,
     A: 0.75,
-    GROUP_OUTER_PROB: 0.04,
+    GROUP_OUTER_PROB: 0.02,
     GROUP_A: 0.40,
   },
 };

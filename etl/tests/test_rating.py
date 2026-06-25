@@ -171,13 +171,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             assert isinstance(comp["weight"], (int, float)) and comp["weight"] >= 0
 
 
-def test_rating_version_is_merit_v44_historical_rebuild(built: list[dict]):
-    # wc-perf-6.4.0 = merit-v4.4: owner re-rate of the 85–90 CURRENT-basis band
-    # layered on v4.3. The historical Career basis is unchanged; only the version
-    # stamp and the CURRENT basis move.
-    assert rating.RATING_VERSION == "wc-perf-6.4.0"
+def test_rating_version_is_merit_v45_historical_rebuild(built: list[dict]):
+    # wc-perf-6.5.0 = merit-v4.5: recovered v4.3 honest misses are folded into
+    # the Career+Current pin path; v4.4 current-only pins still supersede current
+    # on overlap.
+    assert rating.RATING_VERSION == "wc-perf-6.5.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.4.0"
+        assert r["rating_version"] == "wc-perf-6.5.0"
 
 
 def test_historical_consumes_full_v3_stature_but_compat_view_is_available():

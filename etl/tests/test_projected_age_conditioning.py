@@ -222,7 +222,7 @@ def test_dual_basis_payload_shape_and_career_alias(ratings):
             ):
                 assert field in payload, (r["card_id"], basis, field)
             assert payload["basis_metadata"]["basis"] == basis
-            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.4.0"
+            assert payload["basis_metadata"]["rating_version"] == "proj-career-5.5.0"
         for field in ("overall", "overall_basis", "attack", "midfield", "defense",
                       "goalkeeping", "coverage", "components"):
             assert career[field] == r[field], (r["card_id"], field)

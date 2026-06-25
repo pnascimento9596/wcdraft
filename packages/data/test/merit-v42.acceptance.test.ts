@@ -82,15 +82,15 @@ function maxDuplicateOverall(rows: RuntimeRating[]): number {
   return Math.max(...counts.values());
 }
 
-describe("merit-v4.4 ratings-coverage acceptance probes", () => {
-  it("bumps every shipped replay/data/version anchor for the merit-v4.4 season", () => {
-    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.6.0");
-    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.6.0");
-    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.6.0");
-    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.6.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.4.0");
-    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.4.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.16-merit-v4.4");
+describe("merit-v4.5 ratings-coverage acceptance probes", () => {
+  it("bumps every shipped replay/data/version anchor for the merit-v4.5 season", () => {
+    expect(RUNTIME_DATA_SCHEMA_VERSION).toBe("runtime-data-2.7.0");
+    expect(DRAFT_POOL_BUNDLE.schema_version).toBe("runtime-data-2.7.0");
+    expect(SCENARIO_2026_BUNDLE.schema_version).toBe("runtime-data-2.7.0");
+    expect(RUNTIME_DATA_MANIFEST.schema_version).toBe("runtime-data-2.7.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.5.0");
+    expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.5.0");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.17-merit-v4.5");
   });
 
   it("keeps the pre-registered elite European anchors unchanged", () => {

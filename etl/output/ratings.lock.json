@@ -1,1 +1,1 @@
-{"bytes":78727042,"generated_by":"python -m wcdraft_etl.rating","path":"ratings.json","rating_version":"wc-perf-6.4.0","ratings":10973,"sha256":"21fc95027fbc235478aa230e9f49800ed26346915ed3fb92da5be3e8f8a802bd"}
+{"bytes":78741507,"generated_by":"python -m wcdraft_etl.rating","path":"ratings.json","rating_version":"wc-perf-6.5.0","ratings":10973,"sha256":"d318caa6f830e06e399705810233cb6888ba10aec1a8d5c80eab150eb470c65d"}

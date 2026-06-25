@@ -1,0 +1,181 @@
+source_line,country,year,player_name,final_rating,rule,current_baseline,reason,candidate_card_ids,candidate_names
+103,Australia,2014,Eugene Australia,67,f2-only,71,no_unambiguous_match,,
+235,Brazil,2002,R. Júnior,81,f2-only,87,no_unambiguous_match,,
+254,Brazil,2010,Josué de Oliveira,82,"avg(82,81)",71,duplicate_conflict_weak_only,P-74066:WC-2010,Josué
+260,Brazil,2010,Jose Pereira,76,f2-only,71,duplicate_conflict_weak_only,P-74066:WC-2010,Josué
+273,Brazil,2014,Jose Junior,81,f2-only,88,no_unambiguous_match,,
+283,Brazil,2018,Cássio Ramos,77,f2-only,71,duplicate_conflict_weak_only,P-66815:WC-2018,Cássio
+284,Brazil,2018,Cássio Albuquerque dos Anjos,75,f1-only,71,duplicate_conflict_weak_only,P-66815:WC-2018,Cássio
+292,Brazil,2022,Lucas Pedro Alves de Lima,72,f1-only,73,no_unambiguous_match,,
+300,Cameroon,2002,Rigobert Bahanag,80,f2-only,78,no_unambiguous_match,,
+302,Cameroon,2002,Raymond Nkongo,79,f2-only,78,no_unambiguous_match,,
+308,Cameroon,2002,Pierre Nlend,70,f2-only,78,no_unambiguous_match,,
+312,Cameroon,2002,Pierre Beaka,65,f2-only,71,no_unambiguous_match,,
+314,Cameroon,2010,Alexandre Song,79,agree,71,no_unambiguous_match,,
+329,Cameroon,2014,Henri Nsame,76,f2-only,71,no_unambiguous_match,,
+334,Cameroon,2014,Pierre Kouamo,75,f2-only,72,no_unambiguous_match,,
+340,Cameroon,2014,Benjamin Bile,69,f2-only,72,no_unambiguous_match,,
+343,Cameroon,2014,Maxime Nguegang,52,f2-only,71,no_unambiguous_match,,
+345,Cameroon,2022,Nicolas Ndoubena,81,f2-only,73,no_unambiguous_match,,
+349,Cameroon,2022,Georges-Kevin Mbida,75,f2-only,73,no_unambiguous_match,,
+353,Cameroon,2022,Pierre Malong,73,f2-only,73,no_unambiguous_match,,
+358,Cameroon,2022,Martin II,71,f2-only,73,no_unambiguous_match,,
+363,Cameroon,2022,Devis Mboka,67,"avg(66,68)",79,no_unambiguous_match,,
+366,Canada,2022,Dayne Tristan,74,f2-only,71,no_unambiguous_match,,
+374,Canada,2022,Richmond Mamah,71,f2-only,79,no_unambiguous_match,,
+392,Cape Verde,2026,Edilson Borges,63,f2-only,72,no_unambiguous_match,,
+433,Colombia,2018,Cristian Martínez Borja,69,f1-only,71,duplicate_conflict_weaker_match,P-59950:WC-2018,Borja
+441,Colombia,2026,Michael David Barrios Puerta,71,f1-only,72,duplicate_conflict_weaker_match,P-W26-0149:WC-2026,Puerta
+442,Colombia,2026,Rafael Andrés Carrascal Avilez,70,f1-only,72,duplicate_conflict_weaker_match,P-W26-0141:WC-2026,Carrascal
+443,Colombia,2026,Kerwin Andrés Calderón Vargas,68,f1-only,72,duplicate_conflict_weaker_match,P-27327:WC-2026,Vargas
+447,Costa Rica,2002,Gilberto Vidal,69,f2-only,78,no_unambiguous_match,,
+448,Costa Rica,2002,Harold McDonald,69,f2-only,78,no_unambiguous_match,,
+449,Costa Rica,2002,Likely Marín,69,f2-only,78,source_hint_not_player_name,,
+457,Costa Rica,2006,Likely Hernández,68,f2-only,72,source_hint_not_player_name,,
+462,Costa Rica,2006,Likely Azofeifa,62,f2-only,71,source_hint_not_player_name,,
+463,Costa Rica,2006,Likely Badilla,62,f2-only,71,source_hint_not_player_name,,
+465,Costa Rica,2006,Likely Mesén,62,f2-only,71,source_hint_not_player_name,,
+470,Costa Rica,2014,Christian Navarro,74,f2-only,82,no_unambiguous_match,,
+473,Costa Rica,2014,Celso Mora,72,f2-only,82,no_unambiguous_match,,
+479,Costa Rica,2014,Michael Corrales,69,f2-only,82,no_unambiguous_match,,
+480,Costa Rica,2014,Giancarlo Castro,66,f2-only,82,no_unambiguous_match,,
+490,Costa Rica,2018,Marcos Danilo Ureña Porras,68,f1-only,72,duplicate_conflict_weaker_match,P-11307:WC-2018,Ureña
+502,Costa Rica,2022,Gerson Barrantes,62,f2-only,71,no_unambiguous_match,,
+516,Croatia,2002,Igor No,74,f2-only,78,no_unambiguous_match,,
+566,Curaçao,2026,Tijjani Noslin,74,f2-only,71,duplicate_conflict_weaker_match,P-W26-0813:WC-2026,Noslin
+612,DR Congo,2026,Lionel M'Pasi N'Zau,67,f1-only,79,no_unambiguous_match,,
+613,DR Congo,2026,Mayele Fabrice N'Sakala,67,f1-only,72,duplicate_conflict_weaker_match,P-W26-0820:WC-2026,Mayele
+639,Denmark,2018,Simon Thorup Kjær,81,f1-only,86,no_unambiguous_match,,
+640,Denmark,2018,Simon Kjaer,80,f2-only,86,no_unambiguous_match,,
+642,Denmark,2018,Kasper Rasmussen,78,agree,71,no_unambiguous_match,,
+650,Denmark,2018,William Jorgensen,70,f2-only,71,no_unambiguous_match,,
+681,Ecuador,2006,Neicer s,76,f2-only,79,no_unambiguous_match,,
+698,Ecuador,2022,Arón David Rodríguez Franco,70,f1-only,73,no_unambiguous_match,,
+715,Egypt,2018,Ahmed Fathi,74,f2-only,79,no_unambiguous_match,,
+717,Egypt,2018,Ahmed Naser Mahmoud Al Shenawy,73,f1-only,79,duplicate_conflict_weaker_match,P-86080:WC-2018,El Shenawy
+719,Egypt,2018,Mohamed Abdul Shafy Sayed Abouezeid,71,f1-only,79,duplicate_conflict_weaker_match,P-29161:WC-2018,Abdel Shafy
+720,Egypt,2018,Ahmed Fathy Abdel Meneim Ibrahim,67,f1-only,79,no_unambiguous_match,,
+722,Egypt,2026,Emam Ghany,75,f2-only,71,no_unambiguous_match,,
+726,Egypt,2026,Hamza Selim,60,f2-only,71,no_unambiguous_match,,
+753,England,2018,Jacob Maguire,82,f2-only,88,duplicate_conflict_weaker_match,P-02465:WC-2018,Maguire
+830,France,2018,Lucas Pi,78,"avg(77,79)",88,no_unambiguous_match,,
+845,France,2022,Dayotchanculle Oswald Upamecano,81,f1-only,88,duplicate_conflict_weaker_match,P-03945:WC-2022,Upamecano
+909,Germany,2018,Mario García,82,"avg(82,81)",72,no_unambiguous_match,,
+934,Ghana,2006,Christian Gyan,64,f1-only,79,duplicate_conflict_weaker_match,P-38556:WC-2006,Gyan
+960,Ghana,2022,Mohamed Salisu Abdul Karim,77,f1-only,79,no_unambiguous_match,,
+962,Ghana,2022,Mohammed Karim,76,f2-only,79,no_unambiguous_match,,
+988,Ghana,2026,Nicholas Opoku,67,f1-only,71,duplicate_conflict_weaker_match,P-W26-0276:WC-2026,Opoku
+1020,Honduras,2014,Identified Brayan,70,f2-only,79,no_unambiguous_match,,
+1062,Iran,2018,Reza Nournia,72,agree,71,no_unambiguous_match,,
+1063,Iran,2018,Masoud Soleimani,72,f2-only,71,no_unambiguous_match,,
+1064,Iran,2018,Saeid Afagh,67,"avg(66,68)",72,no_unambiguous_match,,
+1068,Iran,2022,Mohammad Kanaanizadegan,75,f2-only,71,no_unambiguous_match,,
+1080,Iran,2026,Likely Ghorbani,65,f2-only,71,source_hint_not_player_name,,
+1081,Iran,2026,strong: Hosseini,65,f2-only,71,source_hint_not_player_name,,
+1082,Iran,2026,strong: Hardani,65,f2-only,71,source_hint_not_player_name,,
+1083,Iran,2026,Likely Nemati,65,f2-only,71,source_hint_not_player_name,,
+1084,Iran,2026,Likely Yousefi,65,f2-only,71,source_hint_not_player_name,,
+1150,Ivory Coast,2026,Bafode Diakite,79,f2-only,79,duplicate_conflict_weaker_match,P-W26-0374:WC-2026,Diakite
+1219,Japan,2018,酒井 宏樹,75,f1-only;merged-dup(17),79,source_hint_not_player_name,,
+1236,Japan,2022,上田 綺世,74,f1-only;merged-dup(13),71,source_hint_not_player_name,,
+1268,Mexico,2002,Oscar Rojas,77,f2-only,86,no_unambiguous_match,,
+1278,Mexico,2002,Rafael Torres,62,f2-only,71,no_unambiguous_match,,
+1297,Mexico,2010,Adolfo Herrera,74,f2-only,71,no_unambiguous_match,,
+1298,Mexico,2010,Israel Macias,74,f2-only,71,no_unambiguous_match,,
+1312,Mexico,2014,Rafael Alvarez,71,f2-only,84,no_unambiguous_match,,
+1319,Mexico,2018,Alfredo Díaz,77,f2-only,71,no_unambiguous_match,,
+1320,Mexico,2018,Oribe Morones,76,agree,71,no_unambiguous_match,,
+1329,Mexico,2022,Rodolfo Robles,76,"avg(76,75)",71,no_unambiguous_match,,
+1339,Mexico,2026,Chavez,75,"avg(72,78)",72,ambiguous_unapplied,P-49806:WC-2026;P-W26-0402:WC-2026,Chávez;Chavez
+1342,Mexico,2026,Armando Alba,74,f2-only,71,no_unambiguous_match,,
+1346,Mexico,2026,Guillermo Ayala,71,f2-only,71,no_unambiguous_match,,
+1347,Mexico,2026,Obed Gómez Vargas,69,f1-only,72,duplicate_conflict_weaker_match,P-W26-0403:WC-2026,Vargas
+1352,Morocco,2018,Noureddine Amrabat,79,f1-only,74,no_unambiguous_match,,
+1374,Morocco,2022,Munir El Kajoui,73,f2-only,83,no_unambiguous_match,,
+1415,Netherlands,2014,Netherlands LB,77,f2-only,84,no_unambiguous_match,,
+1451,New Zealand,2026,Christopher Grant Wood,82,f1-only,79,duplicate_conflict_weaker_match,P-17136:WC-2026,Wood
+1459,New Zealand,2026,Benjamin Craig Old,68,f1-only,79,no_unambiguous_match,,
+1460,New Zealand,2026,Konstantinos BarbarousesΚωνσταντίνος Μπαρμπαρούσης,68,f1-only,71,duplicate_conflict_weaker_match,P-W26-0437:WC-2026,Barbarouses
+1468,New Zealand,2026,Maxime Teremoana Crocombe,65,f1-only,79,duplicate_conflict_weaker_match,P-W26-0438:WC-2026,Crocombe
+1477,Nigeria,2002,Likely Obiorah,68,f2-only,71,source_hint_not_player_name,,
+1480,Nigeria,2002,Likely Ejide,65,f2-only,71,source_hint_not_player_name,,
+1482,Nigeria,2002,Likely Akwuegbu,63,f2-only,71,source_hint_not_player_name,,
+1484,Nigeria,2002,Likely Lawal,62,f2-only,71,source_hint_not_player_name,,
+1491,Nigeria,2010,Victor Nsofor,71,agree,72,no_unambiguous_match,,
+1492,Nigeria,2010,Bamidele,71,f2-only,71,no_unambiguous_match,,
+1493,Nigeria,2010,Augustine,71,f2-only,71,no_unambiguous_match,,
+1504,Nigeria,2014,Efe Celtic,68,f2-only,81,no_unambiguous_match,,
+1531,North Korea,2010,Pak Nam-chol,63,f2-only,71,ambiguous_unapplied,P-47780:WC-2010;P-56547:WC-2010,Pak;Pak
+1542,Norway,2026,Thelonious Gerard Aasgaard,68,f1-only,72,duplicate_conflict_weaker_match,P-W26-0480:WC-2026,Aasgaard
+1554,Panama,2018,Most Jose,64,f2-only,71,no_unambiguous_match,,
+1558,Panama,2026,Ismael de Leon,72,f2-only,80,no_unambiguous_match,,
+1564,Panama,2026,Fidel Mendieta,65,f2-only,80,no_unambiguous_match,,
+1599,Paraguay,2010,José María Ortigoza,72,f1-only,71,duplicate_conflict_weaker_match,P-37133:WC-2010,Ortigoza
+1604,Paraguay,2010,Antolin Viveros,68,f2-only,83,no_unambiguous_match,,
+1646,Poland,2022,Matthew Stuart,79,f2-only,84,no_unambiguous_match,,
+1667,Portugal,2002,Ricardo Pereira,79,f2-only;merged-dup(2),71,no_unambiguous_match,,
+1678,Portugal,2006,Luis Monteiro,83,f2-only,88,no_unambiguous_match,,
+1691,Portugal,2010,Bastos Pimparel,78,f2-only,71,no_unambiguous_match,,
+1693,Portugal,2010,Luis Monteiro,77,f2-only,71,no_unambiguous_match,,
+1705,Portugal,2018,Antonio Pimparel,76,agree,71,no_unambiguous_match,,
+1708,Portugal,2022,Portugal striker,82,f2-only,71,source_hint_not_player_name,,
+1712,Portugal,2022,Portugal center-back,69,f2-only,71,no_unambiguous_match,,
+1722,Qatar,2022,Tarek Odeh,66,f2-only,71,no_unambiguous_match,,
+1727,Qatar,2022,Musab Djebril,65,f2-only,71,no_unambiguous_match,,
+1728,Qatar,2022,Yousef Ali,65,f2-only,71,no_unambiguous_match,,
+1729,Qatar,2022,Khalid Mazeed,64,f2-only,71,no_unambiguous_match,,
+1743,Republic of Ireland,2002,Stephen Kelly,72,f2-only;merged-dup(2),86,no_unambiguous_match,,
+1747,Republic of Ireland,2002,Aaron Connolly,70,f2-only,71,duplicate_conflict_weaker_match,P-20792:WC-2002,Connolly
+1763,Russia,2018,Andrey Lunev,78,f2-only,71,no_unambiguous_match,,
+1778,Saudi Arabia,2002,K. Al-Dosari,63,f2-only,72,ambiguous_unapplied,P-17941:WC-2002;P-85019:WC-2002,Al-Dosari;Al-Dosari
+1780,Saudi Arabia,2002,Sami Heroes,62,f2-only,71,no_unambiguous_match,,
+1783,Saudi Arabia,2002,O. Al-Dosari,62,f2-only,71,ambiguous_unapplied,P-17941:WC-2002;P-85019:WC-2002,Al-Dosari;Al-Dosari
+1804,Saudi Arabia,2018,Mohammed Al Buraik,71,f2-only,79,no_unambiguous_match,,
+1809,Saudi Arabia,2018,Abdullah Ibrahim Al Maiouf,69,f1-only,79,duplicate_conflict_weaker_match,P-61496:WC-2018,Al-Mayouf
+1811,Saudi Arabia,2018,Ahmad Mohammed Al Assiri,55,f1-only,72,duplicate_conflict_weaker_match,P-36522:WC-2018,Assiri
+1818,Saudi Arabia,2022,Saud Abdullah Abdul Hamid,71,f1-only,79,no_unambiguous_match,,
+1822,Saudi Arabia,2022,Ahmed Mohammed Sharahili,69,f1-only,71,duplicate_conflict_weaker_match,P-06750:WC-2022,Sharahili
+1826,Saudi Arabia,2022,Saeed Awadh Al Rubaie Al Yami,67,f1-only,71,duplicate_conflict_weaker_match,P-06659:WC-2022,Al-Rubaie
+1835,Saudi Arabia,2026,Saud Abdullah Abdul Hamidسعود عبدالحميد,75,f1-only,79,no_unambiguous_match,,
+1839,Saudi Arabia,2026,Firas Al Birekan,75,f2-only,79,no_unambiguous_match,,
+1880,Senegal,2002,Habibou Traoré,60,f1-only,71,duplicate_conflict_weaker_match,P-75923:WC-2002,Traoré
+1881,Senegal,2018,Keita Diao,81,"avg(82,80)",71,no_unambiguous_match,,
+1882,Senegal,2018,Diaye,76,"avg(77,74)",72,ambiguous_unapplied,P-12707:WC-2018;P-17986:WC-2018,N'Diaye;N'Diaye
+1903,Senegal,2022,Ahmadou Dieng,74,agree,80,no_unambiguous_match,,
+1914,Senegal,2026,Assane Diaoune,76,agree,71,no_unambiguous_match,,
+1920,Senegal,2026,Ibrahima Seck,60,f1-only,71,duplicate_conflict_weaker_match,P-W26-0597:WC-2026,Seck
+1935,Serbia,2018,Slobodan Rajković,75,f1-only,71,duplicate_conflict_weaker_match,P-35773:WC-2018,Rajković
+1965,Slovakia,2010,Marek Slovak,70,f2-only,71,no_unambiguous_match,,
+1985,South Africa,2002,Bennedict Saul McCarthy,81,f1-only,79,duplicate_conflict_weaker_match,P-59298:WC-2002,McCarthy
+2021,South Korea,2002,Lee W. J.,76,f1-only,81,ambiguous_unapplied,P-22338:WC-2002;P-46519:WC-2002;P-60562:WC-2002;P-66219:WC-2002;P-95122:WC-2002,Lee;Lee;Lee;Lee;Lee
+2023,South Korea,2002,Choi J. C.,74,f1-only,81,ambiguous_unapplied,P-07865:WC-2002;P-17666:WC-2002;P-37114:WC-2002;P-42690:WC-2002;P-72495:WC-2002,Choi;Choi;Choi;Choi;Choi
+2025,South Korea,2002,Kim N. I.,74,f1-only,81,ambiguous_unapplied,P-51785:WC-2002;P-84722:WC-2002;P-96267:WC-2002,Kim;Kim;Kim
+2026,South Korea,2002,Kim T. Y.,74,f1-only,81,ambiguous_unapplied,P-51785:WC-2002;P-84722:WC-2002;P-96267:WC-2002,Kim;Kim;Kim
+2038,South Korea,2006,Yeong Gwang Kim,75,f1-only,71,no_unambiguous_match,,
+2066,South Korea,2014,Ju Young Park,68,f1-only,71,no_unambiguous_match,,
+2078,South Korea,2018,박선주 朴宣住,69,f1-only;merged-dup(10),72,source_hint_not_player_name,,
+2080,South Korea,2018,황의조 Ui Jo Hwang,68,f1-only,72,duplicate_conflict_weaker_match,P-58692:WC-2018,Hwang
+2091,South Korea,2022,홍철 洪喆,70,f1-only;merged-dup(6),71,source_hint_not_player_name,,
+2093,South Korea,2022,Kim Hwan,68,agree,83,ambiguous_unapplied,P-07233:WC-2022;P-66969:WC-2022,Moon-hwan;Tae-hwan
+2095,South Korea,2022,Kyu Min Park,56,f1-only,71,no_unambiguous_match,,
+2103,South Korea,2026,Kim Gyu,73,f2-only,82,ambiguous_unapplied,P-42523:WC-2026;P-W26-0637:WC-2026,Kim;Kim
+2108,South Korea,2026,Kim Hyun,67,f2-only,71,no_unambiguous_match,,
+2111,Spain,2002,Diego Herrera,87,f2-only,71,no_unambiguous_match,,
+2122,Spain,2006,Juan Moreno,84,f2-only,71,no_unambiguous_match,,
+2124,Spain,2006,Antonio Guerrero,75,f2-only,71,no_unambiguous_match,,
+2135,Spain,2014,Javier Aginaga,84,f2-only,71,no_unambiguous_match,,
+2138,Spain,2014,Raul Tortajada,80,f2-only,71,no_unambiguous_match,,
+2224,Switzerland,2018,Ricardo Araya,81,"avg(81,80)",86,no_unambiguous_match,,
+2227,Switzerland,2022,Denis Lado,81,"avg(81,80)",73,no_unambiguous_match,,
+2234,Switzerland,2022,Rubén Martínez,75,"avg(75,74)",73,no_unambiguous_match,,
+2255,Togo,2006,Mohamed Coubadja,71,f2-only,79,no_unambiguous_match,,
+2287,Tunisia,2002,Tunisian Mkacher,62,f2-only,71,duplicate_conflict_weaker_match,P-44407:WC-2002,Mkacher
+2342,Tunisia,2026,Seifeddine Tounekti,73,f2-only,72,duplicate_conflict_weaker_match,P-W26-0708:WC-2026,Tounekti
+2399,United States,2010,Bradley Guzan,77,agree,71,no_unambiguous_match,,
+2430,United States,2022,Timothy Michael Ream,70,f1-only,84,duplicate_conflict_weaker_match,P-26367:WC-2022,Ream
+2467,Uruguay,2010,Maximiliano Pereira,75,f1-only,86,no_unambiguous_match,,
+2479,Uruguay,2014,Sebastián Nión,71,f2-only,71,no_unambiguous_match,,
+2482,Uruguay,2018,Lucas di Pascua,76,"avg(75,77)",82,no_unambiguous_match,,
+2484,Uruguay,2018,Rodrigo Colman,73,"avg(69,76)",82,no_unambiguous_match,,
+2491,Uruguay,2022,Agustin Graviz,73,f2-only,71,no_unambiguous_match,,
+2504,Uruguay,2026,Enzo Gabriel Martínez Suárez,71,f1-only,71,duplicate_conflict_weaker_match,P-W26-0760:WC-2026,Martinez
