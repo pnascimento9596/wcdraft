@@ -27,7 +27,8 @@
 // the swap is a one-import change.
 import type { GameData } from "./data";
 import { type HistoryEntry, type HistoryListResult, type RunHistoryProvider } from "./history";
-import { decodeRunToken, RunTokenError } from "./run-token";
+import { decodeRunTokenForDisplay } from "./run-screen-loader";
+import { RunTokenError } from "./run-token";
 import { resultsHref, shareHref } from "./navigation";
 import { RUN_RECORD_CAP } from "./run-record";
 
@@ -127,7 +128,8 @@ export function createServerRunHistoryProvider(
       const warnings: string[] = [];
       for (let i = 0; i < body.runs.length; i += 1) {
         const apiRow = body.runs[i]!;
-        const decoded = decodeRunToken(apiRow.token);
+        const tokenState = decodeRunTokenForDisplay(apiRow.token);
+        const decoded = tokenState.kind === "ready" ? tokenState.token : null;
         const summary = isApiRunSummary(apiRow.summary) ? apiRow.summary : null;
         // F-3.5 — surface the entry as long as we have EITHER a decoded
         // token OR a valid summary. Token decode failure on a row with a

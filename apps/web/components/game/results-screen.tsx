@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { loadGameData, type GameData } from "@/lib/game/data";
+import type { GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
 import {
   configBadgesFromRecordToken,
@@ -20,16 +20,8 @@ import {
   reviewHref,
   shareHref,
 } from "@/lib/game/navigation";
-import { loadRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
-import { loadScenarioBundle } from "@/lib/game/scenario-data";
-import {
-  decodeRunToken,
-  isNewerRunTokenVersion,
-  RunTokenError,
-  versionsAgree,
-  virtualRecordFromToken,
-} from "@/lib/game/run-token";
-import { runSimulation } from "@/lib/game/simulate";
+import type { RunRecordV1 } from "@/lib/game/run-record";
+import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import {
   buildNarrativeLabels,
   buildRunSummary,
@@ -61,6 +53,7 @@ type Mode =
       record: RunRecordV1;
       /** True when this run was rehydrated from a shared `?run=<token>` URL. */
       isReplayedFromToken: boolean;
+      linkRunValue: string;
     }
   | { kind: "missing"; reason: string; runId: string | null }
   | { kind: "skew"; title: string; message: string }
@@ -94,53 +87,53 @@ export function ResultsScreen({
     }
     (async () => {
       try {
-        const gd = await loadGameData();
+        const resolved = await resolveDisplayRun(parsed, { requireScenarioForLocalRun: true });
         if (myToken !== reqToken.current) return;
-        const scenario = await loadScenarioBundle();
-        if (myToken !== reqToken.current) return;
-
-        if (parsed.kind === "id") {
-          const loaded = loadRunRecord(parsed.run_id, gd.versions);
-          if (loaded.status !== "loaded" || !loaded.record) {
-            setMode({
-              kind: "missing",
-              reason:
-                loaded.status === "stale"
-                  ? "This run was created on an older data bundle and has been evicted."
-                  : "We couldn't find that run.",
-              runId: parsed.run_id,
-            });
-            return;
-          }
-          if (!loaded.record.simulation) {
-            // Send the user back to review where they can re-trigger the sim.
-            router.replace(reviewHref(parsed.run_id));
-            return;
-          }
+        if (resolved.kind === "missing") {
           setMode({
-            kind: "ready",
-            gameData: gd,
-            scenario,
-            record: loaded.record,
-            isReplayedFromToken: false,
+            kind: "missing",
+            reason:
+              resolved.runId === null
+                ? "Open a draft first — results are only available for a simulated run."
+                : "We couldn't find that run.",
+            runId: resolved.runId,
           });
           return;
         }
-
-        // Token path — self-contained `?run=<token>` URL, possibly from a
-        // fresh browser. Decode, version-check, replay deterministically.
-        const decoded = decodeRunToken(parsed.token);
-        if (decoded === null) {
+        if (resolved.kind === "stale") {
           setMode({
             kind: "missing",
-            reason: isNewerRunTokenVersion(parsed.token)
-              ? "This link was made on a newer version of the game than this page is running. Reload the page; if that doesn't help, the new version hasn't reached you yet."
-              : "The shared link is malformed or truncated — ask the sender for a fresh link.",
+            reason: "This run was created on an older data bundle and has been evicted.",
+            runId: resolved.runId,
+          });
+          return;
+        }
+        if (resolved.kind === "needsReview") {
+          // Send the user back to review where they can re-trigger the sim.
+          router.replace(reviewHref(resolved.runId));
+          return;
+        }
+        if (resolved.kind === "newerToken") {
+          setMode({
+            kind: "missing",
+            reason:
+              "This link was made on a newer version of the game than this page is running. Reload the page; if that doesn't help, the new version hasn't reached you yet.",
             runId: null,
           });
           return;
         }
-        if (!versionsAgree(decoded, gd.versions)) {
+        if (resolved.kind === "invalidToken") {
+          setMode({
+            kind: "missing",
+            reason:
+              resolved.reason === "malformed"
+                ? "The shared link is malformed or truncated — ask the sender for a fresh link."
+                : resolved.reason,
+            runId: null,
+          });
+          return;
+        }
+        if (resolved.kind === "versionSkew") {
           setMode({
             kind: "skew",
             title: "This shared run is from a different build",
@@ -149,29 +142,17 @@ export function ResultsScreen({
           });
           return;
         }
-        try {
-          const virtual = virtualRecordFromToken(decoded, gd);
-          const { simulation } = await runSimulation(gd, scenario, virtual);
-          if (myToken !== reqToken.current) return;
-          const recordWithSim: RunRecordV1 = { ...virtual, status: "complete", simulation };
-          setMode({
-            kind: "ready",
-            gameData: gd,
-            scenario,
-            record: recordWithSim,
-            isReplayedFromToken: true,
-          });
-        } catch (err) {
-          if (err instanceof RunTokenError) {
-            setMode({
-              kind: "missing",
-              reason: `Couldn't replay the shared run: ${err.message}`,
-              runId: null,
-            });
-            return;
-          }
-          throw err;
+        if (resolved.scenario === null) {
+          throw new Error("results screen resolved a run without a scenario");
         }
+        setMode({
+          kind: "ready",
+          gameData: resolved.gameData,
+          scenario: resolved.scenario,
+          record: resolved.record,
+          isReplayedFromToken: resolved.isReplayedFromToken,
+          linkRunValue: resolved.linkRunValue,
+        });
       } catch (err) {
         if (myToken !== reqToken.current) return;
         const d = describeGameError(err);
@@ -236,17 +217,13 @@ export function ResultsScreen({
     );
   }
 
-  // For token-replayed sessions, in-screen CTAs must carry the ORIGINAL
-  // `?run=` value (the token) so a receiver who didn't originate the run
-  // can still click through results ↔ share without losing the replay.
-  const linkRunValue = parsed?.kind === "token" ? parsed.token : mode.record.run_id;
   return (
     <ResultsBody
       gameData={mode.gameData}
       scenario={mode.scenario}
       record={mode.record}
       isReplayedFromToken={mode.isReplayedFromToken}
-      linkRunValue={linkRunValue}
+      linkRunValue={mode.linkRunValue}
       leaderboardEnabled={leaderboardEnabled}
     />
   );

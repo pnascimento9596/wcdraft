@@ -44,10 +44,10 @@ import {
   createNewRunRecord,
   evictStaleRunRecords,
   isStorageVolatile,
-  loadRunRecord,
   saveRunRecord,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 
 /**
  * Honest fallback copy when the run-record store is running on the in-memory
@@ -132,16 +132,21 @@ export function DraftScreen() {
     const myToken = ++reqToken.current;
     setMode({ kind: "loading" });
     loadGameData()
-      .then((gd) => {
+      .then(async (gd) => {
         if (myToken !== reqToken.current) return;
         evictStaleRunRecords(gd.versions);
         if (requestRunId) {
-          const loaded = loadRunRecord(requestRunId, gd.versions);
-          if (loaded.status === "loaded" && loaded.record) {
+          const resolved = await resolveDisplayRun(
+            { kind: "id", run_id: requestRunId },
+            { allowUnsimulatedLocalRun: true },
+            { loadGameData: async () => gd },
+          );
+          if (myToken !== reqToken.current) return;
+          if (resolved.kind === "ready") {
             setMode({
               kind: "ready",
               gameData: gd,
-              record: loaded.record,
+              record: resolved.record,
               // Re-derive the volatile-storage warning on the resume path so
               // it survives the formation-lock `router.replace` (and a real
               // refresh) — otherwise the spin stage flashes blank between the
@@ -153,9 +158,9 @@ export function DraftScreen() {
               kind: "recovery",
               gameData: gd,
               reason:
-                loaded.status === "missing"
+                resolved.kind === "missing" && resolved.localStatus === "missing"
                   ? "We couldn't find a draft for that link."
-                  : loaded.status === "stale"
+                  : resolved.kind === "stale"
                     ? "This draft was created on an older data bundle and has been evicted."
                     : "This draft record is invalid and has been removed.",
               runId: requestRunId,
