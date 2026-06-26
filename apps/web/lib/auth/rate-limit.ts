@@ -19,11 +19,18 @@ import { sql } from "drizzle-orm";
 /**
  * Bucket families sharing the `auth_rate_limits` table. `email`/`ip` are the
  * F-2 magic-link buckets; the `lb-*` kinds are the F-4 U5 leaderboard-submit
- * buckets (plan §5.2 reuses this mechanism). Each window length gets its OWN
- * kind: window floors of different lengths can coincide (hour 0 of a day), so
- * sharing a key across windows would double-increment one row.
+ * buckets (plan §5.2 reuses this mechanism); `og-sign-ip-1m` protects the
+ * dynamic OG signing route. Each window length gets its OWN kind: window
+ * floors of different lengths can coincide (hour 0 of a day), so sharing a key
+ * across windows would double-increment one row.
  */
-export type RateLimitBucketKind = "email" | "ip" | "lb-identity-1h" | "lb-identity-1d" | "lb-ip-1h";
+export type RateLimitBucketKind =
+  | "email"
+  | "ip"
+  | "lb-identity-1h"
+  | "lb-identity-1d"
+  | "lb-ip-1h"
+  | "og-sign-ip-1m";
 
 export interface RateLimitArgs {
   /** "<kind>:<plaintext>" — hashed inside. */

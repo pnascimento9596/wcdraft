@@ -13,7 +13,7 @@
     "pretypecheck": "node ../../packages/data/scripts/copy-web-assets.mjs",
     "typecheck": "tsc --noEmit",
     "pretest": "node ../../packages/data/scripts/copy-web-assets.mjs && node scripts/generate-sw-version.mjs",
-    "test": "vitest run",
+    "test": "vitest run && tsx scripts/game-flow-playwright.mts",
     "test:golden:leaderboard": "node ../../packages/data/scripts/copy-web-assets.mjs && vitest run lib/leaderboard/__tests__/validate.golden.test.ts",
     "gen:leaderboard-golden": "tsx scripts/generate-leaderboard-golden.mts",
     "generate:icons": "node scripts/generate-icons.mjs",
@@ -27,13 +27,15 @@
     "@wcdraft/db": "workspace:*",
     "next": "^16.2.9",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.10",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "drizzle-orm": "^0.45.2",
+    "playwright-core": "^1.61.1",
     "vitest": "^4.1.8"
   }
 }

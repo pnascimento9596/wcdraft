@@ -12,16 +12,16 @@ import {
   pitchSlotViews,
   squadAverageOverall,
 } from "@/lib/game/adapters";
-import { loadGameData, type GameData } from "@/lib/game/data";
+import type { GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
 import { draftHref, resultsHref } from "@/lib/game/navigation";
 import {
-  loadRunRecord,
   saveRunRecord,
   setRunSimulation,
   setRunStatus,
   type RunRecordV1,
 } from "@/lib/game/run-record";
+import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
@@ -61,24 +61,27 @@ export function ReviewScreen() {
       });
       return;
     }
-    loadGameData()
-      .then((gd) => {
+    resolveDisplayRun(runId ? { kind: "id", run_id: runId } : null, {
+      allowUnsimulatedLocalRun: true,
+    })
+      .then((resolved) => {
         if (myToken !== reqToken.current) return;
-        const loaded = loadRunRecord(runId, gd.versions);
-        if (loaded.status === "loaded" && loaded.record) {
+        if (resolved.kind === "ready") {
           setMode({
             kind: "ready",
-            gameData: gd,
-            record: loaded.record,
+            gameData: resolved.gameData,
+            record: resolved.record,
             persistenceWarning: null,
           });
         } else {
           setMode({
             kind: "missing",
             reason:
-              loaded.status === "stale"
-                ? "This draft was created on an older data bundle."
-                : "We couldn't find this draft.",
+              resolved.kind === "missing" && resolved.runId === null
+                ? "Open a draft first — review is only available for a saved run."
+                : resolved.kind === "stale"
+                  ? "This draft was created on an older data bundle."
+                  : "We couldn't find this draft.",
           });
         }
       })

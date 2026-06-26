@@ -91,7 +91,7 @@ export const REPLY_BANK: BankScenario[] = [
         referenced_feature_ids: ["draft_flow", "manager_pick", "two_modes", "free_browser"],
       },
       {
-        text: "Different flavour of the same fun — nation Synergy rewards a connected XI, a season-keyed leaderboard ranks your run, and every run gets a reproducible share link. No download, no sign-up to play.",
+        text: "Different flavour of the same fun — nation Synergy rewards a connected XI, per-config leaderboards keep runs in the right lane, and every run gets a reproducible share link. No download to play.",
         referenced_feature_ids: [
           "nation_synergy",
           "leaderboard",
@@ -145,7 +145,7 @@ export const QUOTE_BANK: BankScenario[] = [
         referenced_feature_ids: ["free_browser", "era_presets", "manager_pick", "two_modes"],
       },
       {
-        text: "Add this one to the rotation — Squad First or Position First, nation Synergy, a season-keyed leaderboard, and a reproducible share link for every run.",
+        text: "Add this one to the rotation — Squad First or Position First, nation Synergy, per-config leaderboards, and a reproducible share link for every run.",
         referenced_feature_ids: [
           "draft_flow",
           "nation_synergy",

@@ -21,11 +21,12 @@ import {
   buildRuntimeDeps,
   buildMagicLinkDeps,
   jsonError,
-  readClientIp,
   readRequestCookie,
   setCsrfCookie,
   setSessionCookie,
 } from "@/lib/auth/handler-helpers";
+import { readClientIp } from "@/lib/http/client-ip";
+import { requireJsonObject } from "@/lib/http/bounded-body";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { AuthError } from "@/lib/auth/errors";
 import { isAuthEnabled } from "@/lib/auth/auth-enabled";
@@ -33,6 +34,8 @@ import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 interface RequestBody {
   email?: unknown;
 }
+
+const MAX_MAGIC_LINK_BODY_BYTES = 2 * 1024;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -62,7 +65,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     // 3) Parse + dispatch.
-    const body = (await req.json().catch(() => null)) as RequestBody | null;
+    const body = (await requireJsonObject(req, {
+      maxBytes: MAX_MAGIC_LINK_BODY_BYTES,
+      allowedContentTypes: ["application/json"],
+    })) as RequestBody;
     const email = typeof body?.email === "string" ? body.email : "";
     await requestMagicLink({ email, ipAddress: readClientIp(req) }, buildMagicLinkDeps(deps));
 

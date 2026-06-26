@@ -1,7 +1,7 @@
 {
   "$schema": "./features.schema.json",
   "manifest_version": "1.0.0",
-  "updated": "2026-06-12",
+  "updated": "2026-06-26",
   "site_url": "https://www.wcdraft.com",
   "note": "TRUTH SOURCE for every published marketing claim (q-007). The composer reads feature truth from here: a template may only reference a feature whose `status` is `live`. Each `live` feature was verified against origin/main (incl. #118 — Current rating basis enabled end-to-end) and is reachable on the production site. FUTURE LANES MUST UPDATE THIS FILE when a feature ships, changes, or is removed — a stale claim here becomes a false post. The fresh-context review gate cross-checks every `live` entry against www.wcdraft.com; a claim prod does not support is a merge blocker. Licensing: nominative 'World Cup' only, no FIFA marks, 'football' never 'soccer', 'manager' never 'coach', 'Synergy' never 'Chemistry'.",
   "features": [
@@ -125,15 +125,15 @@
     {
       "id": "leaderboard",
       "status": "live",
-      "headline": "Season-keyed ranked leaderboard",
-      "claim": "Post your run to a season-keyed ranked leaderboard and see where your XI lands.",
+      "headline": "Season-keyed per-config leaderboards",
+      "claim": "Post eligible runs to season-keyed per-config leaderboards. Casual posts can be anonymous; ranked posts require an account.",
       "hooks": [
-        "There's a season-keyed leaderboard — post your run.",
-        "Ranked board, keyed to the season. Climb it.",
-        "Submit your run to the leaderboard and rank up."
+        "Season-keyed leaderboards: casual or signed-in ranked, per config.",
+        "Post a casual run, or sign in for ranked. Each config has its own board.",
+        "Leaderboards are per-config now — no one-size-fits-all ladder."
       ],
-      "verify": "The leaderboard board page is reachable and accepts a submitted run (LEADERBOARD_ENABLED live in prod).",
-      "source": "apps/web/components/leaderboard/board-views.tsx; apps/web/lib/leaderboard/*"
+      "verify": "The leaderboard board page is reachable; board filters include mode, draft order, era, and rating basis. Casual submissions can post anonymously; ranked submissions require an account.",
+      "source": "STATE.md DC-8 per-config leaderboard note; apps/web/components/leaderboard/board-views.tsx; apps/web/lib/leaderboard/submit-route.ts; apps/web/lib/leaderboard/*"
     },
     {
       "id": "shareable_replays",
@@ -158,7 +158,7 @@
         "Rate players on their whole career, or just that tournament.",
         "Two ways to value a player: Career or Current."
       ],
-      "verify": "On /play/draft 'Draft setup' → Rating basis: Career AND Current are both selectable (enabled end-to-end by #118; the sim resolves basis_ratings.current for a Current run). NOTE: Current runs are casual-only (non-canonical on the ranked board) — never imply a Current run can rank.",
+      "verify": "On /play/draft 'Draft setup' → Rating basis: Career AND Current are both selectable (enabled end-to-end by #118; the sim resolves basis_ratings.current for a Current run). Leaderboard boards are per-config for both casual and ranked; ranked still requires an account.",
       "source": "apps/web/components/game/draft-screen.tsx (Rating basis segment, SETUP_RATING_BASES) + #118 Current-basis enablement"
     }
   ]

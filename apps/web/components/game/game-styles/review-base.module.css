@@ -1,0 +1,95 @@
+/* ── Review ────────────────────────────────────────────────────────────── */
+
+.review {
+  display: flex;
+  flex-direction: column;
+}
+.teamNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.teamNameLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+.teamNameInput {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--line-strong);
+  padding: 0.1rem 0;
+  width: 100%;
+}
+.teamNameInput:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+.reviewGrid {
+  display: grid;
+  gap: 1.2rem;
+}
+@media (min-width: 60rem) {
+  .reviewGrid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.squadAvg {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.5rem;
+  color: var(--accent-text);
+}
+.lineRatings {
+  display: grid;
+  gap: 0.7rem;
+}
+.lineRow {
+  display: grid;
+  grid-template-columns: 6rem 1fr 2.2rem;
+  align-items: center;
+  gap: 0.7rem;
+}
+.lineName {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.lineTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+.lineFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--field),
+    color-mix(in srgb, var(--field) 55%, var(--accent))
+  );
+}
+.lineVal {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.1rem;
+  text-align: right;
+}
+.simPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.simNote {
+  color: var(--ink-soft);
+}
+.simPanel .btn {
+  width: 100%;
+}

@@ -1,5 +1,15 @@
 # wcdraft X operating plan - June/July 2026
 
+> **SUPERSEDED / RE-SCOPED 2026-06-26:** The API-posting automation parts of
+> this plan no longer describe current operation. Per `STATE.md` and
+> `.github/workflows/marketing-x.yml`, q-007 is now a **zero-API weekly
+> content-pack model**: GitHub Actions generates ready-to-paste packs and
+> refreshes banks, while the owner schedules posts manually in X. The live API
+> poster/client remain dormant behind `MARKETING_PAUSED=true`; no repository
+> Actions secrets for X API posting are used. The positioning, voice, safety,
+> cadence, and licensing guidance below remain useful unless contradicted by
+> newer repo truth.
+
 Tier: Yellow planning/docs. Organic-first. No paid promotion until the HUMAN gate clears.
 
 Sources checked 2026-06-11: [FIFA match schedule PDF](https://digitalhub.fifa.com/m/1be9ce37eb98fcc5/original/FWC26-Match-Schedule_English.pdf), [FIFA Scores & Fixtures](https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures), and [FIFA opening-match article](https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/estadio-azteca-mexico-city-host-opening-match-world-cup-2026).

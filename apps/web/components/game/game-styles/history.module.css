@@ -1,0 +1,220 @@
+/* ── History ───────────────────────────────────────────────────────────── */
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.historyWarn {
+  margin: 0;
+  font-size: var(--t-xs);
+  color: var(--warn);
+  font-family: var(--f-mono);
+}
+
+.historyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.historyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform var(--d-fast) var(--e-snap),
+    border-color var(--d-fast),
+    box-shadow var(--d-fast);
+}
+
+.historyCard:hover,
+.historyCard:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--ring-emerald, 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent));
+  transform: translateY(-1px);
+}
+
+.historyCardDisabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.historyCardDisabled:hover,
+.historyCardDisabled:focus-visible {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+.historyMetaTop {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.historyRecord {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.4rem, 9vw, 3.2rem);
+  line-height: 0.9;
+  color: var(--accent);
+}
+
+.historyRecordGold {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
+    var(--gold) 55%,
+    var(--gold-strong) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.historyMetaLines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.historyTeam {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-100);
+}
+
+.historyFormation {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.historyPicks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.historyPick {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  border: 1px solid var(--line);
+  background: var(--bg-sunken, var(--bg-750));
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.historyPickNation {
+  font-family: var(--f-mono, ui-monospace), monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.historyPickName {
+  color: var(--ink-100);
+}
+
+.historyFootRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+.historyRecency {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.historySequence {
+  font-family: var(--f-mono, ui-monospace), monospace;
+}
+
+.historySeed {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--bg-sunken, var(--bg-750));
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.18rem 0.45rem;
+  font-size: 0.7rem;
+}
+
+.historyActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.historyOpenHint {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.historyShareHint {
+  color: var(--ink-faint);
+  font-family: var(--f-mono, ui-monospace), monospace;
+  font-size: 0.7rem;
+}
+
+.historyReplayError {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--loss, var(--warn));
+}
+
+/* ── Social share intents ─────────────────────────────────────────────── */
+
+.shareIntentGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.4rem;
+}
+
+.shareIntentLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.shareIntentRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.shareIntentButton {
+  font-size: 0.82rem;
+  padding-inline: 0.85rem;
+}
+
+.copyLinkOk {
+  color: var(--accent);
+  font-size: 0.78rem;
+  margin: 0;
+}

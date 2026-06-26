@@ -1,5608 +1,1691 @@
 /*
- * wcdraft — game-screen styles (WS-D).
+ * wcdraft — game-screen CSS module facade.
  *
- * Scoped CSS Module for the play flow (mode select, draft, review, results,
- * share). Every colour flows from the design tokens in globals.css, so light
- * and dark are both first-class with no per-rule overrides. Aesthetic matches
- * the broadsheet shell: warm paper, pitch-ink, an emerald action accent + gold for win/legend, chalk
- * pitch lines.
+ * Real declarations are split by stable game surface in ./game-styles/.
+ * Keep this file as the single import/export contract for components:
+ * each class below composes the surface-local class names it needs so
+ * existing `s.foo` call sites and descendant selectors remain behavior-preserving.
  */
 
-/* ── Shared primitives ─────────────────────────────────────────────────── */
-
-.panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 1.25rem;
-  box-shadow: var(--shadow-card);
+/* Preserve surface stylesheet load order before the public export map. */
+.__surface_shared {
+  composes: panel from "./game-styles/shared.module.css";
+}
+.__surface_draft_base {
+  composes: draft from "./game-styles/draft-base.module.css";
+}
+.__surface_review_base {
+  composes: review from "./game-styles/review-base.module.css";
+}
+.__surface_results {
+  composes: results from "./game-styles/results.module.css";
+}
+.__surface_share {
+  composes: share from "./game-styles/share.module.css";
+}
+.__surface_draft_shell {
+  composes: draftShell from "./game-styles/draft-shell.module.css";
+}
+.__surface_review {
+  composes: reviewHead from "./game-styles/review.module.css";
+}
+.__surface_draft_spin {
+  composes: spinShell from "./game-styles/draft-spin.module.css";
+}
+.__surface_history {
+  composes: history from "./game-styles/history.module.css";
+}
+.__surface_draft_polish {
+  composes: pitchSynergyLayer from "./game-styles/draft-polish.module.css";
 }
 
+/* Public CSS Module exports. Class names stay source-compatible. */
+.panel {
+  composes: panel from "./game-styles/shared.module.css";
+  composes: panel from "./game-styles/draft-polish.module.css";
+}
 .panelHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  composes: panelHead from "./game-styles/shared.module.css";
+  composes: panelHead from "./game-styles/draft-polish.module.css";
 }
 .panelTitle {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 0.02em;
+  composes: panelTitle from "./game-styles/shared.module.css";
+  composes: panelTitle from "./game-styles/draft-polish.module.css";
 }
 .panelMeta {
-  font-size: 0.78rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.02em;
-  text-align: right;
+  composes: panelMeta from "./game-styles/shared.module.css";
+  composes: panelMeta from "./game-styles/draft-polish.module.css";
 }
 .eyebrowAccent {
-  font-family: var(--font-text), serif;
-  text-transform: uppercase;
-  letter-spacing: 0.26em;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent-text);
+  composes: eyebrowAccent from "./game-styles/shared.module.css";
+  composes: eyebrowAccent from "./game-styles/draft-base.module.css";
+  composes: eyebrowAccent from "./game-styles/results.module.css";
+  composes: eyebrowAccent from "./game-styles/draft-polish.module.css";
 }
 .demoBadge {
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-faint);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.28rem 0.66rem;
-  white-space: nowrap;
+  composes: demoBadge from "./game-styles/shared.module.css";
 }
-
-/* ── Mode select ───────────────────────────────────────────────────────── */
-
 .modeGrid {
-  display: grid;
-  gap: 1.2rem;
-  /* Uniform card height between the two modes — the shorter card stretches
-     to match instead of leaving a ragged edge. */
-  grid-auto-rows: 1fr;
-  margin-top: 1.4rem;
+  composes: modeGrid from "./game-styles/shared.module.css";
 }
-@media (min-width: 46rem) {
-  .modeGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-/* Pre-draft card system — mode select + formation picker share this design
-   language: 14px radius, 1px chalk border, left accent bar, mono uppercase
-   CTA (see .formationCard). Change one, change both. */
 .modeCard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 1.25rem 1.3rem;
-  box-shadow: var(--shadow-card);
-  text-decoration: none;
-  color: var(--ink);
-  transition:
-    transform 0.18s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-  overflow: hidden;
+  composes: modeCard from "./game-styles/shared.module.css";
 }
-.modeCardLive::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 4px;
-  background: var(--accent);
-}
-.modeCardLive:hover {
-  transform: translateY(-3px);
-  border-color: var(--line-strong);
+.modeCardLive {
+  composes: modeCardLive from "./game-styles/shared.module.css";
 }
 .modeCardSoon {
-  opacity: 0.72;
+  composes: modeCardSoon from "./game-styles/shared.module.css";
 }
 .modeCardTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  composes: modeCardTop from "./game-styles/shared.module.css";
 }
 .modeTag {
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-weight: 700;
-  color: var(--accent-ink);
-  background: var(--accent);
-  border-radius: 999px;
-  padding: 0.26rem 0.66rem;
+  composes: modeTag from "./game-styles/shared.module.css";
 }
 .modeTagSoon {
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-weight: 600;
-  color: var(--ink-faint);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.24rem 0.64rem;
+  composes: modeTagSoon from "./game-styles/shared.module.css";
 }
 .modeIndex {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.6rem;
-  color: color-mix(in srgb, var(--ink) 22%, transparent);
+  composes: modeIndex from "./game-styles/shared.module.css";
 }
 .modeName {
-  font-family: var(--font-display), sans-serif;
-  font-size: 2.1rem;
-  letter-spacing: 0.01em;
+  composes: modeName from "./game-styles/shared.module.css";
 }
 .modeDesc {
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-  line-height: 1.5;
+  composes: modeDesc from "./game-styles/shared.module.css";
 }
-/* Feature bullets as single-line inline chips — one row of quiet tags
-   instead of a three-line list (screen-compaction contract). */
 .modeFeatures {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-top: 0.15rem;
-}
-.modeFeatures li {
-  font-size: 0.7rem;
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.16rem 0.55rem;
-  white-space: nowrap;
+  composes: modeFeatures from "./game-styles/shared.module.css";
 }
 .modeCta {
-  margin-top: auto;
-  font-family: var(--f-mono);
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  padding-top: 0.5rem;
+  composes: modeCta from "./game-styles/shared.module.css";
 }
 .modeCtaSoon {
-  margin-top: auto;
-  font-size: 0.82rem;
-  font-style: italic;
-  color: var(--ink-faint);
-  padding-top: 0.5rem;
+  composes: modeCtaSoon from "./game-styles/shared.module.css";
 }
-
-/* Mode select — single-screen contract at ~390x664 VISIBLE viewport (Safari
-   chrome accounted for): page head + BOTH cards (Classic + Memory) fully
-   visible with zero scroll. Compaction only: merged header line, chip
-   bullets, tighter type/padding. */
-@media (max-width: 430px) {
-  .modeGrid {
-    gap: 8px;
-    margin-top: 0.7rem;
-  }
-  .modeCard {
-    padding: 0.7rem 0.8rem;
-    gap: 0.3rem;
-    border-radius: 12px;
-  }
-  .modeCardLive:hover {
-    transform: none;
-  }
-  .modeTag {
-    font-size: 0.58rem;
-    padding: 0.18rem 0.5rem;
-  }
-  .modeIndex {
-    font-size: 1.1rem;
-  }
-  .modeName {
-    font-size: 1.4rem;
-    line-height: 1;
-  }
-  .modeDesc {
-    font-size: 0.8rem;
-    line-height: 1.42;
-  }
-  .modeFeatures {
-    gap: 0.25rem;
-    margin-top: 0;
-  }
-  .modeFeatures li {
-    font-size: 0.64rem;
-    padding: 0.12rem 0.45rem;
-  }
-  .modeCta {
-    font-size: 0.78rem;
-    padding-top: 0.2rem;
-  }
-}
-
-/* ── Draft layout ──────────────────────────────────────────────────────── */
-
 .draft {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding-bottom: 5.5rem; /* room for the sticky lock bar */
+  composes: draft from "./game-styles/draft-base.module.css";
 }
 .spinHead {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  composes: spinHead from "./game-styles/draft-base.module.css";
 }
 .spinCounter {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
+  composes: spinCounter from "./game-styles/draft-base.module.css";
 }
 .spinCounterNum {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 0.02em;
+  composes: spinCounterNum from "./game-styles/draft-base.module.css";
+  composes: spinCounterNum from "./game-styles/draft-polish.module.css";
 }
 .spinCounterTotal {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
-  color: var(--ink-faint);
+  composes: spinCounterTotal from "./game-styles/draft-base.module.css";
+  composes: spinCounterTotal from "./game-styles/draft-polish.module.css";
 }
 .spinProgress {
-  flex: 1;
-  height: 6px;
-  background: var(--bg-sunken);
-  border-radius: 999px;
-  overflow: hidden;
+  composes: spinProgress from "./game-styles/draft-base.module.css";
+  composes: spinProgress from "./game-styles/draft-polish.module.css";
 }
 .spinProgressFill {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-  border-radius: 999px;
+  composes: spinProgressFill from "./game-styles/draft-base.module.css";
 }
-
 .draftGrid {
-  display: grid;
-  gap: 1.2rem;
+  composes: draftGrid from "./game-styles/draft-base.module.css";
 }
-@media (min-width: 60rem) {
-  .draftGrid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    align-items: start;
-  }
+.draftLeft {
+  composes: draftLeft from "./game-styles/draft-base.module.css";
 }
-.draftLeft,
-.draftRight,
+.draftRight {
+  composes: draftRight from "./game-styles/draft-base.module.css";
+}
 .reviewSide {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  min-width: 0;
+  composes: reviewSide from "./game-styles/draft-base.module.css";
 }
-@media (min-width: 60rem) {
-  .draftLeft {
-    position: sticky;
-    top: 5rem;
-  }
-}
-
-/* ── Pitch ─────────────────────────────────────────────────────────────── */
-
 .pitch {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 1rem 0.6rem;
-  min-height: 24rem;
-  border-radius: 12px;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--field) 92%, black 0%),
-    color-mix(in srgb, var(--field) 78%, black 8%)
-  );
-  overflow: hidden;
+  composes: pitch from "./game-styles/draft-base.module.css";
+  composes: pitch from "./game-styles/draft-shell.module.css";
+  composes: pitch from "./game-styles/draft-polish.module.css";
 }
 .slot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  width: 4.7rem;
-  min-height: 3.6rem;
-  padding: 0.4rem 0.3rem;
-  border-radius: 10px;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  background: color-mix(in srgb, var(--bg-invert) 80%, transparent);
-  color: var(--field-ink);
-  font: inherit;
-  text-align: center;
-  transition:
-    transform 0.14s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
-}
-button.slot {
-  cursor: pointer;
-}
-button.slot:disabled {
-  cursor: default;
+  composes: slot from "./game-styles/draft-base.module.css";
+  composes: slot from "./game-styles/draft-shell.module.css";
+  composes: slot from "./game-styles/draft-polish.module.css";
 }
 .slotEmpty {
-  background: color-mix(in srgb, var(--bg-invert) 38%, transparent);
-  border-style: dashed;
-  color: rgba(255, 255, 255, 0.82);
-}
-/* HOVER LIFT — only outside the pitch. Inside the pitch, the slot is
-   absolutely positioned with translate(-50%, -50%); any extra transform
-   here would override that and cause the highlighted slot to JUMP. The
-   `:not(.pitch *)` scope keeps the lift for bench-style usage of .slot. */
-button.slotEmpty:hover:not(:disabled):not(.pitch *) {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.75);
+  composes: slotEmpty from "./game-styles/draft-base.module.css";
+  composes: slotEmpty from "./game-styles/draft-shell.module.css";
 }
 .slotSelected {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
+  composes: slotSelected from "./game-styles/draft-base.module.css";
+  composes: slotSelected from "./game-styles/draft-shell.module.css";
 }
 .slotLocked {
-  opacity: 0.96;
+  composes: slotLocked from "./game-styles/draft-base.module.css";
+  composes: slotLocked from "./game-styles/draft-shell.module.css";
 }
 .slotPos {
-  font-family: var(--font-display), sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.7);
+  composes: slotPos from "./game-styles/draft-base.module.css";
+  composes: slotPos from "./game-styles/draft-shell.module.css";
+  composes: slotPos from "./game-styles/draft-polish.module.css";
 }
 .slotName {
-  font-size: 0.74rem;
-  font-weight: 600;
-  line-height: 1.05;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  white-space: nowrap;
+  composes: slotName from "./game-styles/draft-base.module.css";
+  composes: slotName from "./game-styles/draft-polish.module.css";
 }
 .slotEmptyLabel {
-  font-size: 0.72rem;
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.7);
+  composes: slotEmptyLabel from "./game-styles/draft-base.module.css";
+  composes: slotEmptyLabel from "./game-styles/draft-shell.module.css";
+  composes: slotEmptyLabel from "./game-styles/draft-polish.module.css";
 }
 .slotMeta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+  composes: slotMeta from "./game-styles/draft-base.module.css";
+  composes: slotMeta from "./game-styles/draft-polish.module.css";
 }
 .slotRating {
-  font-family: var(--font-display), sans-serif;
-  font-size: 0.8rem;
+  composes: slotRating from "./game-styles/draft-base.module.css";
+  composes: slotRating from "./game-styles/draft-polish.module.css";
 }
 .lockGlyph {
-  font-size: 0.6rem;
+  composes: lockGlyph from "./game-styles/draft-base.module.css";
 }
 .slotWarn {
-  position: absolute;
-  top: 0.3rem;
-  right: 0.3rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 0 2px var(--bg-invert);
+  composes: slotWarn from "./game-styles/draft-base.module.css";
 }
-.slot {
-  position: relative;
-}
-
-/* Compatibility tiers (committed cards) — coloured left border accent. */
 .tier_ideal {
-  border-left: 4px solid var(--accent);
+  composes: tier_ideal from "./game-styles/draft-base.module.css";
+  composes: tier_ideal from "./game-styles/draft-shell.module.css";
 }
 .tier_ok {
-  border-left: 4px solid rgba(255, 255, 255, 0.6);
+  composes: tier_ok from "./game-styles/draft-base.module.css";
+  composes: tier_ok from "./game-styles/draft-shell.module.css";
 }
 .tier_stretch {
-  border-left: 4px solid var(--gold);
+  composes: tier_stretch from "./game-styles/draft-base.module.css";
+  composes: tier_stretch from "./game-styles/draft-shell.module.css";
 }
 .tier_misfit {
-  border-left: 4px solid var(--accent);
+  composes: tier_misfit from "./game-styles/draft-base.module.css";
+  composes: tier_misfit from "./game-styles/draft-shell.module.css";
 }
-/* Preview tier glow on open slots while placing. */
 .slotPreview {
-  border-style: solid;
+  composes: slotPreview from "./game-styles/draft-base.module.css";
+  composes: slotPreview from "./game-styles/draft-shell.module.css";
 }
 .tierPreview_ideal {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 22%, var(--bg-invert));
+  composes: tierPreview_ideal from "./game-styles/draft-base.module.css";
+  composes: tierPreview_ideal from "./game-styles/draft-shell.module.css";
 }
 .tierPreview_ok {
-  border-color: rgba(255, 255, 255, 0.8);
+  composes: tierPreview_ok from "./game-styles/draft-base.module.css";
+  composes: tierPreview_ok from "./game-styles/draft-shell.module.css";
 }
 .tierPreview_stretch {
-  border-color: var(--gold);
-  background: color-mix(in srgb, var(--gold) 18%, var(--bg-invert));
+  composes: tierPreview_stretch from "./game-styles/draft-base.module.css";
+  composes: tierPreview_stretch from "./game-styles/draft-shell.module.css";
 }
 .tierPreview_misfit {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 18%, var(--bg-invert));
+  composes: tierPreview_misfit from "./game-styles/draft-base.module.css";
+  composes: tierPreview_misfit from "./game-styles/draft-shell.module.css";
 }
-
-/* ── Bench + manager strips ────────────────────────────────────────────── */
-
-.bench,
+.bench {
+  composes: bench from "./game-styles/draft-base.module.css";
+  composes: bench from "./game-styles/draft-shell.module.css";
+  composes: bench from "./game-styles/draft-polish.module.css";
+}
 .mgrSlot {
-  margin-top: 1rem;
+  composes: mgrSlot from "./game-styles/draft-base.module.css";
 }
 .benchLabel {
-  display: block;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-faint);
-  margin-bottom: 0.45rem;
+  composes: benchLabel from "./game-styles/draft-base.module.css";
+  composes: benchLabel from "./game-styles/draft-polish.module.css";
 }
 .benchSlots {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.45rem;
+  composes: benchSlots from "./game-styles/draft-base.module.css";
+  composes: benchSlots from "./game-styles/draft-shell.module.css";
+  composes: benchSlots from "./game-styles/draft-polish.module.css";
 }
 .benchSlot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  padding: 0.4rem 0.25rem;
-  border-radius: 9px;
-  border: 1.5px dashed var(--line-strong);
-  background: var(--bg-sunken);
-  color: var(--ink-soft);
-  font: inherit;
-  text-align: center;
-  min-height: 3rem;
-}
-button.benchSlot {
-  cursor: pointer;
-}
-button.benchSlot:disabled {
-  cursor: default;
-  opacity: 0.85;
-}
-button.benchSlot:not(:disabled):hover {
-  border-color: var(--accent);
+  composes: benchSlot from "./game-styles/draft-base.module.css";
+  composes: benchSlot from "./game-styles/draft-shell.module.css";
+  composes: benchSlot from "./game-styles/draft-polish.module.css";
 }
 .benchFilled {
-  border-style: solid;
-  border-color: var(--line);
-  background: var(--bg-panel);
-  color: var(--ink);
-}
-.benchSlot .slotPos {
-  color: var(--ink-faint);
-}
-.benchSlot .slotName {
-  color: inherit;
+  composes: benchFilled from "./game-styles/draft-base.module.css";
 }
 .benchSlotTop {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  max-width: 100%;
-}
-.mgrFilled,
-.mgrEmpty {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  font-size: 0.92rem;
+  composes: benchSlotTop from "./game-styles/draft-base.module.css";
 }
 .mgrFilled {
-  background: var(--bg-sunken);
-  border: 1px solid var(--line);
-  font-weight: 600;
+  composes: mgrFilled from "./game-styles/draft-base.module.css";
 }
 .mgrEmpty {
-  border: 1px dashed var(--line-strong);
-  color: var(--ink-faint);
-  font-style: italic;
+  composes: mgrEmpty from "./game-styles/draft-base.module.css";
 }
 .mgrRating {
-  margin-left: auto;
-  font-family: var(--font-display), sans-serif;
-  color: var(--accent);
+  composes: mgrRating from "./game-styles/draft-base.module.css";
 }
-
-/* ── Spin reveal ───────────────────────────────────────────────────────── */
-
 .revealPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--bg-invert);
-  color: var(--field-ink);
-  border-color: transparent;
-}
-:root[data-theme="dark"] .revealPanel {
-  color: var(--bg);
-}
-.revealPanel .eyebrowAccent {
-  color: var(--accent);
+  composes: revealPanel from "./game-styles/draft-base.module.css";
 }
 .revealTeam {
-  display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
-  flex-wrap: wrap;
+  composes: revealTeam from "./game-styles/draft-base.module.css";
 }
 .revealNation {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(2.2rem, 7vw, 3.4rem);
-  line-height: 0.95;
+  composes: revealNation from "./game-styles/draft-base.module.css";
 }
 .revealYear {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(1.6rem, 5vw, 2.4rem);
-  color: var(--accent);
+  composes: revealYear from "./game-styles/draft-base.module.css";
 }
 .revealHint {
-  font-size: 0.92rem;
-  opacity: 0.85;
+  composes: revealHint from "./game-styles/draft-base.module.css";
 }
-
-/* ── Controls ──────────────────────────────────────────────────────────── */
-
 .controls {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  composes: controls from "./game-styles/draft-base.module.css";
+  composes: controls from "./game-styles/draft-polish.module.css";
 }
 .searchInput {
-  width: 100%;
-  font: inherit;
-  font-size: 0.95rem;
-  padding: 0.65rem 0.9rem;
-  border-radius: 10px;
-  border: 1px solid var(--line-strong);
-  background: var(--bg-panel);
-  color: var(--ink);
-}
-.searchInput::placeholder {
-  color: var(--ink-faint);
+  composes: searchInput from "./game-styles/draft-base.module.css";
+  composes: searchInput from "./game-styles/draft-polish.module.css";
 }
 .filterRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
+  composes: filterRow from "./game-styles/draft-base.module.css";
+  composes: filterRow from "./game-styles/draft-polish.module.css";
 }
 .segmented {
-  display: inline-flex;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 0.16rem;
-  background: var(--bg-sunken);
+  composes: segmented from "./game-styles/draft-base.module.css";
+  composes: segmented from "./game-styles/draft-polish.module.css";
 }
-.seg,
-.segActive {
-  border: none;
-  background: transparent;
-  color: var(--ink-soft);
-  font-family: var(--font-display), sans-serif;
-  letter-spacing: 0.04em;
-  font-size: 0.78rem;
-  padding: 0.36rem 0.7rem;
-  min-height: 44px; /* thumb-sized position filter (tap-target audit) */
-  border-radius: 999px;
-  cursor: pointer;
+.seg {
+  composes: seg from "./game-styles/draft-base.module.css";
+  composes: seg from "./game-styles/draft-polish.module.css";
 }
 .segActive {
-  background: var(--accent);
-  color: var(--accent-ink);
+  composes: segActive from "./game-styles/draft-base.module.css";
+  composes: segActive from "./game-styles/draft-polish.module.css";
 }
 .sortLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.8rem;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  composes: sortLabel from "./game-styles/draft-base.module.css";
+  composes: sortLabel from "./game-styles/draft-polish.module.css";
 }
 .sortSelect {
-  font: inherit;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.5rem;
-  min-height: 44px; /* tap-target audit */
-  border-radius: 8px;
-  border: 1px solid var(--line-strong);
-  background: var(--bg-panel);
-  color: var(--ink);
+  composes: sortSelect from "./game-styles/draft-base.module.css";
+  composes: sortSelect from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Candidate cards ───────────────────────────────────────────────────── */
-
 .candList {
-  display: grid;
-  /* Single column must be allowed to shrink BELOW its min-content. A bare
-     `grid` track defaults to `auto`, whose minimum is the row's min-content —
-     and `.candRowName`/`.candRowSub` are `white-space: nowrap`, so a long club
-     line (e.g. "Vitória de Guimarães") makes that min-content wider than the
-     viewport. The track then refuses to shrink and the whole draft column
-     scrolls horizontally (formation title clips to "-3-3", flag half off,
-     scrollbar under the pitch). `minmax(0, 1fr)` lets the track collapse so the
-     `min-width: 0` ellipsis on the name/sub lines actually engages. */
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.7rem;
+  composes: candList from "./game-styles/draft-base.module.css";
+  composes: candList from "./game-styles/draft-polish.module.css";
 }
 .cand {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: var(--ink);
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0.85rem 0.95rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-card);
-  transition:
-    transform 0.14s ease,
-    border-color 0.18s ease;
-}
-.cand:hover {
-  transform: translateY(-2px);
-  border-color: var(--line-strong);
+  composes: cand from "./game-styles/draft-base.module.css";
+  composes: cand from "./game-styles/draft-shell.module.css";
 }
 .candSelected {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
+  composes: candSelected from "./game-styles/draft-base.module.css";
+  composes: candSelected from "./game-styles/draft-shell.module.css";
 }
 .candDisabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  filter: grayscale(0.4);
-}
-.candDisabled:hover {
-  transform: none;
+  composes: candDisabled from "./game-styles/draft-base.module.css";
+  composes: candDisabled from "./game-styles/draft-shell.module.css";
 }
 .candManager {
-  border-left: 4px solid var(--accent);
+  composes: candManager from "./game-styles/draft-base.module.css";
+  composes: candManager from "./game-styles/draft-shell.module.css";
 }
 .candTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  composes: candTop from "./game-styles/draft-base.module.css";
+  composes: candTop from "./game-styles/draft-shell.module.css";
 }
 .candId {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  min-width: 0;
+  composes: candId from "./game-styles/draft-base.module.css";
+  composes: candId from "./game-styles/draft-shell.module.css";
 }
 .candShirt {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 8px;
-  background: var(--bg-sunken);
-  font-family: var(--font-display), sans-serif;
-  font-size: 1rem;
-  color: var(--ink-soft);
+  composes: candShirt from "./game-styles/draft-base.module.css";
+  composes: candShirt from "./game-styles/draft-shell.module.css";
 }
 .candNameWrap {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+  composes: candNameWrap from "./game-styles/draft-base.module.css";
+  composes: candNameWrap from "./game-styles/draft-shell.module.css";
 }
 .candName {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.18rem;
-  letter-spacing: 0.01em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+  composes: candName from "./game-styles/draft-base.module.css";
+  composes: candName from "./game-styles/draft-shell.module.css";
 }
 .candCaptain {
-  font-size: 0.6rem;
-  font-family: var(--font-text), serif;
-  font-weight: 700;
-  color: var(--accent-ink);
-  background: var(--accent);
-  border-radius: 4px;
-  padding: 0.05rem 0.28rem;
+  composes: candCaptain from "./game-styles/draft-base.module.css";
+  composes: candCaptain from "./game-styles/draft-shell.module.css";
 }
 .candSub {
-  font-size: 0.8rem;
-  color: var(--ink-faint);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  composes: candSub from "./game-styles/draft-base.module.css";
+  composes: candSub from "./game-styles/draft-shell.module.css";
 }
 .candOverall {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
+  composes: candOverall from "./game-styles/draft-base.module.css";
+  composes: candOverall from "./game-styles/draft-shell.module.css";
 }
 .candOverallNum {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.9rem;
-  color: var(--ink);
+  composes: candOverallNum from "./game-styles/draft-base.module.css";
+  composes: candOverallNum from "./game-styles/draft-shell.module.css";
 }
 .candOverallLabel {
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
+  composes: candOverallLabel from "./game-styles/draft-base.module.css";
+  composes: candOverallLabel from "./game-styles/draft-shell.module.css";
 }
 .candPositions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem;
+  composes: candPositions from "./game-styles/draft-base.module.css";
 }
 .posTag {
-  font-family: var(--font-display), sans-serif;
-  font-size: 0.66rem;
-  letter-spacing: 0.05em;
-  color: var(--field-ink);
-  background: var(--field);
-  border-radius: 5px;
-  padding: 0.16rem 0.42rem;
+  composes: posTag from "./game-styles/draft-base.module.css";
+  composes: posTag from "./game-styles/draft-shell.module.css";
 }
 .candDrafted {
-  margin-left: auto;
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
+  composes: candDrafted from "./game-styles/draft-base.module.css";
+  composes: candDrafted from "./game-styles/draft-shell.module.css";
 }
 .channels {
-  display: grid;
-  gap: 0.28rem;
+  composes: channels from "./game-styles/draft-base.module.css";
+  composes: channels from "./game-styles/review.module.css";
+  composes: channels from "./game-styles/draft-polish.module.css";
 }
 .channel {
-  display: grid;
-  grid-template-columns: 2.2rem 1fr 1.8rem;
-  align-items: center;
-  gap: 0.5rem;
+  composes: channel from "./game-styles/draft-base.module.css";
+  composes: channel from "./game-styles/review.module.css";
 }
 .channelLabel {
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  composes: channelLabel from "./game-styles/draft-base.module.css";
+  composes: channelLabel from "./game-styles/review.module.css";
 }
 .channelTrack {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--bg-sunken);
-  overflow: hidden;
+  composes: channelTrack from "./game-styles/draft-base.module.css";
+  composes: channelTrack from "./game-styles/review.module.css";
 }
 .channelFill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--field),
-    color-mix(in srgb, var(--field) 60%, var(--accent))
-  );
+  composes: channelFill from "./game-styles/draft-base.module.css";
+  composes: channelFill from "./game-styles/review.module.css";
 }
 .channelVal {
-  font-family: var(--font-display), sans-serif;
-  font-size: 0.78rem;
-  text-align: right;
-  color: var(--ink-soft);
+  composes: channelVal from "./game-styles/draft-base.module.css";
+  composes: channelVal from "./game-styles/review.module.css";
 }
 .candStats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1rem;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  border-top: 1px solid var(--line);
-  padding-top: 0.55rem;
-}
-.candStats b {
-  color: var(--ink);
-  font-weight: 700;
+  composes: candStats from "./game-styles/draft-base.module.css";
+  composes: candStats from "./game-styles/review.module.css";
+  composes: candStats from "./game-styles/draft-polish.module.css";
 }
 .candCoverage {
-  margin-left: auto;
-  color: var(--ink-faint);
+  composes: candCoverage from "./game-styles/draft-base.module.css";
+  composes: candCoverage from "./game-styles/draft-shell.module.css";
 }
 .candManagerTag {
-  margin-left: auto;
-  color: var(--accent);
-  font-weight: 600;
+  composes: candManagerTag from "./game-styles/draft-base.module.css";
+  composes: candManagerTag from "./game-styles/draft-shell.module.css";
 }
 .candAwards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  composes: candAwards from "./game-styles/draft-base.module.css";
+  composes: candAwards from "./game-styles/review.module.css";
+  composes: candAwards from "./game-styles/draft-polish.module.css";
 }
 .award {
-  font-size: 0.66rem;
-  letter-spacing: 0.04em;
-  color: var(--gold-ink);
-  background: color-mix(in srgb, var(--gold) 30%, var(--bg-panel));
-  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
-  border-radius: 999px;
-  padding: 0.16rem 0.55rem;
-}
-:root[data-theme="dark"] .award {
-  color: var(--gold);
+  composes: award from "./game-styles/draft-base.module.css";
+  composes: award from "./game-styles/review.module.css";
 }
 .emptyList {
-  color: var(--ink-faint);
-  font-style: italic;
-  padding: 1rem 0.4rem;
+  composes: emptyList from "./game-styles/draft-base.module.css";
 }
-
-/* ── Synergy ───────────────────────────────────────────────────────────── */
-
 .synergy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  composes: synergy from "./game-styles/draft-base.module.css";
 }
 .synergyHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  composes: synergyHead from "./game-styles/draft-base.module.css";
 }
 .synergyTitle {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.03em;
+  composes: synergyTitle from "./game-styles/draft-base.module.css";
 }
 .synergyScore {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  composes: synergyScore from "./game-styles/draft-base.module.css";
 }
 .synergyNum {
-  font-family: var(--font-display), sans-serif;
-  font-size: 2.1rem;
-  color: var(--accent);
+  composes: synergyNum from "./game-styles/draft-base.module.css";
 }
 .deltaUp {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--teal-deep);
+  composes: deltaUp from "./game-styles/draft-base.module.css";
 }
 .deltaDown {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--loss);
+  composes: deltaDown from "./game-styles/draft-base.module.css";
 }
 .synergyBarTrack {
-  height: 8px;
-  border-radius: 999px;
-  background: var(--bg-sunken);
-  overflow: hidden;
+  composes: synergyBarTrack from "./game-styles/draft-base.module.css";
+  composes: synergyBarTrack from "./game-styles/draft-polish.module.css";
 }
 .synergyBarFill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(to right, var(--field), var(--accent));
+  composes: synergyBarFill from "./game-styles/draft-base.module.css";
+  composes: synergyBarFill from "./game-styles/draft-polish.module.css";
 }
 .synergyMeta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-top: 0.2rem;
+  composes: synergyMeta from "./game-styles/draft-base.module.css";
 }
 .synergyStat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: var(--bg-sunken);
-  border-radius: 9px;
-  padding: 0.5rem 0.3rem;
+  composes: synergyStat from "./game-styles/draft-base.module.css";
 }
 .synergyStatNum {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.2rem;
+  composes: synergyStatNum from "./game-styles/draft-base.module.css";
 }
 .synergyStatLabel {
-  font-size: 0.64rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  composes: synergyStatLabel from "./game-styles/draft-base.module.css";
 }
 .clusters {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  composes: clusters from "./game-styles/draft-base.module.css";
 }
 .clustersLabel {
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
+  composes: clustersLabel from "./game-styles/draft-base.module.css";
 }
 .clusterTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  composes: clusterTags from "./game-styles/draft-base.module.css";
 }
 .clusterTag {
-  font-family: var(--font-display), sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  color: var(--field-ink);
-  background: var(--field);
-  border-radius: 6px;
-  padding: 0.2rem 0.5rem;
+  composes: clusterTag from "./game-styles/draft-base.module.css";
 }
-
-/* ── GK warning ────────────────────────────────────────────────────────── */
-
 .gkWarn {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.9rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  border-left: 4px solid var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
-  font-size: 0.88rem;
-  color: var(--ink-soft);
+  composes: gkWarn from "./game-styles/draft-base.module.css";
+  composes: gkWarn from "./game-styles/draft-polish.module.css";
 }
 .gkWarnGlyph {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-family: var(--font-display), sans-serif;
-  font-size: 1rem;
+  composes: gkWarnGlyph from "./game-styles/draft-base.module.css";
 }
-
-/* ── Lock bar ──────────────────────────────────────────────────────────── */
-
 .lockBar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.8rem clamp(1.1rem, 5vw, 2.5rem);
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: saturate(140%) blur(10px);
-  border-top: 1px solid var(--line-strong);
+  composes: lockBar from "./game-styles/draft-base.module.css";
+  composes: lockBar from "./game-styles/draft-shell.module.css";
+  composes: lockBar from "./game-styles/draft-polish.module.css";
 }
 .lockInfo {
-  min-width: 0;
-  font-size: 0.92rem;
-}
-.lockInfo b {
-  font-weight: 700;
+  composes: lockInfo from "./game-styles/draft-base.module.css";
+  composes: lockInfo from "./game-styles/draft-shell.module.css";
+  composes: lockInfo from "./game-styles/draft-polish.module.css";
 }
 .lockHint {
-  color: var(--ink-faint);
-  font-style: italic;
+  composes: lockHint from "./game-styles/draft-base.module.css";
+  composes: lockHint from "./game-styles/draft-shell.module.css";
+  composes: lockHint from "./game-styles/draft-polish.module.css";
 }
 .compatPill {
-  display: inline-block;
-  margin-left: 0.6rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.16rem 0.55rem;
-  border-radius: 999px;
-  border-left-width: 3px;
-  border-left-style: solid;
-  background: var(--bg-panel);
+  composes: compatPill from "./game-styles/draft-base.module.css";
+  composes: compatPill from "./game-styles/draft-shell.module.css";
+  composes: compatPill from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Complete panel ────────────────────────────────────────────────────── */
-
 .completePanel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  align-items: flex-start;
+  composes: completePanel from "./game-styles/draft-base.module.css";
 }
 .completeNote {
-  color: var(--ink-soft);
-  font-size: 0.95rem;
+  composes: completeNote from "./game-styles/draft-base.module.css";
 }
-
-/* ── Review ────────────────────────────────────────────────────────────── */
-
 .review {
-  display: flex;
-  flex-direction: column;
+  composes: review from "./game-styles/review-base.module.css";
 }
 .teamNameRow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  composes: teamNameRow from "./game-styles/review-base.module.css";
+  composes: teamNameRow from "./game-styles/review.module.css";
+  composes: teamNameRow from "./game-styles/draft-polish.module.css";
 }
 .teamNameLabel {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-faint);
+  composes: teamNameLabel from "./game-styles/review-base.module.css";
+  composes: teamNameLabel from "./game-styles/review.module.css";
+  composes: teamNameLabel from "./game-styles/draft-polish.module.css";
 }
 .teamNameInput {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(2.2rem, 7vw, 3.6rem);
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  color: var(--ink);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--line-strong);
-  padding: 0.1rem 0;
-  width: 100%;
-}
-.teamNameInput:focus {
-  outline: none;
-  border-bottom-color: var(--accent);
+  composes: teamNameInput from "./game-styles/review-base.module.css";
+  composes: teamNameInput from "./game-styles/review.module.css";
+  composes: teamNameInput from "./game-styles/draft-polish.module.css";
 }
 .reviewGrid {
-  display: grid;
-  gap: 1.2rem;
-}
-@media (min-width: 60rem) {
-  .reviewGrid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    align-items: start;
-  }
+  composes: reviewGrid from "./game-styles/review-base.module.css";
 }
 .squadAvg {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.5rem;
-  color: var(--accent-text);
+  composes: squadAvg from "./game-styles/review-base.module.css";
+  composes: squadAvg from "./game-styles/draft-polish.module.css";
 }
 .lineRatings {
-  display: grid;
-  gap: 0.7rem;
+  composes: lineRatings from "./game-styles/review-base.module.css";
+  composes: lineRatings from "./game-styles/draft-polish.module.css";
 }
 .lineRow {
-  display: grid;
-  grid-template-columns: 6rem 1fr 2.2rem;
-  align-items: center;
-  gap: 0.7rem;
+  composes: lineRow from "./game-styles/review-base.module.css";
+  composes: lineRow from "./game-styles/draft-polish.module.css";
 }
 .lineName {
-  font-size: 0.85rem;
-  color: var(--ink-soft);
+  composes: lineName from "./game-styles/review-base.module.css";
+  composes: lineName from "./game-styles/draft-polish.module.css";
 }
 .lineTrack {
-  height: 10px;
-  border-radius: 999px;
-  background: var(--bg-sunken);
-  overflow: hidden;
+  composes: lineTrack from "./game-styles/review-base.module.css";
+  composes: lineTrack from "./game-styles/draft-polish.module.css";
 }
 .lineFill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--field),
-    color-mix(in srgb, var(--field) 55%, var(--accent))
-  );
+  composes: lineFill from "./game-styles/review-base.module.css";
 }
 .lineVal {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
-  text-align: right;
+  composes: lineVal from "./game-styles/review-base.module.css";
+  composes: lineVal from "./game-styles/draft-polish.module.css";
 }
 .simPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  align-items: flex-start;
+  composes: simPanel from "./game-styles/review-base.module.css";
+  composes: simPanel from "./game-styles/review.module.css";
+  composes: simPanel from "./game-styles/draft-polish.module.css";
 }
 .simNote {
-  color: var(--ink-soft);
+  composes: simNote from "./game-styles/review-base.module.css";
+  composes: simNote from "./game-styles/review.module.css";
+  composes: simNote from "./game-styles/draft-polish.module.css";
 }
-.simPanel .btn {
-  width: 100%;
+.btn {
+  composes: btn from "./game-styles/review-base.module.css";
 }
-
-/* ── Results ───────────────────────────────────────────────────────────── */
-
 .results {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  /* B1 — the results surface is SANS throughout (Sora body, Saira Condensed
-     headers/numbers). This base family overrides the app's inherited
-     Newsreader serif so the narration + box scores read cleanly; Newsreader
-     usage elsewhere is untouched. */
-  font-family:
-    var(--font-sans),
-    system-ui,
-    -apple-system,
-    sans-serif;
-  /* The reveal/results column is a terminal scroll surface on iOS — keep its
-     last element (bench / leaderboard / replay row) clear of Safari's bottom
-     chrome + the home indicator. */
-  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  composes: results from "./game-styles/results.module.css";
 }
 .outcome {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  background: var(--bg-invert);
-  color: var(--field-ink);
-  /* Deliberate seam (ws-ux/mobile-polish-2): the inverted editorial plate is
-     intentional brand contrast, but flush cream-on-dark read as a rendering
-     glitch. A hairline in the plate's own ink + a 1px outer ring against the
-     page tone frame it as a designed insert in both themes. */
-  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
-  /* B2/B5 — the decorative strip is GOLD (canonical), not emerald: emerald is
-     reserved for interaction. Gold-on-cream/gold-on-ink as a 3px bar reads on
-     both inverted-plate themes. */
-  border-top: 3px solid var(--gold);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent),
-    var(--shadow-card);
-}
-:root[data-theme="dark"] .outcome {
-  color: var(--bg);
-}
-/* B2 — the plate INVERTS the page theme (dark plate in light theme, cream
-   plate in dark theme). Raw emerald failed AA on the cream plate, and emerald
-   here is decorative anyway. Use the plate's own ink (currentColor) so the
-   eyebrow + W–L are legible by construction on both themes. */
-.outcome .eyebrowAccent {
-  color: currentColor;
-  opacity: 0.82;
+  composes: outcome from "./game-styles/results.module.css";
 }
 .configBadgeRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: center;
+  composes: configBadgeRow from "./game-styles/results.module.css";
 }
 .configBadge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.45rem;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
-  border-radius: var(--r-pill);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  line-height: 1;
-  color: currentColor;
-  background: color-mix(in srgb, currentColor 9%, transparent);
+  composes: configBadge from "./game-styles/results.module.css";
 }
 .configBadge_era_preset {
-  border-style: solid;
+  composes: configBadge_era_preset from "./game-styles/results.module.css";
 }
 .configBadge_draft_flow {
-  border-style: dashed;
+  composes: configBadge_draft_flow from "./game-styles/results.module.css";
 }
 .configBadge_rating_basis {
-  border-style: double;
+  composes: configBadge_rating_basis from "./game-styles/results.module.css";
 }
 .outcomeRecord {
-  display: flex;
-  align-items: baseline;
-  gap: 0.7rem;
+  composes: outcomeRecord from "./game-styles/results.module.css";
 }
 .outcomeBig {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 700;
-  font-size: clamp(3.5rem, 14vw, 6rem);
-  line-height: 0.85;
-  letter-spacing: -0.01em;
+  composes: outcomeBig from "./game-styles/results.module.css";
 }
-/* I3.8 — 8-0 perfect run rendered in precious gold. */
 .outcomeBigGold {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--gold) 72%, white) 0%,
-    var(--gold) 55%,
-    var(--gold-strong) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* B2 — the plate is cream in dark theme; gold text alone would fall under AA
-     there. A 1px ink edge (drawn under the clipped gradient) grounds the digits
-     on either plate while preserving the precious-gold fill. */
-  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, #000);
-  text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
+  composes: outcomeBigGold from "./game-styles/results.module.css";
 }
 .outcomeWL {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 600;
-  font-size: 1.4rem;
-  letter-spacing: 0.04em;
-  color: currentColor;
-  opacity: 0.68;
+  composes: outcomeWL from "./game-styles/results.module.css";
 }
 .outcomeStats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-}
-@media (min-width: 34rem) {
-  .outcomeStats {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  composes: outcomeStats from "./game-styles/results.module.css";
 }
 .oStat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
+  composes: oStat from "./game-styles/results.module.css";
 }
 .oStatNum {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 700;
-  font-size: 1.9rem;
-  line-height: 1;
+  composes: oStatNum from "./game-styles/results.module.css";
 }
 .oStatLabel {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  composes: oStatLabel from "./game-styles/results.module.css";
 }
-/* B4 — top-scorer cell: national flag beside the (truncating) scorer name. */
 .oStatScorer {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-}
-.oStatScorer .oStatLabel {
-  min-width: 0;
+  composes: oStatScorer from "./game-styles/results.module.css";
 }
 .oStatFlag {
-  flex: none;
-  width: 1.05rem;
-  height: auto;
-  border-radius: 2px;
+  composes: oStatFlag from "./game-styles/results.module.css";
 }
 .outcomeFlags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.flagGold,
-.flagGood,
-.flagMuted {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-  border-radius: 999px;
-  padding: 0.3rem 0.7rem;
+  composes: outcomeFlags from "./game-styles/results.module.css";
 }
 .flagGold {
-  color: var(--gold-ink);
-  background: var(--gold);
+  composes: flagGold from "./game-styles/results.module.css";
 }
 .flagGood {
-  color: var(--accent-ink);
-  background: var(--accent);
+  composes: flagGood from "./game-styles/results.module.css";
 }
 .flagMuted {
-  color: var(--field-ink);
-  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  composes: flagMuted from "./game-styles/results.module.css";
 }
-:root[data-theme="dark"] .flagMuted {
-  color: var(--bg);
-}
-
 .narrative {
-  position: relative;
-  padding-left: 2.4rem;
+  composes: narrative from "./game-styles/results.module.css";
 }
 .narrativeMark {
-  position: absolute;
-  left: 0.7rem;
-  top: 0.2rem;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 700;
-  font-size: 3rem;
-  line-height: 1;
-  /* Decorative quote mark (aria-hidden) — gold canonical, muted. */
-  color: color-mix(in srgb, var(--gold) 46%, transparent);
+  composes: narrativeMark from "./game-styles/results.module.css";
 }
-/* B1/B3 — narration is SANS (Sora), upright for readability, and wraps cleanly
-   inside its card (no horizontal spill on long unbroken clauses). */
 .narrativeText {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  hyphens: auto;
+  composes: narrativeText from "./game-styles/results.module.css";
 }
-
 .matchList {
-  list-style: none;
-  display: grid;
-  gap: 0.5rem;
+  composes: matchList from "./game-styles/results.module.css";
 }
 .matchItem {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
+  composes: matchItem from "./game-styles/results.module.css";
 }
 .matchRow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: var(--ink);
-  background: var(--bg-panel);
-  border: none;
-  padding: 0.7rem 0.9rem;
-  cursor: pointer;
-}
-.matchRow:hover {
-  background: var(--bg-sunken);
+  composes: matchRow from "./game-styles/results.module.css";
 }
 .matchOutcome {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 1.7rem;
-  height: 1.7rem;
-  border-radius: 6px;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--accent-ink);
+  composes: matchOutcome from "./game-styles/results.module.css";
 }
 .win {
-  background: var(--field);
+  composes: win from "./game-styles/results.module.css";
 }
 .draw {
-  background: var(--ink-faint);
+  composes: draw from "./game-styles/results.module.css";
 }
 .loss {
-  background: var(--accent);
+  composes: loss from "./game-styles/results.module.css";
 }
-/* B3 — round label can shrink + ellipsis; never forces the row wider than the
-   card. */
 .matchRound {
-  flex: 0 1 auto;
-  min-width: 0;
-  max-width: 7.5rem;
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  composes: matchRound from "./game-styles/results.module.css";
 }
-/* B3 — opponent name is the flexible column: it truncates instead of pushing
-   the score off the row ("vs ENG England" → "vs ENG Engl…" before overlap). */
 .matchOpp {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  composes: matchOpp from "./game-styles/results.module.css";
 }
 .matchScore {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
+  composes: matchScore from "./game-styles/results.module.css";
 }
-/* B1/B2 — tag is sans + a neutral chip (not decorative emerald): keeps emerald
-   for interaction and clears AA on the paper panel. */
 .matchTag {
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.1rem 0.45rem;
-  white-space: nowrap;
+  composes: matchTag from "./game-styles/results.module.css";
 }
 .matchChevron {
-  flex: none;
-  color: var(--ink-faint);
+  composes: matchChevron from "./game-styles/results.module.css";
 }
 .boxScore {
-  display: grid;
-  gap: 0.6rem;
-  padding: 0.85rem 0.9rem;
-  background: var(--bg-sunken);
-  border-top: 1px solid var(--line);
-}
-@media (min-width: 34rem) {
-  .boxScore {
-    grid-template-columns: 1fr 1fr;
-  }
-  .boxEvents {
-    grid-column: 1 / -1;
-  }
-}
-.boxCol {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-.boxColHead {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 0.25rem;
-}
-.boxGoal {
-  font-size: 0.9rem;
-}
-.boxDetail {
-  color: var(--ink-faint);
-  font-size: 0.82rem;
-}
-.boxNone {
-  font-size: 0.85rem;
-  color: var(--ink-faint);
-  font-style: italic;
+  composes: boxScore from "./game-styles/results.module.css";
 }
 .boxEvents {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1rem;
-  border-top: 1px dashed var(--line);
-  padding-top: 0.5rem;
+  composes: boxEvents from "./game-styles/results.module.css";
+}
+.boxCol {
+  composes: boxCol from "./game-styles/results.module.css";
+}
+.boxColHead {
+  composes: boxColHead from "./game-styles/results.module.css";
+}
+.boxGoal {
+  composes: boxGoal from "./game-styles/results.module.css";
+}
+.boxDetail {
+  composes: boxDetail from "./game-styles/results.module.css";
+}
+.boxNone {
+  composes: boxNone from "./game-styles/results.module.css";
 }
 .boxEvent {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-}
-.cardYellow,
-.cardRed {
-  width: 0.6rem;
-  height: 0.8rem;
-  border-radius: 2px;
-  display: inline-block;
+  composes: boxEvent from "./game-styles/results.module.css";
 }
 .cardYellow {
-  background: var(--gold);
+  composes: cardYellow from "./game-styles/results.module.css";
 }
 .cardRed {
-  background: var(--accent);
+  composes: cardRed from "./game-styles/results.module.css";
 }
-
 .seedPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  composes: seedPanel from "./game-styles/results.module.css";
 }
 .seedRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem;
+  composes: seedRow from "./game-styles/results.module.css";
 }
 .seedLabel {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
+  composes: seedLabel from "./game-styles/results.module.css";
 }
 .seedCode {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.9rem;
-  background: var(--bg-sunken);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0.3rem 0.6rem;
+  composes: seedCode from "./game-styles/results.module.css";
 }
 .seedNote {
-  font-size: 0.82rem;
-  color: var(--ink-faint);
-  font-style: italic;
+  composes: seedNote from "./game-styles/results.module.css";
 }
 .resultsActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
+  composes: resultsActions from "./game-styles/results.module.css";
+  composes: resultsActions from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Share card ────────────────────────────────────────────────────────── */
-
 .share {
-  display: flex;
-  flex-direction: column;
+  composes: share from "./game-styles/share.module.css";
+  composes: share from "./game-styles/draft-polish.module.css";
 }
 .shareCard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  aspect-ratio: 16 / 10;
-  max-width: 40rem;
-  margin-inline: auto;
-  width: 100%;
-  padding: clamp(1.2rem, 4vw, 2rem);
-  border-radius: 18px;
-  background: linear-gradient(
-    150deg,
-    var(--bg-invert),
-    color-mix(in srgb, var(--field) 70%, var(--bg-invert))
-  );
-  color: var(--field-ink);
-  border: 3px solid var(--accent);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-:root[data-theme="dark"] .shareCard {
-  color: var(--field-ink);
+  composes: shareCard from "./game-styles/share.module.css";
 }
 .shareGrain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.08;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  composes: shareGrain from "./game-styles/share.module.css";
 }
 .shareTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 1;
+  composes: shareTop from "./game-styles/share.module.css";
 }
 .shareBrand {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-.shareBrand b {
-  color: var(--accent);
+  composes: shareBrand from "./game-styles/share.module.css";
 }
 .shareSeed {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 0.72rem;
-  opacity: 0.7;
+  composes: shareSeed from "./game-styles/share.module.css";
 }
 .shareBody {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  margin-top: auto;
+  composes: shareBody from "./game-styles/share.module.css";
 }
 .shareTeam {
-  font-family: var(--font-text), serif;
-  font-style: italic;
-  font-size: 1.1rem;
-  opacity: 0.85;
+  composes: shareTeam from "./game-styles/share.module.css";
 }
 .shareHeadline {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(2.6rem, 10vw, 4.5rem);
-  line-height: 0.85;
-  color: var(--gold);
-  letter-spacing: 0.01em;
+  composes: shareHeadline from "./game-styles/share.module.css";
 }
 .shareRecord {
-  display: flex;
-  align-items: baseline;
-  gap: 0.7rem;
-  margin-top: 0.3rem;
+  composes: shareRecord from "./game-styles/share.module.css";
 }
 .shareRecordNum {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(2rem, 7vw, 3rem);
+  composes: shareRecordNum from "./game-styles/share.module.css";
 }
 .shareRecordLabel {
-  font-size: 0.82rem;
-  opacity: 0.8;
+  composes: shareRecordLabel from "./game-styles/share.module.css";
 }
 .shareStats {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: 1.6rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
-  padding-top: 0.8rem;
+  composes: shareStats from "./game-styles/share.module.css";
 }
 .shareStat {
-  display: flex;
-  flex-direction: column;
-}
-.shareStat b {
-  font-family: var(--font-display), sans-serif;
-  font-size: 1.6rem;
-  line-height: 1;
-}
-.shareStat span {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.78;
+  composes: shareStat from "./game-styles/share.module.css";
 }
 .shareStars {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-text), serif;
-  font-size: 0.9rem;
-  opacity: 0.85;
+  composes: shareStars from "./game-styles/share.module.css";
 }
 .sharePanel {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+  composes: sharePanel from "./game-styles/share.module.css";
+  composes: sharePanel from "./game-styles/draft-polish.module.css";
 }
 .shareCaptionLabel {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
+  composes: shareCaptionLabel from "./game-styles/share.module.css";
+  composes: shareCaptionLabel from "./game-styles/draft-polish.module.css";
 }
 .shareCaption {
-  font-family: var(--font-text), serif;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  white-space: pre-wrap;
-  background: var(--bg-sunken);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.85rem 1rem;
+  composes: shareCaption from "./game-styles/share.module.css";
+  composes: shareCaption from "./game-styles/draft-polish.module.css";
 }
-/* I3.9 — SVG-based deterministic share card. The card is a real <svg>
-   element rendered inline so the same node can be serialised for download
-   without a DOM-to-image dep. The frame just constrains width on mobile. */
 .shareCardFrame {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 1.25rem 0 1.5rem;
+  composes: shareCardFrame from "./game-styles/share.module.css";
+  composes: shareCardFrame from "./game-styles/draft-polish.module.css";
 }
 .shareSvg {
-  width: 100%;
-  max-width: 480px;
-  height: auto;
-  border-radius: 22px;
-  display: block;
-  box-shadow: 0 24px 70px rgba(8, 14, 12, 0.35);
+  composes: shareSvg from "./game-styles/share.module.css";
+  composes: shareSvg from "./game-styles/draft-polish.module.css";
 }
 .shareHint {
-  font-size: 0.82rem;
-  color: var(--ink-faint);
-  font-style: italic;
+  composes: shareHint from "./game-styles/share.module.css";
+  composes: shareHint from "./game-styles/draft-polish.module.css";
 }
-
-/* ========================================================================
-   I2 — Mobile-first portrait draft + review shell.
-   Uses DS tokens from app/ds/tokens.css; keeps legacy mock-era classes for
-   results/share until I3. New blocks are additive to avoid touching the
-   results/share styling.
-   ===================================================================== */
-
-.draftShell,
+.draftShell {
+  composes: draftShell from "./game-styles/draft-shell.module.css";
+  composes: draftShell from "./game-styles/draft-polish.module.css";
+}
 .reviewShell {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 16px calc(96px + env(safe-area-inset-bottom, 0px));
-  /* svh, NOT dvh/vh: iOS Safari grows the dynamic viewport when its toolbar
-     collapses on first interaction; a dvh min-height reflows the whole page
-     mid-tap and the fixed lock bar shifts under the user's finger (the
-     "first tap near LOCK PICK does nothing" bug). The small-viewport box is
-     stable across toolbar states. */
-  min-height: 100svh;
-  background: var(--bg-850);
-  color: var(--ink-100);
-  font-family: var(--f-body);
+  composes: reviewShell from "./game-styles/draft-shell.module.css";
+  composes: reviewShell from "./game-styles/draft-polish.module.css";
 }
-
-/* ws-ux/tap-stability-2 — ANCHORED variant for the main draft layout (the
-   only screen with a bottom action bar). The page column is pinned to 100svh
-   (companion body:has([data-draft-anchored]) rules in globals.css) and the
-   DOCUMENT never scrolls: scrolling lives in .draftScroll. Two effects:
-   (1) iOS Safari's toolbar only collapses on document scroll, so it stays
-   put for the whole draft session; (2) even if the user arrives with the
-   toolbar already collapsed, the svh page bottom = the toolbar-expanded
-   line, so the in-flow lock bar sits safely above Safari's bottom-edge
-   gesture zone. Compound selector beats the later media-query padding
-   overrides on .draftShell. */
-.draftShell.draftShellAnchored {
-  flex: 1 1 auto; /* fill what the masthead leaves of the 100svh column */
-  height: auto;
-  min-height: 0;
-  overflow: hidden;
-  padding: 0;
-  gap: 0;
+.draftShellAnchored {
+  composes: draftShellAnchored from "./game-styles/draft-shell.module.css";
 }
-.draftShellAnchored .draftAppBar {
-  position: static; /* always visible as a shell row — sticky is moot here */
-  margin: 12px 16px 0;
+.draftAppBar {
+  composes: draftAppBar from "./game-styles/draft-shell.module.css";
+  composes: draftAppBar from "./game-styles/draft-polish.module.css";
 }
 .draftScroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain; /* no scroll chaining to the document */
-  -webkit-overflow-scrolling: touch;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 12px 16px 24px;
+  composes: draftScroll from "./game-styles/draft-shell.module.css";
 }
 .draftAttribution {
-  margin: -2px 0 0;
-  color: var(--ink-400);
-  font-family: var(--f-body);
-  font-size: 11px;
-  line-height: 1.35;
-  text-align: center;
-  white-space: nowrap;
+  composes: draftAttribution from "./game-styles/draft-shell.module.css";
 }
-.draftAttribution a {
-  color: inherit;
-  text-decoration: none;
-  text-underline-offset: 3px;
-}
-.draftAttribution a:hover {
-  color: var(--ink-300);
-  text-decoration: underline;
-}
-@media (max-width: 430px) {
-  .draftShellAnchored .draftAppBar {
-    margin: 8px 8px 0;
-  }
-  .draftScroll {
-    gap: 8px;
-    padding: 8px 8px 16px;
-  }
-  .draftAttribution {
-    font-size: 10px;
-  }
-}
-
-.draftAppBar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  background: color-mix(in srgb, var(--bg-900) 92%, transparent);
-  border: 1px solid var(--line);
-  border-radius: var(--r-3);
-  backdrop-filter: blur(8px);
-  box-shadow: var(--sh-1);
-}
-
 .appBarBrand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
+  composes: appBarBrand from "./game-styles/draft-shell.module.css";
+  composes: appBarBrand from "./game-styles/draft-polish.module.css";
 }
-
 .appBarTitle {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-100);
+  composes: appBarTitle from "./game-styles/draft-shell.module.css";
+  composes: appBarTitle from "./game-styles/draft-polish.module.css";
 }
-
 .appBarMeter {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  min-width: 140px;
+  composes: appBarMeter from "./game-styles/draft-shell.module.css";
+  composes: appBarMeter from "./game-styles/draft-polish.module.css";
 }
-
 .persistenceWarn {
-  margin: 0;
-  flex-basis: 100%;
-  font-size: var(--t-xs);
-  color: var(--warn);
-  font-family: var(--f-mono);
+  composes: persistenceWarn from "./game-styles/draft-shell.module.css";
 }
-
 .loadingPanel {
-  padding: 40px 16px;
-  text-align: center;
-  color: var(--ink-300);
-  font-family: var(--f-mono);
+  composes: loadingPanel from "./game-styles/draft-shell.module.css";
 }
-
 .errorPanel {
-  padding: 24px;
-  border: 1px solid rgba(255, 77, 99, 0.35);
-  border-radius: var(--r-3);
-  background: color-mix(in srgb, var(--bg-800) 95%, rgba(255, 77, 99, 0.12));
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
+  composes: errorPanel from "./game-styles/draft-shell.module.css";
 }
-
 .errorTitle {
-  margin: 0;
-  font-family: var(--f-display);
-  font-size: 22px;
-  color: var(--loss);
+  composes: errorTitle from "./game-styles/draft-shell.module.css";
 }
-
 .errorMessage {
-  margin: 0;
-  color: var(--ink-200);
+  composes: errorMessage from "./game-styles/draft-shell.module.css";
 }
-
-/* ── Formation select ───────────────────────────────────────────────────── */
-
 .formationSelect {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 12px 4px 16px;
+  composes: formationSelect from "./game-styles/draft-shell.module.css";
+  composes: formationSelect from "./game-styles/draft-polish.module.css";
 }
-
 .formationHead {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
+  composes: formationHead from "./game-styles/draft-shell.module.css";
+  composes: formationHead from "./game-styles/draft-polish.module.css";
 }
-
 .formationTitle {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 28px;
-  margin: 0;
-  color: var(--ink-100);
+  composes: formationTitle from "./game-styles/draft-shell.module.css";
+  composes: formationTitle from "./game-styles/draft-polish.module.css";
 }
-
 .formationSub {
-  margin: 0;
-  color: var(--ink-300);
-  font-size: var(--t-sm);
-  max-width: 32ch;
+  composes: formationSub from "./game-styles/draft-shell.module.css";
+  composes: formationSub from "./game-styles/draft-polish.module.css";
 }
-
-/* Equal-card formation grid (ws-f4/formations-results-ux redesign): calm
-   vertical tiles — the mini-pitch is the visual focus, the shape name is the
-   hero label, the lock CTA sits beneath. Flows 2-up on phones through
-   auto-fit columns on tablets+desktop; all eight shapes share one scannable
-   grid (no horizontal scroll, no paging). */
 .formationGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  composes: formationGrid from "./game-styles/draft-shell.module.css";
+  composes: formationGrid from "./game-styles/draft-polish.module.css";
 }
-
-@media (max-width: 320px) {
-  /* ws-ux/mobile-compact-v3: collapse formation grid only at
-     true micro-screens (<=320px). Above that the 2-col layout
-     remains, even at 360px. */
-  .formationGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Pre-draft formation card — a CALM equal tile: subtle 1px border + soft
-   elevation, no coloured side-rail. Emerald is reserved for the interactive
-   LOCK affordance (the CTA text) and the hover/focus ring — never decorative.
-   Position-by-SHAPE lives inside the mini-pitch (see .miniDot*). */
 .formationCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--bg-750);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px 12px 12px;
-  gap: 11px;
-  cursor: pointer;
-  transition:
-    transform var(--d-fast) var(--e-snap),
-    box-shadow var(--d-fast),
-    border-color var(--d-fast);
-  text-align: center;
-  color: inherit;
-  font-family: inherit;
-  box-shadow: var(--sh-1);
+  composes: formationCard from "./game-styles/draft-shell.module.css";
+  composes: formationCard from "./game-styles/draft-polish.module.css";
 }
-
-.formationCard:hover,
-.formationCard:focus-visible {
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
-  transform: translateY(-2px);
-}
-
-.formationCard:disabled {
-  opacity: 0.55;
-  cursor: progress;
-}
-
 .formationCardPending {
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
+  composes: formationCardPending from "./game-styles/draft-shell.module.css";
 }
-
 .formationCardBody {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-  width: 100%;
+  composes: formationCardBody from "./game-styles/draft-shell.module.css";
+  composes: formationCardBody from "./game-styles/draft-polish.module.css";
 }
-
 .formationCardName {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 23px;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  color: var(--ink-100);
+  composes: formationCardName from "./game-styles/draft-shell.module.css";
+  composes: formationCardName from "./game-styles/draft-polish.module.css";
 }
-
 .formationCardCta {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ember-bright);
+  composes: formationCardCta from "./game-styles/draft-shell.module.css";
+  composes: formationCardCta from "./game-styles/draft-polish.module.css";
 }
-
 .formationError {
-  margin: 0;
-  color: var(--loss);
-  font-family: var(--f-mono);
+  composes: formationError from "./game-styles/draft-shell.module.css";
 }
-
-/* ── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
-   Collapsed one-line summary row by default so the formation screen keeps
-   its one-viewport compaction (#78); tapping discloses segmented controls. */
-
 .setupRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  background: var(--bg-panel);
-  color: var(--ink-100);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  cursor: pointer;
+  composes: setupRow from "./game-styles/draft-shell.module.css";
 }
-
 .setupRowLabel {
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
+  composes: setupRowLabel from "./game-styles/draft-shell.module.css";
 }
-
 .setupRowValue {
-  color: var(--ink-100);
+  composes: setupRowValue from "./game-styles/draft-shell.module.css";
 }
-
 .setupRowChevron {
-  color: var(--ink-soft);
+  composes: setupRowChevron from "./game-styles/draft-shell.module.css";
 }
-
 .setupPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--line);
-  border-top: none;
-  border-radius: 0 0 0.5rem 0.5rem;
-  background: var(--bg-panel);
+  composes: setupPanel from "./game-styles/draft-shell.module.css";
 }
-
 .setupAxis {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  composes: setupAxis from "./game-styles/draft-shell.module.css";
 }
-
 .setupAxisLabel {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
+  composes: setupAxisLabel from "./game-styles/draft-shell.module.css";
 }
-
 .setupSeg {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+  composes: setupSeg from "./game-styles/draft-shell.module.css";
 }
-
 .setupSegBtn {
-  /* a11y: 44px min tap target (WCAG 2.5.5). Flex-center keeps the short label
-     vertically centered now that min-height exceeds the text+padding box. */
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink-100);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  cursor: pointer;
+  composes: setupSegBtn from "./game-styles/draft-shell.module.css";
 }
-
 .setupSegBtnActive {
-  border-color: var(--ember-bright);
-  color: var(--ember-bright);
+  composes: setupSegBtnActive from "./game-styles/draft-shell.module.css";
 }
-
-.setupSegBtn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-/* DC-3 — position-first target-select stage */
 .targetGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 0.6rem;
+  composes: targetGroup from "./game-styles/draft-shell.module.css";
 }
-
 .targetGroupTitle {
-  margin: 0;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
+  composes: targetGroupTitle from "./game-styles/draft-shell.module.css";
 }
-
 .targetGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 0.4rem;
+  composes: targetGrid from "./game-styles/draft-shell.module.css";
 }
-
 .targetChip {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 44px; /* a11y: 44px min tap target (WCAG 2.5.5) */
-  gap: 0.1rem;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
-  background: var(--bg-panel);
-  cursor: pointer;
+  composes: targetChip from "./game-styles/draft-shell.module.css";
 }
-
-.targetChip:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .targetChipPos {
-  font-family: var(--f-mono);
-  font-size: var(--t-sm);
-  font-weight: 700;
-  color: var(--ember-bright);
+  composes: targetChipPos from "./game-styles/draft-shell.module.css";
 }
-
 .targetChipId {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-soft);
+  composes: targetChipId from "./game-styles/draft-shell.module.css";
 }
-
 .setupAxisNote {
-  margin: 0;
-  font-size: var(--t-xs);
-  color: var(--ink-soft);
+  composes: setupAxisNote from "./game-styles/draft-shell.module.css";
 }
-
-/* ── Mini-pitch on the formation cards ──────────────────────────────────── */
-
-/* Compact mini-pitch — fixed 56px-wide thumbnail (5/6 aspect, no position
-   distortion) sitting on the tile's left so six tiles fit one phone screen. */
 .miniPitch {
-  position: relative;
-  flex: 0 0 auto;
-  width: 92px;
-  aspect-ratio: 5 / 6;
-  background:
-    radial-gradient(
-      ellipse at 50% 8%,
-      color-mix(in srgb, var(--teal-deep) 22%, transparent),
-      transparent 62%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
-      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
-    );
-  border: 1px solid var(--line);
-  border-radius: var(--r-2);
-  overflow: hidden;
+  composes: miniPitch from "./game-styles/draft-shell.module.css";
+  composes: miniPitch from "./game-styles/draft-polish.module.css";
 }
-
-/* Base dot — COLOUR ONLY, geometry comes from the shape modifier so a
-   3-5-2 wing-back can sit in the 'mid' colour band but render as a DF
-   triangle (its true core line). */
 .miniDot {
-  position: absolute;
-  z-index: 1;
-  width: 9px;
-  height: 9px;
-  transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
-  border-radius: 999px;
-  background: var(--ink-200);
-  box-shadow: var(--sh-1);
+  composes: miniDot from "./game-styles/draft-shell.module.css";
+  composes: miniDot from "./game-styles/draft-polish.module.css";
 }
-
-/* COLOUR by JSON visual band. */
 .miniDot_gk {
-  background: var(--prov-historical);
+  composes: miniDot_gk from "./game-styles/draft-shell.module.css";
 }
 .miniDot_def {
-  background: var(--teal-bright);
+  composes: miniDot_def from "./game-styles/draft-shell.module.css";
 }
 .miniDot_mid {
-  background: var(--ink-200);
+  composes: miniDot_mid from "./game-styles/draft-shell.module.css";
 }
 .miniDot_fwd {
-  background: var(--gold);
+  composes: miniDot_fwd from "./game-styles/draft-shell.module.css";
 }
-
-/* SHAPE by CORE position line (GK square / DF triangle / MF diamond /
-   FW circle). Position-by-shape is one of the brand invariants. */
 .miniDotShape_square {
-  border-radius: 2px;
+  composes: miniDotShape_square from "./game-styles/draft-shell.module.css";
 }
 .miniDotShape_triangle {
-  border-radius: 0;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  composes: miniDotShape_triangle from "./game-styles/draft-shell.module.css";
 }
 .miniDotShape_diamond {
-  border-radius: 2px;
-  --mini-dot-rotate: 45deg;
+  composes: miniDotShape_diamond from "./game-styles/draft-shell.module.css";
 }
 .miniDotShape_circle {
-  border-radius: 999px;
+  composes: miniDotShape_circle from "./game-styles/draft-shell.module.css";
 }
-
-/* ── Pitch (absolute-positioned slots) ──────────────────────────────────── */
-
-.pitch {
-  position: relative;
-  aspect-ratio: 7 / 10;
-  background:
-    radial-gradient(
-      ellipse at 50% 8%,
-      color-mix(in srgb, var(--teal-deep) 22%, transparent),
-      transparent 62%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
-      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
-    );
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-3);
-  overflow: hidden;
-  padding: 0;
-  display: block;
-}
-
 .pitchMarkings {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
+  composes: pitchMarkings from "./game-styles/draft-shell.module.css";
 }
-
 .pitchMarkingLine {
-  fill: none;
-  stroke: var(--pitch-line);
-  stroke-width: 0.7;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  composes: pitchMarkingLine from "./game-styles/draft-shell.module.css";
 }
-
 .pitchMarkingTouchline {
-  stroke-width: 0.7;
+  composes: pitchMarkingTouchline from "./game-styles/draft-shell.module.css";
 }
-
 .pitchMarkingSpot {
-  fill: var(--pitch-line);
+  composes: pitchMarkingSpot from "./game-styles/draft-shell.module.css";
 }
-
 .pitchMarkingsFull {
-  opacity: 0.78;
+  composes: pitchMarkingsFull from "./game-styles/draft-shell.module.css";
 }
-
 .pitchMarkingsMini {
-  opacity: 0.34;
+  composes: pitchMarkingsMini from "./game-styles/draft-shell.module.css";
 }
-
-.pitchMarkingsMini .pitchMarkingLine {
-  stroke-width: 0.7;
+.pitchMarkingDetail {
+  composes: pitchMarkingDetail from "./game-styles/draft-shell.module.css";
 }
-
-.pitchMarkingsMini .pitchMarkingDetail {
-  display: none;
+.slotFilled {
+  composes: slotFilled from "./game-styles/draft-shell.module.css";
+  composes: slotFilled from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Pitch slots: stabilized placement ─────────────────────────────────────
-   The slot is absolutely positioned and CENTRED on its (x, y) percentage
-   via `transform: translate(-50%, -50%)`. Any *additional* transform on a
-   selected/hovered/preview/tier state would CLOBBER that translation and
-   make the slot JUMP or LIFT. So every state below preserves
-   `translate(-50%, -50%)` exactly, uses `box-shadow`/`outline` for
-   emphasis, and uses `box-sizing: border-box` so border-width changes
-   never resize the chip.
-   Transitions intentionally exclude `transform` for the same reason. */
-.pitch .slot {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-  min-width: 56px;
-  max-width: 80px;
-  padding: 6px 6px;
-  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
-  border: 1.5px solid var(--line-2);
-  border-radius: var(--r-2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  color: var(--ink-100);
-  font-size: var(--t-xs);
-  font-family: var(--f-mono);
-  cursor: pointer;
-  transition:
-    box-shadow var(--d-fast),
-    border-color var(--d-fast),
-    background-color var(--d-fast);
+.slotProv_historical {
+  composes: slotProv_historical from "./game-styles/draft-shell.module.css";
 }
-
-.pitch button.slot:hover,
-.pitch button.slot:focus-visible {
-  transform: translate(-50%, -50%);
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
+.slotProv_projected {
+  composes: slotProv_projected from "./game-styles/draft-shell.module.css";
 }
-
-.pitch .slotEmpty {
-  transform: translate(-50%, -50%);
-  background: color-mix(in srgb, var(--bg-700) 70%, transparent);
-  border-style: dashed;
-  /* Dashed outline must read on the pale light-mode pitch too — themed
-     token, never the white literal the legacy rules used. */
-  border-color: var(--pitch-slot-line);
-  color: var(--ink-300);
+.slotProv_estimate {
+  composes: slotProv_estimate from "./game-styles/draft-shell.module.css";
 }
-
-/* Slot label ink — the legacy `.slotPos` / `.slotEmptyLabel` rules carry
-   white literals (the old pitch was always dark green). On the DS pitch
-   the chip surface follows the theme, so the label ink must too:
-   white-on-pale was unreadable in light mode. */
-.pitch .slot .slotPos {
-  color: var(--ink-200);
+.slotProv_legend {
+  composes: slotProv_legend from "./game-styles/draft-shell.module.css";
 }
-.pitch .slotEmpty .slotPos {
-  color: var(--ink-300);
+.slotProv_masked {
+  composes: slotProv_masked from "./game-styles/draft-shell.module.css";
 }
-.pitch .slotEmptyLabel {
-  color: var(--ink-300);
+.slotShape_square {
+  composes: slotShape_square from "./game-styles/draft-shell.module.css";
 }
-
-.pitch .slotSelected {
-  transform: translate(-50%, -50%);
-  border-color: var(--ember-bright);
-  box-shadow: var(--ring-ember);
+.slotShape_triangle {
+  composes: slotShape_triangle from "./game-styles/draft-shell.module.css";
 }
-
-.pitch .slotLocked {
-  transform: translate(-50%, -50%);
-  border-color: var(--lock);
-  background: color-mix(in srgb, var(--bg-700) 95%, rgba(var(--lock-rgb), 0.08));
-  cursor: default;
+.slotShape_diamond {
+  composes: slotShape_diamond from "./game-styles/draft-shell.module.css";
 }
-
-.pitch .slotFilled.slotProv_historical {
-  background: color-mix(in srgb, var(--prov-historical) 22%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-historical) 58%, var(--line-2));
+.slotShape_circle {
+  composes: slotShape_circle from "./game-styles/draft-shell.module.css";
 }
-
-.pitch .slotFilled.slotProv_projected {
-  background: color-mix(in srgb, var(--prov-projected) 22%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-projected) 58%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_estimate {
-  background: color-mix(in srgb, var(--prov-estimate) 24%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-estimate) 62%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_legend {
-  background: color-mix(in srgb, var(--prov-legend) 20%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-legend) 62%, var(--line-2));
-}
-
-.pitch .slotFilled.slotProv_masked {
-  background: color-mix(in srgb, var(--prov-unknown) 18%, var(--bg-700));
-  border-color: color-mix(in srgb, var(--prov-unknown) 52%, var(--line-2));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .pitch .slotFilled {
-    animation: slot-settle var(--d-med) var(--e-snap) both;
-  }
-}
-
-@keyframes slot-settle {
-  from {
-    opacity: 0.72;
-    transform: translate(-50%, -50%) scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* Tier accents on pitch slots: the generic `.tier_*` rules set a 4px
-   left border which RESIZES the chip (via box-sizing). Inside the pitch
-   we keep the chip width stable and use an inset shadow accent instead,
-   so a fit-tier change never shifts the slot. */
-.pitch .slot.tier_ideal,
-.pitch .slot.tier_ok,
-.pitch .slot.tier_stretch,
-.pitch .slot.tier_misfit {
-  border-left-width: 1.5px;
-}
-.pitch .slot.tier_ideal {
-  box-shadow: inset 3px 0 0 0 var(--pos-def);
-}
-.pitch .slot.tier_ok {
-  box-shadow: inset 3px 0 0 0 var(--pitch-accent-mute);
-}
-.pitch .slot.tier_stretch {
-  box-shadow: inset 3px 0 0 0 var(--gold);
-}
-.pitch .slot.tier_misfit {
-  box-shadow: inset 3px 0 0 0 var(--accent);
-}
-
-/* Preview tier on pitch slots: stay in place, glow via box-shadow ring. */
-.pitch .slot.slotPreview {
-  transform: translate(-50%, -50%);
-  border-left-width: 1.5px;
-}
-.pitch .slot.tierPreview_ideal {
-  box-shadow:
-    0 0 0 2px var(--pos-def),
-    inset 3px 0 0 0 var(--pos-def);
-}
-.pitch .slot.tierPreview_ok {
-  box-shadow:
-    0 0 0 2px var(--pitch-accent-mute),
-    inset 3px 0 0 0 var(--pitch-accent-mute);
-}
-.pitch .slot.tierPreview_stretch {
-  box-shadow:
-    0 0 0 2px var(--gold),
-    inset 3px 0 0 0 var(--gold);
-}
-.pitch .slot.tierPreview_misfit {
-  box-shadow:
-    0 0 0 2px var(--accent),
-    inset 3px 0 0 0 var(--accent);
-}
-
-/* Position shape encoding (square/triangle/diamond/circle) — applied as a
-   subtle outline shape on the slot's position pill in addition to the chip. */
-.slotShape_square .slotPos {
-  border-radius: 2px;
-}
-
-.slotShape_triangle .slotPos {
-  border-radius: 2px 2px 2px 8px;
-}
-
-.slotShape_diamond .slotPos {
-  border-radius: 6px;
-  transform: rotate(0deg);
-}
-
-.slotShape_circle .slotPos {
-  border-radius: 999px;
-}
-
-/* ── Bench/manager ──────────────────────────────────────────────────────── */
-
-.bench {
-  margin-top: 12px;
-}
-
-.benchSlots {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.benchSlot {
-  min-height: 56px;
-}
-
-/* ── Candidate card refit (provenance hue, badges) ──────────────────────── */
-
-.cand {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-  text-align: left;
-  background: var(--bg-750);
-  border: 1px solid var(--line);
-  border-radius: var(--r-3);
-  color: var(--ink-100);
-  cursor: pointer;
-  transition:
-    border-color var(--d-fast),
-    box-shadow var(--d-fast),
-    transform var(--d-fast);
-}
-
-.cand:hover,
-.cand:focus-visible {
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
-}
-
-.candSelected {
-  border-color: var(--gold);
-  box-shadow: var(--ring-amber);
-}
-
-.candDisabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.candTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.candId {
-  display: flex;
-  gap: 10px;
-  min-width: 0;
-}
-
 .candNationFlag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 6px;
-  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
-  border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.06em;
-  color: var(--ink-100);
+  composes: candNationFlag from "./game-styles/draft-shell.module.css";
 }
-
 .flagShape_square {
-  border-radius: 4px;
+  composes: flagShape_square from "./game-styles/draft-shell.module.css";
 }
-
 .flagShape_triangle {
-  border-radius: 4px 4px 4px 14px;
+  composes: flagShape_triangle from "./game-styles/draft-shell.module.css";
 }
-
 .flagShape_diamond {
-  border-radius: 8px;
+  composes: flagShape_diamond from "./game-styles/draft-shell.module.css";
 }
-
 .flagShape_circle {
-  border-radius: 999px;
+  composes: flagShape_circle from "./game-styles/draft-shell.module.css";
 }
-
-.candNameWrap {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.candName {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.candCaptain {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  margin-left: 6px;
-  font-size: 10px;
-  font-family: var(--f-mono);
-  background: var(--gold);
-  color: var(--bg-900);
-  border-radius: 999px;
-}
-
-.candSub {
-  color: var(--ink-400);
-  font-size: var(--t-xs);
-}
-
-.candOverall {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-family: var(--f-mono);
-  min-width: 44px;
-}
-
-.candOverallNum {
-  font-family: var(--f-display);
-  font-size: 28px;
-  line-height: 1;
-  color: var(--ink-100);
-}
-
-.candOverallLabel {
-  font-size: var(--t-micro);
-  letter-spacing: 0.16em;
-  color: var(--ink-400);
-  text-transform: uppercase;
-}
-
 .candBadgeRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
+  composes: candBadgeRow from "./game-styles/draft-shell.module.css";
+  composes: candBadgeRow from "./game-styles/draft-polish.module.css";
 }
-
-/* Pill/badge rhythm: 2px 8px + r-pill + t-xs mono everywhere a pill
-   appears (provBadge, shirt, drafted, compatPill, manager badge). */
-.candShirt {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-300);
-  padding: 2px 8px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-}
-
-.candDrafted {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--lock);
-  padding: 2px 8px;
-  border: 1px solid var(--lock-dim);
-  border-radius: var(--r-pill);
-}
-
-.candCoverage {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-}
-
 .candCoverageTrack {
-  width: 60px;
-  height: 4px;
-  background: var(--bg-700);
-  border-radius: 999px;
-  overflow: hidden;
+  composes: candCoverageTrack from "./game-styles/draft-shell.module.css";
 }
-
 .candCoverageFill {
-  display: block;
-  height: 100%;
-  background: var(--ember);
+  composes: candCoverageFill from "./game-styles/draft-shell.module.css";
 }
-
 .candCoverageVal {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-300);
+  composes: candCoverageVal from "./game-styles/draft-shell.module.css";
 }
-
-.candManager {
-  border-color: var(--prov-manager);
-}
-
-.candManagerTag {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--prov-manager);
-}
-
-/* Provenance hue on card border + glow. Subtle, not loud. */
 .prov_historical {
-  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line));
+  composes: prov_historical from "./game-styles/draft-shell.module.css";
+  composes: prov_historical from "./game-styles/draft-polish.module.css";
 }
-
 .prov_projected {
-  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line));
+  composes: prov_projected from "./game-styles/draft-shell.module.css";
+  composes: prov_projected from "./game-styles/draft-polish.module.css";
 }
-
 .prov_estimate {
-  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line));
+  composes: prov_estimate from "./game-styles/draft-shell.module.css";
+  composes: prov_estimate from "./game-styles/draft-polish.module.css";
 }
-
 .prov_legend {
-  border-color: color-mix(in srgb, var(--prov-legend) 60%, var(--line));
-  box-shadow: 0 0 0 1px rgba(var(--prov-legend-rgb), 0.25);
+  composes: prov_legend from "./game-styles/draft-shell.module.css";
+  composes: prov_legend from "./game-styles/draft-polish.module.css";
 }
-
 .prov_manager {
-  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line));
+  composes: prov_manager from "./game-styles/draft-shell.module.css";
+  composes: prov_manager from "./game-styles/draft-polish.module.css";
 }
-
-/* Memory-mode blind — neutral, leaks no provenance tier or legend gold. */
 .prov_masked {
-  border-color: var(--line);
+  composes: prov_masked from "./game-styles/draft-shell.module.css";
+  composes: prov_masked from "./game-styles/draft-polish.module.css";
 }
-
-/* Provenance badges */
 .provBadge {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
-  border: 1px solid var(--line-2);
+  composes: provBadge from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_historical {
-  color: var(--prov-historical);
-  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line-2));
+  composes: provBadge_historical from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_projected {
-  color: var(--prov-projected);
-  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line-2));
+  composes: provBadge_projected from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_estimate {
-  color: var(--prov-estimate);
-  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line-2));
+  composes: provBadge_estimate from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_legend {
-  color: var(--bg-900);
-  background: var(--gold);
-  border-color: var(--gold-deep);
+  composes: provBadge_legend from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_manager {
-  color: var(--prov-manager);
-  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+  composes: provBadge_manager from "./game-styles/draft-shell.module.css";
 }
-
 .provBadge_masked {
-  color: var(--ink-400);
-  border-color: var(--line-2);
+  composes: provBadge_masked from "./game-styles/draft-shell.module.css";
 }
-
-/* Position shape on the eligible-position tags (mirrors slot encoding) */
-.posTag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  padding: 2px 8px;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  background: var(--bg-700);
-  color: var(--ink-200);
-  border: 1px solid var(--line-2);
-}
-
 .posShape_square {
-  border-radius: 3px;
+  composes: posShape_square from "./game-styles/draft-shell.module.css";
 }
-
 .posShape_triangle {
-  border-radius: 2px 2px 2px 10px;
+  composes: posShape_triangle from "./game-styles/draft-shell.module.css";
 }
-
 .posShape_diamond {
-  border-radius: 6px;
+  composes: posShape_diamond from "./game-styles/draft-shell.module.css";
 }
-
 .posShape_circle {
-  border-radius: 999px;
+  composes: posShape_circle from "./game-styles/draft-shell.module.css";
 }
-
-/* ── In-shell lock bar (thumb zone) + bottom sheet ────────────────────────
-   LOCK PICK is the most-pressed control in the game. Mobile-first layout:
-   full-width action row on top, compact context line below it (the context
-   line doubles as live clearance above Safari's bottom-edge tap-to-expand
-   gesture zone, so the primary's hit area never lands in it).
-   ≥640px relaxes back to a single side-by-side row.
-
-   ws-ux/tap-stability-2: the bar is NOT viewport-fixed. iOS Safari anchors
-   `position: fixed; bottom: 0` to the visual viewport, so the bar physically
-   moves during the toolbar collapse/expand animation — the "first tap jumps,
-   second tap works" defect that survived the #78 svh fix. Instead the bar is
-   a normal-flow bottom row of the anchored 100svh draft shell (see
-   .draftShellAnchored): the shell bottom corresponds to the toolbar-expanded
-   position and is invariant under toolbar state transitions. The legacy
-   .lockBar block earlier in this file is fully shadowed by this one (same
-   specificity, later wins) and intentionally left untouched. */
-
-.lockBar {
-  /* sticky, NOT fixed: in the anchored shell the document never scrolls, so
-     this settles as a plain in-flow row; if a browser without :has() support
-     degrades to a body-scrolling layout, sticky still keeps the bar visible
-     without the iOS visual-viewport anchoring a fixed bar suffers. */
-  position: sticky;
-  inset: auto; /* neutralise the legacy block's stale left/right offsets */
-  bottom: 0;
-  flex: 0 0 auto;
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  /* ≥12px under the safe-area inset keeps the action row clear of Safari's
-     bottom-edge gesture zone even when the toolbar is minimized. */
-  padding: 8px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: color-mix(in srgb, var(--bg-900) 96%, transparent);
-  border-top: 1px solid var(--line-2);
-  box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  /* Kill the 350ms double-tap-zoom heuristic on the most-pressed surface in
-     the game — first tap must commit immediately (iOS Safari). */
-  touch-action: manipulation;
-}
-
-.lockBar button {
-  touch-action: manipulation;
-}
-
-.lockInfo {
-  min-width: 0;
-  font-size: var(--t-sm);
-  color: var(--ink-200);
-  overflow: visible;
-  overflow-wrap: anywhere;
-  white-space: normal;
-  line-height: 1.3;
-  /* Context line BELOW the actions in the mobile column layout: it lives in
-     the bottom clearance band, lifting the LOCK PICK hit area ≥16px above
-     the shell bottom edge (Safari gesture-zone margin) without dead space. */
-  order: 2;
-}
-
-.lockHint {
-  color: var(--ink-400);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-}
-
 .lockError {
-  color: var(--loss);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
+  composes: lockError from "./game-styles/draft-shell.module.css";
+  composes: lockError from "./game-styles/draft-polish.module.css";
 }
-
 .lockActions {
-  display: flex;
-  gap: 8px;
+  composes: lockActions from "./game-styles/draft-shell.module.css";
+  composes: lockActions from "./game-styles/draft-polish.module.css";
 }
-
-/* Primary (Lock pick / Review XI) — full prominence, thumb-zone right. */
-.lockActions .lockPrimary {
-  flex: 1 1 auto;
-  min-height: 52px;
-  padding: 12px 24px;
-  font-size: 16px;
+.lockPrimary {
+  composes: lockPrimary from "./game-styles/draft-shell.module.css";
 }
-
-/* Secondary (Choose slot) — demoted but still a ≥44px target. */
-.lockActions .lockSecondary {
-  flex: 0 0 auto;
-  min-height: 52px;
-  padding: 12px 14px;
-  font-size: 14px;
+.lockSecondary {
+  composes: lockSecondary from "./game-styles/draft-shell.module.css";
 }
-
-@media (min-width: 640px) {
-  .lockBar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  }
-  .lockInfo {
-    flex: 1;
-    order: 0; /* row layout: context line back on the left */
-  }
-  .lockActions .lockPrimary {
-    flex: 0 0 auto;
-    min-width: 220px;
-  }
-}
-
-.compatPill {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 2px 8px;
-  border-radius: var(--r-pill);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  border: 1px solid var(--line-2);
-}
-
 .sheetBackdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(6, 9, 12, 0.55);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 8;
-  animation: fadeIn var(--d-fast) var(--e-out);
+  composes: sheetBackdrop from "./game-styles/draft-shell.module.css";
 }
-
 .sheet {
-  width: 100%;
-  max-width: 480px;
-  /* dvh, not vh: classic-vh ignores the iOS toolbar state and lets the
-     sheet's bottom land under Safari's collapsed chrome. */
-  max-height: 75dvh;
-  background: var(--bg-800);
-  border-top-left-radius: var(--r-3);
-  border-top-right-radius: var(--r-3);
-  border: 1px solid var(--line-2);
-  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  animation: slideUp var(--d-med) var(--e-snap);
+  composes: sheet from "./game-styles/draft-shell.module.css";
+  composes: sheet from "./game-styles/draft-polish.module.css";
 }
-
 .sheetHead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  composes: sheetHead from "./game-styles/draft-shell.module.css";
 }
-
 .sheetTitle {
-  font-family: var(--f-display);
-  font-size: 18px;
-  letter-spacing: 0.02em;
+  composes: sheetTitle from "./game-styles/draft-shell.module.css";
+  composes: sheetTitle from "./game-styles/draft-polish.module.css";
 }
-
 .sheetClose {
-  appearance: none;
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--ink-200);
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-pill);
-  font-size: 18px;
-  cursor: pointer;
+  composes: sheetClose from "./game-styles/draft-shell.module.css";
 }
-
 .sheetGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  overflow-y: auto;
+  composes: sheetGrid from "./game-styles/draft-shell.module.css";
+  composes: sheetGrid from "./game-styles/draft-polish.module.css";
 }
-
 .sheetSlot {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: center;
-  padding: 12px 4px;
-  min-height: 64px;
-  background: var(--bg-750);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-2);
-  color: var(--ink-100);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  cursor: pointer;
+  composes: sheetSlot from "./game-styles/draft-shell.module.css";
+  composes: sheetSlot from "./game-styles/draft-polish.module.css";
 }
-
 .sheetSlotActive {
-  border-color: var(--gold);
-  box-shadow: var(--ring-amber);
+  composes: sheetSlotActive from "./game-styles/draft-shell.module.css";
 }
-
 .sheetSlotPos {
-  font-family: var(--f-display);
-  font-size: 16px;
+  composes: sheetSlotPos from "./game-styles/draft-shell.module.css";
+  composes: sheetSlotPos from "./game-styles/draft-polish.module.css";
 }
-
 .sheetSlotKind {
-  color: var(--ink-400);
+  composes: sheetSlotKind from "./game-styles/draft-shell.module.css";
 }
-
 .sheetSlotCompat {
-  color: var(--ember-bright);
+  composes: sheetSlotCompat from "./game-styles/draft-shell.module.css";
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sheetBackdrop,
-  .sheet {
-    animation: none;
-  }
-}
-
-/* ── Review screen specifics ────────────────────────────────────────────── */
-
 .reviewHead {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 4px 0;
+  composes: reviewHead from "./game-styles/review.module.css";
+  composes: reviewHead from "./game-styles/draft-polish.module.css";
 }
-
-.teamNameRow {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.teamNameLabel {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  color: var(--ink-400);
-  text-transform: uppercase;
-}
-
-.teamNameInput {
-  width: 100%;
-  padding: 12px;
-  font-family: var(--f-display);
-  font-size: 24px;
-  background: var(--bg-800);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-2);
-  color: var(--ink-100);
-}
-
-.teamNameInput:focus {
-  outline: none;
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
-}
-
-.simPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.simNote {
-  margin: 0;
-  color: var(--ink-200);
-  font-family: var(--f-serif);
-  font-size: 16px;
-}
-
 .warningsPanel {
-  background: color-mix(in srgb, var(--bg-800) 90%, rgba(var(--glow-amber), 0.1));
-  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
+  composes: warningsPanel from "./game-styles/review.module.css";
+  composes: warningsPanel from "./game-styles/draft-polish.module.css";
 }
-
 .panelSubTitle {
-  margin: 0 0 8px;
-  font-family: var(--f-display);
-  font-size: 16px;
-  color: var(--ink-100);
+  composes: panelSubTitle from "./game-styles/review.module.css";
+  composes: panelSubTitle from "./game-styles/draft-polish.module.css";
 }
-
 .warnList {
-  margin: 0;
-  padding-left: 18px;
-  font-size: var(--t-sm);
-  color: var(--ink-200);
+  composes: warnList from "./game-styles/review.module.css";
+  composes: warnList from "./game-styles/draft-polish.module.css";
 }
-
-.warnList li {
-  margin-bottom: 4px;
-}
-
-/* ── Channels (refit on DS tokens) ──────────────────────────────────────── */
-
-.channels {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.channel {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  color: var(--ink-300);
-}
-
-.channelLabel {
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.channelTrack {
-  display: block;
-  height: 4px;
-  background: var(--bg-700);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.channelFill {
-  display: block;
-  height: 100%;
-  background: var(--ember);
-}
-
-.channelVal {
-  font-family: var(--f-mono);
-  color: var(--ink-200);
-}
-
-.candStats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-300);
-  align-items: center;
-}
-
-.candStats b {
-  color: var(--ink-100);
-  font-weight: 700;
-}
-
-.candAwards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.award {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  background: color-mix(in srgb, var(--gold) 18%, var(--bg-700));
-  color: var(--gold-bright);
-  padding: 2px 8px;
-  border-radius: var(--r-pill);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   SPIN REVEAL — standalone stage (the centerpiece). Emerald = var(--ember),
-   gold = var(--gold); brand hexes are never re-hardcoded here. The 2–3s drum
-   spin is PRESENTATION ONLY over the deterministic engine result, and
-   prefers-reduced-motion snaps straight to the settled face.
-   ───────────────────────────────────────────────────────────────────────── */
-
 .spinShell {
-  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  composes: spinShell from "./game-styles/draft-spin.module.css";
+  composes: spinShell from "./game-styles/draft-polish.module.css";
 }
-
-/* Standalone-spin surface has no DraftAppBar, so the persistence warning
-   would never reach the user mid-spin. Render it inline above the stage:
-   one line, centered, no layout regression on the compact density bar. */
 .spinPersistenceWarn {
-  padding: 0 var(--s-3);
-  text-align: center;
-  flex-basis: auto;
+  composes: spinPersistenceWarn from "./game-styles/draft-spin.module.css";
 }
-
 .spinStage {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-  padding: var(--s-2) 0 0;
+  composes: spinStage from "./game-styles/draft-spin.module.css";
+  composes: spinStage from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Status bar ─────────────────────────────────────────────────────────── */
 .spinStatusBar {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--s-2);
+  composes: spinStatusBar from "./game-styles/draft-spin.module.css";
+  composes: spinStatusBar from "./game-styles/draft-polish.module.css";
 }
 .spinPickBadge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: var(--r-pill);
-  background: radial-gradient(
-    circle at 50% 35%,
-    color-mix(in srgb, var(--ember) 24%, var(--bg-750)),
-    var(--bg-800)
-  );
-  border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--line-2));
-  box-shadow: var(--ring-ember);
-  line-height: 1;
+  composes: spinPickBadge from "./game-styles/draft-spin.module.css";
+  composes: spinPickBadge from "./game-styles/draft-polish.module.css";
 }
 .spinPickKicker {
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinPickKicker from "./game-styles/draft-spin.module.css";
+  composes: spinPickKicker from "./game-styles/draft-polish.module.css";
 }
 .spinPickNum {
-  font-family: var(--f-display), sans-serif;
-  font-size: 22px;
-  color: var(--ink-100);
-  font-feature-settings: "tnum" 1;
+  composes: spinPickNum from "./game-styles/draft-spin.module.css";
+  composes: spinPickNum from "./game-styles/draft-polish.module.css";
 }
 .spinPickOf {
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinPickOf from "./game-styles/draft-spin.module.css";
+  composes: spinPickOf from "./game-styles/draft-polish.module.css";
 }
 .spinStatusTitle {
-  text-align: center;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--ink-300);
+  composes: spinStatusTitle from "./game-styles/draft-spin.module.css";
+  composes: spinStatusTitle from "./game-styles/draft-polish.module.css";
 }
 .spinStatusMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  composes: spinStatusMeta from "./game-styles/draft-spin.module.css";
 }
 .spinStatusChip {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 3px 8px;
-  border-radius: var(--r-1);
-  background: var(--bg-800);
-  border: 1px solid var(--line);
-  min-width: 104px;
+  composes: spinStatusChip from "./game-styles/draft-spin.module.css";
+  composes: spinStatusChip from "./game-styles/draft-polish.module.css";
 }
 .spinStatusChipLabel {
-  font-family: var(--f-mono);
-  font-size: 8px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinStatusChipLabel from "./game-styles/draft-spin.module.css";
+  composes: spinStatusChipLabel from "./game-styles/draft-polish.module.css";
 }
 .spinStatusChipValue {
-  font-family: var(--f-display), sans-serif;
-  font-size: 14px;
-  color: var(--ink-100);
-  font-feature-settings: "tnum" 1;
+  composes: spinStatusChipValue from "./game-styles/draft-spin.module.css";
+  composes: spinStatusChipValue from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Drum ───────────────────────────────────────────────────────────────── */
 .spinDrumLabel {
-  text-align: center;
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinDrumLabel from "./game-styles/draft-spin.module.css";
+  composes: spinDrumLabel from "./game-styles/draft-polish.module.css";
 }
 .spinDrum {
-  position: relative;
-  padding: var(--s-3);
-  border-radius: var(--r-3);
-  background:
-    radial-gradient(
-      72% 90% at 50% 50%,
-      color-mix(in srgb, var(--ember) 9%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
-  border: 1px solid var(--line-2);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    var(--sh-2);
-  overflow: hidden;
+  composes: spinDrum from "./game-styles/draft-spin.module.css";
+  composes: spinDrum from "./game-styles/draft-polish.module.css";
 }
 .spinReels {
-  display: grid;
-  grid-template-columns: 0.8fr 1.3fr 0.8fr;
-  gap: var(--s-2);
-  align-items: center;
+  composes: spinReels from "./game-styles/draft-spin.module.css";
 }
 .spinReelWindow {
-  position: relative;
-  height: var(--reel-h);
-  overflow: hidden;
-  border-radius: var(--r-2);
-  background: var(--bg-800);
-  border: 1px solid var(--line);
+  composes: spinReelWindow from "./game-styles/draft-spin.module.css";
 }
 .spinReelWindowSide {
-  opacity: 0.4;
-  filter: saturate(0.7);
-  transform: scale(0.93);
+  composes: spinReelWindowSide from "./game-styles/draft-spin.module.css";
 }
 .spinReelWindowCenter {
-  border: 1.5px solid color-mix(in srgb, var(--gold) 62%, transparent);
-  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
-  box-shadow:
-    var(--ring-amber),
-    inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
-  z-index: 2;
+  composes: spinReelWindowCenter from "./game-styles/draft-spin.module.css";
 }
 .spinReelTrack {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  will-change: transform;
+  composes: spinReelTrack from "./game-styles/draft-spin.module.css";
 }
 .spinReelTrackSpinning {
-  animation-name: spinDrum;
-  animation-duration: var(--spin-dur);
-  animation-delay: var(--spin-delay);
-  animation-timing-function: cubic-bezier(0.16, 0.74, 0.12, 1);
-  animation-fill-mode: both;
-}
-@keyframes spinDrum {
-  0% {
-    transform: translateY(var(--spin-from));
-    filter: blur(2px);
-  }
-  12% {
-    filter: blur(2px);
-  }
-  82% {
-    filter: blur(0);
-  }
-  100% {
-    transform: translateY(var(--spin-to));
-    filter: blur(0);
-  }
+  composes: spinReelTrackSpinning from "./game-styles/draft-spin.module.css";
 }
 .spinFace {
-  height: var(--face-h);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 0 6px;
-  text-align: center;
+  composes: spinFace from "./game-styles/draft-spin.module.css";
 }
 .spinFaceSettled {
-  animation: spinFacePop var(--d-med) var(--e-snap) both;
-}
-@keyframes spinFacePop {
-  0% {
-    transform: scale(0.86);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  composes: spinFaceSettled from "./game-styles/draft-spin.module.css";
 }
 .spinFaceFlag {
-  width: 52px;
-  height: 36px;
-  object-fit: cover;
-  border-radius: 3px;
-  border: 1px solid var(--line-2);
-  background: var(--bg-900);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  composes: spinFaceFlag from "./game-styles/draft-spin.module.css";
 }
 .spinFaceFlagFallback {
-  width: 52px;
-  height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-200);
-  background: var(--bg-700);
-  border: 1px solid var(--line-2);
-  border-radius: 3px;
+  composes: spinFaceFlagFallback from "./game-styles/draft-spin.module.css";
 }
 .spinFaceNation {
-  font-family: var(--f-display), sans-serif;
-  font-size: clamp(13px, 3.6vw, 17px);
-  color: var(--ink-100);
-  line-height: 1;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  composes: spinFaceNation from "./game-styles/draft-spin.module.css";
 }
 .spinFaceYear {
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--gold-bright);
-  letter-spacing: 0.06em;
-  font-feature-settings: "tnum" 1;
+  composes: spinFaceYear from "./game-styles/draft-spin.module.css";
 }
-.spinFaceIdle .spinFaceGlyph {
-  font-family: var(--f-display), sans-serif;
-  font-size: 28px;
-  color: var(--ink-500);
+.spinFaceIdle {
+  composes: spinFaceIdle from "./game-styles/draft-spin.module.css";
 }
-.spinFaceIdle .spinFaceNation {
-  color: var(--ink-400);
-}
-.spinChevronTop,
-.spinChevronBottom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  z-index: 4;
-  filter: drop-shadow(0 0 5px rgba(var(--glow-gold), 0.7));
+.spinFaceGlyph {
+  composes: spinFaceGlyph from "./game-styles/draft-spin.module.css";
 }
 .spinChevronTop {
-  top: 7px;
-  border-top: 11px solid var(--gold);
+  composes: spinChevronTop from "./game-styles/draft-spin.module.css";
 }
 .spinChevronBottom {
-  bottom: 7px;
-  border-bottom: 11px solid var(--gold);
-}
-.spinShadeTop,
-.spinShadeBottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 30px;
-  pointer-events: none;
-  z-index: 3;
+  composes: spinChevronBottom from "./game-styles/draft-spin.module.css";
 }
 .spinShadeTop {
-  top: 0;
-  background: linear-gradient(180deg, var(--bg-900) 0%, transparent 100%);
+  composes: spinShadeTop from "./game-styles/draft-spin.module.css";
 }
 .spinShadeBottom {
-  bottom: 0;
-  background: linear-gradient(0deg, var(--bg-900) 0%, transparent 100%);
+  composes: spinShadeBottom from "./game-styles/draft-spin.module.css";
 }
 .spinPayline {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
+  composes: spinPayline from "./game-styles/draft-spin.module.css";
 }
-
-/* ── Result block ───────────────────────────────────────────────────────── */
 .spinResultBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  text-align: center;
+  composes: spinResultBlock from "./game-styles/draft-spin.module.css";
 }
 .spinResultEyebrow {
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinResultEyebrow from "./game-styles/draft-spin.module.css";
 }
 .spinResultName {
-  margin: 0;
-  font-family: var(--f-display), sans-serif;
-  font-size: clamp(28px, 8vw, 40px);
-  line-height: 1;
-  letter-spacing: 0.01em;
+  composes: spinResultName from "./game-styles/draft-spin.module.css";
+  composes: spinResultName from "./game-styles/draft-polish.module.css";
 }
 .spinResultNation {
-  color: var(--ember);
+  composes: spinResultNation from "./game-styles/draft-spin.module.css";
 }
 .spinResultYear {
-  color: var(--ink-200);
-  font-feature-settings: "tnum" 1;
+  composes: spinResultYear from "./game-styles/draft-spin.module.css";
 }
 .spinResultPending {
-  color: var(--ink-500);
+  composes: spinResultPending from "./game-styles/draft-spin.module.css";
 }
 .spinResultTag {
-  margin: 0;
-  font-size: var(--t-sm);
-  color: var(--ink-300);
-  max-width: 34ch;
+  composes: spinResultTag from "./game-styles/draft-spin.module.css";
+  composes: spinResultTag from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Stat tiles ─────────────────────────────────────────────────────────── */
 .spinTiles {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--s-2);
+  composes: spinTiles from "./game-styles/draft-spin.module.css";
 }
 .spinTile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 10px 6px;
-  background: var(--bg-800);
-  border: 1px solid var(--line);
-  border-radius: var(--r-2);
+  composes: spinTile from "./game-styles/draft-spin.module.css";
+  composes: spinTile from "./game-styles/draft-polish.module.css";
 }
 .spinTileLabel {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: spinTileLabel from "./game-styles/draft-spin.module.css";
+  composes: spinTileLabel from "./game-styles/draft-polish.module.css";
 }
 .spinTileValue {
-  font-family: var(--f-display), sans-serif;
-  font-size: 18px;
-  color: var(--ink-100);
-  font-feature-settings: "tnum" 1;
+  composes: spinTileValue from "./game-styles/draft-spin.module.css";
+  composes: spinTileValue from "./game-styles/draft-polish.module.css";
 }
 .spinTileRare {
-  background: color-mix(in srgb, var(--gold) 14%, var(--bg-800));
-  border-color: color-mix(in srgb, var(--gold) 46%, var(--line));
-  box-shadow: 0 0 18px -6px rgba(var(--glow-gold), 0.5);
+  composes: spinTileRare from "./game-styles/draft-spin.module.css";
 }
-.spinTileRare .spinTileLabel {
-  color: var(--gold-bright);
-}
-.spinTileRare .spinTileValue {
-  color: var(--gold-bright);
-}
-
-/* ── CTA ────────────────────────────────────────────────────────────────── */
 .spinCta {
-  width: 100%;
-  margin-top: auto;
-  min-height: 52px; /* primary CTA — thumb-sized at every breakpoint */
+  composes: spinCta from "./game-styles/draft-spin.module.css";
+  composes: spinCta from "./game-styles/draft-polish.module.css";
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .spinReelTrackSpinning {
-    animation: none !important;
-  }
-  .spinFaceSettled {
-    animation: none !important;
-  }
-}
-
-/* ── History ───────────────────────────────────────────────────────────── */
-
 .history {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  composes: history from "./game-styles/history.module.css";
 }
-
 .historyWarn {
-  margin: 0;
-  font-size: var(--t-xs);
-  color: var(--warn);
-  font-family: var(--f-mono);
+  composes: historyWarn from "./game-styles/history.module.css";
 }
-
 .historyList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  composes: historyList from "./game-styles/history.module.css";
 }
-
 .historyCard {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  transition:
-    transform var(--d-fast) var(--e-snap),
-    border-color var(--d-fast),
-    box-shadow var(--d-fast);
+  composes: historyCard from "./game-styles/history.module.css";
 }
-
-.historyCard:hover,
-.historyCard:focus-visible {
-  border-color: var(--accent);
-  box-shadow: var(--ring-emerald, 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent));
-  transform: translateY(-1px);
-}
-
 .historyCardDisabled {
-  cursor: default;
-  opacity: 0.75;
+  composes: historyCardDisabled from "./game-styles/history.module.css";
 }
-
-.historyCardDisabled:hover,
-.historyCardDisabled:focus-visible {
-  transform: none;
-  border-color: var(--line);
-  box-shadow: none;
-}
-
 .historyMetaTop {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  composes: historyMetaTop from "./game-styles/history.module.css";
 }
-
 .historyRecord {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(2.4rem, 9vw, 3.2rem);
-  line-height: 0.9;
-  color: var(--accent);
+  composes: historyRecord from "./game-styles/history.module.css";
 }
-
 .historyRecordGold {
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--gold) 72%, white) 0%,
-    var(--gold) 55%,
-    var(--gold-strong) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  composes: historyRecordGold from "./game-styles/history.module.css";
 }
-
 .historyMetaLines {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  composes: historyMetaLines from "./game-styles/history.module.css";
 }
-
 .historyTeam {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink-100);
+  composes: historyTeam from "./game-styles/history.module.css";
 }
-
 .historyFormation {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  composes: historyFormation from "./game-styles/history.module.css";
 }
-
 .historyPicks {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  composes: historyPicks from "./game-styles/history.module.css";
 }
-
 .historyPick {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  border: 1px solid var(--line);
-  background: var(--bg-sunken, var(--bg-750));
-  padding: 0.25rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
+  composes: historyPick from "./game-styles/history.module.css";
 }
-
 .historyPickNation {
-  font-family: var(--f-mono, ui-monospace), monospace;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--accent);
+  composes: historyPickNation from "./game-styles/history.module.css";
 }
-
 .historyPickName {
-  color: var(--ink-100);
+  composes: historyPickName from "./game-styles/history.module.css";
 }
-
 .historyFootRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.9rem;
-  font-size: 0.74rem;
-  color: var(--ink-faint);
+  composes: historyFootRow from "./game-styles/history.module.css";
 }
-
 .historyRecency {
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent);
+  composes: historyRecency from "./game-styles/history.module.css";
 }
-
 .historySequence {
-  font-family: var(--f-mono, ui-monospace), monospace;
+  composes: historySequence from "./game-styles/history.module.css";
 }
-
 .historySeed {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  background: var(--bg-sunken, var(--bg-750));
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0.18rem 0.45rem;
-  font-size: 0.7rem;
+  composes: historySeed from "./game-styles/history.module.css";
 }
-
 .historyActions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.78rem;
+  composes: historyActions from "./game-styles/history.module.css";
 }
-
 .historyOpenHint {
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  composes: historyOpenHint from "./game-styles/history.module.css";
 }
-
 .historyShareHint {
-  color: var(--ink-faint);
-  font-family: var(--f-mono, ui-monospace), monospace;
-  font-size: 0.7rem;
+  composes: historyShareHint from "./game-styles/history.module.css";
 }
-
 .historyReplayError {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--loss, var(--warn));
+  composes: historyReplayError from "./game-styles/history.module.css";
 }
-
-/* ── Social share intents ─────────────────────────────────────────────── */
-
 .shareIntentGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.4rem;
+  composes: shareIntentGroup from "./game-styles/history.module.css";
+  composes: shareIntentGroup from "./game-styles/draft-polish.module.css";
 }
-
 .shareIntentLabel {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
-  margin: 0;
+  composes: shareIntentLabel from "./game-styles/history.module.css";
+  composes: shareIntentLabel from "./game-styles/draft-polish.module.css";
 }
-
 .shareIntentRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  composes: shareIntentRow from "./game-styles/history.module.css";
+  composes: shareIntentRow from "./game-styles/draft-polish.module.css";
 }
-
 .shareIntentButton {
-  font-size: 0.82rem;
-  padding-inline: 0.85rem;
+  composes: shareIntentButton from "./game-styles/history.module.css";
+  composes: shareIntentButton from "./game-styles/draft-polish.module.css";
 }
-
 .copyLinkOk {
-  color: var(--accent);
-  font-size: 0.78rem;
-  margin: 0;
+  composes: copyLinkOk from "./game-styles/history.module.css";
 }
-/* ── ws-squad/formations-polish: Synergy link layer + Manager slot ──────── */
-
-/* SVG layer drawn beneath the slot chips so links sit on the pitch but do
-   not block taps. Pointer events disabled because line endpoints sit at
-   slot centres and would otherwise eat clicks on the slot itself. */
 .pitchSynergyLayer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
+  composes: pitchSynergyLayer from "./game-styles/draft-polish.module.css";
 }
-
-/* Inactive adjacency edge (reveal/review surfaces) — the structural "could
-   link" graph. Deliberately quiet: ~20% neutral ink, 1px, no glow, so the
-   pitch never reads as a wire mesh and live emerald edges stay dominant.
-   `--ink-300` flips with the theme, keeping the line visible (but quiet) on
-   the light pitch too. */
 .synergyLineIdle {
-  stroke: color-mix(in srgb, var(--ink-200) 30%, transparent);
-  stroke-width: 1.05;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  composes: synergyLineIdle from "./game-styles/draft-polish.module.css";
 }
-
-/* Emerald link = same-nation, both slots filled (year-agnostic; ENGINE-V2 E-2
-   made synergy nation-only). Token `--accent` carries the locked emerald
-   line hue, and --glow-ember keeps the halo theme-aware. */
 .synergyLineLive {
-  stroke: var(--accent);
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 4px rgba(var(--glow-ember), 0.5));
+  composes: synergyLineLive from "./game-styles/draft-polish.module.css";
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .synergyLineLive {
-    opacity: 0;
-    animation: synergy-line-ignite var(--d-fast) var(--e-out) both;
-  }
-}
-
-@keyframes synergy-line-ignite {
-  from {
-    opacity: 0.2;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Visible label naming the layer. The brand glossary says "Synergy",
-   NEVER "Chemistry". */
 .pitchSynergyLegend {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-100);
-  background: color-mix(in srgb, var(--bg-900) 65%, transparent);
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-  pointer-events: none;
+  composes: pitchSynergyLegend from "./game-styles/draft-polish.module.css";
 }
-
 .pitchSynergyLegendDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--ember);
-  box-shadow: 0 0 6px rgba(var(--glow-ember), 0.7);
+  composes: pitchSynergyLegendDot from "./game-styles/draft-polish.module.css";
 }
-
-/* Pitch slots sit above the SVG layer so chips remain interactive. */
-.pitch .slot {
-  z-index: 2;
-}
-
-/* ── Slot shape marker (visible inside the chip) ─────────────────────────
-   Position-by-shape is one of the brand invariants: GK square,
-   DF triangle, MF diamond, FW circle. The marker is a small block placed
-   beside the slot's role pill. It must not affect chip dimensions when
-   a slot becomes selected/preview/filled — fixed size, no transform. */
-
 .slotHead {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  line-height: 1;
-  max-width: 100%;
+  composes: slotHead from "./game-styles/draft-polish.module.css";
 }
-
-.miniNationFlag,
-.miniNationFlagFallback {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 18px;
-  height: 12px;
-  border-radius: 2px;
-  border: 1px solid color-mix(in srgb, var(--ink-100) 22%, transparent);
-  background: color-mix(in srgb, var(--bg-700) 82%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg-900) 24%, transparent);
-}
-
 .miniNationFlag {
-  object-fit: cover;
+  composes: miniNationFlag from "./game-styles/draft-polish.module.css";
 }
-
 .miniNationFlagFallback {
-  width: auto;
-  min-width: 18px;
-  padding-inline: 2px;
-  font-family: var(--f-mono);
-  font-size: 7px;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  color: var(--ink-100);
+  composes: miniNationFlagFallback from "./game-styles/draft-polish.module.css";
 }
-
 .slotMiniFlag {
-  width: 15px;
-  height: 10px;
+  composes: slotMiniFlag from "./game-styles/draft-polish.module.css";
 }
-
 .benchMiniFlag {
-  width: 16px;
-  height: 11px;
+  composes: benchMiniFlag from "./game-styles/draft-polish.module.css";
 }
-
 .slotShapeMarker {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: currentColor;
-  opacity: 0.85;
-  flex: none;
+  composes: slotShapeMarker from "./game-styles/draft-polish.module.css";
 }
-
 .slotShapeMarker_square {
-  border-radius: 1px;
+  composes: slotShapeMarker_square from "./game-styles/draft-polish.module.css";
 }
-
 .slotShapeMarker_triangle {
-  background: transparent;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 8px solid currentColor;
+  composes: slotShapeMarker_triangle from "./game-styles/draft-polish.module.css";
 }
-
 .slotShapeMarker_diamond {
-  border-radius: 1px;
-  transform: rotate(45deg);
+  composes: slotShapeMarker_diamond from "./game-styles/draft-polish.module.css";
 }
-
 .slotShapeMarker_circle {
-  border-radius: 999px;
+  composes: slotShapeMarker_circle from "./game-styles/draft-polish.module.css";
 }
-
-/* ── Squad stage: pitch + manager slot side-by-side ─────────────────────
-   Mobile-first stack; tablets+ get the manager card pinned to the right
-   of the pitch. The pitch keeps its aspect-ratio either way. */
-
 .squadStage {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  composes: squadStage from "./game-styles/draft-polish.module.css";
 }
-
-@media (min-width: 720px) {
-  .squadStage {
-    grid-template-columns: minmax(0, 1fr) 220px;
-    align-items: start;
-  }
-}
-
-/* ── Manager slot ─────────────────────────────────────────────────────── */
-
 .managerSlot {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-  background: var(--bg-750);
-  border: 1px solid var(--line);
-  border-radius: var(--r-3);
-  color: var(--ink-100);
+  composes: managerSlot from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotCommitted {
-  border-color: color-mix(in srgb, var(--prov-manager) 55%, var(--line));
-  box-shadow: 0 0 0 1px rgba(var(--prov-manager-rgb, 255, 255, 255), 0.15);
+  composes: managerSlotCommitted from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotPreview {
-  border-color: var(--ember);
-  box-shadow: var(--ring-ember);
-  border-style: dashed;
+  composes: managerSlotPreview from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotOpen {
-  border-style: dashed;
-  color: var(--ink-300);
+  composes: managerSlotOpen from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotEyebrow {
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: managerSlotEyebrow from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotIdentity {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
+  composes: managerSlotIdentity from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotFlag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 6px;
-  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
-  border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.06em;
-  color: var(--ink-100);
-  object-fit: cover;
+  composes: managerSlotFlag from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotNameWrap {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+  composes: managerSlotNameWrap from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotName {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  composes: managerSlotName from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotMeta {
-  font-size: var(--t-xs);
-  color: var(--ink-300);
+  composes: managerSlotMeta from "./game-styles/draft-polish.module.css";
 }
-
-/* Manager slot status chip — now only the draft-time "Preview" state.
-   The manager rating contract stays HONEST-STATE: runtime data never
-   carries a rating and the UI never fabricates one; since absence is
-   structural (every manager), the old "Rating unavailable" pill restated
-   nothing and was removed on every surface (ws-ux/mobile-polish-2). */
 .managerSlotBadge {
-  align-self: flex-start;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--prov-manager);
-  padding: 2px 8px;
-  border: 1px solid color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  composes: managerSlotBadge from "./game-styles/draft-polish.module.css";
 }
-
 .managerSlotEmpty {
-  margin: 0;
-  font-size: var(--t-sm);
-  color: var(--ink-300);
-  font-style: italic;
+  composes: managerSlotEmpty from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Compact candidate rows (video-game lineup density). One scannable line by
-   default; tapping selects AND expands the full detail in-place. Honest-state
-   throughout: unknown OVR shows "—", coverage/channels are real, provenance is
-   the left hue stripe + dot. Manager rows render NO rating surface at all
-   (managers structurally carry none — never a fabricated number).
-   ───────────────────────────────────────────────────────────────────────── */
 .candRow {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  text-align: left;
-  background: var(--bg-750);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--line-2);
-  border-radius: var(--r-2);
-  color: var(--ink-100);
-  cursor: pointer;
-  transition:
-    border-color var(--d-fast),
-    box-shadow var(--d-fast),
-    background-color var(--d-fast);
-}
-.candRow:hover,
-.candRow:focus-visible {
-  border-color: var(--ember);
+  composes: candRow from "./game-styles/draft-polish.module.css";
 }
 .candRowSelected {
-  border-color: var(--gold);
-  box-shadow: var(--ring-amber);
-  background: var(--bg-700);
+  composes: candRowSelected from "./game-styles/draft-polish.module.css";
 }
 .candRowDisabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  composes: candRowDisabled from "./game-styles/draft-polish.module.css";
 }
-.candRow.prov_historical {
-  border-left-color: var(--prov-historical);
-}
-.candRow.prov_projected {
-  border-left-color: var(--prov-projected);
-}
-.candRow.prov_estimate {
-  border-left-color: var(--prov-estimate);
-}
-.candRow.prov_legend {
-  border-left-color: var(--prov-legend);
-}
-.candRow.prov_manager {
-  border-left-color: var(--prov-manager);
-}
-.candRow.prov_masked {
-  border-left-color: var(--line-2);
-}
-.candRowSelected {
-  border-left-color: var(--gold);
-}
-
 .candRowLine {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
-  min-height: 46px;
+  composes: candRowLine from "./game-styles/draft-polish.module.css";
 }
 .candRowFlag {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 30px;
-  height: 24px;
-  padding: 0 5px;
-  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
-  border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.04em;
-  color: var(--ink-200);
+  composes: candRowFlag from "./game-styles/draft-polish.module.css";
 }
 .candRowMain {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  composes: candRowMain from "./game-styles/draft-polish.module.css";
 }
 .candRowName {
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  composes: candRowName from "./game-styles/draft-polish.module.css";
 }
 .candRowSub {
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--ink-400);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  composes: candRowSub from "./game-styles/draft-polish.module.css";
 }
 .candRowProv {
-  flex: 0 0 auto;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--prov-unknown);
+  composes: candRowProv from "./game-styles/draft-polish.module.css";
 }
 .provDot_historical {
-  background: var(--prov-historical);
+  composes: provDot_historical from "./game-styles/draft-polish.module.css";
 }
 .provDot_projected {
-  background: var(--prov-projected);
+  composes: provDot_projected from "./game-styles/draft-polish.module.css";
 }
 .provDot_estimate {
-  background: var(--prov-estimate);
+  composes: provDot_estimate from "./game-styles/draft-polish.module.css";
 }
 .provDot_legend {
-  background: var(--prov-legend);
-  box-shadow: 0 0 6px rgba(var(--prov-legend-rgb), 0.7);
+  composes: provDot_legend from "./game-styles/draft-polish.module.css";
 }
 .provDot_masked {
-  background: var(--prov-unknown);
+  composes: provDot_masked from "./game-styles/draft-polish.module.css";
 }
 .candRowShape {
-  flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
-  background: var(--ink-300);
+  composes: candRowShape from "./game-styles/draft-polish.module.css";
 }
 .shapeDot_square {
-  border-radius: 1px;
+  composes: shapeDot_square from "./game-styles/draft-polish.module.css";
 }
 .shapeDot_triangle {
-  background: transparent;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 9px solid var(--ink-300);
+  composes: shapeDot_triangle from "./game-styles/draft-polish.module.css";
 }
 .shapeDot_diamond {
-  border-radius: 1px;
-  transform: rotate(45deg);
+  composes: shapeDot_diamond from "./game-styles/draft-polish.module.css";
 }
 .shapeDot_circle {
-  border-radius: 999px;
+  composes: shapeDot_circle from "./game-styles/draft-polish.module.css";
 }
 .candRowBars {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 18px;
-  width: 22px;
-}
-.candRowBars i {
-  display: block;
-  width: 3px;
-  min-height: 1px;
-  background: var(--ink-400);
-  border-radius: 1px;
+  composes: candRowBars from "./game-styles/draft-polish.module.css";
 }
 .candRowOvr {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-  min-width: 28px;
-}
-.candRowOvr b {
-  font-family: var(--f-display);
-  font-size: 20px;
-  color: var(--ink-100);
-  font-feature-settings: "tnum" 1;
-}
-.candRowOvr i {
-  font-family: var(--f-mono);
-  font-size: 7px;
-  letter-spacing: 0.1em;
-  color: var(--ink-400);
-  font-style: normal;
-  text-transform: uppercase;
+  composes: candRowOvr from "./game-styles/draft-polish.module.css";
 }
 .candRowCov {
-  flex: 0 0 auto;
-  font-family: var(--f-mono);
-  font-size: 10px;
-  color: var(--ink-300);
-  min-width: 30px;
-  text-align: right;
+  composes: candRowCov from "./game-styles/draft-polish.module.css";
 }
 .candRowChevron {
-  flex: 0 0 auto;
-  font-size: 10px;
-  color: var(--ink-400);
+  composes: candRowChevron from "./game-styles/draft-polish.module.css";
 }
 .candDetail {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 2px 10px 0;
-  padding: 8px 0 10px;
-  border-top: 1px solid var(--line);
+  composes: candDetail from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Now-drafting context header (lineup view). The full reveal lives on the
-   standalone spin stage; this is the compact carry-over so the lineup keeps
-   its nation/year context.
-   ───────────────────────────────────────────────────────────────────────── */
 .nowDrafting {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 14px;
-  background: linear-gradient(180deg, var(--bg-800), var(--bg-850));
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-3);
+  composes: nowDrafting from "./game-styles/draft-polish.module.css";
 }
 .nowDraftingMain {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1; /* flag sits left as a header identity element; main fills the middle */
+  composes: nowDraftingMain from "./game-styles/draft-polish.module.css";
 }
-/* Squad-header flag (ws-ux/club-coverage) — same asset family as the spin
-   reel, sized to the existing two-line header so it adds NO vertical height. */
 .squadHeaderFlag {
-  flex: 0 0 auto;
-  width: 46px;
-  height: 32px;
-  object-fit: cover;
-  border-radius: 3px;
-  border: 1px solid var(--line-2);
-  background: var(--bg-900);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  composes: squadHeaderFlag from "./game-styles/draft-polish.module.css";
 }
 .squadHeaderFlagFallback {
-  flex: 0 0 auto;
-  width: 46px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  color: var(--ink-200);
-  background: var(--bg-700);
-  border: 1px solid var(--line-2);
-  border-radius: 3px;
+  composes: squadHeaderFlagFallback from "./game-styles/draft-polish.module.css";
 }
 .nowDraftingPick {
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ember-bright);
+  composes: nowDraftingPick from "./game-styles/draft-polish.module.css";
 }
 .nowDraftingResult {
-  font-family: var(--f-display), sans-serif;
-  font-size: 20px;
-  color: var(--ink-100);
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  composes: nowDraftingResult from "./game-styles/draft-polish.module.css";
 }
 .nowDraftingBack {
-  flex: 0 0 auto;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.06em;
-  color: var(--ink-200);
-  background: var(--bg-700);
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-pill);
-  padding: 6px 14px;
-  min-height: 44px; /* tap-target audit */
+  composes: nowDraftingBack from "./game-styles/draft-polish.module.css";
 }
-.nowDraftingBack:hover {
-  border-color: var(--ember);
-  color: var(--ember-bright);
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Formation grid de-bulk (mobile). Shrink the draft-board pitch, slim the
-   nodes, and move the Synergy-links legend out of the crowded forward line to
-   the clear bottom-left corner so it never overlaps the ST node. Nodes sit
-   above the link layer; the pitch clips its own overflow, so nothing spills.
-   ───────────────────────────────────────────────────────────────────────── */
-/* UX-COMPACT — container-derived pitch chips (ws-ux/mobile-polish-1).
-   Compact-by-default everywhere `.pitch` is rendered inside `.squadStage`
-   (draft + squad-review share this stage).
-
-   GEOMETRY CONTRACT (coupled to lib/game/pitch-layout.ts):
-   The pitch is an inline-size container; chips are sized in cqw so their
-   footprint is a FIXED fraction of the pitch at every viewport width:
-     - chip width  = 19cqw  → half-width  =  9.5% of pitch width
-     - chip height = 14cqw  → at aspect 100/94, 14/0.94 = 14.9% of pitch
-                              height → half-height ≈ 7.45%
-   `CHIP_HALF_W_PCT` / `CHIP_HALF_H_PCT` in pitch-layout.ts mirror these
-   numbers; the anti-overlap resolver is only correct while they match.
-   Inner content scales with the chip (cqw with px clamps) so compaction
-   never clips. Fixed height + hidden overflow keep the AABB exact. */
-.squadStage .pitch {
-  container-type: inline-size;
-  aspect-ratio: 100 / 94;
-  /* The legacy `.pitch` rule pins min-height to 24rem (384px) — that's
-     ~90px of dead vertical on mobile and it breaks the aspect-ratio the
-     chip-geometry contract is computed from. */
-  min-height: 0;
-  width: 100%;
-  max-width: 312px;
-  margin-inline: auto;
-}
-.squadStage .pitch .slot {
-  width: 19cqw;
-  min-width: 0;
-  max-width: none;
-  height: 14cqw;
-  min-height: 0;
-  justify-content: center;
-  overflow: hidden;
-  padding: 2px 3px;
-  gap: 1px;
-  border-radius: var(--r-2);
-}
-.squadStage .pitch .slotHead {
-  gap: 3px;
-}
-.squadStage .pitch .slotName {
-  font-size: clamp(8px, 3cqw, 10px);
-  max-width: 17.5cqw;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.squadStage .pitch .slotPos {
-  font-size: clamp(7px, 2.7cqw, 9px);
-  letter-spacing: 0.04em;
-}
-.squadStage .pitch .slotEmptyLabel {
-  font-size: clamp(7px, 2.8cqw, 9px);
-}
-.squadStage .pitch .slotMeta {
-  font-size: clamp(7px, 2.8cqw, 9px);
-}
-.squadStage .pitch .slotRating {
-  font-size: clamp(8px, 3.2cqw, 11px);
-}
-.squadStage .pitch .slotShapeMarker {
-  width: 6px;
-  height: 6px;
-}
-.squadStage .pitch .slotShapeMarker_triangle {
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-bottom: 6px solid currentColor;
-}
-/* Legend removed in UX-COMPACT — the SynergyBar at the top of the
-   section is now the single source of synergy nomenclature. The class
-   is kept for back-compat; render path no longer emits it. */
-.pitchSynergyLegend {
-  display: none;
-}
-
-/* Formation shape id ("4-3-3") must never break at its hyphens. Scoped so the
-   shared `.panelTitle` (which wraps elsewhere, e.g. "All 17 spins resolved.")
-   is untouched. */
 .formationTitleInline {
-  white-space: nowrap;
-  flex: 0 0 auto;
+  composes: formationTitleInline from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   UX-COMPACT — Synergy bar (pinned to top of formation section)
-   The bar replaces the old SynergyPanel card. Headline score + a thin
-   strength track + three inline figures (strength mult / links live /
-   manager link) — every metric the card surfaced, in a single horizontal
-   composition. Honest-state: "—" when the squad is empty AND no manager.
-   ───────────────────────────────────────────────────────────────────────── */
 .synergyBar {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 2px 12px 8px;
-  margin-bottom: 12px;
-  background: color-mix(in srgb, var(--bg-800) 92%, transparent);
-  border: 1px solid var(--line);
-  border-radius: var(--r-3);
-  /* Subtle emerald-tinted edge to keep the score readable. */
-  box-shadow: inset 0 1px 0 0 rgba(var(--glow-ember), 0.06);
+  composes: synergyBar from "./game-styles/draft-polish.module.css";
 }
-
-/* Head row doubles as the collapse toggle — full-width, 44px target.
-   Collapsed, the bar is exactly this row (label + score + chevron). */
 .synergyBarToggle {
-  appearance: none;
-  background: transparent;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  min-height: 44px;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  text-align: left;
+  composes: synergyBarToggle from "./game-styles/draft-polish.module.css";
 }
-
 .synergyBarChevron {
-  font-size: 10px;
-  color: var(--ink-400);
-  align-self: center;
+  composes: synergyBarChevron from "./game-styles/draft-polish.module.css";
 }
-
 .synergyBarLabel {
-  font-family: var(--f-mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-400);
+  composes: synergyBarLabel from "./game-styles/draft-polish.module.css";
 }
-
 .synergyBarScore {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
+  composes: synergyBarScore from "./game-styles/draft-polish.module.css";
 }
-
 .synergyBarNum {
-  font-family: var(--f-display), sans-serif;
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  color: var(--ember);
-  font-feature-settings: "tnum" 1;
+  composes: synergyBarNum from "./game-styles/draft-polish.module.css";
 }
-
-/* Thin strength track. Single emerald fill. The width is intentionally
-   non-animated so new motion remains transform/opacity-only. */
-.synergyBarTrack {
-  position: relative;
-  height: 4px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
-  overflow: hidden;
-}
-
-.synergyBarFill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--ember) 65%, transparent),
-    var(--ember)
-  );
-  transition: none;
-}
-
 .synergyBarFigures {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  flex-wrap: wrap;
+  composes: synergyBarFigures from "./game-styles/draft-polish.module.css";
 }
-
 .synergyBarFigure {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
+  composes: synergyBarFigure from "./game-styles/draft-polish.module.css";
 }
-
-.synergyBarFigure dt {
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-400);
-  margin: 0;
-}
-
-.synergyBarFigure dd {
-  font-family: var(--f-mono);
-  font-size: 12px;
-  line-height: 1;
-  color: var(--ink-100);
-  margin: 0;
-  font-feature-settings: "tnum" 1;
-}
-
 .synergyBarFigureSub {
-  color: var(--ink-400);
-  font-size: 10px;
+  composes: synergyBarFigureSub from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   UX-COMPACT — squad counter chip ("11/11 XI · 5/5 Bench · 1/1 Mgr").
-   Single line at 360–430px. Monospace + tabular numerals so the digits
-   don't reflow as the counts tick.
-   ───────────────────────────────────────────────────────────────────────── */
 .squadCounter {
-  display: inline-flex;
-  align-items: baseline;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  gap: 6px;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--ink-300);
-  font-feature-settings: "tnum" 1;
+  composes: squadCounter from "./game-styles/draft-polish.module.css";
 }
-
 .squadCounterCell {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 3px;
+  composes: squadCounterCell from "./game-styles/draft-polish.module.css";
 }
-
-.squadCounterCell b {
-  color: var(--ink-100);
-  font-weight: 600;
-}
-
 .squadCounterSep {
-  color: var(--ink-400);
+  composes: squadCounterSep from "./game-styles/draft-polish.module.css";
 }
-
-@media (max-width: 380px) {
-  .squadCounter {
-    font-size: 10px;
-    letter-spacing: 0.02em;
-  }
-}
-
-/* GK warning panel slimmed now that synergy moved up. */
 .gkWarnPanel {
-  margin-top: 8px;
+  composes: gkWarnPanel from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   UX-COMPACT — reduced-motion guard. Lock-in / select / preview already
-   avoid layout shift (every state preserves the centring translate);
-   here we belt-and-brace by disabling state transitions when the user
-   asks for less motion. The squad-stage feels instant rather than eased.
-   ───────────────────────────────────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .pitch .slot,
-  .pitch button.slot,
-  .synergyBarFill,
-  .managerSlot,
-  .benchSlot,
-  .candRow {
-    transition: none !important;
-  }
-  .pitch .slotFilled,
-  .synergyLineLive {
-    animation: none !important;
-    opacity: 1;
-  }
-  .synergyLineLive {
-    filter: none;
-  }
+.formationPanel {
+  composes: formationPanel from "./game-styles/draft-polish.module.css";
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   ws-ux/mobile-compact-v3 — global mobile compaction pass.
-
-   v3 sharpens the v2 cut and closes one critical gap: the candidate-row
-   collapsed height. v2 reduced surrounding chrome but left .candRowLine
-   at the base 46px min-height, so only ~6 collapsed rows fit a 390x844
-   viewport even after the chrome cut. v3 overrides .candRowLine to
-   38px @ 430px and 36px @ 380px so 8-9 rows sit in view. v3 also keeps
-   the formation grid 2-column down to 360px (v2 collapsed it at 380
-   which added scroll), and tightens the draft shell / app bar / sub-
-   panel paddings further.
-
-   Cuts excessive vertical scroll on the key surfaces (spin-reveal,
-   draft/synergy, formation-lock, player-list, squad review, results /
-   share / history) and slims the sticky lock-pick CTA at narrow
-   viewports. Compact via spacing / typography / padding only — NO
-   content removed, NO new color literals, all values sourced from
-   `app/ds/tokens.css` via `var(...)`. Outer breakpoints: 430px (every
-   modern phone in portrait) and 380px (Galaxy Fold / very narrow).
-   Both are scoped so tablet+desktop are untouched.
-
-   Pitch chip overlap (5-3-2 GK/CB, dense midfield diamonds) is also
-   addressed at the RENDER layer by `lib/game/pitch-layout.ts`; this
-   block contributes only chip-size tightening, never a coordinate
-   change, so the canonical `formations.json` stays the source of truth.
-   ───────────────────────────────────────────────────────────────────── */
-@media (max-width: 430px) {
-  /* ── Outer shell + app bar ─────────────────────────────────────── */
-  .draftShell,
-  .reviewShell {
-    gap: 8px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
-    min-height: calc(100svh - 72px);
-  }
-  .draftAppBar {
-    padding: 5px 8px;
-    gap: 6px;
-    border-radius: var(--r-2);
-  }
-  .appBarBrand img {
-    width: 20px;
-    height: 23px;
-  }
-  .appBarTitle {
-    font-size: 14px;
-    letter-spacing: 0.03em;
-  }
-  .appBarMeter {
-    min-width: 108px;
-    gap: 2px;
-  }
-  .spinCounterNum {
-    font-size: 13px;
-  }
-  .spinCounterTotal {
-    font-size: 11px;
-  }
-  .spinProgress {
-    height: 4px;
-  }
-
-  /* ── Cards (panels) ────────────────────────────────────────────── */
-  .panel {
-    padding: 10px;
-    border-radius: var(--r-2);
-  }
-  .panelHead {
-    margin-bottom: 6px;
-    gap: 8px;
-  }
-  .panelTitle {
-    font-size: 15px;
-  }
-  .panelMeta {
-    font-size: var(--t-xs);
-  }
-
-  /* ── Compact spin-context strip in lineup view ─────────────────── */
-  .nowDrafting {
-    padding: 8px 10px;
-    border-radius: var(--r-2);
-  }
-  .nowDraftingPick {
-    font-size: 10px;
-  }
-  .nowDraftingResult {
-    font-size: 14px;
-    letter-spacing: 0.01em;
-  }
-  .nowDraftingBack {
-    padding: 4px 10px;
-    font-size: 10px;
-  }
-
-  /* ── SpinStage (full-screen spin reveal) ───────────────────────── */
-  .spinShell {
-    gap: 10px;
-    padding: 10px 10px calc(8px + env(safe-area-inset-bottom, 0px));
-  }
-  .spinStage {
-    gap: var(--s-3);
-    padding: 0;
-  }
-  .spinStatusBar {
-    gap: 8px;
-  }
-  .spinPickBadge {
-    width: 48px;
-    height: 48px;
-  }
-  .spinPickNum {
-    font-size: 18px;
-  }
-  .spinPickKicker,
-  .spinPickOf {
-    font-size: 7px;
-  }
-  .spinStatusTitle {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-  }
-  .spinStatusChip {
-    min-width: 88px;
-    padding: 2px 6px;
-  }
-  .spinStatusChipLabel {
-    font-size: 7px;
-  }
-  .spinStatusChipValue {
-    font-size: 12px;
-  }
-  /* The drum label duplicates the "Spin reveal" status-bar title — on a
-     390x844 viewport that's a dead line between header and drum. */
-  .spinDrumLabel {
-    display: none;
-  }
-  .spinDrum {
-    padding: var(--s-2);
-    border-radius: var(--r-2);
-  }
-  .spinResultName {
-    font-size: clamp(22px, 6.6vw, 30px);
-  }
-  .spinResultTag {
-    font-size: var(--t-xs);
-    max-width: 30ch;
-  }
-  .spinTile {
-    padding: 6px 4px;
-    gap: 2px;
-  }
-  .spinTileLabel {
-    font-size: 8px;
-    letter-spacing: 0.1em;
-  }
-  .spinTileValue {
-    font-size: 15px;
-  }
-  .spinCta {
-    margin-top: var(--s-2);
-  }
-
-  /* ── Formation lock gate ──────────────────────────────────────────
-     Comparability goal: all six shapes in a tight 2-col grid with
-     minimal scroll at 390x844. The mini-pitch is the bulk — squash it
-     to 4/3 (dots keep relative spacing); blurbs go one-line. */
-  .formationSelect {
-    gap: 10px;
-    padding: 4px 2px 20px;
-  }
-  .formationHead {
-    gap: 5px;
-  }
-  /* The masthead + draft app bar already brand this screen twice — the
-     in-panel lockup is the single biggest dead block above the grid. */
-  .formationHead img {
-    display: none;
-  }
-  .formationTitle {
-    font-size: 20px;
-  }
-  .formationSub {
-    font-size: var(--t-xs);
-    max-width: 44ch;
-  }
-  .formationGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-  /* Vertical calm tile (pitch focus on top, hero name + lock CTA beneath).
-     Two-up keeps all eight shapes comparable at 5/6 aspect within a single
-     scannable grid. 12px radius matches the shared card system. */
-  .formationCard {
-    padding: 11px 9px 10px;
-    gap: 8px;
-    border-radius: 12px;
-  }
-  .formationCardBody {
-    gap: 3px;
-  }
-  .formationCardName {
-    font-size: 19px;
-  }
-  .formationCardCta {
-    font-size: 9px;
-    letter-spacing: 0.08em;
-  }
-  .miniPitch {
-    width: 78px;
-  }
-  .miniDot {
-    width: 8px;
-    height: 8px;
-  }
-
-  /* ── Formation/Synergy section (lineup view) ─────────────────── */
-  .formationPanel {
-    padding: 8px 10px 10px;
-    /* Anchor for the assign-flow scrollIntoView({block:'start'}) so the
-       slot picker lands cleanly below the sticky DraftAppBar instead of
-       half-occluded under it. */
-    scroll-margin-top: 64px;
-  }
-  .synergyBar {
-    padding: 0 10px 6px;
-    margin-bottom: 8px;
-    gap: 4px;
-  }
-  .synergyBarNum {
-    font-size: 18px;
-  }
-  .synergyBarFigures {
-    gap: 10px;
-  }
-  .squadStage {
-    gap: 8px;
-  }
-  /* Chip geometry is container-derived (cqw) — see the squadStage block
-     above. Only non-geometric tweaks belong here so the pitch-layout.ts
-     AABB contract holds at every width. */
-  .squadStage .pitch .slot {
-    border-width: 1px;
-    line-height: 1.05;
-  }
-  .bench {
-    margin-top: 8px;
-  }
-  .benchLabel {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-  }
-  .benchSlots {
-    gap: 4px;
-  }
-  .benchSlot {
-    min-height: 46px;
-    padding: 4px 2px;
-    border-radius: var(--r-2);
-  }
-  .benchSlot .slotPos {
-    font-size: 9px;
-  }
-  .benchSlot .slotName {
-    font-size: 9px;
-  }
-  .managerSlot {
-    padding: 8px 10px;
-    gap: 4px;
-  }
-  .managerSlotName {
-    font-size: 14px;
-  }
-  .managerSlotMeta,
-  .managerSlotBadge {
-    font-size: var(--t-xs);
-  }
-  .managerSlotFlag {
-    min-width: 30px;
-    height: 30px;
-  }
-
-  /* ── Squad review: one-screen mobile composition ─────────────────
-     The review route can carry long honest-state warnings, but the core
-     loop must stay viewport-fit. Keep every datum reachable while moving
-     variable-length warning details into a small internal scroll surface. */
-  .reviewShell {
-    overflow: hidden;
-  }
-  .reviewShell > .draftAppBar {
-    padding-block: 4px;
-  }
-  .reviewHead {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: end;
-    gap: 4px 8px;
-    padding: 0;
-  }
-  .reviewHead > .eyebrowAccent {
-    align-self: center;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-  }
-  .reviewHead .teamNameRow {
-    gap: 2px;
-  }
-  .reviewHead .teamNameLabel {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-  .reviewHead .teamNameInput {
-    min-height: 34px;
-    padding: 5px 8px;
-    font-size: 18px;
-  }
-  .reviewShell > .panel {
-    padding: 7px;
-    border-radius: var(--r-2);
-  }
-  .reviewShell .synergyBar {
-    padding: 0 8px 4px;
-    margin-bottom: 5px;
-    gap: 2px;
-    border-radius: var(--r-2);
-  }
-  .reviewShell .synergyBarToggle {
-    min-height: 32px;
-  }
-  .reviewShell .panelHead {
-    margin-bottom: 4px;
-  }
-  .reviewShell .panelTitle {
-    font-size: 14px;
-  }
-  .reviewShell .panelMeta {
-    font-size: 10px;
-  }
-  .reviewShell .squadStage {
-    gap: 5px;
-  }
-  .reviewShell .squadStage .pitch {
-    max-width: 248px;
-  }
-  .reviewShell .managerSlot {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 3px 7px;
-    padding: 5px 7px;
-  }
-  .reviewShell .managerSlotEyebrow {
-    font-size: 8px;
-    letter-spacing: 0.12em;
-  }
-  .reviewShell .managerSlotIdentity {
-    gap: 6px;
-  }
-  .reviewShell .managerSlotFlag {
-    min-width: 24px;
-    width: 24px;
-    height: 18px;
-    padding: 0;
-  }
-  .reviewShell .managerSlotName {
-    font-size: 12px;
-  }
-  .reviewShell .managerSlotMeta {
-    font-size: 10px;
-  }
-  .reviewShell .managerTraits {
-    grid-column: 1 / -1;
-    flex-wrap: nowrap;
-    gap: 3px;
-    margin-top: 1px;
-    overflow: hidden;
-  }
-  .reviewShell .managerTraitChip {
-    padding: 1px 5px;
-    font-size: 8px;
-    white-space: nowrap;
-  }
-  .reviewShell .bench {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 4px;
-    margin-top: 5px;
-  }
-  .reviewShell .benchLabel {
-    margin: 0;
-    font-size: 8px;
-    letter-spacing: 0.08em;
-  }
-  .reviewShell .benchSlots {
-    gap: 3px;
-  }
-  .reviewShell .benchSlot {
-    min-height: 34px;
-    padding: 2px 1px;
-  }
-  .reviewShell .benchSlot .slotPos,
-  .reviewShell .benchSlot .slotName {
-    font-size: 8px;
-    line-height: 1.05;
-  }
-  .reviewShell .benchMiniFlag {
-    width: 13px;
-    height: 9px;
-  }
-  .reviewShell .squadAvg {
-    font-size: 13px;
-  }
-  .reviewShell .lineRatings {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
-  }
-  .reviewShell .lineRow {
-    grid-template-columns: 1fr;
-    gap: 2px;
-    padding: 3px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-2);
-    background: var(--bg-sunken);
-  }
-  .reviewShell .lineName {
-    font-size: 8px;
-    line-height: 1.05;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .reviewShell .lineTrack {
-    height: 3px;
-  }
-  .reviewShell .lineVal {
-    font-size: 12px;
-    text-align: left;
-  }
-  .reviewShell .warningsPanel {
-    max-height: 58px;
-    overflow: auto;
-    padding: 6px 8px;
-  }
-  .reviewShell .panelSubTitle {
-    margin-bottom: 3px;
-    font-size: 12px;
-  }
-  .reviewShell .warnList {
-    display: grid;
-    gap: 2px;
-    padding-left: 14px;
-    font-size: 9px;
-    line-height: 1.15;
-  }
-  .reviewShell .warnList li {
-    margin-bottom: 0;
-  }
-  .reviewShell .simPanel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 5px;
-  }
-  .reviewShell .simNote {
-    font-size: 10px;
-    line-height: 1.2;
-  }
-  .reviewShell .simPanel :global(.btn) {
-    min-height: 34px;
-    padding: 6px 8px;
-    font-size: 10px;
-    white-space: nowrap;
-  }
-
-  /* ── Share screen ─────────────────────────────────────────────── */
-  .share {
-    gap: 0;
-  }
-  .share :global(.page-head) {
-    gap: 5px;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-  }
-  .share :global(.page-head h1) {
-    font-size: clamp(32px, 10vw, 42px);
-  }
-  .share :global(.page-head__note) {
-    display: none;
-  }
-  .shareCardFrame {
-    margin: 6px 0 8px;
-  }
-  .shareSvg {
-    max-width: min(62vw, 236px);
-    border-radius: 16px;
-    box-shadow: var(--shadow-card);
-  }
-  .sharePanel {
-    margin-top: 0;
-    padding: 8px;
-    gap: 5px;
-  }
-  .shareCaptionLabel {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-  }
-  .shareCaption {
-    max-height: 48px;
-    overflow: auto;
-    font-size: 11px;
-    line-height: 1.25;
-    padding: 6px 8px;
-    border-radius: var(--r-2);
-  }
-  .sharePanel .resultsActions {
-    gap: 4px;
-  }
-  .sharePanel :global(.btn) {
-    min-height: 34px;
-    padding: 6px 8px;
-    border-radius: var(--r-2);
-    font-size: 11px;
-  }
-  .shareIntentGroup {
-    margin-top: 2px;
-    gap: 4px;
-  }
-  .shareIntentLabel {
-    font-size: 9px;
-  }
-  .shareIntentRow {
-    gap: 4px;
-  }
-  .shareIntentButton {
-    font-size: 10px;
-    padding-inline: 6px;
-  }
-  .shareHint {
-    font-size: 10px;
-    line-height: 1.3;
-  }
-
-  /* ── GK warning slim variant ──────────────────────────────────── */
-  .gkWarnPanel {
-    padding: 8px 10px;
-  }
-  .gkWarn {
-    font-size: var(--t-xs);
-    gap: 6px;
-  }
-
-  /* ── Player candidate list ────────────────────────────────────── */
-  .controls {
-    gap: 6px;
-  }
-  .searchInput {
-    padding: 6px 10px;
-    font-size: 13px;
-    border-radius: var(--r-2);
-  }
-  .filterRow {
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .segmented {
-    gap: 2px;
-  }
-  .seg,
-  .segActive {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-  .sortLabel {
-    font-size: 10px;
-    gap: 4px;
-  }
-  .sortSelect {
-    padding: 3px 6px;
-    font-size: 11px;
-  }
-  /* ws-ux/mobile-polish-1: candidate-row density vs tap-target.
-     The v3 pass cut .candRowLine to 38px for density; that is below the
-     44px minimum tap height, and these rows are the most-tapped list in
-     the game. 44px is the floor — density comes from the trimmed chrome
-     around the list instead. */
-  .candList {
-    gap: 3px;
-  }
-  .candRow {
-    padding: 4px 6px;
-    gap: 4px;
-    border-radius: var(--r-2);
-  }
-  .candRowLine {
-    gap: 6px;
-    min-height: 44px;
-    padding: 3px 6px;
-  }
-  .candRowFlag {
-    min-width: 26px;
-    height: 22px;
-    padding: 0 4px;
-    font-size: 9px;
-  }
-  .candRowName {
-    font-size: 12.5px;
-    line-height: 1.2;
-  }
-  .candRowSub {
-    font-size: 9.5px;
-    line-height: 1.2;
-  }
-  .candRowOvr b {
-    font-size: 16px;
-  }
-  .candRowOvr i {
-    font-size: 8px;
-  }
-  .candRowBars {
-    gap: 2px;
-  }
-  .candRowBars i {
-    width: 3px;
-  }
-  .candRowCov {
-    font-size: 10px;
-  }
-  .candRowChevron {
-    font-size: 11px;
-  }
-  /* Expanded detail panel stays useful but loses its bulk. */
-  .candDetail {
-    gap: 6px;
-    padding-top: 6px;
-  }
-  .candBadgeRow {
-    gap: 4px;
-  }
-  .channels {
-    gap: 4px;
-  }
-  .candStats {
-    gap: 6px;
-    font-size: var(--t-xs);
-  }
-  .candAwards {
-    gap: 4px;
-  }
-
-  /* ── Sticky lock-pick CTA ─────────────────────────────────────────
-     Layout is column (helper line above, actions below) from the base
-     rules; here we only trim chrome. The primary stays ≥52px tall —
-     never compact the most-pressed button in the game. */
-  .lockBar {
-    gap: 5px;
-    /* Keep the ≥12px gesture-zone clearance even in the compact tier. */
-    padding: 7px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-  }
-  .lockInfo {
-    font-size: 12px;
-  }
-  .lockHint {
-    font-size: 10px;
-  }
-  .lockError {
-    font-size: 10px;
-  }
-  .lockActions {
-    gap: 6px;
-  }
-  .compatPill {
-    font-size: 10px;
-    padding: 1px 6px;
-    margin-left: 6px;
-  }
-
-  /* ── Bottom-sheet slot picker ─────────────────────────────────── */
-  .sheet {
-    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    gap: 8px;
-  }
-  .sheetTitle {
-    font-size: 15px;
-  }
-  .sheetGrid {
-    gap: 6px;
-  }
-  .sheetSlot {
-    padding: 8px 4px;
-    min-height: 54px;
-  }
-  .sheetSlotPos {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 380px) {
-  /* ws-ux/mobile-compact-v3: extra-tight overrides for very narrow
-     phones (Galaxy Fold / 360px windows). Keep the formation grid
-     2-column down to 360 - the 1-col fallback increased scrolling and
-     undid the v2 compaction. .formationGrid only collapses below 320px
-     (the actual unusable width). */
-  .draftShell,
-  .reviewShell {
-    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
-    min-height: calc(100svh - 68px);
-    gap: 6px;
-  }
-  .candRowLine {
-    min-height: 44px; /* tap-target floor, even on Fold-width screens */
-    padding: 2px 5px;
-  }
-  .candRowFlag {
-    min-width: 24px;
-    height: 20px;
-  }
-  .candRowName {
-    font-size: 12px;
-  }
-  .candRowSub {
-    font-size: 9px;
-  }
-  .spinResultName {
-    font-size: clamp(20px, 6vw, 26px);
-  }
-  .spinPickBadge {
-    width: 44px;
-    height: 44px;
-  }
-  .spinPickNum {
-    font-size: 16px;
-  }
-  .spinTileValue {
-    font-size: 14px;
-  }
-  .candRowName {
-    font-size: 12px;
-  }
-  .candRowSub {
-    font-size: 9px;
-  }
-}
-
-/* ─── ENGINE-V2 E-2 — Manager flavor traits (display-only chips) ─────────── */
-
 .managerTraits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 6px;
+  composes: managerTraits from "./game-styles/draft-polish.module.css";
 }
-
 .managerTraitChip {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--ink-2);
-  background: var(--bg-700);
-  border: 1px solid var(--line-2);
-  /* These chips are FLAVOR only — never style them with gold (reserved for
-     rare) or with the OVR/rating palette. Neutral slate by design. */
+  composes: managerTraitChip from "./game-styles/draft-polish.module.css";
 }
-
-/* ─── ENGINE-V2 E-2 — Rare-pick gold accent (additive, reduced-motion safe) ─ */
-
-.spinRevealPanelRare,
-.spinStage.spinRare {
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent),
-    0 0 28px -8px color-mix(in srgb, var(--gold) 50%, transparent);
+.spinRevealPanelRare {
+  composes: spinRevealPanelRare from "./game-styles/draft-polish.module.css";
 }
-
+.spinRare {
+  composes: spinRare from "./game-styles/draft-polish.module.css";
+}
 .rareMoment {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin: 8px auto 6px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  background: color-mix(in srgb, var(--gold) 10%, var(--bg-800));
-  color: var(--ink-1);
-  animation: rarePulse 1800ms ease-in-out infinite alternate;
+  composes: rareMoment from "./game-styles/draft-polish.module.css";
 }
-
 .rareMomentTitle {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  color: var(--gold);
-  text-transform: uppercase;
+  composes: rareMomentTitle from "./game-styles/draft-polish.module.css";
 }
-
 .rareMomentProbability {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--ink-2);
-  letter-spacing: 0.04em;
+  composes: rareMomentProbability from "./game-styles/draft-polish.module.css";
 }
-
-/* Rare candidate marker (ws-ux/mobile-polish-2): an inline gold chip beside
-   the name, replacing the old full-width gold top band. One accent axis per
-   edge — the left stripe stays provenance-only, gold marks the pick/win
-   moment at the moment site (chip here, ring on the selected card, glow on
-   the spin stage). */
 .candRareTag {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 1px 6px;
-  vertical-align: 1px;
-  border-radius: var(--r-pill);
-  font-family: var(--f-mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  composes: candRareTag from "./game-styles/draft-polish.module.css";
 }
-
-/* Rating-basis chip — marks a Current-basis run on the squad/card surfaces.
-   CONFIG, not a rating: a neutral ember hue, deliberately NOT one of the
-   provenance hues (cyan/periwinkle/orange/gold) so it never reads as a rating
-   tier or legend. Shown only when the run basis is `current`; Career runs are
-   chip-free. `flex: 0 0 auto` so it never pressures the row width. */
 .basisChip {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 6px;
-  border-radius: var(--r-pill);
-  font-family: var(--f-mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--ember);
-  border: 1px solid color-mix(in srgb, var(--ember) 55%, transparent);
-  background: color-mix(in srgb, var(--ember) 12%, transparent);
+  composes: basisChip from "./game-styles/draft-polish.module.css";
 }
-
-@keyframes rarePulse {
-  from {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 25%, transparent);
-  }
-  to {
-    box-shadow: 0 0 18px 2px color-mix(in srgb, var(--gold) 35%, transparent);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rareMoment {
-    animation: none;
-  }
-}
-
-/* ── Memory (hidden) mode ───────────────────────────────────────────────── */
-
-/* Inline note shown on the draft + review screens while the blind is on. */
 .memoryModeNote {
-  margin: 0;
-  font-family: var(--f-mono);
-  font-size: var(--t-xs);
-  letter-spacing: 0.04em;
-  color: var(--ink-400);
+  composes: memoryModeNote from "./game-styles/draft-polish.module.css";
 }
-
-/* Post-Simulate reveal wrapper — auto-expands around the existing squad
-   surfaces (SynergyBar / Pitch / bench / manager). The animation is pure
-   presentation; `.memoryRevealInstant` (prefers-reduced-motion) renders the
-   final state with no animation at all. */
 .memoryReveal {
-  animation: memoryRevealIn 480ms ease-out both;
+  composes: memoryReveal from "./game-styles/draft-polish.module.css";
 }
-
 .memoryRevealInstant {
-  animation: none;
-}
-
-@keyframes memoryRevealIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .memoryReveal {
-    animation: none;
-  }
+  composes: memoryRevealInstant from "./game-styles/draft-polish.module.css";
 }

@@ -20,8 +20,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { users, type Db } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
-import { readClientIp } from "../auth/handler-helpers";
+import { readClientIp } from "../http/client-ip";
 import {
   LeaderboardGateError,
   requireSubmitIdentity,
@@ -64,6 +65,36 @@ function transportError(code: TransportErrorCode, message: string): NextResponse
   return NextResponse.json({ error: code, message }, { status: TRANSPORT_STATUS[code] });
 }
 
+const SubmitBodySchema = z.object({
+  token: z.unknown().optional(),
+  claimed_score: z.unknown().optional(),
+  draft_mode: z.unknown().optional(),
+  display_alias: z.unknown().optional(),
+  display_name: z.unknown().optional(),
+  mode: z
+    .enum(["casual", "ranked"])
+    .nullish()
+    .transform((mode) => mode ?? "casual"),
+});
+
+type SubmitBoundaryBody = z.infer<typeof SubmitBodySchema>;
+type ExpectedSubmitBoundaryBody = {
+  token?: unknown;
+  claimed_score?: unknown;
+  draft_mode?: unknown;
+  display_alias?: unknown;
+  display_name?: unknown;
+  mode: BoardMode;
+};
+type Exact<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2
+    ? (<T>() => T extends B ? 1 : 2) extends <T>() => T extends A ? 1 : 2
+      ? true
+      : false
+    : false;
+const submitBodyTypeParity: Exact<SubmitBoundaryBody, ExpectedSubmitBoundaryBody> = true;
+void submitBodyTypeParity;
+
 export interface SubmitResponseBody {
   readonly entry: ApiLeaderboardEntry;
   readonly duplicate: boolean;
@@ -102,15 +133,16 @@ export async function handleLeaderboardSubmit(
     } catch {
       return transportError("INVALID_BODY", "body is not valid JSON");
     }
-    if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return transportError("INVALID_BODY", "body must be a JSON object");
+    const bodyResult = SubmitBodySchema.safeParse(parsed);
+    if (!bodyResult.success) {
+      const modeIssue = bodyResult.error.issues.some((issue) => issue.path[0] === "mode");
+      return transportError(
+        "INVALID_BODY",
+        modeIssue ? "mode must be 'casual' or 'ranked'" : "body must be a JSON object",
+      );
     }
-    const body = parsed as Record<string, unknown>;
-    const mode = body.mode ?? "casual";
-    if (mode !== "casual" && mode !== "ranked") {
-      return transportError("INVALID_BODY", "mode must be 'casual' or 'ranked'");
-    }
-    const submissionMode: BoardMode = mode;
+    const body = bodyResult.data;
+    const submissionMode: BoardMode = body.mode;
 
     // 4 — identity gate (throws LeaderboardGateError).
     const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));

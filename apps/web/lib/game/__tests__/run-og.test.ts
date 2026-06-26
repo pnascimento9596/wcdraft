@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   buildRunTokenOgSummary,
@@ -18,13 +18,19 @@ import { buildRunOgModelFromTrustedSummary } from "../run-og-model";
 import { renderRunOgImage, type RunOgImageAssets } from "../run-og-image";
 import { verifyRunTokenForOg } from "../run-og-server";
 import {
+  allowAllRunOgSignRateLimiter,
+  createDbRunOgSignRateLimiter,
+  type RunOgSignRateLimiter,
+} from "../run-og-sign-rate-limiter-db";
+import {
   sha256Hex,
   signRunOgPayload,
   verifySignedRunOgPayload,
   type SignedRunOgPayload,
 } from "../run-og-signing";
 import { GET as runOgRouteGet } from "../../../app/api/og/run/route";
-import { POST as runOgSignRoutePost } from "../../../app/api/og/sign/route";
+import { handleRunOgSignPost, POST as runOgSignRoutePost } from "../../../app/api/og/sign/route";
+import { setupTestDb } from "../../auth/__tests__/_test-db";
 
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 
@@ -32,6 +38,13 @@ const gameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
 const SECRET = "run-og-test-secret-32-bytes-minimum";
 const TRUSTED_IMAGE_CACHE = "public, max-age=31536000, immutable";
+const { db: ogRateDb, pg: ogRatePg, reset: resetOgRateDb } = await setupTestDb();
+
+afterAll(async () => ogRatePg.close());
+
+beforeEach(async () => {
+  await resetOgRateDb();
+});
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -63,6 +76,13 @@ async function signedOgForToken(token: string): Promise<string> {
     model: verified.model,
   };
   return signRunOgPayload(payload, SECRET);
+}
+
+function ogSignDeps(rateLimiter: RunOgSignRateLimiter = allowAllRunOgSignRateLimiter) {
+  return {
+    now: () => Date.now(),
+    getRateLimiter: () => rateLimiter,
+  };
 }
 
 function legacyT1FromCurrentT2(token: string): string {
@@ -313,7 +333,7 @@ describe("trusted run OG signing", () => {
     body.tn = "X".repeat(161);
     const token = encodeBody(body);
 
-    const response = await runOgSignRoutePost(
+    const response = await handleRunOgSignPost(
       new Request("http://localhost/api/og/sign", {
         method: "POST",
         headers: {
@@ -322,6 +342,7 @@ describe("trusted run OG signing", () => {
         },
         body: JSON.stringify({ run: token }),
       }),
+      ogSignDeps(),
     );
 
     expect(response.status).toBe(200);
@@ -335,10 +356,15 @@ describe("trusted run OG signing", () => {
   it("bounds repeated uncached sign attempts before re-sim work", async () => {
     vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
     const nowSpy = vi.spyOn(Date, "now").mockReturnValue(Date.UTC(2026, 5, 15, 12, 0, 30));
+    const limiter = createDbRunOgSignRateLimiter({
+      db: ogRateDb,
+      now: () => Date.now(),
+      random: () => 1,
+    });
     let last: Response | null = null;
     try {
       for (let i = 0; i < 31; i += 1) {
-        last = await runOgSignRoutePost(
+        last = await handleRunOgSignPost(
           new Request("http://localhost/api/og/sign", {
             method: "POST",
             headers: {
@@ -347,6 +373,7 @@ describe("trusted run OG signing", () => {
             },
             body: JSON.stringify({ run: "not-a-token" }),
           }),
+          ogSignDeps(limiter),
         );
       }
     } finally {
@@ -354,6 +381,44 @@ describe("trusted run OG signing", () => {
     }
     expect(last?.status).toBe(429);
     expect(last?.headers.get("retry-after")).toMatch(/^[1-9]\d*$/u);
+  });
+
+  it("serves cached signatures before consulting durable quota", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:cache-hit")));
+    let quotaCalls = 0;
+    const allowOnce: RunOgSignRateLimiter = {
+      async checkSign() {
+        quotaCalls += 1;
+        return { allowed: true };
+      },
+    };
+    const denyIfCalled: RunOgSignRateLimiter = {
+      async checkSign() {
+        quotaCalls += 1;
+        return { allowed: false, retryAfterSeconds: 60 };
+      },
+    };
+    const request = () =>
+      new Request("http://localhost/api/og/sign", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-forwarded-for": "198.51.100.79",
+        },
+        body: JSON.stringify({ run: token }),
+      });
+
+    const first = await handleRunOgSignPost(request(), ogSignDeps(allowOnce));
+    expect(first.status).toBe(200);
+    const firstBody = (await first.json()) as { signed?: unknown };
+    expect(typeof firstBody.signed).toBe("string");
+
+    const second = await handleRunOgSignPost(request(), ogSignDeps(denyIfCalled));
+    expect(second.status).toBe(200);
+    const secondBody = (await second.json()) as { signed?: unknown };
+    expect(secondBody.signed).toBe(firstBody.signed);
+    expect(quotaCalls).toBe(1);
   });
 
   it("rejects headerless oversized sign bodies while reading the stream", async () => {

@@ -264,6 +264,31 @@ export type {
   DraftConfig,
 } from "./types/draft-config.js";
 
+// Shared run-token wire contract (pure decode/encode helpers only).
+export {
+  RUN_TOKEN_PREFIX,
+  RUN_TOKEN_V2_PREFIX,
+  RUN_TOKEN_MAX_LEN,
+  RunTokenError,
+  base64UrlEncode,
+  base64UrlDecode,
+  encodeRunTokenBody,
+  tokenDraftConfig,
+  isNewerRunTokenVersion,
+  decodeRunToken,
+  runTokenOgSummary,
+  versionsAgree,
+} from "./run-token.js";
+export type {
+  RunTokenPick,
+  RunTokenPickV2,
+  RunTokenOgSummary,
+  RunTokenV1Body,
+  RunTokenV2Body,
+  RunTokenBody,
+  RunTokenVersions,
+} from "./run-token.js";
+
 // ─── 4. Zod boundary schemas ─────────────────────────────────────────────────
 export {
   // primitives

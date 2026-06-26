@@ -1,0 +1,168 @@
+/* ── Share card ────────────────────────────────────────────────────────── */
+
+.share {
+  display: flex;
+  flex-direction: column;
+}
+.shareCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  aspect-ratio: 16 / 10;
+  max-width: 40rem;
+  margin-inline: auto;
+  width: 100%;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border-radius: 18px;
+  background: linear-gradient(
+    150deg,
+    var(--bg-invert),
+    color-mix(in srgb, var(--field) 70%, var(--bg-invert))
+  );
+  color: var(--field-ink);
+  border: 3px solid var(--accent);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+:root[data-theme="dark"] .shareCard {
+  color: var(--field-ink);
+}
+.shareGrain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.shareTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+.shareBrand {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.shareBrand b {
+  color: var(--accent);
+}
+.shareSeed {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+.shareBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: auto;
+}
+.shareTeam {
+  font-family: var(--font-text), serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+.shareHeadline {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2.6rem, 10vw, 4.5rem);
+  line-height: 0.85;
+  color: var(--gold);
+  letter-spacing: 0.01em;
+}
+.shareRecord {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-top: 0.3rem;
+}
+.shareRecordNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+.shareRecordLabel {
+  font-size: 0.82rem;
+  opacity: 0.8;
+}
+.shareStats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 1.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: 0.8rem;
+}
+.shareStat {
+  display: flex;
+  flex-direction: column;
+}
+.shareStat b {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.shareStat span {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+.shareStars {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-text), serif;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+.sharePanel {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.shareCaptionLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.shareCaption {
+  font-family: var(--font-text), serif;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+/* I3.9 — SVG-based deterministic share card. The card is a real <svg>
+   element rendered inline so the same node can be serialised for download
+   without a DOM-to-image dep. The frame just constrains width on mobile. */
+.shareCardFrame {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0 1.5rem;
+}
+.shareSvg {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: 22px;
+  display: block;
+  box-shadow: 0 24px 70px rgba(8, 14, 12, 0.35);
+}
+.shareHint {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}

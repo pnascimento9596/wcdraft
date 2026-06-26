@@ -1,0 +1,1324 @@
+/* ========================================================================
+   I2 — Mobile-first portrait draft + review shell.
+   Uses DS tokens from app/ds/tokens.css; keeps legacy mock-era classes for
+   results/share until I3. New blocks are additive to avoid touching the
+   results/share styling.
+   ===================================================================== */
+
+.draftShell,
+.reviewShell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom, 0px));
+  /* svh, NOT dvh/vh: iOS Safari grows the dynamic viewport when its toolbar
+     collapses on first interaction; a dvh min-height reflows the whole page
+     mid-tap and the fixed lock bar shifts under the user's finger (the
+     "first tap near LOCK PICK does nothing" bug). The small-viewport box is
+     stable across toolbar states. */
+  min-height: 100svh;
+  background: var(--bg-850);
+  color: var(--ink-100);
+  font-family: var(--f-body);
+}
+
+/* ws-ux/tap-stability-2 — ANCHORED variant for the main draft layout (the
+   only screen with a bottom action bar). The page column is pinned to 100svh
+   (companion body:has([data-draft-anchored]) rules in globals.css) and the
+   DOCUMENT never scrolls: scrolling lives in .draftScroll. Two effects:
+   (1) iOS Safari's toolbar only collapses on document scroll, so it stays
+   put for the whole draft session; (2) even if the user arrives with the
+   toolbar already collapsed, the svh page bottom = the toolbar-expanded
+   line, so the in-flow lock bar sits safely above Safari's bottom-edge
+   gesture zone. Compound selector beats the later media-query padding
+   overrides on .draftShell. */
+.draftShell.draftShellAnchored {
+  flex: 1 1 auto; /* fill what the masthead leaves of the 100svh column */
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+}
+.draftShellAnchored .draftAppBar {
+  position: static; /* always visible as a shell row — sticky is moot here */
+  margin: 12px 16px 0;
+}
+.draftScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* no scroll chaining to the document */
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 16px 24px;
+}
+.draftAttribution {
+  margin: -2px 0 0;
+  color: var(--ink-400);
+  font-family: var(--f-body);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+  white-space: nowrap;
+}
+.draftAttribution a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+.draftAttribution a:hover {
+  color: var(--ink-300);
+  text-decoration: underline;
+}
+@media (max-width: 430px) {
+  .draftShellAnchored .draftAppBar {
+    margin: 8px 8px 0;
+  }
+  .draftScroll {
+    gap: 8px;
+    padding: 8px 8px 16px;
+  }
+  .draftAttribution {
+    font-size: 10px;
+  }
+}
+
+.draftAppBar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--bg-900) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--sh-1);
+}
+
+.appBarBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.appBarTitle {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-100);
+}
+
+.appBarMeter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.persistenceWarn {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--t-xs);
+  color: var(--warn);
+  font-family: var(--f-mono);
+}
+
+.loadingPanel {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--ink-300);
+  font-family: var(--f-mono);
+}
+
+.errorPanel {
+  padding: 24px;
+  border: 1px solid rgba(255, 77, 99, 0.35);
+  border-radius: var(--r-3);
+  background: color-mix(in srgb, var(--bg-800) 95%, rgba(255, 77, 99, 0.12));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.errorTitle {
+  margin: 0;
+  font-family: var(--f-display);
+  font-size: 22px;
+  color: var(--loss);
+}
+
+.errorMessage {
+  margin: 0;
+  color: var(--ink-200);
+}
+
+/* ── Formation select ───────────────────────────────────────────────────── */
+
+.formationSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 4px 16px;
+}
+
+.formationHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.formationTitle {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 28px;
+  margin: 0;
+  color: var(--ink-100);
+}
+
+.formationSub {
+  margin: 0;
+  color: var(--ink-300);
+  font-size: var(--t-sm);
+  max-width: 32ch;
+}
+
+/* Equal-card formation grid (ws-f4/formations-results-ux redesign): calm
+   vertical tiles — the mini-pitch is the visual focus, the shape name is the
+   hero label, the lock CTA sits beneath. Flows 2-up on phones through
+   auto-fit columns on tablets+desktop; all eight shapes share one scannable
+   grid (no horizontal scroll, no paging). */
+.formationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 320px) {
+  /* ws-ux/mobile-compact-v3: collapse formation grid only at
+     true micro-screens (<=320px). Above that the 2-col layout
+     remains, even at 360px. */
+  .formationGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pre-draft formation card — a CALM equal tile: subtle 1px border + soft
+   elevation, no coloured side-rail. Emerald is reserved for the interactive
+   LOCK affordance (the CTA text) and the hover/focus ring — never decorative.
+   Position-by-SHAPE lives inside the mini-pitch (see .miniDot*). */
+.formationCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 12px 12px;
+  gap: 11px;
+  cursor: pointer;
+  transition:
+    transform var(--d-fast) var(--e-snap),
+    box-shadow var(--d-fast),
+    border-color var(--d-fast);
+  text-align: center;
+  color: inherit;
+  font-family: inherit;
+  box-shadow: var(--sh-1);
+}
+
+.formationCard:hover,
+.formationCard:focus-visible {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+  transform: translateY(-2px);
+}
+
+.formationCard:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.formationCardPending {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.formationCardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  width: 100%;
+}
+
+.formationCardName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 23px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ink-100);
+}
+
+.formationCardCta {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ember-bright);
+}
+
+.formationError {
+  margin: 0;
+  color: var(--loss);
+  font-family: var(--f-mono);
+}
+
+/* ── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
+   Collapsed one-line summary row by default so the formation screen keeps
+   its one-viewport compaction (#78); tapping discloses segmented controls. */
+
+.setupRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--bg-panel);
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.setupRowLabel {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.setupRowValue {
+  color: var(--ink-100);
+}
+
+.setupRowChevron {
+  color: var(--ink-soft);
+}
+
+.setupPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--bg-panel);
+}
+
+.setupAxis {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.setupAxisLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.setupSeg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.setupSegBtn {
+  /* a11y: 44px min tap target (WCAG 2.5.5). Flex-center keeps the short label
+     vertically centered now that min-height exceeds the text+padding box. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.setupSegBtnActive {
+  border-color: var(--ember-bright);
+  color: var(--ember-bright);
+}
+
+.setupSegBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* DC-3 — position-first target-select stage */
+.targetGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.targetGroupTitle {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.targetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.4rem;
+}
+
+.targetChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 44px; /* a11y: 44px min tap target (WCAG 2.5.5) */
+  gap: 0.1rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--bg-panel);
+  cursor: pointer;
+}
+
+.targetChip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.targetChipPos {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--ember-bright);
+}
+
+.targetChipId {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-soft);
+}
+
+.setupAxisNote {
+  margin: 0;
+  font-size: var(--t-xs);
+  color: var(--ink-soft);
+}
+
+/* ── Mini-pitch on the formation cards ──────────────────────────────────── */
+
+/* Compact mini-pitch — fixed 56px-wide thumbnail (5/6 aspect, no position
+   distortion) sitting on the tile's left so six tiles fit one phone screen. */
+.miniPitch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 92px;
+  aspect-ratio: 5 / 6;
+  background:
+    radial-gradient(
+      ellipse at 50% 8%,
+      color-mix(in srgb, var(--teal-deep) 22%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
+      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
+    );
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  overflow: hidden;
+}
+
+/* Base dot — COLOUR ONLY, geometry comes from the shape modifier so a
+   3-5-2 wing-back can sit in the 'mid' colour band but render as a DF
+   triangle (its true core line). */
+.miniDot {
+  position: absolute;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%) rotate(var(--mini-dot-rotate, 0deg));
+  border-radius: 999px;
+  background: var(--ink-200);
+  box-shadow: var(--sh-1);
+}
+
+/* COLOUR by JSON visual band. */
+.miniDot_gk {
+  background: var(--prov-historical);
+}
+.miniDot_def {
+  background: var(--teal-bright);
+}
+.miniDot_mid {
+  background: var(--ink-200);
+}
+.miniDot_fwd {
+  background: var(--gold);
+}
+
+/* SHAPE by CORE position line (GK square / DF triangle / MF diamond /
+   FW circle). Position-by-shape is one of the brand invariants. */
+.miniDotShape_square {
+  border-radius: 2px;
+}
+.miniDotShape_triangle {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+.miniDotShape_diamond {
+  border-radius: 2px;
+  --mini-dot-rotate: 45deg;
+}
+.miniDotShape_circle {
+  border-radius: 999px;
+}
+
+/* ── Pitch (absolute-positioned slots) ──────────────────────────────────── */
+
+.pitch {
+  position: relative;
+  aspect-ratio: 7 / 10;
+  background:
+    radial-gradient(
+      ellipse at 50% 8%,
+      color-mix(in srgb, var(--teal-deep) 22%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg-800) 88%, var(--teal-deep)),
+      color-mix(in srgb, var(--bg-900) 78%, var(--teal-deep))
+    );
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  padding: 0;
+  display: block;
+}
+
+.pitchMarkings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pitchMarkingLine {
+  fill: none;
+  stroke: var(--pitch-line);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.pitchMarkingTouchline {
+  stroke-width: 0.7;
+}
+
+.pitchMarkingSpot {
+  fill: var(--pitch-line);
+}
+
+.pitchMarkingsFull {
+  opacity: 0.78;
+}
+
+.pitchMarkingsMini {
+  opacity: 0.34;
+}
+
+.pitchMarkingsMini .pitchMarkingLine {
+  stroke-width: 0.7;
+}
+
+.pitchMarkingsMini .pitchMarkingDetail {
+  display: none;
+}
+
+/* ── Pitch slots: stabilized placement ─────────────────────────────────────
+   The slot is absolutely positioned and CENTRED on its (x, y) percentage
+   via `transform: translate(-50%, -50%)`. Any *additional* transform on a
+   selected/hovered/preview/tier state would CLOBBER that translation and
+   make the slot JUMP or LIFT. So every state below preserves
+   `translate(-50%, -50%)` exactly, uses `box-shadow`/`outline` for
+   emphasis, and uses `box-sizing: border-box` so border-width changes
+   never resize the chip.
+   Transitions intentionally exclude `transform` for the same reason. */
+.pitch .slot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  min-width: 56px;
+  max-width: 80px;
+  padding: 6px 6px;
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--ink-100);
+  font-size: var(--t-xs);
+  font-family: var(--f-mono);
+  cursor: pointer;
+  transition:
+    box-shadow var(--d-fast),
+    border-color var(--d-fast),
+    background-color var(--d-fast);
+}
+
+.pitch button.slot:hover,
+.pitch button.slot:focus-visible {
+  transform: translate(-50%, -50%);
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.pitch .slotEmpty {
+  transform: translate(-50%, -50%);
+  background: color-mix(in srgb, var(--bg-700) 70%, transparent);
+  border-style: dashed;
+  /* Dashed outline must read on the pale light-mode pitch too — themed
+     token, never the white literal the legacy rules used. */
+  border-color: var(--pitch-slot-line);
+  color: var(--ink-300);
+}
+
+/* Slot label ink — the legacy `.slotPos` / `.slotEmptyLabel` rules carry
+   white literals (the old pitch was always dark green). On the DS pitch
+   the chip surface follows the theme, so the label ink must too:
+   white-on-pale was unreadable in light mode. */
+.pitch .slot .slotPos {
+  color: var(--ink-200);
+}
+.pitch .slotEmpty .slotPos {
+  color: var(--ink-300);
+}
+.pitch .slotEmptyLabel {
+  color: var(--ink-300);
+}
+
+.pitch .slotSelected {
+  transform: translate(-50%, -50%);
+  border-color: var(--ember-bright);
+  box-shadow: var(--ring-ember);
+}
+
+.pitch .slotLocked {
+  transform: translate(-50%, -50%);
+  border-color: var(--lock);
+  background: color-mix(in srgb, var(--bg-700) 95%, rgba(var(--lock-rgb), 0.08));
+  cursor: default;
+}
+
+.pitch .slotFilled.slotProv_historical {
+  background: color-mix(in srgb, var(--prov-historical) 22%, var(--bg-700));
+  border-color: color-mix(in srgb, var(--prov-historical) 58%, var(--line-2));
+}
+
+.pitch .slotFilled.slotProv_projected {
+  background: color-mix(in srgb, var(--prov-projected) 22%, var(--bg-700));
+  border-color: color-mix(in srgb, var(--prov-projected) 58%, var(--line-2));
+}
+
+.pitch .slotFilled.slotProv_estimate {
+  background: color-mix(in srgb, var(--prov-estimate) 24%, var(--bg-700));
+  border-color: color-mix(in srgb, var(--prov-estimate) 62%, var(--line-2));
+}
+
+.pitch .slotFilled.slotProv_legend {
+  background: color-mix(in srgb, var(--prov-legend) 20%, var(--bg-700));
+  border-color: color-mix(in srgb, var(--prov-legend) 62%, var(--line-2));
+}
+
+.pitch .slotFilled.slotProv_masked {
+  background: color-mix(in srgb, var(--prov-unknown) 18%, var(--bg-700));
+  border-color: color-mix(in srgb, var(--prov-unknown) 52%, var(--line-2));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pitch .slotFilled {
+    animation: slot-settle var(--d-med) var(--e-snap) both;
+  }
+}
+
+@keyframes slot-settle {
+  from {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Tier accents on pitch slots: the generic `.tier_*` rules set a 4px
+   left border which RESIZES the chip (via box-sizing). Inside the pitch
+   we keep the chip width stable and use an inset shadow accent instead,
+   so a fit-tier change never shifts the slot. */
+.pitch .slot.tier_ideal,
+.pitch .slot.tier_ok,
+.pitch .slot.tier_stretch,
+.pitch .slot.tier_misfit {
+  border-left-width: 1.5px;
+}
+.pitch .slot.tier_ideal {
+  box-shadow: inset 3px 0 0 0 var(--pos-def);
+}
+.pitch .slot.tier_ok {
+  box-shadow: inset 3px 0 0 0 var(--pitch-accent-mute);
+}
+.pitch .slot.tier_stretch {
+  box-shadow: inset 3px 0 0 0 var(--gold);
+}
+.pitch .slot.tier_misfit {
+  box-shadow: inset 3px 0 0 0 var(--accent);
+}
+
+/* Preview tier on pitch slots: stay in place, glow via box-shadow ring. */
+.pitch .slot.slotPreview {
+  transform: translate(-50%, -50%);
+  border-left-width: 1.5px;
+}
+.pitch .slot.tierPreview_ideal {
+  box-shadow:
+    0 0 0 2px var(--pos-def),
+    inset 3px 0 0 0 var(--pos-def);
+}
+.pitch .slot.tierPreview_ok {
+  box-shadow:
+    0 0 0 2px var(--pitch-accent-mute),
+    inset 3px 0 0 0 var(--pitch-accent-mute);
+}
+.pitch .slot.tierPreview_stretch {
+  box-shadow:
+    0 0 0 2px var(--gold),
+    inset 3px 0 0 0 var(--gold);
+}
+.pitch .slot.tierPreview_misfit {
+  box-shadow:
+    0 0 0 2px var(--accent),
+    inset 3px 0 0 0 var(--accent);
+}
+
+/* Position shape encoding (square/triangle/diamond/circle) — applied as a
+   subtle outline shape on the slot's position pill in addition to the chip. */
+.slotShape_square .slotPos {
+  border-radius: 2px;
+}
+
+.slotShape_triangle .slotPos {
+  border-radius: 2px 2px 2px 8px;
+}
+
+.slotShape_diamond .slotPos {
+  border-radius: 6px;
+  transform: rotate(0deg);
+}
+
+.slotShape_circle .slotPos {
+  border-radius: 999px;
+}
+
+/* ── Bench/manager ──────────────────────────────────────────────────────── */
+
+.bench {
+  margin-top: 12px;
+}
+
+.benchSlots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.benchSlot {
+  min-height: 56px;
+}
+
+/* ── Candidate card refit (provenance hue, badges) ──────────────────────── */
+
+.cand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  text-align: left;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  color: var(--ink-100);
+  cursor: pointer;
+  transition:
+    border-color var(--d-fast),
+    box-shadow var(--d-fast),
+    transform var(--d-fast);
+}
+
+.cand:hover,
+.cand:focus-visible {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.candSelected {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+}
+
+.candDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.candTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.candId {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.candNationFlag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-100);
+}
+
+.flagShape_square {
+  border-radius: 4px;
+}
+
+.flagShape_triangle {
+  border-radius: 4px 4px 4px 14px;
+}
+
+.flagShape_diamond {
+  border-radius: 8px;
+}
+
+.flagShape_circle {
+  border-radius: 999px;
+}
+
+.candNameWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.candName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candCaptain {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  font-size: 10px;
+  font-family: var(--f-mono);
+  background: var(--gold);
+  color: var(--bg-900);
+  border-radius: 999px;
+}
+
+.candSub {
+  color: var(--ink-400);
+  font-size: var(--t-xs);
+}
+
+.candOverall {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--f-mono);
+  min-width: 44px;
+}
+
+.candOverallNum {
+  font-family: var(--f-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink-100);
+}
+
+.candOverallLabel {
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  color: var(--ink-400);
+  text-transform: uppercase;
+}
+
+.candBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Pill/badge rhythm: 2px 8px + r-pill + t-xs mono everywhere a pill
+   appears (provBadge, shirt, drafted, compatPill, manager badge). */
+.candShirt {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+}
+
+.candDrafted {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--lock);
+  padding: 2px 8px;
+  border: 1px solid var(--lock-dim);
+  border-radius: var(--r-pill);
+}
+
+.candCoverage {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.candCoverageTrack {
+  width: 60px;
+  height: 4px;
+  background: var(--bg-700);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.candCoverageFill {
+  display: block;
+  height: 100%;
+  background: var(--ember);
+}
+
+.candCoverageVal {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+}
+
+.candManager {
+  border-color: var(--prov-manager);
+}
+
+.candManagerTag {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--prov-manager);
+}
+
+/* Provenance hue on card border + glow. Subtle, not loud. */
+.prov_historical {
+  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line));
+}
+
+.prov_projected {
+  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line));
+}
+
+.prov_estimate {
+  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line));
+}
+
+.prov_legend {
+  border-color: color-mix(in srgb, var(--prov-legend) 60%, var(--line));
+  box-shadow: 0 0 0 1px rgba(var(--prov-legend-rgb), 0.25);
+}
+
+.prov_manager {
+  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line));
+}
+
+/* Memory-mode blind — neutral, leaks no provenance tier or legend gold. */
+.prov_masked {
+  border-color: var(--line);
+}
+
+/* Provenance badges */
+.provBadge {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  border: 1px solid var(--line-2);
+}
+
+.provBadge_historical {
+  color: var(--prov-historical);
+  border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line-2));
+}
+
+.provBadge_projected {
+  color: var(--prov-projected);
+  border-color: color-mix(in srgb, var(--prov-projected) 50%, var(--line-2));
+}
+
+.provBadge_estimate {
+  color: var(--prov-estimate);
+  border-color: color-mix(in srgb, var(--prov-estimate) 60%, var(--line-2));
+}
+
+.provBadge_legend {
+  color: var(--bg-900);
+  background: var(--gold);
+  border-color: var(--gold-deep);
+}
+
+.provBadge_manager {
+  color: var(--prov-manager);
+  border-color: color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+}
+
+.provBadge_masked {
+  color: var(--ink-400);
+  border-color: var(--line-2);
+}
+
+/* Position shape on the eligible-position tags (mirrors slot encoding) */
+.posTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 2px 8px;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  background: var(--bg-700);
+  color: var(--ink-200);
+  border: 1px solid var(--line-2);
+}
+
+.posShape_square {
+  border-radius: 3px;
+}
+
+.posShape_triangle {
+  border-radius: 2px 2px 2px 10px;
+}
+
+.posShape_diamond {
+  border-radius: 6px;
+}
+
+.posShape_circle {
+  border-radius: 999px;
+}
+
+/* ── In-shell lock bar (thumb zone) + bottom sheet ────────────────────────
+   LOCK PICK is the most-pressed control in the game. Mobile-first layout:
+   full-width action row on top, compact context line below it (the context
+   line doubles as live clearance above Safari's bottom-edge tap-to-expand
+   gesture zone, so the primary's hit area never lands in it).
+   ≥640px relaxes back to a single side-by-side row.
+
+   ws-ux/tap-stability-2: the bar is NOT viewport-fixed. iOS Safari anchors
+   `position: fixed; bottom: 0` to the visual viewport, so the bar physically
+   moves during the toolbar collapse/expand animation — the "first tap jumps,
+   second tap works" defect that survived the #78 svh fix. Instead the bar is
+   a normal-flow bottom row of the anchored 100svh draft shell (see
+   .draftShellAnchored): the shell bottom corresponds to the toolbar-expanded
+   position and is invariant under toolbar state transitions. The legacy
+   .lockBar block earlier in this file is fully shadowed by this one (same
+   specificity, later wins) and intentionally left untouched. */
+
+.lockBar {
+  /* sticky, NOT fixed: in the anchored shell the document never scrolls, so
+     this settles as a plain in-flow row; if a browser without :has() support
+     degrades to a body-scrolling layout, sticky still keeps the bar visible
+     without the iOS visual-viewport anchoring a fixed bar suffers. */
+  position: sticky;
+  inset: auto; /* neutralise the legacy block's stale left/right offsets */
+  bottom: 0;
+  flex: 0 0 auto;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  /* ≥12px under the safe-area inset keeps the action row clear of Safari's
+     bottom-edge gesture zone even when the toolbar is minimized. */
+  padding: 8px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bg-900) 96%, transparent);
+  border-top: 1px solid var(--line-2);
+  box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  /* Kill the 350ms double-tap-zoom heuristic on the most-pressed surface in
+     the game — first tap must commit immediately (iOS Safari). */
+  touch-action: manipulation;
+}
+
+.lockBar button {
+  touch-action: manipulation;
+}
+
+.lockInfo {
+  min-width: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-200);
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.3;
+  /* Context line BELOW the actions in the mobile column layout: it lives in
+     the bottom clearance band, lifting the LOCK PICK hit area ≥16px above
+     the shell bottom edge (Safari gesture-zone margin) without dead space. */
+  order: 2;
+}
+
+.lockHint {
+  color: var(--ink-400);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+}
+
+.lockError {
+  color: var(--loss);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+}
+
+.lockActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Primary (Lock pick / Review XI) — full prominence, thumb-zone right. */
+.lockActions .lockPrimary {
+  flex: 1 1 auto;
+  min-height: 52px;
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+/* Secondary (Choose slot) — demoted but still a ≥44px target. */
+.lockActions .lockSecondary {
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+@media (min-width: 640px) {
+  .lockBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .lockInfo {
+    flex: 1;
+    order: 0; /* row layout: context line back on the left */
+  }
+  .lockActions .lockPrimary {
+    flex: 0 0 auto;
+    min-width: 220px;
+  }
+}
+
+.compatPill {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  border: 1px solid var(--line-2);
+}
+
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 9, 12, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 8;
+  animation: fadeIn var(--d-fast) var(--e-out);
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  /* dvh, not vh: classic-vh ignores the iOS toolbar state and lets the
+     sheet's bottom land under Safari's collapsed chrome. */
+  max-height: 75dvh;
+  background: var(--bg-800);
+  border-top-left-radius: var(--r-3);
+  border-top-right-radius: var(--r-3);
+  border: 1px solid var(--line-2);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideUp var(--d-med) var(--e-snap);
+}
+
+.sheetHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sheetTitle {
+  font-family: var(--f-display);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.sheetClose {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-200);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-pill);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sheetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.sheetSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  padding: 12px 4px;
+  min-height: 64px;
+  background: var(--bg-750);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.sheetSlotActive {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+}
+
+.sheetSlotPos {
+  font-family: var(--f-display);
+  font-size: 16px;
+}
+
+.sheetSlotKind {
+  color: var(--ink-400);
+}
+
+.sheetSlotCompat {
+  color: var(--ember-bright);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheetBackdrop,
+  .sheet {
+    animation: none;
+  }
+}

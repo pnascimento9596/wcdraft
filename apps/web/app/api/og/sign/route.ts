@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
+import { getDb } from "@wcdraft/db";
 
+import {
+  createDbRunOgSignRateLimiter,
+  RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
+  type RunOgSignRateLimiter,
+} from "@/lib/game/run-og-sign-rate-limiter-db";
 import { getValidationData } from "@/lib/leaderboard/server-data";
 import { buildRunOgCacheKey } from "@/lib/game/run-og-metadata";
 import { verifyRunTokenForOg } from "@/lib/game/run-og-server";
@@ -10,6 +16,7 @@ import {
   type SignedRunOgPayload,
 } from "@/lib/game/run-og-signing";
 import { RUN_TOKEN_MAX_LEN } from "@/lib/game/run-token";
+import { readClientIp } from "@/lib/http/client-ip";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,9 +25,6 @@ const MAX_SIGN_BODY_BYTES = RUN_TOKEN_MAX_LEN + 512;
 const NO_STORE = { "Cache-Control": "no-store" } as const;
 const SIGN_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const SIGN_CACHE_MAX_ENTRIES = 512;
-const SIGN_RATE_WINDOW_MS = 60 * 1000;
-const SIGN_RATE_MAX_PER_WINDOW = 30;
-const SIGN_RATE_BUCKET_MAX_ENTRIES = 512;
 
 interface SignedOgCacheEntry {
   readonly signed: string;
@@ -28,15 +32,21 @@ interface SignedOgCacheEntry {
   readonly expiresAt: number;
 }
 
-interface SignRateBucket {
-  windowStart: number;
-  count: number;
+export interface RunOgSignRouteDeps {
+  readonly now: () => number;
+  readonly getRateLimiter: () => RunOgSignRateLimiter;
 }
 
 const signedOgCache = new Map<string, SignedOgCacheEntry>();
-const signRateBuckets = new Map<string, SignRateBucket>();
 
 export async function POST(request: Request): Promise<Response> {
+  return handleRunOgSignPost(request, defaultRunOgSignRouteDeps());
+}
+
+export async function handleRunOgSignPost(
+  request: Request,
+  deps: RunOgSignRouteDeps,
+): Promise<Response> {
   const secret = readOgSigningSecret();
   if (!secret) {
     return NextResponse.json(
@@ -85,7 +95,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const now = Date.now();
+  const now = deps.now();
   const tokenHash = await sha256Hex(run);
   const secretHash = await sha256Hex(secret);
   const cached = readSignedOgCache(`${secretHash}:${tokenHash}`, now);
@@ -100,13 +110,13 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const retryAfterSeconds = consumeInMemorySignRateLimit(readClientIp(request), now);
-  if (retryAfterSeconds !== null) {
+  const decision = await checkRateLimit(deps, readClientIp(request));
+  if (!decision.allowed) {
     return NextResponse.json(
       { ok: false, error: "RATE_LIMITED" },
       {
         status: 429,
-        headers: { ...NO_STORE, "Retry-After": String(retryAfterSeconds) },
+        headers: { ...NO_STORE, "Retry-After": String(decision.retryAfterSeconds) },
       },
     );
   }
@@ -151,6 +161,34 @@ export async function POST(request: Request): Promise<Response> {
   );
 }
 
+function defaultRunOgSignRouteDeps(): RunOgSignRouteDeps {
+  const now = (): number => Date.now();
+  return {
+    now,
+    getRateLimiter: () =>
+      createDbRunOgSignRateLimiter({
+        db: getDb(),
+        now,
+        random: Math.random,
+      }),
+  };
+}
+
+async function checkRateLimit(
+  deps: RunOgSignRouteDeps,
+  ip: string,
+): Promise<Awaited<ReturnType<RunOgSignRateLimiter["checkSign"]>>> {
+  try {
+    return await deps.getRateLimiter().checkSign({ ip });
+  } catch (err) {
+    console.error("[run-og] sign rate-limit unavailable - failing CLOSED", err);
+    return {
+      allowed: false,
+      retryAfterSeconds: RUN_OG_SIGN_STORE_ERROR_RETRY_AFTER_SECONDS,
+    };
+  }
+}
+
 function readSignedOgCache(key: string, now: number): SignedOgCacheEntry | null {
   const entry = signedOgCache.get(key);
   if (!entry) return null;
@@ -170,33 +208,6 @@ function writeSignedOgCache(key: string, entry: SignedOgCacheEntry): void {
     if (!oldest) break;
     signedOgCache.delete(oldest);
   }
-}
-
-function consumeInMemorySignRateLimit(ip: string, now: number): number | null {
-  const windowStart = now - (now % SIGN_RATE_WINDOW_MS);
-  const bucket = signRateBuckets.get(ip);
-  if (!bucket || bucket.windowStart !== windowStart) {
-    signRateBuckets.set(ip, { windowStart, count: 1 });
-    trimRateBuckets();
-    return null;
-  }
-  bucket.count += 1;
-  if (bucket.count <= SIGN_RATE_MAX_PER_WINDOW) return null;
-  return Math.max(1, Math.ceil((windowStart + SIGN_RATE_WINDOW_MS - now) / 1000));
-}
-
-function trimRateBuckets(): void {
-  while (signRateBuckets.size > SIGN_RATE_BUCKET_MAX_ENTRIES) {
-    const oldest = signRateBuckets.keys().next().value;
-    if (!oldest) break;
-    signRateBuckets.delete(oldest);
-  }
-}
-
-function readClientIp(request: Request): string {
-  const fwd = request.headers.get("x-forwarded-for");
-  const first = fwd?.split(",")[0]?.trim();
-  return first || request.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 async function readBoundedText(

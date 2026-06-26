@@ -71,7 +71,7 @@ describe("a11y follow-ups", () => {
       "utf8",
     );
     const draftScreen = readFileSync(
-      new URL("../../../components/game/draft-screen.tsx", import.meta.url),
+      new URL("../../../components/game/draft-screen/index.tsx", import.meta.url),
       "utf8",
     );
 
@@ -95,7 +95,7 @@ describe("CandidateCard render-skip wiring", () => {
       "utf8",
     );
     const draftScreen = readFileSync(
-      new URL("../../../components/game/draft-screen.tsx", import.meta.url),
+      new URL("../../../components/game/draft-screen/index.tsx", import.meta.url),
       "utf8",
     );
 
