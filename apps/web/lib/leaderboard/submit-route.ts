@@ -71,7 +71,10 @@ const SubmitBodySchema = z.object({
   draft_mode: z.unknown().optional(),
   display_alias: z.unknown().optional(),
   display_name: z.unknown().optional(),
-  mode: z.enum(["casual", "ranked"]).optional().default("casual"),
+  mode: z
+    .enum(["casual", "ranked"])
+    .nullish()
+    .transform((mode) => mode ?? "casual"),
 });
 
 type SubmitBoundaryBody = z.infer<typeof SubmitBodySchema>;

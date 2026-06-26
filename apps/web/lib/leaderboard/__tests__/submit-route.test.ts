@@ -572,6 +572,18 @@ describe("ranked account gate", () => {
     expect(rows[0]!.userId).toBeNull();
   });
 
+  it("mode:null keeps the legacy omitted-mode casual default", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ mode: null }) }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(201);
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.mode).toBe("casual");
+    expect(rows[0]!.userId).toBeNull();
+  });
+
   it("anonymous session ranked → 401 AUTH_REQUIRED, no row", async () => {
     const { opts } = await sessionReqOpts();
     const res = await handleLeaderboardSubmit(

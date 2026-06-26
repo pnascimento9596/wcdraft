@@ -54,6 +54,22 @@ describe("run-record persisted boundary", () => {
     expect(localStorage.getItem(key)).toBeNull();
   });
 
+  it("evicts non-complete records that carry simulation", () => {
+    const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:non-complete-sim");
+    saveRunRecord(created);
+    const { simulation } = runSimulationSync(gameData, SCENARIO_2026_BUNDLE, created);
+    const persisted = setRunSimulation(created.run_id, gameData.versions, simulation);
+    expect(persisted.status).toBe("updated");
+
+    const key = recordKey(created.run_id);
+    const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
+    raw.status = "ready";
+    localStorage.setItem(key, JSON.stringify(raw));
+
+    expect(loadRunRecord(created.run_id, gameData.versions).status).toBe("invalid");
+    expect(localStorage.getItem(key)).toBeNull();
+  });
+
   it("loads a complete record with a real persisted simulation payload", () => {
     const created = buildOriginRecord(gameData, "wcdraft:run-record-schema:test");
     saveRunRecord(created);

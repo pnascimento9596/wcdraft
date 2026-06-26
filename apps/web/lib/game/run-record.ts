@@ -737,6 +737,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     simulation = parsedSimulation;
   }
   if (status === "complete" && simulation === undefined) return null;
+  if (simulation !== undefined && status !== "complete") return null;
 
   return {
     record_version: RUN_RECORD_SCHEMA_VERSION,

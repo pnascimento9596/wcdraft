@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import net from "node:net";
 import { fileURLToPath } from "node:url";
@@ -16,6 +17,7 @@ import {
 
 const require = createRequire(import.meta.url);
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
+const nextEnvPath = fileURLToPath(new URL("../next-env.d.ts", import.meta.url));
 const nextBin = require.resolve("next/dist/bin/next");
 const host = "127.0.0.1";
 const gameData = buildGameDataFromBundles();
@@ -71,6 +73,13 @@ async function startNextDev(): Promise<{
 }> {
   const port = await findFreePort();
   const baseUrl = `http://${host}:${port}`;
+  const nextEnvSnapshot = await snapshotFile(nextEnvPath);
+  let restoredNextEnv = false;
+  const restoreNextEnv = async () => {
+    if (restoredNextEnv) return;
+    restoredNextEnv = true;
+    await restoreFile(nextEnvSnapshot);
+  };
   const proc = spawn(
     process.execPath,
     [nextBin, "dev", "--webpack", "--hostname", host, "--port", String(port)],
@@ -88,14 +97,35 @@ async function startNextDev(): Promise<{
   proc.stderr.on("data", append);
   await waitForServer(baseUrl, proc).catch(async (err) => {
     await stopProcess(proc);
+    await restoreNextEnv();
     throw new Error(`${err instanceof Error ? err.message : String(err)}\n\n${logs}`);
   });
   return {
     baseUrl,
     stop: async () => {
       await stopProcess(proc);
+      await restoreNextEnv();
     },
   };
+}
+
+async function snapshotFile(path: string): Promise<{ path: string; contents: Uint8Array | null }> {
+  try {
+    return { path, contents: await readFile(path) };
+  } catch (err) {
+    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
+      return { path, contents: null };
+    }
+    throw err;
+  }
+}
+
+async function restoreFile(snapshot: { path: string; contents: Uint8Array | null }): Promise<void> {
+  if (snapshot.contents === null) {
+    await rm(snapshot.path, { force: true });
+    return;
+  }
+  await writeFile(snapshot.path, snapshot.contents);
 }
 
 async function stopProcess(proc: ChildProcessWithoutNullStreams): Promise<void> {
