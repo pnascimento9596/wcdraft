@@ -27,7 +27,8 @@
     "@wcdraft/db": "workspace:*",
     "next": "^16.2.9",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.10",
