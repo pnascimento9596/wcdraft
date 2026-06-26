@@ -1,10 +1,31 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "stream",
+  "remoteCache": {
+    "enabled": true
+  },
+  "globalDependencies": [
+    ".prettierrc.json",
+    "eslint.config.mjs",
+    "pnpm-workspace.yaml",
+    "tsconfig.base.json"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "public/data/**",
+        "public/sw-version.js"
+      ],
       "env": [
         "LEADERBOARD_ENABLED",
         "DATABASE_URL",
@@ -23,17 +44,32 @@
       ]
     },
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
     },
-    "lint": {},
+    "lint": {
+      "outputs": []
+    },
     "test": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": [],
       "env": [
         "WCDRAFT_REALISM_HEAVY",
         "WCDRAFT_REALISM_N",
         "WCDRAFT_REALISM_SEED_PREFIX",
         "WCDRAFT_REALISM_GATE",
-        "WCDRAFT_CANARY_REGEN",
         "WCDRAFT_LEADERBOARD_BENCH",
         "LEADERBOARD_ENABLED",
         "AUTH_COOKIE_SECRET",
@@ -53,6 +89,13 @@
     },
     "test:realism:heavy": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": [],
       "env": [
         "WCDRAFT_REALISM_HEAVY",
         "WCDRAFT_REALISM_N",
@@ -60,16 +103,53 @@
         "WCDRAFT_REALISM_GATE"
       ]
     },
-    "test:golden": {},
-    "test:golden:draft": {},
+    "test:golden": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
+    },
+    "test:golden:draft": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
+    },
     "test:golden:data": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
     },
     "test:golden:integration": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
     },
     "test:golden:leaderboard": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/etl/output/**",
+        "$TURBO_ROOT$/packages/data/src/generated/**",
+        "$TURBO_ROOT$/packages/data/src/retained-runtime-data/**"
+      ],
+      "outputs": []
     },
     "db:generate": {
       "cache": false,
