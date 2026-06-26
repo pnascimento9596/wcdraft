@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 
 import { resolveTopScorer } from "./engine/scoring.js";
+import { deriveNarrativeFacts } from "./narrative/facts.js";
 import { buildCardId } from "./types/identity.js";
+import type { RunResult } from "./types/run.js";
 import type { MatchEvent, MatchLineupEntry, MatchResult } from "./types/sim.js";
 
 // GOLDEN INVARIANT (WS-0b contract, WS-B implementation):
@@ -59,6 +61,50 @@ function match(match_index: number, events: MatchEvent[], lineup: MatchLineupEnt
     advanced: false,
     lineup,
     events,
+  };
+}
+
+function runFor(matches: readonly MatchResult[]): RunResult {
+  const wins = matches.filter((m) => m.outcome === "W").length;
+  const losses = matches.filter((m) => m.outcome === "L").length;
+  return {
+    run_id: "top-scorer-run",
+    scenario_id: "top-scorer-scenario",
+    dataset_version: "fixture-dataset",
+    rating_version: "fixture-rating",
+    engine_version: "fixture-engine",
+    seed: "top-scorer-seed",
+    reached_round: matches[matches.length - 1]?.round ?? "G1",
+    eliminated_in_match_id: null,
+    is_champion: false,
+    undefeated_regulation: losses === 0,
+    record: `${wins}-0-${losses}`,
+    wins,
+    draws: 0,
+    losses,
+    shootout_wins: 0,
+    shootout_losses: 0,
+    round_results: matches.map((m) => ({
+      round: m.round,
+      advanced: m.advanced,
+      outcome: m.outcome,
+      goals_for: m.user_goals + (m.user_goals_et ?? 0),
+      goals_against: m.opp_goals + (m.opp_goals_et ?? 0),
+    })),
+    aggregate: {
+      goals_for: matches.reduce((sum, m) => sum + m.user_goals + (m.user_goals_et ?? 0), 0),
+      goals_against: matches.reduce((sum, m) => sum + m.opp_goals + (m.opp_goals_et ?? 0), 0),
+      clean_sheets: matches.filter((m) => m.opp_goals + (m.opp_goals_et ?? 0) === 0).length,
+      top_scorer_player_id: resolveTopScorer(matches),
+    },
+    score: 0,
+    score_breakdown: [],
+    player_stats: [],
+    narrative: {
+      template_id: "pending",
+      narrative_seed: "pending",
+      filled_text: "",
+    },
   };
 }
 
@@ -169,5 +215,18 @@ describe("top-scorer derivation — exclusions and null cases", () => {
       ),
     );
     expect(resolveTopScorer(withC)).toBe("aaa");
+  });
+
+  it("narrative hero uses the same top-scorer implementation", () => {
+    const matches: MatchResult[] = [0, 1, 2].map((i) =>
+      match(
+        i,
+        [goal("a", 10), goal("b", 20), goal("aaa", 30)],
+        [lineupEntry("a", 90), lineupEntry("b", 60), lineupEntry("aaa", 60)],
+      ),
+    );
+    const expected = resolveTopScorer(matches);
+    expect(expected).toBe("aaa");
+    expect(deriveNarrativeFacts(runFor(matches), matches).hero_player_id).toBe(expected);
   });
 });

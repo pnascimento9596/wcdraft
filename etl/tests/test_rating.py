@@ -149,10 +149,9 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
             )
         # overall is ALWAYS a real int in [0, DISPLAY_MAX]. Non-manual merit
         # rows stay in [DISPLAY_FLOOR, DISPLAY_MAX].
-        assert (
-            isinstance(r["overall"], int)
-            and 0 <= r["overall"] <= rating.DISPLAY_MAX
-        ), r["card_id"]
+        assert isinstance(r["overall"], int) and 0 <= r["overall"] <= rating.DISPLAY_MAX, r[
+            "card_id"
+        ]
         if not _has_manual_override(r):
             assert r["overall"] >= rating.DISPLAY_FLOOR, r["card_id"]
         assert r["overall_basis"] in (
@@ -180,11 +179,10 @@ def test_rating_version_is_merit_v45_historical_rebuild(built: list[dict]):
         assert r["rating_version"] == "wc-perf-6.5.0"
 
 
-def test_historical_consumes_full_v3_stature_but_compat_view_is_available():
+def test_historical_consumes_full_career_stature_row_without_compat_view():
     full = rating._load_career_stature(rating.OUTPUT_DIR)
-    compat = rating._load_career_stature(rating.OUTPUT_DIR, use_rating_compat=True)
     assert full["P-38906"]["career_stature_index"] == 0.878288  # Pelé v3 row
-    assert compat["P-38906"]["career_stature_index"] == 0.807005
+    assert "rating_compat" not in full["P-38906"]
     assert rating._career_stature_rating_version(rating.OUTPUT_DIR) == "career-stature-4.1.0"
 
 
@@ -386,12 +384,14 @@ def test_display_overall_is_monotonic_vs_composite_for_measured_cards():
     inversions = []
     for cid, comp, ov in enriched:
         if ov < last_overall:
-            inversions.append({
-                "card": cid,
-                "composite": comp,
-                "overall": ov,
-                "prior_max_overall": last_overall,
-            })
+            inversions.append(
+                {
+                    "card": cid,
+                    "composite": comp,
+                    "overall": ov,
+                    "prior_max_overall": last_overall,
+                }
+            )
         if ov > last_overall:
             last_overall = ov
     assert not inversions, (
@@ -420,12 +420,14 @@ def test_overall_inversions_vs_composite_are_confined_to_estimate_pairs():
     for r in internal:
         is_est = r["overall_basis"] == "baseline_anchor_estimate"
         ov = rating._display_score(r["score_0_100"], curve, estimate=is_est)
-        enriched.append({
-            "card_id": r["card_id"],
-            "composite": r["score_0_100"],
-            "overall": ov,
-            "is_estimate": is_est,
-        })
+        enriched.append(
+            {
+                "card_id": r["card_id"],
+                "composite": r["score_0_100"],
+                "overall": ov,
+                "is_estimate": is_est,
+            }
+        )
     enriched.sort(key=lambda x: (x["composite"], x["card_id"]))
     max_overall = -1
     max_overall_is_estimate = False
@@ -435,18 +437,19 @@ def test_overall_inversions_vs_composite_are_confined_to_estimate_pairs():
         if max_overall_card is not None and c["overall"] < max_overall:
             both_measured = (not c["is_estimate"]) and (not max_overall_is_estimate)
             if both_measured:
-                breaks.append({
-                    "lower_composite_higher_overall": max_overall_card,
-                    "higher_composite_lower_overall": c["card_id"],
-                    "delta_overall": max_overall - c["overall"],
-                })
+                breaks.append(
+                    {
+                        "lower_composite_higher_overall": max_overall_card,
+                        "higher_composite_lower_overall": c["card_id"],
+                        "delta_overall": max_overall - c["overall"],
+                    }
+                )
         if c["overall"] > max_overall:
             max_overall = c["overall"]
             max_overall_is_estimate = c["is_estimate"]
             max_overall_card = c["card_id"]
     assert not breaks, (
-        f"pure measured-vs-measured composite inversions: {len(breaks)} "
-        f"(first 5: {breaks[:5]})"
+        f"pure measured-vs-measured composite inversions: {len(breaks)} (first 5: {breaks[:5]})"
     )
 
 
@@ -497,8 +500,7 @@ def test_public_award_anchor_train_holdout(
 
     # Lock the anti-overfit invariant.
     assert train_cards.isdisjoint(held_cards), (
-        "TRAIN and HELD-OUT must be card-disjoint; overlap="
-        f"{sorted(train_cards & held_cards)}"
+        f"TRAIN and HELD-OUT must be card-disjoint; overlap={sorted(train_cards & held_cards)}"
     )
     anchored = train_cards | held_cards
 
@@ -541,9 +543,7 @@ def test_pre1978_golden_boot_winners_not_systematically_depressed(
     Golden-Boot winners land in a plausible elite band."""
     by_card = {r["card_id"]: r for r in built}
     pre_1978 = [
-        a
-        for a in awards
-        if a["award_name"] == "Golden Boot" and int(a["tournament_id"][3:]) < 1978
+        a for a in awards if a["award_name"] == "Golden Boot" and int(a["tournament_id"][3:]) < 1978
     ]
     overalls = [by_card[f"{a['player_id']}:{a['tournament_id']}"]["overall"] for a in pre_1978]
     assert overalls, "expected pre-1978 Golden Boot data"
@@ -557,6 +557,7 @@ def test_named_era_anchors_land_in_expected_bands(players, cards, by_id):
     """Spot-check named greats land in plausible bands. Values are bands, not
     exact equalities — the curve maps internal merit deterministically, but the
     final integer is allowed to drift one tick on minor data refreshes."""
+
     def ov(name, tid):
         return by_id[_card_id(players, cards, name, tid)]["overall"]
 
@@ -924,8 +925,12 @@ def test_formerly_zeroed_defender_gk_legends_are_now_material():
     Giuseppe P-55733, who is correctly NOT a material-stature legend)."""
     internal = _internal_by_card()
     # Franco Baresi, Paolo Maldini, Lev Yashin, Johan Cruyff.
-    for name, pid in (("Cruyff", "P-50564"), ("Baresi", "P-42920"),
-                      ("Maldini", "P-43222"), ("Yashin", "P-09317")):
+    for name, pid in (
+        ("Cruyff", "P-50564"),
+        ("Baresi", "P-42920"),
+        ("Maldini", "P-43222"),
+        ("Yashin", "P-09317"),
+    ):
         rows = [r for r in internal.values() if r["player_id"] == pid]
         assert rows, name
         for r in rows:
@@ -937,6 +942,7 @@ def test_channel_shape_non_attacker_legends_are_position_dominant(players, cards
     """A DF/GK/MF legend reads elite on its POSITION channel, NOT uniformly elite
     (the inverse of 'not suppressed'): Maldini DEF ≫ ATT; Yashin GK ≫ outfield; a
     defender/keeper legend must NOT become a top-tier attacker."""
+
     def card(name, tid):
         return by_id[_card_id(players, cards, name, tid)]
 
@@ -992,9 +998,16 @@ def test_continuity_no_cliff_across_the_material_threshold():
 
     def fw_card(pid, goals):
         return {
-            "card_id": f"{pid}:WC-1998", "player_id": pid, "tournament_id": "WC-1998",
-            "nation_id": "N-T", "position_listed": "FW", "goals": goals, "appearances": 5,
-            "appearances_source": "fjelstul_match_events", "awards": None, "coverage": 1.0,
+            "card_id": f"{pid}:WC-1998",
+            "player_id": pid,
+            "tournament_id": "WC-1998",
+            "nation_id": "N-T",
+            "position_listed": "FW",
+            "goals": goals,
+            "appearances": 5,
+            "appearances_source": "fjelstul_match_events",
+            "awards": None,
+            "coverage": 1.0,
         }
 
     # Two near-identical FW cards with the SAME raw tournament profile; only the
@@ -1011,8 +1024,12 @@ def test_continuity_no_cliff_across_the_material_threshold():
 
     def career_row(pid, idx):
         return {
-            "player_id": pid, "career_stature_score": 0.30, "career_stature_index": idx,
-            "coverage": 1.0, "stature_tier": "bronze", "legend": False,
+            "player_id": pid,
+            "career_stature_score": 0.30,
+            "career_stature_index": idx,
+            "coverage": 1.0,
+            "stature_tier": "bronze",
+            "legend": False,
         }
 
     career = {"P-LO": career_row("P-LO", lo_idx), "P-HI": career_row("P-HI", hi_idx)}

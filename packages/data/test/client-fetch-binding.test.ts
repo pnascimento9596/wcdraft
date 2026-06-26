@@ -154,4 +154,15 @@ describe("client.ts — global fetch binding regression", () => {
     // No call should have escaped to the strict global fetch.
     expect(calls.length).toBe(0);
   });
+
+  it("rejects a malformed fetched draft-pool bundle instead of blind-casting it", async () => {
+    const malformedFetch: typeof fetch = (() =>
+      Promise.resolve(
+        jsonResponse({ schema_version: RUNTIME_DATA_MANIFEST.schema_version }),
+      )) as typeof fetch;
+
+    await expect(loadDraftPoolBundle({ fetch: malformedFetch })).rejects.toThrow(
+      /malformed draft pool bundle at player_cards/u,
+    );
+  });
 });

@@ -50,6 +50,13 @@
       "when": 1781657956588,
       "tag": "0006_leaderboard_config_filters",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1782431022830,
+      "tag": "0007_leaderboard_user_recent_idx",
+      "breakpoints": true
     }
   ]
 }

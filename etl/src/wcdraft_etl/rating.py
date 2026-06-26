@@ -39,7 +39,13 @@ import json
 import math
 from pathlib import Path
 
-from . import league_strength, manual_overrides, national_strength
+from . import league_strength, manual_overrides, national_strength, output_contracts
+from .merit.stature import (
+    MATERIAL_MIN_COVERAGE as MATERIAL_STATURE_MIN_COVERAGE,
+)
+from .merit.stature import (
+    MATERIAL_MIN_INDEX as MATERIAL_STATURE_MIN_INDEX,
+)
 
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # stage reads/writes the same place regardless of the caller's cwd. Mirrors
@@ -176,12 +182,8 @@ FINISH_WEIGHT: dict[str, float] = {"FW": 0.16, "MF": 0.16, "DF": 0.24, "GK": 0.2
 # final named-anchor + display-invariant tests are MV2-8 (after the unified display
 # curve, MV2-6). Here we assert INTERNAL-score behavior, not final display.
 
-# Material-stature gate (mirrors merit/stature.py MATERIAL_MIN_* — the stature stage
-# computes stature_tier over the SAME cohort definition). A card joins the
-# stature-dominant path only with a career row clearing BOTH gates; the ramp half-
-# width softens the index edge into a continuous blend.
-MATERIAL_STATURE_MIN_COVERAGE = 0.25
-MATERIAL_STATURE_MIN_INDEX = 0.40
+# Material-stature gate aliases are imported from merit/stature.py so the rating
+# stage consumes the same cohort definition that assigns stature tiers.
 STATURE_RAMP_HALF_WIDTH = 0.06
 
 # The continuity-blend weight at/above which the stature path DOMINATES the final
@@ -362,9 +364,7 @@ class DisplayCurve:
 
     __slots__ = ("raw_floor", "raw_median", "raw_p95", "raw_max")
 
-    def __init__(
-        self, raw_floor: float, raw_median: float, raw_p95: float, raw_max: float
-    ) -> None:
+    def __init__(self, raw_floor: float, raw_median: float, raw_p95: float, raw_max: float) -> None:
         self.raw_floor = float(raw_floor)
         self.raw_median = float(raw_median)
         self.raw_p95 = float(raw_p95)
@@ -413,9 +413,7 @@ def _fit_display_curve(scores: list[float]) -> DisplayCurve:
     return curve
 
 
-def _display_value(
-    score_0_100: float, curve: DisplayCurve, *, estimate: bool = False
-) -> float:
+def _display_value(score_0_100: float, curve: DisplayCurve, *, estimate: bool = False) -> float:
     x = score_0_100
     if x <= curve.raw_floor:
         y = float(DISPLAY_FLOOR)
@@ -424,15 +422,15 @@ def _display_value(
     elif x <= curve.raw_median:
         span_raw = curve.raw_median - curve.raw_floor
         t = (x - curve.raw_floor) / span_raw if span_raw > 0.0 else 0.0
-        y = DISPLAY_FLOOR + (DISPLAY_MEDIAN - DISPLAY_FLOOR) * (t ** DISPLAY_LOW_EXPONENT)
+        y = DISPLAY_FLOOR + (DISPLAY_MEDIAN - DISPLAY_FLOOR) * (t**DISPLAY_LOW_EXPONENT)
     elif x <= curve.raw_p95:
         span_raw = curve.raw_p95 - curve.raw_median
         t = (x - curve.raw_median) / span_raw if span_raw > 0.0 else 0.0
-        y = DISPLAY_MEDIAN + (DISPLAY_P95 - DISPLAY_MEDIAN) * (t ** DISPLAY_MID_EXPONENT)
+        y = DISPLAY_MEDIAN + (DISPLAY_P95 - DISPLAY_MEDIAN) * (t**DISPLAY_MID_EXPONENT)
     else:
         span_raw = curve.raw_max - curve.raw_p95
         t = (x - curve.raw_p95) / span_raw if span_raw > 0.0 else 0.0
-        y = DISPLAY_P95 + (DISPLAY_MAX - DISPLAY_P95) * (t ** DISPLAY_HIGH_EXPONENT)
+        y = DISPLAY_P95 + (DISPLAY_MAX - DISPLAY_P95) * (t**DISPLAY_HIGH_EXPONENT)
     if y < DISPLAY_FLOOR:
         y = float(DISPLAY_FLOOR)
     elif y > DISPLAY_MAX:
@@ -445,9 +443,7 @@ def _display_value(
     return y
 
 
-def _display_score(
-    score_0_100: float, curve: DisplayCurve, *, estimate: bool = False
-) -> int:
+def _display_score(score_0_100: float, curve: DisplayCurve, *, estimate: bool = False) -> int:
     return int(round(_display_value(score_0_100, curve, estimate=estimate)))
 
 
@@ -458,37 +454,24 @@ def _load(output_dir: Path, name: str) -> list[dict]:
     return json.loads((output_dir / f"{name}.json").read_text(encoding="utf-8"))
 
 
-def _load_career_stature(
-    output_dir: Path, *, use_rating_compat: bool = False
-) -> dict[str, dict]:
+def _load_career_stature(output_dir: Path) -> dict[str, dict]:
     """player_id -> career-stature row from the offline merit composite.
 
     Missing file is tolerated (returns {}): the rating stage then degrades to the
     pre-career behavior with every lift = 0, so rating.py never hard-depends on the
     merit artifact existing. A present file must carry unique player_id keys.
-    merit-v3 V2 flips historical rating consumption to the full v3 rows. The
-    2026 projected path remains explicitly pinned to the V1 compatibility view
-    until its V3 unit owns projected re-locking.
+    Historical and projected rating stages consume the full row directly.
     """
     path = output_dir / "career_stature.json"
     if not path.exists():
         return {}
     table = json.loads(path.read_text(encoding="utf-8"))
-    compat_field = (table.get("rating_consumption") or {}).get("field")
     by_player: dict[str, dict] = {}
     for row in table["career_stature"]:
         pid = row["player_id"]
         if pid in by_player:
             raise ValueError(f"duplicate career_stature row for {pid}")
-        if use_rating_compat and compat_field:
-            compat = row.get(compat_field)
-            if compat is None:
-                continue
-            effective = dict(compat)
-            effective["player_id"] = pid
-            by_player[pid] = effective
-        else:
-            by_player[pid] = row
+        by_player[pid] = row
     return by_player
 
 
@@ -622,8 +605,7 @@ def _thresholded_log_component(
     if value <= start:
         return 0.0
     return _clamp01(
-        (math.log1p(value) - math.log1p(start))
-        / (math.log1p(full) - math.log1p(start))
+        (math.log1p(value) - math.log1p(start)) / (math.log1p(full) - math.log1p(start))
     )
 
 
@@ -677,7 +659,7 @@ def _context_adjusted_raw_only_score(
     base = min(raw_path, raw_only_ceiling)
     context = _clamp01(context_score)
     band = raw_only_ceiling - REPLACEMENT_BASE
-    target = REPLACEMENT_BASE + band * (context ** RAW_CONTEXT_TARGET_EXPONENT)
+    target = REPLACEMENT_BASE + band * (context**RAW_CONTEXT_TARGET_EXPONENT)
     delta = target - base
     if delta >= 0.0:
         movement = min(RAW_CONTEXT_MAX_LIFT, RAW_CONTEXT_LIFT_PRESSURE * delta)
@@ -708,9 +690,7 @@ def _national_strength_row(
     try:
         return national_strength_by_key[key]
     except KeyError as exc:
-        raise ValueError(
-            f"card {card['card_id']} has no national_strength row for {key}"
-        ) from exc
+        raise ValueError(f"card {card['card_id']} has no national_strength row for {key}") from exc
 
 
 def _tournament_modulation(
@@ -728,8 +708,7 @@ def _tournament_modulation(
     if raw_delta < 0.0 or participation_gap > 0.0:
         raw_delta -= PARTICIPATION_CONTEXT_PENALTY[pos] * participation_gap
     down_cap = TOURNAMENT_DOWN_CAP[pos][tier or "bronze"] + (
-        TOURNAMENT_LOW_PARTICIPATION_DOWN_CAP_EXTRA[pos][tier or "bronze"]
-        * participation_gap
+        TOURNAMENT_LOW_PARTICIPATION_DOWN_CAP_EXTRA[pos][tier or "bronze"] * participation_gap
     )
     up_cap = TOURNAMENT_UP_CAP[pos]
     return max(-down_cap, min(up_cap, TOURNAMENT_MOD_GAIN[pos] * raw_delta))
@@ -778,9 +757,9 @@ def _historical_factual_context_by_card(
             pos = _coarse_pos(card, position_of_player)
             return pos != "GK" and card.get("intl_goals") is not None
         if name == "league":
-            return league_strength.league_context_component(
-                card.get("club_nation_code")
-            ) is not None
+            return (
+                league_strength.league_context_component(card.get("club_nation_code")) is not None
+            )
         if name == "role":
             return card.get("appearances") is not None
         raise KeyError(name)
@@ -869,9 +848,7 @@ def _build_internal_rows(
         finish_of[key] = fp if key not in finish_of else min(finish_of[key], fp)
 
     mens_cards = [c for c in cards if c["tournament_id"] in mens]
-    factual_context_by_card = _historical_factual_context_by_card(
-        mens_cards, position_of_player
-    )
+    factual_context_by_card = _historical_factual_context_by_card(mens_cards, position_of_player)
 
     # Build per-(tournament, position) percentile maps for the two era-dependent
     # performance signals. Appearances are null pre-1970 and excluded from their
@@ -930,15 +907,13 @@ def _build_internal_rows(
         finish_participation = _participation_factor(c["appearances"], a_pct)
         stature_participation = _stature_participation_context(c["appearances"], a_pct)
         effective_finish_pts = (
-            round(finish_pts * finish_participation, _PRECISION)
-            if finish_pts is not None
-            else None
+            round(finish_pts * finish_participation, _PRECISION) if finish_pts is not None else None
         )
         legacy_anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (
-            finish_pts or 0.0
+            0.0 if finish_pts is None else finish_pts
         )
         anchor = AWARD_WEIGHT[pos] * award_score + FINISH_WEIGHT[pos] * (
-            effective_finish_pts or 0.0
+            0.0 if effective_finish_pts is None else effective_finish_pts
         )
 
         legacy_raw_tournament_score = _clamp01(base + legacy_anchor)
@@ -969,9 +944,7 @@ def _build_internal_rows(
     # cohort is large enough; else the (pos) cross-tournament median; else the card's
     # own raw (→ delta 0, no modulation).
     ref_cohort = {
-        k: _quantile(sorted(v), 0.5)
-        for k, v in raw_by_cohort.items()
-        if len(v) >= COHORT_MIN_N
+        k: _quantile(sorted(v), 0.5) for k, v in raw_by_cohort.items() if len(v) >= COHORT_MIN_N
     }
     ref_pos = {p: _quantile(sorted(v), 0.5) for p, v in raw_by_pos.items()}
 
@@ -1017,9 +990,7 @@ def _build_internal_rows(
         # cohort's elite internal band, which bounds the raw-only ceiling for
         # non-material cards beside it.
         if weight >= STATURE_DOMINANT_WEIGHT:
-            material_finals_by_cohort.setdefault((c["tournament_id"], pos), []).append(
-                stature_path
-            )
+            material_finals_by_cohort.setdefault((c["tournament_id"], pos), []).append(stature_path)
 
     # ── PASS 1d: raw-only ceiling, final blend, basis, components ──────────────
     # The raw-only ceiling exists ONLY to keep non-material cards below the stature
@@ -1044,9 +1015,7 @@ def _build_internal_rows(
         )
         raw_only_ceiling = national_raw_only_ceiling if has_any_material else 1.0
         if cohort_material:
-            raw_only_ceiling = min(
-                raw_only_ceiling, _quantile(sorted(cohort_material), 0.5)
-            )
+            raw_only_ceiling = min(raw_only_ceiling, _quantile(sorted(cohort_material), 0.5))
         raw_path = _raw_only_score(raw, raw_only_ceiling, s["award_score"])
         award_headroom = raw_path - min(raw, raw_only_ceiling)
         factual_context = factual_context_by_card.get(c["card_id"], {})
@@ -1193,11 +1162,7 @@ def _build_internal_rows(
             },
             {
                 "signal": "factual_context_score",
-                "value": (
-                    round(context_score, _PRECISION)
-                    if context_score is not None
-                    else None
-                ),
+                "value": (round(context_score, _PRECISION) if context_score is not None else None),
                 "weight": 0.0,
             },
             {
@@ -1428,14 +1393,8 @@ def build_ratings(
         # tests/realism/test_modern_wc_norms.py and the realism-norms fixture.
         # Only  (display-only) passes through the calibration curve;
         # the visible bars expose the merit channel values directly.
-        channels = {
-            ch: _channel(s, CHANNEL_SPREAD[pos][ch])
-            for ch in CHANNELS
-        }
-        current_channels = {
-            ch: _channel(current_s, CHANNEL_SPREAD[pos][ch])
-            for ch in CHANNELS
-        }
+        channels = {ch: _channel(s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
+        current_channels = {ch: _channel(current_s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
         career_basis = {
             "overall": overall,
             "overall_basis": row["overall_basis"],
@@ -1530,6 +1489,7 @@ def _write_json(path: Path, obj) -> None:
 
 
 def _write_ratings_with_lock(output_dir: Path, ratings: list[dict]) -> None:
+    output_contracts.validate_historical_rating_rows(ratings)
     text = _json_text(ratings)
     raw = text.encode("utf-8")
     (output_dir / "ratings.json").write_text(text, encoding="utf-8")
@@ -1629,11 +1589,7 @@ def _render_merit_v2_sample(
     for ir in material[:20]:
         L.append(row_line(ir))
 
-    mid = [
-        ir
-        for ir in material
-        if 0.40 <= _sample_comp(ir, "career_stature_index") <= 0.58
-    ]
+    mid = [ir for ir in material if 0.40 <= _sample_comp(ir, "career_stature_index") <= 0.58]
     L.append("\n## Mid-band material sample (index 0.40–0.58)\n")
     L.append(header)
     for ir in mid[:12]:
@@ -1647,10 +1603,7 @@ def _render_merit_v2_sample(
             L.append(row_line(ir))
 
     # A raw-only control so the band separation is visible.
-    raw_only = [
-        ir for pid, ir in best.items()
-        if _sample_comp(ir, "stature_model_weight") == 0.0
-    ]
+    raw_only = [ir for pid, ir in best.items() if _sample_comp(ir, "stature_model_weight") == 0.0]
     raw_only.sort(key=lambda r: -r["score_0_100"])
     L.append("\n## Raw-only controls (no material stature — top of the raw band)\n")
     L.append(header)
@@ -1685,9 +1638,7 @@ def render_merit_v2_sample(output_dir: Path = OUTPUT_DIR) -> str:
     ratings = build_ratings(
         players, cards, tournaments, manager_tournaments, career, output_dir=output_dir
     )
-    return _render_merit_v2_sample(
-        internal, {r["card_id"]: r for r in ratings}, players, career
-    )
+    return _render_merit_v2_sample(internal, {r["card_id"]: r for r in ratings}, players, career)
 
 
 def run(output_dir: Path = OUTPUT_DIR) -> list[dict]:

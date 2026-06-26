@@ -11,6 +11,7 @@ export {
   classifyOutcome,
 } from "./templates.js";
 export { deriveNarrativeFacts } from "./facts.js";
+export type { NarrativeFactsOptions } from "./facts.js";
 export {
   resolveNarrativeTokens,
   fillTemplate,

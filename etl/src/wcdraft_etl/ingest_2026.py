@@ -30,7 +30,7 @@ import json
 from pathlib import Path
 
 from . import identity_2026 as idn
-from . import manual_overrides, rating_2026, source_2026, wiki2026
+from . import manual_overrides, output_contracts, rating_2026, source_2026, wiki2026
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 TOURNAMENT_ID = source_2026.TOURNAMENT_ID  # "WC-2026"
@@ -240,7 +240,7 @@ def _feeder_to_source(feeder: str, match_id_of: dict[int, str]) -> dict:
     if feeder.startswith("Runner-up Group "):
         return {"kind": "group_position", "group_id": feeder[-1], "position": 2}
     if feeder.startswith("3rd Group "):
-        groups = feeder[len("3rd Group "):].split("/")
+        groups = feeder[len("3rd Group ") :].split("/")
         return {"kind": "best_third", "candidate_groups": groups}
     if feeder.startswith("Winner Match "):
         num = int(feeder.rsplit(" ", 1)[1])
@@ -252,9 +252,7 @@ def _build_bracket(teams: list[dict], bracket_matches: list[dict]) -> dict:
     groups: dict[str, list[str]] = {}
     for t in teams:
         groups.setdefault(t["group"], []).append(t["team_id"])
-    group_blocks = [
-        {"group_id": g, "team_ids": sorted(groups[g])} for g in sorted(groups)
-    ]
+    group_blocks = [{"group_id": g, "team_ids": sorted(groups[g])} for g in sorted(groups)]
 
     match_id_of = {m["match"]: f"{m['round']}-M{m['match']}" for m in bracket_matches}
     slots: list[dict] = []
@@ -269,6 +267,7 @@ def _build_bracket(teams: list[dict], bracket_matches: list[dict]) -> dict:
                     "source": _feeder_to_source(feeder, match_id_of),
                 }
             )
+
     # Semantic order: round, then match number, then seat side (not lexicographic,
     # which would interleave F-* before QF-*).
     def _slot_key(s: dict) -> tuple[int, int, str]:
@@ -389,6 +388,7 @@ def _manifest(tables: dict) -> dict:
 def run(output_dir: Path = OUTPUT_DIR) -> dict:
     """Build all 2026 artifacts and emit JSON + manifest."""
     tables = build_all(output_dir)
+    output_contracts.validate_projected_rating_rows(tables["ratings_2026"])
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest_2026.json", _manifest(tables))

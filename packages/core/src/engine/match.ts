@@ -1025,13 +1025,18 @@ export function membersFromTeam2026(opponent: Team2026, side: "user" | "opp" = "
   const sorted = canonicalSortBy(opponent.squad_card_ids, (c) => [c as string]);
   return sorted.map((card_id, i) => {
     const parsed = parseCardId(card_id);
+    if (parsed === null) {
+      throw new RangeError(
+        `membersFromTeam2026: unparseable squad card_id ${card_id as string} for team_id ${opponent.team_id}`,
+      );
+    }
     const started = i < 11;
     const prefix = side === "user" ? "user" : "opp";
     return {
       side,
       card_id,
-      player_id: parsed?.player_id ?? (card_id as string),
-      tournament_id: parsed?.tournament_id ?? 1,
+      player_id: parsed.player_id,
+      tournament_id: parsed.tournament_id,
       slot_id: started ? `${prefix}.starter.${i}` : `${prefix}.bench.${i - 11}`,
       position: started ? OPP_TEMPLATE[i]! : "MF",
       started,

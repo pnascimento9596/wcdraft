@@ -74,6 +74,11 @@ function userMembersFromDraft(draft: DraftState, world: SimWorld): SimMember[] {
   for (const slot of draft.squad) {
     if (slot.card_id === null || slot.player_id === null || slot.tournament_id === null) continue;
     const rating = world.ratings[slot.card_id as string];
+    if (!rating) {
+      throw new RangeError(
+        `SimWorld is missing a Rating for drafted card_id ${slot.card_id as string}`,
+      );
+    }
     members.push({
       side: "user",
       card_id: slot.card_id,
@@ -82,8 +87,8 @@ function userMembersFromDraft(draft: DraftState, world: SimWorld): SimMember[] {
       slot_id: slot.slot_id,
       position: slotPositionLine(slot.slot_position),
       started: slot.is_starter,
-      attackWeight: (rating?.attack ?? 50) + 1,
-      creativeWeight: (rating?.midfield ?? 50) + 1,
+      attackWeight: rating.attack + 1,
+      creativeWeight: rating.midfield + 1,
     });
   }
   return members;
@@ -184,6 +189,11 @@ export function runTournamentFull(
   const managerTournament: ManagerTournament | null = draft.manager_card_id
     ? (world.managerTournaments?.[draft.manager_card_id as string] ?? null)
     : null;
+  if (draft.manager_card_id !== null && !managerTournament) {
+    throw new RangeError(
+      `SimWorld is missing a ManagerTournament for drafted manager_card_id ${draft.manager_card_id as string}`,
+    );
+  }
   const managerRating: ManagerRating | null = draft.manager_card_id
     ? (world.managerRatings?.[draft.manager_card_id as string] ?? null)
     : null;
@@ -398,7 +408,9 @@ function assembleRunResult(
   // I3.5 — fill real narrative from the EventLog. The narrative engine
   // consumes the scored run + the underlying matches; selection is seeded by
   // `deriveSubseed(seed, "narrative")` (already on `scoredRun.narrative`).
-  const narrative = buildNarrative(scoredRun, [...matches]);
+  const narrative = buildNarrative(scoredRun, [...matches], undefined, {
+    tournamentYears: world.tournamentYears,
+  });
   return { ...scoredRun, narrative };
 }
 

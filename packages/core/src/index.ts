@@ -17,7 +17,13 @@
 //      zod schema.
 
 // ─── 1. RNG primitive + determinism helpers ──────────────────────────────────
-export { createRng, deriveSubseed, canonicalSortBy, canonicalSortStrings } from "./rng.js";
+export {
+  createRng,
+  deriveSubseed,
+  canonicalSortBy,
+  canonicalSortStrings,
+  compareCodePointStrings,
+} from "./rng.js";
 export type { Rng, SubstreamName, CanonicalSortKey } from "./rng.js";
 
 // ─── 2. Domain types ─────────────────────────────────────────────────────────
@@ -149,6 +155,7 @@ export type {
   ComputeScoreFn,
   ResolveTopScorerFn,
   DeriveNarrativeFactsFn,
+  NarrativeFactsOptions,
   // WS-0c
   StarterContribution,
   AggregateUserXiStrengthFn,

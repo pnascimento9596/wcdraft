@@ -18,6 +18,7 @@ from . import (
     historical_clubs,
     managers,
     nations,
+    output_contracts,
     players,
     source,
     tournaments,
@@ -161,6 +162,7 @@ def run(output_dir: Path = OUTPUT_DIR) -> dict[str, list[dict]]:
     WS-A supplement artifacts (sourced appearances, link review list, report)."""
     output_dir.mkdir(parents=True, exist_ok=True)
     tables = build_all()
+    output_contracts.validate_canonical_tables(tables)
     for name, rows in tables.items():
         _write_json(output_dir / f"{name}.json", rows)
     _write_json(output_dir / "manifest.json", _manifest(tables))
@@ -177,9 +179,7 @@ def run(output_dir: Path = OUTPUT_DIR) -> dict[str, list[dict]]:
     supp_dir.mkdir(parents=True, exist_ok=True)
     _write_json(supp_dir / "appearances_sourced.json", supp["sourced"])
     _write_json(supp_dir / "link_review.json", supp["review"])
-    (supp_dir / "SUPPLEMENT.md").write_text(
-        supplement_link.render_report(supp), encoding="utf-8"
-    )
+    (supp_dir / "SUPPLEMENT.md").write_text(supplement_link.render_report(supp), encoding="utf-8")
     return tables
 
 

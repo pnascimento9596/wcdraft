@@ -1,13 +1,6 @@
 // Browser-side loaders. Fetches the compact bundles from a runtime path
 // (defaults to `/data/wcdraft/`, where the apps/web copy step lands them)
-// and validates the loaded manifest's `schema_version` matches the version
-// this package was compiled against.
-//
-// IMPORTANT: this module performs NO Zod validation of the bundle bodies —
-// the compact JSON is treated as trusted because it ships from the same
-// site origin and is hash-pinned by the manifest. Consumers that need a
-// strict boundary should call `validateBundleHashes(manifest, ...)` after
-// loading.
+// and validates loaded payloads have the expected runtime bundle shape.
 
 import {
   RUNTIME_DATA_SCHEMA_VERSION,
@@ -15,6 +8,11 @@ import {
   type RuntimeDataManifest,
   type Scenario2026Bundle,
 } from "./types.js";
+import {
+  parseDraftPoolBundle,
+  parseRuntimeDataManifest,
+  parseScenario2026Bundle,
+} from "./validation.js";
 
 /**
  * Default site-relative directory where `scripts/copy-web-assets.mjs` lands the
@@ -68,7 +66,11 @@ function resolveOptions(opts: LoaderOptions | undefined): ResolvedOptions {
   return { basePath, fetchImpl, signal: opts?.signal };
 }
 
-async function fetchJson<T>(url: string, opts: ResolvedOptions): Promise<T> {
+async function fetchJson<T>(
+  url: string,
+  opts: ResolvedOptions,
+  parse: (value: unknown) => T,
+): Promise<T> {
   // `opts.fetchImpl` is either an explicitly provided fetch (caller-bound) or
   // the global fetch bound to globalThis in `resolveOptions` — invoking it
   // off `opts` is safe in both cases.
@@ -76,34 +78,37 @@ async function fetchJson<T>(url: string, opts: ResolvedOptions): Promise<T> {
   if (!res.ok) {
     throw new Error(`@wcdraft/data/client: failed to load ${url} (HTTP ${res.status}).`);
   }
-  return (await res.json()) as T;
+  return parse(await res.json());
 }
 
 /** Load the top-level `RuntimeDataManifest`. */
 export async function loadDataManifest(opts?: LoaderOptions): Promise<RuntimeDataManifest> {
   const resolved = resolveOptions(opts);
-  const manifest = await fetchJson<RuntimeDataManifest>(
+  return fetchJson<RuntimeDataManifest>(
     `${resolved.basePath}/manifest.json`,
     resolved,
+    parseRuntimeDataManifest,
   );
-  if (manifest.schema_version !== RUNTIME_DATA_SCHEMA_VERSION) {
-    throw new Error(
-      `@wcdraft/data/client: manifest schema_version mismatch — got "${manifest.schema_version}", expected "${RUNTIME_DATA_SCHEMA_VERSION}". Clear the runtime cache and reload.`,
-    );
-  }
-  return manifest;
 }
 
 /** Load the draft-pool compact bundle (1930–2026). */
 export async function loadDraftPoolBundle(opts?: LoaderOptions): Promise<DraftPoolBundle> {
   const resolved = resolveOptions(opts);
-  return fetchJson<DraftPoolBundle>(`${resolved.basePath}/${DRAFT_POOL_BROTLI_PATH}`, resolved);
+  return fetchJson<DraftPoolBundle>(
+    `${resolved.basePath}/${DRAFT_POOL_BROTLI_PATH}`,
+    resolved,
+    parseDraftPoolBundle,
+  );
 }
 
 /** Load the 2026 scenario compact bundle (teams + bracket). */
 export async function loadScenario2026Bundle(opts?: LoaderOptions): Promise<Scenario2026Bundle> {
   const resolved = resolveOptions(opts);
-  return fetchJson<Scenario2026Bundle>(`${resolved.basePath}/scenario-2026.compact.json`, resolved);
+  return fetchJson<Scenario2026Bundle>(
+    `${resolved.basePath}/scenario-2026.compact.json`,
+    resolved,
+    parseScenario2026Bundle,
+  );
 }
 
 /**

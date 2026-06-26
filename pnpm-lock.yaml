@@ -112,6 +112,9 @@ importers:
         specifier: ^0.45.2
         version: 0.45.2(@electric-sql/pglite@0.3.16)(@neondatabase/serverless@1.1.0)
     devDependencies:
+      '@electric-sql/pglite':
+        specifier: ^0.3.16
+        version: 0.3.16
       drizzle-kit:
         specifier: ^0.28.0
         version: 0.28.1

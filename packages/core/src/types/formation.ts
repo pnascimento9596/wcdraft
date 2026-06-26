@@ -20,6 +20,7 @@
 // `api/compatibility.ts` and is calibrated in WS-B.
 
 import type { Position } from "./primitives.js";
+import { compareCodePointStrings } from "../rng.js";
 
 // ─── SLOT POSITION (fine vocabulary; our design, NOT a player claim) ─────────
 
@@ -355,7 +356,9 @@ export function deriveFormationAdjacency(
   }
   return [...edges]
     .map((k) => k.split(" ") as [string, string])
-    .sort((p, q) => (p[0] === q[0] ? p[1].localeCompare(q[1]) : p[0].localeCompare(q[0])));
+    .sort((p, q) =>
+      p[0] === q[0] ? compareCodePointStrings(p[1], q[1]) : compareCodePointStrings(p[0], q[0]),
+    );
 }
 
 // ─── MVP FORMATION TEMPLATES ────────────────────────────────────────────────

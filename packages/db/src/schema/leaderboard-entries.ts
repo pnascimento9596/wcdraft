@@ -107,6 +107,10 @@ export const leaderboardEntries = pgTable(
     index("leaderboard_entries_session_idx")
       .on(t.sessionId)
       .where(sql`${t.sessionId} IS NOT NULL`),
+    // User-owned entry lookup for account `/me` and moderation read paths.
+    index("leaderboard_entries_user_recent_idx")
+      .on(t.userId, t.seasonKey, t.mode, t.createdAt.desc())
+      .where(sql`${t.userId} IS NOT NULL`),
     unique("leaderboard_entries_dedupe_uq")
       .on(t.seasonKey, t.mode, t.userId, t.token)
       .nullsNotDistinct(),

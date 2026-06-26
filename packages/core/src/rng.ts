@@ -247,6 +247,11 @@ export function deriveSubseed(runSeed: string, substream: SubstreamName, scopeId
 /** A single key part for canonical ordering. Numbers compare numerically; strings compare by code point. */
 export type CanonicalSortKey = string | number;
 
+/** Compare two strings by JS code-point order (NOT locale). */
+export function compareCodePointStrings(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
 /**
  * Return a new array sorted lexicographically over the key parts produced by
  * `keyParts(item)`. Stable. Never mutates `items`.
@@ -287,8 +292,8 @@ export function canonicalSortBy<T>(
       // Both strings — compare by code-point order (NOT locale).
       const as = av as string;
       const bs = bv as string;
-      if (as < bs) return -1;
-      if (as > bs) return 1;
+      const cmp = compareCodePointStrings(as, bs);
+      if (cmp !== 0) return cmp;
     }
     if (ak.length !== bk.length) return ak.length - bk.length;
     // Last-resort stable tiebreak.
