@@ -79,13 +79,23 @@ const configDownSql = readFileSync(
   "utf8",
 );
 
+const userRecentSql = readFileSync(
+  new URL("../migrations/0007_leaderboard_user_recent_idx.sql", import.meta.url),
+  "utf8",
+);
+
+const userRecentDownSql = readFileSync(
+  new URL("../migrations/0007_leaderboard_user_recent_idx.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(7);
+    expect(journal.entries).toHaveLength(8);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -100,6 +110,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[5]?.idx).toBe(5);
     expect(journal.entries[6]?.tag).toBe("0006_leaderboard_config_filters");
     expect(journal.entries[6]?.idx).toBe(6);
+    expect(journal.entries[7]?.tag).toBe("0007_leaderboard_user_recent_idx");
+    expect(journal.entries[7]?.idx).toBe(7);
   });
 
   it.each([
@@ -254,6 +266,29 @@ describe("@wcdraft/db migrations — 0006_leaderboard_config_filters", () => {
     expect(configDownSql).toMatch(/DROP COLUMN IF EXISTS "draft_order"/);
     expect(configDownSql).toMatch(
       /"season_key",\s*"mode",\s*"verified_score" DESC NULLS LAST,\s*"created_at",\s*"id"/s,
+    );
+  });
+});
+
+describe("@wcdraft/db migrations — 0007_leaderboard_user_recent_idx", () => {
+  it("adds a partial user recent lookup index for account-owned leaderboard reads", () => {
+    expect(userRecentSql).toMatch(
+      /CREATE INDEX IF NOT EXISTS "leaderboard_entries_user_recent_idx"/,
+    );
+    expect(userRecentSql).toMatch(
+      /"user_id",\s*"season_key",\s*"mode",\s*"created_at" DESC NULLS LAST/s,
+    );
+    expect(userRecentSql).toMatch(/WHERE "leaderboard_entries"\."user_id" IS NOT NULL/);
+  });
+
+  it("does not rewrite unchanged leaderboard constraints", () => {
+    expect(userRecentSql).not.toMatch(/DROP CONSTRAINT/);
+    expect(userRecentSql).not.toMatch(/ADD CONSTRAINT/);
+  });
+
+  it("drops only the user recent index on rollback", () => {
+    expect(userRecentDownSql.trim()).toBe(
+      'DROP INDEX IF EXISTS "leaderboard_entries_user_recent_idx";',
     );
   });
 });

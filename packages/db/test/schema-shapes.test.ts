@@ -30,7 +30,7 @@ import {
 } from "../src/index.ts";
 
 describe("@wcdraft/db schema — shape", () => {
-  it("exports all six tables", () => {
+  it("exports all seven tables", () => {
     expect(users).toBeDefined();
     expect(magicLinkTokens).toBeDefined();
     expect(sessions).toBeDefined();

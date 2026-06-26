@@ -1731,6 +1731,44 @@ describe("scenario families — fixed seeds cover every new family", () => {
     });
   }
 
+  it("era families consume explicit tournament_id-to-year metadata, not tournament_id", () => {
+    const { run: r, matches } = scenarioMatch("era_clash", {
+      round: "G3",
+      phase: "group",
+      ug: 0,
+      og: 0,
+      outcome: "D",
+      advanced: false,
+      events: [],
+      lineup: [
+        {
+          ...lu("user", "p_old", 90, "MF"),
+          tournament_id: 7,
+          card_id: cardYear("p_old", 7),
+        },
+        {
+          ...lu("user", "p_new", 90, "FW"),
+          tournament_id: 8,
+          card_id: cardYear("p_new", 8),
+        },
+      ],
+    });
+
+    expect(deriveNarrativeFacts(r, matches).scenario_spotlights.map((s) => s.family)).not.toContain(
+      "era_clash",
+    );
+
+    const facts = deriveNarrativeFacts(r, matches, {
+      tournamentYears: { 7: 1930, 8: 2026 },
+    });
+    const spotlight = facts.scenario_spotlights.find((s) => s.family === "era_clash");
+    expect(spotlight).toBeDefined();
+    expect(spotlight!.era_min_year).toBe(1930);
+    expect(spotlight!.era_max_year).toBe(2026);
+    expect(spotlight!.player_id).toBe("p_old");
+    expect(spotlight!.secondary_player_id).toBe("p_new");
+  });
+
   it("honest degradation: no clean sheet means the clean-sheet family does not fire", () => {
     const { run: r, matches } = scenarioMatch("clean_sheet_masterclass", {
       round: "G3",

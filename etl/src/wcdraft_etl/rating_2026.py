@@ -243,14 +243,12 @@ def _projected_objective_record_weight(
 
     family_scores = cs.get("family_scores") or {}
     objective_family = any(
-        (family_scores.get(fam) or 0.0) > 0.0
-        for fam in PROJECTED_OBJECTIVE_FAMILIES
+        (family_scores.get(fam) or 0.0) > 0.0 for fam in PROJECTED_OBJECTIVE_FAMILIES
     )
     captaincy = float(family_scores.get("captaincy") or 0.0)
     international_record = float(family_scores.get("international_record") or 0.0)
-    enough_record_breadth = (
-        int(cs.get("fact_count") or 0) >= 2
-        and (captaincy > 0.0 or international_record > 0.0)
+    enough_record_breadth = int(cs.get("fact_count") or 0) >= 2 and (
+        captaincy > 0.0 or international_record > 0.0
     )
     high_international_record = international_record >= PROJECTED_OBJECTIVE_HIGH_INTL_RECORD
 
@@ -259,9 +257,7 @@ def _projected_objective_record_weight(
 
     if active_current_fact and (objective_family or high_international_record):
         return max(base_weight, PROJECTED_OBJECTIVE_MATERIAL_WEIGHT)
-    if priority_squad and (
-        objective_family or enough_record_breadth or high_international_record
-    ):
+    if priority_squad and (objective_family or enough_record_breadth or high_international_record):
         return max(base_weight, PROJECTED_OBJECTIVE_MATERIAL_WEIGHT)
     return base_weight
 
@@ -286,8 +282,7 @@ def _projected_active_stature_cap(cs: dict | None) -> float | None:
         return None
     stage = min(float(v) for v in stage_factors.values())
     return _clamp01(
-        PROJECTED_ACTIVE_STATURE_CAP_FLOOR
-        + PROJECTED_ACTIVE_STATURE_CAP_SPAN * _clamp01(stage)
+        PROJECTED_ACTIVE_STATURE_CAP_FLOOR + PROJECTED_ACTIVE_STATURE_CAP_SPAN * _clamp01(stage)
     )
 
 
@@ -322,8 +317,8 @@ def _historical_raw_only_internal(output_dir: Path) -> list[float]:
 
     merit-v3 V3 re-derives the MV2-5 cross-era quantile map against V2's new
     historical raw-only distribution (design §2.1: same mechanism, new inputs).
-    The V2-era compatibility reconstruction (rating_compat + legacy raw component)
-    is removed: the target is now each raw-only card's actual internal final —
+    The V2-era compatibility reconstruction is removed: the target is now each
+    raw-only card's actual internal final —
     its ``raw_only_score``, i.e. the participation-scaled raw path including the
     §4.1 award-gated headroom — exactly the population the unified display curve
     pools. (2026 cards have null awards pre-tournament, so their own ceiling
@@ -426,8 +421,15 @@ def _league_score(club_nation_code: str | None) -> float | None:
 # Honest career-signal coverage: signals we DO have vs an ideal that also includes
 # club-competition minutes and a qualification box-score — neither of which is in
 # the squad source, so they are never fabricated and cap coverage below 1.0.
-CAREER_IDEAL_SIGNALS = ("caps", "intl_goals", "age", "position", "club",
-                        "club_minutes", "qualification_record")
+CAREER_IDEAL_SIGNALS = (
+    "caps",
+    "intl_goals",
+    "age",
+    "position",
+    "club",
+    "club_minutes",
+    "qualification_record",
+)
 
 
 def _age_at(birth_date: str | None) -> int | None:
@@ -478,9 +480,7 @@ class AgeConditionalQuantiles:
         self.unconditional = self._weighted_column(values, [1.0] * len(values))
         raw_columns: list[list[float]] = []
         for age in range(self.min_age, self.max_age + 1):
-            w = [
-                max(0.0, 1.0 - abs(ai - age) / AGE_QUANTILE_BANDWIDTH) for ai in ages
-            ]
+            w = [max(0.0, 1.0 - abs(ai - age) / AGE_QUANTILE_BANDWIDTH) for ai in ages]
             if sum(w) <= 0.0:  # pragma: no cover — grid spans observed ages
                 w = [1.0] * len(values)
             raw_columns.append(self._weighted_column(values, w))
@@ -561,9 +561,9 @@ def _projected_factual_context_by_card(cards: list[dict]) -> dict[str, dict]:
         if name == "intl_goals":
             return card.get("position_listed") != "GK" and card.get("intl_goals") is not None
         if name == "league":
-            return league_strength.league_context_component(
-                card.get("club_nation_code")
-            ) is not None
+            return (
+                league_strength.league_context_component(card.get("club_nation_code")) is not None
+            )
         if name == "role":
             return False
         raise KeyError(name)
@@ -900,11 +900,7 @@ def _build_internal_rows(
             },
             {
                 "signal": "factual_context_score",
-                "value": (
-                    round(context_score, _PRECISION)
-                    if context_score is not None
-                    else None
-                ),
+                "value": (round(context_score, _PRECISION) if context_score is not None else None),
                 "weight": 0.0,
             },
             {
@@ -1150,11 +1146,10 @@ def build_ratings(
         channels = {
             # DECOUPLED CHANNELS — see rating.py for rationale. Sim channels stay on
             # the pre-recal [FLOOR_CHANNEL, 100] band so the engine's λ stays calibrated.
-            ch: _channel(s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS
+            ch: _channel(s, CHANNEL_SPREAD[pos][ch])
+            for ch in CHANNELS
         }
-        current_channels = {
-            ch: _channel(current_s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS
-        }
+        current_channels = {ch: _channel(current_s, CHANNEL_SPREAD[pos][ch]) for ch in CHANNELS}
         career_basis = {
             "overall": overall,
             "overall_basis": row["overall_basis"],
@@ -1330,9 +1325,7 @@ def render_merit_v2_sample_2026(
         if ir is not None:
             L.append(row_line(ir))
 
-    L.append(
-        "\n## Previously-spurious OVR-99 projected cards (now raw-only capped)\n"
-    )
+    L.append("\n## Previously-spurious OVR-99 projected cards (now raw-only capped)\n")
     L.append(header)
     for pid in _SAMPLE_SPURIOUS_99:
         ir = by_pid.get(pid)

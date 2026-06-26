@@ -1324,12 +1324,15 @@ function inferRatingVersion(rows, fallback) {
 
 function deriveDatasetVersion(manifest2026) {
   // Prefer the 2026 manifest's `retrieved_date` (date-keyed snapshot of the
-  // most-volatile source); fall back to a fixed "0" marker if absent. We
-  // never derive a dataset_version from wall-clock time.
+  // most-volatile source). We never derive a dataset_version from wall-clock
+  // time, and an absent source date is a contract failure rather than a silent
+  // "0" release.
   if (manifest2026 && typeof manifest2026.retrieved_date === "string") {
     return manifest2026.retrieved_date;
   }
-  return "0";
+  throw new Error(
+    "build-compact-data: cannot derive dataset_version; manifest_2026.retrieved_date is missing. Pass --dataset-version explicitly.",
+  );
 }
 
 // Governing-body acronym, assembled from fragments at runtime so the literal
@@ -1454,8 +1457,12 @@ function buildAttribution(historicalManifest, manifest2026) {
   };
 }
 
-build().catch((err) => {
-  process.stderr.write(`build-compact-data: FATAL — ${err.message}\n`);
-  if (err.stack) process.stderr.write(err.stack + "\n");
-  process.exit(1);
-});
+export { deriveDatasetVersion };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  build().catch((err) => {
+    process.stderr.write(`build-compact-data: FATAL — ${err.message}\n`);
+    if (err.stack) process.stderr.write(err.stack + "\n");
+    process.exit(1);
+  });
+}

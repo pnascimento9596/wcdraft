@@ -12,44 +12,51 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
-  RUNTIME_DATA_SCHEMA_VERSION,
   type DraftPoolBundle,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
 } from "./types.js";
+import {
+  parseDraftPoolBundle,
+  parseRuntimeDataManifest,
+  parseScenario2026Bundle,
+} from "./validation.js";
 
 export interface NodeLoaderOptions {
   /** Directory containing `manifest.json` + the compact bundles. */
   dir: string;
 }
 
-async function readJson<T>(filePath: string): Promise<T> {
+async function readJson<T>(filePath: string, parse: (value: unknown) => T): Promise<T> {
   const text = await readFile(filePath, "utf8");
-  return JSON.parse(text) as T;
+  return parse(JSON.parse(text));
 }
 
 export async function loadDataManifestFromDisk(
   opts: NodeLoaderOptions,
 ): Promise<RuntimeDataManifest> {
-  const manifest = await readJson<RuntimeDataManifest>(path.join(opts.dir, "manifest.json"));
-  if (manifest.schema_version !== RUNTIME_DATA_SCHEMA_VERSION) {
-    throw new Error(
-      `@wcdraft/data/node: manifest schema_version mismatch — got "${manifest.schema_version}", expected "${RUNTIME_DATA_SCHEMA_VERSION}".`,
-    );
-  }
-  return manifest;
+  return readJson<RuntimeDataManifest>(
+    path.join(opts.dir, "manifest.json"),
+    parseRuntimeDataManifest,
+  );
 }
 
 export async function loadDraftPoolBundleFromDisk(
   opts: NodeLoaderOptions,
 ): Promise<DraftPoolBundle> {
-  return readJson<DraftPoolBundle>(path.join(opts.dir, "draft-pool.compact.json"));
+  return readJson<DraftPoolBundle>(
+    path.join(opts.dir, "draft-pool.compact.json"),
+    parseDraftPoolBundle,
+  );
 }
 
 export async function loadScenario2026BundleFromDisk(
   opts: NodeLoaderOptions,
 ): Promise<Scenario2026Bundle> {
-  return readJson<Scenario2026Bundle>(path.join(opts.dir, "scenario-2026.compact.json"));
+  return readJson<Scenario2026Bundle>(
+    path.join(opts.dir, "scenario-2026.compact.json"),
+    parseScenario2026Bundle,
+  );
 }
 
 export async function loadRuntimeDataFromDisk(opts: NodeLoaderOptions): Promise<{

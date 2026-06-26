@@ -62,10 +62,9 @@ from dataclasses import dataclass, field
 #                       fetch manifest. It is NOT a rating change.
 #
 #   VERSION             the downstream career-stature TABLE schema produced by
-#                       stature.py (career_stature.json). merit-v3 V1 moves this
-#                       to 3.0.0 for active facts, person resolution and index
-#                       controls, while rating.py keeps consuming the table's
-#                       row-level rating_compat view until the V2 rating unit.
+#                       stature.py (career_stature.json). rating.py consumes the
+#                       full row directly; any schema move is a rating-input
+#                       contract change and must be locked with rating goldens.
 #
 # Keeping these axes separate is what lets the factual table move without
 # accidentally changing historical/projected rating outputs or compact bundles.

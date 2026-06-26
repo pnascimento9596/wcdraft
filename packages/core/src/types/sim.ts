@@ -340,6 +340,11 @@ export interface SimWorld {
   managerTournaments?: Readonly<Record<string, ManagerTournament>>;
   /** card_id → nation_id, for Synergy nation clustering. */
   nationByCardId?: Readonly<Record<string, string>>;
+  /**
+   * tournament_id -> calendar year. Tournament ids are catalog keys and must
+   * not be interpreted as years by simulation or narrative logic.
+   */
+  tournamentYears?: Readonly<Record<string, number>>;
   /** Calibrated scoring config; defaults to DEFAULT_SCORING_CONFIG. */
   scoringConfig?: ScoringConfig;
   /**

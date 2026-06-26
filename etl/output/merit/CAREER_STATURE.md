@@ -1,6 +1,6 @@
 # Career-stature composite (career-stature-4.1.0)
 
-Per-player career-stature BASE consumed by the stature-dominant rating stage (MV2-4). NOT a rating. Built deterministically from the committed `merit/source_facts.json` (merit-source-set-2.2.0), `merit/source_facts_active.json` (active-career-source-set-2.2.0), and canonical men's World Cup years. Active facts are merged by person identity and stage-normalized in this table; rating-output consumption remains locked to `career-stature-2.1.0` through each row's `rating_compat` field until the later merit-v3 rating units flip the consumer deliberately.
+Per-player career-stature BASE consumed by the stature-dominant rating stage (MV2-4). NOT a rating. Built deterministically from the committed `merit/source_facts.json` (merit-source-set-2.2.0), `merit/source_facts_active.json` (active-career-source-set-2.2.0), and canonical men's World Cup years. Active facts are merged by person identity and stage-normalized in this table; rating-output consumption uses the full row directly.
 
 - Players scored: **847**
 - Rows with active facts: **32**

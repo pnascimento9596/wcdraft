@@ -8,7 +8,7 @@ export { simulateMatch, runTournament } from "./sim.js";
 export type { ComputeScoreFn, ResolveTopScorerFn } from "./scoring.js";
 export { computeScore, resolveTopScorer } from "./scoring.js";
 
-export type { DeriveNarrativeFactsFn } from "./narrative.js";
+export type { DeriveNarrativeFactsFn, NarrativeFactsOptions } from "./narrative.js";
 export {
   deriveNarrativeFacts,
   buildNarrative,

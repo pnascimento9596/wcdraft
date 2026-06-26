@@ -11,7 +11,7 @@ import type { MatchResult } from "../types/sim.js";
 import type { NarrativeFacts, NarrativeLabels, NarrativeTemplate } from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
 import { classifyOutcome, templatesForClass, templatesForScenarioFamily } from "./templates.js";
-import { deriveNarrativeFacts } from "./facts.js";
+import { deriveNarrativeFacts, type NarrativeFactsOptions } from "./facts.js";
 import { fillTemplate, resolveNarrativeTokens } from "./tokens.js";
 
 /**
@@ -49,8 +49,9 @@ export function buildNarrative(
   run: RunResult,
   matches: MatchResult[],
   labels?: NarrativeLabels,
+  options?: NarrativeFactsOptions,
 ): RunResult["narrative"] {
-  const facts = deriveNarrativeFacts(run, matches);
+  const facts = deriveNarrativeFacts(run, matches, options);
   const template = selectNarrativeTemplate(run, facts);
   const tokens = resolveNarrativeTokens(run, facts, labels, template);
   return {

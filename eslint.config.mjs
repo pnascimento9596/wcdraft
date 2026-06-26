@@ -12,6 +12,9 @@ const FORBIDDEN_ENTROPY_MESSAGE =
 const FORBIDDEN_TRANSCENDENTAL_MESSAGE =
   "wcdraft determinism: Math.exp / Math.log / Math.pow are not allowed in packages/core/src — these calls are cross-engine non-deterministic at the last bits. Use integer arithmetic, a precomputed lookup table, or a documented fast-math helper in rng.ts. See WS-B S2-2.";
 
+const FORBIDDEN_LOCALE_COMPARE_MESSAGE =
+  "wcdraft determinism: String.prototype.localeCompare is forbidden in packages/core/src — use code-point ordering via compareCodePointStrings/canonicalSortBy.";
+
 export default tseslint.config(
   {
     ignores: [
@@ -108,6 +111,10 @@ export default tseslint.config(
         {
           selector: "MemberExpression[object.name='Math'][property.name='pow']",
           message: FORBIDDEN_TRANSCENDENTAL_MESSAGE,
+        },
+        {
+          selector: "CallExpression[callee.property.name='localeCompare']",
+          message: FORBIDDEN_LOCALE_COMPARE_MESSAGE,
         },
       ],
     },

@@ -12,7 +12,8 @@
 //
 // HONEST-STATE: a fact with no source resolves to `null` — never invented.
 
-import { deriveSubseed } from "../rng.js";
+import { compareCodePointStrings, deriveSubseed } from "../rng.js";
+import { resolveTopScorer } from "../engine/scoring.js";
 import type { MatchEvent, MatchResult } from "../types/sim.js";
 import type {
   KeyMoment,
@@ -95,66 +96,6 @@ const ROUND_ORDER: Record<string, number> = {
   SF: 6,
   F: 7,
 };
-
-// ─── TOP SCORER (run-wide + final-only) ───────────────────────────────────────
-
-/**
- * Resolve the user-side top scorer across the supplied matches, using the
- * SAME contract as `resolveTopScorer`:
- *   eligible IFF side==='user' && type ∈ {goal, pen_scored}
- *   tiebreaks: most counting goals → fewest user minutes → lowest player_id.
- * Returns null when nobody on the user side scored a counting goal.
- *
- * Local to this module so the narrative layer never depends on the WS-B
- * `resolveTopScorer` runtime stub (which throws until WS-B lands).
- */
-function userTopScorer(matches: readonly MatchResult[]): string | null {
-  const goals = new Map<string, number>();
-  for (const m of matches) {
-    for (const e of m.events) {
-      if (e.side !== "user") continue;
-      if (e.type === "goal" || e.type === "pen_scored") {
-        const pid = e.type === "pen_scored" ? e.taker_player_id : e.scorer_player_id;
-        goals.set(pid, (goals.get(pid) ?? 0) + 1);
-      }
-    }
-  }
-  if (goals.size === 0) return null;
-
-  // Minutes summed from the user-side lineup entries across the same matches.
-  const minutes = new Map<string, number>();
-  for (const m of matches) {
-    for (const entry of m.lineup) {
-      if (entry.side !== "user") continue;
-      minutes.set(entry.player_id, (minutes.get(entry.player_id) ?? 0) + entry.minutes);
-    }
-  }
-
-  let best: string | null = null;
-  for (const [pid, g] of goals) {
-    if (best === null) {
-      best = pid;
-      continue;
-    }
-    const bg = goals.get(best)!;
-    if (g > bg) {
-      best = pid;
-      continue;
-    }
-    if (g < bg) continue;
-    // Tie on goals → fewest minutes.
-    const pm = minutes.get(pid) ?? 0;
-    const bm = minutes.get(best) ?? 0;
-    if (pm < bm) {
-      best = pid;
-      continue;
-    }
-    if (pm > bm) continue;
-    // Tie on minutes → lowest player_id (code-point order).
-    if (pid < best) best = pid;
-  }
-  return best;
-}
 
 // ─── VILLAIN ──────────────────────────────────────────────────────────────────
 
@@ -275,7 +216,7 @@ function userStarted(m: MatchResult): MatchResult["lineup"] {
 }
 
 function sortLineup(a: MatchResult["lineup"][number], b: MatchResult["lineup"][number]): number {
-  return b.minutes - a.minutes || a.player_id.localeCompare(b.player_id);
+  return b.minutes - a.minutes || compareCodePointStrings(a.player_id, b.player_id);
 }
 
 function startedByPosition(
@@ -313,7 +254,7 @@ function topUserScorerInMatch(
     if (
       best === null ||
       goals > best.goals ||
-      (goals === best.goals && player_id.localeCompare(best.player_id) < 0)
+      (goals === best.goals && compareCodePointStrings(player_id, best.player_id) < 0)
     ) {
       best = { player_id, goals };
     }
@@ -390,7 +331,7 @@ function midfieldController(m: MatchResult): string | null {
     if (
       best === null ||
       value > (score.get(best) ?? 0) ||
-      (value === (score.get(best) ?? 0) && player_id.localeCompare(best) < 0)
+      (value === (score.get(best) ?? 0) && compareCodePointStrings(player_id, best) < 0)
     ) {
       best = player_id;
     }
@@ -471,7 +412,25 @@ interface EraSpread {
   count2026: number;
 }
 
-function eraSpread(matches: readonly MatchResult[]): EraSpread | null {
+export interface NarrativeFactsOptions {
+  /**
+   * Authoritative tournament_id -> calendar year lookup. Real runtime
+   * tournament_ids are not guaranteed to be years; this map takes precedence
+   * whenever present.
+   */
+  tournamentYears?: Readonly<Record<string, number>>;
+}
+
+function tournamentYear(tournament_id: number, options: NarrativeFactsOptions | undefined): number {
+  const mapped = options?.tournamentYears?.[String(tournament_id)];
+  if (typeof mapped === "number" && Number.isFinite(mapped)) return mapped;
+  return tournament_id;
+}
+
+function eraSpread(
+  matches: readonly MatchResult[],
+  options: NarrativeFactsOptions | undefined,
+): EraSpread | null {
   let minYear = Number.POSITIVE_INFINITY;
   let maxYear = Number.NEGATIVE_INFINITY;
   let minPlayerId = "";
@@ -479,15 +438,16 @@ function eraSpread(matches: readonly MatchResult[]): EraSpread | null {
   const seen2026 = new Set<string>();
   for (const m of matches) {
     for (const entry of userStarted(m)) {
-      if (entry.tournament_id < minYear) {
-        minYear = entry.tournament_id;
+      const year = tournamentYear(entry.tournament_id, options);
+      if (year < minYear) {
+        minYear = year;
         minPlayerId = entry.player_id;
       }
-      if (entry.tournament_id > maxYear) {
-        maxYear = entry.tournament_id;
+      if (year > maxYear) {
+        maxYear = year;
         maxPlayerId = entry.player_id;
       }
-      if (entry.tournament_id === 2026) seen2026.add(entry.player_id);
+      if (year === 2026) seen2026.add(entry.player_id);
     }
   }
   if (!Number.isFinite(minYear) || !Number.isFinite(maxYear)) return null;
@@ -533,7 +493,7 @@ function compareScenario(a: NarrativeScenarioSpotlight, b: NarrativeScenarioSpot
   const br = roundRank(b.round);
   if (ar !== br) return br - ar;
   if ((a.margin ?? -999) !== (b.margin ?? -999)) return (b.margin ?? -999) - (a.margin ?? -999);
-  return (a.match_id ?? "").localeCompare(b.match_id ?? "");
+  return compareCodePointStrings(a.match_id ?? "", b.match_id ?? "");
 }
 
 function deriveScenarioSpotlights(
@@ -542,6 +502,7 @@ function deriveScenarioSpotlights(
   keyMoments: readonly KeyMoment[],
   finalHero: string | null,
   villain: string | null,
+  options: NarrativeFactsOptions | undefined,
 ): NarrativeScenarioSpotlight[] {
   const out: NarrativeScenarioSpotlight[] = [];
   const seen = new Set<NarrativeScenarioFamily>();
@@ -793,7 +754,7 @@ function deriveScenarioSpotlights(
     );
   }
 
-  const spread = eraSpread(ordered);
+  const spread = eraSpread(ordered, options);
   if (spread && spread.minYear <= 1970 && spread.maxYear >= 2018) {
     add(
       scenarioSpotlight("era_clash", finalMatch ?? lastMatch(ordered), {
@@ -823,7 +784,7 @@ function deriveScenarioSpotlights(
   if (spread && spread.count2026 >= 4) {
     const modern = ordered
       .flatMap((m) => userStarted(m))
-      .filter((entry) => entry.tournament_id === 2026)
+      .filter((entry) => tournamentYear(entry.tournament_id, options) === 2026)
       .sort(sortLineup)[0];
     add(
       scenarioSpotlight("debut_tournament_core", finalMatch ?? lastMatch(ordered), {
@@ -939,7 +900,9 @@ function momentsForMatch(m: MatchResult): IndexedMoment[] {
   }
 
   // Sort chronologically within the match, then by a stable kind order.
-  out.sort((a, b) => momentSortKey(a) - momentSortKey(b) || a.kind.localeCompare(b.kind));
+  out.sort(
+    (a, b) => momentSortKey(a) - momentSortKey(b) || compareCodePointStrings(a.kind, b.kind),
+  );
   return out.map((moment) => ({ match_index: m.match_index, moment }));
 }
 
@@ -1026,13 +989,17 @@ function lastMatch(matches: readonly MatchResult[]): MatchResult {
  * Derive `NarrativeFacts` from a run + its matches. See file header for the
  * determinism / honest-state / seed-lineage contracts.
  */
-export function deriveNarrativeFacts(run: RunResult, matches: MatchResult[]): NarrativeFacts {
+export function deriveNarrativeFacts(
+  run: RunResult,
+  matches: MatchResult[],
+  options?: NarrativeFactsOptions,
+): NarrativeFacts {
   // Chronological match order (defensive — callers should already pass path order).
   const ordered = [...matches].sort((a, b) => a.match_index - b.match_index);
 
-  const hero = userTopScorer(ordered);
+  const hero = resolveTopScorer(ordered);
   const finalMatch = ordered.find((m) => m.round === "F") ?? null;
-  const finalHero = finalMatch ? userTopScorer([finalMatch]) : null;
+  const finalHero = finalMatch ? resolveTopScorer([finalMatch]) : null;
   const villain = resolveVillain(ordered);
 
   const keyMoments = ordered
@@ -1041,7 +1008,7 @@ export function deriveNarrativeFacts(run: RunResult, matches: MatchResult[]): Na
       (a, b) =>
         a.match_index - b.match_index ||
         momentSortKey(a.moment) - momentSortKey(b.moment) ||
-        a.moment.kind.localeCompare(b.moment.kind),
+        compareCodePointStrings(a.moment.kind, b.moment.kind),
     )
     .map((im) => im.moment);
 
@@ -1050,7 +1017,14 @@ export function deriveNarrativeFacts(run: RunResult, matches: MatchResult[]): Na
     : ordered.length > 0
       ? lastMatch(ordered).match_id
       : null;
-  const scenarioSpotlights = deriveScenarioSpotlights(run, ordered, keyMoments, finalHero, villain);
+  const scenarioSpotlights = deriveScenarioSpotlights(
+    run,
+    ordered,
+    keyMoments,
+    finalHero,
+    villain,
+    options,
+  );
 
   return {
     reached_round: run.reached_round,

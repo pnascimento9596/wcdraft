@@ -99,11 +99,6 @@ _V2_FAMILY_KEYS: tuple[str, ...] = (
     "club_season_honors",
 )
 
-_RATING_COMPAT_STATURE_VERSION = "career-stature-2.1.0"
-_RATING_COMPAT_FAMILY_KEYS: tuple[str, ...] = tuple(
-    fam for fam in _V2_FAMILY_KEYS if fam != "club_season_honors"
-)
-
 # ─── era-bucketed family weights (v2) ─────────────────────────────────────────
 # A family weight of 0.0 means the family is structurally UNAVAILABLE for that era
 # and is excluded from BOTH the score product and the coverage denominator — the
@@ -158,39 +153,6 @@ ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
         "captaincy": 0.03,
         "club_honors": 0.35,
         "club_season_honors": 0.20,
-    },
-}
-
-_RATING_COMPAT_ERA_FAMILY_WEIGHTS: dict[str, dict[str, float]] = {
-    "pre_1956": {
-        "wc_legacy": 0.30,
-        "global_annual_recognition": 0.00,
-        "regional_annual_recognition": 0.00,
-        "position_balanced_selection": 0.00,
-        "international_record": 0.15,
-        "retrospective_selection": 0.50,
-        "captaincy": 0.05,
-        "club_honors": 0.00,
-    },
-    "1956_1990": {
-        "wc_legacy": 0.22,
-        "global_annual_recognition": 0.25,
-        "regional_annual_recognition": 0.10,
-        "position_balanced_selection": 0.00,
-        "international_record": 0.08,
-        "retrospective_selection": 0.25,
-        "captaincy": 0.05,
-        "club_honors": 0.00,
-    },
-    "1991_plus": {
-        "wc_legacy": 0.15,
-        "global_annual_recognition": 0.27,
-        "regional_annual_recognition": 0.10,
-        "position_balanced_selection": 0.25,
-        "international_record": 0.08,
-        "retrospective_selection": 0.10,
-        "captaincy": 0.05,
-        "club_honors": 0.00,
     },
 }
 
@@ -608,9 +570,7 @@ def _pre_1967_retrospective_consensus(
     if career_peak_year is None or career_peak_year >= 1967 or index < 0.70:
         return False
     century = sum(
-        1
-        for f in facts
-        if f["source_id"] == "iffhs_century" and "century election:" in f["detail"]
+        1 for f in facts if f["source_id"] == "iffhs_century" and "century election:" in f["detail"]
     )
     has_international_record = any(f["family"] == "international_record" for f in facts)
     living_legends = any(f["source_id"] == "living_legends_2004" for f in facts)
@@ -667,9 +627,7 @@ def _legend_reason_codes(
 
 def _mens_wc_years(cards: list[dict], tournaments: list[dict]) -> dict[str, list[int]]:
     """player_id -> sorted list of the men's World Cup years they have a card in."""
-    year_of = {
-        t["tournament_id"]: t["year"] for t in tournaments if not t.get("womens")
-    }
+    year_of = {t["tournament_id"]: t["year"] for t in tournaments if not t.get("womens")}
     years: dict[str, list[int]] = {}
     for c in cards:
         y = year_of.get(c["tournament_id"])
@@ -891,10 +849,7 @@ def _eligible_family_weights(
     total = sum(eligible.values())
     if total <= 0.0:
         return {fam: 0.0 for fam in _V2_FAMILY_KEYS}, removed
-    normalized = {
-        fam: round(eligible.get(fam, 0.0) / total, _PRECISION)
-        for fam in _V2_FAMILY_KEYS
-    }
+    normalized = {fam: round(eligible.get(fam, 0.0) / total, _PRECISION) for fam in _V2_FAMILY_KEYS}
     remainder = round(1.0 - sum(normalized.values()), _PRECISION)
     if remainder:
         positives = [fam for fam in _V2_FAMILY_KEYS if normalized[fam] > 0.0]
@@ -940,8 +895,7 @@ def _merge_active_channel(
 ) -> tuple[dict, dict]:
     if active_facts.get("version") != ACTIVE_SOURCE_SET_VERSION:
         raise ValueError(
-            f"active fact version {active_facts.get('version')!r} != "
-            f"{ACTIVE_SOURCE_SET_VERSION!r}"
+            f"active fact version {active_facts.get('version')!r} != {ACTIVE_SOURCE_SET_VERSION!r}"
         )
     if active_staging.get("version") != ACTIVE_SOURCE_SET_VERSION:
         raise ValueError(
@@ -1005,79 +959,6 @@ def _merge_active_channel(
 # ─── row build ────────────────────────────────────────────────────────────────
 
 
-def _build_rating_compat_rows(
-    source_facts: dict, mens_years: dict[str, list[int]]
-) -> tuple[list[dict], dict]:
-    """Build the career-stature-2.1.0 view rating.py must keep consuming until
-    merit-v3 V2 deliberately flips the rating consumer.
-
-    V1 changes the stature artifact, but not the shipped rating semantics. Keeping
-    this view generated from the same source facts avoids a hand-copied legacy
-    snapshot while making the compatibility boundary explicit in the v3 table.
-    """
-    by_player: dict[str, list[dict]] = {}
-    for f in source_facts["facts"]:
-        by_player.setdefault(f["player_id"], []).append(f)
-
-    rows: list[dict] = []
-    for pid in sorted(by_player):
-        pfacts = [
-            f for f in by_player[pid] if f["family"] in _RATING_COMPAT_FAMILY_KEYS
-        ]
-        if not pfacts:
-            continue
-        eras = {f["era"] for f in pfacts}
-        if len(eras) != 1:
-            raise ValueError(f"player {pid} has conflicting fact eras {eras}")
-        era = next(iter(eras))
-        if era not in ERA_BUCKETS:
-            raise ValueError(f"player {pid} has unknown era {era!r}")
-        weights = _RATING_COMPAT_ERA_FAMILY_WEIGHTS[era]
-
-        family_facts: dict[str, list[dict]] = {}
-        for f in pfacts:
-            fam = f["family"]
-            if fam not in _RATING_COMPAT_FAMILY_KEYS:
-                raise ValueError(f"player {pid} compat fact in unknown family {fam!r}")
-            family_facts.setdefault(fam, []).append(f)
-        family_scores: dict[str, float] = {
-            fam: round(_saturate([_fact_strength(f) for f in ff]), _PRECISION)
-            for fam, ff in family_facts.items()
-        }
-
-        active = [fam for fam in _RATING_COMPAT_FAMILY_KEYS if weights.get(fam, 0.0) > 0.0]
-        acc = 1.0
-        for fam in active:
-            acc *= 1.0 - weights[fam] * family_scores.get(fam, 0.0)
-        career_score = round(1.0 - acc, _PRECISION)
-        career_index = round(_index_of(career_score), _PRECISION)
-
-        total_w = sum(weights[fam] for fam in active)
-        present_w = sum(
-            weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0
-        )
-        coverage = round(present_w / total_w, _PRECISION) if total_w > 0 else 0.0
-        peak_year = _career_peak_year(mens_years.get(pid, []))
-        legend_codes = _legend_reason_codes(pfacts, career_index, peak_year)
-        rows.append(
-            {
-                "player_id": pid,
-                "stature_version": _RATING_COMPAT_STATURE_VERSION,
-                "source_set_version": SOURCE_SET_VERSION,
-                "career_stature_score": career_score,
-                "career_stature_index": career_index,
-                "coverage": coverage,
-                "stature_tier": None,
-                "legend": bool(legend_codes),
-                "legend_reason_codes": legend_codes,
-                "fact_count": len(pfacts),
-                "review_flags": _review_flags(coverage, career_index, family_scores),
-            }
-        )
-    tier_meta = _assign_tiers(rows)
-    return rows, tier_meta
-
-
 def _build_player_rows(
     source_facts: dict,
     mens_years: dict[str, list[int]],
@@ -1117,9 +998,7 @@ def _build_player_rows(
         family_scores: dict[str, float] = {}
         stage_factors: dict[str, float | None] = {}
         for fam, ff in family_facts.items():
-            completed = round(
-                _saturate([_fact_strength(f) for f in ff]), _PRECISION
-            )
+            completed = round(_saturate([_fact_strength(f) for f in ff]), _PRECISION)
             normalized, stage_factor = _stage_normalized_family_score(pid, ff, completed, ctx)
             family_scores[fam] = round(normalized, _PRECISION)
             stage_factors[fam] = stage_factor
@@ -1139,9 +1018,7 @@ def _build_player_rows(
 
         # Coverage: fraction of eligible family weight that has a positive fact.
         total_w = sum(weights[fam] for fam in active)
-        present_w = sum(
-            weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0
-        )
+        present_w = sum(weights[fam] for fam in active if family_scores.get(fam, 0.0) > 0.0)
         coverage_denominator = total_w
         active_stage_values = [v for v in stage_factors.values() if v is not None]
         if active_stage_values:
@@ -1169,9 +1046,7 @@ def _build_player_rows(
                 ),
                 "stature_version": VERSION,
                 "source_set_version": SOURCE_SET_VERSION,
-                "active_source_set_version": (
-                    ACTIVE_SOURCE_SET_VERSION if active_count else None
-                ),
+                "active_source_set_version": (ACTIVE_SOURCE_SET_VERSION if active_count else None),
                 "career_stature_score": career_score,
                 "career_stature_index_raw": raw_index,
                 "career_stature_index": career_index,
@@ -1179,9 +1054,7 @@ def _build_player_rows(
                 "era_bucket": era,
                 "career_peak_year": peak_year,
                 "modal_position": _modal_position(pfacts),
-                "family_scores": {
-                    fam: family_scores.get(fam, None) for fam in _V2_FAMILY_KEYS
-                },
+                "family_scores": {fam: family_scores.get(fam, None) for fam in _V2_FAMILY_KEYS},
                 "family_weights": {fam: weights.get(fam, 0.0) for fam in _V2_FAMILY_KEYS},
                 "family_weight_adjustments": eligibility_adjustments,
                 "active_stage_factors": {
@@ -1252,9 +1125,7 @@ def build_rows(
     return rows, tier_meta
 
 
-def _review_flags(
-    coverage: float, index: float, family_scores: dict[str, float]
-) -> list[str]:
+def _review_flags(coverage: float, index: float, family_scores: dict[str, float]) -> list[str]:
     """Non-fatal advisory flags for the review queue (never affect the score)."""
     flags: list[str] = []
     if coverage < MATERIAL_MIN_COVERAGE:
@@ -1267,12 +1138,8 @@ def _review_flags(
 
 
 def build(write: bool = True) -> dict:
-    source_facts = json.loads(
-        (OUTPUT_DIR / "source_facts.json").read_text(encoding="utf-8")
-    )
-    active_facts = json.loads(
-        (OUTPUT_DIR / "source_facts_active.json").read_text(encoding="utf-8")
-    )
+    source_facts = json.loads((OUTPUT_DIR / "source_facts.json").read_text(encoding="utf-8"))
+    active_facts = json.loads((OUTPUT_DIR / "source_facts_active.json").read_text(encoding="utf-8"))
     active_staging = json.loads(
         (OUTPUT_DIR / "career_stature_active_staging.json").read_text(encoding="utf-8")
     )
@@ -1285,28 +1152,12 @@ def build(write: bool = True) -> dict:
     tournaments_2026 = json.loads((_CANON_DIR / "tournaments_2026.json").read_text("utf-8"))
     nations_2026 = json.loads((_CANON_DIR / "nations_2026.json").read_text("utf-8"))
     ctx = _build_context(players, players_2026, cards, cards_2026, nations, nations_2026)
-    legacy_mens_years = _mens_wc_years(cards, tournaments)
     mens_years = _mens_wc_years([*cards, *cards_2026], [*tournaments, *tournaments_2026])
     merged_facts, active_meta = _merge_active_channel(
         source_facts, active_facts, active_staging, mens_years, ctx
     )
 
-    compat_rows, compat_tier_meta = _build_rating_compat_rows(source_facts, legacy_mens_years)
-    compat_by_player = {r["player_id"]: r for r in compat_rows}
     rows, tier_meta = build_rows(merged_facts, mens_years, ctx)
-    for r in rows:
-        compat = compat_by_player.get(r["player_id"])
-        if compat is None:
-            continue
-        r["rating_compat"] = {
-            "version": _RATING_COMPAT_STATURE_VERSION,
-            "career_stature_score": compat["career_stature_score"],
-            "career_stature_index": compat["career_stature_index"],
-            "coverage": compat["coverage"],
-            "stature_tier": compat["stature_tier"],
-            "legend": compat["legend"],
-            "legend_reason_codes": compat["legend_reason_codes"],
-        }
     review = [r for r in rows if r["review_flags"]]
     material = [r for r in rows if _is_material(r)]
     legends = [r for r in rows if r["legend"]]
@@ -1318,13 +1169,6 @@ def build(write: bool = True) -> dict:
         "player_count": len(rows),
         "material_count": len(material),
         "legend_count": len(legends),
-        "rating_consumption": {
-            "status": "locked_compat_until_merit_v3_v2",
-            "version": _RATING_COMPAT_STATURE_VERSION,
-            "field": "rating_compat",
-            "player_count": len(compat_rows),
-            "tier_thresholds": compat_tier_meta,
-        },
         "active_channel": active_meta,
         "index_bias_controls": {
             "gold_floor_index": GOLD_FLOOR_INDEX,
@@ -1424,9 +1268,7 @@ def _render_report(rows: list[dict], tier_meta: dict) -> str:
         f"`merit/source_facts_active.json` ({ACTIVE_SOURCE_SET_VERSION}), and "
         "canonical men's World Cup years. Active facts are merged by person "
         "identity and stage-normalized in this table; rating-output consumption "
-        f"remains locked to `{_RATING_COMPAT_STATURE_VERSION}` through each row's "
-        "`rating_compat` field until the later merit-v3 rating units flip the "
-        "consumer deliberately.\n"
+        "uses the full row directly.\n"
     )
     L.append(f"- Players scored: **{len(rows)}**")
     L.append(f"- Rows with active facts: **{sum(1 for r in rows if r['active_fact_count'])}**")
@@ -1454,8 +1296,8 @@ def _render_report(rows: list[dict], tier_meta: dict) -> str:
         ss = sorted(r["career_stature_score"] for r in er)
         ii = sorted(r["career_stature_index"] for r in er)
         L.append(
-            f"| `{era}` | {len(er)} | {ss[0]:.3f} / {ss[len(ss)//2]:.3f} / {ss[-1]:.3f} "
-            f"| {ii[0]:.3f} / {ii[len(ii)//2]:.3f} / {ii[-1]:.3f} |"
+            f"| `{era}` | {len(er)} | {ss[0]:.3f} / {ss[len(ss) // 2]:.3f} / {ss[-1]:.3f} "
+            f"| {ii[0]:.3f} / {ii[len(ii) // 2]:.3f} / {ii[-1]:.3f} |"
         )
 
     # index distribution by modal position (the position-balance check)
@@ -1468,7 +1310,7 @@ def _render_report(rows: list[dict], tier_meta: dict) -> str:
             L.append(f"| {pos} | 0 | — |")
             continue
         ii = sorted(r["career_stature_index"] for r in pr)
-        L.append(f"| {pos} | {len(pr)} | {ii[0]:.3f} / {ii[len(ii)//2]:.3f} / {ii[-1]:.3f} |")
+        L.append(f"| {pos} | {len(pr)} | {ii[0]:.3f} / {ii[len(ii) // 2]:.3f} / {ii[-1]:.3f} |")
 
     # legend reason-code breakdown
     L.append("\n## Legend reason-code breakdown\n")

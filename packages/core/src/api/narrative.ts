@@ -13,6 +13,7 @@
 import type { MatchResult } from "../types/sim.js";
 import type { NarrativeFacts } from "../types/narrative.js";
 import type { RunResult } from "../types/run.js";
+import type { NarrativeFactsOptions } from "../narrative/facts.js";
 
 /**
  * Derive narrative facts from a RunResult + the underlying MatchResults.
@@ -36,9 +37,14 @@ import type { RunResult } from "../types/run.js";
  *    `MatchEvent.score_after` field carried on goal-type variants — never a
  *    removed `counts_for_top_scorer` flag or a stringly-typed `detail` field.
  */
-export type DeriveNarrativeFactsFn = (run: RunResult, matches: MatchResult[]) => NarrativeFacts;
+export type DeriveNarrativeFactsFn = (
+  run: RunResult,
+  matches: MatchResult[],
+  options?: NarrativeFactsOptions,
+) => NarrativeFacts;
 
 export { deriveNarrativeFacts } from "../narrative/facts.js";
+export type { NarrativeFactsOptions } from "../narrative/facts.js";
 export {
   NARRATIVE_TEMPLATES,
   templatesForClass,
