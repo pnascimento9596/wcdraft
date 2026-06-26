@@ -31,7 +31,7 @@ If draft games are your thing: ours is free in-browser, you pick across 90+ year
 **Variant 2 · 150/280 chars**
 
 ```
-Add this one to the rotation — Squad First or Position First, nation Synergy, a season-keyed leaderboard, and a reproducible share link for every run.
+Add this one to the rotation — Squad First or Position First, nation Synergy, per-config leaderboards, and a reproducible share link for every run.
 ```
 
 ### Quoting a football-nostalgia / best-XI thread

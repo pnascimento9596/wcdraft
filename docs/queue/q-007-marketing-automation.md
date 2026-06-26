@@ -2,7 +2,15 @@
 
 - **Tier:** Yellow by default; Red if secrets, posting permissions, or external-account policy expand.
 - **Mode:** DISPATCH-ONLY.
-- **Status:** PLANNED - see [`docs/plans/marketing-x-2026-06.md`](../plans/marketing-x-2026-06.md).
+- **Status:** SUPERSEDED / RE-SCOPED 2026-06-26 — see
+  [`docs/plans/marketing-x-2026-06.md`](../plans/marketing-x-2026-06.md) and
+  `STATE.md`.
+
+> Current operation is the zero-API weekly content-pack model in
+> `.github/workflows/marketing-x.yml`: Actions generates packs and refreshes
+> banks, while the owner schedules posts manually in X. The API-posting spec
+> below is historical unless X API credits are loaded and the owner explicitly
+> reactivates the dormant poster.
 
 ## Spec
 
