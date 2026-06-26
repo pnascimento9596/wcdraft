@@ -28,14 +28,14 @@
     "next": "^16.2.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "zod": "^3.23.8"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.3.10",
+    "@electric-sql/pglite": "^0.5.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "drizzle-orm": "^0.45.2",
     "playwright-core": "^1.61.1",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   }
 }
