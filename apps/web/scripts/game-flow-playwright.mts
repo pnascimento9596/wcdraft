@@ -289,6 +289,7 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
     .getByRole("button", { name: "Position First" })
     .click();
   await page.getByRole("button", { name: /4-3-3[\s\S]*Lock this shape/ }).click();
+  await page.waitForURL(/\/play\/draft\?run=[^&]+$/, { timeout: 30_000 });
 
   await page.getByRole("heading", { name: "Choose the slot to fill" }).waitFor();
   const targetButton = page

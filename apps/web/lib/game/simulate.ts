@@ -141,11 +141,17 @@ export function buildSimWorldInputs(
     knockout_slots: scenario.knockout_slots,
   };
 
+  const tournamentYears: Record<string, number> = {};
+  for (const [tournamentId, tournament] of gameData.indexes.tournamentById) {
+    tournamentYears[String(tournamentId)] = tournament.year;
+  }
+
   const world: SimWorld = {
     ratings,
     opponents,
     managerTournaments,
     nationByCardId: gameData.nationByCardId,
+    tournamentYears,
     bracket,
     // scoringConfig omitted — engine defaults to DEFAULT_SCORING_CONFIG.
   };
