@@ -1,0 +1,362 @@
+import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { createRequire } from "node:module";
+import net from "node:net";
+import { fileURLToPath } from "node:url";
+import { setTimeout as delay } from "node:timers/promises";
+import { chromium, type Browser, type BrowserContext, type Page } from "playwright-core";
+import { autoDraft, createDraft, selectDraftTarget } from "@wcdraft/core";
+
+import { buildGameDataFromBundles } from "../lib/game/__tests__/run-token.test-harness";
+import {
+  RUN_INDEX_KEY,
+  RUN_RECORD_PREFIX,
+  RUN_RECORD_SCHEMA_VERSION,
+  type RunRecordV1,
+} from "../lib/game/run-record";
+
+const require = createRequire(import.meta.url);
+const appRoot = fileURLToPath(new URL("..", import.meta.url));
+const nextBin = require.resolve("next/dist/bin/next");
+const host = "127.0.0.1";
+const gameData = buildGameDataFromBundles();
+
+type BrowserCase = {
+  page: Page;
+  context: BrowserContext;
+  errors: string[];
+  httpErrors: string[];
+};
+
+function assert(condition: unknown, message: string): asserts condition {
+  if (!condition) throw new Error(message);
+}
+
+async function findFreePort(): Promise<number> {
+  return await new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.on("error", reject);
+    server.listen(0, host, () => {
+      const address = server.address();
+      assert(address && typeof address === "object", "failed to allocate test server port");
+      const port = address.port;
+      server.close((err) => (err ? reject(err) : resolve(port)));
+    });
+  });
+}
+
+async function waitForServer(baseUrl: string, proc: ChildProcessWithoutNullStreams): Promise<void> {
+  const deadline = Date.now() + 120_000;
+  let lastError = "server did not respond";
+  while (Date.now() < deadline) {
+    if (proc.exitCode !== null) {
+      throw new Error(`Next dev server exited early with code ${proc.exitCode}`);
+    }
+    try {
+      const response = await fetch(`${baseUrl}/play`, {
+        signal: AbortSignal.timeout(2_000),
+      });
+      if (response.status < 500) return;
+      lastError = `HTTP ${response.status}`;
+    } catch (err) {
+      lastError = err instanceof Error ? err.message : String(err);
+    }
+    await delay(500);
+  }
+  throw new Error(`Timed out waiting for Next dev server: ${lastError}`);
+}
+
+async function startNextDev(): Promise<{
+  baseUrl: string;
+  stop: () => Promise<void>;
+}> {
+  const port = await findFreePort();
+  const baseUrl = `http://${host}:${port}`;
+  const proc = spawn(
+    process.execPath,
+    [nextBin, "dev", "--webpack", "--hostname", host, "--port", String(port)],
+    {
+      cwd: appRoot,
+      env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
+  let logs = "";
+  const append = (chunk: Buffer) => {
+    logs = `${logs}${chunk.toString()}`.slice(-12_000);
+  };
+  proc.stdout.on("data", append);
+  proc.stderr.on("data", append);
+  await waitForServer(baseUrl, proc).catch(async (err) => {
+    await stopProcess(proc);
+    throw new Error(`${err instanceof Error ? err.message : String(err)}\n\n${logs}`);
+  });
+  return {
+    baseUrl,
+    stop: async () => {
+      await stopProcess(proc);
+    },
+  };
+}
+
+async function stopProcess(proc: ChildProcessWithoutNullStreams): Promise<void> {
+  if (proc.exitCode !== null || proc.signalCode !== null) return;
+  proc.kill("SIGTERM");
+  await Promise.race([
+    new Promise<void>((resolve) => proc.once("exit", () => resolve())),
+    delay(5_000).then(() => {
+      if (proc.exitCode === null && proc.signalCode === null) proc.kill("SIGKILL");
+    }),
+  ]);
+}
+
+async function newBrowserCase(
+  browser: Browser,
+  init?: {
+    record: RunRecordV1;
+  },
+): Promise<BrowserCase> {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    colorScheme: "light",
+    reducedMotion: "reduce",
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 1,
+  });
+  if (init) {
+    await context.addInitScript(
+      ({ record, recordPrefix, indexKey, schemaVersion }) => {
+        window.localStorage.setItem(`${recordPrefix}${record.run_id}`, JSON.stringify(record));
+        window.localStorage.setItem(
+          indexKey,
+          JSON.stringify({
+            record_version: schemaVersion,
+            entries: [
+              {
+                run_id: record.run_id,
+                created_seq: record.created_seq,
+                updated_seq: record.updated_seq,
+                versions: record.versions,
+              },
+            ],
+          }),
+        );
+        window.localStorage.setItem("wcdraft:run-counter:v1", String(record.updated_seq));
+      },
+      {
+        record: init.record,
+        recordPrefix: RUN_RECORD_PREFIX,
+        indexKey: RUN_INDEX_KEY,
+        schemaVersion: RUN_RECORD_SCHEMA_VERSION,
+      },
+    );
+  }
+  const page = await context.newPage();
+  const errors: string[] = [];
+  const httpErrors: string[] = [];
+  page.on("console", (msg) => {
+    // Chromium logs failed fetches as generic console errors with no URL.
+    // Those are asserted through the response hook below so known best-effort
+    // endpoints can be allowed without hiding real page exceptions.
+    if (msg.type() === "error" && !msg.text().startsWith("Failed to load resource:")) {
+      errors.push(msg.text());
+    }
+  });
+  page.on("pageerror", (err) => errors.push(err.message));
+  page.on("response", (response) => {
+    if (response.status() < 400) return;
+    const url = new URL(response.url());
+    if (isAllowedBestEffortFailure(url.pathname)) return;
+    httpErrors.push(`${response.status()} ${url.pathname}`);
+  });
+  return { page, context, errors, httpErrors };
+}
+
+async function assertNoBrowserErrors(testCase: BrowserCase, label: string): Promise<void> {
+  await testCase.context.close();
+  assert(
+    testCase.errors.length === 0 && testCase.httpErrors.length === 0,
+    `${label} emitted browser errors:\n${[...testCase.errors, ...testCase.httpErrors].join("\n")}`,
+  );
+}
+
+function isAllowedBestEffortFailure(pathname: string): boolean {
+  return pathname === "/api/auth/csrf" || pathname === "/api/runs" || pathname === "/api/og/sign";
+}
+
+function firstPositionFirstTarget(): string {
+  const draft = createDraft(gameData.catalog, {
+    run_id: "run-v1-1",
+    parent_seed: "wcdraft:run:v1:run-v1-1:4-3-3",
+    formation_id: "4-3-3",
+    mode: "classic",
+    team_name: "Your XI",
+    dataset_version: gameData.versions.dataset_version,
+    rating_version: gameData.versions.rating_version,
+    engine_version: gameData.versions.engine_version,
+    era_preset: "all_time",
+    draft_flow: "position_first",
+    rating_basis: "career",
+  });
+  const starterTargets = draft.squad.filter((slot) => slot.is_starter).map((slot) => slot.slot_id);
+  for (const target of starterTargets) {
+    try {
+      selectDraftTarget(gameData.catalog, draft, target);
+      return target;
+    } catch {
+      // Try the next visible starter slot; the UI surfaces the same dead-end.
+    }
+  }
+  throw new Error("could not find a legal first position-first target");
+}
+
+function completedRunRecord(): RunRecordV1 {
+  const run_id = "pw-complete-classic";
+  const parent_seed = "wcdraft:playwright:complete-classic";
+  return {
+    record_version: RUN_RECORD_SCHEMA_VERSION,
+    run_id,
+    parent_seed,
+    created_seq: 10,
+    updated_seq: 10,
+    versions: gameData.versions,
+    draft: autoDraft({
+      run_id,
+      parent_seed,
+      formation_id: "4-3-3",
+      mode: "classic",
+      team_name: "Playwright XI",
+      dataset_version: gameData.versions.dataset_version,
+      rating_version: gameData.versions.rating_version,
+      engine_version: gameData.versions.engine_version,
+      dataset: gameData.draftDataset,
+      era_preset: "all_time",
+      draft_flow: "squad_first",
+      rating_basis: "career",
+    }),
+  };
+}
+
+async function readRunRecords(page: Page): Promise<RunRecordV1[]> {
+  return await page.evaluate((recordPrefix) => {
+    return Object.keys(window.localStorage)
+      .filter((key) => key.startsWith(recordPrefix))
+      .map((key) => JSON.parse(window.localStorage.getItem(key) ?? "null"))
+      .filter(Boolean);
+  }, RUN_RECORD_PREFIX);
+}
+
+async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): Promise<void> {
+  const target = firstPositionFirstTarget();
+  const testCase = await newBrowserCase(browser);
+  const { page } = testCase;
+  await page.goto(`${baseUrl}/play/draft`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
+
+  await page.getByRole("button", { name: /Draft setup/ }).click();
+  await page
+    .getByRole("group", { name: "Draft mode" })
+    .getByRole("button", { name: "Position First" })
+    .click();
+  await page.getByRole("button", { name: /4-3-3[\s\S]*Lock this shape/ }).click();
+
+  await page.getByRole("heading", { name: "Choose the slot to fill" }).waitFor();
+  const targetButton = page
+    .locator('section[aria-label="Choose your target"]')
+    .getByRole("button")
+    .filter({ hasText: target })
+    .first();
+  await targetButton.click();
+  await page.getByRole("button", { name: "Spin" }).waitFor();
+
+  let records = await readRunRecords(page);
+  assert(
+    records.length === 1,
+    `expected one run record after target commit, found ${records.length}`,
+  );
+  let record = records[0]!;
+  assert(
+    record.draft.draft_flow === "position_first",
+    "draft flow was not persisted as position_first",
+  );
+  assert(
+    record.draft.spins[0]?.target_slot_id === target,
+    `first spin target was ${record.draft.spins[0]?.target_slot_id}, expected ${target}`,
+  );
+  assert(record.draft.spins[0]?.status === "pending", "target commit did not materialize the spin");
+
+  await page.getByRole("button", { name: "Spin" }).click();
+  await page.getByRole("button", { name: /Reveal squad/ }).click();
+  const candidates = page.locator('section[aria-label="Candidates"]');
+  await candidates.waitFor();
+  await candidates.getByRole("button").filter({ hasText: /OVR/ }).first().click();
+  await page.getByRole("button", { name: /Lock pick/ }).click();
+
+  await page.waitForFunction(
+    ([recordPrefix, expectedTarget]) => {
+      const recordKey = Object.keys(window.localStorage).find((key) =>
+        key.startsWith(recordPrefix),
+      );
+      if (!recordKey) return false;
+      const rec = JSON.parse(window.localStorage.getItem(recordKey) ?? "null");
+      return (
+        rec?.draft?.spins?.[0]?.status === "picked" &&
+        rec?.draft?.spins?.[0]?.target_slot_id === expectedTarget &&
+        rec?.draft?.spins?.[0]?.assigned_slot_id === expectedTarget
+      );
+    },
+    [RUN_RECORD_PREFIX, target],
+    { timeout: 15_000 },
+  );
+
+  records = await readRunRecords(page);
+  record = records[0]!;
+  assert(record.draft.spins[0]?.picked_card_id, "lock-pick did not persist a picked card");
+
+  await assertNoBrowserErrors(testCase, "position-first draft flow");
+}
+
+async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): Promise<void> {
+  const seeded = completedRunRecord();
+  const testCase = await newBrowserCase(browser, { record: seeded });
+  const { page } = testCase;
+
+  await page.goto(`${baseUrl}/play/review?run=${seeded.run_id}`, {
+    waitUntil: "domcontentloaded",
+  });
+  await page.getByRole("button", { name: "Simulate the run" }).waitFor();
+  await page.getByRole("button", { name: "Simulate the run" }).click();
+  await page.waitForURL(/\/play\/results\?run=pw-complete-classic$/, { timeout: 90_000 });
+  await page.getByText("Results").first().waitFor();
+  await page.getByRole("link", { name: "Share" }).click();
+  await page.waitForURL(/\/play\/share\?run=pw-complete-classic$/, { timeout: 30_000 });
+  await page.getByRole("heading", { name: "The card" }).waitFor();
+  await page.getByRole("button", { name: "Copy caption" }).waitFor();
+
+  const [record] = await readRunRecords(page);
+  assert(record?.status === "complete", "simulate flow did not mark the run complete");
+  assert(record.simulation?.run?.record, "simulate flow did not persist run results");
+
+  await assertNoBrowserErrors(testCase, "review/results/share flow");
+}
+
+async function main(): Promise<void> {
+  const server = await startNextDev();
+  let browser: Browser | null = null;
+  try {
+    browser = await chromium.launch({
+      channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
+      headless: true,
+    });
+    await verifyPositionFirstDraftFlow(browser, server.baseUrl);
+    await verifyReviewResultsShareFlow(browser, server.baseUrl);
+    console.log(
+      "game-flow-playwright: ok - draft setup, position-first target, lock-pick, review simulate, results, and share",
+    );
+  } finally {
+    if (browser) await browser.close();
+    await server.stop();
+  }
+}
+
+await main();
