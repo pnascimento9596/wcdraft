@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { getBuildStamp } from "../../build-stamp";
+import { readGameCssSource } from "./game-css-source";
 
 /**
  * ws-ux/tap-stability-2 — CI-checkable contract for the iOS first-tap fix.
@@ -15,10 +16,7 @@ import { getBuildStamp } from "../../build-stamp";
  * `position: fixed` is a one-line diff this test must catch.
  */
 
-const css = readFileSync(
-  fileURLToPath(new URL("../../../components/game/game.module.css", import.meta.url)),
-  "utf8",
-);
+const css = readGameCssSource();
 
 // The canonical lock-bar section (the later block wins the cascade over the
 // shadowed legacy block earlier in the file).

@@ -1,0 +1,147 @@
+/* ── Review screen specifics ────────────────────────────────────────────── */
+
+.reviewHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.teamNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.teamNameLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink-400);
+  text-transform: uppercase;
+}
+
+.teamNameInput {
+  width: 100%;
+  padding: 12px;
+  font-family: var(--f-display);
+  font-size: 24px;
+  background: var(--bg-800);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+}
+
+.teamNameInput:focus {
+  outline: none;
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+}
+
+.simPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.simNote {
+  margin: 0;
+  color: var(--ink-200);
+  font-family: var(--f-serif);
+  font-size: 16px;
+}
+
+.warningsPanel {
+  background: color-mix(in srgb, var(--bg-800) 90%, rgba(var(--glow-amber), 0.1));
+  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
+}
+
+.panelSubTitle {
+  margin: 0 0 8px;
+  font-family: var(--f-display);
+  font-size: 16px;
+  color: var(--ink-100);
+}
+
+.warnList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: var(--t-sm);
+  color: var(--ink-200);
+}
+
+.warnList li {
+  margin-bottom: 4px;
+}
+
+/* ── Channels (refit on DS tokens) ──────────────────────────────────────── */
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.channel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  color: var(--ink-300);
+}
+
+.channelLabel {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.channelTrack {
+  display: block;
+  height: 4px;
+  background: var(--bg-700);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.channelFill {
+  display: block;
+  height: 100%;
+  background: var(--ember);
+}
+
+.channelVal {
+  font-family: var(--f-mono);
+  color: var(--ink-200);
+}
+
+.candStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+  align-items: center;
+}
+
+.candStats b {
+  color: var(--ink-100);
+  font-weight: 700;
+}
+
+.candAwards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.award {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  background: color-mix(in srgb, var(--gold) 18%, var(--bg-700));
+  color: var(--gold-bright);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+}

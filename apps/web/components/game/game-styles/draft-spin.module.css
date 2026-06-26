@@ -1,0 +1,405 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   SPIN REVEAL — standalone stage (the centerpiece). Emerald = var(--ember),
+   gold = var(--gold); brand hexes are never re-hardcoded here. The 2–3s drum
+   spin is PRESENTATION ONLY over the deterministic engine result, and
+   prefers-reduced-motion snaps straight to the settled face.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.spinShell {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Standalone-spin surface has no DraftAppBar, so the persistence warning
+   would never reach the user mid-spin. Render it inline above the stage:
+   one line, centered, no layout regression on the compact density bar. */
+.spinPersistenceWarn {
+  padding: 0 var(--s-3);
+  text-align: center;
+  flex-basis: auto;
+}
+
+.spinStage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: var(--s-2) 0 0;
+}
+
+/* ── Status bar ─────────────────────────────────────────────────────────── */
+.spinStatusBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-2);
+}
+.spinPickBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-pill);
+  background: radial-gradient(
+    circle at 50% 35%,
+    color-mix(in srgb, var(--ember) 24%, var(--bg-750)),
+    var(--bg-800)
+  );
+  border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--line-2));
+  box-shadow: var(--ring-ember);
+  line-height: 1;
+}
+.spinPickKicker {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinPickNum {
+  font-family: var(--f-display), sans-serif;
+  font-size: 22px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+.spinPickOf {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinStatusTitle {
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.spinStatusMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.spinStatusChip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 8px;
+  border-radius: var(--r-1);
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+  min-width: 104px;
+}
+.spinStatusChipLabel {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinStatusChipValue {
+  font-family: var(--f-display), sans-serif;
+  font-size: 14px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── Drum ───────────────────────────────────────────────────────────────── */
+.spinDrumLabel {
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinDrum {
+  position: relative;
+  padding: var(--s-3);
+  border-radius: var(--r-3);
+  background:
+    radial-gradient(
+      72% 90% at 50% 50%,
+      color-mix(in srgb, var(--ember) 9%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(180deg, var(--bg-900) 0%, var(--bg-850) 100%);
+  border: 1px solid var(--line-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    var(--sh-2);
+  overflow: hidden;
+}
+.spinReels {
+  display: grid;
+  grid-template-columns: 0.8fr 1.3fr 0.8fr;
+  gap: var(--s-2);
+  align-items: center;
+}
+.spinReelWindow {
+  position: relative;
+  height: var(--reel-h);
+  overflow: hidden;
+  border-radius: var(--r-2);
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+}
+.spinReelWindowSide {
+  opacity: 0.4;
+  filter: saturate(0.7);
+  transform: scale(0.93);
+}
+.spinReelWindowCenter {
+  border: 1.5px solid color-mix(in srgb, var(--gold) 62%, transparent);
+  background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
+  box-shadow:
+    var(--ring-amber),
+    inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
+  z-index: 2;
+}
+.spinReelTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+.spinReelTrackSpinning {
+  animation-name: spinDrum;
+  animation-duration: var(--spin-dur);
+  animation-delay: var(--spin-delay);
+  animation-timing-function: cubic-bezier(0.16, 0.74, 0.12, 1);
+  animation-fill-mode: both;
+}
+@keyframes spinDrum {
+  0% {
+    transform: translateY(var(--spin-from));
+    filter: blur(2px);
+  }
+  12% {
+    filter: blur(2px);
+  }
+  82% {
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(var(--spin-to));
+    filter: blur(0);
+  }
+}
+.spinFace {
+  height: var(--face-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 6px;
+  text-align: center;
+}
+.spinFaceSettled {
+  animation: spinFacePop var(--d-med) var(--e-snap) both;
+}
+@keyframes spinFacePop {
+  0% {
+    transform: scale(0.86);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.spinFaceFlag {
+  width: 52px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-900);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.spinFaceFlagFallback {
+  width: 52px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+}
+.spinFaceNation {
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(13px, 3.6vw, 17px);
+  color: var(--ink-100);
+  line-height: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.spinFaceYear {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--gold-bright);
+  letter-spacing: 0.06em;
+  font-feature-settings: "tnum" 1;
+}
+.spinFaceIdle .spinFaceGlyph {
+  font-family: var(--f-display), sans-serif;
+  font-size: 28px;
+  color: var(--ink-500);
+}
+.spinFaceIdle .spinFaceNation {
+  color: var(--ink-400);
+}
+.spinChevronTop,
+.spinChevronBottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  z-index: 4;
+  filter: drop-shadow(0 0 5px rgba(var(--glow-gold), 0.7));
+}
+.spinChevronTop {
+  top: 7px;
+  border-top: 11px solid var(--gold);
+}
+.spinChevronBottom {
+  bottom: 7px;
+  border-bottom: 11px solid var(--gold);
+}
+.spinShadeTop,
+.spinShadeBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px;
+  pointer-events: none;
+  z-index: 3;
+}
+.spinShadeTop {
+  top: 0;
+  background: linear-gradient(180deg, var(--bg-900) 0%, transparent 100%);
+}
+.spinShadeBottom {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--bg-900) 0%, transparent 100%);
+}
+.spinPayline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Result block ───────────────────────────────────────────────────────── */
+.spinResultBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.spinResultEyebrow {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinResultName {
+  margin: 0;
+  font-family: var(--f-display), sans-serif;
+  font-size: clamp(28px, 8vw, 40px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.spinResultNation {
+  color: var(--ember);
+}
+.spinResultYear {
+  color: var(--ink-200);
+  font-feature-settings: "tnum" 1;
+}
+.spinResultPending {
+  color: var(--ink-500);
+}
+.spinResultTag {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-300);
+  max-width: 34ch;
+}
+
+/* ── Stat tiles ─────────────────────────────────────────────────────────── */
+.spinTiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-2);
+}
+.spinTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 6px;
+  background: var(--bg-800);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+}
+.spinTileLabel {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+.spinTileValue {
+  font-family: var(--f-display), sans-serif;
+  font-size: 18px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+.spinTileRare {
+  background: color-mix(in srgb, var(--gold) 14%, var(--bg-800));
+  border-color: color-mix(in srgb, var(--gold) 46%, var(--line));
+  box-shadow: 0 0 18px -6px rgba(var(--glow-gold), 0.5);
+}
+.spinTileRare .spinTileLabel {
+  color: var(--gold-bright);
+}
+.spinTileRare .spinTileValue {
+  color: var(--gold-bright);
+}
+
+/* ── CTA ────────────────────────────────────────────────────────────────── */
+.spinCta {
+  width: 100%;
+  margin-top: auto;
+  min-height: 52px; /* primary CTA — thumb-sized at every breakpoint */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinReelTrackSpinning {
+    animation: none !important;
+  }
+  .spinFaceSettled {
+    animation: none !important;
+  }
+}

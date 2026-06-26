@@ -1,0 +1,420 @@
+/* ── Results ───────────────────────────────────────────────────────────── */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  /* B1 — the results surface is SANS throughout (Sora body, Saira Condensed
+     headers/numbers). This base family overrides the app's inherited
+     Newsreader serif so the narration + box scores read cleanly; Newsreader
+     usage elsewhere is untouched. */
+  font-family:
+    var(--font-sans),
+    system-ui,
+    -apple-system,
+    sans-serif;
+  /* The reveal/results column is a terminal scroll surface on iOS — keep its
+     last element (bench / leaderboard / replay row) clear of Safari's bottom
+     chrome + the home indicator. */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--bg-invert);
+  color: var(--field-ink);
+  /* Deliberate seam (ws-ux/mobile-polish-2): the inverted editorial plate is
+     intentional brand contrast, but flush cream-on-dark read as a rendering
+     glitch. A hairline in the plate's own ink + a 1px outer ring against the
+     page tone frame it as a designed insert in both themes. */
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  /* B2/B5 — the decorative strip is GOLD (canonical), not emerald: emerald is
+     reserved for interaction. Gold-on-cream/gold-on-ink as a 3px bar reads on
+     both inverted-plate themes. */
+  border-top: 3px solid var(--gold);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent),
+    var(--shadow-card);
+}
+:root[data-theme="dark"] .outcome {
+  color: var(--bg);
+}
+/* B2 — the plate INVERTS the page theme (dark plate in light theme, cream
+   plate in dark theme). Raw emerald failed AA on the cream plate, and emerald
+   here is decorative anyway. Use the plate's own ink (currentColor) so the
+   eyebrow + W–L are legible by construction on both themes. */
+.outcome .eyebrowAccent {
+  color: currentColor;
+  opacity: 0.82;
+}
+.configBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+.configBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.45rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  line-height: 1;
+  color: currentColor;
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+.configBadge_era_preset {
+  border-style: solid;
+}
+.configBadge_draft_flow {
+  border-style: dashed;
+}
+.configBadge_rating_basis {
+  border-style: double;
+}
+.outcomeRecord {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.outcomeBig {
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: clamp(3.5rem, 14vw, 6rem);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+}
+/* I3.8 — 8-0 perfect run rendered in precious gold. */
+.outcomeBigGold {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gold) 72%, white) 0%,
+    var(--gold) 55%,
+    var(--gold-strong) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* B2 — the plate is cream in dark theme; gold text alone would fall under AA
+     there. A 1px ink edge (drawn under the clipped gradient) grounds the digits
+     on either plate while preserving the precious-gold fill. */
+  -webkit-text-stroke: 0.6px color-mix(in srgb, var(--gold-strong) 70%, #000);
+  text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
+}
+.outcomeWL {
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: currentColor;
+  opacity: 0.68;
+}
+.outcomeStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+}
+@media (min-width: 34rem) {
+  .outcomeStats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.oStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.oStatNum {
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.oStatLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* B4 — top-scorer cell: national flag beside the (truncating) scorer name. */
+.oStatScorer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.oStatScorer .oStatLabel {
+  min-width: 0;
+}
+.oStatFlag {
+  flex: none;
+  width: 1.05rem;
+  height: auto;
+  border-radius: 2px;
+}
+.outcomeFlags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.flagGold,
+.flagGood,
+.flagMuted {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}
+.flagGold {
+  color: var(--gold-ink);
+  background: var(--gold);
+}
+.flagGood {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+.flagMuted {
+  color: var(--field-ink);
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+}
+:root[data-theme="dark"] .flagMuted {
+  color: var(--bg);
+}
+
+.narrative {
+  position: relative;
+  padding-left: 2.4rem;
+}
+.narrativeMark {
+  position: absolute;
+  left: 0.7rem;
+  top: 0.2rem;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  /* Decorative quote mark (aria-hidden) — gold canonical, muted. */
+  color: color-mix(in srgb, var(--gold) 46%, transparent);
+}
+/* B1/B3 — narration is SANS (Sora), upright for readability, and wraps cleanly
+   inside its card (no horizontal spill on long unbroken clauses). */
+.narrativeText {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.matchList {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+.matchItem {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.matchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg-panel);
+  border: none;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+}
+.matchRow:hover {
+  background: var(--bg-sunken);
+}
+.matchOutcome {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 6px;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+}
+.win {
+  background: var(--field);
+}
+.draw {
+  background: var(--ink-faint);
+}
+.loss {
+  background: var(--accent);
+}
+/* B3 — round label can shrink + ellipsis; never forces the row wider than the
+   card. */
+.matchRound {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 7.5rem;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* B3 — opponent name is the flexible column: it truncates instead of pushing
+   the score off the row ("vs ENG England" → "vs ENG Engl…" before overlap). */
+.matchOpp {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.matchScore {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+/* B1/B2 — tag is sans + a neutral chip (not decorative emerald): keeps emerald
+   for interaction and clears AA on the paper panel. */
+.matchTag {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  white-space: nowrap;
+}
+.matchChevron {
+  flex: none;
+  color: var(--ink-faint);
+}
+.boxScore {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.85rem 0.9rem;
+  background: var(--bg-sunken);
+  border-top: 1px solid var(--line);
+}
+@media (min-width: 34rem) {
+  .boxScore {
+    grid-template-columns: 1fr 1fr;
+  }
+  .boxEvents {
+    grid-column: 1 / -1;
+  }
+}
+.boxCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.boxColHead {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.25rem;
+}
+.boxGoal {
+  font-size: 0.9rem;
+}
+.boxDetail {
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+}
+.boxNone {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.boxEvents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.5rem;
+}
+.boxEvent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.cardYellow,
+.cardRed {
+  width: 0.6rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  display: inline-block;
+}
+.cardYellow {
+  background: var(--gold);
+}
+.cardRed {
+  background: var(--accent);
+}
+
+.seedPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.seedRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.seedLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+.seedCode {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+}
+.seedNote {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.resultsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}

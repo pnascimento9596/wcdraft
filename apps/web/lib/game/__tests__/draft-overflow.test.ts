@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readGameCssSource } from "./game-css-source";
 
 /**
  * ws-ux/mobile-content — CI-checkable contract for the draft-screen horizontal
@@ -24,10 +23,7 @@ import { fileURLToPath } from "node:url";
  * bare `auto` grid track is a one-line diff this test must catch.
  */
 
-const css = readFileSync(
-  fileURLToPath(new URL("../../../components/game/game.module.css", import.meta.url)),
-  "utf8",
-);
+const css = readGameCssSource();
 
 function block(selector: string): string {
   // Match the FIRST declaration block for an exact selector at line start.

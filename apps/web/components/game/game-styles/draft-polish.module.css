@@ -1,0 +1,1783 @@
+/* ── ws-squad/formations-polish: Synergy link layer + Manager slot ──────── */
+
+/* SVG layer drawn beneath the slot chips so links sit on the pitch but do
+   not block taps. Pointer events disabled because line endpoints sit at
+   slot centres and would otherwise eat clicks on the slot itself. */
+.pitchSynergyLayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Inactive adjacency edge (reveal/review surfaces) — the structural "could
+   link" graph. Deliberately quiet: ~20% neutral ink, 1px, no glow, so the
+   pitch never reads as a wire mesh and live emerald edges stay dominant.
+   `--ink-300` flips with the theme, keeping the line visible (but quiet) on
+   the light pitch too. */
+.synergyLineIdle {
+  stroke: color-mix(in srgb, var(--ink-200) 30%, transparent);
+  stroke-width: 1.05;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Emerald link = same-nation, both slots filled (year-agnostic; ENGINE-V2 E-2
+   made synergy nation-only). Token `--accent` carries the locked emerald
+   line hue, and --glow-ember keeps the halo theme-aware. */
+.synergyLineLive {
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(var(--glow-ember), 0.5));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .synergyLineLive {
+    opacity: 0;
+    animation: synergy-line-ignite var(--d-fast) var(--e-out) both;
+  }
+}
+
+@keyframes synergy-line-ignite {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Visible label naming the layer. The brand glossary says "Synergy",
+   NEVER "Chemistry". */
+.pitchSynergyLegend {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-100);
+  background: color-mix(in srgb, var(--bg-900) 65%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+}
+
+.pitchSynergyLegendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ember);
+  box-shadow: 0 0 6px rgba(var(--glow-ember), 0.7);
+}
+
+/* Pitch slots sit above the SVG layer so chips remain interactive. */
+.pitch .slot {
+  z-index: 2;
+}
+
+/* ── Slot shape marker (visible inside the chip) ─────────────────────────
+   Position-by-shape is one of the brand invariants: GK square,
+   DF triangle, MF diamond, FW circle. The marker is a small block placed
+   beside the slot's role pill. It must not affect chip dimensions when
+   a slot becomes selected/preview/filled — fixed size, no transform. */
+
+.slotHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+  max-width: 100%;
+}
+
+.miniNationFlag,
+.miniNationFlagFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid color-mix(in srgb, var(--ink-100) 22%, transparent);
+  background: color-mix(in srgb, var(--bg-700) 82%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg-900) 24%, transparent);
+}
+
+.miniNationFlag {
+  object-fit: cover;
+}
+
+.miniNationFlagFallback {
+  width: auto;
+  min-width: 18px;
+  padding-inline: 2px;
+  font-family: var(--f-mono);
+  font-size: 7px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ink-100);
+}
+
+.slotMiniFlag {
+  width: 15px;
+  height: 10px;
+}
+
+.benchMiniFlag {
+  width: 16px;
+  height: 11px;
+}
+
+.slotShapeMarker {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  opacity: 0.85;
+  flex: none;
+}
+
+.slotShapeMarker_square {
+  border-radius: 1px;
+}
+
+.slotShapeMarker_triangle {
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 8px solid currentColor;
+}
+
+.slotShapeMarker_diamond {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+
+.slotShapeMarker_circle {
+  border-radius: 999px;
+}
+
+/* ── Squad stage: pitch + manager slot side-by-side ─────────────────────
+   Mobile-first stack; tablets+ get the manager card pinned to the right
+   of the pitch. The pitch keeps its aspect-ratio either way. */
+
+.squadStage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 720px) {
+  .squadStage {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    align-items: start;
+  }
+}
+
+/* ── Manager slot ─────────────────────────────────────────────────────── */
+
+.managerSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  color: var(--ink-100);
+}
+
+.managerSlotCommitted {
+  border-color: color-mix(in srgb, var(--prov-manager) 55%, var(--line));
+  box-shadow: 0 0 0 1px rgba(var(--prov-manager-rgb, 255, 255, 255), 0.15);
+}
+
+.managerSlotPreview {
+  border-color: var(--ember);
+  box-shadow: var(--ring-ember);
+  border-style: dashed;
+}
+
+.managerSlotOpen {
+  border-style: dashed;
+  color: var(--ink-300);
+}
+
+.managerSlotEyebrow {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.managerSlotIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.managerSlotFlag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 6px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-100);
+  object-fit: cover;
+}
+
+.managerSlotNameWrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.managerSlotName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.managerSlotMeta {
+  font-size: var(--t-xs);
+  color: var(--ink-300);
+}
+
+/* Manager slot status chip — now only the draft-time "Preview" state.
+   The manager rating contract stays HONEST-STATE: runtime data never
+   carries a rating and the UI never fabricates one; since absence is
+   structural (every manager), the old "Rating unavailable" pill restated
+   nothing and was removed on every surface (ws-ux/mobile-polish-2). */
+.managerSlotBadge {
+  align-self: flex-start;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prov-manager);
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--prov-manager) 50%, var(--line-2));
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+}
+
+.managerSlotEmpty {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--ink-300);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Compact candidate rows (video-game lineup density). One scannable line by
+   default; tapping selects AND expands the full detail in-place. Honest-state
+   throughout: unknown OVR shows "—", coverage/channels are real, provenance is
+   the left hue stripe + dot. Manager rows render NO rating surface at all
+   (managers structurally carry none — never a fabricated number).
+   ───────────────────────────────────────────────────────────────────────── */
+.candRow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-750);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--ink-100);
+  cursor: pointer;
+  transition:
+    border-color var(--d-fast),
+    box-shadow var(--d-fast),
+    background-color var(--d-fast);
+}
+.candRow:hover,
+.candRow:focus-visible {
+  border-color: var(--ember);
+}
+.candRowSelected {
+  border-color: var(--gold);
+  box-shadow: var(--ring-amber);
+  background: var(--bg-700);
+}
+.candRowDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.candRow.prov_historical {
+  border-left-color: var(--prov-historical);
+}
+.candRow.prov_projected {
+  border-left-color: var(--prov-projected);
+}
+.candRow.prov_estimate {
+  border-left-color: var(--prov-estimate);
+}
+.candRow.prov_legend {
+  border-left-color: var(--prov-legend);
+}
+.candRow.prov_manager {
+  border-left-color: var(--prov-manager);
+}
+.candRow.prov_masked {
+  border-left-color: var(--line-2);
+}
+.candRowSelected {
+  border-left-color: var(--gold);
+}
+
+.candRowLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  min-height: 46px;
+}
+.candRowFlag {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 24px;
+  padding: 0 5px;
+  background: color-mix(in srgb, var(--bg-700) 80%, transparent);
+  border: 1px solid var(--line-2);
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.04em;
+  color: var(--ink-200);
+}
+.candRowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.candRowName {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.candRowSub {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.candRowProv {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--prov-unknown);
+}
+.provDot_historical {
+  background: var(--prov-historical);
+}
+.provDot_projected {
+  background: var(--prov-projected);
+}
+.provDot_estimate {
+  background: var(--prov-estimate);
+}
+.provDot_legend {
+  background: var(--prov-legend);
+  box-shadow: 0 0 6px rgba(var(--prov-legend-rgb), 0.7);
+}
+.provDot_masked {
+  background: var(--prov-unknown);
+}
+.candRowShape {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  background: var(--ink-300);
+}
+.shapeDot_square {
+  border-radius: 1px;
+}
+.shapeDot_triangle {
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 9px solid var(--ink-300);
+}
+.shapeDot_diamond {
+  border-radius: 1px;
+  transform: rotate(45deg);
+}
+.shapeDot_circle {
+  border-radius: 999px;
+}
+.candRowBars {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+  width: 22px;
+}
+.candRowBars i {
+  display: block;
+  width: 3px;
+  min-height: 1px;
+  background: var(--ink-400);
+  border-radius: 1px;
+}
+.candRowOvr {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  min-width: 28px;
+}
+.candRowOvr b {
+  font-family: var(--f-display);
+  font-size: 20px;
+  color: var(--ink-100);
+  font-feature-settings: "tnum" 1;
+}
+.candRowOvr i {
+  font-family: var(--f-mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: var(--ink-400);
+  font-style: normal;
+  text-transform: uppercase;
+}
+.candRowCov {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--ink-300);
+  min-width: 30px;
+  text-align: right;
+}
+.candRowChevron {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--ink-400);
+}
+.candDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 10px 0;
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--line);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Now-drafting context header (lineup view). The full reveal lives on the
+   standalone spin stage; this is the compact carry-over so the lineup keeps
+   its nation/year context.
+   ───────────────────────────────────────────────────────────────────────── */
+.nowDrafting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, var(--bg-800), var(--bg-850));
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-3);
+}
+.nowDraftingMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1; /* flag sits left as a header identity element; main fills the middle */
+}
+/* Squad-header flag (ws-ux/club-coverage) — same asset family as the spin
+   reel, sized to the existing two-line header so it adds NO vertical height. */
+.squadHeaderFlag {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-900);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.squadHeaderFlagFallback {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+}
+.nowDraftingPick {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember-bright);
+}
+.nowDraftingResult {
+  font-family: var(--f-display), sans-serif;
+  font-size: 20px;
+  color: var(--ink-100);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nowDraftingBack {
+  flex: 0 0 auto;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  color: var(--ink-200);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  padding: 6px 14px;
+  min-height: 44px; /* tap-target audit */
+}
+.nowDraftingBack:hover {
+  border-color: var(--ember);
+  color: var(--ember-bright);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Formation grid de-bulk (mobile). Shrink the draft-board pitch, slim the
+   nodes, and move the Synergy-links legend out of the crowded forward line to
+   the clear bottom-left corner so it never overlaps the ST node. Nodes sit
+   above the link layer; the pitch clips its own overflow, so nothing spills.
+   ───────────────────────────────────────────────────────────────────────── */
+/* UX-COMPACT — container-derived pitch chips (ws-ux/mobile-polish-1).
+   Compact-by-default everywhere `.pitch` is rendered inside `.squadStage`
+   (draft + squad-review share this stage).
+
+   GEOMETRY CONTRACT (coupled to lib/game/pitch-layout.ts):
+   The pitch is an inline-size container; chips are sized in cqw so their
+   footprint is a FIXED fraction of the pitch at every viewport width:
+     - chip width  = 19cqw  → half-width  =  9.5% of pitch width
+     - chip height = 14cqw  → at aspect 100/94, 14/0.94 = 14.9% of pitch
+                              height → half-height ≈ 7.45%
+   `CHIP_HALF_W_PCT` / `CHIP_HALF_H_PCT` in pitch-layout.ts mirror these
+   numbers; the anti-overlap resolver is only correct while they match.
+   Inner content scales with the chip (cqw with px clamps) so compaction
+   never clips. Fixed height + hidden overflow keep the AABB exact. */
+.squadStage .pitch {
+  container-type: inline-size;
+  aspect-ratio: 100 / 94;
+  /* The legacy `.pitch` rule pins min-height to 24rem (384px) — that's
+     ~90px of dead vertical on mobile and it breaks the aspect-ratio the
+     chip-geometry contract is computed from. */
+  min-height: 0;
+  width: 100%;
+  max-width: 312px;
+  margin-inline: auto;
+}
+.squadStage .pitch .slot {
+  width: 19cqw;
+  min-width: 0;
+  max-width: none;
+  height: 14cqw;
+  min-height: 0;
+  justify-content: center;
+  overflow: hidden;
+  padding: 2px 3px;
+  gap: 1px;
+  border-radius: var(--r-2);
+}
+.squadStage .pitch .slotHead {
+  gap: 3px;
+}
+.squadStage .pitch .slotName {
+  font-size: clamp(8px, 3cqw, 10px);
+  max-width: 17.5cqw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.squadStage .pitch .slotPos {
+  font-size: clamp(7px, 2.7cqw, 9px);
+  letter-spacing: 0.04em;
+}
+.squadStage .pitch .slotEmptyLabel {
+  font-size: clamp(7px, 2.8cqw, 9px);
+}
+.squadStage .pitch .slotMeta {
+  font-size: clamp(7px, 2.8cqw, 9px);
+}
+.squadStage .pitch .slotRating {
+  font-size: clamp(8px, 3.2cqw, 11px);
+}
+.squadStage .pitch .slotShapeMarker {
+  width: 6px;
+  height: 6px;
+}
+.squadStage .pitch .slotShapeMarker_triangle {
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 6px solid currentColor;
+}
+/* Legend removed in UX-COMPACT — the SynergyBar at the top of the
+   section is now the single source of synergy nomenclature. The class
+   is kept for back-compat; render path no longer emits it. */
+.pitchSynergyLegend {
+  display: none;
+}
+
+/* Formation shape id ("4-3-3") must never break at its hyphens. Scoped so the
+   shared `.panelTitle` (which wraps elsewhere, e.g. "All 17 spins resolved.")
+   is untouched. */
+.formationTitleInline {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — Synergy bar (pinned to top of formation section)
+   The bar replaces the old SynergyPanel card. Headline score + a thin
+   strength track + three inline figures (strength mult / links live /
+   manager link) — every metric the card surfaced, in a single horizontal
+   composition. Honest-state: "—" when the squad is empty AND no manager.
+   ───────────────────────────────────────────────────────────────────────── */
+.synergyBar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 12px 8px;
+  margin-bottom: 12px;
+  background: color-mix(in srgb, var(--bg-800) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  /* Subtle emerald-tinted edge to keep the score readable. */
+  box-shadow: inset 0 1px 0 0 rgba(var(--glow-ember), 0.06);
+}
+
+/* Head row doubles as the collapse toggle — full-width, 44px target.
+   Collapsed, the bar is exactly this row (label + score + chevron). */
+.synergyBarToggle {
+  appearance: none;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.synergyBarChevron {
+  font-size: 10px;
+  color: var(--ink-400);
+  align-self: center;
+}
+
+.synergyBarLabel {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.synergyBarScore {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.synergyBarNum {
+  font-family: var(--f-display), sans-serif;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ember);
+  font-feature-settings: "tnum" 1;
+}
+
+/* Thin strength track. Single emerald fill. The width is intentionally
+   non-animated so new motion remains transform/opacity-only. */
+.synergyBarTrack {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg-700) 90%, transparent);
+  overflow: hidden;
+}
+
+.synergyBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--ember) 65%, transparent),
+    var(--ember)
+  );
+  transition: none;
+}
+
+.synergyBarFigures {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.synergyBarFigure {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.synergyBarFigure dt {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  margin: 0;
+}
+
+.synergyBarFigure dd {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink-100);
+  margin: 0;
+  font-feature-settings: "tnum" 1;
+}
+
+.synergyBarFigureSub {
+  color: var(--ink-400);
+  font-size: 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — squad counter chip ("11/11 XI · 5/5 Bench · 1/1 Mgr").
+   Single line at 360–430px. Monospace + tabular numerals so the digits
+   don't reflow as the counts tick.
+   ───────────────────────────────────────────────────────────────────────── */
+.squadCounter {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 6px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-300);
+  font-feature-settings: "tnum" 1;
+}
+
+.squadCounterCell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.squadCounterCell b {
+  color: var(--ink-100);
+  font-weight: 600;
+}
+
+.squadCounterSep {
+  color: var(--ink-400);
+}
+
+@media (max-width: 380px) {
+  .squadCounter {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* GK warning panel slimmed now that synergy moved up. */
+.gkWarnPanel {
+  margin-top: 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UX-COMPACT — reduced-motion guard. Lock-in / select / preview already
+   avoid layout shift (every state preserves the centring translate);
+   here we belt-and-brace by disabling state transitions when the user
+   asks for less motion. The squad-stage feels instant rather than eased.
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pitch .slot,
+  .pitch button.slot,
+  .synergyBarFill,
+  .managerSlot,
+  .benchSlot,
+  .candRow {
+    transition: none !important;
+  }
+  .pitch .slotFilled,
+  .synergyLineLive {
+    animation: none !important;
+    opacity: 1;
+  }
+  .synergyLineLive {
+    filter: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ws-ux/mobile-compact-v3 — global mobile compaction pass.
+
+   v3 sharpens the v2 cut and closes one critical gap: the candidate-row
+   collapsed height. v2 reduced surrounding chrome but left .candRowLine
+   at the base 46px min-height, so only ~6 collapsed rows fit a 390x844
+   viewport even after the chrome cut. v3 overrides .candRowLine to
+   38px @ 430px and 36px @ 380px so 8-9 rows sit in view. v3 also keeps
+   the formation grid 2-column down to 360px (v2 collapsed it at 380
+   which added scroll), and tightens the draft shell / app bar / sub-
+   panel paddings further.
+
+   Cuts excessive vertical scroll on the key surfaces (spin-reveal,
+   draft/synergy, formation-lock, player-list, squad review, results /
+   share / history) and slims the sticky lock-pick CTA at narrow
+   viewports. Compact via spacing / typography / padding only — NO
+   content removed, NO new color literals, all values sourced from
+   `app/ds/tokens.css` via `var(...)`. Outer breakpoints: 430px (every
+   modern phone in portrait) and 380px (Galaxy Fold / very narrow).
+   Both are scoped so tablet+desktop are untouched.
+
+   Pitch chip overlap (5-3-2 GK/CB, dense midfield diamonds) is also
+   addressed at the RENDER layer by `lib/game/pitch-layout.ts`; this
+   block contributes only chip-size tightening, never a coordinate
+   change, so the canonical `formations.json` stays the source of truth.
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+  /* ── Outer shell + app bar ─────────────────────────────────────── */
+  .draftShell,
+  .reviewShell {
+    gap: 8px;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    min-height: calc(100svh - 72px);
+  }
+  .draftAppBar {
+    padding: 5px 8px;
+    gap: 6px;
+    border-radius: var(--r-2);
+  }
+  .appBarBrand img {
+    width: 20px;
+    height: 23px;
+  }
+  .appBarTitle {
+    font-size: 14px;
+    letter-spacing: 0.03em;
+  }
+  .appBarMeter {
+    min-width: 108px;
+    gap: 2px;
+  }
+  .spinCounterNum {
+    font-size: 13px;
+  }
+  .spinCounterTotal {
+    font-size: 11px;
+  }
+  .spinProgress {
+    height: 4px;
+  }
+
+  /* ── Cards (panels) ────────────────────────────────────────────── */
+  .panel {
+    padding: 10px;
+    border-radius: var(--r-2);
+  }
+  .panelHead {
+    margin-bottom: 6px;
+    gap: 8px;
+  }
+  .panelTitle {
+    font-size: 15px;
+  }
+  .panelMeta {
+    font-size: var(--t-xs);
+  }
+
+  /* ── Compact spin-context strip in lineup view ─────────────────── */
+  .nowDrafting {
+    padding: 8px 10px;
+    border-radius: var(--r-2);
+  }
+  .nowDraftingPick {
+    font-size: 10px;
+  }
+  .nowDraftingResult {
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+  .nowDraftingBack {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+
+  /* ── SpinStage (full-screen spin reveal) ───────────────────────── */
+  .spinShell {
+    gap: 10px;
+    padding: 10px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  .spinStage {
+    gap: var(--s-3);
+    padding: 0;
+  }
+  .spinStatusBar {
+    gap: 8px;
+  }
+  .spinPickBadge {
+    width: 48px;
+    height: 48px;
+  }
+  .spinPickNum {
+    font-size: 18px;
+  }
+  .spinPickKicker,
+  .spinPickOf {
+    font-size: 7px;
+  }
+  .spinStatusTitle {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+  .spinStatusChip {
+    min-width: 88px;
+    padding: 2px 6px;
+  }
+  .spinStatusChipLabel {
+    font-size: 7px;
+  }
+  .spinStatusChipValue {
+    font-size: 12px;
+  }
+  /* The drum label duplicates the "Spin reveal" status-bar title — on a
+     390x844 viewport that's a dead line between header and drum. */
+  .spinDrumLabel {
+    display: none;
+  }
+  .spinDrum {
+    padding: var(--s-2);
+    border-radius: var(--r-2);
+  }
+  .spinResultName {
+    font-size: clamp(22px, 6.6vw, 30px);
+  }
+  .spinResultTag {
+    font-size: var(--t-xs);
+    max-width: 30ch;
+  }
+  .spinTile {
+    padding: 6px 4px;
+    gap: 2px;
+  }
+  .spinTileLabel {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+  .spinTileValue {
+    font-size: 15px;
+  }
+  .spinCta {
+    margin-top: var(--s-2);
+  }
+
+  /* ── Formation lock gate ──────────────────────────────────────────
+     Comparability goal: all six shapes in a tight 2-col grid with
+     minimal scroll at 390x844. The mini-pitch is the bulk — squash it
+     to 4/3 (dots keep relative spacing); blurbs go one-line. */
+  .formationSelect {
+    gap: 10px;
+    padding: 4px 2px 20px;
+  }
+  .formationHead {
+    gap: 5px;
+  }
+  /* The masthead + draft app bar already brand this screen twice — the
+     in-panel lockup is the single biggest dead block above the grid. */
+  .formationHead img {
+    display: none;
+  }
+  .formationTitle {
+    font-size: 20px;
+  }
+  .formationSub {
+    font-size: var(--t-xs);
+    max-width: 44ch;
+  }
+  .formationGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  /* Vertical calm tile (pitch focus on top, hero name + lock CTA beneath).
+     Two-up keeps all eight shapes comparable at 5/6 aspect within a single
+     scannable grid. 12px radius matches the shared card system. */
+  .formationCard {
+    padding: 11px 9px 10px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+  .formationCardBody {
+    gap: 3px;
+  }
+  .formationCardName {
+    font-size: 19px;
+  }
+  .formationCardCta {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+  .miniPitch {
+    width: 78px;
+  }
+  .miniDot {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* ── Formation/Synergy section (lineup view) ─────────────────── */
+  .formationPanel {
+    padding: 8px 10px 10px;
+    /* Anchor for the assign-flow scrollIntoView({block:'start'}) so the
+       slot picker lands cleanly below the sticky DraftAppBar instead of
+       half-occluded under it. */
+    scroll-margin-top: 64px;
+  }
+  .synergyBar {
+    padding: 0 10px 6px;
+    margin-bottom: 8px;
+    gap: 4px;
+  }
+  .synergyBarNum {
+    font-size: 18px;
+  }
+  .synergyBarFigures {
+    gap: 10px;
+  }
+  .squadStage {
+    gap: 8px;
+  }
+  /* Chip geometry is container-derived (cqw) — see the squadStage block
+     above. Only non-geometric tweaks belong here so the pitch-layout.ts
+     AABB contract holds at every width. */
+  .squadStage .pitch .slot {
+    border-width: 1px;
+    line-height: 1.05;
+  }
+  .bench {
+    margin-top: 8px;
+  }
+  .benchLabel {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .benchSlots {
+    gap: 4px;
+  }
+  .benchSlot {
+    min-height: 46px;
+    padding: 4px 2px;
+    border-radius: var(--r-2);
+  }
+  .benchSlot .slotPos {
+    font-size: 9px;
+  }
+  .benchSlot .slotName {
+    font-size: 9px;
+  }
+  .managerSlot {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+  .managerSlotName {
+    font-size: 14px;
+  }
+  .managerSlotMeta,
+  .managerSlotBadge {
+    font-size: var(--t-xs);
+  }
+  .managerSlotFlag {
+    min-width: 30px;
+    height: 30px;
+  }
+
+  /* ── Squad review: one-screen mobile composition ─────────────────
+     The review route can carry long honest-state warnings, but the core
+     loop must stay viewport-fit. Keep every datum reachable while moving
+     variable-length warning details into a small internal scroll surface. */
+  .reviewShell {
+    overflow: hidden;
+  }
+  .reviewShell > .draftAppBar {
+    padding-block: 4px;
+  }
+  .reviewHead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: end;
+    gap: 4px 8px;
+    padding: 0;
+  }
+  .reviewHead > .eyebrowAccent {
+    align-self: center;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+  }
+  .reviewHead .teamNameRow {
+    gap: 2px;
+  }
+  .reviewHead .teamNameLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .reviewHead .teamNameInput {
+    min-height: 34px;
+    padding: 5px 8px;
+    font-size: 18px;
+  }
+  .reviewShell > .panel {
+    padding: 7px;
+    border-radius: var(--r-2);
+  }
+  .reviewShell .synergyBar {
+    padding: 0 8px 4px;
+    margin-bottom: 5px;
+    gap: 2px;
+    border-radius: var(--r-2);
+  }
+  .reviewShell .synergyBarToggle {
+    min-height: 32px;
+  }
+  .reviewShell .panelHead {
+    margin-bottom: 4px;
+  }
+  .reviewShell .panelTitle {
+    font-size: 14px;
+  }
+  .reviewShell .panelMeta {
+    font-size: 10px;
+  }
+  .reviewShell .squadStage {
+    gap: 5px;
+  }
+  .reviewShell .squadStage .pitch {
+    max-width: 248px;
+  }
+  .reviewShell .managerSlot {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 3px 7px;
+    padding: 5px 7px;
+  }
+  .reviewShell .managerSlotEyebrow {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+  .reviewShell .managerSlotIdentity {
+    gap: 6px;
+  }
+  .reviewShell .managerSlotFlag {
+    min-width: 24px;
+    width: 24px;
+    height: 18px;
+    padding: 0;
+  }
+  .reviewShell .managerSlotName {
+    font-size: 12px;
+  }
+  .reviewShell .managerSlotMeta {
+    font-size: 10px;
+  }
+  .reviewShell .managerTraits {
+    grid-column: 1 / -1;
+    flex-wrap: nowrap;
+    gap: 3px;
+    margin-top: 1px;
+    overflow: hidden;
+  }
+  .reviewShell .managerTraitChip {
+    padding: 1px 5px;
+    font-size: 8px;
+    white-space: nowrap;
+  }
+  .reviewShell .bench {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+    margin-top: 5px;
+  }
+  .reviewShell .benchLabel {
+    margin: 0;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+  .reviewShell .benchSlots {
+    gap: 3px;
+  }
+  .reviewShell .benchSlot {
+    min-height: 34px;
+    padding: 2px 1px;
+  }
+  .reviewShell .benchSlot .slotPos,
+  .reviewShell .benchSlot .slotName {
+    font-size: 8px;
+    line-height: 1.05;
+  }
+  .reviewShell .benchMiniFlag {
+    width: 13px;
+    height: 9px;
+  }
+  .reviewShell .squadAvg {
+    font-size: 13px;
+  }
+  .reviewShell .lineRatings {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .reviewShell .lineRow {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-2);
+    background: var(--bg-sunken);
+  }
+  .reviewShell .lineName {
+    font-size: 8px;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .reviewShell .lineTrack {
+    height: 3px;
+  }
+  .reviewShell .lineVal {
+    font-size: 12px;
+    text-align: left;
+  }
+  .reviewShell .warningsPanel {
+    max-height: 58px;
+    overflow: auto;
+    padding: 6px 8px;
+  }
+  .reviewShell .panelSubTitle {
+    margin-bottom: 3px;
+    font-size: 12px;
+  }
+  .reviewShell .warnList {
+    display: grid;
+    gap: 2px;
+    padding-left: 14px;
+    font-size: 9px;
+    line-height: 1.15;
+  }
+  .reviewShell .warnList li {
+    margin-bottom: 0;
+  }
+  .reviewShell .simPanel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 5px;
+  }
+  .reviewShell .simNote {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+  .reviewShell .simPanel :global(.btn) {
+    min-height: 34px;
+    padding: 6px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  /* ── Share screen ─────────────────────────────────────────────── */
+  .share {
+    gap: 0;
+  }
+  .share :global(.page-head) {
+    gap: 5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+  }
+  .share :global(.page-head h1) {
+    font-size: clamp(32px, 10vw, 42px);
+  }
+  .share :global(.page-head__note) {
+    display: none;
+  }
+  .shareCardFrame {
+    margin: 6px 0 8px;
+  }
+  .shareSvg {
+    max-width: min(62vw, 236px);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .sharePanel {
+    margin-top: 0;
+    padding: 8px;
+    gap: 5px;
+  }
+  .shareCaptionLabel {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .shareCaption {
+    max-height: 48px;
+    overflow: auto;
+    font-size: 11px;
+    line-height: 1.25;
+    padding: 6px 8px;
+    border-radius: var(--r-2);
+  }
+  .sharePanel .resultsActions {
+    gap: 4px;
+  }
+  .sharePanel :global(.btn) {
+    min-height: 34px;
+    padding: 6px 8px;
+    border-radius: var(--r-2);
+    font-size: 11px;
+  }
+  .shareIntentGroup {
+    margin-top: 2px;
+    gap: 4px;
+  }
+  .shareIntentLabel {
+    font-size: 9px;
+  }
+  .shareIntentRow {
+    gap: 4px;
+  }
+  .shareIntentButton {
+    font-size: 10px;
+    padding-inline: 6px;
+  }
+  .shareHint {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  /* ── GK warning slim variant ──────────────────────────────────── */
+  .gkWarnPanel {
+    padding: 8px 10px;
+  }
+  .gkWarn {
+    font-size: var(--t-xs);
+    gap: 6px;
+  }
+
+  /* ── Player candidate list ────────────────────────────────────── */
+  .controls {
+    gap: 6px;
+  }
+  .searchInput {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: var(--r-2);
+  }
+  .filterRow {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .segmented {
+    gap: 2px;
+  }
+  .seg,
+  .segActive {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .sortLabel {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .sortSelect {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  /* ws-ux/mobile-polish-1: candidate-row density vs tap-target.
+     The v3 pass cut .candRowLine to 38px for density; that is below the
+     44px minimum tap height, and these rows are the most-tapped list in
+     the game. 44px is the floor — density comes from the trimmed chrome
+     around the list instead. */
+  .candList {
+    gap: 3px;
+  }
+  .candRow {
+    padding: 4px 6px;
+    gap: 4px;
+    border-radius: var(--r-2);
+  }
+  .candRowLine {
+    gap: 6px;
+    min-height: 44px;
+    padding: 3px 6px;
+  }
+  .candRowFlag {
+    min-width: 26px;
+    height: 22px;
+    padding: 0 4px;
+    font-size: 9px;
+  }
+  .candRowName {
+    font-size: 12.5px;
+    line-height: 1.2;
+  }
+  .candRowSub {
+    font-size: 9.5px;
+    line-height: 1.2;
+  }
+  .candRowOvr b {
+    font-size: 16px;
+  }
+  .candRowOvr i {
+    font-size: 8px;
+  }
+  .candRowBars {
+    gap: 2px;
+  }
+  .candRowBars i {
+    width: 3px;
+  }
+  .candRowCov {
+    font-size: 10px;
+  }
+  .candRowChevron {
+    font-size: 11px;
+  }
+  /* Expanded detail panel stays useful but loses its bulk. */
+  .candDetail {
+    gap: 6px;
+    padding-top: 6px;
+  }
+  .candBadgeRow {
+    gap: 4px;
+  }
+  .channels {
+    gap: 4px;
+  }
+  .candStats {
+    gap: 6px;
+    font-size: var(--t-xs);
+  }
+  .candAwards {
+    gap: 4px;
+  }
+
+  /* ── Sticky lock-pick CTA ─────────────────────────────────────────
+     Layout is column (helper line above, actions below) from the base
+     rules; here we only trim chrome. The primary stays ≥52px tall —
+     never compact the most-pressed button in the game. */
+  .lockBar {
+    gap: 5px;
+    /* Keep the ≥12px gesture-zone clearance even in the compact tier. */
+    padding: 7px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .lockInfo {
+    font-size: 12px;
+  }
+  .lockHint {
+    font-size: 10px;
+  }
+  .lockError {
+    font-size: 10px;
+  }
+  .lockActions {
+    gap: 6px;
+  }
+  .compatPill {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 6px;
+  }
+
+  /* ── Bottom-sheet slot picker ─────────────────────────────────── */
+  .sheet {
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+  }
+  .sheetTitle {
+    font-size: 15px;
+  }
+  .sheetGrid {
+    gap: 6px;
+  }
+  .sheetSlot {
+    padding: 8px 4px;
+    min-height: 54px;
+  }
+  .sheetSlotPos {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  /* ws-ux/mobile-compact-v3: extra-tight overrides for very narrow
+     phones (Galaxy Fold / 360px windows). Keep the formation grid
+     2-column down to 360 - the 1-col fallback increased scrolling and
+     undid the v2 compaction. .formationGrid only collapses below 320px
+     (the actual unusable width). */
+  .draftShell,
+  .reviewShell {
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    min-height: calc(100svh - 68px);
+    gap: 6px;
+  }
+  .candRowLine {
+    min-height: 44px; /* tap-target floor, even on Fold-width screens */
+    padding: 2px 5px;
+  }
+  .candRowFlag {
+    min-width: 24px;
+    height: 20px;
+  }
+  .candRowName {
+    font-size: 12px;
+  }
+  .candRowSub {
+    font-size: 9px;
+  }
+  .spinResultName {
+    font-size: clamp(20px, 6vw, 26px);
+  }
+  .spinPickBadge {
+    width: 44px;
+    height: 44px;
+  }
+  .spinPickNum {
+    font-size: 16px;
+  }
+  .spinTileValue {
+    font-size: 14px;
+  }
+  .candRowName {
+    font-size: 12px;
+  }
+  .candRowSub {
+    font-size: 9px;
+  }
+}
+
+/* ─── ENGINE-V2 E-2 — Manager flavor traits (display-only chips) ─────────── */
+
+.managerTraits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.managerTraitChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+  background: var(--bg-700);
+  border: 1px solid var(--line-2);
+  /* These chips are FLAVOR only — never style them with gold (reserved for
+     rare) or with the OVR/rating palette. Neutral slate by design. */
+}
+
+/* ─── ENGINE-V2 E-2 — Rare-pick gold accent (additive, reduced-motion safe) ─ */
+
+.spinRevealPanelRare,
+.spinStage.spinRare {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gold) 35%, transparent),
+    0 0 28px -8px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+
+.rareMoment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 8px auto 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 10%, var(--bg-800));
+  color: var(--ink-1);
+  animation: rarePulse 1800ms ease-in-out infinite alternate;
+}
+
+.rareMomentTitle {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.rareMomentProbability {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+
+/* Rare candidate marker (ws-ux/mobile-polish-2): an inline gold chip beside
+   the name, replacing the old full-width gold top band. One accent axis per
+   edge — the left stripe stays provenance-only, gold marks the pick/win
+   moment at the moment site (chip here, ring on the selected card, glow on
+   the spin stage). */
+.candRareTag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  vertical-align: 1px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+
+/* Rating-basis chip — marks a Current-basis run on the squad/card surfaces.
+   CONFIG, not a rating: a neutral ember hue, deliberately NOT one of the
+   provenance hues (cyan/periwinkle/orange/gold) so it never reads as a rating
+   tier or legend. Shown only when the run basis is `current`; Career runs are
+   chip-free. `flex: 0 0 auto` so it never pressures the row width. */
+.basisChip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ember);
+  border: 1px solid color-mix(in srgb, var(--ember) 55%, transparent);
+  background: color-mix(in srgb, var(--ember) 12%, transparent);
+}
+
+@keyframes rarePulse {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 25%, transparent);
+  }
+  to {
+    box-shadow: 0 0 18px 2px color-mix(in srgb, var(--gold) 35%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rareMoment {
+    animation: none;
+  }
+}
+
+/* ── Memory (hidden) mode ───────────────────────────────────────────────── */
+
+/* Inline note shown on the draft + review screens while the blind is on. */
+.memoryModeNote {
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  color: var(--ink-400);
+}
+
+/* Post-Simulate reveal wrapper — auto-expands around the existing squad
+   surfaces (SynergyBar / Pitch / bench / manager). The animation is pure
+   presentation; `.memoryRevealInstant` (prefers-reduced-motion) renders the
+   final state with no animation at all. */
+.memoryReveal {
+  animation: memoryRevealIn 480ms ease-out both;
+}
+
+.memoryRevealInstant {
+  animation: none;
+}
+
+@keyframes memoryRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memoryReveal {
+    animation: none;
+  }
+}
