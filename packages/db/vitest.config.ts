@@ -6,5 +6,8 @@ export default defineConfig({
     // file is missing/renamed, never pass vacuously. Matches packages/core and
     // packages/data convention.
     passWithNoTests: false,
+    // pglite runtime tests boot an in-memory Postgres and apply all committed
+    // migrations; cold CI runners can exceed Vitest's default 5s timeout.
+    testTimeout: 30_000,
   },
 });
