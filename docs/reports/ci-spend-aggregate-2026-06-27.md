@@ -60,7 +60,7 @@ The aggregate directly covers:
 - full ETL ingest/identity-QA/determinism when applicable
 - DB rollback check when applicable
 - ETL rating fast gate when applicable
-- incremental secret scan when applicable
+- incremental secret scan on every CI run
 
 Heavy realism moved out of ordinary PR churn. It runs for CI-config PRs, relevant
 `main` pushes, and the nightly heavy workflow. The realism job shards the three
@@ -75,6 +75,9 @@ relevant `main` pushes, and the nightly heavy workflow.
 contract matches the new heavy-realism schedule. Contract-only edits are included
 in the CI path detector and still run `typecheck · lint · test · build`, because
 that job owns the `check:agent-contracts` drift check.
+
+The incremental Gitleaks scan intentionally remains always-on. It is short, and
+skipping it for docs-only PRs would weaken a real security gate.
 
 `astral-sh/setup-uv` is pinned to `fac544c07dec837d0ccb6301d7b5580bf5edae39`
 (`v8.2.0`), whose `action.yml` declares `runs.using: node24`.

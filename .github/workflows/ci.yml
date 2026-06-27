@@ -32,7 +32,6 @@ jobs:
       core_data: ${{ steps.filter.outputs.core_data }}
       db: ${{ steps.filter.outputs.db }}
       etl: ${{ steps.filter.outputs.etl }}
-      source: ${{ steps.filter.outputs.source }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -75,22 +74,6 @@ jobs:
               - 'pnpm-workspace.yaml'
             etl:
               - 'etl/**'
-            source:
-              - 'apps/**'
-              - 'packages/**'
-              - 'etl/**'
-              - 'scripts/**'
-              - '.github/**'
-              - 'package.json'
-              - 'pnpm-lock.yaml'
-              - 'pnpm-workspace.yaml'
-              - 'turbo.json'
-              - 'tsconfig.base.json'
-              - 'eslint.config.mjs'
-              - '.prettierrc.json'
-              - 'AGENTS.md'
-              - 'CLAUDE.md'
-
   verify:
     name: typecheck · lint · test · build
     runs-on: ubuntu-latest
@@ -484,7 +467,6 @@ jobs:
     name: secrets · incremental scan
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.source == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
