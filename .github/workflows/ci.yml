@@ -22,9 +22,90 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: changes · path detector
+    runs-on: ubuntu-latest
+    outputs:
+      ci_config: ${{ steps.filter.outputs.ci_config }}
+      js: ${{ steps.filter.outputs.js }}
+      core_data: ${{ steps.filter.outputs.core_data }}
+      db: ${{ steps.filter.outputs.db }}
+      etl: ${{ steps.filter.outputs.etl }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect CI-affecting changes
+        id: filter
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
+        with:
+          filters: |
+            ci_config:
+              - '.github/**'
+              - 'turbo.json'
+            js:
+              - 'apps/**'
+              - 'packages/**'
+              - 'scripts/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.base.json'
+              - 'eslint.config.mjs'
+              - '.prettierrc.json'
+              - 'etl/output/**'
+            core_data:
+              - 'packages/core/**'
+              - 'packages/data/**'
+              - 'etl/output/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+            db:
+              - 'packages/db/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+            etl:
+              - 'etl/**'
+
+  static:
+    name: static · format · contracts
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+        with:
+          version: 11.5.1
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Agent contract drift check
+        run: pnpm run check:agent-contracts
+
+      - name: Format check
+        run: pnpm run format:check
+
   verify:
     name: typecheck · lint · test · build
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -70,6 +151,8 @@ jobs:
   golden:
     name: golden RNG determinism
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -111,6 +194,8 @@ jobs:
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.ci_config == 'true' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.core_data == 'true') }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -133,51 +218,133 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Asymmetric realism gate (heavy — split OFF the default test job)
-        # The N=2000 × 3-policy ensemble (~1 min) is deliberately OFF the
-        # `verify` job's `pnpm run test` to keep fast feedback fast. It is NOT
-        # dropped — it gates every PR here. The fast SYMMETRIC coherent-XI
-        # sweep (realism-modern-norms.golden.test.ts) stays on the default
-        # job. WCDRAFT_REALISM_HEAVY=1 flips realism.gate.test.ts from
-        # describe.skip to live; the Turbo task declares the var in its env so
-        # this run never shares a cache entry with the default test job.
+        # The N=2000 × 3-policy ensemble is deliberately OFF the default
+        # `verify` job's `pnpm run test` to keep fast feedback fast. It still
+        # runs for CI-config PRs, relevant main merges, and the nightly heavy
+        # workflow. Each policy shard runs in its own process on the same
+        # runner, preserving seed ranges while using available cores.
         env:
           WCDRAFT_REALISM_HEAVY: "1"
-        run: pnpm exec turbo run test:realism:heavy --filter=@wcdraft/data
+        run: |
+          set -euo pipefail
+          node packages/data/scripts/ensure-generated-artifacts.mjs
 
-  # ── Path-filter gate for the db job ──────────────────────────────────────
-  #
-  # The destructive ephemeral-branch rollback-check is heavy (forks + tears
-  # down a Neon branch on every run) and only meaningful when something in
-  # @wcdraft/db's surface changes. This gate emits run=true only when the PR
-  # diff (or push) touches packages/db, the workflow itself, the lockfile,
-  # or turbo.json (which carries the env: registrations the job depends on).
-  # Other PRs skip the db job entirely.
-  db-gate:
-    name: db · path filter
+          policies=(autoDraft strategicAutoDraft greedyOverallAutoDraft)
+          pids=()
+          for policy in "${policies[@]}"; do
+            (
+              export WCDRAFT_REALISM_POLICY="$policy"
+              pnpm --filter @wcdraft/data exec vitest run test/realism/realism.gate.test.ts
+            ) > "$RUNNER_TEMP/realism-$policy.log" 2>&1 &
+            pids+=("$!")
+          done
+
+          failed=0
+          for i in "${!policies[@]}"; do
+            policy="${policies[$i]}"
+            pid="${pids[$i]}"
+            if ! wait "$pid"; then
+              echo "::error::realism policy shard failed: $policy"
+              failed=1
+            fi
+            sed "s/^/[${policy}] /" "$RUNNER_TEMP/realism-$policy.log"
+          done
+          exit "$failed"
+
+  etl:
+    name: ingest · identity-QA · determinism
     runs-on: ubuntu-latest
-    outputs:
-      run: ${{ steps.filter.outputs.db }}
+    needs: changes
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
+    env:
+      WORLDCUP_COMMIT: f41e9437a007498bdbf3751305818101f96cb6fb
+      WCDRAFT_WORLDCUP_DIR: etl/vendor/worldcup/data-csv
+    defaults:
+      run:
+        working-directory: etl
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-      - name: Detect DB-affecting changes
-        id: filter
-        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
-          filters: |
-            db:
-              - 'packages/db/**'
-              - '.github/workflows/ci.yml'
-              - 'pnpm-lock.yaml'
-              - 'turbo.json'
+          python-version: "3.12"
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Clone pinned Fjelstul World Cup Database (CC-BY-SA 4.0)
+        run: |
+          git clone --filter=blob:none https://github.com/jfjelstul/worldcup vendor/worldcup
+          git -C vendor/worldcup checkout "$WORLDCUP_COMMIT"
+
+      - name: Assert Fjelstul checkout matches pin
+        run: |
+          actual="$(git -C vendor/worldcup rev-parse HEAD)"
+          if [ "$actual" != "$WORLDCUP_COMMIT" ]; then
+            echo "::error::Fjelstul worldcup checkout drifted: expected $WORLDCUP_COMMIT, got $actual" >&2
+            exit 1
+          fi
+
+      - name: Install ETL package (+ dev tools)
+        run: uv sync --locked --extra dev
+
+      - name: Lint (ruff)
+        run: uv run ruff check src tests
+
+      - name: Verify RSSSF supplement snapshots (sha256 vs fetch manifest)
+        run: uv run python -m wcdraft_etl.supplement.fetch --verify
+
+      - name: Run ETL pipeline
+        working-directory: ${{ github.workspace }}
+        run: uv run --project etl python -m wcdraft_etl
+
+      - name: Determinism + artifacts current (no diff after rebuild)
+        working-directory: ${{ github.workspace }}
+        run: |
+          if ! git diff --exit-code -- etl/output; then
+            echo "::error::etl/output changed after a clean rebuild — committed artifacts are stale or the build is non-deterministic. Run 'python -m wcdraft_etl' and commit." >&2
+            exit 1
+          fi
+
+      - name: Run historical rating stage
+        working-directory: ${{ github.workspace }}
+        run: uv run --project etl python -m wcdraft_etl.rating
+
+      - name: Historical rating determinism lock current
+        working-directory: ${{ github.workspace }}
+        run: |
+          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
+          if ! git diff --exit-code -- etl/output/ratings.lock.json; then
+            echo "::error::etl/output/ratings.lock.json changed after a clean rebuild — run 'python -m wcdraft_etl.rating' and commit the lockfile." >&2
+            exit 1
+          fi
+
+      - name: Run 2026 ingest (offline — pinned Wikipedia snapshots, no network)
+        working-directory: ${{ github.workspace }}
+        run: uv run --project etl python -m wcdraft_etl.ingest_2026
+
+      - name: 2026 determinism + artifacts current (no diff after rebuild)
+        working-directory: ${{ github.workspace }}
+        run: |
+          if ! git diff --exit-code -- etl/output; then
+            echo "::error::2026 etl/output changed after a clean rebuild — committed *_2026.json are stale or the build is non-deterministic. Run 'python -m wcdraft_etl.ingest_2026' and commit." >&2
+            exit 1
+          fi
+
+      - name: Identity-QA + rating + 2026 determinism tests
+        run: uv run python -m pytest -q
 
   db-rollback-check:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
     runs-on: ubuntu-latest
-    needs: db-gate
-    # A skipped db-gate emits no outputs, so this `if` stays false when
-    # package/db-affecting paths were not touched.
-    if: ${{ needs.db-gate.outputs.run == 'true' }}
+    needs: changes
+    # The destructive ephemeral-branch rollback-check is heavy (forks + tears
+    # down a Neon branch) and only meaningful when @wcdraft/db, package
+    # resolution, or CI config changes. Other PRs skip it and rely on the
+    # aggregate check to report success.
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.db == 'true' }}
     # SAFETY POSTURE (revised per independent review on PR #26):
     # This job NO LONGER takes a static DATABASE_URL_UNPOOLED secret. Instead
     # it creates its OWN ephemeral Neon branch off the primary, runs the
@@ -286,6 +453,8 @@ jobs:
   etl-rating:
     name: ETL rating · lint · golden determinism
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
     # etl/output/, so this job needs no upstream Fjelstul CSV clone. It lints the
     # rating code, runs the rating test suite, and proves byte-determinism by
@@ -300,7 +469,7 @@ jobs:
           python-version: "3.12"
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 
       - name: Install ETL package (+ dev tools)
         run: uv sync --locked --extra dev
@@ -324,6 +493,7 @@ jobs:
   gitleaks:
     name: secrets · incremental scan
     runs-on: ubuntu-latest
+    needs: changes
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -334,3 +504,61 @@ jobs:
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  aggregate:
+    name: required · aggregate gates
+    runs-on: ubuntu-latest
+    needs:
+      - changes
+      - static
+      - verify
+      - golden
+      - realism
+      - etl
+      - db-rollback-check
+      - etl-rating
+      - gitleaks
+    if: ${{ always() }}
+    steps:
+      - name: Fail if any needed gate failed or cancelled
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          STATIC_RESULT: ${{ needs.static.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+          GOLDEN_RESULT: ${{ needs.golden.result }}
+          REALISM_RESULT: ${{ needs.realism.result }}
+          ETL_RESULT: ${{ needs.etl.result }}
+          DB_RESULT: ${{ needs.db-rollback-check.result }}
+          ETL_RATING_RESULT: ${{ needs.etl-rating.result }}
+          GITLEAKS_RESULT: ${{ needs.gitleaks.result }}
+        run: |
+          set -euo pipefail
+          failed=0
+          check_result() {
+            name="$1"
+            result="$2"
+            case "$result" in
+              success|skipped)
+                echo "$name: $result"
+                ;;
+              failure|cancelled)
+                echo "::error::$name result=$result"
+                failed=1
+                ;;
+              *)
+                echo "::error::$name unexpected result=$result"
+                failed=1
+                ;;
+            esac
+          }
+
+          check_result "changes · path detector" "$CHANGES_RESULT"
+          check_result "static · format · contracts" "$STATIC_RESULT"
+          check_result "typecheck · lint · test · build" "$VERIFY_RESULT"
+          check_result "golden RNG determinism" "$GOLDEN_RESULT"
+          check_result "realism · asymmetric gate (N=2000 × 3 policies)" "$REALISM_RESULT"
+          check_result "ingest · identity-QA · determinism" "$ETL_RESULT"
+          check_result "db · ephemeral branch · apply → anon-dedupe → rollback round-trip" "$DB_RESULT"
+          check_result "ETL rating · lint · golden determinism" "$ETL_RATING_RESULT"
+          check_result "secrets · incremental scan" "$GITLEAKS_RESULT"
+          exit "$failed"

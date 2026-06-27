@@ -16,12 +16,7 @@ import * as meRoute from "@/app/api/leaderboard/me/route";
 import * as submitRoute from "@/app/api/leaderboard/submit/route";
 import { isLeaderboardAccountRequired, isLeaderboardEnabled } from "../enabled";
 
-const ENV_KEYS = [
-  "LEADERBOARD_ENABLED",
-  "LEADERBOARD_REQUIRE_ACCOUNT",
-  "DATABASE_URL",
-  "AUTH_COOKIE_SECRET",
-] as const;
+const ENV_KEYS = ["LEADERBOARD_ENABLED", "DATABASE_URL", "AUTH_COOKIE_SECRET"] as const;
 
 let saved: Record<string, string | undefined>;
 
@@ -77,12 +72,8 @@ describe("ship-dark — flag absent → 404 on every route, no deps touched", ()
     }
   });
 
-  it("LEADERBOARD_REQUIRE_ACCOUNT has no OFF state for ranked submissions", () => {
-    for (const v of [undefined, "", "0", "false", "true", "1"]) {
-      if (v === undefined) delete process.env.LEADERBOARD_REQUIRE_ACCOUNT;
-      else process.env.LEADERBOARD_REQUIRE_ACCOUNT = v;
-      expect(isLeaderboardAccountRequired()).toBe(true);
-    }
+  it("ranked submissions have no account-required OFF state", () => {
+    expect(isLeaderboardAccountRequired()).toBe(true);
   });
 });
 

@@ -72,8 +72,9 @@ any commit pushed after approval voids it — re-verify, re-pin.
    `… test:golden:leaderboard --filter=@wcdraft/web`.
 4. ETL (if touched): `cd etl && ruff check src tests && pytest -q` (use a venv; CI also
    rebuilds and diffs `etl/output`).
-5. Heavy realism (`WCDRAFT_REALISM_HEAVY=1`) gates every PR in CI — don't skip it locally
-   on engine/data changes.
+5. Heavy realism (`WCDRAFT_REALISM_HEAVY=1`) runs in CI for CI-config changes,
+   relevant `main` pushes, and the nightly heavy workflow. For engine/data changes,
+   run it locally before merge unless that exact lane already re-ran the heavy gate.
 
 ## Final report format
 

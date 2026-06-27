@@ -8,6 +8,14 @@ Last measured for merit-v4.5 recovered honest misses:
 2026-06-24 · local RED gates run on branch `ws-merit/v4.5` before merge/ship.
 Closeout report: `docs/reports/merit-v4.5-recovery-2026-06-24.md`.
 
+CI spend/branch-protection lane:
+2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
+The CI contract now uses path detection plus one required aggregate status,
+`required · aggregate gates`, instead of making individual heavy jobs required.
+Branch-protection baseline before edits required exactly
+`typecheck · lint · test · build` and `golden RNG determinism`. The lane report is
+`docs/reports/ci-spend-aggregate-2026-06-27.md`.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**
