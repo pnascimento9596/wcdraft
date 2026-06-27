@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: etl-${{ github.workflow }}-${{ github.ref }}
