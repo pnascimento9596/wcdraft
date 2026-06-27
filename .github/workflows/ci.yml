@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
+      contracts: ${{ steps.filter.outputs.contracts }}
       js: ${{ steps.filter.outputs.js }}
       core_data: ${{ steps.filter.outputs.core_data }}
       db: ${{ steps.filter.outputs.db }}
@@ -46,6 +47,9 @@ jobs:
             ci_config:
               - '.github/**'
               - 'turbo.json'
+            contracts:
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
             js:
               - 'apps/**'
               - 'packages/**'
@@ -84,12 +88,14 @@ jobs:
               - 'tsconfig.base.json'
               - 'eslint.config.mjs'
               - '.prettierrc.json'
+              - 'AGENTS.md'
+              - 'CLAUDE.md'
 
   verify:
     name: typecheck · lint · test · build
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.contracts == 'true' || needs.changes.outputs.js == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
