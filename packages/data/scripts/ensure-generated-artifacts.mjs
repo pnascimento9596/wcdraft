@@ -4,7 +4,7 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { brotliDecompressSync } from "node:zlib";
@@ -28,6 +28,9 @@ const SCENARIO_PATH = path.join(GENERATED_DIR, "scenario-2026.compact.json");
 const DRAFT_POOL_PATH = path.join(GENERATED_DIR, "draft-pool.compact.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const RETAINED_RUNTIME_DATA_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-data");
+const GENERATED_ARTIFACTS_LOCK_DIR = path.join(PACKAGE_DIR, ".generated-artifacts.lock");
+const GENERATED_ARTIFACTS_LOCK_TIMEOUT_MS = 30 * 60 * 1000;
+const GENERATED_ARTIFACTS_LOCK_SLEEP_MS = 250;
 
 const TRACKED_FINGERPRINT_PATHS = [
   "etl/output/ratings.lock.json",
@@ -46,6 +49,47 @@ function rel(filePath) {
 
 function fail(message) {
   throw new Error(`ensure-generated-artifacts: ${message}`);
+}
+
+function sleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+function acquireGeneratedArtifactsLock() {
+  const started = Date.now();
+  while (true) {
+    try {
+      mkdirSync(GENERATED_ARTIFACTS_LOCK_DIR);
+      return;
+    } catch (err) {
+      if (!err || err.code !== "EEXIST") throw err;
+
+      try {
+        const ageMs = Date.now() - statSync(GENERATED_ARTIFACTS_LOCK_DIR).mtimeMs;
+        if (ageMs > GENERATED_ARTIFACTS_LOCK_TIMEOUT_MS) {
+          rmSync(GENERATED_ARTIFACTS_LOCK_DIR, { recursive: true, force: true });
+          continue;
+        }
+      } catch (statErr) {
+        if (!statErr || statErr.code !== "ENOENT") throw statErr;
+        continue;
+      }
+
+      if (Date.now() - started > GENERATED_ARTIFACTS_LOCK_TIMEOUT_MS) {
+        fail(`timed out waiting for ${rel(GENERATED_ARTIFACTS_LOCK_DIR)}`);
+      }
+      sleep(GENERATED_ARTIFACTS_LOCK_SLEEP_MS);
+    }
+  }
+}
+
+function withGeneratedArtifactsLock(fn) {
+  acquireGeneratedArtifactsLock();
+  try {
+    return fn();
+  } finally {
+    rmSync(GENERATED_ARTIFACTS_LOCK_DIR, { recursive: true, force: true });
+  }
 }
 
 function run(command, commandArgs, options = {}) {
@@ -221,18 +265,20 @@ function checkLargeArtifactsNotTracked() {
 }
 
 try {
-  ensureRatings();
-  ensureCoreBuild({ force: INPUTS_ONLY });
-  if (!INPUTS_ONLY) ensureCompactArtifacts();
-  validateRetainedRuntimeData();
-  if (CHECK_MODE) {
-    checkFingerprintPathsTracked();
-    checkTrackedFingerprintsClean();
-    checkLargeArtifactsNotTracked();
-  }
-  process.stdout.write(
-    `ensure-generated-artifacts: ok${INPUTS_ONLY ? " (inputs only)" : ""}${CHECK_MODE ? " (check)" : ""}\n`,
-  );
+  withGeneratedArtifactsLock(() => {
+    ensureRatings();
+    ensureCoreBuild({ force: INPUTS_ONLY });
+    if (!INPUTS_ONLY) ensureCompactArtifacts();
+    validateRetainedRuntimeData();
+    if (CHECK_MODE) {
+      checkFingerprintPathsTracked();
+      checkTrackedFingerprintsClean();
+      checkLargeArtifactsNotTracked();
+    }
+    process.stdout.write(
+      `ensure-generated-artifacts: ok${INPUTS_ONLY ? " (inputs only)" : ""}${CHECK_MODE ? " (check)" : ""}\n`,
+    );
+  });
 } catch (err) {
   process.stderr.write(`${err instanceof Error ? err.message : String(err)}\n`);
   process.exit(1);

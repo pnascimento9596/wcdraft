@@ -13,6 +13,9 @@ updates:
     directory: "/apps/web"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
     groups:
       web:
         patterns:
@@ -22,6 +25,9 @@ updates:
     directory: "/packages/core"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
     groups:
       core:
         patterns:
