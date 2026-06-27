@@ -1,0 +1,97 @@
+name: Nightly heavy gates
+
+on:
+  schedule:
+    - cron: "23 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-heavy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  realism:
+    name: realism · asymmetric gate (nightly N=2000 × 3 policies)
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+        with:
+          version: 11.5.1
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Asymmetric realism gate (parallel policy shards)
+        env:
+          WCDRAFT_REALISM_HEAVY: "1"
+        run: |
+          set -euo pipefail
+          node packages/data/scripts/ensure-generated-artifacts.mjs
+
+          policies=(autoDraft strategicAutoDraft greedyOverallAutoDraft)
+          pids=()
+          for policy in "${policies[@]}"; do
+            (
+              export WCDRAFT_REALISM_POLICY="$policy"
+              pnpm --filter @wcdraft/data exec vitest run test/realism/realism.gate.test.ts
+            ) > "$RUNNER_TEMP/realism-$policy.log" 2>&1 &
+            pids+=("$!")
+          done
+
+          failed=0
+          for i in "${!policies[@]}"; do
+            policy="${policies[$i]}"
+            pid="${pids[$i]}"
+            if ! wait "$pid"; then
+              echo "::error::realism policy shard failed: $policy"
+              failed=1
+            fi
+            sed "s/^/[${policy}] /" "$RUNNER_TEMP/realism-$policy.log"
+          done
+          exit "$failed"
+
+  rating-lock-matrix:
+    name: rating lock · Python ${{ matrix.python-version }} (nightly)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Install ETL package (+ dev tools)
+        run: uv sync --locked --extra dev
+        working-directory: etl
+
+      - name: Golden determinism — ratings lockfile must be byte-stable
+        run: |
+          uv run --project etl python -m wcdraft_etl.rating
+          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
+          git diff --exit-code -- etl/output/ratings.lock.json \
+            || (echo "::error::etl/output/ratings.lock.json changed on Python ${{ matrix.python-version }}." >&2 && exit 1)

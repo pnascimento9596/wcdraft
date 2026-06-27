@@ -117,16 +117,27 @@ const SEED_PREFIX = process.env.WCDRAFT_REALISM_SEED_PREFIX ?? DEFAULT_SEED_PREF
 const GATE_MODE = process.env.WCDRAFT_REALISM_GATE === "report" ? "report" : "pass";
 
 // HEAVY-CI SPLIT
-//   This gate runs the N=2000 × 3-policy ensemble (~1 min wall on a warm
-//   runner). It is intentionally OFF the default `test` / `turbo run test`
-//   job so the fast feedback loop stays fast, and runs ONLY when
-//   `WCDRAFT_REALISM_HEAVY=1` — set by the dedicated `realism · asymmetric
-//   gate` CI job and by the `pnpm --filter @wcdraft/data test:realism:heavy`
-//   script. It is NOT dropped: the heavy job still gates every PR. The fast
-//   SYMMETRIC coherent-XI sweep (`realism-modern-norms.golden.test.ts`)
-//   remains on the default job, so default CI still exercises realism shape.
+//   This gate runs the N=2000 × 3-policy ensemble. It is intentionally OFF the
+//   default `test` / `turbo run test` job so the fast feedback loop stays fast,
+//   and runs ONLY when `WCDRAFT_REALISM_HEAVY=1` — set by the dedicated heavy
+//   workflow/job and by the `pnpm --filter @wcdraft/data test:realism:heavy`
+//   script. CI may additionally set `WCDRAFT_REALISM_POLICY` so each policy
+//   runs in a separate worker process with the same N and seed prefix.
 const HEAVY_ENABLED = process.env.WCDRAFT_REALISM_HEAVY === "1";
 const gate = HEAVY_ENABLED ? describe : describe.skip;
+
+function isDraftPolicyName(v: string): v is DraftPolicyName {
+  return (ALL_POLICIES as readonly string[]).includes(v);
+}
+
+const POLICY_FILTER_RAW = process.env.WCDRAFT_REALISM_POLICY;
+if (POLICY_FILTER_RAW !== undefined && !isDraftPolicyName(POLICY_FILTER_RAW)) {
+  throw new Error(
+    `WCDRAFT_REALISM_POLICY must be one of ${ALL_POLICIES.join(", ")}; got ${POLICY_FILTER_RAW}`,
+  );
+}
+const POLICIES_TO_RUN: readonly DraftPolicyName[] =
+  POLICY_FILTER_RAW === undefined ? ALL_POLICIES : [POLICY_FILTER_RAW];
 
 interface PolicyResult {
   measurement: RealismMeasurement;
@@ -202,31 +213,34 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
   const results = new Map<DraftPolicyName, PolicyResult>();
 
   beforeAll(() => {
-    for (const policy of ALL_POLICIES) {
+    for (const policy of POLICIES_TO_RUN) {
       const { measurement, telemetry } = runRealismEnsembleForPolicy(policy, N_RUNS, SEED_PREFIX);
       const observed = computeObserved(measurement);
       const r: PolicyResult = { measurement, telemetry, observed };
       results.set(policy, r);
       logPolicy(policy, r);
     }
-    console.log("[REALISM] strategic shape bands (locked):");
-    for (const k of SHAPE_KEYS) {
-      const b = bandFor(k);
-      const obs = results.get("strategicAutoDraft")!.observed[k];
-      const inBand = Math.abs(obs - b.center) <= b.half;
+    const strategic = results.get("strategicAutoDraft");
+    if (strategic !== undefined) {
+      console.log("[REALISM] strategic shape bands (locked):");
+      for (const k of SHAPE_KEYS) {
+        const b = bandFor(k);
+        const obs = strategic.observed[k];
+        const inBand = Math.abs(obs - b.center) <= b.half;
+        console.log(
+          `[REALISM]   ${SHAPE_DISPLAY[k].padEnd(14)} center=${fmtPct(b.center).padStart(7)} ± ${fmtPct(b.half).padStart(7)}  observed=${fmtPct(obs).padStart(7)}  ${inBand ? "✓" : "✗"}`,
+        );
+      }
       console.log(
-        `[REALISM]   ${SHAPE_DISPLAY[k].padEnd(14)} center=${fmtPct(b.center).padStart(7)} ± ${fmtPct(b.half).padStart(7)}  observed=${fmtPct(obs).padStart(7)}  ${inBand ? "✓" : "✗"}`,
+        `[REALISM] goals/game lower floor = ${GOLDEN.goals_per_game_lower_floor.lower_bound.toFixed(3)} (no upper cap)  observed=${strategic.observed.goals_per_game.toFixed(3)}`,
       );
     }
-    console.log(
-      `[REALISM] goals/game lower floor = ${GOLDEN.goals_per_game_lower_floor.lower_bound.toFixed(3)} (no upper cap)  observed=${results.get("strategicAutoDraft")!.observed.goals_per_game.toFixed(3)}`,
-    );
   }, 600_000);
 
   it("locks per-policy run counts (qualifying/matches/groups/KO) so any drift surfaces", () => {
     // Byte-identical run counts at the locked (N, seed_prefix). A run-count
     // drift here means a draft/scenario/RNG change — re-lock atomically.
-    for (const policy of ALL_POLICIES) {
+    for (const policy of POLICIES_TO_RUN) {
       const r = results.get(policy)!;
       const g = GOLDEN.policies[policy];
       if (N_RUNS !== GOLDEN.ensemble.N_runs) continue; // override mode
@@ -249,7 +263,8 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
   });
 
   it("strategicAutoDraft lands inside SHAPE bands (draw / margin≥4 / KO→ET / shootout)", () => {
-    const r = results.get("strategicAutoDraft")!;
+    const r = results.get("strategicAutoDraft");
+    if (r === undefined) return;
     for (const key of SHAPE_KEYS) {
       const { center, half } = bandFor(key);
       const obs = r.observed[key];
@@ -264,7 +279,8 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
   });
 
   it("strategicAutoDraft goals/game ≥ lower floor (one-sided; no upper cap)", () => {
-    const r = results.get("strategicAutoDraft")!;
+    const r = results.get("strategicAutoDraft");
+    if (r === undefined) return;
     const floor = GOLDEN.goals_per_game_lower_floor.lower_bound;
     const obs = r.observed.goals_per_game;
     if (GATE_MODE === "pass") {
@@ -276,7 +292,8 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
   });
 
   it("greedyOverallAutoDraft lands OUTSIDE every SHAPE band (CI guard — competent ≠ max-overall)", () => {
-    const r = results.get("greedyOverallAutoDraft")!;
+    const r = results.get("greedyOverallAutoDraft");
+    if (r === undefined) return;
     for (const key of SHAPE_KEYS) {
       const obs = r.observed[key];
       const within = inShapeBand(key, obs);
@@ -294,7 +311,8 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
     // and is intentionally NOT a user-behavior proxy. Its numbers are
     // recorded in the golden for posterity (so a regression in the
     // canonical draft surface still shows up) but are NOT asserted here.
-    const r = results.get("autoDraft")!;
+    const r = results.get("autoDraft");
+    if (r === undefined) return;
     expect(r.measurement.matches).toBeGreaterThan(0);
   });
 
@@ -303,7 +321,8 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
     // the target. If a future N override drops this below threshold the
     // gate will (correctly) red on the KO shape bands, surfacing the
     // small-N problem instead of silently widening tolerance.
-    const r = results.get("strategicAutoDraft")!;
+    const r = results.get("strategicAutoDraft");
+    if (r === undefined) return;
     const koMatches = r.measurement.knockoutMatches;
     const pKoEt = r.observed.ko_et_pct;
     const pSo = r.observed.shootout_pct;
