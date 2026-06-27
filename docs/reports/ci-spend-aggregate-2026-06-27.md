@@ -46,7 +46,8 @@ Pre-lane path filtering:
 
 ## Implemented CI contract
 
-`ci.yml` now has a tiny `changes · path detector` job and a single always-reporting
+`ci.yml` now has a tiny `changes · path detector` job, a small always-on
+`static · format · contracts` job, and a single always-reporting
 `required · aggregate gates` job. Heavy jobs are gated by detector outputs, and
 the aggregate fails on any failed/cancelled needed job while passing skipped-or-passed jobs.
 
@@ -60,6 +61,7 @@ The aggregate directly covers:
 - full ETL ingest/identity-QA/determinism when applicable
 - DB rollback check when applicable
 - ETL rating fast gate when applicable
+- format and AGENTS/CLAUDE drift checks on every CI run
 - incremental secret scan on every CI run
 
 Heavy realism moved out of ordinary PR churn. It runs for CI-config PRs, relevant
@@ -72,9 +74,9 @@ The Python 3.11/3.12/3.13 rating-lock matrix is limited to CI-config PRs,
 relevant `main` pushes, and the nightly heavy workflow.
 
 `AGENTS.md` and `CLAUDE.md` were updated in the same lane so the repo operating
-contract matches the new heavy-realism schedule. Contract-only edits are included
-in the CI path detector and still run `typecheck · lint · test · build`, because
-that job owns the `check:agent-contracts` drift check.
+contract matches the new heavy-realism schedule. Contract and formatting checks
+intentionally remain always-on through `static · format · contracts`, so
+docs-only and contract-only PRs do not bypass those old required-job protections.
 
 The incremental Gitleaks scan intentionally remains always-on. It is short, and
 skipping it for docs-only PRs would weaken a real security gate.
