@@ -71,6 +71,9 @@ unsharded package script still works.
 The Python 3.11/3.12/3.13 rating-lock matrix is limited to CI-config PRs,
 relevant `main` pushes, and the nightly heavy workflow.
 
+`AGENTS.md` was updated in the same lane so the repo operating contract matches
+the new heavy-realism schedule.
+
 `astral-sh/setup-uv` is pinned to `fac544c07dec837d0ccb6301d7b5580bf5edae39`
 (`v8.2.0`), whose `action.yml` declares `runs.using: node24`.
 
