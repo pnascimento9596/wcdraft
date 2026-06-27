@@ -29,6 +29,7 @@ jobs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
       js: ${{ steps.filter.outputs.js }}
       core_data: ${{ steps.filter.outputs.core_data }}
+      realism_inputs: ${{ steps.filter.outputs.realism_inputs }}
       db: ${{ steps.filter.outputs.db }}
       etl: ${{ steps.filter.outputs.etl }}
     steps:
@@ -63,6 +64,31 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
+            realism_inputs:
+              - 'packages/core/src/**'
+              - 'packages/core/scripts/**'
+              - 'packages/core/test/**'
+              - 'packages/core/package.json'
+              - 'packages/core/tsconfig*.json'
+              - 'packages/core/vitest.config.ts'
+              - 'packages/data/src/**'
+              - 'packages/data/scripts/build-compact-data.mjs'
+              - 'packages/data/scripts/fit-calibration.mjs'
+              - 'packages/data/scripts/regen-asym-golden.mts'
+              - 'packages/data/test/realism/**'
+              - 'packages/data/test/realism-modern-norms.golden.test.ts'
+              - 'etl/output/**'
+              - 'etl/overrides/manual-ratings-*.csv'
+              - 'etl/src/wcdraft_etl/display_curve.py'
+              - 'etl/src/wcdraft_etl/league_strength.py'
+              - 'etl/src/wcdraft_etl/manual_overrides.py'
+              - 'etl/src/wcdraft_etl/merit/**'
+              - 'etl/src/wcdraft_etl/national_strength.py'
+              - 'etl/src/wcdraft_etl/rating*.py'
+              - 'etl/src/wcdraft_etl/rating_2026*.py'
+              - 'etl/src/wcdraft_etl/rating_components.py'
+              - 'etl/src/wcdraft_etl/rating_display.py'
+              - 'etl/src/wcdraft_etl/rating_io.py'
             db:
               - 'packages/db/**'
               - 'package.json'
@@ -195,7 +221,7 @@ jobs:
     name: realism · asymmetric gate (N=2000 × 3 policies)
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.ci_config == 'true' || (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.changes.outputs.core_data == 'true') }}
+    if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.realism_inputs == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
