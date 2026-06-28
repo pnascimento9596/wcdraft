@@ -16,7 +16,9 @@ import {
   type RunTokenV2Body,
 } from "../engine/token.ts";
 
-function mintToken(seed: string, overrides: Partial<Omit<RunTokenV2Body, "v">> = {}) {
+type VestigialV2Overrides = Partial<Omit<RunTokenV2Body, "v">> & { og?: unknown };
+
+function mintToken(seed: string, overrides: VestigialV2Overrides = {}) {
   const gd = loadMarketingGameData();
   const draft = autoDraft({
     run_id: "mkt-token-parity",
@@ -34,7 +36,7 @@ function mintToken(seed: string, overrides: Partial<Omit<RunTokenV2Body, "v">> =
 }
 
 describe("marketing token decoder parity", () => {
-  it("decodes the same web t2 token body, including optional OG summary", () => {
+  it("decodes the same web t2 token body, tolerating vestigial OG summaries", () => {
     const { token } = mintToken("wcdraft:mkt:token-parity:1", {
       og: { w: 5, l: 3, mp: 8, gf: 14, ga: 9, rr: "QF", ch: false, sw: 1 },
     });

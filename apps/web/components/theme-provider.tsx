@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from "react";
 
 export type Theme = "light" | "dark";
+export const THEME_STORAGE_KEY = "wcdraft:theme";
 
 type ThemeContextValue = {
   theme: Theme;
@@ -13,35 +14,57 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-/**
- * Theme state lives in React only — deliberately NOT persisted to localStorage
- * or any other browser storage. On first mount we read the OS `prefers-color-
- * scheme` (a media query, not storage) once, so the UI matches the user's system
- * without writing anything. The choice resets on reload, which is acceptable for
- * the shell milestone.
- *
- * The provider drives the `data-theme` attribute on <html>; all themed styles in
- * globals.css key off that attribute.
- */
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+function systemTheme(): Theme {
+  if (typeof window === "undefined") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
 
-  useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(prefersDark ? "dark" : "light");
-  }, []);
+function storedTheme(): Theme | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const value = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return value === "dark" || value === "light" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+export function resolveInitialTheme(): Theme {
+  return storedTheme() ?? systemTheme();
+}
+
+/** The provider drives the `data-theme` attribute on <html>. */
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(resolveInitialTheme);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  const setTheme = useCallback((next: Theme) => {
+    setThemeState(next);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch {
+      // Non-fatal: private browsing / storage policy can reject writes.
+    }
+  }, []);
+
   const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === "dark" ? "light" : "dark"));
+    setThemeState((current) => {
+      const next = current === "dark" ? "light" : "dark";
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch {
+        // Non-fatal.
+      }
+      return next;
+    });
   }, []);
 
   const value = useMemo<ThemeContextValue>(
     () => ({ theme, setTheme, toggleTheme }),
-    [theme, toggleTheme],
+    [theme, setTheme, toggleTheme],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

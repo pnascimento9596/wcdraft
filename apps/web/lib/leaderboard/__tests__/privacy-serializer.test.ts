@@ -2,7 +2,7 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { leaderboardEntries, users } from "@wcdraft/db";
 
 import { setupTestDb } from "../../auth/__tests__/_test-db";
-import { boardPage, toApiEntryWithProfile } from "../store";
+import { boardPage, identityBoardRank, toApiEntryWithProfile } from "../store";
 
 const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());
@@ -52,5 +52,64 @@ describe("leaderboard public serializers", () => {
     expect(page.rows[0]!.display_name).toBe("public_user");
     expect(JSON.stringify(page)).not.toContain("private-user@example.com");
     expect(JSON.stringify(page)).not.toContain("email");
+  });
+
+  it("skips public board rows whose account has no username or alias", async () => {
+    const [goodUser, badUser] = await db
+      .insert(users)
+      .values([
+        { email: "good-public@example.com", username: "good_public" },
+        { email: "missing-public@example.com", username: null },
+      ])
+      .returning();
+    await db.insert(leaderboardEntries).values([
+      {
+        seasonKey: "season-privacy",
+        mode: "ranked",
+        draftMode: "classic",
+        draftOrder: "squad_first",
+        era: "all_time",
+        ratingBasis: "career",
+        userId: badUser!.id,
+        sessionId: null,
+        displayAlias: null,
+        token: "t1.missing-public",
+        verifiedScore: 99,
+        scoreBreakdown: [],
+        createdAt: new Date("2026-06-12T12:00:00.000Z"),
+      },
+      {
+        seasonKey: "season-privacy",
+        mode: "ranked",
+        draftMode: "classic",
+        draftOrder: "squad_first",
+        era: "all_time",
+        ratingBasis: "career",
+        userId: goodUser!.id,
+        sessionId: null,
+        displayAlias: null,
+        token: "t1.good-public",
+        verifiedScore: 88,
+        scoreBreakdown: [],
+        createdAt: new Date("2026-06-12T12:00:01.000Z"),
+      },
+    ]);
+
+    const query = {
+      seasonKey: "season-privacy",
+      mode: "ranked" as const,
+      draftMode: "classic" as const,
+      draftOrder: "squad_first" as const,
+      era: "all_time" as const,
+      ratingBasis: "career" as const,
+    };
+    const page = await boardPage(db, { ...query, limit: 10, cursor: null });
+    expect(page.rows.map((row) => row.display_name)).toEqual(["good_public"]);
+    await expect(
+      identityBoardRank(db, {
+        ...query,
+        identityKey: badUser!.id,
+      }),
+    ).resolves.toBeNull();
   });
 });

@@ -101,6 +101,9 @@
 .modeDesc {
   composes: modeDesc from "./game-styles/shared.module.css";
 }
+.modePreview {
+  composes: modePreview from "./game-styles/shared.module.css";
+}
 .modeFeatures {
   composes: modeFeatures from "./game-styles/shared.module.css";
 }
@@ -724,6 +727,9 @@
 .boxGoal {
   composes: boxGoal from "./game-styles/results.module.css";
 }
+.boxIcon {
+  composes: boxIcon from "./game-styles/results.module.css";
+}
 .boxDetail {
   composes: boxDetail from "./game-styles/results.module.css";
 }
@@ -732,6 +738,9 @@
 }
 .boxEvent {
   composes: boxEvent from "./game-styles/results.module.css";
+}
+.bookingsLegend {
+  composes: bookingsLegend from "./game-styles/results.module.css";
 }
 .cardYellow {
   composes: cardYellow from "./game-styles/results.module.css";
@@ -757,6 +766,27 @@
 .resultsActions {
   composes: resultsActions from "./game-styles/results.module.css";
   composes: resultsActions from "./game-styles/draft-polish.module.css";
+}
+.sharePrimary {
+  composes: sharePrimary from "./game-styles/results.module.css";
+}
+.sharePreview {
+  composes: sharePreview from "./game-styles/results.module.css";
+}
+.sharePreviewMain {
+  composes: sharePreviewMain from "./game-styles/results.module.css";
+}
+.sharePreviewHeadline {
+  composes: sharePreviewHeadline from "./game-styles/results.module.css";
+}
+.sharePreviewTeam {
+  composes: sharePreviewTeam from "./game-styles/results.module.css";
+}
+.sharePreviewStars {
+  composes: sharePreviewStars from "./game-styles/results.module.css";
+}
+.sharePreviewRecord {
+  composes: sharePreviewRecord from "./game-styles/results.module.css";
 }
 .share {
   composes: share from "./game-styles/share.module.css";
@@ -1240,6 +1270,15 @@
   composes: warnList from "./game-styles/review.module.css";
   composes: warnList from "./game-styles/draft-polish.module.css";
 }
+.warnHead {
+  composes: warnHead from "./game-styles/review.module.css";
+}
+.warnCount {
+  composes: warnCount from "./game-styles/review.module.css";
+}
+.warnExpand {
+  composes: warnExpand from "./game-styles/review.module.css";
+}
 .spinShell {
   composes: spinShell from "./game-styles/draft-spin.module.css";
   composes: spinShell from "./game-styles/draft-polish.module.css";
@@ -1593,8 +1632,17 @@
 .candRowName {
   composes: candRowName from "./game-styles/draft-polish.module.css";
 }
+.candNameText {
+  composes: candNameText from "./game-styles/draft-polish.module.css";
+}
 .candRowSub {
   composes: candRowSub from "./game-styles/draft-polish.module.css";
+}
+.candClub {
+  composes: candClub from "./game-styles/draft-polish.module.css";
+}
+.candBasisDelta {
+  composes: candBasisDelta from "./game-styles/draft-polish.module.css";
 }
 .candRowProv {
   composes: candRowProv from "./game-styles/draft-polish.module.css";

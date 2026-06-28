@@ -71,7 +71,6 @@ export {
   RunTokenError,
   decodeRunToken,
   isNewerRunTokenVersion,
-  runTokenOgSummary,
   tokenDraftConfig,
   versionsAgree,
 } from "@wcdraft/core";
@@ -120,7 +119,6 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
     throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
   });
   const preset = ERA_PRESETS[era_preset];
-  const og = buildRunTokenOgSummary(record);
   return {
     v: 2,
     rid: record.run_id,
@@ -132,7 +130,6 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
     rb: rating_basis,
     ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
     pl,
-    ...(og ? { og } : {}),
     sv: record.versions.schema_version,
     dv: record.versions.dataset_version,
     rv: record.versions.rating_version,

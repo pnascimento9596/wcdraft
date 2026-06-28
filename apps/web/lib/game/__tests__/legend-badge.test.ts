@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { DRAFT_POOL_BUNDLE, type RuntimeBasisRating, type RuntimeRating } from "@wcdraft/data";
 
 import { provenanceBadgeKind, provenanceBadgeLabel } from "@/lib/game/view-models";
 
@@ -74,8 +75,8 @@ describe("MV2-7 legend badge — flag-with-fallback", () => {
     });
   });
 
-  describe("ordering preserved (legend outranks estimate / projected / historical)", () => {
-    it("legend flag wins over an estimate basis", () => {
+  describe("ordering preserved (estimate outranks legend / projected / historical)", () => {
+    it("estimate basis wins over the legacy legend flag", () => {
       expect(
         provenanceBadgeKind({
           overall: 70,
@@ -83,7 +84,7 @@ describe("MV2-7 legend badge — flag-with-fallback", () => {
           overall_basis: "baseline_anchor_estimate",
           legend: true,
         }),
-      ).toBe("legend");
+      ).toBe("estimate");
     });
 
     it("estimate basis still surfaces when legend is absent and OVR<96", () => {
@@ -95,9 +96,45 @@ describe("MV2-7 legend badge — flag-with-fallback", () => {
         }),
       ).toBe("estimate");
     });
+
+    it("career stature estimates use the same visible estimate badge", () => {
+      expect(
+        provenanceBadgeKind({
+          overall: 70,
+          provenance: WC,
+          overall_basis: "career_stature_estimate",
+        }),
+      ).toBe("estimate");
+    });
   });
 
   it("legend badge label is stable", () => {
     expect(provenanceBadgeLabel("legend")).toBe("Legend");
+  });
+
+  it("every surfaced overall_basis has a non-empty accessible badge label", () => {
+    const ratings: Array<RuntimeRating | RuntimeBasisRating> = [
+      ...DRAFT_POOL_BUNDLE.ratings,
+      ...DRAFT_POOL_BUNDLE.ratings.map((rating) => rating.basis_ratings.current),
+    ];
+    const basisRatings = ratings.filter((rating) => rating.overall_basis !== undefined);
+
+    expect(basisRatings.length).toBeGreaterThan(0);
+    for (const rating of basisRatings) {
+      const kind = provenanceBadgeKind({
+        overall: rating.overall,
+        provenance: rating.provenance,
+        overall_basis: rating.overall_basis,
+        legend: rating.legend,
+      });
+      expect(provenanceBadgeLabel(kind).trim()).not.toBe("");
+      if (
+        rating.overall_basis === "baseline_anchor_estimate" ||
+        rating.overall_basis === "career_stature_estimate"
+      ) {
+        expect(kind).toBe("estimate");
+        expect(provenanceBadgeLabel(kind)).toBe("Estimate");
+      }
+    }
   });
 });

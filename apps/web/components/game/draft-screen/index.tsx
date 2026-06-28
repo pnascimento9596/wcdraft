@@ -39,6 +39,7 @@ import {
 } from "@/lib/game/view-models";
 import { buildSlotRevealModel } from "@/lib/game/slot-reveal";
 import { focusFirstWithin, trapTabWithin } from "@/lib/a11y/focus";
+import { LockIcon } from "@/components/icons";
 import { Pitch } from "../pitch";
 import { CandidateCard, ManagerCandidate } from "../candidate-card";
 import { SquadHeaderFlag } from "../squad-header-flag";
@@ -484,6 +485,8 @@ function DraftBoard({
 
   // Open vacant slots (engine truth).
   const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
+  const managerOnlyOpen =
+    !complete && !!spin && draft.manager_card_id === null && openSlots.length === 0;
 
   const bestSlotFor = useCallback(
     (card: PlayerCardView): string | null => {
@@ -501,13 +504,14 @@ function DraftBoard({
 
   const selectPlayer = useCallback(
     (card: PlayerCardView) => {
+      if (managerOnlyOpen) return;
       setSel({ kind: "player", card });
       // Position-first: the slot was committed before the reveal — the pick
       // can only fill the locked target.
       setSelSlot(lockedTarget ?? bestSlotFor(card));
       setTransitionError(null);
     },
-    [bestSlotFor, lockedTarget],
+    [bestSlotFor, lockedTarget, managerOnlyOpen],
   );
 
   const selectManager = useCallback((card: ManagerCardView) => {
@@ -515,6 +519,14 @@ function DraftBoard({
     setSelSlot(null);
     setTransitionError(null);
   }, []);
+
+  useEffect(() => {
+    if (!managerOnlyOpen) return;
+    setPosFilter("ALL");
+    setSortKey("name");
+    setSearch("");
+    setSelSlot(null);
+  }, [managerOnlyOpen]);
 
   const openSlotSheet = useCallback(() => {
     sheetRestoreFocusRef.current =
@@ -735,7 +747,9 @@ function DraftBoard({
                       onClick={() => handleSelectTarget(sl.slot_id)}
                     >
                       <span className={s.targetChipPos}>{sl.slot_position}</span>
-                      <span className={s.targetChipId}>{sl.slot_id}</span>
+                      <span className={s.targetChipId}>
+                        {sl.is_starter ? "Starting XI" : "Bench"}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -754,7 +768,7 @@ function DraftBoard({
                       onClick={() => handleSelectTarget(sl.slot_id)}
                     >
                       <span className={s.targetChipPos}>{sl.slot_position}</span>
-                      <span className={s.targetChipId}>{sl.slot_id}</span>
+                      <span className={s.targetChipId}>Bench</span>
                     </button>
                   ))}
                 </div>
@@ -1004,8 +1018,14 @@ function DraftBoard({
             selected={sel?.kind === "manager"}
             disabled={draft.manager_card_id !== null}
             rarePick={spin?.rare === true}
+            autoFocus={managerOnlyOpen}
             onSelect={selectManager}
           />
+        ) : null}
+        {managerOnlyOpen ? (
+          <p className={s.emptyList} role="status">
+            All player slots filled — pick the manager.
+          </p>
         ) : null}
 
         <div className={s.candList}>
@@ -1014,7 +1034,7 @@ function DraftBoard({
               key={card.card_id}
               card={card}
               selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
-              disabled={false}
+              disabled={managerOnlyOpen}
               rarePick={spin?.rare === true}
               onSelect={selectPlayer}
             />
@@ -1109,7 +1129,14 @@ function DraftBoard({
               disabled={!canLock || committing}
               onClick={handleLock}
             >
-              {committing ? "Locking…" : "Lock pick 🔒"}
+              {committing ? (
+                "Locking..."
+              ) : (
+                <>
+                  <LockIcon width={17} height={17} />
+                  <span>Lock pick</span>
+                </>
+              )}
             </button>
           )}
         </div>

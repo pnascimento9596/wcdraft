@@ -403,6 +403,10 @@
 
 .setupRowValue {
   color: var(--ink-100);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .setupRowChevron {
@@ -1204,7 +1208,7 @@
   padding: 8px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in srgb, var(--bg-900) 96%, transparent);
   border-top: 1px solid var(--line-2);
-  box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -6px 22px color-mix(in srgb, var(--ink) 40%, transparent);
   backdrop-filter: blur(8px);
   /* Kill the 350ms double-tap-zoom heuristic on the most-pressed surface in
      the game — first tap must commit immediately (iOS Safari). */
@@ -1620,7 +1624,7 @@
   border: 1px solid var(--line-1);
   border-radius: 8px;
   background: var(--bg-sunken);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.38);
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 38%, transparent);
 }
 
 .miniDot {
@@ -1678,7 +1682,7 @@
   border-style: solid;
   border-color: var(--line-1);
   background: var(--bg-sunken);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.38);
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 38%, transparent);
 }
 
 .pitch .slotSelected,
@@ -1709,7 +1713,7 @@
 .targetChip {
   border-style: solid;
   background: var(--bg-sunken);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.24);
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 24%, transparent);
 }
 
 .lockBar {

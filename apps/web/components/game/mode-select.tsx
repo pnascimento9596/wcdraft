@@ -12,6 +12,7 @@ const MODE_COPY: Record<
     index: string;
     title: string;
     desc: string;
+    preview: string;
     chips: readonly string[];
     cta: string;
     href: string;
@@ -21,6 +22,7 @@ const MODE_COPY: Record<
     index: "01",
     title: "Classic",
     desc: "Ratings, positions and stats all on the table — pure drafting skill on every rolled squad.",
+    preview: "Visible ratings · live Synergy",
     chips: ["Ratings visible", "Full stat lines", "Live Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
@@ -29,6 +31,7 @@ const MODE_COPY: Record<
     index: "02",
     title: "Memory",
     desc: "Names, flags and years stay — ratings don't. Draft on what you remember; all reveals after you simulate.",
+    preview: "Hidden ratings · post-run reveal",
     chips: ["Ratings hidden", "Names & years shown", "Same seeds"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
@@ -66,6 +69,7 @@ export function ModeSelect() {
                 <span className={s.modeName}>{item.title}</span>
               </span>
               <span className={s.modeDesc}>{item.desc}</span>
+              <span className={s.modePreview}>{item.preview}</span>
               <span className={s.modeFeatures}>
                 {item.chips.map((chip) => (
                   <span key={chip} className={s.modeFeatureChip}>

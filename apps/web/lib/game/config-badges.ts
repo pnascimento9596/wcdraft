@@ -73,7 +73,7 @@ export function draftTargetLabel(draft: DraftState, target: string): string {
   const slot = draft.squad.find((s) => s.slot_id === target);
   if (!slot) return target;
   const line = slot.is_starter ? "XI" : "Bench";
-  return `${slot.slot_position} ${line} (${slot.slot_id})`;
+  return `${slot.slot_position} ${line}`;
 }
 
 export function lockBarIdleCopy({

@@ -13,9 +13,9 @@ export default function SettingsPage() {
       <header className="page-head">
         <span className="eyebrow">Preferences</span>
         <h1 className="display">Settings</h1>
-        <p className="lede">Choose the display theme for this session.</p>
+        <p className="lede">Choose the display theme for this browser.</p>
         <p className="page-head__note">
-          Your theme choice lives in memory for this browser tab; it resets when the page reloads.
+          Without a saved choice, wcdraft follows your system theme.
         </p>
       </header>
 

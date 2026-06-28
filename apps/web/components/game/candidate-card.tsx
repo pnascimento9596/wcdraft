@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import {
   formatNullableNumber,
   formatStatValue,
@@ -116,17 +116,9 @@ export const CandidateCard = memo(function CandidateCard({
       aria-expanded={selected}
     >
       <span className={s.candRowLine}>
-        <span
-          className={`${s.candRowFlag} ${s[`flagShape_${headShape}`]!}`}
-          aria-label={card.nation_name}
-          title={card.nation_name}
-        >
-          {card.nation_code}
-        </span>
-
         <span className={s.candRowMain}>
           <span className={s.candRowName}>
-            {card.name}
+            <span className={s.candNameText}>{card.name}</span>
             {card.captain ? (
               <span className={s.candCaptain} title="Captain">
                 C
@@ -137,10 +129,17 @@ export const CandidateCard = memo(function CandidateCard({
                 Rare
               </span>
             ) : null}
+            {card.basis_delta_label ? (
+              <span className={s.candBasisDelta} title="Current rating compared with career rating">
+                {card.basis_delta_label}
+              </span>
+            ) : null}
           </span>
           <span className={s.candRowSub}>
-            {card.year} · {card.position_listed ?? card.eligible_positions[0] ?? "—"}
-            {card.club_label ? ` · ${card.club_label}` : ""}
+            <span>
+              {card.year} · {card.position_listed ?? card.eligible_positions[0] ?? "—"}
+            </span>
+            {card.club_label ? <span className={s.candClub}> · {card.club_label}</span> : null}
           </span>
         </span>
 
@@ -186,6 +185,9 @@ export const CandidateCard = memo(function CandidateCard({
               >
                 Current
               </span>
+            ) : null}
+            {card.basis_delta_label ? (
+              <span className={s.candBasisDelta}>{card.basis_delta_label}</span>
             ) : null}
             {card.shirt_number !== null ? (
               <span className={s.candShirt}>#{card.shirt_number}</span>
@@ -246,6 +248,7 @@ export const ManagerCandidate = memo(function ManagerCandidate({
   selected,
   disabled,
   rarePick = false,
+  autoFocus = false,
   onSelect,
 }: {
   manager: ManagerCardView;
@@ -253,9 +256,16 @@ export const ManagerCandidate = memo(function ManagerCandidate({
   disabled?: boolean;
   /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
   rarePick?: boolean;
+  autoFocus?: boolean;
   onSelect: (manager: ManagerCardView) => void;
 }) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const handleSelect = useCallback(() => onSelect(manager), [manager, onSelect]);
+
+  useEffect(() => {
+    if (!autoFocus || disabled) return;
+    buttonRef.current?.focus({ preventScroll: true });
+  }, [autoFocus, disabled]);
 
   const classes = [s.candRow, s.candRowManager, s.prov_manager];
   if (selected) classes.push(s.candRowSelected);
@@ -264,9 +274,11 @@ export const ManagerCandidate = memo(function ManagerCandidate({
   return (
     <button
       type="button"
+      ref={buttonRef}
       className={classes.join(" ")}
       onClick={handleSelect}
       disabled={disabled}
+      autoFocus={autoFocus}
       aria-pressed={selected}
       aria-expanded={selected}
     >
@@ -281,7 +293,7 @@ export const ManagerCandidate = memo(function ManagerCandidate({
 
         <span className={s.candRowMain}>
           <span className={s.candRowName}>
-            {manager.name}
+            <span className={s.candNameText}>{manager.name}</span>
             {rarePick ? (
               <span className={s.candRareTag} title="Rare pick — low roll probability">
                 Rare

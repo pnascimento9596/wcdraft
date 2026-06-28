@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 
 import { RUN_OG_HEIGHT, RUN_OG_WIDTH } from "./run-og-constants";
 import type { RunOgLineupSlot, RunOgModel } from "./run-og-model";
+import { RUN_OG_PALETTE as P } from "./run-og-palette";
 
 export interface RunOgImageAssets {
   markSvgDataUri: string;
@@ -73,8 +74,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
         height: RUN_OG_HEIGHT,
         display: "flex",
         position: "relative",
-        background: "#07120f",
-        color: "#f3ecd4",
+        background: P.pageBg,
+        color: P.text,
         fontFamily: "Space Grotesk",
         overflow: "hidden",
       }}
@@ -84,8 +85,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           position: "absolute",
           inset: 0,
           display: "flex",
-          background:
-            "linear-gradient(135deg, rgba(16,185,129,0.22), rgba(7,18,15,0.18) 36%, rgba(231,191,84,0.18))",
+          background: P.washGradient,
         }}
       />
       <div
@@ -96,8 +96,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           width: 726,
           height: 560,
           display: "flex",
-          border: "1px solid rgba(243,236,212,0.22)",
-          background: "rgba(5, 13, 11, 0.76)",
+          border: `1px solid ${P.frameLine}`,
+          background: P.panel,
         }}
       />
       <div
@@ -109,7 +109,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          color: "#d6c997",
+          color: P.muted,
           fontFamily: "Space Mono",
           fontSize: 16,
           letterSpacing: 0,
@@ -127,8 +127,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           width: PITCH_W,
           height: PITCH_H,
           display: "flex",
-          border: "2px solid rgba(84, 211, 159, 0.45)",
-          background: "#0b211b",
+          border: `2px solid ${P.fieldLine}`,
+          background: P.pitch,
         }}
       >
         <div
@@ -139,7 +139,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             width: PITCH_W,
             height: 2,
             display: "flex",
-            background: "rgba(84,211,159,0.26)",
+            background: P.fieldMidline,
           }}
         />
         <div
@@ -150,7 +150,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             width: 104,
             height: 104,
             display: "flex",
-            border: "2px solid rgba(84,211,159,0.24)",
+            border: `2px solid ${P.fieldLineSoft}`,
             borderRadius: 999,
           }}
         />
@@ -162,7 +162,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             width: 108,
             height: 56,
             display: "flex",
-            border: "2px solid rgba(84,211,159,0.24)",
+            border: `2px solid ${P.fieldLineSoft}`,
             borderBottom: "0",
           }}
         />
@@ -174,7 +174,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             width: 272,
             height: 86,
             display: "flex",
-            border: "2px solid rgba(84,211,159,0.24)",
+            border: `2px solid ${P.fieldLineSoft}`,
             borderTop: "0",
           }}
         />
@@ -200,7 +200,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             <div
               style={{
                 display: "flex",
-                color: "#e7bf54",
+                color: P.gold,
                 fontFamily: "Space Grotesk",
                 fontSize: 44,
                 lineHeight: 0.9,
@@ -212,7 +212,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             <div
               style={{
                 display: "flex",
-                color: "#97b7a9",
+                color: P.mutedTeal,
                 fontFamily: "Space Mono",
                 fontSize: 15,
                 textTransform: "uppercase",
@@ -227,7 +227,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           <div
             style={{
               display: "flex",
-              color: "#f7e0a0",
+              color: P.goldSoft,
               fontFamily: "Space Grotesk",
               fontSize: 42,
               lineHeight: 0.95,
@@ -239,7 +239,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           <div
             style={{
               display: "flex",
-              color: "#ffffff",
+              color: P.textStrong,
               fontFamily: "Space Grotesk",
               fontSize: 92,
               lineHeight: 0.9,
@@ -252,7 +252,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             style={{
               display: "flex",
               marginTop: 12,
-              color: "#9fd8bf",
+              color: P.aqua,
               fontFamily: "Space Mono",
               fontSize: 18,
               textTransform: "uppercase",
@@ -269,9 +269,9 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             flexDirection: "column",
             gap: 4,
             padding: "12px 14px",
-            border: "1px solid rgba(159,216,191,0.28)",
-            color: "#f3ecd4",
-            background: "rgba(159,216,191,0.07)",
+            border: `1px solid ${P.aquaSoftLine}`,
+            color: P.text,
+            background: P.aquaWash,
             fontFamily: "Space Grotesk",
             fontSize: 18,
             lineHeight: 1.18,
@@ -292,9 +292,9 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                 style={{
                   display: "flex",
                   padding: "8px 11px",
-                  border: "1px solid rgba(231,191,84,0.48)",
-                  color: "#f7e0a0",
-                  background: "rgba(231,191,84,0.08)",
+                  border: `1px solid ${P.goldLine}`,
+                  color: P.goldSoft,
+                  background: P.goldWash,
                   fontFamily: "Space Mono",
                   fontSize: 15,
                   textTransform: "uppercase",
@@ -317,7 +317,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
-                color: "#f3ecd4",
+                color: P.text,
                 fontSize: 19,
               }}
             >
@@ -327,8 +327,8 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   width: 46,
                   justifyContent: "center",
                   padding: "5px 0",
-                  border: "1px solid rgba(159,216,191,0.38)",
-                  color: "#9fd8bf",
+                  border: `1px solid ${P.aquaLine}`,
+                  color: P.aqua,
                   fontFamily: "Space Mono",
                   fontSize: 14,
                 }}
@@ -367,8 +367,8 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
         alignItems: "center",
         gap: 7,
         padding: "7px 9px",
-        border: "1px solid rgba(243,236,212,0.28)",
-        background: "rgba(3, 10, 8, 0.82)",
+        border: `1px solid ${P.chipLine}`,
+        background: P.chip,
       }}
     >
       <Shape shape={slot.shape} />
@@ -376,7 +376,7 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
         <div
           style={{
             display: "flex",
-            color: "#ffffff",
+            color: P.textStrong,
             fontFamily: "Space Grotesk",
             fontSize: 13,
             lineHeight: 1.05,
@@ -387,7 +387,7 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
         <div
           style={{
             display: "flex",
-            color: "#9fd8bf",
+            color: P.aqua,
             fontFamily: "Space Mono",
             fontSize: 10,
             lineHeight: 1.2,
@@ -410,7 +410,7 @@ function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
           height: 0,
           borderLeft: "7px solid transparent",
           borderRight: "7px solid transparent",
-          borderBottom: "14px solid #e7bf54",
+          borderBottom: `14px solid ${P.gold}`,
         }}
       />
     ) : (
@@ -418,7 +418,7 @@ function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
         style={{
           width: 13,
           height: 13,
-          background: "#e7bf54",
+          background: P.gold,
           borderRadius: shape === "circle" ? 999 : 1,
           ...(shape === "diamond" ? { transform: "rotate(45deg)" } : {}),
         }}
@@ -445,7 +445,7 @@ function SectionTitle({ children }: { children: string }) {
     <div
       style={{
         display: "flex",
-        color: "#d6c997",
+        color: P.muted,
         fontFamily: "Space Mono",
         fontSize: 15,
         textTransform: "uppercase",
@@ -463,7 +463,7 @@ function FactRow({ label, value }: { label: string; value: string }) {
         display: "flex",
         alignItems: "center",
         gap: 10,
-        color: "#f3ecd4",
+        color: P.text,
         fontSize: 19,
       }}
     >
@@ -473,8 +473,8 @@ function FactRow({ label, value }: { label: string; value: string }) {
           width: 46,
           justifyContent: "center",
           padding: "5px 0",
-          border: "1px solid rgba(159,216,191,0.38)",
-          color: "#9fd8bf",
+          border: `1px solid ${P.aquaLine}`,
+          color: P.aqua,
           fontFamily: "Space Mono",
           fontSize: 14,
         }}

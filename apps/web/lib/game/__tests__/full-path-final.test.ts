@@ -44,9 +44,9 @@ const ROUND_ORDER: readonly MatchRound[] = [
 ] as const;
 
 const ROUND_LABEL_GOLD: Record<MatchRound, string> = {
-  G1: "Group · Match 1",
-  G2: "Group · Match 2",
-  G3: "Group · Match 3",
+  G1: "Group · M1",
+  G2: "Group · M2",
+  G3: "Group · M3",
   R32: "Round of 32",
   R16: "Round of 16",
   QF: "Quarter-final",
@@ -255,9 +255,9 @@ describe("full-path Final coverage — perfect 8-0 fixture", () => {
     const cards = matchCardViews(scenario, gameData, matches);
     expect(cards.length).toBe(8);
     expect(cards.map((c) => c.round_label)).toEqual([
-      "Group · Match 1",
-      "Group · Match 2",
-      "Group · Match 3",
+      "Group · M1",
+      "Group · M2",
+      "Group · M3",
       "Round of 32",
       "Round of 16",
       "Quarter-final",
@@ -298,9 +298,9 @@ describe("full-path Final coverage — non-perfect runs do NOT trigger gold rend
     const cards = matchCardViews(scenario, gameData, matches);
     expect(cards.length).toBe(5);
     expect(cards.map((c) => c.round_label)).toEqual([
-      "Group · Match 1",
-      "Group · Match 2",
-      "Group · Match 3",
+      "Group · M1",
+      "Group · M2",
+      "Group · M3",
       "Round of 32",
       "Round of 16",
     ]);
@@ -349,9 +349,9 @@ describe("full-path Final coverage — round-ordering invariant", () => {
     // results screen.
     expect([...ROUND_ORDER]).toEqual(["G1", "G2", "G3", "R32", "R16", "QF", "SF", "F"]);
     expect(Object.values(ROUND_LABEL_GOLD)).toEqual([
-      "Group · Match 1",
-      "Group · Match 2",
-      "Group · Match 3",
+      "Group · M1",
+      "Group · M2",
+      "Group · M3",
       "Round of 32",
       "Round of 16",
       "Quarter-final",

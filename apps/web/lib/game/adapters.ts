@@ -110,6 +110,15 @@ function ratingView(r: RuntimeRating, opts?: AdapterDisplayOptions): CardRatingV
   return opts?.blindRatings ? blindCardRatingView(view) : view;
 }
 
+function ratingBasisDeltaLabel(r: RuntimeRating, opts?: AdapterDisplayOptions): string | null {
+  if (opts?.blindRatings) return null;
+  const career = r.overall;
+  const current = r.basis_ratings.current.overall;
+  if (career === null || current === null || current === career) return null;
+  const delta = current - career;
+  return `Current ${delta > 0 ? "+" : ""}${delta.toString()}`;
+}
+
 // ─── Player card lookup + view ───────────────────────────────────────────────
 
 function playerOrThrow(idx: GameDataIndexes, card_id: CardId | string): RuntimePlayerCard {
@@ -189,6 +198,7 @@ export function playerCardView(
     awards: c.awards,
     captain: c.captain,
     rating: ratingView(r, opts),
+    basis_delta_label: ratingBasisDeltaLabel(r, opts),
     stats: buildStats(c),
   };
 }

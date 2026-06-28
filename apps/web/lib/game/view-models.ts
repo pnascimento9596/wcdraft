@@ -116,6 +116,8 @@ export interface PlayerCardView {
   awards?: Award[] | null;
   captain: boolean | null;
   rating: CardRatingView;
+  /** Current-basis delta against the career card, e.g. "Current -6"; null when equal or hidden. */
+  basis_delta_label: string | null;
   /** Era-appropriate ordered stats for the candidate-card footer. */
   stats: CandidateStatView[];
 }
@@ -311,17 +313,22 @@ interface BadgeInputs {
 }
 
 /**
- * Order matters: legend > estimate > projected > historical.
+ * Order matters: estimate > legend > projected > historical.
+ *   - ESTIMATE: historical card flagged baseline_anchor_estimate or
+ *               career_stature_estimate (orange, low-certainty warning hue)
  *   - LEGEND  : source-derived `legend` flag when present, else the historical
  *               OVR≥96 heuristic (precious gold; rare and earned)
- *   - ESTIMATE: historical card flagged baseline_anchor_estimate (orange,
- *               low-certainty warning hue)
  *   - PROJECTED: 2026 projected-career provenance (periwinkle)
  *   - HISTORICAL: verified WC-performance signal (cyan, the everyday)
  */
 export function provenanceBadgeKind(r: BadgeInputs): RatingBadgeKind {
+  if (
+    r.overall_basis === "baseline_anchor_estimate" ||
+    r.overall_basis === "career_stature_estimate"
+  ) {
+    return "estimate";
+  }
   if (r.legend ?? (r.overall !== null && r.overall >= 96)) return "legend";
-  if (r.overall_basis === "baseline_anchor_estimate") return "estimate";
   if (r.provenance === "projected_career") return "projected";
   return "historical";
 }

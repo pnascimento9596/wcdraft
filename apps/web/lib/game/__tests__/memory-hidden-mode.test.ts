@@ -236,18 +236,18 @@ describe("memory mode — adapters blind ratings but keep identity", () => {
   });
 
   it("legend cards never leak gold through the blind", () => {
-    // Find a card whose OPEN badge is legend (source flag or OVR≥96).
-    let legendCardId: string | null = null;
-    for (const [cardId, r] of gameData.indexes.ratingByCardId) {
-      if (r.legend === true || (r.overall !== null && r.overall >= 96)) {
-        legendCardId = cardId;
+    // Find a card whose OPEN badge is legend after the public badge fold.
+    let open: PlayerCardView | null = null;
+    for (const [cardId] of gameData.indexes.ratingByCardId) {
+      const candidate = playerCardView(gameData.indexes, cardId);
+      if (candidate.rating.badge_kind === "legend") {
+        open = candidate;
         break;
       }
     }
-    expect(legendCardId).not.toBeNull();
-    const open = playerCardView(gameData.indexes, legendCardId!);
+    if (!open) throw new Error("expected a card with public legend badge");
     expect(open.rating.badge_kind).toBe("legend");
-    const blinded = playerCardView(gameData.indexes, legendCardId!, { blindRatings: true });
+    const blinded = playerCardView(gameData.indexes, open.card_id, { blindRatings: true });
     expect(blinded.rating.badge_kind).toBe("masked");
     expect(blinded.rating.overall).toBeNull();
   });
