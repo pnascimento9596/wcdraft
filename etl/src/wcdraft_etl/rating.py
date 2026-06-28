@@ -112,6 +112,9 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # Rating-algorithm version anchor — one of the three replay anchors in the core
 # contract. Bump on ANY change to weights, normalization, or channel mapping;
 # the golden git-diff guard will force the committed ratings.json to move with it.
+# wc-perf-6.6.0 (merit-v4.6): manual owner override display targets are
+# curve-inverted back onto the natural internal score scale before sim channels
+# materialize; display pins remain exact.
 # wc-perf-6.5.0 (merit-v4.5): conservative recovery of 46 previously-unresolved
 # merit-v4.3 owner rows. Recovered rows are folded into the same Career+Current
 # authoritative pin and canonical duplicate-average contract as v4.3; v4.4
@@ -152,7 +155,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # identically to BOTH eras. Channels/internal merit math are UNCHANGED; this is a
 # display-`overall`-only bump (the same shared curve also maps 2026 — see
 # rating_2026, which keeps its own internal-algorithm anchor proj-career-3.0.0).
-RATING_VERSION = "wc-perf-6.5.0"
+RATING_VERSION = "wc-perf-6.6.0"
 
 
 

@@ -13,12 +13,13 @@ Three audit sources are layered:
   ``target_rating`` are applied (blank = no change).
 
 Each source is validated, resolved to a canonical card, and emitted as
-match/miss artifacts. Resolved rows are applied as an authoritative internal-
-score pin. merit-v4.3 plus merit-v4.5 pin both the career ``score_0_100`` and
-the ``current_score_0_100`` to the owner target. merit-v4.4 pins CURRENT only;
-when a card is named by v4.4, that current-basis target supersedes the
-v4.3/v4.5 current pin while the career pin remains. Every other card keeps its
-base merit value.
+match/miss artifacts. Resolved rows are applied as authoritative display pins,
+then curve-inverted onto the same internal scale as natural cards before sim
+channels are materialized. merit-v4.3 plus merit-v4.5 pin both the career
+``score_0_100`` and the ``current_score_0_100`` to ``curve^-1(owner target)``.
+merit-v4.4 pins CURRENT only; when a card is named by v4.4, that current-basis
+target supersedes the v4.3/v4.5 current pin while the career pin remains. Every
+other card keeps its base merit value.
 
 Only unambiguous matches are applied. Plausible-but-non-unique rows are honest
 misses and remain visible in the unmatched artifact.
@@ -785,6 +786,34 @@ def _source_sha256_for_career_override(source_version: str) -> str:
     raise ValueError(f"unsupported career override source_version {source_version!r}")
 
 
+def _override_internal_score(target: int, output_dir: Path) -> tuple[float, bool]:
+    """Return the internal score that displays like ``target`` on the frozen curve.
+
+    The display curve is fit before manual overrides and is frozen by
+    ``display_curve.fit_unified_curve``. Targets below the global display floor
+    have no mathematical inverse; keep their display pin exact, but use the curve
+    floor internally so they do not over-power same-display natural cards.
+    """
+    from . import display_curve  # lazy: avoid import cycles
+    from .rating_display import (
+        DISPLAY_FLOOR,
+        DISPLAY_MAX,
+        _display_score,
+        _inverse_display_value,
+    )
+
+    curve = display_curve.fit_unified_curve(output_dir)
+    internal = _inverse_display_value(float(target), curve)
+    floor_clamped = target < DISPLAY_FLOOR or target > DISPLAY_MAX
+    displayed = _display_score(internal, curve)
+    if not floor_clamped and displayed != target:
+        raise ValueError(
+            "manual override display inverse drift: "
+            f"target {target}, internal {internal:.6f}, display {displayed}"
+        )
+    return internal, floor_clamped
+
+
 def apply_to_internal_rows(
     internal_rows: list[dict],
     output_dir: Path = OUTPUT_DIR,
@@ -794,8 +823,9 @@ def apply_to_internal_rows(
     Two layers, applied in order:
 
     * merit-v4.3 plus merit-v4.5 recovered rows pin BOTH the career
-      ``score_0_100`` and the current ``current_score_0_100`` to the owner value
-      (the default/Career view mechanism).
+      ``score_0_100`` and the current ``current_score_0_100`` to the inverse of
+      the owner display value on the frozen pooled display curve (the
+      default/Career view mechanism).
     * merit-v4.4 pins the CURRENT basis ONLY (``current_score_0_100``), leaving
       the career score untouched, so historical legends keep their all-time
       Career rating while the in-tournament/Current view is re-rated. On a card
@@ -811,14 +841,19 @@ def apply_to_internal_rows(
             continue
         previous_score = row["score_0_100"]
         previous_current = row["current_score_0_100"]
-        target = float(override.final_rating)
-        row["score_0_100"] = target
-        row["current_score_0_100"] = target
+        internal_target, floor_clamped = _override_internal_score(
+            override.final_rating, output_dir
+        )
+        row["score_0_100"] = internal_target
+        row["current_score_0_100"] = internal_target
         row["manual_rating_override"] = {
             "source_line": override.source_line,
             "source_sha256": _source_sha256_for_career_override(override.source_version),
             "source_version": override.source_version,
             "final_rating": override.final_rating,
+            "internal_score_0_100": round(internal_target, 6),
+            "current_internal_score_0_100": round(internal_target, 6),
+            "inverse_display_floor_clamped": floor_clamped,
             "rule": override.rule,
             "player_name": override.player_name,
             "matched_name": override.matched_name,
@@ -832,6 +867,11 @@ def apply_to_internal_rows(
                 "signal": "manual_rating_override",
                 "value": override.final_rating,
                 "weight": 1.0,
+            },
+            {
+                "signal": "manual_rating_override_internal_score",
+                "value": round(internal_target, 6),
+                "weight": 0.0,
             },
             {
                 "signal": "manual_rating_override_source_line",
@@ -856,13 +896,17 @@ def apply_to_internal_rows(
         if row is None:
             continue
         previous_current = row["current_score_0_100"]
-        target = float(override.final_rating)
-        row["current_score_0_100"] = target
+        internal_target, floor_clamped = _override_internal_score(
+            override.final_rating, output_dir
+        )
+        row["current_score_0_100"] = internal_target
         row["manual_current_override"] = {
             "source_line": override.source_line,
             "source_sha256": EXPECTED_SHA256_V44,
             "source_version": "v4.4",
             "final_rating": override.final_rating,
+            "current_internal_score_0_100": round(internal_target, 6),
+            "inverse_display_floor_clamped": floor_clamped,
             "rule": override.rule,
             "player_name": override.player_name,
             "matched_name": override.matched_name,
@@ -877,6 +921,11 @@ def apply_to_internal_rows(
             {
                 "signal": "manual_current_rating_override",
                 "value": override.final_rating,
+                "weight": 0.0,
+            },
+            {
+                "signal": "manual_current_rating_override_internal_score",
+                "value": round(internal_target, 6),
                 "weight": 0.0,
             },
             {
@@ -903,13 +952,14 @@ def manual_overall(row: dict) -> int | None:
     if not isinstance(override, dict):
         return None
     target = int(override["final_rating"])
-    score = int(round(float(row["score_0_100"])))
-    if score != target:
+    expected_score = override.get("internal_score_0_100")
+    score = float(row["score_0_100"])
+    if expected_score is not None and abs(score - float(expected_score)) > 1e-5:
         raise ValueError(
             f"manual career override drift for {row.get('card_id')}: "
-            f"source target {target}, score {score}"
+            f"source target {target}, expected internal {expected_score}, score {score:.6f}"
         )
-    return score
+    return target
 
 
 def manual_current_overall(row: dict) -> int | None:
@@ -922,13 +972,17 @@ def manual_current_overall(row: dict) -> int | None:
     if not isinstance(override, dict):
         return None
     target = int(override["final_rating"])
-    current_score = int(round(float(row.get("current_score_0_100", row["score_0_100"]))))
-    if current_score != target:
+    expected_score = override.get("current_internal_score_0_100") or override.get(
+        "internal_score_0_100"
+    )
+    current_score = float(row.get("current_score_0_100", row["score_0_100"]))
+    if expected_score is not None and abs(current_score - float(expected_score)) > 1e-5:
         raise ValueError(
             f"manual current override drift for {row.get('card_id')}: "
-            f"source target {target}, current_score {current_score}"
+            f"source target {target}, expected internal {expected_score}, "
+            f"current_score {current_score:.6f}"
         )
-    return current_score
+    return target
 
 
 def has_manual_override_components(rating_row: dict) -> bool:

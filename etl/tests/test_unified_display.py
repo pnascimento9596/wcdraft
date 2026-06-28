@@ -23,7 +23,7 @@ import json
 
 import pytest
 
-from wcdraft_etl import display_curve, rating, rating_2026
+from wcdraft_etl import display_curve, rating, rating_2026, rating_display
 
 OUT = rating.OUTPUT_DIR
 
@@ -120,6 +120,13 @@ def test_refit_is_fit_on_the_union_pool(hist_internal, proj_internal):
     assert curve.raw_floor < curve.raw_median < curve.raw_p95 < curve.raw_max
 
 
+def test_inverse_display_curve_round_trips_attainable_display_scores(curve):
+    """Manual display pins are converted back onto the natural internal scale."""
+    for target in range(rating_display.DISPLAY_FLOOR, rating_display.DISPLAY_MAX + 1):
+        internal = rating_display._inverse_display_value(target, curve)
+        assert rating_display._display_score(internal, curve) == target
+
+
 def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_internal):
     """Every emitted `overall` (historical AND 2026) equals the unified curve
     applied to that card's internal score — proof the ONE curve maps both eras."""
@@ -127,7 +134,13 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
         ir = hist_internal[r["card_id"]]
         manual = _manual_override_value(r)
         if manual is not None:
-            assert r["overall"] == manual == int(ir["score_0_100"]), r["card_id"]
+            assert r["overall"] == manual, r["card_id"]
+            if manual >= rating_display.DISPLAY_FLOOR:
+                assert rating_display._display_score(ir["score_0_100"], curve) == manual, r[
+                    "card_id"
+                ]
+            else:
+                assert ir["score_0_100"] == curve.raw_floor, r["card_id"]
             continue
         est = r["overall_basis"] == "baseline_anchor_estimate"
         assert r["overall"] == rating._display_score(
@@ -137,7 +150,13 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
         ir = proj_internal[r["card_id"]]
         manual = _manual_override_value(r)
         if manual is not None:
-            assert r["overall"] == manual == int(ir["score_0_100"]), r["card_id"]
+            assert r["overall"] == manual, r["card_id"]
+            if manual >= rating_display.DISPLAY_FLOOR:
+                assert rating_display._display_score(ir["score_0_100"], curve) == manual, r[
+                    "card_id"
+                ]
+            else:
+                assert ir["score_0_100"] == curve.raw_floor, r["card_id"]
             continue
         # 2026 never carries baseline_anchor_estimate (caps always present).
         assert r["overall"] == rating._display_score(ir["score_0_100"], curve), r[
@@ -148,10 +167,10 @@ def test_same_curve_maps_both_eras(curve, hist, proj, hist_internal, proj_intern
 def test_version_anchors(hist, proj):
     """Historical bumps to the unified display-curve version; 2026 keeps its
     internal-algorithm anchor (only the display moved onto the shared curve)."""
-    assert rating.RATING_VERSION == "wc-perf-6.5.0"
-    assert rating_2026.RATING_VERSION == "proj-career-5.5.0"
-    assert all(r["rating_version"] == "wc-perf-6.5.0" for r in hist)
-    assert all(r["rating_version"] == "proj-career-5.5.0" for r in proj)
+    assert rating.RATING_VERSION == "wc-perf-6.6.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.6.0"
+    assert all(r["rating_version"] == "wc-perf-6.6.0" for r in hist)
+    assert all(r["rating_version"] == "proj-career-5.6.0" for r in proj)
 
 
 # ─── decoupling: the curve reshapes `overall` ONLY ────────────────────────────

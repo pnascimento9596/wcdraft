@@ -255,12 +255,14 @@ def test_tournament_anchors_dropped_not_zeroed(ratings):
 
 
 def test_projected_rating_version_is_stature_reconciled(ratings):
-    # proj-career-5.5.0 = merit-v4.5: recovered v4.3 honest misses are folded
+    # proj-career-5.6.0 = merit-v4.6: owner override display pins are
+    # curve-inverted back onto the natural internal score scale before channels
+    # materialize.
     # into the Career+Current pin path; v4.4 current-only pins still supersede
     # current on overlap.
-    assert rating_2026.RATING_VERSION == "proj-career-5.5.0"
+    assert rating_2026.RATING_VERSION == "proj-career-5.6.0"
     for r in ratings:
-        assert r["rating_version"] == "proj-career-5.5.0"
+        assert r["rating_version"] == "proj-career-5.6.0"
 
 
 def test_projected_distribution_shape(ratings):

@@ -13,7 +13,7 @@ the contract that the implementation must hold:
 
 from __future__ import annotations
 
-from wcdraft_etl import manual_overrides
+from wcdraft_etl import display_curve, manual_overrides, rating_display
 
 EXPECTED_SHA256_V44 = "d51f188357d645f2ff558d8a851434ab78d7e5755136e0be189ad34cdab143a0"
 
@@ -55,6 +55,10 @@ def _row(card_id: str, career: float, current: float) -> dict:
     }
 
 
+def _expected_internal(target: int) -> float:
+    return rating_display._inverse_display_value(target, display_curve.fit_unified_curve())
+
+
 def test_apply_pins_current_only_and_leaves_career_untouched():
     v44 = manual_overrides.resolve_overrides_v44().matched_by_card_id
     v43 = manual_overrides.resolve_overrides().matched_by_card_id
@@ -79,15 +83,15 @@ def test_apply_pins_current_only_and_leaves_career_untouched():
 
     # v4.4-only: CURRENT pinned to target; CAREER score untouched.
     r = by_id[v44_card]
-    assert r["current_score_0_100"] == float(v44[v44_card].final_rating)
+    assert r["current_score_0_100"] == _expected_internal(v44[v44_card].final_rating)
     assert r["score_0_100"] == BASE_CAREER
     assert manual_overrides.manual_current_overall(r) == v44[v44_card].final_rating
     assert manual_overrides.manual_overall(r) is None  # no career pin
 
     # Overlap: CAREER = v4.3 pin; CURRENT = v4.4 target (v4.4 supersedes).
     r = by_id[overlap_card]
-    assert r["score_0_100"] == float(v43[overlap_card].final_rating)
-    assert r["current_score_0_100"] == float(v44[overlap_card].final_rating)
+    assert r["score_0_100"] == _expected_internal(v43[overlap_card].final_rating)
+    assert r["current_score_0_100"] == _expected_internal(v44[overlap_card].final_rating)
     assert manual_overrides.manual_overall(r) == v43[overlap_card].final_rating
     assert manual_overrides.manual_current_overall(r) == v44[overlap_card].final_rating
 

@@ -143,3 +143,39 @@ def _display_value(score_0_100: float, curve: DisplayCurve, *, estimate: bool = 
 
 def _display_score(score_0_100: float, curve: DisplayCurve, *, estimate: bool = False) -> int:
     return int(round(_display_value(score_0_100, curve, estimate=estimate)))
+
+
+def _inverse_display_value(display_overall: float, curve: DisplayCurve) -> float:
+    """Invert the uncapped display curve for a target display overall.
+
+    The global curve only emits the display band [DISPLAY_FLOOR, DISPLAY_MAX].
+    Targets outside that band are clamped to the nearest attainable internal
+    anchor; callers that need exact owner-authored display values below the floor
+    must still render that display value explicitly.
+    """
+    y = float(display_overall)
+    if y != y or y in (float("inf"), float("-inf")):
+        raise ValueError(f"non-finite display overall: {display_overall!r}")
+
+    if y <= DISPLAY_FLOOR:
+        return float(curve.raw_floor)
+    if y >= DISPLAY_MAX:
+        return float(curve.raw_max)
+    if y <= DISPLAY_MEDIAN:
+        span_display = DISPLAY_MEDIAN - DISPLAY_FLOOR
+        t = (y - DISPLAY_FLOOR) / span_display if span_display > 0.0 else 0.0
+        return curve.raw_floor + (curve.raw_median - curve.raw_floor) * (
+            t ** (1.0 / DISPLAY_LOW_EXPONENT)
+        )
+    if y <= DISPLAY_P95:
+        span_display = DISPLAY_P95 - DISPLAY_MEDIAN
+        t = (y - DISPLAY_MEDIAN) / span_display if span_display > 0.0 else 0.0
+        return curve.raw_median + (curve.raw_p95 - curve.raw_median) * (
+            t ** (1.0 / DISPLAY_MID_EXPONENT)
+        )
+
+    span_display = DISPLAY_MAX - DISPLAY_P95
+    t = (y - DISPLAY_P95) / span_display if span_display > 0.0 else 0.0
+    return curve.raw_p95 + (curve.raw_max - curve.raw_p95) * (
+        t ** (1.0 / DISPLAY_HIGH_EXPONENT)
+    )

@@ -49,6 +49,13 @@
 //   GROUP_OUTER_PROB 0.04 -> 0.02. Runtime stamp:
 //   `engine-2026.06.17-merit-v4.5`.
 //
+//   merit-v4.6: λ refit after manual override channels were restored to the
+//   curve-inverted internal scale instead of the owner-facing display scale.
+//   The fitter restores the lower λ floor, raises BASE/GAMMA_MID, and widens
+//   group-phase dispersion so the corrected channel pool lands in the modern
+//   WC scoreline bands before the realism re-lock. Runtime stamp:
+//   `engine-2026.06.28-merit-v4.6`.
+//
 // DETERMINISM NOTE: the engine deliberately avoids transcendental math
 // (exp/log/pow with fractional exponents) so a given seed yields byte-identical
 // output on every platform/engine. λ is a clamped LINEAR map and goal counts
@@ -90,11 +97,11 @@ import type { TeamStrength } from "../types/rating.js";
 export const LAMBDA = Object.freeze({
   /**
    * Baseline goals for an evenly-matched team (attack == opp defResist).
-   * merit-v4.3 REFIT: BASE=0.95. Owner-authored manual pins changed the
-   * projected channel pool enough that the v4.2 tuple overshot goals and
-   * margin>=4; lowering BASE re-centers the modern-WC sweep.
+   * merit-v4.6 REFIT: BASE=1.10 after curve-inverting manual override internals
+   * back onto the natural channel scale; the lower override channels otherwise
+   * made the merit-v4.5 tuple under-shoot mean goals.
    */
-  BASE: 0.95,
+  BASE: 1.1,
   /**
    * Sensitivity to the (attack − defResist) edge, per 100 channel points.
    * E-3a lifted SPREAD 4.0 -> 6.5 to unlock the `margin >= 4 ~= 4.9%` tight
@@ -104,10 +111,10 @@ export const LAMBDA = Object.freeze({
   SPREAD: 5.5,
   /**
    * Floor — even a hopeless attack still threatens occasionally. merit-v4.3
-   * raises MIN to 0.80 after the BASE/SPREAD refit; the symmetric realism
-   * and faithfulness gates lock that this remains variance, not certainty.
+   * raised MIN to 0.80 for the owner-pin channel pool; merit-v4.6 restores
+   * MIN=0.30 after the curve-inverted override channels re-balance the pool.
    */
-  MIN: 0.8,
+  MIN: 0.3,
   /** Ceiling — keeps blowouts bounded and the binomial well-defined. */
   MAX: 3.4,
   /**
@@ -124,11 +131,12 @@ export const LAMBDA = Object.freeze({
    * points). E-3a raised gamma_mid to 0.50; MV2-11b raised it to 0.60;
    * merit-v3 V7 landed at 0.80 on the extended grid; merit-v4.1 landed at
    * 1.00 after the projected objective-record display move; merit-v4.2 and
-   * merit-v4.3 land at 0.70 after the later channel-pool moves. The bounded
-   * multiplier (CONTROL_BAND_LO/HI) is unchanged so midfield STILL amplifies,
-   * never replaces, the attack/defense edge.
+   * merit-v4.3 land at 0.70 after the later channel-pool moves; merit-v4.6
+   * returns to 1.00 after override-heavy midfields moved down to the natural
+   * internal scale. The bounded multiplier (CONTROL_BAND_LO/HI) is unchanged
+   * so midfield STILL amplifies, never replaces, the attack/defense edge.
    */
-  GAMMA_MID: 0.7,
+  GAMMA_MID: 1,
   /** Lower bound of the midfield `control_for` multiplier — keeps midfield from REPLACING talent. */
   CONTROL_BAND_LO: 0.85,
   /** Upper bound of the midfield `control_for` multiplier. */
@@ -204,23 +212,24 @@ export const CHANCES = Object.freeze({
 //       (group matches include weak vs strong; KO matches are between
 //       qualifying teams) — the symmetric sweep cannot capture that.
 //
-// FIX (D1 — parity-dependent variance, phase-gated to knockouts).
+// FIX (D1 — parity-dependent variance, phase-aware dispersion).
 // Each match draws ONE deterministic ε ∈ {1−A, 1, 1+A} (a discrete 3-point
 // distribution, mean exactly 1, integer/rational arithmetic only) from
-// `structRng` BEFORE any chance is generated. The ε is APPLIED ONLY IN THE
-// KNOCKOUT PHASE (see `match.ts:simulateMatchCore`); the group phase keeps
-// pure four-channel Poisson scoring. Both sides' λ are scaled together by ε
-// in KO — preserving the favourite ordering — to lift the KO-tied rate
-// (and downstream shootout rate) onto the modern-era norms:
+// `structRng` BEFORE any chance is generated. The phase selects its tuple:
+// KO uses (OUTER_PROB, A), while group uses (GROUP_OUTER_PROB, GROUP_A).
+// Both sides' λ are scaled together by ε — preserving the favourite ordering —
+// to lift the KO-tied / shootout tail and the group high-margin tail onto the
+// modern-era norms:
 //
 //   ε = 1 − A  with probability  OUTER_PROB    → "cagey KO" (more 0-0, 1-1, more ties)
 //   ε = 1      with probability  1 − 2·OUTER_PROB
 //   ε = 1 + A  with probability  OUTER_PROB    → "open KO"  (more 3-3, 4-4, more ties)
 //
-// E[ε] = 1 → mean goals per KO match is preserved (the `LAMBDA.KO_LAMBDA_FACTOR`
-// constant does the goal-rate reduction); Var[ε] = 2·OUTER_PROB·A² is the
-// dispersion engine. The group_draw rate stays at its pure-Poisson value
-// (≈ 24.7% on the 2026 pool), independent of A / OUTER_PROB.
+// E[ε] = 1 → mean goals within each phase is preserved (the
+// `LAMBDA.KO_LAMBDA_FACTOR` constant does the KO goal-rate reduction);
+// Var[ε] = 2·outer·A² is the dispersion engine. Group dispersion is deliberately
+// milder than KO dispersion so it lifts `margin >= 4` without pushing
+// `group_draw` outside the D5-tight band.
 //
 // DETERMINISM. ε is drawn via a single `structRng.next()` call EVEN IN
 // GROUP MATCHES (the gate uses the value but always consumes the draw), so
@@ -254,13 +263,13 @@ export const LAMBDA_DISP = Object.freeze({
   A: 0.75,
   /**
    * GROUP-phase outer mass. Same shape as `OUTER_PROB` but applied to group
-   * matches. merit-v4.5 REFIT: GROUP_OUTER_PROB=0.02 (much smaller than KO's
-   * 0.20) — group_draw must stay inside the D5-tight band [22.88%, 26.52%],
-   * so the group dispersion is only frequent enough to lift `margin >= 4`
-   * into [4.12%, 5.70%] without inflating group_draw past 26.5%.
+   * matches. merit-v4.6 REFIT: GROUP_OUTER_PROB=0.14 (still below KO's 0.20)
+   * — group_draw must stay inside the D5-tight band [22.88%, 26.52%], so the
+   * group dispersion is only frequent enough to lift `margin >= 4` into
+   * [4.12%, 5.70%] without inflating group_draw past 26.5%.
    * Set to 0 to disable group dispersion.
    */
-  GROUP_OUTER_PROB: 0.02,
+  GROUP_OUTER_PROB: 0.14,
   /**
    * GROUP-phase half-width. merit-v4.3 REFIT: GROUP_A=0.40 — lower than the
    * default to drive the high-margin tail (~4.7% margin≥4) while the
