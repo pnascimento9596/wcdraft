@@ -11,7 +11,14 @@ import {
   type Locator,
   type Page,
 } from "playwright-core";
-import { autoDraft, createDraft, selectDraftTarget } from "@wcdraft/core";
+import {
+  activeSpin,
+  autoDraft,
+  createDraft,
+  isDraftComplete,
+  pickPlayer,
+  selectDraftTarget,
+} from "@wcdraft/core";
 
 import { buildGameDataFromBundles } from "../lib/game/__tests__/run-token.test-harness";
 import {
@@ -279,6 +286,68 @@ function completedRunRecord(): RunRecordV1 {
   };
 }
 
+function firstVacantSlotId(draft: ReturnType<typeof createDraft>): string | null {
+  return draft.squad.find((slot) => slot.card_id === null)?.slot_id ?? null;
+}
+
+function managerOnlyRunRecord(): RunRecordV1 {
+  for (let i = 1; i <= 2_000; i += 1) {
+    const run_id = `pw-manager-only-${i.toString()}`;
+    const parent_seed = `wcdraft:playwright:manager-only:${i.toString()}`;
+    let draft = createDraft(gameData.catalog, {
+      run_id,
+      parent_seed,
+      formation_id: "4-3-3",
+      mode: "classic",
+      team_name: "Manager Only XI",
+      dataset_version: gameData.versions.dataset_version,
+      rating_version: gameData.versions.rating_version,
+      engine_version: gameData.versions.engine_version,
+      era_preset: "all_time",
+      draft_flow: "squad_first",
+      rating_basis: "career",
+    });
+
+    for (;;) {
+      const spin = activeSpin(draft);
+      if (!spin) break;
+      const filledPlayers = draft.squad.filter((slot) => slot.card_id !== null).length;
+      if (
+        spin.index === 16 &&
+        draft.manager_card_id === null &&
+        filledPlayers === 16 &&
+        spin.rolled_manager_card_id !== null &&
+        !isDraftComplete(draft)
+      ) {
+        return {
+          record_version: RUN_RECORD_SCHEMA_VERSION,
+          run_id,
+          parent_seed,
+          created_seq: 20,
+          updated_seq: 20,
+          versions: gameData.versions,
+          draft,
+        };
+      }
+      if (spin.index >= 16) break;
+      const slotId = firstVacantSlotId(draft);
+      if (!slotId) break;
+      let picked = false;
+      for (const cardId of spin.rolled_card_ids) {
+        try {
+          draft = pickPlayer(gameData.catalog, draft, cardId, slotId);
+          picked = true;
+          break;
+        } catch {
+          // Try the next legal player candidate for this spin.
+        }
+      }
+      if (!picked) break;
+    }
+  }
+  throw new Error("could not construct a manager-only guard draft");
+}
+
 async function readRunRecords(page: Page): Promise<RunRecordV1[]> {
   return await page.evaluate((recordPrefix) => {
     return Object.keys(window.localStorage)
@@ -422,6 +491,32 @@ async function verifyReviewResultsShareFlow(browser: Browser, baseUrl: string): 
   await assertNoBrowserErrors(testCase, "review/results/share flow");
 }
 
+async function verifyManagerOnlyGuardFlow(browser: Browser, baseUrl: string): Promise<void> {
+  const seeded = managerOnlyRunRecord();
+  const testCase = await newBrowserCase(browser, { record: seeded });
+  const { page } = testCase;
+
+  await page.goto(`${baseUrl}/play/draft?run=${seeded.run_id}`, {
+    waitUntil: "domcontentloaded",
+  });
+  await page.getByRole("button", { name: "Spin" }).click();
+  await page.getByRole("button", { name: /Reveal squad/ }).click();
+  await page.getByText("All player slots filled — pick the manager.").waitFor();
+  await page.waitForFunction(() => /Manager/u.test(document.activeElement?.textContent ?? ""));
+
+  const playerButtons = page
+    .locator('section[aria-label="Candidates"]')
+    .getByRole("button")
+    .filter({ hasText: /OVR/ });
+  const count = await playerButtons.count();
+  assert(count > 0, "manager-only guard did not render disabled player candidates");
+  for (let i = 0; i < count; i += 1) {
+    assert(await playerButtons.nth(i).isDisabled(), `player candidate ${i} was not disabled`);
+  }
+
+  await assertNoBrowserErrors(testCase, "manager-only guard flow");
+}
+
 async function main(): Promise<void> {
   const server = await startNextDev();
   let browser: Browser | null = null;
@@ -431,9 +526,10 @@ async function main(): Promise<void> {
       headless: true,
     });
     await verifyPositionFirstDraftFlow(browser, server.baseUrl);
+    await verifyManagerOnlyGuardFlow(browser, server.baseUrl);
     await verifyReviewResultsShareFlow(browser, server.baseUrl);
     console.log(
-      "game-flow-playwright: ok - draft setup, position-first target, lock-pick, review simulate, results, and share",
+      "game-flow-playwright: ok - draft setup, position-first target, lock-pick, manager guard, review simulate, results, and share",
     );
   } finally {
     if (browser) await browser.close();
