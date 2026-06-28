@@ -12,7 +12,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="container site-footer__inner">
         <div className="site-footer__brand">
-          wc<span style={{ color: "var(--accent)" }}>draft</span>
+          wc<span style={{ color: "var(--footer-wordmark-accent)" }}>draft</span>
         </div>
 
         <nav aria-label="Footer">

@@ -33,6 +33,7 @@ import type {
 const IDENTITY_EXPR = sql.raw(
   "COALESCE(leaderboard_entries.user_id::text, leaderboard_entries.session_id, leaderboard_entries.id::text)",
 );
+const PUBLIC_NAME_EXPR = sql.raw("COALESCE(leaderboard_entries.display_alias, users.username)");
 
 export type BoardMode = BoardLane;
 export type BoardDraftMode = ConfigDraftMode;
@@ -180,6 +181,24 @@ function toBoardRow(r: RawBoardRow): BoardRow {
   };
 }
 
+function toBoardRowOrNull(r: RawBoardRow): BoardRow | null {
+  try {
+    return toBoardRow(r);
+  } catch {
+    console.warn("[leaderboard] skipping row with no public display name", { entryId: r.id });
+    return null;
+  }
+}
+
+function mapBoardRows(rows: readonly RawBoardRow[]): BoardRow[] {
+  const out: BoardRow[] = [];
+  for (const row of rows) {
+    const mapped = toBoardRowOrNull(row);
+    if (mapped) out.push(mapped);
+  }
+  return out;
+}
+
 /**
  * One board page. Returns up to `limit` rows plus `hasMore` (computed by
  * over-fetching one row). Ranks come from a ROW_NUMBER() window over the
@@ -198,6 +217,7 @@ export async function boardPage(
     sql`${leaderboardEntries.era} = ${q.era}`,
     sql`${leaderboardEntries.ratingBasis} = ${q.ratingBasis}`,
     sql`${leaderboardEntries.hiddenAt} IS NULL`,
+    sql`${PUBLIC_NAME_EXPR} IS NOT NULL`,
   ];
   const cursorPredicate = q.cursor
     ? sql`WHERE verified_score < ${q.cursor.score}
@@ -213,7 +233,7 @@ export async function boardPage(
              ${leaderboardEntries.draftOrder} AS draft_order,
              ${leaderboardEntries.era} AS era,
              ${leaderboardEntries.ratingBasis} AS rating_basis,
-             COALESCE(${leaderboardEntries.displayAlias}, ${users.username}) AS display_name,
+             ${PUBLIC_NAME_EXPR} AS display_name,
              ${leaderboardEntries.verifiedScore} AS verified_score,
              ${leaderboardEntries.scoreBreakdown} AS score_breakdown,
              ${leaderboardEntries.createdAt} AS created_at
@@ -235,7 +255,7 @@ export async function boardPage(
   `);
   const raw = result.rows;
   const hasMore = raw.length > q.limit;
-  return { rows: raw.slice(0, q.limit).map(toBoardRow), hasMore };
+  return { rows: mapBoardRows(raw.slice(0, q.limit)), hasMore };
 }
 
 // ─── Identity rank lookup (submit response + /me) ───────────────────────────
@@ -281,15 +301,20 @@ export async function identityBoardRank(
   }>(sql`
     WITH best AS (
       SELECT DISTINCT ON (${IDENTITY_EXPR})
-             ${IDENTITY_EXPR} AS identity, id, verified_score, created_at
+             ${IDENTITY_EXPR} AS identity,
+             ${leaderboardEntries.id} AS id,
+             ${leaderboardEntries.verifiedScore} AS verified_score,
+             ${leaderboardEntries.createdAt} AS created_at
         FROM ${leaderboardEntries}
-       WHERE season_key = ${q.seasonKey}
-         AND mode = ${q.mode}
-         AND draft_mode = ${q.draftMode}
-         AND draft_order = ${q.draftOrder}
-         AND era = ${q.era}
-         AND rating_basis = ${q.ratingBasis}
-         AND hidden_at IS NULL
+        LEFT JOIN ${users} ON ${users.id} = ${leaderboardEntries.userId}
+       WHERE ${leaderboardEntries.seasonKey} = ${q.seasonKey}
+         AND ${leaderboardEntries.mode} = ${q.mode}
+         AND ${leaderboardEntries.draftMode} = ${q.draftMode}
+         AND ${leaderboardEntries.draftOrder} = ${q.draftOrder}
+         AND ${leaderboardEntries.era} = ${q.era}
+         AND ${leaderboardEntries.ratingBasis} = ${q.ratingBasis}
+         AND ${leaderboardEntries.hiddenAt} IS NULL
+         AND ${PUBLIC_NAME_EXPR} IS NOT NULL
        ORDER BY ${IDENTITY_EXPR}, verified_score DESC, created_at ASC, id ASC
     ),
     ranked AS (

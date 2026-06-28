@@ -43,6 +43,7 @@ const origin = buildOriginRecord(gameData);
 const SECRET = "run-og-test-secret-32-bytes-minimum";
 const TRUSTED_IMAGE_CACHE = "public, max-age=31536000, immutable";
 const { db: ogRateDb, pg: ogRatePg, reset: resetOgRateDb } = await setupTestDb();
+type V2WithVestigialOg = RunTokenV2Body & { og?: unknown };
 
 afterAll(async () => ogRatePg.close());
 
@@ -221,7 +222,7 @@ function stubOgRouteFetch() {
 }
 
 describe("dynamic run OG tokens", () => {
-  it("adds a compact result summary only after a run has simulated", () => {
+  it("builds a compact result summary only after a run has simulated", () => {
     expect(buildRunTokenOgSummary(origin)).toBeNull();
     const completed = complete();
     const summary = buildRunTokenOgSummary(completed);
@@ -235,21 +236,25 @@ describe("dynamic run OG tokens", () => {
       ch: completed.simulation!.run.is_champion,
       sw: completed.simulation!.run.shootout_wins,
     });
-    expect(decodeRunToken(encodeRunToken(completed))).toMatchObject({ v: 2, og: summary });
+    const decoded = decodeRunToken(encodeRunToken(completed));
+    expect(decoded).toMatchObject({ v: 2 });
+    expect(decoded).not.toHaveProperty("og");
   });
 
-  it("rejects malformed result summaries instead of guessing", () => {
+  it("tolerates vestigial result-summary fields on older token bodies", () => {
     const completed = complete();
     const decoded = decodeV2(encodeRunToken(completed));
-    const tampered = encodeBody({ ...decoded, og: { ...decoded.og, w: 9 } });
-    expect(decodeRunToken(tampered)).toBeNull();
+    const summary = buildRunTokenOgSummary(completed)!;
+    const tampered = encodeBody({ ...decoded, og: { ...summary, w: 9 } });
+    expect(decodeRunToken(tampered)).toMatchObject({ v: 2 });
   });
 
   it("does not trust syntactically valid unsigned summaries for server-rendered OG", () => {
     const decoded = decodeV2(encodeRunToken(complete()));
-    const forgedSummary = { ...decoded.og!, w: decoded.og!.mp, l: 0, ch: false };
+    const trueSummary = buildRunTokenOgSummary(complete())!;
+    const forgedSummary = { ...trueSummary, w: trueSummary.mp, l: 0, ch: false };
     const forged = encodeBody({ ...decoded, og: forgedSummary });
-    const forgedDecoded = decodeV2(forged);
+    const forgedDecoded = decodeV2(forged) as V2WithVestigialOg;
 
     expect(forgedDecoded.og).toMatchObject(forgedSummary);
     expect(shareOgImageForRunValue(forged, null, gameData.versions)).toEqual(defaultRunOgImage());
@@ -396,7 +401,16 @@ describe("trusted run OG signing", () => {
     const completed = complete();
     const trueSummary = buildRunTokenOgSummary(completed)!;
     const body = decodeV2(encodeRunToken(completed));
-    body.og = { w: 8, l: 0, mp: 8, gf: 99, ga: 0, rr: "F", ch: true, sw: 0 };
+    (body as V2WithVestigialOg).og = {
+      w: 8,
+      l: 0,
+      mp: 8,
+      gf: 99,
+      ga: 0,
+      rr: "F",
+      ch: true,
+      sw: 0,
+    };
     const token = encodeBody(body);
     const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
     expect(verified.status).toBe("accepted");

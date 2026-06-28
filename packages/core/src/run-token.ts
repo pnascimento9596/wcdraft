@@ -68,7 +68,6 @@ export interface RunTokenV2Body {
   rb: RatingBasis;
   ef: { id: EraPresetId; min: number; max: number };
   pl: RunTokenPickV2[];
-  og?: RunTokenOgSummary;
   sv: string;
   dv: string;
   rv: string;
@@ -172,37 +171,6 @@ function isPickV2(x: unknown, positionFirst: boolean): x is RunTokenPickV2 {
   return false;
 }
 
-const MATCH_ROUNDS: ReadonlySet<MatchRound> = new Set([
-  "G1",
-  "G2",
-  "G3",
-  "R32",
-  "R16",
-  "QF",
-  "SF",
-  "F",
-]);
-
-function isNonNegativeInt(x: unknown): x is number {
-  return typeof x === "number" && Number.isInteger(x) && x >= 0;
-}
-
-function isRunTokenOgSummary(x: unknown): x is RunTokenOgSummary {
-  if (!x || typeof x !== "object") return false;
-  const o = x as Record<string, unknown>;
-  if (!isNonNegativeInt(o.w) || o.w > 8) return false;
-  if (!isNonNegativeInt(o.l) || o.l > 8) return false;
-  if (!isNonNegativeInt(o.mp) || o.mp < 3 || o.mp > 8) return false;
-  if (!isNonNegativeInt(o.gf) || o.gf > 99) return false;
-  if (!isNonNegativeInt(o.ga) || o.ga > 99) return false;
-  if (!MATCH_ROUNDS.has(o.rr as MatchRound)) return false;
-  if (typeof o.ch !== "boolean") return false;
-  if (!isNonNegativeInt(o.sw) || o.sw > o.w) return false;
-  if (o.w + o.l > o.mp) return false;
-  if (o.ch && o.rr !== "F") return false;
-  return true;
-}
-
 function isRunTokenV1Body(x: unknown): x is RunTokenV1Body {
   if (!x || typeof x !== "object") return false;
   const o = x as Record<string, unknown>;
@@ -242,7 +210,6 @@ function isRunTokenV2Body(x: unknown): x is RunTokenV2Body {
   const positionFirst = o.df === "position_first";
   if (!Array.isArray(o.pl) || o.pl.length !== 17) return false;
   for (const p of o.pl) if (!isPickV2(p, positionFirst)) return false;
-  if (o.og !== undefined && !isRunTokenOgSummary(o.og)) return false;
   if (typeof o.sv !== "string") return false;
   if (typeof o.dv !== "string") return false;
   if (typeof o.rv !== "string") return false;
@@ -289,11 +256,6 @@ export function decodeRunToken(value: string): RunTokenBody | null {
   }
   if (v === 1) return isRunTokenV1Body(parsed) ? parsed : null;
   return isRunTokenV2Body(parsed) ? parsed : null;
-}
-
-export function runTokenOgSummary(token: RunTokenBody): RunTokenOgSummary | null {
-  void token;
-  return null;
 }
 
 export function versionsAgree(token: RunTokenBody, current: RunTokenVersions): boolean {

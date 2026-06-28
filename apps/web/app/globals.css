@@ -177,6 +177,7 @@
   --accent-line: rgba(6, 112, 68, 0.42);
   --accent-strong: var(--accent-press);
   --accent-text: var(--accent);
+  --accent-on-solid: #ffffff;
 
   --gold: #765100;
   --gold-solid: #f5b62a;
@@ -206,6 +207,7 @@
   --ink-soft: var(--tx2);
   --ink-faint: var(--tx3);
   --brand-wordmark-accent: var(--accent);
+  --footer-wordmark-accent: #2ecf92;
   --field: #1f6a47;
   --field-ink: #f2ecdc;
   --grain-opacity: 0.025;
@@ -241,6 +243,7 @@
   --accent-line: rgba(46, 207, 146, 0.42);
   --accent-strong: var(--accent-press);
   --accent-text: var(--accent);
+  --accent-on-solid: #06130d;
 
   --gold: #f5b62a;
   --gold-solid: #f5b62a;
@@ -270,6 +273,7 @@
   --ink-soft: var(--tx2);
   --ink-faint: var(--tx3);
   --brand-wordmark-accent: var(--accent);
+  --footer-wordmark-accent: var(--accent);
   --field: #1f6a47;
   --field-ink: #f2ecdc;
   --grain-opacity: 0.04;
@@ -363,7 +367,7 @@ button {
 
 ::selection {
   background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--accent-on-solid);
 }
 
 /* ----------------------------------------------------------------------------
@@ -629,8 +633,10 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   flex: none;
   background: transparent;
   border: 1px solid var(--line);
@@ -1083,6 +1089,7 @@ main {
   top: 0.6rem;
   right: 0.9rem;
 }
+.step h2,
 .step h3 {
   font-size: 1.35rem;
   margin-bottom: 0.5rem;
@@ -1190,7 +1197,7 @@ main {
 }
 .segmented button[aria-pressed="true"] {
   background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--accent-on-solid);
 }
 
 /* Contact cards */

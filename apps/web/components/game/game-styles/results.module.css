@@ -341,6 +341,9 @@
   padding-bottom: 0.25rem;
 }
 .boxGoal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.9rem;
 }
 .boxDetail {
@@ -366,18 +369,42 @@
   font-size: 0.82rem;
   color: var(--ink-soft);
 }
+.boxIcon {
+  flex: none;
+  color: var(--accent-solid);
+}
+.bookingsLegend {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-300);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
 .cardYellow,
 .cardRed {
-  width: 0.6rem;
-  height: 0.8rem;
+  width: 0.78rem;
+  height: 1rem;
   border-radius: 2px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1;
 }
 .cardYellow {
   background: var(--gold);
 }
 .cardRed {
   background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .seedPanel {
@@ -414,6 +441,65 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
+}
+.sharePrimary {
+  justify-content: center;
+  min-width: 7rem;
+}
+.sharePreview {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 76px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-sunken);
+}
+.sharePreviewMain {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.sharePreviewHeadline {
+  color: var(--gold);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+.sharePreviewTeam {
+  overflow: hidden;
+  color: var(--ink-100);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sharePreviewStars {
+  overflow: hidden;
+  color: var(--ink-300);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sharePreviewRecord {
+  display: grid;
+  place-items: center;
+  min-width: 64px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+.sharePreviewRecord b {
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 1.45rem;
+}
+.sharePreviewRecord span {
+  color: var(--ink-400);
+  font-size: 0.62rem;
 }
 
 /* ── Broadcast tactics results overrides ───────────────────────────────── */

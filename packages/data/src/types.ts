@@ -454,7 +454,7 @@ export interface RuntimeDataManifest {
     baseline_anchor_estimate: number;
     /** Cards flagged `overall_basis === "career_stature_estimate"` (MV2-4.1 basis tag). */
     career_stature_estimate: number;
-    /** Ratings carrying `legend: true` (merit-v3 V6 census) — 270 expected. */
+    /** Ratings carrying `legend: true` (merit-v3 V6 census) — 295 expected. */
     legend: number;
     /** Basis-specific census locks for runtime-data-2.0.0. */
     rating_basis: {

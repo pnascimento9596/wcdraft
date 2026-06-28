@@ -384,7 +384,16 @@
   font-size: 15px;
   line-height: 1.1;
   letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.candNameText {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -392,6 +401,8 @@
   font-family: var(--f-mono);
   font-size: 10px;
   color: var(--ink-400);
+  display: flex;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -420,8 +431,8 @@
 }
 .candRowShape {
   flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
+  width: 12px;
+  height: 12px;
   background: var(--ink-300);
 }
 .shapeDot_square {
@@ -431,9 +442,9 @@
   background: transparent;
   width: 0;
   height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 9px solid var(--ink-300);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 12px solid var(--ink-300);
 }
 .shapeDot_diamond {
   border-radius: 1px;
@@ -533,7 +544,7 @@
   border-radius: 3px;
   border: 1px solid var(--line-2);
   background: var(--bg-900);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 35%, transparent);
 }
 .squadHeaderFlagFallback {
   flex: 0 0 auto;
@@ -1205,8 +1216,8 @@
     white-space: nowrap;
   }
   .reviewHead .teamNameInput {
-    min-height: 34px;
-    padding: 5px 8px;
+    min-height: 44px;
+    padding: 7px 8px;
     font-size: 18px;
   }
   .reviewShell > .panel {
@@ -1333,7 +1344,7 @@
     text-align: left;
   }
   .reviewShell .warningsPanel {
-    max-height: 58px;
+    max-height: 96px;
     overflow: auto;
     padding: 6px 8px;
   }
@@ -1903,6 +1914,10 @@
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
 }
 
 .candRowSub {
@@ -1911,6 +1926,35 @@
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.01em;
+  display: flex;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.candClub {
+  display: inline-block;
+  min-width: 10ch;
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.candBasisDelta {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: 18px;
+  margin-left: 6px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-750);
+  color: var(--ink-300);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1;
 }
 
 .candRowProv {
@@ -1956,7 +2000,18 @@
 }
 
 .candRowShape {
+  width: 12px;
+  height: 12px;
   background: var(--ink-300);
+}
+
+.shapeDot_triangle {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 12px solid var(--ink-300);
 }
 
 .candRowBars {
@@ -2030,6 +2085,8 @@
 
 .seg,
 .segActive {
+  min-height: 44px;
+  padding: 0 12px;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -2077,7 +2134,7 @@
 .synergyBarTrack {
   height: 7px;
   background: var(--bg-sunken);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.38);
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--ink) 38%, transparent);
 }
 
 .synergyBarFill {

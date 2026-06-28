@@ -66,6 +66,7 @@ function filledStarterViews(
           badge_label: "Historical",
           basis: "career",
         },
+        basis_delta_label: null,
         stats: [],
       },
     };

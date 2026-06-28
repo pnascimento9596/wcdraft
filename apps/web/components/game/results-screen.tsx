@@ -33,9 +33,11 @@ import {
   type RunSummaryView,
   type TopScorerView,
 } from "@/lib/game/results-adapters";
+import { buildShareView, type ShareView } from "@/lib/game/share-adapters";
 import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
+import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
 import s from "./game.module.css";
@@ -301,6 +303,10 @@ function ResultsBody({
       typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
     return replayBadges.length > 0 ? replayBadges : configBadgesFromRecordToken(record);
   }, [linkRunValue, record]);
+  const sharePreview = useMemo(
+    () => buildShareView(gameData, record, scenario),
+    [gameData, record, scenario],
+  );
 
   return (
     <div className={s.results}>
@@ -394,6 +400,7 @@ function ResultsBody({
           <code className={s.seedCode}>{summary.seed}</code>
           <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
         </div>
+        {sharePreview ? <SharePreview view={sharePreview} /> : null}
         {/*
           Action hierarchy (ws-results/history-share):
             - PRIMARY: Draft Again — the only forward action. Always starts a
@@ -404,9 +411,9 @@ function ResultsBody({
         */}
         <div className={s.resultsActions}>
           <Link href={draftHref(null)} className="btn btn--primary">
-            Draft Again →
+            Draft Again
           </Link>
-          <Link href={shareHref(linkRunValue)} className="btn btn--ghost">
+          <Link href={shareHref(linkRunValue)} className={`btn btn--primary ${s.sharePrimary}`}>
             Share
           </Link>
           <Link href={historyHref()} className="btn btn--ghost">
@@ -414,6 +421,28 @@ function ResultsBody({
           </Link>
         </div>
       </section>
+    </div>
+  );
+}
+
+function SharePreview({ view }: { view: ShareView }) {
+  const starLine =
+    view.stars.length > 0
+      ? view.stars.map((star) => `${star.nation_code} ${star.name}`).join(" · ")
+      : view.manager
+        ? `${view.manager.nation_code} ${view.manager.name}`
+        : view.formation_name;
+  return (
+    <div className={s.sharePreview} aria-label="Share card preview">
+      <div className={s.sharePreviewMain}>
+        <span className={s.sharePreviewHeadline}>{view.headline}</span>
+        <span className={s.sharePreviewTeam}>{view.team_name}</span>
+        <span className={s.sharePreviewStars}>{starLine}</span>
+      </div>
+      <div className={s.sharePreviewRecord}>
+        <b>{view.display_record}</b>
+        <span>W-L</span>
+      </div>
     </div>
   );
 }
@@ -506,7 +535,8 @@ function MatchListItem({
             {box.userGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
             {box.userGoals.map((g, i) => (
               <span key={`u${i}`} className={s.boxGoal}>
-                ⚽ {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+                <GoalIcon className={s.boxIcon} width={16} height={16} />
+                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
                 {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
               </span>
             ))}
@@ -516,7 +546,8 @@ function MatchListItem({
             {box.oppGoals.length === 0 && <span className={s.boxNone}>No goals</span>}
             {box.oppGoals.map((g, i) => (
               <span key={`o${i}`} className={s.boxGoal}>
-                ⚽ {g.name} {g.minute}&rsquo;{periodTag(g.period)}
+                <GoalIcon className={s.boxIcon} width={16} height={16} />
+                {g.name} {g.minute}&rsquo;{periodTag(g.period)}
                 {g.detail && <span className={s.boxDetail}> · {g.detail}</span>}
               </span>
             ))}
@@ -524,23 +555,28 @@ function MatchListItem({
 
           {(box.cards.length > 0 || box.subs.length > 0 || box.injuries.length > 0) && (
             <div className={s.boxEvents}>
+              {box.cards.length > 0 ? <span className={s.bookingsLegend}>Bookings</span> : null}
               {box.cards.map((c, i) => (
                 <span key={`c${i}`} className={s.boxEvent}>
                   <span
                     className={c.card === "red" ? s.cardRed : s.cardYellow}
-                    aria-hidden="true"
-                  />
+                    aria-label={c.card === "red" ? "Red card" : "Yellow card"}
+                  >
+                    {c.card === "red" ? "R" : "Y"}
+                  </span>
                   {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
                 </span>
               ))}
               {box.subs.map((sub, i) => (
                 <span key={`s${i}`} className={s.boxEvent}>
-                  🔁 {sub.name} for {sub.off} {sub.minute}&rsquo;
+                  <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
+                  {sub.name} for {sub.off} {sub.minute}&rsquo;
                 </span>
               ))}
               {box.injuries.map((inj, i) => (
                 <span key={`i${i}`} className={s.boxEvent}>
-                  🩹 {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
+                  <InjuryIcon className={s.boxIcon} width={16} height={16} />
+                  {inj.name} {inj.minute}&rsquo;{inj.ending ? " (out of tournament)" : ""}
                 </span>
               ))}
             </div>

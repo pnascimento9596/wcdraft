@@ -220,7 +220,13 @@ function isAllowedBestEffortFailure(pathname: string): boolean {
   return pathname === "/api/auth/csrf" || pathname === "/api/runs" || pathname === "/api/og/sign";
 }
 
-function firstPositionFirstTarget(): string {
+interface PositionFirstTarget {
+  slotId: string;
+  label: string;
+  group: "Starting XI" | "Bench";
+}
+
+function firstPositionFirstTarget(): PositionFirstTarget {
   const draft = createDraft(gameData.catalog, {
     run_id: "run-v1-1",
     parent_seed: "wcdraft:run:v1:run-v1-1:4-3-3",
@@ -234,11 +240,11 @@ function firstPositionFirstTarget(): string {
     draft_flow: "position_first",
     rating_basis: "career",
   });
-  const starterTargets = draft.squad.filter((slot) => slot.is_starter).map((slot) => slot.slot_id);
+  const starterTargets = draft.squad.filter((slot) => slot.is_starter);
   for (const target of starterTargets) {
     try {
-      selectDraftTarget(gameData.catalog, draft, target);
-      return target;
+      selectDraftTarget(gameData.catalog, draft, target.slot_id);
+      return { slotId: target.slot_id, label: target.slot_position, group: "Starting XI" };
     } catch {
       // Try the next visible starter slot; the UI surfaces the same dead-end.
     }
@@ -339,7 +345,8 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   const targetButton = page
     .locator('section[aria-label="Choose your target"]')
     .getByRole("button")
-    .filter({ hasText: target })
+    .filter({ hasText: target.label })
+    .filter({ hasText: target.group })
     .first();
   await targetButton.click();
   await page.getByRole("button", { name: "Spin" }).waitFor();
@@ -355,8 +362,8 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
     "draft flow was not persisted as position_first",
   );
   assert(
-    record.draft.spins[0]?.target_slot_id === target,
-    `first spin target was ${record.draft.spins[0]?.target_slot_id}, expected ${target}`,
+    record.draft.spins[0]?.target_slot_id === target.slotId,
+    `first spin target was ${record.draft.spins[0]?.target_slot_id}, expected ${target.slotId}`,
   );
   assert(record.draft.spins[0]?.status === "pending", "target commit did not materialize the spin");
 
@@ -380,7 +387,7 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
         rec?.draft?.spins?.[0]?.assigned_slot_id === expectedTarget
       );
     },
-    [RUN_RECORD_PREFIX, target],
+    [RUN_RECORD_PREFIX, target.slotId],
     { timeout: 15_000 },
   );
 

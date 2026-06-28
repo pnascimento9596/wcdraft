@@ -41,8 +41,8 @@ export const BOARD_DRAFT_ORDERS: readonly { key: BoardDraftOrder; label: string 
 
 export const BOARD_ERAS: readonly { key: BoardEra; label: string }[] = Object.freeze([
   { key: "all_time", label: "All-time" },
-  { key: "post_2000", label: "Post-2000" },
-  { key: "post_2010", label: "Post-2010" },
+  { key: "post_2000", label: "2002-2026" },
+  { key: "post_2010", label: "2014-2026" },
   { key: "modern", label: "Modern" },
 ]);
 

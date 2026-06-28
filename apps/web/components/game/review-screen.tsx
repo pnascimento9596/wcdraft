@@ -25,7 +25,7 @@ import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { loadScenarioBundle } from "@/lib/game/scenario-data";
 import { mirrorRunToServer } from "@/lib/game/save-mirror";
 import { runSimulation } from "@/lib/game/simulate";
-import { formatNullableNumber } from "@/lib/game/view-models";
+import { formatNullableNumber, type PitchSlotView } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
 import { ManagerSlot } from "./manager-slot";
 import { MiniNationFlag } from "./mini-nation-flag";
@@ -183,6 +183,7 @@ function ReviewBoard({
   const draft = record.draft;
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
   const validation = useMemo(() => validateSquad(draft), [draft]);
+  const [warningsExpanded, setWarningsExpanded] = useState(false);
 
   // Memory (hidden) mode — blind every rating SIGNAL (OVRs, channels, legend
   // gold, provenance hue, Synergy numerics, line strengths) until the
@@ -222,6 +223,12 @@ function ReviewBoard({
     () => squadAverageOverall(gameData.indexes, draft, { blindRatings: blind, basis }),
     [gameData, draft, blind, basis],
   );
+  const squadWarnings = useMemo(
+    () => buildPlainSquadWarnings(validation.warnings, [...starters, ...bench]),
+    [validation.warnings, starters, bench],
+  );
+  const visibleWarnings = warningsExpanded ? squadWarnings : squadWarnings.slice(0, 4);
+  const hiddenWarningCount = Math.max(0, squadWarnings.length - visibleWarnings.length);
 
   // Team name with debounced persistence.
   const [teamName, setTeamName] = useState(draft.team_name);
@@ -372,20 +379,35 @@ function ReviewBoard({
         </div>
       </section>
 
-      {validation.warnings.length > 0 ? (
+      {squadWarnings.length > 0 ? (
         <section
           className={`${s.panel} ${s.warningsPanel}`}
           tabIndex={0}
           aria-labelledby="squad-warnings-title"
         >
-          <h3 id="squad-warnings-title" className={s.panelSubTitle}>
-            Squad warnings
-          </h3>
+          <div className={s.warnHead}>
+            <h3 id="squad-warnings-title" className={s.panelSubTitle}>
+              Squad warnings
+            </h3>
+            <span className={s.warnCount}>
+              {squadWarnings.length} note{squadWarnings.length === 1 ? "" : "s"}
+            </span>
+          </div>
           <ul className={s.warnList}>
-            {validation.warnings.map((w, i) => (
+            {visibleWarnings.map((w, i) => (
               <li key={i}>{w}</li>
             ))}
           </ul>
+          {hiddenWarningCount > 0 || warningsExpanded ? (
+            <button
+              type="button"
+              className={s.warnExpand}
+              aria-expanded={warningsExpanded}
+              onClick={() => setWarningsExpanded((v) => !v)}
+            >
+              {warningsExpanded ? "Show fewer" : `Show ${hiddenWarningCount.toString()} more`}
+            </button>
+          ) : null}
         </section>
       ) : null}
 
@@ -431,9 +453,11 @@ function SimulatePanel({
 }) {
   const router = useRouter();
   const [sim, setSim] = useState<SimState>({ kind: "idle" });
+  const simInFlightRef = useRef(false);
 
   const startSim = useCallback(async () => {
-    if (!complete || sim.kind === "running") return;
+    if (!complete || sim.kind === "running" || simInFlightRef.current) return;
+    simInFlightRef.current = true;
     setSim({ kind: "running", note: "Loading 2026 scenario…" });
     // Reflect lifecycle on the persisted record so refreshes don't claim the
     // run is "ready" mid-simulation. Best-effort — proceed on failure.
@@ -471,6 +495,8 @@ function SimulatePanel({
       // source of truth; this just lands the row in saved_runs so signed-
       // in users get cross-device history and the F-3 claim has something
       // to transfer at sign-in.
+      setSim({ kind: "running", note: "Syncing run to history..." });
+      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
       void mirrorRunToServer(gameData, persist.record);
       router.push(resultsHref(persist.record.run_id));
     } catch (err) {
@@ -485,6 +511,8 @@ function SimulatePanel({
       }
       const d = describeGameError(err);
       setSim({ kind: "error", title: d.title, message: d.message });
+    } finally {
+      simInFlightRef.current = false;
     }
   }, [complete, sim.kind, gameData, record, router, onRecordUpdate, persistenceWarning]);
 
@@ -526,4 +554,89 @@ function SimulatePanel({
       </button>
     </section>
   );
+}
+
+function buildPlainSquadWarnings(
+  rawWarnings: readonly string[],
+  slots: readonly PitchSlotView[],
+): string[] {
+  const slotWarnings = slots.flatMap((slot) =>
+    slot.warnings.map((warning) => plainSlotWarning(slot, warning)),
+  );
+  const nonSlotWarnings = rawWarnings
+    .filter((warning) => !slots.some((slot) => warning.startsWith(`${slot.slot_id}: `)))
+    .map(plainGeneralWarning);
+  return [...slotWarnings, ...nonSlotWarnings];
+}
+
+function plainSlotWarning(slot: PitchSlotView, raw: string): string {
+  const card = slot.card;
+  if (!card) return plainGeneralWarning(raw);
+  const role = roleName(card.primary_position);
+  const place = slotPlace(slot);
+  if (raw.includes("outfielder in goal")) {
+    return `${card.name} is a ${role} playing in goal; the sim applies a heavy penalty.`;
+  }
+  if (raw.includes("out-of-position") || raw.includes("placed in")) {
+    return `${card.name} is a ${role} in the ${place} slot; expect a fit penalty.`;
+  }
+  return `${card.name} in ${place}: ${plainGeneralWarning(raw)}`;
+}
+
+function plainGeneralWarning(raw: string): string {
+  if (raw.includes("XI incomplete")) return "The starting XI is not complete.";
+  if (raw.includes("no recognised goalkeeper")) {
+    return "No specialist goalkeeper is in the XI; the sim applies an outfielder-in-goal penalty.";
+  }
+  if (raw.includes("no manager drafted")) return "No manager has been drafted.";
+  return raw.replace(/^[^:]+:\s*/u, "");
+}
+
+function roleName(position: PitchSlotView["line"]): string {
+  switch (position) {
+    case "GK":
+      return "goalkeeper";
+    case "DF":
+      return "defender";
+    case "MF":
+      return "midfielder";
+    case "FW":
+      return "forward";
+  }
+}
+
+function slotPlace(slot: PitchSlotView): string {
+  if (!slot.is_starter) return "bench";
+  switch (slot.slot_position) {
+    case "GK":
+      return "goalkeeper";
+    case "LB":
+      return "left back";
+    case "RB":
+      return "right back";
+    case "LCB":
+    case "CB":
+    case "RCB":
+      return "centre back";
+    case "LWB":
+      return "left wing-back";
+    case "RWB":
+      return "right wing-back";
+    case "CDM":
+      return "defensive midfield";
+    case "LCM":
+    case "CM":
+    case "RCM":
+      return "central midfield";
+    case "CAM":
+      return "attacking midfield";
+    case "LW":
+      return "left wing";
+    case "RW":
+      return "right wing";
+    case "ST":
+      return "striker";
+    default:
+      return slot.slot_position.toLowerCase();
+  }
 }

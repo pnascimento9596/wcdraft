@@ -27,6 +27,13 @@ export interface SaveMirrorResult {
   readonly errorMessage: string | null;
 }
 
+const mirrorInFlight = new Set<string>();
+const mirrorComplete = new Set<string>();
+
+function mirrorKey(record: RunRecordV1): string {
+  return `${record.run_id}:${record.updated_seq.toString()}`;
+}
+
 /**
  * Build the F-3.5 display-ready summary from a completed RunRecordV1.
  * Returns null when the record has no simulation (the share-view can't be
@@ -61,6 +68,16 @@ export async function mirrorRunToServer(
   gameData: GameData,
   record: RunRecordV1,
 ): Promise<SaveMirrorResult> {
+  const key = mirrorKey(record);
+  if (mirrorInFlight.has(key) || mirrorComplete.has(key)) {
+    return {
+      attempted: false,
+      ok: true,
+      status: null,
+      errorMessage: "mirror already in flight",
+    };
+  }
+  mirrorInFlight.add(key);
   try {
     const summary = buildSavedRunSummary(gameData, record);
     if (!summary) {
@@ -93,6 +110,7 @@ export async function mirrorRunToServer(
       parentSeed: record.parent_seed,
       summary,
     });
+    if (r.ok) mirrorComplete.add(key);
     return {
       attempted: true,
       ok: r.ok,
@@ -106,5 +124,7 @@ export async function mirrorRunToServer(
       status: null,
       errorMessage: err instanceof Error ? err.message : String(err),
     };
+  } finally {
+    mirrorInFlight.delete(key);
   }
 }

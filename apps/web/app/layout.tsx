@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { connection } from "next/server";
+import { headers } from "next/headers";
 import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
@@ -79,6 +80,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // The CSP uses a fresh per-request nonce. Next can only attach that nonce to
   // framework runtime tags when this layout renders per request.
   await connection();
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   // Ship-dark gate — computed server-side so the client never has to
   // round-trip /api/auth/config on first paint. Setting RESEND_API_KEY,
   // AUTH_EMAIL_FROM, and AUTH_BASE_URL in the Vercel env flips this true.
@@ -87,8 +89,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // is read server-side here; when dark the entry simply doesn't exist.
   const leaderboardEnabled = isLeaderboardEnabled();
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <body>
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html:
+              '(()=>{try{const k="wcdraft:theme";const s=localStorage.getItem(k);const t=s==="dark"||s==="light"?s:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);}catch{}})();',
+          }}
+        />
         <ThemeProvider>
           <AuthProvider authEnabled={authEnabled}>
             <a className="skip-link" href="#main">

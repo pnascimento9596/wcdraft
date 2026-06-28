@@ -23,7 +23,7 @@ export default function HowToPlayPage() {
       <section className="steps">
         <article className="step">
           <span className="step__num">01</span>
-          <h3>The spin</h3>
+          <h2>The spin</h2>
           <p>
             Every spin pairs a nation with one World Cup year — Peru 2018, Hungary 1954, Brazil
             1970. That single squad is your pool for the pick that follows; the era you choose at
@@ -33,7 +33,7 @@ export default function HowToPlayPage() {
 
         <article className="step">
           <span className="step__num">02</span>
-          <h3>One pick</h3>
+          <h2>One pick</h2>
           <p>
             Take one entity from the rolled squad — a player, or that nation&rsquo;s manager. Across
             your seventeen spins you draft sixteen players and exactly one manager; you decide which
@@ -43,7 +43,7 @@ export default function HowToPlayPage() {
 
         <article className="step">
           <span className="step__num">03</span>
-          <h3>Your formation</h3>
+          <h2>Your formation</h2>
           <p>
             Lock a formation before the first spin — it is fixed for the rest of the draft. Eleven
             starters and five on the bench make up your sixteen-player squad; each pick locks to its
@@ -53,7 +53,7 @@ export default function HowToPlayPage() {
 
         <article className="step">
           <span className="step__num">04</span>
-          <h3>Positions &amp; synergy</h3>
+          <h2>Positions &amp; synergy</h2>
           <p>
             Players settle into the positions they can cover, and shared nationality builds synergy:
             starters from the same country reinforce one another, and a manager links to his
@@ -95,7 +95,7 @@ export default function HowToPlayPage() {
         <h2>Ranked &amp; casual</h2>
         <p>
           Leaderboards filter by Lane (Casual or Ranked), Mode (Classic or Memory), Draft order
-          (Squad First or Position First), Era (All-time, Post-2000, Post-2010 or Modern), and
+          (Squad First or Position First), Era (All-time, 2002-2026, 2014-2026 or Modern), and
           Rating basis (Career or Current). Every valid run posts to that exact board. Ranked is for
           signed-in managers; casual posts anonymously and can be claimed after sign-in.
         </p>

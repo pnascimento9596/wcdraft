@@ -31,9 +31,9 @@ import { managerCardView, playerCardView } from "./adapters";
 // ─── Round labels ────────────────────────────────────────────────────────────
 
 const ROUND_LABEL: Record<MatchRound, string> = {
-  G1: "Group · Match 1",
-  G2: "Group · Match 2",
-  G3: "Group · Match 3",
+  G1: "Group · M1",
+  G2: "Group · M2",
+  G3: "Group · M3",
   R32: "Round of 32",
   R16: "Round of 16",
   QF: "Quarter-final",

@@ -19,8 +19,8 @@ import s from "../game.module.css";
 
 const ERA_PRESET_LABELS: Record<EraPresetId, string> = {
   all_time: "All-time",
-  post_2000: "Post-2000",
-  post_2010: "Post-2010",
+  post_2000: "2002-2026",
+  post_2010: "2014-2026",
   modern: "Modern",
 };
 
