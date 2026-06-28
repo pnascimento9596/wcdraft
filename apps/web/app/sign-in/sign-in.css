@@ -5,10 +5,7 @@
 
 .signin-screen {
   min-height: calc(100dvh - 120px);
-  background:
-    radial-gradient(900px 600px at 12% 110%, rgba(var(--glow-ember), 0.07), transparent 60%),
-    radial-gradient(700px 500px at 88% -10%, rgba(var(--glow-amber), 0.05), transparent 65%),
-    linear-gradient(180deg, var(--bg-850), var(--bg-900));
+  background: linear-gradient(180deg, var(--bg-850), var(--bg-900));
   display: grid;
   place-items: start center;
   padding: var(--s-9) var(--s-4) var(--s-9);
@@ -63,12 +60,12 @@
   height: 6px;
   border-radius: 999px;
   background: var(--ember);
-  box-shadow: 0 0 12px rgba(var(--glow-ember), 0.85);
+  outline: 2px solid color-mix(in srgb, var(--ember) 30%, transparent);
 }
 
 .signin-screen__title {
   font-size: var(--t-d1);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   color: var(--ink-100);
   margin: 0;
 }
@@ -81,7 +78,6 @@
   height: 2px;
   margin-top: var(--s-2);
   background: var(--gold);
-  box-shadow: 0 0 10px rgba(var(--glow-amber), 0.6);
 }
 
 .signin-screen__sub {
@@ -162,15 +158,13 @@
 }
 
 .signin-form__input:focus-visible {
-  border-color: rgba(var(--glow-ember), 0.9);
+  border-color: var(--ember);
   box-shadow: var(--ring-ember);
 }
 
 .signin-form__input[aria-invalid="true"] {
   border-color: var(--loss);
-  box-shadow:
-    0 0 0 1px var(--loss),
-    0 0 18px -4px var(--loss);
+  box-shadow: inset 0 0 0 1px var(--loss);
 }
 
 .signin-form__submit {
@@ -192,7 +186,7 @@
     transform var(--d-fast) var(--e-snap),
     background var(--d-fast) var(--e-out),
     box-shadow var(--d-fast) var(--e-out);
-  box-shadow: 0 6px 18px -8px rgba(var(--glow-ember), 0.8);
+  box-shadow: var(--sh-1);
 }
 
 .signin-form__submit:hover {
@@ -264,10 +258,9 @@
 .signin-sent::before {
   content: "";
   position: absolute;
-  inset: -50% -50% auto auto;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(closest-side, rgba(var(--glow-amber), 0.18), transparent);
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 28%, transparent));
   pointer-events: none;
 }
 
@@ -278,16 +271,16 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(var(--glow-amber), 0.12);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
   color: var(--gold-bright);
-  border: 1px solid rgba(var(--glow-amber), 0.35);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
 }
 
 .signin-sent__h {
   margin: 0;
   font-size: var(--t-d3);
   color: var(--ink-100);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .signin-sent__msg {
@@ -300,7 +293,7 @@
 
 .signin-sent__email {
   color: var(--ember-bright);
-  background: rgba(var(--glow-ember), 0.1);
+  background: color-mix(in srgb, var(--ember) 10%, transparent);
   padding: 1px 6px;
   border-radius: var(--r-1);
   font-size: var(--t-sm);
@@ -331,7 +324,7 @@
   background: var(--bg-800);
   padding: var(--s-5);
   border-radius: var(--r-3);
-  border: 1px dashed var(--line-strong);
+  border: 1px solid var(--line);
   color: var(--ink-200);
   font-size: var(--t-sm);
 }
@@ -343,8 +336,8 @@
   color: var(--gold);
   padding: 2px 6px;
   border-radius: var(--r-1);
-  border: 1px solid rgba(var(--glow-amber), 0.4);
-  background: rgba(var(--glow-amber), 0.08);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
   width: max-content;
 }
 .signin-screen__disabled code {

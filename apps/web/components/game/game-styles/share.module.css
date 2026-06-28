@@ -65,7 +65,7 @@
   margin-top: auto;
 }
 .shareTeam {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-style: italic;
   font-size: 1.1rem;
   opacity: 0.85;
@@ -117,7 +117,7 @@
 .shareStars {
   position: relative;
   z-index: 1;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.9rem;
   opacity: 0.85;
 }
@@ -134,7 +134,7 @@
   color: var(--ink-faint);
 }
 .shareCaption {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.92rem;
   line-height: 1.5;
   color: var(--ink-soft);
@@ -165,4 +165,80 @@
   font-size: 0.82rem;
   color: var(--ink-faint);
   font-style: italic;
+}
+
+/* ── Broadcast tactics share overrides ─────────────────────────────────── */
+
+.share {
+  gap: 14px;
+}
+
+.shareCard,
+.sharePanel,
+.shareCaption {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-800);
+  color: var(--ink-100);
+  box-shadow: var(--sh-1);
+}
+
+.shareCard {
+  border-color: var(--accent-line);
+  background:
+    radial-gradient(
+      120% 80% at 50% 0%,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 60%
+    ),
+    var(--bg-800);
+}
+
+.shareBrand,
+.shareHeadline,
+.shareRecordNum,
+.shareStat b {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.shareSeed,
+.shareCaptionLabel,
+.shareStat span {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.shareHeadline,
+.shareRecordNum {
+  color: var(--gold);
+}
+
+.shareTeam,
+.shareStars,
+.shareCaption,
+.shareHint {
+  color: var(--ink-300);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-style: normal;
+}
+
+.shareSvg {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--sh-2);
+}
+
+@media (max-width: 430px) {
+  .shareCardFrame {
+    margin: 8px 0;
+  }
+
+  .shareSvg {
+    max-width: min(68vw, 248px);
+  }
+
+  .sharePanel {
+    gap: 6px;
+    padding: 8px;
+  }
 }
