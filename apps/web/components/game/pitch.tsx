@@ -249,9 +249,9 @@ function SlotChip({
         {shapeMarker}
         <span className={s.slotPos}>{slot.slot_position}</span>
       </span>
-      <span className={s.slotEmptyLabel}>
-        {previewCompat != null ? `${Math.round(previewCompat * 100)}%` : "Empty"}
-      </span>
+      {previewCompat != null ? (
+        <span className={s.slotEmptyLabel}>{Math.round(previewCompat * 100)}%</span>
+      ) : null}
     </>
   );
 

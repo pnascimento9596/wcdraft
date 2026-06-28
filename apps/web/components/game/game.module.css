@@ -74,6 +74,9 @@
 .modeCardLive {
   composes: modeCardLive from "./game-styles/shared.module.css";
 }
+.modeCardSelected {
+  composes: modeCardSelected from "./game-styles/shared.module.css";
+}
 .modeCardSoon {
   composes: modeCardSoon from "./game-styles/shared.module.css";
 }
@@ -82,6 +85,9 @@
 }
 .modeTag {
   composes: modeTag from "./game-styles/shared.module.css";
+}
+.modeTagDot {
+  composes: modeTagDot from "./game-styles/shared.module.css";
 }
 .modeTagSoon {
   composes: modeTagSoon from "./game-styles/shared.module.css";
@@ -98,11 +104,26 @@
 .modeFeatures {
   composes: modeFeatures from "./game-styles/shared.module.css";
 }
+.modeFeatureChip {
+  composes: modeFeatureChip from "./game-styles/shared.module.css";
+}
+.modeFeatureDot {
+  composes: modeFeatureDot from "./game-styles/shared.module.css";
+}
+.modeCardBottom {
+  composes: modeCardBottom from "./game-styles/shared.module.css";
+}
 .modeCta {
   composes: modeCta from "./game-styles/shared.module.css";
 }
 .modeCtaSoon {
   composes: modeCtaSoon from "./game-styles/shared.module.css";
+}
+.modeSelectedText {
+  composes: modeSelectedText from "./game-styles/shared.module.css";
+}
+.modeDock {
+  composes: modeDock from "./game-styles/shared.module.css";
 }
 .draft {
   composes: draft from "./game-styles/draft-base.module.css";
@@ -556,10 +577,12 @@
 }
 .lineTrack {
   composes: lineTrack from "./game-styles/review-base.module.css";
+  composes: lineTrack from "./game-styles/review.module.css";
   composes: lineTrack from "./game-styles/draft-polish.module.css";
 }
 .lineFill {
   composes: lineFill from "./game-styles/review-base.module.css";
+  composes: lineFill from "./game-styles/review.module.css";
 }
 .lineVal {
   composes: lineVal from "./game-styles/review-base.module.css";
@@ -877,6 +900,9 @@
   composes: formationCard from "./game-styles/draft-shell.module.css";
   composes: formationCard from "./game-styles/draft-polish.module.css";
 }
+.formationCardSelected {
+  composes: formationCardSelected from "./game-styles/draft-shell.module.css";
+}
 .formationCardPending {
   composes: formationCardPending from "./game-styles/draft-shell.module.css";
 }
@@ -894,6 +920,9 @@
 }
 .formationError {
   composes: formationError from "./game-styles/draft-shell.module.css";
+}
+.formationDock {
+  composes: formationDock from "./game-styles/draft-shell.module.css";
 }
 .setupRow {
   composes: setupRow from "./game-styles/draft-shell.module.css";

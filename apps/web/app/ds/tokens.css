@@ -4,36 +4,35 @@
 
 :root {
   /* ---- Canvas ramp (warm-neutral, dark) ---- */
-  --bg-void: #06090c;
-  --bg-900: #0a0e13;
-  --bg-850: #0d1218; /* page canvas (cool) */
-  --bg-800: #111720; /* base surface */
-  --bg-750: #161d27; /* card surface */
-  --bg-700: #1c2532; /* raised */
-  --bg-650: #243040; /* hover / chips */
+  --bg-void: #080809;
+  --bg-900: #0e0e10;
+  --bg-850: #0e0e10; /* app canvas */
+  --bg-800: #161618; /* card */
+  --bg-750: #1e1e21; /* raised / selected */
+  --bg-700: #25252a; /* popover / active */
+  --bg-650: #25252a; /* hover / chips */
 
-  --line: rgba(255, 255, 255, 0.07);
-  --line-2: rgba(255, 255, 255, 0.12);
-  --line-strong: #2c3744;
+  --line: rgba(220, 220, 235, 0.11);
+  --line-1: rgba(220, 220, 235, 0.06);
+  --line-2: rgba(220, 220, 235, 0.2);
+  --line-strong: var(--line-2);
 
   /* ---- Ink (cool white) ---- */
-  --ink-100: #eef2f6; /* hi */
-  --ink-200: #cdd3db;
-  --ink-300: #9aa3af; /* mid */
-  --ink-400: #7d8794; /* low — lifted from #6b7480 so t-xs labels on bg-750 clear 4.5:1 */
-  --ink-500: #4d5662; /* faint / disabled */
+  --ink-100: #edecf2; /* hi */
+  --ink-200: #c5c3d4;
+  --ink-300: #9695a8; /* mid */
+  --ink-400: #636274; /* low */
+  --ink-500: #424153; /* faint / disabled */
 
   /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
      moment, legend, champion, award ONLY). Cyan does the everyday work; gold is rare and earned. */
-  --cyan: #22b8f0;
-  --cyan-bright: #6fd8ff;
-  --cyan-deep: #1488c0;
-  --glow-cyan: 34, 184, 240;
+  --cyan: #35c2d6;
+  --cyan-bright: #35c2d6;
+  --cyan-deep: #10809e;
 
   --gold: #f5b62a;
-  --gold-bright: #ffd45e;
-  --gold-deep: #c8861a;
-  --glow-gold: 245, 182, 42;
+  --gold-bright: #f5b62a;
+  --gold-deep: #caa022;
   --brand-gold-start: #c8861a;
   --brand-gold-mid: #f5b62a;
   --brand-gold-end: #ffd86a;
@@ -42,19 +41,15 @@
   --brand-mark-gold-end: var(--brand-gold-end);
 
   --teal: #2ecf92;
-  --teal-bright: #54e3ab;
-  --teal-deep: #1c9e6e;
-  --glow-teal: 46, 207, 146;
+  --teal-bright: #2ecf92;
+  --teal-deep: #1c9c70;
 
   /* legacy aliases — ember now == CYAN (the primary), so existing components adopt the new brand */
   --ember: #2ecf92;
-  --ember-bright: #54e3ab;
-  --ember-deep: #1c9e6e;
+  --ember-bright: #2ecf92;
+  --ember-deep: #1c9c70;
   --amber: #f5b62a;
   --amber-bright: #ffd45e;
-
-  --glow-ember: 46, 207, 146;
-  --glow-amber: 245, 182, 42;
 
   /* ---- Lock / committed — its OWN treatment, off the accent palette (cool steel) ---- */
   --lock: #c5cbd6;
@@ -71,40 +66,40 @@
   /* ---- Provenance (honest-state) — hue encodes how the rating was obtained.
      Locked target mapping: historical = the verified everyday CYAN; projected = periwinkle;
      estimate = warm orange (low-certainty warning); manager = teal; legend = the precious gold. ---- */
-  --prov-historical: #22b8f0; /* observed   · cyan (verified, the everyday) */
-  --prov-projected: #7b86f2; /* modelled   · periwinkle                    */
-  --prov-estimate: #e8843a; /* inferred   · warm orange (low certainty)   */
-  --prov-manager: #8b93a0; /* staff card · neutral slate (off the emerald brand) */
-  --prov-legend: #f5b62a; /* elite      · gold (precious, OVR ≥ 96)     */
-  --prov-unknown: #4d5662; /* the "—"                                    */
+  --prov-historical: #35c2d6; /* observed */
+  --prov-projected: #94a1f2; /* modelled */
+  --prov-estimate: #f0913f; /* inferred */
+  --prov-manager: #93a2b3; /* staff card */
+  --prov-legend: #f5b62a; /* elite */
+  --prov-unknown: #717c75; /* the "—" */
 
-  /* provenance glow rgb triples (kept in sync for shadows/fills in JS + CSS) */
-  --prov-historical-rgb: 34, 184, 240;
-  --prov-projected-rgb: 123, 134, 242;
-  --prov-estimate-rgb: 232, 132, 58;
-  --prov-manager-rgb: 139, 147, 160;
+  /* provenance rgb triples (kept in sync for fills in JS + CSS) */
+  --prov-historical-rgb: 53, 194, 214;
+  --prov-projected-rgb: 148, 161, 242;
+  --prov-estimate-rgb: 240, 145, 63;
+  --prov-manager-rgb: 147, 162, 179;
   --prov-legend-rgb: 245, 182, 42;
 
   /* ---- Position — encoded by SHAPE, not hue (orthogonal to provenance).
      Glyphs render in neutral ink; these tints are used only for tiny legend dots, never on cards. ---- */
-  --pos-gk: #22b8f0;
-  --pos-def: #2ecf92;
-  --pos-mid: #9aa3af;
+  --pos-gk: #9695a8;
+  --pos-def: #9695a8;
+  --pos-mid: #9695a8;
   --pos-fwd: #f5b62a;
 
   /* ---- Pitch surface (theme-aware chalk + chip lines) ----
      The pitch backdrop is bg-800 + a teal wash in BOTH themes, so chalk
-     lines / dashed empty-slot borders can't be white literals — they must
+     lines / recessed empty-slot borders can't be white literals — they must
      darken when the pitch goes pale in light mode. */
-  --pitch-line: rgba(255, 255, 255, 0.1); /* frame, halfway, circle, boxes */
-  --pitch-slot-line: rgba(255, 255, 255, 0.32); /* dashed empty-slot borders     */
-  --pitch-accent-mute: rgba(255, 255, 255, 0.45); /* neutral "ok" fit-tier accent  */
+  --pitch-line: rgba(46, 207, 146, 0.42);
+  --pitch-slot-line: rgba(220, 220, 235, 0.2);
+  --pitch-accent-mute: rgba(220, 220, 235, 0.2);
 
   /* ---- Type ---- */
-  --f-display: "Saira Condensed", "Arial Narrow", sans-serif;
-  --f-body: "Sora", system-ui, -apple-system, sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, monospace;
-  --f-serif: "Newsreader", "Georgia", serif; /* editorial / narrative direction only */
+  --f-display: "Space Grotesk", system-ui, sans-serif;
+  --f-body: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --f-mono: "Space Mono", ui-monospace, monospace;
+  --f-serif: "Space Grotesk", system-ui, sans-serif;
 
   /* type scale (px) */
   --t-hero: clamp(56px, 9vw, 132px);
@@ -136,12 +131,12 @@
   --s-9: 56px;
   --s-10: 80px;
 
-  /* ---- Elevation + glow ---- */
-  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --sh-2: 0 6px 22px rgba(0, 0, 0, 0.45);
-  --sh-3: 0 18px 50px rgba(0, 0, 0, 0.55);
-  --ring-ember: 0 0 0 1px rgba(var(--glow-ember), 0.55), 0 0 26px -4px rgba(var(--glow-ember), 0.6);
-  --ring-amber: 0 0 0 1px rgba(var(--glow-amber), 0.5), 0 0 24px -4px rgba(var(--glow-amber), 0.55);
+  /* ---- Elevation + inset rings ---- */
+  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --sh-2: 0 2px 9px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  --sh-3: 0 16px 36px rgba(0, 0, 0, 0.62);
+  --ring-ember: inset 0 0 0 1.5px var(--ember);
+  --ring-amber: inset 0 0 0 1.5px var(--gold);
 
   /* ---- Motion ---- */
   --e-snap: cubic-bezier(0.2, 0.9, 0.25, 1.15); /* committed lock-in */
@@ -155,53 +150,49 @@
 /* ---- Light theme overrides ----
    First-class, not an afterthought: every hue that renders as TEXT or as a
    load-bearing line on the pale canvas is deepened to clear WCAG AA
-   (≥4.5:1 body / ≥3:1 large+UI) against bg-750/bg-800. Fills (rings, glows,
+   (≥4.5:1 body / ≥3:1 large+UI) against bg-750/bg-800. Fills (rings,
    chevrons, track fills) follow the same deepened ramps so the palette
    stays coherent. */
 [data-theme="light"] {
-  --bg-void: #e9e6df;
-  --bg-900: #efece5;
-  --bg-850: #f4f1ea;
-  --bg-800: #fbf9f4;
+  --bg-void: #e7e1d2;
+  --bg-900: #f1ecdf;
+  --bg-850: #f1ecdf;
+  --bg-800: #fbf8f0;
   --bg-750: #ffffff;
-  --bg-700: #f3f0e8;
-  --bg-650: #e9e5db;
-  --line: rgba(20, 18, 14, 0.1);
-  --line-2: rgba(20, 18, 14, 0.2);
-  --line-strong: #b9b3a4;
-  --ink-100: #14130f;
-  --ink-200: #2c2b25;
-  --ink-300: #54524a;
-  --ink-400: #6c6a60; /* lifted-dark: 5.5:1 on white panels at t-xs sizes */
-  --ink-500: #a09d92;
+  --bg-700: #ffffff;
+  --bg-650: #e7e0cf;
+  --line: rgba(24, 36, 28, 0.16);
+  --line-1: rgba(24, 36, 28, 0.1);
+  --line-2: rgba(24, 36, 28, 0.28);
+  --line-strong: var(--line-2);
+  --ink-100: #16211a;
+  --ink-200: #2f3a33;
+  --ink-300: #46524b;
+  --ink-400: #6c776f;
+  --ink-500: #9aa399;
 
   /* Accent ramps — deepened so accent-as-text reads on paper. "bright"
      means "emphasis text", not "lighter", in this theme. */
-  --cyan: #0a6d96;
-  --cyan-bright: #095e82;
-  --cyan-deep: #084f6e;
-  --glow-cyan: 10, 109, 150;
+  --cyan: #10809e;
+  --cyan-bright: #10809e;
+  --cyan-deep: #0d687f;
 
-  --gold: #8a6200;
-  --gold-bright: #7a5600;
-  --gold-deep: #6e4e00;
-  --glow-gold: 138, 98, 0;
-  --brand-mark-gold-start: #6e4e00;
-  --brand-mark-gold-mid: #8a6200;
-  --brand-mark-gold-end: #a66f00;
+  --gold: #a9760c;
+  --gold-bright: #a9760c;
+  --gold-deep: #c8901a;
+  --brand-mark-gold-start: #a9760c;
+  --brand-mark-gold-mid: #f5b62a;
+  --brand-mark-gold-end: #f5b62a;
 
-  --teal: #177a55;
-  --teal-bright: #116647;
-  --teal-deep: #0e5238;
-  --glow-teal: 23, 122, 85;
+  --teal: #0d8a55;
+  --teal-bright: #0d8a55;
+  --teal-deep: #0d8a55;
 
-  --ember: #177a55;
-  --ember-bright: #116647;
-  --ember-deep: #0e5238;
-  --amber: #8a6200;
-  --amber-bright: #7a5600;
-  --glow-ember: 23, 122, 85;
-  --glow-amber: 138, 98, 0;
+  --ember: #0d8a55;
+  --ember-bright: #0d8a55;
+  --ember-deep: #0d8a55;
+  --amber: #a9760c;
+  --amber-bright: #a9760c;
 
   /* Lock / committed — steel flips dark for text + borders on paper. */
   --lock: #5a6372;
@@ -216,41 +207,41 @@
   --info: #0a6d96;
 
   /* Provenance hues — same identities, print-grade depth. */
-  --prov-historical: #0a6d96;
-  --prov-projected: #4a55c4;
-  --prov-estimate: #9c4f0f;
-  --prov-manager: #5d6570;
-  --prov-legend: #8a6200;
-  --prov-unknown: #8d8a80;
+  --prov-historical: #10809e;
+  --prov-projected: #4f5fcf;
+  --prov-estimate: #bd611b;
+  --prov-manager: #566472;
+  --prov-legend: #a9760c;
+  --prov-unknown: #6c776f;
 
-  --prov-historical-rgb: 10, 109, 150;
-  --prov-projected-rgb: 74, 85, 196;
-  --prov-estimate-rgb: 156, 79, 15;
-  --prov-manager-rgb: 93, 101, 112;
-  --prov-legend-rgb: 138, 98, 0;
+  --prov-historical-rgb: 16, 128, 158;
+  --prov-projected-rgb: 79, 95, 207;
+  --prov-estimate-rgb: 189, 97, 27;
+  --prov-manager-rgb: 86, 100, 114;
+  --prov-legend-rgb: 169, 118, 12;
 
   /* Position legend tints (decorative dots only). */
-  --pos-gk: #0a6d96;
-  --pos-def: #177a55;
-  --pos-mid: #54524a;
-  --pos-fwd: #8a6200;
+  --pos-gk: #6c776f;
+  --pos-def: #6c776f;
+  --pos-mid: #6c776f;
+  --pos-fwd: #a9760c;
 
   /* Pitch chalk + chip lines flip to dark ink on the pale pitch. */
-  --pitch-line: rgba(21, 36, 29, 0.3);
-  --pitch-slot-line: rgba(21, 36, 29, 0.5);
-  --pitch-accent-mute: rgba(21, 36, 29, 0.5);
+  --pitch-line: rgba(13, 138, 85, 0.4);
+  --pitch-slot-line: rgba(24, 36, 28, 0.28);
+  --pitch-accent-mute: rgba(24, 36, 28, 0.28);
 
   /* Paper-weight elevation (heavy black halos look dirty on cream). */
-  --sh-1: 0 1px 2px rgba(20, 18, 14, 0.12);
-  --sh-2: 0 6px 22px rgba(20, 18, 14, 0.14);
-  --sh-3: 0 18px 50px rgba(20, 18, 14, 0.18);
+  --sh-1: 0 1px 2px rgba(40, 50, 44, 0.1);
+  --sh-2: 0 2px 9px rgba(40, 50, 44, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --sh-3: 0 16px 36px rgba(40, 50, 44, 0.18);
 }
 
 * {
   box-sizing: border-box;
 }
 ::selection {
-  background: rgba(var(--glow-ember), 0.32);
+  background: color-mix(in srgb, var(--ember) 32%, transparent);
   color: var(--ink-100);
 }
 html {
@@ -270,7 +261,7 @@ body {
 .mono {
   font-family: var(--f-mono);
   font-feature-settings: "tnum" 1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 .tnum {
   font-variant-numeric: tabular-nums;
@@ -280,7 +271,7 @@ body {
   font-family: var(--f-display);
   font-weight: 700;
   line-height: 0.92;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

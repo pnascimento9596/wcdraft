@@ -1,17 +1,141 @@
 /*
  * wcdraft — global stylesheet.
  *
- * Aesthetic: vintage football almanac / match-day broadsheet.
- * Warm newsprint cream + deep pitch-ink green, a locked emerald action accent
- * + gold for pick/win/legend moments, chalk pitch-line motifs, and a subtle
- * paper grain. Emerald + gold come from the brand lock (Architecture v2 §11);
- * the share card is the reference. Light and dark are both
- * first-class. All colour decisions flow from the custom properties below so the
- * theme toggle (React state, see ThemeProvider) only has to flip `data-theme`.
- *
- * No CSS framework on purpose: full control over the editorial look, zero extra
- * build surface.
+ * Aesthetic: sporting-terminal broadcast tactics. The color/type system is
+ * tokenized here so wired components can reskin without changing behavior.
  */
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-ext-500-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/space-mono/space-mono-latin-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/space-mono/space-mono-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/fonts/space-mono/space-mono-latin-700-normal.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/fonts/space-mono/space-mono-latin-ext-700-normal.woff2") format("woff2");
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 /* ----------------------------------------------------------------------------
  * Design tokens
@@ -21,72 +145,135 @@
 :root[data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces */
-  --bg: #efe9db; /* warm newsprint cream */
-  --bg-panel: #e7dfcd; /* raised paper */
-  --bg-sunken: #e2d9c4;
-  --bg-invert: #14241c; /* pitch ink, used for inverted blocks */
+  --font-display: "Space Grotesk";
+  --font-text: "Space Grotesk";
+  --font-sans: "Space Grotesk";
+  --font-condensed: "Space Grotesk";
+  --font-mono: "Space Mono";
 
-  /* Ink */
-  --ink: #15241d; /* deep pitch ink */
-  --ink-soft: #4c5a50;
-  --ink-faint: #566154; /* AA: 4.6:1+ on light surfaces (was #7a8579 = 3.18:1, failed AA) */
+  --bg: #e7e1d2;
+  --s0: #f1ecdf;
+  --s1: #fbf8f0;
+  --s2: #ffffff;
+  --s3: #ffffff;
+  --well: #e7e0cf;
 
-  /* Lines / borders (chalk on paper) */
-  --line: rgba(21, 36, 29, 0.16);
-  --line-strong: rgba(21, 36, 29, 0.42);
+  --line-1: rgba(24, 36, 28, 0.1);
+  --line: rgba(24, 36, 28, 0.16);
+  --line-2: rgba(24, 36, 28, 0.28);
+  --line-strong: var(--line-2);
 
-  /* Brand — LOCKED identity (Architecture v2 §11).
-     Emerald = brand / action / structure (everyday). Gold = pick / win / legend (precious).
-     Sourced from apps/web/app/ds/tokens.css; aliased here so every shell surface
-     using --accent inherits the locked palette without per-component patching. */
-  --accent: #2ecf92; /* emerald — primary action + structure (FILL: pairs with --accent-ink) */
-  --accent-strong: #1c9e6e; /* emerald deep — hover/active */
-  --accent-ink: #0a1a14; /* legible ink on emerald (both themes) */
-  /* Emerald for TEXT/icons/focus-rings ON light surfaces. #2ecf92 as text on
-     cream is only 1.66:1 (fails AA); this deepened shade is 4.96:1+ on every
-     light surface and matches the game-module's shipped light --ember-bright.
-     --accent stays the brand fill (with dark --accent-ink on top). */
-  --accent-text: #116647;
-  --gold: #f5b62a; /* gold — pick / win / legend / perfect-run */
-  --gold-strong: #c8861a;
-  --gold-ink: #1a1206; /* legible ink on gold */
-  --brand-wordmark-accent: var(--accent-text);
-  --field: #1c4332; /* pitch green */
+  --tx: #16211a;
+  --tx2: #46524b;
+  --tx3: #6c776f;
+  --tx4: #9aa399;
+
+  --accent: #0d8a55;
+  --accent-solid: #2ecf92;
+  --accent-ink: #06130d;
+  --accent-press: #25b07c;
+  --accent-deep: #0d8a55;
+  --accent-wash: rgba(46, 207, 146, 0.16);
+  --accent-line: rgba(13, 138, 85, 0.4);
+  --accent-strong: var(--accent-press);
+  --accent-text: var(--accent);
+
+  --gold: #a9760c;
+  --gold-solid: #f5b62a;
+  --gold-ink: #1a1403;
+  --gold-strong: #c8901a;
+  --gold-deep: #c8901a;
+  --gold-wash: rgba(245, 182, 42, 0.22);
+
+  --hist: #10809e;
+  --proj: #4f5fcf;
+  --est: #bd611b;
+  --mgr: #566472;
+  --unk: #6c776f;
+  --neg: #b6402f;
+
+  --e1: 0 1px 2px rgba(40, 50, 44, 0.1);
+  --e2: 0 2px 9px rgba(40, 50, 44, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --e3: 0 16px 36px rgba(40, 50, 44, 0.18);
+  --well-shadow: inset 0 1px 3px rgba(40, 50, 44, 0.16), inset 0 0 0 1px rgba(40, 50, 44, 0.05);
+  --pitch: rgba(20, 90, 60, 0.055);
+  --scrim: rgba(30, 40, 34, 0.34);
+
+  --bg-panel: var(--s1);
+  --bg-sunken: var(--well);
+  --bg-invert: var(--tx);
+  --ink: var(--tx);
+  --ink-soft: var(--tx2);
+  --ink-faint: var(--tx3);
+  --brand-wordmark-accent: var(--accent);
+  --field: #1f6a47;
   --field-ink: #f2ecdc;
-
-  --grain-opacity: 0.05;
-  --shadow-card: 0 1px 0 rgba(21, 36, 29, 0.04), 0 18px 40px -28px rgba(21, 36, 29, 0.45);
+  --grain-opacity: 0.025;
+  --shadow-card: var(--e1);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #0c1411; /* midnight pitch */
-  --bg-panel: #12201a;
-  --bg-sunken: #0a110e;
-  --bg-invert: #ece4d2;
+  --bg: #080809;
+  --s0: #0e0e10;
+  --s1: #161618;
+  --s2: #1e1e21;
+  --s3: #25252a;
+  --well: #060608;
 
-  --ink: #ece4d2; /* warm cream */
-  --ink-soft: #a3b3a7;
-  --ink-faint: #808e84; /* AA: 4.9:1+ on dark surfaces (was #6f8076 = 4.03:1 on panel, failed AA) */
+  --line-1: rgba(220, 220, 235, 0.06);
+  --line: rgba(220, 220, 235, 0.11);
+  --line-2: rgba(220, 220, 235, 0.2);
+  --line-strong: var(--line-2);
 
-  --line: rgba(236, 228, 210, 0.16);
-  --line-strong: rgba(236, 228, 210, 0.4);
+  --tx: #edecf2;
+  --tx2: #9695a8;
+  --tx3: #636274;
+  --tx4: #424153;
 
-  --accent: #54e3ab; /* emerald bright — dark contrast */
-  --accent-strong: #2ecf92;
-  --accent-ink: #0a1a14;
-  --accent-text: #54e3ab; /* emerald text/icons on dark — 11.5:1, already AA */
+  --accent: #2ecf92;
+  --accent-solid: #2ecf92;
+  --accent-ink: #06130d;
+  --accent-press: #26b681;
+  --accent-deep: #1c9c70;
+  --accent-wash: rgba(46, 207, 146, 0.12);
+  --accent-line: rgba(46, 207, 146, 0.42);
+  --accent-strong: var(--accent-press);
+  --accent-text: var(--accent);
+
   --gold: #f5b62a;
-  --gold-strong: #c8861a;
-  --gold-ink: #1a1206;
+  --gold-solid: #f5b62a;
+  --gold-ink: #1a1403;
+  --gold-strong: #caa022;
+  --gold-deep: #caa022;
+  --gold-wash: rgba(245, 182, 42, 0.13);
+
+  --hist: #35c2d6;
+  --proj: #94a1f2;
+  --est: #f0913f;
+  --mgr: #93a2b3;
+  --unk: #717c75;
+  --neg: #dc6a5f;
+
+  --e1: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --e2: 0 2px 9px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  --e3: 0 16px 36px rgba(0, 0, 0, 0.62);
+  --well-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+  --pitch: rgba(46, 207, 146, 0.04);
+  --scrim: rgba(4, 7, 6, 0.66);
+
+  --bg-panel: var(--s1);
+  --bg-sunken: var(--well);
+  --bg-invert: var(--tx);
+  --ink: var(--tx);
+  --ink-soft: var(--tx2);
+  --ink-faint: var(--tx3);
   --brand-wordmark-accent: var(--accent);
   --field: #1f6a47;
   --field-ink: #f2ecdc;
-
-  --grain-opacity: 0.07;
-  --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.3), 0 22px 48px -30px rgba(0, 0, 0, 0.8);
+  --grain-opacity: 0.04;
+  --shadow-card: var(--e1);
 }
 
 /* ----------------------------------------------------------------------------
@@ -123,7 +310,7 @@ body {
   min-height: 100dvh;
   background-color: var(--bg);
   color: var(--ink);
-  font-family: var(--font-text), Georgia, "Times New Roman", serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.65;
   font-feature-settings: "kern", "liga";
@@ -184,7 +371,7 @@ button {
  * ------------------------------------------------------------------------- */
 
 .display {
-  font-family: var(--font-display), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 400;
   line-height: 0.92;
   letter-spacing: 0.01em;
@@ -194,7 +381,7 @@ button {
 h1,
 h2,
 h3 {
-  font-family: var(--font-display), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: 0.005em;
@@ -211,7 +398,7 @@ p a:hover {
 }
 
 .eyebrow {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.28em;
   font-size: 0.72rem;
@@ -354,7 +541,7 @@ main {
   color: var(--accent-ink);
   padding: 0.6rem 1rem;
   border-radius: 4px;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: 0.04em;
   transform: translateY(calc(-100% - 2rem));
@@ -420,7 +607,7 @@ main {
 }
 
 .nav-link {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.92rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -467,7 +654,7 @@ main {
   display: none;
   align-items: center;
   gap: 0.4rem;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -503,7 +690,7 @@ main {
   padding-block: 0.6rem;
 }
 .mobile-menu__link {
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 1.05rem;
   font-weight: 500;
   text-decoration: none;
@@ -526,7 +713,7 @@ main {
 .mobile-menu__footer {
   margin: 0.6rem 0.2rem 0.2rem;
   text-align: center;
-  font-family: var(--f-mono, monospace);
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.7rem;
   letter-spacing: 0.05em;
   color: var(--ink-faint);
@@ -534,7 +721,7 @@ main {
 .mobile-menu__signin {
   margin: 0.85rem 0.2rem 0.4rem;
   text-align: center;
-  border: 1px dashed var(--line-strong);
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.7rem;
   color: var(--ink-soft);
@@ -562,35 +749,47 @@ main {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   font-size: 1rem;
   line-height: 1;
-  padding: 0.95rem 1.6rem;
-  border-radius: 10px;
+  min-height: 44px;
+  padding: 0 1.15rem;
+  border-radius: 11px;
   border: 1px solid transparent;
   text-decoration: none;
   transition:
-    transform 0.15s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.12s ease,
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
 }
 .btn--primary {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: var(--accent-ink);
-  box-shadow: 0 10px 24px -14px var(--accent);
+  border-color: var(--accent-deep);
+  box-shadow:
+    var(--e2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 30px -14px var(--accent);
+  background: var(--accent-solid);
+}
+.btn--primary:active {
+  transform: translateY(1px);
+  background: var(--accent-press);
+  box-shadow: var(--e1);
 }
 .btn--ghost {
   background: transparent;
   color: var(--ink);
-  border-color: var(--line-strong);
+  border-color: var(--line);
 }
 .btn--ghost:hover {
+  border-color: var(--line-2);
   background: var(--bg-panel);
 }
 .btn--disabled {
@@ -636,7 +835,7 @@ main {
   flex-wrap: wrap;
   gap: 0.4rem 1.1rem;
   list-style: none;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-weight: 500;
 }
 .site-footer__links a {
@@ -744,7 +943,7 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.86rem;
   line-height: 1.5;
   letter-spacing: 0.02em;
@@ -758,7 +957,7 @@ main {
   height: 0.55rem;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--accent) 22%, transparent);
   transform: translateY(0.02em);
 }
 
@@ -979,7 +1178,7 @@ main {
   border: none;
   background: transparent;
   color: var(--ink-soft);
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.03em;
@@ -1036,9 +1235,8 @@ main {
 /* Callout */
 .callout {
   background: var(--bg-panel);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 12px 12px 0;
+  border: 1px solid var(--accent-line);
+  border-radius: 12px;
   padding: 1.2rem 1.4rem;
   margin-top: 1.6rem;
 }
@@ -1080,7 +1278,7 @@ main {
 }
 .signin-stub--live .signin-stub__dot {
   background: var(--accent);
-  box-shadow: 0 0 8px rgba(46, 207, 146, 0.7);
+  outline: 2px solid var(--accent-line);
 }
 
 /* Account-chip (signed-in identity) */
@@ -1092,7 +1290,7 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -1161,7 +1359,7 @@ main {
 .account-pop__id {
   font-size: 0.92rem;
   color: var(--ink);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 .account-pop__link,
 .account-pop__signout {

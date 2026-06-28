@@ -6,10 +6,12 @@ import type { RunOgLineupSlot, RunOgModel } from "./run-og-model";
 export interface RunOgImageAssets {
   markSvgDataUri: string;
   fonts: {
-    sairaCondensedBold: ArrayBuffer;
-    soraSemiBold: ArrayBuffer;
-    soraBold: ArrayBuffer;
-    jetBrainsMonoBold: ArrayBuffer;
+    spaceGroteskSemiBold: ArrayBuffer;
+    spaceGroteskSemiBoldExt: ArrayBuffer;
+    spaceGroteskBold: ArrayBuffer;
+    spaceGroteskBoldExt: ArrayBuffer;
+    spaceMonoBold: ArrayBuffer;
+    spaceMonoBoldExt: ArrayBuffer;
   };
 }
 
@@ -24,16 +26,38 @@ export function renderRunOgImage(model: RunOgModel, assets: RunOgImageAssets): I
     height: RUN_OG_HEIGHT,
     fonts: [
       {
-        name: "Saira Condensed",
-        data: assets.fonts.sairaCondensedBold,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskSemiBold,
+        weight: 600,
+        style: "normal",
+      },
+      {
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskSemiBoldExt,
+        weight: 600,
+        style: "normal",
+      },
+      {
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskBold,
         weight: 700,
         style: "normal",
       },
-      { name: "Sora", data: assets.fonts.soraSemiBold, weight: 600, style: "normal" },
-      { name: "Sora", data: assets.fonts.soraBold, weight: 700, style: "normal" },
       {
-        name: "JetBrains Mono",
-        data: assets.fonts.jetBrainsMonoBold,
+        name: "Space Grotesk",
+        data: assets.fonts.spaceGroteskBoldExt,
+        weight: 700,
+        style: "normal",
+      },
+      {
+        name: "Space Mono",
+        data: assets.fonts.spaceMonoBold,
+        weight: 700,
+        style: "normal",
+      },
+      {
+        name: "Space Mono",
+        data: assets.fonts.spaceMonoBoldExt,
         weight: 700,
         style: "normal",
       },
@@ -51,7 +75,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
         position: "relative",
         background: "#07120f",
         color: "#f3ecd4",
-        fontFamily: "Sora",
+        fontFamily: "Space Grotesk",
         overflow: "hidden",
       }}
     >
@@ -86,7 +110,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           alignItems: "center",
           justifyContent: "space-between",
           color: "#d6c997",
-          fontFamily: "JetBrains Mono",
+          fontFamily: "Space Mono",
           fontSize: 16,
           letterSpacing: 0,
           textTransform: "uppercase",
@@ -177,7 +201,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               style={{
                 display: "flex",
                 color: "#e7bf54",
-                fontFamily: "Saira Condensed",
+                fontFamily: "Space Grotesk",
                 fontSize: 44,
                 lineHeight: 0.9,
                 textTransform: "uppercase",
@@ -189,7 +213,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               style={{
                 display: "flex",
                 color: "#97b7a9",
-                fontFamily: "JetBrains Mono",
+                fontFamily: "Space Mono",
                 fontSize: 15,
                 textTransform: "uppercase",
               }}
@@ -204,7 +228,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             style={{
               display: "flex",
               color: "#f7e0a0",
-              fontFamily: "Saira Condensed",
+              fontFamily: "Space Grotesk",
               fontSize: 42,
               lineHeight: 0.95,
               textTransform: "uppercase",
@@ -216,7 +240,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
             style={{
               display: "flex",
               color: "#ffffff",
-              fontFamily: "Saira Condensed",
+              fontFamily: "Space Grotesk",
               fontSize: 92,
               lineHeight: 0.9,
               textTransform: "uppercase",
@@ -229,7 +253,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               display: "flex",
               marginTop: 12,
               color: "#9fd8bf",
-              fontFamily: "JetBrains Mono",
+              fontFamily: "Space Mono",
               fontSize: 18,
               textTransform: "uppercase",
             }}
@@ -250,7 +274,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   border: "1px solid rgba(231,191,84,0.48)",
                   color: "#f7e0a0",
                   background: "rgba(231,191,84,0.08)",
-                  fontFamily: "JetBrains Mono",
+                  fontFamily: "Space Mono",
                   fontSize: 15,
                   textTransform: "uppercase",
                 }}
@@ -284,13 +308,13 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   padding: "5px 0",
                   border: "1px solid rgba(159,216,191,0.38)",
                   color: "#9fd8bf",
-                  fontFamily: "JetBrains Mono",
+                  fontFamily: "Space Mono",
                   fontSize: 14,
                 }}
               >
                 {star.nation_code}
               </div>
-              <div style={{ display: "flex", fontFamily: "Sora", fontSize: 18 }}>
+              <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>
                 {`${truncate(star.name, 22)} · ${star.overall}`}
               </div>
             </div>
@@ -332,7 +356,7 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
           style={{
             display: "flex",
             color: "#ffffff",
-            fontFamily: "Sora",
+            fontFamily: "Space Grotesk",
             fontSize: 13,
             lineHeight: 1.05,
           }}
@@ -343,7 +367,7 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
           style={{
             display: "flex",
             color: "#9fd8bf",
-            fontFamily: "JetBrains Mono",
+            fontFamily: "Space Mono",
             fontSize: 10,
             lineHeight: 1.2,
             textTransform: "uppercase",
@@ -357,21 +381,40 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
 }
 
 function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
-  const glyph =
-    shape === "square" ? "■" : shape === "triangle" ? "▲" : shape === "diamond" ? "◆" : "●";
+  const mark =
+    shape === "triangle" ? (
+      <div
+        style={{
+          width: 0,
+          height: 0,
+          borderLeft: "7px solid transparent",
+          borderRight: "7px solid transparent",
+          borderBottom: "14px solid #e7bf54",
+        }}
+      />
+    ) : (
+      <div
+        style={{
+          width: 13,
+          height: 13,
+          background: "#e7bf54",
+          borderRadius: shape === "circle" ? 999 : 1,
+          ...(shape === "diamond" ? { transform: "rotate(45deg)" } : {}),
+        }}
+      />
+    );
   return (
     <div
       style={{
         width: 18,
+        height: 18,
         display: "flex",
+        alignItems: "center",
         justifyContent: "center",
-        color: "#e7bf54",
-        fontFamily: "Sora",
-        fontSize: 18,
-        lineHeight: 1,
+        flex: "0 0 auto",
       }}
     >
-      {glyph}
+      {mark}
     </div>
   );
 }
@@ -382,7 +425,7 @@ function SectionTitle({ children }: { children: string }) {
       style={{
         display: "flex",
         color: "#d6c997",
-        fontFamily: "JetBrains Mono",
+        fontFamily: "Space Mono",
         fontSize: 15,
         textTransform: "uppercase",
       }}
@@ -411,13 +454,13 @@ function FactRow({ label, value }: { label: string; value: string }) {
           padding: "5px 0",
           border: "1px solid rgba(159,216,191,0.38)",
           color: "#9fd8bf",
-          fontFamily: "JetBrains Mono",
+          fontFamily: "Space Mono",
           fontSize: 14,
         }}
       >
         {label}
       </div>
-      <div style={{ display: "flex", fontFamily: "Sora", fontSize: 18 }}>{value}</div>
+      <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>{value}</div>
     </div>
   );
 }

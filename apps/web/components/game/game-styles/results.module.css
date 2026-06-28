@@ -4,10 +4,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  /* B1 — the results surface is SANS throughout (Sora body, Saira Condensed
-     headers/numbers). This base family overrides the app's inherited
-     Newsreader serif so the narration + box scores read cleanly; Newsreader
-     usage elsewhere is untouched. */
+  /* Results are sans throughout so narration and box scores read as one
+     compact broadcast surface. */
   font-family:
     var(--font-sans),
     system-ui,
@@ -71,7 +69,7 @@
   border-style: solid;
 }
 .configBadge_draft_flow {
-  border-style: dashed;
+  border-style: solid;
 }
 .configBadge_rating_basis {
   border-style: double;
@@ -82,11 +80,11 @@
   gap: 0.7rem;
 }
 .outcomeBig {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(3.5rem, 14vw, 6rem);
   line-height: 0.85;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 /* I3.8 — 8-0 perfect run rendered in precious gold. */
 .outcomeBigGold {
@@ -106,7 +104,7 @@
   text-shadow: 0 1px 0 color-mix(in srgb, currentColor 30%, transparent);
 }
 .outcomeWL {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 600;
   font-size: 1.4rem;
   letter-spacing: 0.04em;
@@ -130,7 +128,7 @@
   min-width: 0;
 }
 .oStatNum {
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: 1.9rem;
   line-height: 1;
@@ -199,17 +197,16 @@
   position: absolute;
   left: 0.7rem;
   top: 0.2rem;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: 3rem;
   line-height: 1;
   /* Decorative quote mark (aria-hidden) — gold canonical, muted. */
   color: color-mix(in srgb, var(--gold) 46%, transparent);
 }
-/* B1/B3 — narration is SANS (Sora), upright for readability, and wraps cleanly
-   inside its card (no horizontal spill on long unbroken clauses). */
+/* Narration is sans, upright, and wraps cleanly inside its card. */
 .narrativeText {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 1.05rem;
   line-height: 1.6;
   color: var(--ink-soft);
@@ -251,7 +248,7 @@
   width: 1.7rem;
   height: 1.7rem;
   border-radius: 6px;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--accent-ink);
@@ -294,14 +291,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-condensed), "Arial Narrow", sans-serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 700;
   font-size: 1.2rem;
 }
 /* B1/B2 — tag is sans + a neutral chip (not decorative emerald): keeps emerald
    for interaction and clears AA on the paper panel. */
 .matchTag {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -359,7 +356,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 1rem;
-  border-top: 1px dashed var(--line);
+  border-top: 1px solid var(--line-1);
   padding-top: 0.5rem;
 }
 .boxEvent {
@@ -417,4 +414,129 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
+}
+
+/* ── Broadcast tactics results overrides ───────────────────────────────── */
+
+.results {
+  gap: 14px;
+  color: var(--ink-100);
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+.outcome,
+.matchItem,
+.seedPanel,
+.narrative {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-800);
+  color: var(--ink-100);
+  box-shadow: var(--sh-1);
+}
+
+.outcome {
+  border-top: 1px solid var(--line);
+}
+
+:root[data-theme="dark"] .outcome,
+.outcome .eyebrowAccent {
+  color: var(--ink-100);
+}
+
+.configBadge {
+  border-style: solid;
+  border-radius: 8px;
+  color: var(--ink-300);
+  background: var(--bg-750);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.configBadge_draft_flow {
+  border-style: solid;
+}
+
+.outcomeBig,
+.oStatNum,
+.matchScore,
+.seedCode {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 700;
+}
+
+.outcomeWL,
+.oStatLabel,
+.matchRound,
+.matchTag,
+.seedLabel {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+.outcomeBigGold {
+  color: var(--gold);
+  background: none;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+.flagGood {
+  color: var(--accent-ink);
+  background: var(--accent-solid);
+}
+
+.loss {
+  background: var(--neg);
+}
+
+.matchRow {
+  min-height: 52px;
+  background: var(--bg-800);
+  color: var(--ink-100);
+}
+
+.matchRow:hover {
+  background: var(--bg-750);
+}
+
+.boxScore {
+  background: var(--bg-sunken);
+}
+
+.boxEvents {
+  border-top: 1px solid var(--line-1);
+}
+
+.narrative {
+  padding-left: 2.4rem;
+}
+
+.seedCode {
+  background: var(--bg-sunken);
+}
+
+@media (max-width: 430px) {
+  .results {
+    gap: 10px;
+  }
+
+  .outcome {
+    gap: 10px;
+  }
+
+  .outcomeStats {
+    gap: 6px;
+  }
+
+  .matchList {
+    gap: 6px;
+  }
+
+  .matchRow {
+    gap: 8px;
+    padding: 9px 10px;
+  }
+
+  .matchRound {
+    max-width: 5.5rem;
+  }
 }

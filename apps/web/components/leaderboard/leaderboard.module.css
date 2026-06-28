@@ -27,7 +27,7 @@
 .seasonKey {
   display: block;
   margin-top: 0.35rem;
-  font-family: var(--f-mono), monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.68rem;
   color: var(--ink-faint);
   word-break: break-all;
@@ -50,7 +50,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--bg-sunken);
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--ink-soft);
@@ -265,7 +265,7 @@
 }
 .rowScoreUnit {
   display: block;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -286,7 +286,7 @@
   color: var(--ink-soft);
 }
 .breakdownPts {
-  font-family: var(--f-mono), monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 .breakdownNone {
   font-size: 0.78rem;
@@ -496,7 +496,7 @@
 .outcome {
   display: grid;
   gap: 0.35rem;
-  border-top: 1px dashed var(--line);
+  border-top: 1px solid var(--line-1);
   padding-top: 0.75rem;
 }
 .outcomeTitle {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import { ERA_PRESET_IDS, type DraftFlow, type EraPresetId, type RatingBasis } from "@wcdraft/core";
 
@@ -58,15 +58,10 @@ function DraftSetupDisclosure({
   onRatingBasis: (b: RatingBasis) => void;
   disabled: boolean;
 }) {
-  // Mobile-first no-scroll contract: the summary row is the default surface;
-  // the full axes stay one tap away. Desktop has room, so it auto-expands on
-  // mount after hydration.
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (window.matchMedia("(min-width: 720px)").matches) {
-      setOpen(true);
-    }
-  }, []);
+  // Owner note: the setup axes must be visible on arrival. The control still
+  // collapses on demand, but it no longer hides the Era / Draft mode / Rating
+  // basis choices by default on mobile.
+  const [open, setOpen] = useState(true);
   // Summary mirrors all three config axes.
   const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
@@ -161,6 +156,9 @@ export function FormationSelect({
   draftMode: "classic" | "hidden";
   onLocked: (record: RunRecordV1, warning: string | null) => void;
 }) {
+  const defaultFormation: SupportedFormationId =
+    SUPPORTED_FORMATION_OPTIONS[0]?.formation_id ?? "4-3-3";
+  const [selected, setSelected] = useState<SupportedFormationId>(defaultFormation);
   const [pending, setPending] = useState<SupportedFormationId | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [eraPreset, setEraPreset] = useState<EraPresetId>("all_time");
@@ -227,26 +225,42 @@ export function FormationSelect({
               without information. The tile is shape-first: mini pitch +
               name + lock CTA. `FormationOption.blurb` stays in the data
               layer for surfaces with room for prose. */}
-          {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid }) => (
-            <button
-              key={fid}
-              type="button"
-              className={`${s.formationCard} ${pending === fid ? s.formationCardPending : ""}`}
-              disabled={pending !== null}
-              onClick={() => lockIn(fid)}
-            >
-              <MiniPitch formation_id={fid} />
-              <div className={s.formationCardBody}>
-                <span className={s.formationCardName}>{fid}</span>
-                <span className={s.formationCardCta}>
-                  {pending === fid ? "Locking…" : "Lock this shape"}
-                </span>
-              </div>
-            </button>
-          ))}
+          {SUPPORTED_FORMATION_OPTIONS.map(({ formation_id: fid }) => {
+            const active = selected === fid;
+            return (
+              <button
+                key={fid}
+                type="button"
+                className={`${s.formationCard} ${active ? s.formationCardSelected : ""} ${
+                  pending === fid ? s.formationCardPending : ""
+                }`}
+                aria-pressed={active}
+                disabled={pending !== null}
+                onClick={() => setSelected(fid)}
+              >
+                <MiniPitch formation_id={fid} />
+                <div className={s.formationCardBody}>
+                  <span className={s.formationCardName}>{fid}</span>
+                  <span className={s.formationCardCta}>
+                    {pending === fid ? "Locking…" : active ? "Selected" : "Lock this shape"}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
         {error ? <p className={s.formationError}>{error}</p> : null}
       </section>
+      <div className={s.formationDock}>
+        <button
+          type="button"
+          className="btn btn--primary"
+          disabled={pending !== null}
+          onClick={() => lockIn(selected)}
+        >
+          {pending === selected ? "Locking…" : `Lock ${selected} & spin`}
+        </button>
+      </div>
     </div>
   );
 }

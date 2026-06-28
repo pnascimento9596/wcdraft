@@ -53,7 +53,7 @@
 }
 
 .warningsPanel {
-  background: color-mix(in srgb, var(--bg-800) 90%, rgba(var(--glow-amber), 0.1));
+  background: color-mix(in srgb, var(--bg-800) 90%, var(--gold-wash, transparent));
   border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
 }
 
@@ -144,4 +144,46 @@
   color: var(--gold-bright);
   padding: 2px 8px;
   border-radius: var(--r-pill);
+}
+
+/* ── Broadcast tactics review overrides ────────────────────────────────── */
+
+.teamNameLabel,
+.panelSubTitle,
+.channelLabel {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: 0.06em;
+}
+
+.teamNameInput {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--bg-800);
+  box-shadow: var(--sh-1);
+}
+
+.teamNameInput:focus {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.warningsPanel {
+  background: var(--bg-800);
+  border-color: var(--line);
+}
+
+.simNote {
+  color: var(--ink-300);
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+.lineTrack,
+.channelTrack {
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.lineFill,
+.channelFill {
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent-solid));
 }

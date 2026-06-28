@@ -110,7 +110,7 @@ button.slot:disabled {
 }
 .slotEmpty {
   background: color-mix(in srgb, var(--bg-invert) 38%, transparent);
-  border-style: dashed;
+  border-style: solid;
   color: rgba(255, 255, 255, 0.82);
 }
 /* HOVER LIFT — only outside the pitch. Inside the pitch, the slot is
@@ -123,7 +123,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
 }
 .slotSelected {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
 }
 .slotLocked {
   opacity: 0.96;
@@ -168,26 +168,25 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   height: 0.5rem;
   border-radius: 50%;
   background: var(--gold);
-  box-shadow: 0 0 0 2px var(--bg-invert);
+  box-shadow: inset 0 0 0 2px var(--bg-invert);
 }
 .slot {
   position: relative;
 }
 
-/* Compatibility tiers (committed cards) — coloured left border accent. */
 .tier_ideal {
-  border-left: 4px solid var(--accent);
+  border-color: var(--accent);
 }
 .tier_ok {
-  border-left: 4px solid rgba(255, 255, 255, 0.6);
+  border-color: var(--line-2);
 }
 .tier_stretch {
-  border-left: 4px solid var(--gold);
+  border-color: var(--gold);
 }
 .tier_misfit {
-  border-left: 4px solid var(--accent);
+  border-color: var(--accent);
 }
-/* Preview tier glow on open slots while placing. */
+/* Preview tier ring on open slots while placing. */
 .slotPreview {
   border-style: solid;
 }
@@ -233,7 +232,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   gap: 0.1rem;
   padding: 0.4rem 0.25rem;
   border-radius: 9px;
-  border: 1.5px dashed var(--line-strong);
+  border: 1px solid var(--line);
   background: var(--bg-sunken);
   color: var(--ink-soft);
   font: inherit;
@@ -285,7 +284,7 @@ button.benchSlot:not(:disabled):hover {
   font-weight: 600;
 }
 .mgrEmpty {
-  border: 1px dashed var(--line-strong);
+  border: 1px solid var(--line);
   color: var(--ink-faint);
   font-style: italic;
 }
@@ -442,7 +441,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candSelected {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
 }
 .candDisabled {
   opacity: 0.5;
@@ -453,7 +452,7 @@ button.benchSlot:not(:disabled):hover {
   transform: none;
 }
 .candManager {
-  border-left: 4px solid var(--accent);
+  border-color: var(--accent);
 }
 .candTop {
   display: flex;
@@ -494,7 +493,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candCaptain {
   font-size: 0.6rem;
-  font-family: var(--font-text), serif;
+  font-family: var(--font-text), system-ui, sans-serif;
   font-weight: 700;
   color: var(--accent-ink);
   background: var(--accent);
@@ -739,7 +738,7 @@ button.benchSlot:not(:disabled):hover {
   padding: 0.7rem 0.85rem;
   border-radius: 10px;
   border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  border-left: 4px solid var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent-line);
   background: color-mix(in srgb, var(--accent) 8%, var(--bg-panel));
   font-size: 0.88rem;
   color: var(--ink-soft);
@@ -792,8 +791,7 @@ button.benchSlot:not(:disabled):hover {
   font-weight: 600;
   padding: 0.16rem 0.55rem;
   border-radius: 999px;
-  border-left-width: 3px;
-  border-left-style: solid;
+  border-color: currentColor;
   background: var(--bg-panel);
 }
 

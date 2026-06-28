@@ -4,7 +4,13 @@ import { createRequire } from "node:module";
 import net from "node:net";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
-import { chromium, type Browser, type BrowserContext, type Page } from "playwright-core";
+import {
+  chromium,
+  type Browser,
+  type BrowserContext,
+  type Locator,
+  type Page,
+} from "playwright-core";
 import { autoDraft, createDraft, selectDraftTarget } from "@wcdraft/core";
 
 import { buildGameDataFromBundles } from "../lib/game/__tests__/run-token.test-harness";
@@ -276,6 +282,40 @@ async function readRunRecords(page: Page): Promise<RunRecordV1[]> {
   }, RUN_RECORD_PREFIX);
 }
 
+async function assertNoHorizontalOverflow(page: Page, label: string): Promise<void> {
+  const metrics = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    bodyScrollWidth: document.body.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  const maxScroll = Math.max(metrics.scrollWidth, metrics.bodyScrollWidth);
+  assert(
+    maxScroll <= metrics.clientWidth + 1,
+    `${label} overflow ${maxScroll} > ${metrics.clientWidth}`,
+  );
+}
+
+async function assertFullyVisibleInViewport(
+  page: Page,
+  locator: Locator,
+  label: string,
+): Promise<void> {
+  const box = await locator.boundingBox();
+  const viewport = page.viewportSize();
+  assert(box, `${label} did not render a measurable bounding box`);
+  assert(viewport, `${label} could not read viewport size`);
+  assert(box.x >= -1, `${label} left edge is outside viewport: ${box.x}`);
+  assert(box.y >= -1, `${label} top edge is outside viewport: ${box.y}`);
+  assert(
+    box.x + box.width <= viewport.width + 1,
+    `${label} right edge is outside viewport: ${box.x + box.width} > ${viewport.width}`,
+  );
+  assert(
+    box.y + box.height <= viewport.height + 1,
+    `${label} bottom edge is outside viewport: ${box.y + box.height} > ${viewport.height}`,
+  );
+}
+
 async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): Promise<void> {
   const target = firstPositionFirstTarget();
   const testCase = await newBrowserCase(browser);
@@ -283,12 +323,16 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   await page.goto(`${baseUrl}/play/draft`, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
 
-  await page.getByRole("button", { name: /Draft setup/ }).click();
-  await page
-    .getByRole("group", { name: "Draft mode" })
-    .getByRole("button", { name: "Position First" })
-    .click();
-  await page.getByRole("button", { name: /4-3-3[\s\S]*Lock this shape/ }).click();
+  const draftModeGroup = page.getByRole("group", { name: "Draft mode" });
+  if (!(await draftModeGroup.isVisible())) {
+    await page.getByRole("button", { name: /Draft setup/ }).click();
+  }
+  await draftModeGroup.getByRole("button", { name: "Position First" }).click();
+  await page.getByRole("button", { name: /4-3-3[\s\S]*(Selected|Lock this shape)/ }).click();
+  const formationLockButton = page.getByRole("button", { name: /Lock 4-3-3/ });
+  await assertNoHorizontalOverflow(page, "formation setup");
+  await assertFullyVisibleInViewport(page, formationLockButton, "formation lock CTA");
+  await formationLockButton.click();
   await page.waitForURL(/\/play\/draft\?run=[^&]+$/, { timeout: 30_000 });
 
   await page.getByRole("heading", { name: "Choose the slot to fill" }).waitFor();

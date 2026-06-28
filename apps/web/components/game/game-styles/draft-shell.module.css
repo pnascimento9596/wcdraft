@@ -621,7 +621,7 @@
 .pitch .slotEmpty {
   transform: translate(-50%, -50%);
   background: color-mix(in srgb, var(--bg-700) 70%, transparent);
-  border-style: dashed;
+  border-style: solid;
   /* Dashed outline must read on the pale light-mode pitch too — themed
      token, never the white literal the legacy rules used. */
   border-color: var(--pitch-slot-line);
@@ -697,15 +697,14 @@
   }
 }
 
-/* Tier accents on pitch slots: the generic `.tier_*` rules set a 4px
-   left border which RESIZES the chip (via box-sizing). Inside the pitch
-   we keep the chip width stable and use an inset shadow accent instead,
-   so a fit-tier change never shifts the slot. */
+/* Tier accents on pitch slots: the generic `.tier_*` rules used to resize
+   the chip. Inside the pitch we keep the width stable and use an inset
+   accent instead, so a fit-tier change never shifts the slot. */
 .pitch .slot.tier_ideal,
 .pitch .slot.tier_ok,
 .pitch .slot.tier_stretch,
 .pitch .slot.tier_misfit {
-  border-left-width: 1.5px;
+  border-width: 1.5px;
 }
 .pitch .slot.tier_ideal {
   box-shadow: inset 3px 0 0 0 var(--pos-def);
@@ -720,29 +719,29 @@
   box-shadow: inset 3px 0 0 0 var(--accent);
 }
 
-/* Preview tier on pitch slots: stay in place, glow via box-shadow ring. */
+/* Preview tier on pitch slots: stay in place with an inset ring. */
 .pitch .slot.slotPreview {
   transform: translate(-50%, -50%);
-  border-left-width: 1.5px;
+  border-width: 1.5px;
 }
 .pitch .slot.tierPreview_ideal {
   box-shadow:
-    0 0 0 2px var(--pos-def),
+    inset 0 0 0 2px var(--pos-def),
     inset 3px 0 0 0 var(--pos-def);
 }
 .pitch .slot.tierPreview_ok {
   box-shadow:
-    0 0 0 2px var(--pitch-accent-mute),
+    inset 0 0 0 2px var(--pitch-accent-mute),
     inset 3px 0 0 0 var(--pitch-accent-mute);
 }
 .pitch .slot.tierPreview_stretch {
   box-shadow:
-    0 0 0 2px var(--gold),
+    inset 0 0 0 2px var(--gold),
     inset 3px 0 0 0 var(--gold);
 }
 .pitch .slot.tierPreview_misfit {
   box-shadow:
-    0 0 0 2px var(--accent),
+    inset 0 0 0 2px var(--accent),
     inset 3px 0 0 0 var(--accent);
 }
 
@@ -982,7 +981,7 @@
   color: var(--prov-manager);
 }
 
-/* Provenance hue on card border + glow. Subtle, not loud. */
+/* Provenance hue on card border. Subtle, not loud. */
 .prov_historical {
   border-color: color-mix(in srgb, var(--prov-historical) 50%, var(--line));
 }
@@ -997,7 +996,7 @@
 
 .prov_legend {
   border-color: color-mix(in srgb, var(--prov-legend) 60%, var(--line));
-  box-shadow: 0 0 0 1px rgba(var(--prov-legend-rgb), 0.25);
+  box-shadow: inset 0 0 0 1px rgba(var(--prov-legend-rgb), 0.25);
 }
 
 .prov_manager {
@@ -1320,5 +1319,355 @@
   .sheetBackdrop,
   .sheet {
     animation: none;
+  }
+}
+
+/* ── Broadcast tactics shell overrides ─────────────────────────────────── */
+
+.draftShell,
+.reviewShell {
+  gap: 14px;
+  padding: 16px 16px calc(84px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-850);
+  color: var(--ink-100);
+  font-family: var(--f-body);
+}
+
+.draftAppBar {
+  min-height: 50px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line-1);
+  border-radius: 0;
+  background: var(--bg-850);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.appBarTitle {
+  font-size: 19px;
+  letter-spacing: 0;
+}
+
+.appBarMeter {
+  min-width: 112px;
+}
+
+.formationSelect {
+  gap: 14px;
+  padding: 16px 0 8px;
+}
+
+.formationHead {
+  align-items: flex-start;
+  gap: 7px;
+  text-align: left;
+}
+
+.formationHead img {
+  display: none;
+}
+
+.formationHead::before {
+  content: "Draft";
+  color: var(--accent);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.formationTitle {
+  color: var(--ink-100);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.formationSub {
+  max-width: 38ch;
+  color: var(--ink-300);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.setupRow {
+  min-height: 48px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px 13px 0 0;
+  background: var(--bg-800);
+  color: var(--ink-100);
+}
+
+.setupRow[aria-expanded="false"] {
+  border-radius: 13px;
+}
+
+.setupRowLabel,
+.setupAxisLabel {
+  color: var(--ink-400);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.setupRowValue {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink-400);
+  font-size: 12px;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.setupPanel {
+  gap: 15px;
+  padding: 4px 15px 16px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 13px 13px;
+  background: var(--bg-800);
+}
+
+.setupAxis {
+  gap: 8px;
+}
+
+.setupSeg {
+  gap: 8px;
+}
+
+.setupSegBtn {
+  min-height: 38px;
+  padding: 9px 15px;
+  border-radius: 10px;
+  background: var(--bg-800);
+  color: var(--ink-300);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.setupSegBtnActive {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.setupAxisNote {
+  color: var(--ink-400);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.formationGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.formationCard {
+  position: relative;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-800);
+  box-shadow: var(--sh-1);
+  overflow: hidden;
+}
+
+.formationCard:hover,
+.formationCard:focus-visible {
+  border-color: var(--line-2);
+  box-shadow: var(--sh-2);
+  transform: translateY(-1px);
+}
+
+.formationCardSelected,
+.formationCardPending {
+  background: var(--bg-750);
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 0 1.5px var(--accent),
+    var(--sh-2);
+}
+
+.formationCardSelected::after,
+.formationCardPending::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 16px solid var(--accent);
+  border-left: 16px solid transparent;
+  border-top-right-radius: 13px;
+}
+
+.formationCardName {
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.formationCardCta {
+  color: var(--accent);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.miniPitch {
+  width: 64%;
+  max-width: 96px;
+  aspect-ratio: 1 / 1.16;
+  border: 1px solid var(--line-1);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.38);
+}
+
+.miniDot {
+  width: 7px;
+  height: 7px;
+  background: var(--ink-300);
+  box-shadow: none;
+}
+
+.miniDot_gk,
+.miniDot_def,
+.miniDot_mid,
+.miniDot_fwd {
+  background: var(--ink-300);
+}
+
+.formationDock {
+  position: sticky;
+  bottom: 0;
+  margin: 0 -16px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line-1);
+  background: var(--bg-850);
+}
+
+.formationDock :global(.btn) {
+  width: 100%;
+}
+
+.pitch {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      120% 80% at 50% 0%,
+      color-mix(in srgb, var(--accent) 5%, transparent),
+      transparent 60%
+    ),
+    var(--bg-800);
+}
+
+.pitch .slot {
+  min-width: 48px;
+  max-width: 56px;
+  padding: 4px 5px 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-750);
+  box-shadow: var(--sh-2);
+  font-size: 9.5px;
+}
+
+.pitch .slotEmpty {
+  border-style: solid;
+  border-color: var(--line-1);
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.38);
+}
+
+.pitch .slotSelected,
+.pitch button.slot:hover,
+.pitch button.slot:focus-visible {
+  box-shadow:
+    inset 0 0 0 1.5px var(--accent),
+    var(--sh-2);
+}
+
+.pitch .slot.tier_ideal,
+.pitch .slot.tier_ok,
+.pitch .slot.tier_stretch,
+.pitch .slot.tier_misfit,
+.pitch .slot.tierPreview_ideal,
+.pitch .slot.tierPreview_ok,
+.pitch .slot.tierPreview_stretch,
+.pitch .slot.tierPreview_misfit {
+  box-shadow: var(--sh-2);
+}
+
+.benchSlots {
+  gap: 6px;
+}
+
+.benchSlot,
+.sheetSlot,
+.targetChip {
+  border-style: solid;
+  background: var(--bg-sunken);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.24);
+}
+
+.lockBar {
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line-1);
+  background: var(--bg-850);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+@media (max-width: 430px) {
+  .draftShell,
+  .reviewShell {
+    padding: 12px 16px calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .formationSelect {
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .formationGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .formationCard {
+    padding: 9px;
+  }
+
+  .setupPanel {
+    gap: 10px;
+  }
+
+  .setupSegBtn {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .formationDock {
+    margin-inline: -6px;
+    padding-inline: 6px;
   }
 }

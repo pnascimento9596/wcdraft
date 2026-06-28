@@ -57,18 +57,37 @@ function staticFallback(request: Request): Response {
 function loadAssets(request: Request): Promise<RunOgImageAssets> {
   assetsPromise ??= (async () => {
     const base = new URL(request.url);
-    const [mark, sairaCondensedBold, soraSemiBold, soraBold, jetBrainsMonoBold] = await Promise.all(
-      [
-        fetchTextAsset(new URL("/brand/wcdraft-mark.svg", base)),
-        fetchBinaryAsset(new URL("/fonts/og/SairaCondensed-Bold.ttf", base)),
-        fetchBinaryAsset(new URL("/fonts/og/Sora-SemiBold.ttf", base)),
-        fetchBinaryAsset(new URL("/fonts/og/Sora-Bold.ttf", base)),
-        fetchBinaryAsset(new URL("/fonts/og/JetBrainsMono-Bold.ttf", base)),
-      ],
-    );
+    const [
+      mark,
+      spaceGroteskSemiBold,
+      spaceGroteskSemiBoldExt,
+      spaceGroteskBold,
+      spaceGroteskBoldExt,
+      spaceMonoBold,
+      spaceMonoBoldExt,
+    ] = await Promise.all([
+      fetchTextAsset(new URL("/brand/wcdraft-mark.svg", base)),
+      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff", base),
+      ),
+      fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", base)),
+      fetchBinaryAsset(
+        new URL("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff", base),
+      ),
+      fetchBinaryAsset(new URL("/fonts/space-mono/space-mono-latin-700-normal.woff", base)),
+      fetchBinaryAsset(new URL("/fonts/space-mono/space-mono-latin-ext-700-normal.woff", base)),
+    ]);
     return {
       markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(mark)}`,
-      fonts: { sairaCondensedBold, soraSemiBold, soraBold, jetBrainsMonoBold },
+      fonts: {
+        spaceGroteskSemiBold,
+        spaceGroteskSemiBoldExt,
+        spaceGroteskBold,
+        spaceGroteskBoldExt,
+        spaceMonoBold,
+        spaceMonoBoldExt,
+      },
     };
   })();
   return assetsPromise;
