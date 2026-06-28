@@ -45,6 +45,9 @@ import type {
 //
 // Bumping this string is the contract-break signal that invalidates persisted
 // `RunRecord`s and PWA caches.
+// runtime-data-2.8.0 (merit-v4.6): manual override display pins remain exact,
+// but their internal score/channel inputs are curve-inverted onto the natural
+// display scale.
 // runtime-data-2.7.0 (merit-v4.5): conservative recovery of 36 previously
 // unresolved merit-v4.3 owner rows into the Career+Current pin path.
 // runtime-data-2.6.0 (merit-v4.4): owner re-rate of the 85–90 CURRENT-basis band.
@@ -63,7 +66,7 @@ import type {
 // basis ratings (`career` + `current`) and the runtime replay shape includes
 // the draft-config axes introduced in runtime-data-1.2.0. The legacy `ratings`
 // array remains the Career alias until the product toggle ships.
-export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.7.0" as const;
+export const RUNTIME_DATA_SCHEMA_VERSION = "runtime-data-2.8.0" as const;
 export type RuntimeDataSchemaVersion = typeof RUNTIME_DATA_SCHEMA_VERSION;
 
 // ─── Source revisions + attribution ──────────────────────────────────────────

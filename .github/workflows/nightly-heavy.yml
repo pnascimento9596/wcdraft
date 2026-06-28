@@ -92,6 +92,6 @@ jobs:
       - name: Golden determinism — ratings lockfile must be byte-stable
         run: |
           uv run --project etl python -m wcdraft_etl.rating
-          sha256sum etl/output/ratings.lock.json | grep -F '1084f74194c7d46c66892f4d0328d3d90a728a8cec43956564cffd2ec651f0a0'
+          sha256sum etl/output/ratings.lock.json | grep -F 'bf4b75e58b8642833a863986d9191d739f3d2b652c0159e3014c005aaf09400c'
           git diff --exit-code -- etl/output/ratings.lock.json \
             || (echo "::error::etl/output/ratings.lock.json changed on Python ${{ matrix.python-version }}." >&2 && exit 1)

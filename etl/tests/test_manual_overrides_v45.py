@@ -7,7 +7,7 @@ accepted it follows the v4.3 duplicate-average and Career+Current apply rules.
 
 from __future__ import annotations
 
-from wcdraft_etl import manual_overrides
+from wcdraft_etl import display_curve, manual_overrides, rating_display
 
 EXPECTED_SHA256_V45 = "3effc3ba9adb7efd5fb4d00c406da5aa82db67d5b64f20e5a049cb807eaef249"
 
@@ -19,6 +19,10 @@ def _row(card_id: str, career: float, current: float) -> dict:
         "current_score_0_100": current,
         "components": [],
     }
+
+
+def _expected_internal(target: int) -> float:
+    return rating_display._inverse_display_value(target, display_curve.fit_unified_curve())
 
 
 def test_source_fingerprint_and_v43_unmatched_subset():
@@ -80,15 +84,15 @@ def test_apply_pins_recovered_rows_and_preserves_v44_current_precedence():
     by_id = {row["card_id"]: row for row in rows}
 
     row = by_id[v45_only]
-    assert row["score_0_100"] == float(v45[v45_only].final_rating)
-    assert row["current_score_0_100"] == float(v45[v45_only].final_rating)
+    assert row["score_0_100"] == _expected_internal(v45[v45_only].final_rating)
+    assert row["current_score_0_100"] == _expected_internal(v45[v45_only].final_rating)
     assert row["manual_rating_override"]["source_version"] == "v4.5"
     assert manual_overrides.manual_overall(row) == v45[v45_only].final_rating
     assert manual_overrides.manual_current_overall(row) == v45[v45_only].final_rating
 
     row = by_id[v44_overlap]
-    assert row["score_0_100"] == float(v45[v44_overlap].final_rating)
-    assert row["current_score_0_100"] == float(v44[v44_overlap].final_rating)
+    assert row["score_0_100"] == _expected_internal(v45[v44_overlap].final_rating)
+    assert row["current_score_0_100"] == _expected_internal(v44[v44_overlap].final_rating)
     assert row["manual_rating_override"]["source_version"] == "v4.5"
     assert row["manual_current_override"]["source_version"] == "v4.4"
     assert manual_overrides.manual_overall(row) == v45[v44_overlap].final_rating

@@ -1,5 +1,25 @@
 # WS-B Sim + Scoring — Calibration
 
+> **merit-v4.6 (`engine-2026.06.28-merit-v4.6`) — λ refit after manual
+> override curve inversion.** merit-v4.5 pinned owner override internals to the
+> display scale, which made override-heavy XIs simulate far above their visible
+> weight. merit-v4.6 restores the intended ordering: fit the pooled monotone
+> display curve from natural rows, then set each override internal to
+> `display_curve^-1(owner_display)`, preserving the owner's displayed OVERALL
+> while moving channels back to the same internal scale natural cards use. The
+> corrected channel pool made the merit-v4.5 λ tuple under-shoot: seed landing
+> `goals=2.289`, `draw=26.99%`, `margin>=4=3.36%`, `KO->ET=38.13%`,
+> `SO=24.67%`. The deterministic fitter was re-run before realism re-lock.
+> Accepted tuple: **`LAMBDA.BASE = 1.10`, `LAMBDA.SPREAD = 5.5`,
+> `LAMBDA.MIN = 0.30`, `LAMBDA.GAMMA_MID = 1.00`,
+> `LAMBDA.KO_LAMBDA_FACTOR = 0.82`**; `MAX`, `W_DEF/W_GK`, `CHANCES`, KO
+> dispersion, and group `A` remain unchanged, while group dispersion moves to
+> **`GROUP_OUTER_PROB = 0.14`, `GROUP_A = 0.40`**. Fitter: `175`
+> evaluations; final landing `goals=2.565` (delta +0.025), `draw=24.96%`
+> (delta +0.26pp), `margin>=4=4.92%` (delta +0.02pp), `KO->ET=33.73%`
+> (delta +0.73pp), `SO=21.87%` (delta +0.47pp). Runtime stamp:
+> `engine-2026.06.28-merit-v4.6`.
+
 > **merit-v4.5 (`engine-2026.06.17-merit-v4.5`) — λ recheck after conservative
 > recovery of v4.3 honest misses.** The shipped set is the implementer/reviewer
 > intersection: 36 previously-unresolved owner rows folded into the v4.3
@@ -177,30 +197,30 @@ control_for       = clamp( 1 + GAMMA_MID·(midfieldFor − midfieldAgainst)/100,
                            MIN, MAX )  ·  control_for
 ```
 
-| Constant                          | Pre-E3a | E-3a (initial) | E-3a REFIT  | MV2-11b     | merit-v4    | merit-v4.1  | merit-v4.2  | merit-v4.3  | **merit-v4.5 (`engine-2026.06.17-merit-v4.5`)** | Why (merit-v4.5)                                              |
-| --------------------------------- | ------- | -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------------------------------------------- | ------------------------------------------------------------- |
-| `LAMBDA.BASE`                     | 1.25    | 0.85           | 0.85        | 1.0         | 1.10        | 1.10        | 1.05        | 0.95        | **0.95**                                        | unchanged from v4.3 after recovered rows                      |
-| `LAMBDA.SPREAD`                   | 4.0     | 4.0            | 6.5         | 7.0         | 6.0         | 6.0         | 6.5         | 5.5         | **5.5**                                         | unchanged from v4.3                                           |
-| `LAMBDA.MIN`                      | 0.30    | 0.75           | 0.40        | 0.40        | 0.30        | 0.30        | 0.30        | 0.80        | **0.80**                                        | unchanged from v4.3                                           |
-| `LAMBDA.MAX`                      | 3.40    | 3.40           | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40                                            | unchanged                                                     |
-| `LAMBDA.W_DEF`                    | -       | 0.65           | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70                                            | unchanged                                                     |
-| `LAMBDA.W_GK`                     | -       | 0.35           | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30                                            | unchanged (W_GK + W_DEF == 1)                                 |
-| `LAMBDA.GAMMA_MID`                | -       | 0.45           | 0.50        | 0.60        | 0.80        | 1.00        | 0.70        | 0.70        | 0.70                                            | unchanged from v4.3                                           |
-| `LAMBDA.CONTROL_BAND_LO/HI`       | -       | 0.85 / 1.15    | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15                                     | unchanged: bounded multiplier still amplifies, never replaces |
-| `LAMBDA.ET_FRACTION`              | 30/90   | 30/90          | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90                                           | unchanged                                                     |
-| `LAMBDA.KO_LAMBDA_FACTOR`         | -       | -              | 0.85        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82                                            | unchanged from MV2-11b                                        |
-| `CHANCES.REGULATION`              | 14      | 50             | 50          | 50          | 50          | 50          | 50          | 50          | 50                                              | unchanged                                                     |
-| `CHANCES.EXTRA_TIME`              | 5       | 17             | 17          | 17          | 17          | 17          | 17          | 17          | 17                                              | unchanged                                                     |
-| `CHANCE_OUTCOME.SAVED_SHARE`      | 0.26    | 0.10           | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10                                            | unchanged                                                     |
-| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22    | 0.14           | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14                                            | unchanged                                                     |
-| `CHANCE_OUTCOME.FOUL_SHARE`       | 0.16    | 0.22           | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22                                            | unchanged                                                     |
-| `CHANCE_OUTCOME.OFFSIDE_SHARE`    | 0.08    | 0.04           | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04                                            | unchanged                                                     |
-| `LAMBDA_DISP.OUTER_PROB`          | -       | -              | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20                                            | unchanged                                                     |
-| `LAMBDA_DISP.A`                   | -       | -              | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75                                            | unchanged                                                     |
-| `LAMBDA_DISP.GROUP_OUTER_PROB`    | -       | -              | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.04        | **0.02**                                        | trims group dispersion after the recovered-row bundle         |
-| `LAMBDA_DISP.GROUP_A`             | -       | -              | 0.50        | 0.50        | 0.50        | 0.50        | 0.50        | 0.40        | **0.40**                                        | unchanged from v4.3                                           |
+| Constant                          | Pre-E3a | E-3a (initial) | E-3a REFIT  | MV2-11b     | merit-v4    | merit-v4.1  | merit-v4.2  | merit-v4.3  | **merit-v4.6 (`engine-2026.06.28-merit-v4.6`)** | Why (merit-v4.6)                                                |
+| --------------------------------- | ------- | -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------------------------------------------- | --------------------------------------------------------------- |
+| `LAMBDA.BASE`                     | 1.25    | 0.85           | 0.85        | 1.0         | 1.10        | 1.10        | 1.05        | 0.95        | **1.10**                                        | raises mean goals after override channels moved downscale       |
+| `LAMBDA.SPREAD`                   | 4.0     | 4.0            | 6.5         | 7.0         | 6.0         | 6.0         | 6.5         | 5.5         | **5.5**                                         | unchanged from v4.5 fit                                         |
+| `LAMBDA.MIN`                      | 0.30    | 0.75           | 0.40        | 0.40        | 0.30        | 0.30        | 0.30        | 0.80        | **0.30**                                        | restores lower floor after the corrected channel distribution   |
+| `LAMBDA.MAX`                      | 3.40    | 3.40           | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40        | 3.40                                            | unchanged                                                       |
+| `LAMBDA.W_DEF`                    | -       | 0.65           | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70        | 0.70                                            | unchanged                                                       |
+| `LAMBDA.W_GK`                     | -       | 0.35           | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30        | 0.30                                            | unchanged (W_GK + W_DEF == 1)                                   |
+| `LAMBDA.GAMMA_MID`                | -       | 0.45           | 0.50        | 0.60        | 0.80        | 1.00        | 0.70        | 0.70        | **1.00**                                        | restores control sensitivity after override midfields re-scaled |
+| `LAMBDA.CONTROL_BAND_LO/HI`       | -       | 0.85 / 1.15    | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15 | 0.85 / 1.15                                     | unchanged: bounded multiplier still amplifies, never replaces   |
+| `LAMBDA.ET_FRACTION`              | 30/90   | 30/90          | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90       | 30/90                                           | unchanged                                                       |
+| `LAMBDA.KO_LAMBDA_FACTOR`         | -       | -              | 0.85        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82        | 0.82                                            | unchanged from MV2-11b                                          |
+| `CHANCES.REGULATION`              | 14      | 50             | 50          | 50          | 50          | 50          | 50          | 50          | 50                                              | unchanged                                                       |
+| `CHANCES.EXTRA_TIME`              | 5       | 17             | 17          | 17          | 17          | 17          | 17          | 17          | 17                                              | unchanged                                                       |
+| `CHANCE_OUTCOME.SAVED_SHARE`      | 0.26    | 0.10           | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.10                                            | unchanged                                                       |
+| `CHANCE_OUTCOME.OFF_TARGET_SHARE` | 0.22    | 0.14           | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14        | 0.14                                            | unchanged                                                       |
+| `CHANCE_OUTCOME.FOUL_SHARE`       | 0.16    | 0.22           | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22        | 0.22                                            | unchanged                                                       |
+| `CHANCE_OUTCOME.OFFSIDE_SHARE`    | 0.08    | 0.04           | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04        | 0.04                                            | unchanged                                                       |
+| `LAMBDA_DISP.OUTER_PROB`          | -       | -              | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20        | 0.20                                            | unchanged                                                       |
+| `LAMBDA_DISP.A`                   | -       | -              | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75        | 0.75                                            | unchanged                                                       |
+| `LAMBDA_DISP.GROUP_OUTER_PROB`    | -       | -              | 0.10        | 0.10        | 0.10        | 0.10        | 0.10        | 0.04        | **0.14**                                        | lifts margin tail while keeping group draws in band             |
+| `LAMBDA_DISP.GROUP_A`             | -       | -              | 0.50        | 0.50        | 0.50        | 0.50        | 0.50        | 0.40        | **0.40**                                        | unchanged from v4.5                                             |
 
-## E-3a REFIT (current) — match-level λ dispersion (D1 path)
+## Current match-level λ dispersion (D1 path)
 
 E-3a INITIAL pure-Poisson scoring was Pareto-limited against the D5-tight
 bands:
@@ -214,19 +234,21 @@ bands:
   modern-era norms (24.7% group, 33% KO) cannot BOTH be hit without a
   PHASE-DEPENDENT driver.
 
-The E-3a REFIT resolves both walls with two new mechanisms (both
-transcendental-free; cross-platform determinism preserved):
+The current v4.6 tuple preserves the E-3a dispersion design, with later fitted
+values folded in as the rating/channel pool moved. The two mechanisms are still
+transcendental-free and cross-platform deterministic:
 
-1. **`LAMBDA.KO_LAMBDA_FACTOR`** (= 0.85) — multiplicative λ reduction applied
-   to BOTH sides in KO regulation. Models the well-documented modern-WC fact
-   that knockout matches run ~10–15% below group-stage scoring rates (more
-   tactical, more cagey). Faithfulness preserved because the favourite/underdog
-   ordering is scaled by the SAME factor.
+1. **`LAMBDA.KO_LAMBDA_FACTOR`** (= 0.82 in the current v4.6 tuple; E-3a
+   originally landed at 0.85) — multiplicative λ reduction applied to BOTH sides
+   in KO regulation. Models the well-documented modern-WC fact that knockout
+   matches run below group-stage scoring rates (more tactical, more cagey).
+   Faithfulness preserved because the favourite/underdog ordering is scaled by
+   the SAME factor.
 2. **`LAMBDA_DISP` — phase-specific 3-point dispersion** — each match draws
    ONE seeded ε ∈ {1−A, 1, 1+A} (a discrete distribution, mean exactly 1,
    integer/rational arithmetic only). The (`OUTER_PROB`, `A`) pair is
    PHASE-DEPENDENT: KO uses a strong dispersion (0.20, 0.75) → lifts KO →
-   ET and shootout rates; group uses a sparse dispersion (0.02, 0.40)
+   ET and shootout rates; current v4.6 group dispersion uses (0.14, 0.40)
    → lifts `margin >= 4` into band without pushing `group_draw` past its
    tight upper edge. Mean(ε) = 1 by construction so mean goals/match is
    preserved within each phase.
@@ -257,13 +279,13 @@ the existing `realism-modern-norms.golden.test.ts` measures). V7 used
 the grids away from edge landings; the schedule + grids are pinned, so the
 winner is reproducible.
 
-| Norm          | Modern-WC target | D5-tight band    | E-3a initial landing      | E-3a REFIT landing           | merit-v3 V7 landing          | merit-v4.3 landing           | **merit-v4.5 landing**           |
+| Norm          | Modern-WC target | D5-tight band    | E-3a initial landing      | E-3a REFIT landing           | merit-v3 V7 landing          | merit-v4.3 landing           | **merit-v4.6 landing**           |
 | ------------- | ---------------- | ---------------- | ------------------------- | ---------------------------- | ---------------------------- | ---------------------------- | -------------------------------- |
-| goals / game  | 2.54             | [2.478, 2.594]   | 2.40 (delta -0.13, FAIL)  | 2.534 (delta -0.006, pass)   | 2.534 (delta -0.001, pass)   | 2.514 (delta -0.022, pass)   | **2.528 (delta -0.012, pass)**   |
+| goals / game  | 2.54             | [2.478, 2.594]   | 2.40 (delta -0.13, FAIL)  | 2.534 (delta -0.006, pass)   | 2.534 (delta -0.001, pass)   | 2.514 (delta -0.022, pass)   | **2.565 (delta +0.025, pass)**   |
 | group draw %  | 24.7             | [22.88%, 26.52%] | 26.4 (delta +1.7pp, pass) | 25.84% (delta +1.14pp, pass) | 25.18% (delta +0.48pp, pass) | 25.27% (delta +0.57pp, pass) | **24.96% (delta +0.26pp, pass)** |
-| margin >= 4 % | 4.9              | [4.12%, 5.70%]   | 2.93 (delta -2.0pp, FAIL) | 4.72% (delta -0.18pp, pass)  | 4.96% (delta +0.05pp, pass)  | 4.99% (delta +0.09pp, pass)  | **5.02% (delta +0.12pp, pass)**  |
-| KO -> ET %    | 33.0             | [29.61%, 36.48%] | 29.6 (delta -3.4pp, FAIL) | 33.60% (delta +0.60pp, pass) | 33.47% (delta +0.43pp, pass) | 32.67% (delta -0.33pp, pass) | **32.53% (delta -0.47pp, pass)** |
-| shootout %    | 21.4             | [18.43%, 24.43%] | 15.7 (delta -5.7pp, FAIL) | 22.93% (delta +1.53pp, pass) | 21.33% (delta -0.10pp, pass) | 21.73% (delta +0.33pp, pass) | **21.73% (delta +0.33pp, pass)** |
+| margin >= 4 % | 4.9              | [4.12%, 5.70%]   | 2.93 (delta -2.0pp, FAIL) | 4.72% (delta -0.18pp, pass)  | 4.96% (delta +0.05pp, pass)  | 4.99% (delta +0.09pp, pass)  | **4.92% (delta +0.02pp, pass)**  |
+| KO -> ET %    | 33.0             | [29.61%, 36.48%] | 29.6 (delta -3.4pp, FAIL) | 33.60% (delta +0.60pp, pass) | 33.47% (delta +0.43pp, pass) | 32.67% (delta -0.33pp, pass) | **33.73% (delta +0.73pp, pass)** |
+| shootout %    | 21.4             | [18.43%, 24.43%] | 15.7 (delta -5.7pp, FAIL) | 22.93% (delta +1.53pp, pass) | 21.33% (delta -0.10pp, pass) | 21.73% (delta +0.33pp, pass) | **21.87% (delta +0.47pp, pass)** |
 
 All 5 symmetric realism norms land STRICTLY INSIDE the D5-tight bands —
 the realism gate is no longer toothless. Faithfulness (`packages/core/src/faithfulness.test.ts`,

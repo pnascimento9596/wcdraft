@@ -171,12 +171,13 @@ def test_schema_bounds(built: list[dict], cards: dict[str, dict]):
 
 
 def test_rating_version_is_merit_v45_historical_rebuild(built: list[dict]):
-    # wc-perf-6.5.0 = merit-v4.5: recovered v4.3 honest misses are folded into
+    # wc-perf-6.6.0 = merit-v4.6: owner override display pins are curve-inverted
+    # back onto the natural internal score scale before channels materialize.
     # the Career+Current pin path; v4.4 current-only pins still supersede current
     # on overlap.
-    assert rating.RATING_VERSION == "wc-perf-6.5.0"
+    assert rating.RATING_VERSION == "wc-perf-6.6.0"
     for r in built:
-        assert r["rating_version"] == "wc-perf-6.5.0"
+        assert r["rating_version"] == "wc-perf-6.6.0"
 
 
 def test_historical_consumes_full_career_stature_row_without_compat_view():

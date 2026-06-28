@@ -44,10 +44,10 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-// :105 is the first satisfying seed after the merit-v4.3 rating rebuild and
-// lambda refit (`engine-2026.06.15-merit-v4.3`). Same search criteria, same
-// prefix — see scripts/generate-e2e-golden.mjs.
-const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:105";
+// :29 is the first satisfying seed after the merit-v4.6 curve-inversion
+// correction and lambda refit. Same search criteria, same prefix — see
+// scripts/generate-e2e-golden.mjs.
+const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:29";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 

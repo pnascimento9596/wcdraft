@@ -106,6 +106,9 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # wc-perf and must be replay-anchored separately. Team2026.rating_version must
 # equal this. MV2-5 (merit-v2): projected 2026 ratings reconcile onto the career-
 # stature scale for linked-material players → proj-career-3.0.0.
+# proj-career-5.6.0 (merit-v4.6): manual owner override display targets are
+# curve-inverted back onto the natural internal score scale before sim channels
+# materialize; display pins remain exact.
 # proj-career-5.5.0 (merit-v4.5): conservative recovery of 2026 rows among the
 # previously-unresolved merit-v4.3 owner set. Recovered rows use the same
 # Career+Current authoritative pin as v4.3; v4.4 current-only pins still
@@ -135,7 +138,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 # career-stature-3.0.0 person-identity rows for linked AND minted cards, the
 # MV2-5 cross-era quantile map is re-derived against the wc-perf-5.0.0 raw-only
 # distribution, and rows emit the additive Career/Current dual-basis payload.
-RATING_VERSION = "proj-career-5.5.0"
+RATING_VERSION = "proj-career-5.6.0"
 
 PROVENANCE = "projected_career"
 COVERAGE_BASIS = "career_signals"
