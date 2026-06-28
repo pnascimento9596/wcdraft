@@ -270,6 +270,10 @@ function DraftBoard({
     () => draftCandidateViews(gameData.indexes, draft, spin, { blindRatings: blind, basis }),
     [gameData, draft, spin, blind, basis],
   );
+  // Open vacant slots (engine truth).
+  const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
+  const managerOnlyOpen =
+    !complete && !!spin && draft.manager_card_id === null && openSlots.length === 0;
 
   // Selection / UI state.
   const [sel, setSel] = useState<Selection>(null);
@@ -370,11 +374,12 @@ function DraftBoard({
     if (target === null) return;
     revealFocusTargetRef.current = null;
     if (target === "candidates") {
+      if (managerOnlyOpen) return;
       focusFirstWithin(candidatePanelRef.current, candidatePanelRef.current);
       return;
     }
     lineupHeadingRef.current?.focus({ preventScroll: true });
-  }, [phase]);
+  }, [phase, managerOnlyOpen]);
 
   useEffect(() => {
     if (!sheetOpen || sel?.kind !== "player") return undefined;
@@ -482,11 +487,6 @@ function DraftBoard({
       return ord[a.eligible_positions[0] ?? "MF"] - ord[b.eligible_positions[0] ?? "MF"];
     });
   }, [candidates, search, posFilter, sortKey]);
-
-  // Open vacant slots (engine truth).
-  const openSlots = useMemo(() => draft.squad.filter((sl) => sl.card_id === null), [draft.squad]);
-  const managerOnlyOpen =
-    !complete && !!spin && draft.manager_card_id === null && openSlots.length === 0;
 
   const bestSlotFor = useCallback(
     (card: PlayerCardView): string | null => {
