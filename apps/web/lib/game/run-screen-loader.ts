@@ -36,6 +36,11 @@ export interface ResolveDisplayRunOptions {
    * only needs it to replay token-loaded runs, so keep local-id loads cheaper.
    */
   readonly requireScenarioForLocalRun?: boolean;
+  /**
+   * Share can use the scenario to label persisted local narratives, but a
+   * completed local run can still render without that optional copy pass.
+   */
+  readonly optionalScenarioForLocalRun?: boolean;
   /** Draft and Review can render editable pre-simulation records. */
   readonly allowUnsimulatedLocalRun?: boolean;
 }
@@ -67,8 +72,16 @@ export async function resolveDisplayRun(
   const resolvedDeps = { ...defaultResolveDisplayRunDeps, ...deps };
   const gameData = await resolvedDeps.loadGameData();
   let scenario: Scenario2026Bundle | null = null;
-  if (parsed.kind === "id" && options.requireScenarioForLocalRun) {
-    scenario = await resolvedDeps.loadScenarioBundle();
+  if (
+    parsed.kind === "id" &&
+    (options.requireScenarioForLocalRun || options.optionalScenarioForLocalRun)
+  ) {
+    try {
+      scenario = await resolvedDeps.loadScenarioBundle();
+    } catch (err) {
+      if (options.requireScenarioForLocalRun) throw err;
+      scenario = null;
+    }
   }
 
   if (parsed.kind === "id") {

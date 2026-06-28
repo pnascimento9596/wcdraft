@@ -141,6 +141,92 @@
   font-family: var(--f-mono);
 }
 
+.setupSkeleton {
+  width: min(100%, 720px);
+  margin-inline: auto;
+}
+
+.setupSkeletonPanel,
+.setupSkeletonTile {
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--bg-800);
+  box-shadow: var(--sh-1);
+}
+
+.setupSkeletonPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+}
+
+.setupSkeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.setupSkeletonTile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 128px;
+  padding: 12px;
+}
+
+.setupSkeletonPitch,
+.setupSkeletonLine,
+.setupSkeletonSeg span {
+  display: block;
+  border-radius: var(--r-2);
+  background: linear-gradient(
+    90deg,
+    var(--bg-750),
+    color-mix(in srgb, var(--ink-400) 12%, var(--bg-750)),
+    var(--bg-750)
+  );
+  background-size: 220% 100%;
+  animation: setupSkeletonPulse 1.4s ease-in-out infinite;
+}
+
+.setupSkeletonPitch {
+  flex: 1 1 auto;
+  min-height: 72px;
+}
+
+.setupSkeletonLine {
+  width: 62%;
+  height: 14px;
+}
+
+.setupSkeletonSeg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.setupSkeletonSeg span {
+  height: 36px;
+}
+
+@keyframes setupSkeletonPulse {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setupSkeletonPitch,
+  .setupSkeletonLine,
+  .setupSkeletonSeg span {
+    animation: none;
+  }
+}
+
 .errorPanel {
   padding: 24px;
   border: 1px solid rgba(255, 77, 99, 0.35);

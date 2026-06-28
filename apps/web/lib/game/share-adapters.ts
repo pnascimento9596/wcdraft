@@ -10,14 +10,16 @@
 
 import {
   FORMATION_TEMPLATES,
+  buildNarrative,
   type DraftState,
   type MatchResult,
   type RunResult,
 } from "@wcdraft/core";
+import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
 import type { RunRecordV1 } from "./run-record";
-import { topScorerView, type TopScorerView } from "./results-adapters";
+import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
 
 // ─── Headline ────────────────────────────────────────────────────────────────
 
@@ -127,13 +129,18 @@ export interface ShareView {
   manager: ShareManager | null;
   stars: ShareStar[];
   top_scorer: TopScorerView | null;
+  narrative: string;
   seed: string;
   reached_round: string;
   matches_played: number;
   shootout_wins: number;
 }
 
-export function buildShareView(gameData: GameData, record: RunRecordV1): ShareView | null {
+export function buildShareView(
+  gameData: GameData,
+  record: RunRecordV1,
+  scenario?: Scenario2026Bundle | null,
+): ShareView | null {
   if (!record.simulation) return null;
   const run = record.simulation.run;
   const matches = record.simulation.matches;
@@ -152,11 +159,29 @@ export function buildShareView(gameData: GameData, record: RunRecordV1): ShareVi
     manager: managerLine(gameData, draft),
     stars: topStars(gameData, draft, 3),
     top_scorer: topScorerCaption(gameData, run, matches),
+    narrative: shareNarrative(gameData, record, scenario),
     seed: run.seed,
     reached_round: run.reached_round,
     matches_played: matches.length,
     shootout_wins: run.shootout_wins,
   };
+}
+
+function shareNarrative(
+  gameData: GameData,
+  record: RunRecordV1,
+  scenario?: Scenario2026Bundle | null,
+): string {
+  const simulation = record.simulation;
+  if (!simulation) return "";
+  const run = simulation.run;
+  if (!scenario) return "";
+  const labels = buildNarrativeLabels(gameData, scenario, record.draft);
+  return cleanNarrative(buildNarrative(run, [...simulation.matches], labels).filled_text);
+}
+
+function cleanNarrative(value: string | null | undefined): string {
+  return value?.replace(/\s+/gu, " ").trim() ?? "";
 }
 
 // ─── Caption text ────────────────────────────────────────────────────────────
@@ -172,6 +197,7 @@ export const SHARE_TAGLINE = "Built my all-time XI on wcdraft" as const;
  */
 export function buildShareCaption(view: ShareView, url: string | null): string {
   const lines: string[] = [];
+  if (view.narrative) lines.push(view.narrative);
   lines.push(`${view.team_name} went ${view.display_record} on wcdraft.`);
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
@@ -185,7 +211,8 @@ export function buildShareCaption(view: ShareView, url: string | null): string {
  * for `navigator.share({ text, url })`.
  */
 export function buildShareIntentText(view: ShareView): string {
-  return `${view.team_name} went ${view.display_record} on wcdraft. ${SHARE_TAGLINE}`;
+  const lead = `${view.team_name} went ${view.display_record} on wcdraft. ${SHARE_TAGLINE}`;
+  return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 
 // ─── Social web intents ──────────────────────────────────────────────────────

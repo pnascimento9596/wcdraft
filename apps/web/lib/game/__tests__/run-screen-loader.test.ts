@@ -85,6 +85,24 @@ describe("resolveDisplayRun", () => {
     expect(scenarioLoads).toBe(1);
   });
 
+  it("keeps local completed share loads ready when optional scenario labels fail", async () => {
+    const record = completedRecord("wcdraft:screen-loader:optional-scenario-fail");
+    const state = await resolveDisplayRun(
+      { kind: "id", run_id: record.run_id },
+      { optionalScenarioForLocalRun: true },
+      deps({
+        loadScenarioBundle: async () => {
+          throw new Error("scenario unavailable");
+        },
+        loadRunRecord: () => ({ status: "loaded", record }),
+      }),
+    );
+
+    expect(state.kind).toBe("ready");
+    expect(state.kind === "ready" ? state.scenario : "not-ready").toBeNull();
+    expect(state.kind === "ready" ? state.record : null).toBe(record);
+  });
+
   it("separates malformed, newer-version, and version-skewed tokens", async () => {
     await expect(
       resolveDisplayRun({ kind: "token", token: "t2.not-json" }, {}, deps()),

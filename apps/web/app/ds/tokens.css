@@ -21,7 +21,7 @@
   --ink-100: #edecf2; /* hi */
   --ink-200: #c5c3d4;
   --ink-300: #9695a8; /* mid */
-  --ink-400: #636274; /* low */
+  --ink-400: #828195; /* low, AA on dark canvas/card */
   --ink-500: #424153; /* faint / disabled */
 
   /* ---- Duotone v2 — CYAN (primary brand + action + structure) + GOLD (precious: the draft
@@ -168,31 +168,31 @@
   --ink-100: #16211a;
   --ink-200: #2f3a33;
   --ink-300: #46524b;
-  --ink-400: #6c776f;
+  --ink-400: #566158;
   --ink-500: #9aa399;
 
   /* Accent ramps — deepened so accent-as-text reads on paper. "bright"
      means "emphasis text", not "lighter", in this theme. */
-  --cyan: #10809e;
-  --cyan-bright: #10809e;
+  --cyan: #0d687f;
+  --cyan-bright: #0d687f;
   --cyan-deep: #0d687f;
 
-  --gold: #a9760c;
-  --gold-bright: #a9760c;
-  --gold-deep: #c8901a;
-  --brand-mark-gold-start: #a9760c;
+  --gold: #765100;
+  --gold-bright: #765100;
+  --gold-deep: #765100;
+  --brand-mark-gold-start: #765100;
   --brand-mark-gold-mid: #f5b62a;
   --brand-mark-gold-end: #f5b62a;
 
-  --teal: #0d8a55;
-  --teal-bright: #0d8a55;
-  --teal-deep: #0d8a55;
+  --teal: #067044;
+  --teal-bright: #067044;
+  --teal-deep: #067044;
 
-  --ember: #0d8a55;
-  --ember-bright: #0d8a55;
-  --ember-deep: #0d8a55;
-  --amber: #a9760c;
-  --amber-bright: #a9760c;
+  --ember: #067044;
+  --ember-bright: #067044;
+  --ember-deep: #067044;
+  --amber: #765100;
+  --amber-bright: #765100;
 
   /* Lock / committed — steel flips dark for text + borders on paper. */
   --lock: #5a6372;
@@ -200,34 +200,34 @@
   --lock-rgb: 90, 99, 114;
 
   /* Functional states as text on pale surfaces. */
-  --win: #8a6200;
-  --loss: #c2273c;
+  --win: #765100;
+  --loss: #a83228;
   --draw: #5d6570;
-  --warn: #8a5d0b;
-  --info: #0a6d96;
+  --warn: #825400;
+  --info: #0d687f;
 
   /* Provenance hues — same identities, print-grade depth. */
-  --prov-historical: #10809e;
-  --prov-projected: #4f5fcf;
-  --prov-estimate: #bd611b;
+  --prov-historical: #0d687f;
+  --prov-projected: #4655b8;
+  --prov-estimate: #93450c;
   --prov-manager: #566472;
-  --prov-legend: #a9760c;
-  --prov-unknown: #6c776f;
+  --prov-legend: #765100;
+  --prov-unknown: #566158;
 
-  --prov-historical-rgb: 16, 128, 158;
-  --prov-projected-rgb: 79, 95, 207;
-  --prov-estimate-rgb: 189, 97, 27;
+  --prov-historical-rgb: 13, 104, 127;
+  --prov-projected-rgb: 70, 85, 184;
+  --prov-estimate-rgb: 147, 69, 12;
   --prov-manager-rgb: 86, 100, 114;
-  --prov-legend-rgb: 169, 118, 12;
+  --prov-legend-rgb: 118, 81, 0;
 
   /* Position legend tints (decorative dots only). */
-  --pos-gk: #6c776f;
-  --pos-def: #6c776f;
-  --pos-mid: #6c776f;
-  --pos-fwd: #a9760c;
+  --pos-gk: #566158;
+  --pos-def: #566158;
+  --pos-mid: #566158;
+  --pos-fwd: #765100;
 
   /* Pitch chalk + chip lines flip to dark ink on the pale pitch. */
-  --pitch-line: rgba(13, 138, 85, 0.4);
+  --pitch-line: rgba(6, 112, 68, 0.42);
   --pitch-slot-line: rgba(24, 36, 28, 0.28);
   --pitch-accent-mute: rgba(24, 36, 28, 0.28);
 

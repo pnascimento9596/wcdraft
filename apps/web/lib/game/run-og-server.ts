@@ -1,4 +1,4 @@
-import { buildRunScenario, runTournamentFull } from "@wcdraft/core";
+import { buildNarrative, buildRunScenario, runTournamentFull } from "@wcdraft/core";
 
 import type { ValidationData } from "../leaderboard/validate";
 import {
@@ -11,6 +11,7 @@ import {
 import type { RunRecordV1 } from "./run-record";
 import { buildSimWorldInputs } from "./simulate";
 import { buildRunOgModelFromTrustedDraft, type RunOgModel } from "./run-og-model";
+import { buildNarrativeLabels } from "./results-adapters";
 
 export type RunOgVerificationResult =
   | { status: "accepted"; token: RunTokenV2Body; model: RunOgModel; summary: RunTokenOgSummary }
@@ -56,6 +57,8 @@ export function verifyRunTokenForOg(
       ruleset_version: data.gameData.versions.ruleset_version,
     });
     const result = runTournamentFull(draft, scenario, token.ps, world);
+    const narrativeLabels = buildNarrativeLabels(data.gameData, data.scenario, draft);
+    const narrative = buildNarrative(result.run, [...result.matches], narrativeLabels).filled_text;
     const summary: RunTokenOgSummary = {
       w: result.run.wins,
       l: result.run.losses,
@@ -70,7 +73,7 @@ export function verifyRunTokenForOg(
       status: "accepted",
       token,
       summary,
-      model: buildRunOgModelFromTrustedDraft(data.gameData, token, draft, summary),
+      model: buildRunOgModelFromTrustedDraft(data.gameData, token, draft, summary, narrative),
     };
   } catch {
     return { status: "rejected", reason: "SIM_FAILURE" };

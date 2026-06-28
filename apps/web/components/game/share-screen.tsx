@@ -34,10 +34,22 @@ import s from "./game.module.css";
 
 type Mode =
   | { kind: "loading" }
-  | { kind: "ready"; record: RunRecordV1; view: ShareView; linkRunValue: string }
+  | {
+      kind: "ready";
+      record: RunRecordV1;
+      view: ShareView;
+      linkRunValue: string;
+      isRecipient: boolean;
+    }
   | { kind: "missing"; reason: string; runId: string | null }
   | { kind: "skew"; title: string; message: string }
   | { kind: "error"; title: string; message: string };
+
+type OgSignState =
+  | { kind: "idle" }
+  | { kind: "pending" }
+  | { kind: "ready"; signed: string }
+  | { kind: "error"; message: string };
 
 type ShareSvgColors = {
   bgStart: string;
@@ -69,7 +81,6 @@ export function ShareScreen() {
   // Parsed once at component scope so both the load effect AND the render
   // path (link-href threading) see the same discriminated value.
   const parsed = useMemo(() => parseRunSearchParams(searchParams ?? null), [searchParams]);
-
   const [mode, setMode] = useState<Mode>({ kind: "loading" });
   const reqToken = useRef(0);
 
@@ -86,7 +97,7 @@ export function ShareScreen() {
     }
     (async () => {
       try {
-        const resolved = await resolveDisplayRun(parsed);
+        const resolved = await resolveDisplayRun(parsed, { optionalScenarioForLocalRun: true });
         if (myToken !== reqToken.current) return;
         if (resolved.kind === "missing") {
           setMode({
@@ -141,7 +152,7 @@ export function ShareScreen() {
           return;
         }
 
-        const view = buildShareView(resolved.gameData, resolved.record);
+        const view = buildShareView(resolved.gameData, resolved.record, resolved.scenario);
         if (!view) {
           // No simulation — token decoded but rebuilding the view failed.
           setMode({
@@ -156,6 +167,7 @@ export function ShareScreen() {
           record: resolved.record,
           view,
           linkRunValue: resolved.linkRunValue,
+          isRecipient: resolved.isReplayedFromToken,
         });
       } catch (err) {
         if (myToken !== reqToken.current) return;
@@ -221,7 +233,14 @@ export function ShareScreen() {
     );
   }
 
-  return <ShareBody record={mode.record} view={mode.view} linkRunValue={mode.linkRunValue} />;
+  return (
+    <ShareBody
+      record={mode.record}
+      view={mode.view}
+      linkRunValue={mode.linkRunValue}
+      isRecipient={mode.isRecipient}
+    />
+  );
 }
 
 function ShareAppBar() {
@@ -244,17 +263,19 @@ function ShareBody({
   record,
   view,
   linkRunValue,
+  isRecipient,
 }: {
   record: RunRecordV1;
   view: ShareView;
   /** Value to thread into in-screen `?run=` URLs — the token when replayed, the run_id otherwise. */
   linkRunValue: string | null;
+  isRecipient: boolean;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const svgColors = useShareSvgColors();
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState<"idle" | "ok" | "unsupported">("idle");
-  const [signedOg, setSignedOg] = useState<string | null>(null);
+  const [ogSign, setOgSign] = useState<OgSignState>({ kind: "idle" });
 
   // Replay URL: a self-contained `?run=<token>` URL so a fresh browser with
   // no matching localStorage can reproduce the run byte-for-byte. The token
@@ -289,10 +310,14 @@ function ShareBody({
 
   useEffect(() => {
     let cancelled = false;
-    setSignedOg(null);
+    setOgSign({ kind: "idle" });
     if (shareLink.kind !== "ready") return;
-    const controller = new AbortController();
-    void (async () => {
+    let controller: AbortController | null = null;
+    let timeout: number | null = null;
+    const signCurrentRun = async () => {
+      setOgSign({ kind: "pending" });
+      controller = new AbortController();
+      timeout = window.setTimeout(() => controller?.abort(), 4000);
       try {
         const response = await fetch("/api/og/sign", {
           method: "POST",
@@ -300,26 +325,55 @@ function ShareBody({
           body: JSON.stringify({ run: shareLink.token }),
           signal: controller.signal,
         });
-        if (!response.ok) return;
+        if (!response.ok) {
+          if (!cancelled) {
+            setOgSign({
+              kind: "error",
+              message: "Couldn't sign the run preview for link unfurls.",
+            });
+          }
+          return;
+        }
         const body = (await response.json()) as { ok?: unknown; signed?: unknown };
         if (!cancelled && body.ok === true && typeof body.signed === "string") {
-          setSignedOg(body.signed);
+          setOgSign({ kind: "ready", signed: body.signed });
+          return;
+        }
+        if (!cancelled) {
+          setOgSign({
+            kind: "error",
+            message: "Couldn't sign the run preview for link unfurls.",
+          });
         }
       } catch {
-        // Static unfurl fallback is acceptable; the replay URL remains valid.
+        if (!cancelled) {
+          setOgSign({
+            kind: "error",
+            message: "Couldn't sign the run preview for link unfurls.",
+          });
+        }
+      } finally {
+        if (timeout !== null) window.clearTimeout(timeout);
       }
-    })();
+    };
+    void signCurrentRun();
     return () => {
       cancelled = true;
-      controller.abort();
+      if (timeout !== null) window.clearTimeout(timeout);
+      controller?.abort();
     };
   }, [shareLink]);
 
+  const shareLinkPending =
+    shareLink.kind === "ready" && (ogSign.kind === "idle" || ogSign.kind === "pending");
+  const signedOg = ogSign.kind === "ready" ? ogSign.signed : null;
   const shareUrl =
-    shareLink.kind === "ready"
+    shareLink.kind === "ready" && !shareLinkPending
       ? `${shareLink.origin}${shareHref(shareLink.token, signedOg)}`
       : null;
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
+  const ogPreviewError = ogSign.kind === "error" ? ogSign.message : null;
+  const shareUnavailable = !!shareLinkError || !shareUrl;
   const configBadges: ConfigBadge[] = useMemo(() => {
     const replayBadges =
       typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
@@ -347,6 +401,7 @@ function ShareBody({
   }
 
   async function copyCaption() {
+    if (shareLinkPending) return;
     try {
       await navigator.clipboard.writeText(caption);
       setCopied(true);
@@ -357,6 +412,7 @@ function ShareBody({
   }
 
   function downloadSvg() {
+    if (shareLinkPending) return;
     const node = svgRef.current;
     if (!node) return;
     const xml = new XMLSerializer().serializeToString(node);
@@ -374,18 +430,19 @@ function ShareBody({
   }
 
   async function shareNative() {
+    if (!shareUrl) return;
     if (typeof navigator === "undefined" || !navigator.share) {
       setShared("unsupported");
       return;
     }
     try {
       await navigator.share({
-        title: `${view.team_name} — ${view.headline}`,
+        title: `${shareTeamLabel(view, isRecipient)} — ${view.headline}`,
         // `text` excludes the URL so the platform doesn't double-render it
         // alongside the `url:` field. The full caption (with URL) is what
         // Copy Caption emits for clipboard paste targets.
         text: intentText,
-        url: shareUrl ?? undefined,
+        url: shareUrl,
       });
       setShared("ok");
     } catch {
@@ -393,19 +450,39 @@ function ShareBody({
     }
   }
 
+  const teamLabel = shareTeamLabel(view, isRecipient);
+  const shareReadyNote = shareLinkPending
+    ? "Preparing the signed run preview..."
+    : ogPreviewError
+      ? "Signed preview unavailable; sharing still uses a replay-safe run token."
+      : signedOg
+        ? "Signed run preview ready for large-card unfurls."
+        : "Replay-safe share link ready.";
+
   return (
     <div className={s.share}>
       <ShareAppBar />
 
       <header className="page-head">
-        <span className="eyebrow">Share your run</span>
-        <h1 className="display">The card</h1>
+        <span className="eyebrow">{isRecipient ? "Shared run" : "Share your run"}</span>
+        <h1 className="display">
+          {isRecipient ? `${teamLabel} went ${view.display_record}` : "The card"}
+        </h1>
         {configBadges.length > 0 ? <ConfigBadgeRow badges={configBadges} /> : null}
         <p className="page-head__note">
-          Branded, deterministic, seed-locked. Names and national flag codes only — no competition
-          marks.
+          {isRecipient
+            ? "A seed-locked run from another browser. Start fresh to draft your own XI."
+            : "Branded, deterministic, seed-locked. Names and national flag codes only — no competition marks."}
         </p>
       </header>
+
+      {isRecipient ? (
+        <section className={`${s.panel} ${s.recipientPanel}`} aria-label="Draft your own">
+          <Link href={draftHref(null)} className={`btn btn--primary ${s.recipientCta}`}>
+            {teamLabel} went {view.display_record} — draft your own all-time XI →
+          </Link>
+        </section>
+      ) : null}
 
       {/* ── The SVG card (rendered + serialisable for export) ──────────── */}
       <div className={s.shareCardFrame}>
@@ -420,27 +497,48 @@ function ShareBody({
             render, but we will not emit a non-reproducible URL.
           </p>
         ) : null}
+        {ogPreviewError ? (
+          <p className={s.shareHint} role="status">
+            <strong>Large-card preview unavailable.</strong> {ogPreviewError} Sharing still uses a
+            replay-safe token, but some sites may show the default preview.
+          </p>
+        ) : null}
+        {shareLinkPending ? (
+          <p className={s.shareHint} role="status">
+            {shareReadyNote}
+          </p>
+        ) : null}
         <p className={s.shareCaptionLabel}>Caption</p>
-        <pre className={s.shareCaption}>{caption}</pre>
+        <pre className={s.shareCaption} tabIndex={0} aria-label="Share caption">
+          {caption}
+        </pre>
         <div className={s.resultsActions}>
           <button
             type="button"
-            className={`btn btn--primary${shareLinkError ? " btn--disabled" : ""}`}
+            className={`${isRecipient ? "btn btn--ghost" : "btn btn--primary"}${
+              shareLinkPending ? " btn--disabled" : ""
+            }`}
             onClick={copyCaption}
-            disabled={!!shareLinkError}
-            aria-disabled={!!shareLinkError}
+            disabled={shareLinkPending}
+            aria-disabled={shareLinkPending}
           >
             {copied ? "Copied ✓" : "Copy caption"}
           </button>
-          <button type="button" className="btn btn--ghost" onClick={downloadSvg}>
+          <button
+            type="button"
+            className={`btn btn--ghost${shareLinkPending ? " btn--disabled" : ""}`}
+            onClick={downloadSvg}
+            disabled={shareLinkPending}
+            aria-disabled={shareLinkPending}
+          >
             Download card
           </button>
           <button
             type="button"
-            className={`btn btn--ghost${shareLinkError ? " btn--disabled" : ""}`}
+            className={`btn btn--ghost${shareUnavailable ? " btn--disabled" : ""}`}
             onClick={shareNative}
-            disabled={!!shareLinkError}
-            aria-disabled={!!shareLinkError}
+            disabled={shareUnavailable}
+            aria-disabled={shareUnavailable}
           >
             {shared === "unsupported" ? "Share unavailable" : "Native share"}
           </button>
@@ -540,8 +638,10 @@ function ShareBody({
           </Link>
         </div>
         <p className={s.shareHint}>
-          The replay URL above reproduces this run byte-for-byte from its seed. Nothing here uses
-          any official competition name, emblem, or trophy.
+          {shareLinkError
+            ? "The card remains exportable, but this run cannot be shared as a reproducible replay URL."
+            : `${shareReadyNote} The replay URL reproduces this run byte-for-byte from its seed.`}{" "}
+          Nothing here uses any official competition name, emblem, or trophy.
         </p>
       </div>
     </div>
@@ -598,6 +698,7 @@ function ShareCardSvg({
 }) {
   const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : colors.text;
   const headline = view.headline;
+  const narrativeLines = wrapSvgText(view.narrative, 52, 2);
   const formationLabel = view.manager
     ? `${view.formation_name} · mgr ${view.manager.nation_code} ${view.manager.name}`
     : view.formation_name;
@@ -717,8 +818,24 @@ function ShareCardSvg({
         {truncate(formationLabel, 48)}
       </text>
 
+      {/* Existing deterministic result narrative */}
+      {narrativeLines.map((line, i) => (
+        <text
+          key={`${line}-${i}`}
+          x={CARD_WIDTH / 2}
+          y={508 + i * 24}
+          textAnchor="middle"
+          fill={colors.text}
+          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontSize="17"
+          fontWeight="500"
+        >
+          {line}
+        </text>
+      ))}
+
       {/* Stats row */}
-      <g transform={`translate(0, 540)`}>
+      <g transform={`translate(0, 584)`}>
         <ShareStat
           x={CARD_WIDTH * 0.2}
           num={String(view.goals_for)}
@@ -740,7 +857,7 @@ function ShareCardSvg({
       </g>
 
       {/* Stars row — names + flag codes only */}
-      <g transform={`translate(${CARD_WIDTH / 2}, 700)`}>
+      <g transform={`translate(${CARD_WIDTH / 2}, 716)`}>
         <text
           x="0"
           y="-30"
@@ -825,4 +942,33 @@ function ShareStat({
 function truncate(value: string, max: number): string {
   if (value.length <= max) return value;
   return value.slice(0, Math.max(1, max - 1)) + "…";
+}
+
+function wrapSvgText(value: string, maxLineChars: number, maxLines: number): string[] {
+  const words = value.replace(/\s+/gu, " ").trim().split(" ").filter(Boolean);
+  const lines: string[] = [];
+  for (const rawWord of words) {
+    const word = rawWord.length > maxLineChars ? truncate(rawWord, maxLineChars) : rawWord;
+    const current = lines[lines.length - 1];
+    if (!current) {
+      lines.push(word);
+      continue;
+    }
+    if (`${current} ${word}`.length <= maxLineChars) {
+      lines[lines.length - 1] = `${current} ${word}`;
+      continue;
+    }
+    if (lines.length >= maxLines) {
+      lines[lines.length - 1] = truncate(`${current} ${word}`, maxLineChars);
+      break;
+    }
+    lines.push(word);
+  }
+  return lines.length > 0 ? lines.slice(0, maxLines) : ["Run complete."];
+}
+
+function shareTeamLabel(view: ShareView, isRecipient: boolean): string {
+  const teamName = view.team_name.replace(/\s+/gu, " ").trim() || "This XI";
+  if (isRecipient && /^your xi$/iu.test(teamName)) return "This XI";
+  return teamName;
 }

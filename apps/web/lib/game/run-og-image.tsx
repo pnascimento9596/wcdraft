@@ -263,6 +263,27 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           </div>
         </div>
 
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            padding: "12px 14px",
+            border: "1px solid rgba(159,216,191,0.28)",
+            color: "#f3ecd4",
+            background: "rgba(159,216,191,0.07)",
+            fontFamily: "Space Grotesk",
+            fontSize: 18,
+            lineHeight: 1.18,
+          }}
+        >
+          {wrapText(model.narrative, 42, 3).map((line, i) => (
+            <div key={`${line}-${i}`} style={{ display: "flex" }}>
+              {line}
+            </div>
+          ))}
+        </div>
+
         {model.badges.length > 0 ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {model.badges.map((badge) => (
@@ -469,4 +490,29 @@ function truncate(value: string, max: number): string {
   const cleaned = value.replace(/\s+/gu, " ").trim();
   if (cleaned.length <= max) return cleaned;
   return `${cleaned.slice(0, Math.max(0, max - 1)).trimEnd()}...`;
+}
+
+function wrapText(value: string, maxLineChars: number, maxLines: number): string[] {
+  const words = value.replace(/\s+/gu, " ").trim().split(" ").filter(Boolean);
+  const lines: string[] = [];
+  for (const rawWord of words) {
+    const word = rawWord.length > maxLineChars ? truncate(rawWord, maxLineChars) : rawWord;
+    const current = lines[lines.length - 1];
+    if (!current) {
+      lines.push(word);
+      continue;
+    }
+    if (`${current} ${word}`.length <= maxLineChars) {
+      lines[lines.length - 1] = `${current} ${word}`;
+      continue;
+    }
+    if (lines.length >= maxLines) {
+      lines[lines.length - 1] = truncate(`${current} ${word}`, maxLineChars);
+      break;
+    }
+    lines.push(word);
+  }
+  if (lines.length === 0) return ["Run complete."];
+  if (lines.length > maxLines) return lines.slice(0, maxLines);
+  return lines;
 }
