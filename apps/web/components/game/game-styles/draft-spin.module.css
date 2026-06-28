@@ -157,9 +157,7 @@
 .spinReelWindowCenter {
   border: 1.5px solid color-mix(in srgb, var(--gold) 62%, transparent);
   background: linear-gradient(180deg, var(--bg-750) 0%, var(--bg-800) 100%);
-  box-shadow:
-    var(--ring-amber),
-    inset 0 0 26px -8px rgba(var(--glow-gold), 0.5);
+  box-shadow: var(--ring-amber);
   z-index: 2;
 }
 .spinReelTrack {
@@ -274,7 +272,6 @@
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
   z-index: 4;
-  filter: drop-shadow(0 0 5px rgba(var(--glow-gold), 0.7));
 }
 .spinChevronTop {
   top: 7px;
@@ -379,7 +376,7 @@
 .spinTileRare {
   background: color-mix(in srgb, var(--gold) 14%, var(--bg-800));
   border-color: color-mix(in srgb, var(--gold) 46%, var(--line));
-  box-shadow: 0 0 18px -6px rgba(var(--glow-gold), 0.5);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent);
 }
 .spinTileRare .spinTileLabel {
   color: var(--gold-bright);
