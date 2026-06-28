@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { connection } from "next/server";
-import { Anton, Newsreader, Saira_Condensed, Sora } from "next/font/google";
 import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-context";
 import { SiteHeader } from "../components/site-header";
@@ -20,39 +19,6 @@ import { SiteFooter } from "../components/site-footer";
 import { ServiceWorkerRegister } from "../components/sw-register";
 import "./ds/tokens.css";
 import "./globals.css";
-
-const display = Anton({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display",
-  display: "swap",
-});
-
-const text = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-text",
-  display: "swap",
-});
-
-// Brand sans stack (design identity: Saira Condensed / Sora). Loaded here so
-// the variables exist app-wide, but currently consumed only by the results
-// surface (ws-f4/formations-results-ux), which is sans throughout — no
-// Newsreader. Headers/big numbers use Saira Condensed; body + narration Sora.
-const condensed = Saira_Condensed({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-condensed",
-  display: "swap",
-});
-
-const sans = Sora({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
@@ -104,8 +70,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#efe9db" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1411" },
+    { media: "(prefers-color-scheme: light)", color: "#f1ecdf" },
+    { media: "(prefers-color-scheme: dark)", color: "#080809" },
   ],
 };
 
@@ -121,11 +87,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   // is read server-side here; when dark the entry simply doesn't exist.
   const leaderboardEnabled = isLeaderboardEnabled();
   return (
-    <html
-      lang="en"
-      data-theme="light"
-      className={`${display.variable} ${text.variable} ${condensed.variable} ${sans.variable}`}
-    >
+    <html lang="en" data-theme="light">
       <body>
         <ThemeProvider>
           <AuthProvider authEnabled={authEnabled}>

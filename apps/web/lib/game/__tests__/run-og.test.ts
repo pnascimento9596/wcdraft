@@ -115,15 +115,41 @@ function localAssets(): RunOgImageAssets {
       readFileSync(new URL("../../../public/brand/wcdraft-mark.svg", import.meta.url), "utf8"),
     )}`,
     fonts: {
-      sairaCondensedBold: readArrayBuffer(
-        new URL("../../../public/fonts/og/SairaCondensed-Bold.ttf", import.meta.url),
+      spaceGroteskSemiBold: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-600-normal.woff",
+          import.meta.url,
+        ),
       ),
-      soraSemiBold: readArrayBuffer(
-        new URL("../../../public/fonts/og/Sora-SemiBold.ttf", import.meta.url),
+      spaceGroteskSemiBoldExt: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
+          import.meta.url,
+        ),
       ),
-      soraBold: readArrayBuffer(new URL("../../../public/fonts/og/Sora-Bold.ttf", import.meta.url)),
-      jetBrainsMonoBold: readArrayBuffer(
-        new URL("../../../public/fonts/og/JetBrainsMono-Bold.ttf", import.meta.url),
+      spaceGroteskBold: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-700-normal.woff",
+          import.meta.url,
+        ),
+      ),
+      spaceGroteskBoldExt: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
+          import.meta.url,
+        ),
+      ),
+      spaceMonoBold: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-mono/space-mono-latin-700-normal.woff",
+          import.meta.url,
+        ),
+      ),
+      spaceMonoBoldExt: readArrayBuffer(
+        new URL(
+          "../../../public/fonts/space-mono/space-mono-latin-ext-700-normal.woff",
+          import.meta.url,
+        ),
       ),
     },
   };
@@ -144,10 +170,18 @@ function stubOgRouteFetch() {
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
-    ["/fonts/og/SairaCondensed-Bold.ttf", assets.fonts.sairaCondensedBold],
-    ["/fonts/og/Sora-SemiBold.ttf", assets.fonts.soraSemiBold],
-    ["/fonts/og/Sora-Bold.ttf", assets.fonts.soraBold],
-    ["/fonts/og/JetBrainsMono-Bold.ttf", assets.fonts.jetBrainsMonoBold],
+    ["/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", assets.fonts.spaceGroteskSemiBold],
+    [
+      "/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff",
+      assets.fonts.spaceGroteskSemiBoldExt,
+    ],
+    ["/fonts/space-grotesk/space-grotesk-latin-700-normal.woff", assets.fonts.spaceGroteskBold],
+    [
+      "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
+      assets.fonts.spaceGroteskBoldExt,
+    ],
+    ["/fonts/space-mono/space-mono-latin-700-normal.woff", assets.fonts.spaceMonoBold],
+    ["/fonts/space-mono/space-mono-latin-ext-700-normal.woff", assets.fonts.spaceMonoBoldExt],
   ]);
 
   vi.stubGlobal(
