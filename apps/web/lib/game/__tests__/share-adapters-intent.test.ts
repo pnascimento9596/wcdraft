@@ -42,6 +42,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
       nation_code: null,
       nation_name: null,
     },
+    narrative: "Won every match. A perfect run.",
     seed: "wcdraft:run:v1:run-v1-k:4-2-3-1",
     reached_round: "FINAL",
     matches_played: 8,
@@ -56,6 +57,7 @@ describe("buildShareCaption", () => {
   it("includes the team record + the standard wcdraft tagline", () => {
     const view = makeView();
     const caption = buildShareCaption(view, TOKEN_URL);
+    expect(caption.startsWith("Won every match. A perfect run.\n")).toBe(true);
     expect(caption).toContain("Auriverde XI went 8-0 on wcdraft.");
     expect(caption).toContain(SHARE_TAGLINE);
     expect(SHARE_TAGLINE).toBe("Built my all-time XI on wcdraft");

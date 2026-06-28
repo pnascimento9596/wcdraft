@@ -828,6 +828,12 @@
   composes: shareHint from "./game-styles/share.module.css";
   composes: shareHint from "./game-styles/draft-polish.module.css";
 }
+.recipientPanel {
+  composes: recipientPanel from "./game-styles/share.module.css";
+}
+.recipientCta {
+  composes: recipientCta from "./game-styles/share.module.css";
+}
 .draftShell {
   composes: draftShell from "./game-styles/draft-shell.module.css";
   composes: draftShell from "./game-styles/draft-polish.module.css";
@@ -848,6 +854,7 @@
 }
 .draftAttribution {
   composes: draftAttribution from "./game-styles/draft-shell.module.css";
+  composes: draftAttribution from "./game-styles/draft-polish.module.css";
 }
 .appBarBrand {
   composes: appBarBrand from "./game-styles/draft-shell.module.css";
@@ -866,6 +873,27 @@
 }
 .loadingPanel {
   composes: loadingPanel from "./game-styles/draft-shell.module.css";
+}
+.setupSkeleton {
+  composes: setupSkeleton from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonPanel {
+  composes: setupSkeletonPanel from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonGrid {
+  composes: setupSkeletonGrid from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonTile {
+  composes: setupSkeletonTile from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonPitch {
+  composes: setupSkeletonPitch from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonLine {
+  composes: setupSkeletonLine from "./game-styles/draft-shell.module.css";
+}
+.setupSkeletonSeg {
+  composes: setupSkeletonSeg from "./game-styles/draft-shell.module.css";
 }
 .errorPanel {
   composes: errorPanel from "./game-styles/draft-shell.module.css";
@@ -1681,6 +1709,9 @@
 }
 .formationPanel {
   composes: formationPanel from "./game-styles/draft-polish.module.css";
+}
+.candidatePanel {
+  composes: candidatePanel from "./game-styles/draft-polish.module.css";
 }
 .managerTraits {
   composes: managerTraits from "./game-styles/draft-polish.module.css";

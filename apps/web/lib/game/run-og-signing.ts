@@ -44,8 +44,8 @@ export async function signRunOgPayload(
   payload: SignedRunOgPayload,
   secret: string,
 ): Promise<string> {
-  assertSignedRunOgPayload(payload);
-  const payloadBytes = new TextEncoder().encode(JSON.stringify(payload));
+  const normalized = assertSignedRunOgPayload(payload);
+  const payloadBytes = new TextEncoder().encode(JSON.stringify(normalized));
   const payloadB64 = base64UrlEncode(payloadBytes);
   const sig = await hmac(payloadB64, secret);
   return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${base64UrlEncode(sig)}`;
@@ -75,7 +75,7 @@ export async function verifySignedRunOgPayload(
   } catch {
     return null;
   }
-  return isSignedRunOgPayload(parsed) ? parsed : null;
+  return normalizeSignedRunOgPayload(parsed);
 }
 
 export function isLikelySignedRunOg(value: unknown): value is string {
@@ -87,22 +87,28 @@ export function isLikelySignedRunOg(value: unknown): value is string {
   );
 }
 
-export function isSignedRunOgPayload(value: unknown): value is SignedRunOgPayload {
-  if (!value || typeof value !== "object") return false;
-  const o = value as SignedRunOgPayload;
-  return (
-    o.v === 1 &&
-    typeof o.token_hash === "string" &&
-    HEX_64.test(o.token_hash) &&
-    isVersions(o.versions) &&
-    isModel(o.model)
-  );
+function normalizeSignedRunOgPayload(value: unknown): SignedRunOgPayload | null {
+  if (!value || typeof value !== "object") return null;
+  const o = value as Record<string, unknown>;
+  if (o.v !== 1) return null;
+  if (typeof o.token_hash !== "string" || !HEX_64.test(o.token_hash)) return null;
+  if (!isVersions(o.versions)) return null;
+  const model = normalizeModel(o.model);
+  if (!model) return null;
+  return {
+    v: 1,
+    token_hash: o.token_hash,
+    versions: o.versions,
+    model,
+  };
 }
 
-function assertSignedRunOgPayload(value: SignedRunOgPayload): void {
-  if (!isSignedRunOgPayload(value)) {
+function assertSignedRunOgPayload(value: SignedRunOgPayload): SignedRunOgPayload {
+  const normalized = normalizeSignedRunOgPayload(value);
+  if (!normalized) {
     throw new TypeError("signed run OG payload failed validation");
   }
+  return normalized;
 }
 
 function isVersions(value: unknown): value is RunRecordVersions {
@@ -120,10 +126,16 @@ function isVersions(value: unknown): value is RunRecordVersions {
   );
 }
 
-function isModel(value: unknown): value is RunOgModel {
-  if (!value || typeof value !== "object") return false;
+function normalizeModel(value: unknown): RunOgModel | null {
+  if (!value || typeof value !== "object") return null;
   const o = value as RunOgModel;
-  return (
+  const narrative = isText(o.narrative)
+    ? o.narrative
+    : isShortString(o.result_label)
+      ? o.result_label
+      : null;
+  if (narrative === null) return null;
+  if (
     isText(o.team_name) &&
     (o.mode_label === "Classic" || o.mode_label === "Memory") &&
     isShortString(o.formation_name) &&
@@ -146,7 +158,10 @@ function isModel(value: unknown): value is RunOgModel {
     o.stars.length <= 3 &&
     o.stars.every(isStar) &&
     (o.manager === null || isManager(o.manager))
-  );
+  ) {
+    return { ...o, narrative };
+  }
+  return null;
 }
 
 function isSummary(value: unknown): boolean {

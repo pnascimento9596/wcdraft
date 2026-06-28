@@ -37,6 +37,7 @@ export interface RunOgModel {
   formation_name: string;
   result_label: string;
   record: string;
+  narrative: string;
   summary: RunTokenOgSummary;
   badges: ConfigBadge[];
   lineup: RunOgLineupSlot[];
@@ -60,6 +61,7 @@ export function buildRunOgModelFromTrustedDraft(
   token: RunTokenV2Body,
   draft: DraftState,
   summary: RunTokenOgSummary,
+  narrative?: string | null,
 ): RunOgModel {
   const lineup = buildLineup(gameData, draft);
   return {
@@ -68,6 +70,7 @@ export function buildRunOgModelFromTrustedDraft(
     formation_name: formationName(draft),
     result_label: formatRunOgResult(summary),
     record: `${summary.w}-${summary.l}`,
+    narrative: boundedText(narrative ?? "", formatRunOgResult(summary), 150),
     summary,
     badges: configBadgesFromToken(token),
     lineup,

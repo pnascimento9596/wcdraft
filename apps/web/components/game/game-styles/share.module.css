@@ -167,6 +167,18 @@
   font-style: italic;
 }
 
+.recipientPanel {
+  display: flex;
+  align-items: stretch;
+  margin-top: -0.25rem;
+}
+
+.recipientCta {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
 /* ── Broadcast tactics share overrides ─────────────────────────────────── */
 
 .share {

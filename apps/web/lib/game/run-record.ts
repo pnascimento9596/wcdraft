@@ -12,8 +12,9 @@
 //
 // Determinism:
 //   - run_id is a deterministic local counter: `run-v1-<base36-seq>`.
-//   - parent_seed is `wcdraft:run:v1:<run_id>:<formation_id>` so identical
-//     local counter sequences produce identical drafts.
+//   - parent_seed includes a per-run creation nonce plus the local run id and
+//     formation. Replay still keys off token.ps, so shared tokens reproduce
+//     byte-identically while cold visitors no longer collide on run #1.
 //   - createDraft can throw if the 17 drawn pairs contain no coach; we
 //     advance the counter and retry up to 20 times before surfacing a
 //     recoverable error to the UI.
@@ -234,8 +235,19 @@ function buildRunId(seq: number): string {
   return `run-v1-${seq.toString(36)}`;
 }
 
-function buildParentSeed(run_id: string, formation_id: string): string {
-  return `wcdraft:run:v1:${run_id}:${formation_id}`;
+function createRunNonce(): string {
+  const cryptoImpl = globalThis.crypto;
+  if (cryptoImpl?.randomUUID) return `rn-${cryptoImpl.randomUUID().replace(/-/gu, "")}`;
+  if (cryptoImpl?.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    cryptoImpl.getRandomValues(bytes);
+    return `rn-${Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("")}`;
+  }
+  return `rn-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 18)}`;
+}
+
+function buildParentSeed(run_nonce: string, run_id: string, formation_id: string): string {
+  return `wcdraft:run:v1:${run_nonce}:${run_id}:${formation_id}`;
 }
 
 // ─── Index helpers ───────────────────────────────────────────────────────────
@@ -338,7 +350,7 @@ export function createNewRunRecord(
   for (let attempt = 0; attempt < CREATE_RETRY_LIMIT; attempt += 1) {
     const seq = nextCounter(storage);
     const run_id = buildRunId(seq);
-    const parent_seed = buildParentSeed(run_id, params.formation_id);
+    const parent_seed = buildParentSeed(createRunNonce(), run_id, params.formation_id);
     try {
       const era_preset = params.era_preset ?? "all_time";
       const draft = createDraft(getCatalogForEra(gameData, era_preset), {

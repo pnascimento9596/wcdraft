@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
 
+import { buildNarrative } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -17,12 +18,15 @@ import { defaultRunOgImage, formatRunOgResult, shareOgImageForRunValue } from ".
 import { buildRunOgModelFromTrustedSummary } from "../run-og-model";
 import { renderRunOgImage, type RunOgImageAssets } from "../run-og-image";
 import { verifyRunTokenForOg } from "../run-og-server";
+import { buildNarrativeLabels } from "../results-adapters";
+import { buildShareView } from "../share-adapters";
 import {
   allowAllRunOgSignRateLimiter,
   createDbRunOgSignRateLimiter,
   type RunOgSignRateLimiter,
 } from "../run-og-sign-rate-limiter-db";
 import {
+  SIGNED_RUN_OG_PREFIX,
   sha256Hex,
   signRunOgPayload,
   verifySignedRunOgPayload,
@@ -76,6 +80,19 @@ async function signedOgForToken(token: string): Promise<string> {
     model: verified.model,
   };
   return signRunOgPayload(payload, SECRET);
+}
+
+async function signedRawOgPayload(payload: unknown): Promise<string> {
+  const payloadB64 = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
+  return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
 }
 
 function ogSignDeps(rateLimiter: RunOgSignRateLimiter = allowAllRunOgSignRateLimiter) {
@@ -286,6 +303,45 @@ describe("dynamic run OG model and image", () => {
     expect(model.lineup).toHaveLength(11);
   });
 
+  it("threads the server re-derived narrative into the signed image model", () => {
+    const completed = complete();
+    const token = encodeRunToken(completed);
+    const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    const labels = buildNarrativeLabels(gameData, SCENARIO_2026_BUNDLE, completed.draft);
+    const expected = buildNarrative(
+      completed.simulation!.run,
+      [...completed.simulation!.matches],
+      labels,
+    ).filled_text;
+    expect(verified.model.narrative).toBe(expected);
+    expect(verified.model.narrative).not.toContain("Unavailable");
+    expect(verified.model.narrative).not.toMatch(/WC2026-/u);
+  });
+
+  it("labels the share narrative with display names when scenario data is available", () => {
+    const completed = complete();
+    const view = buildShareView(gameData, completed, SCENARIO_2026_BUNDLE);
+    const labels = buildNarrativeLabels(gameData, SCENARIO_2026_BUNDLE, completed.draft);
+    const expected = buildNarrative(
+      completed.simulation!.run,
+      [...completed.simulation!.matches],
+      labels,
+    ).filled_text;
+    expect(view?.narrative).toBe(expected);
+    expect(view?.narrative).not.toContain("Unavailable");
+    expect(view?.narrative).not.toMatch(/WC2026-/u);
+  });
+
+  it("omits share narrative instead of exposing raw labels when scenario data is unavailable", () => {
+    const completed = complete();
+    const view = buildShareView(gameData, completed, null);
+    expect(completed.simulation!.run.narrative.filled_text).toContain("Unavailable");
+    expect(completed.simulation!.run.narrative.filled_text).toContain("WC2026-");
+    expect(view?.narrative).toBe("");
+  });
+
   it("renders byte-identical ImageResponse bytes for an already trusted model", async () => {
     const summary = buildRunTokenOgSummary(complete())!;
     const model = {
@@ -294,6 +350,7 @@ describe("dynamic run OG model and image", () => {
       formation_name: "4-3-3",
       result_label: "3-1, R32",
       record: `${summary.w}-${summary.l}`,
+      narrative: "Knocked out in the round of 32.",
       summary,
       badges: [],
       lineup: [
@@ -359,6 +416,25 @@ describe("trusted run OG signing", () => {
     expect(signedA).toBe(signedB);
     const trusted = await verifySignedRunOgPayload(signedA, SECRET);
     expect(trusted?.model.summary).toEqual(trueSummary);
+  });
+
+  it("verifies legacy signed payloads that predate the narrative field", async () => {
+    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:legacy")));
+    const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    const legacyModel = { ...verified.model } as Record<string, unknown>;
+    delete legacyModel.narrative;
+    const legacySigned = await signedRawOgPayload({
+      v: 1,
+      token_hash: await sha256Hex(token),
+      versions: gameData.versions,
+      model: legacyModel,
+    });
+
+    const trusted = await verifySignedRunOgPayload(legacySigned, SECRET);
+    expect(trusted?.model.narrative).toBe(verified.model.result_label);
+    expect(trusted?.model.team_name).toBe(verified.model.team_name);
   });
 
   it("sanitizes attacker-controlled display text before route signing", async () => {

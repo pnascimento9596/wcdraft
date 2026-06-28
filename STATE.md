@@ -17,6 +17,19 @@ Branch-protection baseline before edits required exactly
 `typecheck · lint · test · build` and `golden RNG determinism`. The lane report is
 `docs/reports/ci-spend-aggregate-2026-06-27.md`.
 
+PWA launch hardening lane:
+2026-06-28 · local YELLOW gates run on branch
+`ws-ux/pwa-launch-hardening-20260628`, rebased onto `origin/main`
+`eed5c4e` / `runtime-data-2.8.0`. Scope is bounded to `apps/web`: first-run
+seed collision prevention, share-recipient acquisition + signed OG/caption
+hardening, WCAG AA token fixes, compact post-reveal candidate ordering/focus,
+and draft loading skeleton. Local gates passed: root `pnpm typecheck` (8/8),
+`pnpm lint` (5/5), `pnpm test` (8/8; web 745 passed / 1 skipped plus
+`game-flow-playwright`), `pnpm build` (4/4), axe-core 4.12.1 on 6 mobile
+page/theme states, and browser verification with 16 screenshots at 360×800 /
+390×844 in both themes. Report:
+`docs/reports/pwa-launch-hardening-2026-06-28/summary.md`.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**

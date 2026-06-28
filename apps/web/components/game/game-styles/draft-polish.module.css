@@ -964,6 +964,25 @@
     font-size: 10px;
   }
 
+  /* First post-reveal viewport: put the actionable candidate rows above the
+     full pitch on phones. Selecting a player still scrolls to the formation
+     panel for slot assignment via the existing assign-flow effect. */
+  .nowDrafting {
+    order: 0;
+  }
+  .candidatePanel {
+    order: 1;
+  }
+  .formationPanel {
+    order: 2;
+  }
+  .gkWarnPanel {
+    order: 3;
+  }
+  .draftAttribution {
+    order: 4;
+  }
+
   /* ── SpinStage (full-screen spin reveal) ───────────────────────── */
   .spinShell {
     gap: 10px;
