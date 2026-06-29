@@ -27,6 +27,7 @@ import {
   buildShareIntentText,
   buildShareIntentUrls,
   buildShareView,
+  dailyStandingText,
   type DailyShareStanding,
   type ShareIntentUrls,
   type ShareView,
@@ -532,7 +533,13 @@ function ShareBody({
 
       {/* ── The SVG card (rendered + serialisable for export) ──────────── */}
       <div className={s.shareCardFrame}>
-        <ShareCardSvg svgRef={svgRef} view={view} shareUrl={shareUrl} colors={svgColors} />
+        <ShareCardSvg
+          svgRef={svgRef}
+          view={view}
+          shareUrl={shareUrl}
+          dailyStanding={dailyStanding}
+          colors={svgColors}
+        />
       </div>
 
       {/* ── Caption + actions ─────────────────────────────────────────── */}
@@ -735,19 +742,26 @@ function ShareCardSvg({
   svgRef,
   view,
   shareUrl,
+  dailyStanding,
   colors,
 }: {
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
   view: ShareView;
   shareUrl: string | null;
+  dailyStanding: DailyShareStanding | null;
   colors: ShareSvgColors;
 }) {
   const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : colors.text;
   const headline = view.headline;
-  const narrativeLines = wrapSvgText(view.narrative, 52, 2);
+  const payoffLines = [
+    view.challenge_date !== null ? dailyStandingText(dailyStanding) : null,
+    view.perfect_run_reference,
+  ].filter((line): line is string => line !== null);
+  const narrativeLines = wrapSvgText(view.narrative, 52, payoffLines.length > 1 ? 1 : 2);
   const formationLabel = view.manager
     ? `${view.formation_name} · mgr ${view.manager.nation_code} ${view.manager.name}`
     : view.formation_name;
+  const headlineColor = view.is_perfect_eight_zero ? recordColor : colors.muted;
 
   return (
     <svg
@@ -828,7 +842,7 @@ function ShareCardSvg({
         x={CARD_WIDTH / 2}
         y="244"
         textAnchor="middle"
-        fill={colors.muted}
+        fill={headlineColor}
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="18"
         fontWeight="600"
@@ -864,12 +878,28 @@ function ShareCardSvg({
         {truncate(formationLabel, 48)}
       </text>
 
+      {/* Daily standing + perfect-run reference */}
+      {payoffLines.map((line, i) => (
+        <text
+          key={`${line}-${i}`}
+          x={CARD_WIDTH / 2}
+          y={508 + i * 24}
+          textAnchor="middle"
+          fill={i === 0 && view.challenge_date !== null ? colors.text : colors.muted}
+          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontSize="16"
+          fontWeight="650"
+        >
+          {line}
+        </text>
+      ))}
+
       {/* Existing deterministic result narrative */}
       {narrativeLines.map((line, i) => (
         <text
           key={`${line}-${i}`}
           x={CARD_WIDTH / 2}
-          y={508 + i * 24}
+          y={508 + payoffLines.length * 24 + i * 24}
           textAnchor="middle"
           fill={colors.text}
           fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
@@ -881,7 +911,7 @@ function ShareCardSvg({
       ))}
 
       {/* Stats row */}
-      <g transform={`translate(0, 584)`}>
+      <g transform={`translate(0, 624)`}>
         <ShareStat
           x={CARD_WIDTH * 0.2}
           num={String(view.goals_for)}
@@ -903,7 +933,7 @@ function ShareCardSvg({
       </g>
 
       {/* Stars row — names + flag codes only */}
-      <g transform={`translate(${CARD_WIDTH / 2}, 716)`}>
+      <g transform={`translate(${CARD_WIDTH / 2}, 756)`}>
         <text
           x="0"
           y="-30"

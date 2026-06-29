@@ -68,6 +68,7 @@ function userMatch(
     round,
     phase: "group",
     opponent_team_id: opp,
+    pre_match_win_probability: 0.5,
     user_goals,
     opp_goals,
     user_goals_et: null,

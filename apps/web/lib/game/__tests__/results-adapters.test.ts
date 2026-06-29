@@ -10,7 +10,8 @@
 import { describe, expect, it } from "vitest";
 
 import type { GameData, GameDataIndexes } from "../data";
-import { resolveScorerName } from "../results-adapters";
+import { formatWinProbability, matchPayoffLabel, resolveScorerName } from "../results-adapters";
+import type { MatchResult } from "@wcdraft/core";
 
 // ─── Minimal GameData stub ───────────────────────────────────────────────────
 //
@@ -79,3 +80,51 @@ describe("resolveScorerName — honest-state fallback", () => {
     expect(resolveScorerName(gd, "different-player-id", "card-3")).toBe("Maradona");
   });
 });
+
+describe("win-probability payoff labels", () => {
+  it("frames a winnable shootout loss as lost on penalties", () => {
+    expect(
+      matchPayoffLabel(
+        match({
+          pre_match_win_probability: 0.781,
+          outcome: "L",
+          shootout: { user: 4, opp: 5, sequence: [] },
+        }),
+      ),
+    ).toBe("78% — lost on penalties");
+  });
+
+  it("frames a favorite win as held", () => {
+    expect(matchPayoffLabel(match({ pre_match_win_probability: 0.824, outcome: "W" }))).toBe(
+      "82% — held",
+    );
+  });
+
+  it("bounds and rounds win probabilities for display", () => {
+    expect(formatWinProbability(1.2)).toBe("100%");
+    expect(formatWinProbability(-0.1)).toBe("0%");
+    expect(formatWinProbability(0.505)).toBe("51%");
+  });
+});
+
+function match(overrides: Partial<MatchResult>): MatchResult {
+  return {
+    match_id: "m0",
+    match_index: 0,
+    round: "QF",
+    phase: "knockout",
+    opponent_team_id: "T_QF",
+    pre_match_win_probability: 0.5,
+    user_goals: 1,
+    opp_goals: 0,
+    user_goals_et: null,
+    opp_goals_et: null,
+    shootout: null,
+    outcome: "W",
+    counts_as_run_win: true,
+    advanced: true,
+    lineup: [],
+    events: [],
+    ...overrides,
+  };
+}

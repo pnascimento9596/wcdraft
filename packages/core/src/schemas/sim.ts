@@ -54,6 +54,12 @@ const ScoreAfterSchema = z.object({
   opp: NonNegativeIntegerSchema,
 });
 
+const ProbabilitySchema = z
+  .number()
+  .min(0)
+  .max(1)
+  .refine(Number.isFinite, { message: "probability must be finite" });
+
 const EventBase = {
   event_id: NonEmptyIdSchema,
   minute: MinuteSchema,
@@ -256,6 +262,7 @@ export const MatchResultSchema = z
     round: MatchRoundSchema,
     phase: MatchPhaseSchema,
     opponent_team_id: NonEmptyIdSchema,
+    pre_match_win_probability: ProbabilitySchema,
     user_goals: NonNegativeIntegerSchema,
     opp_goals: NonNegativeIntegerSchema,
     user_goals_et: NonNegativeIntegerSchema.nullable(),

@@ -249,6 +249,7 @@ function makeMatchResult(): MatchResult {
     round: "G1",
     phase: "group",
     opponent_team_id: "team.2026.opp",
+    pre_match_win_probability: 0.5,
     user_goals: 2,
     opp_goals: 1,
     user_goals_et: null,

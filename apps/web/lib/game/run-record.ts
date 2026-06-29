@@ -128,6 +128,8 @@ export interface RunRecordV1 {
   challenge?: DailyChallenge;
   /** Local marker for a server-issued ranked seed. Not included in share tokens. */
   ranked_attempt?: RankedAttemptRunMetadata;
+  /** Local-only preservation flag; pinned records are not evicted by the recent-run cap. */
+  pinned?: boolean;
   /** Persisted simulation result; present only when status === "complete". */
   simulation?: PersistedSimulation;
 }
@@ -137,6 +139,7 @@ interface RunRecordIndexEntry {
   created_seq: number;
   updated_seq: number;
   versions: RunRecordVersions;
+  pinned?: boolean;
 }
 
 interface RunRecordIndexV1 {
@@ -289,6 +292,7 @@ function updateIndexEntry(idx: RunRecordIndexV1, rec: RunRecordV1): RunRecordInd
     created_seq: rec.created_seq,
     updated_seq: rec.updated_seq,
     versions: rec.versions,
+    ...(rec.pinned === true ? { pinned: true } : {}),
   });
   entries.sort((a, b) => a.updated_seq - b.updated_seq);
   return { record_version: RUN_RECORD_SCHEMA_VERSION, entries };
@@ -485,11 +489,15 @@ export function saveRunRecord(record: RunRecordV1): SaveRunRecordResult {
   }
   const idx = loadIndex(storage);
   const nextIdx = updateIndexEntry(idx, record);
-  while (nextIdx.entries.length > RUN_RECORD_CAP) {
-    const drop = nextIdx.entries.shift()!;
-    if (drop.run_id !== record.run_id) {
-      storage.removeItem(recordKey(drop.run_id));
-    }
+  let unpinnedCount = nextIdx.entries.filter((entry) => entry.pinned !== true).length;
+  while (unpinnedCount > RUN_RECORD_CAP) {
+    const dropIndex = nextIdx.entries.findIndex(
+      (entry) => entry.pinned !== true && entry.run_id !== record.run_id,
+    );
+    if (dropIndex === -1) break;
+    const [drop] = nextIdx.entries.splice(dropIndex, 1);
+    if (drop) storage.removeItem(recordKey(drop.run_id));
+    unpinnedCount -= 1;
   }
   try {
     saveIndex(storage, nextIdx);
@@ -609,10 +617,32 @@ export function setRunStatus(
   };
 }
 
+export function setRunPinned(
+  run_id: string,
+  currentVersions: RunRecordVersions,
+  pinned: boolean,
+): SetSimulationResult {
+  const loaded = loadRunRecord(run_id, currentVersions);
+  if (loaded.status !== "loaded" || !loaded.record) {
+    const s = loaded.status as "missing" | "stale" | "invalid";
+    return { status: s, record: null, persistence: "none", warnings: [] };
+  }
+  const next: RunRecordV1 = { ...loaded.record };
+  if (pinned) next.pinned = true;
+  else delete next.pinned;
+  const save = saveRunRecord(next);
+  return {
+    status: "updated",
+    record: next,
+    persistence: save.persistence,
+    warnings: save.warnings,
+  };
+}
+
 // ─── Listing (history surface) ───────────────────────────────────────────────
 
 export interface ListRunRecordsOptions {
-  /** Cap the number of returned records (default: `RUN_RECORD_CAP`). */
+  /** Cap the number of returned unpinned records (default: `RUN_RECORD_CAP`). Pinned records are included. */
   limit?: number;
 }
 
@@ -650,15 +680,12 @@ export function listRunRecords(
   });
 
   const records: RunRecordV1[] = [];
+  let unpinnedReturned = 0;
   const warnings: string[] = [];
   const survivingIds = new Set<string>();
   let indexDirty = false;
 
   for (const entry of sorted) {
-    if (records.length >= limit) {
-      survivingIds.add(entry.run_id);
-      continue;
-    }
     const raw = storage.getItem(recordKey(entry.run_id));
     if (!raw) {
       indexDirty = true;
@@ -677,7 +704,12 @@ export function listRunRecords(
       indexDirty = true;
       continue;
     }
+    if (parsed.pinned !== true && unpinnedReturned >= limit) {
+      survivingIds.add(entry.run_id);
+      continue;
+    }
     records.push(parsed);
+    if (parsed.pinned !== true) unpinnedReturned += 1;
     survivingIds.add(entry.run_id);
   }
 
@@ -777,6 +809,8 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
   if (challenge === "invalid") return null;
   const rankedAttempt = parseRankedAttempt(value.ranked_attempt, parent_seed);
   if (rankedAttempt === "invalid") return null;
+  const pinned = parseOptionalBoolean(value.pinned);
+  if (pinned === "invalid") return null;
 
   return {
     record_version: RUN_RECORD_SCHEMA_VERSION,
@@ -789,6 +823,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),
     ...(rankedAttempt === undefined ? {} : { ranked_attempt: rankedAttempt }),
+    ...(pinned === undefined ? {} : { pinned }),
     ...(simulation === undefined ? {} : { simulation }),
   };
 }
@@ -995,6 +1030,11 @@ function parseRunRecordStatus(value: unknown): RunRecordStatus | undefined | "in
   return value === "ready" || value === "simulating" || value === "complete" || value === "failed"
     ? value
     : "invalid";
+}
+
+function parseOptionalBoolean(value: unknown): boolean | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  return typeof value === "boolean" ? value : "invalid";
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

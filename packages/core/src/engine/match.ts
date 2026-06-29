@@ -41,6 +41,78 @@ import {
   lambdaForFour,
 } from "./calibration.js";
 
+// Display-only Skellam/Poisson-difference mass from the already-computed λs.
+// The match sampler below remains the locked fixed-chance model and this block
+// consumes no RNG, so goals/events/scores stay byte-identical.
+const POISSON_MAX_GOALS_FOR_DISPLAY = 32;
+
+function expPositiveFinite(value: number): number {
+  let term = 1;
+  let sum = 1;
+  for (let i = 1; i <= 48; i += 1) {
+    term *= value / i;
+    sum += term;
+  }
+  return sum;
+}
+
+function expNegativeFinite(value: number): number {
+  return 1 / expPositiveFinite(value);
+}
+
+function poissonGoalProbabilities(lambda: number): number[] {
+  const safeLambda = Number.isFinite(lambda) && lambda > 0 ? lambda : 0;
+  if (safeLambda === 0) return [1];
+
+  const probabilities = [expNegativeFinite(safeLambda)];
+  let current = probabilities[0]!;
+  let total = current;
+  for (let goals = 1; goals <= POISSON_MAX_GOALS_FOR_DISPLAY; goals += 1) {
+    current *= safeLambda / goals;
+    probabilities.push(current);
+    total += current;
+  }
+  probabilities[probabilities.length - 1]! += clamp(1 - total, 0, 1);
+  return probabilities;
+}
+
+function goalWinDrawMass(lambdaFor: number, lambdaAgainst: number): { win: number; draw: number } {
+  const forMass = poissonGoalProbabilities(lambdaFor);
+  const againstMass = poissonGoalProbabilities(lambdaAgainst);
+  const maxGoals = Math.max(forMass.length, againstMass.length);
+  let win = 0;
+  let draw = 0;
+  let againstLessThanCurrent = 0;
+  for (let goalsFor = 0; goalsFor < maxGoals; goalsFor += 1) {
+    const pFor = forMass[goalsFor] ?? 0;
+    const pAgainst = againstMass[goalsFor] ?? 0;
+    win += pFor * againstLessThanCurrent;
+    draw += pFor * pAgainst;
+    againstLessThanCurrent += pAgainst;
+  }
+  return { win, draw };
+}
+
+function roundProbability(value: number): number {
+  return clamp(Number(value.toFixed(4)), 0, 1);
+}
+
+function preMatchWinProbabilityFromLambdas(
+  lambdaUser: number,
+  lambdaOpp: number,
+  phase: MatchPhase,
+): number {
+  const regulation = goalWinDrawMass(lambdaUser, lambdaOpp);
+  if (phase === "group") return roundProbability(regulation.win);
+
+  const extraTime = goalWinDrawMass(
+    lambdaUser * activeLambda().ET_FRACTION,
+    lambdaOpp * activeLambda().ET_FRACTION,
+  );
+  const knockoutDrawWinShare = extraTime.win + extraTime.draw * 0.5;
+  return roundProbability(regulation.win + regulation.draw * knockoutDrawWinShare);
+}
+
 // ─── INTERNAL MEMBER MODEL ────────────────────────────────────────────────────
 
 /** One participant on the field/bench for a single match (either side). */
@@ -440,6 +512,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
   );
   const lambdaUser = lambdaUserRaw * lambdaEpsilon;
   const lambdaOpp = lambdaOppRaw * lambdaEpsilon;
+  const preMatchWinProbability = preMatchWinProbabilityFromLambdas(lambdaUser, lambdaOpp, phase);
 
   // ── Regulation chances ──
   const userReg = generateChances({
@@ -632,6 +705,7 @@ export function simulateMatchCore(input: CoreMatchInput): InternalMatchResult {
     round,
     phase,
     opponent_team_id: opponentTeamId,
+    pre_match_win_probability: preMatchWinProbability,
     user_goals: userGoalsReg,
     opp_goals: oppGoalsReg,
     user_goals_et: userGoalsEt,

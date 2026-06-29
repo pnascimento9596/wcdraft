@@ -134,6 +134,24 @@
 .modeDock {
   composes: modeDock from "./game-styles/shared.module.css";
 }
+.localProgressBand {
+  composes: localProgressBand from "./game-styles/shared.module.css";
+}
+.localProgressBandCompact {
+  composes: localProgressBandCompact from "./game-styles/shared.module.css";
+}
+.localProgressPrimary {
+  composes: localProgressPrimary from "./game-styles/shared.module.css";
+}
+.localProgressBest {
+  composes: localProgressBest from "./game-styles/shared.module.css";
+}
+.localProgressStreak {
+  composes: localProgressStreak from "./game-styles/shared.module.css";
+}
+.localProgressCountdown {
+  composes: localProgressCountdown from "./game-styles/shared.module.css";
+}
 .draft {
   composes: draft from "./game-styles/draft-base.module.css";
 }
@@ -643,6 +661,24 @@
 .outcomeWL {
   composes: outcomeWL from "./game-styles/results.module.css";
 }
+.outcomeHeadline {
+  composes: outcomeHeadline from "./game-styles/results.module.css";
+}
+.outcomeHeadlineGold {
+  composes: outcomeHeadlineGold from "./game-styles/results.module.css";
+}
+.payoffMeta {
+  composes: payoffMeta from "./game-styles/results.module.css";
+}
+.outcomeScoreRow {
+  composes: outcomeScoreRow from "./game-styles/results.module.css";
+}
+.outcomeScore {
+  composes: outcomeScore from "./game-styles/results.module.css";
+}
+.outcomeRecordSmall {
+  composes: outcomeRecordSmall from "./game-styles/results.module.css";
+}
 .outcomeStats {
   composes: outcomeStats from "./game-styles/results.module.css";
 }
@@ -709,6 +745,9 @@
 .matchOpp {
   composes: matchOpp from "./game-styles/results.module.css";
 }
+.matchPayoff {
+  composes: matchPayoff from "./game-styles/results.module.css";
+}
 .matchScore {
   composes: matchScore from "./game-styles/results.module.css";
 }
@@ -768,6 +807,18 @@
 }
 .seedNote {
   composes: seedNote from "./game-styles/results.module.css";
+}
+.pinRow {
+  composes: pinRow from "./game-styles/results.module.css";
+}
+.pinButton {
+  composes: pinButton from "./game-styles/results.module.css";
+}
+.pinNote {
+  composes: pinNote from "./game-styles/results.module.css";
+}
+.pinWarning {
+  composes: pinWarning from "./game-styles/results.module.css";
 }
 .resultsActions {
   composes: resultsActions from "./game-styles/results.module.css";

@@ -51,6 +51,7 @@ function match(match_index: number, events: MatchEvent[], lineup: MatchLineupEnt
     round: "G1",
     phase: "group",
     opponent_team_id: "OPP",
+    pre_match_win_probability: 0.5,
     user_goals: events.filter((e) => e.type === "goal").length,
     opp_goals: 0,
     user_goals_et: null,

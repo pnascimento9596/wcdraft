@@ -111,6 +111,64 @@
   color: currentColor;
   opacity: 0.68;
 }
+.outcomeHeadline {
+  margin: 0;
+  color: currentColor;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(2.35rem, 11vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+.outcomeHeadlineGold {
+  color: var(--gold);
+}
+.payoffMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: currentColor;
+  opacity: 0.84;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.payoffMeta span {
+  padding: 0.22rem 0.5rem;
+  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
+  border-radius: 7px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.outcomeScoreRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.outcomeScore,
+.outcomeRecordSmall {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 800;
+}
+.outcomeScore {
+  font-size: 1.55rem;
+}
+.outcomeScore span,
+.outcomeRecordSmall span {
+  color: currentColor;
+  font-size: 0.68rem;
+  font-weight: 700;
+  opacity: 0.88;
+  text-transform: uppercase;
+}
+.outcomeRecordSmall {
+  font-size: 1.1rem;
+  opacity: 0.82;
+}
 .outcomeStats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -182,11 +240,14 @@
   background: var(--accent);
 }
 .flagMuted {
-  color: var(--field-ink);
-  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 35%, transparent);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
 }
 :root[data-theme="dark"] .flagMuted {
-  color: var(--bg);
+  color: var(--tx);
+  border-color: color-mix(in srgb, var(--tx) 35%, transparent);
+  background: color-mix(in srgb, var(--tx) 7%, transparent);
 }
 
 .narrative {
@@ -271,7 +332,7 @@
   font-size: 0.74rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  color: var(--ink-300);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -282,6 +343,17 @@
   flex: 1 1 auto;
   min-width: 0;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.matchPayoff {
+  flex: 0 1 9rem;
+  min-width: 4.8rem;
+  color: var(--ink-300);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -437,6 +509,25 @@
   color: var(--ink-faint);
   font-style: italic;
 }
+.pinRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+.pinButton {
+  min-width: 6.8rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+}
+.pinNote,
+.pinWarning {
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+}
+.pinWarning {
+  margin: 0;
+}
 .resultsActions {
   display: flex;
   flex-wrap: wrap;
@@ -542,6 +633,7 @@
   border-style: solid;
 }
 
+.outcomeHeadline,
 .outcomeBig,
 .oStatNum,
 .matchScore,
@@ -553,6 +645,7 @@
 .outcomeWL,
 .oStatLabel,
 .matchRound,
+.matchPayoff,
 .matchTag,
 .seedLabel {
   font-family: var(--font-display), system-ui, sans-serif;
@@ -563,6 +656,10 @@
   background: none;
   -webkit-text-stroke: 0;
   text-shadow: none;
+}
+
+.outcomeHeadlineGold {
+  color: var(--gold);
 }
 
 .flagGood {
@@ -624,5 +721,10 @@
 
   .matchRound {
     max-width: 5.5rem;
+  }
+
+  .matchPayoff {
+    flex-basis: 6rem;
+    min-width: 4.2rem;
   }
 }

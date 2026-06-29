@@ -34,13 +34,25 @@ import {
   type RunSummaryView,
   type TopScorerView,
 } from "@/lib/game/results-adapters";
-import { buildShareView, type ShareView } from "@/lib/game/share-adapters";
+import {
+  buildShareView,
+  dailyStandingText,
+  type DailyShareStanding,
+  type ShareView,
+} from "@/lib/game/share-adapters";
+import { buildLocalProgressSummary, type LocalProgressSummary } from "@/lib/game/local-progress";
 import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
 import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
+import { LocalProgressBand } from "./local-progress-band";
+import { fetchBoardPage } from "@/lib/leaderboard/client";
+import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
+import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
+import { encodeRunToken } from "@/lib/game/run-token";
+import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
 import s from "./game.module.css";
 
 // MemoryReveal renders only for hidden-mode runs (see below). Lazy-load it so
@@ -259,9 +271,14 @@ function ResultsBody({
   linkRunValue: string | null;
   leaderboardEnabled: boolean;
 }) {
-  void isReplayedFromToken; // present for future banner UI; not rendered yet.
   const sim = record.simulation!;
   const eliminatedInGroup = !sim.group_stage.user_qualified && sim.matches.length === 3;
+  const dailyDate = record.challenge?.kind === "daily" ? record.challenge.date : null;
+  const [standingRefresh, setStandingRefresh] = useState(0);
+  const [progressRefresh, setProgressRefresh] = useState(0);
+  const [pinned, setPinned] = useState(record.pinned === true);
+  const [pinWarning, setPinWarning] = useState<string | null>(null);
+  const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
 
   const narrativeLabels = useMemo(
     () => buildNarrativeLabels(gameData, scenario, record.draft),
@@ -296,9 +313,9 @@ function ResultsBody({
       ? "Eliminated in the group"
       : "Run complete";
 
-  const recordClass = summary.is_perfect_eight_zero
-    ? `${s.outcomeBig} ${s.outcomeBigGold}`
-    : s.outcomeBig;
+  const headlineClass = summary.is_perfect_eight_zero
+    ? `${s.outcomeHeadline} ${s.outcomeHeadlineGold}`
+    : s.outcomeHeadline;
   const configBadges: ConfigBadge[] = useMemo(() => {
     const replayBadges =
       typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
@@ -312,6 +329,81 @@ function ResultsBody({
     record.challenge?.kind === "daily"
       ? dailyDraftHref(null, record.challenge.date)
       : draftHref(null);
+  const progressSummary: LocalProgressSummary = useMemo(() => {
+    const list = listRunRecords(gameData.versions, { limit: Number.POSITIVE_INFINITY });
+    return buildLocalProgressSummary(list.records, { targetDate: dailyDate ?? undefined });
+  }, [gameData.versions, dailyDate, progressRefresh]);
+  const dailyStandingLabel =
+    dailyDate !== null ? dailyStandingText(dailyStanding) : "Daily field: —";
+
+  useEffect(() => {
+    setPinned(record.pinned === true);
+    setPinWarning(null);
+  }, [record.run_id, record.pinned]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDailyStanding(null);
+    if (dailyDate === null || isReplayedFromToken) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    let token: string;
+    try {
+      token = encodeRunToken(record);
+    } catch {
+      return () => {
+        cancelled = true;
+      };
+    }
+    if (!wasTokenSubmitted(token, "casual")) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    void fetchBoardPage({
+      filter: { ...DEFAULT_DAILY_BOARD_FILTER, challengeDate: dailyDate },
+      cursor: null,
+    }).then((result) => {
+      if (cancelled) return;
+      if (!result.ok) {
+        setDailyStanding(null);
+        return;
+      }
+      const matches = result.page.entries.filter((entry) => entry.verified_score === sim.run.score);
+      if (matches.length !== 1) {
+        setDailyStanding(null);
+        return;
+      }
+      const [entry] = matches;
+      if (!entry || entry.field_size <= 0) {
+        setDailyStanding(null);
+        return;
+      }
+      setDailyStanding({
+        rank: entry.rank,
+        percentile: entry.percentile,
+        fieldSize: entry.field_size,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [dailyDate, isReplayedFromToken, record, sim.run.score, standingRefresh]);
+
+  function togglePinned() {
+    if (isReplayedFromToken) return;
+    const nextPinned = !pinned;
+    const result = setRunPinned(record.run_id, gameData.versions, nextPinned);
+    if (result.status === "updated" && result.record) {
+      setPinned(result.record.pinned === true);
+      setPinWarning(result.warnings[0] ?? null);
+      setProgressRefresh((n) => n + 1);
+      return;
+    }
+    setPinWarning("Could not update the local pin for this run.");
+  }
 
   return (
     <div className={s.results}>
@@ -321,9 +413,20 @@ function ResultsBody({
       <header className={`${s.panel} ${s.outcome}`}>
         <span className={s.eyebrowAccent}>{eyebrow}</span>
         {configBadges.length > 0 ? <ConfigBadgeRow badges={configBadges} /> : null}
-        <div className={s.outcomeRecord}>
-          <span className={recordClass}>{summary.display_record}</span>
-          <span className={s.outcomeWL}>W–L</span>
+        <h1 className={headlineClass}>{summary.outcome_headline}</h1>
+        <div className={s.payoffMeta}>
+          {dailyDate !== null ? <span>{dailyStandingLabel}</span> : null}
+          <span>{summary.perfect_run_reference}</span>
+        </div>
+        <div className={s.outcomeScoreRow}>
+          <span className={s.outcomeScore}>
+            {sim.run.score}
+            <span>pts</span>
+          </span>
+          <span className={s.outcomeRecordSmall}>
+            {summary.display_record}
+            <span>W-L</span>
+          </span>
         </div>
         <div className={s.outcomeStats}>
           <OutcomeStat num={summary.goals_for} label="scored" />
@@ -345,6 +448,8 @@ function ResultsBody({
           )}
         </div>
       </header>
+
+      <LocalProgressBand summary={progressSummary} compact />
 
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Hidden-mode runs blind every rating signal through draft + review;
@@ -396,7 +501,13 @@ function ResultsBody({
           AND hidden. Server-gated: when the leaderboard is dark the prop is
           false and nothing renders. The panel itself also stays absent when
           the run's version anchors don't match the loaded bundle. */}
-      {leaderboardEnabled ? <LeaderboardSubmitPanel gameData={gameData} record={record} /> : null}
+      {leaderboardEnabled ? (
+        <LeaderboardSubmitPanel
+          gameData={gameData}
+          record={record}
+          onSubmitted={() => setStandingRefresh((n) => n + 1)}
+        />
+      ) : null}
 
       {/* ── Seed + actions ────────────────────────────────────────────── */}
       <section className={`${s.panel} ${s.seedPanel}`}>
@@ -405,6 +516,29 @@ function ResultsBody({
           <code className={s.seedCode}>{summary.seed}</code>
           <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
         </div>
+        <div className={s.pinRow}>
+          <button
+            type="button"
+            className={`btn btn--ghost ${s.pinButton}`}
+            onClick={togglePinned}
+            disabled={isReplayedFromToken}
+            aria-pressed={pinned}
+          >
+            {pinned ? "PINNED" : "PIN RUN"}
+          </button>
+          <span className={s.pinNote}>
+            {isReplayedFromToken
+              ? "Shared replays are not stored in local history."
+              : pinned
+                ? "This run stays past the recent-run cap."
+                : "Keep this run past the recent-run cap."}
+          </span>
+        </div>
+        {pinWarning ? (
+          <p className={s.pinWarning} role="status">
+            {pinWarning}
+          </p>
+        ) : null}
         {sharePreview ? <SharePreview view={sharePreview} /> : null}
         {/*
           Action hierarchy (ws-results/history-share):
@@ -524,6 +658,7 @@ function MatchListItem({
         <span className={`${s.matchOutcome} ${outcomeClass}`}>{view.outcome}</span>
         <span className={s.matchRound}>{view.round_label}</span>
         <span className={s.matchOpp}>vs {opponentLabel}</span>
+        <span className={s.matchPayoff}>{view.payoff_label}</span>
         <span className={s.matchScore}>
           {view.scoreline.user}–{view.scoreline.opp}
           {view.scoreline.tag && <span className={s.matchTag}>{view.scoreline.tag}</span>}

@@ -31,6 +31,7 @@ const PUBLIC_MATCH_RESULT_KEYS = [
   "round",
   "phase",
   "opponent_team_id",
+  "pre_match_win_probability",
   "user_goals",
   "opp_goals",
   "user_goals_et",

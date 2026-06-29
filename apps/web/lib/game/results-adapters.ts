@@ -27,6 +27,7 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
 import { managerCardView, playerCardView } from "./adapters";
+import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 
 // ─── Round labels ────────────────────────────────────────────────────────────
 
@@ -43,6 +44,10 @@ const ROUND_LABEL: Record<MatchRound, string> = {
 
 export function roundLabel(round: MatchRound): string {
   return ROUND_LABEL[round];
+}
+
+function eliminationRoundLabel(round: MatchRound): string {
+  return round === "G1" || round === "G2" || round === "G3" ? "the group" : roundLabel(round);
 }
 
 // ─── Scoreline ───────────────────────────────────────────────────────────────
@@ -347,6 +352,7 @@ export function periodTag(period: Period): string {
 
 export interface RunSummaryView {
   team_name: string;
+  outcome_headline: string;
   reached_round: MatchRound;
   is_champion: boolean;
   undefeated_regulation: boolean;
@@ -365,6 +371,7 @@ export interface RunSummaryView {
   narrative: string;
   eliminated_in_group: boolean;
   matches_played: number;
+  perfect_run_reference: string;
 }
 
 /**
@@ -411,6 +418,9 @@ export function buildRunSummary(
     run.is_champion && run.wins === 8 && run.losses === 0 && matches.length === 8;
   return {
     team_name,
+    outcome_headline: run.is_champion
+      ? "Champion"
+      : `Eliminated in ${eliminationRoundLabel(run.reached_round)}`,
     reached_round: run.reached_round,
     is_champion: run.is_champion,
     undefeated_regulation: run.undefeated_regulation,
@@ -432,6 +442,7 @@ export function buildRunSummary(
       : run.narrative.filled_text,
     eliminated_in_group: eliminatedInGroup,
     matches_played: matches.length,
+    perfect_run_reference: PERFECT_RUN_REFERENCE_LABEL,
   };
 }
 
@@ -444,6 +455,8 @@ export interface MatchCardView {
   opponent: OpponentDisplay;
   scoreline: MatchScoreline;
   outcome: "W" | "D" | "L";
+  win_probability_label: string;
+  payoff_label: string;
 }
 
 export function matchCardViews(
@@ -458,7 +471,31 @@ export function matchCardViews(
     opponent: opponentDisplay(scenario, gameData, m.opponent_team_id),
     scoreline: matchScoreline(m),
     outcome: m.outcome,
+    win_probability_label: formatWinProbability(m.pre_match_win_probability),
+    payoff_label: matchPayoffLabel(m),
   }));
+}
+
+export function formatWinProbability(value: number): string {
+  const bounded = Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+  return `${Math.round(bounded * 100)}%`;
+}
+
+export function matchPayoffLabel(m: MatchResult): string {
+  const pct = formatWinProbability(m.pre_match_win_probability);
+  if (m.outcome === "W") {
+    if (m.shootout) return `${pct} — won on penalties`;
+    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct} — held after ET`;
+    return `${pct} — ${m.pre_match_win_probability >= 0.5 ? "held" : "upset win"}`;
+  }
+  if (m.outcome === "L") {
+    if (m.shootout) return `${pct} — lost on penalties`;
+    if (m.user_goals_et !== null || m.opp_goals_et !== null) return `${pct} — lost after ET`;
+    if (m.pre_match_win_probability >= 0.6) return `${pct} — unlucky loss`;
+    if (m.pre_match_win_probability >= 0.45) return `${pct} — edged out`;
+    return `${pct} — beaten`;
+  }
+  return `${pct} — shared points`;
 }
 
 /**
