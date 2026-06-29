@@ -14,7 +14,7 @@ import { describe, expect, it } from "vitest";
 import type { ScoreComponent } from "@wcdraft/core";
 
 import { decodeRunToken } from "../../game/run-token";
-import { deriveSeasonKey } from "../season";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "../season";
 import { validateSubmission, type ValidationData } from "../validate";
 import { buildServerGameData, serverScenarioBundle } from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
@@ -47,8 +47,8 @@ function asPlain<T>(v: T): T {
 }
 
 describe("leaderboard validation golden — committed accepted fixtures", () => {
-  it("the fixture's season_key matches the live 6-anchor derivation", () => {
-    expect(deriveSeasonKey(data.gameData.versions)).toBe(GOLDEN.season_key);
+  it("the fixture's season_key matches the explicit current season id", () => {
+    expect(DEFAULT_LEADERBOARD_SEASON_ID).toBe(GOLDEN.season_key);
   });
 
   for (const key of ["classic", "hidden"] as const) {

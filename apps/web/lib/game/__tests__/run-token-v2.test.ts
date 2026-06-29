@@ -33,10 +33,12 @@ import {
   reconstructDraftFromToken,
   RUN_TOKEN_V2_PREFIX,
   tokenDraftConfig,
+  virtualRecordFromToken,
   versionsAgree,
   type RunTokenV1Body,
   type RunTokenV2Body,
 } from "../run-token";
+import { dailyChallengeForDate } from "../daily";
 
 import skewFixtures from "./fixtures/run-token-skew.json" with { type: "json" };
 
@@ -108,6 +110,23 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     expect(decoded).not.toBeNull();
     expect(decoded!.v).toBe(2);
     expect(JSON.stringify(decoded)).toBe(JSON.stringify(originBody));
+  });
+
+  it("round-trips daily challenge metadata into token-loaded virtual records", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+    const record = {
+      ...buildOriginRecord(gameData, challenge.seed),
+      parent_seed: challenge.seed,
+      challenge,
+    };
+    const decoded = decodeRunToken(encodeRunToken(record));
+    if (decoded === null || decoded.v !== 2) throw new Error("daily token did not decode as t2");
+    expect(decoded.ch).toEqual({ k: "daily", d: "2026-06-29", s: challenge.seed });
+
+    const virtual = virtualRecordFromToken(decoded, gameData);
+    expect(virtual.parent_seed).toBe(challenge.seed);
+    expect(virtual.challenge).toEqual(challenge);
+    expect(virtual.draft).toEqual(record.draft);
   });
 
   it("rejects unknown df / rb / ef.id values", () => {

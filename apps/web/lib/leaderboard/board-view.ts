@@ -6,15 +6,24 @@
 // server rows verbatim; a malformed breakdown renders as absent ("—"),
 // never re-derived client-side.
 import type {
-  BoardConfigFilter,
   BoardDraftMode,
   BoardDraftOrder,
   BoardEra,
+  BoardLane,
   BoardRatingBasis,
 } from "./config";
+import type { LeaderboardChallengeKind } from "../game/daily";
 
 export type BoardDraftModeFilter = BoardDraftMode;
-export type BoardFilter = BoardConfigFilter;
+export interface BoardFilter {
+  readonly challenge: LeaderboardChallengeKind;
+  readonly challengeDate?: string | null;
+  readonly lane: BoardLane;
+  readonly draftMode: BoardDraftMode;
+  readonly draftOrder: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly ratingBasis: BoardRatingBasis;
+}
 
 /** Wire shape of one GET /api/leaderboard entry (BoardResponseBody.entries[i]). */
 export interface BoardEntryWire {
@@ -24,6 +33,9 @@ export interface BoardEntryWire {
   readonly draft_order: BoardDraftOrder;
   readonly era: BoardEra;
   readonly rating_basis: BoardRatingBasis;
+  readonly rating_version: string | null;
+  readonly percentile: number | null;
+  readonly field_size: number;
   readonly display_name: string;
   readonly verified_score: number;
   readonly score_breakdown: unknown;
@@ -38,6 +50,8 @@ export interface BoardPageWire {
   readonly draft_order: BoardDraftOrder;
   readonly era: BoardEra;
   readonly rating_basis: BoardRatingBasis;
+  readonly challenge_type?: LeaderboardChallengeKind;
+  readonly challenge_date?: string | null;
   readonly entries: readonly BoardEntryWire[];
   readonly next_cursor: string | null;
 }
@@ -110,6 +124,9 @@ export interface BoardRowView {
   readonly draftOrder: BoardDraftOrder;
   readonly era: BoardEra;
   readonly ratingBasis: BoardRatingBasis;
+  readonly ratingVersion: string | null;
+  readonly percentile: number | null;
+  readonly fieldSize: number;
   readonly timeLabel: string;
   readonly isMine: boolean;
   readonly breakdown: BreakdownLineView[] | null;
@@ -128,6 +145,9 @@ export function boardRowViews(
     draftOrder: e.draft_order,
     era: e.era,
     ratingBasis: e.rating_basis,
+    ratingVersion: e.rating_version,
+    percentile: e.percentile,
+    fieldSize: e.field_size,
     timeLabel: relativeTimeLabel(opts.nowMs, e.created_at),
     isMine: opts.myEntryId !== null && e.id === opts.myEntryId,
     breakdown: breakdownLines(e.score_breakdown),
@@ -158,9 +178,13 @@ export function appendBoardPage(acc: BoardAccumulator, page: BoardPageWire): Boa
 }
 
 /** Query string for GET /api/leaderboard — current season is the server's
- *  default, so no season param is ever sent by the v1 board. */
+ *  explicit default, so no season param is sent by the board UI. */
 export function boardQueryString(opts: { filter: BoardFilter; cursor: string | null }): string {
   const q = new URLSearchParams();
+  q.set("challenge", opts.filter.challenge);
+  if (opts.filter.challenge === "daily" && opts.filter.challengeDate) {
+    q.set("date", opts.filter.challengeDate);
+  }
   q.set("mode", opts.filter.lane);
   q.set("draft_mode", opts.filter.draftMode);
   q.set("draft_order", opts.filter.draftOrder);
@@ -173,11 +197,12 @@ export function boardQueryString(opts: { filter: BoardFilter; cursor: string | n
 // ─── Season label ────────────────────────────────────────────────────────────
 
 /**
- * Human header for a derived season key
- * (`engine_rating_dataset_ruleset_hash`, season.ts). The full key is shown
- * elsewhere as evidence; the label leads with the readable anchors.
+ * Human header for a season id. Legacy/archive ids and the current pinned
+ * default still use `engine_rating_dataset_ruleset_hash`; the label leads
+ * with the readable anchors when that shape is present.
  */
 export function seasonLabel(seasonKey: string): string {
+  if (seasonKey.startsWith("season-")) return seasonKey;
   const parts = seasonKey.split("_");
   if (parts.length < 5) return seasonKey;
   // dataset · engine — the two anchors a player can act on (refresh = new data build).

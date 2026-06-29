@@ -47,6 +47,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     reached_round: "FINAL",
     matches_played: 8,
     shootout_wins: 0,
+    challenge_date: null,
     ...overrides,
   };
 }
@@ -61,6 +62,12 @@ describe("buildShareCaption", () => {
     expect(caption).toContain("Auriverde XI went 8-0 on wcdraft.");
     expect(caption).toContain(SHARE_TAGLINE);
     expect(SHARE_TAGLINE).toBe("Built my all-time XI on wcdraft");
+  });
+
+  it("uses challenge framing for daily draft captions", () => {
+    const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL);
+    expect(caption).toContain("Auriverde XI went 8-0 on 2026-06-29's draft — beat it →");
+    expect(caption).toContain(SHARE_TAGLINE);
   });
 
   it("appends the share URL when one is provided", () => {
@@ -82,6 +89,11 @@ describe("buildShareIntentText", () => {
     expect(text).not.toMatch(/https?:\/\//);
     expect(text).toContain("Auriverde XI went 8-0 on wcdraft.");
     expect(text).toContain(SHARE_TAGLINE);
+  });
+
+  it("uses daily challenge framing in intent text", () => {
+    const text = buildShareIntentText(makeView({ challenge_date: "2026-06-29" }));
+    expect(text).toContain("Auriverde XI went 8-0 on 2026-06-29's draft — beat it →");
   });
 });
 

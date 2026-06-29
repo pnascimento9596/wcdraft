@@ -3,8 +3,8 @@
 // Board: public read, keyset pagination riding the partial
 // `leaderboard_entries_top_idx` exactly — (season_key, lane, full config,
 // verified_score DESC, created_at ASC, id), `hidden_at IS NULL` always.
-// Season defaults to the CURRENT derived key (plan §3); config defaults to
-// Classic / Squad First / Career / All-time. CDN-cached 30 s (plan §5.2).
+// Season defaults to the explicit CURRENT season key; daily boards default to
+// today's UTC date and the canonical Daily Draft config. CDN-cached 30 s.
 //
 // /me: session required (no CSRF — read-only); caller's best + rank +
 // recent entries for the season, uncached.
@@ -20,7 +20,15 @@ import { leaderboardEntries, type Db } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
 import {
+  DAILY_CHALLENGE_KIND,
+  SEASON_CHALLENGE_KIND,
+  isDailyChallengeDate,
+  utcDateString,
+  type LeaderboardChallengeKind,
+} from "../game/daily";
+import {
   DEFAULT_BOARD_FILTER,
+  DEFAULT_DAILY_BOARD_FILTER,
   isBoardDraftMode,
   isBoardDraftOrder,
   isBoardEra,
@@ -51,8 +59,9 @@ export interface ReadRouteDeps {
   readonly now: () => number;
   /** Lazy — only read when a session cookie is present. */
   readonly getCookieSecret: () => string;
-  /** The server's current season key (pure function of the manifest). */
+  /** The server's current season key (explicit policy id, env-overridable). */
   readonly currentSeasonKey: () => string;
+  readonly todayUtcDate?: () => string;
 }
 
 function queryError(message: string): NextResponse {
@@ -92,6 +101,8 @@ export function decodeBoardCursor(raw: string): BoardCursor | null {
 
 interface ParsedBoardParams {
   seasonKey: string;
+  challengeType: LeaderboardChallengeKind;
+  challengeDate: string | null;
   mode: BoardMode;
 }
 
@@ -100,15 +111,30 @@ function parseSeasonAndMode(
   deps: ReadRouteDeps,
 ): ParsedBoardParams | NextResponse {
   const q = req.nextUrl.searchParams;
+  const challengeRaw = q.get("challenge") ?? SEASON_CHALLENGE_KIND;
+  if (challengeRaw !== SEASON_CHALLENGE_KIND && challengeRaw !== DAILY_CHALLENGE_KIND) {
+    return queryError("challenge must be 'season' or 'daily'");
+  }
+  const challengeType = challengeRaw;
   const seasonKey = q.get("season") ?? deps.currentSeasonKey();
   if (seasonKey.length === 0 || seasonKey.length > 256) {
     return queryError("season is not a valid season key");
   }
-  const mode = q.get("mode") ?? "ranked";
+  const challengeDate =
+    challengeType === DAILY_CHALLENGE_KIND
+      ? (q.get("date") ?? (deps.todayUtcDate ?? utcDateString)())
+      : null;
+  if (challengeType === DAILY_CHALLENGE_KIND && !isDailyChallengeDate(challengeDate)) {
+    return queryError("date must be a UTC YYYY-MM-DD daily challenge date");
+  }
+  const mode = q.get("mode") ?? (challengeType === DAILY_CHALLENGE_KIND ? "casual" : "ranked");
   if (mode !== "casual" && mode !== "ranked") {
     return queryError("mode must be 'casual' or 'ranked'");
   }
-  return { seasonKey, mode };
+  if (challengeType === DAILY_CHALLENGE_KIND && mode !== "casual") {
+    return queryError("daily challenge boards are casual only");
+  }
+  return { seasonKey, challengeType, challengeDate, mode };
 }
 
 function parseDraftMode(req: NextRequest): BoardDraftMode | NextResponse {
@@ -154,6 +180,8 @@ function parseConfig(req: NextRequest): ParsedConfigParams | NextResponse {
 export interface BoardResponseBody {
   readonly season_key: string;
   readonly current_season_key: string;
+  readonly challenge_type: LeaderboardChallengeKind;
+  readonly challenge_date: string | null;
   readonly mode: BoardMode;
   readonly draft_mode: BoardDraftMode;
   readonly draft_order: BoardDraftOrder;
@@ -172,7 +200,8 @@ export async function handleLeaderboardBoardGet(
     if (base instanceof NextResponse) return base;
     const q = req.nextUrl.searchParams;
 
-    const config = parseConfig(req);
+    const config =
+      base.challengeType === DAILY_CHALLENGE_KIND ? dailyConfigParams() : parseConfig(req);
     if (config instanceof NextResponse) return config;
 
     const limitRaw = q.get("limit");
@@ -199,6 +228,8 @@ export async function handleLeaderboardBoardGet(
 
     const page = await boardPage(deps.db, {
       seasonKey: base.seasonKey,
+      challengeType: base.challengeType,
+      challengeDate: base.challengeDate,
       mode: base.mode,
       draftMode: config.draftMode,
       draftOrder: config.draftOrder,
@@ -211,6 +242,8 @@ export async function handleLeaderboardBoardGet(
     const body: BoardResponseBody = {
       season_key: base.seasonKey,
       current_season_key: deps.currentSeasonKey(),
+      challenge_type: base.challengeType,
+      challenge_date: base.challengeDate,
       mode: base.mode,
       draft_mode: config.draftMode,
       draft_order: config.draftOrder,
@@ -261,13 +294,16 @@ export async function handleLeaderboardMeGet(
     });
     const base = parseSeasonAndMode(req, deps);
     if (base instanceof NextResponse) return base;
-    const config = parseConfig(req);
+    const config =
+      base.challengeType === DAILY_CHALLENGE_KIND ? dailyConfigParams() : parseConfig(req);
     if (config instanceof NextResponse) return config;
 
     // requireReadIdentity guarantees a session id.
     const sessionId = identity.sessionId as string;
     const recent = await recentEntriesFor(deps.db, {
       seasonKey: base.seasonKey,
+      challengeType: base.challengeType,
+      challengeDate: base.challengeDate,
       mode: base.mode,
       draftMode: config.draftMode,
       draftOrder: config.draftOrder,
@@ -279,6 +315,8 @@ export async function handleLeaderboardMeGet(
     });
     const best = await identityBoardRank(deps.db, {
       seasonKey: base.seasonKey,
+      challengeType: base.challengeType,
+      challengeDate: base.challengeDate,
       mode: base.mode,
       draftMode: config.draftMode,
       draftOrder: config.draftOrder,
@@ -312,6 +350,15 @@ export async function handleLeaderboardMeGet(
     console.error("[leaderboard] unexpected me error", err);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
   }
+}
+
+function dailyConfigParams(): ParsedConfigParams {
+  return {
+    draftMode: DEFAULT_DAILY_BOARD_FILTER.draftMode,
+    draftOrder: DEFAULT_DAILY_BOARD_FILTER.draftOrder,
+    era: DEFAULT_DAILY_BOARD_FILTER.era,
+    ratingBasis: DEFAULT_DAILY_BOARD_FILTER.ratingBasis,
+  };
 }
 
 async function fetchEntryById(db: Db, id: string): Promise<ApiLeaderboardEntry | null> {

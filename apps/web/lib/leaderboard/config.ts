@@ -1,4 +1,5 @@
 import type { DraftFlow, EraPresetId, RatingBasis } from "@wcdraft/core";
+import type { LeaderboardChallengeKind } from "../game/daily";
 
 export type BoardLane = "casual" | "ranked";
 export type BoardDraftMode = "classic" | "hidden";
@@ -7,6 +8,8 @@ export type BoardEra = EraPresetId;
 export type BoardRatingBasis = RatingBasis;
 
 export interface BoardConfigFilter {
+  readonly challenge: LeaderboardChallengeKind;
+  readonly challengeDate?: string | null;
   readonly lane: BoardLane;
   readonly draftMode: BoardDraftMode;
   readonly draftOrder: BoardDraftOrder;
@@ -15,7 +18,19 @@ export interface BoardConfigFilter {
 }
 
 export const DEFAULT_BOARD_FILTER: BoardConfigFilter = Object.freeze({
+  challenge: "season",
+  challengeDate: null,
   lane: "ranked",
+  draftMode: "classic",
+  draftOrder: "squad_first",
+  era: "all_time",
+  ratingBasis: "career",
+});
+
+export const DEFAULT_DAILY_BOARD_FILTER: BoardConfigFilter = Object.freeze({
+  challenge: "daily",
+  challengeDate: null,
+  lane: "casual",
   draftMode: "classic",
   draftOrder: "squad_first",
   era: "all_time",

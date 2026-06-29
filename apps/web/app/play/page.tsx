@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ModeSelect } from "../../components/game/mode-select";
 
 export const metadata: Metadata = {
@@ -20,6 +21,12 @@ export default function ModeSelectPage() {
           Seventeen spins, one all-time XI — live on the real 1930–2026 pool, all in your browser.
         </p>
       </header>
+
+      <p className="lede">
+        <Link href="/play/daily" className="btn btn--primary">
+          Today's Draft
+        </Link>
+      </p>
 
       <ModeSelect />
     </div>

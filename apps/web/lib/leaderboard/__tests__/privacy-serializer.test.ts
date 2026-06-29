@@ -40,6 +40,8 @@ describe("leaderboard public serializers", () => {
 
     const page = await boardPage(db, {
       seasonKey: "season-privacy",
+      challengeType: "season",
+      challengeDate: null,
       mode: "ranked",
       draftMode: "classic",
       draftOrder: "squad_first",
@@ -97,6 +99,8 @@ describe("leaderboard public serializers", () => {
 
     const query = {
       seasonKey: "season-privacy",
+      challengeType: "season" as const,
+      challengeDate: null,
       mode: "ranked" as const,
       draftMode: "classic" as const,
       draftOrder: "squad_first" as const,

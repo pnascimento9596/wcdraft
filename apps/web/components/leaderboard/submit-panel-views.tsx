@@ -21,6 +21,8 @@ export interface SubmitPanelViewProps {
   authReady: boolean;
   isSignedIn: boolean;
   publicUsername: string | null;
+  challengeKind?: "season" | "daily";
+  dailyOpen?: boolean;
   leaderboardHref: string;
   name: string;
   /** Live U2-mirror hint; null when the name is fine or untouched. */
@@ -46,6 +48,8 @@ function formVisible(phase: SubmitPhase): boolean {
 export function SubmitPanelView(props: SubmitPanelViewProps) {
   const { phase } = props;
   const rankedSelected = props.submitMode === "ranked";
+  const daily = props.challengeKind === "daily";
+  const dailyOpen = props.dailyOpen ?? true;
   const rankedAuthBlocked = rankedSelected && (!props.authReady || !props.isSignedIn);
   const needsUsername = rankedSelected && props.isSignedIn && props.publicUsername === null;
   const aliasOptional = rankedSelected && props.isSignedIn && props.publicUsername !== null;
@@ -57,7 +61,7 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
       ? "Optional alias (3-20 chars)"
       : "Alias (3-20 chars: a-z, 0-9, _)";
   const submitDisabled =
-    phase.kind === "submitting" || props.retryRemaining !== null || rankedAuthBlocked;
+    phase.kind === "submitting" || props.retryRemaining !== null || rankedAuthBlocked || !dailyOpen;
   return (
     <section className={s.submitPanel} aria-label="Post to the leaderboard">
       <div className={s.submitHead}>
@@ -71,26 +75,35 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
       </div>
 
       <div className={s.submitModeRow}>
-        <div className="segmented" role="group" aria-label="Leaderboard lane">
-          <button
-            type="button"
-            aria-pressed={props.submitMode === "casual"}
-            disabled={phase.kind === "submitting"}
-            onClick={() => props.onModeChange("casual")}
-          >
-            Casual
-          </button>
-          <button
-            type="button"
-            aria-pressed={props.submitMode === "ranked"}
-            disabled={phase.kind === "submitting"}
-            onClick={() => props.onModeChange("ranked")}
-          >
-            Ranked
-          </button>
-        </div>
+        {daily ? (
+          <p className={s.submitModeNote}>
+            {dailyOpen
+              ? "Daily board · anonymous posting open today"
+              : "Daily board · submissions closed for this date"}
+          </p>
+        ) : (
+          <div className="segmented" role="group" aria-label="Leaderboard lane">
+            <button
+              type="button"
+              aria-pressed={props.submitMode === "casual"}
+              disabled={phase.kind === "submitting"}
+              onClick={() => props.onModeChange("casual")}
+            >
+              Casual
+            </button>
+            <button
+              type="button"
+              aria-pressed={props.submitMode === "ranked"}
+              disabled={phase.kind === "submitting"}
+              onClick={() => props.onModeChange("ranked")}
+            >
+              Ranked
+            </button>
+          </div>
+        )}
         <SubmitModeNote
           mode={props.submitMode}
+          challengeKind={props.challengeKind ?? "season"}
           authReady={props.authReady}
           isSignedIn={props.isSignedIn}
           publicUsername={props.publicUsername}
@@ -128,9 +141,11 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
             >
               {phase.kind === "submitting"
                 ? "Submitting…"
-                : rankedSelected
-                  ? "Post ranked run"
-                  : "Post casual run"}
+                : daily
+                  ? "Post daily score"
+                  : rankedSelected
+                    ? "Post ranked run"
+                    : "Post casual run"}
             </button>
           </div>
           <p className={s.submitFine}>
@@ -150,15 +165,18 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
 
 function SubmitModeNote({
   mode,
+  challengeKind,
   authReady,
   isSignedIn,
   publicUsername,
 }: {
   mode: SubmitBoardMode;
+  challengeKind: "season" | "daily";
   authReady: boolean;
   isSignedIn: boolean;
   publicUsername: string | null;
 }) {
+  if (challengeKind === "daily") return null;
   if (mode === "casual") {
     return (
       <p className={s.submitModeNote}>Casual posts anonymously; sign in later to claim the run.</p>

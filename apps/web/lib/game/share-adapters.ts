@@ -134,6 +134,7 @@ export interface ShareView {
   reached_round: string;
   matches_played: number;
   shootout_wins: number;
+  challenge_date: string | null;
 }
 
 export function buildShareView(
@@ -164,6 +165,7 @@ export function buildShareView(
     reached_round: run.reached_round,
     matches_played: matches.length,
     shootout_wins: run.shootout_wins,
+    challenge_date: record.challenge?.kind === "daily" ? record.challenge.date : null,
   };
 }
 
@@ -198,7 +200,7 @@ export const SHARE_TAGLINE = "Built my all-time XI on wcdraft" as const;
 export function buildShareCaption(view: ShareView, url: string | null): string {
   const lines: string[] = [];
   if (view.narrative) lines.push(view.narrative);
-  lines.push(`${view.team_name} went ${view.display_record} on wcdraft.`);
+  lines.push(shareChallengeLine(view));
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
   return lines.join("\n");
@@ -211,8 +213,15 @@ export function buildShareCaption(view: ShareView, url: string | null): string {
  * for `navigator.share({ text, url })`.
  */
 export function buildShareIntentText(view: ShareView): string {
-  const lead = `${view.team_name} went ${view.display_record} on wcdraft. ${SHARE_TAGLINE}`;
+  const lead = `${shareChallengeLine(view)} ${SHARE_TAGLINE}`;
   return view.narrative ? `${view.narrative} ${lead}` : lead;
+}
+
+function shareChallengeLine(view: ShareView): string {
+  if (view.challenge_date !== null) {
+    return `${view.team_name} went ${view.display_record} on ${view.challenge_date}'s draft — beat it →`;
+  }
+  return `${view.team_name} went ${view.display_record} on wcdraft.`;
 }
 
 // ─── Social web intents ──────────────────────────────────────────────────────

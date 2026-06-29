@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/auth-context";
 import { putJson } from "@/lib/auth/client";
 import type { GameData } from "@/lib/game/data";
+import { utcDateString } from "@/lib/game/daily";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { buildRunTokenBody, encodeRunToken, versionsAgree } from "@/lib/game/run-token";
 import { boardQueryString, type BoardFilter } from "@/lib/leaderboard/board-view";
@@ -55,6 +56,9 @@ export function LeaderboardSubmitPanel({
   const [retryRemaining, setRetryRemaining] = useState<number | null>(null);
   const { ready: authReady, isSignedIn, session, refresh } = useAuth();
   const publicUsername = isSignedIn ? (session?.username ?? null) : null;
+  const dailyChallenge = record.challenge?.kind === "daily" ? record.challenge : null;
+  const effectiveSubmitMode: SubmitBoardMode = dailyChallenge === null ? submitMode : "casual";
+  const dailyOpen = dailyChallenge === null || dailyChallenge.date === utcDateString();
 
   // Local memory — read in an effect so SSR/hydration stay byte-stable.
   useEffect(() => {
@@ -64,9 +68,9 @@ export function LeaderboardSubmitPanel({
 
   useEffect(() => {
     if (token === null) return;
-    setPhase(wasTokenSubmitted(token, submitMode) ? { kind: "submitted-earlier" } : IDLE);
+    setPhase(wasTokenSubmitted(token, effectiveSubmitMode) ? { kind: "submitted-earlier" } : IDLE);
     setRetryRemaining(null);
-  }, [token, submitMode]);
+  }, [token, effectiveSubmitMode]);
 
   // RATE_LIMITED: respect Retry-After with a live countdown; the submit
   // button stays disabled until it elapses.
@@ -88,14 +92,24 @@ export function LeaderboardSubmitPanel({
 
   if (sim === null || token === null) return null;
   const score = sim.run.score;
-  const leaderboardHref = leaderboardHrefForRecord(record, submitMode);
+  const leaderboardHref = leaderboardHrefForRecord(record, effectiveSubmitMode);
 
-  const preparedName = preparePublicName({ mode: submitMode, raw: name, publicUsername });
+  const preparedName = preparePublicName({ mode: effectiveSubmitMode, raw: name, publicUsername });
   const nameHint = touched && !preparedName.ok ? NAME_HINT[preparedName.reason] : null;
 
   const onSubmit = () => {
     if (phase.kind === "submitting") return;
-    if (submitMode === "ranked" && (!authReady || !isSignedIn)) {
+    if (!dailyOpen) {
+      setPhase({
+        kind: "rejected",
+        code: "BAD_ATTEMPT",
+        copy: submitStatusCopy("BAD_ATTEMPT"),
+        nameHint: null,
+        retryAfterSeconds: null,
+      });
+      return;
+    }
+    if (effectiveSubmitMode === "ranked" && (!authReady || !isSignedIn)) {
       setPhase(rankedAuthRequiredPhase());
       return;
     }
@@ -107,14 +121,16 @@ export function LeaderboardSubmitPanel({
     void submitAfterProfile({
       token,
       score,
-      mode: submitMode,
+      mode: effectiveSubmitMode,
       draftMode: record.draft.mode,
       displayName: preparedName.value,
-      needsUsername: submitMode === "ranked" && isSignedIn && publicUsername === null,
+      challenge: dailyChallenge === null ? "season" : "daily",
+      challengeDate: dailyChallenge?.date ?? null,
+      needsUsername: effectiveSubmitMode === "ranked" && isSignedIn && publicUsername === null,
       refresh,
     }).then((outcome) => {
       if (outcome.kind === "accepted" || outcome.kind === "duplicate") {
-        rememberTokenSubmitted(token, submitMode);
+        rememberTokenSubmitted(token, effectiveSubmitMode);
         if (preparedName.value !== null) saveLastDisplayName(preparedName.value);
       }
       setPhase(outcome);
@@ -125,10 +141,12 @@ export function LeaderboardSubmitPanel({
     <SubmitPanelView
       score={score}
       draftMode={record.draft.mode}
-      submitMode={submitMode}
+      submitMode={effectiveSubmitMode}
       authReady={authReady}
       isSignedIn={isSignedIn}
       publicUsername={publicUsername}
+      challengeKind={dailyChallenge === null ? "season" : "daily"}
+      dailyOpen={dailyOpen}
       leaderboardHref={leaderboardHref}
       name={name}
       nameHint={nameHint}
@@ -148,7 +166,12 @@ export function LeaderboardSubmitPanel({
 }
 
 function leaderboardHrefForRecord(record: RunRecordV1, lane: SubmitBoardMode): string {
+  if (record.challenge?.kind === "daily") {
+    const q = new URLSearchParams({ challenge: "daily", date: record.challenge.date });
+    return `/leaderboard?${q.toString()}`;
+  }
   const filter: BoardFilter = {
+    challenge: "season",
     lane,
     draftMode: record.draft.mode,
     draftOrder: record.draft.draft_flow ?? "squad_first",
@@ -201,6 +224,8 @@ async function submitAfterProfile({
   mode,
   draftMode,
   displayName,
+  challenge,
+  challengeDate,
   needsUsername,
   refresh,
 }: {
@@ -209,6 +234,8 @@ async function submitAfterProfile({
   mode: SubmitBoardMode;
   draftMode: "classic" | "hidden";
   displayName: string | null;
+  challenge: "season" | "daily";
+  challengeDate: string | null;
   needsUsername: boolean;
   refresh: () => Promise<void>;
 }): Promise<SubmitPhase> {
@@ -245,5 +272,7 @@ async function submitAfterProfile({
     mode,
     draftMode,
     displayName: aliasForEntry,
+    challenge,
+    challengeDate,
   });
 }

@@ -77,6 +77,7 @@ export {
 
 export type {
   RunTokenBody,
+  RunTokenDailyChallenge,
   RunTokenOgSummary,
   RunTokenPick,
   RunTokenPickV2,
@@ -136,6 +137,9 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
     ev: record.versions.engine_version,
     uv: record.versions.ruleset_version,
     hv: record.versions.data_bundle_hash,
+    ...(record.challenge?.kind === "daily"
+      ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
+      : {}),
   };
 }
 
@@ -237,6 +241,10 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
  */
 export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
   const draft = reconstructDraftFromToken(token, gameData);
+  const challenge =
+    token.v === 2 && token.ch?.k === "daily"
+      ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
+      : undefined;
   return {
     record_version: 1,
     run_id: token.rid,
@@ -246,5 +254,6 @@ export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData):
     versions: gameData.versions,
     draft,
     status: "ready",
+    ...(challenge === undefined ? {} : { challenge }),
   };
 }

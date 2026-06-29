@@ -3,25 +3,27 @@
 // One row = one VERIFIED submission. F-4 will:
 //   1) re-simulate the token via `reconstructDraftFromToken` +
 //      `runTournamentFull` to derive `verified_score`,
-//   2) derive `season_key` from the token's embedded anchors (dataset +
-//      rating + engine version) so a rating recalibration rolls a new season
-//      automatically without code change,
+//   2) stamp `season_key` from the explicit active leaderboard season policy
+//      so rating/runtime bumps do not automatically reset aggregate boards,
 //   3) require `attempt_id` for ranked mode and verify the token's
 //      parent_seed matches the issued attempt's seed.
+//
+// Daily challenges are intentionally not token-deduped globally: everyone gets
+// the same UTC date-derived seed/canonical config, and the board stores one
+// visible best row per player identity/date/config.
 //
 // `user_id` is NULLABLE only because casual-mode anon submissions are
 // allowed; ranked mode requires a bound user (F-4 application check).
 // `mode` is a DB-level CHECK enum so a write outside the F-4 application
 // layer cannot silently land an unknown mode.
 //
-// Dedupe is via a UNIQUE CONSTRAINT with NULLS NOT DISTINCT (Postgres 15+).
-// Casual leaderboard is anonymous-first by default: a plain unique index
-// on (season_key, mode, user_id, token) would let two NULL-user rows with
-// the same token both insert under Postgres' default NULLS-DISTINCT
-// semantics. NULLS NOT DISTINCT closes the spam vector while remaining
-// anon-friendly because the (season_key, mode, token) combination still
-// uniquely identifies a casual entry. Global-effective anti-spam is the
-// right F-4 surface regardless of the F-3 anon-history scoping decision.
+// Season dedupe is via a partial UNIQUE INDEX with NULLS NOT DISTINCT
+// (Postgres 15+) on (season_key, mode, user_id, token), limited to
+// challenge_type = 'season'. Casual season boards are anonymous-first by
+// default: a plain unique index on nullable user_id would let two NULL-user
+// rows with the same token both insert under Postgres' default
+// NULLS-DISTINCT semantics. NULLS NOT DISTINCT closes that spam vector while
+// preserving daily's intentional same-seed/same-token share behavior.
 //
 // F-4 U1 (migration 0004) additions, per the F-4 plan §7 + Lead-Architect
 // rulings:
@@ -45,17 +47,11 @@
 //     makes the bound-user requirement structural — a ranked row with a
 //     NULL user cannot exist regardless of application-layer bugs. The
 //     casual path stays anonymous-capable (nullable user + display_alias).
-import {
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  integer,
-  jsonb,
-  index,
-  unique,
-  check,
-} from "drizzle-orm/pg-core";
+//   - Daily challenge columns (migration 0008): `challenge_type`,
+//     `challenge_date`, and `rating_version`. Existing rows default to
+//     season/null date. Daily rows are date-scoped, structurally casual-only,
+//     and unique by visible per-day identity instead of global token.
+import { pgTable, text, timestamp, uuid, integer, jsonb, index, check } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users } from "./users.ts";
 import { sessions } from "./sessions.ts";
@@ -66,6 +62,9 @@ export const leaderboardEntries = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     seasonKey: text("season_key").notNull(),
+    challengeType: text("challenge_type").notNull().default("season"),
+    challengeDate: text("challenge_date"),
+    ratingVersion: text("rating_version"),
     mode: text("mode").notNull(),
     draftMode: text("draft_mode").notNull(),
     draftOrder: text("draft_order"),
@@ -93,6 +92,7 @@ export const leaderboardEntries = pgTable(
     index("leaderboard_entries_top_idx")
       .on(
         t.seasonKey,
+        t.challengeType,
         t.mode,
         t.draftMode,
         t.draftOrder,
@@ -103,6 +103,20 @@ export const leaderboardEntries = pgTable(
         t.id,
       )
       .where(sql`${t.hiddenAt} IS NULL`),
+    index("leaderboard_entries_daily_top_idx")
+      .on(
+        t.challengeType,
+        t.challengeDate,
+        t.mode,
+        t.draftMode,
+        t.draftOrder,
+        t.era,
+        t.ratingBasis,
+        t.verifiedScore.desc(),
+        t.createdAt.asc(),
+        t.id,
+      )
+      .where(sql`${t.hiddenAt} IS NULL AND ${t.challengeType} = 'daily'`),
     // Claim UPDATE + my-entry lookup; only anon-owned rows carry a session.
     index("leaderboard_entries_session_idx")
       .on(t.sessionId)
@@ -111,10 +125,24 @@ export const leaderboardEntries = pgTable(
     index("leaderboard_entries_user_recent_idx")
       .on(t.userId, t.seasonKey, t.mode, t.createdAt.desc())
       .where(sql`${t.userId} IS NOT NULL`),
-    unique("leaderboard_entries_dedupe_uq")
-      .on(t.seasonKey, t.mode, t.userId, t.token)
-      .nullsNotDistinct(),
     check("leaderboard_entries_mode_chk", sql`${t.mode} IN ('casual', 'ranked')`),
+    check("leaderboard_entries_challenge_type_chk", sql`${t.challengeType} IN ('season', 'daily')`),
+    check(
+      "leaderboard_entries_daily_mode_chk",
+      sql`${t.challengeType} <> 'daily' OR ${t.mode} = 'casual'`,
+    ),
+    check(
+      "leaderboard_entries_challenge_date_chk",
+      sql`(
+        ${t.challengeType} = 'season' AND ${t.challengeDate} IS NULL
+      ) OR (
+        ${t.challengeType} = 'daily' AND ${t.challengeDate} ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+      )`,
+    ),
+    check(
+      "leaderboard_entries_rating_version_chk",
+      sql`${t.ratingVersion} IS NULL OR char_length(${t.ratingVersion}) BETWEEN 1 AND 256`,
+    ),
     check("leaderboard_entries_draft_mode_chk", sql`${t.draftMode} IN ('classic', 'hidden')`),
     check(
       "leaderboard_entries_draft_order_chk",

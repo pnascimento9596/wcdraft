@@ -85,6 +85,8 @@ export async function submitRun(input: {
   mode: SubmitBoardMode;
   draftMode: BoardDraftModeFilter;
   displayName: string | null;
+  challenge?: "season" | "daily";
+  challengeDate?: string | null;
 }): Promise<SubmitPhase> {
   let r: Response;
   try {
@@ -103,6 +105,8 @@ export async function submitRun(input: {
         draft_mode: input.draftMode,
         display_alias: input.displayName,
         mode: input.mode,
+        challenge: input.challenge ?? "season",
+        challenge_date: input.challengeDate ?? null,
       }),
     });
   } catch {

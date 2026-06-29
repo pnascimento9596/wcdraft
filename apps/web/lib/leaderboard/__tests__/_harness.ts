@@ -42,15 +42,17 @@ export function buildOriginRecord(
     readonly draftFlow?: DraftFlow;
     readonly ratingBasis?: RatingBasis;
     readonly eraPreset?: EraPresetId;
+    readonly formationId?: string;
   } = {},
 ): RunRecordV1 {
   const draftFlow = config.draftFlow ?? "squad_first";
   const ratingBasis = config.ratingBasis ?? "career";
   const eraPreset = config.eraPreset ?? "all_time";
+  const formationId = config.formationId ?? "4-3-3";
   const params = {
     run_id: `f4-u2-${mode}`,
     parent_seed: seed,
-    formation_id: "4-3-3",
+    formation_id: formationId,
     mode,
     team_name: teamName,
     dataset_version: gameData.versions.dataset_version,

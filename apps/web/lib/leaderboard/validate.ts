@@ -46,8 +46,16 @@ import {
   type RunTokenBody,
 } from "../game/run-token";
 import { buildSimWorldInputs } from "../game/simulate";
+import {
+  DAILY_CHALLENGE_KIND,
+  SEASON_CHALLENGE_KIND,
+  deriveDailySeed,
+  isCanonicalDailyConfig,
+  isDailyChallengeDate,
+  type LeaderboardChallengeKind,
+} from "../game/daily";
 import { validateDisplayName, type DisplayNameRejection } from "./display-name";
-import { deriveSeasonKey } from "./season";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "./season";
 import type { BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 
 // ─── Codes ───────────────────────────────────────────────────────────────────
@@ -112,8 +120,11 @@ export interface AcceptedSubmission {
   verified_score: number;
   /** Transparent breakdown (Σ points === verified_score) for the insert. */
   score_breakdown: ScoreComponent[];
-  /** Season = full 6-anchor tuple, derived from the server's versions (§3). */
+  /** Explicit active aggregate season id, decoupled from runtime/rating bumps. */
   season_key: string;
+  challenge_type: LeaderboardChallengeKind;
+  challenge_date: string | null;
+  rating_version: string;
   /** First-class board mode; explicitly requested and matched to token `md`. */
   draft_mode: SubmissionDraftMode;
   /** Token-derived config axes persisted with the row for exact board filters. */
@@ -153,12 +164,18 @@ export interface SubmissionBody {
   display_alias?: unknown;
   /** Legacy client field; treated as alias while the UI migrates. */
   display_name?: unknown;
+  /** Defaults to season. Daily must be explicit and token-backed. */
+  challenge?: unknown;
+  /** UTC YYYY-MM-DD, required when challenge === daily. */
+  challenge_date?: unknown;
 }
 
 /** Injected server-owned data — built once per process by the route (U3). */
 export interface ValidationData {
   gameData: GameData;
   scenario: Scenario2026Bundle;
+  /** Explicit active aggregate season id. */
+  seasonKey?: string;
 }
 
 // ─── Pipeline ────────────────────────────────────────────────────────────────
@@ -173,6 +190,20 @@ function mismatchedAnchors(token: RunTokenBody, versions: RunRecordVersions): Ve
 
 function isSubmissionDraftMode(value: unknown): value is SubmissionDraftMode {
   return value === "classic" || value === "hidden";
+}
+
+function parseChallenge(
+  body: SubmissionBody,
+):
+  | { kind: typeof SEASON_CHALLENGE_KIND; date: null }
+  | { kind: typeof DAILY_CHALLENGE_KIND; date: string }
+  | null {
+  const raw = body.challenge ?? SEASON_CHALLENGE_KIND;
+  if (raw === SEASON_CHALLENGE_KIND) return { kind: SEASON_CHALLENGE_KIND, date: null };
+  if (raw !== DAILY_CHALLENGE_KIND) return null;
+  return isDailyChallengeDate(body.challenge_date)
+    ? { kind: DAILY_CHALLENGE_KIND, date: body.challenge_date }
+    : null;
 }
 
 /**
@@ -195,6 +226,10 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     return rejected("INVALID_BODY", "draft_mode must be 'classic' or 'hidden'");
   }
   const targetDraftMode = body.draft_mode;
+  const challenge = parseChallenge(body);
+  if (challenge === null) {
+    return rejected("INVALID_BODY", "challenge must be 'season' or 'daily' with a valid date");
+  }
 
   // 2 — decode (never throws; null on any malformation incl. bad mode tag).
   const token = decodeRunToken(body.token);
@@ -222,6 +257,32 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
       "INVALID_BODY",
       `draft_mode ${targetDraftMode} does not match token mode ${token.md}`,
     );
+  }
+
+  const tokenChallenge = token.v === 2 ? token.ch : undefined;
+  if (challenge.kind === DAILY_CHALLENGE_KIND) {
+    if (!tokenChallenge || tokenChallenge.k !== DAILY_CHALLENGE_KIND) {
+      return rejected("INVALID_BODY", "daily submissions require daily token metadata");
+    }
+    if (tokenChallenge.d !== challenge.date || tokenChallenge.s !== token.ps) {
+      return rejected("INVALID_BODY", "daily token date/seed does not match the submission");
+    }
+    if (token.ps !== deriveDailySeed(challenge.date)) {
+      return rejected("INVALID_BODY", "daily token seed does not match the UTC date");
+    }
+    if (
+      !isCanonicalDailyConfig({
+        mode: token.md,
+        formationId: token.fid,
+        draftFlow: config.draft_flow,
+        eraPreset: config.era_preset,
+        ratingBasis: config.rating_basis,
+      })
+    ) {
+      return rejected("INVALID_BODY", "daily submissions must use the canonical daily config");
+    }
+  } else if (tokenChallenge !== undefined) {
+    return rejected("INVALID_BODY", "daily tokens must post to the daily board");
   }
 
   // 5 — optional display alias (4 and 6 are route seams; both are O(1) DB/header work
@@ -289,7 +350,10 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     status: "accepted",
     verified_score: run.score,
     score_breakdown: run.score_breakdown,
-    season_key: deriveSeasonKey(data.gameData.versions),
+    season_key: data.seasonKey ?? DEFAULT_LEADERBOARD_SEASON_ID,
+    challenge_type: challenge.kind,
+    challenge_date: challenge.date,
+    rating_version: token.rv,
     draft_mode: targetDraftMode,
     draft_order: config.draft_flow,
     era: config.era_preset,

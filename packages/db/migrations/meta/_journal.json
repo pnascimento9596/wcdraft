@@ -57,6 +57,13 @@
       "when": 1782431022830,
       "tag": "0007_leaderboard_user_recent_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1782691200000,
+      "tag": "0008_leaderboard_daily_challenge",
+      "breakpoints": true
     }
   ]
 }

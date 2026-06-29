@@ -27,7 +27,7 @@ import {
   type GameData,
   type RunRecordVersions,
 } from "../game/data";
-import { deriveSeasonKey } from "./season";
+import { explicitSeasonKey } from "./season";
 import type { ValidationData } from "./validate";
 
 /** Build the `DraftDataset` consumed by `createDraft`/`buildDraftCatalog`. */
@@ -124,6 +124,7 @@ export function getValidationData(): ValidationData {
   cachedValidationData ??= {
     gameData: buildServerGameData(),
     scenario: serverScenarioBundle(),
+    seasonKey: currentSeasonKey(),
   };
   return cachedValidationData;
 }
@@ -131,10 +132,9 @@ export function getValidationData(): ValidationData {
 let cachedSeasonKey: string | null = null;
 
 /**
- * The CURRENT season key — pure function of the served manifest (plan §3).
- * Light: composes versions from the manifest only; no catalog build.
+ * The CURRENT season key — explicit policy id, not a rating/runtime hash.
  */
 export function currentSeasonKey(): string {
-  cachedSeasonKey ??= deriveSeasonKey(composeVersions(serverManifest()));
+  cachedSeasonKey ??= explicitSeasonKey();
   return cachedSeasonKey;
 }

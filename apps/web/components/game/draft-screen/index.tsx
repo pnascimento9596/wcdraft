@@ -27,9 +27,10 @@ import {
   pitchSlotViews,
 } from "@/lib/game/adapters";
 import { getCatalogForEra, type GameData } from "@/lib/game/data";
+import { dailyDateFromSearchParams } from "@/lib/game/daily";
 import { DraftTransitionError } from "@/lib/game/errors";
 import { draftTargetLabel, lockBarIdleCopy } from "@/lib/game/config-badges";
-import { draftHref, reviewHref } from "@/lib/game/navigation";
+import { dailyDraftHref, draftHref, reviewHref } from "@/lib/game/navigation";
 import { saveRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
   compatLabel,
@@ -94,17 +95,23 @@ type PosFilter = "ALL" | Position;
 type SortKey = "ovr" | "name" | "pos";
 const POS_FILTERS: PosFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
 
-export function DraftScreen() {
+export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
+  const dailyDate = daily ? dailyDateFromSearchParams(searchParams) : null;
   // Mode-select threads `?mode=hidden` for a Memory draft; anything else is
   // classic. Only consulted when CREATING a run — resumed runs carry their
   // mode on the persisted DraftState.
   const requestedMode: "classic" | "hidden" =
     searchParams?.get("mode") === "hidden" ? "hidden" : "classic";
 
-  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId);
+  const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, { dailyDate });
+
+  useEffect(() => {
+    if (!dailyDate || requestRunId !== null || mode.kind !== "ready") return;
+    router.replace(dailyDraftHref(mode.record.run_id, dailyDate));
+  }, [dailyDate, mode, requestRunId, router]);
 
   // ── Sub-renderers per mode ───────────────────────────────────────────────
   if (mode.kind === "loading") {
@@ -138,7 +145,9 @@ export function DraftScreen() {
           <button
             type="button"
             className="btn btn--primary"
-            onClick={() => router.replace(draftHref(null))}
+            onClick={() =>
+              router.replace(dailyDate ? dailyDraftHref(null, dailyDate) : draftHref(null))
+            }
           >
             Start a new draft
           </button>

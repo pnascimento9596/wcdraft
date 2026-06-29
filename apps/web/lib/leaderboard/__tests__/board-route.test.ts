@@ -53,6 +53,9 @@ interface SeedOpts {
   /** Seconds offset from BASE_MS for created_at (ms precision, keyset-exact). */
   at?: number;
   seasonKey?: string;
+  challengeType?: "season" | "daily";
+  challengeDate?: string | null;
+  ratingVersion?: string | null;
   mode?: "casual" | "ranked";
   draftMode?: "classic" | "hidden";
   draftOrder?: "squad_first" | "position_first";
@@ -79,6 +82,14 @@ async function seed(opts: SeedOpts): Promise<string> {
     .insert(leaderboardEntries)
     .values({
       seasonKey: opts.seasonKey ?? CURRENT_SEASON,
+      challengeType: opts.challengeType ?? "season",
+      challengeDate:
+        opts.challengeDate === undefined
+          ? opts.challengeType === "daily"
+            ? "2026-06-29"
+            : null
+          : opts.challengeDate,
+      ratingVersion: opts.ratingVersion ?? null,
       mode,
       draftMode: opts.draftMode ?? "classic",
       draftOrder: opts.draftOrder ?? "squad_first",
@@ -211,6 +222,58 @@ describe("GET /api/leaderboard — board page", () => {
     const casual = await getBoard({ mode: "casual" });
     expect(casual.body.entries.map((e) => e.display_name)).toEqual(["casual_entry"]);
     expect(casual.body.mode).toBe("casual");
+  });
+
+  it("daily board is public, casual-only, date-scoped, and includes percentile", async () => {
+    await seed({
+      score: 42,
+      mode: "casual",
+      challengeType: "daily",
+      challengeDate: "2026-06-29",
+      ratingVersion: "ratings-2026-06-29",
+      displayAlias: "today_a",
+      at: 1,
+    });
+    await seed({
+      score: 84,
+      mode: "casual",
+      challengeType: "daily",
+      challengeDate: "2026-06-29",
+      ratingVersion: "ratings-2026-06-29",
+      displayAlias: "today_b",
+      at: 2,
+    });
+    await seed({
+      score: 99,
+      mode: "casual",
+      challengeType: "daily",
+      challengeDate: "2026-06-28",
+      ratingVersion: "ratings-2026-06-28",
+      displayAlias: "yesterday",
+      at: 3,
+    });
+
+    const { status, body } = await getBoard({ challenge: "daily", date: "2026-06-29" });
+    expect(status).toBe(200);
+    expect(body.challenge_type).toBe("daily");
+    expect(body.challenge_date).toBe("2026-06-29");
+    expect(body.mode).toBe("casual");
+    expect(body.draft_mode).toBe("classic");
+    expect(body.entries.map((e) => [e.display_name, e.rank, e.percentile])).toEqual([
+      ["today_b", 1, 100],
+      ["today_a", 2, 50],
+    ]);
+    expect(body.entries.map((e) => e.rating_version)).toEqual([
+      "ratings-2026-06-29",
+      "ratings-2026-06-29",
+    ]);
+  });
+
+  it("daily board rejects ranked and malformed dates", async () => {
+    const ranked = await getBoard({ challenge: "daily", mode: "ranked" });
+    expect(ranked.status).toBe(400);
+    const badDate = await getBoard({ challenge: "daily", date: "2026-02-30" });
+    expect(badDate.status).toBe(400);
   });
 
   it("full config filter splits the board with canonical config as the default", async () => {

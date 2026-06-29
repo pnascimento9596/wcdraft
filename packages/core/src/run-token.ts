@@ -56,6 +56,14 @@ export interface RunTokenOgSummary {
   sw: number;
 }
 
+export interface RunTokenDailyChallenge {
+  k: "daily";
+  /** UTC date in YYYY-MM-DD form. */
+  d: string;
+  /** Must match `ps`; repeated so the daily seed/date pair is explicit. */
+  s: string;
+}
+
 /** DC-1 config-bearing token body. */
 export interface RunTokenV2Body {
   v: 2;
@@ -74,6 +82,7 @@ export interface RunTokenV2Body {
   ev: string;
   uv: string;
   hv: string;
+  ch?: RunTokenDailyChallenge;
 }
 
 /** Every decodable token body. */
@@ -216,7 +225,24 @@ function isRunTokenV2Body(x: unknown): x is RunTokenV2Body {
   if (typeof o.ev !== "string") return false;
   if (typeof o.uv !== "string") return false;
   if (typeof o.hv !== "string") return false;
+  if (!isDailyChallenge(o.ch, o.ps)) return false;
   return true;
+}
+
+const DAILY_DATE_RE = /^\d{4}-\d{2}-\d{2}$/u;
+
+function isDailyChallenge(
+  value: unknown,
+  parentSeed: unknown,
+): value is RunTokenDailyChallenge | undefined {
+  if (value === undefined) return true;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const o = value as Record<string, unknown>;
+  if (o.k !== "daily") return false;
+  if (typeof o.d !== "string" || !DAILY_DATE_RE.test(o.d)) return false;
+  const parsed = new Date(`${o.d}T00:00:00.000Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== o.d) return false;
+  return typeof o.s === "string" && o.s === parentSeed;
 }
 
 export function isNewerRunTokenVersion(value: string): boolean {

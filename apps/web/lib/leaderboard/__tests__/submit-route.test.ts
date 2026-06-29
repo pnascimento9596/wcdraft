@@ -18,6 +18,7 @@ import { leaderboardEntries, users } from "@wcdraft/db";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
+import { dailyChallengeForDate } from "../../game/daily";
 import { buildRunTokenBody, decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
 import { getValidationData } from "../server-data";
 import { RANKED_AUTH_REQUIRED_MESSAGE } from "../identity-gate";
@@ -127,6 +128,31 @@ function bodyForRecord(
   };
 }
 
+function dailyBody(
+  date = "2026-06-29",
+  over: Record<string, unknown> = {},
+): { body: Record<string, unknown>; expectedScore: number; challengeDate: string } {
+  const challenge = dailyChallengeForDate(date);
+  const record = {
+    ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
+    challenge,
+  };
+  const expected = expectedRunFor(data.gameData, data.scenario, record);
+  return {
+    body: {
+      token: encodeBody(buildRunTokenBody(record)),
+      claimed_score: expected.score,
+      draft_mode: "classic",
+      display_alias: "daily_tester",
+      challenge: "daily",
+      challenge_date: challenge.date,
+      ...over,
+    },
+    expectedScore: expected.score,
+    challengeDate: challenge.date,
+  };
+}
+
 async function allRows() {
   return db.select().from(leaderboardEntries);
 }
@@ -213,6 +239,23 @@ describe("transport gates (before any pipeline work)", () => {
     expect(await errorOf(res)).toMatchObject({
       error: "AUTH_REQUIRED",
       message: RANKED_AUTH_REQUIRED_MESSAGE,
+    });
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("daily ranked mode → 400 INVALID_BODY before auth or validation, no row", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: dailyBody("2026-06-29", { mode: "ranked" }).body }),
+      makeDeps({
+        getValidation: () => {
+          throw new Error("daily ranked must not reach validation");
+        },
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect(await errorOf(res)).toMatchObject({
+      error: "INVALID_BODY",
+      message: "daily submissions are casual only",
     });
     expect(await allRows()).toHaveLength(0);
   });
@@ -473,6 +516,89 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     expect(classicAsHidden.status).toBe(400);
     expect((await errorOf(classicAsHidden)).error).toBe("INVALID_BODY");
     expect(await allRows()).toHaveLength(0);
+  });
+
+  it("anonymous daily submit accepted today with rank and percentile", async () => {
+    const daily = dailyBody();
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: daily.body }),
+      makeDeps({ todayUtcDate: () => daily.challengeDate }),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as {
+      duplicate: boolean;
+      rank: number | null;
+      percentile: number | null;
+      field_size: number;
+      entry: Record<string, unknown>;
+    };
+    expect(body.duplicate).toBe(false);
+    expect(body.rank).toBe(1);
+    expect(body.percentile).toBe(100);
+    expect(body.field_size).toBe(1);
+    expect(body.entry).toMatchObject({
+      mode: "casual",
+      draft_mode: "classic",
+      rating_version: data.gameData.versions.rating_version,
+      verified_score: daily.expectedScore,
+    });
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      challengeType: "daily",
+      challengeDate: daily.challengeDate,
+      mode: "casual",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+    });
+  });
+
+  it("past daily submit is read-only and rejected after verification", async () => {
+    const daily = dailyBody("2026-06-28");
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: daily.body }),
+      makeDeps({ todayUtcDate: () => "2026-06-29" }),
+    );
+    expect(res.status).toBe(403);
+    expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("same daily identity updates an existing lower score instead of adding a row", async () => {
+    const daily = dailyBody();
+    const { sessionId, opts } = await sessionReqOpts();
+    await db.insert(leaderboardEntries).values({
+      seasonKey: GOLDEN.season_key,
+      challengeType: "daily",
+      challengeDate: daily.challengeDate,
+      ratingVersion: data.gameData.versions.rating_version,
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+      userId: null,
+      sessionId,
+      displayAlias: "daily_tester",
+      token: "old-lower-daily-token",
+      verifiedScore: daily.expectedScore - 1,
+      scoreBreakdown: [],
+      createdAt: new Date(Date.now() - 1000),
+    });
+
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: daily.body }),
+      makeDeps({ todayUtcDate: () => daily.challengeDate }),
+    );
+    expect(res.status).toBe(201);
+    const body = (await res.json()) as { duplicate: boolean; rank: number | null };
+    expect(body.duplicate).toBe(false);
+    expect(body.rank).toBe(1);
+    const rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.verifiedScore).toBe(daily.expectedScore);
+    expect(rows[0]!.token).toBe(daily.body.token);
   });
 });
 

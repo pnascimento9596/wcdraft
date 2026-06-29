@@ -2,8 +2,8 @@
 //
 // Produces `lib/leaderboard/__tests__/fixtures/leaderboard-validate-golden.json`:
 // one ACCEPTED classic token + one ACCEPTED hidden token, each with the
-// engine-derived `verified_score` / `score_breakdown` and the season_key for
-// the current 6-anchor tuple.
+// engine-derived `verified_score` / `score_breakdown` and the explicit current
+// leaderboard season id.
 //
 // REGEN DISCIPLINE (same as the e2e golden): the test never writes this file.
 // When any version anchor bumps, regenerate manually, inspect the diff, and
@@ -26,7 +26,7 @@ import {
   serverScenarioBundle,
 } from "../lib/leaderboard/__tests__/_harness";
 import { encodeRunToken } from "../lib/game/run-token";
-import { deriveSeasonKey } from "../lib/leaderboard/season";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "../lib/leaderboard/season";
 import { validateSubmission } from "../lib/leaderboard/validate";
 
 const OUT = resolve(
@@ -55,7 +55,7 @@ const scenario = serverScenarioBundle();
 const fixture: Record<string, unknown> = {
   comment:
     "F-4 U2 golden — regen via `pnpm --filter @wcdraft/web gen:leaderboard-golden` on anchor bumps; never written by tests.",
-  season_key: deriveSeasonKey(gameData.versions),
+  season_key: DEFAULT_LEADERBOARD_SEASON_ID,
   versions: gameData.versions,
 };
 

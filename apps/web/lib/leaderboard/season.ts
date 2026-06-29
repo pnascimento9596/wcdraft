@@ -1,11 +1,9 @@
-// F-4 U2 — season-key derivation (plan §3).
+// F-4 U2 — season-key policy.
 //
-// A season IS the equivalence class of the full 6-anchor version tuple — the
-// exact `versionsAgree` conjunction. The key is a pure function of the
-// manifest-composed `RunRecordVersions`: human-readable prefix (four of the
-// six anchors) + a collision-proof sha256 suffix over ALL six. Any anchor
-// bump (including schema_version / data_bundle_hash, which are not in the
-// readable prefix) changes the suffix and therefore rolls the season.
+// Historical/archive seasons used the full 6-anchor version tuple. Active
+// aggregate boards now use an explicit season id so rating/runtime bumps do
+// not silently reset Casual/Ranked standings. The version-hash derivation is
+// kept as a readback/archive helper for pre-decoupling boards.
 //
 // Server-only module (node:crypto) — never import from client components.
 
@@ -26,6 +24,20 @@ export const SEASON_HASH_ANCHOR_ORDER = [
 
 /** Hex length of the collision-proof suffix. */
 export const SEASON_KEY_HASH_LEN = 8;
+
+export const DEFAULT_LEADERBOARD_SEASON_ID =
+  "engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5" as const;
+
+const MAX_EXPLICIT_SEASON_ID_CHARS = 160;
+const EXPLICIT_SEASON_ID_RE = /^[A-Za-z0-9._:+-]+$/u;
+
+export function explicitSeasonKey(raw = process.env.WCDRAFT_LEADERBOARD_SEASON_ID): string {
+  const value = raw?.trim();
+  if (value && value.length <= MAX_EXPLICIT_SEASON_ID_CHARS && EXPLICIT_SEASON_ID_RE.test(value)) {
+    return value;
+  }
+  return DEFAULT_LEADERBOARD_SEASON_ID;
+}
 
 /**
  * Derive the season key for a version tuple:

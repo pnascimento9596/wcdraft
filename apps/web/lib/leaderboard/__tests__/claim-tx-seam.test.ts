@@ -62,7 +62,7 @@ function makeFakeDb(failMode: FailMode = "none") {
                 const err = new Error("update failed");
                 (err as { cause?: unknown }).cause = new Error(
                   "duplicate key value violates unique constraint " +
-                    '"leaderboard_entries_dedupe_uq"',
+                    '"leaderboard_entries_season_dedupe_uq"',
                 );
                 throw err;
               }
@@ -131,7 +131,7 @@ describe("claimAnonArtifacts — typed transaction seam", () => {
     }
     expect(caught).toBeDefined();
     // The constraint name lives only on the nested cause — the #111 walk finds it.
-    expect(errorMessages(caught).join("\n")).toMatch(/leaderboard_entries_dedupe_uq/);
+    expect(errorMessages(caught).join("\n")).toMatch(/leaderboard_entries_season_dedupe_uq/);
     // And the whole moment rolled back.
     expect(db.committed).toEqual({ runsTransferred: false, boardTransferred: false });
   });
