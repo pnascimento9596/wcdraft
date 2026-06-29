@@ -125,6 +125,9 @@ export const leaderboardEntries = pgTable(
     index("leaderboard_entries_user_recent_idx")
       .on(t.userId, t.seasonKey, t.mode, t.createdAt.desc())
       .where(sql`${t.userId} IS NOT NULL`),
+    index("leaderboard_entries_attempt_idx")
+      .on(t.attemptId)
+      .where(sql`${t.attemptId} IS NOT NULL`),
     check("leaderboard_entries_mode_chk", sql`${t.mode} IN ('casual', 'ranked')`),
     check("leaderboard_entries_challenge_type_chk", sql`${t.challengeType} IN ('season', 'daily')`),
     check(
@@ -176,6 +179,10 @@ export const leaderboardEntries = pgTable(
     check(
       "leaderboard_entries_ranked_user_chk",
       sql`${t.mode} <> 'ranked' OR ${t.userId} IS NOT NULL`,
+    ),
+    check(
+      "leaderboard_entries_ranked_attempt_chk",
+      sql`${t.mode} <> 'ranked' OR ${t.attemptId} IS NOT NULL`,
     ),
   ],
 );

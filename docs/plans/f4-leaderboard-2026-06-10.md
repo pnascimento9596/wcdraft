@@ -144,42 +144,47 @@ Notes:
 
 ## 3. Season semantics
 
-**Rule: a season is the equivalence class of the full 6-anchor tuple** — the
-exact `versionsAgree` conjunction (`run-token.ts:243-252`). Rationale: step 3
-of the pipeline already rejects any token whose six anchors differ from the
-server's current bundle, so "accepted into season S" and "all six anchors
-equal S's tuple" are the same statement. Choosing a looser partition (e.g.
-engine+rating only) would create seasons that mix mutually-incomparable
-scores whenever dataset/ruleset/bundle-hash moved alone — fabricated
-comparability, which violates honest-state. F-1 anticipated anchor-derived
-season keys (`packages/db/src/schema/leaderboard-entries.ts:6-8`).
+**2026-06-29 update — aggregate season id is explicit.** Casual and Ranked
+season boards now use a deliberate policy id (`season-2026-summer` by default,
+overrideable with `WCDRAFT_LEADERBOARD_SEASON_ID`) instead of the six-anchor
+version-hash key. Rating/runtime bumps no longer reset aggregate standings just
+because an anchor changed. Daily boards remain date-keyed and are unchanged.
 
-**Key format** (human-readable prefix + collision-proof suffix; pure function
-of the manifest, zero code per season roll):
+This decouples the leaderboard partition from runtime compatibility; it does
+not weaken replay verification. Submit still performs the strict six-anchor
+`versionsAgree` check against the currently deployed bundle before re-simming a
+token. Rows accepted into an explicit season stamp the token's
+`rating_version`, and the board UI surfaces the honest note that ratings can
+update during a season and entries are stamped at submit time.
+
+**Current aggregate key format** (operator-controlled, safe for URLs and logs):
 
 ```
-season_key = `${engine_version}_${rating_version}_${dataset_version}_${ruleset_version}_${sha256(all-6-joined).slice(0,8)}`
+season_key = explicitSeasonKey()
+default: "season-2026-summer"
+allowed override: /^[A-Za-z0-9._:+-]+$/ and <= 160 chars
+```
+
+**Archive/readback format retained for pre-decoupling seasons:**
+
+```
+legacy_season_key = `${engine_version}_${rating_version}_${dataset_version}_${ruleset_version}_${sha256(all-6-joined).slice(0,8)}`
 e.g. "engine-2026.06.11_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_f166edc0"
 ```
 
-- **Did 4.2.0→4.2.1 start a new season?** Yes. PR #64 changed
-  `rating_version_historical` (and therefore `data_bundle_hash`) — two anchors
-  moved, the tuple changed, new season. This is correct: 4.2.1 changed
-  Maier-1966-class `overall_basis` outcomes, so a 4.2.0 score cannot be
-  re-verified under 4.2.1.
-- **Freeze at a bump is automatic:** after a deploy with new anchors, old-
-  bundle clients fail step 3 with `WRONG_SEASON` (UI maps this to the existing
-  skew-notice pattern — same honest-state language as
-  `apps/web/components/game/results-screen.tsx:128-136` — prompting refresh).
-  Old season rows keep their `season_key` and become read-only by construction:
-  nothing can ever insert into a tuple the server no longer runs.
-- **No seasons table for v1.** The board page derives the season list from
-  `SELECT DISTINCT season_key` (+ a small static label map shipped with the
-  web app if we want friendlier names). A `seasons` metadata table is deferred
-  until we want curated names/dates (open question Q5).
-- Deploy-window race (client refreshed mid-rollout): harmless — whichever
-  bundle the serving function holds defines its season; both sides of a
-  rollout are internally consistent.
+- Existing hash-keyed rows are preserved and readable by explicit `?season=...`
+  queries. They are read-only by construction because new aggregate writes use
+  the active explicit id.
+- Rating bumps inside an explicit season produce mixed `rating_version` values
+  on the same board. That is intentional and auditable, not hidden: entries
+  expose `rating_version`, and public copy tells users entries are stamped at
+  submit time.
+- Deploy-window race (client refreshed mid-rollout): unchanged. A token whose
+  anchors do not match the serving function's current runtime is rejected before
+  persistence; already accepted rows remain on the explicit season board.
+- No seasons table for v1. The active id comes from config/code, archived ids
+  remain discoverable from stored rows, and a metadata table is still deferred
+  until curated names/dates are needed.
 
 ---
 
@@ -301,12 +306,12 @@ $sessionId AND user_id IS NULL`.
 
 `apps/web/lib/auth/handler-helpers.ts`)
 
-| Route                     | Method | Auth                                | Notes                                                                                                                                                                                  |
-| ------------------------- | ------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF                    | pipeline §2; `maxDuration = 10`                                                                                                                                                        |
-| `/api/leaderboard`        | GET    | none                                | params: `season` (default current), `mode`, `draft_mode`, `draft_order`, `era`, `rating_basis`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
-| `/api/leaderboard/me`     | GET    | session                             | caller's best + recent entries for the exact season/lane/config board; uncached                                                                                                        |
-| `/api/ranked/attempt`     | POST   | gate (account once ranked launches) | **dark** in v1 — issues `ranked_attempts` row (server-minted seed per F-1 intent, `ranked-attempts.ts:1-9`)                                                                            |
+| Route                     | Method | Auth             | Notes                                                                                                                                                                                  |
+| ------------------------- | ------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF | pipeline §2; `maxDuration = 10`                                                                                                                                                        |
+| `/api/leaderboard`        | GET    | none             | params: `season` (default current), `mode`, `draft_mode`, `draft_order`, `era`, `rating_basis`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
+| `/api/leaderboard/me`     | GET    | session          | caller's best + recent entries for the exact season/lane/config board; uncached                                                                                                        |
+| `/api/ranked/attempt`     | POST   | account + CSRF   | Issues a short-window, single-use `ranked_attempts` row with a server-minted seed bound to user, active season, formation, and full board config.                                      |
 
 ### UI
 
@@ -360,17 +365,21 @@ an account, but ranked is now per-config: Memory ranked is `mode=ranked` +
 As-built (verified):
 
 - `ranked_attempts(id uuid PK, user_id uuid FK→users CASCADE, session_id text
-FK→sessions CASCADE, issued_parent_seed text NOT NULL, nonce text NOT NULL,
-issued_at tz NOT NULL default now, window_expires_at tz NOT NULL,
-consumed_at tz NULL)` + 2 indexes (`ranked-attempts.ts:14-38`). **Fully
-  sufficient for the ranked lane — no changes.**
+FK→sessions CASCADE, season_key text NOT NULL, formation_id text NOT NULL,
+draft_mode text NOT NULL, draft_order text NOT NULL, era text NOT NULL,
+rating_basis text NOT NULL, issued_parent_seed text NOT NULL, nonce text NOT
+NULL, issued_at tz NOT NULL default now, window_expires_at tz NOT NULL,
+consumed_at tz NULL)` + user/seed and user/config indexes. Ranked submit now
+  consumes exactly one unexpired row matching the submitter, explicit season,
+  formation, full config, and token parent seed.
 - `leaderboard_entries(id uuid PK, season_key text NOT NULL, mode text NOT
 NULL CHECK in ('casual','ranked'), user_id uuid FK→users CASCADE NULL,
 token text NOT NULL, verified_score integer NOT NULL, score_breakdown
 jsonb NULL, attempt_id uuid FK→ranked_attempts SET NULL, created_at tz NOT
 NULL default now)` + top-N index `(season_key, mode, verified_score)` +
   UNIQUE `(season_key, mode, user_id, token)` NULLS NOT DISTINCT
-  (`leaderboard-entries.ts:40-71`).
+  (`leaderboard-entries.ts:40-71`). New ranked rows require non-null
+  `attempt_id`; historical ranked rows are preserved as archive state.
 
 Genuine gaps → **one migration `0004_f4_leaderboard.sql` + hand-paired
 `0004_f4_leaderboard.down.sql`** (repo convention, §0):

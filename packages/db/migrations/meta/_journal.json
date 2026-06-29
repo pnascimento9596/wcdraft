@@ -64,6 +64,13 @@
       "when": 1782691200000,
       "tag": "0008_leaderboard_daily_challenge",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1782777600000,
+      "tag": "0009_ranked_attempt_binding",
+      "breakpoints": true
     }
   ]
 }

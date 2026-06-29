@@ -123,6 +123,12 @@ describe("@wcdraft/db schema — shape", () => {
       // F-4 U1: RANKED IS ACCOUNT-REQUIRED — user_id is structurally NOT NULL.
       userId: string;
       sessionId: string | null;
+      seasonKey: string;
+      formationId: string;
+      draftMode: string;
+      draftOrder: string;
+      era: string;
+      ratingBasis: string;
       issuedParentSeed: string;
       nonce: string;
       issuedAt: Date;
@@ -131,6 +137,12 @@ describe("@wcdraft/db schema — shape", () => {
     }>();
     expectTypeOf<NewRankedAttempt>().toMatchTypeOf<{
       userId: string;
+      seasonKey: string;
+      formationId: string;
+      draftMode: string;
+      draftOrder: string;
+      era: string;
+      ratingBasis: string;
       issuedParentSeed: string;
       nonce: string;
       windowExpiresAt: Date;

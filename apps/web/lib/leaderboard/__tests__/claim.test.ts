@@ -7,7 +7,7 @@
 // across identities or strands a user's entries mid-claim.
 import { describe, it, expect, beforeAll, afterEach } from "vitest";
 import { setupTestDb } from "@/lib/auth/__tests__/_test-db";
-import { sessions, users, savedRuns, leaderboardEntries } from "@wcdraft/db";
+import { sessions, users, savedRuns, leaderboardEntries, rankedAttempts } from "@wcdraft/db";
 import { eq, isNull, and } from "drizzle-orm";
 import { claimLeaderboardEntries, claimAnonArtifacts } from "@/lib/leaderboard/claim";
 
@@ -50,6 +50,26 @@ async function makeEntry(args: {
   hiddenAt?: Date | null;
   createdAt?: Date;
 }) {
+  let attemptId: string | null = null;
+  if (args.mode === "ranked" && args.userId) {
+    const [attempt] = await env.db
+      .insert(rankedAttempts)
+      .values({
+        userId: args.userId,
+        sessionId: args.sessionId ?? null,
+        seasonKey: args.seasonKey ?? "season-a",
+        formationId: "4-3-3",
+        draftMode: args.draftMode ?? "classic",
+        draftOrder: "squad_first",
+        era: "all_time",
+        ratingBasis: "career",
+        issuedParentSeed: `seed-${args.token}`,
+        nonce: `nonce-${args.token.padEnd(16, "0").slice(0, 16)}`,
+        windowExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      })
+      .returning();
+    attemptId = attempt!.id;
+  }
   const [row] = await env.db
     .insert(leaderboardEntries)
     .values({
@@ -67,6 +87,7 @@ async function makeEntry(args: {
       displayAlias: args.displayAlias ?? "anon_ace",
       token: args.token,
       verifiedScore: args.verifiedScore ?? 100,
+      attemptId,
       hiddenAt: args.hiddenAt ?? null,
       createdAt: args.createdAt,
     })
@@ -294,7 +315,7 @@ describe("claimLeaderboardEntries — constraint interplay + isolation", () => {
     await makeSession({ id: "ses-anon" });
     await expectRejectsWithCause(
       makeEntry({ token: "t1.rk", sessionId: "ses-anon", mode: "ranked" }),
-      /leaderboard_entries_ranked_user_chk/,
+      /leaderboard_entries_ranked_(user|attempt)_chk/,
     );
   });
 

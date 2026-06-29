@@ -12,7 +12,7 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
-import { leaderboardEntries, magicLinkTokens, savedRuns, users } from "@wcdraft/db";
+import { leaderboardEntries, magicLinkTokens, rankedAttempts, savedRuns, users } from "@wcdraft/db";
 
 import type { RuntimeDeps } from "@/lib/auth/handler-helpers";
 
@@ -45,8 +45,10 @@ import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { testCookieSecret, setupTestDb } from "../../auth/__tests__/_test-db";
 import { handleLeaderboardBoardGet, handleLeaderboardMeGet } from "../board-route";
+import { handleRankedAttemptPost } from "../ranked-attempt-route";
 import { handleLeaderboardSubmit } from "../submit-route";
 import { buildServerGameData, serverScenarioBundle } from "./_harness";
+import { decodeRunToken, tokenDraftConfig } from "../../game/run-token";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
 
 const { db, pg, reset } = await setupTestDb();
@@ -77,6 +79,7 @@ const PUBLIC_API_METHODS = [
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
   "POST /api/og/sign",
+  "POST /api/ranked/attempt",
   "POST /api/runs",
   "POST /api/runs/claim",
   "PUT /api/profile",
@@ -89,6 +92,7 @@ interface CapturedResponse {
   readonly statusLessThan: number;
 }
 const GOLDEN = fixtureJson as unknown as {
+  season_key: string;
   classic: { token: string; expected: { verified_score: number } };
 };
 
@@ -247,6 +251,40 @@ describe("public route payload email sweep", () => {
       createdAt: new Date(NOW - 30_000),
     });
 
+    const [classicAttempt, memoryAttempt] = await db
+      .insert(rankedAttempts)
+      .values([
+        {
+          userId: user!.id,
+          sessionId: null,
+          seasonKey: SEASON,
+          formationId: "4-3-3",
+          draftMode: "classic",
+          draftOrder: "squad_first",
+          era: "all_time",
+          ratingBasis: "career",
+          issuedParentSeed: "seed-classic-route-board",
+          nonce: "nonce-classic-route",
+          issuedAt: new Date(NOW),
+          windowExpiresAt: new Date(NOW + 60_000),
+        },
+        {
+          userId: user!.id,
+          sessionId: null,
+          seasonKey: SEASON,
+          formationId: "4-3-3",
+          draftMode: "hidden",
+          draftOrder: "squad_first",
+          era: "all_time",
+          ratingBasis: "career",
+          issuedParentSeed: "seed-memory-route-board",
+          nonce: "nonce-memory-route0",
+          issuedAt: new Date(NOW),
+          windowExpiresAt: new Date(NOW + 60_000),
+        },
+      ])
+      .returning();
+
     await db.insert(leaderboardEntries).values([
       {
         seasonKey: SEASON,
@@ -261,6 +299,7 @@ describe("public route payload email sweep", () => {
         token: "t1.classic-route-board",
         verifiedScore: 88,
         scoreBreakdown: [],
+        attemptId: classicAttempt!.id,
         createdAt: new Date(NOW - 5_000),
       },
       {
@@ -276,6 +315,7 @@ describe("public route payload email sweep", () => {
         token: "t1.memory-route-board",
         verifiedScore: 77,
         scoreBreakdown: [],
+        attemptId: memoryAttempt!.id,
         createdAt: new Date(NOW - 4_000),
       },
       {
@@ -388,6 +428,31 @@ describe("public route payload email sweep", () => {
       ),
     );
     captures.push(
+      routeCapture(
+        "POST /api/ranked/attempt",
+        await handleRankedAttemptPost(
+          req("/api/ranked/attempt", {
+            method: "POST",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({
+              formation_id: "4-3-3",
+              draft_mode: "classic",
+              draft_order: "squad_first",
+              era: "all_time",
+              rating_basis: "career",
+            }),
+          }),
+          {
+            db,
+            now: () => NOW,
+            getCookieSecret: () => COOKIE_SECRET,
+            currentSeasonKey: () => SEASON,
+            randomBytes: (size) => new Uint8Array(size).fill(11),
+          },
+        ),
+      ),
+    );
+    captures.push(
       routeCapture("GET /api/runs", await runsGet(req("/api/runs", { headers: authHeaders }))),
     );
 
@@ -488,6 +553,23 @@ describe("public route payload email sweep", () => {
         ),
       ),
     );
+    const submitToken = decodeRunToken(GOLDEN.classic.token);
+    if (submitToken === null) throw new Error("golden submit token failed to decode");
+    const submitConfig = tokenDraftConfig(submitToken);
+    await db.insert(rankedAttempts).values({
+      userId: user!.id,
+      sessionId: session.session.id,
+      seasonKey: GOLDEN.season_key,
+      formationId: submitToken.fid,
+      draftMode: submitToken.md,
+      draftOrder: submitConfig.draft_flow,
+      era: submitConfig.era_preset,
+      ratingBasis: submitConfig.rating_basis,
+      issuedParentSeed: submitToken.ps,
+      nonce: "nonce-submit-route",
+      issuedAt: new Date(NOW),
+      windowExpiresAt: new Date(NOW + 60_000),
+    });
     captures.push(
       routeCapture(
         "POST /api/leaderboard/submit",

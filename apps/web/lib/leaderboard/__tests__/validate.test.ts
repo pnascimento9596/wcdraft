@@ -170,7 +170,7 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
   });
 });
 
-// ─── Step 3 — wrong season: the strict 6-anchor conjunction ─────────────────
+// ─── Step 3 — stale runtime: the strict 6-anchor conjunction ────────────────
 
 describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
   const anchorCases = [
@@ -195,7 +195,7 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
     });
   }
 
-  it("ORDER LOCK: season check fires before name validation", () => {
+  it("ORDER LOCK: runtime anchor check fires before name validation", () => {
     const t = tampered((b) => {
       b.ev = `${b.ev}-skewed`;
     });

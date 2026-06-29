@@ -429,15 +429,15 @@ async function main(): Promise<void> {
             (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, display_alias, token, verified_score)
           VALUES (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', NULL, 'rollback_check', ${`${lbToken}-ranked`}, 0)
         `),
-      /leaderboard_entries_ranked_user_chk|check constraint/i,
+      /leaderboard_entries_ranked_(user|attempt)_chk|check constraint/i,
     );
     await assertInsertRejected(
       "ranked_attempts: NULL user_id must be rejected (NOT NULL)",
       () =>
         db.execute(sql`
           INSERT INTO ranked_attempts
-            (user_id, session_id, issued_parent_seed, nonce, window_expires_at)
-          VALUES (NULL, ${sessionA}, 'rollback-check-seed', 'rollback-check-nonce', NOW() + INTERVAL '10 minutes')
+            (user_id, session_id, season_key, formation_id, draft_mode, draft_order, era, rating_basis, issued_parent_seed, nonce, window_expires_at)
+          VALUES (NULL, ${sessionA}, ${lbSeason}, '4-3-3', 'classic', 'squad_first', 'all_time', 'career', 'rollback-check-seed', 'rollback-check-nonce', NOW() + INTERVAL '10 minutes')
         `),
       /not-null constraint|null value/i,
     );

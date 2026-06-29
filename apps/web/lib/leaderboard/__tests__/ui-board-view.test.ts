@@ -185,7 +185,7 @@ describe("boardQueryString", () => {
 });
 
 describe("seasonLabel", () => {
-  it("leads with dataset · engine from the derived key", () => {
+  it("leads with dataset · engine from a legacy derived key", () => {
     expect(
       seasonLabel(
         "engine-2026.06.11_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_f166edc0",

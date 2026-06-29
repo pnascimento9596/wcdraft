@@ -1,6 +1,6 @@
 {
   "comment": "F-4 U2 golden — regen via `pnpm --filter @wcdraft/web gen:leaderboard-golden` on anchor bumps; never written by tests.",
-  "season_key": "engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5",
+  "season_key": "season-2026-summer",
   "versions": {
     "schema_version": "runtime-data-2.8.0",
     "dataset_version": "2026-06-04",
@@ -83,7 +83,7 @@
           "points": 0
         }
       ],
-      "season_key": "engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5",
+      "season_key": "season-2026-summer",
       "draft_mode": "classic"
     }
   },
@@ -161,7 +161,7 @@
           "points": 0
         }
       ],
-      "season_key": "engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5",
+      "season_key": "season-2026-summer",
       "draft_mode": "hidden"
     }
   }

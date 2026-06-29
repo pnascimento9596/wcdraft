@@ -4,7 +4,7 @@
 //
 //   1. body shape + token size guard + target lane       → INVALID_BODY / TOKEN_TOO_LARGE
 //   2. decodeRunToken === null                           → MALFORMED_TOKEN
-//   3. strict 6-anchor versionsAgree (= season check)    → WRONG_SEASON
+//   3. strict 6-anchor versionsAgree (= runtime check)   → WRONG_SEASON
 //   4. token mode + requested mode match                 → INVALID_BODY
 //   5. optional alias validity (§5.1)                     → INVALID_NAME
 //   7. DRAFT LEGALITY = full token replay (the keystone) → ILLEGAL_PICK
@@ -237,7 +237,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     return rejected("MALFORMED_TOKEN", "token failed to decode");
   }
 
-  // 3 — season check = strict 6-anchor conjunction.
+  // 3 — runtime compatibility check = strict 6-anchor conjunction.
   if (!versionsAgree(token, data.gameData.versions)) {
     return {
       status: "rejected",

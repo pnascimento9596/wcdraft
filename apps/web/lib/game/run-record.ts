@@ -107,6 +107,13 @@ export interface SimulationTelemetry {
 /** Lifecycle status for the persisted run. */
 export type RunRecordStatus = "ready" | "simulating" | "complete" | "failed";
 
+export interface RankedAttemptRunMetadata {
+  readonly attempt_id: string;
+  readonly season_key: string;
+  readonly parent_seed: string;
+  readonly expires_at: string;
+}
+
 export interface RunRecordV1 {
   record_version: typeof RUN_RECORD_SCHEMA_VERSION;
   run_id: string;
@@ -119,6 +126,8 @@ export interface RunRecordV1 {
   status?: RunRecordStatus;
   /** Optional challenge metadata. Daily runs use a shared date-derived seed. */
   challenge?: DailyChallenge;
+  /** Local marker for a server-issued ranked seed. Not included in share tokens. */
+  ranked_attempt?: RankedAttemptRunMetadata;
   /** Persisted simulation result; present only when status === "complete". */
   simulation?: PersistedSimulation;
 }
@@ -311,6 +320,8 @@ export interface CreateRunRecordParams {
   parent_seed?: string;
   /** Optional challenge metadata persisted into the run token. */
   challenge?: DailyChallenge;
+  /** Optional ranked-attempt metadata for server-issued ranked seeds. */
+  ranked_attempt?: RankedAttemptRunMetadata;
   /**
    * DC-2 era preset (default `all_time` = today's pool). The draft is
    * created against the matching era-filtered catalog via `getCatalogForEra`.
@@ -383,6 +394,7 @@ export function createNewRunRecord(
         versions: gameData.versions,
         draft,
         ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
+        ...(params.ranked_attempt === undefined ? {} : { ranked_attempt: params.ranked_attempt }),
       };
       const save = saveRunRecord(record);
       warnings.push(...save.warnings);
@@ -763,6 +775,8 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
 
   const challenge = parseRunChallenge(value.challenge, parent_seed);
   if (challenge === "invalid") return null;
+  const rankedAttempt = parseRankedAttempt(value.ranked_attempt, parent_seed);
+  if (rankedAttempt === "invalid") return null;
 
   return {
     record_version: RUN_RECORD_SCHEMA_VERSION,
@@ -774,6 +788,7 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     draft: draft.data,
     ...(status === undefined ? {} : { status }),
     ...(challenge === undefined ? {} : { challenge }),
+    ...(rankedAttempt === undefined ? {} : { ranked_attempt: rankedAttempt }),
     ...(simulation === undefined ? {} : { simulation }),
   };
 }
@@ -791,6 +806,34 @@ function parseRunChallenge(
     return "invalid";
   }
   return { kind: "daily", date, seed };
+}
+
+function parseRankedAttempt(
+  value: unknown,
+  parentSeed: string,
+): RankedAttemptRunMetadata | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  if (!isPlainObject(value)) return "invalid";
+  const attemptId = boundedString(value.attempt_id, 64);
+  const seasonKey = boundedString(value.season_key, 256);
+  const seed = boundedString(value.parent_seed, MAX_PARENT_SEED_CHARS);
+  const expiresAt = boundedString(value.expires_at, 64);
+  if (
+    attemptId === null ||
+    seasonKey === null ||
+    seed === null ||
+    seed !== parentSeed ||
+    expiresAt === null ||
+    Number.isNaN(Date.parse(expiresAt))
+  ) {
+    return "invalid";
+  }
+  return {
+    attempt_id: attemptId,
+    season_key: seasonKey,
+    parent_seed: seed,
+    expires_at: expiresAt,
+  };
 }
 
 function parsePersistedSimulation(value: unknown): PersistedSimulation | null {

@@ -99,13 +99,23 @@ const dailyDownSql = readFileSync(
   "utf8",
 );
 
+const rankedBindingSql = readFileSync(
+  new URL("../migrations/0009_ranked_attempt_binding.sql", import.meta.url),
+  "utf8",
+);
+
+const rankedBindingDownSql = readFileSync(
+  new URL("../migrations/0009_ranked_attempt_binding.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(9);
+    expect(journal.entries).toHaveLength(10);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -124,6 +134,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[7]?.idx).toBe(7);
     expect(journal.entries[8]?.tag).toBe("0008_leaderboard_daily_challenge");
     expect(journal.entries[8]?.idx).toBe(8);
+    expect(journal.entries[9]?.tag).toBe("0009_ranked_attempt_binding");
+    expect(journal.entries[9]?.idx).toBe(9);
   });
 
   it.each([
@@ -294,6 +306,67 @@ describe("@wcdraft/db migrations — 0008_leaderboard_daily_challenge", () => {
     expect(dailyDownSql).toMatch(/DROP COLUMN IF EXISTS "challenge_type"/);
     expect(dailyDownSql).toMatch(/DROP CONSTRAINT IF EXISTS "leaderboard_entries_daily_mode_chk"/);
     expect(dailyDownSql).toMatch(/ADD CONSTRAINT "leaderboard_entries_dedupe_uq"/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0009_ranked_attempt_binding", () => {
+  it("adds ranked_attempts config columns without deleting attempts", () => {
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "season_key" text/);
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "formation_id" text/);
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "draft_mode" text/);
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "draft_order" text/);
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "era" text/);
+    expect(rankedBindingSql).toMatch(/ADD COLUMN "rating_basis" text/);
+    expect(rankedBindingSql).toMatch(/legacy-unbound/);
+    expect(rankedBindingSql).not.toMatch(/DELETE FROM "ranked_attempts"/);
+    expect(rankedBindingSql).not.toMatch(/TRUNCATE/);
+  });
+
+  it("guards exact ranked-attempt config and seed/window shape", () => {
+    expect(rankedBindingSql).toMatch(/ranked_attempts_season_key_chk/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_formation_id_chk/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_draft_mode_chk/);
+    expect(rankedBindingSql).toMatch(/'classic', 'hidden'/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_draft_order_chk/);
+    expect(rankedBindingSql).toMatch(/'squad_first', 'position_first'/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_era_chk/);
+    expect(rankedBindingSql).toMatch(/'all_time', 'post_2000', 'post_2010', 'modern'/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_rating_basis_chk/);
+    expect(rankedBindingSql).toMatch(/'career', 'current'/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_seed_chk/);
+    expect(rankedBindingSql).toMatch(/ranked_attempts_window_chk/);
+  });
+
+  it("adds submit lookup indexes and unique attempt consumption on entries", () => {
+    expect(rankedBindingSql).toMatch(/CREATE INDEX IF NOT EXISTS "ranked_attempts_user_seed_idx"/);
+    expect(rankedBindingSql).toMatch(
+      /"user_id",\s*"season_key",\s*"formation_id",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"issued_at"/s,
+    );
+    expect(rankedBindingSql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "leaderboard_entries_ranked_attempt_uq"/,
+    );
+    expect(rankedBindingSql).toMatch(/WHERE "leaderboard_entries"\."attempt_id" IS NOT NULL/);
+  });
+
+  it("enforces attempt_id for new ranked rows without scanning old ranked rows", () => {
+    expect(rankedBindingSql).toMatch(/leaderboard_entries_ranked_attempt_chk/);
+    expect(rankedBindingSql).toMatch(
+      /"mode" <> 'ranked' OR "leaderboard_entries"\."attempt_id" IS NOT NULL/,
+    );
+    expect(rankedBindingSql).toMatch(/NOT VALID/);
+  });
+
+  it("down-migration removes ranked attempt binding artifacts only", () => {
+    expect(rankedBindingDownSql).toMatch(
+      /DROP CONSTRAINT IF EXISTS "leaderboard_entries_ranked_attempt_chk"/,
+    );
+    expect(rankedBindingDownSql).toMatch(
+      /DROP INDEX IF EXISTS "leaderboard_entries_ranked_attempt_uq"/,
+    );
+    expect(rankedBindingDownSql).toMatch(/DROP INDEX IF EXISTS "ranked_attempts_user_config_idx"/);
+    expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "rating_basis"/);
+    expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "season_key"/);
+    expect(rankedBindingDownSql).not.toMatch(/DROP TABLE/);
   });
 });
 
