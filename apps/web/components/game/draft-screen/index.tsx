@@ -105,6 +105,8 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   // mode on the persisted DraftState.
   const requestedMode: "classic" | "hidden" =
     searchParams?.get("mode") === "hidden" ? "hidden" : "classic";
+  const rankedDraft =
+    !daily && (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
 
   const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, { dailyDate });
 
@@ -161,6 +163,7 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
       <FormationSelect
         gameData={mode.gameData}
         draftMode={requestedMode}
+        ranked={rankedDraft}
         onLocked={(record, warning) => {
           // Replace URL with new run id; keep history clean.
           router.replace(draftHref(record.run_id));

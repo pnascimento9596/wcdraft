@@ -26,7 +26,7 @@ export const SEASON_HASH_ANCHOR_ORDER = [
 export const SEASON_KEY_HASH_LEN = 8;
 
 export const DEFAULT_LEADERBOARD_SEASON_ID =
-  "engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5" as const;
+  "season-2026-summer" as const;
 
 const MAX_EXPLICIT_SEASON_ID_CHARS = 160;
 const EXPLICIT_SEASON_ID_RE = /^[A-Za-z0-9._:+-]+$/u;

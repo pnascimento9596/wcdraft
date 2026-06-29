@@ -14,12 +14,17 @@
 
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
-import { leaderboardEntries, users } from "@wcdraft/db";
+import { leaderboardEntries, rankedAttempts, users } from "@wcdraft/db";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
 import { dailyChallengeForDate } from "../../game/daily";
-import { buildRunTokenBody, decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
+import {
+  buildRunTokenBody,
+  decodeRunToken,
+  tokenDraftConfig,
+  type RunTokenV1Body,
+} from "../../game/run-token";
 import { getValidationData } from "../server-data";
 import { RANKED_AUTH_REQUIRED_MESSAGE } from "../identity-gate";
 import {
@@ -45,10 +50,14 @@ const GOLDEN = fixtureJson as unknown as {
 
 const SECRET = testCookieSecret("f4-u3-routes");
 const data: ValidationData = getValidationData();
+let attemptSeq = 0;
 
 const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());
-beforeEach(async () => reset());
+beforeEach(async () => {
+  attemptSeq = 0;
+  await reset();
+});
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -157,6 +166,10 @@ async function allRows() {
   return db.select().from(leaderboardEntries);
 }
 
+async function allAttempts() {
+  return db.select().from(rankedAttempts);
+}
+
 async function errorOf(res: Response): Promise<{ error?: string } & Record<string, unknown>> {
   return (await res.json()) as { error?: string } & Record<string, unknown>;
 }
@@ -183,6 +196,39 @@ async function sessionReqOpts(
       host: "localhost",
     },
   };
+}
+
+async function issueRankedAttemptForBody(args: {
+  userId: string;
+  sessionId: string | null;
+  body: Record<string, unknown>;
+  parentSeed?: string;
+  issuedAt?: Date;
+  expiresAt?: Date;
+}) {
+  if (typeof args.body.token !== "string") {
+    throw new Error("cannot issue attempt for non-string test token");
+  }
+  const token = decodeRunToken(args.body.token);
+  if (token === null) throw new Error("cannot issue attempt for malformed test token");
+  const config = tokenDraftConfig(token);
+  return db
+    .insert(rankedAttempts)
+    .values({
+      userId: args.userId,
+      sessionId: args.sessionId,
+      seasonKey: data.seasonKey ?? GOLDEN.season_key,
+      formationId: token.fid,
+      draftMode: token.md,
+      draftOrder: config.draft_flow,
+      era: config.era_preset,
+      ratingBasis: config.rating_basis,
+      issuedParentSeed: args.parentSeed ?? token.ps,
+      nonce: `nonce-${(++attemptSeq).toString().padStart(16, "0")}`,
+      issuedAt: args.issuedAt ?? new Date(Date.now() - 1000),
+      windowExpiresAt: args.expiresAt ?? new Date(Date.now() + 60_000),
+    })
+    .returning();
 }
 
 // ─── Transport gates ────────────────────────────────────────────────────────
@@ -494,6 +540,46 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
     });
   });
 
+  it("duplicate hidden season row keeps rank context honest nulls", async () => {
+    const [user] = await db
+      .insert(users)
+      .values({ email: "hidden-duplicate@example.com", username: "hidden_duplicate" })
+      .returning();
+    const { opts } = await sessionReqOpts(user!.id);
+    await db.insert(leaderboardEntries).values({
+      seasonKey: GOLDEN.season_key,
+      challengeType: "season",
+      challengeDate: null,
+      ratingVersion: data.gameData.versions.rating_version,
+      mode: "casual",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+      userId: user!.id,
+      sessionId: null,
+      displayAlias: "hidden_dupe",
+      token: GOLDEN.classic.token,
+      verifiedScore: GOLDEN.classic.expected.verified_score,
+      scoreBreakdown: [],
+      createdAt: new Date(Date.now() - 1000),
+      hiddenAt: new Date(Date.now() - 500),
+    });
+
+    const res = await handleLeaderboardSubmit(makeReq({ ...opts, body: validBody() }), makeDeps());
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      duplicate: boolean;
+      rank: number | null;
+      percentile: number | null;
+      field_size: number | null;
+    };
+    expect(body.duplicate).toBe(true);
+    expect(body.rank).toBeNull();
+    expect(body.percentile).toBeNull();
+    expect(body.field_size).toBeNull();
+  });
+
   it("cross-mode token mismatch → 400 INVALID_BODY, no row", async () => {
     const hiddenAsClassic = await handleLeaderboardSubmit(
       makeReq({
@@ -761,10 +847,10 @@ describe("ranked account gate", () => {
     expect(await allRows()).toHaveLength(0);
   });
 
-  it("account-bound ranked with username fallback → 201 ranked row, no email", async () => {
+  it("account-bound ranked with a client-chosen seed and no issued attempt → 403 BAD_ATTEMPT", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "ranked-user@example.com", username: "ranked_user" })
+      .values({ email: "no-attempt-ranked@example.com", username: "no_attempt" })
       .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
     const res = await handleLeaderboardSubmit(
@@ -774,19 +860,64 @@ describe("ranked account gate", () => {
       }),
       makeDeps(),
     );
+    expect(res.status).toBe(403);
+    expect(await errorOf(res)).toMatchObject({
+      error: "BAD_ATTEMPT",
+      message: "ranked submissions require a valid unexpired server-issued attempt",
+    });
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("account-bound ranked with a mismatched issued seed → 403 BAD_ATTEMPT", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "wrong-seed-ranked@example.com", username: "wrong_seed" })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
+    await issueRankedAttemptForBody({
+      userId: inserted[0]!.id,
+      sessionId,
+      body,
+      parentSeed: "wcdraft:ranked:v1:not-this-token-seed",
+    });
+    const res = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
+    expect(res.status).toBe(403);
+    expect((await errorOf(res)).error).toBe("BAD_ATTEMPT");
+    expect(await allRows()).toHaveLength(0);
+    expect((await allAttempts())[0]!.consumedAt).toBeNull();
+  });
+
+  it("account-bound ranked with username fallback → 201 ranked row, no email", async () => {
+    const inserted = await db
+      .insert(users)
+      .values({ email: "ranked-user@example.com", username: "ranked_user" })
+      .returning();
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
+    await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
+    const res = await handleLeaderboardSubmit(
+      makeReq({
+        ...opts,
+        body,
+      }),
+      makeDeps(),
+    );
     expect(res.status).toBe(201);
-    const body = (await res.json()) as {
+    const responseBody = (await res.json()) as {
       rank: number | null;
       entry: Record<string, unknown>;
     };
-    expect(body.rank).toBe(1);
-    expect(body.entry.mode).toBe("ranked");
-    expect(body.entry.display_name).toBe("ranked_user");
-    expect(JSON.stringify(body)).not.toContain("ranked-user@example.com");
+    expect(responseBody.rank).toBe(1);
+    expect(responseBody.entry.mode).toBe("ranked");
+    expect(responseBody.entry.display_name).toBe("ranked_user");
+    expect(JSON.stringify(responseBody)).not.toContain("ranked-user@example.com");
     const rows = await allRows();
     expect(rows).toHaveLength(1);
     expect(rows[0]!.mode).toBe("ranked");
     expect(rows[0]!.userId).toBe(inserted[0]!.id);
+    expect(rows[0]!.attemptId).toBe((await allAttempts())[0]!.id);
+    expect((await allAttempts())[0]!.consumedAt).toBeInstanceOf(Date);
   });
 
   it("account-bound ranked alias overrides username per entry", async () => {
@@ -794,15 +925,17 @@ describe("ranked account gate", () => {
       .insert(users)
       .values({ email: "alias-ranked@example.com", username: "real_user" })
       .returning();
-    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = validBody({ mode: "ranked", display_alias: "alias_user" });
+    await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
     const res = await handleLeaderboardSubmit(
-      makeReq({ ...opts, body: validBody({ mode: "ranked", display_alias: "alias_user" }) }),
+      makeReq({ ...opts, body }),
       makeDeps(),
     );
     expect(res.status).toBe(201);
-    const body = (await res.json()) as { entry: Record<string, unknown> };
-    expect(body.entry.display_name).toBe("alias_user");
-    expect(JSON.stringify(body)).not.toContain("alias-ranked@example.com");
+    const responseBody = (await res.json()) as { entry: Record<string, unknown> };
+    expect(responseBody.entry.display_name).toBe("alias_user");
+    expect(JSON.stringify(responseBody)).not.toContain("alias-ranked@example.com");
   });
 
   it("account-bound ranked non-canonical config → 201 ranked row under exact config", async () => {
@@ -810,26 +943,28 @@ describe("ranked account gate", () => {
       .insert(users)
       .values({ email: "ranked-config@example.com", username: "ranked_config" })
       .returning();
-    const { opts } = await sessionReqOpts(inserted[0]!.id);
+    const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
+    const body = bodyForRecord(
+      "wcdraft:f4-u3:any-config:ranked",
+      {
+        draftFlow: "position_first",
+        eraPreset: "post_2010",
+        ratingBasis: "current",
+      },
+      { mode: "ranked", display_alias: undefined, display_name: undefined },
+    );
+    await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
     const res = await handleLeaderboardSubmit(
       makeReq({
         ...opts,
-        body: bodyForRecord(
-          "wcdraft:f4-u3:any-config:ranked",
-          {
-            draftFlow: "position_first",
-            eraPreset: "post_2010",
-            ratingBasis: "current",
-          },
-          { mode: "ranked", display_alias: undefined, display_name: undefined },
-        ),
+        body,
       }),
       makeDeps(),
     );
     expect(res.status).toBe(201);
-    const body = (await res.json()) as { entry: Record<string, unknown>; rank: number | null };
-    expect(body.rank).toBe(1);
-    expect(body.entry).toMatchObject({
+    const responseBody = (await res.json()) as { entry: Record<string, unknown>; rank: number | null };
+    expect(responseBody.rank).toBe(1);
+    expect(responseBody.entry).toMatchObject({
       mode: "ranked",
       draft_order: "position_first",
       era: "post_2010",
@@ -856,6 +991,22 @@ describe("ranked account gate", () => {
       .insert(users)
       .values({ email: "memory-rival@example.com", username: "memory_rival" })
       .returning();
+    const rivalAttempt = await db
+      .insert(rankedAttempts)
+      .values({
+        userId: rival[0]!.id,
+        sessionId: null,
+        seasonKey: GOLDEN.season_key,
+        formationId: "4-3-3",
+        draftMode: "hidden",
+        draftOrder: "squad_first",
+        era: "all_time",
+        ratingBasis: "career",
+        issuedParentSeed: "memory-rival-seed",
+        nonce: "nonce-rival-000000",
+        windowExpiresAt: new Date(Date.now() + 60_000),
+      })
+      .returning();
     await db.insert(leaderboardEntries).values({
       seasonKey: GOLDEN.season_key,
       mode: "ranked",
@@ -869,29 +1020,38 @@ describe("ranked account gate", () => {
       token: "t1.memory-rival",
       verifiedScore: -10,
       scoreBreakdown: [],
+      attemptId: rivalAttempt[0]!.id,
       createdAt: new Date(Date.now() - 1000),
     });
-    const { opts } = await sessionReqOpts(player[0]!.id);
+    const { sessionId, opts } = await sessionReqOpts(player[0]!.id);
+    const classicBody = validBody({
+      mode: "ranked",
+      display_alias: undefined,
+      display_name: undefined,
+    });
+    await issueRankedAttemptForBody({ userId: player[0]!.id, sessionId, body: classicBody });
     const classic = await handleLeaderboardSubmit(
       makeReq({
         ...opts,
-        body: validBody({ mode: "ranked", display_alias: undefined, display_name: undefined }),
+        body: classicBody,
       }),
       makeDeps(),
     );
     expect(classic.status).toBe(201);
 
+    const hiddenBody = {
+      token: GOLDEN.hidden.token,
+      claimed_score: GOLDEN.hidden.expected.verified_score,
+      draft_mode: "hidden",
+      mode: "ranked",
+      display_alias: undefined,
+      display_name: undefined,
+    };
+    await issueRankedAttemptForBody({ userId: player[0]!.id, sessionId, body: hiddenBody });
     const hidden = await handleLeaderboardSubmit(
       makeReq({
         ...opts,
-        body: {
-          token: GOLDEN.hidden.token,
-          claimed_score: GOLDEN.hidden.expected.verified_score,
-          draft_mode: "hidden",
-          mode: "ranked",
-          display_alias: undefined,
-          display_name: undefined,
-        },
+        body: hiddenBody,
       }),
       makeDeps(),
     );

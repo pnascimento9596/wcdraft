@@ -43,6 +43,24 @@ Report: `docs/reports/daily-draft-2026-06-29.md`. Not shipped until the RED
 independent reviewer, human approval, merge, deploy, and live production
 readback gates complete.
 
+Leaderboard season/ranked-attempt lane:
+2026-06-29 · local RED implementation on branch
+`ws-leaderboard/season-attempts-20260629`, based on `origin/main`
+`acc0a82f4b768f7938e2cd4d116109d15d8809ce`. Scope: aggregate Casual/Ranked
+boards now use explicit active season id `season-2026-summer` instead of a
+six-anchor version hash; accepted rows still stamp `rating_version` so
+cross-version seasons remain auditable. Ranked drafts now mint a server-issued,
+single-use, short-window attempt seed bound to user, season, formation, and full
+board config; ranked submit requires the matching unconsumed attempt and stores
+`attempt_id`. Casual and Daily remain attempt-free; Daily remains public
+best-of-many by UTC date. Report:
+`docs/reports/leaderboard-season-ranked-attempts-2026-06-29.md`. Not shipped
+until production migration, merge/deploy, and live readback gates complete.
+Fresh-context independent reviewer passed from separate clone
+`/tmp/wcdraft-leaderboard-review-bI1pIo`: no findings; re-executed targeted DB
+tests (3 files / 104 tests), targeted web tests (9 files / 149 tests), and
+`git diff --check`.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**
@@ -56,7 +74,7 @@ Current repo runtime anchor:
 `proj-career-5.6.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Explicit active leaderboard season id:
-`engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5`.
+`season-2026-summer`.
 
 X marketing lane:
 source assets are present on `origin/main` as of
@@ -451,9 +469,12 @@ web static assets.
   (see PR #108). `WCDRAFT_OG_SIGNING_SECRET` is server-only and also declared
   in `turbo.json` so signed-OG route builds/tests are cache-keyed correctly.
 - `WCDRAFT_CSP_REPORT_ONLY` is an optional build/test cache-keyed override declared in
-  `turbo.json`; it is not a required production secret. `LEADERBOARD_REQUIRE_ACCOUNT`
-  is retired as an env lever and removed from Turbo env lists; ranked submit requires an
-  account in code without reading that flag.
+  `turbo.json`; it is not a required production secret. `WCDRAFT_LEADERBOARD_SEASON_ID`
+  is the optional explicit aggregate season-id override and is also declared in
+  `turbo.json`; the code default is `season-2026-summer`.
+  `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
+  Turbo env lists; ranked submit requires an account in code without reading
+  that flag.
 - Neon prod DB: migrations 0000–0004 were provisioned + verified live 2026-06-10.
   Migration 0005 is in the repo and shipped with leaderboard profiles; re-verify
   prod migration status before relying on 0005-specific production state.

@@ -26,6 +26,7 @@ import { readClientIp } from "../http/client-ip";
 import { DAILY_CHALLENGE_KIND, utcDateString } from "../game/daily";
 import {
   LeaderboardGateError,
+  RANKED_AUTH_REQUIRED_MESSAGE,
   requireSubmitIdentity,
   type IdentityGateDeps,
 } from "./identity-gate";
@@ -36,6 +37,10 @@ import {
   type ApiLeaderboardEntry,
   type BoardMode,
 } from "./store";
+import {
+  consumeRankedAttempt,
+  findExistingRankedAttemptEntry,
+} from "./ranked-attempts";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
 import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
 
@@ -112,7 +117,7 @@ export interface SubmitResponseBody {
    *  the two. Null only if the identity has no visible entry. */
   readonly rank: number | null;
   readonly percentile: number | null;
-  readonly field_size: number;
+  readonly field_size: number | null;
 }
 
 export async function handleLeaderboardSubmit(
@@ -236,28 +241,89 @@ export async function handleLeaderboardSubmit(
 
     // 7 — persist + honest dedupe; rank is a SECOND read after the insert
     // (current rank, not the insert's snapshot).
-    const result = await insertAcceptedEntry(
-      deps.db,
-      {
-        seasonKey: verdict.season_key,
-        challengeType: verdict.challenge_type,
-        challengeDate: verdict.challenge_date,
-        ratingVersion: verdict.rating_version,
-        mode: submissionMode,
-        draftMode: verdict.draft_mode,
-        draftOrder: verdict.draft_order,
-        era: verdict.era,
-        ratingBasis: verdict.rating_basis,
-        userId: identity.userId,
-        sessionId: identity.sessionId,
-        displayAlias: verdict.display_alias,
-        // validateSubmission guaranteed this is a string (step 1).
-        token: body.token as string,
-        verifiedScore: verdict.verified_score,
-        scoreBreakdown: verdict.score_breakdown,
-      },
-      deps.now,
-    );
+    const token = body.token as string;
+    const result =
+      submissionMode === "ranked"
+        ? await deps.db.transaction(async (tx) => {
+            if (identity.userId === null) {
+              throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
+            }
+            const duplicate = await findExistingRankedAttemptEntry(tx as Db, {
+              seasonKey: verdict.season_key,
+              userId: identity.userId,
+              token,
+              draftMode: verdict.draft_mode,
+              draftOrder: verdict.draft_order,
+              era: verdict.era,
+              ratingBasis: verdict.rating_basis,
+            });
+            if (duplicate) return { kind: "duplicate" as const, row: duplicate };
+
+            const attempt = await consumeRankedAttempt(
+              tx as Db,
+              {
+                seasonKey: verdict.season_key,
+                formationId: verdict.token_body.fid,
+                draftMode: verdict.draft_mode,
+                draftOrder: verdict.draft_order,
+                era: verdict.era,
+                ratingBasis: verdict.rating_basis,
+                userId: identity.userId,
+                parentSeed: verdict.token_body.ps,
+              },
+              deps.now,
+            );
+            if (attempt === null) {
+              throw new LeaderboardGateError(
+                "BAD_ATTEMPT",
+                "ranked submissions require a valid unexpired server-issued attempt",
+              );
+            }
+            return insertAcceptedEntry(
+              tx as Db,
+              {
+                seasonKey: verdict.season_key,
+                challengeType: verdict.challenge_type,
+                challengeDate: verdict.challenge_date,
+                ratingVersion: verdict.rating_version,
+                mode: submissionMode,
+                draftMode: verdict.draft_mode,
+                draftOrder: verdict.draft_order,
+                era: verdict.era,
+                ratingBasis: verdict.rating_basis,
+                userId: identity.userId,
+                sessionId: identity.sessionId,
+                displayAlias: verdict.display_alias,
+                token,
+                verifiedScore: verdict.verified_score,
+                scoreBreakdown: verdict.score_breakdown,
+                attemptId: attempt.id,
+              },
+              deps.now,
+            );
+          })
+        : await insertAcceptedEntry(
+            deps.db,
+            {
+              seasonKey: verdict.season_key,
+              challengeType: verdict.challenge_type,
+              challengeDate: verdict.challenge_date,
+              ratingVersion: verdict.rating_version,
+              mode: submissionMode,
+              draftMode: verdict.draft_mode,
+              draftOrder: verdict.draft_order,
+              era: verdict.era,
+              ratingBasis: verdict.rating_basis,
+              userId: identity.userId,
+              sessionId: identity.sessionId,
+              displayAlias: verdict.display_alias,
+              token,
+              verifiedScore: verdict.verified_score,
+              scoreBreakdown: verdict.score_breakdown,
+              attemptId: null,
+            },
+            deps.now,
+          );
     const best = await identityBoardRank(deps.db, {
       seasonKey: verdict.season_key,
       challengeType: verdict.challenge_type,
@@ -274,7 +340,7 @@ export async function handleLeaderboardSubmit(
       duplicate: result.kind === "duplicate",
       rank: best?.rank ?? null,
       percentile: best?.percentile ?? null,
-      field_size: best?.fieldSize ?? 0,
+      field_size: best?.fieldSize ?? null,
     };
     return NextResponse.json(responseBody, {
       status: result.kind === "duplicate" ? 200 : 201,

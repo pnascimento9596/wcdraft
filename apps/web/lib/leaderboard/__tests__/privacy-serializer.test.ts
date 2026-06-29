@@ -1,12 +1,39 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
-import { leaderboardEntries, users } from "@wcdraft/db";
+import { leaderboardEntries, rankedAttempts, users } from "@wcdraft/db";
 
 import { setupTestDb } from "../../auth/__tests__/_test-db";
 import { boardPage, identityBoardRank, toApiEntryWithProfile } from "../store";
 
 const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());
-beforeEach(async () => reset());
+
+let attemptSeq = 0;
+beforeEach(async () => {
+  await reset();
+  attemptSeq = 0;
+});
+
+async function issueRankedAttempt(userId: string, seed: string): Promise<string> {
+  attemptSeq += 1;
+  const [attempt] = await db
+    .insert(rankedAttempts)
+    .values({
+      userId,
+      sessionId: null,
+      seasonKey: "season-privacy",
+      formationId: "4-3-3",
+      draftMode: "classic",
+      draftOrder: "squad_first",
+      era: "all_time",
+      ratingBasis: "career",
+      issuedParentSeed: seed,
+      nonce: `nonce-privacy-${String(attemptSeq).padStart(4, "0")}`,
+      issuedAt: new Date("2026-06-12T12:00:00.000Z"),
+      windowExpiresAt: new Date("2026-06-12T13:00:00.000Z"),
+    })
+    .returning();
+  return attempt!.id;
+}
 
 describe("leaderboard public serializers", () => {
   it("derive display_name from username fallback and never include email", async () => {
@@ -14,6 +41,7 @@ describe("leaderboard public serializers", () => {
       .insert(users)
       .values({ email: "private-user@example.com", username: "public_user" })
       .returning();
+    const attemptId = await issueRankedAttempt(user!.id, "seed-privacy");
     const [entry] = await db
       .insert(leaderboardEntries)
       .values({
@@ -29,6 +57,7 @@ describe("leaderboard public serializers", () => {
         token: "t1.privacy",
         verifiedScore: 88,
         scoreBreakdown: [],
+        attemptId,
         createdAt: new Date("2026-06-12T12:00:00.000Z"),
       })
       .returning();
@@ -64,6 +93,8 @@ describe("leaderboard public serializers", () => {
         { email: "missing-public@example.com", username: null },
       ])
       .returning();
+    const badAttemptId = await issueRankedAttempt(badUser!.id, "seed-missing-public");
+    const goodAttemptId = await issueRankedAttempt(goodUser!.id, "seed-good-public");
     await db.insert(leaderboardEntries).values([
       {
         seasonKey: "season-privacy",
@@ -78,6 +109,7 @@ describe("leaderboard public serializers", () => {
         token: "t1.missing-public",
         verifiedScore: 99,
         scoreBreakdown: [],
+        attemptId: badAttemptId,
         createdAt: new Date("2026-06-12T12:00:00.000Z"),
       },
       {
@@ -93,6 +125,7 @@ describe("leaderboard public serializers", () => {
         token: "t1.good-public",
         verifiedScore: 88,
         scoreBreakdown: [],
+        attemptId: goodAttemptId,
         createdAt: new Date("2026-06-12T12:00:01.000Z"),
       },
     ]);

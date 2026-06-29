@@ -14,12 +14,15 @@ filter columns:
 - `era`: `all_time | post_2000 | post_2010 | modern`
 - `rating_basis`: `career | current`
 
-`season_key` remains the six-version-anchor equivalence class. Config does not
-join the season key; it partitions boards inside the season. Legacy rows whose
-config cannot be derived from the stored token, or which belong to older
-seasons, keep NULL config columns and are excluded from exact-config board
-reads. New writes always persist the config from server replay, never from
-untrusted body/query state.
+Historical note: at this 2026-06-17 ship, `season_key` remained the
+six-version-anchor equivalence class. That policy is superseded by the
+2026-06-29 leaderboard season/ranked-attempt lane: aggregate Casual/Ranked
+boards now use an explicit season id while preserving hash-keyed seasons as
+read-only archives. The per-config partition rule is unchanged: config does
+not join the season key; it partitions boards inside the season. Legacy rows
+whose config cannot be derived from the stored token keep NULL config columns
+and are excluded from exact-config board reads. New writes always persist the
+config from server replay, never from untrusted body/query state.
 
 The old canonical-config-only submit gate is removed. Both `casual` and
 `ranked` accept every legal config. Ranked still requires a signed-in account.

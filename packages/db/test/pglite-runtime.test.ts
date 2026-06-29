@@ -360,7 +360,7 @@ describe("@wcdraft/db pglite runtime", () => {
             120
           )
         `),
-      ).rejects.toThrow(/leaderboard_entries_ranked_user_chk|check constraint/i);
+      ).rejects.toThrow(/leaderboard_entries_ranked_(user|attempt)_chk|check constraint/i);
     });
   });
 
@@ -372,6 +372,35 @@ describe("@wcdraft/db pglite runtime", () => {
       `);
 
       await client.exec(`
+        INSERT INTO ranked_attempts (
+          id,
+          user_id,
+          season_key,
+          formation_id,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          issued_parent_seed,
+          nonce,
+          window_expires_at
+        )
+        VALUES (
+          '00000000-0000-4000-8000-000000000002',
+          '${USER_ID}',
+          'season-user',
+          '4-3-3',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          'seed-user',
+          'nonce-user-000000',
+          now() + interval '1 hour'
+        )
+      `);
+
+      await client.exec(`
         INSERT INTO leaderboard_entries (
           season_key,
           mode,
@@ -380,6 +409,7 @@ describe("@wcdraft/db pglite runtime", () => {
           era,
           rating_basis,
           user_id,
+          attempt_id,
           token,
           verified_score
         )
@@ -391,6 +421,7 @@ describe("@wcdraft/db pglite runtime", () => {
           'all_time',
           'career',
           '${USER_ID}',
+          '00000000-0000-4000-8000-000000000002',
           'user-token',
           140
         )

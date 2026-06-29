@@ -9,6 +9,7 @@ import {
   SUPPORTED_FORMATION_OPTIONS,
   type SupportedFormationId,
 } from "@/lib/game/formation-layout";
+import { requestRankedAttempt } from "@/lib/leaderboard/client";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { positionShape } from "@/lib/game/view-models";
 import { PitchMarkings } from "../pitch";
@@ -149,11 +150,14 @@ function DraftSetupDisclosure({
 export function FormationSelect({
   gameData,
   draftMode,
+  ranked,
   onLocked,
 }: {
   gameData: GameData;
   /** Run mode for the record being created — `hidden` is Memory mode. */
   draftMode: "classic" | "hidden";
+  /** Hidden route hook: ranked drafts must use a server-issued seed. */
+  ranked?: boolean;
   onLocked: (record: RunRecordV1, warning: string | null) => void;
 }) {
   const defaultFormation: SupportedFormationId =
@@ -166,13 +170,41 @@ export function FormationSelect({
   const [ratingBasis, setRatingBasis] = useState<RatingBasis>("career");
 
   const lockIn = useCallback(
-    (formation_id: SupportedFormationId) => {
+    async (formation_id: SupportedFormationId) => {
       setError(null);
       setPending(formation_id);
       try {
+        const rankedAttempt =
+          ranked === true
+            ? await requestRankedAttempt({
+                formationId: formation_id,
+                draftMode,
+                draftOrder: draftFlow,
+                era: eraPreset,
+                ratingBasis,
+              })
+            : null;
+        if (rankedAttempt !== null && !rankedAttempt.ok) {
+          throw new Error(
+            rankedAttempt.message ??
+              (rankedAttempt.status === 401
+                ? "Sign in before starting a ranked draft."
+                : "Ranked draft seed could not be issued."),
+          );
+        }
         const created = createNewRunRecord(gameData, {
           formation_id,
           mode: draftMode,
+          parent_seed: rankedAttempt?.attempt.parent_seed,
+          ranked_attempt:
+            rankedAttempt === null
+              ? undefined
+              : {
+                  attempt_id: rankedAttempt.attempt.attempt_id,
+                  season_key: rankedAttempt.attempt.season_key,
+                  parent_seed: rankedAttempt.attempt.parent_seed,
+                  expires_at: rankedAttempt.attempt.expires_at,
+                },
           era_preset: eraPreset,
           draft_flow: draftFlow,
           rating_basis: ratingBasis,
@@ -189,7 +221,7 @@ export function FormationSelect({
         setPending(null);
       }
     },
-    [gameData, draftMode, eraPreset, draftFlow, ratingBasis, onLocked],
+    [gameData, draftMode, ranked, eraPreset, draftFlow, ratingBasis, onLocked],
   );
 
   return (

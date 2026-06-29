@@ -82,6 +82,30 @@ describe("run-record persisted boundary", () => {
     expect(left.challenge).toEqual(challenge);
   });
 
+  it("persists server-issued ranked attempt metadata with the issued seed", () => {
+    const rankedSeed = "wcdraft:ranked:v1:test-seed";
+    const created = createNewRunRecord(gameData, {
+      formation_id: "4-3-3",
+      parent_seed: rankedSeed,
+      ranked_attempt: {
+        attempt_id: "ranked-attempt-test",
+        season_key: "season-2026-summer",
+        parent_seed: rankedSeed,
+        expires_at: "2026-06-29T13:00:00.000Z",
+      },
+    }).record;
+
+    const loaded = loadRunRecord(created.run_id, gameData.versions);
+    expect(loaded.status).toBe("loaded");
+    expect(loaded.record?.parent_seed).toBe(rankedSeed);
+    expect(loaded.record?.ranked_attempt).toEqual({
+      attempt_id: "ranked-attempt-test",
+      season_key: "season-2026-summer",
+      parent_seed: rankedSeed,
+      expires_at: "2026-06-29T13:00:00.000Z",
+    });
+  });
+
   it("keeps generated-token replay byte-identical from token.ps", () => {
     localStorage.clear();
     const created = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;

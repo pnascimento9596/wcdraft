@@ -5,7 +5,7 @@
 //   - exact board order (verified_score DESC, created_at ASC, id ASC) + ranks
 //   - best-entry-per-identity dedup (session / user / sessionless identities)
 //   - hidden_at IS NULL always (moderated rows invisible, ranks close up)
-//   - season defaulting (current derived key) + explicit season filter
+//   - season defaulting (current explicit key) + explicit season filter
 //   - draft_mode filter
 //   - keyset pagination: page walk with no overlap/skip across a score tie,
 //     cursor strictness (400 BAD_CURSOR), limit clamp, typed query errors
@@ -14,7 +14,7 @@
 
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
-import { leaderboardEntries, sessions, users } from "@wcdraft/db";
+import { leaderboardEntries, rankedAttempts, sessions, users } from "@wcdraft/db";
 
 import { createSession } from "../../auth/sessions";
 import { setupTestDb, testCookieSecret } from "../../auth/__tests__/_test-db";
@@ -78,6 +78,27 @@ async function seed(opts: SeedOpts): Promise<string> {
       .returning();
     userId = u!.id;
   }
+  let attemptId: string | null = null;
+  if (mode === "ranked") {
+    const [attempt] = await db
+      .insert(rankedAttempts)
+      .values({
+        userId: userId!,
+        sessionId: opts.sessionId ?? null,
+        seasonKey: opts.seasonKey ?? CURRENT_SEASON,
+        formationId: "4-3-3",
+        draftMode: opts.draftMode ?? "classic",
+        draftOrder: opts.draftOrder ?? "squad_first",
+        era: opts.era ?? "all_time",
+        ratingBasis: opts.ratingBasis ?? "career",
+        issuedParentSeed: `seed-${seq}`,
+        nonce: `nonce-${String(seq).padStart(16, "0")}`,
+        issuedAt: new Date(BASE_MS),
+        windowExpiresAt: new Date(BASE_MS + 86_400_000),
+      })
+      .returning();
+    attemptId = attempt!.id;
+  }
   const inserted = await db
     .insert(leaderboardEntries)
     .values({
@@ -104,6 +125,7 @@ async function seed(opts: SeedOpts): Promise<string> {
       token: `t1.seed-${seq}`,
       verifiedScore: opts.score,
       scoreBreakdown: [],
+      attemptId,
       hiddenAt: opts.hiddenAt ?? null,
       createdAt: new Date(BASE_MS + (opts.at ?? seq) * 1000),
     })

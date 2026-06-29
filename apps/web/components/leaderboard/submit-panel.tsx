@@ -50,15 +50,22 @@ export function LeaderboardSubmitPanel({
   }, [record, gameData.versions, sim]);
 
   const [phase, setPhase] = useState<SubmitPhase>(IDLE);
-  const [submitMode, setSubmitMode] = useState<SubmitBoardMode>("casual");
+  const [submitMode, setSubmitMode] = useState<SubmitBoardMode>(() =>
+    record.ranked_attempt ? "ranked" : "casual",
+  );
   const [name, setName] = useState("");
   const [touched, setTouched] = useState(false);
   const [retryRemaining, setRetryRemaining] = useState<number | null>(null);
   const { ready: authReady, isSignedIn, session, refresh } = useAuth();
   const publicUsername = isSignedIn ? (session?.username ?? null) : null;
   const dailyChallenge = record.challenge?.kind === "daily" ? record.challenge : null;
+  const rankedAttemptId = record.ranked_attempt?.attempt_id ?? null;
   const effectiveSubmitMode: SubmitBoardMode = dailyChallenge === null ? submitMode : "casual";
   const dailyOpen = dailyChallenge === null || dailyChallenge.date === utcDateString();
+
+  useEffect(() => {
+    setSubmitMode(rankedAttemptId === null ? "casual" : "ranked");
+  }, [record.run_id, rankedAttemptId]);
 
   // Local memory — read in an effect so SSR/hydration stay byte-stable.
   useEffect(() => {

@@ -459,7 +459,10 @@ Per-release QA matrix:
 
 ## F. Leaderboard And Season Semantics [HUMAN]
 
-F-4 seasons are currently the equivalence class of the six version anchors.
+Historical note: F-4 originally treated seasons as the equivalence class of the
+six version anchors. That was superseded on 2026-06-29 by the explicit aggregate
+season id policy; version-anchor checks remain only the submit-time runtime
+compatibility gate.
 Config axes fragment competitive fairness because they change the pool, the
 state machine, and the sim channels.
 

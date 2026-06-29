@@ -10,6 +10,7 @@
 import { ensureCsrfToken } from "../auth/client";
 import type { BoardDraftModeFilter, BoardFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
+import type { BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./submit-state";
 
 // ─── Board page ──────────────────────────────────────────────────────────────
@@ -114,4 +115,101 @@ export async function submitRun(input: {
   }
   const body: unknown = await r.json().catch(() => null);
   return outcomeFromResponse(r.status, body, r.headers.get("Retry-After"));
+}
+
+// ─── Ranked attempt seed ────────────────────────────────────────────────────
+
+export type RankedAttemptFetchResult =
+  | {
+      readonly ok: true;
+      readonly attempt: {
+        readonly attempt_id: string;
+        readonly parent_seed: string;
+        readonly expires_at: string;
+        readonly season_key: string;
+        readonly formation_id: string;
+        readonly draft_mode: BoardDraftModeFilter;
+        readonly draft_order: BoardDraftOrder;
+        readonly era: BoardEra;
+        readonly rating_basis: BoardRatingBasis;
+      };
+    }
+  | { readonly ok: false; readonly status: number | null; readonly message: string | null };
+
+export async function requestRankedAttempt(input: {
+  readonly formationId: string;
+  readonly draftMode: BoardDraftModeFilter;
+  readonly draftOrder: BoardDraftOrder;
+  readonly era: BoardEra;
+  readonly ratingBasis: BoardRatingBasis;
+}): Promise<RankedAttemptFetchResult> {
+  let r: Response;
+  try {
+    const csrf = await ensureCsrfToken();
+    r = await fetch("/api/ranked/attempt", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "x-csrf-token": csrf,
+      },
+      body: JSON.stringify({
+        formation_id: input.formationId,
+        draft_mode: input.draftMode,
+        draft_order: input.draftOrder,
+        era: input.era,
+        rating_basis: input.ratingBasis,
+      }),
+    });
+  } catch {
+    return { ok: false, status: null, message: null };
+  }
+  const body = (await r.json().catch(() => null)) as
+    | {
+        attempt_id?: unknown;
+        parent_seed?: unknown;
+        expires_at?: unknown;
+        season_key?: unknown;
+        formation_id?: unknown;
+        draft_mode?: unknown;
+        draft_order?: unknown;
+        era?: unknown;
+        rating_basis?: unknown;
+        message?: unknown;
+      }
+    | null;
+  if (
+    r.ok &&
+    body !== null &&
+    typeof body.attempt_id === "string" &&
+    typeof body.parent_seed === "string" &&
+    typeof body.expires_at === "string" &&
+    typeof body.season_key === "string" &&
+    body.formation_id === input.formationId &&
+    body.draft_mode === input.draftMode &&
+    body.draft_order === input.draftOrder &&
+    body.era === input.era &&
+    body.rating_basis === input.ratingBasis
+  ) {
+    return {
+      ok: true,
+      attempt: {
+        attempt_id: body.attempt_id,
+        parent_seed: body.parent_seed,
+        expires_at: body.expires_at,
+        season_key: body.season_key,
+        formation_id: input.formationId,
+        draft_mode: input.draftMode,
+        draft_order: input.draftOrder,
+        era: input.era,
+        rating_basis: input.ratingBasis,
+      },
+    };
+  }
+  return {
+    ok: false,
+    status: r.status,
+    message: typeof body?.message === "string" ? body.message : null,
+  };
 }
