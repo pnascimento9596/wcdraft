@@ -12,6 +12,7 @@ paths = [
   '''^apps/web/lib/auth/__tests__/csrf\.test\.ts$''',
   '''^apps/web/lib/auth/__tests__/verify-flow\.test\.ts$''',
   '''^apps/web/lib/game/__tests__/navigation\.test\.ts$''',
+  '''^apps/web/lib/leaderboard/__tests__/claim\.test\.ts$''',
   '''^apps/web/lib/leaderboard/__tests__/public-payload-email-sweep\.test\.ts$''',
 ]
 
