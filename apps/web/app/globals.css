@@ -173,7 +173,7 @@
   --accent-ink: #06130d;
   --accent-press: #25b07c;
   --accent-deep: #067044;
-  --accent-wash: rgba(46, 207, 146, 0.16);
+  --accent-wash: color-mix(in srgb, var(--accent) 16%, transparent);
   --accent-line: rgba(6, 112, 68, 0.42);
   --accent-strong: var(--accent-press);
   --accent-text: var(--accent);
@@ -239,8 +239,8 @@
   --accent-ink: #06130d;
   --accent-press: #26b681;
   --accent-deep: #1c9c70;
-  --accent-wash: rgba(46, 207, 146, 0.12);
-  --accent-line: rgba(46, 207, 146, 0.42);
+  --accent-wash: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 42%, transparent);
   --accent-strong: var(--accent-press);
   --accent-text: var(--accent);
   --accent-on-solid: #06130d;
@@ -263,7 +263,7 @@
   --e2: 0 2px 9px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.045);
   --e3: 0 16px 36px rgba(0, 0, 0, 0.62);
   --well-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.25);
-  --pitch: rgba(46, 207, 146, 0.04);
+  --pitch: color-mix(in srgb, var(--accent) 4%, transparent);
   --scrim: rgba(4, 7, 6, 0.66);
 
   --bg-panel: var(--s1);
@@ -1425,13 +1425,17 @@ main {
    the standalone account-menu in the header is hidden below 52rem. */
 .mobile-menu__signin .account-menu {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 0.45rem;
 }
 .mobile-menu__signin .account-pop {
   position: relative;
   top: 0.4rem;
   right: auto;
   left: auto;
+  width: 100%;
   min-width: 100%;
 }
 
