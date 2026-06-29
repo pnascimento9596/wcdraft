@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 export type Theme = "light" | "dark";
 export const THEME_STORAGE_KEY = "wcdraft:theme";
+export const HYDRATION_THEME: Theme = "light";
 
 type ThemeContextValue = {
   theme: Theme;
@@ -29,20 +30,43 @@ function storedTheme(): Theme | null {
   }
 }
 
+function documentTheme(): Theme | null {
+  if (typeof document === "undefined") return null;
+  const value = document.documentElement.getAttribute("data-theme");
+  return value === "dark" || value === "light" ? value : null;
+}
+
+function writeDocumentTheme(theme: Theme) {
+  if (typeof document === "undefined") return;
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
 export function resolveInitialTheme(): Theme {
   return storedTheme() ?? systemTheme();
 }
 
+export function resolveHydratedTheme(): Theme {
+  return documentTheme() ?? resolveInitialTheme();
+}
+
 /** The provider drives the `data-theme` attribute on <html>. */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(resolveInitialTheme);
+  const [theme, setThemeState] = useState<Theme>(HYDRATION_THEME);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+    const resolved = resolveHydratedTheme();
+    writeDocumentTheme(resolved);
+    setThemeState(resolved);
+    setHydrated(true);
+  }, []);
 
-  const setTheme = useCallback((next: Theme) => {
-    setThemeState(next);
+  useEffect(() => {
+    if (!hydrated) return;
+    writeDocumentTheme(theme);
+  }, [hydrated, theme]);
+
+  const persistTheme = useCallback((next: Theme) => {
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {
@@ -50,17 +74,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const setTheme = useCallback(
+    (next: Theme) => {
+      setHydrated(true);
+      setThemeState(next);
+      writeDocumentTheme(next);
+      persistTheme(next);
+    },
+    [persistTheme],
+  );
+
   const toggleTheme = useCallback(() => {
-    setThemeState((current) => {
-      const next = current === "dark" ? "light" : "dark";
-      try {
-        window.localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        // Non-fatal.
-      }
-      return next;
-    });
-  }, []);
+    setTheme(theme === "dark" ? "light" : "dark");
+  }, [setTheme, theme]);
 
   const value = useMemo<ThemeContextValue>(
     () => ({ theme, setTheme, toggleTheme }),
