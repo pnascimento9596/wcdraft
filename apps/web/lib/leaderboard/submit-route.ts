@@ -37,10 +37,7 @@ import {
   type ApiLeaderboardEntry,
   type BoardMode,
 } from "./store";
-import {
-  consumeRankedAttempt,
-  findExistingRankedAttemptEntry,
-} from "./ranked-attempts";
+import { consumeRankedAttempt, findExistingRankedAttemptEntry } from "./ranked-attempts";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
 import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
 

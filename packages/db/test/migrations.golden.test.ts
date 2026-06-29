@@ -350,7 +350,9 @@ describe("@wcdraft/db migrations — 0009_ranked_attempt_binding", () => {
 
   it("enforces attempt_id for new ranked rows without scanning old ranked rows", () => {
     expect(rankedBindingSql).toMatch(/leaderboard_entries_ranked_attempt_chk/);
-    expect(rankedBindingSql).toMatch(/"mode" <> 'ranked' OR "leaderboard_entries"\."attempt_id" IS NOT NULL/);
+    expect(rankedBindingSql).toMatch(
+      /"mode" <> 'ranked' OR "leaderboard_entries"\."attempt_id" IS NOT NULL/,
+    );
     expect(rankedBindingSql).toMatch(/NOT VALID/);
   });
 

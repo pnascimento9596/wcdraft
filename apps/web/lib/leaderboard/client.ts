@@ -165,20 +165,18 @@ export async function requestRankedAttempt(input: {
   } catch {
     return { ok: false, status: null, message: null };
   }
-  const body = (await r.json().catch(() => null)) as
-    | {
-        attempt_id?: unknown;
-        parent_seed?: unknown;
-        expires_at?: unknown;
-        season_key?: unknown;
-        formation_id?: unknown;
-        draft_mode?: unknown;
-        draft_order?: unknown;
-        era?: unknown;
-        rating_basis?: unknown;
-        message?: unknown;
-      }
-    | null;
+  const body = (await r.json().catch(() => null)) as {
+    attempt_id?: unknown;
+    parent_seed?: unknown;
+    expires_at?: unknown;
+    season_key?: unknown;
+    formation_id?: unknown;
+    draft_mode?: unknown;
+    draft_order?: unknown;
+    era?: unknown;
+    rating_basis?: unknown;
+    message?: unknown;
+  } | null;
   if (
     r.ok &&
     body !== null &&

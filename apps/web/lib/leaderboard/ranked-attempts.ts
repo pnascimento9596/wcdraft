@@ -8,12 +8,7 @@ import { randomBytes as nodeRandomBytes } from "node:crypto";
 import { leaderboardEntries, rankedAttempts, type Db, type LeaderboardEntry } from "@wcdraft/db";
 import { and, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 
-import type {
-  BoardDraftMode,
-  BoardDraftOrder,
-  BoardEra,
-  BoardRatingBasis,
-} from "./config";
+import type { BoardDraftMode, BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 
 export const RANKED_ATTEMPT_TTL_MS = 60 * 60 * 1000;
 const RANKED_SEED_PREFIX = "wcdraft:ranked:v1:";

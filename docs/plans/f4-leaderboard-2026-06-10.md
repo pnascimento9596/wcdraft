@@ -306,12 +306,12 @@ $sessionId AND user_id IS NULL`.
 
 `apps/web/lib/auth/handler-helpers.ts`)
 
-| Route                     | Method | Auth                                | Notes                                                                                                                                                                                  |
-| ------------------------- | ------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF                    | pipeline §2; `maxDuration = 10`                                                                                                                                                        |
-| `/api/leaderboard`        | GET    | none                                | params: `season` (default current), `mode`, `draft_mode`, `draft_order`, `era`, `rating_basis`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
-| `/api/leaderboard/me`     | GET    | session                             | caller's best + recent entries for the exact season/lane/config board; uncached                                                                                                        |
-| `/api/ranked/attempt`     | POST   | account + CSRF                      | Issues a short-window, single-use `ranked_attempts` row with a server-minted seed bound to user, active season, formation, and full board config.                                      |
+| Route                     | Method | Auth             | Notes                                                                                                                                                                                  |
+| ------------------------- | ------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/leaderboard/submit` | POST   | gate §5.3 + CSRF | pipeline §2; `maxDuration = 10`                                                                                                                                                        |
+| `/api/leaderboard`        | GET    | none             | params: `season` (default current), `mode`, `draft_mode`, `draft_order`, `era`, `rating_basis`, `cursor` (keyset on `(verified_score, created_at, id)`), `limit ≤ 50`; CDN-cached 30 s |
+| `/api/leaderboard/me`     | GET    | session          | caller's best + recent entries for the exact season/lane/config board; uncached                                                                                                        |
+| `/api/ranked/attempt`     | POST   | account + CSRF   | Issues a short-window, single-use `ranked_attempts` row with a server-minted seed bound to user, active season, formation, and full board config.                                      |
 
 ### UI
 
@@ -370,8 +370,8 @@ draft_mode text NOT NULL, draft_order text NOT NULL, era text NOT NULL,
 rating_basis text NOT NULL, issued_parent_seed text NOT NULL, nonce text NOT
 NULL, issued_at tz NOT NULL default now, window_expires_at tz NOT NULL,
 consumed_at tz NULL)` + user/seed and user/config indexes. Ranked submit now
-consumes exactly one unexpired row matching the submitter, explicit season,
-formation, full config, and token parent seed.
+  consumes exactly one unexpired row matching the submitter, explicit season,
+  formation, full config, and token parent seed.
 - `leaderboard_entries(id uuid PK, season_key text NOT NULL, mode text NOT
 NULL CHECK in ('casual','ranked'), user_id uuid FK→users CASCADE NULL,
 token text NOT NULL, verified_score integer NOT NULL, score_breakdown

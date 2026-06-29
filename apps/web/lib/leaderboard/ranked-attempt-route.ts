@@ -8,12 +8,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Db } from "@wcdraft/db";
 import { z } from "zod";
 
-import {
-  isBoardDraftMode,
-  isBoardDraftOrder,
-  isBoardEra,
-  isBoardRatingBasis,
-} from "./config";
+import { isBoardDraftMode, isBoardDraftOrder, isBoardEra, isBoardRatingBasis } from "./config";
 import { LeaderboardGateError, requireSubmitIdentity } from "./identity-gate";
 import { createRankedAttempt, type IssuedRankedAttempt } from "./ranked-attempts";
 

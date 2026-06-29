@@ -58,14 +58,8 @@ export const rankedAttempts = pgTable(
       t.ratingBasis,
       t.issuedAt,
     ),
-    check(
-      "ranked_attempts_season_key_chk",
-      sql`char_length(${t.seasonKey}) BETWEEN 1 AND 256`,
-    ),
-    check(
-      "ranked_attempts_formation_id_chk",
-      sql`char_length(${t.formationId}) BETWEEN 1 AND 64`,
-    ),
+    check("ranked_attempts_season_key_chk", sql`char_length(${t.seasonKey}) BETWEEN 1 AND 256`),
+    check("ranked_attempts_formation_id_chk", sql`char_length(${t.formationId}) BETWEEN 1 AND 64`),
     check("ranked_attempts_draft_mode_chk", sql`${t.draftMode} IN ('classic', 'hidden')`),
     check(
       "ranked_attempts_draft_order_chk",
@@ -76,10 +70,7 @@ export const rankedAttempts = pgTable(
       sql`${t.era} IN ('all_time', 'post_2000', 'post_2010', 'modern')`,
     ),
     check("ranked_attempts_rating_basis_chk", sql`${t.ratingBasis} IN ('career', 'current')`),
-    check(
-      "ranked_attempts_seed_chk",
-      sql`char_length(${t.issuedParentSeed}) BETWEEN 1 AND 256`,
-    ),
+    check("ranked_attempts_seed_chk", sql`char_length(${t.issuedParentSeed}) BETWEEN 1 AND 256`),
     check("ranked_attempts_nonce_chk", sql`char_length(${t.nonce}) BETWEEN 16 AND 128`),
     check("ranked_attempts_window_chk", sql`${t.windowExpiresAt} > ${t.issuedAt}`),
   ],

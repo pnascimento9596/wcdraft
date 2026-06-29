@@ -928,10 +928,7 @@ describe("ranked account gate", () => {
     const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
     const body = validBody({ mode: "ranked", display_alias: "alias_user" });
     await issueRankedAttemptForBody({ userId: inserted[0]!.id, sessionId, body });
-    const res = await handleLeaderboardSubmit(
-      makeReq({ ...opts, body }),
-      makeDeps(),
-    );
+    const res = await handleLeaderboardSubmit(makeReq({ ...opts, body }), makeDeps());
     expect(res.status).toBe(201);
     const responseBody = (await res.json()) as { entry: Record<string, unknown> };
     expect(responseBody.entry.display_name).toBe("alias_user");
@@ -962,7 +959,10 @@ describe("ranked account gate", () => {
       makeDeps(),
     );
     expect(res.status).toBe(201);
-    const responseBody = (await res.json()) as { entry: Record<string, unknown>; rank: number | null };
+    const responseBody = (await res.json()) as {
+      entry: Record<string, unknown>;
+      rank: number | null;
+    };
     expect(responseBody.rank).toBe(1);
     expect(responseBody.entry).toMatchObject({
       mode: "ranked",
