@@ -542,7 +542,7 @@ main {
   top: 1rem;
   z-index: 100;
   background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--accent-on-solid);
   padding: 0.6rem 1rem;
   border-radius: 4px;
   font-family: var(--font-text), system-ui, sans-serif;
