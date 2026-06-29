@@ -25,6 +25,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     display_record: "8-0",
     is_champion: true,
     is_perfect_eight_zero: true,
+    score: 41,
     goals_for: 22,
     goals_against: 3,
     formation_name: "4-2-3-1",
@@ -66,8 +67,17 @@ describe("buildShareCaption", () => {
 
   it("uses challenge framing for daily draft captions", () => {
     const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL);
-    expect(caption).toContain("Auriverde XI went 8-0 on 2026-06-29's draft — beat it →");
+    expect(caption).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft — beat it →");
     expect(caption).toContain(SHARE_TAGLINE);
+  });
+
+  it("leads daily captions with rank and percentile when supplied", () => {
+    const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL, {
+      dailyStanding: { rank: 2, percentile: 50, fieldSize: 12 },
+    });
+    expect(caption).toContain(
+      "#2 of 12 today · Top 50% of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
+    );
   });
 
   it("appends the share URL when one is provided", () => {
@@ -93,7 +103,7 @@ describe("buildShareIntentText", () => {
 
   it("uses daily challenge framing in intent text", () => {
     const text = buildShareIntentText(makeView({ challenge_date: "2026-06-29" }));
-    expect(text).toContain("Auriverde XI went 8-0 on 2026-06-29's draft — beat it →");
+    expect(text).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft — beat it →");
   });
 });
 

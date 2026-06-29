@@ -18,9 +18,21 @@ export type SubmitPhase =
   | { readonly kind: "idle" }
   | { readonly kind: "submitting" }
   /** 201 — inserted; rank is the identity's board rank from the same DB snapshot. */
-  | { readonly kind: "accepted"; readonly rank: number | null; readonly score: number }
+  | {
+      readonly kind: "accepted";
+      readonly rank: number | null;
+      readonly score: number;
+      readonly percentile: number | null;
+      readonly fieldSize: number;
+    }
   /** 200 — this exact run is already on the board for this identity. */
-  | { readonly kind: "duplicate"; readonly rank: number | null; readonly score: number }
+  | {
+      readonly kind: "duplicate";
+      readonly rank: number | null;
+      readonly score: number;
+      readonly percentile: number | null;
+      readonly fieldSize: number;
+    }
   /** Typed server rejection — copy via the single-sourced status table. */
   | {
       readonly kind: "rejected";
@@ -42,6 +54,8 @@ export const IDLE: SubmitPhase = { kind: "idle" };
 interface SuccessBodyShape {
   readonly duplicate?: unknown;
   readonly rank?: unknown;
+  readonly percentile?: unknown;
+  readonly field_size?: unknown;
   readonly entry?: { readonly verified_score?: unknown };
 }
 
@@ -57,6 +71,14 @@ function rankOf(body: SuccessBodyShape): number | null {
 function scoreOf(body: SuccessBodyShape): number {
   const s = body.entry?.verified_score;
   return typeof s === "number" ? s : Number.NaN;
+}
+
+function percentileOf(body: SuccessBodyShape): number | null {
+  return typeof body.percentile === "number" ? body.percentile : null;
+}
+
+function fieldSizeOf(body: SuccessBodyShape): number {
+  return typeof body.field_size === "number" ? body.field_size : 0;
 }
 
 /**
@@ -75,10 +97,22 @@ export function outcomeFromResponse(
       : null;
 
   if (status === 201 && obj) {
-    return { kind: "accepted", rank: rankOf(obj), score: scoreOf(obj) };
+    return {
+      kind: "accepted",
+      rank: rankOf(obj),
+      score: scoreOf(obj),
+      percentile: percentileOf(obj),
+      fieldSize: fieldSizeOf(obj),
+    };
   }
   if (status === 200 && obj) {
-    return { kind: "duplicate", rank: rankOf(obj), score: scoreOf(obj) };
+    return {
+      kind: "duplicate",
+      rank: rankOf(obj),
+      score: scoreOf(obj),
+      percentile: percentileOf(obj),
+      fieldSize: fieldSizeOf(obj),
+    };
   }
 
   const code = obj && typeof obj.error === "string" ? obj.error : "INTERNAL_ERROR";

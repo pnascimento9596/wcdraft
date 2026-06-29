@@ -33,7 +33,7 @@ import ResultsPage from "@/app/play/results/page";
 import { ResultsScreen } from "@/components/game/results-screen";
 
 import { boardRowViews } from "../board-view";
-import { DEFAULT_BOARD_FILTER } from "../config";
+import { DEFAULT_BOARD_FILTER, DEFAULT_DAILY_BOARD_FILTER } from "../config";
 import { submitStatusCopy } from "../submit-copy";
 import type { SubmitPhase } from "../submit-state";
 import { runSimulationSync } from "../../game/simulate";
@@ -233,20 +233,38 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
   });
 
   it("accepted (201): rank from the same DB snapshot", () => {
-    const html = render({ kind: "accepted", rank: 4, score: 41 });
+    const html = render({
+      kind: "accepted",
+      rank: 4,
+      score: 41,
+      percentile: null,
+      fieldSize: 0,
+    });
     expect(html).toContain("On the board");
     expect(html).toContain("Rank #4");
     expect(html).toContain(`href="${LEADERBOARD_HREF.replace(/&/g, "&amp;")}"`);
   });
 
   it("accepted with null rank: posted, no invented rank", () => {
-    const html = render({ kind: "accepted", rank: null, score: 41 });
+    const html = render({
+      kind: "accepted",
+      rank: null,
+      score: 41,
+      percentile: null,
+      fieldSize: 0,
+    });
     expect(html).toContain("On the board");
     expect(html).not.toContain("Rank #");
   });
 
   it("duplicate (200): honest already-on-the-board with existing rank", () => {
-    const html = render({ kind: "duplicate", rank: 7, score: 41 });
+    const html = render({
+      kind: "duplicate",
+      rank: 7,
+      score: 41,
+      percentile: null,
+      fieldSize: 0,
+    });
     expect(html).toContain("Already on the board");
     expect(html).toContain("rank #7");
   });
@@ -457,7 +475,12 @@ describe("board views", () => {
 
   it("populated rows: rank, name, score, declared-mode badge, time, me-highlight", () => {
     const html = renderToStaticMarkup(
-      createElement(BoardRows, { rows, openKey: null, onToggle: () => undefined }),
+      createElement(BoardRows, {
+        rows,
+        filter: DEFAULT_BOARD_FILTER,
+        openKey: null,
+        onToggle: () => undefined,
+      }),
     );
     expect(html).toContain("alpha_xi");
     expect(html).toContain("88");
@@ -489,6 +512,7 @@ describe("board views", () => {
             breakdown: [{ label: "<script>breakdown()</script>", points: 1 }],
           },
         ],
+        filter: DEFAULT_BOARD_FILTER,
         openKey: "hostile",
         onToggle: () => undefined,
       }),
@@ -501,7 +525,12 @@ describe("board views", () => {
 
   it("open row shows the verified score breakdown (evidence)", () => {
     const html = renderToStaticMarkup(
-      createElement(BoardRows, { rows, openKey: "a", onToggle: () => undefined }),
+      createElement(BoardRows, {
+        rows,
+        filter: DEFAULT_BOARD_FILTER,
+        openKey: "a",
+        onToggle: () => undefined,
+      }),
     );
     expect(html).toContain("Goals scored");
     expect(html).toContain("+12");
@@ -509,7 +538,12 @@ describe("board views", () => {
 
   it("open row without a stored breakdown says so — never fabricates", () => {
     const html = renderToStaticMarkup(
-      createElement(BoardRows, { rows, openKey: "b", onToggle: () => undefined }),
+      createElement(BoardRows, {
+        rows,
+        filter: DEFAULT_BOARD_FILTER,
+        openKey: "b",
+        onToggle: () => undefined,
+      }),
     );
     expect(html).toContain("No breakdown recorded");
   });
@@ -518,6 +552,20 @@ describe("board views", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard, { filter: DEFAULT_BOARD_FILTER }));
     expect(html).toContain("No runs yet for this board");
     expect(html).toContain("Signed-in ranked runs for this exact config");
+  });
+
+  it("daily rows lead with standing while keeping raw score secondary", () => {
+    const html = renderToStaticMarkup(
+      createElement(BoardRows, {
+        rows,
+        filter: DEFAULT_DAILY_BOARD_FILTER,
+        openKey: null,
+        onToggle: () => undefined,
+      }),
+    );
+    expect(html).toContain("Top 100%");
+    expect(html).toContain("88 pts");
+    expect(html).toContain("#1 of 2 today");
   });
 
   it("toolbar exposes lane tabs and every config axis without collapsing filters", () => {

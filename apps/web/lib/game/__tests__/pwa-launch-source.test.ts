@@ -9,9 +9,13 @@ function source(path: string): string {
 describe("PWA launch hardening source guards", () => {
   it("renders a setup-shaped loading shell instead of a bare loading line", () => {
     const draftScreen = source("../../../components/game/draft-screen/index.tsx");
+    const gameFallback = source("../../../components/game/game-fallback.tsx");
     expect(draftScreen).toContain("function DraftLoadingShell()");
-    expect(draftScreen).toContain("Fetching and parsing the real 1930–2026 draft pool");
-    expect(draftScreen).toContain("setupSkeletonGrid");
+    expect(draftScreen).toContain('<GameFallback title="Loading draft setup" />');
+    expect(gameFallback).toContain("Fetching and parsing the real 1930-2026 draft pool");
+    expect(gameFallback).toContain('role="status"');
+    expect(gameFallback).toContain('aria-live="polite"');
+    expect(gameFallback).toContain("setupSkeletonGrid");
   });
 
   it("puts candidates before the formation panel on mobile post-reveal layouts", () => {

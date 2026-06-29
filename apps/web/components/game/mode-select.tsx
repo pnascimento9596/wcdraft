@@ -5,22 +5,37 @@ import { useRouter } from "next/navigation";
 import s from "./game.module.css";
 
 type DraftMode = "classic" | "hidden";
+type PlayMode = "daily" | DraftMode;
 
 const MODE_COPY: Record<
-  DraftMode,
+  PlayMode,
   {
     index: string;
     title: string;
+    tag: string;
     desc: string;
     preview: string;
     chips: readonly string[];
     cta: string;
     href: string;
+    featured?: boolean;
   }
 > = {
+  daily: {
+    index: "00",
+    title: "Today's Draft",
+    tag: "Daily",
+    desc: "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+    preview: "Shared seed · daily board",
+    chips: ["Same draft for everyone", "Beat today's field"],
+    cta: "Play daily",
+    href: "/play/daily",
+    featured: true,
+  },
   classic: {
     index: "01",
     title: "Classic",
+    tag: "Live",
     desc: "Ratings, positions and stats all on the table — pure drafting skill on every rolled squad.",
     preview: "Visible ratings · live Synergy",
     chips: ["Ratings visible", "Full stat lines", "Live Synergy"],
@@ -30,6 +45,7 @@ const MODE_COPY: Record<
   hidden: {
     index: "02",
     title: "Memory",
+    tag: "Live",
     desc: "Names, flags and years stay — ratings don't. Draft on what you remember; all reveals after you simulate.",
     preview: "Hidden ratings · post-run reveal",
     chips: ["Ratings hidden", "Names & years shown", "Same seeds"],
@@ -40,20 +56,27 @@ const MODE_COPY: Record<
 
 export function ModeSelect() {
   const router = useRouter();
-  const [mode, setMode] = useState<DraftMode>("classic");
+  const [mode, setMode] = useState<PlayMode>("daily");
   const selected = MODE_COPY[mode];
 
   return (
     <>
-      <div className={s.modeGrid} role="radiogroup" aria-label="Draft mode">
-        {(Object.keys(MODE_COPY) as DraftMode[]).map((key) => {
+      <div className={`${s.modeGrid} ${s.modeGridDaily}`} role="radiogroup" aria-label="Draft mode">
+        {(Object.keys(MODE_COPY) as PlayMode[]).map((key) => {
           const item = MODE_COPY[key];
           const on = mode === key;
           return (
             <button
               key={key}
               type="button"
-              className={`${s.modeCard} ${s.modeCardLive} ${on ? s.modeCardSelected : ""}`}
+              className={[
+                s.modeCard,
+                s.modeCardLive,
+                item.featured ? s.modeCardFeatured : "",
+                on ? s.modeCardSelected : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               role="radio"
               aria-checked={on}
               onClick={() => setMode(key)}
@@ -64,7 +87,7 @@ export function ModeSelect() {
               <span className={s.modeCardTop}>
                 <span className={s.modeTag}>
                   <span className={s.modeTagDot} aria-hidden="true" />
-                  Live
+                  {item.tag}
                 </span>
                 <span className={s.modeName}>{item.title}</span>
               </span>
@@ -92,7 +115,7 @@ export function ModeSelect() {
           className="btn btn--primary"
           onClick={() => router.push(selected.href)}
         >
-          Continue with {selected.title} →
+          {selected.featured ? selected.cta : `Continue with ${selected.title}`} →
         </button>
       </div>
     </>

@@ -39,8 +39,8 @@ export interface HistoryEntry {
   sequence_label: string;
   /** Run seed — useful for the seed-locked replay promise. */
   seed: string;
-  /** True when the run finished a tournament (champions). */
-  is_champion: boolean;
+  /** True when the run finished a tournament (champions); null when a server summary is absent. */
+  is_champion: boolean | null;
   /** Tokenized replay URL, or `null` when tokenization fails. */
   replay_href: string | null;
   /** Tokenized share URL, or `null` when tokenization fails. */

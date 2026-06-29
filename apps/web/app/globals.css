@@ -273,7 +273,7 @@
   --ink-soft: var(--tx2);
   --ink-faint: var(--tx3);
   --brand-wordmark-accent: var(--accent);
-  --footer-wordmark-accent: var(--accent);
+  --footer-wordmark-accent: #0d687f;
   --field: #1f6a47;
   --field-ink: #f2ecdc;
   --grain-opacity: 0.04;
@@ -784,6 +784,14 @@ main {
 .btn--primary:hover {
   background: var(--accent-solid);
 }
+.btn--gold {
+  background: var(--gold-solid);
+  color: var(--gold-ink);
+  border-color: var(--gold-deep);
+}
+.btn--gold:hover {
+  background: color-mix(in srgb, var(--gold-solid) 88%, var(--bg-panel));
+}
 .btn--primary:active {
   transform: translateY(1px);
   background: var(--accent-press);
@@ -914,6 +922,14 @@ main {
 }
 .hero__sub {
   max-width: 34rem;
+}
+
+.hero__daily {
+  margin: -0.85rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  max-width: 31rem;
 }
 
 .hero__meta {
@@ -1269,8 +1285,8 @@ main {
 /* `Sign in` CTA — same shape as the old stub, but live (link, not button). */
 .signin-stub--live {
   cursor: pointer;
-  background: rgba(46, 207, 146, 0.06);
-  border-color: rgba(46, 207, 146, 0.45);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   color: var(--ink);
   text-decoration: none;
   transition:
@@ -1279,7 +1295,7 @@ main {
     transform 0.14s ease;
 }
 .signin-stub--live:hover {
-  background: rgba(46, 207, 146, 0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
   border-color: var(--accent);
   transform: translateY(-1px);
 }
@@ -1304,12 +1320,12 @@ main {
   padding: 0.5rem 0.95rem;
   border: 1px solid var(--accent);
   border-radius: 999px;
-  background: rgba(46, 207, 146, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
   color: var(--ink);
   cursor: pointer;
 }
 .account-chip:hover {
-  background: rgba(46, 207, 146, 0.16);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 .account-chip__glyph {
   width: 1rem;
@@ -1322,7 +1338,12 @@ main {
   width: 5.5rem;
   height: 2.1rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--bg-panel), rgba(46, 207, 146, 0.08), var(--bg-panel));
+  background: linear-gradient(
+    90deg,
+    var(--bg-panel),
+    color-mix(in srgb, var(--accent) 8%, transparent),
+    var(--bg-panel)
+  );
   background-size: 200% 100%;
   animation: account-chip-shimmer 1.4s linear infinite;
 }
@@ -1384,7 +1405,7 @@ main {
 }
 .account-pop__link:hover,
 .account-pop__signout:hover {
-  background: rgba(46, 207, 146, 0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 .account-pop__signout {
   color: var(--ink-soft);

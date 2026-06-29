@@ -127,8 +127,8 @@ function playerOrThrow(idx: GameDataIndexes, card_id: CardId | string): RuntimeP
   return c;
 }
 
-function pickPrimaryPosition(c: RuntimePlayerCard): Position {
-  return c.primary_position ?? c.eligible_positions[0] ?? "MF";
+function pickPrimaryPosition(c: RuntimePlayerCard): Position | null {
+  return c.primary_position ?? c.eligible_positions[0] ?? null;
 }
 
 function clubLabel(c: RuntimePlayerCard): string | null {

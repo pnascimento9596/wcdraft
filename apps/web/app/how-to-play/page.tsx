@@ -100,6 +100,14 @@ export default function HowToPlayPage() {
           signed-in managers; casual posts anonymously and can be claimed after sign-in.
         </p>
 
+        <h2>Daily Draft</h2>
+        <p>
+          Daily Draft gives everyone the same Classic, Squad First, Career, All-time draft for the
+          UTC day. There is one daily board, anonymous posting is open, and your best verified score
+          for that day is the one that holds. A new shared draft drops every day at 00:00 UTC; the
+          challenge is simple: beat today&rsquo;s draft.
+        </p>
+
         <h2>Sharing &amp; replays</h2>
         <p>
           Every run produces a share link that carries the seed, your seventeen picks and the build

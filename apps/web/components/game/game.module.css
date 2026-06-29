@@ -68,8 +68,14 @@
 .modeGrid {
   composes: modeGrid from "./game-styles/shared.module.css";
 }
+.modeGridDaily {
+  composes: modeGridDaily from "./game-styles/shared.module.css";
+}
 .modeCard {
   composes: modeCard from "./game-styles/shared.module.css";
+}
+.modeCardFeatured {
+  composes: modeCardFeatured from "./game-styles/shared.module.css";
 }
 .modeCardLive {
   composes: modeCardLive from "./game-styles/shared.module.css";

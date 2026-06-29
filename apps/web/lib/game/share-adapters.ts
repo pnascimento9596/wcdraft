@@ -123,6 +123,7 @@ export interface ShareView {
   display_record: string;
   is_champion: boolean;
   is_perfect_eight_zero: boolean;
+  score: number;
   goals_for: number;
   goals_against: number;
   formation_name: string;
@@ -154,6 +155,7 @@ export function buildShareView(
     is_champion: run.is_champion,
     is_perfect_eight_zero:
       run.is_champion && run.wins === 8 && run.losses === 0 && matches.length === 8,
+    score: run.score,
     goals_for: run.aggregate.goals_for,
     goals_against: run.aggregate.goals_against,
     formation_name: formationName(draft),
@@ -197,10 +199,20 @@ export const SHARE_TAGLINE = "Built my all-time XI on wcdraft" as const;
  * competition marks. When `url` is null (token-encoding failed), the URL
  * line is omitted — the share screen disables affordances around that case.
  */
-export function buildShareCaption(view: ShareView, url: string | null): string {
+export interface DailyShareStanding {
+  readonly rank: number;
+  readonly percentile: number | null;
+  readonly fieldSize: number;
+}
+
+export function buildShareCaption(
+  view: ShareView,
+  url: string | null,
+  opts: { readonly dailyStanding?: DailyShareStanding | null } = {},
+): string {
   const lines: string[] = [];
   if (view.narrative) lines.push(view.narrative);
-  lines.push(shareChallengeLine(view));
+  lines.push(shareChallengeLine(view, opts.dailyStanding ?? null));
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
   return lines.join("\n");
@@ -212,16 +224,30 @@ export function buildShareCaption(view: ShareView, url: string | null): string {
  * would double-render the link. Use this for text-and-url web intents and
  * for `navigator.share({ text, url })`.
  */
-export function buildShareIntentText(view: ShareView): string {
-  const lead = `${shareChallengeLine(view)} ${SHARE_TAGLINE}`;
+export function buildShareIntentText(
+  view: ShareView,
+  opts: { readonly dailyStanding?: DailyShareStanding | null } = {},
+): string {
+  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)} ${SHARE_TAGLINE}`;
   return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 
-function shareChallengeLine(view: ShareView): string {
+function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding | null): string {
   if (view.challenge_date !== null) {
-    return `${view.team_name} went ${view.display_record} on ${view.challenge_date}'s draft — beat it →`;
+    const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
+    if (dailyStanding !== null) {
+      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+    }
+    return `${scoreLine} — beat it →`;
   }
   return `${view.team_name} went ${view.display_record} on wcdraft.`;
+}
+
+function dailyStandingText(standing: DailyShareStanding): string {
+  const rankLine = `#${standing.rank} of ${standing.fieldSize} today`;
+  return standing.percentile !== null
+    ? `${rankLine} · Top ${standing.percentile}% of today's field`
+    : rankLine;
 }
 
 // ─── Social web intents ──────────────────────────────────────────────────────

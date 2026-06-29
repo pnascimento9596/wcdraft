@@ -8,7 +8,9 @@
 
 import type { BoardFilter, BoardRowView } from "@/lib/leaderboard/board-view";
 import { seasonLabel } from "@/lib/leaderboard/board-view";
+import { dailyDraftHref } from "@/lib/game/navigation";
 import type { MyBoardPresence } from "@/lib/leaderboard/client";
+import Link from "next/link";
 import {
   BOARD_DRAFT_MODES,
   BOARD_DRAFT_ORDERS,
@@ -32,6 +34,7 @@ export function BoardHead({
   filter?: BoardFilter;
 }) {
   if (filter?.challenge === "daily") {
+    const playHref = dailyDraftHref(null, filter.challengeDate);
     return (
       <header className="page-head">
         <span className="eyebrow">{filter.challengeDate ?? "Today"} Daily Draft</span>
@@ -39,6 +42,12 @@ export function BoardHead({
         <p className="lede">
           One shared Classic draft for everyone today. Post anonymously; your best verified score
           for the day holds.
+        </p>
+        <p className="lede">A new shared draft drops every day at 00:00 UTC.</p>
+        <p>
+          <Link href={playHref} className="btn btn--primary">
+            Play today&apos;s draft →
+          </Link>
         </p>
       </header>
     );
@@ -203,10 +212,12 @@ export function MeChip({ me }: { me: MyBoardPresence }) {
 
 export function BoardRows({
   rows,
+  filter,
   openKey,
   onToggle,
 }: {
   rows: readonly BoardRowView[];
+  filter: BoardFilter;
   openKey: string | null;
   onToggle: (key: string) => void;
 }) {
@@ -214,6 +225,7 @@ export function BoardRows({
     <ol className={s.rowList}>
       {rows.map((r) => {
         const isOpen = openKey === r.key;
+        const daily = filter.challenge === "daily";
         return (
           <li key={r.key} className={s.rowItem}>
             <button
@@ -236,12 +248,18 @@ export function BoardRows({
                     {r.draftMode === "hidden" ? "Memory" : "Classic"}
                   </span>
                   <span>{r.timeLabel}</span>
-                  {r.percentile !== null && <span>top {r.percentile}%</span>}
+                  {daily ? (
+                    <span>
+                      #{r.rank} of {r.fieldSize} today
+                    </span>
+                  ) : (
+                    r.percentile !== null && <span>top {r.percentile}%</span>
+                  )}
                 </span>
               </span>
-              <span className={s.rowScore}>
-                {r.score}
-                <span className={s.rowScoreUnit}>pts</span>
+              <span className={daily ? `${s.rowScore} ${s.rowScoreDaily}` : s.rowScore}>
+                {daily ? dailyStandingLabel(r) : r.score}
+                <span className={s.rowScoreUnit}>{daily ? `${r.score} pts` : "pts"}</span>
               </span>
             </button>
             {isOpen &&
@@ -267,6 +285,10 @@ export function BoardRows({
 }
 
 export function EmptyBoard({ filter }: { filter: BoardFilter }) {
+  const playHref =
+    filter.challenge === "daily"
+      ? dailyDraftHref(null, filter.challengeDate)
+      : dailyDraftHref(null);
   return (
     <div className={s.stateBox}>
       <p className={s.stateTitle}>
@@ -279,8 +301,21 @@ export function EmptyBoard({ filter }: { filter: BoardFilter }) {
             ? "Signed-in ranked runs for this exact config will appear here after server verification."
             : "Casual runs for this exact config will appear here after server verification."}
       </p>
+      {filter.challenge === "daily" ? (
+        <Link href={playHref} className="btn btn--primary">
+          Play today&apos;s draft →
+        </Link>
+      ) : (
+        <Link href={playHref} className="btn btn--ghost">
+          Daily is where today&apos;s field is → Play today&apos;s draft
+        </Link>
+      )}
     </div>
   );
+}
+
+function dailyStandingLabel(row: BoardRowView): string {
+  return row.percentile !== null ? `Top ${row.percentile}%` : `#${row.rank}`;
 }
 
 export function BoardError({ onRetry }: { onRetry: () => void }) {

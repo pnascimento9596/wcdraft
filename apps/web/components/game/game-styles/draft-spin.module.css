@@ -335,7 +335,7 @@
   font-feature-settings: "tnum" 1;
 }
 .spinResultPending {
-  color: var(--ink-500);
+  color: var(--ink-300);
 }
 .spinResultTag {
   margin: 0;

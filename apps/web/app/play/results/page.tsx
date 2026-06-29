@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ResultsScreen } from "../../../components/game/results-screen";
+import { GameFallback } from "../../../components/game/game-fallback";
 import { isLeaderboardEnabled } from "../../../lib/leaderboard/enabled";
 
 export const metadata: Metadata = {
@@ -18,13 +19,9 @@ export default function ResultsPage() {
   const leaderboardEnabled = isLeaderboardEnabled();
   return (
     <div className="container page game-page game-page--results">
-      <Suspense fallback={<ResultsFallback />}>
+      <Suspense fallback={<GameFallback />}>
         <ResultsScreen leaderboardEnabled={leaderboardEnabled} />
       </Suspense>
     </div>
   );
-}
-
-function ResultsFallback() {
-  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading the run…</div>;
 }

@@ -14,8 +14,8 @@
 // the same run.
 //
 // When no cache hit lands — e.g. signing in from a fresh device — the
-// row still surfaces as a `HistoryEntry`, but with placeholder display
-// fields. The Yellow follow PR is responsible for upgrading the
+// row still surfaces as a `HistoryEntry`, but with honest-null / placeholder
+// display fields. The Yellow follow PR is responsible for upgrading the
 // display path (either by deterministically re-simulating on the client
 // or by persisting an additional `summary` column server-side; this
 // trade-off intentionally stays out of scope here).
@@ -167,7 +167,7 @@ export function createServerRunHistoryProvider(
  *   - When `summary` is null (pre-F-3.5 row, or a save mirror that raced
  *     ahead of the simulation, or a client that omitted it), the display
  *     fields fall back to honest sentinels: `display_record = "—"`,
- *     `key_picks = []`, `is_champion = false`. The token-decoded data
+ *     `key_picks = []`, `is_champion = null`. The token-decoded data
  *     (`team_name`, `seed`, `formation_id`) still populates what it can.
  *     Never fabricated.
  */
@@ -216,7 +216,7 @@ function buildHistoryEntryFromApiRow(
     recency_label: buildRecencyLabel(index),
     sequence_label: apiRow.run_id ?? decoded?.rid ?? apiRow.id,
     seed: summary?.seed ?? apiRow.parent_seed ?? decoded?.ps ?? "—",
-    is_champion: summary?.is_champion ?? false,
+    is_champion: summary?.is_champion ?? null,
     replay_href,
     share_href,
     replay_error,

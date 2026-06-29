@@ -61,6 +61,27 @@ Fresh-context independent reviewer passed from separate clone
 tests (3 files / 104 tests), targeted web tests (9 files / 149 tests), and
 `git diff --check`.
 
+Daily fronting / OG craft lane:
+2026-06-29 · local YELLOW gates run on branch
+`ws-ux/daily-fronting-og-craft-20260629`, based on `origin/main`
+`33fff71c437c2d64eddddf9c956da8341f7c51fe`. Scope is bounded to
+`apps/web`: Daily Draft fronted in home/nav/play/how-to-play, daily leaderboard
+CTA/copy/percentile row polish, daily share-caption standing copy with honest
+fallback, shared token-rooted share/OG palette with provenance-hued lineup
+fills, shared loading fallback/global-error polish, and null-preserving
+view-model fallbacks. No leaderboard server route, submit route, store, season,
+migration, engine, ETL, compact data, or rating contract changed. Local gates
+passed: package build for `@wcdraft/core`, `@wcdraft/data`, and `@wcdraft/db`
+(3/3), root `pnpm typecheck` (8/8), root `pnpm lint` (5/5), root `pnpm test`
+(8/8; web 776 passed / 1 skipped plus `game-flow-playwright`), root
+`pnpm build` (4/4), `test:golden:leaderboard` (4/4; 6 tests), fresh-context
+review (PASS / no blockers), and browser proof with 28 mobile screenshots plus
+1 OG card, zero axe violations, zero contrast failures, zero overflow failures,
+zero page errors, zero console errors, and zero HTTP errors. The web Vitest
+fork pool is now capped at 4 workers after unbounded fork startup proved flaky
+on loaded local runners. Report:
+`docs/reports/daily-fronting-og-craft-2026-06-29/summary.md`.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**

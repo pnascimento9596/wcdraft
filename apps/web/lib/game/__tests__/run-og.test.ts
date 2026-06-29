@@ -364,6 +364,7 @@ describe("dynamic run OG model and image", () => {
           slot_label: "GK",
           position: "GK" as const,
           shape: "square" as const,
+          badge_kind: "historical" as const,
           x_pct: 50,
           y_pct: 88,
           name: "Keeper",

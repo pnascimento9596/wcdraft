@@ -1,0 +1,627 @@
+{
+  "generatedAt": "2026-06-29T08:27:53.556Z",
+  "baseUrl": "http://127.0.0.1:3050",
+  "screenshots": [
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/home.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/home-menu.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/mode-select.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/daily-setup.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/leaderboard-empty.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/leaderboard-populated.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/how-to-play-daily.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/home.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/home-menu.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/mode-select.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/daily-setup.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/leaderboard-empty.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/leaderboard-populated.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/how-to-play-daily.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/home.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/home-menu.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/mode-select.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/daily-setup.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/leaderboard-empty.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/leaderboard-populated.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/how-to-play-daily.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/home.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/home-menu.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/mode-select.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/daily-setup.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/leaderboard-empty.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/leaderboard-populated.png",
+    "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/how-to-play-daily.png"
+  ],
+  "ogScreenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/og-card-provenance.png",
+  "desktopDailyNav": "pass",
+  "results": [
+    {
+      "surface": "home",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/home.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 11,
+        "min": {
+          "tag": "span",
+          "text": "An independent football drafting game",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home-menu",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/home-menu.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 33,
+        "min": {
+          "tag": "span",
+          "text": "An independent football drafting game",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 37,
+        "min": {
+          "tag": "span",
+          "text": "New draft",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "daily-setup",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/daily-setup.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 23,
+        "min": {
+          "tag": "span",
+          "text": "Pick",
+          "fontSize": 7,
+          "ratio": 5.484055133906748
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-empty",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/leaderboard-empty.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 15,
+        "min": {
+          "tag": "span",
+          "text": "2026-06-29 Daily Draft",
+          "fontSize": 8.64,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-populated",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/leaderboard-populated.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 34,
+        "min": {
+          "tag": "span",
+          "text": "2026-06-29 Daily Draft",
+          "fontSize": 8.64,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "how-to-play-daily",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/360x800/how-to-play-daily.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 35,
+        "min": {
+          "tag": "span",
+          "text": "The rules",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/home.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 11,
+        "min": {
+          "tag": "span",
+          "text": "An independent football drafting game",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home-menu",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/home-menu.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 33,
+        "min": {
+          "tag": "span",
+          "text": "An independent football drafting game",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 37,
+        "min": {
+          "tag": "span",
+          "text": "New draft",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "daily-setup",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/daily-setup.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 21,
+        "min": {
+          "tag": "span",
+          "text": "Pick",
+          "fontSize": 7,
+          "ratio": 5.484055133906748
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-empty",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/leaderboard-empty.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 15,
+        "min": {
+          "tag": "span",
+          "text": "2026-06-29 Daily Draft",
+          "fontSize": 8.64,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-populated",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/leaderboard-populated.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 34,
+        "min": {
+          "tag": "span",
+          "text": "2026-06-29 Daily Draft",
+          "fontSize": 8.64,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "how-to-play-daily",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/light/390x844/how-to-play-daily.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 35,
+        "min": {
+          "tag": "span",
+          "text": "The rules",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/home.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 11,
+        "min": {
+          "tag": "span",
+          "text": "11 starters · 5 subs · 1 manager",
+          "fontSize": 12.48,
+          "ratio": 5.265242641127985
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home-menu",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/home-menu.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 33,
+        "min": {
+          "tag": "p",
+          "text": "build dev",
+          "fontSize": 11.2,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 37,
+        "min": {
+          "tag": "span",
+          "text": "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+          "fontSize": 13,
+          "ratio": 5.670568698739553
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "daily-setup",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/daily-setup.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 23,
+        "min": {
+          "tag": "span",
+          "text": "Formation",
+          "fontSize": 7,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-empty",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/leaderboard-empty.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 15,
+        "min": {
+          "tag": "p",
+          "text": "Every score is verified by a server replay of the run before it lands here.",
+          "fontSize": 10.56,
+          "ratio": 5.265242641127985
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-populated",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/leaderboard-populated.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 34,
+        "min": {
+          "tag": "span",
+          "text": "Classic—#1 of 2 today",
+          "fontSize": 11.52,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "how-to-play-daily",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/360x800/how-to-play-daily.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 35,
+        "min": {
+          "tag": "span",
+          "text": "draft",
+          "fontSize": 22.4,
+          "ratio": 5.412490938242818
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/home.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 11,
+        "min": {
+          "tag": "span",
+          "text": "11 starters · 5 subs · 1 manager",
+          "fontSize": 12.48,
+          "ratio": 5.265242641127985
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "home-menu",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/home-menu.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 33,
+        "min": {
+          "tag": "p",
+          "text": "build dev",
+          "fontSize": 11.2,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 37,
+        "min": {
+          "tag": "span",
+          "text": "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+          "fontSize": 13,
+          "ratio": 5.670568698739553
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "daily-setup",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/daily-setup.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 21,
+        "min": {
+          "tag": "span",
+          "text": "Formation",
+          "fontSize": 7,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-empty",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/leaderboard-empty.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 15,
+        "min": {
+          "tag": "p",
+          "text": "Every score is verified by a server replay of the run before it lands here.",
+          "fontSize": 10.56,
+          "ratio": 5.265242641127985
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "leaderboard-populated",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/leaderboard-populated.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 34,
+        "min": {
+          "tag": "span",
+          "text": "Classic—#1 of 2 today",
+          "fontSize": 11.52,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    },
+    {
+      "surface": "how-to-play-daily",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/daily-fronting-og-craft-2026-06-29/screenshots/dark/390x844/how-to-play-daily.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 35,
+        "min": {
+          "tag": "span",
+          "text": "draft",
+          "fontSize": 22.4,
+          "ratio": 5.412490938242818
+        },
+        "failures": []
+      },
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": [],
+      "overflow": null
+    }
+  ],
+  "failures": []
+}

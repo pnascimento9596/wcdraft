@@ -5,7 +5,7 @@ import { configBadgesFromToken, type ConfigBadge } from "./config-badges";
 import type { GameData } from "./data";
 import { getFormationVisualSlots } from "./formation-layout";
 import { adjustPitchLayoutForRender } from "./pitch-layout";
-import { positionShape, type PositionShape } from "./view-models";
+import { positionShape, type PositionShape, type RatingBadgeKind } from "./view-models";
 import {
   reconstructDraftFromToken,
   type RunTokenOgSummary,
@@ -25,6 +25,7 @@ export interface RunOgLineupSlot {
   slot_label: string;
   position: Position;
   shape: PositionShape;
+  badge_kind: RatingBadgeKind;
   x_pct: number;
   y_pct: number;
   name: string;
@@ -103,6 +104,7 @@ function buildLineup(gameData: GameData, draft: DraftState): RunOgLineupSlot[] {
       slot_label: visual.display_label,
       position: visual.position_line,
       shape: positionShape(visual.position_line),
+      badge_kind: view.rating.badge_kind,
       x_pct: visual.x_pct,
       y_pct: visual.y_pct,
       name: view.name,

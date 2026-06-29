@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { HistoryScreen } from "../../../components/game/history-screen";
+import { GameFallback } from "../../../components/game/game-fallback";
 
 export const metadata: Metadata = {
   title: "Run history",
@@ -13,13 +14,9 @@ export const metadata: Metadata = {
 export default function HistoryPage() {
   return (
     <div className="container page game-page game-page--history">
-      <Suspense fallback={<HistoryFallback />}>
+      <Suspense fallback={<GameFallback />}>
         <HistoryScreen />
       </Suspense>
     </div>
   );
-}
-
-function HistoryFallback() {
-  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading history…</div>;
 }

@@ -117,10 +117,33 @@ export function describeGameError(err: unknown): ErrorDisplay {
     };
   }
   if (err instanceof GameDataError) {
-    return { title: "Something is off", message: err.message };
+    logUnexpectedGameError(err);
+    return {
+      title: "Something went wrong",
+      message: "Something went wrong — try again, or start a fresh run",
+      action: "start_new",
+    };
   }
   if (err instanceof Error) {
-    return { title: "Unexpected error", message: err.message };
+    logUnexpectedGameError(err);
+    return {
+      title: "Something went wrong",
+      message: "Something went wrong — try again, or start a fresh run",
+      action: "start_new",
+    };
   }
-  return { title: "Unexpected error", message: String(err ?? "Unknown") };
+  logUnexpectedGameError(err);
+  return {
+    title: "Something went wrong",
+    message: "Something went wrong — try again, or start a fresh run",
+    action: "start_new",
+  };
+}
+
+function logUnexpectedGameError(err: unknown): void {
+  if (err instanceof Error) {
+    console.error("[game] unexpected error", { message: err.message, stack: err.stack });
+    return;
+  }
+  console.error("[game] unexpected error", { message: String(err ?? "Unknown") });
 }
