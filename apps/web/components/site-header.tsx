@@ -22,6 +22,7 @@ export interface MenuItem {
 export function buildMenu(opts: { leaderboardEnabled: boolean }): MenuItem[] {
   return [
     { href: "/play", label: "Play" },
+    { href: "/play/daily", label: "Daily" },
     { href: "/play/history", label: "History" },
     ...(opts.leaderboardEnabled ? [{ href: "/leaderboard", label: "Leaderboard" }] : []),
     { href: "/how-to-play", label: "How to Play" },

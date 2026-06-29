@@ -77,10 +77,14 @@ export default async function HomePage() {
           <Link href="/play" className="btn btn--primary">
             Play
           </Link>
+          <Link href="/play/daily" className="btn btn--primary btn--gold">
+            Today&apos;s Draft
+          </Link>
           <Link href="/how-to-play" className="btn btn--ghost">
             How to play
           </Link>
         </div>
+        <p className="hero__daily">One shared draft for everyone today — a new one drops daily.</p>
 
         <div className="hero__meta">
           <div className="stat">

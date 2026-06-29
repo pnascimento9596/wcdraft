@@ -128,6 +128,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
         {phase === "ready" && rows.length > 0 && (
           <BoardRows
             rows={rows}
+            filter={filter}
             openKey={openKey}
             onToggle={(key) => setOpenKey((k) => (k === key ? null : key))}
           />

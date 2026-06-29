@@ -371,7 +371,7 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
         background: P.chip,
       }}
     >
-      <Shape shape={slot.shape} />
+      <Shape shape={slot.shape} badgeKind={slot.badge_kind} />
       <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
         <div
           style={{
@@ -401,7 +401,14 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
   );
 }
 
-function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
+function Shape({
+  shape,
+  badgeKind,
+}: {
+  shape: RunOgLineupSlot["shape"];
+  badgeKind: RunOgLineupSlot["badge_kind"];
+}) {
+  const fill = P.provenance[badgeKind];
   const mark =
     shape === "triangle" ? (
       <div
@@ -410,7 +417,7 @@ function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
           height: 0,
           borderLeft: "7px solid transparent",
           borderRight: "7px solid transparent",
-          borderBottom: `14px solid ${P.gold}`,
+          borderBottom: `14px solid ${fill}`,
         }}
       />
     ) : (
@@ -418,7 +425,7 @@ function Shape({ shape }: { shape: RunOgLineupSlot["shape"] }) {
         style={{
           width: 13,
           height: 13,
-          background: P.gold,
+          background: fill,
           borderRadius: shape === "circle" ? 999 : 1,
           ...(shape === "diamond" ? { transform: "rotate(45deg)" } : {}),
         }}

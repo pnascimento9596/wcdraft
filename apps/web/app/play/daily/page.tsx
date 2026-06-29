@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { DraftScreen } from "../../../components/game/draft-screen";
+import { GameFallback } from "../../../components/game/game-fallback";
 
 export const metadata: Metadata = {
   title: "Daily Draft",
@@ -12,13 +13,9 @@ export const metadata: Metadata = {
 export default function DailyDraftPage() {
   return (
     <div className="container page game-page game-page--draft">
-      <Suspense fallback={<DraftFallback />}>
+      <Suspense fallback={<GameFallback />}>
         <DraftScreen daily />
       </Suspense>
     </div>
   );
-}
-
-function DraftFallback() {
-  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading daily draft...</div>;
 }

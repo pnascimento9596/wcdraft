@@ -158,6 +158,7 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
         phase={phase}
         retryRemaining={props.retryRemaining}
         leaderboardHref={props.leaderboardHref}
+        challengeKind={props.challengeKind ?? "season"}
       />
     </section>
   );
@@ -208,10 +209,12 @@ function SubmitOutcome({
   phase,
   retryRemaining,
   leaderboardHref,
+  challengeKind,
 }: {
   phase: SubmitPhase;
   retryRemaining: number | null;
   leaderboardHref: string;
+  challengeKind: "season" | "daily";
 }) {
   if (phase.kind === "idle" || phase.kind === "submitting") return null;
 
@@ -219,7 +222,15 @@ function SubmitOutcome({
     return (
       <div className={s.outcome} role="status">
         <p className={`${s.outcomeTitle} ${s.outcomeTitleGood}`}>On the board</p>
-        {phase.rank !== null ? (
+        {phase.rank !== null && challengeKind === "daily" && phase.fieldSize > 0 ? (
+          <p className={s.outcomeRank}>
+            {dailyStandingText({
+              rank: phase.rank,
+              percentile: phase.percentile,
+              fieldSize: phase.fieldSize,
+            })}
+          </p>
+        ) : phase.rank !== null ? (
           <p className={s.outcomeRank}>Rank #{phase.rank}</p>
         ) : (
           <p className={s.outcomeMsg}>Posted — your rank will show on the board.</p>
@@ -237,7 +248,17 @@ function SubmitOutcome({
         <p className={s.outcomeTitle}>Already on the board</p>
         <p className={s.outcomeMsg}>
           This exact run was posted before
-          {phase.rank !== null ? ` — your best sits at rank #${phase.rank}.` : "."}
+          {phase.rank !== null
+            ? ` — your best sits at ${
+                challengeKind === "daily" && phase.fieldSize > 0
+                  ? dailyStandingText({
+                      rank: phase.rank,
+                      percentile: phase.percentile,
+                      fieldSize: phase.fieldSize,
+                    })
+                  : `rank #${phase.rank}`
+              }.`
+            : "."}
         </p>
         <Link href={leaderboardHref} className="btn btn--ghost">
           View leaderboard
@@ -285,4 +306,13 @@ function SubmitOutcome({
       )}
     </div>
   );
+}
+
+function dailyStandingText(phase: {
+  readonly rank: number;
+  readonly percentile: number | null;
+  readonly fieldSize: number;
+}): string {
+  const rankLine = `#${phase.rank} of ${phase.fieldSize} today`;
+  return phase.percentile !== null ? `${rankLine} · Top ${phase.percentile}%` : rankLine;
 }

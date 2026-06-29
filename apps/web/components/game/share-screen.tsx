@@ -27,9 +27,18 @@ import {
   buildShareIntentText,
   buildShareIntentUrls,
   buildShareView,
+  type DailyShareStanding,
   type ShareIntentUrls,
   type ShareView,
 } from "@/lib/game/share-adapters";
+import {
+  SHARE_SVG_COLOR_FALLBACKS,
+  SHARE_SVG_COLOR_TOKENS,
+  type ShareSvgColors,
+} from "@/lib/game/run-palette";
+import { fetchBoardPage } from "@/lib/leaderboard/client";
+import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
+import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
 
 import s from "./game.module.css";
 
@@ -51,30 +60,6 @@ type OgSignState =
   | { kind: "pending" }
   | { kind: "ready"; signed: string }
   | { kind: "error"; message: string };
-
-type ShareSvgColors = {
-  bgStart: string;
-  bgEnd: string;
-  accentStart: string;
-  accentEnd: string;
-  goldStart: string;
-  goldMid: string;
-  goldEnd: string;
-  text: string;
-  muted: string;
-};
-
-const SHARE_SVG_COLOR_VARS: ShareSvgColors = {
-  bgStart: "var(--field)",
-  bgEnd: "var(--accent-ink)",
-  accentStart: "var(--accent)",
-  accentEnd: "var(--accent-strong)",
-  goldStart: "var(--gold-strong)",
-  goldMid: "var(--gold)",
-  goldEnd: "var(--gold)",
-  text: "var(--field-ink)",
-  muted: "var(--ink-soft)",
-};
 
 export function ShareScreen() {
   const searchParams = useSearchParams();
@@ -375,14 +360,64 @@ function ShareBody({
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
   const ogPreviewError = ogSign.kind === "error" ? ogSign.message : null;
   const shareUnavailable = !!shareLinkError || !shareUrl;
+  const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
   const configBadges: ConfigBadge[] = useMemo(() => {
     const replayBadges =
       typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
     return replayBadges.length > 0 ? replayBadges : configBadgesFromRecordToken(record);
   }, [linkRunValue, record]);
 
-  const caption = useMemo(() => buildShareCaption(view, shareUrl), [view, shareUrl]);
-  const intentText = useMemo(() => buildShareIntentText(view), [view]);
+  useEffect(() => {
+    let cancelled = false;
+    setDailyStanding(null);
+    if (isRecipient || record.challenge?.kind !== "daily" || shareLink.kind !== "ready") {
+      return () => {
+        cancelled = true;
+      };
+    }
+    if (!wasTokenSubmitted(shareLink.token, "casual")) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    void fetchBoardPage({
+      filter: { ...DEFAULT_DAILY_BOARD_FILTER, challengeDate: record.challenge.date },
+      cursor: null,
+    }).then((result) => {
+      if (cancelled) return;
+      if (!result.ok) {
+        setDailyStanding(null);
+        return;
+      }
+      const matches = result.page.entries.filter((entry) => entry.verified_score === view.score);
+      if (matches.length !== 1) {
+        setDailyStanding(null);
+        return;
+      }
+      const [entry] = matches;
+      if (!entry || entry.field_size <= 0) {
+        setDailyStanding(null);
+        return;
+      }
+      setDailyStanding({
+        rank: entry.rank,
+        percentile: entry.percentile,
+        fieldSize: entry.field_size,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isRecipient, record.challenge, shareLink, view.score]);
+
+  const caption = useMemo(
+    () => buildShareCaption(view, shareUrl, { dailyStanding }),
+    [view, shareUrl, dailyStanding],
+  );
+  const intentText = useMemo(
+    () => buildShareIntentText(view, { dailyStanding }),
+    [view, dailyStanding],
+  );
   const intentUrls = useMemo<ShareIntentUrls | null>(() => {
     if (!shareUrl) return null;
     return buildShareIntentUrls({ url: shareUrl, text: intentText, caption });
@@ -672,22 +707,22 @@ function ConfigBadgeRow({ badges }: { badges: readonly ConfigBadge[] }) {
 }
 
 function useShareSvgColors(): ShareSvgColors {
-  const [colors, setColors] = useState<ShareSvgColors>(SHARE_SVG_COLOR_VARS);
+  const [colors, setColors] = useState<ShareSvgColors>(SHARE_SVG_COLOR_FALLBACKS);
 
   useEffect(() => {
     const styles = getComputedStyle(document.documentElement);
     const token = (name: string, fallback: string) =>
       styles.getPropertyValue(name).trim() || fallback;
     setColors({
-      bgStart: token("--field", SHARE_SVG_COLOR_VARS.bgStart),
-      bgEnd: token("--accent-ink", SHARE_SVG_COLOR_VARS.bgEnd),
-      accentStart: token("--accent", SHARE_SVG_COLOR_VARS.accentStart),
-      accentEnd: token("--accent-strong", SHARE_SVG_COLOR_VARS.accentEnd),
-      goldStart: token("--gold-strong", SHARE_SVG_COLOR_VARS.goldStart),
-      goldMid: token("--gold", SHARE_SVG_COLOR_VARS.goldMid),
-      goldEnd: token("--gold", SHARE_SVG_COLOR_VARS.goldEnd),
-      text: token("--field-ink", SHARE_SVG_COLOR_VARS.text),
-      muted: token("--ink-soft", SHARE_SVG_COLOR_VARS.muted),
+      bgStart: token(SHARE_SVG_COLOR_TOKENS.bgStart, SHARE_SVG_COLOR_FALLBACKS.bgStart),
+      bgEnd: token(SHARE_SVG_COLOR_TOKENS.bgEnd, SHARE_SVG_COLOR_FALLBACKS.bgEnd),
+      accentStart: token(SHARE_SVG_COLOR_TOKENS.accentStart, SHARE_SVG_COLOR_FALLBACKS.accentStart),
+      accentEnd: token(SHARE_SVG_COLOR_TOKENS.accentEnd, SHARE_SVG_COLOR_FALLBACKS.accentEnd),
+      goldStart: token(SHARE_SVG_COLOR_TOKENS.goldStart, SHARE_SVG_COLOR_FALLBACKS.goldStart),
+      goldMid: token(SHARE_SVG_COLOR_TOKENS.goldMid, SHARE_SVG_COLOR_FALLBACKS.goldMid),
+      goldEnd: token(SHARE_SVG_COLOR_TOKENS.goldEnd, SHARE_SVG_COLOR_FALLBACKS.goldEnd),
+      text: token(SHARE_SVG_COLOR_TOKENS.text, SHARE_SVG_COLOR_FALLBACKS.text),
+      muted: token(SHARE_SVG_COLOR_TOKENS.muted, SHARE_SVG_COLOR_FALLBACKS.muted),
     });
   }, []);
 

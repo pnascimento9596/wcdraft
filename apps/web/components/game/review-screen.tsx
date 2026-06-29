@@ -592,7 +592,8 @@ function plainGeneralWarning(raw: string): string {
   return raw.replace(/^[^:]+:\s*/u, "");
 }
 
-function roleName(position: PitchSlotView["line"]): string {
+function roleName(position: PitchSlotView["line"] | null): string {
+  if (position === null) return "player with no listed position";
   switch (position) {
     case "GK":
       return "goalkeeper";

@@ -8,7 +8,7 @@
 // `decodeRunToken` is mocked so the tests don't need a fully drafted
 // `RunRecordV1` fixture to encode a real token; the provider's
 // responsibility is to map a decoded body, not to verify decoding.
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createServerRunHistoryProvider } from "@/lib/game/server-history-provider";
 import * as runToken from "@/lib/game/run-token";
 import type { GameData } from "@/lib/game/data";
@@ -35,6 +35,10 @@ beforeEach(() => {
   vi.spyOn(runToken, "decodeRunToken").mockImplementation((s: string) =>
     s.startsWith("t1.") ? VALID_BODY : null,
   );
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 describe("createServerRunHistoryProvider", () => {
@@ -165,7 +169,7 @@ describe("createServerRunHistoryProvider", () => {
     // Display-degraded fields the Yellow follow upgrades:
     expect(entry.display_record).toBe("—");
     expect(entry.key_picks).toEqual([]);
-    expect(entry.is_champion).toBe(false);
+    expect(entry.is_champion).toBeNull();
   });
 
   it("caps the returned list at RUN_RECORD_CAP", async () => {
@@ -275,7 +279,7 @@ describe("F-3.5 summary honest-state", () => {
     // Honest-state: never fabricated.
     expect(entry.display_record).toBe("—");
     expect(entry.key_picks).toEqual([]);
-    expect(entry.is_champion).toBe(false);
+    expect(entry.is_champion).toBeNull();
     // Token-decoded fields are still populated where possible.
     expect(entry.team_name).toBe(VALID_BODY.tn);
     expect(entry.formation_name).toBe(VALID_BODY.fid);
@@ -306,6 +310,6 @@ describe("F-3.5 summary honest-state", () => {
     const result = await provider.listCompletedRuns(FAKE_GAME_DATA);
     const entry = result.entries[0]!;
     expect(entry.display_record).toBe("—");
-    expect(entry.is_champion).toBe(false);
+    expect(entry.is_champion).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { loadDataManifest } from "@wcdraft/data/client";
+import { GameFallback } from "../../../components/game/game-fallback";
 import { ShareScreen } from "../../../components/game/share-screen";
 import { composeVersions } from "../../../lib/game/data";
 import { shareOgImageForRunValue } from "../../../lib/game/run-og-metadata";
@@ -93,15 +94,11 @@ export async function generateMetadata({
 export default function SharePage() {
   return (
     <div className="container page game-page game-page--share">
-      <Suspense fallback={<ShareFallback />}>
+      <Suspense fallback={<GameFallback />}>
         <ShareScreen />
       </Suspense>
     </div>
   );
-}
-
-function ShareFallback() {
-  return <div style={{ padding: "2rem", textAlign: "center" }}>Loading share card…</div>;
 }
 
 async function currentVersionsForMetadata() {

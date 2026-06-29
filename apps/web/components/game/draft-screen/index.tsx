@@ -48,6 +48,7 @@ import { ManagerSlot } from "../manager-slot";
 import { MiniNationFlag } from "../mini-nation-flag";
 import { SpinStage, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
+import { GameFallback } from "../game-fallback";
 import { DraftAppBar } from "./app-bar";
 import { TOTAL_SPINS } from "./constants";
 import { FormationSelect } from "./setup";
@@ -198,36 +199,7 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
 }
 
 function DraftLoadingShell() {
-  return (
-    <div className={s.draftShell} aria-busy="true">
-      <DraftAppBar spinNumber={null} progressPct={0} />
-      <section className={`${s.formationSelect} ${s.setupSkeleton}`} role="status">
-        <div className={s.formationHead}>
-          <h1 className={s.formationTitle}>Loading draft setup</h1>
-          <p className={s.formationSub}>
-            Fetching and parsing the real 1930–2026 draft pool before formation lock.
-          </p>
-        </div>
-        <div className={s.setupSkeletonPanel} aria-hidden="true">
-          <span className={s.setupSkeletonLine} />
-          <div className={s.setupSkeletonSeg}>
-            <span />
-            <span />
-            <span />
-          </div>
-          <span className={s.setupSkeletonLine} />
-        </div>
-        <div className={s.setupSkeletonGrid} aria-hidden="true">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className={s.setupSkeletonTile}>
-              <span className={s.setupSkeletonPitch} />
-              <span className={s.setupSkeletonLine} />
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
+  return <GameFallback title="Loading draft setup" />;
 }
 
 // ─── Draft board (active spin → pick → lock) ─────────────────────────────────

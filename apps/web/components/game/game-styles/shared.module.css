@@ -233,6 +233,14 @@
   grid-auto-rows: 1fr;
   margin-top: 14px;
 }
+.modeGridDaily {
+  grid-auto-rows: auto;
+}
+@media (min-width: 52rem) {
+  .modeGridDaily {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 
 .modeCard {
   appearance: none;
@@ -256,6 +264,30 @@
     box-shadow 0.14s ease,
     border-color 0.14s ease,
     background 0.14s ease;
+}
+
+.modeCardFeatured {
+  min-height: 176px;
+  border-color: color-mix(in srgb, var(--gold) 58%, var(--line));
+  background: color-mix(in srgb, var(--gold) 8%, var(--s1));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 18%, transparent),
+    var(--e1);
+}
+
+.modeCardFeatured .modeTag {
+  border-color: color-mix(in srgb, var(--gold) 48%, transparent);
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+  color: var(--gold);
+}
+
+.modeCardFeatured .modeTagDot,
+.modeCardFeatured .modeFeatureDot {
+  background: var(--gold);
+}
+
+.modeCardFeatured .modeCta {
+  color: var(--gold);
 }
 
 .modeCardLive::before {
@@ -462,11 +494,27 @@
     gap: 8px;
     margin-top: 10px;
   }
+  .modeGridDaily {
+    gap: 7px;
+  }
 
   .modeCard {
     gap: 8px;
     padding: 11px;
     border-radius: 12px;
+    min-height: 202px;
+  }
+
+  .modeCardFeatured {
+    min-height: 116px;
+  }
+
+  .modeCardFeatured .modeDesc {
+    min-height: 0;
+  }
+
+  .modeCardFeatured .modeFeatures {
+    display: none;
   }
 
   .modeCard:hover,

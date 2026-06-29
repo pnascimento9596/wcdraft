@@ -31,5 +31,8 @@ export default defineConfig({
     // bundle (multi-MB JSON). Give it generous bounds for cold CI runners.
     testTimeout: 60_000,
     hookTimeout: 120_000,
+    // The web suite starts several PGlite-backed DB tests and Next route/OG
+    // tests. Unbounded fork pools can starve worker startup on loaded runners.
+    maxWorkers: 4,
   },
 });

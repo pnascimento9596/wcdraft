@@ -41,7 +41,13 @@ const ENTRY = {
 describe("outcomeFromResponse — every state maps 1:1 to a server response", () => {
   it("201 → accepted with same-snapshot rank + verified score", () => {
     const p = outcomeFromResponse(201, { entry: ENTRY, duplicate: false, rank: 4 }, null);
-    expect(p).toEqual({ kind: "accepted", rank: 4, score: 42 });
+    expect(p).toEqual({
+      kind: "accepted",
+      rank: 4,
+      score: 42,
+      percentile: null,
+      fieldSize: 0,
+    });
   });
 
   it("201 with null rank stays honest (no invented rank)", () => {
@@ -51,7 +57,27 @@ describe("outcomeFromResponse — every state maps 1:1 to a server response", ()
 
   it("200 → duplicate (already on the board) with existing rank", () => {
     const p = outcomeFromResponse(200, { entry: ENTRY, duplicate: true, rank: 7 }, null);
-    expect(p).toEqual({ kind: "duplicate", rank: 7, score: 42 });
+    expect(p).toEqual({
+      kind: "duplicate",
+      rank: 7,
+      score: 42,
+      percentile: null,
+      fieldSize: 0,
+    });
+  });
+
+  it("success bodies preserve percentile + field size for daily standing copy", () => {
+    const p = outcomeFromResponse(
+      201,
+      { entry: ENTRY, duplicate: false, rank: 2, percentile: 50, field_size: 12 },
+      null,
+    );
+    expect(p).toMatchObject({
+      kind: "accepted",
+      rank: 2,
+      percentile: 50,
+      fieldSize: 12,
+    });
   });
 
   it("WRONG_SEASON → rejected with the different-build/season copy", () => {

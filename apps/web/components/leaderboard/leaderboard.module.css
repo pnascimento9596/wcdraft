@@ -271,6 +271,13 @@
   text-transform: uppercase;
   color: var(--ink-faint);
 }
+.rowScoreDaily {
+  font-size: 1rem;
+  color: var(--accent-text);
+}
+.rowScoreDaily .rowScoreUnit {
+  color: var(--ink-soft);
+}
 
 /* Evidence (score breakdown) disclosure */
 .breakdown {
@@ -318,6 +325,17 @@
 .boardFoot {
   font-size: 0.72rem;
   color: var(--ink-faint);
+}
+
+@media (max-width: 30rem) {
+  .filterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+
+  .filterMode {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 430px) {

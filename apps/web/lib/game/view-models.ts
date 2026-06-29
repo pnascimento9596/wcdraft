@@ -102,7 +102,7 @@ export interface PlayerCardView {
   nation_code: string;
   shirt_number: number | null;
   position_listed: Position | null;
-  primary_position: Position;
+  primary_position: Position | null;
   eligible_positions: Position[];
   club_label: string | null;
   /** Historical-era display: tournament apps. `undefined` for projected cards. */
