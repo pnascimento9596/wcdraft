@@ -279,6 +279,14 @@ export interface MatchResult {
   phase: MatchPhase;
   opponent_team_id: string;
 
+  /**
+   * Pre-match probability that the user's side wins this fixture, derived
+   * from the already-computed expected-goals lambdas. Group matches count
+   * regulation wins only; knockout matches include the fair draw-resolution
+   * share for a level match.
+   */
+  pre_match_win_probability: number;
+
   /** Regulation (90') goals. */
   user_goals: number;
   /** Regulation (90') goals against. */

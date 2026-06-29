@@ -49,6 +49,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     matches_played: 8,
     shootout_wins: 0,
     challenge_date: null,
+    perfect_run_reference: "Perfect 1-0 run: 108 pts",
     ...overrides,
   };
 }
@@ -61,13 +62,16 @@ describe("buildShareCaption", () => {
     const caption = buildShareCaption(view, TOKEN_URL);
     expect(caption.startsWith("Won every match. A perfect run.\n")).toBe(true);
     expect(caption).toContain("Auriverde XI went 8-0 on wcdraft.");
+    expect(caption).toContain("Perfect 1-0 run: 108 pts");
     expect(caption).toContain(SHARE_TAGLINE);
     expect(SHARE_TAGLINE).toBe("Built my all-time XI on wcdraft");
   });
 
   it("uses challenge framing for daily draft captions", () => {
     const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL);
-    expect(caption).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft — beat it →");
+    expect(caption).toContain(
+      "Top — of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
+    );
     expect(caption).toContain(SHARE_TAGLINE);
   });
 
@@ -98,12 +102,15 @@ describe("buildShareIntentText", () => {
     const text = buildShareIntentText(makeView());
     expect(text).not.toMatch(/https?:\/\//);
     expect(text).toContain("Auriverde XI went 8-0 on wcdraft.");
+    expect(text).toContain("Perfect 1-0 run: 108 pts");
     expect(text).toContain(SHARE_TAGLINE);
   });
 
   it("uses daily challenge framing in intent text", () => {
     const text = buildShareIntentText(makeView({ challenge_date: "2026-06-29" }));
-    expect(text).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft — beat it →");
+    expect(text).toContain(
+      "Top — of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft",
+    );
   });
 });
 

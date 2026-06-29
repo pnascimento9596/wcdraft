@@ -19,13 +19,21 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
 import type { RunRecordV1 } from "./run-record";
+import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
 
 // ─── Headline ────────────────────────────────────────────────────────────────
 
-export type ShareHeadline = "CHAMPIONS" | "RUN COMPLETE" | "ELIMINATED IN GROUP";
+export type ShareHeadline =
+  | "UNDEFEATED CHAMPIONS"
+  | "CHAMPIONS"
+  | "RUN COMPLETE"
+  | "ELIMINATED IN GROUP";
 
 export function headlineFor(run: RunResult, matchesPlayed: number): ShareHeadline {
+  if (run.is_champion && run.wins === 8 && run.losses === 0 && matchesPlayed === 8) {
+    return "UNDEFEATED CHAMPIONS";
+  }
   if (run.is_champion) return "CHAMPIONS";
   if (matchesPlayed === 3) return "ELIMINATED IN GROUP";
   return "RUN COMPLETE";
@@ -136,6 +144,7 @@ export interface ShareView {
   matches_played: number;
   shootout_wins: number;
   challenge_date: string | null;
+  perfect_run_reference: string;
 }
 
 export function buildShareView(
@@ -168,6 +177,7 @@ export function buildShareView(
     matches_played: matches.length,
     shootout_wins: run.shootout_wins,
     challenge_date: record.challenge?.kind === "daily" ? record.challenge.date : null,
+    perfect_run_reference: PERFECT_RUN_REFERENCE_LABEL,
   };
 }
 
@@ -213,6 +223,7 @@ export function buildShareCaption(
   const lines: string[] = [];
   if (view.narrative) lines.push(view.narrative);
   lines.push(shareChallengeLine(view, opts.dailyStanding ?? null));
+  lines.push(view.perfect_run_reference);
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
   return lines.join("\n");
@@ -228,22 +239,20 @@ export function buildShareIntentText(
   view: ShareView,
   opts: { readonly dailyStanding?: DailyShareStanding | null } = {},
 ): string {
-  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)} ${SHARE_TAGLINE}`;
+  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)} ${view.perfect_run_reference} ${SHARE_TAGLINE}`;
   return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 
 function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding | null): string {
   if (view.challenge_date !== null) {
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
-    if (dailyStanding !== null) {
-      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
-    }
-    return `${scoreLine} — beat it →`;
+    return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
   }
   return `${view.team_name} went ${view.display_record} on wcdraft.`;
 }
 
-function dailyStandingText(standing: DailyShareStanding): string {
+export function dailyStandingText(standing: DailyShareStanding | null): string {
+  if (standing === null) return "Top — of today's field";
   const rankLine = `#${standing.rank} of ${standing.fieldSize} today`;
   return standing.percentile !== null
     ? `${rankLine} · Top ${standing.percentile}% of today's field`

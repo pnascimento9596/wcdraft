@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { LocalProgressBandFromStorage } from "./local-progress-band";
 import s from "./game.module.css";
 
 type DraftMode = "classic" | "hidden";
@@ -61,6 +62,7 @@ export function ModeSelect() {
 
   return (
     <>
+      <LocalProgressBandFromStorage compact />
       <div className={`${s.modeGrid} ${s.modeGridDaily}`} role="radiogroup" aria-label="Draft mode">
         {(Object.keys(MODE_COPY) as PlayMode[]).map((key) => {
           const item = MODE_COPY[key];

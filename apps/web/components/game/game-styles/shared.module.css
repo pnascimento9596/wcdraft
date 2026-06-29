@@ -489,6 +489,51 @@
   width: 100%;
 }
 
+.localProgressBand {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-800);
+  color: var(--ink-100);
+  box-shadow: var(--sh-1);
+}
+
+.localProgressBandCompact {
+  margin-top: 10px;
+}
+
+.localProgressPrimary,
+.localProgressBest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.localProgressPrimary {
+  justify-content: space-between;
+}
+
+.localProgressStreak,
+.localProgressCountdown {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.localProgressCountdown {
+  color: var(--accent);
+}
+
+.localProgressBest {
+  color: var(--ink-300);
+  font-size: 0.78rem;
+}
+
 @media (max-width: 430px) {
   .modeGrid {
     gap: 8px;

@@ -37,9 +37,11 @@ import { SubmitPanelView } from "./submit-panel-views";
 export function LeaderboardSubmitPanel({
   gameData,
   record,
+  onSubmitted,
 }: {
   gameData: GameData;
   record: RunRecordV1;
+  onSubmitted?: () => void;
 }) {
   const sim = record.simulation ?? null;
   const token = useMemo(() => {
@@ -139,6 +141,7 @@ export function LeaderboardSubmitPanel({
       if (outcome.kind === "accepted" || outcome.kind === "duplicate") {
         rememberTokenSubmitted(token, effectiveSubmitMode);
         if (preparedName.value !== null) saveLastDisplayName(preparedName.value);
+        onSubmitted?.();
       }
       setPhase(outcome);
     });

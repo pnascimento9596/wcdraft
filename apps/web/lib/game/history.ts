@@ -132,7 +132,7 @@ export const localRunHistoryProvider: RunHistoryProvider = {
       if (entry) entries.push(entry);
     }
     return {
-      entries: entries.slice(0, RUN_RECORD_CAP),
+      entries,
       persistence: list.persistence,
       warnings: list.warnings,
     };

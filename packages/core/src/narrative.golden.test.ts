@@ -230,6 +230,7 @@ function match(o: MatchOpts): MatchResult {
     round: o.round,
     phase: o.phase,
     opponent_team_id: o.opp,
+    pre_match_win_probability: 0.5,
     user_goals: o.ug,
     opp_goals: o.og,
     user_goals_et: o.uget ?? null,

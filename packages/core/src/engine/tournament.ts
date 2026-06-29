@@ -140,6 +140,7 @@ function makeForfeitMatch(
     round,
     phase,
     opponent_team_id: opponentTeamId,
+    pre_match_win_probability: 0,
     user_goals: 0,
     opp_goals: INJURY.FORFEIT_OPP_GOALS,
     user_goals_et: null,

@@ -5,9 +5,12 @@ import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 import {
   _resetVolatileStorageForTests,
   createNewRunRecord,
+  listRunRecords,
   loadRunRecord,
+  RUN_RECORD_CAP,
   RUN_RECORD_PREFIX,
   saveRunRecord,
+  setRunPinned,
   setRunSimulation,
   type RunRecordV1,
 } from "../run-record";
@@ -183,6 +186,20 @@ describe("run-record persisted boundary", () => {
     expect(loaded.status).toBe("loaded");
     expect(loaded.record?.status).toBe("complete");
     expect(loaded.record?.simulation?.matches).toHaveLength(simulation.matches.length);
+  });
+
+  it("keeps pinned runs past the five-record recent cap", () => {
+    const pinned = createNewRunRecord(gameData, { formation_id: "4-3-3" }).record;
+    expect(setRunPinned(pinned.run_id, gameData.versions, true).status).toBe("updated");
+
+    for (let i = 0; i < RUN_RECORD_CAP + 2; i += 1) {
+      createNewRunRecord(gameData, { formation_id: "4-3-3" });
+    }
+
+    expect(loadRunRecord(pinned.run_id, gameData.versions).status).toBe("loaded");
+    const listed = listRunRecords(gameData.versions, { limit: RUN_RECORD_CAP }).records;
+    expect(listed.some((record) => record.run_id === pinned.run_id && record.pinned)).toBe(true);
+    expect(listed.filter((record) => !record.pinned)).toHaveLength(RUN_RECORD_CAP);
   });
 });
 

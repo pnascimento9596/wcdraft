@@ -99,6 +99,7 @@ function eraClashMatch(): MatchResult {
     round: "G3",
     phase: "group",
     opponent_team_id: "t_test",
+    pre_match_win_probability: 0.5,
     user_goals: 0,
     opp_goals: 0,
     user_goals_et: null,

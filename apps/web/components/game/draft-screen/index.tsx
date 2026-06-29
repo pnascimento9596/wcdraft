@@ -49,6 +49,7 @@ import { MiniNationFlag } from "../mini-nation-flag";
 import { SpinStage, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
+import { LocalProgressBandWithVersions } from "../local-progress-band";
 import { DraftAppBar } from "./app-bar";
 import { TOTAL_SPINS } from "./constants";
 import { FormationSelect } from "./setup";
@@ -184,6 +185,7 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
     <DraftBoard
       gameData={mode.gameData}
       record={mode.record}
+      dailyDate={dailyDate}
       persistenceWarning={mode.persistenceWarning}
       onRecordUpdate={(rec, warn) =>
         setMode({
@@ -207,12 +209,14 @@ function DraftLoadingShell() {
 function DraftBoard({
   gameData,
   record,
+  dailyDate,
   persistenceWarning,
   onRecordUpdate,
   onReview,
 }: {
   gameData: GameData;
   record: RunRecordV1;
+  dailyDate: string | null;
   persistenceWarning: string | null;
   onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
   onReview: () => void;
@@ -777,6 +781,13 @@ function DraftBoard({
             {persistenceWarning}
           </p>
         ) : null}
+        {dailyDate ? (
+          <LocalProgressBandWithVersions
+            versions={gameData.versions}
+            targetDate={dailyDate}
+            compact
+          />
+        ) : null}
         <SpinStage
           model={slotReveal}
           pickNumber={spinNumber}
@@ -1041,6 +1052,13 @@ function DraftBoard({
       <DraftAppBar spinNumber={spinNumber} progressPct={progressPct} warning={persistenceWarning} />
 
       <div className={s.draftScroll}>
+        {dailyDate ? (
+          <LocalProgressBandWithVersions
+            versions={gameData.versions}
+            targetDate={dailyDate}
+            compact
+          />
+        ) : null}
         {spinContextSection}
         {compactDraftLayout ? (
           <>
