@@ -23,6 +23,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { readClientIp } from "../http/client-ip";
+import { DAILY_CHALLENGE_KIND, utcDateString } from "../game/daily";
 import {
   LeaderboardGateError,
   requireSubmitIdentity,
@@ -50,6 +51,7 @@ export interface SubmitRouteDeps {
   /** Lazy heavy server data — only touched after every cheap gate passed. */
   readonly getValidation: () => ValidationData;
   readonly rateLimiter: SubmitRateLimiter;
+  readonly todayUtcDate?: () => string;
 }
 
 /** Route-transport error codes owned by this handler (not pipeline codes). */
@@ -71,6 +73,11 @@ const SubmitBodySchema = z.object({
   draft_mode: z.unknown().optional(),
   display_alias: z.unknown().optional(),
   display_name: z.unknown().optional(),
+  challenge: z
+    .enum(["season", "daily"])
+    .nullish()
+    .transform((challenge) => challenge ?? "season"),
+  challenge_date: z.unknown().optional(),
   mode: z
     .enum(["casual", "ranked"])
     .nullish()
@@ -84,6 +91,8 @@ type ExpectedSubmitBoundaryBody = {
   draft_mode?: unknown;
   display_alias?: unknown;
   display_name?: unknown;
+  challenge: "season" | "daily";
+  challenge_date?: unknown;
   mode: BoardMode;
 };
 type Exact<A, B> =
@@ -102,6 +111,8 @@ export interface SubmitResponseBody {
    *  statement after the insert — a concurrent insert can move it between
    *  the two. Null only if the identity has no visible entry. */
   readonly rank: number | null;
+  readonly percentile: number | null;
+  readonly field_size: number;
 }
 
 export async function handleLeaderboardSubmit(
@@ -143,6 +154,9 @@ export async function handleLeaderboardSubmit(
     }
     const body = bodyResult.data;
     const submissionMode: BoardMode = body.mode;
+    if (body.challenge === DAILY_CHALLENGE_KIND && submissionMode !== "casual") {
+      return transportError("INVALID_BODY", "daily submissions are casual only");
+    }
 
     // 4 — identity gate (throws LeaderboardGateError).
     const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));
@@ -170,6 +184,8 @@ export async function handleLeaderboardSubmit(
         draft_mode: body.draft_mode,
         display_alias: body.display_alias,
         display_name: body.display_name,
+        challenge: body.challenge,
+        challenge_date: body.challenge_date,
       },
       deps.getValidation(),
     );
@@ -192,6 +208,19 @@ export async function handleLeaderboardSubmit(
       );
     }
 
+    if (
+      verdict.challenge_type === DAILY_CHALLENGE_KIND &&
+      verdict.challenge_date !== (deps.todayUtcDate ?? utcDateString)()
+    ) {
+      return NextResponse.json(
+        {
+          error: "BAD_ATTEMPT",
+          message: "daily submissions are only open for today's UTC draft",
+        },
+        { status: SUBMIT_ERROR_HTTP_STATUS.BAD_ATTEMPT },
+      );
+    }
+
     const username =
       identity.userId === null ? null : await publicUsernameForUser(deps.db, identity.userId);
     if (verdict.display_alias === null && username === null) {
@@ -211,6 +240,9 @@ export async function handleLeaderboardSubmit(
       deps.db,
       {
         seasonKey: verdict.season_key,
+        challengeType: verdict.challenge_type,
+        challengeDate: verdict.challenge_date,
+        ratingVersion: verdict.rating_version,
         mode: submissionMode,
         draftMode: verdict.draft_mode,
         draftOrder: verdict.draft_order,
@@ -228,6 +260,8 @@ export async function handleLeaderboardSubmit(
     );
     const best = await identityBoardRank(deps.db, {
       seasonKey: verdict.season_key,
+      challengeType: verdict.challenge_type,
+      challengeDate: verdict.challenge_date,
       mode: submissionMode,
       draftMode: verdict.draft_mode,
       draftOrder: verdict.draft_order,
@@ -239,9 +273,11 @@ export async function handleLeaderboardSubmit(
       entry: await toApiEntryWithProfile(deps.db, result.row),
       duplicate: result.kind === "duplicate",
       rank: best?.rank ?? null,
+      percentile: best?.percentile ?? null,
+      field_size: best?.fieldSize ?? 0,
     };
     return NextResponse.json(responseBody, {
-      status: result.kind === "inserted" ? 201 : 200,
+      status: result.kind === "duplicate" ? 200 : 201,
     });
   } catch (err) {
     if (err instanceof LeaderboardGateError) {

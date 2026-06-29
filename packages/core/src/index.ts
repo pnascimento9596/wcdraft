@@ -281,6 +281,7 @@ export {
 export type {
   RunTokenPick,
   RunTokenPickV2,
+  RunTokenDailyChallenge,
   RunTokenOgSummary,
   RunTokenV1Body,
   RunTokenV2Body,

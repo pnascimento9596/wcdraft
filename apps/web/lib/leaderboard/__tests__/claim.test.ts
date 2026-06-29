@@ -41,16 +41,22 @@ async function makeEntry(args: {
   sessionId?: string | null;
   userId?: string | null;
   seasonKey?: string;
+  challengeType?: "season" | "daily";
+  challengeDate?: string | null;
   mode?: "casual" | "ranked";
   draftMode?: "classic" | "hidden";
   displayAlias?: string;
   verifiedScore?: number;
   hiddenAt?: Date | null;
+  createdAt?: Date;
 }) {
   const [row] = await env.db
     .insert(leaderboardEntries)
     .values({
       seasonKey: args.seasonKey ?? "season-a",
+      challengeType: args.challengeType ?? "season",
+      challengeDate: args.challengeType === "daily" ? (args.challengeDate ?? "2026-06-29") : null,
+      ratingVersion: "test-rating-1",
       mode: args.mode ?? "casual",
       draftMode: args.draftMode ?? "classic",
       draftOrder: "squad_first",
@@ -62,6 +68,7 @@ async function makeEntry(args: {
       token: args.token,
       verifiedScore: args.verifiedScore ?? 100,
       hiddenAt: args.hiddenAt ?? null,
+      createdAt: args.createdAt,
     })
     .returning();
   return row!;
@@ -200,6 +207,42 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
     const r = await claimLeaderboardEntries({ sessionId: "ses-anon", userId: uid }, deps());
     expect(r).toEqual({ transferred: 1, dropped: 0 });
     expect(await entriesOfUser(uid)).toHaveLength(2);
+  });
+
+  it("merges a same-day daily anon row into the user's daily identity", async () => {
+    const uid = await makeUser("a@example.com");
+    await makeSession({ id: "ses-anon" });
+    const ownedDailyRunId = ["t1", "daily", "owned"].join(".");
+    const anonDailyRunId = ["t1", "daily", "anon"].join(".");
+    const account = await makeEntry({
+      token: ownedDailyRunId,
+      userId: uid,
+      challengeType: "daily",
+      challengeDate: "2026-06-29",
+      displayAlias: "account_name",
+      verifiedScore: 120,
+      createdAt: new Date("2026-06-29T12:00:00.000Z"),
+    });
+    await makeEntry({
+      token: anonDailyRunId,
+      sessionId: "ses-anon",
+      challengeType: "daily",
+      challengeDate: "2026-06-29",
+      displayAlias: "anon_name",
+      verifiedScore: 150,
+      createdAt: new Date("2026-06-29T12:05:00.000Z"),
+    });
+
+    const r = await claimLeaderboardEntries({ sessionId: "ses-anon", userId: uid }, deps());
+    expect(r).toEqual({ transferred: 0, dropped: 1 });
+
+    const rows = await entriesOfUser(uid);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.id).toBe(account.id);
+    expect(rows[0]!.token).toBe(anonDailyRunId);
+    expect(rows[0]!.displayAlias).toBe("anon_name");
+    expect(rows[0]!.verifiedScore).toBe(150);
+    expect(rows[0]!.sessionId).toBeNull();
   });
 });
 

@@ -11,6 +11,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/components/auth-context";
+import { utcDateString, isDailyChallengeDate } from "@/lib/game/daily";
 import {
   appendBoardPage,
   boardRowViews,
@@ -21,6 +22,7 @@ import {
 import { fetchBoardPage, fetchMyPresence, type MyBoardPresence } from "@/lib/leaderboard/client";
 import {
   DEFAULT_BOARD_FILTER,
+  DEFAULT_DAILY_BOARD_FILTER,
   isBoardDraftMode,
   isBoardDraftOrder,
   isBoardEra,
@@ -35,7 +37,10 @@ type LoadPhase = "loading" | "ready" | "error";
 
 export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
   const auth = useAuth();
-  const [filter, setFilter] = useState<BoardFilter>(DEFAULT_BOARD_FILTER);
+  const [filter, setFilter] = useState<BoardFilter>({
+    ...DEFAULT_DAILY_BOARD_FILTER,
+    challengeDate: utcDateString(),
+  });
   const [acc, setAcc] = useState<BoardAccumulator>(EMPTY_BOARD);
   const [phase, setPhase] = useState<LoadPhase>("loading");
   const [loadingMore, setLoadingMore] = useState(false);
@@ -108,7 +113,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
 
   return (
     <div className={s.boardShell}>
-      <BoardHead currentSeasonKey={currentSeasonKey} />
+      <BoardHead currentSeasonKey={currentSeasonKey} filter={filter} />
       <BoardToolbar filter={filter} onFilter={setFilter} />
       {me !== null && <MeChip me={me} />}
 
@@ -152,7 +157,15 @@ function filterFromSearch(params: URLSearchParams): BoardFilter {
   const draftOrder = params.get("draft_order");
   const era = params.get("era");
   const ratingBasis = params.get("rating_basis");
+  const challenge = params.get("challenge");
+  const requestedDate = params.get("date");
+  const challengeDate = isDailyChallengeDate(requestedDate) ? requestedDate : utcDateString();
+  if (challenge !== "season") {
+    return { ...DEFAULT_DAILY_BOARD_FILTER, challengeDate };
+  }
   return {
+    challenge: "season",
+    challengeDate: null,
     lane: isBoardLane(lane) ? lane : DEFAULT_BOARD_FILTER.lane,
     draftMode: isBoardDraftMode(draftMode) ? draftMode : DEFAULT_BOARD_FILTER.draftMode,
     draftOrder: isBoardDraftOrder(draftOrder) ? draftOrder : DEFAULT_BOARD_FILTER.draftOrder,

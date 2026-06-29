@@ -16,9 +16,15 @@
 
 import { describe, expect, it } from "vitest";
 
-import { buildRunTokenBody, decodeRunToken, type RunTokenV1Body } from "../../game/run-token";
+import {
+  buildRunTokenBody,
+  decodeRunToken,
+  type RunTokenV1Body,
+  type RunTokenV2Body,
+} from "../../game/run-token";
+import { dailyChallengeForDate, deriveDailySeed } from "../../game/daily";
 import { DISPLAY_NAME_MAX, validateDisplayName } from "../display-name";
-import { deriveSeasonKey } from "../season";
+import { DEFAULT_LEADERBOARD_SEASON_ID } from "../season";
 import {
   SUBMIT_ERROR_HTTP_STATUS,
   validateSubmission,
@@ -55,6 +61,21 @@ function tampered(mutate: (b: RunTokenV1Body) => void): string {
   const body = JSON.parse(JSON.stringify(originBody)) as RunTokenV1Body;
   mutate(body);
   return encodeBody(body);
+}
+
+function dailySubmission(date = "2026-06-29") {
+  const challenge = dailyChallengeForDate(date);
+  const record = {
+    ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
+    challenge,
+  };
+  const expected = expectedRunFor(data.gameData, data.scenario, record);
+  return {
+    challenge,
+    record,
+    expected,
+    token: encodeBody(buildRunTokenBody(record)),
+  };
 }
 
 function submit(overrides: Partial<SubmissionBody>) {
@@ -275,6 +296,155 @@ describe("step 3b — per-config boards accept every legal config", () => {
   });
 });
 
+describe("daily challenge contract", () => {
+  it("accepts a canonical daily token only on the matching daily date", () => {
+    const daily = dailySubmission();
+    const v = validateSubmission(
+      {
+        token: daily.token,
+        claimed_score: daily.expected.score,
+        draft_mode: "classic",
+        display_name: "daily_player",
+        challenge: "daily",
+        challenge_date: daily.challenge.date,
+      },
+      data,
+    );
+    expect(v.status).toBe("accepted");
+    if (v.status !== "accepted") return;
+    expect(v.challenge_type).toBe("daily");
+    expect(v.challenge_date).toBe("2026-06-29");
+    expect(v.token_body.ps).toBe(deriveDailySeed("2026-06-29"));
+    expect(v.draft_order).toBe("squad_first");
+    expect(v.era).toBe("all_time");
+    expect(v.rating_basis).toBe("career");
+  });
+
+  it("rejects daily tokens posted to the season board", () => {
+    const daily = dailySubmission();
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: daily.token,
+            claimed_score: daily.expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "season",
+          },
+          data,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
+  });
+
+  it("rejects forged daily date/seed metadata before replay", () => {
+    const daily = dailySubmission();
+    const decoded = decodeRunToken(daily.token);
+    expect(decoded?.v).toBe(2);
+    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV2Body;
+    body.ch = { k: "daily", d: "2026-06-30", s: daily.challenge.seed };
+    const forged = encodeBody(body);
+
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: forged,
+            claimed_score: daily.expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: "2026-06-30",
+          },
+          data,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
+  });
+
+  it("still rejects illegal daily picks through the replay keystone", () => {
+    const daily = dailySubmission();
+    const decoded = decodeRunToken(daily.token);
+    expect(decoded?.v).toBe(2);
+    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV2Body;
+    const picks = body.pl
+      .map((p, i) => ({ p, i }))
+      .filter((x): x is { p: { k: "p"; c: string; s: string }; i: number } => x.p.k === "p");
+    const [first, , , second] = picks;
+    body.pl[second!.i] = { ...second!.p, c: first!.p.c };
+
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: encodeBody(body),
+            claimed_score: daily.expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: daily.challenge.date,
+          },
+          data,
+        ),
+      ),
+    ).toBe("ILLEGAL_PICK");
+  });
+
+  it("rejects non-canonical daily configs", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+    const record = {
+      ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", {
+        ratingBasis: "current",
+      }),
+      challenge,
+    };
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: encodeBody(buildRunTokenBody(record)),
+            claimed_score: expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: challenge.date,
+          },
+          data,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
+  });
+
+  it("rejects a valid same-seed daily token built for a non-canonical formation", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+    const record = {
+      ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", {
+        formationId: "4-2-3-1",
+      }),
+      challenge,
+    };
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: encodeBody(buildRunTokenBody(record)),
+            claimed_score: expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: challenge.date,
+          },
+          data,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
+  });
+});
+
 describe("step 5 — display-name rules (plan §5.1)", () => {
   it("rejects through the pipeline with INVALID_NAME + category, raw value not echoed", () => {
     const v = submit({ display_name: "bad-name" });
@@ -477,7 +647,7 @@ describe("acceptance contract", () => {
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.verified_score).toBe(originExpected.score);
-    expect(v.season_key).toBe(deriveSeasonKey(data.gameData.versions));
+    expect(v.season_key).toBe(DEFAULT_LEADERBOARD_SEASON_ID);
     expect(v.draft_mode).toBe("classic");
     expect(v.draft_order).toBe("squad_first");
     expect(v.era).toBe("all_time");

@@ -89,13 +89,23 @@ const userRecentDownSql = readFileSync(
   "utf8",
 );
 
+const dailySql = readFileSync(
+  new URL("../migrations/0008_leaderboard_daily_challenge.sql", import.meta.url),
+  "utf8",
+);
+
+const dailyDownSql = readFileSync(
+  new URL("../migrations/0008_leaderboard_daily_challenge.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(8);
+    expect(journal.entries).toHaveLength(9);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -112,6 +122,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[6]?.idx).toBe(6);
     expect(journal.entries[7]?.tag).toBe("0007_leaderboard_user_recent_idx");
     expect(journal.entries[7]?.idx).toBe(7);
+    expect(journal.entries[8]?.tag).toBe("0008_leaderboard_daily_challenge");
+    expect(journal.entries[8]?.idx).toBe(8);
   });
 
   it.each([
@@ -228,6 +240,60 @@ describe("@wcdraft/db migrations — 0000_init", () => {
 
   it("down-migration also drops the drizzle bookkeeping schema", () => {
     expect(downSql).toMatch(/DROP SCHEMA IF EXISTS "drizzle" CASCADE/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0008_leaderboard_daily_challenge", () => {
+  it("adds challenge/date/rating-version columns without rewriting rows", () => {
+    expect(dailySql).toMatch(/ADD COLUMN "challenge_type" text DEFAULT 'season' NOT NULL/);
+    expect(dailySql).toMatch(/ADD COLUMN "challenge_date" text/);
+    expect(dailySql).toMatch(/ADD COLUMN "rating_version" text/);
+    expect(dailySql).not.toMatch(/DELETE FROM "leaderboard_entries"/);
+    expect(dailySql).not.toMatch(/TRUNCATE/);
+  });
+
+  it("guards season-vs-daily date shape and stamps rating version bounds", () => {
+    expect(dailySql).toMatch(/leaderboard_entries_challenge_type_chk/);
+    expect(dailySql).toMatch(/'season', 'daily'/);
+    expect(dailySql).toMatch(/leaderboard_entries_daily_mode_chk/);
+    expect(dailySql).toMatch(
+      /"challenge_type" <> 'daily' OR "leaderboard_entries"\."mode" = 'casual'/,
+    );
+    expect(dailySql).toMatch(/leaderboard_entries_challenge_date_chk/);
+    expect(dailySql).toMatch(/\^\[0-9\]\{4\}-\[0-9\]\{2\}-\[0-9\]\{2\}\$/);
+    expect(dailySql).toMatch(/leaderboard_entries_rating_version_chk/);
+  });
+
+  it("narrows token dedupe to season rows and adds daily identity uniqueness", () => {
+    expect(dailySql).toMatch(/DROP CONSTRAINT IF EXISTS "leaderboard_entries_dedupe_uq"/);
+    expect(dailySql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "leaderboard_entries_season_dedupe_uq"/,
+    );
+    expect(dailySql).toMatch(/NULLS NOT DISTINCT/);
+    expect(dailySql).toMatch(/WHERE "leaderboard_entries"\."challenge_type" = 'season'/);
+    expect(dailySql).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS "leaderboard_entries_daily_identity_uq"/,
+    );
+    expect(dailySql).toMatch(/COALESCE\("user_id"::text, "session_id", "display_alias"\)/);
+  });
+
+  it("adds a daily top index and extends the season top index with challenge_type", () => {
+    expect(dailySql).toMatch(/CREATE INDEX IF NOT EXISTS "leaderboard_entries_daily_top_idx"/);
+    expect(dailySql).toMatch(/"challenge_type",\s*"challenge_date",\s*"mode",\s*"draft_mode"/s);
+    expect(dailySql).toMatch(/"season_key",\s*"challenge_type",\s*"mode",\s*"draft_mode"/s);
+  });
+
+  it("down-migration removes daily artifacts and restores the prior dedupe constraint", () => {
+    expect(dailyDownSql).toMatch(/DROP INDEX IF EXISTS "leaderboard_entries_daily_identity_uq"/);
+    expect(dailyDownSql).toMatch(/DROP INDEX IF EXISTS "leaderboard_entries_season_dedupe_uq"/);
+    expect(dailyDownSql).toMatch(
+      /DELETE FROM "leaderboard_entries"\s+WHERE "challenge_type" = 'daily'/,
+    );
+    expect(dailyDownSql).toMatch(/DROP COLUMN IF EXISTS "rating_version"/);
+    expect(dailyDownSql).toMatch(/DROP COLUMN IF EXISTS "challenge_date"/);
+    expect(dailyDownSql).toMatch(/DROP COLUMN IF EXISTS "challenge_type"/);
+    expect(dailyDownSql).toMatch(/DROP CONSTRAINT IF EXISTS "leaderboard_entries_daily_mode_chk"/);
+    expect(dailyDownSql).toMatch(/ADD CONSTRAINT "leaderboard_entries_dedupe_uq"/);
   });
 });
 

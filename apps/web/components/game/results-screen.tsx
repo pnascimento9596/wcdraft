@@ -14,6 +14,7 @@ import {
   type ConfigBadge,
 } from "@/lib/game/config-badges";
 import {
+  dailyDraftHref,
   draftHref,
   historyHref,
   parseRunSearchParams,
@@ -307,6 +308,10 @@ function ResultsBody({
     () => buildShareView(gameData, record, scenario),
     [gameData, record, scenario],
   );
+  const draftAgainHref =
+    record.challenge?.kind === "daily"
+      ? dailyDraftHref(null, record.challenge.date)
+      : draftHref(null);
 
   return (
     <div className={s.results}>
@@ -410,7 +415,7 @@ function ResultsBody({
             - SECONDARY: View History — recent local runs (cap 5).
         */}
         <div className={s.resultsActions}>
-          <Link href={draftHref(null)} className="btn btn--primary">
+          <Link href={draftAgainHref} className="btn btn--primary">
             Draft Again
           </Link>
           <Link href={shareHref(linkRunValue)} className={`btn btn--primary ${s.sharePrimary}`}>

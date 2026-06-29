@@ -11,6 +11,7 @@ import {
   setRunSimulation,
   type RunRecordV1,
 } from "../run-record";
+import { DAILY_DRAFT_CONFIG, dailyChallengeForDate } from "../daily";
 import { runSimulationSync } from "../simulate";
 import { decodeRunToken, encodeRunToken, reconstructDraftFromToken } from "../run-token";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
@@ -45,6 +46,40 @@ describe("run-record persisted boundary", () => {
     expect(right.parent_seed).toContain("rn-ffbad4c118754d4fae3c427c6851d616");
     expect(left.parent_seed).not.toBe(right.parent_seed);
     expect(firstDraw(left.draft)).not.toEqual(firstDraw(right.draft));
+  });
+
+  it("uses the shared daily seed without the per-device nonce", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+
+    stubRandomUuids("35502f44-95e8-418e-bfea-80dcfe96c74a", "ffbad4c1-1875-4d4f-ae3c-427c6851d616");
+    localStorage.clear();
+    const left = createNewRunRecord(gameData, {
+      formation_id: DAILY_DRAFT_CONFIG.formationId,
+      mode: DAILY_DRAFT_CONFIG.mode,
+      team_name: DAILY_DRAFT_CONFIG.teamName,
+      parent_seed: challenge.seed,
+      challenge,
+      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+    }).record;
+
+    localStorage.clear();
+    const right = createNewRunRecord(gameData, {
+      formation_id: DAILY_DRAFT_CONFIG.formationId,
+      mode: DAILY_DRAFT_CONFIG.mode,
+      team_name: DAILY_DRAFT_CONFIG.teamName,
+      parent_seed: challenge.seed,
+      challenge,
+      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+    }).record;
+
+    expect(left.parent_seed).toBe("wcdraft:daily:v1:2026-06-29");
+    expect(right.parent_seed).toBe(left.parent_seed);
+    expect(drawPairs(left.draft)).toEqual(drawPairs(right.draft));
+    expect(left.challenge).toEqual(challenge);
   });
 
   it("keeps generated-token replay byte-identical from token.ps", () => {
@@ -133,6 +168,15 @@ function firstDraw(draft: DraftState): { nation_id: string; tournament_id: numbe
     throw new Error("expected a resolved first spin");
   }
   return { nation_id: spin.nation_id, tournament_id: spin.tournament_id };
+}
+
+function drawPairs(draft: DraftState): { nation_id: string; tournament_id: number }[] {
+  return draft.spins.map((spin) => {
+    if (spin.status === "awaiting_slot") {
+      throw new Error("expected resolved spin");
+    }
+    return { nation_id: spin.nation_id, tournament_id: spin.tournament_id };
+  });
 }
 
 function recordKey(runId: string): string {

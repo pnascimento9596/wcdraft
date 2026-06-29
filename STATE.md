@@ -30,6 +30,19 @@ page/theme states, and browser verification with 16 screenshots at 360×800 /
 390×844 in both themes. Report:
 `docs/reports/pwa-launch-hardening-2026-06-28/summary.md`.
 
+Daily Draft implementation lane:
+2026-06-29 · local RED implementation on branch
+`ws-f4/daily-draft-20260629`, based on `origin/main`
+`797fefa8a68edb0449f46199917e4d4b0e83d4d6`. Scope: UTC date-derived Daily
+Draft seed, canonical Classic / Squad First / All-time / Career / 4-3-3 config,
+daily token metadata/replay validation, public casual daily leaderboard,
+best-of-many per identity/day, share CTA routing for the same daily teams,
+explicit active leaderboard season id (`WCDRAFT_LEADERBOARD_SEASON_ID` with
+pinned default), and rating-version stamping on accepted leaderboard rows.
+Report: `docs/reports/daily-draft-2026-06-29.md`. Not shipped until the RED
+independent reviewer, human approval, merge, deploy, and live production
+readback gates complete.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**
@@ -42,7 +55,7 @@ Current repo runtime anchor:
 `runtime-data-2.8.0` / `engine-2026.06.28-merit-v4.6` / `wc-perf-6.6.0` /
 `proj-career-5.6.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
-knockout slots `62`. Leaderboard season key:
+knockout slots `62`. Explicit active leaderboard season id:
 `engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5`.
 
 X marketing lane:
@@ -251,26 +264,26 @@ broken-pipe MCP transport error.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                         | Value                                                                                                                                     |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| schema_version                | runtime-data-2.8.0                                                                                                                        |
-| dataset_version               | 2026-06-04                                                                                                                                |
-| ruleset_version               | ruleset-2026.06.04                                                                                                                        |
-| engine_version                | engine-2026.06.28-merit-v4.6                                                                                                              |
-| rating_version (historical)   | wc-perf-6.6.0                                                                                                                             |
-| rating_version (projected)    | proj-career-5.6.0                                                                                                                         |
-| career_stature                | career-stature-4.1.0                                                                                                                      |
-| merit source set              | merit-source-set-2.2.0                                                                                                                    |
-| active source set             | active-career-source-set-2.2.0                                                                                                            |
-| runtime legend census         | 295                                                                                                                                       |
-| runtime ratings               | 12,219                                                                                                                                    |
-| Career basis counts           | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
-| career-stature table          | 847 players · 209 material · 114 source-derived legends                                                                                   |
-| leaderboard season key        | engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5                                       |
-| compact brotli total          | 2,231,808 measured bytes                                                                                                                  |
-| served draft-pool br artifact | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.8.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `7d6d06…` |
-| compact sha256                | manifest `6d6f17ee…` · draft `7d6d06…` · scenario `ad5c726…`                                                                              |
-| generated artifact locks      | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `7d6d06…` / 130,553,412 bytes                                  |
+| Field                          | Value                                                                                                                                     |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| schema_version                 | runtime-data-2.8.0                                                                                                                        |
+| dataset_version                | 2026-06-04                                                                                                                                |
+| ruleset_version                | ruleset-2026.06.04                                                                                                                        |
+| engine_version                 | engine-2026.06.28-merit-v4.6                                                                                                              |
+| rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
+| rating_version (projected)     | proj-career-5.6.0                                                                                                                         |
+| career_stature                 | career-stature-4.1.0                                                                                                                      |
+| merit source set               | merit-source-set-2.2.0                                                                                                                    |
+| active source set              | active-career-source-set-2.2.0                                                                                                            |
+| runtime legend census          | 295                                                                                                                                       |
+| runtime ratings                | 12,219                                                                                                                                    |
+| Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
+| career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
+| explicit leaderboard season id | engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5                                       |
+| compact brotli total           | 2,231,808 measured bytes                                                                                                                  |
+| served draft-pool br artifact  | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.8.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `7d6d06…` |
+| compact sha256                 | manifest `6d6f17ee…` · draft `7d6d06…` · scenario `ad5c726…`                                                                              |
+| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `7d6d06…` / 130,553,412 bytes                                  |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

@@ -12,14 +12,15 @@ Greenfield additive scaffold:
 - Six tables (Drizzle schema in `src/schema/`):
   `users`, `magic_link_tokens`, `sessions`, `saved_runs`, `ranked_attempts`,
   `leaderboard_entries`.
-- **UNIQUE NULLS NOT DISTINCT (Postgres 15+) on both anonymous-dedupe
-  constraints**:
+- **UNIQUE NULLS NOT DISTINCT (Postgres 15+) on anonymous-dedupe surfaces**:
   - `saved_runs (owner_user_id, token)`
-  - `leaderboard_entries (season_key, mode, user_id, token)`
+  - season `leaderboard_entries (season_key, mode, user_id, token)`
 
   This closes the anon-spam vector an independent reviewer caught on PR #26
   — plain unique indexes on nullable columns are toothless under Postgres'
-  default NULLS-DISTINCT semantics.
+  default NULLS-DISTINCT semantics. Daily leaderboard entries intentionally use
+  per-day identity uniqueness instead of token dedupe so shared daily seeds and
+  replay links can submit under different identities.
 
 - DB-level CHECK enums on `saved_runs.claim_state` (`'anonymous'|'claimed'`)
   and `leaderboard_entries.mode` (`'casual'|'ranked'`).
@@ -41,10 +42,12 @@ Greenfield additive scaffold:
 ## What is NOT in F-1
 
 - **No route handlers** in `apps/web/app/api/*` — that's F-2/F-3/F-4.
-- **No derivation logic** for `saved_runs.version_anchors` (jsonb column only)
-  or `leaderboard_entries.season_key` (text column only). F-4 will derive
-  `season_key` from the run token's embedded anchors so the imminent rating
-  recalibration opens a new season automatically.
+- **No app-server derivation logic** inside the DB package for
+  `saved_runs.version_anchors` (jsonb column only) or
+  `leaderboard_entries.season_key` (text column only). The web app stamps the
+  active aggregate season from `WCDRAFT_LEADERBOARD_SEASON_ID` with a pinned
+  default, and daily rows carry `challenge_type = 'daily'` plus a UTC
+  `challenge_date`.
 - **No edits** to `packages/core/src/schemas/leaderboard.ts` — F-4 will
   replace that claimed-score schema with a token-only submission shape.
 - **No monetization tables** (`entitlements`, `stripe_events`). Monetization

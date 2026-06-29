@@ -2,8 +2,9 @@
 //
 // Board semantics (plan §4): rank by verified_score DESC, created_at ASC
 // (first to reach a score ranks first), id ASC for total order; the board
-// shows the BEST entry per identity (user_id if claimed, else session_id,
-// else the entry's own id for sessionless-anonymous rows); hidden rows
+// shows the BEST season entry per identity (user_id if claimed, else session_id,
+// else the entry's own id for sessionless-anonymous rows). Daily writes already
+// collapse each visible player/day/config identity to one best row; hidden rows
 // (`hidden_at IS NOT NULL`) never appear. The keyset cursor paginates on the
 // exact `leaderboard_entries_top_idx` config filter plus keyset triple
 // (verified_score, created_at, id).
@@ -20,7 +21,8 @@
 
 import type { ScoreComponent } from "@wcdraft/core";
 import { leaderboardEntries, users, type Db, type LeaderboardEntry } from "@wcdraft/db";
-import { and, desc, eq, isNull, sql, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, lt, sql, type SQL } from "drizzle-orm";
+import type { LeaderboardChallengeKind } from "../game/daily";
 import type {
   BoardDraftMode as ConfigDraftMode,
   BoardDraftOrder,
@@ -42,6 +44,9 @@ export type BoardDraftMode = ConfigDraftMode;
 
 export interface AcceptedEntryInsert {
   readonly seasonKey: string;
+  readonly challengeType: LeaderboardChallengeKind;
+  readonly challengeDate: string | null;
+  readonly ratingVersion: string;
   readonly mode: BoardMode;
   readonly draftMode: BoardDraftMode;
   readonly draftOrder: BoardDraftOrder;
@@ -57,24 +62,31 @@ export interface AcceptedEntryInsert {
 
 export type InsertEntryResult =
   | { readonly kind: "inserted"; readonly row: LeaderboardEntry }
+  | { readonly kind: "updated"; readonly row: LeaderboardEntry }
   | { readonly kind: "duplicate"; readonly row: LeaderboardEntry };
 
 /**
- * Insert an ACCEPTED submission, honoring the NULLS-NOT-DISTINCT dedupe
- * constraint `(season_key, mode, user_id, token)`. On conflict the existing
- * row is returned (`kind: "duplicate"`) — the documented best-entry
- * semantics: all distinct accepted runs are retained, an identical token
- * is acknowledged honestly instead of erroring or double-inserting.
+ * Insert an ACCEPTED submission. Season rows honor the partial
+ * NULLS-NOT-DISTINCT index `(season_key, mode, user_id, token)` and return the
+ * existing row on exact duplicates. Daily rows use one visible best row per
+ * identity/date/config so repeated daily attempts improve or duplicate that
+ * row instead of appending.
  */
 export async function insertAcceptedEntry(
   db: Db,
   entry: AcceptedEntryInsert,
   now: () => number,
 ): Promise<InsertEntryResult> {
+  if (entry.challengeType === "daily") {
+    return upsertDailyBestEntry(db, entry, now);
+  }
   const inserted = await db
     .insert(leaderboardEntries)
     .values({
       seasonKey: entry.seasonKey,
+      challengeType: entry.challengeType,
+      challengeDate: entry.challengeDate,
+      ratingVersion: entry.ratingVersion,
       mode: entry.mode,
       draftMode: entry.draftMode,
       draftOrder: entry.draftOrder,
@@ -93,7 +105,7 @@ export async function insertAcceptedEntry(
   const row = inserted[0];
   if (row) return { kind: "inserted", row };
 
-  // NULLS NOT DISTINCT: the conflicting row is uniquely identified by
+  // Season NULLS NOT DISTINCT: the conflicting row is uniquely identified by
   // (season_key, mode, user_id-including-NULL, token).
   const existing = await db
     .select()
@@ -101,6 +113,7 @@ export async function insertAcceptedEntry(
     .where(
       and(
         eq(leaderboardEntries.seasonKey, entry.seasonKey),
+        eq(leaderboardEntries.challengeType, entry.challengeType),
         eq(leaderboardEntries.mode, entry.mode),
         eq(leaderboardEntries.token, entry.token),
         entry.userId === null
@@ -118,6 +131,109 @@ export async function insertAcceptedEntry(
   return { kind: "duplicate", row: dup };
 }
 
+async function upsertDailyBestEntry(
+  db: Db,
+  entry: AcceptedEntryInsert,
+  now: () => number,
+): Promise<InsertEntryResult> {
+  if (entry.challengeDate === null) {
+    throw new Error("daily leaderboard insert requires challengeDate");
+  }
+  const identity = dailyIdentityPredicate(entry);
+  const existing = await db
+    .select()
+    .from(leaderboardEntries)
+    .where(
+      and(
+        eq(leaderboardEntries.challengeType, "daily"),
+        eq(leaderboardEntries.challengeDate, entry.challengeDate),
+        eq(leaderboardEntries.mode, entry.mode),
+        eq(leaderboardEntries.draftMode, entry.draftMode),
+        eq(leaderboardEntries.draftOrder, entry.draftOrder),
+        eq(leaderboardEntries.era, entry.era),
+        eq(leaderboardEntries.ratingBasis, entry.ratingBasis),
+        isNull(leaderboardEntries.hiddenAt),
+        identity,
+      ),
+    )
+    .orderBy(
+      desc(leaderboardEntries.verifiedScore),
+      asc(leaderboardEntries.createdAt),
+      asc(leaderboardEntries.id),
+    )
+    .limit(1);
+  const best = existing[0];
+  if (best && best.verifiedScore >= entry.verifiedScore) {
+    return { kind: "duplicate", row: best };
+  }
+  if (best) {
+    const updated = await db
+      .update(leaderboardEntries)
+      .set({
+        seasonKey: entry.seasonKey,
+        ratingVersion: entry.ratingVersion,
+        displayAlias: entry.displayAlias,
+        token: entry.token,
+        verifiedScore: entry.verifiedScore,
+        scoreBreakdown: entry.scoreBreakdown,
+        createdAt: new Date(now()),
+      })
+      .where(
+        and(
+          eq(leaderboardEntries.id, best.id),
+          lt(leaderboardEntries.verifiedScore, entry.verifiedScore),
+        ),
+      )
+      .returning();
+    const row = updated[0];
+    if (!row) return upsertDailyBestEntry(db, entry, now);
+    return { kind: "updated", row };
+  }
+  const inserted = await db
+    .insert(leaderboardEntries)
+    .values({
+      seasonKey: entry.seasonKey,
+      challengeType: "daily",
+      challengeDate: entry.challengeDate,
+      ratingVersion: entry.ratingVersion,
+      mode: entry.mode,
+      draftMode: entry.draftMode,
+      draftOrder: entry.draftOrder,
+      era: entry.era,
+      ratingBasis: entry.ratingBasis,
+      userId: entry.userId,
+      sessionId: entry.sessionId,
+      displayAlias: entry.displayAlias,
+      token: entry.token,
+      verifiedScore: entry.verifiedScore,
+      scoreBreakdown: entry.scoreBreakdown,
+      createdAt: new Date(now()),
+    })
+    .onConflictDoNothing()
+    .returning();
+  const row = inserted[0];
+  if (!row) return upsertDailyBestEntry(db, entry, now);
+  return { kind: "inserted", row };
+}
+
+function dailyIdentityPredicate(entry: AcceptedEntryInsert): SQL {
+  if (entry.userId !== null) return eq(leaderboardEntries.userId, entry.userId);
+  if (entry.sessionId !== null) {
+    return and(
+      isNull(leaderboardEntries.userId),
+      eq(leaderboardEntries.sessionId, entry.sessionId),
+    )!;
+  }
+  if (entry.displayAlias !== null) {
+    return and(
+      isNull(leaderboardEntries.userId),
+      isNull(leaderboardEntries.sessionId),
+      eq(leaderboardEntries.displayAlias, entry.displayAlias),
+    )!;
+  }
+  throw new Error("daily leaderboard insert requires a user, session, or display alias identity");
+}
+
 // ─── Board page (keyset over best-per-identity) ─────────────────────────────
 
 export interface BoardCursor {
@@ -128,6 +244,8 @@ export interface BoardCursor {
 
 export interface BoardPageQuery {
   readonly seasonKey: string;
+  readonly challengeType: LeaderboardChallengeKind;
+  readonly challengeDate: string | null;
   readonly mode: BoardMode;
   readonly draftMode: BoardDraftMode;
   readonly draftOrder: BoardDraftOrder;
@@ -144,6 +262,9 @@ export interface BoardRow {
   readonly draft_order: BoardDraftOrder;
   readonly era: BoardEra;
   readonly rating_basis: BoardRatingBasis;
+  readonly rating_version: string | null;
+  readonly percentile: number | null;
+  readonly field_size: number;
   readonly display_name: string;
   readonly verified_score: number;
   readonly score_breakdown: unknown;
@@ -158,22 +279,30 @@ type RawBoardRow = {
   draft_order: BoardDraftOrder;
   era: BoardEra;
   rating_basis: BoardRatingBasis;
+  rating_version: string | null;
   display_name: string | null;
   verified_score: number | string;
   score_breakdown: unknown;
   created_at: string | Date;
   rank: number | string;
+  field_size: number | string;
 };
 
 function toBoardRow(r: RawBoardRow): BoardRow {
   const displayName = assertPublicDisplayName(r.display_name, r.id);
+  const fieldSize = Number(r.field_size);
+  const rank = Number(r.rank);
   return {
-    rank: Number(r.rank),
+    rank,
     id: r.id,
     draft_mode: r.draft_mode,
     draft_order: r.draft_order,
     era: r.era,
     rating_basis: r.rating_basis,
+    rating_version: r.rating_version,
+    field_size: fieldSize,
+    percentile:
+      fieldSize > 0 ? Math.max(1, Math.ceil(((fieldSize - rank + 1) / fieldSize) * 100)) : null,
     display_name: displayName,
     verified_score: Number(r.verified_score),
     score_breakdown: r.score_breakdown,
@@ -210,7 +339,7 @@ export async function boardPage(
   q: BoardPageQuery,
 ): Promise<{ rows: BoardRow[]; hasMore: boolean }> {
   const filters: SQL[] = [
-    sql`${leaderboardEntries.seasonKey} = ${q.seasonKey}`,
+    sql`${leaderboardEntries.challengeType} = ${q.challengeType}`,
     sql`${leaderboardEntries.mode} = ${q.mode}`,
     sql`${leaderboardEntries.draftMode} = ${q.draftMode}`,
     sql`${leaderboardEntries.draftOrder} = ${q.draftOrder}`,
@@ -219,6 +348,11 @@ export async function boardPage(
     sql`${leaderboardEntries.hiddenAt} IS NULL`,
     sql`${PUBLIC_NAME_EXPR} IS NOT NULL`,
   ];
+  if (q.challengeType === "daily") {
+    filters.push(sql`${leaderboardEntries.challengeDate} = ${q.challengeDate}`);
+  } else {
+    filters.push(sql`${leaderboardEntries.seasonKey} = ${q.seasonKey}`);
+  }
   const cursorPredicate = q.cursor
     ? sql`WHERE verified_score < ${q.cursor.score}
             OR (verified_score = ${q.cursor.score}
@@ -233,6 +367,7 @@ export async function boardPage(
              ${leaderboardEntries.draftOrder} AS draft_order,
              ${leaderboardEntries.era} AS era,
              ${leaderboardEntries.ratingBasis} AS rating_basis,
+             ${leaderboardEntries.ratingVersion} AS rating_version,
              ${PUBLIC_NAME_EXPR} AS display_name,
              ${leaderboardEntries.verifiedScore} AS verified_score,
              ${leaderboardEntries.scoreBreakdown} AS score_breakdown,
@@ -244,10 +379,11 @@ export async function boardPage(
     ),
     ranked AS (
       SELECT best.*,
-             ROW_NUMBER() OVER (ORDER BY verified_score DESC, created_at ASC, id ASC) AS rank
+             ROW_NUMBER() OVER (ORDER BY verified_score DESC, created_at ASC, id ASC) AS rank,
+             COUNT(*) OVER () AS field_size
         FROM best
     )
-    SELECT id, draft_mode, draft_order, era, rating_basis, display_name, verified_score, score_breakdown, created_at, rank
+    SELECT id, draft_mode, draft_order, era, rating_basis, rating_version, display_name, verified_score, score_breakdown, created_at, rank, field_size
       FROM ranked
       ${cursorPredicate}
      ORDER BY verified_score DESC, created_at ASC, id ASC
@@ -273,10 +409,14 @@ export interface IdentityBest {
   readonly rank: number;
   readonly entryId: string;
   readonly verifiedScore: number;
+  readonly fieldSize: number;
+  readonly percentile: number | null;
 }
 
 interface IdentityRankQuery {
   readonly seasonKey: string;
+  readonly challengeType: LeaderboardChallengeKind;
+  readonly challengeDate: string | null;
   readonly mode: BoardMode;
   readonly draftMode: BoardDraftMode;
   readonly draftOrder: BoardDraftOrder;
@@ -298,6 +438,7 @@ export async function identityBoardRank(
     id: string;
     verified_score: number | string;
     rank: number | string;
+    field_size: number | string;
   }>(sql`
     WITH best AS (
       SELECT DISTINCT ON (${IDENTITY_EXPR})
@@ -307,7 +448,9 @@ export async function identityBoardRank(
              ${leaderboardEntries.createdAt} AS created_at
         FROM ${leaderboardEntries}
         LEFT JOIN ${users} ON ${users.id} = ${leaderboardEntries.userId}
-       WHERE ${leaderboardEntries.seasonKey} = ${q.seasonKey}
+       WHERE ${leaderboardEntries.challengeType} = ${q.challengeType}
+         AND (${q.challengeType} = 'daily' AND ${leaderboardEntries.challengeDate} = ${q.challengeDate}
+              OR ${q.challengeType} = 'season' AND ${leaderboardEntries.seasonKey} = ${q.seasonKey})
          AND ${leaderboardEntries.mode} = ${q.mode}
          AND ${leaderboardEntries.draftMode} = ${q.draftMode}
          AND ${leaderboardEntries.draftOrder} = ${q.draftOrder}
@@ -319,17 +462,23 @@ export async function identityBoardRank(
     ),
     ranked AS (
       SELECT best.*,
-             ROW_NUMBER() OVER (ORDER BY verified_score DESC, created_at ASC, id ASC) AS rank
+             ROW_NUMBER() OVER (ORDER BY verified_score DESC, created_at ASC, id ASC) AS rank,
+             COUNT(*) OVER () AS field_size
         FROM best
     )
-    SELECT id, verified_score, rank FROM ranked WHERE identity = ${q.identityKey} LIMIT 1
+    SELECT id, verified_score, rank, field_size FROM ranked WHERE identity = ${q.identityKey} LIMIT 1
   `);
   const row = result.rows[0];
   if (!row) return null;
+  const fieldSize = Number(row.field_size);
+  const rank = Number(row.rank);
   return {
-    rank: Number(row.rank),
+    rank,
     entryId: row.id,
     verifiedScore: Number(row.verified_score),
+    fieldSize,
+    percentile:
+      fieldSize > 0 ? Math.max(1, Math.ceil(((fieldSize - rank + 1) / fieldSize) * 100)) : null,
   };
 }
 
@@ -343,6 +492,8 @@ export async function recentEntriesFor(
   db: Db,
   q: {
     seasonKey: string;
+    challengeType: LeaderboardChallengeKind;
+    challengeDate: string | null;
     mode: BoardMode;
     draftMode: BoardDraftMode;
     draftOrder: BoardDraftOrder;
@@ -357,6 +508,15 @@ export async function recentEntriesFor(
     q.userId !== null
       ? eq(leaderboardEntries.userId, q.userId)
       : eq(leaderboardEntries.sessionId, q.sessionId);
+  const challengeFilter =
+    q.challengeType === "daily"
+      ? q.challengeDate === null
+        ? sql`false`
+        : eq(leaderboardEntries.challengeDate, q.challengeDate)
+      : and(
+          eq(leaderboardEntries.seasonKey, q.seasonKey),
+          isNull(leaderboardEntries.challengeDate),
+        );
   const rows = await db
     .select({
       row: leaderboardEntries,
@@ -366,7 +526,8 @@ export async function recentEntriesFor(
     .leftJoin(users, eq(users.id, leaderboardEntries.userId))
     .where(
       and(
-        eq(leaderboardEntries.seasonKey, q.seasonKey),
+        eq(leaderboardEntries.challengeType, q.challengeType),
+        challengeFilter,
         eq(leaderboardEntries.mode, q.mode),
         eq(leaderboardEntries.draftMode, q.draftMode),
         eq(leaderboardEntries.draftOrder, q.draftOrder),
@@ -393,6 +554,7 @@ export interface ApiLeaderboardEntry {
   readonly draft_order: string | null;
   readonly era: string | null;
   readonly rating_basis: string | null;
+  readonly rating_version: string | null;
   readonly display_name: string;
   readonly verified_score: number;
   readonly score_breakdown: unknown;
@@ -408,6 +570,7 @@ export function toApiEntry(row: LeaderboardEntry, username: string | null): ApiL
     draft_order: row.draftOrder,
     era: row.era,
     rating_basis: row.ratingBasis,
+    rating_version: row.ratingVersion,
     display_name: publicDisplayName(row, username),
     verified_score: row.verifiedScore,
     score_breakdown: row.scoreBreakdown ?? null,

@@ -25,6 +25,9 @@ function entry(over: Partial<BoardEntryWire> & { id: string; rank: number }): Bo
     draft_order: "squad_first",
     era: "all_time",
     rating_basis: "career",
+    rating_version: "ratings-test",
+    percentile: 100,
+    field_size: 1,
     display_name: `manager_${over.rank}`,
     verified_score: 100 - over.rank,
     score_breakdown: [{ label: "Goals scored", raw: 2, weight: 3, points: 6 }],
@@ -42,6 +45,8 @@ function page(entries: BoardEntryWire[], nextCursor: string | null): BoardPageWi
     draft_order: "squad_first",
     era: "all_time",
     rating_basis: "career",
+    challenge_type: "season",
+    challenge_date: null,
     entries,
     next_cursor: nextCursor,
   };
@@ -139,11 +144,13 @@ describe("boardQueryString", () => {
         cursor: null,
       }),
     ).toBe(
-      "?mode=ranked&draft_mode=hidden&draft_order=squad_first&era=all_time&rating_basis=career",
+      "?challenge=season&mode=ranked&draft_mode=hidden&draft_order=squad_first&era=all_time&rating_basis=career",
     );
     expect(
       boardQueryString({
         filter: {
+          challenge: "season",
+          challengeDate: null,
           lane: "casual",
           draftMode: "classic",
           draftOrder: "position_first",
@@ -153,7 +160,26 @@ describe("boardQueryString", () => {
         cursor: "C 1",
       }),
     ).toBe(
-      "?mode=casual&draft_mode=classic&draft_order=position_first&era=modern&rating_basis=current&cursor=C+1",
+      "?challenge=season&mode=casual&draft_mode=classic&draft_order=position_first&era=modern&rating_basis=current&cursor=C+1",
+    );
+  });
+
+  it("sends daily challenge date for daily boards", () => {
+    expect(
+      boardQueryString({
+        filter: {
+          challenge: "daily",
+          challengeDate: "2026-06-29",
+          lane: "casual",
+          draftMode: "classic",
+          draftOrder: "squad_first",
+          era: "all_time",
+          ratingBasis: "career",
+        },
+        cursor: null,
+      }),
+    ).toBe(
+      "?challenge=daily&date=2026-06-29&mode=casual&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career",
     );
   });
 });

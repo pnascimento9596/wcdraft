@@ -144,6 +144,9 @@ describe("@wcdraft/db schema — shape", () => {
     expectTypeOf<LeaderboardEntry>().toMatchTypeOf<{
       id: string;
       seasonKey: string;
+      challengeType: string;
+      challengeDate: string | null;
+      ratingVersion: string | null;
       mode: string;
       draftMode: string;
       draftOrder: string | null;
@@ -161,6 +164,9 @@ describe("@wcdraft/db schema — shape", () => {
     }>();
     expectTypeOf<NewLeaderboardEntry>().toMatchTypeOf<{
       seasonKey: string;
+      challengeType?: string;
+      challengeDate?: string | null;
+      ratingVersion?: string | null;
       mode: string;
       draftMode: string;
       draftOrder?: string | null;

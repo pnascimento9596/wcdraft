@@ -94,12 +94,12 @@ describe("ship-dark — flag on", () => {
     process.env[FLAG] = "1";
   });
 
-  it("/leaderboard renders the board shell with the current season key", () => {
+  it("/leaderboard renders the daily board shell as the cold landing surface", () => {
     const html = renderToStaticMarkup(LeaderboardPage());
     expect(html).toContain("Leaderboard");
-    expect(html).toContain("Season ");
-    // The full derived key is shown as evidence.
-    expect(html).toMatch(/engine-[0-9.]+(?:-[a-z0-9.-]+)?_/);
+    expect(html).toContain("Daily Leaderboard");
+    expect(html).toContain("Daily Draft");
+    expect(html).toContain("Advanced");
   });
 
   it("nav gains the Leaderboard entry between History and How to Play", () => {
@@ -428,6 +428,9 @@ describe("board views", () => {
         draft_order: "squad_first",
         era: "all_time",
         rating_basis: "career",
+        rating_version: "ratings-test",
+        percentile: 100,
+        field_size: 2,
         display_name: "alpha_xi",
         verified_score: 88,
         score_breakdown: [{ label: "Goals scored", raw: 4, weight: 3, points: 12 }],
@@ -440,6 +443,9 @@ describe("board views", () => {
         draft_order: "squad_first",
         era: "all_time",
         rating_basis: "career",
+        rating_version: "ratings-test",
+        percentile: 50,
+        field_size: 2,
         display_name: "blind_side",
         verified_score: 70,
         score_breakdown: null,
@@ -475,6 +481,9 @@ describe("board views", () => {
             draftOrder: "squad_first",
             era: "all_time",
             ratingBasis: "career",
+            ratingVersion: "ratings-test",
+            percentile: 100,
+            fieldSize: 1,
             timeLabel: "10m ago",
             isMine: false,
             breakdown: [{ label: "<script>breakdown()</script>", points: 1 }],

@@ -12,6 +12,7 @@ import {
   type ConfigBadge,
 } from "@/lib/game/config-badges";
 import {
+  dailyDraftHref,
   draftHref,
   parseRunSearchParams,
   reviewHref,
@@ -451,6 +452,14 @@ function ShareBody({
   }
 
   const teamLabel = shareTeamLabel(view, isRecipient);
+  const recipientDraftHref =
+    record.challenge?.kind === "daily"
+      ? dailyDraftHref(null, record.challenge.date)
+      : draftHref(null);
+  const recipientCta =
+    record.challenge?.kind === "daily"
+      ? "Draft today's teams →"
+      : `${teamLabel} went ${view.display_record} — draft your own all-time XI →`;
   const shareReadyNote = shareLinkPending
     ? "Preparing the signed run preview..."
     : ogPreviewError
@@ -471,15 +480,17 @@ function ShareBody({
         {configBadges.length > 0 ? <ConfigBadgeRow badges={configBadges} /> : null}
         <p className="page-head__note">
           {isRecipient
-            ? "A seed-locked run from another browser. Start fresh to draft your own XI."
+            ? record.challenge?.kind === "daily"
+              ? "A seed-locked daily run from another browser. Draft the same daily teams and chase your own score."
+              : "A seed-locked run from another browser. Start fresh to draft your own XI."
             : "Branded, deterministic, seed-locked. Names and national flag codes only — no competition marks."}
         </p>
       </header>
 
       {isRecipient ? (
         <section className={`${s.panel} ${s.recipientPanel}`} aria-label="Draft your own">
-          <Link href={draftHref(null)} className={`btn btn--primary ${s.recipientCta}`}>
-            {teamLabel} went {view.display_record} — draft your own all-time XI →
+          <Link href={recipientDraftHref} className={`btn btn--primary ${s.recipientCta}`}>
+            {recipientCta}
           </Link>
         </section>
       ) : null}

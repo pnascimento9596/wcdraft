@@ -8,8 +8,14 @@ import {
 } from "react";
 
 import { loadGameData, type GameData } from "@/lib/game/data";
+import { DAILY_DRAFT_CONFIG, dailyChallengeForDate } from "@/lib/game/daily";
 import { describeGameError } from "@/lib/game/errors";
-import { evictStaleRunRecords, isStorageVolatile, type RunRecordV1 } from "@/lib/game/run-record";
+import {
+  createNewRunRecord,
+  evictStaleRunRecords,
+  isStorageVolatile,
+  type RunRecordV1,
+} from "@/lib/game/run-record";
 import { resolveDisplayRun } from "@/lib/game/run-screen-loader";
 import { VOLATILE_STORAGE_WARNING } from "./constants";
 
@@ -25,7 +31,10 @@ export type DraftScreenMode =
   | { kind: "recovery"; gameData: GameData; reason: string; runId: string | null }
   | { kind: "error"; title: string; message: string };
 
-export function useDraftScreenLoader(requestRunId: string | null): {
+export function useDraftScreenLoader(
+  requestRunId: string | null,
+  opts: { dailyDate?: string | null } = {},
+): {
   mode: DraftScreenMode;
   setMode: Dispatch<SetStateAction<DraftScreenMode>>;
   retryFromError: () => void;
@@ -71,6 +80,28 @@ export function useDraftScreenLoader(requestRunId: string | null): {
               runId: requestRunId,
             });
           }
+        } else if (opts.dailyDate) {
+          const challenge = dailyChallengeForDate(opts.dailyDate);
+          const created = createNewRunRecord(gd, {
+            formation_id: DAILY_DRAFT_CONFIG.formationId,
+            mode: DAILY_DRAFT_CONFIG.mode,
+            team_name: DAILY_DRAFT_CONFIG.teamName,
+            parent_seed: challenge.seed,
+            challenge,
+            era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+            draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+            rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+          });
+          const warning =
+            created.persistence === "volatile" || created.warnings.length > 0
+              ? created.warnings.join(" · ") || VOLATILE_STORAGE_WARNING
+              : null;
+          setMode({
+            kind: "ready",
+            gameData: gd,
+            record: created.record,
+            persistenceWarning: warning,
+          });
         } else {
           setMode({ kind: "formation_select", gameData: gd });
         }
@@ -83,7 +114,7 @@ export function useDraftScreenLoader(requestRunId: string | null): {
     return () => {
       reqToken.current += 1;
     };
-  }, [requestRunId]);
+  }, [requestRunId, opts.dailyDate]);
 
   const retryFromError = useCallback(() => {
     const myToken = ++reqToken.current;

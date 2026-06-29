@@ -40,6 +40,7 @@ import {
 
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
+import { isDailyChallengeDate, type DailyChallenge } from "./daily";
 import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
@@ -116,6 +117,8 @@ export interface RunRecordV1 {
   draft: DraftState;
   /** Lifecycle status; older records without this field default to "ready". */
   status?: RunRecordStatus;
+  /** Optional challenge metadata. Daily runs use a shared date-derived seed. */
+  challenge?: DailyChallenge;
   /** Persisted simulation result; present only when status === "complete". */
   simulation?: PersistedSimulation;
 }
@@ -304,6 +307,10 @@ export interface CreateRunRecordParams {
   formation_id: string;
   mode?: "classic" | "hidden";
   team_name?: string;
+  /** Explicit parent seed. Daily drafts use this to bypass the per-device nonce. */
+  parent_seed?: string;
+  /** Optional challenge metadata persisted into the run token. */
+  challenge?: DailyChallenge;
   /**
    * DC-2 era preset (default `all_time` = today's pool). The draft is
    * created against the matching era-filtered catalog via `getCatalogForEra`.
@@ -350,7 +357,8 @@ export function createNewRunRecord(
   for (let attempt = 0; attempt < CREATE_RETRY_LIMIT; attempt += 1) {
     const seq = nextCounter(storage);
     const run_id = buildRunId(seq);
-    const parent_seed = buildParentSeed(createRunNonce(), run_id, params.formation_id);
+    const parent_seed =
+      params.parent_seed ?? buildParentSeed(createRunNonce(), run_id, params.formation_id);
     try {
       const era_preset = params.era_preset ?? "all_time";
       const draft = createDraft(getCatalogForEra(gameData, era_preset), {
@@ -374,6 +382,7 @@ export function createNewRunRecord(
         updated_seq: seq,
         versions: gameData.versions,
         draft,
+        ...(params.challenge === undefined ? {} : { challenge: params.challenge }),
       };
       const save = saveRunRecord(record);
       warnings.push(...save.warnings);
@@ -381,9 +390,10 @@ export function createNewRunRecord(
     } catch (err) {
       lastErr = err;
       // Retry on the specific "no coach in 17 spins" failure; surface anything
-      // else immediately.
+      // else immediately. Explicit seeds (daily) are the contract; retrying
+      // would silently change the shared puzzle.
       if (err instanceof RangeError && /none of the 17 drawn/i.test(err.message)) {
-        continue;
+        if (params.parent_seed === undefined) continue;
       }
       throw err;
     }
@@ -751,6 +761,9 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
   if (status === "complete" && simulation === undefined) return null;
   if (simulation !== undefined && status !== "complete") return null;
 
+  const challenge = parseRunChallenge(value.challenge, parent_seed);
+  if (challenge === "invalid") return null;
+
   return {
     record_version: RUN_RECORD_SCHEMA_VERSION,
     run_id,
@@ -760,8 +773,24 @@ function parseRunRecordValue(value: unknown): RunRecordV1 | null {
     versions,
     draft: draft.data,
     ...(status === undefined ? {} : { status }),
+    ...(challenge === undefined ? {} : { challenge }),
     ...(simulation === undefined ? {} : { simulation }),
   };
+}
+
+function parseRunChallenge(
+  value: unknown,
+  parentSeed: string,
+): DailyChallenge | undefined | "invalid" {
+  if (value === undefined) return undefined;
+  if (!isPlainObject(value)) return "invalid";
+  if (value.kind !== "daily") return "invalid";
+  const date = boundedString(value.date, 10);
+  const seed = boundedString(value.seed, MAX_PARENT_SEED_CHARS);
+  if (date === null || seed === null || !isDailyChallengeDate(date) || seed !== parentSeed) {
+    return "invalid";
+  }
+  return { kind: "daily", date, seed };
 }
 
 function parsePersistedSimulation(value: unknown): PersistedSimulation | null {
