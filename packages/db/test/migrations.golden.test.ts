@@ -256,7 +256,9 @@ describe("@wcdraft/db migrations — 0008_leaderboard_daily_challenge", () => {
     expect(dailySql).toMatch(/leaderboard_entries_challenge_type_chk/);
     expect(dailySql).toMatch(/'season', 'daily'/);
     expect(dailySql).toMatch(/leaderboard_entries_daily_mode_chk/);
-    expect(dailySql).toMatch(/"challenge_type" <> 'daily' OR "leaderboard_entries"\."mode" = 'casual'/);
+    expect(dailySql).toMatch(
+      /"challenge_type" <> 'daily' OR "leaderboard_entries"\."mode" = 'casual'/,
+    );
     expect(dailySql).toMatch(/leaderboard_entries_challenge_date_chk/);
     expect(dailySql).toMatch(/\^\[0-9\]\{4\}-\[0-9\]\{2\}-\[0-9\]\{2\}\$/);
     expect(dailySql).toMatch(/leaderboard_entries_rating_version_chk/);

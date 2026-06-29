@@ -3,9 +3,7 @@ import type { DraftFlow, EraPresetId, RatingBasis } from "@wcdraft/core";
 export const DAILY_CHALLENGE_KIND = "daily" as const;
 export const SEASON_CHALLENGE_KIND = "season" as const;
 
-export type LeaderboardChallengeKind =
-  | typeof SEASON_CHALLENGE_KIND
-  | typeof DAILY_CHALLENGE_KIND;
+export type LeaderboardChallengeKind = typeof SEASON_CHALLENGE_KIND | typeof DAILY_CHALLENGE_KIND;
 
 export interface DailyChallenge {
   readonly kind: typeof DAILY_CHALLENGE_KIND;

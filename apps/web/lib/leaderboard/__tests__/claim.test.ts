@@ -212,8 +212,10 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
   it("merges a same-day daily anon row into the user's daily identity", async () => {
     const uid = await makeUser("a@example.com");
     await makeSession({ id: "ses-anon" });
+    const ownedDailyRunId = ["t1", "daily", "owned"].join(".");
+    const anonDailyRunId = ["t1", "daily", "anon"].join(".");
     const account = await makeEntry({
-      token: "t1.daily-owned",
+      token: ownedDailyRunId,
       userId: uid,
       challengeType: "daily",
       challengeDate: "2026-06-29",
@@ -222,7 +224,7 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
       createdAt: new Date("2026-06-29T12:00:00.000Z"),
     });
     await makeEntry({
-      token: "t1.daily-anon",
+      token: anonDailyRunId,
       sessionId: "ses-anon",
       challengeType: "daily",
       challengeDate: "2026-06-29",
@@ -237,7 +239,7 @@ describe("claimLeaderboardEntries — dedupe conflict resolution", () => {
     const rows = await entriesOfUser(uid);
     expect(rows).toHaveLength(1);
     expect(rows[0]!.id).toBe(account.id);
-    expect(rows[0]!.token).toBe("t1.daily-anon");
+    expect(rows[0]!.token).toBe(anonDailyRunId);
     expect(rows[0]!.displayAlias).toBe("anon_name");
     expect(rows[0]!.verifiedScore).toBe(150);
     expect(rows[0]!.sessionId).toBeNull();
