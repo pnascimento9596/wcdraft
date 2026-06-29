@@ -20,6 +20,7 @@ const MODE_COPY: Record<
     cta: string;
     href: string;
     featured?: boolean;
+    secondary?: boolean;
   }
 > = {
   daily: {
@@ -46,12 +47,13 @@ const MODE_COPY: Record<
   hidden: {
     index: "02",
     title: "Memory",
-    tag: "Live",
-    desc: "Names, flags and years stay — ratings don't. Draft on what you remember; all reveals after you simulate.",
+    tag: "Blind",
+    desc: "Try it after a run: names, flags and years stay visible; ratings reveal after simulation.",
     preview: "Hidden ratings · post-run reveal",
     chips: ["Ratings hidden", "Names & years shown", "Same seeds"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
+    secondary: true,
   },
 };
 
@@ -75,6 +77,7 @@ export function ModeSelect() {
                 s.modeCard,
                 s.modeCardLive,
                 item.featured ? s.modeCardFeatured : "",
+                item.secondary ? s.modeCardSecondary : "",
                 on ? s.modeCardSelected : "",
               ]
                 .filter(Boolean)

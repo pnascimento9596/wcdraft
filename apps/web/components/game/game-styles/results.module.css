@@ -528,6 +528,42 @@
 .pinWarning {
   margin: 0;
 }
+.memoryProgression {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
+    var(--bg-800);
+}
+.memoryProgressionCopy {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
+}
+.memoryProgressionKicker {
+  color: var(--accent);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.memoryProgressionTitle {
+  margin: 0;
+  color: var(--ink-100);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+.memoryProgression p {
+  margin: 0;
+  color: var(--ink-300);
+  font-size: 0.85rem;
+}
 .resultsActions {
   display: flex;
   flex-wrap: wrap;
@@ -708,6 +744,11 @@
 
   .outcomeStats {
     gap: 6px;
+  }
+
+  .memoryProgression {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .matchList {

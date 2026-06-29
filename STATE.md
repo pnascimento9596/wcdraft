@@ -82,6 +82,31 @@ fork pool is now capped at 4 workers after unbounded fork startup proved flaky
 on loaded local runners. Report:
 `docs/reports/daily-fronting-og-craft-2026-06-29/summary.md`.
 
+Memory reveal share / progression / leaderboard IA lane:
+2026-06-29 · local YELLOW gates run on branch
+`ws-ux/memory-reveal-share-20260629`, based on `origin/main`
+`371bee8cb57ece40a027ba76e1c076bcbb8e03d0`, then rebased onto `origin/main`
+`2de107c4e7088c5296cbf7a113e1b08c0c215430`. Scope is bounded to `apps/web`:
+Memory hidden-mode reveal before/after share SVG/OG/caption, cold `/play`
+Memory de-emphasis behind Daily/Classic, post-run `Try drafting blind`
+progression affordance, and leaderboard IA labels that keep sighted Classic and
+blind Memory lanes separate. No `blindCardRatingView` seam, engine, draft/sim,
+compact data, ETL, run-token schema, leaderboard server route/store/scoring,
+migration, or season-key change. Parallel-lane files `apps/web/app/page.tsx`,
+root layout, and theme provider were not touched. Local gates passed: focused
+web Vitest (5 files / 95 tests), web typecheck, root `pnpm typecheck` (8/8),
+root `pnpm lint` (5/5), root `pnpm test` (8/8; web 790 passed / 1 skipped plus
+`game-flow-playwright`), root `pnpm build` (4/4), `test:golden:leaderboard`
+(4/4; 6 tests), fresh-context review for all three units (PASS / no blockers),
+and browser proof with 12 mobile screenshots at 360×800 / 390×844 in both
+themes, zero axe violations, zero contrast failures, zero overflow failures,
+zero page errors, zero console errors, and zero HTTP errors. Runtime anchors
+remain `runtime-data-2.8.0` / `engine-2026.06.28-merit-v4.6` /
+`wc-perf-6.6.0+proj-career-5.6.0`, dataset `2026-06-04`, ruleset
+`ruleset-2026.06.04`; explicit active leaderboard season id remains
+`season-2026-summer`. Report:
+`docs/reports/memory-reveal-share-2026-06-29/summary.md`.
+
 BASIS: merit-v4.3 pins both **Career/default** and **Current** to the owner
 `final_rating`; merit-v4.5 is a conservative recovery list for v4.3's unresolved
 rows and uses that same Career+Current pin path. merit-v4.4 re-rates **Current**

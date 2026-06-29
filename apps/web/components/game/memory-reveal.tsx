@@ -14,14 +14,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { computeSynergy, FORMATION_TEMPLATES } from "@wcdraft/core";
-import {
-  lineStrengthViews,
-  managerCardView,
-  managerTournamentFor,
-  pitchSlotViews,
-  squadAverageOverall,
-} from "@/lib/game/adapters";
+import { managerCardView, managerTournamentFor } from "@/lib/game/adapters";
 import type { GameData } from "@/lib/game/data";
+import { buildMemoryRevealView } from "@/lib/game/memory-reveal-model";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
@@ -50,11 +45,7 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
   // Full (unblinded) views — the same adapters the classic surfaces use. The
   // reveal must show the basis the run was drafted on, so a Current run reveals
   // the Current numbers (not the Career alias).
-  const basis = draft.rating_basis;
-  const { starters, bench } = useMemo(
-    () => pitchSlotViews(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
-  );
+  const reveal = useMemo(() => buildMemoryRevealView(gameData, draft), [gameData, draft]);
   const manager = draft.manager_card_id
     ? managerCardView(gameData.indexes, draft.manager_card_id)
     : null;
@@ -64,14 +55,6 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
   const synergy = useMemo(
     () => computeSynergy(draft.squad, formation, managerTournament, gameData.nationByCardId),
     [draft.squad, formation, managerTournament, gameData.nationByCardId],
-  );
-  const lineRatings = useMemo(
-    () => lineStrengthViews(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
-  );
-  const squadAvg = useMemo(
-    () => squadAverageOverall(gameData.indexes, draft, { basis }),
-    [gameData, draft, basis],
   );
 
   return (
@@ -89,7 +72,7 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
       <div className={s.squadStage}>
         <Pitch
           formationId={draft.formation_id}
-          starters={starters}
+          starters={reveal.starters}
           linkedPairs={synergy.linked_pairs}
           showInactiveEdges
         />
@@ -99,7 +82,7 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
       <div className={s.bench}>
         <span className={s.benchLabel}>Bench</span>
         <div className={s.benchSlots}>
-          {bench.map((b) => (
+          {reveal.bench.map((b) => (
             <div
               key={b.slot_id}
               className={`${s.benchSlot} ${b.card ? s.benchFilled : ""} ${
@@ -115,16 +98,21 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
 
       <div className={s.panelHead}>
         <h3 className={s.panelSubTitle}>Rating by line</h3>
-        <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
+        <span className={s.squadAvg}>
+          {formatNullableNumber(reveal.squadAverageBefore)} →{" "}
+          {formatNullableNumber(reveal.squadAverageAfter)} OVR
+        </span>
       </div>
       <div className={s.lineRatings}>
-        {lineRatings.map((l) => (
+        {reveal.lineRatings.map((l) => (
           <div key={l.line} className={s.lineRow}>
             <span className={s.lineName}>{l.label}</span>
             <span className={s.lineTrack}>
-              <span className={s.lineFill} style={{ width: `${l.value ?? 0}%` }} />
+              <span className={s.lineFill} style={{ width: `${l.after_value ?? 0}%` }} />
             </span>
-            <span className={s.lineVal}>{formatNullableNumber(l.value)}</span>
+            <span className={s.lineVal}>
+              {formatNullableNumber(l.before_value)} → {formatNullableNumber(l.after_value)}
+            </span>
           </div>
         ))}
       </div>

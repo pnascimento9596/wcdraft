@@ -4,7 +4,7 @@ import { ModeSelect } from "../../components/game/mode-select";
 export const metadata: Metadata = {
   title: "Choose a mode",
   description:
-    "Pick a wcdraft game mode — Classic with ratings visible, or the hidden Memory mode.",
+    "Pick a wcdraft game mode — start with Daily or Classic, then try the blind Memory reveal.",
 };
 
 export default function ModeSelectPage() {

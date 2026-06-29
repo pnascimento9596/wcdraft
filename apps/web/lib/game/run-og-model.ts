@@ -4,6 +4,7 @@ import { playerCardView } from "./adapters";
 import { configBadgesFromToken, type ConfigBadge } from "./config-badges";
 import type { GameData } from "./data";
 import { getFormationVisualSlots } from "./formation-layout";
+import { buildMemoryRevealView } from "./memory-reveal-model";
 import { adjustPitchLayoutForRender } from "./pitch-layout";
 import { positionShape, type PositionShape, type RatingBadgeKind } from "./view-models";
 import {
@@ -30,6 +31,27 @@ export interface RunOgLineupSlot {
   y_pct: number;
   name: string;
   nation_code: string;
+  overall?: number | null;
+}
+
+export interface RunOgRevealLine {
+  label: string;
+  before: number | null;
+  after: number | null;
+}
+
+export interface RunOgRevealPick {
+  name: string;
+  nation_code: string;
+  before_overall: number | null;
+  after_overall: number | null;
+}
+
+export interface RunOgRevealModel {
+  squad_before: number | null;
+  squad_after: number | null;
+  lines: RunOgRevealLine[];
+  top_reveals: RunOgRevealPick[];
 }
 
 export interface RunOgModel {
@@ -44,6 +66,7 @@ export interface RunOgModel {
   lineup: RunOgLineupSlot[];
   stars: ShareStar[];
   manager: ShareManager | null;
+  reveal: RunOgRevealModel | null;
 }
 
 const TEAM_NAME_MAX = 80;
@@ -65,6 +88,7 @@ export function buildRunOgModelFromTrustedDraft(
   narrative?: string | null,
 ): RunOgModel {
   const lineup = buildLineup(gameData, draft);
+  const reveal = draft.mode === "hidden" ? buildRunOgRevealModel(gameData, draft) : null;
   return {
     team_name: boundedText(draft.team_name, "Your XI", TEAM_NAME_MAX),
     mode_label: draft.mode === "hidden" ? "Memory" : "Classic",
@@ -77,6 +101,7 @@ export function buildRunOgModelFromTrustedDraft(
     lineup,
     stars: topStars(gameData, draft, 3),
     manager: managerLine(gameData, draft),
+    reveal,
   };
 }
 
@@ -109,6 +134,26 @@ function buildLineup(gameData: GameData, draft: DraftState): RunOgLineupSlot[] {
       y_pct: visual.y_pct,
       name: view.name,
       nation_code: view.nation_code,
+      overall: view.rating.overall,
     };
   });
+}
+
+function buildRunOgRevealModel(gameData: GameData, draft: DraftState): RunOgRevealModel {
+  const reveal = buildMemoryRevealView(gameData, draft);
+  return {
+    squad_before: reveal.squadAverageBefore,
+    squad_after: reveal.squadAverageAfter,
+    lines: reveal.lineRatings.map((line) => ({
+      label: line.label,
+      before: line.before_value,
+      after: line.after_value,
+    })),
+    top_reveals: reveal.topReveals.map((starter) => ({
+      name: starter.name,
+      nation_code: starter.nation_code,
+      before_overall: starter.before_overall,
+      after_overall: starter.after_overall,
+    })),
+  };
 }

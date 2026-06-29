@@ -451,6 +451,8 @@ function ResultsBody({
 
       <LocalProgressBand summary={progressSummary} compact />
 
+      {record.draft.mode !== "hidden" ? <MemoryProgressionPanel /> : null}
+
       {/* ── Memory-mode reveal ────────────────────────────────────────────
           Hidden-mode runs blind every rating signal through draft + review;
           the sim has now run, so the full blind set reveals here. This also
@@ -561,6 +563,21 @@ function ResultsBody({
         </div>
       </section>
     </div>
+  );
+}
+
+function MemoryProgressionPanel() {
+  return (
+    <section className={`${s.panel} ${s.memoryProgression}`} aria-label="Try Memory mode">
+      <div className={s.memoryProgressionCopy}>
+        <span className={s.memoryProgressionKicker}>Next challenge</span>
+        <h2 className={s.memoryProgressionTitle}>Try drafting blind</h2>
+        <p>Ratings stay hidden until the reveal.</p>
+      </div>
+      <Link href="/play/draft?mode=hidden" className="btn btn--primary">
+        Try blind →
+      </Link>
+    </section>
   );
 }
 

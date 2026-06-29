@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { RUN_OG_HEIGHT, RUN_OG_WIDTH } from "./run-og-constants";
-import type { RunOgLineupSlot, RunOgModel } from "./run-og-model";
+import type { RunOgLineupSlot, RunOgModel, RunOgRevealModel } from "./run-og-model";
 import { RUN_OG_PALETTE as P } from "./run-og-palette";
 
 export interface RunOgImageAssets {
@@ -179,7 +179,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           }}
         />
         {model.lineup.map((slot) => (
-          <LineupChip key={slot.slot_id} slot={slot} />
+          <LineupChip key={slot.slot_id} slot={slot} showOverall={model.reveal !== null} />
         ))}
       </div>
       <div
@@ -263,26 +263,30 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-            padding: "12px 14px",
-            border: `1px solid ${P.aquaSoftLine}`,
-            color: P.text,
-            background: P.aquaWash,
-            fontFamily: "Space Grotesk",
-            fontSize: 18,
-            lineHeight: 1.18,
-          }}
-        >
-          {wrapText(model.narrative, 42, 3).map((line, i) => (
-            <div key={`${line}-${i}`} style={{ display: "flex" }}>
-              {line}
-            </div>
-          ))}
-        </div>
+        {model.reveal ? (
+          <MemoryRevealOgPanel reveal={model.reveal} />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+              padding: "12px 14px",
+              border: `1px solid ${P.aquaSoftLine}`,
+              color: P.text,
+              background: P.aquaWash,
+              fontFamily: "Space Grotesk",
+              fontSize: 18,
+              lineHeight: 1.18,
+            }}
+          >
+            {wrapText(model.narrative, 42, 3).map((line, i) => (
+              <div key={`${line}-${i}`} style={{ display: "flex" }}>
+                {line}
+              </div>
+            ))}
+          </div>
+        )}
 
         {model.badges.length > 0 ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -308,51 +312,55 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           <div style={{ display: "flex", height: 38 }} />
         )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-          <SectionTitle>Key names</SectionTitle>
-          {model.stars.map((star, i) => (
-            <div
-              key={`${star.nation_code}-${star.name}-${i}`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                color: P.text,
-                fontSize: 19,
-              }}
-            >
+        {model.reveal ? (
+          <MemoryRevealOgFacts reveal={model.reveal} />
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+            <SectionTitle>Key names</SectionTitle>
+            {model.stars.map((star, i) => (
               <div
+                key={`${star.nation_code}-${star.name}-${i}`}
                 style={{
                   display: "flex",
-                  width: 46,
-                  justifyContent: "center",
-                  padding: "5px 0",
-                  border: `1px solid ${P.aquaLine}`,
-                  color: P.aqua,
-                  fontFamily: "Space Mono",
-                  fontSize: 14,
+                  alignItems: "center",
+                  gap: 10,
+                  color: P.text,
+                  fontSize: 19,
                 }}
               >
-                {star.nation_code}
+                <div
+                  style={{
+                    display: "flex",
+                    width: 46,
+                    justifyContent: "center",
+                    padding: "5px 0",
+                    border: `1px solid ${P.aquaLine}`,
+                    color: P.aqua,
+                    fontFamily: "Space Mono",
+                    fontSize: 14,
+                  }}
+                >
+                  {star.nation_code}
+                </div>
+                <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>
+                  {`${truncate(star.name, 22)} · ${star.overall}`}
+                </div>
               </div>
-              <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>
-                {`${truncate(star.name, 22)} · ${star.overall}`}
-              </div>
-            </div>
-          ))}
-          {model.manager ? (
-            <FactRow
-              label={model.manager.nation_code}
-              value={`${truncate(model.manager.name, 22)} · Manager`}
-            />
-          ) : null}
-        </div>
+            ))}
+            {model.manager ? (
+              <FactRow
+                label={model.manager.nation_code}
+                value={`${truncate(model.manager.name, 22)} · Manager`}
+              />
+            ) : null}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
+function LineupChip({ slot, showOverall }: { slot: RunOgLineupSlot; showOverall: boolean }) {
   const left = Math.round((slot.x_pct / 100) * PITCH_W - SLOT_W / 2);
   const top = Math.round((slot.y_pct / 100) * PITCH_H - SLOT_H / 2);
   return (
@@ -395,8 +403,81 @@ function LineupChip({ slot }: { slot: RunOgLineupSlot }) {
           }}
         >
           {slot.slot_label} · {slot.nation_code}
+          {showOverall ? ` · ${formatOgNumber(slot.overall)}` : ""}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: "12px 14px",
+        border: `1px solid ${P.aquaSoftLine}`,
+        color: P.text,
+        background: P.aquaWash,
+        fontFamily: "Space Grotesk",
+        fontSize: 17,
+        lineHeight: 1.12,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+        <SectionTitle>Blind -&gt; revealed</SectionTitle>
+        <div
+          style={{
+            display: "flex",
+            color: P.goldSoft,
+            fontFamily: "Space Mono",
+            fontSize: 20,
+          }}
+        >
+          {formatOgNumber(reveal.squad_before)} -&gt; {formatOgNumber(reveal.squad_after)} OVR
+        </div>
+      </div>
+      {reveal.lines.map((line) => (
+        <div
+          key={line.label}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 12,
+            color: P.text,
+            fontFamily: "Space Grotesk",
+            fontSize: 17,
+          }}
+        >
+          <span>{line.label}</span>
+          <span style={{ color: P.aqua, fontFamily: "Space Mono" }}>
+            {formatOgNumber(line.before)} -&gt; {formatOgNumber(line.after)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MemoryRevealOgFacts({ reveal }: { reveal: RunOgRevealModel }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+      <SectionTitle>Top reveals</SectionTitle>
+      {reveal.top_reveals.length > 0 ? (
+        reveal.top_reveals.map((star, i) => (
+          <FactRow
+            key={`${star.nation_code}-${star.name}-${i}`}
+            label={star.nation_code}
+            value={`${formatOgNumber(star.before_overall)} -> ${formatOgNumber(
+              star.after_overall,
+            )} · ${truncate(star.name, 18)}`}
+          />
+        ))
+      ) : (
+        <FactRow label="—" value="—" />
+      )}
     </div>
   );
 }
@@ -491,6 +572,11 @@ function FactRow({ label, value }: { label: string; value: string }) {
       <div style={{ display: "flex", fontFamily: "Space Grotesk", fontSize: 18 }}>{value}</div>
     </div>
   );
+}
+
+function formatOgNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return String(value);
 }
 
 function truncate(value: string, max: number): string {

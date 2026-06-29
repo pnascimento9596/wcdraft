@@ -43,8 +43,8 @@ export const BOARD_LANES: readonly { key: BoardLane; label: string }[] = Object.
 ]);
 
 export const BOARD_DRAFT_MODES: readonly { key: BoardDraftMode; label: string }[] = Object.freeze([
-  { key: "classic", label: "Classic" },
-  { key: "hidden", label: "Memory" },
+  { key: "classic", label: "Sighted Classic" },
+  { key: "hidden", label: "Blind Memory" },
 ]);
 
 export const BOARD_DRAFT_ORDERS: readonly { key: BoardDraftOrder; label: string }[] = Object.freeze(
@@ -98,6 +98,10 @@ export function configLabel(filter: Omit<BoardConfigFilter, "lane">): string {
     labelFor(BOARD_RATING_BASES, filter.ratingBasis),
     labelFor(BOARD_ERAS, filter.era),
   ].join(" / ");
+}
+
+export function draftModeLaneLabel(mode: BoardDraftMode): string {
+  return mode === "hidden" ? "Blind Memory" : "Sighted Classic";
 }
 
 function labelFor<T extends string>(items: readonly { key: T; label: string }[], key: T): string {
