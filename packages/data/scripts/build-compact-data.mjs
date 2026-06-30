@@ -54,6 +54,8 @@ const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
 const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 
+// runtime-data-2.9.0 (spin-agency): player-pick replay changes from card-id
+// picks to deterministic choose-from-3 choice indices.
 // runtime-data-2.8.0 (merit-v4.6): manual override display pins remain exact,
 // but their internal score/channel inputs are curve-inverted onto the natural
 // display scale.
@@ -76,10 +78,10 @@ const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 // runtime-data-2.0.0 (merit-v3 V6): compact ratings carry both display bases,
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
-const SCHEMA_VERSION = "runtime-data-2.8.0";
+const SCHEMA_VERSION = "runtime-data-2.9.0";
 // narrative-v2: deterministic scenario-aware narrative selection changes
 // RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.28-merit-v4.6";
+const ENGINE_VERSION = "engine-2026.06.30-spin-agency";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // merit-v4.6 model (wc-perf-6.6.0 historical; proj-career-5.6.0 projected).

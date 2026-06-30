@@ -2,8 +2,8 @@
 // determinism locks for the pure validation core.
 //
 // Threat coverage map:
-//   T1 fabricated pick  → "keystone" describe (roster-mate NOT in the spin's
-//                          re-derived rolled_card_ids → ILLEGAL_PICK)
+//   T1 forged choice    → "keystone" describe (choice index outside the spin's
+//                          re-derived choose-from-3 rolled_card_ids → ILLEGAL_PICK)
 //   T2 tampered score   → SCORE_MISMATCH, claimed never persisted
 //   T4 duplicate pick / manager twice → ILLEGAL_PICK at replay
 //   T5 name abuse       → INVALID_NAME matrix
@@ -19,8 +19,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildRunTokenBody,
   decodeRunToken,
-  type RunTokenV1Body,
-  type RunTokenV2Body,
+  type RunTokenV3Body,
 } from "../../game/run-token";
 import { dailyChallengeForDate, deriveDailySeed } from "../../game/daily";
 import { DISPLAY_NAME_MAX, validateDisplayName } from "../display-name";
@@ -52,13 +51,21 @@ const originBody = (() => {
   // Round-trip through the PRODUCTION encoder so tampering starts from the
   // exact wire shape a real client emits.
   const decoded = decodeRunToken(encodeBody(buildRunTokenBody(origin)));
-  if (!decoded) throw new Error("origin token failed to decode");
+  if (!decoded || decoded.v !== 3) throw new Error("origin token failed to decode as t3");
   return decoded;
 })();
 const originToken = encodeBody(originBody);
 
-function tampered(mutate: (b: RunTokenV1Body) => void): string {
-  const body = JSON.parse(JSON.stringify(originBody)) as RunTokenV1Body;
+type PlayerPickV3 = Extract<RunTokenV3Body["pl"][number], { k: "p" }>;
+
+function playerPicks(body: RunTokenV3Body): Array<{ p: PlayerPickV3; i: number }> {
+  return body.pl
+    .map((p, i) => ({ p, i }))
+    .filter((x): x is { p: PlayerPickV3; i: number } => x.p.k === "p");
+}
+
+function tampered(mutate: (b: RunTokenV3Body) => void): string {
+  const body = JSON.parse(JSON.stringify(originBody)) as RunTokenV3Body;
   mutate(body);
   return encodeBody(body);
 }
@@ -139,7 +146,7 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
 
   it("rejects a wrong pick count (16 and 18 picks)", () => {
     const t18 = tampered((b) => {
-      b.pl.push({ k: "p", c: "fake", s: "fake" });
+      b.pl.push({ k: "p", ci: 0, s: "fake" });
     });
     const t16 = tampered((b) => {
       b.pl.pop();
@@ -148,17 +155,17 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
     expect(rejectionCode(submit({ token: t16 }))).toBe("MALFORMED_TOKEN");
   });
 
-  it("rejects an unknown token version (v:3)", () => {
+  it("rejects an unknown token version (v:4)", () => {
     const t = tampered((b) => {
-      (b as { v: number }).v = 3;
+      (b as { v: number }).v = 4;
     });
     expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
   });
 
-  it("rejects a future `t3.` wire prefix", () => {
+  it("rejects a future `t4.` wire prefix", () => {
     // The UI may show a nicer "newer version" notice, but the API contract is
     // simple: undecodable means MALFORMED_TOKEN.
-    const t = "t3." + Buffer.from(JSON.stringify({ v: 3 }), "utf8").toString("base64url");
+    const t = "t4." + Buffer.from(JSON.stringify({ v: 4 }), "utf8").toString("base64url");
     expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
   });
 
@@ -341,8 +348,8 @@ describe("daily challenge contract", () => {
   it("rejects forged daily date/seed metadata before replay", () => {
     const daily = dailySubmission();
     const decoded = decodeRunToken(daily.token);
-    expect(decoded?.v).toBe(2);
-    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV2Body;
+    expect(decoded?.v).toBe(3);
+    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV3Body;
     body.ch = { k: "daily", d: "2026-06-30", s: daily.challenge.seed };
     const forged = encodeBody(body);
 
@@ -366,13 +373,11 @@ describe("daily challenge contract", () => {
   it("still rejects illegal daily picks through the replay keystone", () => {
     const daily = dailySubmission();
     const decoded = decodeRunToken(daily.token);
-    expect(decoded?.v).toBe(2);
-    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV2Body;
-    const picks = body.pl
-      .map((p, i) => ({ p, i }))
-      .filter((x): x is { p: { k: "p"; c: string; s: string }; i: number } => x.p.k === "p");
-    const [first, , , second] = picks;
-    body.pl[second!.i] = { ...second!.p, c: first!.p.c };
+    expect(decoded?.v).toBe(3);
+    const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV3Body;
+    const [first] = playerPicks(body);
+    if (!first) throw new Error("daily token has no player picks");
+    first.p.ci = 99;
 
     expect(
       rejectionCode(
@@ -494,11 +499,11 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
   });
 
   it("ORDER LOCK: name validation fires before the replay keystone", () => {
-    // Token has BOTH a fabricated pick and a bad name → INVALID_NAME wins
+    // Token has BOTH a forged choice index and a bad name → INVALID_NAME wins
     // (cheapest-rejection-first: no CPU-bound replay for a bad name).
     const t = tampered((b) => {
       const i = b.pl.findIndex((p) => p.k === "p");
-      (b.pl[i] as { c: string }).c = "p99999_t1"; // garbage card
+      (b.pl[i] as PlayerPickV3).ci = 99;
     });
     const v = submit({ token: t, display_name: "bad-name" });
     expect(rejectionCode(v)).toBe("INVALID_NAME");
@@ -508,99 +513,61 @@ describe("step 5 — display-name rules (plan §5.1)", () => {
 // ─── Step 7 — THE KEYSTONE: draft legality via full replay (T1) ─────────────
 
 /**
- * What "not offered" means here: a spin's re-derived candidate pool is the
- * FULL roster of its seed-drawn (tournament, nation) minus already-picked
- * players (verified empirically: rolled_card_ids length === roster length on
- * every spin of this origin). So a fabricated pick is necessarily a card from
- * a (T, N) the seed never rolled for that spin — exactly threat T1's "swap in
- * a legend the spin never offered".
+ * What "not offered" means under the `t3.` token: a spin's re-derived
+ * choose-from-3 list is the only materialized player surface the token may
+ * reference. The token carries a choice index, not a card id, so the attacker
+ * can no longer name an arbitrary legend. The equivalent T1 seam is an index
+ * outside `rolled_card_ids`, which must fail before any slot assignment or
+ * score authority work.
  *
- * The rolled_card_ids membership check is the FIRST of the seed-derived
- * guards in `pickPlayer` (membership → tournament-match → roster lookup), so
- * the keystone tests assert its message contract ("not a candidate"), not
- * just the verdict code. MUTATE-AND-FAIL: loosening the membership check in
- * packages/core/src/draft.ts flips these tests red — the rejection then
- * surfaces from a later guard with a different message (or, for an in-roster
- * fabrication, not at all).
+ * MUTATE-AND-FAIL: loosening replay to accept missing/out-of-range choices in
+ * apps/web/lib/game/run-token.ts flips these tests red.
  */
-function fabricatedPickToken(
-  pickCard: (
-    spin: { tournament_id: number; nation_id: string },
-    pickedPlayerIds: ReadonlySet<string>,
-  ) => { card_id: string } | undefined,
+function outOfRangeChoiceToken(
+  choiceIndex = 99,
+  playerPickOrdinal = 0,
 ): { spinIndex: number; token: string } {
-  const pickedPlayerIds = new Set(
-    origin.draft.squad.flatMap((s) => (s.player_id ? [s.player_id] : [])),
-  );
-  const spin = [...origin.draft.spins]
+  const playerSpins = [...origin.draft.spins]
     .sort((a, b) => a.index - b.index)
-    .find((s) => s.picked_kind === "player");
+    .filter((s) => s.picked_kind === "player");
+  const spin = playerSpins[playerPickOrdinal] ?? playerSpins[0];
   if (!spin) throw new Error("origin draft has no player pick");
-  const fabricated = pickCard(spin, pickedPlayerIds);
-  if (!fabricated) throw new Error("no fabricated card found — origin seed unusable");
   const token = tampered((b) => {
-    (b.pl[spin.index] as { c: string }).c = fabricated.card_id;
+    const pick = b.pl[spin.index];
+    if (!pick || pick.k !== "p") throw new Error("origin token/draft pick log drifted");
+    pick.ci = choiceIndex;
   });
   return { spinIndex: spin.index, token };
 }
 
-/** Highest-overall card outside the spin's (T, N) — "a legend not offered". */
-function legendOutsideSpin(
-  spin: { tournament_id: number; nation_id: string },
-  picked: ReadonlySet<string>,
-): { card_id: string } | undefined {
-  let best: { card_id: string; overall: number } | undefined;
-  for (const c of data.gameData.draftPool.player_cards) {
-    if (c.tournament_id === spin.tournament_id && c.nation_id === spin.nation_id) continue;
-    if (picked.has(c.player_id)) continue;
-    const overall = data.gameData.indexes.ratingByCardId.get(c.card_id)?.overall;
-    if (overall === null || overall === undefined) continue;
-    if (!best || overall > best.overall || (overall === best.overall && c.card_id < best.card_id)) {
-      best = { card_id: c.card_id, overall };
-    }
-  }
-  return best;
-}
-
 describe("step 7 — keystone: replay rejects picks outside rolled_card_ids", () => {
-  it("T1 fabricated pick: a legend the spin never offered → ILLEGAL_PICK at that spin", () => {
-    const { spinIndex, token } = fabricatedPickToken(legendOutsideSpin);
+  it("T1 forged choice: out-of-range choice index → ILLEGAL_PICK at that spin", () => {
+    const { spinIndex, token } = outOfRangeChoiceToken(99);
     const v = submit({ token });
     expect(rejectionCode(v)).toBe("ILLEGAL_PICK");
     if (v.status === "rejected") {
-      // RunTokenError message contract: names the failing spin + the rolled
-      // membership rejection from pickPlayer.
+      // RunTokenError message contract: names the failing spin + the choice
+      // index replay guard.
       expect(v.reason).toContain(`spin ${spinIndex}`);
-      expect(v.reason).toContain("not a candidate");
+      expect(v.reason).toContain("choice index 99");
+      expect(v.reason).toContain("outside the materialized choices");
     }
   });
 
-  it("T1 variant: same tournament, different nation — membership still fires first", () => {
-    const { spinIndex, token } = fabricatedPickToken((spin, picked) =>
-      data.gameData.draftPool.player_cards.find(
-        (c) =>
-          c.tournament_id === spin.tournament_id &&
-          c.nation_id !== spin.nation_id &&
-          !picked.has(c.player_id),
-      ),
-    );
+  it("T1 boundary: choice index 3 rejects even though the token shape decodes", () => {
+    const { spinIndex, token } = outOfRangeChoiceToken(3);
     const v = submit({ token });
     expect(rejectionCode(v)).toBe("ILLEGAL_PICK");
     if (v.status === "rejected") {
       expect(v.reason).toContain(`spin ${spinIndex}`);
-      expect(v.reason).toContain("not a candidate");
+      expect(v.reason).toContain("choice index 3");
+      expect(v.reason).toContain("outside the materialized choices");
     }
   });
 
-  it("duplicate pick: the same card claimed on two spins → ILLEGAL_PICK", () => {
-    const t = tampered((b) => {
-      const picks = b.pl
-        .map((p, i) => ({ p, i }))
-        .filter((x): x is { p: { k: "p"; c: string; s: string }; i: number } => x.p.k === "p");
-      const [first, , , second] = picks;
-      (b.pl[second!.i] as { c: string }).c = first!.p.c;
-    });
-    expect(rejectionCode(submit({ token: t }))).toBe("ILLEGAL_PICK");
+  it("later-spin out-of-range choice index → ILLEGAL_PICK", () => {
+    const { token } = outOfRangeChoiceToken(99, 3);
+    expect(rejectionCode(submit({ token }))).toBe("ILLEGAL_PICK");
   });
 
   it("manager twice: a second {k:'m'} entry → ILLEGAL_PICK", () => {
@@ -616,11 +583,9 @@ describe("step 7 — keystone: replay rejects picks outside rolled_card_ids", ()
 
   it("occupied slot: two picks claiming the same slot → ILLEGAL_PICK", () => {
     const t = tampered((b) => {
-      const picks = b.pl
-        .map((p, i) => ({ p, i }))
-        .filter((x): x is { p: { k: "p"; c: string; s: string }; i: number } => x.p.k === "p");
+      const picks = playerPicks(b);
       const [first, second] = picks;
-      (b.pl[second!.i] as { s: string }).s = first!.p.s;
+      second!.p.s = first!.p.s;
     });
     expect(rejectionCode(submit({ token: t }))).toBe("ILLEGAL_PICK");
   });
@@ -681,7 +646,7 @@ describe("acceptance contract", () => {
   });
 
   it("rejected verdicts are deterministic too (two runs, deep-equal)", () => {
-    const { token } = fabricatedPickToken(legendOutsideSpin);
+    const { token } = outOfRangeChoiceToken(99);
     const a = submit({ token });
     const b = submit({ token });
     expect(JSON.parse(JSON.stringify(a))).toEqual(JSON.parse(JSON.stringify(b)));

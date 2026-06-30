@@ -14,14 +14,12 @@
 //   contain `.`) and pins schema evolutions without ambiguity. Base64url
 //   keeps the payload URL-safe without `encodeURIComponent` blow-up.
 //
-//   DC-1 (draft-config season, plan §A): `t2.` carries the THREE config axes
+//   DC-1 (draft-config season, plan §A): `t2.` carried the THREE config axes
 //   (`df` draft flow, `rb` rating basis, `ef` era preset WITH resolved
-//   bounds) on top of everything `t1.` carried. New runs encode `t2.`
-//   exclusively; `t1.` stays decode-compatible forever and decodes AS the
-//   default config (`squad_first` / `career` / `all_time`). The `rb` field
-//   admits `current` at the schema boundary (single token evolution — no
-//   `t3.` needed for the MV2-12b basis season) but encode emits `career`
-//   only and replay refuses `current` honestly until that season lands.
+//   bounds) on top of everything `t1.` carried. Spin-agency `t3.` keeps those
+//   config anchors and replaces player card ids with choice indices into the
+//   re-derived choose-from-3 list. `t1.`/`t2.` stay decode-compatible for skew
+//   notices, but replay is intentionally `t3.`-only.
 //
 // REPLAY:
 //   `reconstructDraftFromToken` replays the token's pick log through the same
@@ -40,6 +38,7 @@
 //   simulate against a different ruleset.
 
 import {
+  activeSpin,
   createDraft,
   ERA_PRESETS,
   isDraftComplete,
@@ -56,8 +55,8 @@ import {
   type RatingBasis,
   type RunTokenBody,
   type RunTokenOgSummary,
-  type RunTokenPickV2,
-  type RunTokenV2Body,
+  type RunTokenPickV3,
+  type RunTokenV3Body,
 } from "@wcdraft/core";
 
 import type { GameData } from "./data";
@@ -67,6 +66,7 @@ import type { RunRecordV1 } from "./run-record";
 export {
   RUN_TOKEN_PREFIX,
   RUN_TOKEN_V2_PREFIX,
+  RUN_TOKEN_V3_PREFIX,
   RUN_TOKEN_MAX_LEN,
   RunTokenError,
   decodeRunToken,
@@ -81,12 +81,14 @@ export type {
   RunTokenOgSummary,
   RunTokenPick,
   RunTokenPickV2,
+  RunTokenPickV3,
   RunTokenV1Body,
   RunTokenV2Body,
+  RunTokenV3Body,
 } from "@wcdraft/core";
 
-/** Build the DC-1 `t2.` token body from a fully drafted `RunRecord`. */
-export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
+/** Build the spin-agency `t3.` token body from a fully drafted `RunRecord`. */
+export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body {
   const spins = [...record.draft.spins].sort((a, b) => a.index - b.index);
   if (spins.length !== 17) {
     throw new RunTokenError(`expected 17 spins in DraftState, got ${spins.length}`);
@@ -98,7 +100,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
   const rating_basis: RatingBasis = record.draft.rating_basis ?? "career";
   const era_preset: EraPresetId = record.draft.era_preset ?? "all_time";
   const positionFirst = draft_flow === "position_first";
-  const pl: RunTokenPickV2[] = spins.map((spin, i) => {
+  const pl: RunTokenPickV3[] = spins.map((spin, i) => {
     if (spin.index !== i) {
       throw new RunTokenError(`spin index ${spin.index} out of order at position ${i}`);
     }
@@ -112,7 +114,11 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
       if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
         throw new RunTokenError(`spin ${i}: player pick missing card_id or slot_id`);
       }
-      const base = { k: "p" as const, c: spin.picked_card_id as string, s: spin.assigned_slot_id };
+      const choiceIndex = spin.rolled_card_ids.indexOf(spin.picked_card_id);
+      if (choiceIndex < 0) {
+        throw new RunTokenError(`spin ${i}: picked card is not in the materialized choice list`);
+      }
+      const base = { k: "p" as const, ci: choiceIndex, s: spin.assigned_slot_id };
       // Under position-first the committed target IS the assigned slot
       // (`pickPlayer` enforces the match at pick time), so `ts === s` always.
       return positionFirst ? { ...base, ts: spin.assigned_slot_id } : base;
@@ -121,7 +127,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV2Body {
   });
   const preset = ERA_PRESETS[era_preset];
   return {
-    v: 2,
+    v: 3,
     rid: record.run_id,
     fid: record.draft.formation_id,
     ps: record.parent_seed,
@@ -159,7 +165,7 @@ export function buildRunTokenOgSummary(record: RunRecordV1): RunTokenOgSummary |
   };
 }
 
-/** Encode a `RunRecord` as a `t2.<base64url>` token string. */
+/** Encode a `RunRecord` as a `t3.<base64url>` token string. */
 export function encodeRunToken(record: RunRecordV1): string {
   return encodeRunTokenBody(buildRunTokenBody(record));
 }
@@ -173,6 +179,9 @@ export function encodeRunToken(record: RunRecordV1): string {
  * only meaningful when versions agree.
  */
 export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
+  if (token.v !== 3) {
+    throw new RunTokenError("legacy token version cannot replay under choose-from-3");
+  }
   const config = tokenDraftConfig(token);
   // Both rating bases now replay (runtime-data-2.0.0 dual basis). The basis is
   // carried on the reconstructed DraftState and resolved when the sim world /
@@ -213,15 +222,21 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
       if (pick.k === "m") {
         state = pickManager(catalog, state);
       } else {
-        // `pick.c` is a CardId by construction (token round-trips a real
-        // DraftState.spins[i].picked_card_id, which is branded CardId). The
-        // brand is structural and not preserved through JSON, so re-stamp it
-        // here at the trust boundary.
-        state = pickPlayer(catalog, state, pick.c as CardId, pick.s);
+        const active = activeSpin(state);
+        if (!active || active.status !== "pending") {
+          throw new RunTokenError(`spin ${i}: no materialized player choices are pending`);
+        }
+        const cardId = active.rolled_card_ids[pick.ci];
+        if (cardId === undefined) {
+          throw new RunTokenError(
+            `spin ${i}: choice index ${pick.ci} is outside the materialized choices`,
+          );
+        }
+        state = pickPlayer(catalog, state, cardId as CardId, pick.s);
       }
     } catch (err) {
       throw new RunTokenError(
-        `replay failed at spin ${i} (${pick.k === "m" ? "manager" : `player ${pick.c}→${pick.s}`}): ${
+        `replay failed at spin ${i} (${pick.k === "m" ? "manager" : `choice ${pick.ci}→${pick.s}`}): ${
           err instanceof Error ? err.message : String(err)
         }`,
       );
@@ -242,7 +257,7 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
 export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
   const draft = reconstructDraftFromToken(token, gameData);
   const challenge =
-    token.v === 2 && token.ch?.k === "daily"
+    token.v === 3 && token.ch?.k === "daily"
       ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
       : undefined;
   return {

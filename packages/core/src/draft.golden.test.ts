@@ -12,6 +12,7 @@ import {
   stepDraft,
   activeSpin,
   isDraftComplete,
+  buildCardId,
   validateSquad,
   DraftStateSchema,
 } from "./index.js";
@@ -107,6 +108,42 @@ describe("draft — fixed seed reproduces identical 17-spin sequence (ENGINE-V2 
     expect(draft.squad.filter((s) => !s.is_starter)).toHaveLength(5);
     expect(draft.status).toBe("ready");
     expect(validateSquad(draft).is_fieldable).toBe(true);
+  });
+
+  it("materializes no more than three player choices per spin", () => {
+    const draft = runFixtureDraft();
+    for (const spin of draft.spins) {
+      expect(spin.rolled_card_ids.length).toBeLessThanOrEqual(3);
+      expect(new Set(spin.rolled_card_ids).size).toBe(spin.rolled_card_ids.length);
+      if (spin.picked_kind === "player") {
+        expect(spin.rolled_card_ids).toContain(spin.picked_card_id);
+      }
+    }
+  });
+
+  it("spreads full three-choice offers across synthetic rating tiers", () => {
+    const { dataset } = buildDraftFixture();
+    const byCardId = new Map(
+      dataset.players.map((card) => [buildCardId(card.player_id, card.tournament_id), card]),
+    );
+    const draft = runFixtureDraft();
+    let sawPositionSpread = false;
+    for (const spin of draft.spins.filter((s) => s.rolled_card_ids.length === 3)) {
+      const choices = spin.rolled_card_ids.map((id) => byCardId.get(id)!);
+      const tiers = new Set(
+        choices.map((card) => {
+          const overall = card.choice_overall ?? 0;
+          if (overall >= 68) return "top";
+          if (overall >= 64) return "middle";
+          return "lower";
+        }),
+      );
+      expect(tiers).toEqual(new Set(["top", "middle", "lower"]));
+      if (new Set(choices.map((card) => card.eligible_positions[0])).size > 1) {
+        sawPositionSpread = true;
+      }
+    }
+    expect(sawPositionSpread).toBe(true);
   });
 
   it("carries the three version anchors verbatim (honest replay state)", () => {

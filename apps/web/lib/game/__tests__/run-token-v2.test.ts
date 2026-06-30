@@ -31,12 +31,13 @@ import {
   encodeRunToken,
   isNewerRunTokenVersion,
   reconstructDraftFromToken,
-  RUN_TOKEN_V2_PREFIX,
+  RUN_TOKEN_V3_PREFIX,
   tokenDraftConfig,
   virtualRecordFromToken,
   versionsAgree,
   type RunTokenV1Body,
   type RunTokenV2Body,
+  type RunTokenV3Body,
 } from "../run-token";
 import { dailyChallengeForDate } from "../daily";
 
@@ -46,14 +47,26 @@ import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-ha
 
 const gameData: GameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
-const originBody: RunTokenV2Body = buildRunTokenBody(origin);
+const originBody: RunTokenV3Body = buildRunTokenBody(origin);
 
-function encodeBody(body: unknown, prefix: string = RUN_TOKEN_V2_PREFIX): string {
+function encodeBody(body: unknown, prefix: string = RUN_TOKEN_V3_PREFIX): string {
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
 
-/** The equivalent `t1.` body for a default-config v2 body (compat property). */
-function v1BodyFrom(b: RunTokenV2Body): RunTokenV1Body {
+function legacyPickLogFromOrigin(): RunTokenV1Body["pl"] {
+  return [...origin.draft.spins]
+    .sort((a, b) => a.index - b.index)
+    .map((spin) => {
+      if (spin.picked_kind === "manager") return { k: "m" as const };
+      if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
+        throw new Error(`origin spin ${spin.index} is missing player pick fields`);
+      }
+      return { k: "p" as const, c: spin.picked_card_id as string, s: spin.assigned_slot_id };
+    });
+}
+
+/** The equivalent `t1.` body for a default-config v3 body. */
+function v1BodyFrom(b: RunTokenV3Body): RunTokenV1Body {
   return {
     v: 1,
     rid: b.rid,
@@ -61,7 +74,7 @@ function v1BodyFrom(b: RunTokenV2Body): RunTokenV1Body {
     ps: b.ps,
     tn: b.tn,
     md: b.md,
-    pl: b.pl.map((p) => (p.k === "m" ? { k: "m" as const } : { k: "p" as const, c: p.c, s: p.s })),
+    pl: legacyPickLogFromOrigin(),
     sv: b.sv,
     dv: b.dv,
     rv: b.rv,
@@ -71,24 +84,52 @@ function v1BodyFrom(b: RunTokenV2Body): RunTokenV1Body {
   };
 }
 
-function tamperedV2(mutate: (b: RunTokenV2Body) => void): string {
-  const copy = JSON.parse(JSON.stringify(originBody)) as RunTokenV2Body;
+function v2BodyFrom(b: RunTokenV3Body): RunTokenV2Body {
+  return {
+    v: 2,
+    rid: b.rid,
+    fid: b.fid,
+    ps: b.ps,
+    tn: b.tn,
+    md: b.md,
+    df: b.df,
+    rb: b.rb,
+    ef: b.ef,
+    pl: legacyPickLogFromOrigin(),
+    sv: b.sv,
+    dv: b.dv,
+    rv: b.rv,
+    ev: b.ev,
+    uv: b.uv,
+    hv: b.hv,
+  };
+}
+
+function tamperedV3(mutate: (b: RunTokenV3Body) => void): string {
+  const copy = JSON.parse(JSON.stringify(originBody)) as RunTokenV3Body;
   mutate(copy);
   return encodeBody(copy);
 }
 
-// ─── 1. t1 ↔ t2 default-config compatibility property ───────────────────────
+// ─── 1. t3 default-config replay + legacy replay refusal ────────────────────
 
-describe("t2 — t1/t2 default-config equivalence (plan §A compatibility property)", () => {
-  it("a default-config t2 token and its equivalent t1 token replay to a byte-identical DraftState", () => {
-    const t2 = decodeRunToken(encodeBody(originBody));
+describe("t3 — default-config replay and legacy refusal", () => {
+  it("a default-config t3 token replays to the originating DraftState", () => {
+    const t3 = decodeRunToken(encodeBody(originBody));
+    expect(t3).not.toBeNull();
+    const fromV3 = reconstructDraftFromToken(t3!, gameData);
+    expect(JSON.stringify(fromV3)).toBe(JSON.stringify(origin.draft));
+  });
+
+  it("current-anchor t1/t2 bodies decode but cannot replay under choose-from-3", () => {
     const t1 = decodeRunToken(encodeBody(v1BodyFrom(originBody), "t1."));
-    expect(t2).not.toBeNull();
+    const t2 = decodeRunToken(encodeBody(v2BodyFrom(originBody), "t2."));
     expect(t1).not.toBeNull();
-    const fromV2 = reconstructDraftFromToken(t2!, gameData);
-    const fromV1 = reconstructDraftFromToken(t1!, gameData);
-    expect(JSON.stringify(fromV1)).toBe(JSON.stringify(fromV2));
-    expect(JSON.stringify(fromV2)).toBe(JSON.stringify(origin.draft));
+    expect(t2).not.toBeNull();
+    expect(versionsAgree(t1!, gameData.versions)).toBe(true);
+    expect(versionsAgree(t2!, gameData.versions)).toBe(true);
+    expect(() => reconstructDraftFromToken(t1!, gameData)).toThrow(/legacy token version/);
+    expect(() => reconstructDraftFromToken(t2!, gameData)).toThrow(/legacy token version/);
   });
 
   it("tokenDraftConfig normalizes t1 to the default config", () => {
@@ -108,7 +149,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
   it("round-trips a well-formed default-config body", () => {
     const decoded = decodeRunToken(encodeRunToken(origin));
     expect(decoded).not.toBeNull();
-    expect(decoded!.v).toBe(2);
+    expect(decoded!.v).toBe(3);
     expect(JSON.stringify(decoded)).toBe(JSON.stringify(originBody));
   });
 
@@ -120,7 +161,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
       challenge,
     };
     const decoded = decodeRunToken(encodeRunToken(record));
-    if (decoded === null || decoded.v !== 2) throw new Error("daily token did not decode as t2");
+    if (decoded === null || decoded.v !== 3) throw new Error("daily token did not decode as t3");
     expect(decoded.ch).toEqual({ k: "daily", d: "2026-06-29", s: challenge.seed });
 
     const virtual = virtualRecordFromToken(decoded, gameData);
@@ -130,32 +171,32 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
   });
 
   it("rejects unknown df / rb / ef.id values", () => {
-    expect(decodeRunToken(tamperedV2((b) => ((b as { df: string }).df = "slot_first")))).toBeNull();
-    expect(decodeRunToken(tamperedV2((b) => ((b as { rb: string }).rb = "prime")))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => ((b as { df: string }).df = "slot_first")))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => ((b as { rb: string }).rb = "prime")))).toBeNull();
     expect(
-      decodeRunToken(tamperedV2((b) => ((b.ef as { id: string }).id = "since_1998"))),
+      decodeRunToken(tamperedV3((b) => ((b.ef as { id: string }).id = "since_1998"))),
     ).toBeNull();
   });
 
   it("rejects NON-CANONICAL era bounds (tamper-after-encode)", () => {
     // Right id, wrong bounds — a relabel/tamper cannot reinterpret the pool.
-    expect(decodeRunToken(tamperedV2((b) => (b.ef.min = 1954)))).toBeNull();
-    expect(decodeRunToken(tamperedV2((b) => (b.ef.max = 2030)))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => (b.ef.min = 1954)))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => (b.ef.max = 2030)))).toBeNull();
     expect(
-      decodeRunToken(tamperedV2((b) => (b.ef = { id: "modern", min: 1930, max: 2026 }))),
+      decodeRunToken(tamperedV3((b) => (b.ef = { id: "modern", min: 1930, max: 2026 }))),
     ).toBeNull();
   });
 
   it("rejects position_first entries with missing ts", () => {
     // Flipping df alone leaves every pick without the now-required ts.
-    expect(decodeRunToken(tamperedV2((b) => (b.df = "position_first")))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => (b.df = "position_first")))).toBeNull();
   });
 
   it("rejects incoherent ts under EITHER flow", () => {
     // Manager ts must be "manager".
     expect(
       decodeRunToken(
-        tamperedV2((b) => {
+        tamperedV3((b) => {
           const m = b.pl.find((p) => p.k === "m")!;
           (m as { ts?: string }).ts = "gk";
         }),
@@ -164,7 +205,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     // Player ts must equal s.
     expect(
       decodeRunToken(
-        tamperedV2((b) => {
+        tamperedV3((b) => {
           const p = b.pl.find((p) => p.k === "p")!;
           (p as { ts?: string }).ts = "bench.4";
         }),
@@ -173,7 +214,7 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
   });
 
   it("accepts a coherent position_first pick log (ts on every entry)", () => {
-    const t = tamperedV2((b) => {
+    const t = tamperedV3((b) => {
       b.df = "position_first";
       for (const p of b.pl) {
         if (p.k === "m") (p as { ts?: string }).ts = "manager";
@@ -187,16 +228,16 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
 
   it("rejects wrong pick counts (>17 and <17)", () => {
     expect(
-      decodeRunToken(tamperedV2((b) => b.pl.push({ k: "p", c: "x:1", s: "bench.9" }))),
+      decodeRunToken(tamperedV3((b) => b.pl.push({ k: "p", ci: 0, s: "bench.9" }))),
     ).toBeNull();
-    expect(decodeRunToken(tamperedV2((b) => void b.pl.pop()))).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => void b.pl.pop()))).toBeNull();
   });
 
   it("rejects unknown body versions and oversized payloads", () => {
-    expect(decodeRunToken(tamperedV2((b) => ((b as { v: number }).v = 3)))).toBeNull();
-    expect(decodeRunToken("t2." + "A".repeat(9000))).toBeNull();
-    expect(decodeRunToken("t2.")).toBeNull();
-    expect(decodeRunToken("t2.!!!")).toBeNull();
+    expect(decodeRunToken(tamperedV3((b) => ((b as { v: number }).v = 4)))).toBeNull();
+    expect(decodeRunToken("t3." + "A".repeat(9000))).toBeNull();
+    expect(decodeRunToken("t3.")).toBeNull();
+    expect(decodeRunToken("t3.!!!")).toBeNull();
   });
 });
 
@@ -207,7 +248,7 @@ describe("t2 — anchor fuzz (every flipped anchor yields skew, never replay)", 
   for (const anchor of ANCHORS) {
     it(`flipping ${anchor} trips versionsAgree`, () => {
       const decoded = decodeRunToken(
-        tamperedV2((b) => ((b as unknown as Record<string, unknown>)[anchor] = "flipped-anchor-x")),
+        tamperedV3((b) => ((b as unknown as Record<string, unknown>)[anchor] = "flipped-anchor-x")),
       );
       expect(decoded).not.toBeNull();
       expect(versionsAgree(decoded!, gameData.versions)).toBe(false);
@@ -219,7 +260,7 @@ describe("t2 — anchor fuzz (every flipped anchor yields skew, never replay)", 
 
 describe("t2 — replay carries the rating basis (both bases live)", () => {
   it("rb 'current' decodes AND replays, recording the current basis on the draft", () => {
-    const decoded = decodeRunToken(tamperedV2((b) => (b.rb = "current")));
+    const decoded = decodeRunToken(tamperedV3((b) => (b.rb = "current")));
     expect(decoded).not.toBeNull();
     const draft = reconstructDraftFromToken(decoded!, gameData);
     expect(draft.rating_basis).toBe("current");
@@ -227,11 +268,11 @@ describe("t2 — replay carries the rating basis (both bases live)", () => {
 
   it("the basis is the ONLY difference vs a career replay (spins are basis-independent)", () => {
     const current = reconstructDraftFromToken(
-      decodeRunToken(tamperedV2((b) => (b.rb = "current")))!,
+      decodeRunToken(tamperedV3((b) => (b.rb = "current")))!,
       gameData,
     );
     const career = reconstructDraftFromToken(
-      decodeRunToken(tamperedV2((b) => (b.rb = "career")))!,
+      decodeRunToken(tamperedV3((b) => (b.rb = "career")))!,
       gameData,
     );
     expect({ ...current, rating_basis: "career" }).toEqual(career);
@@ -241,17 +282,18 @@ describe("t2 — replay carries the rating basis (both bases live)", () => {
 // ─── 5. future-version detection ─────────────────────────────────────────────
 
 describe("future token versions — honest 'newer build' detection", () => {
-  it("flags t3+ and never flags t1/t2/garbage", () => {
-    expect(isNewerRunTokenVersion("t3.abcd")).toBe(true);
+  it("flags t4+ and never flags t1/t2/t3/garbage", () => {
+    expect(isNewerRunTokenVersion("t4.abcd")).toBe(true);
     expect(isNewerRunTokenVersion("t12.abcd")).toBe(true);
     expect(isNewerRunTokenVersion(encodeRunToken(origin))).toBe(false);
+    expect(isNewerRunTokenVersion("t3.abcd")).toBe(false);
     expect(isNewerRunTokenVersion("t1.abcd")).toBe(false);
     expect(isNewerRunTokenVersion("run-v1-7")).toBe(false);
     expect(isNewerRunTokenVersion("")).toBe(false);
   });
 
-  it("a t3 token does not decode (UI shows the newer-version notice instead)", () => {
-    expect(decodeRunToken("t3." + Buffer.from("{}").toString("base64url"))).toBeNull();
+  it("a t4 token does not decode (UI shows the newer-version notice instead)", () => {
+    expect(decodeRunToken("t4." + Buffer.from("{}").toString("base64url"))).toBeNull();
   });
 });
 

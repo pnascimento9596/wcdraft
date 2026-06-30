@@ -109,12 +109,12 @@ export function SpinStage({
   const pickNum = String(pickNumber).padStart(2, "0");
 
   const tagline = settled
-    ? `${result.nationName}’s ${result.yearLabel} squad is on the board — draft one player or the manager.`
+    ? `${result.nationName} ${result.yearLabel} is on the board — choose from up to three players or take the manager.`
     : spinning
       ? "Rolling the drum…"
       : "Press spin to lock in a nation and World Cup year.";
 
-  const ctaLabel = settled ? "Reveal squad →" : spinning ? "Spinning…" : "Spin";
+  const ctaLabel = settled ? "Reveal choices →" : spinning ? "Spinning…" : "Spin";
   const onCta = settled ? onReveal : spinning ? undefined : onSpin;
 
   const drumVars: DrumVars = {
@@ -206,7 +206,7 @@ export function SpinStage({
           </span>
         </div>
         <div className={s.spinTile}>
-          <span className={s.spinTileLabel}>Player pool</span>
+          <span className={s.spinTileLabel}>Choices</span>
           <span className={s.spinTileValue}>{settled ? playerPoolCount : "—"}</span>
         </div>
         <div className={s.spinTile}>

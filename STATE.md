@@ -9,6 +9,23 @@ Last measured for merit-v4.6 curve-inverted owner overrides:
 `ws-merit/v45-curve-inversion-20260628` before merge/ship.
 Closeout report: `docs/reports/merit-v4.6-curve-inversion-2026-06-28.md`.
 
+Spin Agency / choose-from-3 lane:
+2026-06-30 · local RED implementation on branch
+`ws-core/spin-agency-20260630`, based on `origin/main`
+`421587cf553df8894fc6d27085b6844288ee52f7`. Scope: draft spins now surface
+up to three deterministic player choices plus the manager option; current share
+tokens are `t3.` and carry choice indices instead of player card ids; leaderboard
+anti-cheat replay refuses legacy tokens and out-of-range choices; runtime-data
+anchors moved to `runtime-data-2.9.0` /
+`engine-2026.06.30-spin-agency`; active leaderboard season default moved to
+`season-2026-spin-agency`. Local gates passed: core test (23 files / 383 tests),
+data golden/data+integration/canary/heavy realism, serial Turbo test
+(`pnpm exec turbo run test --concurrency=1`, 8/8 tasks), root typecheck (8/8),
+root lint (5/5), root build (4/4), and `git diff --check`. Report:
+`docs/reports/spin-agency-choose-three-2026-06-30.md`. Not shipped until the RED
+independent reviewer, human approval, merge/deploy, and live production readback
+gates complete.
+
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
 The CI contract now uses path detection plus one required aggregate status,
@@ -154,13 +171,13 @@ current pin on overlap):
 
 Data/bundle anchors:
 `draft-pool.compact.json` raw bytes `130,553,412` with sha256
-`7d6d06b96084dd6ebf2a1eebc365662064d5ed55535a5825f8ce732210a6d48c`;
+`4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0`;
 draft-pool manifest Brotli bucket `2,225,408` (copied `.br` bytes `2,225,295`);
-manifest sha256 `6d6f17eee85b38e7854a3a5d65fdbc7cd7cb586552e234183463003edc19c215`.
+manifest sha256 `44965216b46ef63b85584d2b350629a430d29b643d58a16d67112f4d01d2c919`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
-`ad5c726772561b274b3b1446540a7e982c1d6cc01d942cd2d95d30a606c7cd2e`.
-Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.8.0/`, with
-`runtime-data-2.7.0` retained for N+1 propagation; older retained versions remain
+`7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398`.
+Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.9.0/`, with
+`runtime-data-2.8.0` retained for N+1 propagation; older retained versions remain
 under `apps/web/public/data/wcdraft/` during local web asset copy.
 
 The named canonical doc files (`Build State`, `Architecture`, `Roadmap`,
@@ -317,8 +334,8 @@ broken-pipe MCP transport error.
   neutralization, #136/#142 performance and atomic versioned delivery, #139 a11y
   and candidate render memoization, #140 safe patch dependencies.
 - Runtime data delivery is atomic/versioned at
-  `/data/wcdraft/runtime-data-2.8.0/`; fixed legacy `/data/wcdraft/*` paths remain
-  for old clients/server readers and `runtime-data-2.7.0` is retained for N+1
+  `/data/wcdraft/runtime-data-2.9.0/`; fixed legacy `/data/wcdraft/*` paths remain
+  for old clients/server readers and `runtime-data-2.8.0` is retained for N+1
   propagation.
 - Trusted OG is DONE-LIVE via #143: `/api/og/sign` validates replay tokens against
   the current manifest, reconstructs the draft, runs the deterministic engine, and
@@ -330,10 +347,10 @@ broken-pipe MCP transport error.
 
 | Field                          | Value                                                                                                                                     |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| schema_version                 | runtime-data-2.8.0                                                                                                                        |
+| schema_version                 | runtime-data-2.9.0                                                                                                                        |
 | dataset_version                | 2026-06-04                                                                                                                                |
 | ruleset_version                | ruleset-2026.06.04                                                                                                                        |
-| engine_version                 | engine-2026.06.28-merit-v4.6                                                                                                              |
+| engine_version                 | engine-2026.06.30-spin-agency                                                                                                             |
 | rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
 | rating_version (projected)     | proj-career-5.6.0                                                                                                                         |
 | career_stature                 | career-stature-4.1.0                                                                                                                      |
@@ -343,11 +360,11 @@ broken-pipe MCP transport error.
 | runtime ratings                | 12,219                                                                                                                                    |
 | Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
 | career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
-| explicit leaderboard season id | engine-2026.06.28-merit-v4.6_wc-perf-6.6.0+proj-career-5.6.0_2026-06-04_ruleset-2026.06.04_aa7256a5                                       |
+| explicit leaderboard season id | season-2026-spin-agency                                                                                                                   |
 | compact brotli total           | 2,231,808 measured bytes                                                                                                                  |
-| served draft-pool br artifact  | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.8.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `7d6d06…` |
-| compact sha256                 | manifest `6d6f17ee…` · draft `7d6d06…` · scenario `ad5c726…`                                                                              |
-| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `7d6d06…` / 130,553,412 bytes                                  |
+| served draft-pool br artifact  | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `4daaf2…` |
+| compact sha256                 | manifest `44965216…` · draft `4daaf2…` · scenario `7846fa3a…`                                                                             |
+| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `4daaf2…` / 130,553,412 bytes                                  |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 
@@ -517,7 +534,7 @@ web static assets.
 - `WCDRAFT_CSP_REPORT_ONLY` is an optional build/test cache-keyed override declared in
   `turbo.json`; it is not a required production secret. `WCDRAFT_LEADERBOARD_SEASON_ID`
   is the optional explicit aggregate season-id override and is also declared in
-  `turbo.json`; the code default is `season-2026-summer`.
+  `turbo.json`; the code default is `season-2026-spin-agency`.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.

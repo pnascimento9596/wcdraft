@@ -94,8 +94,35 @@ function manifestAnchors(manifest: ShippedManifest) {
 
 const gameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData, "wcdraft:token-skew-fixture:v1:3");
-const currentBody: RunTokenV2Body = buildRunTokenBody(origin);
+const currentBody = buildRunTokenBody(origin);
 const currentProdAnchors = manifestAnchors(shippedManifestAt(CURRENT_PROD_MANIFEST_COMMIT));
+const plV2 = [...origin.draft.spins]
+  .sort((a, b) => a.index - b.index)
+  .map((spin) => {
+    if (spin.picked_kind === "manager") return { k: "m" as const };
+    if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
+      throw new Error(`origin spin ${spin.index} is missing player pick fields`);
+    }
+    return { k: "p" as const, c: spin.picked_card_id as string, s: spin.assigned_slot_id };
+  });
+const currentBodyV2: RunTokenV2Body = {
+  v: 2,
+  rid: currentBody.rid,
+  fid: currentBody.fid,
+  ps: currentBody.ps,
+  tn: currentBody.tn,
+  md: currentBody.md,
+  df: currentBody.df,
+  rb: currentBody.rb,
+  ef: currentBody.ef,
+  pl: plV2,
+  sv: currentBody.sv,
+  dv: currentBody.dv,
+  rv: currentBody.rv,
+  ev: currentBody.ev,
+  uv: currentBody.uv,
+  hv: currentBody.hv,
+};
 
 // 1 — prev-build t1.
 const prevT1: RunTokenV1Body = {
@@ -105,9 +132,7 @@ const prevT1: RunTokenV1Body = {
   ps: currentBody.ps,
   tn: currentBody.tn,
   md: currentBody.md,
-  pl: currentBody.pl.map((p) =>
-    p.k === "m" ? { k: "m" as const } : { k: "p" as const, c: p.c, s: p.s },
-  ),
+  pl: plV2,
   ...PREV,
 };
 
@@ -119,21 +144,21 @@ const currentProdT1: RunTokenV1Body = {
 };
 
 // 2 — prev-build t2 default config.
-const prevT2Default: RunTokenV2Body = { ...currentBody, ...PREV };
+const prevT2Default: RunTokenV2Body = { ...currentBodyV2, ...PREV };
 
 // 3 — prev-build t2 NON-default config (position_first + modern, ts everywhere).
 const prevT2NonDefault: RunTokenV2Body = {
-  ...currentBody,
+  ...currentBodyV2,
   ...PREV,
   df: "position_first",
   ef: { id: "modern", min: 2018, max: 2026 },
-  pl: currentBody.pl.map((p) =>
+  pl: plV2.map((p) =>
     p.k === "m" ? { k: "m" as const, ts: "manager" as const } : { ...p, ts: p.s },
   ),
 };
 
 // 4 — current-anchor t2 with era bounds tampered AFTER encode.
-const tampered: RunTokenV2Body = JSON.parse(JSON.stringify(currentBody)) as RunTokenV2Body;
+const tampered: RunTokenV2Body = JSON.parse(JSON.stringify(currentBodyV2)) as RunTokenV2Body;
 tampered.ef = { id: "all_time", min: 1900, max: 2026 };
 
 const fixtures = {

@@ -1,7 +1,7 @@
 // Share-token decode + replay — the pure token wire contract is imported from
 // @wcdraft/core so apps/web and marketing/x stay byte-for-byte aligned:
-//   - decodeRunToken (t1./t2., never throws on malformed input → null)
-//   - isNewerRunTokenVersion (t3.+ → honest "older/newer build" angle)
+//   - decodeRunToken (t1./t2./t3., never throws on malformed input → null)
+//   - isNewerRunTokenVersion (t4.+ → honest "older/newer build" angle)
 //   - tokenDraftConfig / versionsAgree
 //   - reconstructDraftFromToken (replays the pick log through core)
 //
@@ -10,6 +10,7 @@
 // or newer-version token must fail closed, never produce a fabricated stat.
 
 import {
+  activeSpin,
   createDraft,
   ERA_PRESETS,
   isDraftComplete,
@@ -84,8 +85,21 @@ export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGame
     }
     if (pick.k === "m") {
       state = pickManager(catalog, state);
-    } else {
+    } else if ("c" in pick) {
+      // Legacy t1/t2 tokens carry the picked CardId directly.
       state = pickPlayer(catalog, state, pick.c as CardId, pick.s);
+    } else {
+      // Current t3 tokens carry a choice index into the re-derived
+      // choose-from-3 list.
+      const active = activeSpin(state);
+      if (!active || active.status !== "pending") {
+        throw new Error(`spin ${i}: no materialized player choices are pending`);
+      }
+      const cardId = active.rolled_card_ids[pick.ci];
+      if (cardId === undefined) {
+        throw new Error(`spin ${i}: choice index ${pick.ci} is outside the materialized choices`);
+      }
+      state = pickPlayer(catalog, state, cardId as CardId, pick.s);
     }
   }
   if (!isDraftComplete(state)) throw new Error("replay completed picks but draft is not complete");

@@ -44,10 +44,9 @@ import fixtureJson from "./fixtures/e2e-real-run-golden.json" with { type: "json
 
 // ─── Fixed inputs ────────────────────────────────────────────────────────────
 
-// :29 is the first satisfying seed after the merit-v4.6 curve-inversion
-// correction and lambda refit. Same search criteria, same prefix — see
-// scripts/generate-e2e-golden.mjs.
-const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:29";
+// :105 is the first satisfying seed after spin-agency choose-from-3. Same
+// search criteria, same prefix — see scripts/generate-e2e-golden.mjs.
+const PARENT_SEED = "wcdraft:e2e-real-run:engine-v2-e3a:105";
 const RUN_SEED = PARENT_SEED;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
@@ -55,12 +54,14 @@ const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historic
 
 /** Build the `DraftDataset` consumed by `autoDraft` / `buildDraftCatalog`. */
 function buildDataset(): DraftDataset {
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
+      choice_overall: ratingByCardId.get(c.card_id) ?? null,
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,

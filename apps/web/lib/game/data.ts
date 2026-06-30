@@ -277,12 +277,15 @@ function validateIndexes(bundle: DraftPoolBundle, idx: GameDataIndexes): void {
 }
 
 function buildDraftDataset(bundle: DraftPoolBundle): DraftDataset {
+  const ratingByCardId = new Map<string, RuntimeRating>();
+  for (const rating of bundle.ratings) ratingByCardId.set(rating.card_id, rating);
   return {
     players: bundle.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
+      choice_overall: ratingByCardId.get(c.card_id)?.overall ?? null,
     })),
     managers: bundle.manager_cards.map((m) => ({
       manager_id: m.manager_id,

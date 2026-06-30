@@ -10,7 +10,7 @@ import {
   decodeRunToken,
   encodeRunToken,
   RUN_TOKEN_PREFIX,
-  type RunTokenV2Body,
+  type RunTokenV3Body,
 } from "../run-token";
 import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
@@ -43,7 +43,7 @@ const origin = buildOriginRecord(gameData);
 const SECRET = "run-og-test-secret-32-bytes-minimum";
 const TRUSTED_IMAGE_CACHE = "public, max-age=31536000, immutable";
 const { db: ogRateDb, pg: ogRatePg, reset: resetOgRateDb } = await setupTestDb();
-type V2WithVestigialOg = RunTokenV2Body & { og?: unknown };
+type V3WithVestigialOg = RunTokenV3Body & { og?: unknown };
 
 afterAll(async () => ogRatePg.close());
 
@@ -61,13 +61,13 @@ function complete(record: RunRecordV1 = origin): RunRecordV1 {
   return { ...record, status: "complete", simulation };
 }
 
-function encodeBody(body: unknown, prefix = "t2."): string {
+function encodeBody(body: unknown, prefix = "t3."): string {
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
 
-function decodeV2(token: string): RunTokenV2Body {
+function decodeV3(token: string): RunTokenV3Body {
   const decoded = decodeRunToken(token);
-  if (!decoded || decoded.v !== 2) throw new Error("expected a t2 token");
+  if (!decoded || decoded.v !== 3) throw new Error("expected a t3 token");
   return decoded;
 }
 
@@ -103,8 +103,8 @@ function ogSignDeps(rateLimiter: RunOgSignRateLimiter = allowAllRunOgSignRateLim
   };
 }
 
-function legacyT1FromCurrentT2(token: string): string {
-  const decoded = decodeV2(token);
+function legacyT1FromCurrentToken(token: string, record: RunRecordV1): string {
+  const decoded = decodeV3(token);
   return encodeBody(
     {
       v: 1,
@@ -113,9 +113,15 @@ function legacyT1FromCurrentT2(token: string): string {
       ps: decoded!.ps,
       tn: decoded!.tn,
       md: decoded!.md,
-      pl: decoded!.pl.map((p) =>
-        p.k === "m" ? { k: "m" as const } : { k: "p" as const, c: p.c, s: p.s },
-      ),
+      pl: [...record.draft.spins]
+        .sort((a, b) => a.index - b.index)
+        .map((spin) => {
+          if (spin.picked_kind === "manager") return { k: "m" as const };
+          if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
+            throw new Error(`spin ${spin.index} is missing player pick fields`);
+          }
+          return { k: "p" as const, c: spin.picked_card_id as string, s: spin.assigned_slot_id };
+        }),
       sv: decoded!.sv,
       dv: decoded!.dv,
       rv: decoded!.rv,
@@ -237,24 +243,24 @@ describe("dynamic run OG tokens", () => {
       sw: completed.simulation!.run.shootout_wins,
     });
     const decoded = decodeRunToken(encodeRunToken(completed));
-    expect(decoded).toMatchObject({ v: 2 });
+    expect(decoded).toMatchObject({ v: 3 });
     expect(decoded).not.toHaveProperty("og");
   });
 
   it("tolerates vestigial result-summary fields on older token bodies", () => {
     const completed = complete();
-    const decoded = decodeV2(encodeRunToken(completed));
+    const decoded = decodeV3(encodeRunToken(completed));
     const summary = buildRunTokenOgSummary(completed)!;
     const tampered = encodeBody({ ...decoded, og: { ...summary, w: 9 } });
-    expect(decodeRunToken(tampered)).toMatchObject({ v: 2 });
+    expect(decodeRunToken(tampered)).toMatchObject({ v: 3 });
   });
 
   it("does not trust syntactically valid unsigned summaries for server-rendered OG", () => {
-    const decoded = decodeV2(encodeRunToken(complete()));
+    const decoded = decodeV3(encodeRunToken(complete()));
     const trueSummary = buildRunTokenOgSummary(complete())!;
     const forgedSummary = { ...trueSummary, w: trueSummary.mp, l: 0, ch: false };
     const forged = encodeBody({ ...decoded, og: forgedSummary });
-    const forgedDecoded = decodeV2(forged) as V2WithVestigialOg;
+    const forgedDecoded = decodeV3(forged) as V3WithVestigialOg;
 
     expect(forgedDecoded.og).toMatchObject(forgedSummary);
     expect(shareOgImageForRunValue(forged, null, gameData.versions)).toEqual(defaultRunOgImage());
@@ -263,15 +269,20 @@ describe("dynamic run OG tokens", () => {
 
 describe("dynamic run OG metadata decision", () => {
   it("uses the static default for malformed, legacy, pre-summary, unsigned, and foreign-build tokens", () => {
-    const completedToken = encodeRunToken(complete());
-    const decoded = decodeV2(completedToken);
+    const completed = complete();
+    const completedToken = encodeRunToken(completed);
+    const decoded = decodeV3(completedToken);
     const foreign = encodeBody({ ...decoded, hv: "foreign-build" });
 
     expect(shareOgImageForRunValue("not-a-token", null, gameData.versions)).toEqual(
       defaultRunOgImage(),
     );
     expect(
-      shareOgImageForRunValue(legacyT1FromCurrentT2(completedToken), null, gameData.versions),
+      shareOgImageForRunValue(
+        legacyT1FromCurrentToken(completedToken, completed),
+        null,
+        gameData.versions,
+      ),
     ).toEqual(defaultRunOgImage());
     expect(shareOgImageForRunValue(encodeRunToken(origin), null, gameData.versions)).toEqual(
       defaultRunOgImage(),
@@ -292,7 +303,7 @@ describe("dynamic run OG metadata decision", () => {
     });
     expect(image.dynamic).toBe(true);
     expect(image.url).toContain("/api/og/run?");
-    expect(image.url).toContain("run=t2.");
+    expect(image.url).toContain("run=t3.");
     expect(image.url).toContain("og=ogs1.");
     expect(image.url).toContain("v=abc1234567890.");
   });
@@ -301,7 +312,7 @@ describe("dynamic run OG metadata decision", () => {
 describe("dynamic run OG model and image", () => {
   it("builds the image model only from a trusted server-derived summary", () => {
     const token = encodeRunToken(complete());
-    const decoded = decodeV2(token);
+    const decoded = decodeV3(token);
     const summary = buildRunTokenOgSummary(complete())!;
     const model = buildRunOgModelFromTrustedSummary(gameData, decoded, summary);
     expect(model.summary).toEqual(summary);
@@ -415,13 +426,12 @@ describe("dynamic run OG model and image", () => {
 
 describe("trusted run OG signing", () => {
   it("mutation: an illegal pick is rejected and never receives a signed model", () => {
-    const body = decodeV2(encodeRunToken(complete()));
+    const body = decodeV3(encodeRunToken(complete()));
     const first = body.pl.find((p) => p.k === "p");
-    const last = [...body.pl].reverse().find((p) => p.k === "p");
-    if (!first || !last || first.k !== "p" || last.k !== "p") {
+    if (!first || first.k !== "p") {
       throw new Error("expected player picks in fixture");
     }
-    first.c = last.c;
+    first.ci = 99;
     const token = encodeBody(body);
     const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
     expect(verified).toEqual({ status: "rejected", reason: "ILLEGAL_PICK" });
@@ -430,8 +440,8 @@ describe("trusted run OG signing", () => {
   it("mutation: a tampered result field signs and renders the true re-derived result", async () => {
     const completed = complete();
     const trueSummary = buildRunTokenOgSummary(completed)!;
-    const body = decodeV2(encodeRunToken(completed));
-    (body as V2WithVestigialOg).og = {
+    const body = decodeV3(encodeRunToken(completed));
+    (body as V3WithVestigialOg).og = {
       w: 8,
       l: 0,
       mp: 8,
@@ -483,7 +493,7 @@ describe("trusted run OG signing", () => {
 
   it("sanitizes attacker-controlled display text before route signing", async () => {
     vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
-    const body = decodeV2(encodeRunToken(complete()));
+    const body = decodeV3(encodeRunToken(complete()));
     body.tn = "X".repeat(161);
     const token = encodeBody(body);
 

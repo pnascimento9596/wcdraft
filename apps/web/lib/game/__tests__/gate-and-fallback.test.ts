@@ -54,7 +54,7 @@ import {
   decodeRunToken,
   encodeRunToken,
   reconstructDraftFromToken,
-  RUN_TOKEN_V2_PREFIX,
+  RUN_TOKEN_V3_PREFIX,
   RunTokenError,
 } from "../run-token";
 
@@ -63,12 +63,14 @@ import {
 const PARENT_SEED = "wcdraft:gate-and-fallback:v1:1";
 
 function buildDataset(): DraftDataset {
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
+      choice_overall: ratingByCardId.get(c.card_id) ?? null,
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,
@@ -199,12 +201,12 @@ describe("share-token invariant — encoding a <17-pick draft throws; a complete
     expect(() => encodeRunToken(record)).toThrow(RunTokenError);
   });
 
-  it("encodeRunToken yields `t2.<base64url>` for a complete 17-spin draft", () => {
+  it("encodeRunToken yields `t3.<base64url>` for a complete 17-spin draft", () => {
     const complete = buildCompleteDraft(gameData);
     const record = recordFor(gameData, complete);
     const token = encodeRunToken(record);
-    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
-    const body = token.slice(RUN_TOKEN_V2_PREFIX.length);
+    expect(token.startsWith(RUN_TOKEN_V3_PREFIX)).toBe(true);
+    const body = token.slice(RUN_TOKEN_V3_PREFIX.length);
     expect(body).toMatch(/^[A-Za-z0-9_-]+$/u);
   });
 });
@@ -246,7 +248,7 @@ describe("regression — complete 17-spin run shares a run token that replays by
     const record = recordFor(gameData, complete);
     const token = encodeRunToken(record);
 
-    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
+    expect(token.startsWith(RUN_TOKEN_V3_PREFIX)).toBe(true);
 
     const decoded = decodeRunToken(token);
     expect(decoded).not.toBeNull();

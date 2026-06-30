@@ -20,7 +20,7 @@ import {
   buildRunTokenBody,
   encodeRunToken,
   type RunTokenV1Body,
-  type RunTokenV2Body,
+  type RunTokenV3Body,
 } from "../run-token";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 
@@ -30,7 +30,19 @@ function encodeBody(body: unknown, prefix: string): string {
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
 
-function v1BodyFrom(b: RunTokenV2Body): RunTokenV1Body {
+function legacyPickLogFromRecord(record: RunRecordV1): RunTokenV1Body["pl"] {
+  return [...record.draft.spins]
+    .sort((a, b) => a.index - b.index)
+    .map((spin) => {
+      if (spin.picked_kind === "manager") return { k: "m" as const };
+      if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
+        throw new Error(`spin ${spin.index} is missing player pick fields`);
+      }
+      return { k: "p" as const, c: spin.picked_card_id as string, s: spin.assigned_slot_id };
+    });
+}
+
+function v1BodyFrom(b: RunTokenV3Body, record: RunRecordV1): RunTokenV1Body {
   return {
     v: 1,
     rid: b.rid,
@@ -38,7 +50,7 @@ function v1BodyFrom(b: RunTokenV2Body): RunTokenV1Body {
     ps: b.ps,
     tn: b.tn,
     md: b.md,
-    pl: b.pl.map((p) => (p.k === "m" ? { k: "m" as const } : { k: "p" as const, c: p.c, s: p.s })),
+    pl: legacyPickLogFromRecord(record),
     sv: b.sv,
     dv: b.dv,
     rv: b.rv,
@@ -91,8 +103,9 @@ describe("run config badges", () => {
   });
 
   it("renders no badge noise for legacy t1 default tokens", () => {
-    const t2Body = buildRunTokenBody(buildOriginRecord(gameData));
-    const t1 = encodeBody(v1BodyFrom(t2Body), "t1.");
+    const record = buildOriginRecord(gameData);
+    const t3Body = buildRunTokenBody(record);
+    const t1 = encodeBody(v1BodyFrom(t3Body, record), "t1.");
     expect(configBadgesFromReplayToken(t1)).toEqual([]);
   });
 

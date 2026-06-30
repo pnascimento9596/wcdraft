@@ -437,7 +437,7 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   assert(record.draft.spins[0]?.status === "pending", "target commit did not materialize the spin");
 
   await page.getByRole("button", { name: "Spin" }).click();
-  await page.getByRole("button", { name: /Reveal squad/ }).click();
+  await page.getByRole("button", { name: /Reveal choices/ }).click();
   const candidates = page.locator('section[aria-label="Candidates"]');
   await candidates.waitFor();
   await candidates.getByRole("button").filter({ hasText: /OVR/ }).first().click();
@@ -500,7 +500,7 @@ async function verifyManagerOnlyGuardFlow(browser: Browser, baseUrl: string): Pr
     waitUntil: "domcontentloaded",
   });
   await page.getByRole("button", { name: "Spin" }).click();
-  await page.getByRole("button", { name: /Reveal squad/ }).click();
+  await page.getByRole("button", { name: /Reveal choices/ }).click();
   await page.getByText("All player slots filled — pick the manager.").waitFor();
   await page.waitForFunction(() => /Manager/u.test(document.activeElement?.textContent ?? ""));
 

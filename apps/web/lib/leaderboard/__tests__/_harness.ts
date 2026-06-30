@@ -134,6 +134,6 @@ export function expectedRunFor(
  *  round-trips through the same decoder the attacker would hit. */
 export function encodeBody(body: unknown): string {
   const v = (body as { v?: unknown } | null)?.v;
-  const prefix = v === 1 ? "t1." : "t2.";
+  const prefix = v === 1 ? "t1." : v === 2 ? "t2." : "t3.";
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }
