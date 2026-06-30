@@ -19,7 +19,9 @@
     "generate:icons": "node scripts/generate-icons.mjs",
     "generate:marketing-assets": "node scripts/generate-marketing-assets.mjs",
     "generate:sw-version": "node scripts/generate-sw-version.mjs",
-    "gen:token-skew": "tsx scripts/generate-token-skew-fixtures.mts"
+    "gen:token-skew": "tsx scripts/generate-token-skew-fixtures.mts",
+    "report:club-crests": "tsx scripts/generate-club-crest-coverage.mts",
+    "verify:club-crests-browser": "tsx scripts/verify-club-crests-browser.mts"
   },
   "dependencies": {
     "@wcdraft/core": "workspace:*",

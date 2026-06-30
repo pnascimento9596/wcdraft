@@ -35,10 +35,18 @@ export default function AttributionPage() {
           marketing assets.
         </p>
 
+        <h2>Club crests</h2>
+        <p>
+          A small audited set of club crest SVGs is sourced from Wikimedia Commons files whose
+          metadata reports public-domain usage terms. Each file and source URL is listed in the
+          repository club-crest manifest. Unmapped, ambiguous, and historical club rows use a
+          generated monogram fallback instead of a guessed logo.
+        </p>
+
         <h2>Independence</h2>
         <p>
           wcdraft is an independent fan-made project and is not affiliated with, endorsed by, or
-          associated with any official competition or governing body.
+          associated with any official competition, governing body, club, or player.
         </p>
       </div>
     </div>

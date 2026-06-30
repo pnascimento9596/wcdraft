@@ -219,7 +219,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-400);
+  color: var(--ink-300);
 }
 
 .managerSlotIdentity {
@@ -1932,13 +1932,89 @@
   overflow: hidden;
 }
 
+.candClubGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 16ch;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.candClubSep {
+  flex: 0 0 auto;
+  color: var(--ink-500);
+}
+
 .candClub {
-  display: inline-block;
-  min-width: 10ch;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
   max-width: 12ch;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   vertical-align: bottom;
+}
+
+.clubCrestMark {
+  flex: 0 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--line-2);
+  background: var(--bg-700);
+}
+
+.clubCrestImage {
+  object-fit: contain;
+  padding: 1px;
+}
+
+.clubCrestFallback {
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.clubTone_0 {
+  background: color-mix(in srgb, var(--bg-700) 86%, var(--ink-300));
+  border-color: color-mix(in srgb, var(--ink-300) 34%, var(--line-2));
+}
+.clubTone_1 {
+  background: color-mix(in srgb, var(--bg-700) 82%, var(--ink-400));
+  border-color: color-mix(in srgb, var(--ink-400) 36%, var(--line-2));
+}
+.clubTone_2 {
+  background: color-mix(in srgb, var(--bg-800) 76%, var(--ink-500));
+  border-color: color-mix(in srgb, var(--ink-500) 42%, var(--line-2));
+}
+.clubTone_3 {
+  background: color-mix(in srgb, var(--bg-750) 80%, var(--lock-dim));
+  border-color: color-mix(in srgb, var(--lock-dim) 34%, var(--line-2));
+}
+.clubTone_4 {
+  background: color-mix(in srgb, var(--bg-800) 82%, var(--ink-300));
+  border-color: color-mix(in srgb, var(--ink-300) 28%, var(--line-2));
+}
+.clubTone_5 {
+  background: color-mix(in srgb, var(--bg-700) 88%, var(--lock));
+  border-color: color-mix(in srgb, var(--lock) 28%, var(--line-2));
+}
+.clubTone_6 {
+  background: color-mix(in srgb, var(--bg-750) 78%, var(--ink-400));
+  border-color: color-mix(in srgb, var(--ink-400) 32%, var(--line-2));
+}
+.clubTone_7 {
+  background: color-mix(in srgb, var(--bg-800) 86%, var(--ink-500));
+  border-color: color-mix(in srgb, var(--ink-500) 38%, var(--line-2));
 }
 
 .candBasisDelta {

@@ -26,6 +26,25 @@ root lint (5/5), root build (4/4), and `git diff --check`. Report:
 independent reviewer, human approval, merge/deploy, and live production readback
 gates complete.
 
+Real club crests lane:
+2026-06-30 · local RED implementation on branch `ws-ux/real-club-crests`,
+based on `origin/main` `995b11a`. Scope is display-only in `apps/web`: an
+audited side manifest for current club-entity crest assets, exact normalized
+club-string lookup at render time, and deterministic neutral monogram fallback
+for unmapped, ambiguous, and historical rows. Coverage from
+`docs/reports/real-club-crests.md`: historical 1930-2022 resolves 0 / 10,957
+club rows by design; projected 2026 resolves 84 / 1,246 club rows; all other
+rows fall back honestly. No runtime-data schema, player-card schema,
+runtime-data version, core, sim, rating, ETL, or golden behavior changed. Local
+gates passed: `@wcdraft/data` build, `@wcdraft/db` build, focused web Vitest (2
+files / 18 tests), web typecheck, web lint, full web test (74 files passed / 1
+skipped; 804 tests passed / 1 skipped plus `game-flow-playwright`), web
+production build, `git diff --check`, static SVG scan, and browser proof at
+390x844 / 360x800 in light+dark with zero axe violations, no horizontal
+overflow, reserved 16x16 crest boxes, and CLS 0. Report:
+`docs/reports/real-club-crests.md`; browser proof:
+`docs/reports/real-club-crests/browser-proof.json`.
+
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
 The CI contract now uses path detection plus one required aggregate status,

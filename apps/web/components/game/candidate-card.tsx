@@ -8,6 +8,7 @@ import {
   type ManagerCardView,
   type PlayerCardView,
 } from "@/lib/game/view-models";
+import { ClubCrestMark } from "./club-crest";
 import s from "./game.module.css";
 
 const AWARD_LABEL: Record<string, string> = {
@@ -139,7 +140,13 @@ export const CandidateCard = memo(function CandidateCard({
             <span>
               {card.year} · {card.position_listed ?? card.eligible_positions[0] ?? "—"}
             </span>
-            {card.club_label ? <span className={s.candClub}> · {card.club_label}</span> : null}
+            {card.club_label ? (
+              <span className={s.candClubGroup}>
+                <span className={s.candClubSep}>·</span>
+                <ClubCrestMark clubName={card.club_label} tournamentYear={card.year} />
+                <span className={s.candClub}>{card.club_label}</span>
+              </span>
+            ) : null}
           </span>
         </span>
 
