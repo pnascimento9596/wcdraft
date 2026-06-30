@@ -7,7 +7,12 @@ import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limite
 import { decodeRunToken, encodeRunToken, type RunTokenV3Body } from "../../game/run-token";
 import { verifyRunTokenForOg } from "../../game/run-og-server";
 import { setupTestDb } from "../../auth/__tests__/_test-db";
-import { buildOriginRecord, buildServerGameData, encodeBody, serverScenarioBundle } from "./_harness";
+import {
+  buildOriginRecord,
+  buildServerGameData,
+  encodeBody,
+  serverScenarioBundle,
+} from "./_harness";
 import fixtureJson from "./fixtures/leaderboard-validate-golden.json" with { type: "json" };
 import {
   deriveAndCacheLineupInspector,

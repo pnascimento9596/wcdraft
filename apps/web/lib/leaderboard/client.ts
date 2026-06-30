@@ -94,9 +94,7 @@ export async function fetchLeaderboardLineup(
     return {
       ok: false,
       message:
-        body?.ok === false
-          ? body.message
-          : "The lineup could not be inspected for this entry.",
+        body?.ok === false ? body.message : "The lineup could not be inspected for this entry.",
     };
   } catch {
     return { ok: false, message: "The lineup inspector did not respond." };

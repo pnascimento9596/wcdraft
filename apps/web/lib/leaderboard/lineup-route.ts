@@ -180,7 +180,11 @@ function inspectorError(
         404,
       );
     case "ILLEGAL_PICK":
-      return errorResponse("ILLEGAL_PICK", "The run token contains a pick that cannot replay.", 422);
+      return errorResponse(
+        "ILLEGAL_PICK",
+        "The run token contains a pick that cannot replay.",
+        422,
+      );
     case "SIM_FAILURE":
       return errorResponse("SIM_FAILURE", "The verified run could not be replayed.", 500);
   }

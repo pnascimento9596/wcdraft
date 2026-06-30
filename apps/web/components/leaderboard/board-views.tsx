@@ -412,7 +412,9 @@ function ScoreBreakdown({ lines }: { lines: BoardRowView["breakdown"] }) {
       {lines.map((line, i) => (
         <span key={i} className={s.breakdownLine}>
           <span>{line.label}</span>
-          <span className={s.breakdownPts}>{line.points > 0 ? `+${line.points}` : line.points}</span>
+          <span className={s.breakdownPts}>
+            {line.points > 0 ? `+${line.points}` : line.points}
+          </span>
         </span>
       ))}
     </div>
