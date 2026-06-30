@@ -24,6 +24,8 @@ import {
   PositiveIntegerSchema,
 } from "./primitives.js";
 
+const MAX_PLAYER_CHOICES_PER_SPIN = 3;
+
 export const SpinSchema = z
   .object({
     index: IntegerRangeSchema(0, 16),
@@ -38,7 +40,7 @@ export const SpinSchema = z
     draw_probability: PercentSchema,
     // rolled_card_ids MAY be empty on a manager-only spin (no remaining
     // players for this (tournament, nation)) — see the Spin comment.
-    rolled_card_ids: z.array(CardIdSchema),
+    rolled_card_ids: z.array(CardIdSchema).max(MAX_PLAYER_CHOICES_PER_SPIN),
     excluded_player_ids: z.array(NonEmptyIdSchema),
     rolled_manager_card_id: ManagerCardIdSchema.nullable(),
     picked_kind: z.enum(["player", "manager"]),

@@ -23,7 +23,7 @@ import {
   buildRunTokenBody,
   decodeRunToken,
   tokenDraftConfig,
-  type RunTokenV1Body,
+  type RunTokenV3Body,
 } from "../../game/run-token";
 import { getValidationData } from "../server-data";
 import { RANKED_AUTH_REQUIRED_MESSAGE } from "../identity-gate";
@@ -113,10 +113,18 @@ function validBody(over: Record<string, unknown> = {}): Record<string, unknown> 
   };
 }
 
-function tamperedToken(mutate: (b: RunTokenV1Body) => void): string {
+type PlayerPickV3 = Extract<RunTokenV3Body["pl"][number], { k: "p" }>;
+
+function playerPicks(body: RunTokenV3Body): Array<{ p: PlayerPickV3; i: number }> {
+  return body.pl
+    .map((p, i) => ({ p, i }))
+    .filter((x): x is { p: PlayerPickV3; i: number } => x.p.k === "p");
+}
+
+function tamperedToken(mutate: (b: RunTokenV3Body) => void): string {
   const decoded = decodeRunToken(GOLDEN.classic.token);
-  if (!decoded) throw new Error("fixture token failed to decode");
-  const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV1Body;
+  if (!decoded || decoded.v !== 3) throw new Error("fixture token failed to decode as t3");
+  const body = JSON.parse(JSON.stringify(decoded)) as RunTokenV3Body;
   mutate(body);
   return encodeBody(body);
 }
@@ -393,13 +401,11 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect(JSON.stringify(body)).not.toContain("xx");
   });
 
-  it("ILLEGAL_PICK (duplicate card across spins) → 422, no row", async () => {
+  it("ILLEGAL_PICK (out-of-range choice index) → 422, no row", async () => {
     const token = tamperedToken((b) => {
-      const picks = b.pl
-        .map((p, i) => ({ p, i }))
-        .filter((x): x is { p: { k: "p"; c: string; s: string }; i: number } => x.p.k === "p");
-      const [first, , , second] = picks;
-      (b.pl[second!.i] as { c: string }).c = first!.p.c;
+      const [first] = playerPicks(b);
+      if (!first) throw new Error("fixture token has no player picks");
+      first.p.ci = 99;
     });
     const res = await handleLeaderboardSubmit(makeReq({ body: validBody({ token }) }), makeDeps());
     expect(res.status).toBe(422);

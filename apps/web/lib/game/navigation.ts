@@ -17,7 +17,7 @@ const RUN_ID_RX = /^[A-Za-z0-9_-]{1,64}$/;
 
 // Token route format. The `.` distinguishes tokens from run-ids (run-ids never
 // contain a dot). Keep this intentionally version-tolerant: current encoders
-// emit `t2.`, legacy shares use `t1.`, and future `t3.` tokens must reach the
+// emit `t3.`, legacy shares use `t1.`/`t2.`, and future tokens must reach the
 // decoder so the UI can show the newer-version notice instead of a generic
 // missing-run state.
 const RUN_TOKEN_ROUTE_RX = /^t\d{1,4}\./;

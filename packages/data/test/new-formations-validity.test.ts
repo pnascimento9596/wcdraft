@@ -4,13 +4,15 @@
 // This is NOT a byte-pinned golden: it proves the GAMEPLAY CONTRACT for each
 // new shape on REAL compact data — that the draft state machine, best-XI /
 // squad assembly, schema, and the sim engine all accept the new formations and
-// produce a valid, fieldable 11 + recognised goalkeeper and a completed run.
+// produce a valid, fieldable 11 + a completed run. Under spin-agency
+// choose-from-3, canonical autoDraft can place an outfielder in GK; that is a
+// soft sim penalty, not an invalid draft state.
 //
 // The locked end-to-end determinism golden (e2e-real-run) covers 4-3-3 only;
 // adding a second per-formation pin there would be redundant. Here we assert
-// INVARIANTS (valid XI, exactly one GK slot, schema-clean boundary objects, a
-// finished run) that hold for any seed, so the test stays deterministic without
-// embedding a fixture.
+// INVARIANTS (valid XI, exactly one filled GK slot, schema-clean boundary
+// objects, a finished run) that hold for any seed, so the test stays
+// deterministic without embedding a fixture.
 
 import { describe, expect, it } from "vitest";
 
@@ -37,12 +39,14 @@ const NEW_FORMATIONS = ["4-1-4-1", "3-4-2-1"] as const;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
 
 function buildDataset(): DraftDataset {
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
+      choice_overall: ratingByCardId.get(c.card_id) ?? null,
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,
@@ -114,7 +118,7 @@ describe("new formations (4-1-4-1, 3-4-2-1) — draftable + simulatable on real 
       expect(formation_id.split("-").reduce((a, b) => a + Number(b), 0)).toBe(10);
     });
 
-    it(`${formation_id}: autoDraft yields a fieldable XI with a recognised GK`, () => {
+    it(`${formation_id}: autoDraft yields a fieldable XI with an honest GK-slot state`, () => {
       const starters = draft.squad.filter((s) => s.is_starter);
       expect(starters).toHaveLength(11);
       const gkSlots = starters.filter((s) => slotPositionLine(s.slot_position) === "GK");
@@ -123,7 +127,11 @@ describe("new formations (4-1-4-1, 3-4-2-1) — draftable + simulatable on real 
 
       const v = validateSquad(draft);
       expect(v.is_fieldable).toBe(true);
-      expect(v.has_goalkeeper).toBe(true);
+      if (!v.has_goalkeeper) {
+        expect(gkSlots[0]!.validation_warnings.some((w) => w.includes("outfielder in goal"))).toBe(
+          true,
+        );
+      }
     });
 
     it(`${formation_id}: DraftState passes its zod boundary schema`, () => {

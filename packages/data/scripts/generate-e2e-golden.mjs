@@ -28,6 +28,7 @@ import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, SCENARIO_2026_BUNDLE } from "
 const SEED_PREFIX = "wcdraft:e2e-real-run:engine-v2-e3a";
 const SEED_LIMIT = 2000;
 const COMBINED_RATING_VERSION = `${RUNTIME_DATA_MANIFEST.rating_version_historical}+${RUNTIME_DATA_MANIFEST.rating_version_projected}`;
+const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
 
 const dataset = {
   players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
@@ -35,6 +36,7 @@ const dataset = {
     tournament_id: c.tournament_id,
     nation_id: c.nation_id,
     eligible_positions: c.eligible_positions,
+    choice_overall: ratingByCardId.get(c.card_id) ?? null,
   })),
   managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
     manager_id: m.manager_id,

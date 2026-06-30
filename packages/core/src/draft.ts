@@ -30,9 +30,10 @@
 //   - GLOBAL player_id dedup remains the hard guarantee: a player picked on
 //     one spin is filtered out of every later spin's roster (even if the
 //     same (T, N) repeats).
-//   - The spin presents that squad's player cards (canonically sorted by
-//     `card_id`, with every already-picked player_id filtered out GLOBALLY) AND
-//     that team-year's coach as candidates. The user takes exactly ONE entity.
+//   - The spin lands on a (tournament, nation) pair, then presents up to three
+//     deterministic player choices from that squad (with every already-picked
+//     player_id filtered out GLOBALLY) AND that team-year's coach as candidates.
+//     The user takes exactly ONE entity.
 //   - PLAYER pick → assigned to a formation SquadSlot; `position_compatibility`
 //     is computed via `positionCompatibility(eligible_positions, slot_position)`
 //     and stored on the slot.
@@ -106,6 +107,11 @@ export interface DraftPlayerCard {
   nation_id: string;
   /** Per-card coarse eligibility; MUST be non-empty (drives `positionCompatibility`). */
   eligible_positions: readonly Position[];
+  /**
+   * Optional quality projection used only to spread choose-from-3 offers across
+   * rating tiers. Missing/null stays honest and falls back to canonical order.
+   */
+  choice_overall?: number | null;
 }
 
 /**
@@ -263,6 +269,7 @@ export interface DraftCatalog {
 
 const SPIN_COUNT = 17;
 const BENCH_COUNT = 5;
+export const MAX_PLAYER_CHOICES_PER_SPIN = 3;
 
 /**
  * Bench slot layout (engine-owned; the schema does NOT cross-validate bench
@@ -642,10 +649,148 @@ function drawSpinEntry(
 
 // ─── SPIN ROLLING ────────────────────────────────────────────────────────────
 
+interface ChoiceCandidate {
+  card: DraftPlayerCard;
+  card_id: CardId;
+  tier: number;
+  position_bucket: Position;
+}
+
+function cardIdFor(card: DraftPlayerCard): CardId {
+  return buildCardId(card.player_id, card.tournament_id);
+}
+
+function compareCardId(a: CardId | string, b: CardId | string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function choiceOverall(card: DraftPlayerCard): number | null {
+  return typeof card.choice_overall === "number" && Number.isFinite(card.choice_overall)
+    ? card.choice_overall
+    : null;
+}
+
+function primaryPosition(card: DraftPlayerCard): Position {
+  return card.eligible_positions[0] ?? "MF";
+}
+
+function shuffled<T>(items: readonly T[], rngSeed: string): T[] {
+  const rng = createRng(rngSeed);
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = rng.int(i + 1);
+    const tmp = out[i]!;
+    out[i] = out[j]!;
+    out[j] = tmp;
+  }
+  return out;
+}
+
+function rankedChoiceCandidates(cards: readonly DraftPlayerCard[]): ChoiceCandidate[] {
+  const ranked = [...cards].sort((a, b) => {
+    const ao = choiceOverall(a);
+    const bo = choiceOverall(b);
+    if (ao !== null && bo !== null && ao !== bo) return bo - ao;
+    if (ao !== null && bo === null) return -1;
+    if (ao === null && bo !== null) return 1;
+    return compareCardId(cardIdFor(a), cardIdFor(b));
+  });
+  return ranked.map((card, rank) => ({
+    card,
+    card_id: cardIdFor(card),
+    tier: Math.min(
+      MAX_PLAYER_CHOICES_PER_SPIN - 1,
+      Math.floor((rank * MAX_PLAYER_CHOICES_PER_SPIN) / ranked.length),
+    ),
+    position_bucket: primaryPosition(card),
+  }));
+}
+
+function selectDiverseChoice(
+  pool: readonly ChoiceCandidate[],
+  selected: readonly ChoiceCandidate[],
+  rngSeed: string,
+): ChoiceCandidate {
+  const selectedPositions = new Set(selected.map((c) => c.position_bucket));
+  const selectedTiers = new Set(selected.map((c) => c.tier));
+  let bestScore = Number.NEGATIVE_INFINITY;
+  const best: ChoiceCandidate[] = [];
+  for (const candidate of pool) {
+    let score = 0;
+    if (!selectedPositions.has(candidate.position_bucket)) score += 4;
+    if (!selectedTiers.has(candidate.tier)) score += 3;
+    const overall = choiceOverall(candidate.card);
+    if (overall !== null) score += overall / 1000;
+    if (score > bestScore) {
+      bestScore = score;
+      best.length = 0;
+      best.push(candidate);
+    } else if (score === bestScore) {
+      best.push(candidate);
+    }
+  }
+  return createRng(rngSeed).pick(canonicalSortBy(best, (c) => [c.card_id]));
+}
+
+function selectPlayerChoices(
+  entry: TnEntry,
+  index: number,
+  priorPlayerPicks: readonly string[],
+  draft_seed: string,
+): CardId[] {
+  const excluded = new Set(priorPlayerPicks);
+  const legal = entry.roster.filter((card) => !excluded.has(card.player_id));
+  if (legal.length <= MAX_PLAYER_CHOICES_PER_SPIN) {
+    const seed = deriveSubseed(
+      draft_seed,
+      "draft",
+      `choices:${index}:${entry.tournament_id}:${entry.nation_id}:${priorPlayerPicks.join(",")}:small`,
+    );
+    return shuffled(
+      canonicalSortBy(
+        legal.map((card) => cardIdFor(card)),
+        (card_id) => [card_id],
+      ),
+      seed,
+    );
+  }
+
+  const choiceSeed = deriveSubseed(
+    draft_seed,
+    "draft",
+    `choices:${index}:${entry.tournament_id}:${entry.nation_id}:${priorPlayerPicks.join(",")}`,
+  );
+  const candidates = rankedChoiceCandidates(legal);
+  const selected: ChoiceCandidate[] = [];
+  const selectedIds = new Set<string>();
+
+  for (const tier of shuffled([0, 1, 2], `${choiceSeed}:tiers`)) {
+    const pool = candidates.filter((c) => c.tier === tier && !selectedIds.has(c.card_id));
+    if (pool.length === 0) continue;
+    const picked = selectDiverseChoice(pool, selected, `${choiceSeed}:tier:${tier}`);
+    selected.push(picked);
+    selectedIds.add(picked.card_id);
+  }
+
+  while (selected.length < MAX_PLAYER_CHOICES_PER_SPIN) {
+    const pool = candidates.filter((c) => !selectedIds.has(c.card_id));
+    if (pool.length === 0) break;
+    const picked = selectDiverseChoice(pool, selected, `${choiceSeed}:fill:${selected.length}`);
+    selected.push(picked);
+    selectedIds.add(picked.card_id);
+  }
+
+  return shuffled(
+    selected.map((c) => c.card_id),
+    `${choiceSeed}:order`,
+  );
+}
+
 /**
  * Build a fresh PENDING spin object from a drawn `TnEntry` and the current
- * pick context. The roster is filtered by the GLOBAL picked-player set; the
- * coach is exposed iff no manager has been drafted yet.
+ * pick context. The player choices are filtered by the GLOBAL picked-player
+ * set and materialized as up to three deterministic options; the coach is
+ * exposed iff no manager has been drafted yet.
  */
 function rollPendingSpinFromEntry(
   entry: TnEntry,
@@ -653,6 +798,7 @@ function rollPendingSpinFromEntry(
   priorPlayerPicks: readonly string[],
   managerPicked: boolean,
   draw_probability: number,
+  draft_seed: string,
   /**
    * DC-3 — the committed position-first target, or null under squad_first.
    * Exposure follows the target: a `"manager"` target offers ONLY the coach;
@@ -661,14 +807,10 @@ function rollPendingSpinFromEntry(
    */
   target_slot_id: string | null = null,
 ): Spin {
-  const excluded = new Set(priorPlayerPicks);
-  const rolled_card_ids: CardId[] = [];
-  if (target_slot_id !== "manager") {
-    for (const card of entry.roster) {
-      if (excluded.has(card.player_id)) continue;
-      rolled_card_ids.push(buildCardId(card.player_id, card.tournament_id));
-    }
-  }
+  const rolled_card_ids: CardId[] =
+    target_slot_id === "manager"
+      ? []
+      : selectPlayerChoices(entry, index, priorPlayerPicks, draft_seed);
   const offerCoach = target_slot_id === null ? !managerPicked : target_slot_id === "manager";
   const rolled_manager_card_id: ManagerCardId | null =
     offerCoach && entry.coach
@@ -769,7 +911,16 @@ function rebuildSpins(catalog: DraftCatalog, draft_seed: string, spins: readonly
     }
     const excluded = new Set(priorPlayerPicks);
     const { entry, draw_probability } = drawSpinEntry(catalog, u, excluded, managerPicked);
-    out.push(rollPendingSpinFromEntry(entry, i, priorPlayerPicks, managerPicked, draw_probability));
+    out.push(
+      rollPendingSpinFromEntry(
+        entry,
+        i,
+        priorPlayerPicks,
+        managerPicked,
+        draw_probability,
+        draft_seed,
+      ),
+    );
   }
   return out;
 }
@@ -791,7 +942,7 @@ function buildInitialSpins(catalog: DraftCatalog, draft_seed: string): Spin[] {
       excluded,
       /*managerPicked*/ false,
     );
-    spins.push(rollPendingSpinFromEntry(entry, i, [], false, draw_probability));
+    spins.push(rollPendingSpinFromEntry(entry, i, [], false, draw_probability, draft_seed));
   }
   return spins;
 }
@@ -1129,6 +1280,7 @@ export function selectDraftTarget(
     priorPlayerPicks,
     managerPicked,
     draw_probability,
+    state.draft_seed,
     target,
   );
   const spins = state.spins.map((s) => (s.index === active.index ? rolled : s));

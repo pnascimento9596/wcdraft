@@ -71,15 +71,19 @@ function completePositionFirstRun(mode: "classic" | "hidden") {
 describe("DC-3 position-first token round-trip (real data)", () => {
   const record = completePositionFirstRun("classic");
 
-  it("encodes a t2 with df position_first and ts on every pick", () => {
+  it("encodes a t3 with df position_first, ts, and choice indices on every player pick", () => {
     const decoded = decodeRunToken(encodeRunToken(record));
     expect(decoded).not.toBeNull();
-    expect(decoded!.v).toBe(2);
+    expect(decoded!.v).toBe(3);
     expect(tokenDraftConfig(decoded!).draft_flow).toBe("position_first");
-    if (decoded!.v === 2) {
+    if (decoded!.v === 3) {
       for (const p of decoded!.pl) {
         if (p.k === "m") expect(p.ts).toBe("manager");
-        else expect(p.ts).toBe(p.s);
+        else {
+          expect(p.ts).toBe(p.s);
+          expect(p.ci).toBeGreaterThanOrEqual(0);
+          expect(p.ci).toBeLessThan(3);
+        }
       }
     }
     expect(versionsAgree(decoded!, gameData.versions)).toBe(true);

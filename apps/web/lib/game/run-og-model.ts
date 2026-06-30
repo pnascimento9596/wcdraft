@@ -10,7 +10,7 @@ import { positionShape, type PositionShape, type RatingBadgeKind } from "./view-
 import {
   reconstructDraftFromToken,
   type RunTokenOgSummary,
-  type RunTokenV2Body,
+  type RunTokenV3Body,
 } from "./run-token";
 import {
   formationName,
@@ -73,7 +73,7 @@ const TEAM_NAME_MAX = 80;
 
 export function buildRunOgModelFromTrustedSummary(
   gameData: GameData,
-  token: RunTokenV2Body,
+  token: RunTokenV3Body,
   summary: RunTokenOgSummary,
 ): RunOgModel {
   const draft = reconstructDraftFromToken(token, gameData);
@@ -82,7 +82,7 @@ export function buildRunOgModelFromTrustedSummary(
 
 export function buildRunOgModelFromTrustedDraft(
   gameData: GameData,
-  token: RunTokenV2Body,
+  token: RunTokenV3Body,
   draft: DraftState,
   summary: RunTokenOgSummary,
   narrative?: string | null,

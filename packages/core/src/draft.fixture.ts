@@ -53,6 +53,10 @@ function pad2(n: number): string {
   return n.toString().padStart(2, "0");
 }
 
+function choiceOverallFor(k: number): number {
+  return 60 + k;
+}
+
 function eligibleFor(t: number, ordinal: number, k: number): readonly Position[] {
   const i = (t * 3 + ordinal * 2 + k) % ELIGIBLE_CYCLE.length;
   return ELIGIBLE_CYCLE[i]!;
@@ -98,6 +102,7 @@ export function buildDraftFixture(): DraftFixture {
           tournament_id: t,
           nation_id: nation,
           eligible_positions: eligibleFor(t, nationIdx, k),
+          choice_overall: choiceOverallFor(k),
         });
       }
       if ((t + nationIdx) % 2 === 0) {
@@ -144,6 +149,7 @@ export function buildNationSwitcherFixture(): DraftFixture {
         tournament_id: t,
         nation_id: nation,
         eligible_positions: eligibleFor(t, ordinal, k),
+        choice_overall: choiceOverallFor(k),
       });
     }
     managers.push({ manager_id: `mm-${t}-${nation}`, tournament_id: t, nation_id: nation });
@@ -158,6 +164,7 @@ export function buildNationSwitcherFixture(): DraftFixture {
       tournament_id: t,
       nation_id: nation,
       eligible_positions: ["MF", "FW"],
+      choice_overall: 90,
     });
   }
   return {
@@ -196,6 +203,7 @@ export function buildSingleCoachFixture(): DraftFixture {
         tournament_id: t,
         nation_id: nation,
         eligible_positions: eligibleFor(t, ordinal, k),
+        choice_overall: choiceOverallFor(k),
       });
     }
   });

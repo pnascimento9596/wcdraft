@@ -23,7 +23,7 @@ import {
   decodeRunToken,
   encodeRunToken,
   reconstructDraftFromToken,
-  RUN_TOKEN_V2_PREFIX,
+  RUN_TOKEN_V3_PREFIX,
   versionsAgree,
   virtualRecordFromToken,
 } from "../run-token";
@@ -41,11 +41,11 @@ describe("run-token — encode / decode round-trip", () => {
   const gameData = buildGameDataFromBundles();
   const origin = buildOriginRecord(gameData);
 
-  it("encodes to a `t2.<base64url>` string", () => {
+  it("encodes to a `t3.<base64url>` string", () => {
     const token = encodeRunToken(origin);
-    expect(token.startsWith(RUN_TOKEN_V2_PREFIX)).toBe(true);
+    expect(token.startsWith(RUN_TOKEN_V3_PREFIX)).toBe(true);
     // Body is base64url: only A-Za-z0-9_- after the prefix.
-    const body = token.slice(RUN_TOKEN_V2_PREFIX.length);
+    const body = token.slice(RUN_TOKEN_V3_PREFIX.length);
     expect(body).toMatch(/^[A-Za-z0-9_-]+$/u);
   });
 
@@ -65,11 +65,12 @@ describe("run-token — encode / decode round-trip", () => {
     // Exactly one manager pick across the 17 spins.
     const managers = body.pl.filter((p) => p.k === "m");
     expect(managers.length).toBe(1);
-    // 16 player picks, each with a slot_id + card_id.
-    const players = body.pl.filter((p): p is { k: "p"; c: string; s: string } => p.k === "p");
+    // 16 player picks, each with a slot_id + choice index into the re-derived offer.
+    const players = body.pl.filter((p): p is { k: "p"; ci: number; s: string } => p.k === "p");
     expect(players.length).toBe(16);
     for (const p of players) {
-      expect(p.c.length).toBeGreaterThan(0);
+      expect(p.ci).toBeGreaterThanOrEqual(0);
+      expect(p.ci).toBeLessThan(3);
       expect(p.s.length).toBeGreaterThan(0);
     }
   });

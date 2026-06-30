@@ -753,7 +753,7 @@
       }
     }
   ],
-  "schema_version": "runtime-data-2.8.0",
+  "schema_version": "runtime-data-2.9.0",
   "team_display_names": {
     "WC2026-A1": "Mexico",
     "WC2026-A2": "South Africa",

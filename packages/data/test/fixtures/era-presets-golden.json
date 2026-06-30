@@ -1,7 +1,7 @@
 {
   "_comment": "DC-2 era-preset golden — one deterministic autoDraft per preset from one seed. Regen: pnpm --filter @wcdraft/data gen:era-golden",
   "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-  "engine_version": "engine-2026.06.28-merit-v4.6",
+  "engine_version": "engine-2026.06.30-spin-agency",
   "dataset_version": "2026-06-04",
   "parent_seed": "wcdraft:era-presets-golden:v1:1",
   "records": [
@@ -25,7 +25,7 @@
           "nation_id": "T-75",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00875:2014",
+          "picked_card_id": "P-62393:2014",
           "assigned_slot_id": "4-3-3.GK"
         },
         {
@@ -34,7 +34,7 @@
           "nation_id": "T-34",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0288:2026",
+          "picked_card_id": "P-W26-0293:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -43,7 +43,7 @@
           "nation_id": "T-30",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00916:2006",
+          "picked_card_id": "P-51388:2006",
           "assigned_slot_id": "4-3-3.LCB"
         },
         {
@@ -52,7 +52,7 @@
           "nation_id": "T-25",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-03128:2002",
+          "picked_card_id": "P-11930:2002",
           "assigned_slot_id": "4-3-3.RCB"
         },
         {
@@ -61,7 +61,7 @@
           "nation_id": "T-06",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-06338:2018",
+          "picked_card_id": "P-72011:2018",
           "assigned_slot_id": "4-3-3.RB"
         },
         {
@@ -70,7 +70,7 @@
           "nation_id": "T-17",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01994:2022",
+          "picked_card_id": "P-81392:2022",
           "assigned_slot_id": "4-3-3.CDM"
         },
         {
@@ -79,7 +79,7 @@
           "nation_id": "T-26",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-75890:2026",
+          "picked_card_id": "P-W26-0219:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -88,7 +88,7 @@
           "nation_id": "T-62",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-05922:2018",
+          "picked_card_id": "P-17872:2018",
           "assigned_slot_id": "4-3-3.RCM"
         },
         {
@@ -97,7 +97,7 @@
           "nation_id": "T-25",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-06468:2002",
+          "picked_card_id": "P-87016:2002",
           "assigned_slot_id": "4-3-3.LW"
         },
         {
@@ -106,7 +106,7 @@
           "nation_id": "T-63",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00585:2006",
+          "picked_card_id": "P-48279:2006",
           "assigned_slot_id": "4-3-3.ST"
         },
         {
@@ -115,7 +115,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-02305:2026",
+          "picked_card_id": "P-74688:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
@@ -124,7 +124,7 @@
           "nation_id": "T-46",
           "rare": true,
           "picked_kind": "player",
-          "picked_card_id": "P-01521:1950",
+          "picked_card_id": "P-92882:1950",
           "assigned_slot_id": "bench.0"
         },
         {
@@ -133,7 +133,7 @@
           "nation_id": "T-50",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01164:2014",
+          "picked_card_id": "P-14952:2014",
           "assigned_slot_id": "bench.1"
         },
         {
@@ -142,7 +142,7 @@
           "nation_id": "T-17",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00781:2018",
+          "picked_card_id": "P-04808:2018",
           "assigned_slot_id": "bench.2"
         },
         {
@@ -151,7 +151,7 @@
           "nation_id": "T-84",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-10014:2014",
+          "picked_card_id": "P-30486:2014",
           "assigned_slot_id": "bench.3"
         },
         {
@@ -160,7 +160,7 @@
           "nation_id": "T-46",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01835:2014",
+          "picked_card_id": "P-77419:2014",
           "assigned_slot_id": "bench.4"
         }
       ]
@@ -176,7 +176,7 @@
           "nation_id": "T-16",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01505:2026",
+          "picked_card_id": "P-W26-0137:2026",
           "assigned_slot_id": "4-3-3.GK"
         },
         {
@@ -194,7 +194,7 @@
           "nation_id": "T-47",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-09614:2026",
+          "picked_card_id": "P-50688:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -203,7 +203,7 @@
           "nation_id": "T-46",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01835:2010",
+          "picked_card_id": "P-89297:2010",
           "assigned_slot_id": "4-3-3.LCB"
         },
         {
@@ -212,7 +212,7 @@
           "nation_id": "T-73",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-13964:2006",
+          "picked_card_id": "P-61793:2006",
           "assigned_slot_id": "4-3-3.RCB"
         },
         {
@@ -221,7 +221,7 @@
           "nation_id": "T-58",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00521:2018",
+          "picked_card_id": "P-72710:2018",
           "assigned_slot_id": "4-3-3.RB"
         },
         {
@@ -230,7 +230,7 @@
           "nation_id": "T-47",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00597:2022",
+          "picked_card_id": "P-87409:2022",
           "assigned_slot_id": "4-3-3.CDM"
         },
         {
@@ -239,7 +239,7 @@
           "nation_id": "T-39",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0326:2026",
+          "picked_card_id": "P-W26-0342:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -248,7 +248,7 @@
           "nation_id": "T-12",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00809:2022",
+          "picked_card_id": "P-85670:2022",
           "assigned_slot_id": "4-3-3.RCM"
         },
         {
@@ -257,7 +257,7 @@
           "nation_id": "T-73",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-15314:2006",
+          "picked_card_id": "P-83711:2006",
           "assigned_slot_id": "4-3-3.LW"
         },
         {
@@ -266,7 +266,7 @@
           "nation_id": "T-70",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-06967:2010",
+          "picked_card_id": "P-38095:2010",
           "assigned_slot_id": "4-3-3.ST"
         },
         {
@@ -275,7 +275,7 @@
           "nation_id": "T-30",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-03945:2026",
+          "picked_card_id": "P-W26-0242:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
@@ -284,7 +284,7 @@
           "nation_id": "T-18",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-10638:2002",
+          "picked_card_id": "P-84378:2002",
           "assigned_slot_id": "bench.0"
         },
         {
@@ -293,7 +293,7 @@
           "nation_id": "T-38",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00111:2018",
+          "picked_card_id": "P-53957:2018",
           "assigned_slot_id": "bench.1"
         },
         {
@@ -302,7 +302,7 @@
           "nation_id": "T-63",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-04434:2018",
+          "picked_card_id": "P-70583:2018",
           "assigned_slot_id": "bench.2"
         },
         {
@@ -311,7 +311,7 @@
           "nation_id": "T-54",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-02886:2018",
+          "picked_card_id": "P-77892:2018",
           "assigned_slot_id": "bench.3"
         },
         {
@@ -320,7 +320,7 @@
           "nation_id": "T-31",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-03367:2018",
+          "picked_card_id": "P-78594:2018",
           "assigned_slot_id": "bench.4"
         }
       ]
@@ -336,7 +336,7 @@
           "nation_id": "T-47",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-09614:2026",
+          "picked_card_id": "P-50688:2026",
           "assigned_slot_id": "4-3-3.GK"
         },
         {
@@ -354,7 +354,7 @@
           "nation_id": "T-64",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0571:2026",
+          "picked_card_id": "P-W26-0590:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -363,7 +363,7 @@
           "nation_id": "T-31",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-03367:2018",
+          "picked_card_id": "P-78594:2018",
           "assigned_slot_id": "4-3-3.LCB"
         },
         {
@@ -372,7 +372,7 @@
           "nation_id": "T-75",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00875:2014",
+          "picked_card_id": "P-46325:2014",
           "assigned_slot_id": "4-3-3.RCB"
         },
         {
@@ -381,7 +381,7 @@
           "nation_id": "T-48",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-10326:2022",
+          "picked_card_id": "P-39861:2022",
           "assigned_slot_id": "4-3-3.RB"
         },
         {
@@ -399,7 +399,7 @@
           "nation_id": "T-59",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01930:2026",
+          "picked_card_id": "P-57100:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -408,7 +408,7 @@
           "nation_id": "T-79",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-09569:2022",
+          "picked_card_id": "P-25989:2022",
           "assigned_slot_id": "4-3-3.RCM"
         },
         {
@@ -417,7 +417,7 @@
           "nation_id": "T-75",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-07180:2014",
+          "picked_card_id": "P-39460:2014",
           "assigned_slot_id": "4-3-3.LW"
         },
         {
@@ -426,7 +426,7 @@
           "nation_id": "T-47",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-15199:2018",
+          "picked_card_id": "P-88869:2018",
           "assigned_slot_id": "4-3-3.ST"
         },
         {
@@ -435,7 +435,7 @@
           "nation_id": "T-54",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-09945:2026",
+          "picked_card_id": "P-W26-0500:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
@@ -444,7 +444,7 @@
           "nation_id": "T-06",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-03735:2014",
+          "picked_card_id": "P-09658:2014",
           "assigned_slot_id": "bench.0"
         },
         {
@@ -453,7 +453,7 @@
           "nation_id": "T-38",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-04541:2022",
+          "picked_card_id": "P-42215:2022",
           "assigned_slot_id": "bench.1"
         },
         {
@@ -462,7 +462,7 @@
           "nation_id": "T-58",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-05289:2022",
+          "picked_card_id": "P-22983:2022",
           "assigned_slot_id": "bench.2"
         },
         {
@@ -471,7 +471,7 @@
           "nation_id": "T-47",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00597:2022",
+          "picked_card_id": "P-42517:2022",
           "assigned_slot_id": "bench.3"
         },
         {
@@ -480,7 +480,7 @@
           "nation_id": "T-32",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01945:2022",
+          "picked_card_id": "P-21820:2022",
           "assigned_slot_id": "bench.4"
         }
       ]
@@ -496,7 +496,7 @@
           "nation_id": "T-55",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0506:2026",
+          "picked_card_id": "P-W26-0512:2026",
           "assigned_slot_id": "4-3-3.GK"
         },
         {
@@ -514,7 +514,7 @@
           "nation_id": "T-73",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-24897:2026",
+          "picked_card_id": "P-68218:2026",
           "assigned_slot_id": "4-3-3.LB"
         },
         {
@@ -523,7 +523,7 @@
           "nation_id": "T-03",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00652:2022",
+          "picked_card_id": "P-29298:2022",
           "assigned_slot_id": "4-3-3.LCB"
         },
         {
@@ -532,7 +532,7 @@
           "nation_id": "T-58",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00521:2018",
+          "picked_card_id": "P-35081:2018",
           "assigned_slot_id": "4-3-3.RCB"
         },
         {
@@ -541,7 +541,7 @@
           "nation_id": "T-83",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01792:2022",
+          "picked_card_id": "P-11737:2022",
           "assigned_slot_id": "4-3-3.RB"
         },
         {
@@ -559,7 +559,7 @@
           "nation_id": "T-70",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0610:2026",
+          "picked_card_id": "P-W26-0630:2026",
           "assigned_slot_id": "4-3-3.LCM"
         },
         {
@@ -568,7 +568,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-02305:2026",
+          "picked_card_id": "P-74688:2026",
           "assigned_slot_id": "4-3-3.RCM"
         },
         {
@@ -577,7 +577,7 @@
           "nation_id": "T-58",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-10712:2018",
+          "picked_card_id": "P-46272:2018",
           "assigned_slot_id": "4-3-3.LW"
         },
         {
@@ -586,7 +586,7 @@
           "nation_id": "T-09",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-05164:2022",
+          "picked_card_id": "P-14060:2022",
           "assigned_slot_id": "4-3-3.ST"
         },
         {
@@ -595,7 +595,7 @@
           "nation_id": "T-64",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-W26-0571:2026",
+          "picked_card_id": "P-W26-0594:2026",
           "assigned_slot_id": "4-3-3.RW"
         },
         {
@@ -604,7 +604,7 @@
           "nation_id": "T-06",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-06338:2018",
+          "picked_card_id": "P-64049:2018",
           "assigned_slot_id": "bench.0"
         },
         {
@@ -613,7 +613,7 @@
           "nation_id": "T-73",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-01416:2022",
+          "picked_card_id": "P-33433:2022",
           "assigned_slot_id": "bench.1"
         },
         {
@@ -622,7 +622,7 @@
           "nation_id": "T-84",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-00232:2022",
+          "picked_card_id": "P-74058:2022",
           "assigned_slot_id": "bench.2"
         },
         {
@@ -631,7 +631,7 @@
           "nation_id": "T-79",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-09569:2022",
+          "picked_card_id": "P-25989:2022",
           "assigned_slot_id": "bench.3"
         },
         {
@@ -640,7 +640,7 @@
           "nation_id": "T-71",
           "rare": false,
           "picked_kind": "player",
-          "picked_card_id": "P-04157:2022",
+          "picked_card_id": "P-77335:2022",
           "assigned_slot_id": "bench.4"
         }
       ]

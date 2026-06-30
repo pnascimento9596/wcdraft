@@ -62,7 +62,7 @@ export function shareOgImageForRunValue(
   if (!signed || !isLikelySignedRunOg(signed)) return defaultRunOgImage();
 
   const decoded = decodeRunToken(value);
-  if (!decoded || decoded.v !== 2 || !versionsAgree(decoded, currentVersions)) {
+  if (!decoded || decoded.v !== 3 || !versionsAgree(decoded, currentVersions)) {
     return defaultRunOgImage();
   }
 

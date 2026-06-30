@@ -77,8 +77,8 @@ describe("runFromToken — real record from a share token", () => {
     expect(res.reason).toBe("version_skew");
   });
 
-  it("honest-state: a newer-version (t3.) token → newer_version", () => {
-    const res = runFromToken("t3.eyJ2IjozfQ", loadMarketingGameData());
+  it("honest-state: a newer-version (t4.) token → newer_version", () => {
+    const res = runFromToken("t4.eyJ2Ijo0fQ", loadMarketingGameData());
     expect(res.ok).toBe(false);
     if (res.ok) return;
     expect(res.reason).toBe("newer_version");

@@ -92,7 +92,7 @@ describe("run-record persisted boundary", () => {
       parent_seed: rankedSeed,
       ranked_attempt: {
         attempt_id: "ranked-attempt-test",
-        season_key: "season-2026-summer",
+        season_key: "season-2026-spin-agency",
         parent_seed: rankedSeed,
         expires_at: "2026-06-29T13:00:00.000Z",
       },
@@ -103,7 +103,7 @@ describe("run-record persisted boundary", () => {
     expect(loaded.record?.parent_seed).toBe(rankedSeed);
     expect(loaded.record?.ranked_attempt).toEqual({
       attempt_id: "ranked-attempt-test",
-      season_key: "season-2026-summer",
+      season_key: "season-2026-spin-agency",
       parent_seed: rankedSeed,
       expires_at: "2026-06-29T13:00:00.000Z",
     });

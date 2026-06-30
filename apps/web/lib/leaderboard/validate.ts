@@ -22,10 +22,10 @@
 // work (replay ~6 ms p50, sim ~1 ms) runs only after every cheap gate passed.
 //
 // THE KEYSTONE (step 7, threat T1): `reconstructDraftFromToken` re-derives
-// every spin's offered candidates from the token's parent_seed alone and
-// `pickPlayer` rejects any card not in that spin's re-derived
-// `rolled_card_ids` (packages/core/src/draft.ts). A token whose pick log
-// claims a card the seed never offered is not forgeable — it fails replay.
+// every spin's choose-from-3 player choices from the token's parent_seed alone
+// and v3 player picks address only those choices by index. A token whose pick
+// log claims an index outside the materialized `rolled_card_ids` is not
+// forgeable — it fails replay before score authority.
 
 import {
   buildRunScenario,
@@ -259,7 +259,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     );
   }
 
-  const tokenChallenge = token.v === 2 ? token.ch : undefined;
+  const tokenChallenge = token.v === 3 ? token.ch : undefined;
   if (challenge.kind === DAILY_CHALLENGE_KIND) {
     if (!tokenChallenge || tokenChallenge.k !== DAILY_CHALLENGE_KIND) {
       return rejected("INVALID_BODY", "daily submissions require daily token metadata");
@@ -302,8 +302,8 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     displayAlias = alias.name;
   }
 
-  // 7 — THE KEYSTONE: full replay re-derives every spin's candidates from the
-  // token's parent_seed; any pick outside rolled_card_ids throws RunTokenError.
+  // 7 — THE KEYSTONE: full replay re-derives every spin's choices from the
+  // token's parent_seed; any choice index outside rolled_card_ids throws.
   let draft: DraftState;
   try {
     draft = reconstructDraftFromToken(token, data.gameData);

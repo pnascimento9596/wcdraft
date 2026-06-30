@@ -14,7 +14,6 @@ import {
   validateSquad,
   type CardId,
   type DraftState,
-  type Position,
   type SquadSlot,
   type SynergyResult,
   selectDraftTarget,
@@ -93,9 +92,6 @@ type Selection =
   | { kind: "player"; card: PlayerCardView }
   | { kind: "manager"; card: ManagerCardView }
   | null;
-type PosFilter = "ALL" | Position;
-type SortKey = "ovr" | "name" | "pos";
-const POS_FILTERS: PosFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
 
 export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
@@ -266,11 +262,6 @@ function DraftBoard({
   // Selection / UI state.
   const [sel, setSel] = useState<Selection>(null);
   const [selSlot, setSelSlot] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [posFilter, setPosFilter] = useState<PosFilter>("ALL");
-  // Hidden mode: OVR is blinded, so a rating sort would leak tier order —
-  // default to name and drop the option (see the sort <select> below).
-  const [sortKey, setSortKey] = useState<SortKey>(blind ? "name" : "ovr");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [committing, setCommitting] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
@@ -309,8 +300,6 @@ function DraftBoard({
     setSel(null);
     setSelSlot(null);
     setSheetOpen(false);
-    setSearch("");
-    setPosFilter("ALL");
     setTransitionError(null);
     setPhase("spin");
     setAnim("idle");
@@ -451,31 +440,6 @@ function DraftBoard({
     [committing, gameData, draft, record, onRecordUpdate, persistenceWarning],
   );
 
-  // Filter/sort player candidates.
-  const visibleCandidates = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    const list = candidates.players.filter((p) => {
-      if (q && !p.name.toLowerCase().includes(q) && !p.full_name.toLowerCase().includes(q)) {
-        return false;
-      }
-      if (posFilter !== "ALL" && !p.eligible_positions.includes(posFilter)) return false;
-      return true;
-    });
-    const ord: Record<Position, number> = { GK: 0, DF: 1, MF: 2, FW: 3 };
-    return [...list].sort((a, b) => {
-      if (sortKey === "ovr") {
-        const ao = a.rating.overall;
-        const bo = b.rating.overall;
-        if (ao === null && bo === null) return a.name.localeCompare(b.name);
-        if (ao === null) return 1;
-        if (bo === null) return -1;
-        return bo - ao;
-      }
-      if (sortKey === "name") return a.name.localeCompare(b.name);
-      return ord[a.eligible_positions[0] ?? "MF"] - ord[b.eligible_positions[0] ?? "MF"];
-    });
-  }, [candidates, search, posFilter, sortKey]);
-
   const bestSlotFor = useCallback(
     (card: PlayerCardView): string | null => {
       const starterOpens = openSlots.filter((sl) => sl.is_starter);
@@ -510,9 +474,6 @@ function DraftBoard({
 
   useEffect(() => {
     if (!managerOnlyOpen) return;
-    setPosFilter("ALL");
-    setSortKey("name");
-    setSearch("");
     setSelSlot(null);
   }, [managerOnlyOpen]);
 
@@ -770,7 +731,7 @@ function DraftBoard({
 
   // ── Standalone spin stage — the centerpiece, gated per spin ────────────
   // Each of the 17 spins lands here first (idle drum, CTA "Spin"). Only after
-  // the reveal settles and the user taps "Reveal squad →" do we cross into the
+  // the reveal settles and the user taps "Reveal choices →" do we cross into the
   // lineup/pick view below. This supersedes the inline reveal from PR #21.
   if (!complete && spin && slotReveal && phase === "spin") {
     return (
@@ -968,45 +929,6 @@ function DraftBoard({
         className={`${s.panel} ${s.candidatePanel}`}
         aria-label="Candidates"
       >
-        <div className={s.controls}>
-          <input
-            type="search"
-            className={s.searchInput}
-            placeholder="Search players…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search players"
-          />
-          <div className={s.filterRow}>
-            <div className={s.segmented} role="group" aria-label="Filter by position">
-              {POS_FILTERS.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  className={posFilter === p ? s.segActive : s.seg}
-                  aria-pressed={posFilter === p}
-                  onClick={() => setPosFilter(p)}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-            <label className={s.sortLabel}>
-              Sort
-              <select
-                className={s.sortSelect}
-                value={sortKey}
-                onChange={(e) => setSortKey(e.target.value as SortKey)}
-              >
-                {/* Hidden mode: rating sort would leak the blinded OVR order. */}
-                {!blind ? <option value="ovr">Rating</option> : null}
-                <option value="name">Name</option>
-                <option value="pos">Position</option>
-              </select>
-            </label>
-          </div>
-        </div>
-
         {candidates.manager ? (
           <ManagerCandidate
             manager={candidates.manager}
@@ -1024,7 +946,7 @@ function DraftBoard({
         ) : null}
 
         <div className={s.candList}>
-          {visibleCandidates.map((card) => (
+          {candidates.players.map((card) => (
             <CandidateCard
               key={card.card_id}
               card={card}
@@ -1034,8 +956,8 @@ function DraftBoard({
               onSelect={selectPlayer}
             />
           ))}
-          {visibleCandidates.length === 0 ? (
-            <p className={s.emptyList}>No players match those filters.</p>
+          {candidates.players.length === 0 ? (
+            <p className={s.emptyList}>No player choices on this spin.</p>
           ) : null}
         </div>
       </section>

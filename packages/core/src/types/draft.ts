@@ -9,9 +9,10 @@
 //     ≈10% of per-spin probability, modern 1998..2026 ≈90% with gentle recency
 //     scaling). The old WS-0c pair-once rule is gone; global `player_id` dedup
 //     is what stops the same human being drafted twice.
-//     Whichever (T, N) is selected, the spin offers BOTH that squad's
-//     un-picked player cards AND that team-year's coach as candidates. The
-//     user picks exactly ONE entity per spin — a player OR the coach.
+//     Whichever (T, N) is selected, the spin offers up to three deterministic
+//     un-picked player choices from that squad AND that team-year's coach as
+//     candidates. The user picks exactly ONE entity per spin — a player OR the
+//     coach.
 //   - ONE manager only: the coach may be taken on ANY single spin, but once
 //     `manager_card_id` is set the coach is NO LONGER a selectable candidate
 //     on later spins. A draft contains EXACTLY ONE manager pick across the 17
@@ -77,8 +78,8 @@ export type PickedKind = "player" | "manager";
  *    with-replacement weighted sampling — the WS-0c uniqueness invariant is
  *    GONE; global `player_id` dedup is what prevents drafting the same human
  *    twice).
- *  - `rolled_card_ids` is the post-dedup player candidate set surfaced to the
- *    user; it must be canonically sorted by card_id BEFORE the user-facing roll.
+ *  - `rolled_card_ids` is the post-dedup choose-from-3 player candidate set
+ *    surfaced to the user; order is deterministic and token-addressable.
  *  - `rolled_manager_card_id` is THAT team-year's coach card if present in
  *    the dataset, otherwise `null`. After a prior spin has confirmed a
  *    manager pick (`DraftState.manager_card_id !== null`), `rolled_manager_card_id`
@@ -116,9 +117,8 @@ export interface Spin {
    */
   draw_probability: number;
   /**
-   * Candidate PLAYER cards AFTER global player_id dedup; canonically sorted
-   * by `card_id` via `canonicalSortBy` BEFORE the user-facing roll. Branded
-   * `CardId[]`.
+   * Candidate PLAYER choices AFTER global player_id dedup; at most three
+   * deterministic options in the user-facing order. Branded `CardId[]`.
    *
    * MAY be empty when every player in this (tournament, nation) pair has
    * already been picked AND the only remaining selectable on this spin is

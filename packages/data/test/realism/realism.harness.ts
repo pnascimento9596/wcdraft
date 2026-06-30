@@ -61,12 +61,14 @@ export const ALL_POLICIES: readonly DraftPolicyName[] = [
 ] as const;
 
 export function buildRealismDataset(): DraftDataset {
+  const ratingByCardId = new Map(DRAFT_POOL_BUNDLE.ratings.map((r) => [r.card_id, r.overall]));
   return {
     players: DRAFT_POOL_BUNDLE.player_cards.map((c) => ({
       player_id: c.player_id,
       tournament_id: c.tournament_id,
       nation_id: c.nation_id,
       eligible_positions: c.eligible_positions,
+      choice_overall: ratingByCardId.get(c.card_id) ?? null,
     })),
     managers: DRAFT_POOL_BUNDLE.manager_cards.map((m) => ({
       manager_id: m.manager_id,

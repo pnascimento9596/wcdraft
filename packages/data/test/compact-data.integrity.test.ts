@@ -111,10 +111,10 @@ describe("compact-data integrity", () => {
     }
   });
 
-  it("rating_version anchors are the merit-v4.6 versions; engine_version carries the merit-v4.6 stamp", () => {
+  it("rating_version anchors are the merit-v4.6 versions; engine_version carries the spin-agency stamp", () => {
     expect(RUNTIME_DATA_MANIFEST.rating_version_historical).toBe("wc-perf-6.6.0");
     expect(RUNTIME_DATA_MANIFEST.rating_version_projected).toBe("proj-career-5.6.0");
-    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.28-merit-v4.6");
+    expect(RUNTIME_DATA_MANIFEST.engine_version).toBe("engine-2026.06.30-spin-agency");
   });
 
   it("career_stature_estimate count matches the manifest (E-4)", () => {
