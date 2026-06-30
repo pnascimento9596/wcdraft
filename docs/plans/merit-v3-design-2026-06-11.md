@@ -463,7 +463,7 @@ merge to main is the single skew/ship event.
 | **V5** (parallel)  | club backfill per the manifest: pin 21 squad-page revisions, parse club, join in ETL (`cards.py:114` null → parsed), per-tournament coverage measured + recorded                                                                                               | ETL determinism; census numbers recorded for V6's test flip                                                         | none (parallel to V1–V4) |
 | **V6**             | compact regen: runtime-data-2.0.0 dual-basis shape, legend census re-lock, club census-lock flip, bundle-size budget check, canary regen + reviewed pick-flip diff (§6), data/draft/e2e golden re-locks, PREV skew fixtures committed                          | all `test:golden:*` suites; any NEW golden script registered in root `turbo.json`                                   | V4, V5                   |
 | **V7**             | λ re-fit vs the new Career channels; engine bump; heavy realism re-lock (λ BEFORE bands — bands never re-locked to pass red); Current-pool channel baseline recorded for DC-7                                                                                  | realism goldens; faithfulness suite                                                                                 | V6                       |
-| **V8**             | season merge: STATE.md (counts, versions, flags) in the same change; cumulative diff fresh-SESSION review that RE-EXECUTES the gates (suites + §7 probe table + live-token skew probes); owner approval SHA-pinned; `gh pr merge --squash --match-head-commit` | cumulative re-lock verification only — no new code                                                                  | V7                       |
+| **V8**             | season merge: STATE.md (counts, versions, flags) in the same change; cumulative diff fresh-SESSION review that RE-EXECUTES the gates (suites + §7 probe table + live-token skew probes); reviewer PASS SHA-pinned; `gh pr merge --squash --match-head-commit`; live verification with auto-revert on failed live checks | cumulative re-lock verification only — no new code                                                                  | V7                       |
 
 Order: U0 → V1 → V2 → V3 → V4 → V6 → V7 → V8, with V5 parallel any time before V6.
 Fix-forward → re-review loops on any unit are normal. Post-merge: live sanity on
@@ -479,7 +479,7 @@ console clean), per the merge-=-ship rule.
 4. PREV skew fixtures green; live `t1.` invalidation behavior verified on a preview
    deploy before main.
 5. Fresh-session independent review of the cumulative diff (re-executes, not diff-reads).
-6. Owner approval pinned to the final SHA; squash with `--match-head-commit`.
+6. Reviewer PASS pinned to the final SHA; squash with `--match-head-commit`.
 7. STATE.md + `docs/queue/q-002` successor updated in the same merge.
 
 ---

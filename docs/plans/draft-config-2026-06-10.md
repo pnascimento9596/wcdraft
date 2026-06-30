@@ -551,8 +551,9 @@ Migration:
 ## H. Unit Decomposition And Sequencing
 
 All items below are **DISPATCH-ONLY**. Red units require fresh-session
-independent review and human approval per `CLAUDE.md`; the docs-only planning
-PR remains Green.
+independent review, SHA-pinned merge, deploy observation, live verification, and
+auto-revert on failed live checks per `CLAUDE.md`; the docs-only planning PR
+remains Green.
 
 | Unit                       | Tier                | Status                        | Scope                                                                        | Depends on          |
 | -------------------------- | ------------------- | ----------------------------- | ---------------------------------------------------------------------------- | ------------------- |
@@ -565,7 +566,7 @@ PR remains Green.
 | DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                    | DC-5                |
 | DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens          | DC-6                |
 | DC-8 leaderboard policy    | Red                 | DISPATCHED 2026-06-17         | per-config ranked/casual boards, DB/API/board changes                        | Paulo decision F    |
-| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, human approval | DC-1..8 as selected |
+| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, SHA-pinned merge, live verification | DC-1..8 as selected |
 
 Integration-branch decision:
 

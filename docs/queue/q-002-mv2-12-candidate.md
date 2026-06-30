@@ -63,7 +63,7 @@ Activates the channel per the audit's D2+D1: player-identity stature seam (not
 historical-card link), career-stage-normalized index for in-progress careers,
 age-conditioned cohorts in the projected raw path. Carries the FULL Red chain:
 rating-version bumps, canary regen + pick-equality, compact regen, λ re-fit BEFORE
-any realism re-lock, fresh-session RED review, human approval, `--match-head-commit`.
+any realism re-lock, fresh-session RED review, SHA-pinned merge, live verification.
 The 12a inertness tests (`test_scoring_code_never_references_the_active_artifacts`,
 the double-credit build guard) are the explicit flip points 12b must change.
 
@@ -93,4 +93,5 @@ gates — at which point this item is replaced by real work items.
 
 Full Red protocol per CLAUDE.md: byte-identical proofs for out-of-scope outputs, ETL suite,
 named-anchor/golden gates, canary regen + pick-equality on any rating-version bump,
-fresh-session re-executing review, human approval, `--match-head-commit` merge.
+fresh-session re-executing review, SHA-pinned merge, deploy observation, and live
+verification with auto-revert on any failed live check.

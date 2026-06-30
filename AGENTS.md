@@ -26,10 +26,13 @@ gate. Treat every merge as a live ship; run live sanity after risky merges.
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Green**  | docs, mechanical chores, no runtime change                                                                                       | CI green → self-merge                                                                                                                                                                                         |
 | **Yellow** | bounded UI/impl, display-only, no schema/rating/sim semantics                                                                    | full validation + CI green → self-merge                                                                                                                                                                       |
-| **Red**    | schema/migrations, ETL/rating, sim/engine, draft/synergy semantics, auth, leaderboard, deploy/env, anything user-facing-security | fresh-SESSION independent reviewer who RE-EXECUTES the gates (a sub-agent diff read does NOT qualify) → HOLD for explicit human approval → squash pinned via `gh pr merge --squash --match-head-commit <sha>` |
+| **Red**    | schema/migrations, ETL/rating, sim/engine, draft/synergy semantics, auth, leaderboard, deploy/env, anything user-facing-security | fresh-SESSION independent reviewer who RE-EXECUTES the gates (a sub-agent diff read does NOT qualify) → fix-forward to PASS → squash pinned via `gh pr merge --squash --match-head-commit <sha>` → deploy → live-verify on `www.wcdraft.com` → auto-revert on any failed live check |
 
-Fix-forward → re-review loops on Red are normal, not a failure. Approval is SHA-pinned:
-any commit pushed after approval voids it — re-verify, re-pin.
+Fix-forward → re-review loops on Red are normal, not a failure. Review PASS is
+SHA-pinned: any commit pushed after review voids it — re-verify, re-pin. There
+is no human approval gate at any tier. Safety comes from implementer≠reviewer
+separation, machine-adjudicated gates, SHA-pinned merge, deploy observation, and
+live-verify-with-auto-revert.
 
 ## Standing invariants
 

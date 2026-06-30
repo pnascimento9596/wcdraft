@@ -23,7 +23,7 @@ data golden/data+integration/canary/heavy realism, serial Turbo test
 (`pnpm exec turbo run test --concurrency=1`, 8/8 tasks), root typecheck (8/8),
 root lint (5/5), root build (4/4), and `git diff --check`. Report:
 `docs/reports/spin-agency-choose-three-2026-06-30.md`. Not shipped until the RED
-independent reviewer, human approval, merge/deploy, and live production readback
+independent reviewer PASS, SHA-pinned merge/deploy, and live production readback
 gates complete.
 
 Real club crests lane:
@@ -116,9 +116,9 @@ marketing 67, web 818 passed / 1 skipped plus `game-flow-playwright`), and root
 build (4/4). Report:
 `docs/reports/engine-season-manager-attrition-2026-06-30.md`. Fresh-context
 independent review passed with no blockers and re-executed the requested gates.
-The attached owner dispatch explicitly overrides the normal checked-in RED human
-approval gate for this season; production merge/deploy and live verification are
-post-merge operator closeout gates. Reviewer carryover: a synthetic legal-roster
+The checked-in RED contract now uses autonomous RED shipping: fresh-context
+independent review, SHA-pinned merge, deploy observation, live verification, and
+auto-revert on failed live checks. Reviewer carryover: a synthetic legal-roster
 size 4/5 edge can yield fewer than three offered player choices under the U5
 bucket filter, though a 5,000 real-pool draft probe found 85,000 player spins
 with `minRolled=3` and `short=0`.
@@ -154,7 +154,7 @@ best-of-many per identity/day, share CTA routing for the same daily teams,
 explicit active leaderboard season id (`WCDRAFT_LEADERBOARD_SEASON_ID` with
 pinned default), and rating-version stamping on accepted leaderboard rows.
 Report: `docs/reports/daily-draft-2026-06-29.md`. Not shipped until the RED
-independent reviewer, human approval, merge, deploy, and live production
+independent reviewer PASS, SHA-pinned merge/deploy, and live production
 readback gates complete.
 
 Leaderboard season/ranked-attempt lane:
@@ -646,5 +646,6 @@ web static assets.
 ## Branch / merge convention (from git history)
 
 `ws-<area>/<topic>` task branches; long-lived integration branches `engine-*`/`merit-*`
-(CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pinned with
-`--match-head-commit`.
+(CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pin the
+reviewed head with `--match-head-commit`, then require deploy observation and
+live verification on `www.wcdraft.com` with auto-revert on any failed live check.
