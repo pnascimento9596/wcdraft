@@ -23,6 +23,7 @@ import { DRAFT_POOL_BUNDLE } from "@wcdraft/data";
 import { buildGameDataIndexes } from "../data";
 import { playerCardView } from "../adapters";
 import { blindCardRatingView } from "../view-models";
+import { resolveClubCrest } from "../club-crests";
 import { CandidateCard } from "@/components/game/candidate-card";
 import { SquadHeaderFlag } from "@/components/game/squad-header-flag";
 
@@ -51,7 +52,8 @@ describe("club-at-tournament display", () => {
     const view = playerCardView(idx, cardWithClub!.card_id);
     expect(view.club_label).toBe(cardWithClub!.club_at_tournament ?? cardWithClub!.club);
     const html = renderCandidate(view);
-    expect(html).toContain(`· ${view.club_label!}`);
+    expect(html).toContain(`>${view.club_label!}<`);
+    expect(html).toContain("data-club-crest-kind=");
   });
 
   it("exposes collapsed rating provenance to screen readers", () => {
@@ -76,7 +78,8 @@ describe("club-at-tournament display", () => {
     const blind = { ...view, rating: blindCardRatingView(view.rating) };
     expect(blind.club_label).toBe(view.club_label);
     const html = renderCandidate(blind);
-    expect(html).toContain(`· ${view.club_label!}`);
+    expect(html).toContain(`>${view.club_label!}<`);
+    expect(html).toContain("data-club-crest-kind=");
   });
 
   it("bundle census lock — V6 carries historical club backfill plus 2026 clubs", () => {
@@ -113,6 +116,53 @@ describe("club-at-tournament display", () => {
       "P-92120:WC-1938",
       "P-92190:WC-1934",
     ]);
+  });
+});
+
+describe("club crest rendering", () => {
+  it("renders an audited real crest for an exact 2026 club mapping", () => {
+    const mappedCard = DRAFT_POOL_BUNDLE.player_cards.find(
+      (c) => c.tournament_id === 2026 && (c.club_at_tournament ?? c.club) === "Bayern Munich",
+    );
+    expect(mappedCard).toBeDefined();
+
+    const view = playerCardView(idx, mappedCard!.card_id);
+    const html = renderCandidate(view);
+    expect(resolveClubCrest(view.club_label, view.year)?.kind).toBe("crest");
+    expect(html).toContain('src="/clubs/bayern-munich.svg"');
+    expect(html).toContain('alt="Bayern Munich club crest"');
+    expect(html).toContain('loading="lazy"');
+    expect(html).toContain('decoding="async"');
+  });
+
+  it("renders a deterministic monogram for unmapped current clubs", () => {
+    const unmappedCard = DRAFT_POOL_BUNDLE.player_cards.find(
+      (c) => c.tournament_id === 2026 && (c.club_at_tournament ?? c.club) === "Arsenal",
+    );
+    expect(unmappedCard).toBeDefined();
+
+    const view = playerCardView(idx, unmappedCard!.card_id);
+    const html = renderCandidate(view);
+    expect(resolveClubCrest(view.club_label, view.year)?.kind).toBe("monogram");
+    expect(html).not.toContain('src="/clubs/');
+    expect(html).toContain('data-club-crest-kind="monogram"');
+    expect(html).toContain('aria-label="Arsenal club monogram fallback"');
+  });
+
+  it("does not render current crests on historical cards", () => {
+    const historicalMappedClub = DRAFT_POOL_BUNDLE.player_cards.find(
+      (c) => c.tournament_id !== 2026 && (c.club_at_tournament ?? c.club) === "Bayern Munich",
+    );
+    expect(historicalMappedClub).toBeDefined();
+
+    const view = playerCardView(idx, historicalMappedClub!.card_id);
+    const html = renderCandidate(view);
+    expect(resolveClubCrest(view.club_label, view.year)).toMatchObject({
+      kind: "monogram",
+      reason: "historical",
+    });
+    expect(html).not.toContain('src="/clubs/bayern-munich.svg"');
+    expect(html).toContain('data-club-crest-reason="historical"');
   });
 });
 

@@ -1713,6 +1713,45 @@
 .candClub {
   composes: candClub from "./game-styles/draft-polish.module.css";
 }
+.candClubGroup {
+  composes: candClubGroup from "./game-styles/draft-polish.module.css";
+}
+.candClubSep {
+  composes: candClubSep from "./game-styles/draft-polish.module.css";
+}
+.clubCrestMark {
+  composes: clubCrestMark from "./game-styles/draft-polish.module.css";
+}
+.clubCrestImage {
+  composes: clubCrestImage from "./game-styles/draft-polish.module.css";
+}
+.clubCrestFallback {
+  composes: clubCrestFallback from "./game-styles/draft-polish.module.css";
+}
+.clubTone_0 {
+  composes: clubTone_0 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_1 {
+  composes: clubTone_1 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_2 {
+  composes: clubTone_2 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_3 {
+  composes: clubTone_3 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_4 {
+  composes: clubTone_4 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_5 {
+  composes: clubTone_5 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_6 {
+  composes: clubTone_6 from "./game-styles/draft-polish.module.css";
+}
+.clubTone_7 {
+  composes: clubTone_7 from "./game-styles/draft-polish.module.css";
+}
 .candBasisDelta {
   composes: candBasisDelta from "./game-styles/draft-polish.module.css";
 }
