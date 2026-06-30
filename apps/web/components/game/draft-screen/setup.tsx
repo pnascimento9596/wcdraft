@@ -58,6 +58,10 @@ function DraftSetupDisclosure({
   // basis choices by default on mobile.
   const [open, setOpen] = useState(true);
   // Summary mirrors all three config axes.
+  const summaryParts = [
+    `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]}`,
+    ERA_PRESET_LABELS[eraPreset],
+  ] as const;
   const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
     <div>
@@ -68,7 +72,11 @@ function DraftSetupDisclosure({
         onClick={() => setOpen((o) => !o)}
       >
         <span className={s.setupRowLabel}>Draft setup</span>
-        <span className={s.setupRowValue}>{summary}</span>
+        <span className={s.setupRowValue} aria-label={summary}>
+          {summaryParts.map((part) => (
+            <span key={part}>{part}</span>
+          ))}
+        </span>
         <span className={s.setupRowChevron} aria-hidden="true">
           {open ? "▴" : "▾"}
         </span>
