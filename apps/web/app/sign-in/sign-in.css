@@ -98,12 +98,14 @@
   border: 1px solid var(--line);
   box-shadow: var(--sh-2);
   position: relative;
+  min-width: 0;
 }
 
 .signin-form__section {
   display: grid;
   gap: var(--s-3);
   margin: 0;
+  min-width: 0;
 }
 
 /* Corner notches — the tactical-card cut-corner echo */
@@ -142,6 +144,7 @@
   grid-template-columns: 1fr auto;
   gap: var(--s-2);
   align-items: stretch;
+  min-width: 0;
 }
 
 .signin-form__input {
@@ -153,6 +156,8 @@
   border-radius: var(--r-2);
   padding: var(--s-3) var(--s-4);
   min-height: 48px;
+  min-width: 0;
+  width: 100%;
   outline: none;
   transition:
     border-color var(--d-fast) var(--e-out),
@@ -184,10 +189,13 @@
   border-radius: var(--r-2);
   padding: var(--s-2) var(--s-5);
   min-height: 48px;
+  min-width: 44px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--s-2);
+  white-space: nowrap;
   transition:
     transform var(--d-fast) var(--e-snap),
     background var(--d-fast) var(--e-out),
@@ -426,5 +434,19 @@
 @media (min-width: 720px) {
   .signin-screen__title {
     font-size: var(--t-hero);
+  }
+}
+
+@media (max-width: 420px) {
+  .signin-form {
+    padding: var(--s-5);
+  }
+
+  .signin-form__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .signin-form__submit {
+    width: 100%;
   }
 }

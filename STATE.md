@@ -4,6 +4,24 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Accounts/auth hub lane:
+2026-06-30 · PR #193 branch `ws-fix/accounts-auth-hub`, originally based on
+`995b11a70054278ab716a7667486eb91bafcbe6a`, rebased onto `origin/main`
+`11ef02afd754c553533858d3efd61f2ed7554b85`. Scope: optional password login
+on top of existing magic links, `/account` hub, account-owned runs/stats,
+password set/change/delete-account flows, shared session issuance, and nullable
+`users.password_hash` / `users.password_set_at` migration `0010`. The checked-in
+RED contract now has no human approval gate; Red safety is fresh-context
+implementer/reviewer separation, machine gates, SHA-pinned merge, deploy
+observation, live verification, and auto-revert on failed live checks. Current
+local validation passed: DB tests (3 files / 106 tests), focused auth/account
+tests (6 files / 32 tests), Neon branch up/down plus pre-migration magic-link-only
+auth proof, root typecheck (8/8), root lint (5/5), root test (8/8; core 384,
+db 106, data 84 passed / 7 skipped, marketing 67, web 828 passed / 1 skipped
+plus `game-flow-playwright`), root build (4/4), core/data/web goldens, and mobile
+Playwright/axe proof at 390x844 and 360x800. Report:
+`docs/reports/accounts-auth-2026-06-30.md`.
+
 Last measured for merit-v4.6 curve-inverted owner overrides:
 2026-06-28 · local RED gates run on branch
 `ws-merit/v45-curve-inversion-20260628` before merge/ship.
