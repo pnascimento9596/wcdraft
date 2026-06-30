@@ -16,11 +16,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import {
-  buildRunTokenBody,
-  decodeRunToken,
-  type RunTokenV3Body,
-} from "../../game/run-token";
+import { buildRunTokenBody, decodeRunToken, type RunTokenV3Body } from "../../game/run-token";
 import { dailyChallengeForDate, deriveDailySeed } from "../../game/daily";
 import { DISPLAY_NAME_MAX, validateDisplayName } from "../display-name";
 import { DEFAULT_LEADERBOARD_SEASON_ID } from "../season";

@@ -46,19 +46,19 @@ before merge/deploy.
 
 ## Version anchors
 
-| Field | Value |
-| --- | --- |
-| schema_version | `runtime-data-2.9.0` |
-| dataset_version | `2026-06-04` |
-| engine_version | `engine-2026.06.30-spin-agency` |
-| rating_version_historical | `wc-perf-6.6.0` |
-| rating_version_projected | `proj-career-5.6.0` |
-| ruleset_version | `ruleset-2026.06.04` |
-| active leaderboard season | `season-2026-spin-agency` |
-| draft-pool sha256 | `4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0` |
-| scenario sha256 | `7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398` |
-| manifest sha256 | `44965216b46ef63b85584d2b350629a430d29b643d58a16d67112f4d01d2c919` |
-| compact brotli total | `2,231,808` bytes |
+| Field                     | Value                                                              |
+| ------------------------- | ------------------------------------------------------------------ |
+| schema_version            | `runtime-data-2.9.0`                                               |
+| dataset_version           | `2026-06-04`                                                       |
+| engine_version            | `engine-2026.06.30-spin-agency`                                    |
+| rating_version_historical | `wc-perf-6.6.0`                                                    |
+| rating_version_projected  | `proj-career-5.6.0`                                                |
+| ruleset_version           | `ruleset-2026.06.04`                                               |
+| active leaderboard season | `season-2026-spin-agency`                                          |
+| draft-pool sha256         | `4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0` |
+| scenario sha256           | `7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398` |
+| manifest sha256           | `44965216b46ef63b85584d2b350629a430d29b643d58a16d67112f4d01d2c919` |
+| compact brotli total      | `2,231,808` bytes                                                  |
 
 ## Validation
 
