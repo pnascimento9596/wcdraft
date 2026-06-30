@@ -65,8 +65,10 @@ and `git diff --check`. Report:
 passed from separate clone `/private/tmp/wcdraft-og-review-195-YvebK8/wcdraft`
 on PR #195: re-executed package builds, focused OG Vitest (28 tests), public
 payload/API inventory sweep (1 test), web typecheck, and `git diff --check
-origin/main...HEAD`. Not shipped until merge/deploy and live production readback
-gates complete.
+origin/main...HEAD`. PR #195 merged as
+`a65fa933dfbc1125c0f25dc9cf6c1b2af137e7a6`, but its first production Vercel
+deployment failed before READY because Lane B's lineup inspector still called the
+old one-argument `buildRunOgCacheKey`.
 
 OG durability deploy recovery:
 2026-06-30 · production Vercel build for merge commit `a65fa933` failed because
@@ -76,7 +78,13 @@ decouples the lineup inspector cache from OG image cache keys and scopes it to
 current run-data version anchors plus token hash. Local recovery gates passed:
 lineup inspector + OG Vitest (37 tests), web typecheck, Vercel-equivalent
 `pnpm exec turbo run build --filter=@wcdraft/web...` (4/4 tasks), Prettier check
-for the touched file, and `git diff --check`.
+for the touched file, and `git diff --check`. PR #198 CI run `28470048653`
+passed and merged as `a18e492027f9c4d3b96e505c8e797ca0c2a4fcfe`. Production
+deployment `dpl_GHKXRgCL25xEd2nPPhpHq7EVjUSd` reached READY and aliased
+`www.wcdraft.com`; live readback proved the pre-deploy signed OG image remained
+byte-identical after deploy, malformed/missing signatures fall back to
+`og-default.png`, malformed signer input rejects 422, and no `/api/og/*` runtime
+errors were found in the post-deploy Vercel window.
 
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
