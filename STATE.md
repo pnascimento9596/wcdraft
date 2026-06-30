@@ -15,7 +15,7 @@ RED contract now has no human approval gate; Red safety is fresh-context
 implementer/reviewer separation, machine gates, SHA-pinned merge, deploy
 observation, live verification, and auto-revert on failed live checks. Current
 local validation passed: DB tests (3 files / 106 tests), focused auth/account
-tests (6 files / 32 tests), Neon branch up/down plus pre-migration magic-link-only
+tests (6 files / 35 tests), Neon branch up/down plus pre-migration magic-link-only
 auth proof, root typecheck (8/8), root lint (5/5), root test (8/8; core 384,
 db 106, data 84 passed / 7 skipped, marketing 67, web 828 passed / 1 skipped
 plus `game-flow-playwright`), root build (4/4), core/data/web goldens, and mobile

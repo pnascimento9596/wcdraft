@@ -63,7 +63,7 @@ Also updated current `STATE.md`, `docs/queue/q-002-mv2-12-candidate.md`, `docs/q
   - `pnpm --filter @wcdraft/data build`: PASS.
 - Focused DB/auth/account tests:
   - `pnpm --filter @wcdraft/db test`: PASS, 3 files / 106 tests.
-  - `pnpm --filter @wcdraft/web exec vitest run lib/auth/__tests__/account-routes.test.ts lib/auth/__tests__/passwords.test.ts lib/auth/__tests__/recent-magic.test.ts lib/game/__tests__/account-runs.test.ts lib/game/__tests__/saved-runs-store.test.ts lib/leaderboard/__tests__/public-payload-email-sweep.test.ts`: PASS, 6 files / 32 tests.
+  - `pnpm --filter @wcdraft/web exec vitest run lib/auth/__tests__/account-routes.test.ts lib/auth/__tests__/passwords.test.ts lib/auth/__tests__/recent-magic.test.ts lib/game/__tests__/account-runs.test.ts lib/game/__tests__/saved-runs-store.test.ts lib/leaderboard/__tests__/public-payload-email-sweep.test.ts`: PASS, 6 files / 35 tests.
 - Ephemeral Neon branch on project `rapid-wind-87431051`: PASS.
   - Created disposable branch from production.
   - Confirmed `password_hash` did not exist before migration.
