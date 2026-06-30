@@ -98,10 +98,9 @@ export default function HowToPlayPage() {
         <p>
           Leaderboards filter by Lane (Casual or Ranked), Mode (Classic or Memory), Draft order
           (Squad First or Position First), Era ({ERA_PRESET_LABELS.all_time},{" "}
-          {ERA_PRESET_LABELS.post_2000}, {ERA_PRESET_LABELS.post_2010} or{" "}
-          {ERA_PRESET_LABELS.modern}), and Rating basis (Career or Current). Every valid run posts to
-          that exact board. Ranked is for signed-in managers; casual posts anonymously and can be
-          claimed after sign-in.
+          {ERA_PRESET_LABELS.post_2000}, {ERA_PRESET_LABELS.post_2010} or {ERA_PRESET_LABELS.modern}
+          ), and Rating basis (Career or Current). Every valid run posts to that exact board. Ranked
+          is for signed-in managers; casual posts anonymously and can be claimed after sign-in.
         </p>
 
         <h2>Daily Draft</h2>
