@@ -2031,6 +2031,7 @@
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 10px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .candRowProv {

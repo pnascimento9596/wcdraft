@@ -157,6 +157,28 @@ describe("display adapter resolves the selected basis", () => {
     expect(def.rating.overall).toBe(r.overall);
     expect(def.rating.basis).toBe("career");
   });
+
+  it("surfaces a compact Current-vs-Career delta only for real divergent ratings", () => {
+    const r = divergent[0]!;
+    const view = playerCardView(gameData.indexes, r.card_id);
+    const delta = r.basis_ratings.current.overall! - r.overall!;
+    expect(view.basis_delta_label).toBe(`Current ${delta > 0 ? "+" : ""}${delta}`);
+
+    const equal = DRAFT_POOL_BUNDLE.ratings.find(
+      (rating) =>
+        typeof rating.overall === "number" &&
+        rating.basis_ratings.current.overall === rating.overall,
+    );
+    expect(equal, "expected at least one card with matching Career/Current OVR").toBeDefined();
+    expect(playerCardView(gameData.indexes, equal!.card_id).basis_delta_label).toBeNull();
+  });
+
+  it("does not leak a basis delta in Memory/blind display mode", () => {
+    const r = divergent[0]!;
+    const view = playerCardView(gameData.indexes, r.card_id, { blindRatings: true });
+    expect(view.rating.overall).toBeNull();
+    expect(view.basis_delta_label).toBeNull();
+  });
 });
 
 // ─── Sim seam ────────────────────────────────────────────────────────────────

@@ -112,7 +112,7 @@ describe("run config badges", () => {
   it("renders only non-default axes in era, draft-flow, rating-basis order", () => {
     const record = completePositionFirstModernRun();
     const expected = [
-      { axis: "era_preset", label: "2018-2026" },
+      { axis: "era_preset", label: "Modern (2018–26)" },
       { axis: "draft_flow", label: "Position First" },
     ];
     expect(configBadgesFromRecordToken(record)).toEqual(expected);

@@ -1,5 +1,6 @@
 import type { DraftFlow, EraPresetId, RatingBasis } from "@wcdraft/core";
 import type { LeaderboardChallengeKind } from "../game/daily";
+import { ERA_PRESET_LABELS } from "../game/era-labels";
 
 export type BoardLane = "casual" | "ranked";
 export type BoardDraftMode = "classic" | "hidden";
@@ -55,10 +56,10 @@ export const BOARD_DRAFT_ORDERS: readonly { key: BoardDraftOrder; label: string 
 );
 
 export const BOARD_ERAS: readonly { key: BoardEra; label: string }[] = Object.freeze([
-  { key: "all_time", label: "All-time" },
-  { key: "post_2000", label: "2002-2026" },
-  { key: "post_2010", label: "2014-2026" },
-  { key: "modern", label: "Modern" },
+  { key: "all_time", label: ERA_PRESET_LABELS.all_time },
+  { key: "post_2000", label: ERA_PRESET_LABELS.post_2000 },
+  { key: "post_2010", label: ERA_PRESET_LABELS.post_2010 },
+  { key: "modern", label: ERA_PRESET_LABELS.modern },
 ]);
 
 export const BOARD_RATING_BASES: readonly {

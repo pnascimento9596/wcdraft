@@ -381,7 +381,7 @@
 
 .setupRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
@@ -403,10 +403,13 @@
 
 .setupRowValue {
   color: var(--ink-100);
+  flex: 1 1 auto;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  line-height: 1.25;
+  text-align: right;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .setupRowChevron {
@@ -440,15 +443,15 @@
 }
 
 .setupSeg {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.25rem), 1fr));
   gap: 0.3rem;
 }
 
 .setupSegBtn {
-  /* a11y: 44px min tap target (WCAG 2.5.5). Flex-center keeps the short label
-     vertically centered now that min-height exceeds the text+padding box. */
-  min-height: 44px;
+  /* a11y: 44px min tap target (WCAG 2.5.5). Use 46px to survive subpixel
+     rounding in the compact mobile dock. */
+  min-height: 46px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -459,6 +462,9 @@
   color: var(--ink-100);
   font-family: var(--f-mono);
   font-size: var(--t-xs);
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
   cursor: pointer;
 }
 
@@ -1511,10 +1517,11 @@
   min-width: 0;
   color: var(--ink-400);
   font-size: 12px;
-  overflow: hidden;
+  overflow: visible;
+  line-height: 1.25;
   text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .setupPanel {
@@ -1535,12 +1542,12 @@
 }
 
 .setupSegBtn {
-  min-height: 38px;
-  padding: 9px 15px;
+  min-height: 46px;
+  padding: 8px 12px;
   border-radius: 10px;
   background: var(--bg-800);
   color: var(--ink-300);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -1749,7 +1756,7 @@
   }
 
   .setupSegBtn {
-    min-height: 34px;
+    min-height: 46px;
     padding: 7px 10px;
     font-size: 12px;
   }

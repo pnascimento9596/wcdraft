@@ -11,19 +11,13 @@ import {
 } from "@/lib/game/formation-layout";
 import { requestRankedAttempt } from "@/lib/leaderboard/client";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
+import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import { positionShape } from "@/lib/game/view-models";
 import { PitchMarkings } from "../pitch";
 import { DraftAppBar } from "./app-bar";
 import s from "../game.module.css";
 
 // ─── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
-
-const ERA_PRESET_LABELS: Record<EraPresetId, string> = {
-  all_time: "All-time",
-  post_2000: "2002-2026",
-  post_2010: "2014-2026",
-  modern: "Modern",
-};
 
 const DRAFT_FLOW_LABELS: Record<DraftFlow, string> = {
   squad_first: "Squad First",
