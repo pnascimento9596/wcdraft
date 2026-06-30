@@ -751,6 +751,18 @@ function ShareCardSvg({
   dailyStanding: DailyShareStanding | null;
   colors: ShareSvgColors;
 }) {
+  if (view.reveal !== null) {
+    return (
+      <MemoryRevealShareCardSvg
+        svgRef={svgRef}
+        view={view}
+        shareUrl={shareUrl}
+        dailyStanding={dailyStanding}
+        colors={colors}
+      />
+    );
+  }
+
   const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : colors.text;
   const headline = view.headline;
   const payoffLines = [
@@ -976,6 +988,406 @@ function ShareCardSvg({
   );
 }
 
+function MemoryRevealShareCardSvg({
+  svgRef,
+  view,
+  shareUrl,
+  dailyStanding,
+  colors,
+}: {
+  svgRef: React.MutableRefObject<SVGSVGElement | null>;
+  view: ShareView;
+  shareUrl: string | null;
+  dailyStanding: DailyShareStanding | null;
+  colors: ShareSvgColors;
+}) {
+  const reveal = view.reveal!;
+  const standingLine =
+    view.challenge_date !== null ? dailyStandingText(dailyStanding) : "Memory reveal";
+  const xiLeft = reveal.revealStarters.slice(0, 6);
+  const xiRight = reveal.revealStarters.slice(6, 11);
+  const avgAfter = formatShareNumber(reveal.squadAverageAfter);
+
+  return (
+    <svg
+      ref={svgRef}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={`0 0 ${CARD_WIDTH} ${CARD_HEIGHT}`}
+      width={CARD_WIDTH}
+      height={CARD_HEIGHT}
+      role="img"
+      aria-label={`${view.team_name} — Memory reveal, record ${view.display_record}`}
+      className={s.shareSvg}
+    >
+      <defs>
+        <linearGradient id="wcBg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={colors.bgStart} />
+          <stop offset="1" stopColor={colors.bgEnd} />
+        </linearGradient>
+        <linearGradient id="wcEmerald" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={colors.accentStart} />
+          <stop offset="1" stopColor={colors.accentEnd} />
+        </linearGradient>
+        <linearGradient id="wcGold" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor={colors.goldStart} />
+          <stop offset="0.5" stopColor={colors.goldMid} />
+          <stop offset="1" stopColor={colors.goldEnd} />
+        </linearGradient>
+      </defs>
+
+      <rect x="0" y="0" width={CARD_WIDTH} height={CARD_HEIGHT} rx="32" ry="32" fill="url(#wcBg)" />
+      <rect x="0" y="0" width={CARD_WIDTH} height="8" fill="url(#wcEmerald)" />
+
+      <g transform="translate(48, 56)">
+        <text
+          x="0"
+          y="0"
+          fill={colors.text}
+          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontSize="28"
+          fontWeight="700"
+        >
+          wc
+          <tspan fontWeight="900" fill="url(#wcEmerald)">
+            draft
+          </tspan>
+        </text>
+        <text
+          x={CARD_WIDTH - 96}
+          y="0"
+          fill={colors.muted}
+          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontSize="14"
+          textAnchor="end"
+        >
+          {truncate(view.seed, 28)}
+        </text>
+      </g>
+
+      <text
+        x={CARD_WIDTH / 2}
+        y="118"
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="13"
+        fontWeight="700"
+      >
+        MEMORY REVEAL
+      </text>
+      <text
+        x={CARD_WIDTH / 2}
+        y="158"
+        textAnchor="middle"
+        fill={colors.text}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="30"
+        fontWeight="650"
+      >
+        {truncate(view.team_name, 25)}
+      </text>
+      <text
+        x={CARD_WIDTH / 2}
+        y="190"
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="15"
+        fontWeight="600"
+      >
+        drafted blind, ended {view.display_record} · {view.score} pts · {avgAfter} OVR
+      </text>
+
+      <g transform="translate(56, 224)">
+        <RevealMetricBox
+          x={0}
+          title="BLIND OVR"
+          value={formatShareNumber(reveal.squadAverageBefore)}
+          colors={colors}
+        />
+        <text
+          x="244"
+          y="58"
+          textAnchor="middle"
+          fill={colors.muted}
+          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontSize="28"
+          fontWeight="700"
+        >
+          -&gt;
+        </text>
+        <RevealMetricBox x={284} title="REVEALED OVR" value={avgAfter} colors={colors} />
+      </g>
+
+      <g transform="translate(58, 344)">
+        <text
+          x="0"
+          y="0"
+          fill={colors.muted}
+          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontSize="12"
+          fontWeight="700"
+        >
+          LINE REVEAL
+        </text>
+        {reveal.lineRatings.map((line, i) => (
+          <RevealLineRow key={line.line} line={line} y={30 + i * 28} colors={colors} />
+        ))}
+      </g>
+
+      <g transform="translate(58, 492)">
+        <text
+          x="0"
+          y="0"
+          fill={colors.muted}
+          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontSize="12"
+          fontWeight="700"
+        >
+          RESULTING XI
+        </text>
+        {xiLeft.map((starter, i) => (
+          <RevealXiRow
+            key={starter.slot_id}
+            starter={starter}
+            x={0}
+            y={30 + i * 28}
+            colors={colors}
+          />
+        ))}
+        {xiRight.map((starter, i) => (
+          <RevealXiRow
+            key={starter.slot_id}
+            starter={starter}
+            x={268}
+            y={30 + i * 28}
+            colors={colors}
+          />
+        ))}
+      </g>
+
+      <g transform="translate(58, 700)">
+        <text
+          x="0"
+          y="0"
+          fill={colors.muted}
+          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontSize="12"
+          fontWeight="700"
+        >
+          TOP REVEALS
+        </text>
+        <text
+          x="0"
+          y="28"
+          fill={colors.text}
+          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontSize="17"
+          fontWeight="600"
+        >
+          {reveal.topReveals.length > 0
+            ? reveal.topReveals
+                .map(
+                  (starter) =>
+                    `${formatShareNumber(starter.before_overall)}->${formatShareNumber(
+                      starter.after_overall,
+                    )} ${starter.nation_code} ${truncate(starter.name, 11)}`,
+                )
+                .join("  ·  ")
+            : "—"}
+        </text>
+      </g>
+
+      <text
+        x={CARD_WIDTH / 2}
+        y="766"
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="13"
+        fontWeight="600"
+      >
+        {truncate(`${standingLine} · ${view.perfect_run_reference}`, 68)}
+      </text>
+
+      <text
+        x={CARD_WIDTH / 2}
+        y={CARD_HEIGHT - 18}
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="10"
+      >
+        {shareUrl ? truncate(shareUrl, 62).toUpperCase() : "WCDRAFT.APP"}
+      </text>
+    </svg>
+  );
+}
+
+function RevealMetricBox({
+  x,
+  title,
+  value,
+  colors,
+}: {
+  x: number;
+  title: string;
+  value: string;
+  colors: ShareSvgColors;
+}) {
+  return (
+    <g transform={`translate(${x}, 0)`}>
+      <rect
+        x="0"
+        y="0"
+        width="204"
+        height="88"
+        rx="14"
+        fill="rgba(0,0,0,0.16)"
+        stroke={colors.muted}
+        strokeOpacity="0.36"
+      />
+      <text
+        x="102"
+        y="28"
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="12"
+        fontWeight="700"
+      >
+        {title}
+      </text>
+      <text
+        x="102"
+        y="66"
+        textAnchor="middle"
+        fill={colors.text}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="34"
+        fontWeight="850"
+      >
+        {value}
+      </text>
+    </g>
+  );
+}
+
+function RevealLineRow({
+  line,
+  y,
+  colors,
+}: {
+  line: NonNullable<ShareView["reveal"]>["lineRatings"][number];
+  y: number;
+  colors: ShareSvgColors;
+}) {
+  return (
+    <g transform={`translate(0, ${y})`}>
+      <text
+        x="0"
+        y="0"
+        fill={colors.text}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="16"
+        fontWeight="600"
+      >
+        {line.label}
+      </text>
+      <text
+        x="326"
+        y="0"
+        textAnchor="end"
+        fill={colors.muted}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="15"
+        fontWeight="700"
+      >
+        {formatShareNumber(line.before_value)}
+      </text>
+      <text
+        x="356"
+        y="0"
+        textAnchor="middle"
+        fill={colors.muted}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="15"
+        fontWeight="700"
+      >
+        -&gt;
+      </text>
+      <text
+        x="404"
+        y="0"
+        textAnchor="end"
+        fill={colors.text}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="16"
+        fontWeight="800"
+      >
+        {formatShareNumber(line.after_value)}
+      </text>
+      <rect x="420" y="-12" width="110" height="8" rx="4" fill="rgba(0,0,0,0.22)" />
+      <rect
+        x="420"
+        y="-12"
+        width={Math.max(0, Math.min(110, ((line.after_value ?? 0) / 100) * 110))}
+        height="8"
+        rx="4"
+        fill="url(#wcEmerald)"
+      />
+    </g>
+  );
+}
+
+function RevealXiRow({
+  starter,
+  x,
+  y,
+  colors,
+}: {
+  starter: NonNullable<ShareView["reveal"]>["revealStarters"][number];
+  x: number;
+  y: number;
+  colors: ShareSvgColors;
+}) {
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <text
+        x="0"
+        y="0"
+        fill={colors.muted}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="12"
+        fontWeight="700"
+      >
+        {truncate(starter.slot_label, 4)}
+      </text>
+      <text
+        x="42"
+        y="0"
+        fill={colors.text}
+        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontSize="15"
+        fontWeight="600"
+      >
+        {starter.nation_code} {truncate(starter.name, 13)}
+      </text>
+      <text
+        x="234"
+        y="0"
+        textAnchor="end"
+        fill={colors.text}
+        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontSize="14"
+        fontWeight="800"
+      >
+        {formatShareNumber(starter.after_overall)}
+      </text>
+    </g>
+  );
+}
+
 function ShareStat({
   x,
   num,
@@ -1013,6 +1425,11 @@ function ShareStat({
       </text>
     </g>
   );
+}
+
+function formatShareNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return String(value);
 }
 
 function truncate(value: string, max: number): string {

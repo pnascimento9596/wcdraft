@@ -18,6 +18,7 @@ import {
   BOARD_LANES,
   BOARD_RATING_BASES,
   configLabel,
+  draftModeLaneLabel,
   type BoardDraftOrder,
   type BoardEra,
   type BoardLane,
@@ -40,8 +41,8 @@ export function BoardHead({
         <span className="eyebrow">{filter.challengeDate ?? "Today"} Daily Draft</span>
         <h1 className="display">Daily Leaderboard</h1>
         <p className="lede">
-          One shared Classic draft for everyone today. Post anonymously; your best verified score
-          for the day holds.
+          One shared sighted Classic draft for everyone today. Post anonymously; your best verified
+          score for the day holds.
         </p>
         <p className="lede">A new shared draft drops every day at 00:00 UTC.</p>
         <p>
@@ -57,11 +58,12 @@ export function BoardHead({
       <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Filter by Lane, Mode, Draft order, Era and Rating basis. Finish a run and post it to the
-        exact board from your results screen.
+        Daily is the default board. Advanced boards keep sighted Classic and blind Memory runs in
+        separate lanes.
       </p>
       <p className="lede">
-        Ratings can update during a season; entries are stamped at submit time.
+        Filter by Lane, Draft order, Era and Rating basis. Ratings can update during a season;
+        entries are stamped at submit time.
       </p>
       <code className={s.seasonKey}>{currentSeasonKey}</code>
     </header>
@@ -112,7 +114,9 @@ export function BoardToolbar({
       {filter.challenge === "daily" ? (
         <p className={s.activeConfig}>
           <strong>Daily Draft</strong>
-          <span>{filter.challengeDate ?? "Today"} · Classic / Squad First / Career / All-time</span>
+          <span>
+            {filter.challengeDate ?? "Today"} · Sighted Classic / Squad First / Career / All-time
+          </span>
         </p>
       ) : (
         <>
@@ -132,7 +136,7 @@ export function BoardToolbar({
           </div>
 
           <div className={s.filterGrid} aria-label="Board filters">
-            <div className={s.filterMode} role="group" aria-label="Mode">
+            <div className={s.filterMode} role="group" aria-label="Draft visibility lane">
               {BOARD_DRAFT_MODES.map((mode) => (
                 <button
                   key={mode.key}
@@ -167,7 +171,13 @@ export function BoardToolbar({
           <p className={s.activeConfig}>
             <strong>{filter.lane === "ranked" ? "Ranked" : "Casual"}</strong>
             <span>{configLabel(filter)}</span>
-            {filter.lane === "ranked" && <em>Sign-in required to post</em>}
+            {filter.lane === "ranked" && (
+              <em>
+                {filter.draftMode === "hidden"
+                  ? "Blind ranked lane · sign-in required"
+                  : "Sighted ranked lane · sign-in required"}
+              </em>
+            )}
           </p>
         </>
       )}
@@ -245,7 +255,7 @@ export function BoardRows({
                   <span
                     className={r.draftMode === "hidden" ? `${s.badge} ${s.badgeHidden}` : s.badge}
                   >
-                    {r.draftMode === "hidden" ? "Memory" : "Classic"}
+                    {draftModeLaneLabel(r.draftMode)}
                   </span>
                   <span>{r.timeLabel}</span>
                   {daily ? (
@@ -298,8 +308,8 @@ export function EmptyBoard({ filter }: { filter: BoardFilter }) {
         {filter.challenge === "daily"
           ? "Be the first to post a verified score for today's shared draft."
           : filter.lane === "ranked"
-            ? "Signed-in ranked runs for this exact config will appear here after server verification."
-            : "Casual runs for this exact config will appear here after server verification."}
+            ? `${draftModeLaneLabel(filter.draftMode)} ranked runs for this exact config will appear here after server verification.`
+            : `${draftModeLaneLabel(filter.draftMode)} casual runs for this exact config will appear here after server verification.`}
       </p>
       {filter.challenge === "daily" ? (
         <Link href={playHref} className="btn btn--primary">

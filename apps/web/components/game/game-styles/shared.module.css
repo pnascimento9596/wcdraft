@@ -290,6 +290,36 @@
   color: var(--gold);
 }
 
+.modeCardSecondary {
+  min-height: 150px;
+  border-color: color-mix(in srgb, var(--line) 74%, var(--accent));
+  background: color-mix(in srgb, var(--bg-sunken) 52%, var(--s1));
+  box-shadow: none;
+}
+
+.modeCardSecondary .modeDesc {
+  min-height: 0;
+  max-width: 58ch;
+}
+
+.modeCardSecondary .modeTag {
+  color: color-mix(in srgb, var(--accent) 68%, var(--tx));
+}
+
+.modeCardSecondary .modeTagDot {
+  background: currentColor;
+}
+
+.modeCardSecondary .modeCardBottom {
+  margin-top: 0;
+}
+
+@media (min-width: 52rem) {
+  .modeCardSecondary {
+    grid-column: 1 / -1;
+  }
+}
+
 .modeCardLive::before {
   content: none;
 }
@@ -552,6 +582,10 @@
 
   .modeCardFeatured {
     min-height: 116px;
+  }
+
+  .modeCardSecondary {
+    min-height: 124px;
   }
 
   .modeCardFeatured .modeDesc {

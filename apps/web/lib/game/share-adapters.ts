@@ -18,9 +18,11 @@ import {
 import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
+import { buildMemoryRevealView, type MemoryRevealView } from "./memory-reveal-model";
 import type { RunRecordV1 } from "./run-record";
 import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
+import { formatNullableNumber } from "./view-models";
 
 // ─── Headline ────────────────────────────────────────────────────────────────
 
@@ -126,6 +128,7 @@ export function topScorerCaption(
 
 export interface ShareView {
   team_name: string;
+  draft_mode: DraftState["mode"];
   headline: ShareHeadline;
   /** Pure W–L (no draws), matching the on-screen record scoreboard. */
   display_record: string;
@@ -145,6 +148,7 @@ export interface ShareView {
   shootout_wins: number;
   challenge_date: string | null;
   perfect_run_reference: string;
+  reveal: MemoryRevealView | null;
 }
 
 export function buildShareView(
@@ -159,6 +163,7 @@ export function buildShareView(
   const headline = headlineFor(run, matches.length);
   return {
     team_name: draft.team_name,
+    draft_mode: draft.mode,
     headline,
     display_record: `${run.wins}-${run.losses}`,
     is_champion: run.is_champion,
@@ -178,6 +183,7 @@ export function buildShareView(
     shootout_wins: run.shootout_wins,
     challenge_date: record.challenge?.kind === "daily" ? record.challenge.date : null,
     perfect_run_reference: PERFECT_RUN_REFERENCE_LABEL,
+    reveal: draft.mode === "hidden" ? buildMemoryRevealView(gameData, draft) : null,
   };
 }
 
@@ -244,6 +250,14 @@ export function buildShareIntentText(
 }
 
 function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding | null): string {
+  if (view.reveal !== null) {
+    const avg = formatNullableNumber(view.reveal.squadAverageAfter);
+    if (view.challenge_date !== null) {
+      const scoreLine = `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on ${view.challenge_date}'s draft`;
+      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+    }
+    return `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
+  }
   if (view.challenge_date !== null) {
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
     return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;

@@ -9,6 +9,7 @@
 
 import Link from "next/link";
 
+import { draftModeLaneLabel } from "@/lib/leaderboard/config";
 import type { SubmitBoardMode, SubmitPhase } from "@/lib/leaderboard/submit-state";
 
 import s from "./leaderboard.module.css";
@@ -69,7 +70,7 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
         <span className={s.submitScore}>
           <span className={s.submitScoreNum}>{props.score}</span>pts ·{" "}
           <span className={props.draftMode === "hidden" ? `${s.badge} ${s.badgeHidden}` : s.badge}>
-            {props.draftMode === "hidden" ? "Memory" : "Classic"}
+            {draftModeLaneLabel(props.draftMode)}
           </span>
         </span>
       </div>

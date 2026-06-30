@@ -306,6 +306,7 @@ describe("dynamic run OG model and image", () => {
     const model = buildRunOgModelFromTrustedSummary(gameData, decoded, summary);
     expect(model.summary).toEqual(summary);
     expect(model.lineup).toHaveLength(11);
+    expect(model.reveal).toBeNull();
   });
 
   it("threads the server re-derived narrative into the signed image model", () => {
@@ -323,6 +324,33 @@ describe("dynamic run OG model and image", () => {
     expect(verified.model.narrative).toBe(expected);
     expect(verified.model.narrative).not.toContain("Unavailable");
     expect(verified.model.narrative).not.toMatch(/WC2026-/u);
+  });
+
+  it("threads hidden-mode reveal data into the signed image model without pre-reveal ratings", async () => {
+    const completed = complete();
+    const hidden: RunRecordV1 = {
+      ...completed,
+      draft: { ...completed.draft, mode: "hidden" },
+    };
+    const token = encodeRunToken(hidden);
+    const verified = verifyRunTokenForOg(token, { gameData, scenario: SCENARIO_2026_BUNDLE });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    expect(verified.model.mode_label).toBe("Memory");
+    expect(verified.model.reveal).not.toBeNull();
+    expect(verified.model.reveal?.squad_before).toBeNull();
+    expect(typeof verified.model.reveal?.squad_after).toBe("number");
+    expect(verified.model.reveal?.lines.length).toBeGreaterThan(0);
+    for (const line of verified.model.reveal?.lines ?? []) {
+      expect(line.before).toBeNull();
+      expect(typeof line.after).toBe("number");
+    }
+    expect(verified.model.lineup.some((slot) => typeof slot.overall === "number")).toBe(true);
+    const signed = await signedOgForToken(token);
+    expect(signed.length).toBeLessThan(12_000);
+    const trusted = await verifySignedRunOgPayload(signed, SECRET);
+    expect(trusted?.model.reveal?.squad_before).toBeNull();
+    expect(trusted?.model.reveal?.squad_after).toBe(verified.model.reveal?.squad_after);
   });
 
   it("labels the share narrative with display names when scenario data is available", () => {
@@ -373,6 +401,7 @@ describe("dynamic run OG model and image", () => {
       ],
       stars: [],
       manager: null,
+      reveal: null,
     };
     const assets = localAssets();
 

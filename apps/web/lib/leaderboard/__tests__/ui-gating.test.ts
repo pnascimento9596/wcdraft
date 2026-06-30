@@ -551,7 +551,7 @@ describe("board views", () => {
   it("empty board is config-scoped words, not placeholder rows", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard, { filter: DEFAULT_BOARD_FILTER }));
     expect(html).toContain("No runs yet for this board");
-    expect(html).toContain("Signed-in ranked runs for this exact config");
+    expect(html).toContain("Sighted Classic ranked runs for this exact config");
   });
 
   it("daily rows lead with standing while keeping raw score secondary", () => {
@@ -577,8 +577,8 @@ describe("board views", () => {
     );
     expect(html).toContain("Ranked");
     expect(html).toContain("Casual");
-    expect(html).toContain("Classic");
-    expect(html).toContain("Memory");
+    expect(html).toContain("Sighted Classic");
+    expect(html).toContain("Blind Memory");
     expect(html).toContain("Squad First");
     expect(html).toContain("Position First");
     expect(html).toContain("Career");

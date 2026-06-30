@@ -1,0 +1,289 @@
+{
+  "generatedAt": "2026-06-29T23:35:29.441Z",
+  "baseUrl": "http://127.0.0.1:3037",
+  "versions": {
+    "schema_version": "runtime-data-2.8.0",
+    "dataset_version": "2026-06-04",
+    "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
+    "engine_version": "engine-2026.06.28-merit-v4.6",
+    "ruleset_version": "ruleset-2026.06.04",
+    "data_bundle_hash": "7d6d06b96084dd6ebf2a1eebc365662064d5ed55535a5825f8ce732210a6d48c+ad5c726772561b274b3b1446540a7e982c1d6cc01d942cd2d95d30a606c7cd2e"
+  },
+  "screenshots": [
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/mode-select.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/post-run-try-blind.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/memory-reveal-share-card.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/mode-select.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/post-run-try-blind.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/memory-reveal-share-card.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/mode-select.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/post-run-try-blind.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/memory-reveal-share-card.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/mode-select.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/post-run-try-blind.png",
+    "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/memory-reveal-share-card.png"
+  ],
+  "summary": {
+    "surfaces": 12,
+    "axeViolations": 0,
+    "contrastFailures": 0,
+    "overflowFailures": 0,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "httpErrors": 0
+  },
+  "results": [
+    {
+      "surface": "mode-select",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 39,
+        "min": {
+          "tag": "span",
+          "text": "New draft",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "post-run-try-blind",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/post-run-try-blind.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 24,
+        "min": {
+          "tag": "span",
+          "text": "NEXT DRAFT IN 00:24:46",
+          "fontSize": 12,
+          "ratio": 5.8045587967058125
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "memory-reveal-share-card",
+      "viewport": "360x800",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/360x800/memory-reveal-share-card.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 19,
+        "min": {
+          "tag": "span",
+          "text": "Share your run",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 40,
+        "min": {
+          "tag": "span",
+          "text": "New draft",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "post-run-try-blind",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/post-run-try-blind.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 24,
+        "min": {
+          "tag": "span",
+          "text": "NEXT DRAFT IN 00:24:41",
+          "fontSize": 12,
+          "ratio": 5.8045587967058125
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "memory-reveal-share-card",
+      "viewport": "390x844",
+      "theme": "light",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/light/390x844/memory-reveal-share-card.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 19,
+        "min": {
+          "tag": "span",
+          "text": "Share your run",
+          "fontSize": 11.52,
+          "ratio": 4.722514637592806
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 39,
+        "min": {
+          "tag": "span",
+          "text": "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+          "fontSize": 13,
+          "ratio": 5.670568698739553
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "post-run-try-blind",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/post-run-try-blind.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 24,
+        "min": {
+          "tag": "span",
+          "text": "Today's best: —",
+          "fontSize": 12.48,
+          "ratio": 6.162475398993834
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "memory-reveal-share-card",
+      "viewport": "360x800",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/360x800/memory-reveal-share-card.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 19,
+        "min": {
+          "tag": "p",
+          "text": "Caption",
+          "fontSize": 9,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "mode-select",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/mode-select.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 40,
+        "min": {
+          "tag": "span",
+          "text": "One shared draft for everyone today — a new one drops daily at 00:00 UTC.",
+          "fontSize": 13,
+          "ratio": 5.670568698739553
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "post-run-try-blind",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/post-run-try-blind.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 24,
+        "min": {
+          "tag": "span",
+          "text": "Today's best: —",
+          "fontSize": 12.48,
+          "ratio": 6.162475398993834
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    },
+    {
+      "surface": "memory-reveal-share-card",
+      "viewport": "390x844",
+      "theme": "dark",
+      "screenshot": "docs/reports/memory-reveal-share-2026-06-29/screenshots/dark/390x844/memory-reveal-share-card.png",
+      "axeViolations": [],
+      "contrast": {
+        "count": 19,
+        "min": {
+          "tag": "p",
+          "text": "Caption",
+          "fontSize": 9,
+          "ratio": 4.75295207609172
+        },
+        "failures": []
+      },
+      "overflow": null,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "httpErrors": []
+    }
+  ]
+}

@@ -52,6 +52,7 @@ import {
   encodeRunToken,
   reconstructDraftFromToken,
 } from "../run-token";
+import { buildMemoryRevealView } from "../memory-reveal-model";
 import { blindCardRatingView, type CardRatingView } from "../view-models";
 import type { PlayerCardView } from "../view-models";
 import { CandidateCard } from "@/components/game/candidate-card";
@@ -353,6 +354,30 @@ describe("memory mode — aggregate seams blind through the adapter", () => {
   it("squadAverageOverall (aggregate seam, sanity): blind ⇒ null", () => {
     expect(squadAverageOverall(gameData.indexes, hidden.draft, { blindRatings: true })).toBeNull();
     expect(typeof squadAverageOverall(gameData.indexes, classic.draft)).toBe("number");
+  });
+});
+
+describe("memory mode — reveal view model", () => {
+  const gameData = buildGameDataFromBundles();
+  const hidden = buildRecord(gameData, "hidden");
+
+  it("shows the drafted-against blind state as honest dashes before actual revealed ratings", () => {
+    const reveal = buildMemoryRevealView(gameData, hidden.draft);
+    expect(reveal.squadAverageBefore).toBeNull();
+    expect(typeof reveal.squadAverageAfter).toBe("number");
+    expect(reveal.lineRatings.length).toBeGreaterThan(0);
+    for (const line of reveal.lineRatings) {
+      expect(line.before_value).toBeNull();
+      expect(typeof line.after_value).toBe("number");
+    }
+    expect(reveal.revealStarters).toHaveLength(11);
+    for (const starter of reveal.revealStarters) {
+      expect(starter.before_overall).toBeNull();
+    }
+    expect(reveal.topReveals.length).toBeGreaterThan(0);
+    expect(reveal.topReveals.some((starter) => typeof starter.after_overall === "number")).toBe(
+      true,
+    );
   });
 });
 

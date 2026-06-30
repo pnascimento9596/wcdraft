@@ -1,4 +1,4 @@
-import type { RunOgModel } from "./run-og-model";
+import type { RunOgModel, RunOgRevealModel } from "./run-og-model";
 import type { RunRecordVersions } from "./versions";
 
 export const RUN_OG_SIGNING_SECRET_ENV = "WCDRAFT_OG_SIGNING_SECRET" as const;
@@ -134,7 +134,9 @@ function normalizeModel(value: unknown): RunOgModel | null {
     : isShortString(o.result_label)
       ? o.result_label
       : null;
+  const reveal = normalizeReveal(o.reveal);
   if (narrative === null) return null;
+  if (reveal === undefined) return null;
   if (
     isText(o.team_name) &&
     (o.mode_label === "Classic" || o.mode_label === "Memory") &&
@@ -159,9 +161,34 @@ function normalizeModel(value: unknown): RunOgModel | null {
     o.stars.every(isStar) &&
     (o.manager === null || isManager(o.manager))
   ) {
-    return { ...o, narrative };
+    return { ...o, narrative, reveal };
   }
   return null;
+}
+
+function normalizeReveal(value: unknown): RunOgRevealModel | null | undefined {
+  if (value === undefined || value === null) return null;
+  if (!value || typeof value !== "object") return undefined;
+  const o = value as Record<string, unknown>;
+  if (
+    !isRevealNumber(o.squad_before) ||
+    !isRevealNumber(o.squad_after) ||
+    o.squad_before !== null ||
+    !Array.isArray(o.lines) ||
+    o.lines.length > 4 ||
+    !o.lines.every(isRevealLine) ||
+    !Array.isArray(o.top_reveals) ||
+    o.top_reveals.length > 3 ||
+    !o.top_reveals.every(isRevealPick)
+  ) {
+    return undefined;
+  }
+  return {
+    squad_before: o.squad_before,
+    squad_after: o.squad_after,
+    lines: o.lines as RunOgRevealModel["lines"],
+    top_reveals: o.top_reveals as RunOgRevealModel["top_reveals"],
+  };
 }
 
 function isSummary(value: unknown): boolean {
@@ -191,7 +218,8 @@ function isLineupSlot(value: unknown): boolean {
     isPct(o.x_pct) &&
     isPct(o.y_pct) &&
     isText(o.name) &&
-    isShortString(o.nation_code)
+    isShortString(o.nation_code) &&
+    (o.overall === undefined || isRevealNumber(o.overall))
   );
 }
 
@@ -205,6 +233,33 @@ function isManager(value: unknown): boolean {
   if (!value || typeof value !== "object") return false;
   const o = value as Record<string, unknown>;
   return isText(o.name) && isShortString(o.nation_code);
+}
+
+function isRevealLine(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+  const o = value as Record<string, unknown>;
+  return (
+    isShortString(o.label) &&
+    o.before === null &&
+    isRevealNumber(o.before) &&
+    isRevealNumber(o.after)
+  );
+}
+
+function isRevealPick(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+  const o = value as Record<string, unknown>;
+  return (
+    isText(o.name) &&
+    isShortString(o.nation_code) &&
+    o.before_overall === null &&
+    isRevealNumber(o.before_overall) &&
+    isRevealNumber(o.after_overall)
+  );
+}
+
+function isRevealNumber(value: unknown): value is number | null {
+  return value === null || isInt(value, 0, 99);
 }
 
 function isInt(value: unknown, min: number, max: number): value is number {

@@ -77,6 +77,9 @@
 .modeCardFeatured {
   composes: modeCardFeatured from "./game-styles/shared.module.css";
 }
+.modeCardSecondary {
+  composes: modeCardSecondary from "./game-styles/shared.module.css";
+}
 .modeCardLive {
   composes: modeCardLive from "./game-styles/shared.module.css";
 }
@@ -151,6 +154,18 @@
 }
 .localProgressCountdown {
   composes: localProgressCountdown from "./game-styles/shared.module.css";
+}
+.memoryProgression {
+  composes: memoryProgression from "./game-styles/results.module.css";
+}
+.memoryProgressionCopy {
+  composes: memoryProgressionCopy from "./game-styles/results.module.css";
+}
+.memoryProgressionKicker {
+  composes: memoryProgressionKicker from "./game-styles/results.module.css";
+}
+.memoryProgressionTitle {
+  composes: memoryProgressionTitle from "./game-styles/results.module.css";
 }
 .draft {
   composes: draft from "./game-styles/draft-base.module.css";

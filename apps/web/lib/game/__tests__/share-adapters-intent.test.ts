@@ -21,6 +21,7 @@ import {
 function makeView(overrides: Partial<ShareView> = {}): ShareView {
   return {
     team_name: "Auriverde XI",
+    draft_mode: "classic",
     headline: "CHAMPIONS",
     display_record: "8-0",
     is_champion: true,
@@ -50,6 +51,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     shootout_wins: 0,
     challenge_date: null,
     perfect_run_reference: "Perfect 1-0 run: 108 pts",
+    reveal: null,
     ...overrides,
   };
 }
@@ -111,6 +113,24 @@ describe("buildShareIntentText", () => {
     expect(text).toContain(
       "Top — of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft",
     );
+  });
+
+  it("uses Memory reveal framing without inventing a blind rating", () => {
+    const view = makeView({
+      draft_mode: "hidden",
+      reveal: {
+        starters: [],
+        bench: [],
+        lineRatings: [],
+        squadAverageBefore: null,
+        squadAverageAfter: 88,
+        revealStarters: [],
+        topReveals: [],
+      },
+    });
+    const caption = buildShareCaption(view, TOKEN_URL);
+    expect(caption).toContain("Auriverde XI drafted blind, ended with 8-0 (41 pts, 88 OVR)");
+    expect(caption).not.toContain("thought");
   });
 });
 
