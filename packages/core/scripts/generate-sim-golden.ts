@@ -15,11 +15,10 @@
  *  1. Fixture-input changes: a diff caused purely by editing
  *     `test/fixtures/sim-fixtures.ts` scenario inputs moves this golden with
  *     no engine semantics change — no `engine_version` bump.
- *  2. PR #62 (decoupling guards): `managerModifier` became explicit identity
- *     because the fixtures exercised a contract violation (sim reading the
- *     display-only `ManagerRating.overall`) that production runtime never
- *     ships. Production-flow goldens (e2e-real-run, asym-realism) stayed
- *     byte-identical, so no `engine_version` bump was taken.
+ *  2. PR #62 (decoupling guards): the manager fold stopped reading the
+ *     display-only `ManagerRating.overall`. Production-flow goldens
+ *     (e2e-real-run, asym-realism) stayed byte-identical, so no
+ *     `engine_version` bump was taken.
  * Any OTHER diff still means the unconditional rule applies.
  */
 import { writeFileSync } from "node:fs";

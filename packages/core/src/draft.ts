@@ -270,6 +270,7 @@ export interface DraftCatalog {
 const SPIN_COUNT = 17;
 const BENCH_COUNT = 5;
 export const MAX_PLAYER_CHOICES_PER_SPIN = 3;
+const CHOICE_SPREAD_BUCKETS = 8;
 
 /**
  * Bench slot layout (engine-owned; the schema does NOT cross-validate bench
@@ -695,15 +696,16 @@ function rankedChoiceCandidates(cards: readonly DraftPlayerCard[]): ChoiceCandid
     if (ao === null && bo !== null) return 1;
     return compareCardId(cardIdFor(a), cardIdFor(b));
   });
-  return ranked.map((card, rank) => ({
+  const candidates = ranked.map((card, rank) => ({
     card,
     card_id: cardIdFor(card),
-    tier: Math.min(
-      MAX_PLAYER_CHOICES_PER_SPIN - 1,
-      Math.floor((rank * MAX_PLAYER_CHOICES_PER_SPIN) / ranked.length),
-    ),
+    // U5: preserve one top/middle/lower tradeoff, but draw the lower option
+    // from the upper spread instead of the full bottom third. This softens
+    // the weakest forced choice without changing ratings or catalog weights.
+    tier: Math.floor((rank * CHOICE_SPREAD_BUCKETS) / ranked.length),
     position_bucket: primaryPosition(card),
   }));
+  return candidates.filter((candidate) => candidate.tier < MAX_PLAYER_CHOICES_PER_SPIN);
 }
 
 function selectDiverseChoice(

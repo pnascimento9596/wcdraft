@@ -9,7 +9,7 @@ import { RANKED_ATTEMPT_TTL_MS } from "../ranked-attempts";
 
 const SECRET = testCookieSecret("ranked-attempt-route");
 const NOW = Date.UTC(2026, 5, 29, 12);
-const CURRENT_SEASON = "season-2026-spin-agency";
+const CURRENT_SEASON = "season-2026-manager-attrition";
 
 const { db, pg, reset } = await setupTestDb();
 afterAll(async () => pg.close());

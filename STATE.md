@@ -86,6 +86,43 @@ byte-identical after deploy, malformed/missing signatures fall back to
 `og-default.png`, malformed signer input rejects 422, and no `/api/og/*` runtime
 errors were found in the post-deploy Vercel window.
 
+Manager attrition engine-season lane:
+2026-06-30 · local RED implementation on branch
+`ws-core/engine-season-20260630`, based on `origin/main`
+`7b31d1b`. Scope: U1 revalidated the committed manual override resolver
+with real current counts (`v4.5` remains 2,336/2,516 matched, 180 unmatched, 36
+existing recovered v4.3 honest misses; 0 new recoveries in this lane); U2 wires
+the reserved manager band through `SynergyResult.manager_link` without reading
+`ManagerRating.overall`; U3 lowers persistent user-path tournament-ending injury
+probability from `0.34` to `0.12`; U4 assessed choose-from-3 position-fit
+non-triviality; U5 raises the choose-from-3 weak-candidate floor by sampling
+full offers from the top three buckets of an eight-bucket ranked legal roster.
+Post-U5 strategic difficulty landed at 1329/2000 qualifying (66.45%) and mean
+score 14.479 versus the post-U1-through-U3 baseline of 1090/2000 (54.50%) and
+8.229. Undefeated regulation moved 6 -> 10 and perfect 8-0 moved 4 -> 7.
+Legend/elite display OVRs and catalog draw probabilities are unchanged, but
+offered-choice exposure rose: 90+ choices 9.0563% -> 10.7458%, legend choices
+8.0385% -> 9.8354%. Runtime anchors moved to `runtime-data-2.9.0` /
+`engine-2026.06.30-manager-attrition`; rating anchors remain `wc-perf-6.6.0` +
+`proj-career-5.6.0`; active leaderboard season default moved to
+`season-2026-manager-attrition`. Local gates passed: core build, draft golden
+regen, data compact/e2e/era/canary/asym/leaderboard regenerators, core narrow
+goldens (5 files / 42 tests), data golden:data (2 files / 31 tests), data
+golden:integration (2 files / 22 tests), canary (1 file / 1 test), heavy realism
+(1 file / 7 tests), web leaderboard golden (1 file / 6 tests), core
+draft/manager/synergy/sim goldens (4 files / 95 tests), root typecheck (8/8),
+root lint (5/5), root test (8/8; core 384, data 84 passed / 7 skipped, db 104,
+marketing 67, web 818 passed / 1 skipped plus `game-flow-playwright`), and root
+build (4/4). Report:
+`docs/reports/engine-season-manager-attrition-2026-06-30.md`. Fresh-context
+independent review passed with no blockers and re-executed the requested gates.
+The attached owner dispatch explicitly overrides the normal checked-in RED human
+approval gate for this season; production merge/deploy and live verification are
+post-merge operator closeout gates. Reviewer carryover: a synthetic legal-roster
+size 4/5 edge can yield fewer than three offered player choices under the U5
+bucket filter, though a 5,000 real-pool draft probe found 85,000 player spins
+with `minRolled=3` and `short=0`.
+
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
 The CI contract now uses path detection plus one required aggregate status,
@@ -193,11 +230,11 @@ internal sim score/channel inputs to `display_curve^-1(owner display)` before
 channel materialization.
 
 Current repo runtime anchor:
-`runtime-data-2.8.0` / `engine-2026.06.28-merit-v4.6` / `wc-perf-6.6.0` /
+`runtime-data-2.9.0` / `engine-2026.06.30-manager-attrition` / `wc-perf-6.6.0` /
 `proj-career-5.6.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Explicit active leaderboard season id:
-`season-2026-summer`.
+`season-2026-manager-attrition`.
 
 X marketing lane:
 source assets are present on `origin/main` as of
@@ -410,7 +447,7 @@ broken-pipe MCP transport error.
 | schema_version                 | runtime-data-2.9.0                                                                                                                        |
 | dataset_version                | 2026-06-04                                                                                                                                |
 | ruleset_version                | ruleset-2026.06.04                                                                                                                        |
-| engine_version                 | engine-2026.06.30-spin-agency                                                                                                             |
+| engine_version                 | engine-2026.06.30-manager-attrition                                                                                                       |
 | rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
 | rating_version (projected)     | proj-career-5.6.0                                                                                                                         |
 | career_stature                 | career-stature-4.1.0                                                                                                                      |
@@ -420,10 +457,10 @@ broken-pipe MCP transport error.
 | runtime ratings                | 12,219                                                                                                                                    |
 | Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
 | career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
-| explicit leaderboard season id | season-2026-spin-agency                                                                                                                   |
+| explicit leaderboard season id | season-2026-manager-attrition                                                                                                             |
 | compact brotli total           | 2,231,808 measured bytes                                                                                                                  |
 | served draft-pool br artifact  | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `4daaf2…` |
-| compact sha256                 | manifest `44965216…` · draft `4daaf2…` · scenario `7846fa3a…`                                                                             |
+| compact sha256                 | manifest `688a9d15…` · draft `4daaf2…` · scenario `7846fa3a…`                                                                             |
 | generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `4daaf2…` / 130,553,412 bytes                                  |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
@@ -594,7 +631,7 @@ web static assets.
 - `WCDRAFT_CSP_REPORT_ONLY` is an optional build/test cache-keyed override declared in
   `turbo.json`; it is not a required production secret. `WCDRAFT_LEADERBOARD_SEASON_ID`
   is the optional explicit aggregate season-id override and is also declared in
-  `turbo.json`; the code default is `season-2026-spin-agency`.
+  `turbo.json`; the code default is `season-2026-manager-attrition`.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.

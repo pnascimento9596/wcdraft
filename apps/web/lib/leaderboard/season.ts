@@ -25,7 +25,7 @@ export const SEASON_HASH_ANCHOR_ORDER = [
 /** Hex length of the collision-proof suffix. */
 export const SEASON_KEY_HASH_LEN = 8;
 
-export const DEFAULT_LEADERBOARD_SEASON_ID = "season-2026-spin-agency" as const;
+export const DEFAULT_LEADERBOARD_SEASON_ID = "season-2026-manager-attrition" as const;
 
 const MAX_EXPLICIT_SEASON_ID_CHARS = 160;
 const EXPLICIT_SEASON_ID_RE = /^[A-Za-z0-9._:+-]+$/u;

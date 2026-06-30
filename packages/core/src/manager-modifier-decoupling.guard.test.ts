@@ -19,21 +19,21 @@
 //       interface — that file is the contract, not the sim, so it is
 //       excluded from the scan.
 //
-//   (2) FUNCTIONAL — call `aggregateUserXiStrength` with a non-null
-//       `ManagerRating` whose `overall` is far from the historical pivot
-//       (PIVOT = 50, so `overall=99` would historically have hit the
-//       upper modifier band of 1.10), and assert the output channel ints
-//       are byte-equal to the `null`-manager case. Identity, no band.
+//   (2) FUNCTIONAL — call `aggregateUserXiStrength` with non-null
+//       `ManagerRating` rows whose `overall` values are far apart and assert
+//       output channel ints are byte-equal when `synergy.manager_link` is the
+//       same. Then assert the reserved manager band is driven by
+//       `synergy.manager_link`, not by display overall.
 //
-// MUTATE-AND-FAIL contract: flip `managerModifier()` to read
-// `manager.overall` and rerun this file — BOTH (1) and (2) must fail.
+// MUTATE-AND-FAIL contract: flip `managerModifier()` to read `manager.overall`
+// and rerun this file — BOTH (1) and (2) must fail.
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
 
-import { aggregateUserXiStrength } from "./engine/team-strength.js";
+import { aggregateUserXiStrength, managerBandModifier } from "./engine/team-strength.js";
 import type { StarterContribution } from "./api/team-strength.js";
 import { buildManagerCardId } from "./types/manager.js";
 import type { ManagerRating } from "./types/manager.js";
@@ -111,7 +111,7 @@ describe("decoupling guard — no sim path may read ManagerRating.overall", () =
   });
 });
 
-// ─── FUNCTIONAL ASSERTION — IDENTITY FOR ARBITRARY ManagerRating ─────────────
+// ─── FUNCTIONAL ASSERTION — DISPLAY DECOUPLED, MANAGER LINK MECHANICAL ──────
 
 const TID = 17;
 
@@ -159,21 +159,25 @@ function makeRating(overall: number | null): ManagerRating {
   };
 }
 
-const NEUTRAL_SYNERGY: SynergyResult = {
-  overall: 0,
-  nation_clusters: 0,
-  linked_pairs: 0,
-  manager_link: 0,
-  multiplier: 1.0,
-} as unknown as SynergyResult;
+function synergy(manager_link: number, multiplier = 1.0): SynergyResult {
+  return {
+    overall: manager_link * 100,
+    nation_clusters: [],
+    linked_pairs: [],
+    manager_link,
+    multiplier,
+  };
+}
 
-describe("decoupling guard — managerModifier is identity for every ManagerRating", () => {
-  it("output channel ints are byte-equal across null / pivot / band-max / band-min managers", () => {
-    const base = aggregateUserXiStrength(starters(60), NEUTRAL_SYNERGY, null);
+describe("decoupling guard — manager band never reads ManagerRating.overall", () => {
+  it("output channel ints are byte-equal across null / pivot / band-max / band-min manager ratings", () => {
+    const neutral = synergy(0);
+    const base = aggregateUserXiStrength(starters(60), neutral, null);
 
     // Pre-fix behavior would have produced strictly DIFFERENT outputs at
     // overall ∈ {0, 99} (the band extremes) and an equal output at overall=50
-    // (the pivot). After the fix, ALL of these must equal `base`.
+    // (the pivot). The manager-link band ignores display overall, so ALL of
+    // these must equal `base`.
     const cases: { label: string; overall: number | null }[] = [
       { label: "null", overall: null },
       { label: "pivot (50)", overall: 50 },
@@ -182,8 +186,25 @@ describe("decoupling guard — managerModifier is identity for every ManagerRati
       { label: "off-pivot (80)", overall: 80 },
     ];
     for (const c of cases) {
-      const out = aggregateUserXiStrength(starters(60), NEUTRAL_SYNERGY, makeRating(c.overall));
-      expect(out, `managerModifier must be identity for ${c.label}`).toEqual(base);
+      const out = aggregateUserXiStrength(starters(60), neutral, makeRating(c.overall));
+      expect(out, `ManagerRating.overall must be ignored for ${c.label}`).toEqual(base);
     }
+  });
+
+  it("reserved manager band is driven by synergy.manager_link", () => {
+    const neutral = synergy(0);
+    const linked = synergy(1);
+    const base = aggregateUserXiStrength(starters(60), neutral, makeRating(0));
+    const boostedLowDisplay = aggregateUserXiStrength(starters(60), linked, makeRating(0));
+    const boostedHighDisplay = aggregateUserXiStrength(starters(60), linked, makeRating(99));
+
+    expect(managerBandModifier(neutral, makeRating(99))).toBe(1);
+    expect(managerBandModifier(linked, makeRating(0))).toBe(1.1);
+    expect(managerBandModifier(linked, null)).toBe(1.1);
+    expect(boostedLowDisplay).toEqual(boostedHighDisplay);
+    expect(boostedLowDisplay.attack).toBeGreaterThan(base.attack);
+    expect(boostedLowDisplay.midfield).toBeGreaterThan(base.midfield);
+    expect(boostedLowDisplay.defense).toBeGreaterThan(base.defense);
+    expect(boostedLowDisplay.goalkeeping).toBeGreaterThan(base.goalkeeping);
   });
 });

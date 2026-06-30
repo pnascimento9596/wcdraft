@@ -149,13 +149,14 @@ branch. Both are tripwires — they preserve current behaviour but make a
 future regression turn red loudly.
 
 1. **Manager modifier no longer reads `ManagerRating.overall`.** The
-   `managerModifier()` fold in `engine/team-strength.ts` is now EXPLICITLY
-   identity (returns 1.0 for every input). `ManagerRating.overall` is
-   display-only — the type contract says "the sim MUST NOT read this
-   field." When a sim-legal manager field is defined, wire that field
-   here; do NOT re-introduce the display-overall read. Locked by
+   `managerBandModifier()` fold in `engine/team-strength.ts` is driven by the
+   sim-legal `SynergyResult.manager_link` field and the reserved positive
+   manager band. `ManagerRating.overall` is display-only — the type contract
+   says "the sim MUST NOT read this field." When a future sim-legal manager
+   rating field is defined, wire that field here; do NOT re-introduce the
+   display-overall read. Locked by
    `src/manager-modifier-decoupling.guard.test.ts` (static scan + functional
-   identity assertion).
+   decoupling assertion).
 
 2. **Strategic-draft tie ordering invalidates the realism lock.** The
    `pickBest` helper in `packages/data/test/realism/draft-policies.ts`
@@ -402,15 +403,19 @@ Shootout: best-of-five + sudden death, conversion `BASE_CONVERT_PROB = 0.75`
 confined to a **variance floor band** `±CONVERT_BAND (0.10)` regardless of
 how lopsided the teams are — the "favourites can still lose" guarantee.
 
-## Injuries / substitutions / forfeit (unchanged)
+## Injuries / substitutions / forfeit
 
 0–2 injury events per match (`PRIMARY_INJURY_PROB 0.5`, `SECOND_INJURY_PROB
-0.2`); each is tournament-ending with `TOURNAMENT_ENDING_PROB 0.34` and then
-persists out of every later match lineup for the run. Position-aware bench
+0.2`); each is tournament-ending with `TOURNAMENT_ENDING_PROB 0.12` and then
+persists out of every later match lineup for the user's run path. The lowered
+persistent probability is intentional for the manager-attrition engine season:
+opponents are regenerated per fixture, so a symmetric opponent tournament
+attrition model would require a larger tournament-roster state change.
+Position-aware bench
 subs from the 5-bench (reset each match). Below `FIELDABLE_FLOOR = 7`
 available players → forfeit (0–3 walkover) — a safety valve.
 
-## Synergy + team-strength fold (unchanged formula)
+## Synergy + team-strength fold
 
 `team_channel = clamp_int( mean_11(rating[ch] × position_compatibility) ×
 synergy.multiplier × manager_modifier )`
@@ -418,6 +423,9 @@ synergy.multiplier × manager_modifier )`
 - **position compatibility** — MAX-of-eligibles fold over
   `POSITION_COMPATIBILITY_FACTORS` (same line 1.0, one-off ≈0.75, two-off
   ≈0.45, GK↔outfield ≈0.15).
+- **manager modifier** — positive reserved band `1 + 0.10 * manager_link`,
+  where `manager_link` is computed from the drafted manager nation and the
+  starter nation mix. `ManagerRating.overall` remains display-only.
 - **Synergy** components: nation clusters (starters only), linked pairs (per
   formation adjacency edge), manager link. Weights `0.45 / 0.40 / 0.15`.
 - **Bounded multipliers**: `synergy.multiplier ∈ [1, 1 + 0.12]`; manager

@@ -26,6 +26,7 @@ import {
   buildRunScenario,
   computeSynergy,
   FORMATION_TEMPLATES,
+  managerBandModifier,
   runTournamentFull,
   type Bracket2026,
   type DraftDataset,
@@ -261,9 +262,8 @@ export function runRealismEnsembleForPolicy(
       coverageSum += team.coverage;
       synSum += synergy.multiplier;
       // The aggregator already folds the manager modifier into channel ints;
-      // we still record the raw modifier so a future diagnostic can split it
-      // back out. With no managerRatings in the bundle, this is always 1.0.
-      mgrModSum += managerRating === null || managerRating.overall === null ? 1.0 : 1.0;
+      // record the raw modifier so the realism report can split it back out.
+      mgrModSum += managerBandModifier(synergy, managerRating);
       aggCount++;
     }
 

@@ -121,7 +121,7 @@ describe("draft — fixed seed reproduces identical 17-spin sequence (ENGINE-V2 
     }
   });
 
-  it("spreads full three-choice offers across synthetic rating tiers", () => {
+  it("spreads full three-choice offers across softened synthetic rating tiers", () => {
     const { dataset } = buildDraftFixture();
     const byCardId = new Map(
       dataset.players.map((card) => [buildCardId(card.player_id, card.tournament_id), card]),
@@ -130,15 +130,37 @@ describe("draft — fixed seed reproduces identical 17-spin sequence (ENGINE-V2 
     let sawPositionSpread = false;
     for (const spin of draft.spins.filter((s) => s.rolled_card_ids.length === 3)) {
       const choices = spin.rolled_card_ids.map((id) => byCardId.get(id)!);
+      const excluded = new Set(spin.excluded_player_ids);
+      const legal = dataset.players
+        .filter(
+          (card) =>
+            card.tournament_id === spin.tournament_id &&
+            card.nation_id === spin.nation_id &&
+            !excluded.has(card.player_id),
+        )
+        .sort((a, b) => {
+          const ao = a.choice_overall ?? Number.NEGATIVE_INFINITY;
+          const bo = b.choice_overall ?? Number.NEGATIVE_INFINITY;
+          if (ao !== bo) return bo - ao;
+          return buildCardId(a.player_id, a.tournament_id) <
+            buildCardId(b.player_id, b.tournament_id)
+            ? -1
+            : 1;
+        });
+      const spreadTierByCardId = new Map<string, "top" | "middle" | "soft-floor" | "omitted">();
+      for (const [rank, rosterCard] of legal.entries()) {
+        const bucket = Math.floor((rank * 8) / legal.length);
+        spreadTierByCardId.set(
+          buildCardId(rosterCard.player_id, rosterCard.tournament_id),
+          bucket === 0 ? "top" : bucket === 1 ? "middle" : bucket === 2 ? "soft-floor" : "omitted",
+        );
+      }
       const tiers = new Set(
-        choices.map((card) => {
-          const overall = card.choice_overall ?? 0;
-          if (overall >= 68) return "top";
-          if (overall >= 64) return "middle";
-          return "lower";
-        }),
+        choices.map((card) =>
+          spreadTierByCardId.get(buildCardId(card.player_id, card.tournament_id)),
+        ),
       );
-      expect(tiers).toEqual(new Set(["top", "middle", "lower"]));
+      expect(tiers).toEqual(new Set(["top", "middle", "soft-floor"]));
       if (new Set(choices.map((card) => card.eligible_positions[0])).size > 1) {
         sawPositionSpread = true;
       }

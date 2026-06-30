@@ -327,8 +327,13 @@ export const INJURY = Object.freeze({
   PRIMARY_INJURY_PROB: 0.5,
   /** Probability of a SECOND injury event in the same match (0..2 injuries/match). */
   SECOND_INJURY_PROB: 0.2,
-  /** Probability a given injury ends the player's tournament (persists across the run). */
-  TOURNAMENT_ENDING_PROB: 0.34,
+  /**
+   * Probability a given injury ends the player's tournament (persists across
+   * the run). Lowered for the engine-season attrition pass because persistent
+   * tournament attrition only applies to the user's squad path; opponents are
+   * regenerated per fixture rather than tracked as a full tournament roster.
+   */
+  TOURNAMENT_ENDING_PROB: 0.12,
   /** Probability a tactical substitution is made in a match (in addition to injury subs). */
   TACTICAL_SUB_PROB: 0.7,
   /**
@@ -425,10 +430,8 @@ export const SYNERGY = Object.freeze({
 });
 
 export const MANAGER_MODIFIER = Object.freeze({
-  /** Modifier band half-width: modifier ∈ [1 - BAND, 1 + BAND]; null manager → 1.0. */
+  /** Positive manager-link bonus band: modifier ∈ [1.0, 1 + BAND]; manager_link 0 -> 1.0. */
   BAND: 0.1,
-  /** Manager rating pivot — a manager rated this is neutral (modifier 1.0). */
-  PIVOT: 50,
 });
 
 /** Clamp a number into an inclusive range. */

@@ -182,6 +182,7 @@ export {
   positionCompatibility,
   computeSynergy,
   aggregateUserXiStrength,
+  managerBandModifier,
 } from "./api/index.js";
 
 // ─── 3b. WS-B engine — usable run entry + calibration ─────────────────────────

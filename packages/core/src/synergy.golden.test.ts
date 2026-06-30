@@ -224,7 +224,7 @@ function managerRating(overall: number): ManagerRating {
 
 describe("team-strength — bounded multiplier (Synergy amplifies, never replaces talent)", () => {
   it("a high-Synergy weak XI cannot out-aggregate a low-Synergy superstar XI", () => {
-    // A: mediocre (50) all-BRA + Brazilian manager → maximal Synergy + manager modifier.
+    // A: mediocre (50) all-BRA + Brazilian manager → maximal Synergy + manager-link band.
     const a = buildSquad({ starterNations: ALL("BRA") });
     const synergyA = computeSynergy(a.squad, TEMPLATE, managerTournament("BRA"), a.nationByCardId);
     const aggA = aggregateUserXiStrength(starters(50), synergyA, managerRating(85));
@@ -250,12 +250,12 @@ describe("team-strength — bounded multiplier (Synergy amplifies, never replace
     );
   });
 
-  it("null manager folds as a 1.0 modifier (no implicit zero)", () => {
+  it("zero manager_link folds as a 1.0 modifier (no implicit zero)", () => {
     const { squad, nationByCardId } = buildSquad({ starterNations: ALL("BRA") });
     const synergy = computeSynergy(squad, TEMPLATE, null, nationByCardId);
     const withNull = aggregateUserXiStrength(starters(60), synergy, null);
     const withNeutral = aggregateUserXiStrength(starters(60), synergy, managerRating(50));
-    // A manager rated exactly at the pivot (50) is also a 1.0 modifier → equal.
+    // ManagerRating.overall is display-only; manager_link is 0 when no manager is drafted.
     expect(withNull).toEqual(withNeutral);
   });
 });
