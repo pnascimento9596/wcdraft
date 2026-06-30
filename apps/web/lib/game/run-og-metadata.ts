@@ -1,5 +1,5 @@
-import { decodeRunToken, versionsAgree, type RunTokenOgSummary } from "./run-token";
-import { isLikelySignedRunOg } from "./run-og-signing";
+import { decodeRunToken, type RunTokenOgSummary } from "./run-token";
+import { isLikelySignedRunOg, SIGNED_RUN_OG_PREFIX } from "./run-og-signing";
 import { RUN_OG_HEIGHT, RUN_OG_IMAGE_ROUTE, RUN_OG_WIDTH } from "./run-og-constants";
 import type { RunRecordVersions } from "./versions";
 import { OG_DEFAULT_IMAGE, OG_DEFAULT_IMAGE_ALT } from "../site-metadata";
@@ -24,21 +24,11 @@ export function defaultRunOgImage(): RunOgImageDescriptor {
   };
 }
 
-export function buildRunOgCacheKey(
-  versions: RunRecordVersions,
-  env: Record<string, string | undefined> = process.env,
-): string {
-  const deploy =
-    env.WCDRAFT_DEPLOY_REVISION ??
-    env.VERCEL_GIT_COMMIT_SHA ??
-    env.VERCEL_DEPLOYMENT_ID ??
-    env.VERCEL_URL ??
-    "dev";
-  const bundleHash = versions.data_bundle_hash
-    .split("+")
-    .map((part) => part.slice(0, 12))
-    .join(".");
-  return `${deploy}.${bundleHash}`.replace(/[^A-Za-z0-9_.-]/gu, "-").slice(0, 96);
+export function buildRunOgCacheKey(tokenHash: string, signedModelVersion: number): string {
+  if (!/^[0-9a-f]{64}$/u.test(tokenHash) || !Number.isSafeInteger(signedModelVersion)) {
+    return "invalid";
+  }
+  return `ogs${signedModelVersion.toString()}.${tokenHash.slice(0, 32)}`;
 }
 
 export function buildRunOgImagePath(
@@ -54,19 +44,21 @@ export function shareOgImageForRunValue(
   runValue: string | string[] | null | undefined,
   signedValue: string | string[] | null | undefined,
   currentVersions: RunRecordVersions,
-  env: Record<string, string | undefined> = process.env,
 ): RunOgImageDescriptor {
+  void currentVersions;
   const value = typeof runValue === "string" ? runValue : null;
   const signed = typeof signedValue === "string" ? signedValue : null;
   if (!value) return defaultRunOgImage();
   if (!signed || !isLikelySignedRunOg(signed)) return defaultRunOgImage();
 
   const decoded = decodeRunToken(value);
-  if (!decoded || decoded.v !== 3 || !versionsAgree(decoded, currentVersions)) {
+  if (!decoded || decoded.v !== 3) {
     return defaultRunOgImage();
   }
+  const signedHint = readSignedRunOgCacheHint(signed);
+  if (!signedHint) return defaultRunOgImage();
 
-  const cacheKey = buildRunOgCacheKey(currentVersions, env);
+  const cacheKey = buildRunOgCacheKey(signedHint.tokenHash, signedHint.version);
   return {
     url: buildRunOgImagePath(value, signed, cacheKey),
     width: RUN_OG_WIDTH,
@@ -74,6 +66,35 @@ export function shareOgImageForRunValue(
     alt: "Verified wcdraft run preview",
     dynamic: true,
   };
+}
+
+function readSignedRunOgCacheHint(value: string): { tokenHash: string; version: number } | null {
+  if (!isLikelySignedRunOg(value)) return null;
+  const rest = value.slice(SIGNED_RUN_OG_PREFIX.length);
+  const dot = rest.lastIndexOf(".");
+  if (dot <= 0) return null;
+  const payloadB64 = rest.slice(0, dot);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(base64UrlDecodeToString(payloadB64));
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== "object") return null;
+  const payload = parsed as Record<string, unknown>;
+  if (payload.v !== 1) return null;
+  const tokenHash = payload.token_hash;
+  if (typeof tokenHash !== "string" || !/^[0-9a-f]{64}$/u.test(tokenHash)) return null;
+  return { tokenHash, version: payload.v };
+}
+
+function base64UrlDecodeToString(value: string): string {
+  const padded = value.replace(/-/gu, "+").replace(/_/gu, "/");
+  const pad = padded.length % 4 === 0 ? "" : "=".repeat(4 - (padded.length % 4));
+  const bin = atob(padded + pad);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i += 1) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 export function formatRunOgResult(summary: RunTokenOgSummary): string {

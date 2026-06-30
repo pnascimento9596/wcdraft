@@ -45,6 +45,29 @@ overflow, reserved 16x16 crest boxes, and CLS 0. Report:
 `docs/reports/real-club-crests.md`; browser proof:
 `docs/reports/real-club-crests/browser-proof.json`.
 
+OG durability lane:
+2026-06-30 · local RED implementation on branch
+`ws-fix/og-durability-20260630`, based on `origin/main`
+`3e1bdc5daa0be84ff38dee09322b93ee52a8dadc`. Scope is bounded to `apps/web`:
+signed per-run OG cards now render as durable historical snapshots when the HMAC
+and token hash verify, even after deploy/runtime-data/rating-version rotations;
+the `/api/og/run` edge route no longer loads current runtime-data or invalidates
+signed snapshots on version mismatch; OG cache keys now use signed payload
+version plus token-hash prefix instead of deploy/data hashes; and
+`/api/og/health` asserts the stable server-only OG secret is present without
+exposing it. Local gates passed: package builds for `@wcdraft/core`,
+`@wcdraft/data`, and `@wcdraft/db` (3/3), focused OG Vitest (28 tests), public
+payload/API inventory sweep (1 test), web typecheck, web lint, root
+`pnpm typecheck` (8/8), root `pnpm lint` (5/5), root `pnpm test` (8/8; web
+809 passed / 1 skipped plus `game-flow-playwright`), root `pnpm build` (4/4),
+and `git diff --check`. Report:
+`docs/reports/og-durability-2026-06-30.md`. Fresh-context independent reviewer
+passed from separate clone `/private/tmp/wcdraft-og-review-195-YvebK8/wcdraft`
+on PR #195: re-executed package builds, focused OG Vitest (28 tests), public
+payload/API inventory sweep (1 test), web typecheck, and `git diff --check
+origin/main...HEAD`. Not shipped until merge/deploy and live production readback
+gates complete.
+
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
 The CI contract now uses path detection plus one required aggregate status,

@@ -2,6 +2,7 @@ import type { RunOgModel, RunOgRevealModel } from "./run-og-model";
 import type { RunRecordVersions } from "./versions";
 
 export const RUN_OG_SIGNING_SECRET_ENV = "WCDRAFT_OG_SIGNING_SECRET" as const;
+export const RUN_OG_SIGNING_SECRET_MIN_CHARS = 32 as const;
 export const SIGNED_RUN_OG_PREFIX = "ogs1." as const;
 export const SIGNED_RUN_OG_MAX_LEN = 12000 as const;
 
@@ -28,11 +29,21 @@ export function readOgSigningSecret(
   return usableSecret(env[RUN_OG_SIGNING_SECRET_ENV]);
 }
 
+export function assertOgSigningSecretPresent(
+  env: Record<string, string | undefined> = process.env,
+): string {
+  const secret = readOgSigningSecret(env);
+  if (secret) return secret;
+  throw new Error(
+    `${RUN_OG_SIGNING_SECRET_ENV} is required for signed OG rendering; set one stable server-only secret with at least ${RUN_OG_SIGNING_SECRET_MIN_CHARS.toString()} characters.`,
+  );
+}
+
 function usableSecret(value: string | undefined): string | null {
   const trimmed = value?.trim() ?? "";
   // HMAC accepts any byte string, but short secrets invite offline guessing if
   // a signed URL leaks. Keep the same practical floor as the auth cookie helper.
-  return trimmed.length >= 32 ? trimmed : null;
+  return trimmed.length >= RUN_OG_SIGNING_SECRET_MIN_CHARS ? trimmed : null;
 }
 
 export async function sha256Hex(value: string): Promise<string> {
