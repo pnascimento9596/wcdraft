@@ -34,7 +34,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     });
     const session = await validateSessionCookie(readRequestCookie(req, SESSION_COOKIE_NAME), deps);
     if (session.userId === null) {
-      throw new AuthError("ANON_FORBIDDEN", "account delete requires sign-in");
+      throw new AuthError("SESSION_INVALID", "account delete requires sign-in");
     }
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),

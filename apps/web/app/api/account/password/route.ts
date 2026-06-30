@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     });
     const session = await validateSessionCookie(readRequestCookie(req, SESSION_COOKIE_NAME), deps);
     if (session.userId === null) {
-      throw new AuthError("ANON_FORBIDDEN", "password changes require sign-in");
+      throw new AuthError("SESSION_INVALID", "password changes require sign-in");
     }
     verifyCsrfDoubleSubmit({
       cookieValue: readRequestCookie(req, CSRF_COOKIE_NAME),

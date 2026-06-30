@@ -9,7 +9,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const auth = await resolveAuth(req);
     if (auth.ctx.userId === null) {
-      throw new AuthError("ANON_FORBIDDEN", "account runs require sign-in");
+      throw new AuthError("SESSION_INVALID", "account runs require sign-in");
     }
     const limit = Number(req.nextUrl.searchParams.get("limit") ?? "25");
     const offset = Number(req.nextUrl.searchParams.get("offset") ?? "0");
