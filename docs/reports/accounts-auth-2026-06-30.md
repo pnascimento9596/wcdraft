@@ -87,6 +87,7 @@ Also updated current `STATE.md`, `docs/queue/q-002-mv2-12-candidate.md`, `docs/q
   - Signed-in mobile header drawer/account menu at 390x844 and 360x800: PASS.
   - axe-core 4.10.2: 0 violations on checked states.
   - 44px auth controls: PASS.
+  - `/account` destructive action contrast: PASS, 5.11:1 light / 6.19:1 dark using existing `--loss`/`--bg` tokens.
   - Screenshots and JSON summary: `/tmp/wcdraft-auth-ui/`.
 - No-core-change proof:
   - Diff contains no changes under `packages/core`, `packages/data`, `etl`, token codec, sim, engine, OG route/server, or leaderboard-validation paths.

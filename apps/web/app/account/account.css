@@ -125,7 +125,7 @@
 
 .account-danger {
   border-color: var(--loss);
-  background: color-mix(in srgb, var(--loss) 86%, var(--bg));
+  background: var(--loss);
   color: var(--bg);
 }
 
