@@ -1,4 +1,11 @@
-import { buildNarrative, buildRunScenario, runTournamentFull } from "@wcdraft/core";
+import {
+  buildNarrative,
+  buildRunScenario,
+  runTournamentFull,
+  type DraftState,
+  type MatchResult,
+  type RunResult,
+} from "@wcdraft/core";
 
 import type { ValidationData } from "../leaderboard/validate";
 import {
@@ -14,7 +21,15 @@ import { buildRunOgModelFromTrustedDraft, type RunOgModel } from "./run-og-model
 import { buildNarrativeLabels } from "./results-adapters";
 
 export type RunOgVerificationResult =
-  | { status: "accepted"; token: RunTokenV3Body; model: RunOgModel; summary: RunTokenOgSummary }
+  | {
+      status: "accepted";
+      token: RunTokenV3Body;
+      draft: DraftState;
+      run: RunResult;
+      matches: readonly MatchResult[];
+      model: RunOgModel;
+      summary: RunTokenOgSummary;
+    }
   | {
       status: "rejected";
       reason: "MALFORMED" | "UNSUPPORTED_VERSION" | "WRONG_SEASON" | "ILLEGAL_PICK" | "SIM_FAILURE";
@@ -72,6 +87,9 @@ export function verifyRunTokenForOg(
     return {
       status: "accepted",
       token,
+      draft,
+      run: result.run,
+      matches: result.matches,
       summary,
       model: buildRunOgModelFromTrustedDraft(data.gameData, token, draft, summary, narrative),
     };

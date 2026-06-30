@@ -19,7 +19,12 @@ import {
   type BoardAccumulator,
   type BoardFilter,
 } from "@/lib/leaderboard/board-view";
-import { fetchBoardPage, fetchMyPresence, type MyBoardPresence } from "@/lib/leaderboard/client";
+import {
+  fetchBoardPage,
+  fetchLeaderboardLineup,
+  fetchMyPresence,
+  type MyBoardPresence,
+} from "@/lib/leaderboard/client";
 import {
   DEFAULT_BOARD_FILTER,
   DEFAULT_DAILY_BOARD_FILTER,
@@ -30,7 +35,15 @@ import {
   isBoardRatingBasis,
 } from "@/lib/leaderboard/config";
 
-import { BoardError, BoardHead, BoardRows, BoardToolbar, EmptyBoard, MeChip } from "./board-views";
+import {
+  BoardError,
+  BoardHead,
+  BoardRows,
+  BoardToolbar,
+  EmptyBoard,
+  MeChip,
+  type BoardLineupPanelState,
+} from "./board-views";
 import s from "./leaderboard.module.css";
 
 type LoadPhase = "loading" | "ready" | "error";
@@ -47,7 +60,14 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   const [me, setMe] = useState<MyBoardPresence | null>(null);
   const [nowMs, setNowMs] = useState<number | null>(null);
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const [lineups, setLineups] = useState<Record<string, BoardLineupPanelState>>({});
   const reqSeq = useRef(0);
+  const lineupSeq = useRef(0);
+  const lineupsRef = useRef(lineups);
+
+  useEffect(() => {
+    lineupsRef.current = lineups;
+  }, [lineups]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -56,9 +76,11 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
 
   const loadFirstPage = useCallback((nextFilter: BoardFilter) => {
     const seq = ++reqSeq.current;
+    lineupSeq.current += 1;
     setPhase("loading");
     setAcc(EMPTY_BOARD);
     setOpenKey(null);
+    setLineups({});
     void fetchBoardPage({ filter: nextFilter, cursor: null }).then((r) => {
       if (seq !== reqSeq.current) return;
       if (!r.ok) {
@@ -106,6 +128,26 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
     });
   }, [acc.nextCursor, filter, loadingMore]);
 
+  useEffect(() => {
+    if (openKey === null) return;
+    const key = openKey;
+    if (lineupsRef.current[key]) return;
+    const seq = lineupSeq.current;
+    setLineups((prev) => {
+      if (prev[key]) return prev;
+      return { ...prev, [key]: { phase: "loading" } };
+    });
+    void fetchLeaderboardLineup(key).then((result) => {
+      if (seq !== lineupSeq.current) return;
+      setLineups((prev) => ({
+        ...prev,
+        [key]: result.ok
+          ? { phase: "ready", lineup: result.lineup }
+          : { phase: "error", message: result.message },
+      }));
+    });
+  }, [openKey]);
+
   const rows = boardRowViews(acc.entries, {
     nowMs: nowMs ?? 0,
     myEntryId: me?.bestEntryId ?? null,
@@ -130,6 +172,7 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
             rows={rows}
             filter={filter}
             openKey={openKey}
+            lineups={lineups}
             onToggle={(key) => setOpenKey((k) => (k === key ? null : key))}
           />
         )}

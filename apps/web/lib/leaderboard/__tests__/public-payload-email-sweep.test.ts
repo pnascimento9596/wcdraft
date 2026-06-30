@@ -43,8 +43,10 @@ import { POST as runsClaimPost } from "@/app/api/runs/claim/route";
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from "@/lib/auth/csrf";
 import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
+import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limiter-db";
 import { testCookieSecret, setupTestDb } from "../../auth/__tests__/_test-db";
 import { handleLeaderboardBoardGet, handleLeaderboardMeGet } from "../board-route";
+import { handleLeaderboardLineupGet, handleLeaderboardLineupPost } from "../lineup-route";
 import { handleRankedAttemptPost } from "../ranked-attempt-route";
 import { handleLeaderboardSubmit } from "../submit-route";
 import { buildServerGameData, serverScenarioBundle } from "./_harness";
@@ -70,6 +72,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/auth/session",
   "GET /api/auth/verify",
   "GET /api/leaderboard",
+  "GET /api/leaderboard/lineup",
   "GET /api/leaderboard/me",
   "GET /api/profile",
   "GET /api/runs",
@@ -78,6 +81,7 @@ const PUBLIC_API_METHODS = [
   "POST /api/auth/verify",
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
+  "POST /api/leaderboard/lineup",
   "POST /api/og/sign",
   "POST /api/ranked/attempt",
   "POST /api/runs",
@@ -334,6 +338,24 @@ describe("public route payload email sweep", () => {
         createdAt: new Date(NOW - 3_000),
       },
     ]);
+    const [lineupEntry] = await db
+      .insert(leaderboardEntries)
+      .values({
+        seasonKey: SEASON,
+        mode: "casual",
+        draftMode: "classic",
+        draftOrder: "squad_first",
+        era: "all_time",
+        ratingBasis: "career",
+        userId: user!.id,
+        sessionId: null,
+        displayAlias: null,
+        token: GOLDEN.classic.token,
+        verifiedScore: GOLDEN.classic.expected.verified_score,
+        scoreBreakdown: [],
+        createdAt: new Date(NOW - 2_000),
+      })
+      .returning();
 
     const captures: CapturedResponse[] = [];
     captures.push(routeCapture("GET /api/auth/config", await authConfigGet()));
@@ -550,6 +572,38 @@ describe("public route payload email sweep", () => {
             getCookieSecret: () => COOKIE_SECRET,
             currentSeasonKey: () => SEASON,
           },
+        ),
+      ),
+    );
+    const lineupDeps = {
+      db,
+      now: () => NOW,
+      getValidationData: () => ({
+        gameData: buildServerGameData(),
+        scenario: serverScenarioBundle(),
+        seasonKey: GOLDEN.season_key,
+      }),
+      getRateLimiter: () => allowAllRunOgSignRateLimiter,
+    };
+    captures.push(
+      routeCapture(
+        "GET /api/leaderboard/lineup",
+        await handleLeaderboardLineupGet(
+          req(`/api/leaderboard/lineup?entry_id=${lineupEntry!.id}`),
+          lineupDeps,
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/leaderboard/lineup",
+        await handleLeaderboardLineupPost(
+          req("/api/leaderboard/lineup", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ token: GOLDEN.classic.token }),
+          }),
+          lineupDeps,
         ),
       ),
     );

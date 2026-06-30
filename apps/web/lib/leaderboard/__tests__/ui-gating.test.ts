@@ -479,6 +479,7 @@ describe("board views", () => {
         rows,
         filter: DEFAULT_BOARD_FILTER,
         openKey: null,
+        lineups: {},
         onToggle: () => undefined,
       }),
     );
@@ -514,6 +515,7 @@ describe("board views", () => {
         ],
         filter: DEFAULT_BOARD_FILTER,
         openKey: "hostile",
+        lineups: {},
         onToggle: () => undefined,
       }),
     );
@@ -529,6 +531,7 @@ describe("board views", () => {
         rows,
         filter: DEFAULT_BOARD_FILTER,
         openKey: "a",
+        lineups: {},
         onToggle: () => undefined,
       }),
     );
@@ -542,6 +545,7 @@ describe("board views", () => {
         rows,
         filter: DEFAULT_BOARD_FILTER,
         openKey: "b",
+        lineups: {},
         onToggle: () => undefined,
       }),
     );
@@ -560,6 +564,7 @@ describe("board views", () => {
         rows,
         filter: DEFAULT_DAILY_BOARD_FILTER,
         openKey: null,
+        lineups: {},
         onToggle: () => undefined,
       }),
     );

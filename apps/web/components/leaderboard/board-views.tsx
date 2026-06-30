@@ -8,8 +8,13 @@
 
 import type { BoardFilter, BoardRowView } from "@/lib/leaderboard/board-view";
 import { seasonLabel } from "@/lib/leaderboard/board-view";
+import { ManagerSlot } from "@/components/game/manager-slot";
+import { MiniNationFlag } from "@/components/game/mini-nation-flag";
+import { Pitch } from "@/components/game/pitch";
 import { dailyDraftHref } from "@/lib/game/navigation";
+import { formatNullableNumber } from "@/lib/game/view-models";
 import type { MyBoardPresence } from "@/lib/leaderboard/client";
+import type { LeaderboardLineupView } from "@/lib/leaderboard/lineup-view";
 import Link from "next/link";
 import {
   BOARD_DRAFT_MODES,
@@ -26,6 +31,12 @@ import {
 } from "@/lib/leaderboard/config";
 
 import s from "./leaderboard.module.css";
+import gameS from "@/components/game/game.module.css";
+
+export type BoardLineupPanelState =
+  | { readonly phase: "loading" }
+  | { readonly phase: "ready"; readonly lineup: LeaderboardLineupView }
+  | { readonly phase: "error"; readonly message: string };
 
 export function BoardHead({
   currentSeasonKey,
@@ -224,11 +235,13 @@ export function BoardRows({
   rows,
   filter,
   openKey,
+  lineups,
   onToggle,
 }: {
   rows: readonly BoardRowView[];
   filter: BoardFilter;
   openKey: string | null;
+  lineups: Readonly<Record<string, BoardLineupPanelState>>;
   onToggle: (key: string) => void;
 }) {
   return (
@@ -242,6 +255,7 @@ export function BoardRows({
               type="button"
               className={r.isMine ? `${s.row} ${s.rowMine}` : s.row}
               aria-expanded={isOpen}
+              aria-controls={isOpen ? `lineup-inspector-${r.key}` : undefined}
               onClick={() => onToggle(r.key)}
               data-mine={r.isMine ? "true" : undefined}
             >
@@ -272,25 +286,140 @@ export function BoardRows({
                 <span className={s.rowScoreUnit}>{daily ? `${r.score} pts` : "pts"}</span>
               </span>
             </button>
-            {isOpen &&
-              (r.breakdown !== null ? (
-                <div className={s.breakdown}>
-                  {r.breakdown.map((line, i) => (
-                    <span key={i} className={s.breakdownLine}>
-                      <span>{line.label}</span>
-                      <span className={s.breakdownPts}>
-                        {line.points > 0 ? `+${line.points}` : line.points}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className={s.breakdownNone}>No breakdown recorded for this entry.</p>
-              ))}
+            {isOpen && <LineupInspectorPanel row={r} state={lineups[r.key]} />}
           </li>
         );
       })}
     </ol>
+  );
+}
+
+function LineupInspectorPanel({
+  row,
+  state,
+}: {
+  row: BoardRowView;
+  state: BoardLineupPanelState | undefined;
+}) {
+  return (
+    <div
+      id={`lineup-inspector-${row.key}`}
+      className={s.inspector}
+      role="region"
+      aria-label={`Lineup inspector for ${row.displayName}`}
+    >
+      {state === undefined || state.phase === "loading" ? (
+        <div className={s.inspectorState} role="status" aria-live="polite">
+          <span className={s.inspectorSkeleton} aria-hidden="true" />
+          <span>Replaying the verified run…</span>
+        </div>
+      ) : state.phase === "error" ? (
+        <div className={s.inspectorState} role="alert">
+          <strong>Lineup unavailable</strong>
+          <span>{state.message}</span>
+        </div>
+      ) : (
+        <LineupView lineup={state.lineup} />
+      )}
+      <ScoreBreakdown lines={row.breakdown} />
+    </div>
+  );
+}
+
+function LineupView({ lineup }: { lineup: LeaderboardLineupView }) {
+  return (
+    <div className={s.lineupView}>
+      <div className={s.lineupSummary}>
+        <div className={s.lineupIdentity}>
+          <span className={s.inspectorEyebrow}>{lineup.mode_label}</span>
+          <h2>{lineup.team_name}</h2>
+          <span>{lineup.formation.name}</span>
+        </div>
+        <div className={s.resultPill} aria-label={`Verified score ${lineup.result.score} points`}>
+          <strong>{lineup.result.score}</strong>
+          <span>
+            {lineup.result.record} · {lineup.result.matches_played} matches
+          </span>
+        </div>
+      </div>
+
+      {lineup.badges.length > 0 ? (
+        <div className={s.lineupBadges} aria-label="Run config">
+          {lineup.badges.map((badge) => (
+            <span key={badge.axis} className={s.badge}>
+              {badge.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
+      <div className={gameS.squadStage}>
+        <Pitch
+          formationId={lineup.formation.id}
+          starters={[...lineup.starters]}
+          linkedPairs={lineup.linked_pairs}
+          showInactiveEdges
+        />
+        <ManagerSlot manager={lineup.manager} />
+      </div>
+
+      <div className={gameS.bench}>
+        <span className={gameS.benchLabel}>Bench</span>
+        <div className={gameS.benchSlots}>
+          {lineup.bench.map((b) => (
+            <div
+              key={b.slot_id}
+              className={`${gameS.benchSlot} ${b.card ? gameS.benchFilled : ""} ${
+                b.card ? gameS.slotLocked : ""
+              }`}
+            >
+              <span className={gameS.benchSlotTop}>
+                <span className={gameS.slotPos}>{b.slot_position}</span>
+                {b.card ? (
+                  <MiniNationFlag
+                    nationId={b.card.nation_id}
+                    nationName={b.card.nation_name}
+                    nationCode={b.card.nation_code}
+                    className={gameS.benchMiniFlag}
+                  />
+                ) : null}
+              </span>
+              <span className={gameS.slotName}>{b.card ? b.card.name : "—"}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className={s.lineupMetrics}>
+        <span className={s.squadAverage}>
+          <strong>{formatNullableNumber(lineup.squad_average)}</strong>
+          <span>XI OVR</span>
+        </span>
+        {lineup.line_strengths.map((line) => (
+          <span key={line.line} className={s.lineMetric}>
+            <span>{line.label}</span>
+            <strong>{formatNullableNumber(line.value)}</strong>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ScoreBreakdown({ lines }: { lines: BoardRowView["breakdown"] }) {
+  return lines !== null ? (
+    <div className={s.breakdown} aria-label="Verified score breakdown">
+      {lines.map((line, i) => (
+        <span key={i} className={s.breakdownLine}>
+          <span>{line.label}</span>
+          <span className={s.breakdownPts}>
+            {line.points > 0 ? `+${line.points}` : line.points}
+          </span>
+        </span>
+      ))}
+    </div>
+  ) : (
+    <p className={s.breakdownNone}>No breakdown recorded for this entry.</p>
   );
 }
 
