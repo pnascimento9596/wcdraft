@@ -68,6 +68,16 @@ payload/API inventory sweep (1 test), web typecheck, and `git diff --check
 origin/main...HEAD`. Not shipped until merge/deploy and live production readback
 gates complete.
 
+OG durability deploy recovery:
+2026-06-30 · production Vercel build for merge commit `a65fa933` failed because
+Lane B's leaderboard lineup inspector still called the old one-argument
+`buildRunOgCacheKey`. Recovery branch `ws-fix/og-durability-lineup-cache`
+decouples the lineup inspector cache from OG image cache keys and scopes it to
+current run-data version anchors plus token hash. Local recovery gates passed:
+lineup inspector + OG Vitest (37 tests), web typecheck, Vercel-equivalent
+`pnpm exec turbo run build --filter=@wcdraft/web...` (4/4 tasks), Prettier check
+for the touched file, and `git diff --check`.
+
 CI spend/branch-protection lane:
 2026-06-27 · local gates run on branch `ws-meta/ci-spend-aggregate-20260627`.
 The CI contract now uses path detection plus one required aggregate status,
