@@ -65,7 +65,7 @@
 
 .filterGrid {
   display: grid;
-  grid-template-columns: minmax(9rem, 1.15fr) repeat(3, minmax(7.4rem, 1fr));
+  grid-template-columns: minmax(9rem, 1.15fr) repeat(3, minmax(8.4rem, 1fr));
   gap: 0.45rem;
   align-items: end;
 }

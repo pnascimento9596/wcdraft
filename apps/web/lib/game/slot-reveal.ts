@@ -16,6 +16,7 @@
 import type { EraPresetId, Spin } from "@wcdraft/core";
 
 import type { GameDataIndexes } from "./data";
+import { ERA_PRESET_LABELS } from "./era-labels";
 import { flagSrcForNationId } from "./flags";
 
 export interface SlotRevealFace {
@@ -63,7 +64,7 @@ export interface SlotRevealModel {
   readonly drawProbabilityLabel: string;
   /**
    * DC-2 — display label for a NON-default era preset bounding this run's
-   * pool (e.g. `Modern (2018–2026)`), or `null` under the default all-time
+   * pool (e.g. `Modern (2018–26)`), or `null` under the default all-time
    * pool (today's rendering, unchanged). Sampling metadata only — allowed in
    * Memory mode's keep set.
    */
@@ -78,12 +79,6 @@ export interface BuildSlotRevealModelParams {
   /** DC-2 — the run's era preset (default `all_time`). */
   readonly eraPreset?: EraPresetId;
 }
-
-const ERA_REVEAL_LABELS: Record<Exclude<EraPresetId, "all_time">, string> = {
-  post_2000: "Post-2000 (2002–2026)",
-  post_2010: "Post-2010 (2014–2026)",
-  modern: "Modern (2018–2026)",
-};
 
 const TRACK_LEN = 7;
 
@@ -140,7 +135,7 @@ export function buildSlotRevealModel(params: BuildSlotRevealModelParams): SlotRe
     rare: activeSpin.rare,
     drawProbability: activeSpin.draw_probability,
     drawProbabilityLabel: formatDrawProbability(activeSpin.draw_probability),
-    eraPresetLabel: eraPreset && eraPreset !== "all_time" ? ERA_REVEAL_LABELS[eraPreset] : null,
+    eraPresetLabel: eraPreset && eraPreset !== "all_time" ? ERA_PRESET_LABELS[eraPreset] : null,
   };
 }
 

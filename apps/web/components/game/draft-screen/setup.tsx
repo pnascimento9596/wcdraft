@@ -11,19 +11,13 @@ import {
 } from "@/lib/game/formation-layout";
 import { requestRankedAttempt } from "@/lib/leaderboard/client";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
+import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 import { positionShape } from "@/lib/game/view-models";
 import { PitchMarkings } from "../pitch";
 import { DraftAppBar } from "./app-bar";
 import s from "../game.module.css";
 
 // ─── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
-
-const ERA_PRESET_LABELS: Record<EraPresetId, string> = {
-  all_time: "All-time",
-  post_2000: "2002-2026",
-  post_2010: "2014-2026",
-  modern: "Modern",
-};
 
 const DRAFT_FLOW_LABELS: Record<DraftFlow, string> = {
   squad_first: "Squad First",
@@ -64,6 +58,10 @@ function DraftSetupDisclosure({
   // basis choices by default on mobile.
   const [open, setOpen] = useState(true);
   // Summary mirrors all three config axes.
+  const summaryParts = [
+    `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]}`,
+    ERA_PRESET_LABELS[eraPreset],
+  ] as const;
   const summary = `${DRAFT_FLOW_LABELS[draftFlow]} · ${RATING_BASIS_LABELS[ratingBasis]} · ${ERA_PRESET_LABELS[eraPreset]}`;
   return (
     <div>
@@ -74,7 +72,11 @@ function DraftSetupDisclosure({
         onClick={() => setOpen((o) => !o)}
       >
         <span className={s.setupRowLabel}>Draft setup</span>
-        <span className={s.setupRowValue}>{summary}</span>
+        <span className={s.setupRowValue} aria-label={summary}>
+          {summaryParts.map((part) => (
+            <span key={part}>{part}</span>
+          ))}
+        </span>
         <span className={s.setupRowChevron} aria-hidden="true">
           {open ? "▴" : "▾"}
         </span>

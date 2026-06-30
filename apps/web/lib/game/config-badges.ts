@@ -3,12 +3,12 @@ import {
   type DraftConfig,
   type DraftFlow,
   type DraftState,
-  type EraPresetId,
   type RatingBasis,
 } from "@wcdraft/core";
 
 import type { RunRecordV1 } from "./run-record";
 import { decodeRunToken, encodeRunToken, tokenDraftConfig, type RunTokenBody } from "./run-token";
+import { ERA_PRESET_LABELS } from "./era-labels";
 
 export type ConfigBadgeAxis = "era_preset" | "draft_flow" | "rating_basis";
 
@@ -16,13 +16,6 @@ export interface ConfigBadge {
   axis: ConfigBadgeAxis;
   label: string;
 }
-
-const ERA_LABEL: Record<EraPresetId, string> = {
-  all_time: "All-time",
-  post_2000: "2002-2026",
-  post_2010: "2014-2026",
-  modern: "2018-2026",
-};
 
 const FLOW_LABEL: Record<DraftFlow, string> = {
   squad_first: "Squad First",
@@ -37,7 +30,7 @@ const BASIS_LABEL: Record<RatingBasis, string> = {
 export function configBadgesFromDraftConfig(config: DraftConfig): ConfigBadge[] {
   const badges: ConfigBadge[] = [];
   if (config.era_preset !== DEFAULT_DRAFT_CONFIG.era_preset) {
-    badges.push({ axis: "era_preset", label: ERA_LABEL[config.era_preset] });
+    badges.push({ axis: "era_preset", label: ERA_PRESET_LABELS[config.era_preset] });
   }
   if (config.draft_flow !== DEFAULT_DRAFT_CONFIG.draft_flow) {
     badges.push({ axis: "draft_flow", label: FLOW_LABEL[config.draft_flow] });

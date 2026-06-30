@@ -5,10 +5,11 @@
 
 import { describe, expect, it } from "vitest";
 
-import { isDraftComplete, stepDraft } from "@wcdraft/core";
+import { ERA_PRESETS, ERA_PRESET_IDS, isDraftComplete, stepDraft } from "@wcdraft/core";
 import { DRAFT_POOL_BUNDLE } from "@wcdraft/data";
 
 import { getCatalogForEra } from "../data";
+import { ERA_PRESET_LABELS } from "../era-labels";
 import { createNewRunRecord } from "../run-record";
 import { buildSlotRevealModel } from "../slot-reveal";
 import {
@@ -22,9 +23,33 @@ import { buildGameDataFromBundles } from "./run-token.test-harness";
 
 const gameData = buildGameDataFromBundles();
 
+const ERA_NAMES = {
+  all_time: "All-time",
+  post_2000: "Post-2000",
+  post_2010: "Post-2010",
+  modern: "Modern",
+} as const;
+
 function tournamentYear(tournament_id: number): number {
   return DRAFT_POOL_BUNDLE.tournaments[String(tournament_id)]!.year;
 }
+
+function compactRange(id: (typeof ERA_PRESET_IDS)[number]): string {
+  const preset = ERA_PRESETS[id];
+  const max =
+    Math.floor(preset.min_year / 100) === Math.floor(preset.max_year / 100)
+      ? String(preset.max_year).slice(2)
+      : String(preset.max_year);
+  return `${preset.min_year}–${max}`;
+}
+
+describe("era preset display labels match core bounds", () => {
+  it("renders every preset name with the actual resolved filter range", () => {
+    for (const id of ERA_PRESET_IDS) {
+      expect(ERA_PRESET_LABELS[id]).toBe(`${ERA_NAMES[id]} (${compactRange(id)})`);
+    }
+  });
+});
 
 describe("getCatalogForEra (DC-2 catalog cache)", () => {
   it("all_time returns gameData.catalog BY OBJECT IDENTITY (default path provably unchanged)", () => {
@@ -127,7 +152,7 @@ describe("spin-reveal era label (DC-2 honest copy)", () => {
       totalPicks: 17,
       eraPreset: "modern",
     });
-    expect(modernModel.eraPresetLabel).toBe("Modern (2018–2026)");
+    expect(modernModel.eraPresetLabel).toBe("Modern (2018–26)");
     expect(modernModel.rare).toBe(false);
 
     const defaultModel = buildSlotRevealModel({
