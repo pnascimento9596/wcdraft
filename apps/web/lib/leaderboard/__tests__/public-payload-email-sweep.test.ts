@@ -35,6 +35,7 @@ import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
 import { POST as cspReportPost } from "@/app/api/csp-report/route";
+import { GET as ogHealthGet } from "@/app/api/og/health/route";
 import { POST as ogSignPost } from "@/app/api/og/sign/route";
 import { GET as profileGet, PUT as profilePut } from "@/app/api/profile/route";
 import { GET as runsGet, POST as runsPost } from "@/app/api/runs/route";
@@ -74,6 +75,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/leaderboard",
   "GET /api/leaderboard/lineup",
   "GET /api/leaderboard/me",
+  "GET /api/og/health",
   "GET /api/profile",
   "GET /api/runs",
   "GET /api/runs/[id]",
@@ -405,6 +407,7 @@ describe("public route payload email sweep", () => {
         ),
       ),
     );
+    captures.push(routeCapture("GET /api/og/health", await ogHealthGet()));
     captures.push(
       routeCapture(
         "POST /api/og/sign",

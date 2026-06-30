@@ -27,11 +27,13 @@ import {
 } from "../run-og-sign-rate-limiter-db";
 import {
   SIGNED_RUN_OG_PREFIX,
+  assertOgSigningSecretPresent,
   sha256Hex,
   signRunOgPayload,
   verifySignedRunOgPayload,
   type SignedRunOgPayload,
 } from "../run-og-signing";
+import { GET as runOgHealthGet } from "../../../app/api/og/health/route";
 import { GET as runOgRouteGet } from "../../../app/api/og/run/route";
 import { handleRunOgSignPost, POST as runOgSignRoutePost } from "../../../app/api/og/sign/route";
 import { setupTestDb } from "../../auth/__tests__/_test-db";
@@ -96,6 +98,21 @@ async function signedRawOgPayload(payload: unknown): Promise<string> {
   return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${Buffer.from(sig).toString("base64url")}`;
 }
 
+function tamperSignedOgPayload(signed: string, mutate: (payload: Record<string, unknown>) => void) {
+  const rest = signed.slice(SIGNED_RUN_OG_PREFIX.length);
+  const dot = rest.lastIndexOf(".");
+  const payload = JSON.parse(
+    Buffer.from(rest.slice(0, dot), "base64url").toString("utf8"),
+  ) as Record<string, unknown>;
+  mutate(payload);
+  const payloadB64 = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
+  return `${SIGNED_RUN_OG_PREFIX}${payloadB64}.${rest.slice(dot + 1)}`;
+}
+
+function corruptSignedOgSignature(signed: string): string {
+  return `${signed.slice(0, -1)}${signed.endsWith("A") ? "B" : "A"}`;
+}
+
 function ogSignDeps(rateLimiter: RunOgSignRateLimiter = allowAllRunOgSignRateLimiter) {
   return {
     now: () => Date.now(),
@@ -131,6 +148,19 @@ function legacyT1FromCurrentToken(token: string, record: RunRecordV1): string {
     },
     RUN_TOKEN_PREFIX,
   );
+}
+
+function previousVersionTokenFromCurrentToken(token: string): string {
+  const decoded = decodeV3(token);
+  return encodeBody({
+    ...decoded,
+    sv: "runtime-data-previous",
+    dv: "dataset-previous",
+    rv: "wc-perf-previous+proj-career-previous",
+    ev: "engine-previous",
+    uv: "ruleset-previous",
+    hv: `${"a".repeat(64)}+${"b".repeat(64)}`,
+  });
 }
 
 function localAssets(): RunOgImageAssets {
@@ -298,14 +328,44 @@ describe("dynamic run OG metadata decision", () => {
   it("uses the dynamic image route only when a signed OG payload is present", async () => {
     const token = encodeRunToken(complete());
     const signed = await signedOgForToken(token);
-    const image = shareOgImageForRunValue(token, signed, gameData.versions, {
-      VERCEL_GIT_COMMIT_SHA: "abc1234567890",
-    });
+    const tokenHash = await sha256Hex(token);
+    const image = shareOgImageForRunValue(token, signed, gameData.versions);
     expect(image.dynamic).toBe(true);
     expect(image.url).toContain("/api/og/run?");
     expect(image.url).toContain("run=t3.");
     expect(image.url).toContain("og=ogs1.");
-    expect(image.url).toContain("v=abc1234567890.");
+    expect(image.url).toContain(`v=ogs1.${tokenHash.slice(0, 32)}`);
+  });
+
+  it("keeps signed historical snapshots dynamic after version anchors move", async () => {
+    const currentToken = encodeRunToken(complete());
+    const historicalToken = previousVersionTokenFromCurrentToken(currentToken);
+    const verified = verifyRunTokenForOg(currentToken, {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    const signed = await signRunOgPayload(
+      {
+        v: 1,
+        token_hash: await sha256Hex(historicalToken),
+        versions: {
+          schema_version: "runtime-data-previous",
+          dataset_version: "dataset-previous",
+          rating_version: "wc-perf-previous+proj-career-previous",
+          engine_version: "engine-previous",
+          ruleset_version: "ruleset-previous",
+          data_bundle_hash: `${"a".repeat(64)}+${"b".repeat(64)}`,
+        },
+        model: verified.model,
+      },
+      SECRET,
+    );
+
+    const decoded = decodeV3(historicalToken);
+    expect(decoded.sv).not.toBe(gameData.versions.schema_version);
+    expect(shareOgImageForRunValue(historicalToken, signed, gameData.versions).dynamic).toBe(true);
   });
 });
 
@@ -600,6 +660,44 @@ describe("trusted run OG signing", () => {
     expect(response.status).toBe(413);
     expect(await response.json()).toEqual({ ok: false, error: "BODY_TOO_LARGE" });
   });
+
+  it("returns 422 for illegal picks and never signs them", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const body = decodeV3(encodeRunToken(complete()));
+    const first = body.pl.find((p) => p.k === "p");
+    if (!first || first.k !== "p") throw new Error("expected player pick");
+    first.ci = 99;
+
+    const response = await handleRunOgSignPost(
+      new Request("http://localhost/api/og/sign", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-forwarded-for": "198.51.100.80",
+        },
+        body: JSON.stringify({ run: encodeBody(body) }),
+      }),
+      ogSignDeps(),
+    );
+
+    expect(response.status).toBe(422);
+    expect(await response.json()).toEqual({ ok: false, error: "ILLEGAL_PICK" });
+  });
+
+  it("asserts the stable OG secret is configured without exposing its value", async () => {
+    const absent = await runOgHealthGet();
+    expect(absent.status).toBe(503);
+    const absentBody = await absent.text();
+    expect(absentBody).toContain("OG_SIGNING_SECRET_MISSING");
+    expect(absentBody).not.toContain(SECRET);
+    expect(() => assertOgSigningSecretPresent({})).toThrow(/WCDRAFT_OG_SIGNING_SECRET/u);
+
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    const present = await runOgHealthGet();
+    expect(present.status).toBe(200);
+    expect(await present.json()).toEqual({ ok: true });
+    expect(assertOgSigningSecretPresent()).toBe(SECRET);
+  });
 });
 
 describe("dynamic run OG route scope", () => {
@@ -637,6 +735,78 @@ describe("dynamic run OG route scope", () => {
     expect(Buffer.compare(firstBytes, secondBytes)).toBe(0);
     expect(firstBytes.length).toBeLessThan(500_000);
     expect(elapsedMs).toBeLessThan(3_000);
+  });
+
+  it("renders a version-moved signed snapshot instead of falling back to default", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    stubOgRouteFetch();
+    const currentToken = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:old")));
+    const historicalToken = previousVersionTokenFromCurrentToken(currentToken);
+    const verified = verifyRunTokenForOg(currentToken, {
+      gameData,
+      scenario: SCENARIO_2026_BUNDLE,
+    });
+    expect(verified.status).toBe("accepted");
+    if (verified.status !== "accepted") return;
+    const signed = await signRunOgPayload(
+      {
+        v: 1,
+        token_hash: await sha256Hex(historicalToken),
+        versions: {
+          schema_version: "runtime-data-previous",
+          dataset_version: "dataset-previous",
+          rating_version: "wc-perf-previous+proj-career-previous",
+          engine_version: "engine-previous",
+          ruleset_version: "ruleset-previous",
+          data_bundle_hash: `${"a".repeat(64)}+${"b".repeat(64)}`,
+        },
+        model: verified.model,
+      },
+      SECRET,
+    );
+    const url = `http://localhost/api/og/run?run=${encodeURIComponent(
+      historicalToken,
+    )}&og=${encodeURIComponent(signed)}&v=ogs1.test`;
+
+    const response = await runOgRouteGet(new Request(url));
+    const bytes = Buffer.from(await response.arrayBuffer());
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe(TRUSTED_IMAGE_CACHE);
+    expect(bytes.length).toBeGreaterThan(1_000);
+  });
+
+  it("rejects forged signed snapshots without rendering forged cards", async () => {
+    vi.stubEnv("WCDRAFT_OG_SIGNING_SECRET", SECRET);
+    stubOgRouteFetch();
+    const token = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:forgery")));
+    const signed = await signedOgForToken(token);
+    const wrongToken = encodeRunToken(complete(buildOriginRecord(gameData, "wcdraft:og:wrong")));
+    const url = (run: string, og: string) =>
+      `http://localhost/api/og/run?run=${encodeURIComponent(run)}&og=${encodeURIComponent(
+        og,
+      )}&v=test`;
+
+    const wrongHash = await runOgRouteGet(new Request(url(wrongToken, signed)));
+    const badHmac = await runOgRouteGet(new Request(url(token, corruptSignedOgSignature(signed))));
+    const tamperedModel = await runOgRouteGet(
+      new Request(
+        url(
+          token,
+          tamperSignedOgPayload(signed, (payload) => {
+            const model = payload.model as Record<string, unknown>;
+            model.result_label = "8-0 - PERFECT";
+          }),
+        ),
+      ),
+    );
+
+    for (const response of [wrongHash, badHmac, tamperedModel]) {
+      expect(response.status).toBe(307);
+      expect(response.headers.get("location")).toBe(
+        "http://localhost/brand/marketing/og-default.png",
+      );
+    }
   });
 
   it("keeps the server image route out of the simulation path", () => {

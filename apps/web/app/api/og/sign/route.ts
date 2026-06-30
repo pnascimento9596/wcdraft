@@ -145,7 +145,7 @@ export async function handleRunOgSignPost(
       { status: 422, headers: NO_STORE },
     );
   }
-  const cacheKey = buildRunOgCacheKey(data.gameData.versions);
+  const cacheKey = buildRunOgCacheKey(tokenHash, payload.v);
   writeSignedOgCache(`${secretHash}:${tokenHash}`, {
     signed,
     cacheKey,
