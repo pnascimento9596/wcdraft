@@ -2,7 +2,6 @@ import { computeSynergy, FORMATION_TEMPLATES } from "@wcdraft/core";
 
 import { managerCardView, managerTournamentFor, pitchSlotViews } from "../game/adapters";
 import { sha256Hex } from "../auth/tokens";
-import { buildRunOgCacheKey } from "../game/run-og-metadata";
 import { verifyRunTokenForOg } from "../game/run-og-server";
 import { formationName } from "../game/share-adapters";
 import { lineStrengthViews, squadAverageOverall } from "../game/adapters";
@@ -130,7 +129,23 @@ export function buildLeaderboardLineupView(
 }
 
 function lineupCacheKey(token: string, data: ValidationData): string {
-  return `${buildRunOgCacheKey(data.gameData.versions)}:${sha256Hex(token)}`;
+  const versions = data.gameData.versions;
+  const bundleHash = versions.data_bundle_hash
+    .split("+")
+    .map((part) => part.slice(0, 12))
+    .join(".");
+  const versionKey = [
+    versions.schema_version,
+    versions.dataset_version,
+    versions.rating_version,
+    versions.engine_version,
+    versions.ruleset_version,
+    bundleHash,
+  ]
+    .join(".")
+    .replace(/[^A-Za-z0-9_.-]/gu, "-")
+    .slice(0, 160);
+  return `lineup:${versionKey}:${sha256Hex(token)}`;
 }
 
 function rejectionReason(
