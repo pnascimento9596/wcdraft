@@ -212,12 +212,11 @@ export interface ManagerRating {
    * DISPLAY-ONLY composite. `null` when coverage is insufficient.
    *
    * HARD CONTRACT: the sim MUST NOT read this field. The
-   * `managerModifier` fold in `engine/team-strength.ts` is EXPLICITLY
-   * IDENTITY (returns 1.0) until a dedicated sim-legal manager rating
-   * field is defined and wired in. Re-introducing a `manager.overall`
-   * read here would silently couple sim behavior to a display channel
-   * (curves, normalization, display rescaling all flow through `overall`).
-   * Locked by `manager-modifier-decoupling.guard.test.ts`.
+   * `managerBandModifier` fold in `engine/team-strength.ts` is driven by the
+   * sim-legal `SynergyResult.manager_link` field, not by this display channel.
+   * Re-introducing a `manager.overall` read here would silently couple sim
+   * behavior to a display channel (curves, normalization, display rescaling all
+   * flow through `overall`). Locked by `manager-modifier-decoupling.guard.test.ts`.
    */
   overall: number | null;
   /**

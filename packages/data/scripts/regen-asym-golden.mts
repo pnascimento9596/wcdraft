@@ -1,5 +1,6 @@
-// spin-agency — refresh the asymmetric realism gate golden after player
-// choices move from full-roster picks to deterministic choose-from-3.
+// manager-attrition — refresh the asymmetric realism gate golden after
+// manager-link band wiring, lower persistent user-path injury attrition, and
+// the U5 choose-from-3 soft-floor spread.
 //
 // What this updates: per-policy run counts + raw event totals + observed rates +
 // per-observed Wilson half-widths + telemetry, then re-centers the shape bands
@@ -85,14 +86,14 @@ for (const policy of ALL_POLICIES) {
 
 const strategic = golden.policies.strategicAutoDraft;
 golden.$schema_doc =
-  "spin-agency asymmetric realism gate -- the gate sims the default/Career basis after player choices move from full-roster picks to deterministic choose-from-3. The pre-relock strategic shape metrics still landed inside the merit-v4.6 bands; this relock records the intentional draft-population run-count drift. Runtime engine_version is " +
+  "manager-attrition asymmetric realism gate -- the gate sims the default/Career basis after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Rating anchors remain merit-v4.6 because no additional high-confidence owner rows resolved in this season lane. Runtime engine_version is " +
   RUNTIME_DATA_MANIFEST.engine_version +
   ".";
 golden.engine_anchor =
-  "spin-agency choose-from-3 player choices; sim calibration constants unchanged";
+  "manager-link band wiring plus lower persistent user-path injury attrition plus U5 choose-from-3 soft-floor spread";
 golden.engine_version = RUNTIME_DATA_MANIFEST.engine_version;
 golden.shape_bands._doc =
-  "spin-agency relock: shape bands centered on strategicAutoDraft after choose-from-3 changes the draftable player population. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
+  "manager-attrition relock: shape bands centered on strategicAutoDraft after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Half-width = max(WilsonHalfWidthAroundObs at locked N, 1.5pp floor). The four shape norms are tracked together (each +/-halfWidth around the strategic golden); goals/game is handled separately as a one-sided LOWER floor (no upper cap -- total volume legitimately tracks the underdog gap).";
 for (const key of SHAPE_KEYS) {
   golden.shape_bands[key] = {
     center_policy: "strategicAutoDraft",
@@ -108,7 +109,7 @@ golden.goals_per_game_lower_floor.lower_bound =
       100,
   ) / 100;
 golden.wilson_target_for_ko_metrics._doc =
-  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. spin-agency remeasures the strategicAutoDraft observed half-widths after choose-from-3 changes the draftable player population.";
+  "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. manager-attrition remeasures the strategicAutoDraft observed half-widths after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread.";
 golden.wilson_target_for_ko_metrics.observed_half_width_pp = {
   ko_et_pct: Number((100 * strategic.wilson_half_widths_around_observed.ko_et_pct).toFixed(2)),
   shootout_pct: Number(

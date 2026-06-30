@@ -79,9 +79,10 @@ const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
 // while preserving the draft-config runtime replay shape from runtime-data-1.2.0.
 // The legacy `ratings` array remains the Career alias for shipped consumers.
 const SCHEMA_VERSION = "runtime-data-2.9.0";
-// narrative-v2: deterministic scenario-aware narrative selection changes
-// RunResult.narrative bytes while leaving sim math/data bundles untouched.
-const ENGINE_VERSION = "engine-2026.06.30-spin-agency";
+// manager-attrition: manager_link now drives the reserved manager band and
+// persistent user-path injury attrition is reduced to keep tournament attrition
+// fair while opponents are regenerated fixture-by-fixture.
+const ENGINE_VERSION = "engine-2026.06.30-manager-attrition";
 const RULESET_VERSION = "ruleset-2026.06.04";
 
 // merit-v4.6 model (wc-perf-6.6.0 historical; proj-career-5.6.0 projected).

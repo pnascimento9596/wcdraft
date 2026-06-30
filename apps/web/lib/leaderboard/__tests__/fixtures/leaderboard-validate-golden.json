@@ -1,20 +1,20 @@
 {
   "comment": "F-4 U2 golden — regen via `pnpm --filter @wcdraft/web gen:leaderboard-golden` on anchor bumps; never written by tests.",
-  "season_key": "season-2026-spin-agency",
+  "season_key": "season-2026-manager-attrition",
   "versions": {
     "schema_version": "runtime-data-2.9.0",
     "dataset_version": "2026-06-04",
     "rating_version": "wc-perf-6.6.0+proj-career-5.6.0",
-    "engine_version": "engine-2026.06.30-spin-agency",
+    "engine_version": "engine-2026.06.30-manager-attrition",
     "ruleset_version": "ruleset-2026.06.04",
     "data_bundle_hash": "4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0+7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398"
   },
   "classic": {
     "parent_seed": "wcdraft:f4-u2-golden:classic:1",
     "display_name": "golden_xi",
-    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuOS4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuNi4wK3Byb2otY2FyZWVyLTUuNi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4zMC1zcGluLWFnZW5jeSIsInV2IjoicnVsZXNldC0yMDI2LjA2LjA0IiwiaHYiOiI0ZGFhZjIwOTkwMDc1OWIxYWNjMWVmNTk1NzRlYzIyM2U2MzZjZWQ4MjhmNTQxYTM3YmY1NjFjMjBhYWIyYmYwKzc4NDZmYTNhYmUwZWFiNGFhMjgzZWZkMWU4MzgyOTU5NTkzZWMxMjQ4MDMwZWJhMTM5MTNmYWMwYWU4ZGEzOTgifQ",
+    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1jbGFzc2ljIiwiZmlkIjoiNC0zLTMiLCJwcyI6IndjZHJhZnQ6ZjQtdTItZ29sZGVuOmNsYXNzaWM6MSIsInRuIjoiR29sZGVuIFhJIiwibWQiOiJjbGFzc2ljIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuOS4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuNi4wK3Byb2otY2FyZWVyLTUuNi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4zMC1tYW5hZ2VyLWF0dHJpdGlvbiIsInV2IjoicnVsZXNldC0yMDI2LjA2LjA0IiwiaHYiOiI0ZGFhZjIwOTkwMDc1OWIxYWNjMWVmNTk1NzRlYzIyM2U2MzZjZWQ4MjhmNTQxYTM3YmY1NjFjMjBhYWIyYmYwKzc4NDZmYTNhYmUwZWFiNGFhMjgzZWZkMWU4MzgyOTU5NTkzZWMxMjQ4MDMwZWJhMTM5MTNmYWMwYWU4ZGEzOTgifQ",
     "expected": {
-      "verified_score": -8,
+      "verified_score": -1,
       "score_breakdown": [
         {
           "label": "Goals scored",
@@ -24,15 +24,15 @@
         },
         {
           "label": "Goal difference",
-          "raw": -3,
+          "raw": -2,
           "weight": 1,
-          "points": -3
+          "points": -2
         },
         {
           "label": "Clean sheets",
-          "raw": 0,
+          "raw": 1,
           "weight": 4,
-          "points": 0
+          "points": 4
         },
         {
           "label": "Round progression",
@@ -48,15 +48,15 @@
         },
         {
           "label": "Goals conceded",
-          "raw": 5,
+          "raw": 4,
           "weight": -1,
-          "points": -5
+          "points": -4
         },
         {
           "label": "Yellow cards",
-          "raw": 5,
+          "raw": 4,
           "weight": -1,
-          "points": -5
+          "points": -4
         },
         {
           "label": "Red cards",
@@ -83,16 +83,16 @@
           "points": 0
         }
       ],
-      "season_key": "season-2026-spin-agency",
+      "season_key": "season-2026-manager-attrition",
       "draft_mode": "classic"
     }
   },
   "hidden": {
     "parent_seed": "wcdraft:f4-u2-golden:hidden:1",
     "display_name": "memory_xi_10",
-    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuOS4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuNi4wK3Byb2otY2FyZWVyLTUuNi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4zMC1zcGluLWFnZW5jeSIsInV2IjoicnVsZXNldC0yMDI2LjA2LjA0IiwiaHYiOiI0ZGFhZjIwOTkwMDc1OWIxYWNjMWVmNTk1NzRlYzIyM2U2MzZjZWQ4MjhmNTQxYTM3YmY1NjFjMjBhYWIyYmYwKzc4NDZmYTNhYmUwZWFiNGFhMjgzZWZkMWU4MzgyOTU5NTkzZWMxMjQ4MDMwZWJhMTM5MTNmYWMwYWU4ZGEzOTgifQ",
+    "token": "t3.eyJ2IjozLCJyaWQiOiJmNC11Mi1oaWRkZW4iLCJmaWQiOiI0LTMtMyIsInBzIjoid2NkcmFmdDpmNC11Mi1nb2xkZW46aGlkZGVuOjEiLCJ0biI6IkdvbGRlbiBYSSIsIm1kIjoiaGlkZGVuIiwiZGYiOiJzcXVhZF9maXJzdCIsInJiIjoiY2FyZWVyIiwiZWYiOnsiaWQiOiJhbGxfdGltZSIsIm1pbiI6MTkzMCwibWF4IjoyMDI2fSwicGwiOlt7ImsiOiJtIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuR0sifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5MQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLkxDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJDQiJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJCIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuQ0RNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTENNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuUkNNIn0seyJrIjoicCIsImNpIjowLCJzIjoiNC0zLTMuTFcifSx7ImsiOiJwIiwiY2kiOjAsInMiOiI0LTMtMy5TVCJ9LHsiayI6InAiLCJjaSI6MCwicyI6IjQtMy0zLlJXIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMCJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjEifSx7ImsiOiJwIiwiY2kiOjAsInMiOiJiZW5jaC4yIn0seyJrIjoicCIsImNpIjowLCJzIjoiYmVuY2guMyJ9LHsiayI6InAiLCJjaSI6MCwicyI6ImJlbmNoLjQifV0sInN2IjoicnVudGltZS1kYXRhLTIuOS4wIiwiZHYiOiIyMDI2LTA2LTA0IiwicnYiOiJ3Yy1wZXJmLTYuNi4wK3Byb2otY2FyZWVyLTUuNi4wIiwiZXYiOiJlbmdpbmUtMjAyNi4wNi4zMC1tYW5hZ2VyLWF0dHJpdGlvbiIsInV2IjoicnVsZXNldC0yMDI2LjA2LjA0IiwiaHYiOiI0ZGFhZjIwOTkwMDc1OWIxYWNjMWVmNTk1NzRlYzIyM2U2MzZjZWQ4MjhmNTQxYTM3YmY1NjFjMjBhYWIyYmYwKzc4NDZmYTNhYmUwZWFiNGFhMjgzZWZkMWU4MzgyOTU5NTkzZWMxMjQ4MDMwZWJhMTM5MTNmYWMwYWU4ZGEzOTgifQ",
     "expected": {
-      "verified_score": -32,
+      "verified_score": -26,
       "score_breakdown": [
         {
           "label": "Goals scored",
@@ -102,9 +102,9 @@
         },
         {
           "label": "Goal difference",
-          "raw": -12,
+          "raw": -10,
           "weight": 1,
-          "points": -12
+          "points": -10
         },
         {
           "label": "Clean sheets",
@@ -126,31 +126,31 @@
         },
         {
           "label": "Goals conceded",
-          "raw": 13,
+          "raw": 11,
           "weight": -1,
-          "points": -13
+          "points": -11
         },
         {
           "label": "Yellow cards",
-          "raw": 5,
+          "raw": 7,
           "weight": -1,
-          "points": -5
+          "points": -7
         },
         {
           "label": "Red cards",
-          "raw": 2,
+          "raw": 1,
           "weight": -4,
-          "points": -8
+          "points": -4
         },
         {
           "label": "Fouls committed",
-          "raw": 28,
+          "raw": 27,
           "weight": 0,
           "points": 0
         },
         {
           "label": "Offsides",
-          "raw": 3,
+          "raw": 2,
           "weight": 0,
           "points": 0
         },
@@ -161,7 +161,7 @@
           "points": 0
         }
       ],
-      "season_key": "season-2026-spin-agency",
+      "season_key": "season-2026-manager-attrition",
       "draft_mode": "hidden"
     }
   }

@@ -14,15 +14,15 @@
         "rare": false,
         "draw_probability": 0.025,
         "rolled_card_ids": [
-          "p-4-ger-07:4",
-          "p-4-ger-03:4",
+          "p-4-ger-09:4",
+          "p-4-ger-08:4",
           "p-4-ger-11:4"
         ],
         "excluded_player_ids": [],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-4-ger-07:4",
-        "picked_player_id": "p-4-ger-07",
+        "picked_card_id": "p-4-ger-09:4",
+        "picked_player_id": "p-4-ger-09",
         "assigned_slot_id": "4-3-3.GK",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -35,17 +35,17 @@
         "rare": false,
         "draw_probability": 0.03,
         "rolled_card_ids": [
-          "p-5-ita-07:5",
-          "p-5-ita-11:5",
-          "p-5-ita-03:5"
+          "p-5-ita-09:5",
+          "p-5-ita-08:5",
+          "p-5-ita-11:5"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07"
+          "p-4-ger-09"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-5-ita-07:5",
-        "picked_player_id": "p-5-ita-07",
+        "picked_card_id": "p-5-ita-09:5",
+        "picked_player_id": "p-5-ita-09",
         "assigned_slot_id": "4-3-3.LB",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -58,18 +58,18 @@
         "rare": false,
         "draw_probability": 0.03,
         "rolled_card_ids": [
-          "p-5-arg-03:5",
-          "p-5-arg-07:5",
-          "p-5-arg-11:5"
+          "p-5-arg-11:5",
+          "p-5-arg-08:5",
+          "p-5-arg-09:5"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07"
+          "p-4-ger-09",
+          "p-5-ita-09"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-5-arg-03:5",
-        "picked_player_id": "p-5-arg-03",
+        "picked_card_id": "p-5-arg-11:5",
+        "picked_player_id": "p-5-arg-11",
         "assigned_slot_id": "4-3-3.LCB",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -82,19 +82,19 @@
         "rare": false,
         "draw_probability": 0.025,
         "rolled_card_ids": [
-          "p-4-uru-11:4",
-          "p-4-uru-03:4",
-          "p-4-uru-07:4"
+          "p-4-uru-09:4",
+          "p-4-uru-08:4",
+          "p-4-uru-10:4"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03"
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-4-uru-11:4",
-        "picked_player_id": "p-4-uru-11",
+        "picked_card_id": "p-4-uru-09:4",
+        "picked_player_id": "p-4-uru-09",
         "assigned_slot_id": "4-3-3.RCB",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -107,20 +107,20 @@
         "rare": false,
         "draw_probability": 0.03,
         "rolled_card_ids": [
-          "p-5-por-03:5",
-          "p-5-por-07:5",
-          "p-5-por-11:5"
+          "p-5-por-08:5",
+          "p-5-por-11:5",
+          "p-5-por-09:5"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11"
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-5-por-03:5",
-        "picked_player_id": "p-5-por-03",
+        "picked_card_id": "p-5-por-08:5",
+        "picked_player_id": "p-5-por-08",
         "assigned_slot_id": "4-3-3.RB",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -134,15 +134,15 @@
         "draw_probability": 0.035,
         "rolled_card_ids": [
           "p-6-uru-11:6",
-          "p-6-uru-03:6",
-          "p-6-uru-07:6"
+          "p-6-uru-09:6",
+          "p-6-uru-08:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03"
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
@@ -160,16 +160,16 @@
         "rare": false,
         "draw_probability": 0.03,
         "rolled_card_ids": [
-          "p-5-bra-07:5",
-          "p-5-bra-03:5",
+          "p-5-bra-08:5",
+          "p-5-bra-09:5",
           "p-5-bra-11:5"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11"
         ],
         "rolled_manager_card_id": "m-5-bra:5",
@@ -188,22 +188,22 @@
         "rare": false,
         "draw_probability": 0.03,
         "rolled_card_ids": [
-          "p-5-ned-07:5",
+          "p-5-ned-08:5",
           "p-5-ned-11:5",
-          "p-5-ned-03:5"
+          "p-5-ned-09:5"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-5-ned-07:5",
-        "picked_player_id": "p-5-ned-07",
+        "picked_card_id": "p-5-ned-08:5",
+        "picked_player_id": "p-5-ned-08",
         "assigned_slot_id": "4-3-3.LCM",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -216,23 +216,23 @@
         "rare": false,
         "draw_probability": 0.025,
         "rolled_card_ids": [
-          "p-4-fra-03:4",
-          "p-4-fra-07:4",
-          "p-4-fra-11:4"
+          "p-4-fra-08:4",
+          "p-4-fra-10:4",
+          "p-4-fra-09:4"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07"
+          "p-5-ned-08"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-4-fra-03:4",
-        "picked_player_id": "p-4-fra-03",
+        "picked_card_id": "p-4-fra-08:4",
+        "picked_player_id": "p-4-fra-08",
         "assigned_slot_id": "4-3-3.RCM",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -245,24 +245,24 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
-          "p-6-ita-03:6",
-          "p-6-ita-07:6",
-          "p-6-ita-11:6"
+          "p-6-ita-09:6",
+          "p-6-ita-10:6",
+          "p-6-ita-08:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03"
+          "p-5-ned-08",
+          "p-4-fra-08"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-ita-03:6",
-        "picked_player_id": "p-6-ita-03",
+        "picked_card_id": "p-6-ita-09:6",
+        "picked_player_id": "p-6-ita-09",
         "assigned_slot_id": "4-3-3.LW",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -275,25 +275,25 @@
         "rare": false,
         "draw_probability": 0.025,
         "rolled_card_ids": [
-          "p-4-uru-02:4",
-          "p-4-uru-10:4",
-          "p-4-uru-06:4"
+          "p-4-uru-11:4",
+          "p-4-uru-08:4",
+          "p-4-uru-07:4"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-4-uru-02:4",
-        "picked_player_id": "p-4-uru-02",
+        "picked_card_id": "p-4-uru-11:4",
+        "picked_player_id": "p-4-uru-11",
         "assigned_slot_id": "4-3-3.ST",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -306,26 +306,26 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
-          "p-6-eng-03:6",
-          "p-6-eng-07:6",
+          "p-6-eng-08:6",
+          "p-6-eng-09:6",
           "p-6-eng-11:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-eng-03:6",
-        "picked_player_id": "p-6-eng-03",
+        "picked_card_id": "p-6-eng-08:6",
+        "picked_player_id": "p-6-eng-08",
         "assigned_slot_id": "4-3-3.RW",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -338,27 +338,27 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
-          "p-6-arg-03:6",
-          "p-6-arg-07:6",
-          "p-6-arg-10:6"
+          "p-6-arg-10:6",
+          "p-6-arg-09:6",
+          "p-6-arg-08:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02",
-          "p-6-eng-03"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11",
+          "p-6-eng-08"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-arg-03:6",
-        "picked_player_id": "p-6-arg-03",
+        "picked_card_id": "p-6-arg-10:6",
+        "picked_player_id": "p-6-arg-10",
         "assigned_slot_id": "bench.0",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -371,28 +371,28 @@
         "rare": false,
         "draw_probability": 0.025,
         "rolled_card_ids": [
-          "p-4-uru-06:4",
-          "p-4-uru-03:4",
-          "p-4-uru-10:4"
+          "p-4-uru-07:4",
+          "p-4-uru-10:4",
+          "p-4-uru-06:4"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02",
-          "p-6-eng-03",
-          "p-6-arg-03"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11",
+          "p-6-eng-08",
+          "p-6-arg-10"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-4-uru-06:4",
-        "picked_player_id": "p-4-uru-06",
+        "picked_card_id": "p-4-uru-07:4",
+        "picked_player_id": "p-4-uru-07",
         "assigned_slot_id": "bench.1",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -405,29 +405,29 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
+          "p-6-ned-08:6",
           "p-6-ned-11:6",
-          "p-6-ned-03:6",
-          "p-6-ned-07:6"
+          "p-6-ned-09:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02",
-          "p-6-eng-03",
-          "p-6-arg-03",
-          "p-4-uru-06"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11",
+          "p-6-eng-08",
+          "p-6-arg-10",
+          "p-4-uru-07"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-ned-11:6",
-        "picked_player_id": "p-6-ned-11",
+        "picked_card_id": "p-6-ned-08:6",
+        "picked_player_id": "p-6-ned-08",
         "assigned_slot_id": "bench.2",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -440,30 +440,30 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
-          "p-6-arg-05:6",
           "p-6-arg-11:6",
-          "p-6-arg-02:6"
+          "p-6-arg-08:6",
+          "p-6-arg-07:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02",
-          "p-6-eng-03",
-          "p-6-arg-03",
-          "p-4-uru-06",
-          "p-6-ned-11"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11",
+          "p-6-eng-08",
+          "p-6-arg-10",
+          "p-4-uru-07",
+          "p-6-ned-08"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-arg-05:6",
-        "picked_player_id": "p-6-arg-05",
+        "picked_card_id": "p-6-arg-11:6",
+        "picked_player_id": "p-6-arg-11",
         "assigned_slot_id": "bench.3",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -476,31 +476,31 @@
         "rare": false,
         "draw_probability": 0.035,
         "rolled_card_ids": [
-          "p-6-eng-01:6",
-          "p-6-eng-10:6",
-          "p-6-eng-07:6"
+          "p-6-eng-07:6",
+          "p-6-eng-09:6",
+          "p-6-eng-11:6"
         ],
         "excluded_player_ids": [
-          "p-4-ger-07",
-          "p-5-ita-07",
-          "p-5-arg-03",
-          "p-4-uru-11",
-          "p-5-por-03",
+          "p-4-ger-09",
+          "p-5-ita-09",
+          "p-5-arg-11",
+          "p-4-uru-09",
+          "p-5-por-08",
           "p-6-uru-11",
-          "p-5-ned-07",
-          "p-4-fra-03",
-          "p-6-ita-03",
-          "p-4-uru-02",
-          "p-6-eng-03",
-          "p-6-arg-03",
-          "p-4-uru-06",
-          "p-6-ned-11",
-          "p-6-arg-05"
+          "p-5-ned-08",
+          "p-4-fra-08",
+          "p-6-ita-09",
+          "p-4-uru-11",
+          "p-6-eng-08",
+          "p-6-arg-10",
+          "p-4-uru-07",
+          "p-6-ned-08",
+          "p-6-arg-11"
         ],
         "rolled_manager_card_id": null,
         "picked_kind": "player",
-        "picked_card_id": "p-6-eng-01:6",
-        "picked_player_id": "p-6-eng-01",
+        "picked_card_id": "p-6-eng-07:6",
+        "picked_player_id": "p-6-eng-07",
         "assigned_slot_id": "bench.4",
         "picked_manager_card_id": null,
         "target_slot_id": null,
@@ -512,20 +512,20 @@
         "slot_id": "4-3-3.GK",
         "is_starter": true,
         "slot_position": "GK",
-        "card_id": "p-4-ger-07:4",
-        "player_id": "p-4-ger-07",
+        "card_id": "p-4-ger-09:4",
+        "player_id": "p-4-ger-09",
         "tournament_id": 4,
         "position_compatibility": 0.15,
         "validation_warnings": [
-          "outfielder in goal: DF/MF placed in GK slot (compatibility 0.15; soft sim penalty)"
+          "outfielder in goal: DF placed in GK slot (compatibility 0.15; soft sim penalty)"
         ]
       },
       {
         "slot_id": "4-3-3.LB",
         "is_starter": true,
         "slot_position": "LB",
-        "card_id": "p-5-ita-07:5",
-        "player_id": "p-5-ita-07",
+        "card_id": "p-5-ita-09:5",
+        "player_id": "p-5-ita-09",
         "tournament_id": 5,
         "position_compatibility": 1,
         "validation_warnings": []
@@ -534,20 +534,18 @@
         "slot_id": "4-3-3.LCB",
         "is_starter": true,
         "slot_position": "LCB",
-        "card_id": "p-5-arg-03:5",
-        "player_id": "p-5-arg-03",
+        "card_id": "p-5-arg-11:5",
+        "player_id": "p-5-arg-11",
         "tournament_id": 5,
-        "position_compatibility": 0.45,
-        "validation_warnings": [
-          "out-of-position: FW in LCB slot (compatibility 0.45)"
-        ]
+        "position_compatibility": 1,
+        "validation_warnings": []
       },
       {
         "slot_id": "4-3-3.RCB",
         "is_starter": true,
         "slot_position": "RCB",
-        "card_id": "p-4-uru-11:4",
-        "player_id": "p-4-uru-11",
+        "card_id": "p-4-uru-09:4",
+        "player_id": "p-4-uru-09",
         "tournament_id": 4,
         "position_compatibility": 1,
         "validation_warnings": []
@@ -556,8 +554,8 @@
         "slot_id": "4-3-3.RB",
         "is_starter": true,
         "slot_position": "RB",
-        "card_id": "p-5-por-03:5",
-        "player_id": "p-5-por-03",
+        "card_id": "p-5-por-08:5",
+        "player_id": "p-5-por-08",
         "tournament_id": 5,
         "position_compatibility": 1,
         "validation_warnings": []
@@ -576,20 +574,18 @@
         "slot_id": "4-3-3.LCM",
         "is_starter": true,
         "slot_position": "LCM",
-        "card_id": "p-5-ned-07:5",
-        "player_id": "p-5-ned-07",
+        "card_id": "p-5-ned-08:5",
+        "player_id": "p-5-ned-08",
         "tournament_id": 5,
-        "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: DF in LCM slot (compatibility 0.75)"
-        ]
+        "position_compatibility": 1,
+        "validation_warnings": []
       },
       {
         "slot_id": "4-3-3.RCM",
         "is_starter": true,
         "slot_position": "RCM",
-        "card_id": "p-4-fra-03:4",
-        "player_id": "p-4-fra-03",
+        "card_id": "p-4-fra-08:4",
+        "player_id": "p-4-fra-08",
         "tournament_id": 4,
         "position_compatibility": 0.75,
         "validation_warnings": [
@@ -600,30 +596,32 @@
         "slot_id": "4-3-3.LW",
         "is_starter": true,
         "slot_position": "LW",
-        "card_id": "p-6-ita-03:6",
-        "player_id": "p-6-ita-03",
+        "card_id": "p-6-ita-09:6",
+        "player_id": "p-6-ita-09",
         "tournament_id": 6,
-        "position_compatibility": 1,
-        "validation_warnings": []
+        "position_compatibility": 0.75,
+        "validation_warnings": [
+          "out-of-position: DF/MF in LW slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "4-3-3.ST",
         "is_starter": true,
         "slot_position": "ST",
-        "card_id": "p-4-uru-02:4",
-        "player_id": "p-4-uru-02",
+        "card_id": "p-4-uru-11:4",
+        "player_id": "p-4-uru-11",
         "tournament_id": 4,
-        "position_compatibility": 0.75,
+        "position_compatibility": 0.45,
         "validation_warnings": [
-          "out-of-position: MF in ST slot (compatibility 0.75)"
+          "out-of-position: DF in ST slot (compatibility 0.45)"
         ]
       },
       {
         "slot_id": "4-3-3.RW",
         "is_starter": true,
         "slot_position": "RW",
-        "card_id": "p-6-eng-03:6",
-        "player_id": "p-6-eng-03",
+        "card_id": "p-6-eng-08:6",
+        "player_id": "p-6-eng-08",
         "tournament_id": 6,
         "position_compatibility": 0.15,
         "validation_warnings": [
@@ -634,78 +632,80 @@
         "slot_id": "bench.0",
         "is_starter": false,
         "slot_position": "GK",
-        "card_id": "p-6-arg-03:6",
-        "player_id": "p-6-arg-03",
+        "card_id": "p-6-arg-10:6",
+        "player_id": "p-6-arg-10",
         "tournament_id": 6,
         "position_compatibility": 0.15,
         "validation_warnings": [
-          "outfielder in goal: DF placed in GK slot (compatibility 0.15; soft sim penalty)"
+          "outfielder in goal: FW placed in GK slot (compatibility 0.15; soft sim penalty)"
         ]
       },
       {
         "slot_id": "bench.1",
         "is_starter": false,
         "slot_position": "CB",
-        "card_id": "p-4-uru-06:4",
-        "player_id": "p-4-uru-06",
+        "card_id": "p-4-uru-07:4",
+        "player_id": "p-4-uru-07",
         "tournament_id": 4,
-        "position_compatibility": 1,
-        "validation_warnings": []
+        "position_compatibility": 0.75,
+        "validation_warnings": [
+          "out-of-position: MF in CB slot (compatibility 0.75)"
+        ]
       },
       {
         "slot_id": "bench.2",
         "is_starter": false,
         "slot_position": "CM",
-        "card_id": "p-6-ned-11:6",
-        "player_id": "p-6-ned-11",
+        "card_id": "p-6-ned-08:6",
+        "player_id": "p-6-ned-08",
         "tournament_id": 6,
-        "position_compatibility": 0.75,
+        "position_compatibility": 0.15,
         "validation_warnings": [
-          "out-of-position: FW in CM slot (compatibility 0.75)"
+          "out-of-position: GK in CM slot (compatibility 0.15)"
         ]
       },
       {
         "slot_id": "bench.3",
         "is_starter": false,
         "slot_position": "CM",
-        "card_id": "p-6-arg-05:6",
-        "player_id": "p-6-arg-05",
+        "card_id": "p-6-arg-11:6",
+        "player_id": "p-6-arg-11",
         "tournament_id": 6,
-        "position_compatibility": 0.75,
-        "validation_warnings": [
-          "out-of-position: FW in CM slot (compatibility 0.75)"
-        ]
+        "position_compatibility": 1,
+        "validation_warnings": []
       },
       {
         "slot_id": "bench.4",
         "is_starter": false,
         "slot_position": "ST",
-        "card_id": "p-6-eng-01:6",
-        "player_id": "p-6-eng-01",
+        "card_id": "p-6-eng-07:6",
+        "player_id": "p-6-eng-07",
         "tournament_id": 6,
-        "position_compatibility": 1,
-        "validation_warnings": []
+        "position_compatibility": 0.75,
+        "validation_warnings": [
+          "out-of-position: DF/MF in ST slot (compatibility 0.75)"
+        ]
       }
     ],
     "manager_card_id": "m-5-bra:5",
     "status": "ready",
     "deduped_player_ids": [
-      "p-4-ger-07",
-      "p-5-ita-07",
-      "p-5-arg-03",
-      "p-4-uru-11",
-      "p-5-por-03",
+      "p-4-ger-09",
+      "p-5-ita-09",
+      "p-5-arg-11",
+      "p-4-uru-09",
+      "p-5-por-08",
       "p-6-uru-11",
-      "p-5-ned-07",
-      "p-4-fra-03",
-      "p-6-ita-03",
-      "p-4-uru-02",
-      "p-6-eng-03",
-      "p-6-arg-03",
-      "p-4-uru-06",
-      "p-6-ned-11",
-      "p-6-arg-05",
-      "p-6-eng-01"
+      "p-5-ned-08",
+      "p-4-fra-08",
+      "p-6-ita-09",
+      "p-4-uru-11",
+      "p-6-eng-08",
+      "p-6-arg-10",
+      "p-4-uru-07",
+      "p-6-ned-08",
+      "p-6-arg-11",
+      "p-6-eng-07"
     ],
     "dataset_version": "fixture-dataset-v1",
     "rating_version": "fixture-rating-v1",

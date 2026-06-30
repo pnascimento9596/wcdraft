@@ -17,12 +17,11 @@
 //  - The multiplier is BOUNDED (see SynergyResult.multiplier comment) — the
 //    aggregator MUST NOT let a high-Synergy weak XI out-aggregate a
 //    low-Synergy superstar XI. The bound is calibrated + locked in WS-B.
-//  - Manager modifier is EXPLICITLY IDENTITY (1.0) for every input —
-//    `null` manager, `null` `ManagerRating.overall`, AND any non-null
-//    rating. `ManagerRating.overall` is display-only (see
-//    `types/manager.ts`); the sim MUST NOT read it. A future sim-legal
-//    manager rating field will replace the identity fold without
-//    re-introducing the display-overall read. Locked by
+//  - Manager modifier is bounded by the reserved manager band and driven by
+//    `SynergyResult.manager_link`, not by `ManagerRating.overall`.
+//    `ManagerRating.overall` is display-only (see `types/manager.ts`); the sim
+//    MUST NOT read it. A future sim-legal manager rating field may add to this
+//    fold without re-introducing the display-overall read. Locked by
 //    `manager-modifier-decoupling.guard.test.ts`.
 //
 // SCOPE: signature + per-starter view type only. The folding formula
@@ -61,10 +60,10 @@ export interface StarterContribution {
  *  - `synergy`   — output of `computeSynergy` for the same XI / formation /
  *    manager triple.
  *  - `manager`   — the drafted manager's `ManagerRating`, or `null` when no
- *    manager has been drafted yet. CURRENTLY UNUSED: the manager modifier
- *    is identity (1.0) for every input until a sim-legal manager field is
- *    defined (see header). The parameter is retained for forward-compat;
- *    do NOT read `manager.overall` here.
+ *    manager rating row is available. The current mechanical manager effect
+ *    comes from `synergy.manager_link`; no manager tournament means
+ *    `manager_link === 0`. This parameter is retained for forward-compat with a
+ *    future sim-legal manager field. Do NOT read `manager.overall` here.
  *
  * OUTPUT: `TeamStrength` — the same shape the sim already consumes.
  *
@@ -82,9 +81,13 @@ export type AggregateUserXiStrengthFn = (
  * Per-channel MEAN of compatibility-weighted starter ratings × bounded Synergy
  * multiplier × bounded manager modifier. Locked by `team-strength.golden.test.ts`.
  */
-import { aggregateUserXiStrength as aggregateUserXiStrengthImpl } from "../engine/team-strength.js";
+import {
+  aggregateUserXiStrength as aggregateUserXiStrengthImpl,
+  managerBandModifier,
+} from "../engine/team-strength.js";
 
 export const aggregateUserXiStrength: AggregateUserXiStrengthFn = aggregateUserXiStrengthImpl;
+export { managerBandModifier };
 
 // Re-declare the existing `UserXiSimView` here in plain English (NOT a type
 // alias; the canonical declaration stays in `api/sim.ts`):
