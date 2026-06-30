@@ -18,6 +18,11 @@ import { SESSION_COOKIE_NAME, SESSION_TTL_MS, type SessionDeps } from "./session
 import { CSRF_COOKIE_NAME } from "./csrf";
 import { getEmailSender, type EmailSender } from "./email";
 import type { MagicLinkDeps } from "./magic-link";
+import {
+  createRecentMagicCookieValue,
+  RECENT_MAGIC_COOKIE_NAME,
+  RECENT_MAGIC_TTL_MS,
+} from "./recent-magic";
 import { boundedBodyErrorResponse } from "../http/bounded-body";
 import { readClientIp } from "../http/client-ip";
 
@@ -193,6 +198,26 @@ export function setCsrfCookie(
   );
 }
 
+export function setRecentMagicCookie(
+  response: NextResponse,
+  args: {
+    readonly sessionId: string;
+    readonly userId: string;
+    readonly now: number;
+    readonly cookieSecret: string;
+  },
+): void {
+  response.headers.append(
+    "Set-Cookie",
+    buildSetCookieValue({
+      name: RECENT_MAGIC_COOKIE_NAME,
+      value: createRecentMagicCookieValue(args),
+      maxAgeSeconds: RECENT_MAGIC_TTL_MS / 1000,
+      httpOnly: true,
+    }),
+  );
+}
+
 export function clearSessionCookie(response: NextResponse): void {
   // Max-Age=0 with the same Path expires the cookie.
   response.headers.append(
@@ -202,6 +227,10 @@ export function clearSessionCookie(response: NextResponse): void {
   response.headers.append(
     "Set-Cookie",
     `${CSRF_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax${isProd() ? "; Secure" : ""}`,
+  );
+  response.headers.append(
+    "Set-Cookie",
+    `${RECENT_MAGIC_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax${isProd() ? "; Secure" : ""}; HttpOnly`,
   );
 }
 

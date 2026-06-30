@@ -43,17 +43,32 @@ export function buildSavedRunSummary(
   gameData: GameData,
   record: RunRecordV1,
 ): SavedRunSummary | null {
+  const simulation = record.simulation;
+  if (!simulation) return null;
   const view = buildShareView(gameData, record);
   if (!view) return null;
   return {
     team_name: view.team_name,
     display_record: view.display_record,
+    score: view.score,
+    wins: simulation.run.wins,
+    draws: simulation.run.draws,
+    losses: simulation.run.losses,
+    undefeated_regulation: simulation.run.undefeated_regulation,
     formation_name: view.formation_name,
+    draft_mode: record.draft.mode,
+    draft_order: record.draft.draft_flow,
+    era_preset: record.draft.era_preset,
+    rating_basis: record.draft.rating_basis,
     key_picks: view.stars.slice(0, 3).map((s) => ({
       name: s.name,
       nation_code: s.nation_code,
     })),
     is_champion: view.is_champion,
+    is_perfect_eight_zero: view.is_perfect_eight_zero,
+    reached_round: view.reached_round,
+    matches_played: view.matches_played,
+    challenge_date: view.challenge_date,
     seed: view.seed,
     created_seq: record.created_seq,
     updated_seq: record.updated_seq,

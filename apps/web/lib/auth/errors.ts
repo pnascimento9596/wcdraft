@@ -15,6 +15,8 @@ export type AuthErrorCode =
   | "CSRF_MISMATCH"
   | "ORIGIN_MISMATCH"
   | "ANON_FORBIDDEN"
+  | "INVALID_CREDENTIALS"
+  | "PASSWORD_WEAK"
   | "RATE_LIMITED"
   | "EMAIL_INVALID"
   // F-3.6 (ship-dark hardening) — issued by mutating auth routes when
@@ -55,6 +57,10 @@ function statusFor(code: AuthErrorCode): number {
       return 401;
     case "ANON_FORBIDDEN":
       return 403;
+    case "INVALID_CREDENTIALS":
+      return 401;
+    case "PASSWORD_WEAK":
+      return 400;
     case "RATE_LIMITED":
       return 429;
     case "EMAIL_INVALID":

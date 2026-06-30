@@ -52,8 +52,17 @@ export interface SavedRunSummary {
   readonly team_name: string;
   /** "W-L" pure record (matches the on-screen scoreboard). */
   readonly display_record: string;
+  readonly score?: number;
+  readonly wins?: number;
+  readonly draws?: number;
+  readonly losses?: number;
+  readonly undefeated_regulation?: boolean;
   /** Formation pretty name e.g. "4-3-3". */
   readonly formation_name: string;
+  readonly draft_mode?: "classic" | "hidden";
+  readonly draft_order?: "squad_first" | "position_first";
+  readonly era_preset?: "all_time" | "post_2000" | "post_2010" | "modern";
+  readonly rating_basis?: "career" | "current";
   /** Up to three: names + nation flag codes only. NEVER kit/crest marks. */
   readonly key_picks: ReadonlyArray<{
     readonly name: string;
@@ -61,6 +70,10 @@ export interface SavedRunSummary {
   }>;
   /** True only when the run finished as champions. */
   readonly is_champion: boolean;
+  readonly is_perfect_eight_zero?: boolean;
+  readonly reached_round?: string;
+  readonly matches_played?: number;
+  readonly challenge_date?: string | null;
   /** The deterministic seed string (cosmetic). */
   readonly seed: string;
   /** Local sequence numbers for stable ordering on the client. */
@@ -150,7 +163,12 @@ export async function saveRun(
     .returning();
   const row = inserted[0];
   if (!row) throw new Error("saveRun: INSERT did not return a row");
-  // Enforce per-scope cap.
+  // Enforce the recent-run cap only for anonymous session history. Account
+  // history is the durable full set used by /account, so saves must not evict.
+  if (ctx.userId !== null) {
+    return { row, evicted: [], idempotent: false };
+  }
+
   const ranked = await deps.db
     .select({ id: savedRuns.id, createdAt: savedRuns.createdAt })
     .from(savedRuns)

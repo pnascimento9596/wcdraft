@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { loadDataManifest } from "@wcdraft/data/client";
 
+import { useAuth } from "@/components/auth-context";
 import {
   buildLocalProgressSummary,
   formatBestScore,
@@ -10,6 +11,7 @@ import {
   millisecondsUntilNextUtcMidnight,
   type LocalProgressSummary,
 } from "@/lib/game/local-progress";
+import { utcDateString } from "@/lib/game/daily";
 import { listRunRecords } from "@/lib/game/run-record";
 import { composeVersions, type RunRecordVersions } from "@/lib/game/versions";
 
@@ -56,13 +58,28 @@ export function LocalProgressBandWithVersions({
   targetDate?: string | null;
   compact?: boolean;
 }) {
+  const { isSignedIn, ready: authReady } = useAuth();
   const [summary, setSummary] = useState<LocalProgressSummary>(() =>
     readSummary(versions, targetDate ?? undefined),
   );
 
   useEffect(() => {
-    setSummary(readSummary(versions, targetDate ?? undefined));
-  }, [versions, targetDate]);
+    let cancelled = false;
+    if (shouldUseServerProgress(isSignedIn, authReady, targetDate)) {
+      readServerProgressSummary(targetDate ?? undefined)
+        .then((serverSummary) => {
+          if (!cancelled) setSummary(serverSummary);
+        })
+        .catch(() => {
+          if (!cancelled) setSummary(readSummary(versions, targetDate ?? undefined));
+        });
+    } else {
+      setSummary(readSummary(versions, targetDate ?? undefined));
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [authReady, isSignedIn, targetDate, versions]);
 
   return <LocalProgressBand summary={summary} compact={compact} />;
 }
@@ -74,10 +91,24 @@ export function LocalProgressBandFromStorage({
   targetDate?: string | null;
   compact?: boolean;
 }) {
+  const { isSignedIn, ready: authReady } = useAuth();
   const [summary, setSummary] = useState<LocalProgressSummary>(EMPTY_SUMMARY);
 
   useEffect(() => {
     let cancelled = false;
+    if (shouldUseServerProgress(isSignedIn, authReady, targetDate)) {
+      readServerProgressSummary(targetDate ?? undefined)
+        .then((serverSummary) => {
+          if (!cancelled) setSummary(serverSummary);
+        })
+        .catch(() => {
+          if (!cancelled)
+            setSummary(buildLocalProgressSummary([], { targetDate: targetDate ?? undefined }));
+        });
+      return () => {
+        cancelled = true;
+      };
+    }
     loadDataManifest()
       .then((manifest) => {
         if (cancelled) return;
@@ -91,9 +122,46 @@ export function LocalProgressBandFromStorage({
     return () => {
       cancelled = true;
     };
-  }, [targetDate]);
+  }, [authReady, isSignedIn, targetDate]);
 
   return <LocalProgressBand summary={summary} compact={compact} />;
+}
+
+interface AccountStatsResponse {
+  readonly stats?: {
+    readonly dailyStreakDays?: number;
+    readonly todayBest?: number | null;
+    readonly personalBest?: number | null;
+  };
+}
+
+function shouldUseServerProgress(
+  isSignedIn: boolean,
+  authReady: boolean,
+  targetDate: string | null | undefined,
+): boolean {
+  if (!authReady || !isSignedIn) return false;
+  return !targetDate || targetDate === utcDateString();
+}
+
+async function readServerProgressSummary(targetDate?: string): Promise<LocalProgressSummary> {
+  const response = await fetch("/api/account/runs?limit=1", {
+    credentials: "include",
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) throw new Error(`account stats HTTP ${response.status.toString()}`);
+  const body = (await response.json()) as AccountStatsResponse;
+  const stats = body.stats;
+  return {
+    targetDate: targetDate ?? utcDateString(),
+    streakDays: finiteNumber(stats?.dailyStreakDays) ?? 0,
+    todayBest: finiteNumber(stats?.todayBest),
+    allTimeBest: finiteNumber(stats?.personalBest),
+  };
+}
+
+function finiteNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
 function readSummary(versions: RunRecordVersions, targetDate?: string): LocalProgressSummary {

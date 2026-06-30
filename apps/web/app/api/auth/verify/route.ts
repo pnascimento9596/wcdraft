@@ -23,6 +23,7 @@ import {
   jsonError,
   readRequestCookie,
   setCsrfCookie,
+  setRecentMagicCookie,
   setSessionCookie,
 } from "@/lib/auth/handler-helpers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
@@ -114,6 +115,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const response = NextResponse.redirect(new URL(result.redirectTo, req.url), 303);
     setSessionCookie(response, result.sessionCookieValue);
     setCsrfCookie(response, result.csrfSecret);
+    setRecentMagicCookie(response, {
+      sessionId: result.sessionId,
+      userId: result.userId,
+      now: deps.now(),
+      cookieSecret: deps.cookieSecret,
+    });
     return response;
   } catch (err) {
     return jsonError(err);

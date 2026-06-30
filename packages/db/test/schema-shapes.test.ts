@@ -58,12 +58,16 @@ describe("@wcdraft/db schema — shape", () => {
       id: string;
       email: string | null;
       username: string | null;
+      passwordHash: string | null;
+      passwordSetAt: Date | null;
       createdAt: Date;
     }>();
     // email is nullable, so the insert type allows omission
     expectTypeOf<NewUser>().toMatchTypeOf<{
       email?: string | null;
       username?: string | null;
+      passwordHash?: string | null;
+      passwordSetAt?: Date | null;
     }>();
   });
 

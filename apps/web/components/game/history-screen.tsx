@@ -106,8 +106,8 @@ export function HistoryScreen() {
           <span className="eyebrow">Run history</span>
           <h1 className="display">No completed runs yet</h1>
           <p className="page-head__note">
-            Finish a draft and simulate the run to see it here. Up to {5} recent runs are kept in
-            this browser.
+            Finish a draft and simulate the run to see it here. Signed-in users can open Account for
+            the complete server history.
           </p>
         </header>
         {mode.persistence === "volatile" ? (
@@ -116,6 +116,11 @@ export function HistoryScreen() {
           </p>
         ) : null}
         <div className={s.resultsActions}>
+          {isSignedIn ? (
+            <Link href="/account" className="btn btn--ghost">
+              Account
+            </Link>
+          ) : null}
           <Link href={draftHref(null)} className="btn btn--primary">
             Draft Again
           </Link>
@@ -131,8 +136,8 @@ export function HistoryScreen() {
         <span className="eyebrow">Run history</span>
         <h1 className="display">Recent runs</h1>
         <p className="page-head__note">
-          Up to 5 most recent completed runs from this browser. Tap a run to re-open the seed-locked
-          results.
+          This shortcut shows the 5 most recent completed runs. Account is the complete server
+          history for signed-in users.
         </p>
       </header>
 
@@ -151,6 +156,11 @@ export function HistoryScreen() {
       </ul>
 
       <div className={s.resultsActions}>
+        {isSignedIn ? (
+          <Link href="/account" className="btn btn--ghost">
+            View all in Account
+          </Link>
+        ) : null}
         <Link href={draftHref(null)} className="btn btn--primary">
           Draft Again
         </Link>

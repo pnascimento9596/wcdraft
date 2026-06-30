@@ -204,13 +204,48 @@ function coerceSummary(x: unknown): import("@/lib/game/saved-runs-store").SavedR
   return {
     team_name,
     display_record,
+    score: finiteNumber(o.score),
+    wins: finiteNumber(o.wins),
+    draws: finiteNumber(o.draws),
+    losses: finiteNumber(o.losses),
+    undefeated_regulation:
+      typeof o.undefeated_regulation === "boolean" ? o.undefeated_regulation : undefined,
     formation_name,
+    draft_mode: o.draft_mode === "classic" || o.draft_mode === "hidden" ? o.draft_mode : undefined,
+    draft_order:
+      o.draft_order === "squad_first" || o.draft_order === "position_first"
+        ? o.draft_order
+        : undefined,
+    era_preset:
+      o.era_preset === "all_time" ||
+      o.era_preset === "post_2000" ||
+      o.era_preset === "post_2010" ||
+      o.era_preset === "modern"
+        ? o.era_preset
+        : undefined,
+    rating_basis:
+      o.rating_basis === "career" || o.rating_basis === "current" ? o.rating_basis : undefined,
     key_picks,
     is_champion: o.is_champion,
+    is_perfect_eight_zero:
+      typeof o.is_perfect_eight_zero === "boolean" ? o.is_perfect_eight_zero : undefined,
+    reached_round:
+      typeof o.reached_round === "string" && o.reached_round.length <= 16
+        ? o.reached_round
+        : undefined,
+    matches_played: finiteNumber(o.matches_played),
+    challenge_date:
+      typeof o.challenge_date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(o.challenge_date)
+        ? o.challenge_date
+        : null,
     seed,
     created_seq: typeof o.created_seq === "number" ? o.created_seq : undefined,
     updated_seq: typeof o.updated_seq === "number" ? o.updated_seq : undefined,
   };
+}
+
+function finiteNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
 export { toApiShape };
