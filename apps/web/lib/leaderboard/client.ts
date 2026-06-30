@@ -10,6 +10,7 @@
 import { ensureCsrfToken } from "../auth/client";
 import type { BoardDraftModeFilter, BoardFilter, BoardPageWire } from "./board-view";
 import { boardQueryString } from "./board-view";
+import type { LeaderboardLineupView, LeaderboardLineupWire } from "./lineup-view";
 import type { BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 import { outcomeFromResponse, type SubmitBoardMode, type SubmitPhase } from "./submit-state";
 
@@ -71,6 +72,34 @@ export async function fetchMyPresence(opts: {
     };
   } catch {
     return null;
+  }
+}
+
+// ─── Lineup inspector ───────────────────────────────────────────────────────
+
+export type LeaderboardLineupFetchResult =
+  | { readonly ok: true; readonly lineup: LeaderboardLineupView }
+  | { readonly ok: false; readonly message: string };
+
+export async function fetchLeaderboardLineup(
+  entryId: string,
+): Promise<LeaderboardLineupFetchResult> {
+  try {
+    const q = new URLSearchParams({ entry_id: entryId });
+    const r = await fetch(`/api/leaderboard/lineup?${q.toString()}`, {
+      headers: { Accept: "application/json" },
+    });
+    const body = (await r.json().catch(() => null)) as LeaderboardLineupWire | null;
+    if (r.ok && body?.ok === true) return { ok: true, lineup: body.lineup };
+    return {
+      ok: false,
+      message:
+        body?.ok === false
+          ? body.message
+          : "The lineup could not be inspected for this entry.",
+    };
+  } catch {
+    return { ok: false, message: "The lineup inspector did not respond." };
   }
 }
 

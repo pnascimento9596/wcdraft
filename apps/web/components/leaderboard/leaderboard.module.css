@@ -95,7 +95,7 @@
 
 .filterMode button[aria-pressed="true"] {
   background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--accent-on-solid);
 }
 
 .selectFilter {
@@ -280,11 +280,147 @@
   color: var(--ink-soft);
 }
 
+/* Lineup inspector disclosure */
+.inspector {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.35rem 0.25rem 1rem 3rem;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.inspectorState {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 52px;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.inspectorState strong {
+  color: var(--ink);
+}
+
+.inspectorSkeleton {
+  width: 2.2rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 24%, var(--line));
+}
+
+.lineupView {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.lineupSummary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lineupIdentity {
+  min-width: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.lineupIdentity h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.lineupIdentity span:last-child {
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+}
+
+.inspectorEyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.resultPill {
+  min-width: 4.4rem;
+  display: grid;
+  justify-items: end;
+  gap: 0.05rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 44%, var(--line));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--gold) 9%, var(--bg-panel));
+}
+
+.resultPill strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.resultPill span {
+  white-space: nowrap;
+  font-size: 0.62rem;
+  color: var(--ink-soft);
+}
+
+.lineupBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.lineupMetrics {
+  display: grid;
+  grid-template-columns: minmax(4.8rem, 0.8fr) repeat(4, minmax(4.5rem, 1fr));
+  gap: 0.4rem;
+}
+
+.squadAverage,
+.lineMetric {
+  min-width: 0;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.38rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+}
+
+.squadAverage strong,
+.lineMetric strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.98rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.squadAverage span,
+.lineMetric span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+}
+
 /* Evidence (score breakdown) disclosure */
 .breakdown {
   display: grid;
   gap: 0.25rem;
-  padding: 0.25rem 0.25rem 0.85rem 3rem;
+  padding: 0.25rem 0 0;
 }
 .breakdownLine {
   display: flex;
@@ -299,7 +435,7 @@
 .breakdownNone {
   font-size: 0.78rem;
   color: var(--ink-faint);
-  padding: 0 0.25rem 0.85rem 3rem;
+  padding: 0;
 }
 
 /* ── States ─────────────────────────────────────────────────────────────── */
@@ -409,6 +545,25 @@
   .boardFoot {
     font-size: 0.66rem;
     line-height: 1.35;
+  }
+
+  .inspector {
+    gap: 0.55rem;
+    padding: 0.35rem 0 0.9rem 0;
+  }
+
+  .lineupSummary {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .resultPill {
+    width: 100%;
+    justify-items: start;
+  }
+
+  .lineupMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -549,8 +704,8 @@
   .row {
     grid-template-columns: 2rem minmax(0, 1fr) auto;
   }
-  .breakdown,
-  .breakdownNone {
-    padding-left: 2.5rem;
+
+  .inspector {
+    padding-left: 0;
   }
 }
