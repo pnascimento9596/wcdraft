@@ -24,17 +24,17 @@ Implement the pre-draft configuration wave defined in the plan:
 
 The implementation units are dispatch-only:
 
-| Unit | Scope                                                            | Gate                              |
-| ---- | ---------------------------------------------------------------- | --------------------------------- |
-| DC-1 | `t2` token schema + `t1` compatibility + fuzz/PREV skew fixtures | SHIPPED                           |
-| DC-2 | era preset filtering, pool census, sampling goldens              | SHIPPED                           |
-| DC-3 | Position First target-selection state machine + replay           | SHIPPED                           |
-| DC-4 | config UX dark wiring + share badges + Memory leak tests         | SHIPPED for setup/badges/copy     |
-| DC-5 | MV2-12 link-seam prerequisite                                    | SUPERSEDED by merit-v3 U0         |
-| DC-6 | MV2-12b dual-basis materialization                               | SHIPPED by merit-v3 V6            |
-| DC-7 | selected-basis sim inputs + shared lambda validation             | Red review                        |
-| DC-8 | leaderboard config policy/schema/API/UX                          | Red review, DISPATCHED 2026-06-17 |
-| DC-9 | integration season merge and anchor/golden re-lock               | Red review + SHA-pinned merge     |
+| Unit | Scope                                                            | Gate                                                                                         |
+| ---- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| DC-1 | `t2` token schema + `t1` compatibility + fuzz/PREV skew fixtures | SHIPPED                                                                                      |
+| DC-2 | era preset filtering, pool census, sampling goldens              | SHIPPED                                                                                      |
+| DC-3 | Position First target-selection state machine + replay           | SHIPPED                                                                                      |
+| DC-4 | config UX dark wiring + share badges + Memory leak tests         | SHIPPED for setup/badges/copy                                                                |
+| DC-5 | MV2-12 link-seam prerequisite                                    | SUPERSEDED by merit-v3 U0                                                                    |
+| DC-6 | MV2-12b dual-basis materialization                               | SHIPPED by merit-v3 V6                                                                       |
+| DC-7 | selected-basis sim inputs + shared lambda validation             | Red review                                                                                   |
+| DC-8 | leaderboard config policy/schema/API/UX                          | Red review, DISPATCHED 2026-06-17                                                            |
+| DC-9 | integration season merge and anchor/golden re-lock               | re-executing Red review + autonomous SHA-pinned merge + live verify + auto-revert on failure |
 
 ## Blockers / Decisions
 
