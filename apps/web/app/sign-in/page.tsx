@@ -34,8 +34,8 @@ export default function SignInPage(): React.ReactElement {
           </div>
           <h1 className="signin-screen__title display">sign&nbsp;in</h1>
           <p className="signin-screen__sub">
-            We&rsquo;ll email a single&#8209;use link. No password, no rate of decay&nbsp;&mdash;
-            just the run you&rsquo;ll come back for.
+            We&rsquo;ll email a single&#8209;use link, or you can use a password if you set one. The
+            link path stays first&#8209;class.
           </p>
         </header>
 

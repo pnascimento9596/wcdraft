@@ -91,13 +91,21 @@
 /* ── Form ─────────────────────────────────────────────────────────── */
 .signin-form {
   display: grid;
-  gap: var(--s-3);
+  gap: var(--s-4);
   background: linear-gradient(180deg, var(--bg-800), var(--bg-750));
   padding: var(--s-6);
   border-radius: var(--r-3);
   border: 1px solid var(--line);
   box-shadow: var(--sh-2);
   position: relative;
+  min-width: 0;
+}
+
+.signin-form__section {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  min-width: 0;
 }
 
 /* Corner notches — the tactical-card cut-corner echo */
@@ -136,6 +144,7 @@
   grid-template-columns: 1fr auto;
   gap: var(--s-2);
   align-items: stretch;
+  min-width: 0;
 }
 
 .signin-form__input {
@@ -147,6 +156,8 @@
   border-radius: var(--r-2);
   padding: var(--s-3) var(--s-4);
   min-height: 48px;
+  min-width: 0;
+  width: 100%;
   outline: none;
   transition:
     border-color var(--d-fast) var(--e-out),
@@ -178,10 +189,13 @@
   border-radius: var(--r-2);
   padding: var(--s-2) var(--s-5);
   min-height: 48px;
+  min-width: 44px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--s-2);
+  white-space: nowrap;
   transition:
     transform var(--d-fast) var(--e-snap),
     background var(--d-fast) var(--e-out),
@@ -207,6 +221,16 @@
   box-shadow: none;
 }
 
+.signin-form__submit--ghost {
+  background: transparent;
+  color: var(--ink-100);
+  border: 1px solid var(--line-strong);
+  box-shadow: none;
+}
+.signin-form__submit--ghost:hover {
+  background: color-mix(in srgb, var(--ember) 10%, transparent);
+}
+
 .signin-form__submit-arrow {
   font-size: var(--t-d3);
   line-height: 1;
@@ -227,6 +251,25 @@
   text-underline-offset: 3px;
 }
 
+.signin-form__divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--ink-400);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.signin-form__divider::before,
+.signin-form__divider::after {
+  content: "";
+  height: 1px;
+  background: var(--line);
+}
+
 .signin-form__error {
   color: var(--loss);
   display: flex;
@@ -239,6 +282,20 @@
   height: 6px;
   border-radius: 999px;
   background: var(--loss);
+}
+
+.signin-form__forgot {
+  justify-self: start;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--ink-100);
+  padding: 0;
+  font: inherit;
+  font-size: var(--t-sm);
+  text-decoration: underline solid var(--line-strong);
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 
 /* ── Sent confirmation ────────────────────────────────────────────── */
@@ -377,5 +434,19 @@
 @media (min-width: 720px) {
   .signin-screen__title {
     font-size: var(--t-hero);
+  }
+}
+
+@media (max-width: 420px) {
+  .signin-form {
+    padding: var(--s-5);
+  }
+
+  .signin-form__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .signin-form__submit {
+    width: 100%;
   }
 }

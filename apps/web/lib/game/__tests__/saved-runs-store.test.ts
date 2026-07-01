@@ -225,17 +225,16 @@ describe("listRuns / getRun / deleteRun — scope isolation", () => {
 
 // ── Cap / eviction ─────────────────────────────────────────────────────
 describe("cap + eviction", () => {
-  it("oldest rows beyond SAVED_RUNS_CAP are evicted on save", async () => {
-    const a = await makeUser("cap@example.com");
-    await makeSession({ id: "ses-a", userId: a });
+  it("anonymous session rows evict oldest entries beyond SAVED_RUNS_CAP", async () => {
+    await makeSession({ id: "ses-a" });
     for (let i = 0; i < SAVED_RUNS_CAP + 2; i += 1) {
       await saveRun(
         { ...baseArgs, token: `t1.c${i.toString()}` },
-        { userId: a, sessionId: "ses-a" },
+        { userId: null, sessionId: "ses-a" },
         { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, i) },
       );
     }
-    const list = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), {
+    const list = await listRuns({ userId: null, sessionId: "ses-a" }, deps(), {
       limit: SAVED_RUNS_CAP + 5,
     });
     expect(list).toHaveLength(SAVED_RUNS_CAP);
@@ -243,20 +242,9 @@ describe("cap + eviction", () => {
     expect(list.map((r) => r.token)).not.toContain("t1.c1");
   });
 
-  it("eviction NEVER reaches across scopes", async () => {
+  it("account rows are retained beyond SAVED_RUNS_CAP for the /account full history", async () => {
     const a = await makeUser("a@example.com");
-    const b = await makeUser("b@example.com");
     await makeSession({ id: "ses-a", userId: a });
-    await makeSession({ id: "ses-b", userId: b });
-    // Fill user B to cap.
-    for (let i = 0; i < SAVED_RUNS_CAP; i += 1) {
-      await saveRun(
-        { ...baseArgs, token: `t1.bb${i.toString()}` },
-        { userId: b, sessionId: "ses-b" },
-        { db: env.db, now: () => Date.UTC(2026, 5, 7, 0, 0, i) },
-      );
-    }
-    // User A goes over cap.
     for (let i = 0; i < SAVED_RUNS_CAP + 2; i += 1) {
       await saveRun(
         { ...baseArgs, token: `t1.aa${i.toString()}` },
@@ -265,9 +253,8 @@ describe("cap + eviction", () => {
       );
     }
     const listA = await listRuns({ userId: a, sessionId: "ses-a" }, deps(), { limit: 99 });
-    const listB = await listRuns({ userId: b, sessionId: "ses-b" }, deps(), { limit: 99 });
-    expect(listA).toHaveLength(SAVED_RUNS_CAP);
-    expect(listB).toHaveLength(SAVED_RUNS_CAP);
+    expect(listA).toHaveLength(SAVED_RUNS_CAP + 2);
+    expect(listA.map((r) => r.token)).toContain("t1.aa0");
   });
 });
 

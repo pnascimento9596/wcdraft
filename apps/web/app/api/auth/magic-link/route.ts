@@ -33,6 +33,7 @@ import { isAuthEnabled } from "@/lib/auth/auth-enabled";
 
 interface RequestBody {
   email?: unknown;
+  next?: unknown;
 }
 
 const MAX_MAGIC_LINK_BODY_BYTES = 2 * 1024;
@@ -70,7 +71,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       allowedContentTypes: ["application/json"],
     })) as RequestBody;
     const email = typeof body?.email === "string" ? body.email : "";
-    await requestMagicLink({ email, ipAddress: readClientIp(req) }, buildMagicLinkDeps(deps));
+    const next = typeof body?.next === "string" ? body.next : null;
+    await requestMagicLink({ email, next, ipAddress: readClientIp(req) }, buildMagicLinkDeps(deps));
 
     const response = NextResponse.json(
       { ok: true, message: "If the address is valid, a link has been sent." },

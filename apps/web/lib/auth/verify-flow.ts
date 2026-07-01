@@ -25,21 +25,14 @@
 // This module is the pure logic. `app/api/auth/verify/route.ts` is the
 // thin Next.js adapter wired to it; the tests in
 // `lib/auth/__tests__/verify-flow.test.ts` exercise this file directly.
-import { eq } from "drizzle-orm";
-import { sessions as sessionsTable } from "@wcdraft/db";
 import { AuthError } from "./errors";
 import { verifyMagicLink, type MagicLinkDeps } from "./magic-link";
-import {
-  createSession,
-  SESSION_TTL_MS,
-  signCookie,
-  validateSessionCookie,
-  type SessionDeps,
-} from "./sessions";
+import { validateSessionCookie, type SessionDeps } from "./sessions";
 import type { Session } from "@wcdraft/db";
 import { ensureSession } from "./anon-session";
-import { generateOpaqueToken } from "./tokens";
 import { verifyCsrfDoubleSubmit, verifyOriginHost } from "./csrf";
+import { issueAuthenticatedSession } from "./session-issue";
+import { safeNextPath } from "./safe-next-path";
 
 // ── Interstitial render ────────────────────────────────────────────────────
 
@@ -187,43 +180,12 @@ export interface ConsumeAndIssueSessionArgs {
 export interface ConsumeAndIssueSessionResult {
   /** Already-validated same-origin path the caller should 303 to. */
   readonly redirectTo: string;
+  readonly sessionId: string;
+  readonly userId: string;
   /** Updated session cookie (always set on success — covers rotated id OR fresh mint). */
   readonly sessionCookieValue: string;
   /** Updated csrf cookie value. */
   readonly csrfSecret: string;
-}
-
-/**
- * Whitelist `?next=` (or the form's `next` field) to same-origin pathnames
- * so a malicious link can't redirect through us cross-origin.
- *
- *   "/play"            ✓
- *   "/play?x=1"        ✓
- *   "//evil/"          ✗ — protocol-relative
- *   "https://…"        ✗ — absolute
- *   "/play%0d%0aSet…"  ✗ — percent-encoded CRLF (F-2 reviewer note)
- *   "/play%09…"        ✗ — percent-encoded tab
- *   "" or null         ✗ — default to "/play"
- *
- * Hardening (F-3, per F-2 reviewer): after the basic regex, percent-decode
- * the candidate path and reject any C0 control byte (0x00–0x1f) or
- * DEL (0x7f). A bare CR/LF in `raw` was already caught by the character
- * class; the new check covers the `%0d` / `%0a` / `%09` percent-encoded
- * variants that would otherwise sneak into a Location: header.
- */
-export function safeNextPath(raw: string | null | undefined): string {
-  if (!raw) return "/play";
-  if (!/^\/[A-Za-z0-9_\-./?&=%]*$/.test(raw)) return "/play";
-  if (raw.startsWith("//")) return "/play";
-  try {
-    const decoded = decodeURIComponent(raw);
-    // eslint-disable-next-line no-control-regex -- explicit C0 + DEL guard
-    if (/[\x00-\x1f\x7f]/.test(decoded)) return "/play";
-  } catch {
-    // Malformed percent-encoding → reject.
-    return "/play";
-  }
-  return raw;
 }
 
 /**
@@ -294,47 +256,22 @@ export async function consumeAndIssueSession(
   const { user } = await verifyMagicLink({ token: args.token }, deps);
 
   // 5) Rotate the anon session in place (see threat-model comment above).
-  const newCsrf = generateOpaqueToken();
-  const rotated = await deps.db
-    .update(sessionsTable)
-    .set({
+  const issued = await issueAuthenticatedSession(
+    {
+      session: anonSession,
       userId: user.id,
-      csrfSecret: newCsrf,
-      expiresAt: new Date(deps.now() + SESSION_TTL_MS),
-    })
-    .where(eq(sessionsTable.id, anonSession.id))
-    .returning();
-  let sessionCookieValue: string;
-  let csrfSecret: string;
-  if (rotated[0]) {
-    sessionCookieValue = signCookie(anonSession.id, deps.cookieSecret);
-    csrfSecret = newCsrf;
-  } else {
-    // The session row vanished between validate and update (sweeper race).
-    // Mint a fresh one rather than fail the whole sign-in.
-    const fresh = await createSession({ userId: user.id }, deps);
-    sessionCookieValue = fresh.cookieValue;
-    csrfSecret = fresh.session.csrfSecret;
-  }
-
-  if (args.onAuthenticatedSessionReady) {
-    try {
-      await args.onAuthenticatedSessionReady({
-        sessionId: anonSession.id,
-        userId: user.id,
-      });
-    } catch (e) {
-      // Claim (or any other future post-rotation work) is best-effort.
-      // The user is already signed in; a hook failure must not surface as
-      // a sign-in failure. The claim is also idempotent — the route
-      // handler offers POST /api/runs/claim as a retry surface.
-      console.error("[verify-flow] onAuthenticatedSessionReady hook failed", e);
-    }
-  }
+      onAuthenticatedSessionReady: args.onAuthenticatedSessionReady,
+    },
+    deps,
+  );
 
   return {
     redirectTo: safeNextPath(args.next),
-    sessionCookieValue,
-    csrfSecret,
+    sessionId: issued.sessionId,
+    userId: issued.userId,
+    sessionCookieValue: issued.sessionCookieValue,
+    csrfSecret: issued.csrfSecret,
   };
 }
+
+export { safeNextPath };

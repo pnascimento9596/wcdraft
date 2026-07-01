@@ -24,6 +24,7 @@ import { AuthError } from "./errors";
 import { consumeRateLimit } from "./rate-limit";
 import { generateToken, sha256Hex } from "./tokens";
 import type { EmailSender } from "./email";
+import { safeNextPath } from "./safe-next-path";
 
 export const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 /** Per-email rate: at most N requests per W minutes. */
@@ -45,6 +46,7 @@ export interface MagicLinkDeps {
 
 export interface RequestMagicLinkArgs {
   readonly email: string;
+  readonly next?: string | null;
   /** Hashed via rate-limit; raw IP never persisted. */
   readonly ipAddress: string;
 }
@@ -52,6 +54,7 @@ export interface RequestMagicLinkArgs {
 export function buildMagicLinkVerifyUrl(args: {
   readonly token: string;
   readonly verifyBaseUrl: string;
+  readonly next?: string | null;
   readonly nodeEnv?: string;
 }): string {
   let verifyUrl: URL;
@@ -61,6 +64,10 @@ export function buildMagicLinkVerifyUrl(args: {
     throw new AuthError("SECRET_MISCONFIGURED", "AUTH_BASE_URL is not a valid absolute URL.");
   }
   verifyUrl.searchParams.set("token", args.token);
+  const next = safeNextPath(args.next);
+  if (next !== "/play") {
+    verifyUrl.searchParams.set("next", next);
+  }
 
   if ((args.nodeEnv ?? process.env.NODE_ENV) === "production") {
     const hostname = verifyUrl.hostname.toLowerCase();
@@ -94,6 +101,7 @@ export async function requestMagicLink(
   const magicLinkUrl = buildMagicLinkVerifyUrl({
     token,
     verifyBaseUrl: deps.verifyBaseUrl,
+    next: args.next,
   });
 
   const emailRate = await consumeRateLimit(

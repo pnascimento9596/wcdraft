@@ -29,9 +29,13 @@ vi.mock("@/lib/auth/handler-helpers", async (importOriginal) => {
   };
 });
 
+import { DELETE as accountDelete } from "@/app/api/account/route";
+import { PUT as accountPasswordPut } from "@/app/api/account/password/route";
+import { GET as accountRunsGet } from "@/app/api/account/runs/route";
 import { GET as authConfigGet } from "@/app/api/auth/config/route";
 import { GET as csrfGet } from "@/app/api/auth/csrf/route";
 import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
+import { POST as passwordLoginPost } from "@/app/api/auth/password-login/route";
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
 import { POST as cspReportPost } from "@/app/api/csp-report/route";
@@ -46,6 +50,7 @@ import { LogEmailSender } from "@/lib/auth/email";
 import { createSession, SESSION_COOKIE_NAME } from "@/lib/auth/sessions";
 import { allowAllRunOgSignRateLimiter } from "../../game/run-og-sign-rate-limiter-db";
 import { testCookieSecret, setupTestDb } from "../../auth/__tests__/_test-db";
+import { hashPassword } from "../../auth/passwords";
 import { handleLeaderboardBoardGet, handleLeaderboardMeGet } from "../board-route";
 import { handleLeaderboardLineupGet, handleLeaderboardLineupPost } from "../lineup-route";
 import { handleRankedAttemptPost } from "../ranked-attempt-route";
@@ -60,14 +65,17 @@ afterAll(async () => pg.close());
 const NOW = Date.parse("2026-06-12T12:00:00.000Z");
 const COOKIE_SECRET = testCookieSecret("l4-public-payload-sweep");
 const PRIVATE_EMAIL = "private-route-sweep@example.com";
+const OTHER_PRIVATE_EMAIL = "other-route-sweep@example.com";
 const MAGIC_EMAIL = "magic-route-sweep@example.com";
 const SEASON = "season-route-sweep";
 const API_ROOT = fileURLToPath(new URL("../../../app/api", import.meta.url));
 const ROUTE_EXPORT_RE =
   /\bexport\s+(?:(?:async\s+)?function|const)\s+(GET|POST|PUT|DELETE|PATCH)\b/g;
 const PUBLIC_API_METHODS = [
+  "DELETE /api/account",
   "DELETE /api/auth/session",
   "DELETE /api/runs/[id]",
+  "GET /api/account/runs",
   "GET /api/auth/config",
   "GET /api/auth/csrf",
   "GET /api/auth/session",
@@ -80,6 +88,7 @@ const PUBLIC_API_METHODS = [
   "GET /api/runs",
   "GET /api/runs/[id]",
   "POST /api/auth/magic-link",
+  "POST /api/auth/password-login",
   "POST /api/auth/verify",
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
@@ -88,9 +97,11 @@ const PUBLIC_API_METHODS = [
   "POST /api/ranked/attempt",
   "POST /api/runs",
   "POST /api/runs/claim",
+  "PUT /api/account/password",
   "PUT /api/profile",
 ] as const;
 type PublicApiMethod = (typeof PUBLIC_API_METHODS)[number];
+const SELF_EMAIL_ALLOWED_ROUTES = new Set<PublicApiMethod>(["GET /api/account/runs"]);
 interface CapturedResponse {
   readonly route: PublicApiMethod;
   readonly label: string;
@@ -166,8 +177,16 @@ async function payloadOf(res: Response): Promise<string> {
 
 function expectNoEmail(label: string, payload: string): void {
   expect(payload, label).not.toContain(PRIVATE_EMAIL);
+  expect(payload, label).not.toContain(OTHER_PRIVATE_EMAIL);
   expect(payload, label).not.toContain(MAGIC_EMAIL);
   expect(payload, label).not.toContain('"email"');
+}
+
+function expectOnlyCallerEmail(label: string, payload: string): void {
+  expect(payload, label).toContain(PRIVATE_EMAIL);
+  expect(payload, label).toContain('"email"');
+  expect(payload, label).not.toContain(OTHER_PRIVATE_EMAIL);
+  expect(payload, label).not.toContain(MAGIC_EMAIL);
 }
 
 function routeCapture(
@@ -208,8 +227,13 @@ describe("public route payload email sweep", () => {
 
     const [user] = await db
       .insert(users)
-      .values({ email: PRIVATE_EMAIL, username: "route_user" })
+      .values({
+        email: PRIVATE_EMAIL,
+        username: "route_user",
+        passwordHash: await hashPassword("Route-Secure-42!"),
+      })
       .returning();
+    const [otherUser] = await db.insert(users).values({ email: OTHER_PRIVATE_EMAIL }).returning();
     const session = await createSession({ userId: user!.id }, runtime.deps!);
     const authHeaders = signedHeaders(session.cookieValue, session.session.csrfSecret);
     const verifySession = await createSession({ userId: null }, runtime.deps!);
@@ -221,6 +245,16 @@ describe("public route payload email sweep", () => {
     const signoutHeaders = signedHeaders(
       signoutSession.cookieValue,
       signoutSession.session.csrfSecret,
+    );
+    const passwordLoginSession = await createSession({ userId: null }, runtime.deps!);
+    const passwordLoginHeaders = signedHeaders(
+      passwordLoginSession.cookieValue,
+      passwordLoginSession.session.csrfSecret,
+    );
+    const deleteSessionForAccount = await createSession({ userId: otherUser!.id }, runtime.deps!);
+    const deleteAccountHeaders = signedHeaders(
+      deleteSessionForAccount.cookieValue,
+      deleteSessionForAccount.session.csrfSecret,
     );
 
     const [accountRun] = await db
@@ -244,6 +278,25 @@ describe("public route payload email sweep", () => {
         createdAt: new Date(NOW - 60_000),
       })
       .returning();
+
+    await db.insert(savedRuns).values({
+      ownerUserId: otherUser!.id,
+      sessionId: null,
+      token: "t1.other-account-route-sweep",
+      versionAnchors: { dataset_version: "route-sweep" },
+      runId: "run-other-route-sweep",
+      parentSeed: "seed-other-route-sweep",
+      summary: {
+        team_name: "Other Private XI",
+        display_record: "0-0",
+        formation_name: "4-3-3",
+        key_picks: [],
+        is_champion: false,
+        seed: "seed-other-route-sweep",
+      },
+      claimState: "claimed",
+      createdAt: new Date(NOW - 45_000),
+    });
 
     await db.insert(savedRuns).values({
       ownerUserId: null,
@@ -480,6 +533,12 @@ describe("public route payload email sweep", () => {
     captures.push(
       routeCapture("GET /api/runs", await runsGet(req("/api/runs", { headers: authHeaders }))),
     );
+    captures.push(
+      routeCapture(
+        "GET /api/account/runs",
+        await accountRunsGet(req("/api/account/runs?limit=25", { headers: authHeaders })),
+      ),
+    );
 
     const saveRunRes = await runsPost(
       req("/api/runs", {
@@ -529,6 +588,41 @@ describe("public route payload email sweep", () => {
       routeCapture(
         "POST /api/runs/claim",
         await runsClaimPost(req("/api/runs/claim", { method: "POST", headers: authHeaders })),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "PUT /api/account/password",
+        await accountPasswordPut(
+          req("/api/account/password", {
+            method: "PUT",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({
+              currentPassword: "Route-Secure-42!",
+              newPassword: "Route-Secure-43!",
+            }),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/password-login",
+        await passwordLoginPost(
+          req("/api/auth/password-login", {
+            method: "POST",
+            headers: {
+              ...passwordLoginHeaders,
+              "content-type": "application/json",
+              "x-forwarded-for": "127.0.0.2",
+            },
+            body: JSON.stringify({
+              email: PRIVATE_EMAIL,
+              password: "Route-Secure-43!",
+              next: "/account",
+            }),
+          }),
+        ),
       ),
     );
 
@@ -682,13 +776,30 @@ describe("public route payload email sweep", () => {
         ),
       ),
     );
+    captures.push(
+      routeCapture(
+        "DELETE /api/account",
+        await accountDelete(
+          req("/api/account", {
+            method: "DELETE",
+            headers: { ...deleteAccountHeaders, "content-type": "application/json" },
+            body: JSON.stringify({ confirm: "delete my account" }),
+          }),
+        ),
+      ),
+    );
 
     const coveredRoutes = Array.from(new Set(captures.map((capture) => capture.route))).sort();
     expect(coveredRoutes).toEqual(expectedPublicApiMethods());
 
-    for (const { label, res, statusLessThan } of captures) {
+    for (const { route, label, res, statusLessThan } of captures) {
       expect(res.status, label).toBeLessThan(statusLessThan);
-      expectNoEmail(label, await payloadOf(res));
+      const payload = await payloadOf(res);
+      if (SELF_EMAIL_ALLOWED_ROUTES.has(route)) {
+        expectOnlyCallerEmail(label, payload);
+      } else {
+        expectNoEmail(label, payload);
+      }
     }
 
     const classicPayload = await payloadOf(

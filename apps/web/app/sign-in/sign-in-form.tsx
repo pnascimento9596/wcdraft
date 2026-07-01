@@ -15,19 +15,26 @@
 //   - Rate-limited responses (429) surface as "give us a minute".
 //   - Errors keep the email in the input so the user can retry.
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { postJson, ensureCsrfToken } from "@/lib/auth/client";
 
 type State =
   | { kind: "idle" }
   | { kind: "submitting" }
-  | { kind: "sent"; email: string }
+  | { kind: "password-submitting" }
+  | { kind: "sent"; email: string; purpose: "signin" | "reset" }
   | { kind: "error"; message: string };
 
 export function SignInForm(): React.ReactElement {
   const emailId = useId();
+  const passwordId = useId();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? "/play";
 
   // Eagerly bootstrap the csrf cookie on mount — the first POST is then
   // already-warm so the perceived latency on "send link" is just the
@@ -38,9 +45,8 @@ export function SignInForm(): React.ReactElement {
     });
   }, []);
 
-  const submit = useCallback(
-    async (evt: React.FormEvent<HTMLFormElement>) => {
-      evt.preventDefault();
+  const sendLink = useCallback(
+    async (purpose: "signin" | "reset") => {
       const trimmed = email.trim();
       if (!trimmed || !trimmed.includes("@")) {
         setState({ kind: "error", message: "Enter the email you want to sign in with." });
@@ -51,7 +57,7 @@ export function SignInForm(): React.ReactElement {
       try {
         const r = await postJson<{ ok?: boolean; error?: string; message?: string }>(
           "/api/auth/magic-link",
-          { email: trimmed },
+          { email: trimmed, next: purpose === "reset" ? "/account" : next },
         );
         if (r.status === 429) {
           setState({
@@ -67,7 +73,7 @@ export function SignInForm(): React.ReactElement {
           });
           return;
         }
-        setState({ kind: "sent", email: trimmed });
+        setState({ kind: "sent", email: trimmed, purpose });
       } catch {
         setState({
           kind: "error",
@@ -75,13 +81,56 @@ export function SignInForm(): React.ReactElement {
         });
       }
     },
-    [email],
+    [email, next],
+  );
+
+  const submitLink = useCallback(
+    async (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
+      await sendLink("signin");
+    },
+    [sendLink],
+  );
+
+  const submitPassword = useCallback(
+    async (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.preventDefault();
+      const trimmed = email.trim();
+      if (!trimmed || !trimmed.includes("@") || password.length === 0) {
+        setState({ kind: "error", message: "Enter your email and password." });
+        return;
+      }
+      setState({ kind: "password-submitting" });
+      try {
+        const r = await postJson<{ ok?: boolean; redirectTo?: string; message?: string }>(
+          "/api/auth/password-login",
+          { email: trimmed, password, next },
+        );
+        if (r.status === 429) {
+          setState({ kind: "error", message: "Too many password attempts. Wait and try again." });
+          return;
+        }
+        if (!r.ok) {
+          setState({
+            kind: "error",
+            message: "Email or password is incorrect. Magic link still works.",
+          });
+          return;
+        }
+        router.push(r.data?.redirectTo ?? "/play");
+        router.refresh();
+      } catch {
+        setState({ kind: "error", message: "Network hiccup. Try again." });
+      }
+    },
+    [email, next, password, router],
   );
 
   if (state.kind === "sent") {
     return (
       <CheckYourEmail
         email={state.email}
+        purpose={state.purpose}
         onChange={() => {
           setState({ kind: "idle" });
           setTimeout(() => inputRef.current?.focus(), 0);
@@ -91,43 +140,73 @@ export function SignInForm(): React.ReactElement {
   }
 
   return (
-    <form
+    <div
       className="signin-form"
-      onSubmit={submit}
-      noValidate
       aria-describedby={state.kind === "error" ? "signin-error" : undefined}
     >
-      <label htmlFor={emailId} className="signin-form__label">
-        Email
-      </label>
-      <div className="signin-form__row">
-        <input
-          ref={inputRef}
-          id={emailId}
-          type="email"
-          autoComplete="email"
-          inputMode="email"
-          required
-          placeholder="you@somewhere.fm"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (state.kind === "error") setState({ kind: "idle" });
-          }}
-          className="signin-form__input"
-          aria-invalid={state.kind === "error"}
-        />
-        <button
-          type="submit"
-          className="signin-form__submit"
-          disabled={state.kind === "submitting"}
-        >
-          <span>{state.kind === "submitting" ? "Sending…" : "Send link"}</span>
-          <span className="signin-form__submit-arrow" aria-hidden="true">
-            →
-          </span>
-        </button>
+      <form className="signin-form__section" onSubmit={submitLink} noValidate>
+        <label htmlFor={emailId} className="signin-form__label">
+          Email
+        </label>
+        <div className="signin-form__row">
+          <input
+            ref={inputRef}
+            id={emailId}
+            type="email"
+            autoComplete="email"
+            inputMode="email"
+            required
+            placeholder="you@somewhere.fm"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (state.kind === "error") setState({ kind: "idle" });
+            }}
+            className="signin-form__input"
+            aria-invalid={state.kind === "error"}
+          />
+          <button
+            type="submit"
+            className="signin-form__submit"
+            disabled={state.kind === "submitting"}
+          >
+            <span>{state.kind === "submitting" ? "Sending…" : "Send link"}</span>
+            <span className="signin-form__submit-arrow" aria-hidden="true">
+              →
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <div className="signin-form__divider">
+        <span>or use a password</span>
       </div>
+
+      <form className="signin-form__section" onSubmit={submitPassword} noValidate>
+        <label htmlFor={passwordId} className="signin-form__label">
+          Password
+        </label>
+        <div className="signin-form__row">
+          <input
+            id={passwordId}
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (state.kind === "error") setState({ kind: "idle" });
+            }}
+            className="signin-form__input"
+          />
+          <button
+            type="submit"
+            className="signin-form__submit signin-form__submit--ghost"
+            disabled={state.kind === "password-submitting"}
+          >
+            <span>{state.kind === "password-submitting" ? "Signing in…" : "Sign in"}</span>
+          </button>
+        </div>
+      </form>
       {state.kind === "error" ? (
         <p id="signin-error" className="signin-form__error" role="alert">
           {state.message}
@@ -141,15 +220,20 @@ export function SignInForm(): React.ReactElement {
           .
         </p>
       )}
-    </form>
+      <button type="button" className="signin-form__forgot" onClick={() => void sendLink("reset")}>
+        Forgot password? Send a magic link
+      </button>
+    </div>
   );
 }
 
 function CheckYourEmail({
   email,
+  purpose,
   onChange,
 }: {
   email: string;
+  purpose: "signin" | "reset";
   onChange: () => void;
 }): React.ReactElement {
   return (
@@ -172,6 +256,11 @@ function CheckYourEmail({
         <strong className="signin-sent__email mono">{email}</strong>. Open it on this device to
         finish.
       </p>
+      {purpose === "reset" ? (
+        <p className="signin-sent__hint">
+          The link lands in your account. Set a new password from there.
+        </p>
+      ) : null}
       <p className="signin-sent__hint">
         The link expires in 15 minutes. Didn&rsquo;t arrive? Check spam, then{" "}
         <button type="button" onClick={onChange} className="signin-sent__again">

@@ -109,13 +109,23 @@ const rankedBindingDownSql = readFileSync(
   "utf8",
 );
 
+const accountPasswordSql = readFileSync(
+  new URL("../migrations/0010_account_password.sql", import.meta.url),
+  "utf8",
+);
+
+const accountPasswordDownSql = readFileSync(
+  new URL("../migrations/0010_account_password.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(10);
+    expect(journal.entries).toHaveLength(11);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -136,6 +146,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[8]?.idx).toBe(8);
     expect(journal.entries[9]?.tag).toBe("0009_ranked_attempt_binding");
     expect(journal.entries[9]?.idx).toBe(9);
+    expect(journal.entries[10]?.tag).toBe("0010_account_password");
+    expect(journal.entries[10]?.idx).toBe(10);
   });
 
   it.each([
@@ -367,6 +379,25 @@ describe("@wcdraft/db migrations — 0009_ranked_attempt_binding", () => {
     expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "rating_basis"/);
     expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "season_key"/);
     expect(rankedBindingDownSql).not.toMatch(/DROP TABLE/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0010_account_password", () => {
+  it("adds nullable password fields to users only", () => {
+    expect(accountPasswordSql).toMatch(/ALTER TABLE "users" ADD COLUMN "password_hash" text/);
+    expect(accountPasswordSql).toMatch(
+      /ALTER TABLE "users" ADD COLUMN "password_set_at" timestamp with time zone/,
+    );
+    expect(accountPasswordSql).not.toMatch(/NOT NULL/);
+    expect(accountPasswordSql).not.toMatch(/ALTER TABLE "sessions"/);
+    expect(accountPasswordSql).not.toMatch(/ALTER TABLE "saved_runs"/);
+    expect(accountPasswordSql).not.toMatch(/ALTER TABLE "leaderboard_entries"/);
+  });
+
+  it("down-migration drops password fields only", () => {
+    expect(accountPasswordDownSql).toMatch(/DROP COLUMN IF EXISTS "password_set_at"/);
+    expect(accountPasswordDownSql).toMatch(/DROP COLUMN IF EXISTS "password_hash"/);
+    expect(accountPasswordDownSql).not.toMatch(/DROP TABLE/);
   });
 });
 

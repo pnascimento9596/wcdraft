@@ -24,6 +24,7 @@
     "verify:club-crests-browser": "tsx scripts/verify-club-crests-browser.mts"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.0.2",
     "@wcdraft/core": "workspace:*",
     "@wcdraft/data": "workspace:*",
     "@wcdraft/db": "workspace:*",

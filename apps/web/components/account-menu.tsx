@@ -107,6 +107,7 @@ export function AccountMenu(): React.ReactElement | null {
   }
 
   const identity = session?.username ?? (session?.userId ? shortenId(session.userId) : "me");
+  const initial = identity.slice(0, 1).toUpperCase();
   return (
     <div ref={wrapRef} className="account-menu" data-open={open || undefined}>
       <button
@@ -118,16 +119,8 @@ export function AccountMenu(): React.ReactElement | null {
         aria-controls="account-menu-popover"
         onClick={toggleOpen}
       >
-        <span className="account-chip__glyph" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none">
-            <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.5" />
-            <path
-              d="M4.5 20c1.5-3.5 4.4-5 7.5-5s6 1.5 7.5 5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+        <span className="account-chip__initial" aria-hidden="true">
+          {initial}
         </span>
         <span className="account-chip__label">Account</span>
       </button>
@@ -146,12 +139,20 @@ export function AccountMenu(): React.ReactElement | null {
             <span className="account-pop__id mono">{identity}</span>
           </div>
           <Link
+            href="/account"
+            role="menuitem"
+            className="account-pop__link"
+            onClick={() => setOpen(false)}
+          >
+            Account hub
+          </Link>
+          <Link
             href="/play/history"
             role="menuitem"
             className="account-pop__link"
             onClick={() => setOpen(false)}
           >
-            View history
+            Recent runs
           </Link>
           <Link
             href="/settings"

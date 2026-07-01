@@ -4,6 +4,26 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Accounts/auth hub lane:
+2026-06-30 · PR #193 branch `ws-fix/accounts-auth-hub`, originally based on
+`995b11a70054278ab716a7667486eb91bafcbe6a`, rebased onto `origin/main`
+`11ef02afd754c553533858d3efd61f2ed7554b85`. Scope: optional password login
+on top of existing magic links, `/account` hub, account-owned runs/stats,
+password set/change/delete-account flows, deterministic account-stat clock
+injection for tests, shared session issuance, and nullable `users.password_hash`
+/ `users.password_set_at` migration `0010`. The checked-in RED contract now has
+no human approval gate; Red safety is fresh-context
+implementer/reviewer separation, machine gates, SHA-pinned merge, deploy
+observation, live verification, and auto-revert on failed live checks. Current
+local validation passed: DB tests (3 files / 106 tests), focused auth/account
+tests (6 files / 35 tests), Neon branch up/down plus pre-migration magic-link-only
+auth proof, root typecheck (8/8), root lint (5/5), root test (8/8; core 384,
+db 106, data 84 passed / 7 skipped, marketing 67, web 831 passed / 1 skipped
+plus `game-flow-playwright`), root build (4/4), core/data/web goldens, and mobile
+Playwright/axe proof at 390x844 and 360x800. The `/account` destructive action
+contrast is fixed against existing tokens and measures 5.11:1 light / 6.19:1
+dark. Report: `docs/reports/accounts-auth-2026-06-30.md`.
+
 Last measured for merit-v4.6 curve-inverted owner overrides:
 2026-06-28 · local RED gates run on branch
 `ws-merit/v45-curve-inversion-20260628` before merge/ship.
@@ -23,7 +43,7 @@ data golden/data+integration/canary/heavy realism, serial Turbo test
 (`pnpm exec turbo run test --concurrency=1`, 8/8 tasks), root typecheck (8/8),
 root lint (5/5), root build (4/4), and `git diff --check`. Report:
 `docs/reports/spin-agency-choose-three-2026-06-30.md`. Not shipped until the RED
-independent reviewer, human approval, merge/deploy, and live production readback
+independent reviewer PASS, SHA-pinned merge/deploy, and live production readback
 gates complete.
 
 Real club crests lane:
@@ -116,9 +136,9 @@ marketing 67, web 818 passed / 1 skipped plus `game-flow-playwright`), and root
 build (4/4). Report:
 `docs/reports/engine-season-manager-attrition-2026-06-30.md`. Fresh-context
 independent review passed with no blockers and re-executed the requested gates.
-The attached owner dispatch explicitly overrides the normal checked-in RED human
-approval gate for this season; production merge/deploy and live verification are
-post-merge operator closeout gates. Reviewer carryover: a synthetic legal-roster
+The checked-in RED contract now uses autonomous RED shipping: fresh-context
+independent review, SHA-pinned merge, deploy observation, live verification, and
+auto-revert on failed live checks. Reviewer carryover: a synthetic legal-roster
 size 4/5 edge can yield fewer than three offered player choices under the U5
 bucket filter, though a 5,000 real-pool draft probe found 85,000 player spins
 with `minRolled=3` and `short=0`.
@@ -154,7 +174,7 @@ best-of-many per identity/day, share CTA routing for the same daily teams,
 explicit active leaderboard season id (`WCDRAFT_LEADERBOARD_SEASON_ID` with
 pinned default), and rating-version stamping on accepted leaderboard rows.
 Report: `docs/reports/daily-draft-2026-06-29.md`. Not shipped until the RED
-independent reviewer, human approval, merge, deploy, and live production
+independent reviewer PASS, SHA-pinned merge/deploy, and live production
 readback gates complete.
 
 Leaderboard season/ranked-attempt lane:
@@ -646,5 +666,6 @@ web static assets.
 ## Branch / merge convention (from git history)
 
 `ws-<area>/<topic>` task branches; long-lived integration branches `engine-*`/`merit-*`
-(CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pinned with
-`--match-head-commit`.
+(CI-watched); PRs squash-merge to `main` (one commit per PR); Red merges pin the
+reviewed head with `--match-head-commit`, then require deploy observation and
+live verification on `www.wcdraft.com` with auto-revert on any failed live check.

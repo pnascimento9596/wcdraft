@@ -34,7 +34,7 @@ The implementation units are dispatch-only:
 | DC-6 | MV2-12b dual-basis materialization                               | SHIPPED by merit-v3 V6            |
 | DC-7 | selected-basis sim inputs + shared lambda validation             | Red review                        |
 | DC-8 | leaderboard config policy/schema/API/UX                          | Red review, DISPATCHED 2026-06-17 |
-| DC-9 | integration season merge and anchor/golden re-lock               | Red review + human approval       |
+| DC-9 | integration season merge and anchor/golden re-lock               | Red review + SHA-pinned merge     |
 
 ## Blockers / Decisions
 
