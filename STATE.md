@@ -9,9 +9,10 @@ Accounts/auth hub lane:
 `995b11a70054278ab716a7667486eb91bafcbe6a`, rebased onto `origin/main`
 `11ef02afd754c553533858d3efd61f2ed7554b85`. Scope: optional password login
 on top of existing magic links, `/account` hub, account-owned runs/stats,
-password set/change/delete-account flows, shared session issuance, and nullable
-`users.password_hash` / `users.password_set_at` migration `0010`. The checked-in
-RED contract now has no human approval gate; Red safety is fresh-context
+password set/change/delete-account flows, deterministic account-stat clock
+injection for tests, shared session issuance, and nullable `users.password_hash`
+/ `users.password_set_at` migration `0010`. The checked-in RED contract now has
+no human approval gate; Red safety is fresh-context
 implementer/reviewer separation, machine gates, SHA-pinned merge, deploy
 observation, live verification, and auto-revert on failed live checks. Current
 local validation passed: DB tests (3 files / 106 tests), focused auth/account

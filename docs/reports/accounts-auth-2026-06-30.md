@@ -43,6 +43,7 @@ Also updated current `STATE.md`, `docs/queue/q-002-mv2-12-candidate.md`, `docs/q
 - Added `/api/account/runs`, `/api/account/password`, `/api/account`, and `/api/auth/password-login`.
 - Aligned anonymous account API access to 401 `SESSION_INVALID` instead of 403 `ANON_FORBIDDEN`.
 - Extended saved-run summaries with account-history display metadata while preserving anonymous recent-run eviction and retaining all account-owned runs.
+- Added a deterministic clock seam to account-run stats reads so `todayBest` tests do not depend on the wall-clock date while production keeps the current UTC-day default.
 - Made `/play/history` the recent-runs shortcut and `/account` the canonical complete server-backed account history.
 - Updated the header account affordance: signed-out users get a visible sign-in CTA; signed-in users get an Account menu in desktop and mobile surfaces.
 - Fixed the mobile `/sign-in` form rows so the email/password inputs and action buttons stack at narrow widths instead of clipping horizontally.

@@ -71,6 +71,13 @@ export interface AccountRunsPage {
   };
 }
 
+export interface AccountRunsPageOptions {
+  readonly limit?: number;
+  readonly offset?: number;
+  /** Epoch milliseconds. Matches the auth-lib `now: () => number` convention. */
+  readonly now?: () => number;
+}
+
 export async function readAccountIdentity(db: Db, userId: string): Promise<AccountIdentity | null> {
   const rows = await db
     .select({
@@ -95,7 +102,7 @@ export async function readAccountIdentity(db: Db, userId: string): Promise<Accou
 export async function readAccountRunsPage(
   db: Db,
   userId: string,
-  opts: { readonly limit?: number; readonly offset?: number } = {},
+  opts: AccountRunsPageOptions = {},
 ): Promise<AccountRunsPage> {
   const identity = await readAccountIdentity(db, userId);
   if (!identity) {
@@ -130,7 +137,7 @@ export async function readAccountRunsPage(
   return {
     identity,
     runs: rows.map((row) => toAccountRun(row, postedTokens.has(row.token))),
-    stats: buildStats(allRows),
+    stats: buildStats(allRows, opts.now ? utcDateString(opts.now()) : utcDateString()),
     page: {
       limit,
       offset,
@@ -203,7 +210,7 @@ function toAccountRun(row: SavedRun, postedToLeaderboard: boolean): AccountRun {
   };
 }
 
-function buildStats(rows: SavedRun[]): AccountStats {
+function buildStats(rows: SavedRun[], today: string): AccountStats {
   const summaries = rows
     .map((row) => (isSavedRunSummary(row.summary) ? row.summary : null))
     .filter((summary): summary is SavedRunSummary => summary !== null);
@@ -225,7 +232,6 @@ function buildStats(rows: SavedRun[]): AccountStats {
       .map((summary) => summary.challenge_date)
       .filter((date): date is string => typeof date === "string"),
   );
-  const today = utcDateString();
   const todayScores = summaries
     .filter((summary) => summary.challenge_date === today)
     .map((summary) => numberOrNull(summary.score))

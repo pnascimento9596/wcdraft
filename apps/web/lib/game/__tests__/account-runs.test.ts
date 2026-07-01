@@ -91,7 +91,10 @@ describe("account runs", () => {
       scoreBreakdown: [],
     });
 
-    const page = await readAccountRunsPage(env.db, a, { limit: 25 });
+    const page = await readAccountRunsPage(env.db, a, {
+      limit: 25,
+      now: () => Date.UTC(2026, 5, 30, 3, 0, 0),
+    });
     expect(page.identity.email).toBe("a@example.com");
     expect(page.runs).toHaveLength(1);
     expect(page.runs[0]).toMatchObject({
