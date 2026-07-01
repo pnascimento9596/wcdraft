@@ -52,6 +52,23 @@ describe("resolveScorerName — honest-state fallback", () => {
     expect(resolveScorerName(gd, "player-2", "card-2")).toBe("Full Name Here");
   });
 
+  it("scrubs source sentinels before falling back across scorer name fields", () => {
+    const gd = makeStub([
+      {
+        card_id: "card-rodri",
+        common_name: "not applicable",
+        full_name: "not applicable Rodri",
+      },
+      {
+        card_id: "card-didi",
+        common_name: "   ",
+        full_name: "not applicable Didi",
+      },
+    ]);
+    expect(resolveScorerName(gd, "rodri", "card-rodri")).toBe("Rodri");
+    expect(resolveScorerName(gd, "didi", "card-didi")).toBe("Didi");
+  });
+
   it("returns '—' when card_id is null (no resolution possible)", () => {
     const gd = makeStub([]);
     expect(resolveScorerName(gd, "player-x", null)).toBe("—");

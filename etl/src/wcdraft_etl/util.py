@@ -22,6 +22,21 @@ def s_or_none(v) -> str | None:
     return t or None
 
 
+_NAME_PART_SENTINELS = {"not applicable"}
+
+
+def name_part_or_none(v) -> str | None:
+    """Name component coercion for audited upstream sentinels.
+
+    This is deliberately narrower than ``s_or_none``: tokens such as "Na" can be
+    real names, so only source-proven missing-name sentinels are dropped.
+    """
+    t = s_or_none(v)
+    if t is None:
+        return None
+    return None if t.casefold() in _NAME_PART_SENTINELS else t
+
+
 def int_or_none(v) -> int | None:
     """Parse an int; blank or unparseable -> None (never a silent 0)."""
     t = s_or_none(v)

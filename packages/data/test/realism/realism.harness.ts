@@ -124,6 +124,7 @@ export interface RealismMeasurement {
   koEt: number;
   koShootout: number;
   qualifyingRuns: number;
+  scores: number[];
 }
 
 /**
@@ -151,6 +152,7 @@ function emptyMeasurement(): RealismMeasurement {
     koEt: 0,
     koShootout: 0,
     qualifyingRuns: 0,
+    scores: [],
   };
 }
 
@@ -277,7 +279,8 @@ export function runRealismEnsembleForPolicy(
       },
       ruleset_version: RUNTIME_DATA_MANIFEST.ruleset_version,
     });
-    const { matches, group_stage } = runTournamentFull(draft, sb.scenario, parentSeed, world);
+    const { run, matches, group_stage } = runTournamentFull(draft, sb.scenario, parentSeed, world);
+    m.scores.push(run.score);
     if (group_stage.user_qualified) m.qualifyingRuns++;
     for (const match of matches) {
       m.matches++;
@@ -333,6 +336,41 @@ export interface Norm {
   band: number;
   delta: number;
   inBand: boolean;
+}
+
+export interface ScorePopulationSummary {
+  runs: number;
+  qualifyingRuns: number;
+  mean: number;
+  median: number;
+  p95: number;
+  min: number;
+  max: number;
+}
+
+function quantileNearestRank(sorted: readonly number[], q: number): number {
+  if (sorted.length === 0) return 0;
+  const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(q * sorted.length) - 1));
+  return sorted[index]!;
+}
+
+export function summarizeScorePopulation(m: RealismMeasurement): ScorePopulationSummary {
+  const sorted = [...m.scores].sort((a, b) => a - b);
+  if (sorted.length === 0) {
+    return { runs: 0, qualifyingRuns: 0, mean: 0, median: 0, p95: 0, min: 0, max: 0 };
+  }
+  const sum = sorted.reduce((acc, score) => acc + score, 0);
+  const mid = Math.floor(sorted.length / 2);
+  const median = sorted.length % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+  return {
+    runs: sorted.length,
+    qualifyingRuns: m.qualifyingRuns,
+    mean: sum / sorted.length,
+    median,
+    p95: quantileNearestRank(sorted, 0.95),
+    min: sorted[0]!,
+    max: sorted[sorted.length - 1]!,
+  };
 }
 
 /** Wilson-style ±2·sqrt(p(1-p)/N) band centered on TARGET (the null hypothesis). */

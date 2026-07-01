@@ -380,6 +380,15 @@ describe("dynamic run OG model and image", () => {
     expect(model.reveal).toBeNull();
   });
 
+  it("refuses trusted-summary reconstruction when token anchors are version-skewed", () => {
+    const historicalToken = previousVersionTokenFromCurrentToken(encodeRunToken(complete()));
+    const decoded = decodeV3(historicalToken);
+    const summary = buildRunTokenOgSummary(complete())!;
+    expect(() => buildRunOgModelFromTrustedSummary(gameData, decoded, summary)).toThrow(
+      /version anchors/u,
+    );
+  });
+
   it("threads the server re-derived narrative into the signed image model", () => {
     const completed = complete();
     const token = encodeRunToken(completed);

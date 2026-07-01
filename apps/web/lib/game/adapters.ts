@@ -25,6 +25,7 @@ import type {
 
 import { MissingRecordError } from "./errors";
 import type { GameDataIndexes } from "./data";
+import { displayNameFromNames, fullDisplayName } from "./display-names";
 import type {
   CandidateStatView,
   CardRatingView,
@@ -180,9 +181,8 @@ export function playerCardView(
     // q-005 — colliding short names (e.g. Cesare vs Paolo "Maldini") carry a
     // pre-computed disambiguated override; everyone else keeps the short form.
     name:
-      idx.displayNameByCardId.get(c.card_id) ??
-      (c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name),
-    full_name: c.full_name,
+      idx.displayNameByCardId.get(c.card_id) ?? displayNameFromNames(c.common_name, c.full_name),
+    full_name: fullDisplayName(c.full_name),
     nation_id: c.nation_id,
     nation_name: nation.canonical_name,
     nation_code: nationCode(c.nation_id, nation),
@@ -227,8 +227,8 @@ export function managerCardView(
     manager_id: m.manager_id,
     tournament_id: m.tournament_id,
     year,
-    name: m.common_name && m.common_name.trim().length > 0 ? m.common_name : m.full_name,
-    full_name: m.full_name,
+    name: displayNameFromNames(m.common_name, m.full_name),
+    full_name: fullDisplayName(m.full_name),
     nation_id: m.nation_id,
     nation_name: nation.canonical_name,
     nation_code: nationCode(m.nation_id, nation),
@@ -237,8 +237,8 @@ export function managerCardView(
     rating_available: false,
     traits: managerTraitsFor({
       manager_id: m.manager_id,
-      full_name: m.full_name,
-      common_name: m.common_name,
+      full_name: fullDisplayName(m.full_name),
+      common_name: displayNameFromNames(m.common_name, m.full_name),
     }),
   };
 }

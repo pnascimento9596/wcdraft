@@ -206,11 +206,29 @@ function parseChallenge(
     : null;
 }
 
+interface AcceptedPreflight {
+  status: "ok";
+  token: RunTokenBody;
+  targetDraftMode: SubmissionDraftMode;
+  config: ReturnType<typeof tokenDraftConfig>;
+  challenge:
+    | { kind: typeof SEASON_CHALLENGE_KIND; date: null }
+    | { kind: typeof DAILY_CHALLENGE_KIND; date: string };
+  displayAlias: string | null;
+}
+
+function tokenDailyChallenge(token: RunTokenBody) {
+  return token.v === 3 || token.v === 4 ? token.ch : undefined;
+}
+
 /**
- * Validate one leaderboard submission. Pure and deterministic over
- * (`body`, `data`); strictly cheapest-rejection-first.
+ * Cheap preflight only: body shape, token decode/anchors/config, daily metadata,
+ * and alias validation. It deliberately does NOT replay picks or re-sim.
  */
-export function validateSubmission(body: SubmissionBody, data: ValidationData): SubmitVerdict {
+function submissionPreflight(
+  body: SubmissionBody,
+  data: Pick<ValidationData, "gameData">,
+): AcceptedPreflight | RejectedSubmission {
   // 1 — shape + size. Size BEFORE decode so an oversize token never reaches
   // base64/JSON work (decodeRunToken would null it, but with the wrong code).
   if (typeof body.token !== "string") {
@@ -259,7 +277,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     );
   }
 
-  const tokenChallenge = token.v === 3 ? token.ch : undefined;
+  const tokenChallenge = tokenDailyChallenge(token);
   if (challenge.kind === DAILY_CHALLENGE_KIND) {
     if (!tokenChallenge || tokenChallenge.k !== DAILY_CHALLENGE_KIND) {
       return rejected("INVALID_BODY", "daily submissions require daily token metadata");
@@ -267,7 +285,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     if (tokenChallenge.d !== challenge.date || tokenChallenge.s !== token.ps) {
       return rejected("INVALID_BODY", "daily token date/seed does not match the submission");
     }
-    if (token.ps !== deriveDailySeed(challenge.date)) {
+    if (tokenChallenge.s !== deriveDailySeed(tokenChallenge.d)) {
       return rejected("INVALID_BODY", "daily token seed does not match the UTC date");
     }
     if (
@@ -285,8 +303,7 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     return rejected("INVALID_BODY", "daily tokens must post to the daily board");
   }
 
-  // 5 — optional display alias (4 and 6 are route seams; both are O(1) DB/header work
-  // and MUST run before the CPU-bound steps below — see module header).
+  // 5 — optional display alias.
   const rawAlias = body.display_alias ?? body.display_name ?? null;
   let displayAlias: string | null = null;
   if (rawAlias !== null && rawAlias !== "") {
@@ -301,6 +318,26 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
     }
     displayAlias = alias.name;
   }
+
+  return { status: "ok", token, targetDraftMode, config, challenge, displayAlias };
+}
+
+export function validateSubmissionCheap(
+  body: SubmissionBody,
+  data: Pick<ValidationData, "gameData">,
+): RejectedSubmission | null {
+  const preflight = submissionPreflight(body, data);
+  return preflight.status === "rejected" ? preflight : null;
+}
+
+/**
+ * Validate one leaderboard submission. Pure and deterministic over
+ * (`body`, `data`); strictly cheapest-rejection-first.
+ */
+export function validateSubmission(body: SubmissionBody, data: ValidationData): SubmitVerdict {
+  const preflight = submissionPreflight(body, data);
+  if (preflight.status === "rejected") return preflight;
+  const { token, targetDraftMode, config, challenge, displayAlias } = preflight;
 
   // 7 — THE KEYSTONE: full replay re-derives every spin's choices from the
   // token's parent_seed; any choice index outside rolled_card_ids throws.

@@ -66,10 +66,12 @@ import {
   DEFAULT_SEED_PREFIX,
   REALISM_NORMS,
   runRealismEnsembleForPolicy,
+  summarizeScorePopulation,
   summarizeRealism,
   type DraftPolicyName,
   type PolicyTelemetry,
   type RealismMeasurement,
+  type ScorePopulationSummary,
 } from "./realism.harness.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -105,6 +107,7 @@ interface AsymRealismGolden {
     shootout_pct: { center_policy: DraftPolicyName; half_width: number };
   };
   goals_per_game_lower_floor: { lower_bound: number };
+  score_population: ScorePopulationSummary & { _doc: string; policy: DraftPolicyName };
   wilson_target_for_ko_metrics: { target_half_width_pp: number };
 }
 
@@ -289,6 +292,22 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
         `goals/game ${obs.toFixed(3)} below lower floor ${floor.toFixed(3)} (no upper cap is enforced — high goals/game are legal: total volume tracks the underdog gap)`,
       ).toBeGreaterThanOrEqual(floor);
     }
+  });
+
+  it("locks the strategicAutoDraft run-score population alongside qualifying%", () => {
+    const r = results.get(GOLDEN.score_population.policy);
+    if (r === undefined) return;
+    if (N_RUNS !== GOLDEN.ensemble.N_runs) return;
+    if (SEED_PREFIX !== GOLDEN.ensemble.seed_prefix) return;
+    expect(summarizeScorePopulation(r.measurement)).toEqual({
+      runs: GOLDEN.score_population.runs,
+      qualifyingRuns: GOLDEN.score_population.qualifyingRuns,
+      mean: GOLDEN.score_population.mean,
+      median: GOLDEN.score_population.median,
+      p95: GOLDEN.score_population.p95,
+      min: GOLDEN.score_population.min,
+      max: GOLDEN.score_population.max,
+    });
   });
 
   it("greedyOverallAutoDraft lands OUTSIDE every SHAPE band (CI guard — competent ≠ max-overall)", () => {

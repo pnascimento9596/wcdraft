@@ -41,7 +41,7 @@ import {
 
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
-import { isDailyChallengeDate, type DailyChallenge } from "./daily";
+import { deriveDailySeed, isDailyChallengeDate, type DailyChallenge } from "./daily";
 import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
@@ -838,7 +838,13 @@ function parseRunChallenge(
   if (value.kind !== "daily") return "invalid";
   const date = boundedString(value.date, 10);
   const seed = boundedString(value.seed, MAX_PARENT_SEED_CHARS);
-  if (date === null || seed === null || !isDailyChallengeDate(date) || seed !== parentSeed) {
+  if (
+    date === null ||
+    seed === null ||
+    !isDailyChallengeDate(date) ||
+    seed !== parentSeed ||
+    seed !== deriveDailySeed(date)
+  ) {
     return "invalid";
   }
   return { kind: "daily", date, seed };

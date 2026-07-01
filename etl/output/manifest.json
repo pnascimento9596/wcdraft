@@ -8,6 +8,7 @@
     "appearances",
     "shirt"
   ],
+  "dataset_revision_date": "2026-07-01",
   "historical_club_backfill": {
     "attribution": "Historical club-at-tournament names, caps, international goals, and club-nation codes for men's World Cup player cards are factual text parsed from English Wikipedia squad-page revisions, used under CC-BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). One revision is pinned per tournament in etl/sources/wikipedia_historical_squads/fetch_manifest.json; raw wikitext is committed under etl/sources/wikipedia_<year>/. Modifications by wcdraft: parsed only factual squad-table fields, joined them to canonical player-tournament cards by deterministic entity-resolution keys, and preserved null where the source or join is absent/ambiguous. No crests, badges, kits, or proprietary ratings are ingested.",
     "cards_populated": 10957,
@@ -28,7 +29,8 @@
       "manager birth_date (no source column)"
     ],
     "null_sentinels": [
-      "shirt_number 0 -> null (pre-1954)"
+      "shirt_number 0 -> null (pre-1954)",
+      "given_name 'not applicable' -> null"
     ]
   },
   "source": {

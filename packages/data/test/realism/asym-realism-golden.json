@@ -143,6 +143,17 @@
     "_doc": "One-sided LOWER floor. No upper cap because total goal volume legitimately rises with the strategic-underdog gap and there is no real-world ceiling. Floor = strategicAutoDraft observed minus ~2x Wilson half-width, rounded down to keep honest residual cushion.",
     "lower_bound": 2.61
   },
+  "score_population": {
+    "_doc": "StrategicAutoDraft score distribution measured over the same locked N and seed_prefix as the asymmetric realism gate. Median and p95 use nearest-rank quantiles over sorted run.score values.",
+    "policy": "strategicAutoDraft",
+    "runs": 2000,
+    "qualifyingRuns": 1329,
+    "mean": 14.4785,
+    "median": 9,
+    "p95": 62,
+    "min": -24,
+    "max": 126
+  },
   "wilson_target_for_ko_metrics": {
     "_doc": "95% Wilson half-width at N=2000 for KO-only metrics (KO->ET, shootout) is the chosen-N tooth criterion. manager-attrition remeasures the strategicAutoDraft observed half-widths after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread.",
     "target_half_width_pp": 4,

@@ -273,7 +273,7 @@ channel materialization.
 
 Current repo runtime anchor:
 `runtime-data-2.9.0` / `engine-2026.06.30-manager-attrition` / `wc-perf-6.6.0` /
-`proj-career-5.6.0`, dataset `2026-06-04`, ruleset `ruleset-2026.06.04`, legend
+`proj-career-5.6.0`, dataset `2026-07-01`, ruleset `ruleset-2026.06.04`, legend
 census `295`, player-card count `12,219`, manager-card count `501`, teams `48`,
 knockout slots `62`. Explicit active leaderboard season id:
 `season-2026-manager-attrition`.
@@ -309,15 +309,15 @@ current pin on overlap):
   `manual-ratings-v4.4-summary.json`.
 
 Data/bundle anchors:
-`draft-pool.compact.json` raw bytes `130,553,412` with sha256
-`4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0`;
-draft-pool manifest Brotli bucket `2,225,408` (copied `.br` bytes `2,225,295`);
-manifest sha256 `44965216b46ef63b85584d2b350629a430d29b643d58a16d67112f4d01d2c919`.
+`draft-pool.compact.json` raw bytes `130,545,042` with sha256
+`461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a`;
+draft-pool manifest Brotli bucket `2,224,896` (copied `.br` bytes `2,224,859`);
+manifest sha256 `2d475e8f0224e320cb51ce870280dc0016d51456cd96ce3ecddad8d49d218fd4`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
 `7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398`.
 Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.9.0/`, with
-`runtime-data-2.8.0` retained for N+1 propagation; older retained versions remain
-under `apps/web/public/data/wcdraft/` during local web asset copy.
+`runtime-data-2.3.0` through `runtime-data-2.6.0` retained under
+`apps/web/public/data/wcdraft/` during local web asset copy.
 
 The named canonical doc files (`Build State`, `Architecture`, `Roadmap`,
 `Surface Inventory`) are not present in this repo. The owner-filed doc-set
@@ -487,7 +487,7 @@ broken-pipe MCP transport error.
 | Field                          | Value                                                                                                                                     |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | schema_version                 | runtime-data-2.9.0                                                                                                                        |
-| dataset_version                | 2026-06-04                                                                                                                                |
+| dataset_version                | 2026-07-01                                                                                                                                |
 | ruleset_version                | ruleset-2026.06.04                                                                                                                        |
 | engine_version                 | engine-2026.06.30-manager-attrition                                                                                                       |
 | rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
@@ -500,10 +500,10 @@ broken-pipe MCP transport error.
 | Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
 | career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
 | explicit leaderboard season id | season-2026-manager-attrition                                                                                                             |
-| compact brotli total           | 2,231,808 measured bytes                                                                                                                  |
-| served draft-pool br artifact  | 2,225,295 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,225,408`; decompressed sha `4daaf2…` |
-| compact sha256                 | manifest `688a9d15…` · draft `4daaf2…` · scenario `7846fa3a…`                                                                             |
-| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `4daaf2…` / 130,553,412 bytes                                  |
+| compact brotli total           | 2,231,296 measured bytes                                                                                                                  |
+| served draft-pool br artifact  | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,224,896`; decompressed sha `461601…` |
+| compact sha256                 | manifest `2d475e8f…` · draft `461601…` · scenario `7846fa3a…`                                                                             |
+| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes                                  |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

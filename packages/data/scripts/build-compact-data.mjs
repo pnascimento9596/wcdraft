@@ -25,8 +25,8 @@
 //
 // The default `--out-dir` is `packages/data/src/generated/`; the default
 // `--etl-dir` is `etl/output/`. The default `--dataset-version` is read from
-// the ETL `manifest.json` if present, else falls back to a parameter the
-// caller must pass — never derived from wall-clock time.
+// the ETL `manifest.json` dataset revision when present, else from the
+// most-volatile source snapshot date — never derived from wall-clock time.
 
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -1026,7 +1026,8 @@ async function build() {
   validateScenario2026Bundle(scenario2026Bundle);
 
   // ── Attribution ──────────────────────────────────────────────────────────
-  const datasetVersion = cliDatasetVersion ?? deriveDatasetVersion(manifest2026);
+  const datasetVersion =
+    cliDatasetVersion ?? deriveDatasetVersion(historicalManifest, manifest2026);
   const ratingVersionHistorical = inferRatingVersion(
     mensRatings,
     RATING_VERSION_HISTORICAL_FALLBACK,
@@ -1328,11 +1329,14 @@ function inferRatingVersion(rows, fallback) {
   );
 }
 
-function deriveDatasetVersion(manifest2026) {
-  // Prefer the 2026 manifest's `retrieved_date` (date-keyed snapshot of the
-  // most-volatile source). We never derive a dataset_version from wall-clock
-  // time, and an absent source date is a contract failure rather than a silent
-  // "0" release.
+function deriveDatasetVersion(etlManifest, manifest2026) {
+  // Prefer an explicit deterministic ETL dataset revision for source-preserving
+  // canonicalization changes (for example sentinel normalization). Otherwise
+  // fall back to the 2026 manifest's retrieved_date, the most-volatile source
+  // snapshot. Never derive a dataset_version from wall-clock time.
+  if (etlManifest && typeof etlManifest.dataset_revision_date === "string") {
+    return etlManifest.dataset_revision_date;
+  }
   if (manifest2026 && typeof manifest2026.retrieved_date === "string") {
     return manifest2026.retrieved_date;
   }

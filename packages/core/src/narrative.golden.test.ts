@@ -1591,8 +1591,8 @@ describe("facts are derived from the event log — no guessing", () => {
     expect(facts.final_hero_player_id).toBe("p_fin");
   });
 
-  it("villain is the opposition player with the most goals against the user", () => {
-    expect(facts.villain_player_id).toBe("o_vil");
+  it("villain is the opposition player from the defining final match", () => {
+    expect(facts.villain_player_id).toBe("o_two");
   });
 
   it("nemesis team is the final opponent for a finalist", () => {
@@ -1634,6 +1634,61 @@ describe("facts are derived from the event log — no guessing", () => {
     const fg = deriveNarrativeFacts(rg, mg);
     expect(fg.eliminated_in_match_id).toBe("m2");
     expect(fg.nemesis_team_id).toBe("t_c");
+  });
+
+  it("binds villain and elimination spotlight players to the defining match", () => {
+    _eid = 0;
+    const earlier = match({
+      index: 0,
+      round: "G1",
+      phase: "group",
+      opp: "t_a",
+      ug: 1,
+      og: 2,
+      outcome: "L",
+      advanced: true,
+      events: [
+        oGoal("1H", 12, "o_group", { user: 0, opp: 1 }),
+        oGoal("2H", 60, "o_group", { user: 0, opp: 2 }),
+        uGoal("2H", 75, "p_str", { user: 1, opp: 2 }),
+      ],
+    });
+    const exit = match({
+      index: 2,
+      round: "R32",
+      phase: "knockout",
+      opp: "t_exit",
+      ug: 0,
+      og: 1,
+      outcome: "L",
+      advanced: false,
+      events: [oGoal("2H", 80, "o_exit", { user: 0, opp: 1 })],
+    });
+    const r = run({
+      seed: "defining-match-villain",
+      reached: "R32",
+      champion: false,
+      undefeated: false,
+      record: "1-0-2",
+      wins: 1,
+      draws: 0,
+      losses: 2,
+      eliminatedIn: "m2",
+    });
+
+    const facts = deriveNarrativeFacts(r, [earlier, exit]);
+    expect(facts.villain_player_id).toBe("o_exit");
+    const spotlight = facts.scenario_spotlights.find((s) => s.family === "elimination_heartbreak");
+    expect(spotlight?.match_id).toBe("m2");
+    expect(spotlight?.player_id).toBe("o_exit");
+    expect(sourcePlayerIds([exit]).has("o_group")).toBe(false);
+    for (const pid of [
+      spotlight?.player_id,
+      spotlight?.secondary_player_id,
+      spotlight?.tertiary_player_id,
+    ]) {
+      if (pid !== undefined && pid !== null) expect(sourcePlayerIds([exit]).has(pid)).toBe(true);
+    }
   });
 });
 
@@ -1822,7 +1877,7 @@ describe("token resolution is event-driven; labels only change display", () => {
     const tokens = resolveNarrativeTokens(r, facts);
     expect(tokens.TOP_SCORER).toBe("p_str");
     expect(tokens.FINAL_HERO).toBe("p_fin");
-    expect(tokens.VILLAIN).toBe("o_vil");
+    expect(tokens.VILLAIN).toBe("o_two");
     expect(tokens.OPPONENT).toBe("t_final");
     expect(tokens.RECORD).toBe("8-0");
     expect(tokens.KEY_MOMENT).toBe("a stirring comeback");
@@ -1832,13 +1887,13 @@ describe("token resolution is event-driven; labels only change display", () => {
     const labels: NarrativeLabels = {
       team_name: "Albiceleste XI",
       manager_name: "A. Gaffer",
-      player_names: { p_str: "Strikerton", p_fin: "Finisher", o_vil: "Villainez" },
+      player_names: { p_str: "Strikerton", p_fin: "Finisher", o_two: "Final Scorer" },
       team_names: { t_final: "Rivals FC" },
     };
     const tokens = resolveNarrativeTokens(r, facts, labels);
     expect(tokens.TOP_SCORER).toBe("Strikerton");
     expect(tokens.FINAL_HERO).toBe("Finisher");
-    expect(tokens.VILLAIN).toBe("Villainez");
+    expect(tokens.VILLAIN).toBe("Final Scorer");
     expect(tokens.OPPONENT).toBe("Rivals FC");
     expect(tokens.TEAM_NAME).toBe("Albiceleste XI");
     expect(tokens.MANAGER).toBe("A. Gaffer");
