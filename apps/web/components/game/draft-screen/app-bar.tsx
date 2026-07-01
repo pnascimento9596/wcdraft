@@ -9,6 +9,7 @@ export function DraftAppBar({
   spinNumber,
   progressPct,
   mode,
+  daily,
   ranked,
   pickSpace,
   warning,
@@ -16,12 +17,15 @@ export function DraftAppBar({
   spinNumber: number | null;
   progressPct: number;
   mode?: DraftMode;
+  daily?: boolean;
   ranked?: boolean;
   pickSpace?: string;
   warning?: string | null;
 }) {
-  const modeCue =
-    mode === undefined
+  const modeLabel = daily ? "Daily" : mode === undefined ? null : draftModeShortLabel(mode);
+  const modeCue = daily
+    ? "today's shared draft"
+    : mode === undefined
       ? null
       : mode === "open"
         ? draftModeCue(mode)
@@ -34,9 +38,9 @@ export function DraftAppBar({
         <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
         <span className={s.appBarTitle}>Draft</span>
       </div>
-      {mode ? (
-        <div className={s.appBarModeChip} aria-label={`Draft mode: ${draftModeShortLabel(mode)}`}>
-          <span>{draftModeShortLabel(mode)}</span>
+      {modeLabel ? (
+        <div className={s.appBarModeChip} aria-label={`Draft mode: ${modeLabel}`}>
+          <span>{modeLabel}</span>
           <b>{modeCue}</b>
           {pickSpace ? <i>{pickSpace}</i> : null}
         </div>

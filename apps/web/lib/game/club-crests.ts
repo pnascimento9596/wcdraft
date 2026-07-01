@@ -87,11 +87,16 @@ export function clubInitials(clubName: string): string {
     (token) => !["and", "club", "de", "da", "do", "the"].includes(token),
   );
   const basis = useful.length > 0 ? useful : tokens;
-  const letters = basis
-    .slice(0, 2)
-    .map((token) => token[0] ?? "")
-    .join("")
-    .toUpperCase();
+  const alphaBasis = basis.map((token) => token.replace(/[^a-z]/gu, "")).filter(Boolean);
+  const letterBasis = alphaBasis.length > 0 ? alphaBasis : basis;
+  const letters =
+    letterBasis.length === 1
+      ? letterBasis[0]!.slice(0, 2).toUpperCase()
+      : letterBasis
+          .slice(0, 2)
+          .map((token) => token[0] ?? "")
+          .join("")
+          .toUpperCase();
   return letters || "FC";
 }
 

@@ -167,6 +167,38 @@
   font-style: italic;
 }
 
+.shareRetryButton {
+  appearance: none;
+  margin-left: 0.55rem;
+  min-height: 36px;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg-sunken);
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.shareDisclosure {
+  margin-top: 1.5rem;
+}
+
+.shareDisclosureSummary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .recipientPanel {
   display: flex;
   align-items: stretch;

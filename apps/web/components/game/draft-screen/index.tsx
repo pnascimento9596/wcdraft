@@ -33,7 +33,12 @@ import { dailyDateFromSearchParams } from "@/lib/game/daily";
 import { DraftTransitionError } from "@/lib/game/errors";
 import { draftTargetLabel, lockBarIdleCopy } from "@/lib/game/config-badges";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
-import { dailyDraftHref, draftHref, reviewHref } from "@/lib/game/navigation";
+import {
+  dailyDraftHref,
+  draftHref,
+  reviewHref,
+  type DailyDraftContext,
+} from "@/lib/game/navigation";
 import { saveRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
   compatLabel,
@@ -52,7 +57,7 @@ import { MiniNationFlag } from "../mini-nation-flag";
 import { SpinStage, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
-import { LocalProgressBandWithVersions } from "../local-progress-band";
+import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
 import { DraftAppBar } from "./app-bar";
 import { TOTAL_SPINS } from "./constants";
 import { FormationSelect } from "./setup";
@@ -105,6 +110,10 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
   const dailyDate = daily ? dailyDateFromSearchParams(searchParams) : null;
+  const friendRun = useMemo(
+    () => (daily ? friendRunFromSearchParams(searchParams) : null),
+    [daily, searchParams],
+  );
   // Mode-select threads `?mode=hidden` for a Memory draft; anything else is
   // classic. Only consulted when CREATING a run — resumed runs carry their
   // mode on the persisted DraftState.
@@ -123,8 +132,8 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
 
   useEffect(() => {
     if (!dailyDate || requestRunId !== null || mode.kind !== "ready") return;
-    router.replace(dailyDraftHref(mode.record.run_id, dailyDate));
-  }, [dailyDate, mode, requestRunId, router]);
+    router.replace(dailyDraftHref(mode.record.run_id, dailyDate, dailyBeatContext(friendRun)));
+  }, [dailyDate, friendRun?.record, friendRun?.score, mode, requestRunId, router]);
 
   // ── Sub-renderers per mode ───────────────────────────────────────────────
   if (mode.kind === "loading") {
@@ -159,7 +168,11 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
             type="button"
             className="btn btn--primary"
             onClick={() =>
-              router.replace(dailyDate ? dailyDraftHref(null, dailyDate) : draftHref(null))
+              router.replace(
+                dailyDate
+                  ? dailyDraftHref(null, dailyDate, dailyBeatContext(friendRun))
+                  : draftHref(null),
+              )
             }
           >
             Start a new draft
@@ -177,7 +190,11 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
         ranked={rankedDraft}
         onLocked={(record, warning) => {
           // Replace URL with new run id; keep history clean.
-          router.replace(draftHref(record.run_id));
+          router.replace(
+            dailyDate
+              ? dailyDraftHref(record.run_id, dailyDate, dailyBeatContext(friendRun))
+              : draftHref(record.run_id),
+          );
           setMode({
             kind: "ready",
             gameData: mode.gameData,
@@ -195,6 +212,8 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
       gameData={mode.gameData}
       record={mode.record}
       dailyDate={dailyDate}
+      friendRun={friendRun}
+      resumedRun={requestRunId !== null}
       persistenceWarning={mode.persistenceWarning}
       onRecordUpdate={(rec, warn) =>
         setMode({
@@ -219,6 +238,8 @@ function DraftBoard({
   gameData,
   record,
   dailyDate,
+  friendRun,
+  resumedRun,
   persistenceWarning,
   onRecordUpdate,
   onReview,
@@ -226,6 +247,8 @@ function DraftBoard({
   gameData: GameData;
   record: RunRecordV1;
   dailyDate: string | null;
+  friendRun: FriendRunContext | null;
+  resumedRun: boolean;
   persistenceWarning: string | null;
   onRecordUpdate: (rec: RunRecordV1, warning: string | null) => void;
   onReview: () => void;
@@ -239,6 +262,8 @@ function DraftBoard({
   const spinNumber = spin !== null ? spin.index + 1 : TOTAL_SPINS;
   const picked = draft.spins.filter((sp) => sp.status === "picked").length;
   const progressPct = Math.round((picked / TOTAL_SPINS) * 100);
+  const dailyRun = dailyDate !== null;
+  const dailyPickSpace = dailyRun ? "Classic rules" : DRAFT_MODE_COPY[draft.mode].pickSpace;
 
   // Memory (hidden) mode — blind every rating SIGNAL (OVRs, channels, legend
   // gold, provenance hue, Synergy numerics) on the draft surface. DISPLAY-
@@ -658,8 +683,9 @@ function DraftBoard({
           spinNumber={spinNumber}
           progressPct={progressPct}
           mode={draft.mode}
+          daily={dailyRun}
           ranked={record.ranked_attempt !== undefined}
-          pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
+          pickSpace={dailyPickSpace}
           warning={persistenceWarning}
         />
         <div className={s.draftScroll}>
@@ -769,16 +795,28 @@ function DraftBoard({
             versions={gameData.versions}
             targetDate={dailyDate}
             compact
+            friendRun={friendRun}
           />
+        ) : null}
+        {resumedRun && picked > 0 ? (
+          <p className={s.spinResumeNote} role="status">
+            Same draw — spins are seed-locked.
+          </p>
         ) : null}
         <SpinStage
           model={slotReveal}
           pickNumber={spinNumber}
           totalPicks={TOTAL_SPINS}
           formationId={draft.formation_id}
-          modeLabel={DRAFT_MODE_COPY[draft.mode].shortLabel}
-          modeCue={record.ranked_attempt ? "Ranked" : DRAFT_MODE_COPY[draft.mode].cue}
-          pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
+          modeLabel={dailyRun ? "Daily" : DRAFT_MODE_COPY[draft.mode].shortLabel}
+          modeCue={
+            dailyRun
+              ? "today's shared draft"
+              : record.ranked_attempt
+                ? "Ranked"
+                : DRAFT_MODE_COPY[draft.mode].cue
+          }
+          pickSpace={dailyPickSpace}
           synergyOverall={revealSynergyOverall}
           synergyMultiplier={revealSynergyMultiplier}
           playerPoolCount={candidates.players.length}
@@ -924,7 +962,7 @@ function DraftBoard({
                   ) : null}
                 </span>
                 <span className={s.slotName}>
-                  {b.card ? b.card.name : pc != null ? `${Math.round(pc * 100)}%` : "—"}
+                  {b.card ? b.card.name : pc != null ? `FIT ${Math.round(pc * 100)}%` : "—"}
                 </span>
               </button>
             );
@@ -1029,8 +1067,9 @@ function DraftBoard({
         spinNumber={spinNumber}
         progressPct={progressPct}
         mode={draft.mode}
+        daily={dailyRun}
         ranked={record.ranked_attempt !== undefined}
-        pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
+        pickSpace={dailyPickSpace}
         warning={persistenceWarning}
       />
 
@@ -1040,6 +1079,7 @@ function DraftBoard({
             versions={gameData.versions}
             targetDate={dailyDate}
             compact
+            friendRun={friendRun}
           />
         ) : null}
         {spinContextSection}
@@ -1071,7 +1111,7 @@ function DraftBoard({
             <span>
               <b>{sel.card.name}</b> → <b>{selectedSlot.slot_position}</b>
               <span className={`${s.compatPill} ${s[`tier_${compatTier(selectedCompat)}`]!}`}>
-                {compatLabel(selectedCompat)} · {Math.round(selectedCompat * 100)}%
+                {compatLabel(selectedCompat)} · FIT {Math.round(selectedCompat * 100)}%
               </span>
             </span>
           ) : sel?.kind === "manager" ? (
@@ -1173,7 +1213,7 @@ function DraftBoard({
                   >
                     <span className={s.sheetSlotPos}>{slot.slot_position}</span>
                     <span className={s.sheetSlotKind}>{slot.is_starter ? "Starter" : "Bench"}</span>
-                    <span className={s.sheetSlotCompat}>{Math.round(c * 100)}%</span>
+                    <span className={s.sheetSlotCompat}>FIT {Math.round(c * 100)}%</span>
                   </button>
                 );
               })}
@@ -1211,4 +1251,26 @@ function sortSlots(slots: readonly SquadSlot[]): SquadSlot[] {
     if (a.is_starter !== b.is_starter) return a.is_starter ? -1 : 1;
     return a.slot_id.localeCompare(b.slot_id);
   });
+}
+
+function friendRunFromSearchParams(
+  params: URLSearchParams | { get: (key: string) => string | null } | null,
+): FriendRunContext | null {
+  const rawScore = params?.get("beat") ?? null;
+  if (rawScore === null || !/^\d{1,4}$/u.test(rawScore)) return null;
+  const score = Number.parseInt(rawScore, 10);
+  if (!Number.isSafeInteger(score) || score < 0 || score > 9999) return null;
+
+  const rawRecord = params?.get("beat_record")?.trim() ?? "";
+  const record = /^\d{1,2}-\d{1,2}$/u.test(rawRecord) ? rawRecord : null;
+  return { score, record };
+}
+
+function dailyBeatContext(friendRun: FriendRunContext | null): DailyDraftContext | undefined {
+  return friendRun
+    ? {
+        beatScore: friendRun.score,
+        beatRecord: friendRun.record,
+      }
+    : undefined;
 }

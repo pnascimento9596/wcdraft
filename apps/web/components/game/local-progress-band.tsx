@@ -19,28 +19,41 @@ import s from "./game.module.css";
 
 const EMPTY_SUMMARY: LocalProgressSummary = {
   targetDate: "",
-  streakDays: 0,
+  streakDays: null,
   todayBest: null,
   allTimeBest: null,
 };
 
+export interface FriendRunContext {
+  readonly score: number;
+  readonly record: string | null;
+}
+
 export function LocalProgressBand({
   summary,
   compact = false,
+  friendRun = null,
 }: {
   summary: LocalProgressSummary;
   compact?: boolean;
+  friendRun?: FriendRunContext | null;
 }) {
   const countdown = useUtcCountdown();
   const className = compact
     ? `${s.localProgressBand} ${s.localProgressBandCompact}`
     : s.localProgressBand;
+  const streakLabel = summary.streakDays === null ? "—" : summary.streakDays.toString();
   return (
     <section className={className} aria-label="Daily progress">
       <div className={s.localProgressPrimary}>
-        <span className={s.localProgressStreak}>{summary.streakDays}-DAY STREAK</span>
+        <span className={s.localProgressStreak}>{streakLabel}-DAY STREAK</span>
         <span className={s.localProgressCountdown}>NEXT DRAFT IN {countdown}</span>
       </div>
+      {friendRun ? (
+        <p className={s.localProgressFriend}>
+          Friend&apos;s run: {friendRun.record ?? "—"} · {friendRun.score} pts — beat it
+        </p>
+      ) : null}
       <div className={s.localProgressBest}>
         <span>Today&apos;s best: {formatBestScore(summary.todayBest)}</span>
         <span>All-time best: {formatBestScore(summary.allTimeBest)}</span>
@@ -53,10 +66,12 @@ export function LocalProgressBandWithVersions({
   versions,
   targetDate,
   compact = false,
+  friendRun = null,
 }: {
   versions: RunRecordVersions;
   targetDate?: string | null;
   compact?: boolean;
+  friendRun?: FriendRunContext | null;
 }) {
   const { isSignedIn, ready: authReady } = useAuth();
   const [summary, setSummary] = useState<LocalProgressSummary>(() =>
@@ -81,15 +96,17 @@ export function LocalProgressBandWithVersions({
     };
   }, [authReady, isSignedIn, targetDate, versions]);
 
-  return <LocalProgressBand summary={summary} compact={compact} />;
+  return <LocalProgressBand summary={summary} compact={compact} friendRun={friendRun} />;
 }
 
 export function LocalProgressBandFromStorage({
   targetDate,
   compact = false,
+  friendRun = null,
 }: {
   targetDate?: string | null;
   compact?: boolean;
+  friendRun?: FriendRunContext | null;
 }) {
   const { isSignedIn, ready: authReady } = useAuth();
   const [summary, setSummary] = useState<LocalProgressSummary>(EMPTY_SUMMARY);
@@ -124,7 +141,7 @@ export function LocalProgressBandFromStorage({
     };
   }, [authReady, isSignedIn, targetDate]);
 
-  return <LocalProgressBand summary={summary} compact={compact} />;
+  return <LocalProgressBand summary={summary} compact={compact} friendRun={friendRun} />;
 }
 
 interface AccountStatsResponse {
@@ -154,7 +171,7 @@ async function readServerProgressSummary(targetDate?: string): Promise<LocalProg
   const stats = body.stats;
   return {
     targetDate: targetDate ?? utcDateString(),
-    streakDays: finiteNumber(stats?.dailyStreakDays) ?? 0,
+    streakDays: finiteNumber(stats?.dailyStreakDays),
     todayBest: finiteNumber(stats?.todayBest),
     allTimeBest: finiteNumber(stats?.personalBest),
   };

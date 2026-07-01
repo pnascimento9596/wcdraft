@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { deleteCsrf, fetchWithCsrf, putJson } from "@/lib/auth/client";
 import { useAuth } from "@/components/auth-context";
 import type { AccountRun, AccountRunsPage } from "@/lib/account/runs";
+import { formatAccountRunRecord } from "@/lib/account/run-format";
 
 type Notice =
   | { kind: "idle" }
@@ -376,10 +377,7 @@ function RunRow({ run }: { readonly run: AccountRun }) {
 }
 
 function formatRecord(run: AccountRun): string {
-  if (run.record.wins === null || run.record.draws === null || run.record.losses === null) {
-    return run.displayRecord === "—" ? "W-L-D —" : `${run.displayRecord}-0`;
-  }
-  return `${run.record.wins.toString()}-${run.record.losses.toString()}-${run.record.draws.toString()}`;
+  return formatAccountRunRecord(run);
 }
 
 function valueOrDash(value: number | null): string {

@@ -20,7 +20,7 @@ export const PERFECT_RUN_REFERENCE_LABEL = `Perfect 1-0 run: ${PERFECT_RUN_REFER
 
 export interface LocalProgressSummary {
   readonly targetDate: string;
-  readonly streakDays: number;
+  readonly streakDays: number | null;
   readonly todayBest: number | null;
   readonly allTimeBest: number | null;
 }

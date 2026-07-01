@@ -155,6 +155,9 @@
 .localProgressCountdown {
   composes: localProgressCountdown from "./game-styles/shared.module.css";
 }
+.localProgressFriend {
+  composes: localProgressFriend from "./game-styles/shared.module.css";
+}
 .memoryProgression {
   composes: memoryProgression from "./game-styles/results.module.css";
 }
@@ -706,6 +709,9 @@
 .oStatLabel {
   composes: oStatLabel from "./game-styles/results.module.css";
 }
+.oStatCaption {
+  composes: oStatCaption from "./game-styles/results.module.css";
+}
 .oStatScorer {
   composes: oStatScorer from "./game-styles/results.module.css";
 }
@@ -820,6 +826,9 @@
 .seedCode {
   composes: seedCode from "./game-styles/results.module.css";
 }
+.seedCopyButton {
+  composes: seedCopyButton from "./game-styles/results.module.css";
+}
 .seedNote {
   composes: seedNote from "./game-styles/results.module.css";
 }
@@ -929,6 +938,15 @@
 .shareHint {
   composes: shareHint from "./game-styles/share.module.css";
   composes: shareHint from "./game-styles/draft-polish.module.css";
+}
+.shareRetryButton {
+  composes: shareRetryButton from "./game-styles/share.module.css";
+}
+.shareDisclosure {
+  composes: shareDisclosure from "./game-styles/share.module.css";
+}
+.shareDisclosureSummary {
+  composes: shareDisclosureSummary from "./game-styles/share.module.css";
 }
 .recipientPanel {
   composes: recipientPanel from "./game-styles/share.module.css";
@@ -1422,6 +1440,9 @@
 .spinPersistenceWarn {
   composes: spinPersistenceWarn from "./game-styles/draft-spin.module.css";
 }
+.spinResumeNote {
+  composes: spinResumeNote from "./game-styles/draft-spin.module.css";
+}
 .spinStage {
   composes: spinStage from "./game-styles/draft-spin.module.css";
   composes: spinStage from "./game-styles/draft-polish.module.css";
@@ -1631,6 +1652,9 @@
 }
 .historySeed {
   composes: historySeed from "./game-styles/history.module.css";
+}
+.historySeedCopy {
+  composes: historySeedCopy from "./game-styles/history.module.css";
 }
 .historyActions {
   composes: historyActions from "./game-styles/history.module.css";

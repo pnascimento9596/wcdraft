@@ -263,6 +263,7 @@ function ShareBody({
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState<"idle" | "ok" | "unsupported">("idle");
   const [ogSign, setOgSign] = useState<OgSignState>({ kind: "idle" });
+  const [ogRetryNonce, setOgRetryNonce] = useState(0);
 
   // Replay URL: a self-contained `?run=<token>` URL so a fresh browser with
   // no matching localStorage can reproduce the run byte-for-byte. The token
@@ -301,7 +302,13 @@ function ShareBody({
     if (shareLink.kind !== "ready") return;
     let controller: AbortController | null = null;
     let timeout: number | null = null;
-    const signCurrentRun = async () => {
+    let delayTimeout: number | null = null;
+    const retryDelays = [0, 650, 1500] as const;
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        delayTimeout = window.setTimeout(resolve, ms);
+      });
+    const signCurrentRun = async (exposeError: boolean): Promise<boolean> => {
       setOgSign({ kind: "pending" });
       controller = new AbortController();
       timeout = window.setTimeout(() => controller?.abort(), 4000);
@@ -313,27 +320,27 @@ function ShareBody({
           signal: controller.signal,
         });
         if (!response.ok) {
-          if (!cancelled) {
+          if (!cancelled && exposeError) {
             setOgSign({
               kind: "error",
               message: "Couldn't sign the run preview for link unfurls.",
             });
           }
-          return;
+          return false;
         }
         const body = (await response.json()) as { ok?: unknown; signed?: unknown };
         if (!cancelled && body.ok === true && typeof body.signed === "string") {
           setOgSign({ kind: "ready", signed: body.signed });
-          return;
+          return true;
         }
-        if (!cancelled) {
+        if (!cancelled && exposeError) {
           setOgSign({
             kind: "error",
             message: "Couldn't sign the run preview for link unfurls.",
           });
         }
       } catch {
-        if (!cancelled) {
+        if (!cancelled && exposeError) {
           setOgSign({
             kind: "error",
             message: "Couldn't sign the run preview for link unfurls.",
@@ -342,24 +349,34 @@ function ShareBody({
       } finally {
         if (timeout !== null) window.clearTimeout(timeout);
       }
+      return false;
     };
-    void signCurrentRun();
+    void (async () => {
+      for (let i = 0; i < retryDelays.length; i += 1) {
+        const delay = retryDelays[i]!;
+        if (delay > 0) await wait(delay);
+        if (cancelled) return;
+        const signed = await signCurrentRun(i === retryDelays.length - 1);
+        if (cancelled || signed) return;
+      }
+    })();
     return () => {
       cancelled = true;
+      if (delayTimeout !== null) window.clearTimeout(delayTimeout);
       if (timeout !== null) window.clearTimeout(timeout);
       controller?.abort();
     };
-  }, [shareLink]);
+  }, [shareLink, ogRetryNonce]);
 
   const shareLinkPending =
     shareLink.kind === "ready" && (ogSign.kind === "idle" || ogSign.kind === "pending");
   const signedOg = ogSign.kind === "ready" ? ogSign.signed : null;
   const shareUrl =
-    shareLink.kind === "ready" && !shareLinkPending
+    shareLink.kind === "ready" && !shareLinkPending && (signedOg !== null || isRecipient)
       ? `${shareLink.origin}${shareHref(shareLink.token, signedOg)}`
       : null;
   const shareLinkError = shareLink.kind === "error" ? shareLink.message : null;
-  const ogPreviewError = ogSign.kind === "error" ? ogSign.message : null;
+  const ogPreviewError = ogSign.kind === "error" && !isRecipient ? ogSign.message : null;
   const shareUnavailable = !!shareLinkError || !shareUrl;
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
   const configBadges: ConfigBadge[] = useMemo(() => {
@@ -426,8 +443,16 @@ function ShareBody({
 
   const [linkCopied, setLinkCopied] = useState(false);
 
+  function retryOgPreview() {
+    if (shareLink.kind !== "ready" || shareLinkPending) return;
+    setOgRetryNonce((n) => n + 1);
+  }
+
   async function copyLink() {
-    if (!shareUrl) return;
+    if (!shareUrl) {
+      retryOgPreview();
+      return;
+    }
     try {
       await navigator.clipboard.writeText(shareUrl);
       setLinkCopied(true);
@@ -439,6 +464,10 @@ function ShareBody({
 
   async function copyCaption() {
     if (shareLinkPending) return;
+    if (!shareUrl) {
+      retryOgPreview();
+      return;
+    }
     try {
       await navigator.clipboard.writeText(caption);
       setCopied(true);
@@ -467,7 +496,10 @@ function ShareBody({
   }
 
   async function shareNative() {
-    if (!shareUrl) return;
+    if (!shareUrl) {
+      retryOgPreview();
+      return;
+    }
     if (typeof navigator === "undefined" || !navigator.share) {
       setShared("unsupported");
       return;
@@ -490,7 +522,10 @@ function ShareBody({
   const teamLabel = shareTeamLabel(view, isRecipient);
   const recipientDraftHref =
     record.challenge?.kind === "daily"
-      ? dailyDraftHref(null, record.challenge.date)
+      ? dailyDraftHref(null, record.challenge.date, {
+          beatScore: view.score,
+          beatRecord: view.display_record,
+        })
       : draftHref(null);
   const recipientCta =
     record.challenge?.kind === "daily"
@@ -499,10 +534,14 @@ function ShareBody({
   const shareReadyNote = shareLinkPending
     ? "Preparing the signed run preview..."
     : ogPreviewError
-      ? "Signed preview unavailable; sharing still uses a replay-safe run token."
+      ? "Retry the signed preview before copying or sharing."
       : signedOg
         ? "Signed run preview ready for large-card unfurls."
         : "Replay-safe share link ready.";
+  const SharePanelElement = isRecipient ? "details" : "div";
+  const sharePanelClass = isRecipient
+    ? `${s.panel} ${s.sharePanel} ${s.shareDisclosure}`
+    : `${s.panel} ${s.sharePanel}`;
 
   return (
     <div className={s.share}>
@@ -543,7 +582,10 @@ function ShareBody({
       </div>
 
       {/* ── Caption + actions ─────────────────────────────────────────── */}
-      <div className={`${s.panel} ${s.sharePanel}`}>
+      <SharePanelElement className={sharePanelClass}>
+        {isRecipient ? (
+          <summary className={s.shareDisclosureSummary}>Share this run</summary>
+        ) : null}
         {shareLinkError ? (
           <p className={s.shareHint} role="alert">
             <strong>Share link unavailable.</strong> {shareLinkError} The card and caption still
@@ -552,8 +594,11 @@ function ShareBody({
         ) : null}
         {ogPreviewError ? (
           <p className={s.shareHint} role="status">
-            <strong>Large-card preview unavailable.</strong> {ogPreviewError} Sharing still uses a
-            replay-safe token, but some sites may show the default preview.
+            <strong>Large-card preview unavailable.</strong> {ogPreviewError} The replay token is
+            ready, but copy/share waits for the signed preview.
+            <button type="button" className={s.shareRetryButton} onClick={retryOgPreview}>
+              Retry preview
+            </button>
           </p>
         ) : null}
         {shareLinkPending ? (
@@ -693,10 +738,12 @@ function ShareBody({
         <p className={s.shareHint}>
           {shareLinkError
             ? "The card remains exportable, but this run cannot be shared as a reproducible replay URL."
-            : `${shareReadyNote} The replay URL reproduces this run byte-for-byte from its seed.`}{" "}
+            : ogPreviewError
+              ? "The replay token is ready; retry preview to copy a signed URL."
+              : `${shareReadyNote} The replay URL reproduces this run byte-for-byte from its seed.`}{" "}
           Nothing here uses any official competition name, emblem, or trophy.
         </p>
-      </div>
+      </SharePanelElement>
     </div>
   );
 }
@@ -766,7 +813,9 @@ function ShareCardSvg({
   const recordColor = view.is_perfect_eight_zero ? "url(#wcGold)" : colors.text;
   const headline = view.headline;
   const payoffLines = [
-    view.challenge_date !== null ? dailyStandingText(dailyStanding) : null,
+    view.challenge_date !== null && dailyStanding !== null
+      ? dailyStandingText(dailyStanding)
+      : null,
     view.perfect_run_reference,
   ].filter((line): line is string => line !== null);
   const narrativeLines = wrapSvgText(view.narrative, 52, payoffLines.length > 1 ? 1 : 2);
@@ -939,7 +988,9 @@ function ShareCardSvg({
         <ShareStat
           x={CARD_WIDTH * 0.8}
           num={view.top_scorer ? String(view.top_scorer.goals) : "—"}
-          label={view.top_scorer ? truncate(view.top_scorer.name, 14) : "top scorer"}
+          label={
+            view.top_scorer ? `TOP SCORER · ${truncate(view.top_scorer.name, 14)}` : "TOP SCORER"
+          }
           colors={colors}
         />
       </g>
@@ -1003,7 +1054,9 @@ function MemoryRevealShareCardSvg({
 }) {
   const reveal = view.reveal!;
   const standingLine =
-    view.challenge_date !== null ? dailyStandingText(dailyStanding) : "Memory reveal";
+    view.challenge_date !== null && dailyStanding !== null
+      ? dailyStandingText(dailyStanding)
+      : "Memory reveal";
   const xiLeft = reveal.revealStarters.slice(0, 6);
   const xiRight = reveal.revealStarters.slice(6, 11);
   const avgAfter = formatShareNumber(reveal.squadAverageAfter);

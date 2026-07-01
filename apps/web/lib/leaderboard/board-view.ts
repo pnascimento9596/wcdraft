@@ -196,15 +196,65 @@ export function boardQueryString(opts: { filter: BoardFilter; cursor: string | n
 
 // ─── Season label ────────────────────────────────────────────────────────────
 
+export interface SeasonDisplay {
+  readonly label: string;
+  readonly evidenceLabel: string;
+  readonly rawKey: string;
+}
+
+const SEASON_DISPLAY_NAMES: Readonly<Record<string, string>> = Object.freeze({
+  "season-2026-manager-attrition": "Summer 2026",
+});
+
 /**
  * Human header for a season id. Legacy/archive ids and the current pinned
  * default still use `engine_rating_dataset_ruleset_hash`; the label leads
  * with the readable anchors when that shape is present.
  */
-export function seasonLabel(seasonKey: string): string {
-  if (seasonKey.startsWith("season-")) return seasonKey;
+export function seasonDisplay(seasonKey: string): SeasonDisplay {
+  const mapped = SEASON_DISPLAY_NAMES[seasonKey];
+  if (mapped) {
+    return {
+      label: mapped,
+      evidenceLabel: "Season key verified",
+      rawKey: seasonKey,
+    };
+  }
+  if (seasonKey.startsWith("season-")) {
+    return {
+      label: prettifySeasonSlug(seasonKey),
+      evidenceLabel: "Season key verified",
+      rawKey: seasonKey,
+    };
+  }
   const parts = seasonKey.split("_");
-  if (parts.length < 5) return seasonKey;
-  // dataset · engine — the two anchors a player can act on (refresh = new data build).
-  return `${parts[2]} · ${parts[0]}`;
+  if (parts.length >= 5) {
+    return {
+      label: `${parts[2]} · ${parts[0]}`,
+      evidenceLabel: "Legacy season key verified",
+      rawKey: seasonKey,
+    };
+  }
+  return {
+    label: prettifySeasonSlug(seasonKey),
+    evidenceLabel: "Season key verified",
+    rawKey: seasonKey,
+  };
+}
+
+export function seasonLabel(seasonKey: string): string {
+  return seasonDisplay(seasonKey).label;
+}
+
+function prettifySeasonSlug(seasonKey: string): string {
+  return seasonKey
+    .replace(/^season-/u, "")
+    .split(/[-_]+/u)
+    .filter(Boolean)
+    .map((part) => (part.length === 4 && /^\d+$/u.test(part) ? part : titleCase(part)))
+    .join(" ");
+}
+
+function titleCase(value: string): string {
+  return value.length === 0 ? value : `${value[0]!.toUpperCase()}${value.slice(1)}`;
 }

@@ -63,6 +63,7 @@ import type { BoardDraftOrder, BoardEra, BoardRatingBasis } from "./config";
 /** Rejection codes this pure core can produce. */
 export type SubmitRejectionCode =
   | "INVALID_BODY"
+  | "NON_CANONICAL_CONFIG"
   | "TOKEN_TOO_LARGE"
   | "MALFORMED_TOKEN"
   | "WRONG_SEASON"
@@ -84,6 +85,7 @@ export type SubmitErrorCode = SubmitRejectionCode | SubmitGateCode;
  */
 export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>> = {
   INVALID_BODY: 400,
+  NON_CANONICAL_CONFIG: 422,
   TOKEN_TOO_LARGE: 400,
   MALFORMED_TOKEN: 400,
   WRONG_SEASON: 409,
@@ -279,7 +281,10 @@ export function validateSubmission(body: SubmissionBody, data: ValidationData): 
         ratingBasis: config.rating_basis,
       })
     ) {
-      return rejected("INVALID_BODY", "daily submissions must use the canonical daily config");
+      return rejected(
+        "NON_CANONICAL_CONFIG",
+        "daily submissions must use the canonical daily config",
+      );
     }
   } else if (tokenChallenge !== undefined) {
     return rejected("INVALID_BODY", "daily tokens must post to the daily board");

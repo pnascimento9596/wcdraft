@@ -355,6 +355,7 @@
   position: absolute;
   top: 2px;
   right: 13px;
+  z-index: 0;
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: 44px;
   font-weight: 700;
@@ -364,6 +365,9 @@
 }
 
 .modeCardTop {
+  position: relative;
+  z-index: 1;
+  padding-right: 48px;
   justify-content: flex-start;
   gap: 10px;
 }
@@ -391,6 +395,7 @@
 }
 
 .modeName {
+  min-width: 0;
   margin: 0;
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: 22px;
@@ -402,6 +407,8 @@
 }
 
 .modeDesc {
+  position: relative;
+  z-index: 1;
   max-width: 34ch;
   min-height: 46px;
   margin: 0;
@@ -411,6 +418,8 @@
 }
 
 .modePreview {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   width: max-content;
@@ -425,8 +434,6 @@
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -437,6 +444,8 @@
 }
 
 .modeFeatures {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -466,6 +475,8 @@
 }
 
 .modeCardBottom {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -559,6 +570,14 @@
   color: var(--accent);
 }
 
+.localProgressFriend {
+  margin: 0;
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
 .localProgressBest {
   color: var(--ink-300);
   font-size: 0.78rem;
@@ -602,7 +621,13 @@
   }
 
   .modeIndex {
-    font-size: 34px;
+    right: 9px;
+    font-size: 30px;
+    opacity: 0.6;
+  }
+
+  .modeCardTop {
+    padding-right: 36px;
   }
 
   .modeName {

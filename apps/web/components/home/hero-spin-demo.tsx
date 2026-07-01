@@ -41,7 +41,7 @@ export function HeroSpinPoster({
       className={s.poster}
       data-hero-spin-poster
       data-reduced-motion={reducedMotion ? "true" : "false"}
-      aria-label={`Draft preview: ${sample.nationName} ${sample.year}, ${sample.card.fullName} at ${sample.card.position}.`}
+      aria-label="Draft preview: the spin lands on a nation and year, then reveals a player."
     >
       <div className={s.posterTop}>
         <span className={s.posterBadge}>Pick 01</span>

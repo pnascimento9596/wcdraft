@@ -75,11 +75,26 @@ export function draftHref(run_id: string | null): string {
   return runHrefFor("/play/draft", run_id);
 }
 
-export function dailyDraftHref(run_id: string | null, date?: string | null): string {
+export interface DailyDraftContext {
+  readonly beatScore?: number | null;
+  readonly beatRecord?: string | null;
+}
+
+export function dailyDraftHref(
+  run_id: string | null,
+  date?: string | null,
+  context: DailyDraftContext = {},
+): string {
   const base = "/play/daily";
   const params = new URLSearchParams();
   if (run_id) params.set(RUN_PARAM, run_id);
   if (date) params.set("date", date);
+  if (typeof context.beatScore === "number" && Number.isFinite(context.beatScore)) {
+    params.set("beat", Math.trunc(context.beatScore).toString());
+  }
+  if (typeof context.beatRecord === "string" && context.beatRecord.trim()) {
+    params.set("beat_record", context.beatRecord.trim());
+  }
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
 }

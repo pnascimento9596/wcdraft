@@ -64,13 +64,9 @@ export interface RunHistoryProvider {
 // ─── Local provider ──────────────────────────────────────────────────────────
 
 function buildSequenceLabel(record: RunRecordV1): string {
-  const { created_seq, updated_seq, run_id } = record;
+  const { created_seq, run_id } = record;
   if (!Number.isFinite(created_seq)) return run_id;
-  const base = `Run #${created_seq}`;
-  if (Number.isFinite(updated_seq) && updated_seq !== created_seq) {
-    return `${base} · updated #${updated_seq}`;
-  }
-  return base;
+  return `Run #${created_seq}`;
 }
 
 function buildRecencyLabel(index: number): string {

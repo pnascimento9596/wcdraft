@@ -18,6 +18,8 @@ const POSITION_KEYS = [
 const RATING_KEYS = [
   { label: "OVR", name: "Overall", tone: "solid" },
   { label: "SYN", name: "Synergy", tone: "accent" },
+  { label: "DATA", name: "Card data coverage", tone: "muted" },
+  { label: "FIT", name: "Slot fit", tone: "cool" },
   { label: "CUR", name: "Current basis", tone: "cool" },
   { label: "EST", name: "Estimated input", tone: "muted" },
 ] as const;
@@ -79,10 +81,11 @@ export default function HowToPlayPage() {
         <div className="mode-rules" aria-label="Draft mode comparison">
           <article>
             <span className="mode-rule__tag">Ranked-capable</span>
-            <h3>Classic (choose-from-3)</h3>
+            <h3>Classic</h3>
             <p>
               Each spin shows up to three players from the rolled nation-year, plus its manager if
-              you still need one. Ratings, positions and Synergy stay visible.
+              you still need one. Ratings, positions and Synergy stay visible. This is the sighted
+              choose-from-3 draft.
             </p>
           </article>
 
@@ -97,10 +100,10 @@ export default function HowToPlayPage() {
 
           <article>
             <span className="mode-rule__tag">Ranked-capable</span>
-            <h3>Memory (Blind)</h3>
+            <h3>Memory</h3>
             <p>
               The same choose-from-3 draft as Classic, but ratings and Synergy numbers stay hidden
-              until after the simulation reveal.
+              until after the simulation reveal. This is the blind draft.
             </p>
           </article>
         </div>
@@ -168,7 +171,10 @@ export default function HowToPlayPage() {
         <ul>
           <li>One player can appear only once in your squad, even if they have multiple cards.</li>
           <li>You must finish with sixteen players and exactly one manager.</li>
-          <li>Synergy rewards national links among starters and between the manager and XI.</li>
+          <li>
+            Synergy rewards national links among starters and between the manager and XI. Team boost
+            is the readable form of the underlying strength multiplier.
+          </li>
           <li>Out-of-position picks are allowed, but the simulation penalizes poor fit.</li>
         </ul>
 

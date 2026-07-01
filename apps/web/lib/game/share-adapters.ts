@@ -221,6 +221,8 @@ export interface DailyShareStanding {
   readonly fieldSize: number;
 }
 
+export const DAILY_STANDING_CLAIM_COPY = "Post your score to claim today's standing" as const;
+
 export function buildShareCaption(
   view: ShareView,
   url: string | null,
@@ -254,26 +256,32 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
     const avg = formatNullableNumber(view.reveal.squadAverageAfter);
     if (view.challenge_date !== null) {
       const scoreLine = `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on ${view.challenge_date}'s draft`;
-      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+      return dailyStanding === null
+        ? `${scoreLine}. Beat it →`
+        : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
     }
     return `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
   }
   if (view.draft_mode === "open") {
     if (view.challenge_date !== null) {
       const scoreLine = `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
-      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+      return dailyStanding === null
+        ? `${scoreLine}. Beat it →`
+        : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
     }
     return `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on wcdraft.`;
   }
   if (view.challenge_date !== null) {
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
-    return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+    return dailyStanding === null
+      ? `${scoreLine}. Beat it →`
+      : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
   }
   return `${view.team_name} went ${view.display_record} on wcdraft.`;
 }
 
 export function dailyStandingText(standing: DailyShareStanding | null): string {
-  if (standing === null) return "Top — of today's field";
+  if (standing === null) return DAILY_STANDING_CLAIM_COPY;
   const rankLine = `#${standing.rank} of ${standing.fieldSize} today`;
   return standing.percentile !== null
     ? `${rankLine} · Top ${standing.percentile}% of today's field`

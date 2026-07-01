@@ -26,6 +26,11 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     title: "Submission rejected",
     message: "The submission was malformed. Refresh and try again from this results screen.",
   },
+  NON_CANONICAL_CONFIG: {
+    title: "Different Daily setup",
+    message:
+      "Daily boards only take the shared Daily Draft setup for that UTC day. Start from Today's Draft and try again.",
+  },
   TOKEN_TOO_LARGE: {
     title: "Submission rejected",
     message: "The run token is larger than the board accepts.",
