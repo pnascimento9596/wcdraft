@@ -63,7 +63,8 @@ Activates the channel per the audit's D2+D1: player-identity stature seam (not
 historical-card link), career-stage-normalized index for in-progress careers,
 age-conditioned cohorts in the projected raw path. Carries the FULL Red chain:
 rating-version bumps, canary regen + pick-equality, compact regen, λ re-fit BEFORE
-any realism re-lock, fresh-session RED review, SHA-pinned merge, live verification.
+any realism re-lock, fresh-session RED review, autonomous SHA-pinned merge,
+deploy observation, and live verification with auto-revert on failed live checks.
 The 12a inertness tests (`test_scoring_code_never_references_the_active_artifacts`,
 the double-credit build guard) are the explicit flip points 12b must change.
 

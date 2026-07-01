@@ -12,8 +12,8 @@ nation draft, extends run tokens to `t4.` with picked card ids and manager card
 ids, keeps leaderboard submission accepted modes to Classic/Memory only,
 fail-closes marketing replay for Open tokens, updates How to Play/mode labels,
 and reconciles current/future-facing RED contract wording to the v5
-fresh-context reviewer -> SHA-pinned merge -> deploy -> live-verify ->
-auto-revert chain with no human approval gate. Runtime data anchors remain
+fresh-context reviewer -> autonomous SHA-pinned merge -> deploy ->
+live-verify -> auto-revert chain. Runtime data anchors remain
 `runtime-data-2.9.0`; no ETL output or compact runtime-data artifact changed.
 Local gates passed: `@wcdraft/core` test (23 files / 384 tests), focused web
 Vitest (8 files / 160 tests), `@wcdraft/marketing-x` typecheck and test (8
@@ -33,10 +33,10 @@ Accounts/auth hub lane:
 on top of existing magic links, `/account` hub, account-owned runs/stats,
 password set/change/delete-account flows, deterministic account-stat clock
 injection for tests, shared session issuance, and nullable `users.password_hash`
-/ `users.password_set_at` migration `0010`. The checked-in RED contract now has
-no human approval gate; Red safety is fresh-context
-implementer/reviewer separation, machine gates, SHA-pinned merge, deploy
-observation, live verification, and auto-revert on failed live checks. Current
+/ `users.password_set_at` migration `0010`. The checked-in RED contract now uses
+the v5 autonomous chain; Red safety is fresh-context implementer/reviewer
+separation, machine gates, SHA-pinned merge, deploy observation, live
+verification, and auto-revert on failed live checks. Current
 local validation passed: DB tests (3 files / 106 tests), focused auth/account
 tests (6 files / 35 tests), Neon branch up/down plus pre-migration magic-link-only
 auth proof, root typecheck (8/8), root lint (5/5), root test (8/8; core 384,

@@ -555,18 +555,18 @@ independent review, SHA-pinned merge, deploy observation, live verification, and
 auto-revert on failed live checks per `CLAUDE.md`; the docs-only planning PR
 remains Green.
 
-| Unit                       | Tier                | Status                        | Scope                                                                                             | Depends on          |
-| -------------------------- | ------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------- | ------------------- |
-| DC-0 plan + queue          | Green docs          | Unblocked now                 | This plan, `q-006`, `STATE.md` note                                                               | none                |
-| DC-1 token schema          | Red                 | SHIPPED                       | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures                                   | DC-0                |
-| DC-2 era presets           | Red                 | SHIPPED                       | filtered catalog input, preset constants, pool-depth census, era goldens                          | DC-1 preferred      |
-| DC-3 position-first core   | Red                 | SHIPPED                       | target-selection state, token `ts` replay, transition goldens                                     | DC-1                |
-| DC-4 config UX             | Yellow/Red boundary | SHIPPED for setup/badges/copy | formation-screen setup disclosure, share badges, Memory leak tests                                | DC-1..3             |
-| DC-5 MV2-12 link seam      | Red                 | SUPERSEDED by merit-v3 U0     | fix 2026 identity-link misses called out by Audit-2                                               | q-002 dispatch      |
-| DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                                         | DC-5                |
-| DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens                               | DC-6                |
-| DC-8 leaderboard policy    | Red                 | DISPATCHED 2026-06-17         | per-config ranked/casual boards, DB/API/board changes                                             | Paulo decision F    |
-| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, SHA-pinned merge, live verification | DC-1..8 as selected |
+| Unit                       | Tier                | Status                        | Scope                                                                                                                                | Depends on          |
+| -------------------------- | ------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------- |
+| DC-0 plan + queue          | Green docs          | Unblocked now                 | This plan, `q-006`, `STATE.md` note                                                                                                  | none                |
+| DC-1 token schema          | Red                 | SHIPPED                       | `t2` encode/decode, `t1` compatibility, fuzz/PREV skew fixtures                                                                      | DC-0                |
+| DC-2 era presets           | Red                 | SHIPPED                       | filtered catalog input, preset constants, pool-depth census, era goldens                                                             | DC-1 preferred      |
+| DC-3 position-first core   | Red                 | SHIPPED                       | target-selection state, token `ts` replay, transition goldens                                                                        | DC-1                |
+| DC-4 config UX             | Yellow/Red boundary | SHIPPED for setup/badges/copy | formation-screen setup disclosure, share badges, Memory leak tests                                                                   | DC-1..3             |
+| DC-5 MV2-12 link seam      | Red                 | SUPERSEDED by merit-v3 U0     | fix 2026 identity-link misses called out by Audit-2                                                                                  | q-002 dispatch      |
+| DC-6 MV2-12b dual basis    | Red                 | SHIPPED by merit-v3 V6        | dual ratings, shared display curve, compact/runtime shape                                                                            | DC-5                |
+| DC-7 rating-basis sim gate | Red                 | OPEN                          | selected-basis channels, shared lambda validation, canaries/goldens                                                                  | DC-6                |
+| DC-8 leaderboard policy    | Red                 | DISPATCHED 2026-06-17         | per-config ranked/casual boards, DB/API/board changes                                                                                | Paulo decision F    |
+| DC-9 season merge          | Red                 | Final integration             | anchor bump, golden re-lock, full CI, independent Red review, autonomous SHA-pinned merge, live verification, auto-revert on failure | DC-1..8 as selected |
 
 Integration-branch decision:
 

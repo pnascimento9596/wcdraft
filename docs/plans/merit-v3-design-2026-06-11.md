@@ -479,7 +479,9 @@ console clean), per the merge-=-ship rule.
 4. PREV skew fixtures green; live `t1.` invalidation behavior verified on a preview
    deploy before main.
 5. Fresh-session independent review of the cumulative diff (re-executes, not diff-reads).
-6. Reviewer PASS pinned to the final SHA; squash with `--match-head-commit`.
+6. Reviewer PASS pinned to the final SHA; autonomous squash with
+   `--match-head-commit`; deploy observation, live verification, and auto-revert
+   on failed live checks.
 7. STATE.md + `docs/queue/q-002` successor updated in the same merge.
 
 ---
