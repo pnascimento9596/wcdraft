@@ -54,26 +54,26 @@ not rewritten unless their wording acted like current process guidance.
 
 ## Local Validation
 
-| Gate | Result |
-| --- | --- |
-| `pnpm install --frozen-lockfile` | PASS |
-| `pnpm --filter @wcdraft/core build` | PASS |
-| `pnpm --filter @wcdraft/data build` | PASS |
-| `pnpm --filter @wcdraft/db build` | PASS |
-| `pnpm --filter @wcdraft/core test` | PASS: 23 files / 384 tests |
-| Focused web Vitest: run-token, run-token-v2, run-screen-loader, config-badges, a11y-focus-perf, leaderboard validate/submit/public-email | PASS: 8 files / 160 tests |
-| `pnpm --filter @wcdraft/marketing-x typecheck` | PASS |
-| `pnpm --filter @wcdraft/marketing-x test` | PASS: 8 files / 68 tests |
-| `pnpm typecheck` | PASS: 8/8 tasks |
-| `pnpm lint` | PASS: 5/5 tasks |
-| `pnpm test` | PASS: 8/8 tasks; web 837 passed / 1 skipped plus `game-flow-playwright`; data 84 passed / 7 skipped; core 384; db 106; marketing 68 |
-| `pnpm build` | PASS: 4/4 tasks; known Next circular-chunk and edge-runtime static-generation warnings only |
-| `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core` | PASS: RNG/narrative 2 files / 68 tests; draft goldens 5 files / 42 tests |
-| `pnpm exec turbo run test:golden:data test:golden:integration --filter=@wcdraft/data` | PASS: compact/data 2 files / 31 tests; integration 2 files / 22 tests |
-| `pnpm exec turbo run test:golden:leaderboard --filter=@wcdraft/web` | PASS: 1 file / 6 tests |
-| `pnpm check:generated` | PASS |
-| `git diff --check` | PASS |
-| Repeated `pnpm --filter @wcdraft/web build` after mobile/accessibility CSS fixes | PASS |
+| Gate                                                                                                                                     | Result                                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm install --frozen-lockfile`                                                                                                         | PASS                                                                                                                                |
+| `pnpm --filter @wcdraft/core build`                                                                                                      | PASS                                                                                                                                |
+| `pnpm --filter @wcdraft/data build`                                                                                                      | PASS                                                                                                                                |
+| `pnpm --filter @wcdraft/db build`                                                                                                        | PASS                                                                                                                                |
+| `pnpm --filter @wcdraft/core test`                                                                                                       | PASS: 23 files / 384 tests                                                                                                          |
+| Focused web Vitest: run-token, run-token-v2, run-screen-loader, config-badges, a11y-focus-perf, leaderboard validate/submit/public-email | PASS: 8 files / 160 tests                                                                                                           |
+| `pnpm --filter @wcdraft/marketing-x typecheck`                                                                                           | PASS                                                                                                                                |
+| `pnpm --filter @wcdraft/marketing-x test`                                                                                                | PASS: 8 files / 68 tests                                                                                                            |
+| `pnpm typecheck`                                                                                                                         | PASS: 8/8 tasks                                                                                                                     |
+| `pnpm lint`                                                                                                                              | PASS: 5/5 tasks                                                                                                                     |
+| `pnpm test`                                                                                                                              | PASS: 8/8 tasks; web 837 passed / 1 skipped plus `game-flow-playwright`; data 84 passed / 7 skipped; core 384; db 106; marketing 68 |
+| `pnpm build`                                                                                                                             | PASS: 4/4 tasks; known Next circular-chunk and edge-runtime static-generation warnings only                                         |
+| `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core`                                                               | PASS: RNG/narrative 2 files / 68 tests; draft goldens 5 files / 42 tests                                                            |
+| `pnpm exec turbo run test:golden:data test:golden:integration --filter=@wcdraft/data`                                                    | PASS: compact/data 2 files / 31 tests; integration 2 files / 22 tests                                                               |
+| `pnpm exec turbo run test:golden:leaderboard --filter=@wcdraft/web`                                                                      | PASS: 1 file / 6 tests                                                                                                              |
+| `pnpm check:generated`                                                                                                                   | PASS                                                                                                                                |
+| `git diff --check`                                                                                                                       | PASS                                                                                                                                |
+| Repeated `pnpm --filter @wcdraft/web build` after mobile/accessibility CSS fixes                                                         | PASS                                                                                                                                |
 
 ## Browser Proof
 
@@ -89,11 +89,11 @@ results, local share, `t4.` token share replay, tampered-token rejection, and
 How to Play.
 
 | Viewport | Theme | Open roster count | Token | Tamper rejected | Surfaces checked | Overflow | Small targets | Axe |
-| --- | --- | ---: | --- | --- | ---: | --- | --- | --- |
-| 390x844 | light | 114 | `t4.` | yes | 7 | 0 | 0 | 0 |
-| 390x844 | dark | 187 | `t4.` | yes | 7 | 0 | 0 | 0 |
-| 360x800 | light | 79 | `t4.` | yes | 7 | 0 | 0 | 0 |
-| 360x800 | dark | 151 | `t4.` | yes | 7 | 0 | 0 | 0 |
+| -------- | ----- | ----------------: | ----- | --------------- | ---------------: | -------- | ------------- | --- |
+| 390x844  | light |               114 | `t4.` | yes             |                7 | 0        | 0             | 0   |
+| 390x844  | dark  |               187 | `t4.` | yes             |                7 | 0        | 0             | 0   |
+| 360x800  | light |                79 | `t4.` | yes             |                7 | 0        | 0             | 0   |
+| 360x800  | dark  |               151 | `t4.` | yes             |                7 | 0        | 0             | 0   |
 
 Minimum visible interactive target measured at least 44x44 on every checked
 surface. The run also caught and fixed unrelated mobile/accessibility regressions

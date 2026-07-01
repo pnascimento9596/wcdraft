@@ -1,9 +1,5 @@
 import { chromium, type Browser, type BrowserContext, type Page } from "playwright-core";
-import {
-  autoDraft,
-  encodeRunTokenBody,
-  type RunTokenV4Body,
-} from "@wcdraft/core";
+import { autoDraft, encodeRunTokenBody, type RunTokenV4Body } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import { buildGameDataFromBundles } from "../lib/game/__tests__/run-token.test-harness";
@@ -13,11 +9,7 @@ import {
   RUN_RECORD_SCHEMA_VERSION,
   type RunRecordV1,
 } from "../lib/game/run-record";
-import {
-  decodeRunToken,
-  encodeRunToken,
-  reconstructDraftFromToken,
-} from "../lib/game/run-token";
+import { decodeRunToken, encodeRunToken, reconstructDraftFromToken } from "../lib/game/run-token";
 import { runSimulationSync } from "../lib/game/simulate";
 
 type Theme = "light" | "dark";
@@ -92,8 +84,9 @@ function tamperedTokenFrom(token: string): string {
   const body: RunTokenV4Body = structuredClone(decoded);
   const players = body.pl
     .map((pick, i) => (pick.k === "p" ? { pick, i } : null))
-    .filter((item): item is { pick: Extract<RunTokenV4Body["pl"][number], { k: "p" }>; i: number } =>
-      item !== null,
+    .filter(
+      (item): item is { pick: Extract<RunTokenV4Body["pl"][number], { k: "p" }>; i: number } =>
+        item !== null,
     );
   assert(players.length >= 2, "expected at least two player picks to tamper");
   body.pl[players[1].i] = { ...players[1].pick, c: players[0].pick.c };
@@ -165,7 +158,12 @@ async function measure(page: Page, label: string, viewport: ViewportCase, theme:
   const axeViolations = await page.evaluate(async () => {
     const runner = (
       window as typeof window & {
-        axe?: { run: (node?: Element | Document, options?: unknown) => Promise<{ violations: { id: string }[] }> };
+        axe?: {
+          run: (
+            node?: Element | Document,
+            options?: unknown,
+          ) => Promise<{ violations: { id: string }[] }>;
+        };
       }
     ).axe;
     if (!runner) throw new Error("axe not loaded");
@@ -184,7 +182,9 @@ async function measure(page: Page, label: string, viewport: ViewportCase, theme:
     ).filter((el) => {
       const box = el.getBoundingClientRect();
       const style = window.getComputedStyle(el);
-      return box.width > 0 && box.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+      return (
+        box.width > 0 && box.height > 0 && style.visibility !== "hidden" && style.display !== "none"
+      );
     });
     const boxes = controls.map((el) => {
       const box = el.getBoundingClientRect();
@@ -228,11 +228,7 @@ async function measure(page: Page, label: string, viewport: ViewportCase, theme:
   return surface;
 }
 
-async function verifyInteractiveOpenDraft(
-  browser: Browser,
-  viewport: ViewportCase,
-  theme: Theme,
-) {
+async function verifyInteractiveOpenDraft(browser: Browser, viewport: ViewportCase, theme: Theme) {
   const session = await newPage(browser, viewport, theme);
   const { page, context, errors } = session;
   const metrics: SurfaceMetrics[] = [];
@@ -268,14 +264,11 @@ async function verifyInteractiveOpenDraft(
     .first()
     .click();
   await page.getByRole("button", { name: /Lock pick/ }).click();
-  await page.waitForFunction(
-    (recordPrefix) => {
-      const key = Object.keys(window.localStorage).find((k) => k.startsWith(recordPrefix));
-      const rec = key ? JSON.parse(window.localStorage.getItem(key) ?? "null") : null;
-      return rec?.draft?.spins?.[0]?.status === "picked";
-    },
-    RUN_RECORD_PREFIX,
-  );
+  await page.waitForFunction((recordPrefix) => {
+    const key = Object.keys(window.localStorage).find((k) => k.startsWith(recordPrefix));
+    const rec = key ? JSON.parse(window.localStorage.getItem(key) ?? "null") : null;
+    return rec?.draft?.spins?.[0]?.status === "picked";
+  }, RUN_RECORD_PREFIX);
   assert(errors.length === 0, `browser errors: ${errors.join("\n")}`);
   await context.close();
   return { rolledCount, metrics };
@@ -288,7 +281,10 @@ async function verifyCompletedOpenRun(browser: Browser, viewport: ViewportCase, 
   const decoded = decodeRunToken(token);
   assert(decoded?.v === 4, "Open Draft token did not decode as v4");
   const replayed = reconstructDraftFromToken(decoded, gameData);
-  assert(JSON.stringify(replayed) === JSON.stringify(record.draft), "t4 replay was not byte-identical");
+  assert(
+    JSON.stringify(replayed) === JSON.stringify(record.draft),
+    "t4 replay was not byte-identical",
+  );
   const tampered = tamperedTokenFrom(token);
   let tamperedRejected = false;
   try {
@@ -303,7 +299,9 @@ async function verifyCompletedOpenRun(browser: Browser, viewport: ViewportCase, 
   const session = await newPage(browser, viewport, theme, record);
   const { page, context, errors } = session;
   const metrics: SurfaceMetrics[] = [];
-  await page.goto(`${baseUrl}/play/results?run=${record.run_id}`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseUrl}/play/results?run=${record.run_id}`, {
+    waitUntil: "domcontentloaded",
+  });
   await page.getByText("Results").first().waitFor();
   await page.getByText("Open").first().waitFor();
   metrics.push(await measure(page, "open results", viewport, theme));
@@ -333,7 +331,10 @@ async function verifyCompletedOpenRun(browser: Browser, viewport: ViewportCase, 
     waitUntil: "domcontentloaded",
   });
   await badSession.page.getByText(/Couldn't replay the shared run/i).waitFor();
-  assert(badSession.errors.length === 0, `tampered token browser errors: ${badSession.errors.join("\n")}`);
+  assert(
+    badSession.errors.length === 0,
+    `tampered token browser errors: ${badSession.errors.join("\n")}`,
+  );
   await badSession.context.close();
 
   return { tokenPrefix: token.slice(0, 3), tamperedRejected, metrics };
@@ -345,7 +346,10 @@ async function verifyHowToPlay(browser: Browser, viewport: ViewportCase, theme: 
   await page.goto(`${baseUrl}/how-to-play`, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Draft modes" }).waitFor();
   await page.getByText("Open Draft").first().waitFor();
-  await page.getByText(/casual-only/i).first().waitFor();
+  await page
+    .getByText(/casual-only/i)
+    .first()
+    .waitFor();
   const metrics = await measure(page, "how-to-play", viewport, theme);
   assert(errors.length === 0, `how-to-play browser errors: ${errors.join("\n")}`);
   await context.close();
