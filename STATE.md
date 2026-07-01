@@ -18,7 +18,7 @@ observation, live verification, and auto-revert on failed live checks. Current
 local validation passed: DB tests (3 files / 106 tests), focused auth/account
 tests (6 files / 35 tests), Neon branch up/down plus pre-migration magic-link-only
 auth proof, root typecheck (8/8), root lint (5/5), root test (8/8; core 384,
-db 106, data 84 passed / 7 skipped, marketing 67, web 828 passed / 1 skipped
+db 106, data 84 passed / 7 skipped, marketing 67, web 831 passed / 1 skipped
 plus `game-flow-playwright`), root build (4/4), core/data/web goldens, and mobile
 Playwright/axe proof at 390x844 and 360x800. The `/account` destructive action
 contrast is fixed against existing tokens and measures 5.11:1 light / 6.19:1

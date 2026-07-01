@@ -77,7 +77,7 @@ Also updated current `STATE.md`, `docs/queue/q-002-mv2-12-candidate.md`, `docs/q
 - Root gates:
   - `pnpm typecheck`: PASS, 8/8 Turbo tasks.
   - `pnpm lint`: PASS, 5/5 Turbo tasks.
-  - `pnpm test`: PASS, 8/8 Turbo tasks. Counts: core 23 files / 384 tests; db 3 files / 106 tests; data 11 files passed + 1 skipped / 84 passed + 7 skipped; marketing 8 files / 67 tests; web 79 files passed + 1 skipped / 828 passed + 1 skipped; `game-flow-playwright: ok`.
+  - `pnpm test`: PASS, 8/8 Turbo tasks. Counts: core 23 files / 384 tests; db 3 files / 106 tests; data 11 files passed + 1 skipped / 84 passed + 7 skipped; marketing 8 files / 67 tests; web 79 files passed + 1 skipped / 831 passed + 1 skipped; `game-flow-playwright: ok`.
   - `pnpm build`: PASS, 4/4 Turbo tasks. Next emitted the existing circular chunk warnings and edge-runtime static-generation warning, then exited 0.
 - Explicit goldens:
   - `pnpm exec turbo run test:golden test:golden:draft --filter=@wcdraft/core`: PASS, 2 tasks; 2 files / 68 tests and 5 files / 42 tests.
