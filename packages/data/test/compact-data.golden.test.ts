@@ -34,10 +34,10 @@ const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const BUNDLE_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
 const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
-// Cold CI runners can spend several minutes re-running the full compact-data
-// builder before these assertions execute; keep this timeout scoped to the
-// golden rebuild rather than relaxing unrelated data tests.
-const COMPACT_GOLDEN_REBUILD_TIMEOUT_MS = 600_000;
+// Cold shared CI runners can spend more than ten minutes re-running the full
+// compact-data builder when package tests contend for CPU. Keep this timeout
+// scoped to the golden rebuild rather than relaxing unrelated data tests.
+const COMPACT_GOLDEN_REBUILD_TIMEOUT_MS = 1_200_000;
 
 interface SizeBudget {
   bundles: Record<string, { max_bytes_brotli: number; path: string }>;
