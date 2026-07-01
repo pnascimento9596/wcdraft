@@ -2,8 +2,8 @@
 
 Branch: `ws-merit/v4.3-owner-overrides`
 Date: 2026-06-15
-Status: pre-merge RED candidate. Merge/deploy/live verification remain blocked on
-the owner approval checkpoint.
+Status: pre-merge RED candidate. Merge/deploy/live verification remain blocked
+on uncompleted ship gates.
 
 ## Outcome
 
@@ -16,7 +16,9 @@ the owner approval checkpoint.
   `f121d0f768fe70cfc6d699559bf78dc25d356ccea33ca0aa5e8ded11c65d9da6`.
 - Resolution: 2,300 / 2,516 source rows matched (`91.4149%`); 216 honest
   misses; 2,246 effective canonical card pins after duplicate consolidation.
-- HUMAN ACTIONS: owner approval is still required before merge.
+- HUMAN ACTIONS: none. Under the current v5 contract, RED safety is
+  fresh-context review, machine gates, SHA-pinned merge, deploy observation,
+  live verification, and auto-revert on any failed live check.
 
 ## Source Integrity
 
@@ -190,8 +192,8 @@ Fitter landing: goals 2.514, group draw 25.27%, margin >=4 4.99%, KO->ET
 
 ## Gate Log
 
-This table is updated from actual command output before the owner approval
-checkpoint. Rows marked PENDING are not claimed as passed.
+This table is updated from actual command output before the ship checkpoint.
+Rows marked PENDING are not claimed as passed.
 
 | Gate                                                                                                                                     | Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -212,14 +214,14 @@ checkpoint. Rows marked PENDING are not claimed as passed.
 | `git diff --check`                                                                                                                       | PASS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Fresh-context independent review                                                                                                         | PASS fallback: RepoPromptCE worktree binding was unavailable, so `/tmp/wcdraft-merit-v43-review-20260615163949` was created as a detached fresh worktree at the implementation candidate; it re-executed manual override resolution, rating generation, 2026 ingest, contract spot checks, ETL ruff + 297 tests, compact rebuild, data goldens 31 + integration 22, realism/canary 6 + heavy realism 7, web leaderboard golden 6, core RNG/draft goldens 107, OG sign/render 17, and `git diff --check`. A cold-review first web-leaderboard attempt failed before assertions because `@wcdraft/data/dist` was absent; after `pnpm --filter @wcdraft/data build`, the rerun passed. |
 | CI                                                                                                                                       | PENDING                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| Merge / deploy / live verify                                                                                                             | PENDING owner approval                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Merge / deploy / live verify                                                                                                             | PENDING ship gates                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ## Ship Closeout
 
-- Candidate SHA: see the owner approval checkpoint; not embedded here to avoid
+- Candidate SHA: see the ship checkpoint; not embedded here to avoid
   self-referential SHA churn on a report-only closeout amend.
 - PR: PENDING.
-- Merge SHA: PENDING owner approval.
-- Deploy id: PENDING owner approval.
-- Live verify: PENDING owner approval.
+- Merge SHA: PENDING ship gates.
+- Deploy id: PENDING ship gates.
+- Live verify: PENDING ship gates.
 - Revert status: PENDING; no merge has happened.

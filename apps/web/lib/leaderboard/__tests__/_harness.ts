@@ -17,6 +17,7 @@ import {
   runTournamentFull,
   selectDraftTarget,
   type DraftFlow,
+  type DraftMode,
   type EraPresetId,
   type RatingBasis,
   type ScoreComponent,
@@ -36,7 +37,7 @@ export type { Scenario2026Bundle };
 export function buildOriginRecord(
   gameData: GameData,
   seed: string,
-  mode: "classic" | "hidden" = "classic",
+  mode: DraftMode = "classic",
   teamName = "Origin XI",
   config: {
     readonly draftFlow?: DraftFlow;
@@ -134,6 +135,6 @@ export function expectedRunFor(
  *  round-trips through the same decoder the attacker would hit. */
 export function encodeBody(body: unknown): string {
   const v = (body as { v?: unknown } | null)?.v;
-  const prefix = v === 1 ? "t1." : v === 2 ? "t2." : "t3.";
+  const prefix = v === 1 ? "t1." : v === 2 ? "t2." : v === 4 ? "t4." : "t3.";
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
 }

@@ -258,6 +258,13 @@ function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding |
     }
     return `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
   }
+  if (view.draft_mode === "open") {
+    if (view.challenge_date !== null) {
+      const scoreLine = `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
+      return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
+    }
+    return `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on wcdraft.`;
+  }
   if (view.challenge_date !== null) {
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
     return `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;

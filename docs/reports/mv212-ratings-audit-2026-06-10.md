@@ -167,7 +167,8 @@ none is a display-curve patch. Full compliance chain for any of them:
 rating-version bump (`proj-career-4.0.0` and/or `career-stature-3.0.0` / `wc-perf-4.3.0`)
 → strategic-pick canary regen (`WCDRAFT_CANARY_REGEN=1`) + pick-equality proof in the
 same PR → compact regen if channels move → λ re-fit BEFORE re-locking realism bands →
-fresh-session RED review → human approval, `--match-head-commit` merge.
+fresh-session RED review → reviewer PASS pinned to the final SHA →
+`--match-head-commit` merge.
 
 ### D1 — Career-stage normalization of the projected raw path
 

@@ -629,7 +629,7 @@
   min-width: 0;
   max-width: none;
   height: 14cqw;
-  min-height: 0;
+  min-height: 44px;
   justify-content: center;
   overflow: hidden;
   padding: 2px 3px;
@@ -1423,7 +1423,7 @@
     gap: 4px;
   }
   .sharePanel :global(.btn) {
-    min-height: 34px;
+    min-height: 44px;
     padding: 6px 8px;
     border-radius: var(--r-2);
     font-size: 11px;

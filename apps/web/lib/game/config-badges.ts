@@ -9,8 +9,9 @@ import {
 import type { RunRecordV1 } from "./run-record";
 import { decodeRunToken, encodeRunToken, tokenDraftConfig, type RunTokenBody } from "./run-token";
 import { ERA_PRESET_LABELS } from "./era-labels";
+import { draftModeShortLabel } from "./mode-labels";
 
-export type ConfigBadgeAxis = "era_preset" | "draft_flow" | "rating_basis";
+export type ConfigBadgeAxis = "draft_mode" | "era_preset" | "draft_flow" | "rating_basis";
 
 export interface ConfigBadge {
   axis: ConfigBadgeAxis;
@@ -42,8 +43,13 @@ export function configBadgesFromDraftConfig(config: DraftConfig): ConfigBadge[] 
 }
 
 export function configBadgesFromToken(token: RunTokenBody): ConfigBadge[] {
-  const { draft_flow, rating_basis, era_preset } = tokenDraftConfig(token);
-  return configBadgesFromDraftConfig({ draft_flow, rating_basis, era_preset });
+  const { md, draft_flow, rating_basis, era_preset } = tokenDraftConfig(token);
+  const badges: ConfigBadge[] = [];
+  if (md !== "classic") {
+    badges.push({ axis: "draft_mode", label: draftModeShortLabel(md) });
+  }
+  badges.push(...configBadgesFromDraftConfig({ draft_flow, rating_basis, era_preset }));
+  return badges;
 }
 
 export function configBadgesFromReplayToken(runValue: string | null): ConfigBadge[] {

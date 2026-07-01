@@ -55,5 +55,6 @@ column. Casual submit/share behavior remains supported, and explicit
 
 Fresh-context Red review for L3 must re-execute the lane gates from an isolated
 clone, then the L3 PR can be squash-merged into `leaderboard-profiles` with a
-SHA pin. Season merge to `main` still requires the cumulative review, owner
-approval word for the exact head SHA, CI, deploy READY, and live probes.
+SHA pin. Season merge to `main` still requires cumulative review pinned to the
+exact head SHA, CI, deploy READY, live probes, and auto-revert on any failed
+live check.

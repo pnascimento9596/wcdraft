@@ -3,14 +3,10 @@ import { leaderboardEntries, savedRuns, users, type Db, type SavedRun } from "@w
 
 import { resultsHref } from "@/lib/game/navigation";
 import type { SavedRunSummary } from "@/lib/game/saved-runs-store";
-import {
-  BOARD_DRAFT_MODES,
-  BOARD_DRAFT_ORDERS,
-  BOARD_ERAS,
-  BOARD_RATING_BASES,
-} from "@/lib/leaderboard/config";
+import { BOARD_DRAFT_ORDERS, BOARD_ERAS, BOARD_RATING_BASES } from "@/lib/leaderboard/config";
 import { utcDateString } from "@/lib/game/daily";
 import { dailyStreakFromDates } from "@/lib/game/local-progress";
+import { draftModeLabel } from "@/lib/game/mode-labels";
 
 export interface AccountIdentity {
   readonly userId: string;
@@ -195,12 +191,12 @@ function toAccountRun(row: SavedRun, postedToLeaderboard: boolean): AccountRun {
       typeof summary?.undefeated_regulation === "boolean" ? summary.undefeated_regulation : null,
     formation: summary?.formation_name ?? "—",
     configLabel: [
-      labelFor(BOARD_DRAFT_MODES, draftMode),
+      accountDraftModeLabel(draftMode),
       labelFor(BOARD_DRAFT_ORDERS, draftOrder),
       labelFor(BOARD_RATING_BASES, basis),
       labelFor(BOARD_ERAS, era),
     ].join(" / "),
-    modeLabel: labelFor(BOARD_DRAFT_MODES, draftMode),
+    modeLabel: accountDraftModeLabel(draftMode),
     draftOrderLabel: labelFor(BOARD_DRAFT_ORDERS, draftOrder),
     eraLabel: labelFor(BOARD_ERAS, era),
     ratingBasisLabel: labelFor(BOARD_RATING_BASES, basis),
@@ -273,6 +269,10 @@ function labelFor<T extends string>(
 ): string {
   if (key === null) return "—";
   return items.find((item) => item.key === key)?.label ?? key;
+}
+
+function accountDraftModeLabel(mode: SavedRunSummary["draft_mode"] | null): string {
+  return mode === null || mode === undefined ? "—" : draftModeLabel(mode);
 }
 
 function nationMix(picks: ReadonlyArray<{ readonly nationCode: string }>): string {

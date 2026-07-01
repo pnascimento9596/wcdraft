@@ -14,6 +14,7 @@ import {
   versionsAgree,
   type RunTokenOgSummary,
   type RunTokenV3Body,
+  type RunTokenV4Body,
 } from "./run-token";
 import type { RunRecordV1 } from "./run-record";
 import { buildSimWorldInputs } from "./simulate";
@@ -23,7 +24,7 @@ import { buildNarrativeLabels } from "./results-adapters";
 export type RunOgVerificationResult =
   | {
       status: "accepted";
-      token: RunTokenV3Body;
+      token: RunTokenV3Body | RunTokenV4Body;
       draft: DraftState;
       run: RunResult;
       matches: readonly MatchResult[];
@@ -41,7 +42,9 @@ export function verifyRunTokenForOg(
 ): RunOgVerificationResult {
   const token = decodeRunToken(runValue);
   if (!token) return { status: "rejected", reason: "MALFORMED" };
-  if (token.v !== 3) return { status: "rejected", reason: "UNSUPPORTED_VERSION" };
+  if (token.v !== 3 && token.v !== 4) {
+    return { status: "rejected", reason: "UNSUPPORTED_VERSION" };
+  }
   if (!versionsAgree(token, data.gameData.versions)) {
     return { status: "rejected", reason: "WRONG_SEASON" };
   }

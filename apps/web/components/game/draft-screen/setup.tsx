@@ -1,6 +1,12 @@
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { ERA_PRESET_IDS, type DraftFlow, type EraPresetId, type RatingBasis } from "@wcdraft/core";
+import {
+  ERA_PRESET_IDS,
+  type DraftFlow,
+  type DraftMode,
+  type EraPresetId,
+  type RatingBasis,
+} from "@wcdraft/core";
 
 import type { GameData } from "@/lib/game/data";
 import { describeGameError } from "@/lib/game/errors";
@@ -12,6 +18,7 @@ import {
 import { requestRankedAttempt } from "@/lib/leaderboard/client";
 import { createNewRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
+import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { positionShape } from "@/lib/game/view-models";
 import { PitchMarkings } from "../pitch";
 import { DraftAppBar } from "./app-bar";
@@ -101,8 +108,8 @@ function DraftSetupDisclosure({
             </div>
           </div>
           <div className={s.setupAxis}>
-            <span className={s.setupAxisLabel}>Draft mode</span>
-            <div className={s.setupSeg} role="group" aria-label="Draft mode">
+            <span className={s.setupAxisLabel}>Draft order</span>
+            <div className={s.setupSeg} role="group" aria-label="Draft order">
               {(["squad_first", "position_first"] as const).map((f) => (
                 <button
                   key={f}
@@ -156,8 +163,8 @@ export function FormationSelect({
   onLocked,
 }: {
   gameData: GameData;
-  /** Run mode for the record being created — `hidden` is Memory mode. */
-  draftMode: "classic" | "hidden";
+  /** Run mode for the record being created. */
+  draftMode: DraftMode;
   /** Hidden route hook: ranked drafts must use a server-issued seed. */
   ranked?: boolean;
   onLocked: (record: RunRecordV1, warning: string | null) => void;
@@ -176,16 +183,19 @@ export function FormationSelect({
       setError(null);
       setPending(formation_id);
       try {
-        const rankedAttempt =
-          ranked === true
-            ? await requestRankedAttempt({
-                formationId: formation_id,
-                draftMode,
-                draftOrder: draftFlow,
-                era: eraPreset,
-                ratingBasis,
-              })
-            : null;
+        let rankedAttempt: Awaited<ReturnType<typeof requestRankedAttempt>> | null = null;
+        if (ranked === true) {
+          if (draftMode === "open") {
+            throw new Error("Open Draft is casual and does not issue ranked seeds.");
+          }
+          rankedAttempt = await requestRankedAttempt({
+            formationId: formation_id,
+            draftMode,
+            draftOrder: draftFlow,
+            era: eraPreset,
+            ratingBasis,
+          });
+        }
         if (rankedAttempt !== null && !rankedAttempt.ok) {
           throw new Error(
             rankedAttempt.message ??
@@ -241,6 +251,11 @@ export function FormationSelect({
             <p className={s.memoryModeNote} role="note">
               Memory mode — names, flags and years stay visible; ratings &amp; Synergy numbers hide
               until you simulate.
+            </p>
+          ) : null}
+          {draftMode === "open" ? (
+            <p className={s.memoryModeNote} role="note">
+              {DRAFT_MODE_COPY.open.label} — {DRAFT_MODE_COPY.open.description} Casual, not ranked.
             </p>
           ) : null}
         </div>

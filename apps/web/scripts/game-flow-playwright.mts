@@ -398,11 +398,11 @@ async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): 
   await page.goto(`${baseUrl}/play/draft`, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Lock a formation" }).waitFor();
 
-  const draftModeGroup = page.getByRole("group", { name: "Draft mode" });
-  if (!(await draftModeGroup.isVisible())) {
+  const draftOrderGroup = page.getByRole("group", { name: "Draft order" });
+  if (!(await draftOrderGroup.isVisible())) {
     await page.getByRole("button", { name: /Draft setup/ }).click();
   }
-  await draftModeGroup.getByRole("button", { name: "Position First" }).click();
+  await draftOrderGroup.getByRole("button", { name: "Position First" }).click();
   await page.getByRole("button", { name: /4-3-3[\s\S]*(Selected|Lock this shape)/ }).click();
   const formationLockButton = page.getByRole("button", { name: /Lock 4-3-3/ });
   await assertNoHorizontalOverflow(page, "formation setup");

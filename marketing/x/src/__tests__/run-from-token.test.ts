@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { autoDraft } from "@wcdraft/core";
+import { autoDraft, encodeRunTokenBody, ERA_PRESETS, type RunTokenV4Body } from "@wcdraft/core";
 
 import { loadMarketingGameData, simulateDraft } from "../engine/game-data.ts";
 import { buildTokenBodyFromDraft, encodeRunTokenV2, type RunTokenV2Body } from "../engine/token.ts";
@@ -77,11 +77,46 @@ describe("runFromToken — real record from a share token", () => {
     expect(res.reason).toBe("version_skew");
   });
 
-  it("honest-state: a newer-version (t4.) token → newer_version", () => {
-    const res = runFromToken("t4.eyJ2Ijo0fQ", loadMarketingGameData());
+  it("honest-state: a newer-version (t5.) token → newer_version", () => {
+    const res = runFromToken("t5.eyJ2Ijo1fQ", loadMarketingGameData());
     expect(res.ok).toBe(false);
     if (res.ok) return;
     expect(res.reason).toBe("newer_version");
+  });
+
+  it("honest-state: an Open Draft t4 token → replay_failed, never a fabricated stat", () => {
+    const gd = loadMarketingGameData();
+    const preset = ERA_PRESETS.all_time;
+    const body: RunTokenV4Body = {
+      v: 4,
+      rid: "mkt-open-unsupported",
+      fid: "4-3-3",
+      ps: "wcdraft:mkt:open:unsupported",
+      tn: "Open XI",
+      md: "open",
+      df: "squad_first",
+      rb: "career",
+      ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
+      pl: [
+        { k: "m", mc: "m:dummy:2026" },
+        ...Array.from({ length: 16 }, (_, i) => ({
+          k: "p" as const,
+          c: `p:dummy-${i}:2026`,
+          s: `slot-${i}`,
+        })),
+      ],
+      sv: gd.versions.schema_version,
+      dv: gd.versions.dataset_version,
+      rv: gd.versions.rating_version,
+      ev: gd.versions.engine_version,
+      uv: gd.versions.ruleset_version,
+      hv: gd.versions.data_bundle_hash,
+    };
+    const res = runFromToken(encodeRunTokenBody(body), gd);
+    expect(res.ok).toBe(false);
+    if (res.ok) return;
+    expect(res.reason).toBe("replay_failed");
+    expect(res.message).toContain("Open Draft");
   });
 
   it("honest-state: foreign / non-token garbage → malformed", () => {

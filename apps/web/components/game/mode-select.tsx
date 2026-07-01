@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import type { DraftMode } from "@wcdraft/core";
+import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { LocalProgressBandFromStorage } from "./local-progress-band";
 import s from "./game.module.css";
 
-type DraftMode = "classic" | "hidden";
 type PlayMode = "daily" | DraftMode;
 
 const MODE_COPY: Record<
@@ -36,21 +37,31 @@ const MODE_COPY: Record<
   },
   classic: {
     index: "01",
-    title: "Classic",
-    tag: "Live",
-    desc: "Ratings, positions and stats all on the table — pure drafting skill on every rolled squad.",
-    preview: "Visible ratings · live Synergy",
-    chips: ["Ratings visible", "Full stat lines", "Live Synergy"],
+    title: DRAFT_MODE_COPY.classic.label,
+    tag: "Ranked",
+    desc: DRAFT_MODE_COPY.classic.description,
+    preview: "Choose 1 of 3 · visible ratings",
+    chips: ["3-player choice", "Ranked-capable", "Live Synergy"],
     cta: "Start drafting",
     href: "/play/draft",
   },
-  hidden: {
+  open: {
     index: "02",
-    title: "Memory",
+    title: DRAFT_MODE_COPY.open.label,
+    tag: "Casual",
+    desc: DRAFT_MODE_COPY.open.description,
+    preview: "Full roster · no ranked board",
+    chips: ["Full nation roster", "Casual only", "Shareable replay"],
+    cta: "Open draft",
+    href: "/play/draft?mode=open",
+  },
+  hidden: {
+    index: "03",
+    title: DRAFT_MODE_COPY.hidden.label,
     tag: "Blind",
-    desc: "Try it after a run: names, flags and years stay visible; ratings reveal after simulation.",
+    desc: DRAFT_MODE_COPY.hidden.description,
     preview: "Hidden ratings · post-run reveal",
-    chips: ["Ratings hidden", "Names & years shown", "Same seeds"],
+    chips: ["Ratings hidden", "Choose 1 of 3", "Blind ranked lane"],
     cta: "Draft from memory",
     href: "/play/draft?mode=hidden",
     secondary: true,

@@ -53,6 +53,7 @@ export type {
   SquadSlot,
   SquadValidation,
   DraftState,
+  DraftMode,
   PickedKind,
 } from "./draft.js";
 

@@ -174,4 +174,6 @@ Generated/relocked surfaces:
 
 ## Human Actions
 
-None requested or required by this autonomous dispatch. The normal Red human-approval gate is intentionally waived by the explicit season dispatch; the fresh-context review and CI gates remain mandatory before merge.
+None requested or required by this autonomous dispatch. Under the current v5
+contract there is no Red human-approval gate; fresh-context review and CI gates
+remain mandatory before merge.

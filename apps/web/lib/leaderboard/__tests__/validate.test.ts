@@ -120,6 +120,7 @@ describe("step 1 — shape + size guard", () => {
   it("rejects a missing or unknown draft_mode (INVALID_BODY)", () => {
     expect(rejectionCode(submit({ draft_mode: undefined }))).toBe("INVALID_BODY");
     expect(rejectionCode(submit({ draft_mode: "all" }))).toBe("INVALID_BODY");
+    expect(rejectionCode(submit({ draft_mode: "open" }))).toBe("INVALID_BODY");
   });
 
   it("ORDER LOCK: size guard fires before name validation", () => {
@@ -158,9 +159,9 @@ describe("step 2 — malformed tokens (MALFORMED_TOKEN)", () => {
     expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
   });
 
-  it("rejects a future `t4.` wire prefix", () => {
-    // The UI may show a nicer "newer version" notice, but the API contract is
-    // simple: undecodable means MALFORMED_TOKEN.
+  it("rejects a malformed `t4.` Open Draft token body", () => {
+    // The wire prefix is current, but malformed token bodies still collapse to
+    // the API's single MALFORMED_TOKEN contract.
     const t = "t4." + Buffer.from(JSON.stringify({ v: 4 }), "utf8").toString("base64url");
     expect(rejectionCode(submit({ token: t }))).toBe("MALFORMED_TOKEN");
   });
@@ -212,7 +213,7 @@ describe("step 3 — WRONG_SEASON (each of the six anchors alone)", () => {
 describe("step 3b — per-config boards accept every legal config", () => {
   function submitRecord(
     record: typeof origin,
-    draftMode: "classic" | "hidden" = record.draft.mode,
+    draftMode: "classic" | "hidden" = record.draft.mode === "hidden" ? "hidden" : "classic",
   ) {
     const token = encodeBody(buildRunTokenBody(record));
     const expected = expectedRunFor(data.gameData, data.scenario, record);
@@ -269,6 +270,25 @@ describe("step 3b — per-config boards accept every legal config", () => {
     expect(v.status).toBe("accepted");
     if (v.status !== "accepted") return;
     expect(v.draft_order).toBe("position_first");
+  });
+
+  it("rejects Open Draft t4 tokens from Classic/Memory leaderboard boards", () => {
+    const record = buildOriginRecord(data.gameData, `${ORIGIN_SEED}:open`, "open", "Open XI");
+    const body = buildRunTokenBody(record);
+    expect(body.v).toBe(4);
+    const v = validateSubmission(
+      {
+        token: encodeBody(body),
+        claimed_score: 0,
+        draft_mode: "classic",
+        display_name: "config_player",
+      },
+      data,
+    );
+    expect(rejectionCode(v)).toBe("INVALID_BODY");
+    if (v.status === "rejected") {
+      expect(v.reason).toContain("does not match token mode open");
+    }
   });
 
   it("a bad name on a legal non-canonical config still rejects before replay", () => {

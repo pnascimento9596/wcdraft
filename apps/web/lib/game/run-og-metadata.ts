@@ -52,7 +52,7 @@ export function shareOgImageForRunValue(
   if (!signed || !isLikelySignedRunOg(signed)) return defaultRunOgImage();
 
   const decoded = decodeRunToken(value);
-  if (!decoded || decoded.v !== 3) {
+  if (!decoded || (decoded.v !== 3 && decoded.v !== 4)) {
     return defaultRunOgImage();
   }
   const signedHint = readSignedRunOgCacheHint(signed);

@@ -268,7 +268,7 @@ Major surfaces changed:
 Required before merge:
 
 1. Fresh-session independent reviewer must re-execute the gates on this branch.
-2. Owner must give explicit SHA-pinned approval in-session.
+2. Reviewer PASS must be pinned to the final SHA.
 3. Squash merge must use `gh pr merge --squash --match-head-commit <sha>`.
 4. Wait for Vercel production deploy READY.
 5. Live-verify:

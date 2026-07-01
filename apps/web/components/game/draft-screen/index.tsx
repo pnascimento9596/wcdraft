@@ -13,7 +13,10 @@ import {
   positionCompatibility,
   validateSquad,
   type CardId,
+  type DraftMode,
   type DraftState,
+  type ManagerCardId,
+  type Position,
   type SquadSlot,
   type SynergyResult,
   selectDraftTarget,
@@ -29,6 +32,7 @@ import { getCatalogForEra, type GameData } from "@/lib/game/data";
 import { dailyDateFromSearchParams } from "@/lib/game/daily";
 import { DraftTransitionError } from "@/lib/game/errors";
 import { draftTargetLabel, lockBarIdleCopy } from "@/lib/game/config-badges";
+import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { dailyDraftHref, draftHref, reviewHref } from "@/lib/game/navigation";
 import { saveRunRecord, type RunRecordV1 } from "@/lib/game/run-record";
 import {
@@ -93,6 +97,9 @@ type Selection =
   | { kind: "manager"; card: ManagerCardView }
   | null;
 
+type OpenRosterFilter = "ALL" | Position;
+const OPEN_ROSTER_FILTERS: readonly OpenRosterFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
+
 export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -101,10 +108,16 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   // Mode-select threads `?mode=hidden` for a Memory draft; anything else is
   // classic. Only consulted when CREATING a run — resumed runs carry their
   // mode on the persisted DraftState.
-  const requestedMode: "classic" | "hidden" =
-    searchParams?.get("mode") === "hidden" ? "hidden" : "classic";
+  const requestedMode: DraftMode =
+    searchParams?.get("mode") === "hidden"
+      ? "hidden"
+      : searchParams?.get("mode") === "open"
+        ? "open"
+        : "classic";
   const rankedDraft =
-    !daily && (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
+    requestedMode !== "open" &&
+    !daily &&
+    (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
 
   const { mode, setMode, retryFromError } = useDraftScreenLoader(requestRunId, { dailyDate });
 
@@ -265,6 +278,7 @@ function DraftBoard({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [committing, setCommitting] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
+  const [openRosterFilter, setOpenRosterFilter] = useState<OpenRosterFilter>("ALL");
 
   // Standalone-spin flow state. `phase` gates the spin stage vs the lineup
   // view; `anim` drives the drum lifecycle on the spin stage.
@@ -301,6 +315,7 @@ function DraftBoard({
     setSelSlot(null);
     setSheetOpen(false);
     setTransitionError(null);
+    setOpenRosterFilter("ALL");
     setPhase("spin");
     setAnim("idle");
     lastSelectedPlayerRef.current = null;
@@ -569,7 +584,7 @@ function DraftBoard({
         }
         nextDraft = pickPlayer(catalog, draft, sel.card.card_id as CardId, selSlot);
       } else {
-        nextDraft = pickManager(catalog, draft);
+        nextDraft = pickManager(catalog, draft, sel.card.manager_card_id as ManagerCardId);
       }
       const updated: RunRecordV1 = {
         ...record,
@@ -613,6 +628,10 @@ function DraftBoard({
       : null;
 
   const canLock = sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
+  const visiblePlayers = useMemo(() => {
+    if (draft.mode !== "open" || openRosterFilter === "ALL") return candidates.players;
+    return candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
+  }, [candidates.players, draft.mode, openRosterFilter]);
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Review CTA gates the entrance to
   // Simulate/Share. It MUST require the draft to be COMPLETE (all 17 spins
@@ -638,6 +657,9 @@ function DraftBoard({
         <DraftAppBar
           spinNumber={spinNumber}
           progressPct={progressPct}
+          mode={draft.mode}
+          ranked={record.ranked_attempt !== undefined}
+          pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
           warning={persistenceWarning}
         />
         <div className={s.draftScroll}>
@@ -754,6 +776,9 @@ function DraftBoard({
           pickNumber={spinNumber}
           totalPicks={TOTAL_SPINS}
           formationId={draft.formation_id}
+          modeLabel={DRAFT_MODE_COPY[draft.mode].shortLabel}
+          modeCue={record.ranked_attempt ? "Ranked" : DRAFT_MODE_COPY[draft.mode].cue}
+          pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
           synergyOverall={revealSynergyOverall}
           synergyMultiplier={revealSynergyMultiplier}
           playerPoolCount={candidates.players.length}
@@ -929,16 +954,41 @@ function DraftBoard({
         className={`${s.panel} ${s.candidatePanel}`}
         aria-label="Candidates"
       >
-        {candidates.manager ? (
+        {draft.mode === "open" ? (
+          <div className={s.openRosterTools}>
+            <div className={s.openRosterSeg} role="group" aria-label="Filter Open Draft roster">
+              {OPEN_ROSTER_FILTERS.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={`${s.openRosterBtn} ${
+                    openRosterFilter === filter ? s.openRosterBtnActive : ""
+                  }`}
+                  aria-pressed={openRosterFilter === filter}
+                  onClick={() => setOpenRosterFilter(filter)}
+                >
+                  {filter === "ALL" ? "All" : filter}
+                </button>
+              ))}
+            </div>
+            <span className={s.openRosterMeta}>
+              {visiblePlayers.length}/{candidates.players.length} · OVR sort
+            </span>
+          </div>
+        ) : null}
+        {candidates.managers.map((manager, index) => (
           <ManagerCandidate
-            manager={candidates.manager}
-            selected={sel?.kind === "manager"}
+            key={manager.manager_card_id}
+            manager={manager}
+            selected={
+              sel?.kind === "manager" && sel.card.manager_card_id === manager.manager_card_id
+            }
             disabled={draft.manager_card_id !== null}
             rarePick={spin?.rare === true}
-            autoFocus={managerOnlyOpen}
+            autoFocus={managerOnlyOpen && index === 0}
             onSelect={selectManager}
           />
-        ) : null}
+        ))}
         {managerOnlyOpen ? (
           <p className={s.emptyList} role="status">
             All player slots filled — pick the manager.
@@ -946,7 +996,7 @@ function DraftBoard({
         ) : null}
 
         <div className={s.candList}>
-          {candidates.players.map((card) => (
+          {visiblePlayers.map((card) => (
             <CandidateCard
               key={card.card_id}
               card={card}
@@ -956,8 +1006,12 @@ function DraftBoard({
               onSelect={selectPlayer}
             />
           ))}
-          {candidates.players.length === 0 ? (
-            <p className={s.emptyList}>No player choices on this spin.</p>
+          {visiblePlayers.length === 0 ? (
+            <p className={s.emptyList}>
+              {draft.mode === "open"
+                ? "No players match this filter."
+                : "No player choices on this spin."}
+            </p>
           ) : null}
         </div>
       </section>
@@ -971,7 +1025,14 @@ function DraftBoard({
        move under the user's finger. */
     <div className={`${s.draftShell} ${s.draftShellAnchored}`} data-draft-anchored>
       {!complete ? <h1 className="visually-hidden">Pick your draft candidate</h1> : null}
-      <DraftAppBar spinNumber={spinNumber} progressPct={progressPct} warning={persistenceWarning} />
+      <DraftAppBar
+        spinNumber={spinNumber}
+        progressPct={progressPct}
+        mode={draft.mode}
+        ranked={record.ranked_attempt !== undefined}
+        pickSpace={DRAFT_MODE_COPY[draft.mode].pickSpace}
+        warning={persistenceWarning}
+      />
 
       <div className={s.draftScroll}>
         {dailyDate ? (

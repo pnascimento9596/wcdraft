@@ -52,11 +52,14 @@ import {
   type DraftFlow,
   type DraftState,
   type EraPresetId,
+  type ManagerCardId,
   type RatingBasis,
   type RunTokenBody,
   type RunTokenOgSummary,
   type RunTokenPickV3,
+  type RunTokenPickV4,
   type RunTokenV3Body,
+  type RunTokenV4Body,
 } from "@wcdraft/core";
 
 import type { GameData } from "./data";
@@ -67,6 +70,7 @@ export {
   RUN_TOKEN_PREFIX,
   RUN_TOKEN_V2_PREFIX,
   RUN_TOKEN_V3_PREFIX,
+  RUN_TOKEN_V4_PREFIX,
   RUN_TOKEN_MAX_LEN,
   RunTokenError,
   decodeRunToken,
@@ -82,13 +86,15 @@ export type {
   RunTokenPick,
   RunTokenPickV2,
   RunTokenPickV3,
+  RunTokenPickV4,
   RunTokenV1Body,
   RunTokenV2Body,
   RunTokenV3Body,
+  RunTokenV4Body,
 } from "@wcdraft/core";
 
-/** Build the spin-agency `t3.` token body from a fully drafted `RunRecord`. */
-export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body {
+/** Build a replay token body from a fully drafted `RunRecord`. */
+export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunTokenV4Body {
   const spins = [...record.draft.spins].sort((a, b) => a.index - b.index);
   if (spins.length !== 17) {
     throw new RunTokenError(`expected 17 spins in DraftState, got ${spins.length}`);
@@ -100,6 +106,55 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body {
   const rating_basis: RatingBasis = record.draft.rating_basis ?? "career";
   const era_preset: EraPresetId = record.draft.era_preset ?? "all_time";
   const positionFirst = draft_flow === "position_first";
+  const draftMode = record.draft.mode;
+  const preset = ERA_PRESETS[era_preset];
+  if (draftMode === "open") {
+    const pl: RunTokenPickV4[] = spins.map((spin, i) => {
+      if (spin.index !== i) {
+        throw new RunTokenError(`spin index ${spin.index} out of order at position ${i}`);
+      }
+      if (spin.picked_kind === "manager") {
+        if (spin.picked_manager_card_id === null) {
+          throw new RunTokenError(`spin ${i}: manager pick missing manager_card_id`);
+        }
+        const base = { k: "m" as const, mc: spin.picked_manager_card_id };
+        return positionFirst ? { ...base, ts: "manager" as const } : base;
+      }
+      if (spin.picked_kind === "player") {
+        if (spin.picked_card_id === null || spin.assigned_slot_id === null) {
+          throw new RunTokenError(`spin ${i}: player pick missing card_id or slot_id`);
+        }
+        if (!spin.rolled_card_ids.includes(spin.picked_card_id)) {
+          throw new RunTokenError(`spin ${i}: picked card is not in the open roster`);
+        }
+        const base = { k: "p" as const, c: spin.picked_card_id, s: spin.assigned_slot_id };
+        return positionFirst ? { ...base, ts: spin.assigned_slot_id } : base;
+      }
+      throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
+    });
+    return {
+      v: 4,
+      rid: record.run_id,
+      fid: record.draft.formation_id,
+      ps: record.parent_seed,
+      tn: record.draft.team_name,
+      md: "open",
+      df: draft_flow,
+      rb: rating_basis,
+      ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
+      pl,
+      sv: record.versions.schema_version,
+      dv: record.versions.dataset_version,
+      rv: record.versions.rating_version,
+      ev: record.versions.engine_version,
+      uv: record.versions.ruleset_version,
+      hv: record.versions.data_bundle_hash,
+      ...(record.challenge?.kind === "daily"
+        ? { ch: { k: "daily" as const, d: record.challenge.date, s: record.challenge.seed } }
+        : {}),
+    };
+  }
+
   const pl: RunTokenPickV3[] = spins.map((spin, i) => {
     if (spin.index !== i) {
       throw new RunTokenError(`spin index ${spin.index} out of order at position ${i}`);
@@ -125,14 +180,13 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body {
     }
     throw new RunTokenError(`spin ${i}: pick is unresolved (status=${spin.status ?? "?"})`);
   });
-  const preset = ERA_PRESETS[era_preset];
   return {
     v: 3,
     rid: record.run_id,
     fid: record.draft.formation_id,
     ps: record.parent_seed,
     tn: record.draft.team_name,
-    md: record.draft.mode,
+    md: draftMode,
     df: draft_flow,
     rb: rating_basis,
     ef: { id: preset.id, min: preset.min_year, max: preset.max_year },
@@ -179,8 +233,8 @@ export function encodeRunToken(record: RunRecordV1): string {
  * only meaningful when versions agree.
  */
 export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameData): DraftState {
-  if (token.v !== 3) {
-    throw new RunTokenError("legacy token version cannot replay under choose-from-3");
+  if (token.v !== 3 && token.v !== 4) {
+    throw new RunTokenError("legacy token version cannot replay under the current draft engine");
   }
   const config = tokenDraftConfig(token);
   // Both rating bases now replay (runtime-data-2.0.0 dual basis). The basis is
@@ -205,19 +259,43 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
     era_preset: config.era_preset,
   });
   for (let i = 0; i < token.pl.length; i += 1) {
+    if (token.v === 4) {
+      const pick = token.pl[i]!;
+      try {
+        // DC-3 position-first: replay the COMMITTED target before each pick —
+        // the same selectDraftTarget transition the live UI walks.
+        if (positionFirst) {
+          if (pick.ts === undefined) {
+            throw new RunTokenError(`spin ${i}: position_first pick is missing its target`);
+          }
+          state = selectDraftTarget(catalog, state, pick.ts);
+        }
+        if (pick.k === "m") {
+          state = pickManager(catalog, state, pick.mc as ManagerCardId);
+        } else {
+          const active = activeSpin(state);
+          if (!active || active.status !== "pending") {
+            throw new RunTokenError(`spin ${i}: no materialized player choices are pending`);
+          }
+          state = pickPlayer(catalog, state, pick.c as CardId, pick.s);
+        }
+      } catch (err) {
+        throw new RunTokenError(
+          `replay failed at spin ${i} (${
+            pick.k === "m" ? "manager" : `card ${pick.c}→${pick.s}`
+          }): ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+      continue;
+    }
+
     const pick = token.pl[i]!;
     try {
-      // DC-3 position-first: replay the COMMITTED target before each pick —
-      // the same selectDraftTarget transition the live UI walks. Decode
-      // guarantees `ts` is present and coherent on every position-first
-      // entry; the engine then enforces target/assignment equality, so a
-      // token whose `ts` and final slot diverge fails replay loudly.
       if (positionFirst) {
-        const ts = (pick as { ts?: string }).ts;
-        if (ts === undefined) {
+        if (pick.ts === undefined) {
           throw new RunTokenError(`spin ${i}: position_first pick is missing its target`);
         }
-        state = selectDraftTarget(catalog, state, ts);
+        state = selectDraftTarget(catalog, state, pick.ts);
       }
       if (pick.k === "m") {
         state = pickManager(catalog, state);
@@ -236,9 +314,9 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
       }
     } catch (err) {
       throw new RunTokenError(
-        `replay failed at spin ${i} (${pick.k === "m" ? "manager" : `choice ${pick.ci}→${pick.s}`}): ${
-          err instanceof Error ? err.message : String(err)
-        }`,
+        `replay failed at spin ${i} (${
+          pick.k === "m" ? "manager" : `choice ${pick.ci}→${pick.s}`
+        }): ${err instanceof Error ? err.message : String(err)}`,
       );
     }
   }
@@ -257,7 +335,7 @@ export function reconstructDraftFromToken(token: RunTokenBody, gameData: GameDat
 export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData): RunRecordV1 {
   const draft = reconstructDraftFromToken(token, gameData);
   const challenge =
-    token.v === 3 && token.ch?.k === "daily"
+    (token.v === 3 || token.v === 4) && token.ch?.k === "daily"
       ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
       : undefined;
   return {
