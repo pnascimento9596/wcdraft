@@ -27,6 +27,7 @@
 import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { savedRuns } from "@wcdraft/db";
 import type { Db, SavedRun } from "@wcdraft/db";
+import type { DraftMode } from "@wcdraft/core";
 
 /** Match the local `RUN_RECORD_CAP` so the swap-in provider preserves user-visible behaviour. */
 export const SAVED_RUNS_CAP = 5 as const;
@@ -59,7 +60,7 @@ export interface SavedRunSummary {
   readonly undefeated_regulation?: boolean;
   /** Formation pretty name e.g. "4-3-3". */
   readonly formation_name: string;
-  readonly draft_mode?: "classic" | "hidden";
+  readonly draft_mode?: DraftMode;
   readonly draft_order?: "squad_first" | "position_first";
   readonly era_preset?: "all_time" | "post_2000" | "post_2010" | "modern";
   readonly rating_basis?: "career" | "current";

@@ -9,7 +9,9 @@ Status: pre-merge candidate; final merge/deploy/live-verification section is upd
 - Candidate runtime: `runtime-data-2.4.0` / `wc-perf-6.2.0` / `proj-career-5.2.0` / `engine-2026.06.15-merit-v4.2`.
 - Leaderboard season key: `engine-2026.06.15-merit-v4.2_wc-perf-6.2.0+proj-career-5.2.0_2026-06-04_ruleset-2026.06.04_f8de3452`.
 - Rebased on `origin/main` `9892af365dd85d36783f4a038ca8a946d3b36291` after the parallel `ui-polish` lane landed.
-- HUMAN ACTIONS: none requested by this lane; owner approval step intentionally waived by dispatch.
+- HUMAN ACTIONS: none requested by this lane; under the current v5 contract,
+  RED safety is fresh-context review, machine gates, SHA-pinned merge, deploy
+  observation, live verification, and auto-revert on any failed live check.
 - Oracle note: initial GPT-5.5 high-path oracle planning was obtained before implementation; later final-form oracle attempts failed because the RepoPromptCE oracle transport was closed.
 
 ## Mechanism

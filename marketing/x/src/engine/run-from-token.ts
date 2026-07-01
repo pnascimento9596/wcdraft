@@ -87,6 +87,13 @@ export function runFromToken(
   if (!decoded) {
     return { ok: false, reason: "malformed", message: "token is malformed, foreign, or tampered" };
   }
+  if (decoded.md === "open") {
+    return {
+      ok: false,
+      reason: "replay_failed",
+      message: "Open Draft t4 tokens are not supported by the marketing composer",
+    };
+  }
   if (!versionsAgree(decoded, gd.versions)) {
     return {
       ok: false,

@@ -40,9 +40,10 @@ export const SpinSchema = z
     draw_probability: PercentSchema,
     // rolled_card_ids MAY be empty on a manager-only spin (no remaining
     // players for this (tournament, nation)) — see the Spin comment.
-    rolled_card_ids: z.array(CardIdSchema).max(MAX_PLAYER_CHOICES_PER_SPIN),
+    rolled_card_ids: z.array(CardIdSchema),
     excluded_player_ids: z.array(NonEmptyIdSchema),
     rolled_manager_card_id: ManagerCardIdSchema.nullable(),
+    rolled_manager_card_ids: z.array(ManagerCardIdSchema).optional(),
     picked_kind: z.enum(["player", "manager"]),
     picked_card_id: CardIdSchema.nullable(),
     picked_player_id: NonEmptyIdSchema.nullable(),
@@ -63,6 +64,7 @@ export const SpinSchema = z
         spin.rolled_card_ids.length === 0 &&
         spin.excluded_player_ids.length === 0 &&
         spin.rolled_manager_card_id === null &&
+        (spin.rolled_manager_card_ids === undefined || spin.rolled_manager_card_ids.length === 0) &&
         spin.picked_card_id === null &&
         spin.picked_player_id === null &&
         spin.assigned_slot_id === null &&
@@ -94,7 +96,9 @@ export const SpinSchema = z
       });
     }
 
-    // rolled_card_ids uniqueness + every rolled card's tournament_id matches.
+    // rolled_card_ids uniqueness. Team-year coherence is enforced at
+    // DraftState level for Classic/Memory; Open Draft may offer cards from
+    // every tournament for the spun nation.
     const rolledSeen = new Set<string>();
     for (let i = 0; i < spin.rolled_card_ids.length; i++) {
       const cid = spin.rolled_card_ids[i]! as string;
@@ -106,14 +110,6 @@ export const SpinSchema = z
         });
       }
       rolledSeen.add(cid);
-      const parsed = parseCardId(cid);
-      if (parsed && parsed.tournament_id !== spin.tournament_id) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `rolled card ${cid} tournament_id does not match spin tournament_id ${spin.tournament_id}`,
-          path: ["rolled_card_ids", i],
-        });
-      }
     }
 
     // rolled_manager_card_id, when present, must point at this spin's tournament.
@@ -125,6 +121,20 @@ export const SpinSchema = z
           message: `rolled_manager_card_id tournament_id does not match spin tournament_id ${spin.tournament_id}`,
           path: ["rolled_manager_card_id"],
         });
+      }
+    }
+    if (spin.rolled_manager_card_ids !== undefined) {
+      const mgrSeen = new Set<string>();
+      for (let i = 0; i < spin.rolled_manager_card_ids.length; i++) {
+        const mid = spin.rolled_manager_card_ids[i] as unknown as string;
+        if (mgrSeen.has(mid)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `rolled_manager_card_ids contains duplicate ${mid}`,
+            path: ["rolled_manager_card_ids", i],
+          });
+        }
+        mgrSeen.add(mid);
       }
     }
 
@@ -187,7 +197,16 @@ export const SpinSchema = z
       // clean issue instead of an exception escaping safeParse.
       let expected: string;
       try {
-        expected = buildCardId(spin.picked_player_id, spin.tournament_id);
+        const parsed = parseCardId(pickedStr);
+        if (!parsed) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "picked_card_id is not a well-formed CardId",
+            path: ["picked_card_id"],
+          });
+          return;
+        }
+        expected = buildCardId(spin.picked_player_id, parsed.tournament_id);
       } catch (err) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -225,15 +244,24 @@ export const SpinSchema = z
           path: ["picked_card_id"],
         });
       }
-      if (spin.rolled_manager_card_id === null) {
+      const managerOffer = spin.rolled_manager_card_ids ?? [];
+      if (
+        spin.rolled_manager_card_id === null &&
+        !managerOffer.includes(spin.picked_manager_card_id)
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "manager-pick spin must have a non-null rolled_manager_card_id",
+          message:
+            "manager-pick spin must have a non-null rolled_manager_card_id or include the pick in rolled_manager_card_ids",
           path: ["rolled_manager_card_id"],
         });
         return;
       }
-      if ((spin.picked_manager_card_id as string) !== (spin.rolled_manager_card_id as string)) {
+      if (
+        spin.rolled_manager_card_id !== null &&
+        (spin.picked_manager_card_id as string) !== (spin.rolled_manager_card_id as string) &&
+        !managerOffer.includes(spin.picked_manager_card_id)
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
@@ -253,7 +281,7 @@ export const SpinSchema = z
           });
           return;
         }
-        expectedMgr = buildManagerCardId(parsed.manager_id, spin.tournament_id);
+        expectedMgr = buildManagerCardId(parsed.manager_id, parsed.tournament_id);
       } catch (err) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -340,7 +368,7 @@ export const DraftStateSchema = z
   .object({
     run_id: NonEmptyIdSchema,
     draft_seed: NonEmptyIdSchema,
-    mode: z.enum(["classic", "hidden"]),
+    mode: z.enum(["classic", "hidden", "open"]),
     formation_id: NonEmptyIdSchema,
     team_name: z.string(),
     spins: z.array(SpinSchema).length(17),
@@ -435,6 +463,51 @@ export const DraftStateSchema = z
       }
     }
 
+    // Mode-specific offer shape. Classic/Memory preserve the choose-from-3
+    // contract exactly; Open Draft can expose the full era-filtered nation
+    // roster and a full manager list for the spun nation.
+    for (let i = 0; i < draft.spins.length; i++) {
+      const s = draft.spins[i]!;
+      if (s.status === "awaiting_slot") continue;
+      const managerOfferCount = s.rolled_manager_card_ids?.length ?? 0;
+      if (draft.mode !== "open") {
+        if (s.rolled_card_ids.length > MAX_PLAYER_CHOICES_PER_SPIN) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `choose-from-3 spin ${i} must expose at most ${MAX_PLAYER_CHOICES_PER_SPIN} player choices`,
+            path: ["spins", i, "rolled_card_ids"],
+          });
+        }
+        if (managerOfferCount > 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `choose-from-3 spin ${i} must not use rolled_manager_card_ids`,
+            path: ["spins", i, "rolled_manager_card_ids"],
+          });
+        }
+        for (let j = 0; j < s.rolled_card_ids.length; j++) {
+          const parsed = parseCardId(s.rolled_card_ids[j]!);
+          if (parsed && parsed.tournament_id !== s.tournament_id) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `rolled card ${s.rolled_card_ids[j]} tournament_id does not match spin tournament_id ${s.tournament_id}`,
+              path: ["spins", i, "rolled_card_ids", j],
+            });
+          }
+        }
+        if (s.picked_card_id !== null) {
+          const parsed = parseCardId(s.picked_card_id);
+          if (parsed && parsed.tournament_id !== s.tournament_id) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `picked_card_id tournament_id must match spin tournament_id ${s.tournament_id} outside Open Draft`,
+              path: ["spins", i, "picked_card_id"],
+            });
+          }
+        }
+      }
+    }
+
     // ENGINE-V2 E-1: (tournament_id, nation_id) MAY repeat across spins under
     // with-replacement weighted sampling. The WS-0c uniqueness refinement is
     // intentionally GONE — global player_id dedup is what stops the same human
@@ -472,6 +545,13 @@ export const DraftStateSchema = z
             code: z.ZodIssueCode.custom,
             message: `spins[${i}].rolled_manager_card_id must be null after the manager pick at spin ${managerPickIndex}`,
             path: ["spins", i, "rolled_manager_card_id"],
+          });
+        }
+        if ((s.rolled_manager_card_ids?.length ?? 0) > 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `spins[${i}].rolled_manager_card_ids must be empty after the manager pick at spin ${managerPickIndex}`,
+            path: ["spins", i, "rolled_manager_card_ids"],
           });
         }
       }
@@ -613,7 +693,7 @@ export const DraftStateSchema = z
       if (
         slot.card_id !== s.picked_card_id ||
         slot.player_id !== s.picked_player_id ||
-        slot.tournament_id !== s.tournament_id
+        slot.tournament_id !== parseCardId(s.picked_card_id ?? "")?.tournament_id
       ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -725,14 +805,21 @@ export const DraftStateSchema = z
             // Candidate exposure matches the committed target: a manager
             // target offers ONLY the coach; a slot target offers ONLY players.
             if (s.target_slot_id === "manager") {
-              if (s.rolled_card_ids.length !== 0 || s.rolled_manager_card_id === null) {
+              const hasManagerOffer =
+                draft.mode === "open"
+                  ? (s.rolled_manager_card_ids?.length ?? 0) > 0
+                  : s.rolled_manager_card_id !== null;
+              if (s.rolled_card_ids.length !== 0 || !hasManagerOffer) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,
                   message: `position_first manager-target spin exposes only the coach (spins[${i}])`,
                   path: ["spins", i, "rolled_manager_card_id"],
                 });
               }
-            } else if (s.rolled_manager_card_id !== null) {
+            } else if (
+              s.rolled_manager_card_id !== null ||
+              (s.rolled_manager_card_ids?.length ?? 0) > 0
+            ) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: `position_first slot-target spin must not expose a coach (spins[${i}])`,

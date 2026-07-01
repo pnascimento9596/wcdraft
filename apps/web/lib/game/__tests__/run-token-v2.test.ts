@@ -47,7 +47,9 @@ import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-ha
 
 const gameData: GameData = buildGameDataFromBundles();
 const origin = buildOriginRecord(gameData);
-const originBody: RunTokenV3Body = buildRunTokenBody(origin);
+const builtOriginBody = buildRunTokenBody(origin);
+if (builtOriginBody.v !== 3) throw new Error("expected default fixture to emit a t3 body");
+const originBody: RunTokenV3Body = builtOriginBody;
 
 function encodeBody(body: unknown, prefix: string = RUN_TOKEN_V3_PREFIX): string {
   return prefix + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
@@ -282,17 +284,18 @@ describe("t2 — replay carries the rating basis (both bases live)", () => {
 // ─── 5. future-version detection ─────────────────────────────────────────────
 
 describe("future token versions — honest 'newer build' detection", () => {
-  it("flags t4+ and never flags t1/t2/t3/garbage", () => {
-    expect(isNewerRunTokenVersion("t4.abcd")).toBe(true);
+  it("flags t5+ and never flags t1/t2/t3/t4/garbage", () => {
+    expect(isNewerRunTokenVersion("t5.abcd")).toBe(true);
     expect(isNewerRunTokenVersion("t12.abcd")).toBe(true);
     expect(isNewerRunTokenVersion(encodeRunToken(origin))).toBe(false);
+    expect(isNewerRunTokenVersion("t4.abcd")).toBe(false);
     expect(isNewerRunTokenVersion("t3.abcd")).toBe(false);
     expect(isNewerRunTokenVersion("t1.abcd")).toBe(false);
     expect(isNewerRunTokenVersion("run-v1-7")).toBe(false);
     expect(isNewerRunTokenVersion("")).toBe(false);
   });
 
-  it("a t4 token does not decode (UI shows the newer-version notice instead)", () => {
+  it("a malformed t4 body does not decode", () => {
     expect(decodeRunToken("t4." + Buffer.from("{}").toString("base64url"))).toBeNull();
   });
 });

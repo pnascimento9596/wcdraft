@@ -5,118 +5,190 @@ import { ERA_PRESET_LABELS } from "@/lib/game/era-labels";
 export const metadata: Metadata = {
   title: "How to Play",
   description:
-    "How wcdraft works: seventeen spins, one XI and a manager, the real 2026 bracket, eight matches, the two modes, your setup choices, and how runs rank and share.",
+    "How wcdraft works: draft modes, seventeen spins, one XI and manager, setup choices, the 2026 bracket run, leaderboard rules, and share replays.",
 };
+
+const POSITION_KEYS = [
+  { label: "GK", name: "Goalkeepers", shape: "square" },
+  { label: "DF", name: "Defenders", shape: "triangle" },
+  { label: "MF", name: "Midfielders", shape: "diamond" },
+  { label: "FW", name: "Forwards", shape: "circle" },
+] as const;
+
+const RATING_KEYS = [
+  { label: "OVR", name: "Overall", tone: "solid" },
+  { label: "SYN", name: "Synergy", tone: "accent" },
+  { label: "CUR", name: "Current basis", tone: "cool" },
+  { label: "EST", name: "Estimated input", tone: "muted" },
+] as const;
 
 export default function HowToPlayPage() {
   return (
     <div className="container container--narrow page">
       <header className="page-head">
-        <span className="eyebrow">The rules</span>
+        <span className="eyebrow">Rules reference</span>
         <h1 className="display">How to play</h1>
         <p className="lede">
-          Seventeen spins build one all-time World Cup XI. Each spin lands a national team from a
-          single tournament year; you take one entity from it, lock the shape you committed to up
-          front, then send your side into the real 2026 bracket. Win all eight and you finish a
-          perfect run.
+          Draft sixteen players and exactly one manager from seventeen spins, then run that squad
+          through the 2026 bracket. Same seed, picks, data and rules always replay the same result.
         </p>
       </header>
 
-      <section className="steps">
+      <section className="steps" aria-label="Draft flow">
         <article className="step">
           <span className="step__num">01</span>
-          <h2>The spin</h2>
+          <h2>Spin</h2>
           <p>
-            Every spin pairs a nation with one World Cup year — Peru 2018, Hungary 1954, Brazil
-            1970. That single squad is your pool for the pick that follows; the era you choose at
-            setup decides which years can come up.
+            A spin lands on one national team from one tournament year. Era setup decides which
+            tournament years can appear.
           </p>
         </article>
 
         <article className="step">
           <span className="step__num">02</span>
-          <h2>One pick</h2>
+          <h2>Pick</h2>
           <p>
-            Take one entity from the rolled squad — a player, or that nation&rsquo;s manager. Across
-            your seventeen spins you draft sixteen players and exactly one manager; you decide which
-            spin to spend on the manager. Once a manager is in, later spins offer players only.
+            Take one legal player choice, or spend the spin on a manager. Once your manager is
+            drafted, later spins offer players only.
           </p>
         </article>
 
         <article className="step">
           <span className="step__num">03</span>
-          <h2>Your formation</h2>
+          <h2>Place</h2>
           <p>
-            Lock a formation before the first spin — it is fixed for the rest of the draft. Eleven
-            starters and five on the bench make up your sixteen-player squad; each pick locks to its
-            slot the moment you place it.
+            Your locked formation gives you eleven starters and five bench slots. Player picks lock
+            to a slot as you place them.
           </p>
         </article>
 
         <article className="step">
           <span className="step__num">04</span>
-          <h2>Positions &amp; synergy</h2>
+          <h2>Simulate</h2>
           <p>
-            Players settle into the positions they can cover, and shared nationality builds synergy:
-            starters from the same country reinforce one another, and a manager links to his
-            countrymen in the XI. Synergy lifts how the side performs in the simulation.
+            The finished squad plays three group matches and five knockout rounds. A flawless run is
+            <strong> 8-0</strong>.
           </p>
         </article>
       </section>
 
       <div className="prose">
         <hr />
-        <h2>The eight-match run</h2>
-        <p>
-          When the squad is complete, wcdraft drops it into the real 2026 World Cup bracket and
-          simulates the campaign: three group matches, then five knockout rounds through to the
-          final — eight matches in all. Winning every one is a flawless <strong>8&ndash;0</strong>{" "}
-          run. The same draft and the same seed always simulate to the same result.
-        </p>
 
-        <h2>Two ways to draft</h2>
-        <p>
-          <strong>Classic</strong> puts everything on the table — ratings, positions, stats and a
-          live synergy preview as you build. <strong>Memory</strong> keeps the names, flags and
-          years but hides every rating and synergy number until you simulate; you draft on what you
-          remember, and the full picture is revealed afterwards. Both modes run on the same seeds,
-          so a side drafted from memory and the same side drafted in the open play out identically.
-        </p>
+        <h2>Draft modes</h2>
+        <div className="mode-rules" aria-label="Draft mode comparison">
+          <article>
+            <span className="mode-rule__tag">Ranked-capable</span>
+            <h3>Classic (choose-from-3)</h3>
+            <p>
+              Each spin shows up to three players from the rolled nation-year, plus its manager if
+              you still need one. Ratings, positions and Synergy stay visible.
+            </p>
+          </article>
 
-        <h2>Setting up</h2>
-        <p>
-          Before you lock a formation you can tune three things. <strong>Era</strong> narrows the
-          spin pool to a span of tournaments — all-time, or the more recent windows.{" "}
-          <strong>Draft order</strong> is either Squad First (spin a squad, then choose who fills
-          which slot) or Position First (choose the slot to fill, then spin for it).{" "}
-          <strong>Rating basis</strong> is Career (each card on its whole-career peak) or Current
-          (the player at that tournament&rsquo;s strength, estimated where a career is still in
-          progress); a Current run is marked with a chip and posts to its matching board.
-        </p>
+          <article>
+            <span className="mode-rule__tag">Casual</span>
+            <h3>Open Draft</h3>
+            <p>
+              Each spin draws a nation. You may pick any available player from that nation&apos;s
+              era-filtered roster, deduped by player, or one of that nation&apos;s managers.
+            </p>
+          </article>
 
-        <h2>Ranked &amp; casual</h2>
+          <article>
+            <span className="mode-rule__tag">Ranked-capable</span>
+            <h3>Memory (Blind)</h3>
+            <p>
+              The same choose-from-3 draft as Classic, but ratings and Synergy numbers stay hidden
+              until after the simulation reveal.
+            </p>
+          </article>
+        </div>
+
+        <h2>Setup choices</h2>
+        <dl className="def-list">
+          <div className="def-row">
+            <dt>Era</dt>
+            <dd>
+              Choose {ERA_PRESET_LABELS.all_time}, {ERA_PRESET_LABELS.post_2000},{" "}
+              {ERA_PRESET_LABELS.post_2010}, or {ERA_PRESET_LABELS.modern}. Era changes the spin
+              pool and the Open Draft roster.
+            </dd>
+          </div>
+          <div className="def-row">
+            <dt>Draft order</dt>
+            <dd>
+              Squad First spins before you choose a slot. Position First commits the slot before the
+              spin.
+            </dd>
+          </div>
+          <div className="def-row">
+            <dt>Rating basis</dt>
+            <dd>
+              Career rates each card by whole-career stature. Current rates the player at that
+              tournament&apos;s strength where the data supports it.
+            </dd>
+          </div>
+        </dl>
+
+        <h2>Visual keys</h2>
+        <div className="key-grid" aria-label="Position and rating keys">
+          <section aria-label="Position shapes">
+            <h3>Position shapes</h3>
+            <ul className="shape-key">
+              {POSITION_KEYS.map((item) => (
+                <li key={item.label}>
+                  <span
+                    className={`shape-key__mark shape-key__mark--${item.shape}`}
+                    aria-hidden="true"
+                  />
+                  <b>{item.label}</b>
+                  <span>{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section aria-label="Rating swatches">
+            <h3>Rating swatches</h3>
+            <ul className="rating-key">
+              {RATING_KEYS.map((item) => (
+                <li key={item.label}>
+                  <span className={`rating-key__swatch rating-key__swatch--${item.tone}`}>
+                    {item.label}
+                  </span>
+                  <span>{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+
+        <h2>Rules that matter</h2>
+        <ul>
+          <li>One player can appear only once in your squad, even if they have multiple cards.</li>
+          <li>You must finish with sixteen players and exactly one manager.</li>
+          <li>Synergy rewards national links among starters and between the manager and XI.</li>
+          <li>Out-of-position picks are allowed, but the simulation penalizes poor fit.</li>
+        </ul>
+
+        <h2>Leaderboards</h2>
         <p>
-          Leaderboards filter by Lane (Casual or Ranked), Mode (Classic or Memory), Draft order
-          (Squad First or Position First), Era ({ERA_PRESET_LABELS.all_time},{" "}
-          {ERA_PRESET_LABELS.post_2000}, {ERA_PRESET_LABELS.post_2010} or {ERA_PRESET_LABELS.modern}
-          ), and Rating basis (Career or Current). Every valid run posts to that exact board. Ranked
-          is for signed-in managers; casual posts anonymously and can be claimed after sign-in.
+          Classic and Memory can post to Casual or Ranked boards. Open Draft is casual-only and does
+          not submit to ranked boards. Leaderboards are separated by lane, draft mode, draft order,
+          era and rating basis.
         </p>
 
         <h2>Daily Draft</h2>
         <p>
           Daily Draft gives everyone the same Classic, Squad First, Career, All-time draft for the
-          UTC day. There is one daily board, anonymous posting is open, and your best verified score
-          for that day is the one that holds. A new shared draft drops every day at 00:00 UTC; the
-          challenge is simple: beat today&rsquo;s draft.
+          UTC day. A new shared draft opens at 00:00 UTC.
         </p>
 
-        <h2>Sharing &amp; replays</h2>
+        <h2>Sharing</h2>
         <p>
-          Every run produces a share link that carries the seed, your seventeen picks and the build
-          it was made on, so opening it replays your draft byte-for-byte from the seed. Open a link
-          made on a different build and the page says so honestly rather than faking a matching
-          result.
+          Share links carry the seed, picks and version anchors. If the receiving site has different
+          data or rules, it says so instead of faking a replay.
         </p>
       </div>
     </div>

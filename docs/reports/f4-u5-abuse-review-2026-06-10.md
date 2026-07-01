@@ -6,8 +6,8 @@
   commit (no code delta).
 - **Reviewer posture:** fresh clone in `/tmp`, all gates re-executed, cruxes probed
   with live code — nothing taken from the PR description on trust.
-- **Verdict: PASS — 0 blockers.** HOLD for Lead Architect approval before squash-merge
-  (pinned `--match-head-commit`).
+- **Verdict: PASS - 0 blockers.** Ready for SHA-pinned squash-merge after the
+  remaining v5 ship gates are complete (`--match-head-commit`).
 
 ## Crux #1 — limiter atomicity: VERIFIED (probed, not reasoned)
 

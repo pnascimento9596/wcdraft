@@ -151,7 +151,8 @@ Other checks:
   `rating_version` stamps for that date unless a later policy splits or hides
   old-version rows. This lane did not change rating/data anchors.
 - No merge, production deploy, or live www.wcdraft.com readback was performed.
-- No explicit human approval was consumed in this local implementation closeout.
+- Current v5 ship gates were not completed in this local implementation
+  closeout.
 
 ## Release Gates Still Required
 
@@ -160,8 +161,9 @@ Before shipping this RED lane:
 - Run ephemeral Neon migration apply/rollback with credentials and keep the
   evidence.
 - Reconfirm branch SHA after any rebase or fix-forward.
-- Get RED approval pinned to the final SHA if required by the release process.
-- Squash-merge only after approval and passing CI.
+- Obtain a fresh-context reviewer PASS pinned to the final SHA.
+- Squash-merge only after reviewer PASS and passing CI, using
+  `--match-head-commit`.
 - Wait for the Vercel production deployment to be READY.
 - Live-verify on `www.wcdraft.com`:
   - data anchors unchanged;

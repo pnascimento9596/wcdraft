@@ -71,6 +71,9 @@ export interface SpinStageProps {
   readonly pickNumber: number;
   readonly totalPicks: number;
   readonly formationId: string;
+  readonly modeLabel: string;
+  readonly modeCue: string;
+  readonly pickSpace: string;
   /** Engine-real running squad Synergy overall, or null when unavailable. */
   readonly synergyOverall: number | null;
   /** Engine-real bounded strength multiplier, or null when unavailable. */
@@ -88,6 +91,9 @@ export function SpinStage({
   pickNumber,
   totalPicks,
   formationId,
+  modeLabel,
+  modeCue,
+  pickSpace,
   synergyOverall,
   synergyMultiplier,
   playerPoolCount,
@@ -109,7 +115,7 @@ export function SpinStage({
   const pickNum = String(pickNumber).padStart(2, "0");
 
   const tagline = settled
-    ? `${result.nationName} ${result.yearLabel} is on the board — choose from up to three players or take the manager.`
+    ? `${result.nationName} ${result.yearLabel} is on the board — ${pickSpace.toLowerCase()} available.`
     : spinning
       ? "Rolling the drum…"
       : "Press spin to lock in a nation and World Cup year.";
@@ -140,6 +146,12 @@ export function SpinStage({
         </span>
 
         <div className={s.spinStatusMeta}>
+          <span className={s.spinStatusChip}>
+            <span className={s.spinStatusChipLabel}>Mode</span>
+            <span className={s.spinStatusChipValue}>
+              {modeLabel} · {modeCue}
+            </span>
+          </span>
           <span className={s.spinStatusChip}>
             <span className={s.spinStatusChipLabel}>Formation</span>
             <span className={s.spinStatusChipValue}>{formationId}</span>

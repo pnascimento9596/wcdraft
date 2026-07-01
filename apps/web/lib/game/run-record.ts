@@ -33,6 +33,7 @@ import {
   type RunScenario,
   type GroupStageResult,
   type KnockoutRound,
+  type DraftMode,
   type DraftFlow,
   type EraPresetId,
   type RatingBasis,
@@ -318,7 +319,7 @@ function isQuotaError(err: unknown): boolean {
 
 export interface CreateRunRecordParams {
   formation_id: string;
-  mode?: "classic" | "hidden";
+  mode?: DraftMode;
   team_name?: string;
   /** Explicit parent seed. Daily drafts use this to bypass the per-device nonce. */
   parent_seed?: string;

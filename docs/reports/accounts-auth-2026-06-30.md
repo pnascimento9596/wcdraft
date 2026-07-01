@@ -14,13 +14,10 @@ No production merge or live production verification is recorded in this pre-merg
 
 ## Contract Reconciliation
 
-Prior checked-in RED contract wording in `AGENTS.md` / `CLAUDE.md`:
-
-> fresh-SESSION independent reviewer who RE-EXECUTES the gates (a sub-agent diff read does NOT qualify) -> HOLD for explicit human approval -> squash pinned via `gh pr merge --squash --match-head-commit <sha>`
-
-Prior SHA-pinning paragraph:
-
-> Fix-forward -> re-review loops on Red are normal, not a failure. Approval is SHA-pinned: any commit pushed after approval voids it - re-verify, re-pin.
+The prior checked-in RED contract included a human-gate step between
+fresh-context review and SHA-pinned merge. That step was removed from the
+current contract in favor of implementer/reviewer separation, machine gates,
+SHA pinning, deploy observation, live verification, and auto-revert.
 
 Reconciled wording:
 

@@ -4,6 +4,28 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Open Draft / RED-contract reconciliation lane:
+2026-07-01 · local RED implementation candidate on branch
+`ws-ux/open-draft-contract-ship-20260701`, based on `origin/main`
+`9c154dd`. Scope: adds `DraftMode: "open"` as a casual-only full-roster
+nation draft, extends run tokens to `t4.` with picked card ids and manager card
+ids, keeps leaderboard submission accepted modes to Classic/Memory only,
+fail-closes marketing replay for Open tokens, updates How to Play/mode labels,
+and reconciles current/future-facing RED contract wording to the v5
+fresh-context reviewer -> SHA-pinned merge -> deploy -> live-verify ->
+auto-revert chain with no human approval gate. Runtime data anchors remain
+`runtime-data-2.9.0`; no ETL output or compact runtime-data artifact changed.
+Local gates passed: `@wcdraft/core` test (23 files / 384 tests), focused web
+Vitest (8 files / 160 tests), `@wcdraft/marketing-x` typecheck and test (8
+files / 68 tests), root typecheck (8/8), root lint (5/5), root test (8/8; web
+837 passed / 1 skipped plus `game-flow-playwright`, data 84 passed / 7 skipped,
+core 384, db 106, marketing 68), root build (4/4), core/data/web golden tasks,
+`pnpm check:generated`, `git diff --check`, repeated web production builds, and
+local production-style Playwright/axe proof at 390x844 and 360x800 in light and
+dark with no horizontal overflow, no sub-44px visible targets, zero axe
+violations, `t4.` Open token replay, and tampered-token rejection. Report:
+`docs/reports/open-draft-2026-07-01.md`.
+
 Accounts/auth hub lane:
 2026-06-30 · PR #193 branch `ws-fix/accounts-auth-hub`, originally based on
 `995b11a70054278ab716a7667486eb91bafcbe6a`, rebased onto `origin/main`

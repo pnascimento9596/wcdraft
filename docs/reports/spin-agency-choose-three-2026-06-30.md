@@ -9,9 +9,11 @@ Base: `421587cf553df8894fc6d27085b6844288ee52f7`
 Implemented locally. Not shipped.
 
 This is RED-tier because it changes draft semantics, replay tokens, runtime-data
-anchors, leaderboard seasoning, and golden fixtures. It still requires a fresh
-independent reviewer who re-executes the gates, then explicit human approval
-before merge/deploy.
+anchors, leaderboard seasoning, and golden fixtures. Under the current v5
+contract it still requires a fresh independent reviewer who re-executes the
+gates, fix-forward to PASS, SHA-pinned squash merge, deploy observation, live
+verification, and auto-revert on any failed live check. No human approval gate
+applies.
 
 ## What changed
 
@@ -103,4 +105,4 @@ before merge/deploy.
 
 - No production merge, deploy, or live readback was performed.
 - Fresh independent RED-tier review has not been performed.
-- Human approval has not been granted.
+- Current v5 ship gates have not been completed.

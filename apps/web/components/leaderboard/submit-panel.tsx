@@ -21,6 +21,7 @@ import { buildRunTokenBody, encodeRunToken, versionsAgree } from "@/lib/game/run
 import { boardQueryString, type BoardFilter } from "@/lib/leaderboard/board-view";
 import { validateDisplayName, type DisplayNameRejection } from "@/lib/leaderboard/display-name";
 import { submitRun } from "@/lib/leaderboard/client";
+import type { BoardDraftMode } from "@/lib/leaderboard/config";
 import { NAME_HINT, submitStatusCopy } from "@/lib/leaderboard/submit-copy";
 import {
   IDLE,
@@ -100,8 +101,10 @@ export function LeaderboardSubmitPanel({
   }, [phase]);
 
   if (sim === null || token === null) return null;
+  if (record.draft.mode === "open") return null;
+  const boardDraftMode: BoardDraftMode = record.draft.mode;
   const score = sim.run.score;
-  const leaderboardHref = leaderboardHrefForRecord(record, effectiveSubmitMode);
+  const leaderboardHref = leaderboardHrefForRecord(record, effectiveSubmitMode, boardDraftMode);
 
   const preparedName = preparePublicName({ mode: effectiveSubmitMode, raw: name, publicUsername });
   const nameHint = touched && !preparedName.ok ? NAME_HINT[preparedName.reason] : null;
@@ -131,7 +134,7 @@ export function LeaderboardSubmitPanel({
       token,
       score,
       mode: effectiveSubmitMode,
-      draftMode: record.draft.mode,
+      draftMode: boardDraftMode,
       displayName: preparedName.value,
       challenge: dailyChallenge === null ? "season" : "daily",
       challengeDate: dailyChallenge?.date ?? null,
@@ -150,7 +153,7 @@ export function LeaderboardSubmitPanel({
   return (
     <SubmitPanelView
       score={score}
-      draftMode={record.draft.mode}
+      draftMode={boardDraftMode}
       submitMode={effectiveSubmitMode}
       authReady={authReady}
       isSignedIn={isSignedIn}
@@ -175,7 +178,11 @@ export function LeaderboardSubmitPanel({
   );
 }
 
-function leaderboardHrefForRecord(record: RunRecordV1, lane: SubmitBoardMode): string {
+function leaderboardHrefForRecord(
+  record: RunRecordV1,
+  lane: SubmitBoardMode,
+  draftMode: BoardDraftMode,
+): string {
   if (record.challenge?.kind === "daily") {
     const q = new URLSearchParams({ challenge: "daily", date: record.challenge.date });
     return `/leaderboard?${q.toString()}`;
@@ -183,7 +190,7 @@ function leaderboardHrefForRecord(record: RunRecordV1, lane: SubmitBoardMode): s
   const filter: BoardFilter = {
     challenge: "season",
     lane,
-    draftMode: record.draft.mode,
+    draftMode,
     draftOrder: record.draft.draft_flow ?? "squad_first",
     era: record.draft.era_preset ?? "all_time",
     ratingBasis: record.draft.rating_basis ?? "career",

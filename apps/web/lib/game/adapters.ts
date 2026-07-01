@@ -319,6 +319,7 @@ export interface DraftCandidateViews {
   spin: Spin | null;
   players: PlayerCardView[];
   manager: ManagerCardView | null;
+  managers: ManagerCardView[];
 }
 
 export function draftCandidateViews(
@@ -327,15 +328,19 @@ export function draftCandidateViews(
   spin: Spin | null,
   opts?: AdapterDisplayOptions,
 ): DraftCandidateViews {
-  if (!spin) return { spin: null, players: [], manager: null };
+  if (!spin) return { spin: null, players: [], manager: null, managers: [] };
   const drafted = new Set(draft.deduped_player_ids);
   const players = spin.rolled_card_ids
     .map((id) => playerCardView(idx, id, opts))
     .filter((v) => !drafted.has(v.player_id));
-  const manager = spin.rolled_manager_card_id
-    ? managerCardView(idx, spin.rolled_manager_card_id)
-    : null;
-  return { spin, players, manager };
+  const managerIds =
+    spin.rolled_manager_card_ids && spin.rolled_manager_card_ids.length > 0
+      ? spin.rolled_manager_card_ids
+      : spin.rolled_manager_card_id
+        ? [spin.rolled_manager_card_id]
+        : [];
+  const managers = managerIds.map((id) => managerCardView(idx, id));
+  return { spin, players, manager: managers[0] ?? null, managers };
 }
 
 // ─── Aggregate rating views (review + line strength) ─────────────────────────

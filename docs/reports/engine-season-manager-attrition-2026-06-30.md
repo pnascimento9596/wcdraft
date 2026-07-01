@@ -286,9 +286,10 @@ Reviewer non-blocking probe for the U5 bucket edge: 5,000 real-pool drafts,
 
 ## Risks / Review Focus
 
-- The checked-in WCDraft operating contract normally requires explicit human
-  approval before RED merges. This season is relying on the attached owner
-  dispatch's explicit autonomous RED/no-human-gate override.
+- The checked-in WCDraft operating contract now uses the v5 autonomous RED
+  model: fresh-context implementer/reviewer separation, machine gates,
+  SHA-pinned merge, deploy observation, live verification, and auto-revert on
+  failed live checks. No human approval gate applies.
 - U5 materially increases offered 90+ share (+1.6895pp) and offered legend share
   (+1.7969pp). It does not change legend draw probability or rating strength,
   but the player will see elite cards in the choice set more often because the

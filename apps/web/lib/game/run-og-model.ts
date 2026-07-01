@@ -11,6 +11,7 @@ import {
   reconstructDraftFromToken,
   type RunTokenOgSummary,
   type RunTokenV3Body,
+  type RunTokenV4Body,
 } from "./run-token";
 import {
   formationName,
@@ -56,7 +57,7 @@ export interface RunOgRevealModel {
 
 export interface RunOgModel {
   team_name: string;
-  mode_label: "Classic" | "Memory";
+  mode_label: "Classic" | "Memory" | "Open";
   formation_name: string;
   result_label: string;
   record: string;
@@ -73,7 +74,7 @@ const TEAM_NAME_MAX = 80;
 
 export function buildRunOgModelFromTrustedSummary(
   gameData: GameData,
-  token: RunTokenV3Body,
+  token: RunTokenV3Body | RunTokenV4Body,
   summary: RunTokenOgSummary,
 ): RunOgModel {
   const draft = reconstructDraftFromToken(token, gameData);
@@ -82,7 +83,7 @@ export function buildRunOgModelFromTrustedSummary(
 
 export function buildRunOgModelFromTrustedDraft(
   gameData: GameData,
-  token: RunTokenV3Body,
+  token: RunTokenV3Body | RunTokenV4Body,
   draft: DraftState,
   summary: RunTokenOgSummary,
   narrative?: string | null,
@@ -91,7 +92,7 @@ export function buildRunOgModelFromTrustedDraft(
   const reveal = draft.mode === "hidden" ? buildRunOgRevealModel(gameData, draft) : null;
   return {
     team_name: boundedText(draft.team_name, "Your XI", TEAM_NAME_MAX),
-    mode_label: draft.mode === "hidden" ? "Memory" : "Classic",
+    mode_label: draft.mode === "hidden" ? "Memory" : draft.mode === "open" ? "Open" : "Classic",
     formation_name: formationName(draft),
     result_label: formatRunOgResult(summary),
     record: `${summary.w}-${summary.l}`,

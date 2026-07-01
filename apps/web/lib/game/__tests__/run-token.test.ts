@@ -13,9 +13,11 @@
 
 import { describe, expect, it } from "vitest";
 
+import { autoDraft, type EraPresetId } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import type { RunRecordVersions } from "../data";
+import type { RunRecordV1 } from "../run-record";
 import { runSimulationSync } from "../simulate";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 import {
@@ -24,6 +26,8 @@ import {
   encodeRunToken,
   reconstructDraftFromToken,
   RUN_TOKEN_V3_PREFIX,
+  RUN_TOKEN_V4_PREFIX,
+  type RunTokenV4Body,
   versionsAgree,
   virtualRecordFromToken,
 } from "../run-token";
@@ -33,6 +37,56 @@ import {
 
 function asPlain<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
+}
+
+function buildOpenOriginRecord(
+  gameData: ReturnType<typeof buildGameDataFromBundles>,
+  seed: string,
+  eraPreset: EraPresetId = "all_time",
+): RunRecordV1 {
+  const draft = autoDraft({
+    run_id: `token-open-origin-${eraPreset}`,
+    parent_seed: seed,
+    formation_id: "4-3-3",
+    mode: "open",
+    team_name: "Open XI",
+    dataset_version: gameData.versions.dataset_version,
+    rating_version: gameData.versions.rating_version,
+    engine_version: gameData.versions.engine_version,
+    era_preset: eraPreset,
+    dataset: gameData.draftDataset,
+  });
+  return {
+    record_version: 1,
+    run_id: draft.run_id,
+    parent_seed: seed,
+    created_seq: 1,
+    updated_seq: 1,
+    versions: gameData.versions,
+    draft,
+  };
+}
+
+function expectV4Body(record: RunRecordV1): RunTokenV4Body {
+  const body = buildRunTokenBody(record);
+  if (body.v !== 4) throw new Error("expected Open Draft record to emit a t4 body");
+  return body;
+}
+
+function encodeV4Body(body: RunTokenV4Body): string {
+  return RUN_TOKEN_V4_PREFIX + Buffer.from(JSON.stringify(body), "utf8").toString("base64url");
+}
+
+function cloneV4(body: RunTokenV4Body): RunTokenV4Body {
+  return JSON.parse(JSON.stringify(body)) as RunTokenV4Body;
+}
+
+function v4PlayerPicks(body: RunTokenV4Body) {
+  return body.pl
+    .map((p, i) => ({ p, i }))
+    .filter((x): x is { p: Extract<RunTokenV4Body["pl"][number], { k: "p" }>; i: number } => {
+      return x.p.k === "p";
+    });
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
@@ -127,6 +181,84 @@ describe("run-token — fresh-context replay (the BLOCKER scenario)", () => {
     const originIds = originSim.matches.map((m) => m.match_id);
     const replayIds = replaySim.matches.map((m) => m.match_id);
     expect(replayIds).toEqual(originIds);
+  });
+});
+
+describe("run-token — Open Draft t4 replay", () => {
+  const gameData = buildGameDataFromBundles();
+  const origin = buildOpenOriginRecord(gameData, "wcdraft:open-token:all-time");
+
+  it("encodes Open Draft as t4 with picked card and manager ids", () => {
+    const token = encodeRunToken(origin);
+    expect(token.startsWith(RUN_TOKEN_V4_PREFIX)).toBe(true);
+    const body = expectV4Body(origin);
+    expect(body.md).toBe("open");
+    expect(body.pl).toHaveLength(17);
+    expect(body.pl.some((p) => p.k === "m" && "mc" in p)).toBe(true);
+    expect(body.pl.filter((p) => p.k === "p").every((p) => "c" in p)).toBe(true);
+  });
+
+  it("round-trips and reconstructs the originating Open Draft byte-for-byte", () => {
+    const token = encodeRunToken(origin);
+    const decoded = decodeRunToken(token);
+    expect(decoded?.v).toBe(4);
+    expect(JSON.stringify(decoded)).toBe(JSON.stringify(expectV4Body(origin)));
+    const replayed = reconstructDraftFromToken(decoded!, gameData);
+    expect(asPlain(replayed)).toEqual(asPlain(origin.draft));
+    expect(JSON.stringify(replayed)).toBe(JSON.stringify(origin.draft));
+  });
+
+  it("rejects a t4 player card from the wrong nation", () => {
+    const body = cloneV4(expectV4Body(origin));
+    const firstPlayer = v4PlayerPicks(body)[0];
+    if (!firstPlayer) throw new Error("fixture has no player picks");
+    const { p, i } = firstPlayer;
+    const spin = origin.draft.spins[i]!;
+    const wrongNation = gameData.draftPool.player_cards.find(
+      (card) => card.nation_id !== spin.nation_id,
+    );
+    if (!wrongNation) throw new Error("fixture has no wrong-nation card");
+    body.pl[i] = { ...p, c: wrongNation.card_id };
+    const decoded = decodeRunToken(encodeV4Body(body));
+    expect(decoded?.v).toBe(4);
+    expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(/not a candidate/i);
+  });
+
+  it("rejects a t4 duplicate player pick", () => {
+    const body = cloneV4(expectV4Body(origin));
+    const players = v4PlayerPicks(body);
+    if (players.length < 2) throw new Error("fixture has fewer than two player picks");
+    body.pl[players[1]!.i] = { ...players[1]!.p, c: players[0]!.p.c };
+    const decoded = decodeRunToken(encodeV4Body(body));
+    expect(decoded?.v).toBe(4);
+    expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(
+      /already drafted|not a candidate/i,
+    );
+  });
+
+  it("rejects a t4 card excluded by the era preset", () => {
+    const modern = buildOpenOriginRecord(gameData, "wcdraft:open-token:modern", "modern");
+    const body = cloneV4(expectV4Body(modern));
+    const players = v4PlayerPicks(body);
+    const oldCard = players
+      .map(({ p, i }) => {
+        const spin = modern.draft.spins[i]!;
+        const card = gameData.draftPool.player_cards.find((candidate) => {
+          const tournament = gameData.draftPool.tournaments[String(candidate.tournament_id)];
+          return (
+            candidate.nation_id === spin.nation_id &&
+            tournament !== undefined &&
+            tournament.year < 2018
+          );
+        });
+        return card ? { p, i, card } : null;
+      })
+      .find((item): item is NonNullable<typeof item> => item !== null);
+    if (!oldCard) throw new Error("modern fixture has no same-nation pre-2018 card to tamper in");
+    body.pl[oldCard.i] = { ...oldCard.p, c: oldCard.card.card_id };
+    const decoded = decodeRunToken(encodeV4Body(body));
+    expect(decoded?.v).toBe(4);
+    expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(/not a candidate/i);
   });
 });
 

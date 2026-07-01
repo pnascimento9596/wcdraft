@@ -211,7 +211,10 @@ function coerceSummary(x: unknown): import("@/lib/game/saved-runs-store").SavedR
     undefeated_regulation:
       typeof o.undefeated_regulation === "boolean" ? o.undefeated_regulation : undefined,
     formation_name,
-    draft_mode: o.draft_mode === "classic" || o.draft_mode === "hidden" ? o.draft_mode : undefined,
+    draft_mode:
+      o.draft_mode === "classic" || o.draft_mode === "hidden" || o.draft_mode === "open"
+        ? o.draft_mode
+        : undefined,
     draft_order:
       o.draft_order === "squad_first" || o.draft_order === "position_first"
         ? o.draft_order

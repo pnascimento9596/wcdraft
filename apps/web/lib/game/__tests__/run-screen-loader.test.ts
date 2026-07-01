@@ -109,7 +109,7 @@ describe("resolveDisplayRun", () => {
     ).resolves.toEqual({ kind: "invalidToken", reason: "malformed" });
 
     await expect(
-      resolveDisplayRun({ kind: "token", token: "t4.abcd" }, {}, deps()),
+      resolveDisplayRun({ kind: "token", token: "t5.abcd" }, {}, deps()),
     ).resolves.toEqual({
       kind: "newerToken",
     });

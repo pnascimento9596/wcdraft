@@ -966,6 +966,9 @@
   composes: appBarTitle from "./game-styles/draft-shell.module.css";
   composes: appBarTitle from "./game-styles/draft-polish.module.css";
 }
+.appBarModeChip {
+  composes: appBarModeChip from "./game-styles/draft-shell.module.css";
+}
 .appBarMeter {
   composes: appBarMeter from "./game-styles/draft-shell.module.css";
   composes: appBarMeter from "./game-styles/draft-polish.module.css";
@@ -978,6 +981,67 @@
 }
 .setupSkeleton {
   composes: setupSkeleton from "./game-styles/draft-shell.module.css";
+}
+
+.openRosterTools {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  margin: -2px -2px 8px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: color-mix(in srgb, var(--bg-800) 94%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.openRosterSeg {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(42px, 1fr));
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.openRosterBtn {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-1);
+  background: var(--bg-800);
+  color: var(--ink-200);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.openRosterBtnActive {
+  border-color: var(--ember);
+  color: var(--ember-bright);
+  background: color-mix(in srgb, var(--ember) 14%, var(--bg-800));
+}
+
+.openRosterMeta {
+  flex: 0 0 auto;
+  color: var(--ink-300);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+@media (max-width: 430px) {
+  .openRosterTools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .openRosterMeta {
+    align-self: flex-end;
+  }
 }
 .setupSkeletonPanel {
   composes: setupSkeletonPanel from "./game-styles/draft-shell.module.css";

@@ -65,6 +65,10 @@
   white-space: nowrap;
 }
 .draftAttribution a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 4px;
   color: inherit;
   text-decoration: none;
   text-underline-offset: 3px;
@@ -118,12 +122,63 @@
   color: var(--ink-100);
 }
 
+.appBarModeChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  max-width: min(42vw, 260px);
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--bg-800);
+  color: var(--ink-200);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.appBarModeChip span,
+.appBarModeChip b,
+.appBarModeChip i {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: normal;
+}
+
+.appBarModeChip span {
+  color: var(--ink-100);
+  font-weight: 700;
+}
+
+.appBarModeChip b {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.appBarModeChip i {
+  color: var(--ink-300);
+}
+
 .appBarMeter {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
   min-width: 140px;
+}
+
+@media (max-width: 430px) {
+  .appBarModeChip {
+    max-width: 36vw;
+  }
+
+  .appBarModeChip i {
+    display: none;
+  }
 }
 
 .persistenceWarn {
@@ -1691,6 +1746,7 @@
 
 .pitch .slot {
   min-width: 48px;
+  min-height: 44px;
   max-width: 56px;
   padding: 4px 5px 5px;
   border: 1px solid var(--line);

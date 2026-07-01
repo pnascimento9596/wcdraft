@@ -1,7 +1,7 @@
 // Share-token decode + replay — the pure token wire contract is imported from
 // @wcdraft/core so apps/web and marketing/x stay byte-for-byte aligned:
-//   - decodeRunToken (t1./t2./t3., never throws on malformed input → null)
-//   - isNewerRunTokenVersion (t4.+ → honest "older/newer build" angle)
+//   - decodeRunToken (t1./t2./t3./t4., never throws on malformed input → null)
+//   - isNewerRunTokenVersion (t5.+ → honest "older/newer build" angle)
 //   - tokenDraftConfig / versionsAgree
 //   - reconstructDraftFromToken (replays the pick log through core)
 //
@@ -52,6 +52,12 @@ export type {
 /** Replay the token's pick log against a fresh createDraft. Throws on any incoherence. */
 export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGameData): DraftState {
   const config = tokenDraftConfig(token);
+  if (token.md === "open") {
+    // Marketing result posts currently simulate only Classic/Memory shares.
+    // Open Draft t4 tokens carry manager card ids and full-roster card picks;
+    // fail closed instead of replaying them through the older t2/t3 bridge.
+    throw new Error("Open Draft t4 tokens are not supported by the marketing composer");
+  }
   if (config.rating_basis !== "career") {
     // The app supports a Current basis (#118), but this marketing composer
     // simulates on Career ratings only, so a Current-basis token is honest-
@@ -124,6 +130,9 @@ export function buildTokenBodyFromDraft(
   gd: MarketingGameData,
   parent_seed: string,
 ): Omit<RunTokenV2Body, "v"> {
+  if (draft.mode === "open") {
+    throw new Error("Open Draft t4 tokens are not supported by the marketing composer");
+  }
   const spins = [...draft.spins].sort((a, b) => a.index - b.index);
   if (spins.length !== 17) throw new Error(`expected 17 spins, got ${spins.length}`);
   const draft_flow: DraftFlow = draft.draft_flow ?? "squad_first";

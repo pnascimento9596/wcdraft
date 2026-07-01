@@ -105,6 +105,7 @@ describe("run config badges", () => {
   it("renders no badge noise for legacy t1 default tokens", () => {
     const record = buildOriginRecord(gameData);
     const t3Body = buildRunTokenBody(record);
+    if (t3Body.v !== 3) throw new Error("expected default fixture to emit a t3 body");
     const t1 = encodeBody(v1BodyFrom(t3Body, record), "t1.");
     expect(configBadgesFromReplayToken(t1)).toEqual([]);
   });

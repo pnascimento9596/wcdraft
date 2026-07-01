@@ -124,7 +124,7 @@ Compact artifacts:
 | Display curve / lambda     | PASS: display-curve code unchanged; no persisted curve artifact moved; lambda refit skipped.                                                                                                 | No waiver needed.                                                                                          |
 | Compact/canary             | PASS: compact regen stable; canary regen twice and normal canary pass.                                                                                                                       | No waiver needed.                                                                                          |
 | Leaderboard season key     | PASS: new key `engine-2026.06.12_wc-perf-5.1.0+proj-career-4.1.0_2026-06-04_ruleset-2026.06.04_7fcbb544`; current-prod skew fixture derives from `c174775d223d8776f8950749b50a0e6099ca456b`. | No waiver needed.                                                                                          |
-| Live prod verification     | PENDING: requires cumulative review, owner approval, merge, deploy, then live checks.                                                                                                        | Cannot be waived before merge/deploy.                                                                      |
+| Live prod verification     | PENDING: requires cumulative review, SHA-pinned merge, deploy, live checks, and auto-revert on failed live checks.                                                                           | Cannot be waived before merge/deploy.                                                                      |
 
 ## Census Results
 

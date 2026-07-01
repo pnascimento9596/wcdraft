@@ -57,6 +57,9 @@ import type { ManagerCardId } from "./manager.js";
 import type { SlotPosition } from "./formation.js";
 import type { DraftFlow, EraPresetId, RatingBasis } from "./draft-config.js";
 
+/** Visibility / pick-space mode for a draft. */
+export type DraftMode = "classic" | "hidden" | "open";
+
 /**
  * The two kinds of entity a user may take on a single spin. Discriminator for
  * the `Spin.picked_*` fields once `status === 'picked'`.
@@ -142,6 +145,13 @@ export interface Spin {
    * rule). Branded `ManagerCardId`.
    */
   rolled_manager_card_id: ManagerCardId | null;
+  /**
+   * Open Draft manager offer list. Classic/Memory keep using
+   * `rolled_manager_card_id`; Open Draft can offer every available manager for
+   * the spun nation under the current era preset. Optional for legacy local
+   * records that predate the field.
+   */
+  rolled_manager_card_ids?: ManagerCardId[];
   /**
    * Discriminator for the picked entity once `status === 'picked'`. The
    * schema enforces the per-kind field coherence (see `PickedKind`).
@@ -320,7 +330,7 @@ export interface DraftState {
    *   - 'hidden'  → identities masked until pick. NEVER affects outcomes for
    *                  the same seed; purely a UI presentation toggle.
    */
-  mode: "classic" | "hidden";
+  mode: DraftMode;
   /**
    * FK -> FormationTemplate. LOCKED at draft creation, IMMUTABLE thereafter.
    * Must resolve to a known formation in `FORMATION_TEMPLATES`. Schema

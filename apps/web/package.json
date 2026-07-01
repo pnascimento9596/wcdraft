@@ -21,7 +21,8 @@
     "generate:sw-version": "node scripts/generate-sw-version.mjs",
     "gen:token-skew": "tsx scripts/generate-token-skew-fixtures.mts",
     "report:club-crests": "tsx scripts/generate-club-crest-coverage.mts",
-    "verify:club-crests-browser": "tsx scripts/verify-club-crests-browser.mts"
+    "verify:club-crests-browser": "tsx scripts/verify-club-crests-browser.mts",
+    "verify:open-draft-browser": "tsx scripts/verify-open-draft-browser-proof.mts"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",

@@ -75,7 +75,7 @@ describe("marketing token decoder parity", () => {
       expect(marketingIsNewerRunTokenVersion(value)).toBe(coreIsNewerRunTokenVersion(value));
     }
 
-    const newer = "t4.eyJ2Ijo0fQ";
+    const newer = "t5.eyJ2Ijo1fQ";
     expect(marketingDecodeRunToken(newer)).toBeNull();
     expect(coreDecodeRunToken(newer)).toBeNull();
     expect(marketingIsNewerRunTokenVersion(newer)).toBe(true);
