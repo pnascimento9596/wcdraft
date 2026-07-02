@@ -1036,6 +1036,9 @@
   .spinDrumLabel {
     display: none;
   }
+  .spinDrumLabelWithHint {
+    display: flex;
+  }
   .spinDrum {
     padding: var(--s-2);
     border-radius: var(--r-2);

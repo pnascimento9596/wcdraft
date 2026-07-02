@@ -106,6 +106,65 @@ const FLAG_SRC_BY_NATION_ID: Readonly<Record<string, `/flags/${string}.svg`>> = 
   "T-W26-5": "/flags/T-W26-5.svg",
 });
 
+export interface HistoricalFlagSubstitution {
+  readonly nationId: string;
+  readonly successorName: string;
+  readonly historicalLabel: string;
+  readonly visuallyIdentical: boolean;
+}
+
+const HISTORICAL_FLAG_SUBSTITUTIONS: Readonly<Record<string, HistoricalFlagSubstitution>> =
+  Object.freeze({
+    "T-21": {
+      nationId: "T-21",
+      successorName: "Czech Republic",
+      historicalLabel: "Czechoslovakia",
+      visuallyIdentical: true,
+    },
+    "T-23": {
+      nationId: "T-23",
+      successorName: "Indonesia",
+      historicalLabel: "Dutch East Indies",
+      visuallyIdentical: true,
+    },
+    "T-24": {
+      nationId: "T-24",
+      successorName: "Germany",
+      historicalLabel: "East Germany",
+      visuallyIdentical: false,
+    },
+    "T-67": {
+      nationId: "T-67",
+      successorName: "Serbia",
+      historicalLabel: "Serbia and Montenegro",
+      visuallyIdentical: false,
+    },
+    "T-72": {
+      nationId: "T-72",
+      successorName: "Russia",
+      historicalLabel: "USSR",
+      visuallyIdentical: false,
+    },
+    "T-86": {
+      nationId: "T-86",
+      successorName: "Germany",
+      historicalLabel: "West Germany",
+      visuallyIdentical: true,
+    },
+    "T-87": {
+      nationId: "T-87",
+      successorName: "Serbia",
+      historicalLabel: "Yugoslavia",
+      visuallyIdentical: false,
+    },
+    "T-88": {
+      nationId: "T-88",
+      successorName: "DR Congo",
+      historicalLabel: "Zaire",
+      visuallyIdentical: false,
+    },
+  });
+
 /**
  * Resolve the public flag SVG URL for a runtime `nation_id`. Returns `null` if
  * no asset is bundled (defensive fallback only — every draft-pool nation
@@ -113,6 +172,32 @@ const FLAG_SRC_BY_NATION_ID: Readonly<Record<string, `/flags/${string}.svg`>> = 
  */
 export function flagSrcForNationId(nationId: string): string | null {
   return FLAG_SRC_BY_NATION_ID[nationId] ?? null;
+}
+
+export function historicalFlagSubstitutionForNationId(
+  nationId: string,
+): HistoricalFlagSubstitution | null {
+  return HISTORICAL_FLAG_SUBSTITUTIONS[nationId] ?? null;
+}
+
+export function flagLabelForNation({
+  nationId,
+  nationName,
+  yearLabel,
+}: {
+  nationId: string;
+  nationName: string;
+  yearLabel?: string | null;
+}): string {
+  const substitution = historicalFlagSubstitutionForNationId(nationId);
+  if (!substitution) return `${nationName} flag`;
+  const historical = yearLabel
+    ? `${substitution.historicalLabel} ${yearLabel}`
+    : substitution.historicalLabel;
+  if (substitution.visuallyIdentical) {
+    return `${nationName} flag; visually identical modern ${substitution.successorName} asset shown`;
+  }
+  return `Modern successor flag (${substitution.successorName}) shown for ${historical}`;
 }
 
 /** Read-only view of the full mapping (exported for tests). */

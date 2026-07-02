@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -38,5 +39,19 @@ describe("LocalProgressBand", () => {
     );
 
     expect(html).toContain("Friend&#x27;s run: 8-0 · 84 pts — beat it");
+  });
+
+  it("keeps the sign-in nudge inline and persists dismissal against the trigger key", () => {
+    const source = readFileSync(
+      new URL("../../../components/game/local-progress-band.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("Keep your streak on every device");
+    expect(source).toContain('href="/sign-in"');
+    expect(source).toContain("Dismiss");
+    expect(source).toContain("window.localStorage.getItem(trigger.storageKey)");
+    expect(source).toContain("window.localStorage.setItem(trigger.storageKey, \"1\")");
+    expect(source).toContain("checkedStorageKey === trigger.storageKey");
+    expect(source).toContain("dismissedKey !== trigger.storageKey");
   });
 });

@@ -597,7 +597,6 @@ function ShareBody({
         <ShareCardSvg
           svgRef={svgRef}
           view={view}
-          shareUrl={shareUrl}
           dailyStanding={dailyStanding}
           colors={svgColors}
         />
@@ -810,13 +809,11 @@ function useShareSvgColors(): ShareSvgColors {
 function ShareCardSvg({
   svgRef,
   view,
-  shareUrl,
   dailyStanding,
   colors,
 }: {
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
   view: ShareView;
-  shareUrl: string | null;
   dailyStanding: DailyShareStanding | null;
   colors: ShareSvgColors;
 }) {
@@ -825,7 +822,6 @@ function ShareCardSvg({
       <MemoryRevealShareCardSvg
         svgRef={svgRef}
         view={view}
-        shareUrl={shareUrl}
         dailyStanding={dailyStanding}
         colors={colors}
       />
@@ -838,7 +834,6 @@ function ShareCardSvg({
     view.challenge_date !== null && dailyStanding !== null
       ? dailyStandingText(dailyStanding)
       : null,
-    view.perfect_run_reference,
   ].filter((line): line is string => line !== null);
   const narrativeLines = wrapSvgText(view.narrative, 52, payoffLines.length > 1 ? 1 : 2);
   const formationLabel = view.manager
@@ -878,7 +873,7 @@ function ShareCardSvg({
       {/* Subtle emerald top border */}
       <rect x="0" y="0" width={CARD_WIDTH} height="8" fill="url(#wcEmerald)" />
 
-      {/* Brand mark + seed */}
+      {/* Brand mark */}
       <g transform="translate(48, 56)">
         <text
           x="0"
@@ -893,16 +888,6 @@ function ShareCardSvg({
           <tspan fontWeight="900" fill="url(#wcEmerald)">
             draft
           </tspan>
-        </text>
-        <text
-          x={CARD_WIDTH - 96}
-          y="0"
-          fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
-          fontSize="14"
-          textAnchor="end"
-        >
-          {truncate(view.seed, 28)}
         </text>
       </g>
 
@@ -961,7 +946,7 @@ function ShareCardSvg({
         {truncate(formationLabel, 48)}
       </text>
 
-      {/* Daily standing + perfect-run reference */}
+      {/* Payoff lines */}
       {payoffLines.map((line, i) => (
         <text
           key={`${line}-${i}`}
@@ -1055,7 +1040,7 @@ function ShareCardSvg({
         fontSize="11"
         letterSpacing="0.28em"
       >
-        {shareUrl ? truncate(shareUrl, 56).toUpperCase() : "WCDRAFT.APP"}
+        wcdraft.com — draft your own XI
       </text>
     </svg>
   );
@@ -1064,13 +1049,11 @@ function ShareCardSvg({
 function MemoryRevealShareCardSvg({
   svgRef,
   view,
-  shareUrl,
   dailyStanding,
   colors,
 }: {
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
   view: ShareView;
-  shareUrl: string | null;
   dailyStanding: DailyShareStanding | null;
   colors: ShareSvgColors;
 }) {
@@ -1126,16 +1109,6 @@ function MemoryRevealShareCardSvg({
           <tspan fontWeight="900" fill="url(#wcEmerald)">
             draft
           </tspan>
-        </text>
-        <text
-          x={CARD_WIDTH - 96}
-          y="0"
-          fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
-          fontSize="14"
-          textAnchor="end"
-        >
-          {truncate(view.seed, 28)}
         </text>
       </g>
 
@@ -1282,7 +1255,7 @@ function MemoryRevealShareCardSvg({
         fontSize="13"
         fontWeight="600"
       >
-        {truncate(`${standingLine} · ${view.perfect_run_reference}`, 68)}
+        {truncate(standingLine, 68)}
       </text>
 
       <text
@@ -1293,7 +1266,7 @@ function MemoryRevealShareCardSvg({
         fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
         fontSize="10"
       >
-        {shareUrl ? truncate(shareUrl, 62).toUpperCase() : "WCDRAFT.APP"}
+        wcdraft.com — draft your own XI
       </text>
     </svg>
   );

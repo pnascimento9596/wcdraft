@@ -252,7 +252,6 @@ export function buildShareCaption(
   lines.push(shareChallengeLine(view, opts.dailyStanding ?? null));
   const referenceLine = referenceStandingCaptionLine(view, opts);
   if (referenceLine !== null) lines.push(referenceLine);
-  lines.push(view.perfect_run_reference);
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
   return lines.join("\n");
@@ -267,7 +266,7 @@ export function buildShareCaption(
 export function buildShareIntentText(view: ShareView, opts: ShareCaptionOpts = {}): string {
   const referenceLine = referenceStandingCaptionLine(view, opts);
   const referencePart = referenceLine === null ? "" : ` ${referenceLine}.`;
-  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)}${referencePart} ${view.perfect_run_reference} ${SHARE_TAGLINE}`;
+  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)}${referencePart} ${SHARE_TAGLINE}`;
   return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 

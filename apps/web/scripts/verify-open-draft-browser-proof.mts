@@ -233,6 +233,7 @@ async function verifyInteractiveOpenDraft(browser: Browser, viewport: ViewportCa
   const { page, context, errors } = session;
   const metrics: SurfaceMetrics[] = [];
   await page.goto(`${baseUrl}/play`, { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
   await page.getByRole("radio", { name: /Open Draft/i }).click();
   await page.getByRole("button", { name: /Continue with Open Draft/i }).click();
   await page.getByRole("heading", { name: "Lock a formation" }).waitFor();

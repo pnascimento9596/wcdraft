@@ -17,7 +17,7 @@ import type { EraPresetId, Spin } from "@wcdraft/core";
 
 import type { GameDataIndexes } from "./data";
 import { ERA_PRESET_LABELS } from "./era-labels";
-import { flagSrcForNationId } from "./flags";
+import { flagLabelForNation, flagSrcForNationId } from "./flags";
 
 export interface SlotRevealFace {
   /** Stable key for React lists: `${nationId}:${tournamentId}:${slotIndex}`. */
@@ -26,6 +26,7 @@ export interface SlotRevealFace {
   readonly nationName: string;
   readonly nationCode: string | null;
   readonly flagSrc: string | null;
+  readonly flagLabel: string;
   readonly yearLabel: string;
 }
 
@@ -200,6 +201,7 @@ function faceFromSpin(
     nationName,
     nationCode,
     flagSrc: flagSrcForNationId(spin.nation_id),
+    flagLabel: flagLabelForNation({ nationId: spin.nation_id, nationName, yearLabel }),
     yearLabel,
   };
 }

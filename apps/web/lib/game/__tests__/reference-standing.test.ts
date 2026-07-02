@@ -163,7 +163,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     matches_played: 6,
     shootout_wins: 0,
     challenge_date: null,
-    perfect_run_reference: "Perfect 1-0 run: 108 pts",
+    perfect_run_reference: "Max score: 108 — eight 1-0 wins, no bookings or missed pens",
     reveal: null,
     ...overrides,
   };

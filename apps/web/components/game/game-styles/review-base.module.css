@@ -50,6 +50,11 @@
   display: grid;
   gap: 0.7rem;
 }
+.lineCaption {
+  margin: -0.35rem 0 0.35rem;
+  color: var(--ink-faint);
+  font-size: 0.76rem;
+}
 .lineRow {
   display: grid;
   grid-template-columns: 6rem 1fr 2.2rem;

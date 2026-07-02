@@ -132,6 +132,13 @@ export default function HowToPlayPage() {
               tournament&apos;s strength where the data supports it.
             </dd>
           </div>
+          <div className="def-row">
+            <dt>Line strength</dt>
+            <dd>
+              Rating by Line uses the sim&apos;s 0–100 line-strength channels; it is not the same
+              number as a card&apos;s OVR.
+            </dd>
+          </div>
         </dl>
 
         <h2>Visual keys</h2>
@@ -166,6 +173,10 @@ export default function HowToPlayPage() {
             </ul>
           </section>
         </div>
+        <p>
+          Historical nations may show a modern successor flag when no accurate bundled asset is
+          available; the flag title says so.
+        </p>
 
         <h2>Rules that matter</h2>
         <ul>

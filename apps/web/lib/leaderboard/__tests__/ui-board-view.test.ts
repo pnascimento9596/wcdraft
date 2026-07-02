@@ -182,6 +182,18 @@ describe("boardQueryString", () => {
       "?challenge=daily&date=2026-06-29&mode=casual&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career",
     );
   });
+
+  it("threads an optional limit for cheap lane-open probes", () => {
+    expect(
+      boardQueryString({
+        filter: DEFAULT_BOARD_FILTER,
+        cursor: null,
+        limit: 1,
+      }),
+    ).toBe(
+      "?challenge=season&mode=ranked&draft_mode=classic&draft_order=squad_first&era=all_time&rating_basis=career&limit=1",
+    );
+  });
 });
 
 describe("seasonLabel", () => {

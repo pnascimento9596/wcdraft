@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { loadDataManifest } from "@wcdraft/data/client";
 
 import { useAuth } from "@/components/auth-context";
 import {
   buildLocalProgressSummary,
+  dailySignInNudgeTrigger,
   formatBestScore,
   formatUtcCountdown,
   millisecondsUntilNextUtcMidnight,
@@ -22,6 +23,8 @@ const EMPTY_SUMMARY: LocalProgressSummary = {
   streakDays: null,
   todayBest: null,
   allTimeBest: null,
+  completedRunCount: 0,
+  todaySetPersonalBest: false,
 };
 
 export interface FriendRunContext {
@@ -33,21 +36,51 @@ export function LocalProgressBand({
   summary,
   compact = false,
   friendRun = null,
+  signedIn = false,
 }: {
   summary: LocalProgressSummary;
   compact?: boolean;
   friendRun?: FriendRunContext | null;
+  signedIn?: boolean;
 }) {
   const countdown = useUtcCountdown();
+  const trigger = useMemo(
+    () => dailySignInNudgeTrigger(summary, { signedIn }),
+    [summary, signedIn],
+  );
+  const [dismissedKey, setDismissedKey] = useState<string | null>(null);
+  const [checkedStorageKey, setCheckedStorageKey] = useState<string | null>(null);
   const className = compact
     ? `${s.localProgressBand} ${s.localProgressBandCompact}`
     : s.localProgressBand;
   const streakLabel = summary.streakDays === null ? "—" : summary.streakDays.toString();
+  const showSignInNudge =
+    trigger !== null && checkedStorageKey === trigger.storageKey && dismissedKey !== trigger.storageKey;
+
+  useEffect(() => {
+    if (trigger === null || typeof window === "undefined") {
+      setDismissedKey(null);
+      setCheckedStorageKey(null);
+      return;
+    }
+    setDismissedKey(window.localStorage.getItem(trigger.storageKey) === "1" ? trigger.storageKey : null);
+    setCheckedStorageKey(trigger.storageKey);
+  }, [trigger]);
+
+  function dismissSignInNudge() {
+    if (trigger === null || typeof window === "undefined") return;
+    window.localStorage.setItem(trigger.storageKey, "1");
+    setDismissedKey(trigger.storageKey);
+    setCheckedStorageKey(trigger.storageKey);
+  }
+
   return (
     <section className={className} aria-label="Daily progress">
       <div className={s.localProgressPrimary}>
         <span className={s.localProgressStreak}>{streakLabel}-DAY STREAK</span>
-        <span className={s.localProgressCountdown}>NEXT DRAFT IN {countdown}</span>
+        <span className={s.localProgressCountdown} suppressHydrationWarning>
+          NEXT DRAFT IN {countdown}
+        </span>
       </div>
       {friendRun ? (
         <p className={s.localProgressFriend}>
@@ -58,6 +91,15 @@ export function LocalProgressBand({
         <span>Today&apos;s best: {formatBestScore(summary.todayBest)}</span>
         <span>All-time best: {formatBestScore(summary.allTimeBest)}</span>
       </div>
+      {showSignInNudge ? (
+        <p className={s.localProgressNudge} role="status">
+          <span>Keep your streak on every device — </span>
+          <a href="/sign-in">sign in.</a>
+          <button type="button" onClick={dismissSignInNudge} aria-label="Dismiss sign-in nudge">
+            Dismiss
+          </button>
+        </p>
+      ) : null}
     </section>
   );
 }
@@ -96,7 +138,14 @@ export function LocalProgressBandWithVersions({
     };
   }, [authReady, isSignedIn, targetDate, versions]);
 
-  return <LocalProgressBand summary={summary} compact={compact} friendRun={friendRun} />;
+  return (
+    <LocalProgressBand
+      summary={summary}
+      compact={compact}
+      friendRun={friendRun}
+      signedIn={isSignedIn}
+    />
+  );
 }
 
 export function LocalProgressBandFromStorage({
@@ -141,7 +190,14 @@ export function LocalProgressBandFromStorage({
     };
   }, [authReady, isSignedIn, targetDate]);
 
-  return <LocalProgressBand summary={summary} compact={compact} friendRun={friendRun} />;
+  return (
+    <LocalProgressBand
+      summary={summary}
+      compact={compact}
+      friendRun={friendRun}
+      signedIn={isSignedIn}
+    />
+  );
 }
 
 interface AccountStatsResponse {
@@ -174,6 +230,11 @@ async function readServerProgressSummary(targetDate?: string): Promise<LocalProg
     streakDays: finiteNumber(stats?.dailyStreakDays),
     todayBest: finiteNumber(stats?.todayBest),
     allTimeBest: finiteNumber(stats?.personalBest),
+    completedRunCount: undefined,
+    todaySetPersonalBest:
+      finiteNumber(stats?.todayBest) !== null &&
+      finiteNumber(stats?.personalBest) !== null &&
+      finiteNumber(stats?.todayBest) === finiteNumber(stats?.personalBest),
   };
 }
 

@@ -16,13 +16,16 @@ export const PERFECT_RUN_REFERENCE_SCORE =
   ) +
   DEFAULT_SCORING_CONFIG.undefeated_bonus;
 
-export const PERFECT_RUN_REFERENCE_LABEL = `Perfect 1-0 run: ${PERFECT_RUN_REFERENCE_SCORE} pts`;
+export const PERFECT_RUN_REFERENCE_LABEL =
+  `Max score: ${PERFECT_RUN_REFERENCE_SCORE} — eight 1-0 wins, no bookings or missed pens` as const;
 
 export interface LocalProgressSummary {
   readonly targetDate: string;
   readonly streakDays: number | null;
   readonly todayBest: number | null;
   readonly allTimeBest: number | null;
+  readonly completedRunCount?: number;
+  readonly todaySetPersonalBest?: boolean;
 }
 
 export function buildLocalProgressSummary(
@@ -35,13 +38,19 @@ export function buildLocalProgressSummary(
   const completedDailyDates = new Set<string>();
   let todayBest: number | null = null;
   let allTimeBest: number | null = null;
+  let bestBeforeTargetDate: number | null = null;
+  let completedRunCount = 0;
 
   for (const record of completed) {
     const score = record.simulation?.run.score;
     if (typeof score === "number" && Number.isFinite(score)) {
+      completedRunCount += 1;
       allTimeBest = allTimeBest === null ? score : Math.max(allTimeBest, score);
       if (record.challenge?.kind === "daily" && record.challenge.date === targetDate) {
         todayBest = todayBest === null ? score : Math.max(todayBest, score);
+      } else {
+        bestBeforeTargetDate =
+          bestBeforeTargetDate === null ? score : Math.max(bestBeforeTargetDate, score);
       }
     }
     if (record.challenge?.kind === "daily") {
@@ -54,7 +63,40 @@ export function buildLocalProgressSummary(
     streakDays: dailyStreakFromDates(completedDailyDates, targetDate),
     todayBest,
     allTimeBest,
+    completedRunCount,
+    todaySetPersonalBest:
+      todayBest !== null &&
+      completedRunCount > 1 &&
+      (bestBeforeTargetDate === null || todayBest > bestBeforeTargetDate),
   };
+}
+
+export type DailySignInNudgeTrigger =
+  | { readonly kind: "streak"; readonly storageKey: string }
+  | { readonly kind: "personal-best"; readonly storageKey: string };
+
+export function dailySignInNudgeTrigger(
+  summary: LocalProgressSummary,
+  opts: { readonly signedIn: boolean },
+): DailySignInNudgeTrigger | null {
+  if (opts.signedIn) return null;
+  if (
+    summary.todaySetPersonalBest === true &&
+    summary.allTimeBest !== null &&
+    (summary.completedRunCount ?? 0) > 1
+  ) {
+    return {
+      kind: "personal-best",
+      storageKey: `wcdraft.daily-signin-nudge.personal-best.${summary.allTimeBest.toString()}`,
+    };
+  }
+  if (typeof summary.streakDays === "number" && summary.streakDays >= 2) {
+    return {
+      kind: "streak",
+      storageKey: "wcdraft.daily-signin-nudge.streak-2-plus",
+    };
+  }
+  return null;
 }
 
 export function dailyStreakFromDates(

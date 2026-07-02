@@ -17,17 +17,13 @@ import type { MyBoardPresence } from "@/lib/leaderboard/client";
 import type { LeaderboardLineupView } from "@/lib/leaderboard/lineup-view";
 import Link from "next/link";
 import {
-  BOARD_DRAFT_MODES,
-  BOARD_DRAFT_ORDERS,
-  BOARD_ERAS,
-  BOARD_LANES,
-  BOARD_RATING_BASES,
+  ADVANCED_BOARD_CONFIG_OPTIONS,
+  BOARD_LANE_OPEN_ENTRY_THRESHOLD,
+  CANONICAL_SEASON_BOARD_FILTER,
+  boardConfigKey,
   configLabel,
   draftModeLaneLabel,
-  type BoardDraftOrder,
-  type BoardEra,
-  type BoardLane,
-  type BoardRatingBasis,
+  isCanonicalSeasonBoardFilter,
 } from "@/lib/leaderboard/config";
 
 import s from "./leaderboard.module.css";
@@ -37,6 +33,10 @@ export type BoardLineupPanelState =
   | { readonly phase: "loading" }
   | { readonly phase: "ready"; readonly lineup: LeaderboardLineupView }
   | { readonly phase: "error"; readonly message: string };
+
+export type AdvancedLaneSummary =
+  | { readonly kind: "ready"; readonly count: number }
+  | { readonly kind: "error" };
 
 export function BoardHead({
   currentSeasonKey,
@@ -86,12 +86,21 @@ export function BoardHead({
 export function BoardToolbar({
   filter,
   onFilter,
+  advancedOpen = false,
+  advancedPhase = "idle",
+  advancedSummaries = {},
+  onAdvancedOpenChange,
 }: {
   filter: BoardFilter;
   onFilter: (f: BoardFilter) => void;
+  advancedOpen?: boolean;
+  advancedPhase?: "idle" | "loading" | "ready" | "error";
+  advancedSummaries?: Readonly<Record<string, AdvancedLaneSummary>>;
+  onAdvancedOpenChange?: (open: boolean) => void;
 }) {
   const update = (patch: Partial<BoardFilter>) => onFilter({ ...filter, ...patch });
   const dailyDate = filter.challengeDate ?? new Date().toISOString().slice(0, 10);
+  const seasonActive = filter.challenge === "season" && isCanonicalSeasonBoardFilter(filter);
   return (
     <div className={s.toolbar}>
       <div className={s.laneTabs} role="tablist" aria-label="Leaderboard view">
@@ -117,11 +126,11 @@ export function BoardToolbar({
         <button
           type="button"
           role="tab"
-          aria-selected={filter.challenge === "season"}
-          className={filter.challenge === "season" ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
-          onClick={() => update({ challenge: "season", challengeDate: null })}
+          aria-selected={seasonActive}
+          className={seasonActive ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
+          onClick={() => onFilter({ ...CANONICAL_SEASON_BOARD_FILTER, challengeDate: null })}
         >
-          Advanced
+          Season
         </button>
       </div>
       {filter.challenge === "daily" ? (
@@ -130,94 +139,62 @@ export function BoardToolbar({
           <span>{filter.challengeDate ?? "Today"} · Classic / Squad First / Career / All-time</span>
         </p>
       ) : (
-        <>
-          <div className={s.laneTabs} role="tablist" aria-label="Leaderboard lane">
-            {BOARD_LANES.map((lane) => (
-              <button
-                key={lane.key}
-                type="button"
-                role="tab"
-                aria-selected={filter.lane === lane.key}
-                className={filter.lane === lane.key ? `${s.laneTab} ${s.laneTabActive}` : s.laneTab}
-                onClick={() => update({ lane: lane.key })}
-              >
-                {lane.label}
-              </button>
-            ))}
-          </div>
-
-          <div className={s.filterGrid} aria-label="Board filters">
-            <div className={s.filterMode} role="group" aria-label="Draft visibility lane">
-              {BOARD_DRAFT_MODES.map((mode) => (
-                <button
-                  key={mode.key}
-                  type="button"
-                  aria-pressed={filter.draftMode === mode.key}
-                  onClick={() => update({ draftMode: mode.key })}
-                >
-                  {mode.label}
-                </button>
-              ))}
-            </div>
-            <SelectFilter<BoardDraftOrder>
-              label="Order"
-              value={filter.draftOrder}
-              options={BOARD_DRAFT_ORDERS}
-              onChange={(draftOrder) => update({ draftOrder })}
-            />
-            <SelectFilter<BoardEra>
-              label="Era"
-              value={filter.era}
-              options={BOARD_ERAS}
-              onChange={(era) => update({ era })}
-            />
-            <SelectFilter<BoardRatingBasis>
-              label="Basis"
-              value={filter.ratingBasis}
-              options={BOARD_RATING_BASES}
-              onChange={(ratingBasis) => update({ ratingBasis })}
-            />
-          </div>
-
-          <p className={s.activeConfig}>
-            <strong>{filter.lane === "ranked" ? "Ranked" : "Casual"}</strong>
-            <span>{configLabel(filter)}</span>
-            {filter.lane === "ranked" && (
-              <em>
-                {filter.draftMode === "hidden"
-                  ? "Memory ranked lane · sign-in required"
-                  : "Classic ranked lane · sign-in required"}
-              </em>
-            )}
-          </p>
-        </>
+        <p className={s.activeConfig}>
+          <strong>{filter.lane === "ranked" ? "Ranked Season" : "Casual Season"}</strong>
+          <span>{configLabel(filter)}</span>
+          {filter.lane === "ranked" && <em>Sign-in required to post ranked runs</em>}
+        </p>
       )}
+      <details
+        className={s.advancedDisclosure}
+        open={advancedOpen}
+        onToggle={(event) => onAdvancedOpenChange?.(event.currentTarget.open)}
+      >
+        <summary className={s.advancedSummary}>Advanced</summary>
+        <div className={s.advancedGrid} aria-label="Advanced season board lanes">
+          {advancedPhase === "loading" || advancedPhase === "idle" ? (
+            <p className={s.advancedState}>Checking which lanes are open…</p>
+          ) : null}
+          {advancedPhase === "error" ? (
+            <p className={s.advancedState}>
+              Some lane counts did not load. Unknown lanes stay closed until refreshed.
+            </p>
+          ) : null}
+          {ADVANCED_BOARD_CONFIG_OPTIONS.map((option) => {
+            const summary = advancedSummaries[option.key];
+            const selected = filter.challenge === "season" && boardConfigKey(filter) === option.key;
+            const count = summary?.kind === "ready" ? summary.count : 0;
+            const open = count >= BOARD_LANE_OPEN_ENTRY_THRESHOLD;
+            const unavailable = summary === undefined || summary.kind === "error" || !open;
+            return (
+              <button
+                key={option.key}
+                type="button"
+                className={
+                  selected
+                    ? `${s.advancedLane} ${s.advancedLaneActive}`
+                    : unavailable
+                      ? `${s.advancedLane} ${s.advancedLaneClosed}`
+                      : s.advancedLane
+                }
+                disabled={unavailable}
+                aria-pressed={selected}
+                onClick={() => onFilter(option.filter)}
+              >
+                <span>{option.label}</span>
+                <em>
+                  {summary?.kind === "ready"
+                    ? open
+                      ? `${count.toString()} runs`
+                      : `opens at ${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`
+                    : `opens at ${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`}
+                </em>
+              </button>
+            );
+          })}
+        </div>
+      </details>
     </div>
-  );
-}
-
-function SelectFilter<T extends BoardLane | BoardDraftOrder | BoardEra | BoardRatingBasis>({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: T;
-  options: readonly { key: T; label: string }[];
-  onChange: (value: T) => void;
-}) {
-  return (
-    <label className={s.selectFilter}>
-      <span>{label}</span>
-      <select value={value} onChange={(event) => onChange(event.target.value as T)}>
-        {options.map((option) => (
-          <option key={option.key} value={option.key}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }
 

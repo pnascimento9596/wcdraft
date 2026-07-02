@@ -54,7 +54,7 @@ import { CandidateCard, ManagerCandidate } from "../candidate-card";
 import { SquadHeaderFlag } from "../squad-header-flag";
 import { ManagerSlot } from "../manager-slot";
 import { MiniNationFlag } from "../mini-nation-flag";
-import { SpinStage, type SpinAnimState } from "../slot-machine";
+import { SpinStage, skipSpinAnimState, type SpinAnimState } from "../slot-machine";
 import { SynergyBar } from "../synergy-bar";
 import { GameFallback } from "../game-fallback";
 import { LocalProgressBandWithVersions, type FriendRunContext } from "../local-progress-band";
@@ -104,6 +104,7 @@ type Selection =
 
 type OpenRosterFilter = "ALL" | Position;
 const OPEN_ROSTER_FILTERS: readonly OpenRosterFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
+const SPIN_SKIP_READY_STORAGE_KEY = "wcdraft.spin-skip-ready.v1";
 
 export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
@@ -304,13 +305,20 @@ function DraftBoard({
   const [committing, setCommitting] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
   const [openRosterFilter, setOpenRosterFilter] = useState<OpenRosterFilter>("ALL");
+  const [openRosterManagersOpen, setOpenRosterManagersOpen] = useState(false);
 
   // Standalone-spin flow state. `phase` gates the spin stage vs the lineup
   // view; `anim` drives the drum lifecycle on the spin stage.
   const [phase, setPhase] = useState<SpinPhase>("spin");
   const [anim, setAnim] = useState<SpinAnimState>("idle");
+  const [spinSkipReady, setSpinSkipReady] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const compactDraftLayout = useCompactDraftLayout();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setSpinSkipReady(window.sessionStorage.getItem(SPIN_SKIP_READY_STORAGE_KEY) === "1");
+  }, []);
 
   // Refs used to drive deterministic scroll alignment on two key
   // transitions:
@@ -341,6 +349,7 @@ function DraftBoard({
     setSheetOpen(false);
     setTransitionError(null);
     setOpenRosterFilter("ALL");
+    setOpenRosterManagersOpen(false);
     setPhase("spin");
     setAnim("idle");
     lastSelectedPlayerRef.current = null;
@@ -434,7 +443,19 @@ function DraftBoard({
   const handleSpin = useCallback(() => {
     setAnim(reducedMotion ? "settled" : "spinning");
   }, [reducedMotion]);
-  const handleSettle = useCallback(() => setAnim("settled"), []);
+  const markSpinSkipReady = useCallback(() => {
+    setSpinSkipReady(true);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(SPIN_SKIP_READY_STORAGE_KEY, "1");
+    }
+  }, []);
+  const handleSettle = useCallback(() => {
+    setAnim("settled");
+    markSpinSkipReady();
+  }, [markSpinSkipReady]);
+  const handleSkip = useCallback(() => {
+    setAnim((current) => skipSpinAnimState(current, spinSkipReady));
+  }, [spinSkipReady]);
   const handleReveal = useCallback(() => {
     revealFocusTargetRef.current = compactDraftLayout ? "candidates" : "formation";
     setPhase("lineup");
@@ -515,7 +536,10 @@ function DraftBoard({
   useEffect(() => {
     if (!managerOnlyOpen) return;
     setSelSlot(null);
-  }, [managerOnlyOpen]);
+    if (draft.mode === "open" && candidates.managers.length > 0) {
+      setOpenRosterManagersOpen(true);
+    }
+  }, [managerOnlyOpen, draft.mode, candidates.managers.length]);
 
   const openSlotSheet = useCallback(() => {
     sheetRestoreFocusRef.current =
@@ -657,6 +681,8 @@ function DraftBoard({
     if (draft.mode !== "open" || openRosterFilter === "ALL") return candidates.players;
     return candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
   }, [candidates.players, draft.mode, openRosterFilter]);
+  const openRosterManagerGroup = draft.mode === "open" && candidates.managers.length > 0;
+  const showManagerCandidates = !openRosterManagerGroup || openRosterManagersOpen;
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Review CTA gates the entrance to
   // Simulate/Share. It MUST require the draft to be COMPLETE (all 17 spins
@@ -823,7 +849,10 @@ function DraftBoard({
           anim={anim}
           onSpin={handleSpin}
           onSettle={handleSettle}
+          onSkip={handleSkip}
           onReveal={handleReveal}
+          canSkip={spinSkipReady}
+          showSkipHint={spinSkipReady}
         />
       </div>
     );
@@ -1014,19 +1043,57 @@ function DraftBoard({
             </span>
           </div>
         ) : null}
-        {candidates.managers.map((manager, index) => (
-          <ManagerCandidate
-            key={manager.manager_card_id}
-            manager={manager}
-            selected={
-              sel?.kind === "manager" && sel.card.manager_card_id === manager.manager_card_id
-            }
-            disabled={draft.manager_card_id !== null}
-            rarePick={spin?.rare === true}
-            autoFocus={managerOnlyOpen && index === 0}
-            onSelect={selectManager}
-          />
-        ))}
+        {openRosterManagerGroup ? (
+          <div className={s.openRosterManagerGroup}>
+            <button
+              type="button"
+              className={s.openRosterManagerToggle}
+              aria-expanded={openRosterManagersOpen}
+              aria-controls="open-roster-managers"
+              onClick={() => setOpenRosterManagersOpen((open) => !open)}
+            >
+              <span className={s.openRosterManagerTitle}>
+                Managers ({candidates.managers.length})
+              </span>
+              <span className={s.openRosterManagerMeta}>Expandable group · manager slot</span>
+              <span className={s.openRosterManagerChevron} aria-hidden="true">
+                {openRosterManagersOpen ? "▴" : "▾"}
+              </span>
+            </button>
+            {showManagerCandidates ? (
+              <div id="open-roster-managers" className={s.openRosterManagerList}>
+                {candidates.managers.map((manager, index) => (
+                  <ManagerCandidate
+                    key={manager.manager_card_id}
+                    manager={manager}
+                    selected={
+                      sel?.kind === "manager" &&
+                      sel.card.manager_card_id === manager.manager_card_id
+                    }
+                    disabled={draft.manager_card_id !== null}
+                    rarePick={spin?.rare === true}
+                    autoFocus={managerOnlyOpen && index === 0}
+                    onSelect={selectManager}
+                  />
+                ))}
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          candidates.managers.map((manager, index) => (
+            <ManagerCandidate
+              key={manager.manager_card_id}
+              manager={manager}
+              selected={
+                sel?.kind === "manager" && sel.card.manager_card_id === manager.manager_card_id
+              }
+              disabled={draft.manager_card_id !== null}
+              rarePick={spin?.rare === true}
+              autoFocus={managerOnlyOpen && index === 0}
+              onSelect={selectManager}
+            />
+          ))
+        )}
         {managerOnlyOpen ? (
           <p className={s.emptyList} role="status">
             All player slots filled — pick the manager.

@@ -179,7 +179,11 @@ export function appendBoardPage(acc: BoardAccumulator, page: BoardPageWire): Boa
 
 /** Query string for GET /api/leaderboard — current season is the server's
  *  explicit default, so no season param is sent by the board UI. */
-export function boardQueryString(opts: { filter: BoardFilter; cursor: string | null }): string {
+export function boardQueryString(opts: {
+  filter: BoardFilter;
+  cursor: string | null;
+  limit?: number;
+}): string {
   const q = new URLSearchParams();
   q.set("challenge", opts.filter.challenge);
   if (opts.filter.challenge === "daily" && opts.filter.challengeDate) {
@@ -191,6 +195,7 @@ export function boardQueryString(opts: { filter: BoardFilter; cursor: string | n
   q.set("era", opts.filter.era);
   q.set("rating_basis", opts.filter.ratingBasis);
   if (opts.cursor !== null) q.set("cursor", opts.cursor);
+  if (typeof opts.limit === "number") q.set("limit", String(opts.limit));
   return `?${q.toString()}`;
 }
 

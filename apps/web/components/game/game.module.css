@@ -158,6 +158,9 @@
 .localProgressFriend {
   composes: localProgressFriend from "./game-styles/shared.module.css";
 }
+.localProgressNudge {
+  composes: localProgressNudge from "./game-styles/shared.module.css";
+}
 .memoryProgression {
   composes: memoryProgression from "./game-styles/results.module.css";
 }
@@ -612,6 +615,9 @@
   composes: lineRatings from "./game-styles/review-base.module.css";
   composes: lineRatings from "./game-styles/draft-polish.module.css";
 }
+.lineCaption {
+  composes: lineCaption from "./game-styles/review-base.module.css";
+}
 .lineRow {
   composes: lineRow from "./game-styles/review-base.module.css";
   composes: lineRow from "./game-styles/draft-polish.module.css";
@@ -690,6 +696,12 @@
 }
 .referenceStandingChip {
   composes: referenceStandingChip from "./game-styles/results.module.css";
+}
+.maxScoreChip {
+  composes: maxScoreChip from "./game-styles/results.module.css";
+}
+.maxScoreChipChampion {
+  composes: maxScoreChipChampion from "./game-styles/results.module.css";
 }
 .outcomeScoreRow {
   composes: outcomeScoreRow from "./game-styles/results.module.css";
@@ -1052,6 +1064,67 @@
   font-family: var(--f-mono);
   font-size: 11px;
   white-space: nowrap;
+}
+
+.openRosterManagerGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.openRosterManagerToggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 10px;
+  min-height: 48px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--prov-manager) 42%, var(--line));
+  border-radius: var(--r-2);
+  background: color-mix(in srgb, var(--prov-manager) 8%, var(--bg-800));
+  color: var(--ink-100);
+  box-shadow: var(--sh-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.openRosterManagerToggle:hover,
+.openRosterManagerToggle:focus-visible {
+  border-color: color-mix(in srgb, var(--prov-manager) 70%, var(--line-2));
+}
+
+.openRosterManagerTitle {
+  min-width: 0;
+  font-family: var(--f-display), system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.openRosterManagerMeta {
+  min-width: 0;
+  color: var(--ink-300);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.openRosterManagerChevron {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  color: var(--prov-manager);
+  font-family: var(--f-mono);
+  font-weight: 800;
+}
+
+.openRosterManagerList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 @media (max-width: 430px) {
@@ -1492,6 +1565,13 @@
 .spinDrumLabel {
   composes: spinDrumLabel from "./game-styles/draft-spin.module.css";
   composes: spinDrumLabel from "./game-styles/draft-polish.module.css";
+}
+.spinDrumLabelWithHint {
+  composes: spinDrumLabelWithHint from "./game-styles/draft-spin.module.css";
+  composes: spinDrumLabelWithHint from "./game-styles/draft-polish.module.css";
+}
+.spinSkipHint {
+  composes: spinSkipHint from "./game-styles/draft-spin.module.css";
 }
 .spinDrum {
   composes: spinDrum from "./game-styles/draft-spin.module.css";

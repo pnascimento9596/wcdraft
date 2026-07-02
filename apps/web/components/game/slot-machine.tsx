@@ -46,6 +46,8 @@ const REEL_TIMING: Record<SlotRevealReel["key"], ReelTiming> = {
   right: { dur: "2.1s", delay: "0.06s" },
   center: { dur: "2.5s", delay: "0.12s" },
 };
+const LAST_SHIPPED_TOURNAMENT_YEAR = 2026;
+const SPIN_ERA_RANGE_SPAN_YEARS = 11;
 
 interface DrumVars extends CSSProperties {
   "--reel-h": string;
@@ -83,7 +85,10 @@ export interface SpinStageProps {
   readonly anim: SpinAnimState;
   readonly onSpin: () => void;
   readonly onSettle: () => void;
+  readonly onSkip: () => void;
   readonly onReveal: () => void;
+  readonly canSkip: boolean;
+  readonly showSkipHint: boolean;
 }
 
 export function SpinStage({
@@ -100,7 +105,10 @@ export function SpinStage({
   anim,
   onSpin,
   onSettle,
+  onSkip,
   onReveal,
+  canSkip,
+  showSkipHint,
 }: SpinStageProps) {
   const [left, center, right] = model.reels;
   const settled = anim === "settled";
@@ -113,6 +121,7 @@ export function SpinStage({
   const isRare = model.rare;
   const drawProbabilityLabel = model.drawProbabilityLabel;
   const pickNum = String(pickNumber).padStart(2, "0");
+  const eraValue = spinEraRangeLabel(result.yearLabel);
 
   const tagline = settled
     ? `${result.nationName} ${result.yearLabel} is on the board — ${pickSpace.toLowerCase()} available.`
@@ -122,6 +131,7 @@ export function SpinStage({
 
   const ctaLabel = settled ? "Reveal choices →" : spinning ? "Spinning…" : "Spin";
   const onCta = settled ? onReveal : spinning ? undefined : onSpin;
+  const skipActive = spinning && canSkip;
 
   const drumVars: DrumVars = {
     "--reel-h": `${REEL_H}px`,
@@ -132,6 +142,15 @@ export function SpinStage({
     <section
       className={`${s.spinStage} ${settled && isRare ? s.spinRare : ""}`}
       aria-labelledby="spin-stage-title"
+      tabIndex={skipActive ? 0 : undefined}
+      onClick={skipActive ? onSkip : undefined}
+      onKeyDown={(event) => {
+        if (!skipActive) return;
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        onSkip();
+      }}
+      data-skip-active={skipActive ? "true" : undefined}
     >
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={s.spinStatusBar}>
@@ -167,7 +186,14 @@ export function SpinStage({
       </div>
 
       {/* ── Drum ─────────────────────────────────────────────────────── */}
-      <span className={s.spinDrumLabel}>Spinning nation + era</span>
+      <span
+        className={`${s.spinDrumLabel} ${
+          showSkipHint && spinning ? s.spinDrumLabelWithHint : ""
+        }`}
+      >
+        Spinning nation + era
+        {showSkipHint && spinning ? <span className={s.spinSkipHint}>tap to skip</span> : null}
+      </span>
 
       <div className={s.spinDrum} style={drumVars} aria-hidden="true">
         <span className={s.spinChevronTop} />
@@ -212,10 +238,8 @@ export function SpinStage({
       {/* ── Stat tiles ───────────────────────────────────────────────── */}
       <div className={s.spinTiles} role="group" aria-label="Spin details">
         <div className={`${s.spinTile} ${settled && isRare ? s.spinTileRare : ""}`}>
-          <span className={s.spinTileLabel}>{settled && isRare ? "Rare" : "Era"}</span>
-          <span className={s.spinTileValue}>
-            {settled ? (model.eraPresetLabel ?? (isRare ? "Pre-1998" : "Modern")) : "—"}
-          </span>
+          <span className={s.spinTileLabel}>Era</span>
+          <span className={s.spinTileValue}>{settled ? eraValue : "—"}</span>
         </div>
         <div className={s.spinTile}>
           <span className={s.spinTileLabel}>Choices</span>
@@ -241,6 +265,18 @@ export function SpinStage({
       </button>
     </section>
   );
+}
+
+export function spinEraRangeLabel(yearLabel: string): string {
+  if (!/^\d{4}$/u.test(yearLabel)) return `ERA ${yearLabel}`;
+  const year = Number.parseInt(yearLabel, 10);
+  const endYear = Math.min(year + SPIN_ERA_RANGE_SPAN_YEARS, LAST_SHIPPED_TOURNAMENT_YEAR);
+  if (endYear <= year) return `ERA ${year.toString()}`;
+  return `ERA ${year.toString()}–${String(endYear).slice(-2)}`;
+}
+
+export function skipSpinAnimState(anim: SpinAnimState, canSkip: boolean): SpinAnimState {
+  return canSkip && anim === "spinning" ? "settled" : anim;
 }
 
 function SpinReel({
@@ -303,14 +339,17 @@ function SpinFace({ face, settled = false }: { face: SlotRevealFace; settled?: b
       {face.flagSrc ? (
         <img
           src={face.flagSrc}
-          alt=""
+          alt={face.flagLabel}
+          title={face.flagLabel}
           className={s.spinFaceFlag}
           loading="eager"
           decoding="async"
           draggable={false}
         />
       ) : (
-        <span className={s.spinFaceFlagFallback}>{face.nationCode ?? face.nationId}</span>
+        <span className={s.spinFaceFlagFallback} aria-label={face.flagLabel} title={face.flagLabel}>
+          {face.nationCode ?? face.nationId}
+        </span>
       )}
       <span className={s.spinFaceNation}>{face.nationName}</span>
       <span className={s.spinFaceYear}>{face.yearLabel}</span>

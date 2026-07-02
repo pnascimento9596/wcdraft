@@ -28,6 +28,7 @@ import {
 import {
   DEFAULT_BOARD_FILTER,
   DEFAULT_DAILY_BOARD_FILTER,
+  ADVANCED_BOARD_CONFIG_OPTIONS,
   isBoardDraftMode,
   isBoardDraftOrder,
   isBoardEra,
@@ -47,6 +48,11 @@ import {
 import s from "./leaderboard.module.css";
 
 type LoadPhase = "loading" | "ready" | "error";
+type AdvancedLaneSummary =
+  | { readonly kind: "ready"; readonly count: number }
+  | { readonly kind: "error" };
+
+const ADVANCED_SUMMARY_LIMIT = 1;
 
 export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) {
   const auth = useAuth();
@@ -61,6 +67,13 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   const [nowMs, setNowMs] = useState<number | null>(null);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [lineups, setLineups] = useState<Record<string, BoardLineupPanelState>>({});
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [advancedPhase, setAdvancedPhase] = useState<"idle" | "loading" | "ready" | "error">(
+    "idle",
+  );
+  const [advancedSummaries, setAdvancedSummaries] = useState<
+    Readonly<Record<string, AdvancedLaneSummary>>
+  >({});
   const reqSeq = useRef(0);
   const lineupSeq = useRef(0);
   const lineupsRef = useRef(lineups);
@@ -96,6 +109,32 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   useEffect(() => {
     loadFirstPage(filter);
   }, [filter, loadFirstPage]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!advancedOpen || advancedPhase !== "idle") return;
+    setAdvancedPhase("loading");
+    void Promise.all(
+      ADVANCED_BOARD_CONFIG_OPTIONS.map(async (option) => {
+        const result = await fetchBoardPage({
+          filter: option.filter,
+          cursor: null,
+          limit: ADVANCED_SUMMARY_LIMIT,
+        });
+        if (!result.ok) return [option.key, { kind: "error" } as const] as const;
+        const count = result.page.entries[0]?.field_size ?? 0;
+        return [option.key, { kind: "ready", count } as const] as const;
+      }),
+    ).then((items) => {
+      if (cancelled) return;
+      const next = Object.fromEntries(items);
+      setAdvancedSummaries(next);
+      setAdvancedPhase(items.some(([, summary]) => summary.kind === "error") ? "error" : "ready");
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [advancedOpen, advancedPhase]);
 
   // Your-entry highlight — anonymous session or account; absent when
   // unresolvable (no session / dark / transport failure).
@@ -156,7 +195,14 @@ export function BoardScreen({ currentSeasonKey }: { currentSeasonKey: string }) 
   return (
     <div className={s.boardShell}>
       <BoardHead currentSeasonKey={currentSeasonKey} filter={filter} />
-      <BoardToolbar filter={filter} onFilter={setFilter} />
+      <BoardToolbar
+        filter={filter}
+        onFilter={setFilter}
+        advancedOpen={advancedOpen}
+        advancedPhase={advancedPhase}
+        advancedSummaries={advancedSummaries}
+        onAdvancedOpenChange={setAdvancedOpen}
+      />
       {me !== null && <MeChip me={me} />}
 
       <section className={s.panel} aria-label="Leaderboard standings">
