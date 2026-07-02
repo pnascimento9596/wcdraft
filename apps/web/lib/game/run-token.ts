@@ -64,6 +64,7 @@ import {
 
 import type { GameData } from "./data";
 import { getCatalogForEra } from "./data";
+import { deriveDailySeed } from "./daily";
 import type { RunRecordV1 } from "./run-record";
 
 export {
@@ -336,7 +337,9 @@ export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData):
   const draft = reconstructDraftFromToken(token, gameData);
   const challenge =
     (token.v === 3 || token.v === 4) && token.ch?.k === "daily"
-      ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
+      ? token.ch.s === deriveDailySeed(token.ch.d)
+        ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
+        : undefined
       : undefined;
   return {
     record_version: 1,

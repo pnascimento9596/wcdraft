@@ -116,8 +116,8 @@ export type KeyMoment = {
  * never look directly at MatchEvents.
  *
  * `villain_player_id` is the opposition player with the most "harm done"
- * across the run (most goals, then most assists, then earliest involvement) —
- * exact tiebreak rules live in WS-E once template needs are settled.
+ * in the defining match (final for champions/finalists, otherwise the exit
+ * match): most goals, then most assists, then earliest involvement.
  */
 export interface NarrativeFacts {
   /** Reached round (final achievement). */
@@ -135,7 +135,7 @@ export interface NarrativeFacts {
    * crown the player who decided the title match.
    */
   final_hero_player_id: string | null;
-  /** Opposition villain — highest cumulative harm against the user XI; null when none. */
+  /** Opposition villain in the defining match; null when none. */
   villain_player_id: string | null;
   /**
    * Team id of the opponent most associated with the run's defining match —

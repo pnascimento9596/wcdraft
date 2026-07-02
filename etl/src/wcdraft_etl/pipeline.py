@@ -29,6 +29,7 @@ from .supplement import link as supplement_link
 # Anchored to the package location (etl/src/wcdraft_etl/ -> etl/output) so the
 # pipeline writes to the same place regardless of the caller's cwd.
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
+DATASET_REVISION_DATE = "2026-07-01"
 
 
 def build_all() -> dict[str, list[dict]]:
@@ -97,6 +98,7 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
     # No timestamp — keeping the manifest deterministic. Provenance is the pinned
     # source commit; row counts let consumers sanity-check what they loaded.
     return {
+        "dataset_revision_date": DATASET_REVISION_DATE,
         "source": {
             "name": source.SOURCE_NAME,
             "version": source.SOURCE_VERSION,
@@ -145,7 +147,10 @@ def _manifest(tables: dict[str, list[dict]]) -> dict:
                 ),
                 "manager birth_date (no source column)",
             ],
-            "null_sentinels": ["shirt_number 0 -> null (pre-1954)"],
+            "null_sentinels": [
+                "shirt_number 0 -> null (pre-1954)",
+                "given_name 'not applicable' -> null",
+            ],
             "appearances_from": cards.APPEARANCES_FROM,
             "appearances_pre_1970": (
                 "sourced from RSSSF starting XIs and linked to player_id where "

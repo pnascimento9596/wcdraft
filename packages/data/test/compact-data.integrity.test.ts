@@ -15,7 +15,15 @@ import {
   RUNTIME_DATA_SCHEMA_VERSION,
   SCENARIO_2026_BUNDLE,
 } from "../src/index.js";
-import type { RuntimeRating } from "../src/types.js";
+import type { RuntimeManagerCard, RuntimePlayerCard, RuntimeRating } from "../src/types.js";
+
+function asCardId(cardId: string): RuntimePlayerCard["card_id"] {
+  return cardId as RuntimePlayerCard["card_id"];
+}
+
+function asManagerCardId(cardId: string): RuntimeManagerCard["manager_card_id"] {
+  return cardId as RuntimeManagerCard["manager_card_id"];
+}
 
 describe("compact-data integrity", () => {
   it("manifest schema_version matches the runtime contract anchor", () => {
@@ -145,6 +153,34 @@ describe("compact-data integrity", () => {
       expect(card.source_manager_card_id).toContain(":WC-");
       expect(card.source_tournament_id).toMatch(/^WC-\d{4}$/u);
     }
+  });
+
+  it("display name fields are free of the source 'not applicable' sentinel", () => {
+    const sentinel = /\bnot applicable\b/iu;
+    for (const card of DRAFT_POOL_BUNDLE.player_cards) {
+      expect(card.common_name, `${card.card_id} common_name`).not.toMatch(sentinel);
+      expect(card.full_name, `${card.card_id} full_name`).not.toMatch(sentinel);
+    }
+    for (const card of DRAFT_POOL_BUNDLE.manager_cards) {
+      expect(card.common_name, `${card.manager_card_id} common_name`).not.toMatch(sentinel);
+      expect(card.full_name, `${card.manager_card_id} full_name`).not.toMatch(sentinel);
+    }
+  });
+
+  it("normalizes mononym sentinels while preserving real Na given names", () => {
+    const playerByCard = new Map(
+      DRAFT_POOL_BUNDLE.player_cards.map((card) => [card.card_id, card]),
+    );
+    expect(playerByCard.get(asCardId("P-81323:1962"))?.full_name).toBe("Rodri");
+    expect(playerByCard.get(asCardId("P-62341:2022"))?.full_name).toBe("Rodri");
+    expect(playerByCard.get(asCardId("P-10357:2022"))?.full_name).toBe("Na Sang-ho");
+
+    const managerByCard = new Map(
+      DRAFT_POOL_BUNDLE.manager_cards.map((card) => [card.manager_card_id, card]),
+    );
+    expect(managerByCard.get(asManagerCardId("M-100:1970"))?.common_name).toBe("Didi");
+    expect(managerByCard.get(asManagerCardId("M-108:2010"))?.common_name).toBe("Dunga");
+    expect(managerByCard.get(asManagerCardId("M-475:2006"))?.common_name).toBe("Zico");
   });
 
   it("every draftable card has a rating and no card has empty eligible_positions", () => {

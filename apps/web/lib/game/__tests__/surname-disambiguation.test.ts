@@ -107,6 +107,25 @@ describe("buildDisplayNameOverrides (q-005)", () => {
     expect(overrides.get("C-b")).toBe("Ronaldo de Assis Moreira");
   });
 
+  it("scrubs source name sentinels before collision disambiguation", () => {
+    const overrides = buildDisplayNameOverrides([
+      card({
+        card_id: "C-rodri-1962",
+        player_id: "P-81323",
+        common_name: "Rodri",
+        full_name: "not applicable Rodri",
+      }),
+      card({
+        card_id: "C-rodri-2022",
+        player_id: "P-62341",
+        common_name: "Rodri",
+        full_name: "not applicable Rodri",
+      }),
+    ]);
+    expect(overrides.get("C-rodri-1962")).toBe("Rodri");
+    expect(overrides.get("C-rodri-2022")).toBe("Rodri");
+  });
+
   it("escalates to full names when initial forms still collide across players", () => {
     const overrides = buildDisplayNameOverrides([
       card({ card_id: "C-a", player_id: "P-a", common_name: "Silva", full_name: "Carlos Silva" }),

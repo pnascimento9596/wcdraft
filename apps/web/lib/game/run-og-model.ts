@@ -9,6 +9,7 @@ import { adjustPitchLayoutForRender } from "./pitch-layout";
 import { positionShape, type PositionShape, type RatingBadgeKind } from "./view-models";
 import {
   reconstructDraftFromToken,
+  versionsAgree,
   type RunTokenOgSummary,
   type RunTokenV3Body,
   type RunTokenV4Body,
@@ -77,6 +78,9 @@ export function buildRunOgModelFromTrustedSummary(
   token: RunTokenV3Body | RunTokenV4Body,
   summary: RunTokenOgSummary,
 ): RunOgModel {
+  if (!versionsAgree(token, gameData.versions)) {
+    throw new Error("run OG model: token version anchors do not match runtime data");
+  }
   const draft = reconstructDraftFromToken(token, gameData);
   return buildRunOgModelFromTrustedDraft(gameData, token, draft, summary);
 }

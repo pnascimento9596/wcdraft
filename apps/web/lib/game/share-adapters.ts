@@ -23,6 +23,7 @@ import type { RunRecordV1 } from "./run-record";
 import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 import { buildNarrativeLabels, topScorerView, type TopScorerView } from "./results-adapters";
 import { formatNullableNumber } from "./view-models";
+import { displayNameFromNames } from "./display-names";
 
 // ─── Headline ────────────────────────────────────────────────────────────────
 
@@ -66,8 +67,7 @@ export function topStars(gameData: GameData, draft: DraftState, n = 3): ShareSta
     if (!rating || !card || rating.overall === null) continue;
     const nation = gameData.indexes.nationById.get(card.nation_id);
     const code = nation?.code ?? card.nation_id.toUpperCase();
-    const name =
-      card.common_name && card.common_name.trim().length > 0 ? card.common_name : card.full_name;
+    const name = displayNameFromNames(card.common_name, card.full_name);
     stars.push({
       name,
       nation_code: code,
@@ -97,7 +97,7 @@ export function managerLine(gameData: GameData, draft: DraftState): ShareManager
   if (draft.manager_card_id === null) return null;
   const m = gameData.indexes.managerByCardId.get(draft.manager_card_id);
   if (!m) return null;
-  const name = m.common_name && m.common_name.trim().length > 0 ? m.common_name : m.full_name;
+  const name = displayNameFromNames(m.common_name, m.full_name);
   const nation = gameData.indexes.nationById.get(m.nation_id);
   const code = nation?.code ?? m.nation_id.toUpperCase();
   return { name, nation_code: code };

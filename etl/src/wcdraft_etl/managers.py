@@ -19,7 +19,7 @@ from __future__ import annotations
 import pandas as pd
 
 from . import source
-from .util import int_or_none, s_or_none
+from .util import int_or_none, name_part_or_none, s_or_none
 
 
 def _name_to_team_id(teams: pd.DataFrame) -> dict[str, str]:
@@ -38,7 +38,7 @@ def build_managers(
 
     rows: list[dict] = []
     for r in mdf.itertuples(index=False):
-        given, family = s_or_none(r.given_name), s_or_none(r.family_name)
+        given, family = name_part_or_none(r.given_name), s_or_none(r.family_name)
         full = " ".join(p for p in (given, family) if p) or None
         country = s_or_none(r.country_name)
         rows.append(

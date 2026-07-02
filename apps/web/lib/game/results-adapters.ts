@@ -11,8 +11,8 @@
 // ----------------------
 // Real player names come from the draft pool (`gameData.indexes`). Opponent
 // scorers (Team2026 players) are in the index when the 2026 card pool
-// covers them; otherwise the player_id is shown verbatim (still honest —
-// no fabricated name).
+// covers them; otherwise the UI shows "—" (honest-state — no fabricated name
+// and no raw internal id leak).
 
 import {
   buildNarrative,
@@ -27,6 +27,7 @@ import type { Scenario2026Bundle } from "@wcdraft/data";
 
 import type { GameData } from "./data";
 import { managerCardView, playerCardView } from "./adapters";
+import { displayNameFromNames } from "./display-names";
 import { PERFECT_RUN_REFERENCE_LABEL } from "./local-progress";
 
 // ─── Round labels ────────────────────────────────────────────────────────────
@@ -125,9 +126,7 @@ export function resolveScorerName(
   if (card_id) {
     const c = gameData.indexes.playerByCardId.get(card_id);
     if (c) {
-      const display =
-        c.common_name && c.common_name.trim().length > 0 ? c.common_name : c.full_name;
-      return display;
+      return displayNameFromNames(c.common_name, c.full_name);
     }
   }
   return "—";

@@ -172,6 +172,27 @@ describe("t2 — decode fuzz (config malformations reject, never default)", () =
     expect(virtual.draft).toEqual(record.draft);
   });
 
+  it("does not render forged daily metadata when seed/date derivation disagrees", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+    const record = {
+      ...buildOriginRecord(gameData, challenge.seed),
+      parent_seed: challenge.seed,
+      challenge,
+    };
+    const body = buildRunTokenBody(record);
+    if (body.v !== 3) throw new Error("daily token did not encode as t3");
+    const forged = {
+      ...body,
+      ch: { k: "daily" as const, d: "2026-06-30", s: challenge.seed },
+    };
+    const decoded = decodeRunToken(encodeBody(forged));
+    expect(decoded).not.toBeNull();
+
+    const virtual = virtualRecordFromToken(decoded!, gameData);
+    expect(virtual.parent_seed).toBe(challenge.seed);
+    expect(virtual.challenge).toBeUndefined();
+  });
+
   it("rejects unknown df / rb / ef.id values", () => {
     expect(decodeRunToken(tamperedV3((b) => ((b as { df: string }).df = "slot_first")))).toBeNull();
     expect(decodeRunToken(tamperedV3((b) => ((b as { rb: string }).rb = "prime")))).toBeNull();

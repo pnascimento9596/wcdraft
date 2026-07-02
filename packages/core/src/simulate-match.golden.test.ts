@@ -59,4 +59,21 @@ describe("public simulateMatch (UserXiSimView path)", () => {
     const m = simulateMatch(view, opponent, "G1", "view-seed-strip");
     expect("__injuredTournamentEnding" in (m as object)).toBe(false);
   });
+
+  it("never assigns open-play goal scorers to goalkeepers across a seeded sample", () => {
+    const { view, opponent } = buildView();
+    let openPlayGoals = 0;
+    for (let i = 0; i < 500; i += 1) {
+      const m = simulateMatch(view, opponent, i % 2 === 0 ? "G1" : "R32", `view-gk-goal-${i}`);
+      const lineupByPlayerId = new Map(m.lineup.map((entry) => [entry.player_id, entry]));
+      for (const event of m.events) {
+        if (event.type !== "goal") continue;
+        openPlayGoals += 1;
+        const scorer = lineupByPlayerId.get(event.scorer_player_id);
+        expect(scorer, `${event.scorer_player_id} missing from ${m.match_id}`).toBeDefined();
+        expect(scorer?.position, `${event.scorer_player_id} scored ${m.match_id}`).not.toBe("GK");
+      }
+    }
+    expect(openPlayGoals).toBeGreaterThan(0);
+  });
 });

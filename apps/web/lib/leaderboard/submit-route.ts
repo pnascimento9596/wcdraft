@@ -7,9 +7,10 @@
 //   3. JSON shape + mode             — 400 INVALID_BODY
 //   4. identity gate                 — ranked requires account;
 //                                      401 AUTH_REQUIRED / 403 CSRF_FAILED
-//   5. rate-limit SEAM (U5 plugs in) — 429 RATE_LIMITED + Retry-After
-//   6. validateSubmission (U2)       — steps 1–3, 5, 7–9; SUBMIT_ERROR_HTTP_STATUS
-//   7. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
+//   5. cheap validation preflight     — malformed requests never burn limiter
+//   6. rate-limit SEAM (U5 plugs in)  — 429 RATE_LIMITED + Retry-After
+//   7. validateSubmission (U2)        — full replay/resim; SUBMIT_ERROR_HTTP_STATUS
+//   8. insert (NULLS-NOT-DISTINCT dedupe) → 201 inserted / 200 duplicate
 //
 // Honest-state: the persisted score is the SERVER's re-sim, the returned
 // rank is the identity's CURRENT board rank read by a SECOND statement after
@@ -39,7 +40,13 @@ import {
 } from "./store";
 import { consumeRankedAttempt, findExistingRankedAttemptEntry } from "./ranked-attempts";
 import type { SubmitRateLimiter } from "./submit-rate-limit";
-import { SUBMIT_ERROR_HTTP_STATUS, validateSubmission, type ValidationData } from "./validate";
+import {
+  SUBMIT_ERROR_HTTP_STATUS,
+  validateSubmission,
+  validateSubmissionCheap,
+  type RejectedSubmission,
+  type ValidationData,
+} from "./validate";
 
 /** Generous bound over the worst legitimate body: token ≤ 8192 chars + name
  *  + integer score + JSON envelope. Checked on declared AND actual size. */
@@ -67,6 +74,25 @@ const TRANSPORT_STATUS: Record<TransportErrorCode, number> = {
 
 function transportError(code: TransportErrorCode, message: string): NextResponse {
   return NextResponse.json({ error: code, message }, { status: TRANSPORT_STATUS[code] });
+}
+
+function validationError(verdict: RejectedSubmission): NextResponse {
+  if (verdict.code === "SIM_FAILURE") {
+    // Contract bug (re-sim threw after a successful replay) — alert, never
+    // persist. The 500 mapping is deliberate.
+    console.error("[leaderboard] SIM_FAILURE — re-sim contract bug:", verdict.reason);
+  }
+  return NextResponse.json(
+    {
+      error: verdict.code,
+      message: verdict.reason,
+      ...(verdict.name_reason !== undefined && { name_reason: verdict.name_reason }),
+      ...(verdict.mismatched_anchors !== undefined && {
+        mismatched_anchors: verdict.mismatched_anchors,
+      }),
+    },
+    { status: SUBMIT_ERROR_HTTP_STATUS[verdict.code] },
+  );
 }
 
 const SubmitBodySchema = z.object({
@@ -163,7 +189,20 @@ export async function handleLeaderboardSubmit(
     // 4 — identity gate (throws LeaderboardGateError).
     const identity = await requireSubmitIdentity(req, gateDeps(deps, submissionMode));
 
-    // 5 — rate-limit seam (deny-nothing default in U3; U5 implements).
+    const submission = {
+      token: body.token,
+      claimed_score: body.claimed_score,
+      draft_mode: body.draft_mode,
+      display_alias: body.display_alias,
+      display_name: body.display_name,
+      challenge: body.challenge,
+      challenge_date: body.challenge_date,
+    };
+    const validationData = deps.getValidation();
+    const cheapVerdict = validateSubmissionCheap(submission, validationData);
+    if (cheapVerdict !== null) return validationError(cheapVerdict);
+
+    // 6 — rate-limit seam (deny-nothing default in U3; U5 implements).
     const decision = await deps.rateLimiter.checkSubmit({
       sessionId: identity.sessionId,
       userId: identity.userId,
@@ -178,36 +217,10 @@ export async function handleLeaderboardSubmit(
       return res;
     }
 
-    // 6 — the U2 pure pipeline (replay + re-sim run only past this point).
-    const verdict = validateSubmission(
-      {
-        token: body.token,
-        claimed_score: body.claimed_score,
-        draft_mode: body.draft_mode,
-        display_alias: body.display_alias,
-        display_name: body.display_name,
-        challenge: body.challenge,
-        challenge_date: body.challenge_date,
-      },
-      deps.getValidation(),
-    );
+    // 7 — the U2 pure pipeline (full replay + re-sim run only past this point).
+    const verdict = validateSubmission(submission, validationData);
     if (verdict.status === "rejected") {
-      if (verdict.code === "SIM_FAILURE") {
-        // Contract bug (re-sim threw after a successful replay) — alert,
-        // never persist. The 500 mapping is deliberate.
-        console.error("[leaderboard] SIM_FAILURE — re-sim contract bug:", verdict.reason);
-      }
-      return NextResponse.json(
-        {
-          error: verdict.code,
-          message: verdict.reason,
-          ...(verdict.name_reason !== undefined && { name_reason: verdict.name_reason }),
-          ...(verdict.mismatched_anchors !== undefined && {
-            mismatched_anchors: verdict.mismatched_anchors,
-          }),
-        },
-        { status: SUBMIT_ERROR_HTTP_STATUS[verdict.code] },
-      );
+      return validationError(verdict);
     }
 
     if (
@@ -236,7 +249,7 @@ export async function handleLeaderboardSubmit(
       );
     }
 
-    // 7 — persist + honest dedupe; rank is a SECOND read after the insert
+    // 8 — persist + honest dedupe; rank is a SECOND read after the insert
     // (current rank, not the insert's snapshot).
     const token = body.token as string;
     const result =

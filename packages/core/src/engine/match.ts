@@ -245,7 +245,10 @@ function generateChances(p: ChancePhaseParams): ChanceResult[] {
       else kind = "open";
     }
 
-    const attacker = weightedPick(p.attackers, (m) => m.attackWeight, p.eventRng);
+    const openPlayAttackers = p.attackers.filter((m) => m.position !== "GK");
+    const actorPool =
+      kind === "goal" && openPlayAttackers.length > 0 ? openPlayAttackers : p.attackers;
+    const attacker = weightedPick(actorPool, (m) => m.attackWeight, p.eventRng);
     let assist: SimMember | null = null;
     if (kind === "goal" && p.eventRng.next() < INCIDENT.ASSIST_PROB) {
       const pool = p.creators.filter((m) => m.card_id !== (attacker?.card_id ?? ""));
@@ -1050,9 +1053,10 @@ function positionFromRating(r: {
 }
 
 /**
- * Build the user SimMembers from a distilled `UserXiSimView`. Positions are
- * inferred from each rating's dominant channel (the view carries no slot
- * layout); the first 11 ratings are starters, the remainder bench.
+ * Build the user SimMembers from a distilled `UserXiSimView`. The view carries
+ * no slot layout, so starters use the same deterministic coarse lineup template
+ * as opponent teams; bench positions are inferred from each rating's dominant
+ * channel.
  */
 function membersFromView(view: UserXiSimView): SimMember[] {
   return view.squad_ratings.map((r, i) => {
@@ -1064,7 +1068,7 @@ function membersFromView(view: UserXiSimView): SimMember[] {
       player_id: r.player_id,
       tournament_id: parsed?.tournament_id ?? r.tournament_id,
       slot_id: started ? `sim.starter.${i}` : `sim.bench.${i - 11}`,
-      position: positionFromRating(r),
+      position: started ? OPP_TEMPLATE[i]! : positionFromRating(r),
       started,
       attackWeight: r.attack + 1,
       creativeWeight: r.midfield + 1,

@@ -31,6 +31,7 @@ import type {
 
 import { MissingRecordError, RuntimeDataLoadError } from "./errors";
 import { composeVersions, type RunRecordVersions } from "./versions";
+import { displayNameFromNames, fullDisplayName } from "./display-names";
 
 export { composeVersions, type RunRecordVersions } from "./versions";
 
@@ -184,8 +185,7 @@ export function buildGameDataIndexes(bundle: DraftPoolBundle): GameDataIndexes {
 
 /** Short display name before disambiguation — mirrors the adapter fallback. */
 function baseDisplayName(c: RuntimePlayerCard): string {
-  const cn = c.common_name.trim();
-  return cn.length > 0 ? cn : c.full_name;
+  return displayNameFromNames(c.common_name, c.full_name);
 }
 
 /**
@@ -194,7 +194,7 @@ function baseDisplayName(c: RuntimePlayerCard): string {
  * (mononyms, nicknames unrelated to the surname).
  */
 function initialForm(c: RuntimePlayerCard, base: string): string | null {
-  const tokens = c.full_name.trim().split(/\s+/);
+  const tokens = fullDisplayName(c.full_name).split(/\s+/);
   if (tokens.length < 2) return null;
   if (tokens[tokens.length - 1]!.toLowerCase() !== base.toLowerCase()) return null;
   return `${tokens[0]!.charAt(0).toUpperCase()}. ${base}`;
@@ -221,7 +221,7 @@ export function buildDisplayNameOverrides(
     const candidateByCard = new Map<string, string>();
     const playersByCandidate = new Map<string, Set<string>>();
     for (const c of colliding) {
-      const cand = initialForm(c, baseDisplayName(c)) ?? c.full_name;
+      const cand = initialForm(c, baseDisplayName(c)) ?? fullDisplayName(c.full_name);
       candidateByCard.set(c.card_id, cand);
       const set = playersByCandidate.get(cand.toLowerCase()) ?? new Set<string>();
       set.add(c.player_id);
@@ -232,7 +232,7 @@ export function buildDisplayNameOverrides(
     for (const c of colliding) {
       const cand = candidateByCard.get(c.card_id)!;
       const stillShared = playersByCandidate.get(cand.toLowerCase())!.size > 1;
-      overrides.set(c.card_id, stillShared ? c.full_name : cand);
+      overrides.set(c.card_id, stillShared ? fullDisplayName(c.full_name) : cand);
     }
   }
   return overrides;

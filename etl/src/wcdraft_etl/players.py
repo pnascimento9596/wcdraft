@@ -18,7 +18,7 @@ from __future__ import annotations
 import pandas as pd
 
 from . import source
-from .util import POSITIONS, s_or_none, sort_positions
+from .util import POSITIONS, name_part_or_none, s_or_none, sort_positions
 
 _FLAG_COL = {"GK": "goal_keeper", "DF": "defender", "MF": "midfielder", "FW": "forward"}
 
@@ -51,7 +51,7 @@ def build(
         eligible = sort_positions(
             [pos for pos, col in _FLAG_COL.items() if getattr(r, col) == "1"]
         )
-        given, family = s_or_none(r.given_name), s_or_none(r.family_name)
+        given, family = name_part_or_none(r.given_name), s_or_none(r.family_name)
         full = " ".join(p for p in (given, family) if p) or None
         rows.append(
             {

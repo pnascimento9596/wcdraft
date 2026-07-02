@@ -108,9 +108,10 @@ interface VillainRow {
 }
 
 /**
- * Opposition villain — the opp player who did the user the most harm:
- * most goals against → most assists → earliest involvement → lowest player_id.
- * Null when no opp player scored or assisted.
+ * Opposition villain for the provided match set: most goals against → most
+ * assists → earliest involvement → lowest player_id. Narrative callers pass
+ * the defining match when prose is about that match, so the named opponent
+ * cannot drift from the sentence's match reference.
  */
 function resolveVillain(matches: readonly MatchResult[]): string | null {
   const rows = new Map<string, VillainRow>();
@@ -460,7 +461,7 @@ function scenarioSpotlight(
   overrides: Partial<NarrativeScenarioSpotlight> = {},
 ): NarrativeScenarioSpotlight {
   const score = match ? totalGoals(match) : null;
-  return {
+  const spotlight = {
     family,
     match_id: match?.match_id ?? null,
     round: match?.round ?? null,
@@ -478,6 +479,81 @@ function scenarioSpotlight(
     era_max_year: null,
     ...overrides,
   };
+  return constrainSpotlightPlayers(spotlight, match);
+}
+
+function eventPlayerIds(e: MatchEvent): string[] {
+  switch (e.type) {
+    case "goal":
+      return [e.scorer_player_id, e.assist_player_id].filter((id): id is string => id !== null);
+    case "own_goal":
+      return [e.scorer_player_id];
+    case "pen_scored":
+      return [e.taker_player_id];
+    case "pen_missed":
+      return [e.taker_player_id, e.saved_by_player_id].filter((id): id is string => id !== null);
+    case "pen_won":
+      return [e.won_by_player_id, e.conceded_by_player_id].filter(
+        (id): id is string => id !== null,
+      );
+    case "shot_on":
+    case "shot_off":
+    case "key_pass":
+    case "offside":
+    case "yellow":
+    case "red":
+    case "injury":
+      return [e.player_id];
+    case "save":
+      return [e.keeper_player_id];
+    case "foul":
+      return [e.committed_by_player_id, e.suffered_by_player_id];
+    case "sub":
+      return [e.in_player_id, e.out_player_id];
+    case "shootout_kick":
+      return e.taker_player_id === null ? [] : [e.taker_player_id];
+  }
+}
+
+function matchParticipantIds(match: MatchResult): Set<string> {
+  const ids = new Set<string>();
+  for (const entry of match.lineup) ids.add(entry.player_id);
+  for (const event of match.events) {
+    for (const id of eventPlayerIds(event)) ids.add(id);
+  }
+  return ids;
+}
+
+function playerInMatch(match: MatchResult | null, player_id: string | null): string | null {
+  if (player_id === null || match === null) return player_id;
+  return matchParticipantIds(match).has(player_id) ? player_id : null;
+}
+
+function constrainSpotlightPlayers(
+  spotlight: NarrativeScenarioSpotlight,
+  match: MatchResult | null,
+): NarrativeScenarioSpotlight {
+  if (match === null) return spotlight;
+  return {
+    ...spotlight,
+    player_id: playerInMatch(match, spotlight.player_id),
+    secondary_player_id: playerInMatch(match, spotlight.secondary_player_id),
+    tertiary_player_id: playerInMatch(match, spotlight.tertiary_player_id),
+  };
+}
+
+function latestMatchWithPlayers(
+  matches: readonly MatchResult[],
+  playerIds: readonly (string | null)[],
+): MatchResult | null {
+  const wanted = playerIds.filter((id): id is string => id !== null);
+  if (wanted.length === 0) return null;
+  return (
+    [...matches].reverse().find((m) => {
+      const participants = matchParticipantIds(m);
+      return wanted.every((id) => participants.has(id));
+    }) ?? null
+  );
 }
 
 function roundRank(round: string | null): number {
@@ -501,7 +577,6 @@ function deriveScenarioSpotlights(
   matches: readonly MatchResult[],
   keyMoments: readonly KeyMoment[],
   finalHero: string | null,
-  villain: string | null,
   options: NarrativeFactsOptions | undefined,
 ): NarrativeScenarioSpotlight[] {
   const out: NarrativeScenarioSpotlight[] = [];
@@ -668,7 +743,7 @@ function deriveScenarioSpotlights(
 
   if (!run.is_champion && ordered.length > 0) {
     const exit = lastMatch(ordered);
-    add(scenarioSpotlight("elimination_heartbreak", exit, { player_id: villain }));
+    add(scenarioSpotlight("elimination_heartbreak", exit, { player_id: resolveVillain([exit]) }));
   }
 
   const clean =
@@ -756,8 +831,12 @@ function deriveScenarioSpotlights(
 
   const spread = eraSpread(ordered, options);
   if (spread && spread.minYear <= 1970 && spread.maxYear >= 2018) {
+    const eraMatch =
+      latestMatchWithPlayers(ordered, [spread.minPlayerId, spread.maxPlayerId]) ??
+      finalMatch ??
+      lastMatch(ordered);
     add(
-      scenarioSpotlight("era_clash", finalMatch ?? lastMatch(ordered), {
+      scenarioSpotlight("era_clash", eraMatch, {
         player_id: spread.minPlayerId,
         secondary_player_id: spread.maxPlayerId,
         era_min_year: spread.minYear,
@@ -771,8 +850,12 @@ function deriveScenarioSpotlights(
     spread.maxYear - spread.minYear >= 40 &&
     ordered.some((m) => m.phase === "knockout")
   ) {
+    const crossEraMatch =
+      latestMatchWithPlayers(ordered, [spread.minPlayerId, spread.maxPlayerId]) ??
+      finalMatch ??
+      lastMatch(ordered);
     add(
-      scenarioSpotlight("cross_era_matchup", finalMatch ?? lastMatch(ordered), {
+      scenarioSpotlight("cross_era_matchup", crossEraMatch, {
         player_id: spread.minPlayerId,
         secondary_player_id: spread.maxPlayerId,
         era_min_year: spread.minYear,
@@ -786,8 +869,12 @@ function deriveScenarioSpotlights(
       .flatMap((m) => userStarted(m))
       .filter((entry) => tournamentYear(entry.tournament_id, options) === 2026)
       .sort(sortLineup)[0];
+    const modernMatch =
+      latestMatchWithPlayers(ordered, [modern?.player_id ?? null]) ??
+      finalMatch ??
+      lastMatch(ordered);
     add(
-      scenarioSpotlight("debut_tournament_core", finalMatch ?? lastMatch(ordered), {
+      scenarioSpotlight("debut_tournament_core", modernMatch, {
         player_id: modern?.player_id ?? null,
         era_min_year: 2026,
         era_max_year: 2026,
@@ -1000,7 +1087,12 @@ export function deriveNarrativeFacts(
   const hero = resolveTopScorer(ordered);
   const finalMatch = ordered.find((m) => m.round === "F") ?? null;
   const finalHero = finalMatch ? resolveTopScorer([finalMatch]) : null;
-  const villain = resolveVillain(ordered);
+  const definingMatch = run.is_champion
+    ? finalMatch
+    : ordered.length > 0
+      ? lastMatch(ordered)
+      : null;
+  const villain = definingMatch ? resolveVillain([definingMatch]) : null;
 
   const keyMoments = ordered
     .flatMap(momentsForMatch)
@@ -1017,14 +1109,7 @@ export function deriveNarrativeFacts(
     : ordered.length > 0
       ? lastMatch(ordered).match_id
       : null;
-  const scenarioSpotlights = deriveScenarioSpotlights(
-    run,
-    ordered,
-    keyMoments,
-    finalHero,
-    villain,
-    options,
-  );
+  const scenarioSpotlights = deriveScenarioSpotlights(run, ordered, keyMoments, finalHero, options);
 
   return {
     reached_round: run.reached_round,

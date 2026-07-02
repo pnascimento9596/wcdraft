@@ -1105,16 +1105,32 @@ describe("ranked account gate", () => {
 
 // ─── Rate-limit seam ────────────────────────────────────────────────────────
 
-describe("rate-limit seam (step 5: after identity, before the pipeline)", () => {
-  it("denying limiter → 429 + Retry-After, validation NEVER invoked, no row", async () => {
+describe("rate-limit seam (step 6: after cheap preflight, before replay)", () => {
+  it("malformed anonymous submissions return before the limiter bucket is touched", async () => {
+    let limiterCalls = 0;
     const res = await handleLeaderboardSubmit(
-      makeReq(),
+      makeReq({ body: validBody({ token: "t3.!!!not-base64!!!" }) }),
+      makeDeps({
+        rateLimiter: {
+          checkSubmit: () => {
+            limiterCalls += 1;
+            return Promise.resolve({ allowed: true });
+          },
+        },
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect((await errorOf(res)).error).toBe("MALFORMED_TOKEN");
+    expect(limiterCalls).toBe(0);
+    expect(await allRows()).toHaveLength(0);
+  });
+
+  it("denying limiter → 429 + Retry-After, replay NEVER invoked, no row", async () => {
+    const res = await handleLeaderboardSubmit(
+      makeReq({ body: validBody({ claimed_score: 999_999 }) }),
       makeDeps({
         rateLimiter: {
           checkSubmit: () => Promise.resolve({ allowed: false, retryAfterSeconds: 42 }),
-        },
-        getValidation: () => {
-          throw new Error("pipeline must not run for rate-limited callers");
         },
       }),
     );

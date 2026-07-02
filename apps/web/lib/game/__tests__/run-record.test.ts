@@ -85,6 +85,30 @@ describe("run-record persisted boundary", () => {
     expect(left.challenge).toEqual(challenge);
   });
 
+  it("rejects persisted daily challenge metadata when seed/date derivation disagrees", () => {
+    const challenge = dailyChallengeForDate("2026-06-29");
+    const created = createNewRunRecord(gameData, {
+      formation_id: DAILY_DRAFT_CONFIG.formationId,
+      mode: DAILY_DRAFT_CONFIG.mode,
+      team_name: DAILY_DRAFT_CONFIG.teamName,
+      parent_seed: challenge.seed,
+      challenge,
+      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+    }).record;
+    const key = recordKey(created.run_id);
+    const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
+    raw.challenge = { kind: "daily", date: "2026-06-30", seed: challenge.seed };
+    localStorage.setItem(key, JSON.stringify(raw));
+
+    expect(loadRunRecord(created.run_id, gameData.versions)).toEqual({
+      status: "invalid",
+      record: null,
+    });
+    expect(localStorage.getItem(key)).toBeNull();
+  });
+
   it("persists server-issued ranked attempt metadata with the issued seed", () => {
     const rankedSeed = "wcdraft:ranked:v1:test-seed";
     const created = createNewRunRecord(gameData, {

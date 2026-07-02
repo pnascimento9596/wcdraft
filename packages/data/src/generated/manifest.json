@@ -55,11 +55,11 @@
   },
   "bundles": {
     "draft_pool": {
-      "bytes": 130553412,
-      "bytes_brotli": 2225408,
-      "bytes_gzip": 4671456,
+      "bytes": 130545042,
+      "bytes_brotli": 2224896,
+      "bytes_gzip": 4669828,
       "path": "draft-pool.compact.json",
-      "sha256": "4daaf209900759b1acc1ef59574ec223e636ced828f541a37bf561c20aab2bf0"
+      "sha256": "461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a"
     },
     "scenario_2026": {
       "bytes": 108775,
@@ -91,7 +91,7 @@
     "ratings": 12219,
     "teams": 48
   },
-  "dataset_version": "2026-06-04",
+  "dataset_version": "2026-07-01",
   "engine_version": "engine-2026.06.30-manager-attrition",
   "rating_version_historical": "wc-perf-6.6.0",
   "rating_version_projected": "proj-career-5.6.0",

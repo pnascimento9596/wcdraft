@@ -18,6 +18,7 @@ import { dirname, join } from "node:path";
 import {
   ALL_POLICIES,
   runRealismEnsembleForPolicy,
+  summarizeScorePopulation,
   wilsonHalfWidthObs,
   type RealismMeasurement,
 } from "../test/realism/realism.harness.js";
@@ -85,6 +86,16 @@ for (const policy of ALL_POLICIES) {
 }
 
 const strategic = golden.policies.strategicAutoDraft;
+const strategicMeasurement = runRealismEnsembleForPolicy(
+  "strategicAutoDraft",
+  N,
+  seedPrefix,
+).measurement;
+golden.score_population = {
+  _doc: "StrategicAutoDraft score distribution measured over the same locked N and seed_prefix as the asymmetric realism gate. Median and p95 use nearest-rank quantiles over sorted run.score values.",
+  policy: "strategicAutoDraft",
+  ...summarizeScorePopulation(strategicMeasurement),
+};
 golden.$schema_doc =
   "manager-attrition asymmetric realism gate -- the gate sims the default/Career basis after manager-link band wiring, lower persistent user-path injury attrition, and U5 choose-from-3 soft-floor spread. Rating anchors remain merit-v4.6 because no additional high-confidence owner rows resolved in this season lane. Runtime engine_version is " +
   RUNTIME_DATA_MANIFEST.engine_version +
