@@ -33,7 +33,13 @@ import ResultsPage from "@/app/play/results/page";
 import { ResultsScreen } from "@/components/game/results-screen";
 
 import { boardRowViews } from "../board-view";
-import { DEFAULT_BOARD_FILTER, DEFAULT_DAILY_BOARD_FILTER } from "../config";
+import {
+  ADVANCED_BOARD_CONFIG_OPTIONS,
+  BOARD_LANE_OPEN_ENTRY_THRESHOLD,
+  DEFAULT_BOARD_FILTER,
+  DEFAULT_DAILY_BOARD_FILTER,
+  boardConfigKey,
+} from "../config";
 import { submitStatusCopy } from "../submit-copy";
 import type { SubmitPhase } from "../submit-state";
 import { runSimulationSync } from "../../game/simulate";
@@ -573,23 +579,32 @@ describe("board views", () => {
     expect(html).toContain("#1 of 2 today");
   });
 
-  it("toolbar exposes lane tabs and every config axis without collapsing filters", () => {
+  it("toolbar keeps Daily/Season headline lanes and gates Advanced combos by count", () => {
+    const openOption = ADVANCED_BOARD_CONFIG_OPTIONS.find(
+      (option) => option.filter.lane === "casual" && option.filter.draftMode === "hidden",
+    )!;
+    const closedOption = ADVANCED_BOARD_CONFIG_OPTIONS.find(
+      (option) => option.filter.lane === "ranked" && option.filter.draftMode === "hidden",
+    )!;
     const html = renderToStaticMarkup(
       createElement(BoardToolbar, {
         filter: DEFAULT_BOARD_FILTER,
         onFilter: () => undefined,
+        advancedOpen: true,
+        advancedPhase: "ready",
+        advancedSummaries: {
+          [openOption.key]: { kind: "ready", count: BOARD_LANE_OPEN_ENTRY_THRESHOLD },
+          [closedOption.key]: { kind: "ready", count: BOARD_LANE_OPEN_ENTRY_THRESHOLD - 1 },
+        },
       }),
     );
-    expect(html).toContain("Ranked");
-    expect(html).toContain("Casual");
-    expect(html).toContain("Classic");
-    expect(html).toContain("Memory");
-    expect(html).toContain("Squad First");
-    expect(html).toContain("Position First");
-    expect(html).toContain("Career");
-    expect(html).toContain("Current");
-    expect(html).toContain("All-time");
-    expect(html).not.toContain("soon");
+    expect(html).toContain("Daily");
+    expect(html).toContain("Season");
+    expect(html).toContain("Advanced");
+    expect(html).toContain(`${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`);
+    expect(html).toContain(`opens at ${BOARD_LANE_OPEN_ENTRY_THRESHOLD.toString()} runs`);
+    expect(html).toContain("disabled");
+    expect(html).not.toContain(boardConfigKey(DEFAULT_BOARD_FILTER));
   });
 
   it("error state is an alert with retry — never an empty board", () => {

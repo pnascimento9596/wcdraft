@@ -1,6 +1,6 @@
 "use client";
 
-import { flagSrcForNationId } from "@/lib/game/flags";
+import { flagLabelForNation, flagSrcForNationId } from "@/lib/game/flags";
 import s from "./game.module.css";
 
 /**
@@ -22,13 +22,15 @@ export function MiniNationFlag({
   className?: string;
 }) {
   const flagSrc = flagSrcForNationId(nationId);
+  const flagLabel = flagLabelForNation({ nationId, nationName });
   const classes = className ? `${s.miniNationFlag} ${className}` : s.miniNationFlag;
 
   if (flagSrc) {
     return (
       <img
         src={flagSrc}
-        alt={`${nationName} flag`}
+        alt={flagLabel}
+        title={flagLabel}
         className={classes}
         loading="lazy"
         decoding="async"

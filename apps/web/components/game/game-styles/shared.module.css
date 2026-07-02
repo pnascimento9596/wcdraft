@@ -583,6 +583,42 @@
   font-size: 0.78rem;
 }
 
+.localProgressNudge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+  padding-top: 2px;
+  color: var(--ink-200);
+  font-size: 0.78rem;
+}
+
+.localProgressNudge a,
+.localProgressNudge button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.localProgressNudge a {
+  color: var(--accent);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.localProgressNudge button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--ink-300);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 @media (max-width: 430px) {
   .modeGrid {
     gap: 8px;

@@ -356,6 +356,22 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           </div>
         )}
       </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 32,
+          bottom: 22,
+          width: RUN_OG_WIDTH - 64,
+          display: "flex",
+          justifyContent: "center",
+          color: P.muted,
+          fontFamily: "Space Mono",
+          fontSize: 18,
+          textTransform: "uppercase",
+        }}
+      >
+        wcdraft.com — draft your own XI
+      </div>
     </div>
   );
 }

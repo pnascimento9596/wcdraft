@@ -361,6 +361,7 @@ function ReviewBoard({
           <h2 className={s.panelTitle}>Rating by line</h2>
           <span className={s.squadAvg}>{formatNullableNumber(squadAvg)} OVR</span>
         </div>
+        <p className={s.lineCaption}>line strength · sim scale 0–100</p>
         {blind ? (
           <p className={s.memoryModeNote} role="note">
             Hidden until you simulate — line strengths are part of the Memory-mode blind.

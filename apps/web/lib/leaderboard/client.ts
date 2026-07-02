@@ -23,6 +23,7 @@ export type BoardFetchResult =
 export async function fetchBoardPage(opts: {
   filter: BoardFilter;
   cursor: string | null;
+  limit?: number;
 }): Promise<BoardFetchResult> {
   try {
     const r = await fetch(`/api/leaderboard${boardQueryString(opts)}`, {

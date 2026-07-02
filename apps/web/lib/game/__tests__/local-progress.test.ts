@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   PERFECT_RUN_REFERENCE_LABEL,
   buildLocalProgressSummary,
+  dailySignInNudgeTrigger,
   dailyStreakFromDates,
   formatUtcCountdown,
   millisecondsUntilNextUtcMidnight,
@@ -56,6 +57,19 @@ describe("buildLocalProgressSummary", () => {
     expect(summary.streakDays).toBe(2);
   });
 
+  it("marks today's new personal best only after at least one completed prior run", () => {
+    const firstRun = buildLocalProgressSummary([completedDaily("2026-06-29", 52)], {
+      targetDate: "2026-06-29",
+    });
+    expect(firstRun.todaySetPersonalBest).toBe(false);
+
+    const improved = buildLocalProgressSummary(
+      [completedDaily("2026-06-28", 41), completedDaily("2026-06-29", 52)],
+      { targetDate: "2026-06-29" },
+    );
+    expect(improved.todaySetPersonalBest).toBe(true);
+  });
+
   it("uses honest dashes via null values when no history exists", () => {
     const summary = buildLocalProgressSummary([], { targetDate: "2026-06-29" });
     expect(summary.todayBest).toBeNull();
@@ -71,6 +85,40 @@ describe("UTC countdown helpers", () => {
   });
 
   it("exposes the current perfect-run reference", () => {
-    expect(PERFECT_RUN_REFERENCE_LABEL).toBe("Perfect 1-0 run: 108 pts");
+    expect(PERFECT_RUN_REFERENCE_LABEL).toBe(
+      "Max score: 108 — eight 1-0 wins, no bookings or missed pens",
+    );
+  });
+});
+
+describe("dailySignInNudgeTrigger", () => {
+  it("fires on a 2+ day streak with a stable dismiss key", () => {
+    const summary = buildLocalProgressSummary(
+      [completedDaily("2026-06-28", 80), completedDaily("2026-06-29", 52)],
+      { targetDate: "2026-06-29" },
+    );
+    expect(dailySignInNudgeTrigger(summary, { signedIn: false })).toEqual({
+      kind: "streak",
+      storageKey: "wcdraft.daily-signin-nudge.streak-2-plus",
+    });
+  });
+
+  it("fires on a new personal best with the score-scoped dismiss key", () => {
+    const summary = buildLocalProgressSummary(
+      [completedDaily("2026-06-28", 41), completedDaily("2026-06-29", 52)],
+      { targetDate: "2026-06-29" },
+    );
+    expect(dailySignInNudgeTrigger(summary, { signedIn: false })).toEqual({
+      kind: "personal-best",
+      storageKey: "wcdraft.daily-signin-nudge.personal-best.52",
+    });
+  });
+
+  it("does not fire for signed-in users or a first completed run", () => {
+    const summary = buildLocalProgressSummary([completedDaily("2026-06-29", 52)], {
+      targetDate: "2026-06-29",
+    });
+    expect(dailySignInNudgeTrigger(summary, { signedIn: false })).toBeNull();
+    expect(dailySignInNudgeTrigger({ ...summary, streakDays: 2 }, { signedIn: true })).toBeNull();
   });
 });

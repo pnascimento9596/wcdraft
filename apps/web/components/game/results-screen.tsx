@@ -456,7 +456,13 @@ function ResultsBody({
               {referenceStanding.label}
             </span>
           ) : null}
-          <span>{summary.perfect_run_reference}</span>
+          <span
+            className={
+              summary.is_champion ? `${s.maxScoreChip} ${s.maxScoreChipChampion}` : s.maxScoreChip
+            }
+          >
+            {summary.perfect_run_reference}
+          </span>
         </div>
         <div className={s.outcomeScoreRow}>
           <span className={s.outcomeScore}>

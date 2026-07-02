@@ -83,6 +83,7 @@ describe("buildSlotRevealModel", () => {
     expect(model.result.nationName).toBe("France");
     expect(model.result.yearLabel).toBe("1998");
     expect(model.result.flagSrc).toBe("/flags/T-30.svg");
+    expect(model.result.flagLabel).toBe("France flag");
     expect(model.reels[1].key).toBe("center");
     expect(model.reels[1].landingFace).toEqual(model.result);
   });

@@ -8,6 +8,8 @@ export type BoardDraftOrder = DraftFlow;
 export type BoardEra = EraPresetId;
 export type BoardRatingBasis = RatingBasis;
 
+export const BOARD_LANE_OPEN_ENTRY_THRESHOLD = 5;
+
 export interface BoardConfigFilter {
   readonly challenge: LeaderboardChallengeKind;
   readonly challengeDate?: string | null;
@@ -27,6 +29,8 @@ export const DEFAULT_BOARD_FILTER: BoardConfigFilter = Object.freeze({
   era: "all_time",
   ratingBasis: "career",
 });
+
+export const CANONICAL_SEASON_BOARD_FILTER: BoardConfigFilter = DEFAULT_BOARD_FILTER;
 
 export const DEFAULT_DAILY_BOARD_FILTER: BoardConfigFilter = Object.freeze({
   challenge: "daily",
@@ -99,6 +103,61 @@ export function configLabel(filter: Omit<BoardConfigFilter, "lane">): string {
     labelFor(BOARD_RATING_BASES, filter.ratingBasis),
     labelFor(BOARD_ERAS, filter.era),
   ].join(" / ");
+}
+
+export function boardConfigKey(filter: BoardConfigFilter): string {
+  return [
+    filter.challenge,
+    filter.lane,
+    filter.draftMode,
+    filter.draftOrder,
+    filter.era,
+    filter.ratingBasis,
+  ].join(":");
+}
+
+export interface AdvancedBoardConfigOption {
+  readonly key: string;
+  readonly label: string;
+  readonly filter: BoardConfigFilter;
+}
+
+export const ADVANCED_BOARD_CONFIG_OPTIONS: readonly AdvancedBoardConfigOption[] = Object.freeze(
+  BOARD_LANES.flatMap((lane) =>
+    BOARD_DRAFT_MODES.flatMap((draftMode) =>
+      BOARD_DRAFT_ORDERS.flatMap((draftOrder) =>
+        BOARD_ERAS.flatMap((era) =>
+          BOARD_RATING_BASES.map((ratingBasis) => {
+            const filter: BoardConfigFilter = {
+              challenge: "season",
+              challengeDate: null,
+              lane: lane.key,
+              draftMode: draftMode.key,
+              draftOrder: draftOrder.key,
+              era: era.key,
+              ratingBasis: ratingBasis.key,
+            };
+            return {
+              key: boardConfigKey(filter),
+              label: `${lane.label} · ${configLabel(filter)}`,
+              filter,
+            };
+          }),
+        ),
+      ),
+    ),
+  ).filter((option) => !isCanonicalSeasonBoardFilter(option.filter)),
+);
+
+export function isCanonicalSeasonBoardFilter(filter: BoardConfigFilter): boolean {
+  return (
+    filter.challenge === "season" &&
+    filter.lane === CANONICAL_SEASON_BOARD_FILTER.lane &&
+    filter.draftMode === CANONICAL_SEASON_BOARD_FILTER.draftMode &&
+    filter.draftOrder === CANONICAL_SEASON_BOARD_FILTER.draftOrder &&
+    filter.era === CANONICAL_SEASON_BOARD_FILTER.era &&
+    filter.ratingBasis === CANONICAL_SEASON_BOARD_FILTER.ratingBasis
+  );
 }
 
 export function draftModeLaneLabel(mode: BoardDraftMode): string {

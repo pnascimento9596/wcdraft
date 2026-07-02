@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { SpinStage } from "@/components/game/slot-machine";
+import { SpinStage, skipSpinAnimState, spinEraRangeLabel } from "@/components/game/slot-machine";
 import type { SlotRevealFace, SlotRevealModel, SlotRevealReel } from "../slot-reveal";
 
 function face(nationName: string, yearLabel: string, key: string): SlotRevealFace {
@@ -18,6 +18,7 @@ function face(nationName: string, yearLabel: string, key: string): SlotRevealFac
     nationName,
     nationCode: nationName.slice(0, 3).toUpperCase(),
     flagSrc: null,
+    flagLabel: `${nationName} flag`,
     yearLabel,
   };
 }
@@ -59,7 +60,10 @@ describe("a11y follow-ups", () => {
         anim: "settled",
         onSpin: () => undefined,
         onSettle: () => undefined,
+        onSkip: () => undefined,
         onReveal: () => undefined,
+        canSkip: false,
+        showSkipHint: false,
       }),
     );
 
@@ -88,6 +92,26 @@ describe("a11y follow-ups", () => {
     expect(draftScreen).toContain("sheetRestoreFocusRef");
     expect(draftScreen).toContain("lineupHeadingRef.current?.focus");
     expect(draftScreen).toContain('event.key === "Escape"');
+  });
+
+  it("uses range vocabulary for the spin ERA chip", () => {
+    expect(spinEraRangeLabel("2002")).toBe("ERA 2002–13");
+    expect(spinEraRangeLabel("2022")).toBe("ERA 2022–26");
+    expect(spinEraRangeLabel("2026")).toBe("ERA 2026");
+  });
+
+  it("spin skip only settles the existing deterministic reveal", () => {
+    expect(skipSpinAnimState("spinning", true)).toBe("settled");
+    expect(skipSpinAnimState("spinning", false)).toBe("spinning");
+    expect(skipSpinAnimState("idle", true)).toBe("idle");
+    expect(skipSpinAnimState("settled", true)).toBe("settled");
+
+    const draftScreen = readFileSync(
+      new URL("../../../components/game/draft-screen/index.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(draftScreen).toContain("skipSpinAnimState(current, spinSkipReady)");
+    expect(draftScreen).toContain("canSkip={spinSkipReady}");
   });
 });
 

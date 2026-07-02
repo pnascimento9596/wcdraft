@@ -50,7 +50,7 @@ function makeView(overrides: Partial<ShareView> = {}): ShareView {
     matches_played: 8,
     shootout_wins: 0,
     challenge_date: null,
-    perfect_run_reference: "Perfect 1-0 run: 108 pts",
+    perfect_run_reference: "Max score: 108 — eight 1-0 wins, no bookings or missed pens",
     reveal: null,
     ...overrides,
   };
@@ -64,7 +64,8 @@ describe("buildShareCaption", () => {
     const caption = buildShareCaption(view, TOKEN_URL);
     expect(caption.startsWith("Won every match. A perfect run.\n")).toBe(true);
     expect(caption).toContain("Auriverde XI went 8-0 on wcdraft.");
-    expect(caption).toContain("Perfect 1-0 run: 108 pts");
+    expect(caption).not.toContain("Max score: 108");
+    expect(caption).not.toContain("Perfect 1-0 run");
     expect(caption).toContain(SHARE_TAGLINE);
     expect(SHARE_TAGLINE).toBe("Built my all-time XI on wcdraft");
   });
@@ -103,7 +104,8 @@ describe("buildShareIntentText", () => {
     const text = buildShareIntentText(makeView());
     expect(text).not.toMatch(/https?:\/\//);
     expect(text).toContain("Auriverde XI went 8-0 on wcdraft.");
-    expect(text).toContain("Perfect 1-0 run: 108 pts");
+    expect(text).not.toContain("Max score: 108");
+    expect(text).not.toContain("Perfect 1-0 run");
     expect(text).toContain(SHARE_TAGLINE);
   });
 

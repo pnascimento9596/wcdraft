@@ -147,6 +147,14 @@
   border-style: dashed;
   background: transparent;
 }
+.payoffMeta span.maxScoreChip {
+  color: currentColor;
+}
+.payoffMeta span.maxScoreChipChampion {
+  order: 10;
+  opacity: 0.68;
+  font-size: 0.68rem;
+}
 .outcomeScoreRow {
   display: flex;
   flex-wrap: wrap;

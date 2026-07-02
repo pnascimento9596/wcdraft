@@ -148,6 +148,78 @@
   color: var(--ink-faint);
 }
 
+.advancedDisclosure {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.advancedSummary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.advancedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.advancedState {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.advancedLane {
+  min-height: 54px;
+  display: grid;
+  justify-items: start;
+  gap: 0.2rem;
+  padding: 0.48rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-sunken);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.advancedLane span {
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.18;
+}
+
+.advancedLane em {
+  color: var(--ink-faint);
+  font-style: normal;
+  font-size: 0.68rem;
+}
+
+.advancedLaneActive {
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--line));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-panel));
+}
+
+.advancedLaneClosed {
+  cursor: not-allowed;
+  color: var(--ink-faint);
+}
+
+.advancedLaneClosed em {
+  color: var(--ink-soft);
+}
+
 /* "Your best" chip — rendered only when /me resolves (honest absence). */
 .meChip {
   display: flex;
@@ -524,6 +596,10 @@
   .activeConfig {
     font-size: 0.68rem;
     line-height: 1.25;
+  }
+
+  .advancedGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .stateBox {

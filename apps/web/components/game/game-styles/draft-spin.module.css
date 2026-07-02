@@ -121,12 +121,25 @@
 
 /* ── Drum ───────────────────────────────────────────────────────────────── */
 .spinDrumLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   text-align: center;
   font-family: var(--f-mono);
   font-size: var(--t-micro);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-400);
+}
+
+.spinDrumLabelWithHint {
+  display: flex;
+}
+
+.spinSkipHint {
+  letter-spacing: 0.08em;
+  color: var(--accent);
 }
 .spinDrum {
   position: relative;
