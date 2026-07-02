@@ -16,15 +16,22 @@
 
 export * from "./types.js";
 export * from "./validation.js";
+export * from "./score-distribution.js";
 
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { DraftPoolBundle, Scenario2026Bundle, RuntimeDataManifest } from "./types.js";
+import type {
+  DraftPoolBundle,
+  Scenario2026Bundle,
+  RuntimeDataManifest,
+  ScoreDistribution,
+} from "./types.js";
 import {
   parseDraftPoolBundle,
   parseRuntimeDataManifest,
   parseScenario2026Bundle,
+  parseScoreDistribution,
 } from "./validation.js";
 
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
@@ -60,3 +67,23 @@ export const RUNTIME_DATA_MANIFEST = readGeneratedJson<RuntimeDataManifest>(
   "manifest.json",
   parseRuntimeDataManifest,
 );
+function readGeneratedJsonOptional<T>(fileName: string, parse: (value: unknown) => T): T | null {
+  for (const dir of GENERATED_DIR_CANDIDATES) {
+    const filePath = join(dir, fileName);
+    if (existsSync(filePath)) return parse(JSON.parse(readFileSync(filePath, "utf8")));
+  }
+  return null;
+}
+
+/**
+ * Statically-imported reference score distribution (tests, scripts, server).
+ * NULL only while the artifact is mid-regeneration (bootstrap: the generation
+ * script's import chain passes through this module before the file exists).
+ * The score-distribution golden asserts non-null, so a checkout that ships
+ * without the artifact cannot pass CI.
+ */
+export const SCORE_DISTRIBUTION_BUNDLE: ScoreDistribution | null =
+  readGeneratedJsonOptional<ScoreDistribution>(
+    "score-distribution.compact.json",
+    parseScoreDistribution,
+  );

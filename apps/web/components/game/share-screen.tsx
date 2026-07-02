@@ -40,6 +40,11 @@ import {
 import { fetchBoardPage } from "@/lib/leaderboard/client";
 import { DEFAULT_DAILY_BOARD_FILTER } from "@/lib/leaderboard/config";
 import { wasTokenSubmitted } from "@/lib/leaderboard/submit-state";
+import {
+  loadScoreDistributionOnce,
+  referenceStandingForRecord,
+} from "@/lib/game/reference-standing";
+import type { ReferenceStanding } from "@wcdraft/data/client";
 
 import s from "./game.module.css";
 
@@ -379,6 +384,23 @@ function ShareBody({
   const ogPreviewError = ogSign.kind === "error" && !isRecipient ? ogSign.message : null;
   const shareUnavailable = !!shareLinkError || !shareUrl;
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
+  const [referenceStanding, setReferenceStanding] = useState<ReferenceStanding | null>(null);
+
+  // Reference standing (vs simulated reference drafts) for NON-daily
+  // captions. Local computation from the shipped quantile table; null →
+  // the caption line is omitted (honest unknown).
+  useEffect(() => {
+    let cancelled = false;
+    setReferenceStanding(null);
+    void loadScoreDistributionOnce().then((dist) => {
+      if (cancelled) return;
+      setReferenceStanding(referenceStandingForRecord(record, dist));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [record]);
+
   const configBadges: ConfigBadge[] = useMemo(() => {
     const replayBadges =
       typeof linkRunValue === "string" ? configBadgesFromReplayToken(linkRunValue) : [];
@@ -429,12 +451,12 @@ function ShareBody({
   }, [isRecipient, record.challenge, shareLink, view.score]);
 
   const caption = useMemo(
-    () => buildShareCaption(view, shareUrl, { dailyStanding }),
-    [view, shareUrl, dailyStanding],
+    () => buildShareCaption(view, shareUrl, { dailyStanding, referenceStanding }),
+    [view, shareUrl, dailyStanding, referenceStanding],
   );
   const intentText = useMemo(
-    () => buildShareIntentText(view, { dailyStanding }),
-    [view, dailyStanding],
+    () => buildShareIntentText(view, { dailyStanding, referenceStanding }),
+    [view, dailyStanding, referenceStanding],
   );
   const intentUrls = useMemo<ShareIntentUrls | null>(() => {
     if (!shareUrl) return null;

@@ -185,6 +185,13 @@ export default function HowToPlayPage() {
           era and rating basis.
         </p>
 
+        <h2>Reference standing</h2>
+        <p>
+          Every finished run shows “Beat ~X% of reference drafts” — your score placed on a curve of
+          simulated drafts run on this engine, not a ranking against other players. The Daily
+          board’s “Top X% of today’s field” is the separate, posted-field standing.
+        </p>
+
         <h2>Daily Draft</h2>
         <p>
           Daily Draft gives everyone the same Classic, Squad First, Career, All-time draft for the

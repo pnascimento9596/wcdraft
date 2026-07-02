@@ -41,6 +41,12 @@ import {
   type ShareView,
 } from "@/lib/game/share-adapters";
 import { buildLocalProgressSummary, type LocalProgressSummary } from "@/lib/game/local-progress";
+import {
+  loadScoreDistributionOnce,
+  referenceStandingForRecord,
+  REFERENCE_STANDING_EXPLAINER,
+} from "@/lib/game/reference-standing";
+import type { ReferenceStanding } from "@wcdraft/data/client";
 import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
 import type { MatchResult } from "@wcdraft/core";
@@ -279,7 +285,25 @@ function ResultsBody({
   const [pinned, setPinned] = useState(record.pinned === true);
   const [pinWarning, setPinWarning] = useState<string | null>(null);
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
+  const [referenceStanding, setReferenceStanding] = useState<ReferenceStanding | null>(null);
   const [seedCopied, setSeedCopied] = useState(false);
+
+  // Reference standing: computed locally from the shipped quantile table.
+  // Null (chip omitted) when the table is unavailable or its anchors do not
+  // match this record's versions — honest unknown, never a wrong-population
+  // percentile. Results render post-sim only, so Memory runs surface this
+  // strictly post-reveal.
+  useEffect(() => {
+    let cancelled = false;
+    setReferenceStanding(null);
+    void loadScoreDistributionOnce().then((dist) => {
+      if (cancelled) return;
+      setReferenceStanding(referenceStandingForRecord(record, dist));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [record]);
 
   const narrativeLabels = useMemo(
     () => buildNarrativeLabels(gameData, scenario, record.draft),
@@ -427,6 +451,11 @@ function ResultsBody({
         <h1 className={headlineClass}>{summary.outcome_headline}</h1>
         <div className={s.payoffMeta}>
           {dailyDate !== null ? <span>{dailyStandingLabel}</span> : null}
+          {referenceStanding !== null ? (
+            <span className={s.referenceStandingChip} title={REFERENCE_STANDING_EXPLAINER}>
+              {referenceStanding.label}
+            </span>
+          ) : null}
           <span>{summary.perfect_run_reference}</span>
         </div>
         <div className={s.outcomeScoreRow}>

@@ -67,6 +67,13 @@
       "bytes_gzip": 7702,
       "path": "scenario-2026.compact.json",
       "sha256": "7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398"
+    },
+    "score_distribution": {
+      "bytes": 1856,
+      "bytes_brotli": 640,
+      "bytes_gzip": 767,
+      "path": "score-distribution.compact.json",
+      "sha256": "16c01f921455ebd6a47b22e0ee7ee5f7e3d36239bc3df9982d123e155c75b06d"
     }
   },
   "counts": {

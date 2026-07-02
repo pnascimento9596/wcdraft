@@ -23,6 +23,10 @@ const DEFAULT_RETAINED_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-dat
 
 const EXPECTED_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
 const VERSIONED_JSON_FILES = ["manifest.json", "scenario-2026.compact.json"];
+// Copied + fingerprint-verified only when the manifest carries a
+// `bundles.score_distribution` entry (manifests built before the artifact
+// existed, and test fixtures, legitimately omit it).
+const SCORE_DISTRIBUTION_FILE = "score-distribution.compact.json";
 const COMPRESSED_DRAFT_FILE = "draft-pool.compact.json.br";
 const RETAINED_FILES = ["manifest.json", "scenario-2026.compact.json", COMPRESSED_DRAFT_FILE];
 
@@ -250,6 +254,15 @@ async function main() {
       `copy-web-assets: compressed draft source does not match manifest fingerprint ` +
         `(${compressed.rawBytes} bytes / ${compressed.rawSha256})`,
     );
+  }
+
+  const scoreDistExpected = manifest.bundles?.score_distribution;
+  if (scoreDistExpected !== undefined) {
+    const sourcePath = path.join(sourceDir, SCORE_DISTRIBUTION_FILE);
+    const raw = await readFile(sourcePath);
+    assertFingerprint(SCORE_DISTRIBUTION_FILE, raw, scoreDistExpected);
+    await writeFile(path.join(targetDir, SCORE_DISTRIBUTION_FILE), raw);
+    await writeFile(path.join(currentTargetDir, SCORE_DISTRIBUTION_FILE), raw);
   }
 
   const retainedCount = await copyRetainedVersions(retainedDir, targetDir, currentVersion);

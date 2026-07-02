@@ -373,6 +373,25 @@ export function summarizeScorePopulation(m: RealismMeasurement): ScorePopulation
   };
 }
 
+/**
+ * Nearest-rank percentile → score breakpoints with inclusive endpoints:
+ * q[0] = min, q[100] = max, q[p] = value at rank ceil(p/100 · N). Single
+ * source of truth for the shipped score-distribution artifact
+ * (`scripts/build-score-distribution.mts`) and the heavy-gate equality check.
+ */
+export function buildScoreQuantiles(scores: readonly number[]): number[] {
+  if (scores.length === 0) {
+    throw new RangeError("buildScoreQuantiles: empty score population");
+  }
+  const sorted = [...scores].sort((a, b) => a - b);
+  const quantiles: number[] = [];
+  for (let p = 0; p <= 100; p++) {
+    const rank = p === 0 ? 1 : Math.ceil((p / 100) * sorted.length);
+    quantiles.push(sorted[Math.min(sorted.length, rank) - 1]!);
+  }
+  return quantiles;
+}
+
 /** Wilson-style ±2·sqrt(p(1-p)/N) band centered on TARGET (the null hypothesis). */
 export function wilsonBand(target: number, denom: number): number {
   if (denom <= 0) return Infinity;

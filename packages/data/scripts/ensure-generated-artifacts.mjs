@@ -25,6 +25,7 @@ const BUILD_COMPACT_SCRIPT = path.join(PACKAGE_DIR, "scripts", "build-compact-da
 const GENERATED_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const RUNTIME_MANIFEST_PATH = path.join(GENERATED_DIR, "manifest.json");
 const SCENARIO_PATH = path.join(GENERATED_DIR, "scenario-2026.compact.json");
+const SCORE_DISTRIBUTION_PATH = path.join(GENERATED_DIR, "score-distribution.compact.json");
 const DRAFT_POOL_PATH = path.join(GENERATED_DIR, "draft-pool.compact.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const RETAINED_RUNTIME_DATA_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-data");
@@ -36,6 +37,7 @@ const TRACKED_FINGERPRINT_PATHS = [
   "etl/output/ratings.lock.json",
   "packages/data/src/generated/manifest.json",
   "packages/data/src/generated/scenario-2026.compact.json",
+  "packages/data/src/generated/score-distribution.compact.json",
   "packages/data/reports/compact-size.json",
 ];
 const UNTRACKED_LARGE_ARTIFACTS = [
@@ -174,6 +176,13 @@ function validateCompactArtifacts() {
   validateFingerprint(DRAFT_POOL_PATH, manifest.bundles.draft_pool, "draft-pool.compact.json");
   validateFingerprint(SCENARIO_PATH, manifest.bundles.scenario_2026, "scenario-2026.compact.json");
   validateFingerprint(RUNTIME_MANIFEST_PATH, report.bundles.manifest, "manifest.json");
+  if (manifest.bundles.score_distribution !== undefined) {
+    validateFingerprint(
+      SCORE_DISTRIBUTION_PATH,
+      manifest.bundles.score_distribution,
+      "score-distribution.compact.json",
+    );
+  }
 
   for (const [key, expected] of Object.entries(manifest.bundles)) {
     const reported = report.bundles[key];

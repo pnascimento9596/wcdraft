@@ -61,8 +61,11 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { SCORE_DISTRIBUTION_BUNDLE } from "../../src/index.js";
+
 import {
   ALL_POLICIES,
+  buildScoreQuantiles,
   DEFAULT_SEED_PREFIX,
   REALISM_NORMS,
   runRealismEnsembleForPolicy,
@@ -307,6 +310,30 @@ gate(`E-3b asymmetric realism gate — ${GATE_MODE.toUpperCase()} mode, N=${N_RU
       p95: GOLDEN.score_population.p95,
       min: GOLDEN.score_population.min,
       max: GOLDEN.score_population.max,
+    });
+  });
+
+  it("re-derives the shipped score-distribution quantile table from the live ensemble (byte-faithful)", () => {
+    const r = results.get("strategicAutoDraft");
+    if (r === undefined) return;
+    if (N_RUNS !== GOLDEN.ensemble.N_runs) return;
+    if (SEED_PREFIX !== GOLDEN.ensemble.seed_prefix) return;
+    expect(
+      SCORE_DISTRIBUTION_BUNDLE,
+      "score-distribution.compact.json must be committed (run build-score-distribution.mts)",
+    ).not.toBeNull();
+    const summary = summarizeScorePopulation(r.measurement);
+    expect(SCORE_DISTRIBUTION_BUNDLE!.quantiles).toEqual(buildScoreQuantiles(r.measurement.scores));
+    expect(SCORE_DISTRIBUTION_BUNDLE!.population).toMatchObject({
+      policy: "strategicAutoDraft",
+      seed_prefix: SEED_PREFIX,
+      runs: summary.runs,
+      qualifying_runs: summary.qualifyingRuns,
+      mean: summary.mean,
+      median: summary.median,
+      p95: summary.p95,
+      min: summary.min,
+      max: summary.max,
     });
   });
 
