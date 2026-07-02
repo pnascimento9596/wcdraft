@@ -4,6 +4,32 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Reference standing (FIT-06) lane:
+2026-07-01 · RED lane on branch `ws-f4/reference-standing-20260701`, based on
+`origin/main` `012c25a`. Scope: ships the strategicAutoDraft N=2000 score
+population (the one pinned by `asym-realism-golden.json`) as a compact
+quantile-table artifact `packages/data/src/generated/score-distribution.compact.json`
+(1856 bytes raw / 767 gzip / 640 brotli; 101 nearest-rank breakpoints;
+anchors = dataset/engine/rating/ruleset versions + source-bundle sha256s),
+stamped into `manifest.json` as optional `bundles.score_distribution` and the
+size report; `runtime-data-2.9.0` and `dataset_version 2026-07-01` unchanged
+(dataset_version already equals today's ETL revision date — no honest newer
+date exists; the manifest's new bundle entry is the live anchor). Every
+completed run now shows a LOCAL "Beat ~X% of reference drafts" standing
+(monotone, whole-%, tails clamp to Top/Bottom ~1%, anchor-gated to the run
+record's versions, omitted when unknown); non-daily captions carry it; daily
+captions keep the posted-field rules; How-to-Play explains the distinction.
+Engine surfaces untouched: ratings/draw/sim math unchanged, canary and all
+goldens byte-stable, zero pick flips. Gates run: data targeted suites
+(web-assets-copy + compact-data golden + score-distribution golden = 16/16),
+root typecheck (8/8), root lint (5/5), root test (8/8; web 860 passed / 1
+skipped + game-flow-playwright), root build (4/4), core/data/web golden turbo
+tasks (2+3+4 successful), heavy realism gate WCDRAFT_REALISM_HEAVY=1 (9/9,
+including the new live-ensemble quantile re-derivation), and a Playwright/axe
+UI proof (`apps/web/scripts/verify-reference-standing-browser.mts`): scores
+{−7, 0, 14, 52} at 390x844 + 360x800, light + dark, 16 screenshots, 0 axe
+violations, token-replay standing identical.
+
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
 `ws-ux/share-polish-orientation-20260701`, based on `origin/main`

@@ -133,19 +133,35 @@ function seedRuns(): SeededRun[] {
 // ── Server + browser plumbing ───────────────────────────────────────────────
 
 async function startServer(port: number): Promise<ChildProcessWithoutNullStreams> {
-  const child = spawn(process.execPath, [nextBin, "dev", "--hostname", host, "--port", `${port}`], {
-    cwd: appRoot,
-    env: { ...process.env, NODE_ENV: "development" },
-    stdio: ["ignore", "pipe", "pipe"],
-  }) as ChildProcessWithoutNullStreams;
+  const child = spawn(
+    process.execPath,
+    [nextBin, "dev", "--webpack", "--hostname", host, "--port", `${port}`],
+    {
+      cwd: appRoot,
+      env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  ) as ChildProcessWithoutNullStreams;
+  let logs = "";
+  const append = (chunk: Buffer) => {
+    logs = `${logs}${chunk.toString()}`.slice(-12_000);
+  };
+  child.stdout.on("data", append);
+  child.stderr.on("data", append);
   const deadline = Date.now() + 120_000;
-  let ready = false;
-  child.stdout.on("data", (chunk: Buffer) => {
-    if (chunk.toString().includes("Ready")) ready = true;
-  });
-  while (!ready && Date.now() < deadline) await delay(250);
-  assert(ready, "next dev did not become ready in 120s");
-  return child;
+  while (Date.now() < deadline) {
+    assert(child.exitCode === null, `next dev exited early (${child.exitCode})\n${logs}`);
+    try {
+      const response = await fetch(`http://${host}:${port}/play`, {
+        signal: AbortSignal.timeout(2_000),
+      });
+      if (response.status < 500) return child;
+    } catch {
+      // keep polling
+    }
+    await delay(500);
+  }
+  throw new Error(`next dev did not become ready in 120s\n${logs}`);
 }
 
 async function injectRecords(page: Page, records: RunRecordV1[]): Promise<void> {
@@ -243,13 +259,20 @@ try {
       );
 
       for (const run of runs) {
-        await page.goto(`${base}/play/results?id=${run.record.run_id}`, {
+        await page.goto(`${base}/play/results?run=${run.record.run_id}`, {
           waitUntil: "networkidle",
         });
         const chip = page.locator(`text=${run.expectedLabel}`).first();
         await chip.waitFor({ state: "visible", timeout: 20_000 });
-        const bodyText = (await page.locator("body").innerText()).replace(/\s+/gu, " ");
-        assert(bodyText.includes(run.expectedLabel), `standing chip missing for ${run.record.run_id}`);
+        // `innerText` reflects CSS text-transform (the chip row renders
+        // uppercase) — compare case-insensitively.
+        const bodyText = (await page.locator("body").innerText())
+          .replace(/\s+/gu, " ")
+          .toLowerCase();
+        assert(
+          bodyText.includes(run.expectedLabel.toLowerCase()),
+          `standing chip missing for ${run.record.run_id}`,
+        );
         assert(
           !/reference drafts of today's field|today's field of reference/iu.test(bodyText),
           "cross-contaminated standing wording",

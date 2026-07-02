@@ -54,8 +54,7 @@ const quantiles = buildScoreQuantiles(measurement.scores);
 
 const artifact: ScoreDistribution = {
   schema_version: SCORE_DISTRIBUTION_SCHEMA_VERSION,
-  _doc:
-    "Reference run-score distribution: nearest-rank percentile->score breakpoints (q[0..100]) over the deterministic strategicAutoDraft ensemble. Reference population of SIMULATED drafts on this engine - not human players. Regenerate via build-score-distribution.mts whenever the anchors move.",
+  _doc: "Reference run-score distribution: nearest-rank percentile->score breakpoints (q[0..100]) over the deterministic strategicAutoDraft ensemble. Reference population of SIMULATED drafts on this engine - not human players. Regenerate via build-score-distribution.mts whenever the anchors move.",
   anchors: {
     dataset_version: RUNTIME_DATA_MANIFEST.dataset_version,
     engine_version: RUNTIME_DATA_MANIFEST.engine_version,

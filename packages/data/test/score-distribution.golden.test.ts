@@ -133,9 +133,7 @@ describe("reference standing (property gate)", () => {
     expect(referenceStanding(dist.population.min, dist).label).toBe(
       "Bottom ~1% of reference drafts",
     );
-    expect(referenceStanding(dist.population.max, dist).label).toBe(
-      "Top ~1% of reference drafts",
-    );
+    expect(referenceStanding(dist.population.max, dist).label).toBe("Top ~1% of reference drafts");
     expect(referenceStanding(dist.population.max + 100, dist).label).toBe(
       "Top ~1% of reference drafts",
     );
