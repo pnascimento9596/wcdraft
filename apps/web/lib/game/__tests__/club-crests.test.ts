@@ -29,6 +29,16 @@ describe("club crest resolver", () => {
       src: "/clubs/inter-milan.svg",
       canonicalClubKey: "inter-milan",
     });
+    expect(resolveClubCrest("A.C. Milan", 2026)).toMatchObject({
+      kind: "crest",
+      src: "/clubs/ac-milan.svg",
+      canonicalClubKey: "ac-milan",
+    });
+    expect(resolveClubCrest("Borussia Dortmund", 2026)).toMatchObject({
+      kind: "crest",
+      src: "/clubs/borussia-dortmund.svg",
+      canonicalClubKey: "borussia-dortmund",
+    });
   });
 
   it("keeps known ambiguous names on monogram fallback", () => {
@@ -57,6 +67,7 @@ describe("club crest resolver", () => {
       reason: "unmapped",
     });
     expect(clubInitials("Al Ahly")).toBe("AA");
+    expect(clubInitials("Mainz 05")).toBe("MA");
   });
 
   it("every manifest asset exists under public/clubs", () => {

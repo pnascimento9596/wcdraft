@@ -555,7 +555,7 @@ describe("board views", () => {
   it("empty board is config-scoped words, not placeholder rows", () => {
     const html = renderToStaticMarkup(createElement(EmptyBoard, { filter: DEFAULT_BOARD_FILTER }));
     expect(html).toContain("No runs yet for this board");
-    expect(html).toContain("Sighted Classic ranked runs for this exact config");
+    expect(html).toContain("Classic ranked runs for this exact config");
   });
 
   it("daily rows lead with standing while keeping raw score secondary", () => {
@@ -582,8 +582,8 @@ describe("board views", () => {
     );
     expect(html).toContain("Ranked");
     expect(html).toContain("Casual");
-    expect(html).toContain("Sighted Classic");
-    expect(html).toContain("Blind Memory");
+    expect(html).toContain("Classic");
+    expect(html).toContain("Memory");
     expect(html).toContain("Squad First");
     expect(html).toContain("Position First");
     expect(html).toContain("Career");
@@ -609,15 +609,15 @@ describe("board views", () => {
     expect(noRank).toContain("—");
   });
 
-  it("board head carries the season label + full key as evidence", () => {
+  it("board head carries a human season label + raw-key tooltip evidence", () => {
     const html = renderToStaticMarkup(
       createElement(BoardHead, {
-        currentSeasonKey:
-          "engine-2026.06.11_wc-perf-4.2.1+proj-career-3.0.0_2026-06-04_ruleset-2026.06.04_f166edc0",
+        currentSeasonKey: "season-2026-manager-attrition",
       }),
     );
-    expect(html).toContain("Season 2026-06-04 · engine-2026.06.11");
-    expect(html).toContain("f166edc0");
+    expect(html).toContain("Season · Summer 2026");
+    expect(html).toContain('title="season-2026-manager-attrition"');
+    expect(html).toContain("Season key verified");
   });
 });
 

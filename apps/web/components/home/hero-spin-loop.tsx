@@ -119,7 +119,7 @@ export function HeroSpinLoop() {
       className={s.demo}
       data-hero-spin-loop
       data-spin-state={phase}
-      aria-label={`Looping draft preview: the spin lands on ${sample.nationName} ${sample.year}, then reveals ${sample.card.fullName} at ${sample.card.position}.`}
+      aria-label="Looping draft preview: the spin lands on a nation and year, then reveals a player."
     >
       <div className={s.statusBar}>
         <span className={s.pickBadge}>Pick {pickNum}</span>

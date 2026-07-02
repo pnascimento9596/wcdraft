@@ -279,6 +279,7 @@ function ResultsBody({
   const [pinned, setPinned] = useState(record.pinned === true);
   const [pinWarning, setPinWarning] = useState<string | null>(null);
   const [dailyStanding, setDailyStanding] = useState<DailyShareStanding | null>(null);
+  const [seedCopied, setSeedCopied] = useState(false);
 
   const narrativeLabels = useMemo(
     () => buildNarrativeLabels(gameData, scenario, record.draft),
@@ -405,6 +406,16 @@ function ResultsBody({
     setPinWarning("Could not update the local pin for this run.");
   }
 
+  async function copyFullSeed() {
+    try {
+      await navigator.clipboard.writeText(summary.seed);
+      setSeedCopied(true);
+      window.setTimeout(() => setSeedCopied(false), 2000);
+    } catch {
+      setSeedCopied(false);
+    }
+  }
+
   return (
     <div className={s.results}>
       <ResultsAppBar />
@@ -436,11 +447,9 @@ function ResultsBody({
         </div>
         <div className={s.outcomeFlags}>
           {summary.is_champion && <span className={s.flagGold}>Tournament won</span>}
-          {!summary.eliminated_in_group && (
-            <span className={summary.undefeated_regulation ? s.flagGood : s.flagMuted}>
-              {summary.undefeated_regulation ? "Undefeated in regulation" : "Decided by a shootout"}
-            </span>
-          )}
+          {!summary.eliminated_in_group && summary.undefeated_regulation ? (
+            <span className={s.flagGood}>Undefeated in regulation</span>
+          ) : null}
           {summary.eliminated_in_group && (
             <span className={s.flagMuted}>
               Finished {ordinal(sim.group_stage.user_rank)} in the group
@@ -515,7 +524,12 @@ function ResultsBody({
       <section className={`${s.panel} ${s.seedPanel}`}>
         <div className={s.seedRow}>
           <span className={s.seedLabel}>Seed</span>
-          <code className={s.seedCode}>{summary.seed}</code>
+          <code className={s.seedCode} title={summary.seed}>
+            {shortSeed(summary.seed)}
+          </code>
+          <button type="button" className={s.seedCopyButton} onClick={copyFullSeed}>
+            {seedCopied ? "Seed copied" : "Copy full seed"}
+          </button>
           <span className={s.seedNote}>Replays are seed-locked — identical every time.</span>
         </div>
         <div className={s.pinRow}>
@@ -630,11 +644,12 @@ function OutcomeStat({ num, label }: { num: number | string; label: string }) {
 // has no resolvable top scorer we fall back to the plain "— / top scorer" cell.
 function TopScorerStat({ scorer }: { scorer: TopScorerView | null }) {
   if (!scorer) {
-    return <OutcomeStat num="—" label="top scorer" />;
+    return <OutcomeStat num="—" label="TOP SCORER" />;
   }
   return (
     <div className={s.oStat}>
       <span className={s.oStatNum}>{scorer.goals}</span>
+      <span className={s.oStatCaption}>TOP SCORER</span>
       <span className={s.oStatScorer}>
         {scorer.nation_id ? (
           <MiniNationFlag
@@ -724,6 +739,7 @@ function MatchListItem({
                   {c.name} {c.minute}&rsquo; ({c.side === "user" ? "us" : view.opponent.name})
                 </span>
               ))}
+              {box.subs.length > 0 ? <span className={s.bookingsLegend}>SUBS</span> : null}
               {box.subs.map((sub, i) => (
                 <span key={`s${i}`} className={s.boxEvent}>
                   <SubstitutionIcon className={s.boxIcon} width={16} height={16} />
@@ -749,4 +765,9 @@ function ordinal(n: number): string {
   if (n === 2) return "2nd";
   if (n === 3) return "3rd";
   return `${n}th`;
+}
+
+function shortSeed(seed: string): string {
+  if (seed.length <= 30) return seed;
+  return `${seed.slice(0, 16)}...${seed.slice(-8)}`;
 }

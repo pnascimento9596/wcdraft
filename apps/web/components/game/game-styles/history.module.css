@@ -182,6 +182,21 @@
   font-size: 0.7rem;
 }
 
+.historySeedCopy {
+  appearance: none;
+  min-height: 36px;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg-sunken);
+  color: var(--ink-100);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .historyReplayError {
   margin: 0;
   font-size: 0.78rem;

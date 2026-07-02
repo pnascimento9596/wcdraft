@@ -192,7 +192,7 @@ describe("seasonLabel", () => {
       ),
     ).toBe("2026-06-04 · engine-2026.06.11");
   });
-  it("falls back to the raw key when the shape is unexpected", () => {
-    expect(seasonLabel("weird")).toBe("weird");
+  it("prettifies unexpected keys instead of showing raw slugs", () => {
+    expect(seasonLabel("weird")).toBe("Weird");
   });
 });

@@ -244,12 +244,12 @@ export function FormationSelect({
           <Image src="/brand/wcdraft-lockup.svg" alt="wcdraft" width={240} height={60} priority />
           <h1 className={s.formationTitle}>Lock a formation</h1>
           <p className={s.formationSub}>
-            Your shape is committed the moment you lock. 17 spins, one entity per spin — no
-            rearranging afterwards.
+            Your shape is committed the moment you lock. 17 spins, one pick per spin — a player, or
+            your manager. No rearranging afterwards.
           </p>
           {draftMode === "hidden" ? (
             <p className={s.memoryModeNote} role="note">
-              Memory mode — names, flags and years stay visible; ratings &amp; Synergy numbers hide
+              Memory mode — names, flags and years stay visible; ratings and Synergy numbers hide
               until you simulate.
             </p>
           ) : null}

@@ -10,7 +10,7 @@ export interface DraftModeCopy {
 
 export const DRAFT_MODE_COPY: Readonly<Record<DraftMode, DraftModeCopy>> = Object.freeze({
   classic: Object.freeze({
-    label: "Classic (choose-from-3)",
+    label: "Classic",
     shortLabel: "Classic",
     description: "Each spin offers up to 3 players from the drawn nation. Pick one.",
     cue: "Ranked-capable",
@@ -24,10 +24,10 @@ export const DRAFT_MODE_COPY: Readonly<Record<DraftMode, DraftModeCopy>> = Objec
     pickSpace: "Full roster",
   }),
   hidden: Object.freeze({
-    label: "Memory (Blind)",
+    label: "Memory",
     shortLabel: "Memory",
     description: "Ratings and Synergy numbers stay hidden until the reveal.",
-    cue: "Ranked-capable blind lane",
+    cue: "Ranked-capable",
     pickSpace: "3-player choice",
   }),
 });

@@ -435,7 +435,7 @@ describe("daily challenge contract", () => {
           data,
         ),
       ),
-    ).toBe("INVALID_BODY");
+    ).toBe("NON_CANONICAL_CONFIG");
   });
 
   it("rejects a valid same-seed daily token built for a non-canonical formation", () => {
@@ -462,7 +462,7 @@ describe("daily challenge contract", () => {
           data,
         ),
       ),
-    ).toBe("INVALID_BODY");
+    ).toBe("NON_CANONICAL_CONFIG");
   });
 });
 
@@ -675,6 +675,7 @@ describe("U3 seam — SUBMIT_ERROR_HTTP_STATUS", () => {
   it("maps every code to the plan §2 status", () => {
     expect(SUBMIT_ERROR_HTTP_STATUS).toEqual({
       INVALID_BODY: 400,
+      NON_CANONICAL_CONFIG: 422,
       TOKEN_TOO_LARGE: 400,
       MALFORMED_TOKEN: 400,
       WRONG_SEASON: 409,

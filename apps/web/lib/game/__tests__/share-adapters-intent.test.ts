@@ -71,9 +71,8 @@ describe("buildShareCaption", () => {
 
   it("uses challenge framing for daily draft captions", () => {
     const caption = buildShareCaption(makeView({ challenge_date: "2026-06-29" }), TOKEN_URL);
-    expect(caption).toContain(
-      "Top — of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.",
-    );
+    expect(caption).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft.");
+    expect(caption).not.toContain("Top —");
     expect(caption).toContain(SHARE_TAGLINE);
   });
 
@@ -110,9 +109,8 @@ describe("buildShareIntentText", () => {
 
   it("uses daily challenge framing in intent text", () => {
     const text = buildShareIntentText(makeView({ challenge_date: "2026-06-29" }));
-    expect(text).toContain(
-      "Top — of today's field — Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft",
-    );
+    expect(text).toContain("Auriverde XI went 8-0 (41 pts) on 2026-06-29's draft");
+    expect(text).not.toContain("Top —");
   });
 
   it("uses Memory reveal framing without inventing a blind rating", () => {

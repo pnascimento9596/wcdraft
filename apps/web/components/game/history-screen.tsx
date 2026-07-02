@@ -185,6 +185,17 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
   const recordClass = entry.is_champion
     ? `${s.historyRecord} ${s.historyRecordGold}`
     : s.historyRecord;
+  const [seedCopied, setSeedCopied] = useState(false);
+
+  async function copyFullSeed() {
+    try {
+      await navigator.clipboard.writeText(entry.seed);
+      setSeedCopied(true);
+      window.setTimeout(() => setSeedCopied(false), 2000);
+    } catch {
+      setSeedCopied(false);
+    }
+  }
 
   const meta = (
     <>
@@ -211,32 +222,27 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
       <div className={s.historyFootRow}>
         <span className={s.historyRecency}>{entry.recency_label}</span>
         <span className={s.historySequence}>{entry.sequence_label}</span>
-        <code className={s.historySeed}>seed {entry.seed}</code>
+        <code className={s.historySeed} title={entry.seed}>
+          seed {shortSeed(entry.seed)}
+        </code>
       </div>
     </>
   );
 
   if (entry.replay_href) {
     return (
-      <Link
-        href={entry.replay_href}
-        className={`${s.panel} ${s.historyCard}`}
-        aria-label={ariaLabel}
-      >
+      <article className={`${s.panel} ${s.historyCard}`} aria-label={ariaLabel}>
         {meta}
         <div className={s.historyActions}>
-          <span className={s.historyOpenHint} aria-hidden="true">
+          <Link href={entry.replay_href} className={s.historyOpenHint}>
             Open results →
-          </span>
-          {entry.share_href ? (
-            // Secondary share affordance — visually rendered inside the link
-            // but uses pointerdown on the outer link, so the receiver should
-            // expect tapping anywhere = open results. We surface share as a
-            // text label rather than a nested link to keep the row clickable.
-            <span className={s.historyShareHint}>Replay token</span>
-          ) : null}
+          </Link>
+          <button type="button" className={s.historySeedCopy} onClick={copyFullSeed}>
+            {seedCopied ? "Seed copied" : "Copy full seed"}
+          </button>
+          {entry.share_href ? <span className={s.historyShareHint}>Replay token</span> : null}
         </div>
-      </Link>
+      </article>
     );
   }
 
@@ -253,4 +259,9 @@ function HistoryCard({ entry }: { entry: HistoryEntry }) {
       </p>
     </div>
   );
+}
+
+function shortSeed(seed: string): string {
+  if (seed.length <= 30) return seed;
+  return `${seed.slice(0, 16)}...${seed.slice(-8)}`;
 }

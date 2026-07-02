@@ -7,7 +7,7 @@
 // label the declared mode (honor-system — no policing language).
 
 import type { BoardFilter, BoardRowView } from "@/lib/leaderboard/board-view";
-import { seasonLabel } from "@/lib/leaderboard/board-view";
+import { seasonDisplay } from "@/lib/leaderboard/board-view";
 import { ManagerSlot } from "@/components/game/manager-slot";
 import { MiniNationFlag } from "@/components/game/mini-nation-flag";
 import { Pitch } from "@/components/game/pitch";
@@ -45,6 +45,7 @@ export function BoardHead({
   currentSeasonKey: string;
   filter?: BoardFilter;
 }) {
+  const season = seasonDisplay(currentSeasonKey);
   if (filter?.challenge === "daily") {
     const playHref = dailyDraftHref(null, filter.challengeDate);
     return (
@@ -52,8 +53,8 @@ export function BoardHead({
         <span className="eyebrow">{filter.challengeDate ?? "Today"} Daily Draft</span>
         <h1 className="display">Daily Leaderboard</h1>
         <p className="lede">
-          One shared sighted Classic draft for everyone today. Post anonymously; your best verified
-          score for the day holds.
+          One shared Classic draft for everyone today. Post anonymously; your best verified score
+          for the day holds.
         </p>
         <p className="lede">A new shared draft drops every day at 00:00 UTC.</p>
         <p>
@@ -66,17 +67,18 @@ export function BoardHead({
   }
   return (
     <header className="page-head">
-      <span className="eyebrow">Season {seasonLabel(currentSeasonKey)}</span>
+      <span className="eyebrow">Season · {season.label}</span>
       <h1 className="display">Leaderboard</h1>
       <p className="lede">
-        Daily is the default board. Advanced boards keep sighted Classic and blind Memory runs in
-        separate lanes.
+        Daily is the default board. Advanced boards keep Classic and Memory runs in separate lanes.
       </p>
       <p className="lede">
         Filter by Lane, Draft order, Era and Rating basis. Ratings can update during a season;
         entries are stamped at submit time.
       </p>
-      <code className={s.seasonKey}>{currentSeasonKey}</code>
+      <code className={s.seasonKey} title={season.rawKey}>
+        {season.evidenceLabel}
+      </code>
     </header>
   );
 }
@@ -125,9 +127,7 @@ export function BoardToolbar({
       {filter.challenge === "daily" ? (
         <p className={s.activeConfig}>
           <strong>Daily Draft</strong>
-          <span>
-            {filter.challengeDate ?? "Today"} · Sighted Classic / Squad First / Career / All-time
-          </span>
+          <span>{filter.challengeDate ?? "Today"} · Classic / Squad First / Career / All-time</span>
         </p>
       ) : (
         <>
@@ -185,8 +185,8 @@ export function BoardToolbar({
             {filter.lane === "ranked" && (
               <em>
                 {filter.draftMode === "hidden"
-                  ? "Blind ranked lane · sign-in required"
-                  : "Sighted ranked lane · sign-in required"}
+                  ? "Memory ranked lane · sign-in required"
+                  : "Classic ranked lane · sign-in required"}
               </em>
             )}
           </p>

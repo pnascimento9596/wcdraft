@@ -4,6 +4,30 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Share polish + orientation lane:
+2026-07-01 · local YELLOW implementation on branch
+`ws-ux/share-polish-orientation-20260701`, based on `origin/main`
+`1a5fa90809a3`. Scope is bounded to `apps/web`: signed-caption share flow,
+OG-sign retry/error affordances, recipient share-tool disclosure and Daily
+beat-context handoff, Daily/orientation copy, DATA/FIT labels, mid-spin seed
+reassurance, human season display, seed/history/result copy cleanup, account
+null-draw formatting, daily non-canonical board rejection code, and crest
+normalization for audited existing assets/monograms. No `packages/` or `etl/`
+files changed; runtime-data anchors remain `runtime-data-2.9.0`. Local gates
+passed: package builds for `@wcdraft/core`, `@wcdraft/data`, and `@wcdraft/db`
+(3/3; cache hits), full `@wcdraft/web` test (79 Vitest files passed, 1 skipped;
+838 tests passed, 1 skipped, plus `game-flow-playwright`), root typecheck
+(8/8), root lint (5/5), root test (8/8; 7 cached, web uncached), root build
+(4/4; web uncached, Next chunk/runtime warnings only), `git diff --check`, and
+local production-style Playwright/axe verification with 36 screenshots covering
+390x844 and 360x800 in light and dark for mode select, Daily draft, Classic
+pick, mid-spin resume, results, share, recipient share, board, and How-to-Play.
+The browser verifier mocked `/api/og/sign` success/failure because this local
+shell has neither `WCDRAFT_OG_SIGNING_SECRET` nor `DATABASE_URL`; leaderboard
+API failures in the local board proof were expected from enabling the board
+without DB credentials and were not treated as UI regressions. Screenshot set:
+`/private/tmp/wcdraft-share-polish-screenshots`.
+
 Open Draft / RED-contract reconciliation lane:
 2026-07-01 · local RED implementation candidate on branch
 `ws-ux/open-draft-contract-ship-20260701`, based on `origin/main`

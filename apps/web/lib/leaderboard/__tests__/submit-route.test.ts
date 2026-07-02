@@ -170,6 +170,30 @@ function dailyBody(
   };
 }
 
+function dailyBodyForConfig(
+  config: Parameters<typeof buildOriginRecord>[4],
+  date = "2026-06-29",
+): { body: Record<string, unknown>; expectedScore: number; challengeDate: string } {
+  const challenge = dailyChallengeForDate(date);
+  const record = {
+    ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI", config),
+    challenge,
+  };
+  const expected = expectedRunFor(data.gameData, data.scenario, record);
+  return {
+    body: {
+      token: encodeBody(buildRunTokenBody(record)),
+      claimed_score: expected.score,
+      draft_mode: "classic",
+      display_alias: "daily_tester",
+      challenge: "daily",
+      challenge_date: challenge.date,
+    },
+    expectedScore: expected.score,
+    challengeDate: challenge.date,
+  };
+}
+
 async function allRows() {
   return db.select().from(leaderboardEntries);
 }
@@ -399,6 +423,14 @@ describe("verdict mapping — every SubmitRejectionCode through the route", () =
     expect(body.error).toBe("INVALID_NAME");
     expect(body.name_reason).toBe("too_short");
     expect(JSON.stringify(body)).not.toContain("xx");
+  });
+
+  it("NON_CANONICAL_CONFIG daily setup → 422, no row", async () => {
+    const { body } = dailyBodyForConfig({ ratingBasis: "current" });
+    const res = await handleLeaderboardSubmit(makeReq({ body }), makeDeps());
+    expect(res.status).toBe(422);
+    expect((await errorOf(res)).error).toBe("NON_CANONICAL_CONFIG");
+    expect(await allRows()).toHaveLength(0);
   });
 
   it("ILLEGAL_PICK (out-of-range choice index) → 422, no row", async () => {

@@ -33,7 +33,9 @@ export default function PrivacyPage() {
             the submitted email address with the magic-link record. If you complete sign-in, we also
             store and use it as your account email. Magic-link sign-in also uses a token hash,
             expiry time, consumed time, session identifier, CSRF secret, and session expiry so the
-            link can be single-use and your session can stay secure.
+            link can be single-use and your session can stay secure. If you set or reset a password,
+            we store a password hash and the password-set timestamp; password sign-in verifies
+            against that hash.
           </li>
           <li>
             <strong>Gameplay and history data.</strong> Draft runs can include the run id, parent
@@ -62,7 +64,7 @@ export default function PrivacyPage() {
         <h2>What we do not collect</h2>
         <p>wcdraft does not collect or process these categories in the current product:</p>
         <ul>
-          <li>Passwords.</li>
+          <li>Plaintext passwords.</li>
           <li>Third-party or social sign-in identifiers.</li>
           <li>Payment details, billing records, or paid entitlements.</li>
           <li>Ad targeting profiles, ad cookies, or ad delivery data.</li>

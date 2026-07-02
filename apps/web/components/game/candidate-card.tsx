@@ -171,7 +171,7 @@ export const CandidateCard = memo(function CandidateCard({
         </span>
 
         <span className={s.candRowCov} title="Honest-state data coverage">
-          {coveragePct === null ? "—" : `${coveragePct}%`}
+          DATA {coveragePct === null ? "—" : `${coveragePct}%`}
         </span>
 
         <span className={s.candRowChevron} aria-hidden="true">
@@ -228,7 +228,7 @@ export const CandidateCard = memo(function CandidateCard({
                 )}
               </span>
               <span className={s.candCoverageVal}>
-                {coveragePct === null ? "—" : `${coveragePct}%`}
+                DATA {coveragePct === null ? "—" : `${coveragePct}%`}
               </span>
             </span>
           </span>

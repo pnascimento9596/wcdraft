@@ -18,6 +18,16 @@
   flex-basis: auto;
 }
 
+.spinResumeNote {
+  margin: 0;
+  color: var(--ink-300);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
 .spinStage {
   flex: 1 1 auto;
   min-height: 0;

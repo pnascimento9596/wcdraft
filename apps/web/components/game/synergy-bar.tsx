@@ -7,7 +7,7 @@ import s from "./game.module.css";
 /**
  * Synergy bar — the compact, top-of-formation summary that replaces the
  * old bulky `SynergyPanel` card. Keeps every metric the panel surfaced
- * (overall score, strength multiplier, links live, manager link).
+ * (overall score, team boost, links live, manager link).
  *
  * COLLAPSIBLE (presentation-only): the head row (label + headline score)
  * is always visible and acts as the toggle; the strength track + figures
@@ -145,8 +145,8 @@ export function SynergyBar({
 
           <dl className={s.synergyBarFigures} aria-label="Synergy components">
             <div className={s.synergyBarFigure}>
-              <dt>strength mult.</dt>
-              <dd>{blind ? "—" : `${result.multiplier.toFixed(2)}×`}</dd>
+              <dt>team boost</dt>
+              <dd>{blind ? "—" : formatTeamBoost(result.multiplier)}</dd>
             </div>
             <div className={s.synergyBarFigure}>
               <dt>links live</dt>
@@ -163,11 +163,25 @@ export function SynergyBar({
             </div>
             <div className={s.synergyBarFigure}>
               <dt>manager link</dt>
-              <dd>{blind ? "—" : `${Math.round(result.manager_link * 100)}%`}</dd>
+              <dd>{blind ? "—" : formatPercentBoost(result.manager_link)}</dd>
             </div>
           </dl>
         </>
       ) : null}
     </div>
   );
+}
+
+function formatTeamBoost(multiplier: number): string {
+  const pct = Math.round((multiplier - 1) * 100);
+  return formatSignedPercent(pct);
+}
+
+function formatPercentBoost(value: number): string {
+  return formatSignedPercent(Math.round(value * 100));
+}
+
+function formatSignedPercent(value: number): string {
+  if (value > 0) return `+${value}%`;
+  return `${value}%`;
 }
