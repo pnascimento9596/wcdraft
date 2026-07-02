@@ -40,6 +40,37 @@ const data: ValidationData = {
   gameData: buildServerGameData(),
   scenario: serverScenarioBundle(),
 };
+const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = {
+  schema_version: "daily-seed-salt-map-1.0.0",
+  _doc: "test salt map",
+  anchors: {
+    dataset_version: data.gameData.manifest.dataset_version,
+    engine_version: data.gameData.manifest.engine_version,
+    rating_version_historical: data.gameData.manifest.rating_version_historical,
+    rating_version_projected: data.gameData.manifest.rating_version_projected,
+    ruleset_version: data.gameData.manifest.ruleset_version,
+    draft_pool_sha256: data.gameData.manifest.bundles.draft_pool.sha256,
+    scenario_2026_sha256: data.gameData.manifest.bundles.scenario_2026.sha256,
+  },
+  window: { start_date: "2026-07-03", days: 2, timezone: "UTC" },
+  policy: "greedyOverallAutoDraft",
+  population: {
+    runs_per_candidate: 1,
+    max_salt_attempts: 2,
+    sample_seed_suffix: ":test:0000..",
+  },
+  degeneracy_band: {
+    easy_perfect_rate_gte: 0.1,
+    easy_qualifying_rate_gte: 0.95,
+    cruel_qualifying_rate_lte: 0.1,
+    cruel_median_score_lte: -8,
+    cruel_median_source: "test",
+  },
+  salts: {
+    "2026-07-04": 2,
+  },
+  dates: [],
+};
 const ORIGIN_SEED = "wcdraft:f4-u2:negatives:1";
 const origin = buildOriginRecord(data.gameData, ORIGIN_SEED, "classic");
 const originExpected = expectedRunFor(data.gameData, data.scenario, origin);
@@ -66,8 +97,18 @@ function tampered(mutate: (b: RunTokenV3Body) => void): string {
   return encodeBody(body);
 }
 
-function dailySubmission(date = "2026-06-29") {
-  const challenge = dailyChallengeForDate(date);
+function dataWithSaltMap(saltMap: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>) {
+  return {
+    ...data,
+    gameData: { ...data.gameData, dailySeedSaltMap: saltMap },
+  };
+}
+
+function dailySubmission(
+  date = "2026-06-29",
+  saltMap?: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>,
+) {
+  const challenge = dailyChallengeForDate(date, saltMap);
   const record = {
     ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
     challenge,
@@ -341,6 +382,72 @@ describe("daily challenge contract", () => {
     expect(v.draft_order).toBe("squad_first");
     expect(v.era).toBe("all_time");
     expect(v.rating_basis).toBe("career");
+  });
+
+  it("accepts a salted daily token and rejects the stale unsalted seed for that date", () => {
+    const saltedData = dataWithSaltMap(TEST_SALT_MAP);
+    const salted = dailySubmission("2026-07-04", TEST_SALT_MAP);
+    const accepted = validateSubmission(
+      {
+        token: salted.token,
+        claimed_score: salted.expected.score,
+        draft_mode: "classic",
+        display_name: "daily_player",
+        challenge: "daily",
+        challenge_date: salted.challenge.date,
+      },
+      saltedData,
+    );
+    expect(accepted.status).toBe("accepted");
+    if (accepted.status === "accepted") {
+      expect(accepted.token_body.ps).toBe("wcdraft:daily:v1:2026-07-04#2");
+    }
+
+    const stale = dailySubmission("2026-07-04");
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: stale.token,
+            claimed_score: stale.expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: stale.challenge.date,
+          },
+          saltedData,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
+  });
+
+  it("rejects a salted token for an unsalted date", () => {
+    const saltedData = dataWithSaltMap(TEST_SALT_MAP);
+    const challenge = {
+      kind: "daily" as const,
+      date: "2026-07-03",
+      seed: "wcdraft:daily:v1:2026-07-03#2",
+    };
+    const record = {
+      ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
+      challenge,
+    };
+    const expected = expectedRunFor(data.gameData, data.scenario, record);
+    expect(
+      rejectionCode(
+        validateSubmission(
+          {
+            token: encodeBody(buildRunTokenBody(record)),
+            claimed_score: expected.score,
+            draft_mode: "classic",
+            display_name: "daily_player",
+            challenge: "daily",
+            challenge_date: challenge.date,
+          },
+          saltedData,
+        ),
+      ),
+    ).toBe("INVALID_BODY");
   });
 
   it("rejects daily tokens posted to the season board", () => {

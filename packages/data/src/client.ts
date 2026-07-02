@@ -4,12 +4,14 @@
 
 import {
   RUNTIME_DATA_SCHEMA_VERSION,
+  type DailySeedSaltMap,
   type DraftPoolBundle,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
   type ScoreDistribution,
 } from "./types.js";
 import {
+  parseDailySeedSaltMap,
   parseDraftPoolBundle,
   parseRuntimeDataManifest,
   parseScenario2026Bundle,
@@ -17,7 +19,7 @@ import {
 } from "./validation.js";
 
 export * from "./score-distribution.js";
-export type { ScoreDistribution, ScoreDistributionAnchors } from "./types.js";
+export type { DailySeedSaltMap, ScoreDistribution, ScoreDistributionAnchors } from "./types.js";
 
 /**
  * Default site-relative directory where `scripts/copy-web-assets.mjs` lands the
@@ -128,6 +130,16 @@ export async function loadScoreDistribution(opts?: LoaderOptions): Promise<Score
     `${resolved.basePath}/score-distribution.compact.json`,
     resolved,
     parseScoreDistribution,
+  );
+}
+
+/** Load the Daily Draft salt map advertised by the manifest. */
+export async function loadDailySeedSaltMap(opts?: LoaderOptions): Promise<DailySeedSaltMap> {
+  const resolved = resolveOptions(opts);
+  return fetchJson<DailySeedSaltMap>(
+    `${resolved.basePath}/daily-seed-salt-map.compact.json`,
+    resolved,
+    parseDailySeedSaltMap,
   );
 }
 

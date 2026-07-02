@@ -81,7 +81,7 @@ export function useDraftScreenLoader(
             });
           }
         } else if (opts.dailyDate) {
-          const challenge = dailyChallengeForDate(opts.dailyDate);
+          const challenge = dailyChallengeForDate(opts.dailyDate, gd.dailySeedSaltMap);
           const created = createNewRunRecord(gd, {
             formation_id: DAILY_DRAFT_CONFIG.formationId,
             mode: DAILY_DRAFT_CONFIG.mode,

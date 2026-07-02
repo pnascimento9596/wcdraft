@@ -337,7 +337,7 @@ export function virtualRecordFromToken(token: RunTokenBody, gameData: GameData):
   const draft = reconstructDraftFromToken(token, gameData);
   const challenge =
     (token.v === 3 || token.v === 4) && token.ch?.k === "daily"
-      ? token.ch.s === deriveDailySeed(token.ch.d)
+      ? token.ch.s === deriveDailySeed(token.ch.d, gameData.dailySeedSaltMap)
         ? { kind: "daily" as const, date: token.ch.d, seed: token.ch.s }
         : undefined
       : undefined;

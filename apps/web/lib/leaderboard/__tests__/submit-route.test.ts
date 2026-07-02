@@ -50,6 +50,37 @@ const GOLDEN = fixtureJson as unknown as {
 
 const SECRET = testCookieSecret("f4-u3-routes");
 const data: ValidationData = getValidationData();
+const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = {
+  schema_version: "daily-seed-salt-map-1.0.0",
+  _doc: "test salt map",
+  anchors: {
+    dataset_version: data.gameData.manifest.dataset_version,
+    engine_version: data.gameData.manifest.engine_version,
+    rating_version_historical: data.gameData.manifest.rating_version_historical,
+    rating_version_projected: data.gameData.manifest.rating_version_projected,
+    ruleset_version: data.gameData.manifest.ruleset_version,
+    draft_pool_sha256: data.gameData.manifest.bundles.draft_pool.sha256,
+    scenario_2026_sha256: data.gameData.manifest.bundles.scenario_2026.sha256,
+  },
+  window: { start_date: "2026-07-03", days: 2, timezone: "UTC" },
+  policy: "greedyOverallAutoDraft",
+  population: {
+    runs_per_candidate: 1,
+    max_salt_attempts: 2,
+    sample_seed_suffix: ":test:0000..",
+  },
+  degeneracy_band: {
+    easy_perfect_rate_gte: 0.1,
+    easy_qualifying_rate_gte: 0.95,
+    cruel_qualifying_rate_lte: 0.1,
+    cruel_median_score_lte: -8,
+    cruel_median_source: "test",
+  },
+  salts: {
+    "2026-07-04": 2,
+  },
+  dates: [],
+};
 let attemptSeq = 0;
 
 const { db, pg, reset } = await setupTestDb();
@@ -69,6 +100,15 @@ function makeDeps(overrides: Partial<SubmitRouteDeps> = {}): SubmitRouteDeps {
     getValidation: () => data,
     rateLimiter: allowAllSubmitRateLimiter,
     ...overrides,
+  };
+}
+
+function validationWithSaltMap(
+  saltMap: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>,
+): ValidationData {
+  return {
+    ...data,
+    gameData: { ...data.gameData, dailySeedSaltMap: saltMap },
   };
 }
 
@@ -147,9 +187,10 @@ function bodyForRecord(
 
 function dailyBody(
   date = "2026-06-29",
+  saltMap?: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]>,
   over: Record<string, unknown> = {},
 ): { body: Record<string, unknown>; expectedScore: number; challengeDate: string } {
-  const challenge = dailyChallengeForDate(date);
+  const challenge = dailyChallengeForDate(date, saltMap);
   const record = {
     ...buildOriginRecord(data.gameData, challenge.seed, "classic", "Daily XI"),
     challenge,
@@ -323,7 +364,7 @@ describe("transport gates (before any pipeline work)", () => {
 
   it("daily ranked mode → 400 INVALID_BODY before auth or validation, no row", async () => {
     const res = await handleLeaderboardSubmit(
-      makeReq({ body: dailyBody("2026-06-29", { mode: "ranked" }).body }),
+      makeReq({ body: dailyBody("2026-06-29", undefined, { mode: "ranked" }).body }),
       makeDeps({
         getValidation: () => {
           throw new Error("daily ranked must not reach validation");
@@ -676,6 +717,46 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
       era: "all_time",
       ratingBasis: "career",
     });
+  });
+
+  it("salted daily submit accepts the salted token and rejects the stale unsalted token", async () => {
+    const saltedData = validationWithSaltMap(TEST_SALT_MAP);
+    const salted = dailyBody("2026-07-04", TEST_SALT_MAP);
+    const accepted = await handleLeaderboardSubmit(
+      makeReq({ body: salted.body }),
+      makeDeps({
+        getValidation: () => saltedData,
+        todayUtcDate: () => salted.challengeDate,
+      }),
+    );
+    expect(accepted.status).toBe(201);
+    const acceptedBody = (await accepted.json()) as { entry: Record<string, unknown> };
+    expect(acceptedBody.entry).toMatchObject({
+      verified_score: salted.expectedScore,
+    });
+    let rows = await allRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      challengeType: "daily",
+      challengeDate: "2026-07-04",
+    });
+
+    await reset();
+    const stale = dailyBody("2026-07-04");
+    const rejected = await handleLeaderboardSubmit(
+      makeReq({ body: stale.body }),
+      makeDeps({
+        getValidation: () => saltedData,
+        todayUtcDate: () => stale.challengeDate,
+      }),
+    );
+    expect(rejected.status).toBe(400);
+    expect(await errorOf(rejected)).toMatchObject({
+      error: "INVALID_BODY",
+      message: "daily token seed does not match the UTC date",
+    });
+    rows = await allRows();
+    expect(rows).toHaveLength(0);
   });
 
   it("past daily submit is read-only and rejected after verification", async () => {

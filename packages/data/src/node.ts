@@ -12,11 +12,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
+  type DailySeedSaltMap,
   type DraftPoolBundle,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
 } from "./types.js";
 import {
+  parseDailySeedSaltMap,
   parseDraftPoolBundle,
   parseRuntimeDataManifest,
   parseScenario2026Bundle,
@@ -59,15 +61,28 @@ export async function loadScenario2026BundleFromDisk(
   );
 }
 
+export async function loadDailySeedSaltMapFromDisk(
+  opts: NodeLoaderOptions,
+): Promise<DailySeedSaltMap> {
+  return readJson<DailySeedSaltMap>(
+    path.join(opts.dir, "daily-seed-salt-map.compact.json"),
+    parseDailySeedSaltMap,
+  );
+}
+
 export async function loadRuntimeDataFromDisk(opts: NodeLoaderOptions): Promise<{
   manifest: RuntimeDataManifest;
   draftPool: DraftPoolBundle;
   scenario2026: Scenario2026Bundle;
+  dailySeedSaltMap: DailySeedSaltMap | null;
 }> {
   const manifest = await loadDataManifestFromDisk(opts);
-  const [draftPool, scenario2026] = await Promise.all([
+  const [draftPool, scenario2026, dailySeedSaltMap] = await Promise.all([
     loadDraftPoolBundleFromDisk(opts),
     loadScenario2026BundleFromDisk(opts),
+    manifest.bundles.daily_seed_salt_map === undefined
+      ? Promise.resolve(null)
+      : loadDailySeedSaltMapFromDisk(opts),
   ]);
-  return { manifest, draftPool, scenario2026 };
+  return { manifest, draftPool, scenario2026, dailySeedSaltMap };
 }

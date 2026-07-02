@@ -20,8 +20,9 @@ import {
   type DraftDataset,
   type EraPresetId,
 } from "@wcdraft/core";
-import { loadDataManifest, loadDraftPoolBundle } from "@wcdraft/data/client";
+import { loadDailySeedSaltMap, loadDataManifest, loadDraftPoolBundle } from "@wcdraft/data/client";
 import type {
+  DailySeedSaltMap,
   DraftPoolBundle,
   RuntimeDataManifest,
   RuntimeManagerCard,
@@ -63,6 +64,7 @@ export interface GameData {
   draftDataset: DraftDataset;
   catalog: DraftCatalog;
   nationByCardId: Readonly<Record<string, string>>;
+  dailySeedSaltMap: DailySeedSaltMap | null;
 }
 
 let cachedGameData: GameData | null = null;
@@ -88,8 +90,18 @@ export async function loadGameData(): Promise<GameData> {
       // independent static URLs, so fetch them concurrently instead of serially
       // — removes one manifest round-trip from the first-play critical path.
       // Promise.all preserves the prior error semantics (reject on first error).
-      const [manifest, draftPool] = await Promise.all([loadDataManifest(), loadDraftPoolBundle()]);
-      const gd = buildGameData(manifest, draftPool);
+      const manifestPromise = loadDataManifest();
+      const draftPoolPromise = loadDraftPoolBundle();
+      const manifest = await manifestPromise;
+      const dailySeedSaltMapPromise =
+        manifest.bundles.daily_seed_salt_map === undefined
+          ? Promise.resolve(null)
+          : loadDailySeedSaltMap();
+      const [draftPool, dailySeedSaltMap] = await Promise.all([
+        draftPoolPromise,
+        dailySeedSaltMapPromise,
+      ]);
+      const gd = buildGameData(manifest, draftPool, dailySeedSaltMap);
       cachedGameData = gd;
       return gd;
     } catch (err) {
@@ -104,7 +116,11 @@ export async function loadGameData(): Promise<GameData> {
   return inFlight;
 }
 
-export function buildGameData(manifest: RuntimeDataManifest, draftPool: DraftPoolBundle): GameData {
+export function buildGameData(
+  manifest: RuntimeDataManifest,
+  draftPool: DraftPoolBundle,
+  dailySeedSaltMap: DailySeedSaltMap | null = null,
+): GameData {
   const indexes = buildGameDataIndexes(draftPool);
   validateIndexes(draftPool, indexes);
   const draftDataset = buildDraftDataset(draftPool);
@@ -118,6 +134,7 @@ export function buildGameData(manifest: RuntimeDataManifest, draftPool: DraftPoo
     draftDataset,
     catalog,
     nationByCardId: draftPool.nation_by_card_id,
+    dailySeedSaltMap,
   };
 }
 

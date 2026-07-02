@@ -30,6 +30,31 @@ UI proof (`apps/web/scripts/verify-reference-standing-browser.mts`): scores
 {−7, 0, 14, 52} at 390x844 + 360x800, light + dark, 16 screenshots, 0 axe
 violations, token-replay standing identical.
 
+Daily-seed vetting + ENG-08 invariant lane:
+2026-07-02 · local RED implementation on branch
+`ws-core/daily-seed-vetting-20260702`, based on `origin/main` `07aaf42`. Scope:
+adds a committed `daily-seed-salt-map-1.0.0` artifact for the UTC Daily Draft
+seed, stamps it into `manifest.json` as optional
+`bundles.daily_seed_salt_map`, and makes client daily derivation,
+token/replay recognition, and leaderboard validation read the same shipped map.
+Runtime code only reads the bundle; vetting simulation stays in data generation
+and scheduled CI. Initial window is `2026-07-02` through `2026-07-15` UTC,
+reference policy `greedyOverallAutoDraft`, N=128 sample seeds per candidate,
+8 candidate salts/date max, final bands = easy perfect >= 10% or easy
+qualifying >= 95%, cruel qualifying <= 10% or median <= score-distribution q10
+(-8). Initial `salts` is empty: all 14 dates measured normal (qualifying range
+0.218750-0.335938, median range -7.0 to -4.0, perfect rate 0). Artifact
+fingerprint: 9084 raw bytes / 1345 gzip / 1152 brotli, sha256
+`6dcb7042eca6b529abe231cb57823d392beda21f15e7742f74c8ab38bb5ae1bf`. ENG-08:
+`choice_overall` is documented and guarded as display/offer-tiering only, never
+scoring/sim/best-XI/team-strength. Local gates passed: generated chain through
+daily salt map and final compact, `pnpm run check:generated`, focused
+data/core/web suites, root typecheck (8/8), root lint (5/5), root test (8/8;
+core 389, data 101 passed / 9 skipped, db 106, marketing 68, web 867 passed /
+1 skipped plus game-flow Playwright), root build (4/4), core/data/web golden
+Turbo tasks, and heavy realism (9/9). Report:
+`docs/reports/daily-seed-vetting-2026-07-02.md`.
+
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
 `ws-ux/share-polish-orientation-20260701`, based on `origin/main`

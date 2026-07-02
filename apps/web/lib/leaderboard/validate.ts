@@ -287,7 +287,7 @@ function submissionPreflight(
     if (tokenChallenge.d !== challenge.date || tokenChallenge.s !== token.ps) {
       return rejected("INVALID_BODY", "daily token date/seed does not match the submission");
     }
-    if (tokenChallenge.s !== deriveDailySeed(tokenChallenge.d)) {
+    if (tokenChallenge.s !== deriveDailySeed(tokenChallenge.d, data.gameData.dailySeedSaltMap)) {
       return rejected("INVALID_BODY", "daily token seed does not match the UTC date");
     }
     if (

@@ -19,7 +19,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
-import type { DraftPoolBundle, RuntimeDataManifest, Scenario2026Bundle } from "@wcdraft/data";
+import type {
+  DailySeedSaltMap,
+  DraftPoolBundle,
+  RuntimeDataManifest,
+  Scenario2026Bundle,
+} from "@wcdraft/data";
 
 import {
   buildGameDataIndexes,
@@ -77,6 +82,7 @@ function readRuntimeJson<T>(fileName: string): T {
 let cachedManifest: RuntimeDataManifest | null = null;
 let cachedDraftPool: DraftPoolBundle | null = null;
 let cachedScenario2026: Scenario2026Bundle | null = null;
+let cachedDailySeedSaltMap: DailySeedSaltMap | null | undefined;
 
 function serverManifest(): RuntimeDataManifest {
   cachedManifest ??= readRuntimeJson<RuntimeDataManifest>("manifest.json");
@@ -86,6 +92,15 @@ function serverManifest(): RuntimeDataManifest {
 function serverDraftPool(): DraftPoolBundle {
   cachedDraftPool ??= readRuntimeJson<DraftPoolBundle>("draft-pool.compact.json");
   return cachedDraftPool;
+}
+
+function serverDailySeedSaltMap(): DailySeedSaltMap | null {
+  if (cachedDailySeedSaltMap !== undefined) return cachedDailySeedSaltMap;
+  cachedDailySeedSaltMap =
+    serverManifest().bundles.daily_seed_salt_map === undefined
+      ? null
+      : readRuntimeJson<DailySeedSaltMap>("daily-seed-salt-map.compact.json");
+  return cachedDailySeedSaltMap;
 }
 
 /**
@@ -107,6 +122,7 @@ export function buildServerGameData(): GameData {
     draftDataset,
     catalog: buildDraftCatalog(draftDataset),
     nationByCardId: draftPool.nation_by_card_id,
+    dailySeedSaltMap: serverDailySeedSaltMap(),
   };
 }
 

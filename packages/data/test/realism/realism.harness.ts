@@ -124,6 +124,7 @@ export interface RealismMeasurement {
   koEt: number;
   koShootout: number;
   qualifyingRuns: number;
+  perfectRuns: number;
   scores: number[];
 }
 
@@ -152,6 +153,7 @@ function emptyMeasurement(): RealismMeasurement {
     koEt: 0,
     koShootout: 0,
     qualifyingRuns: 0,
+    perfectRuns: 0,
     scores: [],
   };
 }
@@ -208,6 +210,16 @@ export function runRealismEnsembleForPolicy(
   n: number,
   seedPrefix: string = DEFAULT_SEED_PREFIX,
 ): { measurement: RealismMeasurement; telemetry: PolicyTelemetry } {
+  return runRealismEnsembleForParentSeeds(
+    policy,
+    Array.from({ length: n }, (_, i) => `${seedPrefix}:${String(i).padStart(4, "0")}`),
+  );
+}
+
+export function runRealismEnsembleForParentSeeds(
+  policy: DraftPolicyName,
+  parentSeeds: readonly string[],
+): { measurement: RealismMeasurement; telemetry: PolicyTelemetry } {
   const dataset = buildRealismDataset();
   const world = buildRealismSimWorld();
   const catalog = buildDraftCatalog(dataset);
@@ -226,8 +238,8 @@ export function runRealismEnsembleForPolicy(
     mgrModSum = 0;
   let aggCount = 0;
 
-  for (let i = 0; i < n; i++) {
-    const parentSeed = `${seedPrefix}:${String(i).padStart(4, "0")}`;
+  for (let i = 0; i < parentSeeds.length; i++) {
+    const parentSeed = parentSeeds[i]!;
     const params = {
       run_id: `realism-${policy}-${String(i).padStart(4, "0")}`,
       parent_seed: parentSeed,
@@ -282,6 +294,7 @@ export function runRealismEnsembleForPolicy(
     const { run, matches, group_stage } = runTournamentFull(draft, sb.scenario, parentSeed, world);
     m.scores.push(run.score);
     if (group_stage.user_qualified) m.qualifyingRuns++;
+    if (run.record === "8-0-0") m.perfectRuns++;
     for (const match of matches) {
       m.matches++;
       const gf = match.user_goals + (match.user_goals_et ?? 0);
