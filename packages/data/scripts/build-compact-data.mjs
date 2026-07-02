@@ -1104,7 +1104,9 @@ async function build() {
       process.stderr.write(
         `build-compact-data: WARN score-distribution anchors are STALE (${stale
           .map(([key]) => key)
-          .join(", ")}); omitting manifest entry. Re-run build-score-distribution.mts, then rebuild.\n`,
+          .join(
+            ", ",
+          )}); omitting manifest entry. Re-run build-score-distribution.mts, then rebuild.\n`,
       );
       return null;
     }
