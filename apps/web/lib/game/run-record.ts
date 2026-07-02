@@ -41,7 +41,7 @@ import {
 
 import type { GameData, RunRecordVersions } from "./data";
 import { getCatalogForEra } from "./data";
-import { deriveDailySeed, isDailyChallengeDate, type DailyChallenge } from "./daily";
+import { isDailyChallengeDate, isDailySeedForDate, type DailyChallenge } from "./daily";
 import { RunRecordError, StorageQuotaError, StorageUnavailableError } from "./errors";
 
 // ─── Schema ──────────────────────────────────────────────────────────────────
@@ -843,7 +843,7 @@ function parseRunChallenge(
     seed === null ||
     !isDailyChallengeDate(date) ||
     seed !== parentSeed ||
-    seed !== deriveDailySeed(date)
+    !isDailySeedForDate(date, seed)
   ) {
     return "invalid";
   }

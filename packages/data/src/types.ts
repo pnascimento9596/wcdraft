@@ -144,6 +144,7 @@ export interface RuntimeBundleFingerprint {
  * is governed by `ScoreDistribution.anchors`.
  */
 export const SCORE_DISTRIBUTION_SCHEMA_VERSION = "score-distribution-1.0.0" as const;
+export const DAILY_SEED_SALT_MAP_SCHEMA_VERSION = "daily-seed-salt-map-1.0.0" as const;
 
 /**
  * Anchors stamped into the score-distribution artifact at generation time.
@@ -188,6 +189,67 @@ export interface ScoreDistribution {
   };
   /** 101 nondecreasing integer score breakpoints, q[0] = min … q[100] = max. */
   quantiles: number[];
+}
+
+// ─── Daily seed salt map ────────────────────────────────────────────────────
+
+export type DailySeedSaltMapAnchors = ScoreDistributionAnchors;
+
+export interface DailySeedVettingBand {
+  easy_perfect_rate_gte: number;
+  easy_qualifying_rate_gte: number;
+  cruel_qualifying_rate_lte: number;
+  cruel_median_score_lte: number;
+  cruel_median_source: string;
+}
+
+export interface DailySeedVettingMetrics {
+  date: string;
+  salt: number;
+  seed: string;
+  sample_seed_prefix: string;
+  selected: boolean;
+  degenerate: boolean;
+  reason: "normal" | "easy_perfect" | "easy_qualifying" | "cruel_qualifying" | "cruel_median";
+  runs: number;
+  perfect_runs: number;
+  perfect_rate: number;
+  qualifying_runs: number;
+  qualifying_rate: number;
+  mean: number;
+  median: number;
+  min: number;
+  max: number;
+  exact_seed_score: number;
+  exact_seed_qualified: boolean;
+  exact_seed_perfect: boolean;
+}
+
+/**
+ * Versioned, committed map for UTC Daily Draft seed salting. `salts` stores
+ * only non-zero dates; absent means unsalted and resolves to the base
+ * `wcdraft:daily:v1:<YYYY-MM-DD>` seed. A salt value of `2` resolves to
+ * `wcdraft:daily:v1:<date>#2`.
+ */
+export interface DailySeedSaltMap {
+  schema_version: typeof DAILY_SEED_SALT_MAP_SCHEMA_VERSION;
+  _doc: string;
+  anchors: DailySeedSaltMapAnchors;
+  window: {
+    start_date: string;
+    days: number;
+    timezone: "UTC";
+  };
+  policy: "greedyOverallAutoDraft";
+  population: {
+    runs_per_candidate: number;
+    max_salt_attempts: number;
+    sample_seed_suffix: string;
+  };
+  degeneracy_band: DailySeedVettingBand;
+  /** date -> salt suffix; absent/default is 0 (unsalted). */
+  salts: Record<string, number>;
+  dates: DailySeedVettingMetrics[];
 }
 
 // ─── Rating wrapper ──────────────────────────────────────────────────────────
@@ -506,6 +568,11 @@ export interface RuntimeDataManifest {
      * "standing unknown" (omit the line), never fabricate.
      */
     score_distribution?: RuntimeBundleFingerprint;
+    /**
+     * Fingerprint of the committed Daily Draft seed salt map. OPTIONAL only
+     * for old manifests; current builds stamp it when anchors match.
+     */
+    daily_seed_salt_map?: RuntimeBundleFingerprint;
   };
   /** Row counts published for fast sanity-checks. */
   counts: {

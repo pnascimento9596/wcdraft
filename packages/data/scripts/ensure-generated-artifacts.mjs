@@ -26,6 +26,7 @@ const GENERATED_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const RUNTIME_MANIFEST_PATH = path.join(GENERATED_DIR, "manifest.json");
 const SCENARIO_PATH = path.join(GENERATED_DIR, "scenario-2026.compact.json");
 const SCORE_DISTRIBUTION_PATH = path.join(GENERATED_DIR, "score-distribution.compact.json");
+const DAILY_SEED_SALT_MAP_PATH = path.join(GENERATED_DIR, "daily-seed-salt-map.compact.json");
 const DRAFT_POOL_PATH = path.join(GENERATED_DIR, "draft-pool.compact.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const RETAINED_RUNTIME_DATA_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-data");
@@ -38,6 +39,7 @@ const TRACKED_FINGERPRINT_PATHS = [
   "packages/data/src/generated/manifest.json",
   "packages/data/src/generated/scenario-2026.compact.json",
   "packages/data/src/generated/score-distribution.compact.json",
+  "packages/data/src/generated/daily-seed-salt-map.compact.json",
   "packages/data/reports/compact-size.json",
 ];
 const UNTRACKED_LARGE_ARTIFACTS = [
@@ -181,6 +183,13 @@ function validateCompactArtifacts() {
       SCORE_DISTRIBUTION_PATH,
       manifest.bundles.score_distribution,
       "score-distribution.compact.json",
+    );
+  }
+  if (manifest.bundles.daily_seed_salt_map !== undefined) {
+    validateFingerprint(
+      DAILY_SEED_SALT_MAP_PATH,
+      manifest.bundles.daily_seed_salt_map,
+      "daily-seed-salt-map.compact.json",
     );
   }
 

@@ -741,6 +741,8 @@ function compareCardId(a: CardId | string, b: CardId | string): number {
 }
 
 function choiceOverall(card: DraftPlayerCard): number | null {
+  // ENG-08 invariant: display values are permitted for offer tiering only.
+  // Never read choice_overall for scoring, sim, best-XI, or team strength.
   return typeof card.choice_overall === "number" && Number.isFinite(card.choice_overall)
     ? card.choice_overall
     : null;

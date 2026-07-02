@@ -3,7 +3,12 @@
 // (run-token-v2.test.ts) exercises the exact same construction path.
 
 import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
-import { DRAFT_POOL_BUNDLE, RUNTIME_DATA_MANIFEST, type RuntimeDataManifest } from "@wcdraft/data";
+import {
+  DAILY_SEED_SALT_MAP_BUNDLE,
+  DRAFT_POOL_BUNDLE,
+  RUNTIME_DATA_MANIFEST,
+  type RuntimeDataManifest,
+} from "@wcdraft/data";
 
 import type { GameData, RunRecordVersions } from "../data";
 import { buildGameDataIndexes, composeVersions } from "../data";
@@ -48,6 +53,7 @@ export function buildGameDataFromBundles(): GameData {
     draftDataset,
     catalog,
     nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+    dailySeedSaltMap: DAILY_SEED_SALT_MAP_BUNDLE,
   };
 }
 

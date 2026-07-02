@@ -517,6 +517,9 @@ function validateRuntimeDataManifest(manifest) {
   if (bundles.score_distribution !== undefined) {
     assertFingerprint(bundles.score_distribution, "manifest.json.bundles.score_distribution");
   }
+  if (bundles.daily_seed_salt_map !== undefined) {
+    assertFingerprint(bundles.daily_seed_salt_map, "manifest.json.bundles.daily_seed_salt_map");
+  }
   const counts = assertObject(value.counts, "manifest.json.counts");
   for (const field of [
     "player_cards",
@@ -1113,6 +1116,41 @@ async function build() {
     return fingerprint(bytes, "score-distribution.compact.json");
   })();
 
+  const dailySeedSaltMapFingerprint = (() => {
+    const artifactPath = path.join(DEFAULT_OUT_DIR, "daily-seed-salt-map.compact.json");
+    if (!existsSync(artifactPath)) {
+      process.stderr.write(
+        "build-compact-data: WARN daily-seed-salt-map.compact.json absent; omitting manifest entry. " +
+          "Run `pnpm --filter @wcdraft/data run build:daily-seed-salt-map` then rebuild.\n",
+      );
+      return null;
+    }
+    const bytes = readFileSync(artifactPath);
+    const artifact = JSON.parse(bytes.toString("utf8"));
+    const anchors = artifact?.anchors ?? {};
+    const expected = {
+      dataset_version: datasetVersion,
+      engine_version: ENGINE_VERSION,
+      rating_version_historical: ratingVersionHistorical,
+      rating_version_projected: ratingVersionProjected,
+      ruleset_version: RULESET_VERSION,
+      draft_pool_sha256: draftPoolFingerprint.sha256,
+      scenario_2026_sha256: scenario2026Fingerprint.sha256,
+    };
+    const stale = Object.entries(expected).filter(([key, value]) => anchors[key] !== value);
+    if (stale.length > 0) {
+      process.stderr.write(
+        `build-compact-data: WARN daily-seed-salt-map anchors are STALE (${stale
+          .map(([key]) => key)
+          .join(
+            ", ",
+          )}); omitting manifest entry. Re-run build-daily-seed-salt-map.mts, then rebuild.\n`,
+      );
+      return null;
+    }
+    return fingerprint(bytes, "daily-seed-salt-map.compact.json");
+  })();
+
   const manifestObj = {
     schema_version: SCHEMA_VERSION,
     dataset_version: datasetVersion,
@@ -1126,6 +1164,9 @@ async function build() {
       ...(scoreDistributionFingerprint === null
         ? {}
         : { score_distribution: scoreDistributionFingerprint }),
+      ...(dailySeedSaltMapFingerprint === null
+        ? {}
+        : { daily_seed_salt_map: dailySeedSaltMapFingerprint }),
     },
     counts: {
       player_cards: playerCards.length,
@@ -1163,6 +1204,9 @@ async function build() {
       ...(scoreDistributionFingerprint === null
         ? {}
         : { score_distribution: scoreDistributionFingerprint }),
+      ...(dailySeedSaltMapFingerprint === null
+        ? {}
+        : { daily_seed_salt_map: dailySeedSaltMapFingerprint }),
     },
     total_raw_bytes: manifestBytes.length + draftPoolBytes.length + scenario2026Bytes.length,
     total_brotli_bytes:

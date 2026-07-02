@@ -23,6 +23,7 @@ import {
   type DraftState,
 } from "@wcdraft/core";
 import {
+  DAILY_SEED_SALT_MAP_BUNDLE,
   DRAFT_POOL_BUNDLE,
   RUNTIME_DATA_MANIFEST,
   SCENARIO_2026_BUNDLE,
@@ -73,6 +74,7 @@ function buildGameData(): GameData {
     draftDataset,
     catalog: buildDraftCatalog(draftDataset),
     nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+    dailySeedSaltMap: DAILY_SEED_SALT_MAP_BUNDLE,
   };
 }
 

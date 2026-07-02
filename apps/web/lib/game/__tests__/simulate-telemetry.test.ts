@@ -13,6 +13,7 @@ import { describe, expect, it } from "vitest";
 
 import { autoDraft, buildDraftCatalog, type DraftDataset } from "@wcdraft/core";
 import {
+  DAILY_SEED_SALT_MAP_BUNDLE,
   DRAFT_POOL_BUNDLE,
   RUNTIME_DATA_MANIFEST,
   SCENARIO_2026_BUNDLE,
@@ -70,6 +71,7 @@ function buildGameDataFromBundles(): GameData {
     draftDataset,
     catalog,
     nationByCardId: DRAFT_POOL_BUNDLE.nation_by_card_id,
+    dailySeedSaltMap: DAILY_SEED_SALT_MAP_BUNDLE,
   };
 }
 

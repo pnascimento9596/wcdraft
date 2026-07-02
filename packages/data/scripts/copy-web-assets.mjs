@@ -27,6 +27,7 @@ const VERSIONED_JSON_FILES = ["manifest.json", "scenario-2026.compact.json"];
 // `bundles.score_distribution` entry (manifests built before the artifact
 // existed, and test fixtures, legitimately omit it).
 const SCORE_DISTRIBUTION_FILE = "score-distribution.compact.json";
+const DAILY_SEED_SALT_MAP_FILE = "daily-seed-salt-map.compact.json";
 const COMPRESSED_DRAFT_FILE = "draft-pool.compact.json.br";
 const RETAINED_FILES = ["manifest.json", "scenario-2026.compact.json", COMPRESSED_DRAFT_FILE];
 
@@ -263,6 +264,15 @@ async function main() {
     assertFingerprint(SCORE_DISTRIBUTION_FILE, raw, scoreDistExpected);
     await writeFile(path.join(targetDir, SCORE_DISTRIBUTION_FILE), raw);
     await writeFile(path.join(currentTargetDir, SCORE_DISTRIBUTION_FILE), raw);
+  }
+
+  const dailySeedSaltMapExpected = manifest.bundles?.daily_seed_salt_map;
+  if (dailySeedSaltMapExpected !== undefined) {
+    const sourcePath = path.join(sourceDir, DAILY_SEED_SALT_MAP_FILE);
+    const raw = await readFile(sourcePath);
+    assertFingerprint(DAILY_SEED_SALT_MAP_FILE, raw, dailySeedSaltMapExpected);
+    await writeFile(path.join(targetDir, DAILY_SEED_SALT_MAP_FILE), raw);
+    await writeFile(path.join(currentTargetDir, DAILY_SEED_SALT_MAP_FILE), raw);
   }
 
   const retainedCount = await copyRetainedVersions(retainedDir, targetDir, currentVersion);

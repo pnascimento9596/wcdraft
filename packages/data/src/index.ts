@@ -22,12 +22,14 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type {
+  DailySeedSaltMap,
   DraftPoolBundle,
   Scenario2026Bundle,
   RuntimeDataManifest,
   ScoreDistribution,
 } from "./types.js";
 import {
+  parseDailySeedSaltMap,
   parseDraftPoolBundle,
   parseRuntimeDataManifest,
   parseScenario2026Bundle,
@@ -86,4 +88,14 @@ export const SCORE_DISTRIBUTION_BUNDLE: ScoreDistribution | null =
   readGeneratedJsonOptional<ScoreDistribution>(
     "score-distribution.compact.json",
     parseScoreDistribution,
+  );
+
+/**
+ * Statically-imported Daily Draft salt map (tests, scripts, server). NULL only
+ * for manifests/checkouts produced before the artifact existed.
+ */
+export const DAILY_SEED_SALT_MAP_BUNDLE: DailySeedSaltMap | null =
+  readGeneratedJsonOptional<DailySeedSaltMap>(
+    "daily-seed-salt-map.compact.json",
+    parseDailySeedSaltMap,
   );
