@@ -29,10 +29,10 @@
     "@wcdraft/core": "workspace:*",
     "@wcdraft/data": "workspace:*",
     "@wcdraft/db": "workspace:*",
-    "next": "^16.2.9",
+    "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "zod": "3.25.76"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.3",
