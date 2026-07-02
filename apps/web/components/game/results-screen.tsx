@@ -458,9 +458,7 @@ function ResultsBody({
           ) : null}
           <span
             className={
-              summary.is_champion
-                ? `${s.maxScoreChip} ${s.maxScoreChipChampion}`
-                : s.maxScoreChip
+              summary.is_champion ? `${s.maxScoreChip} ${s.maxScoreChipChampion}` : s.maxScoreChip
             }
           >
             {summary.perfect_run_reference}

@@ -187,9 +187,7 @@ export function SpinStage({
 
       {/* ── Drum ─────────────────────────────────────────────────────── */}
       <span
-        className={`${s.spinDrumLabel} ${
-          showSkipHint && spinning ? s.spinDrumLabelWithHint : ""
-        }`}
+        className={`${s.spinDrumLabel} ${showSkipHint && spinning ? s.spinDrumLabelWithHint : ""}`}
       >
         Spinning nation + era
         {showSkipHint && spinning ? <span className={s.spinSkipHint}>tap to skip</span> : null}

@@ -55,7 +55,9 @@ export function LocalProgressBand({
     : s.localProgressBand;
   const streakLabel = summary.streakDays === null ? "—" : summary.streakDays.toString();
   const showSignInNudge =
-    trigger !== null && checkedStorageKey === trigger.storageKey && dismissedKey !== trigger.storageKey;
+    trigger !== null &&
+    checkedStorageKey === trigger.storageKey &&
+    dismissedKey !== trigger.storageKey;
 
   useEffect(() => {
     if (trigger === null || typeof window === "undefined") {
@@ -63,7 +65,9 @@ export function LocalProgressBand({
       setCheckedStorageKey(null);
       return;
     }
-    setDismissedKey(window.localStorage.getItem(trigger.storageKey) === "1" ? trigger.storageKey : null);
+    setDismissedKey(
+      window.localStorage.getItem(trigger.storageKey) === "1" ? trigger.storageKey : null,
+    );
     setCheckedStorageKey(trigger.storageKey);
   }, [trigger]);
 

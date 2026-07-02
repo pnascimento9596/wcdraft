@@ -50,7 +50,7 @@ describe("LocalProgressBand", () => {
     expect(source).toContain('href="/sign-in"');
     expect(source).toContain("Dismiss");
     expect(source).toContain("window.localStorage.getItem(trigger.storageKey)");
-    expect(source).toContain("window.localStorage.setItem(trigger.storageKey, \"1\")");
+    expect(source).toContain('window.localStorage.setItem(trigger.storageKey, "1")');
     expect(source).toContain("checkedStorageKey === trigger.storageKey");
     expect(source).toContain("dismissedKey !== trigger.storageKey");
   });

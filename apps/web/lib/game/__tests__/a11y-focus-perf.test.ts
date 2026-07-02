@@ -8,11 +8,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import {
-  SpinStage,
-  skipSpinAnimState,
-  spinEraRangeLabel,
-} from "@/components/game/slot-machine";
+import { SpinStage, skipSpinAnimState, spinEraRangeLabel } from "@/components/game/slot-machine";
 import type { SlotRevealFace, SlotRevealModel, SlotRevealReel } from "../slot-reveal";
 
 function face(nationName: string, yearLabel: string, key: string): SlotRevealFace {
