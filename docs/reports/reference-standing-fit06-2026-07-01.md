@@ -87,6 +87,27 @@ captions gain ~30 chars — flag for the share-polish lane. Post-review delta
 `build-compact-data.mjs` + this report file); merge SHA re-pinned to the
 final head accordingly.
 
-## Live verification
+## Live verification (2026-07-02, post-merge `4b818e2`)
 
-(filled in after deploy)
+All PASS against https://www.wcdraft.com (Playwright + curl):
+
+- live manifest carries `bundles.score_distribution` (sha `16c01f921455…`,
+  1856 B) — byte-identical to the committed artifact; dataset `2026-07-01`,
+  schema `runtime-data-2.9.0` unchanged.
+- token-replayed completed runs render the standing on live results:
+  −7 → "Beat ~10%", 0 → "Beat ~27%", 14 → "Beat ~57%", 52 → "Beat ~92%"
+  (all "of reference drafts").
+- replay stability: the same token rendered twice shows the identical
+  standing.
+- negative score renders the honest low percentile (a point on the curve).
+- non-daily share caption carries the reference line; no field/reference
+  wording cross-contamination.
+- daily page 200; leaderboard board API 200 with season
+  `season-2026-manager-attrition` intact; submit route alive (405 on GET,
+  method-gated as designed). Email privacy surfaces untouched by the diff.
+- How-to-Play explains the reference standing.
+- teardown synthesis doc resolves at
+  `docs/reports/wcdraft-teardown-synthesis-v2-2026-07-01.md` on `main`
+  (merged via #204, `a551aab`).
+
+No auto-revert triggered — every live check passed.
