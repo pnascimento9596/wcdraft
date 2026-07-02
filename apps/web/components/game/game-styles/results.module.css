@@ -140,6 +140,13 @@
   border-radius: 7px;
   background: color-mix(in srgb, currentColor 8%, transparent);
 }
+/* Reference standing (vs simulated reference drafts) — visually distinct
+   from the daily posted-field chip: dashed border, no fill. Wording stays
+   distinct too ("reference drafts" vs "today's field"). */
+.payoffMeta span.referenceStandingChip {
+  border-style: dashed;
+  background: transparent;
+}
 .outcomeScoreRow {
   display: flex;
   flex-wrap: wrap;

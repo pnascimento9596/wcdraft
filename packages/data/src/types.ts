@@ -135,6 +135,61 @@ export interface RuntimeBundleFingerprint {
   bytes_brotli: number;
 }
 
+// ─── Reference score distribution ────────────────────────────────────────────
+
+/**
+ * Schema version of the shipped reference score-distribution artifact
+ * (`score-distribution.compact.json`). Independent of the runtime-data schema:
+ * this versions the TABLE SHAPE, while staleness relative to the engine/data
+ * is governed by `ScoreDistribution.anchors`.
+ */
+export const SCORE_DISTRIBUTION_SCHEMA_VERSION = "score-distribution-1.0.0" as const;
+
+/**
+ * Anchors stamped into the score-distribution artifact at generation time.
+ * They must equal the current `RuntimeDataManifest` values (enforced by the
+ * golden test in CI and re-checked against the run record's versions at
+ * display time) so a shipped table can never be applied to a score it does
+ * not describe.
+ */
+export interface ScoreDistributionAnchors {
+  dataset_version: string;
+  engine_version: string;
+  rating_version_historical: string;
+  rating_version_projected: string;
+  ruleset_version: string;
+  /** sha256 of the draft-pool bundle the ensemble drafted from. */
+  draft_pool_sha256: string;
+  /** sha256 of the 2026 scenario bundle the ensemble simulated against. */
+  scenario_2026_sha256: string;
+}
+
+/**
+ * Compact reference run-score distribution: nearest-rank percentile → score
+ * breakpoints (`quantiles[p]` for p = 0..100, inclusive endpoints) over the
+ * deterministic strategicAutoDraft ensemble pinned by the asym-realism golden.
+ * This is a reference population of SIMULATED drafts on this engine — never
+ * a population of human players. Display copy must keep that distinction.
+ */
+export interface ScoreDistribution {
+  schema_version: typeof SCORE_DISTRIBUTION_SCHEMA_VERSION;
+  _doc: string;
+  anchors: ScoreDistributionAnchors;
+  population: {
+    policy: string;
+    seed_prefix: string;
+    runs: number;
+    qualifying_runs: number;
+    mean: number;
+    median: number;
+    p95: number;
+    min: number;
+    max: number;
+  };
+  /** 101 nondecreasing integer score breakpoints, q[0] = min … q[100] = max. */
+  quantiles: number[];
+}
+
 // ─── Rating wrapper ──────────────────────────────────────────────────────────
 
 /**
@@ -444,6 +499,13 @@ export interface RuntimeDataManifest {
   bundles: {
     draft_pool: RuntimeBundleFingerprint;
     scenario_2026: RuntimeBundleFingerprint;
+    /**
+     * Fingerprint of the shipped reference score-distribution artifact.
+     * OPTIONAL: absent on manifests built before the artifact existed and
+     * while the artifact is mid-regeneration; consumers must degrade to
+     * "standing unknown" (omit the line), never fabricate.
+     */
+    score_distribution?: RuntimeBundleFingerprint;
   };
   /** Row counts published for fast sanity-checks. */
   counts: {

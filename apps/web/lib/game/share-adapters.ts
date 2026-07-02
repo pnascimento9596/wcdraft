@@ -16,6 +16,7 @@ import {
   type RunResult,
 } from "@wcdraft/core";
 import type { Scenario2026Bundle } from "@wcdraft/data";
+import type { ReferenceStanding } from "@wcdraft/data/client";
 
 import type { GameData } from "./data";
 import { buildMemoryRevealView, type MemoryRevealView } from "./memory-reveal-model";
@@ -223,14 +224,34 @@ export interface DailyShareStanding {
 
 export const DAILY_STANDING_CLAIM_COPY = "Post your score to claim today's standing" as const;
 
+/** Caption options shared by `buildShareCaption` / `buildShareIntentText`. */
+export interface ShareCaptionOpts {
+  readonly dailyStanding?: DailyShareStanding | null;
+  /**
+   * Local standing vs the shipped reference population of SIMULATED drafts
+   * (see `reference-standing.ts`). Included on NON-daily captions only —
+   * daily captions keep the posted-field rules (field standing when known,
+   * claim hook otherwise) so the two standings never share a caption and
+   * cannot be confused for each other.
+   */
+  readonly referenceStanding?: ReferenceStanding | null;
+}
+
+function referenceStandingCaptionLine(view: ShareView, opts: ShareCaptionOpts): string | null {
+  if (view.challenge_date !== null) return null;
+  return opts.referenceStanding?.label ?? null;
+}
+
 export function buildShareCaption(
   view: ShareView,
   url: string | null,
-  opts: { readonly dailyStanding?: DailyShareStanding | null } = {},
+  opts: ShareCaptionOpts = {},
 ): string {
   const lines: string[] = [];
   if (view.narrative) lines.push(view.narrative);
   lines.push(shareChallengeLine(view, opts.dailyStanding ?? null));
+  const referenceLine = referenceStandingCaptionLine(view, opts);
+  if (referenceLine !== null) lines.push(referenceLine);
   lines.push(view.perfect_run_reference);
   lines.push(SHARE_TAGLINE);
   if (url) lines.push(url);
@@ -243,11 +264,10 @@ export function buildShareCaption(
  * would double-render the link. Use this for text-and-url web intents and
  * for `navigator.share({ text, url })`.
  */
-export function buildShareIntentText(
-  view: ShareView,
-  opts: { readonly dailyStanding?: DailyShareStanding | null } = {},
-): string {
-  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)} ${view.perfect_run_reference} ${SHARE_TAGLINE}`;
+export function buildShareIntentText(view: ShareView, opts: ShareCaptionOpts = {}): string {
+  const referenceLine = referenceStandingCaptionLine(view, opts);
+  const referencePart = referenceLine === null ? "" : ` ${referenceLine}.`;
+  const lead = `${shareChallengeLine(view, opts.dailyStanding ?? null)}${referencePart} ${view.perfect_run_reference} ${SHARE_TAGLINE}`;
   return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 

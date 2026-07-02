@@ -688,6 +688,9 @@
 .payoffMeta {
   composes: payoffMeta from "./game-styles/results.module.css";
 }
+.referenceStandingChip {
+  composes: referenceStandingChip from "./game-styles/results.module.css";
+}
 .outcomeScoreRow {
   composes: outcomeScoreRow from "./game-styles/results.module.css";
 }

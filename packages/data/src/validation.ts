@@ -1,8 +1,10 @@
 import {
   RUNTIME_DATA_SCHEMA_VERSION,
+  SCORE_DISTRIBUTION_SCHEMA_VERSION,
   type DraftPoolBundle,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
+  type ScoreDistribution,
 } from "./types.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -74,6 +76,12 @@ export function parseRuntimeDataManifest(value: unknown): RuntimeDataManifest {
   const bundles = requireRecord(obj.bundles, label, "bundles");
   requireFingerprint(bundles.draft_pool, label, "bundles.draft_pool");
   requireFingerprint(bundles.scenario_2026, label, "bundles.scenario_2026");
+  // OPTIONAL: manifests built before the score-distribution artifact existed
+  // (and mid-regeneration builds) legitimately omit this entry; consumers
+  // degrade to "standing unknown" (omit the line), never fabricate.
+  if (bundles.score_distribution !== undefined) {
+    requireFingerprint(bundles.score_distribution, label, "bundles.score_distribution");
+  }
 
   const counts = requireRecord(obj.counts, label, "counts");
   for (const key of [
@@ -107,6 +115,49 @@ export function parseDraftPoolBundle(value: unknown): DraftPoolBundle {
   requireRecord(obj.tournaments, label, "tournaments");
   requireRecord(obj.nations, label, "nations");
   return obj as unknown as DraftPoolBundle;
+}
+
+export function parseScoreDistribution(value: unknown): ScoreDistribution {
+  const label = "score distribution";
+  const obj = requireRecord(value, label, "$");
+  const schemaVersion = requireString(obj.schema_version, label, "schema_version");
+  if (schemaVersion !== SCORE_DISTRIBUTION_SCHEMA_VERSION) {
+    fail(
+      label,
+      "schema_version",
+      `schema_version mismatch: got "${schemaVersion}", expected "${SCORE_DISTRIBUTION_SCHEMA_VERSION}"`,
+    );
+  }
+  const anchors = requireRecord(obj.anchors, label, "anchors");
+  for (const key of [
+    "dataset_version",
+    "engine_version",
+    "rating_version_historical",
+    "rating_version_projected",
+    "ruleset_version",
+    "draft_pool_sha256",
+    "scenario_2026_sha256",
+  ]) {
+    requireString(anchors[key], label, `anchors.${key}`);
+  }
+  const population = requireRecord(obj.population, label, "population");
+  requireString(population.policy, label, "population.policy");
+  requireString(population.seed_prefix, label, "population.seed_prefix");
+  for (const key of ["runs", "qualifying_runs", "mean", "median", "p95", "min", "max"]) {
+    requireNumber(population[key], label, `population.${key}`);
+  }
+  const quantiles = requireArray(obj.quantiles, label, "quantiles");
+  if (quantiles.length !== 101) {
+    fail(label, "quantiles", `expected 101 breakpoints, got ${quantiles.length}`);
+  }
+  let prev = -Infinity;
+  for (let i = 0; i < quantiles.length; i++) {
+    const q = requireNumber(quantiles[i], label, `quantiles[${i}]`);
+    if (!Number.isInteger(q)) fail(label, `quantiles[${i}]`, "expected integer score");
+    if (q < prev) fail(label, `quantiles[${i}]`, "expected nondecreasing breakpoints");
+    prev = q;
+  }
+  return obj as unknown as ScoreDistribution;
 }
 
 export function parseScenario2026Bundle(value: unknown): Scenario2026Bundle {

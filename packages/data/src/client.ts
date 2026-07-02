@@ -7,12 +7,17 @@ import {
   type DraftPoolBundle,
   type RuntimeDataManifest,
   type Scenario2026Bundle,
+  type ScoreDistribution,
 } from "./types.js";
 import {
   parseDraftPoolBundle,
   parseRuntimeDataManifest,
   parseScenario2026Bundle,
+  parseScoreDistribution,
 } from "./validation.js";
+
+export * from "./score-distribution.js";
+export type { ScoreDistribution, ScoreDistributionAnchors } from "./types.js";
 
 /**
  * Default site-relative directory where `scripts/copy-web-assets.mjs` lands the
@@ -108,6 +113,21 @@ export async function loadScenario2026Bundle(opts?: LoaderOptions): Promise<Scen
     `${resolved.basePath}/scenario-2026.compact.json`,
     resolved,
     parseScenario2026Bundle,
+  );
+}
+
+/**
+ * Load the reference score-distribution artifact. Throws on HTTP failure or
+ * malformed payload — callers that render an OPTIONAL standing line must
+ * catch and degrade to "standing unknown" (omit), never fabricate. Older
+ * deployed data directories legitimately lack this file (HTTP 404).
+ */
+export async function loadScoreDistribution(opts?: LoaderOptions): Promise<ScoreDistribution> {
+  const resolved = resolveOptions(opts);
+  return fetchJson<ScoreDistribution>(
+    `${resolved.basePath}/score-distribution.compact.json`,
+    resolved,
+    parseScoreDistribution,
   );
 }
 
