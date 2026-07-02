@@ -70,7 +70,22 @@ Date: 2026-07-01 · Branch: `ws-f4/reference-standing-20260701` · PR: #205 · T
 
 ## Reviewer verdict
 
-(fresh-context re-executing reviewer — filled in before merge)
+**PASS** — fresh-context reviewer, clean clone at reviewed HEAD `b2c5da7`,
+all gates RE-EXECUTED (not diff-read): data suite 95 passed / 9 skipped with
+draft pool rebuilt from scratch; root typecheck 8/8, lint 5/5, test 8/8 (web
+860 + game-flow-playwright), build 4/4; goldens core 69/69 + 42/42 (canary
+included), data 41/41 (new golden confirmed running) + 22/22, web 6/6; heavy
+realism 9/9 including the live-ensemble quantile re-derivation; `build:compact`
+rebuild left zero tracked diff and `build-score-distribution.mts` regeneration
+was byte-identical; UI proof re-run with real chromium (16 shots, axe 0).
+Zero blockers. Three non-blocking warnings ledgered: (1) two-step regen flow
+on future engine/data bumps is easy to forget — CI reds via the golden, add
+to the bump checklist; (2) `loadScoreDistributionOnce` caches a transient
+fetch failure as session-sticky null (omission-only, honest); (3) non-daily
+captions gain ~30 chars — flag for the share-polish lane. Post-review delta
+`b2c5da7..ae7b9ab` verified format/docs-only (prettier line-wrap in
+`build-compact-data.mjs` + this report file); merge SHA re-pinned to the
+final head accordingly.
 
 ## Live verification
 
