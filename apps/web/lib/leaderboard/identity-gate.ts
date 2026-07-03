@@ -24,7 +24,8 @@
 // leaderboard contract (CSRF_FAILED is 403 here).
 
 import type { NextRequest } from "next/server";
-import type { Db } from "@wcdraft/db";
+import { users, type Db } from "@wcdraft/db";
+import { eq } from "drizzle-orm";
 
 import {
   CSRF_COOKIE_NAME,
@@ -39,11 +40,14 @@ import { SUBMIT_ERROR_HTTP_STATUS, type SubmitGateCode } from "./validate";
 
 export const RANKED_AUTH_REQUIRED_MESSAGE =
   "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.";
+export const RANKED_VERIFICATION_REQUIRED_MESSAGE =
+  "Verify your email to post ranked runs. Casual posts still work while verification is pending.";
 
 /** Resolved submitting identity. Both null = anonymous casual submission. */
 export interface SubmitIdentity {
   readonly sessionId: string | null;
   readonly userId: string | null;
+  readonly emailVerified: boolean;
 }
 
 /** Gate failure with the single-sourced HTTP status for its code. */
@@ -85,7 +89,7 @@ export async function requireSubmitIdentity(
     if (deps.requireAccount()) {
       throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
     }
-    return { sessionId: null, userId: null };
+    return { sessionId: null, userId: null, emailVerified: false };
   }
 
   let session;
@@ -122,7 +126,23 @@ export async function requireSubmitIdentity(
   if (deps.requireAccount() && session.userId === null) {
     throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
   }
-  return { sessionId: session.id, userId: session.userId };
+  let emailVerified = false;
+  if (session.userId !== null) {
+    const rows = await deps.db
+      .select({ emailVerifiedAt: users.emailVerifiedAt })
+      .from(users)
+      .where(eq(users.id, session.userId))
+      .limit(1);
+    const user = rows[0];
+    if (!user) {
+      throw new LeaderboardGateError("AUTH_REQUIRED", RANKED_AUTH_REQUIRED_MESSAGE);
+    }
+    emailVerified = user.emailVerifiedAt !== null;
+    if (deps.requireAccount() && !emailVerified) {
+      throw new LeaderboardGateError("VERIFICATION_REQUIRED", RANKED_VERIFICATION_REQUIRED_MESSAGE);
+    }
+  }
+  return { sessionId: session.id, userId: session.userId, emailVerified };
 }
 
 /**
@@ -143,7 +163,7 @@ export async function requireReadIdentity(
       now: deps.now,
       cookieSecret: deps.getCookieSecret(),
     });
-    return { sessionId: session.id, userId: session.userId };
+    return { sessionId: session.id, userId: session.userId, emailVerified: false };
   } catch (err) {
     if (err instanceof AuthError) {
       throw new LeaderboardGateError("AUTH_REQUIRED", `session invalid (${err.code})`);

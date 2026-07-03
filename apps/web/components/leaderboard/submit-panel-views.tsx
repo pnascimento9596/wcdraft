@@ -22,6 +22,7 @@ export interface SubmitPanelViewProps {
   authReady: boolean;
   isSignedIn: boolean;
   publicUsername: string | null;
+  emailVerified?: boolean;
   challengeKind?: "season" | "daily";
   dailyOpen?: boolean;
   leaderboardHref: string;
@@ -52,6 +53,8 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
   const daily = props.challengeKind === "daily";
   const dailyOpen = props.dailyOpen ?? true;
   const rankedAuthBlocked = rankedSelected && (!props.authReady || !props.isSignedIn);
+  const rankedVerificationBlocked =
+    rankedSelected && props.isSignedIn && props.emailVerified === false;
   const needsUsername = rankedSelected && props.isSignedIn && props.publicUsername === null;
   const aliasOptional = rankedSelected && props.isSignedIn && props.publicUsername !== null;
   const inputId = needsUsername ? "lb-username" : "lb-display-name";
@@ -62,7 +65,11 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
       ? "Optional alias (3-20 chars)"
       : "Alias (3-20 chars: a-z, 0-9, _)";
   const submitDisabled =
-    phase.kind === "submitting" || props.retryRemaining !== null || rankedAuthBlocked || !dailyOpen;
+    phase.kind === "submitting" ||
+    props.retryRemaining !== null ||
+    rankedAuthBlocked ||
+    rankedVerificationBlocked ||
+    !dailyOpen;
   return (
     <section className={s.submitPanel} aria-label="Post to the leaderboard">
       <div className={s.submitHead}>
@@ -107,6 +114,7 @@ export function SubmitPanelView(props: SubmitPanelViewProps) {
           challengeKind={props.challengeKind ?? "season"}
           authReady={props.authReady}
           isSignedIn={props.isSignedIn}
+          emailVerified={props.emailVerified !== false}
           publicUsername={props.publicUsername}
         />
       </div>
@@ -170,12 +178,14 @@ function SubmitModeNote({
   challengeKind,
   authReady,
   isSignedIn,
+  emailVerified,
   publicUsername,
 }: {
   mode: SubmitBoardMode;
   challengeKind: "season" | "daily";
   authReady: boolean;
   isSignedIn: boolean;
+  emailVerified: boolean;
   publicUsername: string | null;
 }) {
   if (challengeKind === "daily") return null;
@@ -192,6 +202,14 @@ function SubmitModeNote({
       <p className={s.submitModeNote}>
         Sign in to post ranked runs. Casual posts anonymously and can be claimed later.{" "}
         <Link href="/sign-in">Sign in</Link>
+      </p>
+    );
+  }
+  if (!emailVerified) {
+    return (
+      <p className={s.submitModeNote}>
+        Verify your email to post ranked runs.{" "}
+        <Link href="/account?verify=1">Resend verification</Link>
       </p>
     );
   }
@@ -303,6 +321,11 @@ function SubmitOutcome({
       {phase.code === "AUTH_REQUIRED" && (
         <Link href="/sign-in" className="btn btn--ghost">
           Sign in
+        </Link>
+      )}
+      {phase.code === "VERIFICATION_REQUIRED" && (
+        <Link href="/account?verify=1" className="btn btn--ghost">
+          Verify email
         </Link>
       )}
     </div>

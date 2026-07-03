@@ -36,7 +36,10 @@ import { GET as authConfigGet } from "@/app/api/auth/config/route";
 import { GET as csrfGet } from "@/app/api/auth/csrf/route";
 import { POST as magicLinkPost } from "@/app/api/auth/magic-link/route";
 import { POST as passwordLoginPost } from "@/app/api/auth/password-login/route";
+import { POST as passwordResetPost } from "@/app/api/auth/password-reset/route";
+import { POST as resendVerificationPost } from "@/app/api/auth/resend-verification/route";
 import { DELETE as sessionDelete, GET as sessionGet } from "@/app/api/auth/session/route";
+import { POST as signUpPost } from "@/app/api/auth/sign-up/route";
 import { GET as verifyGet, POST as verifyPost } from "@/app/api/auth/verify/route";
 import { POST as cspReportPost } from "@/app/api/csp-report/route";
 import { GET as ogHealthGet } from "@/app/api/og/health/route";
@@ -89,6 +92,9 @@ const PUBLIC_API_METHODS = [
   "GET /api/runs/[id]",
   "POST /api/auth/magic-link",
   "POST /api/auth/password-login",
+  "POST /api/auth/password-reset",
+  "POST /api/auth/resend-verification",
+  "POST /api/auth/sign-up",
   "POST /api/auth/verify",
   "POST /api/csp-report",
   "POST /api/leaderboard/submit",
@@ -231,6 +237,7 @@ describe("public route payload email sweep", () => {
         email: PRIVATE_EMAIL,
         username: "route_user",
         passwordHash: await hashPassword("Route-Secure-42!"),
+        emailVerifiedAt: new Date(NOW),
       })
       .returning();
     const [otherUser] = await db.insert(users).values({ email: OTHER_PRIVATE_EMAIL }).returning();
@@ -250,6 +257,11 @@ describe("public route payload email sweep", () => {
     const passwordLoginHeaders = signedHeaders(
       passwordLoginSession.cookieValue,
       passwordLoginSession.session.csrfSecret,
+    );
+    const signUpSession = await createSession({ userId: null }, runtime.deps!);
+    const signUpHeaders = signedHeaders(
+      signUpSession.cookieValue,
+      signUpSession.session.csrfSecret,
     );
     const deleteSessionForAccount = await createSession({ userId: otherUser!.id }, runtime.deps!);
     const deleteAccountHeaders = signedHeaders(
@@ -620,6 +632,46 @@ describe("public route payload email sweep", () => {
               email: PRIVATE_EMAIL,
               password: "Route-Secure-43!",
               next: "/account",
+            }),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/password-reset",
+        await passwordResetPost(
+          req("/api/auth/password-reset", {
+            method: "POST",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({ email: PRIVATE_EMAIL }),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/resend-verification",
+        await resendVerificationPost(
+          req("/api/auth/resend-verification", {
+            method: "POST",
+            headers: { ...authHeaders, "content-type": "application/json" },
+            body: JSON.stringify({}),
+          }),
+        ),
+      ),
+    );
+    captures.push(
+      routeCapture(
+        "POST /api/auth/sign-up",
+        await signUpPost(
+          req("/api/auth/sign-up", {
+            method: "POST",
+            headers: { ...signUpHeaders, "content-type": "application/json" },
+            body: JSON.stringify({
+              username: "route_signup",
+              email: "route-signup@example.com",
+              password: "Route signup 42!",
             }),
           }),
         ),

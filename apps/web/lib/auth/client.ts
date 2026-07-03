@@ -111,6 +111,7 @@ export interface SessionInfoResponse {
   session: {
     userId: string | null;
     username: string | null;
+    emailVerified: boolean;
     isAnonymous: boolean;
     expiresAt: string;
   } | null;

@@ -139,12 +139,36 @@
   color: var(--ink-300);
 }
 
+.signin-form__split-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.signin-form__inline {
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--ink-100);
+  padding: 0;
+  font: inherit;
+  font-size: var(--t-sm);
+  text-decoration: underline solid var(--line-strong);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
 .signin-form__row {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--s-2);
   align-items: stretch;
   min-width: 0;
+}
+
+.signin-form > .signin-form__submit {
+  width: 100%;
 }
 
 .signin-form__input {

@@ -108,7 +108,16 @@ export async function handleRankedAttemptPost(
     return res;
   } catch (err) {
     if (err instanceof LeaderboardGateError) {
-      return NextResponse.json({ error: err.code, message: err.message }, { status: err.status });
+      return NextResponse.json(
+        {
+          error: err.code,
+          message: err.message,
+          ...(err.code === "VERIFICATION_REQUIRED"
+            ? { resend_verification: "/api/auth/resend-verification" }
+            : {}),
+        },
+        { status: err.status },
+      );
     }
     console.error("[leaderboard] unexpected ranked attempt error", err);
     return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });

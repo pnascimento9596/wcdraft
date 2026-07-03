@@ -30,6 +30,7 @@ import { requireJsonObject } from "@/lib/http/bounded-body";
 export const runtime = "nodejs";
 
 interface RequestBody {
+  identifier?: unknown;
   email?: unknown;
   password?: unknown;
   next?: unknown;
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     })) as RequestBody;
     const { user } = await authenticatePassword(
       {
-        email: body.email,
+        identifier: body.identifier ?? body.email,
         password: body.password,
         ipAddress: readClientIp(req),
       },

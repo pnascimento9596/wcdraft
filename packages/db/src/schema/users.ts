@@ -1,9 +1,10 @@
 // F-1 — users.
 //
 // Minimal private identity is email. Public identity is username: nullable
-// until the player chooses one, unique by lower(username), and validated by
-// the profile API before writes. Leaderboard serializers must use username,
-// never email, when an entry has no per-entry alias.
+// for legacy magic-link accounts until the player chooses one, unique by
+// lower(username), and validated before writes. Leaderboard serializers must
+// use username, never email, when an entry has no per-entry alias. Ranked
+// writes additionally require email_verified_at; casual play/posts do not.
 import { sql } from "drizzle-orm";
 import { check, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
@@ -15,6 +16,7 @@ export const users = pgTable(
     username: text("username"),
     passwordHash: text("password_hash"),
     passwordSetAt: timestamp("password_set_at", { withTimezone: true }),
+    emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [

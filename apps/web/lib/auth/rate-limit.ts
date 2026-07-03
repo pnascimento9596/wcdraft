@@ -32,7 +32,8 @@ export type RateLimitBucketKind =
   | "lb-ip-1h"
   | "og-sign-ip-1m"
   | "password-email-15m"
-  | "password-ip-15m";
+  | "password-ip-15m"
+  | "verification-session-15m";
 
 export interface RateLimitArgs {
   /** "<kind>:<plaintext>" — hashed inside. */

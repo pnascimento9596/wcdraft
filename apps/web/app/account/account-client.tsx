@@ -2,9 +2,9 @@
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import { deleteCsrf, fetchWithCsrf, putJson } from "@/lib/auth/client";
+import { deleteCsrf, fetchWithCsrf, postJson, putJson } from "@/lib/auth/client";
 import { useAuth } from "@/components/auth-context";
 import type { AccountRun, AccountRunsPage } from "@/lib/account/runs";
 import { formatAccountRunRecord } from "@/lib/account/run-format";
@@ -20,6 +20,8 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
   const [page, setPage] = useState(initial.page);
   const [loadingMore, setLoadingMore] = useState(false);
   const { refresh } = useAuth();
+  const searchParams = useSearchParams();
+  const setNewPasswordMode = searchParams.has("set_new_password");
 
   const loadMore = useCallback(async () => {
     if (!page.hasMore || loadingMore) return;
@@ -54,9 +56,23 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
 
       <section className="account-grid" aria-label="Account management">
         <IdentityPanel identity={identity} />
+        <UsernamePanel
+          username={identity.username}
+          onUsernameSet={async (username) => {
+            setIdentity((current) => ({ ...current, username }));
+            await refresh();
+          }}
+        />
+        <VerificationPanel
+          emailVerified={identity.emailVerified}
+          onVerificationSent={async () => {
+            setIdentity((current) => ({ ...current }));
+          }}
+        />
         <PasswordPanel
           hasPassword={identity.hasPassword}
           email={identity.email}
+          setNewPasswordMode={setNewPasswordMode}
           onPasswordSet={async () => {
             setIdentity((current) => ({ ...current, hasPassword: true }));
             await refresh();
@@ -131,7 +147,11 @@ function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["ident
     <section className="account-panel">
       <span className="account-panel__label">Identity</span>
       <div className="account-email">{identity.email ?? "—"}</div>
-      <p>Only you see this email. Public boards use your username or per-run alias.</p>
+      <p>
+        Only you see this email. Public boards use{" "}
+        {identity.username ? <span className="mono">{identity.username}</span> : "your username"} or
+        a per-run alias.
+      </p>
       <div className="account-panel__actions">
         <Link href="/settings" className="account-panel__link">
           Browser settings
@@ -149,13 +169,139 @@ function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["ident
   );
 }
 
+function UsernamePanel({
+  username,
+  onUsernameSet,
+}: {
+  readonly username: string | null;
+  readonly onUsernameSet: (username: string) => Promise<void>;
+}) {
+  const [value, setValue] = useState(username ?? "");
+  const [notice, setNotice] = useState<Notice>({ kind: "idle" });
+  const [saving, setSaving] = useState(false);
+
+  const submit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setSaving(true);
+      setNotice({ kind: "idle" });
+      try {
+        const response = await putJson<{
+          profile?: { username?: unknown };
+          message?: string;
+          username_reason?: string;
+        }>("/api/profile", { username: value });
+        if (!response.ok || typeof response.data?.profile?.username !== "string") {
+          setNotice({
+            kind: "error",
+            message: response.data?.message ?? "Username was not saved.",
+          });
+          return;
+        }
+        const saved = response.data.profile.username;
+        setValue(saved);
+        setNotice({ kind: "ok", message: "Username saved." });
+        await onUsernameSet(saved);
+      } catch {
+        setNotice({ kind: "error", message: "Network hiccup. Try again." });
+      } finally {
+        setSaving(false);
+      }
+    },
+    [onUsernameSet, value],
+  );
+
+  return (
+    <section className="account-panel">
+      <span className="account-panel__label">{username ? "Username" : "Choose username"}</span>
+      <p>Ranked posts need a public username. Casual play and casual posts do not.</p>
+      <form className="account-form" onSubmit={submit}>
+        <label>
+          <span>Public username</span>
+          <input
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            autoComplete="username"
+            placeholder="manager_10"
+            minLength={3}
+            maxLength={20}
+          />
+        </label>
+        <button type="submit" className="account-action" disabled={saving}>
+          {saving ? "Saving..." : "Save username"}
+        </button>
+      </form>
+      {notice.kind !== "idle" ? (
+        <p className={`account-notice account-notice--${notice.kind}`} role="status">
+          {notice.message}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
+function VerificationPanel({
+  emailVerified,
+  onVerificationSent,
+}: {
+  readonly emailVerified: boolean;
+  readonly onVerificationSent: () => Promise<void>;
+}) {
+  const [notice, setNotice] = useState<Notice>({ kind: "idle" });
+  const [sending, setSending] = useState(false);
+
+  const resend = useCallback(async () => {
+    setSending(true);
+    setNotice({ kind: "idle" });
+    try {
+      const response = await postJson<{ message?: string }>("/api/auth/resend-verification", {});
+      if (!response.ok) {
+        setNotice({
+          kind: "error",
+          message: response.data?.message ?? "Verification email was not sent.",
+        });
+        return;
+      }
+      setNotice({ kind: "ok", message: "Verification link sent." });
+      await onVerificationSent();
+    } catch {
+      setNotice({ kind: "error", message: "Network hiccup. Try again." });
+    } finally {
+      setSending(false);
+    }
+  }, [onVerificationSent]);
+
+  return (
+    <section className="account-panel">
+      <span className="account-panel__label">Email verification</span>
+      {emailVerified ? (
+        <p>Verified. Ranked posts are available when your run qualifies.</p>
+      ) : (
+        <>
+          <p>Verify email before ranked attempts or ranked posts. Casual play still works.</p>
+          <button type="button" className="account-action" onClick={resend} disabled={sending}>
+            {sending ? "Sending..." : "Resend verification"}
+          </button>
+        </>
+      )}
+      {notice.kind !== "idle" ? (
+        <p className={`account-notice account-notice--${notice.kind}`} role="status">
+          {notice.message}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 function PasswordPanel({
   hasPassword,
   email,
+  setNewPasswordMode,
   onPasswordSet,
 }: {
   readonly hasPassword: boolean;
   readonly email: string | null;
+  readonly setNewPasswordMode: boolean;
   readonly onPasswordSet: () => Promise<void>;
 }) {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -200,9 +346,11 @@ function PasswordPanel({
 
   return (
     <section className="account-panel">
-      <span className="account-panel__label">{hasPassword ? "Password" : "Set password"}</span>
+      <span className="account-panel__label">
+        {setNewPasswordMode ? "Set new password" : hasPassword ? "Change password" : "Set password"}
+      </span>
       <form className="account-form" onSubmit={submit}>
-        {hasPassword ? (
+        {hasPassword && !setNewPasswordMode ? (
           <label>
             <span>Current password</span>
             <input
@@ -225,11 +373,19 @@ function PasswordPanel({
           />
         </label>
         <button type="submit" className="account-action" disabled={saving}>
-          {saving ? "Saving..." : hasPassword ? "Change password" : "Set password"}
+          {saving
+            ? "Saving..."
+            : setNewPasswordMode
+              ? "Set new password"
+              : hasPassword
+                ? "Change password"
+                : "Set password"}
         </button>
       </form>
       <p className="account-panel__note">
-        Forgot it? Use a magic link for {email ?? "this account"}, then set a new password here.
+        {setNewPasswordMode
+          ? "Fresh reset links let you set a new password without the old one."
+          : `Forgot it? Use reset on sign-in for ${email ?? "this account"}, then set a new password here.`}
       </p>
       {notice.kind !== "idle" ? (
         <p className={`account-notice account-notice--${notice.kind}`} role="status">

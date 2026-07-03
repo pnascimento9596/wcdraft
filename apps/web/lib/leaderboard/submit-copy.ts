@@ -64,6 +64,11 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     title: "Account required",
     message: "Sign in to post ranked runs. Casual posts anonymously and can be claimed later.",
   },
+  VERIFICATION_REQUIRED: {
+    title: "Verify email",
+    message:
+      "Verify your email to post ranked runs. Casual posts still work while verification is pending.",
+  },
   CSRF_FAILED: {
     title: "Session check failed",
     message: "Your session couldn't be verified. Refresh the page and try again.",

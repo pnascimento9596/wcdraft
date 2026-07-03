@@ -19,7 +19,7 @@
 
 .account-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   gap: 0.9rem;
 }
 
@@ -311,7 +311,6 @@
     flex-direction: column;
   }
 
-  .account-grid,
   .account-stats {
     grid-template-columns: 1fr;
   }

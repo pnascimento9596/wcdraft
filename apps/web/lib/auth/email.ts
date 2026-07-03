@@ -14,6 +14,7 @@ export interface SendMagicLinkArgs {
   readonly magicLinkUrl: string;
   /** Best-effort label for log/UI ("from address" in production). */
   readonly fromAddress: string;
+  readonly purpose?: "signin" | "verification" | "reset";
 }
 
 export interface EmailSender {
@@ -32,8 +33,9 @@ export class LogEmailSender implements EmailSender {
   constructor(private readonly logger: (line: string) => void = console.info) {}
   async sendMagicLink(args: SendMagicLinkArgs): Promise<void> {
     this.lastSent = args;
+    const purpose = args.purpose ?? "signin";
     this.logger(
-      `[auth/email/log] would send magic link to ${args.toEmail} ` +
+      `[auth/email/log] would send ${purpose} link to ${args.toEmail} ` +
         `from ${args.fromAddress}: ${args.magicLinkUrl}`,
     );
     return Promise.resolve();
@@ -55,18 +57,16 @@ export class ResendEmailSender implements EmailSender {
   async sendMagicLink(args: SendMagicLinkArgs): Promise<void> {
     const fromAddress = this.fromAddressOverride || args.fromAddress;
     const safeUrl = escapeHtml(args.magicLinkUrl);
+    const copy = emailCopy(args.purpose ?? "signin");
     const body = {
       from: fromAddress,
       to: args.toEmail,
-      subject: "Sign in to wcdraft",
+      subject: copy.subject,
       html:
-        `<p>Click to sign in. This link expires in 15 minutes and can only be used once.</p>` +
-        `<p><a href="${safeUrl}">Sign in to wcdraft</a></p>` +
-        `<p>If you didn't ask for this, ignore the email — no account is created.</p>`,
-      text:
-        `Sign in to wcdraft. Link expires in 15 minutes and is single-use:\n\n` +
-        `${args.magicLinkUrl}\n\n` +
-        `If you didn't ask for this, ignore — no account is created.`,
+        `<p>${escapeHtml(copy.lede)}</p>` +
+        `<p><a href="${safeUrl}">${escapeHtml(copy.cta)}</a></p>` +
+        `<p>${escapeHtml(copy.footer)}</p>`,
+      text: `${copy.lede}\n\n${args.magicLinkUrl}\n\n${copy.footer}`,
     };
     const resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -80,6 +80,37 @@ export class ResendEmailSender implements EmailSender {
       const txt = await resp.text();
       throw new Error(`Resend API failed: HTTP ${resp.status.toString()} ${txt.slice(0, 300)}`);
     }
+  }
+}
+
+function emailCopy(purpose: NonNullable<SendMagicLinkArgs["purpose"]>): {
+  subject: string;
+  lede: string;
+  cta: string;
+  footer: string;
+} {
+  switch (purpose) {
+    case "verification":
+      return {
+        subject: "Verify your wcdraft email",
+        lede: "Verify your wcdraft email. This link expires in 15 minutes and can only be used once.",
+        cta: "Verify email",
+        footer: "If you didn't create this account, ignore this email.",
+      };
+    case "reset":
+      return {
+        subject: "Reset your wcdraft password",
+        lede: "Reset your wcdraft password. This link expires in 15 minutes and can only be used once.",
+        cta: "Reset password",
+        footer: "If you didn't ask for this, ignore this email.",
+      };
+    case "signin":
+      return {
+        subject: "Sign in to wcdraft",
+        lede: "Sign in to wcdraft. This link expires in 15 minutes and can only be used once.",
+        cta: "Sign in to wcdraft",
+        footer: "If you didn't ask for this, ignore this email.",
+      };
   }
 }
 

@@ -119,13 +119,23 @@ const accountPasswordDownSql = readFileSync(
   "utf8",
 );
 
+const emailVerificationSql = readFileSync(
+  new URL("../migrations/0011_email_verification.sql", import.meta.url),
+  "utf8",
+);
+
+const emailVerificationDownSql = readFileSync(
+  new URL("../migrations/0011_email_verification.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(11);
+    expect(journal.entries).toHaveLength(12);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -148,6 +158,8 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[9]?.idx).toBe(9);
     expect(journal.entries[10]?.tag).toBe("0010_account_password");
     expect(journal.entries[10]?.idx).toBe(10);
+    expect(journal.entries[11]?.tag).toBe("0011_email_verification");
+    expect(journal.entries[11]?.idx).toBe(11);
   });
 
   it.each([
@@ -398,6 +410,25 @@ describe("@wcdraft/db migrations — 0010_account_password", () => {
     expect(accountPasswordDownSql).toMatch(/DROP COLUMN IF EXISTS "password_set_at"/);
     expect(accountPasswordDownSql).toMatch(/DROP COLUMN IF EXISTS "password_hash"/);
     expect(accountPasswordDownSql).not.toMatch(/DROP TABLE/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0011_email_verification", () => {
+  it("adds only users.email_verified_at as a nullable timestamp", () => {
+    expect(emailVerificationSql).toMatch(
+      /ALTER TABLE "users" ADD COLUMN "email_verified_at" timestamp with time zone/,
+    );
+    expect(emailVerificationSql).not.toMatch(/NOT NULL/);
+    expect(emailVerificationSql).not.toMatch(/ALTER TABLE "leaderboard_entries"/);
+    expect(emailVerificationSql).not.toMatch(/ALTER TABLE "ranked_attempts"/);
+    expect(emailVerificationSql).not.toMatch(/CREATE TABLE|DROP/);
+  });
+
+  it("down-migration drops only users.email_verified_at", () => {
+    expect(emailVerificationDownSql).toMatch(
+      /ALTER TABLE "users" DROP COLUMN IF EXISTS "email_verified_at"/,
+    );
+    expect(emailVerificationDownSql).not.toMatch(/DROP TABLE/);
   });
 });
 
