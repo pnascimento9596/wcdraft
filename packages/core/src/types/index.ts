@@ -54,8 +54,12 @@ export type {
   SquadValidation,
   DraftState,
   DraftMode,
+  RankedDraftMode,
+  OpenDraftMode,
+  BlindDraftMode,
   PickedKind,
 } from "./draft.js";
+export { isRankedDraftMode, isOpenDraftMode, isBlindDraftMode } from "./draft.js";
 
 export type {
   // formation.ts (WS-0c depth layer)

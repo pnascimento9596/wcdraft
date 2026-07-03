@@ -150,7 +150,10 @@ function normalizeModel(value: unknown): RunOgModel | null {
   if (reveal === undefined) return null;
   if (
     isText(o.team_name) &&
-    (o.mode_label === "Classic" || o.mode_label === "Memory") &&
+    (o.mode_label === "Classic" ||
+      o.mode_label === "Memory" ||
+      o.mode_label === "Open" ||
+      o.mode_label === "Blind Open") &&
     isShortString(o.formation_name) &&
     isShortString(o.result_label) &&
     isShortString(o.record) &&

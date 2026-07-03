@@ -8,7 +8,7 @@ import {
   type EraPresetId,
   type RatingBasis,
 } from "./types/draft-config.js";
-import type { DraftMode } from "./types/draft.js";
+import type { DraftMode, OpenDraftMode } from "./types/draft.js";
 import type { MatchRound } from "./types/index.js";
 
 /** Legacy `t1.` prefix - decode-compatible forever; encode no longer emits it. */
@@ -20,7 +20,7 @@ export const RUN_TOKEN_V2_PREFIX = "t2." as const;
 /** Spin-agency `t3.` prefix - player picks carry choice indices, not card IDs. */
 export const RUN_TOKEN_V3_PREFIX = "t3." as const;
 
-/** Open Draft `t4.` prefix - full-roster player picks carry picked card IDs. */
+/** Open-pick-space `t4.` prefix - full-roster player picks carry picked card IDs. */
 export const RUN_TOKEN_V4_PREFIX = "t4." as const;
 
 /** Upper bound on a well-formed `?run=` value. */
@@ -56,7 +56,7 @@ export type RunTokenPickV3 =
   | { k: "m"; ts?: "manager" }
   | { k: "p"; ci: number; s: string; ts?: string };
 
-/** `t4.` pick log entry. Open Draft players/managers carry picked card IDs. */
+/** `t4.` pick log entry. Open-pick-space players/managers carry picked card IDs. */
 export type RunTokenPickV4 =
   | { k: "m"; mc: string; ts?: "manager" }
   | { k: "p"; c: string; s: string; ts?: string };
@@ -123,14 +123,14 @@ export interface RunTokenV3Body {
   ch?: RunTokenDailyChallenge;
 }
 
-/** Open Draft config-bearing token body. */
+/** Open-pick-space config-bearing token body. */
 export interface RunTokenV4Body {
   v: 4;
   rid: string;
   fid: string;
   ps: string;
   tn: string;
-  md: "open";
+  md: OpenDraftMode;
   df: DraftFlow;
   rb: RatingBasis;
   ef: { id: EraPresetId; min: number; max: number };
@@ -369,7 +369,7 @@ function isRunTokenV4Body(x: unknown): x is RunTokenV4Body {
   if (typeof o.fid !== "string" || o.fid.length === 0 || o.fid.length > 64) return false;
   if (typeof o.ps !== "string" || o.ps.length === 0 || o.ps.length > 256) return false;
   if (typeof o.tn !== "string") return false;
-  if (o.md !== "open") return false;
+  if (o.md !== "open" && o.md !== "open_hidden") return false;
   if (!isDraftFlow(o.df)) return false;
   if (!isRatingBasis(o.rb)) return false;
   const ef = o.ef as { id?: unknown; min?: unknown; max?: unknown } | null | undefined;

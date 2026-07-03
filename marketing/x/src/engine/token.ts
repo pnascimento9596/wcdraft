@@ -14,6 +14,7 @@ import {
   createDraft,
   ERA_PRESETS,
   isDraftComplete,
+  isOpenDraftMode,
   pickManager,
   pickPlayer,
   selectDraftTarget,
@@ -52,11 +53,11 @@ export type {
 /** Replay the token's pick log against a fresh createDraft. Throws on any incoherence. */
 export function reconstructDraftFromToken(token: RunTokenBody, gd: MarketingGameData): DraftState {
   const config = tokenDraftConfig(token);
-  if (token.md === "open") {
+  if (isOpenDraftMode(token.md)) {
     // Marketing result posts currently simulate only Classic/Memory shares.
-    // Open Draft t4 tokens carry manager card ids and full-roster card picks;
+    // Open-pick-space t4 tokens carry manager card ids and full-roster card picks;
     // fail closed instead of replaying them through the older t2/t3 bridge.
-    throw new Error("Open Draft t4 tokens are not supported by the marketing composer");
+    throw new Error("Open/Blind Open Draft t4 tokens are not supported by the marketing composer");
   }
   if (config.rating_basis !== "career") {
     // The app supports a Current basis (#118), but this marketing composer
@@ -130,8 +131,8 @@ export function buildTokenBodyFromDraft(
   gd: MarketingGameData,
   parent_seed: string,
 ): Omit<RunTokenV2Body, "v"> {
-  if (draft.mode === "open") {
-    throw new Error("Open Draft t4 tokens are not supported by the marketing composer");
+  if (isOpenDraftMode(draft.mode)) {
+    throw new Error("Open/Blind Open Draft t4 tokens are not supported by the marketing composer");
   }
   const spins = [...draft.spins].sort((a, b) => a.index - b.index);
   if (spins.length !== 17) throw new Error(`expected 17 spins, got ${spins.length}`);

@@ -313,22 +313,27 @@ describe("step 3b — per-config boards accept every legal config", () => {
     expect(v.draft_order).toBe("position_first");
   });
 
-  it("rejects Open Draft t4 tokens from Classic/Memory leaderboard boards", () => {
-    const record = buildOriginRecord(data.gameData, `${ORIGIN_SEED}:open`, "open", "Open XI");
-    const body = buildRunTokenBody(record);
-    expect(body.v).toBe(4);
-    const v = validateSubmission(
-      {
-        token: encodeBody(body),
-        claimed_score: 0,
-        draft_mode: "classic",
-        display_name: "config_player",
-      },
-      data,
-    );
-    expect(rejectionCode(v)).toBe("INVALID_BODY");
-    if (v.status === "rejected") {
-      expect(v.reason).toContain("does not match token mode open");
+  it("rejects Open Draft and Blind Open t4 tokens from Classic/Memory leaderboard boards", () => {
+    for (const mode of ["open", "open_hidden"] as const) {
+      const record = buildOriginRecord(data.gameData, `${ORIGIN_SEED}:${mode}`, mode, "Open XI");
+      const body = buildRunTokenBody(record);
+      expect(body.v).toBe(4);
+      expect(body.md).toBe(mode);
+      for (const draft_mode of ["classic", "hidden"] as const) {
+        const v = validateSubmission(
+          {
+            token: encodeBody(body),
+            claimed_score: 0,
+            draft_mode,
+            display_name: "config_player",
+          },
+          data,
+        );
+        expect(rejectionCode(v)).toBe("INVALID_BODY");
+        if (v.status === "rejected") {
+          expect(v.reason).toContain(`does not match token mode ${mode}`);
+        }
+      }
     }
   });
 

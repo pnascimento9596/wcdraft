@@ -84,6 +84,7 @@ import type { CardId } from "./types/identity.js";
 import type { ManagerCardId } from "./types/manager.js";
 import type { SlotPosition } from "./types/formation.js";
 import type { Position } from "./types/primitives.js";
+import { isOpenDraftMode } from "./types/draft.js";
 import type { DraftMode, DraftState, Spin, SquadSlot, SquadValidation } from "./types/draft.js";
 import {
   DEFAULT_DRAFT_FLOW,
@@ -567,6 +568,15 @@ function openDraftCardRank(card: DraftPlayerCard): number {
   return overall ?? -1;
 }
 
+type OpenDraftCardOrder = "rating" | "blind";
+
+const BLIND_OPEN_POSITION_ORDER: Readonly<Record<Position, number>> = Object.freeze({
+  GK: 0,
+  DF: 1,
+  MF: 2,
+  FW: 3,
+});
+
 function compareOpenDraftCards(a: DraftPlayerCard, b: DraftPlayerCard): number {
   const ao = openDraftCardRank(a);
   const bo = openDraftCardRank(b);
@@ -574,10 +584,30 @@ function compareOpenDraftCards(a: DraftPlayerCard, b: DraftPlayerCard): number {
   return compareCardId(cardIdFor(a), cardIdFor(b));
 }
 
+function compareBlindOpenDraftCards(a: DraftPlayerCard, b: DraftPlayerCard): number {
+  const ap = BLIND_OPEN_POSITION_ORDER[primaryPosition(a)];
+  const bp = BLIND_OPEN_POSITION_ORDER[primaryPosition(b)];
+  if (ap !== bp) return ap - bp;
+  return compareCardId(cardIdFor(a), cardIdFor(b));
+}
+
+function compareOpenDraftCardsForOrder(
+  a: DraftPlayerCard,
+  b: DraftPlayerCard,
+  order: OpenDraftCardOrder,
+): number {
+  return order === "blind" ? compareBlindOpenDraftCards(a, b) : compareOpenDraftCards(a, b);
+}
+
+function openDraftOrderForMode(mode: DraftMode): OpenDraftCardOrder {
+  return mode === "open_hidden" ? "blind" : "rating";
+}
+
 function openDraftPlayerCards(
   catalog: DraftCatalog,
   nation_id: string,
   excluded: ReadonlySet<string>,
+  displayOrder: OpenDraftCardOrder = "rating",
 ): DraftPlayerCard[] {
   const bestByPlayer = new Map<string, DraftPlayerCard>();
   for (const entry of catalog.pairs) {
@@ -590,17 +620,23 @@ function openDraftPlayerCards(
       }
     }
   }
-  return [...bestByPlayer.values()].sort(compareOpenDraftCards);
+  return [...bestByPlayer.values()].sort((a, b) =>
+    compareOpenDraftCardsForOrder(a, b, displayOrder),
+  );
 }
 
 function openDraftPlayerChoices(
   catalog: DraftCatalog,
   nation_id: string,
   priorPlayerPicks: readonly string[],
+  mode: DraftMode,
 ): CardId[] {
-  return openDraftPlayerCards(catalog, nation_id, new Set(priorPlayerPicks)).map((card) =>
-    cardIdFor(card),
-  );
+  return openDraftPlayerCards(
+    catalog,
+    nation_id,
+    new Set(priorPlayerPicks),
+    openDraftOrderForMode(mode),
+  ).map((card) => cardIdFor(card));
 }
 
 function openDraftManagerChoices(
@@ -691,7 +727,7 @@ function drawSpinEntry(
   let idx = startIdx;
   let scanned = 0;
   const selectable = (entry: TnEntry) =>
-    mode === "open"
+    isOpenDraftMode(mode)
       ? isOpenEntrySelectable(catalog, entry, excluded, managerPicked)
       : isEntrySelectable(entry, excluded, managerPicked);
   while (!selectable(catalog.pairs[idx]!)) {
@@ -891,16 +927,16 @@ function rollPendingSpinFromEntry(
   const rolled_card_ids: CardId[] =
     target_slot_id === "manager"
       ? []
-      : mode === "open"
-        ? openDraftPlayerChoices(catalog, entry.nation_id, priorPlayerPicks)
+      : isOpenDraftMode(mode)
+        ? openDraftPlayerChoices(catalog, entry.nation_id, priorPlayerPicks, mode)
         : selectPlayerChoices(entry, index, priorPlayerPicks, draft_seed);
   const offerCoach = target_slot_id === null ? !managerPicked : target_slot_id === "manager";
   const rolled_manager_card_id: ManagerCardId | null =
-    mode !== "open" && offerCoach && entry.coach
+    !isOpenDraftMode(mode) && offerCoach && entry.coach
       ? buildManagerCardId(entry.coach.manager_id, entry.coach.tournament_id)
       : null;
   const rolled_manager_card_ids =
-    mode === "open" && offerCoach
+    isOpenDraftMode(mode) && offerCoach
       ? openDraftManagerChoices(catalog, entry.nation_id, managerPicked)
       : undefined;
   return {
@@ -1370,20 +1406,18 @@ export function selectDraftTarget(
 
   // Honest dead-end checks BEFORE committing anything.
   if (target === "manager") {
-    const hasManager =
-      state.mode === "open"
-        ? openDraftManagerChoices(catalog, entry.nation_id, managerPicked).length > 0
-        : entry.coach !== null;
+    const hasManager = isOpenDraftMode(state.mode)
+      ? openDraftManagerChoices(catalog, entry.nation_id, managerPicked).length > 0
+      : entry.coach !== null;
     if (!hasManager) {
       throw new DraftTargetDeadEndError(
         `selectDraftTarget: the drawn squad (tournament ${entry.tournament_id}, nation ${entry.nation_id}) has no coach — no candidate for the manager target in this configured pool; the spin was not consumed`,
       );
     }
   } else {
-    const anyPlayerLeft =
-      state.mode === "open"
-        ? openDraftPlayerCards(catalog, entry.nation_id, excluded).length > 0
-        : entry.roster.some((c) => !excluded.has(c.player_id));
+    const anyPlayerLeft = isOpenDraftMode(state.mode)
+      ? openDraftPlayerCards(catalog, entry.nation_id, excluded).length > 0
+      : entry.roster.some((c) => !excluded.has(c.player_id));
     if (!anyPlayerLeft) {
       throw new DraftTargetDeadEndError(
         `selectDraftTarget: every player in the drawn squad (tournament ${entry.tournament_id}, nation ${entry.nation_id}) is already drafted — no candidate for slot ${target}; the spin was not consumed`,
@@ -1464,7 +1498,7 @@ export function pickPlayer(
   if (!parsed) {
     throw new RangeError(`pickPlayer: card_id ${card_id} is not a well-formed CardId`);
   }
-  if (state.mode !== "open" && parsed.tournament_id !== active.tournament_id) {
+  if (!isOpenDraftMode(state.mode) && parsed.tournament_id !== active.tournament_id) {
     throw new RangeError(
       `pickPlayer: card ${card_id} tournament does not match spin ${active.index}`,
     );
@@ -1517,15 +1551,17 @@ export function pickPlayer(
       `pickPlayer: no catalog entry for spin ${active.index} (tournament ${active.tournament_id}, nation ${active.nation_id})`,
     );
   }
-  const pcard =
-    state.mode === "open"
-      ? openDraftPlayerCards(catalog, active.nation_id, new Set(active.excluded_player_ids)).find(
-          (c) => c.player_id === parsed.player_id && c.tournament_id === parsed.tournament_id,
-        )
-      : entry.roster.find((c) => c.player_id === parsed.player_id);
+  const pcard = isOpenDraftMode(state.mode)
+    ? openDraftPlayerCards(
+        catalog,
+        active.nation_id,
+        new Set(active.excluded_player_ids),
+        openDraftOrderForMode(state.mode),
+      ).find((c) => c.player_id === parsed.player_id && c.tournament_id === parsed.tournament_id)
+    : entry.roster.find((c) => c.player_id === parsed.player_id);
   if (!pcard) {
     throw new RangeError(
-      state.mode === "open"
+      isOpenDraftMode(state.mode)
         ? `pickPlayer: player ${parsed.player_id} is not in the open roster for nation ${active.nation_id}`
         : `pickPlayer: player ${parsed.player_id} is not in the (tournament ${active.tournament_id}, nation ${active.nation_id}) roster`,
     );
@@ -1610,12 +1646,11 @@ export function pickManager(
       "pickManager: a manager has already been drafted (≤1 manager across the 17 spins)",
     );
   }
-  const managerOffers =
-    state.mode === "open"
-      ? (active.rolled_manager_card_ids ?? [])
-      : active.rolled_manager_card_id === null
-        ? []
-        : [active.rolled_manager_card_id];
+  const managerOffers = isOpenDraftMode(state.mode)
+    ? (active.rolled_manager_card_ids ?? [])
+    : active.rolled_manager_card_id === null
+      ? []
+      : [active.rolled_manager_card_id];
   if (managerOffers.length === 0) {
     throw new RangeError(`pickManager: spin ${active.index} offers no coach`);
   }

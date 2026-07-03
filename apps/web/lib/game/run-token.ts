@@ -42,6 +42,7 @@ import {
   createDraft,
   ERA_PRESETS,
   isDraftComplete,
+  isOpenDraftMode,
   pickManager,
   pickPlayer,
   selectDraftTarget,
@@ -109,7 +110,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
   const positionFirst = draft_flow === "position_first";
   const draftMode = record.draft.mode;
   const preset = ERA_PRESETS[era_preset];
-  if (draftMode === "open") {
+  if (isOpenDraftMode(draftMode)) {
     const pl: RunTokenPickV4[] = spins.map((spin, i) => {
       if (spin.index !== i) {
         throw new RunTokenError(`spin index ${spin.index} out of order at position ${i}`);
@@ -139,7 +140,7 @@ export function buildRunTokenBody(record: RunRecordV1): RunTokenV3Body | RunToke
       fid: record.draft.formation_id,
       ps: record.parent_seed,
       tn: record.draft.team_name,
-      md: "open",
+      md: draftMode,
       df: draft_flow,
       rb: rating_basis,
       ef: { id: preset.id, min: preset.min_year, max: preset.max_year },

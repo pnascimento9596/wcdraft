@@ -82,12 +82,14 @@ export const CandidateCard = memo(function CandidateCard({
   card,
   selected,
   disabled,
+  blindRatings = false,
   rarePick = false,
   onSelect,
 }: {
   card: PlayerCardView;
   selected: boolean;
   disabled?: boolean;
+  blindRatings?: boolean;
   /** ENGINE-V2 E-2: this candidate belongs to a rare-marked spin (gold accent). */
   rarePick?: boolean;
   onSelect: (card: PlayerCardView) => void;
@@ -152,26 +154,37 @@ export const CandidateCard = memo(function CandidateCard({
 
         <span
           className={`${s.candRowProv} ${s[`provDot_${card.rating.badge_kind}`]!}`}
-          title={card.rating.badge_label}
+          title={blindRatings ? "Hidden until you simulate" : card.rating.badge_label}
           aria-hidden="true"
         />
-        <span className="visually-hidden">Rating provenance: {card.rating.badge_label}</span>
+        <span className="visually-hidden">
+          {blindRatings
+            ? "Hidden values reveal after simulation"
+            : `Rating provenance: ${card.rating.badge_label}`}
+        </span>
         <span className={`${s.candRowShape} ${s[`shapeDot_${headShape}`]!}`} aria-hidden="true" />
 
-        <span className={s.candRowBars} aria-hidden="true">
-          <i style={{ height: barHeight(card.rating.attack) }} />
-          <i style={{ height: barHeight(card.rating.midfield) }} />
-          <i style={{ height: barHeight(card.rating.defense) }} />
-          <i style={{ height: barHeight(card.rating.goalkeeping) }} />
-        </span>
+        {blindRatings ? (
+          <span className={s.candRowBars} aria-hidden="true" />
+        ) : (
+          <span className={s.candRowBars} aria-hidden="true">
+            <i style={{ height: barHeight(card.rating.attack) }} />
+            <i style={{ height: barHeight(card.rating.midfield) }} />
+            <i style={{ height: barHeight(card.rating.defense) }} />
+            <i style={{ height: barHeight(card.rating.goalkeeping) }} />
+          </span>
+        )}
 
         <span className={s.candRowOvr}>
-          <b>{formatNullableNumber(card.rating.overall)}</b>
-          <i>OVR</i>
+          <b>{blindRatings ? "—" : formatNullableNumber(card.rating.overall)}</b>
+          <i>{blindRatings ? "Hidden" : "OVR"}</i>
         </span>
 
-        <span className={s.candRowCov} title="Honest-state data coverage">
-          DATA {coveragePct === null ? "—" : `${coveragePct}%`}
+        <span
+          className={s.candRowCov}
+          title={blindRatings ? "Hidden until you simulate" : "Honest-state data coverage"}
+        >
+          {blindRatings ? "Reveal" : `DATA ${coveragePct === null ? "—" : `${coveragePct}%`}`}
         </span>
 
         <span className={s.candRowChevron} aria-hidden="true">
@@ -208,12 +221,14 @@ export const CandidateCard = memo(function CandidateCard({
             ))}
           </span>
 
-          <span className={s.channels}>
-            <Channel label="ATT" value={card.rating.attack} />
-            <Channel label="MID" value={card.rating.midfield} />
-            <Channel label="DEF" value={card.rating.defense} />
-            <Channel label="GK" value={card.rating.goalkeeping} />
-          </span>
+          {blindRatings ? null : (
+            <span className={s.channels}>
+              <Channel label="ATT" value={card.rating.attack} />
+              <Channel label="MID" value={card.rating.midfield} />
+              <Channel label="DEF" value={card.rating.defense} />
+              <Channel label="GK" value={card.rating.goalkeeping} />
+            </span>
+          )}
 
           <span className={s.candStats}>
             {card.stats.map((stat) => (
@@ -221,16 +236,20 @@ export const CandidateCard = memo(function CandidateCard({
                 <b>{formatStatValue(stat.value)}</b> {stat.label}
               </span>
             ))}
-            <span className={s.candCoverage} title="Honest-state data coverage">
-              <span className={s.candCoverageTrack}>
-                {coveragePct === null ? null : (
-                  <span className={s.candCoverageFill} style={{ width: `${coveragePct}%` }} />
-                )}
+            {blindRatings ? (
+              <span className={s.candCoverageVal}>Hidden until reveal</span>
+            ) : (
+              <span className={s.candCoverage} title="Honest-state data coverage">
+                <span className={s.candCoverageTrack}>
+                  {coveragePct === null ? null : (
+                    <span className={s.candCoverageFill} style={{ width: `${coveragePct}%` }} />
+                  )}
+                </span>
+                <span className={s.candCoverageVal}>
+                  DATA {coveragePct === null ? "—" : `${coveragePct}%`}
+                </span>
               </span>
-              <span className={s.candCoverageVal}>
-                DATA {coveragePct === null ? "—" : `${coveragePct}%`}
-              </span>
-            </span>
+            )}
           </span>
 
           {card.awards && card.awards.length > 0 ? (

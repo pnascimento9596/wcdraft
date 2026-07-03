@@ -11,6 +11,7 @@
 // the server's duplicate handling is the truth).
 
 import { useEffect, useMemo, useState } from "react";
+import { isRankedDraftMode } from "@wcdraft/core";
 
 import { useAuth } from "@/components/auth-context";
 import { putJson } from "@/lib/auth/client";
@@ -102,7 +103,7 @@ export function LeaderboardSubmitPanel({
   }, [phase]);
 
   if (sim === null || token === null) return null;
-  if (record.draft.mode === "open") return null;
+  if (!isRankedDraftMode(record.draft.mode)) return null;
   const boardDraftMode: BoardDraftMode = record.draft.mode;
   const score = sim.run.score;
   const leaderboardHref = leaderboardHrefForRecord(record, effectiveSubmitMode, boardDraftMode);

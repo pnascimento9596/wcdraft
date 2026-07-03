@@ -1,6 +1,6 @@
 "use client";
 
-// Memory (hidden) mode — the post-Simulate REVEAL.
+// Blind modes — the post-Simulate REVEAL.
 //
 // A thin wrapper around the EXISTING squad surfaces (SynergyBar / Pitch /
 // bench / ManagerSlot / rating-by-line) that shows the full blind set —
@@ -8,7 +8,7 @@
 // sim has run. It composes the same components the review screen uses (it
 // does NOT overload SynergyBar with reveal behavior).
 //
-// Rendered ONLY for hidden-mode runs on the results screen — classic results
+// Rendered ONLY for blind-mode runs on the results screen — sighted results
 // are untouched. Auto-expands on mount; `prefers-reduced-motion` renders the
 // final state instantly with no animation.
 
@@ -17,6 +17,7 @@ import { computeSynergy, FORMATION_TEMPLATES } from "@wcdraft/core";
 import { managerCardView, managerTournamentFor } from "@/lib/game/adapters";
 import type { GameData } from "@/lib/game/data";
 import { buildMemoryRevealView } from "@/lib/game/memory-reveal-model";
+import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import type { RunRecordV1 } from "@/lib/game/run-record";
 import { formatNullableNumber } from "@/lib/game/view-models";
 import { Pitch } from "./pitch";
@@ -40,6 +41,7 @@ function usePrefersReducedMotion(): boolean {
 export function MemoryReveal({ gameData, record }: { gameData: GameData; record: RunRecordV1 }) {
   const reducedMotion = usePrefersReducedMotion();
   const draft = record.draft;
+  const modeCopy = DRAFT_MODE_COPY[draft.mode];
   const formation = FORMATION_TEMPLATES[draft.formation_id]!;
 
   // Full (unblinded) views — the same adapters the classic surfaces use. The
@@ -60,11 +62,13 @@ export function MemoryReveal({ gameData, record }: { gameData: GameData; record:
   return (
     <section
       className={`${s.panel} ${s.memoryReveal} ${reducedMotion ? s.memoryRevealInstant : ""}`}
-      aria-label="Memory mode reveal"
+      aria-label={`${modeCopy.label} reveal`}
     >
       <div className={s.panelHead}>
         <h2 className={s.panelTitle}>The reveal</h2>
-        <span className={s.panelMeta}>Memory mode — ratings &amp; Synergy, now on the table</span>
+        <span className={s.panelMeta}>
+          {modeCopy.label} — ratings &amp; Synergy, now on the table
+        </span>
       </div>
 
       <SynergyBar result={synergy} active={true} />

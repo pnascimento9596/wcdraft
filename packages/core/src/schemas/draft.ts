@@ -10,6 +10,7 @@
 
 import { z } from "zod";
 
+import { isOpenDraftMode } from "../types/draft.js";
 import type { DraftState, Spin, SquadSlot, SquadValidation } from "../types/draft.js";
 import { buildCardId, parseCardId } from "../types/identity.js";
 import { FORMATION_TEMPLATES } from "../types/formation.js";
@@ -368,7 +369,7 @@ export const DraftStateSchema = z
   .object({
     run_id: NonEmptyIdSchema,
     draft_seed: NonEmptyIdSchema,
-    mode: z.enum(["classic", "hidden", "open"]),
+    mode: z.enum(["classic", "hidden", "open", "open_hidden"]),
     formation_id: NonEmptyIdSchema,
     team_name: z.string(),
     spins: z.array(SpinSchema).length(17),
@@ -470,7 +471,7 @@ export const DraftStateSchema = z
       const s = draft.spins[i]!;
       if (s.status === "awaiting_slot") continue;
       const managerOfferCount = s.rolled_manager_card_ids?.length ?? 0;
-      if (draft.mode !== "open") {
+      if (!isOpenDraftMode(draft.mode)) {
         if (s.rolled_card_ids.length > MAX_PLAYER_CHOICES_PER_SPIN) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -805,10 +806,9 @@ export const DraftStateSchema = z
             // Candidate exposure matches the committed target: a manager
             // target offers ONLY the coach; a slot target offers ONLY players.
             if (s.target_slot_id === "manager") {
-              const hasManagerOffer =
-                draft.mode === "open"
-                  ? (s.rolled_manager_card_ids?.length ?? 0) > 0
-                  : s.rolled_manager_card_id !== null;
+              const hasManagerOffer = isOpenDraftMode(draft.mode)
+                ? (s.rolled_manager_card_ids?.length ?? 0) > 0
+                : s.rolled_manager_card_id !== null;
               if (s.rolled_card_ids.length !== 0 || !hasManagerOffer) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,

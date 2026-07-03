@@ -24,7 +24,7 @@ export interface LeaderboardLineupFormationView {
 
 export interface LeaderboardLineupView {
   readonly team_name: string;
-  readonly mode_label: "Classic" | "Memory" | "Open";
+  readonly mode_label: "Classic" | "Memory" | "Open" | "Blind Open";
   readonly formation: LeaderboardLineupFormationView;
   readonly badges: readonly ConfigBadge[];
   readonly result: LeaderboardLineupResultView;

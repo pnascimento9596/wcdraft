@@ -23,6 +23,13 @@ export const DRAFT_MODE_COPY: Readonly<Record<DraftMode, DraftModeCopy>> = Objec
     cue: "Casual, not ranked",
     pickSpace: "Full roster",
   }),
+  open_hidden: Object.freeze({
+    label: "Blind Open",
+    shortLabel: "Blind Open",
+    description: "Pick any player from the drawn nation, ratings hidden. Casual, not ranked.",
+    cue: "Casual",
+    pickSpace: "Full blind roster",
+  }),
   hidden: Object.freeze({
     label: "Memory",
     shortLabel: "Memory",
