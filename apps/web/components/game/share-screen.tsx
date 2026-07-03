@@ -27,6 +27,7 @@ import {
   buildShareIntentText,
   buildShareIntentUrls,
   buildShareView,
+  blindRevealShareCopy,
   dailyStandingText,
   type DailyShareStanding,
   type ShareIntentUrls,
@@ -1058,10 +1059,11 @@ function MemoryRevealShareCardSvg({
   colors: ShareSvgColors;
 }) {
   const reveal = view.reveal!;
+  const revealCopy = blindRevealShareCopy(view.draft_mode);
   const standingLine =
     view.challenge_date !== null && dailyStanding !== null
       ? dailyStandingText(dailyStanding)
-      : "Memory reveal";
+      : revealCopy.label;
   const xiLeft = reveal.revealStarters.slice(0, 6);
   const xiRight = reveal.revealStarters.slice(6, 11);
   const avgAfter = formatShareNumber(reveal.squadAverageAfter);
@@ -1074,7 +1076,7 @@ function MemoryRevealShareCardSvg({
       width={CARD_WIDTH}
       height={CARD_HEIGHT}
       role="img"
-      aria-label={`${view.team_name} — Memory reveal, record ${view.display_record}`}
+      aria-label={`${view.team_name} — ${revealCopy.label}, record ${view.display_record}`}
       className={s.shareSvg}
     >
       <defs>
@@ -1121,7 +1123,7 @@ function MemoryRevealShareCardSvg({
         fontSize="13"
         fontWeight="700"
       >
-        MEMORY REVEAL
+        {revealCopy.kicker}
       </text>
       <text
         x={CARD_WIDTH / 2}
@@ -1143,7 +1145,7 @@ function MemoryRevealShareCardSvg({
         fontSize="15"
         fontWeight="600"
       >
-        drafted blind, ended {view.display_record} · {view.score} pts · {avgAfter} OVR
+        {revealCopy.action}, ended {view.display_record} · {view.score} pts · {avgAfter} OVR
       </text>
 
       <g transform="translate(56, 224)">

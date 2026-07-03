@@ -1,4 +1,4 @@
-import type { DraftState, Position } from "@wcdraft/core";
+import { isBlindDraftMode, isOpenDraftMode, type DraftState, type Position } from "@wcdraft/core";
 
 import { playerCardView } from "./adapters";
 import { configBadgesFromToken, type ConfigBadge } from "./config-badges";
@@ -58,7 +58,7 @@ export interface RunOgRevealModel {
 
 export interface RunOgModel {
   team_name: string;
-  mode_label: "Classic" | "Memory" | "Open";
+  mode_label: "Classic" | "Memory" | "Open" | "Blind Open";
   formation_name: string;
   result_label: string;
   record: string;
@@ -93,10 +93,17 @@ export function buildRunOgModelFromTrustedDraft(
   narrative?: string | null,
 ): RunOgModel {
   const lineup = buildLineup(gameData, draft);
-  const reveal = draft.mode === "hidden" ? buildRunOgRevealModel(gameData, draft) : null;
+  const reveal = isBlindDraftMode(draft.mode) ? buildRunOgRevealModel(gameData, draft) : null;
   return {
     team_name: boundedText(draft.team_name, "Your XI", TEAM_NAME_MAX),
-    mode_label: draft.mode === "hidden" ? "Memory" : draft.mode === "open" ? "Open" : "Classic",
+    mode_label:
+      draft.mode === "hidden"
+        ? "Memory"
+        : draft.mode === "open_hidden"
+          ? "Blind Open"
+          : isOpenDraftMode(draft.mode)
+            ? "Open"
+            : "Classic",
     formation_name: formationName(draft),
     result_label: formatRunOgResult(summary),
     record: `${summary.w}-${summary.l}`,

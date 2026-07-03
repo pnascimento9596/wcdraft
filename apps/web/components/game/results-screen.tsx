@@ -49,7 +49,7 @@ import {
 import type { ReferenceStanding } from "@wcdraft/data/client";
 import { MiniNationFlag } from "./mini-nation-flag";
 import type { Scenario2026Bundle } from "@wcdraft/data";
-import type { MatchResult } from "@wcdraft/core";
+import { isBlindDraftMode, type MatchResult } from "@wcdraft/core";
 import { GoalIcon, InjuryIcon, SubstitutionIcon } from "@/components/icons";
 
 import { LeaderboardSubmitPanel } from "../leaderboard/submit-panel";
@@ -61,8 +61,8 @@ import { encodeRunToken } from "@/lib/game/run-token";
 import { listRunRecords, setRunPinned } from "@/lib/game/run-record";
 import s from "./game.module.css";
 
-// MemoryReveal renders only for hidden-mode runs (see below). Lazy-load it so
-// Classic-mode players never ship or parse its chunk on the results route.
+// MemoryReveal renders only for blind-mode runs (see below). Lazy-load it so
+// sighted-mode players never ship or parse its chunk on the results route.
 const MemoryReveal = dynamic(() => import("./memory-reveal").then((m) => m.MemoryReveal));
 
 type Mode =
@@ -495,15 +495,17 @@ function ResultsBody({
 
       <LocalProgressBand summary={progressSummary} compact />
 
-      {record.draft.mode !== "hidden" ? <MemoryProgressionPanel /> : null}
+      {!isBlindDraftMode(record.draft.mode) ? <MemoryProgressionPanel /> : null}
 
       {/* ── Memory-mode reveal ────────────────────────────────────────────
-          Hidden-mode runs blind every rating signal through draft + review;
+          Blind-mode runs blind every rating signal through draft + review;
           the sim has now run, so the full blind set reveals here. This also
-          covers SHARED hidden runs — a token replay reconstructs the
+          covers SHARED blind runs — a token replay reconstructs the
           draft (mode rides the token's `md`) and reveals the same way.
-          Classic runs render nothing extra. */}
-      {record.draft.mode === "hidden" ? <MemoryReveal gameData={gameData} record={record} /> : null}
+          Sighted runs render nothing extra. */}
+      {isBlindDraftMode(record.draft.mode) ? (
+        <MemoryReveal gameData={gameData} record={record} />
+      ) : null}
 
       {/* ── Narrative ─────────────────────────────────────────────────── */}
       {summary.narrative ? (

@@ -8,7 +8,7 @@
 // returns a typed reason the caller turns into the on-brand "made on an older
 // build" angle (or simply skips the post). No invented results, ever.
 
-import type { EraPresetId } from "@wcdraft/core";
+import { isOpenDraftMode, type EraPresetId } from "@wcdraft/core";
 
 import { loadMarketingGameData, simulateDraft, type MarketingGameData } from "./game-data.ts";
 import {
@@ -87,11 +87,11 @@ export function runFromToken(
   if (!decoded) {
     return { ok: false, reason: "malformed", message: "token is malformed, foreign, or tampered" };
   }
-  if (decoded.md === "open") {
+  if (isOpenDraftMode(decoded.md)) {
     return {
       ok: false,
       reason: "replay_failed",
-      message: "Open Draft t4 tokens are not supported by the marketing composer",
+      message: "Open/Blind Open Draft t4 tokens are not supported by the marketing composer",
     };
   }
   if (!versionsAgree(decoded, gd.versions)) {

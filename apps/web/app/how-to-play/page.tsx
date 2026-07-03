@@ -106,6 +106,16 @@ export default function HowToPlayPage() {
               until after the simulation reveal. This is the blind draft.
             </p>
           </article>
+
+          <article>
+            <span className="mode-rule__tag">Casual</span>
+            <h3>Blind Open</h3>
+            <p>
+              Each spin draws a nation, then shows that nation&apos;s full era-filtered roster with
+              ratings hidden. You still see names, positions, nation, era and club line; ratings and
+              Synergy reveal after the run.
+            </p>
+          </article>
         </div>
 
         <h2>Setup choices</h2>
@@ -191,9 +201,9 @@ export default function HowToPlayPage() {
 
         <h2>Leaderboards</h2>
         <p>
-          Classic and Memory can post to Casual or Ranked boards. Open Draft is casual-only and does
-          not submit to ranked boards. Leaderboards are separated by lane, draft mode, draft order,
-          era and rating basis.
+          Classic and Memory can post to Casual or Ranked boards. Open Draft and Blind Open are
+          casual-only and do not submit to ranked boards. Leaderboards are separated by lane, draft
+          mode, draft order, era and rating basis.
         </p>
 
         <h2>Reference standing</h2>

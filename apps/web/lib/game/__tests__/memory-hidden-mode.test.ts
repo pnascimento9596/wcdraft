@@ -104,7 +104,7 @@ function buildGameDataFromBundles(): GameData {
 
 function buildRecord(
   gameData: GameData,
-  mode: "classic" | "hidden",
+  mode: "classic" | "hidden" | "open_hidden",
   seed = PARENT_SEED,
 ): RunRecordV1 {
   const draft = autoDraft({
@@ -300,6 +300,39 @@ describe("memory mode — adapters blind ratings but keep identity", () => {
     }
   });
 
+  it("Blind Open full-roster candidates use the same blindCardRatingView seam", () => {
+    const inProgress = createDraft(gameData.catalog, {
+      run_id: "blind-open-live",
+      parent_seed: `${PARENT_SEED}:blind-open:candidates`,
+      formation_id: "4-3-3",
+      mode: "open_hidden",
+      team_name: "Blind Open XI",
+      dataset_version: gameData.versions.dataset_version,
+      rating_version: gameData.versions.rating_version,
+      engine_version: gameData.versions.engine_version,
+    });
+    const spin = activeSpin(inProgress);
+    expect(spin).not.toBeNull();
+    const views = draftCandidateViews(gameData.indexes, inProgress, spin, {
+      blindRatings: true,
+    });
+    expect(views.players.length).toBeGreaterThan(3);
+    for (const cand of views.players) {
+      expect(cand.rating.overall).toBeNull();
+      expect(cand.rating.attack).toBeNull();
+      expect(cand.rating.midfield).toBeNull();
+      expect(cand.rating.defense).toBeNull();
+      expect(cand.rating.goalkeeping).toBeNull();
+      expect(cand.rating.coverage).toBeNull();
+      expect(cand.rating.badge_kind).toBe("masked");
+      expect(cand.rating.badge_label).toBe("Hidden");
+      expect(cand.name.length).toBeGreaterThan(0);
+      expect(cand.primary_position).toMatch(/^(GK|DF|MF|FW)$/u);
+      expect(cand.nation_code.length).toBeGreaterThan(0);
+      expect(cand.year).toBeGreaterThan(1900);
+    }
+  });
+
   it("classic path (no opts) is unchanged — ratings fully visible", () => {
     const open = playerCardView(gameData.indexes, firstCardId);
     expect(typeof open.rating.attack).toBe("number");
@@ -364,6 +397,7 @@ describe("memory mode — aggregate seams blind through the adapter", () => {
 describe("memory mode — reveal view model", () => {
   const gameData = buildGameDataFromBundles();
   const hidden = buildRecord(gameData, "hidden");
+  const blindOpen = buildRecord(gameData, "open_hidden", `${PARENT_SEED}:blind-open:reveal`);
 
   it("shows the drafted-against blind state as honest dashes before actual revealed ratings", () => {
     const reveal = buildMemoryRevealView(gameData, hidden.draft);
@@ -382,6 +416,21 @@ describe("memory mode — reveal view model", () => {
     expect(reveal.topReveals.some((starter) => typeof starter.after_overall === "number")).toBe(
       true,
     );
+  });
+
+  it("reveals a completed Blind Open run from the full-roster pick space", () => {
+    const reveal = buildMemoryRevealView(gameData, blindOpen.draft);
+    expect(blindOpen.draft.mode).toBe("open_hidden");
+    expect(reveal.squadAverageBefore).toBeNull();
+    expect(typeof reveal.squadAverageAfter).toBe("number");
+    expect(reveal.starters).toHaveLength(11);
+    expect(reveal.bench).toHaveLength(5);
+    expect(reveal.revealStarters).toHaveLength(11);
+    expect(reveal.topReveals.length).toBeGreaterThan(0);
+    for (const starter of reveal.revealStarters) {
+      expect(starter.before_overall).toBeNull();
+      expect(typeof starter.after_overall).toBe("number");
+    }
   });
 });
 

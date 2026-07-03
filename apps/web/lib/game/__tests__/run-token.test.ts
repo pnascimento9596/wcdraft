@@ -13,7 +13,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { autoDraft, type EraPresetId } from "@wcdraft/core";
+import { autoDraft, type DraftMode, type EraPresetId } from "@wcdraft/core";
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import type { RunRecordVersions } from "../data";
@@ -43,13 +43,14 @@ function buildOpenOriginRecord(
   gameData: ReturnType<typeof buildGameDataFromBundles>,
   seed: string,
   eraPreset: EraPresetId = "all_time",
+  mode: Extract<DraftMode, "open" | "open_hidden"> = "open",
 ): RunRecordV1 {
   const draft = autoDraft({
-    run_id: `token-open-origin-${eraPreset}`,
+    run_id: `token-${mode}-origin-${eraPreset}`,
     parent_seed: seed,
     formation_id: "4-3-3",
-    mode: "open",
-    team_name: "Open XI",
+    mode,
+    team_name: mode === "open_hidden" ? "Blind Open XI" : "Open XI",
     dataset_version: gameData.versions.dataset_version,
     rating_version: gameData.versions.rating_version,
     engine_version: gameData.versions.engine_version,
@@ -187,6 +188,12 @@ describe("run-token — fresh-context replay (the BLOCKER scenario)", () => {
 describe("run-token — Open Draft t4 replay", () => {
   const gameData = buildGameDataFromBundles();
   const origin = buildOpenOriginRecord(gameData, "wcdraft:open-token:all-time");
+  const blindOrigin = buildOpenOriginRecord(
+    gameData,
+    "wcdraft:blind-open-token:all-time",
+    "all_time",
+    "open_hidden",
+  );
 
   it("encodes Open Draft as t4 with picked card and manager ids", () => {
     const token = encodeRunToken(origin);
@@ -198,22 +205,37 @@ describe("run-token — Open Draft t4 replay", () => {
     expect(body.pl.filter((p) => p.k === "p").every((p) => "c" in p)).toBe(true);
   });
 
-  it("round-trips and reconstructs the originating Open Draft byte-for-byte", () => {
-    const token = encodeRunToken(origin);
-    const decoded = decodeRunToken(token);
-    expect(decoded?.v).toBe(4);
-    expect(JSON.stringify(decoded)).toBe(JSON.stringify(expectV4Body(origin)));
-    const replayed = reconstructDraftFromToken(decoded!, gameData);
-    expect(asPlain(replayed)).toEqual(asPlain(origin.draft));
-    expect(JSON.stringify(replayed)).toBe(JSON.stringify(origin.draft));
+  it("encodes Blind Open as t4 with picked card and manager ids", () => {
+    const token = encodeRunToken(blindOrigin);
+    expect(token.startsWith(RUN_TOKEN_V4_PREFIX)).toBe(true);
+    const body = expectV4Body(blindOrigin);
+    expect(body.md).toBe("open_hidden");
+    expect(body.pl).toHaveLength(17);
+    expect(body.pl.some((p) => p.k === "m" && "mc" in p)).toBe(true);
+    expect(body.pl.filter((p) => p.k === "p").every((p) => "c" in p)).toBe(true);
   });
 
-  it("rejects a t4 player card from the wrong nation", () => {
-    const body = cloneV4(expectV4Body(origin));
+  it("round-trips and reconstructs Open Draft and Blind Open byte-for-byte", () => {
+    for (const record of [origin, blindOrigin]) {
+      const token = encodeRunToken(record);
+      const decoded = decodeRunToken(token);
+      expect(decoded?.v).toBe(4);
+      expect(JSON.stringify(decoded)).toBe(JSON.stringify(expectV4Body(record)));
+      const replayed = reconstructDraftFromToken(decoded!, gameData);
+      expect(asPlain(replayed)).toEqual(asPlain(record.draft));
+      expect(JSON.stringify(replayed)).toBe(JSON.stringify(record.draft));
+    }
+  });
+
+  it.each([
+    ["Open Draft", origin],
+    ["Blind Open", blindOrigin],
+  ] as const)("rejects a %s t4 player card from the wrong nation", (_label, record) => {
+    const body = cloneV4(expectV4Body(record));
     const firstPlayer = v4PlayerPicks(body)[0];
     if (!firstPlayer) throw new Error("fixture has no player picks");
     const { p, i } = firstPlayer;
-    const spin = origin.draft.spins[i]!;
+    const spin = record.draft.spins[i]!;
     const wrongNation = gameData.draftPool.player_cards.find(
       (card) => card.nation_id !== spin.nation_id,
     );
@@ -224,8 +246,11 @@ describe("run-token — Open Draft t4 replay", () => {
     expect(() => reconstructDraftFromToken(decoded!, gameData)).toThrow(/not a candidate/i);
   });
 
-  it("rejects a t4 duplicate player pick", () => {
-    const body = cloneV4(expectV4Body(origin));
+  it.each([
+    ["Open Draft", origin],
+    ["Blind Open", blindOrigin],
+  ] as const)("rejects a %s t4 duplicate player pick", (_label, record) => {
+    const body = cloneV4(expectV4Body(record));
     const players = v4PlayerPicks(body);
     if (players.length < 2) throw new Error("fixture has fewer than two player picks");
     body.pl[players[1]!.i] = { ...players[1]!.p, c: players[0]!.p.c };
@@ -236,8 +261,11 @@ describe("run-token — Open Draft t4 replay", () => {
     );
   });
 
-  it("rejects a t4 card excluded by the era preset", () => {
-    const modern = buildOpenOriginRecord(gameData, "wcdraft:open-token:modern", "modern");
+  it.each([
+    ["Open Draft", "open"],
+    ["Blind Open", "open_hidden"],
+  ] as const)("rejects a %s t4 card excluded by the era preset", (_label, mode) => {
+    const modern = buildOpenOriginRecord(gameData, `wcdraft:${mode}-token:modern`, "modern", mode);
     const body = cloneV4(expectV4Body(modern));
     const players = v4PlayerPicks(body);
     const oldCard = players

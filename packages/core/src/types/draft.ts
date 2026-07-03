@@ -58,7 +58,28 @@ import type { SlotPosition } from "./formation.js";
 import type { DraftFlow, EraPresetId, RatingBasis } from "./draft-config.js";
 
 /** Visibility / pick-space mode for a draft. */
-export type DraftMode = "classic" | "hidden" | "open";
+export type DraftMode = "classic" | "hidden" | "open" | "open_hidden";
+
+/** Modes eligible for ranked leaderboard submission. */
+export type RankedDraftMode = "classic" | "hidden";
+
+/** Modes that expose the spun nation's full available roster. */
+export type OpenDraftMode = "open" | "open_hidden";
+
+/** Modes that hide rating-derived display values before the reveal. */
+export type BlindDraftMode = "hidden" | "open_hidden";
+
+export function isRankedDraftMode(mode: DraftMode): mode is RankedDraftMode {
+  return mode === "classic" || mode === "hidden";
+}
+
+export function isOpenDraftMode(mode: DraftMode): mode is OpenDraftMode {
+  return mode === "open" || mode === "open_hidden";
+}
+
+export function isBlindDraftMode(mode: DraftMode): mode is BlindDraftMode {
+  return mode === "hidden" || mode === "open_hidden";
+}
 
 /**
  * The two kinds of entity a user may take on a single spin. Discriminator for

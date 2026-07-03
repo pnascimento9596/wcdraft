@@ -64,6 +64,9 @@ export type {
   SquadValidation,
   DraftState,
   DraftMode,
+  RankedDraftMode,
+  OpenDraftMode,
+  BlindDraftMode,
   PickedKind,
   // formation (WS-0c)
   SlotPosition,
@@ -146,6 +149,9 @@ export {
   deriveFormationAdjacency,
   buildManagerCardId,
   parseManagerCardId,
+  isRankedDraftMode,
+  isOpenDraftMode,
+  isBlindDraftMode,
 } from "./types/index.js";
 
 // ─── 3. Function signatures (typed stubs; algorithms in Phase 1) ─────────────

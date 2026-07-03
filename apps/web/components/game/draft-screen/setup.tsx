@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import Image from "next/image";
 import {
   ERA_PRESET_IDS,
+  isRankedDraftMode,
   type DraftFlow,
   type DraftMode,
   type EraPresetId,
@@ -185,8 +186,10 @@ export function FormationSelect({
       try {
         let rankedAttempt: Awaited<ReturnType<typeof requestRankedAttempt>> | null = null;
         if (ranked === true) {
-          if (draftMode === "open") {
-            throw new Error("Open Draft is casual and does not issue ranked seeds.");
+          if (!isRankedDraftMode(draftMode)) {
+            throw new Error(
+              `${DRAFT_MODE_COPY[draftMode].label} is casual and does not issue ranked seeds.`,
+            );
           }
           rankedAttempt = await requestRankedAttempt({
             formationId: formation_id,
@@ -247,15 +250,9 @@ export function FormationSelect({
             Your shape is committed the moment you lock. 17 spins, one pick per spin — a player, or
             your manager. No rearranging afterwards.
           </p>
-          {draftMode === "hidden" ? (
+          {draftMode !== "classic" ? (
             <p className={s.memoryModeNote} role="note">
-              Memory mode — names, flags and years stay visible; ratings and Synergy numbers hide
-              until you simulate.
-            </p>
-          ) : null}
-          {draftMode === "open" ? (
-            <p className={s.memoryModeNote} role="note">
-              {DRAFT_MODE_COPY.open.label} — {DRAFT_MODE_COPY.open.description} Casual, not ranked.
+              {DRAFT_MODE_COPY[draftMode].label} — {DRAFT_MODE_COPY[draftMode].description}
             </p>
           ) : null}
         </div>

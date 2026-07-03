@@ -11,6 +11,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  blindRevealShareCopy,
   buildShareCaption,
   buildShareIntentText,
   buildShareIntentUrls,
@@ -131,6 +132,33 @@ describe("buildShareIntentText", () => {
     const caption = buildShareCaption(view, TOKEN_URL);
     expect(caption).toContain("Auriverde XI drafted blind, ended with 8-0 (41 pts, 88 OVR)");
     expect(caption).not.toContain("thought");
+  });
+
+  it("uses Blind Open reveal framing for open-hidden runs", () => {
+    const view = makeView({
+      draft_mode: "open_hidden",
+      reveal: {
+        starters: [],
+        bench: [],
+        lineRatings: [],
+        squadAverageBefore: null,
+        squadAverageAfter: 88,
+        revealStarters: [],
+        topReveals: [],
+      },
+    });
+    const caption = buildShareCaption(view, TOKEN_URL);
+    const copy = blindRevealShareCopy(view.draft_mode);
+
+    expect(copy).toEqual({
+      label: "Blind Open reveal",
+      kicker: "BLIND OPEN REVEAL",
+      action: "played Blind Open blind",
+    });
+    expect(caption).toContain(
+      "Auriverde XI played Blind Open blind, ended with 8-0 (41 pts, 88 OVR)",
+    );
+    expect(caption).not.toContain("Memory reveal");
   });
 });
 

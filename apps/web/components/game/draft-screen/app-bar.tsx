@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { DraftMode } from "@wcdraft/core";
+import { isRankedDraftMode, type DraftMode } from "@wcdraft/core";
 
 import { draftModeCue, draftModeShortLabel } from "@/lib/game/mode-labels";
 import { TOTAL_SPINS } from "./constants";
@@ -22,15 +22,21 @@ export function DraftAppBar({
   pickSpace?: string;
   warning?: string | null;
 }) {
-  const modeLabel = daily ? "Daily" : mode === undefined ? null : draftModeShortLabel(mode);
+  const modeLabel = daily
+    ? "Daily"
+    : mode === undefined
+      ? null
+      : mode === "open_hidden"
+        ? "BLIND OPEN"
+        : draftModeShortLabel(mode);
   const modeCue = daily
     ? "today's shared draft"
     : mode === undefined
       ? null
-      : mode === "open"
-        ? draftModeCue(mode)
-        : ranked
-          ? "Ranked"
+      : ranked && isRankedDraftMode(mode)
+        ? "Ranked"
+        : mode === "open_hidden"
+          ? "CASUAL"
           : draftModeCue(mode);
   return (
     <header className={s.draftAppBar}>

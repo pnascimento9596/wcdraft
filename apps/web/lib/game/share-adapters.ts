@@ -11,6 +11,9 @@
 import {
   FORMATION_TEMPLATES,
   buildNarrative,
+  isBlindDraftMode,
+  isOpenDraftMode,
+  type DraftMode,
   type DraftState,
   type MatchResult,
   type RunResult,
@@ -184,7 +187,7 @@ export function buildShareView(
     shootout_wins: run.shootout_wins,
     challenge_date: record.challenge?.kind === "daily" ? record.challenge.date : null,
     perfect_run_reference: PERFECT_RUN_REFERENCE_LABEL,
-    reveal: draft.mode === "hidden" ? buildMemoryRevealView(gameData, draft) : null,
+    reveal: isBlindDraftMode(draft.mode) ? buildMemoryRevealView(gameData, draft) : null,
   };
 }
 
@@ -270,25 +273,47 @@ export function buildShareIntentText(view: ShareView, opts: ShareCaptionOpts = {
   return view.narrative ? `${view.narrative} ${lead}` : lead;
 }
 
+export interface BlindRevealShareCopy {
+  readonly label: string;
+  readonly kicker: string;
+  readonly action: string;
+}
+
+export function blindRevealShareCopy(draftMode: DraftMode): BlindRevealShareCopy {
+  return draftMode === "open_hidden"
+    ? {
+        label: "Blind Open reveal",
+        kicker: "BLIND OPEN REVEAL",
+        action: "played Blind Open blind",
+      }
+    : {
+        label: "Memory reveal",
+        kicker: "MEMORY REVEAL",
+        action: "drafted blind",
+      };
+}
+
 function shareChallengeLine(view: ShareView, dailyStanding: DailyShareStanding | null): string {
   if (view.reveal !== null) {
     const avg = formatNullableNumber(view.reveal.squadAverageAfter);
+    const { action } = blindRevealShareCopy(view.draft_mode);
     if (view.challenge_date !== null) {
-      const scoreLine = `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on ${view.challenge_date}'s draft`;
+      const scoreLine = `${view.team_name} ${action}, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on ${view.challenge_date}'s draft`;
       return dailyStanding === null
         ? `${scoreLine}. Beat it →`
         : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
     }
-    return `${view.team_name} drafted blind, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
+    return `${view.team_name} ${action}, ended with ${view.display_record} (${view.score} pts, ${avg} OVR) on wcdraft.`;
   }
-  if (view.draft_mode === "open") {
+  if (isOpenDraftMode(view.draft_mode)) {
+    const label = view.draft_mode === "open_hidden" ? "Blind Open" : "Open Draft";
     if (view.challenge_date !== null) {
-      const scoreLine = `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
+      const scoreLine = `${view.team_name} played ${label}, ended with ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;
       return dailyStanding === null
         ? `${scoreLine}. Beat it →`
         : `${dailyStandingText(dailyStanding)} — ${scoreLine}. Beat it →`;
     }
-    return `${view.team_name} played Open Draft, ended with ${view.display_record} (${view.score} pts) on wcdraft.`;
+    return `${view.team_name} played ${label}, ended with ${view.display_record} (${view.score} pts) on wcdraft.`;
   }
   if (view.challenge_date !== null) {
     const scoreLine = `${view.team_name} went ${view.display_record} (${view.score} pts) on ${view.challenge_date}'s draft`;

@@ -7,7 +7,10 @@ import {
   activeSpin,
   computeSynergy,
   FORMATION_TEMPLATES,
+  isBlindDraftMode,
   isDraftComplete,
+  isOpenDraftMode,
+  isRankedDraftMode,
   pickManager,
   pickPlayer,
   positionCompatibility,
@@ -118,14 +121,17 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   // Mode-select threads `?mode=hidden` for a Memory draft; anything else is
   // classic. Only consulted when CREATING a run — resumed runs carry their
   // mode on the persisted DraftState.
+  const modeParam = searchParams?.get("mode");
   const requestedMode: DraftMode =
-    searchParams?.get("mode") === "hidden"
+    modeParam === "hidden"
       ? "hidden"
-      : searchParams?.get("mode") === "open"
+      : modeParam === "open"
         ? "open"
-        : "classic";
+        : modeParam === "open_hidden" || modeParam === "blind_open"
+          ? "open_hidden"
+          : "classic";
   const rankedDraft =
-    requestedMode !== "open" &&
+    isRankedDraftMode(requestedMode) &&
     !daily &&
     (searchParams?.get("lane") === "ranked" || searchParams?.get("ranked") === "1");
 
@@ -266,11 +272,13 @@ function DraftBoard({
   const dailyRun = dailyDate !== null;
   const dailyPickSpace = dailyRun ? "Classic rules" : DRAFT_MODE_COPY[draft.mode].pickSpace;
 
-  // Memory (hidden) mode — blind every rating SIGNAL (OVRs, channels, legend
+  // Blind modes hide every rating SIGNAL (OVRs, channels, legend
   // gold, provenance hue, Synergy numerics) on the draft surface. DISPLAY-
   // ONLY: the engine state, pick/lock flow, and the sim inputs are the real
   // values; identities, shapes, flags, the spin and synergy LINK LINES stay.
-  const blind = draft.mode === "hidden";
+  const blind = isBlindDraftMode(draft.mode);
+  const blindModeLabel = DRAFT_MODE_COPY[draft.mode].label;
+  const openPickSpace = isOpenDraftMode(draft.mode);
   // Rating-basis seam: every card view + the sim resolve from this basis. The
   // CURRENT chip rides `draft.rating_basis` (config, not a rating), so it shows
   // even under Memory mode while the numerics stay masked.
@@ -536,10 +544,10 @@ function DraftBoard({
   useEffect(() => {
     if (!managerOnlyOpen) return;
     setSelSlot(null);
-    if (draft.mode === "open" && candidates.managers.length > 0) {
+    if (openPickSpace && candidates.managers.length > 0) {
       setOpenRosterManagersOpen(true);
     }
-  }, [managerOnlyOpen, draft.mode, candidates.managers.length]);
+  }, [managerOnlyOpen, openPickSpace, candidates.managers.length]);
 
   const openSlotSheet = useCallback(() => {
     sheetRestoreFocusRef.current =
@@ -678,10 +686,12 @@ function DraftBoard({
 
   const canLock = sel?.kind === "manager" || (sel?.kind === "player" && !!selSlot);
   const visiblePlayers = useMemo(() => {
-    if (draft.mode !== "open" || openRosterFilter === "ALL") return candidates.players;
-    return candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
-  }, [candidates.players, draft.mode, openRosterFilter]);
-  const openRosterManagerGroup = draft.mode === "open" && candidates.managers.length > 0;
+    if (!openPickSpace) return candidates.players;
+    return openRosterFilter === "ALL"
+      ? candidates.players
+      : candidates.players.filter((card) => card.eligible_positions.includes(openRosterFilter));
+  }, [candidates.players, openPickSpace, openRosterFilter]);
+  const openRosterManagerGroup = openPickSpace && candidates.managers.length > 0;
   const showManagerCandidates = !openRosterManagerGroup || openRosterManagersOpen;
 
   // I3.7 fix-pass #2 (PR #18 BLOCKER): the Review CTA gates the entrance to
@@ -900,7 +910,7 @@ function DraftBoard({
       />
       {blind ? (
         <p className={s.memoryModeNote} role="note">
-          Memory mode — ratings &amp; Synergy numbers reveal after you simulate.
+          {blindModeLabel} — hidden values reveal after you simulate.
         </p>
       ) : null}
       <div className={s.panelHead}>
@@ -1021,9 +1031,13 @@ function DraftBoard({
         className={`${s.panel} ${s.candidatePanel}`}
         aria-label="Candidates"
       >
-        {draft.mode === "open" ? (
+        {openPickSpace ? (
           <div className={s.openRosterTools}>
-            <div className={s.openRosterSeg} role="group" aria-label="Filter Open Draft roster">
+            <div
+              className={s.openRosterSeg}
+              role="group"
+              aria-label={`Filter ${DRAFT_MODE_COPY[draft.mode].label} roster`}
+            >
               {OPEN_ROSTER_FILTERS.map((filter) => (
                 <button
                   key={filter}
@@ -1039,7 +1053,8 @@ function DraftBoard({
               ))}
             </div>
             <span className={s.openRosterMeta}>
-              {visiblePlayers.length}/{candidates.players.length} · OVR sort
+              {visiblePlayers.length}/{candidates.players.length}
+              {blind ? "" : " · OVR sort"}
             </span>
           </div>
         ) : null}
@@ -1107,15 +1122,14 @@ function DraftBoard({
               card={card}
               selected={sel?.kind === "player" && sel.card.card_id === card.card_id}
               disabled={managerOnlyOpen}
+              blindRatings={blind}
               rarePick={spin?.rare === true}
               onSelect={selectPlayer}
             />
           ))}
           {visiblePlayers.length === 0 ? (
             <p className={s.emptyList}>
-              {draft.mode === "open"
-                ? "No players match this filter."
-                : "No player choices on this spin."}
+              {openPickSpace ? "No players match this filter." : "No player choices on this spin."}
             </p>
           ) : null}
         </div>

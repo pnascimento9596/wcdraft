@@ -66,6 +66,17 @@ const MODE_COPY: Record<
     href: "/play/draft?mode=hidden",
     secondary: true,
   },
+  open_hidden: {
+    index: "04",
+    title: DRAFT_MODE_COPY.open_hidden.label,
+    tag: "Casual",
+    desc: DRAFT_MODE_COPY.open_hidden.description,
+    preview: "BLIND OPEN · CASUAL",
+    chips: ["Full roster", "Ratings hidden", "Shareable"],
+    cta: "Blind Open",
+    href: "/play/draft?mode=open_hidden",
+    secondary: true,
+  },
 };
 
 export function ModeSelect() {
