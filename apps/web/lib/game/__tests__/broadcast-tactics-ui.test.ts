@@ -31,21 +31,17 @@ describe("broadcast tactics UI source contract", () => {
     expect(combined).not.toContain("g" + "static");
 
     expect(globals).toContain('font-family: "Space Grotesk"');
-    expect(globals).toContain('font-family: "Space Mono"');
+    expect(globals).toContain('--font-family: "Space Grotesk", system-ui, sans-serif;');
     expect(globals).toContain("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2");
     expect(globals).toContain("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff2");
-    expect(globals).toContain("/fonts/space-mono/space-mono-latin-400-normal.woff2");
-    expect(globals).toContain("/fonts/space-mono/space-mono-latin-ext-700-normal.woff2");
+    expect(combined).not.toContain("Space " + "Mono");
+    expect(combined).not.toContain("space-" + "mono");
   });
 
   it("ships the requested font asset matrix", () => {
     const groteskFiles = readdirSync(
       new URL("../../../public/fonts/space-grotesk", import.meta.url),
     ).sort();
-    const monoFiles = readdirSync(
-      new URL("../../../public/fonts/space-mono", import.meta.url),
-    ).sort();
-
     expect(groteskFiles).toEqual(
       expect.arrayContaining([
         "LICENSE-OFL.txt",
@@ -63,16 +59,8 @@ describe("broadcast tactics UI source contract", () => {
         "space-grotesk-latin-ext-700-normal.woff",
       ]),
     );
-    expect(monoFiles).toEqual(
-      expect.arrayContaining([
-        "LICENSE-OFL.txt",
-        "space-mono-latin-400-normal.woff2",
-        "space-mono-latin-700-normal.woff2",
-        "space-mono-latin-ext-400-normal.woff2",
-        "space-mono-latin-ext-700-normal.woff2",
-        "space-mono-latin-700-normal.woff",
-        "space-mono-latin-ext-700-normal.woff",
-      ]),
+    expect(groteskFiles).not.toEqual(
+      expect.arrayContaining(["space-" + "mono" + "-latin-400-normal.woff2"]),
     );
   });
 

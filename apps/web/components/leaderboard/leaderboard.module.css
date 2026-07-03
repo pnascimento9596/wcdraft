@@ -27,7 +27,7 @@
 .seasonKey {
   display: block;
   margin-top: 0.35rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.68rem;
   color: var(--ink-faint);
   word-break: break-all;
@@ -50,7 +50,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--bg-sunken);
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--ink-soft);
@@ -234,7 +234,7 @@
   color: var(--ink-soft);
 }
 .meChipRank {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
   color: var(--accent);
 }
@@ -277,7 +277,7 @@
 }
 
 .rowRank {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.05rem;
   color: var(--ink-soft);
   text-align: right;
@@ -332,13 +332,13 @@
 }
 
 .rowScore {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.25rem;
   text-align: right;
 }
 .rowScoreUnit {
   display: block;
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -405,7 +405,7 @@
 .lineupIdentity h2 {
   margin: 0;
   overflow-wrap: anywhere;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
   line-height: 1.1;
 }
@@ -416,7 +416,7 @@
 }
 
 .inspectorEyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -435,7 +435,7 @@
 }
 
 .resultPill strong {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.05rem;
   line-height: 1;
   color: var(--gold);
@@ -472,7 +472,7 @@
 
 .squadAverage strong,
 .lineMetric strong {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.98rem;
   line-height: 1;
   color: var(--ink);
@@ -502,7 +502,7 @@
   color: var(--ink-soft);
 }
 .breakdownPts {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
 }
 .breakdownNone {
   font-size: 0.78rem;
@@ -520,7 +520,7 @@
   color: var(--ink-soft);
 }
 .stateTitle {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.15rem;
   color: var(--ink);
 }
@@ -664,7 +664,7 @@
 }
 
 .submitTitle {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.3rem;
   letter-spacing: 0.02em;
 }
@@ -674,7 +674,7 @@
   color: var(--ink-soft);
 }
 .submitScoreNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.15rem;
   color: var(--ink);
   margin-right: 0.25rem;
@@ -750,7 +750,7 @@
   padding-top: 0.75rem;
 }
 .outcomeTitle {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.1rem;
 }
 .outcomeTitleGood {
@@ -767,7 +767,7 @@
   color: var(--ink-soft);
 }
 .outcomeRank {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.6rem;
 }
 

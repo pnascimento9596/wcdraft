@@ -61,7 +61,7 @@
   align-items: center;
   gap: 6px;
   padding: 3px 8px;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -120,7 +120,7 @@
   width: auto;
   min-width: 18px;
   padding-inline: 2px;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 7px;
   line-height: 1;
   letter-spacing: 0.04em;
@@ -215,7 +215,7 @@
 }
 
 .managerSlotEyebrow {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -238,7 +238,7 @@
   padding: 0 6px;
   background: color-mix(in srgb, var(--bg-700) 80%, transparent);
   border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-100);
@@ -252,7 +252,7 @@
 }
 
 .managerSlotName {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 16px;
   line-height: 1.1;
@@ -273,7 +273,7 @@
    nothing and was removed on every surface (ws-ux/mobile-polish-2). */
 .managerSlotBadge {
   align-self: flex-start;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -366,7 +366,7 @@
   padding: 0 5px;
   background: color-mix(in srgb, var(--bg-700) 80%, transparent);
   border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.04em;
   color: var(--ink-200);
@@ -379,7 +379,7 @@
   gap: 1px;
 }
 .candRowName {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 15px;
   line-height: 1.1;
@@ -398,7 +398,7 @@
   text-overflow: ellipsis;
 }
 .candRowSub {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 10px;
   color: var(--ink-400);
   display: flex;
@@ -477,13 +477,13 @@
   min-width: 28px;
 }
 .candRowOvr b {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: 20px;
   color: var(--ink-100);
   font-feature-settings: "tnum" 1;
 }
 .candRowOvr i {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 7px;
   letter-spacing: 0.1em;
   color: var(--ink-400);
@@ -492,7 +492,7 @@
 }
 .candRowCov {
   flex: 0 0 auto;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 10px;
   color: var(--ink-300);
   min-width: 30px;
@@ -553,7 +553,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ink-200);
   background: var(--bg-700);
@@ -561,14 +561,14 @@
   border-radius: 3px;
 }
 .nowDraftingPick {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ember-bright);
 }
 .nowDraftingResult {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 20px;
   color: var(--ink-100);
   letter-spacing: 0.01em;
@@ -578,7 +578,7 @@
 }
 .nowDraftingBack {
   flex: 0 0 auto;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-200);
@@ -729,7 +729,7 @@
 }
 
 .synergyBarLabel {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -743,7 +743,7 @@
 }
 
 .synergyBarNum {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 22px;
   line-height: 1;
   letter-spacing: 0.01em;
@@ -789,7 +789,7 @@
 }
 
 .synergyBarFigure dt {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -798,7 +798,7 @@
 }
 
 .synergyBarFigure dd {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 12px;
   line-height: 1;
   color: var(--ink-100);
@@ -822,7 +822,7 @@
   flex-wrap: nowrap;
   white-space: nowrap;
   gap: 6px;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--ink-300);
@@ -1723,7 +1723,7 @@
   padding: 1px 6px;
   vertical-align: 1px;
   border-radius: var(--r-pill);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -1744,7 +1744,7 @@
   align-items: center;
   padding: 1px 6px;
   border-radius: var(--r-pill);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -1775,7 +1775,7 @@
 /* Inline note shown on the draft + review screens while the blind is on. */
 .memoryModeNote {
   margin: 0;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.04em;
   color: var(--ink-400);
@@ -1821,7 +1821,7 @@
 
 .panelTitle {
   color: var(--ink-100);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -1905,7 +1905,7 @@
   border-radius: 7px;
   background: var(--bg-750);
   color: var(--ink-300);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -1913,7 +1913,7 @@
 
 .candRowName {
   color: var(--ink-100);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0;
@@ -1925,7 +1925,7 @@
 
 .candRowSub {
   color: var(--ink-400);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -1980,7 +1980,7 @@
 
 .clubCrestFallback {
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 7px;
   font-weight: 700;
   line-height: 1;
@@ -2031,7 +2031,7 @@
   border-radius: 999px;
   background: var(--bg-750);
   color: var(--ink-300);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 10px;
   line-height: 1;
   white-space: nowrap;
@@ -2105,21 +2105,21 @@
 
 .candRowOvr b {
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 19px;
   font-weight: 700;
 }
 
 .candRowOvr i {
   color: var(--ink-400);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 9px;
   letter-spacing: 0.1em;
 }
 
 .candRowCov {
   color: var(--ink-300);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 10px;
 }
 
@@ -2145,7 +2145,7 @@
   border-radius: 11px;
   background: var(--bg-800);
   color: var(--ink-100);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 15px;
 }
 
@@ -2171,7 +2171,7 @@
   border-radius: 8px;
   background: transparent;
   color: var(--ink-400);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 12.5px;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -2186,7 +2186,7 @@
 .sortSelect {
   border-radius: 10px;
   background: var(--bg-800);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
 }
 
 .synergyBar {
@@ -2201,13 +2201,13 @@
 .synergyBarLabel,
 .synergyBarFigure dt {
   color: var(--ink-400);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   letter-spacing: 0.06em;
 }
 
 .synergyBarNum,
 .synergyBarFigure dd {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-weight: 700;
 }
 

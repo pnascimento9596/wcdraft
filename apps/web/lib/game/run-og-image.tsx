@@ -11,8 +11,6 @@ export interface RunOgImageAssets {
     spaceGroteskSemiBoldExt: ArrayBuffer;
     spaceGroteskBold: ArrayBuffer;
     spaceGroteskBoldExt: ArrayBuffer;
-    spaceMonoBold: ArrayBuffer;
-    spaceMonoBoldExt: ArrayBuffer;
   };
 }
 
@@ -47,18 +45,6 @@ export function renderRunOgImage(model: RunOgModel, assets: RunOgImageAssets): I
       {
         name: "Space Grotesk",
         data: assets.fonts.spaceGroteskBoldExt,
-        weight: 700,
-        style: "normal",
-      },
-      {
-        name: "Space Mono",
-        data: assets.fonts.spaceMonoBold,
-        weight: 700,
-        style: "normal",
-      },
-      {
-        name: "Space Mono",
-        data: assets.fonts.spaceMonoBoldExt,
         weight: 700,
         style: "normal",
       },
@@ -110,7 +96,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           alignItems: "center",
           justifyContent: "space-between",
           color: P.muted,
-          fontFamily: "Space Mono",
+          fontFamily: "Space Grotesk",
           fontSize: 16,
           letterSpacing: 0,
           textTransform: "uppercase",
@@ -213,7 +199,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               style={{
                 display: "flex",
                 color: P.mutedTeal,
-                fontFamily: "Space Mono",
+                fontFamily: "Space Grotesk",
                 fontSize: 15,
                 textTransform: "uppercase",
               }}
@@ -253,7 +239,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
               display: "flex",
               marginTop: 12,
               color: P.aqua,
-              fontFamily: "Space Mono",
+              fontFamily: "Space Grotesk",
               fontSize: 18,
               textTransform: "uppercase",
             }}
@@ -299,7 +285,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                   border: `1px solid ${P.goldLine}`,
                   color: P.goldSoft,
                   background: P.goldWash,
-                  fontFamily: "Space Mono",
+                  fontFamily: "Space Grotesk",
                   fontSize: 15,
                   textTransform: "uppercase",
                 }}
@@ -336,7 +322,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
                     padding: "5px 0",
                     border: `1px solid ${P.aquaLine}`,
                     color: P.aqua,
-                    fontFamily: "Space Mono",
+                    fontFamily: "Space Grotesk",
                     fontSize: 14,
                   }}
                 >
@@ -365,7 +351,7 @@ function RunOgCard({ model, markSvgDataUri }: { model: RunOgModel; markSvgDataUr
           display: "flex",
           justifyContent: "center",
           color: P.muted,
-          fontFamily: "Space Mono",
+          fontFamily: "Space Grotesk",
           fontSize: 18,
           textTransform: "uppercase",
         }}
@@ -412,7 +398,7 @@ function LineupChip({ slot, showOverall }: { slot: RunOgLineupSlot; showOverall:
           style={{
             display: "flex",
             color: P.aqua,
-            fontFamily: "Space Mono",
+            fontFamily: "Space Grotesk",
             fontSize: 10,
             lineHeight: 1.2,
             textTransform: "uppercase",
@@ -448,7 +434,7 @@ function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
           style={{
             display: "flex",
             color: P.goldSoft,
-            fontFamily: "Space Mono",
+            fontFamily: "Space Grotesk",
             fontSize: 20,
           }}
         >
@@ -468,7 +454,7 @@ function MemoryRevealOgPanel({ reveal }: { reveal: RunOgRevealModel }) {
           }}
         >
           <span>{line.label}</span>
-          <span style={{ color: P.aqua, fontFamily: "Space Mono" }}>
+          <span style={{ color: P.aqua, fontFamily: "Space Grotesk" }}>
             {formatOgNumber(line.before)} -&gt; {formatOgNumber(line.after)}
           </span>
         </div>
@@ -550,7 +536,7 @@ function SectionTitle({ children }: { children: string }) {
       style={{
         display: "flex",
         color: P.muted,
-        fontFamily: "Space Mono",
+        fontFamily: "Space Grotesk",
         fontSize: 15,
         textTransform: "uppercase",
       }}
@@ -579,7 +565,7 @@ function FactRow({ label, value }: { label: string; value: string }) {
           padding: "5px 0",
           border: `1px solid ${P.aquaLine}`,
           color: P.aqua,
-          fontFamily: "Space Mono",
+          fontFamily: "Space Grotesk",
           fontSize: 14,
         }}
       >

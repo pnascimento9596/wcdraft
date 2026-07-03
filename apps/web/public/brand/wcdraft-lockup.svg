@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" width="600" height="150" role="img" aria-label="wcdraft">
+  <style>
+    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:600;src:url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2")}
+    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:700;src:url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2")}
+    :root{--font-family:"Space Grotesk",sans-serif}
+  </style>
   <defs>
     <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#c8861a"/><stop offset=".5" stop-color="#f5b62a"/><stop offset="1" stop-color="#ffd86a"/></linearGradient>
     <linearGradient id="draftg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2ecf92"/><stop offset="1" stop-color="#1c9e6e"/></linearGradient>
@@ -15,6 +20,6 @@
     <path d="M81 41 L67 45 L74 58 Z" fill="url(#gold)"/>
     <circle cx="85" cy="38" r="11" fill="none" stroke="url(#gold)" stroke-width="3"/><circle cx="85" cy="38" r="5" fill="url(#gold)"/>
   </g>
-  <text x="150" y="98" font-family="'DejaVu Sans','Arial',sans-serif" font-weight="800" font-size="66" letter-spacing="-2.5"><tspan fill="#eef2f6">wc</tspan><tspan fill="url(#draftg)">draft</tspan></text>
-  <text x="152" y="124" font-family="'DejaVu Sans Mono',monospace" font-weight="600" font-size="12" letter-spacing="4.5" fill="#6b7480">PICK<tspan fill="#3a4350">.</tspan> BUILD<tspan fill="#3a4350">.</tspan> SIMULATE<tspan fill="#3a4350">.</tspan> <tspan fill="#f5b62a">WIN.</tspan></text>
+  <text x="150" y="98" font-family="var(--font-family)" font-weight="800" font-size="66" letter-spacing="-2.5"><tspan fill="#eef2f6">wc</tspan><tspan fill="url(#draftg)">draft</tspan></text>
+  <text x="152" y="124" font-family="var(--font-family)" font-weight="600" font-size="12" letter-spacing="4.5" fill="#6b7480">PICK<tspan fill="#3a4350">.</tspan> BUILD<tspan fill="#3a4350">.</tspan> SIMULATE<tspan fill="#3a4350">.</tspan> <tspan fill="#f5b62a">WIN.</tspan></text>
 </svg>

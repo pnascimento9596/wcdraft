@@ -22,7 +22,7 @@ import s from "./game.module.css";
  *    still emitted for screen readers.
  *  - The `delta` only renders when non-null AND non-zero. The pending
  *    placement preview drives it on the draft screen.
- *  - Inline figures use `monospace` for stable tabular alignment, and
+ *  - Inline figures use tabular numeric features for stable alignment, and
  *    wrap is disabled — never two lines.
  *
  * NOMENCLATURE: "Synergy" — OUR term and OUR formula. Never "chemistry".

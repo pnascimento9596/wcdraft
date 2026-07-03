@@ -21,7 +21,7 @@
 .spinResumeNote {
   margin: 0;
   color: var(--ink-300);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -62,20 +62,20 @@
   line-height: 1;
 }
 .spinPickKicker {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 8px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
 .spinPickNum {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 22px;
   color: var(--ink-100);
   font-feature-settings: "tnum" 1;
 }
 .spinPickOf {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 8px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -83,7 +83,7 @@
 }
 .spinStatusTitle {
   text-align: center;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -106,14 +106,14 @@
   min-width: 104px;
 }
 .spinStatusChipLabel {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 8px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
 .spinStatusChipValue {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 14px;
   color: var(--ink-100);
   font-feature-settings: "tnum" 1;
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 8px;
   text-align: center;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -253,7 +253,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ink-200);
   background: var(--bg-700);
@@ -261,7 +261,7 @@
   border-radius: 3px;
 }
 .spinFaceNation {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(13px, 3.6vw, 17px);
   color: var(--ink-100);
   line-height: 1;
@@ -271,14 +271,14 @@
   white-space: nowrap;
 }
 .spinFaceYear {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--gold-bright);
   letter-spacing: 0.06em;
   font-feature-settings: "tnum" 1;
 }
 .spinFaceIdle .spinFaceGlyph {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 28px;
   color: var(--ink-500);
 }
@@ -337,7 +337,7 @@
   text-align: center;
 }
 .spinResultEyebrow {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-micro);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -345,7 +345,7 @@
 }
 .spinResultName {
   margin: 0;
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(28px, 8vw, 40px);
   line-height: 1;
   letter-spacing: 0.01em;
@@ -384,14 +384,14 @@
   border-radius: var(--r-2);
 }
 .spinTileLabel {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-400);
 }
 .spinTileValue {
-  font-family: var(--f-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 18px;
   color: var(--ink-100);
   font-feature-settings: "tnum" 1;

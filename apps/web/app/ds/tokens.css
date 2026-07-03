@@ -96,10 +96,11 @@
   --pitch-accent-mute: rgba(220, 220, 235, 0.2);
 
   /* ---- Type ---- */
-  --f-display: "Space Grotesk", system-ui, sans-serif;
-  --f-body: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  --f-mono: "Space Mono", ui-monospace, monospace;
-  --f-serif: "Space Grotesk", system-ui, sans-serif;
+  --font-family: "Space Grotesk", system-ui, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* type scale (px) */
   --t-hero: clamp(56px, 9vw, 132px);
@@ -251,15 +252,17 @@ body {
   margin: 0;
   background: var(--bg-850);
   color: var(--ink-100);
-  font-family: var(--f-body);
+  font-family: var(--font-family);
   font-size: var(--t-body);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  font-feature-settings: "tnum" 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "kern", "liga", "tnum";
 }
 
 .mono {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
+  font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   letter-spacing: 0;
 }
@@ -268,7 +271,7 @@ body {
   font-feature-settings: "tnum" 1;
 }
 .display {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   line-height: 0.92;
   letter-spacing: 0;

@@ -251,6 +251,75 @@ function ShareAppBar() {
 
 const CARD_WIDTH = 600;
 const CARD_HEIGHT = 800;
+const SVG_FONT_STYLE_MARKER = "data-wcdraft-font-contract";
+const SVG_FONT_FILES = [
+  { weight: 400, url: "/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2" },
+  { weight: 400, url: "/fonts/space-grotesk/space-grotesk-latin-ext-400-normal.woff2" },
+  { weight: 500, url: "/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2" },
+  { weight: 500, url: "/fonts/space-grotesk/space-grotesk-latin-ext-500-normal.woff2" },
+  { weight: 600, url: "/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2" },
+  { weight: 600, url: "/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff2" },
+  { weight: 700, url: "/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2" },
+  { weight: 700, url: "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff2" },
+] as const;
+
+const SHARE_SVG_FONT_CONTRACT = `${SVG_FONT_FILES.map(
+  ({ weight, url }) =>
+    `@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:${weight};src:url("${url}") format("woff2")}`,
+).join("\n")}
+:root{--font-family:"Space Grotesk",sans-serif}
+svg,text,tspan{font-family:var(--font-family)}`;
+
+let embeddedShareSvgFontContractPromise: Promise<string> | null = null;
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+async function loadEmbeddedShareSvgFontContract(): Promise<string> {
+  if (!embeddedShareSvgFontContractPromise) {
+    embeddedShareSvgFontContractPromise = Promise.all(
+      SVG_FONT_FILES.map(async ({ weight, url }) => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`share SVG font fetch failed: ${url}`);
+        const data = arrayBufferToBase64(await response.arrayBuffer());
+        return `@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:${weight};src:url("data:font/woff2;base64,${data}") format("woff2")}`;
+      }),
+    ).then(
+      (faces) =>
+        `${faces.join("\n")}
+:root{--font-family:"Space Grotesk",sans-serif}
+svg,text,tspan{font-family:var(--font-family)}`,
+    );
+  }
+  return embeddedShareSvgFontContractPromise;
+}
+
+function upsertShareSvgFontContract(svg: SVGSVGElement, css: string) {
+  const selector = `style[${SVG_FONT_STYLE_MARKER}]`;
+  let style = svg.querySelector(selector);
+  if (!style) {
+    style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+    style.setAttribute(SVG_FONT_STYLE_MARKER, "true");
+    svg.insertBefore(style, svg.firstChild);
+  }
+  style.textContent = css;
+  svg.setAttribute("font-family", "var(--font-family)");
+}
+
+async function embedShareSvgFontContract(svg: SVGSVGElement) {
+  try {
+    upsertShareSvgFontContract(svg, await loadEmbeddedShareSvgFontContract());
+  } catch {
+    upsertShareSvgFontContract(svg, SHARE_SVG_FONT_CONTRACT);
+  }
+}
 
 function ShareBody({
   record,
@@ -500,11 +569,13 @@ function ShareBody({
     }
   }
 
-  function downloadSvg() {
+  async function downloadSvg() {
     if (shareLinkPending) return;
     const node = svgRef.current;
     if (!node) return;
-    const xml = new XMLSerializer().serializeToString(node);
+    const exportNode = node.cloneNode(true) as SVGSVGElement;
+    await embedShareSvgFontContract(exportNode);
+    const xml = new XMLSerializer().serializeToString(exportNode);
     const blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n` + xml], {
       type: "image/svg+xml",
     });
@@ -880,7 +951,7 @@ function ShareCardSvg({
           x="0"
           y="0"
           fill={colors.text}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="28"
           fontWeight="700"
           letterSpacing="0.04em"
@@ -898,7 +969,7 @@ function ShareCardSvg({
         y="180"
         textAnchor="middle"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="32"
         fontWeight="600"
         letterSpacing="0.02em"
@@ -912,7 +983,7 @@ function ShareCardSvg({
         y="244"
         textAnchor="middle"
         fill={headlineColor}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="18"
         fontWeight="600"
         letterSpacing="0.32em"
@@ -926,7 +997,7 @@ function ShareCardSvg({
         y="412"
         textAnchor="middle"
         fill={recordColor}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="180"
         fontWeight="900"
         letterSpacing="-0.04em"
@@ -940,7 +1011,7 @@ function ShareCardSvg({
         y="470"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="16"
         letterSpacing="0.06em"
       >
@@ -955,7 +1026,7 @@ function ShareCardSvg({
           y={508 + i * 24}
           textAnchor="middle"
           fill={i === 0 && view.challenge_date !== null ? colors.text : colors.muted}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="16"
           fontWeight="650"
         >
@@ -971,7 +1042,7 @@ function ShareCardSvg({
           y={508 + payoffLines.length * 24 + i * 24}
           textAnchor="middle"
           fill={colors.text}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="17"
           fontWeight="500"
         >
@@ -1010,7 +1081,7 @@ function ShareCardSvg({
           y="-30"
           textAnchor="middle"
           fill={colors.muted}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="12"
           letterSpacing="0.32em"
         >
@@ -1021,7 +1092,7 @@ function ShareCardSvg({
           y="0"
           textAnchor="middle"
           fill={colors.text}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="18"
           fontWeight="500"
         >
@@ -1037,7 +1108,7 @@ function ShareCardSvg({
         y={CARD_HEIGHT - 32}
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="11"
         letterSpacing="0.28em"
       >
@@ -1103,7 +1174,7 @@ function MemoryRevealShareCardSvg({
           x="0"
           y="0"
           fill={colors.text}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="28"
           fontWeight="700"
         >
@@ -1119,7 +1190,7 @@ function MemoryRevealShareCardSvg({
         y="118"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="13"
         fontWeight="700"
       >
@@ -1130,7 +1201,7 @@ function MemoryRevealShareCardSvg({
         y="158"
         textAnchor="middle"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="30"
         fontWeight="650"
       >
@@ -1141,7 +1212,7 @@ function MemoryRevealShareCardSvg({
         y="190"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="15"
         fontWeight="600"
       >
@@ -1160,7 +1231,7 @@ function MemoryRevealShareCardSvg({
           y="58"
           textAnchor="middle"
           fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontFamily="var(--font-family)"
           fontSize="28"
           fontWeight="700"
         >
@@ -1174,7 +1245,7 @@ function MemoryRevealShareCardSvg({
           x="0"
           y="0"
           fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontFamily="var(--font-family)"
           fontSize="12"
           fontWeight="700"
         >
@@ -1190,7 +1261,7 @@ function MemoryRevealShareCardSvg({
           x="0"
           y="0"
           fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontFamily="var(--font-family)"
           fontSize="12"
           fontWeight="700"
         >
@@ -1221,7 +1292,7 @@ function MemoryRevealShareCardSvg({
           x="0"
           y="0"
           fill={colors.muted}
-          fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+          fontFamily="var(--font-family)"
           fontSize="12"
           fontWeight="700"
         >
@@ -1231,7 +1302,7 @@ function MemoryRevealShareCardSvg({
           x="0"
           y="28"
           fill={colors.text}
-          fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+          fontFamily="var(--font-family)"
           fontSize="17"
           fontWeight="600"
         >
@@ -1253,7 +1324,7 @@ function MemoryRevealShareCardSvg({
         y="766"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="13"
         fontWeight="600"
       >
@@ -1265,7 +1336,7 @@ function MemoryRevealShareCardSvg({
         y={CARD_HEIGHT - 18}
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="10"
       >
         wcdraft.com — draft your own XI
@@ -1302,7 +1373,7 @@ function RevealMetricBox({
         y="28"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="12"
         fontWeight="700"
       >
@@ -1313,7 +1384,7 @@ function RevealMetricBox({
         y="66"
         textAnchor="middle"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="34"
         fontWeight="850"
       >
@@ -1338,7 +1409,7 @@ function RevealLineRow({
         x="0"
         y="0"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="16"
         fontWeight="600"
       >
@@ -1349,7 +1420,7 @@ function RevealLineRow({
         y="0"
         textAnchor="end"
         fill={colors.muted}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="15"
         fontWeight="700"
       >
@@ -1360,7 +1431,7 @@ function RevealLineRow({
         y="0"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="15"
         fontWeight="700"
       >
@@ -1371,7 +1442,7 @@ function RevealLineRow({
         y="0"
         textAnchor="end"
         fill={colors.text}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="16"
         fontWeight="800"
       >
@@ -1407,7 +1478,7 @@ function RevealXiRow({
         x="0"
         y="0"
         fill={colors.muted}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="12"
         fontWeight="700"
       >
@@ -1417,7 +1488,7 @@ function RevealXiRow({
         x="42"
         y="0"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="15"
         fontWeight="600"
       >
@@ -1428,7 +1499,7 @@ function RevealXiRow({
         y="0"
         textAnchor="end"
         fill={colors.text}
-        fontFamily="ui-monospace, SF Mono, Menlo, monospace"
+        fontFamily="var(--font-family)"
         fontSize="14"
         fontWeight="800"
       >
@@ -1456,7 +1527,7 @@ function ShareStat({
         y="0"
         textAnchor="middle"
         fill={colors.text}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="40"
         fontWeight="800"
       >
@@ -1467,7 +1538,7 @@ function ShareStat({
         y="22"
         textAnchor="middle"
         fill={colors.muted}
-        fontFamily="system-ui, -apple-system, Segoe UI, sans-serif"
+        fontFamily="var(--font-family)"
         fontSize="11"
         letterSpacing="0.28em"
       >

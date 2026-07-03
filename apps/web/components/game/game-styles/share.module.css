@@ -43,7 +43,7 @@
   z-index: 1;
 }
 .shareBrand {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.3rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -52,7 +52,7 @@
   color: var(--accent);
 }
 .shareSeed {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-family);
   font-size: 0.72rem;
   opacity: 0.7;
 }
@@ -65,13 +65,13 @@
   margin-top: auto;
 }
 .shareTeam {
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-style: italic;
   font-size: 1.1rem;
   opacity: 0.85;
 }
 .shareHeadline {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(2.6rem, 10vw, 4.5rem);
   line-height: 0.85;
   color: var(--gold);
@@ -84,7 +84,7 @@
   margin-top: 0.3rem;
 }
 .shareRecordNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(2rem, 7vw, 3rem);
 }
 .shareRecordLabel {
@@ -104,7 +104,7 @@
   flex-direction: column;
 }
 .shareStat b {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.6rem;
   line-height: 1;
 }
@@ -117,7 +117,7 @@
 .shareStars {
   position: relative;
   z-index: 1;
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 0.9rem;
   opacity: 0.85;
 }
@@ -134,7 +134,7 @@
   color: var(--ink-faint);
 }
 .shareCaption {
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 0.92rem;
   line-height: 1.5;
   color: var(--ink-soft);
@@ -176,7 +176,7 @@
   border-radius: 7px;
   background: var(--bg-sunken);
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -192,7 +192,7 @@
   align-items: center;
   cursor: pointer;
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -242,14 +242,14 @@
 .shareHeadline,
 .shareRecordNum,
 .shareStat b {
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-weight: 700;
 }
 
 .shareSeed,
 .shareCaptionLabel,
 .shareStat span {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
 }
 
 .shareHeadline,
@@ -262,7 +262,7 @@
 .shareCaption,
 .shareHint {
   color: var(--ink-300);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-style: normal;
 }
 

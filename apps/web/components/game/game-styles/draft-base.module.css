@@ -17,12 +17,12 @@
   gap: 0.3rem;
 }
 .spinCounterNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.8rem;
   letter-spacing: 0.02em;
 }
 .spinCounterTotal {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.1rem;
   color: var(--ink-faint);
 }
@@ -129,7 +129,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   opacity: 0.96;
 }
 .slotPos {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   color: color-mix(in srgb, var(--field-ink) 70%, transparent);
@@ -154,7 +154,7 @@ button.slotEmpty:hover:not(:disabled):not(.pitch *) {
   gap: 0.25rem;
 }
 .slotRating {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.8rem;
 }
 .lockGlyph {
@@ -290,7 +290,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .mgrRating {
   margin-left: auto;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   color: var(--accent);
 }
 
@@ -317,12 +317,12 @@ button.benchSlot:not(:disabled):hover {
   flex-wrap: wrap;
 }
 .revealNation {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(2.2rem, 7vw, 3.4rem);
   line-height: 0.95;
 }
 .revealYear {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(1.6rem, 5vw, 2.4rem);
   color: var(--accent);
 }
@@ -370,7 +370,7 @@ button.benchSlot:not(:disabled):hover {
   border: none;
   background: transparent;
   color: var(--ink-soft);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   letter-spacing: 0.04em;
   font-size: 0.78rem;
   padding: 0.36rem 0.7rem;
@@ -474,7 +474,7 @@ button.benchSlot:not(:disabled):hover {
   height: 2rem;
   border-radius: 8px;
   background: var(--bg-sunken);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
   color: var(--ink-soft);
 }
@@ -484,7 +484,7 @@ button.benchSlot:not(:disabled):hover {
   min-width: 0;
 }
 .candName {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.18rem;
   letter-spacing: 0.01em;
   display: inline-flex;
@@ -493,7 +493,7 @@ button.benchSlot:not(:disabled):hover {
 }
 .candCaptain {
   font-size: 0.6rem;
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-weight: 700;
   color: var(--accent-ink);
   background: var(--accent);
@@ -515,7 +515,7 @@ button.benchSlot:not(:disabled):hover {
   line-height: 1;
 }
 .candOverallNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.9rem;
   color: var(--ink);
 }
@@ -531,7 +531,7 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.35rem;
 }
 .posTag {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.66rem;
   letter-spacing: 0.05em;
   color: var(--field-ink);
@@ -578,7 +578,7 @@ button.benchSlot:not(:disabled):hover {
   );
 }
 .channelVal {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.78rem;
   text-align: right;
   color: var(--ink-soft);
@@ -641,7 +641,7 @@ button.benchSlot:not(:disabled):hover {
   justify-content: space-between;
 }
 .synergyTitle {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.3rem;
   letter-spacing: 0.03em;
 }
@@ -651,7 +651,7 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.5rem;
 }
 .synergyNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 2.1rem;
   color: var(--accent);
 }
@@ -693,7 +693,7 @@ button.benchSlot:not(:disabled):hover {
   padding: 0.5rem 0.3rem;
 }
 .synergyStatNum {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.2rem;
 }
 .synergyStatLabel {
@@ -719,7 +719,7 @@ button.benchSlot:not(:disabled):hover {
   gap: 0.35rem;
 }
 .clusterTag {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   color: var(--field-ink);
@@ -752,7 +752,7 @@ button.benchSlot:not(:disabled):hover {
   border-radius: 50%;
   background: var(--accent);
   color: var(--accent-ink);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
 }
 

@@ -48,7 +48,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -82,7 +82,7 @@
 
 .signin-screen__sub {
   margin: 0;
-  font-family: var(--f-body);
+  font-family: var(--font-family);
   font-size: var(--t-body);
   color: var(--ink-200);
   max-width: 24rem;
@@ -132,7 +132,7 @@
 }
 
 .signin-form__label {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -172,7 +172,7 @@
 }
 
 .signin-form__input {
-  font-family: var(--f-body);
+  font-family: var(--font-family);
   font-size: var(--t-h);
   background: var(--bg-900);
   color: var(--ink-100);
@@ -203,7 +203,7 @@
 }
 
 .signin-form__submit {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: var(--t-h);
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -264,7 +264,7 @@
 .signin-form__hint,
 .signin-form__error {
   margin: 0;
-  font-family: var(--f-body);
+  font-family: var(--font-family);
   font-size: var(--t-sm);
   color: var(--ink-300);
 }
@@ -281,7 +281,7 @@
   align-items: center;
   gap: var(--s-3);
   color: var(--ink-400);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -410,7 +410,7 @@
   font-size: var(--t-sm);
 }
 .signin-screen__disabled-tag {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -422,7 +422,7 @@
   width: max-content;
 }
 .signin-screen__disabled code {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   background: var(--bg-700);
   padding: 1px 4px;
@@ -449,7 +449,7 @@
 }
 
 .signin-screen__crumb-num {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ember);
   letter-spacing: 0.16em;

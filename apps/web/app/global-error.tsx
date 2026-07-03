@@ -10,7 +10,6 @@ const wrap: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontFamily: "system-ui, -apple-system, sans-serif",
   padding: "1.5rem",
   textAlign: "center",
 };
@@ -27,7 +26,30 @@ const btn: React.CSSProperties = {
 };
 
 const themeCss = `
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2");
+}
 .global-error-body {
+  --font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: var(--font-family);
   background: #080809;
   color: #edecf2;
 }

@@ -16,7 +16,7 @@
   color: var(--ink-faint);
 }
 .teamNameInput {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(2.2rem, 7vw, 3.6rem);
   text-transform: uppercase;
   letter-spacing: 0.01em;
@@ -42,7 +42,7 @@
   }
 }
 .squadAvg {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.5rem;
   color: var(--accent-text);
 }
@@ -82,7 +82,7 @@
   );
 }
 .lineVal {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.1rem;
   text-align: right;
 }

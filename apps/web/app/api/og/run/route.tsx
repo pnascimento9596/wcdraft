@@ -55,8 +55,6 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
       spaceGroteskSemiBoldExt,
       spaceGroteskBold,
       spaceGroteskBoldExt,
-      spaceMonoBold,
-      spaceMonoBoldExt,
     ] = await Promise.all([
       fetchTextAsset(new URL("/brand/wcdraft-mark.svg", base)),
       fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", base)),
@@ -67,8 +65,6 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
       fetchBinaryAsset(
         new URL("/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff", base),
       ),
-      fetchBinaryAsset(new URL("/fonts/space-mono/space-mono-latin-700-normal.woff", base)),
-      fetchBinaryAsset(new URL("/fonts/space-mono/space-mono-latin-ext-700-normal.woff", base)),
     ]);
     return {
       markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(mark)}`,
@@ -77,8 +73,6 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
         spaceGroteskSemiBoldExt,
         spaceGroteskBold,
         spaceGroteskBoldExt,
-        spaceMonoBold,
-        spaceMonoBoldExt,
       },
     };
   })();

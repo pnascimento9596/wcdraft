@@ -40,7 +40,7 @@
 }
 
 .account-panel__label {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
 }
 
 .account-email {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
@@ -117,7 +117,7 @@
   border: 1px solid var(--accent-deep);
   background: var(--accent-solid);
   color: var(--accent-ink);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
@@ -287,7 +287,7 @@
 }
 
 .account-picks span {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   color: var(--ink-soft);
   font-size: 0.72rem;
 }
