@@ -60,6 +60,7 @@ describe("@wcdraft/db schema — shape", () => {
       username: string | null;
       passwordHash: string | null;
       passwordSetAt: Date | null;
+      emailVerifiedAt: Date | null;
       createdAt: Date;
     }>();
     // email is nullable, so the insert type allows omission
@@ -68,6 +69,7 @@ describe("@wcdraft/db schema — shape", () => {
       username?: string | null;
       passwordHash?: string | null;
       passwordSetAt?: Date | null;
+      emailVerifiedAt?: Date | null;
     }>();
   });
 

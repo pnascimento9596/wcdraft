@@ -73,7 +73,12 @@ export type SubmitRejectionCode =
   | "SCORE_MISMATCH";
 
 /** Codes owned by the route layer (U3/U5) — steps 4 and 6 of the pipeline. */
-export type SubmitGateCode = "AUTH_REQUIRED" | "CSRF_FAILED" | "RATE_LIMITED" | "BAD_ATTEMPT";
+export type SubmitGateCode =
+  | "AUTH_REQUIRED"
+  | "VERIFICATION_REQUIRED"
+  | "CSRF_FAILED"
+  | "RATE_LIMITED"
+  | "BAD_ATTEMPT";
 
 export type SubmitErrorCode = SubmitRejectionCode | SubmitGateCode;
 
@@ -90,6 +95,7 @@ export const SUBMIT_ERROR_HTTP_STATUS: Readonly<Record<SubmitErrorCode, number>>
   MALFORMED_TOKEN: 400,
   WRONG_SEASON: 409,
   AUTH_REQUIRED: 401,
+  VERIFICATION_REQUIRED: 403,
   CSRF_FAILED: 403,
   INVALID_NAME: 422,
   RATE_LIMITED: 429,

@@ -1,5 +1,5 @@
 import { hash, verify } from "@node-rs/argon2";
-import { eq } from "drizzle-orm";
+import { eq, or, sql } from "drizzle-orm";
 import { users, type Db, type User } from "@wcdraft/db";
 
 import { AuthError } from "./errors";
@@ -20,6 +20,7 @@ const DUMMY_PASSWORD_HASH =
   "$argon2id$v=19$m=19456,t=2,p=1$/XeBnMPZVmvqm90RlZMhSA$6R+U4k+OSZrL/lVw48ZxZtytjJkYlgJMHSpH8537bng";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
 
 export interface PasswordDeps {
   readonly db: Db;
@@ -28,6 +29,10 @@ export interface PasswordDeps {
 
 export function normalizeEmail(raw: unknown): string {
   return typeof raw === "string" ? raw.trim().toLowerCase() : "";
+}
+
+export function isValidEmail(raw: string): boolean {
+  return EMAIL_RE.test(raw);
 }
 
 export function validatePasswordStrength(password: unknown, email?: string): string | null {
@@ -67,18 +72,19 @@ export async function verifyPasswordHash(
 }
 
 export async function authenticatePassword(
-  args: { readonly email: unknown; readonly password: unknown; readonly ipAddress: string },
+  args: { readonly identifier: unknown; readonly password: unknown; readonly ipAddress: string },
   deps: PasswordDeps,
 ): Promise<{ user: User }> {
-  const email = normalizeEmail(args.email);
+  const identifier =
+    typeof args.identifier === "string" ? args.identifier.trim().toLowerCase() : "";
   const password = typeof args.password === "string" ? args.password : "";
-  if (!EMAIL_RE.test(email) || password.length === 0) {
-    throw new AuthError("INVALID_CREDENTIALS", "Email or password is incorrect.");
+  if (identifier.length === 0 || password.length === 0) {
+    throw new AuthError("INVALID_CREDENTIALS", "Identifier or password is incorrect.");
   }
 
   const emailRate = await consumeRateLimit(
     {
-      bucket: { kind: "password-email-15m", value: email },
+      bucket: { kind: "password-email-15m", value: identifier },
       windowMs: PASSWORD_RATE_PER_EMAIL.windowMs,
       maxCount: PASSWORD_RATE_PER_EMAIL.maxCount,
     },
@@ -96,11 +102,22 @@ export async function authenticatePassword(
     throw new AuthError("RATE_LIMITED", "Too many password attempts. Wait and try again.");
   }
 
-  const rows = await deps.db.select().from(users).where(eq(users.email, email)).limit(1);
+  const rows =
+    isValidEmail(identifier) || USERNAME_RE.test(identifier)
+      ? await deps.db
+          .select()
+          .from(users)
+          .where(
+            isValidEmail(identifier)
+              ? or(eq(users.email, identifier), sql`lower(${users.username}) = ${identifier}`)
+              : sql`lower(${users.username}) = ${identifier}`,
+          )
+          .limit(1)
+      : [];
   const user = rows[0] ?? null;
   const ok = await verifyPasswordHash(user?.passwordHash ?? null, password);
   if (!user || !ok) {
-    throw new AuthError("INVALID_CREDENTIALS", "Email or password is incorrect.");
+    throw new AuthError("INVALID_CREDENTIALS", "Identifier or password is incorrect.");
   }
   return { user };
 }

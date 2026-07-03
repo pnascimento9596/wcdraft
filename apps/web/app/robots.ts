@@ -20,6 +20,7 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         "/settings",
         "/sign-in",
+        "/sign-up",
         "/play/draft",
         "/play/review",
         "/play/results",

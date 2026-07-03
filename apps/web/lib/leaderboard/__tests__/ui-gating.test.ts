@@ -371,6 +371,32 @@ describe("SubmitPanelView — every outcome state string maps to its phase", () 
     expect(html).not.toContain("disabled");
   });
 
+  it("ranked signed-in without verified email: shows verification affordance", () => {
+    const html = renderToStaticMarkup(
+      createElement(SubmitPanelView, {
+        score: 41,
+        draftMode: "classic",
+        submitMode: "ranked",
+        authReady: true,
+        isSignedIn: true,
+        emailVerified: false,
+        publicUsername: "public_user",
+        leaderboardHref: LEADERBOARD_HREF,
+        name: "",
+        nameHint: null,
+        phase: { kind: "idle" },
+        retryRemaining: null,
+        onModeChange: () => undefined,
+        onNameChange: () => undefined,
+        onSubmit: () => undefined,
+      }),
+    );
+    expect(html).toContain("Verify your email to post ranked runs.");
+    expect(html).toContain('href="/account?verify=1"');
+    expect(html).toContain("Post ranked run");
+    expect(html).toContain("disabled");
+  });
+
   it("ranked signed-in with username: alias is optional per entry", () => {
     const html = renderToStaticMarkup(
       createElement(SubmitPanelView, {

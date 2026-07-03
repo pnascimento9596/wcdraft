@@ -1,0 +1,104 @@
+{
+  "baseUrl": "http://127.0.0.1:3210",
+  "generatedAt": "2026-07-03T17:07:05.815Z",
+  "mode": "next-start",
+  "axeViolations": 0,
+  "results": [
+    {
+      "page": "sign-in",
+      "viewport": "390x844",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-in-390x844-light.png"
+    },
+    {
+      "page": "sign-up",
+      "viewport": "390x844",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-up-390x844-light.png"
+    },
+    {
+      "page": "account-verification-change-password",
+      "viewport": "390x844",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-verification-change-password-390x844-light.png"
+    },
+    {
+      "page": "account-reset-set-new-password",
+      "viewport": "390x844",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-reset-set-new-password-390x844-light.png"
+    },
+    {
+      "page": "sign-in",
+      "viewport": "390x844",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-in-390x844-dark.png"
+    },
+    {
+      "page": "sign-up",
+      "viewport": "390x844",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-up-390x844-dark.png"
+    },
+    {
+      "page": "account-verification-change-password",
+      "viewport": "390x844",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-verification-change-password-390x844-dark.png"
+    },
+    {
+      "page": "account-reset-set-new-password",
+      "viewport": "390x844",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-reset-set-new-password-390x844-dark.png"
+    },
+    {
+      "page": "sign-in",
+      "viewport": "360x800",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-in-360x800-light.png"
+    },
+    {
+      "page": "sign-up",
+      "viewport": "360x800",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-up-360x800-light.png"
+    },
+    {
+      "page": "account-verification-change-password",
+      "viewport": "360x800",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-verification-change-password-360x800-light.png"
+    },
+    {
+      "page": "account-reset-set-new-password",
+      "viewport": "360x800",
+      "theme": "light",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-reset-set-new-password-360x800-light.png"
+    },
+    {
+      "page": "sign-in",
+      "viewport": "360x800",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-in-360x800-dark.png"
+    },
+    {
+      "page": "sign-up",
+      "viewport": "360x800",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/sign-up-360x800-dark.png"
+    },
+    {
+      "page": "account-verification-change-password",
+      "viewport": "360x800",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-verification-change-password-360x800-dark.png"
+    },
+    {
+      "page": "account-reset-set-new-password",
+      "viewport": "360x800",
+      "theme": "dark",
+      "file": "/private/tmp/wcdraft-auth-password-first-20260703/docs/reports/auth-password-first-2026-07-03/account-reset-set-new-password-360x800-dark.png"
+    }
+  ]
+}

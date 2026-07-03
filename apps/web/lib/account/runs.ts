@@ -13,6 +13,7 @@ export interface AccountIdentity {
   readonly email: string | null;
   readonly username: string | null;
   readonly hasPassword: boolean;
+  readonly emailVerified: boolean;
 }
 
 export interface AccountRun {
@@ -81,6 +82,7 @@ export async function readAccountIdentity(db: Db, userId: string): Promise<Accou
       email: users.email,
       username: users.username,
       passwordHash: users.passwordHash,
+      emailVerifiedAt: users.emailVerifiedAt,
     })
     .from(users)
     .where(eq(users.id, userId))
@@ -92,6 +94,7 @@ export async function readAccountIdentity(db: Db, userId: string): Promise<Accou
     email: row.email,
     username: row.username,
     hasPassword: row.passwordHash !== null,
+    emailVerified: row.emailVerifiedAt !== null,
   };
 }
 

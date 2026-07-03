@@ -29,7 +29,11 @@ function makeDeps(overrides: Partial<RankedAttemptRouteDeps> = {}): RankedAttemp
 async function accountReqOpts(): Promise<Record<string, string>> {
   const user = await db
     .insert(users)
-    .values({ email: "ranked-attempt@example.com", username: "ranked_attempt" })
+    .values({
+      email: "ranked-attempt@example.com",
+      username: "ranked_attempt",
+      emailVerifiedAt: new Date(NOW),
+    })
     .returning();
   const { session, cookieValue } = await createSession(
     { userId: user[0]!.id },
@@ -70,6 +74,36 @@ describe("POST /api/ranked/attempt", () => {
     expect(res.status).toBe(401);
     const body = (await res.json()) as { error: string };
     expect(body.error).toBe("AUTH_REQUIRED");
+    expect(await db.select().from(rankedAttempts)).toHaveLength(0);
+  });
+
+  it("requires verified email for account-bound ranked attempts", async () => {
+    const [user] = await db
+      .insert(users)
+      .values({ email: "unverified-attempt@example.com", username: "unverified_attempt" })
+      .returning();
+    const { session, cookieValue } = await createSession(
+      { userId: user!.id },
+      { db, now: () => NOW, cookieSecret: SECRET },
+    );
+    const res = await handleRankedAttemptPost(
+      makeReq({
+        headers: {
+          cookie: `wcdraft_sid=${encodeURIComponent(cookieValue)}; wcdraft_csrf=${encodeURIComponent(
+            session.csrfSecret,
+          )}`,
+          "x-csrf-token": session.csrfSecret,
+          origin: "http://localhost",
+          host: "localhost",
+        },
+      }),
+      makeDeps(),
+    );
+    expect(res.status).toBe(403);
+    expect(await res.json()).toMatchObject({
+      error: "VERIFICATION_REQUIRED",
+      resend_verification: "/api/auth/resend-verification",
+    });
     expect(await db.select().from(rankedAttempts)).toHaveLength(0);
   });
 

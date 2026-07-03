@@ -30,6 +30,33 @@ UI proof (`apps/web/scripts/verify-reference-standing-browser.mts`): scores
 {−7, 0, 14, 52} at 390x844 + 360x800, light + dark, 16 screenshots, 0 axe
 violations, token-replay standing identical.
 
+Password-first auth + ranked verification lane:
+2026-07-03 · local RED implementation on branch
+`ws-auth/password-first-20260703`, based on `origin/main` `ebfac96`. Scope:
+reconciles PR #193's magic-link-first account hub into the owner target model:
+primary sign-up is username + email + password with signup-time username format,
+blocklist, and uniqueness validation; sign-in is username-or-email + password;
+magic-link sign-in remains as the secondary legacy/passwordless path; forgot
+password sends a reset-purpose magic link to `/account?set_new_password=1`;
+`/account` now surfaces identity, username, email verification, change password,
+fresh-link set-new-password, and delete controls; ranked attempt/submit require
+`users.email_verified_at` while casual play/posts remain available unverified.
+Migration `0011_email_verification` adds only nullable
+`users.email_verified_at`; existing magic-only/no-username accounts remain
+valid, and consuming any magic link sets verification. No core, sim, rating,
+ETL, compact runtime-data, or data bundle files changed; runtime-data anchors
+remain `runtime-data-2.9.0`. Local gates passed before fresh-context review:
+focused auth/leaderboard suite (8 files / 130 tests), DB tests (3 files / 108
+tests), root typecheck (8/8), root lint (5/5), root test (8/8; core 389, data
+101 passed / 9 skipped, db 108, marketing 68, web 895 passed / 1 skipped plus
+`game-flow-playwright`), web production build, core/data/web golden Turbo tasks,
+Neon ephemeral branch apply + full rollback round-trip including
+`0011_email_verification.down.sql`, and local production Playwright/axe proof:
+sign-in, sign-up, unverified account verification/change-password, and
+fresh-link set-new-password at 390x844 and 360x800 in light and dark; 16
+screenshots, 0 axe violations, no horizontal overflow. Report:
+`docs/reports/auth-password-first-2026-07-03/summary.md`.
+
 Daily-seed vetting + ENG-08 invariant lane:
 2026-07-02 · local RED implementation on branch
 `ws-core/daily-seed-vetting-20260702`, based on `origin/main` `07aaf42`. Scope:

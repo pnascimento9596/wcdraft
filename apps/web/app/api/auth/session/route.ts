@@ -60,11 +60,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const deps = buildRuntimeDeps();
     try {
       const session = await validateSessionCookie(cookie, deps);
-      const username = session.userId === null ? null : await readUsername(deps.db, session.userId);
+      const profile =
+        session.userId === null ? null : await readSessionProfile(deps.db, session.userId);
       return NextResponse.json({
         session: {
           userId: session.userId,
-          username,
+          username: profile?.username ?? null,
+          emailVerified: profile?.emailVerified ?? false,
           isAnonymous: session.userId === null,
           expiresAt: session.expiresAt.toISOString(),
         },
@@ -80,16 +82,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 }
 
-async function readUsername(
+async function readSessionProfile(
   db: ReturnType<typeof buildRuntimeDeps>["db"],
   userId: string,
-): Promise<string | null> {
+): Promise<{ username: string | null; emailVerified: boolean } | null> {
   const rows = await db
-    .select({ username: users.username })
+    .select({ username: users.username, emailVerifiedAt: users.emailVerifiedAt })
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);
-  return rows[0]?.username ?? null;
+  const row = rows[0];
+  return row ? { username: row.username, emailVerified: row.emailVerifiedAt !== null } : null;
 }
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {

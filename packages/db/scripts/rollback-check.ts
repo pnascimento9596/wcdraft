@@ -319,6 +319,20 @@ async function main(): Promise<void> {
       /users_username_format_chk|check constraint/i,
     );
     await db.execute(sql`
+      UPDATE users
+      SET email_verified_at = NOW()
+      WHERE email = 'rollback-check-a@example.com'
+    `);
+    const verifiedProbe = await db.execute<{ email_verified_at: Date | string | null }>(sql`
+      SELECT email_verified_at
+      FROM users
+      WHERE email = 'rollback-check-a@example.com'
+    `);
+    if (verifiedProbe.rows[0]?.email_verified_at == null) {
+      throw new Error("[rollback-check] FATAL: users.email_verified_at did not persist");
+    }
+    console.log("  ✓ users: email_verified_at nullable verification timestamp persists");
+    await db.execute(sql`
       INSERT INTO leaderboard_entries
         (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, session_id, display_alias, token, verified_score)
       VALUES (${lbSeason}, 'casual', 'classic', 'squad_first', 'all_time', 'career', NULL, ${sessionA}, 'rollback_check', ${lbToken}, 0)

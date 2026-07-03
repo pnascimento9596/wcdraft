@@ -29,13 +29,14 @@ export default function PrivacyPage() {
         </p>
         <ul>
           <li>
-            <strong>Account and sign-in data.</strong> If you request a magic-link sign-in, we store
-            the submitted email address with the magic-link record. If you complete sign-in, we also
-            store and use it as your account email. Magic-link sign-in also uses a token hash,
-            expiry time, consumed time, session identifier, CSRF secret, and session expiry so the
-            link can be single-use and your session can stay secure. If you set or reset a password,
-            we store a password hash and the password-set timestamp; password sign-in verifies
-            against that hash.
+            <strong>Account and sign-in data.</strong> If you create an account, we store your
+            email, public username, password hash, password-set timestamp, and email verification
+            timestamp when verification is complete. If you request a magic-link sign-in,
+            verification link, or password reset, we store the submitted email address with the
+            magic-link record. Magic-link flows also use a token hash, expiry time, consumed time,
+            session identifier, CSRF secret, and session expiry so the link can be single-use and
+            your session can stay secure. Password sign-in verifies against the stored password
+            hash.
           </li>
           <li>
             <strong>Gameplay and history data.</strong> Draft runs can include the run id, parent
@@ -88,7 +89,9 @@ export default function PrivacyPage() {
 
         <h2>How we use information</h2>
         <ul>
-          <li>To send magic-link sign-in emails and keep account sessions secure.</li>
+          <li>
+            To send sign-in, verification, and password-reset emails and keep sessions secure.
+          </li>
           <li>To run drafts, score tournament results, save history, and replay share links.</li>
           <li>To verify and display leaderboard submissions.</li>
           <li>
@@ -109,7 +112,7 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>Resend</strong> processes your email address and magic-link email content when
-            we send you a sign-in link.
+            we send sign-in, verification, or password-reset links.
           </li>
         </ul>
 

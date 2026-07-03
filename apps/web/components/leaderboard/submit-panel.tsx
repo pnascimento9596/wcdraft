@@ -61,6 +61,7 @@ export function LeaderboardSubmitPanel({
   const [retryRemaining, setRetryRemaining] = useState<number | null>(null);
   const { ready: authReady, isSignedIn, session, refresh } = useAuth();
   const publicUsername = isSignedIn ? (session?.username ?? null) : null;
+  const emailVerified = isSignedIn ? (session?.emailVerified ?? false) : false;
   const dailyChallenge = record.challenge?.kind === "daily" ? record.challenge : null;
   const rankedAttemptId = record.ranked_attempt?.attempt_id ?? null;
   const effectiveSubmitMode: SubmitBoardMode = dailyChallenge === null ? submitMode : "casual";
@@ -125,6 +126,10 @@ export function LeaderboardSubmitPanel({
       setPhase(rankedAuthRequiredPhase());
       return;
     }
+    if (effectiveSubmitMode === "ranked" && isSignedIn && !emailVerified) {
+      setPhase(rankedVerificationRequiredPhase());
+      return;
+    }
     if (!preparedName.ok) {
       setTouched(true);
       return;
@@ -158,6 +163,7 @@ export function LeaderboardSubmitPanel({
       authReady={authReady}
       isSignedIn={isSignedIn}
       publicUsername={publicUsername}
+      emailVerified={emailVerified}
       challengeKind={dailyChallenge === null ? "season" : "daily"}
       dailyOpen={dailyOpen}
       leaderboardHref={leaderboardHref}
@@ -224,6 +230,16 @@ function rankedAuthRequiredPhase(): SubmitPhase {
     kind: "rejected",
     code: "AUTH_REQUIRED",
     copy: submitStatusCopy("AUTH_REQUIRED"),
+    nameHint: null,
+    retryAfterSeconds: null,
+  };
+}
+
+function rankedVerificationRequiredPhase(): SubmitPhase {
+  return {
+    kind: "rejected",
+    code: "VERIFICATION_REQUIRED",
+    copy: submitStatusCopy("VERIFICATION_REQUIRED"),
     nameHint: null,
     retryAfterSeconds: null,
   };

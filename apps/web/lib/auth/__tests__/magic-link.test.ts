@@ -21,7 +21,7 @@ import {
 } from "@/lib/auth/magic-link";
 import { LogEmailSender } from "@/lib/auth/email";
 import { sha256Hex } from "@/lib/auth/tokens";
-import { authRateLimits, magicLinkTokens } from "@wcdraft/db";
+import { authRateLimits, magicLinkTokens, users } from "@wcdraft/db";
 import { eq } from "drizzle-orm";
 
 let env: Awaited<ReturnType<typeof setupTestDb>>;
@@ -230,5 +230,20 @@ describe("verifyMagicLink", () => {
       { db: env.db, now: () => t2 + 1 },
     );
     expect(u2.id).toBe(u1.id);
+  });
+
+  it("marks an existing magic-link account verified when the link is consumed", async () => {
+    const t = Date.UTC(2026, 5, 1);
+    await env.db.insert(users).values({ email: "verify-existing@example.com" });
+    const { rawToken } = await issueToken({ now: t, email: "verify-existing@example.com" });
+
+    const { user } = await verifyMagicLink({ token: rawToken }, { db: env.db, now: () => t + 1 });
+
+    expect(user.emailVerifiedAt).toBeInstanceOf(Date);
+    const [row] = await env.db
+      .select({ emailVerifiedAt: users.emailVerifiedAt })
+      .from(users)
+      .where(eq(users.email, "verify-existing@example.com"));
+    expect(row?.emailVerifiedAt).toBeInstanceOf(Date);
   });
 });

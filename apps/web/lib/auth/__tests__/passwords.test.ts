@@ -25,7 +25,21 @@ describe("password auth", () => {
       .returning();
 
     const result = await authenticatePassword(
-      { email: "A@example.com", password: "Long-enough-42", ipAddress: "127.0.0.1" },
+      { identifier: "A@example.com", password: "Long-enough-42", ipAddress: "127.0.0.1" },
+      deps(),
+    );
+    expect(result.user.id).toBe(user!.id);
+  });
+
+  it("authenticates by username with the same password path", async () => {
+    const passwordHash = await hashPassword("Long-enough-42");
+    const [user] = await env.db
+      .insert(users)
+      .values({ email: "username-login@example.com", username: "user_login", passwordHash })
+      .returning();
+
+    const result = await authenticatePassword(
+      { identifier: "USER_LOGIN", password: "Long-enough-42", ipAddress: "127.0.0.5" },
       deps(),
     );
     expect(result.user.id).toBe(user!.id);
@@ -38,7 +52,7 @@ describe("password auth", () => {
 
     await expect(
       authenticatePassword(
-        { email: "has@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.2" },
+        { identifier: "has@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.2" },
         deps(),
       ),
     ).rejects.toMatchObject({
@@ -47,7 +61,16 @@ describe("password auth", () => {
     } satisfies Partial<AuthError>);
     await expect(
       authenticatePassword(
-        { email: "magic@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.3" },
+        { identifier: "magic@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.3" },
+        deps(),
+      ),
+    ).rejects.toMatchObject({
+      code: "INVALID_CREDENTIALS",
+      status: 401,
+    } satisfies Partial<AuthError>);
+    await expect(
+      authenticatePassword(
+        { identifier: "missing_user", password: "Wrong-enough-42", ipAddress: "127.0.0.6" },
         deps(),
       ),
     ).rejects.toMatchObject({
@@ -59,7 +82,7 @@ describe("password auth", () => {
   it("rate-limits repeated password attempts and recovers next window", async () => {
     for (let i = 0; i < 11; i += 1) {
       const action = authenticatePassword(
-        { email: "none@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.4" },
+        { identifier: "none@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.4" },
         deps(),
       );
       if (i < 10) {
@@ -71,7 +94,7 @@ describe("password auth", () => {
 
     await expect(
       authenticatePassword(
-        { email: "none@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.4" },
+        { identifier: "none@example.com", password: "Wrong-enough-42", ipAddress: "127.0.0.4" },
         { db: env.db, now: () => Date.UTC(2026, 5, 30, 12, 16, 0) },
       ),
     ).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });

@@ -31,6 +31,7 @@ export const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 export const MAGIC_LINK_RATE_PER_EMAIL = { maxCount: 3, windowMs: 15 * 60 * 1000 };
 /** Per-IP rate: at most N requests per W hour. */
 export const MAGIC_LINK_RATE_PER_IP = { maxCount: 10, windowMs: 60 * 60 * 1000 };
+const PASSWORD_RESET_RESPONSE_FLOOR_MS = 250;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -49,6 +50,7 @@ export interface RequestMagicLinkArgs {
   readonly next?: string | null;
   /** Hashed via rate-limit; raw IP never persisted. */
   readonly ipAddress: string;
+  readonly purpose?: "signin" | "verification" | "reset";
 }
 
 export function buildMagicLinkVerifyUrl(args: {
@@ -139,9 +141,90 @@ export async function requestMagicLink(
     toEmail: email,
     magicLinkUrl,
     fromAddress: deps.fromAddress,
+    purpose: args.purpose ?? "signin",
   });
 
   return { tokenHash, expiresAt };
+}
+
+export async function requestPasswordResetMagicLink(
+  args: RequestMagicLinkArgs,
+  deps: MagicLinkDeps,
+): Promise<{ sent: boolean; tokenHash: string | null; expiresAt: Date | null }> {
+  const responseStartedAt = performance.now();
+  const email = args.email.trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) {
+    throw new AuthError("EMAIL_INVALID");
+  }
+
+  const emailRate = await consumeRateLimit(
+    {
+      bucket: { kind: "email", value: email },
+      windowMs: MAGIC_LINK_RATE_PER_EMAIL.windowMs,
+      maxCount: MAGIC_LINK_RATE_PER_EMAIL.maxCount,
+    },
+    { db: deps.db, now: deps.now },
+  );
+  if (!emailRate.allowed) {
+    throw new AuthError("RATE_LIMITED", "too many requests for this email");
+  }
+  const ipRate = await consumeRateLimit(
+    {
+      bucket: { kind: "ip", value: args.ipAddress || "unknown" },
+      windowMs: MAGIC_LINK_RATE_PER_IP.windowMs,
+      maxCount: MAGIC_LINK_RATE_PER_IP.maxCount,
+    },
+    { db: deps.db, now: deps.now },
+  );
+  if (!ipRate.allowed) {
+    throw new AuthError("RATE_LIMITED", "too many requests from this address");
+  }
+
+  const existing = await deps.db.select({ id: users.id }).from(users).where(eq(users.email, email));
+  const userId = existing[0]?.id ?? null;
+
+  const { token, tokenHash } = generateToken();
+  const magicLinkUrl = buildMagicLinkVerifyUrl({
+    token,
+    verifyBaseUrl: deps.verifyBaseUrl,
+    next: args.next,
+  });
+  const expiresAt = new Date(deps.now() + MAGIC_LINK_TTL_MS);
+  await deps.db.insert(magicLinkTokens).values({
+    tokenHash,
+    email,
+    userId,
+    expiresAt,
+  });
+  if (userId !== null) {
+    try {
+      void deps.sender
+        .sendMagicLink({
+          toEmail: email,
+          magicLinkUrl,
+          fromAddress: deps.fromAddress,
+          purpose: args.purpose ?? "reset",
+        })
+        .catch(logDeferredResetSendFailure);
+    } catch (err) {
+      logDeferredResetSendFailure(err);
+    }
+  }
+  await waitForPasswordResetFloor(responseStartedAt);
+  return { sent: userId !== null, tokenHash, expiresAt };
+}
+
+async function waitForPasswordResetFloor(responseStartedAt: number): Promise<void> {
+  const remaining = PASSWORD_RESET_RESPONSE_FLOOR_MS - (performance.now() - responseStartedAt);
+  if (remaining <= 0) return;
+  await new Promise((resolve) => setTimeout(resolve, remaining));
+}
+
+function logDeferredResetSendFailure(err: unknown): void {
+  console.error(
+    "[auth/reset] deferred email send failed",
+    err instanceof Error ? err.message : err,
+  );
 }
 
 export interface VerifyMagicLinkArgs {
@@ -191,11 +274,22 @@ export async function verifyMagicLink(
   // row and a returning user gets their existing one. Drizzle 0.36 lacks
   // a fluent upsert returning helper for nullable-unique conflicts; we
   // do select-first, then insert if missing.
+  const verifiedAt = new Date(deps.now());
   const existing = await deps.db.select().from(users).where(eq(users.email, row.email));
   let user = existing[0];
   if (!user) {
-    const inserted = await deps.db.insert(users).values({ email: row.email }).returning();
+    const inserted = await deps.db
+      .insert(users)
+      .values({ email: row.email, emailVerifiedAt: verifiedAt })
+      .returning();
     user = inserted[0];
+  } else if (user.emailVerifiedAt === null) {
+    const updated = await deps.db
+      .update(users)
+      .set({ emailVerifiedAt: verifiedAt })
+      .where(eq(users.id, user.id))
+      .returning();
+    user = updated[0] ?? user;
   }
   if (!user) {
     throw new Error("verifyMagicLink: failed to materialize user row");

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { metadataBaseUrl } from "../lib/site-metadata";
 
 // SEO surface — /sitemap.xml. Stable, indexable public routes only.
-// Excludes transient `/play/*` run states, `/settings`, `/sign-in`, and API
+// Excludes transient `/play/*` run states, `/settings`, `/sign-in`, `/sign-up`, and API
 // routes (all either client-state-dependent or non-content). `lastModified` is
 // intentionally omitted to keep the generated XML deterministic across builds.
 export default function sitemap(): MetadataRoute.Sitemap {

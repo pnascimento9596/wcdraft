@@ -49,6 +49,7 @@ const GOLDEN = fixtureJson as unknown as {
 };
 
 const SECRET = testCookieSecret("f4-u3-routes");
+const VERIFIED_AT = new Date(Date.UTC(2026, 5, 29, 12, 0, 0));
 const data: ValidationData = getValidationData();
 const TEST_SALT_MAP: NonNullable<ValidationData["gameData"]["dailySeedSaltMap"]> = {
   schema_version: "daily-seed-salt-map-1.0.0",
@@ -622,7 +623,11 @@ describe("anonymous casual accept + NULLS-NOT-DISTINCT dedupe", () => {
   it("duplicate hidden season row keeps rank context honest nulls", async () => {
     const [user] = await db
       .insert(users)
-      .values({ email: "hidden-duplicate@example.com", username: "hidden_duplicate" })
+      .values({
+        email: "hidden-duplicate@example.com",
+        username: "hidden_duplicate",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { opts } = await sessionReqOpts(user!.id);
     await db.insert(leaderboardEntries).values({
@@ -820,7 +825,10 @@ describe("session identity + CSRF (plan §5.3 — like POST /api/runs)", () => {
   });
 
   it("account-bound session → user_id persisted", async () => {
-    const inserted = await db.insert(users).values({ email: "f4-u3@example.com" }).returning();
+    const inserted = await db
+      .insert(users)
+      .values({ email: "f4-u3@example.com", emailVerifiedAt: VERIFIED_AT })
+      .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
     const res = await handleLeaderboardSubmit(makeReq(opts), makeDeps());
     expect(res.status).toBe(201);
@@ -831,7 +839,11 @@ describe("session identity + CSRF (plan §5.3 — like POST /api/runs)", () => {
   it("account-bound session with no alias → displays username fallback, never email", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "profile-fallback@example.com", username: "profile_user" })
+      .values({
+        email: "profile-fallback@example.com",
+        username: "profile_user",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
     const res = await handleLeaderboardSubmit(
@@ -929,6 +941,28 @@ describe("ranked account gate", () => {
     expect(await allRows()).toHaveLength(0);
   });
 
+  it("signed-in unverified ranked → 403 VERIFICATION_REQUIRED before validation, no row", async () => {
+    const [user] = await db
+      .insert(users)
+      .values({ email: "unverified-ranked@example.com", username: "unverified_ranked" })
+      .returning();
+    const { opts } = await sessionReqOpts(user!.id);
+    const res = await handleLeaderboardSubmit(
+      makeReq({ ...opts, body: validBody({ mode: "ranked" }) }),
+      makeDeps({
+        getValidation: () => {
+          throw new Error("validation must not run before email verification");
+        },
+      }),
+    );
+    expect(res.status).toBe(403);
+    expect(await errorOf(res)).toMatchObject({
+      error: "VERIFICATION_REQUIRED",
+      resend_verification: "/api/auth/resend-verification",
+    });
+    expect(await allRows()).toHaveLength(0);
+  });
+
   it("forged ranked session → 401 AUTH_REQUIRED, never downgrades to anonymous", async () => {
     const { opts } = await sessionReqOpts();
     const res = await handleLeaderboardSubmit(
@@ -951,7 +985,11 @@ describe("ranked account gate", () => {
     const now = Date.UTC(2026, 5, 1);
     const inserted = await db
       .insert(users)
-      .values({ email: "expired-ranked@example.com", username: "expired_ranked" })
+      .values({
+        email: "expired-ranked@example.com",
+        username: "expired_ranked",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id, { now, ttlMs: 1 });
     const res = await handleLeaderboardSubmit(
@@ -969,7 +1007,11 @@ describe("ranked account gate", () => {
   it("account-bound ranked with a client-chosen seed and no issued attempt → 403 BAD_ATTEMPT", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "no-attempt-ranked@example.com", username: "no_attempt" })
+      .values({
+        email: "no-attempt-ranked@example.com",
+        username: "no_attempt",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { opts } = await sessionReqOpts(inserted[0]!.id);
     const res = await handleLeaderboardSubmit(
@@ -990,7 +1032,11 @@ describe("ranked account gate", () => {
   it("account-bound ranked with a mismatched issued seed → 403 BAD_ATTEMPT", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "wrong-seed-ranked@example.com", username: "wrong_seed" })
+      .values({
+        email: "wrong-seed-ranked@example.com",
+        username: "wrong_seed",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
     const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
@@ -1010,7 +1056,11 @@ describe("ranked account gate", () => {
   it("account-bound ranked with username fallback → 201 ranked row, no email", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "ranked-user@example.com", username: "ranked_user" })
+      .values({
+        email: "ranked-user@example.com",
+        username: "ranked_user",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
     const body = validBody({ mode: "ranked", display_alias: undefined, display_name: undefined });
@@ -1042,7 +1092,11 @@ describe("ranked account gate", () => {
   it("account-bound ranked alias overrides username per entry", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "alias-ranked@example.com", username: "real_user" })
+      .values({
+        email: "alias-ranked@example.com",
+        username: "real_user",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
     const body = validBody({ mode: "ranked", display_alias: "alias_user" });
@@ -1057,7 +1111,11 @@ describe("ranked account gate", () => {
   it("account-bound ranked non-canonical config → 201 ranked row under exact config", async () => {
     const inserted = await db
       .insert(users)
-      .values({ email: "ranked-config@example.com", username: "ranked_config" })
+      .values({
+        email: "ranked-config@example.com",
+        username: "ranked_config",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const { sessionId, opts } = await sessionReqOpts(inserted[0]!.id);
     const body = bodyForRecord(
@@ -1104,11 +1162,19 @@ describe("ranked account gate", () => {
   it("account-bound ranked Memory submit ranks inside the Memory lane only", async () => {
     const player = await db
       .insert(users)
-      .values({ email: "memory-ranked@example.com", username: "memory_player" })
+      .values({
+        email: "memory-ranked@example.com",
+        username: "memory_player",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const rival = await db
       .insert(users)
-      .values({ email: "memory-rival@example.com", username: "memory_rival" })
+      .values({
+        email: "memory-rival@example.com",
+        username: "memory_rival",
+        emailVerifiedAt: VERIFIED_AT,
+      })
       .returning();
     const rivalAttempt = await db
       .insert(rankedAttempts)
