@@ -26,7 +26,7 @@
   margin-bottom: 1rem;
 }
 .panelTitle {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.5rem;
   letter-spacing: 0.02em;
 }
@@ -37,7 +37,7 @@
   text-align: right;
 }
 .eyebrowAccent {
-  font-family: var(--font-text), system-ui, sans-serif;
+  font-family: var(--font-family);
   text-transform: uppercase;
   letter-spacing: 0.26em;
   font-size: 0.7rem;
@@ -131,12 +131,12 @@
   padding: 0.24rem 0.64rem;
 }
 .modeIndex {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 1.6rem;
   color: color-mix(in srgb, var(--ink) 52%, var(--bg-panel));
 }
 .modeName {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: 2.1rem;
   letter-spacing: 0.01em;
 }
@@ -165,7 +165,7 @@
 }
 .modeCta {
   margin-top: auto;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -356,7 +356,7 @@
   top: 2px;
   right: 13px;
   z-index: 0;
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 44px;
   font-weight: 700;
   line-height: 1;
@@ -381,7 +381,7 @@
   border-radius: 6px;
   background: var(--accent-wash);
   color: var(--accent);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -397,7 +397,7 @@
 .modeName {
   min-width: 0;
   margin: 0;
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 22px;
   font-weight: 700;
   line-height: 1;
@@ -430,7 +430,7 @@
   border-radius: 7px;
   background: var(--s2);
   color: var(--tx);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -490,7 +490,7 @@
   margin: 0;
   padding: 6px 0;
   color: var(--accent);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -559,7 +559,7 @@
 
 .localProgressStreak,
 .localProgressCountdown {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -573,7 +573,7 @@
 .localProgressFriend {
   margin: 0;
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.76rem;
   font-weight: 700;
 }

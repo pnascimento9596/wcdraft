@@ -4,6 +4,12 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Blind Open draft mode closeout:
+2026-07-03 · PR #214 (`ws-ux/blind-open-20260703`) merged to `main` as `7b497c9422672bedea578e926e005712951fa143`. Scope: added Blind Open as the fourth draft mode, with Open Draft choice density and pre-sim rating/synergy blinding, deterministic replay/share labels, and leaderboard exclusion. Recorded PR gates: focused core/web/marketing tests, root typecheck/lint/test/build, core/data/web goldens, and fresh detached review; heavy realism was not run because rating/sim/data artifacts did not move. Live verification on 2026-07-03: `https://www.wcdraft.com/play` returned 200, showed Blind Open in the mode selector, and exposed mobile build stamp `7b497c9 · 2026-07-03`. Report: `docs/reports/blind-open-2026-07-03.md`.
+
+Space Grotesk single-font lane:
+2026-07-03 · local YELLOW implementation on branch `ws-ux/space-grotesk-20260703`, based on `origin/main` `7b497c9`. Scope: removes the Space Mono public font payload and all app mono/system-family font references under `apps/web`, consolidates typography tokens to Space Grotesk, enables tabular numeric features globally, updates share/OG/global-error/auth-verify/static-SVG surfaces, embeds Space Grotesk font data into downloaded share-card SVGs, and keeps email-client markup as the documented exception. Payload proof: web font files drop from 267,031 B to 172,521 B (-94,510 B); Space Grotesk Latin faces carry OpenType `tnum`. Browser proof: strict mobile font audit (`apps/web/scripts/verify-font-consolidation-browser.mts`) passed at 390x844 and 360x800 in light/dark across 48 surfaces and 40 targets with zero failures, no non-Grotesk computed families, no horizontal overflow, no sub-44px targets, zero numeric surfaces missing tabular samples, and downloaded share SVG blobs containing embedded Space Grotesk font data. Local gates passed: focused web Vitest 2 files / 32 tests; web typecheck/lint/test (83 files passed / 1 skipped, 902 tests passed / 1 skipped plus game-flow Playwright); root typecheck 8/8, lint 5/5, test 8/8, build 4/4; web leaderboard golden 1 file / 6 tests; `pnpm check:generated`; `git diff --check`; targeted Prettier on supported changed files. Report: `docs/reports/font-consolidation-2026-07-03.md`.
+
 Reference standing (FIT-06) lane:
 2026-07-01 · RED lane on branch `ws-f4/reference-standing-20260701`, based on
 `origin/main` `012c25a`. Scope: ships the strategicAutoDraft N=2000 score

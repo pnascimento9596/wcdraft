@@ -78,8 +78,10 @@ export function renderVerifyInterstitialHtml(args: RenderInterstitialArgs): stri
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <style>
-    :root { color-scheme: light dark; }
-    body { font: 16px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0d1117; color: #f0f6fc; }
+    @font-face { font-family: "Space Grotesk"; font-style: normal; font-display: swap; font-weight: 400; src: url("/fonts/space-grotesk/space-grotesk-latin-400-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Space Grotesk"; font-style: normal; font-display: swap; font-weight: 600; src: url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2"); }
+    :root { color-scheme: light dark; --font-family: "Space Grotesk", system-ui, sans-serif; }
+    body { font: 16px/1.5 var(--font-family); font-variant-numeric: tabular-nums; font-feature-settings: "kern", "liga", "tnum"; margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0d1117; color: #f0f6fc; }
     main { max-width: 32rem; padding: 2rem; text-align: center; }
     h1 { margin: 0 0 1rem; font-size: 1.75rem; }
     p { margin: 0 0 1.5rem; opacity: 0.85; }

@@ -19,7 +19,7 @@
   min-height: 100svh;
   background: var(--bg-850);
   color: var(--ink-100);
-  font-family: var(--f-body);
+  font-family: var(--font-family);
 }
 
 /* ws-ux/tap-stability-2 — ANCHORED variant for the main draft layout (the
@@ -58,7 +58,7 @@
 .draftAttribution {
   margin: -2px 0 0;
   color: var(--ink-400);
-  font-family: var(--f-body);
+  font-family: var(--font-family);
   font-size: 11px;
   line-height: 1.35;
   text-align: center;
@@ -114,7 +114,7 @@
 }
 
 .appBarTitle {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.04em;
@@ -133,7 +133,7 @@
   border-radius: var(--r-2);
   background: var(--bg-800);
   color: var(--ink-200);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 11px;
   line-height: 1.1;
   white-space: nowrap;
@@ -186,14 +186,14 @@
   flex-basis: 100%;
   font-size: var(--t-xs);
   color: var(--warn);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
 }
 
 .loadingPanel {
   padding: 40px 16px;
   text-align: center;
   color: var(--ink-300);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
 }
 
 .setupSkeleton {
@@ -295,7 +295,7 @@
 
 .errorTitle {
   margin: 0;
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: 22px;
   color: var(--loss);
 }
@@ -323,7 +323,7 @@
 }
 
 .formationTitle {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 28px;
   margin: 0;
@@ -377,7 +377,7 @@
     border-color var(--d-fast);
   text-align: center;
   color: inherit;
-  font-family: inherit;
+  font-family: var(--font-family);
   box-shadow: var(--sh-1);
 }
 
@@ -408,7 +408,7 @@
 }
 
 .formationCardName {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 23px;
   line-height: 1;
@@ -417,7 +417,7 @@
 }
 
 .formationCardCta {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -427,7 +427,7 @@
 .formationError {
   margin: 0;
   color: var(--loss);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
 }
 
 /* ── DC-2/DC-4 — pre-draft "Draft setup" disclosure (plan §G) ───────────────
@@ -445,7 +445,7 @@
   border-radius: 0.5rem;
   background: var(--bg-panel);
   color: var(--ink-100);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   cursor: pointer;
 }
@@ -497,7 +497,7 @@
 }
 
 .setupAxisLabel {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -522,7 +522,7 @@
   border-radius: 999px;
   background: transparent;
   color: var(--ink-100);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   line-height: 1.15;
   text-align: center;
@@ -550,7 +550,7 @@
 
 .targetGroupTitle {
   margin: 0;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -583,14 +583,14 @@
 }
 
 .targetChipPos {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-sm);
   font-weight: 700;
   color: var(--ember-bright);
 }
 
 .targetChipId {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ink-soft);
 }
@@ -761,7 +761,7 @@
   gap: 2px;
   color: var(--ink-100);
   font-size: var(--t-xs);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   cursor: pointer;
   transition:
     box-shadow var(--d-fast),
@@ -996,7 +996,7 @@
   padding: 0 6px;
   background: color-mix(in srgb, var(--bg-700) 80%, transparent);
   border: 1px solid var(--line-2);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-100);
@@ -1025,7 +1025,7 @@
 }
 
 .candName {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: 0.01em;
@@ -1042,7 +1042,7 @@
   height: 16px;
   margin-left: 6px;
   font-size: 10px;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   background: var(--gold);
   color: var(--bg-900);
   border-radius: 999px;
@@ -1057,12 +1057,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   min-width: 44px;
 }
 
 .candOverallNum {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: 28px;
   line-height: 1;
   color: var(--ink-100);
@@ -1085,7 +1085,7 @@
 /* Pill/badge rhythm: 2px 8px + r-pill + t-xs mono everywhere a pill
    appears (provBadge, shirt, drafted, compatPill, manager badge). */
 .candShirt {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ink-300);
   padding: 2px 8px;
@@ -1094,7 +1094,7 @@
 }
 
 .candDrafted {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--lock);
   padding: 2px 8px;
@@ -1124,7 +1124,7 @@
 }
 
 .candCoverageVal {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--ink-300);
 }
@@ -1134,7 +1134,7 @@
 }
 
 .candManagerTag {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   color: var(--prov-manager);
 }
@@ -1168,7 +1168,7 @@
 
 /* Provenance badges */
 .provBadge {
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1216,7 +1216,7 @@
   justify-content: center;
   min-width: 32px;
   padding: 2px 8px;
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   background: var(--bg-700);
@@ -1303,13 +1303,13 @@
 
 .lockHint {
   color: var(--ink-400);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
 }
 
 .lockError {
   color: var(--loss);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
 }
 
@@ -1357,7 +1357,7 @@
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: var(--r-pill);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   border: 1px solid var(--line-2);
 }
@@ -1397,7 +1397,7 @@
 }
 
 .sheetTitle {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: 18px;
   letter-spacing: 0.02em;
 }
@@ -1432,7 +1432,7 @@
   border: 1px solid var(--line-2);
   border-radius: var(--r-2);
   color: var(--ink-100);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
   font-size: var(--t-xs);
   cursor: pointer;
 }
@@ -1443,7 +1443,7 @@
 }
 
 .sheetSlotPos {
-  font-family: var(--f-display);
+  font-family: var(--font-family);
   font-size: 16px;
 }
 
@@ -1488,7 +1488,7 @@
   padding: 16px 16px calc(84px + env(safe-area-inset-bottom, 0px));
   background: var(--bg-850);
   color: var(--ink-100);
-  font-family: var(--f-body);
+  font-family: var(--font-family);
 }
 
 .draftAppBar {
@@ -1529,7 +1529,7 @@
 .formationHead::before {
   content: "Draft";
   color: var(--accent);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -1568,7 +1568,7 @@
 .setupRowLabel,
 .setupAxisLabel {
   color: var(--ink-400);
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-family);
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1679,7 +1679,7 @@
 
 .formationCardName {
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 19px;
   font-weight: 700;
   letter-spacing: 0;
@@ -1687,7 +1687,7 @@
 
 .formationCardCta {
   color: var(--accent);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 11.5px;
   font-weight: 400;
   letter-spacing: 0.04em;

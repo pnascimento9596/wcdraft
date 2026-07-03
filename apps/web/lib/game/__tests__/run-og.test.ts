@@ -193,18 +193,6 @@ function localAssets(): RunOgImageAssets {
           import.meta.url,
         ),
       ),
-      spaceMonoBold: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-mono/space-mono-latin-700-normal.woff",
-          import.meta.url,
-        ),
-      ),
-      spaceMonoBoldExt: readArrayBuffer(
-        new URL(
-          "../../../public/fonts/space-mono/space-mono-latin-ext-700-normal.woff",
-          import.meta.url,
-        ),
-      ),
     },
   };
 }
@@ -234,8 +222,6 @@ function stubOgRouteFetch() {
       "/fonts/space-grotesk/space-grotesk-latin-ext-700-normal.woff",
       assets.fonts.spaceGroteskBoldExt,
     ],
-    ["/fonts/space-mono/space-mono-latin-700-normal.woff", assets.fonts.spaceMonoBold],
-    ["/fonts/space-mono/space-mono-latin-ext-700-normal.woff", assets.fonts.spaceMonoBoldExt],
   ]);
 
   vi.stubGlobal(

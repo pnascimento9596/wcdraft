@@ -10,7 +10,7 @@
   margin: 0;
   font-size: var(--t-xs);
   color: var(--warn);
-  font-family: var(--f-mono);
+  font-family: var(--font-family);
 }
 
 .historyList {
@@ -64,7 +64,7 @@
 }
 
 .historyRecord {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(2.4rem, 9vw, 3.2rem);
   line-height: 0.9;
   color: var(--accent);
@@ -122,7 +122,7 @@
 }
 
 .historyPickNation {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -150,11 +150,11 @@
 }
 
 .historySequence {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
 }
 
 .historySeed {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-family);
   background: var(--bg-sunken, var(--bg-750));
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -178,7 +178,7 @@
 
 .historyShareHint {
   color: var(--ink-faint);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.7rem;
 }
 
@@ -190,7 +190,7 @@
   border-radius: 7px;
   background: var(--bg-sunken);
   color: var(--ink-100);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -265,7 +265,7 @@
 .historySequence,
 .historyPickNation,
 .historyShareHint {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-family);
   font-weight: 700;
 }
 
