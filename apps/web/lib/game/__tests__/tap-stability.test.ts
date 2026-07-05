@@ -22,6 +22,11 @@ const css = readGameCssSource();
 // shadowed legacy block earlier in the file).
 const canonical = css.slice(css.indexOf("── In-shell lock bar"));
 
+function block(selector: string): string {
+  const re = new RegExp(`(^|\\n)${selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{[^}]*\\}`);
+  return re.exec(css)?.[0] ?? "";
+}
+
 describe("in-shell lock bar contract", () => {
   it("has a canonical in-shell lock bar section", () => {
     expect(canonical.length).toBeGreaterThan(0);
@@ -70,6 +75,24 @@ describe("in-shell lock bar contract", () => {
         expect(p).toContain("calc(12px + env(safe-area-inset-bottom, 0px))");
       }
     }
+  });
+});
+
+describe("mode-select sticky CTA contract", () => {
+  it("keeps the mode dock above the scrollable cards", () => {
+    const dock = block(".modeDock");
+    expect(dock).toContain("position: sticky");
+    expect(dock).toContain("z-index: 20");
+    expect(dock).toContain("isolation: isolate");
+    expect(dock).toContain("background: var(--s0)");
+  });
+
+  it("reserves the dock height below the mode cards", () => {
+    const grid = block(".modeGridDaily");
+    expect(grid).toContain("padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px))");
+    expect(grid).toContain(
+      "scroll-padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px))",
+    );
   });
 });
 

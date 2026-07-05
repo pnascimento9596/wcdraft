@@ -391,6 +391,81 @@ async function assertFullyVisibleInViewport(
   );
 }
 
+async function verifyModeSelectCtaDoesNotTapThrough(
+  browser: Browser,
+  baseUrl: string,
+): Promise<void> {
+  const testCase = await newBrowserCase(browser);
+  const { page } = testCase;
+  await page.goto(`${baseUrl}/play`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("radio", { name: /Classic/u }).waitFor();
+  await page.waitForTimeout(3_000);
+
+  const classicCard = page.getByRole("radio", { name: /Classic/u });
+  let selectedClassic = false;
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const box = await classicCard.boundingBox();
+    assert(box, "Classic mode card did not render a tappable box");
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    await page.waitForTimeout(250);
+    selectedClassic = (await classicCard.getAttribute("aria-checked")) === "true";
+    if (selectedClassic) break;
+  }
+  assert(selectedClassic, "Classic mode card did not become selected before CTA tap");
+  await page.getByRole("button", { name: "Continue with Classic →" }).waitFor();
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
+  const hit = await page.evaluate(() => {
+    const dock = document.querySelector('[class*="modeDock"]');
+    const button = dock?.querySelector("button");
+    const box = button?.getBoundingClientRect();
+    if (!dock || !button || !box) return null;
+    const center = { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    const target = document.elementFromPoint(center.x, center.y);
+    return {
+      center,
+      buttonHeight: box.height,
+      buttonText: button.textContent?.replace(/\s+/gu, " ").trim() ?? "",
+      dockButtonHit: target?.closest('[class*="modeDock"] button') !== null,
+      radioHit: target?.closest('button[role="radio"]') !== null,
+    };
+  });
+  assert(hit, "mode-select CTA did not render");
+  assert(hit.buttonHeight >= 44, `mode-select CTA height ${hit.buttonHeight} is below 44px`);
+  assert(
+    hit.buttonText === "Continue with Classic →",
+    `unexpected mode-select CTA ${hit.buttonText}`,
+  );
+  assert(hit.dockButtonHit, "mode-select CTA center does not hit the CTA button");
+  assert(!hit.radioHit, "mode-select CTA center still hits a mode card");
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(100);
+  const bottomClearance = await page.evaluate(() => {
+    const dock = document.querySelector('[class*="modeDock"]');
+    const cards = [...document.querySelectorAll('button[role="radio"]')];
+    const lastCard = cards.at(-1);
+    const dockBox = dock?.getBoundingClientRect();
+    const lastBox = lastCard?.getBoundingClientRect();
+    if (!dockBox || !lastBox) return null;
+    return Math.round(dockBox.top - lastBox.bottom);
+  });
+  assert(
+    bottomClearance !== null && bottomClearance >= -1,
+    `last mode card still scrolls under the CTA by ${bottomClearance}px`,
+  );
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
+  await page.touchscreen.tap(hit.center.x, hit.center.y);
+  await page.waitForURL((url) => url.pathname === "/play/draft" && !url.searchParams.has("mode"), {
+    timeout: 30_000,
+  });
+
+  await assertNoBrowserErrors(testCase, "mode-select CTA tap target");
+}
+
 async function verifyPositionFirstDraftFlow(browser: Browser, baseUrl: string): Promise<void> {
   const target = firstPositionFirstTarget();
   const testCase = await newBrowserCase(browser);
@@ -525,11 +600,12 @@ async function main(): Promise<void> {
       channel: process.env.WCDRAFT_PLAYWRIGHT_CHANNEL ?? "chrome",
       headless: true,
     });
+    await verifyModeSelectCtaDoesNotTapThrough(browser, server.baseUrl);
     await verifyPositionFirstDraftFlow(browser, server.baseUrl);
     await verifyManagerOnlyGuardFlow(browser, server.baseUrl);
     await verifyReviewResultsShareFlow(browser, server.baseUrl);
     console.log(
-      "game-flow-playwright: ok - draft setup, position-first target, lock-pick, manager guard, review simulate, results, and share",
+      "game-flow-playwright: ok - mode-select CTA, draft setup, position-first target, lock-pick, manager guard, review simulate, results, and share",
     );
   } finally {
     if (browser) await browser.close();
