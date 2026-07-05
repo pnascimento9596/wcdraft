@@ -235,6 +235,8 @@
 }
 .modeGridDaily {
   grid-auto-rows: auto;
+  padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-block-end: calc(69px + env(safe-area-inset-bottom, 0px));
 }
 @media (min-width: 52rem) {
   .modeGridDaily {
@@ -519,7 +521,9 @@
 
 .modeDock {
   position: sticky;
+  z-index: 20;
   bottom: 0;
+  isolation: isolate;
   margin: 8px -16px -8px;
   padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--line-1);
