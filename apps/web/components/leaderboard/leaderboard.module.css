@@ -453,6 +453,11 @@
   gap: 0.35rem;
 }
 
+.lineupSquad,
+.lineupBench {
+  min-width: 0;
+}
+
 .lineupMetrics {
   display: grid;
   grid-template-columns: minmax(4.8rem, 0.8fr) repeat(4, minmax(4.5rem, 1fr));
@@ -534,6 +539,69 @@
 .boardFoot {
   font-size: 0.72rem;
   color: var(--ink-faint);
+}
+
+@media (min-width: 64rem) {
+  .boardShell {
+    gap: 1.1rem;
+  }
+
+  .toolbar {
+    grid-template-columns: minmax(15rem, 0.34fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+  }
+
+  .laneTabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filterGrid {
+    grid-template-columns: minmax(9rem, 1fr) repeat(3, minmax(8.5rem, 0.9fr));
+  }
+
+  .activeConfig,
+  .advancedDisclosure,
+  .meChip {
+    grid-column: 1 / -1;
+  }
+
+  .row {
+    grid-template-columns: 3rem minmax(0, 1fr) minmax(7rem, auto);
+    gap: 0.8rem;
+  }
+
+  .inspector {
+    padding: 0.65rem 0.4rem 1.1rem 3.25rem;
+  }
+
+  .lineupView {
+    grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 0.88fr);
+    align-items: start;
+    gap: 0.8rem 1rem;
+  }
+
+  .lineupSummary,
+  .lineupBadges {
+    grid-column: 1 / -1;
+  }
+
+  .lineupSquad {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+  }
+
+  .lineupMetrics {
+    grid-column: 2;
+    grid-row: 3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lineupBench {
+    grid-column: 2;
+    grid-row: 4;
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 30rem) {

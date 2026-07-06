@@ -4,6 +4,25 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Desktop responsive pass:
+2026-07-06 · local YELLOW implementation on branch
+`ws-ux/desktop-responsive-20260706`, initially baselined on `origin/main`
+`1274ff9b8cf3c36831be145fcff42e13d7bd48c5` and finally integrated after rebase
+onto `origin/main` `09e1769461b65a49839ea0da61f21f8ae55cafb9`. Scope is
+layout-only in `apps/web`: wider desktop container system, capped home hero scale and composed
+hero grid, desktop mode-select card grid with non-overlapping in-flow CTA,
+desktop draft pitch/candidate split, review/results two-column compositions,
+history and leaderboard wide layouts, account desktop CSS, and a reusable
+responsive browser audit harness. No core, rating, sim, token, API, schema,
+ETL, compact runtime-data, or leaderboard scoring behavior changed. Local gates
+passed: focused web typecheck/lint/test (83 files passed / 1 skipped, 904 tests
+passed / 1 skipped plus `game-flow-playwright`), root typecheck (8/8), root lint
+(5/5), root test (8/8), root build (4/4; existing Next chunk/runtime warnings
+only), strict dev responsive matrix (8 surfaces x 5 viewports x 2 themes = 80
+captures / 0 failures), and strict production-build responsive matrix via
+`next start` (80 captures / 0 failures). Report:
+`docs/reports/desktop-responsive-2026-07-06/REPORT.md`.
+
 Blind Open draft mode closeout:
 2026-07-03 · PR #214 (`ws-ux/blind-open-20260703`) merged to `main` as `7b497c9422672bedea578e926e005712951fa143`. Scope: added Blind Open as the fourth draft mode, with Open Draft choice density and pre-sim rating/synergy blinding, deterministic replay/share labels, and leaderboard exclusion. Recorded PR gates: focused core/web/marketing tests, root typecheck/lint/test/build, core/data/web goldens, and fresh detached review; heavy realism was not run because rating/sim/data artifacts did not move. Live verification on 2026-07-03: `https://www.wcdraft.com/play` returned 200, showed Blind Open in the mode selector, and exposed mobile build stamp `7b497c9 · 2026-07-03`. Report: `docs/reports/blind-open-2026-07-03.md`.
 

@@ -168,6 +168,9 @@
   --field-ink: #f2ecdc;
   --grain-opacity: 0.025;
   --shadow-card: var(--e1);
+  --container-readable: 46rem;
+  --container-page: 76rem;
+  --container-wide: 88rem;
 }
 
 :root[data-theme="dark"] {
@@ -428,13 +431,24 @@ body:has([data-draft-anchored]) .site-footer {
 
 .container {
   width: 100%;
-  max-width: 64rem;
+  max-width: var(--container-page);
   margin-inline: auto;
-  padding-inline: clamp(1.1rem, 5vw, 2.5rem);
+  padding-inline: clamp(1.1rem, 4vw, 2.5rem);
 }
 
 .container--narrow {
-  max-width: 46rem;
+  max-width: var(--container-readable);
+}
+
+@media (min-width: 64rem) {
+  .masthead__inner,
+  .site-footer__inner,
+  .hero .container,
+  .game-page,
+  .leaderboard-page,
+  .account-page {
+    max-width: var(--container-wide);
+  }
 }
 
 main {
@@ -577,6 +591,7 @@ main {
   text-decoration: none;
   padding: 0.45rem 0.7rem;
   border-radius: 6px;
+  white-space: nowrap;
   transition:
     color 0.2s ease,
     background-color 0.2s ease;
@@ -702,6 +717,29 @@ main {
   }
   .menu-toggle {
     display: none;
+  }
+}
+
+@media (min-width: 52rem) and (max-width: 70rem) {
+  .masthead__inner {
+    gap: 0.6rem;
+  }
+
+  .wordmark {
+    gap: 0.45rem;
+  }
+
+  .wordmark__text {
+    font-size: 1.32rem;
+  }
+
+  .nav-desktop {
+    gap: 0.15rem;
+  }
+
+  .nav-link {
+    padding-inline: 0.42rem;
+    font-size: 0.82rem;
   }
 }
 
@@ -850,7 +888,7 @@ main {
 .hero {
   position: relative;
   overflow: hidden;
-  padding-block: clamp(3rem, 9vw, 7rem);
+  padding-block: clamp(3rem, 7vw, 5.75rem);
 }
 
 /* Chalk pitch markings behind the hero. */
@@ -874,7 +912,7 @@ main {
 }
 
 .hero h1 {
-  font-size: clamp(3.4rem, 14vw, 8.5rem);
+  font-size: clamp(3.4rem, 8vw, 7.25rem);
   margin-block: 0.3rem 0.2rem;
 }
 .hero h1 .accent {

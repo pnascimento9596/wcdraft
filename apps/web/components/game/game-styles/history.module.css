@@ -290,6 +290,21 @@
   letter-spacing: 0.04em;
 }
 
+@media (min-width: 64rem) {
+  .historyList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .historyList > li {
+    min-width: 0;
+  }
+
+  .historyCard {
+    height: 100%;
+  }
+}
+
 @media (max-width: 430px) {
   .historyMetaTop {
     gap: 10px;

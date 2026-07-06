@@ -77,6 +77,14 @@
   color: var(--ink-300);
   text-decoration: underline;
 }
+
+.nowDrafting,
+.gkWarnPanel,
+.formationPanel,
+.candidatePanel {
+  min-width: 0;
+}
+
 @media (max-width: 430px) {
   .draftShellAnchored .draftAppBar {
     margin: 8px 8px 0;
@@ -87,6 +95,45 @@
   }
   .draftAttribution {
     font-size: 10px;
+  }
+}
+
+@media (min-width: 64rem) {
+  .draftShellAnchored .draftAppBar {
+    margin: 14px 20px 0;
+  }
+
+  .draftScroll {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(23rem, 0.92fr);
+    grid-auto-rows: min-content;
+    align-items: start;
+    gap: 16px;
+    padding: 14px 20px 26px;
+  }
+
+  .draftScroll > .nowDrafting,
+  .draftScroll > .gkWarnPanel,
+  .draftScroll > .draftAttribution {
+    grid-column: 1 / -1;
+  }
+
+  .draftScroll > .formationPanel {
+    grid-column: 1;
+    position: sticky;
+    top: 0;
+    max-height: calc(100svh - 7.5rem);
+    overflow: auto;
+  }
+
+  .draftScroll > .candidatePanel {
+    grid-column: 2;
+  }
+}
+
+@media (min-width: 90rem) {
+  .draftScroll {
+    grid-template-columns: minmax(36rem, 1.05fr) minmax(26rem, 0.82fr);
   }
 }
 
@@ -1489,6 +1536,55 @@
   background: var(--bg-850);
   color: var(--ink-100);
   font-family: var(--font-family);
+}
+
+.reviewMainPanel,
+.reviewMetricsPanel,
+.reviewWarningsPanel,
+.reviewSimPanel {
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .reviewShell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.16fr) minmax(22rem, 0.84fr);
+    grid-auto-rows: min-content;
+    align-items: start;
+    gap: 16px;
+    padding: 18px 20px calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .reviewShell > .draftAppBar,
+  .reviewShell > header {
+    grid-column: 1 / -1;
+  }
+
+  .reviewMainPanel {
+    grid-column: 1;
+    grid-row: 3 / span 3;
+  }
+
+  .reviewMetricsPanel {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .reviewWarningsPanel {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+  .reviewSimPanel {
+    grid-column: 2;
+    grid-row: 5;
+  }
+}
+
+@media (min-width: 90rem) {
+  .reviewShell {
+    grid-template-columns: minmax(38rem, 1.08fr) minmax(25rem, 0.72fr);
+  }
 }
 
 .draftAppBar {

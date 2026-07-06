@@ -307,7 +307,7 @@ function ReviewBoard({
         </div>
       </header>
 
-      <section className={s.panel} aria-label="Final XI">
+      <section className={`${s.panel} ${s.reviewMainPanel}`} aria-label="Final XI">
         <SynergyBar result={synergy} active={true} blind={blind} />
         {blind ? (
           <p className={s.memoryModeNote} role="note">
@@ -364,7 +364,7 @@ function ReviewBoard({
         </div>
       </section>
 
-      <section className={s.panel}>
+      <section className={`${s.panel} ${s.reviewMetricsPanel}`}>
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>{blind ? "Line strengths hidden" : "Rating by line"}</h2>
           {blind ? (
@@ -397,7 +397,7 @@ function ReviewBoard({
 
       {squadWarnings.length > 0 ? (
         <section
-          className={`${s.panel} ${s.warningsPanel}`}
+          className={`${s.panel} ${s.warningsPanel} ${s.reviewWarningsPanel}`}
           tabIndex={0}
           aria-labelledby="squad-warnings-title"
         >
@@ -539,7 +539,7 @@ function SimulatePanel({
       : "Your draft is complete. Hit simulate to play the 8-match run.";
 
   return (
-    <section className={`${s.panel} ${s.simPanel}`}>
+    <section className={`${s.panel} ${s.simPanel} ${s.reviewSimPanel}`}>
       {sim.kind === "error" ? (
         <div role="alert">
           <p className={s.simNote}>

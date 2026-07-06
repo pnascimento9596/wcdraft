@@ -42,6 +42,7 @@ export default async function HomePage() {
     <section className="hero">
       <script
         nonce={nonce}
+        suppressHydrationWarning
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
