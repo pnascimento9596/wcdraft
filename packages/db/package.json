@@ -37,7 +37,7 @@
     "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.3",
+    "@electric-sql/pglite": "^0.5.4",
     "drizzle-kit": "^0.31.10"
   }
 }
