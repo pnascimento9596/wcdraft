@@ -415,6 +415,97 @@
   min-height: 52px; /* primary CTA — thumb-sized at every breakpoint */
 }
 
+@media (min-width: 64rem) {
+  .spinShell {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    gap: 10px;
+    padding: 12px 20px 18px;
+  }
+
+  .spinStage {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.14fr) minmax(320px, 0.86fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    align-items: stretch;
+    gap: 12px 16px;
+    padding: 0;
+  }
+
+  .spinStatusBar {
+    grid-column: 1 / -1;
+    min-height: 56px;
+  }
+
+  .spinDrumLabel {
+    display: none;
+  }
+
+  .spinDrumLabelWithHint {
+    display: flex;
+    grid-column: 1 / -1;
+  }
+
+  .spinDrum {
+    grid-column: 1;
+    grid-row: 2 / 5;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    padding: clamp(14px, 2.2vw, 28px);
+  }
+
+  .spinReels {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .spinResultBlock {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .spinResultName {
+    font-size: clamp(34px, 3.2vw, 54px);
+  }
+
+  .spinResultTag {
+    max-width: 38ch;
+  }
+
+  .spinTiles {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: end;
+  }
+
+  .spinCta {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: end;
+    margin-top: 0;
+    min-height: 56px;
+  }
+}
+
+@media (min-width: 90rem) {
+  .spinStage {
+    grid-template-columns: minmax(0, 1.22fr) minmax(360px, 0.78fr);
+    gap: 14px 22px;
+  }
+
+  .spinStatusBar {
+    min-height: 60px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spinReelTrackSpinning {
     animation: none !important;

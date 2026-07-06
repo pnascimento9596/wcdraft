@@ -1713,6 +1713,26 @@
   letter-spacing: 0.04em;
 }
 
+@media (min-width: 64rem) {
+  .candidatePanel {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100svh - 9rem);
+    overflow: hidden;
+  }
+
+  .candidatePanel .candList {
+    min-height: 0;
+    overflow: auto;
+    padding-right: 2px;
+  }
+
+  .spinStage .rareMoment {
+    grid-column: 2;
+    margin: 0;
+  }
+}
+
 /* Rare candidate marker (ws-ux/mobile-polish-2): an inline gold chip beside
    the name, replacing the old full-width gold top band. One accent axis per
    edge — provenance stays on the card border, gold marks the pick/win

@@ -41,13 +41,25 @@ type SurfaceCase = {
   readonly path: string;
   readonly prepare?: (page: Page) => Promise<void>;
   readonly route?: (page: Page) => Promise<void>;
+  readonly shellRule?: boolean;
+  readonly allowResponseErrorPathnames?: readonly string[];
+  readonly primaryAction?: {
+    readonly role: "button" | "link" | "radio";
+    readonly name: string | RegExp;
+  };
 };
 
 type SurfaceMetric = {
   readonly surface: string;
   readonly viewport: string;
+  readonly viewportWidth: number;
+  readonly viewportHeight: number;
   readonly theme: Theme;
   readonly screenshot: string;
+  readonly shellRule: boolean;
+  readonly noScrollGate: "pass" | "fail" | "n-a";
+  readonly primaryActionAboveFold: boolean | null;
+  readonly primaryActionInViewport: boolean | null;
   readonly scrollHeight: number;
   readonly clientHeight: number;
   readonly maxScrollWidth: number;
@@ -65,6 +77,18 @@ const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3027";
 const PHASE = process.env.WCDRAFT_RESPONSIVE_PHASE ?? "capture";
 const STRICT = process.env.WCDRAFT_RESPONSIVE_STRICT === "1";
+const VIEWPORT_FILTER = new Set(
+  (process.env.WCDRAFT_RESPONSIVE_VIEWPORTS ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean),
+);
+const SURFACE_FILTER = new Set(
+  (process.env.WCDRAFT_RESPONSIVE_SURFACES ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean),
+);
 const OUT_DIR =
   process.env.WCDRAFT_RESPONSIVE_OUT_DIR ??
   path.join(REPO_ROOT, "docs/reports/desktop-responsive-2026-07-06", PHASE);
@@ -84,6 +108,7 @@ const gameData = buildGameDataFromBundles();
 const viewports: readonly ViewportCase[] = [
   { name: "1280x800", width: 1280, height: 800 },
   { name: "1440x900", width: 1440, height: 900 },
+  { name: "1512x982", width: 1512, height: 982 },
   { name: "1920x1080", width: 1920, height: 1080 },
   { name: "390x844", width: 390, height: 844 },
   { name: "360x800", width: 360, height: 800 },
@@ -94,20 +119,28 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function draftRecord(mode: DraftMode = "classic"): RunRecordV1 {
-  const run_id = `resp-active-${mode}`;
-  const parent_seed = `wcdraft:responsive:${mode}:active`;
+function draftRecord(
+  mode: DraftMode = "classic",
+  opts: {
+    readonly runId?: string;
+    readonly parentSeed?: string;
+    readonly draftFlow?: "squad_first" | "position_first";
+    readonly teamName?: string;
+  } = {},
+): RunRecordV1 {
+  const run_id = opts.runId ?? `resp-active-${mode}`;
+  const parent_seed = opts.parentSeed ?? `wcdraft:responsive:${mode}:active`;
   const draft = createDraft(gameData.catalog, {
     run_id,
     parent_seed,
     formation_id: "4-3-3",
     mode,
-    team_name: "Responsive XI",
+    team_name: opts.teamName ?? "Responsive XI",
     dataset_version: gameData.versions.dataset_version,
     rating_version: gameData.versions.rating_version,
     engine_version: gameData.versions.engine_version,
     era_preset: "all_time",
-    draft_flow: "squad_first",
+    draft_flow: opts.draftFlow ?? "squad_first",
     rating_basis: "career",
   });
   return {
@@ -152,10 +185,33 @@ function completedRecord(run_id: string, teamName: string): RunRecordV1 {
   return { ...base, status: "complete", simulation };
 }
 
-const activeDraftRecord = draftRecord();
+const activeDraftRecord = draftRecord("classic");
+const activePositionRecord = draftRecord("classic", {
+  runId: "resp-active-position-first",
+  parentSeed: "wcdraft:responsive:position-first:active",
+  draftFlow: "position_first",
+  teamName: "Target XI",
+});
+const activeOpenRecord = draftRecord("open", {
+  runId: "resp-active-open",
+  parentSeed: "wcdraft:responsive:open:active",
+  teamName: "Open XI",
+});
+const activeBlindOpenRecord = draftRecord("open_hidden", {
+  runId: "resp-active-open-hidden",
+  parentSeed: "wcdraft:responsive:open-hidden:active",
+  teamName: "Blind Open XI",
+});
 const completeA = completedRecord("resp-complete-a", "Broadcast XI");
 const completeB = completedRecord("resp-complete-b", "Wide View XI");
-const seededRecords = [activeDraftRecord, completeA, completeB] as const;
+const seededRecords = [
+  activeDraftRecord,
+  activePositionRecord,
+  activeOpenRecord,
+  activeBlindOpenRecord,
+  completeA,
+  completeB,
+] as const;
 
 function localStoragePayload(records: readonly RunRecordV1[]) {
   return {
@@ -309,6 +365,7 @@ async function makeContext(
   browser: Browser,
   viewport: ViewportCase,
   theme: Theme,
+  allowResponseErrorPathnames: readonly string[] = [],
 ): Promise<{ context: BrowserContext; page: Page; errors: string[] }> {
   const mobile = viewport.width <= 430;
   const context = await browser.newContext({
@@ -361,6 +418,7 @@ async function makeContext(
   page.on("response", (response) => {
     if (response.status() < 400) return;
     const pathname = new URL(response.url()).pathname;
+    if (allowResponseErrorPathnames.includes(pathname)) return;
     if (["/api/auth/csrf", "/api/runs", "/api/og/sign"].includes(pathname)) return;
     errors.push(`${response.status()} ${pathname}`);
   });
@@ -402,10 +460,20 @@ async function hideDevOverlay(page: Page): Promise<void> {
 }
 
 function surfaceCases(): readonly SurfaceCase[] {
+  const settleSpin = async (page: Page) => {
+    await page.getByRole("button", { name: "Spin" }).click();
+    await page.getByRole("button", { name: /Reveal choices/u }).waitFor();
+  };
+  const revealChoices = async (page: Page) => {
+    await settleSpin(page);
+    await page.getByRole("button", { name: /Reveal choices/u }).click();
+    await page.locator('section[aria-label="Candidates"]').waitFor();
+  };
   return [
     {
       label: "home",
       path: "/",
+      primaryAction: { role: "link", name: /Play daily|Start drafting|Play/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /Draft your/u }).waitFor();
       },
@@ -413,22 +481,72 @@ function surfaceCases(): readonly SurfaceCase[] {
     {
       label: "mode-select",
       path: "/play",
+      primaryAction: { role: "radio", name: /Today/u },
       prepare: async (page) => {
         await page.getByRole("radio", { name: /Classic/u }).waitFor();
       },
     },
     {
-      label: "draft-lineup",
-      path: `/play/draft?run=${activeDraftRecord.run_id}`,
+      label: "draft-setup",
+      path: "/play/draft",
+      primaryAction: { role: "button", name: /Lock .* & spin/u },
       prepare: async (page) => {
-        await page.getByRole("button", { name: "Spin" }).click();
-        await page.getByRole("button", { name: /Reveal choices/u }).click();
-        await page.locator('section[aria-label="Candidates"]').waitFor();
+        await page.getByRole("heading", { name: /Lock a formation/u }).waitFor();
       },
+    },
+    {
+      label: "daily-spin",
+      path: "/play/daily",
+      shellRule: true,
+      primaryAction: { role: "button", name: /Spin|Reveal choices/u },
+      prepare: async (page) => {
+        await page.getByRole("button", { name: /Spin|Reveal choices/u }).waitFor();
+      },
+    },
+    {
+      label: "spin-stage",
+      path: `/play/draft?run=${activeDraftRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Reveal choices/u },
+      prepare: async (page) => {
+        await settleSpin(page);
+      },
+    },
+    {
+      label: "position-target",
+      path: `/play/draft?run=${activePositionRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Starting XI|Bench|Manager/u },
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: /Choose the slot to fill/u }).waitFor();
+      },
+    },
+    {
+      label: "classic-pick",
+      path: `/play/draft?run=${activeDraftRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Lock pick|Choose slot/u },
+      prepare: revealChoices,
+    },
+    {
+      label: "open-roster-pick",
+      path: `/play/draft?run=${activeOpenRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Lock pick|Choose slot/u },
+      prepare: revealChoices,
+    },
+    {
+      label: "blind-open-roster-pick",
+      path: `/play/draft?run=${activeBlindOpenRecord.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Lock pick|Choose slot/u },
+      prepare: revealChoices,
     },
     {
       label: "squad-review",
       path: `/play/review?run=${completeA.run_id}`,
+      shellRule: true,
+      primaryAction: { role: "button", name: /Simulate the run/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /4-3-3/u }).first().waitFor();
       },
@@ -436,13 +554,23 @@ function surfaceCases(): readonly SurfaceCase[] {
     {
       label: "results",
       path: `/play/results?run=${completeA.run_id}`,
+      primaryAction: { role: "link", name: /Share|Review|Leaderboard|Play/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /The run/u }).waitFor();
       },
     },
     {
+      label: "share-author",
+      path: `/play/share?run=${completeA.run_id}`,
+      primaryAction: { role: "button", name: /Copy|Retry/u },
+      prepare: async (page) => {
+        await page.getByText("Share").first().waitFor();
+      },
+    },
+    {
       label: "history",
       path: "/play/history",
+      primaryAction: { role: "link", name: /View results|Replay|New draft|Play/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /Recent runs/u }).waitFor();
       },
@@ -451,7 +579,9 @@ function surfaceCases(): readonly SurfaceCase[] {
       label: "leaderboard",
       path: "/leaderboard?challenge=season",
       route: mockLeaderboard,
+      primaryAction: { role: "button", name: /Broadcast XI/u },
       prepare: async (page) => {
+        await page.getByText("Broadcast XI").first().waitFor();
         await page.getByRole("button", { name: /Broadcast XI/u }).click();
         await page.locator('[role="region"][aria-label^="Lineup inspector"]').waitFor();
       },
@@ -459,8 +589,57 @@ function surfaceCases(): readonly SurfaceCase[] {
     {
       label: "how-to-play",
       path: "/how-to-play",
+      primaryAction: { role: "link", name: /Start drafting|Play/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: "How to Play" }).waitFor();
+      },
+    },
+    {
+      label: "account",
+      path: "/account",
+      primaryAction: { role: "link", name: /Sign in|Start/u },
+      prepare: async (page) => {
+        await page.getByRole("heading").first().waitFor();
+      },
+    },
+    {
+      label: "sign-in",
+      path: "/sign-in",
+      primaryAction: { role: "button", name: /Sign in|Send sign-in link/u },
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: /sign in/u }).waitFor();
+      },
+    },
+    {
+      label: "sign-up",
+      path: "/sign-up",
+      primaryAction: { role: "button", name: /Create account/u },
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: /create account/u }).waitFor();
+      },
+    },
+    {
+      label: "settings",
+      path: "/settings",
+      primaryAction: { role: "button", name: /Use system|Light|Dark/u },
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: /Settings/u }).waitFor();
+      },
+    },
+    {
+      label: "privacy",
+      path: "/privacy",
+      prepare: async (page) => {
+        await page.getByRole("heading", { name: /Privacy/u }).waitFor();
+      },
+    },
+    {
+      label: "not-found",
+      path: "/definitely-not-a-wcdraft-route",
+      allowResponseErrorPathnames: ["/definitely-not-a-wcdraft-route"],
+      primaryAction: { role: "link", name: /home|Play/u },
+      prepare: async (page) => {
+        await page.getByRole("heading").first().waitFor();
       },
     },
   ];
@@ -471,7 +650,18 @@ async function measure(
 ): Promise<
   Omit<
     SurfaceMetric,
-    "surface" | "viewport" | "theme" | "screenshot" | "axeViolations" | "consoleErrors"
+    | "surface"
+    | "viewport"
+    | "viewportWidth"
+    | "viewportHeight"
+    | "theme"
+    | "screenshot"
+    | "shellRule"
+    | "noScrollGate"
+    | "primaryActionAboveFold"
+    | "primaryActionInViewport"
+    | "axeViolations"
+    | "consoleErrors"
   >
 > {
   return await page.evaluate(`(() => {
@@ -549,8 +739,36 @@ async function measure(
   })()`);
 }
 
+async function measurePrimaryAction(
+  page: Page,
+  action: SurfaceCase["primaryAction"],
+): Promise<{ aboveFold: boolean | null; inViewport: boolean | null }> {
+  if (!action) return { aboveFold: null, inViewport: null };
+  const target = page.getByRole(action.role, { name: action.name }).first();
+  const box = await target.boundingBox().catch(() => null);
+  const viewport = page.viewportSize();
+  if (!box || !viewport) return { aboveFold: null, inViewport: null };
+  return {
+    aboveFold: box.y < viewport.height,
+    inViewport:
+      box.x >= -1 &&
+      box.y >= -1 &&
+      box.x + box.width <= viewport.width + 1 &&
+      box.y + box.height <= viewport.height + 1,
+  };
+}
+
 function metricFailures(metric: SurfaceMetric): string[] {
   const failures: string[] = [];
+  if (metric.shellRule && metric.noScrollGate === "fail") {
+    const action =
+      metric.primaryActionInViewport === true
+        ? "primary visible"
+        : `primary ${String(metric.primaryActionInViewport)}`;
+    failures.push(
+      `${metric.surface} ${metric.viewport} ${metric.theme}: shell scroll ${metric.scrollHeight}/${metric.clientHeight}; ${action}`,
+    );
+  }
   if (metric.horizontalOverflow) {
     failures.push(
       `${metric.surface} ${metric.viewport} ${metric.theme}: horizontal overflow ${metric.maxScrollWidth}/${metric.clientWidth}`,
@@ -574,6 +792,10 @@ function metricFailures(metric: SurfaceMetric): string[] {
   return failures;
 }
 
+function shellRuleApplies(surface: SurfaceCase, viewport: ViewportCase): boolean {
+  return surface.shellRule === true && viewport.width >= 1024;
+}
+
 async function captureSurface(
   browser: Browser,
   axeSource: string,
@@ -581,7 +803,12 @@ async function captureSurface(
   viewport: ViewportCase,
   theme: Theme,
 ): Promise<SurfaceMetric> {
-  const { context, page, errors } = await makeContext(browser, viewport, theme);
+  const { context, page, errors } = await makeContext(
+    browser,
+    viewport,
+    theme,
+    surface.allowResponseErrorPathnames,
+  );
   try {
     await surface.route?.(page);
     await page.goto(`${BASE_URL}${surface.path}`, { waitUntil: "domcontentloaded" });
@@ -589,16 +816,29 @@ async function captureSurface(
     await settle(page);
     await hideDevOverlay(page);
     const axeViolations = await runAxe(page, axeSource);
+    const primaryAction = await measurePrimaryAction(page, surface.primaryAction);
     const screenshotName = `${PHASE}-${surface.label}-${viewport.name}-${theme}.png`;
     const screenshotPath = path.join(OUT_DIR, "screenshots", screenshotName);
     await mkdir(path.dirname(screenshotPath), { recursive: true });
     await page.screenshot({ path: screenshotPath, fullPage: true });
     const baseMetric = await measure(page);
+    const shellRule = shellRuleApplies(surface, viewport);
+    const noScrollGate = shellRule
+      ? baseMetric.scrollHeight <= baseMetric.clientHeight + 1 && primaryAction.inViewport === true
+        ? "pass"
+        : "fail"
+      : "n-a";
     return {
       surface: surface.label,
       viewport: viewport.name,
+      viewportWidth: viewport.width,
+      viewportHeight: viewport.height,
       theme,
       screenshot: path.relative(REPO_ROOT, screenshotPath),
+      shellRule,
+      noScrollGate,
+      primaryActionAboveFold: primaryAction.aboveFold,
+      primaryActionInViewport: primaryAction.inViewport,
       axeViolations,
       consoleErrors: errors,
       ...baseMetric,
@@ -619,9 +859,15 @@ async function main(): Promise<void> {
     headless: true,
   });
   const metrics: SurfaceMetric[] = [];
+  const selectedSurfaces = surfaceCases().filter(
+    (surface) => SURFACE_FILTER.size === 0 || SURFACE_FILTER.has(surface.label),
+  );
+  const selectedViewports = viewports.filter(
+    (viewport) => VIEWPORT_FILTER.size === 0 || VIEWPORT_FILTER.has(viewport.name),
+  );
   try {
-    for (const surface of surfaceCases()) {
-      for (const viewport of viewports) {
+    for (const surface of selectedSurfaces) {
+      for (const viewport of selectedViewports) {
         for (const theme of themes) {
           const metric = await captureSurface(browser, axeSource, surface, viewport, theme);
           metrics.push(metric);
@@ -640,6 +886,8 @@ async function main(): Promise<void> {
     phase: PHASE,
     baseUrl: BASE_URL,
     axeSource: AXE_CDN,
+    surfaces: selectedSurfaces.map((surface) => surface.label),
+    viewports: selectedViewports.map((viewport) => viewport.name),
     generatedAt: new Date().toISOString(),
     metrics,
   };
