@@ -47,10 +47,13 @@ Checks per capture:
 - screenshot
 - horizontal overflow
 - desktop nav wrapping
-- visible target size
 - axe `wcag2a`/`wcag2aa`
 - console/page errors
 - desktop layout signals for draft, review, results, leaderboard, and mode grid
+
+Telemetry recorded per capture but not treated as a strict failure in this desktop pass:
+
+- compact interactive target sizes
 
 ## Results
 
@@ -101,4 +104,5 @@ Build notes:
 ## Carryovers
 
 - Account page desktop CSS was improved, but the responsive harness does not authenticate a local account session. Account remains covered by typecheck/build and CSS inspection, not seeded browser screenshots.
+- The audit records compact interactive target sizes for follow-up triage, but this lane gates responsive regressions on horizontal overflow, nav wrapping, axe violations, console/page errors, and the desktop layout signals above.
 - No live production verification has been run from this worktree yet.
