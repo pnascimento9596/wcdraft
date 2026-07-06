@@ -493,7 +493,9 @@ function ResultsBody({
         </div>
       </header>
 
-      <LocalProgressBand summary={progressSummary} compact />
+      <div className={s.resultsProgressWrap}>
+        <LocalProgressBand summary={progressSummary} compact />
+      </div>
 
       {!isBlindDraftMode(record.draft.mode) ? <MemoryProgressionPanel /> : null}
 
@@ -518,7 +520,7 @@ function ResultsBody({
       ) : null}
 
       {/* ── Match-by-match ────────────────────────────────────────────── */}
-      <section className={s.panel} aria-label="Match results">
+      <section className={`${s.panel} ${s.resultsMatchPanel}`} aria-label="Match results">
         <div className={s.panelHead}>
           <h2 className={s.panelTitle}>
             The run · {summary.matches_played} match{summary.matches_played === 1 ? "" : "es"}
@@ -550,11 +552,13 @@ function ResultsBody({
           false and nothing renders. The panel itself also stays absent when
           the run's version anchors don't match the loaded bundle. */}
       {leaderboardEnabled ? (
-        <LeaderboardSubmitPanel
-          gameData={gameData}
-          record={record}
-          onSubmitted={() => setStandingRefresh((n) => n + 1)}
-        />
+        <div className={s.resultsSubmitWrap}>
+          <LeaderboardSubmitPanel
+            gameData={gameData}
+            record={record}
+            onSubmitted={() => setStandingRefresh((n) => n + 1)}
+          />
+        </div>
       ) : null}
 
       {/* ── Seed + actions ────────────────────────────────────────────── */}

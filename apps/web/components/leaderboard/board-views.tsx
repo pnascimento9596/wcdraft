@@ -330,7 +330,7 @@ function LineupView({ lineup }: { lineup: LeaderboardLineupView }) {
         </div>
       ) : null}
 
-      <div className={gameS.squadStage}>
+      <div className={`${s.lineupSquad} ${gameS.squadStage}`}>
         <Pitch
           formationId={lineup.formation.id}
           starters={[...lineup.starters]}
@@ -340,7 +340,7 @@ function LineupView({ lineup }: { lineup: LeaderboardLineupView }) {
         <ManagerSlot manager={lineup.manager} />
       </div>
 
-      <div className={gameS.bench}>
+      <div className={`${s.lineupBench} ${gameS.bench}`}>
         <span className={gameS.benchLabel}>Bench</span>
         <div className={gameS.benchSlots}>
           {lineup.bench.map((b) => (

@@ -863,6 +863,15 @@
   composes: resultsActions from "./game-styles/results.module.css";
   composes: resultsActions from "./game-styles/draft-polish.module.css";
 }
+.resultsProgressWrap {
+  composes: resultsProgressWrap from "./game-styles/results.module.css";
+}
+.resultsMatchPanel {
+  composes: resultsMatchPanel from "./game-styles/results.module.css";
+}
+.resultsSubmitWrap {
+  composes: resultsSubmitWrap from "./game-styles/results.module.css";
+}
 .sharePrimary {
   composes: sharePrimary from "./game-styles/results.module.css";
 }
@@ -983,6 +992,7 @@
 .draftAppBar {
   composes: draftAppBar from "./game-styles/draft-shell.module.css";
   composes: draftAppBar from "./game-styles/draft-polish.module.css";
+  composes: draftAppBar from "./game-styles/results.module.css";
 }
 .draftScroll {
   composes: draftScroll from "./game-styles/draft-shell.module.css";
@@ -1488,6 +1498,18 @@
   composes: reviewHead from "./game-styles/review.module.css";
   composes: reviewHead from "./game-styles/draft-polish.module.css";
 }
+.reviewMainPanel {
+  composes: reviewMainPanel from "./game-styles/draft-shell.module.css";
+}
+.reviewMetricsPanel {
+  composes: reviewMetricsPanel from "./game-styles/draft-shell.module.css";
+}
+.reviewWarningsPanel {
+  composes: reviewWarningsPanel from "./game-styles/draft-shell.module.css";
+}
+.reviewSimPanel {
+  composes: reviewSimPanel from "./game-styles/draft-shell.module.css";
+}
 .warningsPanel {
   composes: warningsPanel from "./game-styles/review.module.css";
   composes: warningsPanel from "./game-styles/draft-polish.module.css";
@@ -1975,6 +1997,7 @@
   composes: candDetail from "./game-styles/draft-polish.module.css";
 }
 .nowDrafting {
+  composes: nowDrafting from "./game-styles/draft-shell.module.css";
   composes: nowDrafting from "./game-styles/draft-polish.module.css";
 }
 .nowDraftingMain {
@@ -2035,12 +2058,15 @@
   composes: squadCounterSep from "./game-styles/draft-polish.module.css";
 }
 .gkWarnPanel {
+  composes: gkWarnPanel from "./game-styles/draft-shell.module.css";
   composes: gkWarnPanel from "./game-styles/draft-polish.module.css";
 }
 .formationPanel {
+  composes: formationPanel from "./game-styles/draft-shell.module.css";
   composes: formationPanel from "./game-styles/draft-polish.module.css";
 }
 .candidatePanel {
+  composes: candidatePanel from "./game-styles/draft-shell.module.css";
   composes: candidatePanel from "./game-styles/draft-polish.module.css";
 }
 .managerTraits {

@@ -325,3 +325,57 @@
     max-width: 100%;
   }
 }
+
+@media (min-width: 64rem) {
+  .account-page {
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.42fr);
+    align-items: start;
+    gap: 1.35rem 1.1rem;
+  }
+
+  .account-head {
+    grid-column: 1 / -1;
+  }
+
+  .account-stats {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .account-runs {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .account-grid {
+    grid-column: 2;
+    grid-row: 3;
+    grid-template-columns: minmax(0, 1fr);
+    position: sticky;
+    top: 5rem;
+  }
+
+  .account-run {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .account-run__main {
+    grid-column: 1 / -1;
+  }
+
+  .account-run__meta,
+  .account-picks,
+  .account-run__empty {
+    grid-column: 1;
+  }
+
+  .account-run__foot {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    justify-content: end;
+    align-items: end;
+    flex-direction: column;
+    text-align: right;
+  }
+}

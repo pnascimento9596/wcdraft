@@ -12,6 +12,9 @@
      chrome + the home indicator. */
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 }
+.draftAppBar {
+  min-width: 0;
+}
 .outcome {
   display: flex;
   flex-direction: column;
@@ -607,6 +610,15 @@
   flex-wrap: wrap;
   gap: 0.7rem;
 }
+.resultsProgressWrap,
+.resultsMatchPanel,
+.resultsSubmitWrap {
+  min-width: 0;
+}
+
+.resultsProgressWrap > * {
+  height: 100%;
+}
 .sharePrimary {
   justify-content: center;
   min-width: 7rem;
@@ -769,6 +781,60 @@
 
 .seedCode {
   background: var(--bg-sunken);
+}
+
+@media (min-width: 64rem) {
+  .results {
+    display: grid;
+    grid-template-columns: minmax(0, 1.16fr) minmax(22rem, 0.84fr);
+    grid-auto-rows: min-content;
+    align-items: start;
+    gap: 16px;
+  }
+
+  .results > .draftAppBar {
+    grid-column: 1 / -1;
+  }
+
+  .outcome {
+    grid-column: 1;
+    grid-row: 2 / span 4;
+    align-self: stretch;
+  }
+
+  .resultsProgressWrap,
+  .memoryProgression,
+  .narrative {
+    grid-column: 2;
+  }
+
+  .resultsProgressWrap {
+    grid-row: 2;
+  }
+
+  .memoryProgression {
+    grid-row: 3;
+  }
+
+  .narrative {
+    grid-row: 4;
+  }
+
+  .resultsMatchPanel,
+  .resultsSubmitWrap,
+  .seedPanel {
+    grid-column: 1 / -1;
+  }
+
+  .resultsActions {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 90rem) {
+  .results {
+    grid-template-columns: minmax(38rem, 1.08fr) minmax(25rem, 0.72fr);
+  }
 }
 
 @media (max-width: 430px) {

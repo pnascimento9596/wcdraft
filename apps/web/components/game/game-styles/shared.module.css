@@ -534,6 +534,30 @@
   width: 100%;
 }
 
+@media (min-width: 64rem) {
+  .modeGridDaily {
+    padding-block-end: 0;
+    scroll-padding-block-end: 0;
+  }
+
+  .modeCardSecondary {
+    grid-column: auto;
+  }
+
+  .modeDock {
+    position: static;
+    margin: 14px 0 0;
+    padding: 0;
+    border-top: 0;
+    background: transparent;
+  }
+
+  .modeDock :global(.btn) {
+    width: auto;
+    min-width: 18rem;
+  }
+}
+
 .localProgressBand {
   display: grid;
   gap: 8px;

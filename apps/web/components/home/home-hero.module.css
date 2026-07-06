@@ -1,7 +1,7 @@
 .heroInner {
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 30rem);
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 32rem);
   align-items: center;
-  gap: clamp(1.4rem, 4vw, 3rem);
+  gap: clamp(1.6rem, 5vw, 4.5rem);
 }
 
 .copy {
@@ -14,9 +14,31 @@
   gap: 0.7rem;
 }
 
+@media (min-width: 64rem) {
+  .heroInner {
+    grid-template-columns: minmax(34rem, 0.95fr) minmax(24rem, 0.65fr);
+    min-height: clamp(31rem, calc(100svh - 9rem), 42rem);
+  }
+
+  .copy {
+    max-width: 44rem;
+  }
+
+  .visual {
+    justify-self: end;
+  }
+}
+
+@media (min-width: 90rem) {
+  .heroInner {
+    grid-template-columns: minmax(40rem, 0.92fr) minmax(28rem, 0.62fr);
+  }
+}
+
 @media (max-width: 760px) {
   .heroInner {
     grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
     gap: 0.85rem;
   }
 
