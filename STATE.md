@@ -6,9 +6,10 @@
 
 Desktop responsive pass:
 2026-07-06 · local YELLOW implementation on branch
-`ws-ux/desktop-responsive-20260706`, based on `origin/main`
-`1274ff9b8cf3c36831be145fcff42e13d7bd48c5`. Scope is layout-only in
-`apps/web`: wider desktop container system, capped home hero scale and composed
+`ws-ux/desktop-responsive-20260706`, initially baselined on `origin/main`
+`1274ff9b8cf3c36831be145fcff42e13d7bd48c5` and finally integrated after rebase
+onto `origin/main` `09e1769461b65a49839ea0da61f21f8ae55cafb9`. Scope is
+layout-only in `apps/web`: wider desktop container system, capped home hero scale and composed
 hero grid, desktop mode-select card grid with non-overlapping in-flow CTA,
 desktop draft pitch/candidate split, review/results two-column compositions,
 history and leaderboard wide layouts, account desktop CSS, and a reusable
