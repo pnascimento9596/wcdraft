@@ -1,7 +1,8 @@
 # Desktop responsive pass - 2026-07-06
 
 Branch: `ws-ux/desktop-responsive-20260706`
-Base: `origin/main` at `1274ff9b8cf3c36831be145fcff42e13d7bd48c5`
+Initial baseline base: `origin/main` at `1274ff9b8cf3c36831be145fcff42e13d7bd48c5`
+Final integration base after rebase: `origin/main` at `09e1769461b65a49839ea0da61f21f8ae55cafb9`
 
 ## Scope
 
@@ -63,6 +64,10 @@ Telemetry recorded per capture but not treated as a strict failure in this deskt
 | final    | `next dev`                         |      80 |        0 | `docs/reports/desktop-responsive-2026-07-06/final/`    |
 | prod     | `next start` from production build |      80 |        0 | `docs/reports/desktop-responsive-2026-07-06/prod/`     |
 
+The baseline captures were taken on the initial lane base before #217 landed. The final and prod
+captures were refreshed after rebasing onto #217, so the shipped evidence includes the current globe
+pennant logo/header system.
+
 Baseline failures were all the same home-page dev console warning from the JSON-LD script nonce hydration mismatch. The fix adds `suppressHydrationWarning` to that non-interactive structured-data script; the final strict run no longer filters that warning and passes with zero console errors.
 
 Representative production `1440x900` dark signals:
@@ -86,6 +91,9 @@ Representative production `1440x900` dark signals:
 - `pnpm build` - pass: 4 tasks successful
 - `WCDRAFT_RESPONSIVE_STRICT=1 ... next dev ... verify-responsive-layout-browser.mts` - pass: 80 metrics, 0 failures
 - `WCDRAFT_RESPONSIVE_STRICT=1 WCDRAFT_HIDE_DEV_OVERLAY=0 ... next start ... verify-responsive-layout-browser.mts` - pass: 80 metrics, 0 failures
+- After rebasing onto `09e1769461b65a49839ea0da61f21f8ae55cafb9`, reran `pnpm typecheck`,
+  `pnpm lint`, `pnpm test`, `pnpm build`, final `next dev` responsive audit, and prod
+  `next start` responsive audit - all pass
 
 Build notes:
 

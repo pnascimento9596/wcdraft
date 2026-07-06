@@ -2,7 +2,7 @@
   "phase": "prod",
   "baseUrl": "http://127.0.0.1:3028",
   "axeSource": "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js",
-  "generatedAt": "2026-07-06T02:14:44.843Z",
+  "generatedAt": "2026-07-06T03:01:40.204Z",
   "metrics": [
     {
       "surface": "home",
