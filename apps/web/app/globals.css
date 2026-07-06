@@ -420,6 +420,36 @@ body:has([data-draft-anchored]) .site-footer {
   display: none;
 }
 
+@media (min-width: 64rem) {
+  body:has([data-draft-desktop-shell]) .shell,
+  body:has([data-review-desktop-shell]) .shell {
+    height: 100svh;
+    min-height: 0;
+  }
+
+  body:has([data-draft-desktop-shell]) main,
+  body:has([data-review-desktop-shell]) main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  body:has([data-draft-desktop-shell]) .game-page,
+  body:has([data-review-desktop-shell]) .game-page {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding-block: 0;
+  }
+
+  body:has([data-draft-desktop-shell]) .site-footer,
+  body:has([data-review-desktop-shell]) .site-footer {
+    display: none;
+  }
+}
+
 @media (max-width: 430px) {
   body:has(.game-page) .site-footer,
   body:has(.hero) .site-footer,

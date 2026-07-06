@@ -272,6 +272,42 @@
   box-shadow: var(--sh-2);
 }
 
+@media (min-width: 64rem) {
+  .share {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 0.75fr);
+    align-items: start;
+    gap: 16px 20px;
+  }
+
+  .share > header:first-child,
+  .share :global(.page-head) {
+    grid-column: 1 / -1;
+  }
+
+  .share :global(.page-head) {
+    margin-bottom: 0;
+  }
+
+  .shareCardFrame {
+    grid-column: 1;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .shareSvg {
+    max-width: min(100%, 440px);
+  }
+
+  .sharePanel {
+    grid-column: 2;
+    align-self: start;
+    margin-top: 0;
+    max-height: calc(100svh - 17rem);
+    overflow: auto;
+  }
+}
+
 @media (max-width: 430px) {
   .shareCardFrame {
     margin: 8px 0;

@@ -819,7 +819,7 @@ function DraftBoard({
   // lineup/pick view below. This supersedes the inline reveal from PR #21.
   if (!complete && spin && slotReveal && phase === "spin") {
     return (
-      <div className={`${s.draftShell} ${s.spinShell}`}>
+      <div className={`${s.draftShell} ${s.spinShell}`} data-draft-desktop-shell>
         <h1 className="visually-hidden">Spin for your next draft pick</h1>
         {persistenceWarning ? (
           <p className={`${s.persistenceWarn} ${s.spinPersistenceWarn}`} role="status">

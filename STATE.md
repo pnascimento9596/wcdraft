@@ -4,6 +4,29 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Desktop viewport-fit pass:
+2026-07-06 · local YELLOW implementation on branch
+`ws-ux/desktop-viewport-fit-20260706`, based on `origin/main`
+`61f9905d6aecf33b2e59e542d61d4fba51b80088`. Scope is layout-only in
+`apps/web`: desktop/laptop fixed-height shell rules for in-run spin, pick,
+assign, and squad-review surfaces; desktop spin and share compositions; desktop
+review internal panel scroll; sign-up title wrapping; and an expanded
+responsive audit harness with `1512x982`, per-surface/viewport filters,
+seeded draft states, desktop shell no-scroll assertions, and primary-action
+viewport measurement. No core, rating, sim, token, API, schema, ETL, compact
+runtime-data, or leaderboard scoring behavior changed. Local gates passed:
+package build prereq for `@wcdraft/core`, `@wcdraft/data`, and `@wcdraft/db`;
+web typecheck; root typecheck (8/8); root lint (5/5); root test (8/8; web
+Vitest 83 files passed / 1 skipped, 904 tests passed / 1 skipped plus
+`game-flow-playwright` and the responsive shell-fit gate); root build (4/4; existing Next circular chunk/runtime
+warnings only); strict desktop responsive matrix (21 surfaces x 4 desktop
+viewports x 2 themes = 168 captures / 0 failures, including 56 shell-gated
+rows / 0 shell failures); strict mobile shell regression matrix (7 shell
+surfaces x 2 mobile viewports x 2 themes = 28 captures / 0 failures); and
+fresh-context reviewer PASS after rerunning web typecheck, desktop shell audit
+(56/0), mobile shell audit (28/0), and representative visual inspection.
+Report: `docs/reports/desktop-responsive-2026-07-06/REPORT.md`.
+
 Desktop responsive pass:
 2026-07-06 · local YELLOW implementation on branch
 `ws-ux/desktop-responsive-20260706`, initially baselined on `origin/main`

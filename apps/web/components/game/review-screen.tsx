@@ -286,7 +286,7 @@ function ReviewBoard({
   const complete = isDraftComplete(draft);
 
   return (
-    <div className={s.reviewShell}>
+    <div className={s.reviewShell} data-review-desktop-shell>
       <ReviewAppBar warning={persistenceWarning} />
 
       <header className={s.reviewHead}>

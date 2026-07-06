@@ -65,9 +65,13 @@
 
 .signin-screen__title {
   font-size: var(--t-d1);
+  line-height: 0.9;
   letter-spacing: 0;
   color: var(--ink-100);
   margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 /* Gold underline accent below "in" — the precious moment cue */
@@ -457,7 +461,7 @@
 
 @media (min-width: 720px) {
   .signin-screen__title {
-    font-size: var(--t-hero);
+    font-size: min(var(--t-hero), 5.4rem);
   }
 }
 

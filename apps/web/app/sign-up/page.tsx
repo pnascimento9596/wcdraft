@@ -22,7 +22,7 @@ export default function SignUpPage(): React.ReactElement {
             <span className="signin-screen__dot" aria-hidden="true" />
             <span>your account</span>
           </div>
-          <h1 className="signin-screen__title display">create&nbsp;account</h1>
+          <h1 className="signin-screen__title display">create account</h1>
           <p className="signin-screen__sub">
             Pick the public username boards can show, then verify email before ranked posts. Casual
             play works right away.
