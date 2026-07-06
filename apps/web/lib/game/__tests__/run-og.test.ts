@@ -166,7 +166,7 @@ function previousVersionTokenFromCurrentToken(token: string): string {
 function localAssets(): RunOgImageAssets {
   return {
     markSvgDataUri: `data:image/svg+xml;utf8,${encodeURIComponent(
-      readFileSync(new URL("../../../public/brand/wcdraft-mark.svg", import.meta.url), "utf8"),
+      readFileSync(new URL("../../../public/brand/logo-mark.svg", import.meta.url), "utf8"),
     )}`,
     fonts: {
       spaceGroteskSemiBold: readArrayBuffer(
@@ -208,7 +208,7 @@ function readArrayBuffer(url: URL): ArrayBuffer {
 function stubOgRouteFetch() {
   const assets = localAssets();
   const markSvg = readFileSync(
-    new URL("../../../public/brand/wcdraft-mark.svg", import.meta.url),
+    new URL("../../../public/brand/logo-mark.svg", import.meta.url),
     "utf8",
   );
   const fonts = new Map<string, ArrayBuffer>([
@@ -233,7 +233,7 @@ function stubOgRouteFetch() {
       if (pathname.endsWith(`/data/wcdraft/${gameData.manifest.schema_version}/manifest.json`)) {
         return Response.json(gameData.manifest);
       }
-      if (pathname === "/brand/wcdraft-mark.svg") {
+      if (pathname === "/brand/logo-mark.svg") {
         return new Response(markSvg, { status: 200 });
       }
       const font = fonts.get(pathname);

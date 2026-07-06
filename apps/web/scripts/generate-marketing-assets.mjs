@@ -5,10 +5,11 @@
  *
  * Inputs (committed originals):
  *   - public/brand/marketing/banner.png
- *   - public/brand/marketing/logo-medallion.png
- *   - public/brand/wcdraft-lockup.svg (overlay only; source is not modified)
+ *   - public/brand/logo-mark.svg
+ *   - public/brand/logo-lockup.svg (overlay only; source is not modified)
  *
  * Outputs (committed, deterministic PNGs):
+ *   - public/brand/marketing/logo-medallion.png
  *   - public/brand/marketing/og-default.png (1200x630)
  *   - public/brand/marketing/og-square.png  (1200x1200)
  *
@@ -51,7 +52,16 @@ const sharp = await loadSharp();
 const OG_MAX_BYTES = 300 * 1024;
 const bannerPath = join(marketingDir, "banner.png");
 const medallionPath = join(marketingDir, "logo-medallion.png");
-const lockupSvg = readFileSync(join(brandDir, "wcdraft-lockup.svg"));
+const lockupFont = readFileSync(
+  join(publicDir, "fonts", "space-grotesk", "space-grotesk-latin-700-normal.woff2"),
+).toString("base64");
+const lockupSvg = Buffer.from(
+  readFileSync(join(brandDir, "logo-lockup.svg"), "utf8").replace(
+    'url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2")',
+    `url("data:font/woff2;base64,${lockupFont}")`,
+  ),
+);
+const fullMarkSvg = readFileSync(join(brandDir, "logo-mark.svg"));
 
 const lockupOverlay = await sharp(lockupSvg, { density: 384 })
   .resize({ width: 390 })
@@ -69,6 +79,33 @@ const lockupPlate = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
   <rect x="34" y="36" width="442" height="116" rx="18" fill="url(#plate)"/>
   <rect x="35" y="37" width="440" height="114" rx="17" fill="none" stroke="#f5b62a" stroke-opacity="0.28" stroke-width="1.5"/>
 </svg>`);
+
+async function writeMedallion() {
+  const size = 1254;
+  const markWidth = 920;
+  const bg = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <rect x="0" y="0" width="${size}" height="${size}" fill="#0a0e13"/>
+  <rect x="78" y="78" width="${size - 156}" height="${size - 156}" rx="92" fill="none" stroke="#f5b62a" stroke-opacity=".28" stroke-width="8"/>
+  <path d="M190 290h874M190 964h874M290 190v874M964 190v874" stroke="#2ecf92" stroke-opacity=".18" stroke-width="5"/>
+</svg>`);
+  const mark = await sharp(fullMarkSvg, { density: 512 })
+    .resize({ width: markWidth, height: markWidth, fit: "contain" })
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toBuffer();
+  const buffer = await sharp(bg)
+    .composite([
+      {
+        input: mark,
+        left: Math.round((size - markWidth) / 2),
+        top: Math.round((size - markWidth) / 2),
+      },
+    ])
+    .png({ compressionLevel: 9, adaptiveFiltering: true })
+    .toBuffer();
+  writeFileSync(medallionPath, buffer);
+  console.log(`wrote ${medallionPath.replace(webRoot + "/", "")}`);
+}
 
 function defaultOgPipeline() {
   return sharp(bannerPath)
@@ -128,5 +165,6 @@ async function writeOptimizedPng(name, outPath, pipelineFactory) {
   );
 }
 
+await writeMedallion();
 await writeOptimizedPng("og-default.png", join(marketingDir, "og-default.png"), defaultOgPipeline);
 await writeOptimizedPng("og-square.png", join(marketingDir, "og-square.png"), squareOgPipeline);

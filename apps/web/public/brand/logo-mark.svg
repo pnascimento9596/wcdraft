@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 8 132 132" width="132" height="132" role="img" aria-label="wcdraft">
+  <defs>
+    <clipPath id="globe-clip">
+      <circle cx="80" cy="80" r="43"/>
+    </clipPath>
+  </defs>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="80" cy="80" rx="62" ry="48" transform="rotate(-14 80 80)" stroke="#0a0e13" stroke-width="6"/>
+    <ellipse cx="80" cy="80" rx="62" ry="48" transform="rotate(-14 80 80)" stroke="#2ecf92" stroke-width="2.5" stroke-dasharray="8 9"/>
+  </g>
+
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(38 48) rotate(-30)">
+      <path d="M0 2v-24" stroke="#0a0e13" stroke-width="5"/>
+      <path d="M0 2v-24" stroke="#eef2f6" stroke-width="2.2"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#2ecf92" stroke="#0a0e13" stroke-width="3"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#2ecf92" stroke="#eef2f6" stroke-width="1.2"/>
+    </g>
+    <g transform="translate(119 37) rotate(24)">
+      <path d="M0 2v-24" stroke="#0a0e13" stroke-width="5"/>
+      <path d="M0 2v-24" stroke="#eef2f6" stroke-width="2.2"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#f5b62a" stroke="#0a0e13" stroke-width="3"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#f5b62a" stroke="#eef2f6" stroke-width="1.2"/>
+    </g>
+    <g transform="translate(133 100) rotate(82)">
+      <path d="M0 2v-24" stroke="#0a0e13" stroke-width="5"/>
+      <path d="M0 2v-24" stroke="#eef2f6" stroke-width="2.2"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#eef2f6" stroke="#0a0e13" stroke-width="3"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#eef2f6" stroke="#2ecf92" stroke-width="1.2"/>
+    </g>
+    <g transform="translate(36 113) rotate(-126)">
+      <path d="M0 2v-24" stroke="#0a0e13" stroke-width="5"/>
+      <path d="M0 2v-24" stroke="#eef2f6" stroke-width="2.2"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#2ecf92" stroke="#0a0e13" stroke-width="3"/>
+      <path d="M0 -22 19 -16 0 -10Z" fill="#2ecf92" stroke="#f5b62a" stroke-width="1.2"/>
+    </g>
+  </g>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="80" cy="80" r="43" stroke="#0a0e13" stroke-width="7"/>
+    <circle cx="80" cy="80" r="43" stroke="#f5b62a" stroke-width="4"/>
+  </g>
+
+  <g clip-path="url(#globe-clip)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="#0a0e13" stroke-width="5">
+      <ellipse cx="80" cy="80" rx="17" ry="43"/>
+      <ellipse cx="80" cy="80" rx="43" ry="14"/>
+      <path d="M47 56c17 11 49 11 66 0"/>
+      <path d="M47 104c17-11 49-11 66 0"/>
+      <path d="M80 66v-13M92 75l12-10M88 90l11 14M72 90l-11 14M68 75 56 65"/>
+    </g>
+    <g stroke="#f5b62a" stroke-width="2">
+      <ellipse cx="80" cy="80" rx="17" ry="43"/>
+      <ellipse cx="80" cy="80" rx="43" ry="14"/>
+      <path d="M47 56c17 11 49 11 66 0" opacity=".64"/>
+      <path d="M47 104c17-11 49-11 66 0" opacity=".64"/>
+      <path d="M80 66v-13M92 75l12-10M88 90l11 14M72 90l-11 14M68 75 56 65" opacity=".72"/>
+    </g>
+  </g>
+
+  <g clip-path="url(#globe-clip)" stroke-linejoin="round">
+    <path d="M80 66 92.4 75 87.6 89.5 72.4 89.5 67.6 75Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+    <path d="M80 66 92.4 75 87.6 89.5 72.4 89.5 67.6 75Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+
+    <g opacity=".58">
+      <g transform="translate(80 44) scale(.78 .5)">
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+      </g>
+      <g transform="translate(113 61) rotate(28) scale(.7 .88)">
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+      </g>
+      <g transform="translate(103 112) rotate(58) scale(.78 .58)">
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+      </g>
+      <g transform="translate(57 112) rotate(-58) scale(.78 .58)">
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+      </g>
+      <g transform="translate(47 61) rotate(-28) scale(.7 .88)">
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
+        <path d="M0 -13 12.4 -4 7.6 10.5 -7.6 10.5 -12.4 -4Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
+      </g>
+    </g>
+  </g>
+</svg>

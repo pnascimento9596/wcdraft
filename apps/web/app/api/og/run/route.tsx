@@ -56,7 +56,7 @@ function loadAssets(request: Request): Promise<RunOgImageAssets> {
       spaceGroteskBold,
       spaceGroteskBoldExt,
     ] = await Promise.all([
-      fetchTextAsset(new URL("/brand/wcdraft-mark.svg", base)),
+      fetchTextAsset(new URL("/brand/logo-mark.svg", base)),
       fetchBinaryAsset(new URL("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff", base)),
       fetchBinaryAsset(
         new URL("/fonts/space-grotesk/space-grotesk-latin-ext-600-normal.woff", base),

@@ -2,8 +2,8 @@ import type { SVGProps } from "react";
 
 /**
  * Small UI icons (theme toggle + menu chrome). The wcdraft mark itself is
- * NEVER drawn inline — it lives in /public/brand/ (wcdraft-mark.svg /
- * wcdraft-lockup.svg) and is referenced via <Image>. Inline mark redraws
+ * NEVER drawn inline — it lives in /public/brand/ (logo-mark.svg /
+ * logo-lockup.svg) and is referenced via <Image>. Inline mark redraws
  * have caused brand drift in the past; keep them out of this file.
  */
 
