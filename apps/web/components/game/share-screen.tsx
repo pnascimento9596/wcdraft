@@ -240,7 +240,7 @@ function ShareAppBar() {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image src="/brand/wcdraft-mark.svg" alt="wcdraft" width={28} height={31} priority />
+        <Image src="/brand/logo-mark-compact.svg" alt="wcdraft" width={28} height={28} priority />
         <span className={s.appBarTitle}>Share</span>
       </div>
     </header>

@@ -536,17 +536,17 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  min-height: 44px;
+  min-height: 48px;
   text-decoration: none;
   color: var(--ink);
   margin-right: auto;
 }
 
 .wordmark__badge {
-  /* Canonical mark is 120×132 — size by height, let width auto-fit
-     so the gold tactical pitch + draft arrow stay on aspect. */
-  height: 2.1rem;
-  width: auto;
+  /* Full mark needs a 48px box for the orbiting pennants to survive. */
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
   flex: none;
 }
 

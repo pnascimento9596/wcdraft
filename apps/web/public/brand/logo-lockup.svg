@@ -1,39 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="wcdraft — draft your all-time XI">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 150" width="600" height="150" role="img" aria-label="wcdraft">
   <style>
-    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500;src:url("/fonts/space-grotesk/space-grotesk-latin-500-normal.woff2") format("woff2")}
-    @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:600;src:url("/fonts/space-grotesk/space-grotesk-latin-600-normal.woff2") format("woff2")}
     @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:700;src:url("/fonts/space-grotesk/space-grotesk-latin-700-normal.woff2") format("woff2")}
     :root{--font-family:"Space Grotesk",sans-serif}
   </style>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#141b24"/>
-      <stop offset="1" stop-color="#0a0e13"/>
-    </linearGradient>
-    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#54e3ab"/>
-      <stop offset="1" stop-color="#1c9e6e"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#c8861a"/>
-      <stop offset="0.5" stop-color="#f5b62a"/>
-      <stop offset="1" stop-color="#ffd86a"/>
-    </linearGradient>
-    <clipPath id="share-globe-clip">
+    <clipPath id="lockup-globe-clip">
       <circle cx="80" cy="80" r="43"/>
     </clipPath>
   </defs>
 
-  <!-- Card background + emerald top border -->
-  <rect x="0" y="0" width="1200" height="630" fill="url(#bg)"/>
-  <rect x="0" y="0" width="1200" height="10" fill="url(#emerald)"/>
-
-  <!-- Brand mark: Concept A globe + orbiting pennants. -->
-  <g transform="translate(82, 78) scale(1.34)">
+  <g transform="translate(0 -5)">
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
       <ellipse cx="80" cy="80" rx="62" ry="48" transform="rotate(-14 80 80)" stroke="#0a0e13" stroke-width="6"/>
       <ellipse cx="80" cy="80" rx="62" ry="48" transform="rotate(-14 80 80)" stroke="#2ecf92" stroke-width="2.5" stroke-dasharray="8 9"/>
     </g>
+
     <g stroke-linecap="round" stroke-linejoin="round">
       <g transform="translate(38 48) rotate(-30)">
         <path d="M0 2v-24" stroke="#0a0e13" stroke-width="5"/>
@@ -60,11 +41,13 @@
         <path d="M0 -22 19 -16 0 -10Z" fill="#2ecf92" stroke="#f5b62a" stroke-width="1.2"/>
       </g>
     </g>
+
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="80" cy="80" r="43" stroke="#0a0e13" stroke-width="7"/>
       <circle cx="80" cy="80" r="43" stroke="#f5b62a" stroke-width="4"/>
     </g>
-    <g clip-path="url(#share-globe-clip)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+    <g clip-path="url(#lockup-globe-clip)" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <g stroke="#0a0e13" stroke-width="5">
         <ellipse cx="80" cy="80" rx="17" ry="43"/>
         <ellipse cx="80" cy="80" rx="43" ry="14"/>
@@ -80,7 +63,8 @@
         <path d="M80 66v-13M92 75l12-10M88 90l11 14M72 90l-11 14M68 75 56 65" opacity=".72"/>
       </g>
     </g>
-    <g clip-path="url(#share-globe-clip)" stroke-linejoin="round">
+
+    <g clip-path="url(#lockup-globe-clip)" stroke-linejoin="round">
       <path d="M80 66 92.4 75 87.6 89.5 72.4 89.5 67.6 75Z" fill="#0a0e13" stroke="#0a0e13" stroke-width="6"/>
       <path d="M80 66 92.4 75 87.6 89.5 72.4 89.5 67.6 75Z" fill="#0a0e13" stroke="#f5b62a" stroke-width="2.4"/>
       <g opacity=".58">
@@ -108,23 +92,7 @@
     </g>
   </g>
 
-  <!-- Wordmark -->
-  <text x="320" y="220" fill="#e9f9f2" font-family="var(--font-family)" font-size="120" font-weight="900" letter-spacing="-0.02em">
-    wc<tspan fill="url(#emerald)">draft</tspan>
-  </text>
-
-  <!-- Headline -->
-  <text x="320" y="310" fill="#9bb6ad" font-family="var(--font-family)" font-size="36" font-weight="600" letter-spacing="0.28em">
-    DRAFT YOUR ALL-TIME XI
-  </text>
-
-  <!-- Sub-headline -->
-  <text x="320" y="410" fill="#cfe5db" font-family="var(--font-family)" font-size="34" font-weight="500">
-    Spin · pick · lock the formation · chase the 8-0 run.
-  </text>
-
-  <!-- Footer line: domain + non-affiliation hint -->
-  <text x="600" y="560" text-anchor="middle" fill="#5e7068" font-family="var(--font-family)" font-size="22" letter-spacing="0.28em">
-    WCDRAFT.APP · NAMES &amp; FLAG CODES ONLY
+  <text x="166" y="96" font-family="var(--font-family)" font-weight="700" font-size="70" letter-spacing="1.2">
+    <tspan fill="#eef2f6">WC</tspan><tspan fill="#2ecf92">DRAFT</tspan>
   </text>
 </svg>

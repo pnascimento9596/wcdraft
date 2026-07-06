@@ -244,7 +244,7 @@ export function FormationSelect({
       <DraftAppBar spinNumber={null} progressPct={0} />
       <section className={s.formationSelect}>
         <div className={s.formationHead}>
-          <Image src="/brand/wcdraft-lockup.svg" alt="wcdraft" width={240} height={60} priority />
+          <Image src="/brand/logo-lockup.svg" alt="wcdraft" width={240} height={60} priority />
           <h1 className={s.formationTitle}>Lock a formation</h1>
           <p className={s.formationSub}>
             Your shape is committed the moment you lock. 17 spins, one pick per spin — a player, or
