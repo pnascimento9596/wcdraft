@@ -54,23 +54,23 @@ Checks per capture:
 
 ## Results
 
-| Phase | Server | Metrics | Failures | Output |
-| --- | --- | ---: | ---: | --- |
-| baseline | `next dev` | 80 | 10 | `docs/reports/desktop-responsive-2026-07-06/baseline/` |
-| final | `next dev` | 80 | 0 | `docs/reports/desktop-responsive-2026-07-06/final/` |
-| prod | `next start` from production build | 80 | 0 | `docs/reports/desktop-responsive-2026-07-06/prod/` |
+| Phase    | Server                             | Metrics | Failures | Output                                                 |
+| -------- | ---------------------------------- | ------: | -------: | ------------------------------------------------------ |
+| baseline | `next dev`                         |      80 |       10 | `docs/reports/desktop-responsive-2026-07-06/baseline/` |
+| final    | `next dev`                         |      80 |        0 | `docs/reports/desktop-responsive-2026-07-06/final/`    |
+| prod     | `next start` from production build |      80 |        0 | `docs/reports/desktop-responsive-2026-07-06/prod/`     |
 
 Baseline failures were all the same home-page dev console warning from the JSON-LD script nonce hydration mismatch. The fix adds `suppressHydrationWarning` to that non-interactive structured-data script; the final strict run no longer filters that warning and passes with zero console errors.
 
 Representative production `1440x900` dark signals:
 
-| Surface | Max container | Desktop signal |
-| --- | ---: | --- |
-| mode-select | 1408px | 3-column mode grid |
-| draft-lineup | 1408px | formation and candidates side by side |
-| squad-review | 1408px | XI and review rail side by side |
-| results | 1408px | outcome and narrative/context side by side |
-| leaderboard | 1408px | lineup inspector wide layout |
+| Surface      | Max container | Desktop signal                             |
+| ------------ | ------------: | ------------------------------------------ |
+| mode-select  |        1408px | 3-column mode grid                         |
+| draft-lineup |        1408px | formation and candidates side by side      |
+| squad-review |        1408px | XI and review rail side by side            |
+| results      |        1408px | outcome and narrative/context side by side |
+| leaderboard  |        1408px | lineup inspector wide layout               |
 
 ## Gates
 

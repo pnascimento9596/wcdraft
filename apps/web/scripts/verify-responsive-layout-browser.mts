@@ -12,7 +12,12 @@ import {
 import { SCENARIO_2026_BUNDLE } from "@wcdraft/data";
 
 import { buildGameDataFromBundles } from "../lib/game/__tests__/run-token.test-harness";
-import { lineStrengthViews, managerCardView, managerTournamentFor, pitchSlotViews } from "../lib/game/adapters";
+import {
+  lineStrengthViews,
+  managerCardView,
+  managerTournamentFor,
+  pitchSlotViews,
+} from "../lib/game/adapters";
 import type { Theme } from "../components/theme-provider";
 import { runSimulationSync } from "../lib/game/simulate";
 import {
@@ -279,7 +284,10 @@ async function mockLeaderboard(page: Page): Promise<void> {
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          best: { id: "11111111-1111-4111-8111-111111111111", verified_score: completeA.simulation?.run.score ?? 0 },
+          best: {
+            id: "11111111-1111-4111-8111-111111111111",
+            verified_score: completeA.simulation?.run.score ?? 0,
+          },
           rank: 1,
         }),
       });
@@ -316,7 +324,10 @@ async function makeContext(
       window.localStorage.setItem("wcdraft:theme", selectedTheme);
       window.sessionStorage.setItem(spinSkipReady, "1");
       for (const record of storage.records) {
-        window.localStorage.setItem(`${storage.recordPrefix}${record.run_id}`, JSON.stringify(record));
+        window.localStorage.setItem(
+          `${storage.recordPrefix}${record.run_id}`,
+          JSON.stringify(record),
+        );
       }
       window.localStorage.setItem(
         storage.indexKey,
@@ -342,10 +353,7 @@ async function makeContext(
   const errors: string[] = [];
   page.on("console", (msg) => {
     const text = msg.text();
-    if (
-      msg.type() === "error" &&
-      !text.startsWith("Failed to load resource:")
-    ) {
+    if (msg.type() === "error" && !text.startsWith("Failed to load resource:")) {
       errors.push(text);
     }
   });
@@ -458,7 +466,14 @@ function surfaceCases(): readonly SurfaceCase[] {
   ];
 }
 
-async function measure(page: Page): Promise<Omit<SurfaceMetric, "surface" | "viewport" | "theme" | "screenshot" | "axeViolations" | "consoleErrors">> {
+async function measure(
+  page: Page,
+): Promise<
+  Omit<
+    SurfaceMetric,
+    "surface" | "viewport" | "theme" | "screenshot" | "axeViolations" | "consoleErrors"
+  >
+> {
   return await page.evaluate(`(() => {
     const rect = (selector) => {
       const el = document.querySelector(selector);

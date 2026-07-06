@@ -1420,10 +1420,7 @@
       "horizontalOverflow": false,
       "navWraps": [],
       "maxContainerWidth": 390,
-      "smallTargets": [
-        "Casual 78x37",
-        "Ranked 83x37"
-      ],
+      "smallTargets": ["Casual 78x37", "Ranked 83x37"],
       "desktopSignals": {
         "draftSideBySide": false,
         "reviewSideBySide": false,
@@ -1447,10 +1444,7 @@
       "horizontalOverflow": false,
       "navWraps": [],
       "maxContainerWidth": 390,
-      "smallTargets": [
-        "Casual 78x37",
-        "Ranked 83x37"
-      ],
+      "smallTargets": ["Casual 78x37", "Ranked 83x37"],
       "desktopSignals": {
         "draftSideBySide": false,
         "reviewSideBySide": false,
@@ -1474,10 +1468,7 @@
       "horizontalOverflow": false,
       "navWraps": [],
       "maxContainerWidth": 360,
-      "smallTargets": [
-        "Casual 78x37",
-        "Ranked 83x37"
-      ],
+      "smallTargets": ["Casual 78x37", "Ranked 83x37"],
       "desktopSignals": {
         "draftSideBySide": false,
         "reviewSideBySide": false,
@@ -1501,10 +1492,7 @@
       "horizontalOverflow": false,
       "navWraps": [],
       "maxContainerWidth": 360,
-      "smallTargets": [
-        "Casual 78x37",
-        "Ranked 83x37"
-      ],
+      "smallTargets": ["Casual 78x37", "Ranked 83x37"],
       "desktopSignals": {
         "draftSideBySide": false,
         "reviewSideBySide": false,
