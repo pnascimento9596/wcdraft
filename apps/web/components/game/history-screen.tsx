@@ -173,7 +173,7 @@ function HistoryAppBar() {
   return (
     <header className={s.draftAppBar}>
       <div className={s.appBarBrand}>
-        <Image src="/brand/logo-mark-compact.svg" alt="wcdraft" width={28} height={28} priority />
+        <Image src="/brand/logo-header.png" alt="WCDraft" width={28} height={28} priority />
         <span className={s.appBarTitle}>History</span>
       </div>
     </header>

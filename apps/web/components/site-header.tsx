@@ -51,12 +51,11 @@ export function SiteHeader({
   return (
     <header className="masthead">
       <div className="container masthead__inner">
-        {/* Canonical full mark: globe + orbiting pennants. Small contexts use
-            /brand/logo-mark-compact.svg; never redraw the brand inline. */}
+        {/* Canonical header mark: medallion badge + separate wordmark text. */}
         <Link href="/" className="wordmark" aria-label="wcdraft — home">
           <Image
-            src="/brand/logo-mark.svg"
-            alt=""
+            src="/brand/logo-header.png"
+            alt="WCDraft"
             width={48}
             height={48}
             priority
