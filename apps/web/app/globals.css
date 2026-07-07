@@ -587,7 +587,7 @@ main {
 }
 
 .wordmark__badge {
-  /* Full mark needs a 48px box for the orbiting pennants to survive. */
+  /* Header badge keeps a stable 48px hit area beside the wordmark. */
   width: 3rem;
   height: 3rem;
   object-fit: contain;

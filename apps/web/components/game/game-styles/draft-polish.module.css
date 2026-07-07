@@ -1076,8 +1076,8 @@
   .formationHead {
     gap: 5px;
   }
-  /* The masthead + draft app bar already brand this screen twice — the
-     in-panel lockup is the single biggest dead block above the grid. */
+  /* The masthead + draft app bar already brand this screen twice; avoid
+     spending vertical space on additional in-panel brand art. */
   .formationHead img {
     display: none;
   }
