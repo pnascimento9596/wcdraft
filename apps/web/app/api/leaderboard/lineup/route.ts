@@ -10,13 +10,14 @@ import {
   handleLeaderboardLineupPost,
 } from "@/lib/leaderboard/lineup-route";
 import { getValidationData } from "@/lib/leaderboard/server-data";
-import { isLeaderboardEnabled, leaderboardDarkResponse } from "@/lib/leaderboard/enabled";
+import { leaderboardGateResponse } from "@/lib/leaderboard/enabled";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
-  if (!isLeaderboardEnabled()) return leaderboardDarkResponse();
+  const gate = leaderboardGateResponse();
+  if (gate) return gate;
   const now = () => Date.now();
   return handleLeaderboardLineupGet(req, {
     db: getDb(),
@@ -32,7 +33,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
-  if (!isLeaderboardEnabled()) return leaderboardDarkResponse();
+  const gate = leaderboardGateResponse();
+  if (gate) return gate;
   const now = () => Date.now();
   return handleLeaderboardLineupPost(request, {
     db: getDb(),

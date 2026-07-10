@@ -4,6 +4,53 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 B4 deploy/migration readiness:
+2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,
+based on `origin/main` `f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe`. The committed Drizzle
+journal has 12 contiguous entries, `0000_init` through
+`0011_email_verification`; the web build now derives its exact supported
+migration range from that journal. `/api/health` publishes the honest build
+SHA, six runtime-data anchors, expected versus actual migration, and one of
+`ready`, `unconfigured`, `schema_mismatch`, or `error` after at most one
+primary-key-indexed read of `drizzle.__drizzle_migrations`. Leaderboard routes
+remain bare-404 while dark; when enabled without `DATABASE_URL`, all entrypoints
+return typed `503 SERVICE_UNAVAILABLE` before constructing a DB handle. The CI
+ephemeral-Neon lane still runs from its broad DB/dependency selector, while a
+separate strict selector hard-fails missing Neon credentials only for
+`packages/db/**` or root `migrations/**`; shared package metadata remains
+skip-is-green when credentials are absent. Five operator runbooks cover
+migration skew, paired Neon/Vercel rollback, secret rotation, manual Daily
+refresh, and stale service-worker/runtime-data recovery. Fix-forward after the
+initial independent-review FAIL now classifies protected migration-status
+receipts before migrating without echoing driver errors; captures preserved
+Neon branch IDs from API truth and executes an inverse restore; reverts a failed
+Daily refresh through a protected exact-SHA PR; and restores known-good secret
+values silently over stdin before a production-target redeploy and live probes.
+No migration, table, rating, sim, core, ETL, or runtime-data artifact changed.
+Local validation passed: frozen install (187 packages reused, 0 downloaded);
+focused health/leaderboard/public-payload tests (3 files / 16 tests); DB tests
+including the PGlite full migration chain (3 files / 108 tests); root typecheck
+(8/8), lint (5/5), test (8/8; changed web package uncached: 87 files passed / 1
+skipped, 926 tests passed / 1 skipped, game-flow browser PASS, responsive shell
+desktop 56/0 and mobile 28/0), and production build (4/4, `/api/health` present);
+core goldens (69 RNG/narrative + 42 draft), data goldens (49 data + 22
+integration), uncached leaderboard golden (6/6), generated-artifact check,
+Prettier, `git diff --check`, actionlint v1.7.12, Bash syntax, and the DB CI
+contract (6 behavior cases / 6 actual workflow path cases / 8 workflow
+bindings). Fix-forward revalidation also passed root typecheck (8/8 cached),
+root lint (5/5 cached), four edited-runbook Bash parses, the no-raw-status-receipt
+contract, targeted Prettier, actionlint, and `git diff --check`. Heavy realism
+was not run locally because no engine, rating, or runtime-data input moved;
+CI-config path selection will run the protected heavy lane on the PR.
+The final rollback-guard fix-forward validates the complete target squash-commit
+path set before `git revert`, refuses root/merge targets, and revalidates the
+complete tracked/index state immediately before commit. Its executable contract
+passed 5 behavior cases and 3 runbook/workflow bindings, including an unexpected
+fourth target path stopping before revert, commit, or push. Targeted static
+revalidation also passed the DB contract (6 behavior / 6 path / 8 binding
+cases), runner-hygiene contract, Daily workflow contract, agent-contract check,
+Prettier, actionlint v1.7.12, Bash 3.2 syntax, and `git diff --check`.
+
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`
 `c77ee289ab33cca3f0c27a6f0020b6492a5dd31e`, moves all four active workflows
@@ -963,9 +1010,13 @@ web static assets.
   `LEADERBOARD_REQUIRE_ACCOUNT` is retired as an env lever and removed from
   Turbo env lists; ranked submit requires an account in code without reading
   that flag.
-- Neon prod DB: migrations 0000–0004 were provisioned + verified live 2026-06-10.
-  Migration 0005 is in the repo and shipped with leaderboard profiles; re-verify
-  prod migration status before relying on 0005-specific production state.
+- Repo migration truth is 12 journal entries, `0000_init` through
+  `0011_email_verification`, verified from
+  `packages/db/migrations/meta/_journal.json` on 2026-07-10. The production
+  Vercel project has a `DATABASE_URL` binding, but the pre-B4 public surface did
+  not expose the database's actual applied migration; do not infer it from the
+  obsolete 0004/0005 receipt. After B4 deploys, `/api/health` expected-versus-
+  actual schema is the live authority.
 - GitHub **Actions secrets** (not Vercel): only `NEON_API_KEY` and `NEON_PROJECT_ID` were
   present when rechecked on 2026-06-25. The old X API secret names are absent and unused.
   Repo **vars** govern the marketing lane: `MARKETING_PAUSED` (kill switch, default off),

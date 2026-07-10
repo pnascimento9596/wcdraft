@@ -22,6 +22,7 @@ export default defineConfig({
     include: [
       "lib/game/__tests__/**/*.test.ts",
       "lib/auth/__tests__/**/*.test.ts",
+      "lib/health/__tests__/**/*.test.ts",
       "lib/leaderboard/__tests__/**/*.test.ts",
     ],
     // A path-selected golden job must FAIL if the target file is renamed /
