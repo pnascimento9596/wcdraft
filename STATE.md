@@ -203,6 +203,30 @@ core 389, data 101 passed / 9 skipped, db 106, marketing 68, web 867 passed /
 Turbo tasks, and heavy realism (9/9). Report:
 `docs/reports/daily-seed-vetting-2026-07-02.md`.
 
+Daily-seed 45-day runway refresh (Audit S1 A2):
+2026-07-10 · RED implementation on branch
+`ws-core/audit-s1-daily-runway`, based on `origin/main` `c77ee28` in PR #225
+(open/unmerged; must rebase after A1 lands). Scope: raises the Daily salt-map
+builder default from 14 to exactly 45 days and replaces the committed artifact
+with 45 contiguous UTC dates from `2026-07-10` through `2026-08-23` inclusive.
+Policy `greedyOverallAutoDraft`, N=128 sample seeds/candidate, 8 candidate
+salts/date, salt/seed construction, and the existing degeneracy bands are
+unchanged. All 45 selected candidates measured normal (qualifying range
+0.187500-0.335938, median range -7.5 to -3.0, perfect-rate range
+0-0.007813): 39 dates are unsalted and six use salt `#2` (`2026-07-24`,
+`2026-07-27`, `2026-08-10`, `2026-08-17`, `2026-08-20`, `2026-08-21`).
+Artifact fingerprint: 26,506 raw bytes / 2,229 gzip / 1,792 brotli, sha256
+`42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79`.
+No rating, sim, core, ETL, schema, auth, or A3 workflow semantics changed.
+Pre-documentation SHA `8398e74` passed two byte-stable five-step regeneration
+cycles, generated-artifact checks, focused/full data tests, root
+typecheck/lint/test/build, core/data/web goldens, and heavy realism locally;
+the independent reviewer re-executed those gates and issued FAIL solely for the
+missing current-state entry fixed here. Expensive gates intentionally await the
+mandatory post-A1 rebase; a fresh full RED review remains required at that new
+SHA. GitHub-hosted required jobs remain externally blocked by the account
+billing/spend-limit refusal recorded on PR #225.
+
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
 `ws-ux/share-polish-orientation-20260701`, based on `origin/main`
