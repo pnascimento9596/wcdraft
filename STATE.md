@@ -40,17 +40,15 @@ restores the exact pre-0012 session cascade plus the prior single-column
 board-attempt FK and deletes no rows. Drizzle intent now declares migration
 0009's existing partial unique attempt index; missing snapshots 0008 through 0012 were
 reconstructed, and the pre-existing broken 0004-to-0005 snapshot link was
-repaired. A fresh drizzle-kit parity probe reports no schema changes. The B4
-ephemeral-Neon lane will apply all 13 migrations, reproduce rejection of a
-ranked row bound to another user's unconsumed cross-config attempt, prove the
-complete ranked session lifecycle, execute all 13 downs, and delete its
-isolated branch. The first Neon run created and deleted its branch despite the
-legacy-data failure; replacement run `29109029455` at `d1779b8b` later passed
-all 13 ups, the adversarial probe, all 13 downs, empty-schema assertion, branch
-cleanup, and required aggregate, but that exact head is void after the
-independent lifecycle FAIL. Baseline local validation before that review
-passed: frozen install already up to date; focused DB tests (3 files / 117
-tests); directly affected web tests (5 files / 94 tests); root
+repaired. Drizzle-kit parity at reviewed replacement code head
+`697b52cd784d9d2e3378b8ef5dd35a2f8a336ae5` reported no schema changes. The
+first Neon run created and deleted its branch despite the legacy-data failure;
+replacement run `29109029455` at `d1779b8b` later passed all 13 ups, the
+adversarial probe, all 13 downs, empty-schema assertion, branch cleanup, and
+required aggregate, but that exact head is void after the independent lifecycle
+FAIL. Baseline local validation before that review passed: frozen install
+already up to date; focused DB tests (3 files / 117 tests); directly affected
+web tests (5 files / 94 tests); root
 typecheck (8/8, 5 cached), lint (5/5, 3 cached), test (8/8, 6 cached before the
 NOT VALID fix-forward: changed DB 3 files / 116 tests, changed web 88 files
 passed / 1 skipped and 933 tests passed / 1 skipped, game-flow Playwright PASS,
@@ -62,10 +60,26 @@ Lifecycle fix-forward validation now passes: focused DB migration/PGlite/schema
 tests (3 files / 119 tests, including the all-13 session/delete/mutation/user
 cascade graph and down-FK action); affected auth/leaderboard tests (7 files /
 106 tests); direct DB and web `tsc --noEmit`; DB and web ESLint; drizzle-kit
-current-snapshot parity; targeted Prettier; and `git diff --check`. A fresh
-exact-head CI/Neon receipt plus full new Red and cross-model reviews remain
-required. Heavy realism was not run because no engine, rating, simulation, or
-runtime-data artifact changed.
+current-snapshot parity; targeted Prettier; and `git diff --check`. Exact-head
+CI run `29111268384` at `697b52c` completed PASS with the required aggregate,
+static/contracts, golden, typecheck/lint/test/build, database, secrets,
+GitGuardian, and Vercel checks green; path-gated ETL, realism, and ingest jobs
+skipped as expected. Ephemeral-Neon job `86425533042` reported
+`applied=13 pending=0 total=13`, rejected the cross-user/unconsumed/cross-config
+attempt, proved session deletion detached attempt and entry while preserving
+the binding, kept referenced-key mutation and direct attempt deletion
+restricted, proved user cascade, ran all 13 downs, asserted an empty schema,
+and deleted its branch. Independent Red re-review report
+`audit-s1-b3-final-rereview-697b52c.md` returned PASS at the exact replacement
+head after an independent adversarial matrix, 13/13 ups and downs, focused DB
+119/119, affected web 106/106, leaderboard golden 6/6, root uncached typecheck
+8/8, lint 5/5, build 4/4 with 40/40 pages, and root uncached test 8/8 in
+8m50.877s (core 391, data 162 passed / 9 skipped, DB 119, marketing 68, web 933
+passed / 1 skipped, responsive 180 metrics / 0 failures). Replacement GLM 5.2
+report `audit-s1-crossmodel-b3-697b52c.md` also returned PASS from a fresh clone
+after frozen install, DB 119/119, DB typecheck, diff check, and exact head/base
+verification. Heavy realism was not run because no engine, rating, simulation,
+or runtime-data artifact changed.
 
 Audit S1 B4 deploy/migration readiness:
 2026-07-10 · RED implementation on branch `ws-f4/audit-s1-health-readiness`,
