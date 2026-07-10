@@ -245,24 +245,39 @@ function initialForm(c: RuntimePlayerCard, base: string): string | null {
 export function buildDisplayNameOverrides(
   cards: readonly RuntimePlayerCard[],
 ): ReadonlyMap<string, string> {
-  // Group player_ids by short display name (case-insensitive).
-  const playersByName = new Map<string, Set<string>>();
+  // Group cards by short display name once. Keeping the base beside each card
+  // avoids both the old whole-array rescan per collision and repeated name
+  // normalization inside the collision passes.
+  const groupsByName = new Map<
+    string,
+    {
+      cards: { card: RuntimePlayerCard; base: string }[];
+      playerIds: Set<string>;
+    }
+  >();
   for (const c of cards) {
-    const key = baseDisplayName(c).toLowerCase();
-    const set = playersByName.get(key) ?? new Set<string>();
-    set.add(c.player_id);
-    playersByName.set(key, set);
+    const base = baseDisplayName(c);
+    const key = base.toLowerCase();
+    const group = groupsByName.get(key);
+    if (group) {
+      group.cards.push({ card: c, base });
+      group.playerIds.add(c.player_id);
+    } else {
+      groupsByName.set(key, {
+        cards: [{ card: c, base }],
+        playerIds: new Set([c.player_id]),
+      });
+    }
   }
 
   const overrides = new Map<string, string>();
-  for (const [key, playerIds] of playersByName) {
-    if (playerIds.size < 2) continue;
-    const colliding = cards.filter((c) => baseDisplayName(c).toLowerCase() === key);
+  for (const group of groupsByName.values()) {
+    if (group.playerIds.size < 2) continue;
     // First pass: candidate per card (initial form, else full name).
     const candidateByCard = new Map<string, string>();
     const playersByCandidate = new Map<string, Set<string>>();
-    for (const c of colliding) {
-      const cand = initialForm(c, baseDisplayName(c)) ?? fullDisplayName(c.full_name);
+    for (const { card: c, base } of group.cards) {
+      const cand = initialForm(c, base) ?? fullDisplayName(c.full_name);
       candidateByCard.set(c.card_id, cand);
       const set = playersByCandidate.get(cand.toLowerCase()) ?? new Set<string>();
       set.add(c.player_id);
@@ -270,7 +285,7 @@ export function buildDisplayNameOverrides(
     }
     // Second pass: if a candidate is still shared by >1 player, fall back to
     // the full name (year on the card disambiguates any remaining tie).
-    for (const c of colliding) {
+    for (const { card: c } of group.cards) {
       const cand = candidateByCard.get(c.card_id)!;
       const stillShared = playersByCandidate.get(cand.toLowerCase())!.size > 1;
       overrides.set(c.card_id, stillShared ? fullDisplayName(c.full_name) : cand);

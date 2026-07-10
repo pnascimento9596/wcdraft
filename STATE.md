@@ -4,6 +4,32 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 C2 display-name override linearization:
+2026-07-10 · YELLOW implementation on branch
+`ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`
+`41a6ffaeb72202db4f530a39ac8f7b9847f62ddc` and rebased onto current
+`origin/main` `b3b8d3271c283b762cd898c33627b0040698298c`. The web game-data
+index now groups cards by normalized base display name in one pass and runs
+collision resolution only over those groups; it no longer filters all 12,219
+cards once per colliding name. On Node v22.22.3 with 3 warmups and 12 measured
+iterations, the frozen legacy implementation measured 717.621 ms median /
+724.273 ms mean; the final grouped implementation measured 5.153 ms median /
+5.188 ms mean, a 139.26x median speedup. Output remained exactly 3,681
+overrides and 113,071 serialized bytes. The raw Map-entry serialization is
+byte-identical to the pre-rewrite baseline at SHA-256
+`553319c2dfee6307fa3f1823a3afe0c4d6075d7a4ec7d4bb030d1edcbb74cbbe`;
+the real-bundle regression also freezes 12 canonical key/value samples.
+Fresh post-rebase proof compared an in-memory copy of the exact legacy
+implementation to the grouped implementation over all 12,219 cards and found
+identical entry order and values, 3,681 entries, 113,071 serialized bytes, and
+the frozen SHA-256 above. Focused validation passed 6/6 files and 66/66 tests
+in 1.89s (2.37s real), including the 10/10 full-bundle identity/collision
+fixture. Forced root validation passed typecheck 8/8 with 0 cached in 7.39s
+(8.44s real), lint 5/5 with 0 cached in 4.406s (4.69s real), and build 4/4
+with 0 cached in 22.586s (23.05s real), generating 40/40 web pages. No
+compact/runtime-data artifact, rating, sim, draft, schema, API, or visible
+naming behavior changed.
+
 Audit S1 B3 production-migration release lane:
 2026-07-10 · RED operations/security follow-up on branch
 `ws-f4/audit-s1-production-migrate`, based on shipped B3 `origin/main`
