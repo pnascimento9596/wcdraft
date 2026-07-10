@@ -898,27 +898,27 @@ broken-pipe MCP transport error.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                          | Value                                                                                                                                     |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| schema_version                 | runtime-data-2.9.0                                                                                                                        |
-| dataset_version                | 2026-07-01                                                                                                                                |
-| ruleset_version                | ruleset-2026.06.04                                                                                                                        |
-| engine_version                 | engine-2026.06.30-manager-attrition                                                                                                       |
-| rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
-| rating_version (projected)     | proj-career-5.6.0                                                                                                                         |
-| career_stature                 | career-stature-4.1.0                                                                                                                      |
-| merit source set               | merit-source-set-2.2.0                                                                                                                    |
-| active source set              | active-career-source-set-2.2.0                                                                                                            |
-| runtime legend census          | 295                                                                                                                                       |
-| runtime ratings                | 12,219                                                                                                                                    |
-| Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
-| career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
-| explicit leaderboard season id | season-2026-manager-attrition                                                                                                             |
-| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                                                    |
-| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)                                            |
-| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…`                               |
-| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                                             |
-| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes                                  |
+| Field                                | Value                                                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| schema_version                       | runtime-data-2.9.0                                                                                           |
+| dataset_version                      | 2026-07-01                                                                                                   |
+| ruleset_version                      | ruleset-2026.06.04                                                                                           |
+| engine_version                       | engine-2026.06.30-manager-attrition                                                                          |
+| rating_version (historical)          | wc-perf-6.6.0                                                                                                |
+| rating_version (projected)           | proj-career-5.6.0                                                                                            |
+| career_stature                       | career-stature-4.1.0                                                                                         |
+| merit source set                     | merit-source-set-2.2.0                                                                                       |
+| active source set                    | active-career-source-set-2.2.0                                                                               |
+| runtime legend census                | 295                                                                                                          |
+| runtime ratings                      | 12,219                                                                                                       |
+| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                          |
+| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                      |
+| explicit leaderboard season id       | season-2026-manager-attrition                                                                                |
+| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                       |
+| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)               |
+| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…` |
+| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                |
+| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes     |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 
