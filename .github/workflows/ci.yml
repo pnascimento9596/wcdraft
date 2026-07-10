@@ -25,6 +25,7 @@ jobs:
   changes:
     name: changes · path detector
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
       js: ${{ steps.filter.outputs.js }}
@@ -108,6 +109,7 @@ jobs:
   static:
     name: static · format · contracts
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    if: ${{ github.actor != 'dependabot[bot]' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -120,6 +122,9 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Runner hygiene contract probe
+        run: scripts/ci/self-hosted-runner-hygiene.test.sh
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
@@ -599,9 +604,10 @@ jobs:
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TMPDIR: ${{ runner.temp }}
 
   aggregate:
-    name: required · aggregate gates
+    name: ${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs:
       - changes
@@ -613,7 +619,7 @@ jobs:
       - db-rollback-check
       - etl-rating
       - gitleaks
-    if: ${{ always() }}
+    if: ${{ always() && github.actor != 'dependabot[bot]' }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6

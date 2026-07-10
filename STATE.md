@@ -32,6 +32,39 @@ path `/Users/runner` on this self-hosted Mac; Python setup now uses pinned
 `setup-uv` plus `uv python install` with both the download cache and managed
 Python installations under the declared runner cache. A local isolated probe
 installed and executed CPython 3.12.13 arm64 without privileged paths.
+A0 shipped through PR #228 as `b882cc387669b1e64c25f726913c22ebacee5c09`.
+Its successful gitleaks PR job `86287107874` downloaded the v8.24.3 archive to
+the macOS user temp file `/var/folders/.../T/gitleaks.tmp`, scanned 2 commits,
+and reported no leaks. The next gitleaks job on `main`, `86288569206`, failed
+before scanning because that destination file still existed; this was a
+persistent-runner tool-temp collision, not a secret finding. The focused A0
+fix-forward binds only the gitleaks step's `TMPDIR` to `${{ runner.temp }}` and
+scrubs `${RUNNER_TEMP}/gitleaks.tmp` at both hygiene start and its always-run
+post phase. The existing canonical-path guards still constrain deletion to the
+runner work root and protect the active workspace, so global/user temp is not
+touched. A committed contract probe runs in the static CI job and passed 1
+TMPDIR binding check, 4 actor guards, 1 protected-check name split, 10
+downstream `needs` edges, 3 actor gate cases, 3 protected-check name mappings,
+2 independently seeded temp removals, and 4 active-workspace/outside sentinel
+checks. Local fix-forward validation passed: frozen pnpm install (187 packages,
+2.9s / 3.01s real; final-tree recheck already up to date in 318ms / 0.39s
+real); root typecheck 8/8 cached tasks (0.60s real); actionlint v1.7.12 across 4
+workflows (0.02s real); Bash 3.2 syntax for 2 scripts; Node syntax for the
+hygiene action; full-repo Prettier (8.15s real); and `git diff --check`.
+Post-merge A0 also exposed a trust-model gap: Dependabot refreshed 3 historical
+action-update PRs and queued 6 CI/ETL runs (`29069760550`/`573`,
+`29069758727`/`755`, and `29069754540`/`577`) against `wcdraft-m4`; jobs from
+the bot-authored merge refs did execute before those runs were cancelled. CI
+now rejects `dependabot[bot]` at both root jobs (`changes` and `static`) and at
+the `always()` aggregate, while ETL rejects it at its root `changes` job. Every
+remaining job depends on a guarded root, so bot runs enqueue zero self-hosted
+jobs; owner branches and `github-actions[bot]` automation remain allowed.
+Because GitHub treats a condition-skipped required job as successful, the
+aggregate check name is also actor-dependent: Dependabot gets only a skipped,
+non-required `blocked · dependabot actor` check and never emits the protected
+`required · aggregate gates` context. Owner/agent runs retain that exact
+required name. Dependabot PRs therefore stay protected-blocked until their
+change is promoted onto an owner/agent branch for review and execution.
 
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch
