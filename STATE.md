@@ -4,6 +4,37 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 B3 production-migration release lane:
+2026-07-10 · RED operations/security follow-up on branch
+`ws-f4/audit-s1-production-migrate`, based on shipped B3 `origin/main`
+`86bba8d71360dad634bbe6c4d7a799e1399675dc`. B3 code is merged, but production
+traffic remains intentionally rolled back to healthy D2
+`50184ef9a346912b5338b2a8a4fe42361bfea45e` while the production database is
+still at migration `0011`; B3 live verification is therefore not complete.
+The new manual `production-db-migrate.yml` release workflow accepts an exact
+main SHA and exact expected journal-tail migration, binds the caller input to
+the dispatch event, checkout, and current remote default branch, and resolves
+the direct production URL only inside Actions from the existing
+`NEON_API_KEY` and `NEON_PROJECT_ID` secrets. It refuses primary/default branch
+ambiguity, read-write endpoint ambiguity, pooled or non-Neon targets, and every
+preflight other than exactly one known pending tail. Raw status/migration
+receipts and the connection URL remain mode-0600 under the runner temp
+directory and are scrubbed in `always()`; logs expose only allowlisted counts.
+No product code, schema, migration, runtime data, rating, simulation, or ETL
+artifact changes in this release lane. Local validation passed: production
+migration contract (8 adversarial classifier cases, 14 workflow/runbook
+bindings, and secret-flow/step-order guards); actionlint 1.7.12; Bash parse;
+targeted Prettier; generated-artifact clean rebuild/check; and `git diff
+--check`. A forced isolated-cache root run passed typecheck (8/8), lint (5/5),
+test (8/8 in 8m35.931s; core 391, data 162 passed / 9 skipped, DB 119,
+marketing 68, web 933 passed / 1 skipped, game-flow Playwright, responsive
+desktop 84/0 + mobile 56/0 + interaction targets 40/0), and build (4/4; web
+emitted 40/40 pages), all with zero Turbo cache hits. Heavy realism passed 9/9.
+An earlier root attempt was discarded after an interrupted sibling task left a
+generated-artifact lock and the untracked raw draft bundle absent; no PASS was
+claimed, the lane regenerated and fingerprint-checked the canonical artifacts,
+and the clean isolated rerun above supersedes it.
+
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
 `ws-f4/audit-s1-ranked-binding`, initially based on `origin/main`

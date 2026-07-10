@@ -172,6 +172,9 @@ jobs:
       - name: DB readiness CI contract probe
         run: scripts/ci/require-neon-for-db-paths.test.sh
 
+      - name: Production migration workflow contract probe
+        run: scripts/ci/production-migration-workflow.test.sh
+
       - name: Daily salt-map revert contract probe
         run: scripts/ci/validate-daily-salt-map-revert.test.sh
 

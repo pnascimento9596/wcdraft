@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+classifier="$repo_root/scripts/ci/classify-production-migration-status.sh"
+workflow="$repo_root/.github/workflows/production-db-migrate.yml"
+runbook="$repo_root/docs/runbooks/prod-migration-failure.md"
+probe_root="$(mktemp -d "${TMPDIR:-/tmp}/wcdraft-prod-migrate-contract.XXXXXX")"
+trap 'rm -rf -- "$probe_root"' EXIT
+
+fail() {
+  echo "production migration workflow contract: FAIL: $1" >&2
+  exit 1
+}
+
+assert_contains() {
+  grep -Fq -- "$2" "$1" || fail "$1 missing contract binding: $2"
+}
+
+run_case() {
+  name="$1"
+  expected_rc="$2"
+  shift 2
+  set +e
+  "$classifier" "$@" >"$probe_root/$name.log" 2>&1
+  rc=$?
+  set -e
+  [ "$rc" -eq "$expected_rc" ] || fail "$name exited $rc, expected $expected_rc"
+}
+
+pre="$probe_root/pre.txt"
+cat >"$pre" <<'EOF'
+[db:migrate:status] applied=12 pending=1 total=13
+  applied 0011 0011_email_verification (db id=12, created_at=2026-07-10T00:00:00.000Z)
+  pending 0012 0012_ranked_attempt_structural_binding
+EOF
+chmod 600 "$pre"
+run_case exact-pre 0 pre "$pre" 1 12 0012_ranked_attempt_structural_binding 13
+
+post="$probe_root/post.txt"
+cat >"$post" <<'EOF'
+[db:migrate:status] applied=13 pending=0 total=13
+  applied 0012 0012_ranked_attempt_structural_binding (db id=13, created_at=2026-07-10T00:01:00.000Z)
+EOF
+chmod 600 "$post"
+run_case exact-post 0 post "$post" 0 12 0012_ranked_attempt_structural_binding 13
+
+cp "$pre" "$probe_root/wrong-tag.txt"
+sed -i.bak 's/0012_ranked_attempt_structural_binding/0012_wrong_migration/' "$probe_root/wrong-tag.txt"
+run_case wrong-tag 1 pre "$probe_root/wrong-tag.txt" 1 12 0012_ranked_attempt_structural_binding 13
+
+cp "$pre" "$probe_root/two-pending.txt"
+printf '  pending 0013 0013_unapproved\n' >>"$probe_root/two-pending.txt"
+run_case two-pending 1 pre "$probe_root/two-pending.txt" 1 12 0012_ranked_attempt_structural_binding 13
+
+cp "$pre" "$probe_root/query-error.txt"
+printf '[db:migrate:status] FAILED Error: redacted\n' >>"$probe_root/query-error.txt"
+run_case query-error 1 pre "$probe_root/query-error.txt" 1 12 0012_ranked_attempt_structural_binding 13
+
+run_case already-current 1 pre "$post" 0 12 0012_ranked_attempt_structural_binding 13
+run_case post-still-pending 1 post "$pre" 1 12 0012_ranked_attempt_structural_binding 13
+
+cp "$pre" "$probe_root/world-readable.txt"
+chmod 644 "$probe_root/world-readable.txt"
+run_case world-readable 1 pre "$probe_root/world-readable.txt" 1 12 0012_ranked_attempt_structural_binding 13
+
+assert_contains "$workflow" "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
+assert_contains "$workflow" 'EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}'
+assert_contains "$workflow" 'git rev-parse HEAD'
+assert_contains "$workflow" 'git ls-remote --exit-code origin'
+assert_contains "$workflow" 'primaryCandidates.length !== 1'
+assert_contains "$workflow" 'endpoint.type === "read_write"'
+assert_contains "$workflow" 'pooled: "false"'
+assert_contains "$workflow" '::add-mask::'
+assert_contains "$workflow" 'umask 077'
+assert_contains "$workflow" 'classify-production-migration-status.sh pre'
+assert_contains "$workflow" 'classify-production-migration-status.sh post'
+assert_contains "$workflow" 'rm -rf -- "$RECEIPT_DIR"'
+assert_contains "$workflow" 'DATABASE_URL_UNPOOLED='
+assert_contains "$runbook" 'production-db-migrate.yml'
+assert_contains "$runbook" '0012_ranked_attempt_structural_binding'
+
+api_key_refs="$(grep -Fc '${{ secrets.NEON_API_KEY }}' "$workflow")"
+project_id_refs="$(grep -Fc '${{ secrets.NEON_PROJECT_ID }}' "$workflow")"
+[ "$api_key_refs" -eq 1 ] && [ "$project_id_refs" -eq 1 ] ||
+  fail "Neon secrets must each enter exactly once through the resolver step env"
+if grep -E '(NEON_API_KEY|NEON_PROJECT_ID|direct_url|CONNECTION_FILE).*(GITHUB_OUTPUT|GITHUB_STEP_SUMMARY)' "$workflow"; then
+  fail "secret or connection material may not enter workflow outputs or summaries"
+fi
+
+sha_line="$(grep -nF 'Bind checkout and remote main to approved SHA' "$workflow" | cut -d: -f1)"
+primary_line="$(grep -nF 'Resolve unique Neon primary direct connection' "$workflow" | cut -d: -f1)"
+preflight_line="$(grep -nF 'Exact known-pending preflight' "$workflow" | cut -d: -f1)"
+migrate_line="$(grep -nF 'Apply exact checked-out migrations' "$workflow" | cut -d: -f1)"
+if ! [ "$sha_line" -lt "$primary_line" ] || ! [ "$primary_line" -lt "$preflight_line" ] || ! [ "$preflight_line" -lt "$migrate_line" ]; then
+  fail "exact SHA, primary identity, preflight, and migration steps are out of safety order"
+fi
+
+echo "production migration workflow contract: PASS (8 classifier cases + 14 bindings + secret/order guards)"

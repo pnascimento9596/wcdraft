@@ -30,6 +30,35 @@ Do not copy connection strings, API keys, or Vercel environment values into the 
 
 ## Apply a behind migration
 
+The preferred production path is the manually dispatched
+`production-db-migrate.yml` workflow on the repository default branch. It is
+the only repository workflow permitted to resolve the Neon primary branch and
+apply production migrations. Dispatch it with both values copied exactly from
+the current `origin/main` checkout:
+
+```bash
+git fetch origin main
+EXPECTED_MAIN_SHA="$(git rev-parse origin/main)"
+gh workflow run production-db-migrate.yml \
+  --ref main \
+  -f expected_main_sha="$EXPECTED_MAIN_SHA" \
+  -f expected_pending_migration=0012_ranked_attempt_structural_binding
+```
+
+The workflow refuses a moving or non-default ref, any mismatch among the
+caller-supplied SHA, dispatch SHA, checkout SHA, and current remote-main SHA,
+more or fewer than one Neon branch flagged primary/default, more or fewer than
+one direct `read_write` endpoint on that branch, and any status other than the
+single exact journal-tail migration named by the caller. It keeps raw status
+and migration output in a mode-0600 runner directory, prints only allowlisted
+count summaries, and deletes the connection URL and receipts in an `always()`
+step. After a successful run, wait for production deployment/live verification
+before restoring traffic to the migrated build.
+
+The shell procedure below is break-glass guidance only. It requires an
+independently resolved direct URL and must preserve the same exact-SHA and
+known-pending evidence as the workflow.
+
 Start from the exact approved commit. Load the direct URL from the approved secret store into the environment without echoing it.
 
 ```bash
