@@ -59,10 +59,23 @@ function requireSchemaVersion(
 function requireFingerprint(value: unknown, label: string, path: string): void {
   const fp = requireRecord(value, label, path);
   requireString(fp.path, label, `${path}.path`);
-  requireString(fp.sha256, label, `${path}.sha256`);
-  requireNumber(fp.bytes, label, `${path}.bytes`);
+  const sha256 = requireString(fp.sha256, label, `${path}.sha256`);
+  const rawSha256 = requireString(fp.raw_sha256, label, `${path}.raw_sha256`);
+  requireString(fp.compressed_sha256, label, `${path}.compressed_sha256`);
+  requireString(fp.brotli_impl_version, label, `${path}.brotli_impl_version`);
+  const bytes = requireNumber(fp.bytes, label, `${path}.bytes`);
   requireNumber(fp.bytes_gzip, label, `${path}.bytes_gzip`);
-  requireNumber(fp.bytes_brotli, label, `${path}.bytes_brotli`);
+  const bytesBrotli = requireNumber(fp.bytes_brotli, label, `${path}.bytes_brotli`);
+  const compressedBytes = requireNumber(fp.compressed_bytes, label, `${path}.compressed_bytes`);
+  const options = requireRecord(fp.options, label, `${path}.options`);
+  if (options.quality !== 11) fail(label, `${path}.options.quality`, "expected 11");
+  if (options.mode !== "text") fail(label, `${path}.options.mode`, 'expected "text"');
+  const sizeHint = requireNumber(options.size_hint, label, `${path}.options.size_hint`);
+  if (sha256 !== rawSha256) fail(label, path, "sha256 must equal raw_sha256");
+  if (bytesBrotli !== compressedBytes) {
+    fail(label, path, "bytes_brotli must equal compressed_bytes");
+  }
+  if (sizeHint !== bytes) fail(label, path, "options.size_hint must equal bytes");
 }
 
 export function parseRuntimeDataManifest(value: unknown): RuntimeDataManifest {

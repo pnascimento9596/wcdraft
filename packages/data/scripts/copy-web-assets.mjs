@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 // Copies the compact bundles into `apps/web/public/data/wcdraft/` so Next.js
 // serves them as static assets. Runs as a pre-build step from
-// `apps/web/package.json`; the default source is generated on demand from the
-// tracked fingerprints because the largest bundle is intentionally not tracked
-// by normal git.
+// `apps/web/package.json`. Current Brotli artifacts are canonical outputs of
+// build-compact-data: this script verifies their raw + compressed fingerprints
+// and copies the exact bytes. It never pays the q11 compression tax.
 
-import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { brotliCompress, brotliDecompress, constants as zlibConstants } from "node:zlib";
-import { promisify } from "node:util";
+import { existsSync } from "node:fs";
+import { brotliDecompressSync } from "node:zlib";
 import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,36 +20,12 @@ const DEFAULT_SOURCE_DIR = path.join(PACKAGE_DIR, "src", "generated");
 const DEFAULT_TARGET_DIR = path.join(REPO_ROOT, "apps", "web", "public", "data", "wcdraft");
 const DEFAULT_RETAINED_DIR = path.join(PACKAGE_DIR, "src", "retained-runtime-data");
 
-const EXPECTED_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
-const VERSIONED_JSON_FILES = ["manifest.json", "scenario-2026.compact.json"];
-// Copied + fingerprint-verified only when the manifest carries a
-// `bundles.score_distribution` entry (manifests built before the artifact
-// existed, and test fixtures, legitimately omit it).
-const SCORE_DISTRIBUTION_FILE = "score-distribution.compact.json";
-const DAILY_SEED_SALT_MAP_FILE = "daily-seed-salt-map.compact.json";
+const REQUIRED_SOURCE_FILES = ["manifest.json", "scenario-2026.compact.json"];
 const COMPRESSED_DRAFT_FILE = "draft-pool.compact.json.br";
 const RETAINED_FILES = ["manifest.json", "scenario-2026.compact.json", COMPRESSED_DRAFT_FILE];
-
-const brotliCompressAsync = promisify(brotliCompress);
-const brotliDecompressAsync = promisify(brotliDecompress);
-
-function ensureDefaultSourceGenerated(sourceDir) {
-  if (path.resolve(sourceDir) !== DEFAULT_SOURCE_DIR) return;
-  const result = spawnSync(
-    process.execPath,
-    [path.join(SCRIPT_DIR, "ensure-generated-artifacts.mjs")],
-    {
-      cwd: REPO_ROOT,
-      stdio: "inherit",
-    },
-  );
-  if (result.error) {
-    throw new Error(`failed to start generated-artifact check: ${result.error.message}`);
-  }
-  if (result.status !== 0) {
-    throw new Error(`generated-artifact check exited ${result.status ?? "without a status"}`);
-  }
-}
+const REQUIRED_BUNDLE_KEYS = ["draft_pool", "scenario_2026"];
+const BROTLI_QUALITY = 11;
+const BROTLI_MODE = "text";
 
 function parseArgs(argv) {
   const out = {
@@ -90,45 +65,6 @@ async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
 
-async function writeBrotliJson(sourcePath, targetPath) {
-  const raw = await readFile(sourcePath);
-  const compressed = await brotliCompressAsync(raw, {
-    params: {
-      [zlibConstants.BROTLI_PARAM_QUALITY]: zlibConstants.BROTLI_MAX_QUALITY,
-      [zlibConstants.BROTLI_PARAM_SIZE_HINT]: raw.length,
-    },
-  });
-  await writeFile(targetPath, compressed);
-  return { rawBytes: raw.length, rawSha256: sha256(raw), compressedBytes: compressed.length };
-}
-
-async function copyRetainedBrotliJson(retainedDir, targetPath, currentVersion, manifest) {
-  const retainedPath = path.join(retainedDir, currentVersion, COMPRESSED_DRAFT_FILE);
-  let compressed;
-  try {
-    compressed = await readFile(retainedPath);
-  } catch (err) {
-    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
-      return null;
-    }
-    throw err;
-  }
-
-  const raw = await brotliDecompressAsync(compressed);
-  assertFingerprint(
-    `${currentVersion}/${COMPRESSED_DRAFT_FILE}`,
-    raw,
-    manifest.bundles?.draft_pool,
-  );
-  await writeFile(targetPath, compressed);
-  return {
-    rawBytes: raw.length,
-    rawSha256: sha256(raw),
-    compressedBytes: compressed.length,
-    reusedRetained: true,
-  };
-}
-
 function assertManifestVersion(manifest) {
   if (!manifest || typeof manifest !== "object") {
     throw new Error("manifest.json is not an object");
@@ -139,16 +75,82 @@ function assertManifestVersion(manifest) {
   return manifest.schema_version;
 }
 
-function assertFingerprint(label, buf, expected) {
+function assertRawFingerprint(label, buf, expected) {
   if (!expected || typeof expected !== "object") {
     throw new Error(`retained ${label}: manifest fingerprint is missing`);
   }
-  if (buf.length !== expected.bytes || sha256(buf) !== expected.sha256) {
+  const expectedRawSha = expected.raw_sha256 ?? expected.sha256;
+  if (buf.length !== expected.bytes || sha256(buf) !== expectedRawSha) {
     throw new Error(
       `retained ${label}: fingerprint mismatch; got ${buf.length} bytes / ${sha256(buf)}, ` +
-        `expected ${expected.bytes} bytes / ${expected.sha256}`,
+        `expected ${expected.bytes} bytes / ${expectedRawSha}`,
     );
   }
+}
+
+function assertCurrentFingerprint(label, raw, compressed, expected) {
+  if (!expected || typeof expected !== "object") {
+    throw new Error(`copy-web-assets: ${label}: manifest fingerprint is missing`);
+  }
+  if (
+    typeof expected.raw_sha256 !== "string" ||
+    expected.raw_sha256 !== expected.sha256 ||
+    typeof expected.compressed_sha256 !== "string" ||
+    typeof expected.brotli_impl_version !== "string" ||
+    expected.brotli_impl_version.length === 0 ||
+    !expected.options ||
+    expected.options.quality !== BROTLI_QUALITY ||
+    expected.options.mode !== BROTLI_MODE ||
+    expected.options.size_hint !== expected.bytes
+  ) {
+    throw new Error(`copy-web-assets: ${label}: canonical Brotli metadata is malformed`);
+  }
+  if (expected.bytes_brotli !== expected.compressed_bytes) {
+    throw new Error(`copy-web-assets: ${label}: bytes_brotli must equal compressed_bytes exactly`);
+  }
+  assertRawFingerprint(label, raw, expected);
+  const compressedSha = sha256(compressed);
+  if (
+    compressed.length !== expected.compressed_bytes ||
+    compressedSha !== expected.compressed_sha256
+  ) {
+    throw new Error(
+      `copy-web-assets: ${label}: compressed fingerprint mismatch; got ` +
+        `${compressed.length} bytes / ${compressedSha}, expected ` +
+        `${expected.compressed_bytes} bytes / ${expected.compressed_sha256}`,
+    );
+  }
+}
+
+async function readCurrentBundle(sourceDir, key, expected) {
+  if (!expected || typeof expected.path !== "string") {
+    throw new Error(`copy-web-assets: manifest bundle ${key} is missing a path`);
+  }
+  const compressedPath = path.join(sourceDir, `${expected.path}.br`);
+  const compressed = await readFile(compressedPath);
+  let raw;
+  try {
+    raw = brotliDecompressSync(compressed);
+  } catch (err) {
+    throw new Error(
+      `copy-web-assets: ${key}: canonical Brotli artifact cannot be decompressed: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+      { cause: err },
+    );
+  }
+  assertCurrentFingerprint(key, raw, compressed, expected);
+
+  const rawPath = path.join(sourceDir, expected.path);
+  if (existsSync(rawPath)) {
+    const sourceRaw = await readFile(rawPath);
+    if (!sourceRaw.equals(raw)) {
+      throw new Error(
+        `copy-web-assets: ${key}: raw source bytes differ from canonical Brotli content`,
+      );
+    }
+  }
+  return { key, expected, raw, compressed, compressedPath };
 }
 
 async function validateRetainedVersion(versionDir, version) {
@@ -168,15 +170,19 @@ async function validateRetainedVersion(versionDir, version) {
   }
 
   const scenario = await readFile(path.join(versionDir, "scenario-2026.compact.json"));
-  assertFingerprint(
+  assertRawFingerprint(
     `${version}/scenario-2026.compact.json`,
     scenario,
     manifest.bundles?.scenario_2026,
   );
 
   const compressedDraft = await readFile(path.join(versionDir, COMPRESSED_DRAFT_FILE));
-  const draft = await brotliDecompressAsync(compressedDraft);
-  assertFingerprint(`${version}/draft-pool.compact.json.br`, draft, manifest.bundles?.draft_pool);
+  const draft = brotliDecompressSync(compressedDraft);
+  assertRawFingerprint(
+    `${version}/draft-pool.compact.json.br`,
+    draft,
+    manifest.bundles?.draft_pool,
+  );
 }
 
 async function copyRetainedVersions(retainedDir, targetDir, currentVersion) {
@@ -209,76 +215,67 @@ async function copyRetainedVersions(retainedDir, targetDir, currentVersion) {
 
 async function main() {
   const { sourceDir, targetDir, retainedDir } = parseArgs(process.argv.slice(2));
-  ensureDefaultSourceGenerated(sourceDir);
 
   const present = new Set(await readdir(sourceDir));
-  const missing = EXPECTED_FILES.filter((f) => !present.has(f));
+  const missing = REQUIRED_SOURCE_FILES.filter((f) => !present.has(f));
   if (missing.length > 0) {
     throw new Error(
       `copy-web-assets: missing generated bundles in ${sourceDir}: ${missing.join(", ")}. ` +
-        `Run \`pnpm --filter @wcdraft/data run build:compact\` to regenerate.`,
+        `Run \`pnpm --filter @wcdraft/data run build:compact -- --force-rebuild\` to regenerate.`,
     );
   }
 
   const manifest = await readJson(path.join(sourceDir, "manifest.json"));
   const currentVersion = assertManifestVersion(manifest);
+  for (const key of REQUIRED_BUNDLE_KEYS) {
+    if (!manifest.bundles?.[key]) {
+      throw new Error(`copy-web-assets: manifest is missing required bundle ${key}`);
+    }
+  }
+  const currentBundles = await Promise.all(
+    Object.entries(manifest.bundles).map(([key, expected]) =>
+      readCurrentBundle(sourceDir, key, expected),
+    ),
+  );
 
   await mkdir(targetDir, { recursive: true });
   // Transitional compatibility: keep the fixed unversioned paths available for
   // old clients and for server-side filesystem readers. New browser clients
   // fetch the versioned path below.
-  for (const file of EXPECTED_FILES) {
-    await copyFile(path.join(sourceDir, file), path.join(targetDir, file));
-  }
+  await copyFile(path.join(sourceDir, "manifest.json"), path.join(targetDir, "manifest.json"));
 
   const currentTargetDir = path.join(targetDir, currentVersion);
   await mkdir(currentTargetDir, { recursive: true });
-  for (const file of VERSIONED_JSON_FILES) {
-    await copyFile(path.join(sourceDir, file), path.join(currentTargetDir, file));
-  }
-  const compressed =
-    (await copyRetainedBrotliJson(
-      retainedDir,
-      path.join(currentTargetDir, COMPRESSED_DRAFT_FILE),
-      currentVersion,
-      manifest,
-    )) ??
-    (await writeBrotliJson(
-      path.join(sourceDir, "draft-pool.compact.json"),
-      path.join(currentTargetDir, COMPRESSED_DRAFT_FILE),
-    ));
-  if (
-    compressed.rawBytes !== manifest.bundles?.draft_pool?.bytes ||
-    compressed.rawSha256 !== manifest.bundles?.draft_pool?.sha256
-  ) {
-    throw new Error(
-      `copy-web-assets: compressed draft source does not match manifest fingerprint ` +
-        `(${compressed.rawBytes} bytes / ${compressed.rawSha256})`,
-    );
-  }
+  await copyFile(
+    path.join(sourceDir, "manifest.json"),
+    path.join(currentTargetDir, "manifest.json"),
+  );
+  for (const bundle of currentBundles) {
+    const rawTarget = path.join(targetDir, bundle.expected.path);
+    await mkdir(path.dirname(rawTarget), { recursive: true });
+    await writeFile(rawTarget, bundle.raw);
 
-  const scoreDistExpected = manifest.bundles?.score_distribution;
-  if (scoreDistExpected !== undefined) {
-    const sourcePath = path.join(sourceDir, SCORE_DISTRIBUTION_FILE);
-    const raw = await readFile(sourcePath);
-    assertFingerprint(SCORE_DISTRIBUTION_FILE, raw, scoreDistExpected);
-    await writeFile(path.join(targetDir, SCORE_DISTRIBUTION_FILE), raw);
-    await writeFile(path.join(currentTargetDir, SCORE_DISTRIBUTION_FILE), raw);
-  }
+    // Keep the 130 MiB draft pool out of the versioned raw tree. The current
+    // browser path is the canonical .br; the legacy unversioned raw path above
+    // remains for existing server-side readers until C5 removes it.
+    if (bundle.key !== "draft_pool") {
+      const versionedRawTarget = path.join(currentTargetDir, bundle.expected.path);
+      await mkdir(path.dirname(versionedRawTarget), { recursive: true });
+      await writeFile(versionedRawTarget, bundle.raw);
+    }
 
-  const dailySeedSaltMapExpected = manifest.bundles?.daily_seed_salt_map;
-  if (dailySeedSaltMapExpected !== undefined) {
-    const sourcePath = path.join(sourceDir, DAILY_SEED_SALT_MAP_FILE);
-    const raw = await readFile(sourcePath);
-    assertFingerprint(DAILY_SEED_SALT_MAP_FILE, raw, dailySeedSaltMapExpected);
-    await writeFile(path.join(targetDir, DAILY_SEED_SALT_MAP_FILE), raw);
-    await writeFile(path.join(currentTargetDir, DAILY_SEED_SALT_MAP_FILE), raw);
+    const compressedTarget = path.join(currentTargetDir, `${bundle.expected.path}.br`);
+    await mkdir(path.dirname(compressedTarget), { recursive: true });
+    await copyFile(bundle.compressedPath, compressedTarget);
   }
 
   const retainedCount = await copyRetainedVersions(retainedDir, targetDir, currentVersion);
+  const draft = currentBundles.find((bundle) => bundle.key === "draft_pool");
+  if (!draft) throw new Error("copy-web-assets: verified draft pool unexpectedly missing");
   process.stdout.write(
-    `copy-web-assets: ok — copied legacy assets plus ${currentVersion}/${COMPRESSED_DRAFT_FILE} ` +
-      `(${compressed.compressedBytes} bytes${compressed.reusedRetained ? ", retained" : ""}) to ${targetDir}` +
+    `copy-web-assets: ok — verified ${currentBundles.length} canonical Brotli artifact(s); copied ` +
+      `${currentVersion}/${COMPRESSED_DRAFT_FILE} byte-for-byte ` +
+      `(${draft.compressed.length} bytes / ${draft.expected.compressed_sha256}) to ${targetDir}` +
       (retainedCount > 0 ? `; retained ${retainedCount} prior version(s)` : "") +
       "\n",
   );

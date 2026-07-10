@@ -21,7 +21,7 @@
 //     when unknown; never coerced to `0`.
 //
 // USAGE: `node packages/data/scripts/build-compact-data.mjs [--out-dir PATH]
-//        [--etl-dir PATH] [--dataset-version YYYY-MM-DD]`.
+//        [--etl-dir PATH] [--dataset-version YYYY-MM-DD] [--force-rebuild]`.
 //
 // The default `--out-dir` is `packages/data/src/generated/`; the default
 // `--etl-dir` is `etl/output/`. The default `--dataset-version` is read from
@@ -50,9 +50,11 @@ const REPO_ROOT = path.resolve(PACKAGE_DIR, "..", "..");
 
 const DEFAULT_ETL_DIR = path.join(REPO_ROOT, "etl", "output");
 const DEFAULT_OUT_DIR = path.join(PACKAGE_DIR, "src", "generated");
-const BROTLI_METADATA_BUCKET_BYTES = 128;
 const DRAFT_POOL_FILE = "draft-pool.compact.json";
-const DRAFT_POOL_BROTLI_FILE = `${DRAFT_POOL_FILE}.br`;
+const BROTLI_SUFFIX = ".br";
+const BROTLI_IMPL_VERSION = process.versions.brotli ?? "unknown";
+const BROTLI_QUALITY = 11;
+const BROTLI_MODE = "text";
 
 // runtime-data-2.9.0 (spin-agency): player-pick replay changes from card-id
 // picks to deterministic choose-from-3 choice indices.
@@ -115,7 +117,12 @@ const DEFAULT_KNOCKOUT_OPPONENT_RULE = Object.freeze({
 // ─── CLI parsing ─────────────────────────────────────────────────────────────
 
 function parseArgs(argv) {
-  const out = { etlDir: DEFAULT_ETL_DIR, outDir: DEFAULT_OUT_DIR, datasetVersion: null };
+  const out = {
+    etlDir: DEFAULT_ETL_DIR,
+    outDir: DEFAULT_OUT_DIR,
+    datasetVersion: null,
+    forceRebuild: false,
+  };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     const next = argv[i + 1];
@@ -128,9 +135,15 @@ function parseArgs(argv) {
     } else if (arg === "--dataset-version" && typeof next === "string") {
       out.datasetVersion = next;
       i += 1;
+    } else if (arg === "--force-rebuild") {
+      out.forceRebuild = true;
+    } else if (arg === "--") {
+      // pnpm forwards its conventional argument separator to the final
+      // command in this compound package script.
+      continue;
     } else if (arg === "--help" || arg === "-h") {
       process.stdout.write(
-        "usage: build-compact-data [--etl-dir DIR] [--out-dir DIR] [--dataset-version YYYY-MM-DD]\n",
+        "usage: build-compact-data [--etl-dir DIR] [--out-dir DIR] [--dataset-version YYYY-MM-DD] [--force-rebuild]\n",
       );
       process.exit(0);
     } else {
@@ -492,9 +505,30 @@ function assertFingerprint(value, pathName) {
   const fp = assertObject(value, pathName);
   assertString(fp.path, `${pathName}.path`);
   assertString(fp.sha256, `${pathName}.sha256`);
+  assertString(fp.raw_sha256, `${pathName}.raw_sha256`);
+  assertString(fp.compressed_sha256, `${pathName}.compressed_sha256`);
+  assertString(fp.brotli_impl_version, `${pathName}.brotli_impl_version`);
   assertInteger(fp.bytes, `${pathName}.bytes`);
   assertInteger(fp.bytes_gzip, `${pathName}.bytes_gzip`);
   assertInteger(fp.bytes_brotli, `${pathName}.bytes_brotli`);
+  assertInteger(fp.compressed_bytes, `${pathName}.compressed_bytes`);
+  const options = assertObject(fp.options, `${pathName}.options`);
+  if (options.quality !== BROTLI_QUALITY) {
+    failBundle(`${pathName}.options.quality`, `expected ${BROTLI_QUALITY}, got ${options.quality}`);
+  }
+  if (options.mode !== BROTLI_MODE) {
+    failBundle(`${pathName}.options.mode`, `expected ${BROTLI_MODE}, got ${options.mode}`);
+  }
+  assertInteger(options.size_hint, `${pathName}.options.size_hint`);
+  if (fp.sha256 !== fp.raw_sha256) {
+    failBundle(pathName, "sha256 compatibility alias must equal raw_sha256");
+  }
+  if (fp.bytes_brotli !== fp.compressed_bytes) {
+    failBundle(pathName, "bytes_brotli compatibility alias must equal compressed_bytes");
+  }
+  if (options.size_hint !== fp.bytes) {
+    failBundle(pathName, "options.size_hint must equal raw bytes");
+  }
 }
 
 function validateRuntimeDataManifest(manifest) {
@@ -609,7 +643,12 @@ function tournamentIdToNumeric(raw) {
 // ─── Builder ─────────────────────────────────────────────────────────────────
 
 async function build() {
-  const { etlDir, outDir, datasetVersion: cliDatasetVersion } = parseArgs(process.argv.slice(2));
+  const {
+    etlDir,
+    outDir,
+    datasetVersion: cliDatasetVersion,
+    forceRebuild,
+  } = parseArgs(process.argv.slice(2));
 
   // ── Load ETL inputs ──────────────────────────────────────────────────────
   const [
@@ -1068,8 +1107,26 @@ async function build() {
   const draftPoolBytes = Buffer.from(stableStringify(draftPoolBundle), "utf8");
   const scenario2026Bytes = Buffer.from(stableStringify(scenario2026Bundle), "utf8");
 
-  const draftPoolFingerprint = fingerprint(draftPoolBytes, DRAFT_POOL_FILE);
-  const scenario2026Fingerprint = fingerprint(scenario2026Bytes, "scenario-2026.compact.json");
+  const previousManifestPath = path.join(outDir, "manifest.json");
+  const previousManifest = existsSync(previousManifestPath)
+    ? JSON.parse(readFileSync(previousManifestPath, "utf8"))
+    : null;
+  const draftPoolMaterialized = materializeBrotliBundle({
+    raw: draftPoolBytes,
+    relativePath: DRAFT_POOL_FILE,
+    outDir,
+    forceRebuild,
+    previousFingerprint: previousManifest?.bundles?.draft_pool,
+  });
+  const scenario2026Materialized = materializeBrotliBundle({
+    raw: scenario2026Bytes,
+    relativePath: "scenario-2026.compact.json",
+    outDir,
+    forceRebuild,
+    previousFingerprint: previousManifest?.bundles?.scenario_2026,
+  });
+  const draftPoolFingerprint = draftPoolMaterialized.fingerprint;
+  const scenario2026Fingerprint = scenario2026Materialized.fingerprint;
 
   // ── Reference score-distribution artifact (committed, generated by
   //    scripts/build-score-distribution.mts). Stamp its fingerprint into the
@@ -1077,7 +1134,7 @@ async function build() {
   //    built; otherwise warn and omit the entry (the golden test then reds
   //    CI until the artifact is regenerated). This keeps the regen flow
   //    non-circular: bundles can always rebuild, the ensemble re-runs after.
-  const scoreDistributionFingerprint = (() => {
+  const scoreDistributionMaterialized = (() => {
     // The artifact is an INPUT here (committed, generated separately by
     // build-score-distribution.mts) — always read from the committed
     // location, never from --out-dir, so temp-dir rebuilds (two-build
@@ -1113,10 +1170,17 @@ async function build() {
       );
       return null;
     }
-    return fingerprint(bytes, "score-distribution.compact.json");
+    return materializeBrotliBundle({
+      raw: bytes,
+      relativePath: "score-distribution.compact.json",
+      outDir,
+      forceRebuild,
+      previousFingerprint: previousManifest?.bundles?.score_distribution,
+    });
   })();
+  const scoreDistributionFingerprint = scoreDistributionMaterialized?.fingerprint ?? null;
 
-  const dailySeedSaltMapFingerprint = (() => {
+  const dailySeedSaltMapMaterialized = (() => {
     const artifactPath = path.join(DEFAULT_OUT_DIR, "daily-seed-salt-map.compact.json");
     if (!existsSync(artifactPath)) {
       process.stderr.write(
@@ -1148,8 +1212,15 @@ async function build() {
       );
       return null;
     }
-    return fingerprint(bytes, "daily-seed-salt-map.compact.json");
+    return materializeBrotliBundle({
+      raw: bytes,
+      relativePath: "daily-seed-salt-map.compact.json",
+      outDir,
+      forceRebuild,
+      previousFingerprint: previousManifest?.bundles?.daily_seed_salt_map,
+    });
   })();
+  const dailySeedSaltMapFingerprint = dailySeedSaltMapMaterialized?.fingerprint ?? null;
 
   const manifestObj = {
     schema_version: SCHEMA_VERSION,
@@ -1183,12 +1254,47 @@ async function build() {
   };
   validateRuntimeDataManifest(manifestObj);
   const manifestBytes = Buffer.from(stableStringify(manifestObj), "utf8");
+  const previousReportPath = path.join(PACKAGE_DIR, "reports", "compact-size.json");
+  const previousReport = existsSync(previousReportPath)
+    ? JSON.parse(readFileSync(previousReportPath, "utf8"))
+    : null;
+  const manifestMaterialized = materializeBrotliBundle({
+    raw: manifestBytes,
+    relativePath: "manifest.json",
+    outDir,
+    forceRebuild,
+    previousFingerprint:
+      path.resolve(outDir) === path.resolve(DEFAULT_OUT_DIR)
+        ? previousReport?.bundles?.manifest
+        : null,
+  });
 
   // ── Emit outputs + reports ───────────────────────────────────────────────
   await mkdir(outDir, { recursive: true });
   await writeFile(path.join(outDir, "manifest.json"), manifestBytes);
+  await writeFile(path.join(outDir, "manifest.json.br"), manifestMaterialized.compressed);
   await writeFile(path.join(outDir, DRAFT_POOL_FILE), draftPoolBytes);
+  await writeFile(
+    path.join(outDir, `${DRAFT_POOL_FILE}${BROTLI_SUFFIX}`),
+    draftPoolMaterialized.compressed,
+  );
   await writeFile(path.join(outDir, "scenario-2026.compact.json"), scenario2026Bytes);
+  await writeFile(
+    path.join(outDir, `scenario-2026.compact.json${BROTLI_SUFFIX}`),
+    scenario2026Materialized.compressed,
+  );
+  if (scoreDistributionMaterialized !== null) {
+    await writeFile(
+      path.join(outDir, `score-distribution.compact.json${BROTLI_SUFFIX}`),
+      scoreDistributionMaterialized.compressed,
+    );
+  }
+  if (dailySeedSaltMapMaterialized !== null) {
+    await writeFile(
+      path.join(outDir, `daily-seed-salt-map.compact.json${BROTLI_SUFFIX}`),
+      dailySeedSaltMapMaterialized.compressed,
+    );
+  }
 
   // Size report — committed at packages/data/reports/compact-size.json so
   // the size-budget golden test can read it deterministically.
@@ -1198,7 +1304,7 @@ async function build() {
     schema_version: SCHEMA_VERSION,
     dataset_version: datasetVersion,
     bundles: {
-      manifest: { ...fingerprint(manifestBytes, "manifest.json") },
+      manifest: manifestMaterialized.fingerprint,
       draft_pool: draftPoolFingerprint,
       scenario_2026: scenario2026Fingerprint,
       ...(scoreDistributionFingerprint === null
@@ -1210,11 +1316,11 @@ async function build() {
     },
     total_raw_bytes: manifestBytes.length + draftPoolBytes.length + scenario2026Bytes.length,
     total_brotli_bytes:
-      fingerprint(manifestBytes, "manifest.json").bytes_brotli +
-      draftPoolFingerprint.bytes_brotli +
-      scenario2026Fingerprint.bytes_brotli,
+      manifestMaterialized.fingerprint.compressed_bytes +
+      draftPoolFingerprint.compressed_bytes +
+      scenario2026Fingerprint.compressed_bytes,
     total_gzip_bytes:
-      fingerprint(manifestBytes, "manifest.json").bytes_gzip +
+      manifestMaterialized.fingerprint.bytes_gzip +
       draftPoolFingerprint.bytes_gzip +
       scenario2026Fingerprint.bytes_gzip,
   };
@@ -1234,8 +1340,8 @@ async function build() {
       `  basis.current.baseline_anchor_estimate = ${basisCounts.current.baseline_anchor_estimate}`,
       `  basis.current.career_stature_estimate = ${basisCounts.current.career_stature_estimate}`,
       `  legend             = ${legendCount}`,
-      `  draft_pool.compact = ${humanBytes(draftPoolBytes.length)} raw / ${humanBytes(draftPoolFingerprint.bytes_gzip)} gzip / ${humanBytes(draftPoolFingerprint.bytes_brotli)} brotli`,
-      `  scenario-2026      = ${humanBytes(scenario2026Bytes.length)} raw / ${humanBytes(scenario2026Fingerprint.bytes_gzip)} gzip / ${humanBytes(scenario2026Fingerprint.bytes_brotli)} brotli`,
+      `  draft_pool.compact = ${humanBytes(draftPoolBytes.length)} raw / ${humanBytes(draftPoolFingerprint.bytes_gzip)} gzip / ${humanBytes(draftPoolFingerprint.compressed_bytes)} canonical brotli${draftPoolMaterialized.reused ? " (reused)" : ""}`,
+      `  scenario-2026      = ${humanBytes(scenario2026Bytes.length)} raw / ${humanBytes(scenario2026Fingerprint.bytes_gzip)} gzip / ${humanBytes(scenario2026Fingerprint.compressed_bytes)} canonical brotli${scenario2026Materialized.reused ? " (reused)" : ""}`,
       `  manifest           = ${humanBytes(manifestBytes.length)} raw`,
       "",
     ].join("\n"),
@@ -1355,50 +1461,81 @@ function hasManualRatingOverride(runtimeRating) {
     : false;
 }
 
-function fingerprint(buf, relativePath) {
+function brotliOptions(rawBytes) {
   return {
-    path: relativePath,
-    sha256: sha256Hex(buf),
-    bytes: buf.length,
-    bytes_gzip: gzipSync(buf, { level: 9 }).length,
-    bytes_brotli: brotliMetadataBytes(buf, relativePath),
+    quality: BROTLI_QUALITY,
+    mode: BROTLI_MODE,
+    size_hint: rawBytes,
   };
 }
 
-function brotliMetadataBytes(buf, relativePath) {
-  if (relativePath === DRAFT_POOL_FILE) {
-    const retained = retainedDraftPoolBrotliMetadataBytes(buf);
-    if (retained !== null) return retained;
-  }
-
-  // Brotli's exact compressed length can vary by a few bytes across OS/CPU
-  // builds even under the same Node version. Manifest/report metadata must be
-  // byte-stable across local macOS and Linux CI, so publish a conservative
-  // rounded-up size bucket while keeping raw bytes and sha256 exact.
-  const measured = brotliCompressSync(buf, {
+function compressCanonicalBrotli(raw) {
+  return brotliCompressSync(raw, {
     params: {
-      [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
+      [zlibConstants.BROTLI_PARAM_QUALITY]: BROTLI_QUALITY,
       [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
+      [zlibConstants.BROTLI_PARAM_SIZE_HINT]: raw.length,
     },
-  }).length;
-  return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
+  });
 }
 
-function retainedDraftPoolBrotliMetadataBytes(buf) {
-  const retainedPath = path.join(
-    PACKAGE_DIR,
-    "src",
-    "retained-runtime-data",
-    SCHEMA_VERSION,
-    DRAFT_POOL_BROTLI_FILE,
-  );
-  if (!existsSync(retainedPath)) return null;
-  const compressed = readFileSync(retainedPath);
-  const decompressed = brotliDecompressSync(compressed);
-  if (decompressed.length !== buf.length || sha256Hex(decompressed) !== sha256Hex(buf)) {
-    return null;
+function reusableCanonicalBrotli(raw, compressed, previousFingerprint) {
+  if (!previousFingerprint || typeof previousFingerprint !== "object") return false;
+  const rawSha256 = sha256Hex(raw);
+  const compressedSha256 = sha256Hex(compressed);
+  const options = previousFingerprint.options;
+  if (
+    previousFingerprint.raw_sha256 !== rawSha256 ||
+    previousFingerprint.sha256 !== rawSha256 ||
+    previousFingerprint.bytes !== raw.length ||
+    previousFingerprint.compressed_sha256 !== compressedSha256 ||
+    previousFingerprint.compressed_bytes !== compressed.length ||
+    previousFingerprint.bytes_brotli !== compressed.length ||
+    typeof previousFingerprint.brotli_impl_version !== "string" ||
+    options?.quality !== BROTLI_QUALITY ||
+    options?.mode !== BROTLI_MODE ||
+    options?.size_hint !== raw.length
+  ) {
+    return false;
   }
-  return Math.ceil(compressed.length / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
+  try {
+    return brotliDecompressSync(compressed).equals(raw);
+  } catch {
+    return false;
+  }
+}
+
+function materializeBrotliBundle({ raw, relativePath, outDir, forceRebuild, previousFingerprint }) {
+  const compressedPath = path.join(outDir, `${relativePath}${BROTLI_SUFFIX}`);
+  let compressed = null;
+  let reused = false;
+  if (!forceRebuild && existsSync(compressedPath)) {
+    const candidate = readFileSync(compressedPath);
+    if (reusableCanonicalBrotli(raw, candidate, previousFingerprint)) {
+      compressed = candidate;
+      reused = true;
+    }
+  }
+  if (compressed === null) compressed = compressCanonicalBrotli(raw);
+
+  const rawSha256 = sha256Hex(raw);
+  const compressedSha256 = sha256Hex(compressed);
+  return {
+    compressed,
+    reused,
+    fingerprint: {
+      path: relativePath,
+      sha256: rawSha256,
+      raw_sha256: rawSha256,
+      bytes: raw.length,
+      bytes_gzip: gzipSync(raw, { level: 9 }).length,
+      bytes_brotli: compressed.length,
+      compressed_sha256: compressedSha256,
+      compressed_bytes: compressed.length,
+      brotli_impl_version: reused ? previousFingerprint.brotli_impl_version : BROTLI_IMPL_VERSION,
+      options: reused ? previousFingerprint.options : brotliOptions(raw.length),
+    },
+  };
 }
 
 function humanBytes(n) {

@@ -51,6 +51,54 @@ revalidation also passed the DB contract (6 behavior / 6 path / 8 binding
 cases), runner-hygiene contract, Daily workflow contract, agent-contract check,
 Prettier, actionlint v1.7.12, Bash 3.2 syntax, and `git diff --check`.
 
+Runtime artifact fingerprint materialization:
+2026-07-10 · Audit Season 1 Unit C1 branch
+`ws-core/audit-s1-runtime-fingerprints`, now rebased onto `origin/main`
+`de7e7095be4f352f38671826bca85c761039846c`, makes q11 Brotli output a
+canonical tracked build artifact instead of recompressing the 130,545,042-byte
+draft pool in every web prehook. Compact generation emits one `.br` beside the
+manifest and each of its four runtime bundles, while each fingerprint now
+records the raw SHA-256, exact compressed SHA-256/bytes, Brotli implementation
+version, and explicit q11/text/size-hint options. The existing `sha256` and
+`bytes_brotli` fields remain compatibility aliases for raw SHA and exact
+compressed bytes. `copy-web-assets.mjs` verifies all four manifest-described
+raw/compressed pairs before writing any target and copies the canonical draft
+artifact byte-for-byte; fresh clones can materialize the ignored raw legacy
+path by decompressing the tracked artifact without rebuilding or recompressing.
+All `predev`/`prebuild`/`pretypecheck`/`pretest` paths share the
+`runtime:materialize` command. Normal unchanged compact builds reuse a canonical
+artifact only when every raw/compressed fingerprint and option matches;
+`build:compact:force` and `check:generated` deliberately recompress and prove
+byte determinism.
+
+The prior drift was reproduced exactly: manifest `bytes_brotli=2,224,896`
+versus shipped `2,224,859` bytes (37 bytes). The canonical draft artifact is
+now exactly 2,224,859 bytes / SHA-256
+`053161069c28d441d87857bb199600c15dc2f7299336a4aa140054b45d03f853`
+in source, manifest, report, and copied web path. Five tracked sidecars add
+2,233,894 repository bytes total; the other SHA-256 values are daily map
+`83fe4752…009`, manifest `93379e5a…b50`, scenario `19290a7d…671`, and score
+distribution `d7dd92f0…ec9`. Runtime schema remains `runtime-data-2.9.0`, dataset
+remains `2026-07-01`, all four raw bundle SHAs and replay anchors are unchanged,
+and SW data revision remains `054ebc2420b6b407`.
+
+Measured unchanged `web pretypecheck` samples improved from 84.54s/84.85s real
+(median 84.695s) to 0.87s/0.82s (median 0.845s), a 100.23x median speedup and
+99.00% reduction. The full regen chain completed; unchanged compact build
+reused artifacts in 8.33s real; explicit forced rebuild reproduced identical
+bytes in 92.98s; `check:generated` passed in 93.88s. Focused copy tests passed
+5/5 and compact/copy goldens passed 15/15. Full data tests passed 150 with 9
+expected heavy skips. Forced root gates passed with zero cache hits: typecheck
+8/8 (8.048s Turbo), lint 5/5 (3.238s), test 8/8 (4m50.868s; core 391, DB 108,
+marketing 68, data 150 + 9 skipped, web 919 + 1 skipped; browser gates 84
+metrics/0 failures), and build 4/4 (19.161s; 40/40 static pages). Forced core
+goldens passed 111/111; data/integration goldens passed 54/54 + 22/22;
+leaderboard golden passed 6/6; explicit heavy realism passed 9/9 for each of
+the three policies (27/27). Timing/fingerprint command evidence is retained at
+`/tmp/audit-s1-c1-prehook-timing.txt`. Those gate counts are the measured
+pre-rebase C1 baseline; the B4-integrated fix-forward is revalidated separately
+before push.
+
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`
 `c77ee289ab33cca3f0c27a6f0020b6492a5dd31e`, moves all four active workflows

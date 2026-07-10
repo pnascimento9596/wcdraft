@@ -16,14 +16,14 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { brotliCompressSync, brotliDecompressSync, constants as zlibConstants } from "node:zlib";
+import { brotliDecompressSync } from "node:zlib";
 
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
-import type { RuntimeDataManifest } from "../src/types.js";
+import type { RuntimeBundleFingerprint, RuntimeDataManifest } from "../src/types.js";
 
 const TEST_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_DIR = path.resolve(TEST_DIR, "..");
@@ -32,8 +32,13 @@ const SCRIPT_PATH = path.join(PACKAGE_DIR, "scripts", "build-compact-data.mjs");
 const BUDGET_PATH = path.join(PACKAGE_DIR, "size-budget.json");
 const SIZE_REPORT_PATH = path.join(PACKAGE_DIR, "reports", "compact-size.json");
 const BUNDLE_FILES = ["manifest.json", "draft-pool.compact.json", "scenario-2026.compact.json"];
-const BROTLI_METADATA_BUCKET_BYTES = 128;
-const DRAFT_POOL_FILE = "draft-pool.compact.json";
+const FINGERPRINT_FILES = [
+  ...BUNDLE_FILES,
+  "score-distribution.compact.json",
+  "daily-seed-salt-map.compact.json",
+];
+const MATERIALIZED_FILES = [...BUNDLE_FILES, ...FINGERPRINT_FILES.map((file) => `${file}.br`)];
+const GENERATED_FILES = [...new Set([...MATERIALIZED_FILES, ...FINGERPRINT_FILES])];
 // Cold shared CI runners can spend more than ten minutes re-running the full
 // compact-data builder when package tests contend for CPU. Keep this timeout
 // scoped to the golden rebuild rather than relaxing unrelated data tests.
@@ -45,10 +50,7 @@ interface SizeBudget {
 }
 
 interface SizeReport {
-  bundles: Record<
-    string,
-    { bytes: number; bytes_brotli: number; bytes_gzip: number; path: string; sha256: string }
-  >;
+  bundles: Record<string, RuntimeBundleFingerprint>;
   total_brotli_bytes: number;
   total_gzip_bytes: number;
   total_raw_bytes: number;
@@ -58,44 +60,18 @@ function sha256Hex(buf: Buffer): string {
   return createHash("sha256").update(buf).digest("hex");
 }
 
-function brotliLen(buf: Buffer, relativePath: string): number {
-  if (relativePath === DRAFT_POOL_FILE) {
-    const retained = retainedDraftPoolBrotliLen(buf);
-    if (retained !== null) return retained;
-  }
-
-  const measured = brotliCompressSync(buf, {
-    params: {
-      [zlibConstants.BROTLI_PARAM_QUALITY]: 11,
-      [zlibConstants.BROTLI_PARAM_MODE]: zlibConstants.BROTLI_MODE_TEXT,
-    },
-  }).length;
-  return Math.ceil(measured / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
-}
-
-function retainedDraftPoolBrotliLen(buf: Buffer): number | null {
-  const schemaVersion = JSON.parse(readFileSync(path.join(GENERATED_DIR, "manifest.json"), "utf8"))
-    .schema_version as string;
-  const retainedPath = path.join(
-    PACKAGE_DIR,
-    "src",
-    "retained-runtime-data",
-    schemaVersion,
-    `${DRAFT_POOL_FILE}.br`,
-  );
-  if (!existsSync(retainedPath)) return null;
-  const compressed = readFileSync(retainedPath);
-  const decompressed = brotliDecompressSync(compressed);
-  if (decompressed.length !== buf.length || sha256Hex(decompressed) !== sha256Hex(buf)) {
-    return null;
-  }
-  return Math.ceil(compressed.length / BROTLI_METADATA_BUCKET_BYTES) * BROTLI_METADATA_BUCKET_BYTES;
+interface MeasuredFingerprint {
+  path: string;
+  bytes: number;
+  raw_sha256: string;
+  compressed_bytes: number;
+  compressed_sha256: string;
 }
 
 function measuredFingerprint(
-  fps: SizeReport["bundles"],
-  key: keyof SizeReport["bundles"],
-): SizeReport["bundles"][keyof SizeReport["bundles"]] {
+  fps: Record<string, MeasuredFingerprint>,
+  key: string,
+): MeasuredFingerprint {
   const fp = fps[key];
   if (!fp) throw new Error(`missing cached fingerprint for ${key}`);
   return fp;
@@ -105,7 +81,7 @@ describe("compact-data golden", () => {
   let tmpDir: string;
   let rebuilt: Record<string, Buffer>;
   let generated: Record<string, Buffer>;
-  let generatedFingerprints: SizeReport["bundles"];
+  let generatedFingerprints: Record<string, MeasuredFingerprint>;
 
   beforeAll(() => {
     tmpDir = mkdtempSync(path.join(tmpdir(), "wcdraft-data-golden-"));
@@ -118,33 +94,39 @@ describe("compact-data golden", () => {
         `build-compact-data exited ${result.status}. stderr:\n${result.stderr}\nstdout:\n${result.stdout}`,
       );
     }
-    rebuilt = Object.fromEntries(BUNDLE_FILES.map((f) => [f, readFileSync(path.join(tmpDir, f))]));
+    rebuilt = Object.fromEntries(
+      MATERIALIZED_FILES.map((f) => [f, readFileSync(path.join(tmpDir, f))]),
+    );
     generated = Object.fromEntries(
-      BUNDLE_FILES.map((f) => [f, readFileSync(path.join(GENERATED_DIR, f))]),
+      GENERATED_FILES.map((f) => [f, readFileSync(path.join(GENERATED_DIR, f))]),
     );
     generatedFingerprints = Object.fromEntries(
-      BUNDLE_FILES.map((f) => [
+      FINGERPRINT_FILES.map((f) => [
         f === "draft-pool.compact.json"
           ? "draft_pool"
           : f === "scenario-2026.compact.json"
             ? "scenario_2026"
-            : "manifest",
+            : f === "score-distribution.compact.json"
+              ? "score_distribution"
+              : f === "daily-seed-salt-map.compact.json"
+                ? "daily_seed_salt_map"
+                : "manifest",
         {
           path: f,
           bytes: generated[f]!.length,
-          sha256: sha256Hex(generated[f]!),
-          bytes_brotli: brotliLen(generated[f]!, f),
-          bytes_gzip: 0,
+          raw_sha256: sha256Hex(generated[f]!),
+          compressed_bytes: generated[`${f}.br`]!.length,
+          compressed_sha256: sha256Hex(generated[`${f}.br`]!),
         },
       ]),
-    ) as SizeReport["bundles"];
+    );
   }, COMPACT_GOLDEN_REBUILD_TIMEOUT_MS);
 
   afterAll(() => {
     if (tmpDir) rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it.each(BUNDLE_FILES)(
+  it.each(MATERIALIZED_FILES)(
     "rebuilds %s byte-identical to the generated locked artifact (two-build hash stability)",
     (file) => {
       const a = sha256Hex(generated[file]!);
@@ -160,14 +142,24 @@ describe("compact-data golden", () => {
     for (const [key, bundlePath] of [
       ["draft_pool", "draft-pool.compact.json"] as const,
       ["scenario_2026", "scenario-2026.compact.json"] as const,
+      ["score_distribution", "score-distribution.compact.json"] as const,
+      ["daily_seed_salt_map", "daily-seed-salt-map.compact.json"] as const,
     ]) {
       const fp = manifest.bundles[key];
+      expect(fp, `${key} manifest fingerprint`).toBeDefined();
+      if (!fp) continue;
       const onDisk = generated[bundlePath]!;
       const measured = measuredFingerprint(generatedFingerprints, key);
       expect(fp.path).toBe(bundlePath);
       expect(fp.bytes, `${key} bytes`).toBe(onDisk.length);
-      expect(fp.sha256, `${key} sha256`).toBe(measured.sha256);
-      expect(fp.bytes_brotli, `${key} brotli`).toBe(measured.bytes_brotli);
+      expect(fp.sha256, `${key} sha256`).toBe(measured.raw_sha256);
+      expect(fp.raw_sha256, `${key} raw sha256`).toBe(measured.raw_sha256);
+      expect(fp.compressed_sha256, `${key} compressed sha256`).toBe(measured.compressed_sha256);
+      expect(fp.compressed_bytes, `${key} compressed bytes`).toBe(measured.compressed_bytes);
+      expect(fp.bytes_brotli, `${key} brotli alias`).toBe(measured.compressed_bytes);
+      expect(fp.brotli_impl_version).toBe(process.versions.brotli);
+      expect(fp.options).toEqual({ quality: 11, mode: "text", size_hint: onDisk.length });
+      expect(brotliDecompressSync(generated[`${bundlePath}.br`]!).equals(onDisk)).toBe(true);
     }
   });
 
@@ -175,10 +167,7 @@ describe("compact-data golden", () => {
     const budget = JSON.parse(readFileSync(BUDGET_PATH, "utf8")) as SizeBudget;
     let totalMeasured = 0;
     for (const [key, { max_bytes_brotli }] of Object.entries(budget.bundles)) {
-      const measured = measuredFingerprint(
-        generatedFingerprints,
-        key as keyof SizeReport["bundles"],
-      ).bytes_brotli;
+      const measured = measuredFingerprint(generatedFingerprints, key).compressed_bytes;
       totalMeasured += measured;
       expect(
         measured,
@@ -204,8 +193,16 @@ describe("compact-data golden", () => {
       expect(fp).toBeDefined();
       expect(fp!.path).toBe(bundlePath);
       expect(fp!.bytes, `${key} report bytes`).toBe(bytes.length);
-      expect(fp!.sha256, `${key} report sha256`).toBe(measured.sha256);
-      expect(fp!.bytes_brotli, `${key} report brotli`).toBe(measured.bytes_brotli);
+      expect(fp!.sha256, `${key} report sha256`).toBe(measured.raw_sha256);
+      expect(fp!.raw_sha256, `${key} report raw sha256`).toBe(measured.raw_sha256);
+      expect(fp!.compressed_sha256, `${key} report compressed sha256`).toBe(
+        measured.compressed_sha256,
+      );
+      expect(fp!.compressed_bytes, `${key} report compressed bytes`).toBe(
+        measured.compressed_bytes,
+      );
+      expect(fp!.bytes_brotli, `${key} report brotli alias`).toBe(measured.compressed_bytes);
+      expect(fp!.options).toEqual({ quality: 11, mode: "text", size_hint: bytes.length });
     }
   });
 });

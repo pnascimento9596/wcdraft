@@ -125,14 +125,28 @@ export interface RuntimeAttribution {
 export interface RuntimeBundleFingerprint {
   /** Path relative to the manifest file (e.g. "draft-pool.compact.json"). */
   path: string;
-  /** Hex-encoded sha256 of the file bytes. */
+  /** Compatibility alias for raw_sha256. */
   sha256: string;
+  /** Hex-encoded SHA-256 of the canonical raw JSON bytes. */
+  raw_sha256: string;
+  /** Hex-encoded SHA-256 of the canonical `${path}.br` bytes. */
+  compressed_sha256: string;
   /** Raw byte length on disk. */
   bytes: number;
   /** Gzip-compressed byte length (level 9, smallest, deterministic). */
   bytes_gzip: number;
-  /** Brotli-compressed byte length, rounded up to a stable metadata bucket. */
+  /** Compatibility alias for compressed_bytes; exact, never bucketed. */
   bytes_brotli: number;
+  /** Exact byte length of the canonical `${path}.br` artifact. */
+  compressed_bytes: number;
+  /** Brotli implementation version that produced the canonical artifact. */
+  brotli_impl_version: string;
+  /** Fully explicit q11 materialization options. */
+  options: {
+    quality: 11;
+    mode: "text";
+    size_hint: number;
+  };
 }
 
 // ─── Reference score distribution ────────────────────────────────────────────
