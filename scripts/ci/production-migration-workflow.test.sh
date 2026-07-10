@@ -67,6 +67,68 @@ run_case world-readable 1 pre "$probe_root/world-readable.txt" 1 12 0012_ranked_
 
 node "$repo_root/scripts/ci/read-github-ref.test.mjs"
 
+resolver_source="$probe_root/neon-resolver-source.mjs"
+resolver_probe="$probe_root/neon-resolver-probe.mjs"
+resolver_output="$probe_root/neon-direct-url"
+sed -n "/^          node <<'NODE'$/,/^          NODE$/p" "$workflow" |
+  sed '1d;$d;s/^          //' >"$resolver_source"
+[ -s "$resolver_source" ] || fail "could not extract inline Neon resolver"
+
+{
+  cat <<'NODE'
+globalThis.__neonResponses = [
+  {
+    branches: [
+      {
+        id: "br-primary",
+        name: "main",
+        default: true,
+        primary: true,
+        default_role_name: "neondb_owner",
+      },
+    ],
+  },
+  { endpoints: [{ branch_id: "br-primary", type: "read_write" }] },
+  { uri: "postgresql://user:test-password@ep-contract.neon.tech/neondb?sslmode=require" },
+];
+globalThis.__neonRequests = [];
+globalThis.fetch = async (url, init) => {
+  globalThis.__neonRequests.push({ url, init });
+  const payload = globalThis.__neonResponses.shift();
+  if (!payload) throw new Error("unexpected extra Neon request");
+  return { ok: true, status: 200, json: async () => payload };
+};
+NODE
+  cat "$resolver_source"
+  cat <<'NODE'
+if (globalThis.__neonRequests.length !== 3) throw new Error("expected exactly three Neon requests");
+if (!globalThis.__neonRequests[0].url.endsWith("/projects/test-project/branches")) {
+  throw new Error("branches request path mismatch");
+}
+if (!globalThis.__neonRequests[1].url.endsWith("/projects/test-project/endpoints")) {
+  throw new Error("endpoints request path mismatch");
+}
+if (!globalThis.__neonRequests[2].url.includes("/projects/test-project/connection_uri?")) {
+  throw new Error("connection request path mismatch");
+}
+for (const request of globalThis.__neonRequests) {
+  if (request.init.headers.Authorization !== "Bearer test-neon-key") {
+    throw new Error("Neon bearer binding mismatch");
+  }
+}
+NODE
+} >"$resolver_probe"
+
+NEON_API_KEY=test-neon-key \
+  NEON_PROJECT_ID=test-project \
+  CONNECTION_FILE="$resolver_output" \
+  node <"$resolver_probe"
+[ -f "$resolver_output" ] || fail "inline Neon resolver did not write its direct URL"
+[ "$(cat "$resolver_output")" = 'postgresql://user:test-password@ep-contract.neon.tech/neondb?sslmode=require' ] ||
+  fail "inline Neon resolver wrote the wrong URL"
+resolver_mode="$(stat -f '%Lp' "$resolver_output" 2>/dev/null || stat -c '%a' "$resolver_output")"
+[ "$resolver_mode" = 600 ] || fail "inline Neon resolver output mode must be 600"
+
 assert_contains "$workflow" "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
 assert_contains "$workflow" 'EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}'
 assert_contains "$workflow" 'git rev-parse HEAD'
@@ -74,6 +136,7 @@ assert_contains "$workflow" 'node scripts/ci/read-github-ref.mjs'
 assert_contains "$workflow" 'primaryCandidates.length !== 1'
 assert_contains "$workflow" 'endpoint.type === "read_write"'
 assert_contains "$workflow" 'pooled: "false"'
+assert_contains "$workflow" 'const { writeFileSync } = await import("node:fs");'
 assert_contains "$workflow" '::add-mask::'
 assert_contains "$workflow" 'umask 077'
 assert_contains "$workflow" 'classify-production-migration-status.sh pre'
@@ -97,6 +160,8 @@ clean_tree_count="$(grep -Fc 'git status --porcelain=v1 --untracked-files=all' "
 [ "$clean_tree_count" -eq 2 ] || fail "workflow must prove a clean checkout exactly twice"
 
 grep -Fq 'git ls-remote' "$workflow" && fail "unauthenticated git ls-remote is forbidden"
+grep -Fq 'require("node:fs")' "$resolver_source" &&
+  fail "inline Neon resolver may not mix CommonJS require with top-level await"
 github_token_refs="$(grep -Fc '${{ github.token }}' "$workflow")"
 [ "$github_token_refs" -eq 2 ] || fail "GitHub token must appear only in the two ref-query env bindings"
 contents_read_count="$(grep -Fc '  contents: read' "$workflow")"
@@ -125,4 +190,4 @@ fi
 steps_between="$(sed -n "$((revalidate_line + 1)),$((migrate_line - 1))p" "$workflow" | grep -Ec '^      - name:' || true)"
 [ "$steps_between" -eq 0 ] || fail "final live-main revalidation must be immediately adjacent to migration"
 
-echo "production migration workflow contract: PASS (8 classifier cases + GitHub ref success/5 refusals + 14 bindings + two authenticated live-main checks + secret/order guards)"
+echo "production migration workflow contract: PASS (8 classifier cases + GitHub ref success/5 refusals + Node 22 inline Neon resolver execution + 14 bindings + two authenticated live-main checks + secret/order guards)"

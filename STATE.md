@@ -88,6 +88,26 @@ helper matrix, the full production-migration workflow contract, Node and Bash
 syntax, actionlint 1.7.12, full repository Prettier, and `git diff --check`.
 No product, schema, migration, runtime-data, rating, simulation, or ETL file
 changed; broad exact-head CI and fresh independent Red review remain required.
+After auth fix PR #239 squash-merged as
+`bc872ac59f3d98bee3b403ec6361359df21f9174`, production migration dispatch run
+`29126577241` passed the authenticated SHA binding, package install, and exact
+journal-tail binding, then failed safely in the Neon resolver under Node
+22.23.1 with `ERR_AMBIGUOUS_MODULE_SYNTAX`. The inline stdin program mixed
+CommonJS `require("node:fs")` with top-level `await`, so Node rejected it before
+the first Neon API request. Database preflight, final main revalidation,
+migration, and postflight were skipped; cleanup passed. The workflow made no
+database mutation and production remained at migration `0011`. The fresh
+resolver fix-forward branch `ws-f4/audit-s1-production-migrate-neon-resolver`,
+based on exact current main `bc872ac`, changes the inline program to unambiguous
+ESM via `await import("node:fs")`. Its executable contract extracts the exact
+workflow heredoc, runs it through plain Node stdin after CI explicitly installs
+Node 22, mocks all three Neon responses without network access, and verifies
+request paths, bearer binding, the direct URL, and mode-0600 output. The
+contract also forbids reintroducing `require("node:fs")` beside top-level await.
+Narrow resolver validation passed under local Node 22.22.3: exact inline
+resolver execution, the complete production-migration contract, Bash parse,
+actionlint 1.7.12, full repository Prettier, and `git diff --check`. Broad
+exact-head CI and fresh independent Red review remain required before merge.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
