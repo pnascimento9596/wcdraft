@@ -42,6 +42,14 @@ root lint (5/5 cached), four edited-runbook Bash parses, the no-raw-status-recei
 contract, targeted Prettier, actionlint, and `git diff --check`. Heavy realism
 was not run locally because no engine, rating, or runtime-data input moved;
 CI-config path selection will run the protected heavy lane on the PR.
+The final rollback-guard fix-forward validates the complete target squash-commit
+path set before `git revert`, refuses root/merge targets, and revalidates the
+complete tracked/index state immediately before commit. Its executable contract
+passed 5 behavior cases and 3 runbook/workflow bindings, including an unexpected
+fourth target path stopping before revert, commit, or push. Targeted static
+revalidation also passed the DB contract (6 behavior / 6 path / 8 binding
+cases), runner-hygiene contract, Daily workflow contract, agent-contract check,
+Prettier, actionlint v1.7.12, Bash 3.2 syntax, and `git diff --check`.
 
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`

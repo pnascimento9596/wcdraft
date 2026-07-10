@@ -172,6 +172,9 @@ jobs:
       - name: DB readiness CI contract probe
         run: scripts/ci/require-neon-for-db-paths.test.sh
 
+      - name: Daily salt-map revert contract probe
+        run: scripts/ci/validate-daily-salt-map-revert.test.sh
+
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:

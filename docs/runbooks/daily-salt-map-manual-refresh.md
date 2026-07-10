@@ -85,6 +85,8 @@ repo_root="$(git rev-parse --show-toplevel)"
 git -C "$repo_root" fetch origin main
 git -C "$repo_root" cat-file -e "$REFRESH_MERGE_SHA^{commit}"
 git -C "$repo_root" merge-base --is-ancestor "$REFRESH_MERGE_SHA" origin/main
+(cd "$repo_root" &&
+  scripts/ci/validate-daily-salt-map-revert.sh target "$REFRESH_MERGE_SHA")
 
 rollback_stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 rollback_branch="ws-fix/daily-salt-map-revert-$rollback_stamp"
@@ -108,21 +110,12 @@ git add \
   packages/data/src/generated/manifest.json \
   packages/data/reports/compact-size.json
 
-expected_paths="$(printf '%s\n' \
-  packages/data/reports/compact-size.json \
-  packages/data/src/generated/daily-seed-salt-map.compact.json \
-  packages/data/src/generated/manifest.json | LC_ALL=C sort)"
-actual_paths="$(git diff --cached --name-only | LC_ALL=C sort)"
-[ "$actual_paths" = "$expected_paths" ] || {
-  echo 'STOP: the failed refresh commit changed paths outside the refresh artifact set.' >&2
-  exit 1
-}
-
 pnpm install --frozen-lockfile
 pnpm --filter @wcdraft/data exec vitest run \
   test/daily-seed-salt-map.golden.test.ts
 pnpm check:generated
 git diff --cached --check
+scripts/ci/validate-daily-salt-map-revert.sh post-revert
 git commit -m 'fix(data): revert failed Daily salt refresh'
 git push --set-upstream origin "$rollback_branch"
 pr_url="$(gh pr create \
