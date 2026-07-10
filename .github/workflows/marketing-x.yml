@@ -44,7 +44,7 @@ jobs:
           persist-credentials: true # required only for the final trusted main push
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
-      - uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6
         with:
           dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
