@@ -242,6 +242,29 @@ and heavy realism (9/9). Required PR gates execute on the self-hosted
 `wcdraft-m4` runner; protected receipts and independent review are retained on
 PR #225.
 
+Daily-seed runway automation (Audit S1 A3):
+2026-07-10 · Unit A3 on `ws-meta/audit-s1-daily-runway-gate` replaces the
+nightly moving-date diff with an inclusive runway policy over the committed
+Daily artifact. More than 21 covered days passes without refresh; 14–21 days
+regenerates a deterministic 45-day window and passes after opening or updating
+the refresh PR; fewer than 14 days performs the same refresh handoff and then
+fails the nightly gate. The stable automation identity is repository
+`pnascimento9596/wcdraft`, branch
+`automation/daily-seed-salt-map-refresh`, label `daily-freshness`, and an exact
+`force_all=true` dispatch of `ci.yml` against that branch. Branch creation,
+same-tree no-op, and changed-tree replacement are explicit decisions; replacement
+uses the captured remote SHA as an exact force-with-lease, while PR identity
+fails closed if more than one open refresh PR exists. The writer keeps checkout
+credentials disabled and exposes the job token only through a step-scoped local
+credential helper that is removed on exit. Repository workflow permissions
+remain `read` by default, with write permissions scoped only to the trusted
+scheduled/manual runway job; Actions may create and approve pull requests
+(`can_approve_pull_request_reviews=true`) so that job can maintain the refresh
+PR. CI still blocks Dependabot before self-hosted runner allocation and reserves
+the protected aggregate name for trusted actors. Nightly remains scheduled for
+`15:23 UTC`; a missed night is benign because the next run evaluates the runway
+thresholds instead of requiring a daily diff.
+
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
 `ws-ux/share-polish-orientation-20260701`, based on `origin/main`

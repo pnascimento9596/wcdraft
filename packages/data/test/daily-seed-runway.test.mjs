@@ -301,6 +301,39 @@ describe("actual workflow mutation contract", () => {
     ).toThrow(/PR_LABEL/u);
   });
 
+  it("fails when the writer loses step-scoped git authentication or its cleanup", () => {
+    expect(() =>
+      validateDailyRefreshWorkflowContract(
+        nightly.replace(
+          "git config --local --add credential.helper",
+          "git config --global --add credential.helper",
+        ),
+        ci,
+      ),
+    ).toThrow(/credential.helper/u);
+    expect(() =>
+      validateDailyRefreshWorkflowContract(
+        nightly.replace("trap cleanup_git_auth EXIT", "true"),
+        ci,
+      ),
+    ).toThrow(/cleanup_git_auth/u);
+  });
+
+  it("fails when the A0 self-hosted runner or trust boundary drifts", () => {
+    expect(() =>
+      validateDailyRefreshWorkflowContract(
+        nightly.replace("runs-on: [self-hosted, macOS, ARM64, wcdraft]", "runs-on: ubuntu-latest"),
+        ci,
+      ),
+    ).toThrow(/self-hosted macOS ARM64/u);
+    expect(() =>
+      validateDailyRefreshWorkflowContract(
+        nightly,
+        ci.replace("github.actor != 'dependabot[bot]' &&", "true &&"),
+      ),
+    ).toThrow(/dependabot/u);
+  });
+
   it("fails when the actual contract drops untracked checks or widens CI dispatch", () => {
     expect(() =>
       validateDailyRefreshWorkflowContract(

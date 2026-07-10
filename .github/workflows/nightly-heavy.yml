@@ -185,11 +185,20 @@ jobs:
         env:
           BRANCH_ACTION: ${{ steps.branch-update.outputs.branch_action }}
           COMMIT_REQUIRED: ${{ steps.branch-update.outputs.commit_required }}
+          GH_TOKEN: ${{ github.token }}
           PUSH_LEASE: ${{ steps.branch-update.outputs.push_lease }}
           PUSH_REFSPEC: ${{ steps.branch-update.outputs.push_refspec }}
           PUSH_REQUIRED: ${{ steps.branch-update.outputs.push_required }}
         run: |
           set -euo pipefail
+          cleanup_git_auth() {
+            git config --local --unset-all credential.helper || true
+          }
+          trap cleanup_git_auth EXIT
+          git config --local --unset-all credential.helper || true
+          git config --local --add credential.helper \
+            '!f() { test "$1" = get && echo "username=x-access-token" && echo "password=$GH_TOKEN"; }; f'
+
           case "$BRANCH_ACTION" in
             noop-same-tree)
               if [[ "$COMMIT_REQUIRED" != "false" || "$PUSH_REQUIRED" != "false" || -n "$PUSH_LEASE" ]]; then

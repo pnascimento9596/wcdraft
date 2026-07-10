@@ -287,10 +287,50 @@ function requireWorkflowOrder(source, fragments, label) {
   }
 }
 
+function requireWorkflowFragmentCount(source, fragment, expected, label) {
+  const actual = source.split(fragment).length - 1;
+  if (actual !== expected) {
+    fail(`${label} must contain ${expected} occurrence(s) of ${fragment}, got ${actual}`);
+  }
+}
+
+function validateSelfHostedWorkflowContract(source, { jobs, label }) {
+  const exactRunsOn = "    runs-on: [self-hosted, macOS, ARM64, wcdraft]";
+  const runsOnLines = source.match(/^ {4}runs-on:.*$/gmu) ?? [];
+  if (runsOnLines.length !== jobs || runsOnLines.some((line) => line !== exactRunsOn)) {
+    fail(`${label} must bind all ${jobs} jobs to the exact self-hosted macOS ARM64 label set`);
+  }
+  for (const [fragment, fragmentLabel] of [
+    ["uses: actions/checkout@", "pinned checkout"],
+    ["          clean: true", "clean checkout"],
+    ["          persist-credentials: false", "non-persistent checkout credentials"],
+    ["uses: ./.github/actions/self-hosted-runner-hygiene", "persistent-runner hygiene"],
+  ]) {
+    requireWorkflowFragmentCount(source, fragment, jobs, `${label} ${fragmentLabel}`);
+  }
+  requireWorkflowFragment(source, "cancel-in-progress: true", `${label} concurrency`);
+}
+
 /** Bind the actual workflow files to every state-changing helper decision. */
 export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
   if (typeof nightlySource !== "string" || typeof ciSource !== "string") {
     fail("nightly and CI workflow sources must be strings");
+  }
+  validateSelfHostedWorkflowContract(ciSource, { jobs: 10, label: "CI workflow" });
+  validateSelfHostedWorkflowContract(nightlySource, { jobs: 3, label: "nightly workflow" });
+  requireWorkflowFragment(
+    nightlySource,
+    '- cron: "23 15 * * *"',
+    "nightly self-hosted awake-window schedule",
+  );
+  for (const fragment of [
+    "permissions:\n  contents: read",
+    "if: ${{ github.actor != 'dependabot[bot]' }}",
+    "github.actor != 'dependabot[bot]' &&",
+    "name: ${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}",
+    "if: ${{ always() && github.actor != 'dependabot[bot]' }}",
+  ]) {
+    requireWorkflowFragment(ciSource, fragment, "CI self-hosted trust boundary");
   }
   validateWorkflowBuilderInvocation(nightlySource);
   requireWorkflowOrder(
@@ -318,10 +358,14 @@ export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
     '--remote-sha "$remote_sha"',
     '--remote-tree "$remote_tree"',
     "BRANCH_ACTION: ${{ steps.branch-update.outputs.branch_action }}",
+    "GH_TOKEN: ${{ github.token }}",
     "PUSH_LEASE: ${{ steps.branch-update.outputs.push_lease }}",
     "PUSH_REFSPEC: ${{ steps.branch-update.outputs.push_refspec }}",
     "git status --porcelain=v1 --untracked-files=all",
     'case "$BRANCH_ACTION" in',
+    "trap cleanup_git_auth EXIT",
+    "git config --local --add credential.helper",
+    "git config --local --unset-all credential.helper || true",
     'git push --force-with-lease="$PUSH_LEASE" origin "$PUSH_REFSPEC"',
     'git push origin "$PUSH_REFSPEC"',
     "id: refresh-pr",
