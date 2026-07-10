@@ -213,8 +213,10 @@ every remaining `smallTargets` measurement as a failure; only inline links
 inside prose paragraphs or list items are allowlisted, and only while their
 computed display remains inline. Its permanent matrix includes `667x375`,
 `768x1024`, `1024x768`, and `1366x768` alongside the prior phone and desktop
-viewports. Dev-overlay suppression is dev-only and carries the page request
-nonce. The responsive wrapper owns a dynamically allocated Next server,
+viewports. Dev-overlay suppression is dev-only, reads the CSP-hidden request
+nonce through the DOM `.nonce` property, and fails strict adjudication unless
+its nonce-bearing stylesheet hides the Next portal and shadow controls. The
+responsive wrapper owns a dynamically allocated Next server,
 records its rolling log and structured exit receipt in every phase directory,
 terminates audit/server children deterministically, and restores generated
 `next-env.d.ts` state after the expected shutdown. No core, rating, sim, token,

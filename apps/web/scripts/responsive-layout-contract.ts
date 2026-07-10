@@ -7,6 +7,16 @@ export const MIN_INTERACTION_TARGET_PX = 44;
  */
 export const INLINE_TEXT_LINK_ALLOWLIST = [".prose p a[href]", ".prose li a[href]"] as const;
 
+export type DevOverlaySuppression = {
+  readonly nonceAttributeLength: number | null;
+  readonly noncePropertyLength: number;
+  readonly nonceSource: "property" | "missing";
+  readonly styleNonceMatches: boolean;
+  readonly styleSheetAttached: boolean;
+  readonly portalState: "absent" | "hidden" | "visible";
+  readonly visibleControlCount: number;
+};
+
 export type ResponsiveMetricForAdjudication = {
   readonly surface: string;
   readonly viewport: string;
@@ -23,6 +33,7 @@ export type ResponsiveMetricForAdjudication = {
   readonly smallTargets: readonly string[];
   readonly axeViolations: readonly string[];
   readonly consoleErrors: readonly string[];
+  readonly devOverlay: DevOverlaySuppression | null;
 };
 
 export function responsiveMetricFailures(metric: ResponsiveMetricForAdjudication): string[] {
@@ -57,6 +68,24 @@ export function responsiveMetricFailures(metric: ResponsiveMetricForAdjudication
   }
   if (metric.consoleErrors.length > 0) {
     failures.push(`${prefix}: console ${metric.consoleErrors.join(",")}`);
+  }
+  if (metric.devOverlay !== null) {
+    const overlay = metric.devOverlay;
+    const reasons: string[] = [];
+    if (overlay.nonceSource !== "property" || overlay.noncePropertyLength === 0) {
+      reasons.push("request nonce property missing");
+    }
+    if (!overlay.styleNonceMatches) reasons.push("style nonce mismatch");
+    if (!overlay.styleSheetAttached) reasons.push("style sheet rejected");
+    if (overlay.portalState === "visible") reasons.push("Next portal visible");
+    if (overlay.visibleControlCount > 0) {
+      reasons.push(`${overlay.visibleControlCount.toString()} dev-tools controls visible`);
+    }
+    if (reasons.length > 0) {
+      failures.push(
+        `${prefix}: dev overlay suppression failed (${reasons.join(", ")}; attribute nonce length=${String(overlay.nonceAttributeLength)}, property nonce length=${overlay.noncePropertyLength.toString()})`,
+      );
+    }
   }
   return failures;
 }

@@ -26,6 +26,7 @@ function metric(
     smallTargets: [],
     axeViolations: [],
     consoleErrors: [],
+    devOverlay: null,
     ...overrides,
   };
 }
@@ -56,6 +57,44 @@ describe("responsive layout contract", () => {
       "history 1024x768 light: horizontal overflow 1026/1024",
       "history 1024x768 light: targets below 44px Retry preview 96x36",
       "history 1024x768 light: console CSP blocked inline style",
+    ]);
+  });
+
+  it("uses the DOM nonce property when CSP hides the nonce attribute", () => {
+    expect(
+      responsiveMetricFailures(
+        metric({
+          devOverlay: {
+            nonceAttributeLength: 0,
+            noncePropertyLength: 22,
+            nonceSource: "property",
+            styleNonceMatches: true,
+            styleSheetAttached: true,
+            portalState: "hidden",
+            visibleControlCount: 0,
+          },
+        }),
+      ),
+    ).toEqual([]);
+  });
+
+  it("fails strict adjudication when dev-overlay suppression is only attempted", () => {
+    expect(
+      responsiveMetricFailures(
+        metric({
+          devOverlay: {
+            nonceAttributeLength: 0,
+            noncePropertyLength: 0,
+            nonceSource: "missing",
+            styleNonceMatches: false,
+            styleSheetAttached: false,
+            portalState: "visible",
+            visibleControlCount: 1,
+          },
+        }),
+      ),
+    ).toEqual([
+      "history 1024x768 light: dev overlay suppression failed (request nonce property missing, style nonce mismatch, style sheet rejected, Next portal visible, 1 dev-tools controls visible; attribute nonce length=0, property nonce length=0)",
     ]);
   });
 });

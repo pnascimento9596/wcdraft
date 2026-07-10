@@ -33,6 +33,7 @@ import {
   INLINE_TEXT_LINK_ALLOWLIST,
   MIN_INTERACTION_TARGET_PX,
   responsiveMetricFailures,
+  type DevOverlaySuppression,
 } from "./responsive-layout-contract";
 
 type ViewportCase = {
@@ -76,6 +77,7 @@ type SurfaceMetric = {
   readonly axeViolations: readonly string[];
   readonly desktopSignals: Record<string, boolean | number | string | null>;
   readonly consoleErrors: readonly string[];
+  readonly devOverlay: DevOverlaySuppression | null;
 };
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
@@ -464,23 +466,79 @@ async function settle(page: Page): Promise<void> {
   await page.waitForTimeout(250);
 }
 
-async function hideDevOverlay(page: Page): Promise<void> {
-  if (!DEV_SERVER || process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0") return;
-  const nonce = await page
-    .locator("script[nonce], style[nonce]")
-    .first()
-    .getAttribute("nonce")
-    .catch(() => null);
-  if (!nonce) return;
-  await page.evaluate(
-    ({ css, requestNonce }) => {
+async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null> {
+  if (!DEV_SERVER || process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0") return null;
+  return await page.evaluate(
+    ({ css }) => {
+      const nonceElement = document.querySelector<HTMLScriptElement | HTMLStyleElement>(
+        "script[nonce], style[nonce]",
+      );
+      const nonceAttributeLength = nonceElement?.getAttribute("nonce")?.length ?? null;
+      const requestNonce = nonceElement?.nonce ?? "";
+      if (!requestNonce) {
+        return {
+          nonceAttributeLength,
+          noncePropertyLength: 0,
+          nonceSource: "missing" as const,
+          styleNonceMatches: false,
+          styleSheetAttached: false,
+          portalState: document.querySelector("nextjs-portal")
+            ? ("visible" as const)
+            : ("absent" as const),
+          visibleControlCount: 0,
+        };
+      }
+
       const style = document.createElement("style");
-      style.setAttribute("nonce", requestNonce);
+      style.nonce = requestNonce;
       style.dataset.wcdraftResponsiveHarness = "dev-overlay";
       style.textContent = css;
       document.head.append(style);
+
+      const portal = document.querySelector<HTMLElement>("nextjs-portal");
+      const controls = portal?.shadowRoot
+        ? Array.from(
+            portal.shadowRoot.querySelectorAll(
+              "[data-nextjs-dev-tools-button], [data-nextjs-dev-tools-panel], button, [role='button']",
+            ),
+          )
+        : [];
+      const visibleControlCount = controls.filter((element) => {
+        const rect = element.getBoundingClientRect();
+        const computed = getComputedStyle(element);
+        return (
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          computed.opacity !== "0" &&
+          rect.width > 0 &&
+          rect.height > 0
+        );
+      }).length;
+      let portalState: DevOverlaySuppression["portalState"] = "absent";
+      if (portal) {
+        const rect = portal.getBoundingClientRect();
+        const computed = getComputedStyle(portal);
+        portalState =
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          computed.opacity !== "0" &&
+          rect.width > 0 &&
+          rect.height > 0
+            ? "visible"
+            : "hidden";
+      }
+
+      return {
+        nonceAttributeLength,
+        noncePropertyLength: requestNonce.length,
+        nonceSource: "property" as const,
+        styleNonceMatches: style.nonce === requestNonce,
+        styleSheetAttached: style.sheet !== null,
+        portalState,
+        visibleControlCount,
+      };
     },
-    { css: DEV_OVERLAY_CSS, requestNonce: nonce },
+    { css: DEV_OVERLAY_CSS },
   );
 }
 
@@ -828,7 +886,7 @@ async function captureSurface(
     await page.goto(`${BASE_URL}${surface.path}`, { waitUntil: "domcontentloaded" });
     await surface.prepare?.(page);
     await settle(page);
-    await hideDevOverlay(page);
+    const devOverlay = await hideDevOverlay(page);
     const axeViolations = await runAxe(page, axeSource);
     const primaryAction = await measurePrimaryAction(page, surface.primaryAction);
     const screenshotName = `${PHASE}-${surface.label}-${viewport.name}-${theme}.png`;
@@ -855,6 +913,7 @@ async function captureSurface(
       primaryActionInViewport: primaryAction.inViewport,
       axeViolations,
       consoleErrors: errors,
+      devOverlay,
       ...baseMetric,
     };
   } finally {
