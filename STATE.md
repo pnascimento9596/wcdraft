@@ -204,6 +204,27 @@ still required that app-owned context; PR #165 reported `mergeStateStatus`
 `BLOCKED`. The security goal was met even though the earlier display-name model
 was false: no bot job received a runner, and the protected context was absent.
 
+Audit Season 1 D2 interaction-floor harness:
+2026-07-10 · Standalone controls now hold a measured 44px minimum in both
+dimensions across Review simulation/back actions, History result/seed actions,
+Share preview retry, result lane and theme segments, primary navigation, pitch
+slots, and open-roster candidate rows. The strict responsive adjudicator treats
+every remaining `smallTargets` measurement as a failure; only inline links
+inside prose paragraphs or list items are allowlisted, and only while their
+computed display remains inline. Its permanent matrix includes `667x375`,
+`768x1024`, `1024x768`, and `1366x768` alongside the prior phone and desktop
+viewports. Dev-overlay suppression is dev-only, reads the CSP-hidden request
+nonce through the DOM `.nonce` property, and fails strict adjudication unless
+its nonce-bearing stylesheet hides the Next portal and shadow controls. The
+strict wrapper pins suppression on rather than inheriting a diagnostic opt-out;
+in dev mode that opt-out emits explicit failing telemetry, while only non-dev
+audits use the null sentinel. The responsive wrapper owns a dynamically
+allocated Next server, records its rolling log and structured exit receipt in
+every phase directory, terminates audit/server children deterministically, and
+restores generated `next-env.d.ts` state after the expected shutdown. No core,
+rating, sim, token, API, schema, ETL, compact runtime-data, or leaderboard
+scoring behavior changed.
+
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch
 `ws-ux/desktop-viewport-fit-20260706`, based on `origin/main`

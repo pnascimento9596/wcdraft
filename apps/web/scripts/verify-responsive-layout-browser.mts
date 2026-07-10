@@ -29,6 +29,12 @@ import {
 import type { BoardPageWire } from "../lib/leaderboard/board-view";
 import type { LeaderboardLineupView } from "../lib/leaderboard/lineup-view";
 import { configBadgesFromRecordToken } from "../lib/game/config-badges";
+import {
+  INLINE_TEXT_LINK_ALLOWLIST,
+  MIN_INTERACTION_TARGET_PX,
+  responsiveMetricFailures,
+  type DevOverlaySuppression,
+} from "./responsive-layout-contract";
 
 type ViewportCase = {
   readonly name: string;
@@ -71,12 +77,14 @@ type SurfaceMetric = {
   readonly axeViolations: readonly string[];
   readonly desktopSignals: Record<string, boolean | number | string | null>;
   readonly consoleErrors: readonly string[];
+  readonly devOverlay: DevOverlaySuppression | null;
 };
 
 const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3027";
 const PHASE = process.env.WCDRAFT_RESPONSIVE_PHASE ?? "capture";
 const STRICT = process.env.WCDRAFT_RESPONSIVE_STRICT === "1";
+const DEV_SERVER = process.env.WCDRAFT_RESPONSIVE_DEV_SERVER === "1";
 const VIEWPORT_FILTER = new Set(
   (process.env.WCDRAFT_RESPONSIVE_VIEWPORTS ?? "")
     .split(",")
@@ -106,6 +114,10 @@ const DEV_OVERLAY_CSS = `
 const gameData = buildGameDataFromBundles();
 
 const viewports: readonly ViewportCase[] = [
+  { name: "667x375", width: 667, height: 375 },
+  { name: "768x1024", width: 768, height: 1024 },
+  { name: "1024x768", width: 1024, height: 768 },
+  { name: "1366x768", width: 1366, height: 768 },
   { name: "1280x800", width: 1280, height: 800 },
   { name: "1440x900", width: 1440, height: 900 },
   { name: "1512x982", width: 1512, height: 982 },
@@ -454,9 +466,84 @@ async function settle(page: Page): Promise<void> {
   await page.waitForTimeout(250);
 }
 
-async function hideDevOverlay(page: Page): Promise<void> {
-  if (process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0") return;
-  await page.addStyleTag({ content: DEV_OVERLAY_CSS }).catch(() => undefined);
+async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null> {
+  if (!DEV_SERVER) return null;
+  const suppression = process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0" ? "disabled" : "enabled";
+  return await page.evaluate(
+    ({ css, requestedSuppression }) => {
+      const nonceElement = document.querySelector<HTMLScriptElement | HTMLStyleElement>(
+        "script[nonce], style[nonce]",
+      );
+      const nonceAttributeLength = nonceElement?.getAttribute("nonce")?.length ?? null;
+      const requestNonce = nonceElement?.nonce ?? "";
+      let styleNonceMatches = false;
+      let styleSheetAttached = false;
+      if (requestedSuppression === "enabled" && requestNonce) {
+        const style = document.createElement("style");
+        style.nonce = requestNonce;
+        style.dataset.wcdraftResponsiveHarness = "dev-overlay";
+        style.textContent = css;
+        document.head.append(style);
+        styleNonceMatches = style.nonce === requestNonce;
+        styleSheetAttached = style.sheet !== null;
+      }
+
+      const portal = document.querySelector<HTMLElement>("nextjs-portal");
+      const controls = portal?.shadowRoot
+        ? Array.from(
+            portal.shadowRoot.querySelectorAll(
+              "[data-nextjs-dev-tools-button], [data-nextjs-dev-tools-panel], button, [role='button']",
+            ),
+          )
+        : [];
+      const visibleControlCount = controls.filter((element) => {
+        const rect = element.getBoundingClientRect();
+        const computed = getComputedStyle(element);
+        return (
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          computed.opacity !== "0" &&
+          rect.width > 0 &&
+          rect.height > 0
+        );
+      }).length;
+      let portalState: DevOverlaySuppression["portalState"] = "absent";
+      if (portal) {
+        const rect = portal.getBoundingClientRect();
+        const computed = getComputedStyle(portal);
+        portalState =
+          computed.display !== "none" &&
+          computed.visibility !== "hidden" &&
+          computed.opacity !== "0" &&
+          rect.width > 0 &&
+          rect.height > 0
+            ? "visible"
+            : "hidden";
+      }
+
+      return {
+        suppression: requestedSuppression,
+        nonceAttributeLength,
+        noncePropertyLength: requestNonce.length,
+        nonceSource: requestNonce ? ("property" as const) : ("missing" as const),
+        styleNonceMatches,
+        styleSheetAttached,
+        portalState,
+        visibleControlCount,
+      };
+    },
+    { css: DEV_OVERLAY_CSS, requestedSuppression: suppression },
+  );
+}
+
+async function mockOgSignFailure(page: Page): Promise<void> {
+  await page.route("**/api/og/sign", async (route) => {
+    await route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "responsive harness preview failure" }),
+    });
+  });
 }
 
 function surfaceCases(): readonly SurfaceCase[] {
@@ -557,14 +644,17 @@ function surfaceCases(): readonly SurfaceCase[] {
       primaryAction: { role: "link", name: /Share|Review|Leaderboard|Play/u },
       prepare: async (page) => {
         await page.getByRole("heading", { name: /The run/u }).waitFor();
+        await page.getByRole("group", { name: "Leaderboard lane" }).waitFor();
       },
     },
     {
       label: "share-author",
       path: `/play/share?run=${completeA.run_id}`,
+      route: mockOgSignFailure,
       primaryAction: { role: "button", name: /Copy|Retry/u },
       prepare: async (page) => {
         await page.getByText("Share").first().waitFor();
+        await page.getByRole("button", { name: "Retry preview" }).waitFor();
       },
     },
     {
@@ -664,7 +754,10 @@ async function measure(
     | "consoleErrors"
   >
 > {
+  const inlineTextLinkAllowlist = JSON.stringify(INLINE_TEXT_LINK_ALLOWLIST);
   return await page.evaluate(`(() => {
+    const inlineTextLinkAllowlist = ${inlineTextLinkAllowlist};
+    const minTargetSize = ${MIN_INTERACTION_TARGET_PX.toString()};
     const rect = (selector) => {
       const el = document.querySelector(selector);
       return el ? el.getBoundingClientRect() : null;
@@ -701,14 +794,21 @@ async function measure(
       );
     });
     const smallTargets = controls
+      .filter((el) => {
+        const style = getComputedStyle(el);
+        return !(
+          style.display === "inline" &&
+          inlineTextLinkAllowlist.some((selector) => el.matches(selector))
+        );
+      })
       .map((el) => {
         const box = el.getBoundingClientRect();
         const text = (el.getAttribute("aria-label") || el.textContent || el.tagName)
           .replace(/\\s+/gu, " ")
           .trim()
           .slice(0, 80);
-        return box.width < 44 || box.height < 44
-          ? \`\${text || el.tagName} \${Math.round(box.width)}x\${Math.round(box.height)}\`
+        return box.width < minTargetSize || box.height < minTargetSize
+          ? (text || el.tagName) + " " + Math.round(box.width) + "x" + Math.round(box.height)
           : null;
       })
       .filter(Boolean);
@@ -758,40 +858,6 @@ async function measurePrimaryAction(
   };
 }
 
-function metricFailures(metric: SurfaceMetric): string[] {
-  const failures: string[] = [];
-  if (metric.shellRule && metric.noScrollGate === "fail") {
-    const action =
-      metric.primaryActionInViewport === true
-        ? "primary visible"
-        : `primary ${String(metric.primaryActionInViewport)}`;
-    failures.push(
-      `${metric.surface} ${metric.viewport} ${metric.theme}: shell scroll ${metric.scrollHeight}/${metric.clientHeight}; ${action}`,
-    );
-  }
-  if (metric.horizontalOverflow) {
-    failures.push(
-      `${metric.surface} ${metric.viewport} ${metric.theme}: horizontal overflow ${metric.maxScrollWidth}/${metric.clientWidth}`,
-    );
-  }
-  if (metric.axeViolations.length > 0) {
-    failures.push(
-      `${metric.surface} ${metric.viewport} ${metric.theme}: axe ${metric.axeViolations.join(",")}`,
-    );
-  }
-  if (metric.navWraps.length > 0) {
-    failures.push(
-      `${metric.surface} ${metric.viewport} ${metric.theme}: nav wraps ${metric.navWraps.join(",")}`,
-    );
-  }
-  if (metric.consoleErrors.length > 0) {
-    failures.push(
-      `${metric.surface} ${metric.viewport} ${metric.theme}: console ${metric.consoleErrors.join(",")}`,
-    );
-  }
-  return failures;
-}
-
 function shellRuleApplies(surface: SurfaceCase, viewport: ViewportCase): boolean {
   return surface.shellRule === true && viewport.width >= 1024;
 }
@@ -814,7 +880,7 @@ async function captureSurface(
     await page.goto(`${BASE_URL}${surface.path}`, { waitUntil: "domcontentloaded" });
     await surface.prepare?.(page);
     await settle(page);
-    await hideDevOverlay(page);
+    const devOverlay = await hideDevOverlay(page);
     const axeViolations = await runAxe(page, axeSource);
     const primaryAction = await measurePrimaryAction(page, surface.primaryAction);
     const screenshotName = `${PHASE}-${surface.label}-${viewport.name}-${theme}.png`;
@@ -841,6 +907,7 @@ async function captureSurface(
       primaryActionInViewport: primaryAction.inViewport,
       axeViolations,
       consoleErrors: errors,
+      devOverlay,
       ...baseMetric,
     };
   } finally {
@@ -871,7 +938,7 @@ async function main(): Promise<void> {
         for (const theme of themes) {
           const metric = await captureSurface(browser, axeSource, surface, viewport, theme);
           metrics.push(metric);
-          const failures = metricFailures(metric);
+          const failures = responsiveMetricFailures(metric);
           const status = failures.length === 0 ? "ok" : `issues=${failures.length.toString()}`;
           console.log(
             `[responsive:${PHASE}] ${status} ${surface.label} ${viewport.name} ${theme} screenshot=${metric.screenshot}`,
@@ -892,7 +959,7 @@ async function main(): Promise<void> {
     metrics,
   };
   await writeFile(path.join(OUT_DIR, `responsive-${PHASE}.json`), JSON.stringify(payload, null, 2));
-  const failures = metrics.flatMap(metricFailures);
+  const failures = metrics.flatMap(responsiveMetricFailures);
   if (STRICT && failures.length > 0) {
     throw new Error(`responsive layout verification failed:\n${failures.join("\n")}`);
   }
