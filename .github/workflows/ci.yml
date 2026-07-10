@@ -41,13 +41,13 @@ jobs:
       db: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.db }}
       etl: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.etl }}
     steps:
-      - name: Guard automation-only dispatch
+      - name: Guard automation dispatch envelope before checkout
         if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           FORCE_ALL: ${{ inputs.force_all }}
         run: |
-          if [[ "$FORCE_ALL" != "true" || "$GITHUB_REF" != "refs/heads/automation/daily-seed-salt-map-refresh" ]]; then
-            echo "::error::force_all dispatch is restricted to the Daily refresh automation branch"
+          if [[ "$GITHUB_REPOSITORY" != "pnascimento9596/wcdraft" || "$GITHUB_EVENT_NAME" != "workflow_dispatch" || "$FORCE_ALL" != "true" || "$GITHUB_REF" != "refs/heads/automation/daily-seed-salt-map-refresh" ]]; then
+            echo "::error::force_all dispatch is restricted to the trusted Daily refresh automation ref"
             exit 1
           fi
 
@@ -60,6 +60,17 @@ jobs:
 
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
+
+      - name: Bind trusted automation dispatch after checkout
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          FORCE_ALL: ${{ inputs.force_all }}
+        run: |
+          node packages/data/scripts/daily-seed-runway.mjs guard-dispatch \
+            --repository "$GITHUB_REPOSITORY" \
+            --event "$GITHUB_EVENT_NAME" \
+            --ref "$GITHUB_REF" \
+            --force-all "$FORCE_ALL"
 
       - name: Force all path outputs for automation dispatch
         id: force-all
@@ -135,7 +146,8 @@ jobs:
     if: >-
       github.actor != 'dependabot[bot]' &&
       (github.event_name != 'workflow_dispatch' ||
-      (inputs.force_all && github.ref == 'refs/heads/automation/daily-seed-salt-map-refresh'))
+      (github.repository == 'pnascimento9596/wcdraft' && inputs.force_all &&
+      github.ref == 'refs/heads/automation/daily-seed-salt-map-refresh'))
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -173,10 +185,11 @@ jobs:
       - name: Format check
         run: pnpm run format:check
 
-      - name: Daily refresh workflow contract
+      - name: Daily refresh workflows contract
         run: >-
-          node packages/data/scripts/daily-seed-runway.mjs check-workflow
-          --workflow .github/workflows/nightly-heavy.yml
+          node packages/data/scripts/daily-seed-runway.mjs check-workflows
+          --nightly .github/workflows/nightly-heavy.yml
+          --ci .github/workflows/ci.yml
 
   verify:
     name: typecheck · lint · test · build
