@@ -216,11 +216,14 @@ computed display remains inline. Its permanent matrix includes `667x375`,
 viewports. Dev-overlay suppression is dev-only, reads the CSP-hidden request
 nonce through the DOM `.nonce` property, and fails strict adjudication unless
 its nonce-bearing stylesheet hides the Next portal and shadow controls. The
-responsive wrapper owns a dynamically allocated Next server,
-records its rolling log and structured exit receipt in every phase directory,
-terminates audit/server children deterministically, and restores generated
-`next-env.d.ts` state after the expected shutdown. No core, rating, sim, token,
-API, schema, ETL, compact runtime-data, or leaderboard scoring behavior changed.
+strict wrapper pins suppression on rather than inheriting a diagnostic opt-out;
+in dev mode that opt-out emits explicit failing telemetry, while only non-dev
+audits use the null sentinel. The responsive wrapper owns a dynamically
+allocated Next server, records its rolling log and structured exit receipt in
+every phase directory, terminates audit/server children deterministically, and
+restores generated `next-env.d.ts` state after the expected shutdown. No core,
+rating, sim, token, API, schema, ETL, compact runtime-data, or leaderboard
+scoring behavior changed.
 
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch

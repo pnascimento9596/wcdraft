@@ -8,6 +8,7 @@ export const MIN_INTERACTION_TARGET_PX = 44;
 export const INLINE_TEXT_LINK_ALLOWLIST = [".prose p a[href]", ".prose li a[href]"] as const;
 
 export type DevOverlaySuppression = {
+  readonly suppression: "enabled" | "disabled";
   readonly nonceAttributeLength: number | null;
   readonly noncePropertyLength: number;
   readonly nonceSource: "property" | "missing";
@@ -72,11 +73,15 @@ export function responsiveMetricFailures(metric: ResponsiveMetricForAdjudication
   if (metric.devOverlay !== null) {
     const overlay = metric.devOverlay;
     const reasons: string[] = [];
-    if (overlay.nonceSource !== "property" || overlay.noncePropertyLength === 0) {
-      reasons.push("request nonce property missing");
+    if (overlay.suppression === "disabled") {
+      reasons.push("suppression disabled");
+    } else {
+      if (overlay.nonceSource !== "property" || overlay.noncePropertyLength === 0) {
+        reasons.push("request nonce property missing");
+      }
+      if (!overlay.styleNonceMatches) reasons.push("style nonce mismatch");
+      if (!overlay.styleSheetAttached) reasons.push("style sheet rejected");
     }
-    if (!overlay.styleNonceMatches) reasons.push("style nonce mismatch");
-    if (!overlay.styleSheetAttached) reasons.push("style sheet rejected");
     if (overlay.portalState === "visible") reasons.push("Next portal visible");
     if (overlay.visibleControlCount > 0) {
       reasons.push(`${overlay.visibleControlCount.toString()} dev-tools controls visible`);

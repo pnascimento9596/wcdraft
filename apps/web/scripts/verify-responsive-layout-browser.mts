@@ -467,33 +467,26 @@ async function settle(page: Page): Promise<void> {
 }
 
 async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null> {
-  if (!DEV_SERVER || process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0") return null;
+  if (!DEV_SERVER) return null;
+  const suppression = process.env.WCDRAFT_HIDE_DEV_OVERLAY === "0" ? "disabled" : "enabled";
   return await page.evaluate(
-    ({ css }) => {
+    ({ css, requestedSuppression }) => {
       const nonceElement = document.querySelector<HTMLScriptElement | HTMLStyleElement>(
         "script[nonce], style[nonce]",
       );
       const nonceAttributeLength = nonceElement?.getAttribute("nonce")?.length ?? null;
       const requestNonce = nonceElement?.nonce ?? "";
-      if (!requestNonce) {
-        return {
-          nonceAttributeLength,
-          noncePropertyLength: 0,
-          nonceSource: "missing" as const,
-          styleNonceMatches: false,
-          styleSheetAttached: false,
-          portalState: document.querySelector("nextjs-portal")
-            ? ("visible" as const)
-            : ("absent" as const),
-          visibleControlCount: 0,
-        };
+      let styleNonceMatches = false;
+      let styleSheetAttached = false;
+      if (requestedSuppression === "enabled" && requestNonce) {
+        const style = document.createElement("style");
+        style.nonce = requestNonce;
+        style.dataset.wcdraftResponsiveHarness = "dev-overlay";
+        style.textContent = css;
+        document.head.append(style);
+        styleNonceMatches = style.nonce === requestNonce;
+        styleSheetAttached = style.sheet !== null;
       }
-
-      const style = document.createElement("style");
-      style.nonce = requestNonce;
-      style.dataset.wcdraftResponsiveHarness = "dev-overlay";
-      style.textContent = css;
-      document.head.append(style);
 
       const portal = document.querySelector<HTMLElement>("nextjs-portal");
       const controls = portal?.shadowRoot
@@ -529,16 +522,17 @@ async function hideDevOverlay(page: Page): Promise<DevOverlaySuppression | null>
       }
 
       return {
+        suppression: requestedSuppression,
         nonceAttributeLength,
         noncePropertyLength: requestNonce.length,
-        nonceSource: "property" as const,
-        styleNonceMatches: style.nonce === requestNonce,
-        styleSheetAttached: style.sheet !== null,
+        nonceSource: requestNonce ? ("property" as const) : ("missing" as const),
+        styleNonceMatches,
+        styleSheetAttached,
         portalState,
         visibleControlCount,
       };
     },
-    { css: DEV_OVERLAY_CSS },
+    { css: DEV_OVERLAY_CSS, requestedSuppression: suppression },
   );
 }
 

@@ -267,6 +267,7 @@ async function runAudit(opts: {
       WCDRAFT_RESPONSIVE_PHASE: opts.phase,
       WCDRAFT_RESPONSIVE_STRICT: "1",
       WCDRAFT_RESPONSIVE_DEV_SERVER: "1",
+      WCDRAFT_HIDE_DEV_OVERLAY: "1",
       WCDRAFT_RESPONSIVE_SURFACES: opts.surfaces,
       WCDRAFT_RESPONSIVE_VIEWPORTS: opts.viewports,
     },

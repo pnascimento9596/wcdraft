@@ -65,6 +65,7 @@ describe("responsive layout contract", () => {
       responsiveMetricFailures(
         metric({
           devOverlay: {
+            suppression: "enabled",
             nonceAttributeLength: 0,
             noncePropertyLength: 22,
             nonceSource: "property",
@@ -83,6 +84,7 @@ describe("responsive layout contract", () => {
       responsiveMetricFailures(
         metric({
           devOverlay: {
+            suppression: "enabled",
             nonceAttributeLength: 0,
             noncePropertyLength: 0,
             nonceSource: "missing",
@@ -96,5 +98,30 @@ describe("responsive layout contract", () => {
     ).toEqual([
       "history 1024x768 light: dev overlay suppression failed (request nonce property missing, style nonce mismatch, style sheet rejected, Next portal visible, 1 dev-tools controls visible; attribute nonce length=0, property nonce length=0)",
     ]);
+  });
+
+  it("rejects a dev diagnostic opt-out even when no overlay geometry is visible", () => {
+    expect(
+      responsiveMetricFailures(
+        metric({
+          devOverlay: {
+            suppression: "disabled",
+            nonceAttributeLength: 0,
+            noncePropertyLength: 22,
+            nonceSource: "property",
+            styleNonceMatches: false,
+            styleSheetAttached: false,
+            portalState: "absent",
+            visibleControlCount: 0,
+          },
+        }),
+      ),
+    ).toEqual([
+      "history 1024x768 light: dev overlay suppression failed (suppression disabled; attribute nonce length=0, property nonce length=22)",
+    ]);
+  });
+
+  it("keeps null as the valid non-dev overlay sentinel", () => {
+    expect(responsiveMetricFailures(metric({ devOverlay: null }))).toEqual([]);
   });
 });
