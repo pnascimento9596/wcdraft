@@ -178,7 +178,7 @@
   gap: 12px;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 75rem) {
   .squadStage {
     grid-template-columns: minmax(0, 1fr) 220px;
     align-items: start;
@@ -300,6 +300,8 @@
    ───────────────────────────────────────────────────────────────────────── */
 .candRow {
   position: relative;
+  flex: 0 0 auto;
+  min-block-size: 44px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -1234,7 +1236,7 @@
     border-radius: var(--r-2);
   }
   .reviewShell .synergyBarToggle {
-    min-height: 32px;
+    min-height: 44px;
   }
   .reviewShell .panelHead {
     margin-bottom: 4px;
@@ -1376,7 +1378,7 @@
     line-height: 1.2;
   }
   .reviewShell .simPanel :global(.btn) {
-    min-height: 34px;
+    min-height: 44px;
     padding: 6px 8px;
     font-size: 10px;
     white-space: nowrap;

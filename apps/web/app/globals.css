@@ -613,6 +613,11 @@ main {
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 44px;
+  min-block-size: 44px;
   font-family: var(--font-family);
   font-size: 0.92rem;
   font-weight: 500;
@@ -1339,6 +1344,7 @@ main {
   background: var(--bg-sunken);
 }
 .segmented button {
+  min-block-size: 44px;
   border: none;
   background: transparent;
   color: var(--ink-soft);

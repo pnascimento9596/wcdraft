@@ -26,6 +26,24 @@ const shellSurfaces = [
   "blind-open-roster-pick",
   "squad-review",
 ].join(",");
+const interactionSurfaces = ["home", "results", "share-author", "history", "settings"].join(",");
+
+type ProcessExit = {
+  readonly code: number | null;
+  readonly signal: NodeJS.Signals | null;
+  readonly at: string;
+  readonly expected: boolean;
+};
+
+type NextDevServer = {
+  readonly baseUrl: string;
+  readonly exited: Promise<ProcessExit>;
+  readonly persistDiagnostics: (outDir: string) => Promise<{
+    readonly logPath: string;
+    readonly exitPath: string;
+  }>;
+  readonly stop: () => Promise<void>;
+};
 
 type AuditMetric = {
   readonly shellRule?: boolean;
@@ -33,6 +51,7 @@ type AuditMetric = {
   readonly horizontalOverflow?: boolean;
   readonly axeViolations?: readonly unknown[];
   readonly navWraps?: readonly unknown[];
+  readonly smallTargets?: readonly unknown[];
   readonly consoleErrors?: readonly unknown[];
 };
 
@@ -74,15 +93,34 @@ async function restoreFile(snapshot: { path: string; contents: Uint8Array | null
   await writeFile(snapshot.path, snapshot.contents);
 }
 
+async function waitForProcessExit(
+  proc: ChildProcessWithoutNullStreams,
+  timeoutMs: number,
+): Promise<boolean> {
+  if (proc.exitCode !== null || proc.signalCode !== null) return true;
+  return await new Promise<boolean>((resolve) => {
+    const onExit = () => {
+      clearTimeout(timer);
+      resolve(true);
+    };
+    const timer = setTimeout(() => {
+      proc.off("exit", onExit);
+      resolve(false);
+    }, timeoutMs);
+    proc.once("exit", onExit);
+  });
+}
+
 async function stopProcess(proc: ChildProcessWithoutNullStreams): Promise<void> {
   if (proc.exitCode !== null || proc.signalCode !== null) return;
   proc.kill("SIGTERM");
-  await Promise.race([
-    new Promise<void>((resolve) => proc.once("exit", () => resolve())),
-    delay(5_000).then(() => {
-      if (proc.exitCode === null && proc.signalCode === null) proc.kill("SIGKILL");
-    }),
-  ]);
+  if (await waitForProcessExit(proc, 5_000)) return;
+  proc.kill("SIGKILL");
+  if (!(await waitForProcessExit(proc, 5_000))) {
+    throw new Error(
+      `child process ${proc.pid?.toString() ?? "unknown"} did not exit after SIGKILL`,
+    );
+  }
 }
 
 async function waitForServer(baseUrl: string, proc: ChildProcessWithoutNullStreams): Promise<void> {
@@ -106,7 +144,7 @@ async function waitForServer(baseUrl: string, proc: ChildProcessWithoutNullStrea
   throw new Error(`Timed out waiting for Next dev server: ${lastError}`);
 }
 
-async function startNextDev(): Promise<{ baseUrl: string; stop: () => Promise<void> }> {
+async function startNextDev(): Promise<NextDevServer> {
   const port = await findFreePort();
   const baseUrl = `http://${host}:${port}`;
   const nextEnvSnapshot = await snapshotFile(nextEnvPath);
@@ -130,21 +168,67 @@ async function startNextDev(): Promise<{ baseUrl: string; stop: () => Promise<vo
     },
   );
   let logs = "";
+  let stopRequested = false;
+  let exitState: ProcessExit | null = null;
+  const diagnosticDirs = new Set<string>();
   const append = (chunk: Buffer) => {
-    logs = `${logs}${chunk.toString()}`.slice(-12_000);
+    logs = `${logs}${chunk.toString()}`.slice(-200_000);
   };
   proc.stdout.on("data", append);
   proc.stderr.on("data", append);
+  const exited = new Promise<ProcessExit>((resolve) => {
+    proc.once("exit", (code, signal) => {
+      exitState = {
+        code,
+        signal,
+        at: new Date().toISOString(),
+        expected: stopRequested,
+      };
+      resolve(exitState);
+    });
+  });
   await waitForServer(baseUrl, proc).catch(async (err) => {
     await stopProcess(proc);
     await restoreNextEnv();
     throw new Error(`${err instanceof Error ? err.message : String(err)}\n\n${logs}`);
   });
+  const persistDiagnostics = async (outDir: string) => {
+    diagnosticDirs.add(outDir);
+    const logPath = path.join(outDir, "next-server.log");
+    const exitPath = path.join(outDir, "next-server-exit.json");
+    await writeFile(logPath, logs);
+    await writeFile(
+      exitPath,
+      JSON.stringify(
+        {
+          pid: proc.pid ?? null,
+          status: exitState ? "exited" : "running",
+          exitCode: exitState?.code ?? null,
+          signal: exitState?.signal ?? null,
+          expected: exitState?.expected ?? null,
+          exitedAt: exitState?.at ?? null,
+          capturedAt: new Date().toISOString(),
+        },
+        null,
+        2,
+      ),
+    );
+    return { logPath, exitPath };
+  };
   return {
     baseUrl,
+    exited,
+    persistDiagnostics,
     stop: async () => {
-      await stopProcess(proc);
-      await restoreNextEnv();
+      stopRequested = true;
+      try {
+        await stopProcess(proc);
+        await Promise.all(
+          Array.from(diagnosticDirs, async (outDir) => await persistDiagnostics(outDir)),
+        );
+      } finally {
+        await restoreNextEnv();
+      }
     },
   };
 }
@@ -168,8 +252,9 @@ async function copyWebAssets(): Promise<void> {
 }
 
 async function runAudit(opts: {
-  baseUrl: string;
+  server: NextDevServer;
   phase: string;
+  surfaces: string;
   viewports: string;
 }): Promise<{ metrics: number; failures: number; outDir: string }> {
   const outDir = await mkdtemp(path.join(tmpdir(), `wcdraft-${opts.phase}-`));
@@ -177,11 +262,12 @@ async function runAudit(opts: {
     cwd: appRoot,
     env: {
       ...process.env,
-      BASE_URL: opts.baseUrl,
+      BASE_URL: opts.server.baseUrl,
       WCDRAFT_RESPONSIVE_OUT_DIR: outDir,
       WCDRAFT_RESPONSIVE_PHASE: opts.phase,
       WCDRAFT_RESPONSIVE_STRICT: "1",
-      WCDRAFT_RESPONSIVE_SURFACES: shellSurfaces,
+      WCDRAFT_RESPONSIVE_DEV_SERVER: "1",
+      WCDRAFT_RESPONSIVE_SURFACES: opts.surfaces,
       WCDRAFT_RESPONSIVE_VIEWPORTS: opts.viewports,
     },
     stdio: ["ignore", "pipe", "pipe"],
@@ -192,9 +278,35 @@ async function runAudit(opts: {
   };
   proc.stdout.on("data", append);
   proc.stderr.on("data", append);
-  const code = await new Promise<number | null>((resolve) => proc.once("exit", resolve));
+  const auditExited = new Promise<number | null>((resolve) => proc.once("exit", resolve));
+  const outcome = await Promise.race([
+    auditExited.then((code) => ({ kind: "audit" as const, code })),
+    opts.server.exited.then((exit) => ({ kind: "server" as const, exit })),
+  ]);
+  if (outcome.kind === "server") {
+    await stopProcess(proc);
+    const diagnostics = await opts.server.persistDiagnostics(outDir);
+    throw new Error(
+      [
+        `Next dev server exited during responsive audit ${opts.phase}`,
+        `exit code=${String(outcome.exit.code)} signal=${String(outcome.exit.signal)}`,
+        `server log=${diagnostics.logPath}`,
+        `server exit=${diagnostics.exitPath}`,
+        output,
+      ].join("\n\n"),
+    );
+  }
+  const diagnostics = await opts.server.persistDiagnostics(outDir);
+  const code = outcome.code;
   if (code !== 0) {
-    throw new Error(`responsive shell audit ${opts.phase} failed with code ${code}\n\n${output}`);
+    throw new Error(
+      [
+        `responsive shell audit ${opts.phase} failed with code ${String(code)}`,
+        `server log=${diagnostics.logPath}`,
+        `server exit=${diagnostics.exitPath}`,
+        output,
+      ].join("\n\n"),
+    );
   }
   const resultPath = path.join(outDir, `responsive-${opts.phase}.json`);
   const result = JSON.parse(await readFile(resultPath, "utf8")) as {
@@ -205,6 +317,7 @@ async function runAudit(opts: {
     if (metric.horizontalOverflow === true) return true;
     if ((metric.axeViolations?.length ?? 0) > 0) return true;
     if ((metric.navWraps?.length ?? 0) > 0) return true;
+    if ((metric.smallTargets?.length ?? 0) > 0) return true;
     if ((metric.consoleErrors?.length ?? 0) > 0) return true;
     return false;
   }).length;
@@ -215,20 +328,29 @@ await copyWebAssets();
 const server = await startNextDev();
 try {
   const desktop = await runAudit({
-    baseUrl: server.baseUrl,
+    server,
     phase: "ci-desktop-shell",
-    viewports: "1280x800,1440x900,1512x982,1920x1080",
+    surfaces: shellSurfaces,
+    viewports: "1024x768,1280x800,1366x768,1440x900,1512x982,1920x1080",
   });
   const mobile = await runAudit({
-    baseUrl: server.baseUrl,
+    server,
     phase: "ci-mobile-shell",
-    viewports: "390x844,360x800",
+    surfaces: shellSurfaces,
+    viewports: "360x800,390x844,667x375,768x1024",
+  });
+  const interactions = await runAudit({
+    server,
+    phase: "ci-interaction-targets",
+    surfaces: interactionSurfaces,
+    viewports: "667x375,768x1024,1024x768,1366x768",
   });
   console.log(
     [
       `responsive-shell-fit: ok`,
       `desktop metrics=${desktop.metrics} failures=${desktop.failures} out=${desktop.outDir}`,
       `mobile metrics=${mobile.metrics} failures=${mobile.failures} out=${mobile.outDir}`,
+      `interactions metrics=${interactions.metrics} failures=${interactions.failures} out=${interactions.outDir}`,
     ].join(" - "),
   );
 } finally {
