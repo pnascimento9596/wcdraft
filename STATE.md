@@ -15,10 +15,17 @@ SHA, six runtime-data anchors, expected versus actual migration, and one of
 primary-key-indexed read of `drizzle.__drizzle_migrations`. Leaderboard routes
 remain bare-404 while dark; when enabled without `DATABASE_URL`, all entrypoints
 return typed `503 SERVICE_UNAVAILABLE` before constructing a DB handle. The CI
-ephemeral-Neon lane remains skip-is-green for non-DB changes but hard-fails
-DB/migration-path PRs when either required Neon credential is absent. Five
-operator runbooks cover migration skew, paired Neon/Vercel rollback, secret
-rotation, manual Daily refresh, and stale service-worker/runtime-data recovery.
+ephemeral-Neon lane still runs from its broad DB/dependency selector, while a
+separate strict selector hard-fails missing Neon credentials only for
+`packages/db/**` or root `migrations/**`; shared package metadata remains
+skip-is-green when credentials are absent. Five operator runbooks cover
+migration skew, paired Neon/Vercel rollback, secret rotation, manual Daily
+refresh, and stale service-worker/runtime-data recovery. Fix-forward after the
+initial independent-review FAIL now classifies protected migration-status
+receipts before migrating without echoing driver errors; captures preserved
+Neon branch IDs from API truth and executes an inverse restore; reverts a failed
+Daily refresh through a protected exact-SHA PR; and restores known-good secret
+values silently over stdin before a production-target redeploy and live probes.
 No migration, table, rating, sim, core, ETL, or runtime-data artifact changed.
 Local validation passed: frozen install (187 packages reused, 0 downloaded);
 focused health/leaderboard/public-payload tests (3 files / 16 tests); DB tests
@@ -29,9 +36,12 @@ desktop 56/0 and mobile 28/0), and production build (4/4, `/api/health` present)
 core goldens (69 RNG/narrative + 42 draft), data goldens (49 data + 22
 integration), uncached leaderboard golden (6/6), generated-artifact check,
 Prettier, `git diff --check`, actionlint v1.7.12, Bash syntax, and the DB CI
-contract (6 behavior cases / 6 workflow bindings). Heavy realism was not run
-locally because no engine, rating, or runtime-data input moved; CI-config path
-selection will run the protected heavy lane on the PR.
+contract (6 behavior cases / 6 actual workflow path cases / 8 workflow
+bindings). Fix-forward revalidation also passed root typecheck (8/8 cached),
+root lint (5/5 cached), four edited-runbook Bash parses, the no-raw-status-receipt
+contract, targeted Prettier, actionlint, and `git diff --check`. Heavy realism
+was not run locally because no engine, rating, or runtime-data input moved;
+CI-config path selection will run the protected heavy lane on the PR.
 
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`

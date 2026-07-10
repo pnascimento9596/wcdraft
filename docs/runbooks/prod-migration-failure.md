@@ -33,24 +33,97 @@ Do not copy connection strings, API keys, or Vercel environment values into the 
 Start from the exact approved commit. Load the direct URL from the approved secret store into the environment without echoing it.
 
 ```bash
+set -euo pipefail
+umask 077
 test -n "${DATABASE_URL_UNPOOLED:-}"
 pnpm install --frozen-lockfile
-pnpm --filter @wcdraft/db db:migrate:status
-printf 'migration-status exit=%s\n' "$?"
+status_receipt="$incident_dir/migration-status.txt"
+
+# Pending migrations deliberately make db:migrate:status exit 1. Disable
+# errexit only around that command so an inherited `set -e` cannot discard the
+# receipt or skip classification.
+set +e
+pnpm --filter @wcdraft/db db:migrate:status >"$status_receipt" 2>&1
+status_rc=$?
+set -e
+printf 'migration-status exit=%s receipt=%s\n' "$status_rc" "$status_receipt"
+
+# SECURITY: the caught driver error can contain endpoint/connection details.
+# Never cat or otherwise echo the raw receipt. Print only an allowlisted count
+# summary after classification; query-error output stays in the mode-0600 file.
+safe_summary="$(
+  grep -Eo '\[db:migrate:status\] applied=[0-9]+ pending=[0-9]+ total=[0-9]+' \
+    "$status_receipt" | tail -n 1 || true
+)"
+
+if [ "$status_rc" -eq 0 ] &&
+  grep -Eq '\[db:migrate:status\] applied=[0-9]+ pending=0 total=[0-9]+' "$status_receipt"; then
+  migration_decision=ready
+elif [ "$status_rc" -eq 1 ] &&
+  grep -Eq '\[db:migrate:status\] applied=[0-9]+ pending=[1-9][0-9]* total=[0-9]+' "$status_receipt" &&
+  ! grep -Fq '[db:migrate:status] FAILED' "$status_receipt"; then
+  migration_decision=known-pending
+elif grep -Fq 'but this checkout only knows' "$status_receipt"; then
+  migration_decision=database-ahead
+else
+  migration_decision=query-error
+fi
+
+printf 'migration decision: %s\n' "$migration_decision"
+if [ -n "$safe_summary" ] && [ "$migration_decision" != "query-error" ]; then
+  printf '%s\n' "$safe_summary"
+fi
+case "$migration_decision" in
+  known-pending)
+    # This is the only decision that may reach the migration command below.
+    ;;
+  ready)
+    echo 'STOP: database is already at this checkout; no migration is needed.'
+    exit 0
+    ;;
+  database-ahead)
+    echo 'STOP: database is ahead; select compatible code instead of migrating.' >&2
+    exit 1
+    ;;
+  query-error)
+    echo 'STOP: status was not a verified known-pending receipt; investigate the query/error.' >&2
+    exit 1
+    ;;
+esac
+
+migrate_receipt="$incident_dir/migrate.txt"
+set +e
+pnpm --filter @wcdraft/db db:migrate >"$migrate_receipt" 2>&1
+migrate_rc=$?
+set -e
+printf 'migration exit=%s receipt=%s\n' "$migrate_rc" "$migrate_receipt"
+[ "$migrate_rc" -eq 0 ] || {
+  echo 'STOP: migration failed; inspect the protected receipt without echoing it.' >&2
+  exit 1
+}
+
+post_status_receipt="$incident_dir/migration-status-after.txt"
+set +e
+pnpm --filter @wcdraft/db db:migrate:status >"$post_status_receipt" 2>&1
+post_status_rc=$?
+set -e
+post_safe_summary="$(
+  grep -Eo '\[db:migrate:status\] applied=[0-9]+ pending=0 total=[0-9]+' \
+    "$post_status_receipt" | tail -n 1 || true
+)"
+if [ "$post_status_rc" -ne 0 ] || [ -z "$post_safe_summary" ] ||
+  grep -Fq '[db:migrate:status] FAILED' "$post_status_receipt"; then
+  echo "STOP: post-migration status failed; protected receipt=$post_status_receipt" >&2
+  exit 1
+fi
+printf '%s\n' "$post_safe_summary"
 ```
 
-Inspect the status receipt. Continue only when it reports known pending
-migrations from this checkout; a database-ahead or query error needs a
-compatible-code decision, not a blind migrate. Then run:
-
-```bash
-set -euo pipefail
-test -n "${DATABASE_URL_UNPOOLED:-}"
-pnpm --filter @wcdraft/db db:migrate
-pnpm --filter @wcdraft/db db:migrate:status
-```
-
-The first status command exits non-zero when migrations are pending. Save that receipt; do not suppress an unexpected "database ahead" result.
+The preflight accepts only the command's exact known-pending summary with exit
+code `1`. Ready, database-ahead, and query/error output all stop before
+migration. Preflight status, migration, and postflight status stdout/stderr
+remain in the mode-0600 incident directory. Raw receipts are never echoed
+because driver error text can include endpoint details.
 
 ## Verify
 
@@ -61,8 +134,16 @@ curl --fail-with-body -sS https://www.wcdraft.com/api/health | jq -e '
   .schema.actual.index >= .schema.expected.minimum.index and
   .schema.actual.index <= .schema.expected.maximum.index
 '
-curl --fail-with-body -sS 'https://www.wcdraft.com/api/leaderboard?limit=1' | jq .
-curl --fail-with-body -sS https://www.wcdraft.com/api/og/health | jq .
+leaderboard_receipt="$incident_dir/leaderboard-after.json"
+leaderboard_status="$(curl -sS -o "$leaderboard_receipt" -w '%{http_code}' \
+  'https://www.wcdraft.com/api/leaderboard?limit=1')"
+case "$leaderboard_status" in
+  200) jq . "$leaderboard_receipt" ;;
+  404) echo 'Leaderboard remains intentionally ship-dark (HTTP 404).' ;;
+  *) echo "Unexpected leaderboard HTTP $leaderboard_status" >&2; exit 1 ;;
+esac
+curl --fail-with-body -sS https://www.wcdraft.com/api/og/health \
+  | jq -e '.ok == true'
 ```
 
 Verification must use the production domain after Vercel reports the target deployment READY.
@@ -72,9 +153,11 @@ Verification must use the production domain after Vercel reports the target depl
 For a code-only regression, select the last known-good production deployment from the captured list and run:
 
 ```bash
-vercel rollback '<deployment-id-or-url>' --scope pnascimento9596s-projects --yes
+test -n "${ROLLBACK_DEPLOYMENT:-}"
+vercel rollback "$ROLLBACK_DEPLOYMENT" --scope pnascimento9596s-projects --yes
 vercel rollback status wcdraft-web --scope pnascimento9596s-projects
-curl --fail-with-body -sS https://www.wcdraft.com/api/health | jq .
+curl --fail-with-body -sS https://www.wcdraft.com/api/health \
+  | jq -e '.ok == true and .db.status == "ready"'
 ```
 
 If database state must also move backward, stop here and follow `neon-restore-vercel-rollback.md`; the code deployment and restored schema must be selected as a compatible pair. Vercel documents `vercel rollback <deployment-id-or-url>` at <https://vercel.com/docs/cli>.

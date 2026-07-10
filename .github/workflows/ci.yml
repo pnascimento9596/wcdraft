@@ -39,6 +39,7 @@ jobs:
       core_data: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.core_data }}
       realism_inputs: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.realism_inputs }}
       db: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.db }}
+      db_migrations: ${{ steps.filter.outputs.db_migrations || 'false' }}
       etl: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.etl }}
     steps:
       - name: Guard automation dispatch envelope before checkout
@@ -138,6 +139,9 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
+            db_migrations:
+              - 'packages/db/**'
+              - 'migrations/**'
             etl:
               - 'etl/**'
 
@@ -511,7 +515,7 @@ jobs:
       - name: Gate — require Neon API key + project id
         id: gate
         env:
-          DB_PATHS_CHANGED: ${{ needs.changes.outputs.db }}
+          DB_PATHS_CHANGED: ${{ needs.changes.outputs.db_migrations }}
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
         run: scripts/ci/require-neon-for-db-paths.sh
