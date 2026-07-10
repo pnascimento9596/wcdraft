@@ -17,6 +17,10 @@ import { readGameCssSource } from "./game-css-source";
  */
 
 const css = readGameCssSource();
+const modeSelectSource = readFileSync(
+  fileURLToPath(new URL("../../../components/game/mode-select.tsx", import.meta.url)),
+  "utf8",
+);
 
 // The canonical lock-bar section (the later block wins the cascade over the
 // shadowed legacy block earlier in the file).
@@ -92,6 +96,19 @@ describe("mode-select sticky CTA contract", () => {
     expect(grid).toContain("--mode-dock-reserve: calc(84px + env(safe-area-inset-bottom, 0px))");
     expect(grid).toContain("padding-block-end: var(--mode-dock-reserve)");
     expect(grid).toContain("scroll-padding-block-end: var(--mode-dock-reserve)");
+  });
+
+  it("keeps the taller unavailable notice in flow without a stale dock reserve", () => {
+    const inFlowDock = block(".modeDockInFlow");
+    const inFlowGrid = block(".modeGridDockInFlow");
+    expect(inFlowDock).toContain("position: static");
+    expect(inFlowGrid).toContain("padding-block-end: 0");
+    expect(inFlowGrid).toContain("scroll-padding-block-end: 0");
+    expect(modeSelectSource).toContain(
+      'const dailyUnavailableSelected = mode === "daily" && dailyAvailability === "unavailable"',
+    );
+    expect(modeSelectSource).toContain('dailyUnavailableSelected ? s.modeGridDockInFlow : ""');
+    expect(modeSelectSource).toContain("${s.modeDock} ${s.modeDockInFlow}");
   });
 
   it("keeps the dock in flow on short landscape viewports", () => {

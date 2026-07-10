@@ -35,6 +35,8 @@ const nextBin = require.resolve("next/dist/bin/next");
 const host = "127.0.0.1";
 const gameData = buildGameDataFromBundles();
 
+type DailyAvailabilityFixtureState = "available" | "unavailable";
+
 type BrowserCase = {
   page: Page;
   context: BrowserContext;
@@ -44,6 +46,37 @@ type BrowserCase = {
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
+}
+
+async function installDailyAvailabilityFixture(
+  page: Page,
+  state: DailyAvailabilityFixtureState,
+): Promise<void> {
+  const saltMap = gameData.dailySeedSaltMap;
+  assert(saltMap, "game-flow Daily state fixture requires the committed salt map");
+  const unavailableBundles: Record<string, unknown> = { ...gameData.manifest.bundles };
+  delete unavailableBundles.daily_seed_salt_map;
+  const manifest =
+    state === "unavailable"
+      ? { ...gameData.manifest, bundles: unavailableBundles }
+      : gameData.manifest;
+  const frozenNow = Date.parse(`${saltMap.window.start_date}T12:00:00.000Z`);
+  assert(Number.isFinite(frozenNow), "game-flow Daily state fixture has an invalid start date");
+  await page.addInitScript({ content: `Date.now = () => ${frozenNow.toString()};` });
+  await page.route("**/manifest.json", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(manifest),
+    });
+  });
+  await page.route("**/daily-seed-salt-map.compact.json", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(saltMap),
+    });
+  });
 }
 
 async function findFreePort(): Promise<number> {
@@ -480,13 +513,24 @@ const MODE_SELECT_VIEWPORTS = [
   { width: 667, height: 375, name: "667x375", expectedDockPosition: "static" },
 ] as const;
 
+async function measureModeCardClearance(page: Page): Promise<number | null> {
+  return await page.evaluate(() => {
+    const dockBox = document.querySelector('[class*="modeDock"]')?.getBoundingClientRect();
+    const cardBottoms = [...document.querySelectorAll('button[role="radio"]')].map(
+      (card) => card.getBoundingClientRect().bottom,
+    );
+    if (!dockBox || cardBottoms.length === 0) return null;
+    return Math.round(dockBox.top - Math.max(...cardBottoms));
+  });
+}
+
 async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): Promise<void> {
   for (const viewport of MODE_SELECT_VIEWPORTS) {
     const testCase = await newBrowserCase(browser, { viewport });
     const { page } = testCase;
+    await installDailyAvailabilityFixture(page, "available");
     await page.goto(`${baseUrl}/play`, { waitUntil: "domcontentloaded" });
-    await page.getByRole("radio", { name: /Classic/u }).waitFor();
-    await page.waitForTimeout(3_000);
+    await page.getByRole("button", { name: "Play daily →" }).waitFor();
 
     const cards = page.getByRole("radio");
     assert((await cards.count()) === 5, `${viewport.name} did not render all five modes`);
@@ -517,28 +561,69 @@ async function verifyModeSelectCompactBoard(browser: Browser, baseUrl: string): 
       `${viewport.name} dock position was ${layout.dockPosition}`,
     );
 
-    const measureClearance = async () =>
-      await page.evaluate(() => {
-        const dock = document.querySelector('[class*="modeDock"]');
-        const lastCard = [...document.querySelectorAll('button[role="radio"]')].at(-1);
-        const dockBox = dock?.getBoundingClientRect();
-        const cardBox = lastCard?.getBoundingClientRect();
-        return dockBox && cardBox ? Math.round(dockBox.top - cardBox.bottom) : null;
-      });
-    const initialClearance = await measureClearance();
+    const initialClearance = await measureModeCardClearance(page);
     assert(
       initialClearance !== null && initialClearance >= 0,
       `${viewport.name} mode dock overlapped the initial card paint by ${String(initialClearance)}px`,
     );
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await page.waitForTimeout(100);
-    const endClearance = await measureClearance();
+    const endClearance = await measureModeCardClearance(page);
     assert(
       endClearance !== null && endClearance >= 0,
       `${viewport.name} mode dock overlapped the final card paint by ${String(endClearance)}px`,
     );
     await assertNoHorizontalOverflow(page, `${viewport.name} compact mode board`);
     await assertNoBrowserErrors(testCase, `${viewport.name} compact mode board`);
+  }
+}
+
+async function verifyUnavailableDailyNoticeStaysInFlow(
+  browser: Browser,
+  baseUrl: string,
+): Promise<void> {
+  for (const viewport of MODE_SELECT_VIEWPORTS) {
+    const testCase = await newBrowserCase(browser, { viewport });
+    const { page } = testCase;
+    await installDailyAvailabilityFixture(page, "unavailable");
+    await page.goto(`${baseUrl}/play`, { waitUntil: "domcontentloaded" });
+    await page.getByRole("status").waitFor();
+
+    const layout = await page.evaluate(() => {
+      const grid = document.querySelector('[class*="modeGrid"]');
+      const dock = document.querySelector('[class*="modeDock"]');
+      if (!grid || !dock) return null;
+      const gridStyle = getComputedStyle(grid);
+      return {
+        dockPosition: getComputedStyle(dock).position,
+        gridPaddingBottom: Number.parseFloat(gridStyle.paddingBottom),
+        gridScrollPaddingBottom: Number.parseFloat(gridStyle.scrollPaddingBottom),
+      };
+    });
+    assert(layout, `${viewport.name} unavailable Daily layout did not render`);
+    assert(
+      layout.dockPosition === "static",
+      `${viewport.name} unavailable Daily notice remained ${layout.dockPosition}`,
+    );
+    assert(
+      layout.gridPaddingBottom === 0 && layout.gridScrollPaddingBottom === 0,
+      `${viewport.name} unavailable Daily grid retained a stale dock reserve`,
+    );
+
+    const initialClearance = await measureModeCardClearance(page);
+    assert(
+      initialClearance !== null && initialClearance >= 0,
+      `${viewport.name} unavailable Daily notice overlapped initial cards by ${String(initialClearance)}px`,
+    );
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(100);
+    const terminalClearance = await measureModeCardClearance(page);
+    assert(
+      terminalClearance !== null && terminalClearance >= 0,
+      `${viewport.name} unavailable Daily notice overlapped terminal cards by ${String(terminalClearance)}px`,
+    );
+    await assertNoHorizontalOverflow(page, `${viewport.name} unavailable Daily notice`);
+    await assertNoBrowserErrors(testCase, `${viewport.name} unavailable Daily notice`);
   }
 }
 
@@ -758,12 +843,13 @@ async function main(): Promise<void> {
     });
     await verifyModeSelectCtaDoesNotTapThrough(browser, server.baseUrl);
     await verifyModeSelectCompactBoard(browser, server.baseUrl);
+    await verifyUnavailableDailyNoticeStaysInFlow(browser, server.baseUrl);
     await verifyRankedSetupGates(browser, server.baseUrl);
     await verifyPositionFirstDraftFlow(browser, server.baseUrl);
     await verifyManagerOnlyGuardFlow(browser, server.baseUrl);
     await verifyReviewResultsShareFlow(browser, server.baseUrl);
     console.log(
-      "game-flow-playwright: ok - mode-select CTA/compact dock, Casual/Ranked setup gates, position-first target, lock-pick, manager guard, review simulate, results, and share",
+      "game-flow-playwright: ok - mode-select CTA/compact dock/unavailable notice, Casual/Ranked setup gates, position-first target, lock-pick, manager guard, review simulate, results, and share",
     );
   } finally {
     if (browser) await browser.close();

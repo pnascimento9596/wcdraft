@@ -22,7 +22,8 @@ function metric(
     maxScrollWidth: 1024,
     clientWidth: 1024,
     horizontalOverflow: false,
-    modeDockClearance: null,
+    modeDockInitialClearance: null,
+    modeDockTerminalClearance: null,
     navWraps: [],
     smallTargets: [],
     axeViolations: [],
@@ -61,14 +62,40 @@ describe("responsive layout contract", () => {
     ]);
   });
 
-  it("fails strict adjudication when the sticky mode dock covers the last mode card", () => {
-    expect(responsiveMetricFailures(metric({ modeDockClearance: -18 }))).toEqual([
-      "history 1024x768 light: mode dock overlaps last card by 18px",
-    ]);
-    expect(responsiveMetricFailures(metric({ modeDockClearance: 0 }))).toEqual([]);
+  it("fails strict adjudication when the mode dock covers any card at either checkpoint", () => {
     expect(
-      responsiveMetricFailures(metric({ surface: "mode-select", modeDockClearance: null })),
-    ).toEqual(["mode-select 1024x768 light: mode dock clearance unavailable"]);
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-unavailable",
+          modeDockInitialClearance: -18,
+          modeDockTerminalClearance: -4,
+        }),
+      ),
+    ).toEqual([
+      "mode-select-unavailable 1024x768 light: mode dock overlaps cards at initial paint by 18px",
+      "mode-select-unavailable 1024x768 light: mode dock overlaps cards at terminal scroll by 4px",
+    ]);
+    expect(
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-available",
+          modeDockInitialClearance: 0,
+          modeDockTerminalClearance: 0,
+        }),
+      ),
+    ).toEqual([]);
+    expect(
+      responsiveMetricFailures(
+        metric({
+          surface: "mode-select-checking",
+          modeDockInitialClearance: null,
+          modeDockTerminalClearance: null,
+        }),
+      ),
+    ).toEqual([
+      "mode-select-checking 1024x768 light: mode dock initial clearance unavailable",
+      "mode-select-checking 1024x768 light: mode dock terminal clearance unavailable",
+    ]);
   });
 
   it("uses the DOM nonce property when CSP hides the nonce attribute", () => {

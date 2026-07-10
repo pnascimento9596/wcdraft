@@ -240,6 +240,13 @@
   padding-block-end: var(--mode-dock-reserve);
   scroll-padding-block-end: var(--mode-dock-reserve);
 }
+
+/* The unavailable notice is taller than the one-line action dock. Keep that
+   state in normal flow so its copy can wrap without ever covering a card. */
+.modeGridDockInFlow {
+  padding-block-end: 0;
+  scroll-padding-block-end: 0;
+}
 @media (min-width: 52rem) {
   .modeGridDaily {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -530,6 +537,10 @@
   padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--line-1);
   background: var(--s0);
+}
+
+.modeDockInFlow {
+  position: static;
 }
 
 .modeDock :global(.btn) {

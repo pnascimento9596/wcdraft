@@ -27,7 +27,12 @@ const shellSurfaces = [
   "squad-review",
 ].join(",");
 const interactionSurfaces = ["home", "results", "share-author", "history", "settings"].join(",");
-const modeSetupSurfaces = ["mode-select", "draft-setup"].join(",");
+const modeSetupSurfaces = [
+  "mode-select-checking",
+  "mode-select-available",
+  "mode-select-unavailable",
+  "draft-setup",
+].join(",");
 
 type ProcessExit = {
   readonly code: number | null;
@@ -47,10 +52,12 @@ type NextDevServer = {
 };
 
 type AuditMetric = {
+  readonly surface?: string;
   readonly shellRule?: boolean;
   readonly noScrollGate?: "pass" | "fail" | "n-a";
   readonly horizontalOverflow?: boolean;
-  readonly modeDockClearance?: number | null;
+  readonly modeDockInitialClearance?: number | null;
+  readonly modeDockTerminalClearance?: number | null;
   readonly axeViolations?: readonly unknown[];
   readonly navWraps?: readonly unknown[];
   readonly smallTargets?: readonly unknown[];
@@ -318,7 +325,12 @@ async function runAudit(opts: {
   const failures = result.metrics.filter((metric) => {
     if (metric.shellRule === true && metric.noScrollGate !== "pass") return true;
     if (metric.horizontalOverflow === true) return true;
-    if ((metric.modeDockClearance ?? 0) < 0) return true;
+    if (metric.surface?.startsWith("mode-select") === true) {
+      if (metric.modeDockInitialClearance === null) return true;
+      if (metric.modeDockTerminalClearance === null) return true;
+      if ((metric.modeDockInitialClearance ?? 0) < 0) return true;
+      if ((metric.modeDockTerminalClearance ?? 0) < 0) return true;
+    }
     if ((metric.axeViolations?.length ?? 0) > 0) return true;
     if ((metric.navWraps?.length ?? 0) > 0) return true;
     if ((metric.smallTargets?.length ?? 0) > 0) return true;

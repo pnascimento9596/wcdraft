@@ -71,6 +71,9 @@
 .modeGridDaily {
   composes: modeGridDaily from "./game-styles/shared.module.css";
 }
+.modeGridDockInFlow {
+  composes: modeGridDockInFlow from "./game-styles/shared.module.css";
+}
 .modeCard {
   composes: modeCard from "./game-styles/shared.module.css";
 }
@@ -136,6 +139,9 @@
 }
 .modeDock {
   composes: modeDock from "./game-styles/shared.module.css";
+}
+.modeDockInFlow {
+  composes: modeDockInFlow from "./game-styles/shared.module.css";
 }
 .dailyUnavailable {
   composes: dailyUnavailable from "./game-styles/shared.module.css";

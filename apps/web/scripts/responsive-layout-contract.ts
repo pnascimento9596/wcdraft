@@ -30,7 +30,8 @@ export type ResponsiveMetricForAdjudication = {
   readonly maxScrollWidth: number;
   readonly clientWidth: number;
   readonly horizontalOverflow: boolean;
-  readonly modeDockClearance: number | null;
+  readonly modeDockInitialClearance: number | null;
+  readonly modeDockTerminalClearance: number | null;
   readonly navWraps: readonly string[];
   readonly smallTargets: readonly string[];
   readonly axeViolations: readonly string[];
@@ -55,12 +56,21 @@ export function responsiveMetricFailures(metric: ResponsiveMetricForAdjudication
       `${prefix}: horizontal overflow ${metric.maxScrollWidth.toString()}/${metric.clientWidth.toString()}`,
     );
   }
-  if (metric.surface === "mode-select" && metric.modeDockClearance === null) {
-    failures.push(`${prefix}: mode dock clearance unavailable`);
-  } else if (metric.modeDockClearance !== null && metric.modeDockClearance < 0) {
-    failures.push(
-      `${prefix}: mode dock overlaps last card by ${Math.abs(metric.modeDockClearance).toString()}px`,
-    );
+  if (metric.surface.startsWith("mode-select")) {
+    if (metric.modeDockInitialClearance === null) {
+      failures.push(`${prefix}: mode dock initial clearance unavailable`);
+    } else if (metric.modeDockInitialClearance < 0) {
+      failures.push(
+        `${prefix}: mode dock overlaps cards at initial paint by ${Math.abs(metric.modeDockInitialClearance).toString()}px`,
+      );
+    }
+    if (metric.modeDockTerminalClearance === null) {
+      failures.push(`${prefix}: mode dock terminal clearance unavailable`);
+    } else if (metric.modeDockTerminalClearance < 0) {
+      failures.push(
+        `${prefix}: mode dock overlaps cards at terminal scroll by ${Math.abs(metric.modeDockTerminalClearance).toString()}px`,
+      );
+    }
   }
   if (metric.smallTargets.length > 0) {
     const targetPreview = metric.smallTargets.slice(0, 12);
