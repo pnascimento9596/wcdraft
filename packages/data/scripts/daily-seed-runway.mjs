@@ -14,6 +14,13 @@ export const DAILY_REFRESH_BRANCH = "automation/daily-seed-salt-map-refresh";
 export const DAILY_REFRESH_REF = `refs/heads/${DAILY_REFRESH_BRANCH}`;
 export const DAILY_REFRESH_LABEL = "daily-freshness";
 export const DAILY_REFRESH_CI_WORKFLOW = "ci.yml";
+export const DAILY_REFRESH_GENERATED_PATHS = Object.freeze([
+  "packages/data/reports/compact-size.json",
+  "packages/data/src/generated/daily-seed-salt-map.compact.json",
+  "packages/data/src/generated/daily-seed-salt-map.compact.json.br",
+  "packages/data/src/generated/manifest.json",
+  "packages/data/src/generated/manifest.json.br",
+]);
 
 function fail(message) {
   throw new Error(`daily seed runway: ${message}`);
@@ -52,6 +59,23 @@ function normalizeGitObject(value, label, { optional = false } = {}) {
     fail(`${label} must be ${optional ? "empty or " : ""}a 40-character lowercase git object`);
   }
   return normalized;
+}
+
+/** Fail closed unless a refresh changes the complete canonical five-file set. */
+export function validateDailyRefreshChangedPaths(paths) {
+  if (!Array.isArray(paths) || paths.some((value) => typeof value !== "string")) {
+    fail("refresh changed paths must be an array of strings");
+  }
+  const actual = [...new Set(paths.map((value) => value.trim()).filter(Boolean))].sort();
+  if (actual.length !== paths.length) {
+    fail("refresh changed paths must not contain blanks or duplicates");
+  }
+  if (JSON.stringify(actual) !== JSON.stringify(DAILY_REFRESH_GENERATED_PATHS)) {
+    fail(
+      `refresh changed paths must equal the canonical five-file set; got ${JSON.stringify(actual)}`,
+    );
+  }
+  return actual;
 }
 
 /** Capture the UTC calendar date from one supplied clock reading. */
@@ -294,6 +318,15 @@ function requireWorkflowFragmentCount(source, fragment, expected, label) {
   }
 }
 
+function requireWorkflowPathCount(source, path, expected, label) {
+  const escaped = path.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const pattern = new RegExp(`${escaped}${path.endsWith(".json") ? "(?!\\.br)" : ""}`, "gu");
+  const actual = source.match(pattern)?.length ?? 0;
+  if (actual !== expected) {
+    fail(`${label} must contain ${expected} standalone occurrence(s) of ${path}, got ${actual}`);
+  }
+}
+
 function validateSelfHostedWorkflowContract(source, { jobs, label }) {
   const exactRunsOn = "    runs-on: [self-hosted, macOS, ARM64, wcdraft]";
   const runsOnLines = source.match(/^ {4}runs-on:.*$/gmu) ?? [];
@@ -362,6 +395,10 @@ export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
     "PUSH_LEASE: ${{ steps.branch-update.outputs.push_lease }}",
     "PUSH_REFSPEC: ${{ steps.branch-update.outputs.push_refspec }}",
     "git status --porcelain=v1 --untracked-files=all",
+    "git status --porcelain=v1 --untracked-files=all | cut -c4-",
+    'refresh_paths_file="$RUNNER_TEMP/daily-refresh-changed-paths.txt"',
+    "daily-seed-runway.mjs validate-refresh-paths",
+    '--paths-file "$refresh_paths_file"',
     'case "$BRANCH_ACTION" in',
     "trap cleanup_git_auth EXIT",
     "git config --local --add credential.helper",
@@ -384,12 +421,21 @@ export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
   ]) {
     requireWorkflowFragment(nightlySource, fragment, "nightly workflow");
   }
-  for (const path of [
-    "packages/data/src/generated/daily-seed-salt-map.compact.json",
-    "packages/data/src/generated/manifest.json",
-    "packages/data/reports/compact-size.json",
-  ]) {
-    requireWorkflowFragment(nightlySource, path, "nightly explicit generated allowlist");
+  const stageStart = nightlySource.indexOf(
+    "- name: Stage refresh candidate and plan branch update",
+  );
+  const stageEnd = nightlySource.indexOf("- name: Commit and push refresh branch", stageStart);
+  if (stageStart === -1 || stageEnd === -1) {
+    fail("nightly workflow is missing the bounded refresh staging step");
+  }
+  const stageBlock = nightlySource.slice(stageStart, stageEnd);
+  for (const path of DAILY_REFRESH_GENERATED_PATHS) {
+    requireWorkflowPathCount(
+      stageBlock,
+      path,
+      3,
+      "nightly stage/allow/status generated path contract",
+    );
   }
 
   requireWorkflowOrder(
@@ -418,6 +464,8 @@ export function validateDailyRefreshWorkflowContract(nightlySource, ciSource) {
     "daily-seed-runway.mjs check-workflows",
     "--nightly .github/workflows/nightly-heavy.yml",
     "--ci .github/workflows/ci.yml",
+    "Future Daily regeneration path contract",
+    "bash scripts/ci/validate-daily-refresh-regeneration.test.sh",
   ]) {
     requireWorkflowFragment(ciSource, fragment, "CI workflow");
   }
@@ -429,7 +477,8 @@ function parseCli(argv) {
   if (!command) {
     fail(
       "expected command: inspect, compare-overlap, automation-identity, " +
-        "plan-branch-update, guard-dispatch, plan-pr, or check-workflows",
+        "plan-branch-update, guard-dispatch, plan-pr, validate-refresh-paths, " +
+        "or check-workflows",
     );
   }
   const options = new Map();
@@ -557,6 +606,14 @@ function runCli(argv) {
       ...identityOutputs(result),
     });
     process.stdout.write(`${JSON.stringify(result)}\n`);
+    return;
+  }
+
+  if (command === "validate-refresh-paths") {
+    const pathsFile = requireOption(options, "--paths-file");
+    const paths = readFileSync(pathsFile, "utf8").split(/\r?\n/u).filter(Boolean);
+    const result = validateDailyRefreshChangedPaths(paths);
+    process.stdout.write(`${JSON.stringify({ valid: true, paths: result })}\n`);
     return;
   }
 

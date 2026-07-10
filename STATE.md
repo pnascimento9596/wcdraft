@@ -99,6 +99,37 @@ the three policies (27/27). Timing/fingerprint command evidence is retained at
 pre-rebase C1 baseline; the B4-integrated fix-forward is revalidated separately
 before push.
 
+Post-B4 rebase fix-forward closes the independent C1 review failure at the
+Daily refresh boundary. A future regeneration is a five-file change, not the
+pre-C1 three-file set: Daily JSON plus its canonical q11 `.br`, manifest JSON
+plus its canonical q11 `.br`, and `compact-size.json`. The nightly A3 writer
+now captures the actual post-generator `git status` paths, validates that exact
+set before staging, stages/allows/requires all five, and still stops on any
+unexpected status or sixth path. The Daily workflow contract binds each path
+at the stage, allowlist, and status-check seams; its regression fixture records
+the independently observed `2026-07-11` future-refresh path set. B4's manual
+refresh runbook and executable exact-SHA rollback validator now use the same
+five paths for both target and post-revert validation. Focused post-rebase
+checks passed: actionlint v1.7.12; Bash syntax; rollback contract 6 behavior
+cases / 5 runbook-workflow bindings; Daily workflow contract; runway tests
+40/40; C1 focused data tests 47/47; agent-contract check; ESLint; Prettier; and
+`git diff --check`. The executable detached-worktree regeneration probe passed
+for a `2026-07-11` / 45-day future window and produced exactly the five expected
+tracked outputs; both new sidecars decompressed byte-identically to their JSON.
+Final post-rebase gates passed: `check:generated` with no tracked drift; full
+data tests 151 passed / 9 expected heavy skips; forced root typecheck 8/8
+(0 cached, 7.417s), lint 5/5 (0 cached, 2.855s), test 8/8 (0 cached,
+4m30.881s; core 391, DB 108, marketing 68, data 151 + 9 skipped, web 926 + 1
+skipped, game-flow browser PASS, responsive shell desktop 56/0 and mobile
+28/0), and build 4/4 (0 cached, 17.294s, 40/40 pages; existing Next warnings
+only). Forced goldens passed core 69 + draft 42, data 54 + integration 22,
+leaderboard 6; explicit locked-N heavy realism passed 9/9 for each of
+`autoDraft`, `strategicAutoDraft`, and `greedyOverallAutoDraft` (27/27). The
+q11/copy/materialize implementation and all canonical artifact bytes are
+unchanged by this workflow/runbook fix, so the measured 84.695s → 0.845s
+prehook benchmark remains the applicable C1 result rather than being
+re-measured on an unaffected path.
+
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`
 `c77ee289ab33cca3f0c27a6f0020b6492a5dd31e`, moves all four active workflows

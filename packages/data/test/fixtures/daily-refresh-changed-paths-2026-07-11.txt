@@ -1,0 +1,5 @@
+packages/data/reports/compact-size.json
+packages/data/src/generated/daily-seed-salt-map.compact.json
+packages/data/src/generated/daily-seed-salt-map.compact.json.br
+packages/data/src/generated/manifest.json
+packages/data/src/generated/manifest.json.br
