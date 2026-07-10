@@ -27,6 +27,11 @@ pruned stale runner-owned work/cache/temp paths while preserving the active
 workspace and an outside sentinel. The host had approximately 12.1 GiB free
 during that probe, so the remaining below-20-GiB condition is surfaced as a
 warning after safe runner-owned cleanup rather than deleting user-owned data.
+The first branch run exposed `actions/setup-python` attempting the hosted-image
+path `/Users/runner` on this self-hosted Mac; Python setup now uses pinned
+`setup-uv` plus `uv python install` with both the download cache and managed
+Python installations under the declared runner cache. A local isolated probe
+installed and executed CPython 3.12.13 arm64 without privileged paths.
 
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch

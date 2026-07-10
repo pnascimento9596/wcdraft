@@ -18,6 +18,7 @@ if (!isPost) {
       `PLAYWRIGHT_BROWSERS_PATH=${join(cacheRoot, "ms-playwright")}`,
       `PNPM_CONFIG_STORE_DIR=${join(cacheRoot, "pnpm-store")}`,
       `UV_CACHE_DIR=${join(cacheRoot, "uv")}`,
+      `UV_PYTHON_INSTALL_DIR=${join(cacheRoot, "python")}`,
       "",
     ].join("\n"),
     { encoding: "utf8" },

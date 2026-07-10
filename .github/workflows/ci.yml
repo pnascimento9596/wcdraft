@@ -329,6 +329,7 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     env:
+      UV_PYTHON: "3.12"
       WORLDCUP_COMMIT: f41e9437a007498bdbf3751305818101f96cb6fb
       WCDRAFT_WORLDCUP_DIR: etl/vendor/worldcup/data-csv
     defaults:
@@ -344,13 +345,11 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
-      - name: Setup Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: "3.12"
-
       - name: Setup uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Setup Python
+        run: uv python install "$UV_PYTHON"
 
       - name: Clone pinned Fjelstul World Cup Database (CC-BY-SA 4.0)
         run: |
@@ -540,6 +539,8 @@ jobs:
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
+    env:
+      UV_PYTHON: "3.12"
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
     # etl/output/, so this job needs no upstream Fjelstul CSV clone. It lints the
     # rating code, runs the rating test suite, and proves byte-determinism by
@@ -554,13 +555,11 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
-      - name: Setup Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: "3.12"
-
       - name: Setup uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Setup Python
+        run: uv python install "$UV_PYTHON"
 
       - name: Install ETL package (+ dev tools)
         run: uv sync --locked --extra dev
