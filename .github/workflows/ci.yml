@@ -24,7 +24,7 @@ concurrency:
 jobs:
   changes:
     name: changes · path detector
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     outputs:
       ci_config: ${{ steps.filter.outputs.ci_config }}
       js: ${{ steps.filter.outputs.js }}
@@ -36,7 +36,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          clean: true
           fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Detect CI-affecting changes
         id: filter
@@ -102,17 +107,24 @@ jobs:
 
   static:
     name: static · format · contracts
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
       - name: Setup Node
@@ -132,19 +144,27 @@ jobs:
 
   verify:
     name: typecheck · lint · test · build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      WCDRAFT_PLAYWRIGHT_CHANNEL: chromium
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
       - name: Setup Node
@@ -153,8 +173,17 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - name: Restore Playwright Chromium cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: playwright-chromium-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: ${{ runner.tool_cache }}/wcdraft-cache/ms-playwright
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Ensure Playwright Chromium is installed
+        run: pnpm --filter @wcdraft/web exec playwright install chromium
 
       - name: Generated data determinism
         run: pnpm run check:generated
@@ -179,7 +208,7 @@ jobs:
 
   golden:
     name: golden RNG determinism
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.js == 'true' }}
     env:
@@ -188,10 +217,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
       - name: Setup Node
@@ -222,7 +258,7 @@ jobs:
 
   realism:
     name: realism · asymmetric gate (N=2000 × 3 policies)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.realism_inputs == 'true' }}
     env:
@@ -231,10 +267,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
       - name: Setup Node
@@ -282,7 +325,7 @@ jobs:
 
   etl:
     name: ingest · identity-QA · determinism
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     env:
@@ -294,6 +337,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -367,7 +416,7 @@ jobs:
 
   db-rollback-check:
     name: db · ephemeral branch · apply → anon-dedupe → rollback round-trip
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     # The destructive ephemeral-branch rollback-check is heavy (forks + tears
     # down a Neon branch) and only meaningful when @wcdraft/db, package
@@ -385,10 +434,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup pnpm
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
       - name: Setup Node
@@ -481,7 +537,7 @@ jobs:
 
   etl-rating:
     name: ETL rating · lint · golden determinism
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     if: ${{ needs.changes.outputs.ci_config == 'true' || needs.changes.outputs.etl == 'true' }}
     # Self-contained: the rating stage reads the COMMITTED canonical JSON in
@@ -491,6 +547,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Setup Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -521,13 +583,18 @@ jobs:
 
   gitleaks:
     name: secrets · incremental scan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs: changes
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          clean: true
           fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
 
       - name: Gitleaks incremental scan
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
@@ -536,7 +603,7 @@ jobs:
 
   aggregate:
     name: required · aggregate gates
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     needs:
       - changes
       - static
@@ -549,6 +616,15 @@ jobs:
       - gitleaks
     if: ${{ always() }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          clean: true
+          persist-credentials: false
+
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
+
       - name: Fail if any needed gate failed or cancelled
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}

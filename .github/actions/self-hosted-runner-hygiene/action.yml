@@ -1,0 +1,7 @@
+name: Self-hosted runner hygiene
+description: Guard and scrub the persistent wcdraft-m4 workspace and declared caches
+runs:
+  using: node24
+  main: index.js
+  post: index.js
+  post-if: always()

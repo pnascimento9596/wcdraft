@@ -24,24 +24,29 @@ on:
         default: ""
 
 concurrency:
-  group: marketing-x-pack
-  cancel-in-progress: false
+  group: marketing-x-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
 
 jobs:
   pack:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, wcdraft]
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
+          clean: true
           fetch-depth: 0
+          persist-credentials: true # required only for the final trusted main push
+      - name: Prepare persistent runner
+        uses: ./.github/actions/self-hosted-runner-hygiene
       - uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
+          dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
