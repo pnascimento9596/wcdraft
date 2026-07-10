@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { postJson, ensureCsrfToken } from "@/lib/auth/client";
+import { authClientErrorMessage, postJson, ensureCsrfToken } from "@/lib/auth/client";
 
 type State =
   | { kind: "idle" }
@@ -65,8 +65,15 @@ export function SignInForm(): React.ReactElement {
           return;
         }
         setState({ kind: "sent", email, purpose });
-      } catch {
-        setState({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        setState({
+          kind: "error",
+          message: authClientErrorMessage(error, {
+            timeout:
+              "The delivery request timed out and may still be processing. Wait before requesting another link.",
+            fallback: "Network hiccup. Try again.",
+          }),
+        });
       }
     },
     [emailForSecondaryFlow, next],
@@ -97,8 +104,15 @@ export function SignInForm(): React.ReactElement {
         }
         router.push(r.data?.redirectTo ?? "/play");
         router.refresh();
-      } catch {
-        setState({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        setState({
+          kind: "error",
+          message: authClientErrorMessage(error, {
+            timeout:
+              "The sign-in request timed out and may have completed. Refresh before trying again.",
+            fallback: "Network hiccup. Try again.",
+          }),
+        });
       }
     },
     [identifier, next, password, router],

@@ -39,12 +39,7 @@ export interface SubmitPanelViewProps {
 
 /** Phases that keep the form on screen for another attempt. */
 function formVisible(phase: SubmitPhase): boolean {
-  return (
-    phase.kind === "idle" ||
-    phase.kind === "submitting" ||
-    phase.kind === "rejected" ||
-    phase.kind === "unreachable"
-  );
+  return phase.kind === "idle" || phase.kind === "submitting" || phase.kind === "rejected";
 }
 
 export function SubmitPanelView(props: SubmitPanelViewProps) {
@@ -302,7 +297,27 @@ function SubmitOutcome({
     return (
       <div className={s.outcome} role="alert">
         <p className={`${s.outcomeTitle} ${s.outcomeTitleBad}`}>Couldn&rsquo;t reach the server</p>
-        <p className={s.outcomeMsg}>Nothing was posted. Check your connection and try again.</p>
+        <p className={s.outcomeMsg}>
+          No server verdict came back. Check the leaderboard before submitting this run again.
+        </p>
+        <Link href={leaderboardHref} className="btn btn--ghost">
+          Check leaderboard
+        </Link>
+      </div>
+    );
+  }
+
+  if (phase.kind === "timeout") {
+    return (
+      <div className={s.outcome} role="alert">
+        <p className={`${s.outcomeTitle} ${s.outcomeTitleBad}`}>The post timed out</p>
+        <p className={s.outcomeMsg}>
+          The outcome is unknown and the run may already be on the board. Check the leaderboard
+          before submitting it again.
+        </p>
+        <Link href={leaderboardHref} className="btn btn--ghost">
+          Check leaderboard
+        </Link>
       </div>
     );
   }

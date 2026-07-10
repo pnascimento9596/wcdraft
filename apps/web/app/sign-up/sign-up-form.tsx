@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ensureCsrfToken, postJson } from "@/lib/auth/client";
+import { authClientErrorMessage, ensureCsrfToken, postJson } from "@/lib/auth/client";
 
 type State =
   | { kind: "idle" }
@@ -54,8 +54,15 @@ export function SignUpForm(): React.ReactElement {
       setState({ kind: "created" });
       router.push(response.data?.redirectTo ?? "/account");
       router.refresh();
-    } catch {
-      setState({ kind: "error", message: "Network hiccup. Try again." });
+    } catch (error) {
+      setState({
+        kind: "error",
+        message: authClientErrorMessage(error, {
+          timeout:
+            "The account request timed out and may have completed. Refresh or sign in before trying again.",
+          fallback: "Network hiccup. Try again.",
+        }),
+      });
     }
   }
 

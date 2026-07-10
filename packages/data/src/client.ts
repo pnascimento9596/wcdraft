@@ -18,8 +18,10 @@ import {
   parseScenario2026Bundle,
   parseScoreDistribution,
 } from "./validation.js";
+import { boundedRequest, REQUEST_BUDGET_MS } from "./bounded-request.js";
 
 export * from "./score-distribution.js";
+export * from "./bounded-request.js";
 export { DAILY_SEED_MAX_SALT_ATTEMPTS };
 export type { DailySeedSaltMap, ScoreDistribution, ScoreDistributionAnchors } from "./types.js";
 
@@ -43,12 +45,15 @@ export interface LoaderOptions {
   fetch?: typeof fetch;
   /** `AbortSignal` propagated into the underlying `fetch`. */
   signal?: AbortSignal;
+  /** Elapsed fetch + parse budget; defaults to the 30s runtime-data budget. */
+  timeoutMs?: number;
 }
 
 interface ResolvedOptions {
   basePath: string;
   fetchImpl: typeof fetch;
   signal?: AbortSignal;
+  timeoutMs: number;
 }
 
 function resolveOptions(opts: LoaderOptions | undefined): ResolvedOptions {
@@ -72,22 +77,38 @@ function resolveOptions(opts: LoaderOptions | undefined): ResolvedOptions {
       "@wcdraft/data/client: no `fetch` is available — pass `opts.fetch` explicitly.",
     );
   }
-  return { basePath, fetchImpl, signal: opts?.signal };
+  return {
+    basePath,
+    fetchImpl,
+    signal: opts?.signal,
+    timeoutMs: opts?.timeoutMs ?? REQUEST_BUDGET_MS.runtimeData,
+  };
 }
 
 async function fetchJson<T>(
   url: string,
   opts: ResolvedOptions,
   parse: (value: unknown) => T,
+  operation: string,
 ): Promise<T> {
   // `opts.fetchImpl` is either an explicitly provided fetch (caller-bound) or
   // the global fetch bound to globalThis in `resolveOptions` — invoking it
   // off `opts` is safe in both cases.
-  const res = await opts.fetchImpl(url, { signal: opts.signal });
-  if (!res.ok) {
-    throw new Error(`@wcdraft/data/client: failed to load ${url} (HTTP ${res.status}).`);
-  }
-  return parse(await res.json());
+  return boundedRequest(
+    async (signal) => {
+      const res = await opts.fetchImpl(url, { signal });
+      if (!res.ok) {
+        throw new Error(`@wcdraft/data/client: ${operation} returned HTTP ${res.status}.`);
+      }
+      return parse(await res.json());
+    },
+    {
+      operation,
+      timeoutMs: opts.timeoutMs,
+      safety: "safe-read",
+      signal: opts.signal,
+    },
+  );
 }
 
 /** Load the top-level `RuntimeDataManifest`. */
@@ -97,6 +118,7 @@ export async function loadDataManifest(opts?: LoaderOptions): Promise<RuntimeDat
     `${resolved.basePath}/manifest.json`,
     resolved,
     parseRuntimeDataManifest,
+    "runtime data manifest",
   );
 }
 
@@ -107,6 +129,7 @@ export async function loadDraftPoolBundle(opts?: LoaderOptions): Promise<DraftPo
     `${resolved.basePath}/${DRAFT_POOL_BROTLI_PATH}`,
     resolved,
     parseDraftPoolBundle,
+    "runtime draft pool",
   );
 }
 
@@ -117,6 +140,7 @@ export async function loadScenario2026Bundle(opts?: LoaderOptions): Promise<Scen
     `${resolved.basePath}/scenario-2026.compact.json`,
     resolved,
     parseScenario2026Bundle,
+    "runtime scenario",
   );
 }
 
@@ -132,6 +156,7 @@ export async function loadScoreDistribution(opts?: LoaderOptions): Promise<Score
     `${resolved.basePath}/score-distribution.compact.json`,
     resolved,
     parseScoreDistribution,
+    "runtime score distribution",
   );
 }
 
@@ -142,6 +167,7 @@ export async function loadDailySeedSaltMap(opts?: LoaderOptions): Promise<DailyS
     `${resolved.basePath}/daily-seed-salt-map.compact.json`,
     resolved,
     parseDailySeedSaltMap,
+    "Daily metadata",
   );
 }
 

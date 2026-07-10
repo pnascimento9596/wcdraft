@@ -6,12 +6,13 @@ import type { DraftMode } from "@wcdraft/core";
 import { DRAFT_MODE_COPY } from "@/lib/game/mode-labels";
 import { loadDailyAvailability } from "@/lib/game/data";
 import { utcDateString } from "@/lib/game/daily";
+import { isRuntimeDataTimeout } from "@/lib/game/errors";
 import { DAILY_UNAVAILABLE_TITLE, DailyUnavailableNotice } from "./daily-unavailable-notice";
 import { LocalProgressBandFromStorage } from "./local-progress-band";
 import s from "./game.module.css";
 
 type PlayMode = "daily" | DraftMode;
-type DailyAvailabilityState = "checking" | "available" | "unavailable";
+type DailyAvailabilityState = "checking" | "available" | "unavailable" | "timeout";
 
 const MODE_COPY: Record<
   PlayMode,
@@ -87,17 +88,23 @@ export function ModeSelect() {
   const router = useRouter();
   const [mode, setMode] = useState<PlayMode>("daily");
   const [dailyAvailability, setDailyAvailability] = useState<DailyAvailabilityState>("checking");
+  const [dailyRetry, setDailyRetry] = useState(0);
   const selected = MODE_COPY[mode];
 
   useEffect(() => {
     let active = true;
-    void loadDailyAvailability(utcDateString()).then((available) => {
-      if (active) setDailyAvailability(available ? "available" : "unavailable");
-    });
+    setDailyAvailability("checking");
+    void loadDailyAvailability(utcDateString())
+      .then((available) => {
+        if (active) setDailyAvailability(available ? "available" : "unavailable");
+      })
+      .catch((error: unknown) => {
+        if (active) setDailyAvailability(isRuntimeDataTimeout(error) ? "timeout" : "unavailable");
+      });
     return () => {
       active = false;
     };
-  }, []);
+  }, [dailyRetry]);
 
   return (
     <>
@@ -108,6 +115,7 @@ export function ModeSelect() {
           const on = mode === key;
           const checking = key === "daily" && dailyAvailability === "checking";
           const unavailable = key === "daily" && dailyAvailability === "unavailable";
+          const timedOut = key === "daily" && dailyAvailability === "timeout";
           return (
             <button
               key={key}
@@ -136,31 +144,43 @@ export function ModeSelect() {
                 <span className={s.modeName}>{item.title}</span>
               </span>
               <span className={s.modeDesc}>
-                {unavailable
-                  ? DAILY_UNAVAILABLE_TITLE
-                  : checking
-                    ? "Checking today's Daily…"
-                    : item.desc}
+                {timedOut
+                  ? "Today's Daily check timed out. Retry it or play another mode."
+                  : unavailable
+                    ? DAILY_UNAVAILABLE_TITLE
+                    : checking
+                      ? "Checking today's Daily…"
+                      : item.desc}
               </span>
               <span className={s.modePreview}>
-                {unavailable ? "DAILY · PAUSED" : checking ? "DAILY · CHECKING" : item.preview}
+                {timedOut
+                  ? "DAILY · CHECK TIMED OUT"
+                  : unavailable
+                    ? "DAILY · PAUSED"
+                    : checking
+                      ? "DAILY · CHECKING"
+                      : item.preview}
               </span>
               <span className={s.modeFeatures}>
-                {(unavailable || checking ? ["Other modes ready"] : item.chips).map((chip) => (
-                  <span key={chip} className={s.modeFeatureChip}>
-                    <span className={s.modeFeatureDot} aria-hidden="true" />
-                    {chip}
-                  </span>
-                ))}
+                {(unavailable || checking || timedOut ? ["Other modes ready"] : item.chips).map(
+                  (chip) => (
+                    <span key={chip} className={s.modeFeatureChip}>
+                      <span className={s.modeFeatureDot} aria-hidden="true" />
+                      {chip}
+                    </span>
+                  ),
+                )}
               </span>
               <span className={s.modeCardBottom}>
                 <span className={s.modeCta}>
-                  {unavailable
-                    ? "Unavailable today"
-                    : checking
-                      ? "Checking availability"
-                      : item.cta}
-                  {unavailable || checking ? "" : " →"}
+                  {timedOut
+                    ? "Daily check timed out"
+                    : unavailable
+                      ? "Unavailable today"
+                      : checking
+                        ? "Checking availability"
+                        : item.cta}
+                  {unavailable || checking || timedOut ? "" : " →"}
                 </span>
                 {on ? <span className={s.modeSelectedText}>Selected</span> : null}
               </span>
@@ -168,7 +188,24 @@ export function ModeSelect() {
           );
         })}
       </div>
-      {mode === "daily" && dailyAvailability === "unavailable" ? (
+      {mode === "daily" && dailyAvailability === "timeout" ? (
+        <div className={s.modeDock} role="alert">
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => setDailyRetry((value) => value + 1)}
+          >
+            Retry Daily check
+          </button>
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => router.push("/play/draft")}
+          >
+            Play Classic instead
+          </button>
+        </div>
+      ) : mode === "daily" && dailyAvailability === "unavailable" ? (
         <div className={s.modeDock}>
           <DailyUnavailableNotice />
         </div>

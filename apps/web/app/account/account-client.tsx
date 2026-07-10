@@ -4,8 +4,16 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { deleteCsrf, fetchWithCsrf, postJson, putJson } from "@/lib/auth/client";
+import {
+  authClientErrorMessage,
+  deleteCsrf,
+  deleteJson,
+  postJson,
+  putJson,
+} from "@/lib/auth/client";
 import { useAuth } from "@/components/auth-context";
+import { fetchAccountRunsPage } from "@/lib/account/client";
+import { isRequestTimeoutError } from "@wcdraft/data/client";
 import type { AccountRun, AccountRunsPage } from "@/lib/account/runs";
 import { formatAccountRunRecord } from "@/lib/account/run-format";
 
@@ -19,6 +27,7 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
   const [runs, setRuns] = useState(initial.runs);
   const [page, setPage] = useState(initial.page);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [loadMoreError, setLoadMoreError] = useState<string | null>(null);
   const { refresh } = useAuth();
   const searchParams = useSearchParams();
   const setNewPasswordMode = searchParams.has("set_new_password");
@@ -26,17 +35,20 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
   const loadMore = useCallback(async () => {
     if (!page.hasMore || loadingMore) return;
     setLoadingMore(true);
+    setLoadMoreError(null);
     try {
-      const response = await fetch(
-        `/api/account/runs?limit=${page.limit.toString()}&offset=${(
-          page.offset + runs.length
-        ).toString()}`,
-        { credentials: "include", headers: { Accept: "application/json" } },
-      );
-      if (!response.ok) return;
-      const data = (await response.json()) as AccountRunsPage;
+      const data = await fetchAccountRunsPage({
+        limit: page.limit,
+        offset: page.offset + runs.length,
+      });
       setRuns((current) => [...current, ...data.runs]);
       setPage(data.page);
+    } catch (error) {
+      setLoadMoreError(
+        isRequestTimeoutError(error)
+          ? "Loading more runs timed out. Retry this safe history read or use Recent view."
+          : "More runs could not be loaded. Retry or use Recent view.",
+      );
     } finally {
       setLoadingMore(false);
     }
@@ -122,6 +134,11 @@ export function AccountClient({ initial }: { readonly initial: AccountRunsPage }
             {loadingMore ? "Loading..." : "Load more runs"}
           </button>
         ) : null}
+        {loadMoreError ? (
+          <p className="account-notice account-notice--error" role="alert">
+            {loadMoreError}
+          </p>
+        ) : null}
       </section>
     </div>
   );
@@ -131,13 +148,23 @@ function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["ident
   const router = useRouter();
   const { refresh } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
   const signOut = useCallback(async () => {
     setSigningOut(true);
+    setSignOutError(null);
     try {
       await deleteCsrf("/api/auth/session");
       await refresh();
       router.push("/");
       router.refresh();
+    } catch (error) {
+      setSignOutError(
+        authClientErrorMessage(error, {
+          timeout:
+            "Sign-out timed out and may have completed. Refresh this page before trying again.",
+          fallback: "Sign-out could not be completed. Refresh and try again.",
+        }),
+      );
     } finally {
       setSigningOut(false);
     }
@@ -165,6 +192,11 @@ function IdentityPanel({ identity }: { readonly identity: AccountRunsPage["ident
           {signingOut ? "Signing out..." : "Sign out"}
         </button>
       </div>
+      {signOutError ? (
+        <p className="account-notice account-notice--error" role="alert">
+          {signOutError}
+        </p>
+      ) : null}
     </section>
   );
 }
@@ -202,8 +234,15 @@ function UsernamePanel({
         setValue(saved);
         setNotice({ kind: "ok", message: "Username saved." });
         await onUsernameSet(saved);
-      } catch {
-        setNotice({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        setNotice({
+          kind: "error",
+          message: authClientErrorMessage(error, {
+            timeout:
+              "The username update timed out and may have completed. Refresh Account before trying again.",
+            fallback: "Network hiccup. Try again.",
+          }),
+        });
       } finally {
         setSaving(false);
       }
@@ -264,8 +303,15 @@ function VerificationPanel({
       }
       setNotice({ kind: "ok", message: "Verification link sent." });
       await onVerificationSent();
-    } catch {
-      setNotice({ kind: "error", message: "Network hiccup. Try again." });
+    } catch (error) {
+      setNotice({
+        kind: "error",
+        message: authClientErrorMessage(error, {
+          timeout:
+            "The delivery request timed out and may still be processing. Wait before trying again.",
+          fallback: "Network hiccup. Try again.",
+        }),
+      });
     } finally {
       setSending(false);
     }
@@ -335,8 +381,15 @@ function PasswordPanel({
         setNewPassword("");
         setNotice({ kind: "ok", message: "Password updated." });
         await onPasswordSet();
-      } catch {
-        setNotice({ kind: "error", message: "Network hiccup. Try again." });
+      } catch (error) {
+        setNotice({
+          kind: "error",
+          message: authClientErrorMessage(error, {
+            timeout:
+              "The password update timed out and may have completed. Refresh or sign in again before retrying.",
+            fallback: "Network hiccup. Try again.",
+          }),
+        });
       } finally {
         setSaving(false);
       }
@@ -408,23 +461,25 @@ function DeletePanel() {
       setDeleting(true);
       setNotice({ kind: "idle" });
       try {
-        const response = await fetchWithCsrf("/api/account", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ confirm }),
-        });
+        const response = await deleteJson<{ message?: string }>("/api/account", { confirm });
         if (!response.ok) {
-          const body = (await response.json().catch(() => null)) as { message?: string } | null;
           setNotice({
             kind: "error",
-            message: body?.message ?? "Account was not deleted.",
+            message: response.data?.message ?? "Account was not deleted.",
           });
           return;
         }
         router.push("/");
         router.refresh();
-      } catch {
-        setNotice({ kind: "error", message: "Network hiccup. Account not deleted." });
+      } catch (error) {
+        setNotice({
+          kind: "error",
+          message: authClientErrorMessage(error, {
+            timeout:
+              "Deletion timed out and may have completed. Do not retry yet; refresh or sign in to check account state.",
+            fallback: "Network hiccup. Account not deleted.",
+          }),
+        });
       } finally {
         setDeleting(false);
       }

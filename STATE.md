@@ -4,6 +4,48 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit Season 1 shared bounded-request contract (Unit D1):
+2026-07-10 · YELLOW implementation on branch
+`ws-ux/audit-s1-bounded-requests`, initially based on Wave-A `origin/main`
+`f9ea1a5c3893a9e34e4fc8d67465c1385b79bfbe` and finally rebased onto C2-shipped
+`origin/main` `6ad3d17353fbfab7e076bc2b6a22f0c1412a50dc`. One browser-safe
+`boundedRequest` helper now enforces elapsed fetch-plus-body budgets with a
+composed `AbortSignal` and PII-free `RequestTimeoutError`: 30 seconds for
+runtime data and 12 seconds for Daily metadata, leaderboard, auth, account,
+history, and progress calls. Runtime manifests/bundles, game-data first load,
+A1's Daily metadata preflight, leaderboard reads and mutations, session/CSRF
+and auth calls, Account pagination, server history, and signed-in progress all
+use the same helper and documented constants; no scoped client retains a
+standalone abort timer. Safe reads settle into explicit Retry plus an alternate
+route. Unsafe mutations run exactly once, describe timeout outcomes as unknown,
+and the leaderboard form is removed after timeout or transport-unknown outcomes
+so it cannot immediately dispatch a duplicate post. A direct `/play/daily`
+metadata timeout now reaches the draft container's Retry/choose-another-mode
+panel instead of being collapsed into publication unavailability; non-timeout
+metadata failures remain fail-closed. Runtime, draft, review, results, share,
+history, leaderboard, auth, account, and progress first-load surfaces no longer
+hold an indefinite spinner when their underlying request never resolves.
+
+Held-open fetch/body tests cover the shared helper and every scoped request
+domain, including timer/listener cleanup, response-body stalls, late
+completion, one-call mutation behavior, retry safety, and URL/credential
+redaction. The old PR-head review observation that a timed-out leaderboard
+submit still exposed its mutation form was fixed-forward, with both timeout and
+transport-unknown views now rendering only the safe board-check action. Before
+the final C2 rebase, full affected validation passed: data 16 files passed / 1
+skipped and 168 tests passed / 9 skipped; web 91 files passed / 1 skipped and
+943 tests passed / 1 skipped; game-flow Playwright; responsive desktop 84/0,
+mobile 56/0, and interaction targets 40/0; root typecheck 8/8, lint 5/5, and
+build 4/4 with 40/40 web pages. The generated-artifact deterministic
+rebuild/check, agent-contract check, full-repository Prettier, and `git diff
+--check` also passed. After rebasing onto C2, the combined code preserved its
+linear display-name grouping and passed the overlap matrix (8 web files / 76
+tests plus data 1 file / 6 tests), root typecheck 8/8, lint 5/5, full-repository
+Prettier, and build 4/4 with 40/40 pages. Existing Next circular-chunk and Edge
+static-generation warnings remain unchanged. No schema, migration, rating,
+simulation, draft semantics, runtime-data payload, or API response contract
+changed; the PR's protected CI must rerun at the pushed final head.
+
 Audit S1 C2 display-name override linearization:
 2026-07-10 · YELLOW implementation on branch
 `ws-ux/audit-s1-display-name-on`, initially based on C1-shipped `origin/main`

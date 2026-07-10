@@ -176,6 +176,9 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
           <button type="button" className="btn btn--primary" onClick={retryFromError}>
             Retry
           </button>
+          <Link href="/play" className="btn btn--ghost">
+            Choose another mode
+          </Link>
         </div>
       </div>
     );

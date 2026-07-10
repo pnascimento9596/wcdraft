@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { loadDataManifest } from "@wcdraft/data/client";
+import {
+  boundedRequest,
+  isRequestTimeoutError,
+  loadDataManifest,
+  REQUEST_BUDGET_MS,
+} from "@wcdraft/data/client";
 
 import { useAuth } from "@/components/auth-context";
 import {
@@ -37,11 +42,15 @@ export function LocalProgressBand({
   compact = false,
   friendRun = null,
   signedIn = false,
+  timedOut = false,
+  onRetry,
 }: {
   summary: LocalProgressSummary;
   compact?: boolean;
   friendRun?: FriendRunContext | null;
   signedIn?: boolean;
+  timedOut?: boolean;
+  onRetry?: () => void;
 }) {
   const countdown = useUtcCountdown();
   const trigger = useMemo(
@@ -95,6 +104,15 @@ export function LocalProgressBand({
         <span>Today&apos;s best: {formatBestScore(summary.todayBest)}</span>
         <span>All-time best: {formatBestScore(summary.allTimeBest)}</span>
       </div>
+      {timedOut && onRetry ? (
+        <p className={s.localProgressNudge} role="alert">
+          <span>Progress took too long to load. </span>
+          <button type="button" onClick={onRetry}>
+            Retry progress
+          </button>
+          <a href="/play/history">Open history instead</a>
+        </p>
+      ) : null}
       {showSignInNudge ? (
         <p className={s.localProgressNudge} role="status">
           <span>Keep your streak on every device — </span>
@@ -123,16 +141,22 @@ export function LocalProgressBandWithVersions({
   const [summary, setSummary] = useState<LocalProgressSummary>(() =>
     readSummary(versions, targetDate ?? undefined),
   );
+  const [timedOut, setTimedOut] = useState(false);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    setTimedOut(false);
     if (shouldUseServerProgress(isSignedIn, authReady, targetDate)) {
       readServerProgressSummary(targetDate ?? undefined)
         .then((serverSummary) => {
           if (!cancelled) setSummary(serverSummary);
         })
-        .catch(() => {
-          if (!cancelled) setSummary(readSummary(versions, targetDate ?? undefined));
+        .catch((error: unknown) => {
+          if (!cancelled) {
+            setTimedOut(isRequestTimeoutError(error));
+            setSummary(readSummary(versions, targetDate ?? undefined));
+          }
         });
     } else {
       setSummary(readSummary(versions, targetDate ?? undefined));
@@ -140,7 +164,7 @@ export function LocalProgressBandWithVersions({
     return () => {
       cancelled = true;
     };
-  }, [authReady, isSignedIn, targetDate, versions]);
+  }, [authReady, isSignedIn, retryNonce, targetDate, versions]);
 
   return (
     <LocalProgressBand
@@ -148,6 +172,8 @@ export function LocalProgressBandWithVersions({
       compact={compact}
       friendRun={friendRun}
       signedIn={isSignedIn}
+      timedOut={timedOut}
+      onRetry={() => setRetryNonce((value) => value + 1)}
     />
   );
 }
@@ -163,17 +189,22 @@ export function LocalProgressBandFromStorage({
 }) {
   const { isSignedIn, ready: authReady } = useAuth();
   const [summary, setSummary] = useState<LocalProgressSummary>(EMPTY_SUMMARY);
+  const [timedOut, setTimedOut] = useState(false);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    setTimedOut(false);
     if (shouldUseServerProgress(isSignedIn, authReady, targetDate)) {
       readServerProgressSummary(targetDate ?? undefined)
         .then((serverSummary) => {
           if (!cancelled) setSummary(serverSummary);
         })
-        .catch(() => {
-          if (!cancelled)
+        .catch((error: unknown) => {
+          if (!cancelled) {
+            setTimedOut(isRequestTimeoutError(error));
             setSummary(buildLocalProgressSummary([], { targetDate: targetDate ?? undefined }));
+          }
         });
       return () => {
         cancelled = true;
@@ -185,14 +216,16 @@ export function LocalProgressBandFromStorage({
         const versions = composeVersions(manifest);
         setSummary(readSummary(versions, targetDate ?? undefined));
       })
-      .catch(() => {
-        if (!cancelled)
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setTimedOut(isRequestTimeoutError(error));
           setSummary(buildLocalProgressSummary([], { targetDate: targetDate ?? undefined }));
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, [authReady, isSignedIn, targetDate]);
+  }, [authReady, isSignedIn, retryNonce, targetDate]);
 
   return (
     <LocalProgressBand
@@ -200,6 +233,8 @@ export function LocalProgressBandFromStorage({
       compact={compact}
       friendRun={friendRun}
       signedIn={isSignedIn}
+      timedOut={timedOut}
+      onRetry={() => setRetryNonce((value) => value + 1)}
     />
   );
 }
@@ -221,25 +256,38 @@ function shouldUseServerProgress(
   return !targetDate || targetDate === utcDateString();
 }
 
-async function readServerProgressSummary(targetDate?: string): Promise<LocalProgressSummary> {
-  const response = await fetch("/api/account/runs?limit=1", {
-    credentials: "include",
-    headers: { Accept: "application/json" },
-  });
-  if (!response.ok) throw new Error(`account stats HTTP ${response.status.toString()}`);
-  const body = (await response.json()) as AccountStatsResponse;
-  const stats = body.stats;
-  return {
-    targetDate: targetDate ?? utcDateString(),
-    streakDays: finiteNumber(stats?.dailyStreakDays),
-    todayBest: finiteNumber(stats?.todayBest),
-    allTimeBest: finiteNumber(stats?.personalBest),
-    completedRunCount: undefined,
-    todaySetPersonalBest:
-      finiteNumber(stats?.todayBest) !== null &&
-      finiteNumber(stats?.personalBest) !== null &&
-      finiteNumber(stats?.todayBest) === finiteNumber(stats?.personalBest),
-  };
+export async function readServerProgressSummary(
+  targetDate?: string,
+  fetcher: typeof fetch = fetch.bind(globalThis),
+): Promise<LocalProgressSummary> {
+  return boundedRequest(
+    async (signal) => {
+      const response = await fetcher("/api/account/runs?limit=1", {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+        signal,
+      });
+      if (!response.ok) throw new Error(`account stats HTTP ${response.status.toString()}`);
+      const body = (await response.json()) as AccountStatsResponse;
+      const stats = body.stats;
+      return {
+        targetDate: targetDate ?? utcDateString(),
+        streakDays: finiteNumber(stats?.dailyStreakDays),
+        todayBest: finiteNumber(stats?.todayBest),
+        allTimeBest: finiteNumber(stats?.personalBest),
+        completedRunCount: undefined,
+        todaySetPersonalBest:
+          finiteNumber(stats?.todayBest) !== null &&
+          finiteNumber(stats?.personalBest) !== null &&
+          finiteNumber(stats?.todayBest) === finiteNumber(stats?.personalBest),
+      };
+    },
+    {
+      operation: "account progress",
+      timeoutMs: REQUEST_BUDGET_MS.auth,
+      safety: "safe-read",
+    },
+  );
 }
 
 function finiteNumber(value: unknown): number | null {

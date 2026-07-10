@@ -25,6 +25,8 @@
 // The UI swap from `localRunHistoryProvider` to this one is the Yellow
 // follow. F-3 lands the provider + the route handlers it consumes so
 // the swap is a one-import change.
+import { boundedRequest, isRequestTimeoutError, REQUEST_BUDGET_MS } from "@wcdraft/data/client";
+
 import type { GameData } from "./data";
 import { type HistoryEntry, type HistoryListResult, type RunHistoryProvider } from "./history";
 import { decodeRunTokenForDisplay } from "./run-screen-loader";
@@ -93,66 +95,78 @@ export function createServerRunHistoryProvider(
   return {
     async listCompletedRuns(gameData: GameData): Promise<HistoryListResult> {
       const url = `${baseUrl}/api/runs?limit=${RUN_RECORD_CAP.toString()}`;
-      let response: Response;
       try {
-        response = await fetchImpl(url, {
-          credentials: "include",
-          headers: { Accept: "application/json" },
-        });
-      } catch (err) {
-        return {
-          entries: [],
-          persistence: "volatile",
-          warnings: [
-            `server-history: fetch failed (${err instanceof Error ? err.message : String(err)})`,
-          ],
-        };
-      }
-      if (!response.ok) {
-        return {
-          entries: [],
-          persistence: "volatile",
-          warnings: [`server-history: GET /api/runs returned HTTP ${response.status.toString()}`],
-        };
-      }
-      const body = (await response.json().catch(() => null)) as ListResponse | null;
-      if (!body || !Array.isArray(body.runs)) {
-        return {
-          entries: [],
-          persistence: "volatile",
-          warnings: ["server-history: malformed response"],
-        };
-      }
+        return await boundedRequest(
+          async (signal) => {
+            const response = await fetchImpl(url, {
+              credentials: "include",
+              headers: { Accept: "application/json" },
+              signal,
+            });
+            if (!response.ok) {
+              return {
+                entries: [],
+                persistence: "volatile",
+                warnings: [
+                  `server-history: GET /api/runs returned HTTP ${response.status.toString()}`,
+                ],
+              } satisfies HistoryListResult;
+            }
+            let body: ListResponse | null;
+            try {
+              body = (await response.json()) as ListResponse;
+            } catch {
+              if (signal.aborted) throw signal.reason;
+              body = null;
+            }
+            if (!body || !Array.isArray(body.runs)) {
+              return {
+                entries: [],
+                persistence: "volatile",
+                warnings: ["server-history: malformed response"],
+              } satisfies HistoryListResult;
+            }
 
-      const entries: HistoryEntry[] = [];
-      const warnings: string[] = [];
-      for (let i = 0; i < body.runs.length; i += 1) {
-        const apiRow = body.runs[i]!;
-        const tokenState = decodeRunTokenForDisplay(apiRow.token);
-        const decoded = tokenState.kind === "ready" ? tokenState.token : null;
-        const summary = isApiRunSummary(apiRow.summary) ? apiRow.summary : null;
-        // F-3.5 — surface the entry as long as we have EITHER a decoded
-        // token OR a valid summary. Token decode failure on a row with a
-        // good summary is non-fatal (the user still sees the run; only
-        // the replay/share links degrade). Dropping a row that had real
-        // saved data would be a worse honest-state violation than
-        // showing it with degraded affordances.
-        if (!decoded && !summary) {
-          warnings.push(
-            `server-history: row ${apiRow.id} has neither a decodable token nor a summary (skipped)`,
-          );
-          continue;
-        }
-        entries.push(buildHistoryEntryFromApiRow(gameData, decoded, apiRow, i));
+            return historyResultFromResponse(gameData, body);
+          },
+          {
+            operation: "account run history",
+            timeoutMs: REQUEST_BUDGET_MS.auth,
+            safety: "safe-read",
+          },
+        );
+      } catch (err) {
+        if (isRequestTimeoutError(err)) throw err;
+        return {
+          entries: [],
+          persistence: "volatile",
+          warnings: ["server-history: fetch failed"],
+        };
       }
-      return {
-        entries: entries.slice(0, RUN_RECORD_CAP),
-        // "Durable" in the same sense as local-storage durable — survives a
-        // tab close. The row lives in Neon, not browser storage.
-        persistence: "durable",
-        warnings,
-      };
     },
+  };
+}
+
+function historyResultFromResponse(gameData: GameData, body: ListResponse): HistoryListResult {
+  const entries: HistoryEntry[] = [];
+  const warnings: string[] = [];
+  for (let i = 0; i < body.runs.length; i += 1) {
+    const apiRow = body.runs[i]!;
+    const tokenState = decodeRunTokenForDisplay(apiRow.token);
+    const decoded = tokenState.kind === "ready" ? tokenState.token : null;
+    const summary = isApiRunSummary(apiRow.summary) ? apiRow.summary : null;
+    if (!decoded && !summary) {
+      warnings.push(
+        `server-history: row ${apiRow.id} has neither a decodable token nor a summary (skipped)`,
+      );
+      continue;
+    }
+    entries.push(buildHistoryEntryFromApiRow(gameData, decoded, apiRow, i));
+  }
+  return {
+    entries: entries.slice(0, RUN_RECORD_CAP),
+    persistence: "durable",
+    warnings,
   };
 }
 

@@ -8,6 +8,7 @@
 // `refresh()` so post-sign-in/post-sign-out flows can re-read.
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { fetchSession, type SessionInfoResponse } from "@/lib/auth/client";
+import { isRequestTimeoutError } from "@wcdraft/data/client";
 import { shouldFetchSessionOnMount } from "@/lib/auth/auth-client-policy";
 
 export interface AuthState {
@@ -17,6 +18,8 @@ export interface AuthState {
   readonly session: SessionInfoResponse["session"];
   /** True once the first /api/auth/session call has resolved. */
   readonly ready: boolean;
+  /** Honest session-read failure; timeout is separately actionable. */
+  readonly sessionError: "timeout" | "unavailable" | null;
   /** True when signed in (session present AND not anonymous). */
   readonly isSignedIn: boolean;
   /** Refresh the session from the server (call after sign-in/sign-out). */
@@ -34,14 +37,18 @@ export function AuthProvider({
 }): React.ReactElement {
   const [session, setSession] = useState<SessionInfoResponse["session"]>(null);
   const [ready, setReady] = useState(false);
+  const [sessionError, setSessionError] = useState<AuthState["sessionError"]>(null);
 
   const refresh = useCallback(async () => {
+    setReady(false);
+    setSessionError(null);
     try {
       const r = await fetchSession();
       setSession(r.session);
-    } catch {
+    } catch (error) {
       // Honest-state: a network error means we don't actually know — leave
       // `session` unchanged. The next call will retry.
+      setSessionError(isRequestTimeoutError(error) ? "timeout" : "unavailable");
     } finally {
       setReady(true);
     }
@@ -65,10 +72,11 @@ export function AuthProvider({
       authEnabled,
       session,
       ready,
+      sessionError,
       isSignedIn: session !== null && session.userId !== null,
       refresh,
     }),
-    [authEnabled, session, ready, refresh],
+    [authEnabled, session, ready, sessionError, refresh],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -83,6 +91,7 @@ export function useAuth(): AuthState {
       authEnabled: false,
       session: null,
       ready: false,
+      sessionError: null,
       isSignedIn: false,
       refresh: async () => {
         /* noop */

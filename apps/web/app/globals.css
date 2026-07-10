@@ -1499,6 +1499,26 @@ main {
   background-size: 200% 100%;
   animation: account-chip-shimmer 1.4s linear infinite;
 }
+.account-session-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+.account-session-error button,
+.account-session-error a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
 @keyframes account-chip-shimmer {
   0% {
     background-position: 200% 0;
