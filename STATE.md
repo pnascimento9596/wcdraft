@@ -52,6 +52,14 @@ repository Prettier check, and `git diff --check`. The prior full root run is
 not claimed as exact-head evidence for this new commit; the PR's broad
 CI-config path and fresh independent Red re-review must re-execute exact-head
 gates before merge.
+The first Vercel preview for TOCTOU-fix head `a33de06`, deployment
+`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, failed before any install/build command:
+its only source log was the Git clone line, followed by an immediate empty-error
+deployment. One Vercel preview redeploy of that same incomplete source snapshot,
+`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K`, reproduced the pre-build failure with no
+error code or message. These are source/integration failures, not product-build
+verdicts. A subsequent docs-only evidence commit retriggers a fresh Git
+integration clone, whose exact-head Vercel check remains required.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch

@@ -85,6 +85,16 @@ parse, actionlint 1.7.12, full repository Prettier check, and `git diff
 repository baseline, not exact-head approval for this fix; broad PR CI and the
 fresh Red reviewer must re-execute the new head before merge.
 
+The first Git-integrated Vercel preview for fix head `a33de06`, deployment
+`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, entered `ERROR` immediately after its
+source-clone line, before dependency installation or an application build
+command. Vercel exposed no error code or message. A single preview redeploy,
+`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K`, reused the incomplete source snapshot and
+reproduced the same pre-build failure. These are source/integration failures,
+not product-build evidence. This report update intentionally triggers a fresh
+Git integration clone; the resulting exact-head Vercel check must pass before
+merge.
+
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane
 removed only its stale lock/processes, regenerated and fingerprint-checked the
