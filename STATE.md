@@ -238,8 +238,9 @@ passed / 9 skipped); generated-artifact check; root typecheck (8/8), lint
 web 919 passed / 1 skipped, game-flow Playwright, responsive shell-fit 56
 desktop + 28 mobile metrics / 0 failures), and build (4/4); core goldens (111
 tests), data/integration goldens (71 tests), web leaderboard golden (6 tests),
-and heavy realism (9/9). Required PR gates now execute on the self-hosted
-`wcdraft-m4` runner; CI results remain unclaimed until this exact head is pushed.
+and heavy realism (9/9). Required PR gates execute on the self-hosted
+`wcdraft-m4` runner; protected receipts and independent review are retained on
+PR #225.
 
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
