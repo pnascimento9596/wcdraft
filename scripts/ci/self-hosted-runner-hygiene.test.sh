@@ -63,14 +63,6 @@ actor_can_run() {
   [ "$1" != "dependabot[bot]" ]
 }
 
-aggregate_check_name() {
-  if [ "$1" = "dependabot[bot]" ]; then
-    echo "blocked · dependabot actor"
-  else
-    echo "required · aggregate gates"
-  fi
-}
-
 assert_file_content() {
   expected="$1"
   path="$2"
@@ -94,7 +86,7 @@ run_hygiene() {
 
 actor_guard="if: \${{ github.actor != 'dependabot[bot]' }}"
 aggregate_guard="if: \${{ always() && github.actor != 'dependabot[bot]' }}"
-aggregate_name="name: \${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}"
+aggregate_name_expression="name: \${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}"
 
 assert_job_set "$workflow" \
   "changes static verify golden realism etl db-rollback-check etl-rating gitleaks aggregate"
@@ -105,7 +97,9 @@ for job in verify golden realism etl db-rollback-check etl-rating gitleaks; do
 done
 assert_job_contains "$workflow" aggregate "      - changes"
 assert_job_contains "$workflow" aggregate "$aggregate_guard"
-assert_job_contains "$workflow" aggregate "$aggregate_name"
+assert_job_contains "$workflow" aggregate "$aggregate_name_expression"
+assert_job_contains "$workflow" aggregate "'blocked · dependabot actor'"
+assert_job_contains "$workflow" aggregate "'required · aggregate gates'"
 assert_job_contains "$workflow" gitleaks 'TMPDIR: ${{ runner.temp }}'
 
 assert_job_set "$etl_workflow" "changes etl rating-lock-matrix"
@@ -119,14 +113,6 @@ if actor_can_run "dependabot[bot]"; then
 fi
 actor_can_run "pnascimento9596" || fail "owner actor must remain allowed"
 actor_can_run "github-actions[bot]" || fail "repository automation must remain allowed"
-[ "$(aggregate_check_name "dependabot[bot]")" = "blocked · dependabot actor" ] ||
-  fail "Dependabot must emit only the non-required blocked check"
-[ "$(aggregate_check_name "dependabot[bot]")" != "required · aggregate gates" ] ||
-  fail "Dependabot must not emit the protected aggregate context"
-[ "$(aggregate_check_name "pnascimento9596")" = "required · aggregate gates" ] ||
-  fail "owner actor must retain the protected aggregate context"
-[ "$(aggregate_check_name "github-actions[bot]")" = "required · aggregate gates" ] ||
-  fail "repository automation must retain the protected aggregate context"
 
 mkdir -p "$runner_temp" "$tool_cache" "$workspace" "$(dirname "$outside_sentinel")"
 printf '%s\n' "workspace-sentinel" >"$workspace_sentinel"
@@ -148,4 +134,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (1 TMPDIR binding, 4 actor guards, 1 protected-check split, 10 needs edges, 3 actor gate cases, 3 check-name mappings, 2 temp removals, 4 sentinel checks)"
+echo "runner hygiene contract: PASS (1 TMPDIR binding, 4 actor guards, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 2 temp removals, 4 sentinel checks)"
