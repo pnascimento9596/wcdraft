@@ -34,7 +34,7 @@ const DEFAULT_OUT_DIR = join(HERE, "..", "src", "generated");
 const OUT_FILE = "daily-seed-salt-map.compact.json";
 
 const POLICY = "greedyOverallAutoDraft" as const;
-const WINDOW_DAYS = 14;
+const WINDOW_DAYS = 45;
 const RUNS_PER_CANDIDATE = 128;
 const SAMPLE_SUFFIX = "vet";
 

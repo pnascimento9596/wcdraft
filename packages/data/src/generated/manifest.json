@@ -55,11 +55,11 @@
   },
   "bundles": {
     "daily_seed_salt_map": {
-      "bytes": 9084,
-      "bytes_brotli": 1152,
-      "bytes_gzip": 1345,
+      "bytes": 26506,
+      "bytes_brotli": 1792,
+      "bytes_gzip": 2229,
       "path": "daily-seed-salt-map.compact.json",
-      "sha256": "6dcb7042eca6b529abe231cb57823d392beda21f15e7742f74c8ab38bb5ae1bf"
+      "sha256": "42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79"
     },
     "draft_pool": {
       "bytes": 130545042,

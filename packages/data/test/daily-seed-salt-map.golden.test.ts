@@ -24,6 +24,9 @@ const PACKAGE_DIR = join(HERE, "..");
 const ARTIFACT_PATH = join(PACKAGE_DIR, "src", "generated", "daily-seed-salt-map.compact.json");
 const OUT_FILE = "daily-seed-salt-map.compact.json";
 const REGEN_TIMEOUT_MS = 600_000;
+const EXPECTED_WINDOW_START = "2026-07-10";
+const EXPECTED_WINDOW_DAYS = 45;
+const EXPECTED_WINDOW_END = "2026-08-23";
 
 function requireArtifact(): DailySeedSaltMap {
   expect(
@@ -35,6 +38,11 @@ function requireArtifact(): DailySeedSaltMap {
 
 function sha256(bytes: Buffer): string {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function addUtcDays(date: string, days: number): string {
+  const start = Date.parse(`${date}T00:00:00.000Z`);
+  return new Date(start + days * 86_400_000).toISOString().slice(0, 10);
 }
 
 describe("daily seed salt-map artifact", () => {
@@ -58,8 +66,6 @@ describe("daily seed salt-map artifact", () => {
         tmpDir,
         "--start-date",
         artifact.window.start_date,
-        "--window-days",
-        String(artifact.window.days),
         "--population",
         String(artifact.population.runs_per_candidate),
         "--max-salt-attempts",
@@ -112,6 +118,25 @@ describe("daily seed salt-map artifact", () => {
   it("regenerates byte-identically for the committed rolling window", () => {
     expect(sha256(regenerated)).toBe(sha256(committed));
     expect(regenerated.toString("utf8")).toBe(committed.toString("utf8"));
+  });
+
+  it("publishes the intended 45-day UTC runway", () => {
+    const saltMap = requireArtifact();
+    expect(saltMap.window).toEqual({
+      start_date: EXPECTED_WINDOW_START,
+      days: EXPECTED_WINDOW_DAYS,
+      timezone: "UTC",
+    });
+    expect(saltMap.dates[0]?.date).toBe(EXPECTED_WINDOW_START);
+    expect(saltMap.dates.at(-1)?.date).toBe(EXPECTED_WINDOW_END);
+  });
+
+  it("lists exactly the contiguous dates advertised by the window", () => {
+    const saltMap = requireArtifact();
+    const advertisedDates = Array.from({ length: saltMap.window.days }, (_, offset) =>
+      addUtcDays(saltMap.window.start_date, offset),
+    );
+    expect(saltMap.dates.map(({ date }) => date)).toEqual(advertisedDates);
   });
 
   it("publishes only non-zero salts and keeps absent dates as default-0", () => {

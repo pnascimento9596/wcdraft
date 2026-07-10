@@ -203,6 +203,45 @@ core 389, data 101 passed / 9 skipped, db 106, marketing 68, web 867 passed /
 Turbo tasks, and heavy realism (9/9). Report:
 `docs/reports/daily-seed-vetting-2026-07-02.md`.
 
+Daily-seed 45-day runway refresh (Audit S1 A2):
+2026-07-10 · RED implementation on branch
+`ws-core/audit-s1-daily-runway` in PR #225, rebased without conflicts onto
+`origin/main` `986c5789614b0dc2e3bc726f5e34b2dd266d1f55` after A1 shipped through
+PR #227 at that same commit. A1's typed fail-closed behavior outside committed
+Daily coverage remains the base behavior and is untouched here. A2 raises the
+Daily salt-map builder default from 14 to exactly 45 days and replaces the
+committed artifact with 45 contiguous UTC dates from `2026-07-10` through
+`2026-08-23` inclusive.
+Policy `greedyOverallAutoDraft`, N=128 sample seeds/candidate, 8 candidate
+salts/date, salt/seed construction, and the existing degeneracy bands are
+unchanged. All 45 selected candidates measured normal (qualifying range
+0.187500-0.335938, median range -7.5 to -3.0, perfect-rate range
+0-0.007813): 39 dates are unsalted and six use salt `#2` (`2026-07-24`,
+`2026-07-27`, `2026-08-10`, `2026-08-17`, `2026-08-20`, `2026-08-21`).
+Artifact fingerprint: 26,506 raw bytes / 2,229 gzip / 1,792 brotli, sha256
+`42d012d035565b4ff218d890b2ecbd28d0e3ea3c3c30240737d8ba4afc3f5d79`.
+No rating, sim, core, ETL, schema, auth, or A3 workflow semantics changed.
+Post-rebase verification ran the mandated five-step regeneration chain twice
+with `--start-date 2026-07-10`; both passes ended with a clean worktree and
+zero-byte tracked diff. Both reproduced the artifact sha above plus manifest
+sha `7979fa756545287ef84a4cc338d9d2fa7d362f03e5ad84814318cf1bd7cc28bb`,
+compact-size report sha
+`003dbf2e48d7bc1469288795bd3fa08b353f2b5f919ff57eac89a99616add64c`,
+and score-distribution sha
+`16c01f921455ebd6a47b22e0ee7ee5f7e3d36239bc3df9982d123e155c75b06d`.
+The exact window, 45-date contiguity, today's coverage, and manifest/report
+fingerprints were asserted independently after each pass. Frozen install was
+already current (0.18s). Post-rebase local gates passed: focused Daily golden
+(1 file / 8 tests); full data tests (13 files passed / 1 skipped, 103 tests
+passed / 9 skipped); generated-artifact check; root typecheck (8/8), lint
+(5/5), test (8/8; core 391, data 103 passed / 9 skipped, DB 108, marketing 68,
+web 919 passed / 1 skipped, game-flow Playwright, responsive shell-fit 56
+desktop + 28 mobile metrics / 0 failures), and build (4/4); core goldens (111
+tests), data/integration goldens (71 tests), web leaderboard golden (6 tests),
+and heavy realism (9/9). Required PR gates execute on the self-hosted
+`wcdraft-m4` runner; protected receipts and independent review are retained on
+PR #225.
+
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
 `ws-ux/share-polish-orientation-20260701`, based on `origin/main`
