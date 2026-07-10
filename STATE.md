@@ -4,6 +4,68 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Audit S1 B3 production-migration release lane:
+2026-07-10 · RED operations/security follow-up on branch
+`ws-f4/audit-s1-production-migrate`, based on shipped B3 `origin/main`
+`86bba8d71360dad634bbe6c4d7a799e1399675dc`. B3 code is merged, but production
+traffic remains intentionally rolled back to healthy D2
+`50184ef9a346912b5338b2a8a4fe42361bfea45e` while the production database is
+still at migration `0011`; B3 live verification is therefore not complete.
+The new manual `production-db-migrate.yml` release workflow accepts an exact
+main SHA and exact expected journal-tail migration, binds the caller input to
+the dispatch event, checkout, and current remote default branch, and resolves
+the direct production URL only inside Actions from the existing
+`NEON_API_KEY` and `NEON_PROJECT_ID` secrets. It refuses primary/default branch
+ambiguity, read-write endpoint ambiguity, pooled or non-Neon targets, and every
+preflight other than exactly one known pending tail. Raw status/migration
+receipts and the connection URL remain mode-0600 under the runner temp
+directory and are scrubbed in `always()`; logs expose only allowlisted counts.
+No product code, schema, migration, runtime data, rating, simulation, or ETL
+artifact changes in this release lane. Local validation passed: production
+migration contract (8 adversarial classifier cases, 14 workflow/runbook
+bindings, and secret-flow/step-order guards); actionlint 1.7.12; Bash parse;
+targeted Prettier; generated-artifact clean rebuild/check; and `git diff
+--check`. A forced isolated-cache root run passed typecheck (8/8), lint (5/5),
+test (8/8 in 8m35.931s; core 391, data 162 passed / 9 skipped, DB 119,
+marketing 68, web 933 passed / 1 skipped, game-flow Playwright, responsive
+desktop 84/0 + mobile 56/0 + interaction targets 40/0), and build (4/4; web
+emitted 40/40 pages), all with zero Turbo cache hits. Heavy realism passed 9/9.
+An earlier root attempt was discarded after an interrupted sibling task left a
+generated-artifact lock and the untracked raw draft bundle absent; no PASS was
+claimed, the lane regenerated and fingerprint-checked the canonical artifacts,
+and the clean isolated rerun above supersedes it.
+Independent exact-head Red review correctly returned FAIL at
+`38718e5f3d0582d9094f71429c2d4af19674b7cf`: the workflow queried live remote
+main only before setup, target resolution, and database preflight, so another
+merge could make that binding stale before the production write. The
+fix-forward adds a second fail-closed remote-default-ref query immediately
+after the exact known-pending preflight and directly adjacent to the migration
+step. It reasserts live remote main, dispatch SHA, checkout HEAD, and a clean
+tree against `EXPECTED_MAIN_SHA`; any movement after preflight now stops before
+mutation. The executable contract requires exactly two remote queries and two
+checkout bindings plus strict preflight -> final revalidation -> migration
+ordering. Reviewer observations about migration-history hash verification and
+abrupt-host-loss receipt cleanup remain explicit non-blocking hardening; they
+are not broadened into this narrow TOCTOU fix. Narrow fix-forward validation
+passed the executable workflow contract, Bash parse, actionlint 1.7.12, full
+repository Prettier check, and `git diff --check`. The prior full root run is
+not claimed as exact-head evidence for this new commit; the PR's broad
+CI-config path and fresh independent Red re-review must re-execute exact-head
+gates before merge.
+The Vercel preview for TOCTOU-fix head `a33de06`, deployment
+`dpl_6rGDpuxsikQSzc6p8awSNj51Rc2e`, and its single preview redeploy
+`dpl_4YQa2Sjf7MVnu5Pdofbb5r3Tbm2K` both failed before any product install/build
+command. Replacement evidence head `edf83c6` independently reproduced the same
+pre-build failure in `dpl_796UKnmeaNTJdzee2beXNZpUpAyf`. Human-readable
+`vercel inspect --logs` output stopped after the Git clone line and displayed no
+error code or message. The authoritative authenticated Vercel v13 deployment
+records for all three identify `readyState=ERROR`,
+`errorStep=build-container-init`, `errorCode=sts_credentials_fetch_failed`, and
+`errorMessage=null`, with `gitSource.sha` correctly bound to `a33de06` for the
+first two and `edf83c6` for the third. These are Vercel build-container
+credential-initialization failures, not product-build verdicts. The exact-head
+Vercel check remains externally failed; no further preview retry is performed.
+
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch
 `ws-f4/audit-s1-ranked-binding`, initially based on `origin/main`
