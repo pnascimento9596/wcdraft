@@ -7,8 +7,8 @@ import {
   type SetStateAction,
 } from "react";
 
-import { loadGameData, type GameData } from "@/lib/game/data";
-import { DAILY_DRAFT_CONFIG, dailyChallengeForDate } from "@/lib/game/daily";
+import { loadDailyAvailability, loadGameData, type GameData } from "@/lib/game/data";
+import { DAILY_DRAFT_CONFIG, dailyChallengeForDate, dailyCoverageForDate } from "@/lib/game/daily";
 import { describeGameError } from "@/lib/game/errors";
 import {
   createNewRunRecord,
@@ -21,6 +21,7 @@ import { VOLATILE_STORAGE_WARNING } from "./constants";
 
 export type DraftScreenMode =
   | { kind: "loading" }
+  | { kind: "daily_unavailable" }
   | { kind: "formation_select"; gameData: GameData }
   | {
       kind: "ready";
@@ -30,6 +31,42 @@ export type DraftScreenMode =
     }
   | { kind: "recovery"; gameData: GameData; reason: string; runId: string | null }
   | { kind: "error"; title: string; message: string };
+
+export type InitialDraftDataResult =
+  | { readonly kind: "loaded"; readonly gameData: GameData }
+  | { readonly kind: "daily_unavailable" };
+
+export interface InitialDraftDataDeps {
+  readonly loadDailyAvailability: (date: string) => Promise<boolean>;
+  readonly loadGameData: () => Promise<GameData>;
+}
+
+const INITIAL_DRAFT_DATA_DEPS: InitialDraftDataDeps = {
+  loadDailyAvailability,
+  loadGameData,
+};
+
+/**
+ * New Daily runs must prove lightweight publication coverage before the full
+ * draft pool starts loading. Historical run-id resumes intentionally bypass
+ * that rolling-coverage check so honest stored runs remain readable.
+ */
+export async function loadInitialDraftData(
+  requestRunId: string | null,
+  dailyDate: string | null,
+  deps: InitialDraftDataDeps = INITIAL_DRAFT_DATA_DEPS,
+): Promise<InitialDraftDataResult> {
+  if (requestRunId === null && dailyDate !== null) {
+    try {
+      if (!(await deps.loadDailyAvailability(dailyDate))) {
+        return { kind: "daily_unavailable" };
+      }
+    } catch {
+      return { kind: "daily_unavailable" };
+    }
+  }
+  return { kind: "loaded", gameData: await deps.loadGameData() };
+}
 
 export function useDraftScreenLoader(
   requestRunId: string | null,
@@ -44,10 +81,16 @@ export function useDraftScreenLoader(
 
   useEffect(() => {
     const myToken = ++reqToken.current;
+    const dailyDate = opts.dailyDate ?? null;
     setMode({ kind: "loading" });
-    loadGameData()
-      .then(async (gd) => {
+    loadInitialDraftData(requestRunId, dailyDate)
+      .then(async (initial) => {
         if (myToken !== reqToken.current) return;
+        if (initial.kind === "daily_unavailable") {
+          setMode({ kind: "daily_unavailable" });
+          return;
+        }
+        const gd = initial.gameData;
         evictStaleRunRecords(gd.versions);
         if (requestRunId) {
           const resolved = await resolveDisplayRun(
@@ -80,8 +123,12 @@ export function useDraftScreenLoader(
               runId: requestRunId,
             });
           }
-        } else if (opts.dailyDate) {
-          const challenge = dailyChallengeForDate(opts.dailyDate, gd.dailySeedSaltMap);
+        } else if (dailyDate) {
+          if (!dailyCoverageForDate(dailyDate, gd.dailySeedSaltMap).covered) {
+            setMode({ kind: "daily_unavailable" });
+            return;
+          }
+          const challenge = dailyChallengeForDate(dailyDate, gd.dailySeedSaltMap);
           const created = createNewRunRecord(gd, {
             formation_id: DAILY_DRAFT_CONFIG.formationId,
             mode: DAILY_DRAFT_CONFIG.mode,

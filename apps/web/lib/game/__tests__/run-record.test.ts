@@ -14,12 +14,20 @@ import {
   setRunSimulation,
   type RunRecordV1,
 } from "../run-record";
-import { DAILY_DRAFT_CONFIG, dailyChallengeForDate } from "../daily";
+import { DAILY_DRAFT_CONFIG, type DailyChallenge } from "../daily";
 import { runSimulationSync } from "../simulate";
 import { decodeRunToken, encodeRunToken, reconstructDraftFromToken } from "../run-token";
 import { buildGameDataFromBundles, buildOriginRecord } from "./run-token.test-harness";
 
 const gameData = buildGameDataFromBundles();
+
+function historicalDailyChallenge(date: string, salt = 0): DailyChallenge {
+  return {
+    kind: "daily",
+    date,
+    seed: `wcdraft:daily:v1:${date}${salt === 0 ? "" : `#${salt.toString()}`}`,
+  };
+}
 
 let restoreWindow: (() => void) | null = null;
 
@@ -52,7 +60,7 @@ describe("run-record persisted boundary", () => {
   });
 
   it("uses the shared daily seed without the per-device nonce", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const challenge = historicalDailyChallenge("2026-06-29");
 
     stubRandomUuids("35502f44-95e8-418e-bfea-80dcfe96c74a", "ffbad4c1-1875-4d4f-ae3c-427c6851d616");
     localStorage.clear();
@@ -86,7 +94,7 @@ describe("run-record persisted boundary", () => {
   });
 
   it("rejects persisted daily challenge metadata when seed/date derivation disagrees", () => {
-    const challenge = dailyChallengeForDate("2026-06-29");
+    const challenge = historicalDailyChallenge("2026-06-29");
     const created = createNewRunRecord(gameData, {
       formation_id: DAILY_DRAFT_CONFIG.formationId,
       mode: DAILY_DRAFT_CONFIG.mode,
@@ -107,6 +115,37 @@ describe("run-record persisted boundary", () => {
       record: null,
     });
     expect(localStorage.getItem(key)).toBeNull();
+  });
+
+  it("keeps builder-valid historical salted runs but evicts impossible suffixes", () => {
+    const challenge = historicalDailyChallenge("2026-06-29", 8);
+    const created = createNewRunRecord(gameData, {
+      formation_id: DAILY_DRAFT_CONFIG.formationId,
+      mode: DAILY_DRAFT_CONFIG.mode,
+      team_name: DAILY_DRAFT_CONFIG.teamName,
+      parent_seed: challenge.seed,
+      challenge,
+      draft_flow: DAILY_DRAFT_CONFIG.draftFlow,
+      era_preset: DAILY_DRAFT_CONFIG.eraPreset,
+      rating_basis: DAILY_DRAFT_CONFIG.ratingBasis,
+    }).record;
+
+    expect(loadRunRecord(created.run_id, gameData.versions).status).toBe("loaded");
+
+    const key = recordKey(created.run_id);
+    const raw = JSON.parse(localStorage.getItem(key)!) as Record<string, unknown>;
+    raw.parent_seed = "wcdraft:daily:v1:2026-06-29#9";
+    raw.challenge = {
+      kind: "daily",
+      date: "2026-06-29",
+      seed: "wcdraft:daily:v1:2026-06-29#9",
+    };
+    localStorage.setItem(key, JSON.stringify(raw));
+
+    expect(loadRunRecord(created.run_id, gameData.versions)).toEqual({
+      status: "invalid",
+      record: null,
+    });
   });
 
   it("persists server-issued ranked attempt metadata with the issued seed", () => {

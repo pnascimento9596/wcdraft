@@ -18,6 +18,7 @@ import { performance } from "node:perf_hooks";
 
 import { RUNTIME_DATA_MANIFEST, SCORE_DISTRIBUTION_BUNDLE } from "../src/index.js";
 import {
+  DAILY_SEED_MAX_SALT_ATTEMPTS,
   DAILY_SEED_SALT_MAP_SCHEMA_VERSION,
   type DailySeedSaltMap,
   type DailySeedVettingBand,
@@ -35,7 +36,6 @@ const OUT_FILE = "daily-seed-salt-map.compact.json";
 const POLICY = "greedyOverallAutoDraft" as const;
 const WINDOW_DAYS = 14;
 const RUNS_PER_CANDIDATE = 128;
-const MAX_SALT_ATTEMPTS = 8;
 const SAMPLE_SUFFIX = "vet";
 
 export const DEFAULT_DAILY_SEED_VETTING_BAND: DailySeedVettingBand = {
@@ -91,7 +91,9 @@ function parseArgs(argv: readonly string[]): DailySeedSaltMapBuildArgs {
     startDate: process.env.WCDRAFT_DAILY_SEED_START_DATE ?? utcToday(),
     windowDays: Number(process.env.WCDRAFT_DAILY_SEED_WINDOW_DAYS ?? WINDOW_DAYS),
     runsPerCandidate: Number(process.env.WCDRAFT_DAILY_SEED_POPULATION ?? RUNS_PER_CANDIDATE),
-    maxSaltAttempts: Number(process.env.WCDRAFT_DAILY_SEED_MAX_SALT_ATTEMPTS ?? MAX_SALT_ATTEMPTS),
+    maxSaltAttempts: Number(
+      process.env.WCDRAFT_DAILY_SEED_MAX_SALT_ATTEMPTS ?? DAILY_SEED_MAX_SALT_ATTEMPTS,
+    ),
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]!;

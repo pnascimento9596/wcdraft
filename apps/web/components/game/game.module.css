@@ -137,6 +137,18 @@
 .modeDock {
   composes: modeDock from "./game-styles/shared.module.css";
 }
+.dailyUnavailable {
+  composes: dailyUnavailable from "./game-styles/shared.module.css";
+}
+.dailyUnavailableCopy {
+  composes: dailyUnavailableCopy from "./game-styles/shared.module.css";
+}
+.dailyUnavailableTitle {
+  composes: dailyUnavailableTitle from "./game-styles/shared.module.css";
+}
+.dailyUnavailableMessage {
+  composes: dailyUnavailableMessage from "./game-styles/shared.module.css";
+}
 .localProgressBand {
   composes: localProgressBand from "./game-styles/shared.module.css";
 }

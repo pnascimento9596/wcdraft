@@ -31,6 +31,7 @@ import type {
 } from "@wcdraft/data";
 
 import { MissingRecordError, RuntimeDataLoadError } from "./errors";
+import { dailyCoverageForDate } from "./daily";
 import { composeVersions, type RunRecordVersions } from "./versions";
 import { displayNameFromNames, fullDisplayName } from "./display-names";
 
@@ -69,11 +70,34 @@ export interface GameData {
 
 let cachedGameData: GameData | null = null;
 let inFlight: Promise<GameData> | null = null;
+const DAILY_AVAILABILITY_TIMEOUT_MS = 12_000;
 
 /** Test-only — drop the session memo (no production caller). */
 export function clearGameDataCacheForTests(): void {
   cachedGameData = null;
   inFlight = null;
+}
+
+/**
+ * Lightweight Daily availability probe for the mode picker. It fetches only
+ * the small manifest and salt map; the decoded draft pool remains on the
+ * actual play path. Missing, malformed, or inconsistent metadata is an honest
+ * unavailable result.
+ */
+export async function loadDailyAvailability(date: string): Promise<boolean> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DAILY_AVAILABILITY_TIMEOUT_MS);
+  try {
+    const manifest = await loadDataManifest({ signal: controller.signal });
+    if (manifest.bundles.daily_seed_salt_map === undefined) return false;
+    const saltMap = await loadDailySeedSaltMap({ signal: controller.signal });
+    return dailyCoverageForDate(date, saltMap).covered;
+  } catch (err) {
+    console.error("[daily] availability metadata failed", err);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 /**

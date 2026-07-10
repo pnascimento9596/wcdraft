@@ -44,6 +44,10 @@ export const SUBMIT_STATUS_COPY: Readonly<Record<SubmitWireCode, SubmitStatusCop
     message:
       "This run is from a different build/season — the board only takes runs simulated on the current one. Refresh and draft a new squad to compete.",
   },
+  DAILY_UNAVAILABLE: {
+    title: "Daily unavailable",
+    message: "Today's Daily is temporarily unavailable. Classic is still ready to play.",
+  },
   INVALID_NAME: {
     title: "Name not accepted",
     message: "The server rejected that display name.",

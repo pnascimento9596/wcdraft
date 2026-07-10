@@ -3,6 +3,7 @@
 // and validates loaded payloads have the expected runtime bundle shape.
 
 import {
+  DAILY_SEED_MAX_SALT_ATTEMPTS,
   RUNTIME_DATA_SCHEMA_VERSION,
   type DailySeedSaltMap,
   type DraftPoolBundle,
@@ -19,6 +20,7 @@ import {
 } from "./validation.js";
 
 export * from "./score-distribution.js";
+export { DAILY_SEED_MAX_SALT_ATTEMPTS };
 export type { DailySeedSaltMap, ScoreDistribution, ScoreDistributionAnchors } from "./types.js";
 
 /**

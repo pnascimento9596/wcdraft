@@ -843,6 +843,11 @@ function parseRunChallenge(
     seed === null ||
     !isDailyChallengeDate(date) ||
     seed !== parentSeed ||
+    // Persisted local history can outlive the rolling publication window.
+    // The shared seed validator consults dailyCoverageForDate first, then—only
+    // because no current map is supplied here—allows bounded daily-v1 builder
+    // syntax for historical records. This keeps honest old runs readable
+    // without treating them as currently available for play or submission.
     !isDailySeedForDate(date, seed)
   ) {
     return "invalid";
