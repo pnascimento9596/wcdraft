@@ -12,6 +12,13 @@ on:
     branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
   push:
     branches: [main, "engine-*", "merit-*", "leaderboard-profiles", "season-*"]
+  workflow_dispatch:
+    inputs:
+      force_all:
+        description: Run every path-selected gate for an automation refresh branch
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -27,13 +34,23 @@ jobs:
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
     if: ${{ github.actor != 'dependabot[bot]' }}
     outputs:
-      ci_config: ${{ steps.filter.outputs.ci_config }}
-      js: ${{ steps.filter.outputs.js }}
-      core_data: ${{ steps.filter.outputs.core_data }}
-      realism_inputs: ${{ steps.filter.outputs.realism_inputs }}
-      db: ${{ steps.filter.outputs.db }}
-      etl: ${{ steps.filter.outputs.etl }}
+      ci_config: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.ci_config }}
+      js: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.js }}
+      core_data: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.core_data }}
+      realism_inputs: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.realism_inputs }}
+      db: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.db }}
+      etl: ${{ steps.force-all.outputs.all == 'true' && 'true' || steps.filter.outputs.etl }}
     steps:
+      - name: Guard automation dispatch envelope before checkout
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          FORCE_ALL: ${{ inputs.force_all }}
+        run: |
+          if [[ "$GITHUB_REPOSITORY" != "pnascimento9596/wcdraft" || "$GITHUB_EVENT_NAME" != "workflow_dispatch" || "$FORCE_ALL" != "true" || "$GITHUB_REF" != "refs/heads/automation/daily-seed-salt-map-refresh" ]]; then
+            echo "::error::force_all dispatch is restricted to the trusted Daily refresh automation ref"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
@@ -44,8 +61,25 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
+      - name: Bind trusted automation dispatch after checkout
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          FORCE_ALL: ${{ inputs.force_all }}
+        run: |
+          node packages/data/scripts/daily-seed-runway.mjs guard-dispatch \
+            --repository "$GITHUB_REPOSITORY" \
+            --event "$GITHUB_EVENT_NAME" \
+            --ref "$GITHUB_REF" \
+            --force-all "$FORCE_ALL"
+
+      - name: Force all path outputs for automation dispatch
+        id: force-all
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.force_all }}
+        run: echo "all=true" >> "$GITHUB_OUTPUT"
+
       - name: Detect CI-affecting changes
         id: filter
+        if: ${{ steps.force-all.outputs.all != 'true' }}
         uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4
         with:
           filters: |
@@ -109,7 +143,11 @@ jobs:
   static:
     name: static · format · contracts
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: >-
+      github.actor != 'dependabot[bot]' &&
+      (github.event_name != 'workflow_dispatch' ||
+      (github.repository == 'pnascimento9596/wcdraft' && inputs.force_all &&
+      github.ref == 'refs/heads/automation/daily-seed-salt-map-refresh'))
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -146,6 +184,12 @@ jobs:
 
       - name: Format check
         run: pnpm run format:check
+
+      - name: Daily refresh workflows contract
+        run: >-
+          node packages/data/scripts/daily-seed-runway.mjs check-workflows
+          --nightly .github/workflows/nightly-heavy.yml
+          --ci .github/workflows/ci.yml
 
   verify:
     name: typecheck · lint · test · build

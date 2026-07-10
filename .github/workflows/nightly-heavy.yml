@@ -15,8 +15,16 @@ concurrency:
 
 jobs:
   daily-seed-salt-map:
-    name: daily seed salt map · freshness
+    name: daily seed salt map · runway
+    if: >-
+      github.repository == 'pnascimento9596/wcdraft' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: [self-hosted, macOS, ARM64, wcdraft]
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -30,35 +38,270 @@ jobs:
       - name: Prepare persistent runner
         uses: ./.github/actions/self-hosted-runner-hygiene
 
-      - name: Setup pnpm
+      - name: Inspect committed Daily runway
+        id: runway
+        shell: bash
+        run: |
+          set -euo pipefail
+          captured_date="$(date -u +%F)"
+          node packages/data/scripts/daily-seed-runway.mjs inspect \
+            --artifact packages/data/src/generated/daily-seed-salt-map.compact.json \
+            --today "$captured_date" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Resolve stable refresh automation identity
+        if: steps.runway.outputs.refresh_required == 'true'
+        id: automation
+        run: >-
+          node packages/data/scripts/daily-seed-runway.mjs automation-identity
+          --github-output "$GITHUB_OUTPUT"
+
+      - name: Setup pnpm for refresh
+        if: steps.runway.outputs.refresh_required == 'true'
         uses: pnpm/action-setup@b0f76dfb45f55f8421693e4803ac7bb65143bd34 # v6
         with:
           dest: ${{ runner.tool_cache }}/pnpm-11.5.1
           version: 11.5.1
 
-      - name: Setup Node
+      - name: Setup Node for refresh
+        if: steps.runway.outputs.refresh_required == 'true'
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 22
           cache: pnpm
 
-      - name: Install dependencies
+      - name: Install dependencies for refresh
+        if: steps.runway.outputs.refresh_required == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Regenerate daily seed salt map for current UTC window
+      - name: Regenerate 45-day Daily artifact
+        if: steps.runway.outputs.refresh_required == 'true'
+        env:
+          CAPTURED_DATE: ${{ steps.runway.outputs.captured_date }}
         run: |
           set -euo pipefail
-          start_date="$(date -u +%F)"
+          cp packages/data/src/generated/daily-seed-salt-map.compact.json \
+            "$RUNNER_TEMP/committed-daily-seed-salt-map.json"
           pnpm --filter @wcdraft/data run build:compact
           pnpm --filter @wcdraft/data run build:score-distribution
           pnpm --filter @wcdraft/data run build:compact
-          pnpm --filter @wcdraft/data run build:daily-seed-salt-map --start-date "$start_date"
+          pnpm --filter @wcdraft/data run build:daily-seed-salt-map \
+            --start-date "$CAPTURED_DATE" \
+            --window-days 45
           pnpm --filter @wcdraft/data run build:compact
-          pnpm --filter @wcdraft/data exec vitest run test/daily-seed-salt-map.golden.test.ts
-          git diff --exit-code -- \
+
+      - name: Prove overlapping salts are deterministic
+        if: steps.runway.outputs.refresh_required == 'true'
+        run: |
+          set -euo pipefail
+          node packages/data/scripts/daily-seed-runway.mjs compare-overlap \
+            --committed "$RUNNER_TEMP/committed-daily-seed-salt-map.json" \
+            --generated packages/data/src/generated/daily-seed-salt-map.compact.json
+
+      - name: Plan deterministic refresh PR
+        if: steps.runway.outputs.refresh_required == 'true'
+        id: refresh-pr
+        env:
+          AUTOMATION_BRANCH: ${{ steps.automation.outputs.automation_branch }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          existing_pr="$(gh pr list \
+            --repo "$GITHUB_REPOSITORY" \
+            --base "${{ github.event.repository.default_branch }}" \
+            --head "$AUTOMATION_BRANCH" \
+            --state open \
+            --limit 2 \
+            --json number \
+            --jq 'map(.number | tostring) | join(",")')"
+          node packages/data/scripts/daily-seed-runway.mjs plan-pr \
+            --existing-pr-numbers "$existing_pr" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Stage refresh candidate and plan branch update
+        if: steps.runway.outputs.refresh_required == 'true'
+        id: branch-update
+        env:
+          AUTOMATION_BRANCH: ${{ steps.automation.outputs.automation_branch }}
+        run: |
+          set -euo pipefail
+          remote_sha="$(git ls-remote --heads origin "refs/heads/$AUTOMATION_BRANCH" | awk '{print $1}')"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$AUTOMATION_BRANCH"
+          git add \
             packages/data/src/generated/daily-seed-salt-map.compact.json \
             packages/data/src/generated/manifest.json \
             packages/data/reports/compact-size.json
+
+          allowed_paths=(
+            packages/data/src/generated/daily-seed-salt-map.compact.json
+            packages/data/src/generated/manifest.json
+            packages/data/reports/compact-size.json
+          )
+          unexpected=0
+          while IFS= read -r line; do
+            status="${line:0:2}"
+            path="${line:3}"
+            case "$path" in
+              packages/data/src/generated/daily-seed-salt-map.compact.json|packages/data/src/generated/manifest.json|packages/data/reports/compact-size.json)
+                if [[ "$status" != "M " && "$status" != "A " ]]; then
+                  echo "::error::refresh output has unexpected git status: $line"
+                  unexpected=1
+                fi
+                ;;
+              *)
+                echo "::error::refresh generated unexpected tracked or untracked path: $line"
+                unexpected=1
+                ;;
+            esac
+          done < <(git status --porcelain=v1 --untracked-files=all)
+          if (( unexpected != 0 )); then
+            exit 1
+          fi
+          for path in "${allowed_paths[@]}"; do
+            if git diff --cached --quiet -- "$path"; then
+              echo "::error::refresh did not stage required generated output: $path"
+              exit 1
+            fi
+          done
+          candidate_tree="$(git write-tree)"
+
+          remote_tree=""
+          if [[ -n "$remote_sha" ]]; then
+            git fetch --no-tags origin "$remote_sha"
+            remote_tree="$(git rev-parse "$remote_sha^{tree}")"
+          fi
+
+          node packages/data/scripts/daily-seed-runway.mjs plan-branch-update \
+            --candidate-tree "$candidate_tree" \
+            --remote-sha "$remote_sha" \
+            --remote-tree "$remote_tree" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Commit and push refresh branch
+        if: steps.runway.outputs.refresh_required == 'true'
+        env:
+          BRANCH_ACTION: ${{ steps.branch-update.outputs.branch_action }}
+          COMMIT_REQUIRED: ${{ steps.branch-update.outputs.commit_required }}
+          GH_TOKEN: ${{ github.token }}
+          PUSH_LEASE: ${{ steps.branch-update.outputs.push_lease }}
+          PUSH_REFSPEC: ${{ steps.branch-update.outputs.push_refspec }}
+          PUSH_REQUIRED: ${{ steps.branch-update.outputs.push_required }}
+        run: |
+          set -euo pipefail
+          cleanup_git_auth() {
+            git config --local --unset-all credential.helper || true
+          }
+          trap cleanup_git_auth EXIT
+          git config --local --unset-all credential.helper || true
+          git config --local --add credential.helper \
+            '!f() { test "$1" = get && echo "username=x-access-token" && echo "password=$GH_TOKEN"; }; f'
+
+          case "$BRANCH_ACTION" in
+            noop-same-tree)
+              if [[ "$COMMIT_REQUIRED" != "false" || "$PUSH_REQUIRED" != "false" || -n "$PUSH_LEASE" ]]; then
+                echo "::error::invalid no-op branch plan"
+                exit 1
+              fi
+              echo "Refresh branch already has the exact candidate tree; skipping commit and push."
+              ;;
+            create)
+              if [[ "$COMMIT_REQUIRED" != "true" || "$PUSH_REQUIRED" != "true" || -n "$PUSH_LEASE" ]]; then
+                echo "::error::invalid create branch plan"
+                exit 1
+              fi
+              git commit -m "chore(data): refresh Daily seed salt map"
+              git push origin "$PUSH_REFSPEC"
+              ;;
+            replace-with-exact-lease)
+              if [[ "$COMMIT_REQUIRED" != "true" || "$PUSH_REQUIRED" != "true" || -z "$PUSH_LEASE" ]]; then
+                echo "::error::invalid replacement branch plan"
+                exit 1
+              fi
+              git commit -m "chore(data): refresh Daily seed salt map"
+              git push --force-with-lease="$PUSH_LEASE" origin "$PUSH_REFSPEC"
+              ;;
+            *)
+              echo "::error::unknown branch update action: $BRANCH_ACTION"
+              exit 1
+              ;;
+          esac
+
+      - name: Open or update refresh PR
+        if: steps.runway.outputs.refresh_required == 'true'
+        env:
+          ARTIFACT_END: ${{ steps.runway.outputs.artifact_end }}
+          AUTOMATION_BRANCH: ${{ steps.refresh-pr.outputs.automation_branch }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+          CAPTURED_DATE: ${{ steps.runway.outputs.captured_date }}
+          GH_TOKEN: ${{ github.token }}
+          PR_ACTION: ${{ steps.refresh-pr.outputs.pr_action }}
+          PR_LABEL: ${{ steps.refresh-pr.outputs.pr_label }}
+          PR_NUMBER: ${{ steps.refresh-pr.outputs.pr_number }}
+          REMAINING_DAYS: ${{ steps.runway.outputs.remaining_days }}
+        run: |
+          set -euo pipefail
+          pr_title="chore(data): refresh Daily seed runway from $CAPTURED_DATE"
+          pr_body="$RUNNER_TEMP/daily-seed-refresh-pr.md"
+          {
+            echo "## Summary"
+            echo
+            echo "Regenerates the committed Daily seed salt map as a deterministic 45-day window starting $CAPTURED_DATE UTC."
+            echo
+            echo "## Why"
+            echo
+            echo "The nightly runway gate found $REMAINING_DAYS explicitly covered day(s) remaining through $ARTIFACT_END. Refresh begins at 21 days so normal CI can validate and merge it before the 14-day fail-closed threshold."
+            echo
+            echo "## Validation"
+            echo
+            echo "The automation re-ran the required compact/score-distribution/compact chain, built the Daily artifact, rebuilt compact outputs, and proved identical salts for every overlapping explicitly covered date (including implicit zero). Normal validation is supplied by a full CI workflow dispatch against this branch SHA; failure to request that run reds the nightly job."
+            echo
+            echo "_Automated by nightly-heavy.yml using stable branch \`$AUTOMATION_BRANCH\`._"
+          } > "$pr_body"
+
+          if [[ "$PR_ACTION" == "open" ]]; then
+            gh pr create \
+              --repo "$GITHUB_REPOSITORY" \
+              --base "$BASE_BRANCH" \
+              --head "$AUTOMATION_BRANCH" \
+              --title "$pr_title" \
+              --body-file "$pr_body" \
+              --label "$PR_LABEL"
+          elif [[ "$PR_ACTION" == "update" && "$PR_NUMBER" =~ ^[1-9][0-9]*$ ]]; then
+            gh pr edit "$PR_NUMBER" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$pr_title" \
+              --body-file "$pr_body" \
+              --add-label "$PR_LABEL"
+          else
+            echo "::error::invalid refresh PR plan: action=$PR_ACTION number=$PR_NUMBER"
+            exit 1
+          fi
+
+      - name: Dispatch full CI against refresh branch
+        if: steps.runway.outputs.refresh_required == 'true'
+        env:
+          AUTOMATION_BRANCH: ${{ steps.automation.outputs.automation_branch }}
+          CI_FORCE_ALL: ${{ steps.automation.outputs.ci_force_all }}
+          CI_WORKFLOW: ${{ steps.automation.outputs.ci_workflow }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run "$CI_WORKFLOW" \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref "$AUTOMATION_BRANCH" \
+            --field "force_all=$CI_FORCE_ALL"
+
+      - name: Enforce minimum Daily runway
+        if: steps.runway.outputs.fail_freshness == 'true'
+        env:
+          ARTIFACT_END: ${{ steps.runway.outputs.artifact_end }}
+          REMAINING_DAYS: ${{ steps.runway.outputs.remaining_days }}
+        run: |
+          echo "::error::Daily seed runway is $REMAINING_DAYS day(s) through $ARTIFACT_END; at least 14 are required. The automated refresh PR was opened or updated above."
+          exit 1
 
   realism:
     name: realism · asymmetric gate (nightly N=2000 × 3 policies)

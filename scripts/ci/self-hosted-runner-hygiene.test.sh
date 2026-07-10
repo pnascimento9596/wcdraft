@@ -85,13 +85,24 @@ run_hygiene() {
 }
 
 actor_guard="if: \${{ github.actor != 'dependabot[bot]' }}"
+static_composite_guard="    if: >-"
+static_actor_guard="github.actor != 'dependabot[bot]' &&"
+static_dispatch_event_guard="github.event_name != 'workflow_dispatch' ||"
+static_dispatch_repository_guard="github.repository == 'pnascimento9596/wcdraft'"
+static_dispatch_force_guard="inputs.force_all &&"
+static_dispatch_ref_guard="github.ref == 'refs/heads/automation/daily-seed-salt-map-refresh'"
 aggregate_guard="if: \${{ always() && github.actor != 'dependabot[bot]' }}"
 aggregate_name_expression="name: \${{ github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required · aggregate gates' }}"
 
 assert_job_set "$workflow" \
   "changes static verify golden realism etl db-rollback-check etl-rating gitleaks aggregate"
 assert_job_contains "$workflow" changes "$actor_guard"
-assert_job_contains "$workflow" static "$actor_guard"
+assert_job_contains "$workflow" static "$static_composite_guard"
+assert_job_contains "$workflow" static "$static_actor_guard"
+assert_job_contains "$workflow" static "$static_dispatch_event_guard"
+assert_job_contains "$workflow" static "$static_dispatch_repository_guard"
+assert_job_contains "$workflow" static "$static_dispatch_force_guard"
+assert_job_contains "$workflow" static "$static_dispatch_ref_guard"
 for job in verify golden realism etl db-rollback-check etl-rating gitleaks; do
   assert_job_contains "$workflow" "$job" "needs: changes"
 done
@@ -134,4 +145,4 @@ assert_runner_temp_scrubbed
 assert_file_content "workspace-sentinel" "$workspace_sentinel"
 assert_file_content "outside-sentinel" "$outside_sentinel"
 
-echo "runner hygiene contract: PASS (1 TMPDIR binding, 4 actor guards, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 2 temp removals, 4 sentinel checks)"
+echo "runner hygiene contract: PASS (1 TMPDIR binding, 4 actor guards, 1 static composite-if binding, 4 static dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name literals, 10 needs edges, 3 actor gate cases, 2 temp removals, 4 sentinel checks)"

@@ -43,10 +43,11 @@ scrubs `${RUNNER_TEMP}/gitleaks.tmp` at both hygiene start and its always-run
 post phase. The existing canonical-path guards still constrain deletion to the
 runner work root and protect the active workspace, so global/user temp is not
 touched. A committed contract probe runs in the static CI job and passed 1
-TMPDIR binding check, 4 actor guards, 1 static aggregate-name expression, 2
-aggregate-name literals, 10 downstream `needs` edges, 3 actor gate cases, 2
-independently seeded temp removals, and 4 active-workspace/outside sentinel
-checks. Local fix-forward validation passed: frozen pnpm install (187 packages,
+TMPDIR binding check, 4 actor guards, 1 static composite-if binding, 4 static
+dispatch constraints, 1 static aggregate-name expression, 2 aggregate-name
+literals, 10 downstream `needs` edges, 3 actor gate cases, 2 independently
+seeded temp removals, and 4 active-workspace/outside sentinel checks. Local
+fix-forward validation passed: frozen pnpm install (187 packages,
 2.9s / 3.01s real; final-tree recheck already up to date in 318ms / 0.39s
 real); root typecheck 8/8 cached tasks (0.60s real); actionlint v1.7.12 across 4
 workflows (0.02s real); Bash 3.2 syntax for 2 scripts; Node syntax for the
@@ -241,6 +242,29 @@ tests), data/integration goldens (71 tests), web leaderboard golden (6 tests),
 and heavy realism (9/9). Required PR gates execute on the self-hosted
 `wcdraft-m4` runner; protected receipts and independent review are retained on
 PR #225.
+
+Daily-seed runway automation (Audit S1 A3):
+2026-07-10 · Unit A3 on `ws-meta/audit-s1-daily-runway-gate` replaces the
+nightly moving-date diff with an inclusive runway policy over the committed
+Daily artifact. More than 21 covered days passes without refresh; 14–21 days
+regenerates a deterministic 45-day window and passes after opening or updating
+the refresh PR; fewer than 14 days performs the same refresh handoff and then
+fails the nightly gate. The stable automation identity is repository
+`pnascimento9596/wcdraft`, branch
+`automation/daily-seed-salt-map-refresh`, label `daily-freshness`, and an exact
+`force_all=true` dispatch of `ci.yml` against that branch. Branch creation,
+same-tree no-op, and changed-tree replacement are explicit decisions; replacement
+uses the captured remote SHA as an exact force-with-lease, while PR identity
+fails closed if more than one open refresh PR exists. The writer keeps checkout
+credentials disabled and exposes the job token only through a step-scoped local
+credential helper that is removed on exit. Repository workflow permissions
+remain `read` by default, with write permissions scoped only to the trusted
+scheduled/manual runway job; Actions may create and approve pull requests
+(`can_approve_pull_request_reviews=true`) so that job can maintain the refresh
+PR. CI still blocks Dependabot before self-hosted runner allocation and reserves
+the protected aggregate name for trusted actors. Nightly remains scheduled for
+`15:23 UTC`; a missed night is benign because the next run evaluates the runway
+thresholds instead of requiring a daily diff.
 
 Share polish + orientation lane:
 2026-07-01 · local YELLOW implementation on branch
