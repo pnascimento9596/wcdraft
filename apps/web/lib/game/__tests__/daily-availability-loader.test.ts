@@ -67,4 +67,27 @@ describe("lightweight Daily availability loader", () => {
     expect(loaders.saltMap).not.toHaveBeenCalled();
     expect(loaders.draftPool).not.toHaveBeenCalled();
   });
+
+  it("bounds a held-open metadata request and resolves unavailable", async () => {
+    vi.useFakeTimers();
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      loaders.manifest.mockImplementation(
+        ({ signal }: { signal: AbortSignal }) =>
+          new Promise((_, reject) => {
+            signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+          }),
+      );
+
+      const pending = loadDailyAvailability("2026-07-03");
+      await vi.advanceTimersByTimeAsync(12_000);
+
+      await expect(pending).resolves.toBe(false);
+      expect(loaders.saltMap).not.toHaveBeenCalled();
+      expect(loaders.draftPool).not.toHaveBeenCalled();
+    } finally {
+      consoleError.mockRestore();
+      vi.useRealTimers();
+    }
+  });
 });

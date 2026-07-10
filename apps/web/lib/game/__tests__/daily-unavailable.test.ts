@@ -6,12 +6,22 @@ import {
   DAILY_UNAVAILABLE_TITLE,
   DailyUnavailableNotice,
 } from "../../../components/game/daily-unavailable-notice";
+import { DailyUnavailableDraftState } from "../../../components/game/draft-screen/index";
 
 describe("Daily unavailable product state", () => {
   it("renders terminal honest copy with a Classic route and no loading state", () => {
     const html = renderToStaticMarkup(createElement(DailyUnavailableNotice));
 
     expect(DAILY_UNAVAILABLE_TITLE).toBe("Today's Daily is temporarily unavailable");
+    expect(html).toMatch(/Today(?:'|&#x27;)s Daily is temporarily unavailable/u);
+    expect(html).toContain('href="/play/draft"');
+    expect(html).toContain("Play Classic instead");
+    expect(html).not.toMatch(/spinner|loading|salt|coverage|artifact/iu);
+  });
+
+  it("renders the direct Daily route state with the same terminal Classic action", () => {
+    const html = renderToStaticMarkup(createElement(DailyUnavailableDraftState));
+
     expect(html).toMatch(/Today(?:'|&#x27;)s Daily is temporarily unavailable/u);
     expect(html).toContain('href="/play/draft"');
     expect(html).toContain("Play Classic instead");

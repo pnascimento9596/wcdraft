@@ -74,6 +74,69 @@ describe("daily coverage and seed derivation", () => {
     ).toEqual({ covered: false });
   });
 
+  it("returns uncovered without throwing for grossly malformed nested runtime shapes", () => {
+    const malformed: unknown[] = [
+      {},
+      [],
+      true,
+      { window: null },
+      { dates: [null] },
+      { window: null, dates: [], population: {}, salts: {} },
+      { window: [], dates: [], population: {}, salts: {} },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: null,
+        population: { max_salt_attempts: 8 },
+        salts: {},
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [null],
+        population: { max_salt_attempts: 8 },
+        salts: {},
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [[]],
+        population: { max_salt_attempts: 8 },
+        salts: {},
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [dateEntry("2026-07-03", 0)],
+        population: null,
+        salts: {},
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [dateEntry("2026-07-03", 0)],
+        population: { max_salt_attempts: null },
+        salts: {},
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [dateEntry("2026-07-03", 0)],
+        population: { max_salt_attempts: 8 },
+        salts: null,
+      },
+      {
+        window: { start_date: "2026-07-03", days: 1, timezone: "UTC" },
+        dates: [dateEntry("2026-07-03", 0)],
+        population: { max_salt_attempts: 8 },
+        salts: [],
+      },
+    ];
+
+    for (const value of malformed) {
+      expect(() =>
+        dailyCoverageForDate("2026-07-03", value as Parameters<typeof dailyCoverageForDate>[1]),
+      ).not.toThrow();
+      expect(
+        dailyCoverageForDate("2026-07-03", value as Parameters<typeof dailyCoverageForDate>[1]),
+      ).toEqual({ covered: false });
+    }
+  });
+
   it("fails closed when a date entry disagrees with its published salt or seed", () => {
     expect(
       dailyCoverageForDate("2026-07-04", {

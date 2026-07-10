@@ -65,6 +65,10 @@ function dailySeedWithSalt(date: string, salt: number): string {
   return salt === 0 ? base : `${base}#${salt.toString()}`;
 }
 
+function isRuntimeRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /**
  * Single publication authority for Daily availability. Coverage is valid only
  * when the artifact's UTC window, explicit contiguous date inventory, and
@@ -74,15 +78,25 @@ export function dailyCoverageForDate(
   date: string,
   saltMap?: DailySeedSaltLookup | null,
 ): DailyCoverage {
-  if (!isDailyChallengeDate(date) || saltMap == null) return UNCOVERED_DAILY;
+  const rawMap: unknown = saltMap;
+  if (!isDailyChallengeDate(date) || !isRuntimeRecord(rawMap)) return UNCOVERED_DAILY;
 
-  const { window, dates, salts, population } = saltMap;
+  const window = rawMap.window;
+  const dates = rawMap.dates;
+  const salts = rawMap.salts;
+  const population = rawMap.population;
   if (
+    !isRuntimeRecord(window) ||
+    !Array.isArray(dates) ||
+    !isRuntimeRecord(salts) ||
+    !isRuntimeRecord(population) ||
     window.timezone !== "UTC" ||
     !isDailyChallengeDate(window.start_date) ||
+    typeof window.days !== "number" ||
     !Number.isSafeInteger(window.days) ||
     window.days <= 0 ||
     dates.length !== window.days ||
+    typeof population.max_salt_attempts !== "number" ||
     !Number.isSafeInteger(population.max_salt_attempts) ||
     population.max_salt_attempts < 1
   ) {
@@ -96,13 +110,14 @@ export function dailyCoverageForDate(
   let target: DailyCoverage = UNCOVERED_DAILY;
   for (let i = 0; i < dates.length; i += 1) {
     const entry = dates[i];
-    if (entry === undefined) return UNCOVERED_DAILY;
+    if (!isRuntimeRecord(entry)) return UNCOVERED_DAILY;
     const expectedDate = new Date(startMs + i * DAY_MS).toISOString().slice(0, 10);
     if (entry.date !== expectedDate || entry.selected !== true) return UNCOVERED_DAILY;
     expectedDates.add(expectedDate);
 
     const publishedSalt = salts[expectedDate] ?? 0;
     if (
+      typeof publishedSalt !== "number" ||
       !Number.isSafeInteger(publishedSalt) ||
       (publishedSalt !== 0 &&
         (publishedSalt < 2 || publishedSalt > population.max_salt_attempts)) ||
@@ -120,6 +135,7 @@ export function dailyCoverageForDate(
   for (const [saltDate, salt] of Object.entries(salts)) {
     if (
       !expectedDates.has(saltDate) ||
+      typeof salt !== "number" ||
       !Number.isSafeInteger(salt) ||
       salt < 2 ||
       salt > population.max_salt_attempts

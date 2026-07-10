@@ -110,11 +110,24 @@ type OpenRosterFilter = "ALL" | Position;
 const OPEN_ROSTER_FILTERS: readonly OpenRosterFilter[] = ["ALL", "GK", "DF", "MF", "FW"];
 const SPIN_SKIP_READY_STORAGE_KEY = "wcdraft.spin-skip-ready.v1";
 
+export function DailyUnavailableDraftState() {
+  return (
+    <div className={s.draftShell}>
+      <h1 className="visually-hidden">Daily Draft unavailable</h1>
+      <DraftAppBar spinNumber={null} progressPct={0} />
+      <DailyUnavailableNotice />
+    </div>
+  );
+}
+
 export function DraftScreen({ daily = false }: { daily?: boolean }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requestRunId = searchParams?.get("run") ?? null;
-  const dailyDate = daily ? dailyDateFromSearchParams(searchParams) : null;
+  const dailyDate = useMemo(
+    () => (daily ? dailyDateFromSearchParams(searchParams) : null),
+    [daily, searchParams],
+  );
   const friendRun = useMemo(
     () => (daily ? friendRunFromSearchParams(searchParams) : null),
     [daily, searchParams],
@@ -149,13 +162,7 @@ export function DraftScreen({ daily = false }: { daily?: boolean }) {
   }
 
   if (mode.kind === "daily_unavailable") {
-    return (
-      <div className={s.draftShell}>
-        <h1 className="visually-hidden">Daily Draft unavailable</h1>
-        <DraftAppBar spinNumber={null} progressPct={0} />
-        <DailyUnavailableNotice />
-      </div>
-    );
+    return <DailyUnavailableDraftState />;
   }
 
   if (mode.kind === "error") {
