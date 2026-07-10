@@ -84,11 +84,16 @@ globalThis.__neonResponses = [
         name: "main",
         default: true,
         primary: true,
-        default_role_name: "neondb_owner",
       },
     ],
   },
   { endpoints: [{ branch_id: "br-primary", type: "read_write" }] },
+  {
+    roles: [
+      { branch_id: "br-primary", name: "neondb_owner" },
+      { branch_id: "br-primary", name: "readonly" },
+    ],
+  },
   { uri: "postgresql://user:test-password@ep-contract.neon.tech/neondb?sslmode=require" },
 ];
 globalThis.__neonRequests = [];
@@ -101,15 +106,33 @@ globalThis.fetch = async (url, init) => {
 NODE
   cat "$resolver_source"
   cat <<'NODE'
-if (globalThis.__neonRequests.length !== 3) throw new Error("expected exactly three Neon requests");
+if (globalThis.__neonRequests.length !== 4) throw new Error("expected exactly four Neon requests");
 if (!globalThis.__neonRequests[0].url.endsWith("/projects/test-project/branches")) {
   throw new Error("branches request path mismatch");
 }
 if (!globalThis.__neonRequests[1].url.endsWith("/projects/test-project/endpoints")) {
   throw new Error("endpoints request path mismatch");
 }
-if (!globalThis.__neonRequests[2].url.includes("/projects/test-project/connection_uri?")) {
+if (!globalThis.__neonRequests[2].url.endsWith("/projects/test-project/branches/br-primary/roles")) {
+  throw new Error("roles request path mismatch");
+}
+const connectionRequest = new URL(globalThis.__neonRequests[3].url);
+if (connectionRequest.pathname !== "/api/v2/projects/test-project/connection_uri") {
   throw new Error("connection request path mismatch");
+}
+const expectedParams = {
+  branch_id: "br-primary",
+  database_name: "neondb",
+  role_name: "neondb_owner",
+  pooled: "false",
+};
+if (connectionRequest.searchParams.size !== Object.keys(expectedParams).length) {
+  throw new Error("connection request parameter count mismatch");
+}
+for (const [name, value] of Object.entries(expectedParams)) {
+  if (connectionRequest.searchParams.get(name) !== value) {
+    throw new Error(`connection request ${name} mismatch`);
+  }
 }
 for (const request of globalThis.__neonRequests) {
   if (request.init.headers.Authorization !== "Bearer test-neon-key") {
@@ -129,12 +152,61 @@ NEON_API_KEY=test-neon-key \
 resolver_mode="$(stat -f '%Lp' "$resolver_output" 2>/dev/null || stat -c '%a' "$resolver_output")"
 [ "$resolver_mode" = 600 ] || fail "inline Neon resolver output mode must be 600"
 
+for refusal in missing ambiguous; do
+  refusal_probe="$probe_root/neon-resolver-$refusal.mjs"
+  refusal_output="$probe_root/neon-direct-url-$refusal"
+  refusal_log="$probe_root/neon-resolver-$refusal.log"
+  if [ "$refusal" = missing ]; then
+    roles='[
+      { branch_id: "br-primary", name: "readonly" },
+      { branch_id: "br-other", name: "neondb_owner" },
+    ]'
+    expected_count=0
+  else
+    roles='[
+      { branch_id: "br-primary", name: "neondb_owner" },
+      { branch_id: "br-primary", name: "neondb_owner" },
+    ]'
+    expected_count=2
+  fi
+  {
+    cat <<NODE
+globalThis.__neonResponses = [
+  { branches: [{ id: "br-primary", default: true, primary: true }] },
+  { endpoints: [{ branch_id: "br-primary", type: "read_write" }] },
+  { roles: $roles },
+];
+globalThis.fetch = async () => {
+  const payload = globalThis.__neonResponses.shift();
+  if (!payload) throw new Error("unexpected extra Neon request");
+  return { ok: true, status: 200, json: async () => payload };
+};
+NODE
+    cat "$resolver_source"
+  } >"$refusal_probe"
+  set +e
+  NEON_API_KEY=test-neon-key \
+    NEON_PROJECT_ID=test-project \
+    CONNECTION_FILE="$refusal_output" \
+    node <"$refusal_probe" >"$refusal_log" 2>&1
+  refusal_rc=$?
+  set -e
+  [ "$refusal_rc" -ne 0 ] || fail "$refusal role case unexpectedly succeeded"
+  grep -Fq "refusing neondb_owner role ambiguity: found $expected_count on primary" "$refusal_log" ||
+    fail "$refusal role case did not fail for the expected reason"
+  [ ! -e "$refusal_output" ] || fail "$refusal role case wrote a connection file"
+done
+
 assert_contains "$workflow" "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
 assert_contains "$workflow" 'EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}'
 assert_contains "$workflow" 'git rev-parse HEAD'
 assert_contains "$workflow" 'node scripts/ci/read-github-ref.mjs'
 assert_contains "$workflow" 'primaryCandidates.length !== 1'
+assert_contains "$workflow" 'typeof primary.id !== "string" || primary.id.length === 0'
 assert_contains "$workflow" 'endpoint.type === "read_write"'
+assert_contains "$workflow" '/branches/${encodedBranch}/roles'
+assert_contains "$workflow" 'role.branch_id === primary.id && role.name === "neondb_owner"'
+assert_contains "$workflow" 'expectedRoles.length !== 1'
 assert_contains "$workflow" 'pooled: "false"'
 assert_contains "$workflow" 'const { writeFileSync } = await import("node:fs");'
 assert_contains "$workflow" '::add-mask::'
@@ -190,4 +262,4 @@ fi
 steps_between="$(sed -n "$((revalidate_line + 1)),$((migrate_line - 1))p" "$workflow" | grep -Ec '^      - name:' || true)"
 [ "$steps_between" -eq 0 ] || fail "final live-main revalidation must be immediately adjacent to migration"
 
-echo "production migration workflow contract: PASS (8 classifier cases + GitHub ref success/5 refusals + Node 22 inline Neon resolver execution + 14 bindings + two authenticated live-main checks + secret/order guards)"
+echo "production migration workflow contract: PASS (8 classifier cases + GitHub ref success/5 refusals + Node 22 inline Neon resolver execution/2 role refusals + 18 bindings + two authenticated live-main checks + secret/order guards)"
