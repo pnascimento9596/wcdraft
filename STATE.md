@@ -43,9 +43,9 @@ scrubs `${RUNNER_TEMP}/gitleaks.tmp` at both hygiene start and its always-run
 post phase. The existing canonical-path guards still constrain deletion to the
 runner work root and protect the active workspace, so global/user temp is not
 touched. A committed contract probe runs in the static CI job and passed 1
-TMPDIR binding check, 4 actor guards, 1 protected-check name split, 10
-downstream `needs` edges, 3 actor gate cases, 3 protected-check name mappings,
-2 independently seeded temp removals, and 4 active-workspace/outside sentinel
+TMPDIR binding check, 4 actor guards, 1 static aggregate-name expression, 2
+aggregate-name literals, 10 downstream `needs` edges, 3 actor gate cases, 2
+independently seeded temp removals, and 4 active-workspace/outside sentinel
 checks. Local fix-forward validation passed: frozen pnpm install (187 packages,
 2.9s / 3.01s real; final-tree recheck already up to date in 318ms / 0.39s
 real); root typecheck 8/8 cached tasks (0.60s real); actionlint v1.7.12 across 4
@@ -60,11 +60,22 @@ the `always()` aggregate, while ETL rejects it at its root `changes` job. Every
 remaining job depends on a guarded root, so bot runs enqueue zero self-hosted
 jobs; owner branches and `github-actions[bot]` automation remain allowed.
 Because GitHub treats a condition-skipped required job as successful, the
-aggregate check name is also actor-dependent: Dependabot gets only a skipped,
-non-required `blocked · dependabot actor` check and never emits the protected
-`required · aggregate gates` context. Owner/agent runs retain that exact
-required name. Dependabot PRs therefore stay protected-blocked until their
-change is promoted onto an owner/agent branch for review and execution.
+aggregate source expression reserves `required · aggregate gates` for trusted
+actors and includes a distinct `blocked · dependabot actor` literal. A skipped
+job's displayed name is not assumed to evaluate that expression; live checks
+are the authority. Dependabot PRs stay protected-blocked until their change is
+promoted onto an owner/agent branch for review and execution.
+Live proof on Dependabot PR #165 at head
+`5d5f2838523ab33bca0579416cb51f3326a97441`: CI run `29072226902` completed
+with 10/10 jobs skipped, and ETL run `29072226897` completed with 3/3 jobs
+skipped. All 13 jobs had null `runner_id` and `runner_name`, so none reached
+`wcdraft-m4`. GitHub displayed the skipped aggregate name as the raw expression
+`github.actor == 'dependabot[bot]' && 'blocked · dependabot actor' || 'required
+· aggregate gates'`, not as the evaluated blocked literal. The head had zero
+check runs named exactly `required · aggregate gates`, while `main` protection
+still required that app-owned context; PR #165 reported `mergeStateStatus`
+`BLOCKED`. The security goal was met even though the earlier display-name model
+was false: no bot job received a runner, and the protected context was absent.
 
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch
