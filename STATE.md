@@ -4,6 +4,35 @@
 > Numbers below were MEASURED by running the commands, not assumed — re-measure
 > whatever your change touches.
 
+Self-hosted Actions runner migration:
+2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`
+`c77ee289ab33cca3f0c27a6f0020b6492a5dd31e`, moves all four active workflows
+(`CI`, `ETL`, `Nightly heavy gates`, and `marketing-x`) from metered hosted
+compute to the durable `wcdraft-m4` macOS ARM64 runner. The runner is installed
+at `~/actions-runner-wcdraft` as a launchd service and GitHub reported it online
+with labels `self-hosted`, `macOS`, `ARM64`, and `wcdraft`. Every job explicitly
+cleans its checkout, uses runner-owned declared dependency caches, registers an
+always-run workspace scrub, and prunes only stale runner-owned work/cache paths
+when free space is below 20 GiB. Fork pull-request workflows are disabled;
+repository Actions remain enabled for owner branches with default workflow
+permissions `read`, branch protection still requires the app-owned
+`required · aggregate gates`, and `enforce_admins` remains enabled.
+The nightly heavy schedule is `15:23 UTC` (`11:23 EDT` / `10:23 EST`) to run
+while this Mac is typically awake; a missed night is benign because the Daily
+runway gate evaluates coverage thresholds rather than requiring daily diffs.
+Local A0 validation passed: frozen pnpm install; root typecheck 8/8 (3 cached);
+actionlint v1.7.12 across all four workflows; Bash 3.2 and Node syntax checks;
+Prettier and `git diff --check`; and a forced-low-disk functional probe that
+pruned stale runner-owned work/cache/temp paths while preserving the active
+workspace and an outside sentinel. The host had approximately 12.1 GiB free
+during that probe, so the remaining below-20-GiB condition is surfaced as a
+warning after safe runner-owned cleanup rather than deleting user-owned data.
+The first branch run exposed `actions/setup-python` attempting the hosted-image
+path `/Users/runner` on this self-hosted Mac; Python setup now uses pinned
+`setup-uv` plus `uv python install` with both the download cache and managed
+Python installations under the declared runner cache. A local isolated probe
+installed and executed CPython 3.12.13 arm64 without privileged paths.
+
 Desktop viewport-fit pass:
 2026-07-06 · local YELLOW implementation on branch
 `ws-ux/desktop-viewport-fit-20260706`, based on `origin/main`
