@@ -25,6 +25,10 @@ checks.
 - Manual dispatch only, repository/default-branch only, read-only GitHub token.
 - Caller input, dispatch SHA, checkout SHA, and current remote-main SHA must be
   the same exact lowercase 40-character commit.
+- After exact known-pending preflight, the workflow queries live remote main a
+  second time immediately before migration and reasserts the dispatch SHA,
+  checkout HEAD, and clean tree. A merge during setup, target resolution, or
+  preflight therefore stops the workflow before mutation.
 - The caller-supplied migration must be the checked-out contiguous journal
   tail.
 - Neon credentials enter exactly once through step-scoped environment
@@ -56,6 +60,30 @@ checks.
     84 desktop + 56 mobile + 40 interaction metrics, 0 failures.
   - Production build: 40/40 pages.
 - Heavy realism: 9/9 PASS.
+
+## Independent review fix-forward
+
+Independent exact-head Red review returned FAIL at
+`38718e5f3d0582d9094f71429c2d4af19674b7cf`. The workflow's initial exact-main
+check could become stale while setup, Neon resolution, and database preflight
+ran. A concurrent merge could therefore leave the old checkout at the mutation
+boundary even though the early check had passed.
+
+The fix-forward adds a second live `git ls-remote` query after successful exact
+known-pending classification and immediately before the migration step. It
+again requires the live default ref, dispatch SHA, and checkout HEAD to equal
+`EXPECTED_MAIN_SHA`, and requires a clean checkout. The contract now proves
+there are exactly two live remote queries and checkout bindings, and proves the
+strict order preflight -> final revalidation -> migration with no intervening
+workflow step. Migration-hash validation and crash-recovery cleanup were noted
+as non-blocking future hardening and intentionally remain outside this minimal
+release-blocker fix.
+
+Narrow fix-forward validation passed the executable workflow contract, Bash
+parse, actionlint 1.7.12, full repository Prettier check, and `git diff
+--check`. The earlier full root results remain evidence for the unchanged
+repository baseline, not exact-head approval for this fix; broad PR CI and the
+fresh Red reviewer must re-execute the new head before merge.
 
 The first root attempt is not counted: an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent. The lane

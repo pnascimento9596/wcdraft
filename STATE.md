@@ -34,6 +34,24 @@ An earlier root attempt was discarded after an interrupted sibling task left a
 generated-artifact lock and the untracked raw draft bundle absent; no PASS was
 claimed, the lane regenerated and fingerprint-checked the canonical artifacts,
 and the clean isolated rerun above supersedes it.
+Independent exact-head Red review correctly returned FAIL at
+`38718e5f3d0582d9094f71429c2d4af19674b7cf`: the workflow queried live remote
+main only before setup, target resolution, and database preflight, so another
+merge could make that binding stale before the production write. The
+fix-forward adds a second fail-closed remote-default-ref query immediately
+after the exact known-pending preflight and directly adjacent to the migration
+step. It reasserts live remote main, dispatch SHA, checkout HEAD, and a clean
+tree against `EXPECTED_MAIN_SHA`; any movement after preflight now stops before
+mutation. The executable contract requires exactly two remote queries and two
+checkout bindings plus strict preflight -> final revalidation -> migration
+ordering. Reviewer observations about migration-history hash verification and
+abrupt-host-loss receipt cleanup remain explicit non-blocking hardening; they
+are not broadened into this narrow TOCTOU fix. Narrow fix-forward validation
+passed the executable workflow contract, Bash parse, actionlint 1.7.12, full
+repository Prettier check, and `git diff --check`. The prior full root run is
+not claimed as exact-head evidence for this new commit; the PR's broad
+CI-config path and fresh independent Red re-review must re-execute exact-head
+gates before merge.
 
 Audit S1 B3 ranked-attempt structural binding:
 2026-07-10 · RED implementation on branch

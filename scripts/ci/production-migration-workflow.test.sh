@@ -81,6 +81,15 @@ assert_contains "$workflow" 'DATABASE_URL_UNPOOLED='
 assert_contains "$runbook" 'production-db-migrate.yml'
 assert_contains "$runbook" '0012_ranked_attempt_structural_binding'
 
+remote_query_count="$(grep -Fc 'git ls-remote --exit-code origin' "$workflow")"
+head_query_count="$(grep -Fc 'git rev-parse HEAD' "$workflow")"
+event_binding_count="$(grep -Fc 'event_sha="$GITHUB_SHA"' "$workflow")"
+clean_tree_count="$(grep -Fc 'git status --porcelain=v1 --untracked-files=all' "$workflow")"
+[ "$remote_query_count" -eq 2 ] || fail "workflow must query live remote main exactly twice"
+[ "$head_query_count" -eq 2 ] || fail "workflow must bind the checkout HEAD exactly twice"
+[ "$event_binding_count" -eq 2 ] || fail "workflow must bind the dispatch SHA exactly twice"
+[ "$clean_tree_count" -eq 2 ] || fail "workflow must prove a clean checkout exactly twice"
+
 api_key_refs="$(grep -Fc '${{ secrets.NEON_API_KEY }}' "$workflow")"
 project_id_refs="$(grep -Fc '${{ secrets.NEON_PROJECT_ID }}' "$workflow")"
 [ "$api_key_refs" -eq 1 ] && [ "$project_id_refs" -eq 1 ] ||
@@ -92,9 +101,13 @@ fi
 sha_line="$(grep -nF 'Bind checkout and remote main to approved SHA' "$workflow" | cut -d: -f1)"
 primary_line="$(grep -nF 'Resolve unique Neon primary direct connection' "$workflow" | cut -d: -f1)"
 preflight_line="$(grep -nF 'Exact known-pending preflight' "$workflow" | cut -d: -f1)"
+revalidate_line="$(grep -nF 'Revalidate live main immediately before mutation' "$workflow" | cut -d: -f1)"
 migrate_line="$(grep -nF 'Apply exact checked-out migrations' "$workflow" | cut -d: -f1)"
-if ! [ "$sha_line" -lt "$primary_line" ] || ! [ "$primary_line" -lt "$preflight_line" ] || ! [ "$preflight_line" -lt "$migrate_line" ]; then
-  fail "exact SHA, primary identity, preflight, and migration steps are out of safety order"
+if ! [ "$sha_line" -lt "$primary_line" ] || ! [ "$primary_line" -lt "$preflight_line" ] || ! [ "$preflight_line" -lt "$revalidate_line" ] || ! [ "$revalidate_line" -lt "$migrate_line" ]; then
+  fail "exact SHA, primary identity, preflight, final revalidation, and migration steps are out of safety order"
 fi
 
-echo "production migration workflow contract: PASS (8 classifier cases + 14 bindings + secret/order guards)"
+steps_between="$(sed -n "$((revalidate_line + 1)),$((migrate_line - 1))p" "$workflow" | grep -Ec '^      - name:' || true)"
+[ "$steps_between" -eq 0 ] || fail "final live-main revalidation must be immediately adjacent to migration"
+
+echo "production migration workflow contract: PASS (8 classifier cases + 14 bindings + two live-main checks + secret/order guards)"

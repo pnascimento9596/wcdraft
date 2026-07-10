@@ -208,6 +208,23 @@ jobs:
             "$pre_receipt" "$status_rc" "$EXPECTED_INDEX" \
             "$EXPECTED_PENDING_MIGRATION" "$EXPECTED_TOTAL"
 
+      - name: Revalidate live main immediately before mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          checkout_sha="$(git rev-parse HEAD)"
+          event_sha="$GITHUB_SHA"
+          live_remote_sha="$(git ls-remote --exit-code origin "refs/heads/${{ github.event.repository.default_branch }}" | awk 'NR == 1 { print $1 }')"
+          if [[ "$checkout_sha" != "$EXPECTED_MAIN_SHA" || "$event_sha" != "$EXPECTED_MAIN_SHA" || "$live_remote_sha" != "$EXPECTED_MAIN_SHA" ]]; then
+            echo "::error::main moved after preflight; refusing production mutation"
+            exit 1
+          fi
+          if [[ -n "$(git status --porcelain=v1 --untracked-files=all)" ]]; then
+            echo "::error::migration checkout changed after preflight; refusing production mutation"
+            exit 1
+          fi
+          echo "pre-mutation live-main binding: PASS ($EXPECTED_MAIN_SHA)"
+
       - name: Apply exact checked-out migrations
         shell: bash
         run: |
