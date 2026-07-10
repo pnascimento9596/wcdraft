@@ -130,14 +130,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -C "$AUTOMATION_BRANCH"
+          refresh_paths_file="$RUNNER_TEMP/daily-refresh-changed-paths.txt"
+          git status --porcelain=v1 --untracked-files=all | cut -c4- \
+            >"$refresh_paths_file"
+          node packages/data/scripts/daily-seed-runway.mjs validate-refresh-paths \
+            --paths-file "$refresh_paths_file"
           git add \
             packages/data/src/generated/daily-seed-salt-map.compact.json \
+            packages/data/src/generated/daily-seed-salt-map.compact.json.br \
             packages/data/src/generated/manifest.json \
+            packages/data/src/generated/manifest.json.br \
             packages/data/reports/compact-size.json
 
           allowed_paths=(
             packages/data/src/generated/daily-seed-salt-map.compact.json
+            packages/data/src/generated/daily-seed-salt-map.compact.json.br
             packages/data/src/generated/manifest.json
+            packages/data/src/generated/manifest.json.br
             packages/data/reports/compact-size.json
           )
           unexpected=0
@@ -145,7 +154,7 @@ jobs:
             status="${line:0:2}"
             path="${line:3}"
             case "$path" in
-              packages/data/src/generated/daily-seed-salt-map.compact.json|packages/data/src/generated/manifest.json|packages/data/reports/compact-size.json)
+              packages/data/src/generated/daily-seed-salt-map.compact.json|packages/data/src/generated/daily-seed-salt-map.compact.json.br|packages/data/src/generated/manifest.json|packages/data/src/generated/manifest.json.br|packages/data/reports/compact-size.json)
                 if [[ "$status" != "M " && "$status" != "A " ]]; then
                   echo "::error::refresh output has unexpected git status: $line"
                   unexpected=1

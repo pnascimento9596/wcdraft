@@ -48,12 +48,18 @@ pnpm check:generated
 git diff --check
 git add \
   packages/data/src/generated/daily-seed-salt-map.compact.json \
+  packages/data/src/generated/daily-seed-salt-map.compact.json.br \
   packages/data/src/generated/manifest.json \
+  packages/data/src/generated/manifest.json.br \
   packages/data/reports/compact-size.json
 git diff --cached --check
 ```
 
-Confirm those are the only changed paths, commit conventionally, push with an exact lease, and open/update the dedicated refresh PR. Protected CI, independent RED review, merge, deployment READY, and live manifest/hash checks still apply.
+Confirm those five files are the only changed paths: the Daily JSON and its
+canonical q11 sidecar, the manifest JSON and its canonical q11 sidecar, and the
+compact-size report. Commit conventionally, push with an exact lease, and
+open/update the dedicated refresh PR. Protected CI, independent RED review,
+merge, deployment READY, and live manifest/hash checks still apply.
 
 After deployment:
 
@@ -107,7 +113,9 @@ cd "$rollback_worktree"
 git revert --no-commit "$REFRESH_MERGE_SHA"
 git add \
   packages/data/src/generated/daily-seed-salt-map.compact.json \
+  packages/data/src/generated/daily-seed-salt-map.compact.json.br \
   packages/data/src/generated/manifest.json \
+  packages/data/src/generated/manifest.json.br \
   packages/data/reports/compact-size.json
 
 pnpm install --frozen-lockfile

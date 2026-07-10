@@ -190,6 +190,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Future Daily regeneration path contract
+        run: bash scripts/ci/validate-daily-refresh-regeneration.test.sh
+
       - name: Agent contract drift check
         run: pnpm run check:agent-contracts
 

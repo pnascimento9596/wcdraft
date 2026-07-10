@@ -51,6 +51,85 @@ revalidation also passed the DB contract (6 behavior / 6 path / 8 binding
 cases), runner-hygiene contract, Daily workflow contract, agent-contract check,
 Prettier, actionlint v1.7.12, Bash 3.2 syntax, and `git diff --check`.
 
+Runtime artifact fingerprint materialization:
+2026-07-10 · Audit Season 1 Unit C1 branch
+`ws-core/audit-s1-runtime-fingerprints`, now rebased onto `origin/main`
+`de7e7095be4f352f38671826bca85c761039846c`, makes q11 Brotli output a
+canonical tracked build artifact instead of recompressing the 130,545,042-byte
+draft pool in every web prehook. Compact generation emits one `.br` beside the
+manifest and each of its four runtime bundles, while each fingerprint now
+records the raw SHA-256, exact compressed SHA-256/bytes, Brotli implementation
+version, and explicit q11/text/size-hint options. The existing `sha256` and
+`bytes_brotli` fields remain compatibility aliases for raw SHA and exact
+compressed bytes. `copy-web-assets.mjs` verifies all four manifest-described
+raw/compressed pairs before writing any target and copies the canonical draft
+artifact byte-for-byte; fresh clones can materialize the ignored raw legacy
+path by decompressing the tracked artifact without rebuilding or recompressing.
+All `predev`/`prebuild`/`pretypecheck`/`pretest` paths share the
+`runtime:materialize` command. Normal unchanged compact builds reuse a canonical
+artifact only when every raw/compressed fingerprint and option matches;
+`build:compact:force` and `check:generated` deliberately recompress and prove
+byte determinism.
+
+The prior drift was reproduced exactly: manifest `bytes_brotli=2,224,896`
+versus shipped `2,224,859` bytes (37 bytes). The canonical draft artifact is
+now exactly 2,224,859 bytes / SHA-256
+`053161069c28d441d87857bb199600c15dc2f7299336a4aa140054b45d03f853`
+in source, manifest, report, and copied web path. Five tracked sidecars add
+2,233,894 repository bytes total; the other SHA-256 values are daily map
+`83fe4752…009`, manifest `93379e5a…b50`, scenario `19290a7d…671`, and score
+distribution `d7dd92f0…ec9`. Runtime schema remains `runtime-data-2.9.0`, dataset
+remains `2026-07-01`, all four raw bundle SHAs and replay anchors are unchanged,
+and SW data revision remains `054ebc2420b6b407`.
+
+Measured unchanged `web pretypecheck` samples improved from 84.54s/84.85s real
+(median 84.695s) to 0.87s/0.82s (median 0.845s), a 100.23x median speedup and
+99.00% reduction. The full regen chain completed; unchanged compact build
+reused artifacts in 8.33s real; explicit forced rebuild reproduced identical
+bytes in 92.98s; `check:generated` passed in 93.88s. Focused copy tests passed
+5/5 and compact/copy goldens passed 15/15. Full data tests passed 150 with 9
+expected heavy skips. Forced root gates passed with zero cache hits: typecheck
+8/8 (8.048s Turbo), lint 5/5 (3.238s), test 8/8 (4m50.868s; core 391, DB 108,
+marketing 68, data 150 + 9 skipped, web 919 + 1 skipped; browser gates 84
+metrics/0 failures), and build 4/4 (19.161s; 40/40 static pages). Forced core
+goldens passed 111/111; data/integration goldens passed 54/54 + 22/22;
+leaderboard golden passed 6/6; explicit heavy realism passed 9/9 for each of
+the three policies (27/27). Timing/fingerprint command evidence is retained at
+`/tmp/audit-s1-c1-prehook-timing.txt`. Those gate counts are the measured
+pre-rebase C1 baseline; the B4-integrated fix-forward is revalidated separately
+before push.
+
+Post-B4 rebase fix-forward closes the independent C1 review failure at the
+Daily refresh boundary. A future regeneration is a five-file change, not the
+pre-C1 three-file set: Daily JSON plus its canonical q11 `.br`, manifest JSON
+plus its canonical q11 `.br`, and `compact-size.json`. The nightly A3 writer
+now captures the actual post-generator `git status` paths, validates that exact
+set before staging, stages/allows/requires all five, and still stops on any
+unexpected status or sixth path. The Daily workflow contract binds each path
+at the stage, allowlist, and status-check seams; its regression fixture records
+the independently observed `2026-07-11` future-refresh path set. B4's manual
+refresh runbook and executable exact-SHA rollback validator now use the same
+five paths for both target and post-revert validation. Focused post-rebase
+checks passed: actionlint v1.7.12; Bash syntax; rollback contract 6 behavior
+cases / 5 runbook-workflow bindings; Daily workflow contract; runway tests
+40/40; C1 focused data tests 47/47; agent-contract check; ESLint; Prettier; and
+`git diff --check`. The executable detached-worktree regeneration probe passed
+for a `2026-07-11` / 45-day future window and produced exactly the five expected
+tracked outputs; both new sidecars decompressed byte-identically to their JSON.
+Final post-rebase gates passed: `check:generated` with no tracked drift; full
+data tests 151 passed / 9 expected heavy skips; forced root typecheck 8/8
+(0 cached, 7.417s), lint 5/5 (0 cached, 2.855s), test 8/8 (0 cached,
+4m30.881s; core 391, DB 108, marketing 68, data 151 + 9 skipped, web 926 + 1
+skipped, game-flow browser PASS, responsive shell desktop 56/0 and mobile
+28/0), and build 4/4 (0 cached, 17.294s, 40/40 pages; existing Next warnings
+only). Forced goldens passed core 69 + draft 42, data 54 + integration 22,
+leaderboard 6; explicit locked-N heavy realism passed 9/9 for each of
+`autoDraft`, `strategicAutoDraft`, and `greedyOverallAutoDraft` (27/27). The
+q11/copy/materialize implementation and all canonical artifact bytes are
+unchanged by this workflow/runbook fix, so the measured 84.695s → 0.845s
+prehook benchmark remains the applicable C1 result rather than being
+re-measured on an unaffected path.
+
 Self-hosted Actions runner migration:
 2026-07-10 · Unit A0 branch `ci/self-hosted-runner`, based on `origin/main`
 `c77ee289ab33cca3f0c27a6f0020b6492a5dd31e`, moves all four active workflows
@@ -644,8 +723,10 @@ current pin on overlap):
 Data/bundle anchors:
 `draft-pool.compact.json` raw bytes `130,545,042` with sha256
 `461601c64221289ccddabc97db426d54fbd4d39ef06bcd2a9bbdae129d2a487a`;
-draft-pool manifest Brotli bucket `2,224,896` (copied `.br` bytes `2,224,859`);
-manifest sha256 `2d475e8f0224e320cb51ce870280dc0016d51456cd96ce3ecddad8d49d218fd4`.
+draft-pool canonical `.br` bytes `2,224,859`; legacy three-file Brotli total
+(manifest + draft + scenario) `2,231,500`; all five tracked `.br` repository
+artifacts total `2,233,894`; raw manifest sha256
+`aa70f018471e9c4091323b6e441ae309ddfa0bb86f7831b547cdffe4739bdad7`.
 `scenario-2026.compact.json` raw bytes `108,775` with sha256
 `7846fa3abe0eab4aa283efd1e8382959593ec1248030eba13913fac0ae8da398`.
 Runtime data delivery is versioned at `/data/wcdraft/runtime-data-2.9.0/`, with
@@ -817,26 +898,27 @@ broken-pipe MCP transport error.
 
 ## Shipped versions (repo pins — `packages/data/src/generated/manifest.json`)
 
-| Field                          | Value                                                                                                                                     |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| schema_version                 | runtime-data-2.9.0                                                                                                                        |
-| dataset_version                | 2026-07-01                                                                                                                                |
-| ruleset_version                | ruleset-2026.06.04                                                                                                                        |
-| engine_version                 | engine-2026.06.30-manager-attrition                                                                                                       |
-| rating_version (historical)    | wc-perf-6.6.0                                                                                                                             |
-| rating_version (projected)     | proj-career-5.6.0                                                                                                                         |
-| career_stature                 | career-stature-4.1.0                                                                                                                      |
-| merit source set               | merit-source-set-2.2.0                                                                                                                    |
-| active source set              | active-career-source-set-2.2.0                                                                                                            |
-| runtime legend census          | 295                                                                                                                                       |
-| runtime ratings                | 12,219                                                                                                                                    |
-| Career basis counts            | 11,292 measured · 541 career-stature · 386 baseline                                                                                       |
-| career-stature table           | 847 players · 209 material · 114 source-derived legends                                                                                   |
-| explicit leaderboard season id | season-2026-manager-attrition                                                                                                             |
-| compact brotli total           | 2,231,296 measured bytes                                                                                                                  |
-| served draft-pool br artifact  | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; manifest bucket `2,224,896`; decompressed sha `461601…` |
-| compact sha256                 | manifest `2d475e8f…` · draft `461601…` · scenario `7846fa3a…`                                                                             |
-| generated artifact locks       | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes                                  |
+| Field                                | Value                                                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| schema_version                       | runtime-data-2.9.0                                                                                           |
+| dataset_version                      | 2026-07-01                                                                                                   |
+| ruleset_version                      | ruleset-2026.06.04                                                                                           |
+| engine_version                       | engine-2026.06.30-manager-attrition                                                                          |
+| rating_version (historical)          | wc-perf-6.6.0                                                                                                |
+| rating_version (projected)           | proj-career-5.6.0                                                                                            |
+| career_stature                       | career-stature-4.1.0                                                                                         |
+| merit source set                     | merit-source-set-2.2.0                                                                                       |
+| active source set                    | active-career-source-set-2.2.0                                                                               |
+| runtime legend census                | 295                                                                                                          |
+| runtime ratings                      | 12,219                                                                                                       |
+| Career basis counts                  | 11,292 measured · 541 career-stature · 386 baseline                                                          |
+| career-stature table                 | 847 players · 209 material · 114 source-derived legends                                                      |
+| explicit leaderboard season id       | season-2026-manager-attrition                                                                                |
+| compact brotli total (legacy 3-file) | 2,231,500 measured bytes (manifest + draft + scenario)                                                       |
+| all tracked compact `.br` total      | 2,233,894 repository bytes (manifest + draft + scenario + score distribution + daily seed map)               |
+| served draft-pool br artifact        | 2,224,859 bytes at `/data/wcdraft/runtime-data-2.9.0/draft-pool.compact.json.br`; decompressed sha `461601…` |
+| compact sha256                       | manifest `aa70f018…` · draft `461601…` · scenario `7846fa3a…`                                                |
+| generated artifact locks             | ratings lockfile `bf4b75e…` / payload `89630181…` / 212 bytes · draft-pool `461601…` / 130,545,042 bytes     |
 
 ## Superseded candidate versions (`merit-v3.1`, not shipped)
 

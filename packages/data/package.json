@@ -34,6 +34,7 @@
     "test:golden:integration": "node scripts/ensure-generated-artifacts.mjs && vitest run test/e2e-real-run.golden.test.ts test/era-presets.golden.test.ts",
     "test:realism:heavy": "node scripts/ensure-generated-artifacts.mjs && WCDRAFT_REALISM_HEAVY=1 vitest run test/realism/realism.gate.test.ts",
     "build:compact": "node scripts/ensure-generated-artifacts.mjs --inputs-only && node scripts/build-compact-data.mjs",
+    "build:compact:force": "node scripts/ensure-generated-artifacts.mjs --inputs-only && node scripts/build-compact-data.mjs --force-rebuild",
     "build:score-distribution": "node scripts/ensure-generated-artifacts.mjs && tsx scripts/build-score-distribution.mts",
     "build:daily-seed-salt-map": "node scripts/ensure-generated-artifacts.mjs && tsx scripts/build-daily-seed-salt-map.mts",
     "copy:web-assets": "node scripts/copy-web-assets.mjs",

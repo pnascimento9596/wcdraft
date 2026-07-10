@@ -37,9 +37,14 @@ const GENERATED_ARTIFACTS_LOCK_SLEEP_MS = 250;
 const TRACKED_FINGERPRINT_PATHS = [
   "etl/output/ratings.lock.json",
   "packages/data/src/generated/manifest.json",
+  "packages/data/src/generated/manifest.json.br",
+  "packages/data/src/generated/draft-pool.compact.json.br",
   "packages/data/src/generated/scenario-2026.compact.json",
+  "packages/data/src/generated/scenario-2026.compact.json.br",
   "packages/data/src/generated/score-distribution.compact.json",
+  "packages/data/src/generated/score-distribution.compact.json.br",
   "packages/data/src/generated/daily-seed-salt-map.compact.json",
+  "packages/data/src/generated/daily-seed-salt-map.compact.json.br",
   "packages/data/reports/compact-size.json",
 ];
 const UNTRACKED_LARGE_ARTIFACTS = [
@@ -132,6 +137,41 @@ function validateFingerprint(filePath, expected, label) {
   }
 }
 
+function validateCanonicalBrotli(filePath, rawPath, expected, label) {
+  if (!existsSync(filePath)) fail(`${label} missing at ${rel(filePath)}`);
+  if (
+    !expected ||
+    expected.sha256 !== expected.raw_sha256 ||
+    expected.bytes_brotli !== expected.compressed_bytes ||
+    expected.options?.quality !== 11 ||
+    expected.options?.mode !== "text" ||
+    expected.options?.size_hint !== expected.bytes ||
+    typeof expected.brotli_impl_version !== "string"
+  ) {
+    fail(`${label} manifest compression metadata is malformed`);
+  }
+  const compressed = readFileSync(filePath);
+  const compressedSha = sha256(compressed);
+  if (
+    compressed.length !== expected.compressed_bytes ||
+    compressedSha !== expected.compressed_sha256
+  ) {
+    fail(
+      `${label} compressed fingerprint mismatch: got ${compressed.length} bytes / ` +
+        `${compressedSha}, expected ${expected.compressed_bytes} bytes / ` +
+        `${expected.compressed_sha256}`,
+    );
+  }
+  const raw = readFileSync(rawPath);
+  let decompressed;
+  try {
+    decompressed = brotliDecompressSync(compressed);
+  } catch (err) {
+    fail(`${label} cannot be decompressed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+  if (!decompressed.equals(raw)) fail(`${label} decompressed bytes differ from canonical raw file`);
+}
+
 function validateRatings() {
   if (!existsSync(RATINGS_LOCK_PATH)) fail(`${rel(RATINGS_LOCK_PATH)} is missing`);
   const lock = readJson(RATINGS_LOCK_PATH);
@@ -176,13 +216,37 @@ function validateCompactArtifacts() {
   const report = readJson(SIZE_REPORT_PATH);
 
   validateFingerprint(DRAFT_POOL_PATH, manifest.bundles.draft_pool, "draft-pool.compact.json");
+  validateCanonicalBrotli(
+    `${DRAFT_POOL_PATH}.br`,
+    DRAFT_POOL_PATH,
+    manifest.bundles.draft_pool,
+    "draft-pool.compact.json.br",
+  );
   validateFingerprint(SCENARIO_PATH, manifest.bundles.scenario_2026, "scenario-2026.compact.json");
+  validateCanonicalBrotli(
+    `${SCENARIO_PATH}.br`,
+    SCENARIO_PATH,
+    manifest.bundles.scenario_2026,
+    "scenario-2026.compact.json.br",
+  );
   validateFingerprint(RUNTIME_MANIFEST_PATH, report.bundles.manifest, "manifest.json");
+  validateCanonicalBrotli(
+    `${RUNTIME_MANIFEST_PATH}.br`,
+    RUNTIME_MANIFEST_PATH,
+    report.bundles.manifest,
+    "manifest.json.br",
+  );
   if (manifest.bundles.score_distribution !== undefined) {
     validateFingerprint(
       SCORE_DISTRIBUTION_PATH,
       manifest.bundles.score_distribution,
       "score-distribution.compact.json",
+    );
+    validateCanonicalBrotli(
+      `${SCORE_DISTRIBUTION_PATH}.br`,
+      SCORE_DISTRIBUTION_PATH,
+      manifest.bundles.score_distribution,
+      "score-distribution.compact.json.br",
     );
   }
   if (manifest.bundles.daily_seed_salt_map !== undefined) {
@@ -191,17 +255,36 @@ function validateCompactArtifacts() {
       manifest.bundles.daily_seed_salt_map,
       "daily-seed-salt-map.compact.json",
     );
+    validateCanonicalBrotli(
+      `${DAILY_SEED_SALT_MAP_PATH}.br`,
+      DAILY_SEED_SALT_MAP_PATH,
+      manifest.bundles.daily_seed_salt_map,
+      "daily-seed-salt-map.compact.json.br",
+    );
   }
 
   for (const [key, expected] of Object.entries(manifest.bundles)) {
     const reported = report.bundles[key];
     if (!reported) fail(`compact-size report missing ${key}`);
-    for (const field of ["path", "bytes", "bytes_brotli", "bytes_gzip", "sha256"]) {
+    for (const field of [
+      "path",
+      "bytes",
+      "bytes_brotli",
+      "bytes_gzip",
+      "sha256",
+      "raw_sha256",
+      "compressed_sha256",
+      "compressed_bytes",
+      "brotli_impl_version",
+    ]) {
       if (reported[field] !== expected[field]) {
         fail(
           `compact-size report ${key}.${field}=${reported[field]} does not match manifest ${expected[field]}`,
         );
       }
+    }
+    if (JSON.stringify(reported.options) !== JSON.stringify(expected.options)) {
+      fail(`compact-size report ${key}.options does not match manifest`);
     }
   }
 }
@@ -240,9 +323,9 @@ function validateRetainedRuntimeData() {
   }
 }
 
-function runCompactBuilder() {
+function runCompactBuilder({ forceRebuild = false } = {}) {
   ensureCoreBuild({ force: true });
-  run(process.execPath, [BUILD_COMPACT_SCRIPT]);
+  run(process.execPath, [BUILD_COMPACT_SCRIPT, ...(forceRebuild ? ["--force-rebuild"] : [])]);
 }
 
 function ensureCompactArtifacts() {
@@ -254,7 +337,7 @@ function ensureCompactArtifacts() {
       // Regenerate below, then validate with the freshly emitted tracked fingerprints.
     }
   }
-  runCompactBuilder();
+  runCompactBuilder({ forceRebuild: CHECK_MODE });
   validateCompactArtifacts();
 }
 

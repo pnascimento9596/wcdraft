@@ -5,12 +5,14 @@ import { describe, expect, it } from "vitest";
 import {
   captureUtcDate,
   compareOverlappingSalts,
+  DAILY_REFRESH_GENERATED_PATHS,
   dailyRefreshAutomationIdentity,
   decideRunway,
   evaluateRunwayAtCapture,
   planDailyRefreshBranchUpdate,
   planRefreshPullRequest,
   requireTrustedDailyRefreshDispatch,
+  validateDailyRefreshChangedPaths,
   validateDailySeedArtifact,
   validateDailyRefreshWorkflowContract,
   validateWorkflowBuilderInvocation,
@@ -34,6 +36,30 @@ function artifact({ start = "2026-07-01", days = 30, salts = {} } = {}) {
 }
 
 describe("daily seed runway policy", () => {
+  it("proves the complete five-file set from the captured 2026-07-11 regeneration evidence", () => {
+    const evidence = readFileSync(
+      new URL("fixtures/daily-refresh-changed-paths-2026-07-11.txt", import.meta.url),
+      "utf8",
+    )
+      .trim()
+      .split(/\r?\n/u);
+    expect(validateDailyRefreshChangedPaths(evidence)).toEqual([
+      "packages/data/reports/compact-size.json",
+      "packages/data/src/generated/daily-seed-salt-map.compact.json",
+      "packages/data/src/generated/daily-seed-salt-map.compact.json.br",
+      "packages/data/src/generated/manifest.json",
+      "packages/data/src/generated/manifest.json.br",
+    ]);
+    expect(() =>
+      validateDailyRefreshChangedPaths(
+        DAILY_REFRESH_GENERATED_PATHS.filter((path) => !path.endsWith(".json.br")),
+      ),
+    ).toThrow(/canonical five-file set/u);
+    expect(() =>
+      validateDailyRefreshChangedPaths([...DAILY_REFRESH_GENERATED_PATHS, "unexpected.txt"]),
+    ).toThrow(/canonical five-file set/u);
+  });
+
   it.each([
     [22, false, false],
     [21, true, false],

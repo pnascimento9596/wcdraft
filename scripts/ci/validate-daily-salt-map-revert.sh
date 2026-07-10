@@ -16,14 +16,16 @@ expected_paths="$({
   printf '%s\n' \
     packages/data/reports/compact-size.json \
     packages/data/src/generated/daily-seed-salt-map.compact.json \
-    packages/data/src/generated/manifest.json
+    packages/data/src/generated/daily-seed-salt-map.compact.json.br \
+    packages/data/src/generated/manifest.json \
+    packages/data/src/generated/manifest.json.br
 } | LC_ALL=C sort)"
 
 assert_exact_paths() {
   label="$1"
   actual_paths="$2"
   [ "$actual_paths" = "$expected_paths" ] ||
-    fail "$label must contain exactly the three Daily refresh outputs"
+    fail "$label must contain exactly the five Daily refresh outputs, including both canonical Brotli sidecars"
 }
 
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 ||
@@ -45,7 +47,7 @@ case "${1:-}" in
         LC_ALL=C sort -u
     )"
     assert_exact_paths "target commit path set" "$target_paths"
-    echo "daily salt-map revert target validation: PASS (single parent, 3 exact paths)"
+    echo "daily salt-map revert target validation: PASS (single parent, 5 exact paths)"
     ;;
   post-revert)
     [ "$#" -eq 1 ] || usage
@@ -60,7 +62,7 @@ case "${1:-}" in
     assert_exact_paths "staged post-revert path set" "$staged_paths"
     [ -z "$unstaged_paths" ] ||
       fail "post-revert worktree contains unstaged tracked changes"
-    echo "daily salt-map post-revert validation: PASS (3 exact tracked paths, fully staged)"
+    echo "daily salt-map post-revert validation: PASS (5 exact tracked paths, fully staged)"
     ;;
   *)
     usage
