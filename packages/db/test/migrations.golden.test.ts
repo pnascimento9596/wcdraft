@@ -13,7 +13,7 @@
 // If drizzle-kit's emit format changes, this file flags the drift instead
 // of letting the migrator quietly start producing different SQL.
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 
 const initSql = readFileSync(new URL("../migrations/0000_init.sql", import.meta.url), "utf8");
 
@@ -129,13 +129,44 @@ const emailVerificationDownSql = readFileSync(
   "utf8",
 );
 
+const structuralBindingSql = readFileSync(
+  new URL("../migrations/0012_ranked_attempt_structural_binding.sql", import.meta.url),
+  "utf8",
+);
+
+const structuralBindingDownSql = readFileSync(
+  new URL("../migrations/0012_ranked_attempt_structural_binding.down.sql", import.meta.url),
+  "utf8",
+);
+
 const journal = JSON.parse(
   readFileSync(new URL("../migrations/meta/_journal.json", import.meta.url), "utf8"),
 ) as { entries: Array<{ tag: string; idx: number }> };
 
+type DrizzleSnapshot = {
+  id: string;
+  prevId: string;
+  tables: Record<
+    string,
+    {
+      columns: Record<string, unknown>;
+      indexes: Record<string, { isUnique: boolean; where?: string }>;
+      foreignKeys: Record<string, { columnsFrom: string[]; columnsTo: string[] }>;
+      checkConstraints: Record<string, unknown>;
+    }
+  >;
+};
+
+function readSnapshot(index: number): DrizzleSnapshot {
+  const prefix = index.toString().padStart(4, "0");
+  return JSON.parse(
+    readFileSync(new URL(`../migrations/meta/${prefix}_snapshot.json`, import.meta.url), "utf8"),
+  ) as DrizzleSnapshot;
+}
+
 describe("@wcdraft/db migrations — 0000_init", () => {
   it("journal references the renamed 0000/0001/0002/0003/0004 tags", () => {
-    expect(journal.entries).toHaveLength(12);
+    expect(journal.entries).toHaveLength(13);
     expect(journal.entries[0]?.tag).toBe("0000_init");
     expect(journal.entries[0]?.idx).toBe(0);
     expect(journal.entries[1]?.tag).toBe("0001_auth_rate_limits");
@@ -160,6 +191,65 @@ describe("@wcdraft/db migrations — 0000_init", () => {
     expect(journal.entries[10]?.idx).toBe(10);
     expect(journal.entries[11]?.tag).toBe("0011_email_verification");
     expect(journal.entries[11]?.idx).toBe(11);
+    expect(journal.entries[12]?.tag).toBe("0012_ranked_attempt_structural_binding");
+    expect(journal.entries[12]?.idx).toBe(12);
+  });
+
+  it("has one linked drizzle-kit snapshot for every journal entry through 0012", () => {
+    const snapshotFiles = readdirSync(new URL("../migrations/meta", import.meta.url))
+      .filter((file) => /^\d{4}_snapshot\.json$/u.test(file))
+      .sort();
+    expect(snapshotFiles).toHaveLength(journal.entries.length);
+    expect(snapshotFiles.at(-1)).toBe("0012_snapshot.json");
+
+    const snapshots = journal.entries.map((entry) => readSnapshot(entry.idx));
+    for (let index = 1; index < snapshots.length; index += 1) {
+      expect(snapshots[index]?.prevId).toBe(snapshots[index - 1]?.id);
+    }
+  });
+
+  it("repairs 0009 attempt-index intent and carries it through the 0012 snapshot", () => {
+    for (const index of [9, 10, 11, 12]) {
+      const leaderboard = readSnapshot(index).tables["public.leaderboard_entries"];
+      expect(leaderboard?.indexes.leaderboard_entries_ranked_attempt_uq).toMatchObject({
+        isUnique: true,
+        where: '"leaderboard_entries"."attempt_id" IS NOT NULL',
+      });
+    }
+
+    const latest = readSnapshot(12);
+    const leaderboard = latest.tables["public.leaderboard_entries"];
+    const attempts = latest.tables["public.ranked_attempts"];
+    expect(leaderboard?.columns).toHaveProperty("attempt_formation_id");
+    expect(leaderboard?.columns).toHaveProperty("attempt_consumed_at");
+    expect(attempts?.indexes.ranked_attempts_binding_uq).toMatchObject({ isUnique: true });
+    expect(leaderboard?.foreignKeys.leaderboard_entries_ranked_attempt_binding_fk).toMatchObject({
+      columnsFrom: [
+        "attempt_id",
+        "user_id",
+        "season_key",
+        "attempt_formation_id",
+        "draft_mode",
+        "draft_order",
+        "era",
+        "rating_basis",
+        "attempt_consumed_at",
+      ],
+      columnsTo: [
+        "id",
+        "user_id",
+        "season_key",
+        "formation_id",
+        "draft_mode",
+        "draft_order",
+        "era",
+        "rating_basis",
+        "consumed_at",
+      ],
+    });
+    expect(leaderboard?.checkConstraints).toHaveProperty(
+      "leaderboard_entries_ranked_attempt_binding_chk",
+    );
   });
 
   it.each([
@@ -391,6 +481,58 @@ describe("@wcdraft/db migrations — 0009_ranked_attempt_binding", () => {
     expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "rating_basis"/);
     expect(rankedBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "season_key"/);
     expect(rankedBindingDownSql).not.toMatch(/DROP TABLE/);
+  });
+});
+
+describe("@wcdraft/db migrations — 0012_ranked_attempt_structural_binding", () => {
+  it("adds and derives only the missing persisted attempt witnesses", () => {
+    expect(structuralBindingSql).toMatch(/ADD COLUMN "attempt_formation_id" text/);
+    expect(structuralBindingSql).toMatch(
+      /ADD COLUMN "attempt_consumed_at" timestamp with time zone/,
+    );
+    expect(structuralBindingSql).toMatch(
+      /UPDATE "leaderboard_entries" AS "entry"[\s\S]*FROM "ranked_attempts" AS "attempt"[\s\S]*"entry"\."attempt_id" = "attempt"\."id"/,
+    );
+    expect(structuralBindingSql).not.toMatch(/DELETE FROM/);
+  });
+
+  it("requires every ranked row to carry a complete consumed-attempt binding", () => {
+    expect(structuralBindingSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_ranked_attempt_binding_chk"/,
+    );
+    for (const column of [
+      "attempt_id",
+      "user_id",
+      "attempt_formation_id",
+      "draft_order",
+      "era",
+      "rating_basis",
+      "attempt_consumed_at",
+    ]) {
+      expect(structuralBindingSql).toContain(`"leaderboard_entries"."${column}" IS NOT NULL`);
+    }
+  });
+
+  it("binds user, season, full config, and consumed_at through one composite FK", () => {
+    expect(structuralBindingSql).toMatch(/CREATE UNIQUE INDEX "ranked_attempts_binding_uq"/);
+    expect(structuralBindingSql).toMatch(
+      /FOREIGN KEY \(\s*"attempt_id",\s*"user_id",\s*"season_key",\s*"attempt_formation_id",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"attempt_consumed_at"\s*\)[\s\S]*REFERENCES "public"\."ranked_attempts" \(\s*"id",\s*"user_id",\s*"season_key",\s*"formation_id",\s*"draft_mode",\s*"draft_order",\s*"era",\s*"rating_basis",\s*"consumed_at"\s*\)/,
+    );
+    expect(structuralBindingSql).toMatch(/ON DELETE restrict\s+ON UPDATE restrict/);
+  });
+
+  it("rolls back metadata only and restores the prior single-column FK", () => {
+    expect(structuralBindingDownSql).toMatch(
+      /DROP CONSTRAINT IF EXISTS "leaderboard_entries_ranked_attempt_binding_fk"/,
+    );
+    expect(structuralBindingDownSql).toMatch(/DROP INDEX IF EXISTS "ranked_attempts_binding_uq"/);
+    expect(structuralBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "attempt_consumed_at"/);
+    expect(structuralBindingDownSql).toMatch(/DROP COLUMN IF EXISTS "attempt_formation_id"/);
+    expect(structuralBindingDownSql).toMatch(
+      /ADD CONSTRAINT "leaderboard_entries_attempt_id_ranked_attempts_id_fk"/,
+    );
+    expect(structuralBindingDownSql).not.toMatch(/DELETE FROM/);
+    expect(structuralBindingDownSql).not.toMatch(/DROP TABLE/);
   });
 });
 

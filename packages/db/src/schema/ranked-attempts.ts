@@ -13,7 +13,7 @@
 // ON DELETE CASCADE is acceptable because attempts are short-lived
 // operational rows (window_expires_at), unlike public board entries.
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid, index, check } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, index, uniqueIndex, check } from "drizzle-orm/pg-core";
 import { users } from "./users.ts";
 import { sessions } from "./sessions.ts";
 
@@ -57,6 +57,20 @@ export const rankedAttempts = pgTable(
       t.era,
       t.ratingBasis,
       t.issuedAt,
+    ),
+    // Migration 0012 references the complete consumed-attempt identity from
+    // leaderboard_entries. `id` is already unique, but the wider key makes
+    // user/season/config/consumption equality a structural FK invariant.
+    uniqueIndex("ranked_attempts_binding_uq").on(
+      t.id,
+      t.userId,
+      t.seasonKey,
+      t.formationId,
+      t.draftMode,
+      t.draftOrder,
+      t.era,
+      t.ratingBasis,
+      t.consumedAt,
     ),
     check("ranked_attempts_season_key_chk", sql`char_length(${t.seasonKey}) BETWEEN 1 AND 256`),
     check("ranked_attempts_formation_id_chk", sql`char_length(${t.formationId}) BETWEEN 1 AND 64`),

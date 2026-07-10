@@ -23,9 +23,8 @@
 //   step 2 — INSERT two anonymous saved_runs rows (NULL owner) with the
 //            same token; assert the second is rejected by the
 //            UNIQUE NULLS NOT DISTINCT constraint
-//   step 3 — INSERT two anonymous leaderboard_entries rows (NULL user)
-//            with the same (season, mode, token); assert the second is
-//            rejected
+//   step 3 — assert leaderboard constraints, including rejection of a ranked
+//            row bound to another user's unconsumed cross-config attempt
 //   step 4 — run paired down-migrations in reverse journal order
 //   step 5 — assert the public schema is empty (no tables, no drizzle bookkeeping)
 //
@@ -454,6 +453,47 @@ async function main(): Promise<void> {
           VALUES (NULL, ${sessionA}, ${lbSeason}, '4-3-3', 'classic', 'squad_first', 'all_time', 'career', 'rollback-check-seed', 'rollback-check-nonce', NOW() + INTERVAL '10 minutes')
         `),
       /not-null constraint|null value/i,
+    );
+    // Audit S1 B3 adversarial reproduction: an application bug or direct SQL
+    // writer must not be able to attach a ranked row to another user's
+    // unconsumed attempt from a different season/config. Supply non-null
+    // witnesses so the composite FK (not merely the ranked CHECK) adjudicates.
+    await db.execute(sql`
+      INSERT INTO users (email, username)
+      VALUES ('rollback-check-rival@example.com', 'rivaluser')
+    `);
+    const ownerRows = await db.execute<{ id: string }>(sql`
+      SELECT id FROM users WHERE email = 'rollback-check-a@example.com'
+    `);
+    const rivalRows = await db.execute<{ id: string }>(sql`
+      SELECT id FROM users WHERE email = 'rollback-check-rival@example.com'
+    `);
+    const ownerId = ownerRows.rows[0]?.id;
+    const rivalId = rivalRows.rows[0]?.id;
+    if (!ownerId || !rivalId) {
+      throw new Error("[rollback-check] FATAL: ranked binding probe users were not created");
+    }
+    const attemptRows = await db.execute<{ id: string }>(sql`
+      INSERT INTO ranked_attempts
+        (user_id, season_key, formation_id, draft_mode, draft_order, era, rating_basis, issued_parent_seed, nonce, window_expires_at)
+      VALUES
+        (${rivalId}::uuid, 'rollback-check-rival-season', '3-5-2', 'hidden', 'position_first', 'modern', 'current', 'rollback-check-rival-seed', 'rollback-check-rival-nonce', NOW() + INTERVAL '10 minutes')
+      RETURNING id
+    `);
+    const adversarialAttemptId = attemptRows.rows[0]?.id;
+    if (!adversarialAttemptId) {
+      throw new Error("[rollback-check] FATAL: adversarial ranked attempt was not created");
+    }
+    await assertInsertRejected(
+      "leaderboard_entries: another user's unconsumed cross-config attempt must be rejected",
+      () =>
+        db.execute(sql`
+          INSERT INTO leaderboard_entries
+            (season_key, mode, draft_mode, draft_order, era, rating_basis, user_id, attempt_id, attempt_formation_id, attempt_consumed_at, token, verified_score)
+          VALUES
+            (${lbSeason}, 'ranked', 'classic', 'squad_first', 'all_time', 'career', ${ownerId}::uuid, ${adversarialAttemptId}::uuid, '4-3-3', NOW(), ${`${lbToken}-adversarial-binding`}, 999)
+        `),
+      /leaderboard_entries_ranked_attempt_binding_fk|foreign key|23503/i,
     );
     // ON DELETE SET NULL semantics: board entries are public artifacts that
     // must SURVIVE session expiry/sweep (unlike cascading operational rows).

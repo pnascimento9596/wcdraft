@@ -51,7 +51,9 @@ async function makeEntry(args: {
   createdAt?: Date;
 }) {
   let attemptId: string | null = null;
+  let attemptConsumedAt: Date | null = null;
   if (args.mode === "ranked" && args.userId) {
+    attemptConsumedAt = new Date();
     const [attempt] = await env.db
       .insert(rankedAttempts)
       .values({
@@ -66,6 +68,7 @@ async function makeEntry(args: {
         issuedParentSeed: `seed-${args.token}`,
         nonce: `nonce-${args.token.padEnd(16, "0").slice(0, 16)}`,
         windowExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        consumedAt: attemptConsumedAt,
       })
       .returning();
     attemptId = attempt!.id;
@@ -88,6 +91,8 @@ async function makeEntry(args: {
       token: args.token,
       verifiedScore: args.verifiedScore ?? 100,
       attemptId,
+      attemptFormationId: attemptId === null ? null : "4-3-3",
+      attemptConsumedAt,
       hiddenAt: args.hiddenAt ?? null,
       createdAt: args.createdAt,
     })
@@ -315,7 +320,7 @@ describe("claimLeaderboardEntries — constraint interplay + isolation", () => {
     await makeSession({ id: "ses-anon" });
     await expectRejectsWithCause(
       makeEntry({ token: "t1.rk", sessionId: "ses-anon", mode: "ranked" }),
-      /leaderboard_entries_ranked_(user|attempt)_chk/,
+      /leaderboard_entries_ranked_(user|attempt(?:_binding)?)_chk/,
     );
   });
 

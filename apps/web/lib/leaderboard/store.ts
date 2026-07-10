@@ -59,6 +59,8 @@ export interface AcceptedEntryInsert {
   readonly verifiedScore: number;
   readonly scoreBreakdown: ScoreComponent[];
   readonly attemptId: string | null;
+  readonly attemptFormationId: string | null;
+  readonly attemptConsumedAt: Date | null;
 }
 
 export type InsertEntryResult =
@@ -100,6 +102,8 @@ export async function insertAcceptedEntry(
       verifiedScore: entry.verifiedScore,
       scoreBreakdown: entry.scoreBreakdown,
       attemptId: entry.attemptId,
+      attemptFormationId: entry.attemptFormationId,
+      attemptConsumedAt: entry.attemptConsumedAt,
       createdAt: new Date(now()),
     })
     .onConflictDoNothing()
@@ -179,6 +183,8 @@ async function upsertDailyBestEntry(
         verifiedScore: entry.verifiedScore,
         scoreBreakdown: entry.scoreBreakdown,
         attemptId: entry.attemptId,
+        attemptFormationId: entry.attemptFormationId,
+        attemptConsumedAt: entry.attemptConsumedAt,
         createdAt: new Date(now()),
       })
       .where(
@@ -211,6 +217,8 @@ async function upsertDailyBestEntry(
       verifiedScore: entry.verifiedScore,
       scoreBreakdown: entry.scoreBreakdown,
       attemptId: entry.attemptId,
+      attemptFormationId: entry.attemptFormationId,
+      attemptConsumedAt: entry.attemptConsumedAt,
       createdAt: new Date(now()),
     })
     .onConflictDoNothing()

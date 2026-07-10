@@ -383,7 +383,8 @@ describe("@wcdraft/db pglite runtime", () => {
           rating_basis,
           issued_parent_seed,
           nonce,
-          window_expires_at
+          window_expires_at,
+          consumed_at
         )
         VALUES (
           '00000000-0000-4000-8000-000000000002',
@@ -396,7 +397,8 @@ describe("@wcdraft/db pglite runtime", () => {
           'career',
           'seed-user',
           'nonce-user-000000',
-          now() + interval '1 hour'
+          now() + interval '1 hour',
+          '2026-07-10T12:00:00.000Z'
         )
       `);
 
@@ -410,6 +412,8 @@ describe("@wcdraft/db pglite runtime", () => {
           rating_basis,
           user_id,
           attempt_id,
+          attempt_formation_id,
+          attempt_consumed_at,
           token,
           verified_score
         )
@@ -422,6 +426,8 @@ describe("@wcdraft/db pglite runtime", () => {
           'career',
           '${USER_ID}',
           '00000000-0000-4000-8000-000000000002',
+          '4-3-3',
+          '2026-07-10T12:00:00.000Z',
           'user-token',
           140
         )
@@ -441,6 +447,239 @@ describe("@wcdraft/db pglite runtime", () => {
       expect(rows.rows).toEqual([{ token: "user-token" }]);
     });
   });
+
+  it("rejects another user's unconsumed cross-config attempt before ranked insertion", async () => {
+    await withMigratedPglite(async ({ client }) => {
+      const rivalId = "00000000-0000-4000-8000-000000000003";
+      const attemptId = "00000000-0000-4000-8000-000000000004";
+      await client.exec(`
+        INSERT INTO users (id, email, username)
+        VALUES
+          ('${USER_ID}', 'bound-player@example.com', 'bound_player'),
+          ('${rivalId}', 'bound-rival@example.com', 'bound_rival')
+      `);
+      await client.exec(`
+        INSERT INTO ranked_attempts (
+          id,
+          user_id,
+          season_key,
+          formation_id,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          issued_parent_seed,
+          nonce,
+          window_expires_at
+        )
+        VALUES (
+          '${attemptId}',
+          '${rivalId}',
+          'season-rival',
+          '3-5-2',
+          'hidden',
+          'position_first',
+          'modern',
+          'current',
+          'seed-rival',
+          'nonce-rival-000000',
+          now() + interval '1 hour'
+        )
+      `);
+
+      await expect(
+        client.exec(`
+          INSERT INTO leaderboard_entries (
+            season_key,
+            mode,
+            draft_mode,
+            draft_order,
+            era,
+            rating_basis,
+            user_id,
+            attempt_id,
+            attempt_formation_id,
+            attempt_consumed_at,
+            token,
+            verified_score
+          )
+          VALUES (
+            'season-player',
+            'ranked',
+            'classic',
+            'squad_first',
+            'all_time',
+            'career',
+            '${USER_ID}',
+            '${attemptId}',
+            '4-3-3',
+            '2026-07-10T12:00:00.000Z',
+            'adversarial-token',
+            999
+          )
+        `),
+      ).rejects.toThrow(/leaderboard_entries_ranked_attempt_binding_fk|foreign key/i);
+
+      const inserted = await client.query<{ count: number }>(
+        `SELECT count(*)::integer AS count FROM leaderboard_entries WHERE token = 'adversarial-token'`,
+      );
+      expect(inserted.rows).toEqual([{ count: 0 }]);
+    });
+  });
+
+  it("applies 0012 over historical rows and rolls only 0012 back without data loss", async () => {
+    const client = await PGlite.create();
+    try {
+      await applyMigrationsThrough(client, "0011");
+      const attemptId = "00000000-0000-4000-8000-000000000005";
+      await client.exec(`
+        INSERT INTO users (id, email, username)
+        VALUES ('${USER_ID}', 'historical-player@example.com', 'historical_player');
+
+        INSERT INTO ranked_attempts (
+          id,
+          user_id,
+          season_key,
+          formation_id,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          issued_parent_seed,
+          nonce,
+          window_expires_at,
+          consumed_at
+        )
+        VALUES (
+          '${attemptId}',
+          '${USER_ID}',
+          'season-history',
+          '4-3-3',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          'seed-history',
+          'nonce-history-0000',
+          now() + interval '1 hour',
+          '2026-07-10T13:00:00.000Z'
+        );
+
+        INSERT INTO leaderboard_entries (
+          season_key,
+          mode,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          user_id,
+          attempt_id,
+          token,
+          verified_score
+        )
+        VALUES (
+          'season-history',
+          'ranked',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          '${USER_ID}',
+          '${attemptId}',
+          'historical-ranked-token',
+          150
+        );
+
+        INSERT INTO leaderboard_entries (
+          season_key,
+          mode,
+          draft_mode,
+          draft_order,
+          era,
+          rating_basis,
+          display_alias,
+          token,
+          verified_score
+        )
+        VALUES (
+          'season-history',
+          'casual',
+          'classic',
+          'squad_first',
+          'all_time',
+          'career',
+          'history_casual',
+          'historical-casual-token',
+          120
+        )
+      `);
+
+      await applyMigrationFile(client, "0012_ranked_attempt_structural_binding.sql");
+      const bound = await client.query<{
+        attempt_formation_id: string | null;
+        attempt_consumed_at: Date | null;
+      }>(`
+        SELECT attempt_formation_id, attempt_consumed_at
+        FROM leaderboard_entries
+        WHERE token = 'historical-ranked-token'
+      `);
+      expect(bound.rows).toHaveLength(1);
+      expect(bound.rows[0]?.attempt_formation_id).toBe("4-3-3");
+      expect(new Date(bound.rows[0]!.attempt_consumed_at!).toISOString()).toBe(
+        "2026-07-10T13:00:00.000Z",
+      );
+      const casual = await client.query<{
+        attempt_formation_id: string | null;
+        attempt_consumed_at: Date | null;
+      }>(`
+        SELECT attempt_formation_id, attempt_consumed_at
+        FROM leaderboard_entries
+        WHERE token = 'historical-casual-token'
+      `);
+      expect(casual.rows).toEqual([{ attempt_formation_id: null, attempt_consumed_at: null }]);
+
+      await applyDownMigrationFile(client, "0012_ranked_attempt_structural_binding.down.sql");
+      const columns = await client.query<{ column_name: string }>(`
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = 'public'
+          AND table_name = 'leaderboard_entries'
+          AND column_name IN ('attempt_formation_id', 'attempt_consumed_at')
+      `);
+      expect(columns.rows).toEqual([]);
+      const constraints = await client.query<{ conname: string }>(`
+        SELECT conname
+        FROM pg_constraint
+        WHERE conname = 'leaderboard_entries_attempt_id_ranked_attempts_id_fk'
+      `);
+      expect(constraints.rows).toEqual([
+        { conname: "leaderboard_entries_attempt_id_ranked_attempts_id_fk" },
+      ]);
+      const indexes = await client.query<{ indexname: string }>(`
+        SELECT indexname
+        FROM pg_indexes
+        WHERE schemaname = 'public'
+          AND indexname IN (
+            'leaderboard_entries_ranked_attempt_uq',
+            'ranked_attempts_binding_uq'
+          )
+        ORDER BY indexname
+      `);
+      expect(indexes.rows).toEqual([{ indexname: "leaderboard_entries_ranked_attempt_uq" }]);
+      const survivors = await client.query<{ token: string }>(`
+        SELECT token
+        FROM leaderboard_entries
+        WHERE token IN ('historical-ranked-token', 'historical-casual-token')
+        ORDER BY token
+      `);
+      expect(survivors.rows).toEqual([
+        { token: "historical-casual-token" },
+        { token: "historical-ranked-token" },
+      ]);
+    } finally {
+      await client.close();
+    }
+  });
 });
 
 async function applyMigrationsThrough(client: PGlite, lastPrefix: string): Promise<void> {
@@ -459,4 +698,8 @@ async function applyMigrationFile(client: PGlite, fileName: string): Promise<voi
     const trimmed = statement.trim();
     if (trimmed.length > 0) await client.exec(trimmed);
   }
+}
+
+async function applyDownMigrationFile(client: PGlite, fileName: string): Promise<void> {
+  return applyMigrationFile(client, fileName);
 }
